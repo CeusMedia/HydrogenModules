@@ -36,7 +36,7 @@ list>
 <list
 
 ]]></description>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Extend model by scopes.</log>
@@ -50,6 +50,7 @@ list>
 	<log version="0.4">Add logic class.</log>
 	<log version="0.4.1">Add switch for integration mode (buttons or tab).</log>
 	<log version="0.4.2">Increase size of model table columns.</log>
+	<log version="0.4.3">Refactoring to support new identified state.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

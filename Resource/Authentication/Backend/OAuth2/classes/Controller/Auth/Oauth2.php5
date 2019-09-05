@@ -9,20 +9,31 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 	protected $modelProvider;
 	protected $modelRelation;
 
+	protected $scopes	= array(
+		'adam-paterson/oauth2-slack'	=> ['identity.basic'],
+		'stevenmaguire/oauth2-paypal'	=> ['openid', 'profile', 'email', 'phone', 'address'],
+		'omines/oauth2-gitlab'			=> ['read_user']
+	);
+
 	protected function __onInit(){
-		$this->config			= $this->env->getConfig();
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-		$this->messenger		= $this->env->getMessenger();
+		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+		if( isset( $this->env->version ) )
+			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
+				$this->cookie	= $this->env->getCookie();
 		$this->cookie			= $this->env->getCookie();
 		$this->moduleConfig		= $this->config->getAll( 'module.resource_authentication_backend_oauth2.', TRUE );
-		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
+		$this->useCsrf			 = $this->env->getModules()->has( 'Security_CSRF' );
 
 		if( !class_exists( 'League\OAuth2\Client\Provider\GenericProvider' ) )
 			$this->messenger->noteFailure( '<strong>OAuth2-Client is missing.</strong><br/>Please install package "league/oauth2-client" using composer.' );
 		$this->modelProvider	= new Model_Oauth_Provider( $this->env );
 		$this->modelRelation	= new Model_Oauth_User( $this->env );
 
+		$this->addData( 'useCsrf', $this->useCsrf );
 		$this->refreshToken();
 	}
 
@@ -111,6 +122,7 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 					$this->session->set( 'oauth2_token', $token );
 					$this->session->set( 'userId', $user->userId );
 					$this->session->set( 'roleId', $user->roleId );
+					$this->logic->setAuthenticatedUser( $user );
 					if( $this->request->get( 'login_remember' ) )
 						$this->rememberUserInCookie( $user );
 					if( $from = $this->session->get( 'oauth2_from' ) ){
@@ -165,6 +177,7 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			) );
 			$this->session->remove( 'userId' );
 			$this->session->remove( 'roleId' );
+			$this->logic->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->messenger->noteNotice( $words['logout']['msgAutoLogout'] );
 			}
@@ -245,12 +258,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 			$this->session->set( 'oauth2_providerId', $providerId );
 			$providerObject	= $this->getProviderObject( $providerId, 'auth/oauth2/register' );
 			$scopes	= array();
-			if( $provider->composerPackage === "adam-paterson/oauth2-slack" )
-				$scopes	= array( 'scope' => ['identity.basic'] );
-			else if( $provider->composerPackage === "stevenmaguire/oauth2-paypal" )
-				$scopes	= array( 'scope' => ['openid', 'profile', 'email', 'phone', 'address'] );
-			else if( $provider->composerPackage === "omines/oauth2-gitlab" )
-				$scopes	= array( 'scope' => ['read_user'] );
+			if( isset( $this->scopes[$provider->composerPackage] ) )
+				$scopes	= $this->scopes[$provider->composerPackage];
 			$authUrl = $providerObject->getAuthorizationUrl( $scopes );
 
 			$this->session->set( 'oauth2_state', $providerObject->getState() );

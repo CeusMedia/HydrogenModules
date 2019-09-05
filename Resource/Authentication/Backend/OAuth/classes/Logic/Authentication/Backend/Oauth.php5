@@ -9,6 +9,7 @@ class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 
 	protected function __onInit(){
 		$this->config		= $this->env->getConfig();
+		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth', TRUE );
 		$this->providerUri	= $this->moduleConfig->get( 'provider.URI' );
 		$this->modelUser	= new Model_User( $this->env );
@@ -47,6 +48,13 @@ class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 		return FALSE;
 	}
 
+	public function clearCurrentUser(){
+		$this->session->remove( 'auth_user_id' );
+		$this->session->remove( 'auth_role_id' );
+		$this->session->remove( 'auth_status_id' );
+		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this );
+	}
+
 	public function getCurrentRole( $strict = TRUE ){
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
@@ -65,7 +73,7 @@ class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 				throw new RuntimeException( 'No user authenticated' );
 			return NULL;
 		}
-		return $this->env->getSession()->get( 'roleId');
+		return $this->session->get( 'auth_role_id');
 	}
 
 	public function getCurrentUser( $strict = TRUE, $withRole = FALSE ){
@@ -89,11 +97,18 @@ class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 				throw new RuntimeException( 'No user authenticated' );
 			return 0;
 		}
-		return $this->env->getSession()->get( 'userId' );
+		return $this->session->get( 'auth_user_id' );
 	}
 
 	public function isAuthenticated(){
-		return $this->env->getSession()->get( 'userId' );
+		if( !$this->isIdentified() )
+			return FALSE;
+		$authStatus	= (int) $this->session->get( 'auth_status' );
+		return $authStatus == Logic_Authentication::STATUS_AUTHENTICATED;
+	}
+
+	public function isIdentified(){
+		return (int) $this->session->get( 'auth_user_id' ) > 0;
 	}
 
 	public function isCurrentUserId( $userId ){
@@ -106,10 +121,21 @@ class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 	public function noteUserActivity(){
 	}
 
-/*	public function setCurrentUser( $userId ){
+	public function setAuthenticatedUser( $user ){
+		$this->setIdentifiedUser( $user );
+		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
+		return $this;
+	}
 
+	public function setIdentifiedUser( $user ){
+		$this->session->set( 'auth_user_id', $user->userId );
+		$this->session->set( 'auth_role_id', $user->roleId );
+		$this->session->set( 'auth_status', Logic_Authentication::STATUS_IDENTIFIED );
+		$this->session->set( 'auth_account_id', $user->data->accountId );
+		$this->session->set( 'auth_token', $user->data->token );
+		$this->session->set( 'auth_rights', $user->data->rights );
+		$this->session->set( 'auth_backend', 'Rest' );
+		return $this;
+	}
 
-		$this->env->getSession()->set( 'userId', $userId );
-		$this->env->getSession()->set( 'userId', $userId );
-	}*/
 }

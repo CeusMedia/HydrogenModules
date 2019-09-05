@@ -13,6 +13,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	protected $moduleConfigAuth;
 	protected $moduleConfigUsers;
 	protected $limiter;
+	protected $logic;
 
 	public function __onInit(){
 		$this->config		= $this->env->getConfig();
@@ -25,6 +26,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->messenger	= $this->env->getMessenger();
 		$this->modules		= $this->env->getModules();
 		$this->useCsrf		= $this->modules->has( 'Security_CSRF' );
+		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Local' );
 
 		$this->useOauth2	= FALSE;																//  assume that OAuth2 is not installed or registers as login tab
 		if( $this->modules->has( 'Resource_Authentication_Backend_OAuth2' ) ){						//  OAuth2 is installed
@@ -88,7 +90,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	 */
 	protected function checkPasswordOnLogin( $user, $password ){
 		$words				= (object) $this->getWords( 'login' );
-		$isMinimumVersion	= version_compare( PHP_VERSION, '5.5.0', '>=' );
+		$isMinimumVersion	= $this->env->getPhp()->version->isAtLeast( '5.5.0' );
 		if( $isMinimumVersion && class_exists( 'Logic_UserPassword' ) ){							//  @todo  remove line if old user password support decays
 			$logic			= Logic_UserPassword::getInstance( $this->env );
 			$newPassword	= $logic->getActivableUserPassword( $user->userId, $password );
@@ -245,8 +247,11 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 			$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
 			if( $this->request->isPost() )
 				$this->messenger->noteSuccess( $words->msgSuccess );
+
 			$this->session->set( 'userId', $user->userId );
 			$this->session->set( 'roleId', $user->roleId );
+			$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
+			$logicAuth->setAuthenticatedUser( $user, $password );
 			if( $this->request->get( 'login_remember' ) )
 				$this->rememberUserInCookie( $user );
 			$this->redirectAfterLogin();
@@ -269,6 +274,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){
 		$words		= (object) $this->getWords( 'logout' );
+		$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
 		if( $this->session->has( 'userId' ) ){
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
 				'userId'	=> $this->session->get( 'userId' ),
@@ -276,6 +282,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 			) );
 			$this->session->remove( 'userId' );
 			$this->session->remove( 'roleId' );
+			$logicAuth->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->env->getMessenger()->noteNotice( $words->msgAutoLogout );
 			}
@@ -570,7 +577,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	protected function rememberUserInCookie( $user ){
 		$expires	= strtotime( "+2 years" ) - time();
 		$passwordHash	= md5( sha1( $user->password ) );											//  hash password using SHA1 and MD5
-		if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )											//  for PHP 5.5.0+
+		if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )											//  for PHP 5.5.0+
 			$passwordHash	= password_hash( $user->password, PASSWORD_BCRYPT );					//  hash password using BCRYPT
 		$this->cookie->set( 'auth_remember', TRUE, $expires );
 		$this->cookie->set( 'auth_remember_id', $user->userId, $expires );
@@ -596,12 +603,13 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 				$role		= $modelRole->get( $user->roleId );										//  get role of user
 				if( $role && $role->access ){														//  role exists and allows login
 					$passwordMatch	= md5( sha1( $user->password ) ) === $password;					//  compare hashed password with user password
-					if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )								//  for PHP 5.5.0+
+					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )								//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
 						$this->session->set( 'userId', $user->userId );								//  set user ID in session
 						$this->session->set( 'roleId', $user->roleId );								//  set user role in session
+						$this->logic->setAuthenticatedUser( $user );
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
 						$this->restart( './'.$from );												//  restart (or go to redirect URL)

@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.2.6</version>
+	<version>0.3</version>
 	<log version="0.1">Initial fork from module Auth:JSON.</log>
 	<log version="0.2">Add hook call Auth::onBeforeLogin.</log>
 	<log version="0.2.1">Add method to note latest user activity (not implemented yet).</log>
@@ -19,6 +19,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.2.4">Migrate logic to support new logic pool.</log>
 	<log version="0.2.5">Extract hooks to own hook class.</log>
 	<log version="0.2.6">Use general module main switch.</log>
+	<log version="0.3">Refactoring.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

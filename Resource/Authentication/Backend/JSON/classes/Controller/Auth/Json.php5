@@ -15,7 +15,11 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 		$this->session		= $this->env->getSession();
 //		$this->cookie		= new Net_HTTP_PartitionCookie( "hydrogen", "/" );
 		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+		if( isset( $this->env->version ) )
+			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
+				$this->cookie	= $this->env->getCookie();
 		$this->messenger	= $this->env->getMessenger();
+		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Json' );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication_backend_json.', TRUE );
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
 	}
@@ -76,7 +80,7 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 	}
 
 	public function index(){
-		if( !$this->session->has( 'userId' ) )
+		if( !$this->logic->isAuthenticated() )
 			return $this->redirect( 'auth/json', 'login' );										// @todo replace redirect
 
 		$from			= $this->request->get( 'from' );
@@ -93,7 +97,7 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 	}
 
 	public function login( $username = NULL ){
-		if( $this->session->has( 'userId' ) ){
+		if( $this->logic->isAuthenticated() ){
 			if( $this->request->has( 'from' ) )
 				$this->restart( $from );
 			$this->restart( NULL, TRUE );
@@ -148,6 +152,7 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 						$this->session->set( 'userId', $user->userId );
 						$this->session->set( 'roleId', $user->roleId );
 						$this->session->set( 'authBackend', 'Json' );
+						$this->logic->setAuthenticatedUser( $user );
 //						if( $this->request->get( 'login_remember' ) )
 //							$this->rememberUserInCookie( $user->userId, $password );
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
@@ -168,13 +173,14 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){
 		$words		= (object) $this->getWords( 'logout' );
 
-		if( $this->session->has( 'userId' ) ){
+		if( $this->logic->isAuthenticated() ){
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
-				'userId'	=> $this->session->get( 'userId' ),
-				'roleId'	=> $this->session->get( 'roleId' ),
+				'userId'	=> $this->session->get( 'auth_user_id' ),
+				'roleId'	=> $this->session->get( 'auth_role_id' ),
 			) );
 			$this->session->remove( 'userId' );
 			$this->session->remove( 'roleId' );
+			$this->logic->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->env->getMessenger()->noteNotice( $words->msgAutoLogout );
 			}
@@ -210,7 +216,7 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 /*	protected function rememberUserInCookie( $userId, $password ){
 		$expires	= strtotime( "+2 years" ) - time();
 		$passwordHash	= md5( sha1( $password ) );													//  hash password using SHA1 and MD5
-		if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )											//  for PHP 5.5.0+
+		if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )											//  for PHP 5.5.0+
 			$passwordHash	= password_hash( $password, PASSWORD_BCRYPT );							//  hash password using BCRYPT
 		$this->cookie->set( 'auth_remember', TRUE, $expires );
 		$this->cookie->set( 'auth_remember_id', $userId, $expires );
@@ -237,7 +243,7 @@ class Controller_Auth_Json extends CMF_Hydrogen_Controller {
 				$role		= $modelRole->get( $user->roleId );										//  get role of user
 				if( $role && $role->access ){														//  role exists and allows login
 					$passwordMatch	= md5( sha1( $user->password ) ) === $password;					//  compare hashed password with user password
-					if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )								//  for PHP 5.5.0+
+					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )								//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database

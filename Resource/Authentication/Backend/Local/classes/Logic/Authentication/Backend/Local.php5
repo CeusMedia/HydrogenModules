@@ -15,9 +15,8 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
 	 *	@todo		remove support for old user password
 	 */
 	public function checkPassword( $userId, $password ){
-		$isMinimumVersion	= version_compare( PHP_VERSION, '5.5.0', '>=' );
 		$hasUsersModule		= $this->env->getModules()->has( 'Resource_Users' );
-		if( $isMinimumVersion && $hasUsersModule ){
+		if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) && $hasUsersModule ){
 			if( class_exists( 'Logic_UserPassword' ) ){												//  @todo  remove line if old user password support decays
 				$logic	= Logic_UserPassword::getInstance( $this->env );
 				if( $logic->hasUserPassword( $userId ) ){											//  @todo  remove line if old user password support decays
@@ -43,6 +42,13 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
 		return FALSE;
 	}
 
+	public function clearCurrentUser(){
+		$this->session->remove( 'auth_user_id' );
+		$this->session->remove( 'auth_role_id' );
+		$this->session->remove( 'auth_status_id' );
+		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this );
+	}
+
 	public function getCurrentRole( $strict = TRUE ){
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
@@ -61,7 +67,7 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
 				throw new RuntimeException( 'No user authenticated' );
 			return NULL;
 		}
-		return $this->env->getSession()->get( 'roleId' );
+		return $this->session->get( 'auth_role_id' );
 	}
 
 	public function getCurrentUser( $strict = TRUE, $withRole = FALSE ){
@@ -85,11 +91,18 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
 				throw new RuntimeException( 'No user authenticated' );
 			return 0;
 		}
-		return $this->env->getSession()->get( 'userId' );
+		return $this->session->get( 'auth_user_id' );
 	}
 
 	public function isAuthenticated(){
-		return $this->env->getSession()->get( 'userId' );
+		if( !$this->isIdentified() )
+			return FALSE;
+		$authStatus	= (int) $this->session->get( 'auth_status' );
+		return $authStatus == Logic_Authentication::STATUS_AUTHENTICATED;
+	}
+
+	public function isIdentified(){
+		return (int) $this->session->get( 'auth_user_id' ) > 0;
 	}
 
 	public function isCurrentUserId( $userId ){
@@ -97,15 +110,25 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
 	}
 
 	public function noteUserActivity(){
-		if( $userId = $this->getCurrentUserId( FALSE ) ){													//  get ID of current user (or zero)
+		if( $this->isAuthenticated() && $userId = $this->getCurrentUserId( FALSE ) ){				//  get ID of current user (or zero)
 			$this->modelUser->edit( $userId, array( 'activeAt' => time() ) );
 		}
+		return $this;
 	}
 
-/*	public function setCurrentUser( $userId ){
+	public function setAuthenticatedUser( $user ){
+		$this->session->set( 'auth_user_id', $user->userId );
+		$this->session->set( 'auth_role_id', $user->roleId );
+		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
+		return $this;
+	}
 
-
-		$this->env->getSession()->set( 'userId', $userId );
-		$this->env->getSession()->set( 'userId', $userId );
-	}*/
+	public function setIdentifiedUser( $user ){
+		if( !$this->isAuthenticated() ){
+			$this->session->set( 'auth_user_id', $user->userId );
+			$this->session->set( 'auth_role_id', $user->roleId );
+			$this->session->set( 'auth_status', Logic_Authentication::STATUS_IDENTIFIED );
+		}
+		return $this;
+	}
 }

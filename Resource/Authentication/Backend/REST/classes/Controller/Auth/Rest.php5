@@ -15,10 +15,13 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		$this->session		= $this->env->getSession();
 //		$this->cookie		= new Net_HTTP_PartitionCookie( "hydrogen", "/" );
 		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+		if( isset( $this->env->version ) )
+			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
+				$this->cookie	= $this->env->getCookie();
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication_backend_rest.', TRUE );
-		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
-		$this->logic		= Logic_Authentication_Backend_Rest::getInstance( $this->env );
+		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Rest' );
+		$this->addData( 'useCsrf', $this->useCsrf );
 	}
 
 	public function ajaxUsernameExists(){
@@ -120,12 +123,9 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 				$user	= $this->logic->checkPassword( $username, $password );
 				if( isset( $user->data->userId ) ){
 					$this->messenger->noteSuccess( $words->msgSuccess );
-					$this->session->set( 'accountId', $user->data->accountId );
 					$this->session->set( 'userId', $user->data->userId );
 					$this->session->set( 'roleId', $user->data->roleId );
-					$this->session->set( 'token', $user->data->token );
-					$this->session->set( 'rights', $user->data->rights );
-					$this->session->set( 'authBackend', 'Rest' );
+					$this->logic->setAuthenticatedUser( $user );
 	//				if( $this->request->get( 'login_remember' ) )
 	//					$this->rememberUserInCookie( $user->userId, $password );
 					$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
@@ -169,12 +169,12 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 
 		if( $this->session->has( 'userId' ) ){
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
-				'userId'	=> $this->session->get( 'userId' ),
-				'roleId'	=> $this->session->get( 'roleId' ),
+				'userId'	=> $this->session->get( 'auth_user_id' ),
+				'roleId'	=> $this->session->get( 'auth_role_id' ),
 			) );
 			$this->session->remove( 'userId' );
 			$this->session->remove( 'roleId' );
-			$this->session->remove( 'token' );
+			$this->logic->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->env->getMessenger()->noteNotice( $words->msgAutoLogout );
 			}
@@ -273,7 +273,7 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 /*	protected function rememberUserInCookie( $userId, $password ){
 		$expires	= strtotime( "+2 years" ) - time();
 		$passwordHash	= md5( sha1( $password ) );													//  hash password using SHA1 and MD5
-		if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )											//  for PHP 5.5.0+
+		if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )											//  for PHP 5.5.0+
 			$passwordHash	= password_hash( $password, PASSWORD_BCRYPT );							//  hash password using BCRYPT
 		$this->cookie->set( 'auth_remember', TRUE, $expires );
 		$this->cookie->set( 'auth_remember_id', $userId, $expires );
@@ -300,7 +300,7 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 				$role		= $modelRole->get( $user->roleId );										//  get role of user
 				if( $role && $role->access ){														//  role exists and allows login
 					$passwordMatch	= md5( sha1( $user->password ) ) === $password;					//  compare hashed password with user password
-					if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )								//  for PHP 5.5.0+
+					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )								//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database

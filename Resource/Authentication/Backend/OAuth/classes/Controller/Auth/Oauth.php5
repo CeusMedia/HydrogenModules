@@ -10,6 +10,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 	protected $reqest;
 	protected $cookie;
 	protected $messenger;
+	protected $logic;
 
 	protected function __onInit(){
 		$this->config		= $this->env->getConfig();
@@ -17,13 +18,17 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+		if( isset( $this->env->version ) )
+			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
+				$this->cookie	= $this->env->getCookie();
 		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth.', TRUE );
 		$this->clientUri	= $this->env->url;
 		$this->clientId		= $this->moduleConfig->get( 'provider.client.ID' );
 		$this->clientSecret	= $this->moduleConfig->get( 'provider.client.secret' );
 		$this->providerUri	= $this->moduleConfig->get( 'provider.URI' );
-		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
-
+		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Oauth' );
+		$this->useCsrf		= $this->env->getModules()->has( 'Security_CSRF' );
+		$this->addData( 'useCsrf', $this->useCsrf );
 		$this->refreshToken();
 	}
 
@@ -92,6 +97,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 					if( $user ){
 						$this->session->set( 'userId', $user->userId );
 						$this->session->set( 'roleId', $user->roleId );
+						$this->logic->setAuthenticatedUser( $user );
 //						if( $this->request->get( 'login_remember' ) )
 //							$this->rememberUserInCookie( $user );
 					}
@@ -107,6 +113,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 							$userId				= $modelUser->add( (array) $data );
 							$this->session->set( 'userId', $userId );
 							$this->session->set( 'roleId', $data->roleId );
+							$this->logic->setAuthenticatedUser( $modelUser->get( $userId ) );
 							if( $this->request->get( 'login_remember' ) )
 								$this->rememberUserInCookie( $user );
 						}
@@ -123,7 +130,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 	}
 
 	public function login(){
-		if( $this->session->has( 'userId' ) )
+		if( $this->logic->isAuthenticated() )
 			$this->redirectAfterLogin();
 		if( $this->moduleConfig->get( 'login.grantType' ) === 'password' ){
 			$this->messenger->noteFailure( 'Grant type "password" is not implemented, yet.' );
@@ -187,6 +194,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 					if( $user ){
 						$this->session->set( 'userId', $user->userId );
 						$this->session->set( 'roleId', $user->roleId );
+						$this->logic->setAuthenticatedUser( $user );
 						if( $this->request->get( 'login_remember' ) )
 							$this->rememberUserInCookie( $user );
 					}
@@ -200,6 +208,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 						$userId			= $modelUser->add( $data );
 						$this->session->set( 'userId', $userId );
 						$this->session->set( 'roleId', $roleId );
+						$this->logic->setAuthenticatedUser( $user );
 						if( $this->request->get( 'login_remember' ) )
 							$this->rememberUserInCookie( $user );
 					}
@@ -224,13 +233,14 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 		$this->session->remove( 'oauth_scope' );
 
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
-		if( $this->session->has( 'userId' ) ){
+		if( $this->logic->isAuthenticated() ){
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
-				'userId'	=> $this->session->get( 'userId' ),
-				'roleId'	=> $this->session->get( 'roleId' ),
+				'userId'	=> $this->session->get( 'auth_user_id' ),
+				'roleId'	=> $this->session->get( 'auth_role_id' ),
 			) );
 			$this->session->remove( 'userId' );
 			$this->session->remove( 'roleId' );
+			$this->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->messenger->noteNotice( $words['logout']['msgAutoLogout'] );
 			}
@@ -372,12 +382,13 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 				$role		= $modelRole->get( $user->roleId );										//  get role of user
 				if( $role && $role->access ){														//  role exists and allows login
 					$passwordMatch	= md5( sha1( $user->password ) ) === $password;					//  compare hashed password with user password
-					if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )								//  for PHP 5.5.0+
+					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )								//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
 						$this->session->set( 'userId', $user->userId );								//  set user ID in session
 						$this->session->set( 'roleId', $user->roleId );								//  set user role in session
+						$this->logic->setAuthenticatedUser( $user );
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
 						$this->restart( './'.$from );												//  restart (or go to redirect URL)
