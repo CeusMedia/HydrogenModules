@@ -41,6 +41,7 @@ class View_Helper_Shop_AddressView{
 	public function renderAsHtml(){
 		$w		= (object) $this->words['view'];
 		$d		= new ADT_List_Dictionary( $this->address );
+//		print_m( $d->getAll() );die;
 		$list	= array();
 		if( trim( $d->get( 'institution' ) ) )
 			$list[]	= $this->renderRow( 'institution', $this->escape( $d->get( 'institution' ) ) );

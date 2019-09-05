@@ -174,6 +174,7 @@ class Job_Shop extends Job_Abstract{
 		$regExp		= '/^(.+)\s+([0-9]+.*)$/';
 		$count		= 0;
 		$total		= count( $emails );
+		$migrants	= array();
 		foreach( $emails as $email => $data ){
 			$data->customer->number	= '';
 			if( preg_match( $regExp, $data->customer->address ) ){
@@ -204,10 +205,12 @@ class Job_Shop extends Job_Abstract{
 		}
 		$this->out();
 		$this->out( 'Imported '.count( $migrants ).' customers as migrants' );
-		$headers	= array_keys( $migrants[0] );
-		$csv	= new FS_File_CSV_Writer( 'migrants.csv' );
-		$csv->write( $migrants, $headers );
-		$this->out( 'Saved migrants for marketing uses in migrants.csv' );
+		if( $migrants ){
+			$headers	= array_keys( $migrants[0] );
+			$csv	= new FS_File_CSV_Writer( 'migrants.csv' );
+			$csv->write( $migrants, $headers );
+			$this->out( 'Saved migrants for marketing uses in migrants.csv' );
+		}
 	}
 
 	public function migrateOldCustomers( $arguments = array(), $parameters = array() ){

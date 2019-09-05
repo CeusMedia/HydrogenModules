@@ -91,29 +91,35 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		return $user;
 	}
 
+	public function getBillingAddressFromCart(){
+		$address		= NULL;
+		if( $this->modelCart->get( 'userId' ) ){
+			$address	= $this->modelAddress->getByIndices( array(
+				'relationId'	=> $this->modelCart->get( 'userId' ),
+				'relationType'	=> 'user',
+				'type'			=> Model_Address::TYPE_BILLING,
+			) );
+		}
+		return $address;
+	}
+
 	public function getDeliveryAddressFromCart(){
 		$address		= NULL;
-		$addressUserId	= 0;
-		$customerMode	= $this->modelCart->get( 'customerMode' );
-		if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_ACCOUNT ){
-			$addressUserId	= $this->modelCart->get( 'userId' );
-			$relationType	= 'user';
-		}
-		else if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_GUEST ){
-			$addressUserId	= $this->modelCart->get( 'customerId' );
-			$relationType	= 'customer';
-		}
-		if( $addressUserId ){
+		if( $this->modelCart->get( 'userId' ) ){
 			$address	= $this->modelAddress->getByIndices( array(
-				'relationId'	=> $addressUserId,
-				'relationType'	=> $relationType,
+				'relationId'	=> $this->modelCart->get( 'userId' ),
+				'relationType'	=> 'user',
 				'type'			=> Model_Address::TYPE_DELIVERY,
 			) );
 		}
 		return $address;
 	}
 
+	/**
+	 *	@deprecated
+	 */
 	public function getGuestCustomer( $customerId ){
+		die( 'getGuestCustomer is deprecated' );
 		$model		= new Model_Shop_Customer( $this->env );
 		$customer	= $model->get( $customerId );
 		if( !$customer )
@@ -155,11 +161,9 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		$order	= $this->modelOrder->get( $orderId );
 		if( !$order )
 			throw new RangeException( 'Invalid order ID: '.$orderId );
-		if( $order->userId )
-			return $this->getAccountCustomer( $order->userId );
-		else if( $order->customerId )
-			return $this->getGuestCustomer( $order->customerId );
-		throw new Exception( 'No user or customer assigned to order' );
+		if( !$order->userId )
+			throw new Exception( 'No user assigned to order' );
+		return $this->getAccountCustomer( $order->userId );
 	}
 
 	/**

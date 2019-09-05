@@ -10,8 +10,11 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 	/**	@var	Model_Address			$modelAddress		Model for address objects*/
 	protected $modelAddress;
 
-	/**	@var	Model_Shop_Cart			$modelCart			Model for shopping cart */
+	/**	@var	Model_Shop_Cart			$modelCart			Model for shopping carts */
 	protected $modelCart;
+
+	/**	@var	Model_User				$modelUser			Model for user accounts */
+	protected $modelUser;
 
 	/**	@var	boolean					$useAuth			Flag: Shop allows user registration and login */
 	protected $useAuth					= FALSE;
@@ -22,8 +25,10 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 	protected function __onInit(){
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
+		$this->modelUser	= new Model_User( $this->env );
 		$this->modelAddress	= new Model_Address( $this->env );
 		$this->modelCart	= new Model_Shop_Cart( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
 
 		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$this->useAuth		= TRUE;
@@ -53,26 +58,13 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 	 *	@return		void
 	 */
 	public function address( $addressId, $type = NULL, $remove = NULL ){
+		$type			= (int) $type;
 		$customerMode	= $this->modelCart->get( 'customerMode' );
 		$countries		= $this->env->getLanguage()->getWords( 'countries' );
-		switch( $customerMode ){
-			case Model_Shop_CART::CUSTOMER_MODE_GUEST:
-				$relationType	= 'customer';
-				$relationId		= $this->modelCart->get( 'customerId' );
-				if( !$relationId )
-					$this->restart( NULL, TRUE );
-				break;
-			case Model_Shop_CART::CUSTOMER_MODE_ACCOUNT:
-				if( $this->useAuth ){
-					$relationType	= 'user';
-					$relationId		= $this->modelCart->get( 'userId' );
-					if( !$relationId )
-						$this->restart( NULL, TRUE );
-					break;
-				}
-			default:
-				throw new RuntimeException( 'Unknown customer mode: '.$customerMode );
-		}
+		$relationType	= 'user';
+		$relationId		= $this->modelCart->get( 'userId' );
+		if( !$relationId )
+			$this->restart( NULL, TRUE );
 
 		if( $addressId && $remove ){
 			$this->modelAddress->removeByIndices( array(
@@ -84,9 +76,9 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 		$data		= $this->request->getAll( NULL, TRUE );
-		$countryKey	= 'DE';
+		$country	= 'DE';
 		if( $data->get( 'country' ) )
-			$countryKey	= array_search( $data->get( 'country' ), $countries );
+			$country	= $data->get( 'country' );
 		if( $this->request->has( 'save' ) ){
 			if( $addressId > 0 ){
 				$address	= $this->modelAddress->getByIndices( array(
@@ -103,10 +95,9 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 					$this->messenger->noteError( 'Access to address denied.' );
 					$this->restart( NULL, TRUE );
 				}
-				$data->set( 'country', $countryKey );
+//				$data->set( 'country', $countryKey );
 				$data->set( 'modifiedAt', time() );
 				$this->modelAddress->edit( $addressId, $data->getAll() );
-				$this->restart( NULL, TRUE );
 			}
 			else{
 				if( !$type || !in_array( (int) $type, array( Model_Address::TYPE_DELIVERY, Model_Address::TYPE_BILLING ) ) ){
@@ -132,16 +123,32 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 						);
 					}
 				}
-				if( !$this->messenger->gotError() ){
-					$data->set( 'relationId', $relationId );
-					$data->set( 'relationType', $relationType );
-					$data->set( 'type', $type );
-					$data->set( 'createdAt', time() );
-					$data->set( 'country', $countryKey );
-					$addressId	= $this->modelAddress->add( $data->getAll() );
-				}
-				$this->restart( NULL, TRUE );
+				if( $this->messenger->gotError() )
+					$this->restart( NULL, TRUE );
+				$data->set( 'relationId', $relationId );
+				$data->set( 'relationType', $relationType );
+				$data->set( 'type', $type );
+				$data->set( 'createdAt', time() );
+				$data->set( 'country', $country );
+				$addressId	= $this->modelAddress->add( $data->getAll() );
 			}
+			if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_GUEST ){
+				if( $type === Model_Address::TYPE_BILLING ){
+					$address	= $this->modelAddress->get( $addressId );
+					$this->modelUser->edit( $relationId, array(
+						'firstname'	=> $address->firstname,
+						'surname'	=> $address->surname,
+						'email'		=> $address->email,
+						'country'	=> $address->country,
+					) );
+				}
+			}
+			$this->env->getCaptain()->callHook( 'Shop', 'updateAddress', $this, array(
+				'address'		=> $this->modelAddress->get( $addressId ),
+				'relationId'	=> $relationId,
+				'relationType'	=> $relationType,
+			) );
+			$this->restart( NULL, TRUE );
 		}
 		if( !$addressId ){
 			$this->messenger->noteError( 'No address ID given.' );
@@ -205,20 +212,27 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 		$this->addData( 'mode', Model_Shop_CART::CUSTOMER_MODE_GUEST );
 		$this->addData( 'userId', 0 );
 
-		$customerId		= $this->modelCart->get( 'customerId' );
-		if( !$customerId ){
-			$model		= new Model_Shop_Customer( $this->env );
-			$customerId	= $model->add( array() );
-			$this->modelCart->set( 'customerId', $customerId );
+		$userId		= $this->modelCart->get( 'userId' );
+		if( !$userId ){
+			$userId		= $this->modelUser->add( array(
+				'username'		=> 'Guest User '.uniqid(),
+				'password'		=> '-1',
+				'roleId'		=> $this->moduleConfig->get( 'customerRoleId' ),
+				'createdAt'		=> time(),
+				'modifiedAt'	=> time(),
+			) );
+			$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
+			$logicAuth->setIdentifiedUser( $this->modelUser->get( $userId ) );
+			$this->modelCart->set( 'userId', $userId );
 		}
 		$addressDelivery	= $this->modelAddress->getByIndices( array(
-			'relationType'	=> 'customer',
-			'relationId'	=> $customerId,
+			'relationType'	=> 'user',
+			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
 		) );
 		$addressBilling		= $this->modelAddress->getByIndices( array(
-			'relationType'	=> 'customer',
-			'relationId'	=> $customerId,
+			'relationType'	=> 'user',
+			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_BILLING,
 		) );
 		$this->addData( 'addressBilling', $addressBilling );
@@ -230,8 +244,7 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 
 		if( $this->request->has( 'save' ) && $addressBilling && $addressDelivery ){
 			$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_AUTHENTICATED );
-			$this->modelCart->set( 'customerId', $customerId );
-			$this->modelCart->set( 'userId', 0 );
+			$this->modelCart->set( 'userId', $userId );
 			$this->restart( 'shop/conditions' );
 		}
 
@@ -246,6 +259,9 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 			'region'	=> NULL,
 			'phone'		=> NULL,
 		);
+		if( $addressBilling && !$addressDelivery ){
+			$user	= $addressBilling;
+		}
 		$this->addData( 'user', $user );
 	}
 
@@ -262,8 +278,7 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 			if( $userId ){
 				if( !$this->modelCart->get( 'userId' ) )
 					$this->modelCart->set( 'userId', $userId );
-				$modelUser	= new Model_User( $this->env );
-				$user		= $modelUser->get( $userId );
+				$user		= $this->modelUser->get( $userId );
 				$addressDelivery	= $this->modelAddress->getByIndices( array(
 					'relationType'	=> 'user',
 					'relationId'	=> $userId,
@@ -277,7 +292,6 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 				if( $this->request->has( 'save' ) && $addressDelivery && $addressBilling ){
 					$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_AUTHENTICATED );
 					$this->modelCart->set( 'userId', $userId );
-					$this->modelCart->set( 'customerId', 0 );
 					$this->restart( 'shop/conditions' );
 				}
 				if( !array_key_exists( $user->country, $countries ) )
@@ -305,7 +319,7 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 	 *	@param		string		$icon			...
 	 *	@return		void
 	 */
-	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL ){
+	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL, $countries = array() ){
 		$this->backends[]	= (object) array(
 			'backend'	=> $backend,
 			'key'		=> $key,
@@ -313,6 +327,7 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 			'path'		=> $path,
 			'priority'	=> $priority,
 			'icon'		=> $icon,
+			'countries'	=> $countries,
 		);
 	}
 }

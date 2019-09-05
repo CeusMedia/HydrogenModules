@@ -4,7 +4,7 @@
 	<description><![CDATA[Basic shop with cart, shipping and conditions.
 For payment you need to install a payment module.]]></description>
 	<category>Shop</category>
-	<version>0.8.4</version>
+	<version>0.8.5</version>
 	<log version="0.3.14">Improved cart panels.</log>
 	<log version="0.3.15">Changed and extracted locales.</log>
 	<log version="0.3.16">Added support for article description in tables and mails.</log>
@@ -50,6 +50,7 @@ For payment you need to install a payment module.]]></description>
 	<log version="0.8.2">Replace session storage by new cart model.</log>
 	<log version="0.8.3">Reintegrate shipping.</log>
 	<log version="0.8.4">Integrate shop jobs from other app modules.</log>
+	<log version="0.8.5">Refactoring to use shop user instead of shop customer.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -140,6 +141,8 @@ For payment you need to install a payment module.]]></description>
 	<config protected="yes" mandatory="yes" type="string" name="price.currency" values="€,£,$,¥">€</config>
 	<config protected="yes" mandatory="yes" type="string" name="price.point">,</config>
 	<config protected="yes" type="boolean" name="tabs.icons.white">no</config>
+	<config protected="yes" type="integer" name="accountRoleId">4</config>
+	<config protected="yes" type="integer" name="customerRoleId">6</config>
 <!--	<config protected="yes" type="" name=""></config>-->
 	<link access="public" path="shop/addArticle"/>
 	<link access="public" path="shop/cart"/>

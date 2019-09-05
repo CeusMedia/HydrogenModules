@@ -51,8 +51,8 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 	);
 	protected $primaryKey	= 'orderId';
 	protected $indices		= array(
-		"customerId",
 		"sessionId",
+		"customerId",
 		"userId",
 		"paymentMethod",
 		"paymentId",

@@ -135,15 +135,14 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 //		print_m( $this->session->getAll( 'shop_' ) );die;
 		if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_ACCOUNT ){
 			$logicAuth	= new Logic_Authentication( $this->env );
-			if( !$logicAuth->isAuthenticated() ){
+			if( !$logicAuth->isIdentified() ){
 				$this->modelCart->set( 'userId', 0 );
 				$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_NEW );
-				$this->modelCart->remove( 'customerId' );
 				$this->restart( 'customer', TRUE );
 			}
 		}
 		else if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_GUEST ){
-			if( !$this->modelCart->get( 'customerId' ) )
+			if( !$this->modelCart->get( 'userId' ) )
 				$this->restart( 'customer', TRUE );
 		}
 		if( $this->request->has( 'save' ) && $this->request->getMethod()->is( 'POST' ) ){
@@ -170,9 +169,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		}
 //		$order		= $this->session->get( 'shop_order' );
 		$userId		= $this->modelCart->get( 'userId' );
-		$customerId	= $this->modelCart->get( 'customerId' );
 		$positions	= $this->modelCart->get( 'positions' );
-		if( !$userId && !$customerId )
+		if( !$userId )
 			$this->restart( 'customer', TRUE );
 		if( !$positions ){
 			$this->messenger->noteNotice( $this->words->errorCheckoutEmptyCart );
@@ -187,7 +185,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 				break;
 		 	case Model_Shop_CART::CUSTOMER_MODE_GUEST:
 			default:
-				$customer	= $this->logic->getGuestCustomer( $customerId );
+				$customer	= $this->logic->getAccountCustomer( $userId );
 				break;
 		}
 		if( !$customer->addressDelivery )
@@ -258,6 +256,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		}
 		$orderId	= $this->modelCart->get( 'orderId' );
 		$this->addData( 'cart', $this->modelCart );
+
+		$this->addData( 'billingAddress', $this->logic->getBillingAddressFromCart() );
 	}
 
 /*	public function register(){
@@ -306,7 +306,18 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->addData( 'address', $address );
 	}*/
 
-	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL ){
+	/**
+	 *	Register a payment backend.
+	 *	@access		public
+	 *	@param		string		$backend		...
+	 *	@param		string		$key			...
+	 *	@param		string		$title			...
+	 *	@param		string		$path			...
+	 *	@param		integer		$priority		...
+	 *	@param		string		$icon			...
+	 *	@return		void
+	 */
+	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL, $countries = array() ){
 		$this->backends[]	= (object) array(
 			'backend'	=> $backend,
 			'key'		=> $key,
@@ -314,6 +325,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 			'path'		=> $path,
 			'priority'	=> $priority,
 			'icon'		=> $icon,
+			'countries'	=> $countries,
 		);
 	}
 

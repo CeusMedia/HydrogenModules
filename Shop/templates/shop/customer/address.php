@@ -7,7 +7,7 @@ if( $address->type == 2 )
 $helper		= new View_Helper_Shop_AddressForm( $env );
 $helper->setAddress( $address );
 $helper->setHeading( $w->heading );
-$helper->setType( 0 );
+$helper->setType( $address->type );
 if( strlen( trim( $w->textTop ) ) )
 	$helper->setTextTop( UI_HTML_Tag::create( 'p', $w->textTop ) );
 $tabContent	= $helper->render();

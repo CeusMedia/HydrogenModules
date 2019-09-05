@@ -5,7 +5,8 @@ class View_Helper_Shop_AddressForm{
 	protected $address;
 	protected $heading;
 	protected $textTop;
-	protected $type		= 0;
+	protected $type					= 0;
+	protected $defaultCountryCode	= 'DE';
 
 	public function __construct( $env ){
 		$this->env		= $env;
@@ -17,9 +18,10 @@ class View_Helper_Shop_AddressForm{
 		$w			= (object) $this->words['form'];
 		$d			= $this->address;
 
-		$country	= '';
-		if( isset( $d->country ) && array_key_exists( $d->country, $this->words['countries'] ) )
-			$country	= $this->words['countries'][$d->country];
+		if( empty( $d->country ) || !array_key_exists( $d->country, $this->words['countries'] ) )
+			$d->country	= $this->defaultCountryCode;
+
+		$optCountry	= UI_HTML_Elements::Options( $this->words['countries'], $d->country );
 
 		return '
 <div class="content-panel">
@@ -86,7 +88,7 @@ class View_Helper_Shop_AddressForm{
 					<div class="row-fluid">
 						<div class="span6">
 							<label for="input_country" class="required mandatory">'.$w->labelCountry.'</label>
-							<input type="text" name="country" id="input_country" class="span12 typeahead" data-provide="typeahead" autocomplete="off" required="required" value="'.$country.'"/>
+							<select name="country" id="input_country" class="span12" required="required">'.$optCountry.'</select>
 						</div>
 						<div class="span6">
 							<label for="input_region">'.$w->labelRegion.'</label>
@@ -138,5 +140,11 @@ $(document).ready(function(){
 	public function setType( $type ){
 		$this->type		= $type;
 		return $this;
+	}
+
+	public function setDefaultCountryCode( $countryCode ){
+		if( !array_key_exists( $countryCode, $this->words['countries'] ) )
+			throw new DomainException( 'Invalid country code: '.$countryCode );
+		$this->defaultCountryCode	= $countryCode;
 	}
 }

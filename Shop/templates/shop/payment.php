@@ -2,9 +2,13 @@
 
 $w		= (object) $words['payment'];
 
+//print_m($cart->getAll());
+
 $list	= array();
 foreach( $paymentBackends as $paymentBackend ){
 	$icon	= '';
+	if( $paymentBackend->countries && !in_array( $billingAddress->country, $paymentBackend->countries ) )
+		continue;
 	$path	= $env->getConfig()->get( 'path.images' ).'paymentProviderLogo/medium/';
 	if( $paymentBackend->icon ){
 		$icon	= '&nbsp;&nbsp;&nbsp;'.UI_HTML_Tag::create( 'i', '', array( 'class' => $paymentBackend->icon ) ).'&nbsp;&nbsp;&nbsp;';

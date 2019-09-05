@@ -47,7 +47,6 @@ class Model_Shop_Cart{
 			'currency'			=> $this->defaultCurrency,
 			'positions'			=> array(),
 			'customer'			=> array(),
-			'customerId'		=> 0,
 			'customerMode'		=> Model_Shop_CART::CUSTOMER_MODE_UNKNOWN,
 		) );
 		$this->session->set( 'shop_cart', $this->data->getAll() );
@@ -71,7 +70,6 @@ class Model_Shop_Cart{
 			$order	= $this->modelOrder->get( $orderId );
 			if( $order ){
 				$this->data->set( 'userId', $order->userId );
-				$this->data->set( 'customerId', $order->customerId );
 				$this->data->set( 'orderStatus', $order->status );
 				$this->data->set( 'paymentMethod', $order->paymentMethod );
 //				$this->data->set( 'options', $order->options );
@@ -133,7 +131,6 @@ class Model_Shop_Cart{
 	protected function createOrder(){
 		$orderId	= $this->modelOrder->add( array(
 			'userId'		=> $this->data->get( 'userId' ),
-			'customerId'	=> $this->data->get( 'customerId' ),
 			'status'		=> $this->data->get( 'orderStatus' ),
 			'paymentMethod'	=> $this->data->get( 'paymentMethod' ),
 //			'options'		=> $this->data->get( 'options' ),
@@ -173,7 +170,6 @@ class Model_Shop_Cart{
 	protected function updateOrder( $orderId ){
 		$this->modelOrder->edit( $orderId, array(
 			'userId'		=> $this->data->get( 'userId' ),
-			'customerId'	=> $this->data->get( 'customerId' ),
 			'status'		=> $this->data->get( 'orderStatus' ),
 //			'options'		=> $this->data->get( 'options' ),
 			'paymentMethod'	=> $this->data->get( 'paymentMethod' ),

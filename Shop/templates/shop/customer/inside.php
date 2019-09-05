@@ -14,11 +14,12 @@ if( !$addressDelivery ){
 	$address->street		= $user->street;
 	$address->institution	= '';
 	$address->region		= '';//$user->region;
+	$address->country		= $user->country;
 
 	$helper		= new View_Helper_Shop_AddressForm( $env );
 	$helper->setAddress( $address );
 	$helper->setHeading( $wDelivery->heading );
-	$helper->setType( 4 );
+	$helper->setType( Model_Address::TYPE_DELIVERY );
 	$helper->setTextTop( '<div class="alert alert-info">'.$wDelivery->textTop.'<br/></div>' );
 	return $hint.$helper->render();
 }
@@ -30,7 +31,7 @@ if( !$addressBilling ){
 	$helper		= new View_Helper_Shop_AddressForm( $env );
 	$helper->setAddress( $address );
 	$helper->setHeading( $wBilling->heading );
-	$helper->setType( 2 );
+	$helper->setType( Model_Address::TYPE_BILLING );
 	$helper->setTextTop( '<div class="alert alert-info">'.$wBilling->textTop.'<br/></div>' );
 	return $hint.$helper->render();
 }
