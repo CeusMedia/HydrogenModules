@@ -449,8 +449,7 @@ abstract class Mail_Abstract{
 		$templateId		= $this->options->get( 'template' );
 		if( isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];
-		if( $templateId )
-			$content	= $this->applyTemplateToHtml( $content, $templateId );
+		$content	= $this->applyTemplateToHtml( $content, $templateId );
 
 		$html		= $content;
 		if( !preg_match( '/(<html>|<head>)/', $content ) ){
@@ -488,8 +487,7 @@ abstract class Mail_Abstract{
 		$templateId		= $this->options->get( 'template' );
 		if( isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];
-		if( $templateId )
-			$content	= $this->applyTemplateToText( $content, $templateId );
+		$content	= $this->applyTemplateToText( $content, $templateId );
 		$this->contents['text']	= $content;
 		$this->mail->addText( $content, 'UTF-8', $this->encodingText );
 	}
