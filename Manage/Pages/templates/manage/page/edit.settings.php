@@ -11,16 +11,15 @@ $optStatus		= UI_HTML_Elements::Options( $words['states'], $page->status );
 $optParent		= UI_HTML_Elements::Options( $parentMap, $page->parentId );
 $optFormat		= UI_HTML_Elements::Options( $words['formats'], $page->format );
 $optController	= UI_HTML_Elements::Options( $optController, $page->controller );
+$optTemplate	= UI_HTML_Elements::Options( $masterTemplates, $page->template );
 
 $fieldAccess	= '';
 if( $useAuth ){
 	$optAccess		= UI_HTML_Elements::Options( $words['accesses'], $page->access );
 	$fieldAccess	= '
-		<div class="row-fluid">
-			<div class="span5">
-				<label for="input_page_access">'.$w->labelAccess.'</label>
-				<select name="page_access" class="span12 optional-trigger has-optionals" id="input_page_access">'.$optAccess.'</select>
-			</div>
+		<div class="span3">
+			<label for="input_page_access">'.$w->labelAccess.'</label>
+			<select name="page_access" class="span12 optional-trigger has-optionals" id="input_page_access">'.$optAccess.'</select>
 		</div>';
 }
 
@@ -83,7 +82,13 @@ return '
 					<input type="text" name="page_action" class="span12" id="input_page_action" value="'.htmlentities( $page->action, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
-			'.$fieldAccess.'
+			<div class="row-fluid">
+				<div class="span4 optional page_type page_type-0 page_type-2" style="display: none">
+					<label for="input_page_template">'.$w->labelTemplate.'</label>
+					<select name="page_template" class="span12" id="input_page_template">'.$optTemplate.'</select>
+				</div>
+				'.$fieldAccess.'
+			</div>
 			<div class="buttonbar">
 				<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
 				<button type="reset" class="btn btn-small">'.$w->buttonReset.'</button>

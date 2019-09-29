@@ -115,6 +115,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			'action'		=> $this->request->get( 'page_action' ),
 			'access'		=> $this->request->get( 'page_access' ),
 			'icon'			=> $this->request->get( 'page_icon' ),
+			'template'		=> $this->request->get( 'page_template' ),
 			'createdAt'		=> time(),
 		);
 
@@ -435,6 +436,16 @@ ModuleManagePages.PageEditor.init();
 			$editors[]	= 'Ace';
 		if( $this->env->getModules()->has( 'JS_CodeMirror' ) )
 			$editors[]	= 'CodeMirror';
+		$masterTemplates		= $this->getWords( 'templates' );
+		$pathTemplates			= $this->frontend->getPath( 'templates' );
+		$pathMasterTemplates	= $pathTemplates.'info/page/masters/';
+		if( is_dir( $pathMasterTemplates ) ){
+			$list	= FS_Folder_RecursiveLister::getFileList( $pathMasterTemplates, '/\.php$/' );
+			foreach( $list as $item ){
+				$path	= substr( $item->getPathname(), strlen( $pathMasterTemplates ) );
+				$masterTemplates[$path]	= 'Page Master: '.$path;
+			}
+		}
 
 		$this->addData( 'current', $pageId );
 		$this->addData( 'pageId', $pageId );
@@ -451,6 +462,7 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'editors', $editors );
 		$this->addData( 'modules', $this->frontend->getModules() );
 		$this->addData( 'controllers', $this->getFrontendControllers() );
+		$this->addData( 'masterTemplates', $masterTemplates );
 		$this->preparePageTree( $pageId );
 
 //		$helper	= new View_Helper_TinyMceResourceLister( $this->env );
