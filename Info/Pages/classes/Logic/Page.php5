@@ -24,6 +24,16 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		$this->modelPage		= new Model_Page( $this->env );
 	}
 
+	public function getChildren( $pageId, $activeOnly = TRUE ){
+		$page	= $this->modelPage->get( $pageId );
+		if( !$page )
+			throw new InvalidArgumentException( 'Invalid page ID given: '.$pageId );
+		$indices	= array( 'parentId'	=> $pageId );
+		if( $activeOnly )
+			$indices['status']	= Model_Page::STATUS_VISIBLE;
+		return $this->modelPage->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
+	}
+
 	/**
 	 *	@todo		move "from path" to method hasPageByPath and make pathOrId to pageId
 	 */
@@ -52,29 +62,49 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	}
 
 	/**
-	 *	...
-	 *	@access		protected
-	 *	@param		string		$path			Path to find page for
-	 *	@param		integer		$parentPageId	Parent page ID to start with (default: 0)
-	 *	@param		array		$parents		Flag: Returns page parents as well (default: no)
-	 *	@return		object						Data object of found page or NULL if nothing found
-	 *	@throws		RuntimeException			if path is not resolvable
-	 *	@throws		RuntimeException			if path parent part is not resolvable
+	 *	Tries to find page related to controller and returns found page.
+	 *	@access		public
+	 *	@param		string		$controllerName	Name of controller (Controller_Test -> Test)
+	 *	@param		boolean		$strict			Flag: throw exceptions on failure
+	 *	@return		object|null					Data object of found page or NULL if nothing found
+	 *	@throws		InvalidArgumentException	if no or empty module ID is given
 	 */
-	protected function getPageFromPathRecursive( $path, $parentPageId = 0, & $parents = array() ){
-		if( preg_match( '/\//', $path ) ){
-			$parts	= preg_split( '/\//', $path, 2 );
-			$parent	= $this->getPageFromPathRecursive( $parts[0], $parentPageId );
-			if( !$parent )
-				throw new RangeException( 'Parent path "'.$parts[0].'" is not resolvable' );
-			$parents[]	= $parent;
-			return $this->getPageFromPathRecursive( $parts[1], $parent->pageId, $parents );
+	public function getPageFromController( $controllerName, $strict = TRUE ){
+		if( !strlen( trim( $controllerName ) ) )
+			throw new InvalidArgumentException( 'No controller name given' );
+		$page	= $this->modelPage->getByIndex( 'controller', $controllerName );
+		if( !$page ){
+			if( !$strict )
+				return NULL;
+			throw new RangeException( 'No page set for controller: '.$controllerName );
 		}
-		$indices	= array( 'identifier' => $path, 'parentId' => $parentPageId );
-		$page		= $this->modelPage->getByIndices( $indices );
-		if( !$page )
-			throw new RangeException( 'Page with identifier "'.$path.'" is not resolvable' );
-		return $this->getPage( $page->pageId );
+		$page	= $this->getPage( $page->pageId );
+		return $this->translatePage( $page );
+	}
+
+	/**
+	 *	Tries to find page related to controller and returns found page.
+	 *	@access		public
+	 *	@param		string		$controllerName	Name of controller (Controller_Test -> Test)
+	 *	@param		string		$action			Name of controller action
+	 *	@param		boolean		$strict			Flag: throw exceptions on failure
+	 *	@return		object|null					Data object of found page or NULL if nothing found
+	 *	@throws		InvalidArgumentException	if no or empty module ID is given
+	 */
+	public function getPageFromControllerAction( $controllerName, $action, $strict = TRUE ){
+		if( !strlen( trim( $controllerName ) ) )
+			throw new InvalidArgumentException( 'No controller name given' );
+		$page	= $this->modelPage->getByIndices( array(
+			'controller'	=> $controllerName,
+			'action'		=> $action,
+		) );
+		if( !$page ){
+			if( !$strict )
+				return NULL;
+			throw new RangeException( 'No page set for controller action: '.$controllerName.':'.$action );
+		}
+		$page	= $this->getPage( $page->pageId );
+		return $this->translatePage( $page );
 	}
 
 	/**
@@ -125,57 +155,52 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		return $this->translatePage( $page );																//  return this module controlled page
 	}
 
-	public function getChildren( $pageId, $activeOnly = TRUE ){
-		$page	= $this->modelPage->get( $pageId );
+	/**
+	 *	...
+	 *	@access		protected
+	 *	@param		string		$path			Path to find page for
+	 *	@param		integer		$parentPageId	Parent page ID to start with (default: 0)
+	 *	@param		array		$parents		Flag: Returns page parents as well (default: no)
+	 *	@return		object						Data object of found page or NULL if nothing found
+	 *	@throws		RuntimeException			if path is not resolvable
+	 *	@throws		RuntimeException			if path parent part is not resolvable
+	 */
+	protected function getPageFromPathRecursive( $path, $parentPageId = 0, & $parents = array() ){
+		if( preg_match( '/\//', $path ) ){
+			$parts	= preg_split( '/\//', $path, 2 );
+			$parent	= $this->getPageFromPathRecursive( $parts[0], $parentPageId );
+			if( !$parent )
+				throw new RangeException( 'Parent path "'.$parts[0].'" is not resolvable' );
+			$parents[]	= $parent;
+			return $this->getPageFromPathRecursive( $parts[1], $parent->pageId, $parents );
+		}
+		$indices	= array( 'identifier' => $path, 'parentId' => $parentPageId );
+		$page		= $this->modelPage->getByIndices( $indices );
 		if( !$page )
-			throw new InvalidArgumentException( 'Invalid page ID given: '.$pageId );
-		$indices	= array( 'parentId'	=> $pageId );
-		if( $activeOnly )
-			$indices['status']	= Model_Page::STATUS_VISIBLE;
-		return $this->modelPage->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
+			throw new RangeException( 'Page with identifier "'.$path.'" is not resolvable' );
+		return $this->getPage( $page->pageId );
 	}
 
 	/**
-	 *	Tries to find page related to controller and returns found page.
+	 *	Tries to resolves URI path from current request and returns found page.
 	 *	@access		public
-	 *	@param		string		$controllerName	Name of controller (Controller_Test -> Test)
+	 *	@param		bool		$withParents	Flag: Returns page parents as well (default: no)
+	 *	@param		boolean		$strict			Flag: throw exception on failure
 	 *	@return		object|null					Data object of found page or NULL if nothing found
-	 *	@throws		InvalidArgumentException	if no or empty module ID is given
+	 *	@throws		RuntimeException			if path is not resolvable
 	 */
-	public function getPageFromController( $controllerName, $strict = TRUE ){
-		if( !strlen( trim( $controllerName ) ) )
-			throw new InvalidArgumentException( 'No controller name given' );
-		$page	= $this->modelPage->getByIndex( 'controller', $controllerName );
-		if( !$page ){
-			if( !$strict )
-				return NULL;
-			throw new RangeException( 'No page set for controller: '.$controllerName );
+	public function getPageFromRequest( $withParents = FALSE, $strict = TRUE ){
+		$request	= $this->env->getRequest();
+		$path		= trim( $request->get( '__path' ), '/' );										//  get requested path
+		$pagePath	= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page path is not empty
+		try{
+			return $this->getPageFromPath( $pagePath, $withParents );								//  try to get page by called page path
 		}
-		$page	= $this->getPage( $page->pageId );
-		return $this->translatePage( $page );
-	}
-
-	/**
-	 *	Tries to find page related to controller and returns found page.
-	 *	@access		public
-	 *	@param		string		$controllerName	Name of controller (Controller_Test -> Test)
-	 *	@return		object|null					Data object of found page or NULL if nothing found
-	 *	@throws		InvalidArgumentException	if no or empty module ID is given
-	 */
-	public function getPageFromControllerAction( $controllerName, $action, $strict = TRUE ){
-		if( !strlen( trim( $controllerName ) ) )
-			throw new InvalidArgumentException( 'No controller name given' );
-		$page	= $this->modelPage->getByIndices( array(
-			'controller'	=> $controllerName,
-			'action'		=> $action,
-		) );
-		if( !$page ){
-			if( !$strict )
-				return NULL;
-			throw new RangeException( 'No page set for controller action: '.$controllerName.':'.$action );
+		catch( Exception $e ){
+			if( $strict )
+				throw new RuntimeException( 'Requested page is not resolvable', 0, $e );
+			return NULL;
 		}
-		$page	= $this->getPage( $page->pageId );
-		return $this->translatePage( $page );
 	}
 
 	/**

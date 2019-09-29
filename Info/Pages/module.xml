@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.8.3</version>
+	<version>0.8.4</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -36,8 +36,9 @@
 	<log version="0.7.9">Cleanup and documentation.</log>
 	<log version="0.8">Improve dispatching.</log>
 	<log version="0.8.1">Refactor page detection to work by recursion.</log>
-	<log version="0.8.2">Add component page type.</log> 
+	<log version="0.8.2">Add component page type.</log>
 	<log version="0.8.3">Extend logic class by method hasPages.</log>
+	<log version="0.8.4">Add support to set master template per page.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -56,16 +57,21 @@
 	<config type="string" protected="yes" name="title.separator"> - </config>
 	<config type="string" protected="yes" name="direct" values="allowed,denied">denied</config>
 	<config type="boolean" protected="yes" name="sitemap">yes</config>
+	<config type="boolean" protected="yes" mandatory="no" name="masterTemplateOverride.active">yes</config>
+	<config type="string" protected="yes" mandatory="no" name="masterTemplateOverride.default"></config>
+	<config type="string" protected="yes" mandatory="no" name="masterTemplateOverride.fallback">master.php</config>
+	<config type="string" protected="yes" mandatory="no" name="masterTemplateOverride.force"></config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">UI_MetaTags</needs>
 		<supports type="module">Resource_Localization</supports>
 	</relations>
 	<hook type="resource" resource="App" event="onDispatch">Hook_Info_Page::onAppDispatch</hook>
-	<hook type="resource" resource="View" event="onRenderContent">Hook_Info_Page::onRenderContent</hook>
-	<hook type="resource" resource="Sitemap" event="registerLinks">Hook_Info_Page::onRegisterSitemapLinks</hook>
-	<hook type="resource" resource="Controller" event="onDetectPath">Hook_Info_Page::onControllerDetectPath</hook>
+	<hook type="resource" resource="App" event="getMasterTemplate">Hook_Info_Page::onAppGetMasterTemplate</hook>
 	<hook type="resource" resource="Env" event="constructEnd">Hook_Info_Page::onEnvConstructEnd</hook>
+	<hook type="resource" resource="Controller" event="onDetectPath">Hook_Info_Page::onControllerDetectPath</hook>
+	<hook type="resource" resource="Sitemap" event="registerLinks">Hook_Info_Page::onRegisterSitemapLinks</hook>
+	<hook type="resource" resource="View" event="onRenderContent">Hook_Info_Page::onRenderContent</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>pages`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
@@ -142,6 +148,9 @@ ALTER TABLE `<%?prefix%>pages` ADD `action` VARCHAR(100) CHARACTER SET utf8 COLL
 	<sql on="update" type="mysql" version="0.7.2"><![CDATA[
 ALTER TABLE `<%?prefix%>pages` ADD `access` VARCHAR( 10 ) NOT NULL DEFAULT 'public' AFTER `action` ,
 ADD INDEX ( `access` ) ;
+]]></sql>
+	<sql on="update" type="mysql" version="0.8.4"><![CDATA[
+ALTER TABLE `pages` ADD `template` VARCHAR(255) NULL DEFAULT NULL AFTER `icon`;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>pages`;

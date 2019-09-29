@@ -7,9 +7,10 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 				return;																				//  no (frontend) pages for backend
 
 		$request	= $env->getRequest();
-		$path		= $request->get( '__path' );													//  get requested path
-		$path		= trim( $path, '/' );
 		$logic		= $env->getLogic()->get( 'page' );												//  get page logic instance
+		$page		= $logic->getPageFromRequest( TRUE );
+
+		$path		= trim( $request->get( '__path' ), '/' );										//  get requested path
 		$pagePath	= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page path is not empty
 		try{
 			$page	= $logic->getPageFromPath( $pagePath, TRUE );									//  try to get page by called page path
@@ -63,6 +64,20 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 			return static::redirect( $env, $controllerName, $action, $page->arguments );			//  redirect to module controller action
 		}
 		return FALSE;																				//  continue ongoing dispatching
+	}
+
+	static public function onAppGetMasterTemplate( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+		$page	= $env->getLogic()->get( 'page' )->getPageFromRequest( TRUE, FALSE );
+		if( $page ){
+			$parents	= $page->parents;
+			while( $page->template === 'inherit' && $parents )
+				$page	= array_shift( $parents );
+			$template		= (string) $page->template;
+			$valuesToSkip	= array( '', 'default', 'inherit', 'theme' );
+			if( !in_array( $template, $valuesToSkip, TRUE ) )
+				return 'info/page/masters/'.$template;
+		}
+		return NULL;
 	}
 
 	static public function onControllerDetectPath( CMF_Hydrogen_Environment $env, $context, $module, $data ){
