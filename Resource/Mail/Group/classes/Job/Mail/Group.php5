@@ -163,7 +163,8 @@ class Job_Mail_Group extends Job_Abstract{
 				continue;
 			$groupId	= $group->mailGroupId;
 			$this->logicGroup->setGroupStatus( $groupId, Model_Mail_Group::STATUS_WORKING );
-			$this->out( '* '.date( 'r' ).': Group: ['.$groupId.'] '.$group->title );
+			$this->out( '* Group: '.$group->title.' (ID: '.$groupId.')' );
+			$this->out( '  - Date: '.date( 'r' ) );
 
 			try{
 				//  handle formerly stalled messages
@@ -172,12 +173,17 @@ class Job_Mail_Group extends Job_Abstract{
 					$this->out( '  - '.count( $results->forwarded ).' messages forwarded' );
 					foreach( $results->forwarded as $message ){
 						$mailObject	= $this->logicMessage->getMessageObject( (int) $message->mailGroupMessageId );
-						$this->out( '  Subject: '.$mailObject->getSubject() );
-						$this->out( '  Sender: '.$mailObject->getSender() );
+						$this->out( '    Sender: '.$mailObject->getSender()->get() );
+						$this->out( '    Subject: '.$mailObject->getSubject() );
 					}
 				}
 				if( $results->rejected ){
 					$this->out( '  - '.count( $results->rejected ).' messages rejected' );
+					foreach( $results->rejected as $message ){
+						$mailObject	= $this->logicMessage->getMessageObject( (int) $message->mailGroupMessageId );
+						$this->out( '    Sender: '.$mailObject->getSender()->get() );
+						$this->out( '    Subject: '.$mailObject->getSubject() );
+					}
 				}
 
 				//  import new mails from mailbox
@@ -194,8 +200,8 @@ class Job_Mail_Group extends Job_Abstract{
 							continue;
 						$message	= $this->logicMessage->checkId( $messageId );
 						$mailObject	= $this->logicMessage->getMessageObject( (int) $message->mailGroupMessageId );
-						$this->out( '  Subject: '.$mailObject->getSubject() );
-						$this->out( '  Sender: '.$mailObject->getSender() );
+						$this->out( '    Sender: '.$mailObject->getSender()->get() );
+						$this->out( '    Subject: '.$mailObject->getSubject() );
 	/*					$this->out( '- Mail #'.$handledMail->id );
 						$this->out( '  Sender: '.$handledMail->fromAddress );
 						$this->out( '  Receivers: '.count( $handledMail->receivers ) );
@@ -208,15 +214,25 @@ class Job_Mail_Group extends Job_Abstract{
 					$this->out( '  - '.count( $results->forwarded ).' messages forwarded' );
 					foreach( $results->forwarded as $message ){
 						$mailObject	= $this->logicMessage->getMessageObject( (int) $message->mailGroupMessageId );
-						$this->out( '  Subject: '.$mailObject->getSubject() );
-						$this->out( '  Sender: '.$mailObject->getSender() );
+						$this->out( '    Subject: '.$mailObject->getSubject() );
+						$this->out( '    Sender: '.$mailObject->getSender()->get() );
 					}
 				}
 				if( $results->stalled ){
 					$this->out( '  - '.count( $results->stalled ).' messages stalled' );
+					foreach( $results->stalled as $message ){
+						$mailObject	= $this->logicMessage->getMessageObject( (int) $message->mailGroupMessageId );
+						$this->out( '    Sender: '.$mailObject->getSender()->get() );
+						$this->out( '    Subject: '.$mailObject->getSubject() );
+					}
 				}
 				if( $results->rejected ){
 					$this->out( '  - '.count( $results->rejected ).' messages rejected' );
+					foreach( $results->rejected as $message ){
+						$mailObject	= $this->logicMessage->getMessageObject( (int) $message->mailGroupMessageId );
+						$this->out( '    Sender: '.$mailObject->getSender()->get() );
+						$this->out( '    Subject: '.$mailObject->getSubject() );
+					}
 				}
 			} catch( Exception $e ){
 				$this->logError( $e->getMessage() );
