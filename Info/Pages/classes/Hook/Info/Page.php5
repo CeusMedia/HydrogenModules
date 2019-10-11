@@ -8,16 +8,12 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 
 		$request	= $env->getRequest();
 		$logic		= $env->getLogic()->get( 'page' );												//  get page logic instance
-		$page		= $logic->getPageFromRequest( TRUE );
 
 		$path		= trim( $request->get( '__path' ), '/' );										//  get requested path
-		$pagePath	= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page path is not empty
-		try{
-			$page	= $logic->getPageFromPath( $pagePath, TRUE );									//  try to get page by called page path
-		}
-		catch( Exception $e ){																		//  no page found for called page path
+		$pagePath	= strlen( $path ) ? $path : 'index';											//  ensure page path is not empty
+		$page		= $logic->getPageFromRequest( TRUE, FALSE );
+		if( !$page )																				//  no page found for called page path
 			return FALSE;																			//  quit hook call and return without result
-		}
 
 		if( (int) $page->status === Model_Page::STATUS_DISABLED ){									//  page is deactivated
 			$reasons		= 0;																	//  reasons to pass disabled state
