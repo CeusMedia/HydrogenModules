@@ -3,8 +3,9 @@
 	<title>UI: Font: FontAwesome</title>
 	<description><![CDATA[Integration of Font Awesome icons.]]></description>
 	<category>User Interface</category>
-	<version>5.1.0-p2</version>
+	<version>5.11.2</version>
 	<log version="5.1.0-p2">Use general module main switch.</log>
+	<log version="5.11.2">Support more 5.x versions in module config.</log>
 	<company site="https://fontawesome.com">fontawesome.com</company>
 	<author twitter="@davegandy">Dave Gandy</author>
 	<license source="http://fontawesome.com/license">Font Awesome Free / Font Awesome Pro</license>
@@ -12,7 +13,7 @@
 		<class>Hook/UI/Font/FontAwesome.php5</class>
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
-	<config protected="yes" type="string" name="version" values="4.7.0,5.1.0">4.7.0</config>
+	<config protected="yes" type="string" name="version" values="4.7.0,5.1.1,5.2.0,5.3.1,5.4.2,5.5.0,5.6.3,5.7.2,5.8.2,5.9.0,5.10.2,5.11.2">4.7.0</config>
 	<config protected="yes" type="boolean" name="v4.cdn">yes</config>
 	<config protected="yes" type="string" name="v5.license" values="free,pro">free</config>
 	<config protected="yes" type="string" name="v5.mode" values="css+font,js+svg">css+font</config>
