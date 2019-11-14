@@ -21,6 +21,7 @@ class Model_Page extends CMF_Hydrogen_Model {
 	const TYPE_CONTENT		= 0;
 	const TYPE_BRANCH		= 1;
 	const TYPE_MODULE		= 2;
+	const TYPE_COMPONENT	= 3;
 
 	const STATUS_DISABLED	= -1;
 	const STATUS_HIDDEN		= 0;
