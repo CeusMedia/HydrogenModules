@@ -1,22 +1,24 @@
 {
-  "name": "ceus-media/hydrogen-modules",
-  "license": [
-    "GPL-3.0-or-later"
-  ],
-  "authors": [
-    {
-      "name": "Christian Würker",
-      "email": "christian.wuerker@ceusmedia.de",
-      "homepage": "https://ceusmedia.de",
-      "role": "Developer"
+    "name": "ceus-media/hydrogen-modules",
+    "description": "Collection of modules for Hydrogen framework.",
+    "type": "library",
+    "license": [
+        "GPL-3.0-or-later"
+    ],
+    "authors": [
+        {
+            "name": "Christian Würker",
+            "email": "christian.wuerker@ceusmedia.de",
+            "homepage": "https://ceusmedia.de",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "cw@ceusmedia.de",
+        "jabber": "cw@ceusmedia.de"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "ceus-media/hydrogen-framework": "^0.8 || dev-master"
     }
-  ],
-  "support": {
-    "email": "office@ceusmedia.de",
-    "jabber": "ceus-media@jabber.org"
-  },
-  "minimum-stability": "dev",
-  "require": {
-    "ceus-media/hydrogen-framework": "^0.8 || dev-master"
-  }
 }
