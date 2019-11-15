@@ -14,6 +14,6 @@ class Hook_JS_Storage extends CMF_Hydrogen_Hook{
 			return;
 		$pathJs		= $env->getConfig()->get( 'path.scripts' );
 		$fileSuffix	= $module->config['load.minified']->value ? '.min' : '';
-		$context->js->addUrl( $pathJs.'js.storage'.fileSuffix.'.js', 3 );
+		$context->js->addUrl( $pathJs.'js.storage'.$fileSuffix.'.js', 3 );
 	}
 }

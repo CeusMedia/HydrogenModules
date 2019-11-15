@@ -39,7 +39,6 @@
 		<supports type="module">Resource_Localization</supports>
 	</relations>
 	<sql on="install" type="mysql" version="final"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>pages`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
   `pageId` int(10) UNSIGNED NOT NULL,
   `parentId` int(10) UNSIGNED DEFAULT '0',
@@ -73,9 +72,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
   KEY `access` (`access`),
   KEY `format` (`format`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-]]></sql>
-	<sql on="update" type="mysql" version="0.8.4"><![CDATA[
-ALTER TABLE `pages` ADD `template` VARCHAR(255) NULL DEFAULT NULL AFTER `icon`;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>pages`;
