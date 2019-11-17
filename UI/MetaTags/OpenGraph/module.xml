@@ -21,10 +21,10 @@
 	<config protected="yes" type="string" name="video.width"></config>
 	<config protected="yes" type="string" name="video.height"></config>
 	<config protected="yes" type="string" name="video.type" values=",application/x-shockwave-flash,video/mpeg,video/mp4,video/ogg,video/quicktime,video/webm,video/x-matroska,video/x-ms-wmv,video/x-flv"></config>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+<!--	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
 	]]></hook>
 	<hook type="resource" resource="App" event="respond"><![CDATA[
-	]]></hook>
+	]]></hook>-->
 	<relations>
 		<needs type="module">UI_MetaTags</needs>
 	</relations>
