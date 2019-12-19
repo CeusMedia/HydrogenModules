@@ -1,14 +1,19 @@
 <?php
 class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 
-	protected $moduleConfig;
 	protected $dumps;
 	protected $prefixPlaceholder	= '<%?prefix%>';
 
 	public function __onInit(){
 		$this->config		= $this->env->getConfig();
-		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
-		$this->path			= $this->moduleConfig->get( 'path' );
+
+		$moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
+		$basePath		= $this->env->uri;
+		if( $this->env->hasModule( 'Resource_Frontend' ) ){
+			$frontend	= $this->env->getLogic()->get( 'Frontend' );
+			$basePath	= $frontend->getPath();
+		}
+		$this->path			= $basePath.$moduleConfig->get( 'path' );
 		$this->commentsFile	= $this->path.'comments.json';
 		if( !file_exists( $this->path ) )
 			\FS_Folder_Editor::createFolder( $this->path );
