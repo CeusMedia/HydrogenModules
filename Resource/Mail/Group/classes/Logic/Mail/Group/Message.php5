@@ -307,13 +307,14 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 		$recipient	= new \CeusMedia\Mail\Address( $member->address, $member->title );
 		$forwardMail->addRecipient( $recipient );
 //		remark( '    Send to: '.$recipient->get() );
-		if( !$dry )
+		if( !$dry ){
 			$this->getTransport( $message->mailGroupId )->send( $forwardMail );
-		$this->setMessageStatus(
-			$message->mailGroupMessageId,
-			Model_Mail_Group_Message::STATUS_FORWARDED,
-			__METHOD__
-		);
+			$this->setMessageStatus(
+				$message->mailGroupMessageId,
+				Model_Mail_Group_Message::STATUS_FORWARDED,
+				__METHOD__
+			);
+		}
 		return $forwardMail;
 	}
 
