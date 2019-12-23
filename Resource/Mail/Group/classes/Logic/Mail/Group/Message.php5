@@ -25,7 +25,8 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 	}
 
 	public function addFromRawMail( $groupId, $rawMail ){
-		$message	= \CeusMedia\Mail\Message\Parser::parse( $rawMail );
+		$parser		= new \CeusMedia\Mail\Message\Parser();
+		$message	= $parser->parse( $rawMail );
 		$headers	= $message->getHeaders();
 		$member		= $this->modelMember->getByIndices( array(
 			'mailGroupId'	=> $groupId,
@@ -287,6 +288,7 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 		$mailObject		= $this->getMessageObject( (int) $message->mailGroupMessageId );
 		$forwardMail	= new \CeusMedia\Mail\Message();
 		foreach( $mailObject->getParts( TRUE ) as $part ){
+			$part->setEncoding( 'base64' );
 			if( strlen( trim( $part->getContent() ) ) )
 				$forwardMail->addPart( $part );
 		}
