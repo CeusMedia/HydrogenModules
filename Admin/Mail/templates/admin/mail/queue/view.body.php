@@ -97,6 +97,15 @@ else{
 
 		$parts	= array();
 
+		//  realize plain text view if available
+		if( $text ){
+			$headingText	= UI_HTML_Tag::create( 'h4', 'Plain Text' );
+			$displayText	= UI_HTML_Tag::create( 'pre', $text, array(
+				'style' => "width: 98%; height: 450px; border: 1px solid gray; overflow: auto; border-radius: 2px;",
+			) );
+			$parts[]	= $headingText.$displayText;
+		}
+
 		if( $html ){																			//  realize HTML view if available
 			$headingHtml	= UI_HTML_Tag::create( 'h4', 'HTML' );
 			$displayHtml	= UI_HTML_Tag::create( 'iframe', '', array(
@@ -109,12 +118,14 @@ else{
 
 		if( $attachments ){																		//  realize attachments view if available
 			foreach( $attachments as $nr => $attachment ){
-				$size	= Alg_UnitFormater::formatBytes( $attachment->fileSize );
-				$size	= UI_HTML_Tag::create( 'small', $size, array( 'class' => 'muted' ) );
-				$label	= $attachment->fileName.' '.$size;
-				$attachments[$nr]	= UI_HTML_Tag::create( 'li', $label );
+				$attachments[$nr]	= UI_HTML_Tag::create( 'tr', array(
+					UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', '#'.( $nr + 1 ) ) ),
+					UI_HTML_Tag::create( 'td', $attachment->fileName ),
+					UI_HTML_Tag::create( 'td', $attachment->mimeType ),
+					UI_HTML_Tag::create( 'td', Alg_UnitFormater::formatBytes( $attachment->fileSize ) ),
+				) );
 			}
-			$displayAttachments	= UI_HTML_Tag::create( 'ul', $attachments );
+			$displayAttachments	= UI_HTML_Tag::create( 'table', array( $attachments ), array( 'class' => 'table table-condensed table-striped' ) );
 			$headingAttachments	= '<h4>Anhänge</h4>';
 			$parts[]	= $headingAttachments.$displayAttachments;
 		}
@@ -130,15 +141,6 @@ else{
 			$displayImages	= UI_HTML_Tag::create( 'ul', $images );
 			$headingImages	= '<h4>Eingebundene Bilder</h4>';
 			$parts[]	= $headingImages.$displayImages;
-		}
-
-		//  realize plain text view if available
-		if( $text ){
-			$headingText	= UI_HTML_Tag::create( 'h4', 'Plain Text' );
-			$displayText	= UI_HTML_Tag::create( 'pre', $text, array(
-				'style' => "width: 98%; height: 450px; border: 1px solid gray; overflow: auto; border-radius: 2px;",
-			) );
-			$parts[]	= $headingText.$displayText;
 		}
 
 		$helperSource	= new View_Helper_Mail_View_Source( $env );

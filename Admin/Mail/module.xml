@@ -3,7 +3,7 @@
 	<title>Admin: Mail</title>
 	<description/>
 	<category>Administration</category>
-	<version>0.8.9</version>
+	<version>0.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
@@ -55,6 +55,7 @@
 	<log version="0.8.7">Extend mail queue filters by subject and date range.</log>
 	<log version="0.8.8">Improve template preview handling.</log>
 	<log version="0.8.9">Add removal of mails in queue.</log>
+	<log version="0.9">Adjust to changes in Resource:Mail and improve mail view.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

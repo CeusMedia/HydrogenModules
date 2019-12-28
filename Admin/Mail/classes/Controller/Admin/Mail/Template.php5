@@ -330,7 +330,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 				case 'text':
 					print( UI_HTML_Tag::create( 'html', array(
 						UI_HTML_Tag::create( 'body', array(
-							UI_HTML_Tag::create( 'xmp', $mail->contents['text'] ),
+							UI_HTML_Tag::create( 'xmp', $mail->getContent( 'textRendered' ) ),
 						) ),
 					) ) );
 /*					$helper	= new View_Helper_Mail_View_Text( $this->env );

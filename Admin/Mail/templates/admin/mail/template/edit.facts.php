@@ -165,31 +165,28 @@ $iframeText		= UI_HTML_Tag::create( 'iframe', '', array(
 
 $panelPreview		= '
 <div class="content-panel">
-	<h3>
-		<span>'.$words['modal-preview']['heading-html'].'</span>
-		<div style="float: right">
-			'.$buttonPreviewHtml.'
-		</div>
-	</h3>
+	<h3>'.$words['modal-preview']['heading'].'</h3>
 	<div class="content-panel-inner">
-		<div class="template-preview half-size">
+		<label>
+			<span>'.$words['modal-preview']['heading-html'].'</span>
+			<div style="float: right">
+				'.$buttonPreviewHtml.'
+			</div>
+		</label>
+		<div class="template-preview template-preview-html half-size">
 			<div class="template-preview-container">
 				<div class="template-preview-iframe-container">
 					'.$iframeHtml.'
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
-<div class="content-panel">
-	<h3>
-		<span>'.$words['modal-preview']['heading-text'].'</span>
-		<div style="float: right">
-			'.$buttonPreviewText.'
-		</div>
-	</h3>
-	<div class="content-panel-inner">
-		<div class="template-preview half-size">
+		<label>
+			<span>'.$words['modal-preview']['heading-text'].'</span>
+			<div style="float: right">
+				'.$buttonPreviewText.'
+			</div>
+		</label>
+		<div class="template-preview template-preview-text half-size">
 			<div class="template-preview-container">
 				<div class="template-preview-iframe-container">
 					'.$iframeText.'
