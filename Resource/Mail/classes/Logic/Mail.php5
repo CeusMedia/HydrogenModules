@@ -13,9 +13,11 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	const LIBRARY_MAIL_V1		= 2;
 	const LIBRARY_MAIL_V2		= 4;
 
-	protected $libraries		= 0;
+	protected $detectedTemplates		= array();
+	protected $libraries			= 0;
 	protected $options;
 	protected $modelQueue;
+	protected $modelTemplate;
 	protected $modelAttachment;
 	protected $pathAttachments;
 
@@ -33,9 +35,10 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 
 		/*  --  INIT QUEUE  --  */
 		$this->modelQueue		= new Model_Mail( $this->env );
+		$this->modelTemplate	= new Model_Mail_Template( $this->env );
 
 		$this->_repair();
-		$this->checkActiveTemplate();
+//		$this->detectTemplateToUse();
 
 		/*  --  INIT ATTACHMENTS  --  */
 		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
@@ -51,28 +54,6 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 			if( !file_exists( $this->pathAttachments.'.htaccess' ) )
 				copy( 'classes/.htaccess', $this->pathAttachments.'.htaccess' );
 		}
-	}
-
-	protected function checkActiveTemplate(){
-		$modelTemplate	= new Model_Mail_Template( $this->env );
-		$template		= $modelTemplate->getByIndex( 'status', Model_Mail_Template::STATUS_ACTIVE );
-		if( $template )
-			return $template;
-		$moduleTemplateId	= $this->env->getConfig()->get( 'module.resource_mail.template' );
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
-			$frontend			= Logic_Frontend::getInstance( $this->env );
-			$moduleTemplateId	= $frontend->getModuleConfigValue( 'Resource_Mail', 'template' );
-		}
-		if( $moduleTemplateId ){
-			$template	= $modelTemplate->get( $moduleTemplateId );
-			if( $template && $template->status == Model_Mail_Template::STATUS_USABLE ){
-				$modelTemplate->edit( $moduleTemplateId, array(
-					'status'	=> Model_Mail_Template::STATUS_ACTIVE
-				) );
-				return $modelTemplate->get( $moduleTemplateId );
-			}
-		}
-		return NULL;
 	}
 
 	public function abortMailsWithTooManyAttempts(){
@@ -233,6 +214,68 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		return Logic_Mail::LIBRARY_UNKNOWN;
 	}
 
+	/**
+	 *	Detects best template to use by looking for:
+	 *	- given template ID, realizing mail settings of mail class of a module
+	 *	- active mail template ID within database
+	 *	- default mail template ID of mail resource module of frontend application (if considered)
+	 *	- default mail template ID of mail resource module
+	 *	The first of these templates being usable will be stored and returned.
+	 *	@access		public
+	 *	@param		integer		$preferredTmplateId		Template ID to override database and module defaults, if usable
+	 *	@param		boolean		$considerFrontend		Flag: consider mail resource module of frontend, if available
+	 *	@param		boolean		$strict					Flag: throw exception if something goes wrong
+	 *	@return		objects		Model entity object of detected mail template
+	 *	@todo		see code doc
+	 */
+	public function detectTemplateToUse( $preferredTmplateId = 0, $considerFrontend = FALSE, $strict = TRUE ){
+		$preferredTmplateId	= (int) $preferredTmplateId;										//  @todo remove after update to PHP 7.x using type hints
+		if( array_key_exists( $preferredTmplateId, $this->detectedTemplates ) )
+			return $this->detectedTemplates[$preferredTmplateId];
+
+		$defaultFromMailModule	= $this->options->get( 'template' );
+		$defaultFromDatabase	= $this->modelTemplate->getByIndex( 'status', Model_Mail_Template::STATUS_ACTIVE, array(), 'mailTemplateId' );
+		$defaultFromFrontend	= 0;
+		if( $considerFrontend && $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			try{
+				$frontend				= $this->env->getLogic()->get( 'Frontend' );
+				$defaultFromFrontend	= $frontend->getModuleConfigValue( 'Resource_Mail', 'template' );
+			}
+			catch( Exception $e ){}
+		}
+
+		//  collect template defaults and overrides
+		$templateIds	= array();
+		array_push( $templateIds, $defaultFromMailModule ? $defaultFromMailModule : 0 );
+		array_push( $templateIds, $defaultFromDatabase ? $defaultFromDatabase : 0 );
+		array_push( $templateIds, $defaultFromFrontend ? $defaultFromFrontend : 0 );
+		array_push( $templateIds, $preferredTmplateId ? $preferredTmplateId : 0 );
+
+		//  @todo active for PHP 7.x
+//		array_push( $templateIds, $defaultFromMailModule ?? 0 );
+//		array_push( $templateIds, $defaultFromDatabase ?? 0 );
+//		array_push( $templateIds, $defaultFromFrontend ?? 0 );
+//		array_push( $templateIds, $preferredTmplateId ?? 0 );
+
+		$templateIds	= array_unique( $templateIds );
+
+		//  get usable templates from database
+		$availableTemplateIds	= $this->modelTemplate->getAll( array(
+			'mailTemplateId'	=> $templateIds,
+			'status'			=> '>='.Model_Mail_Template::STATUS_USABLE,
+		), array(), array(), array( 'mailTemplateId' ) );
+
+		//  match collected and usable templates
+		$templateIds	= array_intersect( $templateIds, $availableTemplateIds );
+		if( !$templateIds )
+			throw new RuntimeException( 'No usable mail template found' );
+
+		//  get best template and store for later
+		$detectedTemplateId	= array_pop( $templateIds );
+		$template			= $this->modelTemplate->get( $detectedTemplateId );
+		$this->detectedTemplates[$preferredTmplateId]	= $template;
+		return $template;
+	}
 
 	/**
 	 *	Send prepared mail later.

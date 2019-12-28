@@ -37,8 +37,6 @@ class View_Helper_Mail_View_HTML{
 			throw new RangeException( 'No source renderer for mail object available' );
 		}
 
-
-
 		$images		= array();
 		$parts		= $this->logicMail->getMailParts( $this->mail );
 		foreach( $parts as $key => $part ){

@@ -1,41 +1,49 @@
 <?php
 class Mail_Example extends Mail_Abstract{
 
-	protected function generate( $data = array() ){
-		$words		= (object) $this->getWords( 'myModule', 'myMailSection' );						//  @todo change this!
+	/**
+	 *	Create mail body and sets subject and body on mail object.
+	 *	By using methods setText and setHtml to assign generated contents,
+	 *	a detected mail template will be applied,
+	 *	the mail object will receive the rendered contents as new mail parts and
+	 *	generated and rendered contents will be stored in mail class as contents.
+	 *	@access		protected
+	 *	@param		array		$data		Map of body template data
+	 *	@return		self
+	 */
+	protected function generate(){
+		$wordsMain		= $this->getWords( 'main' );												//  main words of application
+		$wordsModule	= (object) $this->getWords( 'myModule', 'myMailSection' );					//  @todo change this!
+		$this->setSubject( $wordsModule->subject );
 
-		$prefix		= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
-		$this->mail->setSubject( ( $prefix ? $prefix.' ' : '' ) . $w->subject );
+		$configModule	= $this->env->getConfig()->getAll( 'module.myModule.', TRUE );				//  @todo change this!
+		$templateId		= (int) $configModule->get( 'mailTemplateId' );
 
-		$html		= $this->renderBody( $data );
-		$html		= chunk_split( base64_encode( $html ), 78 );
-		$mailBody	= new Net_Mail_Body( $html, Net_Mail_Body::TYPE_HTML );
-		$mailBody->setContentEncoding( 'base64' );
-		$this->mail->addBody( $mailBody );
+		$this->setHtml( $this->renderBodyHtml( $wordsModule ), $templateId );
+		$this->setText( $this->renderBodyText( $wordsModule ), $templateId );
 
-		return $html;
+		return $this;
 	}
 
-	public function renderBody( $data ){
-		$words		= (object) $this->getWords( 'myModule', 'myMailSection' );						//  @todo change this!
-		$body		= '
+	protected function renderBodyHtml( $wordsModule ){
+		if( $this->view->hasContentFile( 'mails/myModule/myAction.html' ) )
+			$body	= $this->view->loadContentFile( 'mails/myModule/myAction.html', $this->data );
+		else
+			$body	= '
 <div id="layout-mail">
 	<div id="layout-content">
 		This is an example mail.
 	</div>
 </div>';
+		return $body;
+	}
 
-		if( $this->env->getConfig()->get( 'layout.primer' ) )
-			$this->addPrimerStyle( 'layout.css' );
-		if( $this->env->getModules()->has( 'UI_Bootstrap' ) )
-			$this->addThemeStyle( 'bootstrap.min.css' );
-		$this->addThemeStyle( 'layout.css' );
-		$this->addThemeStyle( 'myModule.css' );														//  @todo adjust and enable or remove this!
-
-		$this->page->setBaseHref( $this->env->url );
-		$this->page->addBody( $body );
-		$bodyClass	= 'moduleMyModule';																	//  @todo change this!
-		return $this->page->build( array( 'class' => $bodyClass ) );
+	protected function renderBodyText( $wordsModule ){
+		if( $this->view->hasContentFile( 'mails/myModule/myAction.txt' ) )
+			$body	= $this->view->loadContentFile( 'mails/myModule/myAction.txt', $this->data );
+		else
+			$body	= 'This is an example mail.';
+		return $body;
 	}
 }
 ?>
