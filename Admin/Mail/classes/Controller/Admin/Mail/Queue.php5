@@ -222,7 +222,10 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		try{
 			$mail			= $this->logic->getMail( $mailId );
 			$mail->parts	= $this->logic->getMailParts( $mail );
+			$this->logic->detectMailLibraryFromMail( $mail );
+
 			$this->addData( 'mail', $mail );
+			$this->addData( 'libraries', $this->logic->detectAvailableMailLibraries() );
 			$this->addData( 'page', $this->request->get( 'page' ) );
 		}
 		catch( Exception $e ){

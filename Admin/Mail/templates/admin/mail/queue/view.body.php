@@ -18,16 +18,13 @@ else if( !isset( $mail->parts ) )
 else{
 
 	try{
-		$libraries		= Logic_Mail::detectAvailableMailLibraries();
-		$usedLibrary	= Logic_Mail::detectMailLibraryFromMailObject( $mail->object );
-
 		$html			= '';
 		$text			= '';
 		$attachments	= array();
 		$images			= array();
 
-		if( $libraries & $usedLibrary ){
-			if( $usedLibrary === Logic_Mail::LIBRARY_COMMON ){
+		if( $libraries & $mail->usedLibrary ){
+			if( $mail->usedLibrary === Logic_Mail::LIBRARY_COMMON ){
 				foreach( $mail->parts as $key => $part ){
 	//				$this->env->getMessenger()->noteNotice( 'LIBRARY_COMMON: '.get_class( $part ) );
 	//				$this->env->getMessenger()->noteNotice( 'TYPE: '.$part->getMimeType() );
@@ -52,7 +49,7 @@ else{
 					}
 				}
 			}
-			if( $usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
+			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
 				foreach( $mail->parts as $key => $part ){
 	//				$this->env->getMessenger()->noteNotice( 'LIBRARY_MAIL1: '.get_class( $part ) );
 					if( $part instanceof \CeusMedia\Mail\Part\HTML )
@@ -73,7 +70,7 @@ else{
 						);
 				}
 			}
-			if( $usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
+			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
 				foreach( $mail->parts as $key => $part ){
 					if( $part instanceof \CeusMedia\Mail\Message\Part\HTML )
 						$html	= TRUE;//$part->getContent();
