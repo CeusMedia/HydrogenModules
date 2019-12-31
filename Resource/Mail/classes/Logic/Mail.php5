@@ -21,17 +21,9 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	protected $modelAttachment;
 	protected $pathAttachments;
 
-	static public function canBzip(){
-		return function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' );
-	}
-
-	static public function canGzip(){
-		return function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' );
-	}
-
 	public function __onInit(){
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
-		$this->libraries		= static::detectAvailableMailLibraries();
+		$this->libraries		= $this->detectAvailableMailLibraries();
 
 		/*  --  INIT QUEUE  --  */
 		$this->modelQueue		= new Model_Mail( $this->env );
@@ -78,6 +70,14 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		}
 	}
 
+	public function canBzip(){
+		return function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' );
+	}
+
+	public function canGzip(){
+		return function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' );
+	}
+
 	public function collectConfiguredReceivers( $userIds, $roleIds = array(), $listConfigKeysToCheck = array() ){
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return array();
@@ -115,6 +115,31 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	}
 
 	/**
+	 *	...
+	 *	@access		public
+	 *	@param		string		$string			String to compress
+	 *	@param		integer		$compression	Compression to apply
+	 *	@return		string
+	 */
+	public function compressString( $string, $compression ){
+		switch( $compression ){
+			case Model_Mail::COMPRESSION_BZIP:
+				if( !$this->canBzip() )
+					throw new RuntimeException( 'Missing extension for BZIP compression' );
+				return bzcompress( $string );
+			case Model_Mail::COMPRESSION_GZIP:
+				if( !$this->canGzip() )
+					throw new RuntimeException( 'Missing extension for GZIP compression' );
+				return gzdeflate( $string );
+			case Model_Mail::COMPRESSION_BASE64:
+				return base64_encode( $string );
+			case Model_Mail::COMPRESSION_NONE:
+			default:
+				return $string;
+		}
+	}
+
+	/**
 	 *	Returns number of mails in queue by given conditions.
 	 *	@access		public
 	 *	@param		array		$conditions		Map of column conditions to look for
@@ -141,19 +166,140 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		$env	= $this->env;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$this->frontendPath	= $this->env->getConfig()->get( 'module.resource_frontend.path' );
-			if( $this->frontendPath != './' )
-				$env	= Logic_Frontend::getRemoteEnv( $this->env );
+			if( $this->frontendPath != './' ){
+				$logicFrontend	= $this->env->getLogic->get( 'Frontend' );
+				$envFrontend	= $logicFrontend->getRemoteEnv( $this->env );
+			}
 		}
-		return Alg_Object_Factory::createObject( $className, array( $env, $data ) );
+		return Alg_Object_Factory::createObject( $className, array( $envFrontend, $data ) );
+	}
+
+	/**
+	 *	Tries to compress mail object from serial.
+	 *	This serial will be created from the mail object instance, by default.
+	 *	If disabled, a set serial by before taken decompression is used.
+	 *
+	 *	The created raw output will replace the raw content within given mail object.
+	 *	@access		public
+	 *	@param		object		$mail			Mail object to compress object serial within
+	 *	@param		boolean		$unserialize	Flag: try to realize mail object from decompressed serial (default: yes)
+	 *	@param		boolean		$force			Flag: not used yet, exists for symmetry
+	 *	@throws		RuntimeException			if no object instance is available
+	 *	@throws		RuntimeException			if no object serial is available
+	 */
+	public function compressMailObject( $mail, $serialize = TRUE, $force = FALSE ){
+		if( $serialize ){
+			if( empty( $mail->object->instance ) )
+				throw new RuntimeException( 'Mail object has not been decompressed before, no mail object instance available' );
+			$mail->object->serial	= serialize( $mail->object->instance );
+		}
+		if( empty( $mail->object->serial ) )
+			throw new RuntimeException( 'Mail object has not been serialized or decompressed before, no mail object serial available' );
+		$mail->object->raw	= $this->compressString( $mail->object->serial, $mail->compression );
+	}
+
+	/**
+	 *	Tries to decompress raw mail object serial and recreated the serialized mail class object.
+	 *
+	 *	The recreated mail class object will replace the compressed serial within the given mail object.
+	 *	Since decompression is applied, the identified compression is set to mail object, as well.
+	 *	@access		public
+	 *	@param		object		$mail			Mail object to decompress serial within
+	 *	@param		boolean		$unserialize	Flag: try to realize mail object from decompressed serial (default: yes)
+	 *	@param		boolean		$force			Flag: force detection and decompression (default: no)
+	 *	@throws		RuntimeException			if no compressed raw column content is available
+	 *	@throws		RuntimeException			if unserialization fails
+	 */
+	public function decompressMailObject( $mail, $unserialize = TRUE, $force = FALSE ){
+		if( is_string( $mail->object ) ){
+			$mail->object	= (object) array(
+				'raw'		=> $mail->object,
+				'serial'	=> NULL,
+				'instance'	=> NULL,
+			);
+		}
+		if( empty( $mail->object->raw ) )
+			throw new RuntimeException( 'No raw (compressed) mail object serial available' );
+		if( empty( $mail->object->serial ) || $force ){
+			$this->detectUsedMailCompression( $mail, $force );
+			$mail->object->serial	= $this->decompressString( $mail->object->raw, $mail->compression );
+		}
+		$noInstanceYet	= empty( $mail->object->instance );
+		if( ( $noInstanceYet && $unserialize ) || ( $force && $unserialize ) ){
+			$creation		= unserialize( $mail->object->serial );
+			if( !$creation )
+				throw new RuntimeException( 'Unserialization failed' );
+			$mail->object->instance	= $creation;
+		}
+	}
+
+
+	/**
+	 *	Tries to decompress the raw column of mail database item.
+	 *	In force mode, a beforehand made copy of raw database column will be used.
+	 *	@access		public
+	 *	@param		object		$mail		...
+	 *	@param		boolean		$force		Flag: force detection and decompression (default: no)
+	 *	@return		boolean
+	 *	@throws		RuntimeException		if no compressed raw column content is available
+	 */
+	public function decompressMailRaw( $mail, $force = FALSE ){
+		if( is_object( $mail->raw ) && !$force )
+			return TRUE;
+		if( is_string( $mail->raw ) || $force ){
+			if( $force ){
+				if( !isset( $mail->raw->raw ) )
+					throw new RuntimeException( 'Re-decompression failed' );
+				$mail->raw	= $mail->raw->raw;
+			}
+		}
+		$this->detectUsedMailCompression( $mail, $force );
+		$object	= (object) array(
+			'raw'		=> $mail->raw,
+			'serial'	=> $this->decompressString( $mail->raw, $mail->compression ),
+			'instance'	=> NULL,
+		);
+		$mail->raw		= $object;
+		return TRUE;
 	}
 
 	/**
 	 *	...
-	 *	@static
+	 *	@access		public
+	 *	@param		string		$string			String to compress
+	 *	@param		integer		$compression	Compression to apply
+	 *	@return		string
+	 */
+	public function decompressString( $string, $compression ){
+		switch( (int) $compression ){
+			case Model_Mail::COMPRESSION_BZIP:
+				if( !$this->canBzip() )
+					throw new RuntimeException( 'Missing extension for BZIP compression' );
+				$result	= bzdecompress( $string );
+				if( is_int( $result ) )
+					throw new RuntimeException( 'Decompression failed' );
+				return $result;
+			case Model_Mail::COMPRESSION_GZIP:
+				if( !$this->canGzip() )
+					throw new RuntimeException( 'Missing extension for BZIP compression' );
+				$result	= gzinflate( $string );
+				if( is_int( $result ) )
+					throw new RuntimeException( 'Decompression failed' );
+				return $result;
+			case Model_Mail::COMPRESSION_BASE64:
+				return base64_decode( $string );
+			case Model_Mail::COMPRESSION_NONE:
+			default:
+				return $string;
+		}
+	}
+
+	/**
+	 *	...
 	 *	@access		public
 	 *	@return		integer			Flags of available mail library contants
 	 */
-	static public function detectAvailableMailLibraries(){
+	public function detectAvailableMailLibraries(){
 		$libraries	= static::LIBRARY_UNKNOWN;
 		if( class_exists( 'Net_Mail_Body' ) )
 			$libraries	|= static::LIBRARY_COMMON;
@@ -172,8 +318,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
 	 */
 	public function detectMailLibraryFromMailId( $mailId ){
-		$mail	= $this->getMail( $mailId );
-		return $this->detectMailLibraryFromMail( $mail );
+		return $this->detectMailLibraryFromMail( $this->getMail( $mailId ) );
 	}
 
 	/**
@@ -186,20 +331,22 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	public function detectMailLibraryFromMail( $mail ){
 		if( !is_object( $mail ) )
 			throw new InvalidArgumentException( 'No mail object given' );
-		if( !isset( $mail->object ) || empty( $mail->object ) || !is_object( $mail->object ) )
-			throw new InvalidArgumentException( 'Mail object has not been unpacked yet' );
-		return static::detectMailLibraryFromMailObject( $mail->object );
+		if( empty( $mail->usedLibrary ) || $force ){
+			if( is_string( $mail->object ) )
+				$this->decompressMailObject( $mail );
+			$mail->usedLibrary	= $this->detectMailLibraryFromMailObjectInstance( $mail->object->instance );
+		}
+		return $mail->usedLibrary;
 	}
 
 	/**
 	 *	Tries to detect mail library used for unpacked mail object.
 	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
-	 *	@static
 	 *	@access		public
 	 *	@param		object		$mail		Mail data object from database to get used library for
 	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
 	 */
-	static public function detectMailLibraryFromMailObject( $mailObject ){
+	public function detectMailLibraryFromMailObjectInstance( $mailObject ){
 		if( is_a( $mailObject, 'Mail_Abstract' ) ){
 			if( is_a( $mailObject->mail, 'Net_Mail' ) )
 				return Logic_Mail::LIBRARY_COMMON;
@@ -278,6 +425,30 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	}
 
 	/**
+	 *	Detected compression used when mail object was stored.
+	 *	@access		public
+	 *	@param		object		$mail		Mail item from database
+	 *	@param		boolean		$force		Flag: redetect (default: no)
+	 *	@return		integer		Detected compression as of Model_Mail::COMPRESSION_*
+	 */
+	public function detectUsedMailCompression( $mail, $force = FALSE ){
+		if( !$mail->compression || $force ){
+			if( is_string( $mail->object ) )
+				$source	= $mail->object;
+			else if( is_object( $mail->object ) && !empty( $mail->object->raw ) )
+				$source	= $mail->object->raw;
+			else
+				throw new RuntimeException( 'Detection failed since no raw source is available' );
+			$mail->compression	= Model_Mail::COMPRESSION_BASE64;
+			if( substr( $source, 0, 2 ) == "BZ" )													//  BZIP compression detected
+				$mail->compression	= Model_Mail::COMPRESSION_BZIP;
+			else if( substr( $source, 0, 2 ) == "GZ" )												//  GZIP compression detected
+				$mail->compression	=  Model_Mail::COMPRESSION_GZIP;
+		}
+		return $mail->compression;
+	}
+
+	/**
 	 *	Send prepared mail later.
 	 *	@access		public
 	 *	@param		Mail_Abstract	$mail			Mail instance to be queued
@@ -298,15 +469,38 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		if( empty( $receiver->email ) )
 			throw new InvalidArgumentException( 'Receiver object is missing "email"' );
 
-		$compression	= $this->getRecommendedCompression();
-		$serial			= $this->compressMailClassObject( $mail, $compression );
-
 		if( $mail->mail->getSender() instanceof \CeusMedia\Mail\Address )
 			$senderAddress	= $mail->mail->getSender()->getAddress();
 		else if( $mail->mail->getSender() instanceof \CeusMedia\Mail\Participant )
 			$senderAddress	= $mail->mail->getSender()->getAddress();
 		else
 			$senderAddress	= $mail->mail->getSender()->address;
+
+		$incompleteMailDataObject	= (object) array(
+			'compression'	=> $this->getRecommendedCompression(),
+			'object'		=> (object) array( 'instance' => $mail ),
+			'raw'			=> NULL,
+		);
+
+		$this->compressMailObject( $incompleteMailDataObject, TRUE, TRUE );
+
+		$raw			= '';
+		$libraryObject	= $incompleteMailDataObject->object->instance->mail;
+		if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
+			$raw	= \CeusMedia\Mail\Message\Renderer::render( $libraryObject );
+		}
+		else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
+			$raw	= \CeusMedia\Mail\Renderer::render( $libraryObject );
+		}
+		else if( $this->libraries & Logic_Mail::LIBRARY_COMMON ){
+			$rawLines	= array();
+			foreach( $libraryObject->getHeaders()->getFields() as $header )
+				$rawLines[]	= $header->toString();
+			$rawLines[]	= '';
+			$rawLines[]	= $libraryObject->getBody();
+			$raw		= implode( Net_Mail::$delimiter, $rawLines );
+		}
+		$incompleteMailDataObject->raw	= $this->logicMail->compressString( $raw, $incompleteMailDataObject->compression );
 
 		$data		= array(
 			'templateId'		=> $mail->templateId,
@@ -318,8 +512,9 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 			'receiverName'		=> isset( $receiver->username ) ? $receiver->username : NULL,
 			'subject'			=> $mail->getSubject(),
 			'mailClass'			=> get_class( $mail ),
-			'compression'		=> $compression,
-			'object'			=> $serial,
+			'compression'		=> $incompleteMailDataObject->compression,
+			'object'			=> $incompleteMailDataObject->object->raw,
+			'raw'				=> $incompleteMailDataObject->raw,
 			'enqueuedAt'		=> time(),
 			'attemptedAt'		=> 0,
 			'sentAt'			=> 0,
@@ -369,8 +564,10 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		$mail	= $this->modelQueue->get( $mailId );
 		if( !$mail )
 			throw new OutOfRangeException( 'Invalid mail ID: '.$mailId );
-		if( !$this->decompressMailObject( $mail ) )
-			throw new RuntimeException( 'Deserialization of mail failed' );
+		if( !static::decompressMailObject( $mail ) )
+			throw new RuntimeException( 'Deserialization of mail object failed' );
+		if( !static::decompressMailRaw( $mail ) )
+			throw new RuntimeException( 'Decompression of raw mail failed' );
 		return $mail;
 	}
 
@@ -386,11 +583,12 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		$complete	= TRUE;
 		$mail		= $this->getMailFromObjectOrId( $mail );
 		if( !is_object( $mail->object ) )
+			$this->decompressMailObject( $mail );
 			throw new Exception( 'No mail object available' );
-		if( !is_a( $mail->object, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
+		if( !is_a( $mail->object->instance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
 			throw new Exception( 'Mail object is not extending Mail_Abstract' );
 		$list		= array();
-		foreach( $mail->object->mail->getHeaders()->getFields() as $headerField )
+		foreach( $mail->object->instance->mail->getHeaders()->getFields() as $headerField )
 			$list[$headerField->getName()]	= $headerField->getValue();
 		return $list;
 	}
@@ -408,17 +606,17 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	public function getMailParts( $mail ){
 		$mails	= $this->getMailFromObjectOrId( $mail );
 		if( !is_object( $mail->object ) )
-			throw new Exception( 'No mail object available' );
-		if( !is_a( $mail->object, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
+			$this->decompressMailObject( $mail );
+		if( !is_a( $mail->object->instance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
 			throw new Exception( 'Mail object is not extending Mail_Abstract' );
-		if( $mail->object->mail instanceof \CeusMedia\Mail\Message )							//  modern mail message with parsed body parts
-			return $mail->object->mail->getParts( TRUE );
-		else if( $mail->object->mail instanceof Net_Mail ){										//  outdated mail message using cmClasses implementation
-			if( method_exists( $mail->object->mail, 'getParts' ) )
-				return $mail->object->mail->getParts();
+		if( $mail->object->instance->mail instanceof \CeusMedia\Mail\Message )							//  modern mail message with parsed body parts
+			return $mail->object->instance->mail->getParts( TRUE );
+		else if( $mail->object->instance->mail instanceof Net_Mail ){										//  outdated mail message using cmClasses implementation
+			if( method_exists( $mail->object->instance->mail, 'getParts' ) )
+				return $mail->object->instance->mail->getParts();
 			if( !class_exists( 'CMM_Mail_Parser' ) )											//  Net_Mail needs Parser from cmModules
 				throw new RuntimeException( 'Mail parser "CMM_Mail_Parser" is not available.' );
-			return CMM_Mail_Parser::parseBody( $mail->object->mail->getBody() );
+			return CMM_Mail_Parser::parseBody( $mail->object->instance->mail->getBody() );
 		}
 		throw new RuntimeException( 'No mail parser available.' );							//  ... which is not available
 	}
@@ -505,10 +703,11 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 */
 	public function sendQueuedMail( $mailId, $forceResent = FALSE ){
 		$mail		= $this->getMail( $mailId );
+		$this->decompressMailObject( $mail );
 		if( (int) $mail->status > Model_Mail::STATUS_SENDING && !$forceResent )
 			throw new Exception( 'Mail already has been sent' );
-		$mail->object->setEnv( $this->env );
-		$mail->object->initTransport();
+		$mail->object->instance->setEnv( $this->env );
+		$mail->object->instance->initTransport();
 		$this->modelQueue->edit( $mailId, array(
 			'status'		=> Model_Mail::STATUS_SENDING,
 			'attempts'		=> $mail->attempts + 1,
@@ -516,14 +715,14 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		) );
 		try{
 			if( !empty( $mail->receiverId ) ){
-				$mail->object->sendToUser( $mail->receiverId );
+				$mail->object->instance->sendToUser( $mail->receiverId );
 			}
 			else{
 				$receiver	= (object) array(
 					'email'		=> $mail->receiverAddress,
 					'username'	=> $mail->receiverName,
 				);
-				$mail->object->sendTo( $receiver );
+				$mail->object->instance->sendTo( $receiver );
 			}
 			$this->modelQueue->edit( $mailId, array(
 				'status'		=> Model_Mail::STATUS_SENT,
@@ -581,68 +780,14 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		$this->options->set( 'queue.enabled', (bool) $toggle );
 	}
 
+	//  --  STATIC PUBLIC  --  //
+
 	//  --  PROTECTED  --  //
-
 	/**
-	 *	Returns the compressed serial of a mail class instance.
-	 *	@access		protected
-	 *	@param		Mail_Abstract	$mail			Mail class instance to serialize and compress
-	 *	@param		integer			$compression	Compression (or encoding) to apply, one of Model_Mail::COMPRESSION_*
-	 *	@return		string
+	 *	@todo		check if needed or remove
 	 */
-	protected function compressMailClassObject( Mail_Abstract $mailClassObject, $compression ){
-		$serial		= serialize( $mailClassObject );
-		if( $compression === Model_Mail::COMPRESSION_BZIP )
-			return bzcompress( $serial );
-		if( $compression === Model_Mail::COMPRESSION_GZIP )
-			return gzdeflate( $serial );
-		if( $compression === Model_Mail::COMPRESSION_NONE )
-			return base64_encode( $serial );
-		return $serial;
-	}
-
-	/**
-	 *	Tries to decompress raw mail object serial and recreated the serialized mail class object.
-	 *	The recreated mail class object will replace the compressed serial with the given mail object.
-	 *  Since decompression is applied, the identified compression is set to mail object, as well.
-	 *	Returns FALSE of decompression or deserialization failed.
-	 *	@access		protected
-	 *	@param		object			$mail		Mail object to decompress serial within
-	 *	@return		boolean
-	 */
-	protected function decompressMailObject( $mail ){
-		if( !is_object( $mail->object ) ){
-			$this->detectUsedMailCompression( $mail );
-			if( $mail->compression == Model_Mail::COMPRESSION_BZIP ){
-				if( !static::canBzip() )
-					throw new RuntimeException( 'Missing extension for BZIP compression' );
-				$mail->serial	= bzdecompress( $mail->object );
-			}
-			else if( $mail->compression == Model_Mail::COMPRESSION_GZIP ){
-				if( !static::canGzip() )
-					throw new RuntimeException( 'Missing extension for BZIP compression' );
-				$mail->serial	= gzinflate( $mail->object );
-			}
-			else if( $mail->compression == Model_Mail::COMPRESSION_BASE64 ){
-				$mail->serial	= base64_decode( $mail->object );
-			}
-			$creation	= unserialize( $mail->serial );
-			if( $creation === FALSE )
-				return FALSE;
-			$mail->object	= $creation;
-		}
-		return TRUE;
-	}
-
-	protected function detectUsedMailCompression( $mail ){
-		if( !$mail->compression && !is_string( $mail->object ) ){
-			$mail->compression	= Model_Mail::COMPRESSION_BASE64;
-			if( substr( $mail->object, 0, 2 ) == "BZ" )												//  BZIP compression detected
-				$mail->compression	= Model_Mail::COMPRESSION_BZIP;
-			else if( substr( $mail->object, 0, 2 ) == "GZ" )										//  GZIP compression detected
-				$mail->compression	=  Model_Mail::COMPRESSION_GZIP;
-		}
-		return $mail->compression;
+	public function decompressObjectInMail( $mail, $unserialize = TRUE, $force = FALSE ){
+		return $this->decompressMailObject( $mail, $unserialize, $force );
 	}
 
 	protected function getMailFromObjectOrId( $mailObjectOrId ){
@@ -654,9 +799,9 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	}
 
 	protected function getRecommendedCompression(){
-		if( static::canBzip() )
+		if( $this->canBzip() )
 			return Model_Mail::COMPRESSION_BZIP;
-		if( static::canGzip() )
+		if( $this->canGzip() )
 			return Model_Mail::COMPRESSION_GZIP;
 		return Model_Mail::COMPRESSION_BASE64;
 	}
@@ -711,13 +856,13 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		$mails		= $this->modelQueue->getAll( $conditions, $orders, $limits );
 		foreach( $mails as $mail ){
 			$mail	= $this->getMail( $mail->mailId );
-			remark( "repair: ".$mail->mailId );
+			$this->decompressMailObject( $mail );
 			if( empty( $mail->senderAddress ) ){
-				if( method_exists( $mail->object->mail, 'getSender' ) ){
-					$address 	= $mail->object->mail->getSender();
-					if( $mail->object->mail->getSender() instanceof \CeusMedia\Mail\Address )				//  use library CeusMedia/Mail version 2
+				if( method_exists( $mail->object->instance->mail, 'getSender' ) ){
+					$address 	= $mail->object->instance->mail->getSender();
+					if( $mail->object->instance->mail->getSender() instanceof \CeusMedia\Mail\Address )				//  use library CeusMedia/Mail version 2
 						$address	= $address->getAddress();
-					else if( $mail->object->mail->getSender() instanceof \CeusMedia\Mail\Participant )		//  use library CeusMedia/Mail version 1
+					else if( $mail->object->instance->mail->getSender() instanceof \CeusMedia\Mail\Participant )		//  use library CeusMedia/Mail version 1
 						$address	= $address->getAddress();
 					$this->modelQueue->edit( $mail->mailId, array(
 						'senderAddress'	=> $address,

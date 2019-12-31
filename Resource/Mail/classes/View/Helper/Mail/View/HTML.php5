@@ -7,21 +7,21 @@ class View_Helper_Mail_View_HTML{
 
 	public function __construct( $env ){
 		$this->env			= $env;
-		$this->logicMail	= Logic_Mail::getInstance( $this->env );
+		$this->logicMail	= $env->getLogic()->get( 'Mail' );
 	}
 
 	public function render(){
 		if( !$this->mail )
 			throw new RuntimeException( 'No mail object or ID set' );
 
-		$libraries		= Logic_Mail::detectAvailableMailLibraries();
-		$usedLibrary	= Logic_Mail::detectMailLibraryFromMailObject( $this->mail->object );
+		$libraries		= $this->logicMail->detectAvailableMailLibraries();
+		$usedLibrary	= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this->mail->object->instance );
 
 		if( !( $libraries & $usedLibrary ) ){
 			$libraryKey	= Alg_Object_Constant::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
 			return '- used mail library ('.$libraryKey.') is not supported anymore or yet -';
 		}
-		$mailObject	= $this->mail->object;
+		$mailObject	= $this->mail->object->instance;
 
 		$code	= '';
 		if( $usedLibrary == Logic_Mail::LIBRARY_COMMON ){										//  mail uses library CeusMedia/Common

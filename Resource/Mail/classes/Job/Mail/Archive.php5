@@ -14,7 +14,8 @@ class Job_Mail_Archive extends Job_Abstract{
 
 	public function __onInit(){
 		$this->model		= new Model_Mail( $this->env );
-		$this->libraries	= Logic_Mail::detectAvailableMailLibraries();
+		$this->logicMail	= $this->env->getLogic()->get( 'Mail' );
+		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$this->_loadMailClasses();
 	}
 
@@ -82,46 +83,87 @@ class Job_Mail_Archive extends Job_Abstract{
 //		$this->showErrors( 'removeOldMails', $fails );
 	}
 
+	/**
+	 *	Applies several migration processes.
+	 *	Supports dry mode.
+	 *
+	 *	Parameters:
+	 *		--limit=NUMBER
+	 *			- maximum number of mails to work on
+	 *			- optional, default: 1000
+	 *		--offset=NUMBER
+	 *			- offset if using limit
+	 *			- optional, default: 0
+	 *
+	 *	@access		public
+	 *	@return		void
+	 */
 	public function migrate(){
 		$conditions	= array( 'status' > $this->statusesHandledMails );
 		$orders		= array( 'mailId' => 'ASC' );
-		$mails		= $this->model->getAll( $conditions, $orders, array(), array( 'mailId' ) );
+		$limits		= array(
+			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
+			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
+		);
 		$count		= 0;
 		$fails		= array();
-		foreach( $mails as $mailId ){
+		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
+		foreach( $mailIds as $mailId ){
 			$mail		= $this->model->get( $mailId );
 			$mailClone	= clone( $mail );
 			try{
-				$this->_detectMailCompression( $mailClone );
+				$this->logicMail->detectUsedMailCompression( $mailClone );
 				$this->_detectMailClass( $mailClone );
 				$this->_migrateMailClass( $mailClone );
 				$this->_migrateMailObject( $mailClone );
+				$this->_saveRaw( $mailClone );
+
+				if( is_object( $mailClone->object ) )
+					$mailClone->object	= $mailClone->object->raw;
+				if( is_object( $mailClone->raw ) )
+					$mailClone->raw	= $mailClone->raw->raw;
 
 				$changes	= array();
 				foreach( $mailClone as $key => $value )
-					if( $mail->$key != $value )
-						$changes[$key]	= $value;
-
+					if( in_array( $key, $this->model->getColumns() ) )
+						if( ( !isset( $mail->$key ) && $value ) || trim( $mail->$key ) != trim( $value ) )
+							$changes[$key]	= (object) array(
+								'old'	=> $mail->$key,
+								'new'	=> $value,
+							);
 				if( $changes ){
+					$changeList	= array();
+					$changeMap	= array();
+					foreach( $changes as $key => $values ){
+						$changeMap[$key]	= $values->new;
+						$changeList[]		= vsprintf( '%s: %s => %s', array(
+							$key,
+							substr( $values->old, 0, 20 ),
+							substr( $values->new, 0, 20 )
+						) );
+					}
+					$this->logMigration( $mail, 'Changed: '.implode( ', ', $changeList ) );
 					if( !$this->dryMode )
-						$this->model->edit( $mailId, $changes, FALSE );
-					$this->showProgress( ++$count, count( $mails ), '+' );
+						$this->model->edit( $mailId, $changeMap, FALSE );
+					$this->showProgress( ++$count, count( $mailIds ), '+' );
 				}
 				else{
-					$this->showProgress( ++$count, count( $mails ) );
+					$this->showProgress( ++$count, count( $mailIds ) );
 				}
 			}
 			catch( Exception $e ){
-				$fails[$mailId]	= $e->getMessage();
-				$this->showProgress( ++$count, count( $mails ), 'E' );
+				$fails[$mailId]	= $e->getMessage().PHP_EOL.$e->getTraceAsString();
+				$this->showProgress( ++$count, count( $mailIds ), 'E' );
 			}
 		}
-		if( $mails )
-			$this->out();
+		$this->out();
 		$this->showErrors( 'migrate', $fails );
 		$this->_migrateMailTemplates();
 	}
 
+	/**
+	 *	@todo	support CeusMedia/Mail@v2 (only v1 supported now)
+	 */
 	public function removeAttachments(){
 		$conditions	= array( 'status' => $this->statusesHandledMails );
 		$orders		= array( 'mailId' => 'DESC' );
@@ -133,34 +175,34 @@ class Job_Mail_Archive extends Job_Abstract{
 			'sizeAfter'		=> 0,
 		);
 
-		$mails	= $this->model->getAllByIndices( $conditions, $orders, array(), array( 'mailId' ) );
-		foreach( $mails as $mailId ){
+		$mailIds	= $this->model->getAllByIndices( $conditions, $orders, array(), array( 'mailId' ) );
+		foreach( $mailIds as $mailId ){
 			try{
 				$mail			= $this->model->get( $mailId );
-				$sizeBefore		= strlen( $mail->object );
-				$mail->object	= $this->_unpackMailObject( $mail );
-				if( method_exists( $mail->object->mail, 'getParts' ) ){
-					$attachments		= $mail->object->mail->getAttachments( TRUE );
+				$this->logicMail->decompressMailObject( $mail );
+				$sizeBefore		= strlen( $mail->object->raw );
+				if( method_exists( $mail->object->instance->mail, 'getParts' ) ){
+					$attachments		= $mail->object->instance->mail->getAttachments( TRUE );
 					foreach( $attachments as $nr => $part ){
 //						$this->out( "Part: ".get_class( $part ) );
 						if( $part instanceof \CeusMedia\Mail\Part\Attachment ){
-							$mail->object->mail->removePart( $nr );
-							$object	= $this->_packMailObject( $mail, $mail->object );
-							$this->model->edit( $mail->mailId, array( 'object' => $object), FALSE );
+							$mail->object->instance->mail->removePart( $nr );
+							$this->logicMail->compressMailObject( $mail );
+							$this->model->edit( $mail->mailId, array( 'object' => $mail->object->raw ), FALSE );
 							$results->attachments++;
 							$results->sizeBefore	+= $sizeBefore;
-							$results->sizeAfter		+= strlen( $object );
+							$results->sizeAfter		+= strlen( $mail->object->raw );
 						}
 					}
 				}
-				$this->showProgress( ++$results->mails, count( $mails ) );
+				$this->showProgress( ++$results->mails, count( $mailIds ) );
 			}
 			catch( Exception $e ){
-				$this->showProgress( ++$results->mails, count( $mails ), 'E' );
+				$this->showProgress( ++$results->mails, count( $mailIds ), 'E' );
 				$fails[$mail->mailId]	= $e->getMessage();
 			}
 		}
-		if( $mails )
+		if( $mailIds )
 			$this->out();
 		if( $results->attachments ){
 			$message	= 'Detached %s attachments, deflated mails from %s to %s.';
@@ -175,30 +217,23 @@ class Job_Mail_Archive extends Job_Abstract{
 		$this->showErrors( 'removeAttachments', $fails );
 	}
 
+	//  --  PROTECTED  --  //
+	protected function logMigration( $mail, $message ){
+		$fileName	= 'job.resource_mail.archive.migration.log';
+		$filePath	= $this->env->getConfig()->get( 'path.logs' ).$fileName;
+		$message	= date( 'Y-m-d H:i:s' ).' #'.$mail->mailId.' '.$message;
+		error_log( $message.PHP_EOL, 3, $filePath );
+	}
+
 	//  --  PRIVATE  --  //
 	private function _detectMailClass( $mail ){
-		$serial			= $this->_unpackMailObject( $mail, FALSE );
+		$this->logicMail->decompressMailObject( $mail, FALSE );
+		$serial			= $mail->object->serial;
 		$serialStart	= substr( $serial, 0, 80 );
 		$mailClass		= preg_replace( '/^O:[0-9]+:"([^"]+)":.+$/U', '\\1', $serialStart );
 		if( $mail->mailClass == $mailClass )
 			return FALSE;
 		$mail->mailClass = $mailClass;
-		return TRUE;
-	}
-
-	private function _detectMailCompression( $mail ){
-		$compression	= Model_Mail::COMPRESSION_UNKNOWN;
-		$finfo			= new finfo( FILEINFO_MIME );
-		$mimeType		= $finfo->buffer( $mail->object );
-		if( preg_match( '@application/x-bzip2@', $mimeType ) )
-			$compression	= Model_Mail::COMPRESSION_BZIP;
-		else if( preg_match( '@application/x-gzip@', $mimeType ) )
-			$compression	= Model_Mail::COMPRESSION_GZIP;
-		else if( preg_match( '@^[A-Za-z0-9+/=]+$@', $mimeType ) )
-			$compression	= Model_Mail::COMPRESSION_BASE64;
-		if( $mail->compression == $compression )
-			return FALSE;
-		$mail->compression	= $compression;
 		return TRUE;
 	}
 
@@ -228,29 +263,51 @@ class Job_Mail_Archive extends Job_Abstract{
 		if( !array_key_exists( $mail->mailClass, $classMigrations ) )
 			return FALSE;
 
-		$serial		= $this->_unpackMailObject( $mail, FALSE );
+		$this->logicMail->decompressMailObject( $mail, FALSE, FALSE );
 		$newerClass	= $classMigrations[$mail->mailClass];
 		$find		= 'O:'.strlen( $mail->mailClass ).':"'.$mail->mailClass.'":';
 		$replace	= 'O:'.strlen( $newerClass ).':"'.$newerClass.'":';
-		$serial		= str_replace( $find, $replace, $serial );
-		$object		=
-		$mail->object		= $this->_packMailObject( $mail, $serial );
+		$serial		= str_replace( $find, $replace, $mail->object->serial );
+		$this->logicMail->compressMailObject( $mail );
 		$mail->mailClass	= $newerClass;
+		$this->logMigration( $mail, 'Migrated mail class names' );
 		return TRUE;
 	}
 
 	private function _migrateMailObject( $mail ){
-		$object		= $this->_unpackMailObject( $mail );
-		$usedLibrary	 = Logic_Mail::detectMailLibraryFromMailObject( $object );
+		$this->logicMail->decompressMailObject( $mail );
+		$usedLibrary	= $this->logicMail->detectMailLibraryFromMail( $mail );
 
-		if( $usedLibrary === Logic_Mail::LIBRARY_COMMON ){
+		//  currently using CeusMedia/Mail version 2
+		//  nothing to do here, placed for later
+		if( $usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
+			return FALSE;
+		}
+
+		//  currently using CeusMedia/Mail version 1
+		else if( $usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
+			if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
+				if( in_array( 'raw', $this->model->getColumns() ) ){
+					if( !empty( $mail->raw ) && is_string( $mail->raw ) && strlen( $mail->raw ) ){
+						$raw	= $this->logicMail->decompressString( $mail->raw, $mail->compression );
+						$parser	= new \CeusMedia\Mail\Message\Parser();
+						$mail->object->instance	= $parser->parse( $raw );
+						$this->logicMail->compressMailObject( $mail, TRUE, TRUE );
+						$this->logMigration( $mail, 'Migrated mail object from CeusMedia/Mail v1 to v2' );
+						return TRUE;
+					}
+				}
+			}
+		}
+		//  currently using Net_Mail from CeusMedia/Common
+		else if( $usedLibrary === Logic_Mail::LIBRARY_COMMON ){
 			if( $this->libraries & ( Logic_Mail::LIBRARY_MAIL_V1 | Logic_Mail::LIBRARY_MAIL_V2 ) ){	// @todo finish support for v2, see todo below
+				$oldInstance	= $mail->object->instance;
 				$newInstance	= new \CeusMedia\Mail\Message();
-
-				$newInstance->setSubject( $object->mail->getSubject() );
+				$newInstance->setSubject( $oldInstance->mail->getSubject() );
 				$sender	= $mail->senderAddress;
-				if( $object->mail->getSender() )
-					$sender	= $object->mail->getSender();
+				if( $oldInstance->mail->getSender() )
+					$sender	= $oldInstance->mail->getSender();
 				$newInstance->setSender( $sender );
 
 				if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
@@ -259,9 +316,10 @@ class Job_Mail_Archive extends Job_Abstract{
 					if( $mail->receiverName )
 						$receiver->setName( $mail->receiverName );
 					$newInstance->addRecipient( $receiver );
-					$parts	= \CeusMedia\Mail\Parser::parseBody( $object->mail->getBody() );
+					$parts	= \CeusMedia\Mail\Parser::parseBody( $oldInstance->mail->getBody() );
 					foreach( $parts as $part )
 						$newInstance->addPart( $part );
+					$this->logMigration( $mail, 'Migrated mail object from CeusMedia/Common::Net_Mail to CeusMedia/Mail v1' );
 				}
 				if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
 					$receiver	= new \CeusMedia\Mail\Address();
@@ -271,14 +329,12 @@ class Job_Mail_Archive extends Job_Abstract{
 					$newInstance->addRecipient( $receiver );
 // @todo find a way to get Net_Mail::parts and import in new CeusMedia\Mail\Message instance
 //					$newInstance->...
+					$this->logMigration( $mail, 'Migrated mail object from CeusMedia/Common::Net_Mail to CeusMedia/Mail v2' );
 				}
-				$object->mail	= $newInstance;
-				$mail->object	= $this->_packMailObject( $mail, $object );
+				$mail->object->instance->mail	= $newInstance;
+				$this->logicMail->compressMailObject( $mail, TRUE, TRUE );
 				return TRUE;
 			}
-		}
-		else if( get_class( $object->mail ) === 'CeusMedia\Mail\Message' ){
-
 		}
 		return FALSE;
 	}
@@ -305,44 +361,32 @@ class Job_Mail_Archive extends Job_Abstract{
 		}
 	}
 
-	private function _packMailObject( $mail, $objectOrSerial ){
-		$serial	= $objectOrSerial;
-		if( is_object( $objectOrSerial ) )
-			$serial	= serialize( $objectOrSerial );
-
-		$object	= $serial;
-		if( $mail->compression == Model_Mail::COMPRESSION_BZIP ){
-			if( !Logic_Mail::canBzip() )
-				throw new RuntimeException( 'Missing extension for BZIP compression' );
-			$object	= bzcompress( $serial );
+	private function _saveRaw( $mail, $force = FALSE ){
+		if( !in_array( 'raw', $this->model->getColumns() ) )
+			return;
+		if( !empty( $mail->raw ) && !$force )
+			return;
+		$this->logicMail->decompressMailObject( $mail );
+		$libraryObject	= $mail->object->instance->mail;
+		if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
+			$raw = \CeusMedia\Mail\Message\Renderer::render( $libraryObject );
+			$mail->raw	= $this->logicMail->compressString( $raw, $mail->compression );
+			$this->logMigration( $mail, 'Saved raw using CeusMedia/Mail v2' );
 		}
-		else if( $mail->compression == Model_Mail::COMPRESSION_GZIP ){
-			if( !Logic_Mail::canGzip() )
-				throw new RuntimeException( 'Missing extension for BZIP compression' );
-			$object	= gzdeflate( $serial );
+		else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
+			$raw = \CeusMedia\Mail\Renderer::render( $libraryObject );
+			$mail->raw	= $this->logicMail->compressString( $raw, $mail->compression );
+			$this->logMigration( $mail, 'Saved raw using CeusMedia/Mail v1' );
 		}
-		else if( $mail->compression == Model_Mail::COMPRESSION_BASE64 )
-			$object	= base64_encode( $serial );
-		return $object;
-	}
-
-	private function _unpackMailObject( $mail, $unserialize = TRUE ){
-		$serial	= $mail->object;
-		if( $mail->compression == Model_Mail::COMPRESSION_BZIP ){
-			if( !Logic_Mail::canBzip() )
-				throw new RuntimeException( 'Missing extension for BZIP compression' );
-			$serial	= bzdecompress( $mail->object );
-			if( is_int( $serial ) )
-				throw new RuntimeException( 'Decompression failed' );
+		else if( $this->libraries & Logic_Mail::LIBRARY_COMMON ){
+			$rawLines	= array();
+			foreach( $libraryObject->getHeaders()->getFields() as $header )
+				$rawLines[]	= $header->toString();
+			$rawLines[]	= '';
+			$rawLines[]	= $libraryObject->getBody();
+			$raw		= implode( Net_Mail::$delimiter, $rawLines );
+			$mail->raw	= $this->logicMail->compressString( $raw, $mail->compression );
+			$this->logMigration( $mail, 'Saved raw using CeusMedia/Common::Net_Mail' );
 		}
-		else if( $mail->compression == Model_Mail::COMPRESSION_GZIP ){
-			if( !Logic_Mail::canGzip() )
-				throw new RuntimeException( 'Missing extension for BZIP compression' );
-			$serial	= gzinflate( $mail->object );
-		}
-		else if( $mail->compression == Model_Mail::COMPRESSION_BASE64 )
-			$serial	= base64_decode( $mail->object );
-
-		return $unserialize ? unserialize( $serial ) : $serial;
 	}
 }

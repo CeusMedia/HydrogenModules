@@ -65,11 +65,11 @@ abstract class Mail_Abstract{
 
 		//  apply encoding settings from module config
 		if( $this->options->get( 'encoding.html' ) )
-			$this->encodingHtml		= $this->options->get( 'encoding.html',  );
+			$this->encodingHtml		= $this->options->get( 'encoding.html' );
 		if( $this->options->get( 'encoding.subject' ) )
-			$this->encodingHtml		= $this->options->get( 'encoding.subject',  );
+			$this->encodingHtml		= $this->options->get( 'encoding.subject' );
 		if( $this->options->get( 'encoding.text' ) )
-			$this->encodingHtml		= $this->options->get( 'encoding.text',  );
+			$this->encodingHtml		= $this->options->get( 'encoding.text' );
 
 		$this->baseUrl	= !empty( $env->baseUrl ) ? $env->baseUrl : $this->config->get( 'app.base.url' );
 		if( !$this->baseUrl )

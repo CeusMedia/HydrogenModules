@@ -96,6 +96,7 @@ class Model_Mail extends CMF_Hydrogen_Model {
 		'mailClass',
 		'compression',
 		'object',
+		'raw',
 		'enqueuedAt',
 		'attemptedAt',
 		'sentAt',
