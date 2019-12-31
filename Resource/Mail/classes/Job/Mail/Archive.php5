@@ -291,7 +291,7 @@ class Job_Mail_Archive extends Job_Abstract{
 					if( !empty( $mail->raw ) && is_string( $mail->raw ) && strlen( $mail->raw ) ){
 						$raw	= $this->logicMail->decompressString( $mail->raw, $mail->compression );
 						$parser	= new \CeusMedia\Mail\Message\Parser();
-						$mail->object->instance	= $parser->parse( $raw );
+						$mail->object->instance->mail	= $parser->parse( $raw );
 						$this->logicMail->compressMailObject( $mail, TRUE, TRUE );
 						$this->logMigration( $mail, 'Migrated mail object from CeusMedia/Mail v1 to v2' );
 						return TRUE;

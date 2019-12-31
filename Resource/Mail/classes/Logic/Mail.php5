@@ -564,9 +564,11 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		$mail	= $this->modelQueue->get( $mailId );
 		if( !$mail )
 			throw new OutOfRangeException( 'Invalid mail ID: '.$mailId );
-		if( !static::decompressMailObject( $mail ) )
+		$this->decompressMailObject( $mail );
+		$this->decompressMailRaw( $mail );
+		if( !$mail->object->instance )
 			throw new RuntimeException( 'Deserialization of mail object failed' );
-		if( !static::decompressMailRaw( $mail ) )
+		if( !$mail->raw->serial )
 			throw new RuntimeException( 'Decompression of raw mail failed' );
 		return $mail;
 	}
@@ -604,11 +606,9 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@throws		RuntimeException			if given no parser is available for mail object
 	 */
 	public function getMailParts( $mail ){
-		$mails	= $this->getMailFromObjectOrId( $mail );
-		if( !is_object( $mail->object ) )
-			$this->decompressMailObject( $mail );
+		$this->decompressMailObject( $mail );
 		if( !is_a( $mail->object->instance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
-			throw new Exception( 'Mail object is not extending Mail_Abstract' );
+			throw new Exception( 'Mail object is not extending Mail_Abstract, but '.get_class( $mail->object->instance ) );
 		if( $mail->object->instance->mail instanceof \CeusMedia\Mail\Message )							//  modern mail message with parsed body parts
 			return $mail->object->instance->mail->getParts( TRUE );
 		else if( $mail->object->instance->mail instanceof Net_Mail ){										//  outdated mail message using cmClasses implementation
