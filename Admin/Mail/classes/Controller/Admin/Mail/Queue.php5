@@ -35,6 +35,68 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		return $this->view->ajaxRenderDashboardPanel();
 	}
 
+	/**
+	 *	Delivers attachment content.
+	 *	By sending the attachments MIME type, the browser can decide, what to do.
+	 *	Set delivery mode to 'download' to force download.
+	 *	Exits after delivery.
+	 *	@access		public
+	 *	@param		integer		$mailId			ID of mail of attachment
+	 *	@param		integer		$attachmentNr	Index key attachment within mail
+	 *	@todo		export locales
+	 */
+	public function attachment( $mailId, $attachmentNr, $deliveryMode = NULL ){
+		$libraries			= $this->logic->detectAvailableMailLibraries();
+		$deliveryMode		= $deliveryMode == 'download' ? 'download' : 'view';
+		$mail				= $this->logic->getMail( $mailId );
+		$this->logic->detectMailLibraryFromMail( $mail );
+		if( !( $libraries & $mail->usedLibrary ) ){
+			$message	= 'Die beim Versand benutzte Bibliothek wird nicht mehr unterstützt.';
+			$this->env->getMessenger()->noteError( $message );
+			$this->restart( 'view/'.$mailId, TRUE );
+		}
+		$mailObjectParts	= $mail->object->instance->mail->getParts( TRUE );
+		$attachments		= array();
+		foreach( $mailObjectParts as $part ){
+			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
+				if( $part instanceof \CeusMedia\Mail\Message\Part\Attachment )
+					$attachments[]	= $part;
+			}
+			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
+				if( $part instanceof \CeusMedia\Mail\Part\Attachment )
+					$attachments[]	= $part;
+			}
+			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_COMMON ){
+				if( $part instanceof Net_Mail_Attachment )
+					$attachments[]	= $part;
+			}
+		}
+		if( !isset( $attachmentNr, $attachments ) ){
+			$message	= 'Die ID des Anhangs ist ungültig.';
+			$this->env->getMessenger()->noteError( $message );
+			$this->restart( 'view/'.$mailId, TRUE );
+		}
+		$item	= $attachments[$attachmentNr];
+		if( $deliveryMode === 'download' ){
+			Net_HTTP_Download::sendString( $item->getContent(), $item->getFileName() );
+		}
+		else{
+			$response	= $this->env->getResponse();
+			$headers	= array(
+				'Cache-Control'				=> 'private, max-age=0, must-revalidate',
+				'Pragma'					=> 'public',
+				'Content-Transfer-Encoding'	=> 'binary',
+				'Content-Disposition'		=> 'inline; filename="'.$item->getFileName().'"',
+				'Content-Type'				=> $item->getMimeType(),
+			);
+			foreach( $headers as $key => $value )
+				$response->addHeaderPair( $key, $value );
+			$response->setBody( $item->getContent() );
+			Net_HTTP_Response_Sender::sendResponse( $response );
+		}
+		exit;
+	}
+
 	public function cancel( $mailId ){
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );

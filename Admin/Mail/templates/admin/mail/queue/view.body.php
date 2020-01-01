@@ -1,5 +1,12 @@
 <?php
 
+use \CeusMedia\Bootstrap\Icon;
+
+//$iconDownload		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+$iconDownload		= new Icon( 'download' );
+$iconView			= new Icon( 'eye' );
+$iconFile			= new Icon( 'file' );
+
 $list	= array(
 	'1-html'		=> '',
 	'2-attachments'	=> array(),
@@ -24,7 +31,54 @@ else{
 		$images			= array();
 
 		if( $libraries & $mail->usedLibrary ){
-			if( $mail->usedLibrary === Logic_Mail::LIBRARY_COMMON ){
+			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
+				foreach( $mail->parts as $key => $part ){
+					if( $part instanceof \CeusMedia\Mail\Message\Part\HTML )
+						$html	= TRUE;//$part->getContent();
+					else if( $part instanceof \CeusMedia\Mail\Message\Part\Text )
+						$text	= $part->getContent();
+					else if( $part instanceof \CeusMedia\Mail\Message\Part\Attachment )
+						$attachments[]	= (object) array(
+							'fileName'	=> $part->getFileName(),
+							'fileSize'	=> $part->getFileSize(),
+							'fileATime'	=> $part->getFileATime(),
+							'fileCTime'	=> $part->getFileCTime(),
+							'fileMTime'	=> $part->getFileMTime(),
+							'mimeType'	=> $part->getMimeType(),
+						);
+					else if( $part instanceof \CeusMedia\Mail\Message\Part\InlineImage )
+						$images[]	= (object) array(
+							'fileName'	=> $part->getFileName(),
+							'fileSize'	=> $part->getFileSize(),
+							'mimeType'	=> $part->getMimeType(),
+						);
+				}
+			}
+			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
+				foreach( $mail->parts as $key => $part ){
+	//				$this->env->getMessenger()->noteNotice( 'LIBRARY_MAIL1: '.get_class( $part ) );
+					if( $part instanceof \CeusMedia\Mail\Part\HTML )
+						$html	= TRUE;//$part->getContent();
+					else if( $part instanceof \CeusMedia\Mail\Part\Text )
+						$text	= $part->getContent();
+					else if( $part instanceof \CeusMedia\Mail\Part\Attachment )
+						$attachments[]	= (object) array(
+							'fileName'	=> $part->getFileName(),
+							'fileSize'	=> $part->getFileSize(),
+							'fileATime'	=> $part->getFileATime(),
+							'fileCTime'	=> $part->getFileCTime(),
+							'fileMTime'	=> $part->getFileMTime(),
+							'mimeType'	=> $part->getMimeType(),
+						);
+					else if( $part instanceof \CeusMedia\Mail\Part\InlineImage )
+						$images[]	= (object) array(
+							'fileName'	=> $part->getFileName(),
+							'fileSize'	=> $part->getFileSize(),
+							'mimeType'	=> $part->getMimeType(),
+						);
+				}
+			}
+			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_COMMON ){
 				foreach( $mail->parts as $key => $part ){
 	//				$this->env->getMessenger()->noteNotice( 'LIBRARY_COMMON: '.get_class( $part ) );
 	//				$this->env->getMessenger()->noteNotice( 'TYPE: '.$part->getMimeType() );
@@ -47,47 +101,6 @@ else{
 							'mimeType'	=> $part->getMimeType(),
 						);
 					}
-				}
-			}
-			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
-				foreach( $mail->parts as $key => $part ){
-	//				$this->env->getMessenger()->noteNotice( 'LIBRARY_MAIL1: '.get_class( $part ) );
-					if( $part instanceof \CeusMedia\Mail\Part\HTML )
-						$html	= TRUE;//$part->getContent();
-					else if( $part instanceof \CeusMedia\Mail\Part\Text )
-						$text	= $part->getContent();
-					else if( $part instanceof \CeusMedia\Mail\Part\Attachment )
-						$attachments[]	= (object) array(
-							'fileName'	=> $part->getFileName(),
-							'fileSize'	=> $part->getFileSize(),
-							'mimeType'	=> $part->getMimeType(),
-						);
-					else if( $part instanceof \CeusMedia\Mail\Part\InlineImage )
-						$images[]	= (object) array(
-							'fileName'	=> $part->getFileName(),
-							'fileSize'	=> $part->getFileSize(),
-							'mimeType'	=> $part->getMimeType(),
-						);
-				}
-			}
-			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
-				foreach( $mail->parts as $key => $part ){
-					if( $part instanceof \CeusMedia\Mail\Message\Part\HTML )
-						$html	= TRUE;//$part->getContent();
-					else if( $part instanceof \CeusMedia\Mail\Message\Part\Text )
-						$text	= $part->getContent();
-					else if( $part instanceof \CeusMedia\Mail\Message\Part\Attachment )
-						$attachments[]	= (object) array(
-							'fileName'	=> $part->getFileName(),
-							'fileSize'	=> $part->getFileSize(),
-							'mimeType'	=> $part->getMimeType(),
-						);
-					else if( $part instanceof \CeusMedia\Mail\Message\Part\InlineImage )
-						$images[]	= (object) array(
-							'fileName'	=> $part->getFileName(),
-							'fileSize'	=> $part->getFileSize(),
-							'mimeType'	=> $part->getMimeType(),
-						);
 				}
 			}
 		}
@@ -115,14 +128,43 @@ else{
 
 		if( $attachments ){																		//  realize attachments view if available
 			foreach( $attachments as $nr => $attachment ){
+				$buttonDownload	= UI_HTML_Tag::create( 'a', $iconDownload.' speichern', array(
+					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$nr.'/download',
+					'class'	=> 'btn btn-small',
+				) );
+				$buttonView		= UI_HTML_Tag::create( 'a', $iconView.' öffnen', array(
+					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$nr,
+					'class'	=> 'btn btn-small',
+				) );
+				$buttons	= UI_HTML_Tag::create( 'div', array( $buttonView, $buttonDownload ), array(
+					'class'	=> 'btn-group',
+				) );
+				$date		= '';
+				if( $attachment->fileMTime ){
+					$date	= date( 'Y-m-d H:i:s', $attachment->fileMTime );
+				}
+				$link		= UI_HTML_Tag::create( 'a', $iconFile.' '.$attachment->fileName, array(
+					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$nr,
+				) );
 				$attachments[$nr]	= UI_HTML_Tag::create( 'tr', array(
-					UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', '#'.( $nr + 1 ) ) ),
-					UI_HTML_Tag::create( 'td', $attachment->fileName ),
+					UI_HTML_Tag::create( 'td', $link ),
 					UI_HTML_Tag::create( 'td', $attachment->mimeType ),
 					UI_HTML_Tag::create( 'td', Alg_UnitFormater::formatBytes( $attachment->fileSize ) ),
+					UI_HTML_Tag::create( 'td', $date ),
+					UI_HTML_Tag::create( 'td', $buttonDownload, array( 'style' => 'text-align: right' ) ),
 				) );
 			}
-			$displayAttachments	= UI_HTML_Tag::create( 'table', array( $attachments ), array( 'class' => 'table table-condensed table-striped' ) );
+			$heads	= UI_HTML_Tag::create( 'tr', array(
+				UI_HTML_Tag::create( 'th', 'Dateiname' ),
+				UI_HTML_Tag::create( 'th', 'MIME-Type' ),
+				UI_HTML_Tag::create( 'th', 'Dateigröße' ),
+				UI_HTML_Tag::create( 'th', 'letzte Änderung' ),
+				UI_HTML_Tag::create( 'th', '' ),
+			), array( 'style' => 'background-color: rgba(255, 255, 255, 0.75);' ) );
+			$colgroup	= UI_HTML_Elements::ColumnGroup( '', '15%', '10%', '20%', '15%' );
+			$thead	= UI_HTML_Tag::create( 'thead', $heads );
+			$tbody	= UI_HTML_Tag::create( 'tbody', $attachments );
+			$displayAttachments	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table not-table-condensed table-striped' ) );
 			$headingAttachments	= '<h4>Anhänge</h4>';
 			$parts[]	= $headingAttachments.$displayAttachments;
 		}
