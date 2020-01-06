@@ -523,6 +523,29 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	}
 
 	/**
+	 *	Returns saved mail as uncompressed object by mail ID.
+	 *	@access		public
+	 *	@param		integer			$mailId			ID of queued mail
+	 *	@return		object							Mail object from queue
+	 *	@throws		OutOfRangeException				if mail ID is not existing
+	 *	@throws		RuntimeException				if mail is compressed by BZIP which is not supported in this environment
+	 *	@throws		RuntimeException				if mail is compressed by GZIP which is not supported in this environment
+	 *	@throws		RuntimeException				if unserialize mail serial fails
+	 */
+	public function getMail( $mailId ){
+		$mail	= $this->modelQueue->get( $mailId );
+		if( !$mail )
+			throw new OutOfRangeException( 'Invalid mail ID: '.$mailId );
+		$this->decompressMailObject( $mail );
+		$this->decompressMailRaw( $mail );
+		if( !$mail->object->instance )
+			throw new RuntimeException( 'Deserialization of mail object failed' );
+		if( !$mail->raw->serial )
+			throw new RuntimeException( 'Decompression of raw mail failed' );
+		return $mail;
+	}
+
+	/**
 	 *	@todo		kriss: (performance) remove double preg check for class (remove 3rd argument on index and double check if clause in loop)
 	 */
 	public function getMailClassNames( $strict = TRUE ){
@@ -548,29 +571,6 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 			}
 		}
 		return $list;																				//  return map of found mail classes by their files
-	}
-
-	/**
-	 *	Returns saved mail as uncompressed object by mail ID.
-	 *	@access		public
-	 *	@param		integer			$mailId			ID of queued mail
-	 *	@return		object							Mail object from queue
-	 *	@throws		OutOfRangeException				if mail ID is not existing
-	 *	@throws		RuntimeException				if mail is compressed by BZIP which is not supported in this environment
-	 *	@throws		RuntimeException				if mail is compressed by GZIP which is not supported in this environment
-	 *	@throws		RuntimeException				if unserialize mail serial fails
-	 */
-	public function getMail( $mailId ){
-		$mail	= $this->modelQueue->get( $mailId );
-		if( !$mail )
-			throw new OutOfRangeException( 'Invalid mail ID: '.$mailId );
-		$this->decompressMailObject( $mail );
-		$this->decompressMailRaw( $mail );
-		if( !$mail->object->instance )
-			throw new RuntimeException( 'Deserialization of mail object failed' );
-		if( !$mail->raw->serial )
-			throw new RuntimeException( 'Decompression of raw mail failed' );
-		return $mail;
 	}
 
 	/**

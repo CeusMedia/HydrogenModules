@@ -162,10 +162,46 @@ class Job_Mail_Archive extends Job_Abstract{
 	}
 
 	/**
-	 *	@todo	support CeusMedia/Mail@v2 (only v1 supported now)
+	 *	Remove attachments from mails in database table.
+	 *	Mails to be removed can be filtered by minimum age and mail class(es).
+	 *	Supports dry mode.
+	 *	Supports CeusMedia/Mail v1 and v2, but not CeusMedia/Common:Net_Nail.
+	 *
+	 *	Parameters:
+	 *		--age=PERIOD
+	 *			- minimum age of mail to delete
+	 *			- DateInterval period without starting P and without any time elements
+	 *			- see: https://www.php.net/manual/en/dateinterval.construct.php
+	 *			- example: 1Y (1 year), 2M (2 months), 3D (3 days)
+	 *			- optional, default: 1Y
+	 *		--class=CLASSNAME[,CLASSNAME]
+	 *			- name of mail class to focus on
+	 *			- without prefix 'Mail_'
+	 *			- can be several, separated by comma
+	 *			- example: Newsletter (for class Mail_Newsletter)
+	 *			- example: Newsletter,Form_Manager_Filled
+	 *			- default: empty, meaning all mail classes
+	 *
+	 *	@todo	test
 	 */
 	public function removeAttachments(){
-		$conditions	= array( 'status' => $this->statusesHandledMails );
+		$age		= $this->parameters->get( '--age', '1Y' );
+		$age		= $age ? strtoupper( $age ) : '1Y';
+		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
+
+		$class		= $this->parameters->get( '--class', NULL );
+		if( $class !== NULL ){
+			$class	= preg_split( '/\s*,\s*/', $class );
+			foreach( $class as $nr => $mailClassName )
+				if( !preg_match( '/\\\/', $mailClassName ) )
+					$class[$nr]	= 'Mail_'.$mailClassName;
+		}
+		$conditions	= array(
+			'status'		=> $this->statusesHandledMails,
+			'mailClass'		=> $class,
+			'enqueuedAt' 	=> '<'.$threshold->format( 'U' ),
+		);
+
 		$orders		= array( 'mailId' => 'DESC' );
 		$fails		= array();
 		$results	= (object) array(
@@ -175,20 +211,50 @@ class Job_Mail_Archive extends Job_Abstract{
 			'sizeAfter'		=> 0,
 		);
 
+		if( $this->dryMode )
+			$this->out( 'DRY RUN - no changes will be made.' );
+
 		$mailIds	= $this->model->getAllByIndices( $conditions, $orders, array(), array( 'mailId' ) );
 		foreach( $mailIds as $mailId ){
 			try{
 				$mail			= $this->model->get( $mailId );
 				$this->logicMail->decompressMailObject( $mail );
 				$sizeBefore		= strlen( $mail->object->raw );
-				if( method_exists( $mail->object->instance->mail, 'getParts' ) ){
-					$attachments		= $mail->object->instance->mail->getAttachments( TRUE );
-					foreach( $attachments as $nr => $part ){
+				if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
+					$parts		= $mail->object->instance->mail->getParts();
+					foreach( $parts as $nr => $part ){
+//						$this->out( "Part: ".get_class( $part ) );
+						if( $part->isAttachment() ){
+							$mail->object->instance->mail->removePart( $nr );
+							$this->logicMail->compressMailObject( $mail );
+							$renderer	= new \CeusMedia\Mail\Message\Renderer();
+							$raw		= $renderer->render( $mail->object->instance->mail );
+							if( !$this->dryMode ){
+								$this->model->edit( $mail->mailId, array(
+									'object'	=> $mail->object->raw,
+									'raw'		=> $this->logicMail->compressString( $raw ),
+								), FALSE );
+							}
+							$results->attachments++;
+							$results->sizeBefore	+= $sizeBefore;
+							$results->sizeAfter		+= strlen( $mail->object->raw );
+						}
+					}
+				}
+				else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
+					$parts		= $mail->object->instance->mail->getParts();
+					foreach( $parts as $nr => $part ){
 //						$this->out( "Part: ".get_class( $part ) );
 						if( $part instanceof \CeusMedia\Mail\Part\Attachment ){
 							$mail->object->instance->mail->removePart( $nr );
 							$this->logicMail->compressMailObject( $mail );
-							$this->model->edit( $mail->mailId, array( 'object' => $mail->object->raw ), FALSE );
+							$raw	= \CeusMedia\Mail\Renderer::render( $mail->object->instance->mail );
+							if( !$this->dryMode ){
+								$this->model->edit( $mail->mailId, array(
+									'object'	=> $mail->object->raw,
+									'raw'		=> $this->logicMail->compressString( $raw ),
+								), FALSE );
+							}
 							$results->attachments++;
 							$results->sizeBefore	+= $sizeBefore;
 							$results->sizeAfter		+= strlen( $mail->object->raw );
