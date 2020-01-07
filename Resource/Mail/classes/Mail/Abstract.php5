@@ -97,11 +97,51 @@ abstract class Mail_Abstract{
 	}*/
 
 	public function addAttachment( $filePath, $mimeType = NULL, $encoding = NULL, $fileName = NULL ){
-		$this->mail->addFile( $filePath, $mimeType, $encoding, $fileName );
+		$libraries		= $this->logicMail->detectAvailableMailLibraries();
+		$library		= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this );
+
+		if( !$library || !( $libraries & $library ) )
+			throw new RuntimeException( 'Mail was created by a mail library which is not supported' );
+
+		switch( $library ){
+			case Logic_Mail::LIBRARY_COMMON:
+				$this->mail->addAttachmentFile( $filePath, $mimeType );
+				break;
+			case Logic_Mail::LIBRARY_MAIL_V1:
+				$this->mail->addFile( $filePath, $mimeType, $encoding, $fileName );
+				break;
+			case Logic_Mail::LIBRARY_MAIL_V2:
+				$this->mail->addAttachment( $filePath, $mimeType, $encoding, $fileName );
+				break;
+		}
+		return $this;
 	}
 
 	public function getAttachments(){
-		return $this->mail->getAttachments();
+		$list			= array();
+		$libraries		= $this->logicMail->detectAvailableMailLibraries();
+		$library		= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this );
+
+		if( !$library || !( $libraries & $library ) )
+			throw new RuntimeException( 'Mail was created by a mail library which is not supported' );
+
+		foreach( $this->mail->getParts() as $part ){
+			switch( $library ){
+				case Logic_Mail::LIBRARY_COMMON:
+					if( $part instanceof Net_Mail_Attachment )
+						$list[]	= $part;
+					break;
+				case Logic_Mail::LIBRARY_MAIL_V1:
+					if( $part instanceof CeusMedia\Mail\Part\Attachment )
+						$list[]	= $part;
+					break;
+				case Logic_Mail::LIBRARY_MAIL_V2:
+					if( $part->isAttachment() )
+						$list[]	= $part;
+					break;
+			}
+		}
+		return $list;
 	}
 
 	/**
@@ -130,16 +170,27 @@ abstract class Mail_Abstract{
 	}
 
 	public function initTransport( $verbose = FALSE ){
+		$libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$options	= $this->env->getConfig()->getAll( 'module.resource_mail.transport.', TRUE );
 		switch( strtolower( $options->get( 'type' ) ) ){
 			case 'smtp':
-				$hostname	= $options->get( 'hostname' );
-				$port		= $options->get( 'port' );
-				$username	= $options->get( 'username' );
-				$password	= $options->get( 'password' );
-				$this->transport	= new \CeusMedia\Mail\Transport\SMTP( $hostname, $port );
-				$this->transport->setUsername( $username );
-				$this->transport->setPassword( $password );
+				if( $libraries & ( Logic_Mail::LIBRARY_MAIL_V1 | Logic_Mail::LIBRARY_MAIL_V2 ) ){
+					$this->transport	= \CeusMedia\Mail\Transport\SMTP::getInstance(
+						$options->get( 'hostname' ),
+						$options->get( 'port' ),
+						$options->get( 'username' ),
+						$options->get( 'password' )
+					);
+				}
+				else if( $libraries & Logic_Mail::LIBRARY_COMMON ){
+					$hostname	= $options->get( 'hostname' );
+					$port		= $options->get( 'port' );
+					$this->transport	= new Net_Mail_Transport_SMTP( $hostname, $port );
+					$this->transport->setAuthUsername( $options->get( 'username' ) );
+					$this->transport->setAuthPassword( $options->get( 'password' ) );
+				}
+				else
+					throw new RuntimeException( 'No supported mail library available' );
 				$this->transport->setSecure( $options->get( 'secure' ) );
 				$this->transport->setVerbose( $verbose );
 				break;
@@ -339,6 +390,7 @@ abstract class Mail_Abstract{
 	}
 
 	protected function applyTemplateToHtml( $content, $templateId = NULL ){
+		$libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$template	= $this->logicMail->detectTemplateToUse( $templateId, TRUE, FALSE );
 		if( !$template )
 			return $content;
@@ -370,7 +422,10 @@ abstract class Mail_Abstract{
 						continue;
 					}
 				}
-				$this->mail->addHtmlImage( 'image'.( $nr + 1), $this->env->uri.$image );
+				if( $libraries & Logic_Mail::LIBRARY_MAIL_V1 )
+					$this->mail->addHtmlImage( 'image'.( $nr + 1), $this->env->uri.$image );
+				else if( $libraries & Logic_Mail::LIBRARY_MAIL_V2 )
+					$this->mail->addInlineImage( 'image'.( $nr + 1), $this->env->uri.$image, NULL, 'base64' );
 			}
 		}
 

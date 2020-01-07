@@ -281,7 +281,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 				return $result;
 			case Model_Mail::COMPRESSION_GZIP:
 				if( !$this->canGzip() )
-					throw new RuntimeException( 'Missing extension for BZIP compression' );
+					throw new RuntimeException( 'Missing extension for GZIP compression' );
 				$result	= gzinflate( $string );
 				if( is_int( $result ) )
 					throw new RuntimeException( 'Decompression failed' );
@@ -500,7 +500,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 			$rawLines[]	= $libraryObject->getBody();
 			$raw		= implode( Net_Mail::$delimiter, $rawLines );
 		}
-		$incompleteMailDataObject->raw	= $this->logicMail->compressString( $raw, $incompleteMailDataObject->compression );
+		$incompleteMailDataObject->raw	= $this->compressString( $raw, $incompleteMailDataObject->compression );
 
 		$data		= array(
 			'templateId'		=> $mail->templateId,

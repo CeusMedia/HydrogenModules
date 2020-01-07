@@ -12,34 +12,30 @@ class View_Helper_Mail_View_Source{
 	public function __construct( $env ){
 		$this->env			= $env;
 		$this->logicMail	= $env->getLogic()->get( 'Mail' );
+		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 	}
 
 	public function render(){
-		if( !$this->mail )
-			throw new RuntimeException( 'No mail object or ID set' );
+		if( !$this->mailObject )
+			throw new RuntimeException( 'No mail object set' );
 
-		$libraries		= $this->logicMail->detectAvailableMailLibraries();
-		$usedLibrary	= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this->mail->object->instance );
-
-		if( !( $libraries & $usedLibrary ) ){
+		$usedLibrary	= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this->mailObject );
+		if( !( $this->libraries & $usedLibrary ) ){
 			$libraryKey	= Alg_Object_Constant::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
 			return '- used mail library ('.$libraryKey.') is not supported anymore or yet -';
 		}
-		$mailObject	= $this->mail->object->instance;
+		$message	= $this->mailObject->mail;
 
 		$code	= '';
-		if( $usedLibrary == Logic_Mail::LIBRARY_COMMON ){										//  mail uses library CeusMedia/Common
-			$code	= $mailObject->mail->getBody();												//  @todo find better way: currently only parts content displayed but no headers
-		}
-		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 ){									//  mail uses library CeusMedia/Mail version 1
-			$code	= CeusMedia\Mail\Renderer::render( $mailObject->mail );						//  @todo find better way: currently only parts content displayed but no headers
-		}
-		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V2 ){									//  mail uses library CeusMedia/Mail version 1
-			$code	= CeusMedia\Mail\Message\Renderer::render( $mailObject->mail );				//  @todo find better way: currently only parts content displayed but no headers
-		}
-		else{
+		if( $usedLibrary == Logic_Mail::LIBRARY_COMMON )										//  mail uses library CeusMedia/Common
+			$code	= $message->getBody();														//  @todo find better way: currently only parts content displayed but no headers
+		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 )									//  mail uses library CeusMedia/Mail version 1
+			$code	= CeusMedia\Mail\Renderer::render( $message );								//  @todo find better way: currently only parts content displayed but no headers
+		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V2 )									//  mail uses library CeusMedia/Mail version 1
+			$code	= CeusMedia\Mail\Message\Renderer::render( $message );						//  @todo find better way: currently only parts content displayed but no headers
+		else
 			throw new RangeException( 'No source renderer for mail object available' );
-		}
+
 		switch( $this->mode ){
 			case self::MODE_CONDENSED:
 				$code	= $this->shortenMailCode( $code );
@@ -57,7 +53,13 @@ class View_Helper_Mail_View_Source{
 			$mailObjectOrId	= $this->logicMail->getMail( $mailObjectOrId );
 		if( !is_object( $mailObjectOrId ) )
 			throw new InvalidArgumentException( 'Argument must be integer or object' );
-		$this->mail	= $mailObjectOrId;
+		$this->setMailObjectInstance( $this->mail->object->instance );
+		return $this;
+	}
+
+	public function setMailObjectInstance( Mail_Abstract $mail ){
+		$this->mailObject	= $mail;
+		return $this;
 	}
 
 	public function setMode( $mode ){

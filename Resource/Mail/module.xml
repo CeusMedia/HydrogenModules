@@ -32,7 +32,7 @@ code>* * * * * cd /path/to/project && php job.php5 Mail.Archive.clean --age=3M</
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.9.2</version>
+	<version>0.9.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -91,6 +91,7 @@ code>* * * * * cd /path/to/project && php job.php5 Mail.Archive.clean --age=3M</
 	<log version="0.9">Refactor mail template detection and apply.</log>
 	<log version="0.9.1">Save mail as raw and prepare migration to CeusMedia/Mail@v2.</log>
 	<log version="0.9.2">Implement job to remove attachments for CeusMedia/Mail@v2.</log>
+	<log version="0.9.3">Improve support for mail libraries.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

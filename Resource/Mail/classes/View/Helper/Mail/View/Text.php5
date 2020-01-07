@@ -8,55 +8,46 @@ class View_Helper_Mail_View_Text{
 	public function __construct( $env ){
 		$this->env			= $env;
 		$this->logicMail	= $env->getLogic()->get( 'Mail' );
+		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 	}
 
 	public function render(){
-		if( !$this->mail )
-			throw new RuntimeException( 'No mail object or ID set' );
+		if( !$this->mailObject )
+			throw new RuntimeException( 'No mail object set' );
 
-		$libraries		= $this->logicMail->detectAvailableMailLibraries();
-		$usedLibrary	= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this->mail->object->instance );
-
-		if( !( $libraries & $usedLibrary ) ){
+		$usedLibrary	= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this->mailObject );
+		if( !( $this->libraries & $usedLibrary ) ){
 			$libraryKey	= Alg_Object_Constant::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
 			return '- used mail library ('.$libraryKey.') is not supported anymore or yet -';
 		}
-		$mailObject	= $this->mail->object->instance;
+		$message	= $this->mailObject->mail;
 
-		$code	= '';
+		$text	= '';
+		$images	= array();
 		if( $usedLibrary == Logic_Mail::LIBRARY_COMMON ){										//  mail uses library CeusMedia/Common
-			$code	= $mailObject->mail->getBody();												//  @todo find better way: currently only parts content displayed but no headers
-		}
-		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 ){									//  mail uses library CeusMedia/Mail version 1
-			$code	= CeusMedia\Mail\Renderer::render( $mailObject->mail );						//  @todo find better way: currently only parts content displayed but no headers
-		}
-		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V2 ){									//  mail uses library CeusMedia/Mail version 1
-			$code	= CeusMedia\Mail\Message\Renderer::render( $mailObject->mail );				//  @todo find better way: currently only parts content displayed but no headers
-		}
-		else{
-			throw new RangeException( 'No source renderer for mail object available' );
-		}
-
-		$parts		= $this->logicMail->getMailParts( $this->mail );
-		foreach( $parts as $key => $part ){
-			if( is_a( $part, 'CeusMedia\Mail\Part\HTML' ) )
-				continue;
-			if( is_a( $part, 'CeusMedia\Mail\Part\Text' ) )
-				$text	= $part->getContent();
-			else if( is_a( $part, 'CeusMedia\Mail\Message\Part\Text' ) )
-				$text	= $part->getContent();
-			else if( is_a( $part, 'Net_Mail_Body' ) ){
-				if( $part->getMimeType() === "text/plain" ){
-					$text	= $part->getContent();
-					if( $part->getContentEncoding() === "base64" )
-						$text	= base64_decode( $text );
-					if( $part->getContentEncoding() === "quoted-printable" )
-						$text	= quoted_printable_decode( $text );
-				}
+			if( $part->getMimeType() === "text/plain" ){
+				$html	= $part->getContent();
+				if( $part->getContentEncoding() === "base64" )
+					$html	= base64_decode( $html );
+				if( $part->getContentEncoding() === "quoted-printable" )
+					$html	= quoted_printable_decode( $html );
 			}
 		}
+		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 ){									//  mail uses library CeusMedia/Mail version 1
+			foreach( $message->getParts( TRUE ) as $part )
+				if( $part instanceof \CeusMedia\Mail\Part\Text )
+					$text	= $part->getContent();
+		}
+		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V2 ){									//  mail uses library CeusMedia/Mail version 1
+			if( $message->hasText() )
+				$text	= $message->getText()->getContent();
+		}
+		else
+			throw new RangeException( 'No source renderer for mail object available' );
+
 		if( empty( $text ) )
-			throw new Exception( 'No plain text part found' );
+			throw new Exception( 'No text part found' );
+
 		return $text;
 	}
 
@@ -65,7 +56,13 @@ class View_Helper_Mail_View_Text{
 			$mailObjectOrId	= $this->logicMail->getMail( $mailObjectOrId );
 		if( !is_object( $mailObjectOrId ) )
 			throw new InvalidArgumentException( 'Argument must be integer or object' );
-		$this->mail	= $mailObjectOrId;
+		$this->setMailObjectInstance( $this->mail->object->instance );
+		return $this;
+	}
+
+	public function setMailObjectInstance( Mail_Abstract $mail ){
+		$this->mailObject	= $mail;
+		return $this;
 	}
 }
 ?>
