@@ -88,7 +88,7 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 		try{
 			$mail	= $this->getData( 'mail' );
 			$helper	= new View_Helper_Mail_View_HTML( $this->env );
-			$helper->setMail( $mail );
+			$helper->setMailObjectInstance( $mail->object->instance );
 			print( $helper->render() );
 		}
 		catch( Exception $e ){

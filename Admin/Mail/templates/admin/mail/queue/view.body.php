@@ -107,15 +107,6 @@ else{
 
 		$parts	= array();
 
-		//  realize plain text view if available
-		if( $text ){
-			$headingText	= UI_HTML_Tag::create( 'h4', 'Plain Text' );
-			$displayText	= UI_HTML_Tag::create( 'pre', $text, array(
-				'style' => "width: 98%; height: 450px; border: 1px solid gray; overflow: auto; border-radius: 2px;",
-			) );
-			$parts[]	= $headingText.$displayText;
-		}
-
 		if( $html ){																			//  realize HTML view if available
 			$headingHtml	= UI_HTML_Tag::create( 'h4', 'HTML' );
 			$displayHtml	= UI_HTML_Tag::create( 'iframe', '', array(
@@ -126,17 +117,26 @@ else{
 			$parts[]	= $headingHtml.$displayHtml;
 		}
 
+		//  realize plain text view if available
+		if( $text ){
+			$headingText	= UI_HTML_Tag::create( 'h4', 'Plain Text' );
+			$displayText	= UI_HTML_Tag::create( 'pre', $text, array(
+				'style' => "width: 98%; height: 450px; border: 1px solid gray; overflow: auto; border-radius: 2px;",
+			) );
+			$parts[]	= $headingText.$displayText;
+		}
+
 		if( $attachments ){																		//  realize attachments view if available
 			foreach( $attachments as $nr => $attachment ){
 				$buttonDownload	= UI_HTML_Tag::create( 'a', $iconDownload.' speichern', array(
 					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$nr.'/download',
 					'class'	=> 'btn btn-small',
 				) );
-				$buttonView		= UI_HTML_Tag::create( 'a', $iconView.' öffnen', array(
+/*				$buttonView		= UI_HTML_Tag::create( 'a', $iconView.' öffnen', array(
 					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$nr,
 					'class'	=> 'btn btn-small',
-				) );
-				$buttons	= UI_HTML_Tag::create( 'div', array( $buttonView, $buttonDownload ), array(
+				) );*/
+				$buttons	= UI_HTML_Tag::create( 'div', array( $buttonDownload ), array(
 					'class'	=> 'btn-group',
 				) );
 				$date		= '';
@@ -151,7 +151,7 @@ else{
 					UI_HTML_Tag::create( 'td', $attachment->mimeType ),
 					UI_HTML_Tag::create( 'td', Alg_UnitFormater::formatBytes( $attachment->fileSize ) ),
 					UI_HTML_Tag::create( 'td', $date ),
-					UI_HTML_Tag::create( 'td', $buttonDownload, array( 'style' => 'text-align: right' ) ),
+					UI_HTML_Tag::create( 'td', $buttons, array( 'style' => 'text-align: right' ) ),
 				) );
 			}
 			$heads	= UI_HTML_Tag::create( 'tr', array(
@@ -171,19 +171,38 @@ else{
 
 		if( $images ){																			//  realize inline images view if available
 			foreach( $images as $nr => $image ){
-				$size	= Alg_UnitFormater::formatBytes( $image->fileSize );
-				$size	= UI_HTML_Tag::create( 'small', $size, array( 'class' => 'muted' ) );
-				$label	= $image->fileName.' '.$size;
-				$images[$nr]	= UI_HTML_Tag::create( 'li', $label );
+				$date		= '';
+				if( $image->fileMTime ){
+					$date	= date( 'Y-m-d H:i:s', $image->fileMTime );
+				}
+				$link		= UI_HTML_Tag::create( 'a', $iconFile.' '.$image->fileName, array(
+					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$nr,
+				) );
+				$images[$nr]	= UI_HTML_Tag::create( 'tr', array(
+					UI_HTML_Tag::create( 'td', $link ),
+					UI_HTML_Tag::create( 'td', $image->mimeType ),
+					UI_HTML_Tag::create( 'td', Alg_UnitFormater::formatBytes( $image->fileSize ) ),
+					UI_HTML_Tag::create( 'td', '' ),
+					UI_HTML_Tag::create( 'td', '', array( 'style' => 'text-align: right' ) ),
+				) );
 			}
-				$images[$nr]	= UI_HTML_Tag::create( 'li', $image->fileName.' <small class="muted">('.Alg_UnitFormater::formatBytes( $image->fileSize ).')</small>' );
-			$displayImages	= UI_HTML_Tag::create( 'ul', $images );
+			$heads	= UI_HTML_Tag::create( 'tr', array(
+				UI_HTML_Tag::create( 'th', 'Dateiname' ),
+				UI_HTML_Tag::create( 'th', 'MIME-Type' ),
+				UI_HTML_Tag::create( 'th', 'Dateigröße' ),
+				UI_HTML_Tag::create( 'th', '' ),
+				UI_HTML_Tag::create( 'th', '' ),
+			), array( 'style' => 'background-color: rgba(255, 255, 255, 0.75);' ) );
+			$colgroup	= UI_HTML_Elements::ColumnGroup( '', '15%', '10%', '20%', '15%' );
+			$thead	= UI_HTML_Tag::create( 'thead', $heads );
+			$tbody	= UI_HTML_Tag::create( 'tbody', $images );
+			$displayImages	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table not-table-condensed table-striped' ) );
 			$headingImages	= '<h4>Eingebundene Bilder</h4>';
 			$parts[]	= $headingImages.$displayImages;
 		}
 
 		$helperSource	= new View_Helper_Mail_View_Source( $env );
-		$helperSource->setMail( $mail );
+		$helperSource->setMailObjectInstance( $mail->object->instance );
 		$helperSource->setMode( View_Helper_Mail_View_Source::MODE_CONDENSED );
 		$headingSource	= UI_HTML_Tag::create( 'h4', 'Source' );
 		$valueSource	= htmlentities( $helperSource->render(), ENT_QUOTES, 'UTF-8' );

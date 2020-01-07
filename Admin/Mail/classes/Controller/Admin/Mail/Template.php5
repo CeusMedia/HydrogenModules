@@ -35,7 +35,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 		$template	= $this->checkTemplate( $templateId );
 		$mail		= new Mail_Test( $this->env, array( 'mailTemplateId' => $templateId ) );
 		$helper		= new View_Helper_Mail_View_HTML( $this->env );
-		$helper->setMail( (object) array( 'object' => $mail ) );
+		$helper->setMailObjectInstance( $mail );
 		$html		= $helper->render();
 		print( $html );
 		exit;
@@ -320,23 +320,20 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 			$mail		= new Mail_Test( $env, array( 'mailTemplateId' => $templateId ) );
 			switch( strtolower( $mode ) ){
 				case 'html':
-//					print( $mail->contents['html'] );
 					$helper	= new View_Helper_Mail_View_HTML( $this->env );
-					$helper->setMail( (object) array( 'object' => $mail ) );
-					$html	= $helper->render();
-					print( $html );
+					$helper->setMailObjectInstance( $mail );
+					print( $helper->render() );
 					break;
 				case 'plain':
 				case 'text':
+					$helper	= new View_Helper_Mail_View_Text( $this->env );
+					$helper->setMailObjectInstance( $mail );
+					$text	= $helper->render();
 					print( UI_HTML_Tag::create( 'html', array(
 						UI_HTML_Tag::create( 'body', array(
-							UI_HTML_Tag::create( 'xmp', $mail->getContent( 'textRendered' ) ),
+							UI_HTML_Tag::create( 'xmp', $text ),
 						) ),
 					) ) );
-/*					$helper	= new View_Helper_Mail_View_Text( $this->env );
-					$helper->setMail( (object) array( 'object' => $mail ) );
-					$text	= $helper->render();
-					xmp( $text );*/
 					break;
 				default:
 					if( strlen( trim( $template->html ) ) )
