@@ -50,6 +50,7 @@ else{
 						$images[]	= (object) array(
 							'fileName'	=> $part->getFileName(),
 							'fileSize'	=> $part->getFileSize(),
+							'fileMTime'	=> $part->getFileMTime(),
 							'mimeType'	=> $part->getMimeType(),
 						);
 				}
@@ -74,6 +75,7 @@ else{
 						$images[]	= (object) array(
 							'fileName'	=> $part->getFileName(),
 							'fileSize'	=> $part->getFileSize(),
+							'fileMTime'	=> $part->getFileMTime(),
 							'mimeType'	=> $part->getMimeType(),
 						);
 				}
@@ -182,7 +184,7 @@ else{
 					UI_HTML_Tag::create( 'td', $link ),
 					UI_HTML_Tag::create( 'td', $image->mimeType ),
 					UI_HTML_Tag::create( 'td', Alg_UnitFormater::formatBytes( $image->fileSize ) ),
-					UI_HTML_Tag::create( 'td', '' ),
+					UI_HTML_Tag::create( 'td', $date ),
 					UI_HTML_Tag::create( 'td', '', array( 'style' => 'text-align: right' ) ),
 				) );
 			}
@@ -190,7 +192,7 @@ else{
 				UI_HTML_Tag::create( 'th', 'Dateiname' ),
 				UI_HTML_Tag::create( 'th', 'MIME-Type' ),
 				UI_HTML_Tag::create( 'th', 'Dateigröße' ),
-				UI_HTML_Tag::create( 'th', '' ),
+				UI_HTML_Tag::create( 'th', 'letzte Änderung' ),
 				UI_HTML_Tag::create( 'th', '' ),
 			), array( 'style' => 'background-color: rgba(255, 255, 255, 0.75);' ) );
 			$colgroup	= UI_HTML_Elements::ColumnGroup( '', '15%', '10%', '20%', '15%' );

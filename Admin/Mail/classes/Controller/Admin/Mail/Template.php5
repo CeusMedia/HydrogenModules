@@ -120,6 +120,32 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 		return FALSE;
 	}
 
+	public function copy( $templateId ){
+		if( $this->request->isPost() ){
+			$title	= trim( $this->request->get( 'title' ) );
+			$exists	= $this->modelTemplate->getByIndex( 'title', $title );
+			if( $exists ){
+				$this->messenger->noteError( 'Dieser Titel ist bereits vergeben.' );
+				$this->restart( 'edit/'.$templateId, TRUE );
+			}
+			$template	= $this->modelTemplate->get( $templateId );
+			$templateId	= $this->modelTemplate->add( array(
+				'status'		=> Model_Mail_Template::STATUS_NEW,
+				'language'		=> $template->language,
+				'title'			=> $title,
+				'plain'			=> $template->plain,
+				'html'			=> $template->html,
+				'css'			=> $template->css,
+				'styles'		=> $template->styles,
+				'images'		=> $template->images,
+				'createdAt'		=> time(),
+				'modifiedAt'	=> time(),
+			), FALSE );
+			$this->messenger->noteSuccess( 'Vorlage "'.$template->title.'" nach "'.$title.'" kopiert.' );
+		}
+		$this->restart( 'edit/'.$templateId, TRUE );
+	}
+
 	public function edit( $templateId ){
 		$modelMail		= new Model_Mail( $this->env );
 		$template		= $this->checkTemplate( $templateId );
@@ -196,35 +222,56 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 	public function export( $templateId, $output = 'download' ){
 		$template	= $this->checkTemplate( $templateId );
 //print_m( $template );
+
+		$files	= array( 'styles' => array(), 'images' => array() );
+		foreach( array_keys( $files ) as $topic ){
+			if( $template->{$topic}[0] === '[' )
+				$source	= json_decode( $template->$topic );
+			else
+				$source	= preg_split( '/\s*,\s*/', $template->$topic );
+
+			foreach( $source as $item ){
+				if( !file_exists( $item ) ){
+					$this->messenger->noteError( 'File is missing: '.$item );
+					continue;
+				}
+				$files[$topic][]	= array(
+					'filePath'	=> $item,
+					'content'	=> base64_encode( FS_File_Reader::load( $item ) ),
+				);
+			}
+		}
+
+		$title		= new ADT_String( $template->title );
+		$titleKey	= $title->hyphenate();											//  preserve whitespace in title as hyphen
+
 		$data	= array(
 			'type'		=> 'mail-template',
-			'title'		=> $template->title,
-			'version'	=> '0',
-			'language'	=> $template->language ? $template->language : '*',
-			'contents'	=> array(
-				'text'		=> $template->plain,
-				'html'		=> $template->html,
-				'css'		=> $template->css,
-			),
-			'files'		=> array(
-				'css'	=> json_decode( $template->styles ),
-				'image'	=> array(),
-			),
-			'links'		=> array(
-				'css'	=> array(),
-				'image'	=> json_decode( $template->images ),
-			),
-			'dates'		=> array(
-				'createdAt'		=> $template->createdAt,
-				'modifiedAt'	=> $template->modifiedAt,
+			'version'	=> 2,
+			'entity'	=> array(
+				'title'		=> $template->title,
+				'key'		=> $titleKey,
+				'version'	=> '0',
+				'language'	=> $template->language ? $template->language : '*',
+				'contents'	=> array(
+					'text'		=> $template->plain,
+					'html'		=> $template->html,
+					'css'		=> $template->css,
+				),
+				'files'		=> array(
+					'styles'	=> $files['styles'],
+					'images'	=> $files['images'],
+				),
+				'dates'		=> array(
+					'createdAt'		=> $template->createdAt,
+					'modifiedAt'	=> $template->modifiedAt,
+				)
 			)
 		);
 		$json		= json_encode( $data, JSON_PRETTY_PRINT );
-		$title		= new ADT_String( $template->title );
-		$title		= $title->hyphenate();											//  preserve whitespace in title as hyphen
 		$fileName	= vsprintf( '%s%s%s%s', array(
 			'MailTemplate_',													//  file name prefix @todo make configurable
-			preg_replace( '/[: "\']/', '', $title	),							//  template title as file ID (stripped invalid characters)
+			preg_replace( '/[: "\']/', '', $titleKey ),							//  template title as file ID (stripped invalid characters)
 			'_'.date( 'Y-m-d' ),
 			'.json',															//  file extension @todo make configurable
 		) );
@@ -262,27 +309,69 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 				$template	= json_decode( $upload->getContent() );
 				if( !$template )
 					throw new InvalidArgumentException( 'Uploaded file is not valid JSON' );
-				if( !$template->title )
-					throw new InvalidArgumentException( 'Uploaded file is not valid JSON' );
-				$title		= $template->title;
-				$counter	= 0;
-				while( $this->modelTemplate->getAllByIndex( 'title', $title ) ){
-					$suffix	= ' ('.date( 'Y-m-d' ).( $counter ? '-'.$counter : '' ).')';
-					$title	= $template->title.$suffix;
-					$counter++;
+
+				if( empty( $template->type ) || $template->type !== 'mail-template' )
+					throw new InvalidArgumentException( 'Uploaded file does not contain a template' );
+				if( empty( $template->entity ) ){
+					$title		= $template->title;
+					$counter	= 0;
+					while( $this->modelTemplate->countByIndex( 'title', $title ) ){
+						$suffix	= ' ('.date( 'Y-m-d' ).( $counter ? '-'.$counter : '' ).')';
+						$title	= $template->title.$suffix;
+						$counter++;
+					}
+					$data	= array(
+						'status'		=> Model_Mail_Template::STATUS_IMPORTED,
+						'title'			=> $title,
+						'version'		=> $template->version,
+						'language'		=> $template->language,
+						'plain'			=> $template->contents->text,
+						'html'			=> $template->contents->html,
+						'css'			=> $template->contents->css,
+						'styles'		=> $template->files->css ? json_encode( $template->files->css ) : NULL,
+						'images'		=> $template->links->image ? json_encode( $template->links->image ) : NULL,
+						'createdAt'		=> time(),
+						'modifiedAt'	=> time(),
+					);
 				}
-				$data	= array(
-					'title'			=> $title,
-					'version'		=> $template->version,
-					'language'		=> $template->language,
-					'plain'			=> $template->contents->text,
-					'html'			=> $template->contents->html,
-					'css'			=> $template->contents->css,
-					'styles'		=> $template->files->css ? json_encode( $template->files->css ) : NULL,
-					'images'		=> $template->links->image ? json_encode( $template->links->image ) : NULL,
-					'createdAt'		=> time(),
-					'modifiedAt'	=> time(),
-				);
+				else if( !empty( $template->version ) && $template->version == 2 ){
+					$entity		= $template->entity;
+					$title		= $entity->title;
+					$counter	= 0;
+					while( $this->modelTemplate->countByIndex( 'title', $title ) ){
+						$suffix	= ' ('.date( 'Y-m-d' ).( $counter ? '-'.$counter : '' ).')';
+						$title	= $entity->title.$suffix;
+						$counter++;
+					}
+					$files	= array( 'styles' => array(), 'images' => array() );
+					foreach( array_keys( $files ) as $topic ){
+						foreach( $entity->files->$topic as $item ){
+							if( !file_exists( $item->filePath )){
+								new FS_Folder( dirname( $item->filePath ), TRUE );
+								$file	= new FS_File( $item->filePath, TRUE );
+								$file->setContent( base64_decode( $item->content ) );
+							}
+							$files[$topic][]	= $item->filePath;
+						}
+					}
+					$data	= array(
+						'status'		=> Model_Mail_Template::STATUS_IMPORTED,
+						'title'			=> $title,
+						'version'		=> $entity->version,
+						'language'		=> $entity->language,
+						'plain'			=> $entity->contents->text,
+						'html'			=> $entity->contents->html,
+						'css'			=> $entity->contents->css,
+						'styles'		=> json_encode( $files['styles'] ),
+						'images'		=> json_encode( $files['images'] ),
+						'createdAt'		=> time(),
+						'modifiedAt'	=> time(),
+					);
+				}
+				else{
+					$this->messenger->noteError( 'File is not compatible' );
+					$this->restart( NULL, TRUE );
+				}
 				$templateId	= $this->modelTemplate->add( $data, FALSE );
 				$this->messenger->noteSuccess( 'Template imported as '.$title );
 				$this->restart( 'edit/'.$templateId, TRUE );
@@ -293,9 +382,9 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 				if( !$message )
 					$message	= $e->getMessage();
 				$this->messenger->noteError( $message );
-				$this->restart( NULL, TRUE );
 			}
 		}
+		$this->restart( NULL, TRUE );
 	}
 
 	public function index(){
@@ -313,11 +402,12 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 	public function preview( $templateId, $mode = NULL ){
 		try{
 			$template	= $this->checkTemplate( $templateId );
+//			print_m( $template);die;
 
 			$env	= $this->env;
 			if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 				$env	= Logic_Frontend::getRemoteEnv( $this->env );
-			$mail		= new Mail_Test( $env, array( 'mailTemplateId' => $templateId ) );
+			$mail		= new Mail_Test( $env, array( 'forceTemplateId' => $templateId ) );
 			switch( strtolower( $mode ) ){
 				case 'html':
 					$helper	= new View_Helper_Mail_View_HTML( $this->env );

@@ -63,6 +63,42 @@ $panelMain	= '
 		</div>
 	</form>';
 
+$panelTest	= '
+	<form action="./admin/mail/template/test/'.$template->mailTemplateId.'" method="post">
+		<div class="content-panel">
+			<h3>'.$words['edit-test']['heading'].'</h3>
+			<div class="content-panel-inner">
+				<div class="row-fluid">
+					<div class="span12">
+						<label for="input_email">'.$words['edit-test']['labelAddress'].'</label>
+						<input type="email" name="email" id="input_email" class="span12" required="required"/>
+					</div>
+				</div>
+				<div class="buttonbar">
+					<button type="submit" class="btn">'.$words['edit-test']['buttonSend'].'</button>
+				</div>
+			</div>
+		</div>
+	</form>';
+
+$panelCopy	= '
+	<form action="./admin/mail/template/copy/'.$template->mailTemplateId.'" method="post">
+		<div class="content-panel">
+			<h3>'.$words['edit-copy']['heading'].'</h3>
+			<div class="content-panel-inner">
+				<div class="row-fluid">
+					<div class="span12">
+						<label for="input_title">'.$words['edit-copy']['labelTitle'].'</label>
+						<input type="text" name="title" id="input_title" class="span12" required="required"/>
+					</div>
+				</div>
+				<div class="buttonbar">
+					<button type="submit" class="btn">'.$words['edit-copy']['buttonCopy'].'</button>
+				</div>
+			</div>
+		</div>
+	</form>';
+
 $panelExport	= '
 	<div class="content-panel">
 		<h3>'.$words['edit-export']['heading'].'</h3>
@@ -101,32 +137,13 @@ $panelRemove	= '
 					'./admin/mail/template/remove/'.$template->mailTemplateId,
 					$words['edit']['buttonRemove'],
 					'btn btn-small btn-danger',
-					'remove'
+					'fa fa-fw fa-remove'
 				)->setConfirm( 'Wirklich?' ).'
 			</div>
 		</div>
 	</div>';
 if( $template->used )
 	$panelRemove	= '';
-
-$panelTest	= '
-	<form action="./admin/mail/template/test/'.$template->mailTemplateId.'" method="post">
-		<div class="content-panel">
-			<h3>'.$words['edit-test']['heading'].'</h3>
-			<div class="content-panel-inner">
-				<div class="row-fluid">
-					<div class="span12">
-						<label for="input_email">'.$words['edit-test']['labelAddress'].'</label>
-						<input type="email" name="email" id="input_email" class="span12"/>
-					</div>
-				</div>
-				<div class="buttonbar">
-					<button type="submit" class="btn">'.$words['edit-test']['buttonSend'].'</button>
-				</div>
-			</div>
-		</div>
-	</form>';
-
 
 /*  --  PANEL: PREVIEW: HTML  --  */
 $modalPreviewHtml		= new Modal( 'modal-admin-mail-template-preview-html' );
@@ -203,6 +220,9 @@ return '
 			<div class="row-fluid">
 				<div class="span6">
 					'.$panelTest.'
+				</div>
+				<div class="span6">
+					'.$panelCopy.'
 				</div>
 			</div>
 			<div class="row-fluid">
