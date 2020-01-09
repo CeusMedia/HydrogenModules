@@ -3,14 +3,11 @@ class Mail_Test extends Mail_Abstract{
 
 	public function generate( $data = array() ){
 		$this->setSubject( 'Test' );
-		$contentText	= $this->renderText( $data );
-		$contentHtml	= $this->renderHtml( $data );
-		$this->setText( $contentText );
-		$this->setHtml( $contentHtml );
-		return array(
-			'text'	=> $contentText,
-			'html'	=> $contentHtml,
-		);
+		if( !empty( $data['forceTemplateId'] ) )
+			$this->setTemplateId( $data['forceTemplateId'] );
+		$this->setText( $this->renderText( $data ) );
+		$this->setHtml( $this->renderHtml( $data ) );
+		return $this;
 	}
 
 	public function renderHtml( $data = array() ){

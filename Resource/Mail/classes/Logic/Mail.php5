@@ -369,16 +369,16 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	- default mail template ID of mail resource module
 	 *	The first of these templates being usable will be stored and returned.
 	 *	@access		public
-	 *	@param		integer		$preferredTmplateId		Template ID to override database and module defaults, if usable
+	 *	@param		integer		$preferredTemplateId	Template ID to override database and module defaults, if usable
 	 *	@param		boolean		$considerFrontend		Flag: consider mail resource module of frontend, if available
 	 *	@param		boolean		$strict					Flag: throw exception if something goes wrong
 	 *	@return		objects		Model entity object of detected mail template
 	 *	@todo		see code doc
 	 */
-	public function detectTemplateToUse( $preferredTmplateId = 0, $considerFrontend = FALSE, $strict = TRUE ){
-		$preferredTmplateId	= (int) $preferredTmplateId;										//  @todo remove after update to PHP 7.x using type hints
-		if( array_key_exists( $preferredTmplateId, $this->detectedTemplates ) )
-			return $this->detectedTemplates[$preferredTmplateId];
+	public function detectTemplateToUse( $preferredTemplateId = 0, $considerFrontend = FALSE, $strict = TRUE ){
+		$preferredTemplateId	= (int) $preferredTemplateId;										//  @todo remove after update to PHP 7.x using type hints
+		if( array_key_exists( $preferredTemplateId, $this->detectedTemplates ) )
+			return $this->detectedTemplates[$preferredTemplateId];
 
 		$defaultFromMailModule	= $this->options->get( 'template' );
 		$defaultFromDatabase	= $this->modelTemplate->getByIndex( 'status', Model_Mail_Template::STATUS_ACTIVE, array(), 'mailTemplateId' );
@@ -396,13 +396,13 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		array_push( $templateIds, $defaultFromMailModule ? $defaultFromMailModule : 0 );
 		array_push( $templateIds, $defaultFromDatabase ? $defaultFromDatabase : 0 );
 		array_push( $templateIds, $defaultFromFrontend ? $defaultFromFrontend : 0 );
-		array_push( $templateIds, $preferredTmplateId ? $preferredTmplateId : 0 );
+		array_push( $templateIds, $preferredTemplateId ? $preferredTemplateId : 0 );
 
 		//  @todo active for PHP 7.x
 //		array_push( $templateIds, $defaultFromMailModule ?? 0 );
 //		array_push( $templateIds, $defaultFromDatabase ?? 0 );
 //		array_push( $templateIds, $defaultFromFrontend ?? 0 );
-//		array_push( $templateIds, $preferredTmplateId ?? 0 );
+//		array_push( $templateIds, $preferredTemplateId ?? 0 );
 
 		$templateIds	= array_unique( $templateIds );
 
@@ -420,7 +420,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		//  get best template and store for later
 		$detectedTemplateId	= array_pop( $templateIds );
 		$template			= $this->modelTemplate->get( $detectedTemplateId );
-		$this->detectedTemplates[$preferredTmplateId]	= $template;
+		$this->detectedTemplates[$detectedTemplateId]	= $template;
 		return $template;
 	}
 
@@ -503,7 +503,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		$incompleteMailDataObject->raw	= $this->compressString( $raw, $incompleteMailDataObject->compression );
 
 		$data		= array(
-			'templateId'		=> $mail->templateId,
+			'templateId'		=> $mail->getTemplateId(),
 			'language'			=> strtolower( trim( $language ) ),
 			'senderId'			=> (int) $senderId,
 			'senderAddress'		=> $senderAddress,

@@ -7,43 +7,48 @@
  */
 abstract class Mail_Abstract{
 
-	/**	@var		CeusMedia\Mail\Message				$mail			Mail objectm, build on construction */
+	/**	@var		object								$mail			Mail objectm, build on construction */
 	public $mail;
 
+	/**	@var		CMF_Hydrogen_Environment			$env			Environment object */
+	protected $env;
 	/**	@var		ADT_List_Dictionary					$config			Application configuration object */
 	protected $config;
-	/*	@var		CMF_Hydrogen_Environment			$env			Environment object */
-	protected $env;
+	/**	@var		ADT_List_Dictionary					$options		Module configuration object */
+	protected $options;
 	/** @var		Logic_Mail							$logicMail		Mail logic object */
 	protected $logicMail;
 	/** @var		UI_HTML_PageFrame					$page			Empty page oject for HTML mails */
 	protected $page;
-	/** @var		CeusMedia\Mail\Transport\SMTP		$transport		Mail transport object, build on construction */
+	/** @var		object								$transport		Mail transport object, build on construction */
 	protected $transport;
 	/** @var		CMF_Hydrogen_View					$view			General view instance */
 	protected $view;
+	/** @var		Model_Mail_Template					$modelTemplate	Mail template model object */
+	protected $modelTemplate;
 	/** @var		string								$baseUrl		Application base URL */
 	protected $baseUrl;
 	/** @var		array								$bodyClasses	List of Stylesheet files to integrate into HTML body */
 	protected $addedStyles				= array();
 	/** @var		array								$bodyClasses	List of classes to apply to HTML body */
 	protected $bodyClasses				= array();
-	/** @var		Model_Mail_Template					$modelTemplate	Mail template model object */
-	protected $modelTemplate;
-
-	protected $encodingHtml				= 'quoted-printable';
-
-	protected $encodingSubject			= 'quoted-printable';
-
-	protected $encodingText				= 'quoted-printable';
-
+	/** @var		array								$data			Data assigned for mail body generation, for HTML and text */
+	protected $data						= array();
+	/** @var		array								$contents		Map of generated and rendered contents */
 	protected $contents					= array(
 		'htmlGenerated'		=> '',
 		'htmlRendered'		=> '',
 		'textGenerated'		=> '',
 		'textRendered'		=> '',
 	);
-
+	/** @var		integer								$templateId		ID of template to force to use on rendering of mail contents */
+	protected $templateId				= 0;
+	/** @var		string								$encodingHtml	Default encoding for HTML */
+	protected $encodingHtml				= 'quoted-printable';
+	/** @var		string								$encodingHtml	Default encoding for subject */
+	protected $encodingSubject			= 'quoted-printable';
+	/** @var		string								$encodingHtml	Default encoding for text */
+	protected $encodingText				= 'quoted-printable';
 
 	/**
 	 *	Contructor.
@@ -167,6 +172,13 @@ abstract class Mail_Abstract{
 	 */
 	public function getSubject(){
 		return $this->mail->getSubject();
+	}
+
+	public function getTemplateId(){
+		$template	= $this->getTemplateToUse( 0, TRUE, FALSE );
+		if( $template )
+			return $template->mailTemplateId;
+		return 0;
 	}
 
 	public function initTransport( $verbose = FALSE ){
@@ -391,7 +403,7 @@ abstract class Mail_Abstract{
 
 	protected function applyTemplateToHtml( $content, $templateId = NULL ){
 		$libraries	= $this->logicMail->detectAvailableMailLibraries();
-		$template	= $this->logicMail->detectTemplateToUse( $templateId, TRUE, FALSE );
+		$template	= $this->getTemplateToUse( $templateId, TRUE, FALSE );
 		if( !$template )
 			return $content;
 		$wordsMain		= $this->env->getLanguage()->getWords( 'main' );
@@ -465,12 +477,12 @@ abstract class Mail_Abstract{
 	 *	Applies detected mail template to generated mail content, if available.
 	 *
 	 *	@access		protected
-	 *	@param		string		$content		123
+	 *	@param		string		$content		...
 	 *	@param		integer		$templateId		ID of template to use in favor of defaults (must be usable)
 	 *	@return		string						Fully rendered content
 	 */
 	protected function applyTemplateToText( $content, $templateId = NULL ){
-		$template	= $this->logicMail->detectTemplateToUse( $templateId, TRUE, FALSE );
+		$template	= $this->getTemplateToUse( $templateId, TRUE, FALSE );
 		if( !$template )
 			return $content;
 		$wordsMain		= $this->env->getLanguage()->getWords( 'main' );
@@ -519,6 +531,30 @@ abstract class Mail_Abstract{
 	abstract protected function generate();
 
 	/**
+	 *	Get template to use.
+	 *	Having a template ID set, this template will be forced.
+	 *	Needed for preview and testing.
+	 *
+	 *	Otherwise detects best template to use by looking for:
+	 *	- given template ID, realizing mail settings of mail class of a module
+	 *	- active mail template ID within database
+	 *	- default mail template ID of mail resource module of frontend application (if considered)
+	 *	- default mail template ID of mail resource module
+	 *	The first of these templates being usable will be stored and returned.
+	 *	@access		public
+	 *	@param		integer		$preferredTemplateId	Template ID to override database and module defaults, if usable
+	 *	@param		boolean		$considerFrontend		Flag: consider mail resource module of frontend, if available
+	 *	@param		boolean		$strict					Flag: throw exception if something goes wrong
+	 *	@return		objects		Model entity object of detected mail template
+	 */
+	protected function getTemplateToUse( $preferredTemplateId = 0, $considerFrontend = FALSE, $strict = TRUE ){
+		if( $this->templateId )
+			if( ( $template = $this->modelTemplate->get( $this->templateId ) ) )
+				return $template;
+		return $this->logicMail->detectTemplateToUse( $preferredTemplateId, $considerFrontend, $strict );
+	}
+
+	/**
 	 *	Loads View Class of called Controller.
 	 *	@access		protected
 	 *	@param		string		$topic		Locale file key, eg. test/my
@@ -563,6 +599,7 @@ abstract class Mail_Abstract{
 	protected function setHtml( $content, $templateId = 0 ){
 		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];
+
 		$contentFull	= $this->applyTemplateToHtml( $content, $templateId );
 
 		if( !preg_match( '/(<html>|<head>)/', $contentFull ) ){
@@ -586,6 +623,19 @@ abstract class Mail_Abstract{
 		$this->contents['htmlGenerated']	= $content;
 		$this->contents['htmlRendered']		= $contentFull;
 		$this->mail->addHTML( $contentFull, 'UTF-8', $this->encodingHtml );
+		return $this;
+	}
+
+	/**
+	 *	Sets ID of mail template to force.
+	 *	Needed for preview and testing.
+	 *	Set to 0 to return to detection mode.
+	 *	@access		protected
+	 *	@param		integer		$templateId		Forced template ID
+	 *	@return 	self
+	 */
+	protected function setTemplateId( $templateId ){
+		$this->templateId	= $templateId;
 		return $this;
 	}
 
