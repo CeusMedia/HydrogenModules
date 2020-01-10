@@ -304,16 +304,21 @@ class Job_Mail_Archive extends Job_Abstract{
 	}
 
 	private function _loadMailClasses(){
-		$mailClassPaths	= array( './' );
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
-			$logicFrontend		= Logic_Frontend::getInstance( $this->env );
-			if( !in_array( $logicFrontend->getPath(), $mailClassPaths ) )
-				$mailClassPaths[]	= $logicFrontend->getPath();
-		}
-		foreach( $mailClassPaths as $mailClassPaths ){
-			$index	= new FS_File_RecursiveRegexFilter( $mailClassPaths.'/classes/Mail/', '/\.php5?/' );
-			foreach( $index as $entry ){
-				@include_once( $entry->getPathname() );
+		$loadedClasses	= array();
+		$mailClassPaths	= array( './', 'admin/' );
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$mailClassPaths[]	= Logic_Frontend::getInstance( $this->env )->getPath();
+		foreach( array_unique( $mailClassPaths ) as $mailClassPath ){
+			if( !is_dir( $mailClassPath ) )
+				continue;
+			$path	= rtrim( trim( $classClassPath ), '/' ).'/classes/Mail/';
+			foreach( new FS_File_RecursiveRegexFilter( $path, '/\.php5?/' ) as $entry ){
+				$content	= FS_File_Reader::load( $entry->getPathname() );
+				$className	= preg_replace( '/^.*class ([A-Z][A-Za-z0-9_]+).*$/s', '\\1', $content, 1 );
+				if( $className && !in_array( $className, $loadedClasses ) ){
+					include_once( $entry->getPathname() );
+					$loadedClasses[]	= $className;
+				}
 			}
 		}
 	}
@@ -322,8 +327,8 @@ class Job_Mail_Archive extends Job_Abstract{
 		$classMigrations	= array(
 			'Mail_Auth_Password'		=> 'Mail_Auth_Local_Password',
 			'Mail_Auth_Register'		=> 'Mail_Auth_Local_Register',
-//			'Mail_Shop_Order_Customer'	=> 'Mail_Shop_Customer_Ordered',
-//			'Mail_Shop_Order_Manager'	=> 'Mail_Shop_Manager_Ordered',
+			'Mail_Shop_Order_Customer'	=> 'Mail_Shop_Customer_Ordered',
+			'Mail_Shop_Order_Manager'	=> 'Mail_Shop_Manager_Ordered',
 		);
 
 		if( !array_key_exists( $mail->mailClass, $classMigrations ) )
