@@ -30,7 +30,7 @@ foreach( $templates as $template ){
 	$rows[]	= UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'td', $title ),
 		UI_HTML_Tag::create( 'td', $badgeStatus ),
-		UI_HTML_Tag::create( 'td', sprintf( $words['index']['valueUsedInMail'], $modelMail->countByIndex( 'templateId', $template->mailTemplateId ) ) ),
+		UI_HTML_Tag::create( 'td', sprintf( $words['index']['valueUsedInMail'], $template->used ) ),
 		UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i', $template->createdAt ) ),
 		UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i', $template->modifiedAt ) ),
 	) );
