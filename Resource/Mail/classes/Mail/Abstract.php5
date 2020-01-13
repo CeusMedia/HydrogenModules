@@ -94,7 +94,7 @@ abstract class Mail_Abstract{
 	 *	@return		array		List of allowed members during serialization
 	 */
 	public function __sleep(){
-		return array( 'mail', 'page'/*, 'transport', 'options'*/ );
+		return array( 'mail', 'page', 'logicMail'/*, 'transport', 'options'*/ );
 	}
 
 /*	public function __wakeup(){
@@ -182,6 +182,8 @@ abstract class Mail_Abstract{
 	}
 
 	public function initTransport( $verbose = FALSE ){
+		if( empty( $this->logicMail ) )
+			$this->logicMail	= $this->env->getLogic()->get( 'Mail' );
 		$libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$options	= $this->env->getConfig()->getAll( 'module.resource_mail.transport.', TRUE );
 		switch( strtolower( $options->get( 'type' ) ) ){
