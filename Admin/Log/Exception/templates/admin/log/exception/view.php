@@ -3,12 +3,11 @@
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
-//print_m( $exception->request->get( '__path' ) );die;
-//print_m( $exception );die;
+//print_m($exception);die;
 
 $file		= preg_replace( "/^".preg_quote( realpath( $env->uri ), '/' )."/", '.', $exception->file );
-$date		= date( 'Y.m.d', $exception->timestamp );
-$time		= date( 'H:i:s', $exception->timestamp );
+$date		= date( 'Y.m.d', $exception->createdAt );
+$time		= date( 'H:i:s', $exception->createdAt );
 
 $xmpStyle	= 'overflow: auto; border: 1px solid gray; background-color: #EFEFEF; padding: 1em 2em';
 
@@ -20,34 +19,80 @@ else
 	$trace	= '<xmp style="'.$xmpStyle.'">'.$exception->trace.'</xmp>';
 $sectionTrace	= UI_HTML_Tag::create( 'h4', 'Stack Trace' ).$trace;
 
+$exceptionEnv		= unserialize( $exception->env );
+$exceptionRequest	= unserialize( $exception->request );
+$exceptionSession	= unserialize( $exception->session );
+
 $facts	= array();
 $facts['Message']	= '<big><strong>'.$exception->message.'</strong></big>';
 if( (int) $exception->code != 0 )
 	$facts['Code']	= $exception->code;
 $facts['File (Line)']	= $file.' ('.$exception->line.')';
 $facts['Date (Time)']	= $date.' <small class="muted">('.$time.')</small>';
-$facts['Reqest Path']	= $exception->request->get( '__path' );
-$facts['App Name']		= $exception->env['appName'];
-$facts['Base URL']		= $exception->env['url'];
-$facts['Environment']	= $exception->env['class'];
+$facts['Reqest Path']	= $exceptionRequest->get( '__path' );
+$facts['App Name']		= $exceptionEnv['appName'];
+$facts['Base URL']		= $exceptionEnv['url'];
+$facts['Environment']	= $exceptionEnv['class'];
+
+
 
 $list	= array();
 foreach( $facts as $key => $value )
 	$list[]	= UI_HTML_Tag::create( 'dt', $key ).UI_HTML_Tag::create( 'dd', $value );
 $list	= UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 
-$requestHeaders	= array();
-if( isset( $exception->request ) ){
-	$requestHeaders	= UI_HTML_Tag::create( 'xmp', $exception->request->getHeaders()->render(), array( 'style' => $xmpStyle ) );
+if( $exceptionRequest ){
+	$requestHeaders	= UI_HTML_Tag::create( 'xmp', $exceptionRequest->getHeaders()->render(), array( 'style' => $xmpStyle ) );
 	$sectionRequestHeaders	= UI_HTML_Tag::create( 'h4', 'Request Headers' ).$requestHeaders;
 }
+
+$sectionSession	= '';
+if( $exceptionSession ){
+	$rows	= array();
+	foreach( $exceptionSession as $key => $value ){
+		$rows[]	= UI_HTML_Tag::create( 'tr', array(
+			UI_HTML_Tag::create( 'td', count( $rows ) + 1, array( 'style' => 'text-align: right' ) ),
+			UI_HTML_Tag::create( 'td', $key ),
+			UI_HTML_Tag::create( 'td', $value ),
+		) );
+	}
+	$colgroup		= UI_HTML_Elements::ColumnGroup( '40px', '35%', '' );
+	$thead			= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
+		UI_HTML_Tag::create( 'th', '#', array( 'style' => 'text-align: right' ) ),
+		UI_HTML_Tag::create( 'th', 'Key' ),
+		UI_HTML_Tag::create( 'th', 'Value' )
+	) ) );
+	$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
+	$sessionData	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array(
+		'class'	=> 'table table-striped table-condensed',
+		'style'	=> 'border: 1px solid rgba(127, 127, 127, 0.5)',
+	) );
+	$sectionSession	= UI_HTML_Tag::create( 'h4', 'Session Data' ).$sessionData;
+}
+
+$sectionFile	= '';
+if( file_exists( $exception->file ) ){
+	$fileLines	= FS_File_Reader::loadArray( $exception->file );
+	$firstLine	= max( 0, $exception->line - 5 );
+	$fileLines	= array_slice( $fileLines, $firstLine, 11 );
+	$lines		= array();
+	foreach( $fileLines as $nr => $line ){
+		$lines[]	= UI_HTML_Tag::create( 'tr', array(
+			UI_HTML_Tag::create( 'th', $firstLine + $nr + 1 ),
+			UI_HTML_Tag::create( 'td', '<tt>'.$line.'</tt>' ),
+		) );
+	}
+	$lines			= UI_HTML_Tag::create( 'table', $lines, array( 'class' => 'table table-striped table-condensed' ) );
+	$sectionFile	=UI_HTML_Tag::create( 'h4', 'File' ).$lines;
+}
+
 
 $buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;zur Liste', array(
 	'href'		=> './admin/log/exception'.( $page ? '/'.$page : '' ),
 	'class'		=> 'btn btn-small',
 ) );
 $buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
-	'href'		=> './admin/log/exception/remove/'.$exception->id,
+	'href'		=> './admin/log/exception/remove/'.$exception->exceptionId,
 	'class'		=> 'btn btn-small btn-danger',
 ) );
 
@@ -59,9 +104,13 @@ return '
 			<div class="content-panel-inner">
 				'.$list.'
 				<hr/>
+				'.$sectionFile.'
+				<hr/>
 				'.$sectionTrace.'
 				<hr/>
 				'.$sectionRequestHeaders.'
+				<hr/>
+				'.$sectionSession.'
 				<div class="buttonbar">
 					'.$buttonCancel.'
 					'.$buttonRemove.'

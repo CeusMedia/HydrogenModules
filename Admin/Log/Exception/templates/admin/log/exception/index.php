@@ -21,19 +21,19 @@ $list	= '<div class="muted"><em><small>No exceptions logged.</small></em></div>'
 if( $exceptions ){
 	$list	= array();
 	foreach( $exceptions as $nr => $exception ){
-
-		$link	= UI_HTML_Tag::create( 'a', $exception->message, array( 'href' => './admin/log/exception/view/'.$exception->id ) );
-		$date	= date( 'Y.m.d', $exception->timestamp );
-		$time	= date( 'H:i:s', $exception->timestamp );
+//print_m($exception);die;
+		$link	= UI_HTML_Tag::create( 'a', $exception->message, array( 'href' => './admin/log/exception/view/'.$exception->exceptionId ) );
+		$date	= date( 'Y.m.d', $exception->createdAt );
+		$time	= date( 'H:i:s', $exception->createdAt );
 
 		$buttons	= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'a', $iconView, array(
 				'class'	=> 'btn btn-mini not-btn-info',
-				'href'	=> './admin/log/exception/view/'.$exception->id
+				'href'	=> './admin/log/exception/view/'.$exception->exceptionId
 			) ),
 			UI_HTML_Tag::create( 'a', $iconRemove, array(
 				'class'	=> 'btn btn-mini btn-danger',
-				'href'	=> './admin/log/exception/remove/'.$exception->id
+				'href'	=> './admin/log/exception/remove/'.$exception->exceptionId
 			) ),
 		), array( 'class' => 'btn-group' ) );
 

@@ -75,16 +75,16 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 			$content->classInterfaces	= class_implements( $content->class );
 		}
 		if( method_exists( $exception, 'getSQLSTATE' ) )
-		$content->sqlState	= $exception->getSQLSTATE();
+			$content->sqlState	= $exception->getSQLSTATE();
 
 		$classes	= array_values( array( $content->class ) + $content->classParents );
 
 		$content->resource		= NULL;
 		if( in_array( 'Exception_IO', $classes ) )
-		$content->resource		= $exception->getResource();
+			$content->resource		= $exception->getResource();
 		$content->subject		= NULL;
 		if( in_array( 'Exception_Logic', $classes ) )
-		$content->subject		= $exception->getSubject();
+			$content->subject		= $exception->getSubject();
 		return $content;
 	}
 
