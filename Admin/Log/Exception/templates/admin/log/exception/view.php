@@ -49,17 +49,24 @@ if( $exceptionRequest ){
 $sectionSession	= '';
 if( $exceptionSession ){
 	$rows	= array();
+	ksort( $exceptionSession );
 	foreach( $exceptionSession as $key => $value ){
+		$key	= UI_HTML_Tag::create( 'div', $key, array( 'style' => 'font-family: monospace; font-size: 0.85em; letter-spacing: -0.5px' ) );
+		$type	= ucfirst( gettype( $value ) );
+		$type	= UI_HTML_Tag::create( 'small', $type, array( 'class' => 'muted' ) );
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', count( $rows ) + 1, array( 'style' => 'text-align: right' ) ),
 			UI_HTML_Tag::create( 'td', $key ),
-			UI_HTML_Tag::create( 'td', $value ),
+			UI_HTML_Tag::create( 'td', $type, array( 'style' => 'text-align: right' ) ),
+//			UI_HTML_Tag::create( 'td', json_encode( $value ) ),
+			UI_HTML_Tag::create( 'td', stripslashes( trim( json_encode( $value ), '"' ) ) ),
 		) );
 	}
-	$colgroup		= UI_HTML_Elements::ColumnGroup( '40px', '35%', '' );
+	$colgroup		= UI_HTML_Elements::ColumnGroup( '40px', '35%', '7%', '' );
 	$thead			= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'th', '#', array( 'style' => 'text-align: right' ) ),
 		UI_HTML_Tag::create( 'th', 'Key' ),
+		UI_HTML_Tag::create( 'th', 'Type', array( 'style' => 'text-align: right' ) ),
 		UI_HTML_Tag::create( 'th', 'Value' )
 	) ) );
 	$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
@@ -82,8 +89,12 @@ if( file_exists( $exception->file ) ){
 			UI_HTML_Tag::create( 'td', '<tt>'.$line.'</tt>' ),
 		) );
 	}
-	$lines			= UI_HTML_Tag::create( 'table', $lines, array( 'class' => 'table table-striped table-condensed' ) );
-	$sectionFile	=UI_HTML_Tag::create( 'h4', 'File' ).$lines;
+	$tbody		= UI_HTML_Tag::create( 'tbody', $lines );
+	$lines		= UI_HTML_Tag::create( 'table', $tbody, array(
+		'class' => 'table table-striped table-condensed',
+		'style'	=> 'border: 1px solid rgba(127, 127, 127, 0.5)',
+	) );
+	$sectionFile	= UI_HTML_Tag::create( 'h4', 'File' ).$lines;
 }
 
 
