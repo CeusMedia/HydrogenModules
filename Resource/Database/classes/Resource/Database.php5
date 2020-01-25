@@ -35,7 +35,7 @@
  *	@link			http://code.google.com/p/cmframeworks/
  *	@since			0.4
  */
-class Resource_Database extends \DB_PDO_Connection
+class Resource_Database extends \CeusMedia\Database\PDO\Connection
 {
 	const STATUS_LOST			= -1;
 	const STATUS_UNKNOWN		= 0;
@@ -70,7 +70,8 @@ class Resource_Database extends \DB_PDO_Connection
 	 *	@param		string		$statement		SQL statement to execute
 	 *	@return		integer		Number of affected rows
 	 */
-	public function exec( $statement ){
+	public function exec( $statement ): int
+	{
 		if( $this->status == self::STATUS_UNKNOWN )
 			$this->tryToConnect();
 		return parent::exec( $statement );
@@ -116,6 +117,48 @@ class Resource_Database extends \DB_PDO_Connection
 		return parent::query( $statement, $fetchMode );
 	}
 
+	/**
+	 *	Sets database name in configuration.
+	 *	@access		public
+	 *	@param		boolean		$use		Use in database connection (default) or only edit configuration
+	 *	@return		self
+	 *	@todo		check persistent mode change on instant connections, see disabled lines below
+	 */
+	public function setName( $name, $use = TRUE ){
+		if( $name !== $this->getName( $use ) ){
+			if( $use ){
+//				if( $this->getMode() !== 'lazy' )
+//					$this->setAttribute( PDO::ATTR_PERSISTENT, FALSE );
+				$this->query( 'USE '.$name.';' );
+			}
+			$this->options->set( 'access.name', $name );
+		}
+		return $this;
+	}
+
+	/**
+	 *	Sets table prefix in configuration.
+	 *	@access		public
+	 *	@param		string		$prefix		Table prefix to set in configuration
+	 *	@return		self
+	 */
+	public function setPrefix( $prefix ){
+		$this->options->set( 'access.prefix', $prefix );
+		return $this;
+	}
+
+	/**
+	 *	To be called on connection deconstruction.
+	 *	Does nothing right now.
+	 *	@access		public
+	 *	@return		self
+	 */
+	public function tearDown(){
+		return $this;
+	}
+
+	//  --  PROTECTED  --  //
+
 	protected function realizeDriverOptions(){
 		$options	= array_merge(																	//  merge option pairs ...
 			$this->defaultDriverOptions,															//  ... from default driver options
@@ -154,33 +197,6 @@ class Resource_Database extends \DB_PDO_Connection
 	}
 
 	/**
-	 *	Sets database name in configuration.
-	 *	@access		public
-	 *	@param		boolean		$use		Use in database connection (default) or only edit configuration
-	 *	@return		string
-	 *	@todo		check persistent mode change on instant connections, see disabled lines below
-	 */
-	public function setName( $name, $use = TRUE ){
-		if( $name !== $this->getName( $use ) ){
-			if( $use ){
-//				if( $this->getMode() !== 'lazy' )
-//					$this->setAttribute( PDO::ATTR_PERSISTENT, FALSE );
-				$this->query( 'USE '.$name.';' );
-			}
-			$this->options->set( 'access.name', $name );
-		}
-	}
-
-	/**
-	 *	Returns table prefix from configuration.
-	 *	@access		public
-	 *	@return		string
-	 */
-	public function setPrefix( $prefix ){
-		$this->options->set( 'access.prefix', $prefix );
-	}
-
-	/**
 	 *	Sets up connection to database, if configured with database module or main config (deprecated).
 	 *
 	 *	Attention: If using MySQL and UTF-8 the charset must bet se after connection is established.
@@ -193,7 +209,6 @@ class Resource_Database extends \DB_PDO_Connection
 	 *	Disable this feature after development/debugging!
 	 *
 	 *	@todo		implement lazy mode
-	 *	@todo		0.7: clean deprecated code
 	 *	@todo		realize todos above now that lazy mode has been integrated by a different solution
 	 */
 	protected function setUp(){
@@ -205,7 +220,7 @@ class Resource_Database extends \DB_PDO_Connection
 		$access		= (object) $this->options->getAll( 'access.' );									//  extract connection access configuration
 		if( empty( $access->driver ) )
 			throw new RuntimeException( 'No database driver set' );
-		$dsn		= new \DB_PDO_DataSourceName( $access->driver, $access->name );
+		$dsn		= new \CeusMedia\Database\PDO\DataSourceName( $access->driver, $access->name );
 		!empty( $access->host )		? $dsn->setHost( $access->host ) : NULL;
 		!empty( $access->port )		? $dsn->setPort( $access->port ) : NULL;
 		!empty( $access->username )	? $dsn->setUsername( $access->username ) : NULL;
@@ -226,7 +241,5 @@ class Resource_Database extends \DB_PDO_Connection
 #		if( $charset && $this->driver == 'mysql' )													//  a character set is configured on a MySQL database
 #			$this->exec( "SET NAMES '".$charset."';" );												//  set character set
 	}
-
-	public function tearDown(){}
 }
 ?>
