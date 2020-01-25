@@ -72,7 +72,7 @@ class Controller_Router extends CMF_Hydrogen_Controller{
 		$model			= new Model_Route( $env );
 		$list			= array();
 		$indices		= array(
-			'status'	=> '>0',
+			'status'	=> '> 0',
 			'ajax'		=> $env->getRequest()->isAjax() ? 1 : 0,
 		);
 		foreach( $model->getAllByIndices( $indices ) as $route ){
