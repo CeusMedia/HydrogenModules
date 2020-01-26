@@ -35,7 +35,7 @@ class View_Helper_Mail_View_Text{
 		}
 		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 ){									//  mail uses library CeusMedia/Mail version 1
 			foreach( $message->getParts( TRUE ) as $part )
-				if( $part instanceof \CeusMedia\Mail\Part\Text )
+				if( get_class( $part ) == 'CeusMedia\\Mail\\Part\\Text' )
 					$text	= $part->getContent();
 		}
 		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V2 ){									//  mail uses library CeusMedia/Mail version 1
