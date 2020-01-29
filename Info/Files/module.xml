@@ -3,7 +3,7 @@
 	<title>Info: Files</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydroge module.</log>
 	<log version="0.2.1">Added support for news list via hook.</log>
@@ -17,6 +17,7 @@
 	<log version="0.4.2">Add job to migrate older file entries.</log>
 	<log version="0.4.3">Add icon to newslist items ans focus search.</log>
 	<log version="0.4.4">Add actions and view to edit files and folders.</log>
+	<log version="0.4.5">Extract hook methods to own class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -25,6 +26,7 @@
 		<class>Model/Download/File.php5</class>
 		<class>Model/Download/Folder.php5</class>
 		<class>Job/Info/Files.php5</class>
+		<class>Hook/Info/File.php5</class>
 		<locale>de/info/file.ini</locale>
 		<locale>de/html/info/file/index.bottom.html</locale>
 		<locale>de/html/info/file/index.top.html</locale>
@@ -49,8 +51,8 @@
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Helper_Input_File</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="collectNews">Controller_Info_File::___onPageCollectNews</hook>
-	<hook type="resource" resource="Novelties" event="collect">Controller_Info_File::___onCollectNovelties</hook>
+	<hook type="resource" resource="Page" event="collectNews">Hook_Info_File::onPageCollectNews</hook>
+	<hook type="resource" resource="Novelties" event="collect">Hook_Info_File::onCollectNovelties</hook>
 	<sql on="install" type="mysql" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>download_files`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>download_files` (
