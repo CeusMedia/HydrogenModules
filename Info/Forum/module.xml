@@ -3,7 +3,7 @@
 	<title>Info: Forum</title>
 	<description><![CDATA[Simple forum boards.]]></description>
 	<category>Info</category>
-	<version>0.5.4</version>
+	<version>0.5.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3.5">Extended thread addition handling.</log>
@@ -21,6 +21,7 @@
 	<log version="0.5.2">Add icon to newslist items.</log>
 	<log version="0.5.3">Use FontAwesome for button icons.</log>
 	<log version="0.5.4">Update mail handling.</log>
+	<log version="0.5.5">Extract hook methods to own class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -34,6 +35,7 @@
 		<class>Mail/Forum/Daily.php5</class>
 		<class>View/Info/Forum.php5</class>
 		<class>Job/Info/Forum.php5</class>
+		<class>Hook/Info/Forum.php5</class>
 		<template>info/forum/index.php</template>
 		<template>info/forum/index.add.php</template>
 		<template>info/forum/thread.php</template>
@@ -66,8 +68,8 @@
 	</relations>
 	<link access="acl" path="info/forum" xml:lang="de" rank="55">Forum</link>
 	<link access="acl" path="info/forum" xml:lang="en" rank="55">Forum</link>
-	<hook type="resource" resource="Sitemap" event="registerLinks">Controller_Info_Forum::___onRegisterSitemapLinks</hook>
-	<hook type="resource" resource="Page" event="collectNews">Controller_Info_Forum::___onPageCollectNews</hook>
+	<hook type="resource" resource="Sitemap" event="registerLinks">Hook_Info_Forum::onRegisterSitemapLinks</hook>
+	<hook type="resource" resource="Page" event="collectNews">Hook_Info_Forum::onPageCollectNews</hook>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>forum_posts`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>forum_posts` (
