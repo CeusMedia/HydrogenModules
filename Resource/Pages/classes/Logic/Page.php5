@@ -68,6 +68,7 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 *	@param		boolean		$strict			Flag: throw exceptions on failure
 	 *	@return		object|null					Data object of found page or NULL if nothing found
 	 *	@throws		InvalidArgumentException	if no or empty module ID is given
+	 *	@todo		check if this is deprecated! why the hell get page from controller alone?
 	 */
 	public function getPageFromController( $controllerName, $strict = TRUE ){
 		if( !strlen( trim( $controllerName ) ) )
@@ -113,12 +114,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 *	@param		string		$path			Path to find page for
 	 *	@param		bool		$withParents	Flag: Returns page parents as well (default: no)
 	 *	@return		object						Data object of found page or NULL if nothing found
-	 *	@throws		InvalidArgumentException	if no or empty path is given, call atleast with path 'index'
-	 *	@throws		RuntimeException			if path is not resolvable
-	 *	@throws		RuntimeException			if path parent part is not resolvable
-	 *	@throws		RuntimeException			if parents are enabled and page it its own parent
-	 *	@throws		RuntimeException			if parents are enabled and page nesting loop is detected
-	 *	@throws		RuntimeException			if parents are enabled and page has parent which is missing
+	 *	@throws		RangeException				if path is not resolvable
+	 *	@throws		RangeException				if path parent part is not resolvable
 	 */
 	public function getPageFromPath( $path, $withParents = FALSE ){
 		$parents	= array();
@@ -131,27 +128,6 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 			array_reverse( $parents );
 			$page->parents	= $parents;
 		}
-/*		if( $withParents ){
-			$page->parents	= array();
-			$copy = clone $page;
-			$hadIds	= array();
-			while( $copy->parentId ){
-				if( $copy->pageId === $copy->parentId )
-					throw new RuntimeException( 'Page '.$copy->pageId.' cannot be its own parent' );
-				if( in_array( $copy->pageId, $hadIds ) )
-					throw new RuntimeException( 'Page nesting loop detected starting with page '.$copy->pageId );
-				$hadIds[]	= $copy->pageId;
-				$parent	= $this->getPage( $copy->parentId );
-				if( !$parent )
-					throw new RuntimeException( 'Page '.$copy->pageId.' has missing parent page '.$copy->parentId );
-
-//				if( (int) $parent->type === Model_Page::TYPE_MODULE )								//  parent page is a module controller
-				$parent	= $this->translatePage( $parent );											//  apply localization to page
-				$page->parents[]	= $parent;
-				$copy	= clone $parent;
-			}
-			array_reverse( $page->parents );
-		}*/
 		return $this->translatePage( $page );																//  return this module controlled page
 	}
 
@@ -162,8 +138,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 *	@param		integer		$parentPageId	Parent page ID to start with (default: 0)
 	 *	@param		array		$parents		Flag: Returns page parents as well (default: no)
 	 *	@return		object						Data object of found page or NULL if nothing found
-	 *	@throws		RuntimeException			if path is not resolvable
-	 *	@throws		RuntimeException			if path parent part is not resolvable
+	 *	@throws		RangeException				if path is not resolvable
+	 *	@throws		RangeException				if path parent part is not resolvable
 	 */
 	protected function getPageFromPathRecursive( $path, $parentPageId = 0, & $parents = array() ){
 		if( preg_match( '/\//', $path ) ){
