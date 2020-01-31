@@ -105,6 +105,15 @@ class Logic_Frontend{
 		return trim( $this->getConfigValue( 'locale.default' ) );
 	}
 
+	public function getEnv(){
+		return new CMF_Hydrogen_Environment_Remote( array(
+			'configFile'	=> $this->path.'config/config.ini',
+			'pathApp' 		=> $this->path,
+			'parentEnv'		=> $this->env,
+		) );
+
+	}
+
 	public function getLanguages(){
 		$data		= $this->config->getAll( 'locale.', TRUE );
 		$list		= array( trim( $data->get( 'default' ) ) );
@@ -116,18 +125,19 @@ class Logic_Frontend{
 		return $list;
 	}
 
-	public function getModuleConfigValue( $moduleId, $key ){
-		$values	= $this->getModuleConfigValues( $moduleId, array( $key ) );
+	public function getModuleConfigValue( $moduleId, $key, $strict = FALSE ){
+		$values	= $this->getModuleConfigValues( $moduleId, array( $key ), TRUE, $strict );
 		return array_pop( $values );
 	}
 
-	public function getModuleConfigValues( $moduleId, $keys = array(), $useFasterUncachedSolution = TRUE ){
+	public function getModuleConfigValues( $moduleId, $keys = array(), $useFasterUncachedSolution = TRUE, $strict = TRUE ){
 		$fileName	= $this->getPath( 'modules' ).$moduleId.'.xml';
-		if( !file_exists( $fileName ) )
-			throw new OutOfBoundsException( 'Invalid module ID: '.$moduleId );
-
-		$list	= array();
-
+		$list		= array();
+		if( !file_exists( $fileName ) ){
+			if( $strict )
+				throw new OutOfBoundsException( 'Invalid module ID: '.$moduleId );
+			return $list;
+		}
 		if( $useFasterUncachedSolution ){
 			//  version 1
 			//  description: get config pairs using regular expressions
@@ -178,7 +188,9 @@ class Logic_Frontend{
 		return $list;
 	}
 
-	public function getModules(){
+	public function getModules( $asDictionary = FALSE ){
+		if( $asDictionary )
+			return new ADT_List( $this->modules );
 		return array_keys( $this->modules );
 	}
 
