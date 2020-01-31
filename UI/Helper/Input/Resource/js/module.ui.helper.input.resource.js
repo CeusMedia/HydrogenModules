@@ -1,34 +1,37 @@
 var HelperInputResource = {
+	modePaths: {
+		'image': ['contents/images/', 'images/', 'contents/themes/', 'themes/'],
+		'style': ['contents/themes/', 'themes/'],
+		'document': ['contents/'],
+		'download': ['contents/']
+	},
+	modeExtensions: {
+		'image': [],
+		'style': [],
+		'document': [],
+		'download': []
+	},
 	open: function(elem){
 		var inputId = jQuery(elem).data('inputId');
 		var modalId = jQuery(elem).data('modalId');
-		var mode = jQuery(elem).data('mode');
 		if(!modalId || !inputId)
 			return;
+		var mode = jQuery(elem).data('mode');
+		var paths = this.modePaths[mode];
+		var forcedPaths	= jQuery(elem).data('paths');
+		if(forcedPaths.length)
+			paths = forcedPaths.split(/,/);
 		jQuery("#"+modalId+"-content").hide();
 		jQuery("#"+modalId+"-loader").show();
 		jQuery("#"+modalId).modal();
-
-		var data = {
-			inputId: inputId,
-			modalId: modalId,
-			mode: mode,
-		};
-		switch(mode){
-			case 'image':
-				data = jQuery.extend(data, {
-					paths: ["contents/images/", "images/", "themes/"],
-				});
-				break;
-			case 'style':
-				data = jQuery.extend(data, {
-					paths: ["themes/", "contents/themes/"],
-				});
-				break;
-		}
 		jQuery.ajax({
 			url: "./helper/input/resource/ajaxRender",
-			data: data,
+			data: {
+				inputId: inputId,
+				modalId: modalId,
+				mode: mode,
+				paths: paths,
+			},
 			method: "post",
 			dataType: "html",
 			success: function(html){

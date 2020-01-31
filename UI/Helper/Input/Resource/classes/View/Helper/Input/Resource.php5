@@ -49,6 +49,7 @@ class View_Helper_Input_ResourceTrigger{
 	protected $inputId;
 	protected $label			= 'select';
 	protected $class			= 'btn';
+	protected $paths			= array();
 
 	public function __construct( $env ){
 		$this->env		= $env;
@@ -83,6 +84,12 @@ class View_Helper_Input_ResourceTrigger{
 		return $this;
 	}
 
+	public function setPaths( $paths ){
+		$this->paths	= $paths;
+		return $this;
+	}
+
+
 	public function render(){
 		return UI_HTML_Tag::create( 'button', $this->label, array(
 			'type'		=> "button",
@@ -92,6 +99,7 @@ class View_Helper_Input_ResourceTrigger{
 			'modal-id'	=> $this->modalId,
 			'input-id'	=> $this->inputId,
 			'mode'		=> $this->mode,
+			'paths'		=> join( ',', $this->paths ),
 		) );
 	}
 }

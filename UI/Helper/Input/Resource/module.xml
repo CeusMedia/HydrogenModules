@@ -3,16 +3,19 @@
 	<title>UI: Helper: Input: Resource</title>
 	<description><![CDATA[...]]></description>
 	<category>User Interface</category>
-	<version>0.3.1</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support several resources by mode.</log>
 	<log version="0.3.1">Replace related module UI_Bootstrap_Modal by newer UI_Bootstrap.</log>
+	<log version="0.3.2">Add hook to setup paths in JavaScript.</log>
+	<log version="0.3.3">Support default and forced paths for each mode.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Helper/Input/Resource.php5</class>
+		<class>Hook/Helper/Input/Resource.php5</class>
 		<class>View/Helper/Input/Resource.php5</class>
 		<script load="auto">module.ui.helper.input.resource.js</script>
 		<style source="common" load="auto">module.ui.helper.input.resource.css</style>
@@ -20,4 +23,5 @@
 	<relations>
 		<needs type="module">UI_Bootstrap</needs>
 	</relations>
+	<hook type="event" resource="Page" event="applyModules">Hook_Helper_Input_Resource::onPageInitModules</hook>
 </module>
