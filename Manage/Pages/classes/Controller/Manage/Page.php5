@@ -12,14 +12,22 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 	protected function __onInit(){
 		$config				= $this->env->getConfig()->getAll( 'module.manage_pages.', TRUE );
 
-		$this->model		= new Model_Page( $this->env );
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->words		= $this->getWords();
-
 		$this->session		= $this->env->getSession();
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->languages	= $this->frontend->getLanguages();
+
+		$source	= $this->frontend->getEnv()->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+		$source	= $this->frontend->getModuleConfigValue( 'UI_Navigation', 'menu.source' );
+		$source	= $this->env->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+
+		if( $source === 'Database' )
+			$this->model		= new Model_Page( $this->env );
+		else if( $source === 'Config' )
+			$this->model		= new Model_Config_Page( $this->frontend->getEnv() );
+
 		$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
 		if( !$this->session->get( 'module.manage_pages.language' ) ){
 			if( $this->frontend->getDefaultLanguage() )
@@ -37,43 +45,6 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
-		$frontend		= Logic_Frontend::getInstance( $env );
-		if( !$frontend->hasModule( 'Info_Pages' ) )
-			return;
-
-		$words		= $env->getLanguage()->getWords( 'manage/page' );
-		$model		= new Model_Page( $env );
-		$list		= array();
-		foreach( $model->getAllByIndex( 'status', 1, array( 'rank' => 'ASC' ) ) as $nr => $page ){
-			$page->level		= 0;
-			if( $page->parentId ){
-				$parent = $model->get( $page->parentId );
-				$page->level		= 1;
-				if( $parent->parentId ){
-					$grand  = $model->get( $parent->parentId );
-					$parent->identifier = $grand->identifier.'/'.$parent->identifier;
-					$parent->title		= $grand->title.' / '.$parent->title;
-					$page->level		= 2;
-				}
-				$page->identifier   = $parent->identifier.'/'.$page->identifier;
-				$page->title		= $parent->title.' / '.$page->title;
-			}
-			$list[$page->title.$nr]	= (object) array(
-				'title'	=> $page->title,
-				'value'	=> './'.$page->identifier,
-			);
-		}
-		if( $list ){
-			ksort( $list );
-			$list	= array( (object) array(
-				'title'	=> $words['tinyMCE']['prefix'],
-				'menu'	=> array_values( $list ),
-			) );
-	//		$context->list	= array_merge( $context->list, array_values( $list ) );
-			$context->list	= array_merge( $context->list, $list );
-		}
-	}
 
 	public function add( $parentId = 0 ){
 		$parent	= $parentId ? $this->checkPageId( $parentId ) : NULL;

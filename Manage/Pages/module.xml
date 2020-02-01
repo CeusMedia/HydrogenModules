@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -46,6 +46,7 @@
 	<log version="1.1.1">Support new component page type.</log>
 	<log version="1.1.2">Support new template column.</log>
 	<log version="1.2.0">Use logic and model from Resource:Pages.</log>
+	<log version="1.2.1">Extract hook to own class.</log>
 <!--	<log version="1.2.1">Add page manager logic.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -54,6 +55,7 @@
 		<class>Controller/Manage/Page.php5</class>
 <!--		<class>Logic/PageManager.php5</class>-->
 		<class>View/Manage/Page.php5</class>
+		<class>Hook/Manage/Page.php5</class>
 		<template>manage/page/add.php</template>
 		<template>manage/page/edit.php</template>
 		<template>manage/page/edit.content.php</template>
@@ -95,5 +97,5 @@
 	<link access="acl" path="manage/page/getJsImageList"/>
 	<link access="acl" path="manage/page/preparePageTree"/>
 	<link access="acl" path="manage/page/setScope"/>
-	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Page::___onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Hook_Manage_Page::onTinyMceGetLinkList</hook>
 </module>
