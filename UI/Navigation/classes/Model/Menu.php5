@@ -238,7 +238,7 @@ class Model_Menu {
 			$pages		= $model->getAllByIndices( array(
 				'parentId'	=> 0,
 				'scope'		=> $scopeId,
-				'status'	=> '>0',
+				'status'	=> '> 0',
 			), array( 'rank' => 'ASC' ) );
 			foreach( $pages as $page ){
 				$item	= (object) array(
@@ -264,7 +264,7 @@ class Model_Menu {
 					$subpages		= $model->getAllByIndices( array(
 						'parentId'	=> $page->pageId,
 						'scope'		=> 0,
-						'status'	=> '>0',
+						'status'	=> '> 0',
 					), array( 'rank' => 'ASC' ) );
 					foreach( $subpages as $subpage ){
 						if( $subpage->status < 1 )
