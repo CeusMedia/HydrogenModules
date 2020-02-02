@@ -18,20 +18,20 @@
  */
 class Logic_Page extends CMF_Hydrogen_Logic{
 
-	protected $modelPage;
+	protected $app				= 'self';
+	protected $model			= array();
 
 	public function __onInit(){
-		$this->modelPage		= new Model_Page( $this->env );
 	}
 
 	public function getChildren( $pageId, $activeOnly = TRUE ){
-		$page	= $this->modelPage->get( $pageId );
+		$page	= $this->getPageModel()->get( $pageId );
 		if( !$page )
 			throw new InvalidArgumentException( 'Invalid page ID given: '.$pageId );
 		$indices	= array( 'parentId'	=> $pageId );
 		if( $activeOnly )
 			$indices['status']	= Model_Page::STATUS_VISIBLE;
-		return $this->modelPage->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
+		return $this->getPageModel()->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
 	}
 
 	/**
@@ -40,7 +40,7 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	public function getPage( $pageId, $strict = TRUE  ){
 		if( !preg_match( '/^[0-9]+$/', $pageId ) )
 			throw new RangeException( 'Given page is not an ID' );
-		$page	= $this->modelPage->get( $pageId );
+		$page	= $this->getPageModel()->get( $pageId );
 		if( !$page ){
 			if( $strict )
 				throw new RangeException( 'Given page is not an ID' );
@@ -50,7 +50,7 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		$current	= $page;
 		$parents	= array();
 		while( $current->parentId !== 0 ){
-			$current	= $this->modelPage->get( $current->parentId );
+			$current	= $this->getPageModel()->get( $current->parentId );
 			if( !$current )
 				break;
 			$parents[]	= $current;
@@ -73,7 +73,7 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	public function getPageFromController( $controllerName, $strict = TRUE ){
 		if( !strlen( trim( $controllerName ) ) )
 			throw new InvalidArgumentException( 'No controller name given' );
-		$page	= $this->modelPage->getByIndex( 'controller', $controllerName );
+		$page	= $this->getPageModel()->getByIndex( 'controller', $controllerName );
 		if( !$page ){
 			if( !$strict )
 				return NULL;
@@ -95,7 +95,7 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	public function getPageFromControllerAction( $controllerName, $action, $strict = TRUE ){
 		if( !strlen( trim( $controllerName ) ) )
 			throw new InvalidArgumentException( 'No controller name given' );
-		$page	= $this->modelPage->getByIndices( array(
+		$page	= $this->getPageModel()->getByIndices( array(
 			'controller'	=> $controllerName,
 			'action'		=> $action,
 		) );
@@ -132,32 +132,6 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	}
 
 	/**
-	 *	...
-	 *	@access		protected
-	 *	@param		string		$path			Path to find page for
-	 *	@param		integer		$parentPageId	Parent page ID to start with (default: 0)
-	 *	@param		array		$parents		Flag: Returns page parents as well (default: no)
-	 *	@return		object						Data object of found page or NULL if nothing found
-	 *	@throws		RangeException				if path is not resolvable
-	 *	@throws		RangeException				if path parent part is not resolvable
-	 */
-	protected function getPageFromPathRecursive( $path, $parentPageId = 0, & $parents = array() ){
-		if( preg_match( '/\//', $path ) ){
-			$parts	= preg_split( '/\//', $path, 2 );
-			$parent	= $this->getPageFromPathRecursive( $parts[0], $parentPageId );
-			if( !$parent )
-				throw new RangeException( 'Parent path "'.$parts[0].'" is not resolvable' );
-			$parents[]	= $parent;
-			return $this->getPageFromPathRecursive( $parts[1], $parent->pageId, $parents );
-		}
-		$indices	= array( 'identifier' => $path, 'parentId' => $parentPageId );
-		$page		= $this->modelPage->getByIndices( $indices );
-		if( !$page )
-			throw new RangeException( 'Page with identifier "'.$path.'" is not resolvable' );
-		return $this->getPage( $page->pageId );
-	}
-
-	/**
 	 *	Tries to resolves URI path from current request and returns found page.
 	 *	@access		public
 	 *	@param		bool		$withParents	Flag: Returns page parents as well (default: no)
@@ -189,14 +163,14 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 */
 	public function hasPage( $pathOrId ){
 		if( preg_match( '/^[0-9]+$/', $pathOrId ) )
-			return (bool) $this->modelPage->get( $pathOrId );
+			return (bool) $this->getPageModel()->get( $pathOrId );
 		return (bool) $this->getPageFromPath( $pathOrId );
 	}
 
 	public function hasPages( $visible = TRUE ){
 		$indices	= array();
 		$indices['status']	= $visible ? '>='.Model_Page::STATUS_VISIBLE : '>='.Model_Page::STATUS_HIDDEN;
-		return $this->modelPage->count( $indices );
+		return $this->getPageModel()->count( $indices );
 	}
 
 	public function isAccessible( $page ){
@@ -205,6 +179,10 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		$outside	= !$isAuthenticated && $page->access == "outside";
 		$inside		= $isAuthenticated && $page->access == "inside";
 		return $public || $outside || $inside;
+	}
+
+	public function setApp( $app ){
+		$this->app	= $app;
 	}
 
 	public function translatePage( $page ){
@@ -217,5 +195,50 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		$page->content	= $localization->translate( $id, $page->content );
 		return $page;
 	}
+
+	//  --  PROTECTED  --  //
+
+	/**
+	 *	...
+	 *	@access		protected
+	 *	@param		string		$path			Path to find page for
+	 *	@param		integer		$parentPageId	Parent page ID to start with (default: 0)
+	 *	@param		array		$parents		Flag: Returns page parents as well (default: no)
+	 *	@return		object						Data object of found page or NULL if nothing found
+	 *	@throws		RangeException				if path is not resolvable
+	 *	@throws		RangeException				if path parent part is not resolvable
+	 */
+	protected function getPageFromPathRecursive( $path, $parentPageId = 0, & $parents = array() ){
+		if( preg_match( '/\//', $path ) ){
+			$parts	= preg_split( '/\//', $path, 2 );
+			$parent	= $this->getPageFromPathRecursive( $parts[0], $parentPageId );
+			if( !$parent )
+				throw new RangeException( 'Parent path "'.$parts[0].'" is not resolvable' );
+			$parents[]	= $parent;
+			return $this->getPageFromPathRecursive( $parts[1], $parent->pageId, $parents );
+		}
+		$indices	= array( 'identifier' => $path, 'parentId' => $parentPageId );
+		$page		= $this->getPageModel()->getByIndices( $indices );
+		if( !$page )
+			throw new RangeException( 'Page with identifier "'.$path.'" is not resolvable' );
+		if( !is_object( $page ) )
+			throw new RangeException( 'Invalid Page Data: '.print_m( $page, NULL, NULL, TRUE ) );
+		return $this->getPage( $page->pageId );
+	}
+
+	protected function getPageModel(){
+		if( !empty( $this->model[$this->app] ) )
+			return $this->model[$this->app];
+		$envManaged		= $this->env;
+		if( $this->app === 'frontend' && class_exists( 'Logic_Frontend' ) ){
+			$frontend	= Logic_Frontend::getInstance( $this->env );
+			$envManaged	= $frontend->getEnv();
+		}
+		$source	= $envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+		if( $source === 'Database' )
+			$this->model[$this->app]	= new Model_Page( $envManaged );
+		else if( $source === 'Config' )
+			$this->model[$this->app]	= new Model_Config_Page( $envManaged );
+		return $this->model[$this->app];
+	}
 }
-?>

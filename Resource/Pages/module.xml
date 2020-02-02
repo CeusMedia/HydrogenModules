@@ -3,7 +3,7 @@
 	<title>Resource: Pages</title>
 	<description><![CDATA[Base of providing addressed pages.]]></description>
 	<category>Resource</category>
-	<version>0.9.0</version>
+	<version>0.9.1</version>
 	<log version="0.1.0">Starting this module as Info:Pages.</log>
 	<log version="0.1.1">Later, the extraction to Resource:Pages happened.</log>
 	<log version="0.1.2">This version log is the reduced progress of the former module.</log>
@@ -27,12 +27,14 @@
 	<log version="0.8.2">Add component page type.</log>
 	<log version="0.8.3">Extend logic class by method hasPages.</log>
 	<log version="0.9.0">Migrate core of Info:Pages to Resource:Pages.</log>
+	<log version="0.9.1">Add prototype of config based page model.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Logic/Page.php5</class>
 		<class>Model/Page.php5</class>
+		<class>Model/Config/Page.php5</class>
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>
