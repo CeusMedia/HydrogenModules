@@ -7,7 +7,8 @@ $iconSuggest	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-magi
 $iconExclude	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-ban' ) );
 
 $metaPageTypes	= array(
-	Model_Page::TYPE_CONTENT
+	Model_Page::TYPE_CONTENT,
+	Model_Page::TYPE_MODULE,
 );
 if( !in_array( (int) $page->type, $metaPageTypes, TRUE ) )
 	return '<div class="alert alert-info"><em>'.$wMeta->no_meta.'</em></div>';
@@ -59,7 +60,7 @@ return '
 					</div>
 					<div class="span6">
 						<label for="input_page_description">'.$wMeta->labelDefaultDescription.'</label>
-						<textarea class="span12" rows="2" name="page_default_description" id="input_page_default_description">'.htmlentities( $meta['default.description'], ENT_QUOTES, 'UTF-8' ).'</textarea>
+						<textarea class="span12" rows="2" name="page_default_description" id="input_page_default_description">'.htmlentities( $meta['description'], ENT_QUOTES, 'UTF-8' ).'</textarea>
 						<div class="btn-group">
 							<button type="button" class="btn btn-mini" id="btn-copy-description">'.$iconCopy.' '.$wMeta->buttonCopy.'</button>
 							<button type="button" class="btn btn-mini" disabled="disabled">save</button>
@@ -77,7 +78,7 @@ return '
 					</div>
 					<div class="span6">
 						<label for="page_default_keywords">'.$wMeta->labelDefaultKeywords.'</label>
-						<textarea class="span12" rows="4" name="page_default_keywords" id="input_page_default_keywords">'.htmlentities( $meta['default.keywords'], ENT_QUOTES, 'UTF-8' ).'</textarea>
+						<textarea class="span12" rows="4" name="page_default_keywords" id="input_page_default_keywords">'.htmlentities( $meta['keywords'], ENT_QUOTES, 'UTF-8' ).'</textarea>
 						<div class="btn-group">
 							<button type="button" class="btn btn-mini" id="btn-copy-keywords">'.$iconCopy.' '.$wMeta->buttonCopy.'</button>
 							<button type="button" class="btn btn-mini" disabled="disabled">save</button>
@@ -99,7 +100,7 @@ return '
 					</div>
 					<div class="span6">
 						<label for="input_page_author">'.$wMeta->labelDefaultAuthor.'</label>
-						<input class="span12" type="text" name="page_default_author" id="input_page_default_author" value="'.htmlentities( $meta['default.author'], ENT_QUOTES, 'UTF-8' ).'"/>
+						<input class="span12" type="text" name="page_default_author" id="input_page_default_author" value="'.htmlentities( $meta['author'], ENT_QUOTES, 'UTF-8' ).'"/>
 						<button type="button" class="btn btn-small">save</button>
 					</div>
 				</div>
@@ -111,7 +112,7 @@ return '
 					</div>
 					<div class="span6">
 						<label for="input_page_author">'.$wMeta->labelDefaultPublisher.'</label>
-						<input class="span12" type="text" name="page_default_publisher" id="input_page_default_publisher" value="'.htmlentities( $meta['default.publisher'], ENT_QUOTES, 'UTF-8' ).'"/>
+						<input class="span12" type="text" name="page_default_publisher" id="input_page_default_publisher" value="'.htmlentities( $meta['publisher'], ENT_QUOTES, 'UTF-8' ).'"/>
 						<button type="button" class="btn btn-small">save</button>
 					</div>
 				</div>-->

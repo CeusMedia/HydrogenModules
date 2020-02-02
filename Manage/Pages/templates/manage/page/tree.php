@@ -3,6 +3,18 @@
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 $iconSortable	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrows-v' ) );
 
+$filterApp		= '';
+if( count( $apps ) > 1 ){
+	$optApp		= UI_HTML_Elements::Options( $apps, $app );
+	$filterApp	= '
+		<div class="row-fluid">
+			<div class="span12">
+				<label for="input_app" class="mandatory">'.$words['filter']['labelApp'].'</label>
+				<select name="app" id="input_app" class="span12" onchange="document.location.href=\'./manage/page/setApp/\'+this.value;">'.$optApp.'</select>
+			</div>
+		</div>';
+}
+
 //print_m( $tree );die;
 
 $filterLanguage		= '';
@@ -57,6 +69,7 @@ $listPages	= $view->renderTree( $tree, $currentId );
 return '
 <div class="content-panel">
 	<div class="content-panel-inner">
+		'.$filterApp.'
 		'.$filterLanguage.'
 		'.$filterScope.'
 		'.$listPages.'

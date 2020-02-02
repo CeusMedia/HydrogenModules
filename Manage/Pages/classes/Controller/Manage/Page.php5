@@ -16,30 +16,53 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->messenger	= $this->env->getMessenger();
 		$this->words		= $this->getWords();
 		$this->session		= $this->env->getSession();
-		$this->frontend		= Logic_Frontend::getInstance( $this->env );
-		$this->languages	= $this->frontend->getLanguages();
+		$this->frontend		= NULL;
 
-		$source	= $this->frontend->getEnv()->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
-		$source	= $this->frontend->getModuleConfigValue( 'UI_Navigation', 'menu.source' );
-		$source	= $this->env->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+		$apps			= array(
+			'self'		=> 'Administration',
+			'frontend'	=> 'Webseite',
+		);
+		$app	= $this->session->get( 'module.manage_pages.app' );
+		if( !array_key_exists( $app, $apps ) )
+			$app	= current( array_keys( $apps ) );
+		if( $app !== $this->session->get( 'module.manage_pages.app' ) )
+			$this->session->remove( 'module.manage_pages.language' );
 
+		if( $app === 'frontend' ){
+			$this->frontend		= Logic_Frontend::getInstance( $this->env );
+			$this->envManaged	= $this->frontend->getEnv();
+			$this->languages	= $this->frontend->getLanguages();
+//			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+//			$source	= $this->frontend->getModuleConfigValue( 'UI_Navigation', 'menu.source' );
+			$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
+		}
+		else{
+			$this->envManaged		= $this->env;
+			$this->languages		= $this->env->getLanguage()->getLanguages();
+			$this->defaultLanguage	= current( array_keys( $this->env->getLanguage()->getLanguages() ) );
+		}
+		$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+
+//		$this->messenger->noteNotice( json_encode( array( 'Source' => $source, 'App' => $app ) ) );
 		if( $source === 'Database' )
-			$this->model		= new Model_Page( $this->env );
+			$this->model		= new Model_Page( $this->envManaged );
 		else if( $source === 'Config' )
-			$this->model		= new Model_Config_Page( $this->frontend->getEnv() );
+			$this->model		= new Model_Config_Page( $this->envManaged );
 
-		$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
 		if( !$this->session->get( 'module.manage_pages.language' ) ){
 			if( $this->frontend->getDefaultLanguage() )
 				$this->setLanguage( $this->frontend->getDefaultLanguage() );
 		}
 
+		$this->addData( 'apps', $apps );
+		$this->addData( 'app', $app );
+		$this->addData( 'source', $source );
 		$this->addData( 'frontend', $this->frontend );
 		$this->addData( 'languages', $this->languages );
 		$this->addData( 'language', $this->session->get( 'module.manage_pages.language' ) );
-		$this->addData( 'useAuth', $this->frontend->hasModule( 'Resource_Authentication' ) );
+		$this->addData( 'useAuth', $this->envManaged->hasModule( 'Resource_Authentication' ) );
 
-		if( !$this->frontend->hasModule( 'Info_Pages' ) ){
+		if( !$this->envManaged->hasModule( 'Info_Pages' ) ){
 			$this->messenger->noteFailure( 'No support for pages available in frontend environment. Access denied.' );
 			$this->restart();
 		}
@@ -156,12 +179,12 @@ ModuleManagePages.PageEditor.init();
 	}
 
 	public function ajaxSetEditor( $editor ){
-		$this->env->getSession()->set( 'module.manage_pages.editor', $editor );
+		$this->session->set( 'module.manage_pages.editor', $editor );
 		exit;
 	}
 
 	public function ajaxSetTab( $tabKey ){
-		$this->env->getSession()->set( 'module.manage_pages.tab', $tabKey );
+		$this->session->set( 'module.manage_pages.tab', $tabKey );
 		exit;
 	}
 
@@ -279,7 +302,6 @@ ModuleManagePages.PageEditor.init();
 
 	public function edit( $pageId, $version = NULL ){
 		$page		= $this->checkPageId( $pageId );
-		$model		= new Model_Page( $this->env );
 		$scope		= (int) $this->session->get( 'module.manage_pages.scope' );
 
 //		$logic		= Logic_Versions::getInstance( $this->env );
@@ -352,22 +374,22 @@ ModuleManagePages.PageEditor.init();
 					$data['parentId']	= 0;														//  clear parent page
 				$data['modifiedAt']	= time();
 				unset( $data['pageId'] );
-				$model->edit( $pageId, $data, FALSE );
+				$this->model->edit( $pageId, $data, FALSE );
 				$this->env->getMessenger()->noteSuccess( $words->successEdited, $data['title'] );
 				$this->restart( 'edit/'.$pageId, TRUE );
 			}
 		}
 
 		$pages	= array();
-		$visiblePages	= $model->getAllByIndices(
+		$visiblePages	= $this->model->getAllByIndices(
 			array( 'status'	=> Model_Page::STATUS_VISIBLE ),
 			array( 'title' => "ASC" )
 		);
 		foreach( $visiblePages as $item ){
 			if( $item->parentId ){
-				$parent	= $model->get( $item->parentId );
+				$parent	= $this->model->get( $item->parentId );
 				if( $parent && $parent->parentId ){
-					$grand	= $model->get( $parent->parentId );
+					$grand	= $this->model->get( $parent->parentId );
 					$parent->identifier	= $grand->identifier.'/'.$parent->identifier;
 				}
 				$item->identifier	= $parent->identifier.'/'.$item->identifier;
@@ -380,11 +402,11 @@ ModuleManagePages.PageEditor.init();
 			$pages[]	= $item;
 		}
 
-		$path		= $this->frontend->getUri();
+		$path		= $this->envManaged->getBaseUrl();
 		$versions	= array();
 		$this->session->set( 'module.manage_pages.scope', $page->scope );
 		if( $page->parentId ){
-			$parent	= $model->get( (int) $page->parentId );
+			$parent	= $this->model->get( (int) $page->parentId );
 			if( $parent )
 				$path	.= $parent->identifier.'/';
 		}
@@ -408,7 +430,7 @@ ModuleManagePages.PageEditor.init();
 		if( $this->env->getModules()->has( 'JS_CodeMirror' ) )
 			$editors[]	= 'CodeMirror';
 		$masterTemplates		= $this->getWords( 'templates' );
-		$pathTemplates			= $this->frontend->getPath( 'templates' );
+		$pathTemplates			= $this->envManaged->getConfig()->get( 'path.templates' );
 		$pathMasterTemplates	= $pathTemplates.'info/page/masters/';
 		if( is_dir( $pathMasterTemplates ) ){
 			$list	= FS_Folder_RecursiveLister::getFileList( $pathMasterTemplates, '/\.php$/' );
@@ -427,18 +449,18 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'versions', $versions );
 		$this->addData( 'pageUrl', $path.$page->identifier );
 		$this->addData( 'pagePreviewUrl', $path.$page->identifier.'?preview='.$page->createdAt.$page->modifiedAt );
-		$this->addData( 'tab', max( 1, (int) $this->session->get( 'module.manage_pages.tab' ) ) );
+		$this->addData( 'tab', $this->session->get( 'module.manage_pages.tab' ) );
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
 		$this->addData( 'editor', $this->session->get( 'module.manage_pages.editor' ) );
 		$this->addData( 'editors', $editors );
-		$this->addData( 'modules', $this->frontend->getModules() );
+		$this->addData( 'modules', $this->envManaged->getModules() );
 		$this->addData( 'controllers', $this->getFrontendControllers() );
 		$this->addData( 'masterTemplates', $masterTemplates );
 		$this->preparePageTree( $pageId );
 
 //		$helper	= new View_Helper_TinyMceResourceLister( $this->env );
 		$script	= '
-ModuleManagePages.PageEditor.frontendUri = "'.$this->frontend->getUri().'";
+ModuleManagePages.PageEditor.frontendUri = "'.$this->envManaged->getBaseUrl().'";
 ModuleManagePages.PageEditor.pageId = "'.$page->pageId.'";
 ModuleManagePages.PageEditor.pageIdentifier = "'.$page->identifier.'";
 ModuleManagePages.PageEditor.parentPageId = "'.$page->parentId.'";
@@ -450,24 +472,21 @@ ModuleManagePages.PageEditor.init();
 		$this->env->getPage()->js->addScriptOnReady( $script );
 
 		/*  --  META: TAGS  --  */
-		if( !$this->frontend->hasModule( 'UI_MetaTags' ) )
+		if( !$this->envManaged->getModules()->has( 'UI_MetaTags' ) )
 			$this->env->getMessenger()->noteError( 'Das Modul "UI:MetaTags" muss in der Zielinstanz installiert sein, ist es aber nicht.' );
 		else{
-			$meta	= $this->frontend->getModuleConfigValues( "UI_MetaTags", array(
-				'default.description',
-				'default.keywords',
-				'default.author',
-				'default.publisher'
-			) );
-			if( file_exists( $this->frontend->getPath().$meta['default.keywords'] ) ){
-				$list	= array();
-				foreach( explode( "\n", file_get_contents( $this->frontend->getPath().$meta['default.keywords'] ) ) as $line )
-					if( trim( $line ) )
-						$list[]	= trim( $line );
-				natcasesort( $list );
-				$meta['default.keywords']	= join( ", ", $list );
+			$configMetaTags	= $this->envManaged->getConfig()->getAll( 'module.ui_metatags.default.' );
+			if( trim( $configMetaTags['keywords'] ) ){
+				$possibleKeywordsFile	= $this->envManaged->uri.$configMetaTags['keywords'];
+				if( file_exists( $possibleKeywordsFile ) ){
+					$list	= preg_split( '/\r?\n/', trim( FS_File_Reader::load( $possibleKeywordsFile ) ) );
+					foreach( $list as $nr => $item )
+						$list[$nr]	= trim( $item );
+					natcasesort( $list );
+					$configMetaTags['keywords']	= join( ', ', $list );
+				}
 			}
-			$this->addData( 'meta', $meta );
+			$this->addData( 'meta', $configMetaTags );
 		}
 
 		/*  --  META: KEYWORD BLACKLIST  --  */
@@ -481,15 +500,17 @@ ModuleManagePages.PageEditor.init();
 
 	protected function getFrontendControllers(){
 		$controllers	= array();
-		$modulePath		= $this->frontend->getPath( 'modules' );
-		foreach( $this->frontend->getModules() as $moduleId ){
-			$module	= CMF_Hydrogen_Environment_Resource_Module_Reader::load( $modulePath.$moduleId.'.xml', $moduleId );
-			foreach( $module->files->classes as $classFile ){
-				if( preg_match( "/^Controller/", $classFile->file ) ){
-					$name	= preg_replace( "/^Controller\/(.+)\.php.?$/", "$1", $classFile->file );
+		$pathConfig		= $this->envManaged->getConfig()->get( 'path.config' );
+		$pathModules	= $this->envManaged->getConfig()->get( 'path.modules' );
+		$pathModules	= $pathModules ? $pathModules : $pathConfig.'modules/';
+		foreach( $this->envManaged->getModules()->getAll() as $moduleId => $module ){
+			if( empty( $module->files->classes ) )
+				continue;
+			foreach( $module->files->classes as $moduleFile )
+				if( preg_match( "/^Controller/", $moduleFile->file ) ){
+					$name	= preg_replace( "/^Controller\/(.+)\.php.?$/", "$1", $moduleFile->file );
 					$controllers[]	= str_replace( "/", "_", $name );
 				}
-			}
 		}
 		return array_unique( $controllers );
 	}
@@ -537,18 +558,17 @@ ModuleManagePages.PageEditor.init();
 
 	protected function preparePageTree( $currentPageId = NULL ){
 		$scope		= (int) $this->session->get( 'module.manage_pages.scope' );
-		$model		= new Model_Page( $this->env );
-		$indices	= array( 'parentId' => 0, 'status' => '>-2', 'scope' => $scope );
-		$pages		= $model->getAllByIndices( $indices, array( 'rank' => "ASC" ) );
+		$model		= $this->model;
+		$indices	= array( 'parentId' => 0, 'status' => '> -2', 'scope' => $scope );
+		$pages		= $this->model->getAllByIndices( $indices, array( 'rank' => "ASC" ) );
 		$tree		= array();
 		$parentMap	= array( '0' => '-' );
 		foreach( $pages as $item ){
 			$item	= $this->translatePage( $item );
-//			print_m( $item );die;
 			if( $item->pageId != $currentPageId && $item->type == 1 )
 				$parentMap[$item->pageId]	= $item->title;
 			$indices		= array( 'parentId' => $item->pageId );
-			$item->subpages	= $model->getAllByIndices( $indices, array( 'rank' => "ASC" ) );
+			$item->subpages	= $this->model->getAllByIndices( $indices, array( 'rank' => "ASC" ) );
 			foreach( $item->subpages as $nr => $subitem )
 				$subitem	= $this->translatePage( $subitem );
 			$tree[]		= $item;
@@ -560,11 +580,16 @@ ModuleManagePages.PageEditor.init();
 	public function remove( $pageId ){
 		$page		= $this->checkPageId( $pageId );
 		$model		= new Model_Page( $this->env );
-		$model->remove( $pageId );
+		$this->model->remove( $pageId );
 		$this->messenger->noteSuccess( $this->getWords( 'msg' )['successRemoved'], $page->title );
 		$this->restart( NULL, TRUE );
 	}
 
+
+	public function setApp( $app ){
+		$this->session->set( 'module.manage_pages.app', (string) $app );
+		$this->restart( NULL, TRUE );
+	}
 	public function setLanguage( $language ){
 		$this->session->set( 'module.manage_pages.language', (string) $language );
 		$this->restart( NULL, TRUE );

@@ -2,11 +2,11 @@
 $w		= (object) $words['edit'];
 
 $tabTemplates	= array(
-	0	=> 'edit.settings.php',
-	1	=> 'edit.preview.php',
-	2	=> 'edit.content.php',
-	3	=> 'edit.meta.php',
-	4	=> 'edit.sitemap.php',
+	'settings'	=> 'edit.settings.php',
+	'preview'	=> 'edit.preview.php',
+	'content'	=> 'edit.content.php',
+	'meta'		=> 'edit.meta.php',
+	'sitemap'	=> 'edit.sitemap.php',
 );
 $tabs		= $view->renderTabs( $words['tabs'], $tabTemplates, $tab );
 

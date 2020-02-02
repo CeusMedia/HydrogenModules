@@ -198,14 +198,14 @@ ModuleManagePages.PageEditor = {
 				jQuery(this).parent().parent().parent().find(jQuery(this).attr("href")).addClass("active");
 		});
 		containerEditor.find(">ul>li>a").on("click", function(){
-			var key = jQuery(this).attr("href").replace(/#tab/, "");
-			if(key == 3){
+			var key = jQuery(this).attr("href").replace(/#tab-/, "");
+			if(key == 'content'){
 				if( ModuleManagePages.PageEditor.editor.toLowerCase() == "codemirror")
 					window.setTimeout(ModuleManagePages.PageEditor.setupCodeMirror, 20);
 				if( ModuleManagePages.PageEditor.editor.toLowerCase() == "ace")
 					window.setTimeout(ModuleManagePages.PageEditor.setupAce, 20);
 			}
-			if(key == 4)
+			if(key == 'preview')
 				ModuleManagePages.PageEditor.loadPagePreview();
 			jQuery.ajax({
 				url: "./manage/page/ajaxSetTab/"+key,

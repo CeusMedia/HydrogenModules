@@ -29,22 +29,35 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 
 	protected function renderTabs( $labels, $templates, $current ){
 		$page	= $this->getData( 'page' );
+		$app	= $this->getData( 'app' );
+		$source	= $this->getData( 'source' );
+
+		$isSelfApp		= $app === 'self';
+		$isFrontendApp	= $app === 'frontend';
+		$isFromConfig	= $source === 'Config';
+		$isFromDatabase	= $source === 'Database';
 
 		$listTabs	= array();
-		$listPanes		= array();
-		foreach( array_values( $labels ) as $nr => $label ){
-			$attributes		= array( 'href' => '#tab'.($nr+1), 'data-toggle' => 'tab' );
-			if( $page->type == 1 && $nr >= 2 || $page->type == 2 && $nr == 2 )
-				$attributes	= array();
+		$listPanes	= array();
+		foreach( $labels as $tabKey => $label ){
+			$isPage		= (int) $page->type === Model_Page::TYPE_BRANCH;
+			$isBranch	= (int) $page->type === Model_Page::TYPE_BRANCH;
+			$isModule	= (int) $page->type === Model_Page::TYPE_MODULE;
+			$disabled	= FALSE;
+			$attributes		= array( 'href' => '#tab-'.$tabKey, 'data-toggle' => 'tab' );
+			switch( $tabKey ){
+				case 'content':
+					$disabled	= $isBranch || $isModule || $isFromConfig;
+					break;
+			}
 			$link			= UI_HTML_Tag::create( 'a', $label, $attributes );
-			$isActive		= ($nr+1) == $current;
-			$class			= $isActive ? "active" : NULL;
-			if( $page->type == 1 && $nr >= 2 || $page->type == 2 && $nr >= 2 )
-				$class	.= ' disabled';
-			$attributes		= array( 'id' => 'page-editor-tab-'.($nr+1), 'class' => $class );
+			$isActive		= $tabKey == $current;
+			$class			= $isActive ? "active" : '';
+			$class			.= $disabled ? ' disabled' : '';
+			$attributes		= array( 'id' => 'page-editor-tab-'.$tabKey, 'class' => $class );
 			$listTabs[]		= UI_HTML_Tag::create( 'li', $link, $attributes );
-			$paneContent	= $this->loadTemplateFile( 'manage/page/'.$templates[$nr], array(), FALSE );
-			$attributes		= array( 'id' => 'tab'.($nr+1), 'class' => $isActive ? 'tab-pane active' : 'tab-pane' );
+			$paneContent	= $this->loadTemplateFile( 'manage/page/'.$templates[$tabKey], array(), FALSE );
+			$attributes		= array( 'id' => 'tab-'.$tabKey, 'class' => $isActive ? 'tab-pane active' : 'tab-pane' );
 			$listPanes[]	= UI_HTML_Tag::create( 'div', $paneContent, $attributes );
 		}
 		$listTabs	= UI_HTML_Tag::create( 'ul', $listTabs, array( 'class' => "nav nav-tabs" ) );
@@ -61,9 +74,9 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 				$classes	= array();
 				if( $currentPageId && $currentPageId == $subitem->pageId )
 					$classes[]	= 'active';
-				if( $subitem->status < 1 || $item->status < 1 )
+				if( $subitem->status < Model_Page::STATUS_VISIBLE || $item->status < Model_Page::STATUS_VISIBLE )
 					$classes[]	= 'disabled';
-				if( $subitem->status < 0 )
+				if( $subitem->status < Model_Page::STATUS_HIDDEN )
 					$subitem->title	= '<strike>'.$subitem->title.'</strike>';
 				$url	= './manage/page/edit/'.$subitem->pageId;
 				$label	= $this->getPageIcon( $subitem ).' <small>'.$subitem->title.'</small>';
@@ -80,9 +93,9 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 			$classes	= array( 'autocut' );
 			if( $currentPageId && $currentPageId == $item->pageId )
 				$classes[]	= 'active';
-			if( $item->status < 1 )
+			if( $item->status < Model_Page::STATUS_VISIBLE )
 				$classes[]	= 'disabled';
-			if( $item->status < 0 )
+			if( $item->status < Model_Page::STATUS_HIDDEN )
 				$item->title	= '<strike>'.$item->title.'</strike>';
 			$url	= './manage/page/edit/'.$item->pageId;
 			$label	= $this->getPageIcon( $item ).' '.$item->title;
