@@ -20,6 +20,92 @@ class Job_Mail_Archive extends Job_Abstract{
 	}
 
 	/**
+	 *	Work in progress!
+	 *	Store raw mails in shard folders.
+	 */
+	public function shard(){
+		$path		= 'contents/mails/';
+		$indexFile	= $path.'index.json';
+		if( !file_exists( $path ) )
+			FS_Folder_Editor::createFolder( $path );
+		if( !file_exists( $indexFile ) )
+			FS_File_Writer::save( $indexFile, '[]' );
+		$index		= json_decode( FS_File_Reader::load( $indexFile ), TRUE );
+
+		$conditions	= array( 'status' > $this->statusesHandledMails );
+		$orders		= array( 'mailId' => 'ASC' );
+		$limits		= array(
+			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
+			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
+		);
+		$count		= 0;
+		$fails		= array();
+		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
+		foreach( $mailIds as $mailId ){
+			$count++;
+			$mailId		= (string) $mailId;
+			if( array_key_exists( $mailId, $index ) ){
+				$fails[]	= 'Mail #'.$mailId.': Skipped.';
+				$this->showProgress( $count, count( $mailIds ), '.' );
+				continue;
+			}
+			$mail	= $this->model->get( $mailId );
+			$this->logicMail->decompressMailObject( $mail );
+			$usedLibrary	= $this->logicMail->detectMailLibraryFromMail( $mail );
+			if( !( $this->libraries & $usedLibrary ) ){
+				$fails[]	= 'Mail #'.$mailId.': Mail library mismatch: '.$usedLibrary;
+				$this->showProgress( $count, count( $mailIds ), 'E' );
+				continue;
+			}
+			$uuid		= Alg_ID::uuid();
+			$shard		= $uuid[0].'/'.$uuid[1].'/'.$uuid[2].'/';
+			if( !empty( $mail->raw ) ){
+				if( !file_exists( $path.$shard ) )
+					FS_Folder_Editor::createFolder( $path.$shard );
+				FS_File_Writer::save( $path.$shard.$uuid.'.raw', $mail->raw );
+				FS_File_Writer::save( $path.$shard.$uuid.'.raw.bz2', bzcompress( $mail->raw ) );
+				$index[$mailId]	= array( 'uuid' => $uuid, 'shard' => $shard, 'format' => 'bzip' );
+				$this->showProgress( $count, count( $mailIds ), '+' );
+			}
+			else{
+				$object	= $mail->object->instance;
+				$class	= get_class( $object->mail );
+				if( $class !== 'CeusMedia\\Mail\\Message' ){
+					$fails[]	= 'Mail #'.$mailId.': Unsupported mail class: '.$class;
+					$this->showProgress( $count, count( $mailIds ), 'E' );
+					continue;
+				}
+				try{
+					if( !count( $object->mail->getParts( FALSE ) ) ){
+						if( ( $page = $object->getPage() ) )
+						$object->mail->addHtml( $page->build() );
+					}
+					if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
+						$raw		= CeusMedia\Mail\Renderer::render( $object->mail );
+					}
+					else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
+						$raw		= CeusMedia\Mail\Message\Renderer::render( $object->mail );
+					}
+					if( !file_exists( $path.$shard ) )
+						FS_Folder_Editor::createFolder( $path.$shard );
+					FS_File_Writer::save( $path.$shard.$uuid.'.raw', $raw );
+					FS_File_Writer::save( $path.$shard.$uuid.'.raw.bz2', bzcompress( $raw ) );
+					$index[$mailId]	= array( 'uuid' => $uuid, 'shard' => $shard, 'format' => 'bzip' );
+					$this->showProgress( $count, count( $mailIds ), '+' );
+				}
+				catch( Exception $e ){
+					$fails[]	= 'Mail #'.$mailId.': Exception: '.$e->getMessage();
+					$this->showProgress( $count, count( $mailIds ), 'E' );
+					continue;
+				}
+			}
+		}
+		FS_File_Writer::save( $indexFile, json_encode( $index ) );
+		$this->out();
+		$this->showErrors( 'shard', $fails );
+	}
+
+	/**
 	 *	Removes old mails from database table.
 	 *	Mails to be removed can be filtered by minimum age and mail class(es).
 	 *	Supports dry mode.
@@ -311,7 +397,7 @@ class Job_Mail_Archive extends Job_Abstract{
 		foreach( array_unique( $mailClassPaths ) as $mailClassPath ){
 			if( !is_dir( $mailClassPath ) )
 				continue;
-			$path	= rtrim( trim( $classClassPath ), '/' ).'/classes/Mail/';
+			$path	= rtrim( trim( $mailClassPath ), '/' ).'/classes/Mail/';
 			foreach( new FS_File_RecursiveRegexFilter( $path, '/\.php5?/' ) as $entry ){
 				$content	= FS_File_Reader::load( $entry->getPathname() );
 				$className	= preg_replace( '/^.*class ([A-Z][A-Za-z0-9_]+).*$/s', '\\1', $content, 1 );

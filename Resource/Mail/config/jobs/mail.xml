@@ -17,6 +17,11 @@
 		<method>migrate</method>
 		<mode>live</mode>
 	</job>
+	<job id="Mail.Archive.shard">
+		<class>Mail_Archive</class>
+		<method>shard</method>
+		<mode>live</mode>
+	</job>
 	<job id="Mail.Queue.count">
 		<class>Mail_Queue</class>
 		<method>countQueuedMails</method>
