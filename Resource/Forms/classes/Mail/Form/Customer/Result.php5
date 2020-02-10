@@ -1,10 +1,6 @@
 <?php
 class Mail_Form_Customer_Result extends Mail_Form_Abstract{
 
-	public $fill;
-	public $form;
-	public $mail;
-
 	public function generate( $data = array() ){
 		$form	= $this->data['form'];
 		$fill	= $this->data['fill'];
@@ -16,15 +12,7 @@ class Mail_Form_Customer_Result extends Mail_Form_Abstract{
 			$content	= $this->applyFillData( $content, $fill );
 			$content	= $this->applyHelpers( $content, $fill, $form );
 			$this->setHtml( $content );
-			return (object) array(
-				'html'	=> $content,
-				'text'	=> NULL,
-			);
 		}
 		$this->setText( $content );
-		return (object) array(
-			'text'	=> $content,
-			'html'	=> NULL,
-		);
 	}
 }

@@ -1,9 +1,6 @@
 <?php
 class Mail_Form_Manager_Filled extends Mail_Form_Abstract{
 
-	public $fill;
-	public $form;
-
 	/* @todo use block of mail */
 	public function generate( $data = array() ){
 		$form	= $this->data['form'];
@@ -17,10 +14,5 @@ class Mail_Form_Manager_Filled extends Mail_Form_Abstract{
 		$content	= str_replace( "[form_title]", $form->title, $mail->content );
 		$content	= $this->applyHelpers( $content, $fill, $form );
 		$this->setHtml( $content );
-
-		return (object) array(
-			'html'	=> $content,
-			'text'	=> NULL,
-		);
 	}
 }

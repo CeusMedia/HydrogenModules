@@ -1,10 +1,6 @@
 <?php
 class Mail_Form_Customer_Confirm extends Mail_Form_Abstract{
 
-	public $fill;
-	public $form;
-	protected $modelMail;
-
 	public function generate( $data = array() ){
 		$form	= $this->data['form'];
 		$fill	= $this->data['fill'];
@@ -22,15 +18,7 @@ class Mail_Form_Customer_Confirm extends Mail_Form_Abstract{
 			$content	= $this->applyFillData( $content, $fill );
 			$content	= $this->applyHelpers( $content, $fill, $form );
 			$this->setHtml( $content );
-			return (object) array(
-				'html'	=> $content,
-				'text'	=> NULL,
-			);
 		}
 		$this->setText( $content );
-		return (object) array(
-			'html'	=> NULL,
-			'text'	=> $content,
-		);
 	}
 }

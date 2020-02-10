@@ -1,12 +1,20 @@
 <?php
 abstract class Mail_Form_Abstract extends Mail_Abstract{
 
-	protected $app;
-	protected $usePremailer;
-
-	public function __onInit(){
-		$this->usePremailer	= $this->env->getConfig()->get( 'module.use.premailer' );
+	/**
+	 *	Sets subject without applying default subject extensions.
+	 *	Overrides default mail subject handling to avoid adding default subject prefix or template.
+	 *	@access		public
+	 *	@param		string		$subject		Subject to set on mail
+	 *	@param		boolean		$usePrefix		For compatibility only, no function
+	 *	@param		boolean		$useTemplate	For compatibility only, no function
+	 *	@return		void
+	 */
+	public function setSubject( $subject, $usePrefix = TRUE, $useTemplate = TRUE ){
+		$this->mail->setSubject( $subject, $this->encodingSubject );
 	}
+
+	//  --  PROTECTED  --  //
 
 	protected function applyFillData( $content, $fill ){
 		$data	= json_decode( $fill->data, TRUE );
@@ -29,13 +37,13 @@ abstract class Mail_Form_Abstract extends Mail_Abstract{
 			$identifier		= preg_replace( '/.*\[helper_(\S+)\].*/su', "\\1", $content );
 			$replace		= '';
 			if( $identifier === "fill_person" ){
-				$helperPerson	= new View_Helper_Form_Fill_Person( $this->app );
+				$helperPerson	= new View_Helper_Form_Fill_Person( $this->env );
 				$helperPerson->setFill( $fill );
 				$helperPerson->setForm( $form );
 				$replace		= $helperPerson->render();
 			}
 			else if( $identifier === "fill_data" ){
-				$helperData	= new View_Helper_Form_Fill_Data( $this->app );
+				$helperData	= new View_Helper_Form_Fill_Data( $this->env );
 				$helperData->setFill( $fill );
 				$helperData->setForm( $form );
 				$replace		= $helperData->render();
@@ -44,8 +52,5 @@ abstract class Mail_Form_Abstract extends Mail_Abstract{
 			$content		= preg_replace( $pattern, $replace, $content, 1 );
 		}
 		return $content;
-	}
-	public function setSubject( $subject, $usePrefix = TRUE, $useTemplate = TRUE ){
-		$this->mail->setSubject( $subject, $this->encodingSubject );
 	}
 }
