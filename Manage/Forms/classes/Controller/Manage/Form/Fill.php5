@@ -38,7 +38,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 	}
 
 	protected function checkIsPost( $strict = TRUE ){
-		if( $this->env->getRequest()->isMethod( 'POST' ) )
+		if( $this->env->getRequest()->getMethod()->is( 'POST' ) )
 			return TRUE;
 		if( $strict )
 			throw new RuntimeException( 'Access denied: POST requests, only' );
@@ -183,6 +183,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 	}
 
 	public function receive(){
+		error_reporting( E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED );
 		$origin	= $this->env->getConfig()->get( 'module.manage_forms.origin' );
 		$origin	= $origin ? $origin : $this->env->getBaseUrl();
 		$origin	= rtrim( $origin, '/' );
@@ -264,6 +265,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			$status	= 'error';
 			$data	= array(
 				'error'		=> $e->getMessage(),
+				'trace'		=> $e->getTraceAsString(),
 				'formId'	=> @$form->formId,
 				'formType'	=> @$form->type,
 			);
