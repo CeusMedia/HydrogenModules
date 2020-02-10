@@ -392,7 +392,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 		$moduleTemplateId	= $this->env->getConfig()->get( 'module.resource_mail.template' );
 		$modelMail			= new Model_Mail( $this->env );
 		foreach( $templates as $template ){
-			$template->used	= $modelMail->countByIndex( 'mailTemplateId', $template->mailTemplateId );
+			$template->used	= $modelMail->countByIndex( 'templateId', $template->mailTemplateId );
 			$template->activeByModule = ( $template->mailTemplateId == $moduleTemplateId );
 		}
 		$this->addData( 'templates', $templates );
