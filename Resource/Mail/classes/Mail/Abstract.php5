@@ -94,11 +94,12 @@ abstract class Mail_Abstract{
 	 *	@return		array		List of allowed members during serialization
 	 */
 	public function __sleep(){
-		return array( 'mail', 'page', 'logicMail'/*, 'transport', 'options'*/ );
+		return array( 'mail', 'page'/*, 'logicMail'/*, 'transport', 'options'*/ );
 	}
 
 /*	public function __wakeup(){
 		return $this->initTransport();
+		$this->logicMail		= $this->env->getLogic()->get( 'Mail' );
 	}*/
 
 	public function addAttachment( $filePath, $mimeType = NULL, $encoding = NULL, $fileName = NULL ){

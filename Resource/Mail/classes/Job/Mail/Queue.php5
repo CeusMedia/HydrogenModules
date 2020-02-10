@@ -34,7 +34,7 @@ class Job_Mail_Queue extends Job_Abstract{
 				Model_Mail::STATUS_NEW,
 				Model_Mail::STATUS_RETRY
 			),
-			'attemptedAt'	=> '<'.( time() - $this->options->get( 'retry.delay' ) ),
+			'attemptedAt'	=> '< '.( time() - $this->options->get( 'retry.delay' ) ),
 		);
 		$orders		= array( 'status' => 'ASC', 'mailId' => 'ASC' );
 		$count		= $this->logic->countQueue( $conditions );

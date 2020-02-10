@@ -52,7 +52,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		$model		= new Model_Mail( $this->env );
 		$mails		= $model->getAll( array(
 			'status'	=> Model_Mail::STATUS_RETRY,
-			'attempts'	=> '>='.$this->options->get( 'retry.attempts' ),
+			'attempts'	=> '>= '.$this->options->get( 'retry.attempts' ),
 		) );
 		foreach( $mails as $mail )
 			$model->edit( $mail->mailId, array( 'status' => Model_Mail::STATUS_FAILED ) );
@@ -409,7 +409,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		//  get usable templates from database
 		$availableTemplateIds	= $this->modelTemplate->getAll( array(
 			'mailTemplateId'	=> $templateIds,
-			'status'			=> '>='.Model_Mail_Template::STATUS_USABLE,
+			'status'			=> '>= '.Model_Mail_Template::STATUS_USABLE,
 		), array(), array(), array( 'mailTemplateId' ) );
 
 		//  match collected and usable templates

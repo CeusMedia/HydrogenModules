@@ -35,7 +35,7 @@
 	</job>
 
 	<!--  DEPRECATED JOB DESCRIPTION  -->
-	<job id="Resource.Mail.clean">
+<!--	<job id="Resource.Mail.clean">
 		<class>Mail_Archive</class>
 		<method>clean</method>
 		<mode>live</mode>
@@ -71,7 +71,7 @@
 		<interval>minute</interval>
 		<mode>live</mode>
 		<deprecated>use Mail.Queue.send instead</deprecated>
-	</job>
+	</job>-->
 
 	<!--  OLD JOB DESCRIPTION  --><!--
 	<job id="sendQueuedMails">
