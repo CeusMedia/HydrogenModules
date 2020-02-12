@@ -7,6 +7,8 @@ class Hook_UI_Bootstrap /*extends CMF_Hydrogen_Hook*/{
 	}
 
 	static public function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+		if( get_class( $env ) === 'CMF_Hydrogen_Environment_Remote' )
+			return;
 		$config			= $env->getConfig();
 		$modules		= $env->getModules();
 		$moduleConfig	= $config->getAll( 'module.ui_bootstrap.', TRUE );
