@@ -26,9 +26,10 @@
 	background-repeat: no-repeat;
 	background-size: contain;
 	background-position: center center;
+	text-align: center;
 	}
 .modal-source-list .source-list-image > i.fa {
-    padding-top: 3px;
+	padding-top: 3px;
 	}
 .modal-source-list .source-list-label {
 	margin-left: 46px;

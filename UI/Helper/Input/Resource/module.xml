@@ -3,13 +3,14 @@
 	<title>UI: Helper: Input: Resource</title>
 	<description><![CDATA[...]]></description>
 	<category>User Interface</category>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support several resources by mode.</log>
 	<log version="0.3.1">Replace related module UI_Bootstrap_Modal by newer UI_Bootstrap.</log>
 	<log version="0.3.2">Add hook to setup paths in JavaScript.</log>
 	<log version="0.3.3">Support default and forced paths for each mode.</log>
+	<log version="0.3.4">Use thumbnail if available (module Manage:Content:Images).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

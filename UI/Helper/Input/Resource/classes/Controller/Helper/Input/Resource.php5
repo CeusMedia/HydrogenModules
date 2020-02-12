@@ -72,10 +72,23 @@ class Controller_Helper_Input_Resource extends CMF_Hydrogen_Controller {
 	static protected function renderThumbnail( CMF_Hydrogen_Environment $env, $mode, $path, $relativePath ){
 		switch( $mode ){
 			case 'image':
-				return UI_HTML_Tag::create( 'div', '&nbsp;', array(
+				$div	= UI_HTML_Tag::create( 'div', '&nbsp;', array(
 					'class'	=> 'source-list-image',
 					'style'	=> 'background-image: url('.$env->getBaseUrl().$path.$relativePath.');',
 				) );
+				try{
+					if( class_exists( 'View_Helper_Thumbnailer' ) ){
+						$helper	= new View_Helper_Thumbnailer( $env, 36, 36 );
+						$image	= $helper->get( $env->uri.$path.$relativePath );
+						$image	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $image ) );
+						$div	= UI_HTML_Tag::create( 'div', $image, array(
+							'class'	=> 'source-list-image',
+						) );
+					}
+				}
+				catch( Exception $e ){
+				}
+				return $div;
 			case 'style':
 			default:
 				return UI_HTML_Tag::create( 'div', array(
