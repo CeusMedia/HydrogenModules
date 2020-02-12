@@ -28,19 +28,20 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 	}
 
 	protected function renderTabs( $labels, $templates, $current ){
-		$page	= $this->getData( 'page' );
+/*		$page	= $this->getData( 'page' );
 		$app	= $this->getData( 'app' );
 		$source	= $this->getData( 'source' );
+		$meta	= $this->getData( 'appHasMetaModule' );
 
 		$isSelfApp		= $app === 'self';
 		$isFrontendApp	= $app === 'frontend';
 		$isFromConfig	= $source === 'Config';
-		$isFromDatabase	= $source === 'Database';
+		$isFromDatabase	= $source === 'Database';*/
 
 		$listTabs	= array();
 		$listPanes	= array();
 		foreach( $labels as $tabKey => $label ){
-			$isPage		= (int) $page->type === Model_Page::TYPE_BRANCH;
+			$isPage		= (int) $page->type === Model_Page::TYPE_CONTENT;
 			$isBranch	= (int) $page->type === Model_Page::TYPE_BRANCH;
 			$isModule	= (int) $page->type === Model_Page::TYPE_MODULE;
 			$disabled	= FALSE;
@@ -48,6 +49,9 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 			switch( $tabKey ){
 				case 'content':
 					$disabled	= $isBranch || $isModule || $isFromConfig;
+					break;
+				case 'meta':
+					$disabled	= !$meta;
 					break;
 			}
 			$link			= UI_HTML_Tag::create( 'a', $label, $attributes );
@@ -67,6 +71,14 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 	}
 
 	public function renderTree( $tree, $currentPageId = NULL ){
+		$app	= $this->getData( 'source' );
+		$source	= $this->getData( 'source' );
+
+		$isSelfApp		= $app === 'self';
+		$isFrontendApp	= $app === 'frontend';
+		$isFromConfig	= $source === 'Config';
+		$isFromDatabase	= $source === 'Database';
+
 		$list	= array();
 		foreach( $tree as $item ){
 			$sublist	= array();

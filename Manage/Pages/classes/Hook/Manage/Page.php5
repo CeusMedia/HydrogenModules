@@ -3,7 +3,7 @@ class Hook_Manage_Page extends CMF_Hydrogen_Hook
 {
 	static public function onTinyMceGetLinkList( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
 		$frontend		= Logic_Frontend::getInstance( $env );
-		if( !$frontend->hasModule( 'Info_Pages' ) )
+		if( !$frontend->hasModule( 'Resource_Pages' ) )
 			return;
 
 		$words		= $env->getLanguage()->getWords( 'manage/page' );

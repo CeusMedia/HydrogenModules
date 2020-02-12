@@ -8,6 +8,9 @@ $tabTemplates	= array(
 	'meta'		=> 'edit.meta.php',
 	'sitemap'	=> 'edit.sitemap.php',
 );
+//if( !$appHasMetaModule )
+//	unset( $words['tabs']['meta'] );
+
 $tabs		= $view->renderTabs( $words['tabs'], $tabTemplates, $tab );
 
 $panelTree	= $view->loadTemplateFile( 'manage/page/tree.php' );

@@ -2,6 +2,9 @@
 $w				= (object) $words['edit'];
 $wMeta			= (object) $words['edit-meta'];
 
+if( !$appHasMetaModule )
+	return '<div class="alert alert-info"><em>'.$wMeta->no_meta_module.'</em></div>';
+
 $iconCopy		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconSuggest	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-magic' ) );
 $iconExclude	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-ban' ) );
