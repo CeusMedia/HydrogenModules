@@ -1,6 +1,10 @@
 <?php
 class Model_Config_Page
 {
+	protected $env;
+	protected $filePath;
+	protected $pages;
+
 	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->env		= $env;
 		$this->filePath	= $env->uri.'config/pages.json';
@@ -49,6 +53,10 @@ class Model_Config_Page
 		return $data;
 	}
 
+	public function remove(){
+		throw new RuntimeException( 'Not implemented yet' );
+	}
+
 	//  --  PROTECTED  --  //
 
 	protected function loadPages(){
@@ -59,6 +67,7 @@ class Model_Config_Page
 		$baseItem		= array(
 			'parentId'		=> 0,
 			'status'		=> 0,
+			'type'			=> 0,
 			'controller'	=> '',
 			'action'		=> '',
 			'access'		=> 'acl',
@@ -74,6 +83,13 @@ class Model_Config_Page
 		foreach( $this->scopes as $scopeNr => $scope ){
 			foreach( $this->fileData[$scope] as $pageNr => $page ){
 				$pageId++;
+				if( empty( $page['type'] ) ){
+					$page['type']	= 0;
+					if( !empty( $page['pages'] ) )
+						$page['type']	= 1;
+					else if( !empty( $page['controller'] ) )
+						$page['type']	= 2;
+				}
 				$pageItem	= (object) array_merge( $baseItem, array(
 					'pageId'		=> $pageId,
 					'status'		=> 1,			//@todo realize
@@ -91,6 +107,13 @@ class Model_Config_Page
 				if( !empty( $page['pages'] ) ){
 					foreach( $page['pages'] as $subpageNr => $subpage ){
 						$pageId++;
+						if( empty( $subpage['type'] ) ){
+							$subpage['type']	= 0;
+							if( !empty( $subpage['pages'] ) )
+								$subpage['type']	= 1;
+							else if( !empty( $subpage['controller'] ) )
+								$subpage['type']	= 2;
+						}
 						$subpageItem	= (object) array_merge( $baseItem, array(
 							'pageId'		=> $pageId,
 							'parentId'		=> $pageItem->pageId,
