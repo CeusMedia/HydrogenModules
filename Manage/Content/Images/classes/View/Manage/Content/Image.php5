@@ -59,7 +59,7 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 		$time	= '<div class="label">'.round( ( microtime( TRUE ) - $start ) * 1000, 1 ).'ms</div>';
 		if( $list )
 			return UI_HTML_Tag::create( 'ul', $list, array(
-				'class'	=> 'nav nav-pills nav-stacked nav-bordered nav-resizing',
+				'class'	=> 'nav nav-pills nav-stacked not-nav-bordered nav-resizing',
 				'id'	=> 'list-folders',
 		) );
 	}
