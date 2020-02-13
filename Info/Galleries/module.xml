@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<module>
+	<title>Info: Galleries</title>
+	<description><![CDATA[Standard image gallery presentation.
+
+This module presents beforehand registered galleries and their images.
+Uploaded images will be scaled to default size and to thumbnail size.
+Prepared galleries can be indexed in list or matrix mode.
+
+For showing images within a lightbox, use one of these modules:
+list>
+- UI_JS_fancyBox
+- UI_JS_Darkbox
+<list
+
+A gallery can be injected into a static HTML page by shortcode [gallery:#].
+A gallery index can be injected by shortcode [galleries].
+
+To register galleries and images, use module Manage_Content_Images within a backend instance.
+]]></description>
+	<category>Info</category>
+	<version>0.5.1</version>
+	<log version="0.2.3">Added relation to UI:JS:Darkbox.</log>
+	<log version="0.2.4">Added support for UI:JS:fancyBox.</log>
+	<log version="0.2.5">Added hook support and event onRenderContent.</log>
+	<log version="0.2.6">Better use of module configuration.</log>
+	<log version="0.2.7">Improve base path handling.</log>
+	<log version="0.2.8">Allow path longer than 30 characters.</log>
+	<log version="0.3">Extend matrix mode by list mode.</log>
+	<log version="0.3.1">Add locales.</log>
+	<log version="0.3.2">Apply fancyBox auto class from module.</log>
+	<log version="0.3.3">Order gallery images by rank.</log>
+	<log version="0.3.4">Support shortcode for gallery and gallery index.</log>
+	<log version="0.3.5">Improve order configuration.</log>
+	<log version="0.4">Refactoring rendering into several view helpers.</log>
+	<log version="0.4.1">Cleanup. Prepare move to public modules.</log>
+	<log version="0.4.2">Update HTML blocks.</log>
+	<log version="0.4.3">Improve support for fancyBox 3+.</log>
+	<log version="0.5">Imported module from protected SVN repository.</log>
+	<log version="0.5.1">Extract hook to own class.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Info/Gallery.php5</class>
+		<class>Hook/Info/Gallery.php5</class>
+		<class>Model/Gallery.php5</class>
+		<class>Model/Gallery/Image.php5</class>
+		<class>View/Info/Gallery.php5</class>
+		<class>View/Helper/Info/Gallery.php5</class>
+		<class>View/Helper/Info/Gallery/Images.php5</class>
+		<class>View/Helper/Info/Gallery/List.php5</class>
+		<class>View/Helper/Info/Gallery/Matrix.php5</class>
+		<locale>de/info/gallery.ini</locale>
+		<locale>de/html/info/gallery/index.bottom.html</locale>
+		<locale>de/html/info/gallery/index.top.html</locale>
+		<locale>de/html/info/gallery/view.bottom.html</locale>
+		<locale>de/html/info/gallery/view.top.html</locale>
+		<template>info/gallery/index.php</template>
+		<template>info/gallery/view.php</template>
+	</files>
+	<config type="string" name="path" title="Path within images path">galleries/</config>
+	<config type="string" name="gallery.order.by" values="galleryImageId,rank,title" title="Sort gallery images by column">rank</config>
+	<config type="string" name="gallery.order.direction" values="ASC,DESC" title="Sort direction">ASC</config>
+	<config type="string" name="gallery.lightbox" values="none,Darkbox,fancyBox" title="Type of lightbox to use">none</config>
+	<config type="string" name="gallery.thumb.class" values=",img-polaroid,img-rounded" title="Style of thumbnails">img-polaroid</config>
+	<config type="string" name="index.mode" title="Mode if gallery index" values="matrix,list">list</config>
+	<config type="string" name="index.order.by" values="galleryId,rank,title" title="Sort by column">rank</config>
+	<config type="string" name="index.order.direction" values="ASC,DESC" title="Sort direction">ASC</config>
+	<config type="string" name="index.thumb.class" values=",img-polaroid,img-rounded" title="Style of thumbnails">img-polaroid</config>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+		<supports type="module">UI_JS_Darkbox</supports>
+		<supports type="module">UI_JS_fancyBox</supports>
+		<supports type="module">JS_jQuery_equalize</supports>
+	</relations>
+	<link xml:lang="de" access="public" path="info/gallery">Galerien</link>
+	<link xml:lang="en" access="public" path="info/gallery">Galleries</link>
+	<hook type="resource" resource="View" event="onRenderContent">Hook_Info_Gallery::onViewRenderContent</hook>
+	<sql on="install" type="mysql" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>galleries`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>galleries` (
+  `galleryId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` int(10) unsigned DEFAULT '0',
+  `rank` tinyint(3) unsigned DEFAULT '0',
+  `path` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(120) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `timestamp` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`galleryId`),
+  KEY `status` (`status`),
+  KEY `title` (`title`),
+  KEY `path` (`path`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>gallery_images`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>gallery_images` (
+  `galleryImageId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `galleryId` int(10) unsigned NOT NULL,
+  `rank` tinyint(3) unsigned NOT NULL,
+  `filename` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(120) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `timestamp` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`galleryImageId`),
+  KEY `galleryId` (`galleryId`,`filename`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" type="mysql" version="0.2.8"><![CDATA[
+ALTER TABLE `<%?prefix%>galleries` CHANGE `path` `path` VARCHAR(60) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>galleries`;
+DROP TABLE IF EXISTS `<%?prefix%>gallery_images`;
+]]></sql>
+</module>
