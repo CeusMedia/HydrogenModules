@@ -31,10 +31,11 @@ class Job_Mail_Group extends Job_Abstract{
 			if( $members )
 				$this->out( 'Mail Group: '.$group->title );
 			foreach( $members as $member ){
-				$modelMember->edit( $member->mailGroupMemberId, array(
-					'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
-					'modifiedAt'	=> time(),
-				) );
+				if( !$this->dryMode )
+					$modelMember->edit( $member->mailGroupMemberId, array(
+						'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
+						'modifiedAt'	=> time(),
+					) );
 
 				$action	= $modelAction->getByIndices( array(
 					'action'			=> 'activateAfterConfirm',
@@ -62,21 +63,23 @@ class Job_Mail_Group extends Job_Abstract{
 						);
 						$mail		= new Mail_Info_Mail_Group_Members_MemberJoined( $this->env, $mailData );
 						$language	= $this->env->getLanguage()->getLanguage();
-						$this->logicMail->handleMail( $mail, $receiver, $language );
+						if( !$this->dryMode )
+							$this->logicMail->handleMail( $mail, $receiver, $language );
 					}
-					$mail		= new Mail_Info_Mail_Group_Activated( $this->env, $mailData );
+					$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, $mailData );
 					$receiver	= (object) array(
 						'username'	=> $member->title,
 						'email'		=> $member->address
 					);
 					$language	= $this->env->getLanguage()->getLanguage();
 					$this->logicMail->appendRegisteredAttachments( $mail, $language );
-					$this->logicMail->handleMail( $mail, $receiver, $language );
-
-					$modelAction->edit( $action->mailGroupActionId, array(
-						'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
-						'modifiedAt'	=> time(),
-					) );
+					if( !$this->dryMode ){
+						$this->logicMail->handleMail( $mail, $receiver, $language );
+						$modelAction->edit( $action->mailGroupActionId, array(
+							'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
+							'modifiedAt'	=> time(),
+						) );
+					}
 				}
 				$this->out( '- Member "'.$member->title.'" <'.$member->address.'> activated' );
 			}
@@ -100,7 +103,13 @@ class Job_Mail_Group extends Job_Abstract{
 				$manager	= $modelUser->get( $group->managerId );
 				foreach( $actions as $action ){
 					$member		= $modelMember->get( $action->mailGroupMemberId );
-					foreach( $this->logicGroup->getGroupMembers( $group->mailGroupId, TRUE ) as $entry ){
+					if( !$member ){
+						$this->out( 'Error: Invalid member ID ('.$action->mailGroupMemberId.') in action ('.$action->mailGroupActionId.')' );
+						continue;
+					}
+					$groupMembers	= $this->logicGroup->getGroupMembers( $group->mailGroupId, TRUE );
+					$this->out( '- Informing '.count( $groupMembers ).' group members about new member "'.$member->title.'" <'.$member->address.'>:' );
+					foreach( $groupMembers as $entry ){
 						if( $entry->address === $manager->email )
 							continue;
 						if( $entry->mailGroupMemberId === $member->mailGroupMemberId )
@@ -116,40 +125,34 @@ class Job_Mail_Group extends Job_Abstract{
 						);
 						$mail		= new Mail_Info_Mail_Group_Members_MemberJoined( $this->env, $mailData );
 						$language	= $this->env->getLanguage()->getLanguage();
-						$this->logicMail->handleMail( $mail, $receiver, $language );
+						if( !$this->dryMode )
+							$this->logicMail->handleMail( $mail, $receiver, $language );
+						$this->out( '  - Member: "'.$entry->title.'" <'.$entry->address.'>' );
 					}
-					$mail		= new Mail_Info_Mail_Group_Activated( $this->env, $mailData );
+					$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, $mailData );
 					$receiver	= (object) array(
 						'username'	=> $member->title,
 						'email'		=> $member->address
 					);
 					$language	= $this->env->getLanguage()->getLanguage();
 					$this->logicMail->appendRegisteredAttachments( $mail, $language );
-					$this->logicMail->handleMail( $mail, $receiver, $language );
-
-					$modelAction->edit( $action->mailGroupActionId, array(
-						'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
-						'modifiedAt'	=> time(),
-					) );
+					if( !$this->dryMode ){
+						$this->logicMail->handleMail( $mail, $receiver, $language );
+						$modelAction->edit( $action->mailGroupActionId, array(
+							'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
+							'modifiedAt'	=> time(),
+						) );
+					}
 				}
 			}
 		}
 	}
 
 	public function test(){
-		$groups			= $this->logicGroup->getGroups();
-		foreach( $groups as $group ){
-			$this->out( '- Mail Group: '.$group->title );
-			$results	= $this->logicMessage->importNewMails( $group->mailGroupId );
-			$this->out( '  Imported ('.count( $results->mailsImported ).'): '.join( ',', $results->mailsImported ) );
-			if( $results->errors ){
-				$this->out( '  Errors:' );
-				foreach( $results->errors as $error ){
-					$this->out( '    - '.$error );
-				}
-			}
-			$results	= $this->logicGroup->handleNewMails( $group->mailGroupId );
-		}
+		$this->out( 'Dry Mode: '.( $this->dryMode ? 'yes' : 'no' ) );
+		$this->out( 'Verbose Mode: '.( $this->dryMode ? 'yes' : 'no' ) );
+		$this->out( 'DEPRECATED: Use job Mail.Group.handle with dry mode, instead!' );
+		return;
 	}
 
 	public function handle(){
