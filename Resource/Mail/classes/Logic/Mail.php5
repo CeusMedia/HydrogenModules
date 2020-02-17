@@ -369,10 +369,10 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	- default mail template ID of mail resource module
 	 *	The first of these templates being usable will be stored and returned.
 	 *	@access		public
-	 *	@param		integer		$preferredTemplateId	Template ID to override database and module defaults, if usable
-	 *	@param		boolean		$considerFrontend		Flag: consider mail resource module of frontend, if available
-	 *	@param		boolean		$strict					Flag: throw exception if something goes wrong
-	 *	@return		objects		Model entity object of detected mail template
+	 *	@param		integer			$preferredTemplateId	Template ID to override database and module defaults, if usable
+	 *	@param		boolean			$considerFrontend		Flag: consider mail resource module of frontend, if available
+	 *	@param		boolean			$strict					Flag: throw exception if something goes wrong
+	 *	@return		objects|NULL	Model entity object of detected mail template
 	 *	@todo		see code doc
 	 */
 	public function detectTemplateToUse( $preferredTemplateId = 0, $considerFrontend = FALSE, $strict = TRUE ){
@@ -411,11 +411,19 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 			'mailTemplateId'	=> $templateIds,
 			'status'			=> '>= '.Model_Mail_Template::STATUS_USABLE,
 		), array(), array(), array( 'mailTemplateId' ) );
+		if( !$availableTemplateIds ){
+			if( $strict )
+				throw new RuntimeException( 'No usable mail template available' );
+			return NULL;
+		}
 
 		//  match collected and usable templates
 		$templateIds	= array_intersect( $templateIds, $availableTemplateIds );
-		if( !$templateIds )
-			throw new RuntimeException( 'No usable mail template found' );
+		if( !$templateIds ){
+			if( $strict )
+				throw new RuntimeException( 'No usable mail template found' );
+			return NULL;
+		}
 
 		//  get best template and store for later
 		$detectedTemplateId	= array_pop( $templateIds );
