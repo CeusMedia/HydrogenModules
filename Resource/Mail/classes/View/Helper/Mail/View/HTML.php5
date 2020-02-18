@@ -17,6 +17,7 @@ class View_Helper_Mail_View_HTML{
 			throw new RuntimeException( 'No mail object set' );
 
 		$usedLibrary	= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this->mailObject );
+//		$this->env->getMessenger()->noteNotice( 'usedLibrary: '.Alg_Object_Constant::staticGetKeyByValue( 'Logic_Mail', $usedLibrary, 'LIBRARY_' ) );
 		if( !( $this->libraries & $usedLibrary ) ){
 			$libraryKey	= Alg_Object_Constant::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
 			return '- used mail library ('.$libraryKey.') is not supported anymore or yet -';
@@ -42,7 +43,7 @@ class View_Helper_Mail_View_HTML{
 					$images[$part->getId()]	= $part;
 			}
 		}
-		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V2 ){									//  mail uses library CeusMedia/Mail version 1
+		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V2 ){									//  mail uses library CeusMedia/Mail version 2
 			if( $message->hasHTML() )
 				$html	= $message->getHTML()->getContent();
 			foreach( $message->getInlineImages() as $image )

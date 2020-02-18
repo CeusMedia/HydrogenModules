@@ -352,6 +352,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 				return Logic_Mail::LIBRARY_COMMON;
 			if( is_a( $mailObject->mail, 'CeusMedia\Mail\Message' ) ){
 				$agent		= $mailObject->mail->getUserAgent();
+//				$this->env->getMessenger()->noteNotice( 'Agent: '.$agent );die;
 				if( preg_match( '/^'.preg_quote( 'CeusMedia::Mail/2.', '/' ).'/', $agent ) )
 					return Logic_Mail::LIBRARY_MAIL_V2;
 //				if( preg_match( '/^'.preg_quote( 'CeusMedia::Mail/1.', '/' ).'/', $agent ) )

@@ -413,6 +413,7 @@ abstract class Mail_Abstract{
 		$baseUrl		= $this->env->getBaseUrl();
 		$replacements	= array(
 			'content'		=> $content,
+			'template.css'	=> $template->css,
 			'app.email'		=> $this->env->getConfig()->get( 'app.email' ),
 			'app.url'		=> $baseUrl,
 			'app.host'		=> parse_url( $baseUrl, PHP_URL_HOST ),
