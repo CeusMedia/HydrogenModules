@@ -27,7 +27,7 @@ class View_Helper_Messenger_Bootstrap{
 					);
 
 				$class	= $this->classes[$message->type].' messenger-message-'.$nr;
-				$message	= UI_HTML_Tag::create( 'div', $message->message, array( 'class' => 'messenger-message' ) );
+				$message	= UI_HTML_Tag::create( 'div', (string) $message->message, array( 'class' => 'messenger-message' ) );
 				if( $timeFormat && !empty( $message->timestamp ) ){
 					$time		= Alg_Time_Converter::convertToHuman( $message->timestamp, $timeFormat );
 					$time		= UI_HTML_Tag::create( 'span',  '['.$time.'] ', array( 'class' => 'time' ) );
