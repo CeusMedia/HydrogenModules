@@ -80,7 +80,7 @@ function detectAppPath( $verbose ){
 		return $_SERVER['OLDPWD'].'/';
 	throw new RuntimeException( 'Could not determine working directory' );
 }
-function handleError( $errno, $errstr, $errfile, $errline, array $errcontext ){
+function handleError( $errno, $errstr, $errfile, $errline, ?array $errcontext ){
 	if( error_reporting() === 0 )									    // error was suppressed with the @-operator
 		return FALSE;
 	throw new \ErrorException( $errstr, 0, $errno, $errfile, $errline );
