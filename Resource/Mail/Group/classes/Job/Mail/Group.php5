@@ -18,7 +18,7 @@ class Job_Mail_Group extends Job_Abstract{
 		$groups			= $this->logicGroup->getGroups();
 		$count			= 0;
 		foreach( $groups as $group ){
-			if( $group->type == Model_Mail_Group::TYPE_PUBLIC )
+			if( $group->type == Model_Mail_Group::TYPE_AUTOJOIN )
 				continue;
 			if( $group->type == Model_Mail_Group::TYPE_INVITE )
 				continue;
@@ -102,6 +102,7 @@ class Job_Mail_Group extends Job_Abstract{
 			if( $actions ){
 				$manager	= $modelUser->get( $group->managerId );
 				foreach( $actions as $action ){
+					$count++;
 					$member		= $modelMember->get( $action->mailGroupMemberId );
 					if( !$member ){
 						$this->out( 'Error: Invalid member ID ('.$action->mailGroupMemberId.') in action ('.$action->mailGroupActionId.')' );
@@ -146,11 +147,12 @@ class Job_Mail_Group extends Job_Abstract{
 				}
 			}
 		}
+		$this->out( $count.' members activated' );
 	}
 
 	public function test(){
 		$this->out( 'Dry Mode: '.( $this->dryMode ? 'yes' : 'no' ) );
-		$this->out( 'Verbose Mode: '.( $this->dryMode ? 'yes' : 'no' ) );
+		$this->out( 'Verbose Mode: '.( $this->verbose ? 'yes' : 'no' ) );
 		$this->out( 'DEPRECATED: Use job Mail.Group.handle with dry mode, instead!' );
 		return;
 	}
