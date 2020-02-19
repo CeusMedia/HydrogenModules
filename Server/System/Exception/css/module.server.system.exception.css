@@ -1,0 +1,13 @@
+#exception-facts dl dd {
+	margin-left: 120px;
+	}
+#exception-facts dl dt {
+	width: 110px;
+	}
+#exception-facts dl dd {
+	margin-left: 120px;
+	}
+#exception-facts dl .fact-file,
+#exception-facts dl .fact-line {
+	font-size: 0.85em;
+	}
