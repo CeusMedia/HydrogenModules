@@ -37,6 +37,15 @@ $buttonCancel	= UI_HTML_Tag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'class'	=> 'btn',
 ) );
 
+$iconParse		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
+$buttonParse	= '';
+if( $message->status == Model_Mail_Group_Message::STATUS_NEW ){
+	$buttonParse	= UI_HTML_Tag::create( 'a', $iconParse.'&nbsp;noch einmal einlesen', array(
+		'href'		=> './work/mail/group/message/parseAgainFromRaw/'.$message->mailGroupMessageId,
+		'class'		=> 'btn btn-small',
+	) );
+}
+
 return $tabs.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', 'Mail: '.$message->object->getSubject() ),
 	UI_HTML_Tag::create( 'div', array(
@@ -44,6 +53,7 @@ return $tabs.UI_HTML_Tag::create( 'div', array(
 		$fieldHtml,
 		UI_HTML_Tag::create( 'div', join( ' ', array(
 			$buttonCancel,
+			$buttonParse
 		) ), array( 'class' => 'buttonbar' ) ),
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );

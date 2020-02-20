@@ -67,8 +67,20 @@ class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	public function parseAgainFromRaw( $messageId ){
+		$message		= $this->checkId( $messageId );
+		if( $message->status == Model_Mail_Group_Message::STATUS_NEW ){
+			$rawMail	= bzdecompress(substr($message->raw,6));
+			$parser		= new \CeusMedia\Mail\Message\Parser();
+			$message->object		= 'BZIP2:'.bzcompress( serialize( $parser->parse( $rawMail ) ) );
+			$this->modelMessage->edit( $messageId, array( 'object' => $message->object ), FALSE );
+		}
+		$this->restart( 'view/'.$messageId );
+	}
+
 	public function view( $messageId ){
 		$message		= $this->checkId( $messageId );
+
 		$message->raw		= $this->logicMessage->getMessageRawMail( $message );
 		$message->object	= $this->logicMessage->getMessageObject( $message );
 		$this->addData( 'message', $message );
