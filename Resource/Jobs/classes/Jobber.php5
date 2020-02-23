@@ -4,24 +4,27 @@
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
- *	@version		$Id: Maintainer.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
+ *	@copyright		2010-2020 Ceus Media (https://ceusmedia.de/)
  */
 /**
  *	Chat maintainer.
  *	@category		cmApps
  *	@package		Chat.Server
- *	@extends		CMF_Hydrogen_Application_Abstract
+ *	@extends		CMF_Hydrogen_Application_Console
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
- *	@version		$Id: Maintainer.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
+ *	@copyright		2010-2020 Ceus Media (https://ceusmedia.de/)
  */
-class Jobber extends \CMF_Hydrogen_Application_Console {
-
-	protected $lock;
+class Jobber extends \CMF_Hydrogen_Application_Console
+{
 	protected $jobs	= array();
+	protected $lock;
+	protected $modelJob;
+	protected $modelLock;
+	protected $pathLogs;
+	protected $pathJobs;
 
-	public function __construct( \CMF_Hydrogen_Environment $env = NULL ){
+	public function __construct( \CMF_Hydrogen_Environment $env = NULL )
+	{
 		parent::__construct( $env, TRUE );															//  construct parent and call __onInit
 		$config				= $this->env->getConfig();
 		$this->pathLogs		= $config->get( 'path.logs' );
@@ -31,46 +34,45 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 		$this->modelLock	= new \Model_Joblock( $this->env );
 	}
 
-	public function loadJobs( $modes, $strict = TRUE ){
+	public function loadJobs( array $modes, bool $strict = TRUE ): self
+	{
 		$this->modelJob->load( $modes, $strict );
+		return $this;
 	}
 
-	protected function getJobIdFromRequest(){
-		if( $this->env->getRequest()->get( 0 ) )
-			return $this->env->getRequest()->get( 0 );
-		$commands	= $this->env->getRequest()->get( 'commands' );
-		if( $commands )
-			return array_shift( $commands );
-		return FALSE;
-	}
-
-	public function getJobs(){
+	public function getJobs(): array
+	{
 		return $this->modelJob->getAll();
 	}
 
-	public function log( $message ){
-		error_log( date( "Y-m-d H:i:s" ).": Jobber: ".$message."\n", 3, $this->pathLogs."jobs.log" );
+	public function log( string $message ): self
+	{
+		$line	= sprintf( '%s: Jobber: %s', date( "Y-m-d H:i:s" ), $message );
+		error_log( $line.PHP_EOL, 3, $this->pathLogs.'jobs.log' );
+		return $this;
 	}
 
-	public function logError( $message ){
-		error_log( date( "Y-m-d H:i:s" ).": Jobber: ".$message.PHP_EOL, 3, $this->pathLogs."jobs.error.log" );
-		$this->out( "Exception: ".$message."\n" );
+	public function logError( string $message ): self
+	{
+		$line	= sprintf( '%s: Jobber: %s', date( "Y-m-d H:i:s" ), $message );
+		error_log( $line.PHP_EOL, 3, $this->pathLogs."jobs.error.log" );
+		$this->out( "Exception: ".$message.PHP_EOL );
+		return $this;
 	}
 
-	public function logException( $exception ){
+	public function logException( Exception $exception ): self
+	{
 		$message	= $exception->getMessage().'@'.$exception->getFile().':'.$exception->getLine();
 		$this->logError( /*$this->getLogPrefix().*/$message );
-	}
-
-	protected function out( $message = '' ){
-		print( $message.PHP_EOL );
+		return $this;
 	}
 
 	/**
 	 *	Executes possible job call.
 	 *	@return		integer
 	 */
-	public function run() {
+	public function run(): int
+	{
 		$jobId	= $this->getJobIdFromRequest();
 		if( !strlen( trim( $jobId ) ) ){
 			$this->out( '' );
@@ -84,10 +86,27 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 			$commands	= array_slice( $commands, 1 );
 			$this->env->getRequest()->set( 'commands', $commands );
 		}
-		$this->runJob( $jobId );
+		return $this->runJob( $jobId );
 	}
 
-	protected function runJob( $jobId ){
+	/*  --  PROTECTED  --  */
+	protected function getJobIdFromRequest()
+	{
+		if( $this->env->getRequest()->get( 0 ) )
+			return $this->env->getRequest()->get( 0 );
+		$commands	= $this->env->getRequest()->get( 'commands' );
+		if( $commands )
+			return array_shift( $commands );
+		return FALSE;
+	}
+
+	protected function out( string $message = '' )
+	{
+		print( $message.PHP_EOL );
+	}
+
+	protected function runJob( string $jobId ): int
+	{
 		$commands	= $this->env->getRequest()->get( 'commands' );
 		$parameters	= $this->env->getRequest()->get( 'parameters' );
 		if( !$this->modelJob->has( $jobId ) ){														//  job ID is not in list of registered jobs
@@ -119,11 +138,10 @@ class Jobber extends \CMF_Hydrogen_Application_Console {
 			}
 			return 1;																				//  quit with positive status
 		}
-		catch( \Exception $e ){																		//  on exception
+		catch( Throwable $t ){																		//  on throwable error or exception
 			$this->modelLock->unlock( $job->class, $job->method );									//  remove job lock
-			$this->logError( $e->getMessage()."@".$e->getFile().":".$e->getLine() );				//  log exception
+			$this->logError( $t->getMessage()."@".$t->getFile().":".$t->getLine() );				//  log throwable error or exception
 			return -1;																				//  quit with negative status
 		}
 	}
 }
-?>
