@@ -165,8 +165,8 @@ return UI_HTML_Tag::create( 'div', array(
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary',
-				) ) ),
-			), array( 'class' => 'buttonbar' ) ),
+				) ),
+			) ), array( 'class' => 'buttonbar' ) ),
 		), array(
 			'action'		=> './work/mail/group/edit/'.$group->mailGroupId,
 			'method'		=> 'post',
