@@ -5,15 +5,6 @@ class View_Work_Mail_Group extends CMF_Hydrogen_View{
 	public function edit(){}
 	public function index(){}
 
-	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$words	= (object) $env->getLanguage()->getWords( 'work/mail/group' );					//  load words
-		$context->registerTab( '', $words->tabs['group'], 0 );									//  register main tab
-	//	$context->registerTab( 'member', $words->tabs['members'], 1 );							//  register main tab
-		$context->registerTab( 'server', $words->tabs['servers'], 2 );							//  register main tab
-		$context->registerTab( 'role', $words->tabs['roles'], 3 );								//  register main tab
-		$context->registerTab( 'message', $words->tabs['messages'], 4 );						//  register main tab
-	}
-
 	public static function renderTabs( CMF_Hydrogen_Environment $env, $current = 0 ){
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/mail/group/' );

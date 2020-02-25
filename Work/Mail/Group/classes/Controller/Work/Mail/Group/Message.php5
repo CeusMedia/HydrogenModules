@@ -29,6 +29,20 @@ class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
+	public function html( $messageId ){
+		try{
+			$message	= $this->checkId( $messageId );
+			$object		= $this->logicMessage->getMessageObject( $message );
+			$content	= $object->getHTML()->getContent();
+		}
+		catch( Exception $e ){
+			$content	= UI_HTML_Exception_Page::render( $e );
+		}
+		$response	= $this->env->getResponse();
+		$response->setBody( $content );
+		Net_HTTP_Response_Sender::sendResponse( $response, NULL, TRUE, TRUE );
+	}
+
 	public function index( $page = 0 ){
 		$filterGroupId	= $this->session->get( $this->filterPrefix.'groupId' );
 
@@ -59,13 +73,13 @@ class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function remove(){
-		$server	= $this->checkId( $serverId );
-		if( $server ){
-			$this->modelServer->remove( $serverId );
+/*	public function remove( $messageId ){
+		$message	= $this->checkId( $messageId );
+		if( $message ){
+			$this->modelMessage->remove( $messageId );
 			$this->restart( NULL, TRUE );
 		}
-	}
+	}*/
 
 	public function parseAgainFromRaw( $messageId ){
 		$message		= $this->checkId( $messageId );
@@ -80,7 +94,6 @@ class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller{
 
 	public function view( $messageId ){
 		$message		= $this->checkId( $messageId );
-
 		$message->raw		= $this->logicMessage->getMessageRawMail( $message );
 		$message->object	= $this->logicMessage->getMessageObject( $message );
 		$this->addData( 'message', $message );

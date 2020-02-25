@@ -3,7 +3,7 @@
 	<title>Work: Mail Group</title>
 	<description/>
 	<category>Work</category>
-	<version>0.3.9</version>
+	<version>0.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add database models for groups and members.</log>
@@ -18,7 +18,7 @@
 	<log version="0.3.7">Set receiver name in sent mails.</log>
 	<log version="0.3.8">Improve mail view for manager.</log>
 	<log version="0.3.9">Split group edit panels.</log>
-<!--	<log version="0.3.10">Fix support of viewing HTML messages.</log>-->
+	<log version="0.4">Extract hook to own class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -27,6 +27,7 @@
 		<class>Controller/Work/Mail/Group/Message.php5</class>
 		<class>Controller/Work/Mail/Group/Role.php5</class>
 		<class>Controller/Work/Mail/Group/Server.php5</class>
+		<class>Hook/Work/Mail/Group.php5</class>
 		<class>View/Work/Mail/Group.php5</class>
 		<class>View/Work/Mail/Group/Message.php5</class>
 		<class>View/Work/Mail/Group/Role.php5</class>
@@ -54,5 +55,5 @@
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
-	<hook type="resource" resource="WorkMailGroup" event="registerTabs">View_Work_Mail_Group::___onRegisterTab</hook>
+	<hook type="resource" resource="WorkMailGroup" event="registerTabs">Hook_Work_Mail_Group::onRegisterTab</hook>
 </module>
