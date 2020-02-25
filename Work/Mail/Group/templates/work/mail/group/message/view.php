@@ -9,6 +9,7 @@ foreach( $message->object->getParts( FALSE ) as $part ){
 	else if( $part instanceof \CeusMedia\Mail\Message\Part\Text )
 		$message->text	= $part->getContent();
 }
+
 $fieldText	= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'h4', 'Plain Text' ),
@@ -19,7 +20,8 @@ $fieldText	= UI_HTML_Tag::create( 'div', array(
 $fieldHtml	= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'h4', 'HTML' ),
-		UI_HTML_Tag::create( 'iframe', $message->html, array(
+		UI_HTML_Tag::create( 'iframe', '', array(
+			'src'			=> './work/mail/group/message/html/'.$message->mailGroupMessageId,
 			'style'			=> 'width: 100%; height: 600px; border: 1px solid gray;',
 			'frameborder'	=> 0,
 		) ),

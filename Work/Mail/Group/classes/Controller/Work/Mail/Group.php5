@@ -22,7 +22,7 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->modelMember	= $this->getModel( 'mailGroupMember' );
 		$this->modelRole	= $this->getModel( 'mailGroupRole' );
 		$this->modelAction	= $this->getModel( 'mailGroupAction' );
-//		$this->modelServer	= $this->getModel( 'mailGroupServer' );
+		$this->modelServer	= $this->getModel( 'mailGroupServer' );
 		$this->modelGroup	= $this->getModel( 'mailGroup' );
 		$this->modelUser	= $this->getModel( 'user' );
 		$this->logicGroup	= $this->getLogic( 'mailGroup' );
@@ -60,8 +60,8 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 			$this->messenger->noteSuccess( 'Added.' );
 			$this->restart( 'edit/'.$groupId, TRUE );
 		}
-//		$this->addData( 'servers', $this->modelServer->getAll() );
-		$users		= $this->modelUser->getAll( array( 'status' => '>0' ), array( 'username' => 'ASC' ) );
+		$this->addData( 'servers', $this->modelServer->getAll() );
+		$users		= $this->modelUser->getAll( array( 'status' => '> 0' ), array( 'username' => 'ASC' ) );
 		$this->addData( 'users', $users );
 		$roles		= $this->modelRole->getAll( array(), array( 'rank' => 'ASC' ) );
 		$this->addData( 'roles', $roles );
@@ -155,8 +155,9 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 			$this->messenger->noteSuccess( 'Saved.' );
 			$this->restart( 'edit/'.$groupId, TRUE );
 		}
+		$this->addData( 'servers', $this->modelServer->getAll() );
 		$this->addData( 'group', $group );
-		$users		= $this->modelUser->getAll( array( 'status' => '>0' ), array( 'username' => 'ASC' ) );
+		$users		= $this->modelUser->getAll( array( 'status' => '> 0' ), array( 'username' => 'ASC' ) );
 		$this->addData( 'users', $users );
 		$members	= $this->modelMember->getAll( array( 'mailGroupId' => $groupId ), array( 'title' => 'ASC' ) );
 		$this->addData( 'members', $members );
@@ -178,6 +179,17 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 	public function removeMember( $mailGroupId, $mailGroupMemberId ){
 		$member	= $this->checkMemberId( $mailGroupMemberId );
 		$this->modelMember->remove( $mailGroupMemberId );
+		$this->restart( 'edit/'.$mailGroupId, TRUE );
+	}
+
+	public function editMember( $mailGroupId, $mailGroupMemberId ){
+		$member	= $this->checkMemberId( $mailGroupMemberId );
+		$this->modelMember->edit( $mailGroupMemberId, array(
+			'address'		=> $this->request->get( 'address' ),
+			'title'			=> $this->request->get( 'title' ),
+			'roleId'		=> $this->request->get( 'roleId' ),
+			'modifiedAt'	=> time(),
+		) );
 		$this->restart( 'edit/'.$mailGroupId, TRUE );
 	}
 
