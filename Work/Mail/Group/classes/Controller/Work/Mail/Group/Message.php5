@@ -34,6 +34,16 @@ class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller{
 			$message	= $this->checkId( $messageId );
 			$object		= $this->logicMessage->getMessageObject( $message );
 			$content	= $object->getHTML()->getContent();
+
+			$modules	= $this->env->getModules();
+			if( $modules->has( 'UI_Bootstrap' ) ){
+				$version	= $modules->get( 'UI_Bootstrap' )->config['version']->value;
+				$pathThemes	= $this->env->getConfig()->get( 'path.themes' );
+				$styleFile	= $pathThemes.'common/css/bootstrap/'.$version.'/css/bootstrap.min.css';
+				$style		= FS_File_Reader::load( $styleFile );
+				$style		= UI_HTML_Tag::create( 'style', $style );
+				$content	= str_replace( '<head>', '<head>'.$style, $content );
+			}
 		}
 		catch( Exception $e ){
 			$content	= UI_HTML_Exception_Page::render( $e );
