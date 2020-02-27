@@ -28,7 +28,7 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 	}
 
 	protected function renderTabs( $labels, $templates, $current ){
-/*		$page	= $this->getData( 'page' );
+		$page	= $this->getData( 'page' );
 		$app	= $this->getData( 'app' );
 		$source	= $this->getData( 'source' );
 		$meta	= $this->getData( 'appHasMetaModule' );
@@ -36,7 +36,7 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 		$isSelfApp		= $app === 'self';
 		$isFrontendApp	= $app === 'frontend';
 		$isFromConfig	= $source === 'Config';
-		$isFromDatabase	= $source === 'Database';*/
+		$isFromDatabase	= $source === 'Database';
 
 		$listTabs	= array();
 		$listPanes	= array();
