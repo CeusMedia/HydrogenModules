@@ -3,7 +3,7 @@
 	<title>Manage: Content: Documents</title>
 	<description>Basic management of available made documents.</description>
 	<category>Management</category>
-	<version>0.5.5</version>
+	<version>0.5.6</version>
 	<log version="0.4.3">Added relation to time phrase helper.</log>
 	<log version="0.4.4">Use frontend resource.</log>
 	<log version="0.4.5">Updated TinyMCE link collection.</log>
@@ -20,11 +20,13 @@
 	<log version="0.5.3">Create documents folder if not existing.</log>
 	<log version="0.5.4">Permit file names starting with a dot.</log>
 	<log version="0.5.5">Add pagination to list.</log>
+	<log version="0.5.6">Extract hook to own class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/Content/Document.php5</class>
+		<class>Hook/Manage/Content/Document.php5</class>
 		<class>Model/Document.php5</class>
 		<class>View/Manage/Content/Document.php5</class>
 		<locale>de/manage/content/document.ini</locale>
@@ -44,6 +46,6 @@
 	<config type="string" name="path.documents" title="path to documents within managed application, needs trailing slash">contents/documents/</config>
 	<link xml:lang="de" path="manage/content/document">Dokumente</link>
 	<link xml:lang="en" path="manage/content/document">Documents</link>
-	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Content_Document::___onTinyMCE_getLinkList</hook>
-	<hook type="resource" resource="HintHelper" event="registerHints">Controller_Manage_Content_Document::___onRegisterHints</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Hook_Manage_Content_Document::onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="HintHelper" event="registerHints">Hook_Manage_Content_Document::onRegisterHints</hook>
 </module>
