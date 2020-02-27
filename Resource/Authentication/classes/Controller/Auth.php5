@@ -13,7 +13,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
-		$this->logic		= Logic_Authentication::getInstance( $this->env );
+		$this->logic		= $this->env->getLogic()->get( 'Authentication' );
 		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 		if( isset( $this->env->version ) )
 			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
@@ -21,43 +21,6 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication.', TRUE );
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
-	}
-
-	static public function ___onAppException( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$payload	= (object) $data;
-		if( !property_exists( $payload, 'exception' ) )
-			throw new Exception( 'No exception data given' );
-		if( !( $payload->exception instanceof Exception ) )
-			throw new Exception( 'Given exception data is not an exception object' );
-		$request	= $env->getRequest();
-		$session	= $env->getSession();
-		if( $payload->exception->getCode() == 403 ){
-			if( !$session->get( 'userId' ) ){
-				$forwardUrl	= $request->get( 'controller' );
-				if( $request->get( 'action' ) )
-					$forwardUrl	.= '/'.$request->get( 'action' );
-				if( $request->get( 'arguments' ) )
-					foreach( $request->get( 'arguments' ) as $argument )
-						$forwardUrl	.= '/'.$argument;
-				$url	= $env->url.'auth/login?from='.$forwardUrl;
-				Net_HTTP_Status::sendHeader( 403 );
-				if( !$request->isAjax() )
-					header( 'Location: '.$url );
-				exit;
-			}
-		}
-		return FALSE;
-	}
-
-	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$userId		= (int) $env->getSession()->get( 'userId' );														//  get ID of current user (or zero)
-		if( $userId ){
-			$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
-			$remember	= (bool) $cookie->get( 'auth_remember' );
-			$env->getSession()->set( 'isRemembered', $remember );
-			$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';											//  initialize Auth class with user ID
-			$env->getPage()->js->addScriptOnReady( $script, 1 );															//  enlist script to be run on ready
-		}
 	}
 
 	public function ajaxIsAuthenticated(){
@@ -69,8 +32,12 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->ajaxIsAuthenticated();
 	}
 
-	public function index(){
-		if( !$this->session->has( 'userId' ) )
+	public function confirm(){
+		$this->forwardToBackendAction( 'confirm' );
+	}
+
+	public function index( $arg1 = NULL, $arg2 = NULL ){
+		if( !$this->logic->isAuthenticated() )
 			return $this->restart( 'login', TRUE );
 		$this->redirectAfterLogin();
 	}
@@ -87,39 +54,37 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	}
 
 	public function login( $username = NULL ){
-		if( $this->session->has( 'userId' ) )
+		if( $this->logic->isAuthenticated() )
 			$this->redirectAfterLogin();
-		$backend	= $this->getBackend();
-		$path		= 'auth/'.$backend->path.'/login';
+		$action		= 'login';
 		if( $username )
-			$path	.= '/'.$username;
-		$from		= $this->request->get( 'from' );
-		$from		= str_replace( "index/index", "", $from );
-		$this->restart( $from ? $path.'?from='.$from : $path );
+			$action	.= '/'.$username;
+		$this->forwardToBackendAction( $action );
 	}
 
 	public function logout(){
-		$backend	= $this->getBackend();
-		$path		= 'auth/'.strtolower( $backend->path ).'/logout';
-		$from		= $this->request->get( 'from' );
-		$from		= str_replace( "index/index", "", $from );
-		$this->restart( $from ? $path.'?from='.$from : $path );
+		if( !$this->logic->isAuthenticated() )
+			$this->redirectAfterLogout();
+		$this->forwardToBackendAction( 'logout' );
 	}
 
 	public function password(){
-		$backend	= $this->getBackend();
-		$path		= 'auth/'.strtolower( $backend->path ).'/password';
-		$from		= $this->request->get( 'from' );
-		$from		= str_replace( "index/index", "", $from );
-		$this->restart( $from ? $path.'?from='.$from : $path );
+		$this->forwardToBackendAction( 'password' );
 	}
 
 	public function register(){
+		$this->forwardToBackendAction( 'register' );
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function forwardToBackendAction( $action, $carryFrom = TRUE ){
 		$backend	= $this->getBackend();
-		$path		= 'auth/'.strtolower( $backend->path ).'/register';
-		$from		= $this->request->get( 'from' );
-		$from		= str_replace( "index/index", "", $from );
-		$this->restart( $from ? $path.'?from='.$from : $path );
+		$path		= 'auth/'.strtolower( $backend->path ).'/'.$action;
+		$from		= trim( $this->request->get( 'from' ) );
+		$from		= strlen( $from ) ? preg_replace( '|^index/?(index)?$|', '', $from ) : '';
+		$path		= strlen( $from ) ? $path.'?from='.$from : $path;
+		$this->restart( $path );
 	}
 
 	protected function redirectAfterLogin(){
