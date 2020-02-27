@@ -54,10 +54,10 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', array(
 				) )
 			) ),
 		/*	HTML::DivClass( 'buttonbar buttonbar-blocks', $buttonSave ),*/
-			HTML::DivClass( 'buttonbar', array(
+			HTML::DivClass( 'buttonbar', join( ' ', array(
 				$buttonCancel,
 				$buttonSave,
-			) ),
+			) ) ),
 		), array(
 			'action'	=> './auth/local/password',
 			'method'	=> 'post',
@@ -78,6 +78,7 @@ if( strlen( trim( strip_tags( $textTop ) ) ) || strlen( trim( strip_tags( $textB
 	return $textTop.$panelLogin.$textBottom;
 }
 
+$env->getPage()->addBodyClass( 'auth-centered' );
 return UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', $panelPassword, array( 'class' => 'centered-pane' ) )
 ), array( 'class' => 'centered-pane-container' ) );

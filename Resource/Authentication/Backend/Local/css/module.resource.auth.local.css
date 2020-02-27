@@ -51,22 +51,38 @@ body.moduleAuthLocal div.framed h3 {
 
 /*  --  CENTERED PANE  --  */
 /*  @todo transport to main auth module if possible */
-body.moduleAuthLocal.action-login #layout-content,
-body.moduleAuthLocal.action-login #layout-field,
-body.moduleAuthLocal.action-login #layout-content,
-body.moduleAuthLocal.action-password #layout-content,
-body.moduleAuthLocal.action-password #layout-field,
-body.moduleAuthLocal.action-password #layout-content{
+body.auth-centered.moduleAuthLocal.action-confirm #layout-content,
+body.auth-centered.moduleAuthLocal.action-confirm #layout-field,
+body.auth-centered.moduleAuthLocal.action-confirm #layout-content,
+body.auth-centered.moduleAuthLocal.action-login #layout-content,
+body.auth-centered.moduleAuthLocal.action-login #layout-field,
+body.auth-centered.moduleAuthLocal.action-login #layout-content,
+body.auth-centered.moduleAuthLocal.action-password #layout-content,
+body.auth-centered.moduleAuthLocal.action-password #layout-field,
+body.auth-centered.moduleAuthLocal.action-password #layout-content{
 	height: 100vh;
+	margin-top: 0 !important;
+	overflow: hidden;
 	}
-body.moduleAuthLocal.action-login #layout-content .centered-pane-container,
-body.moduleAuthLocal.action-password #layout-content .centered-pane-container{
-	height: 100vh;
+body.auth-centered.moduleAuthLocal.action-confirm #layout-content .centered-pane-container,
+body.auth-centered.moduleAuthLocal.action-login #layout-content .centered-pane-container,
+body.auth-centered.moduleAuthLocal.action-password #layout-content .centered-pane-container{
+	height: 90vh;
+	display: flex;           /* establish flex container */
+	flex-direction: column;  /* make main axis vertical */
+	justify-content: center; /* center items vertically, in this case */
+	align-items: center;     /* center items horizontally, in this case */
 	}
-body.moduleAuthLocal.action-login #layout-content .centered-pane,
-body.moduleAuthLocal.action-password #layout-content .centered-pane{
+body.auth-centered.moduleAuthLocal.action-confirm #layout-content .centered-pane,
+body.auth-centered.moduleAuthLocal.action-login #layout-content .centered-pane,
+body.auth-centered.moduleAuthLocal.action-password #layout-content .centered-pane{
 	width: 400px;
-	margin: 0px auto;
 	margin-top: 2em;
 /*	box-shadow: 0 0 12vw 5vw rgba(127, 127, 127, 0.25), 0 0 2vw rgba(127, 127, 127, 0.25);*/
+	box-shadow: 0 0 12vw 5vw rgba(127, 127, 127, 0.15), 0 0 2vw rgba(127, 127, 127, 0.5);
+	}
+body.auth-centered.moduleAuthLocal.action-confirm #layout-content .centered-pane .content-panel.content-panel-form,
+body.auth-centered.moduleAuthLocal.action-login #layout-content .centered-pane .content-panel.content-panel-form,
+body.auth-centered.moduleAuthLocal.action-password #layout-content .centered-pane .content-panel.content-panel-form{
+	margin-bottom: 0;
 	}

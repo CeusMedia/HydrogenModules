@@ -56,9 +56,11 @@ if( $useRemember )
 
 $linkPassword	= UI_HTML_Tag::create( 'a', $w->linkPassword, array(
 	'href'		=> './auth/local/password',
+	'tabindex'	=> -1,
 ) );
 $linkRegister	= UI_HTML_Tag::create( 'a', $w->linkRegister, array(
 	'href'		=> './auth/local/register'.( $from ? '?from='.$from : '' ),
+	'tabindex'	=> -1,
 ) );
 $buttonLogin	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
 	'type'		=> 'submit',
