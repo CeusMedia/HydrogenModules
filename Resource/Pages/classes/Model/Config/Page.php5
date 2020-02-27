@@ -27,6 +27,32 @@ class Model_Config_Page
 		return $this->pages;
 	}
 
+	public function getColumns(){
+		return $columns	= array(
+			'pageId',
+			'parentId',
+			'type',
+			'scope',
+			'status',
+			'rank',
+			'identifier',
+			'controller',
+			'action',
+			'access',
+			'title',
+			'content',
+			'format',
+			'description',
+			'keywords',
+			'changefreq',
+			'priority',
+			'icon',
+			'template',
+			'createdAt',
+			'modifiedAt'
+		);
+	}
+
 	public function getByIndices( $indices = array(), $orders = array() ){
 		return current( $this->getAllByIndices( $indices, $orders, array( 0, 1 ) ) );
 	}
@@ -94,6 +120,8 @@ class Model_Config_Page
 					'pageId'		=> $pageId,
 					'status'		=> 1,			//@todo realize
 					'type'			=> (int) array_search( $page['type'], $types ),
+					'controller'	=> !empty( $page['controller'] ) ? $page['controller'] : '',
+					'action'		=> !empty( $page['action'] ) ? $page['action'] : '',
 					'scope'			=> $scopeNr,
 					'rank'			=> $pageNr + 1,
 					'identifier'	=> $page['path'],
@@ -120,6 +148,8 @@ class Model_Config_Page
 							'parentId'		=> $pageItem->pageId,
 							'status'		=> 1,			//@todo realize
 							'type'			=> (int) array_search( $subpage['type'], $types ),
+							'controller'	=> !empty( $subpage['controller'] ) ? $subpage['controller'] : '',
+							'action'		=> !empty( $subpage['action'] ) ? $subpage['action'] : '',
 							'scope'			=> $scopeNr,
 							'rank'			=> $subpageNr + 1,
 							'identifier'	=> $subpage['path'],
