@@ -2,6 +2,11 @@
 <jobs>
 
 	<!--  NEWER JOB DESCRIPTION  -->
+	<job id="Mail.test">
+		<class>Mail</class>
+		<method>test</method>
+		<mode>live</mode>
+	</job>
 	<job id="Mail.Archive.clean">
 		<class>Mail_Archive</class>
 		<method>clean</method>

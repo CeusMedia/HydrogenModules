@@ -2,11 +2,18 @@
 class Mail_Test extends Mail_Abstract{
 
 	public function generate( $data = array() ){
-		$this->setSubject( 'Test' );
+
+		$data		= new ADT_List_Dictionary( $data );
+		$subject	= $data->get( 'subject', 'Test' );
+		$text		= $data->get( 'text', $this->renderText( $data ) );
+		$html		= $data->get( 'html', $this->renderHtml( $data ) );
+
 		if( !empty( $data['forceTemplateId'] ) )
 			$this->setTemplateId( $data['forceTemplateId'] );
-		$this->setText( $this->renderText( $data ) );
-		$this->setHtml( $this->renderHtml( $data ) );
+
+		$this->setSubject( $subject );
+		$this->setText( $text );
+		$this->setHtml( $html );
 		return $this;
 	}
 
