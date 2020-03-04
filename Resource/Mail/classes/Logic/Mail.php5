@@ -656,6 +656,21 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	}
 
 	/**
+	 *	Return map of mail classes used in all queued mails and the number of related mails.
+	 *	@access		public
+	 *	@param		array			$conditions		Map of Conditions to include in SQL Query
+	 *	@return 	array
+	 */
+	public function getUsedMailClassNames( $conditions = array() ){
+		$list			= array();
+		$orders			= array( 'mailClass' => 'ASC' );
+		$mailClassNames	= $this->modelQueue->getDistinct( 'mailClass', $conditions, $orders );
+		foreach( $mailClassNames as $mailClassName )
+			$list[$mailClassName]	= $this->modelQueue->count( array( 'mailClass' => $mailClassName ) );
+		return $list;
+	}
+
+	/**
 	 *	Handles mail by sending immediately or appending to queue if allowed.
 	 *	Sending mail immediately can be configured or forced by third argment.
 	 *	@access		public

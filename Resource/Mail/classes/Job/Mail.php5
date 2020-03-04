@@ -18,8 +18,8 @@ class Job_Mail extends Job_Abstract{
 			'subject'	=> $this->getMailSubject(),
 		);
 
+		$mail	= new Mail_Test( $this->env, $data );
 		if( $testDirectly ){
-			$mail	= new Mail_Test( $this->env, $data );
 //			$mail->initTransport();                                                                     //  override serialized mail transfer
 			try{
 				$mail->sendTo( array( 'email' => $receiver ) );
@@ -62,10 +62,14 @@ class Job_Mail extends Job_Abstract{
 	}
 
 	protected function getMailSubject(){
-		$appConfig	= $this->env->getConfig()->getAll( 'app.', TRUE );
-		$appTitle	= $appConfig->get( 'title', $appConfig->get( 'name' ) );
-		$prefix		= $appTitle ? '['.( $appTitle ).'] ' : '';
-		$subject	= 'Test-Mail '.date( 'y-m-d / H:i' );
-		return $prefix.$subject;
+		$subject		= 'Test-Mail '.date( 'y-m-d / H:i' );
+		$subjectConfig	= $this->env->getConfig()->getAll( 'module.resource_mail.subject.', TRUE );
+		if( !$subjectConfig->get( 'prefix' ) && !$subjectConfig->get( 'template' ) ){
+			$appConfig	= $this->env->getConfig()->getAll( 'app.', TRUE );
+			$appTitle	= $appConfig->get( 'title', $appConfig->get( 'name' ) );
+			$prefix		= $appTitle ? '['.( $appTitle ).'] ' : '';
+			$subject	= $prefix.$subject;
+		}
+		return $subject;
 	}
 }

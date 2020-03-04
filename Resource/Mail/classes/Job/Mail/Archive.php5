@@ -32,7 +32,7 @@ class Job_Mail_Archive extends Job_Abstract{
 			FS_File_Writer::save( $indexFile, '[]' );
 		$index		= json_decode( FS_File_Reader::load( $indexFile ), TRUE );
 
-		$conditions	= array( 'status' > $this->statusesHandledMails );
+		$conditions	= array( 'status' => $this->statusesHandledMails );
 		$orders		= array( 'mailId' => 'ASC' );
 		$limits		= array(
 			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
@@ -143,7 +143,7 @@ class Job_Mail_Archive extends Job_Abstract{
 		$conditions	= array(
 			'status'		=> $this->statusesHandledMails,
 			'mailClass'		=> $class,
-			'enqueuedAt' 	=> '<'.$threshold->format( 'U' ),
+			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
 		);
 		$orders		= array( 'mailId' => 'ASC' );
 		$mails		= $this->model->getAll( $conditions, $orders );
@@ -153,10 +153,12 @@ class Job_Mail_Archive extends Job_Abstract{
 			return;
 		}
 		$count		= 0;
-		$mailIds	= array();
-		foreach( $mails as $mail )
-			$mailIds[]	= $mail->mailId;
-		$this->model->removeByIndex( 'mailId', $mailIds );
+		if( $mails ){
+			$mailIds	= array();
+			foreach( $mails as $mail )
+				$mailIds[]	= $mail->mailId;
+			$this->model->removeByIndex( 'mailId', $mailIds );
+		}
 
 //		$fails	= array();
 /*		foreach( $mails as $mail ){
@@ -285,7 +287,7 @@ class Job_Mail_Archive extends Job_Abstract{
 		$conditions	= array(
 			'status'		=> $this->statusesHandledMails,
 			'mailClass'		=> $class,
-			'enqueuedAt' 	=> '<'.$threshold->format( 'U' ),
+			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
 		);
 
 		$orders		= array( 'mailId' => 'DESC' );
