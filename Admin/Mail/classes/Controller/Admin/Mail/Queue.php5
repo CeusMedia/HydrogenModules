@@ -169,6 +169,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 			$this->session->set( $this->filterPrefix.'subject', $this->request->get( 'subject' ) );
 			$this->session->set( $this->filterPrefix.'receiverAddress', $this->request->get( 'receiverAddress' ) );
 			$this->session->set( $this->filterPrefix.'status', $this->request->get( 'status' ) );
+			$this->session->set( $this->filterPrefix.'mailClass', $this->request->get( 'mailClass' ) );
 			$this->session->set( $this->filterPrefix.'dateStart', $this->request->get( 'dateStart' ) );
 			$this->session->set( $this->filterPrefix.'dateEnd', $this->request->get( 'dateEnd' ) );
 			$this->session->set( $this->filterPrefix.'timeStart', $this->request->get( 'timeStart' ) );
@@ -211,12 +212,14 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 			$conditions['receiverAddress'] = '%'.$filters->get( 'receiverAddress' ).'%';
 		if( $filters->get( 'status' ) )
 			$conditions['status'] = $filters->get( 'status' );
+		if( $filters->get( 'mailClass' ) )
+			$conditions['mailClass'] = $filters->get( 'mailClass' );
 		if( $dateStart && $dateEnd )
-			$conditions['enqueuedAt']	= '><'.strtotime( $dateStart ).'&'.( strtotime( $dateEnd ) + 24 * 3600 - 1);
+			$conditions['enqueuedAt']	= '>< '.strtotime( $dateStart ).'&'.( strtotime( $dateEnd ) + 24 * 3600 - 1);
 		else if( $dateStart )
-			$conditions['enqueuedAt']	= '>='.strtotime( $dateStart );
+			$conditions['enqueuedAt']	= '>= '.strtotime( $dateStart );
 		else if( $dateEnd )
-			$conditions['enqueuedAt']	= '<='.( strtotime( $dateEnd ) + 24 * 36000 - 1);
+			$conditions['enqueuedAt']	= '<= '.( strtotime( $dateEnd ) + 24 * 36000 - 1);
 
 		$page		= max( 0, (int) $page );
 		$total		= $this->logic->countQueue( $conditions );
@@ -235,6 +238,11 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->addData( 'total', $total );
 		$this->addData( 'limit', $filters->get( 'limit' ) );
 		$this->addData( 'filters', $filters );
+
+//		$mailClasses	= array_values( $this->logic->getMailClassNames() );
+		$mailClasses	= array_keys( $this->logic->getUsedMailClassNames() );
+//		print_m( $mailClasses );die;
+		$this->addData( 'mailClasses', $mailClasses );
 	}
 
 	public function remove( $mailId ){

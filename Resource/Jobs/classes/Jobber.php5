@@ -60,9 +60,9 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 		return $this;
 	}
 
-	public function logException( Exception $exception ): self
+	public function logException( Throwable $t ): self
 	{
-		$message	= $exception->getMessage().'@'.$exception->getFile().':'.$exception->getLine();
+		$message	= $t->getMessage().'@'.$t->getFile().':'.$t->getLine().PHP_EOL.$t->getTraceAsString();
 		$this->logError( /*$this->getLogPrefix().*/$message );
 		return $this;
 	}
@@ -140,7 +140,7 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 		}
 		catch( Throwable $t ){																		//  on throwable error or exception
 			$this->modelLock->unlock( $job->class, $job->method );									//  remove job lock
-			$this->logError( $t->getMessage()."@".$t->getFile().":".$t->getLine() );				//  log throwable error or exception
+			$this->logException( $t );																//  log throwable error or exception
 			return -1;																				//  quit with negative status
 		}
 	}

@@ -30,6 +30,12 @@ $optDirection	= array(
 );
 $optDirection	= UI_HTML_Elements::Options( $optDirection, $filters->get( 'direction' ) );
 
+$optMailClass	= array( '' => '- alle -' );
+foreach( $mailClasses as $mailClass )
+	$optMailClass[$mailClass]	= preg_replace( '/_/', ':', preg_replace( '/^Mail_/', '', $mailClass ) );
+$optMailClass	= UI_HTML_Elements::Options( $optMailClass, $filters->get( 'mailClass' ) );
+
+
 $iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
 $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove-circle' ) );
 
@@ -58,6 +64,12 @@ return '
 					<div class="span12">
 						<label for="input_status">'.$wf->labelStatus.'</label>
 						<select name="status[]" id="input_status" class="span12" multiple="multiple" size="11">'.$optStatus.'</select>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span12">
+						<label for="input_mailClass">'.$wf->labelMailClass.'</label>
+						<select name="mailClass" id="input_mailClass" class="span12">'.$optMailClass.'</select>
 					</div>
 				</div>
 				<div class="row-fluid">

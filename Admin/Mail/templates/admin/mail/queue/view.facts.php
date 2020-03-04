@@ -35,6 +35,7 @@ $listKeys	= array(
 	'receiverName',
 	'receiverAddress',
 	'receiverId',
+	'mailClass',
 	'language',
 );
 $list	= array();

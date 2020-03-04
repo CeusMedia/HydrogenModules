@@ -105,9 +105,18 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 
 	public function renderFact( $key, $value ){
 		$words	= $this->env->getLanguage()->getWords( 'admin/mail/queue' );
-		if( in_array( $key, array( "object" ) ) )
+		if( in_array( $key, array( 'object' ) ) )
 			return;
-		if( preg_match( "/At$/", $key ) ){
+		if( $key === 'status' ){
+			$value = $words['states'][$value].' <small class="muted">('.$value.')</small>';
+		}
+		else if( $key === 'mailClass' ){
+			$original	= $value;
+			$value	= preg_replace( '/^Mail_/', '', $value );
+			$value	= preg_replace( '/_/', ':', $value );
+			$value	= UI_HTML_Tag::create( 'abbr', $value, array( 'title' => $original ) );
+		}
+		else if( preg_match( '/At$/', $key ) ){
 			if( !( (int) $value ) )
 				return;
 			$helper	= new View_Helper_TimePhraser( $this->env );
@@ -123,9 +132,6 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-envelope' ) );
 			$link	= UI_HTML_Tag::create( 'a', $value, array( 'href' => 'mailto:'.$value ) );
 			$value	= $icon.'&nbsp;'.$link;
-		}
-		else if( $key === "status" ){
-			$value = $words['states'][$value].' <small class="muted">('.$value.')</small>';
 		}
 		else{
 			if( !strlen( $value ) )
