@@ -556,8 +556,9 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 
 	/**
 	 *	@todo		kriss: (performance) remove double preg check for class (remove 3rd argument on index and double check if clause in loop)
+	 *	@todo		kriss: (migration) adjust regex for upcoming Hydrogen with namespaces, maybe use reflection
 	 */
-	public function getMailClassNames( $strict = TRUE ){
+	public function getMailClassNames( $strict = TRUE, $sort = 'ASC' ){
 		$list			= array();																	//  prepare empty result list
 		$matches		= array();																	//  prepare empty matches list
 		$pathClasses	= $this->options->get( 'path.classes' );									//  get path to mail classes from module config
@@ -568,7 +569,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 				throw new RuntimeException( 'Path to mail classes invalid or not existing' );
 			return $list;
 		}
-		$regexExt		= "/\.php5$/";																//  define regular expression of acceptable mail class file extensions
+		$regexExt		= "/\.php5?$/";																//  define regular expression of acceptable mail class file extensions
 		$regexClass		= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";								//  define regular expression of acceptable mail class implementations
 		$index			= new FS_File_RecursiveRegexFilter( $pathClasses, "/\.php5$/", $regexClass );	//  get recursive list of acceptable files
 		foreach( $index as $file ){																	//  iterate recursive list
@@ -579,6 +580,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 				$list[$path]	= $matches[1][0];													//  enqueue mail class name by list key
 			}
 		}
+		in_array( $sort, array( 'DESC', -1 ), TRUE ) ? krsort( $list ) : ksort( $list );			//  sort list
 		return $list;																				//  return map of found mail classes by their files
 	}
 
@@ -660,11 +662,15 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@access		public
 	 *	@param		array			$conditions		Map of Conditions to include in SQL Query
 	 *	@return 	array
+	 *	@todo		remove check for model method "getDistinct" after next minor framework release (0.8.8)
 	 */
 	public function getUsedMailClassNames( $conditions = array() ){
 		$list			= array();
 		$orders			= array( 'mailClass' => 'ASC' );
-		$mailClassNames	= $this->modelQueue->getDistinct( 'mailClass', $conditions, $orders );
+		if( method_exists( $this->modelQueue, 'getDistinct' ) )
+			$mailClassNames	= $this->modelQueue->getDistinct( 'mailClass', $conditions, $orders );
+		else
+			$mailClassNames	= array_values( $this->getMailClassNames() );
 		foreach( $mailClassNames as $mailClassName )
 			$list[$mailClassName]	= $this->modelQueue->count( array( 'mailClass' => $mailClassName ) );
 		return $list;
