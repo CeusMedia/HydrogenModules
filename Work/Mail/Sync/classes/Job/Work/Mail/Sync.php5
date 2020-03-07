@@ -23,7 +23,7 @@ class Job_Work_Mail_Sync extends Job_Abstract{
 			array( 0, 1 )
 		);
 		$resyncs		= $this->logic->getSyncs(
-			array( 'status' => Model_Mail_Sync::STATUS_SYNCHED, 'resync' => 1, 'modifiedAt' => '<'.( time() - 900 ) ),
+			array( 'status' => Model_Mail_Sync::STATUS_SYNCHED, 'resync' => 1, 'modifiedAt' => '< '.( time() - 900 ) ),
 			array( 'modifiedAt' => 'ASC' ),
 			array( 0, 10 )
 		);
@@ -71,6 +71,7 @@ class Job_Work_Mail_Sync extends Job_Abstract{
 			'modifiedAt'	=> time(),
 		) );
 		$lastline	= exec( $command, $results, $code );
+$this->out( 'Code: '.$code );
 
 		$lines		= array();
 		$status		= 0;
