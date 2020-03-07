@@ -2,7 +2,7 @@
 
 $hostMap	= array();
 foreach( $hosts as $host )
-	$hostMap[$host->mailHostId]	= $host->host ? $host->host : $host->ip;
+	$hostMap[$host->mailSyncHostId]	= $host->host ? $host->host : $host->ip;
 
 $optHost1	= UI_HTML_Elements::Options( $hostMap, $sync->sourceMailHostId );
 $optHost2	= UI_HTML_Elements::Options( $hostMap, $sync->targetMailHostId );

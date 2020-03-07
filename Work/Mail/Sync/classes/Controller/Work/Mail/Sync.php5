@@ -81,7 +81,7 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 			) );
 			$this->restart( NULL, TRUE );
 		}
-		$this->addData( 'hosts', $this->logic->getHosts() );
+		$this->addData( 'hosts', $this->logic->getSyncHosts() );
 		$this->addData( 'sync', $this->logic->getSync( $id ) );
 	}
 
