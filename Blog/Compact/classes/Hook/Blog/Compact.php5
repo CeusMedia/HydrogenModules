@@ -1,7 +1,7 @@
 <?php
 class Hook_Blog_Compact extends CMF_Hydrogen_Hook
 {
-	public static function onPageApplyModules( $env, $module, $context, $payload )
+	public static function onPageApplyModules( $env, $context, $module, $payload )
 	{
 		$env->getLanguage()->load( 'blog' );														//  load blog language file
 		$words		= $env->getLanguage()->getWords( 'blog' );										//  get blog feed words
