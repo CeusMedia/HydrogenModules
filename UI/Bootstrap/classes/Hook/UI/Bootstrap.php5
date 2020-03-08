@@ -47,11 +47,19 @@ class Hook_UI_Bootstrap /*extends CMF_Hydrogen_Hook*/{
 			$configBootstrap	= $config->getAll( 'module.ui_bootstrap.', TRUE );
 			$versionParts		= explode( '.', $configAwesome->get( 'version' ) );
 			$majorVersion		= (int) array_shift( $versionParts );
-			\CeusMedia\Bootstrap\Icon::$defaultSet	= 'fontawesome'.$majorVersion;
-			if( $configBootstrap->get( 'icon.fixedWidth' ) )
-				\CeusMedia\Bootstrap\Icon::$defaultSize	= array( 'fixed' );
-			if( $majorVersion === 5 && $configAwesome->get( 'v5.style' ) )
-				\CeusMedia\Bootstrap\Icon::$defaultStyle	= $configAwesome->get( 'v5.style' );
+
+			//  Bootstrap library (>=0.4.7) has support for Font Awesome 5
+			if( property_exists( '\CeusMedia\Bootstrap\Icon', 'defaultSet' ) ){
+				\CeusMedia\Bootstrap\Icon::$defaultSet	= 'fontawesome'.$majorVersion;
+				if( $configBootstrap->get( 'icon.fixedWidth' ) )
+					\CeusMedia\Bootstrap\Icon::$defaultSize	= array( 'fixed' );
+				if( $majorVersion === 5 && $configAwesome->get( 'v5.style' ) )
+					\CeusMedia\Bootstrap\Icon::$defaultStyle	= $configAwesome->get( 'v5.style' );
+			}
+			//  Bootstrap library is below 0.4.7
+			else if( property_exists( '\CeusMedia\Bootstrap\Icon', 'iconSet' ) )
+				\CeusMedia\Bootstrap\Icon::$iconSet		= 'fontawesome'.$majorVersion;
+
 		}
 	}
 

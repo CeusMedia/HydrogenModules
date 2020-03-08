@@ -3,7 +3,7 @@
 	<title>UI: Bootstrap</title>
 	<description><![CDATA[Sleek, intuitive, and powerful front-end framework for faster and easier web development.]]></description>
 	<category>User Interface</category>
-	<version>4.1.1-p3</version>
+	<version>4.4.1</version>
 	<log version="2.3.2">Add Bootstrap v2.3.2.</log>
 	<log version="3.3.6">Add Bootstrap v3.3.6 and option to set used version.</log>
 	<log version="3.3.6-p1">Improve file handling in hook.</log>
@@ -16,6 +16,7 @@
 	<log version="4.1.1-p1">Add hook to check required or supported libraries on environment init.</log>
 	<log version="4.1.1-p2">Use general module main switch.</log>
 	<log version="4.1.1-p3">Improve handling of missing library.</log>
+	<log version="4.4.1">Add Bootstrap v4.4.1.</log>
 	<company site="http://twitter.github.com/bootstrap/">Twitter</company>
 	<author site="https://twitter.com/mdo">Mark Otto</author>
 	<author site="https://twitter.com/fat">fat-kun</author>
@@ -42,6 +43,18 @@
 		<style source="common">bootstrap/3.3.6/fonts/glyphicons-halflings-regular.ttf</style>
 		<style source="common">bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff</style>
 		<style source="common">bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff2</style>
+		<style source="common">bootstrap/4.4.1/bootstrap.css
+		<style source="common">bootstrap/4.4.1/bootstrap.css.map
+		<style source="common">bootstrap/4.4.1/bootstrap.min.css
+		<style source="common">bootstrap/4.4.1/bootstrap.min.css.map
+		<style source="common">bootstrap/4.4.1/bootstrap-grid.css
+		<style source="common">bootstrap/4.4.1/bootstrap-grid.css.map
+		<style source="common">bootstrap/4.4.1/bootstrap-grid.min.css
+		<style source="common">bootstrap/4.4.1/bootstrap-grid.min.css.map
+		<style source="common">bootstrap/4.4.1/bootstrap-reboot.css
+		<style source="common">bootstrap/4.4.1/bootstrap-reboot.css.map
+		<style source="common">bootstrap/4.4.1/bootstrap-reboot.min.css
+		<style source="common">bootstrap/4.4.1/bootstrap-reboot.min.css.map
 		<style source="common">bootstrap.print.css</style>
 		<script>bootstrap/2.3.2/bootstrap.js</script>
 		<script>bootstrap/2.3.2/bootstrap.min.js</script>
@@ -52,6 +65,14 @@
 		<script>bootstrap/4.1.1/bootstrap.js.map</script>
 		<script>bootstrap/4.1.1/bootstrap.min.js</script>
 		<script>bootstrap/4.1.1/bootstrap.min.js.map</script>
+		<script>bootstrap/4.4.1/bootstrap.bundle.js
+		<script>bootstrap/4.4.1/bootstrap.bundle.js.map
+		<script>bootstrap/4.4.1/bootstrap.bundle.min.js
+		<script>bootstrap/4.4.1/bootstrap.bundle.min.js.map
+		<script>bootstrap/4.4.1/bootstrap.js
+		<script>bootstrap/4.4.1/bootstrap.js.map
+		<script>bootstrap/4.4.1/bootstrap.min.js
+		<script>bootstrap/4.4.1/bootstrap.min.js.map
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config protected="no" type="boolean" name="cdn">no</config>
@@ -62,7 +83,8 @@
 	<config protected="no" type="boolean" name="map">no</config>
 	<config protected="no" type="boolean" name="minified">yes</config>
 	<config protected="no" type="boolean" name="responsive">yes</config>
-	<config protected="no" type="string" name="version" values="2.3.2,3.3.6,4.1.1">2.3.2</config>
+	<config protected="no" type="boolean" name="bundle">yes</config>
+	<config protected="no" type="string" name="version" values="2.3.2,3.3.6,4.1.1,4.4.1">2.3.2</config>
 	<config protected="yes" type="string" name="missing.library" values="ignore,note,throw">throw</config>
 	<config protected="yes" type="string" name="missing.module" values="ignore,note,throw">throw</config>
 	<config protected="yes" type="string" name="missing.fontawesome" values="ignore,note,throw">throw</config>
