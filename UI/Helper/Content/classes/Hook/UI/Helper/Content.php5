@@ -1,7 +1,7 @@
-<php
+<?php
 class Hook_UI_Helper_Content extends CMF_Hydrogen_Hook
 {
-	public function onPageApplyModules( $env, $context, $module, $payload )
+	public static function onPageApplyModules( $env, $context, $module, $payload )
 	{
 		$map	= array(
 			'text'			=> "formatText",
