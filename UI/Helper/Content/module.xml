@@ -3,11 +3,13 @@
 	<title>UI: Helper: Content</title>
 	<description><![CDATA[Content converter and format helper.]]></description>
 	<category>User Interface</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Replace CDN resource.</log>
+	<log version="0.2.2">Extract hook to own class.</log>
 	<files>
+		<class>Hook/UI/Helper/Content.php5</class>
 		<class>View/Helper/ContentConverter.php5</class>
 		<style source="theme" load="auto">links.css</style>
 		<image source="theme">icons/wikipedia.png</image>
@@ -32,26 +34,5 @@
 	<config protected="yes" type="boolean" name="register.search.map">1</config>
 	<config protected="yes" type="boolean" name="register.text">1</config>
 	<relations/>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-$map	= array(
-	'text'			=> "formatText",
-	'currencies'	=> "formatCurrencies",
-	'links'			=> "formatLinks",
-	'links.discogs'	=> "formatDiscogsLinks",
-	'links.imdb'	=> "formatImdbLinks",
-	'links.map'		=> "formatMapLinks",
-	'links.myspace'	=> "formatMyspaceLinks",
-	'links.wiki'	=> "formatWikiLinks",
-	'links.youtube'	=> "formatYoutubeLinks",
-	'search.image'	=> "formatImageSearch",
-	'search.map'	=> "formatMapSearch",
-	'code'			=> "formatCodeBlocks",
-	'breaks'		=> "formatBreaks",
-	'lists'			=> "formatLists",
-);
-$plugins	= $env->getConfig()->getAll( 'module.ui_helper_content.register.' );
-foreach( $map as $key => $method )
-	if( isset( $plugins[$key] ) && $plugins[$key] )
-		View_Helper_ContentConverter::register( 'View_Helper_ContentConverter', $method );
-]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Helper_Content::onPageApplyModules</hook>
 </module>
