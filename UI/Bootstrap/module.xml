@@ -43,18 +43,18 @@
 		<style source="common">bootstrap/3.3.6/fonts/glyphicons-halflings-regular.ttf</style>
 		<style source="common">bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff</style>
 		<style source="common">bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff2</style>
-		<style source="common">bootstrap/4.4.1/bootstrap.css
-		<style source="common">bootstrap/4.4.1/bootstrap.css.map
-		<style source="common">bootstrap/4.4.1/bootstrap.min.css
-		<style source="common">bootstrap/4.4.1/bootstrap.min.css.map
-		<style source="common">bootstrap/4.4.1/bootstrap-grid.css
-		<style source="common">bootstrap/4.4.1/bootstrap-grid.css.map
-		<style source="common">bootstrap/4.4.1/bootstrap-grid.min.css
-		<style source="common">bootstrap/4.4.1/bootstrap-grid.min.css.map
-		<style source="common">bootstrap/4.4.1/bootstrap-reboot.css
-		<style source="common">bootstrap/4.4.1/bootstrap-reboot.css.map
-		<style source="common">bootstrap/4.4.1/bootstrap-reboot.min.css
-		<style source="common">bootstrap/4.4.1/bootstrap-reboot.min.css.map
+		<style source="common">bootstrap/4.4.1/bootstrap.css</style>
+		<style source="common">bootstrap/4.4.1/bootstrap.css.map</style>
+		<style source="common">bootstrap/4.4.1/bootstrap.min.css</style>
+		<style source="common">bootstrap/4.4.1/bootstrap.min.css.map</style>
+		<style source="common">bootstrap/4.4.1/bootstrap-grid.css</style>
+		<style source="common">bootstrap/4.4.1/bootstrap-grid.css.map</style>
+		<style source="common">bootstrap/4.4.1/bootstrap-grid.min.css</style>
+		<style source="common">bootstrap/4.4.1/bootstrap-grid.min.css.map</style>
+		<style source="common">bootstrap/4.4.1/bootstrap-reboot.css</style>
+		<style source="common">bootstrap/4.4.1/bootstrap-reboot.css.map</style>
+		<style source="common">bootstrap/4.4.1/bootstrap-reboot.min.css</style>
+		<style source="common">bootstrap/4.4.1/bootstrap-reboot.min.css.map</style>
 		<style source="common">bootstrap.print.css</style>
 		<script>bootstrap/2.3.2/bootstrap.js</script>
 		<script>bootstrap/2.3.2/bootstrap.min.js</script>
@@ -65,14 +65,14 @@
 		<script>bootstrap/4.1.1/bootstrap.js.map</script>
 		<script>bootstrap/4.1.1/bootstrap.min.js</script>
 		<script>bootstrap/4.1.1/bootstrap.min.js.map</script>
-		<script>bootstrap/4.4.1/bootstrap.bundle.js
-		<script>bootstrap/4.4.1/bootstrap.bundle.js.map
-		<script>bootstrap/4.4.1/bootstrap.bundle.min.js
-		<script>bootstrap/4.4.1/bootstrap.bundle.min.js.map
-		<script>bootstrap/4.4.1/bootstrap.js
-		<script>bootstrap/4.4.1/bootstrap.js.map
-		<script>bootstrap/4.4.1/bootstrap.min.js
-		<script>bootstrap/4.4.1/bootstrap.min.js.map
+		<script>bootstrap/4.4.1/bootstrap.bundle.js</script>
+		<script>bootstrap/4.4.1/bootstrap.bundle.js.map</script>
+		<script>bootstrap/4.4.1/bootstrap.bundle.min.js</script>
+		<script>bootstrap/4.4.1/bootstrap.bundle.min.js.map</script>
+		<script>bootstrap/4.4.1/bootstrap.js</script>
+		<script>bootstrap/4.4.1/bootstrap.js.map</script>
+		<script>bootstrap/4.4.1/bootstrap.min.js</script>
+		<script>bootstrap/4.4.1/bootstrap.min.js.map</script>
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config protected="no" type="boolean" name="cdn">no</config>
