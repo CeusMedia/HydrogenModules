@@ -13,3 +13,6 @@ set-rights:
 show-todos:
 	@echo "- Hooks to extract:"
 	@find . -type f | grep xml | xargs grep hook | grep CDATA
+
+dev-test-units:
+	@vendor/bin/phpunit
