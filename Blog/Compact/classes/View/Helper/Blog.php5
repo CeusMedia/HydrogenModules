@@ -114,7 +114,7 @@ class View_Helper_Blog{
 	static public function renderLatestArticles( CMF_Hydrogen_Environment $env, $limit, $offset = 0 ){
 		$list		= array();
 		$model		= new Model_Article( $env );
-		$conditions	= array( 'status' => 1, 'createdAt' => '<='.time() );
+		$conditions	= array( 'status' => 1, 'createdAt' => '<= '.time() );
 		$latest		= $model->getAll( $conditions, array( 'createdAt' => 'DESC' ), array( $offset, $limit ) );
 		foreach( $latest as $article ){
 			$link	= self::renderArticleLink( $env, $article );

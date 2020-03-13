@@ -233,7 +233,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 			'article'	=> $this->model->get( $articleId ),
 			'tags'		=> $this->model->getArticleTags( $articleId ),
 			'authors'	=> $this->model->getArticleAuthors( $articleId ),
-			'editors'	=> $modelUser->getAll( array( 'status' => '>0' ) ),
+			'editors'	=> $modelUser->getAll( array( 'status' => '> 0' ) ),
 			'articleId'	=> rawurldecode( $articleId ),
 			'tags'		=> $this->model->getArticleTags( $articleId ),
 			'version'	=> $version,
@@ -251,7 +251,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 	public function feed( $limit = 10, $debug = NULL ){
 		$limit		= ( (int) $limit > 0 ) ? (int) $limit : 10;
 
-		$conditions	= array( 'status' => 1, 'createdAt' => '<='.time() );
+		$conditions	= array( 'status' => 1, 'createdAt' => '<= '.time() );
 		$orders		= array( 'createdAt' => 'DESC' );
 		$articles	= $this->model->getAll( $conditions, $orders, array( 0, $limit ) );
 		$this->addData( 'articles', $articles );
@@ -276,7 +276,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$limits		= array( $offset, $limit );
 		$conditions	= array( 'status' => $states ? $states : -99 );
 		if( !$this->isEditor )
-			$conditions['createdAt']	= '<='.time();
+			$conditions['createdAt']	= '<=  '.time();
 		$orders		= array( 'createdAt' => 'DESC'/*, 'articleId' => 'DESC'*/ );
 		$articles	= $this->model->getAll( $conditions, $orders, $limits );
 
