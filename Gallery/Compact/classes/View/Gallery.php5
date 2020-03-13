@@ -39,7 +39,7 @@ class View_Gallery extends CMF_Hydrogen_View{
 		$channel	= array(
 			'link'		=> $baseUrl.'gallery',
 			'language'	=> $module->get( 'feed.language' ),
-			'generator'	=> 'cmClasses::XML_RSS_Builder/'.CMC_VERSION,
+			'generator'	=> 'CeusMedia/Common:XML/RSS/Builder/1.0',
 			'title'		=> $words->title,
 		);
 		if( $config->get( 'app.name' ) )

@@ -84,9 +84,10 @@ foreach( $files as $file ){
 	else
 		$attributes	= array(
 			'href'			=> $path.$source.$data['filename'].'.medium.'.$data['extension'],
+			'data-fancybox'	=> '1',
 			'class'			=> 'no-thickbox no-layer-image no-darkbox fancybox-auto',
 			'rel'			=> 'gallery',
-			'target'		=> '_blank',
+//			'target'		=> '_blank',
 			'title'			=> $title,
 			'data-original'	=> $source.$data['filename'].'.'.$data['extension'],
 		);
