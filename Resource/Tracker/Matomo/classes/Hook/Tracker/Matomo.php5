@@ -31,7 +31,7 @@ class Hook_Tracker_Matomo extends CMF_Hydrogen_Controller{
 	}
 
 	/**
-	 *	Loads connector to remove Matomo installation for client side tracking, if enabled and available.
+	 *	Loads connector to remote Matomo installation for client side tracking, if enabled and available.
 	 *	@static
 	 *	@access		public
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
