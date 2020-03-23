@@ -121,7 +121,6 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		$parents	= array();
 		$path		= trim( $path, '/' );
 		$page		= $this->getPageFromPathRecursive( $path, 0, $parents );
-
 		if( $withParents ){
 			foreach( $parents as $nr => $parent )
 				$parents[$nr]	= $this->translatePage( $parent );											//  apply localization to page
@@ -144,7 +143,9 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		$path		= trim( $request->get( '__path' ), '/' );										//  get requested path
 		$pagePath	= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page path is not empty
 		try{
-			return $this->getPageFromPath( $pagePath, $withParents );								//  try to get page by called page path
+			$page	= $this->getPageFromPath( $pagePath, $withParents );								//  try to get page by called page path
+			$request->set( 'arguments', $page->arguments );
+			return $page;
 		}
 		catch( Exception $e ){
 			if( $strict )
@@ -206,24 +207,30 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 *	@param		array		$parents		Flag: Returns page parents as well (default: no)
 	 *	@return		object						Data object of found page or NULL if nothing found
 	 *	@throws		RangeException				if path is not resolvable
-	 *	@throws		RangeException				if path parent part is not resolvable
 	 */
 	protected function getPageFromPathRecursive( $path, $parentPageId = 0, & $parents = array() ){
-		if( preg_match( '/\//', $path ) ){
-			$parts	= preg_split( '/\//', $path, 2 );
-			$parent	= $this->getPageFromPathRecursive( $parts[0], $parentPageId );
-			if( !$parent )
-				throw new RangeException( 'Parent path "'.$parts[0].'" is not resolvable' );
-			$parents[]	= $parent;
-			return $this->getPageFromPathRecursive( $parts[1], $parent->pageId, $parents );
+		$parts		= preg_split( '/\//', $path );
+		$lastPage	= NULL;
+		while( count( $parts ) ){
+			$part		= array_shift( $parts );
+			$indices	= array( 'identifier' => $part, 'parentId' => $parentPageId );
+			$candidate	= $this->getPageModel()->getByIndices( $indices );
+			if( $candidate ){
+				$candidate->arguments	= array();
+				$parentPageId			= $candidate->pageId;
+				if( $lastPage )
+					$parents[]			= $lastPage;
+				$lastPage				= $candidate;
+			}
+			else{
+				if( $lastPage )
+					$lastPage->arguments[]	= $part;
+				break;
+			}
 		}
-		$indices	= array( 'identifier' => $path, 'parentId' => $parentPageId );
-		$page		= $this->getPageModel()->getByIndices( $indices );
-		if( !$page )
+		if( !$lastPage )
 			throw new RangeException( 'Page with identifier "'.$path.'" is not resolvable' );
-		if( !is_object( $page ) )
-			throw new RangeException( 'Invalid Page Data: '.print_m( $page, NULL, NULL, TRUE ) );
-		return $this->getPage( $page->pageId );
+		return $lastPage;
 	}
 
 	protected function getPageModel(){
