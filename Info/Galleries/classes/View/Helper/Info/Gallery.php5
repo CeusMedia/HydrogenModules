@@ -10,8 +10,8 @@ class View_Helper_Info_Gallery extends CMF_Hydrogen_View_Helper_Abstract{
 		$pathImages			= $env->getConfig()->get( 'path.images' );
 		$pathImages			= $pathImages ? $pathImages : 'images/';
 		$this->baseFilePath	= $this->env->url.$pathImages.$this->moduleConfig->get( 'path' );
-		$this->modelGallery		= new Model_Gallery( $this->env );
-		$this->modelImage			= new Model_Gallery_Image( $this->env );
+		$this->modelGallery	= new Model_Gallery( $this->env );
+		$this->modelImage	= new Model_Gallery_Image( $this->env );
 	}
 
 	protected function getBasePath(){
