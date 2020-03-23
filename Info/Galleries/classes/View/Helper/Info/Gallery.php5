@@ -19,7 +19,7 @@ class View_Helper_Info_Gallery extends CMF_Hydrogen_View_Helper_Abstract{
 	}
 
 	protected function getGalleries(){
-		$conditions		= array( 'status' => '>0' );
+		$conditions		= array( 'status' => '> 0' );
 		$configSort		= $this->moduleConfig->getAll( 'index.order.', TRUE );
 		$order			= array( $configSort->get( 'by' ) => $configSort->get( 'direction' ) );
 		$galleries		= $this->modelGallery->getAll( $conditions, $order );

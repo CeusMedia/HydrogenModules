@@ -107,7 +107,7 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		$limit		= 5;
 		$offset		= (int) $page * $limit;
 		$orders		= array( 'createdAt' => 'DESC' );
-		$conditions	= array( 'status' => '>0' );
+		$conditions	= array( 'status' => '> 0' );
 		$limits		= array( $limit, $offset );
 		$posts		= $this->modelPost->getAll( $conditions, $orders, $limits );
 		foreach( $posts as $post ){
@@ -137,7 +137,7 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		$logic->handleMail( $mail, $postAuthor, $language->getLanguage() );							//  enqueue mail
 
 		$addresses	= array();
-		$indices	= array( 'postId' => $post->postId, 'status' => '>=0' );						//  get all visible post comments
+		$indices	= array( 'postId' => $post->postId, 'status' => '>= 0' );						//  get all visible post comments
 		foreach( $this->modelComment->getAllByIndices( $indices ) as $item ){						//  find former comment authors
 			if( empty( $item->email ) )																//  comment without email address
 				continue;																			//  cannot inform
@@ -174,7 +174,7 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		$post->author	= $this->modelUser->get( $post->authorId );									//  extend post by author
 		$post->comments	= $this->modelComment->getAllByIndices( array(								//  collect post comments
 			'postId'	=> $post->postId,															//  ... related to this post
-			'status'	=> '>=0'																	//  ... and visible
+			'status'	=> '>= 0'																	//  ... and visible
 		) );
 		$this->addData( 'post', $post );															//  assign post data to template
 
