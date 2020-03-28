@@ -149,12 +149,17 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 			'workerId = '.(int) $userId,															//  or user is worker
 		);
 		$userProjects	= array_keys( $this->getUserProjects( $userId, TRUE ) );					//  get user projects from model
-		if( $userProjects )																			//  user has projects
-			$havings[]	= 'projectId IN ('.join( ',', $userProjects ).')';							//  add projects condition
-		array_unshift( $userProjects, 0 );															//
-		if( isset( $conditions['projectId'] ) )														//  projects have been selected
-			$userProjects	= array_intersect( $conditions['projectId'], $userProjects );			//  intersect user projectes and selected projects
-		$conditions['projectId']	= $userProjects;												//
+		$projectIds		= $userProjects;
+		if( !empty( $conditions['projectId'] ) ){													//  project(s) have been selected
+			if( !is_array( $conditions['projectId'] ) )
+				$conditions['projectId']	= (array) $conditions['projectId'];
+			$projectIds	= array_intersect( $conditions['projectId'], $userProjects );				//  intersect user projectes and selected projects
+		}
+		if( $projectIds )																			//  user has projects
+			$havings[]	= 'projectId IN ('.join( ',', $projectIds ).')';							//  add projects condition
+		else
+			array_unshift( $projectIds, 0 );														//
+		$conditions['projectId']	= $projectIds;													//
 		if( !$conditions['projectId'] )																//  no projects by filter
 			unset( $conditions['projectId'] );														//  do not filter projects then
 		return $this->modelMission->getAll(															//  return missions matched by conditions

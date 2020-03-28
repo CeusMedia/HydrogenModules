@@ -321,7 +321,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$listLarge->setWords( $words );
 
 			$listSmall		= new View_Helper_Work_Mission_List_DaysSmall( $this->env );
-			$listSmall->setMissions( $listLarge->getDayMissions( $day ) );
+			$listSmall->setMissions( $listLarge->getDayMissions( $day ) );	
 			$listSmall->setWords( $words );
 
 			$allDayMissions	= $listLarge->getDayMissions();
@@ -350,7 +350,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				'lists'		=> array(
 					'large'	=> $listLarge->renderDayList( 1, $day, TRUE, TRUE, FALSE, TRUE ),
 					'small'	=> $listSmall->renderDayList( 1, $day, TRUE, TRUE, FALSE, !TRUE )
-				)
+				),
+				'filters'	=> $this->session->getAll( 'filter.work.mission.'.$mode.'.' ),
 			);
 			print( json_encode( $data ) );
 			exit;

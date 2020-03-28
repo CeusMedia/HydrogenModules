@@ -62,6 +62,7 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission{
 			'page'		=> $page,
 			'total'		=> $total,
 			'missions'	=> $missions,
+			'filters'	=> $this->session->getAll( $this->filterKeyPrefix ),
 		) );
 //		$json	= $this->view->ajaxRenderIndex();
 //		print( json_encode( $json ) );

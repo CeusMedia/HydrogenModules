@@ -15,7 +15,8 @@ var WorkMissionsKanban = {
 				$("#message-loading-list").remove();
 				$("#day-lists .visible-desktop").html(json.lists.large);
 				$("#day-lists .hidden-desktop").html(json.lists.large);
-				$("#mission-folders").equalize({
+//				$("#mission-folders").equalize({
+				$(".work-mission-kanban-lane-item").equalize({
 					equalize: 'height',
 			//		reset: true,
 					children: 'ul.sortable'
