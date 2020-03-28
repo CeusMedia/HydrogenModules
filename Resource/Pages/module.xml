@@ -43,7 +43,7 @@
 	</relations>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
-  `pageId` int(10) UNSIGNED NOT NULL,
+  `pageId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `parentId` int(10) UNSIGNED DEFAULT '0',
   `status` tinyint(1) DEFAULT '0',
   `type` tinyint(4) DEFAULT '0',
