@@ -82,7 +82,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			$data['createdAt']	= time();
 			unset( $data['pageId'] );
 
-			$indices		= array( 'parentId' => 0, 'identifier' => $data['identifier'] );
+			$indices		= array( 'parentId' => $parentId, 'identifier' => $data['identifier'] );
 			if( $this->model->getByIndices( $indices ) )
 				$this->messenger->noteError( 'Identifier "'.$data['identifier'].'" already taken' );
 			else{
@@ -322,7 +322,7 @@ ModuleManagePages.PageEditor.init();
 			$indices		= array(
 				'scope'			=> $scope,
 				'parentId'		=> $this->request->get( 'page_parentId' ),
-				'pageId'		=> '!='.$pageId,
+				'pageId'		=> '!= '.$pageId,
 				'identifier'	=> $this->request->get( 'page_identifier' )
 			);
 			if( $this->model->getByIndices( $indices ) ){

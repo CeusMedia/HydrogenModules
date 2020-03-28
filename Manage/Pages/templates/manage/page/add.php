@@ -12,6 +12,7 @@ $optFormat		= UI_HTML_Elements::Options( $words['formats'], $page->format );
 $optParent		= UI_HTML_Elements::Options( $parentMap, $page->parentId );
 $optController	= UI_HTML_Elements::Options( $optController, $page->controller );
 
+$colAccess		= '';
 $fieldAccess	= '';
 if( $useAuth ){
 	$optAccess		= UI_HTML_Elements::Options( $words['accesses'], $page->access );
