@@ -39,9 +39,9 @@ return '
 	<h3>Blöcke</h3>
 	<div class="content-panel-inner">
 		'.$table.'
-	</div>
-	<div class="buttonbar">
-		'.$linkAdd.'
-		'.$pagination.'
+		<div class="buttonbar">
+			'.$linkAdd.'
+			'.$pagination.'
+		</div>
 	</div>
 </div>';
