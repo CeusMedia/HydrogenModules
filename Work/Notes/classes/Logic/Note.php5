@@ -25,7 +25,7 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		$this->prefix			= $this->env->getDatabase()->getPrefix();
 	}
 
-	public function addLinkToNote( $linkId, $noteId, $title = NULL, $strict= TRUE ){
+	public function addLinkToNote( $linkId, $noteId, $title = NULL, $strict = TRUE ){
 		$conditions	= array( 'noteId' => $noteId, 'linkId' => $linkId, 'title' => $title );
 		$relation	= $this->modelNoteLink->getAll( $conditions );
 		if( $relation ){
@@ -42,20 +42,42 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		return $this->modelNoteLink->add( $data );
 	}
 
-	public function addTagToNote( $tagId, $noteId, $strict= TRUE ){
-		$indices	= array( 'noteId' => $noteId, 'tagId' => $tagId );
-		$relation	= $this->modelNoteTag->getByIndices( $indices );
-		if( $relation ){
+	public function addTagToNote( $tagId, $noteId, $status = Model_Note_Tag::STATUS_NORMAL, $strict = TRUE ){
+		$indices	= array(
+			'noteId'	=> $noteId,
+			'tagId'		=> $tagId,
+			'status'	=> $status,
+		);
+		if( ( $relation	= $this->modelNoteTag->getByIndices( $indices ) ) ){
 			if( $strict )
 				throw new InvalidArgumentException( 'tag already related to note' );
 			return $relation->noteTagId;
 		}
+		$indices	= array(
+			'noteId'	=> $noteId,
+			'tagId'		=> $tagId,
+		);
+		if( ( $relation = $this->modelNoteTag->getByIndices( $indices ) ) ){
+			if( $relation->status != $status ){
+				$this->modelNoteTag->edit( $relation->noteTagId, array(
+					'status'		=> $status,
+					'modifiedAt'	=> time(),
+				) );
+			}
+			return $relation->noteTagId;
+		}
 		$data	= array(
-			'noteId'	=> (int) $noteId,
-			'tagId'		=> (int) $tagId,
-			'createdAt'	=> time(),
+			'noteId'		=> (int) $noteId,
+			'tagId'			=> (int) $tagId,
+			'status'		=> $status,
+			'createdAt'		=> time(),
+			'modifiedAt'	=> time(),
 		);
 		return $this->modelNoteTag->add( $data );
+	}
+
+	public function ignoreTagOnNote( $tagId, $noteId, $strict = TRUE ){
+		return $this->addTagToNote( $tagId, $noteId, Model_Note_Tag::STATUS_DISABLED, TRUE );
 	}
 
 	public function countNoteView( $noteId ){
@@ -99,7 +121,11 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		}
 
 		$note->tags	= array();
-		foreach( $this->modelNoteTag->getAllByIndex( 'noteId', $noteId ) as $tag )
+		$indices	= array(
+			'noteId'	=> $noteId,
+			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
+		);
+		foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $tag )
 			$note->tags[]	= $this->modelTag->get( $tag->tagId );
 		return $note;
 	}
@@ -121,7 +147,11 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 			$noteIds	= array();
 			$tagIds		= array_unique( $tagIds );
 			foreach( $tagIds as $tagId ){
-				foreach( $this->modelNoteTag->getAll( array( 'tagId' => $tagId ) ) as $relation ){
+				$indices	= array(
+					'tagId'		=> $tagId,
+					'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
+				);
+				foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $relation ){
 					if( !isset( $noteIds[$relation->noteId] ) )
 						$noteIds[$relation->noteId]	= array();
 					$noteIds[$relation->noteId][]	= $relation->tagId;
@@ -134,7 +164,11 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		}
 
 		$noteIds			= array();
-		foreach( $this->modelNoteTag->getAllByIndices( array( 'tagId' => $tagIds ) ) as $relation )
+		$indices	= array(
+			'tagId'		=> $tagIds,
+			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
+		);
+		foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $relation )
 			$noteIds[]	= $relation->noteId;
 		return $noteIds;
 	}
@@ -142,19 +176,34 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 	public function getRelatedTags( $noteId ){
 		$relatedNoteIds	= $this->getRelatedNoteIds( $noteId );
 
-		$noteTags		= array();
-		foreach( $this->modelNoteTag->getAllByIndex( 'noteId', $noteId ) as $noteTag )
+		$noteTags	= array();
+		$indices	= array(
+			'noteId'	=> $noteId,
+			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
+		);
+		foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $noteTag )
 			$noteTags[]	= $noteTag->tagId;
 
 		$list		= array();
 		foreach( $relatedNoteIds as $relatedNoteId => $count ){
-			$relatedNoteTags	= $this->modelNoteTag->getAllByIndex( 'noteId', $relatedNoteId );
+			$indices	= array(
+				'noteId'	=> $relatedNoteId,
+				'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
+			);
+			$relatedNoteTags	= $this->modelNoteTag->getAllByIndices( $indices );
 			foreach( $relatedNoteTags as $relatedNoteTag ){
 				if( !isset( $list[$relatedNoteTag->tagId] ) )
 					$list[$relatedNoteTag->tagId]	= 0;
 				$list[$relatedNoteTag->tagId]		+= $count;
 			}
 		}
+		$indices	= array(
+			'noteId'	=> $noteId,
+			'status'	=> '< '.Model_Note_Tag::STATUS_NORMAL,
+		);
+		foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $noteTag )
+			if( isset( $list[$noteTag->tagId] ) )
+				unset( $list[$noteTag->tagId] );
 		arsort( $list );
 
 		$relatedTagIds		= array();
@@ -170,9 +219,17 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 
 	public function getRelatedNoteIds( $noteId ){
 		$relatedNoteIds	= array();
-		$noteTags		= $this->modelNoteTag->getAllByIndex( 'noteId', $noteId );
+		$indices	= array(
+			'noteId'	=> $noteId,
+			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
+		);
+		$noteTags		= $this->modelNoteTag->getAllByIndices( $indices );
 		foreach( $noteTags as $noteTag ){
-			$notes		= $this->modelNoteTag->getAllByIndex( 'tagId', $noteTag->tagId );
+			$indices	= array(
+				'tagId'		=> $noteTag->tagId,
+				'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
+			);
+			$notes		= $this->modelNoteTag->getAllByIndices( $indices );
 			foreach( $notes as $note ){
 				if( $note->noteId != $noteId ){
 					if( !isset( $list[$note->noteId] ) )
@@ -194,14 +251,18 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 			throw new InvalidArgumentException( 'Tag list cannot be empty' );
 
 		$noteIds			= array();
-		foreach( $this->modelNoteTag->getAllByIndices( array( 'tagId' => $tagIds ) ) as $relation )
+		foreach( $this->modelNoteTag->getAllByIndices( array( 'tagId' => $tagIds, 'status' => '>= '.Model_Note_Tag::STATUS_NORMAL ) ) as $relation )
 			$noteIds[]	= $relation->noteId;
 		return $noteIds;
 	}
 */
 	public function getRankedTagIdsFromNoteIds( $noteIds, $skipTagIds = array() ){
 		$tagIds	= array();
-		foreach( $this->modelNoteTag->getAllByIndices( array( 'noteId' => $noteIds ) ) as $relation ){
+		$indices	= array(
+			'noteId'	=> $noteIds,
+			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
+		);
+		foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $relation ){
 			if( !in_array( $relation->tagId, $skipTagIds ) ){
 				if( !isset( $tagIds[$relation->tagId] ) )
 					$tagIds[$relation->tagId]	= 0;
@@ -265,7 +326,9 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		}
 
 		$tagIds	= array();
-		$conditions	= array();
+		$conditions	= array(
+			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL
+		);
 		if( $this->userId && $this->userProjects )
 			$conditions['noteId']	= array_merge( array( 0 ), $this->userNoteIds );
 		foreach( $this->modelNoteTag->getAll( $conditions ) as $relation ){
@@ -290,7 +353,10 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		$note->tags		= array();
 
 		$links	= $this->modelNoteLink->getAllByIndex( 'noteId', $note->noteId );
-		$tags	= $this->modelNoteTag->getAllByIndex( 'noteId', $note->noteId );
+		$tags	= $this->modelNoteTag->getAllByIndices( array(
+			'noteId'	=> $note->noteId,
+			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
+		) );
 
 		foreach( $links as $relation ){
 			$link			= $this->modelLink->get( $relation->linkId );

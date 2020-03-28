@@ -102,14 +102,14 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 	public function addTag( $noteId, $tagId = NULL ){
 		$words			= (object) $this->getWords( 'msg' );
 		if( !is_null( $tagId ) ){
-			$this->logic->addTagToNote( $tagId, $noteId, FALSE );
+			$this->logic->addTagToNote( $tagId, $noteId, Model_Note_Tag::STATUS_NORMAL, FALSE );
 			$this->messenger->noteSuccess( $words->successNoteTagAdded );
 		}
 		else{
 			if( ( $parts = explode( ' ', trim( $this->request->get( 'tag_content' ) ) ) ) ){
 				foreach( $parts as $part ){
 					$tagId	= $this->logic->createTag( $part, FALSE );
-					$this->logic->addTagToNote( $tagId, $noteId, FALSE );
+					$this->logic->addTagToNote( $tagId, $noteId, Model_Note_Tag::STATUS_NORMAL, FALSE );
 				}
 				$this->messenger->noteSuccess( $words->successNoteTagAdded );
 			}
@@ -215,6 +215,11 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->session->set( 'filter_notes_tags', $list );
 		$this->session->set( 'filter_notes_offset', 0 );
 		$this->restart( './work/note/'.$page );
+	}
+
+	public function ignoreTag( $noteId, $tagId ){
+		$this->logic->ignoreTagOnNote( $tagId, $noteId );
+		$this->restart( './work/note/edit/'.$noteId );
 	}
 
 	public function index( $page = 0 ){

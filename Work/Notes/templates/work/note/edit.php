@@ -5,6 +5,9 @@ $w		= (object) $words['edit'];
 $iconAdd	= '<i class="icon-plus icon-white"></i>';
 $iconRemove	= '<i class="icon-remove icon-white"></i>';
 
+$iconAdd	= '<i class="fa fa-fw fa-plus"></i>';
+$iconRemove	= '<i class="fa fa-fw fa-remove"></i>';
+
 //  --  TAG MANAGEMENT  --  //
 $listTags	= "";
 if( $note->tags ){
@@ -25,11 +28,13 @@ if( $relatedTags ){
 	$list	= array();
 	$relatedTags	= array_slice( $relatedTags, 0, 5 );
 	foreach( $relatedTags as $tag ){
-		$url	= './work/note/addTag/'.$note->noteId.'/'.$tag->tagId;
-		$label	= '<div class="item-tag-label">'.$tag->content.'</div>';
-		$count	= '<div class="number-indicator">'.$tag->relevance.'</div>';
-		$button	= '<a href="'.$url.'" class="btn btn-small btn-success" title="zuweisen">'.$iconAdd.'</a>';
-		$tray	= '<div class="item-tag-tray">'.$count.$button.'</div>';
+		$urlAdd			= './work/note/addTag/'.$note->noteId.'/'.$tag->tagId;
+		$urlIgnore		= './work/note/ignoreTag/'.$note->noteId.'/'.$tag->tagId;
+		$label			= '<div class="item-tag-label">'.$tag->content.'</div>';
+		$count			= '<div class="number-indicator">'.$tag->relevance.'</div>';
+		$buttonAdd		= '<a href="'.$urlAdd.'" class="btn not-btn-small btn-mini btn-success" title="zuweisen">'.$iconAdd.'</a>';
+		$buttonIgnore	= '<a href="'.$urlIgnore.'" class="btn not-btn-small btn-mini btn-inverse" title="Tag für diese Notiz ignorieren">'.$iconRemove.'</a>';
+		$tray			= '<div class="item-tag-tray">'.$count.'<div class="btn-group">'.$buttonAdd.$buttonIgnore.'</div></div>';
 		$list[]	= '<li class="item-tag-extended border-top">'.$label.$tray.'</li>';
 	}
 	$listRelatedTags	= '<br/><label>Vorschläge</label><ul class="tags-list">'.join( $list ).'</ul>';
