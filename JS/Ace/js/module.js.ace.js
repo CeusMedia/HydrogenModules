@@ -8,7 +8,7 @@
  *
  */
 var ModuleAce = {
-	verbose: !false,
+	verbose: false,
 	strict: true,
 	config: {																	//  @see https://github.com/ajaxorg/ace/wiki/Configuring-Ace
 		theme: "ace/theme/tomorrow",
@@ -21,6 +21,10 @@ var ModuleAce = {
 			maxLines: 'Infinity',							//  ...
 			useWorker: false,
 			showGutter: true,
+			useSoftTabs: false,
+			tabSize: 4,
+			displayIndentGuides: true,
+			showInvisibles: true,
 		},
 		events: [{
 		}],
