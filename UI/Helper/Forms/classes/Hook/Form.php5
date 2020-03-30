@@ -14,7 +14,7 @@ class Hook_Form/* extends CMF_Hydrogen_Hook*/{
 	static public function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $data->content );
-		$words			= $env->getLanguage()->getWords( 'info/news' );
+//		$words			= $env->getLanguage()->getWords( 'info/news' );
 		$shortCodes		= array(
 			'form'		=> array(
 				'id'		=> 0,
