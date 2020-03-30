@@ -53,7 +53,6 @@ $tabs->setActive( $activeTab ? $activeTab : 'facts' );
 
 return '
 <h2><a href="./manage/form" class="muted">Formular:</a> '.$form->title.'</h2>'.$tabs->render().'
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.3/ace.js"></script>
 <script>
 jQuery(document).ready(function(){
 	RuleManager.init('.$form->formId.');

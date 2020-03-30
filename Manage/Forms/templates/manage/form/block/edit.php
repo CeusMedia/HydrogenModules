@@ -69,7 +69,7 @@ return '
 			<div class="row-fluid" style="margin-bottom: 1em">
 				<div class="span12">
 					<label for="input_content">Inhalt</label>
-					<textarea name="content" id="input_content" class="span12 ace-auto" rows="25">'.htmlentities( $block->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="content" id="input_content" class="span12" rows="25">'.htmlentities( $block->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
 			<div class="buttonbar">
@@ -105,4 +105,9 @@ return '
 		</div>
 	</div>
 </div>
+<script>
+jQuery(document).ready(function(){
+	FormEditor.applyAceEditor("#input_content");
+});
+</script>
 ';

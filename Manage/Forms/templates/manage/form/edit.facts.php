@@ -87,10 +87,5 @@ return '
 		</form>
 	</div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.3/ace.js"></script>
-<script>
-jQuery(document).ready(function(){
-	FormEditor.applyAceEditor("#input_content");
-});
-</script>';
+';
 ?>

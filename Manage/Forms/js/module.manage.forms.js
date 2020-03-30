@@ -1,6 +1,16 @@
 var FormEditor = {
 	applyAceEditor: function(selector, options){
 		var options = jQuery.extend({
+			options: {
+				lineHeight: 1.2,
+				maxLines: 30
+			},
+			flags: {
+				fontSize: 14
+			}
+		}, options);
+		ModuleAce.applyTo(selector, options);
+/*		var options = jQuery.extend({
 			minLines: 15,
 			maxLines: 35,
 		}, options);
@@ -12,7 +22,7 @@ var FormEditor = {
 			var value = editor.getSession().getValue();
 			textarea.val(value);
 		});
-		textarea.data('ace-editor', editor);
+		textarea.data('ace-editor', editor);*/
 	},
 	initTabs: function(){
 		jQuery("#tabs-form>li>a").on("click", function(){

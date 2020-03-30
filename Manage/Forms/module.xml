@@ -3,7 +3,7 @@
 	<title>Manage: Forms</title>
 	<description><![CDATA[Basic handling for forms.]]></description>
 	<category>Resource</category>
-	<version>0.3.9</version>
+	<version>0.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
@@ -16,6 +16,7 @@
 	<log version="0.3.7">Extend form mail list by filter.</log>
 	<log version="0.3.8">Extend form block list by filter.</log>
 	<log version="0.3.9">Apply block identifier changes to forms and other blocks.</log>
+	<log version="0.4">Use module JS:Ace as code editor.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -61,6 +62,7 @@
 	</files>
 	<config protected="yes" type="string" name="origin"></config>
 	<relations>
+		<needs type="module">JS_Ace</needs>
 		<needs type="module">Resource_Forms</needs>
 		<needs type="module">UI_Helper_Forms</needs>
 	</relations>

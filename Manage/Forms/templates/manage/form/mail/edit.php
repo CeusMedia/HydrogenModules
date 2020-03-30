@@ -51,7 +51,7 @@ return '
 <div class="content-panel">
 	<!--<h3><span class="muted">Mails-Vorlage:</span> '.$mail->title.'</h3>-->
 	<div class="content-panel-inner">
-		<form action="./manage/form/mail/edit/'.$mail->mailId.'" method="post">
+		<form action="./manage/form/mail/edit/'.$mail->mailId.'" method="post" class="form-changes-auto">
 			<div class="row-fluid">
 				<div class="span8">
 					<label for="input_title">Titel</label>
@@ -80,7 +80,6 @@ return '
 				<div class="span12">
 					<label for="input_content">Inhalt</label>
 					<textarea name="content" id="input_content" class="span12" rows="20">'.htmlentities( $mail->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
-					<div id="content_editor" class="ace-editor"></div>
 				</div>
 			</div>
 			<div class="buttonbar">
@@ -102,7 +101,6 @@ return '
 		'.$listWithinForms.'
 	</div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.3/ace.js"></script>
 <script>
 jQuery(document).ready(function(){
 	FormEditor.applyAceEditor("#input_content");
