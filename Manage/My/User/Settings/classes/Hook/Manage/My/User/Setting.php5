@@ -39,17 +39,17 @@ class Hook_Manage_My_User_Setting extends CMF_Hydrogen_Hook{
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
 	 *	@param		object						$context	Event call context object
 	 *	@param		object						$module		Event call module object
-	 *	@param		array						$data		Payload map
+	 *	@param		object						$payload	Payload object
 	 *	@return		void
 	 */
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$data	= (object) $data;
-		if( !empty( $data->userId ) ){
+	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload ){
+		$payload	= (object) $payload;
+		if( !empty( $payload->userId ) ){
 			$model	= new Model_User_Setting( $env );
-			$count	= $model->removeByIndex( 'userId', $data->userId );
+			$count	= $model->removeByIndex( 'userId', $payload->userId );
 		}
-		if( isset( $data->counts ) )
-			$data->counts['Manage_My_User_Settings']	= (object) array( 'entities' => $count );
+		if( isset( $payload->counts ) )
+			$payload->counts['Manage_My_User_Settings']	= (object) array( 'entities' => $count );
 	}
 
 	/**

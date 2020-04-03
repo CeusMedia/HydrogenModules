@@ -36,7 +36,7 @@ class Model_User_Invite extends CMF_Hydrogen_Model {
 		'email',
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
-	
+
 	public function generateInviteCode( $inviterId, $mode = 0, $length = 10, $split = 5 ){
 		switch( $mode ){
 			default:
