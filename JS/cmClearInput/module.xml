@@ -14,7 +14,7 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/JS/ClearInput.php5</hook>
+		<class>Hook/JS/ClearInput.php5</class>
 		<script source="local">cmClearInput-0.1.js</script>
 		<script source="local" load="auto">cmClearInput-0.1.min.js</script>
 		<style source="theme" load="auto">cmClearInput-0.1.css</style>
