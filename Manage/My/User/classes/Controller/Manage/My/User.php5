@@ -153,8 +153,8 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		else{
 			$indices	= array(
 				'email'		=> $email,
-				'userId'	=> '!='.$this->userId,
-//				'status'	=> '>=-1',																//  disabled for integrity
+				'userId'	=> '!= '.$this->userId,
+//				'status'	=> '>= -1',																//  disabled for integrity
 			);
 			if( $this->modelUser->getByIndices( $indices ) ){
 				$this->messenger->noteError( $words->msgEmailExisting, $email );
@@ -247,7 +247,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 	public function remove( $confirmed = NULL ){
 		$this->addData( 'userId', $this->userId );
 		$this->addData( 'user', $this->modelUser->get( $this->userId ) );
-		if( $this->request->isPost() && $confirmed ){
+		if( $this->request->getMethod()->isPost() && $confirmed ){
 			$this->checkConfirmationPassword( 'manage/my/user/remove' );
 			$dbc	= $this->env->getDatabase();
 			$dbc->beginTransaction();
