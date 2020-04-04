@@ -85,11 +85,11 @@ class View_Helper_Navigation_Bootstrap_Sidebar{
 //				'id'	=> "logo",
 				'class'	=> 'brand'
 			) );
-		return UI_HTML_Tag::create( 'a', $label, array(
+		$link	= UI_HTML_Tag::create( 'a', $label, array(
 			'href'	=> $this->logoLink,
-//			'id'	=> "logo",
-			'class'	=> 'brand'
+//			'class'	=> 'brand'
 		) );
+		return UI_HTML_Tag::create( 'div', $link, array( 'class' => 'brand' ) );
 	}
 
 	public function setInverse( $boolean = NULL ){

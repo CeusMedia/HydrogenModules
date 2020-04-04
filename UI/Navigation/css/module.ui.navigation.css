@@ -67,6 +67,11 @@ body.nav-sidebar #layout-container #layout-nav div.brand > a:visited {
 	color: #444;
 	text-decoration: none;
 	}
+body.nav-sidebar #layout-container #layout-nav div.brand > img,
+body.nav-sidebar #layout-container #layout-nav div.brand > a > img {
+	max-width: 64px;
+	max-height: 64px;
+	}
 
 /*  --  RESPONSIVE  --  */
 @media (min-width: 768px) {
