@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Navigation{
-
+class View_Helper_Navigation
+{
 	protected $env;
 	protected $menu;
 	protected $moduleConfig;
@@ -10,13 +10,15 @@ class View_Helper_Navigation{
 	protected $logoLink;
 	protected $logoIcon;
 
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env			= $env;
 		$this->menu			= new Model_Menu( $env );
 		$this->moduleConfig	= $env->getConfig()->getAll( "module.ui_navigation.", TRUE );
 	}
 
-	static public function ___setupSidebar( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function ___setupSidebar( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_navigation.', TRUE );
 		$desktopRendererClass = $moduleConfig->get( 'render.desktop.class' );
 		if( $desktopRendererClass === 'View_Helper_Navigation_Bootstrap_Sidebar' ){
@@ -34,11 +36,13 @@ class View_Helper_Navigation{
 		}
 	}
 
-	public function getMenu(){
+	public function getMenu(): Model_Menu
+	{
 		return $this->menu;
 	}
 
-	public function render( $scope = 'main', $class = NULL, $style = NULL ){
+	public function render( $scope = 'main', $class = NULL, $style = NULL ): string
+	{
 		$class		= $class ? $class : $this->moduleConfig->get( 'render.desktop.class' );
 		$style		= $style ? $style : $this->moduleConfig->get( 'render.desktop.style' );
 		$argments	= array( $this->env, $this->menu );
@@ -50,20 +54,34 @@ class View_Helper_Navigation{
 		$helper->setLogo( $this->logoTitle, $this->logoLink, $this->logoIcon );
 		$helper->setScope( $scope );
 		$helper->setStyle( $style );
+		if( $this->helperAccount )
+			$helper->setAccountMenuHelper( $this->helperAccount );
 		return $helper->render();
 	}
 
-	public function setInverse( $boolean = NULL ){
-		$this->inverse	= (boolean) $boolean;
+	public function setAccountMenuHelper( $helperAccount ): self
+	{
+		$this->helperAccount	= $helperAccount;
+		return $this;
 	}
 
-	public function setLinksToSkip( $links ){
-		$this->linksToSkip	= $links;
+	public function setInverse( $boolean = NULL ): self
+	{
+		$this->inverse	= (boolean) $boolean;
+		return $this;
 	}
-	public function setLogo( $title, $url = NULL, $icon = NULL ){
+
+	public function setLinksToSkip( $links ): self
+	{
+		$this->linksToSkip	= $links;
+		return $this;
+	}
+	public function setLogo( $title, $url = NULL, $icon = NULL ): self
+	{
 		$this->logoTitle	= $title;
 		$this->logoLink		= $url;
 		$this->logoIcon		= $icon;
+		return $this;
 	}
 }
 ?>

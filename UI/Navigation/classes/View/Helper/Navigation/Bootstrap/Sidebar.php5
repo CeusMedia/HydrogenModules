@@ -54,8 +54,15 @@ class View_Helper_Navigation_Bootstrap_Sidebar{
 		}
 		$logo	= $this->renderLogo();
 		$this->env->getPage()->addBodyClass( 'nav-sidebar' );
+
+		$account	= '';
+		if( $this->helperAccountMenu ){
+			$account	= $this->helperAccountMenu->render();
+		}
+
 		$list	= UI_HTML_Tag::create( 'ul', $list, array( "class" => 'nav nav-list bs4-nav-pills bs4-flex-column' ) );
-		return $logo.UI_HTML_Tag::create( 'div', $list, array( 'id' => 'nav-sidebar-list' ) );
+		$list	= UI_HTML_Tag::create( 'div', $list, array( 'id' => 'nav-sidebar-list' ) );
+		return $logo.$account.$list;
 	}
 
 	protected function renderLabelWithIcon( $entry ){
@@ -112,6 +119,10 @@ class View_Helper_Navigation_Bootstrap_Sidebar{
 
 	public function setStyle( $style ){
 		$this->style	= $style;
+	}
+
+	public function setAccountMenuHelper( $helper ){
+		$this->helperAccountMenu	= $helper;
 	}
 }
 ?>
