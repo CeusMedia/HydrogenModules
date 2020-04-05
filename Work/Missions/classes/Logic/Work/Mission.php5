@@ -165,7 +165,7 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 		return $this->modelMission->getAll(															//  return missions matched by conditions
 			$conditions,
 			$orders,
-			$limits,
+			$limits ? $limits : array(),
 			array_diff( $this->modelMission->getColumns(), array( 'content' ) ),					//  all columns except content
 			array( 'missionId' ),																	//  HAVING needs grouping
 			array( join( ' OR ', $havings ) )														//  combine havings with OR
