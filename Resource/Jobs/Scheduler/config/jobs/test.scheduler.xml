@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<jobs>
+	<job id="Scheduler.Test.Hour">
+		<class>Test_Scheduler</class>
+		<method>greetHour</method>
+		<interval>hour</interval>
+		<mode>dev</mode>
+	</job>
+	<job id="Scheduler.Test.Min" >
+		<class>Test_Scheduler</class>
+		<method>greetMinute</method>
+		<interval>min</interval>
+		<mode>dev</mode>
+	</job>
+</jobs>
