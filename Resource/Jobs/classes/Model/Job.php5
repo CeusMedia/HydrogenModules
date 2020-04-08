@@ -4,13 +4,14 @@ class Model_Job{
 	const FORMAT_AUTO		= 0;
 	const FORMAT_XML		= 1;
 	const FORMAT_JSON		= 2;
-
+	const FORMAT_MODULE		= 3;
 
 	protected $pathJobs		= 'config/jobs/';
 	protected $jobs			= array();
 	protected $format		= 0;
 
-	public function __construct(){
+	public function __construct( CMF_Hydrogen_Environment $env ){
+		$this->env	= $env;
 	}
 
 	public function get( $jobId ){
@@ -19,8 +20,34 @@ class Model_Job{
 		throw new RangeException( 'Job with ID "'.$jobId.'" is not existing' );
 	}
 
-	public function getAll(){
-		return $this->jobs;
+	public function getAll( $conditions = array() ){
+		$list	= array();
+		foreach( $this->jobs as $jobId => $job ){
+			foreach( $conditions as $key => $value ){
+				if( is_array( $value ) ){
+					if( is_array( $job->$key ) ){
+						if( !array_intersect( $value, $job->$key ) )
+							continue 2;
+					}
+					else if( !in_array( $job->$key, $value ) )
+						continue 2;
+				}
+				else if( is_bool( $value ) ){
+					if( $value !== (bool) $job->$key )
+						continue 2;
+				}
+				else {
+					if( is_array( $job->$key ) ){
+						if( !in_array( $value, $job->$key ) )
+							continue 2;
+					}
+					else if( $value != $job->$key )
+						continue 2;
+				}
+			}
+			$list[$jobId]	= $job;
+		}
+		return $list;
 	}
 
 	public function getByInterval( $interval = NULL ){
@@ -65,6 +92,12 @@ class Model_Job{
 				$this->jobs[$jobId]	= $job;
 			foreach( self::readJobsFromJsonFiles( $modes ) as $jobId => $job )
 				$this->jobs[$jobId]	= $job;
+		}
+		else if( $this->format === static::FORMAT_MODULE ){
+			foreach( self::readJobsFromModules( $modes ) as $jobId => $job )
+				$this->jobs[$jobId]	= $job;
+//			foreach( self::readJobsFromJsonFiles( $modes ) as $jobId => $job )
+//				$this->jobs[$jobId]	= $job;
 		}
 		ksort( $this->jobs/*, SORT_NATURAL | SORT_FLAG_CASE*/ );
 	}
@@ -135,6 +168,14 @@ class Model_Job{
 				$jobs[$jobId]	= $job;
 			}
 		}
+		return $jobs;
+	}
+
+	protected function readJobsFromModules( $modes = array() ){
+		$jobs	= array();
+		foreach( $this->env->getModules()->getAll() as $moduleId => $module )
+			foreach( $module->jobs as $job )
+				$jobs[$job->id]	= $job;
 		return $jobs;
 	}
 

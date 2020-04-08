@@ -1,5 +1,5 @@
 <?php
-class Model_Joblock {
+class Model_Job_Lock {
 
 	public $lockExt		= ".lock";
 	public $lockPath	= "config/locks/";

@@ -12,6 +12,7 @@ $modes			= array(
 	'test',
 	'dev',
 );
+$mode			= 'dev';
 $errorHandling	= array(
 	'report'	=> E_ALL,
 	'display'	=> TRUE,
@@ -31,6 +32,7 @@ $helper	= new JobScriptHelper();
 isset( $configFile ) ? $helper->setConfigFile( $configFile ) : NULL;
 isset( $pathClasses ) ? $helper->setClassesPath( $pathClasses ) : NULL;
 isset( $modes ) ? $helper->setModes( $modes ) : NULL;
+isset( $mode ) ? $helper->setMode( $mode ) : NULL;
 isset( $verbose ) ? $helper->setVerbose( $verbose ) : NULL;
 isset( $errorHandling ) ? $helper->setErrorHandling( $errorHandling ) : NULL;
 $helper->run();
@@ -49,6 +51,7 @@ class JobScriptHelper
 		'test',
 		'dev',
 	);
+	protected $mode;
 	protected $pathClasses		= 'classes/';
 	protected $verbose			= FALSE;
 
@@ -63,6 +66,7 @@ class JobScriptHelper
 		$this->changeDirIntoApp()
 			->setupEnvironment()
 			->setupErrorHandling()												//  override error handling after request analysis
+			->detectAppMode()
 			->runJobApp();
 	}
 
@@ -75,6 +79,14 @@ class JobScriptHelper
 	public function setErrorHandling( $errorHandling ): self
 	{
 		$this->errorHandling	= $errorHandling;
+		return $this;
+	}
+
+	public function setMode( string $modes ): self
+	{
+		if( !in_array( $mode, $this->modes ) )
+			throw new RangeException( 'Invalid mode: '.$mode );
+		$this->mode		= $modes;
 		return $this;
 	}
 
@@ -114,6 +126,20 @@ class JobScriptHelper
 		return $this;
 	}
 
+	protected function detectAppMode(): self
+	{
+		if( !$this->mode ){
+			$file	= '.hymn';
+			if( file_exists( $file ) ){
+				$hymn = FS_File_JSON_Reader::load( $file );
+				$mode = $hymn->application->installMode ?? 'dev';
+				if( in_array( $mode, $this->modes ) )
+					$this->mode = $mode;
+			}
+		}
+		return $this;
+	}
+
 	protected function detectAppPath(): string
 	{
 		$this->verbose ? print( 'Detecting application path...'.PHP_EOL ) : NULL;
@@ -138,6 +164,7 @@ class JobScriptHelper
 	{
 		try{
 			$jobber	= new \Jobber();											//  start job handler
+			$jobber->setMode( $this->mode );
 			$jobber->loadJobs( $this->modes, FALSE );							//  load jobs configured in XML or JSON files, allowing JSON to override
 			$code	= $jobber->run( $this->request );							//  execute found jobs
 			exit( $code );
