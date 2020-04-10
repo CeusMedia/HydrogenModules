@@ -140,69 +140,46 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		try{
 			$moduleConfig	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );				//  get configuration of module
 			if( $moduleConfig->get( 'sitemap' ) ){													//  sitemap is enabled
-				$model		= new Model_Page( $env );												//  get model of pages
-				$indices	= array(																//  focus on ...
-					'status'	=> Model_Page::STATUS_VISIBLE,										//  ... visible pages ...
-					'parentId'	=> 0,																//  ... in top level ...
-					'scope'		=> 0,																//  ... of main navigation
-					'access'	=> array( 'public', 'outside' ),									//  ... accessible by everyone
-				);
+				$urls		= array();
 				$orders		= array( 'scope' => 'ASC', 'rank' => 'ASC', 'modifiedAt' => 'DESC' );	//  collect latest changed pages first
-				$pages		= $model->getAllByIndices( $indices, $orders );							//  get all active top level pages
-				foreach( $pages as $page ){															//  iterate found pages
-					if( (int) $page->type === Model_Page::TYPE_BRANCH ){							//  page is a branch only (without content)
-						$indices	= array(														//  focus on ...
-							'status'	=> array( Model_Page::STATUS_VISIBLE ),						//  ... visible pages ...
-							'parentId'	=> $page->pageId,											//  ... on sub level
-							'access'	=> array( 'public', 'outside' ),							//  ... accessible by everyone
-						);
-						$subpages	= $model->getAllByIndices( $indices, $orders );					//  get all active sub level pages of top level page
-						foreach( $subpages as $subpage ){											//  iterate found pages
-							$url		= $env->url.$page->identifier.'/'.$subpage->identifier;		//  build absolute URI of sub level page
-							$timestamp	= max( $subpage->createdAt, $subpage->modifiedAt );			//  get timestamp of last action
-							$priority	= $subpage->priority;										//  get page priority
-							$frequency	= $subpage->changefreq;										//  get page change frequency
+				for( $scope=0; $scope<10; $scope++ ){
+					$model		= new Model_Page( $env );											//  get model of pages
+					$indices	= array(															//  focus on ...
+						'status'	=> Model_Page::STATUS_VISIBLE,									//  ... visible pages ...
+						'parentId'	=> 0,															//  ... in top level ...
+						'scope'		=> $scope,														//  ... of scoped navigation
+						'access'	=> array( 'public', 'outside' ),								//  ... accessible by everyone
+					);
+					$pages		= $model->getAllByIndices( $indices, $orders );						//  get all active top level pages
+					foreach( $pages as $page ){														//  iterate found pages
+						if( (int) $page->type === Model_Page::TYPE_BRANCH ){						//  page is a branch only (without content)
+							$indices	= array(													//  focus on ...
+								'status'	=> array( Model_Page::STATUS_VISIBLE ),					//  ... visible pages ...
+								'parentId'	=> $page->pageId,										//  ... on sub level
+								'access'	=> array( 'public', 'outside' ),						//  ... accessible by everyone
+							);
+							$subpages	= $model->getAllByIndices( $indices, $orders );				//  get all active sub level pages of top level page
+							foreach( $subpages as $subpage ){										//  iterate found pages
+								$url		= $env->url.$page->identifier.'/'.$subpage->identifier;	//  build absolute URI of sub level page
+								if( in_array( $url, $urls ) )
+									continue;
+								$urls[]		= $url;
+								$timestamp	= max( $subpage->createdAt, $subpage->modifiedAt );		//  get timestamp of last action
+								$priority	= $subpage->priority;									//  get page priority
+								$frequency	= $subpage->changefreq;									//  get page change frequency
+								$context->addLink( $url, $timestamp, $priority, $frequency );		//  append URI to sitemap
+							}
+						}
+						else{																		//  page is static of dynamic (using a module)
+							$url		= $env->url.$page->identifier;								//  build absolute URI of top level page
+							if( in_array( $url, $urls ) )
+								continue;
+							$urls[]		= $url;
+							$timestamp	= max( $page->createdAt, $page->modifiedAt );				//  get timestamp of last action
+							$priority	= $page->priority;											//  get page priority
+							$frequency	= $page->changefreq;										//  get page change frequency
 							$context->addLink( $url, $timestamp, $priority, $frequency );			//  append URI to sitemap
 						}
-					}
-					else{																			//  page is static of dynamic (using a module)
-						$url	= $env->url.$page->identifier;										//  build absolute URI of top level page
-						$timestamp	= max( $page->createdAt, $page->modifiedAt );					//  get timestamp of last action
-						$priority	= $page->priority;												//  get page priority
-						$frequency	= $page->changefreq;											//  get page change frequency
-						$context->addLink( $url, $timestamp, $priority, $frequency );				//  append URI to sitemap
-					}
-				}
-
-				$indices	= array(																//  focus on ...
-					'status'	=> array( Model_Page::STATUS_VISIBLE ),								//  ... visible pages ...
-					'parentId'	=> 0,																//  ... on top level ...
-					'scope'		=> 1,																//  ... of top navigation scope ...
-					'access'	=> array( 'public', 'outside' ),									//  ... accessible by everyone
-				);
-				$orders		= array( 'modifiedAt' => 'DESC' );										//  collect latest changed pages first
-				$pages		= $model->getAllByIndices( $indices, $orders );							//  get all active top level pages
-				foreach( $pages as $page ){															//  iterate found pages
-					if( (int) $page->type === 1 ){													//  page is a junction only (without content)
-						$indices	= array(														//  focus on ...
-							'status'	=> array( Model_Page::STATUS_VISIBLE ),						//  ... visible pages ...
-							'parentId'	=> $page->pageId,											//  ... on sub level
-						);
-						$subpages	= $model->getAllByIndices( $indices, $orders );					//  get all active sub level pages of top level page
-						foreach( $subpages as $subpage ){											//  iterate found pages
-							$url		= $env->url.$page->identifier.'/'.$subpage->identifier;		//  build absolute URI of sub level page
-							$timestamp	= max( $subpage->createdAt, $subpage->modifiedAt );			//  get timestamp of last action
-							$priority	= $subpage->priority;										//  get page priority
-							$frequency	= $subpage->changefreq;										//  get page change frequency
-							$context->addLink( $url, $timestamp, $priority, $frequency );			//  append URI to sitemap
-						}
-					}
-					else{																			//  page is static of dynamic (using a module)
-						$url	= $env->url.$page->identifier;										//  build absolute URI of top level page
-						$timestamp	= max( $page->createdAt, $page->modifiedAt );					//  get timestamp of last action
-						$priority	= $page->priority;												//  get page priority
-						$frequency	= $page->changefreq;											//  get page change frequency
-						$context->addLink( $url, $timestamp, $priority, $frequency );				//  append URI to sitemap
 					}
 				}
 			}
