@@ -9,6 +9,8 @@ class View_Helper_Bootstrap_Modal{
 	protected $formAction;
 	protected $labelButtonCancel	= "Schließen";
 	protected $labelButtonSubmit	= "Weiter";
+	protected $bsVersion;
+	protected $isBs4;
 
 	/**
 	 *	Constructor.
@@ -16,8 +18,10 @@ class View_Helper_Bootstrap_Modal{
 	 *	@param		object		$env			Instance of Hydrogen Environment
 	 */
 	public function __construct( $env ){
-		$this->env		= $env;
-		$this->id		= 'modal-'.uniqid();
+		$this->env			= $env;
+		$this->id			= 'modal-'.uniqid();
+		$this->bsVersion	= $env->getModules()->get( 'UI_Bootstrap' )->config->get( 'version' );
+		$this->isBs4		= version_compare( $this->bsVersion->value, 4, '>=' );
 	}
 
 	public function __toString(){
@@ -61,7 +65,17 @@ class View_Helper_Bootstrap_Modal{
 					$attributes[$key]	= $value;
 			}
 		}
-		$modal		= UI_HTML_Tag::create( 'div', array( $header, $body, $footer ), $attributes );
+		$content	= array( $header, $body, $footer );
+		if( $this->isBs4 ){
+			$content	= UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', $content, array( 'class' => 'modal-content' ) ),
+			), array(
+				'class'	=> 'modal-dialog',
+				'role'	=> 'document',
+			) );
+		}
+
+		$modal		= UI_HTML_Tag::create( 'div', $content, $attributes );
 		if( $this->formAction ){
 			$modal	= UI_HTML_Tag::create( 'form', $modal, array(
 				'action'	=> $this->formAction,
