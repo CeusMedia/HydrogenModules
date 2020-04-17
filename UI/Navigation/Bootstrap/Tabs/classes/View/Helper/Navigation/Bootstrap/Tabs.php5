@@ -49,6 +49,8 @@ class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abs
 					$link['class']	.= $this->classLinkActive ? ' '.$this->classLinkActive : '';	//
 				}
 			}
+			$link['class']	.= ' nav-link';
+			$item['class']	.= ' nav-item';
 			$link		= UI_HTML_Tag::create( 'a', $tab->label, $link );							//  render tab link
 			$key		= (float) $tab->priority.'.'.str_pad( $nr, 2, '0', STR_PAD_LEFT );			//  generate order key
 			$list[$key]	= UI_HTML_Tag::create( 'li', $link, $item );								//  enlist tab

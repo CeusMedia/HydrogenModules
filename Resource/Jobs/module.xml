@@ -13,7 +13,7 @@ code:html>php job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 <b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
 ]]></description>
 	<category>Resource</category>
-	<version>0.7</version>
+	<version>0.7.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted to Hydrogen module.</log>
 	<log version="0.2.1">Introduced logging mechanism.</log>
@@ -49,6 +49,7 @@ code:html>php job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 	<log version="0.6.7">Use new CLI progress output component.</log>
 	<log version="0.6.8">Refactor job script.</log>
 	<log version="0.7">Improve error handling by catching throwable errors.</log>
+	<log version="0.7.1">Prepare new job configuration handling.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -56,12 +57,27 @@ code:html>php job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 		<class>Job/Abstract.php5</class>
 		<class>Job/Job.php5</class>
 		<class>Model/Job.php5</class>
-		<class>Model/Joblock.php5</class>
+		<class>Model/Job/Lock.php5</class>
 		<file>job.php</file>
 		<file>config/jobs/job.xml</file>
 	</files>
+	<config access="protected" mandatory="yes" type="string" name="format" values="XML,JSON,MODULE" title="Source of job definitions">XML</config>
 	<relations>
 		<supports type="module">Resource_Maintainer</supports>
 		<supports type="module">Resource_Mail</supports>
 	</relations>
+	<jobs>
+		<job id="Job.list" mode="dev,test,live">Job::index</job>
+		<job id="Job.info" mode="dev,test,live">Job::info</job>
+		<job id="Job.Lock.list" mode="dev,test,live">Job::listLocks</job>
+		<job id="Job.Lock.clear" mode="dev,test,live">Job::clearLocks</job>
+		<job id="Job.Lock.alert" mode="dev,test,live">Job::alert</job>
+		<job id="Job.jsonfy" mode="dev,live">Job::convertJobConfigToJson</job>
+		<job id="Job.Test.reflect" mode="dev,test">Job::reflect</job>
+		<job id="Job.Test.reflectCommands" mode="dev,test">Job::reflectCommands</job>
+		<job id="Job.Test.reflectParameters" mode="dev,test">Job::reflectParameters</job>
+		<job id="Job.Util.getDate" mode="dev,test,live">Job::getDate</job>
+		<job id="Job.Util.getExtensionVersion" mode="dev,test,live">Job::getExtensionVersion</job>
+		<job id="Job.Util.getPhpVersion" mode="dev,test,live">Job::getPhpVersion</job>
+	</jobs>
 </module>

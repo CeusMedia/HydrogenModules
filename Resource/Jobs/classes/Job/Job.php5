@@ -12,7 +12,7 @@ class Job_Job extends Job_Abstract{
 	 *	@todo		finish implementation
 	 */
 	public function alert(){
-		$skip	= array( 'Not.Job.alert' );
+		$skip	= array();//array( 'Job.alert' );
 		$locks	= $this->getLocks( $skip );
 		$list	= array();
 		foreach( $locks as $lockFile ){
@@ -39,14 +39,19 @@ class Job_Job extends Job_Abstract{
 		}
 	}
 
-	public function clearLocks(){
+	public function clearLocks( $jobIds = array() ){
 		$skip	= array(
 			'Job.Lock.clear',
 			'Job.clearLocks',					//  @todo remove after migration
 		);
-		$list	= $this->getLocks( $skip );
-		foreach( $list as $item )
-			@unlink( $this->pathLocks.$item.'.lock' );
+		$list	= array();
+		$locks	= $this->getLocks( $skip );
+		foreach( $locks as $lockId ){
+			if( is_array( $jobIds ) && !in_array( $lockId, $jobIds ) )
+				continue;
+			@unlink( $this->pathLocks.$lockId.'.lock' );
+			$list[]	= $lockId;
+		}
 		$this->out( 'Removed '.count( $list ).' locks:' );
 		foreach( $list as $item )
 			$this->out( ' - '.$item );
@@ -138,13 +143,16 @@ class Job_Job extends Job_Abstract{
 		$this->out( preg_replace( '/(-.+)$/', '', phpversion() ) );
 	}
 
-	public function index(){
-	//	print( json_encode( $this->env->getRequest()->getAll()));
-		foreach( $this->manager->getJobs() as $jobId => $jobData ){
+	public function index( $mode = NULL ){
+		$conditions	= array();
+		if( $mode )
+			$conditions['mode']	= $mode;
+		foreach( $this->manager->getJobs( $conditions ) as $jobId => $jobData ){
+			$arguments	= $jobData->arguments ? ' '.$jobData->arguments : '';
 			if( $jobData->deprecated )
-				$this->out( '- '.$jobId.' (deprecated: '.$jobData->deprecated.')' );
+				$this->out( '- '.$jobId.$arguments.' (deprecated: '.$jobData->deprecated.')' );
 			else
-				$this->out( '- '.$jobId );
+				$this->out( '- '.$jobId.$arguments );
 		}
 	}
 
@@ -163,7 +171,21 @@ class Job_Job extends Job_Abstract{
 				$this->out( 'Job "'.$jobKey.'" is not existing' );
 				continue;
 			}
-			print_m( $jobs[$jobKey] );
+			$job	= $jobs[$jobKey];
+			$data	= array(
+				'ID'			=> $job->id,
+				'Job Method'	=> 'Job_'.$job->class.' >> '.$job->method,
+				'Modes'			=> join( ', ', $job->mode ),
+				'Multiple Runs'	=> $job->multiple ? 'yes' : 'no',
+			);
+			if( $job->arguments )
+				$data['Arguments']	= $job->arguments;
+			if( $job->interval )
+				$data['Interval']	= $job->interval;
+			if( $job->arguments )
+				$data['Deprecated']	= $job->deprecated ? 'yes' : 'no';
+			foreach( $data as $label => $value )
+				$this->out( str_pad( '- '.$label.':', 20, ' ', STR_PAD_RIGHT ).$value );
 		}
 	}
 

@@ -70,12 +70,12 @@ body.navbar-fixed #account-menu {
 	}
 
 @media screen and (max-width: 900px) {
-	#account-menu .labels {
+	#layout-field #account-menu .labels {
 		display: none;
 		}
 	}
 @media screen and (max-width: 979px) {
-	#account-menu .labels div.fullname {
+	#layout-field #account-menu .labels div.fullname {
 		display:  none;
 	}
 }

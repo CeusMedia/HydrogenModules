@@ -22,16 +22,19 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 	protected $modelLock;
 	protected $pathLogs;
 	protected $pathJobs;
+	protected $mode;
 
 	public function __construct( \CMF_Hydrogen_Environment $env = NULL )
 	{
 		parent::__construct( $env, TRUE );															//  construct parent and call __onInit
 		$config				= $this->env->getConfig();
+		$format				=
 		$this->pathLogs		= $config->get( 'path.logs' );
 		$this->pathJobs		= 'config/jobs/';
 		$this->modelJob		= new \Model_Job( $this->env );
 		$this->modelJob->setFormat( Model_Job::FORMAT_XML );
-		$this->modelLock	= new \Model_Joblock( $this->env );
+//		$this->modelJob->setFormat( Model_Job::FORMAT_MODULE );
+		$this->modelLock	= new \Model_Job_Lock( $this->env );
 	}
 
 	public function loadJobs( array $modes, bool $strict = TRUE ): self
@@ -40,9 +43,11 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 		return $this;
 	}
 
-	public function getJobs(): array
+	public function getJobs( $conditions = array() ): array
 	{
-		return $this->modelJob->getAll();
+		if( $this->mode && !isset( $conditions['mode'] ) )
+			$conditions['mode']	= $this->mode;
+		return $this->modelJob->getAll( $conditions );
 	}
 
 	public function log( string $message ): self
@@ -89,6 +94,12 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 		return $this->runJob( $jobId );
 	}
 
+	public function setMode( $mode ): self
+	{
+		$this->mode	= $mode;
+		return $this;
+	}
+
 	/*  --  PROTECTED  --  */
 	protected function getJobIdFromRequest()
 	{
@@ -115,7 +126,7 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 		}
 		$job		= $this->modelJob->get( $jobId );												//  get job data from job list by job ID
 		$classArgs	= array( $this->env, $this );													//  prepare job class instance arguments
-		$arguments	= array( $commands, $parameters );															//
+		$arguments	= array( $commands, $parameters );												//
 		$className	= 'Job_'.$job->class;															//  build job class name
 		if( !class_exists( '\\'.$className ) ){														//  job class is not existing
 			$this->logError( 'Job class "'.$className.'" is not existing.' );						//  log error

@@ -42,6 +42,9 @@ class Logic_Sitemap{
 			throw new OutOfBoundsException( 'Priority cannot be greater than 1' );
 		if( !in_array( $frequency, $this->frequencies ) )
 			throw new InvalidArgumentException( 'Frequency must with one of '.join( ', ', $this->frequencies ) );
+		foreach( $this->links as $link )
+			if( $location === $link->location )
+				throw new InvalidArgumentException( 'Link already set by location: '.$location );
 		$this->links[]	= (object) array(
 			'location'	=> $location,
 			'datetime'	=> $timestamp > 0 ? date( 'c', (int) $timestamp ) : NULL,

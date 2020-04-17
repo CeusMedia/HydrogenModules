@@ -189,16 +189,27 @@ if( strtoupper( $format ) === "MARKDOWN" ){
 
 $panelInfo	= $view->loadContentFile( 'html/work/mission/add.info.html' );
 
-return '
-<form action="./work/mission/add" method="post" class="form-changes-auto">
-	<input type="hidden" name="format" value="'.htmlentities( $mission->format, ENT_QUOTES, 'UTF-8' ).'"/>
-	<div class="row-fluid">
+if( strlen( trim( $panelInfo ) ) ){
+	$content	= '
 		<div class="span9">
 			'.$panelAdd.'
 		</div>
 		<div class="span3">
 			'.$panelInfo.'
-		</div>
+		</div>';
+}
+else {
+	$content	= '
+		<div class="span12">
+			'.$panelAdd.'
+		</div>';
+
+}
+return '
+<form action="./work/mission/add" method="post" class="form-changes-auto">
+	<input type="hidden" name="format" value="'.htmlentities( $mission->format, ENT_QUOTES, 'UTF-8' ).'"/>
+	<div class="row-fluid">
+		'.$content.'
 	</div>
 	'.$panelContent.'
 </form>

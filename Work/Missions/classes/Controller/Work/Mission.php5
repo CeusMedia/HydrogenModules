@@ -277,7 +277,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$conditions		= array(
 					'status'	=> array( 0, 1, 2, 3 ),
 					'type'		=> 0,
-					'dayStart'	=> '<='.date( 'Y-m-d', time() ),
+					'dayStart'	=> '<= '.date( 'Y-m-d', time() ),
 //					'dayEnd'	=> '>='.date( 'Y-m-d', time() ),
 					'workerId'	=> $this->userId,
 				);
@@ -321,7 +321,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$listLarge->setWords( $words );
 
 			$listSmall		= new View_Helper_Work_Mission_List_DaysSmall( $this->env );
-			$listSmall->setMissions( $listLarge->getDayMissions( $day ) );	
+			$listSmall->setMissions( $listLarge->getDayMissions( $day ) );
 			$listSmall->setWords( $words );
 
 			$allDayMissions	= $listLarge->getDayMissions();
@@ -555,7 +555,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->checkIsEditor( $missionId );
 		$words			= (object) $this->getWords( 'edit' );
 		$mission		= $this->model->get( $missionId );
-		
+
 //print_m( $mission );die;
 		if( !$mission )
 			$this->messenger->noteError( $words->msgInvalidId );
@@ -1071,7 +1071,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$filters	= array(																//  task filters
 					'type'		=> 0,																//  tasks only
 					'status'	=> array( 0, 1, 2, 3 ),												//  states: new, accepted, progressing, ready
-					'dayStart'	=> "<=".date( "Y-m-d", time() ),									//  present and past (overdue)
+					'dayStart'	=> "<= ".date( "Y-m-d", time() ),									//  present and past (overdue)
 				);
 				$order	= array( 'priority' => 'ASC' );
 				$tasks	= $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered tasks ordered by priority
@@ -1080,7 +1080,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$filters	= array(																//  event filters
 					'type'		=> 1,																//  events only
 					'status'	=> array( 0, 1, 2, 3 ),												//  states: new, accepted, progressing, ready
-					'dayStart'	=> "<=".date( "Y-m-d", time() ),									//  starting today
+					'dayStart'	=> "<= ".date( "Y-m-d", time() ),									//  starting today
 				);
 				$order	= array( 'timeStart' => 'ASC' );
 				$events	= $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered events ordered by start time

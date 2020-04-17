@@ -35,7 +35,7 @@ class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abst
 		}
 
 		$fieldSelect	= '';
-		if( count( !$this->dashboards ) > 0 )
+		if( count( $this->dashboards ) > 0 )
 			$fieldSelect	= '
 			<div class="row-fluid">
 				<div class="span12">

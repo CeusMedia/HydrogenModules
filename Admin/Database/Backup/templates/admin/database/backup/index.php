@@ -12,6 +12,9 @@ if( $backups ){
 				'comment'		=> $backup->comment,
 			);
 		}
+		else if( is_null( $backup->comment ) ){
+			$backup->comment	= array( 'comment' => '' );
+		}
 		$rowClass	= '';
 		$status		= '';
 		if( !empty( $backup->comment['copyPrefix'] ) ){

@@ -23,7 +23,7 @@ class Hook_Auth_Local extends CMF_Hydrogen_Hook{
 			return;
 		$modelUser	= new Model_User( $env );
 		$words		= $env->getLanguage()->getWords( 'auth/local' );
-		$conditions	= array( 'status' => '>0' );
+		$conditions	= array( 'status' => '> 0' );
 		$users		= $modelUser->getAll( $conditions, array( 'username' => 'ASC' ) );
 		$data->list	= array( (object) array(
 			'module'		=> $module,
