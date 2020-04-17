@@ -45,20 +45,35 @@ class Hook_UI_Bootstrap /*extends CMF_Hydrogen_Hook*/{
 		else{
 			$configAwesome		= $config->getAll( 'module.ui_font_fontawesome.', TRUE );
 			$configBootstrap	= $config->getAll( 'module.ui_bootstrap.', TRUE );
-			$versionParts		= explode( '.', $configAwesome->get( 'version' ) );
-			$majorVersion		= (int) array_shift( $versionParts );
+			$versionBootstrap	= $configBootstrap->get( 'version' );
+
+			$versionAwesomeParts	= explode( '.', $configAwesome->get( 'version' ) );
+			$versionAwesomeMajor	= (int) array_shift( $versionAwesomeParts );
+
+			$libraryVersion		= 0;
+			if( class_exists( '\\CeusMedia\\Bootstrap\\Base\\Component' ) )							//  Bootstrap library (>=0.5) with base classes
+				$libraryVersion	= \CeusMedia\Bootstrap\Base\Component::$version;
+			else if( class_exists( '\\CeusMedia\\Bootstrap\\Component' ) )							//  Bootstrap library is below 0.4.7
+				$libraryVersion	= \CeusMedia\Bootstrap\Component::getVersion();
+
+			if( version_compare( $libraryVersion, '0.5', '>=' ) ){
+				\CeusMedia\Bootstrap\Base\Structure::$defaultBsVersion	= $versionBootstrap;
+				\CeusMedia\Bootstrap\Base\Component::$defaultBsVersion	= $versionBootstrap;
+			}
+			else
+				\CeusMedia\Bootstrap\Component::$bsVersion	= $versionBootstrap;
 
 			//  Bootstrap library (>=0.4.7) has support for Font Awesome 5
 			if( property_exists( '\CeusMedia\Bootstrap\Icon', 'defaultSet' ) ){
-				\CeusMedia\Bootstrap\Icon::$defaultSet	= 'fontawesome'.$majorVersion;
+				\CeusMedia\Bootstrap\Icon::$defaultSet	= 'fontawesome'.$versionAwesomeMajor;
 				if( $configBootstrap->get( 'icon.fixedWidth' ) )
 					\CeusMedia\Bootstrap\Icon::$defaultSize	= array( 'fixed' );
-				if( $majorVersion === 5 && $configAwesome->get( 'v5.style' ) )
+				if( $versionAwesomeMajor === 5 && $configAwesome->get( 'v5.style' ) )
 					\CeusMedia\Bootstrap\Icon::$defaultStyle	= $configAwesome->get( 'v5.style' );
 			}
 			//  Bootstrap library is below 0.4.7
 			else if( property_exists( '\CeusMedia\Bootstrap\Icon', 'iconSet' ) )
-				\CeusMedia\Bootstrap\Icon::$iconSet		= 'fontawesome'.$majorVersion;
+				\CeusMedia\Bootstrap\Icon::$iconSet		= 'fontawesome'.$versionAwesomeMajor;
 
 		}
 	}
