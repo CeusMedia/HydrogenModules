@@ -9,6 +9,7 @@ class View_Helper_Navigation
 	protected $logoTitle;
 	protected $logoLink;
 	protected $logoIcon;
+	protected $helperAccount;
 
 	public function __construct( $env )
 	{
