@@ -42,7 +42,7 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 		$model		= new Model_Blog_Post( $env );
 		$list		= array();
 		$conditions	= array( 'status' => 1 );
-		$orders		= array( 'createdAt'	=> 'DESC' );
+		$orders		= array( 'createdAt' => 'DESC' );
 		foreach( $model->getAll( $conditions, $orders ) as $nr => $post ){
 			$list[$post->postId]	= (object) array(
 				'title'	=> str_replace( '/', '-', $post->title ),
@@ -98,8 +98,8 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 			$data['language']	= $language->getLanguage();
 		$data['status']		= 0;
 
-		$categories			= $this->modelCategory->getAllByIndices( array( 'status' => '>=0' ) );		//
-		$users				= $this->modelUser->getAll( array( 'status' => '>0' ) );
+		$categories			= $this->modelCategory->getAllByIndices( array( 'status' => '>= 0' ) );		//
+		$users				= $this->modelUser->getAll( array( 'status' => '> 0' ) );
 		$this->addData( 'post', (object) $data );
 		$this->addData( 'users', $users );
 		$this->addData( 'categories', $categories );
@@ -166,10 +166,10 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 		$post->author	= $this->modelUser->get( $post->authorId );									//  extend post by author
 		$post->comments	= $this->modelComment->getAllByIndices( array(								//  collect post comments
 			'postId'	=> $post->postId,															//  ... related to this post
-			'status'	=> '>=0'																	//  ... and visible
+			'status'	=> '>= 0'																	//  ... and visible
 		) );
-		$categories		= $this->modelCategory->getAllByIndices( array( 'status' => '>=0' ) );		//
-		$users			= $this->modelUser->getAll( array( 'status' => '>0' ) );
+		$categories		= $this->modelCategory->getAllByIndices( array( 'status' => '>= 0' ) );		//
+		$users			= $this->modelUser->getAll( array( 'status' => '> 0' ) );
 
 		$this->addData( 'post', $post );															//  assign post data to template
 		$this->addData( 'categories', $categories );
@@ -234,7 +234,7 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 		$logic->handleMail( $mail, $postAuthor, $language->getLanguage() );							//  enqueue mail
 
 		$addresses	= array();
-		$indices	= array( 'postId' => $post->postId, 'status' => '>=0' );						//  get all visible post comments
+		$indices	= array( 'postId' => $post->postId, 'status' => '>= 0' );						//  get all visible post comments
 		foreach( $this->modelComment->getAllByIndices( $indices ) as $item ){						//  find former comment authors
 			if( empty( $item->email ) )																//  comment without email address
 				continue;																			//  cannot inform
