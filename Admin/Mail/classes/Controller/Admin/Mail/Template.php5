@@ -158,7 +158,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 				$title		= strip_tags( trim( $this->request->get( 'template_title' ) ) );
 				$found		= $this->modelTemplate->getByIndices( array(
 					'title'				=> $title,
-					'mailTemplateId'	=> '!='.$templateId
+					'mailTemplateId'	=> '!= '.$templateId
 				) );
 				if( !trim( $title ) )
 					$this->messenger->noteError( 'No title given.' );
