@@ -7,9 +7,11 @@ class View_Helper_Thumbnailer{
 		$this->model		= new Model_Image_Thumbnail( $this->env );
 		$this->maxWidth		= $maxWidth;
 		$this->maxHeight	= $maxHeight;
-		if( $this->env->getRequest()->has( 'flushCache' ) ){
-			$number	= $this->flushCache();
-			$this->env->getMessenger()->noteNotice( 'Thumbnail cache cleared (%s entries).', $number );
+		if( !( $env instanceof CMF_Hydrogen_Environment_Remote ) ){
+			if( $this->env->getRequest()->has( 'flushCache' ) ){
+				$number	= $this->flushCache();
+				$this->env->getMessenger()->noteNotice( 'Thumbnail cache cleared (%s entries).', $number );
+			}
 		}
 	}
 
