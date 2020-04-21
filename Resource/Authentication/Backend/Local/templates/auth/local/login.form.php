@@ -65,7 +65,7 @@ $linkRegister	= UI_HTML_Tag::create( 'a', $w->linkRegister, array(
 $buttonLogin	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
 	'type'		=> 'submit',
 	'name'		=> 'doLogin',
-	'class'		=> 'btn btn-primary btn-large',
+	'class'		=> 'btn btn-primary btn-large btn-block',
 ) );
 
 /*$buttonLoginBlock	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
@@ -101,12 +101,14 @@ HTML::DivClass( 'content-panel content-panel-form', array(
 				HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row',
 					HTML::DivClass( 'bs2-span12 bs3-col-md12 bs3-form-group bs4-col-md-12 bs4-form-group', array(
 						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'label', $w->labelUsername, array(
+							UI_HTML_Tag::create( 'label', array(
+								$w->labelUsername,
+								UI_HTML_Tag::create( 'small', $linkRegister, array(
+									'class' => 'pull-right float-right',
+								) ),
+							), array(
 								'for'	=> 'input_login_username',
 								'class'	=> 'mandatory pull-left'
-							) ),
- 							UI_HTML_Tag::create( 'small', $linkRegister, array(
-								'class' => 'pull-right',
 							) ),
 						) ),
 						UI_HTML_Tag::create( 'input', NULL, array(
@@ -122,12 +124,14 @@ HTML::DivClass( 'content-panel content-panel-form', array(
 				HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row',
 					HTML::DivClass( 'bs2-span12 bs3-col-md12 bs3-form-group bs4-col-md-12 bs4-form-group', array(
 						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'label', $w->labelPassword, array(
+							UI_HTML_Tag::create( 'label', array(
+								$w->labelPassword,
+								UI_HTML_Tag::create( 'small', $linkPassword, array(
+									'class' => 'pull-right',
+								) ),
+							), array(
 								'for'	=> 'input_login_password',
 								'class'	=> 'mandatory pull-left'
-							) ),
- 							UI_HTML_Tag::create( 'small', $linkPassword, array(
-								'class' => 'pull-right',
 							) ),
 						) ),
 						UI_HTML_Tag::create( 'input', NULL, array(
