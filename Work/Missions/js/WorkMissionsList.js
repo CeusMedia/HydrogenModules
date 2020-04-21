@@ -66,8 +66,10 @@ var WorkMissionsList = {
 			order: WorkMissionsList.sortBy,
 			direction: WorkMissionsList.sortDir
 		});
-		$("#day-controls-small").html(data.buttons.small);
-		$("#day-controls-large").html(data.buttons.large);
+		if(typeof data.buttons !== "undefined"){
+			$("#day-controls-small").html(data.buttons.small);
+			$("#day-controls-large").html(data.buttons.large);
+		}
 		$("#day-controls-large a.btn.active").removeClass("active");
 		$("#day-controls-large a.btn").eq(data.day).addClass("active");
 		$("#day-controls-small li:eq("+data.day+") a").tab("show");

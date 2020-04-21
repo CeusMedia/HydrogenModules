@@ -1,6 +1,6 @@
 var WorkMissions = {
 	currentDay: 0,
-
+	mode: null,
 	changeView: function(type){
 		document.location.href = "./work/mission?view="+parseInt(type);
 	},
@@ -22,7 +22,7 @@ var WorkMissions = {
 
 	init: function(mode){
 		WorkMissionsFilter.__init(mode);
-//		this.mode = mode;
+		this.mode = mode;
 		var site = $("body.controller-work-mission");
 		if(!site.length)
 			return;

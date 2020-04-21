@@ -93,62 +93,64 @@ WorkMissionsKanban.loadCurrentList();
 
 		$lanes		= array();
 		foreach( $this->projects as $projectId => $project ){
+			$missionCount	= 0;
+			$columns		= array();
+			foreach( $statuses as $status => $statusLabel ){
+				$conditions	= $this->logic->getFilterConditions( 'filter.work.mission.kanban.' );
+				$conditions['status']		= $status;
+				$conditions['projectId']	= $projectId;
 
-		$missionCount	= 0;
-		$columns		= array();
-		foreach( $statuses as $status => $statusLabel ){
-			$conditions	= $this->logic->getFilterConditions( 'filter.work.mission.kanban.' );
-			$conditions['status']		= $status;
-			$conditions['projectId']	= $projectId;
-
-			$missions	= $this->logic->getUserMissions( $userId, $conditions, array( 'priority' => 'ASC' ) );
-			$rows	= array();
-			foreach( $missions as $mission ){
-				$missionCount++;
-				$buttonView	= UI_HTML_Tag::create( 'a', '<i class="fa fa-eye"></i>&nbsp;<span class="hidden-tablet">anzeigen</span>', array(
-					'href'	=> './work/mission/view/'.$mission->missionId,
-					'class'	=> 'btn not-btn-small',
-					'alt'	=> 'anzeigen',
-					'title'	=> 'anzeigen',
-				) );
-				$buttonEdit	= UI_HTML_Tag::create( 'a', '<i class="fa fa-pencil"></i>&nbsp;<span class="hidden-tablet">bearbeiten</span>', array(
-					'href'	=> './work/mission/edit/'.$mission->missionId,
-					'class'	=> 'btn not-btn-small',
-					'alt'	=> 'bearbeiten',
-					'title'	=> 'bearbeiten',
-				) );
-				$cells	= array();
-				$cells[]	= UI_HTML_Tag::create( 'div', $mission->title, array( 'class' => 'mission-title' ) );
-				$userMap	= $this->getData( 'users' );
-				if( $mission->workerId ){
-					$worker	= '<strike class="muted">entfernt</strike>';
-					if( isset( $userMap[$mission->workerId] ) )
-						$worker	= $userMap[$mission->workerId]->username;
-					$label		= UI_HTML_Tag::create( 'small', 'Bearbeiter: '.$worker );
-					$cells[]	= UI_HTML_Tag::create( 'div', $label );
+				$missions	= $this->logic->getUserMissions( $userId, $conditions, array( 'priority' => 'ASC' ) );
+				$rows	= array();
+				foreach( $missions as $mission ){
+					$missionCount++;
+					$buttonView	= UI_HTML_Tag::create( 'a', '<i class="fa fa-eye"></i>&nbsp;<span class="hidden-tablet">anzeigen</span>', array(
+						'href'	=> './work/mission/view/'.$mission->missionId,
+						'class'	=> 'btn btn-small',
+						'alt'	=> 'anzeigen',
+						'title'	=> 'anzeigen',
+					) );
+					$buttonEdit	= UI_HTML_Tag::create( 'a', '<i class="fa fa-pencil"></i>&nbsp;<span class="hidden-tablet">bearbeiten</span>', array(
+						'href'	=> './work/mission/edit/'.$mission->missionId,
+						'class'	=> 'btn btn-small',
+						'alt'	=> 'bearbeiten',
+						'title'	=> 'bearbeiten',
+					) );
+					$cells	= array();
+					$cells[]	= UI_HTML_Tag::create( 'div', $mission->title, array( 'class' => 'mission-title' ) );
+					$userMap	= $this->getData( 'users' );
+					if( $mission->workerId ){
+						$worker	= '<strike class="muted">entfernt</strike>';
+						if( isset( $userMap[$mission->workerId] ) )
+							$worker	= $userMap[$mission->workerId]->username;
+						$label		= UI_HTML_Tag::create( 'small', 'Bearbeiter: '.$worker );
+						$cells[]	= UI_HTML_Tag::create( 'div', $label );
+					}
+					if( $mission->projectId ){
+						$projectLabel	= '<strike class="muted">entfernt</strike>';
+						if( isset( $this->projects[$mission->projectId] ) )
+							$projectLabel	= $this->projects[$mission->projectId]->title;
+						$mission->projectId ?  : $mission->projectId;
+						$label		= UI_HTML_Tag::create( 'small', 'Project: '.$projectLabel );
+						$cells[]	= UI_HTML_Tag::create( 'div', $label );
+					}
+					$cells[]	= UI_HTML_Tag::create( 'div', $buttonView.$buttonEdit, array( 'class' => 'btn-group' ) );
+					$rows[]	= UI_HTML_Tag::create( 'li', $cells, array( 'class' => 'mission-block priority-'.$mission->priority, 'data-id' => $mission->missionId ) );
 				}
-				if( $mission->projectId ){
-					$projectLabel	= '<strike class="muted">entfernt</strike>';
-					if( isset( $this->projects[$mission->projectId] ) )
-						$projectLabel	= $this->projects[$mission->projectId]->title;
-					$mission->projectId ?  : $mission->projectId;
-					$label		= UI_HTML_Tag::create( 'small', 'Project: '.$projectLabel );
-					$cells[]	= UI_HTML_Tag::create( 'div', $label );
-				}
-				$cells[]	= UI_HTML_Tag::create( 'div', $buttonView.$buttonEdit, array( 'class' => 'btn-group' ) );
-				$rows[]	= UI_HTML_Tag::create( 'li', $cells, array( 'class' => 'mission-block priority-'.$mission->priority, 'data-id' => $mission->missionId ) );
+				$columns[]	= UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'h4', $statusLabel, array( 'class' => '' ) ),
+					UI_HTML_Tag::create( 'ul', $rows, array( 'class' => 'sortable unstyled equalize-auto', 'id' => 'sortable-status-'.$status ) ),
+				), array( 'class' => 'span3' ) );
 			}
-			$columns[]	= UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'h4', $statusLabel, array( 'class' => '' ) ),
-				UI_HTML_Tag::create( 'ul', $rows, array( 'class' => 'sortable unstyled equalize-auto', 'id' => 'sortable-status-'.$status ) ),
-			), array( 'class' => 'span3' ) );
-		}
 			if( !$missionCount )
 				continue;
 
 			$laneLabel	= UI_HTML_Tag::create( 'h3', '<span class="muted">Projekt:</span>&nbsp;'.$project->title );
 			$columns	= UI_HTML_Tag::create( 'div', $columns, array( 'class' => 'row-fluid' ) );
-			$lanes[]	= UI_HTML_Tag::create( 'div', array( $laneLabel, $columns ), array( 'class' => 'row-fluid work-mission-kanban-lane-item' ) );
+			$lanes[]	= UI_HTML_Tag::create( 'div', array( $laneLabel, $columns ), array(
+				'class'		=> 'row-fluid work-mission-kanban-lane-item',
+				'id'		=> 'kanban-lane-'.$projectId.'-'.$status,
+			) );
 		}
 
 		return UI_HTML_Tag::create( 'div', $lanes, array( 'class' => 'work-mission-kanban-lane-list' ) );

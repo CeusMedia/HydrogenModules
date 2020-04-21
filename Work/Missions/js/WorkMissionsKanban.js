@@ -6,7 +6,7 @@ var WorkMissionsKanban = {
 
 	loadCurrentList: function(onSuccess){
 		var onSuccess = typeof onSuccess !== "undefined" ? onSuccess : function(){};
-		WorkMissionsList.blendOut(100);
+//		WorkMissionsList.blendOut(100);
 		$("#day-lists-empty").hide();
 		$.ajax({
 			url: "./work/mission/ajaxRenderIndex",

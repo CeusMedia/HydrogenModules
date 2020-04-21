@@ -278,7 +278,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'status'	=> array( 0, 1, 2, 3 ),
 					'type'		=> 0,
 					'dayStart'	=> '<= '.date( 'Y-m-d', time() ),
-//					'dayEnd'	=> '>='.date( 'Y-m-d', time() ),
+//					'dayEnd'	=> '>= '.date( 'Y-m-d', time() ),
 					'workerId'	=> $this->userId,
 				);
 				$orders		= array(
@@ -680,8 +680,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'priority'			=> (int) $this->request->get( 'priority' ),
 					'status'			=> (int) $this->request->get( 'status' ),
 					'title'				=> $title,
-					'dayStart'			=> $dayStart,
-					'dayEnd'			=> $dayEnd,
+					'dayStart'			=> (string) $dayStart,
+					'dayEnd'			=> (string) $dayEnd,
 					'timeStart'			=> $this->request->get( 'timeStart' ),
 					'timeEnd'			=> $this->request->get( 'timeEnd' ),
 //					'minutesProjected'	=> $this->getMinutesFromInput( $this->request->get( 'minutesProjected' ) ),
@@ -1085,12 +1085,14 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 				$order	= array( 'timeStart' => 'ASC' );
 				$events	= $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered events ordered by start time
 
-				if( !$events && !$tasks )															//  user has neither tasks nor events
-					continue;																		//  do not send a mail, leave user alone
-
-				$data		= array( 'user' => $user, 'tasks' => $tasks, 'events' => $events );		//  data for mail upcoming object
-				$mail		= new Mail_Work_Mission_Daily( $this->env, $data );						//  create mail and populate data
-				$content	= print( $mail->content );
+				if( $events || $tasks ){															//  user has tasks or events
+					$mail		= new Mail_Work_Mission_Daily( $this->env, array(					//  create mail and populate data
+						'user'		=> $user,
+						'tasks'		=> $tasks,
+						'events'	=> $events
+					) );
+					$content	= print( $mail->getContent( 'htmlRendered' ) );
+				}
 				break;
 			default:
 				throw new InvalidArgumentException( 'Invalid mail type' );
@@ -1101,9 +1103,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	public function testMailNew( $missionId, $asText = NULL ){
 		$data	= array(
-            'mission'   => $this->model->get( $missionId ),
-            'user'      => $this->userMap[$this->userId],
-        );
+			'mission'	=> $this->model->get( $missionId ),
+			'user'		=> $this->userMap[$this->userId],
+		);
 		$mail	= new Mail_Work_Mission_New( $this->env, $data );
 		$asText ? xmp( $mail->contents['text'] ) : print( $mail->contents['html'] );
 		exit;

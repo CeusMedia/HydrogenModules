@@ -594,10 +594,36 @@ table tr th .sortable.right {
 
 
 /*  --  MISSION KANBAN  --  */
+#mission-kanban #day-lists {
+	margin-top: 0;
+	}
 #mission-kanban ul.sortable,
 #mission-kanban div.droppable {
-	border: 1px dotted rgba(127,127,127,0.25);
 	min-height: 200px;
+	max-height: 600px;
+	overflow-y: auto;
+	overflow-x: hidden;
+/*	border: 1px solid rgba(127,127,127,0.25);*/
+	}
+#mission-kanban .work-mission-kanban-lane-list .row-fluid .span3 {
+	border-right: 1px solid rgba(127, 127, 127, 0.25);
+	margin-left: 1.4%;
+	padding-right: 1.4%;
+	}
+#mission-kanban .work-mission-kanban-lane-list .row-fluid .span3:last-child {
+	border-width: 0px;
+	}
+#mission-kanban .work-mission-kanban-lane-list {
+	}
+#mission-kanban .work-mission-kanban-lane-item {
+	padding-bottom: 0.5em;
+	border-bottom: 1px solid rgba(127, 127, 127, 0.5);
+	}
+#mission-kanban .work-mission-kanban-lane-item:last-child {
+	border-width: 0px;
+	}
+#mission-kanban .work-mission-kanban-lane-item h3 {
+	border-bottom: 1px solid rgba(127, 127, 127, 0.15);
 	}
 #mission-kanban .mission-block {
 	border: 1px solid rgba(127,127,127,0.75);
@@ -607,7 +633,8 @@ table tr th .sortable.right {
 	box-sizing: border-box;
 	padding: 0.5em 1em;
 	overflow: hidden;
-	margin: -1px -1px 4px -1px;
+	margin: 0 2px 6px 0;
+/*	margin: -1px -1px 6px -1px;*/
 	}
 #mission-kanban ul.sortable-status-0 {
 	background-yellow: red;
@@ -639,6 +666,9 @@ table tr th .sortable.right {
 #mission-kanban .mission-block .mission-title {
 	font-weight: bold;
 	font-size: 1.1em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	}
 
 
