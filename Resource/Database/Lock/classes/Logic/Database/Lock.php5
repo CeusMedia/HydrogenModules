@@ -72,13 +72,13 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic{
 	}
 
 	public function isLockedByOther( $subject, $entryId ){
-		return $this->isLocked( $subject, $entryId, '!='.$this->userId );
+		return $this->isLocked( $subject, $entryId, '!= '.$this->userId );
 	}
 
 	public function lock( $subject, $entryId, $userId ){
 		if( $this->isLocked( $subject, $entryId, $userId ) )
 			return NULL;
-		if( $this->isLocked( $subject, $entryId, '!='.$userId ) )
+		if( $this->isLocked( $subject, $entryId, '!= '.$userId ) )
 			return FALSE;
 		$this->model->add( array(
 			'userId'	=> (int) $userId,
