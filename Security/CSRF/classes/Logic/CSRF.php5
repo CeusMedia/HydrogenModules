@@ -43,7 +43,7 @@ class Logic_CSRF{
     protected function cancelOutdatedTokens(){
         $outdatedTokens = $this->model->getAll( array(
             'status'    => self::STATUS_OPEN,
-            'timestamp' => '<'.( time() - $this->moduleConfig->get( 'duration' ) ),
+            'timestamp' => '< '.( time() - $this->moduleConfig->get( 'duration' ) ),
         ) );
         foreach( $outdatedTokens as $token ){
             $this->model->edit( $token->tokenId, array(

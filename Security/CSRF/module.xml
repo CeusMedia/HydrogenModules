@@ -54,7 +54,7 @@ list>
 	</relations>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>csrf_tokens`;
-CREATE TABLE IF NOT EXISTS `dp_csrf_tokens` (
+CREATE TABLE IF NOT EXISTS `<%?prefix%>csrf_tokens` (
   `tokenId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status` tinyint(1) NOT NULL,
   `token` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
