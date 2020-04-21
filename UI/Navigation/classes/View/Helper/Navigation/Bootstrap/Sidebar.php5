@@ -10,6 +10,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar{
 	protected $logoIcon;
 	protected $scope			= 'main';
 	protected $style;
+	protected $helperAccountMenu;
 
 	public function __construct( CMF_Hydrogen_Environment $env, Model_Menu $menu ){
 		$this->env		= $env;
