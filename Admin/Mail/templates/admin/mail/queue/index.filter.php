@@ -21,6 +21,7 @@ $optOrder		= array(
 	''				=> '- egal -',
 	'subject'		=> 'Betreff',
 	'enqueuedAt'	=> 'Eingangsdatum',
+	'sentAt'		=> 'Ausgangsdatum',
 );
 $optOrder		= UI_HTML_Elements::Options( $optOrder, $filters->get( 'order' ) );
 
