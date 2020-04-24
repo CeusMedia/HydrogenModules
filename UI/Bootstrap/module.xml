@@ -3,7 +3,7 @@
 	<title>UI: Bootstrap</title>
 	<description><![CDATA[Sleek, intuitive, and powerful front-end framework for faster and easier web development.]]></description>
 	<category>User Interface</category>
-	<version>4.4.1</version>
+	<version>4.4.1-p1</version>
 	<log version="2.3.2">Add Bootstrap v2.3.2.</log>
 	<log version="3.3.6">Add Bootstrap v3.3.6 and option to set used version.</log>
 	<log version="3.3.6-p1">Improve file handling in hook.</log>
@@ -17,6 +17,7 @@
 	<log version="4.1.1-p2">Use general module main switch.</log>
 	<log version="4.1.1-p3">Improve handling of missing library.</log>
 	<log version="4.4.1">Add Bootstrap v4.4.1.</log>
+	<log version="4.4.1-p1">Mark module UI:Font:FontAwesome as needed.</log>
 	<company site="http://twitter.github.com/bootstrap/">Twitter</company>
 	<author site="https://twitter.com/mdo">Mark Otto</author>
 	<author site="https://twitter.com/fat">fat-kun</author>
@@ -92,6 +93,7 @@
 
 	<relations>
 		<needs type="module">JS_jQuery</needs>
+		<needs type="module">UI_Font_FontAwesome</needs>
 		<supports type="module">UI_Helper_Messenger_Bootstrap</supports>
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Bootstrap::onPageApplyModules</hook>
