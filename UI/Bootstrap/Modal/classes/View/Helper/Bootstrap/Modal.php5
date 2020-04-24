@@ -20,8 +20,8 @@ class View_Helper_Bootstrap_Modal{
 	public function __construct( $env ){
 		$this->env			= $env;
 		$this->id			= 'modal-'.uniqid();
-		$this->bsVersion	= $env->getModules()->get( 'UI_Bootstrap' )->config->get( 'version' );
-		$this->isBs4		= version_compare( $this->bsVersion->value, 4, '>=' );
+		$this->bsVersion	= $env->getModules()->get( 'UI_Bootstrap' )->config['version']->value;
+		$this->isBs4		= version_compare( $this->bsVersion, 4, '>=' );
 	}
 
 	public function __toString(){
