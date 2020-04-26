@@ -46,8 +46,8 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 			if( !$page->controller )																//  but no module controller has been selected
 				throw new RangeException( 'Module page '.$page->title.' has no assigned controller' );
 			$controllerName	= strtolower( str_replace( "_", "/", $page->controller ) );				//  get module controller path
-			if( substr( $pagePath, 0, strlen( $controllerName ) ) === $controllerName )				//  module has been addresses by page link
-				return TRUE;																		//  nothing to do here
+			if( substr( $pagePath, 0, strlen( $controllerName ) ) === $controllerName )				//  module has been addressed by page link
+				return TRUE;																		//  let the general dispatcher do the job
 			$page->arguments	= isset( $page->arguments ) ? $page->arguments : array();
 			$action	= $page->action ? $page->action : 'index';										//  default action is 'index'
 			if( $page->arguments ){																	//  but there are path arguments
