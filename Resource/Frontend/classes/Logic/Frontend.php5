@@ -1,5 +1,9 @@
 <?php
 use CMF_Hydrogen_Environment_Resource_Module_Reader as HydrogenModuleReader;
+
+/**
+ *	@todo		remove singleton to have serveral frontend logics for different environments
+ */
 class Logic_Frontend{
 
 	static protected $instance;
@@ -34,47 +38,6 @@ class Logic_Frontend{
 		$this->detectBaseUrl();
 	}
 
-	protected function detectConfig(){
-		$configFile		= $this->path.'config/config.ini';
-		if( !file_exists( $configFile ) )
-			throw new RuntimeException( 'No Hydrogen application found in: '.$this->path );
-		$this->config	= new ADT_List_Dictionary( parse_ini_file( $configFile ) );
-		$this->paths	= array_merge( $this->paths, $this->config->getAll( 'path.', !TRUE ) );
-		unset( $this->paths['scripts.lib'] );
-	}
-
-	/**
-	 *	Tries to resolves frontend URL.
- 	 *	@access		protected
- 	 *	@return		void
- 	 *	@throws		RuntimeException				if URL is not defined
-	 */
-	protected function detectBaseUrl(){
-//		if( $this->env->url )
-//			$this->url		= $this->env->url;
-		/*else*/ if( $this->getAppConfigValue( 'base.url' ) )
-			$this->url	= $this->getAppConfigValue( 'base.url' );
-		else if( $this->getAppConfigValue( 'baseHref' ) )											//  @todo remove in v1.0.0
-			$this->url	= $this->getAppConfigValue( 'baseHref' );									//  @todo remove in v1.0.0
-		else
-			throw new RuntimeException( 'Frontend URL could not been detected' );
-	}
-
-	protected function detectModules(){
-		$index	= new DirectoryIterator( $this->getPath( 'modules' ) );
-		foreach( $index as $entry ){
-			if( preg_match( '@^(.+)(\.xml)$@', $entry->getFilename() ) ){
-				$key	= preg_replace( '@^(.+)(\.xml)$@', '\\1', $entry->getFilename() );
-				$this->modules[$key]	= (object) array(
-					'id'			=> $key,
-					'configFile'	=> $entry->getPathname(),
-					'config'		=> NULL,
-				);
-			}
-		}
-		ksort( $this->modules );
-	}
-
 	public function getAppConfigValue( $key ){
 		$values	= $this->getAppConfigValues( array( $key ) );
 		return array_pop( $values );
@@ -95,12 +58,6 @@ class Logic_Frontend{
 		return $this->config->get( $key );
 	}
 
-	static public function getInstance( $env ){
-		if( !self::$instance )
-			self::$instance	= new self( $env );
-		return self::$instance;
-	}
-
 	public function getDefaultLanguage(){
 		return trim( $this->getConfigValue( 'locale.default' ) );
 	}
@@ -112,6 +69,12 @@ class Logic_Frontend{
 			'parentEnv'		=> $this->env,
 		) );
 
+	}
+
+	static public function getInstance( $env ){
+		if( !self::$instance )
+			self::$instance	= new self( $env );
+		return self::$instance;
 	}
 
 	public function getLanguages(){
@@ -217,7 +180,7 @@ class Logic_Frontend{
 	 *	@access		public
 	 *	@return		string		Frontend URL
 	 *	@deprecated	use getUrl instead
-	 *	@toto		to be removed in 0.4
+	 *	@todo		to be removed in 0.9
 	 */
 	public function getUri(){
 		return $this->getUrl();
@@ -234,6 +197,49 @@ class Logic_Frontend{
 
 	public function hasModule( $moduleId ){
 		return isset( $this->modules[$moduleId] );
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function detectConfig(){
+		$configFile		= $this->path.'config/config.ini';
+		if( !file_exists( $configFile ) )
+			throw new RuntimeException( 'No Hydrogen application found in: '.$this->path );
+		$this->config	= new ADT_List_Dictionary( parse_ini_file( $configFile ) );
+		$this->paths	= array_merge( $this->paths, $this->config->getAll( 'path.', !TRUE ) );
+		unset( $this->paths['scripts.lib'] );
+	}
+
+	/**
+	 *	Tries to resolves frontend URL.
+	 *	@access		protected
+	 *	@return		void
+	 *	@throws		RuntimeException				if URL is not defined
+	 */
+	protected function detectBaseUrl(){
+//		if( $this->env->url )
+//			$this->url		= $this->env->url;
+		/*else*/ if( $this->getAppConfigValue( 'base.url' ) )
+			$this->url	= $this->getAppConfigValue( 'base.url' );
+		else if( $this->getAppConfigValue( 'baseHref' ) )											//  @todo remove in v1.0.0
+			$this->url	= $this->getAppConfigValue( 'baseHref' );									//  @todo remove in v1.0.0
+		else
+			throw new RuntimeException( 'Frontend URL could not been detected' );
+	}
+
+	protected function detectModules(){
+		$index	= new DirectoryIterator( $this->getPath( 'modules' ) );
+		foreach( $index as $entry ){
+			if( preg_match( '@^(.+)(\.xml)$@', $entry->getFilename() ) ){
+				$key	= preg_replace( '@^(.+)(\.xml)$@', '\\1', $entry->getFilename() );
+				$this->modules[$key]	= (object) array(
+					'id'			=> $key,
+					'configFile'	=> $entry->getPathname(),
+					'config'		=> NULL,
+				);
+			}
+		}
+		ksort( $this->modules );
 	}
 }
 ?>
