@@ -3,7 +3,7 @@
 	<title>Resource: Pages</title>
 	<description><![CDATA[Base of providing addressed pages.]]></description>
 	<category>Resource</category>
-	<version>0.9.2</version>
+	<version>0.9.3</version>
 	<log version="0.1.0">Starting this module as Info:Pages.</log>
 	<log version="0.1.1">Later, the extraction to Resource:Pages happened.</log>
 	<log version="0.1.2">This version log is the reduced progress of the former module.</log>
@@ -29,6 +29,7 @@
 	<log version="0.9.0">Migrate core of Info:Pages to Resource:Pages.</log>
 	<log version="0.9.1">Add prototype of config based page model.</log>
 	<log version="0.9.2">Refactor page detection to be more stable.</log>
+	<log version="0.9.3">Extend model by fullpath for faster dispatching.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -48,33 +49,42 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
   `status` tinyint(1) DEFAULT '0',
   `type` tinyint(4) DEFAULT '0',
   `scope` int(10) UNSIGNED DEFAULT '0',
-  `rank` tinyint(1) NOT NULL,
+  `rank` tinyint(1) DEFAULT '0',
   `identifier` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fullpath` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `controller` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `action` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `access` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'public',
+  `access` varchar(10) COLLATE utf8_unicode_ci DEFAULT 'public',
   `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci,
   `format` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'HTML',
   `description` text COLLATE utf8_unicode_ci,
   `keywords` text COLLATE utf8_unicode_ci,
-  `changefreq` varchar(8) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'weekly',
-  `priority` float UNSIGNED NOT NULL DEFAULT '0.5',
+  `changefreq` varchar(8) COLLATE utf8_unicode_ci DEFAULT 'weekly',
+  `priority` float UNSIGNED DEFAULT '0.5',
   `icon` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
   `template` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` decimal(12,0) UNSIGNED NOT NULL,
-  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT 0,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT '0',
   PRIMARY KEY (`pageId`),
   KEY `parentId` (`parentId`),
   KEY `status` (`status`),
   KEY `type` (`type`),
   KEY `scope` (`scope`),
   KEY `identifier` (`identifier`),
+  KEY `fullpath` (`fullpath`),
   KEY `controller` (`controller`),
   KEY `action` (`action`),
   KEY `access` (`access`),
   KEY `format` (`format`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" type="mysql" version="0.9.3"><![CDATA[
+ALTER TABLE `<%?prefix%>pages` ADD `fullpath` VARCHAR(200) NOT NULL AFTER `identifier`, ADD INDEX (`fullpath`);
+ALTER TABLE `<%?prefix%>pages` CHANGE `rank` `rank` TINYINT(1) NULL DEFAULT '0';
+ALTER TABLE `<%?prefix%>pages` CHANGE `access` `access` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'public';
+ALTER TABLE `<%?prefix%>pages` CHANGE `changefreq` `changefreq` VARCHAR(8) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'weekly';
+ALTER TABLE `<%?prefix%>pages` CHANGE `priority` `priority` FLOAT UNSIGNED NULL DEFAULT '0.5';
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>pages`;

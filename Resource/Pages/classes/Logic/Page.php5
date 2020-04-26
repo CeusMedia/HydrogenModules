@@ -22,6 +22,69 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	protected $model			= array();
 
 	public function __onInit(){
+		$moduleNav	= $this->env->getModules()->get( 'UI_Navigation', TRUE, FALSE );
+		if( $moduleNav && $moduleNav->config['menu.source']->value === 'Database' ){
+			$model	= new Model_Page( $this->env );
+			$pages	= $model->getAllByIndices( array(
+				'fullpath'	=> '',
+			) );
+			foreach( $pages as $page ){
+				$way	= '';
+				$parent	= $page;
+				while( $parent->parentId ){
+					$parent	= $model->get( $page->parentId );
+					$way	.= $parent->identifier.'/';
+				}
+				$model->edit( $page->pageId, array( 'fullpath' => $way.$page->identifier ) );
+			}
+		}
+	}
+
+	public function updateFullpath( $pageId, $parentPath = NULL ){
+		$model	= $this->getPageModel();
+		$page	= $model->get( $pageId );
+		if( !$parentPath ){
+			$parentPath	= '';
+			$parent	= $page;
+			while( $parent->parentId ){
+				$parent	= $model->get( $page->parentId );
+				$parentPath	= $parent->identifier.'/'.$parentPath;
+			}
+		}
+		$model->edit( $pageId, array(
+			'fullpath'		=> $parentPath.$page->identifier,
+			'modifiedAt'	=> time(),
+		) );
+		if( (int) $page->type === Model_Page::TYPE_BRANCH )
+			foreach( $model->getAllByIndex( 'parentId', $pageId ) as $subpage )
+				$this->updateFullpath( $subpage->pageId, $parentPath.$page->identifier.'/' );
+	}
+
+	/**
+	 *	Decorates page with its parent pages by adding a list of parent pages to the given page object.
+	 *	@access		public
+	 *	@param		object		$page		Page data object to set list of parent pages to
+	 *	@return		List of parent pages, added to given page object
+	 */
+	public function decoratePathWithParents( &$page ){
+		$model		= $this->getPageModel();
+		$current	= $page;
+		$list		= array();
+		while( $current->parentId ){
+			$candidate	= $model->get( $current->parentId );
+			if( !$candidate )
+				throw new DomainException( vsprintf(
+					'Page %d relates to invalid parent page ID %d',
+					array( $current->pageId, $current->parentId )
+				) );
+//			$current->parent	= $candidate;
+//			$candidate->child	= $current;
+			$list[]		= $candidate;
+			$current	= $candidate;
+		}
+		array_reverse( $list );
+		$page->parents	= $list;
+		return $list;
 	}
 
 	public function getChildren( $pageId, $activeOnly = TRUE ){
@@ -105,6 +168,11 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 			throw new RangeException( 'No page set for controller action: '.$controllerName.':'.$action );
 		}
 		$page	= $this->getPage( $page->pageId );
+		$page->dispatcher	= (object) array(
+			'type'		=> 'module',
+			'module'	=> 'Resource_Page',
+			'strategy'	=> 'controller_action',
+		);
 		return $this->translatePage( $page );
 	}
 
@@ -117,17 +185,22 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 *	@throws		RangeException				if path is not resolvable
 	 *	@throws		RangeException				if path parent part is not resolvable
 	 */
-	public function getPageFromPath( $path, $withParents = FALSE ){
-		$parents	= array();
+	public function getPageFromPath( $path, $withParents = FALSE, $strict = TRUE ){
 		$path		= trim( $path, '/' );
-		$page		= $this->getPageFromPathRecursive( $path, 0, $parents );
-		if( $withParents ){
-			foreach( $parents as $nr => $parent )
-				$parents[$nr]	= $this->translatePage( $parent );											//  apply localization to page
-			array_reverse( $parents );
-			$page->parents	= $parents;
+		try{
+			$page	= $this->getPageFromPathRecursive( $path, 0, TRUE );
+			if( $withParents ){
+				$this->decoratePathWithParents( $page );
+				foreach( $page->parents as $nr => $parent )
+					$page->parents[$nr]	= $this->translatePage( $parent );							//  apply localization to page
+			}
+			return $this->translatePage( $page );													//  return this module controlled page
 		}
-		return $this->translatePage( $page );																//  return this module controlled page
+		catch( Exception $e ){
+			if( $strict )
+				throw new RuntimeException( 'Requested page is not resolvable', 0, $e );
+			return NULL;
+		}
 	}
 
 	/**
@@ -143,8 +216,7 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		$path		= trim( $request->get( '__path' ), '/' );										//  get requested path
 		$pagePath	= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page path is not empty
 		try{
-			$page	= $this->getPageFromPath( $pagePath, $withParents );								//  try to get page by called page path
-			$request->set( 'arguments', $page->arguments );
+			$page	= $this->getPageFromPath( $pagePath, $withParents, TRUE );						// try to get page by called page path
 			return $page;
 		}
 		catch( Exception $e ){
@@ -200,37 +272,112 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	//  --  PROTECTED  --  //
 
 	/**
-	 *	...
+	 *	Tries to find page for given URL path with several strategies.
+	 *	Otherwise returns NULL or throws exception if strict mode is on.
+	 *	Attention: Pages to be found must be atleast hidden (but not disabled) and of type content or module.
+	 *
 	 *	@access		protected
 	 *	@param		string		$path			Path to find page for
 	 *	@param		integer		$parentPageId	Parent page ID to start with (default: 0)
-	 *	@param		array		$parents		Flag: Returns page parents as well (default: no)
-	 *	@return		object						Data object of found page or NULL if nothing found
-	 *	@throws		RangeException				if path is not resolvable
+	 *	@param		boolean		$strict			Flag: strict mode - throw exceptions
+	 *	@return		object|NULL					Data object of found page or NULL if nothing found and not in strict mode
+	 *	@throws		RangeException				if path is not resolvable and strict mode is on
+	 *	@todo		remove strategies absolute_backward and relative_forward since both are buggy
 	 */
-	protected function getPageFromPathRecursive( $path, $parentPageId = 0, & $parents = array() ){
-		$parts		= preg_split( '/\//', $path );
-		$lastPage	= NULL;
-		while( count( $parts ) ){
-			$part		= array_shift( $parts );
-			$indices	= array( 'identifier' => $part, 'parentId' => $parentPageId );
-			$candidate	= $this->getPageModel()->getByIndices( $indices );
-			if( $candidate ){
-				$candidate->arguments	= array();
-				$parentPageId			= $candidate->pageId;
-				if( $lastPage )
-					$parents[]			= $lastPage;
-				$lastPage				= $candidate;
-			}
-			else{
-				if( $lastPage )
-					$lastPage->arguments[]	= $part;
-				break;
+	protected function getPageFromPathRecursive( $path, $parentPageId = 0, $strict = TRUE ){
+		$model	= $this->getPageModel();
+		$parts	= preg_split( '/\//', $path );
+		$indices	= array(																		//  basic indices to find page
+			'type'		=> array( Model_Page::TYPE_CONTENT, Model_Page::TYPE_MODULE ),				//  ... being of page type content or module
+			'status'	=> array( Model_Page::STATUS_HIDDEN, Model_Page::STATUS_VISIBLE ),			//  ... being visible or hidden, but not disabled
+		);
+		$dispatcher	= array(
+			'type'		=> 'module',
+			'module'	=> 'Resource_Page',
+		);
+
+		/**
+		 *	Strategy: fullpath_backward
+		 *
+		 *	Tries to find page by comparing requested path with fullpath of page models.
+		 *	Reduces requested path backwards until matching a fullpath.
+		 *	Found page:
+		 *	 - can be, of course, at every level - parent ID does not matter.
+		 *	 - must be of type Model_Page::TYPE_CONTENT or TYPE_MODULE
+		 *	 - must be visible or atleast hidden
+		 */
+		for( $i=count( $parts ); $i>0; $i-- ){														//  backward resolution
+			$candidate	= $model->getByIndices( array_merge( $indices, array(						//  try to find page ...
+				'fullpath'		=> join( '/', array_slice( $parts, 0, $i ) ),						//  ... having this full path
+			) ) );
+			if( $candidate ){																		//  page found
+				$candidate->arguments	= array_slice( $parts, $i );								//  set cut path parts as action arguments
+				$candidate->dispatcher	= (object) array_merge( $dispatcher, array(
+					'strategy'	=> 'fullpath_backward',
+				) );
+				return $candidate;
 			}
 		}
-		if( !$lastPage )
+
+
+		/**
+		 *	Strategy: absolute_backward
+		 *
+		 *	Tries to find page by identifier, also supporting identifier to contain slashs.
+		 *	This is a fix for strategy relative_forward.
+		 *	Reduces requested path backwards until matching a identifier.
+		 *	Found page:
+		 *	 - must be in root, so having no parent
+		 *	 - must be of type Model_Page::TYPE_CONTENT or TYPE_MODULE
+		 *	 - must be visible or atleast hidden
+		 *	Problem: Does not work for pages in deeper levels
+		 */
+		for( $i=count( $parts ); $i>0; $i-- ){														//  absolute and backward resolution
+			$candidate	= $model->getByIndices( array_merge( $indices, array(						//  try to find page ...
+				'parentId'		=> 0,																//  ... with no parent --> absolute
+				'identifier'	=> join( '/', array_slice( $parts, 0, $i ) ),						//  ... having this sub path
+			) ) );
+			if( $candidate ){																		//  page found
+				$candidate->arguments	= array_slice( $parts, $i );								//  set cut path parts as action arguments
+				$candidate->dispatcher	= (object) array_merge( $dispatcher, array(
+					'strategy'	=> 'absolute_backward',
+				) );
+				return $candidate;
+			}
+		}
+
+		/**
+		 *	Strategy: relative_forward
+		 *
+		 *	Iterates pages recursive by parents starting from top while each path part matches a page identifier.
+		 *	Returns deepest found page, that
+		 *	 - must be of type Model_Page::TYPE_CONTENT or TYPE_MODULE
+		 *	 - must be visible or atleast hidden
+		 *
+		 *	Problem: Does not work if page identifier contains a slash, eg. is like abc/def
+		 */
+		$lastPage	= NULL;
+		while( count( $parts ) ){																	//  relative and forward resolution
+			$part		= array_shift( $parts );													//  take next path part
+			$candidate	= $model->getByIndices( array_merge( $indices, array(						//  try to find page ...
+				'parentId'		=> $parentPageId,
+				'identifier'	=> $part,
+			) ) );
+			if( !$candidate )
+				break;
+			$candidate->arguments	= $parts;
+			$candidate->dispatcher	= (object) array_merge( $dispatcher, array(
+				'strategy'	=> 'relative_forward',
+			) );
+			$parentPageId			= $candidate->pageId;
+			$lastPage				= $candidate;
+		}
+		if( $lastPage )
+			return $lastPage;
+
+		if( $strict )
 			throw new RangeException( 'Page with identifier "'.$path.'" is not resolvable' );
-		return $lastPage;
+		return NULL;
 	}
 
 	protected function getPageModel(){
