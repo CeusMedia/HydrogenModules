@@ -87,6 +87,8 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				$this->messenger->noteError( 'Identifier "'.$data['identifier'].'" already taken' );
 			else{
 				$pageId		= $this->model->add( $data );
+				$logic		= new Logic_Page( $this->env );
+				$logic->updateFullpath( $pageId );
 				$this->env->getMessenger()->noteSuccess( 'Neue Seite "'.$data['title'].'" angelegt.' );
 				$this->restart( 'edit/'.$pageId, TRUE );
 			}
@@ -111,21 +113,22 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			'createdAt'		=> time(),
 		);
 
-		$path		= $this->frontend->getUri();
+		$path		= $this->frontend ? $this->frontend->getUrl() : $this->env->url;
 		if( $parentId && $parent->type && $parent->type == 1 )
 			$path	.= $parent->identifier.'/';
 
+		$moduleIds	= $this->frontend ? $this->frontend->getModules() : array_keys( $this->env->getModules() );
 
 		$this->addData( 'path', $path );
 		$this->addData( 'page', $page );
 		$this->addData( 'parentId', $parentId );
 		$this->addData( 'parent', $parent );
 		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
-		$this->addData( 'modules', $this->frontend->getModules() );
+		$this->addData( 'modules', $moduleIds );
 		$this->addData( 'controllers', $this->getFrontendControllers() );
 		$this->preparePageTree();
 		$script	= '
-ModuleManagePages.PageEditor.frontendUri = "'.$this->frontend->getUri().'";
+ModuleManagePages.PageEditor.frontendUri = "'.$path.'";
 ModuleManagePages.PageEditor.editor = "'.$this->session->get( 'module.manage_pages.editor' ).'";
 ModuleManagePages.PageEditor.editors = '.json_encode( array_keys( $this->getWords( 'editors' ) ) ).';
 ModuleManagePages.PageEditor.init();
@@ -247,7 +250,7 @@ ModuleManagePages.PageEditor.init();
 		$html	= Alg_Text_Filter::stripScripts( $html );
 		$html	= Alg_Text_Filter::stripStyles( $html );
 		$html	= Alg_Text_Filter::stripEventAttributes( $html );
-		//$html	= Alg_Text_Filter::stripTags( $html );
+//		$html	= Alg_Text_Filter::stripTags( $html );
 //		$html	= htmlspecialchars_decode( $html );
 		$html	= preg_replace( "@<[\/\!]*?[^<>]*?>@si", " ", $html );
 		$html	= str_replace( "&nbsp;", " ", $html );
@@ -274,13 +277,10 @@ ModuleManagePages.PageEditor.init();
 			$this->messenger->noteError( $this->getWords( 'msg' )['errorMissingPageId'] );
 			$this->restart( NULL, TRUE );
 		}
-//remark('PageId: '.$pageId);
 		$page	= $this->model->get( $pageId );
 		if( !$page ){
 			if( $strict )
 				throw new OutOfRangeException( 'Invalid page ID given' );
-//print_m($page);
-//die;
 			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidPageId'] );
 			$this->restart( NULL, TRUE );
 		}
@@ -376,6 +376,8 @@ ModuleManagePages.PageEditor.init();
 				$data['modifiedAt']	= time();
 				unset( $data['pageId'] );
 				$this->model->edit( $pageId, $data, FALSE );
+				$logic	= new Logic_Page( $this->env );
+				$logic->updateFullpath( $pageId );
 				$this->env->getMessenger()->noteSuccess( $words->successEdited, $data['title'] );
 				$this->restart( 'edit/'.$pageId, TRUE );
 			}

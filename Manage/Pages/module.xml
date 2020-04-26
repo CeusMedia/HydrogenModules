@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>1.2.3</version>
+	<version>1.2.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -49,6 +49,7 @@
 	<log version="1.2.1">Extract hook to own class.</log>
 	<log version="1.2.2">Support config based page model.</log>
 	<log version="1.2.3">Add support to switch between self and frontend app.</log>
+	<log version="1.2.4">Update fullpath on page changes.</log>
 <!--	<log version="1.2.1">Add page manager logic.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
