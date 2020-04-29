@@ -8,6 +8,7 @@ class View_Helper_Form/* extends CMF_Hydrogen_View_Helper*/{
 	protected $modelBlock;
 	protected $modelForm;
 	protected $returnCode;
+	protected $mode					= '';
 
 	public function __construct( $env ){
 		$this->env	= $env;
@@ -32,15 +33,34 @@ class View_Helper_Form/* extends CMF_Hydrogen_View_Helper*/{
 		return $this;
 	}
 
+	public function setMode( $mode ){
+		if( in_array( $mode, array( NULL, '', 'extended' ) ) ){
+			$this->mode	= (string) $mode;
+		}
+		return $this;
+	}
+
 	public function render(){
-		$resultMessages		= $this->renderResultMessages();
-		$content			= $resultMessages;
+		$resultMessages	= $this->renderResultMessages();
+		$content		= $resultMessages;
 		if( !$this->returnCode )
-			$content		.= $this->renderForm();
+			$content	.= $this->renderForm();
+		$counter		= 0;
 		while( preg_match( '/\[block_(\S+)\]/su', $content ) ){
+			$counter++;
 			$identifier		= preg_replace( '/.*\[block_(\S+)\].*/su', "\\1", $content );
 			$replace		= isset( $this->blocks[$identifier] ) ? $this->blocks[$identifier]->content : '';
 			$pattern		= '/'.preg_quote( '[block_'.$identifier.']' ).'/su';
+			if( $this->mode === 'extended' && strlen( trim( $replace ) ) ){
+				$replace	= UI_HTML_Tag::create( 'div', $replace, array(
+					'class'		=> 'form-view-block',
+					'id'		=> 'form-view-block-'.$this->formId.'-'.$counter,
+				), array(
+					'identifier'	=> $identifier,
+					'block-id'		=> $this->blocks[$identifier]->blockId,
+					'title'			=> $this->blocks[$identifier]->title,
+				) );
+			}
 			$content		= preg_replace( $pattern, $replace, $content, 1 );
 		}
 		$pattern	= '/'.preg_quote( '[helper_captcha]', '/' ).'/';
