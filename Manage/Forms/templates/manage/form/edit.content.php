@@ -17,7 +17,8 @@ return '
 			</div>
 			<div class="buttonbar">
 				'.$navButtons['list'].'
-				'.$navButtons['prevBlocks'].'
+<!--				'./*$navButtons['prevBlocks'].*/'-->
+				'.$navButtons['prevView'].'
 				'.UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;speichern', array(
 					'type'		=> 'submit',
 					'name'		=> 'save',

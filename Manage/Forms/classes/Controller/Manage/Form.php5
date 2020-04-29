@@ -21,6 +21,11 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->modelFill	= new Model_Form_Fill( $this->env );
 		$this->modelRule	= new Model_Form_Rule( $this->env );
 		$this->modelMail	= new Model_Form_Mail( $this->env );
+
+		$module			= $this->env->getModules()->get( 'Manage_Forms' );
+		$mailDomains	= trim( $module->config['mailDomains']->value );
+		$mailDomains	= strlen( $mailDomains ) ? preg_split( '/\s*,\s*/', $mailDomains ) : array();
+		$this->addData( 'mailDomains', $mailDomains );
 	}
 
 	public function add(){
@@ -59,12 +64,14 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	protected function checkId( $formId ){
+	protected function checkId( $formId, $strict = TRUE ){
 		if( !$formId )
 			throw new RuntimeException( 'No form ID given' );
-		if( !( $form = $this->modelForm->get( $formId ) ) )
+		if( $form = $this->modelForm->get( $formId ) )
+			return $form;
+		if( $strict )
 			throw new DomainException( 'Invalid form ID given' );
-		return $form;
+		return FALSE;
 	}
 
 	protected function checkIsPost( $strict = TRUE ){
@@ -98,7 +105,7 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->addData( 'form', $form );
 		$this->addData( 'mailsCustomer', $this->getAvailableCustomerMails() );
 		$this->addData( 'mailsManager', $this->getAvailableManagerMails() );
-
+		$this->addData( 'blocksWithin', $this->getBlocksFromFormContent( $form->content ) );
 		$this->addData( 'rulesManager', $this->modelRule->getAllByIndices( array(
 			'formId'	=> $formId,
 			'type'		=> Model_Form_Rule::TYPE_MANAGER,
@@ -152,13 +159,6 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 
 	}
 
-	public function view( $formId ){
-		$form	= $this->checkId( (int) $formId );
-		$this->addData( 'formId', $formId );
-//		$helper	= new View_Helper_Form( $this->env );
-//		return $helper->setId( $formId )->render();
-	}
-
 	public function remove( $formId ){
 		$this->checkId( $formId );
 		$this->modelForm->remove( $formId );
@@ -180,7 +180,16 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
+	public function view( $formId, $mode = NULL ){
+		$form	= $this->checkId( (int) $formId );
+		$this->addData( 'formId', $formId );
+		$this->addData( 'mode', (string) $mode );
+//		$helper	= new View_Helper_Form( $this->env );
+//		return $helper->setId( $formId )->render();
+	}
+
 	//  --  PROTECTED METHODS  --  //
+
 	protected function getAvailableCustomerMails( $conditions = array(), $orders = array() ){
 //		$conditions	= array( 'identifier' => 'customer_result_%' );
 		$conditions	= array_merge( $conditions, array( 'roleType' => array(
@@ -213,5 +222,22 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 			'title'		=> 'ASC',
 		);
 		return $this->modelMail->getAll( $conditions, $orders );
+	}
+
+	protected function getBlocksFromFormContent( $content ){
+		$modelBlock	= new Model_Form_Block( $this->env );
+		$list		= array();
+		$matches	= array();
+		$content	= preg_replace( '@<!--.*-->@', '', $content );
+		preg_match_all( '/\[block_(\S+)\]/', $content, $matches );
+		if( isset( $matches[0] ) && count( $matches[0] ) ){
+			foreach( array_keys( $matches[0] ) as $nr ){
+				$item	= $modelBlock->getByIndex( 'identifier', $matches[1][$nr] );
+				if( !$item )
+					continue;
+				$list[$matches[1][$nr]]	= $item;
+			}
+		}
+		return $list;
 	}
 }

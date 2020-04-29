@@ -45,13 +45,42 @@ var RuleManager = {
 	},
 	loadFormView: function(){
 		jQuery.ajax({
-			url: "./manage/form/view/"+RuleManager.formId,
+			url: "./manage/form/view/"+RuleManager.formId+"/extended",
 			success: function(html){
 				jQuery("#shadow-form").html(html);
 				jQuery("#shadow-form").find("button[type=submit]").parent().remove();
+				RuleManager.connectBlocksWithinformView();
 				RuleManager.readFormSelects();
 				RuleManager.onReady();
 			}
+		});
+		jQuery("#show-blocks").on("change", function(){
+			jQuery("#shadow-form .form-view-block").removeClass("show");
+			if(jQuery(this).is(":checked"))
+				jQuery("#shadow-form .form-view-block").addClass("show");
+		});
+	},
+	connectBlocksWithinformView: function(){
+		jQuery("#shadow-form .form-view-block").on("mouseenter", function(event){
+			var block		= jQuery(this);
+			var identifier	= block.data('identifier');
+			var link		= jQuery("<a></a>")
+				.html(block.data('identifier'))
+				.html(block.data('title'))
+				.addClass("form-block-link")
+				.attr("href", "./manage/form/block/edit/"+block.data('blockId'));
+			block.prepend(link);
+		}).on("mouseleave", function(event){
+			var block	= jQuery(this).children(".form-block-link").remove();
+		});
+		jQuery("#list-blocks-within").find("a").on("mouseenter", function(){
+			var link = jQuery(this);
+			var identifier	= link.data('identifier');
+			jQuery("#shadow-form .form-view-block[data-identifier='"+identifier+"']")
+				.addClass("focus")
+				.trigger("mouseenter");
+		}).on("mouseleave", function(event){
+			jQuery("#shadow-form .form-view-block").removeClass("focus").trigger("mouseleave");
 		});
 	},
 	onReady: function(){

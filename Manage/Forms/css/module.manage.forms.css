@@ -1,0 +1,30 @@
+#shadow-form {
+	background-color: rgba(191, 191, 191, 0.1);
+	border: 1px solid rgba(191, 191, 191, 0.25);
+	padding: 1em 2em;
+	}
+.form-view-block.show {
+	position: relative;
+	border: 1px dashed rgba(127, 127, 127, 0.5);
+	margin: 0 2px 2px 0;
+	padding: 2px;
+	}
+.form-view-block.show.focus,
+.form-view-block.show:hover {
+	border: 1px solid rgba(0, 0, 0, 0.40);
+	}
+.form-view-block .form-block-link {
+	display: none;
+	}
+.form-view-block.show .form-block-link {
+	display: inline-block;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	z-index: 1000;
+	font-size: 0.8em;
+	padding: 1px 4px;
+	background-color: rgba(0, 0, 0, 0.30);
+	color: white;
+	border-radius: 0 0 0 4px;
+	}

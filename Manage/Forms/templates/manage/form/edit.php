@@ -17,13 +17,13 @@ $navButtons	= array(
 	) ),
 	'prevFacts'		=> renderNavButton( $form->formId, 'facts', 'Fakten', 'prev' ),
 	'prevView'		=> renderNavButton( $form->formId, 'view', 'Ansicht', 'prev' ),
-	'prevBlocks'	=> renderNavButton( $form->formId, 'blocks', 'Blöcke', 'prev' ),
+//	'prevBlocks'	=> renderNavButton( $form->formId, 'blocks', 'Blöcke', 'prev' ),
 	'prevContent'	=> renderNavButton( $form->formId, 'content', 'Inhalt', 'prev' ),
 	'prevManager'	=> renderNavButton( $form->formId, 'rulesManager', 'Manager-Mail-Regeln', 'prev' ),
 	'prevCustomer'	=> renderNavButton( $form->formId, 'rulesCustomer', 'Kunden-Mail-Regeln', 'prev' ),
 
 	'nextView'		=> renderNavButton( $form->formId, 'view', 'Ansicht', 'next' ),
-	'nextBlocks'	=> renderNavButton( $form->formId, 'blocks', 'Blöcke', 'next' ),
+//	'nextBlocks'	=> renderNavButton( $form->formId, 'blocks', 'Blöcke', 'next' ),
 	'nextContent'	=> renderNavButton( $form->formId, 'content', 'Inhalt', 'next' ),
 	'nextManager'	=> renderNavButton( $form->formId, 'rulesManager', 'Manager-Mail-Regeln', 'next' ),
 	'nextCustomer'	=> renderNavButton( $form->formId, 'rulesCustomer', 'Kunden-Mail-Regeln', 'next' ),
@@ -33,7 +33,7 @@ $navButtons	= array(
 $panelFacts			= $this->loadTemplateFile( 'manage/form/edit.facts.php', array( 'navButtons' => $navButtons ) );
 $panelView			= $this->loadTemplateFile( 'manage/form/edit.view.php', array( 'navButtons' => $navButtons ) );
 $panelContent		= $this->loadTemplateFile( 'manage/form/edit.content.php', array( 'navButtons' => $navButtons ) );
-$panelBlocksWithin	= $this->loadTemplateFile( 'manage/form/edit.blocks.within.php', array( 'navButtons' => $navButtons ) );
+//$panelBlocksWithin	= $this->loadTemplateFile( 'manage/form/edit.blocks.within.php', array( 'navButtons' => $navButtons ) );
 $panelRulesManager	= $this->loadTemplateFile( 'manage/form/edit.rules.manager.php', array( 'navButtons' => $navButtons ) );
 $panelRulesCustomer	= $this->loadTemplateFile( 'manage/form/edit.rules.customer.php', array( 'navButtons' => $navButtons ) );
 $panelFills			= '';
@@ -44,7 +44,7 @@ $countRulesCustomer	= count( $rulesCustomer ) ? ' <small class="muted">('.count(
 $tabs	= new \CeusMedia\Bootstrap\Tabs( 'tabs-form' );
 $tabs->add( 'facts', '#', 'Fakten', $panelFacts );
 $tabs->add( 'view', '#', 'Ansicht', $panelView );
-$tabs->add( 'blocks', '#', 'Blöcke', $panelBlocksWithin );
+//$tabs->add( 'blocks', '#', 'Blöcke', $panelBlocksWithin );
 $tabs->add( 'content', '#', 'Inhalt', $panelContent );
 $tabs->add( 'rulesManager', '#', 'Manager-Mail-Regeln'.$countRulesManager, $panelRulesManager );
 $tabs->add( 'rulesCustomer', '#', 'Kunden-Mail-Regeln'.$countRulesCustomer, $panelRulesCustomer );

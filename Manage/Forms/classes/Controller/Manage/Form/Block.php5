@@ -15,12 +15,16 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
 		$this->modelBlock	= new Model_Form_Block( $this->env );
 	}
 
-	protected function checkId( $blockId ){
+	protected function checkId( $blockId, $strict = TRUE ){
 		if( !$blockId )
 			throw new RuntimeException( 'No block ID given' );
-		if( !( $block = $this->modelBlock->get( $blockId ) ) )
+		if( $block = $this->modelBlock->get( $blockId ) )
+			return $block;
+//		if( $block = $this->modelBlock->getByIndex( 'identifier', $blockId ) )
+//			return $block;
+		if( $strict )
 			throw new DomainException( 'Invalid block ID given' );
-		return $block;
+		return FALSE;
 	}
 
 	protected function checkIsPost(){

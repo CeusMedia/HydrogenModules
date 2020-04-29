@@ -33,7 +33,11 @@ if( $rulesManager ){
 		}
 		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'style' => 'margin-bottom: 0' ) );
 
-		$addresses		= join( '<br/>', preg_split( '/\s*,\s*/', $rule->mailAddresses ) );
+		$addresses		= preg_split( '/\s*,\s*/', $rule->mailAddresses );
+		foreach( $addresses as $nr => $address )
+			foreach( $mailDomains as $domain )
+				$addresses[$nr]	= preg_replace( '/'.preg_quote( $domain, '/' ).'$/', '...', $address );
+
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
 			'href'	=> './manage/form/removeRule/'.$form->formId.'/'.$rule->formRuleId,
 			'class'	=> 'btn btn-danger btn-small',
@@ -41,7 +45,7 @@ if( $rulesManager ){
 		$listRules[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $list ),
 			UI_HTML_Tag::create( 'td', $mail ),
-			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $addresses ) ),
+			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', join( '<br/>', $addresses ) ) ),
 			UI_HTML_Tag::create( 'td', $buttonRemove ),
 		) );
 	}
