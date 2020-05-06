@@ -2,7 +2,7 @@
 <module>
 	<title>JS: TinyMCE</title>
 	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.5.7-p6</version>
+	<version>4.5.7-p7</version>
 	<category>JavaScript</category>
 	<company site="http://www.tinymce.com/">www.tinymce.com</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
@@ -125,5 +125,6 @@
 	<relations>
 		<supports type="module">Resource_Frontend</supports>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules">View_Helper_TinyMce::___onPageApplyModules</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_TinyMce::onPageApplyModules</hook>
+	<hook type="resource" resource="Module" event="onGetAvailableContentEditor">Hook_JS_TinyMce::onGetAvailableContentEditor</hook>
 </module>
