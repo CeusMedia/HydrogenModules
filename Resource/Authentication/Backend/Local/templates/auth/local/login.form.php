@@ -108,7 +108,7 @@ HTML::DivClass( 'content-panel content-panel-form', array(
 								) ),
 							), array(
 								'for'	=> 'input_login_username',
-								'class'	=> 'mandatory pull-left'
+								'class'	=> 'mandatory not-pull-left'
 							) ),
 						) ),
 						UI_HTML_Tag::create( 'input', NULL, array(
@@ -131,7 +131,7 @@ HTML::DivClass( 'content-panel content-panel-form', array(
 								) ),
 							), array(
 								'for'	=> 'input_login_password',
-								'class'	=> 'mandatory pull-left'
+								'class'	=> 'mandatory not-pull-left'
 							) ),
 						) ),
 						UI_HTML_Tag::create( 'input', NULL, array(
