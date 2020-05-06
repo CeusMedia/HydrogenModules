@@ -2,7 +2,7 @@
 <module>
 	<title>JS: CodeMirror</title>
 	<description><![CDATA[Component that provides a code editor in the browser.]]></description>
-	<version>5.39.2</version>
+	<version>5.53.2</version>
 	<category>JavaScript</category>
 	<company site="http://codemirror.net/">codemirror.net</company>
 	<author email="marijnh@gmail.com">marijnh@gmail.com</author>
@@ -16,7 +16,7 @@
 	</files>
 	<config protected="no" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config protected="no" type="string" name="load.cdn" values="cdnjs,configJsLib" title="Name of CDN to use (configJsLib is deprecated configured Ceus Media CDN)">cdnjs</config>
-	<config protected="no" type="string" name="load.version" values="">5.39.2</config>
+	<config protected="no" type="string" name="load.version" values="">5.53.2</config>
 	<config protected="no" type="boolean" name="load.minified" title="Load minified resource file">yes</config>
 	<config protected="no" type="boolean" name="load.map" title="Load minification map (for dev mode)">no</config>
 	<config protected="yes" type="string" name="load.modes">css,xml,javascript,clike,php,htmlmixed,sql</config>
@@ -38,4 +38,5 @@
 	<config protected="no" type="string" name="auto.selector">textarea.CodeMirror-auto</config>
 	<config protected="no" type="boolean" name="auto.verbose">no</config>
 	<hook type="resource" resource="Page" event="applyModules">Hook_JS_CodeMirror::onPageApplyModules</hook>
+	<hook type="resource" resource="Module" event="onGetAvailableContentEditor">Hook_JS_CodeMirror::onGetAvailableContentEditor</hook>
 </module>
