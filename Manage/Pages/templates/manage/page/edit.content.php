@@ -10,17 +10,11 @@ else{
 	foreach( $versions as $entry )
 		$optVersion[$entry->version]	= $entry->version;
 
+	$editor		= $editor ?: current( array_keys( $editors ) );
+
 	$optVersion	= UI_HTML_Elements::Options( $optVersion, $version );
-
-	if( $page->format === "MD" )
-		unset( $words['editors']['TinyMCE'] );
-	$optEditor	= $words['editors'];
-
-	$optEditor	= UI_HTML_Elements::Options( $optEditor, $editor );
-
-	$optFormat	= $words['formats'];
-
-	$optFormat	= UI_HTML_Elements::Options( $optFormat, $page->format );
+	$optEditor	= UI_HTML_Elements::Options( $editors, $editor );
+	$optFormat	= UI_HTML_Elements::Options( $words['formats'], $page->format );
 
 	$format		= $page->format === "MD" ? "Markdown" : "HTML";
 
@@ -29,7 +23,7 @@ else{
 		$fieldVersion	= '
 				<div class="span2">
 					<label for="input_page_version">'.$words['edit']['labelVersion'].'</label>
-					<select class="span12" name="page_version" id="input_page_version" onchange="loadVersion('.$page->pageId.', this.value);">'.$optVersion.'</select>
+					<select class="span12" name="page_version" id="input_page_version" onchange="ModuleManagePages.PageEditor.loadVersion('.$page->pageId.', this.value);">'.$optVersion.'</select>
 				</div>';
 		}
 
@@ -38,7 +32,7 @@ else{
 	<div class="content-panel-inner">
 		<form action="./manage/page/edit/'.$page->pageId.'/'.$version.'" method="post" class="cmFormChange-auto form-changes-auto">
 			<div class="row-fluid">
-				<div class="span3">
+				<div class="span4">
 					<label for="input_page_editor">'.$words['edit']['labelEditor'].'</label>
 					<select class="span12" name="page_editor" id="input_page_editor">'.$optEditor.'</select>
 		<!--			<div class="input-prepend">
@@ -70,9 +64,6 @@ else{
 </div>
 	<script>
 var pageType = '.(int) $page->type.';
-function loadVersion(pageId, version){
-	document.location.href="./manage/page/edit/"+pageId+"/"+version;
-}
 	</script>';
 }
 return $content;

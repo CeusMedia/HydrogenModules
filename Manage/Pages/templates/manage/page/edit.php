@@ -11,7 +11,10 @@ $tabTemplates	= array(
 //if( !$appHasMetaModule )
 //	unset( $words['tabs']['meta'] );
 
-$tabs		= $view->renderTabs( $words['tabs'], $tabTemplates, $tab );
+//print_m( $tab );die;
+//print_m( $env->getSession()->getAll() );die;
+
+$tabs		= $view->renderTabs( $words['tabs'], $tabTemplates, $tab ?: current( array_keys( $tabTemplates ) ) );
 
 $panelTree	= $view->loadTemplateFile( 'manage/page/tree.php' );
 

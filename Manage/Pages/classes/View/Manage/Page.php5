@@ -71,7 +71,7 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 	}
 
 	public function renderTree( $tree, $currentPageId = NULL ){
-		$app	= $this->getData( 'source' );
+		$app	= $this->getData( 'app' );
 		$source	= $this->getData( 'source' );
 
 		$isSelfApp		= $app === 'self';

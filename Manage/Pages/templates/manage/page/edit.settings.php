@@ -17,7 +17,7 @@ $fieldAccess	= '';
 if( $useAuth ){
 	$optAccess		= UI_HTML_Elements::Options( $words['accesses'], $page->access );
 	$fieldAccess	= '
-		<div class="span3">
+		<div class="span4">
 			<label for="input_page_access">'.$w->labelAccess.'</label>
 			<select name="page_access" class="span12 optional-trigger has-optionals" id="input_page_access">'.$optAccess.'</select>
 		</div>';
@@ -25,8 +25,20 @@ if( $useAuth ){
 
 return '
 <div class="content-panel content-panel-form">
+<!--	<h3><span class="muted">Seite:</span> '.$page->title.'</h3>-->
 	<div class="content-panel-inner">
 		<form action="./manage/page/edit/'.$current.'/'.$version.'" method="post" class="cmFormChange-auto form-changes-auto">
+			<h4>Erscheinungsbild</h4>
+			<div class="row-fluid">
+				<div class="span6">
+					<label for="input_page_title">'.$w->labelTitle.'</label>
+					<input type="text" name="page_title" id="input_page_title" class="span12" value="'.htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ).'" required/>
+				</div>
+				<div class="span3">
+					<label for="input_page_icon">'.$w->labelIcon.'</label>
+					<input type="text" name="page_icon" id="input_page_icon" class="span12" value="'.htmlentities( $page->icon, ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_page_identifier" class="mandatory required">'.$w->labelIdentifier.'</label>
@@ -36,56 +48,49 @@ return '
 					</div>
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="span6">
-					<label for="input_page_title">'.$w->labelTitle.'</label>
-					<input type="text" name="page_title" id="input_page_title" class="span12" value="'.htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ).'" required/>
-				</div>
-				<div class="span3">
-					<label for="input_page_status">'.$w->labelStatus.'</label>
-					<select name="page_status" class="span12" id="input_page_status">'.$optStatus.'</select>
-				</div>
-				<div class="span3">
-					<label for="input_page_icon">'.$w->labelIcon.'</label>
-					<input type="text" name="page_icon" id="input_page_icon" class="span12" value="'.htmlentities( $page->icon, ENT_QUOTES, 'UTF-8' ).'"/>
-				</div>
-			</div>
+			<h4>Einordnung</h4>
 			<div class="row-fluid">
 				<div class="span5">
 					<label for="input_page_scope">'.$w->labelScope.'</label>
 					<select name="page_scope" class="span12" id="input_page_scope">'.$optScope.'</select>
 				</div>
-				<div class="span1">
-					<label for="input_page_rank">'.$w->labelRank.'</label>
-					<input type="text" name="page_rank" id="input_page_rank" class="span12 numeric" value="'.htmlentities( $page->rank, ENT_QUOTES, 'UTF-8' ).'" required/>
-				</div>
-				<div class="span6 optional page_type page_type-0 page_type-2" style="display: none">
+				<div class="span5 optional page_type page_type-0 page_type-2" style="display: none">
 					<label for="input_page_parentId">'.$w->labelParentId.'</label>
 					<select name="page_parentId" class="span12" id="input_page_parentId">'.$optParent.'</select>
 				</div>
+				<div class="span2">
+					<label for="input_page_rank">'.$w->labelRank.'</label>
+					<input type="text" name="page_rank" id="input_page_rank" class="span12 numeric" value="'.htmlentities( $page->rank, ENT_QUOTES, 'UTF-8' ).'" required/>
+				</div>
 			</div>
+			<h4>Inhalt</h4>
 			<div class="row-fluid">
-				<div class="span5">
+				<div class="span4">
 					<label for="input_page_type">'.$w->labelType.'</label>
 					<select name="page_type" class="span12 optional-trigger has-optionals" id="input_page_type" data-onchange="showOptionals(this);">'.$optType.'</select>
 				</div>
-				<div class="span3 optional page_type page_type-0" style="display: none">
+				<div class="span3 optional page_type page_type-0 page_type-2" style="display: none">
+					<label for="input_page_template">'.$w->labelTemplate.'</label>
+					<select name="page_template" class="span12" id="input_page_template">'.$optTemplate.'</select>
+				</div>
+				<div class="span2 optional page_type page_type-0" style="display: none">
 					<label for="input_page_format">'.$w->labelFormat.'</label>
 					<select name="page_format" id="input_page_format" class="span12">'.$optFormat.'</select>
 				</div>
-				<div class="span4 optional page_type page_type-2" style="display: none">
+				<div class="span3 optional page_type page_type-2" style="display: none">
 					<label for="input_page_controller">'.$w->labelController.'</label>
 					<select name="page_controller" class="span12" id="input_page_controller">'.$optController.'</select>
 				</div>
-				<div class="span3 optional page_type page_type-2" style="display: none">
+				<div class="span2 optional page_type page_type-2" style="display: none">
 					<label for="input_page_action">'.$w->labelAction.'</label>
 					<input type="text" name="page_action" class="span12" id="input_page_action" value="'.htmlentities( $page->action, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
+			<h4>Erreichbarkeit</h4>
 			<div class="row-fluid">
-				<div class="span4 optional page_type page_type-0 page_type-2" style="display: none">
-					<label for="input_page_template">'.$w->labelTemplate.'</label>
-					<select name="page_template" class="span12" id="input_page_template">'.$optTemplate.'</select>
+				<div class="span3">
+					<label for="input_page_status">'.$w->labelStatus.'</label>
+					<select name="page_status" class="span12" id="input_page_status">'.$optStatus.'</select>
 				</div>
 				'.$fieldAccess.'
 			</div>

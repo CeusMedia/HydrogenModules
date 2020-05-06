@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>1.2.4</version>
+	<version>1.2.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -50,12 +50,16 @@
 	<log version="1.2.2">Support config based page model.</log>
 	<log version="1.2.3">Add support to switch between self and frontend app.</log>
 	<log version="1.2.4">Update fullpath on page changes.</log>
+	<log version="1.2.5">Extract AJAX actions to own controller.</log>
+	<log version="1.2.6">Rearrange page add and edit forms.</log>
+	<log version="1.2.7">Add hook to detect available editors.</log>
 <!--	<log version="1.2.1">Add page manager logic.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/Page.php5</class>
+		<class>Controller/Manage/Page/Ajax.php5</class>
 <!--		<class>Logic/PageManager.php5</class>-->
 		<class>View/Manage/Page.php5</class>
 		<class>Hook/Manage/Page.php5</class>
@@ -70,14 +74,17 @@
 		<template>manage/page/tree.php</template>
 		<locale>de/manage/page.ini</locale>
 		<locale>de/html/manage/page/index.html</locale>
+		<locale>de/html/manage/page/sitemap/top.html</locale>
 		<locale>en/manage/page.ini</locale>
 		<locale>en/html/manage/page/index.html</locale>
+		<locale>en/html/manage/page/sitemap/top.html</locale>
 		<script load="auto">module.manage.pages.js</script>
 		<style load="auto">module.manage.pages.css</style>
 	</files>
-    <config type="string" protected="yes" name="site.domain">localhost</config>
-    <config type="string" protected="yes" name="site.path">/</config>
-    <config type="string" protected="user" name="editor" values="none,CodeMirror,Ace,TinyMCE">TinyMCE</config>
+	<config type="string" protected="yes" name="site.domain">localhost</config>
+	<config type="string" protected="yes" name="site.path">/</config>
+	<config type="string" protected="user" name="editor.html" values="none,CodeMirror,Ace,TinyMCE">Ace</config>
+	<config type="string" protected="user" name="editor.markdown" values="none,CodeMirror,Ace">Ace</config>
 	<relations>
 		<needs type="module">JS_Ace</needs>
 		<needs type="module">JS_CodeMirror</needs>
@@ -92,8 +99,10 @@
 	<link access="acl" path="manage/page/ajaxBlacklistSuggestedKeywords"/>
 	<link access="acl" path="manage/page/ajaxOrderPages"/>
 	<link access="acl" path="manage/page/ajaxSaveContent"/>
-	<link access="acl" path="manage/page/ajaxSetEditor"/>
-	<link access="acl" path="manage/page/ajaxSetTab"/>
+<!--	<link access="acl" path="manage/page/ajaxSetEditor"/>-->
+<!--	<link access="acl" path="manage/page/ajaxSetTab"/>-->
+	<link access="acl" path="manage/page/ajax/setEditor"/>
+	<link access="acl" path="manage/page/ajax/setTab"/>
 	<link access="acl" path="manage/page/ajaxSuggestKeywords"/>
 	<link access="acl" path="manage/page/copy"/>
 	<link access="acl" path="manage/page/edit"/>

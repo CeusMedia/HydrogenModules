@@ -121,7 +121,7 @@ return '
 				</div>-->
 			</div>
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
+				<button type="submit" name="save" class="btn btn-primary"><i class="fa fa-fw fa-check"></i> '.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>

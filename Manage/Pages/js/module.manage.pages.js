@@ -16,7 +16,7 @@ ModuleManagePages.PageEditor = {
 		if(!(words))
 			return;
 		jQuery.ajax({
-			url: "./manage/page/ajaxBlacklistSuggestedKeywords",
+			url: "./manage/page/ajax/blacklistSuggestedKeywords",
 			data: {pageId: pageId, words: words},
 			method: "post",
 			dataType: "JSON",
@@ -40,6 +40,10 @@ ModuleManagePages.PageEditor = {
 		ModuleManagePages.PageEditor._initSortable();
 	},
 
+	loadVersion: function(pageId, version){
+		document.location.href="./manage/page/edit/"+pageId+"/"+version;
+	},
+
 	loadPagePreview: function(){
 		var iframe = jQuery("<iframe></iframe>");
 		iframe.addClass("preview");
@@ -57,9 +61,10 @@ ModuleManagePages.PageEditor = {
 
 	setEditor: function(event){
 		event.stopPropagation();
+		var format = jQuery("#input_page_format").val();
 		var value = jQuery("#input_page_editor").val();
 		jQuery.ajax({
-			url: "./manage/page/ajaxSetEditor/"+value,
+			url: "./manage/page/ajax/setEditor/"+value+"/"+format,
 			success: function(){
 				jQuery("#input_page_editor").data("original-value", value).trigger("keyup.FormChanges");
 				document.location.reload();
@@ -93,7 +98,7 @@ ModuleManagePages.PageEditor = {
 				},
 				"Ctrl-S": function(cm) {
 					jQuery.ajax({
-						url: "./manage/page/ajaxSaveContent/",
+						url: "./manage/page/ajax/saveContent/",
 						data: {content: cm.getValue(), pageId: ModuleManagePages.PageEditor.pageId},
 						dataType: "json",
 						method: "post",
@@ -141,7 +146,7 @@ ModuleManagePages.PageEditor = {
 
 	suggestKeyWords: function(pageId, id){
 		jQuery.ajax({
-			url: "./manage/page/ajaxSuggestKeywords",
+			url: "./manage/page/ajax/suggestKeywords",
 			data: {pageId: pageId},
 			method: "post",
 			dataType: "JSON",
@@ -208,12 +213,11 @@ ModuleManagePages.PageEditor = {
 			if(key == 'preview')
 				ModuleManagePages.PageEditor.loadPagePreview();
 			jQuery.ajax({
-				url: "./manage/page/ajaxSetTab/"+key,
+				url: "./manage/page/ajax/setTab/"+key,
 				type: "post"
 			});
 		});
-		if(this.format.toUpperCase() === "MD" && this.editor.toLowerCase() === "tinymce")
-			this.editor = 'codemirror';
+
 		switch(this.editor.toLowerCase()){
 			case 'tinymce':
 				ModuleManagePages.PageEditor.setupTinyMCE();
@@ -260,7 +264,7 @@ ModuleManagePages.PageEditor = {
 					pageIds.push(jQuery(this).data("pageId"));
 				});
 				jQuery.ajax({
-					url: "./manage/page/ajaxOrderPages",
+					url: "./manage/page/ajax/orderPages",
 					data: {pageIds: pageIds},
 					method: "POST",
 					success: function(){}

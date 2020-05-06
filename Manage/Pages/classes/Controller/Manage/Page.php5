@@ -8,63 +8,77 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 	protected $words;
 	protected $frontend;
 	protected $patternIdentifier	= '@[^a-z0-9_/-]@';
+	protected $sessionPrefix		= 'filter_manage_pages_';
+	protected $moduleConfig;
+
+	protected $appFocus;
+	protected $appSession;
+	protected $appLanguages;
+	protected $envManaged;
+	protected $defaultLanguage;
 
 	protected function __onInit(){
-		$config				= $this->env->getConfig()->getAll( 'module.manage_pages.', TRUE );
+		$this->request			= $this->env->getRequest();
+		$this->messenger		= $this->env->getMessenger();
+		$this->words			= $this->getWords();
+		$this->session			= $this->env->getSession();
+		$this->frontend			= Logic_Frontend::getInstance( $this->env );
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_pages.', TRUE );
 
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->words		= $this->getWords();
-		$this->session		= $this->env->getSession();
-		$this->frontend		= NULL;
+		$this->appFocus			= 'self';
+		$this->appSession		= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
+		$this->envManaged		= $this->env;
+		$this->appLanguages		= $this->env->getLanguage()->getLanguages();
+		$this->defaultLanguage	= current( array_keys( $this->env->getLanguage()->getLanguages() ) );
 
-		$apps			= array(
-			'self'		=> 'Administration',
-			'frontend'	=> 'Webseite',
-		);
-		$app	= $this->session->get( 'module.manage_pages.app' );
-		if( !array_key_exists( $app, $apps ) )
-			$app	= current( array_keys( $apps ) );
-		if( $app !== $this->session->get( 'module.manage_pages.app' ) )
-			$this->session->remove( 'module.manage_pages.language' );
+		$apps	= array();
 
-		if( $app === 'frontend' ){
-			$this->frontend		= Logic_Frontend::getInstance( $this->env );
-			$this->envManaged	= $this->frontend->getEnv();
-			$this->languages	= $this->frontend->getLanguages();
-//			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
-//			$source	= $this->frontend->getModuleConfigValue( 'UI_Navigation', 'menu.source' );
-			$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
+		if( realpath( $this->frontend->getPath() ) !== realpath( $this->env->uri ) ){				//  frontend is different from self
+			$apps			= array(
+				'self'		=> 'Administration',
+				'frontend'	=> 'Webseite',
+			);
+			$this->appFocus	= $this->session->get( $this->sessionPrefix.'app' );
+			if( !array_key_exists( $this->appFocus, $apps ) )
+				$this->appFocus	= current( array_keys( $apps ) );
+//			if( $this->appFocus !== $this->session->get( $this->sessionPrefix.'app' ) )
+//				$this->session->remove( $this->sessionPrefix.'language' );
+
+			if( $this->appFocus === 'frontend' ){
+				if( !$this->envManaged->hasModule( 'Resource_Pages' ) ){
+					$this->messenger->noteFailure( 'No support for pages available in frontend environment. Access denied.' );
+					$this->session->set( $this->sessionPrefix.'app', 'self' );
+					$this->restart();
+				}
+				$this->envManaged	= $this->frontend->getEnv();
+				$this->appSession	= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
+				$this->appLanguages	= $this->frontend->getLanguages();
+	//			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+	//			$source	= $this->frontend->getModuleConfigValue( 'UI_Navigation', 'menu.source' );
+				$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
+			}
 		}
-		else{
-			$this->envManaged		= $this->env;
-			$this->languages		= $this->env->getLanguage()->getLanguages();
-			$this->defaultLanguage	= current( array_keys( $this->env->getLanguage()->getLanguages() ) );
-		}
+		if( $this->session->get( $this->sessionPrefix.'app' ) !== $this->appFocus )
+			$this->session->set( $this->sessionPrefix.'app', $this->appFocus );
+
 		$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
 
-//		$this->messenger->noteNotice( json_encode( array( 'Source' => $source, 'App' => $app ) ) );
 		if( $source === 'Database' )
 			$this->model		= new Model_Page( $this->envManaged );
 		else if( $source === 'Config' )
 			$this->model		= new Model_Config_Page( $this->envManaged );
 
 		if( $this->defaultLanguage )
-			if( !$this->session->get( 'module.manage_pages.language' ) )
+			if( !$this->appSession->get( 'language' ) )
 				$this->setLanguage( $this->defaultLanguage );
 
 		$this->addData( 'apps', $apps );
-		$this->addData( 'app', $app );
+		$this->addData( 'app', $this->appFocus );
 		$this->addData( 'source', $source );
 		$this->addData( 'frontend', $this->frontend );
-		$this->addData( 'languages', $this->languages );
-		$this->addData( 'language', $this->session->get( 'module.manage_pages.language' ) );
+		$this->addData( 'languages', $this->appLanguages );
+		$this->addData( 'language', $this->appSession->get( 'language' ) );
 		$this->addData( 'useAuth', $this->envManaged->hasModule( 'Resource_Authentication' ) );
-
-		if( !$this->envManaged->hasModule( 'Resource_Pages' ) ){
-			$this->messenger->noteFailure( 'No support for pages available in frontend environment. Access denied.' );
-			$this->restart();
-		}
 	}
 
 	public function add( $parentId = 0 ){
@@ -123,151 +137,18 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->addData( 'page', $page );
 		$this->addData( 'parentId', $parentId );
 		$this->addData( 'parent', $parent );
-		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
+		$this->addData( 'scope', $this->appSession->get( 'scope' ) );
 		$this->addData( 'modules', $moduleIds );
 		$this->addData( 'controllers', $this->getFrontendControllers() );
 		$this->preparePageTree();
+		$this->collectMasterTemplates();
 		$script	= '
 ModuleManagePages.PageEditor.frontendUri = "'.$path.'";
-ModuleManagePages.PageEditor.editor = "'.$this->session->get( 'module.manage_pages.editor' ).'";
-ModuleManagePages.PageEditor.editors = '.json_encode( array_keys( $this->getWords( 'editors' ) ) ).';
+ModuleManagePages.PageEditor.editor = "'.$this->appSession->get( 'editor.'.strtolower( $page->format ) ).'";
+//ModuleManagePages.PageEditor.editors = '.json_encode( array_keys( $this->getWords( 'editors' ) ) ).';
 ModuleManagePages.PageEditor.init();
 ';
 		$this->env->getPage()->js->addScriptOnReady( $script );
-	}
-
-	public function ajaxOrderPages(){
-		$pageIds	= $this->request->get( 'pageIds' );
-		foreach( $pageIds as $nr => $pageId )
-			$this->model->edit( $pageId, array( 'rank' => $nr + 1 ) );
-		header( "Content-Type: application/json" );
-		print( json_encode( TRUE ) );
-		exit;
-	}
-
-	public function ajaxSaveContent(){
-		$content	= $this->request->get( 'content' );
-		$pageId		= $this->request->get( 'pageId' );
-		$result		= array( 'status' => FALSE );
-		try{
-			/*	@todo remove this old string-based solution soon */
-			if( preg_match( '/[a-z]/', $pageId ) ){
-				if( $page = $this->model->getByIndex( 'identifier', $pageId ) ){
-					$this->model->edit( $page->pageId, array(
-						'content'		=> $content,
-						'modifiedAt'	=> time(),
-					), FALSE );
-					$result	= array( 'pageId' => $pageId, 'content' => $content );
-					$result	= array( 'status' => TRUE );
-				}
-			}
-			else if( $pageId ){
-				if( $page = $this->model->get( (int) $pageId ) ){
-					$this->model->edit( $page->pageId, array(
-						'content'		=> $content,
-						'modifiedAt'	=> time(),
-					), FALSE );
-					$result	= array( 'status' => TRUE );
-				}
-			}
-		}
-		catch( Exception $e ){
-			$result['error']	= $e->getMessage();
-		}
-		header( "Content-Type: application/json" );
-		print( json_encode( $result ) );
-		exit;
-	}
-
-	public function ajaxSetEditor( $editor ){
-		$this->session->set( 'module.manage_pages.editor', $editor );
-		exit;
-	}
-
-	public function ajaxSetTab( $tabKey ){
-		$this->session->set( 'module.manage_pages.tab', $tabKey );
-		exit;
-	}
-
-	public function ajaxBlacklistSuggestedKeywords(){
-		try{
-			$pageId			= $this->request->get( 'pageId' );					//  get page ID from request
-			$page			= $this->checkPageId( $pageId );					//  check if page ID is valid
-			$blacklistFile	= 'config/terms.blacklist.txt';
-			$wordsInput		= trim( $this->request->get( 'words' ) );			//  get string of whitespace concatenated words from request
-			$wordsGiven		= array();											//  prepare empty list of given words to add to blacklist
-			if( strlen( trim( $wordsInput ) ) )									//  given string of listed keywords is not empty
-				$wordsGiven		= preg_split( '/\s*(,|\s)\s*/', $wordsInput );	//  split to list of words to add to blacklist
-			$wordsAdded		= array();											//  prepare empty list of words added to blacklist
-			if( count( $wordsGiven ) ){											//  atleast one word is given
-				if( !file_exists( $blacklistFile ) )							//  blacklist file is not existing, yet
-					touch( $blacklist );										//  create empty list file
-				$editor	= new \FS_File_List_Editor( $blacklistFile );			//  start list editor
-				foreach( $wordsGiven as $wordToAdd ){							//  iterate trimmed words
-					if( !$editor->hasItem( $wordToAdd ) )						//  word is not in list
-						$editor->add( trim( $wordToAdd ) );						//  add word to list and save
-				}
-			}
-			$blacklist	= \FS_File_List_Reader::read( $blacklistFile );			//  read list of words in blacklist
-
-			$pages	= $this->model->getAll();
-			foreach( $pages as $page ){
-				$keywords	= array();
-				if( strlen( trim( $page->keywords ) ) )
-					$keywords	= preg_split( '/\s*,\s*/', $page->keywords );
-				if( $keywords ){
-					$reduced	= array_diff( $keywords, $blacklist );
-					if( count( $reduced ) !== count( $keywords ) ){
-						$this->model->edit( $page->pageId, array(
-							'keywords'	=> join( ', ', $reduced )
-						) );
-					}
-				}
-			}
-			$page		= $this->checkPageId( $pageId );						//  get updated page object
-			$keywords	= preg_split( '/\s*,\s*/', $page->keywords );
-			print( json_encode( array(											//  respond to client
-				'status'	=> 'data',											//  that this operation has been successful
-				'data'		=> array(
-//					'changed'	=> count( $wordsGiven ),
-					'keywords'	=> $keywords,									//  updated page keywords
-					'blacklist'	=> $blacklist,									//  updated blacklisted words
-			) ) ) );
-		}
-		catch( Exception $e ){													//  an exception has been thrown
-			print( json_encode( array(											//  respond to client
-				'status'	=> 'exception',										//  that this is an error
-				'data'		=> $e->getMessage(),								//  provider exception message as error message
-			) ) );
-		}
-		exit;																	//  quit anyways since this is an AJAX request
-	}
-
-	public function ajaxSuggestKeywords(){
-		$pageId	= $this->request->get( 'pageId' );
-		$page	= $this->checkPageId( $pageId );
-		$html	= Alg_Text_Filter::stripComments( $page->content );
-		$html	= Alg_Text_Filter::stripScripts( $html );
-		$html	= Alg_Text_Filter::stripStyles( $html );
-		$html	= Alg_Text_Filter::stripEventAttributes( $html );
-//		$html	= Alg_Text_Filter::stripTags( $html );
-//		$html	= htmlspecialchars_decode( $html );
-		$html	= preg_replace( "@<[\/\!]*?[^<>]*?>@si", " ", $html );
-		$html	= str_replace( "&nbsp;", " ", $html );
-		$blacklist	= 'config/terms.blacklist.txt';
-		if( file_exists( $blacklist ) )
-			Alg_Text_TermExtractor::loadBlacklist( $blacklist );
-		$terms	= Alg_Text_TermExtractor::getTerms( $html );
-		$list	= array();
-		foreach( $terms as $term => $count )
-			if( preg_match( '/^[A-Z]/', $term ) )
-				if( preg_match( '/[A-Z]$/i', $term ) )
-					$list[]	= htmlspecialchars_decode( html_entity_decode( $term ) );
-		print( json_encode( array(
-			'status'	=> 'data',
-			'data'		=> $list
-		) ) );
-		exit;
 	}
 
 	protected function checkPageId( $pageId, $strict = FALSE ){
@@ -303,12 +184,30 @@ ModuleManagePages.PageEditor.init();
 		$isFromConfig	= $source == 'Config';
 		$isFromDatabase	= $source == 'Database';
 		$page		= $this->checkPageId( $pageId );
-		$scope		= (int) $this->session->get( 'module.manage_pages.scope' );
+		$scope		= (int) $this->appSession->get( 'scope' );
 
 //		$logic		= Logic_Versions::getInstance( $this->env );
 
-		if( !$this->session->get( 'module.manage_pages.editor' ) )
-			$this->session->set( 'module.manage_pages.editor', $this->env->getConfig()->get( 'module.manage_pages.editor' ) );
+		$defaultEditor	= $this->moduleConfig->get( 'editor'.'.'.strtolower( $page->format ) );
+		$currentEditor	= $this->session->get( $this->sessionPrefix.$this->appFocus.'.editor' );
+
+		$editors	= array();
+		$helper		= new UI_Helper_ContentEditor( $this->env );
+		$helper->setDefaultEditor( $defaultEditor );
+		$helper->setCurrentEditor( $currentEditor );
+		$helper->setFormat( $page->format );
+		foreach( $this->getWords( 'editor-types' ) as $typeKey => $typeTemplate ){
+			$helper->setType( $typeKey );
+			$helper->setLabelTemplate( $typeTemplate );
+			foreach( $helper->getEditors() as $editorKey => $editorLabel )
+				$editors[$editorKey]	= $editorLabel;
+		}
+		$editors['source']	= 'Quellcode';
+
+		if( !$this->appSession->get( 'editor' ) ){
+			$this->session->set( $this->sessionPrefix.$this->appFocus.'.editor', $helper->getBestEditor() );
+			$this->appSession->get( 'editor', $defaultEditor );
+		}
 
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'msg' );
@@ -341,7 +240,7 @@ ModuleManagePages.PageEditor.init();
 //				if( $this->env->getModules()->has( 'Resource_Localization' ) ){							//  localization module is installed
 				if( class_exists( 'Logic_Localization' ) ){							//  localization module is installed
 					$localization	= new Logic_Localization( $this->env );
-					$localization->setLanguage( $this->session->get( 'module.manage_pages.language' ) );
+					$localization->setLanguage( $this->appSession->get( 'language' ) );
 					$idTitle	= 'page.'.$page->identifier.'-title';
 					$idContent	= 'page.'.$page->identifier.'-content';
 					$title		= $this->request->get( 'page_title' );
@@ -407,7 +306,7 @@ ModuleManagePages.PageEditor.init();
 
 		$path		= $this->envManaged->getBaseUrl();
 		$versions	= array();
-		$this->session->set( 'module.manage_pages.scope', $page->scope );
+		$this->session->set( $this->sessionPrefix.$this->appFocus.'.scope', $page->scope );
 		if( $page->parentId ){
 			$parent	= $this->model->get( (int) $page->parentId );
 			if( $isFromDatabase && $parent )
@@ -424,24 +323,7 @@ ModuleManagePages.PageEditor.init();
 					$page->content	= $entry->content;
 			}
 		}
-
-		$editors	= array( 'none' );
-		if( $this->env->getModules()->has( 'JS_TinyMCE' ) )
-			$editors[]	= 'TinyMCE';
-		if( $this->env->getModules()->has( 'JS_Ace' ) )
-			$editors[]	= 'Ace';
-		if( $this->env->getModules()->has( 'JS_CodeMirror' ) )
-			$editors[]	= 'CodeMirror';
-		$masterTemplates		= $this->getWords( 'templates' );
-		$pathTemplates			= $this->envManaged->getConfig()->get( 'path.templates' );
-		$pathMasterTemplates	= $pathTemplates.'info/page/masters/';
-		if( is_dir( $pathMasterTemplates ) ){
-			$list	= FS_Folder_RecursiveLister::getFileList( $pathMasterTemplates, '/\.php$/' );
-			foreach( $list as $item ){
-				$path	= substr( $item->getPathname(), strlen( $pathMasterTemplates ) );
-				$masterTemplates[$path]	= 'Page Master: '.$path;
-			}
-		}
+		$editor	= $this->appSession->get( 'editor.'.strtolower( $page->format ) ) ?: current( array_keys( $editors ) );
 
 		$this->addData( 'current', $pageId );
 		$this->addData( 'pageId', $pageId );
@@ -452,14 +334,17 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'versions', $versions );
 		$this->addData( 'pageUrl', $path.$page->identifier );
 		$this->addData( 'pagePreviewUrl', $path.$page->identifier.'?preview='.$page->createdAt.$page->modifiedAt );
-		$this->addData( 'tab', $this->session->get( 'module.manage_pages.tab' ) );
-		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
-		$this->addData( 'editor', $this->session->get( 'module.manage_pages.editor' ) );
+		$this->addData( 'tab', $this->appSession->get( 'tab' ) );
+		$this->addData( 'scope', $this->appSession->get( 'scope' ) );
+		$this->addData( 'editor', $editor );
 		$this->addData( 'editors', $editors );
 		$this->addData( 'modules', $this->envManaged->getModules() );
 		$this->addData( 'controllers', $this->getFrontendControllers() );
-		$this->addData( 'masterTemplates', $masterTemplates );
 		$this->preparePageTree( $pageId );
+		$this->collectMasterTemplates();
+
+
+//$this->messenger->noteNotice(print_m($this->session->getAll( $this->sessionPrefix ), NULL, NULL, TRUE));
 
 //		$helper	= new View_Helper_TinyMceResourceLister( $this->env );
 		$script	= '
@@ -467,8 +352,8 @@ ModuleManagePages.PageEditor.frontendUri = "'.$this->envManaged->getBaseUrl().'"
 ModuleManagePages.PageEditor.pageId = "'.$page->pageId.'";
 ModuleManagePages.PageEditor.pageIdentifier = "'.$page->identifier.'";
 ModuleManagePages.PageEditor.parentPageId = "'.$page->parentId.'";
-ModuleManagePages.PageEditor.editor = "'.$this->session->get( 'module.manage_pages.editor' ).'";
-ModuleManagePages.PageEditor.editors = '.json_encode( array_keys( $this->getWords( 'editors' ) ) ).';
+ModuleManagePages.PageEditor.editor = "'.$editor.'";
+ModuleManagePages.PageEditor.editors = '.json_encode( array_keys( $editors ) ).';
 ModuleManagePages.PageEditor.format = "'.$page->format.'";
 ModuleManagePages.PageEditor.init();
 ';
@@ -542,8 +427,9 @@ ModuleManagePages.PageEditor.init();
 	}
 
 	public function index(){
+//$this->messenger->noteNotice( 'App: '.$this->appFocus.' - Filter: '.json_encode( $this->appSession->getAll() ) );
 		$this->preparePageTree();
-		$this->addData( 'scope', $this->session->get( 'module.manage_pages.scope' ) );
+		$this->addData( 'scope', $this->appSession->get( 'scope' ) );
 		$this->addData( 'parentId', 0 );
 		$script	= 'ModuleManagePages.PageEditor.initSortable();';
 		$this->env->getPage()->js->addScriptOnReady( $script );
@@ -553,7 +439,7 @@ ModuleManagePages.PageEditor.init();
 		if( !class_exists( 'Logic_Localization' ) )							//  localization module is not installed
 			return $page;
 		$localization	= new Logic_Localization( $this->env );
-		$localization->setLanguage( $this->session->get( 'module.manage_pages.language' ) );
+		$localization->setLanguage( $this->appSession->get( 'language' ) );
 //		remark( $localization->getLanguage() );
 		$id	= 'page.'.$page->identifier.'-title';
 //		remark( $id );
@@ -564,7 +450,7 @@ ModuleManagePages.PageEditor.init();
 	}
 
 	protected function preparePageTree( $currentPageId = NULL ){
-		$scope		= (int) $this->session->get( 'module.manage_pages.scope' );
+		$scope		= (int) $this->appSession->get( 'scope' );
 		$indices	= array( 'parentId' => 0, 'status' => '> -2', 'scope' => $scope );
 		$pages		= $this->model->getAllByIndices( $indices, array( 'rank' => "ASC" ) );
 		$tree		= array();
@@ -592,17 +478,161 @@ ModuleManagePages.PageEditor.init();
 
 
 	public function setApp( $app ){
-		$this->session->set( 'module.manage_pages.app', (string) $app );
+		$currentApp	= $this->session->get( $this->sessionPrefix.'app' );
+		if( $app !== $currentApp ){
+			$this->session->set( $this->sessionPrefix.'app', (string) $app );
+		}
 		$this->restart( NULL, TRUE );
 	}
+
 	public function setLanguage( $language ){
-		$this->session->set( 'module.manage_pages.language', (string) $language );
+		$this->session->set( $this->sessionPrefix.$this->appFocus.'.language', (string) $language );
 		$this->restart( NULL, TRUE );
 	}
 
 	public function setScope( $scope ){
-		$this->session->set( 'module.manage_pages.scope', (int) $scope );
+		$this->session->set( $this->sessionPrefix.$this->appFocus.'.scope', (int) $scope );
 		$this->restart( NULL, TRUE );
 	}
+
+	//  --  PROTECTED  --  //
+
+	protected function collectMasterTemplates(){
+		$masterTemplates		= $this->getWords( 'templates' );
+		$pathTemplates			= $this->envManaged->getConfig()->get( 'path.templates' );
+		$pathMasterTemplates	= $pathTemplates.'info/page/masters/';
+		if( is_dir( $pathMasterTemplates ) ){
+			$list	= FS_Folder_RecursiveLister::getFileList( $pathMasterTemplates, '/\.php$/' );
+			foreach( $list as $item ){
+				$path	= substr( $item->getPathname(), strlen( $pathMasterTemplates ) );
+				$masterTemplates[$path]	= 'Page Master: '.$path;
+			}
+		}
+		$this->addData( 'masterTemplates', $masterTemplates );
+		return $masterTemplates;
+	}
+
 }
+
+
+class UI_Helper_ContentEditor
+{
+	const STATUS_INIT				= 0;
+	const STATUS_CONFIGURED			= 1;
+	const STATUS_COLLECTED			= 2;
+
+	protected $env;
+	protected $defaultEditorKey;
+	protected $currentEditorKey;
+	protected $forcedEditorKey;
+	protected $bestEditorKey;
+	protected $status				= 0;
+	protected $format;
+	protected $editors				= array();
+	protected $type;
+
+	public function __construct( $env )
+	{
+		$this->env		= $env;
+	}
+
+	public function getBestEditor(): string
+	{
+		return $this->collectEditors()->bestEditorKey;
+	}
+
+	public function getEditors(): array
+	{
+		return $this->collectEditors()->editors;
+	}
+
+	public function render(){
+
+	}
+
+	public function setFormat( $format ): self
+	{
+		$format	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $format ) );
+		if( $this->format !== $format ){
+			$this->format	= $format;
+			$this->status	= static::STATUS_CONFIGURED;
+		}
+		return $this;
+	}
+
+	public function setCurrentEditor( $key ): self
+	{
+		$key	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $key ) );
+		if( $this->currentEditorKey !== $key ){
+			$this->currentEditorKey	= $key;
+			$this->status	= static::STATUS_CONFIGURED;
+		}
+		return $this;
+	}
+
+	public function setDefaultEditor( $key ): self
+	{
+		$key	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $key ) );
+		if( $this->defaultEditorKey !== $key ){
+			$this->defaultEditorKey	= $key;
+			$this->status	= static::STATUS_CONFIGURED;
+		}
+		return $this;
+	}
+
+	public function setForcedEditor( $key ): self
+	{
+		$key	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $key ) );
+		if( $this->forcedEditorKey !== $key ){
+			$this->forcedEditorKey	= $key;
+			$this->status	= static::STATUS_CONFIGURED;
+		}
+		return $this;
+	}
+
+	public function setType( $type ): self
+	{
+		$type	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $type ) );
+		if( $this->type !== $type ){
+			$this->type	= $type;
+			$this->status	= static::STATUS_CONFIGURED;
+		}
+		return $this;
+	}
+
+	public function setLabelTemplate( $template ): self
+	{
+		$this->labelTemplate	= $template;
+		return $this;
+	}
+
+	protected function collectEditors(): self
+	{
+		if( $this->status === static::STATUS_COLLECTED )
+			return $this;
+		$this->env->getCaptain()->callHook(
+			'Module',
+			'onGetAvailableContentEditor',
+			$this,
+			$payload	= (object) array(
+				'list'		=> array(),
+				'type'		=> $this->type,
+				'format'	=> $this->format,
+				'default'	=> $this->defaultEditorKey,
+				'current'	=> $this->currentEditorKey,
+			)
+		);
+		$this->status		= static::STATUS_COLLECTED;
+		krsort( $payload->list );
+		$this->editors	= array();
+		$this->bestEditorKey = $payload->list ? current( $payload->list )->key : '';
+		foreach( $payload->list as $editor ){
+			if( $this->labelTemplate )
+				$editor->label	= sprintf( $this->labelTemplate, $editor->label );
+			$this->editors[$editor->key]	= $editor->label;
+		}
+		return $this;
+	}
+}
+
 ?>
