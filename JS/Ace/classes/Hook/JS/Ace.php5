@@ -51,4 +51,38 @@ class Hook_JS_Ace extends CMF_Hydrogen_Hook{
 		$level	= CMF_Hydrogen_Environment_Resource_Captain::interpretLoadLevel( $level );		//  sanitize level supporting old string values
 		$page->js->addScriptOnReady( $script, max( 2, min( 8, $level ) ) );						// append script call on document ready
 	}
+
+	/**
+	 *	@static
+	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 *	@param		object						$context	Caller object
+	 *	@param		object						$module		Module config data object
+	 *	@param		array						$payload	Map of payload data
+	 *	@return		void
+	 */
+	static public function onGetAvailableContentEditor( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+		if( !empty( $payload->type ) && !in_array( $payload->type, array( 'code' ) ) )
+			return;
+		if( !empty( $payload->format ) && !in_array( $payload->format, array( 'html', 'markdown', 'md'/*, '*'*/ ) ) )
+			return;
+		$editor	= (object) array(
+			'key'		=> 'ace',
+			'label'		=> 'Ace',
+			'type'		=> 'code',
+			'format'	=> $payload->format,
+			'score'		=> 5,
+		);
+		$criteria	= array(
+			'default'		=> 1,
+			'current'		=> 2,
+			'force'			=> 10,
+		);
+		foreach( $criteria as $key => $value )
+			if( !empty( $payload->$key ) && strtolower( $payload->$key ) === $editor->key )
+				$editor->score	+= $value;
+
+//		if( !empty( $payload->format ) ){}
+		$key	= str_pad( $editor->score * 1000, 8, '0', STR_PAD_LEFT ).'_'.$editor->key;
+		$payload->list[$key]	= $editor;
+	}
 }

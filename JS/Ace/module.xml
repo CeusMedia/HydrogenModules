@@ -2,7 +2,7 @@
 <module>
 	<title>JS: Ace</title>
 	<description><![CDATA[Ace Text Editor.]]></description>
-	<version>1.4.8</version>
+	<version>1.4.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Implement auto apply.</log>
@@ -16,6 +16,7 @@
 	<log version="1.3.0-p1">Support mode option.</log>
 	<log version="1.3.0-p1">Replace jsDeliver by PageCDN.</log>
 	<log version="1.4.8">Support versions 1.3.x and 1.4.x up to 1.4.8.</log>
+	<log version="1.4.9">Add hook to detect available editors.</log>
 	<category>JavaScript</category>
 	<company site="https://ace.c9.io/">ace.c9.io</company>
 	<license source="https://raw.githubusercontent.com/ajaxorg/ace/master/LICENSE">BSD</license>
@@ -43,4 +44,5 @@
 	<config protected="no" type="boolean" name="auto.verbose">no</config>
 	<relations/>
 	<hook type="resource" resource="Page" event="applyModules">Hook_JS_Ace::onPageApplyModules</hook>
+	<hook type="resource" resource="Module" event="onGetAvailableContentEditor">Hook_JS_Ace::onGetAvailableContentEditor</hook>
 </module>
