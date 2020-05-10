@@ -24,9 +24,9 @@ var Auth = {
 		var minutes = parseInt(Auth.config.logout_auto_minutes);
 		if(!Auth.config.logout_auto || !minutes)
 			return;
-		Auth.autoLogout.seconds = minutes * 60;
+		Auth.autoLogout.seconds = minutes * Auth.oneMinute;
 		$.ajax({
-			url: './auth/ajaxIsAuthenticated',
+			url: './ajax/auth/isAuthenticated',
 			dataType: 'json',
 			success: function(status){
 				if(!status)
@@ -41,7 +41,7 @@ var Auth = {
 				$("body").on('click', function(){
 					Auth.refreshAutoLogoutInterval();
 				});
-				Auth.autoLogout.left = minutes * 60;
+				Auth.autoLogout.left = minutes * Auth.oneMinute;
 				Auth.updateAutoLogoutTimer();
 				window.setInterval(Auth.updateAutoLogoutTimer, 1000);
 			}
@@ -55,16 +55,17 @@ var Auth = {
 		window.setInterval(
 			function(){
 				$.ajax({
-					url: './auth/ajaxRefreshSession',
+					url: './ajax/auth/isAuthenticated',
 					dataType: 'json',
 					type: 'POST',
 					success: function(json){
-						if(!json){
-							document.location.reload();
+						if(typeof json.data.result !== "undefined"){
+							if(!json.data.result)
+								document.location.reload();
 						}
 					}
 				});
-			}, minutes * 60 * 1000
+			}, minutes * Auth.oneMinute * 1000
 		);
 	},
 
@@ -79,11 +80,10 @@ var Auth = {
 
 	updateAutoLogoutTimer: function(){
 		if(Auth.autoLogout.left > 0){
-			var factorMinute	= 60;
-			var factorHour		= 60 * factorMinute;
+			var factorHour		= 60 * Auth.oneMinute;
 			var hours	= Math.floor(Auth.autoLogout.left / factorHour );
-			var minutes = Math.floor((Auth.autoLogout.left - hours * factorHour) / factorMinute);
-			var seconds = Auth.autoLogout.left - hours * factorHour - minutes * factorMinute;
+			var minutes = Math.floor((Auth.autoLogout.left - hours * factorHour) / Auth.oneMinute);
+			var seconds = Auth.autoLogout.left - hours * factorHour - minutes * Auth.oneMinute;
 			if((""+seconds).length == 1)
 				seconds = "0"+seconds;
 			if(hours && (""+minutes).length == 1)
@@ -91,10 +91,8 @@ var Auth = {
 			var label	= minutes+":"+seconds;
 			if(hours)
 				label	= hours+":"+label;
-			if(Auth.autoLogout.left <= 60)
+			if(Auth.autoLogout.left <= Auth.oneMinute)
 				label	= $("<span></span>").addClass( "label label-important").html(label);
-
-
 			$("#auth-auto-logout-timer").html(label);
 			Auth.autoLogout.left--;
 		}

@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.9.9</version>
+	<version>1.0</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added text block support for every page (german only).</log>
@@ -77,18 +77,20 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.9.7">Add hook to handle exception.</log>
 	<log version="0.9.8">Provide new identified state.</log>
 	<log version="0.9.9">Extract hook to own class and improve redirecting to backend actions.</log>
+	<log version="1.0">Extract AJAX actions to own class AJAX controller.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Auth.php5</class>
+		<class>Controller/Ajax/Auth.php5</class>
 		<class>Hook/Auth.php5</class>
 		<class>View/Auth.php5</class>
 		<class>BasicAuthentication.php5</class>
 		<class>Logic/Authentication.php5</class>
 		<locale>de/auth.ini</locale>
 		<locale>en/auth.ini</locale>
-		<script load="auto">Auth.js</script>
+		<script load="auto">module.resource.auth.js</script>
 	</files>
 	<config protected="yes" type="string" name="login.forward.path"></config>
 	<config protected="yes" type="boolean" name="login.forward.force">no</config>
@@ -114,9 +116,8 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<link xml:lang="en" rank="12" access="outside" path="auth/register">Rgister Account</link>
 	<link xml:lang="en" rank="13" access="outside" path="auth/confirm">Confirm Account</link>
 	<link xml:lang="en" rank="99" access="inside" path="auth/logout">Logout</link>
-	<link rank="99" access="public" path="auth/ajaxIsAuthenticated"></link>
-	<link rank="99" access="public" path="auth/ajaxRefreshSession"></link>
 	<link rank="99" access="public" path="auth/index"></link>
+	<link rank="99" access="public" path="ajax/auth/isAuthenticated"></link>
 	<hook type="resource" resource="Page" event="applyModules">Hook_Auth::onPageApplyModules</hook>
 	<hook type="resource" resource="App" event="onException">Hook_Auth::onAppException</hook>
 </module>
