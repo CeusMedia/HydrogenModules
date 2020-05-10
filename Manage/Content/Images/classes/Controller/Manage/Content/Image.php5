@@ -31,9 +31,12 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 //			$this->baseUri	= $this->frontend->getUri().$this->moduleConfig->get( 'path.images' );
 		}
 		if( !file_exists( $this->basePath ) ){
-			$this->messenger->noteFailure( $words->errorBasePathInvalid, $this->basePath );
+			if( realpath( $this->frontend->getPath() ) === realpath( $this->env->uri ) )
+				mkdir( $this->basePath );
+			else
+				$this->messenger->noteFailure( $words->errorBasePathInvalid, $this->basePath );
 		}
-		else{
+		if( file_exists( $this->basePath ) ){
 			$this->folders	= array( '' => '.' );
 			foreach( FS_Folder_RecursiveLister::getFolderList( $this->basePath ) as $entry ){
 				$path	= substr( $entry->getPathname(), strlen( $this->basePath ) );
