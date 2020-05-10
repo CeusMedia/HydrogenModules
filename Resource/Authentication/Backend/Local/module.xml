@@ -21,7 +21,7 @@ list>
 <list
 
 ]]></description>
-	<version>0.5.7</version>
+	<version>0.6</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated locale backend functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -59,11 +59,13 @@ list>
 	<log version="0.5.5">Add content shortcode hook for login panel.</log>
 	<log version="0.5.6">Refactoring to support new identified state.</log>
 	<log version="0.5.7">Improve centered panel mode.</log>
+	<log version="0.6">Extract AJAX actions to own class AJAX controller.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Auth/Local.php5</class>
+		<class>Controller/Ajax/Auth/Local.php5</class>
 		<class>Hook/Auth/Local.php5</class>
 		<class>Logic/Authentication/Backend/Local.php5</class>
 		<class>Mail/Auth/Local/Register.php5</class>
@@ -146,11 +148,11 @@ list>
 	<link xml:lang="en" rank="12" access="outside" path="auth/local/register">Rgister Account</link>
 	<link xml:lang="en" rank="13" access="outside" path="auth/local/confirm">Confirm Account</link>
 	<link xml:lang="en" rank="99" access="inside" path="auth/local/logout">Logout</link>
-	<link rank="99" access="public" path="auth/local/ajaxEmailExists"></link>
-	<link rank="99" access="public" path="auth/local/ajaxIsAuthenticated"></link>
-	<link rank="99" access="public" path="auth/local/ajaxUsernameExists"></link>
-	<link rank="99" access="public" path="auth/local/ajaxPasswordStrength"></link>
 	<link rank="99" access="public" path="auth/local/index"></link>
+	<link rank="99" access="public" path="ajax/auth/local/emailExists"></link>
+<!--	<link rank="99" access="public" path="ajax/auth/local/isAuthenticated"></link>-->
+	<link rank="99" access="public" path="ajax/auth/local/usernameExists"></link>
+	<link rank="99" access="public" path="ajax/auth/local/passwordStrength"></link>
 	<hook type="resource" resource="Auth" event="registerBackends">Hook_Auth_Local::onAuthRegisterBackend</hook>
 	<hook type="resource" resource="Auth" event="registerLoginTabs">Hook_Auth_Local::onAuthRegisterLoginTab</hook>
 	<hook type="resource" resource="Resource:Users" event="getRelatedUsers">Hook_Auth_Local::onGetRelatedUsers</hook>

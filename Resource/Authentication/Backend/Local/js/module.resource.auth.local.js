@@ -55,14 +55,14 @@ ModuleResourceAuthLocal.Registration = {
 			return;
 		}
 		$.ajax({
-			url: "./auth/local/ajaxEmailExists",
+			url: "./ajax/auth/local/emailExists",
 			method: "post",
 			data: {email: input.val()},
 			dataType: "json",
 			context: input,
 			success: function(response){
 				$(this).removeClass("state-good").removeClass("state-bad");
-				$(this).addClass(response ? "state-bad" : "state-good");
+				$(this).addClass(response.data ? "state-bad" : "state-good");
 			}
 		});
 	},
@@ -79,13 +79,13 @@ ModuleResourceAuthLocal.Registration = {
 		}
 		else if(settings.Resource_Users.password_strength_min){
 			$.ajax({
-				url: "./auth/ajaxPasswordStrength",
+				url: "./ajax/auth/passwordStrength",
 				method: "post",
 				data: {password: input.val()},
 				dataType: "json",
 				context: input,
 				success: function(response){
-					var tooWeak	= response < settings.Resource_Users.password_strength_min;
+					var tooWeak	= response.data < settings.Resource_Users.password_strength_min;
 					$(this).removeClass("state-good").removeClass("state-bad");
 					$(this).addClass(tooWeak ? "state-bad" : "state-good");
 				}
@@ -121,14 +121,14 @@ ModuleResourceAuthLocal.Registration = {
 				return;
 			}
 			$.ajax({
-				url: "./auth/local/ajaxUsernameExists",
+				url: "./ajax/auth/local/usernameExists",
 				method: "post",
 				data: {username: input.val()},
 				dataType: "json",
 				context: input,
 				success: function(response){
 					$(this).removeClass("state-good").removeClass("state-bad");
-					$(this).addClass(response ? "state-bad" : "state-good");
+					$(this).addClass(response.data ? "state-bad" : "state-good");
 				}
 			});
 		}
