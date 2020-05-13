@@ -25,7 +25,7 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 		$data		= NULL;
 		if( !$this->request->isAjax() )
 			$message	= "Access granted for AJAX requests, only.";
-		else if( !$this->request->isPost() )
+		else if( !$this->request->getMethod()->isPost() )
 			$message	= "Access granted for POST requests, only.";
 		else{
 			try{

@@ -121,7 +121,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 	}
 
 	public function copy( $templateId ){
-		if( $this->request->isPost() ){
+		if( $this->request->getMethod()->isPost() ){
 			$title	= trim( $this->request->get( 'title' ) );
 			$exists	= $this->modelTemplate->getByIndex( 'title', $title );
 			if( $exists ){
@@ -290,7 +290,7 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller{
 	}
 
 	public function import(){
-		if( $this->request->isPost() ){
+		if( $this->request->getMethod()->isPost() ){
 			$upload	= $this->env->getLogic()->upload;
 			try{
 				$upload->setUpload( $this->request->get( 'template' ) );

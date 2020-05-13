@@ -14,7 +14,7 @@ class Controller_Manage_Workshop extends CMF_Hydrogen_Controller{
 	}
 
 	public function add(){
-		if( $this->request->isPost() && $this->request->has( 'save' ) ){
+		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$data	= array_merge( $this->request->getAll(), array(
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
@@ -43,7 +43,7 @@ class Controller_Manage_Workshop extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Invalid workshop ID.' );
 			$this->restart( NULL, TRUE );
 		}
-		if( $this->request->isPost() && $this->request->has( 'save' ) ){
+		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$this->model->edit( $workshopId, $this->request->getAll(), FALSE );
 			$this->messenger->noteSuccess( 'Updated.' );
 			$this->restart( './edit/'.$workshopId, TRUE );

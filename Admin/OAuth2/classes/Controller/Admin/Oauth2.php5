@@ -31,7 +31,7 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 	}
 
 	public function add(){
-		if( $this->request->isPost() && $this->request->has( 'save' ) ){
+		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$data	= $this->request->getAll();
 			$data['status']	= Model_Oauth_Provider::STATUS_NEW;
 			$data['createdAt']	= time();
@@ -88,7 +88,7 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 //		$this->addData( 'exists', class_exists( $provider->className ) );
 		$this->addData( 'exists', $this->providersIndex[$provider->className]->exists );
 		$this->addData( 'providerId', $providerId );
-		if( $this->request->isPost() && $this->request->has( 'save' ) ){
+		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$this->modelProvider->edit( $providerId, $this->request->getAll(), FALSE );
 			$this->restart( 'edit/'.$providerId, TRUE );
 		}

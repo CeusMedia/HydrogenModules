@@ -13,7 +13,7 @@ class Controller_Share extends CMF_Hydrogen_Controller{
 	}
 
 	public function index( $uuid ){
-		if( $this->request->isPost() ){
+		if( $this->request->getMethod()->isPost() ){
 			$captcha	= $this->request->get( 'captcha' );
 			if( $captcha !== $this->session->get( 'captcha' ) ){
 				$this->messenger->noteError( 'Der Sicherheitscode wurde nicht korrekt eingegeben. Bitte noch einmal!' );

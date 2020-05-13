@@ -28,7 +28,7 @@ class Controller_Manage_Ip_Lock_Transport extends CMF_Hydrogen_Controller{
 
 
 	public function export(){
-		if( !$this->request->isPost() )
+		if( !$this->request->getMethod()->isPost() )
 			$this->restart( NULL, TRUE );
 
 		$fileName	= $this->request->get( 'filename' );

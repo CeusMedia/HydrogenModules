@@ -101,7 +101,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller{
 	}
 
 	public function import( $fileHash = NULL ){
-		if( $this->request->isPost() && $this->request->has( 'save' ) ){
+		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$categoryId	= $this->request->get( 'categoryId' );
 			$format		= $this->request->get( 'format' );
 			$files		= $this->request->get( 'files' );

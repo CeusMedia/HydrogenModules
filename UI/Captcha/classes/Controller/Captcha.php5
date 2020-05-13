@@ -14,7 +14,7 @@ class Controller_Captcha extends CMF_Hydrogen_Controller{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$messenger	= $this->env->getMessenger();
-		if( $request->isPost() ){
+		if( $request->getMethod()->isPost() ){
 			$code	= $request->get( 'captcha' );
 			if( View_Helper_Captcha::checkCaptcha( $this->env, $code ) )
 				$messenger->noteSuccess( 'Der CAPTCHA-Code war richtig.' );

@@ -31,7 +31,7 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 	}
 
 	public function bank(){
-		if( $this->request->isPost() ){
+		if( $this->request->getMethod()->isPost() ){
 			$sellerUserId	= $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
 			$iban			= $this->request->get( 'iban' );
 			$bic			= $this->request->get( 'bic' );
@@ -61,7 +61,7 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 	}
 
 	public function wallet(){
-		if( $this->request->isPost() ){
+		if( $this->request->getMethod()->isPost() ){
 			$sellerUserId	= $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
 			$currency		= $this->request->get( 'currency' );
 			if( $sellerUserId && $currency ){

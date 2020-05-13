@@ -38,7 +38,7 @@ class Controller_Manage_Shop_Special extends CMF_Hydrogen_Controller{
 	}
 
 	public function add(){
-		if( $this->request->isPost() ){
+		if( $this->request->getMethod()->isPost() ){
 			$logicAuth	= $this->env->getLogic()->get( 'authentication' );
 			$data	= array(
 				'bridgeId'		=> $this->request->get( 'bridgeId' ),
@@ -66,7 +66,7 @@ class Controller_Manage_Shop_Special extends CMF_Hydrogen_Controller{
 			$special->styleFiles	= '[]';
 		$special->styleFiles	= json_decode( $special->styleFiles );
 
-		if( $this->request->isPost() ){
+		if( $this->request->getMethod()->isPost() ){
 			$data	= array();
 			if( strlen( trim( $this->request->get( 'title' ) ) ) ){
 				if( $special->title != $this->request->get( 'title' ) )
@@ -85,7 +85,7 @@ class Controller_Manage_Shop_Special extends CMF_Hydrogen_Controller{
 			$this->restart( 'edit/'.$special->shopSpecialId, TRUE );
 		}
 
-		if( $this->request->isPost() ){
+		if( $this->request->getMethod()->isPost() ){
 			$specialId	= $this->modelSpecial->add( array() );
 			$this->messenger->noteSuccess( 'Spezialität hinzugefügt.' );
 			$this->restart( 'edit/'.$specialId, TRUE );

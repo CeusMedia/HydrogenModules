@@ -178,7 +178,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
-		if( $this->request->isPost() && $this->request->has( 'save' ) ){
+		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$data		= array();
 			$path		= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
 			$title		= $this->request->get( 'title' );
@@ -217,7 +217,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( 'Invalid folder ID: %s', $folderId );
 			$this->restart( NULL, TRUE );
 		}
-		if( $this->request->isPost() && $this->request->has( 'save' ) ){
+		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$data		= array();
 			$path		= $this->getPathFromFolderId( $folder->parentId, TRUE );
 			$title		= $this->request->get( 'title' );
