@@ -74,18 +74,18 @@ code:html>php job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 		<supports type="module">Resource_Mail</supports>
 	</relations>
 	<jobs>
-		<job id="Job.list" mode="dev,test,live">Job::index</job>
-		<job id="Job.info" mode="dev,test,live">Job::info</job>
-<!--		<job id="Job.jsonfy" mode="dev,live">Job::convertJobConfigToJson</job>-->
-		<job id="Job.Lock.list" mode="dev,test,live">Job_Lock::list</job>
-		<job id="Job.Lock.clear" mode="dev,test,live">Job_Lock::clear</job>
-		<job id="Job.Lock.alert" mode="dev,test,live">Job_Lock::alert</job>
-		<job id="Job.Test.reflect" mode="dev,test">Job_Test::reflect</job>
-		<job id="Job.Test.reflectCommands" mode="dev,test">Job_Test::reflectCommands</job>
-		<job id="Job.Test.reflectParameters" mode="dev,test">Job_Test::reflectParameters</job>
-		<job id="Job.Util.getDate" mode="dev,test,live">Job_Util::getDate</job>
-		<job id="Job.Util.getExtensionVersion" mode="dev,test,live">Job_Util::getExtensionVersion</job>
-		<job id="Job.Util.getPhpVersion" mode="dev,test,live">Job_Util::getPhpVersion</job>
+		<job id="Job.list" env="dev,test,live">Job::index</job>
+		<job id="Job.info" env="dev,test,live">Job::info</job>
+<!--		<job id="Job.jsonfy" env="dev,live">Job::convertJobConfigToJson</job>-->
+		<job id="Job.Lock.list" env="dev,test,live">Job_Lock::list</job>
+		<job id="Job.Lock.clear" env="dev,test,live">Job_Lock::clear</job>
+		<job id="Job.Lock.alert" env="dev,test,live">Job_Lock::alert</job>
+		<job id="Job.Test.reflect" env="dev,test">Job_Test::reflect</job>
+		<job id="Job.Test.reflectCommands" env="dev,test">Job_Test::reflectCommands</job>
+		<job id="Job.Test.reflectParameters" env="dev,test">Job_Test::reflectParameters</job>
+		<job id="Job.Util.getDate" env="dev,test,live">Job_Util::getDate</job>
+		<job id="Job.Util.getExtensionVersion" env="dev,test,live">Job_Util::getExtensionVersion</job>
+		<job id="Job.Util.getPhpVersion" env="dev,test,live">Job_Util::getPhpVersion</job>
 	</jobs>
 	<sql type="mysql" on="update" version="0.7.2"><![CDATA[
 		DROP TABLE IF EXISTS `<%?prefix%>job_definitions`;
