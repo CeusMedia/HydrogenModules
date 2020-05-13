@@ -252,7 +252,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller{
 		$this->addData( 'files', $files );
 	}
 
-	protected function listFolderNested( $parentId = 0, $excludeFolderId, $level = 0 ){
+	protected function listFolderNested( $parentId = 0, $excludeFolderId = 0, $level = 0 ){
 		$list		= array();
 		$orders		= array( 'title' => 'ASC' );
 		$folders	= $this->modelFolder->getAll( array( 'parentId' => $parentId ), $orders );
