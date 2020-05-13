@@ -13,6 +13,7 @@ class Mail_Form_Customer_Result extends Mail_Form_Abstract{
 			$content	= $this->applyHelpers( $content, $fill, $form );
 			$this->setHtml( $content );
 		}
-		$this->setText( $content );
+		else
+			$this->setText( $content );
 	}
 }
