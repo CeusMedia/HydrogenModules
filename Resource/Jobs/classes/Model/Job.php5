@@ -1,6 +1,6 @@
 <?php
-class Model_Job{
-
+class Model_Job
+{
 	const FORMAT_AUTO		= 0;
 	const FORMAT_XML		= 1;
 	const FORMAT_JSON		= 2;
@@ -10,17 +10,20 @@ class Model_Job{
 	protected $jobs			= array();
 	protected $format		= 0;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 	}
 
-	public function get( $jobId ){
+	public function get( string $jobId ): object
+	{
 		if( $this->has( $jobId ) )
 			return $this->jobs[$jobId];
 		throw new RangeException( 'Job with ID "'.$jobId.'" is not existing' );
 	}
 
-	public function getAll( $conditions = array() ){
+	public function getAll( $conditions = array() ): array
+	{
 		$list	= array();
 		foreach( $this->jobs as $jobId => $job ){
 			foreach( $conditions as $key => $value ){
@@ -50,7 +53,8 @@ class Model_Job{
 		return $list;
 	}
 
-	public function getByInterval( $interval = NULL ){
+	public function getByInterval( $interval = NULL ): array
+	{
 		$intervals	= array();
 		foreach( $this->jobs as $jobId => $job ){
 			if( !$job->interval )
@@ -67,11 +71,13 @@ class Model_Job{
 		return $intervals;
 	}
 
-	public function has( $jobId ){
+	public function has( string $jobId ): bool
+	{
 		return array_key_exists( $jobId, $this->jobs );
 	}
 
-	public function load( $modes, $strict = TRUE ){
+	public function load( array $modes, bool $strict = TRUE )
+	{
 		$this->jobs	= array();
 		if( $this->format === static::FORMAT_XML ){
 			foreach( self::readJobsFromXmlFiles( $modes ) as $jobId => $job ){
@@ -102,7 +108,8 @@ class Model_Job{
 		ksort( $this->jobs/*, SORT_NATURAL | SORT_FLAG_CASE*/ );
 	}
 
-	public function readJobsFromJsonFile( $pathName, $modes = array() ){
+	public function readJobsFromJsonFile( string $pathName, $modes = array() ): array
+	{
 		$jobs			= array();
 		$json	= \FS_File_JSON_Reader::load( $pathName, FALSE );
 		foreach( $json as $jobId => $job ){
@@ -120,7 +127,8 @@ class Model_Job{
 		return $jobs;
 	}
 
-	public function readJobsFromXmlFile( $pathName, $modes = array() ){
+	public function readJobsFromXmlFile( string $pathName, $modes = array() ): array
+	{
 		$jobs			= array();
 		$xml	= \XML_ElementReader::readFile( $pathName );
 		foreach( $xml->job as $job ){
@@ -145,7 +153,8 @@ class Model_Job{
 		return $jobs;
 	}
 
-	public function setFormat( $format ){
+	public function setFormat( string $format ): self
+	{
 		$validFormats	= Alg_Object_Constant::staticGetAll( 'Model_Job', 'FORMAT_' );
 		if( !in_array( $format, $validFormats ) )
 			throw new RangeException( 'Invalid format' );
@@ -155,7 +164,8 @@ class Model_Job{
 
 	/*  --  PROTECTED  --  */
 
-	protected function readJobsFromJsonFiles( $modes = array() ){
+	protected function readJobsFromJsonFiles( $modes = array() ): array
+	{
 		$jobs		= array();
 		$index			= new \FS_File_RegexFilter( $this->pathJobs, '/\.json$/i' );
 		foreach( $index as $file ){
@@ -171,7 +181,8 @@ class Model_Job{
 		return $jobs;
 	}
 
-	protected function readJobsFromModules( $modes = array() ){
+	protected function readJobsFromModules( $modes = array() ): array
+	{
 		$jobs	= array();
 		foreach( $this->env->getModules()->getAll() as $moduleId => $module )
 			foreach( $module->jobs as $job )
@@ -179,7 +190,8 @@ class Model_Job{
 		return $jobs;
 	}
 
-	protected function readJobsFromXmlFiles( $modes = array() ){
+	protected function readJobsFromXmlFiles( $modes = array() ): array
+	{
 		$jobs			= array();
 		$index			= new \FS_File_RegexFilter( $this->pathJobs, '/\.xml$/i' );
 		foreach( $index as $file ){

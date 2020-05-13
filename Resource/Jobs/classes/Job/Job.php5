@@ -1,64 +1,79 @@
 <?php
-class Job_Job extends Job_Abstract{
-
-	protected $pathLocks	= 'config/locks/';
+class Job_Job extends Job_Abstract
+{
 	protected $pathJobs		= 'config/jobs/';
+	protected $logic;
 
-	public function __onInit(){
+	public function __onInit()
+	{
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_cache.', TRUE );
+		$this->logic	= $this->env->getLogic()->get( 'Job' );
 	}
 
 	/**
-	 *	@todo		finish implementation
+	 *	Display list of available job identifiers.
+	 *	Stores list of available job definitions as result.
+	 *	@access		public
+	 *	@param		array		List of environment modes to filter jobs by (currently not implemented)
+	 *	@todo		add old mode (= environment type [dev,test,live])
 	 */
-	public function alert(){
-		$skip	= array();//array( 'Job.alert' );
-		$locks	= $this->getLocks( $skip );
-		$list	= array();
-		foreach( $locks as $lockFile ){
-			$timestamp	= filemtime( $this->pathLocks.$lockFile.'.lock' );
-			$age		= time() - $timestamp;
-			$datetime	= date( 'Y-m-d_H:i:s', $timestamp );
-			$listKey	= $datetime.'_'.$lockFile;
-			$list[$listKey]	= (object) array(
-				'listKey'		=> $listKey,
-				'timestamp'		=> $timestamp,
-				'datetime'		=> $datetime,
-				'ageSeconds'	=> $age,
-				'filePath'		=> $this->pathLocks.$lockFile.'.lock',
-				'fileName'		=> $lockFile.'.lock',
-				'jobKey'		=> $lockFile,
-			);
-		}
-		krsort( $list );
-		print_m( $list );
-
-		foreach( $list as $item ){
-
-
-		}
+	public function index( $mode = NULL )
+	{
+		$conditions	= array();
+//		if( $mode )
+//			$conditions['mode']	= $mode;
+//		$this->out( 'List of available jobs:' );
+		$availableJobs	= $this->logic->getDefinitions( $conditions, array( 'identifier' => 'ASC' ) );
+		foreach( $availableJobs as $availableJob )
+			$this->results[$availableJob->jobDefinitionId]	= $availableJob->identifier;
+		$this->out( join( PHP_EOL, $this->results ) );
+		return 1;
 	}
 
-	public function clearLocks( $jobIds = array() ){
-		$skip	= array(
-			'Job.Lock.clear',
-			'Job.clearLocks',					//  @todo remove after migration
-		);
-		$list	= array();
-		$locks	= $this->getLocks( $skip );
-		foreach( $locks as $lockId ){
-			if( is_array( $jobIds ) && !in_array( $lockId, $jobIds ) )
+	/**
+	 *	Display information about one or more jobs.
+	 *	@access		public
+	 *	@param		array		List of job identifiers
+	 *	@todo		add old mode (= environment type [dev,test,live])
+	 */
+	public function info( $jobIdentifiers = NULL )
+	{
+		if( !count( $jobIdentifiers ) ){
+			$this->out( 'No job identifier(s) given' );
+			return;
+		}
+		foreach( $jobIdentifiers as $jobIdentifier ){
+			$job	= $this->logic->getDefinitionByIdentifier( $jobIdentifier );
+			if( !$job ){
+				$this->out( 'Job "'.$jobIdentifier.'" is not existing' );
 				continue;
-			@unlink( $this->pathLocks.$lockId.'.lock' );
-			$list[]	= $lockId;
+			}
+			if( count( $jobIdentifiers ) !== 1 )
+				$this->out( 'Job: '.$jobIdentifier );
+			$constants	= new Alg_Object_Constant( 'Model_Job_Definition' );
+			$data	= array(
+				'Method'		=> 'Job_'.$job->className.' >> '.$job->methodName,
+				'Mode'			=> strtolower( $constants->getKeyByValue( (int) $job->mode, 'MODE_' ) ),
+				'Status'		=> strtolower( $constants->getKeyByValue( (int) $job->status, 'STATUS_' ) ),
+			);
+			$arguments	= json_decode( $job->arguments );
+			if( $arguments )
+				$data['Arguments']	= print_m( $arguments, NULL, NULL, TRUE );
+//			if( $job->interval )
+//				$data['Interval']	= $job->interval;
+			if( !empty( $job->deprecated ) )
+				$data['Deprecated']	= $job->deprecated;
+			foreach( $data as $label => $value )
+				$this->out( str_pad( '- '.$label.':', 15, ' ', STR_PAD_RIGHT ).$value );
 		}
-		$this->out( 'Removed '.count( $list ).' locks:' );
-		foreach( $list as $item )
-			$this->out( ' - '.$item );
-		$this->out();
 	}
 
-	public function convertJobConfigToJson(){
+	/**
+	 *	@deprecated		Conversion from XML file to JSON file not needed anymore, since new solution is migration to module XML file + database import by jobs module
+	 *	@todo			use parts of this code to implement automatic migration to module XML file
+	 */
+	public function convertJobConfigToJson()
+	{
 		$model		= new Model_Job( $this->env );
 		$modes		= array();																		//  no specific modes
 		$index		= new \FS_File_RegexFilter( $this->pathJobs, '/\.xml$/i' );
@@ -92,146 +107,7 @@ class Job_Job extends Job_Abstract{
 			$moduleJobs->moduleId	= $moduleId;
 			$targetFile	= $this->pathJobs.$moduleId.'.json';
 			$this->out( 'Writing job JSON: '.$targetFile );
-			FS_File_JSON_Writer::save( $targetFile, $moduleJobs, TRUE );
+			FS_File_JSON_Writer::save( $targetFile, $moduleJoJob.bs, TRUE );
 		}
-	}
-
-	/**
-	 *	Returns current date time depending on format parameter.
-	 *	Uses parameter --format (-f), default: 'r' (RFC 2822).
-	 *	Supports all date formats (http://php.net/manual/de/function.date.php).
-	 *	Supports format constants, like DATE_W3C.
-	 *	Removes milliseconds (.v) below PHP version 7.
-	 *	@access		public
-	 *	@return		string		Current date time in requested format
-	 *	@todo		use environment date after framework update, see below
-	 */
-	public function getDate(){
-		$format	= 'r';
-		if( $this->parameters->get( '-f' ) && !$this->parameters->get( '--format' ) )
-			$this->parameters->set( '--format', $this->parameters->get( '-f' ) );
-		if( $this->parameters->get( '--format' ) )
-			$format	= $this->parameters->get( '--format' );
-		if( preg_match( '/^[A-Z0-9_]+$/', $format ) && ADT_Constant::has( $format ) ){
-			if( $this->verbose )
-				$this->out( 'Found format by constant.' );
-			$format	= ADT_Constant::get( $format );
-		}
-		else if( version_compare( PHP_VERSION, '7.0', '<' ) ){
-			if( $this->verbose )
-				$this->out( 'Removing milliseconds for PHP < 7.' );
-			$format	= preg_replace( '/\.v/', '', $format );
-		}
-		$this->out( date_create()->format( $format ) );							//  @todo replace by line below after framework update
-//		$this->out( $this->env->date->now->format( $format ) );
-	}
-
-	public function getExtensionVersion(){
-		if( !$this->commands ){
-			$this->out( 'No extension given' );
-			return;
-		}
-		foreach( $this->commands as $command ){
-			$version	= preg_replace( '/(-.+)$/', '', phpversion( $command ) );
-			if( count( $commands ) > 1 )
-				$version		= $command.': '.$version;
-			$this->out( $version );
-		}
-	}
-
-	public function getPhpVersion(){
-		$this->out( preg_replace( '/(-.+)$/', '', phpversion() ) );
-	}
-
-	public function index( $mode = NULL ){
-		$conditions	= array();
-		if( $mode )
-			$conditions['mode']	= $mode;
-		foreach( $this->manager->getJobs( $conditions ) as $jobId => $jobData ){
-			$arguments	= $jobData->arguments ? ' '.$jobData->arguments : '';
-			if( $jobData->deprecated )
-				$this->out( '- '.$jobId.$arguments.' (deprecated: '.$jobData->deprecated.')' );
-			else
-				$this->out( '- '.$jobId.$arguments );
-		}
-	}
-
-	public function info( $jobKeys = NULL ){
-		if( !( $this->manager instanceof Jobber ) ){
-			$class	= get_class( $this->manager );
-			throw new RuntimeException( 'Manager "'.$class.'" is not supported, yet' );
-		}
-		$jobs	= $this->manager->getJobs();
-		if( !count( $jobKeys ) ){
-			$this->out( 'No job keys given' );
-			return;
-		}
-		foreach( $jobKeys as $jobKey ){
-			if( !array_key_exists( (string) $jobKey, $jobs ) ){
-				$this->out( 'Job "'.$jobKey.'" is not existing' );
-				continue;
-			}
-			$job	= $jobs[$jobKey];
-			$data	= array(
-				'ID'			=> $job->id,
-				'Job Method'	=> 'Job_'.$job->class.' >> '.$job->method,
-				'Modes'			=> join( ', ', $job->mode ),
-				'Multiple Runs'	=> $job->multiple ? 'yes' : 'no',
-			);
-			if( $job->arguments )
-				$data['Arguments']	= $job->arguments;
-			if( $job->interval )
-				$data['Interval']	= $job->interval;
-			if( $job->arguments )
-				$data['Deprecated']	= $job->deprecated ? 'yes' : 'no';
-			foreach( $data as $label => $value )
-				$this->out( str_pad( '- '.$label.':', 20, ' ', STR_PAD_RIGHT ).$value );
-		}
-	}
-
-	public function listLocks(){
-		$skip	= array(
-			'Job.Lock.list',
-			'Job.listLocks',					//  @todo remove after migration
-		);
-		$list	= $this->getLocks( $skip );
-		$this->out( 'Found '.count( $list ).' locks:' );
-		foreach( $list as $item )
-			$this->out( ' - '.$item );
-		$this->out();
-	}
-
-	public function reflect(){
-		$this->reflectCommands();
-		$this->reflectParameters();
-	}
-
-	public function reflectCommands(){
-//		$this->out( json_encode( $this->commands ) );
-		$this->out( 'Commands: '.join( ', ', $this->commands ) );
-	}
-
-	public function reflectParameters(){
-//		$this->out( json_encode( $this->parameters->getAll() ) );
-		$this->out( 'Parameters: ' );
-		foreach( $this->parameters as $key => $value )
-			$this->out( '  '.$key.' => '.$value );
-	}
-
-	//  --  PRIVATE  METHODS  --  //
-	protected function getLocks( $skip = array() ){
-		$list	= array();
-		if( file_exists( $this->pathLocks ) ){
-			$index	= new DirectoryIterator( $this->pathLocks );
-			foreach( $index as $entry ){
-				if( $entry->isDot() )
-					continue;
-				$jobId	= preg_replace( '/\.lock$/', '', $entry->getFilename() );
-				if( !in_array( $jobId, $skip ) )
-					$list[]	= $jobId;
-			}
-		}
-		return $list;
 	}
 }
-?>

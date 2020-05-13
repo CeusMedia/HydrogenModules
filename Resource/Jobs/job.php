@@ -165,12 +165,17 @@ class JobScriptHelper
 		try{
 			$jobber	= new \Jobber();											//  start job handler
 			$jobber->setMode( $this->mode );
-			$jobber->loadJobs( $this->modes, FALSE );							//  load jobs configured in XML or JSON files, allowing JSON to override
+//			$jobber->loadJobs( $this->modes, FALSE );							//  load jobs configured in XML or JSON files, allowing JSON to override
 			$code	= $jobber->run( $this->request );							//  execute found jobs
 			exit( $code );
 		}
 		catch( \Exception $e ){
-			print( $e->getMessage().'@'.$e->getFile().':'.$e->getLine().PHP_EOL );
+			$cwd	= dirname( __FILE__ ).'/';
+			$p	= $e->getPrevious() ?: $e;
+			print( 'Exception: '.$p->getMessage().PHP_EOL );
+			print( 'Location:  '.str_replace( $cwd, '', $p->getFile() ).' line #'.$p->getLine().PHP_EOL );
+			print( 'Trace:'.PHP_EOL );
+			print( str_replace( $cwd, '', $p->getTraceAsString() ).PHP_EOL );
 			exit -2;
 		}
 	}
