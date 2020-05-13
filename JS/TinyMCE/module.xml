@@ -9,6 +9,7 @@
 	<license source="http://www.gnu.org/licenses/lgpl-2.1.html">LGPL 2.1</license>
 	<files>
 		<class>Controller/Manage/TinyMce.php5</class>
+		<class>Hook/JS/TinyMce.php5</class>
 		<class>View/Helper/TinyMce.php5</class>
 		<class>View/Helper/TinyMce/FileBrowser.php5</class>
 		<class>View/Manage/TinyMce.php5</class>
