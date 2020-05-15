@@ -76,25 +76,25 @@ class Model_Job
 		return array_key_exists( $jobId, $this->jobs );
 	}
 
-	public function load( array $modes, bool $strict = TRUE )
+	public function load( array $modes, bool $strict = TRUE ): self
 	{
 		$this->jobs	= array();
 		if( $this->format === static::FORMAT_XML ){
-			foreach( self::readJobsFromXmlFiles( $modes ) as $jobId => $job ){
+			foreach( self::readJobsFromXmlFiles( $this->pathJobs, $modes ) as $jobId => $job ){
 				if( $strict && array_key_exists( $jobId, $this->jobs ) )
 					throw new \DomainException( 'Duplicate job ID "'.$jobId.'"' );
 				$this->jobs[$jobId]	= $job;
 			}
 		}
 		else if( $this->format === static::FORMAT_JSON ){
-			foreach( self::readJobsFromJsonFiles( $modes ) as $jobId => $job ){
+			foreach( self::readJobsFromJsonFiles( $this->pathJobs, $modes ) as $jobId => $job ){
 				if( $strict && array_key_exists( $jobId, $this->jobs ) )
 					throw new \DomainException( 'Duplicate job ID "'.$jobId.'"' );
 				$this->jobs[$jobId]	= $job;
 			}
 		}
 		else if( $this->format === static::FORMAT_AUTO ){
-			foreach( self::readJobsFromXmlFiles( $modes ) as $jobId => $job )
+			foreach( self::readJobsFromXmlFiles( $this->pathJobs, $modes ) as $jobId => $job )
 				$this->jobs[$jobId]	= $job;
 			foreach( self::readJobsFromJsonFiles( $modes ) as $jobId => $job )
 				$this->jobs[$jobId]	= $job;
@@ -106,6 +106,7 @@ class Model_Job
 //				$this->jobs[$jobId]	= $job;
 		}
 		ksort( $this->jobs/*, SORT_NATURAL | SORT_FLAG_CASE*/ );
+		return $this;
 	}
 
 	public function readJobsFromJsonFile( string $pathName, $modes = array() ): array
@@ -129,7 +130,7 @@ class Model_Job
 
 	public function readJobsFromXmlFile( string $pathName, $modes = array() ): array
 	{
-		$jobs			= array();
+		$jobs	= array();
 		$xml	= \XML_ElementReader::readFile( $pathName );
 		foreach( $xml->job as $job ){
 			$jobObj				= new \stdClass();

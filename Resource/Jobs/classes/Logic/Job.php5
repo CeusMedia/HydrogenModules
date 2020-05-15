@@ -20,19 +20,42 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	 */
 	public function discoverJobDefinitions(): array
 	{
+		$list			= array();																	//  prepare empty result list
 		$discoveredJobs	= array();
+
+		//  read jobs definied by modules
 		foreach( $this->env->getModules()->getAll() as $module )									//  iterate all modules
 			foreach( $module->jobs as $job )														//  iterate all their jobs
 				$discoveredJobs[$job->id]	= $job;													//  collect job by identifier
+
+		//  read jobs definied by XML files, installed by modules
+		$model	= new Model_Job( $this->env );
+		$model->setFormat( Model_Job::FORMAT_XML );
+		$model->load( array( 'live', 'test', 'dev' ) );
+		foreach( $model->getAll() as $xmlJobId => $xmlJob ){
+			if( !array_key_exists( $xmlJobId, $discoveredJobs ) ){
+				$discoveredJobs[$xmlJobId]	= (object) array(
+					'id'		=> $xmlJobId,
+					'class'		=> $xmlJob->class,
+					'method'	=> $xmlJob->method,
+					'multiple'	=> FALSE,
+					'arguments'	=> NULL,
+				);
+			}
+		}
+		if( !$discoveredJobs )																		//  no jobs discovered
+			return $list;																			//  return empty list
+
+		//  read already registered jobs matching discovered jobs
 		$registeredJobIdentifiers	= $this->modelDefinition->getAll(								//  get all registered jobs
 			array( 'identifier' => array_keys( $discoveredJobs ) ),									//  ... having the discovered identifiers
 			array(),																				//  ... without any orders
 			array(),																				//  ... without any limits
 			array( 'identifier' )																	//  ... and return identifiers, only
 		);
-		$list	= array();																			//  prepare empty result list
 		if( count( $discoveredJobs ) === count( $registeredJobIdentifiers ) )						//  no new jobs discovered
 			return $list;																			//  return empty list
+
 		foreach( $registeredJobIdentifiers as $registeredJobIdentifier )							//  iterate found registered jobs
 			unset( $discoveredJobs[$registeredJobIdentifier] );										//  remove discovered job
 		foreach( $discoveredJobs as $discoveredJob ){												//  iterate the remaining discovered jobs
