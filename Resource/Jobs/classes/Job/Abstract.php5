@@ -16,6 +16,8 @@ class Job_Abstract{
 	protected $versionModule;
 	protected $progress;
 
+	protected $results;
+
 	/**	@var		Jobber								$manager		Job manager instance */
 	protected $manager;
 
@@ -37,6 +39,10 @@ class Job_Abstract{
 	}
 
 	protected function __onInit(){
+	}
+
+	public function getResults(){
+		return $this->results;
 	}
 
 	protected function getLogPrefix(){
