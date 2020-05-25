@@ -15,6 +15,7 @@ class Hook_Shop_Payment_Bank/* extends CMF_Hydrogen_Hook*/{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_bank.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/bank' );
 		$labels		= (object) $words['payment-methods'];
+		$descs		= (object) $words['payment-method-descriptions'];
 		if( $methods->get( 'Transfer' ) ){
 			$context->registerPaymentBackend(
 				'Bank',									//  backend class name
@@ -22,6 +23,16 @@ class Hook_Shop_Payment_Bank/* extends CMF_Hydrogen_Hook*/{
 				$labels->transfer,						//  payment method label
 				'bank/perTransfer',						//  shop URL
 				$methods->get( 'Transfer' ),			//  priority
+				'bank-1.png'							//  icon
+			);
+		}
+		if( $methods->get( 'Bill' ) ){
+			$context->registerPaymentBackend(
+				'Bank',									//  backend class name
+				'Bank:Bill',							//  payment method key
+				$labels->bill,							//  payment method label
+				'bank/perBill',							//  shop URL
+				$methods->get( 'Bill' ),				//  priority
 				'bank-1.png'							//  icon
 			);
 		}
