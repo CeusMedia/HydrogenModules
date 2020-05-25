@@ -110,7 +110,7 @@ class Logic_ShopManager extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@deprecated
 	 */
 	public function getGuestCustomer( $customerId ){
-		die( 'getGuestCustomer is deprecated' );
+//		throw new RuntimeException( 'Method Logic_ShopManager::getGuestCustomer is deprecated' );
 		$model	= new Model_Shop_Customer( $this->env );
 		$user	= $model->get( $customerId );
 		if( !$user )
