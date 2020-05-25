@@ -66,10 +66,10 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 		if( $this->request->has( 'save' ) ){
 			$title	= $this->request->get( 'title' );
 			$url	= $this->request->get( 'url' );
-			if( $this->model->getAll( array( 'title' => $title, 'relocationId' => "!=".$relocationId ) ) ){
+			if( $this->model->getAll( array( 'title' => $title, 'relocationId' => "!= ".$relocationId ) ) ){
 				$this->messenger->noteError( $words->errorTitleAlreadyExists, $title );
 			}
-			else if( $this->model->getAll( array( 'url' => $url, 'relocationId' => "!=".$relocationId ) ) ){
+			else if( $this->model->getAll( array( 'url' => $url, 'relocationId' => "!= ".$relocationId ) ) ){
 				$this->messenger->noteError( $words->errorUrlAlreadyExists, $url );
 			}
 			else{
