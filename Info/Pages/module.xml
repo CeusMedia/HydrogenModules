@@ -73,7 +73,7 @@
 	<hook type="resource" resource="Sitemap" event="registerLinks">Hook_Info_Page::onRegisterSitemapLinks</hook>
 	<hook type="resource" resource="View" event="onRenderContent">Hook_Info_Page::onRenderContent</hook>
 	<sql type="mysql" on="install" version="final"><![CDATA[--  DO NOTHING  --]]></sql>
-	<sql type="mysql" on="update" version="0.9"><![CDATA[
+	<sql type="mysql" on="update" version="0.8.4"><![CDATA[
 ALTER TABLE `<%?prefix%>pages` ADD `template` VARCHAR(255) NULL DEFAULT NULL AFTER `icon`;
-	]]></sql>
+]]></sql>
 </module>
