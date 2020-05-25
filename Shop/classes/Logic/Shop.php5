@@ -119,7 +119,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 	 *	@deprecated
 	 */
 	public function getGuestCustomer( $customerId ){
-		die( 'getGuestCustomer is deprecated' );
+		throw new RuntimeException( 'Method Logic_Shop::getGuestCustomer is deprecated' );
 		$model		= new Model_Shop_Customer( $this->env );
 		$customer	= $model->get( $customerId );
 		if( !$customer )
