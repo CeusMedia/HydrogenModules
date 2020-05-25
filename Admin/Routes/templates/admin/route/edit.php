@@ -66,7 +66,8 @@ $optCode	= array(
 	508 => "508 Loop Detected",
 //	511 => "511 Network Authentication Required",
 );
-$optCode	= UI_HTML_Elements::Options( $optCode, @$data->code );
+
+$optCode	= UI_HTML_Elements::Options( $optCode, $route->code );
 
 $buttonsCancel	= UI_HTML_Tag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'href'		=> './admin/route',

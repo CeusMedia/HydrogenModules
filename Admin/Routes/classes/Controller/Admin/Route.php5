@@ -34,11 +34,15 @@ class Controller_Admin_Route extends CMF_Hydrogen_Controller{
 							'status'		=> (int) $route->getAttribute( 'status' ),
 							'code'			=> (int) $route->getAttribute( 'code' ),
 							'regex'			=> (bool) $route->getAttribute( 'regex' ),
+							'title'			=> '',
 						);
+						if( $route->hasAttribute( 'title' ) )
+							$this->routes[$id]->title	= (string) $route->getAttribute( 'title' );
 					}
 				}
-				foreach( $this->routes as $route )
+				foreach( $this->routes as $route ){
 					$this->routeMapBySource[$route->source]	= $route;
+				}
 		}
 		$this->addData( 'routes', $this->routes );
 		$this->addData( 'routesBySource', $this->routeMapBySource );
