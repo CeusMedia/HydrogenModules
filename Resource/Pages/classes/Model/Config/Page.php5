@@ -64,12 +64,16 @@ class Model_Config_Page
 			foreach( $data as $nr => $page ){
 				$pageValue	= $page->$indexKey;
 				$matches	= array();
-				if( preg_match( $regExp, $indexValue, $matches ) ){
-					if( $matches[1] === '!= ' && $matches[2] !== (string) $pageValue ||
-						$matches[1] === '>= ' && (int) $matches[1] >= (int) $pageValue ||
-						$matches[1] === '<= ' && (int) $matches[1] <= (int) $pageValue ||
-						$matches[1] === '> ' && (int) $matches[1] > (int) $pageValue ||
-						$matches[1] === '< ' && (int) $matches[1] < (int) $pageValue )
+				if( is_array( $indexValue ) ){
+					if( !in_array( $pageValue, $indexValue ) )
+						unset( $data[$nr] );
+				}
+				else if( preg_match( $regExp, $indexValue, $matches ) ){
+					if( $matches[1] === '!= ' && $pageValue !== (string) $matches[2] ||
+						$matches[1] === '>= ' && (int) $pageValue >= (int) $matches[2] ||
+						$matches[1] === '<= ' && (int) $pageValue <= (int) $matches[2] ||
+						$matches[1] === '> ' && (int) $pageValue > (int) $matches[2] ||
+						$matches[1] === '< ' && (int) $pageValue < (int) $matches[2] )
 						unset( $data[$nr] );
 				}
 				else if( $pageValue != $indexValue )
