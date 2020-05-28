@@ -41,7 +41,21 @@ class Controller_Shop_Payment_Bank extends CMF_Hydrogen_Controller{
 		$this->order		= $this->logicShop->getOrder( $this->orderId );
 	}
 
+	/**
+	 *	Entry point for payment.
+	 *	Since "Transfer" (user pays on another channel) is selected, no further actions are needed.
+	 *	Forwards to shop finish.
+	 */
 	public function perTransfer(){
+		$this->restart( 'shop/finish' );
+	}
+
+	/**
+	 *	Entry point for payment.
+	 *	Since "Bill" (user pays bill coming on delivery) is selected, no further actions are needed.
+	 *	Forwards to shop finish.
+	 */
+	public function perBill(){
 		$this->restart( 'shop/finish' );
 	}
 
