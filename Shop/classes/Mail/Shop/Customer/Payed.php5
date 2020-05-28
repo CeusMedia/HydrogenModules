@@ -35,8 +35,8 @@ class Mail_Shop_Customer_Payed extends Mail_Abstract{
 		$subject	= str_replace( "%time%", date( 'H:i:s' ), $subject );
 		$subject	= str_replace( "%orderId%", $this->order->orderId, $subject );
 		$this->setSubject( $subject );
-		$this->addTextBody( $text = $this->renderText( $data ) );
-		$this->addHtmlBody( $html = $this->renderHtml( $data ) );
+		$this->setText( $text = $this->renderText( $data ) );
+		$this->setHtml( $html = $this->renderHtml( $data ) );
 		return (object) array(
 			'html'		=> $html,
 			'text'		=> $text,

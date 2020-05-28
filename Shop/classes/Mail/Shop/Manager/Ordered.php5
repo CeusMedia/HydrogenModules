@@ -32,8 +32,8 @@ class Mail_Shop_Manager_Ordered extends Mail_Abstract{
 		$subject	= str_replace( "%time%", date( 'H:i:s' ), $subject );
 		$subject	= str_replace( "%orderId%", $this->order->orderId, $subject );
 		$this->setSubject( $subject );
-//		$this->addTextBody( $this->renderText( $data ) );
-		$this->addHtmlBody( $this->renderHtml( $data ) );
+//		$this->setText( $this->renderText( $data ) );
+		$this->setHtml( $this->renderHtml( $data ) );
 	}
 
 	public function renderHtml( $data ){
