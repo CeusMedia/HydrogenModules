@@ -51,6 +51,7 @@ For payment you need to install a payment module.]]></description>
 	<log version="0.8.3">Reintegrate shipping.</log>
 	<log version="0.8.4">Integrate shop jobs from other app modules.</log>
 	<log version="0.8.5">Refactoring to use shop user instead of shop customer.</log>
+	<log version="0.8.6">Move job definitions to module configuration.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -129,7 +130,6 @@ For payment you need to install a payment module.]]></description>
 		<template>shop/payment.php</template>
 		<template>shop/service.php</template>
 		<style sourc="theme" load="auto">module.shop.css</style>
-		<file>config/jobs/shop.xml</file>
 		<file>contents/attachments/Widerrufsformular.odt</file>
 		<file>contents/attachments/Widerrufsformular.pdf</file>
 		<file>contents/attachments/Widerrufsformular.txt</file>
@@ -168,6 +168,14 @@ For payment you need to install a payment module.]]></description>
 		<supports type="module">Shop_Shipping</supports>
 	</relations>
 	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_FinishPanel::__onRenderServicePanels</hook>
+	<jobs>
+		<job id="Shop.OldCustomers.cleanup" env="dev,test,live">Shop::cleanupOldCustomers</job>
+		<job id="Shop.OldCustomers.cleanupTestOrders" env="dev,test,live">Shop::cleanupOldCustomerTestOrders</job>
+		<job id="Shop.OldCustomers.importAsMigrantsAndSaveAsCsv" env="dev,test,live">Shop::importOldCustomersAsMigrantsAndSaveAsCsv</job>
+		<job id="Shop.OldCustomers.migrate" env="dev,test,live">Shop::migrateOldCustomers</job>
+		<job id="Shop.OldCustomers.sanitizeCountries" env="dev,test,live">Shop::sanitizeOldCustomerCountries</job>
+		<job id="Shop.OldCustomers.createConfig" env="dev,test,live">Shop::createOldCustomersConfig</job>
+	</jobs>
 	<sql type="mysql" on="install" version="0.1">
 <![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_customers`;
