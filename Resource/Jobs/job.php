@@ -166,7 +166,8 @@ class JobScriptHelper
 			$jobber	= new \Jobber();											//  start job handler
 			$jobber->setMode( $this->mode );
 //			$jobber->loadJobs( $this->modes, FALSE );							//  load jobs configured in XML or JSON files, allowing JSON to override
-			$code	= $jobber->run( $this->request );							//  execute found jobs
+			$result	= $jobber->run( $this->request );							//  execute found jobs
+			$code	= ( $result === 1 || $result === TRUE ) ? 0 : -1 * $result;
 			exit( $code );
 		}
 		catch( \Exception $e ){

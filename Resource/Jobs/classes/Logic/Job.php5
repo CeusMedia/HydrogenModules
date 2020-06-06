@@ -121,19 +121,22 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	public function getDefinitionByIdentifier( $jobDefinitionIdentifier, $extendBy = array() ): ?object
 	{
 		$jobDefinition	= $this->modelDefinition->getByIndex( 'identifier', $jobDefinitionIdentifier );
-		if( $jobDefinition && $extendBy ){
-			if( in_array( 'schedules', $extendBy ) ){
-				$jobDefinition->schedules	= $this->modelSchedule->getAll( array(
-					'jobDefinitionId'	=> $jobDefinition->jobDefinitionId,
-				) );
+		if( $jobDefinition ){
+			if( $extendBy ){
+				if( in_array( 'schedules', $extendBy ) ){
+					$jobDefinition->schedules	= $this->modelSchedule->getAll( array(
+						'jobDefinitionId'	=> $jobDefinition->jobDefinitionId,
+					) );
+				}
+				if( in_array( 'runs', $extendBy ) ){
+					$jobDefinition->runs		= $this->modelRun->getAll( array(
+						'jobDefinitionId'	=> $jobDefinition->jobDefinitionId,
+					) );
+				}
 			}
-			if( in_array( 'runs', $extendBy ) ){
-				$jobDefinition->runs		= $this->modelRun->getAll( array(
-					'jobDefinitionId'	=> $jobDefinition->jobDefinitionId,
-				) );
-			}
+			return $jobDefinition;
 		}
-		return $jobDefinition;
+		return NULL;
 	}
 
 	public function getDefinitions( $conditions = array(), $orders = array(), $limits = array(), $fields = array() ): array
