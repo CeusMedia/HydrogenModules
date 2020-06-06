@@ -111,6 +111,8 @@ class Job_Shop extends Job_Abstract{
 						'D',
 						'Deutschland (DEU)',
 						'BR Deutschland',
+						'Deutschlan',
+						'DEutschland',
 					),
 				)
 			),
@@ -151,11 +153,16 @@ class Job_Shop extends Job_Abstract{
 		$blocked		= $this->data->migrants->skipEmails;
 		$countryMap		= array_flip( $this->env->getLanguage()->getWords( 'countries' ) );
 		$emails			= array();
-		$conditions		= array( 'customerId' => '>0', 'status' => '>='.Model_Shop_Order::STATUS_ORDERED );
+		$conditions		= array( 'customerId' => '> 0', 'status' => '>= '.Model_Shop_Order::STATUS_ORDERED );
 		$orders			= array( 'orderId' => 'ASC' );
 		$shopOrders		= $modelOrder->getAll( $conditions, $orders );
 		foreach( $shopOrders as $order ){
+			$this->out( '- Order: '.$order->orderId );
+			if( !$order->customerId )
+				continue;
 			$customer	= $modelCustomer->get( $order->customerId );
+			if( !$customer )
+				continue;
 			if( in_array( $customer->email, $blocked ) )
 				continue;
 			if( array_key_exists( $customer->email, $emails ) )
