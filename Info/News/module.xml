@@ -11,6 +11,7 @@
 	<log version="0.2.9">Use shortcode logic to apply shortcode hook.</log>
 	<log version="0.3">Imported module from protected repository.</log>
 	<log version="0.3.1">Adjust to new shortcode handling.</log>
+	<log version="0.3.2">Added Basic English Language Files.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -22,6 +23,9 @@
 		<locale>de/info/news.ini</locale>
 		<locale>de/html/info/news/bottom.html</locale>
 		<locale>de/html/info/news/top.html</locale>
+		<locale>en/info/news.ini</locale>
+		<locale>en/html/info/news/bottom.html</locale>
+		<locale>en/html/info/news/top.html</locale>
 		<template>info/news/index.php</template>
 		<style source="common" load="auto">module.info.news.css</style>
 	</files>
