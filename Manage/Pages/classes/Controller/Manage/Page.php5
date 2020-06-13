@@ -94,6 +94,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 				}
 			}
 			$data['createdAt']	= time();
+			$data['fullpath']	= '';
 			unset( $data['pageId'] );
 
 			$indices		= array( 'parentId' => $parentId, 'identifier' => $data['identifier'] );
