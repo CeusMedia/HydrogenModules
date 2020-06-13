@@ -285,7 +285,7 @@ class Model_Menu {
 						);
 						if( $this->localization ){
 							$id	= 'page.'.$subitem->path.'-title';
-							$subitem->label	= $this->localization->translate( $id, $subitem->title );
+							$subitem->label	= $this->localization->translate( $id, $subitem->label );
 						}
 						if( $subpage->type == 2 ){
 							$subpage->path	= $subpage->controller;
