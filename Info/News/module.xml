@@ -3,7 +3,7 @@
 	<title>Info: News</title>
 	<description></description>
 	<category>Info</category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.2.5">Prepared extraction of still bundled catalog news.</log>
 	<log version="0.2.6">Add helper to render news.</log>
 	<log version="0.2.7">Improve HTML customisation.</log>
