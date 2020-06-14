@@ -10,6 +10,7 @@
 	<log version="0.2.2">Prepare view helper for hook call on view construction.</log>
 	<log version="0.2.3">Add simple locales. Language list needs to be completed!</log>
 	<log version="0.2.4">Support dropdown alignment.</log>
+	<!--<log version="0.2.5">Support Flag Images.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -17,6 +18,7 @@
 		<class>View/Helper/LanguageSelector.php5</class>
 		<locale>de/language.ini</locale>
 		<locale>en/language.ini</locale>
+		<!--<image source='common'>de.png</image>-->
 	</files>
 	<config protected="yes" type="string" name="mode" value="select,dropdown">dropdown</config>
 	<config protected="yes" type="string" name="mode.dropdown.align" value="left,right">right</config>

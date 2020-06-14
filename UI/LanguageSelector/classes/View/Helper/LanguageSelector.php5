@@ -51,6 +51,12 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract{
 		) );
 
 		$label			= $this->words['selector']['label'];
+		$this->env->getCaptain()->callHook('LanguageSelector','queryLanguageDecorator', $this, array("label" => $label ));
+/* TODO Move to own Module and add support here for themeable icons
+		$flagimgpath		= "themes/common/img/".$this->language->GetLanguage().".png";
+		$flagimg		= UI_HTML_Tag::create( 'img' , '', array( 'src' => $flagimgpath , 'style' =>'height:1em') );
+		$flagimg		.= '&nbsp;'
+*/
 		$caret			= UI_HTML_Tag::create( 'span', '', array( 'class' => 'caret' ) );
 		$buttonToggle	= UI_HTML_Tag::create( 'a', $label.'&nbsp;&nbsp;'.$caret, array(
 			'class'			=> "btn btn-small dropdown-toggle language-selector-button",
