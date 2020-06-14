@@ -85,18 +85,20 @@ class Resource_Server_Log{
 		error_log( join( ' ', array_values( $entry ) )."\n", 3, $filePath );
 
 		/*  --  DATABASE STORAGE  --  */
-		if( $this->env->dbc ){
-			$model	= new Model_Log_Message( $this->env );
-			$model->add( array(
-				'type'				=> $type,
-				'status'			=> Model_Log_Message::STATUS_NEW,
-				'ip'				=> $use->get( 'ip' ) ? getEnv( 'REMOTE_ADDR' ) : NULL,
-				'format'			=> $format,
-				'message'			=> is_string( $message ) ? $message : json_encode( $message ),
-				'userAgent'			=> $use->get( 'userAgent' ) ? getEnv( 'HTTP_USER_AGENT' ) : NULL,
-				'context'			=> $context,
-				'microtimestamp'	=> microtime( TRUE ),
-			) );
+		if( isset( $this->env->dbc ) ) {
+			if( $this->env->dbc ){
+				$model	= new Model_Log_Message( $this->env );
+				$model->add( array(
+					'type'				=> $type,
+					'status'			=> Model_Log_Message::STATUS_NEW,
+					'ip'				=> $use->get( 'ip' ) ? getEnv( 'REMOTE_ADDR' ) : NULL,
+					'format'			=> $format,
+					'message'			=> is_string( $message ) ? $message : json_encode( $message ),
+					'userAgent'			=> $use->get( 'userAgent' ) ? getEnv( 'HTTP_USER_AGENT' ) : NULL,
+					'context'			=> $context,
+					'microtimestamp'	=> microtime( TRUE ),
+				) );
+			}
 		}
 		return TRUE;
 	}
