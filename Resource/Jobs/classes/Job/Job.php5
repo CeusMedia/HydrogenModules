@@ -107,7 +107,7 @@ class Job_Job extends Job_Abstract
 			$moduleJobs->moduleId	= $moduleId;
 			$targetFile	= $this->pathJobs.$moduleId.'.json';
 			$this->out( 'Writing job JSON: '.$targetFile );
-			FS_File_JSON_Writer::save( $targetFile, $moduleJoJob.bs, TRUE );
+			FS_File_JSON_Writer::save( $targetFile, $moduleJobs, TRUE );
 		}
 	}
 }
