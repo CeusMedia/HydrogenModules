@@ -39,7 +39,7 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract{
 				$icon	= UI_HTML_Tag::create( 'i', '', array(
 					'class'	=> ( $entry == $this->current ) ? 'icon-ok' : 'icon-empty',
 				) );
-				$link	= UI_HTML_Tag::create( 'a', $icon.'&nbsp;'.$this->labels[$entry], array(
+				$link	= UI_HTML_Tag::create( 'a', '<%?OPTIONALICON%>'.$icon.'&nbsp;'.$this->labels[$entry], array(
 					'href'	=> $this->path.'?switchLanguageTo='.$entry,
 					'class'	=> 'language-selector-link active',
 				) );
@@ -53,7 +53,7 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract{
 			'class'		=> 'dropdown-menu pull-'.$this->dropdownAlign,
 		) );
 
-		$label			= $this->words['selector']['label'];
+		$label			= '<%?OPTIONALICON%>.'$this->words['selector']['label'];
 		$eventpayload 		= (object)( array("label" => $label, "language" => $this->language->GetLanguage() ) );
 		$this->env->getCaptain()->callHook('LanguageSelector','queryLanguageDecorator', $this, $eventpayload);
 		$label			= $eventpayload->label;
