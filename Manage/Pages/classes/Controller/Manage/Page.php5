@@ -29,7 +29,8 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		$this->appSession		= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
 		$this->envManaged		= $this->env;
 		$this->appLanguages		= $this->env->getLanguage()->getLanguages();
-		$this->defaultLanguage	= current( array_keys( $this->env->getLanguage()->getLanguages() ) );
+//		$this->env->getLog()->log("debug","found languages in env:".print_r($this->env->getLanguage()->getLanguages(),true),$this);
+		$this->defaultLanguage	= current( array_values( $this->env->getLanguage()->getLanguages() ) );
 
 		$apps	= array();
 
@@ -67,7 +68,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			$this->model		= new Model_Page( $this->envManaged );
 		else if( $source === 'Config' )
 			$this->model		= new Model_Config_Page( $this->envManaged );
-
+//		$this->env->getLog()->log("debug","default language during init: ".print_r($this->defaultLanguage,true),$this);
 		if( $this->defaultLanguage )
 			if( !$this->appSession->get( 'language' ) )
 				$this->setLanguage( $this->defaultLanguage );
@@ -439,7 +440,12 @@ ModuleManagePages.PageEditor.init();
 	protected function translatePage( $page ){
 		if( !class_exists( 'Logic_Localization' ) )							//  localization module is not installed
 			return $page;
+//		$this->env->getLog()->log("debug","env dump: ".print_r($this->env,true),$this);
 		$localization	= new Logic_Localization( $this->env );
+/*		$this->env->getLog()->log("debug","trying to set language from appSession to localization object during translatePage: ".print_r($this->appSession,true),$this);
+		$this->env->getLog()->log("debug","trying to set language from appSession to localization object during translatePage: ".print_r($this->appSession->get( 'language' ),true),$this);
+		$this->env->getLog()->log("debug",print_r($this->session->getall(),true));
+*/
 		$localization->setLanguage( $this->appSession->get( 'language' ) );
 //		remark( $localization->getLanguage() );
 		$id	= 'page.'.$page->identifier.'-title';
