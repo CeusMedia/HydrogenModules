@@ -43,6 +43,9 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract{
 					'href'	=> $this->path.'?switchLanguageTo='.$entry,
 					'class'	=> 'language-selector-link active',
 				) );
+				$eventpayload = (object)( array( "label" => $link, "language" => $entry) );
+				$this->env->getCaptain()->callHook('LanguageSelector', 'queryLanguageDecorator', $this, $eventpayload );
+				$link   = $eventpayload->label;
 				$list[]	= UI_HTML_Tag::create( 'li', $link );
 			}
 		}
@@ -51,7 +54,9 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract{
 		) );
 
 		$label			= $this->words['selector']['label'];
-		$this->env->getCaptain()->callHook('LanguageSelector','queryLanguageDecorator', $this, array("label" => $label ));
+		$eventpayload 		= (object)( array("label" => $label, "language" => $this->language->GetLanguage() ) );
+		$this->env->getCaptain()->callHook('LanguageSelector','queryLanguageDecorator', $this, $eventpayload);
+		$label			= $eventpayload->label;
 /* TODO Move to own Module and add support here for themeable icons
 		$flagimgpath		= "themes/common/img/".$this->language->GetLanguage().".png";
 		$flagimg		= UI_HTML_Tag::create( 'img' , '', array( 'src' => $flagimgpath , 'style' =>'height:1em') );
