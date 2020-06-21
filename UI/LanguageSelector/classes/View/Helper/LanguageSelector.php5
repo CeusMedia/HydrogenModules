@@ -53,7 +53,7 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract{
 			'class'		=> 'dropdown-menu pull-'.$this->dropdownAlign,
 		) );
 
-		$label			= '<%?OPTIONALICON%>.'$this->words['selector']['label'];
+		$label			= '<%?OPTIONALICON%>'.$this->words['selector']['label'];
 		$eventpayload 		= (object)( array("label" => $label, "language" => $this->language->GetLanguage() ) );
 		$this->env->getCaptain()->callHook('LanguageSelector','queryLanguageDecorator', $this, $eventpayload);
 		$label			= $eventpayload->label;
