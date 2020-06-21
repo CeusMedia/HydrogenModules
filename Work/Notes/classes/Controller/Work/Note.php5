@@ -22,7 +22,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 	public function add(){
 		$model		= new Model_Note( $this->env );
 		$words		= (object) $this->getWords( 'add' );
-		$data		= $this->request->getAllFromSource( 'post' )->getAll();
+		$data		= $this->request->getAllFromSource( 'POST', TRUE );
 
 		if( $this->request->has( 'save' ) ){
 			$data		= array(

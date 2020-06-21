@@ -97,7 +97,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 
-		$data		= $this->request->getAllFromSource( 'POST' )->getAll();
+		$data		= $this->request->getAllFromSource( 'POST' );
 		$deniedKeys	= array( 'username', 'email', 'password', 'createdAt', 'modifiedAt', 'roleId', 'companyId', 'saveUser' );
 		foreach( $deniedKeys as $deniedKey )
 			unset( $data[$deniedKey] );
@@ -209,10 +209,10 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		$pwdMinStrength	= (int) $options->get( 'password.strength.min' );
 		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
-		$data = $this->request->getAllFromSource( 'post' );
-		$passwordOld		= trim( $this->request->getFromSource( 'passwordOld', 'post' ) );
-		$passwordNew		= trim( $this->request->getFromSource( 'passwordNew', 'post' ) );
-		$passwordConfirm	= trim( $this->request->getFromSource( 'passwordConfirm', 'post' ) );
+		$data = $this->request->getAllFromSource( 'POST', TRUE );
+		$passwordOld		= trim( $this->request->getFromSource( 'passwordOld', 'POST' ) );
+		$passwordNew		= trim( $this->request->getFromSource( 'passwordNew', 'POST' ) );
+		$passwordConfirm	= trim( $this->request->getFromSource( 'passwordConfirm', 'POST' ) );
 
 		if( !strlen( $passwordOld ) )
 			$this->messenger->noteError( $words->msgPasswordOldMissing );

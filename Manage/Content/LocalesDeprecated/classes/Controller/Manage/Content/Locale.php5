@@ -89,7 +89,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'msg' );
 
-		if( $request->getMethod() == "POST" ){
+		if( $request->getMethod()->isPost() ){
 			$url	= $request->get( 'language' ).'/'.$request->get( 'type' ).'/'.$request->get( 'fileId' );
 			$this->restart( $url, TRUE );
 		}

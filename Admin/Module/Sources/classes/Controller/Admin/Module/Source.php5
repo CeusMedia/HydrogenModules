@@ -17,7 +17,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 			$source->id	= $sourceId;
 		}
 
-		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
+		$post		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		if( $post->has( 'path' ) )
 			$source->path	= $post->get( 'path' );
 		if( $post->has( 'type' ) )
@@ -107,7 +107,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 
 	public function add(){
 		$messenger	= $this->env->getMessenger();
-		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
+		$post		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$words		= (object) $this->getWords( 'msg' );
 		if( $post->get( 'add' ) ){
 
@@ -157,7 +157,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 
 	public function edit( $sourceId ){
 		$messenger	= $this->env->getMessenger();
-		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
+		$post		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$words		= (object) $this->getWords( 'msg' );
 		if( $post->get( 'edit' ) ){
 

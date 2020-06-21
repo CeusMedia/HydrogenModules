@@ -12,7 +12,7 @@
 class Controller_Admin_Database_Connection extends CMF_Hydrogen_Controller{
 
 	public function ajaxCheck(){
-		$post		= (object) $this->env->getRequest()->getAllFromSource( "POST" )->getAll();
+		$post		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$status		= 0;
 		$error		= NULL;
 		try{

@@ -148,7 +148,7 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 			$this->restart( $url );
 		}
 
-		if( $this->request->getMethod() == "POST" ){
+		if( $this->request->getMethod()->isPost() ){
 			$authorization	= base64_encode( $this->clientId.':'.$this->clientSecret );
 			$postData		= http_build_query( array(
 				'grant_type'	=> 'password',

@@ -16,8 +16,8 @@
  *	@copyright		2010-2012 Ceus Media
  *	@version		$Id$
  */
-class Model_Role extends CMF_Hydrogen_Model {
-
+class Model_Role extends CMF_Hydrogen_Model
+{
 	const ACCESS_NONE		= 0;
 	const ACCESS_ACL		= 64;
 	const ACCESS_FULL		= 128;

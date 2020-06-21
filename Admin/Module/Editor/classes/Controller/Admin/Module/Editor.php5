@@ -9,7 +9,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	protected $logic;
 	/** @var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	Messenger Object */
 	protected $messenger;
-	/**	@var	Net_HTTP_Request_Receiver						$request	HTTP Request Object */
+	/**	@var	Net_HTTP_Request								$request	HTTP Request Object */
 	protected $request;
 
 	protected function __onInit(){
@@ -60,7 +60,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function addAuthor( $moduleId ){
-		$data	= $this->env->getRequest()->getAllFromSource( 'post' );
+		$data	= $this->request->getAllFromSource( 'POST', TRUE );
 		if( !strlen( trim( $data->get( 'name' ) ) ) )												//  no name provided
 			$this->env->getMessenger()->noteError( 'Der Name des Autors fehlt.' );
 		else{
@@ -71,7 +71,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function addCompany( $moduleId ){
-		$data	= $this->env->getRequest()->getAllFromSource( 'post' );
+		$data	= $this->request->getAllFromSource( 'POST', TRUE );
 		if( !strlen( trim( $data->get( 'name' ) ) ) )												//  no name provided
 			$this->env->getMessenger()->noteError( 'Der Name des Unternehmens fehlt.' );
 		else{
@@ -82,7 +82,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function addConfig( $moduleId ){
-		$data	= $this->env->getRequest()->getAllFromSource( 'post' );
+		$data	= $this->request->getAllFromSource( 'POST', TRUE );
 		if( $data->get( 'type' ) === "boolean" )
 			$data->set( 'value', trim( $data->get( 'value_boolean' ) ) );
 		if( !strlen( trim( $data->get( 'name' ) ) ) )												//  no name provided
@@ -108,7 +108,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	 *	@param		string		$moduleId		Module ID
 	 */
 	public function addFile( $moduleId ){
-		$data		= $this->env->getRequest()->getAllFromSource( 'post' );
+		$data		= $this->request->getAllFromSource( 'POST', TRUE );
 		$type		= $data->get( 'type' );
 		$resource	= $data->get( 'resource' );
 		$source		= $data->get( 'source_'.$type );
@@ -126,7 +126,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function addLink( $moduleId ){
-		$request	= $this->env->getRequest()->getAllFromSource( 'post' );
+		$request	= $this->request->getAllFromSource( 'POST', TRUE );
 		if( !trim( $request->get( 'path' ) ) )														//  no path provided
 			$this->env->getMessenger()->noteError( 'Kein Link-Pfad angegeben.' );
 		else{
@@ -144,18 +144,18 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function addRelation( $moduleId ){
-		$data		= $this->env->getRequest()->getAllFromSource( 'post' );
+		$data		= $this->request->getAllFromSource( 'POST', TRUE );
 		$this->editor->addRelation( $moduleId, $data->get( 'type' ), $data->get( 'module' ) );
 		$this->restart( 'view/'.$moduleId.'?tab=relations', TRUE );									//  restart view of relations
 	}
 
 	public function addSql( $moduleId ){
-		$request	= $this->env->getRequest();
-		$event		= $request->get( 'event' );
-		$type		= $request->get( 'type' );
-		$ddl		= $request->get( 'ddl' );
-		$from		= $request->get( 'version_from' );
-		$to			= $request->get( 'version_to' );
+		$post		= $this->request->getAllFromSource( 'POST', TRUE );
+		$event		= $post->get( 'event' );
+		$type		= $post->get( 'type' );
+		$ddl		= $post->get( 'ddl' );
+		$from		= $post->get( 'version_from' );
+		$to			= $post->get( 'version_to' );
 		if( trim( $ddl ) ){
 			$this->editor->addSql( $moduleId, $ddl, $event, $type, $from, $to );
 			$this->env->getMessenger()->noteSuccess( 'SQL added.' );								//  show success message
@@ -164,19 +164,18 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function commit( $moduleId, $move = NULL ){
-		$request	= $this->env->getRequest()->getAllFromSource( 'post' );
+		$request	= $this->request->getAllFromSource( 'POST', TRUE );
 		$this->logic->importLocalModuleToRepository( $moduleId, $request->get( 'source' ), $move );
 		$this->restart( 'view/'.$moduleId, TRUE );
 	}
 
 	public function edit( $moduleId ){
-		$request	= $this->env->getRequest();
+		$post		= $this->request->getAllFromSource( 'POST', TRUE );
 		$module		= $this->logic->model->getLocalModuleXml( $moduleId, TRUE );					//  load module XML
 
-		$title			= $request->get( 'edit_title' );
-		$version		= $request->get( 'edit_version' );
-		$description	= $request->get( 'edit_description' );
-#		$title			= $request->get( 'title' );
+		$title			= $post->get( 'edit_title' );
+		$version		= $post->get( 'edit_version' );
+		$description	= $post->get( 'edit_description' );
 
 		if( $title )
 			if( $module->title != $title )
@@ -192,8 +191,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function editConfig( $moduleId ){
-		$request	= $this->env->getRequest();
-		$pairs		= $request->get( 'config' );
+		$post		= $this->request->getAllFromSource( 'POST', TRUE );
+		$pairs		= $post->get( 'config' );
 		$this->logic->configureLocalModule( $moduleId, $pairs );
 		$this->logic->invalidateFileCache( $this->env->getRemote() );
 		$this->messenger->noteSuccess( 'Saved.' );
@@ -201,20 +200,20 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function editLink( $moduleId, $number ){
-		$request	= $this->env->getRequest()->getAllFromSource( 'post' );
-		if( !trim( $request->get( 'path' ) ) )														//  no path provided
+		$post	= $this->request->getAllFromSource( 'POST', TRUE );
+		if( !trim( $post->get( 'path' ) ) )														//  no path provided
 			$this->env->getMessenger()->noteError( 'Kein Link-Pfad angegeben.' );
 		else{
 			try{
 				$this->editor->editLink(
 					$moduleId,
 					$number,
-					$request->get( 'path' ),
-					$request->get( 'link' ),
-					$request->get( 'label' ),
-					$request->get( 'access' ),
-					$request->get( 'language' ),
-					$request->get( 'rank' )
+					$post->get( 'path' ),
+					$post->get( 'link' ),
+					$post->get( 'label' ),
+					$post->get( 'access' ),
+					$post->get( 'language' ),
+					$post->get( 'rank' )
 				);
 				$this->env->getMessenger()->noteSuccess( 'Link saved.' );							//  show success message
 			}
@@ -318,15 +317,14 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	}
 
 	public function saveXml( $moduleId ){
-		$request	= $this->env->getRequest();
-		$this->logic->model->setLocalModuleXml( $moduleId, $request->get( 'content' ) );
+		$post	= $this->request->getAllFromSource( 'POST', TRUE );
+		$this->logic->model->setLocalModuleXml( $moduleId, $post->get( 'content' ) );
 		$this->messenger->noteSuccess( 'Module XML saved.' );
 		$this->restart( 'view/'.$moduleId.'?tab=xml', TRUE );
 	}
 
 	public function uploadIcon( $moduleId ){
-		$request	= $this->env->getRequest();
-		$image		= $request->get( 'image' );
+		$image		= $this->request->get( 'image' );
 		if( !empty( $image['error'] ) ){
 			$handler	= new Net_HTTP_UploadErrorHandler();
 			$message	= $handler->getErrorMessage( $image['error'] );
@@ -415,7 +413,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->addData( 'modules', $modules = $this->logic->model->getAll() );
 		$this->addData( 'sources', $this->logic->listSources() );
 		$this->addData( 'xml', $this->logic->model->getLocalModuleXml( $moduleId ) );
-		$this->addData( 'linkNr', $this->env->getRequest()->get( 'linkNr' ) );
+		$this->addData( 'linkNr', $this->request->get( 'linkNr' ) );
 
 		if( isset( $modules[$moduleId] ) )
 			$this->env->getPage()->setTitle( $modules[$moduleId]->title, 'append' );

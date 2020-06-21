@@ -25,7 +25,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller{
 
 	public function add(){
 		$words		= (object) $this->getWords( 'add' );
-		$data		= $this->request->getAllFromSource( 'POST' )->getAll();
+		$data		= $this->request->getAllFromSource( 'POST' );
 
 		if( $this->request->has( 'save' ) ){
 			if( empty( $data['title'] ) )
@@ -78,7 +78,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller{
 		$title			= $this->request->get( 'title' );
 		$words			= (object) $this->getWords( 'edit' );
 		$modelUser		= new Model_User( $this->env );
-		$data		= $this->request->getAllFromSource( 'POST' )->getAll();
+		$data		= $this->request->getAllFromSource( 'POST' );
 		if( $this->request->has( 'save' ) ){
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->msgNoTitle );

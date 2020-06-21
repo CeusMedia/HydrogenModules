@@ -336,7 +336,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		foreach( $modelRole->getAllByIndex( 'register', array( 64, 128 ) ) as $role )
 			$rolesAllowed[]	= $role->roleId;
 
-		$input			= $this->request->getAllFromSource( 'post' );
+		$input			= $this->request->getAllFromSource( 'POST', TRUE );
 		$options		= $this->moduleConfigUsers;
 
 		$nameMinLength	= $options->get( 'name.length.min' );

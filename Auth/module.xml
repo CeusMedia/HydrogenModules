@@ -2,9 +2,10 @@
 <module>
 	<title>Authentication</title>
 	<description>Module for authentication against local database using the Users module.</description>
-	<version>0.5.1</version>
+	<version>0.5.2</version>
 	<log version="0.5">Migration to Bootstrap and FontAwesome.</log>
 	<log version="0.5.1">Adjusted configuration visibility.</log>
+	<log version="0.5.2">End Of Life: Deprecated - use Resource:Authentication:Backend:Local instead.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -60,4 +61,3 @@
 	<link rank="99" access="public" path="auth/ajaxRefreshSession"></link>
 	<link rank="99" access="public" path="auth/ajaxUsernameExists"></link>
 </module>
-

@@ -206,7 +206,7 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 	public function register(){
 		$data	= array();
 		if( $this->request->has( 'save' ) ){
-			$data	= $this->request->getAllFromSource( 'POST' );
+			$data	= $this->request->getAllFromSource( 'POST', TRUE );
 			$result	= $this->logic->register( $data );
 			if( is_array( $result ) ){
 				$this->messenger->noteSuccess( 'Account has been created. Now, please confirm you account!' );

@@ -29,7 +29,7 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 
 	public function add( $companyId = NULL ){
 		$words			= (object) $this->getWords( 'msg' );
-		$data			= $this->request->getAllFromSource( 'POST' )->getAll();
+		$data			= $this->request->getAllFromSource( 'POST' );
 
 		if( $this->request->get( 'save' ) ){
 			if( empty( $data['title'] ) )
@@ -138,7 +138,7 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 		$branch			= $this->checkBranch( $branchId );
 
 		if( $this->request->get( 'save' ) ){
-			$data	= $this->request->getAllFromSource( 'POST' )->getAll();
+			$data	= $this->request->getAllFromSource( 'POST' );
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->errorTitleMissing );
 			else if( $this->modelBranch->getAll( array( 'title' => $data['title'], 'branchId' => '!='.$branchId ) ) )

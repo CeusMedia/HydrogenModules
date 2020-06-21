@@ -161,9 +161,9 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$rolesAllowed	= array();
 		foreach( $modelRole->getAllByIndex( 'register', array( 64, 128 ) ) as $role )
 				$rolesAllowed[]	= $role->roleId;
-				
-		$input		= $this->request->getAllFromSource( 'post' );
-		
+
+		$input		= $this->request->getAllFromSource( 'POST', TRUE );
+
 		$nameMinLength	= $this->config->get( 'module.users.name.length.min' );
 		$nameMaxLength	= $this->config->get( 'module.users.name.length.max' );
 		$nameRegExp		= $this->config->get( 'module.users.name.preg' );
@@ -179,7 +179,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$username	= $input->get( 'username' );
 		$password	= $input->get( 'password' );
 		$email		= $input->get( 'email' );
-	
+
 		$errors	= $this->messenger->gotError();
 		if( $this->request->get( 'saveUser' ) ){
 			if( !in_array( $roleId, $rolesAllowed ) )
@@ -227,7 +227,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 				);
 				$userId		= $modelUser->add( $data );
 				$this->messenger->noteSuccess( $words->msgSuccess );
-				
+
 				if( !$status ){
 					$pak		= md5( 'pak:'.$userId.'/'.$username.'&'.$passwordSalt );
 					$data	= $input->getAll();

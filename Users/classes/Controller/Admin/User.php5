@@ -39,7 +39,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'add' );
-		$input		= $request->getAllFromSource( 'POST' );
+		$input		= $request->getAllFromSource( 'POST', TRUE );
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
@@ -56,8 +56,8 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$username	= $input->get( 'username' );
 		$password	= $input->get( 'password' );
 		$email		= $input->get( 'email' );
-		
-		if( $request->getMethod() == 'POST' ){
+
+		if( $request->getMethod()->isPost() ){
 			if( empty( $username ) )																//  no username given
 				$messenger->noteError( $words->msgNoUsername );
 			else if( $modelUser->countByIndex( 'username', $username ) )							//  username is already used
@@ -78,7 +78,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 				$messenger->noteError( $words->msgNoFirstname );
 			if( $needsSurname && empty( $data['surname'] ) )
 				$messenger->noteError( $words->msgNoSurname );
-			
+
 			if( !$messenger->gotError() ){
 				$userId		= $modelUser->add( array(
 					'roleId'		=> $input['roleId'],
@@ -127,7 +127,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'edit' );
-		$input		= $request->getAllFromSource( 'POST' );
+		$input		= $request->getAllFromSource( 'POST', TRUE );
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
@@ -146,7 +146,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$password	= $input->get( 'password' );
 		$email		= $input->get( 'email' );
 
-		if( $request->getMethod() == 'POST' ){
+		if( $request->getMethod()->isPost() ){
 			if( empty( $username ) )																//  no username given
 				$messenger->noteError( $words->msgNoUsername );
 			else if( $modelUser->countByIndex( 'username', $username ) )

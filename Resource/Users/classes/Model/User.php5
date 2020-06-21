@@ -24,6 +24,27 @@ class Model_User extends CMF_Hydrogen_Model {
 	const STATUS_UNCONFIRMED	= 0;
 	const STATUS_ACTIVE			= 1;
 
+	const TRANSITIONS			= array(
+		self::STATUS_DISABLED	=> array(
+			self::STATUS_UNCONFIRMED,
+			self::STATUS_ACTIVE,
+		),
+		self::STATUS_BANNED	=> array(
+			self::STATUS_DISABLED,
+			self::STATUS_UNCONFIRMED,
+			self::STATUS_ACTIVE,
+		),
+		self::STATUS_UNCONFIRMED	=> array(
+			self::STATUS_DISABLED,
+			self::STATUS_BANNED,
+			self::STATUS_ACTIVE,
+		),
+		self::STATUS_ACTIVE	=> array(
+			self::STATUS_DISABLED,
+			self::STATUS_BANNED,
+		),
+	);
+
 	protected $name		= 'users';
 	protected $columns	= array(
 		'userId',

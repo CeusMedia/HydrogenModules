@@ -4,7 +4,7 @@ class Controller_Admin_Server extends CMF_Hydrogen_Controller{
 	public function add(){
 		$model	= new Model_Server( $this->env );
 		$words	= (object) $this->getWords( 'add' );
-		$post	= $this->env->getRequest()->getAllFromSource( 'post' );
+		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		if( $post->get( 'add' ) ){
 			if( !strlen( trim( $post->get( 'title' ) ) ) )
 				$this->env->getMessenger()->noteError( $words->msgTitleMissing );
@@ -46,7 +46,7 @@ class Controller_Admin_Server extends CMF_Hydrogen_Controller{
 	}
 
 	public function edit( $serverId ){
-		$post	= $this->env->getRequest()->getAllFromSource( 'post' );
+		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$words	= (object) $this->getWords( 'edit' );
 		$model	= new Model_Server( $this->env );
 		if( $post->get( 'edit' ) ){
@@ -83,7 +83,7 @@ class Controller_Admin_Server extends CMF_Hydrogen_Controller{
 	}
 
 	public function filter(){}
-	
+
 	public function index(){
 		$session	= $this->env->getSession();
 		$model		= new Model_Server( $this->env );

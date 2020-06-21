@@ -2,7 +2,7 @@
 class Controller_Admin_Cache extends CMF_Hydrogen_Controller{
 
 	public function add(){
-		$post	= $this->env->getRequest()->getAllFromSource( "post" );
+		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$cache	= $this->getCache();
 		$result	= NULL;
 		if( $cache ){
@@ -26,7 +26,7 @@ class Controller_Admin_Cache extends CMF_Hydrogen_Controller{
 	}
 
 	public function ajaxRemove(){
-		$post	= $this->env->getRequest()->getAllFromSource( "post" );
+		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$cache	= $this->getCache();
 		$result	= NULL;
 		if( $cache )
@@ -41,7 +41,7 @@ class Controller_Admin_Cache extends CMF_Hydrogen_Controller{
 			return $env->getCache();
 		return NULL;
 	}
-	
+
 	public function index(){
 		$list		= array();
 		$cache		= $this->getCache();

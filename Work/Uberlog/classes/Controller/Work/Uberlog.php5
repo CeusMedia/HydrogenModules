@@ -134,7 +134,7 @@ class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
 
 	public function record(){
 		$request	= $this->env->getRequest();
-		$post		= $request->getAllFromSource( "post" );
+		$post		= $request->getAllFromSource( 'POST', TRUE );
 		$data		= $post->getAll();
 		$data['timestamp']	= $post->has( 'timestamp' ) ? $post->get( 'timestamp' ) : time();
 		$data['logCategoryId']	= $this->getCategoryId( $post->get( 'category' ) );

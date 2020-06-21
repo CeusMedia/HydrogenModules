@@ -20,8 +20,8 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 
 	public function add() {
 		$words	= $this->env->getLanguage()->getWords( 'admin/role' );
-		if( $this->env->getRequest()->getMethod() == 'POST' ){
-			$data		= $this->env->getRequest()->getAllFromSource( 'POST' );
+		if( $this->env->getRequest()->getMethod()->isPost() ){
+			$data		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 			$title		= $data->get( 'title' );
 
 			if( $title ){
@@ -41,7 +41,7 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 				$this->env->messenger->noteError( 'role_title_missing' );
 		}
 
-		$data	= $this->env->getRequest()->getAllFromSource( 'POST' );
+		$data	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$this->addData( 'role', $data );
 		$this->addData( 'words', $words );
 	}
@@ -49,7 +49,7 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 	public function addRight( $roleId ) {
 		$words		= $this->env->getLanguage()->getWords( 'admin/role' );
 		$request	= $this->env->getRequest();
-		if( $request->getMethod() == 'POST' ){
+		if( $request->getMethod()->isPost() ){
 			$controller	= $request->getFromSource( 'controller', 'POST' );
 			$action		= $request->getFromSource( 'action', 'POST' );
 			$data		= array(
@@ -84,7 +84,7 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 		print( json_encode( (bool) $right ) );
 		exit;
 	}
-	
+
 	public function edit( $roleId = NULL ) {
 		if( empty( $roleId ) )
 			throw new InvalidArgumentException( 'Invalid role id' );
@@ -95,9 +95,9 @@ class Controller_Admin_Role extends CMF_Hydrogen_Controller {
 		$modelRole	= new Model_Role( $this->env );
 		$role		= $modelRole->get( $roleId );
 
-		if( $this->env->getRequest()->getMethod() == 'POST' )
+		if( $this->env->getRequest()->getMethod()->isPost() )
 		{
-			$data		= $this->env->getRequest()->getAllFromSource( 'POST' )->getAll();
+			$data		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 			$modelRole->edit( $roleId, $data );
 			$this->restart( './admin/role' );
 		}

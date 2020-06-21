@@ -16,7 +16,9 @@
  *	@copyright		2010-2012 Ceus Media
  *	@version		$Id$
  */
-class Controller_Manage_User extends CMF_Hydrogen_Controller {
+class Controller_Manage_User extends CMF_Hydrogen_Controller
+{
+	public static $moduleId		= 'Manage_Users';
 
 	protected $countries;
 
@@ -32,8 +34,8 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		'limit'
 	);
 
-	public function __onInit(){
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_users.', TRUE );
+	public function __onInit()
+	{
 		$options			= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$this->countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$this->setData( array(
@@ -45,22 +47,22 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 			'needsSurname'		=> $options->get( 'surname.mandatory' ),
 			'needsTac'			=> $options->get( 'tac.mandatory' ),
 		) );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
 
-
-	public function accept( $userId ) {
-		$this->setStatus( $userId, 1 );
+	public function accept( $userId )
+	{
+		$this->setStatus( $userId, Model_User::STATUS_ACTIVE );
 	}
 
-	public function add() {
+	public function add()
+	{
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'add' );
-		$input		= $request->getAllFromSource( 'POST' );
-		$modelUser	= new Model_User( $this->env );
-		$modelRole	= new Model_Role( $this->env );
+		$input		= $request->getAllFromSource( 'POST', TRUE );
+		$modelUser	= $this->getModel( 'User' );
+		$modelRole	= $this->getModel( 'Role' );
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$nameMinLength	= $options->get( 'name.length.min' );
@@ -77,7 +79,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$password		= $input->get( 'password' );
 		$email			= strtolower( trim( $input->get( 'email' ) ) );
 
-		if( $request->getMethod() == 'POST' ){
+		if( $request->getMethod()->isPost() ){
 			if( empty( $username ) )																//  no username given
 				$messenger->noteError( $words->msgNoUsername );
 			else if( $modelUser->countByIndex( 'username', $username ) )							//  username is already used
@@ -152,15 +154,18 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$this->addData( 'countries', $this->countries );
 	}
 
-	public function ban( $userId ) {
-		$this->setStatus( $userId, -1 );
+	public function ban( $userId )
+	{
+		$this->setStatus( $userId, Model_User::STATUS_BANNED );
 	}
 
-	public function disable( $userId ) {
-		$this->setStatus( $userId, -2 );
+	public function disable( $userId )
+	{
+		$this->setStatus( $userId, Model_User::STATUS_DISABLED );
 	}
 
-	public function edit( $userId ) {
+	public function edit( $userId )
+	{
 /*		$acl		= $this->env->getAcl();
 		$modules	= $this->env->getModules();
 		$canEdit	= $acl->has( 'manage/user', 'edit' );
@@ -171,7 +176,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'edit' );
-		$input		= $request->getAllFromSource( 'POST' );
+		$input		= $request->getAllFromSource( 'POST', TRUE );
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
@@ -196,7 +201,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$password	= $input->get( 'password' );
 		$email		= strtolower( trim( $input->get( 'email' ) ) );
 
-		if( $request->getMethod() == 'POST' ){
+		if( $request->getMethod()->isPost() ){
 			if( empty( $username ) ){																//  no username given
 				$messenger->noteError( $words->msgNoUsername );
 				$this->restart( 'edit/'.$userId, TRUE );
@@ -312,7 +317,8 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL ) {
+	public function index( $page = NULL )
+	{
 		$session	= $this->env->getSession();
 		$limit		= abs( $session->get( 'filter-user-limit' ) );
 		$limit		= $limit ? $limit : 15;
@@ -376,9 +382,15 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$this->restart( './manage/user/edit/'.(int) $userId );
 	}*/
 
-	protected function setStatus( $userId, $status ) {
+	protected function setStatus( int $userId, int $status )
+	{
 		$model		= new Model_User( $this->env );
-		$model->edit( $userId, array( 'status' => $status ) );
+		$user		= $model->get( $userId );
+		if( !$user )
+			throw new DomainException( 'Invalid user ID' );
+		if( !in_array( (int) $status, Model_User::TRANSITIONS[(int) $user->status] ) )
+			throw new RangeException( 'Invalid status transition' );
+		$model->edit( $userId, array( 'status' => $status, 'modifiedAt' => time() ) );
 /*		$server		= $this->env->getServer();
 		$user		= $server->getData( 'user', 'get', array( (int) $userId ) );
 		$code		= $server->postData( 'user', 'setStatus', array( (int) $userId, $status ) );
@@ -386,7 +398,8 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 */		$this->restart( 'edit/'.(int) $userId, TRUE );
 	}
 
-	public function remove( $userId ){
+	public function remove( int $userId )
+	{
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'remove' );
 		$model		= new Model_User( $this->env );
@@ -400,4 +413,3 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller {
 		$this->restart( NULL, TRUE );
 	}
 }
-?>

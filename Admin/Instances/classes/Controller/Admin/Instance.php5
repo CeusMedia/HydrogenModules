@@ -11,7 +11,7 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 	}
 
 	public function add(){
-		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
+		$post		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		if( $post->get( 'add' ) ){
 			$id			= trim( $post->get( 'id' ) );
 			$title		= trim( $post->get( 'title' ) );
@@ -183,7 +183,7 @@ class Controller_Admin_Instance extends CMF_Hydrogen_Controller{
 		}
 
 		$module		= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );
-		$post		= $this->env->getRequest()->getAllFromSource( 'post' );
+		$post		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		if( $post->get( 'edit' ) ){
 			$id			= trim( $post->get( 'id' ) );
 			$title		= trim( $post->get( 'title' ) );

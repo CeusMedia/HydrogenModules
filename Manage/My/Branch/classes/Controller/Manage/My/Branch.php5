@@ -22,7 +22,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'add' );
 		$model			= new Model_Branch( $this->env );
-		$data			= $request->getAllFromSource( 'POST' )->getAll();
+		$data			= $request->getAllFromSource( 'POST' );
 
 		$modelUser		= new Model_User( $this->env );
 		$user			= $modelUser->get( (int) $session->get( 'userId' ) );
@@ -141,7 +141,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'edit' );
-		$data			= $request->getAllFromSource( 'POST' )->getAll();
+		$data			= $request->getAllFromSource( 'POST' );
 		$modelBranch	= new Model_Branch( $this->env );
 		$modelImage		= new Model_Branch_Image( $this->env );
 

@@ -28,7 +28,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'add' );
 		$model		= new Model_Company( $this->env );
-		$data		= $request->getAllFromSource( 'POST' )->getAll();
+		$data		= $request->getAllFromSource( 'POST' );
 
 		if( $request->get( 'doAdd' ) ){
 			if( empty( $data['title'] ) )
@@ -78,7 +78,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 		$words			= (object) $this->getWords( 'edit' );
 		$modelCompany	= new Model_Company( $this->env );
 		$modelUser		= new Model_User( $this->env );
-		$data		= $request->getAllFromSource( 'POST' )->getAll();
+		$data		= $request->getAllFromSource( 'POST' );
 		if( $request->get( 'doEdit' ) ){
 			if( empty( $data['title'] ) )
 				$messenger->noteError( $words->msgNoTitle );

@@ -73,7 +73,7 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 	public function add( $companyId = NULL ){
 		$words			= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'save' ) ){
-			$data	= $this->request->getAllFromSource( 'POST' )->getAll();
+			$data	= $this->request->getAllFromSource( 'POST' );
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->errorNoTitle );
 			else if( $this->modelBranch->getAll( array( 'title' => $data['title'] ) ) )
@@ -208,7 +208,7 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 	//	$modelImage		= new Model_Branch_Image( $this->env );
 
 		if( $this->request->has( 'save' ) ){
-			$data	= $this->request->getAllFromSource( 'POST' )->getAll();
+			$data	= $this->request->getAllFromSource( 'POST' );
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->errorNoTitle );
 			else if( $this->modelBranch->getAll( array( 'title' => $data['title'], 'branchId' => '!='.$branchId ) ) )
