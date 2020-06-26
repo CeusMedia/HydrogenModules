@@ -8,6 +8,7 @@ $usedModules	= array();
 foreach( $controllerActions as $controller )
 	$usedModules[]	= $controller->module->id;
 $usedModules	= array_unique( $usedModules );
+asort( $usedModules );
 
 $list	= array();
 foreach( $usedModules as $usedModule ){
@@ -16,76 +17,6 @@ foreach( $usedModules as $usedModule ){
 }
 
 $tableRights	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
-
-$script	= '
-var ModuleManageUsers = {
-	onChangeVisibleRightsToggle: function(event){
-		var toggle = $(this);
-		var showAll = toggle.is(":checked");
-
-		if(showAll){
-			$("li.acl-module").not(".changable").slideDown(250);
-		}
-		else{
-			$("li.acl-module").not(".changable").slideUp(250);
-		}
-
-
-		var rows = $("#role-edit-rights tbody tr");
-		rows.each(function(){
-			var row = $(this);
-			if(showAll){
-				row.fadeIn({duration: 0, queue: false});
-				row.find("li.action").show();
-				row.find(".label-module,.label-controller").show();
-			}
-			else{
-				row.find(".label-module,.label-controller").hide();
-				var hasChangables = $(this).find("li.action.changable").length;
-				if(!hasChangables)
-					row.fadeOut({duration: 0, queue: false});
-				else{
-					row.fadeIn({duration: 0, queue: false});
-					row.find("li.action").not(".changable").hide();
-				}
-			}
-		});
-	},
-	onChangeRightToggle: function(event){
-		if(event.button != 0)
-			return;
-		var toggle = $(this);
-		var id = toggle.attr("id");
-		var parts = id.split(/-/);
-		var action = parts.pop();
-		var controller = parts.pop();
-		toggle.addClass("yellow");
-		$.ajax({
-			url: "./manage/role/ajaxChangeRight/'.$roleId.'/"+controller+"/"+action,
-			dataType: "json",
-			context: toggle,
-			success: function(data){
-				if(data)
-					$(this).removeClass("red").addClass("green");
-				else
-					$(this).removeClass("green").addClass("red");
-				$(this).removeClass("yellow");
-			}
-		});
-	}
-};
-';
-$env->getPage()->js->addScript( $script );
-
-$script	= '
-$(document).ready(function(){
-	$("#role-edit-rights li.changable").on("mousedown", ModuleManageUsers.onChangeRightToggle );
-	$("#input-toggle-rights-all").on("change", ModuleManageUsers.onChangeVisibleRightsToggle);
-	$("#button-toggle").on("click", function(e){jQuery(this).children("label").trigger("click");});
-	$("#button-toggle>label").on("click", function(e){e.stopPropagation();});
-});
-';
-$env->getPage()->js->addScript( $script );
 
 return '
 <div class="content-panel content-panel-form">
@@ -106,12 +37,7 @@ return '
 	<div class="content-panel-inner" id="role-edit-rights">
 		'.$tableRights.'
 	</div>
-</div>
-<script>
-$(document).ready(function(){
-});
-</script>
-';
+</div>';
 
 function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, $words ){
 	$list		= array();
