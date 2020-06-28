@@ -119,16 +119,6 @@ $panelAdd	= '
 		</form>
 	</div>
 </div>
-<script>
-$(document).ready(function(){
-	$(".typeahead").each(function(){
-		$(this).typeahead({
-			source: '.json_encode( array_values( $countries ) ).',
-			items: 4
-		});
-	});
-});
-</script>
 ';
 
 $panelInfo	= '';
@@ -145,4 +135,4 @@ return $textIndexTop.'
 	</div>
 </div>
 '.$textIndexBottom;
-?>
+

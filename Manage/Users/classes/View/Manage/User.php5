@@ -19,7 +19,11 @@
 class View_Manage_User extends CMF_Hydrogen_View {
 
 	public function __onInit(){
-		$this->env->getPage()->addThemeStyle( 'module.manage.users.css' );
+		$countriesAsJson	= json_encode( array_values( $this->getData( 'countries' ) ) );
+        $this->env->getPage()
+            ->addThemeStyle( 'module.manage.users.css' )
+            ->loadLocalScript( 'module.manage.users.js', 8 )
+            ->runScript( 'ModuleManageUsers.setCountries('.$countriesAsJson ).').init()' );
 	}
 
 	public function index(){

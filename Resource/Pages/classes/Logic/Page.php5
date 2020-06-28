@@ -381,6 +381,7 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	}
 
 	protected function getPageModel(){
+//		$this->env->getMessenger()->noteInfo("...");
 		if( !empty( $this->model[$this->app] ) )
 			return $this->model[$this->app];
 		$envManaged		= $this->env;
@@ -393,6 +394,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 			$this->model[$this->app]	= new Model_Page( $envManaged );
 		else if( $source === 'Config' )
 			$this->model[$this->app]	= new Model_Config_Page( $envManaged );
+		else if( $source === 'Modules' )
+			$this->model[$this->app]	= new Model_Module_Page( $envManaged );
 		return $this->model[$this->app];
 	}
 }

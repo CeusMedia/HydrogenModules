@@ -68,6 +68,8 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			$this->model		= new Model_Page( $this->envManaged );
 		else if( $source === 'Config' )
 			$this->model		= new Model_Config_Page( $this->envManaged );
+		else if( $source === 'Modules' )
+			$this->model		= new Model_Module_Page( $this->envManaged );
 //		$this->env->getLog()->log("debug","default language during init: ".print_r($this->defaultLanguage,true),$this);
 		if( $this->defaultLanguage )
 			if( !$this->appSession->get( 'language' ) )

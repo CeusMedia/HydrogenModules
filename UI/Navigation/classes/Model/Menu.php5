@@ -360,7 +360,7 @@ class Model_Menu {
 						'type'		=> 'item',
 						'scope'		=> $scope,
 						'path'		=> $link->path,
-						'link'		=> is_string( $link->link ) ? $link->link : $link->path,
+						'link'		=> !empty( $link->link ) ? $link->link : $link->path,
 						'label'		=> $link->label,
 						'language'	=> $this->language,
 						'rank'		=> $link->rank,

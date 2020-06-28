@@ -36,7 +36,8 @@ class View_Manage_Page extends CMF_Hydrogen_View{
 		$isSelfApp		= $app === 'self';
 		$isFrontendApp	= $app === 'frontend';
 		$isFromConfig	= $source === 'Config';
-		$isFromDatabase	= $source === 'Database';
+//		$isFromDatabase	= $source === 'Database';
+//		$isFromModules	= $source === 'Modules';
 
 		$listTabs	= array();
 		$listPanes	= array();
