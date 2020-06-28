@@ -178,16 +178,7 @@ $panelEdit	= '
 			</div>
 		</form>
 	</div>
-</div>
-<script>
-$(document).ready(function(){
-	$(".typeahead").typeahead({
-		source: '.json_encode( array_values( $countries ) ).',
-		items: 4
-	});
-});
-</script>
-';
+</div>';
 
 $panelStatus	= $this->loadTemplateFile( 'manage/user/edit.status.php' );
 $panelInfo		= $this->loadTemplateFile( 'manage/user/edit.info.php' );
@@ -213,4 +204,4 @@ return $textIndexTop.'
 	</div>
 </div>
 '.$textIndexBottom;
-?>
+

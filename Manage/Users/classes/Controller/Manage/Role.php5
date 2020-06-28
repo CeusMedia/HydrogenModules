@@ -138,6 +138,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller
 		$this->addData( 'actions', $disclosure->reflect( 'classes/Controller/', $options ) );
 		$this->addData( 'controllerActions', $list );
 		$this->addData( 'acl', $this->env->getAcl() );
+		$this->addData( 'roleId', $roleId );
 	}
 
 	public function index()
@@ -198,7 +199,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller
 		}
 	}
 
-	protected function getModuleWords( object $module ): array
+	protected function getModuleWords( stdClass $module ): array
 	{
 		$path		= $this->env->getConfig()->get( 'path.locales' );
 		$language	= $this->env->getLanguage()->getLanguage();

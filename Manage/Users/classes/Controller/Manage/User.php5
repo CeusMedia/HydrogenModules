@@ -46,6 +46,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 			'needsFirstname'	=> $options->get( 'firstname.mandatory' ),
 			'needsSurname'		=> $options->get( 'surname.mandatory' ),
 			'needsTac'			=> $options->get( 'tac.mandatory' ),
+			'countries'			=> $this->countries,
 		) );
 	}
 
@@ -151,7 +152,6 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 		$this->addData( 'roles', $modelRole->getAll() );
 		$this->addData( 'pwdMinLength', (int) $config->get( 'user.password.length.min' ) );
 		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
-		$this->addData( 'countries', $this->countries );
 	}
 
 	public function ban( $userId )
@@ -287,7 +287,6 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 		$this->addData( 'roles', $modelRole->getAll() );
 		$this->addData( 'pwdMinLength', (int) $config->get( 'user.password.length.min' ) );
 		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
-		$this->addData( 'countries', $this->countries );
 
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$modelProject	= new Model_Project( $this->env );
