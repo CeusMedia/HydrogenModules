@@ -1,5 +1,5 @@
 <?php
-class View_Helper_Navigation_PrevNext/* extends CMF_Hydrogen_View_Helper*/
+class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 {
 	protected $env;					//  remove after using newer framework base helper class
 	protected $modelClass;
