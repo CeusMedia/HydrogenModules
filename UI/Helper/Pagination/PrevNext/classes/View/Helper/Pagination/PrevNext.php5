@@ -5,6 +5,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 	protected $modelClass;
 	protected $modelObject;
 	protected $labelColumn			= 'title';
+	protected $orderColumn;
 	protected $currentId			= NULL;
 	protected $useIcons				= TRUE;
 	protected $useIndex				= FALSE;
