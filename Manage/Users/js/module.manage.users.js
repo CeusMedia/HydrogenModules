@@ -1,8 +1,9 @@
 var ModuleManageUsers = {
 	countries: [],
+	roleId: 0,
 	init: function(){
 		var body = jQuery("body");
-		if(body.hasClass("site-manage-role-edit")){
+		if(this.roleId && body.hasClass("site-manage-role-edit")){
 			var container = $("#role-edit-rights").parent();
 			container.find("li.changable").on("mousedown", ModuleManageUsers.onChangeRightToggle );
 			container.find("#input-toggle-rights-all").on("change", ModuleManageUsers.onChangeVisibleRightsToggle);
@@ -60,7 +61,7 @@ var ModuleManageUsers = {
 		var controller = parts.pop();
 		toggle.addClass("yellow");
 		$.ajax({
-			url: "./manage/role/ajaxChangeRight/'.$roleId.'/"+controller+"/"+action,
+			url: "./manage/role/ajaxChangeRight/"+ModuleManageUsers.roleId+"/"+controller+"/"+action,
 			dataType: "json",
 			context: toggle,
 			success: function(data){
@@ -71,6 +72,10 @@ var ModuleManageUsers = {
 				$(this).removeClass("yellow");
 			}
 		});
+	},
+	setRoleId: function(roleId){
+		this.roleId = roleId;
+		return this;
 	},
 	setCountries: function(countries){
 		this.countries = countries;

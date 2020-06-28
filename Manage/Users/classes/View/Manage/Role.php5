@@ -20,8 +20,7 @@ class View_Manage_Role extends CMF_Hydrogen_View
 	{
 		$this->env->getPage()
 			->addThemeStyle( 'module.manage.users.css' )
-			->loadLocalScript( 'module.manage.users.js', 8 )
-			->runScript( 'ModuleManageUsers.init()' );
+			->loadLocalScript( 'module.manage.users.js', 8 );
 	}
 
 	public function index()
@@ -34,6 +33,8 @@ class View_Manage_Role extends CMF_Hydrogen_View
 
 	public function edit()
 	{
+		$roleId	= $this->getData( 'roleId' );
+		$this->env->getPage()->runScript( 'ModuleManageUsers.setRoleId('.$roleId.').init()' );
 	}
 }
 
