@@ -1,5 +1,31 @@
 <?php
 
+$noPreview	= FALSE;
+$controllerActions	= array(
+	'Auth::login',
+	'Auth::logout',
+);
+$controllers	= array(
+	'Auth',
+	'Manage_Page',
+);
+
+$logicPage	= new Logic_Page( $env );
+
+if( !$isAccessible )
+	$noPreview	= TRUE;
+else if( in_array( $page->controller.'::'.$page->action, $controllerActions ) )
+	$noPreview	= TRUE;
+else if( in_array( $page->controller, $controllers ) )
+	$noPreview	= TRUE;
+
+if( $noPreview ){
+	return '
+<div class="alert alert-info">
+	<big>Keine Vorschau für diese Seite.</big><br/>
+</div>';
+}
+
 $divIFrame	= UI_HTML_Tag::create( 'div', "", array( 'id' => "page-preview-iframe-container" ) );
 $divMask	= UI_HTML_Tag::create( 'div', "", array( 'id' => "page-preview-mask" ) );
 
@@ -10,7 +36,7 @@ else
 
 $divPreview		= UI_HTML_Tag::create( 'div', $divContainer, array(
 	'id'		=> "page-preview",
-	'data-url'	=> $pagePreviewUrl
+	'data-url'	=> $pagePreviewUrl,
 ) );
 
 $linkPage		= UI_HTML_Tag::create( 'a', $pageUrl, array( 'href' => $pageUrl ) );

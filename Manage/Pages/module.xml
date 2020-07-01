@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>1.2.7</version>
+	<version>1.2.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -53,6 +53,7 @@
 	<log version="1.2.5">Extract AJAX actions to own controller.</log>
 	<log version="1.2.6">Rearrange page add and edit forms.</log>
 	<log version="1.2.7">Add hook to detect available editors.</log>
+	<log version="1.2.8">Improve settings editor by icon and preview only if accessible.</log>
 <!--	<log version="1.2.1">Add page manager logic.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

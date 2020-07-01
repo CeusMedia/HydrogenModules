@@ -187,8 +187,9 @@ ModuleManagePages.PageEditor.init();
 		$source			= $this->getData( 'source' );
 		$isFromConfig	= $source == 'Config';
 		$isFromDatabase	= $source == 'Database';
-		$page		= $this->checkPageId( $pageId );
-		$scope		= (int) $this->appSession->get( 'scope' );
+		$page			= $this->checkPageId( $pageId );
+		$scope			= (int) $this->appSession->get( 'scope' );
+		$logic			= new Logic_Page( $this->env );
 
 //		$logic		= Logic_Versions::getInstance( $this->env );
 
@@ -279,7 +280,6 @@ ModuleManagePages.PageEditor.init();
 				$data['modifiedAt']	= time();
 				unset( $data['pageId'] );
 				$this->model->edit( $pageId, $data, FALSE );
-				$logic	= new Logic_Page( $this->env );
 				$logic->updateFullpath( $pageId );
 				$this->env->getMessenger()->noteSuccess( $words->successEdited, $data['title'] );
 				$this->restart( 'edit/'.$pageId, TRUE );
@@ -342,6 +342,7 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'scope', $this->appSession->get( 'scope' ) );
 		$this->addData( 'editor', $editor );
 		$this->addData( 'editors', $editors );
+		$this->addData( 'isAccessible', $logic->isAccessible( $page ) );
 		$this->addData( 'modules', $this->envManaged->getModules() );
 		$this->addData( 'controllers', $this->getFrontendControllers() );
 		$this->preparePageTree( $pageId );

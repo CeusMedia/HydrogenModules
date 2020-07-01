@@ -23,32 +23,46 @@ if( $useAuth ){
 		</div>';
 }
 
+$icon	= '<i class="fa fa-fw fa-times fa-5x fa-pull-left fa-border" aria-hidden="true" style="margin: 18px 10px 16px 0; opacity: 0.75; color: rgba(127, 127, 127, 0.25)"></i>';
+if( $page->icon ){
+	$icon	= '<i class="fa fa-fw '.$page->icon.' fa-5x fa-pull-left fa-border" aria-hidden="true" style="margin: 18px 10px 16px 0"></i>';
+}
+
+$path	= preg_replace( '@^(https?://)(.+)$@', '<small class="muted">\\1</small><strong>\\2</strong>', $path );
+
 return '
 <div class="content-panel content-panel-form">
 <!--	<h3><span class="muted">Seite:</span> '.$page->title.'</h3>-->
 	<div class="content-panel-inner">
 		<form action="./manage/page/edit/'.$current.'/'.$version.'" method="post" class="cmFormChange-auto form-changes-auto">
-			<h4>Erscheinungsbild</h4>
-			<div class="row-fluid">
-				<div class="span6">
-					<label for="input_page_title">'.$w->labelTitle.'</label>
-					<input type="text" name="page_title" id="input_page_title" class="span12" value="'.htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ).'" required/>
+			<h4>'.$w->sectionSettingsAppearance.'</h4>
+			<div style="display: flex">
+				<div style="width: 160px;">
+					'.$icon.'
 				</div>
-				<div class="span3">
-					<label for="input_page_icon">'.$w->labelIcon.'</label>
-					<input type="text" name="page_icon" id="input_page_icon" class="span12" value="'.htmlentities( $page->icon, ENT_QUOTES, 'UTF-8' ).'"/>
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span12">
-					<label for="input_page_identifier" class="mandatory required">'.$w->labelIdentifier.'</label>
-					<div class="input-prepend">
-						<span class="add-on"><small>'.$path.'</small></span>
-						<input type="text" name="page_identifier" class="span6 mandatory required" id="input_page_identifier" value="'.htmlentities( $page->identifier, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
+				<div style="flex: 1;">
+					<div class="row-fluid">
+						<div class="span5">
+							<label for="input_page_title">'.$w->labelTitle.'</label>
+							<big><input type="text" name="page_title" id="input_page_title" class="span12" value="'.htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ).'" required/></big>
+						</div>
+						<div class="span4">
+							<label for="input_page_icon">'.$w->labelIcon.'</label>
+							<input type="text" name="page_icon" id="input_page_icon" class="span12" value="'.htmlentities( $page->icon, ENT_QUOTES, 'UTF-8' ).'"/>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_page_identifier" class="mandatory required">'.$w->labelIdentifier.'</label>
+							<div class="input-prepend">
+								<span class="add-on"><small>'.$path.'</small></span>
+								<input type="text" name="page_identifier" class="span8 mandatory required" id="input_page_identifier" value="'.htmlentities( $page->identifier, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-			<h4>Einordnung</h4>
+			<h4>'.$w->sectionSettingsPosition.'</h4>
 			<div class="row-fluid">
 				<div class="span5">
 					<label for="input_page_scope">'.$w->labelScope.'</label>
@@ -63,7 +77,7 @@ return '
 					<input type="text" name="page_rank" id="input_page_rank" class="span12 numeric" value="'.htmlentities( $page->rank, ENT_QUOTES, 'UTF-8' ).'" required/>
 				</div>
 			</div>
-			<h4>Inhalt</h4>
+			<h4>'.$w->sectionSettingsContent.'</h4>
 			<div class="row-fluid">
 				<div class="span4">
 					<label for="input_page_type">'.$w->labelType.'</label>
@@ -86,7 +100,7 @@ return '
 					<input type="text" name="page_action" class="span12" id="input_page_action" value="'.htmlentities( $page->action, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
-			<h4>Erreichbarkeit</h4>
+			<h4>'.$w->sectionSettingsAccess.'</h4>
 			<div class="row-fluid">
 				<div class="span3">
 					<label for="input_page_status">'.$w->labelStatus.'</label>
