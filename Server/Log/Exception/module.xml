@@ -41,7 +41,7 @@ Please think about using the hook instead.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.5.6</version>
+	<version>0.5.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
@@ -56,6 +56,7 @@ Please think about using the hook instead.
 	<log version="0.5.4">Extract logic from job to logic class.</log>
 	<log version="0.5.5">Support frontend environment.</log>
 	<log version="0.5.6">Added English Localization files.</log>
+	<log version="0.5.7">Replace job file by module configuration.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -73,7 +74,6 @@ Please think about using the hook instead.
 		<locale>de/server/log/exception/sqlstate.ini</locale>
 		<locale>en/server/log/exception.ini</locale>
 		<locale>en/server/log/exception/sqlstate.ini</locale>
-		<file>config/jobs/server.log.exception.xml</file>
 	</files>
 	<config protected="yes" type="boolean" name="file.active" title="Enable log file">yes</config>
 	<config protected="yes" type="string" name="file.name" title="Path of log file">exception.log</config>
@@ -83,6 +83,7 @@ Please think about using the hook instead.
 		<needs type="module">Resource_Mail</needs>
 	</relations>
 	<hook type="resource" resource="Env" event="logException">Hook_Server_Log_Exception::onEnvLogException</hook>
+	<job id="Server.Log.Exception.import">Server_Log_Exception::import</job>
 	<sql on="update" type="mysql" version="0.5"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_exceptions`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>log_exceptions` (

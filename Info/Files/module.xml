@@ -3,7 +3,7 @@
 	<title>Info: Files</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.4.6</version>
+	<version>0.4.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydroge module.</log>
 	<log version="0.2.1">Added support for news list via hook.</log>
@@ -19,6 +19,7 @@
 	<log version="0.4.4">Add actions and view to edit files and folders.</log>
 	<log version="0.4.5">Extract hook methods to own class.</log>
 	<log version="0.4.6">Migrate to support CeusMedia::Common 0.8.5.</log>
+	<log version="0.4.7">Replace job file by module configuration.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -42,7 +43,6 @@
 		<style>module.info.files.css</style>
 		<script load="auto">InfoFile.js</script>
 		<file>contents/files/.htaccess</file>
-		<file>config/jobs/files.xml</file>
 	</files>
 	<config protected="yes" type="string" name="path">contents/files/</config>
 	<link xml:lang="de" access="acl" rank="21" path="info/file">Dateien</link>
@@ -54,6 +54,7 @@
 	</relations>
 	<hook type="resource" resource="Page" event="collectNews">Hook_Info_File::onPageCollectNews</hook>
 	<hook type="resource" resource="Novelties" event="collect">Hook_Info_File::onCollectNovelties</hook>
+	<job id="Info.Files.migrate">Info_Files::migrate</job>
 	<sql on="install" type="mysql" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>download_files`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>download_files` (

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<jobs>
-	<job id="Info.Forum.sendDaily">
-		<class>Info_Forum</class>
-		<method>sendDaily</method>
-		<mode>live</mode>
-		<interval>daily</interval>
-	</job>
-</jobs>

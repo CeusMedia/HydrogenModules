@@ -3,7 +3,7 @@
 	<title>Resource: Mail: Group</title>
 	<description/>
 	<category>Resource</category>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add database models for groups and members.</log>
@@ -22,6 +22,7 @@
 	<log version="0.4">Extract message logic to own class.</log>
 	<log version="0.4.1">Refactor mail classes and plain part locales.</log>
 	<log version="0.4.2">Add terms of use and privacy note.</log>
+	<log version="0.4.3">Replace job file by module configuration.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -94,7 +95,6 @@
 		<template>info/mail/group/register.php</template>
 <!--		<style source="theme" load="auto" level="end">module.work.mail.sync.css</style>-->
 <!--		<script load="auto" level="end">module.work.mail.group.js</script>-->
-		<file>config/jobs/mail.group.xml</file>
 	</files>
 	<relations>
 		<needs type="module">UI_Helper_TimePhraser</needs>
@@ -114,6 +114,10 @@
 	<hook type="resource" resource="MailGroup" event="memberRejected">Hook_Resource_Mail_Group_Member::onMemberReject</hook>
 	<hook type="resource" resource="MailGroupAction" event="confirmAfterJoin">Hook_Resource_Mail_Group::onConfirmAfterJoin</hook>
 	<hook type="resource" resource="MailGroupAction" event="deactivateAfterLeaving">Hook_Resource_Mail_Group::onDeactivateAfterLeaving</hook>
+	<job id="Mail.Group.handle">Mail_Group::handle</job>
+	<job id="Mail.Group.test">>Mail_Group::test</job>
+	<job id="Mail.Group.Members.activate">Mail_Group::activateConfirmedMembers</job>
+	<job id="Mail.Group.Members.inform">Mail_Group::informMembersAboutNewMember</job>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mail_groups`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_groups` (

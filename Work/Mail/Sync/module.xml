@@ -3,13 +3,14 @@
 	<title>Work: Mail Sync</title>
 	<description/>
 	<category>Work</category>
-	<version>0.2.4</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add logic class.</log>
 	<log version="0.2.2">Add job class.</log>
 	<log version="0.2.3">Extract JavaScript.</log>
 	<log version="0.2.4">Refactor database.</log>
+	<log version="0.2.5">Replace job file by module configuration.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -28,13 +29,13 @@
 <!--		<locale>de/work/mail/sync.ini</locale>
 		<style source="theme" load="auto" level="end">module.work.mail.sync.css</style>-->
 		<script load="auto" level="end">module.work.mail.sync.js</script>
-		<file>config/jobs/work.mail.sync.xml</file>
 	</files>
 	<relations>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
 	<hook type="resource" resource="WorkMailSync" event="registerTabs">View_Work_Mail_Sync::___onRegisterTab</hook>
+	<job id="Work.Mail.Sync.sync" multiple="yes">Work_Mail_Sync::sync</job>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mail_syncs`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_syncs` (

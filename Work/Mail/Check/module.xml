@@ -3,7 +3,7 @@
 	<title>Work: Mail Check</title>
 	<description/>
 	<category>Work</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add job to mass check in background.</log>
@@ -18,6 +18,7 @@
 	<log version="0.3">Improve user interface usability.</log>
 	<log version="0.3.1">Extend export data by check information.</log>
 	<log version="0.3.2">Migrate to use newer database classes.</log>
+	<log version="0.3.3">Replace job file by module configuration.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -36,7 +37,6 @@
 		<template>work/mail/check/status.php</template>
 		<locale>de/work/mail/check.ini</locale>
 		<style source="theme" load="auto" level="end">module.work.mail.check.css</style>
-		<file>config/jobs/work.mail.check.xml</file>
 	</files>
 	<config protected="yes" type="integer" mandatory="yes" name="job.limit" title="Maximum number for checks per job call.">10000</config>
 	<config protected="yes" type="string" mandatory="yes" name="sender" title="Sender email address, only needed for HELO"/>
@@ -49,6 +49,7 @@
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
 	<hook type="resource" resource="WorkMailCheck" event="registerTabs">View_Work_Mail_Check::___onRegisterTab</hook>
+	<job id="checkMailAddresses">Work_Mail_Check::run</job>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mail_addresses`;
 CREATE TABLE IF NOT EXISTS `mail_addresses` (

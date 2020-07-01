@@ -4,7 +4,7 @@
 	<description><![CDATA[Integrates MangoPay into shop.
 ]]></description>
 	<category>Shop</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve relations.</log>
@@ -17,18 +17,19 @@
 	<log version="0.2.8">Extract controller methods to new logic class.</log>
 	<log version="0.2.9">Send mails if payment succeeded or failed.</log>
 	<log version="0.3">Update to support Shop version 0.8.</log>
+	<log version="0.3.1">Replace job file by module configuration.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Shop/Payment/Mangopay.php5</class>
+		<class>Hook/Shop/Payment/Mangopay.php5</class>
 		<class>Job/Shop/Payment/Mangopay.php5</class>
 		<class>Logic/Shop/Payment/Mangopay.php5</class>
 		<class>Model/Shop/Payment/Mangopay.php5</class>
 		<class>View/Helper/Shop/FinishPanel/Mangopay.php5</class>
 		<class>View/Shop/Payment/Mangopay.php5</class>
 		<locale>de/shop/payment/mangopay.ini</locale>
-		<file>config/jobs/shop.payment.mangopay.xml</file>
 	</files>
 	<config protected="yes" type="integer" name="method.BankWire" title="priority: 0-disabled, 1-highest, ..., 9-lowest">8</config>
 	<config protected="yes" type="integer" name="method.BankWireWeb" title="priority: 0-disabled, 1-highest, ..., 9-lowest">4</config>
@@ -41,8 +42,9 @@
 	<link access="inside" path="shop/payment/mangopay/perBankWire"/>
 	<link access="inside" path="shop/payment/mangopay/perCreditCard"/>
 	<link access="inside" path="shop/payment/mangopay/perDirectDebit"/>
-	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Controller_Shop_Payment_Mangopay::__onRegisterShopPaymentBackends</hook>
-	<hook type="resource" resource="Shop" event="renderServicePanels">Controller_Shop_Payment_Mangopay::__onRenderServicePanels</hook>
+	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Hook_Shop_Payment_Mangopay::onRegisterShopPaymentBackends</hook>
+	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_Payment_Mangopay::onRenderServicePanels</hook>
+	<job id="Shop.Payment.Mangopay.handle">Shop_Payment_Mangopay::handle</job>
 	<sql on="install" type="mysql" version="0.2.3"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_payments_mangopay`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_payments_mangopay` (

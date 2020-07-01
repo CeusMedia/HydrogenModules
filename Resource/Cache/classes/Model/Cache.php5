@@ -2,13 +2,14 @@
 /**
  *	@todo		apply module config main switch
  */
-class Model_Cache{
-
+class Model_Cache
+{
 	protected $model;
 	protected $env;
 	protected $config;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->config	= (object) $this->env->getConfig()->getAll( 'module.resource_cache.' );
 
@@ -28,7 +29,8 @@ class Model_Cache{
 		$this->env->set( 'cache', $this );
 	}
 
-	public function flush( $context = NULL ){
+	public function flush( ?string $context = NULL )
+	{
 		if( $context !== NULL ){
 			$_ctx	= $this->getContext();
 			$this->setContext( $this->config->context.$context );
@@ -39,7 +41,8 @@ class Model_Cache{
 		return $this->model->flush();
 	}
 
-	public function get( $key, $default = NULL, $context = NULL ){
+	public function get( string $key, ?string $default = NULL, ?string $context = NULL )
+	{
 		if( $context !== NULL ){
 			if( !$this->has( $key, $context ) )
 				return $default;
@@ -54,15 +57,18 @@ class Model_Cache{
 		return $default;
 	}
 
-	public function getContext(){
+	public function getContext()
+	{
 		return $this->model->getContext();
 	}
 
-	public function getType(){
+	public function getType()
+	{
 		return $this->config->type;
 	}
 
-	public function has( $key, $context = NULL ){
+	public function has( string $key, ?string $context = NULL ): bool
+	{
 		if( $context !== NULL ){
 			$_ctx	= $this->getContext();
 			$this->setContext( $this->config->context.$context );
@@ -73,7 +79,8 @@ class Model_Cache{
 		return $this->model->has( $key );
 	}
 
-	public function index( $context = NULL ){
+	public function index( ?string $context = NULL ): array
+	{
 		if( $context !== NULL ){
 			$_ctx	= $this->getContext();
 			$this->setContext( $this->config->context.$context );
@@ -84,11 +91,13 @@ class Model_Cache{
 		return $this->model->index();
 	}
 
-	public function remove( $key ){
+	public function remove( string $key )
+	{
 		return $this->model->remove( $key );
 	}
 
-	public function set( $key, $value, $context = NULL ){
+	public function set( string $key, $value, ?string $context = NULL )
+	{
 		if( $context !== NULL ){
 			$_ctx	= $this->getContext();
 			$this->setContext( $this->config->context.$context );
@@ -103,11 +112,11 @@ class Model_Cache{
 	 *	Sets context within cache storage.
 	 *	If folder is not existing, it will be created.
 	 *	@access		public
-	 *	@param		string		$context		Context within cache storage
+	 *	@param		string|NULL		$context		Context within cache storage
 	 *	@return		void
 	 */
-	public function setContext( $context ){
+	public function setContext( ?string $context ): self
+	{
 		$this->model->setContext( $context );
 	}
 }
-?>

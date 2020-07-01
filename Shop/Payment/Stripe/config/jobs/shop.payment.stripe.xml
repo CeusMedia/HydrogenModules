@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<jobs>
-	<job id="Shop.Payment.Stripe.handle">
-		<class>Shop_Payment_Stripe</class>
-		<method>handle</method>
-		<mode>live</mode>
-	</job>
-</jobs>

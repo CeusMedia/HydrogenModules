@@ -3,7 +3,7 @@
 	<title>Server: System Load</title>
 	<description/>
 	<category>Server</category>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Handle denial via remote environment with exception instead of HTTP response.</log>
@@ -11,16 +11,17 @@
 	<log version="0.3.1">Improved code documentation and module relations.</log>
 	<log version="0.3.2">Add system load panel for dashboard.</log>
 	<log version="0.3.3">Migrate definition of jobs.</log>
+	<log version="0.3.4">Replace job file by module configuration.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/System/Load.php5</class>
+		<class>Hook/System/Load.php5</class>
 		<class>Job/System/Load.php5</class>
 		<class>View/System/Load.php5</class>
 		<locale>de/html/error/503.html</locale>
 		<locale>en/html/error/503.html</locale>
-		<file>config/jobs/system.load.xml</file>
 	</files>
 	<config protected="yes" type="integer" name="cores">1</config>
 	<config protected="yes" type="float" name="max">20</config>
@@ -32,6 +33,7 @@
 	<link access="public" path="system/load/ajaxRenderIndicator"/>
 	<link access="inside" path="system/load/ajaxGetLoad"/>
 	<link access="inside" path="system/load/ajaxGetLoads"/>
-	<hook type="resource" resource="Env" event="init">Controller_System_Load::___onEnvInit</hook>
-	<hook type="resource" resource="Dashboard" event="registerPanels">Controller_System_Load::___onRegisterDashboardPanels</hook>
+	<hook type="resource" resource="Env" event="init">Hook_System_Load::onEnvInit</hook>
+	<hook type="resource" resource="Dashboard" event="registerPanels">Hook_System_Load::onRegisterDashboardPanels</hook>
+	<job id="System.Load.note">System_Load::note</job>
 </module>

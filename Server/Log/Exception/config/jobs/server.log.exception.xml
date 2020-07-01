@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<jobs>
-	<job id="Server.Log.Exception.import">
-		<class>Server_Log_Exception</class>
-		<method>import</method>
-		<interval>minute</interval>
-		<mode>live</mode>
-	</job>
-</jobs>

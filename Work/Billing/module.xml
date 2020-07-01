@@ -3,7 +3,7 @@
 	<title>Work: Billing</title>
 	<description><![CDATA[Account and billing for small companies.]]></description>
 	<category>Work</category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve lists and inputs.</log>
@@ -17,6 +17,7 @@
 	<log version="0.2.9">Implement reversal of transactions (booked bills).</log>
 	<log version="0.3">Support shares for corporations.</log>
 	<log version="0.3.1">Add sum under all transaction tables having atleast 2 entries.</log>
+	<log version="0.3.2">Replace job file by module configuration.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -39,6 +40,7 @@
 		<class>Controller/Work/Billing/Person/Reserve.php5</class>
 		<class>Controller/Work/Billing/Person/Transaction.php5</class>
 		<class>Controller/Work/Billing/Person/Unbooked.php5</class>
+		<class>Hook/Work/Billing.php5</class>
 		<class>Job/Billing.php5</class>
 		<class>Logic/Billing.php5</class>
 		<class>Model/Billing/Bill.php5</class>
@@ -96,7 +98,6 @@
 		<template>work/billing/reserve/index.php</template>
 		<style source="common" load="auto">module.work.billing.css</style>
 		<script load="auto">module.work.billing.js</script>
-		<file>config/jobs/work.billing.xml</file>
 	</files>
 	<relations>
 		<needs type="module">JS_Form_Changes</needs>
@@ -111,9 +112,8 @@
 	<hook type="resource" resource="WorkBilling/Bill" event="registerTabs">View_Work_Billing_Bill::___onRegisterTab</hook>
 	<hook type="resource" resource="WorkBilling/Corporation" event="registerTabs">View_Work_Billing_Corporation::___onRegisterTab</hook>
 	<hook type="resource" resource="WorkBilling/Person" event="registerTabs">View_Work_Billing_Person::___onRegisterTab</hook>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$context->js->addScriptOnReady("WorkBilling.init()");
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_Work_Billing::onPageApplyModules</hook>
+	<job id="Billing.bookExpenses">Billing::bookExpenses</job>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>billing_bills`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>billing_bills` (

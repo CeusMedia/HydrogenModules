@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.63</version>
+	<version>0.9.64</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -110,6 +110,7 @@ code>
 	<log version="0.9.61">Migrate logic class to extend new framework logic class.</log>
 	<log version="0.9.62">Improve hook on project removal.</log>
 	<log version="0.9.63">Add content converter from HTML to Markdown.</log>
+	<log version="0.9.64">Replace job file by module configuration.</log>
 	<category>Work</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -199,7 +200,6 @@ code>
 		<script load="auto">bindWithDelay.js</script>
 		<style load="auto">module.work.missions.css</style>
 		<image source="theme">clearSearch.png</image>
-		<file>config/jobs/work.mission.xml</file>
 	</files>
 	<relations>
 		<needs type="module">JS_Ace</needs>
@@ -260,6 +260,9 @@ code>
 	<hook type="resource" resource="Work_Timer" event="onStartTimer">Hook_Work_Mission::onStartTimer</hook>
 	<hook type="resource" resource="Work_Timer" event="onPauseTimer">Hook_Work_Mission::onPauseTimer</hook>
 	<hook type="resource" resource="Work_Timer" event="onStopTimer">Hook_Work_Mission::onStopTimer</hook>
+	<job id="Work.Missions.clean">Work_Mission::cleanup</job>
+	<job id="Work.Missions.sendChangesMail">Work_Mission::informAboutChanges</job>
+	<job id="Work.Missions.sendDailyMail">Work_Mission::mailDaily</job>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>missions`;
 CREATE TABLE `<%?prefix%>missions` (

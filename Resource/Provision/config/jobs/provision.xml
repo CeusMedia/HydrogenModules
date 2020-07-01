@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<jobs>
-	<job id="Provision.Cache.clear">
-		<class>Provision</class>
-		<method>clearCache</method>
-		<interval>hour</interval>
-		<mode>dev</mode>
-	</job>
-</jobs>

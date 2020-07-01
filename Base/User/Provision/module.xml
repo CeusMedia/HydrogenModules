@@ -3,9 +3,10 @@
 	<title>Base: User: Provision</title>
 	<description><![CDATA[Management for user-ordered provisioning of products, licenses and their keys.]]></description>
 	<category>Base</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Replace job file by module configuration.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -43,7 +44,6 @@
 		<locale>de/mail/provision/customer/license/revoked.html</locale>
 		<locale>de/mail/provision/customer/license/revoked.txt</locale>
 		<locale>de/user/provision.ini</locale>
-		<file>config/jobs/user.provision.xml</file>
 	</files>
 	<config protected="yes" type="boolean" name="REST">1</config>
 	<relations/>
@@ -53,6 +53,7 @@
 	<link access="public" path="provision/rest/orderLicense"/>
 	<link access="public" path="provision/rest/hasActiveKey"/>
 	<link access="public" path="provision/rest/test"/>
+	<job id="User.Provision.manageLicenses">User_Provision::manageLicenses</job>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>user_provision_licenses`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>user_provision_licenses` (
