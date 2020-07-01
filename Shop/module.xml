@@ -168,14 +168,12 @@ For payment you need to install a payment module.]]></description>
 		<supports type="module">Shop_Shipping</supports>
 	</relations>
 	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_FinishPanel::__onRenderServicePanels</hook>
-	<jobs>
-		<job id="Shop.OldCustomers.cleanup" env="dev,test,live">Shop::cleanupOldCustomers</job>
-		<job id="Shop.OldCustomers.cleanupTestOrders" env="dev,test,live">Shop::cleanupOldCustomerTestOrders</job>
-		<job id="Shop.OldCustomers.importAsMigrantsAndSaveAsCsv" env="dev,test,live">Shop::importOldCustomersAsMigrantsAndSaveAsCsv</job>
-		<job id="Shop.OldCustomers.migrate" env="dev,test,live">Shop::migrateOldCustomers</job>
-		<job id="Shop.OldCustomers.sanitizeCountries" env="dev,test,live">Shop::sanitizeOldCustomerCountries</job>
-		<job id="Shop.OldCustomers.createConfig" env="dev,test,live">Shop::createOldCustomersConfig</job>
-	</jobs>
+	<job id="Shop.OldCustomers.cleanup" mode="dev,test,live">Shop::cleanupOldCustomers</job>
+	<job id="Shop.OldCustomers.cleanupTestOrders" mode="dev,test,live">Shop::cleanupOldCustomerTestOrders</job>
+	<job id="Shop.OldCustomers.importAsMigrantsAndSaveAsCsv" mode="dev,test,live">Shop::importOldCustomersAsMigrantsAndSaveAsCsv</job>
+	<job id="Shop.OldCustomers.migrate" mode="dev,test,live">Shop::migrateOldCustomers</job>
+	<job id="Shop.OldCustomers.sanitizeCountries" mode="dev,test,live">Shop::sanitizeOldCustomerCountries</job>
+	<job id="Shop.OldCustomers.createConfig" mode="dev,test,live">Shop::createOldCustomersConfig</job>
 	<sql type="mysql" on="install" version="0.1">
 <![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_customers`;

@@ -152,15 +152,13 @@ code>* * * * * cd /path/to/project && php job.php5 Mail.Archive.clean --age=3M</
 	</relations>
 	<hook type="resource" resource="User" event="listRelations">Hook_Resource_Mail::onListUserRelations</hook>
 	<hook type="resource" resource="User" event="remove">Hook_Resource_Mail::onUserRemove</hook>
-	<jobs>
-		<job id="Mail.test">Mail::test</job>
-		<job id="Mail.Archive.clean">Mail_Archive::clean</job>
-		<job id="Mail.Archive.detach">Mail_Archive::removeAttachments</job>
-		<job id="Mail.Archive.migrate">Mail_Archive::migrate</job>
-		<job id="Mail.Archive.shard">Mail_Archive::shard</job>
-		<job id="Mail.Queue.count">Mail_Queue::countQueuedMails</job>
-		<job id="Mail.Queue.send">Mail_Queue::sendQueuedMails</job>
-	</jobs>
+	<job id="Mail.test">Mail::test</job>
+	<job id="Mail.Archive.clean">Mail_Archive::clean</job>
+	<job id="Mail.Archive.detach">Mail_Archive::removeAttachments</job>
+	<job id="Mail.Archive.migrate">Mail_Archive::migrate</job>
+	<job id="Mail.Archive.shard">Mail_Archive::shard</job>
+	<job id="Mail.Queue.count">Mail_Queue::countQueuedMails</job>
+	<job id="Mail.Queue.send">Mail_Queue::sendQueuedMails</job>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>mails`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
