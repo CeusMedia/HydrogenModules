@@ -1,11 +1,18 @@
 <?php
-class Job_Abstract{
-
-	/**	@var	CMF_Hydrogen_Environment				$env		Environment object */
+class Job_Abstract
+{
+	/**	@var	CMF_Hydrogen_Environment	$env			Environment object */
 	protected $env;
+
 	protected $logFile;
+
+	/**	@var	string						$jobClass		Class name of inheriting job */
 	protected $jobClass;
+
+	/**	@var	string						$jobMethod		Method name of job task */
 	protected $jobMethod;
+
+	/**	@var	string						$jobModuleId	Module ID of inheriting job */
 	protected $jobModuleId;
 
 	protected $commands			= array();
@@ -28,31 +35,38 @@ class Job_Abstract{
 	 *	@param		Jobber								$manager	Job manage instance
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env, $manager, $jobClassName = NULL, $jobModuleId = NULL ){
+	public function __construct( CMF_Hydrogen_Environment $env, $manager, ?string $jobClassName = NULL, ?string $jobModuleId = NULL )
+	{
 		$this->env			= $env;
 		$this->manager		= $manager;
 		$this->logFile		= $env->getConfig()->get( 'path.logs' ).'jobs.log';
 		$this->parameters	= new ADT_List_Dictionary();
-		$this->setJobClassName( $jobClassName );
-		$this->setJobModuleId( $jobModuleId );
+		if( $jobClassName )
+			$this->setJobClassName( $jobClassName );
+		if( $jobModuleId )
+			$this->setJobModuleId( $jobModuleId );
 		$this->__onInit();
 	}
 
-	protected function __onInit(){
-	}
-
-	public function getResults(){
+	/**
+	 *	...
+	 *	@access		public
+	 *	@return		???
+	 */
+	public function getResults()
+	{
 		return $this->results;
 	}
 
-	protected function getLogPrefix(){
-		$label		= $this->jobClass;
-		if( $this->jobMethod )
-			$label	.= '.'.$this->jobMethod;
-		return $label.': ';
-	}
-
-	public function noteArguments( $commands = array(), $parameters = array() ){
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		array		$command		...
+	 *	@param		array		$parameters		...
+	 *	@return		self
+	 */
+	public function noteArguments( array $commands = array(), array $parameters = array() ): self
+	{
 		$this->commands		= array_diff( $commands, array( 'dry', 'verbose' ) );
 		$this->parameters	= new ADT_List_Dictionary( $parameters );
 		$this->dryMode		= in_array( 'dry', (array) $commands );
@@ -60,39 +74,112 @@ class Job_Abstract{
 		return $this;
 	}
 
-	public function noteJob( $className, $jobName, $moduleId = NULL ){
+	/**
+	 *	Set information about inheriting job for output or logging.
+	 *	@access		public
+	 *	@param		string		$className		Class name of inheriting job
+	 *	@param		string		$jobName		Method name of job task
+	 *	@param		string		$moduleId		Module ID of inheriting job
+	 *	@return		self
+	 */
+	public function noteJob( string $className, string $jobName, string $moduleId = NULL ): self
+	{
 		$this->setJobClassName( $className );
 		$this->jobMethod	= $jobName;
 		$this->setJobModuleId( $moduleId );
 		return $this;
 	}
 
-	protected function log( $message ){
+	/**
+	 *	@access		public
+	 *	@param		string		$message		Message to be displayed
+	 *	@return		self
+	 *	@todo		make protected
+	 */
+	public function out( ?string $message = NULL ): self
+	{
+		print( $message."\n" );
+		return $this;
+	}
+
+	//  --  PROTECTED  --  //
+
+	/**
+	 *	Initialization, called at the end of construction.
+	 *	@access		protected
+	 */
+	protected function __onInit()
+	{
+	}
+
+	/**
+	 *	Returns prefix for log lines depending on set job class and method.
+	 *	@access		protected
+	 *	@return		string
+	 */
+	protected function getLogPrefix(): string
+	{
+		$label		= $this->jobClass;
+		if( $this->jobMethod )
+			$label	.= '.'.$this->jobMethod;
+		return $label.': ';
+	}
+
+	/**
+	 *	Write message to log.
+	 *	@access		protected
+	 *	@param		string		$message		Message to log
+	 *	@return		self
+	 */
+	protected function log( string $message ): self
+	{
 		$this->manager->log( $this->getLogPrefix().$message );
 		return $this;
 	}
 
+	/**
+	 *	Write error message to log.
+	 *	@access		protected
+	 *	@param		string		$message		Error message to log
+	 *	@return		self
+	 */
 	protected function logError( $message ){
 		$this->manager->logError( $this->getLogPrefix().$message );
 		return $this;
 	}
 
-	protected function logException( $exception ){
+	/**
+	 *	Log caught exception.
+	 *	@access		protected
+	 *	@param		Throwable	$exception		Exception to be logged
+	 *	@return		self
+	 */
+	protected function logException( Throwable $exception ): self
+	{
 		$this->manager->logException( $exception );
 		return $this;
 	}
 
-	public function out( $message = NULL ){
-		print( $message."\n" );
-		return $this;
-	}
-
-	protected function setJobClassName( $jobClassName ){
+	/**
+	 *	Set class name of inheriting job for information output or logging.
+	 *	@access		protected
+	 *	@param		string		$jobClassName	Class name of inheriting job
+	 *	@return		self
+	 */
+	protected function setJobClassName( string $jobClassName ): self
+	{
 		$this->jobClass		= strlen( trim( $jobClassName ) ) ? $jobClassName : get_class( $this );
 		return $this;
 	}
 
-	protected function setJobModuleId( $jobModuleId ){
+	/**
+	*	Set module of inheriting job for information output or logging.
+	 *	@access		protected
+	 *	@param		string		$jobModuleId	Module ID of inheriting job
+	 *	@return		self
+	 */
+	protected function setJobModuleId( ?string $jobModuleId ): self
+	{
 		$this->jobModuleId		= strlen( trim( $jobModuleId ) ) ? $jobModuleId : NULL;
 		$this->versionModule	= NULL;
 		if( $this->jobModuleId && $this->env->getModules()->has( $this->jobModuleId ) ){
@@ -102,7 +189,17 @@ class Job_Abstract{
 		return $this;
 	}
 
-	protected function showProgress( $count, $total, $sign = '.', $length = 60 ){
+	/**
+	 *	Show or update progress bar.
+	 *	@access		protected
+	 *	@param		integer		$count			Currently reached step of all steps
+	 *	@param		integer		$total			Number of all steps of progress bar
+	 *	@param		string		$sign			Character to display progress within bar
+	 *	@param		integer		$length			Length of progress bar
+	 *	@return		self
+	 */
+	protected function showProgress( int $count, int $total, string $sign = '.', int $length = 60 ): self
+	{
 		if( class_exists( 'CLI_Output_Progress' ) ){
 			if( $count === 0 ){
 				$this->progress	= new CLI_Output_Progress();
@@ -129,7 +226,15 @@ class Job_Abstract{
 		return $this;
 	}
 
-	protected function showErrors( $taskName, $errors ){
+	/**
+	 *	Display caucht error messages.
+	 *	@access		protected
+	 *	@param		string		$taskName		Name of task producing errors
+	 *	@param		array		$errors			List of error messages to show
+	 *	@return		self
+	 */
+	protected function showErrors( string $taskName, array $errors ): self
+	{
 		if( is_array( $errors ) && count( $errors ) ){
 			$this->out( 'Errors on '.$taskName.':' );
 			foreach( $errors as $mailId => $message )
@@ -138,4 +243,3 @@ class Job_Abstract{
 		return $this;
 	}
 }
-?>

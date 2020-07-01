@@ -1,14 +1,6 @@
 <?php
 class Job_Job_Lock extends Job_Abstract
 {
-	public function __onInit(){
-		$this->logic	= $this->env->getLogic()->get( 'Job' );
-		$this->skipJobs	= array(
-			$this->logic->getDefinitionByIdentifier( 'Job.Lock.clear' )->jobDefinitionId,
-			$this->logic->getDefinitionByIdentifier( 'Job.Lock.list' )->jobDefinitionId,
-		);
-	}
-
 	/**
 	 *	@todo		finish implementation
 	 */
@@ -49,6 +41,17 @@ class Job_Job_Lock extends Job_Abstract
 		foreach( $list as $item )
 			$this->out( ' - '.$item->jobDefinition->identifier.' (Run ID: '.$item->jobRunId.')' );
 		$list ? $this->out() : NULL;
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->logic	= $this->env->getLogic()->get( 'Job' );
+		$this->skipJobs	= array(
+			$this->logic->getDefinitionByIdentifier( 'Job.Lock.clear' )->jobDefinitionId,
+			$this->logic->getDefinitionByIdentifier( 'Job.Lock.list' )->jobDefinitionId,
+		);
 	}
 
 	protected function getLockedJobs(){

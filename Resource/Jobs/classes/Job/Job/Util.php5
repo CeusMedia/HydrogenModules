@@ -3,12 +3,6 @@ class Job_Job_Util extends Job_Abstract
 {
 //	protected $logic;
 
-	public function __onInit()
-	{
-//		$this->options	= $this->env->getConfig()->getAll( 'module.resource_cache.', TRUE );
-//		$this->logic	= $this->env->getLogic()->get( 'Job' );
-	}
-
 	/**
 	 *	Returns current date time depending on format parameter.
 	 *	Uses parameter --format (-f), default: 'r' (RFC 2822).
@@ -69,4 +63,12 @@ class Job_Job_Util extends Job_Abstract
 	{
 		return preg_replace( '/(-.+)$/', '', $version );
 	}
+
+	//  --  PROTECTED  --  //
+
+/*	protected function __onInit(): self
+	{
+		$this->options	= $this->env->getConfig()->getAll( 'module.resource_cache.', TRUE );
+		$this->logic	= $this->env->getLogic()->get( 'Job' );
+	}*/
 }
