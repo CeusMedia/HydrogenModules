@@ -6,11 +6,12 @@ class Model_Module_Page
 		$this->env	= $env;
 	}
 
-	public function getByIndices(){
+	public function getByIndices()
+	{
 		return array();
 	}
 
-	public function getAllByIndices( $conditions = array() )
+	public function getAllByIndices( array $conditions = array() ): array
 	{
 		$scope	= $conditions['scope'] ?: NULL;
 		if( !$scope )

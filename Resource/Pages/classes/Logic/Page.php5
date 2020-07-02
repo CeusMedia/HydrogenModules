@@ -16,19 +16,17 @@
  *	@copyright		2013 Ceus Media
  *	@version		$Id$
  */
-class Logic_Page extends CMF_Hydrogen_Logic{
-
+class Logic_Page extends CMF_Hydrogen_Logic
+{
 	protected $app				= 'self';
 	protected $model			= array();
 
-	public function __onInit(){
+	public function __onInit()
+	{
 		$moduleNav	= $this->env->getModules()->get( 'UI_Navigation', TRUE, FALSE );
 		if( $moduleNav && $moduleNav->config['menu.source']->value === 'Database' ){
-			$model	= new Model_Page( $this->env );
-			$pages	= $model->getAllByIndices( array(
-				'fullpath'	=> '',
-			) );
-			foreach( $pages as $page ){
+			$model	= $this->getPageModel();
+			foreach( $model->getAllByIndex( 'fullpath', '' ) as $page ){
 				$way	= '';
 				$parent	= $page;
 				while( $parent->parentId ){
@@ -40,7 +38,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		}
 	}
 
-	public function updateFullpath( $pageId, $parentPath = NULL ){
+	public function updateFullpath( $pageId, string $parentPath = NULL )
+	{
 		$model	= $this->getPageModel();
 		$page	= $model->get( $pageId );
 		if( !$parentPath ){
@@ -66,7 +65,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 *	@param		object		$page		Page data object to set list of parent pages to
 	 *	@return		List of parent pages, added to given page object
 	 */
-	public function decoratePathWithParents( &$page ){
+	public function decoratePathWithParents( &$page )
+	{
 		$model		= $this->getPageModel();
 		$current	= $page;
 		$list		= array();
@@ -87,7 +87,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		return $list;
 	}
 
-	public function getChildren( $pageId, $activeOnly = TRUE ){
+	public function getChildren( $pageId, bool $activeOnly = TRUE ): array
+	{
 		$page	= $this->getPageModel()->get( $pageId );
 		if( !$page )
 			throw new InvalidArgumentException( 'Invalid page ID given: '.$pageId );
@@ -100,7 +101,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo		move "from path" to method hasPageByPath and make pathOrId to pageId
 	 */
-	public function getPage( $pageId, $strict = TRUE  ){
+	public function getPage( $pageId, bool $strict = TRUE  )
+	{
 		if( !preg_match( '/^[0-9]+$/', $pageId ) )
 			throw new RangeException( 'Given page is not an ID' );
 		$page	= $this->getPageModel()->get( $pageId );
@@ -133,7 +135,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 *	@throws		InvalidArgumentException	if no or empty module ID is given
 	 *	@todo		check if this is deprecated! why the hell get page from controller alone?
 	 */
-	public function getPageFromController( $controllerName, $strict = TRUE ){
+	public function getPageFromController( string $controllerName, bool $strict = TRUE )
+	{
 		if( !strlen( trim( $controllerName ) ) )
 			throw new InvalidArgumentException( 'No controller name given' );
 		$page	= $this->getPageModel()->getByIndex( 'controller', $controllerName );
@@ -155,7 +158,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 *	@return		object|null					Data object of found page or NULL if nothing found
 	 *	@throws		InvalidArgumentException	if no or empty module ID is given
 	 */
-	public function getPageFromControllerAction( $controllerName, $action, $strict = TRUE ){
+	public function getPageFromControllerAction( string $controllerName, string $action, bool $strict = TRUE )
+	{
 		if( !strlen( trim( $controllerName ) ) )
 			throw new InvalidArgumentException( 'No controller name given' );
 		$page	= $this->getPageModel()->getByIndices( array(
@@ -185,7 +189,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 *	@throws		RangeException				if path is not resolvable
 	 *	@throws		RangeException				if path parent part is not resolvable
 	 */
-	public function getPageFromPath( $path, $withParents = FALSE, $strict = TRUE ){
+	public function getPageFromPath( string $path, bool $withParents = FALSE, bool $strict = TRUE )
+	{
 		$path		= trim( $path, '/' );
 		try{
 			$page	= $this->getPageFromPathRecursive( $path, 0, TRUE );
@@ -211,7 +216,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 *	@return		object|null					Data object of found page or NULL if nothing found
 	 *	@throws		RuntimeException			if path is not resolvable
 	 */
-	public function getPageFromRequest( $withParents = FALSE, $strict = TRUE ){
+	public function getPageFromRequest( bool $withParents = FALSE, bool $strict = TRUE )
+	{
 		$request	= $this->env->getRequest();
 		$path		= trim( $request->get( '__path' ), '/' );										//  get requested path
 		$pagePath	= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page path is not empty
@@ -234,31 +240,40 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 *	@throws		InvalidArgumentException	if no or empty path is given, call atleast with path 'index'
 	 *	@todo		move "by path" to method hasPageByPath and make pathOrId to pageId
 	 */
-	public function hasPage( $pathOrId ){
+	public function hasPage( $pathOrId ): bool
+	{
 		if( preg_match( '/^[0-9]+$/', $pathOrId ) )
 			return (bool) $this->getPageModel()->get( $pathOrId );
 		return (bool) $this->getPageFromPath( $pathOrId );
 	}
 
-	public function hasPages( $visible = TRUE ){
-		$indices	= array();
-		$indices['status']	= $visible ? '>='.Model_Page::STATUS_VISIBLE : '>='.Model_Page::STATUS_HIDDEN;
+	public function hasPages( bool $visible = TRUE ): bool
+	{
+		$minimumStatus	= $visible ? Model_Page::STATUS_VISIBLE : Model_Page::STATUS_HIDDEN;
+		$indices		= array( 'status' => '>='.$minimumStatus );
 		return $this->getPageModel()->count( $indices );
 	}
 
-	public function isAccessible( $page ){
+	public function isAccessible( $page ): bool
+	{
 		$isAuthenticated	= $this->env->getSession()->get( 'userId' );
+		$hasRight			= FALSE;
+		if( $page->type == Model_Page::TYPE_MODULE && $page->access == 'acl' )
+			$hasRight	= $this->env->getAcl()->has( $page->controller, $page->action ?: 'index' );
 		$public		= $page->access == "public";
 		$outside	= !$isAuthenticated && $page->access == "outside";
 		$inside		= $isAuthenticated && $page->access == "inside";
-		return $public || $outside || $inside;
+		return $public || $outside || $inside || $hasRight;
 	}
 
-	public function setApp( $app ){
+	public function setApp( $app ): self
+	{
 		$this->app	= $app;
+		return $this;
 	}
 
-	public function translatePage( $page ){
+	public function translatePage( $page )
+	{
 		if( !class_exists( 'Logic_Localization' ) )
 			return $page;
 		$localization		= new Logic_Localization( $this->env );
@@ -284,7 +299,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 	 *	@throws		RangeException				if path is not resolvable and strict mode is on
 	 *	@todo		remove strategies absolute_backward and relative_forward since both are buggy
 	 */
-	protected function getPageFromPathRecursive( $path, $parentPageId = 0, $strict = TRUE ){
+	protected function getPageFromPathRecursive( string $path, int $parentPageId = 0, bool $strict = TRUE )
+	{
 		$model	= $this->getPageModel();
 		$parts	= preg_split( '/\//', $path );
 		$indices	= array(																		//  basic indices to find page
@@ -380,7 +396,8 @@ class Logic_Page extends CMF_Hydrogen_Logic{
 		return NULL;
 	}
 
-	protected function getPageModel(){
+	protected function getPageModel()
+	{
 //		$this->env->getMessenger()->noteInfo("...");
 		if( !empty( $this->model[$this->app] ) )
 			return $this->model[$this->app];

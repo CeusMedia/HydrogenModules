@@ -16,8 +16,8 @@
  *	@copyright		2013 Ceus Media
  *	@version		$Id$
  */
-class Model_Page extends CMF_Hydrogen_Model {
-
+class Model_Page extends CMF_Hydrogen_Model
+{
 	const TYPE_CONTENT		= 0;
 	const TYPE_BRANCH		= 1;
 	const TYPE_MODULE		= 2;
@@ -69,4 +69,3 @@ class Model_Page extends CMF_Hydrogen_Model {
 	);
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

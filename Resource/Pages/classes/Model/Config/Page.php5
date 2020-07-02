@@ -5,17 +5,20 @@ class Model_Config_Page
 	protected $filePath;
 	protected $pages;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->filePath	= $env->uri.'config/pages.json';
 		$this->loadPages();
 	}
 
-	public function edit( $pageId, $data = array() ){
+	public function edit( $pageId, $data = array() )
+	{
 		throw new RuntimeException( 'Not implemented yet' );
 	}
 
-	public function get( $pageId ){
+	public function get( $pageId )
+	{
 		$pageId	= (int) $pageId;
 		foreach( $this->pages as $page )
 			if( $page->pageId === $pageId )
@@ -23,11 +26,13 @@ class Model_Config_Page
 		return NULL;
 	}
 
-	public function getAll(){
+	public function getAll(): array
+	{
 		return $this->pages;
 	}
 
-	public function getColumns(){
+	public function getColumns(): array
+	{
 		return $columns	= array(
 			'pageId',
 			'parentId',
@@ -53,11 +58,13 @@ class Model_Config_Page
 		);
 	}
 
-	public function getByIndices( $indices = array(), $orders = array() ){
+	public function getByIndices( array $indices = array(), array $orders = array() )
+	{
 		return current( $this->getAllByIndices( $indices, $orders, array( 0, 1 ) ) );
 	}
 
-	public function getAllByIndices( $indices = array(), $orders = array(), $limits = array() ){
+	public function getAllByIndices( array $indices = array(), array $orders = array(), array $limits = array() ): array
+	{
 		$data	= $this->pages;
 		$regExp	= '/^(!=|>=|<=|>|<) (.+)$/';
 		foreach( $indices as $indexKey => $indexValue ){
@@ -83,13 +90,15 @@ class Model_Config_Page
 		return $data;
 	}
 
-	public function remove(){
+	public function remove()
+	{
 		throw new RuntimeException( 'Not implemented yet' );
 	}
 
 	//  --  PROTECTED  --  //
 
-	protected function loadPages(){
+	protected function loadPages()
+	{
 		$this->fileData	= FS_File_JSON_Reader::load( $this->filePath, TRUE );
 		$this->scopes	= array_keys( $this->fileData );
 		$this->pages	= array();
