@@ -39,7 +39,7 @@ class View_Helper_Module_Details extends CMF_Hydrogen_View_Helper_Abstract{
 			'database'		=> 'tabDatabase',
 		//	'links'			=> 'tabLinks',
 			'relations'		=> 'tabRelations',
-			'instances'		=> 'tabInstances',
+//			'instances'		=> 'tabInstances',
 		);
 
 		$nr			= 0;

@@ -5,7 +5,8 @@
 /**
  *	Singleton of module logic.
  */
-class Logic_Module {
+class Logic_Module extends CMF_Hydrogen_Logic
+{
 
 	static protected $instance	= NULL;
 	protected $env;
@@ -19,13 +20,13 @@ class Logic_Module {
 
 	protected function __clone(){}
 
-	protected function __construct( CMF_Hydrogen_Environment $env ){
-		$this->env	= $env;
+	protected function __onInit()
+	{
 		$this->messenger	= $this->env->getMessenger();
-		$this->model		= new Model_Module( $env );
+		$this->model		= new Model_Module( $this->env );
 		$this->env->clock->profiler->tick( 'Logic_Module: init' );
 
-		$moduleSource		= new Model_ModuleSource( $env );
+		$moduleSource		= new Model_ModuleSource( $this->env );
 		$this->sources		= $moduleSource->getAll( FALSE );
 		$this->env->clock->profiler->tick( 'Logic_Module: get sources' );
 		foreach( $this->model->loadSources() as $sourceId => $status )
@@ -46,7 +47,8 @@ class Logic_Module {
 		$this->env->clock->profiler->tick( 'Logic_Module: check sources' );
 	}
 
-	public function checkForUpdate( $moduleId ){
+	public function checkForUpdate( string $moduleId )
+	{
 		$module		= $this->model->get( $moduleId );
 		if( $module && strlen( trim( $module->versionInstalled ) ) )
 			if( version_compare( $module->versionAvailable, $module->versionInstalled ) )
@@ -54,7 +56,8 @@ class Logic_Module {
 		return FALSE;
 	}
 
-	public function configureLocalModule( $moduleId, $pairs, $installType = NULL, $sourceId = NULL ){
+	public function configureLocalModule( string $moduleId, $pairs, /*int*/$installType = NULL, string $sourceId = NULL )
+	{
 		$fileName	= $this->env->pathApp.'config/modules/'.$moduleId.'.xml';
 		$xml	= FS_File_Reader::load( $fileName );
 		$xml	= new XML_Element( $xml );
@@ -71,91 +74,16 @@ class Logic_Module {
 		return FS_File_Writer::save( $fileName, $xml->asXml() );
 	}
 
-	protected function copyModuleFile( $moduleId, $fileIn, $fileOut, $force = FALSE ){
-		$source		= $this->getSourceFromModuleId( $moduleId );
-		$fileIn		= $source->path.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
-		$fileOut	= $this->env->pathApp.$fileOut;
-#		$this->messenger->noteNotice( $fileIn." -> ".$fileOut );
-		$pathNameIn		= realpath( $fileIn );
-		if( !$pathNameIn )
-			throw new Exception_IO( 'Resource file is not existing', 20, $fileIn );
-		if( !is_readable( $pathNameIn ) )
-			throw new Exception_IO( 'Resource file is not readable', 21, $fileIn );
-		if( !is_writable( $pathNameIn ) )
-			throw new Exception_IO( 'Resource file is not executable', 22, $fileIn );
-		$pathOut	= dirname( $fileOut );
-		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) )
-			throw new Exception_IO( 'Target path could not been created', 30, $pathOut );
-		if( file_exists( $fileOut ) ){
-			if( !$force )
-				throw new Exception_IO( 'Target file is already existing', 31, $fileOut );
-			@unlink( $fileOut );
-		}
-		if( !copy( $pathNameIn, $fileOut ) )
-			throw new Exception_IO( 'Link failed', 50, array( $fileIn, $fileOut ) );
-		chmod( $fileOut, 0770 );
-		return TRUE;
-	}
-
-	/**
-	 *	Creates a Path by creating all Path Steps.
-	 *	@access		protected
-	 *	@param		string		$path				Path to create
-	 *	@return		void
-	 */
-	static protected function createPath( $path ){
-		$dirname	= dirname( $path );
-		if( file_exists( $path ) && is_dir( $path ) )
-			return;
-		$hasParent	= file_exists( $dirname ) && is_dir( $dirname );
-		if( $dirname != "./" && !$hasParent )
-			self::createPath( $dirname );
-		return mkdir( $path, 02770, TRUE );
-	}
-
-	/**
-	 *	Executes SQL/DDL and returns number of executed statements.
-	 *	You can provide complex collections of SQL statements, which will be chunked and executed separately.
-	 *	@access		protected
-	 *	@param		string		$sql		SQL statements
-	 *	@return		integer					Number of executed SQL statements
-	 *	@throws		RuntimeException		if remote environment/instance has no database resource
-	 */
-	protected function executeSql( $sql ){
-		if( !trim( $sql ) )
-			return 0;
-		$lines		= explode( "\n", trim( $sql ) );
-		$statements	= array();
-		$buffer		= array();
-		if( !$this->env->getRemote()->has( 'dbc' ) )
-			throw new RuntimeException( 'Remvote environment has no database connection' );
-		$dbc	= $this->env->getRemote()->getDatabase();
-		$prefix	= $this->env->getRemote()->getDatabase()->getPrefix();								//  @todo use config of module Resource_Database instead
-		while( count( $lines ) ){
-			$line = array_shift( $lines );
-			if( !trim( $line ) )
-				continue;
-			$buffer[]	= UI_Template::renderString( trim( $line ), array( 'prefix' => $prefix ) );
-			if( preg_match( '/;$/', trim( $line ) ) ){
-				$statements[]	= join( "\n", $buffer );
-				$buffer			= array();
-			}
-			if( !count( $lines ) && $buffer )
-				$statements[]	= join( "\n", $buffer ).';';
-		}
-		foreach( $statements as $statement )
-			$dbc->exec( $statement );
-		return count( $statements );
-	}
-
-	public function getCategories(){
+	public function getCategories(): array
+	{
 		return $this->model->getCategories();
 	}
 
-	public function getDatabaseScripts( $moduleId, $versionStart = NULL, $versionTarget = NULL ){
-		if( !$this->env->getRemote()->has( 'dbc' ) )												//  remote environment has no database connection
+	public function getDatabaseScripts( string $moduleId, ?string $versionStart = NULL, ?string $versionTarget = NULL ): array
+	{
+		if( !$this->env/*->getRemote()*/->has( 'dbc' ) )												//  remote environment has no database connection
 			return array();
-		if( !( $driver = $this->env->getRemote()->getDatabase()->getDriver() ) )					//  no PDO driver set on database connection
+		if( !( $driver = $this->env/*->getRemote()*/->getDatabase()->getDriver() ) )					//  no PDO driver set on database connection
 			return array();
 		$list			= array();
 		$module			= $this->model->get( $moduleId );
@@ -206,13 +134,15 @@ class Logic_Module {
 		return $list;
 	}
 
-	static public function getInstance( CMF_Hydrogen_Environment $env ){
+/*	static public function getInstance( CMF_Hydrogen_Environment $env ): self
+	{
 		if( !self::$instance )
 			self::$instance	= new Logic_Module( $env );
 		return self::$instance;
-	}
+	}*/
 
-	public function getLocalFileTypePath( CMF_Hydrogen_Environment_Remote $env, $fileType, $file ){
+	public function getLocalFileTypePath( CMF_Hydrogen_Environment $env, string $fileType, $file ): string
+	{
 		$config		= $env->getConfig();
 		$paths		= $config->getAll( 'path.', TRUE );
 		$pathTheme	= $paths->get( 'themes' ).$config->get( 'layout.theme' ).'/';
@@ -247,11 +177,13 @@ class Logic_Module {
 		}
 	}
 
-	public function getModule( $moduleId ){
+	public function getModule( string $moduleId )
+	{
 		return $this->model->get( $moduleId );
 	}
 
-	public function getModuleFileMap( CMF_Hydrogen_Environment_Remote $env, $module ){
+	public function getModuleFileMap( CMF_Hydrogen_Environment_Remote $env, $module ): array
+	{
 		$map		= array();
 		$fileTypes	= array(
 			'classes'		=> 'class',
@@ -273,15 +205,21 @@ class Logic_Module {
 		return $map;
 	}
 
-	public function getModuleFromSource( $moduleId, $source = NULL ){
+	public function getModuleFromSource( string $moduleId, string $source = NULL )
+	{
 		return $this->model->getFromSource( $moduleId, $source );
 	}
 
-	public function getModulePath( $moduleId ){
+	public function getModulePath( string $moduleId ): ?string
+	{
 		return $this->model->getPath( $moduleId );
 	}
 
-	public function getSourceFileTypePath( $fileType, $file ){
+	/**
+	 *	@todo  			critical: apply paths from app base config
+	 */
+	public function getSourceFileTypePath( string $fileType, $file ): string
+	{
 		switch( $fileType ){
 			case 'class':
 				return 'classes/'.$file->file;
@@ -300,7 +238,8 @@ class Logic_Module {
 		}
 	}
 
-	public function getSourceFromModuleId( $moduleId ){
+	public function getSourceFromModuleId( string $moduleId )
+	{
 		$module		= $this->getModule( $moduleId );
 		if( !$module )
 			throw new InvalidArgumentException( 'Module '.$moduleId.' not existing' );
@@ -312,7 +251,8 @@ class Logic_Module {
 		return $source;
 	}
 
-/*	public function importLocalModule( $moduleId, $title, $description = NULL, $version = NULL, $route = NULL ){
+/*	public function importLocalModule( string $moduleId, string $title, string $description = NULL, $version = NULL, $route = NULL )
+	{
 		$path	= $this->getModulePath( $moduleId );
 		if( !file_exists( $path ) )
 			throw new RuntimeException( 'Path of module to import is not existing' );
@@ -323,8 +263,9 @@ class Logic_Module {
 	#	- write XML file
 	}*/
 
-	public function importLocalModuleToRepository( $moduleId, $sourceId, $move = NULL ){
-		$config		= $this->env->getRemote()->getConfig();
+	public function importLocalModuleToRepository( string $moduleId, string $sourceId, bool $move = NULL ): bool
+	{
+		$config		= $this->env/*->getRemote()*/->getConfig();
 		$messenger	= $this->env->getMessenger();
 		$module		= $this->getModule( $moduleId );
 		if( !$module )
@@ -451,40 +392,283 @@ class Logic_Module {
 		return FALSE;
 	}
 
-	public function installModule( $sourceId, $moduleId, $installType = 0, $settings = array(), $force = FALSE, $database = TRUE, $verbose = NULL ){
+	public function installModule( string $sourceId, string $moduleId, int $installType = 0, array $settings = array(), bool $force = FALSE, bool $database = TRUE, bool $verbose = NULL ): bool
+	{
 		try{
 			if( $database )
 				$this->installModuleDatabase( $moduleId );
 			$exceptions	= $this->installModuleFiles( $moduleId, $installType, $force, $verbose );
 			if( !count( $exceptions ) ){															//  no error occured until now
 				$this->configureLocalModule( $moduleId, $settings, $installType, $sourceId );		//  save given configuration values in local module
-				$this->invalidateFileCache( $this->env->getRemote() );
+				$this->invalidateFileCache( $this->env/*->getRemote()*/ );
 				return TRUE;
 			}
 		}
 		catch( Exception $e ){
 			$exceptions	= array( $e );
+			throw new Exception_Logic( 'Module installation failed', $exceptions, 2 );
 		}
-		throw new Exception_Logic( 'Module installation failed', $exceptions, 2 );
 		return FALSE;
 	}
 
-	protected function installModuleDatabase( $moduleId ){
+	public function invalidateFileCache( CMF_Hydrogen_Environment $env = NULL, bool $verbose = NULL )
+	{
+		if( $env->getConfig()->get( 'system.cache.modules' ) ){
+			$fileCache	= $env->path.'config/modules.cache.serial';
+			if(file_exists( $fileCache ) ){
+				@unlink( $fileCache );
+				if( $verbose )
+					$this->env->getMessenger()->noteNotice( 'Removed module cache file <small><code>'.$fileCache.'</code></small>.' );
+			}
+		}
+	}
+
+	public function updateModule( string $moduleId, int $installType = 0, array $files = array(), array $settings = array(), bool $verbose = TRUE ): array
+	{
+		$exceptions	= $this->updateModuleFiles( $moduleId, $installType, $files, $verbose );
+		if( !count( $exceptions ) ){
+			try{
+				$this->configureLocalModule( $moduleId, $settings, $installType );
+				$this->updateModuleDatabase( $moduleId );
+			}
+			catch( Exception $e){
+				$exceptions[]	= $e->getMessage();
+			}
+		}
+		if( count( $exceptions ) )																	//  several exceptions occured
+			throw new Exception_Logic( 'Module update failed', $exceptions, 2 );
+		return $exceptions;
+	}
+
+	public function uninstallModule( string $moduleId, bool $database = TRUE, bool $verbose = TRUE ): bool
+	{
+		try{
+			if( $database )
+				$this->uninstallModuleDatabase( $moduleId, $verbose );
+			$this->uninstallModuleFiles( $moduleId, $verbose );
+			return TRUE;
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( 'Failed: '.$e->getMessage() );
+		}
+		return FALSE;
+	}
+
+	/**
+	 *	@todo		implement
+	 */
+	public function addSource()
+	{
+	}
+
+	/**
+	 *	@todo		implement
+	 */
+	public function editSource( string $sourceId )
+	{
+	}
+
+	public function getSource( string $sourceId )
+	{
+		if( !array_key_exists( $sourceId, $this->sources ) )
+			throw new RuntimeException( 'Source "'.$sourceId.'" not existing' );
+		return $this->sources[$sourceId];
+	}
+
+	/**
+	 *	@todo		implement
+	 */
+	public function hasSource( string $sourceId )
+	{
+	}
+
+	public function isInstalled( $moduleOrId ): bool
+	{
+		if( is_object( $moduleOrId ) )
+			return in_array( (int) $moduleOrId->type, array(
+				Model_Module::TYPE_CUSTOM,
+				Model_Module::TYPE_COPY,
+				Model_Module::TYPE_LINK
+			) );
+		else if( $moduleOrId )
+			return $this->isInstalled( $this->getModule ( $moduleOrId ) );
+		return NULL;
+	}
+
+	public function listModulesMissing( string $instanceId ): array
+	{
+		$remote		= $this->env/*->getRemote()*/;
+		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
+		$list		= array();
+		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+			$modulesAll				= $this->model->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
+			$modulesInstalled		= $remote->getModules()->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
+			foreach( $modulesInstalled as $module )
+				foreach( $module->relations->needs as $need )
+					if( !array_key_exists( $need, $modulesInstalled ) )
+						$list[$need]	= isset( $list[$need] ) ? $list[$need] + 1 : 1;
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
+			arsort( $list );
+		}
+		return $list;
+	}
+
+	public function listModulesPossible( string $instanceId ): array
+	{
+		$remote		= $this->env/*->getRemote()*/;
+		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
+		$list		= array();
+		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+			$modulesAll				= $this->model->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
+			$modulesInstalled		= $remote->getModules()->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
+			foreach( $modulesInstalled as $module )
+				foreach( $module->relations->supports as $support )
+					if( !array_key_exists( $support, $modulesInstalled ) )
+						$list[$support]	= isset( $list[$support] ) ? $list[$support] + 1 : 1;
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
+			arsort( $list );
+		}
+		return $list;
+	}
+
+	public function listModulesOutdated( string $instanceId ): array
+	{
+		$remote		= $this->env/*->getRemote()*/;
+		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
+		$list		= array();
+		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+			$modulesAll				= $this->model->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
+			$modulesInstalled		= $remote->getModules()->getAll();
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
+			foreach( $modulesInstalled as $module )
+				if( $module->versionInstalled && $module->versionAvailable )
+					if( version_compare( $module->versionAvailable, $module->versionInstalled ) > 0 )
+						$list[$module]	= isset( $list[$module] ) ? $list[$module] + 1 : 1;
+			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
+			arsort( $list );
+		}
+		return $list;
+	}
+
+	public function listSources( bool $activeOnly = FALSE ): array
+	{
+		$list	= array();
+		$model	= new Model_ModuleSource( $this->env );
+		return $model->getAll( $activeOnly );
+	}
+
+	/**
+	 *	@todo		implement
+	 */
+	public function removeSource( string $sourceId )
+	{
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function copyModuleFile( string $moduleId, string $fileIn, string $fileOut, bool $force = FALSE ): bool
+	{
+		$source		= $this->getSourceFromModuleId( $moduleId );
+		$fileIn		= $source->path.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
+		$fileOut	= $this->env->pathApp.$fileOut;
+#		$this->messenger->noteNotice( $fileIn." -> ".$fileOut );
+		$pathNameIn		= realpath( $fileIn );
+		if( !$pathNameIn )
+			throw new Exception_IO( 'Resource file is not existing', 20, $fileIn );
+		if( !is_readable( $pathNameIn ) )
+			throw new Exception_IO( 'Resource file is not readable', 21, $fileIn );
+		if( !is_writable( $pathNameIn ) )
+			throw new Exception_IO( 'Resource file is not executable', 22, $fileIn );
+		$pathOut	= dirname( $fileOut );
+		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) )
+			throw new Exception_IO( 'Target path could not been created', 30, $pathOut );
+		if( file_exists( $fileOut ) ){
+			if( !$force )
+				throw new Exception_IO( 'Target file is already existing', 31, $fileOut );
+			@unlink( $fileOut );
+		}
+		if( !copy( $pathNameIn, $fileOut ) )
+			throw new Exception_IO( 'Link failed', 50, array( $fileIn, $fileOut ) );
+		chmod( $fileOut, 0770 );
+		return TRUE;
+	}
+
+	/**
+	 *	Creates a Path by creating all Path Steps.
+	 *	@access		protected
+	 *	@param		string		$path				Path to create
+	 *	@return		void
+	 */
+	protected static function createPath( string $path )
+	{
+		$dirname	= dirname( $path );
+		if( file_exists( $path ) && is_dir( $path ) )
+			return;
+		$hasParent	= file_exists( $dirname ) && is_dir( $dirname );
+		if( $dirname != "./" && !$hasParent )
+			self::createPath( $dirname );
+		return mkdir( $path, 02770, TRUE );
+	}
+
+	/**
+	 *	Executes SQL/DDL and returns number of executed statements.
+	 *	You can provide complex collections of SQL statements, which will be chunked and executed separately.
+	 *	@access		protected
+	 *	@param		string		$sql		SQL statements
+	 *	@return		integer					Number of executed SQL statements
+	 *	@throws		RuntimeException		if remote environment/instance has no database resource
+	 */
+	protected function executeSql( string $sql ): int
+	{
+		if( !trim( $sql ) )
+			return 0;
+		$lines		= explode( "\n", trim( $sql ) );
+		$statements	= array();
+		$buffer		= array();
+		if( !$this->env/*->getRemote()*/->has( 'dbc' ) )
+			throw new RuntimeException( 'Remvote environment has no database connection' );
+		$dbc	= $this->env/*->getRemote()*/->getDatabase();
+		$prefix	= $this->env/*->getRemote()*/->getDatabase()->getPrefix();								//  @todo use config of module Resource_Database instead
+		while( count( $lines ) ){
+			$line = array_shift( $lines );
+			if( !trim( $line ) )
+				continue;
+			$buffer[]	= UI_Template::renderString( trim( $line ), array( 'prefix' => $prefix ) );
+			if( preg_match( '/;$/', trim( $line ) ) ){
+				$statements[]	= join( "\n", $buffer );
+				$buffer			= array();
+			}
+			if( !count( $lines ) && $buffer )
+				$statements[]	= join( "\n", $buffer ).';';
+		}
+		foreach( $statements as $statement )
+			$dbc->exec( $statement );
+		return count( $statements );
+	}
+
+	protected function installModuleDatabase( string $moduleId )
+	{
 		foreach( $this->getDatabaseScripts( $moduleId ) as $step ){
 			$this->executeSql( $step->sql );																//  execute SQL
 		}
 	}
 
-	protected function installModuleFiles( $moduleId, $installType = 0, $force = FALSE, $verbose = TRUE ){
+	protected function installModuleFiles( string $moduleId, int $installType = 0, bool $force = FALSE, bool $verbose = TRUE ): array
+	{
 		$module		= $this->model->get( $moduleId );
 		$pathModule	= $this->model->getPath( $moduleId );
-		$pathApp	= $this->env->getRemote()->path;
+		$pathApp	= $this->env/*->getRemote()*/->path;
 
 		if( !in_array( $installType, array( self::INSTALL_TYPE_LINK, self::INSTALL_TYPE_COPY ) ) )	//  unsupported install type
 			throw new InvalidArgumentException( 'Unknown installation type', 10 );
 
 		$files		= array( 'link' => array(), 'copy' => array() );
-		$fileMap	= $this->getModuleFileMap( $this->env->getRemote(), $module );
+		$fileMap	= $this->getModuleFileMap( $this->env/*->getRemote()*/, $module );
 		$listDone	= array();
 		$exceptions	= array();
 
@@ -515,18 +699,8 @@ class Logic_Module {
 		return $exceptions;
 	}
 
-	public function invalidateFileCache( $env = NULL, $verbose = NULL ){
-		if( $env->getConfig()->get( 'system.cache.modules' ) ){
-			$fileCache	= $env->path.'config/modules.cache.serial';
-			if(file_exists( $fileCache ) ){
-				@unlink( $fileCache );
-				if( $verbose )
-					$this->env->getMessenger()->noteNotice( 'Removed module cache file <small><code>'.$fileCache.'</code></small>.' );
-			}
-		}
-	}
-
-	protected function linkModuleFile( $moduleId, $fileIn, $fileOut, $force = FALSE ){
+	protected function linkModuleFile( string $moduleId, string $fileIn, string $fileOut, bool $force = FALSE ): bool
+	{
 		$source		= $this->getSourceFromModuleId( $moduleId );
 		$fileIn		= $source->path.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
 		$fileOut	= $this->env->pathApp.$fileOut;
@@ -550,31 +724,85 @@ class Logic_Module {
 		return TRUE;
 	}
 
-	public function updateModule( $moduleId, $installType = 0, $files = array(), $settings = array(), $verbose = TRUE ){
-		$exceptions	= $this->updateModuleFiles( $moduleId, $installType, $files, $verbose );
-		if( !count( $exceptions ) ){
-			try{
-				$this->configureLocalModule( $moduleId, $settings, $installType );
-				$this->updateModuleDatabase( $moduleId );
-			}
-			catch( Exception $e){
-				$exceptions[]	= $e->getMessage();
-			}
-		}
-		if( count( $exceptions ) )																	//  several exceptions occured
-			throw new Exception_Logic( 'Module update failed', $exceptions, 2 );
-		return $exceptions;
+	protected static function saveFile( string $filePath, string $content, $mode = 0777 )
+	{
+		FS_Folder_Editor::createFolder( dirname( $filePath ), $mode );
+		$e	= new FS_File_Editor( $filePath );
+		$e->writeString( $content );
+		$e->setPermissions( 0777 );
 	}
 
-	protected function updateModuleDatabase( $moduleId, $verbose = TRUE ){
+	protected function uninstallModuleDatabase( string $moduleId, bool $verbose = TRUE )
+	{
+		$module		= $this->model->get( $moduleId );
+		if( $this->env/*->getRemote()*/->has( 'dbc' ) ){												//  remote environment has database connection
+			$driver	= $this->env/*->getRemote()*/->getDatabase()->getDriver();							//  get PDO driver used on dabase connetion
+			if( $driver ){																			//  remote database connection is configured
+				if( strlen( trim( $module->sql['uninstall@'.$driver]->sql ) ) )						//  SQL for installation for specific PDO driver is given
+					$this->executeSql( $module->sql['uninstall@'.$driver]->sql );					//  execute SQL
+				else if( strlen( trim( $module->sql['uninstall@*']->sql ) ) )						//  fallback: general SQL for installation is available
+					$this->executeSql( $module->sql['uninstall@*']->sql );							//  execute SQL
+			}
+		}
+	}
+
+	protected function uninstallModuleFiles( string $moduleId, bool $verbose = TRUE ): array
+	{
+		$configApp	= $this->env/*->getRemote()*/->getConfig();
+		$pathApp	= $this->env/*->getRemote()*/->path;
+		$module		= $this->model->get( $moduleId );
+		$files		= array_values( $this->getModuleFileMap( $this->env/*->getRemote()*/, $module ) );
+
+		//  --  CONFIGURATION  --  //
+		$files[]	= 'config/modules/'.$moduleId.'.xml';
+		if( file_exists( 'config/modules/'.$moduleId.'.ini' ) )
+			$files[]	= 'config/modules/'.$moduleId.'.ini';
+		$this->invalidateFileCache( $this->env/*->getRemote()*/ );
+
+		$folders	= array();
+		$baseAppPaths	= $configApp->getAll( 'path.' );
+		foreach( $files as $file ){
+			if( $file === "config/config.ini" )														//  @todo	fix this hack
+				continue;
+			@unlink( $path = $pathApp.$file );
+			if( file_exists( dirname( $path ) ) ){
+				do{
+					$path	= dirname( $path );
+					$folder	= new FS_Folder_Reader( $path );
+					if( !( $count = $folder->getNestedCount() ) ){
+						if( !in_array( basename( $path ).'/', $baseAppPaths ) ){
+							FS_Folder_Editor::removeFolder( $path );
+							$folders[]	= substr( $path, strlen( $pathApp ) );
+						}
+					}
+				}
+				while( !$count );
+			}
+		}
+		if( $verbose ){
+			if( $files ){
+				$files	= '<ul><li>'.implode( '</li><li>', $files ).'</li></ul>';
+				$this->messenger->noteNotice( 'Removed files: '.$files );
+			}
+			if( $folders ){
+				$folders	= '<ul><li>'.implode( '</li><li>', $folders ).'</li></ul>';
+				$this->messenger->noteNotice( 'Removed folders: '.$folders );
+			}
+		}
+		return array( $files, $folders );
+	}
+
+	protected function updateModuleDatabase( string $moduleId, bool $verbose = TRUE )
+	{
 		foreach( $this->getDatabaseScripts( $moduleId ) as $step ){
 			$this->executeSql( $step->sql );														//  execute SQL
 		}
 	}
 
-	protected function updateModuleFiles( $moduleId, $installType = 0, $files = array(), $verbose = TRUE ){
+	protected function updateModuleFiles( string $moduleId, int $installType = 0, array $files = array(), bool $verbose = TRUE ): array
+	{
 		$module		= $this->model->getFromSource( $moduleId );
-		$pathApp	= $this->env->getRemote()->path;
+		$pathApp	= $this->env/*->getRemote()*/->path;
 
 		if( !in_array( $installType, array( self::INSTALL_TYPE_LINK, self::INSTALL_TYPE_COPY ) ) )	//  unsupported install type
 			throw new InvalidArgumentException( 'Unknown installation type', 10 );
@@ -591,7 +819,7 @@ class Logic_Module {
 		}
 		$module->files	= (object) $list;															//  set new file list on module
 
-		$fileMap	= $this->getModuleFileMap( $this->env->getRemote(), $module );
+		$fileMap	= $this->getModuleFileMap( $this->env/*->getRemote()*/, $module );
 		$fileLists[( $installType == self::INSTALL_TYPE_LINK ? 'link' : 'copy' )]	= $fileMap;
 
 		$listDone	= array();
@@ -630,194 +858,8 @@ class Logic_Module {
 		return $exceptions;
 	}
 
-	public function uninstallModule( $moduleId, $database = TRUE, $verbose = TRUE ){
-		try{
-			if( $database )
-				$this->uninstallModuleDatabase( $moduleId, $verbose );
-			$this->uninstallModuleFiles( $moduleId, $verbose );
-			return TRUE;
-		}
-		catch( Exception $e ){
-			$this->messenger->noteFailure( 'Failed: '.$e->getMessage() );
-		}
-		return FALSE;
-	}
-
-	protected function uninstallModuleDatabase( $moduleId, $verbose = TRUE ){
-		$module		= $this->model->get( $moduleId );
-		if( $this->env->getRemote()->has( 'dbc' ) ){												//  remote environment has database connection
-			$driver	= $this->env->getRemote()->getDatabase()->getDriver();							//  get PDO driver used on dabase connetion
-			if( $driver ){																			//  remote database connection is configured
-				if( strlen( trim( $module->sql['uninstall@'.$driver]->sql ) ) )						//  SQL for installation for specific PDO driver is given
-					$this->executeSql( $module->sql['uninstall@'.$driver]->sql );					//  execute SQL
-				else if( strlen( trim( $module->sql['uninstall@*']->sql ) ) )						//  fallback: general SQL for installation is available
-					$this->executeSql( $module->sql['uninstall@*']->sql );							//  execute SQL
-			}
-		}
-	}
-
-	protected function uninstallModuleFiles( $moduleId, $verbose = TRUE ){
-		$configApp	= $this->env->getRemote()->getConfig();
-		$pathApp	= $this->env->getRemote()->path;
-		$module		= $this->model->get( $moduleId );
-		$files		= array_values( $this->getModuleFileMap( $this->env->getRemote(), $module ) );
-
-		//  --  CONFIGURATION  --  //
-		$files[]	= 'config/modules/'.$moduleId.'.xml';
-		if( file_exists( 'config/modules/'.$moduleId.'.ini' ) )
-			$files[]	= 'config/modules/'.$moduleId.'.ini';
-		$this->invalidateFileCache( $this->env->getRemote() );
-
-		$folders	= array();
-		$baseAppPaths	= $configApp->getAll( 'path.' );
-		foreach( $files as $file ){
-			if( $file === "config/config.ini" )														//  @todo	fix this hack
-				continue;
-			@unlink( $path = $pathApp.$file );
-			if( file_exists( dirname( $path ) ) ){
-				do{
-					$path	= dirname( $path );
-					$folder	= new FS_Folder_Reader( $path );
-					if( !( $count = $folder->getNestedCount() ) ){
-						if( !in_array( basename( $path ).'/', $baseAppPaths ) ){
-							FS_Folder_Editor::removeFolder( $path );
-							$folders[]	= substr( $path, strlen( $pathApp ) );
-						}
-					}
-				}
-				while( !$count );
-			}
-		}
-		if( $verbose ){
-			if( $files ){
-				$files	= '<ul><li>'.implode( '</li><li>', $files ).'</li></ul>';
-				$this->messenger->noteNotice( 'Removed files: '.$files );
-			}
-			if( $folders ){
-				$folders	= '<ul><li>'.implode( '</li><li>', $folders ).'</li></ul>';
-				$this->messenger->noteNotice( 'Removed folders: '.$folders );
-			}
-		}
-		return array( $files, $folders );
-	}
-
-	protected function version( $version ){
+	protected function version( string $version ): string
+	{
 		return preg_replace( "/-pl?([0-9])/", ".0.\\1", $version );
 	}
-
-	/**
-	 *	@todo		implement
-	 */
-	public function addSource(){
-
-	}
-
-	/**
-	 *	@todo		implement
-	 */
-	public function editSource( $sourceId ){
-
-	}
-
-	public function getSource( $sourceId ){
-		if( !array_key_exists( $sourceId, $this->sources ) )
-			throw new RuntimeException( 'Source "'.$sourceId.'" not existing' );
-		return $this->sources[$sourceId];
-	}
-
-	/**
-	 *	@todo		implement
-	 */
-	public function hasSource( $sourceId ){
-
-	}
-
-	public function isInstalled( $moduleOrId ){
-		if( is_object( $moduleOrId ) )
-			return in_array( (int) $moduleOrId->type, array(
-				Model_Module::TYPE_CUSTOM,
-				Model_Module::TYPE_COPY,
-				Model_Module::TYPE_LINK
-			) );
-		else if( $moduleOrId )
-			return $this->isInstalled( $this->getModule ( $moduleOrId ) );
-		return NULL;
-	}
-
-	public function listModulesMissing( $instanceId ){
-		$remote		= $this->env->getRemote();
-		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
-		$list		= array();
-		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
-			$modulesAll				= $this->model->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
-			$modulesInstalled		= $remote->getModules()->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
-			foreach( $modulesInstalled as $module )
-				foreach( $module->relations->needs as $need )
-					if( !array_key_exists( $need, $modulesInstalled ) )
-						$list[$need]	= isset( $list[$need] ) ? $list[$need] + 1 : 1;
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
-			arsort( $list );
-		}
-		return $list;
-	}
-
-	public function listModulesPossible( $instanceId ){
-		$remote		= $this->env->getRemote();
-		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
-		$list		= array();
-		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
-			$modulesAll				= $this->model->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
-			$modulesInstalled		= $remote->getModules()->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
-			foreach( $modulesInstalled as $module )
-				foreach( $module->relations->supports as $support )
-					if( !array_key_exists( $support, $modulesInstalled ) )
-						$list[$support]	= isset( $list[$support] ) ? $list[$support] + 1 : 1;
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
-			arsort( $list );
-		}
-		return $list;
-	}
-
-	public function listModulesOutdated( $instanceId ){
-		$remote		= $this->env->getRemote();
-		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
-		$list		= array();
-		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
-			$modulesAll				= $this->model->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
-			$modulesInstalled		= $remote->getModules()->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
-			foreach( $modulesInstalled as $module )
-				if( $module->versionInstalled && $module->versionAvailable )
-					if( version_compare( $module->versionAvailable, $module->versionInstalled ) > 0 )
-						$list[$module]	= isset( $list[$module] ) ? $list[$module] + 1 : 1;
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
-			arsort( $list );
-		}
-		return $list;
-	}
-
-	public function listSources( $activeOnly = FALSE ){
-		$list	= array();
-		$model	= new Model_ModuleSource( $this->env );
-		return $model->getAll( $activeOnly );
-	}
-
-	/**
-	 *	@todo		implement
-	 */
-	public function removeSource( $sourceId ){
-	}
-
-	static protected function saveFile( $filePath, $content, $mode = 0777 ){
-		FS_Folder_Editor::createFolder( dirname( $filePath ), $mode );
-		$e	= new FS_File_Editor( $filePath );
-		$e->writeString( $content );
-		$e->setPermissions( 0777 );
-	}
 }
-?>

@@ -59,7 +59,7 @@ dl.general dd {
 	&laquo;&nbsp;<a href="./admin/module">Liste</a>
 </div>
 '.$panelGeneral.'
-<div id="panel-details" style="display: none">
+<div id="panel-details" data-style="display: none">
 	'.$panelDetails.'
 </div>
 <br/>

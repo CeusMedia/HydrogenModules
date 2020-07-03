@@ -18,6 +18,13 @@ switch( (int) $filterModuleScope ){
 
 $listSections	= $this->renderModuleSections( $modules, $categories, $filters );
 
+$instanceSelector	= '';
+/*
+$helperInstance	= new View_Helper_InstanceSelector( $env );
+//$helperInstance->setCurrentId( $env->getSession()->get( 'instanceId' ) );
+$instanceSelector	= '<div class="pull-right">'.$helperInstance->render().'</div>';
+*/
+
 return '
 <div id="search">
 	<input type="text" name="query" id="input_query" placeholder="Suche" autocomplete="off"/>
@@ -50,6 +57,7 @@ $(document).ready(function(){
 });
 </script>
 <h3 class="position">
+	'.$instanceSelector.'
 	<span>'.$words['index']['heading'].'</span>
 </h3><br/>
 <div class="module-overview">

@@ -34,6 +34,7 @@ $(document).ready(function(){
 		ModuleAdminModule.init(selectorModuleFilter);
 
 	$("button.auto-back").each(function(){
+		console.log($(this));
 		$(this).removeAttr("disabled").removeAttr("readonly");
 		$(this).on("click",function(){
 			history.back();

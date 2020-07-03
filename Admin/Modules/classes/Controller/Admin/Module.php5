@@ -9,11 +9,11 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 #		print_m( $this->envApp );
 #		die;
 		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
-		if( !$this->env->getSession()->get( 'instanceId' ) ){
+/*		if( !$this->env->getSession()->get( 'instanceId' ) ){
 			$words	= $this->getWords( 'msg' );
 			$this->messenger->noteError( $words['noInstanceSelected'] );
 			$this->restart( 'viewer', TRUE );
-		}
+		}*/
 	}
 
 	public function filter(){
@@ -44,14 +44,14 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 	}
 
 	public function ajaxAddConfig( $moduleId, $key, $value ){
-		
+
 	}
 
-	public function index( $moduleId = NULL ){
+	public function index( $page = 0 ){
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$limit		= 15;
-		$offset		= (int) $request->get( 'offset' );
+		$offset		= $page * $limit;
 		$filters	= array(
 			'types'			=> $session->get( 'filter-modules-types' ),
 			'query'			=> $session->get( 'filter-modules-query' ),
@@ -68,14 +68,11 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 		$this->addData( 'filters', $filters );
 		$this->addData( 'limit', $limit );
 		$this->addData( 'offset', $offset );
+		$this->addData( 'page', $page );
 /*		$this->addData( 'modulesAvailable', $this->logic->model->getAvailable() );
 		$this->addData( 'modulesInstalled', $this->logic->model->getInstalled() );
 		$this->addData( 'modulesNotInstalled', $this->logic->model->getNotInstalled() );
 */	}
-
-	protected function setData( $data, $topic = NULL ){
-		$this->view->setData( $data, $topic );
-	}
 
 	public function showRelationGraph( $moduleId, /*$instanceId,*/ $direction = 'out', $type = 'needs', $recursive = FALSE ){
 		$solver	= new Logic_Module_Relation( $this->logic );														//	calculator for module installation order

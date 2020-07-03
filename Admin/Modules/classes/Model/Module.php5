@@ -17,7 +17,7 @@ class Model_Module{
 
 	public function __construct( $env ){
 		$this->env			= $env;
-		$this->pathConfig	= $env->pathConfig.'modules';
+		$this->pathConfig	= $env->uri.( get_class( $env )::$configPath ).'modules';
 
 		$model	= new Model_ModuleSource( $env );
 		foreach( $model->getAll() as $sourceId => $source )
@@ -113,13 +113,13 @@ class Model_Module{
 							break;
 						case 'query':
 							if( !strlen( trim( $filterValue ) ) )
-								continue;
+								break;
 							$text	= $module->title.$module->description;
 							$parts	= explode( ' ', trim( $filterValue ) );
 							$found	= FALSE;
 							foreach( $parts as $part )
 								if( substr_count( $text, $part ) )
-									$found	= TRUE;	
+									$found	= TRUE;
 							if( !$found )
 								unset( $modulesAll[$moduleId] );
 							break;
@@ -198,20 +198,20 @@ class Model_Module{
 
 	public function getInstalled(){
 		$list		= array();
-		$modules	= $this->env->getRemote()->getModules();
+		$modules	= $this->env/*->getRemote()*/->getModules();
 		if( $modules ){
 			foreach( $modules->getAll() as $id => $module ){
 				$module->type	= self::TYPE_CUSTOM;
-				if( is_int( $module->installType ) && $module->installType ){
+				if( is_int( $module->install->type ) && $module->install->type ){
 					$module->type	= self::TYPE_UNKNOWN;
-					if( $module->installType === 1 )
+					if( $module->install->type === 1 )
 						$module->type	= self::TYPE_LINK;
-					else if( $module->installType === 2 )
+					else if( $module->install->type === 2 )
 						$module->type	= self::TYPE_COPY;
 				}
 				else if( array_key_exists( $id, $this->modulesAvailable ) )
 					$module->type	= self::TYPE_COPY;
-						
+
 				if( !empty( $this->modulesAvailable[$id] ) ){
 					$module->icon	= $this->modulesAvailable[$id]->icon;
 				}
@@ -315,7 +315,7 @@ class Model_Module{
 			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
 		return $module->source;
 	}
-	
+
 	public function getSupportedModulesWithStatus( $moduleId ){										//  @todo	refactor to getSupportedModuleIdsWithStatus
 		$module	= $this->get( $moduleId );
 		if( !$module )

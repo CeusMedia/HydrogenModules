@@ -9,19 +9,32 @@ if( $filterTypes === NULL )
 	$filterTypes	= array(
 		Model_Module::TYPE_CUSTOM,
 		Model_Module::TYPE_COPY,
-#		Model_Module::TYPE_LINK,
+		Model_Module::TYPE_LINK,
 		Model_Module::TYPE_SOURCE
 	);
 
-for( $i=1; $i<=4; $i++)
-	$inputType[$i]	= UI_HTML_Tag::create( 'input', NULL, array(
+$typeMap	= array(
+	Model_Module::TYPE_SOURCE		=> 'verfügbar',
+	Model_Module::TYPE_LINK			=> 'eingebunden',
+	Model_Module::TYPE_COPY			=> 'kopiert',
+	Model_Module::TYPE_CUSTOM		=> 'eigenständig',
+);
+
+$list	= array();
+$types[]	= '';
+foreach( $typeMap as $typeKey => $typeLabel ){
+	$attributes	= array(
 		'type'		=> 'checkbox',
 		'name'		=> 'filter_types[]',
-		'value'		=> $i,
-		'id'		=> 'filter_type_'.$i,
-		'class'		=> 'filter-type',
-		'checked'	=> in_array( $i, $filterTypes ) ? 'checked' : NULL,
-	));
+		'value'		=> $typeKey,
+		'id'		=> 'filter_type_'.$typeKey,
+		'checked'	=> in_array( $typeKey, $filterTypes ) ? 'checked' : NULL,
+	);
+	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
+	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$typeLabel, array( 'for' => 'filter_type_'.$typeKey, 'class' => 'checkbox' ) );
+	$list[]	= UI_HTML_Tag::create( 'li', $label );
+}
+$typeList	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;' ) );
 
 if( !$filterCategories )
 	$filterCategories	= array_keys( $categories );
@@ -39,10 +52,10 @@ foreach( $categories as $nr => $category ){
 	if( !strlen( $category ) )
 		$category	= '<em>(keine Kategorie)</em>';
 	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
-	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$category, array( 'for' => 'filter_category_'.$nr ) );
+	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$category, array( 'for' => 'filter_category_'.$nr, 'class' => 'checkbox' ) );
 	$list[]	= UI_HTML_Tag::create( 'li', $label );
 }
-$categoryList	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none' ) );
+$categoryList	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;' ) );
 
 $filterItemSources		= "";
 if( count( $sources ) > 1 ){
@@ -60,66 +73,49 @@ if( count( $sources ) > 1 ){
 		);
 		$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
 		$title	= UI_HTML_Tag::create( 'acronym', $sourceId, array( 'title' => $source->title ) );
-		$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$title, array( 'for' => 'filter_source_'.$sourceId ) );
+		$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$title, array( 'for' => 'filter_source_'.$sourceId, 'class' => 'checkbox' ) );
 		$list[]	= UI_HTML_Tag::create( 'li', $label );
 	}
-	$sourceList	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none' ) );
+	$sourceList	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;' ) );
 	$filterItemSources	= '
-			<li>
-				<b><label>Quellen</label></b><br/>
+		<div class="row-fluid">
+			<div class="span12">
+				<label><b>Quellen</b></label>
 				'.$sourceList.'
-			</li>';
+			</div>
+		</div>';
 }
 
 $panelFilter	= '
 <form id="form_module_filter" action="./admin/module/filter" method="post">
-	<fieldset>
-		<legend class="filter">Filter</legend>
-		<ul class="input">
-			<li>
-				<b><label for="filter_query">Suchwort</label></b><br/>
-				<input type="text" name="filter_query" id="filter_query" class="max" value="'.$filterQuery.'"/>
-			</li>
-			<li>
-				<b><label>Zustandstyp</label></b><br/>
-				<ul style="margin: 0px; padding: 0px; list-style: none">
-					<li>
-						<label for="filter_type_4">
-							'.$inputType[4].'
-							&nbsp;verfügbar
-						</label>
-					</li>
-<!--					<li>
-						<label for="filter_type_3">
-							'.$inputType[3].'
-							&nbsp;eingebunden
-						</label>
-					</li>-->
-					<li>
-						<label for="filter_type_2">
-							'.$inputType[2].'
-							&nbsp;kopiert
-						</label>
-					</li>
-					<li>
-						<label for="filter_type_1">
-							'.$inputType[1].'
-							&nbsp;eigenständig
-						</label>
-					</li>
-				</ul>
-			</li>
-			<li>
-				<b><label>Kategorien</label></b><br/>
-				'.$categoryList.'
-			</li>
+	<div class="content-panel">
+		<h3 class="filter">Filter</h3>
+		<div class="content-panel-inner">
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="filter_query"><b>Suchwort</b></label>
+					<input type="text" name="filter_query" id="filter_query" class="span12 max" value="'.$filterQuery.'"/>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label><b>Zustandstyp</b></label>
+					'.$typeList.'
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label><b>Kategorien</b></label>
+					'.$categoryList.'
+				</div>
+			</div>
 			'.$filterItemSources.'
-		</ul>
-		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'filter', 'filtern', 'button filter' ).'&nbsp;&nbsp;|&nbsp;&nbsp;
-			'.UI_HTML_Elements::LinkButton( './admin/module/filter?reset', 'kein Filter', 'button reset' ).'
+			<div class="buttonbar">
+			'.UI_HTML_Elements::Button( 'filter', 'filtern', 'btn btn-small btn-primary button filter' ).'&nbsp;&nbsp;|&nbsp;&nbsp;
+			'.UI_HTML_Elements::LinkButton( './admin/module/filter?reset', 'kein Filter', 'btn btn-small btn-inverse button reset' ).'
+			</div>
 		</div>
-	</fieldset>
+	</div>
 </form>
 <script>
 $(document).ready(function(){
@@ -128,8 +124,6 @@ $(document).ready(function(){
 		form.find("button[type=submit]").trigger("click");
 	});
 });
-</script>
-';
+</script>';
 
 return $panelFilter;
-?>

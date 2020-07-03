@@ -4,9 +4,10 @@ $panelFilter	= $this->loadTemplateFile( 'admin/module/index.filter.php' );
 
 $pagination	= '';
 if( $modulesTotal > $limit ){
-	$pagination	= new UI_HTML_Pagination();
+/*	$pagination	= new UI_HTML_Pagination();
 	$pagination->setOption( 'uri', './admin/module' );
-	$pagination	= $pagination->build( $modulesTotal, $limit, $offset );
+	$pagination	= $pagination->build( $modulesTotal, $limit, $offset );*/
+	$pagination	= new \CeusMedia\Bootstrap\PageControl( './admin/module', $page, ceil( $modulesTotal / $limit ) );
 }
 
 /*  --  MODULE TABLE  --  */
@@ -55,10 +56,10 @@ $heads		= array(
 );
 $heads		= UI_HTML_Elements::TableHeads( $heads );
 $colGroup	= UI_HTML_Elements::ColumnGroup( "58%,14%,8%,20%" );
-$listAll	= '<table class="modules all" style="table-layout: fixed">
+$listAll	= '<table class="modules all table table-striped" style="table-layout: fixed">
 	'.$colGroup.'
-	'.$heads.'
-	'.join( $list ).'
+	<thead>'.$heads.'</thead>
+	<tbody>'.join( $list ).'</tbody>
 </table>';
 
 
@@ -98,17 +99,18 @@ table {
 	border: 0px;
 	}
 </style>
-<div>
-	<div class="column-left-25">
+<div class="row-fluid">
+	<div class="span3">
 		'.$panelFilter.'
 	</div>
-	<div class="column-right-75">
-		<fieldset>
-			<legend class="module">Module</legend>
-			'.$listAll.'
-			'.$pages.'
-			'.$pagination.'
-		</fieldset>
+	<div class="span9">
+		<div class="content-panel">
+			<div class="content-panel-inner">
+				'.$listAll.'
+				'.$pages.'
+				'.$pagination.'
+			</div>
+		</div>
 	</div>
 </div>';
 ?>

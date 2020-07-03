@@ -16,7 +16,7 @@ This module needs other modules to be installed:
 - App Instances
 ]]></description>
 	<category>Administration</category>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Adding features.</log>
@@ -24,13 +24,14 @@ This module needs other modules to be installed:
 	<log version="0.3.2">Imnproved instant module filter.</log>
 	<log version="0.3.3">Switches graph orientation.</log>
 	<log version="0.3.4">Added helper for module details.</log>
-	<log version="0.3.5">Added switch to run SQL commands during installation or uninstallation.</log> 
+	<log version="0.3.5">Added switch to run SQL commands during installation or uninstallation.</log>
 	<log version="0.3.6">Added scope to filter modules in viewer index.</log>
 	<log version="0.3.7">Moved templates for details panel.</log>
 	<log version="0.3.8">Extended details by list of instances using this module.</log>
 	<log version="0.4">Rework SQL script collecting on install and update.</log>
 	<log version="0.4.1">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.4.2">Replace CDN resource.</log>
+	<log version="0.4.3">Start migrating module for using outside of Hydra.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
