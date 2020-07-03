@@ -4,13 +4,13 @@ use CMF_Hydrogen_Environment_Resource_Module_Reader as HydrogenModuleReader;
 /**
  *	@todo		remove singleton to have serveral frontend logics for different environments
  */
-class Logic_Frontend{
-
+class Logic_Frontend extends CMF_Hydrogen_Logic
+{
 	static protected $instance;
 
 	protected $config;
 	protected $env;
-	protected $modules	= array();
+	protected $installedModules	= array();
 	protected $path;
 	protected $paths	= array(
 		'config'	=> 'config/',
@@ -25,25 +25,14 @@ class Logic_Frontend{
 	);
 	protected $url;
 
-	protected function __clone(){}
-
-	public function __construct( CMF_Hydrogen_Environment $env, $path = NULL ){
-		$this->env		= $env;
-		$this->path		= $path;
-		$moduleConfig	= $env->getConfig()->getAll( 'module.resource_frontend.', TRUE );
-		if( !$this->path )
-			$this->path		= $moduleConfig->get( 'path' );
-		$this->detectConfig();
-		$this->detectModules();
-		$this->detectBaseUrl();
-	}
-
-	public function getAppConfigValue( $key ){
+	public function getAppConfigValue( string $key )
+	{
 		$values	= $this->getAppConfigValues( array( $key ) );
 		return array_pop( $values );
 	}
 
-	public function getAppConfigValues( $keys = array() ){
+	public function getAppConfigValues( array $keys = array() ): array
+	{
 		if( is_string( $keys ) && strlen( trim( $keys ) ) )
 			$keys	= array( $keys );
 		$list	= array();
@@ -54,30 +43,35 @@ class Logic_Frontend{
 		return $list;
 	}
 
-	public function getConfigValue( $key ){
+	public function getConfigValue( string $key )
+	{
 		return $this->config->get( $key );
 	}
 
-	public function getDefaultLanguage(){
+	public function getDefaultLanguage(): string
+	{
 		return trim( $this->getConfigValue( 'locale.default' ) );
 	}
 
-	public function getEnv(){
-		return new CMF_Hydrogen_Environment_Remote( array(
+	public function getEnv(): CMF_Hydrogen_Environment_Remote
+	{
+		$env	= new CMF_Hydrogen_Environment_Remote( array(
 			'configFile'	=> $this->path.'config/config.ini',
 			'pathApp' 		=> $this->path,
 			'parentEnv'		=> $this->env,
 		) );
-
+		return $env;
 	}
 
-	static public function getInstance( $env ){
+	static public function getInstance( CMF_Hydrogen_Environment $env ): self
+	{
 		if( !self::$instance )
 			self::$instance	= new self( $env );
 		return self::$instance;
 	}
 
-	public function getLanguages(){
+	public function getLanguages(): array
+	{
 		$data		= $this->config->getAll( 'locale.', TRUE );
 		$list		= array( trim( $data->get( 'default' ) ) );
 		foreach( explode( ',', $data->get( 'allowed' ) ) as $locale ){
@@ -88,12 +82,14 @@ class Logic_Frontend{
 		return $list;
 	}
 
-	public function getModuleConfigValue( $moduleId, $key, $strict = FALSE ){
+	public function getModuleConfigValue( string $moduleId, string $key, bool $strict = FALSE )
+	{
 		$values	= $this->getModuleConfigValues( $moduleId, array( $key ), TRUE, $strict );
 		return array_pop( $values );
 	}
 
-	public function getModuleConfigValues( $moduleId, $keys = array(), $useFasterUncachedSolution = TRUE, $strict = TRUE ){
+	public function getModuleConfigValues( string $moduleId, array $keys = array(), bool $useFasterUncachedSolution = TRUE, bool $strict = TRUE ): array
+	{
 		$fileName	= $this->getPath( 'modules' ).$moduleId.'.xml';
 		$list		= array();
 		if( !file_exists( $fileName ) ){
@@ -139,25 +135,26 @@ class Logic_Frontend{
 			//  downsides:   - >5x slower than version 1
 			//               - more code to use
 			//               - DOM use (needs to be valid XML)
-			if( empty( $this->modules[$moduleId]->config ) ){
+			if( empty( $this->installedModules[$moduleId]->config ) ){
 				$module	= HydrogenModuleReader::load( $fileName, $moduleId );
-				$this->modules[$moduleId]->config	= $module;
+				$this->installedModules[$moduleId]->config	= $module;
 			}
-			$list	= array();
-			foreach( $this->modules[$moduleId]->config->config as $configKey => $configData )
+			foreach( $this->installedModules[$moduleId]->config->config as $configKey => $configData )
 				if( !$keys || in_array( $configKey, $keys ) )
 					$list[$configKey]	= (string) $configData->value;
 		}
 		return $list;
 	}
 
-	public function getModules( $asDictionary = FALSE ){
+	public function getModules( bool $asDictionary = FALSE )
+	{
 		if( $asDictionary )
-			return new ADT_List( $this->modules );
-		return array_keys( $this->modules );
+			return new ADT_List( $this->installedModules );
+		return array_keys( $this->installedModules );
 	}
 
-	public function getPath( $key = NULL ){
+	public function getPath( $key = NULL )
+	{
 		if( !$key )
 			return $this->path;
 		if( array_key_exists( $key, $this->paths ) )
@@ -165,13 +162,16 @@ class Logic_Frontend{
 		throw new OutOfBoundsException( 'Invalid path key: '.$key );
 	}
 
-	static public function getRemoteEnv( $parentEnv, $options = array() ){
+	static public function getRemoteEnv( CMF_Hydrogen_Environment $parentEnv, array $options = array() ): CMF_Hydrogen_Environment_Remote
+	{
 		$path		= $parentEnv->getConfig()->get( 'module.resource_frontend.path' );
-		return new CMF_Hydrogen_Environment_Remote( array(
+		$env		= new CMF_Hydrogen_Environment_Remote( array(
 			'configFile'	=> $path.'config/config.ini',
 			'pathApp' 		=> $path,
 			'parentEnv'		=> $parentEnv,
 		) );
+		print_m( $env );die;
+		return $env;
 	}
 
 	/**
@@ -195,8 +195,21 @@ class Logic_Frontend{
 		return $this->url;
 	}
 
+	//  --  PROTECTED  --  //
+
+	protected function __clone(){}
+
+	protected  function __onInit()
+	{
+		$moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_frontend.', TRUE );
+		$this->path		= $moduleConfig->get( 'path' );
+		$this->detectConfig();
+		$this->detectModules();
+		$this->detectBaseUrl();
+	}
+
 	public function hasModule( $moduleId ){
-		return isset( $this->modules[$moduleId] );
+		return isset( $this->installedModules[$moduleId] );
 	}
 
 	//  --  PROTECTED  --  //
@@ -232,14 +245,13 @@ class Logic_Frontend{
 		foreach( $index as $entry ){
 			if( preg_match( '@^(.+)(\.xml)$@', $entry->getFilename() ) ){
 				$key	= preg_replace( '@^(.+)(\.xml)$@', '\\1', $entry->getFilename() );
-				$this->modules[$key]	= (object) array(
+				$this->installedModules[$key]	= (object) array(
 					'id'			=> $key,
 					'configFile'	=> $entry->getPathname(),
 					'config'		=> NULL,
 				);
 			}
 		}
-		ksort( $this->modules );
+		ksort( $this->installedModules );
 	}
 }
-?>
