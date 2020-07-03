@@ -5,8 +5,8 @@ if( $backups ){
 	$rows	= array();
 	foreach( $backups as $backup ){
 		$rows[]	= U_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $backup->backupId,
-			UI_HTML_Tag::create( 'td', $backup->createdAt,
+			UI_HTML_Tag::create( 'td', $backup->backupId ),
+			UI_HTML_Tag::create( 'td', $backup->createdAt ),
 		) );
 	}
 	$thead	= UI_HTML_Tag::create( 'thead', '' );
@@ -31,6 +31,6 @@ $panelFilter	= '
 	<div class="content-panel-inner">
 		<p>Not implemented, yet.</p>
 	</div>
-</div>
+</div>';
 
 return $panelList;
