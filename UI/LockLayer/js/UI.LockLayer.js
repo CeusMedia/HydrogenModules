@@ -39,7 +39,7 @@ var LockLayer = {
 
 	applyToLinks: function (context, delay, fade) {
 		var context = context ? $(context) : $("body");									//  define context
-		var links = context.find("a[href]").not("[href*=#]");							//  find all links without fragment
+		var links = context.find("a[href]").not("[href*=\"#\"]");							//  find all links without fragment
 	    LockLayer.applyTo(links.not("[target]"), delay, fade);							//  apply to links without target
 	    LockLayer.applyTo(links.filter("[target=_self]"), delay, fade);					//  apply to links with target to self
 	},
