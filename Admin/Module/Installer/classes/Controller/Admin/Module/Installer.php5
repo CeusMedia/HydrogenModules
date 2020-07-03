@@ -1,97 +1,24 @@
 <?php
-class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							//  @todo	1) inherit from View_Admin_Module after cleanup
-
+class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller								//  @todo	1) inherit from View_Admin_Module after cleanup
+{
 	/**	@var	Logic_Module									$logic		Module logic instance */
 	protected $logic;
+
 	/** @var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	Messenger Object */
 	protected $messenger;
+
 	/**	@var	Net_HTTP_Request_Receiver						$request	HTTP Request Object */
 	protected $request;
 
 	protected $categories;
 
-	protected function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= Logic_Module::getInstance( $this->env );
-		$this->categories	= $this->logic->getCategories();
-		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
-#		$this->env->getPage()->addThemeStyle( 'site.admin.module.installer.css' );
-#		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
-		if( !$this->env->getSession()->get( 'instanceId' ) ){
-			$words	= $this->getWords( 'msg' );
-			$this->messenger->noteError( $words['noInstanceSelected'] );
-			$this->restart( 'admin/module/viewer' );
-		}
-	}
+	protected $frontendEnv;
 
-	protected function compareModuleFiles( $moduleId, $pathLinks = array() ){
-		$fileTypes	= array(
-			'classes'	=> 'class',
-			'files'		=> 'file',
-			'images'	=> 'image',
-			'locales'	=> 'locale',
-			'scripts'	=> 'script',
-			'styles'	=> 'style',
-			'templates'	=> 'template',
-		);
-		$files			= array();
-		$moduleLocal	= $this->logic->getModule( $moduleId );
-
-		$moduleSource	= $this->logic->getModuleFromSource( $moduleId );
-
-		$envRemote		= $this->env->getRemote();
-		$pathLocal		= $envRemote->path;
-		$pathSource		= $this->logic->model->getPath( $moduleId );
-
-		foreach( $fileTypes as $typeMember => $typeKey ){
-			foreach( $moduleSource->files->$typeMember as $file ){
-				$diff		= array();
-				$status		= 0;
-				$pathFileLocal	= $this->logic->getLocalFileTypePath( $envRemote, $typeKey, $file );
-				$pathFileSource	= $this->logic->getSourceFileTypePath( $typeKey, $file );
-
-				$source		= $pathSource.$pathFileSource;
-				$target		= $pathLocal.$pathFileLocal;
-				$fileSource	= isset( $file->source  ) ? strtolower( $file->source ) : NULL;
-				if( in_array( $fileSource, array( "url", "lib", "scripts-lib" ) ) ){
-					$status	= 5;
-				}
-				else if( $pathFileLocal && file_exists( $target ) ){
-					$status			= 1;
-					if( is_link( $target ) ){
-						$source		= $this->resolveLinkedPath( $source, $pathLinks );
-						$target		= readlink( $target );
-						$target		= $this->resolveLinkedPath( $target, $pathLinks );
-#						remark( 'Source: '.$source );
-#						remark( 'Target: '.$target );
-						$status		= $target === $source ? 3 : 4;
-					}
-					else{
-						$cmd	= 'diff '.$source.' '.$target;
-						exec( $cmd, $diff, $code );
-						if( $code == 1 )
-							$status	= 2;
-					}
-				}
-				$files[]	= (object) array(
-					'moduleId'		=> $moduleId,
-					'status'		=> $status,
-					'file'			=> $file,
-					'name'			=> $file->file,
-					'typeMember'	=> $typeMember,
-					'typeKey'		=> $typeKey,
-					'pathLocal'		=> $target,
-					'pathSource'	=> $source,
-//					'diff'			=> $diff
-				);
-			}
-		}
-		return $files;
-	}
-
-	public function diff( $hashFileLocal, $hashFileSource ){
-
+	/**
+	 *	@todo			critical: improve integration of diff library
+	 */
+	public function diff( string $hashFileLocal, string $hashFileSource )
+	{
 		if( !class_exists( 'Diff' ) )
 			CMC_Loader::registerNew( 'php', NULL, '/var/www/lib/php-diff/lib/' );
 		if( !class_exists( 'Diff' ) )
@@ -104,59 +31,8 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$this->addData( 'fileSource', $fileSource );
 	}
 
-	protected function handleException( Exception_Logic $e ){
-		$messenger	= $this->env->getMessenger();
-		$words		= (object) $this->getWords( 'msg' );
-		if( $e instanceof Exception_Logic ){
-			if( $e->getCode() !== 2 )
-				$subject	= array( $e->getSubject() );
-			else
-				$subject	= array_merge( $e->getSubject(), array_fill( 0, 2, NULL ) );
-
-			foreach( $subject as $exception ){
-				if( is_string( $exception ) ){
-					$messenger->noteFailure( 'Unbekannter Fehler: '.$exception );
-				}
-				else if( $exception instanceof Exception_IO ){
-					list( $s0, $s1 )	= (array) $exception->getResource();
-					switch( $exception->getCode() ){
-						case 20:
-							$messenger->noteError( $words->resourceMissing, $s0 );
-							break;
-						case 21:
-							$messenger->noteError( $words->resourceNotReadable, $s0 );
-							break;
-						case 22:
-							$messenger->noteError( $words->resourceNotExecutable, $s0 );
-							break;
-						case 30:
-							$messenger->noteError( $words->pathNotCreatable, $s0 );
-							break;
-						case 31:
-							$messenger->noteError( $words->targetExisting, $s0 );
-							break;
-						case 40:
-							$messenger->noteError( $words->copyFailed, $s0, $s1 );
-							break;
-						case 50:
-							$messenger->noteError( $words->linkFailed, $s0, $s1 );
-							break;
-						default:
-							$messenger->noteFailure( 'Unbekannter Fehler ('.$exception->getCode().'): '.$exception->getMessage() );
-							break;
-					}
-				}
-				else if( $exception instanceof Exception ){
-					$messenger->noteError( 'Fehler ('.$exception->getCode().'): '.$exception->getMessage() );
-				}
-			}
-		}
-		else{
-			$messenger->noteFailure( 'Unbekannter Fehler: '.$e->getMessage() );
-		}
-	}
-
-	public function index( $moduleId = NULL, $mainModuleId = NULL ){
+	public function index( string $moduleId = NULL, ?string $mainModuleId = NULL )
+	{
 		if( $moduleId )
 			return $this->restart( 'view/'.$moduleId.'/'.$mainModuleId, TRUE );
 		$this->addData( 'sources', $this->logic->listSources() );
@@ -164,7 +40,8 @@ class Controller_Admin_Module_Installer extends CMF_Hydrogen_Controller{							/
 		$this->addData( 'modules', $this->logic->model->getAll() );
 	}
 
-	public function install( $moduleId, $mainModuleId = NULL, $step = 0 ){
+	public function install( string $moduleId, ?string $mainModuleId = NULL, int $step = 0 )
+	{
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$module		= $this->logic->model->get( $moduleId );
@@ -243,7 +120,8 @@ die;																								//  @todo handle exception without die
 		$this->restart( $urlSelf );
 	}
 
-	public function uninstall( $moduleId, $verbose = NULL ){
+	public function uninstall( string $moduleId, bool $verbose = NULL )
+	{
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'msg' );
 		$module		= $this->logic->getModule( $moduleId );
@@ -276,7 +154,8 @@ die;																								//  @todo handle exception without die
 		}
 	}
 
-	public function update( $moduleId, $verbose = TRUE ){
+	public function update( string $moduleId, bool $verbose = TRUE )
+	{
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'msg' );
 		$hasUpdate	= $this->logic->checkForUpdate( $moduleId );
@@ -331,15 +210,8 @@ die;																								//  @todo handle exception without die
 		$this->addData( 'sql', $this->logic->getDatabaseScripts( $moduleId ) );
 	}
 
-	protected function resolveLinkedPath( $path, $links = array() ){
-		foreach( $links as $source => $target )
-			if( preg_match( "/^".str_replace( "/", "\/", $source )."/", $path ) )
-				$path	= str_replace( $source, $target, $path );
-		return $path;
-	}
-
-	public function view( $moduleId, $mainModuleId = NULL ){
-
+	public function view( string $moduleId, ?string $mainModuleId = NULL )
+	{
 		$module		= $this->logic->model->get( $moduleId );
 
 #		$this->addData( 'allNeededModules', $this->logic->model->getAllNeededModules( $moduleId ) );
@@ -369,5 +241,151 @@ die;																								//  @todo handle exception without die
 		$this->addData( 'sqlScripts', $this->logic->getDatabaseScripts( $moduleId ) );
 		$this->addData( 'files', $this->compareModuleFiles( $moduleId, array( '/home/kriss/Web/' => '/var/www/' ) ) );
 	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logic		= Logic_Module::getInstance( $this->env );
+		$this->categories	= $this->logic->getCategories();
+		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
+		$this->frontendEnv	= $this->getLogic( 'Frontend' )->getEnv();
+#		$this->env->getPage()->addThemeStyle( 'site.admin.module.installer.css' );
+#		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
+		if( !$this->env->getSession()->get( 'instanceId' ) ){
+			$words	= $this->getWords( 'msg' );
+			$this->messenger->noteError( $words['noInstanceSelected'] );
+			$this->restart( 'admin/module/viewer' );
+		}
+	}
+
+	protected function compareModuleFiles( string $moduleId, array $pathLinks = array() )
+	{
+		$fileTypes	= array(
+			'classes'	=> 'class',
+			'files'		=> 'file',
+			'images'	=> 'image',
+			'locales'	=> 'locale',
+			'scripts'	=> 'script',
+			'styles'	=> 'style',
+			'templates'	=> 'template',
+		);
+		$files			= array();
+		$moduleLocal	= $this->logic->getModule( $moduleId );
+
+		$moduleSource	= $this->logic->getModuleFromSource( $moduleId );
+
+		$envRemote		= $this->frontendEnv;
+		$pathLocal		= $envRemote->path;
+		$pathSource		= $this->logic->model->getPath( $moduleId );
+
+		foreach( $fileTypes as $typeMember => $typeKey ){
+			foreach( $moduleSource->files->$typeMember as $file ){
+				$diff		= array();
+				$status		= 0;
+				$pathFileLocal	= $this->logic->getLocalFileTypePath( $envRemote, $typeKey, $file );
+				$pathFileSource	= $this->logic->getSourceFileTypePath( $typeKey, $file );
+
+				$source		= $pathSource.$pathFileSource;
+				$target		= $pathLocal.$pathFileLocal;
+				$fileSource	= isset( $file->source  ) ? strtolower( $file->source ) : NULL;
+				if( in_array( $fileSource, array( "url", "lib", "scripts-lib" ) ) ){
+					$status	= 5;
+				}
+				else if( $pathFileLocal && file_exists( $target ) ){
+					$status			= 1;
+					if( is_link( $target ) ){
+						$source		= $this->resolveLinkedPath( $source, $pathLinks );
+						$target		= readlink( $target );
+						$target		= $this->resolveLinkedPath( $target, $pathLinks );
+#						remark( 'Source: '.$source );
+#						remark( 'Target: '.$target );
+						$status		= $target === $source ? 3 : 4;
+					}
+					else{
+						$cmd	= 'diff '.$source.' '.$target;
+						exec( $cmd, $diff, $code );
+						if( $code == 1 )
+							$status	= 2;
+					}
+				}
+				$files[]	= (object) array(
+					'moduleId'		=> $moduleId,
+					'status'		=> $status,
+					'file'			=> $file,
+					'name'			=> $file->file,
+					'typeMember'	=> $typeMember,
+					'typeKey'		=> $typeKey,
+					'pathLocal'		=> $target,
+					'pathSource'	=> $source,
+//					'diff'			=> $diff
+				);
+			}
+		}
+		return $files;
+	}
+
+	protected function handleException( Exception_Logic $e )
+	{
+		$messenger	= $this->env->getMessenger();
+		$words		= (object) $this->getWords( 'msg' );
+		if( $e instanceof Exception_Logic ){
+			if( $e->getCode() !== 2 )
+				$subject	= array( $e->getSubject() );
+			else
+				$subject	= array_merge( $e->getSubject(), array_fill( 0, 2, NULL ) );
+
+			foreach( $subject as $exception ){
+				if( is_string( $exception ) ){
+					$messenger->noteFailure( 'Unbekannter Fehler: '.$exception );
+				}
+				else if( $exception instanceof Exception_IO ){
+					list( $s0, $s1 )	= (array) $exception->getResource();
+					switch( $exception->getCode() ){
+						case 20:
+							$messenger->noteError( $words->resourceMissing, $s0 );
+							break;
+						case 21:
+							$messenger->noteError( $words->resourceNotReadable, $s0 );
+							break;
+						case 22:
+							$messenger->noteError( $words->resourceNotExecutable, $s0 );
+							break;
+						case 30:
+							$messenger->noteError( $words->pathNotCreatable, $s0 );
+							break;
+						case 31:
+							$messenger->noteError( $words->targetExisting, $s0 );
+							break;
+						case 40:
+							$messenger->noteError( $words->copyFailed, $s0, $s1 );
+							break;
+						case 50:
+							$messenger->noteError( $words->linkFailed, $s0, $s1 );
+							break;
+						default:
+							$messenger->noteFailure( 'Unbekannter Fehler ('.$exception->getCode().'): '.$exception->getMessage() );
+							break;
+					}
+				}
+				else if( $exception instanceof Exception ){
+					$messenger->noteError( 'Fehler ('.$exception->getCode().'): '.$exception->getMessage() );
+				}
+			}
+		}
+		else{
+			$messenger->noteFailure( 'Unbekannter Fehler: '.$e->getMessage() );
+		}
+	}
+
+	protected function resolveLinkedPath( string $path, array $links = array() ): string
+	{
+		foreach( $links as $source => $target )
+			if( preg_match( "/^".str_replace( "/", "\/", $source )."/", $path ) )
+				$path	= str_replace( $source, $target, $path );
+		return $path;
+	}
+
 }
-?>
