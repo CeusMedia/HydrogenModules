@@ -2,24 +2,27 @@
 <module>
 	<title>UI: DevLayer: Profiler</title>
 	<description><![CDATA[Runtime profiler view layer.]]></description>
-	<version>0.3.3</version>
-	<log version="0.3.2">Import from nonfree module UI:Helper:Dev:Profiler.</log> 
-	<log version="0.3.3">Use general module main switch.</log> 
+	<version>0.3.5</version>
+	<log version="0.3.2">Import from nonfree module UI:Helper:Dev:Profiler.</log>
+	<log version="0.3.3">Use general module main switch.</log>
+	<log version="0.3.4">Add english locale file.</log>
+	<log version="0.3.5">Extract hook to own class.</log>
 	<category>User Interface</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
+		<class>Hook/UI/DevLayers/Profiler.php5</class>
 		<class>View/Helper/DevProfiler.php5</class>
 		<style source="theme">module.ui.dev.layer.profiler.css</style>
 		<locale>de/ui.dev.layer.profiler.ini</locale>
+		<locale>en/ui.dev.layer.profiler.ini</locale>
 	</files>
-	<config protected="no" type="boolean" name="enabled">yes</config>
+	<config protected="no" type="boolean" name="active">yes</config>
 	<config protected="no" type="boolean" name="filter">yes</config>
 	<config protected="no" type="string" name="filter.type" values="%,ms">%</config>
 	<config protected="no" type="float" name="filter.threshold">0.5</config>
 	<relations>
 		<needs type="module">UI_DevLayers</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="build">View_Helper_DevProfiler::___onPageBuild</hook>
+	<hook type="resource" resource="Page" event="build">Hook_UI_DevLayers_Profiler::onPageBuild</hook>
 </module>
- 
