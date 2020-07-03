@@ -1,86 +1,144 @@
 <?php
-class Model_ModuleSource{
+class Model_ModuleSource
+{
+	const STATUS_NONE			= 0;
+	const STATUS_OKAY			= 1;
 
-	protected $data;
+	protected $data			= array();
 	protected $fileName;
+	protected $hymn;
+	protected $status		= self::STATUS_NONE;
+	protected $default		= array(
+		'active'	=> TRUE,
+		'type'		=> 'folder',
+		'path'		=> '',
+		'title'		=> '',
+	);
 
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env		= $env;
-		$this->fileName	= 'config/modules/sources.json';
+		$this->fileName	= $env->uri.'.hymn';
 
-		if( !file_exists( dirname( $this->fileName ) ) ){
-			FS_Folder_Editor::createFolder( dirname( $this->fileName ), 0770 );
+		if( file_exists( $this->fileName ) ){
+			$this->hymn	= FS_File_JSON_Reader::load( $this->fileName );
+			$this->status	= self::STATUS_OKAY;
+			if( property_exists( $this->hymn, 'sources' ) ){
+				foreach( $this->hymn->sources as $sourceId => $sourceData ){
+					$this->data[$sourceId]	= (object) array_merge( $this->default, (array) $sourceData );
+				}
+			}
 		}
-		if( !file_exists( $this->fileName ) ){
-			touch( $this->fileName );
-			chmod( $this->fileName, 0770 );
-		}
-		$json		= FS_File_Reader::load( $this->fileName );
-		$this->data	= json_decode( $json, TRUE );
 	}
 
-	public function add( $data ){
+	public function add( array $data ): string
+	{
+		if( !$this->checkSupport( FALSE ) )
+			return '';
+
 		if( empty( $data['id'] ) || !strlen( trim( $data['id'] ) ) )
-			throw new InvalidArgumentException( 'Source data is missing an source ID' );
+			throw new InvalidArgumentException( 'Source data is missing a source ID' );
+
 		$id		= trim( $data['id'] );
 		unset( $data['id'] );
-		$this->data[$id]	 = $data;
+		$data	 = array_merge( $this->default, $data );
+		$data['active']	 = (bool) $data['active'];
+		$this->data[$id]	 = (object) $data;
 		$this->save();
 		return $id;
 	}
 
-	public function changeId( $from, $to ){
+	public function changeId( string $from, string $to ): bool
+	{
+		if( !$this->checkSupport( FALSE ) )
+			return FALSE;
 		$data	= $this->data[$from];
 		unset( $this->data[$from] );
 		$this->data[$to]	= $data;
 		return (boolean) $this->save();
 	}
 
-	public function count(){
+	public function count(): int
+	{
 		return count( $this->data );
 	}
-	
-	public function edit( $id, $data ){
-		$old		= $this->data[$id];
-		foreach( $data as $key => $value )
-			$this->data[$id][$key]	= $value;
+
+	public function edit( string $id, array $data ): bool
+	{
+		if( !$this->checkSupport( FALSE ) )
+			return FALSE;
+		if( !$this->has( $id ) )
+			throw new DomainException( 'Invalid source ID' );
+
+		$old	= $this->data[$id];
+		$data	= array_merge( $this->default, (array) $old, $data );
+		$data['active']	 	= (bool) $data['active'];
+		$this->data[$id]	= (object) $data;
 		if( $old != $this->data[$id] )
-			return (boolean) $this->save();
+			return (bool) $this->save();
 		return FALSE;
 	}
 
-	public function get( $id ){
-		if( !$this->has( $id ) )
+	public function get( string $id, bool $strict = TRUE )
+	{
+		if( !$this->checkSupport( FALSE ) )
 			return NULL;
-		$data	= $this->data[$id];
-		return (object) $data;
+		if( !$this->has( $id ) ){
+			if( $strict )
+				throw new DomainException( 'Invalid source ID' );
+			return NULL;
+		}
+		return (object) $this->data[$id];
 	}
 
-	public function getAll( $activeOnly = TRUE ){
+	public function getAll( bool $activeOnly = TRUE ): array
+	{
 		$list		= array();
+		if( !$this->checkSupport( FALSE ) )
+			return $list;
 		foreach( $this->data as $id => $data ){
-			if( !$activeOnly || !empty( $data['active'] ) )
+			if( !$activeOnly || !empty( $data->active ) )
 				$list[$id]	= (object) $this->data[$id];
 		}
 		return $list;
 	}
 
-	public function has( $id, $key = NULL ){
+	public function has( string $id, string $key = NULL ): bool
+	{
+		if( !$this->checkSupport( FALSE ) )
+			return FALSE;
 		if( !isset( $this->data[$id] ) )
 			return FALSE;
 		if( $key )
-			return isset( $this->data[$id][$key] );
+			return property_exists( $this->data[$id], $key );
 		return TRUE;
 	}
 
-	public function remove( $id ){
+	public function remove( string $id ): bool
+	{
+		if( !$this->checkSupport( FALSE ) )
+			return FALSE;
 		unset( $this->data[$id] );
-		$this->save();
+		return (bool) $this->save();
 	}
 
-	protected function save(){
-		$json	= ADT_JSON_Formater::format( json_encode( $this->data ) );
-		return FS_File_Writer::save( $this->fileName, $json );
+	//  --  PROTECTED  --  //
+
+	protected function checkSupport( $strict = TRUE ): bool
+	{
+		if( $this->status === self::STATUS_OKAY )
+			return TRUE;
+		$message	= 'This feature requires a Hymn file within the application.';
+		if( $strict )
+			throw new RuntimeException( $message );
+		$this->env->getMessenger()->noteFailure( $message );
+		return FALSE;
+	}
+
+	protected function save(): int
+	{
+		$this->checkSupport();
+		$this->hymn->sources	= $this->data;
+		return FS_File_JSON_Writer::save( $this->fileName, $this->hymn, TRUE );
 	}
 }
-?>
