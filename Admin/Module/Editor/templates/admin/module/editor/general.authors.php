@@ -1,7 +1,10 @@
 <?php
 $wf		= (object) $words['tab-general-authors'];
 
-$list	= '<span class="hint">'.$wf->listNone.'</span>';
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconAuthor		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
+
+$list	= '<div class="alert alert-info former-hint">'.$wf->listNone.'</div>';
 if( $module->authors ){
 	$list	= array();
 	foreach( $module->authors as $author ){
@@ -15,13 +18,14 @@ if( $module->authors ){
 	$list	= '<ul class="general-info">'.join( $list ).'</ul>';
 }
 
-$buttonOpen		= '<button type="button" class="button iconed tiny add form-trigger"><span></span></button>';
+$buttonOpen		= '<button type="button" class="btn btn-mini btn-success form-trigger former-button former-iconed former-tiny former-add">'.$iconAdd.'</button>';
 $hideForMore	= ' style="display: none"';
+
 
 $panelAuthors	= '
 <form action="./admin/module/editor/addAuthor/'.$module->id.'" method="post">
-	<fieldset>
-		<legend class="icon author">'.$wf->legend.'</legend>
+	<div class="">
+		<h4 class="former-icon former-author">'.$iconAuthor.'&nbsp;'.$wf->legend.'</h4>
 		'.$list.'
 		<ul class="input"'.$hideForMore.'>
 			<li>
@@ -37,8 +41,6 @@ $panelAuthors	= '
 			'.UI_HTML_Elements::Button( 'addAuthor', $wf->buttonAdd, 'button add' ).'
 		</div>
 		'.$buttonOpen.'
-	</fieldset>
-</form>
-';
+	</div>
+</form>';
 return $panelAuthors;
-?>

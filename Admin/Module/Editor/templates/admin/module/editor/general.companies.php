@@ -1,7 +1,10 @@
 <?php
 $wf		= (object) $words['tab-general-companies'];
 
-$list	= '<span class="hint">'.$wf->listNone.'</span>';
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building' ) );
+
+$list	= '<div class="alert alert-info former-hint">'.$wf->listNone.'</div>';
 if( $module->companies ){
 	$list	= array();
 	foreach( $module->companies as $company ){
@@ -15,13 +18,13 @@ if( $module->companies ){
 	$list	= '<ul class="general-info">'.join( $list ).'</ul>';
 }
 
-$buttonOpen		= '<button type="button" class="button iconed tiny add form-trigger"><span></span></button>';
+$buttonOpen		= '<button type="button" class="btn btn-mini btn-success form-trigger former-button former-iconed former-tiny former-add">'.$iconAdd.'</button>';
 $hideForMore	= ' style="display: none"';
 
 $panelCompanies	= '
 <form action="./admin/module/editor/addCompany/'.$module->id.'" method="post">
-	<fieldset>
-		<legend class="icon company">'.$wf->legend.'</legend>
+	<div>
+		<h4 class="former-icon former-company">'.$iconCompany.'&nbsp;'.$wf->legend.'</h4>
 		'.$list.'
 		<ul class="input"'.$hideForMore.'>
 			<li>
@@ -37,7 +40,7 @@ $panelCompanies	= '
 			'.UI_HTML_Elements::Button( 'addCompany', $wf->buttonAdd, 'button add' ).'
 		</div>
 		'.$buttonOpen.'
-	</fieldset>
+	</div>
 </form>
 ';
 return $panelCompanies;

@@ -1,65 +1,23 @@
 <?php
-class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								//  @todo	1) inherit from View_Admin_Module after cleanup
-
+class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller								//  @todo	1) inherit from View_Admin_Module after cleanup
+{
 	/** @var	CMF_Hydrogen_Environment_Resource_Module_Editor	$editor		Module XML editor instance */
 	protected $editor;
+
 	/** @var	View_Helper_Module								$helper		Modile View helper instance */
 	protected $helper;
+
 	/**	@var	Logic_Module									$logic		Module logic instance */
 	protected $logic;
+
 	/** @var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	Messenger Object */
 	protected $messenger;
+
 	/**	@var	Net_HTTP_Request								$request	HTTP Request Object */
 	protected $request;
 
-	protected function __onInit(){
-		$this->env->clock->profiler->tick( 'Controller_Admin_Module_Editor::init: start' );
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= Logic_Module::getInstance( $this->env );
-		$this->editor		= new CMF_Hydrogen_Environment_Resource_Module_Editor( $this->env->getRemote() );
-		$this->helper		= new View_Helper_Module( $this->env );
-
-		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
-#		$this->env->getPage()->addThemeStyle( 'site.admin.module.editor.css' );
-#		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
-		if( !$this->env->getSession()->get( 'instanceId' ) ){
-			$words	= $this->getWords( 'msg' );
-			$this->messenger->noteError( $words['noInstanceSelected'] );
-			$this->restart( 'admin/module/viewer' );
-		}
-		$this->modules	= (object) array(
-			'all'		=> $this->logic->model->getAll(),
-			'missing'	=> $this->logic->listModulesMissing( 1 ),
-			'possible'	=> $this->logic->listModulesPossible( 1 ),
-		);
-
-		if( 0 && $this->modules->missing ){
-			$list	= array();
-			$first	= NULL;
-			foreach( $this->modules->missing as $moduleId => $relations ){
-				$first	= $first ? $first : $moduleId;
-				$label	= $title	= $moduleId;
-				foreach( $this->modules->all as $module ){
-					if( $module->id == $moduleId ){
-						$descLines	= explode( "\n", $module->description );
-						$descFirst	= addslashes( trim( array_shift( $descLines ) ) );
-						$title		= $module->title;
-						$label		= $descFirst ? '<acronym title="'.$descFirst.'">'.$title.'</acronym>' : $title;
-					}
-				}
-				$url		= './admin/module/viewer/'.$moduleId;
-				$link		= UI_HTML_Tag::create( 'a', $title, array( 'href' => $url ) );
-				$span		= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'icon module module-status-4' ) );
-				$list[]		= UI_HTML_Tag::create( 'li', $span, array() );
-			}
-			$list	= UI_HTML_Tag::create( 'ul', $list );
-			$this->messenger->noteError( 'Folgende Module müssen installiert werden:<br/>'.$list );
-			$this->restart( 'admin/module/viewer/index/'.$first );
-		}
-	}
-
-	public function addAuthor( $moduleId ){
+	public function addAuthor( string $moduleId )
+	{
 		$data	= $this->request->getAllFromSource( 'POST', TRUE );
 		if( !strlen( trim( $data->get( 'name' ) ) ) )												//  no name provided
 			$this->env->getMessenger()->noteError( 'Der Name des Autors fehlt.' );
@@ -70,7 +28,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId.'?tab=general', TRUE );
 	}
 
-	public function addCompany( $moduleId ){
+	public function addCompany( string $moduleId )
+	{
 		$data	= $this->request->getAllFromSource( 'POST', TRUE );
 		if( !strlen( trim( $data->get( 'name' ) ) ) )												//  no name provided
 			$this->env->getMessenger()->noteError( 'Der Name des Unternehmens fehlt.' );
@@ -81,7 +40,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId.'?tab=general', TRUE );
 	}
 
-	public function addConfig( $moduleId ){
+	public function addConfig( string $moduleId )
+	{
 		$data	= $this->request->getAllFromSource( 'POST', TRUE );
 		if( $data->get( 'type' ) === "boolean" )
 			$data->set( 'value', trim( $data->get( 'value_boolean' ) ) );
@@ -107,7 +67,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 	 *	@access		public
 	 *	@param		string		$moduleId		Module ID
 	 */
-	public function addFile( $moduleId ){
+	public function addFile( string $moduleId )
+	{
 		$data		= $this->request->getAllFromSource( 'POST', TRUE );
 		$type		= $data->get( 'type' );
 		$resource	= $data->get( 'resource' );
@@ -125,7 +86,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId.'?tab=resources', TRUE );									//  restart view of resources
 	}
 
-	public function addLink( $moduleId ){
+	public function addLink( string $moduleId )
+	{
 		$request	= $this->request->getAllFromSource( 'POST', TRUE );
 		if( !trim( $request->get( 'path' ) ) )														//  no path provided
 			$this->env->getMessenger()->noteError( 'Kein Link-Pfad angegeben.' );
@@ -143,13 +105,15 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId.'?tab=links', TRUE );
 	}
 
-	public function addRelation( $moduleId ){
+	public function addRelation( string $moduleId )
+	{
 		$data		= $this->request->getAllFromSource( 'POST', TRUE );
 		$this->editor->addRelation( $moduleId, $data->get( 'type' ), $data->get( 'module' ) );
 		$this->restart( 'view/'.$moduleId.'?tab=relations', TRUE );									//  restart view of relations
 	}
 
-	public function addSql( $moduleId ){
+	public function addSql( string $moduleId )
+	{
 		$post		= $this->request->getAllFromSource( 'POST', TRUE );
 		$event		= $post->get( 'event' );
 		$type		= $post->get( 'type' );
@@ -163,13 +127,15 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId.'?tab=database', TRUE );									//  restart view of database
 	}
 
-	public function commit( $moduleId, $move = NULL ){
+	public function commit( string $moduleId, $move = NULL )
+	{
 		$request	= $this->request->getAllFromSource( 'POST', TRUE );
 		$this->logic->importLocalModuleToRepository( $moduleId, $request->get( 'source' ), $move );
 		$this->restart( 'view/'.$moduleId, TRUE );
 	}
 
-	public function edit( $moduleId ){
+	public function edit( string $moduleId )
+	{
 		$post		= $this->request->getAllFromSource( 'POST', TRUE );
 		$module		= $this->logic->model->getLocalModuleXml( $moduleId, TRUE );					//  load module XML
 
@@ -190,16 +156,18 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId, TRUE );													//  restart view of resources
 	}
 
-	public function editConfig( $moduleId ){
+	public function editConfig( string $moduleId )
+	{
 		$post		= $this->request->getAllFromSource( 'POST', TRUE );
 		$pairs		= $post->get( 'config' );
 		$this->logic->configureLocalModule( $moduleId, $pairs );
-		$this->logic->invalidateFileCache( $this->env->getRemote() );
+		$this->logic->invalidateFileCache( $this->frontendEnv );
 		$this->messenger->noteSuccess( 'Saved.' );
 		$this->restart( 'view/'.$moduleId.'?tab=config', TRUE );
 	}
 
-	public function editLink( $moduleId, $number ){
+	public function editLink( string $moduleId, $number )
+	{
 		$post	= $this->request->getAllFromSource( 'POST', TRUE );
 		if( !trim( $post->get( 'path' ) ) )														//  no path provided
 			$this->env->getMessenger()->noteError( 'Kein Link-Pfad angegeben.' );
@@ -224,12 +192,14 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId.'?tab=links', TRUE );
 	}
 
-	public function export( $moduleId, $move = NULL ){
+	public function export( string $moduleId, $move = NULL )
+	{
 		$this->logic->importLocalModuleToRepository( $moduleId, $move );
 		$this->restart( 'view/'.$moduleId, TRUE );
 	}
 
-	public function index( $moduleId = NULL ){
+	public function index( string $moduleId = NULL )
+	{
 		if( $moduleId )
 			return $this->restart( 'view/'.$moduleId, TRUE );
 		$this->addData( 'sources', $this->logic->listSources() );
@@ -237,7 +207,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->addData( 'modules', $this->logic->model->getAll() );
 	}
 
-	public function remove( $moduleId, $verbose = NULL ){
+	public function remove( string $moduleId, $verbose = NULL )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$module		= $this->logic->getModule( $moduleId );
 		if( !$module )
@@ -251,7 +222,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId, TRUE );
 	}
 
-	public function removeAuthor( $moduleId, $name ){
+	public function removeAuthor( string $moduleId, string $name )
+	{
 		$name	= base64_decode( $name );
 		try{
 			$this->editor->removeAuthor( $moduleId, $name );
@@ -263,7 +235,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId.'?tab=general', TRUE );
 	}
 
-	public function removeCompany( $moduleId, $name ){
+	public function removeCompany( string $moduleId, string $name )
+	{
 		$name	= base64_decode( $name );
 		try{
 			$this->editor->removeCompany( $moduleId, $name );
@@ -275,7 +248,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId.'?tab=general', TRUE );
 	}
 
-	public function removeConfig( $moduleId, $name ){
+	public function removeConfig( string $moduleId, string $name )
+	{
 		try{
 			$this->editor->removeConfig( $moduleId, $name );
 #			$this->env->getMessenger()->noteSuccess( 'Config removed.' );								//  show success message
@@ -286,7 +260,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId.'?tab=config', TRUE );
 	}
 
-	public function removeFile( $moduleId, $type, $resource ){
+	public function removeFile( string $moduleId, string $type, string $resource )
+	{
 		try{
 			$this->editor->removeFile( $moduleId, $type, base64_decode( $resource ) );
 #			$this->env->getMessenger()->noteSuccess( 'Link removed.' );								//  show success message
@@ -297,10 +272,12 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId.'?tab=resources', TRUE );
 	}
 
-	public function removeIcon( $moduleId ){
+	public function removeIcon( string $moduleId )
+	{
 	}
 
-	public function removeLink( $moduleId, $number ){
+	public function removeLink( string $moduleId, $number )
+	{
 		try{
 			$this->editor->removeLink( $moduleId, $number );
 			$this->env->getMessenger()->noteSuccess( 'Link removed.' );								//  show success message
@@ -311,19 +288,22 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId.'?tab=relations', TRUE );
 	}
 
-	public function removeRelation( $moduleId, $type, $relatedModuleId ){
+	public function removeRelation( string $moduleId, string $type, string $relatedModuleId )
+	{
 		$this->editor->removeRelation( $moduleId, $type, $relatedModuleId );
 		$this->restart( 'view/'.$moduleId.'?tab=relations', TRUE );
 	}
 
-	public function saveXml( $moduleId ){
+	public function saveXml( string $moduleId )
+	{
 		$post	= $this->request->getAllFromSource( 'POST', TRUE );
 		$this->logic->model->setLocalModuleXml( $moduleId, $post->get( 'content' ) );
 		$this->messenger->noteSuccess( 'Module XML saved.' );
 		$this->restart( 'view/'.$moduleId.'?tab=xml', TRUE );
 	}
 
-	public function uploadIcon( $moduleId ){
+	public function uploadIcon( string $moduleId )
+	{
 		$image		= $this->request->get( 'image' );
 		if( !empty( $image['error'] ) ){
 			$handler	= new Net_HTTP_UploadErrorHandler();
@@ -346,9 +326,9 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		}
 		if( !$this->messenger->gotError() ){
 			$pathConfig	= 'config/modules/';
-			if( $this->env->getRemote()->getConfig()->get( 'path.module.config' ) )
-				$pathConfig	= $this->env->getRemote()->getConfig()->get( 'path.module.config' );
-			$path		= $this->env->pathApp.$pathConfig;
+			if( $this->frontendEnv->getConfig()->get( 'path.module.config' ) )
+				$pathConfig	= $this->frontendEnv->getConfig()->get( 'path.module.config' );
+			$path		= $this->env->path.$pathConfig;
 
 			$target		= $path.$moduleId.'.png';
 			move_uploaded_file( $image['tmp_name'], $target );
@@ -357,7 +337,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		$this->restart( 'view/'.$moduleId, TRUE );
 	}
 
-	public function view( $moduleId ){
+	public function view( string $moduleId )
+	{
 		if( !$moduleId ){
 			$this->messenger->noteError( "No module selected. Redirecting to list" );
 			$this->restart( NULL, TRUE );
@@ -406,8 +387,8 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 			$this->messenger->noteError( 'Problem bei den Abhängigkeiten: '.$e->getMessage() );
 		}
 
-		$this->addData( 'pathApp', $this->env->pathApp );
-		$this->addData( 'configApp', $this->env->getRemote()->getConfig() );						//  assign config object of remote application
+		$this->addData( 'pathApp', $this->env->uri );
+		$this->addData( 'configApp', $this->frontendEnv->getConfig() );						//  assign config object of remote application
 		$this->addData( 'module', $module );
 		$this->addData( 'moduleId', $moduleId );
 		$this->addData( 'modules', $modules = $this->logic->model->getAll() );
@@ -417,10 +398,10 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 
 		if( isset( $modules[$moduleId] ) )
 			$this->env->getPage()->setTitle( $modules[$moduleId]->title, 'append' );
-
 	}
 
-	public function viewCode( $moduleId, $type, $fileName ){
+	public function viewCode( string $moduleId, string $type, string $fileName )
+	{
 		$fileName	= base64_decode( $fileName );
 		$helper		= new View_Helper_Module_CodeViewer( $this->env, $this->logic );
 		try{
@@ -431,5 +412,60 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller{								// 
 		}
 		exit;
 	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->env->clock->profiler->tick( 'Controller_Admin_Module_Editor::init: start' );
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logic		= Logic_Module::getInstance( $this->env );
+		$this->frontend		= $this->getLogic( 'Frontend' );
+		$this->frontendPath	= $this->frontend->getPath();
+		$this->frontendEnv	= $this->frontend->getEnv();
+
+//print_m( $this->frontend->getEnv()->path );die;
+
+		$this->editor		= new CMF_Hydrogen_Environment_Resource_Module_Editor( $this->frontendEnv );
+		$this->helper		= new View_Helper_Module( $this->env );
+
+		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
+#		$this->env->getPage()->addThemeStyle( 'site.admin.module.editor.css' );
+#		$this->env->getPage()->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'site.admin.module.js' );	//  @todo	2) move to parent class after 1)
+		if( !$this->env->getSession()->get( 'instanceId' ) ){
+			$words	= $this->getWords( 'msg' );
+			$this->messenger->noteError( $words['noInstanceSelected'] );
+			$this->restart( 'admin/module/viewer' );
+		}
+		$this->modules	= (object) array(
+			'all'		=> $this->logic->model->getAll(),
+			'missing'	=> $this->logic->listModulesMissing( 1 ),
+			'possible'	=> $this->logic->listModulesPossible( 1 ),
+		);
+
+		if( 0 && $this->modules->missing ){
+			$list	= array();
+			$first	= NULL;
+			foreach( $this->modules->missing as $moduleId => $relations ){
+				$first	= $first ? $first : $moduleId;
+				$label	= $title	= $moduleId;
+				foreach( $this->modules->all as $module ){
+					if( $module->id == $moduleId ){
+						$descLines	= explode( "\n", $module->description );
+						$descFirst	= addslashes( trim( array_shift( $descLines ) ) );
+						$title		= $module->title;
+						$label		= $descFirst ? '<acronym title="'.$descFirst.'">'.$title.'</acronym>' : $title;
+					}
+				}
+				$url		= './admin/module/viewer/'.$moduleId;
+				$link		= UI_HTML_Tag::create( 'a', $title, array( 'href' => $url ) );
+				$span		= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'icon module module-status-4' ) );
+				$list[]		= UI_HTML_Tag::create( 'li', $span, array() );
+			}
+			$list	= UI_HTML_Tag::create( 'ul', $list );
+			$this->messenger->noteError( 'Folgende Module müssen installiert werden:<br/>'.$list );
+			$this->restart( 'admin/module/viewer/index/'.$first );
+		}
+	}
 }
-?>

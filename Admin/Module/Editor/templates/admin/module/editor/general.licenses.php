@@ -1,7 +1,10 @@
 <?php
 $wf		= (object) $words['tab-general-licenses'];
 
-$list	= '<span class="hint">'.$wf->listNone.'</span>';
+$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconLicense	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-gavel' ) );
+
+$list	= '<div class="alert alert-info former-hint">'.$wf->listNone.'</div>';
 if( $module->licenses ){
 	$list	= array();
 	foreach( $module->licenses as $license ){
@@ -15,13 +18,13 @@ if( $module->licenses ){
 	$list	= '<ul class="general-info">'.join( $list ).'</ul>';
 }
 
-$buttonOpen		= '<button type="button" class="button iconed tiny add form-trigger"><span></span></button>';
+$buttonOpen		= '<button type="button" class="btn btn-mini btn-success form-trigger former-button former-iconed former-tiny former-add">'.$iconAdd.'</button>';
 $hideForMore	= ' style="display: none"';
 
 $panelAuthors	= '
 <form action="./admin/module/editor/addLicense/'.$module->id.'" method="post">
-	<fieldset>
-		<legend>'.$wf->legend.'</legend>
+	<div>
+		<h4>'.$iconLicense.'&nbsp;'.$wf->legend.'</h4>
 		'.$list.'
 		<ul class="input"'.$hideForMore.'>
 			<li>
@@ -37,8 +40,6 @@ $panelAuthors	= '
 			'.UI_HTML_Elements::Button( 'addLicense', $wf->buttonAdd, 'button add' ).'
 		</div>
 		'.$buttonOpen.'
-	</fieldset>
-</form>
-';
+	</div>
+</form>';
 return $panelAuthors;
-?>
