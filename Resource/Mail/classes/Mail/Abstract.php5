@@ -381,7 +381,7 @@ abstract class Mail_Abstract{
 		if( in_array( $filePath, $this->addedStyles ) )
 			return FALSE;
 		$style	= FS_File_Reader::load( $filePath );
-		$style	= str_replace( '(/lib/', '(http://'.getEnv( 'HTTP_HOST' ).'/lib/', $style );
+//		$style	= str_replace( '(/lib/', '(http://'.getEnv( 'HTTP_HOST' ).'/lib/', $style );
 
 		$path	= dirname( $filePath );
 		$style	= str_replace( '(../../../', '('.$this->env->url.dirname( dirname( dirname( $path ) ) ).'/', $style );
@@ -389,6 +389,7 @@ abstract class Mail_Abstract{
 		$style	= str_replace( '(../', '('.$this->env->url.dirname( $path ).'/', $style );
 		$tag	= UI_HTML_Tag::create( 'style', $style, array( 'type' => 'text/css' ) );
 		$this->page->addHead( $tag );
+		$this->addedStyles[]	= $filePath;
 		return TRUE;
 	}
 
