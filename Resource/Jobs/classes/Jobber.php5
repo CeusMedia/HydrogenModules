@@ -125,7 +125,39 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 
 	protected function runJobManually( object $job ): int
 	{
-		$preparedJobRun	= $this->logic->prepareManuallyJobRun( $job );
+		$commands			= $this->env->getRequest()->get( 'commands' );
+		$parameters			= $this->env->getRequest()->get( 'parameters' );
+		$jobRunConstants	= new Alg_Object_Constant( Model_Job_Run::class );
+		$reportMode			= NULL;
+		$reportChannel		= Model_Job_Run::REPORT_CHANNEL_NONE;
+		$reportReceivers	= '';
+		if( !empty( $parameters['--report-mode'] ) ){
+			$modes	= $jobRunConstants->getAll( 'REPORT_MODE_' );
+			if( !array_key_exists( strtoupper( $parameters['--report-mode'] ), $modes ) )
+				throw new \RangeException( 'Invalid job report mode given' );
+			$reportMode	= $modes[strtoupper( $parameters['--report-mode'] )];
+		}
+		if( !empty( $parameters['--report-receivers'] ) )
+			$reportReceivers	= $parameters['--report-receivers'];
+		if( !empty( $parameters['--report-channel'] ) ){
+			$channels	= $jobRunConstants->getAll( 'REPORT_CHANNEL_' );
+			if( !array_key_exists( strtoupper( $parameters['--report-channel'] ), $channels ) )
+				throw new \RangeException( 'Invalid job report channel given' );
+			$reportChannel	= $channels[strtoupper( $parameters['--report-channel'] )];
+		}
+		if( $reportMode && $reportReceivers && !$reportChannel )
+			$reportChannel	= Model_Job_Run::REPORT_CHANNEL_MAIL;
+
+		$options	= array(
+			'reportMode'		=> $reportMode,
+			'reportChannel'		=> $reportChannel,
+			'reportReceivers'	=> $reportReceivers,
+		);
+		if( !empty( $parameters['--report-title'] ) ){
+			$options['title']	= trim( $parameters['--report-title'] );
+		}
+
+		$preparedJobRun	= $this->logic->prepareManuallyJobRun( $job, $options );
 		if( !$preparedJobRun ){
 			$this->out( 'Job not runnable at the moment. Maybe already running or blocked by an exclusive job.' );
 			print_m($job);
@@ -136,8 +168,6 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 			$this->logError( 'Job class "'.$className.'" is not existing.' );						//  log error
 			return -1;																				//  quit with negative status
 		}
-		$commands	= $this->env->getRequest()->get( 'commands' );
-		$parameters	= $this->env->getRequest()->get( 'parameters' );
 		$result		= $this->logic->startJobRun( $preparedJobRun, $commands, $parameters );
 		if( is_integer( $result ) ){
 			return $result;

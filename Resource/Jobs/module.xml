@@ -25,7 +25,7 @@ code:shell>./job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 <b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
 ]]></description>
 	<category>Resource</category>
-	<version>0.7.6</version>
+	<version>0.7.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted to Hydrogen module.</log>
 	<log version="0.2.1">Introduced logging mechanism.</log>
@@ -67,6 +67,7 @@ code:shell>./job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 	<log version="0.7.4">Move job handling to new logic class.</log>
 	<log version="0.7.5">Finish support for jobs defined in module configuration.</log>
 	<log version="0.7.6">Discover jobs defined by modules (=new style) or XML file (=old style).</log>
+	<log version="0.7.7">Add report mail for job run.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -77,10 +78,12 @@ code:shell>./job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 		<class>Job/Job/Test.php5</class>
 		<class>Job/Job/Util.php5</class>
 		<class>Logic/Job.php5</class>
+		<class>Mail/Job/Report.php5</class>
 		<class>Model/Job.php5</class>
 		<class>Model/Job/Definition.php5</class>
 		<class>Model/Job/Run.php5</class>
 		<class>Model/Job/Schedule.php5</class>
+		<style source="common">module.resource.jobs-mail.css</style>
 		<file>job.php</file>
 	</files>
 	<relations>
@@ -96,87 +99,102 @@ code:shell>./job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 	<job id="Job.Test.reflect" mode="dev,test">Job_Test::reflect</job>
 	<job id="Job.Test.reflectCommands" mode="dev,test">Job_Test::reflectCommands</job>
 	<job id="Job.Test.reflectParameters" mode="dev,test">Job_Test::reflectParameters</job>
+	<job id="Job.Test.throw" mode="dev,test">Job_Test::throwException</job>
 	<job id="Job.Util.getDate" mode="dev,test,live">Job_Util::getDate</job>
 	<job id="Job.Util.getExtensionVersion" mode="dev,test,live">Job_Util::getExtensionVersion</job>
 	<job id="Job.Util.getPhpVersion" mode="dev,test,live">Job_Util::getPhpVersion</job>
 	<sql type="mysql" on="update" version="0.7.2"><![CDATA[
-		DROP TABLE IF EXISTS `<%?prefix%>job_definitions`;
-		CREATE TABLE IF NOT EXISTS `<%?prefix%>job_definitions` (
-		  `jobDefinitionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-		  `mode` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:undefined,1:single,2:multiple,3:exclusive',
-		  `status` tinyint(1) DEFAULT '0' COMMENT '0:disabled,1:enabled,2:deprecated',
-		  `identifier` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-		  `className` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-		  `methodName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-		  `arguments` text COLLATE utf8_unicode_ci COMMENT 'as JSON',
-		  `runs` int(11) UNSIGNED DEFAULT '0',
-		  `fails` int(11) UNSIGNED DEFAULT '0',
-		  `createdAt` decimal(12,0) NOT NULL,
-		  `modifiedAt` decimal(12,0) NOT NULL,
-		  `lastRunAt` decimal(12,0) UNSIGNED DEFAULT '0',
-		  PRIMARY KEY (`jobDefinitionId`),
-		  UNIQUE KEY `identifier` (`identifier`),
-		  KEY `status` (`status`),
-		  KEY `mode` (`mode`),
-		  KEY `className` (`className`),
-		  KEY `methodName` (`methodName`),
-		  KEY `createdAt` (`createdAt`),
-		  KEY `modifiedAt` (`modifiedAt`),
-		  KEY `lastRunAt` (`lastRunAt`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DROP TABLE IF EXISTS `<%?prefix%>job_definitions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>job_definitions` (
+  `jobDefinitionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mode` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:undefined,1:single,2:multiple,3:exclusive',
+  `status` tinyint(1) DEFAULT '0' COMMENT '0:disabled,1:enabled,2:deprecated',
+  `identifier` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `className` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `methodName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `arguments` text COLLATE utf8_unicode_ci COMMENT 'as JSON',
+  `runs` int(11) UNSIGNED DEFAULT '0',
+  `fails` int(11) UNSIGNED DEFAULT '0',
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) NOT NULL,
+  `lastRunAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`jobDefinitionId`),
+  UNIQUE KEY `identifier` (`identifier`),
+  KEY `status` (`status`),
+  KEY `mode` (`mode`),
+  KEY `className` (`className`),
+  KEY `methodName` (`methodName`),
+  KEY `createdAt` (`createdAt`),
+  KEY `modifiedAt` (`modifiedAt`),
+  KEY `lastRunAt` (`lastRunAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-		DROP TABLE IF EXISTS `<%?prefix%>job_runs`;
-		CREATE TABLE IF NOT EXISTS `<%?prefix%>job_runs` (
-		  `jobRunId` int(21) UNSIGNED NOT NULL AUTO_INCREMENT,
-		  `jobDefinitionId` int(11) UNSIGNED NOT NULL,
-		  `jobScheduleId` int(11) UNSIGNED DEFAULT '0',
-		  `processId` int(10) UNSIGNED DEFAULT '0',
-		  `type` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:manually,1:scheduled',
-		  `status` tinyint(1) DEFAULT '0' COMMENT '-3:terminated,-2:failed,-1:aborted,0:prepared,1:running,2:done',
-		  `message` text COLLATE utf8_unicode_ci,
-		  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
-		  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
-		  `ranAt` decimal(12,0) UNSIGNED DEFAULT '0',
-		  `finishedAt` decimal(12,0) UNSIGNED DEFAULT '0',
-		  PRIMARY KEY (`jobRunId`),
-		  KEY `jobDefinitionId` (`jobDefinitionId`),
-		  KEY `jobScheduleId` (`jobScheduleId`),
-		  KEY `processId` (`processId`),
-		  KEY `type` (`type`),
-		  KEY `status` (`status`),
-		  KEY `createdAt` (`createdAt`),
-		  KEY `modifiedAt` (`modifiedAt`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DROP TABLE IF EXISTS `<%?prefix%>job_runs`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>job_runs` (
+  `jobRunId` int(21) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `jobDefinitionId` int(11) UNSIGNED NOT NULL,
+  `jobScheduleId` int(11) UNSIGNED DEFAULT '0',
+  `processId` int(10) UNSIGNED DEFAULT '0',
+  `type` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:manually,1:scheduled',
+  `status` tinyint(1) DEFAULT '0' COMMENT '-3:terminated,-2:failed,-1:aborted,0:prepared,1:running,2:done',
+  `message` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  `ranAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  `finishedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`jobRunId`),
+  KEY `jobDefinitionId` (`jobDefinitionId`),
+  KEY `jobScheduleId` (`jobScheduleId`),
+  KEY `processId` (`processId`),
+  KEY `type` (`type`),
+  KEY `status` (`status`),
+  KEY `createdAt` (`createdAt`),
+  KEY `modifiedAt` (`modifiedAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-		DROP TABLE IF EXISTS `<%?prefix%>job_schedule`;
-		CREATE TABLE IF NOT EXISTS `<%?prefix%>job_schedule` (
-		  `jobScheduleId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-		  `jobDefinitionId` int(11) UNSIGNED NOT NULL,
-		  `status` tinyint(1) DEFAULT '0' COMMENT '0:disabled,1:enabled',
-		  `minuteOfHour` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
-		  `hourOfDay` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
-		  `dayOfWeek` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
-		  `dayOfMonth` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
-		  `monthOfYear` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
-		  `createdAt` decimal(10,0) UNSIGNED NOT NULL,
-		  `modifiedAt` decimal(10,0) UNSIGNED NOT NULL,
-		  `lastRunAt` decimal(12,0) UNSIGNED DEFAULT '0',
-		  PRIMARY KEY (`jobScheduleId`),
-		  KEY `jobDefinitionId` (`jobDefinitionId`),
-		  KEY `status` (`status`),
-		  KEY `minuteOfHour` (`minuteOfHour`),
-		  KEY `hourOfDay` (`hourOfDay`),
-		  KEY `dayOfWeek` (`dayOfWeek`),
-		  KEY `dayOfMonth` (`dayOfMonth`),
-		  KEY `monthOfYear` (`monthOfYear`),
-		  KEY `createdAt` (`createdAt`),
-		  KEY `modifiedAt` (`modifiedAt`),
-		  KEY `lastRunAt` (`lastRunAt`)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DROP TABLE IF EXISTS `<%?prefix%>job_schedule`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>job_schedule` (
+  `jobScheduleId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `jobDefinitionId` int(11) UNSIGNED NOT NULL,
+  `status` tinyint(1) DEFAULT '0' COMMENT '0:disabled,1:enabled',
+  `minuteOfHour` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
+  `hourOfDay` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
+  `dayOfWeek` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
+  `dayOfMonth` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
+  `monthOfYear` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
+  `createdAt` decimal(10,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(10,0) UNSIGNED NOT NULL,
+  `lastRunAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`jobScheduleId`),
+  KEY `jobDefinitionId` (`jobDefinitionId`),
+  KEY `status` (`status`),
+  KEY `minuteOfHour` (`minuteOfHour`),
+  KEY `hourOfDay` (`hourOfDay`),
+  KEY `dayOfWeek` (`dayOfWeek`),
+  KEY `dayOfMonth` (`dayOfMonth`),
+  KEY `monthOfYear` (`monthOfYear`),
+  KEY `createdAt` (`createdAt`),
+  KEY `modifiedAt` (`modifiedAt`),
+  KEY `lastRunAt` (`lastRunAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="update" version="0.7.7"><![CDATA[
+ALTER TABLE `<%?prefix%>job_runs` ADD `title` VARCHAR(200) NOT NULL AFTER `status`;
+ALTER TABLE `<%?prefix%>job_runs` ADD `reportMode` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:never,1:error,2:fail,3:negative,4:done,8:workload,12:positive,15:all' AFTER `status`,
+  ADD `reportChannel` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:none,1:mail,2:xmpp' AFTER `reportMode`,
+  ADD `reportReceivers` TEXT NULL DEFAULT NULL AFTER `reportChannel`,
+  ADD INDEX (`reportMode`),
+  ADD INDEX (`reportChannel`);
+ALTER TABLE `<%?prefix%>job_schedule` ADD `title` VARCHAR(200) NOT NULL AFTER `monthOfYear`;
+ALTER TABLE `<%?prefix%>job_schedule` ADD `reportMode` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:never,1:error,2:fail,3:negative,4:done,8:workload,12:positive,15:all' AFTER `monthOfYear`,
+  ADD `reportChannel` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:none,1:mail,2:xmpp' AFTER `reportMode`,
+  ADD `reportReceivers` TEXT NULL DEFAULT NULL AFTER `reportChannel`,
+  ADD INDEX (`reportMode`),
+  ADD INDEX (`reportChannel`);
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
-	DROP TABLE IF EXISTS `<%?prefix%>job_definitions`;
-	DROP TABLE IF EXISTS `<%?prefix%>job_runs`;
-	DROP TABLE IF EXISTS `<%?prefix%>job_schedule`;
+DROP TABLE IF EXISTS `<%?prefix%>job_definitions`;
+DROP TABLE IF EXISTS `<%?prefix%>job_runs`;
+DROP TABLE IF EXISTS `<%?prefix%>job_schedule`;
 ]]></sql>
 </module>

@@ -91,7 +91,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	{
 		$jobRun	= $this->getPreparedJobRun( $jobRunId, array( 'definition' ) );
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED )
-			throw new RuntimeException( 'Job run is not in prepared state' );
+			throw new \RuntimeException( 'Job run is not in prepared state' );
 		if( $jobRun->definition && !$jobRun->processId ){
 			try{
 				$this->modelRun->edit( $jobRun->jobRunId, array(
@@ -212,21 +212,22 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	{
 	}*/
 
-	public function prepareManuallyJobRun( object $job ): ?object
+	public function prepareManuallyJobRun( object $job, array $options ): ?object
 	{
-		if( $this->isPreparableJob( $job, Model_Job_Run::TYPE_MANUALLY ) ){
-			$jobRunId	= $this->modelRun->add( array(
-				'jobDefinitionId'	=> $job->jobDefinitionId,
-				'processId'			=> getmypid(),
-				'type'				=> Model_Job_Run::TYPE_MANUALLY,
-				'status'			=> Model_Job_Run::STATUS_PREPARED,
-//				'message'			=> json_encode( array() ),
-				'createdAt'			=> time(),
-				'modifiedAt'		=> time(),
-			) );
-			return $this->getPreparedJobRun( $jobRunId );
-		}
-		return NULL;
+		if( !$this->isPreparableJob( $job, Model_Job_Run::TYPE_MANUALLY ) )
+			return NULL;
+		$entityData	= array_merge( array(
+			'jobDefinitionId'	=> $job->jobDefinitionId,
+			'processId'			=> getmypid(),
+			'type'				=> Model_Job_Run::TYPE_MANUALLY,
+			'status'			=> Model_Job_Run::STATUS_PREPARED,
+			'title'				=> '',
+//			'message'			=> json_encode( array() ),
+			'createdAt'			=> time(),
+			'modifiedAt'		=> time(),
+		), $options );
+		$jobRunId	= $this->modelRun->add( $entityData );
+		return $this->getPreparedJobRun( $jobRunId );
 	}
 
 	public function prepareScheduledJobs( $jobDefinitionId = NULL ): array
@@ -236,6 +237,9 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return $preparedJobs;
 	}
 
+	/**
+	 *  @todo		kill process by stored process ID if existing as pid file
+	 */
 	public function quitJobRun( int $jobRunId, $status, $messageData = array() )
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
@@ -246,8 +250,11 @@ class Logic_Job extends CMF_Hydrogen_Logic
 			'modifiedAt'	=> time(),
 			'message'		=> json_encode( $messageData ),
 		);
-		if( $status !== Model_Job_Run::STATUS_TERMINATED )
+		if( $status !== Model_Job_Run::STATUS_TERMINATED ){
 			$dataRun['finishedAt']	= time();
+			//  @todo		kill process by stored process ID if existing as pid file
+		}
+
 		$this->modelRun->edit( $jobRun->jobRunId, $dataRun );
 		$jobDefinition	= $this->modelDefinition->get( $jobRun->jobDefinitionId );
 		$failStatuses	= array(
@@ -264,6 +271,8 @@ class Logic_Job extends CMF_Hydrogen_Logic
 
 	public function startJobRun( object $jobRun, $commands = array(), $parameters = array() ): int
 	{
+		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED )
+			throw new RuntimeException( 'Job run is not in prepared state' );
 		$this->modelRun->edit( $jobRun->jobRunId, array(
 			'status'		=> Model_Job_Run::STATUS_RUNNING,
 			'modifiedAt'	=> time(),
@@ -290,19 +299,22 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		$jobObject	= \Alg_Object_Factory::createObject( '\\'.$className, $classArgs );				//  ... create job class instance with arguments
 		$jobObject->noteJob( $jobDefinition->className, $methodName );								//  ... inform job instance about method to be called
 		$jobObject->noteArguments( $commands, $parameters );										//  ... inform job instance about request arguments
+
+		$returnCode		= -255;
+		$result			= -255;
 		try{																						//  try to ...
 			$result		= \Alg_Object_MethodFactory::call( $jobObject, $methodName, $arguments );	//  ... call job method of job instance with arguments
 			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_DONE, array(			//  finish job run since no exception has been thrown
-				'type'		=> 'result',															//  ... and save message of type "result"
+				'type'		=> 'data',															//  ... and save message of type "data"
 				'code'		=> $result,																//  ... containing the method call return code
-				'results'	=> $jobObject->getResults(),											//  ... and results collected by the method call
+				'data'		=> $jobObject->getResults(),											//  ... and results collected by the method call
 			) );
 			if( is_integer( $result ) )																//  method call return value is an integer
-				return $result;																		//  carry this return code out as status
+				$returnCode	 = $result;																//  carry this return code out as status
 			if( strlen( trim( $result ) ) )															//  handle old return strings @deprecated
 				foreach( explode( "\n", trim( $result ) ) as $line )								//  handle each result line
 					$this->log( $line );															//  by logging
-			return 1;																				//  quit with positive status
+			$returnCode = 1;																		//  quit with positive status
 		}
 		catch( Throwable $t ){																		//  on throwable error or exception
 			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_FAILED, array(		//  finish job run as failed
@@ -317,7 +329,10 @@ class Logic_Job extends CMF_Hydrogen_Logic
 				throw new RuntimeException( 'Job run failed: '.$t->getMessage(), 0, $t );			//  ... carry exception out
 			}
 		}
-		return -1;																					//  quit with negative status
+		finally{
+			$this->sendReport( (int) $jobRun->jobRunId, $commands, $parameters, $result );
+		}
+		return $returnCode;																					//  quit with negative status
 	}
 
 /*	public function setProcessIdOnJobRun( $jobRunOrJobRunId ): ?object
@@ -423,6 +438,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 					'jobDefinitionId'	=> $job->jobDefinitionId,
 					'type'			=> Model_Job_Run::TYPE_SCHEDULED,
 					'status'		=> Model_Job_Run::STATUS_PREPARED,
+					'title'			=> '',
 //					'message'		=> json_encode( array() ),
 					'createdAt'		=> time(),
 					'modifiedAt'	=> time(),
@@ -431,5 +447,108 @@ class Logic_Job extends CMF_Hydrogen_Logic
 			}
 		}
 		return $list;
+	}
+
+	protected function isToReport( $jobRunId/*, ?int $mode = NULL*/ ): bool
+	{
+		$jobRun			= $this->modelRun->get( $jobRunId );
+		$status			= (int) $jobRun->status;
+		$reportMode		= (int) $jobRun->reportMode;
+/*		if( is_int( $mode ) ){
+			if( !in_array( $mode, Model_Job_Run::REPORT_MODES ) )
+				throw new \RangeException( 'Invalid job run report mode given' );
+			$reportMode		= $mode;
+		}*/
+
+		switch( $reportMode ){
+			case Model_Job_Run::REPORT_MODE_NEVER:
+				return FALSE;
+			case Model_Job_Run::REPORT_MODE_ALL:
+				return TRUE;
+			case Model_Job_Run::REPORT_MODE_NEGATIVE:
+				return in_array( $status, array(
+					Model_Job_Run::STATUS_TERMINATED,
+					Model_Job_Run::STATUS_FAIL,
+					Model_Job_Run::STATUS_ABORTED,
+				) );
+			case Model_Job_Run::REPORT_MODE_ERROR:			//  @todo to implement
+				return in_array( $status, array(
+				) );
+			case Model_Job_Run::REPORT_MODE_FAIL:
+				return in_array( $status, array(
+					Model_Job_Run::STATUS_FAIL,
+				) );
+			case Model_Job_Run::REPORT_MODE_DONE:
+				return in_array( $status, array(
+					Model_Job_Run::STATUS_DONE,
+				) );
+			case Model_Job_Run::REPORT_MODE_WORKLOAD:			//  @todo to implement
+				return in_array( $status, array(
+				) );
+			case Model_Job_Run::REPORT_MODE_POSITIVE:
+				return in_array( $status, array(
+					Model_Job_Run::STATUS_DONE,
+				) );
+		}
+		return FALSE;
+	}
+
+	protected function sendReport( $jobRunId, $commands, $parameters, $resultCode )
+	{
+		$jobRun		= $this->modelRun->get( $jobRunId );
+		$message	= json_decode( $jobRun->message ?: '{"type": "unknown"}' );
+
+		if( !$this->isToReport( $jobRunId ) )
+			return 0;
+
+		$receivers	= $jobRun->reportReceivers;
+		$parser		= new \CeusMedia\Mail\Address\Collection\Parser();
+		$receivers	= $parser->parse( $receivers );
+		if( !count( $receivers ) )
+			return 0;
+
+
+		$jobDefinition	= $this->modelDefinition->get( $jobRun->jobDefinitionId );
+		$results		= (array) json_decode( $jobRun->message ?: '[]' );
+		$mailData		= array(
+			'arguments'		=> (object) array(
+				'commands'		=> $commands,
+				'parameters'	=> $parameters
+			),
+			'definition'	=> $jobDefinition,
+			'run'			=> $jobRun,
+			'result'		=> (object) array_merge( array(
+				'status'	=> $jobRun->status,
+				'code'		=> $resultCode,													//  ... containing the method call return code
+				'type'		=> 'empty',														//  ... and save message of type "data"
+				'data'		=> NULL,														//  ... and results collected by the method call
+			), $results ),
+		);
+
+		switch( (int) $jobRun->reportChannel ){
+			case Model_Job_Run::REPORT_CHANNEL_MAIL:
+				$this->sendReportViaMail( $jobRunId, $mailData, $receivers );
+				break;
+			case Model_Job_Run::REPORT_CHANNEL_XMPP:
+				$this->sendReportViaXMPP( $jobRunId, $mailData, $receivers );
+				break;
+		}
+		return count( $receivers );
+	}
+
+	protected function sendReportViaMail( $jobRunId, $mailData, $receivers )
+	{
+		$logicMail	= $this->env->getLogic()->get( 'Mail' );
+		$language	= $this->env->getLanguage()->getLanguage();
+		$mail		= new Mail_Job_Report( $this->env, $mailData );
+		foreach( $receivers as $address ){
+			$receiver	= (object) array( 'email' => $address->getAddress() );
+			$logicMail->handleMail( $mail, $receiver, $language );
+		}
+	}
+
+	protected function sendReportViaXMPP( $jobRunId, $mailData, $receivers )
+	{
+		throw new \RuntimeException( 'No implemented, yet' );
 	}
 }

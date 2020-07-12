@@ -36,6 +36,16 @@ class Job_Job_Test extends Job_Abstract
 			$this->out( '  '.$key.' => '.$value );
 	}
 
+	/**
+	 *	Prints given parameters.
+	 *	@access		public
+	 *	@return		...
+	 */
+	public function throwException()
+	{
+		throw new RuntimeException( 'Test Exception' );
+	}
+
 	//  --  PROTECTED  --  //
 
 	protected function __onInit()

@@ -1,0 +1,31 @@
+.content-block-facts .facts-list {
+
+	}
+.content-block-facts .facts-list .fact-label {
+	text-transform: uppercase;
+	font-size: 0.9em;
+	font-weight: lighter;
+	}
+.content-block-facts .facts-list .fact-value {
+	font-size: 1.1em;
+	margin-bottom: 0.5em;
+	}
+
+.content-block-exception .trace-list {
+	border: 1px solid rgba(127, 127, 127, 0.5);
+	border-radius: 4px;
+	padding: 4px 6px;
+	}
+.content-block-exception .trace-list .trace-item {
+	border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+	padding: 4px 6px;
+	}
+.content-block-exception .trace-list .trace-item .trace-item-call {
+	font-size: 1.1em;
+	}
+.content-block-exception .trace-list .trace-item .trace-item-file {
+	font-size: 0.9em;
+	}
+.content-block-exception .trace-list .trace-item:last-child {
+	border-bottom: 0;
+	}

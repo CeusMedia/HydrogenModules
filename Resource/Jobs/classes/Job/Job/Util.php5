@@ -59,7 +59,7 @@ class Job_Job_Util extends Job_Abstract
 		$this->out( $this->results->short );
 	}
 
-	protected function shortenVersion( $version ): stro
+	protected function shortenVersion( $version ): string
 	{
 		return preg_replace( '/(-.+)$/', '', $version );
 	}
