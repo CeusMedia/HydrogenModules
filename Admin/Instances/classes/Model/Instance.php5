@@ -9,11 +9,12 @@ class Model_Instance{
 		$this->data		= array();
 		$this->fileName	= 'config/instances.json';
 		if( !file_exists( $this->fileName ) ){
-			touch( $this->fileName );
+			FS_File_Writer::save( $this->fileName, '[]' );
 			chmod( $this->fileName, 0770 );
 		}
 		$json		= FS_File_Reader::load( $this->fileName );
-		$this->data	= json_decode( $json, TRUE );
+		foreach( json_decode( $json ) as $instanceId => $instance )
+			$this->data[$instanceId]	= $instance;
 	}
 
 	public function add( $data ){
@@ -50,16 +51,16 @@ class Model_Instance{
 		if( !$this->has( $id ) )
 			return NULL;
 		$data	= $this->data[$id];
-		$data['path']	= empty( $data['path'] ) ? '' : $data['path'];
-		$data['protocol']	= empty( $data['protocol'] ) ? 'http://' : $data['protocol'];
+		$data->path		= empty( $data->path ) ? '' : $data->path;
+		$data->protocol	= empty( $data->protocol ) ? 'http://' : $data->protocol;
 		return (object) $data;
 	}
 
 	public function getAll(){
 		$list		= array();
 		foreach( $this->data as $id => $data ){
-			$data['path']	= empty( $data['path'] ) ? '' : $data['path'];
-			$data['protocol']	= empty( $data['protocol'] ) ? 'http://' : $data['protocol'];
+			$data->path		= empty( $data->path ) ? '' : $data->path;
+			$data->protocol	= empty( $data->protocol ) ? 'http://' : $data->protocol;
 			$list[$id]	= (object) $this->data[$id];
 		}
 		return $list;

@@ -170,7 +170,7 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 			'pathApp' 		=> $path,
 			'parentEnv'		=> $parentEnv,
 		) );
-		print_m( $env );die;
+//		print_m( $env );die;
 		return $env;
 	}
 
