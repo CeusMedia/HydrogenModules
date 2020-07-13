@@ -107,7 +107,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller
 		$role		= $this->modelRole->get( $roleId );
 
 		if( $this->request->getMethod()->isPost() ){
-			$data	= $this->request->getAllFromSource( 'POST', TRUE );
+			$data	= $this->request->getAllFromSource( 'POST' );
 			$this->modelRole->edit( $roleId, $data );
 			$this->restart( NULL, TRUE );
 		}
