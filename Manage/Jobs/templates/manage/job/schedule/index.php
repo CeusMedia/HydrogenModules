@@ -7,7 +7,7 @@ $iconDeactivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-t
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
-$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.' hinzufügen', array(
+$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
 	'href'	=> './manage/job/schedule/add',
 	'class'	=> 'btn btn-success',
 ) );
@@ -77,8 +77,10 @@ if( $scheduledJobs ){
 	$table	= UI_HTML_Tag::create( 'table', array( $cols, $thead, $tbody ), array( 'class' => 'table' ) );
 }
 
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Geplante Aufgaben' ),
+$tabs	= View_Manage_Job::renderTabs( $env, 'schedule' );
+
+return $tabs.UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'h3', $words['index']['heading'] ),
 	UI_HTML_Tag::create( 'div', array(
 		$table,
 		UI_HTML_Tag::create( 'div', array(

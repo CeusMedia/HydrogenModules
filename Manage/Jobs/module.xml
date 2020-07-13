@@ -3,29 +3,51 @@
 	<title><![CDATA[Manage: Jobs]]></title>
 	<description><![CDATA[...]]></description>
 	<category>Management</category>
-	<version>0.2.3</version>
+	<version>0.2.6</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add definition index.</log>
 	<log version="0.2.2">Add model for inspecting jobs defined in code.</log>
 	<log version="0.2.3">Add job definition view.</log>
+	<log version="0.2.4">Add tabs.</log>
+	<log version="0.2.5">Add job run list view and filter.</log>
+	<log version="0.2.6">Add locales.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Controller/Manage/Job.php5</class>
 		<class>Controller/Manage/Job/Definition.php5</class>
+		<class>Controller/Manage/Job/Run.php5</class>
 		<class>Controller/Manage/Job/Schedule.php5</class>
 		<class>Model/Job/Code.php5</class>
+		<class>View/Manage/Job.php5</class>
 		<class>View/Manage/Job/Definition.php5</class>
+		<class>View/Manage/Job/Run.php5</class>
 		<class>View/Manage/Job/Schedule.php5</class>
+		<template>manage/job/index.php</template>
 		<template>manage/job/definition/index.php</template>
 		<template>manage/job/definition/view.php</template>
+		<template>manage/job/run/index.php</template>
+		<template>manage/job/run/index.filter.php</template>
+		<template>manage/job/run/index.list.php</template>
 		<template>manage/job/schedule/index.php</template>
 		<style>module.manage.jobs.css</style>
+		<locale>de/manage/job.ini</locale>
+		<locale>de/manage/job/definition.ini</locale>
+		<locale>de/manage/job/run.ini</locale>
+		<locale>de/manage/job/schedule.ini</locale>
+		<locale>en/manage/job.ini</locale>
+		<locale>en/manage/job/definition.ini</locale>
+		<locale>en/manage/job/run.ini</locale>
+		<locale>en/manage/job/schedule.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Jobs</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
-	<link xml:lang="de" access="acl" path="manage/job/schedule" rank="85">Ausführungsplan</link>
-	<link xml:lang="de" access="acl" path="manage/job/definition" rank="86">Job-Definition</link>
+	<link xml:lang="de" access="acl" path="manage/job" rank="85">Job-Dashboard</link>
+	<link xml:lang="de" access="acl" path="manage/job/schedule" rank="86">Job-Ausführungen</link>
+	<link xml:lang="de" access="acl" path="manage/job/schedule" rank="86">Job-Zeitplan</link>
+	<link xml:lang="de" access="acl" path="manage/job/definition" rank="87">Job-Liste</link>
 </module>

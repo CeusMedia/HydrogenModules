@@ -1,5 +1,6 @@
 <?php
 
+$statusLabels	= $wordsGeneral['job-status'];
 //print_m($definitions);die;
 
 $iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
@@ -9,7 +10,7 @@ $iconDeactivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-t
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
-$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.' hinzufügen', array(
+$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
 	'href'	=> './manage/job/definition/add',
 	'class'	=> 'btn btn-success',
 ) );
@@ -22,11 +23,16 @@ $modes	= array(
 );
 //return print_m( $allDefinedJobs, NULL, NULL, TRUE );
 
+
+
 $table	= UI_HTML_Tag::create( 'div', 'Noch keine Jobs geplant.', array( 'class' => 'alert' ) );
 
 if( $definitions ){
-	$rows	= array();
+	$helperTime		= new View_Helper_TimePhraser( $env );
+	$helperTime->setTemplate( '%s ago' );
+	$helperTime->setMode( View_Helper_TimePhraser::MODE_BREAK );
 
+	$rows	= array();
 	foreach( $definitions as $item ){
 		$buttonView		= UI_HTML_Tag::create( 'a', $iconView, array(
 			'href'		=> './manage/job/definition/view/'.$item->jobDefinitionId,
@@ -61,9 +67,9 @@ if( $definitions ){
 			$buttonStatus,
 			$buttonRemove
 		), array( 'class' => 'btn-group' ) );
-		$status	= UI_HTML_Tag::create( 'span', 'aktiv', array( 'class' => 'badge badge-success' ) );
+		$status	= UI_HTML_Tag::create( 'span', $statusLabels[$item->status], array( 'class' => 'badge badge-success' ) );
 		if( $item->status == Model_Job_Definition::STATUS_DISABLED )
-			$status	= UI_HTML_Tag::create( 'span', 'deaktiviert', array( 'class' => 'badge badge-warning' ) );
+			$status	= UI_HTML_Tag::create( 'span', $statusLabels[$item->status], array( 'class' => 'badge badge-warning' ) );
 		$mode	= $modes[$item->mode];
 
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
@@ -71,7 +77,7 @@ if( $definitions ){
 			UI_HTML_Tag::create( 'td', '<span class="text-success">'.$item->runs.'</span> / <span class="text-error">'.$item->fails.'</span>', array( 'class' => '' ) ),
 			UI_HTML_Tag::create( 'td', $mode, array( 'class' => '' ) ),
 			UI_HTML_Tag::create( 'td', $status, array( 'class' => '' ) ),
-			UI_HTML_Tag::create( 'td', $item->lastRunAt ? date( 'd.m.Y H:i', $item->lastRunAt ) : '-', array( 'class' => '' ) ),
+			UI_HTML_Tag::create( 'td', $item->lastRunAt ? $helperTime->setTimestamp( $item->lastRunAt )->render() : '-', array( 'class' => '' ) ),
 			UI_HTML_Tag::create( 'td', $buttons, array( 'class' => '' ) ),
 		) );
 	}
@@ -81,8 +87,10 @@ if( $definitions ){
 	$table	= UI_HTML_Tag::create( 'table', array( $cols, $thead, $tbody ), array( 'class' => 'table' ) );
 }
 
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Verfügbare Aufgaben' ),
+$tabs	= View_Manage_Job::renderTabs( $env, 'definition' );
+
+return $tabs.UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'h3', $words['index']['heading'] ),
 	UI_HTML_Tag::create( 'div', array(
 		$table,
 		UI_HTML_Tag::create( 'div', array(

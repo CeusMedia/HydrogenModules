@@ -54,5 +54,6 @@ class Controller_Manage_Job_Definition extends CMF_Hydrogen_Controller
 		$this->modelRun			= new Model_Job_Run( $this->env );
 		$this->modelCode		= new Model_Job_Code( $this->env );
 		$this->logic			= $this->env->getLogic()->get( 'Job' );
+		$this->addData( 'wordsGeneral', $this->env->getLanguage()->getWords( 'manage/job' ) );
 	}
 }
