@@ -1,0 +1,24 @@
+/*
+.plus-menu {
+	position: fixed;
+	bottom: 2em;
+	right: 2em;
+	}
+.plus-menu > .btn-group > .btn {
+	padding: 6px 2px 5px 2px;
+	font-size: 1.4rem;
+	border-radius: 0em;
+	box-shadow: 4px 4px 4px 0px rgba(127, 127, 127, 0.5);
+	}
+*/
+
+.plus-menu {
+	position: fixed;
+	bottom: 0em;
+	right: 0em;
+	}
+.plus-menu > .btn-group > .btn {
+	padding: 10px 6px 9px 6px;
+	font-size: 1.4rem;
+	border-radius: 0em;
+	}
