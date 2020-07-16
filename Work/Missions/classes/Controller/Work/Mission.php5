@@ -938,10 +938,10 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->logic->generalConditions['status']		= $this->defaultFilterValues['states'];
 		switch( $mode ){
 			case 'now':
-				$this->logic->generalConditions['dayStart']	= '<'.date( "Y-m-d", time() + 7 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+				$this->logic->generalConditions['dayStart']	= '< '.date( "Y-m-d", time() + 7 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
 				break;
 //			case 'future':
-//				$this->logic->generalConditions['dayStart']	= '>='.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+//				$this->logic->generalConditions['dayStart']	= '>= '.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
 //				break;
 		}
 	}
