@@ -87,9 +87,9 @@ class Model_Job_Code
 		return $this->classes[$className];
 	}
 
-	protected function clearSourceCode( array $code ): array
+	protected function clearSourceCode( ?array $code ): ?array
 	{
-		$code	= preg_replace( '@^(//)?\t@s', '\\1', $code );
 		return $code;
+		$code	= preg_replace( '@^(//)?\t@s', '\\1', $code );
 	}
 }

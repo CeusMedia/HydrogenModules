@@ -1,22 +1,14 @@
 <?php
 
+$runList	= UI_HTML_Tag::create( 'div', 'Keine Ausführungen gefunden.', array( 'class' => 'alert alert-info' ) );
+
 if( $runs ){
 	$rows	= array();
 	foreach( $runs as $item ){
-		$message	= json_decode( $item->message );
-		if( $message->type === 'throwable' ){
-			$file	= removeEnvPath( $env, $message->file );
-			$output	= '<div>
-				<div>Error: '.$message->message.'</div>
-				<div>File: '.$file.' - Line: '.$message->line.'</div>
-				<xmp>'.removeEnvPath( $env, $message->trace ).'</xmp>
-			</div>';
-		}
-		else if( $message->type === 'result' ){
-			$output	= '<div>
-				<div>Type: Result</div>
-				<pre>'.print_m( $message->results, NULL, NULL, TRUE ).'</pre>
-			</div>';
+		$output		= '';
+		if( $item->status != Model_Job_Run::STATUS_PREPARED ){
+			$message	= json_decode( $item->message );
+			$output		= $message->type;
 		}
 
 		switch( (int) $item->status ){
@@ -59,12 +51,40 @@ if( $runs ){
 
 $tabs	= View_Manage_Job::renderTabs( $env, 'definition' );
 
+$list	= array();
+$facts	= array();
+$facts['Identifier']	= $definition->identifier;
+$facts['Job-ID']		= $definition->jobDefinitionId;
+$facts['Mode']			= $wordsGeneral['job-modes'][$definition->mode];
+$facts['Status']		= $wordsGeneral['job-statuses'][$definition->status];
+$facts['Class Name']	= $definition->className;
+$facts['Method']		= $definition->methodName;
+$facts['Runs']			= $definition->runs;
+$facts['Success']		= $definition->runs - $definition->fails.( $definition->runs ? ' <small class="muted">('.round( ( $definition->runs - $definition->fails ) / $definition->runs * 100 ).'%)</small>' : '' );
+$facts['Fails']			= $definition->fails.( $definition->runs ? ' <small class="muted">('.round( $definition->fails / $definition->runs * 100 ).'%)</small>' : '' );
+$facts['Method']		= $definition->methodName;
+$facts['Method']		= $definition->methodName;
+$facts['Created At']	= date( 'Y-m-d H:i:s', $definition->createdAt );
+if( $definition->modifiedAt )
+	$facts['Modified At']	= date( 'Y-m-d H:i:s', $definition->modifiedAt );
+if( $definition->lastRunAt )
+	$facts['Last Run At']	= date( 'Y-m-d H:i:s', $definition->lastRunAt );
+
+foreach( $facts as $factKey => $factValue ){
+	$list[]	= UI_HTML_Tag::create( 'dt', $factKey );
+	$list[]	= UI_HTML_Tag::create( 'dd', $factValue );
+}
+$list	= UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+
 return $tabs.UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'h4', 'Code' ),
-		UI_HTML_Tag::create( 'xmp', join( PHP_EOL, $definitionCode ) ),
+		UI_HTML_Tag::create( 'h4', 'Facts' ),
+		$list,
+//		UI_HTML_Tag::create( 'div', print_m( $definition, NULL, NULL, TRUE ) ),
 		UI_HTML_Tag::create( 'h4', 'Run List' ),
 		$runList,
+		UI_HTML_Tag::create( 'h4', 'Code' ),
+		UI_HTML_Tag::create( 'xmp', join( PHP_EOL, $definitionCode ) ),
 	), array( 'class' => 'content-panel-inner' ) )
 ), array( 'class' => 'content-panel' ) );
 

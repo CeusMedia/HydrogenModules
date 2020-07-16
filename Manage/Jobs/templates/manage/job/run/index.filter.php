@@ -3,10 +3,17 @@
 $iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
 $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 
-$optStatus		= UI_HTML_Elements::Options( $wordsGeneral['job-run-statuses'], $filterStatus );
-$optType		= UI_HTML_Elements::Options( array_merge( array( '' => '- alle -' ), $wordsGeneral['job-run-types'] ), $filterType );
+$optStatus	= array( '' => $wordsGeneral['list']['optAll'] );
+foreach( $wordsGeneral['job-run-statuses'] as $key => $value )
+	$optStatus[$key]	= $value;
+$optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
 
-$optJobId	= array( '' => '- alle -' );
+$optType	= array( '' => $wordsGeneral['list']['optAll'] );
+foreach( $wordsGeneral['job-run-types'] as $key => $value )
+	$optType[$key]	= $value;
+$optType	= UI_HTML_Elements::Options( $optType, $filterStatus );
+
+$optJobId	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $definitions as $jobId => $definition )
 	$optJobId[$jobId]	= $definition->identifier;
 $optJobId	= UI_HTML_Elements::Options( $optJobId, $filterJobId );
@@ -66,6 +73,6 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 			), array( 'class' => 'buttonbar' ) ),
 		), array( 'action' => './manage/job/run/filter', 'method' => 'POST' ) ),
 	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );;
+), array( 'class' => 'content-panel' ) );
 
 return $panelFilter;

@@ -18,21 +18,27 @@ if( $runs ){
 	$rows	= array();
 	foreach( $runs as $item ){
 		$definition	= $definitions[$item->jobDefinitionId];
-		$message	= json_decode( $item->message );
-/*		if( $message->type === 'throwable' ){
-			$file	= View_Manage_Job::removeEnvPath( $env, $message->file );
-			$output	= '<div>
-				<div>Error: '.$message->message.'</div>
-				<div>File: '.$file.' - Line: '.$message->line.'</div>
-				<xmp>'.View_Manage_Job::removeEnvPath( $env, $message->trace ).'</xmp>
-			</div>';
+		$output		= '';
+		if( in_array( $item->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS_DONE, Model_Job_Run::STATUS_SUCCESS ) ) ){
+			$message	= json_decode( $item->message );
+			switch( $message->type ){
+				case 'throwable':
+					$file	= View_Manage_Job::removeEnvPath( $env, $message->file );
+					$output	= '<div>
+						<div>Error: '.$message->message.'</div>
+						<div>File: '.$file.' - Line: '.$message->line.'</div>
+						<xmp>'.View_Manage_Job::removeEnvPath( $env, $message->trace ).'</xmp>
+					</div>';
+					break;
+				case 'result':
+				case 'data':
+					$output	= '<div>
+						<div>Type: '.ucfirst( $message->type ).'</div>
+						<pre>'.print_m( $message->{$message->type}, NULL, NULL, TRUE ).'</pre>
+					</div>';
+					break;
+			}
 		}
-		else if( $message->type === 'result' ){
-			$output	= '<div>
-				<div>Type: Result</div>
-				<pre>'.print_m( $message->results, NULL, NULL, TRUE ).'</pre>
-			</div>';
-		}*/
 
 		switch( (int) $item->status ){
 			case Model_Job_Run::STATUS_TERMINATED:
@@ -72,8 +78,8 @@ if( $runs ){
 			UI_HTML_Tag::create( 'td', '<small class="muted">'.$item->processId.'</small>' ),
 			UI_HTML_Tag::create( 'td', '<a href="./manage/job/definition/view/'.$definition->jobDefinitionId.'">'.$title.'</a>' ),
 			UI_HTML_Tag::create( 'td', $status ),
-//			UI_HTML_Tag::create( 'td', $output ),
 			UI_HTML_Tag::create( 'td', $type ),
+			UI_HTML_Tag::create( 'td', $output ),
 			UI_HTML_Tag::create( 'td', $item->ranAt ? $helperTime->setTimestamp( $item->ranAt )->render() : '-' ),
 			UI_HTML_Tag::create( 'td', $item->finishedAt ? $helperTime->setTimestamp( $item->finishedAt )->render() : '-' ),
 		) );
@@ -83,6 +89,7 @@ if( $runs ){
 		$words['index']['tableHeadJobId'],
 		$words['index']['tableHeadStatus'],
 		$words['index']['tableHeadType'],
+		$words['index']['tableHeadStatus'],
 		$words['index']['tableHeadRanAt'],
 		$words['index']['tableHeadFinishedId'],
 	) ) );

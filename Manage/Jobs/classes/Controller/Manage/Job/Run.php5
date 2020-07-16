@@ -51,7 +51,7 @@ class Controller_Manage_Job_Run extends CMF_Hydrogen_Controller
 		while( ceil( $total / $filterLimit ) <= $page )
 			$page--;
 
-		$orders	= array( 'createdAt' => 'DESC' );
+		$orders	= array( 'createdAt' => 'DESC', 'jobRunId' => 'DESC' );
 		$limits	= array( $page * $filterLimit, $filterLimit );
 		$runs	= $this->modelRun->getAll( $conditions, $orders, $limits );
 
