@@ -3,15 +3,16 @@
 $iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
 $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 
+
 $optStatus	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $wordsGeneral['job-run-statuses'] as $key => $value )
-	$optStatus[$key]	= $value;
+	$optStatus[(string) $key]	= $value;
 $optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
 
 $optType	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $wordsGeneral['job-run-types'] as $key => $value )
 	$optType[$key]	= $value;
-$optType	= UI_HTML_Elements::Options( $optType, $filterStatus );
+$optType	= UI_HTML_Elements::Options( $optType, $filterType );
 
 $optJobId	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $definitions as $jobId => $definition )
@@ -42,7 +43,7 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 						'class' 	=> 'span12',
 //						'oninput'	=> 'this.form.submit();',
 						'multiple'	=> 'multiple',
-						'size'		=> '7',
+						'size'		=> '8',
 						'style'		=> 'overflow-y: hidden;'
 					) ),
 				), array( 'class' => 'span12' ) ),
@@ -54,6 +55,32 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 						'name' 		=> 'type',
 						'id'		=> 'input_type',
 						'class' 	=> 'span12',
+//						'oninput'	=> 'this.form.submit();',
+					) ),
+				), array( 'class' => 'span12' ) ),
+			), array( 'class' => 'row-fluid' ) ),
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'label', $words['filter']['labelStartFrom'], array( 'for' => 'input_startFrom' ) ),
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'type'		=> 'date',
+						'name' 		=> 'startFrom',
+						'id'		=> 'input_startFrom',
+						'class' 	=> 'span12',
+						'value'		=> $filterStartFrom,
+//						'oninput'	=> 'this.form.submit();',
+					) ),
+				), array( 'class' => 'span12' ) ),
+			), array( 'class' => 'row-fluid' ) ),
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'label', $words['filter']['labelStartTo'], array( 'for' => 'input_startTo' ) ),
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'type'		=> 'date',
+						'name' 		=> 'startTo',
+						'id'		=> 'input_startTo',
+						'class' 	=> 'span12',
+						'value'		=> $filterStartTo,
 //						'oninput'	=> 'this.form.submit();',
 					) ),
 				), array( 'class' => 'span12' ) ),
