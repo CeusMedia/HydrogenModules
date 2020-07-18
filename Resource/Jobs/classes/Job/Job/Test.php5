@@ -46,6 +46,21 @@ class Job_Job_Test extends Job_Abstract
 		throw new RuntimeException( 'Test Exception' );
 	}
 
+	/**
+	 *	Prints given parameters.
+	 *	@access		public
+	 *	@return		...
+	 */
+	public function wait()
+	{
+		throw new Exception( 'Test Exception' );
+		$seconds	= 1;
+		if( $this->commands )
+			$seconds	= (int) current( $this->commands );
+		$this->out( 'Waiting for '.$seconds.' seconds ...' );
+		sleep( $seconds );
+	}
+
 	//  --  PROTECTED  --  //
 
 	protected function __onInit()

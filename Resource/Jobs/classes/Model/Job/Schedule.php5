@@ -23,23 +23,19 @@ class Model_Job_Schedule extends CMF_Hydrogen_Model
 	);
 
 	const REPORT_MODE_NEVER		= 0;
-	const REPORT_MODE_ERROR		= 1;
-	const REPORT_MODE_FAIL		= 2;
-	const REPORT_MODE_NEGATIVE	= 3;
+	const REPORT_MODE_ALWAYS	= 1;
+	const REPORT_MODE_CHANGE	= 2;
+	const REPORT_MODE_FAIL		= 3;
 	const REPORT_MODE_DONE		= 4;
-	const REPORT_MODE_WORKLOAD	= 8;
-	const REPORT_MODE_POSITIVE	= 12;
-	const REPORT_MODE_ALL		= 15;
+	const REPORT_MODE_SUCCESS	= 5;
 
 	const REPORT_MODES			= array(
 		self::REPORT_MODE_NEVER,
-		self::REPORT_MODE_ERROR,
+		self::REPORT_MODE_ALWAYS,
+		self::REPORT_MODE_CHANGE,
 		self::REPORT_MODE_FAIL,
-		self::REPORT_MODE_NEGATIVE,
 		self::REPORT_MODE_DONE,
-		self::REPORT_MODE_WORKLOAD,
-		self::REPORT_MODE_POSITIVE,
-		self::REPORT_MODE_ALL,
+		self::REPORT_MODE_SUCCESS,
 	);
 
 	const REPORT_CHANNEL_NONE	= 0;
@@ -65,6 +61,7 @@ class Model_Job_Schedule extends CMF_Hydrogen_Model
 		'reportMode',
 		'reportChannel',
 		'reportReceivers',
+		'arguments',
 		'title',
 		'createdAt',
 		'modifiedAt',

@@ -25,7 +25,7 @@ code:shell>./job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 <b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
 ]]></description>
 	<category>Resource</category>
-	<version>0.7.7</version>
+	<version>0.8.0</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted to Hydrogen module.</log>
 	<log version="0.2.1">Introduced logging mechanism.</log>
@@ -68,6 +68,7 @@ code:shell>./job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 	<log version="0.7.5">Finish support for jobs defined in module configuration.</log>
 	<log version="0.7.6">Discover jobs defined by modules (=new style) or XML file (=old style).</log>
 	<log version="0.7.7">Add report mail for job run.</log>
+	<log version="0.8.0">Add job scheduler jobs.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -90,19 +91,22 @@ code:shell>./job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 		<supports type="module">Resource_Maintainer</supports>
 		<supports type="module">Resource_Mail</supports>
 	</relations>
-	<job id="Job.list" mode="dev,test,live">Job::index</job>
-	<job id="Job.info" mode="dev,test,live">Job::info</job>
-<!--	<job id="Job.jsonfy" mode="dev,live">Job::convertJobConfigToJson</job>-->
-	<job id="Job.Lock.list" mode="dev,test,live">Job_Lock::list</job>
-	<job id="Job.Lock.clear" mode="dev,test,live">Job_Lock::clear</job>
-<!--	<job id="Job.Lock.alert" mode="dev,test,live">Job_Lock::alert</job>-->
-	<job id="Job.Test.reflect" mode="dev,test">Job_Test::reflect</job>
-	<job id="Job.Test.reflectCommands" mode="dev,test">Job_Test::reflectCommands</job>
-	<job id="Job.Test.reflectParameters" mode="dev,test">Job_Test::reflectParameters</job>
-	<job id="Job.Test.throw" mode="dev,test">Job_Test::throwException</job>
-	<job id="Job.Util.getDate" mode="dev,test,live">Job_Util::getDate</job>
-	<job id="Job.Util.getExtensionVersion" mode="dev,test,live">Job_Util::getExtensionVersion</job>
-	<job id="Job.Util.getPhpVersion" mode="dev,test,live">Job_Util::getPhpVersion</job>
+	<job id="Job.list">Job::index</job>
+	<job id="Job.info">Job::info</job>
+<!--	<job id="Job.jsonfy">Job::convertJobConfigToJson</job>-->
+	<job id="Job.Lock.list">Job_Lock::list</job>
+	<job id="Job.Lock.clear">Job_Lock::clear</job>
+<!--	<job id="Job.Lock.alert">Job_Lock::alert</job>-->
+	<job id="Job.Schedule.archive">Job_Schedule::archive</job>
+	<job id="Job.Schedule.run" multiple="yes">Job_Schedule::run</job>
+	<job id="Job.Test.reflect">Job_Test::reflect</job>
+	<job id="Job.Test.reflectCommands">Job_Test::reflectCommands</job>
+	<job id="Job.Test.reflectParameters">Job_Test::reflectParameters</job>
+	<job id="Job.Test.throw">Job_Test::throwException</job>
+	<job id="Job.Test.wait">Job_Test::wait</job>
+	<job id="Job.Util.getDate">Job_Util::getDate</job>
+	<job id="Job.Util.getExtensionVersion">Job_Util::getExtensionVersion</job>
+	<job id="Job.Util.getPhpVersion">Job_Util::getPhpVersion</job>
 	<sql type="mysql" on="update" version="0.7.2"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>job_definitions`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>job_definitions` (
@@ -179,16 +183,23 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>job_schedule` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql type="mysql" on="update" version="0.7.7"><![CDATA[
-ALTER TABLE `<%?prefix%>job_runs` ADD `title` VARCHAR(200) NOT NULL AFTER `status`;
-ALTER TABLE `<%?prefix%>job_runs` ADD `reportMode` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:never,1:error,2:fail,3:negative,4:done,8:workload,12:positive,15:all' AFTER `status`,
+ALTER TABLE `<%?prefix%>job_schedule`
+  ADD `reportMode` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:never,1:always,2:change,3:fail,4:done,5:success' AFTER `status`,
   ADD `reportChannel` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:none,1:mail,2:xmpp' AFTER `reportMode`,
-  ADD `reportReceivers` TEXT NULL DEFAULT NULL AFTER `reportChannel`,
+  ADD `arguments` VARCHAR(100) NULL DEFAULT NULL AFTER `monthOfYear`,
+  ADD `title` VARCHAR(200) NOT NULL AFTER `arguments`,
+  ADD `reportReceivers` TEXT NULL DEFAULT NULL AFTER `title`,
   ADD INDEX (`reportMode`),
   ADD INDEX (`reportChannel`);
-ALTER TABLE `<%?prefix%>job_schedule` ADD `title` VARCHAR(200) NOT NULL AFTER `monthOfYear`;
-ALTER TABLE `<%?prefix%>job_schedule` ADD `reportMode` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:never,1:error,2:fail,3:negative,4:done,8:workload,12:positive,15:all' AFTER `monthOfYear`,
+
+ALTER TABLE `<%?prefix%>job_runs`
+  ADD `archived` TINYINT(1) UNSIGNED NULL DEFAULT '0' COMMENT '0:no, 1:yes' AFTER `status`,
+  ADD `reportMode` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:never,1:always,2:change,3:fail,4:done,5:success' AFTER `archived`,
   ADD `reportChannel` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:none,1:mail,2:xmpp' AFTER `reportMode`,
-  ADD `reportReceivers` TEXT NULL DEFAULT NULL AFTER `reportChannel`,
+  ADD `arguments` VARCHAR(250) NULL DEFAULT NULL AFTER `reportChannel`,
+  ADD `title` VARCHAR(200) NOT NULL AFTER `arguments`,
+  ADD `reportReceivers` TEXT NULL DEFAULT NULL AFTER `title`,
+  ADD INDEX (`archived`),
   ADD INDEX (`reportMode`),
   ADD INDEX (`reportChannel`);
 ]]></sql>

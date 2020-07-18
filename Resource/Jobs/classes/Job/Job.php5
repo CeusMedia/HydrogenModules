@@ -11,6 +11,37 @@ class Job_Job extends Job_Abstract
 	}
 
 	/**
+	 *	@todo		implement
+	 */
+	public function updateStats()
+	{
+		$modelStats	= new Model_Job_Statistic( $this->env );
+		$modelRun	= new Model_Job_Run( $this->env );
+
+		$now	= new DateTime();
+
+
+		$lastUpdate	= $modelStats->getByIndices( array(
+			'span'
+		) );
+		if( $lastUpdate ){
+
+		}
+		else{
+			$firstRun	= $modelRun->getAll(
+				array(),
+				array( 'jobRunId' => 'ASC' ),
+				array( 0, 1 ),
+				array( 'createdAt' ),
+			);
+			if( $firstRun ){
+				$nextDate	= new DateTimeImmutable();
+				$nextDate->setTimestamp( $firstRun[0] );
+			}
+		}
+	}
+
+	/**
 	 *	Display list of available job identifiers.
 	 *	Stores list of available job definitions as result.
 	 *	@access		public

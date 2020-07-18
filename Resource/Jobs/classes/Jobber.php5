@@ -153,8 +153,8 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 			'reportChannel'		=> $reportChannel,
 			'reportReceivers'	=> $reportReceivers,
 		);
-		if( !empty( $parameters['--report-title'] ) ){
-			$options['title']	= trim( $parameters['--report-title'] );
+		if( !empty( $parameters['--title'] ) ){
+			$options['title']	= trim( $parameters['--title'] );
 		}
 
 		$preparedJobRun	= $this->logic->prepareManuallyJobRun( $job, $options );

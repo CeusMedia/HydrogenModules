@@ -13,6 +13,29 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		$this->discoverJobDefinitions();
 	}
 
+	public function archiveJobRun( int $jobRunId ): bool
+	{
+		$statusesNotArchivable	= array(
+			Model_Job_Run::STATUS_PREPARED,
+			Model_Job_Run::STATUS_RUNNING,
+		);
+		$jobRun	= $this->modelRun->get( $jobRunId );
+		if( $jobRun && !$jobRun->archived ){
+			if( !in_array( $jobRun->status, $statusesNotArchivable ) ){
+				$this->modelRun->edit( $jobRunId, array(
+					'archived'			=> Model_Job_Run::ARCHIVED_YES,
+					'processId'			=> NULL,
+					'reportMode'		=> Model_Job_Run::REPORT_MODE_NEVER,
+					'reportChannel'		=> Model_Job_Run::REPORT_CHANNEL_NONE,
+					'reportReceivers'	=> NULL,
+					'message'			=> NULL,
+				) );
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
 	/**
 	 *	Discover jobs of modules which are not registered in database.
 	 *	@access		public
@@ -275,6 +298,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 			throw new RuntimeException( 'Job run is not in prepared state' );
 		$this->modelRun->edit( $jobRun->jobRunId, array(
 			'status'		=> Model_Job_Run::STATUS_RUNNING,
+			'processId'		=> getmypid(),
 			'modifiedAt'	=> time(),
 			'ranAt'			=> time(),
 		) );
@@ -302,21 +326,29 @@ class Logic_Job extends CMF_Hydrogen_Logic
 
 		$returnCode		= -255;
 		$result			= -255;
+		$output			= '';
 		try{																						//  try to ...
+			$outputBuffer	= new UI_OutputBuffer( FALSE );
+			if( $jobRun->type == Model_Job_Run::TYPE_SCHEDULED )
+				$outputBuffer->open();
 			$result		= \Alg_Object_MethodFactory::call( $jobObject, $methodName, $arguments );	//  ... call job method of job instance with arguments
+			if( $jobRun->type == Model_Job_Run::TYPE_SCHEDULED )
+				$output	= $outputBuffer->get( TRUE );
 			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_DONE, array(			//  finish job run since no exception has been thrown
 				'type'		=> 'data',															//  ... and save message of type "data"
 				'code'		=> $result,																//  ... containing the method call return code
 				'data'		=> $jobObject->getResults(),											//  ... and results collected by the method call
+				'output'	=> $output,
 			) );
 			if( is_integer( $result ) )																//  method call return value is an integer
 				$returnCode	 = $result;																//  carry this return code out as status
-			if( strlen( trim( $result ) ) )															//  handle old return strings @deprecated
+/*			if( strlen( trim( $result ) ) )															//  handle old return strings @deprecated
 				foreach( explode( "\n", trim( $result ) ) as $line )								//  handle each result line
 					$this->log( $line );															//  by logging
-			$returnCode = 1;																		//  quit with positive status
+*/			$returnCode = 1;																		//  quit with positive status
 		}
 		catch( Throwable $t ){																		//  on throwable error or exception
+			print_r( $t );
 			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_FAILED, array(		//  finish job run as failed
 				'type'		=> 'throwable',															//  ... and save message of type "throwable" for caught exception
 				'message'	=> $t->getMessage(),													//  ...
@@ -352,7 +384,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	protected function abortPreparedJobRuns( $jobDefinitionId ): array
 	{
 		$preparedJobs	= $this->modelRun->getAllByIndices( array(
-			'jobDefinitionId'	=> $job->jobDefinitionId,
+			'jobDefinitionId'	=> $jobDefinitionId,
 			'status'		=> Model_Job_Run::STATUS_PREPARED
 		) );
 		foreach( $preparedJobs as $preparedJob ){
@@ -369,7 +401,6 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		$indicesByMonth	= array_merge( array(
 			'status'		=> Model_Job_Schedule::STATUS_ENABLED,
 			'monthOfYear'	=> ['*', date( 'n' )],
-			'dayOfWeek'		=> [''],
 			'dayOfMonth'	=> ['*', date( 'j' )],
 			'hourOfDay'		=> ['*', date( 'G' )],
 			'minuteOfHour'	=> ['*', date( 'i' )],
@@ -378,7 +409,6 @@ class Logic_Job extends CMF_Hydrogen_Logic
 			'status'		=> Model_Job_Schedule::STATUS_ENABLED,
 			'monthOfYear'	=> ['*', date( 'n' )],
 			'dayOfWeek'		=> ['*', date( 'N' )],
-			'dayOfMonth'	=> [''],
 			'hourOfDay'		=> ['*', date( 'G' )],
 			'minuteOfHour'	=> ['*', date( 'i' )],
 		), $jobDefinitionId ? array( 'jobDefinitionId' => $jobDefinitionId ) : array() );
@@ -426,22 +456,27 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return TRUE;
 	}
 
-	protected function prepareJobRunsForScheduledJobs( $scheduledJobsToPrepare ): array
+	protected function prepareJobRunsForScheduledJobs( $scheduledJobRunsToPrepare ): array
 	{
 		$list	= array();
-		foreach( $scheduledJobsToPrepare as $job ){
-			$date		= date( 'Y-m-d-H-i' );
+		foreach( $scheduledJobRunsToPrepare as $scheduledJob ){
+			$date	= date( 'Y-m-d-H-i' );
+			$job	= $this->modelDefinition->get( $scheduledJob->jobDefinitionId );
 			if( $this->isPreparableJob( $job ) ){
-				$this->abortPreparedJobRuns( $job->jobDefinitionId );
+				$this->abortPreparedJobRuns( $scheduledJob->jobDefinitionId );
 				$jobRunId	= $this->modelRun->add( array(
-					'jobScheduleId'	=> $job->jobScheduleId,
-					'jobDefinitionId'	=> $job->jobDefinitionId,
-					'type'			=> Model_Job_Run::TYPE_SCHEDULED,
-					'status'		=> Model_Job_Run::STATUS_PREPARED,
-					'title'			=> '',
-//					'message'		=> json_encode( array() ),
-					'createdAt'		=> time(),
-					'modifiedAt'	=> time(),
+					'jobScheduleId'		=> $scheduledJob->jobScheduleId,
+					'jobDefinitionId'	=> $scheduledJob->jobDefinitionId,
+					'type'				=> Model_Job_Run::TYPE_SCHEDULED,
+					'status'			=> Model_Job_Run::STATUS_PREPARED,
+					'title'				=> $scheduledJob->title,
+					'arguments'			=> $scheduledJob->arguments,
+					'reportMode'		=> $scheduledJob->reportMode,
+					'reportChannel'		=> $scheduledJob->reportChannel,
+					'reportReceivers'	=> $scheduledJob->reportReceivers,
+//					'message'			=> json_encode( array() ),
+					'createdAt'			=> time(),
+					'modifiedAt'		=> time(),
 				) );
 				$list[$jobRunId]	= $this->modelRun->get( $jobRunId );
 			}
@@ -454,6 +489,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		$jobRun			= $this->modelRun->get( $jobRunId );
 		$status			= (int) $jobRun->status;
 		$reportMode		= (int) $jobRun->reportMode;
+
 /*		if( is_int( $mode ) ){
 			if( !in_array( $mode, Model_Job_Run::REPORT_MODES ) )
 				throw new \RangeException( 'Invalid job run report mode given' );
@@ -463,32 +499,55 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		switch( $reportMode ){
 			case Model_Job_Run::REPORT_MODE_NEVER:
 				return FALSE;
-			case Model_Job_Run::REPORT_MODE_ALL:
+			case Model_Job_Run::REPORT_MODE_ALWAYS:
 				return TRUE;
-			case Model_Job_Run::REPORT_MODE_NEGATIVE:
+			case Model_Job_Run::REPORT_MODE_FAIL:
+				return $status === Model_Job_Run::STATUS_FAILED;
+			case Model_Job_Run::REPORT_MODE_DONE:
+				return $status === Model_Job_Run::STATUS_DONE;
+			case Model_Job_Run::REPORT_MODE_SUCCESS:
+				return $status === Model_Job_Run::STATUS_SUCCESS;
+/*			case Model_Job_Run::REPORT_MODE_NEGATIVE:
 				return in_array( $status, array(
 					Model_Job_Run::STATUS_TERMINATED,
-					Model_Job_Run::STATUS_FAIL,
+					Model_Job_Run::STATUS_FAILED,
 					Model_Job_Run::STATUS_ABORTED,
-				) );
-			case Model_Job_Run::REPORT_MODE_ERROR:			//  @todo to implement
+				) );*/
+/*			case Model_Job_Run::REPORT_MODE_ERROR:			//  @todo to implement
 				return in_array( $status, array(
-				) );
-			case Model_Job_Run::REPORT_MODE_FAIL:
-				return in_array( $status, array(
-					Model_Job_Run::STATUS_FAIL,
-				) );
-			case Model_Job_Run::REPORT_MODE_DONE:
+				) );*/
+/*			case Model_Job_Run::REPORT_MODE_POSITIVE:
 				return in_array( $status, array(
 					Model_Job_Run::STATUS_DONE,
-				) );
-			case Model_Job_Run::REPORT_MODE_WORKLOAD:			//  @todo to implement
-				return in_array( $status, array(
-				) );
-			case Model_Job_Run::REPORT_MODE_POSITIVE:
-				return in_array( $status, array(
-					Model_Job_Run::STATUS_DONE,
-				) );
+					Model_Job_Run::STATUS_SUCCESS,
+				) );*/
+			case Model_Job_Run::REPORT_MODE_CHANGE:
+				$previousRunStatus	= $this->modelRun->getByIndices(
+					array(
+						'jobRunId'			=> '< '.$jobRunId,
+						'jobDefinitionId'	=> $jobRun->jobDefinitionId,
+					),
+					array( 'jobRunId' => 'DESC' ),
+					array( 'status' )
+				);
+				if( $previousRunStatus ){
+					$statusMap		= array(
+						'positive'	=> array(
+							Model_Job_Run::STATUS_DONE,
+							Model_Job_Run::STATUS_SUCCESS,
+						),
+						'negative'	=> array(
+							Model_Job_Run::STATUS_FAILED,
+						)
+					);
+					$nowIsNeg	= in_array( $status, $statusMap['negative'] );
+					$nowIsPos	= in_array( $status, $statusMap['positive'] );
+					$prevIsNeg	= in_array( $previousRunStatus, $statusMap['negative'] );
+					$prevIsPos	= in_array( $previousRunStatus, $statusMap['positive'] );
+					if( ( $nowIsPos && $prevIsNeg ) || ( $nowIsNeg && $prevIsPos ) )
+						return TRUE;
+				}
+				return FALSE;
 		}
 		return FALSE;
 	}
