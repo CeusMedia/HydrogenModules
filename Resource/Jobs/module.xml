@@ -76,6 +76,7 @@ code:shell>./job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 		<class>Job/Abstract.php5</class>
 		<class>Job/Job.php5</class>
 		<class>Job/Job/Lock.php5</class>
+		<class>Job/Job/Schedule.php5</class>
 		<class>Job/Job/Test.php5</class>
 		<class>Job/Job/Util.php5</class>
 		<class>Logic/Job.php5</class>
