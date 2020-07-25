@@ -24,6 +24,7 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 	protected $pathJobs;
 	protected $mode;
 	protected $logic;
+	protected $runningJob;
 
 	public function __construct( \CMF_Hydrogen_Environment $env = NULL )
 	{
@@ -37,6 +38,14 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 		$this->modelJob->setFormat( Model_Job::FORMAT_XML );
 //		$this->modelJob->setFormat( Model_Job::FORMAT_MODULE );
 //		$this->modelLock	= new \Model_Job_Lock( $this->env );
+	}
+
+	public function __destruct()
+	{
+		if( $this->runningJob ){
+			echo "Running Job: ".$this->runningJob->jobRunId.PHP_EOL;
+			$this->logic->quitJobRun( $this->runningJob->jobRunId, Model_Job_Run::STATUS_TERMINATED );
+		}
 	}
 
 	public function loadJobs( array $modes, bool $strict = TRUE ): self
@@ -168,7 +177,9 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 			$this->logError( 'Job class "'.$className.'" is not existing.' );						//  log error
 			return -1;																				//  quit with negative status
 		}
+		$this->runningJob	= $preparedJobRun;
 		$result		= $this->logic->startJobRun( $preparedJobRun, $commands, $parameters );
+		$this->runningJob	= NULL;
 		if( is_integer( $result ) ){
 			return $result;
 		if( strlen( trim( $result ) ) )																//  handle old return strings @deprecated

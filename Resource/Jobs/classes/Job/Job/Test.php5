@@ -53,7 +53,7 @@ class Job_Job_Test extends Job_Abstract
 	 */
 	public function wait()
 	{
-		throw new Exception( 'Test Exception' );
+//		throw new Exception( 'Test Exception' );
 		$seconds	= 1;
 		if( $this->commands )
 			$seconds	= (int) current( $this->commands );

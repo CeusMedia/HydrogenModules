@@ -14,54 +14,8 @@
  */
 class Model_Job_Run extends CMF_Hydrogen_Model
 {
-	const STATUS_TERMINATED		= -3;
-	const STATUS_FAILED			= -2;
-	const STATUS_ABORTED		= -1;
-	const STATUS_PREPARED		= 0;
-	const STATUS_RUNNING		= 1;
-	const STATUS_DONE			= 2;
-	const STATUS_SUCCESS		= 3;
-
-	const STATUSES				= array(
-		self::STATUS_TERMINATED,
-		self::STATUS_FAILED,
-		self::STATUS_ABORTED,
-		self::STATUS_PREPARED,
-		self::STATUS_RUNNING,
-		self::STATUS_DONE,
-		self::STATUS_SUCCESS,
-	);
-
-	const STATUS_TRANSITIONS	= array(
-		self::STATUS_TERMINATED		=> array(
-			self::STATUS_PREPARED,
-		),
-		self::STATUS_FAILED			=> array(
-		),
-		self::STATUS_ABORTED		=> array(
-			self::STATUS_PREPARED,
-		),
-		self::STATUS_PREPARED		=> array(
-			self::STATUS_RUNNING,
-		),
-		self::STATUS_RUNNING		=> array(
-			self::STATUS_TERMINATED,
-			self::STATUS_FAILED,
-			self::STATUS_DONE,
-			self::STATUS_SUCCESS,
-		),
-		self::STATUS_DONE		=> array(
-			self::STATUS_SUCCESS,
-		),
-	);
-
-	const TYPE_MANUALLY			= 0;
-	const TYPE_SCHEDULED		= 1;
-
-	const TYPES					= array(
-		self::TYPE_MANUALLY,
-		self::TYPE_SCHEDULED,
-	);
+	const ARCHIVED_NO			= 0;
+	const ARCHIVED_YES			= 1;
 
 	const REPORT_MODE_NEVER		= 0;
 	const REPORT_MODE_ALWAYS	= 1;
@@ -89,10 +43,68 @@ class Model_Job_Run extends CMF_Hydrogen_Model
 		self::REPORT_CHANNEL_XMPP,
 	);
 
-	const ARCHIVED_NO			= 0;
-	const ARCHIVED_YES			= 1;
+	const STATUS_TERMINATED		= -3;
+	const STATUS_FAILED			= -2;
+	const STATUS_ABORTED		= -1;
+	const STATUS_PREPARED		= 0;
+	const STATUS_RUNNING		= 1;
+	const STATUS_DONE			= 2;
+	const STATUS_SUCCESS		= 3;
+
+	const STATUS_TRANSITIONS	= array(
+		self::STATUS_TERMINATED		=> array(
+			self::STATUS_PREPARED,
+		),
+		self::STATUS_FAILED			=> array(
+		),
+		self::STATUS_ABORTED		=> array(
+			self::STATUS_PREPARED,
+		),
+		self::STATUS_PREPARED		=> array(
+			self::STATUS_RUNNING,
+		),
+		self::STATUS_RUNNING		=> array(
+			self::STATUS_TERMINATED,
+			self::STATUS_FAILED,
+			self::STATUS_DONE,
+			self::STATUS_SUCCESS,
+		),
+		self::STATUS_DONE			=> array(
+			self::STATUS_SUCCESS,
+		),
+	);
+
+	const STATUSES				= array(
+		self::STATUS_TERMINATED,
+		self::STATUS_FAILED,
+		self::STATUS_ABORTED,
+		self::STATUS_PREPARED,
+		self::STATUS_RUNNING,
+		self::STATUS_DONE,
+		self::STATUS_SUCCESS,
+	);
+
+	const STATUSES_NEGATIVE		= array(
+		self::STATUS_TERMINATED,
+		self::STATUS_FAILED,
+		self::STATUS_ABORTED,
+	);
+
+	const STATUSES_POSITIVE		= array(
+		self::STATUS_DONE,
+		self::STATUS_SUCCESS,
+	);
+
+	const TYPE_MANUALLY			= 0;
+	const TYPE_SCHEDULED		= 1;
+
+	const TYPES					= array(
+		self::TYPE_MANUALLY,
+		self::TYPE_SCHEDULED,
+	);
 
 	protected $name			= 'job_runs';
+
 	protected $columns		= array(
 		'jobRunId',
 		'jobDefinitionId',
@@ -112,7 +124,9 @@ class Model_Job_Run extends CMF_Hydrogen_Model
 		'ranAt',
 		'finishedAt',
 	);
+
 	protected $primaryKey	= 'jobRunId';
+
 	protected $indices		= array(
 		'jobDefinitionId',
 		'jobScheduleId',
@@ -125,5 +139,6 @@ class Model_Job_Run extends CMF_Hydrogen_Model
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

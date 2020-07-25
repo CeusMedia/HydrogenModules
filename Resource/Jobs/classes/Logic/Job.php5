@@ -103,45 +103,12 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return $list;																				//  return result list
 	}
 
-	/**
-	 *	Runs prepared job.
-	 *	@access		public
-	 *	@todo		deprecated? see ::startJobRun()
-	 *	@todo		implement! serial or (better) in parallel?
-	 *	@todo		exception handling?
-	 */
-	public function runPreparedJob( $jobRunId )
-	{
-		$jobRun	= $this->getPreparedJobRun( $jobRunId, array( 'definition' ) );
-		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED )
-			throw new \RuntimeException( 'Job run is not in prepared state' );
-		if( $jobRun->definition && !$jobRun->processId ){
-			try{
-				$this->modelRun->edit( $jobRun->jobRunId, array(
-					'status'		=> Model_Job_Run::STATUS_RUNNING,
-					'processId'		=> getmypid(),
-					'modifiedAt'	=> time(),
-				) );
-//				exec( $jobRun->method );
-			}
-			catch( Exception $e ){
-
-			}
-		}
-	}
-
-	public function getRunningJobs( $conditions = array(), $orders = array(), $limits = array(), $fields = array() ): array
-	{
-		$conditions['status']	= Model_Job_Run::STATUS_RUNNING;
-		return $this->modelRun->getAll( $conditions, $orders, $limits, $fields );
-	}
-
-	public function getDefinition( $jobDefinitionId )
+	public function getDefinition( int $jobDefinitionId )
 	{
 		return $this->modelDefinition->get( $jobDefinitionId );
 	}
 
-	public function getDefinitionByIdentifier( $jobDefinitionIdentifier, $extendBy = array() ): ?object
+	public function getDefinitionByIdentifier( string $jobDefinitionIdentifier, array $extendBy = array() ): ?object
 	{
 		$jobDefinition	= $this->modelDefinition->getByIndex( 'identifier', $jobDefinitionIdentifier );
 		if( $jobDefinition ){
@@ -165,6 +132,30 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	public function getDefinitions( $conditions = array(), $orders = array(), $limits = array(), $fields = array() ): array
 	{
 		return $this->modelDefinition->getAll( $conditions, $orders, $limits, $fields );
+	}
+
+	/**
+	 *	Returns list of job runs not having a process anymore.
+	 *	Gets running jobs and checks if process ID is still a running process.
+	 *	@access		public
+	 *	@param		array		$conditions		Additional job run filters (status will be ignored)
+	 *	@param		array		$orders			Order rules (defaults to: ranAt -> DESC)
+	 *	@return		array						List ob job run objects not having a process anymore
+	 */
+	public function getDiscontinuedJobRuns( $conditions = array(), $orders = array() ): array
+	{
+		$list			= array();
+		$orders			= $orders ? $orders : array( 'ranAt' => 'ASC' );
+		foreach( $this->getRunningJobs( $conditions, $orders ) as $runningJob )
+			if( !$this->isActiveProcessId( (int) $runningJob->processId ) )
+				$list[$runningJob->jobRunId]	= $runningJob;
+		return $list;
+	}
+
+	public function getRunningJobs( $conditions = array(), $orders = array(), $limits = array(), $fields = array() ): array
+	{
+		$conditions['status']	= Model_Job_Run::STATUS_RUNNING;
+		return $this->modelRun->getAll( $conditions, $orders, $limits, $fields );
 	}
 
 	/**
@@ -227,13 +218,40 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return $list;
 	}
 
-/*	public function isActiveJob( $jobDefinitionIdOrIdentifier )
+	public function hasRunningExclusiveJob(): bool
 	{
-	}*/
+		$exclusiveJobsDefinitionIds	= $this->modelDefinition->getAllByIndices( array(
+			'mode'		=> Model_Job_Definition::MODE_EXCLUSIVE,
+			'status'	=> Model_Job_Definition::STATUS_ENABLED,
+		), array(), array(), array( 'jobDefinitionId' ) );
+		if( $exclusiveJobsDefinitionIds ){
+			$exclusiveJobIsRunning	= $this->modelRun->getByIndices( array(
+				'jobDefinitionId'	=> $exclusiveJobsDefinitionIds,
+				'status'		=> Model_Job_Run::STATUS_RUNNING,
+			) );
+			if( $exclusiveJobIsRunning )
+				return TRUE;
+		}
+		return FALSE;
+	}
 
-/*	public function isLockedJob()
+	public function isActiveProcessId( int $processId ): bool
 	{
-	}*/
+		if( $processId < 2 )
+			return FALSE;
+		exec( 'ps -p '.$processId, $table );
+		return count( $table ) > 1;
+	}
+
+	public function isRunningSingleJob( $jobDefinition, ?int $runType = NULL ): bool
+	{
+		if( (int) $jobDefinition->mode !== Model_Job_Definition::MODE_SINGLE )
+			return FALSE;
+		$conditions	= array( 'jobDefinitionId' => $jobDefinition->jobDefinitionId );
+		if( !is_null( $runType ) )
+			$conditions['type']	= $runType;
+		return (bool) count( $this->getRunningJobs( $conditions ) );
+	}
 
 	public function prepareManuallyJobRun( object $job, array $options ): ?object
 	{
@@ -253,7 +271,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return $this->getPreparedJobRun( $jobRunId );
 	}
 
-	public function prepareScheduledJobs( $jobDefinitionId = NULL ): array
+	public function prepareScheduledJobs( ?int $jobDefinitionId = NULL ): array
 	{
 		$scheduledJobsToPrepare	= $this->getScheduledJobsToPrepare( $jobDefinitionId );
 		$preparedJobs	= $this->prepareJobRunsForScheduledJobs( $scheduledJobsToPrepare );
@@ -261,32 +279,52 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	}
 
 	/**
-	 *  @todo		kill process by stored process ID if existing as pid file
+	 *	Runs prepared job.
+	 *	@access		public
+	 *	@todo		deprecated? see ::startJobRun()
+	 *	@todo		implement! serial or (better) in parallel?
+	 *	@todo		exception handling?
 	 */
-	public function quitJobRun( int $jobRunId, $status, $messageData = array() )
+	public function runPreparedJob( int $jobRunId )
+	{
+		$jobRun	= $this->getPreparedJobRun( $jobRunId, array( 'definition' ) );
+		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED )
+			throw new \RuntimeException( 'Job run is not in prepared state' );
+		if( $jobRun->definition && !$jobRun->processId ){
+			try{
+				$this->modelRun->edit( $jobRun->jobRunId, array(
+					'status'		=> Model_Job_Run::STATUS_RUNNING,
+					'processId'		=> getmypid(),
+					'modifiedAt'	=> time(),
+				) );
+//				exec( $jobRun->method );
+			}
+			catch( Exception $e ){
+
+			}
+		}
+	}
+
+	public function quitJobRun( int $jobRunId, int $status, $messageData = array() )
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_RUNNING )
-			throw new RuntimeException( 'Job is not running' );
+			throw new \RuntimeException( 'Job is not running' );
+		if( !in_array( $status, Model_Job_Run::STATUS_TRANSITIONS[$jobRun->status] ) )
+			throw new \DomainException( 'Transition to given status is not allowed' );
 		$dataRun	= array(
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
+			'finishedAt'	=> time(),
 			'message'		=> json_encode( $messageData ),
 		);
-		if( $status !== Model_Job_Run::STATUS_TERMINATED ){
-			$dataRun['finishedAt']	= time();
-			//  @todo		kill process by stored process ID if existing as pid file
-		}
-
+		if( $status === Model_Job_Run::STATUS_TERMINATED )
+			if( $this->isActiveProcessId( (int) $jobRun->processId ) )
+				$this->killJobRunProcess( (int) $jobRun->processId );
 		$this->modelRun->edit( $jobRun->jobRunId, $dataRun );
 		$jobDefinition	= $this->modelDefinition->get( $jobRun->jobDefinitionId );
-		$failStatuses	= array(
-			Model_Job_Run::STATUS_TERMINATED,
-			Model_Job_Run::STATUS_FAILED,
-			Model_Job_Run::STATUS_ABORTED,
-		);
 		$dataDefinition	= array();
-		if( in_array( $status, $failStatuses ) )
+		if( in_array( $status, Model_Job_Run::STATUSES_NEGATIVE ) )
 			$dataDefinition['fails']	= $jobDefinition->fails + 1;
 		if( $dataDefinition )
 			$this->modelDefinition->edit( $jobRun->jobDefinitionId, $dataDefinition );
@@ -367,6 +405,22 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return $returnCode;																					//  quit with negative status
 	}
 
+	public function terminateDiscontinuedJobRuns( ?string $reason = NULL ): array
+	{
+		$list	= array();
+		foreach( $this->getDiscontinuedJobRuns() as $jobRun ){
+			$messageData	= $reason ? array( 'reason' => $reason ) : array();
+			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_TERMINATED, $messageData );
+			$list[(int) $jobRun->jobRunId]	= (object) array(
+				'jobRunId'			=> (int) $jobRun->jobRunId,
+				'jobDefinitionId'	=> (int) $jobRun->jobDefinitionId,
+				'jobScheduleId'		=> (int) $jobRun->jobScheduleId,
+				'jobDefinition'		=> $this->getDefinition( (int) $jobRun->jobDefinitionId ),
+			);
+		}
+		return $list;
+	}
+
 /*	public function setProcessIdOnJobRun( $jobRunOrJobRunId ): ?object
 	{
 		$jobRunId	= $jobRunOrJobRunId;
@@ -417,43 +471,42 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return $jobsByMonthDays + $jobsByWeekDays;
 	}
 
-	protected function isPreparableJob( object $job, $runType = 0 ): bool
+	protected function isPreparableJob( object $jobDefinition, ?int $runType = 0 ): bool
 	{
-		if( (int) $job->status !== Model_Job_Definition::STATUS_ENABLED )
+		$preparableJobStatuses	= array( Model_Job_Definition::STATUS_ENABLED );
+		if( !in_array( (int) $jobDefinition->status, $preparableJobStatuses, TRUE ) )
+			return FALSE;
+		$this->terminateDiscontinuedJobRuns( 'Cleanup on next job run' );
+		if( $this->hasRunningExclusiveJob() )
 			return FALSE;
 
-		$exclusiveJobsDefinitionIds	= $this->modelDefinition->getAllByIndices( array(
-			'mode'		=> Model_Job_Definition::MODE_EXCLUSIVE,
-			'status'	=> Model_Job_Definition::STATUS_ENABLED,
-		), array(), array(), array( 'jobDefinitionId' ) );
-		if( $exclusiveJobsDefinitionIds ){
-			$exclusiveJobIsRunning	= $this->modelRun->getByIndices( array(
-				'jobDefinitionId'	=> $exclusiveJobsDefinitionIds,
-				'status'		=> Model_Job_Run::STATUS_RUNNING,
-			) );
-			if( $exclusiveJobIsRunning )
-				return FALSE;
-		}
-		if( (int) $job->mode === Model_Job_Definition::MODE_MULTIPLE )
-			return TRUE;
-		if( (int) $job->mode === Model_Job_Definition::MODE_EXCLUSIVE ){
-			$runningJobRuns	= $this->modelRun->getByIndices( array(
-				'status'		=> Model_Job_Run::STATUS_RUNNING,
-			) );
-			if( $runningJobRuns )		// @todo finish impl: exclude currently "running" job "run scheduled jobs" to make this work
-				return FALSE;
-
-		}
-		if( (int) $job->mode === Model_Job_Definition::MODE_SINGLE ){
-			$runningJob	= $this->modelRun->getByIndices( array(
-				'jobDefinitionId'	=> $job->jobDefinitionId,
-				'type'			=> $runType,
-				'status'		=> Model_Job_Run::STATUS_RUNNING,
-			) );
-			if( $runningJob )
-				return FALSE;
+		switch( (int) $jobDefinition->mode ){
+			case Model_Job_Definition::MODE_MULTIPLE:
+				return TRUE;
+			case Model_Job_Definition::MODE_EXCLUSIVE:
+				$jobsAreRunning	= (bool) count( $this->getRunningJobs() );
+				if( $jobsAreRunning )		// @todo finish impl: exclude currently "running" job "run scheduled jobs" to make this work
+					return FALSE;
+				break;
+			case Model_Job_Definition::MODE_SINGLE:
+				if( $this->isRunningSingleJob( $jobDefinition, $runType ) )
+					return FALSE;
+				break;
 		}
 		return TRUE;
+	}
+
+	/**
+	 *	Terminates job run process by ID.
+	 *	@access		protected
+	 *	@param		integer		$processId		ID of Process to kill
+	 *	@return		boolean
+	 */
+	protected function killJobRunProcess( int $processId ): bool
+	{
+		$command	= 'kill '.$processId;
+        exec( $command );
+		return !$this->isActiveProcessId( $processId );
 	}
 
 	protected function prepareJobRunsForScheduledJobs( $scheduledJobRunsToPrepare ): array
