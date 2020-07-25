@@ -21,7 +21,10 @@ class Job_Job_Schedule extends Job_Abstract
 		$modelDefinition	= new Model_Job_Definition( $this->env );
 		$modelRun			= new Model_Job_Run( $this->env );
 
-		$conditions		= array( 'identifier' => $identifiers );
+		$conditions		= array(
+			'archived'		=> Model_Job_Run::ARCHIVED_NO,
+/*			'identifier'	=> $identifiers,*/
+		);
 		$fields			= array( 'jobDefinitionId' );
 		$definitionIds	= $modelDefinition->getAll( $conditions, array(), array(), $fields );
 
@@ -32,10 +35,18 @@ class Job_Job_Schedule extends Job_Abstract
 				Model_Job_Run::STATUS_SUCCESS,
 			)
 		);
-		$runIds		= $modelRun->getAll( $conditions, array(), array(), array( 'jobRunId' ) );
-		foreach( $runIds as $runId )
-			$this->logic->archiveJobRun( $runId );
+		$orders		= array( 'jobRunId' => 'ASC' );
+		$limits		= array(
+			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
+			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
+		);
+		$runIds	= $modelRun->getAll( $conditions, $orders, $limits, array( 'jobRunId' ) );
 		$nrJobs	= count( $runIds );
+		$this->showProgress( $counter = 0, $nrJobs );
+		foreach( $runIds as $nr => $runId ){
+			$this->logic->archiveJobRun( $runId );
+			$this->showProgress( ++$counter, $nrJobs );
+		}
 		$this->results	= array( 'count' => $nrJobs );
 		$this->out( sprintf( 'Archived %d job runs.', $nrJobs ) );
 		return $nrJobs ? 2 : 1;
