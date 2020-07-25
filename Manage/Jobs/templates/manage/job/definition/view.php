@@ -6,7 +6,7 @@ if( $runs ){
 	$rows	= array();
 	foreach( $runs as $item ){
 		$output		= '';
-		if( $item->status != Model_Job_Run::STATUS_PREPARED ){
+		if( $item->status != Model_Job_Run::STATUS_PREPARED && $item->message ){
 			$message	= json_decode( $item->message );
 			$output		= $message->type;
 		}

@@ -129,7 +129,7 @@ $buttonArchive	= UI_HTML_Tag::create( 'a', $iconArchive.'&nbsp;zurück', array(
 
 
 $panelFactsJob	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h4', 'Job Definition' ),
+	UI_HTML_Tag::create( 'h4', 'Job Run Facts' ),
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) ),
 		UI_HTML_Tag::create( 'div', join( ' ', array(
@@ -150,15 +150,14 @@ $definitionModeLabel	= $definitionModeIcon.'&nbsp;'.$definitionModeLabels[$defin
 $definitionMode			= UI_HTML_Tag::create( 'span', $definitionModeLabel, array( 'class' => $definitionModeClasses[$definition->mode] ) );
 
 $facts	= array();
-$facts['Identifier']	= $definition->identifier;
-$facts['Job-ID']		= $definition->jobDefinitionId;
+$facts['Identifier']	= UI_HTML_Tag::create( 'a', $definition->identifier, array( 'href' => './manage/job/definition/view/'.$definition->jobDefinitionId ) );
+$facts['Job-ID']		= UI_HTML_Tag::create( 'a', $definition->jobDefinitionId, array( 'href' => './manage/job/definition/view/'.$definition->jobDefinitionId ) );
 $facts['Mode']			= $definitionMode;
 $facts['Status']		= $definitionStatus;
-$facts['Class Name']	= $definition->className;
-$facts['Method']		= $definition->methodName;
-$facts['Runs']			= $definition->runs;
-$facts['Success']		= $definition->runs - $definition->fails.( $definition->runs ? ' <small class="muted">('.round( ( $definition->runs - $definition->fails ) / $definition->runs * 100 ).'%)</small>' : '' );
-$facts['Fails']			= $definition->fails.( $definition->runs ? ' <small class="muted">('.round( $definition->fails / $definition->runs * 100 ).'%)</small>' : '' );
+$facts['Class Method']	= $definition->className.' :: '.$definition->methodName;
+$facts['Runs']			= UI_HTML_Tag::create( 'span', $definition->runs, array( 'class' => 'badge' ) );
+$facts['Success']		= UI_HTML_Tag::create( 'span', $definition->runs - $definition->fails, array( 'class' => 'badge badge-success' ) ).( $definition->runs ? ' <small class="muted">('.round( ( $definition->runs - $definition->fails ) / $definition->runs * 100 ).'%)</small>' : '' );
+$facts['Fails']			= UI_HTML_Tag::create( 'span', $definition->fails, array( 'class' => 'badge badge-important' ) ).( $definition->runs ? ' <small class="muted">('.round( $definition->fails / $definition->runs * 100 ).'%)</small>' : '' );
 $facts['Method']		= $definition->methodName;
 $facts['Method']		= $definition->methodName;
 $facts['Created At']	= date( 'd.m.Y H:i:s', $definition->createdAt );
@@ -173,14 +172,14 @@ foreach( $facts as $factKey => $factValue ){
 	$list[]	= UI_HTML_Tag::create( 'dd', $factValue );
 }
 $panelFactsDefinition	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h4', 'Job Run' ),
+	UI_HTML_Tag::create( 'h4', 'Job Definition Facts' ),
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) ),
 	), array( 'class' => 'content-panel-inner' ) )
 ), array( 'class' => 'content-panel' ) );
 
 
-$tabs	= View_Manage_Job::renderTabs( $env, 'definition' );
+$tabs	= View_Manage_Job::renderTabs( $env, 'run' );
 
 $panelMessage	= '';
 if( in_array( $run->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS_DONE, Model_Job_Run::STATUS_SUCCESS ) ) ){
