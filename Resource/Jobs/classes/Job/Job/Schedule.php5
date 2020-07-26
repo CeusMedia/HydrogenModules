@@ -11,30 +11,79 @@ class Job_Job_Schedule extends Job_Abstract
 //	protected $pathJobs		= 'config/jobs/';
 //	protected $logic;
 
+	/**
+	 *	Removes old mails from database table.
+	 *	Mails to be removed can be filtered by minimum age and mail class(es).
+	 *	Supports dry mode.
+	 *
+	 *	Parameters:
+	 *		--age=PERIOD
+	 *			- minimum age of job runs to archive
+	 *			- DateInterval period without starting P and without any time elements
+	 *			- see: https://www.php.net/manual/en/dateinterval.construct.php
+	 *			- example: 1Y (1 year), 2M (2 months), 3D (3 days)
+	 *			- optional, default: 1M
+	 *		--identifier=ID[,...]
+	 *			- list of job definition identifiers to focus on
+	 *			- optional, default: *
+	 *		--status=STATUS[,...]
+	 *			- list of job run statuses to focus on
+	 *			- values: terminated, failed,aborted, prepared, done, success, *
+	 *			- optional, default: done,success
+	 *		--limit=NUMBER
+	 *			- maximum number of job runs to work on
+	 *			- optional, default: 1000
+	 *		--offset=NUMBER
+	 *			- offset if using limit
+	 *			- optional, default: 0
+	 *
+	 *	@access		public
+	 *	@return		void
+	 */
 	public function archive()
 	{
-		$identifiers	= array(
-			'Job.Schedule.run',
-			'Job.Schedule.archive',
-			'Job.Test.wait',
-		);
-		$modelDefinition	= new Model_Job_Definition( $this->env );
 		$modelRun			= new Model_Job_Run( $this->env );
 
-		$conditions		= array(
-			'archived'		=> Model_Job_Run::ARCHIVED_NO,
-/*			'identifier'	=> $identifiers,*/
-		);
-		$fields			= array( 'jobDefinitionId' );
-		$definitionIds	= $modelDefinition->getAll( $conditions, array(), array(), $fields );
+		$age		= $this->parameters->get( '--age', '1M' );
+		$age		= $age ? strtoupper( $age ) : '1M';
+		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
 
+		//  GET JOB RUNS
 		$conditions		= array(
-			'jobDefinitionId'	=> $definitionIds,
-			'status'			=> array(
-				Model_Job_Run::STATUS_DONE,
-				Model_Job_Run::STATUS_SUCCESS,
-			)
+			'archived'			=> Model_Job_Run::ARCHIVED_NO,
+			'enqueuedAt' 		=> '< '.$threshold->format( 'U' ),
 		);
+
+		//  PARAMETER: IDENTIFIER(S)
+		$identifierParam	= $this->parameters->get( '--identifier', '*' );
+		$identifierParam	= preg_replace( '/\s/', '', $identifierParam );
+		if( $identifierParam !== '*' ){
+			$jobDefinitionIds	= array();
+			$jobDefinitionMap	= array();
+			foreach( $this->logic->getDefinitions() as $definition )
+				$jobDefinitionMap[$definition->identifier]	= $definition->jobDefinitionId;
+			foreach( explode( ',', $identifierParam ) as $identifier ){
+				if( !array_key_exists( $identifier, $jobDefinitionMap ) )
+					throw new \InvalidArgumentException( 'Invalid job identifier: '.$identifier );
+				$jobDefinitionIds[]	= $jobDefinitionMap[$identifier];
+			}
+			$conditions['jobDefinitionId']	= $jobDefinitionIds;
+		}
+
+		//  PARAMETER: STATUS(ES)
+		$statusParam	= strtoupper( $this->parameters->get( '--status', 'done,success' ) );
+		$statusParam	= preg_replace( '/\s/', '', $statusParam );
+		if( $statusesParam !== '*' ){
+			$statuses	= array();
+			$statusMap	= Alg_Object_Constant::staticGetAll( 'Model_Job_Run', 'STATUS_' );
+			foreach( explode( ',', $statusParam ) as $statusKey ){
+				if( !array_key_exists( $statusKey, $statusMap ) )
+					throw new \InvalidArgumentException( 'Invalid job run status: '.$statusKey );
+				$statuses[]	= $statusMap[$statusKey];
+			}
+			$conditions['status']	= $statuses;
+		}
+
 		$orders		= array( 'jobRunId' => 'ASC' );
 		$limits		= array(
 			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
@@ -44,7 +93,8 @@ class Job_Job_Schedule extends Job_Abstract
 		$nrJobs	= count( $runIds );
 		$this->showProgress( $counter = 0, $nrJobs );
 		foreach( $runIds as $nr => $runId ){
-			$this->logic->archiveJobRun( $runId );
+			if( !$this->dryMode )
+				$this->logic->archiveJobRun( $runId );
 			$this->showProgress( ++$counter, $nrJobs );
 		}
 		$this->results	= array( 'count' => $nrJobs );
