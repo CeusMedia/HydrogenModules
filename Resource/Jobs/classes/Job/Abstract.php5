@@ -206,8 +206,10 @@ class Job_Abstract
 				$this->progress->setTotal( $total )->start();
 			}
 			else if( $count === $total ){
-				if( $this->progress )
+				if( $this->progress ){
+					$this->progress->update( $count );
 					$this->progress->finish();
+				}
 			}
 			else{
 				if( !$this->progress ){
