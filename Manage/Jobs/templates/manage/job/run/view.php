@@ -158,8 +158,6 @@ $facts['Class Method']	= $definition->className.' :: '.$definition->methodName;
 $facts['Runs']			= UI_HTML_Tag::create( 'span', $definition->runs, array( 'class' => 'badge' ) );
 $facts['Success']		= UI_HTML_Tag::create( 'span', $definition->runs - $definition->fails, array( 'class' => 'badge badge-success' ) ).( $definition->runs ? ' <small class="muted">('.round( ( $definition->runs - $definition->fails ) / $definition->runs * 100 ).'%)</small>' : '' );
 $facts['Fails']			= UI_HTML_Tag::create( 'span', $definition->fails, array( 'class' => 'badge badge-important' ) ).( $definition->runs ? ' <small class="muted">('.round( $definition->fails / $definition->runs * 100 ).'%)</small>' : '' );
-$facts['Method']		= $definition->methodName;
-$facts['Method']		= $definition->methodName;
 $facts['Created At']	= date( 'd.m.Y H:i:s', $definition->createdAt );
 if( $definition->modifiedAt )
 	$facts['Modified At']	= date( 'd.m.Y H:i:s', $definition->modifiedAt );

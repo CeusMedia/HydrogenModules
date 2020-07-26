@@ -5,10 +5,10 @@ $runList	= UI_HTML_Tag::create( 'div', 'Keine Ausführungen gefunden.', array( '
 if( $runs ){
 	$rows	= array();
 	foreach( $runs as $item ){
-		$output		= '';
+		$output		= '<em class="muted">none</em>';
 		if( $item->status != Model_Job_Run::STATUS_PREPARED && $item->message ){
 			$message	= json_decode( $item->message );
-			$output		= $message->type;
+			$output		= $message->type ?? '<em class="muted">unknonwn</em>';
 		}
 
 		switch( (int) $item->status ){
@@ -34,9 +34,10 @@ if( $runs ){
 				$status	= UI_HTML_Tag::create( 'span', 'erledigt', array( 'class' => 'badge badge-success' ) );
 				break;
 		}
+		$title	= $item->title ? $item->title : $definition->identifier;
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', '<small class="muted">'.$item->processId.'</small>' ),
-			UI_HTML_Tag::create( 'td', '<a href="./manage/job/definition/view/'.$definition->jobDefinitionId.'">'.$definition->identifier.'</a>' ),
+			UI_HTML_Tag::create( 'td', '<small class="muted">'.$item->jobRunId.'</small>' ),
+			UI_HTML_Tag::create( 'td', '<a href="./manage/job/run/view/'.$item->jobRunId.'">'.$title.'</a>' ),
 			UI_HTML_Tag::create( 'td', $status ),
 			UI_HTML_Tag::create( 'td', $output ),
 			UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i:s', $item->createdAt ) ),

@@ -1,6 +1,6 @@
 <?php
 
-$statusClasses		= array(
+$runStatusClasses		= array(
 	Model_Job_Run::STATUS_TERMINATED	=> 'label label-important',
 	Model_Job_Run::STATUS_FAILED		=> 'label label-important',
 	Model_Job_Run::STATUS_ABORTED		=> 'label label-important',
@@ -9,7 +9,7 @@ $statusClasses		= array(
 	Model_Job_Run::STATUS_DONE			=> 'label label-info',
 	Model_Job_Run::STATUS_SUCCESS		=> 'label label-success',
 );
-$statusIconClasses	= array(
+$runStatusIconClasses	= array(
 	Model_Job_Run::STATUS_TERMINATED	=> 'fa fa-fw fa-times',
 	Model_Job_Run::STATUS_FAILED		=> 'fa fa-fw fa-exclamation-triangle',
 	Model_Job_Run::STATUS_ABORTED		=> 'fa fa-fw fa-ban',
@@ -18,18 +18,18 @@ $statusIconClasses	= array(
 	Model_Job_Run::STATUS_DONE			=> 'fa fa-fw fa-check',
 	Model_Job_Run::STATUS_SUCCESS		=> 'fa fa-fw fa-',
 );
-$typeClasses		= array(
+$runTypeClasses		= array(
 	Model_Job_Run::TYPE_MANUALLY		=> 'label label-info',
 	Model_Job_Run::TYPE_SCHEDULED		=> 'label label-success',
 );
-$typeIconClasses	= array(
+$runTypeIconClasses	= array(
 	Model_Job_Run::TYPE_MANUALLY		=> 'fa fa-fw fa-hand-paper-o',
 	Model_Job_Run::TYPE_SCHEDULED		=> 'fa fa-fw fa-clock-o',
 );
 //print_m( $wordsGeneral );die;
 
-$statusLabels	= $wordsGeneral['job-run-statuses'];
-$typeLabels		= $wordsGeneral['job-run-types'];
+$runStatusLabels	= $wordsGeneral['job-run-statuses'];
+$runTypeLabels		= $wordsGeneral['job-run-types'];
 
 $helperTime		= new View_Helper_TimePhraser( $env );
 $helperTime->setTemplate( $words['index']['timestampTemplate'] );
@@ -65,13 +65,13 @@ if( $runs ){
 					break;
 			}*/
 		}
-		$statusIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => $statusIconClasses[$item->status] ) );
-		$statusLabel	= $statusIcon.'&nbsp;'.$statusLabels[$item->status];
-		$status			= UI_HTML_Tag::create( 'span', $statusLabel, array( 'class' => $statusClasses[$item->status] ) );
+		$statusIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => $runStatusIconClasses[$item->status] ) );
+		$statusLabel	= $statusIcon.'&nbsp;'.$runStatusLabels[$item->status];
+		$status			= UI_HTML_Tag::create( 'span', $statusLabel, array( 'class' => $runStatusClasses[$item->status] ) );
 
 		$typeIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => $typeIconClasses[$item->type] ) );
-		$typeLabel		= $typeIcon.'&nbsp;'.$typeLabels[$item->type];
-		$type			= UI_HTML_Tag::create( 'span', $typeLabel, array( 'class' => $typeClasses[$item->type] ) );
+		$typeLabel		= $typeIcon.'&nbsp;'.$runTypeLabels[$item->type];
+		$type			= UI_HTML_Tag::create( 'span', $runTypeLabel, array( 'class' => $runTypeClasses[$item->type] ) );
 
 		$title	= $definition->identifier;
 		if( $item->title )
