@@ -9,6 +9,26 @@ class Controller_Manage_Job_Run extends CMF_Hydrogen_Controller
 	protected $logic;
 	protected $filterPrefix			= 'filter_manage_job_run_';
 
+	public function abort( $jobRunId )
+	{
+		$jobRun	= $this->modelRun->get( $jobRunId );
+		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED ){
+			$msg	= 'Der Job konnte nicht mehr verhindert werden.';
+			$title	= $jobRun->title;
+			if( !$title )
+				$title	= $this->modelDefinition->get( $jobRun->jobDefinitionId, 'identifier' );
+			$this->env->getMessenger()->noteError( sprintf( $msg, $title ) );
+		}
+		else{
+			$this->modelRun->edit( $jobRunId, array(
+				'status'		=> Model_Job_Run::STATUS_ABORTED,
+				'modifiedAt'	=> time(),
+			) );
+		}
+		$from	= $this->request->get( 'from' );
+		$this->restart( $from, !$from );
+	}
+
 	public function archive( $jobRunId )
 	{
 		$this->logic->archiveJobRun( $jobRunId );
@@ -81,13 +101,6 @@ die;*/
 				$conditions['ranAt']		= '>< '.$timestampStart.' & '.$timestampTo;
 		}
 
-		if( $filterJobId )
-			$conditions['jobDefinitionId']		= $filterJobId;
-
-/*print_m( $this->session->getAll( $this->filterPrefix ) );
-print_m( $conditions );
-die;*/
-
 		$total		= $this->modelRun->count( $conditions );
 		while( ceil( $total / $filterLimit ) <= $page )
 			$page--;
@@ -104,10 +117,29 @@ die;*/
 		$this->addData( 'filterJobId', $filterJobId );
 		$this->addData( 'filterStartFrom', $filterStartFrom );
 		$this->addData( 'filterStartTo', $filterStartTo );
-
 		$this->addData( 'total', $total );
 		$this->addData( 'page', $page );
+	}
 
+	public function terminate( $jobRunId )
+	{
+		$jobRun	= $this->modelRun->get( $jobRunId );
+		if( (int) $jobRun->status !== Model_Job_Run::STATUS_RUNNING ){
+			$msg	= 'Der Job "%s" konnte nicht mehr abgebrochen werden.';
+			$title	= $jobRun->title;
+			if( !$title )
+				$title	= $this->modelDefinition->get( $jobRun->jobDefinitionId, 'identifier' );
+			$this->env->getMessenger()->noteError( sprintf( $msg, $title ) );
+		}
+		else{
+			$this->modelRun->edit( $jobRunId, array(
+				'status'		=> Model_Job_Run::STATUS_TERMINATED,
+				'modifiedAt'	=> time(),
+				'finishedAt'	=> time(),
+			) );
+		}
+		$from	= $this->request->get( 'from' );
+		$this->restart( $from, !$from );
 	}
 
 	public function view( $jobRunId )

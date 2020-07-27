@@ -6,7 +6,23 @@ class Controller_Manage_Job_Schedule extends CMF_Hydrogen_Controller
 	protected $modelRun;
 	protected $logic;
 
-	public function index()
+	public function add()
+	{
+		if( $this->request->getMethod()->isPost() ){
+			$data	= $this->request->getAll();
+			$jobScheduleId	= $this->modelSchedule->add( $data );
+			$this->restart( 'edit/'.$jobScheduleId, TRUE );
+		}
+	}
+
+	public function edit( $jobScheduleId )
+	{
+		if( $this->request->getMethod()->isPost() ){
+
+		}
+	}
+
+	public function index( $page = 0 )
 	{
 		$schedule		= $this->modelSchedule->getAll( array(), array() );
 		foreach( $schedule as $item ){
@@ -14,6 +30,10 @@ class Controller_Manage_Job_Schedule extends CMF_Hydrogen_Controller
 		}
 		$this->addData( 'allDefinedJobs', $this->allDefinitions );
 		$this->addData( 'scheduledJobs', $schedule );
+	}
+
+	public function remove( $jobScheduleId )
+	{
 	}
 
 	public function setStatus( $jobScheduleId, $status )
