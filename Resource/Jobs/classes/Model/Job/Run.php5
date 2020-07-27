@@ -95,6 +95,14 @@ class Model_Job_Run extends CMF_Hydrogen_Model
 		self::STATUS_SUCCESS,
 	);
 
+	const STATUSES_ARCHIVABLE	= array(
+		self::STATUS_TERMINATED,
+		self::STATUS_FAILED,
+		self::STATUS_ABORTED,
+		self::STATUS_DONE,
+		self::STATUS_SUCCESS,
+	);
+
 	const TYPE_MANUALLY			= 0;
 	const TYPE_SCHEDULED		= 1;
 
