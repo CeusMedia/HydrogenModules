@@ -1,6 +1,8 @@
 <?php
 
-$statusLabels	= $wordsGeneral['job-statuses'];
+$helperAttribute	= new View_Helper_Job_Attribute( $env );
+
+$statusLabels	= $wordsGeneral['job-definition-statuses'];
 //print_m($definitions);die;
 
 $iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
@@ -24,6 +26,7 @@ if( $definitions ){
 
 	$rows	= array();
 	foreach( $definitions as $item ){
+		$helperAttribute->setObject( $item );
 		$parts	= explode( '.', $item->identifier );
 		foreach( $parts as $nr => $part ){
 			if( preg_match( '/[A-Z]/', $part[0] ) )
@@ -62,18 +65,15 @@ if( $definitions ){
 			$buttonStatus,
 			$buttonRemove
 		), array( 'class' => 'btn-group' ) );*/
-		$status	= UI_HTML_Tag::create( 'span', $statusLabels[$item->status], array( 'class' => 'badge badge-success' ) );
-		if( $item->status == Model_Job_Definition::STATUS_DISABLED )
-			$status	= UI_HTML_Tag::create( 'span', $statusLabels[$item->status], array( 'class' => 'badge badge-warning' ) );
-		$mode	= $wordsGeneral['job-modes'][$item->mode];
+
 
 		$runs	= $item->runs ? '<div>'.$item->runs.' Runs</div>' : '-';
 		$fails	= $item->fails ? '<div><span class="text-error">'.$item->fails.' Fails</span></div>' : '';
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link.'<br/><small class="muted">'.$item->className.' >> '.$item->methodName.'</small>', array( 'class' => '' ) ),
 			UI_HTML_Tag::create( 'td', $runs.$fails, array( 'class' => '' ) ),
-			UI_HTML_Tag::create( 'td', $mode, array( 'class' => '' ) ),
-			UI_HTML_Tag::create( 'td', $status, array( 'class' => '' ) ),
+			UI_HTML_Tag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_MODE )->render(), array( 'class' => '' ) ),
+			UI_HTML_Tag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_STATUS )->render(), array( 'class' => '' ) ),
 			UI_HTML_Tag::create( 'td', $item->lastRunAt ? $helperTime->setTimestamp( $item->lastRunAt )->render() : '-', array( 'class' => '' ) ),
 //			UI_HTML_Tag::create( 'td', $buttons, array( 'class' => '' ) ),
 		) );
@@ -84,8 +84,8 @@ if( $definitions ){
 //		$words['index']['tableHeadId'],
 		$words['index']['tableHeadIdentifier'],
 		$words['index']['tableHeadStats'],
-		$words['index']['tableHeadStatus'],
 		$words['index']['tableHeadMode'],
+		$words['index']['tableHeadStatus'],
 		$words['index']['tableHeadLastRun'],
 	) ) );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );

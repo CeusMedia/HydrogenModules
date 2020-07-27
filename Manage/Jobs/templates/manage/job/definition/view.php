@@ -1,44 +1,24 @@
 <?php
 
+$helperAttribute	= new View_Helper_Job_Attribute( $env );
+
 $runList	= UI_HTML_Tag::create( 'div', 'Keine Ausführungen gefunden.', array( 'class' => 'alert alert-info' ) );
 
 if( $runs ){
 	$rows	= array();
 	foreach( $runs as $item ){
+		$helperAttribute->setObject( $item );
 		$output		= '<em class="muted">none</em>';
 		if( $item->status != Model_Job_Run::STATUS_PREPARED && $item->message ){
 			$message	= json_decode( $item->message );
 			$output		= $message->type ?? '<em class="muted">unknonwn</em>';
 		}
 
-		switch( (int) $item->status ){
-			case Model_Job_Run::STATUS_TERMINATED:
-				$status	= UI_HTML_Tag::create( 'span', 'verhindert', array( 'class' => 'badge badge-important' ) );
-				break;
-			case Model_Job_Run::STATUS_FAILED:
-				$status	= UI_HTML_Tag::create( 'span', 'gescheitert', array( 'class' => 'badge badge-important' ) );
-				break;
-			case Model_Job_Run::STATUS_ABORTED:
-				$status	= UI_HTML_Tag::create( 'span', 'abgebrochen', array( 'class' => 'badge badge-important' ) );
-				break;
-			case Model_Job_Run::STATUS_PREPARED:
-				$status	= UI_HTML_Tag::create( 'span', 'vorbereitet', array( 'class' => 'badge' ) );
-				break;
-			case Model_Job_Run::STATUS_RUNNING:
-				$status	= UI_HTML_Tag::create( 'span', 'läuft', array( 'class' => 'badge badge-warning' ) );
-				break;
-			case Model_Job_Run::STATUS_DONE:
-				$status	= UI_HTML_Tag::create( 'span', 'erledigt', array( 'class' => 'badge badge-info' ) );
-				break;
-			case Model_Job_Run::STATUS_WORKLOAD:
-				$status	= UI_HTML_Tag::create( 'span', 'erledigt', array( 'class' => 'badge badge-success' ) );
-				break;
-		}
 		$title	= $item->title ? $item->title : $definition->identifier;
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', '<small class="muted">'.$item->jobRunId.'</small>' ),
 			UI_HTML_Tag::create( 'td', '<a href="./manage/job/run/view/'.$item->jobRunId.'">'.$title.'</a>' ),
-			UI_HTML_Tag::create( 'td', $status ),
+			UI_HTML_Tag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_RUN_STATUS )->render() ),
 			UI_HTML_Tag::create( 'td', $output ),
 			UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i:s', $item->createdAt ) ),
 			UI_HTML_Tag::create( 'td', $item->ranAt ? date( 'd.m.Y H:i:s', $item->ranAt ) : '-' ),
@@ -52,12 +32,13 @@ if( $runs ){
 
 $tabs	= View_Manage_Job::renderTabs( $env, 'definition' );
 
+$helperAttribute->setObject( $definition );
 $list	= array();
 $facts	= array();
 $facts['Identifier']	= $definition->identifier;
 $facts['Job-ID']		= $definition->jobDefinitionId;
-$facts['Mode']			= $wordsGeneral['job-modes'][$definition->mode];
-$facts['Status']		= $wordsGeneral['job-statuses'][$definition->status];
+$facts['Mode']			= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_MODE )->render();
+$facts['Status']		= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_STATUS )->render();
 $facts['Class Name']	= $definition->className;
 $facts['Method']		= $definition->methodName;
 $facts['Runs']			= $definition->runs;

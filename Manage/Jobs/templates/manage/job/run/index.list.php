@@ -1,35 +1,6 @@
 <?php
 
-$runStatusClasses		= array(
-	Model_Job_Run::STATUS_TERMINATED	=> 'label label-important',
-	Model_Job_Run::STATUS_FAILED		=> 'label label-important',
-	Model_Job_Run::STATUS_ABORTED		=> 'label label-important',
-	Model_Job_Run::STATUS_PREPARED		=> 'label',
-	Model_Job_Run::STATUS_RUNNING		=> 'label label-warning',
-	Model_Job_Run::STATUS_DONE			=> 'label label-info',
-	Model_Job_Run::STATUS_SUCCESS		=> 'label label-success',
-);
-$runStatusIconClasses	= array(
-	Model_Job_Run::STATUS_TERMINATED	=> 'fa fa-fw fa-times',
-	Model_Job_Run::STATUS_FAILED		=> 'fa fa-fw fa-exclamation-triangle',
-	Model_Job_Run::STATUS_ABORTED		=> 'fa fa-fw fa-ban',
-	Model_Job_Run::STATUS_PREPARED		=> 'fa fa-fw fa-asterisk',
-	Model_Job_Run::STATUS_RUNNING		=> 'fa fa-fw fa-cog fa-spin',
-	Model_Job_Run::STATUS_DONE			=> 'fa fa-fw fa-check',
-	Model_Job_Run::STATUS_SUCCESS		=> 'fa fa-fw fa-',
-);
-$runTypeClasses		= array(
-	Model_Job_Run::TYPE_MANUALLY		=> 'label label-info',
-	Model_Job_Run::TYPE_SCHEDULED		=> 'label label-success',
-);
-$runTypeIconClasses	= array(
-	Model_Job_Run::TYPE_MANUALLY		=> 'fa fa-fw fa-hand-paper-o',
-	Model_Job_Run::TYPE_SCHEDULED		=> 'fa fa-fw fa-clock-o',
-);
-//print_m( $wordsGeneral );die;
-
-$runStatusLabels	= $wordsGeneral['job-run-statuses'];
-$runTypeLabels		= $wordsGeneral['job-run-types'];
+$helperAttribute	= new View_Helper_Job_Attribute( $env );
 
 $helperTime		= new View_Helper_TimePhraser( $env );
 $helperTime->setTemplate( $words['index']['timestampTemplate'] );
@@ -37,11 +8,14 @@ $helperTime->setMode( View_Helper_TimePhraser::MODE_BREAK );
 //$helperTime->setMode( View_Helper_TimePhraser::MODE_HINT );
 
 $iconArchive	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) );
+$iconAbort		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconTerminate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $table		= UI_HTML_Tag::create( 'div', 'Keine Ausführungen gefunden.', array( 'class' => 'alert alert-warning' ) );
 if( $runs ){
 	$rows	= array();
 	foreach( $runs as $item ){
+		$helperAttribute->setObject( $item );
 		$definition	= $definitions[$item->jobDefinitionId];
 		$output		= '';
 		if( in_array( $item->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS_DONE, Model_Job_Run::STATUS_SUCCESS ) ) ){
@@ -65,13 +39,6 @@ if( $runs ){
 					break;
 			}*/
 		}
-		$statusIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => $runStatusIconClasses[$item->status] ) );
-		$statusLabel	= $statusIcon.'&nbsp;'.$runStatusLabels[$item->status];
-		$status			= UI_HTML_Tag::create( 'span', $statusLabel, array( 'class' => $runStatusClasses[$item->status] ) );
-
-		$typeIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => $typeIconClasses[$item->type] ) );
-		$typeLabel		= $typeIcon.'&nbsp;'.$runTypeLabels[$item->type];
-		$type			= UI_HTML_Tag::create( 'span', $runTypeLabel, array( 'class' => $runTypeClasses[$item->type] ) );
 
 		$title	= $definition->identifier;
 		if( $item->title )
@@ -81,21 +48,43 @@ if( $runs ){
 			$duration	= $item->finishedAt - $item->ranAt;
 			$duration	= Alg_Time_Duration::render( $duration, ' ', TRUE );
 		}
-		$buttonArchive	= UI_HTML_Tag::create( 'a', $iconArchive, array(
-			'href'	=> './manage/job/run/archive/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
-			'class'	=> 'btn btn-mini btn-inverse',
-			'title'	=> 'archivieren',
-		) );
+
+		$buttonArchive	= '';
+		if( in_array( (int) $item->status, Model_Job_Run::STATUSES_ARCHIVABLE ) ){
+			$buttonArchive	= UI_HTML_Tag::create( 'a', $iconArchive, array(
+				'href'	=> './manage/job/run/archive/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
+				'class'	=> 'btn btn-mini btn-inverse',
+				'title'	=> 'archivieren',
+			) );
+		}
+		$buttonAbort	= '';
+		if( (int) $item->status === Model_Job_Run::STATUS_PREPARED ){
+			$buttonAbort	= UI_HTML_Tag::create( 'a', $iconAbort, array(
+				'href'	=> './manage/job/run/abort/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
+				'class'	=> 'btn btn-mini btn-danger',
+				'title'	=> 'verhindern',
+			) );
+		}
+		$buttonTerminate	= '';
+		if( (int) $item->status === Model_Job_Run::STATUS_RUNNING ){
+			$buttonTerminate	= UI_HTML_Tag::create( 'a', $iconTerminate, array(
+				'href'	=> './manage/job/run/terminate/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
+				'class'	=> 'btn btn-mini btn-danger',
+				'title'	=> 'abbrechen',
+			) );
+		}
+
+
 		$link		= UI_HTML_Tag::create( 'a', $title, array(
 			'href'	=> './manage/job/run/view/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' )
 		) );
-		$buttons	= UI_HTML_Tag::create( 'div', array( $buttonArchive ), array( 'class' => 'btn-group' ) );
+		$buttons	= UI_HTML_Tag::create( 'div', array( $buttonAbort, $buttonTerminate, $buttonArchive ), array( 'class' => 'btn-group' ) );
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', '<small class="muted">'.$item->jobRunId.'</small>' ),
 //			UI_HTML_Tag::create( 'td', '<a href="./manage/job/definition/view/'.$definition->jobDefinitionId.'">'.$title.'</a>' ),
 			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', $type ),
-			UI_HTML_Tag::create( 'td', $status ),
+			UI_HTML_Tag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_RUN_TYPE )->render() ),
+			UI_HTML_Tag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_RUN_STATUS )->render() ),
 //			UI_HTML_Tag::create( 'td', $output ),
 			UI_HTML_Tag::create( 'td', $item->ranAt ? $helperTime->setTimestamp( $item->ranAt )->render() : '-' ),
 //			UI_HTML_Tag::create( 'td', $item->finishedAt ? $helperTime->setTimestamp( $item->finishedAt )->render() : '-' ),
@@ -107,8 +96,8 @@ if( $runs ){
 	$columns	= array(
 		$words['index']['tableHeadId']				=> '60px',
 		$words['index']['tableHeadJobId']			=> '*',
-		$words['index']['tableHeadType']			=> '110px',
-		$words['index']['tableHeadStatus']			=> '110px',
+		$words['index']['tableHeadType']			=> '120px',
+		$words['index']['tableHeadStatus']			=> '120px',
 //		$words['index']['tableHeadResult']			=> '100px',
 		$words['index']['tableHeadRanAt']			=> '120px',
 //		$words['index']['tableHeadFinishedId']		=> '120px',

@@ -4,12 +4,12 @@ $iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sear
 $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 
 $optStatus	= array( '' => $wordsGeneral['list']['optAll'] );
-foreach( $wordsGeneral['job-statuses'] as $key => $value )
+foreach( $wordsGeneral['job-definition-statuses'] as $key => $value )
 	$optStatus[$key]	= $value;
 $optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
 
 $optMode	= array( '' => $wordsGeneral['list']['optAll'] );
-foreach( $wordsGeneral['job-modes'] as $key => $value )
+foreach( $wordsGeneral['job-definition-modes'] as $key => $value )
 	$optMode[$key]	= $value;
 $optMode	= UI_HTML_Elements::Options( $optMode, $filterMode );
 

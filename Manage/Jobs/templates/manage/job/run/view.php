@@ -1,85 +1,23 @@
 <?php
 
-$runStatusClasses		= array(
-	Model_Job_Run::STATUS_TERMINATED	=> 'label label-important',
-	Model_Job_Run::STATUS_FAILED		=> 'label label-important',
-	Model_Job_Run::STATUS_ABORTED		=> 'label label-important',
-	Model_Job_Run::STATUS_PREPARED		=> 'label',
-	Model_Job_Run::STATUS_RUNNING		=> 'label label-warning',
-	Model_Job_Run::STATUS_DONE			=> 'label label-info',
-	Model_Job_Run::STATUS_SUCCESS		=> 'label label-success',
-);
-$runStatusIconClasses	= array(
-	Model_Job_Run::STATUS_TERMINATED	=> 'fa fa-fw fa-times',
-	Model_Job_Run::STATUS_FAILED		=> 'fa fa-fw fa-exclamation-triangle',
-	Model_Job_Run::STATUS_ABORTED		=> 'fa fa-fw fa-ban',
-	Model_Job_Run::STATUS_PREPARED		=> 'fa fa-fw fa-asterisk',
-	Model_Job_Run::STATUS_RUNNING		=> 'fa fa-fw fa-cog fa-spin',
-	Model_Job_Run::STATUS_DONE			=> 'fa fa-fw fa-check',
-	Model_Job_Run::STATUS_SUCCESS		=> 'fa fa-fw fa-',
-);
-$runTypeClasses		= array(
-	Model_Job_Run::TYPE_MANUALLY		=> 'label label-info',
-	Model_Job_Run::TYPE_SCHEDULED		=> 'label label-success',
-);
-$runTypeIconClasses	= array(
-	Model_Job_Run::TYPE_MANUALLY		=> 'fa fa-fw fa-hand-paper-o',
-	Model_Job_Run::TYPE_SCHEDULED		=> 'fa fa-fw fa-clock-o',
-);
-
-$definitionStatusClasses		= array(
-	Model_Job_Definition::STATUS_DISABLED		=> 'label label-inverse',
-	Model_Job_Definition::STATUS_ENABLED		=> 'label label-success',
-	Model_Job_Definition::STATUS_DEPRECATED		=> 'label label-warning',
-);
-$definitionStatusIconClasses	= array(
-	Model_Job_Definition::STATUS_DISABLED		=> 'fa fa-fw fa-toggle-off',
-	Model_Job_Definition::STATUS_ENABLED		=> 'fa fa-fw fa-toggle-on',
-	Model_Job_Definition::STATUS_DEPRECATED		=> 'fa fa-fw fa-ban',
-);
-$definitionModeClasses		= array(
-	Model_Job_Definition::MODE_UNDEFINED		=> 'not-label not-label-info',
-	Model_Job_Definition::MODE_SINGLE			=> 'not-label not-label-info',
-	Model_Job_Definition::MODE_MULTIPLE			=> 'not-label not-label-success',
-	Model_Job_Definition::MODE_EXCLUSIVE		=> 'not-label not-label-success',
-);
-$definitionModeIconClasses	= array(
-	Model_Job_Definition::MODE_UNDEFINED		=> 'fa fa-fw fa-exclamation-circle ',
-	Model_Job_Definition::MODE_SINGLE			=> 'fa fa-fw fa-square',
-	Model_Job_Definition::MODE_MULTIPLE			=> 'fa fa-fw fa-th-large',
-	Model_Job_Definition::MODE_EXCLUSIVE		=> 'fa fa-fw fa-square-o',
-);
-
-$runStatusLabels		= $wordsGeneral['job-run-statuses'];
-$runTypeLabels			= $wordsGeneral['job-run-types'];
-$runReportChannelLabels	= $wordsGeneral['job-run-report-channels'];
-
-$definitionStatusLabels	= $wordsGeneral['job-statuses'];
-$definitionModeLabels	= $wordsGeneral['job-modes'];
-
-$runStatusIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => $runStatusIconClasses[$run->status] ) );
-$runStatusLabel		= $runStatusIcon.'&nbsp;'.$runStatusLabels[$run->status];
-$runStatus			= UI_HTML_Tag::create( 'span', $runStatusLabel, array( 'class' => $runStatusClasses[$run->status] ) );
-
-$runTypeIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => $runTypeIconClasses[$run->type] ) );
-$runTypeLabel		= $runTypeIcon.'&nbsp;'.$runTypeLabels[$run->type];
-$runType			= UI_HTML_Tag::create( 'span', $runTypeLabel, array( 'class' => $runTypeClasses[$run->type] ) );
-
 $helperTime		= new View_Helper_TimePhraser( $env );
 $helperTime->setTemplate( $words['index']['timestampTemplate'] );
 $helperTime->setMode( View_Helper_TimePhraser::MODE_BREAK );
 
+$helperAttribute	= new View_Helper_Job_Attribute( $env );
 
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconArchive	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) );
 
+$runReportChannelLabels	= $wordsGeneral['job-run-report-channels'];
 
 //  --  PANEL FACTS: JOB  -- //
+$helperAttribute->setObject( $run );
 $facts	= array();
 $facts['Title']				= $run->title ? $run->title : $definition->identifier;
 $facts['Run-ID']			= $run->jobRunId;
-$facts['Type']				= $runType;
-$facts['Status']			= $runStatus;
+$facts['Type']				= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_RUN_TYPE )->render();
+$facts['Status']			= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_RUN_STATUS )->render();
 //$facts['Data']				= print_m( $run, NULL, NULL, TRUE );
 $facts['Created']			= date( 'd.m.Y H:i:s', $run->createdAt );
 if( $run->ranAt ){
@@ -141,19 +79,12 @@ $panelFactsJob	= UI_HTML_Tag::create( 'div', array(
 
 
 //  --  PANEL FACTS: DEFINITION  -- //
-$definitionStatusIcon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $definitionStatusIconClasses[$definition->status] ) );
-$definitionStatusLabel	= $definitionStatusIcon.'&nbsp;'.$definitionStatusLabels[$definition->status];
-$definitionStatus		= UI_HTML_Tag::create( 'span', $definitionStatusLabel, array( 'class' => $definitionStatusClasses[$definition->status] ) );
-
-$definitionModeIcon		= UI_HTML_Tag::create( 'i', '', array( 'class' => $definitionModeIconClasses[$definition->mode] ) );
-$definitionModeLabel	= $definitionModeIcon.'&nbsp;'.$definitionModeLabels[$definition->mode];
-$definitionMode			= UI_HTML_Tag::create( 'span', $definitionModeLabel, array( 'class' => $definitionModeClasses[$definition->mode] ) );
-
+$helperAttribute->setObject( $definition );
 $facts	= array();
 $facts['Identifier']	= UI_HTML_Tag::create( 'a', $definition->identifier, array( 'href' => './manage/job/definition/view/'.$definition->jobDefinitionId ) );
 $facts['Job-ID']		= UI_HTML_Tag::create( 'a', $definition->jobDefinitionId, array( 'href' => './manage/job/definition/view/'.$definition->jobDefinitionId ) );
-$facts['Mode']			= $definitionMode;
-$facts['Status']		= $definitionStatus;
+$facts['Mode']			= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_MODE )->render();
+$facts['Status']		= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_STATUS )->render();
 $facts['Class Method']	= $definition->className.' :: '.$definition->methodName;
 $facts['Runs']			= UI_HTML_Tag::create( 'span', $definition->runs, array( 'class' => 'badge' ) );
 $facts['Success']		= UI_HTML_Tag::create( 'span', $definition->runs - $definition->fails, array( 'class' => 'badge badge-success' ) ).( $definition->runs ? ' <small class="muted">('.round( ( $definition->runs - $definition->fails ) / $definition->runs * 100 ).'%)</small>' : '' );
