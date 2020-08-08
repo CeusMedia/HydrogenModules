@@ -1,32 +1,75 @@
-<Files ~ "^(\..+|config\.+|Makefile)$">
+
+#  GENERAL
+#  ----------------------------------------------------------
+#
+#  Disabled multi views
+Options -MultiViews
+#
+#  Disabled indexing
+Options -Indexes
+#
+#  Enable following symlink (needed for install type "link")
+Options +FollowSymLinks
+#
+#
+#  ACCESS
+#  ----------------------------------------------------------
+#
+#  Deny access to files matching:
+<Files ~ "^(\..+|config\.+|Makefile|composer.+)$">
     Deny From All
 </Files>
-<Files ~ "(\.inc|\.dist|~)$">
+#
+#  Deny access to files ending with:
+<Files ~ "(\.inc|\.dist|\.sh|\.xml|~)$">
     Deny From All
 </Files>
+#
+#  Deny access to step out tries
 RedirectMatch 404  ".*\/\..*"
-
-Options -MultiViews -Indexes +FollowSymLinks
-
+#
+#  Deny access to vendor folder
+RedirectMatch 404  "vendor"
+#
+#
+#  REWRITING
+# ----------------------------------------------------------
+#
+# Enable rewrite engine
 RewriteEngine On
-
+#
+# catch request to index.html
 RewriteRule index.html index.php [L]
-
+#
+# file not found
 RewriteCond %{REQUEST_FILENAME} !-f
+#
+# folder not found
 RewriteCond %{REQUEST_FILENAME} !-d
+#
+# rewrite framework request
 RewriteRule ^(.*)/?$ index.php?__path=$1&%{QUERY_STRING} [L]
-
+#
+# set rewrite path key as env variable
+SetEnv H_REQUEST_PATH_KEY __path
+#
+#
 #  AUTHENTICATION
+#  ----------------------------------------------------------
+#
 #AuthType Basic
 #AuthName "My Project"
 #AuthUserFile /path/to/my/project/.htpasswd
 #Require valid-user
-
-#  DISABLE ETAGS
+#
+#
+#  PERFORMANCE
+#  ----------------------------------------------------------
+#
+#  disable etags
 #FileETag none
-
-
-#  GZIP COMPRESSION
+#
+#  gzip compression
 <ifModule mod_gzip.c>
 mod_gzip_on Yes
 mod_gzip_dechunk Yes
