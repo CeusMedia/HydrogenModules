@@ -2,7 +2,7 @@
 <module>
 	<title><![CDATA[Gallery &raquo;Compact&laquo;]]></title>
 	<description>Simple gallery with auto indexing in nested folders.</description>
-	<version>0.4.3</version>
+	<version>0.4.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added image download.</log>
@@ -16,6 +16,7 @@
 	<log version="0.4.1">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.4.2">Replace CDN resource.</log>
 	<log version="0.4.3">Extract hook to own hook class.</log>
+	<log version="0.4.4">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
 	<files>
 		<class>Controller/Gallery.php5</class>
 		<class>Hook/Gallery/Compact.php5</class>

@@ -10,7 +10,7 @@ class Hook_System_Exception extends CMF_Hydrogen_Hook{
 		if( !( $payload->exception instanceof \Exception ) )
 			throw new \RangeException( 'Given exception is not an exception instance' );
 
-		if( $env->getRequest()->get( 'controller' ) === 'system/exception' )
+		if( $env->getRequest()->get( '__controller' ) === 'system/exception' )
 			return FALSE;
 		if( !$env->getConfig()->get( 'module.server_system_exception.active' ) )
 			return FALSE;

@@ -64,7 +64,7 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 	}
 
 	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL ){
-		$source	= urldecode( implode( '/', $this->env->getRequest()->get( 'arguments' ) ) );
+		$source	= urldecode( implode( '/', $this->env->getRequest()->get( '__arguments' ) ) );
 		$source	= stripslashes( $source );
 		$info	= $this->readGalleryInfo( $source );
 		$path	= $this->path.$source;

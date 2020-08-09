@@ -15,8 +15,8 @@ class Browser{
 		$config			= $this->env->getConfig();
 		$request		= $this->env->getRequest();
 
-		$controller		= $request->get( 'controller' );
-		$action			= $request->get( 'action' );
+		$controller		= $request->get( '__controller' );
+		$action			= $request->get( '__action' );
 
 		if( !$controller )
 			$controller	= 'index';
@@ -61,7 +61,7 @@ class Browser{
 			'actions'		=> $actions,
 			'arguments'		=> implode( '/', $arguments ),
 			'token'			=> $request->get( 'token' ),
-			'path'			=> implode( '/', $request->get( 'arguments' ) ),
+			'path'			=> implode( '/', $request->get( '__arguments' ) ),
 			'post'			=> $request->get( 'post' ),
 			'response'		=> (object) array(
 				'json'		=> $body,

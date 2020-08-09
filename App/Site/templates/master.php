@@ -62,7 +62,7 @@ else{
 	else if( isset( $words['links'] ) && $words['links'] ){						//  fallback: links from main words section, all public
 		$links	= $words['links'];
 	}
-	$controller	= $this->env->getRequest()->get( 'controller' );
+	$controller	= $this->env->getRequest()->get( '__controller' );
 	$current	= CMF_Hydrogen_View_Helper_Navigation_SingleList::getCurrentKey( $links, $controller );
 
 	$list	= array();

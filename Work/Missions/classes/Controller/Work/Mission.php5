@@ -441,7 +441,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	public function bulk(){
-		$action	= $this->request->get( 'action' );
+		$action	= $this->request->get( '__action' );
 		$missionIds	= $this->request->get( 'missionIds' );
 
 	print_m( $action );

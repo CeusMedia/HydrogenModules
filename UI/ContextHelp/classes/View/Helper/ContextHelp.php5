@@ -6,8 +6,8 @@ class View_Helper_ContextHelp{
 			self::registerFile( $env, $data['path'] );
 			return;
 		}
-		$controller	= $env->getRequest()->get( 'controller' );
-		$action		= $env->getRequest()->get( 'action' );
+		$controller	= $env->getRequest()->get( '__controller' );
+		$action		= $env->getRequest()->get( '__action' );
 		self::registerFile( $env, $controller.'/contexthelp' );
 		self::registerFile( $env, $controller.'/'.$action.'/contexthelp' );
 	}

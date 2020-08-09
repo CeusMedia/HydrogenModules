@@ -22,8 +22,8 @@ class Controller_System_Exception extends CMF_Hydrogen_Controller{
 //			$session->remove( 'exception' );
 		}
 		else{
-			if( !$request->get( 'controller' ) == 'system' ){
-				if( !$request->get( 'action' ) == 'exception' ){
+			if( !$request->get( '__controller' ) == 'system' ){
+				if( !$request->get( '__action' ) == 'exception' ){
 					$this->restart( NULL, FALSE, 400 );
 				}
 			}

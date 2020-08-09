@@ -3,14 +3,15 @@
 	<title>Resource: JSON Server</title>
 	<description><![CDATA[Access to JSON Server.]]></description>
 	<category>Resource</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype in project Client:Chat.</log>
 	<log version="0.2">Separation into this module.</log>
 	<log version="0.2.1">Added response code handler.</log>
 	<log version="0.2.2">Updated configuration.</log>
 	<log version="0.2.3">Updated configuration by mandatory and title.</log>
 	<log version="0.3">Use hook for automatic initialization and configuration.</log>
-<!--	<log version="0.3.1">Allow multiple instances.</log>-->
+	<log version="0.3.1">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
+<!--	<log version="0.3.x">Allow multiple instances.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

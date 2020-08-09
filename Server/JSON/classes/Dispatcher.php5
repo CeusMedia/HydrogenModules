@@ -82,9 +82,9 @@ class Dispatcher extends CMF_Hydrogen_Dispatcher_General {
 	{
 		$this->realizeCall();																		//  set defaults if necessary
 
-		$controller	= trim( $this->request->get( 'controller' ) );									//  get called controller
-		$action		= trim( $this->request->get( 'action' ) );										//  get called action
-		$arguments	= $this->request->get( 'arguments' );											//  get given arguments
+		$controller	= trim( $this->request->get( '__controller' ) );								//  get called controller
+		$action		= trim( $this->request->get( '__action' ) );									//  get called action
+		$arguments	= $this->request->get( '__arguments' );											//  get given arguments
 
 		if( $this->env->getModules()->has( 'Resource_Tracker_Piwik' ) )								//  Piwik tracker is installed
 			if( $this->env->getConfig()->get( 'module.resource_tracker_piwik.tracker.enabled' ) )	//  a tracker is enabled

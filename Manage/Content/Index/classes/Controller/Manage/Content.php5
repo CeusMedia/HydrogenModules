@@ -3,7 +3,7 @@ class Controller_Manage_Content extends CMF_Hydrogen_Controller{
 	public function index(){}
 
 	protected function renderTabs(){
-		$current	= $this->env->getRequest()->get( 'controller' );
+		$current	= $this->env->getRequest()->get( '__controller' );
 		$tabs	    = array(
 			'manage/content'			=> 'Übersicht',
 			'manage/content/link'		=> 'Links',

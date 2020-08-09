@@ -6,7 +6,7 @@ class View_Manage_Catalog_Bookstore extends CMF_Hydrogen_View{
 	protected function renderMainTabs(){
 		$currentTab		= (int) $this->env->getSession()->get( 'manage.catalog.bookstore.tab' );
 		$tabs			= (object) $this->getWords( 'tabsMain', 'manage/catalog/bookstore' );
-		$current		= strtolower( $this->env->getRequest()->get( 'controller' ) );
+		$current		= strtolower( $this->env->getRequest()->get( '__controller' ) );
 		$list			= array();
 		foreach( $tabs as $key => $value ){
 			$attributes	= array( 'href' => './'.$key );

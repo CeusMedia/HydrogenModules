@@ -17,15 +17,15 @@ class Hook_Shop_Special extends CMF_Hydrogen_Hook{
 		$request	= $env->getRequest();
 		$model		= new Model_Shop_Bridge( $env );
 		$bridge		= $model->getByIndices( array(
-			'frontendUriPath'	=> $request->get( 'controller' ).'/',
+			'frontendUriPath'	=> $request->get( '__controller' ).'/',
 		) );
 		if( !$bridge )
 			return;
-//		if( $request->get( 'action' ) !== 'article' )
+//		if( $request->get( '__action' ) !== 'article' )
 //			return;
-		if( !count( $request->get( 'arguments' ) ) )
+		if( !count( $request->get( '__arguments' ) ) )
 			return;
-		static::$articleId = (int) $request->get( 'arguments' )[0];
+		static::$articleId = (int) $request->get( '__arguments' )[0];
 	}
 
 	/**

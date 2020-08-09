@@ -11,11 +11,11 @@ class Hook_Auth extends CMF_Hydrogen_Hook{
 		$session	= $env->getSession();
 		if( $payload->exception->getCode() == 403 ){
 			if( !$session->get( 'userId' ) ){
-				$forwardUrl	= $request->get( 'controller' );
-				if( $request->get( 'action' ) )
-					$forwardUrl	.= '/'.$request->get( 'action' );
-				if( $request->get( 'arguments' ) )
-					foreach( $request->get( 'arguments' ) as $argument )
+				$forwardUrl	= $request->get( '__controller' );
+				if( $request->get( '__action' ) )
+					$forwardUrl	.= '/'.$request->get( '__action' );
+				if( $request->get( '__arguments' ) )
+					foreach( $request->get( '__arguments' ) as $argument )
 						$forwardUrl	.= '/'.$argument;
 				$url	= $env->url.'auth/login?from='.$forwardUrl;
 				Net_HTTP_Status::sendHeader( 403 );

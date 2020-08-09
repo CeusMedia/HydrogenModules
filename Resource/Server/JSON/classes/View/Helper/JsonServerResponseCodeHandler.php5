@@ -13,8 +13,8 @@ class View_Helper_JsonServerResponseCodeHandler extends CMF_Hydrogen_View_Helper
 	}
 
 	public function handleCode( $code, $identifier = NULL ){
-		$controller	= $this->env->getRequest()->get( 'controller' );
-		$action		= $this->env->getRequest()->get( 'action' );
+		$controller	= $this->env->getRequest()->get( '__controller' );
+		$action		= $this->env->getRequest()->get( '__action' );
 		$messenger	= $this->env->getMessenger();
 		try{
 			$words		= $this->env->getLanguage()->getWords( $controller );

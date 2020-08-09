@@ -41,9 +41,9 @@ class Hook_Provision extends CMF_Hydrogen_Hook{
 						$controller	= new Controller_Provision( $env, FALSE );
 						$controller->restart( 'provision/status' );
 
-/*						$env->getRequest()->set( 'controller', 'provision' );
-						$env->getRequest()->set( 'action', 'status' );
-						$env->getRequest()->set( 'arguments', array( $userId ) );*/
+/*						$env->getRequest()->set( '__controller', 'provision' );
+						$env->getRequest()->set( '__action', 'status' );
+						$env->getRequest()->set( '__arguments', array( $userId ) );*/
 					}
 					if( $hasCache )
 						$cache->set( 'userId-'.$userId, TRUE, 'Provision.userLicenseKey' );

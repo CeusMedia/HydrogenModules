@@ -5,8 +5,8 @@
 $links		= $words['links'];
 $sublinks	= array( 'admin/module' => $words['links_admin_module'] );
 
-$controller	= $env->request->get( 'controller' );
-$action		= $env->request->get( 'action' );
+$controller	= $env->request->get( '__controller' );
+$action		= $env->request->get( '__action' );
 
 if( $controller == "admin/module/source" )
 	$sublinks	= array();
