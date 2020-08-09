@@ -15,19 +15,28 @@ class Hook_System_Exception extends CMF_Hydrogen_Hook{
 		if( !$env->getConfig()->get( 'module.server_system_exception.active' ) )
 			return FALSE;
 
+		
+
 		$e	= $payload->exception;
-		if( $env->getRequest()->isAjax() ){
-			$env->getResponse()->setStatus( 500 );
-			$env->getResponse()->setBody( json_encode( array(
-				'status'	=> 'exception',
-				'message'	=> $e->getMessage(),
-				'code'		=> $e->getCode(),
-				'file'		=> $e->getFile(),
-				'line'		=> $e->getLine(),
-				'trace'		=> $e->getTraceAsString(),
-			) ) );
-			$env->getResponse()->send();
-			exit;
+		if( $env instanceof CMF_Hydrogen_Environment_Web ){
+			$requestUrl	= $env->getRequest()->getUrl();
+			if( $env->getRequest()->isAjax() ){
+				$env->getResponse()->setStatus( 500 );
+				$env->getResponse()->setBody( json_encode( array(
+					'status'	=> 'exception',
+					'message'	=> $e->getMessage(),
+					'code'		=> $e->getCode(),
+					'file'		=> $e->getFile(),
+					'line'		=> $e->getLine(),
+					'trace'		=> $e->getTraceAsString(),
+				) ) );
+				$env->getResponse()->send();
+				exit;
+			}
+		}
+		else if( $env instanceof CMF_Hydrogen_Environment_Console ){
+			global $argv;
+			$requestUrl	= join( ' ', $argv );
 		}
 
 		$options	= $env->getConfig()->getAll( 'module.server_system_exception.', TRUE );
@@ -42,7 +51,7 @@ class Hook_System_Exception extends CMF_Hydrogen_Hook{
 					'trace'		=> $e->getTraceAsString(),
 				) ) );
 				$env->getSession()->set( 'exceptionRequest', $env->getRequest() );
-				$env->getSession()->set( 'exceptionUrl', $env->getRequest()->getUrl() );
+				$env->getSession()->set( 'exceptionUrl', $requestUrl );
 				static::restart( $env, 'system/exception', 500 );
 			case 'dev':
 			case 'strict':
