@@ -482,17 +482,10 @@ class Logic_Job extends CMF_Hydrogen_Logic
 					case Model_Job_Schedule::TYPE_INTERVAL:
 						$isDue		= empty( $jobSchedule->lastRunAt );								//  not running before -> always due
 						if( !$isDue ){																//  otherwise do some math
-							print_m(['indices' => $indices, 'isDue' => $isDue, 'interval' => $jobSchedule->expression]);
 							$interval	= new DateInterval( $jobSchedule->expression );				//  create date interval
 							$lastRun	= new DateTimeImmutable( '@'.$jobSchedule->lastRunAt );		//  get datetime object for last run
 							$nextRun	= $lastRun->add( $interval );
 							$isDue		= new DateTime( 'now' ) >= $nextRun;						//  last run + interval is past -> due
-							print_m(array(
-								'dateInterval' => $jobSchedule->expression,
-								'lastRun' => $lastRun->format('r'),
-								'newDate' => $nextRun->format( 'r'),
-								'isDue' => $isDue
-							));
 						}
 						break;
 					case Model_Job_Schedule::TYPE_DATETIME:
