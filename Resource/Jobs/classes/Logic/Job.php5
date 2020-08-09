@@ -460,23 +460,53 @@ class Logic_Job extends CMF_Hydrogen_Logic
 
 	protected function getScheduledJobsToPrepare( $jobDefinitionId = NULL ): array
 	{
-		$indicesByMonth	= array_merge( array(
-			'status'		=> Model_Job_Schedule::STATUS_ENABLED,
-			'monthOfYear'	=> ['*', date( 'n' )],
-			'dayOfMonth'	=> ['*', date( 'j' )],
-			'hourOfDay'		=> ['*', date( 'G' )],
-			'minuteOfHour'	=> ['*', date( 'i' )],
-		), $jobDefinitionId ? array( 'jobDefinitionId' => $jobDefinitionId ) : array() );
-		$indicesByWeek	= array_merge( array(
-			'status'		=> Model_Job_Schedule::STATUS_ENABLED,
-			'monthOfYear'	=> ['*', date( 'n' )],
-			'dayOfWeek'		=> ['*', date( 'N' )],
-			'hourOfDay'		=> ['*', date( 'G' )],
-			'minuteOfHour'	=> ['*', date( 'i' )],
-		), $jobDefinitionId ? array( 'jobDefinitionId' => $jobDefinitionId ) : array() );
-		$jobsByMonthDays	= $this->modelSchedule->getAllByIndices( $indicesByMonth );
-		$jobsByWeekDays		= $this->modelSchedule->getAllByIndices( $indicesByWeek );
-		return $jobsByMonthDays + $jobsByWeekDays;
+		$jobSchedules	= array();
+		$indices		= array(
+			'status'	=> Model_Job_Schedule::STATUS_ENABLED,
+			'type'		=> array(
+				Model_Job_Schedule::TYPE_CRON,
+				Model_Job_Schedule::TYPE_INTERVAL,
+				Model_Job_Schedule::TYPE_DATETIME,
+			),
+		);
+		if( $jobDefinitionId )
+			$indices['jobDefinitionId']	= $jobDefinitionId;
+		foreach( $this->modelSchedule->getAllByIndices( $indices ) as $jobSchedule ){
+			try{
+				$isDue	= FALSE;
+				switch( (int) $jobSchedule->type ){
+					case Model_Job_Schedule::TYPE_CRON:
+						$cron	= Cron\CronExpression::factory( $jobSchedule->expression );
+						$isDue = $cron->isDue();
+					break;
+					case Model_Job_Schedule::TYPE_INTERVAL:
+						$isDue		= empty( $jobSchedule->lastRunAt );								//  not running before -> always due
+						if( !$isDue ){																//  otherwise do some math
+							print_m(['indices' => $indices, 'isDue' => $isDue, 'interval' => $jobSchedule->expression]);
+							$interval	= new DateInterval( $jobSchedule->expression );				//  create date interval
+							$lastRun	= new DateTimeImmutable( '@'.$jobSchedule->lastRunAt );		//  get datetime object for last run
+							$nextRun	= $lastRun->add( $interval );
+							$isDue		= new DateTime( 'now' ) >= $nextRun;						//  last run + interval is past -> due
+							print_m(array(
+								'dateInterval' => $jobSchedule->expression,
+								'lastRun' => $lastRun->format('r'),
+								'newDate' => $nextRun->format( 'r'),
+								'isDue' => $isDue
+							));
+						}
+						break;
+					case Model_Job_Schedule::TYPE_DATETIME:
+						$isDue		= $jobSchedule->expression === date( 'Y-m-d H:i' );
+						break;
+				}
+				if( $isDue )
+					$jobSchedules[]	= $jobSchedule;
+			}
+			catch( Exception $e ){
+				$this->callHook( 'Env', 'logException', $this, array( 'exception' => $e ) );
+			}
+		}
+		return $jobSchedules;
 	}
 
 	protected function isPreparableJob( object $jobDefinition, ?int $runType = 0 ): bool

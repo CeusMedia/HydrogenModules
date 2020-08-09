@@ -16,10 +16,12 @@ class Model_Job_Schedule extends CMF_Hydrogen_Model
 {
 	const STATUS_DISABLED	= 0;
 	const STATUS_ENABLED	= 1;
+	const STATUS_PAUSED		= 2;
 
 	const STATUSES				= array(
 		self::STATUS_DISABLED,
 		self::STATUS_ENABLED,
+		self::STATUS_PAUSED,
 	);
 
 	const REPORT_MODE_NEVER		= 0;
@@ -48,16 +50,24 @@ class Model_Job_Schedule extends CMF_Hydrogen_Model
 		self::REPORT_CHANNEL_XMPP,
 	);
 
+	const TYPE_UNKNOWN		= 0;
+	const TYPE_CRON			= 1;
+	const TYPE_INTERVAL		= 2;
+	const TYPE_DATETIME		= 3;
+
+	const TYPES				= array(
+		self::TYPE_CRON,
+		self::TYPE_INTERVAL,
+		self::TYPE_DATETIME,
+	);
+
 	protected $name			= 'job_schedule';
 	protected $columns		= array(
 		'jobScheduleId',
 		'jobDefinitionId',
+		'type',
 		'status',
-		'minuteOfHour',
-		'hourOfDay',
-		'dayOfWeek',
-		'dayOfMonth',
-		'monthOfYear',
+		'expression',
 		'reportMode',
 		'reportChannel',
 		'reportReceivers',
@@ -70,12 +80,8 @@ class Model_Job_Schedule extends CMF_Hydrogen_Model
 	protected $primaryKey	= 'jobScheduleId';
 	protected $indices		= array(
 		'jobDefinitionId',
+		'type',
 		'status',
-		'minuteOfHour',
-		'hourOfDay',
-		'dayOfWeek',
-		'dayOfMonth',
-		'monthOfYear',
 		'reportMode',
 		'reportChannel',
 		'createdAt',
