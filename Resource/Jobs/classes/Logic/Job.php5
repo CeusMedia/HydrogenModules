@@ -253,6 +253,14 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return (bool) count( $this->getRunningJobs( $conditions ) );
 	}
 
+	public function logException( Throwable $t ): self
+	{
+		$message	= $t->getMessage().'@'.$t->getFile().':'.$t->getLine().PHP_EOL.$t->getTraceAsString();
+		$this->env->getLog()->log( "error", $message );
+		$this->env->getCaptain()->callHook( 'Env', 'logException', $this, array( 'exception' => $t ) );
+		return $this;
+	}
+
 	public function prepareManuallyJobRun( object $job, array $options ): ?object
 	{
 		if( !$this->isPreparableJob( $job, Model_Job_Run::TYPE_MANUALLY ) )
@@ -505,7 +513,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	protected function killJobRunProcess( int $processId ): bool
 	{
 		$command	= 'kill '.$processId;
-        exec( $command );
+		exec( $command );
 		return !$this->isActiveProcessId( $processId );
 	}
 
