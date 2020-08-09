@@ -5,6 +5,8 @@ class View_Helper_Job_Attribute
 	const ATTRIBUTE_DEFINITION_MODE		= 1;
 	const ATTRIBUTE_RUN_STATUS			= 2;
 	const ATTRIBUTE_RUN_TYPE			= 3;
+	const ATTRIBUTE_SCHEDULE_STATUS		= 4;
+	const ATTRIBUTE_SCHEDULE_TYPE		= 5;
 
 	const RUN_STATUS_CLASSES				= array(
 		Model_Job_Run::STATUS_TERMINATED		=> 'label label-important',
@@ -55,6 +57,17 @@ class View_Helper_Job_Attribute
 		Model_Job_Definition::MODE_EXCLUSIVE	=> 'fa fa-fw fa-square-o',
 	);
 
+	const SCHEDULE_STATUS_CLASSES			= array(
+		Model_Job_Schedule::STATUS_DISABLED		=> 'label label-inverse',
+		Model_Job_Schedule::STATUS_ENABLED		=> 'label label-success',
+		Model_Job_Schedule::STATUS_PAUSED		=> 'label label-warning',
+	);
+	const SCHEDULE_STATUS_ICON_CLASSES	= array(
+		Model_Job_Schedule::STATUS_DISABLED		=> 'fa fa-fw fa-toggle-off',
+		Model_Job_Schedule::STATUS_ENABLED		=> 'fa fa-fw fa-toggle-on',
+		Model_Job_Schedule::STATUS_PAUSED		=> 'fa fa-fw fa-pause',
+	);
+
 	protected $env;
 	protected $attribute		= 0;
 	protected $object;
@@ -95,6 +108,11 @@ class View_Helper_Job_Attribute
 				$iconClass	= static::RUN_TYPE_ICON_CLASSES[$this->object->type];
 				$labelClass	= static::RUN_TYPE_CLASSES[$this->object->type];
 				$labelText	= $this->words['job-run-types'][$this->object->type];
+				break;
+			case static::ATTRIBUTE_SCHEDULE_STATUS:
+				$iconClass	= static::SCHEDULE_STATUS_ICON_CLASSES[$this->object->status];
+				$labelClass	= static::SCHEDULE_STATUS_CLASSES[$this->object->status];
+				$labelText	= $this->words['job-schedule-statuses'][$this->object->status];
 				break;
 		}
 		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $iconClass ) );

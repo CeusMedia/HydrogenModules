@@ -3,18 +3,18 @@
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$words['add']['buttonCancel'], array(
+$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$words['edit']['buttonCancel'], array(
 	'href'	=> './manage/job/schedule',
 	'class' => 'btn',
 ) );
-$buttonAdd		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$words['add']['buttonAdd'], array(
+$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$words['edit']['buttonSave'], array(
 	'class' => 'btn btn-primary',
 	'type'	=> 'submit',
 	'name'	=> 'save',
 ) );
 
 $optStatus	= $wordsGeneral['job-definition-statuses'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus );
+$optStatus	= UI_HTML_Elements::Options( $optStatus, $item->status );
 
 
 $optDefinition	= array();
@@ -22,6 +22,21 @@ foreach( $definitionMap as $definitionId => $definition )
 	$optDefinition[$definitionId]	= $definition->identifier;
 $optDefinition	= UI_HTML_Elements::Options( $optDefinition );
 
+switch( (int) $item->type){
+	case Model_Job_Schedule::TYPE_INTERVAL:
+		$format	= 'interval';
+		break;
+	case Model_Job_Schedule::TYPE_DATETIME:
+		$format	= 'datetime';
+		break;
+	case Model_Job_Schedule::TYPE_CRON:
+		$format	= 'cron-month';
+		$parts	= preg_split( '/\s+/', $item->expression );
+		$format	= 'cron-month';
+		if( isset( $parts[4] ) && $parts[4] === '*' && $parts[3] !== '*' )
+			$format	= 'cron-week';
+		break;
+}
 
 $optFormat			= array(
 	'cron-month'	=> 'Cron: Monatstage',
@@ -29,7 +44,7 @@ $optFormat			= array(
 	'interval'		=> 'Intervall',
 	'datetime'		=> 'Datum (einmalig)'
 );
-$optFormat			= UI_HTML_Elements::Options( $optFormat );
+$optFormat			= UI_HTML_Elements::Options( $optFormat, $format );
 
 $optMinuteOfHour	= array_merge( $words['options-minuteOfHour'], array( 'value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:' ) );
 $optMinuteOfHour	= UI_HTML_Elements::Options( $optMinuteOfHour );
@@ -89,8 +104,8 @@ $optMonth	= array(
 );
 $optMonth		= UI_HTML_Elements::Options( $optMonth );
 
-$optReportMode		= UI_HTML_Elements::Options( $wordsGeneral['job-schedule-report-modes'] );
-$optReportChannel	= UI_HTML_Elements::Options( $wordsGeneral['job-schedule-report-channels'] );
+$optReportMode		= UI_HTML_Elements::Options( $wordsGeneral['job-schedule-report-modes'], $item->reportMode );
+$optReportChannel	= UI_HTML_Elements::Options( $wordsGeneral['job-schedule-report-channels'], $item->reportChannel );
 
 
 
@@ -102,22 +117,21 @@ jQuery(document).ready(function(){
 	ModuleManageJobSchedule.valuesSelected.month = '.json_encode( array_keys( $words['options-monthOfYear'] ) ).';
 	ModuleManageJobSchedule.valuesSelected.weekday = '.json_encode( array_keys( $words['options-dayOfWeek'] ) ).';
 	ModuleManageJobSchedule.init();
-//	var exp = "*/2 */3 1-4 */6 1,2,3,4,5";
-	var exp = "9-10 7-8 5-6 3-4 1-2";
-	ModuleManageJobSchedule.applyCronExpressionToInputs(exp);
-
-	var exp = "P1Y2M3DT4H5M";
-	ModuleManageJobSchedule.applyIntervalExpressionToInputs(exp);
-
-	var exp = "2020-08-08 01:00";
-	ModuleManageJobSchedule.applyDatetimeExpressionToInputs(exp);
+	var exp = "'.$item->expression.'";
+	var format = "'.$format.'";
+	if(format == "interval")
+		ModuleManageJobSchedule.applyIntervalExpressionToInputs(exp);
+	else if(format == "datetime")
+		ModuleManageJobSchedule.applyDatetimeExpressionToInputs(exp);
+	else
+		ModuleManageJobSchedule.applyCronExpressionToInputs(exp);
 });
 ';
 
 $form		= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'label', $words['add']['labelJobDefinitionId'], array( 'for' => 'input_jobDefinitionId' ) ),
+			UI_HTML_Tag::create( 'label', $words['edit']['labelJobDefinitionId'], array( 'for' => 'input_jobDefinitionId' ) ),
 			UI_HTML_Tag::create( 'select', $optDefinition, array(
 				'id'		=> 'input_jobDefinitionId',
 				'name'		=> 'jobDefinitionId',
@@ -125,23 +139,25 @@ $form		= UI_HTML_Tag::create( 'div', array(
 			) ),
 		), array( 'class' => 'span4' ) ),
 		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'label', $words['add']['labelArguments'], array( 'for' => 'input_arguments' ) ),
+			UI_HTML_Tag::create( 'label', $words['edit']['labelArguments'], array( 'for' => 'input_arguments' ) ),
 			UI_HTML_Tag::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'id'		=> 'input_arguments',
 				'name'		=> 'arguments',
 				'class'		=> 'span12',
+				'value'		=> htmlentities( $item->arguments, ENT_QUOTES, 'UTF-8' ),
 			) ),
 		), array( 'class' => 'span8' ) ),
 	), array( 'class' => 'row-fluid' ) ),
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'label', $words['add']['labelTitle'], array( 'for' => 'input_title' ) ),
+			UI_HTML_Tag::create( 'label', $words['edit']['labelTitle'], array( 'for' => 'input_title' ) ),
 			UI_HTML_Tag::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'id'		=> 'input_title',
 				'name'		=> 'title',
 				'class'		=> 'span12',
+				'value'		=> htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ),
 			) ),
 		), array( 'class' => 'span7' ) ),
 		UI_HTML_Tag::create( 'div', array(
@@ -153,7 +169,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 			) ),
 		), array( 'class' => 'span3' ) ),
 		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'label', $words['add']['labelStatus'], array( 'for' => 'input_status' ) ),
+			UI_HTML_Tag::create( 'label', $words['edit']['labelStatus'], array( 'for' => 'input_status' ) ),
 			UI_HTML_Tag::create( 'select', $optStatus, array(
 				'id'		=> 'input_status',
 				'name'		=> 'status',
@@ -174,7 +190,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 							UI_HTML_Tag::create( 'div', array(
 								UI_HTML_Tag::create( 'h4', 'Zeit' ),
 								UI_HTML_Tag::create( 'div', array(
-									UI_HTML_Tag::create( 'label', $words['add']['labelHourOfDay'], array( 'for' => 'input_hourOfDay' ) ),
+									UI_HTML_Tag::create( 'label', $words['edit']['labelHourOfDay'], array( 'for' => 'input_hourOfDay' ) ),
 									UI_HTML_Tag::create( 'select', $optHourOfDay, array(
 										'id'		=> 'input_hourOfDay',
 										'name'		=> 'hourOfDay',
@@ -221,7 +237,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 							UI_HTML_Tag::create( 'h4', 'Datum' ),
 							UI_HTML_Tag::create( 'div', array(
 								UI_HTML_Tag::create( 'div', array(
-									UI_HTML_Tag::create( 'label', $words['add']['labelMonthOfYear'], array( 'for' => 'input_monthOfYear' ) ),
+									UI_HTML_Tag::create( 'label', $words['edit']['labelMonthOfYear'], array( 'for' => 'input_monthOfYear' ) ),
 									UI_HTML_Tag::create( 'select', $optMonthOfYear, array(
 										'id'		=> 'input_monthOfYear',
 										'name'		=> 'monthOfYear',
@@ -269,7 +285,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 						UI_HTML_Tag::create( 'div', array(
 							UI_HTML_Tag::create( 'div', array(
 								UI_HTML_Tag::create( 'div', array(
-									UI_HTML_Tag::create( 'label', $words['add']['labelMinuteOfHour'], array( 'for' => 'input_minuteOfHour' ) ),
+									UI_HTML_Tag::create( 'label', $words['edit']['labelMinuteOfHour'], array( 'for' => 'input_minuteOfHour' ) ),
 									UI_HTML_Tag::create( 'select', $optMinuteOfHour, array(
 										'id'		=> 'input_minuteOfHour',
 										'name'		=> 'minuteOfHour',
@@ -315,7 +331,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 						UI_HTML_Tag::create( 'div', array(
 							UI_HTML_Tag::create( 'div', array(
 								UI_HTML_Tag::create( 'div', array(
-									UI_HTML_Tag::create( 'label', $words['add']['labelDayOfWeek'], array( 'for' => 'input_dayOfWeek' ) ),
+									UI_HTML_Tag::create( 'label', $words['edit']['labelDayOfWeek'], array( 'for' => 'input_dayOfWeek' ) ),
 									UI_HTML_Tag::create( 'select', $optDayOfWeek, array(
 										'id'		=> 'input_dayOfWeek',
 										'name'		=> 'dayOfWeek',
@@ -361,7 +377,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 						UI_HTML_Tag::create( 'div', array(
 							UI_HTML_Tag::create( 'div', array(
 								UI_HTML_Tag::create( 'div', array(
-									UI_HTML_Tag::create( 'label', $words['add']['labelDayOfMonth'], array( 'for' => 'input_dayOfMonth' ) ),
+									UI_HTML_Tag::create( 'label', $words['edit']['labelDayOfMonth'], array( 'for' => 'input_dayOfMonth' ) ),
 									UI_HTML_Tag::create( 'select', $optDayOfMonth, array(
 										'id'		=> 'input_dayOfMonth',
 										'name'		=> 'dayOfMonth',
@@ -423,7 +439,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(
 					UI_HTML_Tag::create( 'div', array(
 						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'label', $words['add']['labelYears'], array( 'for' => 'input_years' ) ),
+							UI_HTML_Tag::create( 'label', $words['edit']['labelYears'], array( 'for' => 'input_years' ) ),
 							UI_HTML_Tag::create( 'input', NULL, array(
 								'type'		=> 'number',
 								'id'		=> 'input_years',
@@ -436,7 +452,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 							) ),
 						), array( 'class' => 'span2' ) ),
 						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'label', $words['add']['labelMonths'], array( 'for' => 'input_months' ) ),
+							UI_HTML_Tag::create( 'label', $words['edit']['labelMonths'], array( 'for' => 'input_months' ) ),
 							UI_HTML_Tag::create( 'input', NULL, array(
 								'type'		=> 'number',
 								'id'		=> 'input_months',
@@ -449,7 +465,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 							) ),
 						), array( 'class' => 'span2' ) ),
 						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'label', $words['add']['labelDays'], array( 'for' => 'input_days' ) ),
+							UI_HTML_Tag::create( 'label', $words['edit']['labelDays'], array( 'for' => 'input_days' ) ),
 							UI_HTML_Tag::create( 'input', NULL, array(
 								'type'		=> 'number',
 								'id'		=> 'input_days',
@@ -462,7 +478,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 							) ),
 						), array( 'class' => 'span2' ) ),
 						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'label', $words['add']['labelHours'], array( 'for' => 'input_hours' ) ),
+							UI_HTML_Tag::create( 'label', $words['edit']['labelHours'], array( 'for' => 'input_hours' ) ),
 							UI_HTML_Tag::create( 'input', NULL, array(
 								'type'		=> 'number',
 								'id'		=> 'input_hours',
@@ -475,7 +491,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 							) ),
 						), array( 'class' => 'span2' ) ),
 						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'label', $words['add']['labelMinutes'], array( 'for' => 'input_minutes' ) ),
+							UI_HTML_Tag::create( 'label', $words['edit']['labelMinutes'], array( 'for' => 'input_minutes' ) ),
 							UI_HTML_Tag::create( 'input', NULL, array(
 								'type'		=> 'number',
 								'id'		=> 'input_minutes',
@@ -504,7 +520,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['add']['labelDate'], array( 'for' => 'input_date' ) ),
+					UI_HTML_Tag::create( 'label', $words['edit']['labelDate'], array( 'for' => 'input_date' ) ),
 					UI_HTML_Tag::create( 'input', NULL, array(
 						'type'		=> 'date',
 						'id'		=> 'input_date',
@@ -513,7 +529,7 @@ $form		= UI_HTML_Tag::create( 'div', array(
 					) ),
 				), array( 'class' => 'span3' ) ),
 				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['add']['labelTime'], array( 'for' => 'input_time' ) ),
+					UI_HTML_Tag::create( 'label', $words['edit']['labelTime'], array( 'for' => 'input_time' ) ),
 					UI_HTML_Tag::create( 'input', NULL, array(
 						'type'		=> 'time',
 						'id'		=> 'input_time',
@@ -559,19 +575,20 @@ $form		= UI_HTML_Tag::create( 'div', array(
 				'id'		=> 'input_reportReceivers',
 				'name'		=> 'reportReceivers',
 				'class'		=> 'span12',
+				'value'		=> htmlentities( $item->reportReceivers, ENT_QUOTES, 'UTF-8' ),
 			) ),
 		), array( 'class' => 'span7 optional reportChannel reportChannel-1 reportChannel-2' ) ),
 	), array( 'class' => 'row-fluid' ) ),
 ) );
 
-$buttons	= UI_HTML_Tag::create( 'div', $buttonCancel.' '.$buttonAdd, array() );
+$buttons	= UI_HTML_Tag::create( 'div', $buttonCancel.' '.$buttonSave, array() );
 
 $tabs		= View_Manage_Job::renderTabs( $env, 'schedule' );
 
 $env->getPage()->js->addScriptOnReady( $script );
 
 return $tabs.UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', $words['add']['heading'] ),
+	UI_HTML_Tag::create( 'h3', $words['edit']['heading'] ),
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'form', array(
 			UI_HTML_Tag::create( 'input', NULL, array(
@@ -596,6 +613,6 @@ return $tabs.UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'div', array(
 				$buttons,
 			), array( 'class' => 'buttonbar' ) ),
-		), array( 'action' => './manage/job/schedule/add', 'method' => 'post', 'id' => 'formManageJobScheduleAdd' ) ),
+		), array( 'action' => './manage/job/schedule/edit/'.$item->jobScheduleId, 'method' => 'post', 'id' => 'formManageJobScheduleEdit' ) ),
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );

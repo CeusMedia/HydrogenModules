@@ -3,7 +3,7 @@
 	<title><![CDATA[Manage: Jobs]]></title>
 	<description><![CDATA[...]]></description>
 	<category>Management</category>
-	<version>0.3.0</version>
+	<version>0.3.1</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add definition index.</log>
@@ -16,6 +16,7 @@
 	<log version="0.2.8">Add job run view.</log>
 	<log version="0.2.9">Add view helper for attributes of job definitions and runs.</log>
 	<log version="0.3.0">Complete job run management bysupporting abort and terminate.</log>
+	<log version="0.3.1">Support schedule formats: cron, interval and datetime.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -40,9 +41,10 @@
 		<template>manage/job/run/index.list.php</template>
 		<template>manage/job/run/view.php</template>
 		<template>manage/job/schedule/add.php</template>
-<!--		<template>manage/job/schedule/edit.php</template>-->
+		<template>manage/job/schedule/edit.php</template>
 		<template>manage/job/schedule/index.php</template>
 		<style>module.manage.jobs.css</style>
+		<script>module.manage.jobs.js</script>
 		<locale>de/manage/job.ini</locale>
 		<locale>de/manage/job/definition.ini</locale>
 		<locale>de/manage/job/run.ini</locale>
@@ -55,6 +57,7 @@
 	<relations>
 		<needs type="module">Resource_Jobs</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+		<needs type="composer">lorisleiva/cron-translator</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="manage/job" rank="85">Job-Dashboard</link>
 	<link xml:lang="de" access="acl" path="manage/job/schedule" rank="86">Job-Ausführungen</link>

@@ -57,22 +57,19 @@ if( $scheduledJobs ){
 		if( $item->status == Model_Job_Schedule::STATUS_DISABLED )
 			$status	= UI_HTML_Tag::create( 'span', 'deaktiviert', array( 'class' => 'badge badge-warning' ) );
 
+		$type	= $words['types'][$item->type];
+
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $item->definition->identifier, array( 'class' => '' ) ),
-			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $item->minuteOfHour, array( 'style' => 'flex: 1' ) ),
-				UI_HTML_Tag::create( 'div', $item->hourOfDay, array( 'style' => 'flex: 1' ) ),
-				UI_HTML_Tag::create( 'div', $item->dayOfWeek, array( 'style' => 'flex: 1' ) ),
-				UI_HTML_Tag::create( 'div', $item->dayOfMonth, array( 'style' => 'flex: 1' ) ),
-				UI_HTML_Tag::create( 'div', $item->monthOfYear, array( 'style' => 'flex: 1' ) ),
-			), array( 'style' => 'display: flex' ) ) ),
-			UI_HTML_Tag::create( 'td', $status, array( 'class' => '' ) ),
+			UI_HTML_Tag::create( 'td', $type, array( 'class' => '' ) ),
+			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'tt', $item->expression ), array( 'class' => '' ) ),
 			UI_HTML_Tag::create( 'td', $item->lastRunAt ? date( 'd.m.Y H:i', $item->lastRunAt ) : '-', array( 'class' => '' ) ),
+			UI_HTML_Tag::create( 'td', $status, array( 'class' => '' ) ),
 			UI_HTML_Tag::create( 'td', $buttons, array( 'class' => '' ) ),
 		) );
 	}
-	$cols	= UI_HTML_Elements::ColumnGroup( '', '20%', '140px', '140px', '140px' );
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( '1', '2', '3', '4' ) ) );
+	$cols	= UI_HTML_Elements::ColumnGroup( '', '180px', '140px', '140px', '140px', '140px' );
+	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Job ID / Title', 'Typ/Format', 'Ausführung', 'letzter Lauf', 'Zustand', '' ) ) );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
 	$table	= UI_HTML_Tag::create( 'table', array( $cols, $thead, $tbody ), array( 'class' => 'table' ) );
 }

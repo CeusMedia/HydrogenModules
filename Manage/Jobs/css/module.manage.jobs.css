@@ -1,0 +1,26 @@
+div[class*="span"].span_input_value,
+div[class*="span"].span_input_values,
+div[class*="span"].span_input_range {
+	display: none;
+	}
+div.label_dateCode {
+	border: 1px solid gray;
+	background-color: rgba(127, 127, 127, 0.25);
+	border-radius: 4px;
+	padding: 4px 10px;
+	font-size: 1.3em;
+	font-family: monospace;
+	line-height: 1.6em;
+	}
+div.label_dateCode>em {
+	font-size: 1em;
+	}
+
+div.optional.format.format-interval,
+div.optional.format.format-week,
+div.optional.format.format-date {
+	display: none;
+	}
+div.optional.format.format-month {
+	display: block;
+	}
