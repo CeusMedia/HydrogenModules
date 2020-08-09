@@ -100,7 +100,7 @@ class Model_Config_Page
 	protected function loadPages()
 	{
 		$this->fileData	= FS_File_JSON_Reader::load( $this->filePath, TRUE );
-		$this->scopes	= array_keys( $this->fileData );
+		$this->scopes	= array_keys( (array) $this->fileData );
 		$this->pages	= array();
 		$pageId			= 0;
 		$baseItem		= array(
