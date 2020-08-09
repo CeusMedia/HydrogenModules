@@ -20,7 +20,7 @@ class Mail_Info_Contact extends Mail_Abstract{
 			'message'		=> nl2br( htmlentities( strip_tags( $data->message ), ENT_QUOTES, 'UTF-8' ) ),
 			'newsletter'	=> !empty( $data->newsletter ) ? 'ja' : 'nein',
 		) );
-		$this->addHtmlBody( $html );
+		$this->setHtml( $html );
 
 		return (object) array(
 			'plain'	=> NULL,
