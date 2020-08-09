@@ -25,7 +25,7 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 			foreach( $ranges as $rangeKey => $rangeLabel ){
 				$conditions	= array(
 					'status'		=> $statusKey,
-					'enqueuedAt'	=> '>='.( time() - $rangeKey * 24 * 3600 ),
+					'enqueuedAt'	=> '>= '.( time() - $rangeKey * 24 * 3600 ),
 				);
 				$data[$statusKey][$rangeKey]	= $model->count( $conditions );
 			}
