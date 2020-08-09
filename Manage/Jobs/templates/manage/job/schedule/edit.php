@@ -187,8 +187,8 @@ $form		= UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(
 					UI_HTML_Tag::create( 'div', array(
 						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'div', array(
 								UI_HTML_Tag::create( 'h4', 'Zeit' ),
+							UI_HTML_Tag::create( 'div', array(
 								UI_HTML_Tag::create( 'div', array(
 									UI_HTML_Tag::create( 'label', $words['edit']['labelHourOfDay'], array( 'for' => 'input_hourOfDay' ) ),
 									UI_HTML_Tag::create( 'select', $optHourOfDay, array(

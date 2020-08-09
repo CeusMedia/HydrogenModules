@@ -59,10 +59,15 @@ if( $scheduledJobs ){
 
 		$type	= $words['types'][$item->type];
 
+		$expression	= $item->expression;
+		if( (int) $item->type === Model_Job_Schedule::TYPE_CRON )
+			$expression	= UI_HTML_Tag::create( 'abbr', $expression, array( 'title' => \Lorisleiva\CronTranslator\CronTranslator::translate( $expression ) ) );
+
+
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $item->definition->identifier, array( 'class' => '' ) ),
 			UI_HTML_Tag::create( 'td', $type, array( 'class' => '' ) ),
-			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'tt', $item->expression ), array( 'class' => '' ) ),
+			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'tt', $expression ), array( 'class' => '' ) ),
 			UI_HTML_Tag::create( 'td', $item->lastRunAt ? date( 'd.m.Y H:i', $item->lastRunAt ) : '-', array( 'class' => '' ) ),
 			UI_HTML_Tag::create( 'td', $status, array( 'class' => '' ) ),
 			UI_HTML_Tag::create( 'td', $buttons, array( 'class' => '' ) ),
