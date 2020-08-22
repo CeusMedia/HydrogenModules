@@ -1,33 +1,19 @@
 <?php
-class Controller_Csrf extends CMF_Hydrogen_Controller{
-
+class Controller_Csrf extends CMF_Hydrogen_Controller
+{
 	protected $logic;
 	protected $messenger;
+	protected $moduleConfig;
 
-	public function __onInit(){
-		$this->logic		= Logic_CSRF::getInstance( $this->env );
+	public function __onInit()
+	{
+		$this->logic		= $this->env->getLogic()->get( 'CSRF' );
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.security_csrf.', TRUE );
 	}
 
-	public function ajaxGetToken(){
-		$this->checkAjaxRequest();
-		$formName	= $this->env->getRequest()->get( 'formName' );
-		try{
-			if( !$formName )
-				throw new InvalidArgumentException( 'Form name is missing' );
-	        $token	= $this->logic->getToken( $formName );
-			$this->handleJsonResponse( TRUE, array( 'token' => $token ) );
-		}
-		catch( Exception $e ){
-			$this->handleJsonResponse( FALSE, array(
-				'error'		=> $e->getMessage(),
-				'exception'	=> $e
-			) );
-		}
-	}
-
-	public function checkToken( $redirectUrl = NULL ){
+	public function checkToken( $redirectUrl = NULL )
+	{
 		$token		= $this->env->getRequest()->get( 'csrf_token' );							//  get token from request
 		$formName	= $this->env->getRequest()->get( 'csrf_form_name' );						//  get form name from request
 		$result		= $this->logic->verifyToken( $formName, $token );							//  check token against environment
@@ -49,15 +35,15 @@ class Controller_Csrf extends CMF_Hydrogen_Controller{
 					break;
 				case Logic_CSRF::CHECK_TOKEN_REPLACED:											//  form has been loaded again since
 					$statusCode	= 409;															//  HTTP status: Conflict
-                    $this->messenger->noteError( $msg->error_token_replaced );					//  note error
+					$this->messenger->noteError( $msg->error_token_replaced );					//  note error
 					break;
 				case Logic_CSRF::CHECK_TOKEN_OUTDATED:											//  token is too old
 					$statusCode	= 408;															//  HTTP status: Request Timeout
 					$maxMinutes	= floor( $this->moduleConfig->get( 'duration' ) / 60 );			//  calculate time out minutes
 					$message	= sprintf( $msg->error_token_outdated, $maxMinutes );			//  generate message
-                    $this->messenger->noteError( $message );									//  note error
+					$this->messenger->noteError( $message );									//  note error
 					break;
-                case Logic_CSRF::CHECK_SESSION_MISMATCH:										//  session ID is not matching to token
+				case Logic_CSRF::CHECK_SESSION_MISMATCH:										//  session ID is not matching to token
 					$statusCode	= 409;															//  HTTP status: Conflict
 					$this->messenger->noteFailure( $msg->error_session_mismatch );				//  note failure
 					break;
