@@ -1,11 +1,22 @@
 <?php
-class Controller_Info_Contact extends CMF_Hydrogen_Controller{
+class Controller_Info_Contact extends CMF_Hydrogen_Controller
+{
+	protected $request;
+	protected $messenger;
+	protected $moduleConfig;
 
-	public function __onInit(){
+	protected $useCaptcha;
+	protected $useCsrf;
+	protected $useHoneypot;
+	protected $useNewsletter;
+
+	public function __onInit()
+	{
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();
 		$this->moduleConfig		= $this->env->getConfig()->getAll( "module.info_contact.", TRUE );
 		$this->useCaptcha		= NULL;
+		$this->useCsrf			= FALSE;
 
 		if( $this->moduleConfig->get( 'captcha.enable' ) ){
 			$configCaptcha	= $this->env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
@@ -14,13 +25,31 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 			else
 				$this->useCaptcha	= $configCaptcha->get( 'mode' );
 		}
+		if( $this->moduleConfig->get( 'csrf.enable' ) ){
+			$configCsrf	= $this->env->getConfig()->getAll( 'module.security_csrf.', TRUE );
+			if( !$this->env->getModules()->has( 'Security_CSRF' ) ){
+				$this->messenger->noteFailure( 'Module "Security_CSRF" needs to be installed.' );
+				$this->env->getLog()->log( 'warn', 'Module "Security_CSRF" needs to be installed.' );
+			}
+//	@todo activate these lines after module Security:CSRF got config switch "active", maybe at version 0.2.8
+//			else if( !$configCsrf->get( 'active' ) ){
+//				$this->messenger->noteFailure( 'Module "Security_CSRF" needs to be enabled.' );
+//				$this->env->getLog()->log( 'warn', 'Module "Security_CSRF" needs to be enabled.' );
+//			}
+			else
+				$this->useCsrf	= TRUE;
+		}
 		$this->useNewsletter	= $this->moduleConfig->get( 'newsletter.enable' );
+		$this->useHoneypot		= $this->moduleConfig->get( 'honeypot.enable' );
+
 		$this->addData( 'useCaptcha', $this->useCaptcha );
+		$this->addData( 'useCsrf', $this->useCsrf );
 		$this->addData( 'useNewsletter', $this->useNewsletter );
-		$this->addData( 'useHoneypot', $this->moduleConfig->get( 'honeypot.enable' ) );
+		$this->addData( 'useHoneypot', $this->useHoneypot );
 	}
 
-	public function ajaxForm(){
+	public function ajaxForm()
+	{
 		$message	= '';
 		$data		= NULL;
 		if( !$this->request->isAjax() )
@@ -55,10 +84,11 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function index(){
+	public function index()
+	{
 		$words			= (object) $this->getWords( 'index' );
 
-		if( $this->request->has( 'save' ) ){
+		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$valid	= TRUE;
 			if( !strlen( trim( $this->request->get( 'fullname' ) ) ) ){
 				$this->messenger->noteError( $words->msgErrorFullNameMissing );
@@ -79,6 +109,17 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 			if( strlen( trim( $this->request->get( 'trap' ) ) ) ){
 				$this->messenger->noteError( $words->msgErrorAccessDenied );
 				$valid	= FALSE;
+			}
+			if( $this->useCsrf ){
+				$logic	= $this->env->getLogic()->get( 'CSRF' );
+				if( !$logic->verifyToken(
+					$this->request->get( 'csrf_form_name' ),
+					$this->request->get( 'csrf_token' )
+				) ){
+					if( !empty( $words->msgErrorCsrfFailed ) )
+						$this->messenger->noteError( $words->msgErrorCsrfFailed );
+					$valid	= FALSE;
+				}
 			}
 			if( $this->useCaptcha ){
 				$captchaWord	= $this->request->get( 'captcha' );
@@ -174,4 +215,3 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller{
 		$this->addData( 'message', $this->request->get( 'message' ) );
 	}
 }
-?>

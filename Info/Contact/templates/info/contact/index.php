@@ -82,6 +82,12 @@ if( $useHoneypot ){
 	</div>';
 }
 
+$csrf		= '';
+if( $useCsrf ){
+	$helper	= new View_Helper_CSRF( $env );
+	$csrf	= $helper->setFormName( 'Contact' )->render();
+}
+
 $content	= $textTop.'
 <a id="'.$w->idPanel.'"></a>
 <div class="content-panel">
@@ -144,6 +150,7 @@ $content	= $textTop.'
 			'.$captcha.'
 			'.$honeypot.'
 			'.$textPrivacy.'
+			'.$csrf.'
 			<div class="buttonbar">
 				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' '.$w->buttonSave.'</button>
 				<button type="reset" class="btn btn-small">'.$w->buttonReset.'</button>

@@ -1,0 +1,20 @@
+<%salutation%>
+
+Question or inquiry received:
+
+––  PERSON  –––––––––––––––––––––––––––––––––––––––––––––––
+
+Person:   <%person%>
+E-Mail:   <%email%>
+Company:  <%?company%>
+Address:  <%?address%>
+
+––  MESSAGE  ––––––––––––––––––––––––––––––––––––––––––––––
+
+Anliegen: <%type%>
+Thema:    <%subject%>
+Message:
+
+<%?body%>
+
+–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––

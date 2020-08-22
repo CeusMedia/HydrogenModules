@@ -1,13 +1,14 @@
 <?php
-class View_Helper_Info_Contact_Form_Trigger{
-
+class View_Helper_Info_Contact_Form_Trigger
+{
 	protected $class		= 'btn';
 	protected $icon;
 	protected $iconPosition	= 'left';
 	protected $label;
 	protected $modalId;
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->modalId )
 			throw new RuntimeException( 'No modal ID set' );
 		$trigger	= new \CeusMedia\Bootstrap\Modal\Trigger();
@@ -24,27 +25,32 @@ class View_Helper_Info_Contact_Form_Trigger{
 		return $trigger->setLabel( $label )->render();
 	}
 
-	public function setModalId( $modalId ){
+	public function setModalId( $modalId ): self
+	{
 		$this->modalId	= $modalId;
 		return $this;
 	}
 
-	public function setClass( $class ){
+	public function setClass( $class ): self
+	{
 		$this->class	= $class;
 		return $this;
 	}
 
-	public function setIcon( $icon ){
+	public function setIcon( $icon ): self
+	{
 		$this->icon		= $icon;
 		return $this;
 	}
 
-	public function setIconPosition( $position = 'left' ){
+	public function setIconPosition( $position = 'left' ): self
+	{
 		$this->iconPosition	= $position;
 		return $this;
 	}
 
-	public function setLabel( $label ){
+	public function setLabel( $label ): self
+	{
 		$this->label	= $label;
 		return $this;
 	}

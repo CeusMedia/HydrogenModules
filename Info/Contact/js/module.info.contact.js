@@ -1,4 +1,4 @@
-ModuleInfoContactForm = {
+var ModuleInfoContactForm = {
 	durationLayerFadeIn: 150,
 	durationLayerFadeOut: 2000,
 	durationLayerShow: 4000,

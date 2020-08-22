@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Info_Contact_Form_Modal{
-
+class View_Helper_Info_Contact_Form_Modal
+{
 	protected $id;
 	protected $subject;
 	protected $heading;
@@ -9,13 +9,15 @@ class View_Helper_Info_Contact_Form_Modal{
 	protected $moduleConfig;
 	protected $moduleWords;
 
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env			= $env;
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.info_contact.', TRUE );
 		$this->moduleWords	= $this->env->getLanguage()->getWords( 'info/contact' );
 	}
 
-	public function render(){
+	public function render()
+	{
 		if( !$this->id )
 			throw new RuntimeException( 'No ID set' );
 
@@ -153,7 +155,7 @@ class View_Helper_Info_Contact_Form_Modal{
 		$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 		$modal	= new \CeusMedia\Bootstrap\Modal( $this->id );
 //		$modal->setFormAction( './info/contact/form'.( $this->from ? '?from='.$this->from : '' ) );
-		$modal->setFormAction( './info/contact/ajaxForm' );
+		$modal->setFormAction( './info/contact/ajax/form' );
 		$modal->setFormSubmit( 'ModuleInfoContactForm.sendContactForm(this)' );
 		$modal->setHeading( $this->heading ? $this->heading : $words['form']['heading'] );
 		$modal->setBody( $form );
@@ -167,37 +169,44 @@ class View_Helper_Info_Contact_Form_Modal{
 	}
 
 	//  --  SETTERS  --  //
-	public function setId( $id ){
+	public function setId( $id ): self
+	{
 		$this->id		= $id;
 		return $this;
 	}
 
-	public function setHeading( $heading ){
+	public function setHeading( $heading ): self
+	{
 		$this->heading		= $heading;
 		return $this;
 	}
 
-	public function setSubject( $subject ){
+	public function setSubject( $subject ): self
+	{
 		$this->subject	= $subject;
 		return $this;
 	}
 
-	public function setType( $type ){
+	public function setType( $type ): self
+	{
 		$this->type		= $type;
 		return $this;
 	}
 
-	public function setTypes( $types ){
+	public function setTypes( $types ): self
+	{
 		$this->types		= $types;
 		return $this;
 	}
 /*
-	public function setFrom( $from ){
+	public function setFrom( $from ): self
+	{
 		$this->from		= $from;
 	}*/
 
 	//  --  PROTECTED  --  //
-	protected function renderTypeOptions(){
+	protected function renderTypeOptions()
+	{
 		//  TYPES: Enabled thru config and hook param
 		$typesConfig	= array();
 		foreach( $this->moduleConfig->getAll( 'modal.show.type.' ) as $key => $value )

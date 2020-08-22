@@ -1,0 +1,20 @@
+<%salutation%>
+
+Du hast einen Nachricht bekommen von:
+
+––  PERSON  –––––––––––––––––––––––––––––––––––––––––––––––
+
+Person:      <%person%>
+E-Mail:      <%email%>
+Unternehmen: <%?company%>
+Anschrift:   <%?address%>
+
+––  NACHRICHT  ––––––––––––––––––––––––––––––––––––––––––––
+
+Anliegen:    <%type%>
+Thema:       <%subject%>
+Message:
+
+<%?body%>
+
+–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––

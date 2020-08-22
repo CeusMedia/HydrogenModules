@@ -1,0 +1,20 @@
+<%salutation%>
+
+Jemand hat über deine Webseite den Kontakt zu dir gesucht:
+
+––––––––––––––––––––––––––––––––––––––––––––––––––
+
+Name:       <%fullname%>
+E-Mail:     <%email%>
+Subject:    <%subject%>
+Type:       <%type%>
+Newsletter: <%newsletter%>
+Message:
+
+<%message%>
+
+––––––––––––––––––––––––––––––––––––––––––––––––––
+
+Bitte speichere dir die E-Mail-Adresse als Kontakt und antworte, sobald du kannst.
+
+Schönen Tag noch ;-)
