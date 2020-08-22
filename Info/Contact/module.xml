@@ -78,6 +78,7 @@
 	<config protected="yes" type="integer" name="captcha.length">4</config>
 	<config protected="yes" type="string" name="captcha.strength" values="soft,hard">soft</config>
 	<config protected="yes" type="string" name="captcha.path"></config>
+	<config protected="yes" type="boolean" name="csrf.enable">yes</config>
 	<config protected="yes" type="boolean" name="honeypot.enable">yes</config>
 	<config protected="yes" type="boolean" name="newsletter.enable">yes</config>
 	<config protected="yes" type="boolean" name="modal.show.company">yes</config>
