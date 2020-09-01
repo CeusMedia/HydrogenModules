@@ -17,7 +17,9 @@ class View_Helper_CSRF
 		$formName	= $formName ? $formName : $this->formName;
 		if( !$formName )
 			throw new RuntimeException( 'No form name set' );
-		$token	= $this->env->getLogic()->get( 'CSRF' )->getToken( $formName );
+//		$token	= $this->env->getLogic()->get( 'CSRF' )->getToken( $formName );
+		$logic	= Logic_CSRF::getInstance( $this->env );
+		$token	= $logic->getToken( $formName );
 		$input1	= UI_HTML_Tag::create( 'input', NULL, array(
 			'type'	=> 'hidden',
 			'name'	=> 'csrf_token',

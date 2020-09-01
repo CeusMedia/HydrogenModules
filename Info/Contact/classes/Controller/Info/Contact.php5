@@ -111,7 +111,8 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller
 				$valid	= FALSE;
 			}
 			if( $this->useCsrf ){
-				$logic	= $this->env->getLogic()->get( 'CSRF' );
+//				$logic	= $this->env->getLogic()->get( 'CSRF' );
+				$logic	= Logic_CSRF::getInstance( $this->env );
 				if( !$logic->verifyToken(
 					$this->request->get( 'csrf_form_name' ),
 					$this->request->get( 'csrf_token' )
