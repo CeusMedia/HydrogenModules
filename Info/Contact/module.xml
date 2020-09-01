@@ -55,7 +55,9 @@
 		<locale>de/html/info/contact/form/error.html</locale>
 		<locale>de/info/contact.ini</locale>
 		<locale>de/mail/info/contact.html</locale>
+		<locale>de/mail/info/contact.txt</locale>
 		<locale>de/mail/info/contact/form.html</locale>
+		<locale>de/mail/info/contact/form.txt</locale>
 		<locale>en/html/info/contact/bottom.html</locale>
 		<locale>en/html/info/contact/privacy.html</locale>
 		<locale>en/html/info/contact/top.html</locale>
@@ -63,7 +65,9 @@
 		<locale>en/html/info/contact/form/error.html</locale>
 		<locale>en/info/contact.ini</locale>
 		<locale>en/mail/info/contact.html</locale>
+		<locale>en/mail/info/contact.txt</locale>
 		<locale>en/mail/info/contact/form.html</locale>
+		<locale>en/mail/info/contact/form.txt</locale>
 		<script load="auto" level="end">module.info.contact.js</script>
 		<style source="common" load="auto">module.info.contact.css</style>
 	</files>
