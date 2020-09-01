@@ -7,7 +7,6 @@ Somebody write a message using the contact form of your website.
 Name:       <%fullname%>
 E-Mail:     <%email%>
 Subject:    <%subject%>
-Type:       <%type%>
 Newsletter: <%newsletter%>
 Message:
 

@@ -7,7 +7,6 @@ Jemand hat über deine Webseite den Kontakt zu dir gesucht:
 Name:       <%fullname%>
 E-Mail:     <%email%>
 Subject:    <%subject%>
-Type:       <%type%>
 Newsletter: <%newsletter%>
 Message:
 
