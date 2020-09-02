@@ -18,7 +18,10 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends CMF_Hydrogen_View_Helper
 	public function __construct( CMF_Hydrogen_Environment $env ){
 		$this->setEnv( $env );
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.'.$this->moduleKey.'.', TRUE );
-		$this->setButtonClass( $this->moduleConfig->get( 'button.class' ) );
+		if( $this->moduleConfig->get( 'button.class' ) )
+			$this->setButtonClass( $this->moduleConfig->get( 'button.class' ) );
+		if( $this->moduleConfig->get( 'button.icon' ) )
+			$this->setButtonIcon( $this->moduleConfig->get( 'button.icon' ) );
 	}
 
 	public function __toString(): string
