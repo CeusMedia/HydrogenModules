@@ -749,6 +749,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$orders		= array( 'modifiedAt' => 'DESC', 'createdAt' => 'DESC' );
 		$documents	= $model->getAllByIndex( 'missionId', $missionId, $orders );
 		$this->addData( 'documents', $documents );
+		$this->env->getPage()->setTitle( $mission->title, 'prepend' );
 	}
 
 	public function filter( $reset = NULL){
@@ -1198,6 +1199,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$orders		= array( 'modifiedAt' => 'DESC', 'createdAt' => 'DESC' );
 		$documents	= $model->getAllByIndex( 'missionId', $missionId, $orders );
 		$this->addData( 'documents', $documents );
+		$this->env->getPage()->setTitle( $mission->title, 'prepend' );
 	}
 
 	public function viewDocument( $missionId, $missionDocumentId ){
