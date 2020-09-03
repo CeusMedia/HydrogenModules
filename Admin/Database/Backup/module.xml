@@ -14,9 +14,9 @@
 	<log version="0.3.3">Extract hook method from controller to own hook class.</log>
 	<log version="0.3.4">Add relation to module UI:Helper:HTML.</log>
 	<log version="0.3.5">Support remote dump management by module Resource:Frontend.</log>
-<!--	<log version="0.3.1">Support dump switch.</log>-->
-<!--	<log version="0.3.2">Add locale files.</log>-->
-<!--	<log version="0.3.2">Extract view panels.</log>-->
+<!--	<log version="0.3.x">Support dump switch.</log>-->
+<!--	<log version="0.3.y">Add locale files.</log>-->
+<!--	<log version="0.3.z">Extract view panels.</log>-->
 <!--	<log version="0.4">Replace dump comment file by dump model.</log>-->
 <!--	<log version="0.4.1">Improve notice on using dump copy.</log>-->
 <!--	<log version="0.4.2">Add compression for dumps.</log>-->
@@ -40,8 +40,8 @@
 		<template>admin/database/backup/view.recover.php</template>
 <!--		<file>config/jobs/admin.backup.database.xml</file>-->
 	</files>
-	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module" default="yes" original="yes">yes</config>
-	<config protected="yes" type="string" name="path" mandatory="yes" default="config/sql/" original="config/sql/">../config/sql/</config>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+	<config protected="yes" type="string" name="path" mandatory="yes">config/sql/</config>
 <!--	<config protected="yes" type="boolean" name="copy.active">yes</config>-->
 	<config protected="yes" type="string" name="copy.database"></config>
 	<relations>
