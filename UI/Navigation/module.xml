@@ -5,7 +5,7 @@
 
 This module combines several navigation types to provide a standard navigation composition.
 ]]></description>
-	<version>0.5.3</version>
+	<version>0.5.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -37,6 +37,7 @@ This module combines several navigation types to provide a standard navigation c
 	<log version="0.5.1">Add mask to blur/blend content below mobile sidebar.</log>
 	<log version="0.5.2">Improve exception handling for pages file.</log>
 	<log version="0.5.3">Improve brand integration for sidebar navigation.</log>
+	<log version="0.5.4">Extract hook to own class.</log>
 	<category>User Interface</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -69,5 +70,5 @@ This module combines several navigation types to provide a standard navigation c
 		<supports type="module">JS_Storage</supports>
 		<supports type="module">UI_Navigation_Bootstrap_Navbar</supports>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules">View_Helper_Navigation::___setupSidebar</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Navigation::setupSidebar</hook>
 </module>
