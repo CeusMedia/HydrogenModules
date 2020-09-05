@@ -99,6 +99,30 @@ class Logic_Page extends CMF_Hydrogen_Logic
 	}
 
 	/**
+	 *	Return page of type component by full path, if available.
+	 *	@access		public
+	 *	@param		string		$path			Full path to get component for
+	 *	@return		object|NULL					Page data object if available or NULL of strict is disabled
+	 *	@throws		InvalidArgumentException	if given path is not a string or empty
+	 *	@throws		RangeException				if no page object found for by fullpath in strict mode
+	 */
+	public function getComponentFromPath( $path, $strict = TRUE )
+	{
+		if( !strlen( trim( $path ) ) )
+			throw new InvalidArgumentException( 'No path given' );
+		$page	= $this->getPageModel()->getByIndices( array(
+			'type'		=> Model_Page::TYPE_COMPONENT,
+			'fullpath'	=> $path
+		) );
+		if( !$page ){
+			if( !$strict )
+				return NULL;
+			throw new RangeException( 'No component set for path: '.$path );
+		}
+		return $page;
+	}
+
+	/**
 	 *	@todo		move "from path" to method hasPageByPath and make pathOrId to pageId
 	 */
 	public function getPage( $pageId, bool $strict = TRUE  )
@@ -203,7 +227,7 @@ class Logic_Page extends CMF_Hydrogen_Logic
 		}
 		catch( Exception $e ){
 			if( $strict )
-				throw new RuntimeException( 'Requested page is not resolvable', 0, $e );
+				throw new RuntimeException( 'Requested page is not resolvable ('.$e->getMessage().')', 0, $e );
 			return NULL;
 		}
 	}
@@ -398,7 +422,6 @@ class Logic_Page extends CMF_Hydrogen_Logic
 
 	protected function getPageModel()
 	{
-//		$this->env->getMessenger()->noteInfo("...");
 		if( !empty( $this->model[$this->app] ) )
 			return $this->model[$this->app];
 		$envManaged		= $this->env;

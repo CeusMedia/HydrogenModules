@@ -257,7 +257,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
 						continue;																	//  skip to next appearance
 					}
-					if( !( $page = $logic->getPageFromPath( $pagePath ) ) ){						//  no page found by full path
+					if( !( $page = $logic->getComponentFromPath( $pagePath, FALSE ) ) ){			//  no page found by full path
 						$message	= $msgs->errorInvalidPath;										//  get error message
 						$env->getMessenger()->noteFailure( $message, $pagePath );					//  note failure in UI
 						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
