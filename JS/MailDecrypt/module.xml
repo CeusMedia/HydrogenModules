@@ -7,6 +7,7 @@ Renders mail links for encrypted addresses.
 This is the second step for protecting mail addresses against harvesting bots.<br/>The first part is to store mail addresses encrypted within HTML contents, like this:
 code:html><span class="encrypted-mail" data-name="john" data-host="example.net">John Doe</span><code
 ]]></description>
+	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/UI/JS/MailEncryption">End of life: Use module UI:JS:MailEncryption instead!</deprecation>
 	<version>0.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>

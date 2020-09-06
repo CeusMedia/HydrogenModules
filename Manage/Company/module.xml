@@ -2,6 +2,7 @@
 <module>
 	<title>Manage: Companies</title>
 	<description>Management for company accounts.</description>
+	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Manage/Companies">End of life: Use module Manage:Companies and Resource:Companies instead!</deprecation>
 	<version>0.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>

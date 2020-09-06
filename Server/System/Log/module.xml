@@ -44,6 +44,7 @@ Of course, this method is not the best way, since you bind your code to this mod
 Please think about using the hook instead.
 
 ]]></description>
+	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Server/Log/Exception">End of life: Use module Server:Log:Exception instead!</deprecation>
 	<category>Server</category>
 	<version>0.5.3</version>
 	<log version="0.1">Initial prototype.</log>

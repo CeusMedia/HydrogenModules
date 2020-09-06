@@ -10,6 +10,7 @@ DEPRECATED: Use module Work:Issues instead.
 ---------------
 
 ]]></description>
+	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Work/Issues">End of life: Use module Work:Issues instead!</deprecation>
 	<version>0.1</version>
 	<files>
 		<class>Controller/Bug.php5</class>

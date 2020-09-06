@@ -2,6 +2,7 @@
 <module>
 	<title>Manage: Branches</title>
 	<description>Management for company branches.</description>
+	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Manage/Companies">End of life: Use module Manage:Companies instead!</deprecation>
 	<version>0.3</version>
 	<log version="0.3">End of life: Use Manage:Companies instead.</log>
 	<category>Management</category>

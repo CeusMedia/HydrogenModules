@@ -2,6 +2,7 @@
 <module>
 	<title>Authentication</title>
 	<description>Module for authentication against local database using the Users module.</description>
+	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Resource/Authentication/Backend/Local">End of life: Use module Resource:Authentication:Backend:Local instead!</deprecation>
 	<version>0.5.2</version>
 	<log version="0.5">Migration to Bootstrap and FontAwesome.</log>
 	<log version="0.5.1">Adjusted configuration visibility.</log>

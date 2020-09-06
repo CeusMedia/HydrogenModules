@@ -19,6 +19,7 @@ list>
 <list
 
 ]]></description>
+	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Resource/Tracker/Matomo">End of life: Use module Resource:Tracker:Matomo instead!</deprecation>
 	<category>Resource</category>
 	<version>0.4.4</version>
 	<log version="0.1">Initial prototype.</log>
