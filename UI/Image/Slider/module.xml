@@ -12,7 +12,7 @@ code>[shortcode id="1"]<code
 
 ]]></description>
 	<category>User Interface</category>
-	<version>0.4</version>
+	<version>0.4.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Refactoring to Hydrogen Module.</log>
 	<log version="0.2.1">Added title layer.</log>
