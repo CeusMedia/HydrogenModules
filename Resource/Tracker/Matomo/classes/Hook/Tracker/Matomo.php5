@@ -1,6 +1,6 @@
 <?php
-class Hook_Tracker_Matomo extends CMF_Hydrogen_Controller{
-
+class Hook_Tracker_Matomo extends CMF_Hydrogen_Hook
+{
 	/**
 	 *	Loads connector to local Matomo installation for PHP side tracking, if enabled and available.
 	 *	Adds resource 'piwik' to environment.
@@ -12,7 +12,8 @@ class Hook_Tracker_Matomo extends CMF_Hydrogen_Controller{
 	 *	@param		public						$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_matomo.', TRUE );			//  get module configuration as dictionary
 		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )								//  Matomo tracking is disabled or ID is not set
 			return;
@@ -40,7 +41,8 @@ class Hook_Tracker_Matomo extends CMF_Hydrogen_Controller{
 	 *	@param		public						$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$config		= $env->getConfig()->getAll( 'module.resource_tracker_matomo.', TRUE );		//  get module configuration as dictionary
 		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )								//  Matomo tracking is disabled or ID is not set
 			return;
@@ -66,4 +68,4 @@ ModuleTrackerMatomo.init();';
 		$context->addBody( $noscript );															//  append noscript tag to body
 	}
 }
-?>
+

@@ -1,7 +1,8 @@
 <?php
-class Controller_Piwik extends CMF_Hydrogen_Controller{
-
-	public function index(){
+class Controller_Matomo extends CMF_Hydrogen_Controller
+{
+	public function index()
+	{
 	}
 }
-?>
+
