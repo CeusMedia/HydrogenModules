@@ -60,7 +60,7 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends CMF_Hydrogen_View_Helper
 			'class'			=> join( ' ', $buttonClasses ),
 			'data-toggle'	=> 'dropdown',
 		) );
-		$group		= Dropdown::create()->add( $button )->add( $dropdown );
+		$group		= (new Dropdown())->add( $button )->add( $dropdown );
 		if( $this->alignBottom )
 			$group->addClass( 'dropup' );
 		$container	= UI_HTML_Tag::create( 'div', $group, array( 'class' => $this->class ) );
