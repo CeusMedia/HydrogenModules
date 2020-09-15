@@ -96,6 +96,7 @@ class Hook_Work_Note /*extends CMF_Hydrogen_Hook*/{
 		$language	= $env->getLanguage();
 		$words		= $language->getWords( 'work/note' );
 		$icon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz' ) );
+		$list		= array();
 		foreach( $notes as $note ){
 			$isOpen		= TRUE;//in_array( $issue->status, $statusesActive );
 //			$status		= '('.$words['states'][$issue->status].')';
