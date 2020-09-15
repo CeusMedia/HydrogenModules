@@ -1,0 +1,24 @@
+.facts-vertical {
+	padding: 0;
+	margin: 0 0 0.5em 0;
+	}
+.facts-vertical dt {
+	display: block;
+	float: none;
+	clear: left;
+	font-size: 0.85em;
+	}
+.facts-vertical dd {
+	display: block;
+	float: none;
+	clear: left;
+	font-size: 1.1em;
+	margin: 0 0 0.5em 0;
+	}
+
+.dashboard-panel-work-timer-container-time {
+	margin-top: 0.8em;
+	padding: 0.8em 0 0.6em 0;
+	border-top: 1px solid rgba(127, 127, 127, 0.33)
+	text-align: center;
+	}

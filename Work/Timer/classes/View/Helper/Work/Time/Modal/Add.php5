@@ -1,0 +1,115 @@
+<?php
+class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time{
+
+	protected $missionId	= NULL;
+	protected $projectId	= NULL;
+
+	public function setModule( $module ){
+		$this->module		= $module;
+	}
+
+	public function setModuleId( $moduleId ){
+		$this->moduleId		= $moduleId;
+	}
+
+	public function setProjectId( $projectId ){
+		$this->projectId	= $projectId;
+	}
+
+	public function render(){
+		$logicProject	= Logic_Project::getInstance( $this->env );
+		$logicAuth		= Logic_Authentication::getInstance( $this->env );
+		$currentUserId	= $logicAuth->getCurrentUserId();
+
+		$words		= $this->getWords( NULL, 'work/time' );
+		$modules	= View_Helper_Work_Time_Timer::getRegisteredModules();
+		$module		= $modules[$this->module];
+		$w			= (object) $words['add'];
+
+		$optStatus	= $words['states'];
+		$optStatus	= UI_HTML_Elements::Options( $optStatus, 0 );
+
+		$optWorker	= array();
+		$users	= $logicProject->getProjectUsers( $this->projectId, array(), array( 'username' => 'ASC' ) );
+		foreach( $users as $user )
+			$optWorker[$user->userId]	= $user->username;
+		$optWorker	= UI_HTML_Elements::Options( $optWorker, $currentUserId );
+
+		$fieldProject	= '';
+		if( $this->projectId ){
+			$project	= $this->modelProject->get( $this->projectId );
+			$fieldProject	= '
+			<div class="row-fluid">
+				<div class="span4">
+					<label for="input_workerId">'.$w->labelWorkerId.'</label>
+					<select name="workerId" id="input_workerId" class="span12">'.$optWorker.'</select>
+				</div>
+				<div class="span8">
+					<label for="input_projectId">'.$w->labelProjectId.'</label>
+					<input type="text" name="project" id="input_project" class="span12" readonly="readonly" value="'.$project->title.'"/>
+				</div>
+			</div>';
+
+		}
+		$fieldRelation	= '';
+		if( $this->moduleId ){
+			$relation	= $module->model->get( $this->moduleId );
+			$fieldRelation	= '
+			<div class="row-fluid">
+				<div class="span12">
+					<label>'.$module->typeLabel.'</label>
+					<input type="text" class="span12" readonly="readonly" value="'.htmlentities( $relation->title, ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+			</div>';
+		}
+
+		return '
+<form action="./work/time/add" method="post">
+	<input type="hidden" name="from" value="'.$this->from.'"/>
+	<input type="hidden" name="projectId" value="'.$this->projectId.'"/>
+	<input type="hidden" name="module" value="'.$this->module.'"/>
+	<input type="hidden" name="moduleId" value="'.$this->moduleId.'"/>
+
+	<div id="myModalWorkTimeAdd" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">Starte Zeiterfassung</h3>
+		</div>
+		<div class="modal-body">
+			'.$fieldRelation.'
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_title">Titel</label>
+					<input type="text" name="title" id="input_title" class="span12" mandatory="mandatory"/>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_description">Beschreibung</label>
+					<textarea name="description" id="input_description" rows="5" class="span12"></textarea>
+				</div>
+			</div>
+			'.$fieldProject.'
+			<div class="row-fluid">
+				<div class="span4">
+					<label for="input_time_planned">'.$w->labelTimePlanned.'</label>
+					<input type="text" name="time_planned" id="input_time_planned" class="span12" value="0h 00m"/>
+				</div>
+				<div class="span4">
+					<label for="input_time_needed">'.$w->labelTimeNeeded.'</label>
+					<input type="text" name="time_needed" id="input_time_needed" class="span12" value="0h 00m"/>
+				</div>
+				<div class="span4">
+					<label for="input_status">'.$w->labelStatus.'</label>
+					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"><i class="icon-arrow-left"></i>&nbsp;'.$w->buttonCancel.'</button>
+			<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSave.'</button>
+		</div>
+	</div>
+</form>';
+	}
+}
