@@ -140,7 +140,7 @@ class Controller_Work_Time_Analysis extends CMF_Hydrogen_Controller{
 						'projectId'	=> $filterProjectIds,
 					);
 					if( $timestampStart && $timestampEnd )
-						$conditions['modifiedAt']	= '><'.$timestampStart.'&'.$timestampEnd;
+						$conditions['modifiedAt']	= '>< '.$timestampStart.' & '.$timestampEnd;
 					$sums				= $this->sumTimers( $conditions );
 					$sumPlanned			+= $sums->secondsPlanned;
 					$sumNeeded			+= $sums->secondsNeeded;
@@ -171,7 +171,7 @@ class Controller_Work_Time_Analysis extends CMF_Hydrogen_Controller{
 						'projectId'	=> $projectId,
 					);
 					if( $timestampStart && $timestampEnd )
-						$conditions['modifiedAt']	= '><'.$timestampStart.'&'.$timestampEnd;
+						$conditions['modifiedAt']	= '>< '.$timestampStart.' & '.$timestampEnd;
 					$sums				= $this->sumTimers( $conditions );
 					$sumPlanned			+= $sums->secondsPlanned;
 					$sumNeeded			+= $sums->secondsNeeded;

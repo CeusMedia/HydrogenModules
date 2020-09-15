@@ -3,7 +3,7 @@
 	<title>Work: Timer</title>
 	<description><![CDATA[Time tracking extension for Work:Missions.]]></description>
 	<category>Work</category>
-	<version>0.6</version>
+	<version>0.6.2</version>
 	<log version="0.1">Initial prototype of module.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.2">Remove releation to Resource_Library_cmModules.</log>
@@ -37,6 +37,8 @@
 	<log version="0.5.8">Extract template parts to own template files.</log>
 	<log version="0.5.9">Add modal to assign unrelated timers.</log>
 	<log version="0.6">Upgrade short list.</log>
+	<log version="0.6.1">Adjust to changes of CeusMedia:Database.</log>
+	<log version="0.6.2">Import from protected SVN repository.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
