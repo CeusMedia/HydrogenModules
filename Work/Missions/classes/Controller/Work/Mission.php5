@@ -304,14 +304,14 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	public function ajaxRenderIndex(){
-		$mode	= $this->session->get( 'filter.work.mission.mode' );
+		$mode	= $this->session->get( $this->filterKeyPrefix.'mode' );
 		if( $mode && $mode !== 'now' )
 			$this->restart( 'work/mission/'.$mode.'/ajaxRenderIndex' );
 //			$this->redirect( 'work/mission/'.$mode, 'ajaxRenderIndex', func_get_args() );		//  @todo replace redirect but keep AJAX request in mind
 		else{
 			$words		= $this->getWords();
 
-			$day		= (int) $this->session->get( 'filter.work.mission.day' );
+			$day		= (int) $this->session->get( $this->filterKeyPrefix.'day' );
 
 			$missions	= $this->getFilteredMissions( $this->userId );
 			$missions	= array_slice( $missions, 0, 100 );										//  @todo	kriss: make configurable
@@ -351,7 +351,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 					'large'	=> $listLarge->renderDayList( 1, $day, TRUE, TRUE, FALSE, TRUE ),
 					'small'	=> $listSmall->renderDayList( 1, $day, TRUE, TRUE, FALSE, !TRUE )
 				),
-				'filters'	=> $this->session->getAll( 'filter.work.mission.'.$mode.'.' ),
+				'filters'	=> $this->session->getAll( $this->filterKeyPrefix.$mode.'.' ),
 			);
 			print( json_encode( $data ) );
 			exit;
@@ -432,7 +432,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterOrder', $order );
 		$this->addData( 'filterProjects', $this->session->get( $this->filterKeyPrefix.'projects' ) );
 		$this->addData( 'filterDirection', $direction );
-		$this->addData( 'filterMode', $this->session->get( 'filter.work.mission.mode' ) );
+		$this->addData( 'filterMode', $this->session->get( $this->filterKeyPrefix.'mode' ) );
 		$this->addData( 'filterQuery', $this->session->get( $this->filterKeyPrefix.'query' ) );
 		$this->addData( 'filterWorkers', $this->session->get( $this->filterKeyPrefix.'workers' ) );
 		$this->addData( 'defaultFilterValues', $this->defaultFilterValues );
@@ -640,9 +640,9 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->restart( 'view/'.$missionId, TRUE );
 		}
 		if( $mission->status < 0 || $mission->status > 3 )
-			$this->session->set( 'filter.work.mission.mode', 'archive' );
-		else if( $this->session->get( 'filter.work.mission.mode' ) == 'archive' )
-			$this->session->set( 'filter.work.mission.mode', 'now' );
+			$this->session->set( $this->filterKeyPrefix.'mode', 'archive' );
+		else if( $this->session->get( $this->filterKeyPrefix.'mode' ) == 'archive' )
+			$this->session->set( $this->filterKeyPrefix.'mode', 'now' );
 
 		if( !array_key_exists( $mission->projectId, $this->userProjects ) )
 			$this->messenger->noteError( $words->msgInvalidProject );
@@ -825,8 +825,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	protected function getModeFilterKeyPrefix(){
 		$mode	= '';
-		if( $this->session->get( 'filter.work.mission.mode' ) !== 'now' )
-			$mode	= $this->session->get( 'filter.work.mission.mode' ).'.';
+		if( $this->session->get( $this->filterKeyPrefix.'mode' ) !== 'now' )
+			$mode	= $this->session->get( $this->filterKeyPrefix.'mode' ).'.';
 		return $this->filterKeyPrefix.$mode;
 	}
 
@@ -873,7 +873,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->restart( 'view/'.$missionId, TRUE );
 
 		$this->initFilters( $this->userId );
-		$mode	= $this->session->get( 'filter.work.mission.mode' );
+		$mode	= $this->session->get( $this->filterKeyPrefix.'mode' );
 		if( $mode !== 'now' )
 			$this->restart( './work/mission/'.$mode );
 
@@ -899,8 +899,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 	protected function initDefaultFilters(){
-		if( $this->session->get( 'filter.work.mission.mode' ) === NULL )
-			$this->session->set( 'filter.work.mission.mode', $this->defaultFilterValues['mode'] );
+		if( $this->session->get( $this->filterKeyPrefix.'mode' ) === NULL )
+			$this->session->set( $this->filterKeyPrefix.'mode', $this->defaultFilterValues['mode'] );
 		if( !$this->session->get( $this->filterKeyPrefix.'types' ) )
 			$this->session->set( $this->filterKeyPrefix.'types', $this->defaultFilterValues['types'] );
 		if( !$this->session->get( $this->filterKeyPrefix.'priorities' ) )
@@ -928,32 +928,34 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	protected function initFilters( $userId ){
 		if( !(int) $userId )
 			return;
-		if( !$this->session->getAll( 'filter.work.mission.', TRUE )->count() )
+		if( !$this->session->getAll( $this->filterKeyPrefix, TRUE )->count() )
 			$this->recoverFilters( $userId );
 
 		//  --  DEFAULT SETTINGS  --  //
 		$this->initDefaultFilters();
 
 		//  --  GENERAL LOGIC CONDITIONS  --  //
-		$mode	= $this->session->get( 'filter.work.mission.mode' );
-		$this->logic->generalConditions['status']		= $this->defaultFilterValues['states'];
-		switch( $mode ){
+		$conditions	= array();
+		$conditions['status']	= $this->defaultFilterValues['states'];
+		switch( $this->session->get( $this->filterKeyPrefix.'mode' ) ){
 			case 'now':
-				$this->logic->generalConditions['dayStart']	= '< '.date( "Y-m-d", time() + 7 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+				$conditions['dayStart']	= '< '.date( "Y-m-d", time() + 7 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
 				break;
 //			case 'future':
-//				$this->logic->generalConditions['dayStart']	= '>= '.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+//				$conditions['dayStart']	= '>= '.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
 //				break;
 		}
+		foreach( $conditions as $key => $value )
+			$this->logic->generalConditions[$key]	= $value;
 	}
 
 	public function kanban(){
-		$this->session->set( 'filter.work.mission.mode', 'kanban' );
+		$this->session->set( $this->filterKeyPrefix.'mode', 'kanban' );
 		$this->restart( NULL, TRUE );
 	}
 
 	public function now(){
-		$this->session->set( 'filter.work.mission.mode', 'now' );
+		$this->session->set( $this->filterKeyPrefix.'mode', 'now' );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -969,7 +971,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$serial	= $serial ? unserialize( $serial ) : NULL;
 		if( is_array( $serial ) ){
 			foreach( $serial as $key => $value )
-				$this->session->set( 'filter.work.mission.'.$key, $value );
+				$this->session->set( $this->filterKeyPrefix.$key, $value );
 			$this->env->getMessenger()->noteNotice( 'Filter für Aufgaben aus der letzten Sitzung wurden reaktiviert.' );
 			$this->restart( NULL, TRUE );
 		}
@@ -982,7 +984,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 
 	protected function saveFilters( $userId ){
 		$model		= new Model_Mission_Filter( $this->env );
-		$serial		= serialize( $this->session->getAll( 'filter.work.mission.' ) );
+		$serial		= serialize( $this->session->getAll( $this->filterKeyPrefix ) );
 		$data		= array( 'serial' => $serial, 'timestamp' => time() );
 		$indices	= array( 'userId' => $userId );
 		$filter		= $model->getByIndex( 'userId', $userId );
@@ -1156,13 +1158,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 
-/*		$mode	= $this->session->get( 'filter.work.mission.mode' );
+/*		$mode	= $this->session->get( $this->filterKeyPrefix.'mode' );
 		if( $mission->status < 0 || $mission->status > 3 ){
 			if( in_array( $mode, array( 'now', 'future' ) ) )
-				$this->session->set( 'filter.work.mission.mode', 'archive' );
+				$this->session->set( $this->filterKeyPrefix.'mode', 'archive' );
 		}
-		else if( $this->session->get( 'filter.work.mission.mode' ) == 'archive' ){
-			$this->session->set( 'filter.work.mission.mode', 'now' );
+		else if( $this->session->get( $this->filterKeyPrefix.'mode' ) == 'archive' ){
+			$this->session->set( $this->filterKeyPrefix.'mode', 'now' );
 		}*/
 
 		$title		= $this->request->get( 'title' );
