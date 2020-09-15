@@ -208,7 +208,8 @@ ALTER TABLE `<%?prefix%>job_runs`
   ADD INDEX (`reportChannel`);
   ]]></sql>
 	<sql type="mysql" on="update" version="0.8.2"><![CDATA[
-ALTER TABLE `<%?prefix%>job_schedule` ADD COLUMN expression VARCHAR(100) GENERATED ALWAYS AS (CONCAT(minuteOfHour," ",hourOfDay," ",dayOfMonth," ",monthOfYear," ",dayOfWeek)) STORED AFTER reportChannel;
+-- ALTER TABLE `<%?prefix%>job_schedule` ADD COLUMN expression VARCHAR(100) GENERATED ALWAYS AS (CONCAT(minuteOfHour," ",hourOfDay," ",dayOfMonth," ",monthOfYear," ",dayOfWeek)) STORED AFTER reportChannel;
+ALTER TABLE `<%?prefix%>job_schedule` ADD COLUMN expression VARCHAR(100) AFTER reportChannel;
 ALTER TABLE `<%?prefix%>job_schedule` CHANGE `expression` `expression` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;
 ALTER TABLE `<%?prefix%>job_schedule` DROP `minuteOfHour`, DROP `hourOfDay`, DROP `dayOfWeek`, DROP `dayOfMonth`, DROP `monthOfYear`;
 ALTER TABLE `<%?prefix%>job_schedule` ADD `type` TINYINT(1) UNSIGNED NULL DEFAULT '1' COMMENT '0:unknown,1:cron,2:interval,3:datetime' AFTER `jobDefinitionId`, ADD INDEX (`type`);
