@@ -20,23 +20,23 @@ input.user-status {
 	}
 .user-status.status1 {
 	color: darkgreen;
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/accept.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/accept.png);
 	}
 .user-status.status0 {
 	font-weight: normal;
 	font-style: italic;
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/star.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/star.png);
 	}
 .user-status.status-1 {
 	font-weight: normal;
 	font-style: italic;
 	color: red;
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/lock.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/lock.png);
 	}
 .user-status.status-2 {
 	font-weight: normal;
 	color: darkred;
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/delete.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/delete.png);
 	}
 
 
@@ -49,23 +49,23 @@ input.user-activity {
 	background-position: 6px 4px;
 	}
 .user-activity.activity0 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/status_offline.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/status_offline.png);
 	opacity: 0.8;
 	}
 .user-activity.activity1 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/status_online.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/status_online.png);
 	}
 .user-activity.activity2 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/status_busy.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/status_busy.png);
 	}
 .user-activity.activity3 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/status_away.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/status_away.png);
 	}
 .user-activity.activity4 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/status_online.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/status_online.png);
 	}
 .user-activity.activity5 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/star.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/star.png);
 	}
 
 .controller-manage-user #content dl dt {
@@ -74,11 +74,11 @@ input.user-activity {
 
 
 legend.user-add {
-	background-image:  url(//cdn.ceusmedia.de/img/famfamfam/silk/user_add.png);
+	background-image:  url(//cdn.ceusmedia.de/icons/famfamfam/silk/user_add.png);
 	}
 
 legend.user-edit {
-	background-image:  url(//cdn.ceusmedia.de/img/famfamfam/silk/user_edit.png);
+	background-image:  url(//cdn.ceusmedia.de/icons/famfamfam/silk/user_edit.png);
 	}
 
 
@@ -98,16 +98,16 @@ span.role.role5 {
 
 span.role.role1,
 span.role.role2 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/user_gray.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/user_gray.png);
 	}
 span.role.role3 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/user_suit.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/user_suit.png);
 	}
 span.role.role4 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/user.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/user.png);
 	}
 span.role.role5 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/user_green.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/user_green.png);
 	}
 
 .role-access {
@@ -119,13 +119,13 @@ span.role.role5 {
 	float: left;
 	}
 .role-access.access0 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/stop.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/stop.png);
 	}
 .role-access.access64 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/shield.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/shield.png);
 	}
 .role-access.access128 {
-	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/world.png);
+	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/world.png);
 	}
 
 #role-edit-rights {
