@@ -1,6 +1,6 @@
 <?php
-class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
-
+class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller
+{
 	protected $model;
 	protected $path;
 	protected $messenger;
@@ -8,7 +8,8 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 	protected $logicMail;
 	protected $logicUpload;
 
-	public function __onInit(){
+	public function __onInit()
+	{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_Mail_Attachment( $this->env );
@@ -30,7 +31,8 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		$this->addData( 'languages', $this->languages );
 	}
 
-	public function add(){
+	public function add()
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'add' ) ){
 			$files	= $this->listFiles();
@@ -82,12 +84,14 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 //		$this->restart( NULL, TRUE );
 	}
 
-	public function download( $fileName ){
+	public function download( $fileName )
+	{
 		$fileName	= urldecode( $fileName );
 		Net_HTTP_Download::sendFile( $this->path.$fileName, $fileName );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		$session	= $this->env->getSession();
 		$prefix		= 'filter_admin_mail_attachment_';
 		if( $reset ){
@@ -111,14 +115,16 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function getMimeTypeOfFile( $fileName ){
+	protected function getMimeTypeOfFile( $fileName )
+	{
 		if( !file_exists( $this->path.$fileName ) )
 			throw new RuntimeException( 'File "'.$fileName.'" is not existing is attachments folder.' );
 		$info	= finfo_open( FILEINFO_MIME_TYPE/*, '/usr/share/file/magic'*/ );
 		return finfo_file( $info, $this->path.$fileName );
 	}
 
-	public function index( $page = NULL ){
+	public function index( $page = NULL )
+	{
 		$session	= $this->env->getSession();
 		$prefix		= 'filter_admin_mail_attachment_';
 		$this->addData( 'filterStatus', $filterStatus = $session->get( $prefix.'status' ) );
@@ -149,7 +155,8 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		$this->addData( 'attachments', $this->model->getAll( $conditions, $orders, $limits ) );
 	}
 
-	protected function listFiles(){
+	protected function listFiles()
+	{
 		$list	= array();
 		$index	= new DirectoryIterator( $this->path );
 		foreach( $index as $entry ){
@@ -165,7 +172,8 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		return $list;
 	}
 
-	public function remove( $fileName ){
+	public function remove( $fileName )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		if( $this->model->getAllByIndex( 'filename', $fileName ) )
 			$this->messenger->noteError( $words->errorFileInUse, $fileName );
@@ -187,7 +195,8 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		$this->restart( 'upload', TRUE );
 	}
 
-	public function setStatus( $attachmentId, $status ){
+	public function setStatus( $attachmentId, $status )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$attachment	= $this->model->get( $attachmentId );
 		if( !$attachment )
@@ -209,7 +218,8 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 	 *	@return		void
 	 *	@todo		kriss: handle failure (with mail to developer or exception log)
 	 */
-	public function upload(){
+	public function upload()
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'upload' ) ){
 			$file		= (object) $this->request->get( 'file' );
@@ -239,7 +249,8 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function unregister( $attachmentId ){
+	public function unregister( $attachmentId )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$attachment	= $this->model->get( $attachmentId );
 		if( !$attachment )
@@ -255,4 +266,3 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 }
-?>

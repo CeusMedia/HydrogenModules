@@ -1,11 +1,13 @@
 <?php
-class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
-
-	public function __onInit(){
+class View_Admin_Mail_Queue extends CMF_Hydrogen_View
+{
+	public function __onInit()
+	{
 		$this->env->getPage()->addCommonStyle( 'module.admin.mail.css' );
 	}
 
-	public function ajaxRenderDashboardPanel(){
+	public function ajaxRenderDashboardPanel()
+	{
 		$model			= new Model_Mail( $this->env );
 
 		$statuses		= array(
@@ -81,10 +83,10 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 		return $table1.'<br/>'.$table2;
 	}
 
-	public function enqueue(){
-	}
+	public function enqueue(){}
 
-	public function html(){
+	public function html()
+	{
 		try{
 			$mail	= $this->getData( 'mail' );
 			$helper	= new View_Helper_Mail_View_HTML( $this->env );
@@ -97,13 +99,12 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 		exit;
 	}
 
-	public function index(){
-	}
+	public function index(){}
 
-	public function view(){
-	}
+	public function view(){}
 
-	public function renderFact( $key, $value ){
+	public function renderFact( $key, $value )
+	{
 		$words	= $this->env->getLanguage()->getWords( 'admin/mail/queue' );
 		if( in_array( $key, array( 'object' ) ) )
 			return;
@@ -143,4 +144,3 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View{
 		return $term.$def;
 	}
 }
-?>

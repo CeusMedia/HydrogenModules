@@ -1,6 +1,6 @@
 <?php
-class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
-
+class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
+{
 	protected $logic;
 	protected $filterPrefix	= 'filter_admin_mail_queue_';
 
@@ -18,20 +18,8 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 			$this->session->set( $this->filterPrefix.'status', array());
 	}
 
-	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		if( !$env->getAcl()->has( 'admin/mail/queue', 'ajaxRenderDashboardPanel' ) )
-			return;
-		$context->registerPanel( 'admin-mail-queue', array(
-			'url'			=> 'admin/mail/queue/ajaxRenderDashboardPanel',
-			'title'			=> 'E-Mail-Queue',
-			'heading'		=> 'E-Mail-Queue',
-			'icon'			=> 'fa fa-fw fa-envelope',
-			'rank'			=> 70,
-			'refresh'		=> 10,
-		) );
-	}
-
-	public function ajaxRenderDashboardPanel( $panelId ){
+	public function ajaxRenderDashboardPanel( $panelId )
+	{
 		return $this->view->ajaxRenderDashboardPanel();
 	}
 
@@ -45,7 +33,8 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 	 *	@param		integer		$attachmentNr	Index key attachment within mail
 	 *	@todo		export locales
 	 */
-	public function attachment( $mailId, $attachmentNr, $deliveryMode = NULL ){
+	public function attachment( $mailId, $attachmentNr, $deliveryMode = NULL )
+	{
 		$libraries			= $this->logic->detectAvailableMailLibraries();
 		$deliveryMode		= $deliveryMode == 'download' ? 'download' : 'view';
 		$mail				= $this->logic->getMail( $mailId );
@@ -97,7 +86,8 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function cancel( $mailId ){
+	public function cancel( $mailId )
+	{
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
 		if( !$mail ){
@@ -114,7 +104,8 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->restart( 'view/'.$mailId, TRUE );
 	}
 
-	public function enqueue(){
+	public function enqueue()
+	{
 		$language	= $this->env->getLanguage()->getLanguage();
 		if( $this->request->has( 'add' ) ){
 			if( !strlen( $class	= trim( $this->request->get( 'class' ) ) ) )
@@ -154,7 +145,8 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->addData( 'receiver', $this->request->get( 'receiver' ) ? $this->request->get( 'receiver' ) : "dev@ceusmedia.de" );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			foreach( $this->session->getAll( $this->filterPrefix ) as $key => $value )
 				$this->session->remove( $this->filterPrefix.$key );
@@ -187,11 +179,13 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function html( $mailId ){
+	public function html( $mailId )
+	{
 		$this->addData( 'mail', $this->logic->getMail( (int) $mailId ) );
 	}
 
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 //		if( !$this->session->get( $this->filterPrefix.'status' ) )
 //			$this->session->set( $this->filterPrefix.'status', array( 0 ) );
 		if( !$this->session->get( $this->filterPrefix.'limit' ) )
@@ -245,14 +239,16 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->addData( 'mailClasses', $mailClasses );
 	}
 
-	public function remove( $mailId ){
+	public function remove( $mailId )
+	{
 		$this->logic->removeMail( $mailId );
 		if( ( $page = $this->request->get( 'page' ) ) )
 			$this->restart( $page, TRUE );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function resend( $mailId ){
+	public function resend( $mailId )
+	{
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
 		if( !$mail ){
@@ -269,7 +265,8 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->restart( 'view/'.$mailId, TRUE );
 	}
 
-	public function send(){
+	public function send()
+	{
 		$count	= $this->logic->countQueue( array( 'status' => '<'.Model_Mail::STATUS_SENT ) );
 		if( $count ){
 			$this->messenger->noteNotice( "Mails in Queue: ".$this->logic->countQueue() );
@@ -288,7 +285,8 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function view( $mailId ){
+	public function view( $mailId )
+	{
 		try{
 			$mail			= $this->logic->getMail( $mailId );
 			$mail->parts	= $this->logic->getMailParts( $mail );
@@ -306,4 +304,3 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller{
 		}
 	}
 }
-?>
