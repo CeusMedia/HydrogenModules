@@ -1,27 +1,33 @@
 <?php
-class Controller_Helper_Input_Resource extends CMF_Hydrogen_Controller {
+class Controller_Ajax_Helper_Input_Resource extends CMF_Hydrogen_Controller_Ajax
+{
+	protected $extensions	= array(
+		'image'	=> array( 'png', 'gif', 'jpg', 'jpeg', 'jpe', 'svg' ),
+		'style'	=> array( 'css', 'scss', 'less' ),
+	);
 
-	public function ajaxRender(){
+	public function render()
+	{
 		$paths		= (array) $this->env->getRequest()->get( 'paths' );
 		$mode		= $this->env->getRequest()->get( 'mode' );
 		$modalId	= $this->env->getRequest()->get( 'modalId' );
 		$inputId	= $this->env->getRequest()->get( 'inputId' );
 
-		switch( $mode ){
-			case 'image':
-				$extensions	= array( "png", "gif", "jpg", "jpeg", "jpe", "svg" );
-				$mimeTypes	= (array) $this->env->getRequest()->get( 'mimeTypes' );
-				break;
-			case 'style':
-				$extensions	= array( "css", "scss", "less" );
-				$mimeTypes	= (array) $this->env->getRequest()->get( 'mimeTypes' );
-				break;
-		}
+		if( !$paths )
+			throw new RuntimeException( 'No paths given' );
+		if( !$mode )
+			throw new RuntimeException( 'No mode given' );
 
-		$env	= $this->env;
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+		$extensions	= $this->extensions[$mode];
+		$mimeTypes	= (array) $this->env->getRequest()->get( 'mimeTypes' );
+
+		$env		= $this->env;
+		$path		= $this->env->uri;
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$env	= Logic_Frontend::getRemoteEnv( $this->env );
-		$realpath	= realpath( $env->path ).'/';
+			$path	= $env->path;
+		}
+		$realpath	= realpath( $path ).'/';
 
 		$list		= array();
 		foreach( $paths as $path ){
@@ -64,9 +70,10 @@ class Controller_Helper_Input_Resource extends CMF_Hydrogen_Controller {
 			$labelPath	= UI_HTML_Tag::create( 'div', 'Pfad: <strong>'.$path.'</strong>' );
 			$list[]		= UI_HTML_Tag::create( 'li', $labelPath.$sublist, array( 'class' => 'source-list-path' ) );
 		}
-		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'id' => '', 'class' => 'unstyled modal-source-list' ) );
-		print $list;
-		exit;
+		$html	= UI_HTML_Tag::create( 'div', 'Nichts gefunden.', array( 'class' => 'alert alert-info' ) );
+		if( count( $list ) )
+			$html	= UI_HTML_Tag::create( 'ul', $list, array( 'id' => '', 'class' => 'unstyled modal-source-list' ) );
+		$this->respondData( array( 'html' => $html ) );
 	}
 
 	static protected function renderThumbnail( CMF_Hydrogen_Environment $env, $mode, $path, $relativePath ){

@@ -25,7 +25,7 @@ var HelperInputResource = {
 		jQuery("#"+modalId+"-loader").show();
 		jQuery("#"+modalId).modal();
 		jQuery.ajax({
-			url: "./helper/input/resource/ajaxRender",
+			url: "./ajax/helper/input/resource/render",
 			data: {
 				inputId: inputId,
 				modalId: modalId,
@@ -33,9 +33,9 @@ var HelperInputResource = {
 				paths: paths,
 			},
 			method: "post",
-			dataType: "html",
-			success: function(html){
-				jQuery("#"+modalId+"-content").html(html).show();
+			dataType: "json",
+			success: function(json){
+				jQuery("#"+modalId+"-content").html(json.data.html).show();
 				jQuery("#"+modalId+"-loader").hide();
 			}
 		})
