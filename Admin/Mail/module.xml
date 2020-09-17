@@ -3,7 +3,7 @@
 	<title>Admin: Mail</title>
 	<description/>
 	<category>Administration</category>
-	<version>0.9.6</version>
+	<version>0.9.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
@@ -61,6 +61,7 @@
 	<log version="0.9.4">Add template copy panel and refactor template export and import.</log>
 	<log version="0.9.5">Extend queued mail filter and view by used mail classes.</log>
 	<log version="0.9.6">Migrate to support CeusMedia::Common 0.8.5.</log>
+	<log version="0.9.7">Extract template import, export and AJAX handling into own classes.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -68,6 +69,9 @@
 		<class>Controller/Admin/Mail/Attachment.php5</class>
 		<class>Controller/Admin/Mail/Queue.php5</class>
 		<class>Controller/Admin/Mail/Template.php5</class>
+		<class>Controller/Admin/Mail/Template/Export.php5</class>
+		<class>Controller/Admin/Mail/Template/Import.php5</class>
+		<class>Controller/Ajax/Admin/Mail/Template.php5</class>
 		<class>View/Admin/Mail/Attachment.php5</class>
 		<class>View/Admin/Mail/Queue.php5</class>
 		<class>View/Admin/Mail/Template.php5</class>

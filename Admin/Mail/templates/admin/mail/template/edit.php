@@ -59,10 +59,19 @@ $tabs->add( 'admin-mail-template-edit-tab-images', '#', $w->tabImages, $contentI
 $tabs->add( 'admin-mail-template-edit-tab-preview', '#', $w->tabPreview, $contentPreview );
 $tabs->setActive( $tabId ? $tabId : 'admin-mail-template-edit-tab-facts' );
 
+$helperNav	= View_Helper_Pagination_PrevNext::create( $env )
+	->setCurrentId( $template->mailTemplateId )
+	->setUrlTemplate( './admin/mail/template/edit/%s' )
+	->useIndex( TRUE )
+	->setIndexUrl( './admin/mail/template' )
+	->setModelClass( 'Model_Mail_Template' )
+	->setOrderColumn( 'mailTemplateId' );
+$navPrevNext	= UI_HTML_Tag::create( 'div', $helperNav->render(), array( 'class' => 'pull-right' ) );
+
 $heading3	= UI_HTML_Tag::create( 'h3', vsprintf( $w->heading, array(
 	'./admin/mail/template',
 	htmlentities( $template->title, ENT_QUOTES, 'UTF-8' )
-) ) );
+) ).$navPrevNext );
 
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/template/edit/' ) );
 

@@ -7,8 +7,13 @@ $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arro
 
 $rows	= array();
 foreach( $templates as $template ){
-	$title	= $template->title;
-	$title	= UI_HTML_Tag::create( 'a', $template->title, array(
+	$title		= $template->title;
+	$rowClass	= '';
+	if( $template->mailTemplateId == $moduleTemplateId ){
+		$title		= $template->title.'&nbsp;<small class="muted">(Standard)</small>';
+		$rowClass	= 'success';
+	}
+	$title	= UI_HTML_Tag::create( 'a', $title, array(
 		'href'	=> './admin/mail/template/edit/'.$template->mailTemplateId,
 		'class'	=> 'autocut',
 	) );
@@ -33,7 +38,7 @@ foreach( $templates as $template ){
 		UI_HTML_Tag::create( 'td', sprintf( $words['index']['valueUsedInMail'], $template->used ) ),
 		UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i', $template->createdAt ) ),
 		UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i', $template->modifiedAt ) ),
-	) );
+	), array( 'class' => $rowClass ) );
 }
 $tableHeads	= UI_HTML_Elements::tableHeads( array(
 	$words['index']['headTitle'],

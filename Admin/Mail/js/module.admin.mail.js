@@ -27,23 +27,23 @@ ModuleAdminMail.TemplateEditor	= {
 		};
 		ModuleAceAutoSave.applyToEditor(
 			ModuleAce.applyTo("#input_template_html"),
-			"admin/mail/template/ajaxSaveHtml/"+templateId,
+			"ajax/admin/mail/template/saveHtml/"+templateId,
 			{callbacks: {update: onHtmlUpdate}}
 		);
 		ModuleAceAutoSave.applyToEditor(
 			ModuleAce.applyTo("#input_template_plain"),
-			"admin/mail/template/ajaxSavePlain/"+templateId,
+			"ajax/admin/mail/template/savePlain/"+templateId,
 			{callbacks: {update: onTextUpdate}}
 		);
 		ModuleAceAutoSave.applyToEditor(
 			ModuleAce.applyTo("#input_template_css"),
-			"admin/mail/template/ajaxSaveCss/"+templateId,
+			"ajax/admin/mail/template/saveCss/"+templateId,
 			{callbacks: {update: onStyleUpdate}}
 		);
 		jQuery("#admin-mail-template-edit li a").on("click", function(){
 			var targetUrl	= jQuery(this).attr("href").substr(1);
 			jQuery.ajax({
-				url: "./admin/mail/template/ajaxSetTab/"+targetUrl
+				url: "./ajax/admin/mail/template/setTab/"+targetUrl
 			});
 		});
 	}

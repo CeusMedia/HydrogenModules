@@ -36,7 +36,7 @@ if( $template->images ){
 				'title'		=> 'Bildverweis in neuem Browser-Tab anzeigen',
 				'target'	=> '_blank',
 			) );
-			$rowClass	= 'not-success';
+			$rowClass	= 'success';
 			$buttonOpen	= UI_HTML_Tag::create( 'a', $iconView, array(
 				'href'		=> $appUrl.$item,
 				'class'		=> 'btn btn-info',
