@@ -6,14 +6,14 @@
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  *	@todo		code doc
  */
-class Logic_Mail extends CMF_Hydrogen_Logic{
-
+class Logic_Mail extends CMF_Hydrogen_Logic
+{
 	const LIBRARY_UNKNOWN		= 0;
 	const LIBRARY_COMMON		= 1;
 	const LIBRARY_MAIL_V1		= 2;
 	const LIBRARY_MAIL_V2		= 4;
 
-	protected $detectedTemplates		= array();
+	protected $detectedTemplates	= array();
 	protected $libraries			= 0;
 	protected $options;
 	protected $modelQueue;
@@ -21,7 +21,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	protected $modelAttachment;
 	protected $pathAttachments;
 
-	public function __onInit(){
+	public function __onInit()
+	{
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 		$this->libraries		= $this->detectAvailableMailLibraries();
 
@@ -48,7 +49,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		}
 	}
 
-	public function abortMailsWithTooManyAttempts(){
+	public function abortMailsWithTooManyAttempts()
+	{
 		$model		= new Model_Mail( $this->env );
 		$mails		= $model->getAll( array(
 			'status'	=> Model_Mail::STATUS_RETRY,
@@ -60,7 +62,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	}
 
 
-	public function appendRegisteredAttachments( Mail_Abstract $mail, $language ){
+	public function appendRegisteredAttachments( Mail_Abstract $mail, $language )
+	{
 		$class			= get_class( $mail );
 		$indices		= array( 'className' => $class, 'status' => Model_Mail::STATUS_SENDING, 'language' => $language );
 		$attachments	= $this->modelAttachment->getAllByIndices( $indices );
@@ -70,15 +73,18 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		}
 	}
 
-	public function canBzip(){
+	public function canBzip()
+	{
 		return function_exists( 'bzcompress' ) && function_exists( 'bzdecompress' );
 	}
 
-	public function canGzip(){
+	public function canGzip()
+	{
 		return function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' );
 	}
 
-	public function collectConfiguredReceivers( $userIds, $roleIds = array(), $listConfigKeysToCheck = array() ){
+	public function collectConfiguredReceivers( $userIds, $roleIds = array(), $listConfigKeysToCheck = array() )
+	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return array();
 		$receivers		= array();
@@ -121,7 +127,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		integer		$compression	Compression to apply
 	 *	@return		string
 	 */
-	public function compressString( $string, $compression ){
+	public function compressString( $string, $compression )
+	{
 		switch( $compression ){
 			case Model_Mail::COMPRESSION_BZIP:
 				if( !$this->canBzip() )
@@ -145,7 +152,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		array		$conditions		Map of column conditions to look for
 	 *	@return		integer						Number of mails in queue matching conditions
 	 */
-	public function countQueue( $conditions = array() ){
+	public function countQueue( $conditions = array() )
+	{
 		return $this->modelQueue->count( $conditions );
 	}
 
@@ -159,7 +167,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@return		object							Instance of mail class containing rendered mail parts
 	 *	@throws		RuntimeException				If mail class is not existing
 	 */
-	public function createMail( $mailClassName, $data ){
+	public function createMail( $mailClassName, $data )
+	{
 		$className	= 'Mail_'.$mailClassName;
 		if( !class_exists( $className ) )
 			throw new RuntimeException( 'Mail class "'.$className.'" is not existing' );
@@ -187,7 +196,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@throws		RuntimeException			if no object instance is available
 	 *	@throws		RuntimeException			if no object serial is available
 	 */
-	public function compressMailObject( $mail, $serialize = TRUE, $force = FALSE ){
+	public function compressMailObject( $mail, $serialize = TRUE, $force = FALSE )
+	{
 		if( $serialize ){
 			if( empty( $mail->object->instance ) )
 				throw new RuntimeException( 'Mail object has not been decompressed before, no mail object instance available' );
@@ -210,7 +220,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@throws		RuntimeException			if no compressed raw column content is available
 	 *	@throws		RuntimeException			if unserialization fails
 	 */
-	public function decompressMailObject( $mail, $unserialize = TRUE, $force = FALSE ){
+	public function decompressMailObject( $mail, $unserialize = TRUE, $force = FALSE )
+	{
 		if( is_string( $mail->object ) ){
 			$mail->object	= (object) array(
 				'raw'		=> $mail->object,
@@ -243,7 +254,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@return		boolean
 	 *	@throws		RuntimeException		if no compressed raw column content is available
 	 */
-	public function decompressMailRaw( $mail, $force = FALSE ){
+	public function decompressMailRaw( $mail, $force = FALSE )
+	{
 		if( is_object( $mail->raw ) && !$force )
 			return TRUE;
 		if( is_string( $mail->raw ) || $force ){
@@ -270,7 +282,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		integer		$compression	Compression to apply
 	 *	@return		string
 	 */
-	public function decompressString( $string, $compression ){
+	public function decompressString( $string, $compression )
+	{
 		switch( (int) $compression ){
 			case Model_Mail::COMPRESSION_BZIP:
 				if( !$this->canBzip() )
@@ -299,7 +312,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@access		public
 	 *	@return		integer			Flags of available mail library contants
 	 */
-	public function detectAvailableMailLibraries(){
+	public function detectAvailableMailLibraries()
+	{
 		$libraries	= static::LIBRARY_UNKNOWN;
 		if( class_exists( 'Net_Mail_Body' ) )
 			$libraries	|= static::LIBRARY_COMMON;
@@ -317,7 +331,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		integer		$mailId		ID of mail to get used library for
 	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
 	 */
-	public function detectMailLibraryFromMailId( $mailId ){
+	public function detectMailLibraryFromMailId( $mailId )
+	{
 		return $this->detectMailLibraryFromMail( $this->getMail( $mailId ) );
 	}
 
@@ -328,7 +343,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		object		$mail		Mail data object from database to get used library for
 	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
 	 */
-	public function detectMailLibraryFromMail( $mail ){
+	public function detectMailLibraryFromMail( $mail )
+	{
 		if( !is_object( $mail ) )
 			throw new InvalidArgumentException( 'No mail object given' );
 		if( empty( $mail->usedLibrary ) || $force ){
@@ -346,7 +362,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		object		$mail		Mail data object from database to get used library for
 	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
 	 */
-	public function detectMailLibraryFromMailObjectInstance( $mailObject ){
+	public function detectMailLibraryFromMailObjectInstance( $mailObject )
+	{
 		if( is_a( $mailObject, 'Mail_Abstract' ) ){
 			if( is_a( $mailObject->mail, 'Net_Mail' ) )
 				return Logic_Mail::LIBRARY_COMMON;
@@ -376,7 +393,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@return		objects|NULL	Model entity object of detected mail template
 	 *	@todo		see code doc
 	 */
-	public function detectTemplateToUse( $preferredTemplateId = 0, $considerFrontend = FALSE, $strict = TRUE ){
+	public function detectTemplateToUse( $preferredTemplateId = 0, $considerFrontend = FALSE, $strict = TRUE )
+	{
 		$preferredTemplateId	= (int) $preferredTemplateId;										//  @todo remove after update to PHP 7.x using type hints
 		if( array_key_exists( $preferredTemplateId, $this->detectedTemplates ) )
 			return $this->detectedTemplates[$preferredTemplateId];
@@ -440,7 +458,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		boolean		$force		Flag: redetect (default: no)
 	 *	@return		integer		Detected compression as of Model_Mail::COMPRESSION_*
 	 */
-	public function detectUsedMailCompression( $mail, $force = FALSE ){
+	public function detectUsedMailCompression( $mail, $force = FALSE )
+	{
 		if( !$mail->compression || $force ){
 			if( is_string( $mail->object ) )
 				$source	= $mail->object;
@@ -466,7 +485,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		integer			$senderId		Optional: ID of sending user
 	 *	@return		integer							ID of queued mail
 	 */
-	public function enqueueMail( Mail_Abstract $mail, $language, $receiver, $senderId = NULL ){
+	public function enqueueMail( Mail_Abstract $mail, $language, $receiver, $senderId = NULL )
+	{
 		if( is_array( $receiver ) )
 			$receiver	= (object) $receiver;
 		if( is_integer( $receiver ) ){
@@ -541,7 +561,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@throws		RuntimeException				if mail is compressed by GZIP which is not supported in this environment
 	 *	@throws		RuntimeException				if unserialize mail serial fails
 	 */
-	public function getMail( $mailId ){
+	public function getMail( $mailId )
+	{
 		$mail	= $this->modelQueue->get( $mailId );
 		if( !$mail )
 			throw new OutOfRangeException( 'Invalid mail ID: '.$mailId );
@@ -558,7 +579,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@todo		kriss: (performance) remove double preg check for class (remove 3rd argument on index and double check if clause in loop)
 	 *	@todo		kriss: (migration) adjust regex for upcoming Hydrogen with namespaces, maybe use reflection
 	 */
-	public function getMailClassNames( $strict = TRUE, $sort = 'ASC' ){
+	public function getMailClassNames( $strict = TRUE, $sort = 'ASC' )
+	{
 		$list			= array();																	//  prepare empty result list
 		$matches		= array();																	//  prepare empty matches list
 		$pathClasses	= $this->options->get( 'path.classes' );									//  get path to mail classes from module config
@@ -592,7 +614,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@deprecated	this method has no real value and will be removed
 	 *	@todo		remove this method
 	 */
-	public function getMailHeaders( $mail ){
+	public function getMailHeaders( $mail )
+	{
 		$complete	= TRUE;
 		$mail		= $this->getMailFromObjectOrId( $mail );
 		if( !is_object( $mail->object ) )
@@ -616,7 +639,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@throws		RuntimeException			if given mail object is of outdated Net_Mail and parser CMM_Mail_Parser is not available
 	 *	@throws		RuntimeException			if given no parser is available for mail object
 	 */
-	public function getMailParts( $mail ){
+	public function getMailParts( $mail )
+	{
 		$this->decompressMailObject( $mail );
 		if( !is_a( $mail->object->instance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
 			throw new Exception( 'Mail object is not extending Mail_Abstract, but '.get_class( $mail->object->instance ) );
@@ -639,7 +663,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@return		object							Mail object from queue
 	 *	@throws		OutOfRangeException				if mail ID is not existing
 	 */
-	public function getQueuedMail( $mailId ){
+	public function getQueuedMail( $mailId )
+	{
 		return $this->getMail( $mailId );
 	}
 
@@ -653,7 +678,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		array			$havings		List of conditions to apply after grouping
 	 *	@return		array
 	 */
-	public function getQueuedMails( $conditions = array(), $orders = array(), $limits = array(), $columns = array() ){
+	public function getQueuedMails( $conditions = array(), $orders = array(), $limits = array(), $columns = array() )
+	{
 		return $this->modelQueue->getAll( $conditions, $orders, $limits, $columns );
 	}
 
@@ -664,7 +690,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@return 	array
 	 *	@todo		remove check for model method "getDistinct" after next minor framework release (0.8.8)
 	 */
-	public function getUsedMailClassNames( $conditions = array() ){
+	public function getUsedMailClassNames( $conditions = array() )
+	{
 		$list			= array();
 		$orders			= array( 'mailClass' => 'ASC' );
 		if( method_exists( $this->modelQueue, 'getDistinct' ) )
@@ -686,7 +713,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		boolean			$forceSendNow	Flag: override module settings and avoid queue
 	 *	@return		boolean			TRUE if success
 	 */
-	public function handleMail( Mail_Abstract $mail, $receiver, $language, $forceSendNow = NULL ){
+	public function handleMail( Mail_Abstract $mail, $receiver, $language, $forceSendNow = NULL )
+	{
 		if( $this->options->get( 'queue.enabled' ) && !$forceSendNow )
 			return (bool) $this->enqueueMail( $mail, $language, $receiver );
 		return $this->sendMail( $mail, $receiver );
@@ -698,7 +726,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		integer			$mailId			ID of mail to remove
 	 *	@return		boolean
 	 */
-	public function removeMail( $mailId ){
+	public function removeMail( $mailId )
+	{
 		return (bool) $this->modelQueue->remove( $mailId );
 	}
 
@@ -709,7 +738,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		integer|object	$receiver		User ID or data object of receiver (must have member 'email', should have 'userId' and 'username')
 	 *	@return		boolean			TRUE if success
 	 */
-	public function sendMail( Mail_Abstract $mail, $receiver ){
+	public function sendMail( Mail_Abstract $mail, $receiver )
+	{
 		if( is_array( $receiver ) )
 			$receiver	= (object) $receiver;
 		if( is_integer( $receiver ) ){
@@ -731,7 +761,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@return		void
 	 *	@todo		use logging on exception (=sending mail failed)
 	 */
-	public function sendQueuedMail( $mailId, $forceResent = FALSE ){
+	public function sendQueuedMail( $mailId, $forceResent = FALSE )
+	{
 		$mail		= $this->getMail( $mailId );
 		$this->decompressMailObject( $mail );
 		if( (int) $mail->status > Model_Mail::STATUS_SENDING && !$forceResent )
@@ -779,7 +810,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@throws		DomainException			if given status is invalid
 	 *	@throws		DomainException			if transition to new status is not allowed
 	 */
-	public function setMailStatus( $mail, $status ){
+	public function setMailStatus( $mail, $status )
+	{
 		$status			= (int) $status;
 		$mail			= $this->getMailFromObjectOrId( $mail );
 		$mail->status	= (int) $mail->status;
@@ -804,7 +836,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@param		boolean|NULL	$toggle			New state or NULL to return current state
 	 *	@return		boolean|NULL	Current state if no new state is given
 	 */
-	public function useQueue( $toggle = NULL ){
+	public function useQueue( $toggle = NULL )
+	{
 		if( $toggle === NULL )
 			return $this->options->get( 'queue.enabled' );
 		$this->options->set( 'queue.enabled', (bool) $toggle );
@@ -816,11 +849,13 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo		check if needed or remove
 	 */
-	public function decompressObjectInMail( $mail, $unserialize = TRUE, $force = FALSE ){
+	public function decompressObjectInMail( $mail, $unserialize = TRUE, $force = FALSE )
+	{
 		return $this->decompressMailObject( $mail, $unserialize, $force );
 	}
 
-	protected function getMailFromObjectOrId( $mailObjectOrId ){
+	protected function getMailFromObjectOrId( $mailObjectOrId )
+	{
 		if( is_object( $mailObjectOrId ) )
 			return $mailObjectOrId;
 		if( !preg_match( '/^[0-9]+$/', $mailObjectOrId ) )
@@ -828,7 +863,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 		return $this->getMail( (int) $mailObjectOrId );
 	}
 
-	protected function getRecommendedCompression(){
+	protected function getRecommendedCompression()
+	{
 		if( $this->canBzip() )
 			return Model_Mail::COMPRESSION_BZIP;
 		if( $this->canGzip() )
@@ -842,7 +878,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@todo		remove after migration
 	 *	@todo		to be removed in version 0.9
 	 */
-	protected function _repair(){
+	protected function _repair()
+	{
 		$this->_repair_extendMailsBySenderAddress();
 		$this->_repair_extendMailsByCompression();
 	}
@@ -856,7 +893,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@todo		remove after migration
 	 *	@todo		to be removed in version 0.9
 	 */
-	protected function _repair_extendMailsByCompression( $limit = 10 ){
+	protected function _repair_extendMailsByCompression( $limit = 10 )
+	{
 		$conditions	= array( 'compression' => '0' );
 		$orders		= array( 'mailId' => 'DESC' );
 		$limits		= array( 0, max( 10, min( 100, $limit ) ) );
@@ -879,7 +917,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 	 *	@todo		remove after migration
 	 *	@todo		remove in version 0.9
 	 */
-	protected function _repair_extendMailsBySenderAddress( $limit = 10 ){
+	protected function _repair_extendMailsBySenderAddress( $limit = 10 )
+	{
 		$conditions	= array( 'senderAddress' => '' );
 		$orders		= array( 'mailId' => 'DESC' );
 		$limits		= array( 0, max( 10, min( 100, $limit ) ) );
@@ -905,4 +944,3 @@ class Logic_Mail extends CMF_Hydrogen_Logic{
 if( !class_exists( 'PHP_Incomplete_Class' ) ){
 	class PHP_Incomplete_Class{}
 }
-?>

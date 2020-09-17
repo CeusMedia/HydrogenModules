@@ -1,16 +1,18 @@
 <?php
-class Job_Mail_Queue extends Job_Abstract{
-
+class Job_Mail_Queue extends Job_Abstract
+{
 	protected $logic;
 	protected $options;
 //	protected $greylistingDelay	= 900;
 
-	public function __onInit(){
+	public function __onInit()
+	{
 		$this->logic		= Logic_Mail::getInstance( $this->env );
 		$this->options		= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 	}
 
-	public function countQueuedMails(){
+	public function countQueuedMails()
+	{
 		$conditions		= array( 'status' => array( Model_Mail::STATUS_NEW ) );
 		$countNew		= $this->logic->countQueue( $conditions );
 		$conditions		= array( 'status' => array( Model_Mail::STATUS_RETRY ) );
@@ -18,7 +20,8 @@ class Job_Mail_Queue extends Job_Abstract{
 		$this->out( sprintf( "%d mails to send, %d mail to retry.", $countNew, $countRetry ) );
 	}
 
-	public function sendQueuedMails(){
+	public function sendQueuedMails()
+	{
 		$sleep		= (float) $this->options->get( 'queue.job.sleep' );
 		$limit		= (integer) $this->options->get( 'queue.job.limit' );
 		set_time_limit( ( $timeLimit = ( 5 + $sleep ) * $limit + 10 ) );

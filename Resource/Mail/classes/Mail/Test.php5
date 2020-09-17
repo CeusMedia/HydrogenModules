@@ -1,8 +1,8 @@
 <?php
-class Mail_Test extends Mail_Abstract{
-
-	public function generate( $data = array() ){
-
+class Mail_Test extends Mail_Abstract
+{
+	public function generate( $data = array() )
+	{
 		$data		= new ADT_List_Dictionary( $data );
 		$subject	= $data->get( 'subject', 'Test' );
 		$text		= $data->get( 'text', $this->renderText( $data ) );
@@ -17,7 +17,8 @@ class Mail_Test extends Mail_Abstract{
 		return $this;
 	}
 
-	public function renderHtml( $data = array() ){
+	public function renderHtml( $data = array() )
+	{
 		$content	= '
 <h2>E-Mail-Test</h2>
 <div>
@@ -27,7 +28,8 @@ class Mail_Test extends Mail_Abstract{
 		return $content;
 	}
 
-	public function renderText( $data = array() ){
+	public function renderText( $data = array() )
+	{
 		$content	= '
 *E-Mail-Test*
 
@@ -38,4 +40,3 @@ Goodbye';
 		return $content;
 	}
 }
-?>

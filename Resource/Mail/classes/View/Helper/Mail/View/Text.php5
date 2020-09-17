@@ -1,17 +1,19 @@
 <?php
-class View_Helper_Mail_View_Text{
-
+class View_Helper_Mail_View_Text
+{
 	protected $env;
 	protected $mail;
 	protected $logicMail;
 
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env			= $env;
 		$this->logicMail	= $env->getLogic()->get( 'Mail' );
 		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 	}
 
-	public function render(){
+	public function render()
+	{
 		if( !$this->mailObject )
 			throw new RuntimeException( 'No mail object set' );
 
@@ -51,7 +53,8 @@ class View_Helper_Mail_View_Text{
 		return $text;
 	}
 
-	public function setMail( $mailObjectOrId ){
+	public function setMail( $mailObjectOrId )
+	{
 		if( is_int( $mailObjectOrId ) )
 			$mailObjectOrId	= $this->logicMail->getMail( $mailObjectOrId );
 		if( !is_object( $mailObjectOrId ) )
@@ -60,9 +63,9 @@ class View_Helper_Mail_View_Text{
 		return $this;
 	}
 
-	public function setMailObjectInstance( Mail_Abstract $mail ){
+	public function setMailObjectInstance( Mail_Abstract $mail ): self
+	{
 		$this->mailObject	= $mail;
 		return $this;
 	}
 }
-?>

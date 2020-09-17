@@ -10,8 +10,8 @@
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  *	@todo		kriss: finish code doc
  */
-class View_Helper_Mail_Text{
-
+class View_Helper_Mail_Text
+{
 	static protected $encoding	= "UTF-8";
 
 	/**
@@ -24,7 +24,8 @@ class View_Helper_Mail_Text{
 	 *	@param		boolean		$fromLeft		Flag: extend from left (= float right)
 	 *	@return		string		Extended one line string
 	 */
-	static public function extend( $text, $toLength, $fromLeft = FALSE ){
+	static public function extend( $text, $toLength, $fromLeft = FALSE )
+	{
 		return Alg_Text_Extender::extend( $text, $toLength, $fromLeft, ' ' );
 	}
 
@@ -37,7 +38,8 @@ class View_Helper_Mail_Text{
 	 *	@param		integer		$toLength		Maximum string length
 	 *	@return		string		Extended one line string
 	 */
-	static public function extendCentric( $text, $toLength ){
+	static public function extendCentric( $text, $toLength )
+	{
 		return Alg_Text_Extender::extendCentric( $text, $toLength, ' ' );
 	}
 
@@ -54,7 +56,8 @@ class View_Helper_Mail_Text{
 	 *	@param		boolean		$trimCentric	Flag: trim text centric
 	 *	@return		string		Fitted one line string
 	 */
-	static public function fit( $text, $toLength, $float = 1, $trimCentric = TRUE ){
+	static public function fit( $text, $toLength, $float = 1, $trimCentric = TRUE )
+	{
 		$toLength	= (int) $toLength;
 		$text		= self::trim( trim( $text ), $toLength, $trimCentric ? 2 : 0 );
 		if( in_array( (string) $float, array( "2", 'center', 'centric' ) ) )
@@ -74,7 +77,8 @@ class View_Helper_Mail_Text{
 	 *	@param		boolean		$trimCentric	Flag: trim text centric
 	 *	@return		string
 	 */
-	static public function indent( $text, $indentLength, $lineLength = NULL ){
+	static public function indent( $text, $indentLength, $lineLength = NULL )
+	{
 		if( $lineLength )
 			$text	= wordwrap( $text, $lineLength );
 		$lines	= explode( "\n", $text );
@@ -94,7 +98,8 @@ class View_Helper_Mail_Text{
 	 *	@param		boolean		$trimCentric	Flag: trim text centric
 	 *	@return		string
 	 */
-	static public function line( $sign = "-", $lineLength = 76 ){
+	static public function line( $sign = "-", $lineLength = 76 )
+	{
 		$steps	= floor( $lineLength / mb_strlen( $sign ) );
 		return str_repeat( $sign, $steps );
 	}
@@ -110,7 +115,8 @@ class View_Helper_Mail_Text{
 	 *	@param		boolean		$trimCentric	Flag: trim text centric
 	 *	@return		string
 	 */
-	static public function trim( $text, $length, $mode = 2 ){
+	static public function trim( $text, $length, $mode = 2 )
+	{
 		if( $mode === 2 || $mode === 'center' || $mode === 'centric' )
 			return Alg_Text_Trimmer::trimCentric( $text, $length );
 		return Alg_Text_Trimmer::trim( $text, $length, $mode );
@@ -125,7 +131,8 @@ class View_Helper_Mail_Text{
 	 *	@param		integer		$maxLength		Maximum string length
 	 *	@return		string		Last line of text underscored
 	 */
-	static public function underscore( $text, $withString = '-', $maxLength = 76 ){
+	static public function underscore( $text, $withString = '-', $maxLength = 76 )
+	{
 		$parts	= explode( "\n", $text );
 		$text	= array_pop( $parts );
 		$text	= self::trim( trim( strip_tags( $text ) ), $maxLength );
@@ -139,4 +146,3 @@ class View_Helper_Mail_Text{
 		return $text."\n".$line;
 	}
 }
-?>

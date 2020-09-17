@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Mail_View_Source{
-
+class View_Helper_Mail_View_Source
+{
 	protected $env;
 	protected $mail;
 	protected $logicMail;
@@ -9,13 +9,15 @@ class View_Helper_Mail_View_Source{
 	const MODE_NORMAL		= 0;
 	const MODE_CONDENSED	= 1;
 
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env			= $env;
 		$this->logicMail	= $env->getLogic()->get( 'Mail' );
 		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 	}
 
-	public function render(){
+	public function render()
+	{
 		if( !$this->mailObject )
 			throw new RuntimeException( 'No mail object set' );
 
@@ -48,7 +50,8 @@ class View_Helper_Mail_View_Source{
 		return $code;
 	}
 
-	public function setMail( $mailObjectOrId ){
+	public function setMail( $mailObjectOrId ): self
+	{
 		if( is_int( $mailObjectOrId ) )
 			$mailObjectOrId	= $this->logicMail->getMail( $mailObjectOrId );
 		if( !is_object( $mailObjectOrId ) )
@@ -57,18 +60,22 @@ class View_Helper_Mail_View_Source{
 		return $this;
 	}
 
-	public function setMailObjectInstance( Mail_Abstract $mail ){
+	public function setMailObjectInstance( Mail_Abstract $mail ): self
+	{
 		$this->mailObject	= $mail;
 		return $this;
 	}
 
-	public function setMode( $mode ){
+	public function setMode( $mode ): self
+	{
 		if( !in_array( $mode, array( self::MODE_NORMAL, self::MODE_CONDENSED ) ) )
 			throw new RangeException( 'Invalid mode' );
 		$this->mode	= $mode;
+		return $this;
 	}
 
-	protected function shortenMailCode( $code ){
+	protected function shortenMailCode( $code )
+	{
 		$status	= 0;
 		$list	= array();
 		foreach( explode( PHP_EOL, $code ) as $nr => $line ){
@@ -96,4 +103,3 @@ class View_Helper_Mail_View_Source{
 		return implode( PHP_EOL, $list );
 	}
 }
-?>

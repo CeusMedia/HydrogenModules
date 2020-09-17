@@ -1,7 +1,16 @@
 <?php
-class Hook_Resource_Mail /*extends CMF_Hydrogen_Hook*/{
-
-	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_Resource_Mail extends CMF_Hydrogen_Hook
+{
+	/**
+	 *	@static
+	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 *	@param		object						$context	Caller object
+	 *	@param		object						$module		Module config data object
+	 *	@param		array						$payload	Map of payload data
+	 *	@return		void
+	 */
+	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Hook_Info_Mail::onListUserRelations" is missing user ID in data.';
@@ -89,7 +98,16 @@ class Hook_Resource_Mail /*extends CMF_Hydrogen_Hook*/{
 		);
 	}
 
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	/**
+	 *	@static
+	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 *	@param		object						$context	Caller object
+	 *	@param		object						$module		Module config data object
+	 *	@param		array						$payload	Map of payload data
+	 *	@return		void
+	 */
+	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Hook_Info_Mail::onUserRemove" is missing user ID in data.';

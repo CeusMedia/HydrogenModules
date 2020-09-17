@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Mail_Facts{
-
+class View_Helper_Mail_Facts
+{
 	protected $changedFactClassPos  = 'label label-success';
 	protected $changedFactClassNeg  = 'label label-important';
 	protected $changedFactClassInfo	= 'label label-info';
@@ -12,12 +12,18 @@ class View_Helper_Mail_Facts{
 
 	const FORMAT_HTML				= 0;
 	const FORMAT_TEXT				= 1;
+
+	const FORMATS					= array(
+		self::FORMAT_HTML,
+		self::FORMAT_TEXT,
+	);
 /*
 	public function __onInit(){
 		$this->helperText	= new View_Helper_Mail_Text( $this->env );
 	}*/
 
-	public function add( $keyOrLabel, $valueAsHtml, $valueAsText = NULL, $direction = NULL ){
+	public function add( $keyOrLabel, $valueAsHtml, $valueAsText = NULL, $direction = NULL ): self
+	{
 		$key	= $label	= $keyOrLabel;
 		$valueAsText	= $valueAsText !== NULL ? $valueAsText : strip_tags( $valueAsHtml );
 		if( !empty( $this->labels[$key] ) )
@@ -34,7 +40,8 @@ class View_Helper_Mail_Facts{
 		return $this;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !count( $this->facts ) )
 			return '';
 		if( $this->format == self::FORMAT_HTML )
@@ -43,7 +50,37 @@ class View_Helper_Mail_Facts{
 			return $this->renderAsText();
 	}
 
-	protected function renderAsHtml(){
+
+	public function setFormat( $format ): self
+	{
+		if( !in_array( $format, array( self::FORMAT_HTML, self::FORMAT_TEXT ) ) )
+			throw new RangeException( 'Invalid helper output format' );
+		$this->format	= $format;
+		return $this;
+	}
+
+	public function setLabels( $labels ): self
+	{
+		$this->labels	= $labels;
+		return $this;
+	}
+
+	public function setListClass( $listClass ): self
+	{
+		$this->listClass	= $listClass;
+		return $this;
+	}
+
+	public function setTextLabelLength( $integer ): self
+	{
+		$this->textLabelLength	= max( 0, min( $integer, 36 ) );
+		return $this;
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function renderAsHtml(): string
+	{
 		$list	= array();
 		foreach( $this->facts as $fact ){
 			$value	= $fact->valueHtml;
@@ -64,7 +101,8 @@ class View_Helper_Mail_Facts{
 		return UI_HTML_Tag::create( 'dl', $list, array( 'class' => $this->listClass ) );
 	}
 
-	public function renderAsText(){
+	protected function renderAsText(): string
+	{
 		$list	= array();
 		foreach( $this->facts as $fact ){
 			$label	= trim( strip_tags( $fact->label.':' ) );
@@ -74,27 +112,4 @@ class View_Helper_Mail_Facts{
 		}
 		return join( "\n", $list );
 	}
-
-	public function setFormat( $format ){
-		if( !in_array( $format, array( self::FORMAT_HTML, self::FORMAT_TEXT ) ) )
-			throw new RangeException( 'Invalid helper output format' );
-		$this->format	= $format;
-		return $this;
-	}
-
-	public function setLabels( $labels ){
-		$this->labels	= $labels;
-		return $this;
-	}
-
-	public function setListClass( $listClass ){
-		$this->listClass	= $listClass;
-		return $this;
-	}
-
-	public function setTextLabelLength( $integer ){
-		$this->textLabelLength	= max( 0, min( $integer, 36 ) );
-		return $this;
-	}
 }
-?>

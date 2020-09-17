@@ -1,8 +1,10 @@
 <?php
-class Job_Mail_Archive extends Job_Abstract{
-
+class Job_Mail_Archive extends Job_Abstract
+{
 	protected $model;
+
 	protected $libraries;
+
 	protected $statusesHandledMails	= array(
 		Model_Mail::STATUS_ABORTED,																//  status: -3
 		Model_Mail::STATUS_FAILED,																//  status: -2
@@ -12,7 +14,8 @@ class Job_Mail_Archive extends Job_Abstract{
 		Model_Mail::STATUS_REPLIED,																//  status: 5
 	);
 
-	public function __onInit(){
+	public function __onInit()
+	{
 		$this->model		= new Model_Mail( $this->env );
 		$this->logicMail	= $this->env->getLogic()->get( 'Mail' );
 		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
@@ -23,7 +26,8 @@ class Job_Mail_Archive extends Job_Abstract{
 	 *	Work in progress!
 	 *	Store raw mails in shard folders.
 	 */
-	public function shard(){
+	public function shard()
+	{
 		$path		= 'contents/mails/';
 		$indexFile	= $path.'index.json';
 		if( !file_exists( $path ) )
@@ -128,7 +132,8 @@ class Job_Mail_Archive extends Job_Abstract{
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function clean(){
+	public function clean()
+	{
 		$age		= $this->parameters->get( '--age', '1Y' );
 		$age		= $age ? strtoupper( $age ) : '1Y';
 		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
@@ -186,7 +191,8 @@ class Job_Mail_Archive extends Job_Abstract{
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function migrate(){
+	public function migrate()
+	{
 		$conditions	= array( 'status' > $this->statusesHandledMails );
 		$orders		= array( 'mailId' => 'ASC' );
 		$limits		= array(
@@ -272,7 +278,8 @@ class Job_Mail_Archive extends Job_Abstract{
 	 *
 	 *	@todo	test
 	 */
-	public function removeAttachments(){
+	public function removeAttachments()
+	{
 		$age		= $this->parameters->get( '--age', '1Y' );
 		$age		= $age ? strtoupper( $age ) : '1Y';
 		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
@@ -372,7 +379,9 @@ class Job_Mail_Archive extends Job_Abstract{
 	}
 
 	//  --  PROTECTED  --  //
-	protected function logMigration( $mail, $message ){
+
+	protected function logMigration( $mail, $message )
+	{
 		$fileName	= 'job.resource_mail.archive.migration.log';
 		$filePath	= $this->env->getConfig()->get( 'path.logs' ).$fileName;
 		$message	= date( 'Y-m-d H:i:s' ).' #'.$mail->mailId.' '.$message;
@@ -380,7 +389,8 @@ class Job_Mail_Archive extends Job_Abstract{
 	}
 
 	//  --  PRIVATE  --  //
-	private function _detectMailClass( $mail ){
+	private function _detectMailClass( $mail )
+	{
 		$this->logicMail->decompressMailObject( $mail, FALSE );
 		$serial			= $mail->object->serial;
 		$serialStart	= substr( $serial, 0, 80 );
@@ -391,7 +401,8 @@ class Job_Mail_Archive extends Job_Abstract{
 		return TRUE;
 	}
 
-	private function _loadMailClasses(){
+	private function _loadMailClasses()
+	{
 		$loadedClasses	= array();
 		$mailClassPaths	= array( './', 'admin/' );
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
@@ -411,7 +422,8 @@ class Job_Mail_Archive extends Job_Abstract{
 		}
 	}
 
-	private function _migrateMailClass( $mail ){
+	private function _migrateMailClass( $mail )
+	{
 		$classMigrations	= array(
 			'Mail_Auth_Password'		=> 'Mail_Auth_Local_Password',
 			'Mail_Auth_Register'		=> 'Mail_Auth_Local_Register',
@@ -433,7 +445,8 @@ class Job_Mail_Archive extends Job_Abstract{
 		return TRUE;
 	}
 
-	private function _migrateMailObject( $mail ){
+	private function _migrateMailObject( $mail )
+	{
 		$this->logicMail->decompressMailObject( $mail );
 		$usedLibrary	= $this->logicMail->detectMailLibraryFromMail( $mail );
 
@@ -498,7 +511,8 @@ class Job_Mail_Archive extends Job_Abstract{
 		return FALSE;
 	}
 
-	private function _migrateMailTemplates(){
+	private function _migrateMailTemplates()
+	{
 		$model		= new Model_Mail_Template( $this->env );
 		foreach( $model->getAll() as $template ){
 			if( strlen( trim( $template->styles ) ) ){
@@ -520,7 +534,8 @@ class Job_Mail_Archive extends Job_Abstract{
 		}
 	}
 
-	private function _saveRaw( $mail, $force = FALSE ){
+	private function _saveRaw( $mail, $force = FALSE )
+	{
 		if( !in_array( 'raw', $this->model->getColumns() ) )
 			return;
 		if( !empty( $mail->raw ) && !$force )

@@ -5,8 +5,8 @@
  *	Sends generated mail using configured mail transport.
  *	Attention: This class needs to be extended by method generate().
  */
-abstract class Mail_Abstract{
-
+abstract class Mail_Abstract
+{
 	/**	@var		object								$mail			Mail objectm, build on construction */
 	public $mail;
 
@@ -58,7 +58,8 @@ abstract class Mail_Abstract{
 	 *	@param		boolean								$defaultStyle	Flag: load default mail style file
 	 *	@todo		resolve todos below after all modules have adjusted
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env, $data = array(), $defaultStyle = TRUE ){
+	public function __construct( CMF_Hydrogen_Environment $env, $data = array(), $defaultStyle = TRUE )
+	{
 		$this->setEnv( $env );
 		$this->modelTemplate	= new Model_Mail_Template( $env );
 		$this->mail				= new \CeusMedia\Mail\Message();
@@ -93,7 +94,8 @@ abstract class Mail_Abstract{
 	 *	@access		public
 	 *	@return		array		List of allowed members during serialization
 	 */
-	public function __sleep(){
+	public function __sleep()
+	{
 		return array( 'mail', 'page'/*, 'logicMail'/*, 'transport', 'options'*/ );
 	}
 
@@ -102,7 +104,8 @@ abstract class Mail_Abstract{
 		$this->logicMail		= $this->env->getLogic()->get( 'Mail' );
 	}*/
 
-	public function addAttachment( $filePath, $mimeType = NULL, $encoding = NULL, $fileName = NULL ){
+	public function addAttachment( $filePath, $mimeType = NULL, $encoding = NULL, $fileName = NULL )
+	{
 		$libraries		= $this->logicMail->detectAvailableMailLibraries();
 		$library		= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this );
 
@@ -123,7 +126,8 @@ abstract class Mail_Abstract{
 		return $this;
 	}
 
-	public function getAttachments(){
+	public function getAttachments()
+	{
 		$list			= array();
 		$libraries		= $this->logicMail->detectAvailableMailLibraries();
 		$library		= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this );
@@ -156,13 +160,15 @@ abstract class Mail_Abstract{
 	 *	@return		string|NULL
 	 *	@throws		DomainException			if content key is not valid
 	 */
-	public function getContent( $key ){
+	public function getContent( $key )
+	{
 		if( !array_key_exists( $key, $this->contents ) )
 			throw new DomainException( 'Invalid content key' );
 		return $this->contents[$key];
 	}
 
-	public function getPage(){
+	public function getPage()
+	{
 		return $this->page;
 	}
 
@@ -171,18 +177,21 @@ abstract class Mail_Abstract{
 	 *	@access		public
 	 *	@return		string		Subject set for mail
 	 */
-	public function getSubject(){
+	public function getSubject()
+	{
 		return $this->mail->getSubject();
 	}
 
-	public function getTemplateId(){
+	public function getTemplateId()
+	{
 		$template	= $this->getTemplateToUse( 0, TRUE, FALSE );
 		if( $template )
 			return $template->mailTemplateId;
 		return 0;
 	}
 
-	public function initTransport( $verbose = FALSE ){
+	public function initTransport( $verbose = FALSE )
+	{
 		if( empty( $this->logicMail ) )
 			$this->logicMail	= $this->env->getLogic()->get( 'Mail' );
 		$libraries	= $this->logicMail->detectAvailableMailLibraries();
@@ -225,7 +234,8 @@ abstract class Mail_Abstract{
 	 *	@param		stdClass	$user		User model object
 	 *	@return		boolean		TRUE if success
 	 */
-	public function sendTo( $user ){
+	public function sendTo( $user )
+	{
 		if( is_array( $user ) )
 			$user	= (object) $user;
 		if( empty( $user->email ) )
@@ -240,7 +250,8 @@ abstract class Mail_Abstract{
 	 *	@param		integer		$userId		ID of user to send mail to
 	 *	@return		boolean		TRUE if success
 	 */
-	public function sendToUser( $userId ){
+	public function sendToUser( $userId )
+	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			throw new RuntimeException( 'Module "Resource_Users" is not installed' );
 		$model	= new Model_User( $this->env );
@@ -250,7 +261,8 @@ abstract class Mail_Abstract{
 		return $this->sendTo( $user );
 	}
 
-	public function setEnv( CMF_Hydrogen_Environment $env ){
+	public function setEnv( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 	}
 
@@ -260,7 +272,8 @@ abstract class Mail_Abstract{
 	 *	@param		string		$sender		Mail address of sender
 	 *	@return		void
 	 */
-	public function setSender( $sender ){
+	public function setSender( $sender )
+	{
 		$this->mail->setSender( $sender );
 	}
 
@@ -275,7 +288,8 @@ abstract class Mail_Abstract{
 	 *	@param		boolean		$useTemplate	Flag: Insert subject into mail subject prefix defined by mail module
 	 *	@return		void
 	 */
-	public function setSubject( $subject, $usePrefix = TRUE, $useTemplate = TRUE ){
+	public function setSubject( $subject, $usePrefix = TRUE, $useTemplate = TRUE )
+	{
 		if( $useTemplate ){
 			$template	= $this->options->get( 'subject.template' );
 			if( strlen( trim( $template ) ) )
@@ -308,10 +322,12 @@ abstract class Mail_Abstract{
 	 *	@access		protected
 	 *	@return		void
 	 */
-	protected function __onInit(){
+	protected function __onInit()
+	{
 	}
 
-	protected function addBodyClass( $class ){
+	protected function addBodyClass( $class )
+	{
 		if( strlen( trim( $class ) ) )
 			$this->bodyClasses[]	= $class;
 	}
@@ -325,7 +341,8 @@ abstract class Mail_Abstract{
 	 *	@deprecated	use setHtml instead
 	 *	@todo		to be removed
 	 */
-	protected function addHtmlBody( $html ){
+	protected function addHtmlBody( $html )
+	{
 		CMF_Hydrogen_Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Resource_Mail' )->version )
 			->setErrorVersion( '0.8.9' )
@@ -342,7 +359,8 @@ abstract class Mail_Abstract{
 	 *	@deprecated	use setText instead
 	 *	@todo		to be removed
 	 */
-	protected function addTextBody( $text ){
+	protected function addTextBody( $text )
+	{
 		CMF_Hydrogen_Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Resource_Mail' )->version )
 			->setErrorVersion( '0.8.9' )
@@ -351,13 +369,15 @@ abstract class Mail_Abstract{
 		$this->setText( $text );
 	}
 
-	protected function addPrimerStyle( $fileName ){
+	protected function addPrimerStyle( $fileName )
+	{
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.themes' ).$config->get( 'layout.primer' ).'/css/';
 		return $this->addStyle( $path.$fileName );
 	}
 
-	protected function addScriptFile( $fileName ){
+	protected function addScriptFile( $fileName )
+	{
 		$filePath	= $this->env->getConfig()->get( 'path.scripts' ).$fileName;
 		if( !file_exists( $filePath ) )
 			return FALSE;
@@ -375,7 +395,8 @@ abstract class Mail_Abstract{
 	 *	@param		string		$filePath		URI of file from app root
 	 *	@return		boolean		TRUE if file was added, FALSE if not found or already added
 	 */
-	protected function addStyle( $filePath ){
+	protected function addStyle( $filePath )
+	{
 		if( !file_exists( $filePath ) )
 			return FALSE;
 		if( in_array( $filePath, $this->addedStyles ) )
@@ -393,19 +414,22 @@ abstract class Mail_Abstract{
 		return TRUE;
 	}
 
-	protected function addCommonStyle( $fileName ){
+	protected function addCommonStyle( $fileName )
+	{
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.themes' ).'/common/css/';
 		return $this->addStyle( $path.$fileName );
 	}
 
-	protected function addThemeStyle( $fileName ){
+	protected function addThemeStyle( $fileName )
+	{
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/css/';
 		return $this->addStyle( $path.$fileName );
 	}
 
-	protected function applyTemplateToHtml( $content, $templateId = NULL ){
+	protected function applyTemplateToHtml( $content, $templateId = NULL )
+	{
 		$libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$template	= $this->getTemplateToUse( $templateId, TRUE, FALSE );
 		if( !$template )
@@ -486,7 +510,8 @@ abstract class Mail_Abstract{
 	 *	@param		integer		$templateId		ID of template to use in favor of defaults (must be usable)
 	 *	@return		string						Fully rendered content
 	 */
-	protected function applyTemplateToText( $content, $templateId = NULL ){
+	protected function applyTemplateToText( $content, $templateId = NULL )
+	{
 		$template	= $this->getTemplateToUse( $templateId, TRUE, FALSE );
 		if( !$template )
 			return $content;
@@ -553,7 +578,8 @@ abstract class Mail_Abstract{
 	 *	@param		boolean		$strict					Flag: throw exception if something goes wrong
 	 *	@return		objects		Model entity object of detected mail template
 	 */
-	protected function getTemplateToUse( $preferredTemplateId = 0, $considerFrontend = FALSE, $strict = TRUE ){
+	protected function getTemplateToUse( $preferredTemplateId = 0, $considerFrontend = FALSE, $strict = TRUE )
+	{
 		if( $this->templateId )
 			if( ( $template = $this->modelTemplate->get( $this->templateId ) ) )
 				return $template;
@@ -567,7 +593,8 @@ abstract class Mail_Abstract{
 	 *	@param		string		$section	Section in locale file
 	 *	@return		void
 	 */
-	protected function getWords( $topic, $section = NULL ){
+	protected function getWords( $topic, $section = NULL )
+	{
 		$language	= $this->env->getLanguage();
 		if( !$language->hasWords( $topic ) )
 			$language->load( $topic );
@@ -585,7 +612,8 @@ abstract class Mail_Abstract{
 	 *	@return		boolean		TRUE if success
 	 *	@todo		kriss: Notwendigkeit dieser Methode prüfen.
 	 */
-	protected function sendToAddress( $email ){
+	protected function sendToAddress( $email )
+	{
 		if( $this->mail instanceof \CeusMedia\Mail\Message )
 			$this->mail->addRecipient( $email );
 		else
@@ -602,7 +630,8 @@ abstract class Mail_Abstract{
 	 *	@param		integer		$templateId		ID of mail template to use in favour
 	 *	@return		self
 	 */
-	protected function setHtml( $content, $templateId = 0 ){
+	protected function setHtml( $content, $templateId = 0 )
+	{
 		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];
 
@@ -640,7 +669,8 @@ abstract class Mail_Abstract{
 	 *	@param		integer		$templateId		Forced template ID
 	 *	@return 	self
 	 */
-	protected function setTemplateId( $templateId ){
+	protected function setTemplateId( $templateId )
+	{
 		$this->templateId	= $templateId;
 		return $this;
 	}
@@ -654,7 +684,8 @@ abstract class Mail_Abstract{
 	 *	@param		integer		$templateId		ID of mail template to use in favour
 	 *	@return		self
 	 */
-	protected function setText( $content, $templateId = 0 ){
+	protected function setText( $content, $templateId = 0 )
+	{
 		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];
 		$contentFull	= $this->applyTemplateToText( $content, $templateId );
@@ -664,4 +695,3 @@ abstract class Mail_Abstract{
 		return $this;
 	}
 }
-?>

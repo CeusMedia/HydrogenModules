@@ -1,6 +1,6 @@
 <?php
-class Job_Mail extends Job_Abstract{
-
+class Job_Mail extends Job_Abstract
+{
 	/**
 	 *	Created test message and tries to send mail.
 	 *	Allows to test direct mail sending using the transports of mail classes.
@@ -19,8 +19,8 @@ class Job_Mail extends Job_Abstract{
 	 *	@access		public
 	 *	@return		void
 	 */
-
-	public function test(){
+	public function test()
+	{
 		$receiver	= $this->parameters->get( '--to' );
 		$modes		= preg_split( '/\s*,\s*/s', $this->parameters->get( '--mode', 'direct' ) );
 
@@ -88,15 +88,19 @@ class Job_Mail extends Job_Abstract{
 	}
 
 	//  --  PROTECTED  --  //
-	protected function getMailContentAsHtml(){
+
+	protected function getMailContentAsHtml()
+	{
 		return 'Test-Mail '.date( 'y-m-d / H:i' );
 	}
 
-	protected function getMailContentAsText(){
+	protected function getMailContentAsText()
+	{
 		return 'Test-Mail '.date( 'y-m-d / H:i' );
 	}
 
-	protected function getMailSubject(){
+	protected function getMailSubject()
+	{
 		$subject		= 'Test-Mail '.date( 'y-m-d / H:i' );
 		$subjectConfig	= $this->env->getConfig()->getAll( 'module.resource_mail.subject.', TRUE );
 		if( !$subjectConfig->get( 'prefix' ) && !$subjectConfig->get( 'template' ) ){

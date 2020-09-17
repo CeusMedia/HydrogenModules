@@ -1,6 +1,6 @@
 <?php
-class Mail_Example extends Mail_Abstract{
-
+class Mail_Example extends Mail_Abstract
+{
 	/**
 	 *	Create mail body and sets subject and body on mail object.
 	 *	By using methods setText and setHtml to assign generated contents,
@@ -11,7 +11,8 @@ class Mail_Example extends Mail_Abstract{
 	 *	@param		array		$data		Map of body template data
 	 *	@return		self
 	 */
-	protected function generate(){
+	protected function generate()
+	{
 		$wordsMain		= $this->getWords( 'main' );												//  main words of application
 		$wordsModule	= (object) $this->getWords( 'myModule', 'myMailSection' );					//  @todo change this!
 		$this->setSubject( $wordsModule->subject );
@@ -25,7 +26,8 @@ class Mail_Example extends Mail_Abstract{
 		return $this;
 	}
 
-	protected function renderBodyHtml( $wordsModule ){
+	protected function renderBodyHtml( $wordsModule )
+	{
 		if( $this->view->hasContentFile( 'mails/myModule/myAction.html' ) )
 			$body	= $this->view->loadContentFile( 'mails/myModule/myAction.html', $this->data );
 		else
@@ -38,7 +40,8 @@ class Mail_Example extends Mail_Abstract{
 		return $body;
 	}
 
-	protected function renderBodyText( $wordsModule ){
+	protected function renderBodyText( $wordsModule )
+	{
 		if( $this->view->hasContentFile( 'mails/myModule/myAction.txt' ) )
 			$body	= $this->view->loadContentFile( 'mails/myModule/myAction.txt', $this->data );
 		else
@@ -46,4 +49,3 @@ class Mail_Example extends Mail_Abstract{
 		return $body;
 	}
 }
-?>
