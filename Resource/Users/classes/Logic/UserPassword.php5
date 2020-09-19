@@ -1,6 +1,6 @@
 <?php
-class Logic_UserPassword{
-
+class Logic_UserPassword
+{
 	static protected $instance;
 
 	protected $env;
@@ -10,7 +10,8 @@ class Logic_UserPassword{
 	protected $defaultSaltLength;
 	protected $maxAgeBeforeDecay;
 
-	protected function __construct( $env ){
+	protected function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->model	= new Model_User_Password( $env );
 		$config			= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
@@ -36,7 +37,8 @@ class Logic_UserPassword{
 	 *	@throws		OutOfRangeException		if given user password ID is not existing
 	 *	@throws		OutOfRangeException		if new password already has been activated, decayed or revoked
 	 */
-	public function activatePassword( $userPasswordId ){
+	public function activatePassword( $userPasswordId )
+	{
 		$new		= $this->model->get( $userPasswordId );
 		if( !$new )
 			throw new OutOfRangeException( 'Invalid user password ID' );
@@ -76,7 +78,8 @@ class Logic_UserPassword{
 	 *	@param 		string		$password		The new password to set.
 	 *	@return		integer		$userPasswordId
 	 */
-	public function addPassword( $userId, $password ){
+	public function addPassword( $userId, string $password )
+	{
 		$salt	= $this->generateSalt();															//  generate password salt
 		$other	= $this->model->getByIndices( array(
 			'userId'	=> $userId,
@@ -111,7 +114,8 @@ class Logic_UserPassword{
 	 *	@access		public
 	 *	@return		integer			Number of decayed passwords replacement entries
 	 */
-	public function clearOutdatedPasswordReplacements(){
+	public function clearOutdatedPasswordReplacements()
+	{
 		$count	= 0;
 		if( $this->maxAgeBeforeDecay ){
 			foreach( $this->model->getAllByIndex( 'status', Model_User_Password::STATUS_NEW ) as $item ){
@@ -145,13 +149,15 @@ class Logic_UserPassword{
 	 *	ATTENTION: You need to prepend a password salt, if enabled!
 	 *
 	 *	@access		public
-	 *	@param    	string			Password to encrypt (prefixed by salt)
-	 *	@param    	string			Encryption algorithm to use (default: bcrypt)
+	 *	@param    	string		$password		Password to encrypt (prefixed by salt)
+	 *	@param    	integer		$algo			Encryption algorithm to use (default: PASSWORD_BCRYPT)
 	 *	@return 	string			Hash of encrypted (salted) password
 	 *	@see		http://php.net/manual/en/password.constants.php
 	 */
-	public function encryptPassword( $password, $algo = PASSWORD_BCRYPT ){
-		return password_hash( $password, $algo );
+	public function encryptPassword( $password, int $algo = PASSWORD_BCRYPT )
+	{
+		$options	= array();
+		return password_hash( $password, $algo, $options );
 	}
 
 	/**
@@ -165,9 +171,12 @@ class Logic_UserPassword{
 	 *	Default length of salt is defined in module configuration.
 	 *
 	 *	@access		public
-	 *	@param 		integer		$length		Length of salt hash (default: config, max: 32)
+	 *	@param 		string		$algo		Algorihm to use to generate salt, default: by module config
+	 *	@param 		integer		$length		Length of salt hash (default: by module config, max: 32)
+	 *	@return		string
 	 */
-	protected function generateSalt( $algo = NULL, $length = NULL ){
+	protected function generateSalt( $algo = NULL, ?int $length = NULL ): string
+	{
 		if( is_null( $algo ) )
 			$algo		= $this->defaultSaltAlgo;
 		if( is_null( $length ) )
@@ -185,7 +194,8 @@ class Logic_UserPassword{
 		return $salt;
 	}
 
-	public function getActivableUserPassword( $userId, $password ){
+	public function getActivatableUserPassword( $userId, string $password )
+	{
 		$indices	= array(
 			'userId'	=> $userId,
 			'status'	=> Model_User_Password::STATUS_NEW,
@@ -202,7 +212,8 @@ class Logic_UserPassword{
 	 *	@param  	object    	$env		Environment object
 	 *	@return		object   		Singleton instance of this logic class
 	 */
-	static public function getInstance( $env ){
+	static public function getInstance( $env ): self
+	{
 		if( !self::$instance )
 			self::$instance	= new self( $env );
 		return self::$instance;
@@ -215,7 +226,8 @@ class Logic_UserPassword{
 	 *	@param		integer		$userId		ID of user to check for password
 	 *	@return		boolean
 	 */
-	public function hasUserPassword( $userId ){
+	public function hasUserPassword( $userId ): bool
+	{
 		$indices	= array(
 			'userId'	=> $userId,
 			'status'	=> Model_User_Password::STATUS_ACTIVE,
@@ -223,7 +235,8 @@ class Logic_UserPassword{
 		return (bool) $this->model->count( $indices );
 	}
 
-	public function migrateOldUserPassword( $userId, $password ){
+	public function migrateOldUserPassword( $userId, string $password )
+	{
 		if( !$this->hasUserPassword( $userId ) ){
 			$userPasswordId		= $this->addPassword( $userId, $password );
 			$this->activatePassword( $userPasswordId );
@@ -240,7 +253,8 @@ class Logic_UserPassword{
 	 *	@param		integer		$hash		Hash of encrypted password to check against
 	 *	@return		boolean
 	 */
-	public function validatePassword( $password, $hash ){
+	public function validatePassword( string $password, string $hash ): bool
+	{
 		return password_verify( $password, $hash );
 	}
 
@@ -252,7 +266,8 @@ class Logic_UserPassword{
 	 *	@param		string		$password	Password to check for user
 	 *	@return		boolean
 	 */
-	public function validateUserPassword( $userId, $password ){
+	public function validateUserPassword( $userId, string $password ): bool
+	{
 		$item	= $this->model->getByIndices( array(
 			'userId'	=> $userId,
 			'status'	=> Model_User_Password::STATUS_ACTIVE,
@@ -267,4 +282,3 @@ class Logic_UserPassword{
 		return FALSE;
 	}
 }
-?>
