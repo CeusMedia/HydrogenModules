@@ -387,7 +387,9 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 		$user		= $model->get( $userId );
 		if( !$user )
 			throw new DomainException( 'Invalid user ID' );
-		if( !in_array( (int) $status, Model_User::TRANSITIONS[(int) $user->status] ) )
+		if( !in_array( (int) $status, Model_User::STATUSES, TRUE ) )
+			throw new RangeException( 'Invalid status' );
+		if( !in_array( (int) $status, Model_User::STATUS_TRANSITIONS[(int) $user->status], TRUE ) )
 			throw new RangeException( 'Invalid status transition' );
 		$model->edit( $userId, array( 'status' => $status, 'modifiedAt' => time() ) );
 /*		$server		= $this->env->getServer();
