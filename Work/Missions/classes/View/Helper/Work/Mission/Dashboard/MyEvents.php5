@@ -1,10 +1,12 @@
 <?php
-class View_Helper_Work_Mission_Dashboard_MyEvents extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_Work_Mission_Dashboard_MyEvents extends CMF_Hydrogen_View_Helper_Abstract
+{
 	protected $events		= array();
+
 	protected $projects		= array();
 
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env		= $env;
 	}
 

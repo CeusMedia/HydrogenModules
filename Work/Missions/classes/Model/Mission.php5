@@ -1,25 +1,28 @@
 <?php
 /**
- *	Model.
- *	@version		$Id$
+ *	Model for missions.
  */
 /**
- *	Model.
- *	@version		$Id$
- *	@todo			implement
+*	Model for missions.
  *	@todo			code documentation
  */
-class Model_Mission extends CMF_Hydrogen_Model{
-
-	const TYPE_TASK		= 0;
-	const TYPE_EVENT	= 1;
-
+class Model_Mission extends CMF_Hydrogen_Model
+{
 	const PRIORITY_NONE			= 0;
 	const PRIORITY_HIGHEST		= 1;
 	const PRIORITY_HIGH			= 2;
 	const PRIORITY_NORMAL		= 3;
 	const PRIORITY_LOW			= 4;
 	const PRIORITY_LOWEST		= 5;
+
+	const PRIORITIES			= array(
+		self::PRIORITY_NONE,
+		self::PRIORITY_HIGHEST,
+		self::PRIORITY_HIGH,
+		self::PRIORITY_NORMAL,
+		self::PRIORITY_LOW,
+		self::PRIORITY_LOWEST,
+	);
 
 	const STATUS_ABORTED		= -2;
 	const STATUS_REJECTED		= -1;
@@ -28,6 +31,24 @@ class Model_Mission extends CMF_Hydrogen_Model{
 	const STATUS_PROGRESS		= 2;
 	const STATUS_READY			= 3;
 	const STATUS_FINISHED		= 4;
+
+	const STATUSES			= array(
+		self::STATUS_ABORTED,
+		self::STATUS_REJECTED,
+		self::STATUS_NEW,
+		self::STATUS_ACCEPTED,
+		self::STATUS_PROGRESS,
+		self::STATUS_READY,
+		self::STATUS_FINISHED,
+	);
+
+	const TYPE_TASK		= 0;
+	const TYPE_EVENT	= 1;
+
+	const TYPES			= array(
+		self::TYPE_TASK.
+		self::TYPE_EVENT,
+	);
 
 	/**	@var	$name		string		Table name without prefix of database connection */
 	protected $name			= "missions";
@@ -76,4 +97,3 @@ class Model_Mission extends CMF_Hydrogen_Model{
 	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

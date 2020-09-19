@@ -1,14 +1,16 @@
 <?php
-class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		$w			= (object) $this->getWords( 'work/mission', 'mail-daily' );
 		$this->setSubject( $w->subject );
 		$this->addBodyClass( 'job-work-mission-mail-daily' );
 		return $this->setHtml( $this->renderBody( $data ) );
 	}
 
-	public function renderBody( $data ){
+	public function renderBody( $data )
+	{
 		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$w				= (object) $this->getWords( 'work/mission', 'mail-daily' );
 		$monthNames		= (array) $this->getWords( 'work/mission', 'months' );
@@ -66,4 +68,3 @@ class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract{
 		return $body;
 	}
 }
-?>

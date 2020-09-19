@@ -9,8 +9,8 @@
  *	@todo			implement
  *	@todo			code documentation
  */
-class Controller_Work_Mission_Kanban extends Controller_Work_Mission{
-
+class Controller_Work_Mission_Kanban extends Controller_Work_Mission
+{
 	protected $filterKeyPrefix	= 'filter.work.mission.kanban.';
 
 	protected $defaultFilterValues	= array(
@@ -39,7 +39,8 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission{
 		'direction'		=> 'ASC',
 	);
 
-	protected function __onInit(){
+	protected function __onInit()
+	{
 		parent::__onInit();
 		$this->session->set( 'filter.work.mission.mode', 'kanban' );
 
@@ -53,12 +54,14 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission{
 		) );
 	}
 
-	public function ajaxRenderIndex(){
+	public function ajaxRenderIndex()
+	{
 		$userId	= $this->getData( 'userId' );
 		$this->addData( 'users', $this->userMap );
 	}
 
-	public function ajaxSetMissionStatus(){
+	public function ajaxSetMissionStatus()
+	{
 		$missionId	= $this->request->get( 'missionId' );
 		$status		= (int) $this->request->get( 'status' );
 
@@ -95,19 +98,21 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission{
 		exit;
 	}
 
-	public function index( $year = NULL, $month = NULL ){
+	public function index( $year = NULL, $month = NULL )
+	{
 		$this->assignFilters();
 	}
 
-	protected function initDefaultFilters(){
+	protected function initDefaultFilters()
+	{
 		parent::initDefaultFilters();
 		if( !$this->session->get( $this->filterKeyPrefix.'month' ) )
 			$this->session->set( $this->filterKeyPrefix.'month', date( "Y" )."-".date( "n" ) );
 	}
 
-	protected function initFilters( $userId ){
+	protected function initFilters( $userId )
+	{
 		parent::initFilters( $userId );
 //		$this->logic->generalConditions['...'] = '...';
 	}
 }
-?>

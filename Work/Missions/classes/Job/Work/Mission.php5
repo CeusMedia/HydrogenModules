@@ -1,6 +1,6 @@
 <?php
-class Job_Work_Mission extends Job_Abstract{
-
+class Job_Work_Mission extends Job_Abstract
+{
 	protected $logicMail;
 	protected $language;
 	protected $modelChange;
@@ -9,8 +9,8 @@ class Job_Work_Mission extends Job_Abstract{
 	protected $modelUser;
 	protected $useSettings;
 
-
-	protected function __onInit(){
+	protected function __onInit()
+	{
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 		$this->language		= $this->env->getLanguage()->getLanguage();							//  @deprecated if each mail is sent in user language
 		$this->modelChange	= new Model_Mission_Change( $this->env );							//  get mission changes model
@@ -20,8 +20,6 @@ class Job_Work_Mission extends Job_Abstract{
 		$this->useSettings	= $this->env->getModules()->has( 'Manage_My_User_Settings' );			//  user settings are enabled
 	}
 
-
-
 	/**
 	 *	Get mail receivers of update mails.
 	 *	@access		protected
@@ -30,7 +28,8 @@ class Job_Work_Mission extends Job_Abstract{
 	 *	@param		array		$excludes			List of user IDs to exclude
 	 *  @return		array		List of mail receiving users
 	 */
-	protected function getUpdateMailReceivers( $projectIds, $includes = array(), $excludes = array() ){
+	protected function getUpdateMailReceivers( $projectIds, $includes = array(), $excludes = array() )
+	{
 		$list	= array();																		//  prepare empty user list
 		$projectIds	= array_unique( $projectIds );
 		foreach( $projectIds as $projectId )												//  iterate given projects IDs
@@ -58,7 +57,8 @@ class Job_Work_Mission extends Job_Abstract{
 		return $users;																			//  return final user list
 	}
 
-    public function informAboutChanges(){
+    public function informAboutChanges()
+	{
 		$language		= $this->language;														//  @todo get user language instead of current language
 		$count			= 0;																	//  init mail counter
 		foreach( $this->modelChange->getAll( array(), array(), array( 0, 10 ) ) as $change ){										//  iterate mission changes
@@ -117,7 +117,8 @@ class Job_Work_Mission extends Job_Abstract{
 	 *	@todo		implement this job
 	 *	@return		void
 	 */
-	public function mailDaily(){
+	public function mailDaily()
+	{
 		$count			= 0;
 		$activeUsers	= $this->modelUser->getAll( array( 'status' => '>0' ) );						//  get all active users
 		foreach( $activeUsers as $user ){														//  iterate found users
@@ -127,7 +128,8 @@ class Job_Work_Mission extends Job_Abstract{
 		$this->out( 'Sent '.$count.' mails.' );
 	}
 
-	protected function sendDailyMailOfUser( $user ){
+	protected function sendDailyMailOfUser( $user )
+	{
 		if( $user->userId != 4 )
 			return;
 		if( !strlen( trim( $user->email ) ) )													//  no mail address configured for user

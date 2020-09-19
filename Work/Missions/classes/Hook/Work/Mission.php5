@@ -1,7 +1,15 @@
 <?php
-class Hook_Work_Mission extends CMF_Hydrogen_Hook{
+class Hook_Work_Mission extends CMF_Hydrogen_Hook
+{
+	static $statusesActive	= array(
+		Model_Mission::STATUS_NEW,
+		Model_Mission::STATUS_ACCEPTED,
+		Model_Mission::STATUS_PROGRESS,
+		Model_Mission::STATUS_READY,
+	);
 
-	static public function onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$model		= new Model_Mission_Document( $env );
 		$conditions	= array( 'modifiedAt' => '>'.( time() - 30 * 24 * 60 * 60 ) );
 		$orders		= array( 'modifiedAt' => 'DESC' );
@@ -18,7 +26,8 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 		}
 	}
 
-	static public function onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$context->registerModule( (object) array(
 			'moduleId'		=> 'Work_Missions',
 			'typeLabel'		=> 'Aufgabe',
@@ -27,8 +36,10 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 		) );
 	}
 
-	static public function onDatabaseLockReleaseCheck( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$controllerAction	= $data['controller'].'/'.$data['action'];
+	static public function onDatabaseLockReleaseCheck( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
+		$data	= (object) $payload;
+		$controllerAction	= $data->controller.'/'.$data->action;
 		$skipActions		= array(
 			'work/mission/export/ical',
 			'work/mission/addDocument',
@@ -40,20 +51,21 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 		);
 		if( in_array( $controllerAction, $skipActions ) )
 			return FALSE;
-		if( !$data['userId'] )
+		if( !$data->userId )
 			return FALSE;
 		$logicLock	= new Logic_Database_Lock( $env );
-		$locks		= $logicLock->getUserLocks( $data['userId'] );
+		$locks		= $logicLock->getUserLocks( $data->userId );
 		foreach( $locks as $lock ){
 			if( $lock->subject === "Work_Missions" ){
-//				error_log( time().": Missions:onDatabaseLockReleaseCheck: ".json_encode( $data['request']->get( '__path') )."\n", 3, "unlock.log" );
-				$logicLock->unlock( $lock->subject, $lock->entryId, $data['userId'] );
+//				error_log( time().": Missions:onDatabaseLockReleaseCheck: ".json_encode( $data->request->get( '__path') )."\n", 3, "unlock.log" );
+				$logicLock->unlock( $lock->subject, $lock->entryId, $data->userId );
 			}
 		}
 	}
 
-	static public function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$data				= (object) $data;
+	static public function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
+		$data				= (object) $payload;
 		$data->informOthers	= isset( $data->informOthers ) ? $data->informOthers : FALSE;
 		if( empty( $data->projectId ) ){
 			$message	= 'Hook "Work_Missions::onProjectRemove" is missing project ID in data.';
@@ -74,7 +86,9 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 		}
 	}
 
-	static public function onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
+		$data			= (object) $payload;
 		$modelProject	= new Model_Project( $env );
 		if( empty( $data->projectId ) ){
 			$message	= 'Hook "Work_Missions::onListProjectRelations" is missing project ID in data.';
@@ -91,11 +105,11 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 
 		$modelMission	= new Model_Mission( $env );
 		$words			= $env->getLanguage()->getWords( 'work/mission' );
-		$statusesActive	= array( 0, 1, 2, 3 );
+
 		$list			= array();
 		$indices		= array( 'projectId' => $data->projectId );
 		if( $data->activeOnly )
-			$indices['status']	= $statusesActive;
+			$indices['status']	= self::$statusesActive;
 		$orders			= array( 'type' => 'DESC', 'title' => 'ASC' );
 		$missions		= $modelMission->getAllByIndices( $indices, $orders );	//  ...
 
@@ -105,7 +119,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 		);
 		foreach( $missions as $mission ){
 			$icon		= $icons[$mission->type];
-			$isOpen		= in_array( $mission->status, $statusesActive );
+			$isOpen		= in_array( $mission->status, self::$statusesActive );
 			$status		= '('.$words['states'][$mission->status].')';
 			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
 			$title		= $isOpen ? $mission->title : UI_HTML_Tag::create( 'del', $mission->title );
@@ -126,9 +140,11 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 		);
 	}
 
-	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
+		$data		= (object) $payload;
 		if( empty( $data->userId ) ){
-			$message	= 'Hook "Work_Missions::___onListUserRelations" is missing user ID in data.';
+			$message	= 'Hook "Work_Missions::onListUserRelations" is missing user ID in data.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
@@ -145,14 +161,15 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 			$projectIds[]	= $project->projectId;
 		}
 
+		if( empty( $projectIds ) )
+			return;
 		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
 		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
-		$statusesActive	= array( 0, 1, 2, 3 );
 		$list			= array();
 		$modelMission	= new Model_Mission( $env );
 		$indices		= array( 'projectId' => $projectIds );
 		if( $data->activeOnly )
-			$indices['status']	= $statusesActive;
+			$indices['status']	= self::$statusesActive;
 		$orders			= array( 'type' => 'DESC', 'title' => 'ASC' );
 
 		$missions		= $modelMission->getAllByIndices( $indices, $orders );	//  ...
@@ -162,7 +179,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 		);
 		foreach( $missions as $mission ){
 			$icon		= $icons[$mission->type];
-			$isOpen		= in_array( $mission->status, $statusesActive );
+			$isOpen		= in_array( $mission->status, self::$statusesActive );
 			$status		= '('.$words['states'][$mission->status].')';
 			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
 			$title		= $isOpen ? $mission->title : UI_HTML_Tag::create( 'del', $mission->title );
@@ -184,11 +201,12 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 			);
 	}
 
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$data				= (object) $data;
+	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
+		$data				= (object) $payload;
 		$data->informOthers	= isset( $data->informOthers ) ? $data->informOthers : FALSE;
 		if( empty( $data->userId ) ){
-			$message	= 'Hook "Work_Missions::___onUserRemove" is missing user ID in data.';
+			$message	= 'Hook "Work_Missions::onUserRemove" is missing user ID in data.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
@@ -225,6 +243,12 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 			}
 			foreach( $missions as $mission ){
 				$old	= clone $mission;
+				$listProgressingMissionStatues	= array(
+					Model_Mission::STATUS_ACCEPTED,
+					Model_Mission::STATUS_PROGRESS,
+					Model_Mission::STATUS_READY,
+					Model_Mission::STATUS_FINISHED,
+				);
 				if( $mission->creatorId == $data->userId )
 					$mission->creatorId		= $nextUserId;
 				if( $mission->workerId == $data->userId )
@@ -234,7 +258,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 				if( $old != $mission ){
 					$nrMissionsChanged++;
 					$modelMission->edit( $mission->missionId, (array) $mission );
-					if( $data->informOthers && in_array( $mission->status, array( 1, 2, 3, 4 ) ) )
+					if( $data->informOthers && in_array( $mission->status, $listProgressingMissionStatues ) )
 						$logicMission->noteChange( 'update', $mission->missionId, $old, $data->userId );
 				}
 			}
@@ -250,26 +274,30 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook{
 			);
 	}
 
-	static public function onStartTimer( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$timer	= $data['timer'];
+	static public function onStartTimer( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
+		$timer	= $payload['timer'];
 		if( $timer->module === 'Work_Missions' && $timer->moduleId ){
 			$model		= new Model_Mission( $env );
 			$mission	= $model->get( $timer->moduleId );
 			if( in_array( $mission->status, array( -2, -1, 0, 1, 3, 4 ) ) ){
-				$model->edit( $timer->moduleId, array( 'status' => 2 ) );
+				$model->edit( $timer->moduleId, array( 'status' => Model_Mission::STATUS_PROGRESS ) );
 			}
 		}
 	}
 
-	static public function onPauseTimer( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function onPauseTimer( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 //		self::___onStartTimer( $env, $context, $module, $data );
 	}
 
-	static public function onStopTimer( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function onStopTimer( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 //		self::___onStartTimer( $env, $context, $module, $data );
 	}
 
-	static public function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$context->registerPanel( 'work-mission-my-today', array(
 			'url'		=> 'work/mission/ajaxRenderDashboardPanel',
 			'title'		=> 'Heute & Termine',

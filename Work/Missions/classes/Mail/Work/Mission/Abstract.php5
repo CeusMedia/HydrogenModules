@@ -1,6 +1,6 @@
 <?php
-abstract class Mail_Work_Mission_Abstract extends Mail_Abstract{
-
+abstract class Mail_Work_Mission_Abstract extends Mail_Abstract
+{
 	protected $indicator;
 	protected $labelsMonthNames;
 	protected $labelsWeekdays;
@@ -10,7 +10,8 @@ abstract class Mail_Work_Mission_Abstract extends Mail_Abstract{
 	protected $modelUser;
 	protected $salute;
 
-	protected function __onInit(){
+	protected function __onInit()
+	{
 		parent::__onInit();
 		$this->addThemeStyle( 'module.work.missions.css' );
 		$this->addThemeStyle( 'indicator.css' );
@@ -30,4 +31,3 @@ abstract class Mail_Work_Mission_Abstract extends Mail_Abstract{
 		$this->salutes			= (array) $this->getWords( 'work/mission', 'mail-salutes' );
 	}
 }
-?>

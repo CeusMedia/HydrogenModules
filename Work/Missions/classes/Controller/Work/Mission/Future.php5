@@ -1,6 +1,6 @@
 <?php
-class Controller_Work_Mission_Future extends Controller_Work_Mission{
-
+class Controller_Work_Mission_Future extends Controller_Work_Mission
+{
 	protected $filterKeyPrefix	= 'filter.work.mission.future.';
 
 	protected $defaultFilterValues	= array(
@@ -26,17 +26,20 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission{
 		'direction'		=> 'ASC',
 	);
 
-	protected function __onInit(){
+	protected function __onInit()
+	{
 		parent::__onInit();
 		$this->session->set( 'filter.work.mission.mode', 'future' );
 	}
 
-	protected function initFilters( $userId ){
+	protected function initFilters( $userId )
+	{
 		parent::initFilters( $userId );
 		$this->logic->generalConditions['dayStart']	= '>='.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
 	}
 
-	public function ajaxRenderIndex(){
+	public function ajaxRenderIndex()
+	{
 		$userId		= $this->session->get( 'userId' );
 
 		//  get list limit and page filters and sanitize them
@@ -69,11 +72,11 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission{
 //		exit;
 	}
 
-	public function index( $missionId = NULL ){
+	public function index( $missionId = NULL )
+	{
 		if( strlen( trim( $missionId ) ) )
 			$this->restart( './work/mission/'.$missionId );
 		$this->initFilters( $this->userId );
 		$this->assignFilters();
 	}
 }
-?>

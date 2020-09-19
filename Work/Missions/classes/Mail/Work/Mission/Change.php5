@@ -1,6 +1,6 @@
 <?php
-abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract{
-
+abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
+{
 	protected $baseUrl;
 	protected $facts				= array();
 	protected $labels;
@@ -8,7 +8,8 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract{
 	protected $changedFactClassPos	= 'label label-success';
 	protected $changedFactClassNeg	= 'label label-important';
 
-	protected function enlistFact( $key, $value, $class = NULL ){
+	protected function enlistFact( $key, $value, $class = NULL )
+	{
 		$labelKey	= 'label'.ucfirst( $key );
 		if( !is_null( $class ) ){
 			if( $class === TRUE )
@@ -22,13 +23,15 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract{
 		$this->facts[$key]   =   $term.$definition;
 	}
 
-	protected function generate( $data = array() ){
+	protected function generate( $data = array() )
+	{
 		$this->baseUrl			= $this->env->getConfig()->get( 'app.base.url' );
 		$this->words			= (object) $this->getWords( 'work/mission', $this->languageSection );
 		$this->labels			= (object) $this->getWords( 'work/mission', 'add' );
 	}
 
-	protected function renderUser( $user, $link = FALSE ){
+	protected function renderUser( $user, $link = FALSE )
+	{
 		if( !$user )
 			return '-';
 		if( $this->env->getModules()->has( 'Members' ) ){
@@ -47,7 +50,8 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract{
 		return $userLabel;
 	}
 
-	protected function renderUserAsText( $user ){
+	protected function renderUserAsText( $user )
+	{
 		if( !$user )
 			return '-';
 		$fullname	= '';
@@ -62,16 +66,17 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract{
 		return $user->username.$fullname;
 	}
 
-	protected function renderLinkedTitle( $mission ){
+	protected function renderLinkedTitle( $mission )
+	{
 		return UI_HTML_Tag::create( 'a', $mission->title, array(
 			'href'	=> './work/mission/view/'.$mission->missionId
 		) );
 	}
 
-	protected function setSubjectFromMission( $mission ){
+	protected function setSubjectFromMission( $mission )
+	{
 		$subjectKey	= $mission->type ? 'subjectEvent' : 'subjectTask';
 		$subject	= sprintf( $this->words->$subjectKey, $mission->title );
 		$this->setSubject( $subject );
 	}
 }
-?>

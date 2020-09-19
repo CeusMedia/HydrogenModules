@@ -1,13 +1,15 @@
 <?php
-class Controller_Work_Mission_Export extends Controller_Work_Mission{
-
-	protected function __onInit(){
+class Controller_Work_Mission_Export extends Controller_Work_Mission
+{
+	protected function __onInit()
+	{
 		parent::__onInit();
 		$this->pathLogs		= $this->env->getConfig()->get( 'path.logs' );
 //		$this->logPrefix	= 'work.mission.ical.export.log';
 	}
 
-	protected function exportAsIcal(){
+	protected function exportAsIcal()
+	{
 		$conditions	= array( 'status' => array( 0, 1, 2, 3 ) );
 		$orders		= array( 'dayStart' => 'ASC' );
 		$missions	= $this->getUserMissions( $conditions, $orders );
@@ -88,13 +90,15 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 		return trim( $ical->build( $root ) );
 	}
 
-	protected function getUserMissions( $conditions = array(), $orders = array(), $limits = array() ){
+	protected function getUserMissions( $conditions = array(), $orders = array(), $limits = array() )
+	{
 		$userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );							//  get user projects from model
 		$conditions['projectId']	= array_keys( $userProjects );									//
 		return $this->model->getAll( $conditions, $orders, $limits );	//  return missions matched by conditions
 	}
 
-	public function ical(){
+	public function ical()
+	{
 			$method		= $this->request->getMethod();
 			$logFile	= $this->pathLogs.'work.mission.ical.method.log';
 			$logMessage	= date( "Y-m-d H:i:s" ).' ['.$method.'] '.getEnv( 'HTTP_USER_AGENT' )."\n";
@@ -141,7 +145,8 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 		exit;
 	}
 
-	protected function importFromIcal( $ical /*= NULL */){
+	protected function importFromIcal( $ical /*= NULL */)
+	{
 /*		if( !$ical && file_exists( "test.ical" ) )
 			$ical	= file_get_contents( "test.ical" );
 */		$projects	= array();
@@ -182,7 +187,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 							$changes[$key]	= $value;									//  note changed column
 					if( $changes ){														//  columns have been changed
 						$this->model->edit( $mission['missionId'], $changes );			//  save changes to database
-//						$projectUsers	= 
+//						$projectUsers	=
 //						foreach( $projectUsers as $projectUser ){
 							touch("update-".$this->userId);
 //						}
@@ -215,7 +220,8 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 		}
 	}
 
-	protected function remapCalendarItem( $item, $projects, $defaultProjectId ){
+	protected function remapCalendarItem( $item, $projects, $defaultProjectId )
+	{
 		$data	= array();
 		foreach( $item as $attribute => $content ){
 			switch( $attribute ){
@@ -275,7 +281,8 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 		return $data;
 	}
 
-	public function index( $format = NULL, $debug = FALSE ){
+	public function index( $format = NULL, $debug = FALSE )
+	{
 		$this->restart( './work/mission/help/sync' );
 /*
 		switch( $format ){
@@ -291,4 +298,3 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission{
 		}
 */	}
 }
-?>

@@ -1,36 +1,14 @@
 <?php
 /**
- *	Model.
- *	@version		$Id$
+ *	Model for documents attached to missions.
  */
 /**
- *	Model.
- *	@version		$Id$
- *	@todo			implement
+*	Model for documents attached to missions.
+ *	@todo			support linked files, e.G. by module Info:Files
  *	@todo			code documentation
  */
-/*
-DROP TABLE IF EXISTS `mission_documents`;
-CREATE TABLE IF NOT EXISTS `mission_documents` (
-  `missionDocumentId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `missionId` int(11) unsigned NOT NULL,
-  `userId` int(11) unsigned NOT NULL,
-  `size` decimal(12,0) unsigned NOT NULL,
-  `mimeType` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `filename` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `hashname` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `createdAt` decimal(12,0) unsigned NOT NULL,
-  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
-  `accessedAt` decimal(12,0) unsigned DEFAULT NULL,
-  PRIMARY KEY (`missionDocumentId`),
-  KEY `missionId` (`missionId`),
-  KEY `userId` (`userId`),
-  KEY `mimeType` (`mimeType`),
-  KEY `filename` (`filename`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-*/
-class Model_Mission_Document extends CMF_Hydrogen_Model{
-
+class Model_Mission_Document extends CMF_Hydrogen_Model
+{
 	/**	@var	$name		string		Table name without prefix of database connection */
 	protected $name			= "mission_documents";
 
@@ -62,4 +40,3 @@ class Model_Mission_Document extends CMF_Hydrogen_Model{
 	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

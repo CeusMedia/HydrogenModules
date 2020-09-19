@@ -1,8 +1,10 @@
 <?php
-class Controller_Work_Mission_Archive extends Controller_Work_Mission{
-
+class Controller_Work_Mission_Archive extends Controller_Work_Mission
+{
 	protected $filterKeyPrefix	= 'filter.work.mission.archive.';
+
 	protected $options;
+
 	protected $request;
 
 	protected $defaultFilterValues	= array(
@@ -27,12 +29,14 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission{
 		'direction'		=> 'ASC',
 	);
 
-	protected function __onInit(){
+	protected function __onInit()
+	{
 		parent::__onInit();
 		$this->session->set( 'filter.work.mission.mode', 'archive' );
 	}
 
-	public function ajaxRenderIndex(){
+	public function ajaxRenderIndex()
+	{
 		//  get list limit and page filters and sanitize them
 		$limitMin	= 20;
 		$limitMax	= 100;
@@ -61,16 +65,17 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission{
 //		exit;
 	}
 
-	public function index( $missionId = NULL ){
+	public function index( $missionId = NULL )
+	{
 		if( strlen( trim( $missionId ) ) )
 			$this->restart( './work/mission/'.$missionId );
 		$this->initFilters( $this->userId );
 		$this->assignFilters();
 	}
 
-	protected function initFilters( $userId ){
+	protected function initFilters( $userId )
+	{
 		parent::initFilters( $userId );
 //		$this->logic->generalConditions['...'] = '...';
 	}
 }
-?>

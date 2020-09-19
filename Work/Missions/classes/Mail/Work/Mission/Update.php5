@@ -1,10 +1,11 @@
 <?php
-class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
-
+class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
+{
 	protected $languageSection	= 'mail-update';
 	protected $helperFacts;
 
-	public function generate( $data = array() ){
+	public function generate( $data = array() )
+	{
 		parent::generate( $data );
 		$this->setSubjectFromMission( $data['missionBefore'] );
 		$this->prepareFacts( $data );
@@ -17,12 +18,14 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 		);
 	}
 
-	protected function renderLabel( $content, $class = NULL ){
+	protected function renderLabel( $content, $class = NULL )
+	{
 		$class	= 'label'.( $class ? ' label-'.$class : '' );
 		return UI_HTML_Tag::create( 'span', $content, array( 'class' => $class ) );
 	}
 
-	protected function prepareFacts( $data ){
+	protected function prepareFacts( $data )
+	{
 		$old		= $data['missionBefore'];
 		$new		= $data['missionAfter'];
 
@@ -180,7 +183,8 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 		}
 	}
 
-	public function renderHtml( $data ){
+	public function renderHtml( $data )
+	{
 		$indicator		= new UI_HTML_Indicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
@@ -220,7 +224,8 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 		return $this->view->loadContentFile( 'mail/work/mission/update.html', $data );
 	}
 
-	public function renderText( $data ){
+	public function renderText( $data )
+	{
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
 		$old			= $data['missionBefore'];
@@ -256,4 +261,3 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change{
 		return $this->view->loadContentFile( 'mail/work/mission/update.txt', $data );
 	}
 }
-?>

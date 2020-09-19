@@ -12,8 +12,8 @@
  *	@extends		CMF_Hydrogen_Logic
  *	@todo			code doc
  */
-class Logic_Work_Mission extends CMF_Hydrogen_Logic{
-
+class Logic_Work_Mission extends CMF_Hydrogen_Logic
+{
 	static protected $instance;
 
 	public $timeOffset			= 0; # nerd mode: 4 hours night shift: 14400;
@@ -28,7 +28,8 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 	 *	@access		protected
 	 *	@return		void
 	 */
-	protected function __onInit(){
+	protected function __onInit()
+	{
 		$this->modelMission		= new Model_Mission( $this->env );
 		$this->modelVersion		= new Model_Mission_Version( $this->env );
 		$this->modelChange		= new Model_Mission_Change( $this->env );
@@ -49,13 +50,15 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 *	@return		object			Singleton instance of logic
 	 */
-	static public function getInstance( CMF_Hydrogen_Environment $env ){
+	static public function getInstance( CMF_Hydrogen_Environment $env )
+	{
 		if( !self::$instance )
 			self::$instance	= new self( $env );
 		return self::$instance;
 	}
 
-	public function getDate( $string ){
+	public function getDate( $string )
+	{
 		$day	= 24 * 60 * 60;
 		$now	= time();
 		$string	= strtolower( trim( $string ) );
@@ -92,7 +95,8 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 		return $model->getAllByIndex( 'missionId', $missionId, $orders );
 	}*/
 
-	public function getFilterConditions( $sessionFilterKeyPrefix, $additionalConditions = array() ){
+	public function getFilterConditions( $sessionFilterKeyPrefix, $additionalConditions = array() )
+	{
 		$session	= $this->env->getSession();
 		$query		= $session->get( $sessionFilterKeyPrefix.'query' );
 		$types		= $session->get( $sessionFilterKeyPrefix.'types' );
@@ -124,7 +128,8 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 		return $conditions;
 	}
 
-	public function getUserProjects( $userId, $activeOnly = FALSE ){
+	public function getUserProjects( $userId, $activeOnly = FALSE )
+	{
 		$modelProject	= new Model_Project( $this->env );											//  create projects model
 		if( !$this->hasFullAccess() ){																//  normal access
 			$conditions		= $activeOnly ? array( 'status' => array( 0, 1, 2 ) ) : array();		//  ...
@@ -136,7 +141,8 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 		return $userProjects;																		//  return projects map
 	}
 
-	public function getUserMissions( $userId, $conditions = array(), $orders = array(), $limits = NULL ){
+	public function getUserMissions( $userId, $conditions = array(), $orders = array(), $limits = NULL )
+	{
 		$conditions	= array_merge( $this->generalConditions, $conditions );
 		$orders		= $orders ? $orders : array( 'dayStart' => 'ASC' );
 
@@ -172,14 +178,16 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 		);
 	}
 
-	public function getVersion( $missionId, $version ){
+	public function getVersion( $missionId, $version )
+	{
 		return $this->modelVersion->getByIndices( array(
 			'missionId'	=> $missionId,
 			'version'	=> $version,
 		) );
 	}
 
-	public function getVersions( $missionId ){
+	public function getVersions( $missionId )
+	{
 		$orders		= array( 'version' => 'ASC' );
 		$versions	= $this->modelVersion->getAllByIndex( 'missionId', $missionId, $orders );
 		$modelUser	= new Model_User( $this->env );											//  create projects model
@@ -188,11 +196,13 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 		return $versions;
 	}
 
-	protected function hasFullAccess(){
+	protected function hasFullAccess()
+	{
 		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );
 	}
 
-	public function noteChange( $type, $missionId, $data, $currentUserId ){
+	public function noteChange( $type, $missionId, $data, $currentUserId )
+	{
 		$model	= new Model_Mission_Change( $this->env );
 		if( !$model->count( array( 'missionId' => $missionId ) ) ){
 			$model->add( array(
@@ -214,7 +224,8 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 		}
 	}
 
-	public function noteVersion( $missionId, $userId, $content ){
+	public function noteVersion( $missionId, $userId, $content )
+	{
 		$modelVersion	= new Model_Mission_Version( $this->env );
 		$latest	= $modelVersion->getByIndex( 'missionId', $missionId, array( 'version' => 'DESC' ) );
 		if( $latest && $latest->content === $content )
@@ -228,7 +239,8 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 		) );
 	}
 
-	public function removeDocument( $documentId ){
+	public function removeDocument( $documentId )
+	{
 		$document	= $this->modelDocument->get( $documentId );
 		if( !$document )
 			return FALSE;
@@ -238,7 +250,8 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 		return TRUE;
 	}
 
-	public function removeMission( $missionId ){
+	public function removeMission( $missionId )
+	{
 		$this->modelChange->removeByIndex( 'missionId', $missionId );
 		$this->modelVersion->removeByIndex( 'missionId', $missionId );
 		$missionDocuments	= $this->modelDocument->getAllByIndex( 'missionId', $missionId );
@@ -247,6 +260,4 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic{
 		$this->modelMission->remove( $missionId );
 		return count( $missionDocuments );
 	}
-
 }
-?>

@@ -11,9 +11,10 @@
  *	@todo			implement
  *	@todo			code documentation
  */
-class Controller_Work_Mission extends CMF_Hydrogen_Controller{
-
-	public function help( $topic = NULL ){
+class Controller_Work_Mission extends CMF_Hydrogen_Controller
+{
+	public function help( $topic = NULL )
+	{
 		$this->addData( 'topic', (string) $topic );
 	}
 
@@ -60,7 +61,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		'direction'		=> 'ASC',
 	);
 
-	protected function __onInit(){
+	protected function __onInit()
+	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
@@ -119,7 +121,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	 *	@param		integer		$copyFromMissionId		ID of mission to copy default values from (optional)
 	 *	@return		void
 	 */
-	public function add( $copyFromMissionId = NULL ){
+	public function add( $copyFromMissionId = NULL )
+	{
 		$words			= (object) $this->getWords( 'add' );
 
 		if( !$this->isEditor ){
@@ -205,7 +208,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'userProjects', $this->userProjects );
 	}
 
-	public function addDocument( $missionId ){
+	public function addDocument( $missionId )
+	{
 		$upload		= (object) $this->env->getRequest()->get( 'document' );
 		$model		= new Model_Mission_Document( $this->env );
 
@@ -247,7 +251,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$missionId.'#documents', TRUE );
 	}
 
-	public function ajaxGetProjectUsers( $projectId ){
+	public function ajaxGetProjectUsers( $projectId )
+	{
 		$list	= array();
 		$model	= new Model_Project( $this->env );
 		$users	= $model->getProjectUsers( (int) $projectId );
@@ -260,7 +265,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function ajaxRenderContent(){
+	public function ajaxRenderContent()
+	{
 		$content	= $this->env->getRequest()->get( 'content' );
 		$html		= View_Helper_Markdown::transformStatic( $this->env, $content );
 		header( "Content-length: ".strlen( $html ) );
@@ -269,7 +275,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function ajaxRenderDashboardPanel( $panelId ){
+	public function ajaxRenderDashboardPanel( $panelId )
+	{
 		$this->addData( 'panelId', $panelId );
 		$logic		= Logic_Work_Mission::getInstance( $this->env );
 		switch( $panelId ){
@@ -303,7 +310,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		return $this->view->ajaxRenderDashboardPanel();
 	}
 
-	public function ajaxRenderIndex(){
+	public function ajaxRenderIndex()
+	{
 		$mode	= $this->session->get( $this->filterKeyPrefix.'mode' );
 		if( $mode && $mode !== 'now' )
 			$this->restart( 'work/mission/'.$mode.'/ajaxRenderIndex' );
@@ -358,7 +366,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function ajaxRenderMissionContent( $missionId, $version = NULL, $versionCompare = NULL ){
+	public function ajaxRenderMissionContent( $missionId, $version = NULL, $versionCompare = NULL )
+	{
 		try{
 //			if( !$this->request->isAjax() )
 //				throw new RuntimeException( "No denied" );
@@ -389,7 +398,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function ajaxSaveContent( $missionId ){
+	public function ajaxSaveContent( $missionId )
+	{
 		$content	= $this->env->getRequest()->get( 'content' );
 		$this->model->edit( $missionId, array(														//  store in database
 			'content'		=> $content,															//  - new content
@@ -403,12 +413,14 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function ajaxSelectDay( $day ){
+	public function ajaxSelectDay( $day )
+	{
 		$this->session->set( $this->filterKeyPrefix.'day', (int) $day );
 		$this->ajaxRenderIndex();
 	}
 
-	protected function assignFilters(){
+	protected function assignFilters()
+	{
 		$this->addData( 'userId', $this->userId );
 		$this->addData( 'viewType', (int) $this->session->get( 'work-mission-view-type' ) );
 
@@ -440,7 +452,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->addData( 'wordsFilter', $this->env->getLanguage()->getWords( 'work/mission' ) );
 	}
 
-	public function bulk(){
+	public function bulk()
+	{
 		$action	= $this->request->get( '__action' );
 		$missionIds	= $this->request->get( 'missionIds' );
 
@@ -461,7 +474,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	 *	@return		void
 	 *	@todo		kriss: enable this feature for AJAX called EXCEPT gid list
 	 */
-	public function changeDay( $missionId ){
+	public function changeDay( $missionId )
+	{
 		$date		= trim( $this->request->get( 'date' ) );
 		$mission	= $this->model->get( $missionId );
 		$data		= array(
@@ -502,7 +516,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	/**
 	 *	@todo			check if this method is needed anymore
 	 */
-	public function checkForUpdate( $userId ){
+	public function checkForUpdate( $userId )
+	{
 		if( file_exists( "update-".$userId ) ){
 			@unlink( "update-".$userId );
 			print json_encode( TRUE );
@@ -513,7 +528,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	protected function checkIsEditor( $missionId = NULL, $strict = TRUE, $status = 403 ){
+	protected function checkIsEditor( $missionId = NULL, $strict = TRUE, $status = 403 )
+	{
 		if( $this->isEditor )
 			return TRUE;
 		if( !$strict )
@@ -530,7 +546,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	}
 
 
-	public function close( $missionId ){
+	public function close( $missionId )
+	{
 		$this->checkIsEditor( $missionId );
 		$words		= (object) $this->getWords( 'edit' );
 		$mission	= $this->model->get( $missionId );
@@ -547,11 +564,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function convertToIssue( $missionId ){
+	public function convertToIssue( $missionId )
+	{
 		die( "Not implemented yet" );
 	}
 
-	public function convertContent( $missionId, $format ){
+	public function convertContent( $missionId, $format )
+	{
 		$this->checkIsEditor( $missionId );
 		$words			= (object) $this->getWords( 'edit' );
 		$mission		= $this->model->get( $missionId );
@@ -595,7 +614,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	/**
 	 *	@todo  			check sanity, see below
 	 */
-	protected function deliverDocument( $missionId, $missionDocumentId, $download = FALSE ){
+	protected function deliverDocument( $missionId, $missionDocumentId, $download = FALSE )
+	{
 	//	check missionId against user
 	//	check missionDocumentId against missionId
 
@@ -625,11 +645,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function downloadDocument( $missionId, $missionDocumentId ){
+	public function downloadDocument( $missionId, $missionDocumentId )
+	{
 		$this->deliverDocument( $missionId, $missionDocumentId, TRUE );
 	}
 
-	public function edit( $missionId ){
+	public function edit( $missionId )
+	{
 		$this->checkIsEditor( $missionId );
 		$words			= (object) $this->getWords( 'edit' );
 		$mission		= $this->model->get( $missionId );
@@ -752,7 +774,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->env->getPage()->setTitle( $mission->title, 'prepend' );
 	}
 
-	public function filter( $reset = NULL){
+	public function filter( $reset = NULL)
+	{
 		$sessionPrefix	= $this->getModeFilterKeyPrefix();
 		if( $this->request->has( 'reset' ) || $reset ){
 			$this->session->remove( $sessionPrefix.'query' );
@@ -796,7 +819,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 //		$this->request->isAjax() ? exit : $this->restart( '', TRUE );
 	}
 
-	protected function getFilteredMissions( $userId, $additionalConditions = array(), $limit = 0, $offset = 0 ){
+	protected function getFilteredMissions( $userId, $additionalConditions = array(), $limit = 0, $offset = 0 )
+	{
 		$conditions	= $this->logic->getFilterConditions( $this->filterKeyPrefix, $additionalConditions );
 		$direction	= $this->session->get( $this->filterKeyPrefix.'direction' );
 		$order		= $this->session->get( $this->filterKeyPrefix.'order' );
@@ -813,7 +837,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		return $this->logic->getUserMissions( $userId, $conditions, $orders, $limits );
 	}
 
-	protected function getMinutesFromInput( $input ){
+	protected function getMinutesFromInput( $input )
+	{
 		if( !strlen( trim( $input ) ) )
 			return 0;
 		if( substr_count( $input, ":" ) ){
@@ -823,7 +848,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		return (int) $input;
 	}
 
-	protected function getModeFilterKeyPrefix(){
+	protected function getModeFilterKeyPrefix()
+	{
 		$mode	= '';
 		if( $this->session->get( $this->filterKeyPrefix.'mode' ) !== 'now' )
 			$mode	= $this->session->get( $this->filterKeyPrefix.'mode' ).'.';
@@ -833,11 +859,13 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	/**
 	 * @todo	remove this because all methods receiver userId and this is using roleId from session
 	 */
-	protected function hasFullAccess(){
+	protected function hasFullAccess()
+	{
 		return $this->env->getAcl()->hasFullAccess( $this->session->get( 'roleId' ) );
 	}
 
-	public function import(){
+	public function import()
+	{
 		$this->checkIsEditor();
 		$file	= $this->env->getRequest()->get( 'serial' );
 		if( $file['error'] != 0 ){
@@ -868,7 +896,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function index( $missionId = NULL ){
+	public function index( $missionId = NULL )
+	{
 		if( trim( $missionId ) )
 			$this->restart( 'view/'.$missionId, TRUE );
 
@@ -898,7 +927,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		) );
 	}
 
-	protected function initDefaultFilters(){
+	protected function initDefaultFilters()
+	{
 		if( $this->session->get( $this->filterKeyPrefix.'mode' ) === NULL )
 			$this->session->set( $this->filterKeyPrefix.'mode', $this->defaultFilterValues['mode'] );
 		if( !$this->session->get( $this->filterKeyPrefix.'types' ) )
@@ -925,7 +955,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	protected function initFilters( $userId ){
+	protected function initFilters( $userId )
+	{
 		if( !(int) $userId )
 			return;
 		if( !$this->session->getAll( $this->filterKeyPrefix, TRUE )->count() )
@@ -949,17 +980,20 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$this->logic->generalConditions[$key]	= $value;
 	}
 
-	public function kanban(){
+	public function kanban()
+	{
 		$this->session->set( $this->filterKeyPrefix.'mode', 'kanban' );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function now(){
+	public function now()
+	{
 		$this->session->set( $this->filterKeyPrefix.'mode', 'now' );
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function recoverFilters( $userId ){
+	protected function recoverFilters( $userId )
+	{
 		$model	= new Model_Mission_Filter( $this->env );
 		$serial	= $model->getByIndex( 'userId', $userId, array(), 'serial' );
 //	print_m( $serial );
@@ -977,12 +1011,14 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function removeDocument( $missionId, $missionDocumentId ){
+	public function removeDocument( $missionId, $missionDocumentId )
+	{
 		$this->logic->removeDocument( $missionDocumentId );
 		$this->restart( 'edit/'.$missionId.'#documents', TRUE );
 	}
 
-	protected function saveFilters( $userId ){
+	protected function saveFilters( $userId )
+	{
 		$model		= new Model_Mission_Filter( $this->env );
 		$serial		= serialize( $this->session->getAll( $this->filterKeyPrefix ) );
 		$data		= array( 'serial' => $serial, 'timestamp' => time() );
@@ -994,7 +1030,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 			$model->add( $data + $indices );
 	}
 
-	public function setFilter( $name, $value = NULL, $set = FALSE, $onlyThisOne = FALSE ){
+	public function setFilter( $name, $value = NULL, $set = FALSE, $onlyThisOne = FALSE )
+	{
 		$sessionPrefix	= $this->getModeFilterKeyPrefix();
 		$storedValues	= $this->session->get( $sessionPrefix.$name );
 		$newValues		= $value;
@@ -1025,7 +1062,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setPriority( $missionId, $priority, $showMission = FALSE ){
+	public function setPriority( $missionId, $priority, $showMission = FALSE )
+	{
 		$this->checkIsEditor( $missionId );
 		$data	= array();
 		$this->model->edit( $missionId, array(														//  store in database
@@ -1038,7 +1076,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
 	}
 
-	public function setStatus( $missionId, $status, $showMission = FALSE ){
+	public function setStatus( $missionId, $status, $showMission = FALSE )
+	{
 		$this->checkIsEditor( $missionId );
 		$this->model->edit( $missionId, array(														//  store in database
 			'status'		=> $status,																//  - new status
@@ -1050,7 +1089,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
 	}
 
-	public function testMail( $type, $send = FALSE ){
+	public function testMail( $type, $send = FALSE )
+	{
 		switch( $type ){
 			case "daily":																			//
 				$modelUser		= new Model_User( $this->env );										//
@@ -1104,7 +1144,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function testMailNew( $missionId, $asText = NULL ){
+	public function testMailNew( $missionId, $asText = NULL )
+	{
 		$data	= array(
 			'mission'	=> $this->model->get( $missionId ),
 			'user'		=> $this->userMap[$this->userId],
@@ -1114,7 +1155,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function testMailUpdate( $missionId, $asText = NULL ){
+	public function testMailUpdate( $missionId, $asText = NULL )
+	{
 		$missionOld		= $this->model->get( $missionId );
 		$missionNew		= clone( $missionOld );
 
@@ -1145,7 +1187,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function view( $missionId ){
+	public function view( $missionId )
+	{
 		$words		= (object) $this->getWords( 'edit' );
 
 		$mission	= $this->model->get( $missionId );
@@ -1204,8 +1247,8 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller{
 		$this->env->getPage()->setTitle( $mission->title, 'prepend' );
 	}
 
-	public function viewDocument( $missionId, $missionDocumentId ){
+	public function viewDocument( $missionId, $missionDocumentId )
+	{
 		$this->deliverDocument( $missionId, $missionDocumentId, FALSE );
 	}
 }
-?>

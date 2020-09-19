@@ -1,7 +1,8 @@
 <?php
-class Mail_Work_Mission_Done extends Mail_Work_Mission_Change{
-
-	protected function generate( $data = array() ){
+class Mail_Work_Mission_Done extends Mail_Work_Mission_Change
+{
+	protected function generate( $data = array() )
+	{
 		$w			= (object) $this->getWords( 'work/mission', 'mail-change' );
 		$html		= $this->renderBody( $data );
 		$body		= chunk_split( base64_encode( $html ), 78 );
@@ -13,7 +14,8 @@ class Mail_Work_Mission_Done extends Mail_Work_Mission_Change{
 		return $html;
 	}
 
-	public function renderBody( $data ){
+	public function renderBody( $data )
+	{
 		return "not implemented, yet";
 /*		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$w				= (object) $this->getWords( 'work/mission', 'mail-daily' );
@@ -86,4 +88,3 @@ class Mail_Work_Mission_Done extends Mail_Work_Mission_Change{
 		return $this->setHtml( $body );*/
 	}
 }
-?>
