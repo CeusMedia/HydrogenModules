@@ -1,7 +1,8 @@
 <?php
-class Hook_Info_File extends CMF_Hydrogen_Hook{
-
-	static public function onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_Info_File extends CMF_Hydrogen_Hook
+{
+	static public function onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$model		= new Model_Download_File( $env );
 		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, array( 'uploadedAt' => 'DESC' ) );
@@ -19,7 +20,8 @@ class Hook_Info_File extends CMF_Hydrogen_Hook{
 		}
 	}
 
-	static public function onPageCollectNews( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onPageCollectNews( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$model		= new Model_Download_File( $env );
 		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, array( 'uploadedAt' => 'DESC' ) );

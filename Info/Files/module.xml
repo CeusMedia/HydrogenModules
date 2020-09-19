@@ -3,7 +3,7 @@
 	<title>Info: Files</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.4.7</version>
+	<version>0.4.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydroge module.</log>
 	<log version="0.2.1">Added support for news list via hook.</log>
@@ -20,15 +20,16 @@
 	<log version="0.4.5">Extract hook methods to own class.</log>
 	<log version="0.4.6">Migrate to support CeusMedia::Common 0.8.5.</log>
 	<log version="0.4.7">Replace job file by module configuration.</log>
+	<log version="0.4.8">Update code style and code doc.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Info/File.php5</class>
-		<class>View/Info/File.php5</class>
+		<class>Hook/Info/File.php5</class>
+		<class>Job/Info/Files.php5</class>
 		<class>Model/Download/File.php5</class>
 		<class>Model/Download/Folder.php5</class>
-		<class>Job/Info/Files.php5</class>
-		<class>Hook/Info/File.php5</class>
+		<class>View/Info/File.php5</class>
 		<locale>de/info/file.ini</locale>
 		<locale>de/html/info/file/index.bottom.html</locale>
 		<locale>de/html/info/file/index.top.html</locale>
@@ -49,8 +50,8 @@
 	<link xml:lang="en" access="acl" rank="21" path="info/file">Files</link>
 	<relations>
 		<needs type="module">UI_Bootstrap</needs>
-		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Helper_Input_File</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
 	<hook type="resource" resource="Page" event="collectNews">Hook_Info_File::onPageCollectNews</hook>
 	<hook type="resource" resource="Novelties" event="collect">Hook_Info_File::onCollectNovelties</hook>

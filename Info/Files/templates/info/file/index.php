@@ -72,7 +72,7 @@ foreach( $folders as $item ){
 	else if( $item->nrFolders )
 		$info	= UI_HTML_Tag::create( 'small', $item->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
 	else
-		$info	= '';
+		$info	= '<small class="muted">leer</small>';
 	$label	= UI_HTML_Tag::create( 'a', $label.$info, array( 'class' => 'name', 'href' => $url ) );
 
 	$buttons	= array();
@@ -177,7 +177,7 @@ return $textIndexTop.'
 			'.$linkUp.'
 	</div>
 	<div class="span3">
-		'.join( '<hr/>', $panels ).'
+		'.join( /*'<hr/>', */$panels ).'
 	</div>
 </div>
 '.$textIndexBottom;

@@ -1,10 +1,12 @@
 <?php
-class Job_Info_Files extends Job_Abstract{
-
+class Job_Info_Files extends Job_Abstract
+{
 	protected $language;
+
 	protected $words;
 
-	protected function __onInit(){
+	protected function __onInit()
+	{
 		$this->config		= $this->env->getConfig();												//  get app config
 		$this->language		= $this->env->getLanguage();											//  get language support
 		$this->options		= $this->config->getAll( 'module.info_files.', TRUE );					//  get module options for job
@@ -12,15 +14,16 @@ class Job_Info_Files extends Job_Abstract{
 
 		$this->modelFolder	= new Model_Download_Folder( $this->env );
 		$this->modelFile	= new Model_Download_File( $this->env );
-
 	}
 
-	public function migrate(){
+	public function migrate()
+	{
 		$count	= $this->migrateFilesInFolderByFolderId( 0, 'contents/files/' );
 		$this->out( 'Migrated '.$count.' files.' );
 	}
 
-	protected function migrateFilesInFolderByFolderId( $folderId, $path, $level = 0 ){
+	protected function migrateFilesInFolderByFolderId( $folderId, string $path, int $level = 0 )
+	{
 		$count	= 0;
 		$files	= $this->modelFile->getAllByIndex( 'downloadFolderId', $folderId );
 		foreach( $files as $file ){
