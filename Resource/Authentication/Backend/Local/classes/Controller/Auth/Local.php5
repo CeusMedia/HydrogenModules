@@ -93,11 +93,11 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$isMinimumVersion	= $this->env->getPhp()->version->isAtLeast( '5.5.0' );
 		if( $isMinimumVersion && class_exists( 'Logic_UserPassword' ) ){							//  @todo  remove line if old user password support decays
 			$logic			= Logic_UserPassword::getInstance( $this->env );
-			$newPassword	= $logic->getActivableUserPassword( $user->userId, $password );
+			$newPassword	= $logic->getActivatableUserPassword( $user->userId, $password );
 			if( $logic->hasUserPassword( $user->userId ) ){											//  @todo  remove line if old user password support decays
 				if( $logic->validateUserPassword( $user->userId, $password ) )
 					return TRUE;
-				$newPassword	= $logic->getActivableUserPassword( $user->userId, $password );
+				$newPassword	= $logic->getActivatableUserPassword( $user->userId, $password );
 				if( $newPassword ){
 					$logic->activatePassword( $newPassword->userPasswordId );
 					$this->messenger->noteNotice( $words->msgNoticePasswordChanged );
