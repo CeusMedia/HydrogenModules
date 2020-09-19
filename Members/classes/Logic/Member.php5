@@ -42,12 +42,19 @@ class Logic_Member{
 		$userIds	= array();
 
 		$query		= str_replace( ' ', '%', trim( $query ) );
-		$conditions	= array( 'status' => '>=0', 'username' => '%'.$query.'%' );
+		$conditions	= array(
+			'status'	=> '>= '.Model_User::STATUS_UNCONFIRMED,
+			'username'	=> '%'.$query.'%'
+		);
 		$byUsername	= $this->modelUser->getAll( $conditions, array( 'username' => 'ASC' ) );
 		foreach( $byUsername as $user )
 			$userIds[]	= $user->userId;
 
-		$query		= "SELECT userId, CONCAT(firstname, ' ', surname) AS fullname FROM ".$prefix."users HAVING fullname LIKE '%".$query."%'";
+		$query		= vsprintf( "SELECT %s FROM %s HAVING %s", array(
+			"userId, CONCAT(firstname, ' ', surname) AS fullname",
+			$prefix.'users',
+			"fullname LIKE '%".$query."%'",
+		) );
 		foreach( $dbc->query( $query )->fetchAll( PDO::FETCH_OBJ ) as $user )
 			$userIds[]	= $user->userId;
 		$userIds	= array_unique( $userIds );
