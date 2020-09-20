@@ -97,7 +97,8 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 					) );
 				}
 				else{
-					if( preg_match( "/password$/i", $config->key."|".$config->type ) ){				//  setting is a password or key ends with 'password'
+					$isPassword	= preg_match( "/password$/i", $config->key."|".$config->type );			//  setting is a password or key ends with 'password'
+					if( $isPassword ){
 						$input	= UI_HTML_Tag::create( 'input', NULL, array(
 							'type'	=> "password",
 							'name'	=> $inputKey,
@@ -106,7 +107,9 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 						) );
 					}
 					else if( substr_count( $config->value, "," ) ){										//  contains several values
-						$input	= UI_HTML_Tag::create( 'textarea', str_replace( ",", "\n", htmlentities( $config->value, ENT_QUOTES, 'UTF-8' ) ), array(
+						$content	= htmlentities( $config->value, ENT_QUOTES, 'UTF-8' );
+						$content	= str_replace( ",", "\n", $content );
+						$input	= UI_HTML_Tag::create( 'textarea', $content, array(
 							'name'	=> $inputKey,
 							'id'	=> 'input_'.$inputKey,
 							'class'	=> "span12",
@@ -115,11 +118,11 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 					}
 					else{
 						$input	= UI_HTML_Tag::create( 'input', NULL, array(
-							'type'	=> $isPassword ? "password" : "text",
+							'type'	=> 'text',
 							'name'	=> $inputKey,
 							'id'	=> 'input_'.$inputKey,
-							'class'	=> $isPassword ? "span6" : "span12",
-							'value'	=> $isPassword ? NULL : htmlentities( $config->value, ENT_COMPAT, 'UTF-8' ),
+							'class'	=> 'span12',
+							'value'	=> htmlentities( $config->value, ENT_COMPAT, 'UTF-8' ),
 						) );
 					}
 				}
@@ -137,7 +140,7 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 
 		//  collect module settings configurable by user
 		foreach( $module->config as $config ){
-			if( $config->protected == "user" )
+			if( $config->protected === "user" )
 				$list[$config->key]	= $config;
 		}
 

@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User Settings</title>
 	<description>Management for user configuration settings.</description>
-	<version>0.4.5</version>
+	<version>0.4.6</version>
 	<log version="0.3.6">Changes to support new tab module.</log>
 	<log version="0.3.7">Fixed bug in database script.</log>
 	<log version="0.3.8">Replace file and folder class calls to use CeusMedia:Common.</log>
@@ -13,6 +13,7 @@
 	<log version="0.4.3">Add tab icon.</log>
 	<log version="0.4.4">Extract hooks to own hook class.</log>
 	<log version="0.4.5">Add hook for user relations.</log>
+	<log version="0.4.6">Update code style.</log>
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -38,7 +39,7 @@
 	<hook type="resource" resource="Session" event="init">Hook_Manage_My_User_Setting::onSessionInit</hook>
 	<hook type="resource" resource="User" event="remove">Hook_Manage_My_User_Setting::onUserRemove</hook>
 	<hook type="resource" resource="User" event="listRelations">Hook_Manage_My_User_Setting::onListUserRelations</hook>
-	<sql on="install" type="mysql"><![CDATA[
+	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>user_settings`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>user_settings` (
   `userSettingId` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -55,9 +56,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>user_settings` (
   KEY `userId` (`userId`),
   KEY `key` (`key`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-]]></sql>
-	<sql on="update" type="mysql" version-from="0.2.0" version-to="0.2.1"><![CDATA[
-RENAME TABLE `user_settings` TO `<%?prefix%>user_settings`;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>user_settings`;

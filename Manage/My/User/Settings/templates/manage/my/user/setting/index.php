@@ -35,20 +35,18 @@ if( isset( $modules ) && count( $modules ) ){
 	}
 }
 
+$script	= 'jQuery("#manageMyUserModuleSettings :input").on("keyup mouseup change",function(){
+	var row = jQuery(this).closest("div.row-fluid");
+	var changed = row.data("value") != jQuery(this).val();
+	changed ? row.addClass("modified") : row.removeClass("modified");
+});';
+
+$env->getPage()->js->addScriptOnReady($script, 9);
+
 return $tabs.'
 <div class="content-panel" id="manageMyUserModuleSettings">
 	<h3>'.$w->legend.'</h3>
 	<div class="content-panel-inner">
 		'.$panelSettings.'
 	</div>
-</div>
-<script>
-$(document).ready(function(){
-	$("#manageMyUserModuleSettings :input").on("keyup mouseup change",function(){
-		var row = $(this).closest("div.row-fluid");
-		var changed = row.data("value") != $(this).val();
-		changed ? row.addClass("modified") : row.removeClass("modified");
-	});
-});
-</script>';
-?>
+</div>';
