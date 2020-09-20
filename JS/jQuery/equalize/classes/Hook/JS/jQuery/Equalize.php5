@@ -1,6 +1,6 @@
 <?php
-class Hook_JS_jQuery_Equalize extends CMF_Hydrogen_Hook{
-
+class Hook_JS_jQuery_Equalize extends CMF_Hydrogen_Hook
+{
 	/**
 	 *	@static
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
@@ -9,7 +9,8 @@ class Hook_JS_jQuery_Equalize extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		if( !$module->config['auto']->value )
 			return;
 		if( !( $selector = $module->config['auto.selector']->value ) )
@@ -18,6 +19,6 @@ class Hook_JS_jQuery_Equalize extends CMF_Hydrogen_Hook{
 			'equalize'	=> $module->config['auto.dimension']->value,
 			'reset'		=> $module->config['auto.reset']->value
 		) );
-		$context->js->addScriptOnReady( '$("'.$selector.'").equalize('.$params.');' );
+		$context->js->addScriptOnReady( 'jQuery("'.$selector.'").equalize('.$params.');' );
 	}
 }
