@@ -4,6 +4,7 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View
 	public function __onInit()
 	{
 		$this->env->getPage()->addCommonStyle( 'module.admin.mail.css' );
+		$this->env->getPage()->js->addModuleFile( 'module.admin.mail.js' );
 	}
 
 	public function ajaxRenderDashboardPanel()
@@ -99,7 +100,10 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View
 		exit;
 	}
 
-	public function index(){}
+	public function index(){
+		$script	= 'ModuleAdminMail.Queue.init();';
+		$this->env->getPage()->js->addScriptOnReady( $script );
+	}
 
 	public function view(){}
 
@@ -133,6 +137,9 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View
 			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-envelope' ) );
 			$link	= UI_HTML_Tag::create( 'a', $value, array( 'href' => 'mailto:'.$value ) );
 			$value	= $icon.'&nbsp;'.$link;
+		}
+		else if( $key === "status" ){
+			$value = $words['states'][$value].' <small class="muted">('.$value.')</small>';
 		}
 		else{
 			if( !strlen( $value ) )

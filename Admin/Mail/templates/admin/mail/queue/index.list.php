@@ -64,8 +64,14 @@ if( $mails ){
 			$statusClass	= 'inverse';
 
 		$status		= UI_HTML_Tag::create( 'span', $words['states'][$mail->status], array( 'class' => 'label label-'.$statusClass ) );
+		$checkbox	= UI_HTML_Tag::create ('input', NULL, array(
+			'type'		=> 'checkbox',
+			'class'		=> 'checkbox-mail',
+			'id'		=> 'admin-mail-queue-list-all-item-'.$mail->mailId,
+		), array( 'id' => $mail->mailId, ) );
 
 		$cells		= array();
+		$cells[]	= UI_HTML_Tag::create( 'td', $checkbox, array( 'class' => '' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $senderMail.'<br/>'.$link, array( 'class' => 'autocut cell-mail-subject' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $receiverName.'<br/>'.$receiverMail, array( 'class' => 'autocut cell-mail-receiver' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $status.'<br/>'.$datetime, array( 'class' => 'cell-mail-status' ) );
@@ -77,14 +83,20 @@ if( $mails ){
 		$rows[]		= UI_HTML_Tag::create( 'tr', $cells, array( 'class' => $class ) );
 	}
 
+	$checkboxAll	= UI_HTML_Tag::create( 'input', NULL, array(
+		'type'		=> 'checkbox',
+		'id'		=> 'admin-mail-queue-list-all-items-toggle',
+	) );
+
 	$heads	= UI_HTML_Elements::TableHeads( array(
+		$checkboxAll,
 		'Sender und Betreff',
 		'Empfänger',
 		'Status',
 		'',
 	) );
 
-	$colgroup		= UI_HTML_Elements::ColumnGroup( array( '', '30%', '120px', '80px' ) );
+	$colgroup		= UI_HTML_Elements::ColumnGroup( array( '40px', '', '30%', '120px', '80px' ) );
 	$thead			= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
 	$table			= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
@@ -92,12 +104,36 @@ if( $mails ){
 
 $pagination		= new \CeusMedia\Bootstrap\PageControl( './admin/mail/queue', $page, ceil( $total / $limit ) );
 
+$dropdownMenu	= UI_HTML_Tag::create( 'ul', array(
+	UI_HTML_Tag::create( 'li',
+		UI_HTML_Tag::create( 'a', '<i class="fa fa-remove"></i> <strike>abbrechen</strike>', array( 'class' => '#', 'id' => 'action-button-abort' ) )
+	),
+	UI_HTML_Tag::create( 'li',
+		UI_HTML_Tag::create( 'a', '<i class="fa fa-refresh"></i> <strike>erneut versuchen</strike>', array( 'class' => '#', 'id' => 'action-button-retry' ) )
+	),
+	UI_HTML_Tag::create( 'li',
+		UI_HTML_Tag::create( 'a', '<i class="fa fa-trash"></i> entfernen', array( 'class' => '#', 'id' => 'action-button-remove' ) )
+	),
+), array( 'class' => 'dropdown-menu not-pull-right' ) );
+
+$dropdownToggle	= UI_HTML_Tag::create( 'button', 'Aktion <span class="caret"></span>', array(
+	'type'		=> 'button',
+	'class'		=> 'btn dropdown-toggle',
+), array( 'toggle' => 'dropdown' ) );
+$dropdown		= UI_HTML_Tag::create( 'div', array( $dropdownToggle, $dropdownMenu ), array( 'class' => 'btn-group dropup' ) );
+
+
 return '
 	<div class="content-panel">
 		<h3>'.$wl->heading.'</h3>
 		<div class="content-panel-inner">
-			'.$table.'
-			'.$pagination.'
+			<form action="admin/mail/queue/bulk" method="post" id="form-admin-mail-queue">
+				<input type="hidden" name="type" id="input_type"/>
+				<input type="hidden" name="ids" id="input_ids"/>
+				'.$table.'
+				'.$pagination.'
+				'.$dropdown.'
+			</form>
 		</div>
 	</div>';
 ?>

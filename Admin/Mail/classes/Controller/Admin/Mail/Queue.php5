@@ -1,14 +1,21 @@
 <?php
 class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
 {
+	protected $request;
+	protected $session;
+	protected $messenger;
 	protected $logic;
+	protected $model;
 	protected $filterPrefix	= 'filter_admin_mail_queue_';
 
-	public function __onInit(){
+	public function __onInit()
+	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= Logic_Mail::getInstance( $this->env );
+		$this->model		= new Model_Mail( $this->env );
+
 		$path				= '';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$path	= Logic_Frontend::getInstance( $this->env )->getPath();
@@ -86,8 +93,25 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
 		exit;
 	}
 
-	public function cancel( $mailId )
+	public function bulk()
 	{
+		$type	= $this->request->get( 'type' );
+		$ids	= preg_split( '/\s*,\s*/', $this->request->get( 'ids' ) );
+		switch( $type ){
+			case 'abort':
+				$count	= $this->bulkAbort( $ids );
+				break;
+			case 'retry':
+				$count	= $this->bulkRetry( $ids );
+				break;
+			case 'remove':
+				$count	= $this->bulkRemove( $ids );
+				break;
+		}
+		$this->restart( NULL, TRUE );
+	}
+
+	public function cancel( $mailId ){
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
 		if( !$mail ){
@@ -302,5 +326,55 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
 				$this->restart( $page, TRUE );
 			$this->restart( NULL, TRUE );
 		}
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function bulkAbort( $mailIds )
+	{
+		if( !count( $mailIds ) )
+			return 0;
+		$mailIds	= $this->model->getAll( array(
+			'mailId'	=> $mailIds,
+			'status'	=> array(
+				Model_Mail::STATUS_FAILED,
+				Model_Mail::STATUS_RETRY,
+				Model_Mail::STATUS_NEW,
+			) ), array(), array(), array( 'mailId' ) );
+		$data	= array(
+			'status'		=> Model_Mail::STATUS_ABORTED,
+			'modifiedAt'	=> time(),
+		);
+	print_m( $mailIds );
+	print_m( $data );
+	die;
+//		return $this->model->editByIndices( array( 'mailId' => $mailIds ), $data );
+	}
+
+	protected function bulkRetry( $mailIds )
+	{
+		if( !count( $mailIds ) )
+			return 0;
+		$mailIds	= $this->model->getAll( array(
+			'mailId'	=> $mailIds,
+			'status'	=> array(
+				Model_Mail::STATUS_ABORTED,
+				Model_Mail::STATUS_FAILED,
+			) ), array(), array(), array( 'mailId' ) );
+		$data	= array(
+			'status'		=> Model_Mail::STATUS_RETRY,
+			'modifiedAt'	=> time(),
+		);
+	print_m( $mailIds );
+	print_m( $data );
+	die;
+//		return $this->model->editByIndices( array( 'mailId' => $mailIds ), $data );
+	}
+
+	protected function bulkRemove( $mailIds )
+	{
+		if( !count( $mailIds ) )
+			return 0;
+		$this->model->removeByIndices( array( 'mailId' => $mailIds ) );
 	}
 }
