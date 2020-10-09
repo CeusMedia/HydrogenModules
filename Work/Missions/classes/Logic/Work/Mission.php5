@@ -141,7 +141,7 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic
 		return $userProjects;																		//  return projects map
 	}
 
-	public function getUserMissions( $userId, $conditions = array(), $orders = array(), $limits = NULL )
+	public function getUserMissions( $userId, $conditions = array(), $orders = array(), $limits = array() )
 	{
 		$conditions	= array_merge( $this->generalConditions, $conditions );
 		$orders		= $orders ? $orders : array( 'dayStart' => 'ASC' );
