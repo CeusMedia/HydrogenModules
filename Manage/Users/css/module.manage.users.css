@@ -176,6 +176,17 @@ span.role.role5 {
 	font-size: 0.9em;
 /*	display: none;*/
 	}
+#role-edit-rights li.acl-module > table {
+	margin-bottom: 5px;
+	border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+	}
+#role-edit-rights li.acl-module > table > tbody > tr > td {
+	padding: 0;
+	}
+#role-edit-rights li.acl-module > table > tbody > tr > td.column-controller {
+	padding-left: 1.1em;
+	}
+
 
 
 /*  --  RIGHTS MAP  --  */

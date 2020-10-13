@@ -4,8 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2012 Ceus Media
- *	@version		$Id$
+ *	@copyright		2010-2020 Ceus Media
  */
 /**
  *	Role Controller.
@@ -13,8 +12,7 @@
  *	@package		Manage_Users.Controller.Manage
  *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2012 Ceus Media
- *	@version		$Id$
+ *	@copyright		2010-2020 Ceus Media
  */
 class Controller_Manage_Role extends CMF_Hydrogen_Controller
 {
@@ -79,27 +77,6 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller
 			$this->modelRoleRight->add( $data );
 		}
 		$this->restart( 'edit/'.$roleId, TRUE );
-	}
-
-	public function ajaxChangeRight( int $roleId, string $controller, string $action )
-	{
-		if( $this->request->isAjax() ){
-			$indices	= array(
-				'roleId'		=> $roleId,
-				'controller'	=> Model_Role_Right::minifyController( $controller ),
-				'action'		=> $action
-			);
-			$right	= $this->modelRoleRight->getByIndices( $indices );
-			if( $right )
-				$this->modelRoleRight->remove( $right->roleRightId );
-			else{
-				$data	= array_merge( $indices, array( 'timestamp' => time() ) );
-				$this->modelRoleRight->add( $data );
-			}
-		}
-		$right	= $this->modelRoleRight->getByIndices( $indices );
-		print( json_encode( (bool) $right ) );
-		exit;
 	}
 
 	public function edit( int $roleId ) {

@@ -3,7 +3,7 @@
 	<title><![CDATA[Manage: Users & Roles]]></title>
 	<description><![CDATA[Basic user, role and access administration.]]></description>
 	<category>Management</category>
-	<version>0.7.6</version>
+	<version>0.7.7</version>
 	<log version="0.5.2">Split user edit template into parts.</log>
 	<log version="0.5.3">Extend username filter by wildmark support (* only).</log>
 	<log version="0.5.4">Decorated panels.</log>
@@ -28,22 +28,25 @@
 	<log version="0.7.4">Replace CDN resource.</log>
 	<log version="0.7.5">Support Bootstrap 3 and 4.</log>
 	<log version="0.7.6">Extract JavaScript to own file.</log>
+	<log version="0.7.7">Extract AJAX controller actions.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/User.php5</class>
+		<class>Controller/Ajax/Manage/Role.php5</class>
+		<class>Controller/Ajax/Manage/User.php5</class>
 		<class>Controller/Manage/Role.php5</class>
-		<class>View/Manage/User.php5</class>
+		<class>Controller/Manage/User.php5</class>
 		<class>View/Manage/Role.php5</class>
-		<locale>de/manage/user.ini</locale>
+		<class>View/Manage/User.php5</class>
 		<locale>de/manage/role.ini</locale>
+		<locale>de/manage/user.ini</locale>
 		<locale>de/html/manage/role/index.bottom.html</locale>
 		<locale>de/html/manage/role/index.top.html</locale>
 		<locale>de/html/manage/user/index.bottom.html</locale>
 		<locale>de/html/manage/user/index.top.html</locale>
-		<locale>en/manage/user.ini</locale>
 		<locale>en/manage/role.ini</locale>
+		<locale>en/manage/user.ini</locale>
 		<locale>en/html/manage/role/index.bottom.html</locale>
 		<locale>en/html/manage/role/index.top.html</locale>
 		<locale>en/html/manage/user/index.bottom.html</locale>

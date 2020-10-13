@@ -5,7 +5,7 @@ var ModuleManageUsers = {
 		var body = jQuery("body");
 		if(this.roleId && body.hasClass("site-manage-role-edit")){
 			var container = $("#role-edit-rights").parent();
-			container.find("li.changable").on("mousedown", ModuleManageUsers.onChangeRightToggle );
+			container.find("td.column-actions li.changable").on("mousedown", ModuleManageUsers.onChangeRightToggle );
 			container.find("#input-toggle-rights-all").on("change", ModuleManageUsers.onChangeVisibleRightsToggle);
 			container.find("#button-toggle").on("click", function(e){jQuery(this).children("label").trigger("click");});
 			container.find("#button-toggle>label").on("click", function(e){e.stopPropagation();});
@@ -22,15 +22,8 @@ var ModuleManageUsers = {
 	onChangeVisibleRightsToggle: function(event){
 		var toggle = $(this);
 		var showAll = toggle.is(":checked");
-
-		if(showAll){
-			$("li.acl-module").not(".changable").slideDown(250);
-		}
-		else{
-			$("li.acl-module").not(".changable").slideUp(250);
-		}
-
-
+		var items = $("li.acl-module").not(".changable");
+		showAll ? items.slideDown(250) : items.slideUp(250);
 		var rows = $("#role-edit-rights tbody tr");
 		rows.each(function(){
 			var row = $(this);
@@ -55,17 +48,21 @@ var ModuleManageUsers = {
 		if(event.button != 0)
 			return;
 		var toggle = $(this);
-		var id = toggle.attr("id");
-		var parts = id.split(/-/);
-		var action = parts.pop();
-		var controller = parts.pop();
+		var action = toggle.data("action");
+		var controller = toggle.data("controller");
 		toggle.addClass("yellow");
 		$.ajax({
-			url: "./manage/role/ajaxChangeRight/"+ModuleManageUsers.roleId+"/"+controller+"/"+action,
+			url: "./ajax/manage/role/changeRight",
+			method: "POST",
+			data: {
+				roleId: ModuleManageUsers.roleId,
+				controller: controller,
+				action: action
+			},
 			dataType: "json",
 			context: toggle,
-			success: function(data){
-				if(data)
+			success: function(response){
+				if(response.data.current)
 					$(this).removeClass("red").addClass("green");
 				else
 					$(this).removeClass("green").addClass("red");

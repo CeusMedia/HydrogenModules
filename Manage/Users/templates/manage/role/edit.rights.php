@@ -80,7 +80,7 @@ function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, 
 	}
 	if( $rows ){
 		$rows	= UI_HTML_Tag::create( 'table', array(
-			UI_HTML_Elements::ColumnGroup( '30%', '' ),
+			UI_HTML_Elements::ColumnGroup( '300px', '' ),
 			UI_HTML_Tag::create( 'tbody', $rows ),
 		), array( 'class' => 'table table-fixed table-condensed' ) );
 		$list[]	= UI_HTML_Tag::create( 'li', $iconModule.$module.$rows,  array(
@@ -130,10 +130,11 @@ function renderControllerActions( $acl, $roleId, $controller, $words ){
 			'id'	=> $changable ? $id : NULL,
 			'title'	=> $title,
 			'style'	=> $changable /*|| $showAll*/ ? NULL : 'display: none',
+		), array(
+			'controller'	=> $controller->name,
+			'action'		=> $action,
 		) );
 		$changableAtAll	= $changableAtAll || $changable;
 	}
 	return (object) array( 'list' => $list, 'changable' => $changableAtAll );
 }
-
-?>
