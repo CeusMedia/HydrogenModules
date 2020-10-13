@@ -1,14 +1,76 @@
 <?php
 class Controller_Admin_Mail_Template_Export extends CMF_Hydrogen_Controller
 {
+	protected $messenger;
+	protected $modelTemplate;
+
+	/**
+	 *	Constructor.
+	 *	@access		public
+	 *	@param		CMF_Hydrogen_Environment	$env			Application Environment Object
+	 *	@return		void
+	 */
+    public function __construct( CMF_Hydrogen_Environment $env )
+    {
+		parent::__construct( $env, FALSE );
+		$this->messenger			= $this->env->getMessenger();
+		$this->modelTemplate		= $this->getModel( 'Mail_Template' );
+	}
+
 	/**
 	 *	Export mail template as JSON.
 	 *	Will provide file download by default.
 	 *	@access		public
-	 *	@param		integer		$templateId		ID of template to export
+	 *	@param		string		$templateId		ID of template to export
+	 *	@param		string		$output			Type of output (download|print)
 	 *	@return		void
 	 */
-	public function index( $templateId, $output = 'download' ){
+	public function index( string $templateId, string $output = 'download' )
+	{
+		$template	= $this->checkTemplate( $templateId );
+		$title		= new ADT_String( $template->title );
+		$titleKey	= $title->hyphenate();										//  preserve whitespace in title as hyphen
+		$json		= $this->generateJson( $templateId );
+		$fileName	= vsprintf( '%s%s%s%s', array(
+			'MailTemplate_',													//  file name prefix @todo make configurable
+			preg_replace( '/[: "\']/', '', $titleKey ),							//  template title as file ID (stripped invalid characters)
+			'_'.date( 'Y-m-d' ),
+			'.json',															//  file extension @todo make configurable
+		) );
+		switch( $output ){
+			case 'print':
+			case 'dev':
+				remark( 'Ttile: '.$template->title );
+				remark( 'File: '.$fileName );
+				remark( 'JSON:' );
+				xmp( $json );
+				die;
+			case 'download':
+			default:
+				Net_HTTP_Download::sendString( $json, $fileName, TRUE );
+		}
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function checkTemplate( $templateId, bool $strict = TRUE )
+	{
+		$template   = $this->modelTemplate->get( $templateId );
+		if( $template )
+			return $template;
+		if( $strict )
+			throw new RangeException( 'Invalid template ID' );
+		return FALSE;
+    }
+
+	/**
+	 *	Generate JSON representing mail template.
+	 *	@access		protected
+	 *	@param		string		$templateId		ID of mail template
+	 *	@return		string
+	 */
+	protected function generateJson( string $templateId ): string
+	{
 		$template	= $this->checkTemplate( $templateId );
 		$files		= ['styles' => [], 'images' => []];
 		foreach( array_keys( $files ) as $topic ){
@@ -55,24 +117,6 @@ class Controller_Admin_Mail_Template_Export extends CMF_Hydrogen_Controller
 				)
 			)
 		);
-		$json		= json_encode( $data, JSON_PRETTY_PRINT );
-		$fileName	= vsprintf( '%s%s%s%s', array(
-			'MailTemplate_',													//  file name prefix @todo make configurable
-			preg_replace( '/[: "\']/', '', $titleKey ),							//  template title as file ID (stripped invalid characters)
-			'_'.date( 'Y-m-d' ),
-			'.json',															//  file extension @todo make configurable
-		) );
-		switch( $output ){
-			case 'print':
-			case 'dev':
-				remark( 'Ttile: '.$template->title );
-				remark( 'File: '.$fileName );
-				remark( 'JSON:' );
-				xmp( $json );
-				die;
-			case 'download':
-			default:
-				Net_HTTP_Download::sendString( $json, $fileName, TRUE );
-		}
+		return json_encode( $data, JSON_PRETTY_PRINT );
 	}
 }
