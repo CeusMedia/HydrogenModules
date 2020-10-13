@@ -2,7 +2,7 @@
 <module>
 	<title>UI: Markdown</title>
 	<description><![CDATA[Markdown transformation support.]]></description>
-	<version>1.1.0</version>
+	<version>1.2.1</version>
 	<log version="1.0.1">Add support for INS(++) and DEL(--).</log>
 	<log version="1.0.2">Add AJAX support.</log>
 	<log version="1.0.3">Add hook View:onRenderContent.</log>
@@ -13,16 +13,16 @@
 	<log version="1.0.8">Add main switch config pair.</log>
 	<log version="1.0.9">Add version support range config pairs.</log>
 	<log version="1.1.0">Check for installation of markdown library and version.</log>
+	<log version="1.2.0">Replace used markdown library by CeusMedia/Markdown.</log>
+	<log version="1.2.1">Convert controller to AJAX controller.</log>
 	<category>User Interface</category>
-	<author site="http://michelf.ca/home/">Michel Fortin</author>
-	<url>http://michelf.ca/projects/php-markdown/</url>
-	<license source="https://github.com/michelf/php-markdown/blob/lib/License.md">BSD-style</license>
+    <company site="https://ceusmedia.de/">Ceus Media</company>
+    <author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+    <license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Helper/Markdown.php5</class>
+		<class>Controller/Ajax/Helper/Markdown.php5</class>
 		<class>Hook/UI/Markdown.php5</class>
 		<class>View/Helper/Markdown.php5</class>
-		<class>Markdown.php5</class>
-		<file>licenses/Markdown.md</file>
 	</files>
 	<config protected="no" type="boolean" name="active" title="Main switch of module">yes</config>
 	<config protected="yes" type="string" name="version.max"></config>
@@ -30,5 +30,5 @@
 	<link access="public" rank="99" path="helper/markdown/ajaxRender"/>
 	<relations/>
 	<hook type="resource" resource="View" event="onRenderContent">Hook_UI_Markdown::onRenderContent</hook>
-	<hook type="resource" resource="Page" event="onApplyModules">Hook_UI_Markdown::onPageApplyModules</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Markdown::onPageApplyModules</hook>
 </module>
