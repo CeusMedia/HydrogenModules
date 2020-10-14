@@ -17,8 +17,8 @@ class View_Helper_Mail_Facts
 		self::FORMAT_HTML,
 		self::FORMAT_TEXT,
 	);
-/*
-	public function __onInit(){
+
+/*	public function __onInit(){
 		$this->helperText	= new View_Helper_Mail_Text( $this->env );
 	}*/
 
@@ -44,16 +44,16 @@ class View_Helper_Mail_Facts
 	{
 		if( !count( $this->facts ) )
 			return '';
-		if( $this->format == self::FORMAT_HTML )
+		if( $this->format === self::FORMAT_HTML )
 			return $this->renderAsHtml();
-		if( $this->format == self::FORMAT_TEXT )
+		if( $this->format === self::FORMAT_TEXT )
 			return $this->renderAsText();
 	}
 
 
 	public function setFormat( $format ): self
 	{
-		if( !in_array( $format, array( self::FORMAT_HTML, self::FORMAT_TEXT ) ) )
+		if( !in_array( $format, self::FORMATS, TRUE ) )
 			throw new RangeException( 'Invalid helper output format' );
 		$this->format	= $format;
 		return $this;
