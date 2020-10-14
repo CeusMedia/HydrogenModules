@@ -13,8 +13,8 @@
 	<log version="1.0.8">Add main switch config pair.</log>
 	<log version="1.0.9">Add version support range config pairs.</log>
 	<log version="1.1.0">Check for installation of markdown library and version.</log>
-	<log version="1.2.0">Replace used markdown library by CeusMedia/Markdown.</log>
-	<log version="1.2.1">Convert controller to AJAX controller.</log>
+	<log version="1.2.0">Convert controller to AJAX controller.</log>
+	<log version="1.2.1">Replace used markdown library by CeusMedia/Markdown.</log>
 	<category>User Interface</category>
     <company site="https://ceusmedia.de/">Ceus Media</company>
     <author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
