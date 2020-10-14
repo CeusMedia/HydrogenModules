@@ -14,6 +14,7 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 	protected $filterKeyPrefix	= 'filter.work.mission.kanban.';
 
 	protected $defaultFilterValues	= array(
+		'mode'		=> 'now',
 		'states'	=> array(
 			Model_Mission::STATUS_ABORTED,
 			Model_Mission::STATUS_REJECTED,
