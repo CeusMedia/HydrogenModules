@@ -1,15 +1,12 @@
 <?php
-class Logic_Project extends CMF_Hydrogen_Logic{
+class Logic_Project extends CMF_Hydrogen_Logic
+{
+	protected $modelProject;
+	protected $modelProjectUser;
+	protected $modelUser;
 
-	protected $model;
-
-	protected function __onInit(){
-		$this->modelProject		= new Model_Project( $this->env );								//  create projects model
-		$this->modelProjectUser	= new Model_Project_User( $this->env );
-		$this->modelUser		= new Model_User( $this->env );									//  create user model
-	}
-
-	public function get( $projectId ){
+	public function get( $projectId )
+	{
 		return $this->getProject( $projectId );
 	}
 
@@ -21,10 +18,12 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 	 *	@access		public
 	 *	@param		integer		$userId			User ID to get coworkers for
 	 *	@param		integer		$projectId		Project ID to get coworkers of
+	 *	@param		boolean		$includeSelf	Flag: include or remove given user ID
 	 *	@return		array		Map of related users
 	 *	@throws		RuntimeException			if user is neither in project nor has full access
 	 */
-	public function getCoworkers( $userId, $projectId = NULL, $includeSelf = FALSE ){
+	public function getCoworkers( $userId, $projectId = NULL, bool $includeSelf = FALSE ): array
+	{
 		if( $projectId ){
 			$users	= $this->getProjectUsers( $projectId );
 			if( !isset( $users[$userId] ) && !$this->hasFullAccess() )
@@ -40,7 +39,8 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 		return $users;
 	}
 
-	public function getDefaultProject( $userId ){
+	public function getDefaultProject( $userId )
+	{
 		$relation	= $this->modelProjectUser->getByIndices( array(
 			'userId'	=> $userId,
 			'isDefault'	=> 1
@@ -48,11 +48,13 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 		return $relation ? $relation->projectId : NULL;
 	}
 
-	public function getProject( $projectId ){
+	public function getProject( $projectId )
+	{
 		return $this->modelProject->get( $projectId );
 	}
 
-	public function getProjects( $conditions = array(), $orders = array(), $limits = array() ){
+	public function getProjects( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	{
 		$projects	= $this->modelProject->getAll( $conditions, $orders, $limits );
 //		@todo   	replace the last 3 lines below by this more performant code after testing
 //		$projectIds	= array();
@@ -71,7 +73,8 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 	 *	@param		array       $orders         Map how to order users, defaults to 'username ASC'
 	 *	@return		array		Map of users assigned to project
 	 */
-	public function getProjectUsers( $projectId, $conditions = array(), $orders = array() ){
+	public function getProjectUsers( $projectId, array $conditions = array(), array $orders = array() ): array
+	{
 		return $this->modelProject->getProjectUsers( $projectId, $conditions, $orders );
 	}
 
@@ -83,7 +86,8 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 	 *	@param		array       $orders         Map how to order users, defaults to 'username ASC'
 	 *	@return		array		Map of users assigned to project
 	 */
-	public function getProjectsUsers( $projectIds, $conditions = array(), $orders = array() ){
+	public function getProjectsUsers( $projectIds, array $conditions = array(), array $orders = array() ): array
+	{
 		return $this->modelProject->getProjectUsers( $projectIds, $conditions, $orders );
 	}
 
@@ -96,7 +100,8 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 	 *	@param		array		$orders			Map how to order projects, defaults to 'title ASC'
 	 *	@return		array		List of projects of user
 	 */
-	public function getUserProjects( $userId, $activeOnly = FALSE, $conditions = array(), $orders = array() ){
+	public function getUserProjects( $userId, bool $activeOnly = FALSE, array $conditions = array(), array $orders = array() ): array
+	{
 		$orders			= $orders ? $orders : array( 'title' => 'ASC' );							//  sanitize project orders
 		$userProjects	= array();																	//  create empty project map
 		if( $this->hasFullAccess() ){																//  super access
@@ -112,6 +117,7 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 		}
 		return $userProjects;																		//  return projects map
 	}
+
 	/**
 	 *	Returns projects where users (by their ID) are assigned to.
 	 *	@access		public
@@ -121,7 +127,8 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 	 *	@param		array		$orders			Map how to order projects, defaults to 'title ASC'
 	 *	@return		array		List of projects of user
 	 */
-	public function getUsersProjects( $userIds, $activeOnly = FALSE, $conditions = array(), $orders = array() ){
+	public function getUsersProjects( $userIds, bool $activeOnly = FALSE, array $conditions = array(), array $orders = array() ): array
+	{
 		$orders			= $orders ? $orders : array( 'title' => 'ASC' );							//  sanitize project orders
 		$userProjects	= array();																	//  create empty project map
 		if( $this->hasFullAccess() ){																//  super access
@@ -138,11 +145,8 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 		return $userProjects;																		//  return projects map
 	}
 
-	protected function hasFullAccess(){
-		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );
-	}
-
-	public function removeProjectUser( $projectId, $userId, $informOthers = TRUE ){
+	public function removeProjectUser( $projectId, $userId, bool $informOthers = TRUE )
+	{
 		try{
 			$this->modelProjectUser->removeByIndices( array(
 				'projectId'		=> $projectId,
@@ -154,7 +158,10 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 				foreach( $this->getProjectUsers( $projectId ) as $member ){
 					if( $member->userId !== $userId ){
 						$user	= $this->modelUser->get( $member->userId );
-						$data	= array( 'project' => $project, 'user' => $user );
+						$data	= array(
+							'project'	=> $this->getProject( $projectId ),
+							'user'		=> $user,
+						);
 						$mail	= new Mail_Manage_Project_Members( $this->env, $data, FALSE );
 						$logicMail->handleMail( $mail, $user, $language->getLanguage() );
 					}
@@ -162,11 +169,12 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 			}
 		}
 		catch( Exception $e ){
-			throw new RuntimeException( 'Removing project user failed', 0, $e );
+			throw new RuntimeException( 'Removing project user failed ('.$e->getMessage().')', 0, $e );
 		}
 	}
 
-	public function setDefaultProject( $userId, $projectId ){
+	public function setDefaultProject( $userId, $projectId )
+	{
 		$this->modelProjectUser->editByIndices( array(
 			'userId'		=> $userId,
 			'isDefault'		=> 1
@@ -182,5 +190,19 @@ class Logic_Project extends CMF_Hydrogen_Logic{
 			'modifiedAt'	=> time()
 		) );
 	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->modelProject		= new Model_Project( $this->env );								//  create projects model
+		$this->modelProjectUser	= new Model_Project_User( $this->env );
+		$this->modelUser		= new Model_User( $this->env );									//  create user model
+	}
+
+	protected function hasFullAccess()
+	{
+		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );
+	}
 }
-?>
+

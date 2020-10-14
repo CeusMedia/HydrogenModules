@@ -1,7 +1,8 @@
 <?php
-class Mail_Manage_Project_Invited extends Mail_Manage_Project_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Manage_Project_Invited extends Mail_Manage_Project_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		parent::generate( $data );
 		$baseUrl	= $this->env->url;
 		$config		= $this->env->getConfig();
@@ -28,13 +29,12 @@ class Mail_Manage_Project_Invited extends Mail_Manage_Project_Abstract{
 
 		//  --  FORMAT: PLAIN TEXT  --  //
 		$helperText	= new View_Helper_Mail_Text( $this->env );
-$text	= $helperText->underscore( $config->get( 'app.name' ), '=' ).'
-
-'.sprintf( $w->headingText, $project->title ).'
-
-'.$helperText->underscore( $w->headingFacts ).'
-'.$helperFacts->renderAsText();
-		$this->addTextBody( $text );
+		$text	= $helperText->underscore( $config->get( 'app.name' ), '=' ).PHP_EOL.
+			PHP_EOL.
+			sprintf( $w->headingText, $project->title ).PHP_EOL.
+			PHP_EOL.
+			$helperText->underscore( $w->headingFacts ).PHP_EOL.
+			$helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render();
 
 		//  --  FORMAT: HTML  --  //
 		$body	= '
@@ -43,16 +43,11 @@ $text	= $helperText->underscore( $config->get( 'app.name' ), '=' ).'
 	<h3>Aktuelle Projektinformationen</h3>
 	<div class="content-panel-inner">
 		<h4>'.$w->headingFacts.'</h4>
-		'.$helperFacts->render().'
+		'.$helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render().'
 		'.$relations.'
 		</dl>
 	</div>
 </div>';
-		return $this->setHtml( $tbody );
-/*		return array(
-			'contentText'	=> '',
-			'contentHtml'	=> '',
-		);*/
+		return $this->setHtml( $tbody )->setText( $text );
 	}
 }
-?>

@@ -1,7 +1,8 @@
 <?php
-abstract class Mail_Manage_Project_Abstract extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
+{
+	protected function generate( $data = array() )
+	{
 //		$this->addThemeStyle( $modules->has( 'UI_Bootstrap' ) ? 'bootstrap.min.css' : 'mail.min.css' );
 /*		if( $this->env->getModules()->has( 'UI_CSS_Panel' ) ){
 			$options	= $this->env->getConfig()->getAll( 'module.ui_css_panel.', TRUE );
@@ -12,7 +13,8 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract{
 		}*/
 	}
 
-	protected function collectFacts( $project ){
+	protected function collectFacts( $project ): View_Helper_Mail_Facts
+	{
 		$view		= new CMF_Hydrogen_View( $this->env );
 		$logic		= Logic_Project::getInstance( $this->env );
 		$words		= $this->getWords( 'manage/project' );
@@ -65,4 +67,3 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract{
 		return $helperFacts;
 	}
 }
-?>

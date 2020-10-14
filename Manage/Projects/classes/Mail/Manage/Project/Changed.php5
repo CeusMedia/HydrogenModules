@@ -1,7 +1,8 @@
 <?php
-class Mail_Manage_Project_Changed extends Mail_Manage_Project_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Manage_Project_Changed extends Mail_Manage_Project_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		parent::generate( $data );
 		$baseUrl	= $this->env->url;
 		$config		= $this->env->getConfig();
@@ -34,8 +35,7 @@ class Mail_Manage_Project_Changed extends Mail_Manage_Project_Abstract{
 			sprintf( $w->headingText, $project->title ).PHP_EOL.
 			PHP_EOL.
 			$helperText->underscore( $w->headingFacts ).
-			$helperFacts->renderAsText();
-		$this->setText( $text );
+			$helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render();
 
 		//  --  FORMAT: HTML  --  //
 		$body	= '
@@ -44,16 +44,11 @@ class Mail_Manage_Project_Changed extends Mail_Manage_Project_Abstract{
 	<h3>Aktuelle Projektinformationen</h3>
 	<div class="content-panel-inner">
 		<h4>'.$w->headingFacts.'</h4>
-		'.$helperFacts->render().'
+		'.$helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render().'
 		'.$relations.'
 		</dl>
 	</div>
 </div>';
-		return $this->setHtml( $body );
-/*		return array(
-			'contentText'	=> '',
-			'contentHtml'	=> '',
-		);*/
+		return $this->setHtml( $body )->setText( $text );
 	}
 }
-?>

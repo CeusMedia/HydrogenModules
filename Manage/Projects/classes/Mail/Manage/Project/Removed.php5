@@ -1,7 +1,8 @@
 <?php
-class Mail_Manage_Project_Removed extends Mail_Manage_Project_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Manage_Project_Removed extends Mail_Manage_Project_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		parent::generate( $data );
 		$baseUrl	= $this->env->url;
 		$config		= $this->env->getConfig();
@@ -28,15 +29,16 @@ class Mail_Manage_Project_Removed extends Mail_Manage_Project_Abstract{
 
 		//  --  FORMAT: PLAIN TEXT  --  //
 		$helperText	= new View_Helper_Mail_Text( $this->env );
-$text	= $helperText->underscore( $config->get( 'app.name' ), '=' ).'
-
-'.sprintf( $w->headingText, $project->title ).'
-
-'.$helperText->underscore( $w->headingFacts ).'
-'.$helperFacts->renderAsText();
-		$this->addTextBody( $text );
+		$helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT );
+		$text	= $helperText->underscore( $config->get( 'app.name' ), '=' ).PHP_EOL.
+			PHP_EOL.
+			sprintf( $w->headingText, $project->title ).PHP_EOL.
+			PHP_EOL.
+			$helperText->underscore( $w->headingFacts ).PHP_EOL.
+			$helperFacts->render();
 
 		//  --  FORMAT: HTML  --  //
+		$helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_HTML );
 		$body	= '
 <div class="alert alert-danger">'.sprintf( $w->headingHtml, $project->title ).'</div>
 <div class="content-panel">
@@ -48,11 +50,6 @@ $text	= $helperText->underscore( $config->get( 'app.name' ), '=' ).'
 		</dl>
 	</div>
 </div>';
-		return $this->setHtml( $body );
-/*		return array(
-			'contentText'	=> '',
-			'contentHtml'	=> '',
-		);*/
+		return $this->setHtml( $body )->setText( $text );
 	}
 }
-?>

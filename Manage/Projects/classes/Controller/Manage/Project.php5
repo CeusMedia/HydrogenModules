@@ -1,6 +1,6 @@
 <?php
-class Controller_Manage_Project extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Project extends CMF_Hydrogen_Controller
+{
 	protected $logic;
 	protected $logicMail;
 	protected $messenger;
@@ -8,33 +8,13 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 	protected $modelProject;
 	protected $modelProjectUser;
 	protected $modelUser;
-	protected $useMissions	= FALSE;
-	protected $useCompanies	= FALSE;
-	protected $useCustomers	= FALSE;
+	protected $useMissions		= FALSE;
+	protected $useCompanies		= FALSE;
+	protected $useCustomers		= FALSE;
 	protected $userId;
 
-	public function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-		$this->messenger		= $this->env->getMessenger();
-		$this->useMissions		= $this->env->getModules()->has( 'Work_Missions' );
-		$this->useCompanies		= $this->env->getModules()->has( 'Manage_Projects_Companies' );
-		$this->useCustomers		= $this->env->getModules()->has( 'Manage_Customers' );
-		$this->userId			= $this->session->get( 'userId' );
-		$this->roleId			= $this->session->get( 'roleId' );
-		$this->logic			= Logic_Project::getInstance( $this->env );
-		$this->logicMail		= Logic_Mail::getInstance( $this->env );
-		$this->modelProject		= new Model_Project( $this->env );
-		$this->modelProjectUser	= new Model_Project_User( $this->env );
-		$this->modelUser		= new Model_User( $this->env );
-		$this->isAdmin			= $this->env->getAcl()->hasFullAccess( $this->roleId );
-		$this->isEditor			= $this->env->getAcl()->has( 'manage_project', 'edit' );
-
-		if( !$this->session->get( 'filter_manage_project_limit' ) )
-			$this->session->set( 'filter_manage_project_limit', 15 );
-	}
-
-	public function acceptInvite( $projectId ){
+	public function acceptInvite( string $projectId )
+	{
 		$indices	= array(
 			'projectId'	=> $projectId,
 			'userId'	=> $this->userId,
@@ -54,7 +34,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function add(){
+	public function add()
+	{
 		$words			= (object) $this->getWords( 'add' );
 
 		$this->addData( 'from', $this->request->get( 'from' ) );
@@ -95,7 +76,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 //		$this->addData( 'filterDirection', $this->session->get( 'filter_manage_project_direction' ) );
 	}
 
-	public function addUser( $projectId, $userId = NULL ){
+	public function addUser( string $projectId, ?string $userId = NULL )
+	{
 		$userId			= $userId ? $userId : $this->request->get( 'userId' );
 		$forwardTo		= $this->request->get( 'forwardTo' );
 		$words			= (object) $this->getWords( 'edit-panel-users' );
@@ -136,45 +118,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$projectId, TRUE );
 	}
 
-	protected function checkDefault(){
-		$default	= $this->modelProjectUser->getByIndices( array(
-			'userId'	=> $this->userId,
-			'isDefault'	=> 1,
-		) );
-		if( !$default ){
-			$from	= $this->request->get( '__path' );
-			$this->restart( 'setDefault'.( $from ? '?from='.$from : '' ), TRUE );
-		}
-	}
-
-	protected function checkProject( $projectId, $checkMembership = TRUE ){
-		$project		= $this->modelProject->get( $projectId );
-		if( !$project ){
-			$this->messenger->noteError( 'Invalid project. Redirection to index.' );
-			$this->restart( NULL, TRUE );
-		}
-		if( $checkMembership ){
-			$isMember	= $this->modelProjectUser->getByIndices( array(
-				'projectId'	=> $projectId,
-				'userId'	=> $this->userId,
-			) );
-			if( !$isMember && !$this->isAdmin ){
-				$this->messenger->noteError( 'You cannot access this project. Redirection to index.' );
-				$this->restart( NULL, TRUE );
-			}
-		}
-		return $project;
-	}
-
-	protected function checkUserProjects(){
-		if( !$this->modelProjectUser->countByIndex( 'userId', $this->userId ) ){
-			$words		= (object) $this->getWords( 'index' );
-			$this->messenger->noteNotice( $words->msgErrorNoProjects );
-			$this->restart( 'add', TRUE );
-		}
-	}
-
-	public function declineInvite( $projectId ){
+	public function declineInvite( string $projectId )
+	{
 		$indices	= array(
 			'projectId'	=> $projectId,
 			'userId'	=> $this->userId,
@@ -194,7 +139,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $projectId ){
+	public function edit( string $projectId )
+	{
 		$words			= (object) $this->getWords( 'edit' );
 		$project		= $this->checkProject( $projectId, TRUE );
 
@@ -216,7 +162,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 			}
 			$found	= $this->modelProject->getByIndices( array(
 				'title'		=> $title,
-				'creatorId'	=> $this->user,
+				'creatorId'	=> $this->userId,
 			) );
 			if( $found && $found->projectId != $projectId ){
 				$this->messenger->noteError( $words->msgTitleExisting, $title );
@@ -271,7 +217,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 //		$this->addData( 'filterDirection', $this->session->get( 'filter_manage_project_direction' ) );
 	}
 
-	public function filter( $mode = NULL ){
+	public function filter( ?string $mode = NULL )
+	{
 		if( $mode === "reset" )
 			foreach( array_keys( $this->session->getAll( 'filter_manage_project_' ) ) as $key )
 				$this->session->remove( 'filter_manage_project_'.$key );
@@ -300,11 +247,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function getWorkersOfMyProjects(){
-		return $this->logic->getCoworkers( $this->userId );
-	}
-
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 		$this->checkDefault();
 //		$this->env->getCaptain()->callHook( 'Project', 'update', $this, array( 'projectId' => '43' ) );
 		if( $this->useMissions )
@@ -414,7 +358,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 	/**
 	 *	@todo		finish: implement hook on other modules and test
 	 */
-	public function remove( $projectId, $confirmed = NULL ){
+	public function remove( string $projectId, bool $confirmed = FALSE )
+	{
 		$this->checkDefault();
 		$project	= $this->checkProject( $projectId, TRUE, TRUE, TRUE );
 
@@ -447,15 +392,16 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->addData( 'project', $project );
 	}
 
-	public function removeUser( $projectId, $userId ){
+	public function removeUser( string $projectId, string $userId )
+	{
 		$project		= $this->checkProject( $projectId, TRUE, TRUE );
 		$words			= (object) $this->getWords( 'edit-panel-users' );
-		$numberUsers	= 0;																//  prepare user counter
-		$relations		= $this->modelProjectUser->getAllByIndex( 'projectId', $projectId );			//  get project user relations
+		$numberUsers	= 0;																	//  prepare user counter
+		$relations		= $this->modelProjectUser->getAllByIndex( 'projectId', $projectId );	//  get project user relations
 		$user			= NULL;
-		foreach( $relations as $relation ){													//  iterate relations
-			$relatedUser	= $this->modelUser->get( $relation->userId );							//  get user from relation
-			$numberUsers	+= ( $relatedUser && $relatedUser->status > 0 ) ? 1 : 0;		//  count only existing and active users
+		foreach( $relations as $relation ){														//  iterate relations
+			$relatedUser	= $this->modelUser->get( $relation->userId );						//  get user from relation
+			$numberUsers	+= ( $relatedUser && $relatedUser->status > 0 ) ? 1 : 0;			//  count only existing and active users
 			if( $relatedUser->userId === $userId )
 				$user	= $relatedUser;
 		}
@@ -474,7 +420,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$projectId, TRUE );
 	}
 
-	public function setDefault( $projectId = NULL ){
+	public function setDefault( string $projectId = NULL )
+	{
 		$this->checkUserProjects();
 		$projectId	= $projectId ? $projectId : $this->request->get( 'projectId' );
 
@@ -494,7 +441,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->addData( 'from', $this->request->get( 'from' ) );
 	}
 
-	public function view( $projectId ){
+	public function view( string $projectId )
+	{
 		$project			= $this->checkProject( $projectId, TRUE );
 		$project->users		= $this->logic->getProjectUsers( $projectId );
 		$project->coworkers	= $this->logic->getCoworkers( $this->userId, $projectId );
@@ -506,5 +454,76 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller{
 		$this->addData( 'project', $project );
 		$this->addData( 'canEdit', $this->isAdmin || $this->isEditor );
 	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+		$this->messenger		= $this->env->getMessenger();
+		$this->useMissions		= $this->env->getModules()->has( 'Work_Missions' );
+		$this->useCompanies		= $this->env->getModules()->has( 'Manage_Projects_Companies' );
+		$this->useCustomers		= $this->env->getModules()->has( 'Manage_Customers' );
+		$this->userId			= $this->session->get( 'userId' );
+		$this->roleId			= $this->session->get( 'roleId' );
+//		$this->logic			= Logic_Project::getInstance( $this->env );
+//		$this->logicMail		= Logic_Mail::getInstance( $this->env );
+		$this->logic			= $this->getLogic( 'Project' );
+		$this->logicMail		= $this->getLogic( 'Mail' );
+		$this->modelProject		= $this->getModel( 'Project' );
+		$this->modelProjectUser	= $this->getModel( 'Project_User' );
+		$this->modelUser		= $this->getModel( 'User' );
+		$this->isAdmin			= $this->env->getAcl()->hasFullAccess( $this->roleId );
+		$this->isEditor			= $this->env->getAcl()->has( 'manage_project', 'edit' );
+
+		if( !$this->session->get( 'filter_manage_project_limit' ) )
+			$this->session->set( 'filter_manage_project_limit', 15 );
+	}
+
+	protected function checkDefault()
+	{
+		$default	= $this->modelProjectUser->getByIndices( array(
+			'userId'	=> $this->userId,
+			'isDefault'	=> 1,
+		) );
+		if( !$default ){
+			$from	= $this->request->get( '__path' );
+			$this->restart( 'setDefault'.( $from ? '?from='.$from : '' ), TRUE );
+		}
+	}
+
+	protected function checkProject( string $projectId, bool $checkMembership = TRUE )
+	{
+		$project		= $this->modelProject->get( $projectId );
+		if( !$project ){
+			$this->messenger->noteError( 'Invalid project. Redirection to index.' );
+			$this->restart( NULL, TRUE );
+		}
+		if( $checkMembership ){
+			$isMember	= $this->modelProjectUser->getByIndices( array(
+				'projectId'	=> $projectId,
+				'userId'	=> $this->userId,
+			) );
+			if( !$isMember && !$this->isAdmin ){
+				$this->messenger->noteError( 'You cannot access this project. Redirection to index.' );
+				$this->restart( NULL, TRUE );
+			}
+		}
+		return $project;
+	}
+
+	protected function checkUserProjects()
+	{
+		if( !$this->modelProjectUser->countByIndex( 'userId', $this->userId ) ){
+			$words		= (object) $this->getWords( 'index' );
+			$this->messenger->noteNotice( $words->msgErrorNoProjects );
+			$this->restart( 'add', TRUE );
+		}
+	}
+
+	protected function getWorkersOfMyProjects(): array
+	{
+		return $this->logic->getCoworkers( $this->userId );
+	}
 }
-?>
