@@ -40,65 +40,13 @@ class Controller_Admin_Mail_Template_Import extends CMF_Hydrogen_Controller
 				$template	= json_decode( $upload->getContent() );
 				if( !$template )
 					throw new InvalidArgumentException( 'Uploaded file is not valid JSON' );
-
 				if( empty( $template->type ) || $template->type !== 'mail-template' )
 					throw new InvalidArgumentException( 'Uploaded file does not contain a template' );
-				if( empty( $template->entity ) ){
-					$title		= $template->title;
-					$counter	= 0;
-					while( $this->modelTemplate->countByIndex( 'title', $title ) ){
-						$suffix	= ' ('.date( 'Y-m-d' ).( $counter ? '-'.$counter : '' ).')';
-						$title	= $template->title.$suffix;
-						$counter++;
-					}
-					$data	= array(
-						'status'		=> Model_Mail_Template::STATUS_IMPORTED,
-						'title'			=> $title,
-						'version'		=> $template->version,
-						'language'		=> $template->language,
-						'plain'			=> $template->contents->text,
-						'html'			=> $template->contents->html,
-						'css'			=> $template->contents->css,
-						'styles'		=> $template->files->css ? json_encode( $template->files->css ) : NULL,
-						'images'		=> $template->links->image ? json_encode( $template->links->image ) : NULL,
-						'createdAt'		=> time(),
-						'modifiedAt'	=> time(),
-					);
-				}
-				else if( !empty( $template->version ) && $template->version == 2 ){
-					$entity		= $template->entity;
-					$title		= $entity->title;
-					$counter	= 0;
-					while( $this->modelTemplate->countByIndex( 'title', $title ) ){
-						$suffix	= ' ('.date( 'Y-m-d' ).( $counter ? '-'.$counter : '' ).')';
-						$title	= $entity->title.$suffix;
-						$counter++;
-					}
-					$files	= array( 'styles' => array(), 'images' => array() );
-					foreach( array_keys( $files ) as $topic ){
-						foreach( $entity->files->$topic as $item ){
-							if( !file_exists( $item->filePath )){
-								new FS_Folder( dirname( $item->filePath ), TRUE );
-								$file	= new FS_File( $item->filePath, TRUE );
-								$file->setContent( base64_decode( $item->content ) );
-							}
-							$files[$topic][]	= $item->filePath;
-						}
-					}
-					$data	= array(
-						'status'		=> Model_Mail_Template::STATUS_IMPORTED,
-						'title'			=> $title,
-						'version'		=> $entity->version,
-						'language'		=> $entity->language,
-						'plain'			=> $entity->contents->text,
-						'html'			=> $entity->contents->html,
-						'css'			=> $entity->contents->css,
-						'styles'		=> json_encode( $files['styles'] ),
-						'images'		=> json_encode( $files['images'] ),
-						'createdAt'		=> time(),
-						'modifiedAt'	=> time(),
-					);
-				}
+
+				if( !empty( $template->version ) && $template->version == 2 )
+					$data	= $this->getDataFromExportV2( $template );
+				else if( empty( $template->entity ) )
+					$data	= $this->getDataFromExportV1( $template );
 				else{
 					$this->messenger->noteError( 'File is not compatible' );
 					$this->restart( 'admin/mail/template' );
@@ -116,5 +64,73 @@ class Controller_Admin_Mail_Template_Import extends CMF_Hydrogen_Controller
 			}
 		}
 		$this->restart( 'admin/mail/template' );
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function getDataFromExportV1( $template )
+	{
+		$title		= $this->getNextTitle( $template->title );
+		$data	= array(
+			'status'		=> Model_Mail_Template::STATUS_IMPORTED,
+			'title'			=> $title,
+			'version'		=> $template->version,
+			'language'		=> $template->language,
+			'plain'			=> $template->contents->text,
+			'html'			=> $template->contents->html,
+			'css'			=> $template->contents->css,
+			'styles'		=> $template->files->css ? json_encode( $template->files->css ) : NULL,
+			'images'		=> $template->links->image ? json_encode( $template->links->image ) : NULL,
+			'createdAt'		=> time(),
+			'modifiedAt'	=> time(),
+		);
+		return $data;
+	}
+
+	protected function getDataFromExportV2( $template )
+	{
+		$entity		= $template->entity;
+		$title		= $this->getNextTitle( $entity->title );
+		$files		= array(
+			'styles'	=> array(),
+			'images'	=> array()
+		);
+		foreach( array_keys( $files ) as $topic ){
+			foreach( $entity->files->$topic as $item ){
+				if( !file_exists( $item->filePath )){
+					new FS_Folder( dirname( $item->filePath ), TRUE );
+					$file	= new FS_File( $item->filePath, TRUE );
+					$file->setContent( base64_decode( $item->content ) );
+				}
+				$files[$topic][]	= $item->filePath;
+			}
+		}
+		$data	= array(
+			'status'		=> Model_Mail_Template::STATUS_IMPORTED,
+			'title'			=> $title,
+			'version'		=> $entity->version,
+			'language'		=> $entity->language,
+			'plain'			=> $entity->contents->text,
+			'html'			=> $entity->contents->html,
+			'css'			=> $entity->contents->css,
+			'styles'		=> json_encode( $files['styles'] ),
+			'images'		=> json_encode( $files['images'] ),
+			'createdAt'		=> time(),
+			'modifiedAt'	=> time(),
+		);
+		return $data;
+	}
+
+	protected function getNextTitle( string $title ): string
+	{
+		$counter	= 0;
+		$current	= $title;
+		$date		= date( 'Y-m-d' );
+		while( $this->modelTemplate->countByIndex( 'title', $current ) ){
+			$suffix		= ' ('.$date.( $counter ? '-'.$counter : '' ).')';
+			$current	= $title.$suffix;
+			$counter++;
+		}
+		return $current;
 	}
 }
