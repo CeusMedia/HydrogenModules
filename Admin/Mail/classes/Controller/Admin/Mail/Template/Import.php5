@@ -1,6 +1,24 @@
 <?php
 class Controller_Admin_Mail_Template_Import extends CMF_Hydrogen_Controller
 {
+	protected $messenger;
+	protected $request;
+	protected $modelTemplate;
+
+	/**
+	 *	Constructor.
+	 *	@access		public
+	 *	@param		CMF_Hydrogen_Environment	$env			Application Environment Object
+	 *	@return		void
+	 */
+    public function __construct( CMF_Hydrogen_Environment $env )
+	{
+		parent::__construct( $env, FALSE );
+		$this->messenger			= $this->env->getMessenger();
+		$this->request				= $this->env->getRequest();
+		$this->modelTemplate		= $this->getModel( 'Mail_Template' );
+	}
+
 	public function index()
 	{
 		if( $this->request->getMethod()->isPost() ){
@@ -10,7 +28,7 @@ class Controller_Admin_Mail_Template_Import extends CMF_Hydrogen_Controller
 			}
 			catch( Exception $e ){
 				$this->messenger->noteFailure( $e->getMessage() );
-				$this->restart( NULL, TRUE );
+				$this->restart( 'admin/mail/template' );
 			}
 			try{
 //				$this->messenger->noteNotice( 'MIME: '.$upload->getMimeType() );
@@ -83,11 +101,11 @@ class Controller_Admin_Mail_Template_Import extends CMF_Hydrogen_Controller
 				}
 				else{
 					$this->messenger->noteError( 'File is not compatible' );
-					$this->restart( NULL, TRUE );
+					$this->restart( 'admin/mail/template' );
 				}
 				$templateId	= $this->modelTemplate->add( $data, FALSE );
 				$this->messenger->noteSuccess( 'Template imported as '.$title );
-				$this->restart( 'edit/'.$templateId, TRUE );
+				$this->restart( 'admin/mail/template/edit/'.$templateId );
 			}
 			catch( Exception $e ){
 				$helper		= new View_Helper_UploadError( $this->env );
@@ -97,6 +115,6 @@ class Controller_Admin_Mail_Template_Import extends CMF_Hydrogen_Controller
 				$this->messenger->noteError( $message );
 			}
 		}
-		$this->restart( NULL, TRUE );
+		$this->restart( 'admin/mail/template' );
 	}
 }
