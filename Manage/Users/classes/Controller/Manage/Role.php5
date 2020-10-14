@@ -112,6 +112,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller
 				'moduleWords'	=> $this->getModuleWords( $module ),
 			);
 		}
+
 		$this->addData( 'actions', $disclosure->reflect( 'classes/Controller/', $options ) );
 		$this->addData( 'controllerActions', $list );
 		$this->addData( 'acl', $this->env->getAcl() );

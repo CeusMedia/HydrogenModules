@@ -20,14 +20,6 @@ class Controller_Ajax_Manage_Role extends CMF_Hydrogen_Controller_Ajax
 	protected $modelRole;
 	protected $modelRoleRight;
 
-	public function __onInit()
-	{
-		$this->request			= $this->env->getRequest();
-//		$this->modelRoleRight	= $this->getModel( 'Role_Right' );
-		$this->modelRole		= new Model_Role( $this->env );
-		$this->modelRoleRight	= new Model_Role_Right( $this->env );
-	}
-
 	/**
 	 *	Change role right by toggling.
 	 *	@access		public
@@ -61,5 +53,13 @@ class Controller_Ajax_Manage_Role extends CMF_Hydrogen_Controller_Ajax
 		}
 		$right	= $this->modelRoleRight->getByIndices( $indices );
 		$this->respondData( array( 'current' => (bool) $right ) );
+	}
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+//		$this->modelRoleRight	= $this->getModel( 'Role_Right' );
+		$this->modelRole		= new Model_Role( $this->env );
+		$this->modelRoleRight	= new Model_Role_Right( $this->env );
 	}
 }
