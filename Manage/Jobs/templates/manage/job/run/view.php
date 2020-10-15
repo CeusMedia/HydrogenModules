@@ -60,7 +60,7 @@ $buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;zurück', array(
 	'class'	=> 'btn btn-small',
 ) );
 
-$buttonArchive	= UI_HTML_Tag::create( 'a', $iconArchive.'&nbsp;zurück', array(
+$buttonArchive	= UI_HTML_Tag::create( 'a', $iconArchive.'&nbsp;archivieren', array(
 	'href'	=> './manage/job/run/archive/'.$run->jobRunId,
 	'class'	=> 'btn btn-inverse',
 ) );

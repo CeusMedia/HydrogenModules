@@ -72,11 +72,12 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 					UI_HTML_Tag::create( 'button', $iconFilter.'&nbsp;'.$words['filter']['buttonFilter'], array(
 						'type'	=> 'submit',
 						'name'	=> 'filter',
-						'class'	=> 'btn btn-small btn-primary',
+						'class'	=> 'btn not-btn-small not-btn-primary btn-info',
 					) ),
-					UI_HTML_Tag::create( 'a', $iconReset.'&nbsp;'.$words['filter']['buttonReset'], array(
+//					UI_HTML_Tag::create( 'a', $iconReset.'&nbsp;'.$words['filter']['buttonReset'], array(
+					UI_HTML_Tag::create( 'a', $iconReset, array(
 						'href'	=> './manage/job/definition/filter/reset',
-						'class'	=> 'btn btn-small btn-inverse',
+						'class'	=> 'btn not-btn-small btn-inverse',
 					) ),
 				), array( 'class' => 'btn-group' ) ),
 			), array( 'class' => 'buttonbar' ) ),

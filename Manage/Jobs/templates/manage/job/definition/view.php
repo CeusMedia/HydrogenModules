@@ -59,6 +59,7 @@ foreach( $facts as $factKey => $factValue ){
 $list	= UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 
 return $tabs.UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'h3', '<span class="muted">Job:</span> '.$definition->identifier ),
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'h4', 'Facts' ),
 		$list,
