@@ -2,14 +2,16 @@
 /**
  *	@todo		integrate authentication backends
  */
-class BasicAuthentication{
-
-	public function __construct( CMF_Hydrogen_Environment $env, $realm ){
+class BasicAuthentication
+{
+	public function __construct( CMF_Hydrogen_Environment $env, string $realm )
+	{
 		$this->env		= $env;
 		$this->realm	= $realm;
 	}
 
-	public function authenticate(){
+	public function authenticate()
+	{
 		$server		= new ADT_List_Dictionary( $_SERVER );
 		$username	= trim( $server->get( 'PHP_AUTH_USER' ) );
 		$password	= trim( $server->get( 'PHP_AUTH_PW' ) );
@@ -36,9 +38,7 @@ class BasicAuthentication{
 		}
 		header( 'WWW-Authenticate: Basic realm="'.addslashes( $this->realm ).'"' );
 		header( 'HTTP/1.0 401 Unauthorized' );
-//		header( '401 Forbidden' );
 		print( '<h1>Authentication failed.</h1>' );
 		exit;
 	}
 }
-?>

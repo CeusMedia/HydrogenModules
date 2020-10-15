@@ -394,7 +394,6 @@ class Logic_Job extends CMF_Hydrogen_Logic
 */			$returnCode = 1;																		//  quit with positive status
 		}
 		catch( Throwable $t ){																		//  on throwable error or exception
-			print_r( $t );
 			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_FAILED, array(		//  finish job run as failed
 				'type'		=> 'throwable',															//  ... and save message of type "throwable" for caught exception
 				'message'	=> $t->getMessage(),													//  ...
