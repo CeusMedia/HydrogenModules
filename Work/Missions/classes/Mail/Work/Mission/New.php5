@@ -133,7 +133,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 				'content'	=> $content,
 			),
 			'lists'		=> array(
-				'facts'		=> $this->helperFacts->renderAsText()
+				'facts'		=> $this->helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render()
 			),
 			'texts'		=> array(
 				'salute'	=> $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '',

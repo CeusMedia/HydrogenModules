@@ -44,16 +44,18 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logicProject	= Logic_Project::getInstance( $this->env );
 			$projectOld		= $old->projectId ? $logicProject->getProject( $old->projectId ) : '-';
-			$linkProjectOld	= UI_HTML_Tag::create( 'a', $projectOld->title, array( 'href' => './manage/project/view/'.$projectOld->projectId ) );
-			$projectHtml	= $linkProjectOld;
-			$projectText	= $projectOld->title;
-			if( $new->projectId && $old->projectId !== $new->projectId ){
-				$projectNew		= $logicProject->getProject( $new->projectId );
-				$linkProjectNew	= UI_HTML_Tag::create( 'a', $projectNew->title, array( 'href' => './manage/project/view/'.$projectNew->projectId ) );
-				$projectHtml	.= '<br/>&rarr; '.$linkProjectNew;
-				$projectText	= $projectText.PHP_EOL.'-> '.$projectNew->title;
+			if( $projectOld ){
+				$linkProjectOld	= UI_HTML_Tag::create( 'a', $projectOld->title, array( 'href' => './manage/project/view/'.$projectOld->projectId ) );
+				$projectHtml	= $linkProjectOld;
+				$projectText	= $projectOld->title;
+				if( $new->projectId && $old->projectId !== $new->projectId ){
+					$projectNew		= $logicProject->getProject( $new->projectId );
+					$linkProjectNew	= UI_HTML_Tag::create( 'a', $projectNew->title, array( 'href' => './manage/project/view/'.$projectNew->projectId ) );
+					$projectHtml	.= '<br/>&rarr; '.$linkProjectNew;
+					$projectText	= $projectText.PHP_EOL.'-> '.$projectNew->title;
+				}
+				$this->helperFacts->add( 'projectId', $projectHtml, $projectText );
 			}
-			$this->helperFacts->add( 'projectId', $projectHtml, $projectText );
 		}
 
 		$titleHtml		= $this->renderLinkedTitle( $old );
@@ -252,7 +254,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 				'content'	=> $content,
 			),
 			'lists'		=> array(
-				'facts'		=> $this->helperFacts->renderAsText()
+				'facts'		=> $this->helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render()
 			),
 			'texts'		=> array(
 				'salute'	=> $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '',
