@@ -73,7 +73,7 @@ class Job_Job_Schedule extends Job_Abstract
 		//  PARAMETER: STATUS(ES)
 		$statusParam	= strtoupper( $this->parameters->get( '--status', 'done,success' ) );
 		$statusParam	= preg_replace( '/\s/', '', $statusParam );
-		if( $statusesParam !== '*' ){
+		if( $statusParam !== '*' ){
 			$statuses	= array();
 			$statusMap	= Alg_Object_Constant::staticGetAll( 'Model_Job_Run', 'STATUS_' );
 			foreach( explode( ',', $statusParam ) as $statusKey ){

@@ -381,7 +381,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 			if( $jobRun->type == Model_Job_Run::TYPE_SCHEDULED )
 				$output	= $outputBuffer->get( TRUE );
 			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_DONE, array(			//  finish job run since no exception has been thrown
-				'type'		=> 'data',															//  ... and save message of type "data"
+				'type'		=> 'data',																//  ... and save message of type "data"
 				'code'		=> $result,																//  ... containing the method call return code
 				'data'		=> $jobObject->getResults(),											//  ... and results collected by the method call
 				'output'	=> $output,
