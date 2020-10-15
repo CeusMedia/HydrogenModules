@@ -1,6 +1,75 @@
 <?php
 class Controller_Work_Mission_Export extends Controller_Work_Mission
 {
+	protected $pathLogs;
+
+	public function ical()
+	{
+		$method		= $this->request->getMethod();
+		$logFile	= $this->pathLogs.'work.mission.ical.method.log';
+		$logMessage	= date( "Y-m-d H:i:s" ).' ['.$method.'] '.getEnv( 'HTTP_USER_AGENT' )."\n";
+		error_log( $logMessage, 3, $logFile );
+		if( !$this->userId ){
+			$auth	= new BasicAuthentication( $this->env, 'iCal Export' );
+			$this->userId	= $auth->authenticate();
+		}
+		try{
+			switch( strtoupper( $method ) ){
+				case 'PUT':
+//					$ical	= file_get_contents( "php://input" );							//  read PUT data
+					$ical	= $this->request->getBody();									//  get PUT content from request body
+					$this->importFromIcal( $ical );											//  import
+					break;
+				case 'GET':
+				default:
+					$ical		= $this->exportAsIcal();
+					if( $this->request->has( 'download' ) ){
+						$fileName	= 'ical_'.date( 'Ymd' ).'.ics';
+						Net_HTTP_Download::sendString( $ical , $fileName );					//  deliver downloadable file
+					}
+					else{
+						$mimeType	= "text/calendar";
+						$mimeType	= "text/plain;charset=utf-8";
+						header( "Content-type: ".$mimeType );
+						header( "Last-Modified: ".date( 'r' ) );
+						print( $ical );
+					}
+			}
+		}
+		catch( Exception $e ){
+			$lines	= array(
+				str_repeat( "-". 78 ),
+				"Date: ".date( "Y-m-d H:i:s" ),
+				"Request: ".$method." ".$this->request->get( '__path' ),
+				"Error: ".$e->getMessage(),
+				"Agent: ".getEnv( 'HTTP_USER_AGENT' ),
+			);
+			$logFile	= $this->pathLogs."work.missions.ical.error.log";
+			$logMessage	= join( "\n", $lines )."\n";
+			error_log( $logMessage, 3, $logFile );
+		}
+		exit;
+	}
+
+	public function index( $format = NULL, $debug = FALSE )
+	{
+		$this->restart( './work/mission/help/sync' );
+/*
+		switch( $format ){
+			case 'ical':
+				$ical	= $this->exportAsIcal( $debug );
+				$debug ? xmp( $ical ) : print( $ical );
+				die;
+				break;
+			default:
+				$missions	= $this->model->getAll();												//  get all missions
+				$zip		= gzencode( serialize( $missions ) );									//  gzip serial of mission objects
+				Net_HTTP_Download::sendString( $zip , 'missions_'.date( 'Ymd' ).'.gz' );			//  deliver downloadable file
+		}
+*/	}
+
+	//  --  PROTECTED  --  //
+
 	protected function __onInit()
 	{
 		parent::__onInit();
@@ -95,54 +164,6 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		$userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );							//  get user projects from model
 		$conditions['projectId']	= array_keys( $userProjects );									//
 		return $this->model->getAll( $conditions, $orders, $limits );	//  return missions matched by conditions
-	}
-
-	public function ical()
-	{
-			$method		= $this->request->getMethod();
-			$logFile	= $this->pathLogs.'work.mission.ical.method.log';
-			$logMessage	= date( "Y-m-d H:i:s" ).' ['.$method.'] '.getEnv( 'HTTP_USER_AGENT' )."\n";
-			error_log( $logMessage, 3, $logFile );
-		if( !$this->userId ){
-			$auth	= new BasicAuthentication( $this->env, 'iCal Export' );
-			$this->userId	= $auth->authenticate();
-		}
-		try{
-			switch( strtoupper( $method ) ){
-				case 'PUT':
-//					$ical	= file_get_contents( "php://input" );							//  read PUT data
-					$ical	= $this->request->getBody();									//  get PUT content from request body
-					$this->importFromIcal( $ical );											//  import
-					break;
-				case 'GET':
-				default:
-					$ical		= $this->exportAsIcal();
-					if( $this->request->has( 'download' ) ){
-						$fileName	= 'ical_'.date( 'Ymd' ).'.ics';
-						Net_HTTP_Download::sendString( $ical , $fileName );					//  deliver downloadable file
-					}
-					else{
-						$mimeType	= "text/calendar";
-						$mimeType	= "text/plain;charset=utf-8";
-						header( "Content-type: ".$mimeType );
-						header( "Last-Modified: ".date( 'r' ) );
-						print( $ical );
-					}
-			}
-		}
-		catch( Exception $e ){
-			$lines	= array(
-				str_repeat( "-". 78 ),
-				"Date: ".date( "Y-m-d H:i:s" ),
-				"Request: ".$method." ".$this->request->get( '__path' ),
-				"Error: ".$e->getMessage(),
-				"Agent: ".getEnv( 'HTTP_USER_AGENT' ),
-			);
-			$logFile	= $this->pathLogs."work.missions.ical.error.log";
-			$logMessage	= join( "\n", $lines )."\n";
-			error_log( $logMessage, 3, $logFile );
-		}
-		exit;
 	}
 
 	protected function importFromIcal( $ical /*= NULL */)
@@ -280,21 +301,4 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		}
 		return $data;
 	}
-
-	public function index( $format = NULL, $debug = FALSE )
-	{
-		$this->restart( './work/mission/help/sync' );
-/*
-		switch( $format ){
-			case 'ical':
-				$ical	= $this->exportAsIcal( $debug );
-				$debug ? xmp( $ical ) : print( $ical );
-				die;
-				break;
-			default:
-				$missions	= $this->model->getAll();												//  get all missions
-				$zip		= gzencode( serialize( $missions ) );									//  gzip serial of mission objects
-				Net_HTTP_Download::sendString( $zip , 'missions_'.date( 'Ymd' ).'.gz' );			//  deliver downloadable file
-		}
-*/	}
 }

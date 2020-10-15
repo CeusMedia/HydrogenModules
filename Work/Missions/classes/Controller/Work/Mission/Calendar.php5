@@ -14,6 +14,7 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 	protected $filterKeyPrefix	= 'filter.work.mission.calendar.';
 
 	protected $defaultFilterValues	= array(
+		'mode'		=> 'now',
 		'states'	=> array(
 			Model_Mission::STATUS_ABORTED,
 			Model_Mission::STATUS_REJECTED,
