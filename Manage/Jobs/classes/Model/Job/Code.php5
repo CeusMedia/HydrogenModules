@@ -58,7 +58,8 @@ class Model_Job_Code
 	{
 		if( !( file_exists( $filePath ) && ( is_file( $filePath ) || is_link( $filePath ) ) ) )
 			throw new DomainException( 'File is not existing' );
-		$parser	= new FS_File_PHP_Parser_Regular();
+//		$parser	= new FS_File_PHP_Parser_Regular();
+		$parser	= new CeusMedia\PhpParser\Parser\Regular();
 		$file	= $parser->parseFile( $filePath, '' );
 		foreach( $file->getClasses() as $className => $class ){
 			$methods	= array();
@@ -67,7 +68,7 @@ class Model_Job_Code
 				'methods'	=> & $methods,
 				'desc'		=> preg_split( '/\r?\n/', $class->getDescription() ),
 			);
-			foreach( $class->getMethods() as $methodName => $method ){
+			foreach( $class->getMethods( FALSE ) as $methodName => $method ){
 				if( $method->getAccess() !== 'public' )
 					continue;
 				$arguments	= array();
