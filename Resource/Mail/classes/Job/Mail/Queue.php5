@@ -44,9 +44,12 @@ class Job_Mail_Queue extends Job_Abstract
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );
 			$this->out( 'Would send '.$count.' mails.' );
-		}
-		if( $this->dryMode || !$count )
+			$this->results	= array(
+				'mode'		=> 'dry',
+				'count'		=> $count,
+			);
 			return;
+		}
 		while( $count && $counter < $count && ( !$limit || $counter < $limit ) ){
 			if( $counter > 0 && $sleep > 0 )
 				$sleep >= 1 ? sleep( $sleep ) : usleep( $sleep * 1000 * 1000 );
@@ -64,13 +67,15 @@ class Job_Mail_Queue extends Job_Abstract
 				}
 			}
 		}
-		$this->log( json_encode( array(
-			'timestamp'	=> time(),
-			'datetime'	=> date( "Y-m-d H:i:s" ),
+		$this->results	= array(
 			'count'		=> $count,
 			'failed'	=> count( $listFailed ),
 			'sent'		=> count( $listSent ),
 			'ids'		=> $listSent,
-		) ) );
+		);
+		$this->log( json_encode( array_merge( array(
+			'timestamp'	=> time(),
+			'datetime'	=> date( "Y-m-d H:i:s" ),
+		), $this->results ) ) );
 	}
 }
