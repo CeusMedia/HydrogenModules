@@ -107,12 +107,12 @@ var WorkMissionsEditor = {
 		var content	= WorkMissionsEditor.textarea.hide().val();											//  get content of editor
 		WorkMissionsEditor.markdown.css({opacity: 0.5});
 		$.ajax({
-			url: "./helper/markdown/ajaxRender",
+			url: "./ajax/helper/markdown/render",
 			data: {content: content},
 			method: "POST",
-			success: function(html){
+			success: function(json){
 				$("#work-missions-loader").remove();
-				WorkMissionsEditor.markdown.html(html).css({opacity: 1});
+				WorkMissionsEditor.markdown.html(json.data).css({opacity: 1});
 				WorkMissionsEditor._resizeMarkdownEditor();
 			}
 		});
@@ -154,10 +154,10 @@ var WorkMissionsEditor = {
 		var editor 	= ModuleAce.applyTo("#input_content");
 		var saveUrl	= "work/mission/ajaxSaveContent/"+WorkMissionsEditor.missionId;
 		var onUpdate	= function(chance, editor){
-			jQuery.post("./helper/markdown/ajaxRender", {content: editor.getValue()})
-			.done(function(html){
+			jQuery.post("./ajax/helper/markdown/render", {content: editor.getValue()})
+			.done(function(json){
 				jQuery("#work-missions-loader").remove();
-				WorkMissionsEditor.markdown.html(html).css({opacity: 1});
+				WorkMissionsEditor.markdown.html(json.data).css({opacity: 1});
 			});
 		};
 		ModuleAceAutoSave.applyToEditor(editor, saveUrl, {callbacks: {update: onUpdate}});
