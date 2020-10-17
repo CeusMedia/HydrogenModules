@@ -1,16 +1,17 @@
 <?php
-class View_Helper_Work_Issue_Changes{
+class View_Helper_Work_Issue_Changes
+{
+	protected $env;
+	protected $modelNote;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 		$this->modelNote	= new Model_Issue_Note( $this->env );
 	}
 
-	public function setIssue( $issue ){
-		$this->issue	= $issue;
-	}
-
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->issue )
 			throw new RuntimeException( 'No issue set.' );
 		$list			= array();
@@ -41,5 +42,10 @@ class View_Helper_Work_Issue_Changes{
 		$table		= UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-striped table-fixed' ) );
 		return $table;
 	}
+
+	public function setIssue( $issue ): self
+	{
+		$this->issue	= $issue;
+		return $this;
+	}
 }
-?>

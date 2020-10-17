@@ -1,14 +1,22 @@
 <?php
-abstract class Mail_Work_Issue_Abstract extends Mail_Abstract{
-
+abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
+{
 	protected $words;
+	protected $factsAll;
+	protected $factsMain;
+	protected $logicProject;
+	protected $modelUser;
+	protected $modelIssue;
+	protected $modelIssueNote;
+	protected $modelIssueChange;
 
 	/**
 	 *	This method is called after construction is done and right before generation takes place.
 	 *	@access		protected
 	 *	@return		void
 	 */
-	protected function __onInit(){
+	protected function __onInit()
+	{
 		parent::__onInit();
 //		$this->addThemeStyle( 'layout.css' );
 //		$this->addThemeStyle( 'layout.panels.css' );
@@ -23,23 +31,8 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract{
 		$this->modelIssueChange	= new Model_Issue_Change( $this->env );								//  get model of issue changes
 	}
 
-	protected function renderUser( $user, $asHtml = TRUE ){
-		if( !is_object( $user ) )
-			return '-';
-		if( !$asHtml )
-			return $user->username.' ('.$user->firstname.' '.$user->surname.')';
-		if( class_exists( 'View_Helper_Member' ) ){
-			$helper		= new View_Helper_Member( $this->env );
-			$helper->setLinkUrl( './member/view/%s' );
-			$helper->setUser( $user );
-			return $helper->render();
-		}
-		$link	= UI_HTML_Elements::Link( './member/view/'.$user->userId, $user->username );
-		$user	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'role role'.$user->roleId ) );
-		return $user;
-	}
-
-	protected function prepareFacts( $data ){
+	protected function prepareFacts( array $data )
+	{
 		$issue		= $data['issue'];
 
 		$this->factsMain	= new View_Helper_Mail_Facts( $this->env );
@@ -122,5 +115,22 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract{
 			'#'.$issue->issueId
 		);
 	}
+
+	protected function renderUser( $user, bool $asHtml = TRUE ): string
+	{
+		if( !is_object( $user ) )
+			return '-';
+		if( !$asHtml )
+			return $user->username.' ('.$user->firstname.' '.$user->surname.')';
+		if( class_exists( 'View_Helper_Member' ) ){
+			$helper		= new View_Helper_Member( $this->env );
+			$helper->setLinkUrl( './member/view/%s' );
+			$helper->setUser( $user );
+			return $helper->render();
+		}
+		$link	= UI_HTML_Elements::Link( './member/view/'.$user->userId, $user->username );
+		$user	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'role role'.$user->roleId ) );
+		return $user;
+	}
 }
-?>
+

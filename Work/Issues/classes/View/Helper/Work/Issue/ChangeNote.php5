@@ -1,18 +1,46 @@
 <?php
-class View_Helper_Work_Issue_ChangeNote{
+class View_Helper_Work_Issue_ChangeNote
+{
+	const FORMAT_HTML		= 1;
+	const FORMAT_TEXT		= 2;
+
+	const FORMATS			= array(
+		self::FORMAT_HTML,
+		self::FORMAT_TEXT,
+	);
 
 	protected $env;
 	protected $note;
+	protected $format		= self::FORMAT_HTML;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 	}
 
-	public function setNote( $note ){
-		$this->note	= $note;
+	public function render(): string
+	{
+		if( $this->format === self::FORMAT_TEXT )
+			return $this->renderAsText();
+		return $this->renderAsHtml();
 	}
 
-	public function render(){
+	public function setFormat( int $format ): self
+	{
+		$this->format	= $format;
+		return $this;
+	}
+
+	public function setNote( $note ): self
+	{
+		$this->note	= $note;
+		return $this;
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function renderAsHtml(): string
+	{
 		if( !$this->note )
 			return '';
 
@@ -31,7 +59,8 @@ class View_Helper_Work_Issue_ChangeNote{
 		return $note;
 	}
 
-	public function renderAsText(){
+	protected function renderAsText(): string
+	{
 		if( !$this->note )
 			return '';
 
@@ -43,4 +72,3 @@ class View_Helper_Work_Issue_ChangeNote{
 		return $noteText.PHP_EOL;
 	}
 }
-?>

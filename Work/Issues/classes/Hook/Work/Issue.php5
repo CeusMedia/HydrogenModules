@@ -1,7 +1,8 @@
 <?php
-class Hook_Work_Issue /*extends CMF_Hydrogen_Hook*/{
-
-	static public function onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_Work_Issue extends CMF_Hydrogen_Hook
+{
+	static public function onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$context->registerModule( (object) array(
 			'moduleId'		=> 'Work_Issues',
 			'typeLabel'		=> 'Problem',
@@ -10,7 +11,8 @@ class Hook_Work_Issue /*extends CMF_Hydrogen_Hook*/{
 		) );
 	}
 
-	static public function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		if( !$env->getAcl()->has( 'work/issue', 'ajaxRenderDashboardPanel' ) )
 			return;
 		$context->registerPanel( 'work-issues', array(
@@ -22,8 +24,9 @@ class Hook_Work_Issue /*extends CMF_Hydrogen_Hook*/{
 		) );
 	}
 
-	static public function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$projectId	= $data['projectId'];
+	static public function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
+		$projectId	= $payload['projectId'];
 		$model		= new Model_Issue( $env );
 		$logic		= new Logic_Issue( $env );
 		foreach( $model->getAllByIndex( 'projectId', $projectId ) as $issue ){
@@ -34,9 +37,10 @@ class Hook_Work_Issue /*extends CMF_Hydrogen_Hook*/{
 	/**
 	 *	@todo 		maybe reassign issues etc. instead of removing them (as already (partly) implemented for managed issues)
 	 */
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$data	= (object) $data;
-		if( empty( $data->userId ) ){
+	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
+		$payload	= (object) $payload;
+		if( empty( $payload->userId ) ){
 			$message	= 'Hook "Work_Issues::onUserRemove" is missing user ID in data.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
@@ -46,45 +50,46 @@ class Hook_Work_Issue /*extends CMF_Hydrogen_Hook*/{
 		$modelChange	= new Model_Issue_Change( $env );
 		$modelNote		= new Model_Issue_Note( $env );
 
-		$reportedIssues	= $modelIssue->getAllByIndex( 'reporterId', $data->userId );
+		$reportedIssues	= $modelIssue->getAllByIndex( 'reporterId', $payload->userId );
 		foreach( $reportedIssues as $reportedIssue )
 			$logic->remove( $reportedIssue->issueId );
 
 		//  @todo		problem: what if manager is reporter?
-		$managedIssues	= $modelIssue->getAllByIndex( 'managerId', $data->userId );
+		$managedIssues	= $modelIssue->getAllByIndex( 'managerId', $payload->userId );
 		foreach( $managedIssues as $managedIssue )
 			$modelIssue->edit( $managedIssue->issueId, array(
 				'managerId'	=> $managedIssue->reporterId,
 			) );
 
-		$changes	= $modelChange->getAllByIndex( 'userId', $data->userId );
+		$changes	= $modelChange->getAllByIndex( 'userId', $payload->userId );
 		foreach( $changes as $change )
 			$modelNote->remove( $change->issueChangeId );
 
-		$notes		= $modelNote->getAllByIndex( 'userId', $data->userId );
+		$notes		= $modelNote->getAllByIndex( 'userId', $payload->userId );
 		foreach( $notes as $note )
 			$modelNote->remove( $note->issueNoteId );
 
-		if( isset( $data->counts ) )
-			$data->counts['Work_Issues']	= (object) array(
+		if( isset( $payload->counts ) )
+			$payload->counts['Work_Issues']	= (object) array(
 				'entities'	=> count( $reportedIssues ) + count( $managedIssues ) + count( $changes ) + count( $notes ),
 			);
 	}
 
-	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$data	= (object) $data;
-		if( empty( $data->userId ) ){
+	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
+		$payload	= (object) $payload;
+		if( empty( $payload->userId ) ){
 			$message	= 'Hook "Work_Issues::onListUserRelations" is missing user ID in data.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
 		$modelIssue		= new Model_Issue( $env );
 
-		$activeOnly		= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
-		$linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
+		$activeOnly		= isset( $payload->activeOnly ) ? $payload->activeOnly : FALSE;
+		$linkable		= isset( $payload->linkable ) ? $payload->linkable : FALSE;
 		$statusesActive	= array( 0, 1, 2, 3, 4, 5 );
 		$list			= array();
-		$indices		= array( 'reporterId' => $data->userId );
+		$indices		= array( 'reporterId' => $payload->userId );
 		if( $activeOnly )
 			$indices['status']	= $statusesActive;
 		$orders			= array( 'type' => 'ASC', 'title' => 'ASC' );
@@ -103,12 +108,12 @@ class Hook_Work_Issue /*extends CMF_Hydrogen_Hook*/{
 			$title		= $isOpen ? $issue->title : UI_HTML_Tag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) array(
-				'id'		=> $data->linkable ? $issue->issueId : NULL,
+				'id'		=> $payload->linkable ? $issue->issueId : NULL,
 				'label'		=> $label,
 			);
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$data,																					//  hook content data
+			$payload,																				//  hook content data
 			$module,																				//  module called by hook
 			'entity',																				//  relation type: entity or relation
 			$list,																					//  list of related items
@@ -118,26 +123,27 @@ class Hook_Work_Issue /*extends CMF_Hydrogen_Hook*/{
 		);
 	}
 
-	static public function onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		$modelProject	= new Model_Project( $env );
-		if( empty( $data->projectId ) ){
+		if( empty( $payload->projectId ) ){
 			$message	= 'Hook "Work_Issues::onListProjectRelations" is missing project ID in data.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		if( !( $project = $modelProject->get( $data->projectId ) ) ){
+		if( !( $project = $modelProject->get( $payload->projectId ) ) ){
 			$message	= 'Hook "Work_Issues::onListProjectRelations": Invalid project ID.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
-		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
+		$payload->activeOnly	= isset( $payload->activeOnly ) ? $payload->activeOnly : FALSE;
+		$payload->linkable		= isset( $payload->linkable ) ? $payload->linkable : FALSE;
 		$language		= $env->getLanguage();
 		$statusesActive	= array( 0, 1, 2, 3, 4, 5 );
 		$list			= array();
 		$modelIssue		= new Model_Issue( $env );
-		$indices		= array( 'projectId' => $data->projectId );
-		if( $data->activeOnly )
+		$indices		= array( 'projectId' => $payload->projectId );
+		if( $payload->activeOnly )
 			$indices['status']	= $statusesActive;
 		$orders			= array( 'type' => 'ASC', 'title' => 'ASC' );
 		$issues			= $modelIssue->getAllByIndices( $indices, $orders );	//  ...
@@ -155,12 +161,12 @@ class Hook_Work_Issue /*extends CMF_Hydrogen_Hook*/{
 			$title		= $isOpen ? $issue->title : UI_HTML_Tag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) array(
-				'id'		=> $data->linkable ? $issue->issueId : NULL,
+				'id'		=> $payload->linkable ? $issue->issueId : NULL,
 				'label'		=> $label,
 			);
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$data,																					//  hook content data
+			$payload,																				//  hook content data
 			$module,																				//  module called by hook
 			'entity',																				//  relation type: entity or relation
 			$list,																					//  list of related items

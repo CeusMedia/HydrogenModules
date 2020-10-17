@@ -1,7 +1,23 @@
 <?php
-class View_Helper_Work_Issue_ChangeFact{
+class View_Helper_Work_Issue_ChangeFact
+{
+	const FORMAT_HTML		= 1;
+	const FORMAT_TEXT		= 2;
 
-	public function __construct( $env ){
+	const FORMATS			= array(
+		self::FORMAT_HTML,
+		self::FORMAT_TEXT,
+	);
+
+	protected $env;
+	protected $format		= self::FORMAT_HTML;
+	protected $modelUser;
+	protected $modelIssue;
+	protected $modelNote;
+	protected $modelChange;
+
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 		$this->modelUser	= new Model_User( $this->env );
 		$this->modelIssue	= new Model_Issue( $this->env );
@@ -9,11 +25,29 @@ class View_Helper_Work_Issue_ChangeFact{
 		$this->modelChange	= new Model_Issue_Change( $this->env );
 	}
 
-	public function setChange( $change ){
-		$this->change	= $change;
+	public function render(): string
+	{
+		if( $this->format === self::FORMAT_TEXT )
+			return $this->renderAsString();
+		return $this->renderAsHtml();
 	}
 
-	public function render(){
+	public function setChange( $change ): self
+	{
+		$this->change	= $change;
+		return $this;
+	}
+
+	public function setFormat( int $format ): self
+	{
+		$this->format	= $format;
+		return $this;
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function renderAsHtml(): string
+	{
 		if( !$this->change )
 			throw new RuntimeException( 'No change set.' );
 		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
@@ -75,7 +109,8 @@ class View_Helper_Work_Issue_ChangeFact{
 		return UI_HTML_Tag::create( 'dd', $change );
 	}
 
-	public function renderAsText(){
+	protected function renderAsText(): string
+	{
 		if( !$this->change )
 			throw new RuntimeException( 'No change set.' );
 		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
@@ -132,4 +167,4 @@ class View_Helper_Work_Issue_ChangeFact{
 		return $change;
 	}
 }
-?>
+

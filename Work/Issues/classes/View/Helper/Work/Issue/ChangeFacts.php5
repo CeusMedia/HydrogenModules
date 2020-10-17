@@ -1,15 +1,47 @@
 <?php
-class View_Helper_Work_Issue_ChangeFacts{
+class View_Helper_Work_Issue_ChangeFacts
+{
+	const FORMAT_HTML		= 1;
+	const FORMAT_TEXT		= 2;
+	const FORMATS			= array(
+		self::FORMAT_HTML,
+		self::FORMAT_TEXT,
+	);
 
 	protected $note;
+	protected $format		= self::FORMAT_HTML;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 		$this->modelUser	= new Model_User( $this->env );
 		$this->modelChange	= new Model_Issue_Change( $this->env );
 	}
 
-	protected function prepareFacts(){
+	public function render(): string
+	{
+		if( $this->format === self::FORMAT_TEXT )
+			return $this->renderAsText();
+		return $this->renderAsHtml();
+	}
+
+	public function setFormat( int $format ): self
+	{
+		$this->format	= $format;
+		return $this;
+	}
+
+	public function setNote( $note ): self
+	{
+		$this->note	= $note;
+		$this->prepareFacts();
+		return $this;
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function prepareFacts()
+	{
 		$words			= $this->env->getLanguage()->getWords( 'work/issue' );
 		$changerHtml	= '-';
 		$changerText	= '-';
@@ -43,27 +75,26 @@ class View_Helper_Work_Issue_ChangeFacts{
 		$helper			= new View_Helper_Work_Issue_ChangeFact( $this->env );
 		foreach( $changes as $change ){
 			$helper->setChange( $change );
-			$this->factsChanges->add( $change->type, $helper->render(), $helper->renderAsText() );
+			$this->factsChanges->add(
+				$change->type,
+				$helper->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render(),
+				$helper->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render()
+			);
 		}
-
 	}
 
-	public function setNote( $note ){
-		$this->note	= $note;
-		$this->prepareFacts();
-	}
-
-	public function render(){
+	protected function renderAsHtml(): string
+	{
 		if( !$this->note )
 			return '';
-		return $this->factsChanges->render();
+		return $this->factsChanges->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render();
 	}
 
 
-	public function renderAsText(){
+	protected function renderAsText(): string
+	{
 		if( !$this->note )
 			return '';
-		return $this->factsChanges->renderAsText();
+		return $this->factsChanges->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render();
 	}
 }
-?>

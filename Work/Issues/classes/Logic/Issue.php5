@@ -5,8 +5,8 @@
 /**
  *	@todo		Code Doc
  */
-class Logic_Issue extends CMF_Hydrogen_Logic {
-
+class Logic_Issue extends CMF_Hydrogen_Logic
+{
 	const CHANGE_UNKNOWN		= 0;
 	const CHANGE_REPORTER		= 1;
 	const CHANGE_MANAGER		= 2;
@@ -28,14 +28,6 @@ class Logic_Issue extends CMF_Hydrogen_Logic {
 	protected $modelIssueNote;
 	protected $modelIssueChange;
 
-	public function __onInit(){
-		$this->logicProject		= Logic_Project::getInstance( $this->env );
-		$this->modelUser		= new Model_User( $this->env );										//  get model of users
-		$this->modelIssue		= new Model_Issue( $this->env );									//  get model of issues
-		$this->modelIssueNote	= new Model_Issue_Note( $this->env );								//  get model of issue notes
-		$this->modelIssueChange	= new Model_Issue_Change( $this->env );								//  get model of issue changes
-	}
-
 	/**
 	 *	Return issue data object
 	 *	@access		public
@@ -44,7 +36,8 @@ class Logic_Issue extends CMF_Hydrogen_Logic {
 	 *	@return		object		Issue data object
 	 *	@throws		OutOfRangeException			if issue ID is not valid
 	 */
-	public function get( $issueId, $extended = FALSE ){
+	public function get( $issueId, bool $extended = FALSE )
+	{
 		$issue		= $this->modelIssue->get( $issueId );											//  get issue
 		if( !$issue )																				//  not found
 			throw new OutOfRangeException( 'Invalid issue ID: '.$issueId );							//  quit with exception
@@ -71,31 +64,14 @@ class Logic_Issue extends CMF_Hydrogen_Logic {
 	}
 
 	/**
-	 *	...
-	 *	@access		public
-	 */
-	public function getUserProjects(){
-		$userId		= $this->env->getSession()->get( 'userId' );
-		return $this->logicProject->getUserProjects( $userId, TRUE );
-	}
-
-	/**
-	 *	...
-	 *	@access		public
-	 *	@todo		kriss:support conditions ot orders
-	 */
-	public function getProjectUsers( $projectId ){
-		return $this->logicProject->getProjectUsers( $projectId );
-	}
-
-	/**
 	 *	Returns map of all users participating on an issue.
 	 *	This includes project members, note authors, change authors and former assigned users.
 	 *	@access		public
 	 *	@param		integer		$issueId		ID of issue to get participating users for
 	 *	@return		array		Map of ordered participating users by ID
 	 */
-	public function getParticitatingUsers( $issueId ){
+	public function getParticitatingUsers( $issueId )
+	{
 		$issue		= $this->get( $issueId, TRUE );
 		$userIds	= array();																		//  prepare empty list of user IDs
 		$usersProject	= $this->getProjectUsers( $issue->projectId );								//  get users of issue project
@@ -134,7 +110,28 @@ class Logic_Issue extends CMF_Hydrogen_Logic {
 		return $users;
 	}
 
-	public function informAboutNew( $issueId, $currentUserId ){
+	/**
+	 *	...
+	 *	@access		public
+	 *	@todo		kriss:support conditions ot orders
+	 */
+	public function getProjectUsers( $projectId )
+	{
+		return $this->logicProject->getProjectUsers( $projectId );
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 */
+	public function getUserProjects()
+	{
+		$userId		= $this->env->getSession()->get( 'userId' );
+		return $this->logicProject->getUserProjects( $userId, TRUE );
+	}
+
+	public function informAboutNew( $issueId, $currentUserId )
+	{
 		$users				= $this->getParticitatingUsers( $issueId );
 		$issue				= $this->get( $issueId, TRUE );
 		if( $issue->reporterId )
@@ -160,7 +157,8 @@ class Logic_Issue extends CMF_Hydrogen_Logic {
 		return $users;
 	}
 
-	public function informAboutChange( $issueId, $currentUserId ){
+	public function informAboutChange( $issueId, $currentUserId )
+	{
 		$users				= $this->getParticitatingUsers( $issueId );
 		$issue				= $this->get( $issueId, TRUE );
 		if( $issue->reporterId )
@@ -186,7 +184,8 @@ class Logic_Issue extends CMF_Hydrogen_Logic {
 		return $users;
 	}
 
-	public function noteChange( $issueId, $noteId, $type, $from, $to ){
+	public function noteChange( $issueId, $noteId, $type, $from, $to )
+	{
 		$data	= array(
 			'issueId'	=> $issueId,
 			'userId'	=> $this->env->getSession()->get( 'userId' ),
@@ -199,11 +198,21 @@ class Logic_Issue extends CMF_Hydrogen_Logic {
 		return $this->modelIssueChange->add( $data );
 	}
 
-	public function remove( $issueId ){
+	public function remove( $issueId )
+	{
 		$this->modelIssueNote->removeByIndex( 'issueId', $issueId );
 		$this->modelIssueChange->removeByIndex( 'issueId', $issueId );
 		$this->modelIssue->remove( $issueId );
 	}
 
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->logicProject		= Logic_Project::getInstance( $this->env );
+		$this->modelUser		= new Model_User( $this->env );										//  get model of users
+		$this->modelIssue		= new Model_Issue( $this->env );									//  get model of issues
+		$this->modelIssueNote	= new Model_Issue_Note( $this->env );								//  get model of issue notes
+		$this->modelIssueChange	= new Model_Issue_Change( $this->env );								//  get model of issue changes
+	}
 }
-?>

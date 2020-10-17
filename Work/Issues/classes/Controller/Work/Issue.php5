@@ -5,8 +5,8 @@
 /**
  *	@todo		Code Doc
  */
-class Controller_Work_Issue extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Issue extends CMF_Hydrogen_Controller
+{
 	protected $filters	= array(
 		'issueId',
 		'reporterId',
@@ -27,14 +27,8 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 	protected $userProjects;
 	protected $userId;
 
-	public function __onInit(){
-		$this->logic		= new Logic_Issue( $this->env );
-		$this->userId		= $this->env->getSession()->get( 'userId' );
-		$this->userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );
-	}
-
-
-	public function add(){
+	public function add()
+	{
 		if( !$this->userProjects && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/issue/add' );
 		$request	= $this->env->request;
@@ -78,24 +72,13 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->addData( 'projects', $this->userProjects );
 	}
 
-	public function ajaxRenderDashboardPanel( $panelId ){
+	public function ajaxRenderDashboardPanel( $panelId )
+	{
 		return UI_HTML_Tag::create( 'div', '...' );
 	}
 
-	protected function checkIssue( $issueId, $strict = TRUE ){
-		$issue	= $this->logic->get( $issueId, TRUE );
-		$users	= $this->logic->getParticitatingUsers( $issueId );
-		if( $issue && $users ){
-			$logicAuth	= Logic_Authentication::getInstance( $this->env );
-			if( array_key_exists( $logicAuth->getCurrentUserId(), $users ) )
-				return $issue;
-		}
-		if( $strict )
-			throw new RangeException( 'Invalid issue ID' );
-		return NULL;
-	}
-
-	public function edit( $issueId ){
+	public function edit( $issueId )
+	{
 		$request	= $this->env->request;
 		$issue		= $this->checkIssue( $issueId );
 		if( $request->has( 'save' ) ){
@@ -124,7 +107,8 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->addData( 'users', $this->logic->getParticitatingUsers( $issueId ) );
 	}
 
-	public function emerge( $issueId ){
+	public function emerge( $issueId )
+	{
 		$request	= $this->env->request;
 		$modelIssue		= new Model_Issue( $this->env );
 		$modelNote		= new Model_Issue_Note( $this->env );
@@ -174,7 +158,8 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->restart( './work/issue/edit/'.$issueId );
 	}
 
-	public function export( $limit = 10, $offset = 0 ){
+	public function export( $limit = 10, $offset = 0 )
+	{
 		$request	= $this->env->getRequest();
 		if( !($filters	= $request->get( 'filters' ) ) )
 			$filters	= array(
@@ -192,7 +177,8 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function filter( $mode = NULL, $modeValue = 0 ){
+	public function filter( $mode = NULL, $modeValue = 0 )
+	{
 		$session	= $this->env->getSession();
 		switch( $mode )
 		{
@@ -215,7 +201,8 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->restart( './work/issue' );
 	}
 
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 		if( !$this->userProjects && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/issue' );
 
@@ -256,30 +243,30 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$modelUser		= new Model_User( $this->env );
 
 		$numberTypes	= array(
-			0	=> $modelIssue->count( array_merge( $filters, array( 'type'	=> 0 ) ) ),
-			1	=> $modelIssue->count( array_merge( $filters, array( 'type'	=> 1 ) ) ),
-			2	=> $modelIssue->count( array_merge( $filters, array( 'type'	=> 2 ) ) ),
-			3	=> $modelIssue->count( array_merge( $filters, array( 'type'	=> 3 ) ) ),
+			0	=> $modelIssue->count( array_merge( $filters, array( 'type' => 0 ) ) ),
+			1	=> $modelIssue->count( array_merge( $filters, array( 'type' => 1 ) ) ),
+			2	=> $modelIssue->count( array_merge( $filters, array( 'type' => 2 ) ) ),
+			3	=> $modelIssue->count( array_merge( $filters, array( 'type' => 3 ) ) ),
 		);
 
 		$numberStates	= array(
-			0	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 0 ) ) ),
-			1	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 1 ) ) ),
-			2	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 2 ) ) ),
-			3	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 3 ) ) ),
-			4	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 4 ) ) ),
-			5	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 5 ) ) ),
-			6	=> $modelIssue->count( array_merge( $filters, array( 'status'	=> 6 ) ) ),
+			0	=> $modelIssue->count( array_merge( $filters, array( 'status'=> 0 ) ) ),
+			1	=> $modelIssue->count( array_merge( $filters, array( 'status' => 1 ) ) ),
+			2	=> $modelIssue->count( array_merge( $filters, array( 'status' => 2 ) ) ),
+			3	=> $modelIssue->count( array_merge( $filters, array( 'status' => 3 ) ) ),
+			4	=> $modelIssue->count( array_merge( $filters, array( 'status' => 4 ) ) ),
+			5	=> $modelIssue->count( array_merge( $filters, array( 'status' => 5 ) ) ),
+			6	=> $modelIssue->count( array_merge( $filters, array( 'status' => 6 ) ) ),
 		);
 
 		$numberPriorities	= array(
-			0	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 0 ) ) ),
-			1	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 1 ) ) ),
-			2	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 2 ) ) ),
-			3	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 3 ) ) ),
-			4	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 4 ) ) ),
-			5	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 5 ) ) ),
-			6	=> $modelIssue->count( array_merge( $filters, array( 'priority'	=> 6 ) ) ),
+			0	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 0 ) ) ),
+			1	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 1 ) ) ),
+			2	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 2 ) ) ),
+			3	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 3 ) ) ),
+			4	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 4 ) ) ),
+			5	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 5 ) ) ),
+			6	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 6 ) ) ),
 		);
 
 		$numberProjects	= array();
@@ -326,11 +313,8 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		$this->addData( 'users', $users );
 	}
 
-	protected function noteChange( $issueId, $noteId, $type, $from, $to ){
-		return $this->logic->noteChange( $issueId, $noteId, $type, $from, $to );
-	}
-
-	public function search(){
+	public function search()
+	{
 		$request	= $this->env->getRequest();
 		$terms		= explode( " ", trim( $request->get( 'term' ) ) );
 		$modelIssue	= new Model_Issue( $this->env );
@@ -353,5 +337,33 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller{
 		print( json_encode( $list ) );
 		exit;
 	}
+
+	// --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->logic		= new Logic_Issue( $this->env );
+		$this->userId		= $this->env->getSession()->get( 'userId' );
+		$this->userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );
+	}
+
+	protected function checkIssue( $issueId, bool $strict = TRUE )
+	{
+		$issue	= $this->logic->get( $issueId, TRUE );
+		$users	= $this->logic->getParticitatingUsers( $issueId );
+		if( $issue && $users ){
+			$logicAuth	= Logic_Authentication::getInstance( $this->env );
+			if( array_key_exists( $logicAuth->getCurrentUserId(), $users ) )
+				return $issue;
+		}
+		if( $strict )
+			throw new RangeException( 'Invalid issue ID' );
+		return NULL;
+	}
+
+	protected function noteChange( $issueId, $noteId, $type, $from, $to )
+	{
+		return $this->logic->noteChange( $issueId, $noteId, $type, $from, $to );
+	}
 }
-?>
+

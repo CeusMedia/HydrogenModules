@@ -1,31 +1,25 @@
 <?php
-class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract{
-
+class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
+{
+	protected $factsChanges;
 	protected $labelsStates;
 	protected $note;
 
-	protected function generate( $data = array() ){
+	protected function generate( $data = array() )
+	{
 		$this->labelsStates		= (array) $this->getWords( 'work/issue', 'states' );
-		$modelIssue		= new Model_Issue( $this->env );
-
 		$this->prepareFacts( $data );
 
-		$issue			= $data['issue'];
+		$issue	= $data['issue'];
 		$this->setSubject( 'Problemreport #'.$issue->issueId.': ['.$this->labelsStates[$issue->status].'] '.$issue->title );
-
-		$html		= $this->renderHtmlBody( $data );
-		$text		= $this->renderTextBody( $data );
-		$this->setHtml( $html );
-		$this->setText( $text );
-		return (object) array(
-			'html'		=> $html,
-			'text'		=> $text,
-		);
+		$this->setHtml( $this->renderHtmlBody( $data ) );
+		$this->setText( $this->renderTextBody( $data ) );
 	}
 
-	protected function prepareFacts( $data ){
+	protected function prepareFacts( array $data )
+	{
 		parent::prepareFacts( $data );
-		$issue		= $data['issue'];
+		$issue	= $data['issue'];
 
 		$this->factsChanges	= new View_Helper_Mail_Facts( $this->env );
 		$this->note	= $this->modelIssueNote->getByIndex( 'issueId', $issue->issueId, array( 'issueNoteId' => 'DESC' ) );
@@ -36,10 +30,10 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract{
 			$this->changeNote	= new View_Helper_Work_Issue_ChangeNote( $this->env );
 			$this->changeNote->setNote( $this->note );
 		}
-
 	}
 
-	public function renderHtmlBody( $data ){
+	protected function renderHtmlBody( array $data ): string
+	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
 		$issue		= $data['issue'];
@@ -54,7 +48,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract{
 				<div class="content-panel">
 					<h3>Änderungen</h3>
 					<div class="content-panel-inner">
-						'.$this->factsChanges->render().'
+						'.$this->factsChanges->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render().'
 					</div>
 				</div>';
 			$panelNote	= '
@@ -80,7 +74,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract{
 	<div class="content-panel">
 		<h3>Eintrag</h3>
 		<div class="content-panel-inner">
-			'.$this->factsMain->render().'
+			'.$this->factsMain->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render().'
 		</div>
 	</div>
 	'.$panelFacts.'
@@ -88,14 +82,15 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract{
 	<div class="content-panel">
 		<h3>Informationen</h3>
 		<div class="content-panel-inner">
-			'.$this->factsAll->render().'
+			'.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render().'
 		</div>
 	</div>
 </div>';
 		return $body;
 	}
 
-	protected function renderTextBody( $data ){
+	protected function renderTextBody( array $data ): string
+	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
 		$issue		= $data['issue'];
@@ -113,17 +108,15 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract{
 '.View_Helper_Mail_Text::underscore( 'Neuer Problemreport', '=' ).PHP_EOL.'
 '.$message.PHP_EOL.'
 '.View_Helper_Mail_Text::underscore( 'Eintrag' ).PHP_EOL.'
-'.$this->factsMain->renderAsText().PHP_EOL.PHP_EOL.'
+'.$this->factsMain->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.PHP_EOL.'
 '.View_Helper_Mail_Text::underscore( 'Änderungen' ).PHP_EOL.'
-'.$this->factsChanges->renderAsText().PHP_EOL.PHP_EOL.'
+'.$this->factsChanges->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.PHP_EOL.'
 '.View_Helper_Mail_Text::underscore( 'Informationen' ).PHP_EOL.'
-'.$this->factsAll->renderAsText().PHP_EOL.'';
+'.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.'';
 
 		$list	= array();
 		foreach( explode( PHP_EOL, $body ) as $nr => $line )
 			$list[]	= View_Helper_Mail_Text::indent( $line, 0, 76 );
 		return join( PHP_EOL, $list );
-
 	}
 }
-?>

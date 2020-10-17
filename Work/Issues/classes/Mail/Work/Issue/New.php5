@@ -1,7 +1,8 @@
 <?php
-class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		$this->prepareFacts( $data );
 
 		$issue		= $data['issue'];
@@ -18,10 +19,10 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract{
 		);
 	}
 
-	public function renderHtmlBody( $data ){
+	protected function renderHtmlBody( array $data ): string
+	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$issue		= $data['issue'];
-
 		$message	= array();
 		if( $issue->reporterId ){
 			$reporter	= $this->renderUser( $issue->reporter, TRUE );
@@ -41,23 +42,23 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract{
 	<div class="content-panel">
 		<h3>Eintrag</h3>
 		<div class="content-panel-inner">
-			'.$this->factsMain->render().'
+			'.$this->factsMain->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render().'
 		</div>
 	</div>
 	<div class="content-panel">
 		<h3>Informationen</h3>
 		<div class="content-panel-inner">
-			'.$this->factsAll->render().'
+			'.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render().'
 		</div>
 	</div>
 </div>';
 		return $body;
 	}
 
-	public function renderTextBody( $data ){
+	protected function renderTextBody( array $data ): string
+	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$issue		= $data['issue'];
-
 		$message	= array();
 		if( $issue->reporterId )
 			$message[]	= $this->renderUser( $issue->reporter, FALSE ).' hat einen neuen Problemreport geschrieben.';
@@ -71,9 +72,9 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract{
 '.View_Helper_Mail_Text::underscore( 'Neuer Problemreport', '=' ).PHP_EOL.'
 '.$message.PHP_EOL.'
 '.View_Helper_Mail_Text::underscore( 'Neuer Eintrag' ).PHP_EOL.'
-'.$this->factsMain->renderAsText().PHP_EOL.PHP_EOL.'
+'.$this->factsMain->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.PHP_EOL.'
 '.View_Helper_Mail_Text::underscore( 'Informationen' ).PHP_EOL.'
-'.$this->factsAll->renderAsText().PHP_EOL.'';
+'.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.'';
 
 		$list	= array();
 		foreach( explode( PHP_EOL, $body ) as $nr => $line )
@@ -81,4 +82,3 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract{
 		return join( PHP_EOL, $list );
 	}
 }
-?>
