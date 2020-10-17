@@ -2,10 +2,11 @@
 
 $w		= (object) $words['index'];
 
-$table	= '<div class="info empty"><em><small>'.$w->noEntries.'</small></em></div>';
+//$table		= '<div class="info empty"><em><small>'.$w->noEntries.'</small></em></div>';
+$table		= UI_HTML_Tag::create( 'div', $w->noEntries, array( 'class' => 'alert alert-info' ) );
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 
-if( $locks ){
+if( count( $locks ) > 0 ){
 	$list	= array();
 	foreach( $locks as $lock ){
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
@@ -39,6 +40,4 @@ return '
 	<div class="content-panel-inner">
 		'.$table.'
 	</div>
-</div>
-';
-?>
+</div>';

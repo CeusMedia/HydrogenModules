@@ -2,7 +2,7 @@
 <module>
 	<title>Resource: Database: Lock</title>
 	<description><![CDATA[Simple lock for database entries.]]></description>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add module activity switch.</log>
@@ -12,6 +12,7 @@
 	<log version="0.3.3">Add dashboard panel.</log>
 	<log version="0.3.4">Extract hooks to own class.</log>
 	<log version="0.3.5">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
+	<log version="0.3.6">Improve code style.</log>
 	<category>Resource</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -32,9 +33,9 @@
 	<link access="acl" path="database/lock" rank="85" xml:lang="en">Locks</link>
 	<link access="acl" path="database/lock/unlock"/>
 	<link access="acl" path="database/lock/ajaxRenderDashboardPanel"/>
-	<hook type="resource" resource="Page" event="applyModules">Hook_Database_Lock::___onAutoModuleLockRelease</hook>
-	<hook type="resource" resource="Dashboard" event="registerPanels">Hook_Database_Lock::___onRegisterDashboardPanels</hook>
-	<hook type="resource" resource="Auth" event="onBeforeLogout">Hook_Database_Lock::___onAuthLogout</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_Database_Lock::onAutoModuleLockRelease</hook>
+	<hook type="resource" resource="Dashboard" event="registerPanels">Hook_Database_Lock::onRegisterDashboardPanels</hook>
+	<hook type="resource" resource="Auth" event="onBeforeLogout">Hook_Database_Lock::onAuthLogout</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>locks`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>locks` (
@@ -48,5 +49,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>locks` (
   KEY `subject` (`subject`),
   KEY `entryId` (`entryId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>locks`;
 ]]></sql>
 </module>

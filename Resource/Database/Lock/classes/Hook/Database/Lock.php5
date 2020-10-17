@@ -1,15 +1,17 @@
 <?php
-class Hook_Database_Lock/* extends CMF_Hydrogen_Hook*/{
-
-	static public function ___onAuthLogout( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_Database_Lock extends CMF_Hydrogen_Hook
+{
+	static public function ___onAuthLogout( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$model		= new Model_Lock( $env );
 		$model->removeByIndices( array(
-			'userId'	=> $data['userId'],
+			'userId'	=> $payload['userId'],
 		) );
 	}
 
-	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		if( !$env->getAcl()->has( 'work/time', 'ajaxRenderDashboardPanel' ) )
+	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
+		if( !$env->getAcl()->has( 'database/lock', 'ajaxRenderDashboardPanel' ) )
 			return;
 		$context->registerPanel( 'resource-database-locks', array(
 			'url'			=> 'database/lock/ajaxRenderDashboardPanel',
@@ -21,7 +23,8 @@ class Hook_Database_Lock/* extends CMF_Hydrogen_Hook*/{
 		) );
 	}
 
-	static public function ___onAutoModuleLockRelease( CMF_Hydrogen_Environment $env, $context/*, $module, $data = array()*/ ){
+	static public function ___onAutoModuleLockRelease( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$request	= $env->getRequest();
 		if( $request->isAjax() )
 			return FALSE;

@@ -1,15 +1,14 @@
 <?php
-class Controller_Database_Lock extends CMF_Hydrogen_Controller{
-
-	public function __onInit(){
-		$this->model	= new Model_Lock( $this->env );
-	}
+class Controller_Database_Lock extends CMF_Hydrogen_Controller
+{
+	protected $model;
 
 	/**
 	 *	@deprecated		use hook class instead
 	 *	@todo			remove after all installations are updated
 	 */
-	static public function ___onAuthLogout( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function ___onAuthLogout( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$model		= new Model_Lock( $env );
 		$model->removeByIndices( array(
 			'userId'	=> $data['userId'],
@@ -20,7 +19,8 @@ class Controller_Database_Lock extends CMF_Hydrogen_Controller{
 	 *	@deprecated		use hook class instead
 	 *	@todo			remove after all installations are updated
 	 */
-	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data )
+	{
 		if( !$env->getAcl()->has( 'work/time', 'ajaxRenderDashboardPanel' ) )
 			return;
 		$context->registerPanel( 'resource-database-locks', array(
@@ -33,7 +33,8 @@ class Controller_Database_Lock extends CMF_Hydrogen_Controller{
 		) );
 	}
 
-	public function ajaxRenderDashboardPanel( $panelId ){
+	public function ajaxRenderDashboardPanel( $panelId )
+	{
 		$modelUser	= new Model_User( $this->env );
 		$locks		= $this->model->getAll();
 		foreach( $locks as $lock )
@@ -41,7 +42,38 @@ class Controller_Database_Lock extends CMF_Hydrogen_Controller{
 		$this->addData( 'locks', $locks );
 	}
 
-	protected function getEntryTitle( $lock ){
+	public function index()
+	{
+		$modules	= $this->env->getModules();
+		$model		= new Model_User( $this->env );
+		$locks		= $this->model->getAll();
+		foreach( $locks as $lock ){
+			$lock->module	= NULL;
+			if( $modules->has( $lock->subject ) )
+				$lock->module	= $modules->get( $lock->subject )->title;
+			$lock->user		= $model->get( $lock->userId );
+			$lock->title	= $this->getEntryTitle( $lock );
+		}
+		$this->addData( 'locks', $locks );
+	}
+
+	public function unlock( $lockId )
+	{
+		$lock	= $this->model->get( $lockId );
+		if( !$lock )
+			$this->env->getMessenger()->noteError( 'Diese Sperre existiert nicht mehr.' );
+		else
+			$this->model->remove( $lockId );
+		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->model	= new Model_Lock( $this->env );
+	}
+
+	protected function getEntryTitle( $lock )
+	{
 		$title	= '<em><small class="muted">unbekannt</small></em>';
 		$uri	= NULL;
 		switch( $lock->subject ){
@@ -59,28 +91,5 @@ class Controller_Database_Lock extends CMF_Hydrogen_Controller{
 			$title	= UI_HTML_Tag::create( 'a', $title, array( 'href' => $uri ) );
 		return $title;
 	}
-
-	public function index(){
-		$modules	= $this->env->getModules();
-		$model		= new Model_User( $this->env );
-		$locks		= $this->model->getAll();
-		foreach( $locks as $lock ){
-			$lock->module	= NULL;
-			if( $modules->has( $lock->subject ) )
-				$lock->module	= $modules->get( $lock->subject )->title;
-			$lock->user		= $model->get( $lock->userId );
-			$lock->title	= $this->getEntryTitle( $lock );
-		}
-		$this->addData( 'locks', $locks );
-	}
-
-	public function unlock( $lockId ){
-		$lock	= $this->model->get( $lockId );
-		if( !$lock )
-			$this->env->getMessenger()->noteError( 'Diese Sperre existiert nicht mehr.' );
-		else
-			$this->model->remove( $lockId );
-		$this->restart( NULL, TRUE );
-	}
 }
-?>
+
