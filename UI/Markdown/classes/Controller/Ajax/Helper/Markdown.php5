@@ -12,6 +12,6 @@ class Controller_Ajax_Helper_Markdown extends CMF_Hydrogen_Controller_Ajax
 			$response	= array( 'status' => 'ok', 'data' => $html );					//  collect data to return
 			$this->respondData( $response );											//  respond JSON data and quit
 		}
-		$this->respond( $html );														//  otherwise respond HTML
+		$this->respondData( $html );													//  otherwise respond HTML
 	}
 }
