@@ -3,7 +3,7 @@
 	<title>Work: Timer</title>
 	<description><![CDATA[Time tracking extension for Work:Missions.]]></description>
 	<category>Work</category>
-	<version>0.6.2</version>
+	<version>0.6.4</version>
 	<log version="0.1">Initial prototype of module.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.2">Remove releation to Resource_Library_cmModules.</log>
@@ -39,6 +39,8 @@
 	<log version="0.6">Upgrade short list.</log>
 	<log version="0.6.1">Adjust to changes of CeusMedia:Database.</log>
 	<log version="0.6.2">Import from protected SVN repository.</log>
+	<log version="0.6.3">Extract hooks to own class.</log>
+	<log version="0.6.4">Improve code style.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -46,6 +48,7 @@
 		<class>Controller/Work/Time.php5</class>
 		<class>Controller/Work/Time/Analysis.php5</class>
 		<class>Controller/Work/Time/Archive.php5</class>
+		<class>Hook/Work/Time.php5</class>
 		<class>Logic/Work/Timer.php5</class>
 		<class>Model/Work/Timer.php5</class>
 		<class>View/Helper/Work/Time.php5</class>
@@ -89,13 +92,13 @@
 	</relations>
 	<link xml:lang="de" access="acl" path="work/time" rank="55">Zeiterfassung</link>
 	<link xml:lang="en" access="acl" path="work/time" rank="55">Time Tracking</link>
-	<hook type="resource" resource="WorkTime" event="registerTabs">View_Work_Time::___onRegisterTab</hook>
-	<hook type="resource" resource="WorkTime" event="registerTabs">View_Work_Time_Archive::___onRegisterTab</hook>
-	<hook type="resource" resource="WorkTime" event="registerTabs">View_Work_Time_Analysis::___onRegisterTab</hook>
-	<hook type="resource" resource="Env" event="init">View_Helper_Work_Time_Timer::___onCallForModules</hook>
-	<hook type="resource" resource="Auth" event="onBeforeLogout">Controller_Work_Time::___onBeforeLogout</hook>
-	<hook type="resource" resource="Project" event="onRemove">Controller_Work_Time::___onProjectRemove</hook>
-	<hook type="resource" resource="Dashboard" event="registerPanels">Controller_Work_Time::___onRegisterDashboardPanels</hook>
+	<hook type="resource" resource="WorkTime" event="registerTabs">Hook_Work_Time::onRegisterTab</hook>
+	<hook type="resource" resource="WorkTime" event="registerTabs">Hook_Work_Time::onRegisterArchiveTab</hook>
+	<hook type="resource" resource="WorkTime" event="registerTabs">Hook_Work_Time::onRegisterAnalysisTab</hook>
+	<hook type="resource" resource="Env" event="init">Hook_Work_Time::onCallForModules</hook>
+	<hook type="resource" resource="Auth" event="onBeforeLogout">Hook_Work_Time::onBeforeLogout</hook>
+	<hook type="resource" resource="Project" event="onRemove">Hook_Work_Time::onProjectRemove</hook>
+	<hook type="resource" resource="Dashboard" event="registerPanels">Hook_Work_Time::onRegisterDashboardPanels</hook>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>work_timers`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>work_timers` (

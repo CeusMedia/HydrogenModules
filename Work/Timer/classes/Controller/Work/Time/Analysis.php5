@@ -1,37 +1,18 @@
 <?php
-class Controller_Work_Time_Analysis extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Time_Analysis extends CMF_Hydrogen_Controller
+{
+	protected $request;
+	protected $session;
+	protected $userId;
+	protected $modelProject;
+	protected $modelMission;
+	protected $modelTimer;
+	protected $logicProject;
+	protected $projectMap;
 	protected $filterPrefix		= 'filter_work_timer_analysis_';
 
-	public function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-		$this->userId			= $this->session->get( 'userId' );
-		$this->modelProject		= new Model_Project( $this->env );
-		$this->modelMission		= new Model_Mission( $this->env );
-		$this->modelTimer		= new Model_Work_Timer( $this->env );
-		$this->logicProject		= Logic_Project::getInstance( $this->env );
-		$this->projectMap		= $this->logicProject->getUserProjects( $this->userId, TRUE );
-//		$this->addData( 'filterProjectId', $this->session->get( 'filter_work_timer_projectId' ) );
-//		$this->addData( 'filterStatus', (int) $this->session->get( 'filter_work_timer_status' ) );
-		$this->addData( 'userId', $this->userId );
-
-		if( !$this->session->get( $this->filterPrefix.'durationFrom' ) )
-			$this->session->set( $this->filterPrefix.'durationFrom', date( "Y-m-d" ) );
-		if( !$this->session->get( $this->filterPrefix.'durationTo' ) )
-			$this->session->set( $this->filterPrefix.'durationTo', date( "Y-m-d" ) );
-
-		if( !$this->session->get( $this->filterPrefix.'year' ) )
-			$this->session->set( $this->filterPrefix.'year', date( "Y" ) );
-		if( !$this->session->get( $this->filterPrefix.'month' ) )
-			$this->session->set( $this->filterPrefix.'month', date( "m" ) );
-		if( !$this->session->get( $this->filterPrefix.'week' ) )
-			$this->session->set( $this->filterPrefix.'week', date( "W" ) );
-		if( !$this->session->get( $this->filterPrefix.'mode' ) )
-			$this->session->set( $this->filterPrefix.'mode', 'projects' );
-	}
-
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			$setFilters	= $this->session->getAll( $this->filterPrefix );
 			foreach( array_keys( $setFilters ) as $key )
@@ -72,23 +53,8 @@ class Controller_Work_Time_Analysis extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function sumTimers( $conditions ){
-		$sumPlanned	= 0;
-		$sumNeeded	= 0;
-		$timers		= $this->modelTimer->getAll( $conditions );
-		foreach( $timers as $timer ){
-			$sumPlanned	+= $timer->secondsPlanned;
-			$sumNeeded	+= $timer->secondsNeeded;
-		}
-		return (object) array(
-			'secondsPlanned'	=> $sumPlanned,
-			'secondsNeeded'		=> $sumNeeded,
-			'timers'			=> $timers,
-		);
-	}
-
-	public function index(){
-
+	public function index()
+	{
 		$filterProjectIds	= $this->session->get( $this->filterPrefix.'projectIds' );
 		$filterUserIds		= $this->session->get( $this->filterPrefix.'userIds' );
 		$filterMode			= $this->session->get( $this->filterPrefix.'mode' );
@@ -201,5 +167,51 @@ class Controller_Work_Time_Analysis extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterMonth', $this->session->get( $this->filterPrefix.'month' ) );
 		$this->addData( 'filterWeek', $this->session->get( $this->filterPrefix.'week' ) );
 	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+		$this->userId			= $this->session->get( 'userId' );
+		$this->modelProject		= new Model_Project( $this->env );
+		$this->modelMission		= new Model_Mission( $this->env );
+		$this->modelTimer		= new Model_Work_Timer( $this->env );
+		$this->logicProject		= Logic_Project::getInstance( $this->env );
+		$this->projectMap		= $this->logicProject->getUserProjects( $this->userId, TRUE );
+//		$this->addData( 'filterProjectId', $this->session->get( 'filter_work_timer_projectId' ) );
+//		$this->addData( 'filterStatus', (int) $this->session->get( 'filter_work_timer_status' ) );
+		$this->addData( 'userId', $this->userId );
+
+		if( !$this->session->get( $this->filterPrefix.'durationFrom' ) )
+			$this->session->set( $this->filterPrefix.'durationFrom', date( "Y-m-d" ) );
+		if( !$this->session->get( $this->filterPrefix.'durationTo' ) )
+			$this->session->set( $this->filterPrefix.'durationTo', date( "Y-m-d" ) );
+
+		if( !$this->session->get( $this->filterPrefix.'year' ) )
+			$this->session->set( $this->filterPrefix.'year', date( "Y" ) );
+		if( !$this->session->get( $this->filterPrefix.'month' ) )
+			$this->session->set( $this->filterPrefix.'month', date( "m" ) );
+		if( !$this->session->get( $this->filterPrefix.'week' ) )
+			$this->session->set( $this->filterPrefix.'week', date( "W" ) );
+		if( !$this->session->get( $this->filterPrefix.'mode' ) )
+			$this->session->set( $this->filterPrefix.'mode', 'projects' );
+	}
+
+	protected function sumTimers( array $conditions )
+	{
+		$sumPlanned	= 0;
+		$sumNeeded	= 0;
+		$timers		= $this->modelTimer->getAll( $conditions );
+		foreach( $timers as $timer ){
+			$sumPlanned	+= $timer->secondsPlanned;
+			$sumNeeded	+= $timer->secondsNeeded;
+		}
+		return (object) array(
+			'secondsPlanned'	=> $sumPlanned,
+			'secondsNeeded'		=> $sumNeeded,
+			'timers'			=> $timers,
+		);
+	}
 }
-?>

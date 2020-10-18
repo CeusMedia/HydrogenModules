@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time{
-
+class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
+{
 	protected $ownerId		= NULL;
 	protected $workerId		= NULL;
 	protected $status		= NULL;
@@ -11,7 +11,8 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time{
 	protected $limits		= array( 0, 20 );
 	protected $orders		= array( 'createdAt' => 'ASC' );
 
-	public function render(){
+	public function render(): string
+	{
 		$conditions	= array();
 //		$conditions['userId']		= (int) $this->userId;
 		if( $this->ownerId )
@@ -32,7 +33,7 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time{
 
 		$rows		= array();
 		foreach( $timers as $timer ){
-			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
+			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer, FALSE );
 
 			$linkRelation	= $this->renderRelationLink( $timer );
 			$title			= $this->renderTitleLink( $timer );
@@ -70,7 +71,68 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time{
 		return $table;
 	}
 
-	protected function renderButtons( $timer ){
+	public function setButtons( $buttons ): self
+	{
+		$this->buttons	= $buttons;
+		return $this;
+	}
+
+	public function setLimits( $limit, $offset = 0 ): self
+	{
+		$limit			= min( 100, max( 1, $limit ) );
+		$offset			= max( 0, $offset );
+		$this->limits	= array( $offset, $limit );
+		return $this;
+	}
+
+	public function setModule( $module ): self
+	{
+		$this->module		= $module;
+		return $this;
+	}
+
+	public function setModuleId( $moduleId ): self
+	{
+		if( !$this->module )
+			throw new RuntimeException( 'No module set beforehand' );
+		$this->moduleId	= $moduleId;
+		return $this;
+	}
+
+	public function setOrders( $orders ): self
+	{
+		$this->orders		= $orders;
+		return $this;
+	}
+
+	public function setOwnerId( $userId ): self
+	{
+		$this->ownerId	= $userId;
+		return $this;
+	}
+
+	public function setProjectId( $projectId ): self
+	{
+		$this->projectId	= $projectId;
+		return $this;
+	}
+
+	public function setStatus( $status ): self
+	{
+		$this->status	= $status;
+		return $this;
+	}
+
+	public function setWorkerId( $userId ): self
+	{
+		$this->workerId	= $userId;
+		return $this;
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function renderButtons( $timer ): string
+	{
 		$helperButtons	= new View_Helper_Work_Time_Buttons( $this->env );
 		$helperButtons->setUserId( $this->userId );
 		$helperButtons->setButtons( $this->buttons );
@@ -81,9 +143,10 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time{
 		return $buttonGroup;
 	}
 
-	protected function renderRelationLink( $timer ){
+	protected function renderRelationLink( $timer ): string
+	{
 		if( !$timer->moduleId )
-			return;
+			return '';
 		$labelType		= UI_HTML_Tag::create( 'span', $timer->type.':', array(
 			'class' => 'muted',
 		) );
@@ -95,7 +158,8 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time{
 		return UI_HTML_Tag::create( 'div', $linkRelation, array( 'class' => 'autocut' ) );
 	}
 
-	protected function renderTimes( $timer ){
+	protected function renderTimes( $timer ): string
+	{
 		$secondsPlanned	= $timer->secondsPlanned;
 		$secondsNeeded	= $timer->status == 1 ? $timer->secondsNeeded + ( time() - $timer->modifiedAt ) : $timer->secondsNeeded;
 		$classes		= array();
@@ -113,61 +177,22 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time{
 		return $timeNeeded.' / '.$timePlanned;
 	}
 
-	protected function renderTitleLink( $timer ){
+	protected function renderTitleLink( $timer ): string
+	{
 		$title	= strlen( trim( $timer->title ) ) ? htmlentities( $timer->title, ENT_QUOTES, 'UTF-8' ) : '<em class="muted">unbenannt</em>';
 		$title	= UI_HTML_Tag::create( 'a', $title, array( 'href' => './work/time/edit/'.$timer->workTimerId.'?from='.$this->from ) );
 		$title	= UI_HTML_Tag::create( 'div', $title, array( 'class' => 'autocut' ) );
 		return $title;
 	}
 
-	protected function renderWorker( $timer ){
+	protected function renderWorker( $timer ): string
+	{
 		if( !class_exists( 'View_Helper_Member' ) )
-			return;
+			return '';
 		$helper	= new View_Helper_Member( $this->env );
 		$helper->setUser( $timer->workerId );
 		$helper->setMode( 'inline' );
 		$label	= UI_HTML_Tag::create( 'span', 'Bearbeiter: ', array( 'class' => 'muted' ) );
 		return UI_HTML_Tag::create( 'div', $label.$helper->render(), array( 'class' => 'autocut' ) );
 	}
-
-	public function setButtons( $buttons ){
-		$this->buttons	= $buttons;
-	}
-
-	public function setLimits( $limit, $offset = 0 ){
-		$limit			= min( 100, max( 1, $limit ) );
-		$offset			= max( 0, $offset );
-		$this->limits	= array( $offset, $limit );
-	}
-
-	public function setModule( $module ){
-		$this->module		= $module;
-	}
-
-	public function setModuleId( $moduleId ){
-		if( !$this->module )
-			throw new RuntimeException( 'No module set beforehand' );
-		$this->moduleId	= $moduleId;
-	}
-
-	public function setOrders( $orders ){
-		$this->orders		= $orders;
-	}
-
-	public function setOwnerId( $userId ){
-		$this->ownerId	= $userId;
-	}
-
-	public function setProjectId( $projectId ){
-		$this->projectId	= $projectId;
-	}
-
-	public function setStatus( $status ){
-		$this->status	= $status;
-	}
-
-	public function setWorkerId( $userId ){
-		$this->workerId	= $userId;
-	}
 }
-?>

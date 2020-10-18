@@ -1,13 +1,17 @@
 <?php
-abstract class View_Helper_Work_Time extends CMF_Hydrogen_View_Helper_Abstract{
-
+abstract class View_Helper_Work_Time extends CMF_Hydrogen_View_Helper_Abstract
+{
 	protected $session;
 	protected $userId;
+	protected $logicTimer;
+	protected $logicProject;
+	protected $modelMission;
 	protected $modelProject;
 	protected $modelTimer;
 	public $from;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->setEnv( $env );
 		$this->session			= $this->env->getSession();
 		$this->userId			= $this->session->get( 'userId' );
@@ -21,7 +25,8 @@ abstract class View_Helper_Work_Time extends CMF_Hydrogen_View_Helper_Abstract{
 			$this->from				= $this->env->getRequest()->get( 'from' );
 	}
 
-	static public function formatSeconds( $duration, $space = ' ', $shorten = FALSE ){
+	static public function formatSeconds( $duration, string $space = ' ', bool $shorten = FALSE ): string
+	{
 		$seconds 	= $duration % 60;
 		$duration	= ( $duration - $seconds ) / 60;
 		$minutes	= $duration % 60;
@@ -48,7 +53,8 @@ abstract class View_Helper_Work_Time extends CMF_Hydrogen_View_Helper_Abstract{
 		return ltrim( $duration, $space );
 	}
 
-	static public function parseTime( $time ){
+	static public function parseTime( $time ): int
+	{
 		$regexWeeks	= '@([0-9]+)w\s*@';
 		$regexDays	= '@([0-9]+)d\s*@';
 		$regexHours	= '@([0-9]+)h\s*@';
@@ -79,18 +85,20 @@ abstract class View_Helper_Work_Time extends CMF_Hydrogen_View_Helper_Abstract{
 		return $seconds;
 	}
 
-	public function setFrom( $from ){
+	abstract public function render();
+
+	public function setFrom( string $from ): self
+	{
 		$this->from	= $from;
+		return $this;
 	}
 
-	static public function sumTimersOfModuleId( CMF_Hydrogen_Environment $env, $moduleKey, $moduleId, $statuses = array( 3 ), $formatAsTime = FALSE ){
+	static public function sumTimersOfModuleId( CMF_Hydrogen_Environment $env, string $moduleKey, $moduleId, array $statuses = array( 3 ), bool $formatAsTime = FALSE )
+	{
 		$logic		= Logic_Work_Timer::getInstance( $env );
 		$seconds	= $logic->sumTimersOfModuleId( $moduleKey, $moduleId, $statuses );
 		if( $formatAsTime )
 			return self::formatSeconds( $seconds );
 		return $seconds;
 	}
-
-	abstract public function render();
 }
-?>

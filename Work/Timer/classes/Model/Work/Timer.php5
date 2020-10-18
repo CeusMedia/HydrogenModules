@@ -1,6 +1,8 @@
 <?php
-class Model_Work_Timer extends CMF_Hydrogen_Model{
+class Model_Work_Timer extends CMF_Hydrogen_Model
+{
 	protected $name			= 'work_timers';
+
 	protected $columns		= array(
 		'workTimerId',
 		'userId',
@@ -16,7 +18,9 @@ class Model_Work_Timer extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'workTimerId';
+
 	protected $indices		= array(
 		'userId',
 		'projectId',
@@ -26,6 +30,6 @@ class Model_Work_Timer extends CMF_Hydrogen_Model{
 		'userId',
 		'status',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

@@ -1,11 +1,13 @@
 <?php
-class View_Helper_Work_Time_Dashboard_Others extends CMF_Hydrogen_View_Helper_Abstract{
-
-	public function __construct( $env ){
+class View_Helper_Work_Time_Dashboard_Others extends CMF_Hydrogen_View_Helper_Abstract
+{
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->setEnv( $env );
 	}
 
-	public function render(){
+	public function render()
+	{
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$logicProject	= Logic_Project::getInstance( $this->env );
 		$modelTimer		= new Model_Work_Timer( $this->env );
@@ -65,7 +67,6 @@ class View_Helper_Work_Time_Dashboard_Others extends CMF_Hydrogen_View_Helper_Ab
 			$content	= $table.'
 			<script>jQuery(document).ready(function(){WorkTimer.init(".dashboard-timer-others", "&nbsp;");});</script>';
 		}
-
 		return $content;
 	}
 }

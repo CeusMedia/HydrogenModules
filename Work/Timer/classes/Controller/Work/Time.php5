@@ -1,25 +1,19 @@
 <?php
-class Controller_Work_Time extends CMF_Hydrogen_Controller{
+class Controller_Work_Time extends CMF_Hydrogen_Controller
+{
+	protected $request;
+	protected $session;
+	protected $messenger;
+	protected $userId;
+	protected $logicTimer;
+	protected $logicProject;
+	protected $modelTimer;
+	protected $projectMap;
+	protected $modules			= array();
 
-	protected $modules	= array();
-
-	public function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-		$this->messenger		= $this->env->getMessenger();
-		$this->userId			= $this->session->get( 'userId' );
-		$this->logicTimer		= Logic_Work_Timer::getInstance( $this->env );
-		$this->logicProject		= Logic_Project::getInstance( $this->env );
-//		$this->modelProject		= new Model_Project( $this->env );
-		$this->modelTimer		= new Model_Work_Timer( $this->env );
-		$this->projectMap		= $this->logicProject->getUserProjects( $this->userId, TRUE );
-		$this->addData( 'filterProjectId', $this->session->get( 'filter_work_timer_projectId' ) );
-		$this->addData( 'filterStatus', (int) $this->session->get( 'filter_work_timer_status' ) );
-		$this->addData( 'userId', $this->userId );
-	}
-
-	static public function ___onBeforeLogout( CMF_Hydrogen_Environment $env, $module, $context, $data = array() ){
-		$data	= new ADT_List_Dictionary( $data );
+	static public function ___onBeforeLogout( CMF_Hydrogen_Environment $env, $module, $context, $payload = array() )
+	{
+		$data	= new ADT_List_Dictionary( $payload );
 		if( ( $userId = $data->get( 'userId' ) ) ){
 			$logicTimer	= Logic_Work_Timer::getInstance( $env );
 			$modelTimer	= new Model_Work_Timer( $env );
@@ -32,7 +26,8 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		if( !$env->getAcl()->has( 'work/time', 'ajaxRenderDashboardPanel' ) )
 			return;
 		$context->registerPanel( 'work-timer-my', array(
@@ -51,8 +46,9 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller{
 		) );
 	}
 
-	static public function ___onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$projectId	= $data['projectId'];
+	static public function ___onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
+		$projectId	= $payload['projectId'];
 		$this->modelTimer->removeByIndex( 'projectId', $projectId );
 	}
 
@@ -61,7 +57,8 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller{
 	}
 */
 
-	public function add(){
+	public function add()
+	{
 		if( !$this->projectMap && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/time/add' );
 
@@ -109,7 +106,8 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller{
 		$this->addData( 'workers', $this->logicProject->getCoworkers( $this->userId ) );
 	}
 
-	public function ajaxRenderDashboardPanel( $panelId ){
+	public function ajaxRenderDashboardPanel( $panelId )
+	{
 		switch( $panelId ){
 			case 'work-timer-my':
 				$helper		= new View_Helper_Work_Time_Dashboard_My( $this->env );
@@ -122,7 +120,8 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function assign(){
+	public function assign()
+	{
 		$module		= $this->request->get( 'module' );
 		$moduleId	= $this->request->get( 'moduleId' );
 		$timerIds	= $this->request->get( 'timerIds' );
@@ -145,13 +144,14 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $timerId ){
+	public function edit( $timerId )
+	{
 		$timer	= $this->modelTimer->get( $timerId );
 		if( !$timer ){
 			$this->messenger->noteError( 'Invalid timer ID' );
 			$this->restart( NULL, TRUE );
 		}
-		View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
+		View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer, FALSE );
 
 		if( $this->request->has( 'save' ) ){
 			$data			= array();
@@ -218,14 +218,16 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller{
 
 	}
 
-	public function filter(){
+	public function filter()
+	{
 		$this->session->set( 'filter_work_timer_activityId', $this->request->get( 'activityId' ) );
 		$this->session->set( 'filter_work_timer_projectId', $this->request->get( 'projectId' ) );
 		$this->session->set( 'filter_work_timer_status', $this->request->get( 'status' ) );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $limit = 10, $page = 0 ){
+	public function index( $limit = 10, $page = 0 )
+	{
 		if( !$this->projectMap && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/time' );
 
@@ -233,7 +235,7 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller{
 		$total		= $this->modelTimer->count( $conditions );
 		$timers		= $this->modelTimer->getAll( $conditions, array( 'modifiedAt' => 'ASC' ), array( $page * $limit, $limit ) );
 		foreach( $timers as $timer ){
-			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
+			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer, FALSE );
 		}
 		$conditions	= array(
 			'userId'	=> (int) $this->userId,
@@ -260,24 +262,8 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller{
 		$this->addData( 'unrelatedTimers', $unrelatedTimers );
 	}
 
-	public function remove( $timerId ){
-		$this->restart( NULL, TRUE );
-	}
-
-	public function start( $timerId ){
-		try{
-			$this->logicTimer->start( $timerId );
-			if( $this->request->get( 'from' ) )
-				$this->restart( $this->request->get( 'from' ) );
-			$this->restart( NULL, TRUE );
-		}
-		catch( Exception $e ){
-			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
-			$this->restart( NULL, TRUE );
-		}
-	}
-
-	public function pause( $timerId ){
+	public function pause( $timerId )
+	{
 		try{
 			$this->logicTimer->pause( $timerId );
 			if( $this->request->get( 'from' ) )
@@ -290,7 +276,27 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function stop( $timerId ){
+	public function remove( $timerId )
+	{
+		$this->restart( NULL, TRUE );
+	}
+
+	public function start( $timerId )
+	{
+		try{
+			$this->logicTimer->start( $timerId );
+			if( $this->request->get( 'from' ) )
+				$this->restart( $this->request->get( 'from' ) );
+			$this->restart( NULL, TRUE );
+		}
+		catch( Exception $e ){
+			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
+			$this->restart( NULL, TRUE );
+		}
+	}
+
+	public function stop( $timerId )
+	{
 		try{
 			$this->logicTimer->stop( $timerId );
 			if( $this->request->get( 'from' ) )
@@ -306,5 +312,22 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller{
 			$this->restart( $this->request->get( 'from' ) );
 		$this->restart( NULL, TRUE );
 	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+		$this->messenger		= $this->env->getMessenger();
+		$this->userId			= $this->session->get( 'userId' );
+		$this->logicTimer		= Logic_Work_Timer::getInstance( $this->env );
+		$this->logicProject		= Logic_Project::getInstance( $this->env );
+//		$this->modelProject		= new Model_Project( $this->env );
+		$this->modelTimer		= new Model_Work_Timer( $this->env );
+		$this->projectMap		= $this->logicProject->getUserProjects( $this->userId, TRUE );
+		$this->addData( 'filterProjectId', $this->session->get( 'filter_work_timer_projectId' ) );
+		$this->addData( 'filterStatus', (int) $this->session->get( 'filter_work_timer_status' ) );
+		$this->addData( 'userId', $this->userId );
+	}
 }
-?>

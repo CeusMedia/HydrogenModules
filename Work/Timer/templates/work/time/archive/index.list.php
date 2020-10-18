@@ -42,7 +42,7 @@ foreach( $timers as $timer ){
 */
 	$secondsNeeded	= $timer->status == 1 ? $timer->secondsNeeded + ( time() - $timer->modifiedAt ) : $timer->secondsNeeded;
 	$link			= UI_HTML_Tag::create( 'a', $timer->title, array(
-		'href'		=> './work/timer/edit/'.$timer->workTimerId.'?from=',
+		'href'		=> './work/time/edit/'.$timer->workTimerId.'?from=',
 		'class'		=> 'autocut',
 	) );
 
@@ -74,7 +74,7 @@ foreach( $timers as $timer ){
 	) ) );
 	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
-	$pagination	= new CMM_Bootstrap_PageControl( './work/time/'.$limit, $page, ceil( $total / $limit ) );
+	$pagination	= new CMM_Bootstrap_PageControl( './work/time/archive/'.$limit, $page, ceil( $total / $limit ) );
 }
 return '
 <div class="content-panel conten-panel-table">

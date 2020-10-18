@@ -1,17 +1,19 @@
 <?php
-class View_Helper_Work_Time_Modal_Assign extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_Work_Time_Modal_Assign extends CMF_Hydrogen_View_Helper_Abstract
+{
 	protected $from;
 	protected $module;
 	protected $moduleId;
 	protected $timers	= array();
 	protected $userId;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 	}
 
-	public function render(){
+	public function render()
+	{
 		$words		= $this->env->getLanguage()->getWords( 'work/time' );
 		$w			= (object) $words['assign'];
 
@@ -65,22 +67,30 @@ class View_Helper_Work_Time_Modal_Assign extends CMF_Hydrogen_View_Helper_Abstra
 ';
 	}
 
-	public function setFrom( $from ){
+	public function setFrom( $from ): self
+	{
 		$this->from		= $from;
+		return $this;
 	}
 
-	public function setRelation( $module, $moduleId ){
+	public function setRelation( $module, $moduleId ): self
+	{
 		$this->relation	= (object) array(
 			'module'	=> $module,
 			'moduleId'	=> $moduleId,
 		);
+		return $this;
 	}
 
-	public function setTimers( $timers ){
+	public function setTimers( $timers ): self
+	{
 		$this->timers	= $timers;
+		return $this;
 	}
 
-	public function setUserId( $userId ){
+	public function setUserId( $userId ): self
+	{
 		$this->userId	= $userId;
+		return $this;
 	}
 }

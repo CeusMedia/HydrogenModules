@@ -1,22 +1,12 @@
 <?php
-class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time{
-
-	protected $missionId	= NULL;
+class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
+{
+	protected $module;
+	protected $moduleId;
 	protected $projectId	= NULL;
 
-	public function setModule( $module ){
-		$this->module		= $module;
-	}
-
-	public function setModuleId( $moduleId ){
-		$this->moduleId		= $moduleId;
-	}
-
-	public function setProjectId( $projectId ){
-		$this->projectId	= $projectId;
-	}
-
-	public function render(){
+	public function render()
+	{
 		$logicProject	= Logic_Project::getInstance( $this->env );
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$currentUserId	= $logicAuth->getCurrentUserId();
@@ -111,5 +101,23 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time{
 		</div>
 	</div>
 </form>';
+	}
+
+	public function setModule( $module ): self
+	{
+		$this->module		= $module;
+		return $this;
+	}
+
+	public function setModuleId( $moduleId ): self
+	{
+		$this->moduleId		= $moduleId;
+		return $this;
+	}
+
+	public function setProjectId( $projectId ): self
+	{
+		$this->projectId	= $projectId;
+		return $this;
 	}
 }

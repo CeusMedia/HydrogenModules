@@ -2,18 +2,14 @@
 /**
  *	@deprecated		not used anymore, see template index.active
  */
-class View_Helper_Work_Time_Timer extends View_Helper_Work_Time{
-
+class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
+{
 	static protected $modules	= array();
 
-	protected $missionId	= NULL;
+	protected $missionId		= NULL;
 
-	static public function ___onCallForModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$context	= new View_Helper_Work_Time_Timer( $env );
-		$env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, array() );
-	}
-
-	static public function decorateTimer( CMF_Hydrogen_Environment $env, $timer ){
+	static public function decorateTimer( CMF_Hydrogen_Environment $env, $timer, bool $strict = TRUE )
+	{
 		$modelProject		= new Model_Project( $env );
 		if( $timer->projectId )
 			$timer->project	= $modelProject->get( $timer->projectId );
@@ -26,9 +22,16 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time{
 			if( !array_key_exists( $timer->module, self::$modules ) )
 				throw new Exception( 'Module "'.$timer->module.'" not registered' );
 			$module	= self::$modules[$timer->module];
+//print_m( self::$modules );
+//print_m( $timer );
+//print_m( $module );
+//die;
 			$entry	= $module->model->get( $timer->moduleId );
-			if( !$entry )
-				throw new Exception( 'Relation between timer and module is invalid' );
+			if( !$entry ){
+				if( $strict )
+					throw new Exception( 'Relation between timer and module is invalid' );
+				return;
+			}
 			$timer->type			= $module->typeLabel;
 			$timer->relation		= $entry;
 			$timer->relationTitle	= $entry->{$module->column};
@@ -36,11 +39,13 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time{
 		}
 	}
 
-	static public function getRegisteredModules(){
+	static public function getRegisteredModules()
+	{
 		return self::$modules;
 	}
 
-	public function registerModule( $module ){
+	public function registerModule( $module )
+	{
 		$arguments		= array( $this->env );
 		$modelInstance	= Alg_Object_Factory::createObject( $module->modelClass, $arguments );
 		self::$modules[$module->moduleId]	= (object) array(
@@ -54,15 +59,8 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time{
 		);
 	}
 
-	public function setModule( $module ){
-		$this->module		= $module;
-	}
-
-	public function setModuleId( $moduleId ){
-		$this->moduleId	= $moduleId;
-	}
-
-	public function render(){
+	public function render(): string
+	{
 		$conditions	= array();
 		$conditions['userId']	= (int) $this->userId;
 		$conditions['status']	= 1;
@@ -124,5 +122,17 @@ $(document).ready(function(){
 	WorkTimer.init();
 });
 	</script>';
+	}
+
+	public function setModule( $module ): self
+	{
+		$this->module		= $module;
+		return $this;
+	}
+
+	public function setModuleId( $moduleId ): self
+	{
+		$this->moduleId	= $moduleId;
+		return $this;
 	}
 }

@@ -1,19 +1,22 @@
 <?php
-class View_Helper_Work_Time_Buttons{
-
+class View_Helper_Work_Time_Buttons
+{
 	protected $buttons	= array();
 	protected $env;
 	protected $from;
 	protected $size;
 	protected $userId;
 	protected $workerId;
+	protected $modelTimer;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env			= $env;
 		$this->modelTimer	= new Model_Work_Timer( $this->env );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->userId )
 			throw new RuntimeException( 'No user ID set' );
 		if( !$this->timerId )
@@ -125,24 +128,33 @@ class View_Helper_Work_Time_Buttons{
 		return $helper->render();
 	}
 
-	public function setButtons( $buttons = array() ){
+	public function setButtons( array $buttons = array() ): self
+	{
 		$this->buttons	= $buttons;
+		return $this;
 	}
 
-	public function setFrom( $from ){
+	public function setFrom( $from ): self
+	{
 		$this->from	= $from;
+		return $this;
 	}
 
-	public function setSize( $size ){
+	public function setSize( $size ): self
+	{
 		$this->size	= $size;
+		return $this;
 	}
 
-	public function setTimerId( $timerId ){
+	public function setTimerId( $timerId ): self
+	{
 		$this->timerId	= $timerId;
+		return $this;
 	}
 
-	public function setUserId( $userId ){
+	public function setUserId( $userId ): self
+	{
 		$this->userId	= $userId;
+		return $this;
 	}
 }
-?>
