@@ -11,7 +11,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 	static public function onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
 	{
 		$model		= new Model_Mission_Document( $env );
-		$conditions	= array( 'modifiedAt' => '>'.( time() - 30 * 24 * 60 * 60 ) );
+		$conditions	= array( 'modifiedAt' => '> '.( time() - 30 * 24 * 60 * 60 ) );
 		$orders		= array( 'modifiedAt' => 'DESC' );
 		foreach( $model->getAll( $conditions, $orders ) as $item ){
 			$context->add( (object) array(
