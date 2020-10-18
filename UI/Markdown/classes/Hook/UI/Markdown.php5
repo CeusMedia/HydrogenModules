@@ -42,21 +42,5 @@ class Hook_UI_Markdown extends CMF_Hydrogen_View
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
-/*		$libVersion	= \Michelf\Markdown::MARKDOWNLIB_VERSION;
-		if( $config->get( 'version.min' ) ){
-			if( version_compare( $libVersion, $config->get( 'version.min' ), '<=' ) ){
-				$message	= 'Installed version of Markdown is invalid - must be atleast %s.';
-				$env->getMessenger()->noteFailure( sprint_m( $message, $config->get( 'version.min' ) ) );
-				return;
-			}
-		}
-		if( $config->get( 'version.max' ) ){
-			if( version_compare( $libVersion, $config->get( 'version.max' ), '>' ) ){
-				$message	= 'Installed version of Markdown is invalid - must be atmost %s.';
-				$env->getMessenger()->noteFailure( sprint_m( $message, $config->get( 'version.max' ) ) );
-				return;
-			}
-		}*/
 	}
 }
-

@@ -12,7 +12,7 @@ class View_Helper_Markdown extends CMF_Hydrogen_View
 			$data->content	= Markdown::defaultTransform( $data->content );
 	}*/
 
-	public function transform( string $markdown, bool $wrapped = TRUE )
+	public function transform( string $markdown, bool $wrapped = TRUE ): string
 	{
 		$renderer	= new CeusMedia\Markdown\Renderer\Html();			//  create renderer
 		$html		= $renderer->convert( $markdown );					//  convert to HTML
@@ -21,7 +21,7 @@ class View_Helper_Markdown extends CMF_Hydrogen_View
 		return $html;
 	}
 
-	static public function transformStatic( CMF_Hydrogen_Environment $env, $markdown, $wrapped = TRUE )
+	static public function transformStatic( CMF_Hydrogen_Environment $env, string $markdown, bool $wrapped = TRUE ): string
 	{
 		$helper	= new self( $env );
 		return $helper->transform( $markdown, $wrapped );
