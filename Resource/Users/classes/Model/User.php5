@@ -10,6 +10,18 @@
  */
 class Model_User extends CMF_Hydrogen_Model
 {
+	const GENDER_UNKNOWN	= 0;
+	const GENDER_FEMALE		= 1;
+	const GENDER_MALE		= 2;
+	const GENDER_OTHER		= 3;
+
+	const GENDERS			= [
+		self::GENDER_UNKNOWN,
+		self::GENDER_FEMALE,
+		self::GENDER_OTHER,
+		self::GENDER_OTHER,
+	];
+
 	const STATUS_DISABLED		= -2;
 	const STATUS_BANNED			= -1;
 	const STATUS_UNCONFIRMED	= 0;
@@ -23,7 +35,7 @@ class Model_User extends CMF_Hydrogen_Model
 	);
 
 	const STATUS_TRANSITIONS	= array(
-		self::STATUS_DISABLED		=> array(
+		self::STATUS_DISABLED	=> array(
 			self::STATUS_UNCONFIRMED,
 			self::STATUS_ACTIVE,
 		),
