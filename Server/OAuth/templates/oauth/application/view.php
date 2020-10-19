@@ -1,17 +1,18 @@
 <?php
 
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
+
 $iconsStatus	= array(
-	-1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-removed' ) ),
-	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-stop' ) ),
-	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-play' ) )
+	-1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) ),
+	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
+	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) )
 );
 $iconsType	= array(
-	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-world' ) ),
-	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-lock' ) )
+	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-world' ) ),
+	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lock' ) )
 );
-
-
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 
 $data	= print_m( $application, NULL, NULL, TRUE );
 
@@ -47,9 +48,6 @@ if( !empty( $refreshTokens ) ){
 	$tbody		= UI_HTML_Tag::create( 'tbody', $listRefreshTokens );
 	$listRefreshTokens	= UI_HTML_Tag::create( 'table', $thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
 }
-
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
 
 $buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array( 'href' => './oauth/application', 'class' => 'btn btn-small' ) );
 $buttonEdit		= UI_HTML_Tag::create( 'a', $iconEdit.' bearbeiten', array( 'href' => './oauth/application/edit/'.$application->oauthApplicationId, 'class' => 'btn btn-small btn-primary' ) );

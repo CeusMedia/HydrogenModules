@@ -35,14 +35,16 @@ if( $applications ){
 }
 */
 
+$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+
 $iconsStatus	= array(
-	-1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-removed' ) ),
-	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-stop' ) ),
-	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-play' ) )
+	-1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fw-trash' ) ),
+	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
+	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) )
 );
 $iconsType	= array(
-	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-world' ) ),
-	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-lock' ) )
+	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-world' ) ),
+	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lock' ) )
 );
 
 $list	= '<div class="muted"><em><small>Keine Applikationen angemeldet.</small></em></div><br/>';
@@ -67,12 +69,12 @@ if( $applications ){
 			UI_HTML_Tag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
 		), array( 'class' => NULL ) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "50%", "15%", "15%", "20%" );
+	$colgroup	= UI_HTML_Elements::ColumnGroup( '50%', '15%', '15%', '20%' );
 	$theads		= UI_HTML_Elements::TableHeads( array(
-		"Applikation",
-		"Vertraulichkeit",
-		"Zustand",
-		"erstellt / verändert"
+		'Applikation',
+		'Vertraulichkeit',
+		'Zustand',
+		'erstellt / verändert',
 	) );
 	$thead		= UI_HTML_Tag::create( 'thead', $theads );
 	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
@@ -82,7 +84,6 @@ if( $applications ){
 }
 
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 $buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' hinzufügen', array(
 	'class'	=> 'btn btn-primary btn-small',
 	'href'	=> './oauth/application/add',
@@ -98,4 +99,3 @@ return '
 		</div>
 	</div>
 </div>';
-?>

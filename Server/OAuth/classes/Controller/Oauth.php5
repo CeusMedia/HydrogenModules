@@ -4,20 +4,18 @@
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
 /**
  *	Controller for OAuth server.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  *	@todo			code doc
  *	@todo			todos within code
  *	@todo			add response headers: "Cache-Control: no-store", "Pragma: no-cache"
  */
-class Controller_Oauth extends CMF_Hydrogen_Controller{
-
+class Controller_Oauth extends CMF_Hydrogen_Controller
+{
 	/**	@var		Net_HTTP_Request_Receiver	$request */
 	protected $request;
 
@@ -31,32 +29,10 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 	protected $lifetimeRefreshToken			= 1209600;
 
 	protected $flagSendRefreshTokenOnAuthorizationCodeGrant	= TRUE;
+
 	protected $flagSendRefreshTokenOnPasswordGrant			= TRUE;
+
 	protected $flagRefreshRefreshToken						= FALSE;
-
-	public function __onInit(){
-		$this->request	= $this->env->getRequest();
-		$config			= $this->env->getConfig()->getAll( 'module.server_oauth.', TRUE );
-		$this->lifetimeAccessToken			= $config->get( 'lifetime.access' );
-		$this->lifetimeAuthorizationCode	= $config->get( 'lifetime.code' );
-		$this->lifetimeRefreshRefreshToken	= $config->get( 'lifetime.refresh' );
-		$this->cleanUp();
-	}
-
-	/**
-	 *	... unfinished helper method ...
-	 *	@access		protected
-	 *	@param		string			Client ID
-	 *	@return		integer|NULL	Application ID or NULL if not available
-	 *	@todo		refactor to getApplicationFromClientId, delivering application data object instead of ID
-	 */
-	protected function getApplicationIdFromClientId( $clientId ){
-		$model			= new Model_Oauth_Application( $this->env );
-		$application	= $model->getByIndex( 'clientId', $clientId );
-		if( $application )
-			return $application->oauthApplicationId;
-		return NULL;
-	}
 
 	/**
 	 *	... unfinished, undocumented ...
@@ -68,7 +44,8 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 	 *	@todo		#2 implement grant type: implicit
 	 *	@todo		#3 make configurable: client agent (default, RFC) OR show login fail on authorization server (nicer)
 	 */
-	public function authorize(){
+	public function authorize()
+	{
 #		if( $this->request->getMethod() !== "GET" )
 #			$this->errorRedirect( 'GET request required.', 'This request must use the GET method.' );
 		if( !strlen( trim( $redirectUri = $this->request->get( 'redirect_uri' ) ) ) )
@@ -127,28 +104,75 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 		}
 	}
 
+	public function index()
+	{
+	}
+
+	/**
+	 *	...
+	 *	Supported grant types: authorization_code, password, client_credentials, refresh_token
+	 *	@access		public
+	 *	@return		void
+	 */
+	public function token()
+	{
+		if( !strlen( trim( $grantType = $this->request->get( 'grant_type' ) ) ) )
+			$this->errorResponse( 'invalid_request', 'Missing grant type.' );
+
+		switch( $grantType ){
+			case 'authorization_code':				//  grant type: authorization code
+				$this->tokenAuthorizationCode();
+				break;
+			case 'password':						//  grant type: resource owner password credentials
+				$this->tokenPassword();
+				break;
+			case 'client_credentials':				//  grant type: client credentials
+				$this->tokenClient();
+				break;
+			case 'refresh_token':
+				$this->tokenRefreshToken();
+				break;
+			default:
+				$this->errorResponse( 'invalid_grant', 'Invalid grant type: '.$grantType );
+		}
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->request	= $this->env->getRequest();
+		$config			= $this->env->getConfig()->getAll( 'module.server_oauth.', TRUE );
+		$this->lifetimeAccessToken			= $config->get( 'lifetime.access' );
+		$this->lifetimeAuthorizationCode	= $config->get( 'lifetime.code' );
+		$this->lifetimeRefreshRefreshToken	= $config->get( 'lifetime.refresh' );
+		$this->cleanUp();
+	}
+
+
 	/**
 	 *	Removes all expired access tokens, authorization codes and refresh tokens.
 	 *	@access		protected
 	 *	@return		void
 	 *	@todo		idea: return list of refreshed tokens/codes
 	 */
-	protected function cleanUp(){
+	protected function cleanUp()
+	{
 		$modelCode			= new Model_Oauth_Code( $this->env );
 		$modelApplication	= new Model_Oauth_Application( $this->env );
 		$modelAccessToken	= new Model_Oauth_AccessToken( $this->env );
 		$modelRefreshToken	= new Model_Oauth_RefreshToken( $this->env );
 
 		$expired		= time() - $this->lifetimeAuthorizationCode;
-		foreach( $modelCode->getAll( array( 'createdAt' => '<'.$expired ) ) as $entry )
+		foreach( $modelCode->getAll( array( 'createdAt' => '< '.$expired ) ) as $entry )
 			$modelCode->remove( $entry->oauthCodeId );
 
 		$expired		= time() - $this->lifetimeAccessToken;
-		foreach( $modelAccessToken->getAll( array( 'createdAt' => '<'.$expired ) ) as $entry )
+		foreach( $modelAccessToken->getAll( array( 'createdAt' => '< '.$expired ) ) as $entry )
 			$modelAccessToken->remove( $entry->oauthAccessTokenId );
 
 		$expired		= time() - $this->lifetimeRefreshToken;
-		foreach( $modelRefreshToken->getAll( array( 'createdAt' => '<'.$expired ) ) as $entry )
+		foreach( $modelRefreshToken->getAll( array( 'createdAt' => '< '.$expired ) ) as $entry )
 			$modelRefreshToken->remove( $entry->oauthRefreshTokenId );
 	}
 
@@ -157,7 +181,8 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 	 *	@access		protected
 	 *	@return		object|NULL		Data object containing client ID and secret if detected, NULL otherwise
 	 */
-	protected function decodeBasicAuthentication(){
+	protected function decodeBasicAuthentication()
+	{
 		$headers    = getallheaders();
 		if( !empty( $headers['Authorization'] ) ){
 			if( preg_match( "/^Basic /", $headers['Authorization'] ) ){
@@ -169,7 +194,8 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 		return NULL;
 	}
 
-	protected function errorRedirect( $message, $description = NULL, $uri = NULL, $status = 302 ){
+	protected function errorRedirect( $message, $description = NULL, $uri = NULL, $status = 302 )
+	{
 		$parameters		= array( 'error' => $message );
 		if( strlen( trim( $description ) ) )
 			$parameters['error_description']	= utf8_decode( $description );
@@ -189,7 +215,8 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 	 *	@param		string		$uri			URI within local application to redirect to
 	 *	@return		void
 	 */
-	protected function errorReport( $message, $uri = NULL ){
+	protected function errorReport( $message, $uri = NULL )
+	{
 		$this->env->getMessenger()->noteError( $message );
 		$this->restart( $uri, !$uri );
 	}
@@ -203,7 +230,8 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 	 *	@param		string		$uri			URI for further information
 	 *	@return		void
 	 */
-	protected function errorResponse( $message, $description = NULL, $uri = NULL, $status = 400 ){
+	protected function errorResponse( $message, $description = NULL, $uri = NULL, $status = 400 )
+	{
 		$parameters	= array( 'error' => $message );
 		if( strlen( trim( $description ) ) )
 			$parameters['error_description']	= utf8_decode( $description );
@@ -232,7 +260,8 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 	 *	@param		string		$scope				List of scopes asked to access to
 	 *	@return		sting		Authorization code to be delivered to redirect URI
 	 */
-	protected function generateAuthorizationCode( $applicationId, $userId, $redirectUri, $scope = NULL ){
+	protected function generateAuthorizationCode( $applicationId, $userId, $redirectUri, $scope = NULL ): string
+	{
 		$modelCode	= new Model_Oauth_Code( $this->env );
 		$code		= $modelCode->getNewCode( $applicationId, $scope );
 		$codeId		= $modelCode->add( array(
@@ -260,7 +289,8 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 	 *	@return		string		Access token
 	 *	@todo		implement scope validation/filtering beforehand
 	 */
-	protected function generateAccessToken( $applicationId, $userId, $scope = NULL, $salt = NULL, $pepper = NULL ){
+	protected function generateAccessToken( $applicationId, $userId, $scope = NULL, $salt = NULL, $pepper = NULL ): string
+	{
 		$modelToken	= new Model_Oauth_AccessToken( $this->env );
 		$token		= $modelToken->getNewToken( $applicationId, $scope, $salt, $pepper );
 		$tokenId	= $modelToken->add( array(
@@ -286,7 +316,8 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 	 *	@return		string		Access token
 	 *	@todo		implement scope validation/filtering beforehand
 	 */
-	protected function generateRefreshToken( $applicationId, $scope = NULL, $salt = NULL, $pepper = NULL ){
+	protected function generateRefreshToken( $applicationId, $scope = NULL, $salt = NULL, $pepper = NULL ): string
+	{
 		$modelRefresh	= new Model_Oauth_RefreshToken( $this->env );
 		$token			= $modelRefresh->getNewToken( $applicationId, $scope, $salt, $pepper );
 		$refreshId		= $modelRefresh->add( array(
@@ -298,38 +329,25 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 		return $token;
 	}
 
-	public function index(){
-	}
-
 	/**
-	 *	...
-	 *	Supported grant types: authorization_code, password, client_credentials, refresh_token
-	 *	@access		public
-	 *	@return		void
+	 *	... unfinished helper method ...
+	 *	@access		protected
+	 *	@param		string			Client ID
+	 *	@return		integer|NULL	Application ID or NULL if not available
+	 *	@todo		refactor to getApplicationFromClientId, delivering application data object instead of ID
 	 */
-	public function token(){
-		if( !strlen( trim( $grantType = $this->request->get( 'grant_type' ) ) ) )
-			$this->errorResponse( 'invalid_request', 'Missing grant type.' );
-
-		switch( $grantType ){
-			case 'authorization_code':				//  grant type: authorization code
-				$this->tokenAuthorizationCode();
-				break;
-			case 'password':						//  grant type: resource owner password credentials
-				$this->tokenPassword();
-				break;
-			case 'client_credentials':				//  grant type: client credentials
-				$this->tokenClient();
-				break;
-			case 'refresh_token':
-				$this->tokenRefreshToken();
-				break;
-			default:
-				$this->errorResponse( 'invalid_grant', 'Invalid grant type: '.$grantType );
-		}
+	protected function getApplicationIdFromClientId( $clientId )
+	{
+		$model			= new Model_Oauth_Application( $this->env );
+		$application	= $model->getByIndex( 'clientId', $clientId );
+		if( $application )
+			return $application->oauthApplicationId;
+		return NULL;
 	}
 
-	protected function tokenAuthorizationCode(){
+
+	protected function tokenAuthorizationCode()
+	{
 		$modelCode			= new Model_Oauth_Code( $this->env );									//  connect storage of authorization codes
 		$modelApplication	= new Model_Oauth_Application( $this->env );							//  connect storage of applications
 		if( !strlen( trim( $code = $this->request->get( 'code' ) ) ) )								//  if authorization code is not in request
@@ -458,7 +476,8 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 		$this->respondJsonData( $data );
 	}
 
-	protected function tokenRefreshToken(){
+	protected function tokenRefreshToken()
+	{
 		$modelApplication	= new Model_Oauth_Application( $this->env );							//  connect storage of applications
 		$modelRefresh		= new Model_Oauth_RefreshToken( $this->env );
 		if( !strlen( trim( $refreshToken = $this->request->get( 'refresh_token' ) ) ) )				//  if authorization code is not in request
@@ -507,7 +526,8 @@ class Controller_Oauth extends CMF_Hydrogen_Controller{
 		$this->respondJsonData( $data );
 	}
 
-	protected function respondJsonData( $data ){
+	protected function respondJsonData( $data )
+	{
 		header( 'Content-Type: application/json' );
 		print( json_encode( $data ) );
 		exit;

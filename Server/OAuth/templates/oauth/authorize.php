@@ -3,6 +3,9 @@ $w	= (object) $words['authorize'];
 
 extract( $view->populateTexts( array( 'authorize.top', 'authorize.bottom' ), 'html/oauth/', array( 'application' => $application ) ) );
 
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'fa fa-fw fa-arrow-left' ) );
+$iconLogin		= UI_HTML_Tag::create( 'i', '', array( 'fa fa-fw fa-sign-in' ) );
+
 return $textAuthorizeTop.'
 		<div class="content-panel">
 			<div class="content-panel-inner">
@@ -27,11 +30,10 @@ return $textAuthorizeTop.'
 						</div>
 					</div>
 					<div class="buttonbar">
-						<a href="'.$application->url.'" class="btn"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
-						<button type="submit" name="login" class="btn btn-primary"><i class="icon-ok icon-white"></i> '.$w->buttonLogin.'</button>
+						<a href="'.$application->url.'" class="btn">'.$iconCancel.' '.$w->buttonCancel.'</a>
+						<button type="submit" name="login" class="btn btn-primary">'.$iconLogin.' '.$w->buttonLogin.'</button>
 					</div>
 				</form>
 			</div>
 		</div>
 '.$textAuthorizeBottom;
-?>

@@ -2,10 +2,11 @@
 $optType	= UI_HTML_Elements::Options( $words['types'], $application->type );
 $optStatus	= UI_HTML_Elements::Options( $words['states'], $application->status );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconEnable		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-play not-icon-white' ) );
-$iconDisable	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pause not-icon-white' ) );
+$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
+$iconEnable		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) );
+$iconDisable	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) );
 
 $buttonEnable	= UI_HTML_Tag::create( 'a', $iconEnable.' aktivieren', array( 'href' => "#", 'disabled' => 'disabled', 'class' => "btn btn-default btn-small disabled" ) );
 $buttonDisable	= UI_HTML_Tag::create( 'a', $iconDisable.' deaktivieren', array( 'href' => "#", 'disabled' => 'disabled', 'class' => "btn not-btn-inverse btn-small disabled" ) );
@@ -71,11 +72,11 @@ return '
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="./oauth/application" class="btn not-btn-small"><i class="icon-arrow-left"></i> zurück</a>
+				<a href="./oauth/application" class="btn not-btn-small">'.$iconCancel.' zurück</a>
 				<a href="./oauth/application/view/'.$application->oauthApplicationId.'" class="btn not-btn-small btn-info"><i class="icon-eye-open icon-white"></i> anzeigen</a>
 				&nbsp;|&nbsp;
-				<button type="submit" name="save" class="btn btn-success not-btn-small"><i class="icon-ok icon-white"></i> speichern</button>
-				<a href="./oauth/application/remove/'.$application->oauthApplicationId.'" class="btn btn-danger not-btn-small"><i class="icon-remove icon-white"></i> entfernen</a>
+				<button type="submit" name="save" class="btn btn-success not-btn-small">'.$iconSave.' speichern</button>
+				<a href="./oauth/application/remove/'.$application->oauthApplicationId.'" class="btn btn-danger not-btn-small">'.$iconRemove.' entfernen</a>
 				&nbsp;|&nbsp;
 				<div class="btn-group">
 					'.$buttonEnable.'

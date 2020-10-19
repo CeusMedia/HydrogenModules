@@ -5,7 +5,6 @@
  *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
 /**
  *	OAuth Access Token Model.
@@ -14,7 +13,6 @@
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
 /**
 DROP TABLE IF EXISTS `<%?prefix%>oauth_access_tokens`;
@@ -31,9 +29,10 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_access_tokens` (
   KEY `token` (`token`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
  */
-class Model_Oauth_AccessToken extends CMF_Hydrogen_Model {
-
+class Model_Oauth_AccessToken extends CMF_Hydrogen_Model
+{
 	protected $name		= 'oauth_access_tokens';
+
 	protected $columns	= array(
 		'oauthAccessTokenId',
 		'oauthApplicationId',
@@ -42,12 +41,15 @@ class Model_Oauth_AccessToken extends CMF_Hydrogen_Model {
 		'scope',
 		'createdAt',
 	);
+
 	protected $primaryKey	= 'oauthAccessTokenId';
+
 	protected $indices		= array(
 		'oauthApplicationId',
 		'userId',
 		'token',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
 	/**
@@ -59,7 +61,8 @@ class Model_Oauth_AccessToken extends CMF_Hydrogen_Model {
 	 *	@param		string		$pepper				Token hash pepper (optional)
 	 *	@return		string		Token (32 characters)
 	 */
-	public function getNewToken( $applicationId, $scope = "", $salt = NULL, $pepper = NULL ){
+	public function getNewToken( $applicationId, $scope = "", $salt = NULL, $pepper = NULL ): string
+	{
 		do{
 			$key	= $applicationId.'_'.$scope.'_'.$salt.'_'.microtime( TRUE ).'_'.$pepper;
 			$token	= md5( $key );
@@ -68,4 +71,3 @@ class Model_Oauth_AccessToken extends CMF_Hydrogen_Model {
 		return $token;
 	}
 }
-?>

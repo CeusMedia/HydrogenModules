@@ -34,10 +34,9 @@ return '
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="./oauth/application" class="btn not-btn-small"><i class="icon-arrow-left"></i> zurück</a>
-				<button type="submit" name="save" class="btn btn-success not-btn-small"><i class="icon-ok icon-white"></i> hinzufügen</button>
+				<a href="./oauth/application" class="btn not-btn-small"><i class="fa fa-fw fa-arrow-left"></i> zurück</a>
+				<button type="submit" name="save" class="btn btn-success not-btn-small"><i class="fa fa-fw fa-check"></i> hinzufügen</button>
 			</div>
 		</form>
 	</div>
-</div>
-';
+</div>';

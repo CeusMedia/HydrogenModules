@@ -5,7 +5,6 @@
  *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
 /**
  *	OAuth Code Model.
@@ -14,7 +13,6 @@
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
 /**
 DROP TABLE IF EXISTS `<%?prefix%>oauth_codes`;
@@ -33,9 +31,10 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_codes` (
   KEY `code` (`code`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
  */
-class Model_Oauth_Code extends CMF_Hydrogen_Model {
-
+class Model_Oauth_Code extends CMF_Hydrogen_Model
+{
 	protected $name		= 'oauth_codes';
+
 	protected $columns	= array(
 		'oauthCodeId',
 		'oauthApplicationId',
@@ -45,13 +44,16 @@ class Model_Oauth_Code extends CMF_Hydrogen_Model {
 		'scope',
 		'createdAt',
 	);
+
 	protected $primaryKey	= 'oauthCodeId';
+
 	protected $indices		= array(
 		'oauthApplicationId',
 		'userId',
 		'redirectUri',
 		'code',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
 	/**
@@ -61,7 +63,8 @@ class Model_Oauth_Code extends CMF_Hydrogen_Model {
 	 *	@param		string		$scope				List of scopes to get token for (optional)
 	 *	@return		string		Authorization code (32 characters)
 	 */
-	public function getNewCode( $applicationId, $scope = "" ){
+	public function getNewCode( $applicationId, $scope = '' ): string
+	{
 		do{
 			$code	= md5( $applicationId.'_'.$scope.'_'.microtime( TRUE ) );
 		}
@@ -69,4 +72,3 @@ class Model_Oauth_Code extends CMF_Hydrogen_Model {
 		return $code;
 	}
 }
-?>

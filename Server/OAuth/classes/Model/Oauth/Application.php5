@@ -5,7 +5,6 @@
  *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
 /**
  *	OAuth Code Model.
@@ -14,18 +13,29 @@
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
-class Model_Oauth_Application extends CMF_Hydrogen_Model {
-
+class Model_Oauth_Application extends CMF_Hydrogen_Model
+{
 	const STATUS_REMOVED		= -1;
-	const STATUS_DISABLED	= 0;
+	const STATUS_DISABLED		= 0;
 	const STATUS_ENABLED		= 1;
-	
-	const TYPE_PUBLIC		= 0;
-	const TYPE_CONFIDENTIAL	= 1;
-		
+
+	const STATUSES				= array(
+		self::STATUS_REMOVED,
+		self::STATUS_DISABLED,
+		self::STATUS_ENABLED,
+	);
+
+	const TYPE_PUBLIC			= 0;
+	const TYPE_CONFIDENTIAL		= 1;
+
+	const TYPES					= array(
+		self::TYPE_PUBLIC,
+		self::TYPE_CONFIDENTIAL,
+	);
+
 	protected $name		= 'oauth_applications';
+
 	protected $columns	= array(
 		'oauthApplicationId',
 		'userId',
@@ -39,7 +49,9 @@ class Model_Oauth_Application extends CMF_Hydrogen_Model {
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'oauthApplicationId';
+
 	protected $indices		= array(
 		'userId',
 		'type',
@@ -48,9 +60,11 @@ class Model_Oauth_Application extends CMF_Hydrogen_Model {
 		'clientSecret',
 		'url',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function getNewClientId( $salt = NULL, $pepper = NULL ){
+	public function getNewClientId( $salt = NULL, $pepper = NULL ): string
+	{
 		do{
 			$pos	= round( rand(0, 1) * 20 );
 			$id		= substr( md5( $salt.'_'.microtime( TRUE ).'_'.$pepper ), $pos, 12 );
@@ -59,11 +73,13 @@ class Model_Oauth_Application extends CMF_Hydrogen_Model {
 		return $id;
 	}
 
-	public function getNewClientSecret( $salt = NULL, $pepper = NULL ){
-		return hash( "sha256", $salt.'_'.microtime( TRUE ).'_'.$pepper );		
+	public function getNewClientSecret( $salt = NULL, $pepper = NULL ): string
+	{
+		return hash( "sha256", $salt.'_'.microtime( TRUE ).'_'.$pepper );
 	}
 
-	public function remove( $id ){
+	public function remove( $id )
+	{
 		$modelAccess	= new Model_Oauth_AccessToken( $this->env );
 		$modelCode		= new Model_Oauth_Code( $this->env );
 		$modelRefresh	= new Model_Oauth_RefreshToken( $this->env );
@@ -73,4 +89,3 @@ class Model_Oauth_Application extends CMF_Hydrogen_Model {
 		parent::remove( $id );
 	}
 }
-?>

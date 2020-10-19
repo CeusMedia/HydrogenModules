@@ -5,7 +5,6 @@
  *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
 /**
  *	OAuth Refresh Token Model.
@@ -14,11 +13,11 @@
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
-class Model_Oauth_RefreshToken extends CMF_Hydrogen_Model {
-
+class Model_Oauth_RefreshToken extends CMF_Hydrogen_Model
+{
 	protected $name		= 'oauth_refresh_tokens';
+
 	protected $columns	= array(
 		'oauthRefreshTokenId',
 		'oauthApplicationId',
@@ -26,11 +25,14 @@ class Model_Oauth_RefreshToken extends CMF_Hydrogen_Model {
 		'scope',
 		'createdAt',
 	);
+
 	protected $primaryKey	= 'oauthRefreshTokenId';
+
 	protected $indices		= array(
 		'oauthApplicationId',
 		'token',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
 	/**
@@ -42,7 +44,8 @@ class Model_Oauth_RefreshToken extends CMF_Hydrogen_Model {
 	 *	@param		string		$pepper				Token hash pepper (optional)
 	 *	@return		string		Token (32 characters)
 	 */
-	public function getNewToken( $applicationId, $scope = "", $salt = NULL, $pepper = NULL ){
+	public function getNewToken( $applicationId, $scope = "", $salt = NULL, $pepper = NULL ): string
+	{
 		do{
 			$key	= $applicationId.'_'.$scope.'_'.$salt.'_'.microtime( TRUE ).'_'.$pepper;
 			$token	= md5( $key );
@@ -51,4 +54,3 @@ class Model_Oauth_RefreshToken extends CMF_Hydrogen_Model {
 		return $token;
 	}
 }
-?>
