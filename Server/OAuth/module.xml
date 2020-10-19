@@ -65,7 +65,9 @@ RFC 6749 (http://tools.ietf.org/html/rfc6749).
 	<link access="public" path="resource/user"/>
 	<link access="public" path="resource/userId"/>
 	<link access="acl" path="oauth/application" xml:lang="de">OAuth Applikationen</link>
-	<link access="acl" path="oauth/resource" xml:lang="de">OAuth Ressourcen</link>
+	<link access="acl" path="oauth/application" xml:lang="en">OAuth Applicatios</link>
+<!--	<link access="acl" path="oauth/resource" xml:lang="de">OAuth Ressourcen</link>-->
+<!--	<link access="acl" path="oauth/resource" xml:lang="en">OAuth Resources</link>-->
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>oauth_access_tokens`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_access_tokens` (

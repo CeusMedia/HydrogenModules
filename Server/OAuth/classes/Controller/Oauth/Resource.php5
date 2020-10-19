@@ -8,6 +8,7 @@
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
+ *	@todo			finish implementation
  *	@todo			code doc
  */
 class Controller_Oauth_Resource extends CMF_Hydrogen_Controller
@@ -26,6 +27,9 @@ class Controller_Oauth_Resource extends CMF_Hydrogen_Controller
 		remark( "Path: ".$path );
 		print_m( $get->getAll() );
 		die;
+
+		//	@todo	finish implementation
+		//this->addData( 'resources', self::$resource );
 	}
 
 	public static function registerResource( CMF_Hydrogen_Environment $env, $path, $class, $method, $scope = NULL )
@@ -39,7 +43,7 @@ class Controller_Oauth_Resource extends CMF_Hydrogen_Controller
 		);
 	}
 
-	proteced function __onInit()
+	protected function __onInit()
 	{
 		$this->env->getModules()->callHook( 'OAuthServer', 'registerResource', $this );
 	}
