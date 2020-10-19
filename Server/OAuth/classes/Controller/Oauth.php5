@@ -297,7 +297,7 @@ class Controller_Oauth extends CMF_Hydrogen_Controller
 			'oauthApplicationId'	=> $applicationId,
 			'userId'				=> $userId,
 			'token'					=> $token,
-			'scope'					=> $scope,
+			'scope'					=> (string) $scope,
 			'createdAt'				=> time(),
 		) );
 		return $token;
@@ -323,7 +323,7 @@ class Controller_Oauth extends CMF_Hydrogen_Controller
 		$refreshId		= $modelRefresh->add( array(
 			'oauthApplicationId'	=> $applicationId,
 			'token'					=> $token,
-			'scope'					=> $scope,
+			'scope'					=> (string) $scope,
 			'createdAt'				=> time(),
 		) );
 		return $token;
@@ -400,7 +400,8 @@ class Controller_Oauth extends CMF_Hydrogen_Controller
 		$this->respondJsonData( $data );
 	}
 
-	protected function tokenClient(){
+	protected function tokenClient()
+	{
 		if( !( $client = $this->decodeBasicAuthentication() ) )										//  no basic authentication found
 			$this->errorResponse( 'invalid_client', 'Missing client authentication header', NULL, 401 );
 		$clientId		= $client->clientId;													//  get client ID from basic authentication
@@ -426,7 +427,8 @@ class Controller_Oauth extends CMF_Hydrogen_Controller
 	/**
 	 *	@todo	protect against brute force attacks (http://tools.ietf.org/html/rfc6749#section-4.3.2)
 	 */
-	protected function tokenPassword(){
+	protected function tokenPassword()
+	{
 		$modelApplication	= new Model_Oauth_Application( $this->env );							//  connect storage of applications
 		if( !strlen( trim( $username = $this->request->get( 'username' ) ) ) )						//  if username is not in request
 			$this->errorResponse( 'invalid_request', 'Missing username.' );							//  respond error
@@ -459,7 +461,9 @@ class Controller_Oauth extends CMF_Hydrogen_Controller
 		$modelUser	= new Model_User( $this->env );
 		if( !( $user = $modelUser->getByIndex( 'username', $username ) ) )
 			$this->errorResponse( 'invalid_client', 'Invalid user', NULL, 401 );
-		if( $user->password !== md5( $password ) )
+
+		$logic	= Logic_UserPassword::getInstance( $this->env );
+		if( !$logic->validateUserPassword( $user->userId, $password ) )
 			$this->errorResponse( 'invalid_client', 'Invalid password', NULL, 401 );
 
 		$scope	= $this->request->get( 'scope' );

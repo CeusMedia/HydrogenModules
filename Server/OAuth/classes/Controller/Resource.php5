@@ -1,11 +1,102 @@
 <?php
-class Controller_Resource extends CMF_Hydrogen_Controller {
-
-	public function __construct( CMF_Hydrogen_Environment $env, $setupView = TRUE ){
+class Controller_Resource extends CMF_Hydrogen_Controller
+{
+	public function __construct( CMF_Hydrogen_Environment $env, $setupView = TRUE )
+	{
 		parent::__construct( $env, FALSE );
 	}
 
-	protected function checkToken(){
+	public function me()
+	{
+		$this->checkToken();
+		$this->checkPostRequest();
+		$request	= $this->env->getRequest();
+		$modelToken	= new Model_Oauth_AccessToken( $this->env );
+		$modelUser	= new Model_User( $this->env );
+		$token		= $modelToken->getByIndex( 'token', $request->get( 'access_token' ) );
+		if( $token->userId < 1 )
+			$this->handleJsonResponse( 'error', array(
+				'message'		=> 'not_an_user_token',
+				'description'	=> '...',
+			), 404 );
+		$user		= $modelUser->get( $token->userId );
+		if( !$user )
+			$this->handleJsonResponse( 'error', array(
+				'message'		=> 'invalid_user',
+				'description'	=> '...',
+			), 404 );
+		$this->handleJsonResponse( 'data', array(
+			'user'	=> $user,
+		) );
+	}
+
+	public function user( $username )
+	{
+		$this->checkToken();
+//		$this->checkPostRequest();
+		$request	= $this->env->getRequest();
+		$model		= new Model_User( $this->env );
+		$user		= $model->getByIndex( 'username', $username );
+		if( !$user ){
+			$this->handleJsonResponse( 'error', array(
+				'message'		=> 'invalid_username',
+				'description'	=> '...',
+			), 404 );
+		}
+		if( $this->isWriteAction() ){
+			$data = $this->getPostData();
+			if( isset( $data['password'] ) )
+				unset( $data['password'] );
+			$model->edit( $user->userId, $data );
+			$user	= $model->getByIndex( 'username', $username );
+		}
+		unset( $user->password );
+		$this->handleJsonResponse( 'data', array(
+			'user'	=> $user,
+		) );
+	}
+
+	public function userId( $userId )
+	{
+		$this->checkToken();
+		$this->checkPostRequest();
+		$request	= $this->env->getRequest();
+		$model		= new Model_User( $this->env );
+		$user		= $model->get( $userId );
+		if( !$user ){
+			$this->handleJsonResponse( 'error', array(
+				'message'		=> 'invalid_user_id',
+				'description'	=> '...',
+			), 404 );
+		}
+		if( $this->isWriteAction() ){
+			$data = $this->getPostData();
+			if( isset( $data['password'] ) )
+				unset( $data['password'] );
+			$model->edit( $user->userId, $data );
+			$user		= $model->get( $userId );
+		}
+		unset( $user->password );
+		$this->handleJsonResponse( 'data', array(
+			'user'	=> $user,
+		) );
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function checkPostRequest()
+	{
+		$request	= $this->env->getRequest();
+		if( strtoupper( $request->getMethod() ) === "POST" )
+			return TRUE;
+		$this->handleJsonErrorResponse( array(
+			'message'		=> 'invalid_request_method',
+			'description'	=> 'Use POST HTTP request method for this resource.'
+		) );
+	}
+
+	protected function checkToken()
+	{
 		$request	= $this->env->getRequest();
 		$token		= $request->get( 'access_token' );
 		if( !$token ){
@@ -31,17 +122,8 @@ class Controller_Resource extends CMF_Hydrogen_Controller {
 			) );
 	}
 
-	protected function checkPostRequest(){
-		$request	= $this->env->getRequest();
-		if( strtoupper( $request->getMethod() ) === "POST" )
-			return TRUE;
-		$this->handleJsonErrorResponse( array(
-			'message'		=> 'invalid_request_method',
-			'description'	=> 'Use POST HTTP request method for this resource.'
-		) );
-	}
-
-	protected function getPostData(){
+	protected function getPostData(): array
+	{
 		$data	= array();
 		$body	= $this->env->getRequest()->getBody();
 		if( strlen( trim( $body ) ) ){
@@ -53,84 +135,13 @@ class Controller_Resource extends CMF_Hydrogen_Controller {
 		return $data;
 	}
 
-	protected function isWriteAction(){
+	protected function isWriteAction(): bool
+	{
 		return strlen( trim( $this->env->getRequest()->getBody() ) ) > 0;
 	}
 
-	protected function hasWriteAccess( $userId, $resource ){
+	protected function hasWriteAccess( $userId, $resource ): bool
+	{
 		return TRUE;
-	}
-
-	public function me(){
-		$this->checkToken();
-		$this->checkPostRequest();
-		$request	= $this->env->getRequest();
-		$modelToken	= new Model_Oauth_AccessToken( $this->env );
-		$modelUser	= new Model_User( $this->env );
-		$token		= $modelToken->getByIndex( 'token', $request->get( 'access_token' ) );
-		if( $token->userId < 1 )
-			$this->handleJsonResponse( 'error', array(
-				'message'		=> 'not_an_user_token',
-				'description'	=> '...',
-			), 404 );
-		$user		= $modelUser->get( $token->userId );
-		if( !$user )
-			$this->handleJsonResponse( 'error', array(
-				'message'		=> 'invalid_user',
-				'description'	=> '...',
-			), 404 );
-		$this->handleJsonResponse( 'data', array(
-			'user'	=> $user,
-		) );
-	}
-
-	public function user( $username ){
-		$this->checkToken();
-//		$this->checkPostRequest();
-		$request	= $this->env->getRequest();
-		$model		= new Model_User( $this->env );
-		$user		= $model->getByIndex( 'username', $username );
-		if( !$user ){
-			$this->handleJsonResponse( 'error', array(
-				'message'		=> 'invalid_username',
-				'description'	=> '...',
-			), 404 );
-		}
-		if( $this->isWriteAction() ){
-			$data = $this->getPostData();
-			if( isset( $data['password'] ) )
-				unset( $data['password'] );
-			$model->edit( $user->userId, $data );
-			$user	= $model->getByIndex( 'username', $username );
-		}
-		unset( $user->password );
-		$this->handleJsonResponse( 'data', array(
-			'user'	=> $user,
-		) );
-	}
-
-	public function userId( $userId ){
-		$this->checkToken();
-		$this->checkPostRequest();
-		$request	= $this->env->getRequest();
-		$model		= new Model_User( $this->env );
-		$user		= $model->get( $userId );
-		if( !$user ){
-			$this->handleJsonResponse( 'error', array(
-				'message'		=> 'invalid_user_id',
-				'description'	=> '...',
-			), 404 );
-		}
-		if( $this->isWriteAction() ){
-			$data = $this->getPostData();
-			if( isset( $data['password'] ) )
-				unset( $data['password'] );
-			$model->edit( $user->userId, $data );
-			$user		= $model->get( $userId );
-		}
-		unset( $user->password );
-		$this->handleJsonResponse( 'data', array(
-			'user'	=> $user,
-		) );
 	}
 }
