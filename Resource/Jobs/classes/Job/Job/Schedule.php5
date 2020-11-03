@@ -12,8 +12,8 @@ class Job_Job_Schedule extends Job_Abstract
 //	protected $logic;
 
 	/**
-	 *	Removes old mails from database table.
-	 *	Mails to be removed can be filtered by minimum age and mail class(es).
+	 *	Archive old job runs.
+	 *	Job runs to be archived can be filtered by minimum age and job idenfier(s).
 	 *	Supports dry mode.
 	 *
 	 *	Parameters:
@@ -50,8 +50,8 @@ class Job_Job_Schedule extends Job_Abstract
 
 		//  GET JOB RUNS
 		$conditions		= array(
-			'archived'			=> Model_Job_Run::ARCHIVED_NO,
-			'enqueuedAt' 		=> '< '.$threshold->format( 'U' ),
+			'archived'		=> Model_Job_Run::ARCHIVED_NO,
+			'finishedAt'	=> '< '.$threshold->format( 'U' ),
 		);
 
 		//  PARAMETER: IDENTIFIER(S)
@@ -92,11 +92,14 @@ class Job_Job_Schedule extends Job_Abstract
 		$runIds	= $modelRun->getAll( $conditions, $orders, $limits, array( 'jobRunId' ) );
 		$nrJobs	= count( $runIds );
 		$this->showProgress( $counter = 0, $nrJobs );
+		$database	= $this->env->getDatabase();
+		$database->beginTransaction();
 		foreach( $runIds as $nr => $runId ){
 			if( !$this->dryMode )
 				$this->logic->archiveJobRun( $runId );
 			$this->showProgress( ++$counter, $nrJobs );
 		}
+		$database->commit();
 		$this->results	= array( 'count' => $nrJobs );
 		$this->out( sprintf( 'Archived %d job runs.', $nrJobs ) );
 		return $nrJobs ? 2 : 1;
