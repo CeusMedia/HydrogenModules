@@ -1,71 +1,6 @@
 <?php
-class Hook_App_Site/* extends CMF_Hydrogen_Hook*/{
-
-	/**
-	 *	@deprecated		use Hook_App_Site::onEnvConstructEnd instead
-	 */
-	static public function ___onEnvConstructEnd( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
-			'type'		=> 'hook',
-			'entity'	=> 'Hook_App_Site::___onEnvConstructEnd',
-			'message'	=> 'Hook method "___onEnvConstructEnd" has been renamed to "onEnvConstructEnd"',
-			'instead'	=> 'Hook_App_Site::onEnvConstructEnd',
-		) );
-		return self::onEnvConstructEnd( $env, $context, $module, $data );
-	}
-
-	/**
-	 *	@deprecated		use Hook_App_Site::onPageApplyModules instead
-	 */
-	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
-			'type'		=> 'hook',
-			'entity'	=> 'Hook_App_Site::___onPageApplyModules',
-			'message'	=> 'Hook method "___onPageApplyModules" has been renamed to "onPageApplyModules"',
-			'instead'	=> 'Hook_App_Site::onPageApplyModules',
-		) );
-		return self::onPageApplyModules( $env, $context, $module, $data );
-	}
-
-	/**
-	 *	@deprecated		use Hook_App_Site::onPageInit instead
-	 */
-	static public function ___onPageInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
-			'type'		=> 'hook',
-			'entity'	=> 'Hook_App_Site::___onPageInit',
-			'message'	=> 'Hook method "___onPageInit" has been renamed to "onPageInit"',
-			'instead'	=> 'Hook_App_Site::onPageInit',
-		) );
-		return self::onPageInit( $env, $context, $module, $data );
-	}
-
-	/**
-	 *	@deprecated		use Hook_App_Site::onTinyMCEGetImageList instead
-	 */
-	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
-			'type'		=> 'hook',
-			'entity'	=> 'Hook_App_Site::___onTinyMCE_getImageList',
-			'message'	=> 'Hook method "___onTinyMCE_getImageList" has been renamed to "onTinyMCEGetImageList"',
-			'instead'	=> 'Hook_App_Site::onTinyMCEGetImageList',
-		) );
-		return self::onTinyMCEGetImageList( $env, $context, $module, $data );
-	}
-
-	/**
-	 *	@deprecated		use Hook_App_Site::onFrameworkDeprecation instead
-	 */
-	static public function ___onFrameworkDeprecation( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
-			'type'		=> 'hook',
-			'entity'	=> 'Hook_App_Site::___onFrameworkDeprecation',
-			'message'	=> 'Hook method "___onFrameworkDeprecation" has been renamed to "onFrameworkDeprecation"',
-			'instead'	=> 'Hook_App_Site::onFrameworkDeprecation',
-		) );
-		return self::onFrameworkDeprecation( $env, $context, $module, $data );
-	}
-
+class Hook_App_Site extends CMF_Hydrogen_Hook
+{
 	/**
 	 *	...
 	 *	@static
@@ -76,7 +11,8 @@ class Hook_App_Site/* extends CMF_Hydrogen_Hook*/{
 	 *	@param		array|object				$data		Data array or object for hook event handler
 	 *	@return		boolean|NULL				...
 	 */
-	static public function onFrameworkDeprecation( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onFrameworkDeprecation( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$entity		= 'UNKNOWN';
 		$version	= '';
 		$hint		= '';
@@ -123,7 +59,8 @@ class Hook_App_Site/* extends CMF_Hydrogen_Hook*/{
 	 *	@param		array|object				$data		Data array or object for hook event handler
 	 *	@return		boolean|NULL				...
 	 */
-	static public function onEnvConstructEnd( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onEnvConstructEnd( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		if( !$env->getModules()->has( 'Resource_Authentication' ) )
 			return;
 		if( !$env->getModules()->has( 'Info_Pages' ) )												//  module supporting pages not installed
@@ -178,7 +115,8 @@ class Hook_App_Site/* extends CMF_Hydrogen_Hook*/{
 	 *	@param		array|object				$data		Data array or object for hook event handler
 	 *	@return		boolean|NULL				...
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$messenger	= $context->env->getMessenger();									//  shortcut messenger
 		if( !file_exists( '.htaccess' ) ){												//  .htaccess file is not existing
 			if( file_exists( '.htaccess.dist' ) && file_exists( '.htpasswd.dist' ) ){	//  but default files are existing
@@ -208,7 +146,8 @@ class Hook_App_Site/* extends CMF_Hydrogen_Hook*/{
 	 *	@param		array|object				$data		Data array or object for hook event handler
 	 *	@return		boolean|NULL				...
 	 */
-	static public function onPageInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onPageInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$config = $env->getConfig();														//  shortcut configuration
 		if( !$config->get( 'app.revision' ) ){												//  no revision set in base app configuration
 			$version	= $config->get( 'module.app_site.version' );						//  get version from module App:Site
@@ -230,7 +169,8 @@ class Hook_App_Site/* extends CMF_Hydrogen_Hook*/{
 	 *	@param		array|object				$data		Data array or object for hook event handler
 	 *	@return		boolean|NULL				...
 	 */
-	static public function onTinyMCEGetImageList( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onTinyMCEGetImageList( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$moduleConfig		= $env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
 		$frontend			= Logic_Frontend::getInstance( $env );
 		$remotePathThemes	= $frontend->getPath( 'themes' );
@@ -276,5 +216,75 @@ class Hook_App_Site/* extends CMF_Hydrogen_Hook*/{
 			) );
 			$context->list	= array_merge( $context->list, $list );
 		}
+	}
+
+	/**
+	 *	@deprecated		use Hook_App_Site::onEnvConstructEnd instead
+	 */
+	static public function ___onEnvConstructEnd( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
+		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
+			'type'		=> 'hook',
+			'entity'	=> 'Hook_App_Site::___onEnvConstructEnd',
+			'message'	=> 'Hook method "___onEnvConstructEnd" has been renamed to "onEnvConstructEnd"',
+			'instead'	=> 'Hook_App_Site::onEnvConstructEnd',
+		) );
+		return self::onEnvConstructEnd( $env, $context, $module, $data );
+	}
+
+	/**
+	 *	@deprecated		use Hook_App_Site::onPageApplyModules instead
+	 */
+	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
+		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
+			'type'		=> 'hook',
+			'entity'	=> 'Hook_App_Site::___onPageApplyModules',
+			'message'	=> 'Hook method "___onPageApplyModules" has been renamed to "onPageApplyModules"',
+			'instead'	=> 'Hook_App_Site::onPageApplyModules',
+		) );
+		return self::onPageApplyModules( $env, $context, $module, $data );
+	}
+
+	/**
+	 *	@deprecated		use Hook_App_Site::onPageInit instead
+	 */
+	static public function ___onPageInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
+		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
+			'type'		=> 'hook',
+			'entity'	=> 'Hook_App_Site::___onPageInit',
+			'message'	=> 'Hook method "___onPageInit" has been renamed to "onPageInit"',
+			'instead'	=> 'Hook_App_Site::onPageInit',
+		) );
+		return self::onPageInit( $env, $context, $module, $data );
+	}
+
+	/**
+	 *	@deprecated		use Hook_App_Site::onTinyMCEGetImageList instead
+	 */
+	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
+		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
+			'type'		=> 'hook',
+			'entity'	=> 'Hook_App_Site::___onTinyMCE_getImageList',
+			'message'	=> 'Hook method "___onTinyMCE_getImageList" has been renamed to "onTinyMCEGetImageList"',
+			'instead'	=> 'Hook_App_Site::onTinyMCEGetImageList',
+		) );
+		return self::onTinyMCEGetImageList( $env, $context, $module, $data );
+	}
+
+	/**
+	 *	@deprecated		use Hook_App_Site::onFrameworkDeprecation instead
+	 */
+	static public function ___onFrameworkDeprecation( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
+		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
+			'type'		=> 'hook',
+			'entity'	=> 'Hook_App_Site::___onFrameworkDeprecation',
+			'message'	=> 'Hook method "___onFrameworkDeprecation" has been renamed to "onFrameworkDeprecation"',
+			'instead'	=> 'Hook_App_Site::onFrameworkDeprecation',
+		) );
+		return self::onFrameworkDeprecation( $env, $context, $module, $data );
 	}
 }
