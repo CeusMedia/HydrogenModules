@@ -128,6 +128,12 @@ class Job_Mail_Archive extends Job_Abstract
 	 *			- example: Newsletter (for class Mail_Newsletter)
 	 *			- example: Newsletter,Form_Manager_Filled
 	 *			- default: empty, meaning all mail classes
+	 *		--limit=NUMBER
+	 *			- maximum number of mails to work on
+	 *			- optional, default: 1000
+	 *		--offset=NUMBER
+	 *			- offset if using limit
+	 *			- optional, default: 0
 	 *
 	 *	@access		public
 	 *	@return		void
@@ -136,6 +142,10 @@ class Job_Mail_Archive extends Job_Abstract
 	{
 		$age		= $this->parameters->get( '--age', '1Y' );
 		$age		= $age ? strtoupper( $age ) : '1Y';
+		$limits		= array(
+			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
+			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
+		);
 		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
 
 		$class		= $this->parameters->get( '--class', NULL );
@@ -151,29 +161,21 @@ class Job_Mail_Archive extends Job_Abstract
 			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
 		);
 		$orders		= array( 'mailId' => 'ASC' );
-		$mails		= $this->model->getAll( $conditions, $orders );
+		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
+		$nrMails	= count( $mailIds );
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );
-			$this->out( 'Would remove '.count( $mails ).' old mails.' );
+			$this->out( 'Would remove '.$nrMails.' old mails.' );
 			return;
 		}
-		$count		= 0;
-		if( $mails ){
-			$mailIds	= array();
-			foreach( $mails as $mail )
-				$mailIds[]	= $mail->mailId;
-			$this->model->removeByIndex( 'mailId', $mailIds );
+		$database	= $this->env->getDatabase();
+		$database->beginTransaction();
+		foreach( $mailIds as $nr => $mailId ){
+			$this->model->remove( $mailId );
+			$this->showProgress( $nr + 1, $nrMails );
 		}
-
-//		$fails	= array();
-/*		foreach( $mails as $mail ){
-			$this->model->remove( $mail->mailId );
-			$this->showProgress( ++$count, count( $mails ) );
-		}
-		if( $mails )
-			$this->out();*/
-		$this->out( 'Removed '.count( $mails ).' old mails.' );
-//		$this->showErrors( 'removeOldMails', $fails );
+		$database->commit();
+		$this->out( 'Removed '.$nrMails.' old mails.' );
 	}
 
 	/**
