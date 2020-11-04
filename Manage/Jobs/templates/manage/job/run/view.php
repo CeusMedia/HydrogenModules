@@ -24,12 +24,12 @@ if( $run->ranAt ){
 	$duration	= '-';
 	if( $run->finishedAt ){
 		$duration	= $run->finishedAt - $run->ranAt;
-		$duration	= Alg_Time_Duration::render( $duration, ' ', TRUE );
+		$duration	= $duration ? Alg_Time_Duration::render( $duration, ' ', TRUE ) : '-';
 	}
 	$facts['Start']				= date( 'd.m.Y H:i:s', $run->ranAt );
 	if( $run->finishedAt ){
 		$facts['Finish']			= $run->finishedAt ? date( 'd.m.Y H:i:s', $run->finishedAt ) : '-';
-		$facts['Duration']			= $duration;
+		$facts['Duration']			= $duration.'&nbsp;';
 	}
 }
 if( $run->arguments )
