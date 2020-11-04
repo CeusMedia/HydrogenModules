@@ -91,15 +91,17 @@ class Job_Job_Schedule extends Job_Abstract
 		);
 		$runIds	= $modelRun->getAll( $conditions, $orders, $limits, array( 'jobRunId' ) );
 		$nrJobs	= count( $runIds );
-		$this->showProgress( $counter = 0, $nrJobs );
-		$database	= $this->env->getDatabase();
-		$database->beginTransaction();
-		foreach( $runIds as $nr => $runId ){
-			if( !$this->dryMode )
-				$this->logic->archiveJobRun( $runId );
-			$this->showProgress( ++$counter, $nrJobs );
+		if( $nrJobs ){
+			$this->showProgress( $counter = 0, $nrJobs );
+			$database	= $this->env->getDatabase();
+			$database->beginTransaction();
+			foreach( $runIds as $nr => $runId ){
+				if( !$this->dryMode )
+					$this->logic->archiveJobRun( $runId );
+				$this->showProgress( ++$counter, $nrJobs );
+			}
+			$database->commit();
 		}
-		$database->commit();
 		$this->results	= array( 'count' => $nrJobs );
 		$this->out( sprintf( 'Archived %d job runs.', $nrJobs ) );
 		return $nrJobs ? 2 : 1;

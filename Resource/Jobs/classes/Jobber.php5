@@ -178,7 +178,23 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 			return -1;																				//  quit with negative status
 		}
 		$this->runningJob	= $preparedJobRun;
-		$result		= $this->logic->startJobRun( $preparedJobRun, $commands, $parameters );
+		try{
+			$result		= $this->logic->startJobRun( $preparedJobRun, $commands, $parameters );
+		}
+		catch( \Exception $e ){
+			$cwd	= dirname( __FILE__ ).'/';
+			$cwd	= getCwd().'/';
+			$p		= $e->getPrevious() ?: $e;
+			print( 'Error:     '.get_class( $p ).' thrown and not caught'.PHP_EOL );
+			print( 'Message:   '.$p->getMessage().PHP_EOL );
+			print( 'Location:  '.str_replace( $cwd, '', $p->getFile() ).' line #'.$p->getLine().PHP_EOL );
+//			print( 'File Dir:  '.$cwd.PHP_EOL );
+			print( 'Trace:'.PHP_EOL );
+			print( str_replace( $cwd, '', $p->getTraceAsString() ).PHP_EOL );
+			$this->runningJob	= NULL;
+			return 0;
+		}
+
 		$this->runningJob	= NULL;
 		if( is_integer( $result ) ){
 			return $result;
