@@ -268,8 +268,8 @@ ALTER TABLE `<%?prefix%>users` CHANGE `status` `status` TINYINT(1) NULL DEFAULT 
 	<sql on="update" type="mysql" version="0.4"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>user_tokens`;
 CREATE TABLE `<%?prefix%>user_tokens` (
-  `userTokenId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `userId` int(10) UNSIGNED NOT NULL,
+  `userTokenId` int(11) UNSIGNED NOT NULL,
+  `userId` int(11) UNSIGNED NOT NULL,
   `status` tinyint(1) DEFAULT '0' COMMENT '-2:revoked, -1:outdated, 0:new, 1:active',
   `token` varchar(63) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` decimal(12,0) UNSIGNED NOT NULL,
@@ -282,6 +282,9 @@ ALTER TABLE `<%?prefix%>user_tokens`
   ADD KEY `userId` (`userId`),
   ADD KEY `status` (`status`),
   ADD KEY `token` (`token`);
+
+ALTER TABLE `<%?prefix%>user_tokens`
+  MODIFY `userTokenId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>users`;
