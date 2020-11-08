@@ -7,7 +7,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.3.6</version>
+	<version>0.4</version>
 	<log version="0.1">Initital prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
@@ -23,6 +23,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<log version="0.3.4">Add hook class.</log>
 	<log version="0.3.5">Set status constants and default status in model.</log>
 	<log version="0.3.6">Update code style.</log>
+	<log version="0.4">Support user tokens backed by user passwords.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -32,7 +33,9 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 		<class>Model/Role/Right.php5</class>
 		<class>Model/User.php5</class>
 		<class>Model/User/Password.php5</class>
+		<class>Model/User/Token.php5</class>
 		<class>Logic/UserPassword.php5</class>
+		<class>Logic/UserToken.php5</class>
 		<locale>de/countries.ini</locale>
 		<locale>en/countries.ini</locale>
 	</files>
@@ -262,17 +265,37 @@ ALTER TABLE `<%?prefix%>users` DROP INDEX `accountId`, ADD INDEX `accountId` (`a
 	<sql on="update" type="mysql" version="0.3.5"><![CDATA[
 ALTER TABLE `<%?prefix%>users` CHANGE `status` `status` TINYINT(1) NULL DEFAULT '0';
 ]]></sql>
+	<sql on="update" type="mysql" version="0.4"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>user_tokens`;
+CREATE TABLE `<%?prefix%>user_tokens` (
+  `userTokenId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `userId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) DEFAULT '0' COMMENT '-2:revoked, -1:outdated, 0:new, 1:active',
+  `token` varchar(63) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `usedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  `revokedAt` decimal(12,0) UNSIGNED DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `<%?prefix%>user_tokens`
+  ADD PRIMARY KEY (`userTokenId`),
+  ADD KEY `userId` (`userId`),
+  ADD KEY `status` (`status`),
+  ADD KEY `token` (`token`);
+]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>users`;
 DROP TABLE IF EXISTS `<%?prefix%>roles`;
 DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
 DROP TABLE IF EXISTS `<%?prefix%>user_passwords`;
+DROP TABLE IF EXISTS `<%?prefix%>user_tokens`;
 ]]></sql>
 	<sql on="uninstall" type="sqlite"><![CDATA[
 DROP TABLE IF EXISTS "<%?prefix%>users";
 DROP TABLE IF EXISTS "<%?prefix%>roles";
 DROP TABLE IF EXISTS "<%?prefix%>role_rights";
 DROP TABLE IF EXISTS "<%?prefix%>user_passwords";
+DROP TABLE IF EXISTS "<%?prefix%>user_tokens";
 ]]></sql>
 	<todo>
 <![CDATA[
