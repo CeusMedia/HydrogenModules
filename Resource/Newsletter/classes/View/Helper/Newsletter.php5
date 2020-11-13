@@ -1,10 +1,17 @@
 <?php
-class View_Helper_Newsletter{
+/**
+ *	@todo	transform to real helper with render and setters
+ */
+class View_Helper_Newsletter
+{
+	protected $env;
 
 	protected $cachePath	= "cache/";
+
 	protected $preview		= FALSE;
 
-	public function __construct( CMF_Hydrogen_Environment $env, $templateId, $preview = FALSE ){
+	public function __construct( CMF_Hydrogen_Environment $env, $templateId, $preview = FALSE )
+	{
 		$this->env		= $env;
 		$this->preview	= $preview;
 		$this->logic	= new Logic_Newsletter( $env );
@@ -13,7 +20,8 @@ class View_Helper_Newsletter{
 		$this->template->styles		= $this->logic->getTemplateAttributeList( $templateId, 'styles' );
 	}
 
-	public function generateMail( $readerLetterId ){
+	public function generateMail( $readerLetterId )
+	{
 		$this->logic->checkReaderLetterId( $readerLetterId );
 		$readerLetter	= $this->logic->getReaderLetter( $readerLetterId );
 		$newsletter		= $this->logic->getNewsletter( $readerLetter->newsletterId );
@@ -26,7 +34,8 @@ class View_Helper_Newsletter{
 	/**
 	 *	@deprecated use View_Helper_Newsletter_Mail::prepareData instead
 	 */
-	public function prepareReaderDataForNewsletter( $newsletterId, $newsletterReaderId ){
+	public function prepareReaderDataForNewsletter( $newsletterId, $newsletterReaderId )
+	{
 		throw new Exception( 'Method View_Helper_Newsletter::prepareReaderDataForNewsletter is deprecated' );
 		$readerLetterId	= 0;
 //		$queueId		= 0;
@@ -74,7 +83,8 @@ class View_Helper_Newsletter{
 	 *	@todo		kriss: code doc
 	 *	@deprecated use View_Helper_Newsletter_Mail::prepareData instead
 	 */
-	public function prepareReaderDataForLetter( $readerLetterId ){
+	public function prepareReaderDataForLetter( $readerLetterId )
+	{
 		throw new Exception( 'Method View_Helper_Newsletter::prepareReaderDataForLetter is deprecated' );
 		$letter			= $this->logic->getReaderLetter( $readerLetterId );
 		$reader			= $this->logic->getReader( $letter->newsletterReaderId );
@@ -117,7 +127,8 @@ class View_Helper_Newsletter{
 	 *	@param		$mode		Mail format: 0 - Plain, 1 - HTML
 	 */
 
-	protected function callbackReplacePlainColumns( $matches ){
+	protected function callbackReplacePlainColumns( $matches )
+	{
 		$columns	= $matches[1];
 		$content	= $matches[2];
 
@@ -128,7 +139,8 @@ class View_Helper_Newsletter{
 		die;
 	}
 
-	protected function realizeColumns( $content, $mode = 0 ){
+	protected function realizeColumns( $content, $mode = 0 )
+	{
 		switch( $mode ){
 			case 0:
 //				$pattern	= "/\+col([0-9])\r?\n(.+)\r?\n-col[0-9]/s";
@@ -149,7 +161,8 @@ class View_Helper_Newsletter{
 	/**
 	 *	@todo  			check if deprecated
 	 */
-	public function renderNewsletterPlain( $newsletterId, $readerId = NULL, $data = array() ){
+	public function renderNewsletterPlain( $newsletterId, $readerId = NULL, $data = array() )
+	{
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );
 		$helper		= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId );
 		$data['title']		= $newsletter->heading;
@@ -167,7 +180,8 @@ class View_Helper_Newsletter{
 	/**
 	 *	@todo  			check if deprecated
 	 */
-	public function renderNewsletterHtml( $newsletterId, $readerId = NULL, $data = array(), $strict = TRUE ){
+	public function renderNewsletterHtml( $newsletterId, $readerId = NULL, $data = array(), $strict = TRUE )
+	{
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );
 		$helper		= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId, $this->preview );
 		$data['title']		= $newsletter->heading;
@@ -185,7 +199,8 @@ class View_Helper_Newsletter{
 	/**
 	 *	@todo  			check if deprecated
 	 */
-	public function renderPlain( $data ){
+	public function renderPlain( $data )
+	{
 		$content	= $this->template->plain;
 
 		if( $this->preview ){
@@ -201,7 +216,8 @@ class View_Helper_Newsletter{
 		return $content;
 	}
 
-	public function renderHtml( $data, $strict = TRUE ){
+	public function renderHtml( $data, $strict = TRUE )
+	{
 		$page		= new UI_HTML_PageFrame();
 		$cache		= $this->env->getCache();
 //		$page->setBaseHref( $this->env->url );
@@ -252,4 +268,3 @@ class View_Helper_Newsletter{
 		return $page->build( array( 'class' => 'mail mail-newsletter' ) );							//  return rendered HTML page
 	}
 }
-?>

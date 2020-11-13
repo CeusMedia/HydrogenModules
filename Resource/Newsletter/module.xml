@@ -3,7 +3,7 @@
 	<title>Resource: Newsletter</title>
 	<description><![CDATA[Let customers register for newsletter mails.]]></description>
 	<category>Resource</category>
-	<version>0.4.8</version>
+	<version>0.5</version>
 	<log version="0.2.1">Updated members of logic class.</log>
 	<log version="0.3">Migrate models from Info:Newsletter.</log>
 	<log version="0.3.1">Migrate mail generation from Info:Newsletter and Work:Newsletter.</log>
@@ -24,6 +24,8 @@
 	<log version="0.4.6">Improve HTML to plain text converter.</log>
 	<log version="0.4.7">Store resulting mail ID in reader letters.</log>
 	<log version="0.4.8">Improve template and theme handling.</log>
+	<log version="0.4.9">Improve code style.</log>
+	<log version="0.5">Import from protected SVN repository.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

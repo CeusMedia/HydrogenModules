@@ -1,6 +1,6 @@
 <?php
-class Model_Newsletter_Theme{
-
+class Model_Newsletter_Theme
+{
 	protected $attributesAuthor	= array(
 		'name'			=> '',
 		'email'			=> '',
@@ -9,26 +9,32 @@ class Model_Newsletter_Theme{
 		'github'		=> '',
 		'twitter'		=> '',
 	);
+
 	protected $attributesCopyright	= array(
 		'year'			=> '',
 		'link'			=> '',
 	);
+
 	protected $attributesTimestamp	= array(
 		'source'		=> '',
 	);
+
 	protected $attributesDescription	= array(
 		'format'		=> 'markdown',
 	);
+
 	protected $attributesLicense	= array(
 		'id'			=> '',
 	);
 
-	public function __construct( $env, $themePath ){
+	public function __construct( CMF_Hydrogen_Environment $env, string $themePath )
+	{
 		$this->env			= $env;
 		$this->themePath	= rtrim( $themePath, '/' ).'/';
 	}
 
-	public function createFromTemplate( $templateId, $data ){
+	public function createFromTemplate( $templateId, $data )
+	{
 		$modelTemplate	= new Model_Newsletter_Template( $this->env );
 		$template		= $modelTemplate->get( $templateId );
 		$data			= (object) array_merge( (array) $template, $data );
@@ -81,11 +87,13 @@ class Model_Newsletter_Theme{
 			$this->env->getMessenger()->noteFailure( $error );
 	}
 
-	public function get( $theme ){
+	public function get( string $theme )
+	{
 		return $this->getFromFolder( $theme );
 	}
 
-	public function getAll(){
+	public function getAll(): array
+	{
 		$themes	= array();
 		$index	= new \DirectoryIterator( $this->themePath );
 		foreach( $index as $entry ){
@@ -101,7 +109,8 @@ class Model_Newsletter_Theme{
 		return $list;
 	}
 
-	public function getFromFolder( $theme ){
+	public function getFromFolder( string $theme )
+	{
 		if( file_exists( $this->themePath.$theme.'/template.json' ) )
 			return $this->getFromFolderJson( $theme );
 		if( file_exists( $this->themePath.$theme.'/template.xml' ) )
@@ -109,7 +118,15 @@ class Model_Newsletter_Theme{
 		throw new \RangeException( 'Theme meta file "'.$theme.'" is not existing' );
 	}
 
-	protected function getFromFolderJson( $theme ){
+	public function getFromId( $id ){
+		$themes	= $this->getAll();
+		return $themes[$id];
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function getFromFolderJson( string $theme )
+	{
 		$json	= file_get_contents( $this->themePath.$theme.'/template.json' );
 		$data	= json_decode( $json );
 		if( !isset( $data->id ) ){
@@ -121,7 +138,8 @@ class Model_Newsletter_Theme{
 		return $data;
 	}
 
-	protected function getFromFolderXml( $theme ){
+	protected function getFromFolderXml( string $theme )
+	{
 		$xml	= \XML_ElementReader::readFile( $this->themePath.$theme.'/template.xml' );
 		foreach( $xml->author as $author ){
 			foreach( $this->attributesAuthor as $attributeName => $attributeDefault )
@@ -160,10 +178,4 @@ class Model_Newsletter_Theme{
 		$xml->addChild( 'id', $theme );
 		return $xml;
 	}
-
-	public function getFromId( $id ){
-		$themes	= $this->getAll();
-		return $themes[$id];
-	}
 }
-?>

@@ -1,18 +1,70 @@
 <?php
-class View_Helper_HtmlToPlainText{
+/**
+ *	Converts HTML to plain text using a DOM parser.
+ *
+ *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
+ */
+/**
+ *	Converts HTML to plain text using a DOM parser.
+ *
+ *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
+ */
+class View_Helper_HtmlToPlainText
+{
+	protected $env;
 
-	static public function convert( $html ){
+	protected $html;
+
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
+		$this->env	= $env;
+	}
+
+	/**
+	 *	Converts set HTML to plain text.
+	 *	@access		public
+	 *	@return		string				Plain text converted from set HTML
+	 *	@throws		RuntimeException	if no HTML has been set
+	 */
+	public function render(): string
+	{
+		if( !strlen( trim( $this->html ) ) )
+			throw new RuntimeException( 'No HTML set' );
+		return self::convert( $this->html );
+	}
+
+	/**
+	 *	Sets HTML to convert to plain text.
+	 *	@access		public
+	 *	@param		string		$html		HTML to convert to plain text
+	 *	@return		self
+	 */
+	public function setHtml( string $html ): self
+	{
+		$this->html	= $html;
+		return $this;
+	}
+
+	/**
+	 *	Converts set HTML to plain text, statically.
+	 *	@static
+	 *	@access		public
+	 *	@param		string		$html		HTML to convert to plain text
+	 *	@return		string		Plain text converted from set HTML
+	 */
+	public static function convert( string $html ): string
+	{
+		$html	= mb_convert_encoding( $html, 'HTML-ENTITIES', "UTF-8" );
 		$doc	= new DOMDocument();
 		$doc->preserveWhitespace = FALSE;
 		$doc->loadHTML( $html );
 		return self::convertNodes( $doc );
 	}
 
-	static protected function underline( $node, $character = '-' ){
-		return str_repeat( $character, strlen( $node->textContent ) ).PHP_EOL;
-	}
+	//  --  PROTECTED  --  //
 
-	static protected function convertNodes( $root ){
+	protected static function convertNodes( DOMNode $root ): string
+	{
 		$text		= '';
 		$cleared	= TRUE;
 		foreach( $root->childNodes as $node ){
@@ -77,7 +129,8 @@ class View_Helper_HtmlToPlainText{
 		return $text;
 	}
 
-	static protected function isBlockElement( $node ){
+	protected static function isBlockElement( DOMNode $node ): bool
+	{
 		$elements	= array_merge(
 			array( 'div', 'p', 'ul', 'li', 'hr', 'blockquote', 'pre', 'xmp' ),
 			array( 'h1', 'h2', 'h3', 'h4', 'h5' )
@@ -85,8 +138,13 @@ class View_Helper_HtmlToPlainText{
 		return in_array( $node->nodeName, $elements );
 	}
 
-	static protected function isInlineElement( $node ){
-		return !isBlockElement( $node );
+	protected static function isInlineElement( DOMNode $node ): bool
+	{
+		return !self::isBlockElement( $node );
+	}
+
+	protected static function underline( DOMNode $node, string $character = '-' ): string
+	{
+		return str_repeat( $character, strlen( $node->textContent ) ).PHP_EOL;
 	}
 }
-?>

@@ -4,8 +4,7 @@
  *	@category		...
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2013 Ceus Media
- *	@version		$Id$
+ *	@copyright		2013-2020 Ceus Media
  */
 /**
  *	...
@@ -13,17 +12,24 @@
  *	@package		...
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2013 Ceus Media
- *	@version		$Id$
+ *	@copyright		2013-2020 Ceus Media
  */
-class Model_Newsletter extends CMF_Hydrogen_Model {
-
+class Model_Newsletter extends CMF_Hydrogen_Model
+{
 	const STATUS_ABORTED		= -1;
 	const STATUS_NEW			= 0;
 	const STATUS_READY			= 1;
 	const STATUS_SENT			= 2;
 
+	const STATUSES				= array(
+		self::STATUS_ABORTED,
+		self::STATUS_NEW,
+		self::STATUS_READY,
+		self::STATUS_SENT,
+	);
+
 	protected $name		= 'newsletters';
+
 	protected $columns	= array(
 		'newsletterId',
 		'newsletterTemplateId',
@@ -43,7 +49,9 @@ class Model_Newsletter extends CMF_Hydrogen_Model {
 		'modifiedAt',
 		'sentAt',
 	);
+
 	protected $primaryKey	= 'newsletterId';
+
 	protected $indices		= array(
 		'newsletterTemplateId',
 		'creatorId',
@@ -51,6 +59,6 @@ class Model_Newsletter extends CMF_Hydrogen_Model {
 		'title',
 		'subject',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

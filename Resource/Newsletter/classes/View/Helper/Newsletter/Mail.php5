@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Newsletter_Mail{
-
+class View_Helper_Newsletter_Mail
+{
 	const MODE_PLAIN		= 0;
 	const MODE_HTML			= 1;
 
@@ -12,17 +12,78 @@ class View_Helper_Newsletter_Mail{
 	protected $reader;
 	protected $newsletter;
 
-	public function __construct( $env/*, $templateId = NULL*/ ){
+	public function __construct( $env/*, $templateId = NULL*/ )
+	{
 		$this->env		= $env;
 		$this->logic	= new Logic_Newsletter( $env );
 		if( !file_exists( $this->cachePath ) )
 			FS_Folder_Editor::createFolder( $this->cachePath );
 	}
 
+	public function render()
+	{
+		if( !$this->template )
+			throw new RuntimeException( 'No mail template set' );
+		if( !$this->data )
+			throw new RuntimeException( 'No mail data set' );
+		if( $this->mode == self::MODE_HTML )
+			return $this->renderHtml();
+		else
+			return $this->renderPlain();
+	}
+
+	public function setData( $data ): self
+	{
+		$this->data	= $data;
+		return $this;
+	}
+
+	public function setMode( $mode = self::MODE_PLAIN ): self
+	{
+		$this->mode	= $mode;
+		return $this;
+	}
+
+	public function setNewsletterId( $newsletterId ): self
+	{
+		$this->logic->checkNewsletterId( $newsletterId, TRUE );
+		$this->newsletter	= $this->logic->getNewsletter( $newsletterId );
+		$this->setTemplateId( $this->newsletter->newsletterTemplateId );
+		return $this;
+	}
+
+	public function setReaderLetterId( $readerLetterId ): self
+	{
+		$this->logic->checkReaderLetterId( $readerLetterId, TRUE );
+		$this->letter	= $this->logic->getReaderLetter( $readerLetterId );
+		$this->setNewsletterId( $this->letter->newsletterId );
+		$this->setReaderId( $this->letter->newsletterReaderId );
+		return $this;
+	}
+
+	public function setReaderId( $readerId ): self
+	{
+		$this->logic->checkReaderId( $readerId );
+		$this->reader	= $this->logic->getReader( $readerId );
+		return $this;
+	}
+
+	public function setTemplateId( $templateId ): self
+	{
+		$this->logic->checkTemplateId( $templateId, TRUE );
+		$this->template	= $this->logic->getTemplate( $templateId );
+		$this->template->styles		= $this->logic->getTemplateAttributeList( $templateId, 'styles' );
+//		$this->template->scripts	= $this->logic->getTemplateAttributeList( $templateId, 'scripts' );
+		return $this;
+	}
+
+	//  --  PROTECTED  --  //
+
 	/**
 	 *	@param		$mode		Mail format: 0 - Plain, 1 - HTML
 	 */
-	protected function callbackReplacePlainColumns( $matches ){
+	protected function callbackReplacePlainColumns( $matches )
+	{
 		$columns	= $matches[1];
 		$content	= $matches[2];
 
@@ -33,7 +94,8 @@ class View_Helper_Newsletter_Mail{
 		die;
 	}
 
-	protected function prepareData( $mode = self::MODE_PLAIN ){
+	protected function prepareData( $mode = self::MODE_PLAIN )
+	{
 		$data		= $this->data;
 		$words		= $this->env->getLanguage()->getWords( 'resource/newsletter' );
 		$w			= (object) $words['send'];
@@ -87,7 +149,8 @@ class View_Helper_Newsletter_Mail{
 		return $data;
 	}
 
-	protected function realizeColumns( $content, $mode = 0 ){
+	protected function realizeColumns( $content, $mode = 0 )
+	{
 		switch( $mode ){
 			case 0:
 //				$pattern	= "/\+col([0-9])\r?\n(.+)\r?\n-col[0-9]/s";
@@ -105,18 +168,8 @@ class View_Helper_Newsletter_Mail{
 		return $content;
 	}
 
-	public function render(){
-		if( !$this->template )
-			throw new RuntimeException( 'No mail template set' );
-		if( !$this->data )
-			throw new RuntimeException( 'No mail data set' );
-		if( $this->mode == self::MODE_HTML )
-			return $this->renderHtml();
-		else
-			return $this->renderPlain();
-	}
-
-	protected function renderHtml( $strict = TRUE ){
+	protected function renderHtml( $strict = TRUE )
+	{
 		$data	= $this->prepareData( self::MODE_HTML );
 		$data['imprint']	= $this->renderImprint( TRUE );
 		$page		= new UI_HTML_PageFrame();
@@ -187,7 +240,8 @@ class View_Helper_Newsletter_Mail{
 		) );
 	}
 
-	protected function renderImprint( $asHtml = FALSE ){
+	protected function renderImprint( $asHtml = FALSE )
+	{
 		$content	= $this->template->imprint;
 		if( $asHtml ){
 			$content	= preg_replace( "/\n/", "<br/>", $content );
@@ -197,7 +251,8 @@ class View_Helper_Newsletter_Mail{
 		return $content;
 	}
 
-	protected function renderPlain(){
+	protected function renderPlain()
+	{
 		$data	= $this->prepareData( self::MODE_PLAIN );
 		$data['imprint']	= $this->renderImprint();
 		$content	= $this->template->plain;
@@ -207,39 +262,4 @@ class View_Helper_Newsletter_Mail{
 		$content	= wordwrap( $content, 78 );
 		return $content;
 	}
-
-	public function setData( $data ){
-		$this->data	= $data;
-	}
-
-	public function setMode( $mode = self::MODE_PLAIN ){
-		$this->mode	= $mode;
-	}
-
-	public function setNewsletterId( $newsletterId ){
-		$this->logic->checkNewsletterId( $newsletterId, TRUE );
-		$this->newsletter	= $this->logic->getNewsletter( $newsletterId );
-		$this->setTemplateId( $this->newsletter->newsletterTemplateId );
-	}
-
-	public function setReaderLetterId( $readerLetterId ){
-		$this->logic->checkReaderLetterId( $readerLetterId, TRUE );
-		$this->letter	= $this->logic->getReaderLetter( $readerLetterId );
-		$this->setNewsletterId( $this->letter->newsletterId );
-		$this->setReaderId( $this->letter->newsletterReaderId );
-	}
-
-	public function setReaderId( $readerId ){
-		$this->logic->checkReaderId( $readerId );
-		$this->reader	= $this->logic->getReader( $readerId );
-	}
-
-
-	public function setTemplateId( $templateId ){
-		$this->logic->checkTemplateId( $templateId, TRUE );
-		$this->template	= $this->logic->getTemplate( $templateId );
-		$this->template->styles		= $this->logic->getTemplateAttributeList( $templateId, 'styles' );
-//		$this->template->scripts	= $this->logic->getTemplateAttributeList( $templateId, 'scripts' );
-	}
 }
-?>

@@ -1,7 +1,8 @@
 <?php
-class Mail_Newsletter extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Newsletter extends Mail_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		$logic	= new Logic_Newsletter( $this->env );
 		$this->data['mailTemplateId']	= 0;
 //		$logic->checkTemplateId( $data['templateId'], TRUE );
