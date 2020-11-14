@@ -30,10 +30,9 @@ class View_Helper_News{
 			$list[$nr]	= '
 <div class="news-list-entry">
 	<h4 class="news-list-entry-title">'.$item->title.'</h4>
-		<div class="news-list-entry-date">'.$date.'</div>
+	<div class="news-list-entry-date">'.$date.'</div>
 	<div class="news-list-entry-content col-'.$item->columns.'">'.$item->content.'</div>
-</div>
-		';
+</div>';
 		}
 		if( $list )
 			return UI_HTML_Tag::create( 'div', join( $list ), array( 'class' => 'news-list' ) );
