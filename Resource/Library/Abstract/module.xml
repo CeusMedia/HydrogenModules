@@ -6,8 +6,11 @@ This module is ***abstract*** and can be used as template for library autoloader
 
 **ATTENTION**: You need to adjust the module hook (first line) if you copy/inherit this module.
 ]]></description>
+	<deprecation>This module is not needed, use composer for library dependencies.</deprecation>
 	<category>Resource</category>
-	<version>0.1</version>
+	<version>0.1.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.1.1">Deprecated.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files/>
