@@ -165,7 +165,7 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
 		$orders			= array( 'title' => 'ASC' );
 		$this->addData( 'templates', $this->logic->getTemplates( $conditions, $orders ) );
 
-		$model	= new Model_Newsletter_Theme( $env, 'contents/themes/' );
+		$model	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
 		$this->addData( 'themes', $model->getAll() );
 	}
 
