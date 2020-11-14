@@ -1,0 +1,6 @@
+Mein Unternehmen
+Teststraße 12
+12345 Teststadt
+Telefon: (0049) 123-456789
+Internet: https://mein-unternehmen.de/
+E-Mail: kontakt@mein-unternehmen.de

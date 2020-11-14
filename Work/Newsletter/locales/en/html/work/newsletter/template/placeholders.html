@@ -1,0 +1,53 @@
+<div id="modal-newsletter-template-placeholders" class="modal hide fade" style="width: 680px">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Placeholders</h3>
+	</div>
+	<div class="modal-body">
+		<p>
+			Each template is able to insert information by placeholders.
+			Placeholders are noted by this syntax:
+			<pre>[#placeholder#]</pre>
+		</p>
+		<h4>List of available placeholders:</h4>
+		<dl class="dl-horizontal">
+			<dt>nr</dt>
+			<dd>Internal number of newsletter.</dd>
+			<dt>title</dt>
+			<dd>Mail title of newsletter.</dd>
+			<dt>content</dd>
+			<dd>Content of newsletter.</dd>
+			<dt>prefix</dt>
+			<dd>Saluation depending on given gender of reader.</dd>
+			<dt>firstname</dt>
+			<dd>Firstname of reader.</dd>
+			<dt>surname</dt>
+			<dd>Surname of reader.</dd>
+			<dt>registerDate</dt>
+			<dd>Date of newsletter registration.</dd>
+			<dt>registerTime</dt>
+			<dd>Time of newsletter registration.</dd>
+			<dt>linkUnregister</dt>
+			<dd>Link to unregister.</dd>
+			<dt>linkView</dt>
+			<dd>Link to view in browser.</dd>
+			<dt>tracking</dt>
+			<dd>Invisible image to track opening of mail.</dd>
+		</dl>
+		<h4>Example</h4>
+		<p>
+			Within this example 3 placeholders will be inserted:
+			<pre>Hello [#prefix#] [#firstname#] [#surname#]!</pre>
+			The resulting mail to a male reader will contain like:
+			<pre>Hello Mr. John Doe!</pre>
+			Having a female reader it would be like;
+			<pre>Hello Mrs. Jane Doe!</pre>
+			Without gender information (or transgender) would be like:
+			<pre>Hello Jordan Doe!</pre>
+		</p>
+		<br/>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"><i class="fa fa-fw fa-close"></i>&nbsp;close</button>
+	</div>
+</div>

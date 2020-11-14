@@ -1,0 +1,55 @@
+<div id="modal-newsletter-template-placeholders" class="modal hide fade" style="width: 680px">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Platzhalter</h3>
+	</div>
+	<div class="modal-body">
+		<p>
+			Jede Vorlage kann mittels Platzhalter bekannte Informationen in die Kampagne einsetzen.
+			Dabei wird jeder Platzhalter in diesem Format eingesetzt:
+			<pre>[#platzhalter#]</pre>
+		</p>
+		<h4>Liste der vorhandenen Platzhalter:</h4>
+		<dl class="dl-horizontal">
+			<dt>nr</dt>
+			<dd>Fortlaufende Nummer der Kampagne.</dd>
+			<dt>title</dt>
+			<dd>Inhalt der E-Mail-Überschrift.</dd>
+			<dt>content</dd>
+			<dd>Inhalt der Kampagne.</dd>
+			<dt>imprint</dt>
+			<dd>Das Impressum, definiert in der Vorlage.</dd>
+			<dt>prefix</dt>
+			<dd>Anrede (Frau, Herr oder leer) des Empfängers.</dd>
+			<dt>firstname</dt>
+			<dd>Vorname des Empfängers.</dd>
+			<dt>surname</dt>
+			<dd>Nachname des Empfängers.</dd>
+			<dt>registerDate</dt>
+			<dd>Datum der Anmeldung des Empfängers am Newsletter.</dd>
+			<dt>registerTime</dt>
+			<dd>Zeit der Anmeldung des Empfängers am Newsletter.</dd>
+			<dt>linkUnregister</dt>
+			<dd>Link zur Abmeldung.</dd>
+			<dt>linkView</dt>
+			<dd>Link zum Anzeigen dieser Kampagne im Browser.</dd>
+			<dt>tracking</dt>
+			<dd>Unsichtbarer Tracking-Pixel zur Erfassung der E-Mail-Öffnung.</dd>
+		</dl>
+		<h4>Beispiel</h4>
+		<p>
+			In diesem Beispiel werden 3 Platzhalter eingesetzt:
+			<pre>Hallo [#prefix#] [#firstname#] [#surname#]!</pre>
+			Für einen Leser würde beim Versand der Kampagne daraus etwa:
+			<pre>Hallo Herr Max Mustermann!</pre>
+			Für eine Leserin würde daraus etwa:
+			<pre>Hallo Frau Erika Mustermann!</pre>
+			Ohne Geschlechtsangabe (oder transgender) würde daraus etwa:
+			<pre>Hallo Sascha Mustermann!</pre>
+		</p>
+		<br/>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"><i class="fa fa-fw fa-close"></i>&nbsp;schließen</button>
+	</div>
+</div>

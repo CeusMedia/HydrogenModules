@@ -1,0 +1,6 @@
+My Company 
+Teststreet 12
+12345 Testtown
+Telefon: (0049) 123-456789
+Internet: https://my-company.de
+E-Mail: contact@my-company.de

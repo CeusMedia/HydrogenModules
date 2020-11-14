@@ -1,0 +1,269 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Newsletter</title>
+	<description><![CDATA[Creating and sending newsletter mails.]]></description>
+	<category>Work</category>
+	<version>1.4</version>
+	<log version="0.8.3">Added simple text export of grouped readers for manual mails.</log>
+	<log version="0.8.4">Removed locking from job in favour of locking mechanism in jobber class in module Resource:Jobs.</log>
+	<log version="0.8.5">Prepare to remove usage of TinyMCE module config key auto_baseUrl.</log>
+	<log version="0.8.6">Make use of frontend resource if available.</log>
+	<log version="0.8.7">Export active readers only.</log>
+	<log version="0.8.8">Use module Resource:Newsletter.</log>
+	<log version="0.8.9">Add mail class.</log>
+	<log version="0.9">Migration according to updated modules.</log>
+	<log version="0.9.1">Several bug fixes.</log>
+	<log version="0.9.2">Lock forms of used templates.</log>
+	<log version="0.9.3">Allow to filter readers by email.</log>
+	<log version="0.9.4">Allow to remove readers aslong they did not receiver a letter.</log>
+	<log version="0.9.5">Allow sent newsletter to be resend.</log>
+	<log version="0.9.6">Link readers in history and add tab icons.</log>
+	<log version="0.9.7">Improve group filter and creation.</log>
+	<log version="0.9.8">Add modal to explain template placeholders.</log>
+	<log version="0.9.9">Split templates of readers and groups.</log>
+	<log version="1.0">Use module UI:Font:FontAwesome.</log>
+	<log version="1.0.1">Support sender address and name per newsletter.</log>
+	<log version="1.0.2">Add CSV import and export for readers.</log>
+	<log version="1.0.3">Renamed JavaScript file according to standards.</log>
+	<log version="1.0.4">Add switch to not use tabs.</log>
+	<log version="1.0.5">Apply PHP tidy to HTML on saving HTML.</log>
+	<log version="1.0.6">Transform HTML to plain text on saving HTML.</log>
+	<log version="1.0.7">Extend locales by english.</log>
+	<log version="1.0.8">Empty login info block.</log>
+	<log version="1.1">Split template style and style resources into two tabs.</log>
+	<log version="1.1.1">Add HTML blocks.</log>
+	<log version="1.1.2">Add limiter and apply rules.</log>
+	<log version="1.1.3">Implement new queues feature.</log>
+	<log version="1.1.4">Implement new themes feature.</log>
+	<log version="1.1.5">Make theme path configurable.</log>
+	<log version="1.1.6">Theme preview.</log>
+	<log version="1.1.7">Integrate filters into list panels.</log>
+	<log version="1.1.8">Add sender fields in template.</log>
+	<log version="1.1.9">Add switch for automatically generating plain version.</log>
+	<log version="1.2">Show previews in modals.</log>
+	<log version="1.2.1">Add theme viewer.</log>
+	<log version="1.2.2">Add logic class extracted from Resource:Newsletter.</log>
+	<log version="1.2.3">Use module UI:Helper:TimePhraser.</log>
+	<log version="1.2.4">Use Ace editor instead of Code Mirror.</log>
+	<log version="1.2.5">Add filter and pagination on newsletter list.</log>
+	<log version="1.2.6">Use module JS:Form:Changes.</log>
+	<log version="1.2.7">Send mails if adding readers.</log>
+	<log version="1.2.8">Support removal of newsletters with all related entities.</log>
+	<log version="1.2.9">Cleanup and bug fix.</log>
+	<log version="1.3">More previews and modals.</log>
+	<log version="1.3.1">Add template to theme export.</log>
+	<log version="1.3.2">Update theme import to use new JSON defined themes.</log>
+	<log version="1.3.3">Add remove panel for unsent newsletters.</log>
+	<log version="1.3.4">Remove module Info:Pages.</log>
+	<log version="1.3.5">Use new module UI:Helper:Pagination:PrevNext in newsletter editor.</log>
+	<log version="1.3.6">Improve reader CSV export.</log>
+	<log version="1.4">Imported module from protected repositry.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Newsletter.php5</class>
+		<class>Controller/Work/Newsletter/Dashboard.php5</class>
+		<class>Controller/Work/Newsletter/Group.php5</class>
+		<class>Controller/Work/Newsletter/Reader.php5</class>
+		<class>Controller/Work/Newsletter/Template.php5</class>
+		<class>Logic/Newsletter/Editor.php5</class>
+		<class>Mail/Work/Newsletter/Add.php5</class>
+		<class>Mail/Work/Newsletter/Invite.php5</class>
+		<class>View/Work/Newsletter.php5</class>
+		<class>View/Work/Newsletter/Dashboard.php5</class>
+		<class>View/Work/Newsletter/Group.php5</class>
+		<class>View/Work/Newsletter/Reader.php5</class>
+		<class>View/Work/Newsletter/Template.php5</class>
+		<class>View/Helper/Work/Newsletter/ThemeFacts.php5</class>
+		<class>View/Helper/Work/Newsletter/ThemeList.php5</class>
+		<locale>de/work/newsletter.ini</locale>
+		<locale>en/work/newsletter/dashboard.ini</locale>
+		<locale>de/work/newsletter/group.ini</locale>
+		<locale>de/work/newsletter/reader.ini</locale>
+		<locale>de/work/newsletter/template.ini</locale>
+		<locale>de/html/work/newsletter/above.html</locale>
+		<locale>de/html/work/newsletter/bottom.html</locale>
+		<locale>de/html/work/newsletter/default.html</locale>
+		<locale>de/html/work/newsletter/top.html</locale>
+		<locale>de/html/work/newsletter/add/above.html</locale>
+		<locale>de/html/work/newsletter/add/top.html</locale>
+		<locale>de/html/work/newsletter/add/bottom.html</locale>
+		<locale>de/html/work/newsletter/dashboard/index.top.html</locale>
+		<locale>de/html/work/newsletter/dashboard/index.bottom.html</locale>
+		<locale>de/html/work/newsletter/edit/top.html</locale>
+		<locale>de/html/work/newsletter/edit/bottom.html</locale>
+		<locale>de/html/work/newsletter/edit/above.html</locale>
+		<locale>de/html/work/newsletter/group/add/above.html</locale>
+		<locale>de/html/work/newsletter/group/add/top.html</locale>
+		<locale>de/html/work/newsletter/group/add/bottom.html</locale>
+		<locale>de/html/work/newsletter/group/edit/top.html</locale>
+		<locale>de/html/work/newsletter/group/edit/bottom.html</locale>
+		<locale>de/html/work/newsletter/group/edit/above.html</locale>
+		<locale>de/html/work/newsletter/group/index/above.html</locale>
+		<locale>de/html/work/newsletter/group/index/top.html</locale>
+		<locale>de/html/work/newsletter/group/index/bottom.html</locale>
+		<locale>de/html/work/newsletter/index/above.html</locale>
+		<locale>de/html/work/newsletter/index/top.html</locale>
+		<locale>de/html/work/newsletter/index/bottom.html</locale>
+		<locale>de/html/work/newsletter/index/list/noneExisting.html</locale>
+		<locale>de/html/work/newsletter/index/list/noneFound.html</locale>
+		<locale>de/html/work/newsletter/reader/add/above.html</locale>
+		<locale>de/html/work/newsletter/reader/add/top.html</locale>
+		<locale>de/html/work/newsletter/reader/add/bottom.html</locale>
+		<locale>de/html/work/newsletter/reader/edit/top.html</locale>
+		<locale>de/html/work/newsletter/reader/edit/bottom.html</locale>
+		<locale>de/html/work/newsletter/reader/edit/above.html</locale>
+		<locale>de/html/work/newsletter/reader/index/above.html</locale>
+		<locale>de/html/work/newsletter/reader/index/top.html</locale>
+		<locale>de/html/work/newsletter/reader/index/bottom.html</locale>
+		<locale>de/html/work/newsletter/template/default.css</locale>
+		<locale>de/html/work/newsletter/template/default.html</locale>
+		<locale>de/html/work/newsletter/template/default.txt</locale>
+		<locale>de/html/work/newsletter/template/imprint.txt</locale>
+		<locale>de/html/work/newsletter/template/placeholders.html</locale>
+		<locale>de/html/work/newsletter/template/add/above.html</locale>
+		<locale>de/html/work/newsletter/template/add/top.html</locale>
+		<locale>de/html/work/newsletter/template/add/bottom.html</locale>
+		<locale>de/html/work/newsletter/template/edit/top.html</locale>
+		<locale>de/html/work/newsletter/template/edit/bottom.html</locale>
+		<locale>de/html/work/newsletter/template/edit/above.html</locale>
+		<locale>de/html/work/newsletter/template/index/above.html</locale>
+		<locale>de/html/work/newsletter/template/index/top.html</locale>
+		<locale>de/html/work/newsletter/template/index/bottom.html</locale>
+		<locale>de/mail/work/newsletter/add.html</locale>
+		<locale>de/mail/work/newsletter/add.txt</locale>
+		<locale>de/mail/work/newsletter/invite.html</locale>
+		<locale>de/mail/work/newsletter/invite.txt</locale>
+		<locale>en/work/newsletter.ini</locale>
+		<locale>en/work/newsletter/dashboard.ini</locale>
+		<locale>en/work/newsletter/group.ini</locale>
+		<locale>en/work/newsletter/reader.ini</locale>
+		<locale>en/work/newsletter/template.ini</locale>
+		<locale>en/html/work/newsletter/above.html</locale>
+		<locale>en/html/work/newsletter/bottom.html</locale>
+		<locale>en/html/work/newsletter/default.html</locale>
+		<locale>en/html/work/newsletter/top.html</locale>
+		<locale>en/html/work/newsletter/add/above.html</locale>
+		<locale>en/html/work/newsletter/add/top.html</locale>
+		<locale>en/html/work/newsletter/add/bottom.html</locale>
+		<locale>en/html/work/newsletter/dashboard/index.top.html</locale>
+		<locale>en/html/work/newsletter/dashboard/index.bottom.html</locale>
+		<locale>en/html/work/newsletter/edit/top.html</locale>
+		<locale>en/html/work/newsletter/edit/bottom.html</locale>
+		<locale>en/html/work/newsletter/edit/above.html</locale>
+		<locale>en/html/work/newsletter/group/add/above.html</locale>
+		<locale>en/html/work/newsletter/group/add/top.html</locale>
+		<locale>en/html/work/newsletter/group/add/bottom.html</locale>
+		<locale>en/html/work/newsletter/group/edit/top.html</locale>
+		<locale>en/html/work/newsletter/group/edit/bottom.html</locale>
+		<locale>en/html/work/newsletter/group/edit/above.html</locale>
+		<locale>en/html/work/newsletter/group/index/above.html</locale>
+		<locale>en/html/work/newsletter/group/index/top.html</locale>
+		<locale>en/html/work/newsletter/group/index/bottom.html</locale>
+		<locale>en/html/work/newsletter/index/above.html</locale>
+		<locale>en/html/work/newsletter/index/top.html</locale>
+		<locale>en/html/work/newsletter/index/bottom.html</locale>
+		<locale>en/html/work/newsletter/index/list/noneExisting.html</locale>
+		<locale>en/html/work/newsletter/index/list/noneFound.html</locale>
+		<locale>en/html/work/newsletter/reader/add/above.html</locale>
+		<locale>en/html/work/newsletter/reader/add/top.html</locale>
+		<locale>en/html/work/newsletter/reader/add/bottom.html</locale>
+		<locale>en/html/work/newsletter/reader/edit/top.html</locale>
+		<locale>en/html/work/newsletter/reader/edit/bottom.html</locale>
+		<locale>en/html/work/newsletter/reader/edit/above.html</locale>
+		<locale>en/html/work/newsletter/reader/index/above.html</locale>
+		<locale>en/html/work/newsletter/reader/index/top.html</locale>
+		<locale>en/html/work/newsletter/reader/index/bottom.html</locale>
+		<locale>en/html/work/newsletter/template/default.css</locale>
+		<locale>en/html/work/newsletter/template/default.html</locale>
+		<locale>en/html/work/newsletter/template/default.txt</locale>
+		<locale>en/html/work/newsletter/template/imprint.txt</locale>
+		<locale>en/html/work/newsletter/template/placeholders.html</locale>
+		<locale>en/html/work/newsletter/template/add/above.html</locale>
+		<locale>en/html/work/newsletter/template/add/top.html</locale>
+		<locale>en/html/work/newsletter/template/add/bottom.html</locale>
+		<locale>en/html/work/newsletter/template/edit/top.html</locale>
+		<locale>en/html/work/newsletter/template/edit/bottom.html</locale>
+		<locale>en/html/work/newsletter/template/edit/above.html</locale>
+		<locale>en/html/work/newsletter/template/index/above.html</locale>
+		<locale>en/html/work/newsletter/template/index/top.html</locale>
+		<locale>en/html/work/newsletter/template/index/bottom.html</locale>
+		<locale>en/mail/work/newsletter/add.html</locale>
+		<locale>en/mail/work/newsletter/add.txt</locale>
+		<locale>en/mail/work/newsletter/invite.html</locale>
+		<locale>en/mail/work/newsletter/invite.txt</locale>
+		<style load="auto">module.work.newsletter.css</style>
+		<script load="auto">module.work.newsletter.js</script>
+		<template>work/newsletter/add.php</template>
+		<template>work/newsletter/edit.php</template>
+		<template>work/newsletter/edit.details.php</template>
+		<template>work/newsletter/edit.history.php</template>
+		<template>work/newsletter/edit.html.php</template>
+		<template>work/newsletter/edit.queue.php</template>
+		<template>work/newsletter/edit.sender.php</template>
+		<template>work/newsletter/edit.statistics.php</template>
+		<template>work/newsletter/edit.test.php</template>
+		<template>work/newsletter/edit.text.php</template>
+		<template>work/newsletter/editFull.php</template>
+		<template>work/newsletter/index.php</template>
+		<template>work/newsletter/index.add.php</template>
+		<template>work/newsletter/index.filter.php</template>
+		<template>work/newsletter/index.list.php</template>
+		<template>work/newsletter/dashboard/index.php</template>
+		<template>work/newsletter/group/add.php</template>
+		<template>work/newsletter/group/edit.php</template>
+		<template>work/newsletter/group/index.php</template>
+		<template>work/newsletter/group/index.filter.php</template>
+		<template>work/newsletter/group/index.list.php</template>
+		<template>work/newsletter/group/index.list.filter.php</template>
+		<template>work/newsletter/reader/add.php</template>
+		<template>work/newsletter/reader/edit.php</template>
+		<template>work/newsletter/reader/index.php</template>
+		<template>work/newsletter/reader/index.filter.php</template>
+		<template>work/newsletter/reader/index.list.php</template>
+		<template>work/newsletter/reader/index.list.filter.php</template>
+		<template>work/newsletter/reader/modal.import.csv.php</template>
+		<template>work/newsletter/reader/modal.import.list.php</template>
+		<template>work/newsletter/template/add.php</template>
+		<template>work/newsletter/template/edit.php</template>
+		<template>work/newsletter/template/edit.details.php</template>
+		<template>work/newsletter/template/edit.html.php</template>
+		<template>work/newsletter/template/edit.style.php</template>
+		<template>work/newsletter/template/edit.styles.php</template>
+		<template>work/newsletter/template/edit.text.php</template>
+		<template>work/newsletter/template/export.php</template>
+		<template>work/newsletter/template/index.php</template>
+		<template>work/newsletter/template/index.filter.php</template>
+		<template>work/newsletter/template/index.list.php</template>
+		<template>work/newsletter/template/index.themes.php</template>
+		<template>work/newsletter/template/viewTheme.php</template>
+	</files>
+	<config type="string" protected="no" mandatory="no" name="editor.newsletter" value="CodeMirror,TinyMCE">TinyMCE</config>
+	<config type="string" protected="no" mandatory="no" name="editor.template" value="CodeMirror,TinyMCE">Ace</config>
+	<config type="boolean" protected="yes" mandatory="no" name="tabbedLinks" value="yes,no">yes</config>
+	<config type="string" protected="no" mandatory="no" name="themes.path">contents/themes</config>
+	<relations>
+		<needs type="module">JS_Ace</needs>
+		<needs type="module">JS_TinyMCE</needs>
+		<needs type="module">JS_Form_Changes</needs>
+		<needs type="module">Resource_Jobs</needs>
+		<needs type="module">Resource_Mail</needs>
+		<needs type="module">Resource_Newsletter</needs>
+		<needs type="module">UI_Font_FontAwesome</needs>
+		<needs type="module">UI_Helper_Pagination</needs>
+		<needs type="module">UI_Helper_Pagination_PrevNext</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_JS_fancyBox</needs>
+		<needs type="module">UI_JS_fancyBox</needs>
+		<needs type="module">Tool_PhantomJS</needs>
+	</relations>
+	<link access="public" path="work/newsletter/template/previewTheme"></link>
+	<link xml:lang="de" access="acl" path="work/newsletter" rank="30">Newsletters</link>
+	<link xml:lang="de" access="acl" path="work/newsletter/dashboard" rank="31">Übersicht</link>
+	<link xml:lang="de" access="acl" path="work/newsletter/reader" rank="33">Leser</link>
+	<link xml:lang="de" access="acl" path="work/newsletter/group" rank="34">Gruppe</link>
+	<link xml:lang="de" access="acl" path="work/newsletter/template" rank="35">Vorlagen</link>
+	<link access="public" path="work/newsletter/template/preview"/>
+	<hook type="resource" resource="HintHelper" event="registerHints">Controller_Work_Newsletter::___registerHints</hook>
+</module>

@@ -1,0 +1,20 @@
+
+Mein Projekt
+=============================================================================
+
+Hinweis: Vollständige Darstellung dieses Newsletters im Internet-Browser:
+[#linkView#]
+
+
+[#title#]
+-----------------------------------------------------------------------------
+
+[#content#]
+
+[#imprint#]
+
+-----------------------------------------------------------------------------
+
+Sie, [#prefix#] [#firstname#] [#surname#], erhalten diesen Newsletter aufgrund Ihrer Registrierung am [#registerDate#] um [#registerTime#].
+Wenn Sie diesen Newsletter nicht mehr erhalten wollen, können Sie ihn komplett oder teilweise abbestellen:
+[#linkUnregister#]

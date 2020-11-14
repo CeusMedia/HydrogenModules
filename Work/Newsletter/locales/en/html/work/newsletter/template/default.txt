@@ -1,0 +1,19 @@
+
+My Project
+=============================================================================
+
+Hint: You can view a nicer version of this newsletter in your browser:
+[#linkView#]
+
+
+[#title#]
+-----------------------------------------------------------------------------
+
+[#content#]
+
+-----------------------------------------------------------------------------
+You, [#prefix#] [#firstname#] [#surname#], received this newsletter
+according to your registration on [#registerDate#] at [#registerTime#].
+
+If you do not want to get any more newsletters, please sign out here:
+[#linkUnregister#]

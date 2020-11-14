@@ -1,0 +1,32 @@
+/*  --  Vorgabe  --  */
+
+/*  --  GENERAL  --  */
+html {
+	height: 100%;
+	background-color: white;
+	}
+body.mail {
+	font-family: "Helvetica Neue", "Helvetica", "Arial" , sans-serif;
+	background-color: white;
+	}
+
+/*  --  LAYOUT  --  */
+body.mail #layout-mail {
+	}
+body.mail #layout-mail-header {
+	}
+body.mail #layout-mail-content {
+	}
+body.mail #layout-mail-footer {
+	}
+	
+
+/*  --  TEXT FORMAT  --  */
+body.mail h3 {
+	}
+body.mail h4 {
+	}
+body.mail h5 {
+	}
+body.mail p {
+	}

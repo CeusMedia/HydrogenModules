@@ -1,0 +1,15 @@
+<%salutation%> <%reader.firstname%> <%reader.surname%>,
+
+vielen Dank für Ihr Interesse an uns und unserem Newsletter!
+Wir haben Sie an unserem Newsletter angemeldet und folgenden Themengruppen zugeordnet:
+<%groups%>
+
+Damit die Anmeldung aktiv wird, muss die Gültigkeit der E-Mail-Adresse bestätigen.
+Öffnen Sie dazu bitte den folgende Link im Browser mit einem Klick:
+
+<%baseUrl%>info/newsletter/confirm/<%readerId%>/<%key%>
+
+Sollte dieser Eintrag NICHT mit Ihnen abgesprochen bzw. NICHT in Ihrem Interesse sein,
+können Sie diesen Eintrag entfernen:
+
+<%baseUrl%>info/newsletter/unregister/<%emailHash%>/<%key%>

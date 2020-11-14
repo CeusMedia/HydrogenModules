@@ -1,0 +1,12 @@
+<%salutation%> <%reader.firstname%>,
+
+vielen Dank für Ihr Interesse und die Anmeldung am Newsletter.
+
+Damit die Anmeldung aktiv wird, muss die Gültigkeit der E-Mail-Adresse bestätigen.
+Öffnen Sie dazu bitte den folgende Link im Browser mit einem Klick:
+
+<%baseUrl%>info/newsletter/confirm/<%readerId%>/<%key%>
+
+Falls Sie diese E-Mail erhalten haben, OHNE sich am Newsletter angemeldet zu haben, können Sie diese E-Mail ignorieren.
+Die Anmeldung verfällt dann selbstständig.
+
