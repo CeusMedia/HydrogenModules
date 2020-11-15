@@ -149,7 +149,7 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 	public function getModules( bool $asDictionary = FALSE )
 	{
 		if( $asDictionary )
-			return new ADT_List( $this->installedModules );
+			return new ADT_List_Dictionary( $this->installedModules );
 		return array_keys( $this->installedModules );
 	}
 
