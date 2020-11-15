@@ -43,6 +43,7 @@ class Controller_Manage_Job_Run extends CMF_Hydrogen_Controller
 			'status',
 			'type',
 			'jobId',
+			'className',
 			'startFrom',
 			'startTo',
 		);
@@ -71,6 +72,7 @@ die;*/
 		$filterStatus		= $this->session->get( $this->filterPrefix.'status' );
 		$filterType			= $this->session->get( $this->filterPrefix.'type' );
 		$filterJobId		= $this->session->get( $this->filterPrefix.'jobId' );
+		$filterClassName	= $this->session->get( $this->filterPrefix.'className' );
 		$filterStartFrom	= $this->session->get( $this->filterPrefix.'startFrom' );
 		$filterStartTo		= $this->session->get( $this->filterPrefix.'startTo' );
 		$filterArchived		= $this->session->get( $this->filterPrefix.'archived' );
@@ -85,8 +87,14 @@ die;*/
 			$conditions['status']		= $filterStatus;
 		if( strlen( $filterType ) && in_array( $filterType, Model_Job_Run::TYPES ) )
 			$conditions['type']			= $filterType;
+
+		$definitionIds	= array();
 		if( $filterJobId )
-			$conditions['jobDefinitionId']		= $filterJobId;
+			$definitionIds	= array( $filterJobId );
+		if( $filterClassName )
+			$definitionIds	= $this->modelDefinition->getAllByIndex( 'className', $filterClassName, array(), array(), array( 'jobDefinitionId' ) );
+		if( $definitionIds )
+			$conditions['jobDefinitionId']		= $definitionIds;
 
 		if( $filterStartFrom || $filterStartTo ){
 			if( $filterStartFrom ){
@@ -115,6 +123,7 @@ die;*/
 		$this->addData( 'filterStatus', $filterStatus );
 		$this->addData( 'filterType', $filterType );
 		$this->addData( 'filterJobId', $filterJobId );
+		$this->addData( 'filterClassName', $filterClassName );
 		$this->addData( 'filterStartFrom', $filterStartFrom );
 		$this->addData( 'filterStartTo', $filterStartTo );
 		$this->addData( 'total', $total );

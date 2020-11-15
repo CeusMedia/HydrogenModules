@@ -19,6 +19,12 @@ foreach( $definitions as $jobId => $definition )
 	$optJobId[$jobId]	= $definition->identifier;
 $optJobId	= UI_HTML_Elements::Options( $optJobId, $filterJobId );
 
+$optClassName	= array( '' => $wordsGeneral['list']['optAll'] );
+foreach( $definitions as $jobId => $definition )
+	$optClassName[$definition->className]	= str_replace( '_', ': ', $definition->className );
+ksort( $optClassName );
+$optClassName	= UI_HTML_Elements::Options( $optClassName, $filterClassName );
+
 $panelFilter	= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', $words['filter']['heading'] ),
 	UI_HTML_Tag::create( 'div', array(
@@ -29,6 +35,17 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 					UI_HTML_Tag::create( 'select', $optJobId, array(
 						'name' 		=> 'jobId',
 						'id'		=> 'input_jobId',
+						'class' 	=> 'span12',
+//						'oninput'	=> 'this.form.submit();',
+					) ),
+				), array( 'class' => 'span12' ) ),
+			), array( 'class' => 'row-fluid' ) ),
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'label', $words['filter']['labelClassName'], array( 'for' => 'input_className' ) ),
+					UI_HTML_Tag::create( 'select', $optClassName, array(
+						'name' 		=> 'className',
+						'id'		=> 'input_className',
 						'class' 	=> 'span12',
 //						'oninput'	=> 'this.form.submit();',
 					) ),
@@ -70,9 +87,9 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 						'value'		=> $filterStartFrom,
 //						'oninput'	=> 'this.form.submit();',
 					) ),
-				), array( 'class' => 'span12' ) ),
-			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
+				), array( 'class' => 'not-span12 span6' ) ),
+//			), array( 'class' => 'row-fluid' ) ),
+//			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(
 					UI_HTML_Tag::create( 'label', $words['filter']['labelStartTo'], array( 'for' => 'input_startTo' ) ),
 					UI_HTML_Tag::create( 'input', NULL, array(
@@ -83,7 +100,7 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 						'value'		=> $filterStartTo,
 //						'oninput'	=> 'this.form.submit();',
 					) ),
-				), array( 'class' => 'span12' ) ),
+				), array( 'class' => 'not-span12 span6' ) ),
 			), array( 'class' => 'row-fluid' ) ),
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(
