@@ -63,7 +63,6 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			$this->session->set( $this->sessionPrefix.'app', $this->appFocus );
 
 		$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
-
 		if( $source === 'Database' )
 			$this->model		= new Model_Page( $this->envManaged );
 		else if( $source === 'Config' )
@@ -436,7 +435,7 @@ ModuleManagePages.PageEditor.init();
 		$this->preparePageTree();
 		$this->addData( 'scope', $this->appSession->get( 'scope' ) );
 		$this->addData( 'parentId', 0 );
-		$script	= 'ModuleManagePages.PageEditor.initSortable();';
+		$script	= 'ModuleManagePages.PageEditor._initSortable();';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
