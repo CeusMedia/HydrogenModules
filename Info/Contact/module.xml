@@ -72,8 +72,9 @@
 		<style source="common" load="auto">module.info.contact.css</style>
 	</files>
 	<relations>
-		<needs type="module">Resource_Mail</needs>
 		<needs type="module">JS_Form_Optionals</needs>
+		<needs type="module">Resource_Mail</needs>
+		<needs type="module">Security_CSRF</needs>
 		<needs type="module">UI_Shortcode</needs>
 	</relations>
 	<config protected="yes" mandatory="yes" type="string" name="mail.sender"></config>
