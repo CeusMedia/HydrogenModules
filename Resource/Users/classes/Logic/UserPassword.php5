@@ -1,7 +1,12 @@
 <?php
+/**
+ *	Logic of user password handling.
+ *	This is a singleton.
+ *	@todo		extend from frameworks single logic once it exists: CMF_Hydrogen_Logic_Singleton
+ */
 class Logic_UserPassword
 {
-	static protected $instance;
+	protected static $instance;
 
 	protected $env;
 	protected $model;
@@ -9,20 +14,6 @@ class Logic_UserPassword
 	protected $defaultSaltAlgo;
 	protected $defaultSaltLength;
 	protected $maxAgeBeforeDecay;
-
-	protected function __construct( CMF_Hydrogen_Environment $env )
-	{
-		$this->env		= $env;
-		$this->model	= new Model_User_Password( $env );
-		$config			= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
-		$this->useSalt				= $config->get( 'password.salt' );
-		$this->defaultSaltAlgo		= $config->get( 'password.salt.algo' );
-		$this->defaultSaltLength	= $config->get( 'password.salt.length' );
-		$this->maxAgeBeforeDecay	= $config->get( 'password.salt.decay.seconds' );
-//		$this->clearOutdatedPasswordReplacements();
-	}
-
-	protected function __clone(){}
 
 	/**
 	 *	Activates a new password.
@@ -160,40 +151,6 @@ class Logic_UserPassword
 		return password_hash( $password, $algo, $options );
 	}
 
-	/**
-	 *	Generates a hash of salting passwords, if enabled.
-	 *	Prepend this salt hash to the password afterwards for comparisons.
-	 *	Will do nothing is salting is disabled or salt hash length is 0 or lower.
-	 *
-	 *	Default salt generation algorithm is defined in module configuration.
-	 *	At the moment, md5 over microtime will be used for hash generation.
-	 *	So maximumn salt hash length is 32.
-	 *	Default length of salt is defined in module configuration.
-	 *
-	 *	@access		public
-	 *	@param 		string		$algo		Algorihm to use to generate salt, default: by module config
-	 *	@param 		integer		$length		Length of salt hash (default: by module config, max: 32)
-	 *	@return		string
-	 */
-	protected function generateSalt( $algo = NULL, ?int $length = NULL ): string
-	{
-		if( is_null( $algo ) )
-			$algo		= $this->defaultSaltAlgo;
-		if( is_null( $length ) )
-			$length		= $this->defaultSaltLength;
-		if( !$this->useSalt || $length < 1 )
-			return '';
-		switch( $algo ){
-			case 'md5(microtime)':
-			default:
-				$length	= min( 32, $length );
-				$hash	= md5( microtime( TRUE ) );
-				$salt	= substr( $hash, 0, $length );
-				break;
-		}
-		return $salt;
-	}
-
 	public function getActivatableUserPassword( $userId, string $password )
 	{
 		$indices	= array(
@@ -212,7 +169,7 @@ class Logic_UserPassword
 	 *	@param  	object    	$env		Environment object
 	 *	@return		object   		Singleton instance of this logic class
 	 */
-	static public function getInstance( $env ): self
+	public static function getInstance( $env ): self
 	{
 		if( !self::$instance )
 			self::$instance	= new self( $env );
@@ -264,21 +221,83 @@ class Logic_UserPassword
 	 *	@access		public
 	 *	@param		integer		$userId		ID of user to check for password
 	 *	@param		string		$password	Password to check for user
+	 *	@param		boolean		$resetFails	Flag: reset fail counter on success, default: yes
 	 *	@return		boolean
 	 */
-	public function validateUserPassword( $userId, string $password ): bool
+	public function validateUserPassword( $userId, string $password, bool $resetFails = TRUE ): bool
 	{
 		$item	= $this->model->getByIndices( array(
 			'userId'	=> $userId,
 			'status'	=> Model_User_Password::STATUS_ACTIVE,
 		) );
 		if( $item && $this->validatePassword( $item->salt.$password, $item->hash ) ){
-			$this->model->edit( $item->userPasswordId, array(
-				'usedAt'	=> time(),
-				'failsLast'	=> 0
-			) );
+			if( $resetFails ){
+				$this->model->edit( $item->userPasswordId, array(
+					'usedAt'	=> time(),
+					'failsLast'	=> 0
+				) );
+			}
 			return TRUE;
 		}
 		return FALSE;
+	}
+
+	//  --  PROTECTED  --  //
+
+	/**
+	 *	Protected constructor - this is a singleton.
+	 *	@access		protected
+	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 */
+	protected function __construct( CMF_Hydrogen_Environment $env )
+	{
+		$this->env		= $env;
+		$this->model	= new Model_User_Password( $env );
+		$config			= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$this->useSalt				= $config->get( 'password.salt' );
+		$this->defaultSaltAlgo		= $config->get( 'password.salt.algo' );
+		$this->defaultSaltLength	= $config->get( 'password.salt.length' );
+		$this->maxAgeBeforeDecay	= $config->get( 'password.salt.decay.seconds' );
+//		$this->clearOutdatedPasswordReplacements();
+	}
+
+	/**
+	 *	Protected clone - this is a singleton.
+	 *	@access		protected
+	 */
+	protected function __clone(){}
+
+	/**
+	 *	Generates a hash of salting passwords, if enabled.
+	 *	Prepend this salt hash to the password afterwards for comparisons.
+	 *	Will do nothing is salting is disabled or salt hash length is 0 or lower.
+	 *
+	 *	Default salt generation algorithm is defined in module configuration.
+	 *	At the moment, md5 over microtime will be used for hash generation.
+	 *	So maximumn salt hash length is 32.
+	 *	Default length of salt is defined in module configuration.
+	 *
+	 *	@access		protected
+	 *	@param 		string		$algo		Algorihm to use to generate salt, default: by module config
+	 *	@param 		integer		$length		Length of salt hash (default: by module config, max: 32)
+	 *	@return		string
+	 */
+	protected function generateSalt( $algo = NULL, ?int $length = NULL ): string
+	{
+		if( is_null( $algo ) )
+			$algo		= $this->defaultSaltAlgo;
+		if( is_null( $length ) )
+			$length		= $this->defaultSaltLength;
+		if( !$this->useSalt || $length < 1 )
+			return '';
+		switch( $algo ){
+			case 'md5(microtime)':
+			default:
+				$length	= min( 32, $length );
+				$hash	= md5( microtime( TRUE ) );
+				$salt	= substr( $hash, 0, $length );
+				break;
+		}
+		return $salt;
 	}
 }
