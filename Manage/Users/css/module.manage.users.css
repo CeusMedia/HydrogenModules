@@ -1,22 +1,13 @@
 
+/*  ##  GENERAL  ##  */
+
 /*  --  USERS  --  */
 
-.controller-manage-user.action-edit .column-control {
-	float: right;
-	width: 40%;
-	}
-.controller-manage-user.action-edit .column-main {
-	margin-right: 42%;
-	}
-
+/*  --  User Status  --  */
 .user-status {
 	background-repeat: no-repeat;
 	background-position: 4px 1px;
 	padding-left: 1.8em;
-	}
-input.user-status {
-	padding-left: 2em;
-	background-position: 6px 6px;
 	}
 .user-status.status1 {
 	color: darkgreen;
@@ -38,15 +29,16 @@ input.user-status {
 	color: darkred;
 	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/delete.png);
 	}
+input.user-status {
+	padding-left: 2em;
+	background-position: 6px 6px;
+	}
 
-
+/*  --  User Activity  --  */
 .user-activity {
 	background-repeat: no-repeat;
 	background-position: 4px 1px;
 	padding-left: 1.8em;
-	}
-input.user-activity {
-	background-position: 6px 4px;
 	}
 .user-activity.activity0 {
 	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/status_offline.png);
@@ -67,25 +59,13 @@ input.user-activity {
 .user-activity.activity5 {
 	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/star.png);
 	}
-
-.controller-manage-user #content dl dt {
-	width: 150px;
+input.user-activity {
+	background-position: 6px 4px;
 	}
-
-
-legend.user-add {
-	background-image:  url(//cdn.ceusmedia.de/icons/famfamfam/silk/user_add.png);
-	}
-
-legend.user-edit {
-	background-image:  url(//cdn.ceusmedia.de/icons/famfamfam/silk/user_edit.png);
-	}
-
-
-
 
 /*  --  ROLES  --  */
 
+/*  --  Role  --  */
 span.role.role1,
 span.role.role2,
 span.role.role3,
@@ -95,7 +75,6 @@ span.role.role5 {
 	background-position: 2px 1px;
 	padding-left: 1.8em;
 	}
-
 span.role.role1,
 span.role.role2 {
 	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/user_gray.png);
@@ -110,6 +89,7 @@ span.role.role5 {
 	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/user_green.png);
 	}
 
+/*  --  Role Access  --  */
 .role-access {
 	background-repeat: no-repeat;
 	background-position: 2px 1px;
@@ -128,6 +108,154 @@ span.role.role5 {
 	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/world.png);
 	}
 
+/*  --  Role Rights Map  --  */
+.acl-card {
+	border: 1px solid rgba(0, 0, 0, 0.33);
+	overflow: hidden;
+	}
+.acl-card div.bar {
+	height: 12px;
+	border-width: 1px 1px 0px 1px;
+	border-style: solid;
+	border-color: white;
+	overflow: hidden;
+	white-space: nowrap;
+	}
+.acl-card div.bar:last-child {
+	border-width: 1px;
+	height: 12px;
+	}
+.acl-card div.bar div {
+	height: 12px;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	margin-right: 1px;
+	vertical-align: top;
+	white-space: normal;
+	}
+.acl-card div.bar div.counter {
+	width: 10%;
+	font-size: 10px;
+	margin: 0;
+	padding: 0;
+	line-height: 0.9em;
+	display: none;
+	}
+.acl-card div.bar .yes {
+	background-color: green;
+	}
+.acl-card div.bar .no {
+	background-color: #EDC;
+	}
+
+/*  ##  USER MANAGEMENT  ##  */
+
+/*  --  Edit  --  */
+body.moduleManageUsers .controller-manage-user.action-edit .column-control {
+	float: right;
+	width: 40%;
+	}
+body.moduleManageUsers .controller-manage-user.action-edit .column-main {
+	margin-right: 42%;
+	}
+
+
+/*  --  Password  --  */
+body.moduleManageUsers #password-strength {
+	width: 90% !important;
+	margin-top: 0px;
+	margin-bottom: 0.5em;
+	background-color: #EFEFEF;
+	border: 0px solid #9F9F9F;
+	font-size: 0.9em;
+	overflow: hidden;
+	min-height: 1em;
+	border-radius: 0.4em;
+	}
+body.moduleManageUsers #password-strength .password-strength-bar {
+	display: inline-block;
+	opacity: 1 !important;
+	width: 100% !important;
+	text-align: center;
+	font-size: 0.9em;
+	color: rgba( 0,0,0,0.75);
+	color: rgba( 255, 255, 255, 1);
+	font-weight: bold;
+	letter-spacing: 1px;
+	text-shadow: 0 -1px #444, 1px 0 #444, 0 1px #444, -1px 0 #444, 0 0 2px #000;
+	}
+body.moduleManageUsers #input_passwordConfirm.valid {
+	background-color: rgba(127, 255, 63, 0.25);
+	}
+body.moduleManageUsers #input_passwordConfirm.invalid {
+	background-color: rgba(255, 63, 0, 0.15);
+	}
+body.moduleManageUsers div.password-history table thead th {
+	font-weight: normal;
+	font-size: 0.9em;
+	font-style: italic;
+	}
+body.moduleManageUsers div.password-history table tbody td {
+	font-weight: normal;
+	font-size: 0.9em;
+	}
+
+/*  --  Password: eXpErImEnTaL  --  */
+body.moduleManageUsers #form_manage_user_password > div > div {
+	position: relative;
+	}
+body.moduleManageUsers #password-strength {
+	position: absolute;
+
+	/* disc with space */
+/*	top: 31px;
+	right: 20px;
+	width: 18px !important;
+	height: 18px !important;
+	border-radius: 9px;*/
+
+	/* square with space */
+	top: 30px;
+	right: 20px;
+	width: 20px !important;
+	height: 20px !important;
+	border-radius: 3px;
+
+	/* square without space */
+/*	top: 26px;
+	right: 16px;
+	width: 28px !important;
+	height: 28px !important;
+	border-radius: 0px 2px 2px 0px;*/
+	}
+body.moduleManageUsers #password-strength .password-strength-bar {
+	font-size: 0px !important;
+
+	/* disc with space */
+/*	width: 18px !important;
+	height: 18px !important;*/
+
+	/* square with space */
+	width: 20px !important;
+	height: 20px !important;
+
+	/* square without space */
+/*	width: 28px !important;
+	height: 28px !important;
+	margin: 0;
+	padding: 0;*/
+	}
+
+
+
+
+
+
+
+/*  ##  ROLE MANAGEMENT  ##  */
+
+/*  --  Rights  --  */
 #role-edit-rights {
 	}
 #role-edit-rights ul {
@@ -189,43 +317,35 @@ span.role.role5 {
 
 
 
-/*  --  RIGHTS MAP  --  */
-.acl-card {
-	border: 1px solid rgba(0, 0, 0, 0.33);
-	overflow: hidden;
+
+
+
+
+.collapsable-block {
+/*	margin-bottom: 1em;
+	border-bottom: 1px solid rgba(127, 127, 127, 0.25);*/
 	}
-.acl-card div.bar {
-	height: 12px;
-	border-width: 1px 1px 0px 1px;
-	border-style: solid;
-	border-color: white;
-	overflow: hidden;
-	white-space: nowrap;
+.collapsable-block-trigger {
+/*	cursor: pointer;*/
 	}
-.acl-card div.bar:last-child {
-	border-width: 1px;
-	height: 12px;
+.collapsable-block-content {
+/*	display: none;*/
 	}
-.acl-card div.bar div {
-	height: 12px;
-	display: inline-block;
-	margin: 0;
-	padding: 0;
-	margin-right: 1px;
-	vertical-align: top;
-	white-space: normal;
+
+
+
+
+/*  ##  OUTDATED ?  ##  */
+
+
+.controller-manage-user #content dl dt {
+	width: 150px;
 	}
-.acl-card div.bar div.counter {
-	width: 10%;
-	font-size: 10px;
-	margin: 0;
-	padding: 0;
-	line-height: 0.9em;
-	display: none;
+
+legend.user-add {
+	background-image:  url(//cdn.ceusmedia.de/icons/famfamfam/silk/user_add.png);
 	}
-.acl-card div.bar .yes {
-	background-color: green;
-	}
-.acl-card div.bar .no {
-	background-color: #EDC;
+
+legend.user-edit {
+	background-image:  url(//cdn.ceusmedia.de/icons/famfamfam/silk/user_edit.png);
 	}

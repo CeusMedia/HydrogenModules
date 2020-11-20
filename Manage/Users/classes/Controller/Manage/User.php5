@@ -42,6 +42,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 			'nameMinLength'		=> $options->get( 'name.length.min' ),
 			'nameMaxLength'		=> $options->get( 'name.length.max' ),
 			'pwdMinLength'		=> $options->get( 'password.length.min' ),
+			'pwdMinStrength'	=> $options->get( 'password.strength.min' ),
 			'needsEmail'		=> $options->get( 'email.mandatory' ),
 			'needsFirstname'	=> $options->get( 'firstname.mandatory' ),
 			'needsSurname'		=> $options->get( 'surname.mandatory' ),
@@ -190,6 +191,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 		$nameMaxLength	= $options->get( 'name.length.max' );
 		$nameRegExp		= $options->get( 'name.preg' );
 		$pwdMinLength	= $options->get( 'password.length.min' );
+		$pwdMinStrength	= $options->get( 'password.strength.min' );
 		$needsEmail		= $options->get( 'email.mandatory' );
 		$needsFirstname	= $options->get( 'firstname.mandatory' );
 		$needsSurname	= $options->get( 'surname.mandatory' );
@@ -285,13 +287,81 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 		$this->addData( 'user', $user );
 		$this->addData( 'from', $request->get( 'from' ) );
 		$this->addData( 'roles', $modelRole->getAll() );
-		$this->addData( 'pwdMinLength', (int) $config->get( 'user.password.length.min' ) );
-		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
+		$this->addData( 'pwdMinLength', $pwdMinLength );
+		$this->addData( 'pwdMinStrength', $pwdMinStrength );
 
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$modelProject	= new Model_Project( $this->env );
 			$this->addData( 'projects', $modelProject->getUserProjects( $userId ) );
 		}
+
+		$modelPassword	= new Model_User_Password( $this->env );
+		$passwords		= $modelPassword->getAll( array( 'userId' => $userId ) );
+		$this->addData( 'passwords', $passwords );
+	}
+
+	public function password( $userId )
+	{
+		$config			= $this->env->getConfig();
+		$request		= $this->env->getRequest();
+		$messenger		= $this->env->getMessenger();
+		$words			= (object) $this->getWords( 'editPassword' );
+		$input			= $request->getAllFromSource( 'POST', TRUE );
+		$modelUser		= new Model_User( $this->env );
+		$modelRole		= new Model_Role( $this->env );
+
+		if( !$request->getMethod()->isPost() ){
+			$messenger->noteError( 'Access denied' );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}
+
+		$user		= $modelUser->get( $userId );
+		if( !$user ){
+			$messenger->noteError( 'Invalid user ID' );
+			$this->restart( NULL, TRUE );
+		}
+
+		$passwordNew	= $input->get( 'passwordNew' );
+		if( strlen( trim( $passwordNew ) ) === 0 ){
+			$messenger->noteError( $words->msgPasswordNewMissing );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}
+
+		$passwordConfirm	= $input->get( 'passwordConfirm' );
+		if( strlen( trim( $passwordConfirm ) ) === 0 ){
+			$messenger->noteError( $words->msgPasswordNewMissing );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}
+		if( $passwordNew !== $passwordConfirm ){
+			$messenger->noteError( $words->msgPasswordConfirmMismatch );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}
+
+		$logicPassword	= Logic_UserPassword::getInstance( $this->env );
+		if( $logicPassword->validateUserPassword( $userId, $passwordNew, FALSE ) ){
+			$messenger->noteError( $words->msgPasswordNewSame );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}
+
+		$options		= $config->getAll( 'module.resource_users.', TRUE );
+		$pwdMinLength	= $options->get( 'password.length.min' );
+		if( $pwdMinLength > 0 && strlen( $passwordNew ) < $pwdMinLength ){
+			$messenger->noteError( $words->msgPasswordNewTooShort );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}
+
+		// @todo implement strength check
+/*		$pwdMinStrength	= $options->get( 'password.strength.min' );
+		$pwdStrength	= todoDoTheMathHere();
+		if( $pwdMinStrength > 0 && $pwdStrength < $pwdMinStrength ){
+			$messenger->noteError( $words->msgPasswordTooWeak );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}*/
+
+		$userPasswordId	= $logicPassword->addPassword( $userId, $passwordNew );
+		$logicPassword->activatePassword( $userPasswordId );
+		$messenger->noteSuccess( $words->msgSuccess, $user->username );
+		$this->restart( 'edit/'.$userId, TRUE );
 	}
 
 	public function filter( $mode = NULL )

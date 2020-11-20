@@ -90,15 +90,17 @@ $panelEdit	= '
 		<form name="editUser" action="./manage/user/edit/'.$userId.'" method="post">
 			<input type="hidden" name="from" value="'.$from.'"/>
 			<div class="bs2-row-fluid bs3-row bs4-row">
-				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
+<!--			<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">-->
+				<div class="bs2-span3 bs3-col-md-3 bs3-form-group bs4-col-md-3 bs4-form-group">
 					<label for="input_username" class="mandatory">'.$w->labelUsername.'</label>
 					<input type="text" name="username" id="input_username" class="bs2-span12 bs3-form-control bs4-form-control mandatory" autocomplete="off" value="'.htmlentities( $user->username, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
-				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
+<!--				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
 					<label for="input_password" class="">'.$w->labelPassword.'</label>
 					<input type="password" name="password" id="input_password" autocomplete="new-password" class="bs2-span12 bs3-form-control bs4-form-control"/>
-				</div>
-				<div class="bs2-span4 bs3-col-md-4 bs3-form-group bs4-col-md-4 bs4-form-group">
+				</div>-->
+<!--				<div class="bs2-span4 bs3-col-md-4 bs3-form-group bs4-col-md-4 bs4-form-group">-->
+				<div class="bs2-span6 bs3-col-md-6 bs3-form-group bs4-col-md-6 bs4-form-group">
 					<label for="input_email" class="'.( $needsEmail ? 'mandatory' : '' ).'">'.$w->labelEmail.'</label>
 					'.UI_HTML_Tag::create( 'input', NULL, array(
 						'type'		=> "text",
@@ -109,11 +111,12 @@ $panelEdit	= '
 						'required'	=> $needsEmail ? "required" : NULL
 					) ).'
 				</div>
-				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
+<!--				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
 					<label for="input_status" class="mandatory">'.$w->labelStatus.'</label>
 					<select name="status" id="input_status" class="bs2-span12 bs3-form-control bs4-form-control mandatory">'.$optStatus.'</select>
-				</div>
-				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
+				</div>-->
+<!--				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">-->
+				<div class="bs2-span3 bs3-col-md-3 bs3-form-group bs4-col-md-3 bs4-form-group">
 					<label for="input_roleId" class="mandatory">'.$w->labelRole.'</label>
 					<select name="roleId" id="input_roleId" class="bs2-span12 bs3-form-control bs4-form-control mandatory">'.$optRole.'</select>
 				</div>
@@ -181,6 +184,7 @@ $panelEdit	= '
 </div>';
 
 $panelStatus	= $this->loadTemplateFile( 'manage/user/edit.status.php' );
+$panelPassword	= $this->loadTemplateFile( 'manage/user/edit.password.php' );
 $panelInfo		= $this->loadTemplateFile( 'manage/user/edit.info.php' );
 $panelRights	= $this->loadTemplateFile( 'manage/user/edit.rights.php' );
 
@@ -193,6 +197,7 @@ return $textIndexTop.'
 		<div class="bs2-row-fluid bs3-row bs4-row">
 			<div class="bs2-span6 bs3-col-md-6 bs4-col-md-6">
 				'.$panelStatus.'
+				'.$panelPassword.'
 			</div>
 			<div class="bs2-span6 bs3-col-md-6 bs4-col-md-6">
 				'.$panelRights.'
@@ -204,4 +209,3 @@ return $textIndexTop.'
 	</div>
 </div>
 '.$textIndexBottom;
-
