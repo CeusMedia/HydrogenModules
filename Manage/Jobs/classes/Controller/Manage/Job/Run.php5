@@ -43,6 +43,7 @@ class Controller_Manage_Job_Run extends CMF_Hydrogen_Controller
 			'status',
 			'type',
 			'jobId',
+			'archived',
 			'className',
 			'startFrom',
 			'startTo',
@@ -81,7 +82,7 @@ die;*/
 			$filterStatus	= array();
 
 		$conditions	= array(
-			'archived'	=> (int)$filterArchived,
+			'archived'	=> (int) $filterArchived,
 		);
 		if( is_array( $filterStatus ) && count( $filterStatus ) )
 			$conditions['status']		= $filterStatus;
@@ -126,6 +127,7 @@ die;*/
 		$this->addData( 'filterClassName', $filterClassName );
 		$this->addData( 'filterStartFrom', $filterStartFrom );
 		$this->addData( 'filterStartTo', $filterStartTo );
+		$this->addData( 'filterArchived', $filterArchived );
 		$this->addData( 'total', $total );
 		$this->addData( 'page', $page );
 	}

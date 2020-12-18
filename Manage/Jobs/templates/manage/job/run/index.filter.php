@@ -25,6 +25,9 @@ foreach( $definitions as $jobId => $definition )
 ksort( $optClassName );
 $optClassName	= UI_HTML_Elements::Options( $optClassName, $filterClassName );
 
+$optArchived	= array( 0 => 'no', 1 => 'yes' );
+$optArchived	= UI_HTML_Elements::Options( $optArchived, $filterArchived );
+
 $panelFilter	= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h3', $words['filter']['heading'] ),
 	UI_HTML_Tag::create( 'div', array(
@@ -74,7 +77,16 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 						'class' 	=> 'span12',
 //						'oninput'	=> 'this.form.submit();',
 					) ),
-				), array( 'class' => 'span12' ) ),
+				), array( 'class' => 'span8' ) ),
+				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'label', $words['filter']['labelArchived'], array( 'for' => 'input_archived' ) ),
+					UI_HTML_Tag::create( 'select', $optArchived, array(
+						'name' 		=> 'type',
+						'id'		=> 'input_archived',
+						'class' 	=> 'span12',
+//						'oninput'	=> 'this.form.submit();',
+					) ),
+				), array( 'class' => 'span4' ) ),
 			), array( 'class' => 'row-fluid' ) ),
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(

@@ -15,12 +15,12 @@ $optMode	= UI_HTML_Elements::Options( $optMode, $filterMode );
 
 $optClass	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $classNames as $key => $value )
-	$optClass[$key]	= $value;
+	$optClass[$value]	= $value;
 $optClass	= UI_HTML_Elements::Options( $optClass, $filterClass );
 
 $optMethod	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $methodNames as $key => $value )
-	$optMethod[$key]	= $value;
+	$optMethod[$value]	= $value;
 $optMethod	= UI_HTML_Elements::Options( $optMethod, $filterMethod );
 
 $panelFilter	= UI_HTML_Tag::create( 'div', array(
