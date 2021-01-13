@@ -241,7 +241,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 
 			$data	= array(
 				'roleId'		=> $input['roleId'],
-				'status'		=> $input['status'],
+//				'status'		=> $input['status'],
 				'username'		=> $username,
 				'email'			=> strtolower( $email ),
 				'gender'		=> $input['gender'],
