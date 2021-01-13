@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <module>
 	<title>JS: TinyMCE</title>
-	<description><![CDATA[WYSIWYG Editor.]]></description>
-	<version>4.5.7-p7</version>
+	<description><![CDATA[WYSIWYG editor integration.]]></description>
+	<version>4.5.7-p8</version>
+	<log version="4.5.7-p8">Support module configured auto height.</log>
 	<category>JavaScript</category>
-	<company site="http://www.tinymce.com/">www.tinymce.com</company>
+	<company site="https://www.tiny.cloud/features">www.tiny.cloud</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
 	<license source="http://www.gnu.org/licenses/lgpl-2.1.html">LGPL 2.1</license>
 	<files>

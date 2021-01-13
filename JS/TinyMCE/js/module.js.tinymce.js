@@ -10,6 +10,8 @@ var ModuleJsTinyMce = {
 				if(textarea.data("tinymce-mode"))
 					mode = $(this).data("tinymce-mode");
 				options.relative_urls = textarea.data("tinymce-relative") !== false;
+				if(textarea.data("tinymce-height"))
+					options.height = $(this).data("tinymce-height");
 				if(textarea.data("tinymce-mode"))
 				options = tinymce.Config.apply(options, mode);
 				if(!textarea.attr("id"))
