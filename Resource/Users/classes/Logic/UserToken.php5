@@ -10,7 +10,7 @@ class Logic_UserToken extends CMF_Hydrogen_Logic
 		return $this->get();
 	}
 
-	public function get( string $username, string $password ): string
+	public function get( string $username, string $password, ?string $scope = NULL ): string
 	{
 		//  check username
 		$userId	= $this->getUserIdFromUsername( $username );
@@ -25,18 +25,20 @@ class Logic_UserToken extends CMF_Hydrogen_Logic
 			'userId'	=> $userId,
 			'status'	=> Model_User_Token::STATUS_ACTIVE,
 			'token'		=> $token,
+			'scope'		=> (string) $scope,
 			'createdAt'	=> time(),
 		) );
 
-		$this->revokeByUserId( $userId, $tokenId );
+		$this->revokeByUserId( $userId, $tokenId, $scope );
 
 		return $token;
 	}
 
-	public function validate( string $token, ?string $username ): bool
+	public function validate( string $token, ?string $username, ?string $scope = NULL ): bool
 	{
 		$indices	= array(
-			'token'		=> $token,
+			'scope'		=> (string) $scope,
+			'token'		=> (string) $token,
 			'status'	=> Model_User_Token::STATUS_ACTIVE,
 		);
 		if( strlen( trim( $username ) ) > 0 )
@@ -66,6 +68,21 @@ class Logic_UserToken extends CMF_Hydrogen_Logic
 		);
 		if( strlen( trim( $except ) ) > 0 )
 			$indices['userTokenId']	= '!= '.$except;
+		$tokens	= $this->modelToken->getAllByIndices( $indices );
+		foreach( $tokens as $token )
+			$this->revokeByTokenId( $token->userTokenId );
+		return count( $tokens ) > 0;
+	}
+
+	public function revokeByScope( string $scope ): bool
+	{
+		$indices	= array(
+			'scope'		=> $scope,
+			'status'	=> array(
+				Model_User_Token::STATUS_NEW,
+				Model_User_Token::STATUS_ACTIVE
+			),
+		);
 		$tokens	= $this->modelToken->getAllByIndices( $indices );
 		foreach( $tokens as $token )
 			$this->revokeByTokenId( $token->userTokenId );

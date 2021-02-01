@@ -7,7 +7,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.4</version>
+	<version>0.4.1</version>
 	<log version="0.1">Initital prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
@@ -24,6 +24,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<log version="0.3.5">Set status constants and default status in model.</log>
 	<log version="0.3.6">Update code style.</log>
 	<log version="0.4">Support user tokens backed by user passwords.</log>
+	<log version="0.4.1">Extend user tokens by scope.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -285,6 +286,9 @@ ALTER TABLE `<%?prefix%>user_tokens`
 
 ALTER TABLE `<%?prefix%>user_tokens`
   MODIFY `userTokenId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+]]></sql>
+	<sql on="update" type="mysql" version="0.4.1"><![CDATA[
+ALTER TABLE `<%?prefix%>user_tokens` ADD `scope` VARCHAR(127) NULL DEFAULT '' AFTER `status`, ADD INDEX (`scope`);
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>users`;

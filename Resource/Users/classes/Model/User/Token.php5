@@ -27,6 +27,7 @@ class Model_User_Token extends CMF_Hydrogen_Model
 		'userTokenId',
 		'userId',
 		'status',
+		'scope',
 		'token',
 		'createdAt',
 		'usedAt',
@@ -38,6 +39,7 @@ class Model_User_Token extends CMF_Hydrogen_Model
 	protected $indices		= array(
 		'userId',
 		'status',
+		'scope',
 		'token',
 	);
 
