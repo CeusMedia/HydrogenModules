@@ -995,7 +995,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller
 	protected function recoverFilters( $userId )
 	{
 		$model	= new Model_Mission_Filter( $this->env );
-		$serial	= $model->getByIndex( 'userId', $userId, array(), 'serial' );
+		$serial	= $model->getByIndex( 'userId', $userId, array(), ['serial'], FALSE );
 //	print_m( $serial );
 //	print_m( unserialize( $serial ) );
 //	die;
