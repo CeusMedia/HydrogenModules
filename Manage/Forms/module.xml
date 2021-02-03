@@ -14,7 +14,7 @@ The form action will save the entered data and send mails according to rules.
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.4.8</version>
+	<version>0.4.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
@@ -22,7 +22,7 @@ The form action will save the entered data and send mails according to rules.
 	<log version="0.3.2">Add pagination.</log>
 	<log version="0.3.3">Add fill export.</log>
 	<log version="0.4">Use module UI:Helper:Forms.</log>
-	<log version="0.4.1">Support role type to form mail model.</log>
+	<log version="0.4.1">Add role type to form mail model.</log>
 	<log version="0.4.2">Extend form list by filter.</log>
 	<log version="0.4.3">Extend form mail list by filter.</log>
 	<log version="0.4.4">Extend form block list by filter.</log>
@@ -30,6 +30,7 @@ The form action will save the entered data and send mails according to rules.
 	<log version="0.4.6">Use module JS:Ace as code editor.</log>
 	<log version="0.4.7">Add style file.</log>
 	<log version="0.4.8">Link blocks in form view.</log>
+	<log version="0.4.9">Support form transfers.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -50,6 +51,7 @@ The form action will save the entered data and send mails according to rules.
 		<template>manage/form/edit.facts.php</template>
 		<template>manage/form/edit.rules.customer.php</template>
 		<template>manage/form/edit.rules.manager.php</template>
+		<template>manage/form/edit.rules.transfer.php</template>
 		<template>manage/form/edit.view.php</template>
 		<template>manage/form/index.php</template>
 		<template>manage/form/index.filter.php</template>

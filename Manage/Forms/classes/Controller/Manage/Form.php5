@@ -5,6 +5,8 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	protected $modelFill;
 	protected $modelRule;
 	protected $modelMail;
+	protected $modelTranserTarget;
+	protected $modelTransferRule;
 	protected $filters		= array(
 		'formId',
 		'type',
@@ -13,20 +15,6 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		'managerMailId',
 		'title'
 	);
-
-	protected function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->modelForm	= new Model_Form( $this->env );
-		$this->modelFill	= new Model_Form_Fill( $this->env );
-		$this->modelRule	= new Model_Form_Rule( $this->env );
-		$this->modelMail	= new Model_Form_Mail( $this->env );
-
-		$module			= $this->env->getModules()->get( 'Manage_Forms' );
-		$mailDomains	= trim( $module->config['mailDomains']->value );
-		$mailDomains	= strlen( $mailDomains ) ? preg_split( '/\s*,\s*/', $mailDomains ) : array();
-		$this->addData( 'mailDomains', $mailDomains );
-	}
 
 	public function add(){
 		if( $this->request->has( 'save' ) ){
@@ -64,22 +52,27 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	protected function checkId( $formId, $strict = TRUE ){
-		if( !$formId )
-			throw new RuntimeException( 'No form ID given' );
-		if( $form = $this->modelForm->get( $formId ) )
-			return $form;
-		if( $strict )
-			throw new DomainException( 'Invalid form ID given' );
-		return FALSE;
-	}
+	public function addTransferRule( $formId )
+	{
+		$this->checkIsPost();
+		$title		= $this->request->get( 'title' );
+		$targetId	= trim( $this->request->get( 'formTransferTargetId' ) );
+		$rules		= trim( $this->request->get( 'rules' ) );
 
-	protected function checkIsPost( $strict = TRUE ){
-		if( $this->request->isMethod( 'POST' ) )
-			return TRUE;
-		if( $strict )
-			throw new RuntimeException( 'Access denied: POST requests, only' );
-		return FALSE;
+		if( empty( $title ) )
+			throw new InvalidArgumentException( 'No title given' );
+		if( empty( $targetId ) )
+			throw new InvalidArgumentException( 'No target ID given' );
+
+		$this->modelTransferRule->add([
+			'formTransferTargetId'	=> $targetId,
+			'formId'				=> $formId,
+			'title'					=> $title,
+			'rules'					=> $rules,
+			'createdAt'				=> time(),
+			'modifiedAt'			=> time(),
+		]);
+		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
 	public function confirm(){
@@ -114,10 +107,48 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 			'formId'	=> $formId,
 			'type'		=> Model_Form_Rule::TYPE_CUSTOMER,
 		) ) );
+		$transferTargetMap	= array();
+		foreach( $this->modelTransferTarget->getAll() as $target )
+			$transferTargetMap[$target->formTransferTargetId]	= $target;
+		$this->addData( 'transferTargets', $transferTargetMap );
+		$this->addData( 'transferRules', $this->modelTransferRule->getAllByIndices( array(
+			'formId'	=> $formId,
+		) ) );
 
 		$fills	= $this->modelFill->getAll( array( 'formId' => $formId ) );
 		$this->addData( 'fills', $fills );
 		$this->addData( 'hasFills', count( $fills ) > 0 );
+	}
+
+	public function editTransferRule( $formId, $transferRuleId )
+	{
+		$this->checkIsPost();
+		$rule		= $this->checkTransferRuleId( $transferRuleId );
+		$title		= $this->request->get( 'title' );
+		$targetId	= trim( $this->request->get( 'formTransferTargetId' ) );
+		$rules		= trim( $this->request->get( 'rules' ) );
+
+		if( empty( $title ) )
+			throw new InvalidArgumentException( 'No title given' );
+		if( empty( $targetId ) )
+			throw new InvalidArgumentException( 'No target ID given' );
+
+		if( strlen( $rules ) > 0 ){
+			$ruleSet = json_decode( $rules );
+			if( $ruleSet )
+				$rules	= json_encode( $ruleSet, JSON_PRETTY_PRINT );
+		}
+		if( $rule->formTransferTargetId !== $targetId )
+			$data['formTransferTargetId']	= $targetId;
+		if( $rule->title !== $title )
+			$data['title']	= $title;
+		if( $rule->rules !== $rules )
+			$data['rules']	= $rules;
+		if( $data ){
+			$data['modifiedAt']	= time();
+			$this->modelTransferRule->edit( $transferRuleId, $data );
+		}
+		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
 	public function filter( $reset = NULL ){
@@ -156,7 +187,55 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->addData( 'pages', ceil( $total / $limit ) );
 		$this->addData( 'mailsCustomer', $this->getAvailableCustomerMails() );
 		$this->addData( 'mailsManager', $this->getAvailableManagerMails() );
+	}
 
+	public function ajaxTestTransferRules(){
+		$this->checkIsPost();
+		$ruleId	= $this->request->get( 'ruleId' );
+		$this->checkTransferRuleId( $ruleId );
+		$rules	= $this->request->get( 'rules' );
+
+		$response	= [
+			'userId'	=> $this->session->get( 'userId' ),
+			'ruleId'	=> $ruleId,
+			'rules'		=> $rules,
+			'status'	=> 'empty',
+			'message'	=> NULL,
+		];
+
+		$data	= [
+			'personDate1'		=> "I've been copied from personDate1",
+			'personDate3'		=> "I've been mapped from personDate3 to personDate2",
+			'__courseId__'		=> 1,
+			'__base__'			=> 1,
+		];
+
+		if( strlen( trim( $rules ) ) ){
+			$parser	= new ADT_JSON_Parser;
+			try{
+				$ruleSet	= $parser->parse( $rules, FALSE );
+				$response['status']	= 'parsed';
+				try{
+					$mapper			= new Logic_FormDataTransferMapper( $this->env );
+					$transferData	= $mapper->applyRulesToFormData( $data, $ruleSet );
+					$response['status']		= "success";
+					$response['message']	= $transferData;
+				}
+				catch( RuntimeException $e ){
+					$response['status']		= 'error';
+					$response['message']	= $e->getMessage();
+				}
+			}
+			catch( RuntimeException $e ){
+				$response['status']		= 'exception';
+				$response['message']	= $e->getMessage();
+			}
+		}
+
+		print( json_encode( $response ) );
+		exit;
+
+		$this->respond( $rules );
 	}
 
 	public function remove( $formId ){
@@ -167,6 +246,13 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 
 	public function removeRule( $formId, $ruleId ){
 		$this->modelRule->remove( $ruleId );
+		$this->restart( 'edit/'.$formId, TRUE );
+	}
+
+	public function removeTransferRule( $formId, $transferRuleId )
+	{
+		$this->checkTransferRuleId( $transferRuleId );
+		$this->modelTransferRule->remove( $transferRuleId );
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
@@ -240,4 +326,67 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		}
 		return $list;
 	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit(){
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->modelForm	= new Model_Form( $this->env );
+		$this->modelFill	= new Model_Form_Fill( $this->env );
+		$this->modelRule	= new Model_Form_Rule( $this->env );
+		$this->modelMail	= new Model_Form_Mail( $this->env );
+		$this->modelTransferTarget	= new Model_Form_Transfer_Target( $this->env );
+		$this->modelTransferRule	= new Model_Form_Transfer_Rule( $this->env );
+
+		$module			= $this->env->getModules()->get( 'Manage_Forms' );
+		$mailDomains	= trim( $module->config['mailDomains']->value );
+		$mailDomains	= strlen( $mailDomains ) ? preg_split( '/\s*,\s*/', $mailDomains ) : array();
+		$this->addData( 'mailDomains', $mailDomains );
+	}
+
+	protected function checkId( $formId, $strict = TRUE ){
+		if( !$formId )
+			throw new RuntimeException( 'No form ID given' );
+		if( $form = $this->modelForm->get( $formId ) )
+			return $form;
+		if( $strict )
+			throw new DomainException( 'Invalid form ID given' );
+		return FALSE;
+	}
+
+	protected function checkIsPost( $strict = TRUE ){
+		if( $this->request->getMethod()->is( 'POST' ) )
+			return TRUE;
+		if( $strict )
+			throw new RuntimeException( 'Access denied: POST requests, only' );
+		return FALSE;
+	}
+
+	protected function checkTransferRuleId( $transferRuleId ){
+		if( !$transferRuleId )
+			throw new RuntimeException( 'No transfer rule ID given' );
+		if( !( $transferRule = $this->modelTransferRule->get( $transferRuleId ) ) )
+			throw new DomainException( 'Invalid transfer rule ID given' );
+		return $transferRule;
+	}
 }
+
+
+/*
+{
+	"copy": ["personDate1"],
+	"map": {"personDate3": "personDate2"},
+	"db": {
+		"course_id": {
+			"table": "school_course_bases",
+			"column": "schoolCourseBaseId",
+			"index": {
+				"schoolCourseId": "__courseId__",
+				"schoolBaseId": "__base__"
+			}
+		}
+	}
+}
+
+*/

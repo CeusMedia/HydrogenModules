@@ -21,6 +21,7 @@ $navButtons	= array(
 	'prevContent'	=> renderNavButton( $form->formId, 'content', 'Inhalt', 'prev' ),
 	'prevManager'	=> renderNavButton( $form->formId, 'rulesManager', 'Manager-Mail-Regeln', 'prev' ),
 	'prevCustomer'	=> renderNavButton( $form->formId, 'rulesCustomer', 'Kunden-Mail-Regeln', 'prev' ),
+	'prevTransfer'	=> renderNavButton( $form->formId, 'rulesCustomer', 'Transfer-Regeln', 'prev' ),
 
 	'nextView'		=> renderNavButton( $form->formId, 'view', 'Ansicht', 'next' ),
 //	'nextBlocks'	=> renderNavButton( $form->formId, 'blocks', 'Blöcke', 'next' ),
@@ -49,6 +50,13 @@ $tabs->add( 'content', '#', 'Inhalt', $panelContent );
 $tabs->add( 'rulesManager', '#', 'Manager-Mail-Regeln'.$countRulesManager, $panelRulesManager );
 $tabs->add( 'rulesCustomer', '#', 'Kunden-Mail-Regeln'.$countRulesCustomer, $panelRulesCustomer );
 //$tabs->add( 'fills', '#', 'Einträge', $panelFills );
+
+if( count( $transferTargets ) ){
+//	$panelFormTransfer	= '...';
+	$panelFormTransfer	= $this->loadTemplateFile( 'manage/form/edit.rules.transfer.php', array( 'navButtons' => $navButtons ) );
+	$tabs->add( 'formTransfer', '#', 'Datenweitergabe', $panelFormTransfer );
+}
+
 $tabs->setActive( $activeTab ? $activeTab : 'facts' );
 
 return '
