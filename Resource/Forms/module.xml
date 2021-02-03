@@ -3,18 +3,20 @@
 	<title>Resource: Forms</title>
 	<description><![CDATA[Basic handling for forms.]]></description>
 	<category>Resource</category>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
 	<log version="0.3.1">Support manager and customer rules.</log>
 	<log version="0.3.2">Add mail for error handling.</log>
 	<log version="0.3.3">Add role type to form mail model.</log>
+	<log version="0.3.4">Add form transfer targets and rules.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 <!--		<class>Logic/Form.php5</class>-->
+		<class>Logic/FormDataTransferMapper.php5</class>
 		<class>Mail/Form/Abstract.php5</class>
 		<class>Mail/Form/Customer/Confirm.php5</class>
 		<class>Mail/Form/Customer/Result.php5</class>
@@ -25,6 +27,8 @@
 		<class>Model/Form/Fill.php5</class>
 		<class>Model/Form/Mail.php5</class>
 		<class>Model/Form/Rule.php5</class>
+		<class>Model/Form/Transfer/Rule.php5</class>
+		<class>Model/Form/Transfer/Target.php5</class>
 		<class>View/Helper/Form/Fill/Data.php5</class>
 		<class>View/Helper/Form/Fill/Person.php5</class>
 	</files>
@@ -174,6 +178,36 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>form_rules` (
   KEY `type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DROP TABLE IF EXISTS `<%?prefix%>form_transfer_targets`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_transfer_targets` (
+  `formTransferTargetId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:disabled, 1:enabled',
+  `title` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
+  `className` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `baseUrl` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `apiKey` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`formTransferTargetId`),
+  KEY `status` (`status`),
+  KEY `className` (`className`),
+  KEY `createdAt` (`createdAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_transfer_rules`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_transfer_rules` (
+  `formTransferRuleId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `formTransferTargetId` int(10) UNSIGNED NOT NULL,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `title` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `rules` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`formTransferRuleId`),
+  KEY `formTransferTargetId` (`formTransferTargetId`),
+  KEY `formId` (`formId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 INSERT INTO `<%?prefix%>forms` (`formId`, `managerMailId`, `customerMailId`, `type`, `status`, `title`, `receivers`, `content`, `timestamp`) VALUES
 (1, 1, 2, 1, 1, 'Test 1', 'dev@ceusmedia.de', '<div class=\"content-panel\">\r\n	<h3><span class=\"muted\">Formular:</span> Test 1</h3>\r\n	<div class=\"content-panel-inner\">\r\n		[block_person]\r\n	</div>\r\n</div>\r\n', '1585524422');
 
@@ -206,6 +240,37 @@ UPDATE `<%?prefix%>form_mails` SET `roleType` = 33 WHERE `identifier` LIKE "mana
 UPDATE `<%?prefix%>form_mails` SET `roleType` = 31 WHERE `identifier` LIKE "manager%" AND `roleType` = 0;
 ALTER TABLE `<%?prefix%>forms` CHANGE `mailId` `customerMailId` INT(10) UNSIGNED NULL DEFAULT '0';
 ALTER TABLE `<%?prefix%>forms` ADD `managerMailId` INT UNSIGNED NULL DEFAULT '0' AFTER `formId`, ADD INDEX (`managerMailId`);
+	]]></sql>
+	<sql type="mysql" on="update" version="0.3.4"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>form_transfer_targets`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_transfer_targets` (
+  `formTransferTargetId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:disabled, 1:enabled',
+  `title` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
+  `className` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `baseUrl` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `apiKey` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`formTransferTargetId`),
+  KEY `status` (`status`),
+  KEY `className` (`className`),
+  KEY `createdAt` (`createdAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_transfer_rules`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_transfer_rules` (
+  `formTransferRuleId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `formTransferTargetId` int(10) UNSIGNED NOT NULL,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `title` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `rules` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`formTransferRuleId`),
+  KEY `formTransferTargetId` (`formTransferTargetId`),
+  KEY `formId` (`formId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 	]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>form_mails`;
