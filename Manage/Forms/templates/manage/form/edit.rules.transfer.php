@@ -147,7 +147,6 @@ var FormsTransferRuleTest = {
 		}
 		FormsTransferRuleTest.testTransferRules(ruleId, rules, callback);
 	}
-
 }
 jQuery(document).ready(function(){
 	FormsTransferRuleTest.init();

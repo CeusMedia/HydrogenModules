@@ -60,10 +60,79 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		) );
 		$this->sendCustomerResultMail( $fillId );
 		$this->sendManagerResultMails( $fillId );
+		$this->applyTransfers( $fillId );
 		if( $fill->referer )
 			$this->restart( $fill->referer.$urlGlue.'rc=2', FALSE, NULL, TRUE );
 		$this->restart( 'confirmed/'.$fillId, TRUE );
 	}
+
+	public function testTransfer( $fillId ){
+		$this->applyTransfers( $fillId );
+		exit;
+	}
+
+	protected function applyTransfers( $fillId ){
+		if( !( $fill = $this->modelFill->get( $fillId ) ) )
+			throw new DomainException( 'Invalid fill given' );
+
+		$formData		= [];
+		foreach( json_decode( $fill->data ) as $fieldName => $fieldParameters ){
+			$formData[$fieldName]	= $fieldParameters->value;
+		}
+
+		$form = $this->modelForm->get( $fill->formId );
+		$modelRule		= new Model_Form_Transfer_Rule( $this->env );
+		$modelTarget	= new Model_Form_Transfer_Target( $this->env );
+		$rules	= $modelRule->getAllByIndex( 'formId', $fill->formId );
+//		print_m( $form );
+//		print_m( $fill );
+//		print_m( $rules );
+
+
+		$parser		= new ADT_JSON_Parser;
+		$mapper		= new Logic_FormDataTransferMapper( $this->env );
+
+
+		$transfers	= array();
+
+		$transferData	= [];
+		foreach( $rules as $rule ){
+			$target = $modelTarget->get( $rule->formTransferTargetId );
+			if( $target->status < Model_Form_Transfer_Target::STATUS_ENABLED )
+				continue;
+
+			$transferData	= $formData;
+			$transfer	= (object) [
+				'status'	=> 'none',
+				'rule'		=> $rule,
+				'target'	=> $target,
+				'data'		=> NULL
+			];
+			$transfer->data	= $transferData;
+			if( strlen( trim( $rule->rules ) ) ){
+				try{
+					$ruleSet		= $parser->parse( $rule->rules, FALSE );
+					$transfer->status	= 'parsed';
+					$transferData	= $mapper->applyRulesToFormData( $formData, $ruleSet );
+					$transfer->status	= 'applied';
+
+					$targetId			= $transfer->target->formTransferTargetId;
+					$factory			= new Alg_Object_Factory( [$this->env] );
+					$transferInstance	= $factory->create( $transfer->target->className );
+					$transfer->result	= $transferInstance->transfer( $targetId, $transferData );
+					$transfer->status	= 'transfered';
+				}
+				catch( RuntimeException $e ){
+					$transfer->status	= 'failed';
+					$this->env->getLog()->logException( $e );
+				}
+			}
+			$transfers[]	= $transfer;
+		}
+		print_m( $transfers );
+		die;
+	}
+
 
 	public function export( $format, $type, $id ){
 		$data	= array();

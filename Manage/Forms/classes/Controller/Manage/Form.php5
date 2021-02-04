@@ -208,6 +208,8 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 			'personDate3'		=> "I've been mapped from personDate3 to personDate2",
 			'__courseId__'		=> 1,
 			'__base__'			=> 1,
+			'topic'				=> 'fl-nat',
+			'interestBase'		=> 'leipzig@deutsche-heilpraktikerschule.de',
 		];
 
 		if( strlen( trim( $rules ) ) ){
