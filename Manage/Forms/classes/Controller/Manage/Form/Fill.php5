@@ -90,7 +90,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 
 
 		$parser		= new ADT_JSON_Parser;
-		$mapper		= new Logic_FormDataTransferMapper( $this->env );
+		$mapper		= new Logic_Form_Transfer_DataMapper( $this->env );
 
 
 		$transfers	= array();

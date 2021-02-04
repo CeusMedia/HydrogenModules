@@ -1,5 +1,5 @@
 <?php
-class Logic_FormDataTransferMapper extends CMF_Hydrogen_Logic
+class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 {
 	protected $env;
 	protected $formData		= [];
@@ -22,7 +22,10 @@ class Logic_FormDataTransferMapper extends CMF_Hydrogen_Logic
 				$result	= $dbc->query( $query )->fetch( PDO::FETCH_OBJ );
 				if( empty( $result ) )
 					throw new RuntimeException( 'No table data found for index source of target field "'.$fieldName.'"' );
-				$transferData[$fieldName]	= $result->value;
+				if( !empty( $parameters->to ) && $parameters->to === 'request')
+					$formData[$fieldName]	= $result->value;
+				else
+					$transferData[$fieldName]	= $result->value;
 			}
 		}
 		if( !empty( $rules->copy ) ){

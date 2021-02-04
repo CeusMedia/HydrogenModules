@@ -16,7 +16,7 @@
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 <!--		<class>Logic/Form.php5</class>-->
-		<class>Logic/FormDataTransferMapper.php5</class>
+		<class>Logic/Form/Transfer/DataMapper.php5</class>
 		<class>Mail/Form/Abstract.php5</class>
 		<class>Mail/Form/Customer/Confirm.php5</class>
 		<class>Mail/Form/Customer/Result.php5</class>

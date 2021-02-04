@@ -218,7 +218,7 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 				$ruleSet	= $parser->parse( $rules, FALSE );
 				$response['status']	= 'parsed';
 				try{
-					$mapper			= new Logic_FormDataTransferMapper( $this->env );
+					$mapper			= new Logic_Form_Transfer_DataMapper( $this->env );
 					$transferData	= $mapper->applyRulesToFormData( $data, $ruleSet );
 					$response['status']		= "success";
 					$response['message']	= $transferData;
