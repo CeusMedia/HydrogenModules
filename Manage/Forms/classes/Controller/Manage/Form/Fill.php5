@@ -84,17 +84,11 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$modelRule		= new Model_Form_Transfer_Rule( $this->env );
 		$modelTarget	= new Model_Form_Transfer_Target( $this->env );
 		$rules	= $modelRule->getAllByIndex( 'formId', $fill->formId );
-//		print_m( $form );
-//		print_m( $fill );
-//		print_m( $rules );
-
 
 		$parser		= new ADT_JSON_Parser;
 		$mapper		= new Logic_Form_Transfer_DataMapper( $this->env );
 
-
 		$transfers	= array();
-
 		$transferData	= [];
 		foreach( $rules as $rule ){
 			$target = $modelTarget->get( $rule->formTransferTargetId );
@@ -106,14 +100,18 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 				'status'	=> 'none',
 				'rule'		=> $rule,
 				'target'	=> $target,
-				'data'		=> NULL
+				'formData'	=> $formData,
+				'data'		=> NULL,
+				'error'		=> NULL,
 			];
 			$transfer->data	= $transferData;
 			if( strlen( trim( $rule->rules ) ) ){
+				$transfer->data	= [];
 				try{
 					$ruleSet		= $parser->parse( $rule->rules, FALSE );
 					$transfer->status	= 'parsed';
 					$transferData	= $mapper->applyRulesToFormData( $formData, $ruleSet );
+					$transfer->data		= $transferData;
 					$transfer->status	= 'applied';
 
 					$targetId			= $transfer->target->formTransferTargetId;
@@ -124,6 +122,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 				}
 				catch( RuntimeException $e ){
 					$transfer->status	= 'failed';
+					$transfer->error	= $e->getMessage();
 					$this->env->getLog()->logException( $e );
 				}
 			}
