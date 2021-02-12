@@ -26,6 +26,8 @@ $helperData		= new View_Helper_Form_Fill_Data( $env );
 $helperData->setFill( $fill );
 $helperData->setForm( $form );
 
+
+//  --  PANEL: FACTS  --  //
 $datetime	= UI_HTML_Tag::create( 'div', 'Zeitpunkt: '.date( 'd.m.Y H:i:s', $fill->createdAt ) );
 $status		= UI_HTML_Tag::create( 'div', 'Zustand: '.$statuses[$fill->status] );
 $referer	= '';
@@ -36,22 +38,40 @@ if( $fill->referer ){
 $formLink	= UI_HTML_Tag::create( 'a', $iconForm.'&nbsp;'.$form->title, array( 'href' => './manage/form/edit/'.$form->formId ) );
 $formLink	= UI_HTML_Tag::create( 'div', 'Formular: '.$formLink );
 $panelFacts	= UI_HTML_Tag::create( 'div', array(
+	UI_HTML_Tag::create( 'h3', 'Fakten' ),
 	UI_HTML_Tag::create( 'div', array(
-		$helperPerson->render(),
-	), array( 'class' => 'span8' ) ),
-	UI_HTML_Tag::create( 'div', array(
+		$datetime,
+		$referer,
+		$formLink,
+		$status,
+	), array( 'class' => 'content-panel-inner' ) ),
+), array( 'class' => 'content-panel' ) );
+
+
+//  --  PANEL: TRANSFERS  --  //
+$panelTransfers	= '';
+if( $fillTransfers ){
+	$list	= array();
+	foreach( $fillTransfers as $fillTransfer ){
+		$targetTitle	= $transferTargetMap[$fillTransfer->formTransferTargetId];
+		$status			= $fillTransfer->status == 1 ? 'erfolgreich' : 'gescheitert';
+		$list[]	= UI_HTML_Tag::create( 'tr', array(
+			UI_HTML_Tag::create( 'td', $targetTitle ),
+			UI_HTML_Tag::create( 'td', $status ),
+			UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i:s', $fillTransfer->createdAt ) ),
+		) );
+	}
+	$panelTransfers	= UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'h3', 'Fakten' ),
 			UI_HTML_Tag::create( 'div', array(
-				$datetime,
-				$referer,
-				$formLink,
-				$status,
-			), array( 'class' => 'content-panel-inner' ) ),
-		), array( 'class' => 'content-panel' ) ),
-	), array( 'class' => 'span4' ) ),
-), array( 'class' => 'row-fluid' ) );
+			) ),
+		), array( 'class' => 'content-panel-inner' ) ),
+	), array( 'class' => 'content-panel' ) );
+}
 
+
+//  --  BUTTONS  --  //
 $buttonList	= UI_HTML_Tag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'href'	=> './manage/form/fill'.( $page ? '/'.$page : '' ),
 	'class'	=> 'btn',
@@ -83,8 +103,24 @@ $buttonExport	= UI_HTML_Tag::create( 'a', $iconExport.'&nbsp;exportieren', array
 
 $buttons	= join( ' ', array( $buttonList, $buttonExport, $buttonConfirm, $buttonHandled, $buttonRemove ) );
 $buttonbar	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'buttonbar' ) );
+
+
 $heading	= UI_HTML_Tag::create( 'h2', array(
 	UI_HTML_Tag::create( 'span', 'Eintrag: ', array( 'class' => 'muted' ) ),
 	$form->title,
 ) );
-return $heading.$panelFacts.$helperData->render().$buttonbar;
+
+return UI_HTML_Tag::create( 'div', array(
+	$heading,
+	UI_HTML_Tag::create( 'div', array(
+		UI_HTML_Tag::create( 'div', array(
+			$helperPerson->render(),
+		), array( 'class' => 'span8' ) ),
+		UI_HTML_Tag::create( 'div', array(
+			$panelFacts,
+			$panelTransfers,
+		), array( 'class' => 'span4' ) ),
+	), array( 'class' => 'row-fluid' ) ),
+	$helperData->render(),
+	$buttonbar,
+) );

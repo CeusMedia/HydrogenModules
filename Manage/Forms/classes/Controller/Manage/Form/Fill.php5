@@ -5,13 +5,24 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 	protected $modelFill;
 	protected $modelMail;
 	protected $modelRule;
+	protected $modelTransferTarget;
+	protected $modelTransferRule;
+	protected $modelFillTransfer;
+
+	protected $transferTargetMap	= [];
 
 	public function __onInit(){
-		$this->modelForm	= new Model_Form( $this->env );
-		$this->modelFill	= new Model_Form_Fill( $this->env );
-		$this->modelMail	= new Model_Form_Mail( $this->env );
-		$this->modelRule	= new Model_Form_Rule( $this->env );
+		$this->modelForm			= new Model_Form( $this->env );
+		$this->modelFill			= new Model_Form_Fill( $this->env );
+		$this->modelMail			= new Model_Form_Mail( $this->env );
+		$this->modelRule			= new Model_Form_Rule( $this->env );
+		$this->modelTransferTarget	= new Model_Form_Transfer_Target( $this->env );
+		$this->modelTransferRule	= new Model_Form_Transfer_Rule( $this->env );
+		$this->modelFillTransfer	= new Model_Form_Fill_Transfer( $this->env );
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
+
+		foreach( $this->modelTransferTarget->getAll() as $target )
+			$this->transferTargetMap[$target->formTransferTargetId]	= $target;
 	}
 
 	protected function checkId( $fillId, $strict = TRUE ){
@@ -554,5 +565,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$fill	= $this->checkId( $fillId );
 		$this->addData( 'fill', $fill );
 		$this->addData( 'form', $this->modelForm->get( $fill->formId ) );
+		$this->addData( 'fillTransfers', $this->modelFillTransfer->getAllByIndex( 'fillId', $fillId ) );
+		$this->addData( 'transferTargetMap', $this->transferTargetMap );
 	}
 }
