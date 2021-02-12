@@ -400,7 +400,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 			return $this->detectedTemplates[$preferredTemplateId];
 
 		$defaultFromMailModule	= $this->options->get( 'template' );
-		$defaultFromDatabase	= $this->modelTemplate->getByIndex( 'status', Model_Mail_Template::STATUS_ACTIVE, array(), 'mailTemplateId' );
+		$defaultFromDatabase	= $this->modelTemplate->getByIndex( 'status', Model_Mail_Template::STATUS_ACTIVE, array(), ['mailTemplateId'] );
 		$defaultFromFrontend	= 0;
 		if( $considerFrontend && $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			try{
