@@ -11,6 +11,7 @@ $iconResend	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-reloa
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 $iconForm	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
 $iconExport	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+$iconInfo	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-info' ) );
 
 $statuses	= array(
 	Model_Form_Fill::STATUS_NEW			=> UI_HTML_Tag::create( 'label', 'unbestätigt', array( 'class' => 'label' ) ),
@@ -52,15 +53,49 @@ $panelFacts	= UI_HTML_Tag::create( 'div', array(
 $panelTransfers	= '';
 if( $fillTransfers ){
 	$rows	= array();
+	$modals	= array();
 	foreach( $fillTransfers as $fillTransfer ){
 		$targetTitle	= $transferTargetMap[$fillTransfer->formTransferTargetId]->title;
 		$status			= $iconCheck.'&nbsp;erfolgreich';
 		if( (int) $fillTransfer->status !== Model_Form_Fill_Transfer::STATUS_SUCCESS )
 			$status	= UI_HTML_Tag::create( 'abbr', $iconRemove.'&nbsp;gescheitert', array( 'title' => $fillTransfer->message ) );
+
+		$button			= '';
+		if( $fillTransfer->data ){
+			$list	= array();
+			$modalId	= 'transfer-report-'.$fillTransfer->formFillTransferId;
+			$button		= new CeusMedia\Bootstrap\Modal\Trigger( $modalId );
+			$button->setLabel( $iconInfo )->setClass( 'btn-info btn-mini' );
+			foreach( json_decode( $fillTransfer->data, TRUE ) as $key => $value )
+				$list[]	= UI_HTML_Tag::create( 'tr', array(
+					UI_HTML_Tag::create( 'th', $key ),
+					UI_HTML_Tag::create( 'td', $value ),
+				) );
+			$tbody	= UI_HTML_Tag::create( 'tbody', $list );
+			$modalBody	= array(
+				UI_HTML_Tag::create( 'h4', 'Transferdaten' ),
+				UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-condensed table-bordered' ) ),
+			);
+			if( in_array( (int) $fillTransfer->status, array( Model_Form_Fill_Transfer::STATUS_ERROR, Model_Form_Fill_Transfer::STATUS_EXCEPTION ) ) ){
+				$modalBody[]	= UI_HTML_Tag::create( 'h4', 'Fehlermeldung' );
+				$modalBody[]    = UI_HTML_Tag::create( 'pre', str_replace( $this->env->uri, '', $fillTransfer->message ), array( 'style' => 'font-size: 10px' ) );
+				if( !empty( $fillTransfer->trace ) ){
+					$modalBody[]	= UI_HTML_Tag::create( 'h4', 'Aufrufstapel' );
+					$modalBody[]    = UI_HTML_Tag::create( 'pre', str_replace( $this->env->uri, '', $fillTransfer->trace ), array( 'style' => 'font-size: 10px' ) );
+				}
+			}
+
+			$modal	= new CeusMedia\Bootstrap\Modal\Dialog( $modalId );
+			$modal->setHeading( 'Datenweitergabe an '.$targetTitle );
+			$modal->setBody( join( $modalBody ) );
+			$modal->setCloseButtonLabel( 'schließen' );
+			$modal->setCloseButtonIconClass( 'fa fa-fw fa-close' );
+			$modals[]	= $modal;
+		}
 		$rows[]			= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $targetTitle ),
 			UI_HTML_Tag::create( 'td', $status ),
-//			UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i:s', $fillTransfer->createdAt ) ),
+			UI_HTML_Tag::create( 'td', $button ),
 		) );
 	}
 	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
@@ -71,7 +106,7 @@ if( $fillTransfers ){
 				UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-condensed' ) ),
 			) ),
 		), array( 'class' => 'content-panel-inner' ) ),
-	), array( 'class' => 'content-panel' ) );
+	), array( 'class' => 'content-panel' ) ).join( $modals );;
 }
 
 

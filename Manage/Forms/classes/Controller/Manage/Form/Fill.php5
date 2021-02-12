@@ -129,6 +129,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 				'formTransferTargetId'	=> $transfer->target->formTransferTargetId,
 				'fillId'				=> $fillId,
 				'status'				=> Model_Form_Fill_Transfer::STATUS_UNKNOWN,
+				'data'					=> json_encode( $transferData ),
 				'createdAt'				=> time(),
 			);
 			try{
@@ -142,15 +143,30 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 				$factory				= new Alg_Object_Factory( [$this->env] );
 				$transferInstance		= $factory->create( $transfer->target->className );
 				$transfer->result		= $transferInstance->transfer( $targetId, $transfer );
-				$transfer->status		= 'transfered';
-				$reportData['status']	= Model_Form_Fill_Transfer::STATUS_SUCCESS;
+				$reportData['status']	= (int) $transfer->result->status;
+				switch( (int) $transfer->result->status ){
+					case Model_Form_Fill_Transfer::STATUS_SUCCESS:
+						$transfer->status		= 'transfered';
+						break;
+					case Model_Form_Fill_Transfer::STATUS_ERROR:
+						$transfer->status		= 'error';
+						$reportData['message']	= join( PHP_EOL, $transfer->result->errors );
+						break;
+					case Model_Form_Fill_Transfer::STATUS_EXCEPTION:
+						$transfer->status		= 'exception';
+						$reportData['message']	= join( PHP_EOL, $transfer->result->errors );
+						if( !empty( $transfer->result->trace ) )
+							$reportData['trace']	= $transfer->result->trace;
+						break;
+				}
 			}
-			catch( RuntimeException $e ){
-				$transfer->status		= 'failed';
-				$transfer->error		= $e->getMessage();
-				$this->env->getLog()->logException( $e );
-				$reportData['status']	= Model_Form_Fill_Transfer::STATUS_ERROR;
-				$reportData['message']	= $e->getMessage();
+			catch( Throwable $t ){
+				$transfer->status		= 'exception';
+				$transfer->error		= $t->getMessage();
+				$this->env->getLog()->logException( $t );
+				$reportData['status']	= Model_Form_Fill_Transfer::STATUS_EXCEPTION;
+				$reportData['message']	= 'Exception: '.$t->getMessage().' in '.$t->getFile().'('.$t->getLine().')';
+				$reportData['trace']	= $t->getTraceAsString();
 			}
 			$modelFormFillTransfer->add( $reportData );
 			$transfers[]	= $transfer;
@@ -263,6 +279,8 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		$this->modelFill->edit( $fillId, array(
 			'status'	=> Model_Form_Fill::STATUS_CONFIRMED
 		) );
+		$this->sendManagerResultMails( $fillId );
+		$this->applyTransfers( $fillId );
 		$page		= (int) $this->env->getRequest()->get( 'page' );
 		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
