@@ -20,7 +20,9 @@ class Model_Form_Fill_Transfer extends CMF_Hydrogen_Model
 		'formTransferTargetId',
 		'fillId',
 		'status',
+		'data',
 		'message',
+		'trace',
 		'createdAt',
 	);
 	protected $indices		= array(
