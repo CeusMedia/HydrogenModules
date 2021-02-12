@@ -3,7 +3,7 @@
 	<title>Resource: Forms</title>
 	<description><![CDATA[Basic handling for forms.]]></description>
 	<category>Resource</category>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
@@ -12,6 +12,7 @@
 	<log version="0.3.3">Add role type to form mail model.</log>
 	<log version="0.3.4">Add form transfer targets and rules.</log>
 	<log version="0.3.5">Add form transfer mapper.</log>
+	<log version="0.3.6">Add form fill transfer reports.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -272,12 +273,34 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>form_transfer_rules` (
   KEY `formTransferTargetId` (`formTransferTargetId`),
   KEY `formId` (`formId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+<sql type="mysql" on="update" version="0.3.6"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>form_fill_transfers`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_fill_transfers` (
+  `formFillTransferId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `formTransferRuleId` int(10) UNSIGNED NOT NULL,
+  `formTransferTargetId` int(10) UNSIGNED NOT NULL,
+  `fillId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) UNSIGNED NOT NULL,
+  `message` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`formFillTransferId`),
+  KEY `formId` (`formId`),
+  KEY `formTransferRuleId` (`formTransferRuleId`),
+  KEY `formTransferTargetId` (`formTransferTargetId`),
+  KEY `fillId` (`fillId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 	]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>form_mails`;
-DROP TABLE IF EXISTS `<%?prefix%>form_fills`;
-DROP TABLE IF EXISTS `<%?prefix%>forms`;
-DROP TABLE IF EXISTS `<%?prefix%>form_blocks`;
-DROP TABLE IF EXISTS `<%?prefix%>form_rules`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_fill_transfers`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_transfer_rules`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_transfer_targets`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_mails`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_fills`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_rules`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_blocks`;
+		DROP TABLE IF EXISTS `<%?prefix%>forms`;
 	]]></sql>
 </module>
