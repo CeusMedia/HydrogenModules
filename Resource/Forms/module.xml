@@ -29,6 +29,7 @@
 		<class>Model/Form/Fill.php5</class>
 		<class>Model/Form/Mail.php5</class>
 		<class>Model/Form/Rule.php5</class>
+		<class>Model/Form/Fill/Transfer.php5</class>
 		<class>Model/Form/Transfer/Rule.php5</class>
 		<class>Model/Form/Transfer/Target.php5</class>
 		<class>View/Helper/Form/Fill/Data.php5</class>
