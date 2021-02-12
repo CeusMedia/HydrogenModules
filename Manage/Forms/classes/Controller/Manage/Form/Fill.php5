@@ -75,15 +75,17 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
 			throw new DomainException( 'Invalid fill given' );
 
-		$formData		= [];
+		$modelRule		= new Model_Form_Transfer_Rule( $this->env );
+		$modelTarget	= new Model_Form_Transfer_Target( $this->env );
+		$rules			= $modelRule->getAllByIndex( 'formId', $fill->formId );
+		if( !$rules )
+			return [];
+
+		$formData	= [];
 		foreach( json_decode( $fill->data ) as $fieldName => $fieldParameters ){
 			$formData[$fieldName]	= $fieldParameters->value;
 		}
-
-		$form = $this->modelForm->get( $fill->formId );
-		$modelRule		= new Model_Form_Transfer_Rule( $this->env );
-		$modelTarget	= new Model_Form_Transfer_Target( $this->env );
-		$rules	= $modelRule->getAllByIndex( 'formId', $fill->formId );
+		$form		= $this->modelForm->get( $fill->formId );
 
 		$parser		= new ADT_JSON_Parser;
 		$mapper		= new Logic_Form_Transfer_DataMapper( $this->env );
@@ -105,31 +107,41 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 				'error'		=> NULL,
 			];
 			$transfer->data	= $transferData;
-			if( strlen( trim( $rule->rules ) ) ){
-				$transfer->data	= [];
-				try{
-					$ruleSet		= $parser->parse( $rule->rules, FALSE );
-					$transfer->status	= 'parsed';
-					$transferData	= $mapper->applyRulesToFormData( $formData, $ruleSet );
-					$transfer->data		= $transferData;
-					$transfer->status	= 'applied';
+			if( !strlen( trim( $rule->rules ) ) )
+				continue;
+			$transfer->data	= [];
+			$reportData	= array(
+				'formId'				=> $transfer->rule->formId,
+				'formTransferRuleId'	=> $transfer->rule->formTransferRuleId,
+				'transferTargetId'		=> $transfer->target->formTransferTargetId,
+				'fillId'				=> $fillId,
+				'status'				=> Model_Form_Fill_Transfer::STATUS_UNKOWN,
+			);
+			try{
+				$ruleSet				= $parser->parse( $rule->rules, FALSE );
+				$transfer->status		= 'parsed';
+				$transferData			= $mapper->applyRulesToFormData( $formData, $ruleSet );
+				$transfer->data			= $transferData;
+				$transfer->status		= 'applied';
 
-					$targetId			= $transfer->target->formTransferTargetId;
-					$factory			= new Alg_Object_Factory( [$this->env] );
-					$transferInstance	= $factory->create( $transfer->target->className );
-					$transfer->result	= $transferInstance->transfer( $targetId, $transferData );
-					$transfer->status	= 'transfered';
-				}
-				catch( RuntimeException $e ){
-					$transfer->status	= 'failed';
-					$transfer->error	= $e->getMessage();
-					$this->env->getLog()->logException( $e );
-				}
+				$targetId				= $transfer->target->formTransferTargetId;
+				$factory				= new Alg_Object_Factory( [$this->env] );
+				$transferInstance		= $factory->create( $transfer->target->className );
+				$transfer->result		= $transferInstance->transfer( $targetId, $transfer );
+				$transfer->status		= 'transfered';
+				$reportData['status']	= Model_Form_Fill_Transfer::STATUS_SUCCESS;
 			}
+			catch( RuntimeException $e ){
+				$transfer->status		= 'failed';
+				$transfer->error		= $e->getMessage();
+				$this->env->getLog()->logException( $e );
+				$reportData['status']	= Model_Form_Fill_Transfer::STATUS_ERROR;
+				$reportData['message']	= $e->getMessage();
+			}
+			$modelFormFillTransfer->add( $reportData );
 			$transfers[]	= $transfer;
 		}
-		print_m( $transfers );
-		die;
+		return $transfers;
 	}
 
 
