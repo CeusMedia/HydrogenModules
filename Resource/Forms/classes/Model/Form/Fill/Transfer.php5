@@ -6,6 +6,13 @@ class Model_Form_Fill_Transfer extends CMF_Hydrogen_Model
 	const STATUS_ERROR		= 2;
 	const STATUS_EXCEPTION	= 3;
 
+	const STATUSES			= [
+		self::STATUS_UNKNOWN,
+		self::STATUS_SUCCESS,
+		self::STATUS_ERROR,
+		self::STATUS_EXCEPTION,
+	];
+
 	protected $columns		= array(
 		'formFillTransferId',
 		'formId',

@@ -51,20 +51,24 @@ $panelFacts	= UI_HTML_Tag::create( 'div', array(
 //  --  PANEL: TRANSFERS  --  //
 $panelTransfers	= '';
 if( $fillTransfers ){
-	$list	= array();
+	$rows	= array();
 	foreach( $fillTransfers as $fillTransfer ){
-		$targetTitle	= $transferTargetMap[$fillTransfer->formTransferTargetId];
-		$status			= $fillTransfer->status == 1 ? 'erfolgreich' : 'gescheitert';
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
+		$targetTitle	= $transferTargetMap[$fillTransfer->formTransferTargetId]->title;
+		$status			= $iconCheck.'&nbsp;erfolgreich';
+		if( (int) $fillTransfer->status !== Model_Form_Fill_Transfer::STATUS_SUCCESS )
+			$status	= UI_HTML_Tag::create( 'abbr', $iconRemove.'&nbsp;gescheitert', array( 'title' => $fillTransfer->message ) );
+		$rows[]			= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $targetTitle ),
 			UI_HTML_Tag::create( 'td', $status ),
-			UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i:s', $fillTransfer->createdAt ) ),
+//			UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i:s', $fillTransfer->createdAt ) ),
 		) );
 	}
+	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
 	$panelTransfers	= UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'h3', 'Fakten' ),
+			UI_HTML_Tag::create( 'h3', 'Datenweitergabe' ),
 			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-condensed' ) ),
 			) ),
 		), array( 'class' => 'content-panel-inner' ) ),
 	), array( 'class' => 'content-panel' ) );

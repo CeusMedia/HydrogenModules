@@ -78,7 +78,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 	}
 
 	public function testTransfer( $fillId ){
-		$this->applyTransfers( $fillId );
+		print_m( $this->applyTransfers( $fillId ) );
 		exit;
 	}
 
@@ -86,9 +86,11 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
 			throw new DomainException( 'Invalid fill given' );
 
-		$modelRule		= new Model_Form_Transfer_Rule( $this->env );
-		$modelTarget	= new Model_Form_Transfer_Target( $this->env );
-		$rules			= $modelRule->getAllByIndex( 'formId', $fill->formId );
+		$modelRule				= new Model_Form_Transfer_Rule( $this->env );
+		$modelTarget			= new Model_Form_Transfer_Target( $this->env );
+		$modelFormFillTransfer	= new Model_Form_Fill_Transfer( $this->env );
+
+		$rules	= $modelRule->getAllByIndex( 'formId', $fill->formId );
 		if( !$rules )
 			return [];
 
@@ -124,9 +126,10 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 			$reportData	= array(
 				'formId'				=> $transfer->rule->formId,
 				'formTransferRuleId'	=> $transfer->rule->formTransferRuleId,
-				'transferTargetId'		=> $transfer->target->formTransferTargetId,
+				'formTransferTargetId'	=> $transfer->target->formTransferTargetId,
 				'fillId'				=> $fillId,
-				'status'				=> Model_Form_Fill_Transfer::STATUS_UNKOWN,
+				'status'				=> Model_Form_Fill_Transfer::STATUS_UNKNOWN,
+				'createdAt'				=> time(),
 			);
 			try{
 				$ruleSet				= $parser->parse( $rule->rules, FALSE );
