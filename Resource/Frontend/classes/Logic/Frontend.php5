@@ -12,7 +12,8 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 	protected $env;
 	protected $installedModules	= array();
 	protected $path;
-	protected $paths	= array(
+	protected $paths			= array();
+	protected $defaultPaths		= array(
 		'config'	=> 'config/',
 		'modules'	=> 'config/modules/',
 		'contents'	=> 'contents/',
@@ -202,14 +203,21 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 	protected  function __onInit()
 	{
 		$moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_frontend.', TRUE );
-		$this->path		= $moduleConfig->get( 'path' );
-		$this->detectConfig();
-		$this->detectModules();
-		$this->detectBaseUrl();
+		$this->setPath( $moduleConfig->get( 'path' ) );
 	}
 
 	public function hasModule( $moduleId ){
 		return isset( $this->installedModules[$moduleId] );
+	}
+
+	public function setPath( $path )
+	{
+		if( !file_exists( $path ) )
+			throw new DomainException( 'Invalid frontend path' );
+		$this->path		= $path;
+		$this->detectConfig();
+		$this->detectModules();
+		$this->detectBaseUrl();
 	}
 
 	//  --  PROTECTED  --  //
@@ -219,7 +227,7 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 		if( !file_exists( $configFile ) )
 			throw new RuntimeException( 'No Hydrogen application found in: '.$this->path );
 		$this->config	= new ADT_List_Dictionary( parse_ini_file( $configFile ) );
-		$this->paths	= array_merge( $this->paths, $this->config->getAll( 'path.', !TRUE ) );
+		$this->paths	= array_merge( $this->defaultPaths, $this->config->getAll( 'path.', !TRUE ) );
 		unset( $this->paths['scripts.lib'] );
 	}
 
@@ -230,9 +238,9 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 	 *	@throws		RuntimeException				if URL is not defined
 	 */
 	protected function detectBaseUrl(){
-//		if( $this->env->url )
-//			$this->url		= $this->env->url;
-		/*else*/ if( $this->getAppConfigValue( 'base.url' ) )
+		if( $this->path === './' && $this->env->url )
+			$this->url		= $this->env->url;
+		else if( $this->getAppConfigValue( 'base.url' ) )
 			$this->url	= $this->getAppConfigValue( 'base.url' );
 		else if( $this->getAppConfigValue( 'baseHref' ) )											//  @todo remove in v1.0.0
 			$this->url	= $this->getAppConfigValue( 'baseHref' );									//  @todo remove in v1.0.0
@@ -241,6 +249,7 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 	}
 
 	protected function detectModules(){
+		$this->installedModules	= array();
 		$index	= new DirectoryIterator( $this->getPath( 'modules' ) );
 		foreach( $index as $entry ){
 			if( preg_match( '@^(.+)(\.xml)$@', $entry->getFilename() ) ){
