@@ -3,6 +3,14 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 {
 	protected $env;
 
+	/**
+	 *	Applies transfer rules on form data and returns resulting output data.
+	 *
+	 *	@access		public
+	 *	@param		array		$formData		Map of form data
+	 *	@param		object		$rules			Rule object to apply
+	 *	@return		array
+	 */
 	public function applyRulesToFormData( $formData, $rules ): array
 	{
 		$input	= new ADT_List_Dictionary( $formData );
@@ -23,6 +31,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 
 	/**
 	 *	Applies filter rules.
+	 *
 	 *	@access		protected
 	 *	@param		array				$filters	Map of filter rules
 	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
@@ -35,23 +44,21 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 			if( !$input->has( $fieldName ) ){
 				if( isset( $parameters->onEmpty ) && $parameters->onEmpty === "skip" )
 					continue;
-				throw new RuntimeException( 'Filter: No data available for "'.$fieldName.'"' );
+				if( isset( $parameters->onEmpty ) && $parameters->onEmpty === "set" )
+					$input->set( $fieldName, '' );
+				else
+					throw new RuntimeException( 'Filter: No data available for "'.$fieldName.'"' );
 			}
 			$inputValue	= $input->get( $fieldName );
 			if( empty( $parameters->condition ) || empty( $parameters->action ) ){
 				continue;
 			}
 			$condition	= $parameters->condition;
-			if( empty( $condition->operator ) || empty( $condition->match ) ){
+			if( empty( $condition->operator ) || !isset( $condition->match ) ){
 				continue;
 			}
 			$truth	= FALSE;
-			$match	= $condition->match;
-			if( substr( $condition->match, 0, 1 ) === '@' ){
-				$matchField	= substr( $condition->match, 1 );
-				if( $input->has( $matchField ) )
-					$match = $input->get( $matchField );
-			}
+			$match	= $this->resolveValue( $condition->match, $input );
 			switch( strtolower( $condition->operator ) ){
 				case 'equals':
 				case '==':
@@ -85,12 +92,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 						if( !empty( $action->to ) )
 							$toField	= $action->to;
 						if( !empty( $action->value ) ){
-							$value	= $action->value;
-							if( substr( $action->value, 0, 1 ) === '@' ){
-								$valueField	= substr( $action->value, 1 );
-								if( $input->has( $valueField ) )
-									$value = $input->get( $valueField );
-							}
+							$value	= $this->resolveValue( $action->value, $input );
 							$input->set( $toField, $value );
 						}
 						break;
@@ -117,6 +119,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 
 	/**
 	 *	Applies filter rules.
+	 *
 	 *	@access		protected
 	 *	@param		array				$filters	Map of filter rules
 	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
@@ -140,7 +143,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 				if( substr( $indexSource, 0, 1 ) === '@' ){
 					$indexSourceName	= substr( $indexSource, 1 );
 					if( !$input->has( $indexSourceName ) )
-						throw new RuntimeException( 'DB: No data available for "'.$indexSourceName.'", uses as index source for target field "'.$fieldName.'"' );
+						throw new RuntimeException( 'DB: No data available for "'.$indexSourceName.'", used as index source for target field "'.$fieldName.'"' );
 					$indexValue	= $input->get( $indexSourceName );
 				}
 				$indices[]	= $indexColumn.' = "'.$indexValue.'"';
@@ -159,6 +162,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 
 	/**
 	 *	Applies filter rules.
+	 *
 	 *	@access		protected
 	 *	@param		array				$filters	Map of filter rules
 	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
@@ -181,6 +185,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 
 	/**
 	 *	Applies filter rules.
+	 *
 	 *	@access		protected
 	 *	@param		array				$filters	Map of filter rules
 	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
@@ -196,6 +201,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 
 	/**
 	 *	Applies mappings by copying input values to output fields.
+	 *
 	 *	@access		protected
 	 *	@param		array				$map		Map of input to output field names
 	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
@@ -211,6 +217,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 
 	/**
 	 *	Applies map of output values to set directly.
+	 *
 	 *	@access		protected
 	 *	@param		array				$map		Map of output values to set
 	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
@@ -219,7 +226,38 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	 */
 	protected function applySets( $map, $input, $output )
 	{
-		foreach( $map as $name => $value )
-			$output->set( $name, $value );
+		foreach( $map as $name => $value ){
+			$output->set( $name, $this->resolveValue( $value, $input ) );
+		}
+	}
+
+	/**
+	 *	Resolves value field.
+	 *	Looks for prefixes:
+	 *	- ! => execute a function
+	 *	- @ => get from input data by name
+	 *	No prefix found, return given value.
+	 *
+	 *	@access		public
+	 *	@param		string
+	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
+	 *	@return		string
+	 */
+	protected function resolveValue( $value, $input )
+	{
+		$prefix	= substr( $value, 0, 1 );
+		if( $prefix === '!' ){
+			switch( substr( $value, 1 ) ){
+				case 'datetime':
+					return date( 'Y-m-d H:i:s' );
+				case 'date':
+					return date( 'Y-m-d' );
+				case 'time':
+					return date( 'H:i:s' );
+			}
+		}
+		else if( $prefix === '@' )
+			return $input->get( substr( $value, 1 ) );
+		return $value;
 	}
 }
