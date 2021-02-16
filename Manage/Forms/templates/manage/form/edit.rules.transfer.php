@@ -7,11 +7,6 @@ $iconTest	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cogs' )
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 $iconMail	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
 
-$optTransferTarget	= array();
-foreach( $transferTargets as $item )
-	$optTransferTarget[$item->formTransferTargetId]	= $item->title;
-$optTransferTarget	= UI_HTML_Elements::Options( $optTransferTarget );
-
 $listRules	= UI_HTML_Tag::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $transferRules ){
 	$listRules	= array();
@@ -25,6 +20,11 @@ if( $transferRules ){
 			'id'	=> 'button-test-'.$ruleId,
 			'class'	=> 'btn not-btn-info btn-small button-test-rules',
 		), array( 'rule-id' => $ruleId ) );
+
+		$optTransferTarget	= array();
+		foreach( $transferTargets as $item )
+			$optTransferTarget[$item->formTransferTargetId]	= $item->title;
+		$optTransferTarget	= UI_HTML_Elements::Options( $optTransferTarget, $rule->formTransferTargetId );
 
 		$modal	= new \CeusMedia\Bootstrap\Modal( 'rule-transfer-edit-'.$ruleId );
 		$modal->setHeading( 'Transfer-Regel: '.$rule->title );
@@ -72,6 +72,11 @@ if( $transferRules ){
 	$tbody		= UI_HTML_Tag::create( 'tbody', $listRules );
 	$listRules	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped' ) ).join( $modals );
 }
+
+$optTransferTarget	= array();
+foreach( $transferTargets as $item )
+	$optTransferTarget[$item->formTransferTargetId]	= $item->title;
+$optTransferTarget	= UI_HTML_Elements::Options( $optTransferTarget );
 
 $modal	= new \CeusMedia\Bootstrap\Modal( 'rule-transfer-add' );
 $modal->setHeading( 'Neue Transfer-Regel' );
