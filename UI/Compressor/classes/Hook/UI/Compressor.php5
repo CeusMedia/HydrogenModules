@@ -1,7 +1,8 @@
 <?php
-class Controller_Compressor extends CMF_Hydrogen_Controller{
-
-	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $module, $context, $data = array() ){
+class Hook_UI_Compressor extends CMF_Hydrogen_Hook
+{
+	public static function onApplyModules( CMF_Hydrogen_Environment $env, $module, $context, $payload = array() )
+	{
 		$config		= (object) $env->getConfig()->getAll( 'module.ui_compressor.' );
 		$pathCache  = $env->getConfig()->get( 'path.cache' );
 		$page		= $env->getPage();
@@ -28,16 +29,4 @@ class Controller_Compressor extends CMF_Hydrogen_Controller{
 
 		$page->setPackaging( FALSE, $config->cssMinify );
 	}
-
-	public function flush(){
-		$page	= $this->env->getPage();
-		$page->js->clearCache();
-		$page->css->primer->clearCache();
-		$page->css->theme->clearCache();
-		$this->env->getMessenger()->noteNotice( 'Compressed resource files removed from cache' );
-		$request	= $this->env->getRequest();
-		$redirect	= $request->has( 'from' ) ? $request->get( 'from' ) : NULL;
-		$this->restart( $redirect );
-	}
 }
-?>
