@@ -1,10 +1,11 @@
 <?php
+
+$pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
+$env->page->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
+
 $w				= (object) $words['add'];
 
 $optStatus		= $words['status'] + array( '_selected' => $user->status );
-
-$jsHelper		= CMF_Hydrogen_View_Helper_JavaScript::getInstance();
-$jsHelper->addUrl( 'http://js.ceusmedia.de/jquery/pstrength/2.1.0.min.js', TRUE );
 
 $script		= '
 $(document).ready(function(){
@@ -23,9 +24,8 @@ $(document).ready(function(){
 			colors: ["#f00", "#f60", "#cc0", "#3c0", "#3f0"]
 		});
 	}
-});
-';
-$jsHelper->addScript( $script );
+});';
+$env->page->js->addScript( $script );
 
 $roleMap	= array();
 foreach( $roles as $role )

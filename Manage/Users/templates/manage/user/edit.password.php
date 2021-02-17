@@ -1,9 +1,11 @@
 <?php
 
+$pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
+$env->page->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
+
 //  --  PANEL: PASSWORD  --  //
 $w	= (object) $words['editPassword'];
 
-$env->page->js->addUrl( 'https://cdn.ceusmedia.de/js/jquery/pstrength/2.1.0.min.js' );
 $script		= '
 function matchPasswords(){
 	var inputPassword = jQuery("#input_passwordNew");

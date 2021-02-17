@@ -1,6 +1,8 @@
  <?php
 
-$env->page->js->addUrl( 'http://js.ceusmedia.de/jquery/pstrength/2.1.0.min.js' );
+$pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
+$env->page->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
+
 
 $script		= '
 $(document).ready(function(){
