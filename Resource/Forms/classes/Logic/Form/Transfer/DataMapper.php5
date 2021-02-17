@@ -139,20 +139,22 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 
 			$indices	= array( 1 );
 			foreach( $parameters->index as $indexColumn => $indexSource ){
-				$indexValue	= $indexSource;
-				if( substr( $indexSource, 0, 1 ) === '@' ){
-					$indexSourceName	= substr( $indexSource, 1 );
-					if( !$input->has( $indexSourceName ) )
-						throw new RuntimeException( 'DB: No data available for "'.$indexSourceName.'", used as index source for target field "'.$fieldName.'"' );
-					$indexValue	= $input->get( $indexSourceName );
+				$indexValue	= $this->resolveValue( $indexSource, $input );
+				if( $indexValue === NULL ){
+					if( !isset( $parameters->onEmpty ) )
+						throw new RuntimeException( 'DB: No data available for "'.$indexSource.'", used as index source for target field "'.$fieldName.'" on table(s) '.$tables );
+					$indexValue = $parameters->onEmpty;
 				}
 				$indices[]	= $indexColumn.' = "'.$indexValue.'"';
 			}
 			$query	= 'SELECT '.$parameters->column.' AS value FROM '.$tables.' WHERE '.join( ' AND ', $indices );
 			$dbc	= $this->env->getDatabase();
 			$result	= $dbc->query( $query )->fetch( PDO::FETCH_OBJ );
-			if( empty( $result ) )
-				throw new RuntimeException( 'DB: No table data found for index source of target field "'.$fieldName.'"' );
+			if( empty( $result ) ){
+				if( !isset( $parameters->onEmpty ) )
+					throw new RuntimeException( 'DB: No table data found for index source of target field "'.$fieldName.'" from table(s) '.$tables );
+				$result->value = $parameters->onEmpty;
+			}
 			if( !empty( $parameters->to ) && $parameters->to === 'request')
 				$input->set( $fieldName, $result->value );
 			else
