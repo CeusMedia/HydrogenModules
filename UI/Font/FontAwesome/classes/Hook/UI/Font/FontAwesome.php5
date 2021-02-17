@@ -49,9 +49,16 @@ class Hook_UI_Font_FontAwesome/* extends CMF_Hook*/{
 
 		if( version_compare( $mc->get( 'version' ), 5 ) < 0 ){
 			$url	= $config->get( 'module.ui_font.uri' ).'FontAwesome/font-awesome.min.css';
-			if( $mc->get( 'v4.cdn' ) && $mc->get( 'version' ) === '4.7.0' )
-				$url	= 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
-			$env->getPage()->css->theme->addUrl( $url );
+			if( $mc->get( 'version' ) === '4.7.0' ){
+				if( $mc->get( 'v4.cdn' ) ){
+					$url	= 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
+					$env->getPage()->css->theme->addUrl( $url );
+				}
+				else{
+					$url	= 'FontAwesome/4.7.0/font-awesome.min.css';
+					$env->getPage()->css->common->addUrl( $url );
+				}
+			}
 			return;
 		}
 
