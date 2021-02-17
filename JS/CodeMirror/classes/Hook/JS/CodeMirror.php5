@@ -8,13 +8,14 @@ class Hook_JS_CodeMirror extends CMF_Hydrogen_Hook{
 
 		$page		= $env->getPage();															//  $context is page too, but this is more readable
 		$pathJs		= $env->getConfig()->get( 'path.scripts' );
-		$cdn		= $moduleConfig->get( 'load.cdn' );
+		$configLoad	= $moduleConfig->getAll( 'load.', TRUE );
+		$cdn		= $configLoad->get( 'cdn' );
 
 		$scripts	= array();
 		$styles		= array();
 
 		if( $cdn === "cdnjs" ){
-			$configLoad	= $moduleConfig->getAll( 'load.', TRUE );
+			$collector	= $page->css->theme;
 			$version	= $configLoad->get( 'version' );
 			$modes		= explode( ',', $configLoad->get( 'modes' ) );
 			$addons		= explode( ',', $configLoad->get( 'addons' ) );
@@ -48,10 +49,11 @@ class Hook_JS_CodeMirror extends CMF_Hydrogen_Hook{
 				$styles[]	= $pathCdn.'addon/dialog/dialog'.$suffixCss;
 		}
 		else{																					//  use default CDN @deprecated @todo remove
-			$version	= $moduleConfig->get( 'version' );
-			$modes		= explode( ',', $moduleConfig->get( 'modes' ) );
-			$addons		= explode( ',', $moduleConfig->get( 'addons' ) );
-			$themes		= explode( ',', $moduleConfig->get( 'themes' ) );
+			$collector	= $page->css->lib;
+			$version	= $configLoad->get( 'version' );
+			$modes		= explode( ',', $configLoad->get( 'modes' ) );
+			$addons		= explode( ',', $configLoad->get( 'addons' ) );
+			$themes		= explode( ',', $configLoad->get( 'themes' ) );
 			$pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );							//  get default CDN from config
  			if( !strlen( trim( $pathJsLib ) ) )
 				throw new RuntimeException( 'No default CDN configured' );
@@ -68,11 +70,10 @@ class Hook_JS_CodeMirror extends CMF_Hydrogen_Hook{
 			foreach( $themes as $theme )
 				$styles[]	= $pathCdn.'theme/'.$theme.'.css';
 		}
-
 		foreach( $scripts as $script )
 			$page->js->addUrl( $script );
 		foreach( $styles as $style )
-			$page->css->theme->addUrl( $style );
+			$collector->addUrl( $style );
 
 		$page->js->addUrl( $pathJs.'module.js.codemirror.js', 9 );
 		$page->addCommonStyle( 'module.js.codemirror.css' );
