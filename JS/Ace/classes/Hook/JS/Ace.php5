@@ -18,10 +18,19 @@ class Hook_JS_Ace extends CMF_Hydrogen_Hook{
 		$words		= $env->getLanguage()->getWords( 'ace' );
 
 		$configLoad	= $moduleConfig->getAll( 'load.', TRUE );
-		$pathCdn	= $configLoad->get( 'cdn.url.'.$configLoad->get( 'cdn' ) );
-		$pathCdn	= sprintf( $pathCdn, $configLoad->get( 'version' ) );
-		if( !$pathCdn )
-			throw new RuntimeException( 'Module does not configure URL of used CDN' );
+		$cdn		= $configLoad->get( 'cdn' );
+		$version	= $configLoad->get( 'version' );
+
+		if( $cdn === 'configJsLib' ){
+			$pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );							//  get default CDN from config
+			$pathCdn	= $pathJsLib.'Ace/'.$version.'/';
+		}
+		else{
+			$pathCdn	= $configLoad->get( 'cdn.url.'.$cdn );
+			$pathCdn	= sprintf( $pathCdn, $version );
+			if( !$pathCdn )
+				throw new RuntimeException( 'Module does not configure URL of used CDN' );
+		}
 
 		$page->addCommonStyle( 'module.js.ace.css' );
 		$page->js->addUrl( $pathCdn.'ace.js' );
