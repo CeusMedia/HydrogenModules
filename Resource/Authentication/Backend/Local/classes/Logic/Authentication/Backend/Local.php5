@@ -1,11 +1,12 @@
 <?php
-class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
-
+class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic
+{
 	protected $modelUser;
 	protected $modelRole;
 	protected $session;
 
-	protected function __onInit(){
+	protected function __onInit()
+	{
 		$this->session		= $this->env->getSession();
 		$this->modelUser	= new Model_User( $this->env );
 		$this->modelRole	= new Model_Role( $this->env );
@@ -14,7 +15,8 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo		remove support for old user password
 	 */
-	public function checkPassword( $userId, $password ){
+	public function checkPassword( $userId, string $password ): bool
+	{
 		$hasUsersModule		= $this->env->getModules()->has( 'Resource_Users' );
 		if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) && $hasUsersModule ){
 			if( class_exists( 'Logic_UserPassword' ) ){												//  @todo  remove line if old user password support decays
@@ -42,14 +44,16 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
 		return FALSE;
 	}
 
-	public function clearCurrentUser(){
+	public function clearCurrentUser()
+	{
 		$this->session->remove( 'auth_user_id' );
 		$this->session->remove( 'auth_role_id' );
 		$this->session->remove( 'auth_status_id' );
 		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this );
 	}
 
-	public function getCurrentRole( $strict = TRUE ){
+	public function getCurrentRole( bool $strict = TRUE )
+	{
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
 			$role	= $this->modelRole->get( $roleId );
@@ -61,7 +65,8 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
 		return NULL;
 	}
 
-	public function getCurrentRoleId( $strict = TRUE ){
+	public function getCurrentRoleId( bool $strict = TRUE )
+	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
 				throw new RuntimeException( 'No user authenticated' );
@@ -70,7 +75,8 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
 		return $this->session->get( 'auth_role_id' );
 	}
 
-	public function getCurrentUser( $strict = TRUE, $withRole = FALSE ){
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
+	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
 			$user	= $this->modelUser->get( $userId );
@@ -85,7 +91,8 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
 		return NULL;
 	}
 
-	public function getCurrentUserId( $strict = TRUE ){
+	public function getCurrentUserId( bool $strict = TRUE )
+	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
 				throw new RuntimeException( 'No user authenticated' );
@@ -94,36 +101,42 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic{
 		return $this->session->get( 'auth_user_id' );
 	}
 
-	public function isAuthenticated(){
+	public function isAuthenticated(): bool
+	{
 		if( !$this->isIdentified() )
 			return FALSE;
 		$authStatus	= (int) $this->session->get( 'auth_status' );
 		return $authStatus == Logic_Authentication::STATUS_AUTHENTICATED;
 	}
 
-	public function isIdentified(){
+	public function isIdentified(): bool
+	{
 		return (int) $this->session->get( 'auth_user_id' ) > 0;
 	}
 
-	public function isCurrentUserId( $userId ){
+	public function isCurrentUserId( $userId ): bool
+	{
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}
 
-	public function noteUserActivity(){
+	public function noteUserActivity(): self
+	{
 		if( $this->isAuthenticated() && $userId = $this->getCurrentUserId( FALSE ) ){				//  get ID of current user (or zero)
 			$this->modelUser->edit( $userId, array( 'activeAt' => time() ) );
 		}
 		return $this;
 	}
 
-	public function setAuthenticatedUser( $user ){
+	public function setAuthenticatedUser( $user ): self
+	{
 		$this->session->set( 'auth_user_id', $user->userId );
 		$this->session->set( 'auth_role_id', $user->roleId );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
 		return $this;
 	}
 
-	public function setIdentifiedUser( $user ){
+	public function setIdentifiedUser( $user ): self
+	{
 		if( !$this->isAuthenticated() ){
 			$this->session->set( 'auth_user_id', $user->userId );
 			$this->session->set( 'auth_role_id', $user->roleId );

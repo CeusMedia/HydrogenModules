@@ -1,20 +1,22 @@
 <?php
-class View_Helper_Auth_Local_Panel_Login implements Renderable{
-
+class View_Helper_Auth_Local_Panel_Login implements Renderable
+{
 	protected $env;
 	protected $useOAuth2	= TRUE;
 	protected $useRemember	= TRUE;
 	protected $useRegister	= TRUE;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 	}
 
-	public function render(){
-		$words	= $this->env->getLanguage()->getWords( 'auth/local' );
+	public function render()
+	{
+		$words		= $this->env->getLanguage()->getWords( 'auth/local' );
 		$wordsLogin	= $words['login'];
 		$request	= $this->env->getRequest();
-		$view	= new CMF_Hydrogen_View( $this->env );
+		$view		= new CMF_Hydrogen_View( $this->env );
 		$view->addData( 'words', $words );
 		$view->addData( 'useOauth2', $this->useOAuth2 );
 		$view->addData( 'useRemember', $this->useRemember );
@@ -26,16 +28,22 @@ class View_Helper_Auth_Local_Panel_Login implements Renderable{
 		return $view->loadTemplateFile( 'auth/local/panel/login.php' );
 	}
 
-	public function setUseOAuth2( $use ){
+	public function setUseOAuth2( bool $use = TRUE ): self
+	{
 		$this->useOAuth2 = $use;
+		return $this;
 	}
 
-	public function setUseRemember( $use ){
+	public function setUseRemember( bool $use = TRUE ): self
+	{
 		$this->useRemember = $use;
+		return $this;
 	}
 
-	public function setUseRegister( $use ){
+	public function setUseRegister( bool $use = TRUE ): self
+	{
 		$this->useRegister = $use;
+		return $this;
 	}
 }
 

@@ -1,7 +1,8 @@
 <?php
-class Mail_Auth_Local_Password extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Auth_Local_Password extends Mail_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/local', 'mails' );
 
@@ -23,4 +24,3 @@ class Mail_Auth_Local_Password extends Mail_Abstract{
 		);
 	}
 }
-?>

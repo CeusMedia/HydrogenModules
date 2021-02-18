@@ -59,7 +59,7 @@ $linkPassword	= UI_HTML_Tag::create( 'a', $w->linkPassword, array(
 	'tabindex'	=> -1,
 ) );
 $linkRegister	= UI_HTML_Tag::create( 'a', $w->linkRegister, array(
-	'href'		=> './auth/local/register'.( $from ? '?from='.$from : '' ),
+	'href'		=> './auth/local/register'.( $from ? '?from='.$from : '?from=auth/login' ),
 	'tabindex'	=> -1,
 ) );
 $buttonLogin	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(

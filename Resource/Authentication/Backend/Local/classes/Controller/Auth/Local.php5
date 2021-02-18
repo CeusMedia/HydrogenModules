@@ -1,6 +1,6 @@
 <?php
-class Controller_Auth_Local extends CMF_Hydrogen_Controller {
-
+class Controller_Auth_Local extends CMF_Hydrogen_Controller
+{
 	protected $config;
 	protected $request;
 	protected $session;
@@ -15,7 +15,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	protected $limiter;
 	protected $logic;
 
-	public function __onInit(){
+	public function __onInit()
+	{
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
@@ -46,7 +47,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->addData( 'useOauth2', $this->useOauth2 );
 	}
 
-	public function ajaxUsernameExists(){
+	public function ajaxUsernameExists()
+	{
 		$username	= trim( $this->request->get( 'username' ) );
 		$result		= FALSE;
 		if( strlen( $username ) ){
@@ -57,7 +59,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		exit;
 	}
 
-	public function ajaxEmailExists(){
+	public function ajaxEmailExists()
+	{
 		$email	= trim( $this->request->get( 'email' ) );
 		$result		= FALSE;
 		if( strlen( $email ) ){
@@ -68,7 +71,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		exit;
 	}
 
-	public function ajaxPasswordStrength(){
+	public function ajaxPasswordStrength()
+	{
 		$password	= trim( $this->request->get( 'password' ) );
 		$result		= 0;
 		if( strlen( $password ) ){
@@ -79,51 +83,10 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	}
 
 	/**
-	 *	Check given user password against old and newer password storage.
-	 *	If newer password store is supported and old password has been found, migration will apply.
-	 *
-	 *	@access		protected
-	 *	@param   	object   	$user		User data object
-	 *	@param   	string		$password	Password to check on login
-	 *	@todo   	clean up if support for old passwort decays
-	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
-	 */
-	protected function checkPasswordOnLogin( $user, $password ){
-		$words				= (object) $this->getWords( 'login' );
-		$isMinimumVersion	= $this->env->getPhp()->version->isAtLeast( '5.5.0' );
-		if( $isMinimumVersion && class_exists( 'Logic_UserPassword' ) ){							//  @todo  remove line if old user password support decays
-			$logic			= Logic_UserPassword::getInstance( $this->env );
-			$newPassword	= $logic->getActivatableUserPassword( $user->userId, $password );
-			if( $logic->hasUserPassword( $user->userId ) ){											//  @todo  remove line if old user password support decays
-				if( $logic->validateUserPassword( $user->userId, $password ) )
-					return TRUE;
-				$newPassword	= $logic->getActivatableUserPassword( $user->userId, $password );
-				if( $newPassword ){
-					$logic->activatePassword( $newPassword->userPasswordId );
-					$this->messenger->noteNotice( $words->msgNoticePasswordChanged );
-					return TRUE;
-				}
-			}
-			else{																					//  @todo  remove whole block if old user password support decays
-				$pepper		= $this->moduleConfigUsers->get( 'password.pepper' );
-				if( $user->password === md5( $password.$pepper ) ){
-					$logic->migrateOldUserPassword( $user->userId, $password );
-					return TRUE;
-				}
-			}
-		}
-		else{																						//  @todo  remove whole block if old user password support decays
-			$pepper		= $this->moduleConfigUsers->get( 'password.pepper' );
-			if( $user->password === md5( $password.$pepper ) )
-				return TRUE;
-		}
-		return FALSE;
-	}
-
-	/**
  	 *	@todo		send mail to user after confirmation with user data
 	 */
-	public function confirm( $code = NULL ){
+	public function confirm( $code = NULL )
+	{
 		$words		= (object) $this->getWords( 'confirm' );
 		$code		= $code ? $code : $this->request->get( 'confirm_code' );											//  get code from POST reqeuest if not given by GET
 		$from		= $this->request->get( 'from'  );
@@ -159,7 +122,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->addData( 'from', $from );									//  forward redirect URL to form action
 	}
 
-	public function index(){
+	public function index()
+	{
 		if( !$this->session->has( 'userId' ) )
 			return $this->redirect( 'auth', 'login' );											// @todo replace redirect
 
@@ -179,7 +143,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	/**
 	 *	@todo implement username parameter to be used (not the case right now)
 	 */
-	public function login( $username = NULL ){
+	public function login( $username = NULL )
+	{
 		if( $this->session->has( 'userId' ) )
 			$this->redirectAfterLogin();
 
@@ -237,7 +202,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->addData( 'useRemember', $useRememberByConfig && $useRememberByLimit );
 	}
 
-	public function logout( $redirectController = NULL, $redirectAction = NULL ){
+	public function logout( $redirectController = NULL, $redirectAction = NULL )
+	{
 		$words		= (object) $this->getWords( 'logout' );
 		$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
 		if( $this->session->has( 'userId' ) ){
@@ -263,7 +229,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->redirectAfterLogout( $redirectController, $redirectAction );
 	}
 
-	public function password(){
+	public function password()
+	{
 		$words			= (object) $this->getWords( 'password' );
 		$modelUser		= new Model_User( $this->env );
 
@@ -320,10 +287,10 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->addData( 'password_email', $this->request->get( 'password_email' ) );
 	}
 
-	public function register(){
+	public function register()
+	{
 		$words		= (object) $this->getWords( 'register' );
-
-		if( !$this->moduleConfig->get( 'register' ) ){
+		if( !$this->moduleConfigAuth->get( 'register' ) || !$this->moduleConfig->get( 'register' ) ){
 			$this->messenger->noteError( $words->msgRegistrationClosed );
 			$this->restart( $this->request->get( 'from' ) );
 		}
@@ -331,7 +298,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
-		$roleDefault	= $modelRole->getByIndex( 'register', 128, 'roleId' );
+		$roleDefault	= $modelRole->getByIndex( 'register', 128 );
 		$rolesAllowed	= array();
 		foreach( $modelRole->getAllByIndex( 'register', array( 64, 128 ) ) as $role )
 			$rolesAllowed[]	= $role->roleId;
@@ -350,6 +317,11 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$status			= (int) $options->get( 'status.register' );
 		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
+		if( !!$roleDefault ){
+			$this->messenger->noteFailure( $words->msgNoDefaultRoleDefined );
+			$from	= $this->request->get( 'from' );
+			$this->restart( $from ? $from : NULL, !$from );
+		}
 		$roleId		= $roleDefault->roleId;															//  use default register role if none given
 		if( $this->request->has( 'roleId' ) && trim( $input->get( 'roleId' ) ) ){
 			if( in_array( (int) $this->request->get( 'roleId' ), $rolesAllowed ) ){
@@ -483,7 +455,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 
 	//  --  PROTECTED  --  //
 
-	protected function authenticateUserByCredentials( $username, $password ){
+	protected function authenticateUserByCredentials( string $username, string $password )
+	{
 		$words		= (object) $this->getWords( 'login' );
 		if( !strlen( $username ) ){
 			$this->messenger->noteError( $words->msgNoUsername );
@@ -547,6 +520,49 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	}
 
 	/**
+	 *	Check given user password against old and newer password storage.
+	 *	If newer password store is supported and old password has been found, migration will apply.
+	 *
+	 *	@access		protected
+	 *	@param   	object   	$user		User data object
+	 *	@param   	string		$password	Password to check on login
+	 *	@todo   	clean up if support for old passwort decays
+	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
+	 */
+	protected function checkPasswordOnLogin( $user, string $password )
+	{
+		$words				= (object) $this->getWords( 'login' );
+		$isMinimumVersion	= $this->env->getPhp()->version->isAtLeast( '5.5.0' );
+		if( $isMinimumVersion && class_exists( 'Logic_UserPassword' ) ){							//  @todo  remove line if old user password support decays
+			$logic			= Logic_UserPassword::getInstance( $this->env );
+			$newPassword	= $logic->getActivatableUserPassword( $user->userId, $password );
+			if( $logic->hasUserPassword( $user->userId ) ){											//  @todo  remove line if old user password support decays
+				if( $logic->validateUserPassword( $user->userId, $password ) )
+					return TRUE;
+				$newPassword	= $logic->getActivatableUserPassword( $user->userId, $password );
+				if( $newPassword ){
+					$logic->activatePassword( $newPassword->userPasswordId );
+					$this->messenger->noteNotice( $words->msgNoticePasswordChanged );
+					return TRUE;
+				}
+			}
+			else{																					//  @todo  remove whole block if old user password support decays
+				$pepper		= $this->moduleConfigUsers->get( 'password.pepper' );
+				if( $user->password === md5( $password.$pepper ) ){
+					$logic->migrateOldUserPassword( $user->userId, $password );
+					return TRUE;
+				}
+			}
+		}
+		else{																						//  @todo  remove whole block if old user password support decays
+			$pepper		= $this->moduleConfigUsers->get( 'password.pepper' );
+			if( $user->password === md5( $password.$pepper ) )
+				return TRUE;
+		}
+		return FALSE;
+	}
+
+	/**
 	 *	Dispatch next route after login, by these rules:
 	 *	1. Given controller and action
 	 *	2. Forced forward path of this auth module
@@ -558,7 +574,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogin( $controller = NULL, $action = NULL ){
+	protected function redirectAfterLogin( $controller = NULL, $action = NULL )
+	{
 		if( $controller )																			//  a redirect contoller has been argumented
 			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
@@ -587,7 +604,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogout( $controller = NULL, $action = NULL ){
+	protected function redirectAfterLogout( $controller = NULL, $action = NULL )
+	{
 		if( $controller )																			//  a redirect contoller has been argumented
 			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
@@ -604,7 +622,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		$this->restart( NULL );																		//  fallback: go to index (empty path)
 	}
 
-	protected function rememberUserInCookie( $user ){
+	protected function rememberUserInCookie( $user )
+	{
 		$expires	= strtotime( "+2 years" ) - time();
 		$passwordHash	= md5( sha1( $user->password ) );											//  hash password using SHA1 and MD5
 		if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )											//  for PHP 5.5.0+
@@ -623,7 +642,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 	 *	@access		public
 	 *	@return		void
 	 */
-	protected function tryLoginByCookie(){
+	protected function tryLoginByCookie()
+	{
 		if( $this->cookie->get( 'auth_remember' ) ){												//  autologin has been activated
 			$userId		= (int) $this->cookie->get( 'auth_remember_id' );							//  get user ID from cookie
 			$password	= (string) $this->cookie->get( 'auth_remember_pw' );						//  get hashed password from cookie
@@ -649,4 +669,3 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller {
 		}
 	}
 }
-?>
