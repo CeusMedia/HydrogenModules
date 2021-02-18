@@ -17,4 +17,4 @@ if( $view->hasContent( 'index', 'index', 'html/' ) ){
 return '
 Hello World!
 ';
-?>
+

@@ -1,6 +1,19 @@
 <?php
-class Controller_Index extends CMF_Hydrogen_Controller{
-	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL, $arg5 = NULL, $arg6 = NULL ){
+class Controller_Index extends CMF_Hydrogen_Controller
+{
+	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL, $arg5 = NULL, $arg6 = NULL )
+	{
+
+		//  redirect forced by auth module ?
+		$forward	= $this->env->getConfig()->getAll( 'module.resource_authentication.login.forward.', TRUE );
+		if( $forward->get( 'path' ) && $forward->get( 'force' ) ){
+			$isInside	= $this->env->getSession()->get( 'auth_user_id' ) > 0;
+			if( $isInside ){
+				$hasAccess	= $this->env->getAcl()->has( $forward->get( 'path' ), '' );
+				$this->restart( $forward->get( 'path' ) );
+			}
+		}
+
 		if( $arg1 ){
 			$this->env->getResponse()->setStatus( 404 );
 		}
@@ -16,4 +29,3 @@ class Controller_Index extends CMF_Hydrogen_Controller{
 		$this->addData( 'sessionData', $this->env->getSession()->getAll() );
 	}
 }
-?>
