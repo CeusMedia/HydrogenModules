@@ -41,12 +41,15 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends CMF_Hydrogen_View_Helper
 
 	public function render(): string
 	{
-		if( !$this->menu && !$this->links )
+		if( !$this->menu )
+			return '';
+		$pages	= $this->menu->getPages( $this->scope );
+		if( 0 === count( $pages ) && !$this->links )
 			return '';
 		$dropdown	= new DropdownMenu();
 		$dropdown->setAlign( !$this->alignRight );
 		if( $this->menu )
-			foreach( $this->menu->getPages( $this->scope ) as $page )
+			foreach( $pages as $page )
 				$dropdown->add( $page->link, $page->label, NULL, $page->icon );
 		else if( $this->links )
 			foreach( $this->links as $link )
