@@ -1,7 +1,9 @@
 <?php
-class Hook_Work_Note /*extends CMF_Hydrogen_Hook*/{
+class Hook_Work_Note extends CMF_Hydrogen_Hook
+{
 
-	public function __onInit(){
+	public function __onInit()
+	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
@@ -14,8 +16,10 @@ class Hook_Work_Note /*extends CMF_Hydrogen_Hook*/{
 		$this->addData( 'logicNote', $this->logic );
 	}
 
-	static public function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$projectId	= $data['projectId'];
+	public static function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
+		$data		= (object) $payload;
+		$projectId	= $data->projectId;
 		$model		= new Model_Note( $env );
 		$logic		= Logic_Note::getInstance( $env );
 		foreach( $model->getAllByIndex( 'projectId', $projectId ) as $note ){
@@ -23,7 +27,9 @@ class Hook_Work_Note /*extends CMF_Hydrogen_Hook*/{
 		}
 	}
 
-	static public function onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
+		$data		= (object) $payload;
 		$modelProject	= new Model_Project( $env );
 		if( empty( $data->projectId ) ){
 			$message	= 'Hook "Work_Notes::onListProjectRelations" is missing project ID in data.';
@@ -75,8 +81,9 @@ class Hook_Work_Note /*extends CMF_Hydrogen_Hook*/{
 		);
 	}
 
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$data		= (object) $data;
+	public static function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
+		$data		= (object) $payload;
 		$userId		= $data->userId;
 		$model		= new Model_Note( $env );
 		$logic		= Logic_Note::getInstance( $env );
@@ -87,8 +94,9 @@ class Hook_Work_Note /*extends CMF_Hydrogen_Hook*/{
 			$data->counts['Work_Notes']	= (object) array( 'entities' => count( $notes ) );
 	}
 
-	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$data		= (object) $data;
+	public static function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
+		$data		= (object) $payload;
 		$userId		= $data->userId;
 		$model		= new Model_Note( $env );
 		$logic		= Logic_Note::getInstance( $env );
@@ -119,4 +127,3 @@ class Hook_Work_Note /*extends CMF_Hydrogen_Hook*/{
 		);
 	}
 }
-?>

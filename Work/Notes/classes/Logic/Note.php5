@@ -1,6 +1,6 @@
 <?php
-class Logic_Note extends CMF_Hydrogen_Logic{
-
+class Logic_Note extends CMF_Hydrogen_Logic
+{
 	protected $modelNote;
 	protected $modelNoteLink;
 	protected $modelNoteTag;
@@ -16,7 +16,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 	protected $userNoteIds	= array();
 	protected $userProjects	= array();
 
-	protected function __onInit(){
+	protected function __onInit()
+	{
 		$this->modelNote		= new Model_Note( $this->env );
 		$this->modelNoteLink	= new Model_Note_Link( $this->env );
 		$this->modelNoteTag		= new Model_Note_Tag( $this->env );
@@ -25,7 +26,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		$this->prefix			= $this->env->getDatabase()->getPrefix();
 	}
 
-	public function addLinkToNote( $linkId, $noteId, $title = NULL, $strict = TRUE ){
+	public function addLinkToNote( $linkId, $noteId, $title = NULL, $strict = TRUE )
+	{
 		$conditions	= array( 'noteId' => $noteId, 'linkId' => $linkId, 'title' => $title );
 		$relation	= $this->modelNoteLink->getAll( $conditions );
 		if( $relation ){
@@ -42,7 +44,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		return $this->modelNoteLink->add( $data );
 	}
 
-	public function addTagToNote( $tagId, $noteId, $status = Model_Note_Tag::STATUS_NORMAL, $strict = TRUE ){
+	public function addTagToNote( $tagId, $noteId, $status = Model_Note_Tag::STATUS_NORMAL, $strict = TRUE )
+	{
 		$indices	= array(
 			'noteId'	=> $noteId,
 			'tagId'		=> $tagId,
@@ -76,16 +79,19 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		return $this->modelNoteTag->add( $data );
 	}
 
-	public function ignoreTagOnNote( $tagId, $noteId, $strict = TRUE ){
+	public function ignoreTagOnNote( $tagId, $noteId, $strict = TRUE )
+	{
 		return $this->addTagToNote( $tagId, $noteId, Model_Note_Tag::STATUS_DISABLED, TRUE );
 	}
 
-	public function countNoteView( $noteId ){
+	public function countNoteView( $noteId )
+	{
 		$query	= 'UPDATE '.$this->prefix.'notes SET numberViews=numberViews+1 WHERE noteId='.(int)$noteId;
 		$this->env->getDatabase()->query( $query );
 	}
 
-	public function createLink( $url, $strict = TRUE ){
+	public function createLink( $url, $strict = TRUE )
+	{
 		$existingLink		= $this->modelLink->getByIndex( 'url', $url );
 		if( $existingLink ){
 			if( $strict )
@@ -95,7 +101,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		return $this->modelLink->add( array( 'url' => $url, 'createdAt' => time() ) );
 	}
 
-	public function createTag( $content, $strict = TRUE ){
+	public function createTag( $content, $strict = TRUE )
+	{
 		$existingTag		= $this->modelTag->getByIndex( 'content', $content );
 		if( $existingTag ){
 			if( $strict )
@@ -105,7 +112,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		return $this->modelTag->add( array( 'content' => $content, 'createdAt' => time() ) );
 	}
 
-	public function getNoteData( $noteId ){
+	public function getNoteData( $noteId )
+	{
 		$note		= $this->modelNote->get( $noteId );
 		if( !$note ){
 			$this->env->getMessenger()->noteError( 'Invalid note ID' );
@@ -137,7 +145,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 	 *	@param		boolean		$strict		Notes must be related to ALL tag IDs (slower)
 	 *	@return		array					List of note IDs related to tag IDs
 	 */
-	public function getNoteIdsFromTagIds( $tagIds, $strict = FALSE ){
+	public function getNoteIdsFromTagIds( $tagIds, $strict = FALSE )
+	{
 		if( !is_array( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list must be an array' );
 		if( !count( $tagIds ) )
@@ -173,7 +182,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		return $noteIds;
 	}
 
-	public function getRelatedTags( $noteId ){
+	public function getRelatedTags( $noteId )
+	{
 		$relatedNoteIds	= $this->getRelatedNoteIds( $noteId );
 
 		$noteTags	= array();
@@ -217,7 +227,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		return $relatedTagIds;
 	}
 
-	public function getRelatedNoteIds( $noteId ){
+	public function getRelatedNoteIds( $noteId )
+	{
 		$relatedNoteIds	= array();
 		$indices	= array(
 			'noteId'	=> $noteId,
@@ -256,7 +267,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		return $noteIds;
 	}
 */
-	public function getRankedTagIdsFromNoteIds( $noteIds, $skipTagIds = array() ){
+	public function getRankedTagIdsFromNoteIds( $noteIds, $skipTagIds = array() )
+	{
 		$tagIds	= array();
 		$indices	= array(
 			'noteId'	=> $noteIds,
@@ -276,14 +288,16 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo finish implementation or remove
 	 */
-	public function getRelatedTagsFromTags( $tagIds = array() ){
+	public function getRelatedTagsFromTags( $tagIds = array() )
+	{
 		if( !is_array( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list must be an array' );
 		if( !count( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list cannot be empty' );
 	}
 
-	public function getTopNotes( $conditions = array(), $orders = array(), $limits = array() ){
+	public function getTopNotes( $conditions = array(), $orders = array(), $limits = array() )
+	{
 		$clock		= new Alg_Time_Clock();
 		if( !$orders )
 			$orders		= array(
@@ -307,7 +321,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		);
 	}
 
-	public function getTopTags( $limit = 10, $offset = 0, $projectId = NULL, $notTagIds = array() ){
+	public function getTopTags( $limit = 10, $offset = 0, $projectId = NULL, $notTagIds = array() )
+	{
 		if( $notTagIds ){
 			$noteIds	= $this->getNoteIdsFromTagIds( $notTagIds, !TRUE );
 			if( $this->userId && $this->userProjects )
@@ -348,7 +363,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		return array_values( $tagIds );
 	}
 
-	public function populateNote( $note ){
+	public function populateNote( $note )
+	{
 		$note->links	= array();
 		$note->tags		= array();
 
@@ -370,7 +386,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		return $note;
 	}
 
-	public function removeNote( $noteId ){
+	public function removeNote( $noteId )
+	{
 		$relatedTags	= $this->modelNoteTag->getAllByIndex( 'noteId', $noteId );					//  get tag relations
 		foreach( $relatedTags as $relatedTag ){														//  iterate tag relations
 			$this->modelNoteTag->remove( $relatedTag->noteTagId );									//  remove relation to tag
@@ -386,14 +403,16 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 		$this->modelNote->remove( $noteId );														//  remote note
 	}
 
-	public function removeNoteLink( $noteLinkId ){
+	public function removeNoteLink( $noteLinkId )
+	{
 		if( !$this->modelNoteLink->get( $noteLinkId ) )
 			return FALSE;
 		$this->modelNoteLink->remove( $noteLinkId );
 		return TRUE;
 	}
 
-	public function removeLinkFromNote( $linkId, $noteId ){
+	public function removeLinkFromNote( $linkId, $noteId )
+	{
 		$indices		= array( 'noteId' => $noteId, 'linkId' => $linkId );						//  focus on note and link
 		$this->modelNoteLink->removeByIndices( $indices );											//  remove note link relation
 		$relations	= $this->modelNoteLink->getAllByIndex( 'linkId', $linkId );						//  find other link relations
@@ -401,7 +420,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 			$this->modelLink->remove( $linkId );													//  remove link
 	}
 
-	public function removeTagFromNote( $tagId, $noteId ){
+	public function removeTagFromNote( $tagId, $noteId )
+	{
 		$indices		= array( 'noteId' => $noteId, 'tagId' => $tagId );							//  focus on note and tag
 		$this->modelNoteTag->removeByIndices( $indices );											//  remove note tag relation
 		$relations	= $this->modelNoteTag->getAllByIndex( 'tagId', $tagId );						//  find other tag relations
@@ -413,7 +433,8 @@ class Logic_Note extends CMF_Hydrogen_Logic{
 	 *	@todo		use of GREATEST only works for MySQL - improve this!
 	 *	@see		http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
 	 */
-	public function searchNotes( $query, $conditions, $orders = array(), $limits = array() ){
+	public function searchNotes( $query, $conditions, $orders = array(), $limits = array() )
+	{
 //		if( !strlen( trim( $query ) ) && !$tags )
 //			throw new Exception( 'Neither query nor tags to search for given' );
 		if( !strlen( trim( $query ) ) )
@@ -475,7 +496,7 @@ ORDER BY
 		$result		= $this->env->getDatabase()->query( $query );
 		$notes	= $result->fetchAll( PDO::FETCH_OBJ );
 		$number		= count( $notes );
-		$notes	= array_slice( $notes, $limits[0], $limit[1] );
+		$notes	= array_slice( $notes, $limits[0], $limits[1] );
 		foreach( $notes as $nr => $note )
 			$notes[$nr]	= $this->populateNote( $note );
 		return array(
@@ -485,7 +506,8 @@ ORDER BY
 		);
 	}
 
-	public function setContext( $userId, $roleId, $projectId ){
+	public function setContext( $userId, $roleId, $projectId )
+	{
 		$this->userId			= $userId;
 		$this->roleId			= $roleId;
 		$this->projectId		= $projectId;
@@ -507,7 +529,8 @@ ORDER BY
 		}
 	}
 
-	protected function sharpenConditions( $conditions ){
+	protected function sharpenConditions( $conditions )
+	{
 		if( $this->env->has( 'acl' ) )
 			if( $this->env->get( 'acl' )->hasFullAccess( $this->roleId ) )
 				return $conditions;
@@ -525,4 +548,3 @@ ORDER BY
 */		return $conditions;
 	}
 }
-?>

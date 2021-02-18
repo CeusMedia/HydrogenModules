@@ -1,8 +1,13 @@
 <?php
-class Model_Note_Tag extends CMF_Hydrogen_Model{
-
+class Model_Note_Tag extends CMF_Hydrogen_Model
+{
 	const STATUS_DISABLED	= -1;
 	const STATUS_NORMAL		= 0;
+
+	const STATUSES			= [
+		self::STATUS_DISABLED,
+		self::STATUS_NORMAL,
+	];
 
 	protected $name		= 'note_tags';
 

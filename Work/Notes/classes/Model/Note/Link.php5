@@ -1,7 +1,8 @@
 <?php
-class Model_Note_Link extends CMF_Hydrogen_Model{
-
+class Model_Note_Link extends CMF_Hydrogen_Model
+{
 	protected $name		= 'note_links';
+
 	protected $columns	= array(
 		'noteLinkId',
 		'noteId',
@@ -9,15 +10,18 @@ class Model_Note_Link extends CMF_Hydrogen_Model{
 		'title',
 		'createdAt',
 	);
+
 	protected $primaryKey	= 'noteLinkId';
+
 	protected $indices		= array(
 		'noteId',
 		'linkId'
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function  __construct( CMF_Hydrogen_Environment $env, $id = NULL ){
+	public function  __construct( CMF_Hydrogen_Environment $env, $id = NULL )
+	{
 		parent::__construct( $env, $id );
 	}
 }
-?>

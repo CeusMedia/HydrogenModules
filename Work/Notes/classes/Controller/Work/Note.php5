@@ -1,12 +1,13 @@
 <?php
-class Controller_Work_Note extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Note extends CMF_Hydrogen_Controller
+{
 	protected $request;
 	protected $session;
 	protected $messenger;
 	protected $logic;
 
-	public function __onInit(){
+	public function __onInit()
+	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
@@ -19,7 +20,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->addData( 'logicNote', $this->logic );
 	}
 
-	public function add(){
+	public function add()
+	{
 		$model		= new Model_Note( $this->env );
 		$words		= (object) $this->getWords( 'add' );
 		$data		= $this->request->getAllFromSource( 'POST', TRUE );
@@ -28,6 +30,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 			$data		= array(
 				'userId'		=> $this->session->get( 'userId' ),
 				'projectId'		=> $this->request->get( 'note_projectId' ),
+				'status'		=> '0',
 				'title'			=> $this->request->get( 'note_title' ),
 				'public'		=> (int) $this->request->get( 'note_public' ),
 				'format'		=> $this->request->get( 'note_format' ),
@@ -73,7 +76,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->addData( 'projects', $projects );
 	}
 
-	public function addLink( $noteId, $tagId = NULL ){
+	public function addLink( $noteId, $tagId = NULL )
+	{
 		if( (int) $tagId < 1 )
 			$linkId	= $this->logic->createLink( $this->request->get( 'link_url' ), FALSE );
 		$this->logic->addLinkToNote( $linkId, $noteId, $this->request->get( 'link_title' ), FALSE );
@@ -82,7 +86,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 
-	public function addSearchTag( $tagId, $page = 0 ){
+	public function addSearchTag( $tagId, $page = 0 )
+	{
 		$tags		= $this->session->get( 'filter_notes_tags' );
 		$model		= new Model_Tag( $this->env );
 		$tag		= $model->get( $tagId );
@@ -99,7 +104,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->restart( './work/note/'.$page );
 	}
 
-	public function addTag( $noteId, $tagId = NULL ){
+	public function addTag( $noteId, $tagId = NULL )
+	{
 		$words			= (object) $this->getWords( 'msg' );
 		if( !is_null( $tagId ) ){
 			$this->logic->addTagToNote( $tagId, $noteId, Model_Note_Tag::STATUS_NORMAL, FALSE );
@@ -117,7 +123,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 
-	public function edit( $noteId ){
+	public function edit( $noteId )
+	{
 		$words			= (object) $this->getWords( 'edit' );
 
 		$modelNote		= new Model_Note( $this->env );
@@ -158,7 +165,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->addData( 'projects', $projects );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			$this->session->remove( 'filter_notes_visibility' );
 			$this->session->remove( 'filter_notes_author' );
@@ -207,7 +215,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function forgetTag( $tagId, $page = 0 ){
+	public function forgetTag( $tagId, $page = 0 )
+	{
 		$tags		= $this->session->get( 'filter_notes_tags' );
 		foreach( $tags as $tag )
 			if( $tag->tagId != $tagId )
@@ -217,12 +226,14 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->restart( './work/note/'.$page );
 	}
 
-	public function ignoreTag( $noteId, $tagId ){
+	public function ignoreTag( $noteId, $tagId )
+	{
 		$this->logic->ignoreTagOnNote( $tagId, $noteId );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 		$tags				= $this->session->get( 'filter_notes_tags' );
 		$query				= $this->session->get( 'filter_notes_term');
 		$filterOrder		= $this->session->get( 'filter_notes_order' );
@@ -289,7 +300,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->addData( 'notes', $notes );
 	}
 
-	public function link( $linkId ){
+	public function link( $linkId )
+	{
 		$model	= new Model_Link( $this->env );
 		$link	= $model->get( $linkId );
 		if( !$link ){
@@ -300,28 +312,32 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function remove( $noteId ){
+	public function remove( $noteId )
+	{
 		$this->logic->removeNote( $noteId );
 		$words		= (object) $this->getWords( 'msg' );
 		$this->messenger->noteSuccess( $words->successNoteRemoved );
 		$this->restart( './work/note' );
 	}
 
-	public function removeTag( $noteId, $tagId ){
+	public function removeTag( $noteId, $tagId )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$this->logic->removeTagFromNote( $tagId, $noteId );
 		$this->messenger->noteSuccess( $words->successNoteTagRemoved );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 
-	public function removeLink( $noteId, $noteLinkId ){
+	public function removeLink( $noteId, $noteLinkId )
+	{
 		$this->logic->removeNoteLink( $noteLinkId );
 		$words		= (object) $this->getWords( 'msg' );
 		$this->messenger->noteSuccess( $words->successNoteLinkRemoved );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 
-	public function view( $noteId ){
+	public function view( $noteId )
+	{
 		$modelUser	= new Model_User( $this->env );
 		$this->logic->countNoteView( $noteId );
 		$note		= $this->logic->getNoteData( $noteId );
@@ -333,4 +349,3 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller{
 		$this->addData( 'note', $note );
 	}
 }
-?>
