@@ -35,6 +35,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 				'public'		=> (int) $this->request->get( 'note_public' ),
 				'format'		=> $this->request->get( 'note_format' ),
 				'content'		=> $this->request->get( 'note_content' ),
+				'numberViews'	=> 0,
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
 			);
