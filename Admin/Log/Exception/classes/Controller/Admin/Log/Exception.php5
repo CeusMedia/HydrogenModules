@@ -64,22 +64,23 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
 		return $this->model->count();
 	}
 
-	public function index( $page = 0, $limit = 10 ){
+	public function index( $page = 0, $limit = 20 ){
 		$count		= $this->logic->importFromLogFile();
 		if( $count )
 			$this->messenger->noteNotice( 'Imported %d logged exceptions.', $count );
 
 		$page	= preg_match( "/^[0-9]+$/", $page ) ? (int) $page : 0;
-		if( $page > 0 && $page * $limit >= $this->count() )
-			$page--;
-		$limit	= preg_match( "/^[0-9]+$/", $limit ) ? (int) $limit : 10;
+		$limit	= preg_match( "/^[0-9]+$/", $limit ) ? (int) $limit : 20;
+		$count	= $this->count();
+		if( $page > 0 && $page * $limit >= $count )
+			$page = floor( $count / $limit );
 		$offset	= $page * $limit;
 		$this->env->getSession()->set( 'filter_admin_log_exception_page', $page );
 		$this->env->getSession()->set( 'filter_admin_log_exception_limit', $limit );
-		$limits	= array( $limit, $offset );
+		$limits	= array( $offset, $limit );
 		$lines	= $this->model->getAll( array(), array( 'createdAt' => 'DESC' ), $limits );
 		$this->addData( 'exceptions', $lines );
-		$this->addData( 'total', $this->count() );
+		$this->addData( 'total', $count );
 		$this->addData( 'page', $page );
 		$this->addData( 'limit', $limit );
 	}
