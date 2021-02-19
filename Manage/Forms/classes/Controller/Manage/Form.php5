@@ -203,30 +203,11 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 			'message'	=> NULL,
 		];
 
-		$data	= [
-			'personDate1'		=> "I've been copied from personDate1",
-			'personDate3'		=> "I've been mapped from personDate3 to personDate2",
-			'__courseId__'		=> 1,
-			'__base__'			=> 1,
-			'topic'				=> 'fl-nat',
-			'interestBase'		=> 'leipzig@deutsche-heilpraktikerschule.de',
-		];
-
 		if( strlen( trim( $rules ) ) ){
 			$parser	= new ADT_JSON_Parser;
 			try{
 				$ruleSet	= $parser->parse( $rules, FALSE );
 				$response['status']	= 'parsed';
-				try{
-					$mapper			= new Logic_Form_Transfer_DataMapper( $this->env );
-					$transferData	= $mapper->applyRulesToFormData( $data, $ruleSet );
-					$response['status']		= "success";
-					$response['message']	= $transferData;
-				}
-				catch( RuntimeException $e ){
-					$response['status']		= 'error';
-					$response['message']	= $e->getMessage();
-				}
 			}
 			catch( RuntimeException $e ){
 				$response['status']		= 'exception';

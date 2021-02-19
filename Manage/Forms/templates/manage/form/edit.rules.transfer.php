@@ -18,7 +18,7 @@ if( $transferRules ){
 		$buttonTest	= UI_HTML_Tag::create( 'button', $iconTest, array(
 			'type'	=> 'button',
 			'id'	=> 'button-test-'.$ruleId,
-			'class'	=> 'btn not-btn-info btn-small button-test-rules',
+			'class'	=> 'btn not-btn-info not-btn-small btn-mini button-test-rules',
 		), array( 'rule-id' => $ruleId ) );
 
 		$optTransferTarget	= array();
@@ -46,7 +46,7 @@ if( $transferRules ){
 		<div class="row-fluid">
 			<div class="span12">
 				<label for="input_rules-'.$ruleId.'">Regeln <small class="muted">(im JSON-Format) '.$buttonTest.'</small></label>
-				<textarea name="rules" id="input_rules-'.$ruleId.'" class="span12 ace-auto" rows="18">'.htmlentities( @$rule->rules, ENT_QUOTES, 'UTF-8' ).'</textarea>
+				<textarea name="rules" id="input_rules-'.$ruleId.'" class="span12 ace-auto" rows="18" data-ace-option-max-lines="25" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( @$rule->rules, ENT_QUOTES, 'UTF-8' ).'</textarea>
 			</div>
 		</div>
 		' );
@@ -111,7 +111,6 @@ $script		= '
 var FormsTransferRuleTest = {
 	init: function(){
 		jQuery(".button-test-rules").bind("click", function(){
-			console.log("CLICK");
 			var button = jQuery(this);
 			var ruleId = button.data("rule-id");
 			var modal = jQuery("#rule-transfer-edit-"+ruleId);
@@ -132,9 +131,7 @@ var FormsTransferRuleTest = {
 		});
 	},
 	updateTransferRulesTestTrigger: function(ruleId, rules){
-		console.log({ruleId: ruleId, rules: rules});
 		var callback = function(json){
-			console.log("UPDATE");
 			var button = jQuery("#button-test-"+ruleId);
 			button.prop("title", null);
 			button.removeClass("btn-info btn-success btn-danger")
@@ -143,9 +140,8 @@ var FormsTransferRuleTest = {
 					button.addClass("btn-danger");
 					button.prop("title", json.message);
 				}
-				else if(json.status === "success"){
+				else if(json.status === "success" || json.status === "parsed"){
 					button.addClass("btn-success");
-					console.log(json.message);
 				}
 			}
 			button.blur();
