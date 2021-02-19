@@ -20,6 +20,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 		$this->applyFilters( $rules->filter ?? [], $input, $output );
 		$this->applyDatabaseSearches( $rules->db ?? [], $input, $output );
 
+		$this->applyCreations( $rules->create ?? [], $input, $output );
 		$this->applySets( $rules->set ?? [], $input, $output );
 		$this->applyCopies( $rules->copy ?? [], $input, $output );
 		$this->applyMappings( $rules->map ?? [], $input, $output );
@@ -28,6 +29,35 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	}
 
 	//  --  PROTECTED  --  //
+
+	/**
+	 *	...
+	 *	@access		protected
+	 *	@param		array				$creations		List of creation rules
+	 *	@param		ADT_List_Dictionary	$input			Input data dictionary
+	 *	@param		ADT_List_Dictionary	$output		Output data dictionary
+	 */
+	protected function applyCreations( $creations, $input, $output )
+	{
+		foreach( $creations as $fieldName => $parameters ){
+			$buffer	= '';
+			foreach( $parameters->lines as $line ){
+				$glue	= strlen( $buffer ) ? PHP_EOL : '';
+				$buffer	.= $glue.$line;
+			}
+			$functions	= ['datetime', 'date', 'time'];
+			foreach( $functions as $function ){
+				$regex	= '/\[!'.preg_quote( $function, '/' ).'\]/';
+				$value	= $this->resolveFunction( $function );
+				$buffer	= preg_replace( $regex, $value, $buffer );
+			}
+			foreach( $input->getAll() as $key => $value ){
+				$regex	= '/\[@'.preg_quote( $key, '/' ).'\]/';
+				$buffer	= preg_replace( $regex, $value, $buffer );
+			}
+			$input->set( $fieldName, $buffer );
+		}
+	}
 
 	/**
 	 *	Applies filter rules.
@@ -82,36 +112,28 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 					$truth	= preg_match( $condition->match, $inputValue );
 					break;
 			}
-			if( !$truth )
-				continue;
-			$action	= $parameters->action;
-			if( !empty( $action->operation ) ){
-				switch( strtolower( $action->operation ) ){
-					case 'set':
-						$toField	= $fieldName;
-						if( !empty( $action->to ) )
-							$toField	= $action->to;
-						if( !empty( $action->value ) ){
-							$value	= $this->resolveValue( $action->value, $input );
-							$input->set( $toField, $value );
-						}
-						break;
-					case 'inc':
-					case 'increment':
-					case '++':
-						$value	= (int) $input->get( $fieldName ) + 1;
-						$input->set( $fieldName, (string) $value );
-						break;
-					case 'dec':
-					case 'decrement':
-					case '--':
-						$value	= (int) $input->get( $fieldName ) - 1;
-						$input->set( $fieldName, (string) $value );
-						break;
-					case 'remove':
-					case 'delete':
-						$input->remove( $fieldName );
-						break;
+			if( $truth ){
+				if( !empty( $parameters->action ) ){
+					$action		= $parameters->action;
+					if( !empty( $action->operation ) ){
+						$operation	= strtolower( $action->operation );
+						$value		= $action->value ?? $input->get( $fieldName );
+						$value		= $this->resolveOperation( $operation, $value, $input );
+						$target		= $action->to ?? fieldName;
+						NULL === $value ? $input->remove( $target ) : $input->set( $target, $value );
+					}
+				}
+			}
+			else{
+				if( !empty( $parameters->else ) ){
+					$action		= $parameters->else;
+					if( !empty( $action->operation ) ){
+						$operation	= strtolower( $action->operation );
+						$value		= $action->value ?? $input->get( $fieldName );
+						$value		= $this->resolveOperation( $operation, $value, $input );
+						$target		= $action->to ?? fieldName;
+						NULL === $value ? $input->remove( $target ) : $input->set( $target, $value );
+					}
 				}
 			}
 		}
@@ -153,7 +175,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 			if( empty( $result ) ){
 				if( !isset( $parameters->onEmpty ) )
 					throw new RuntimeException( 'DB: No table data found for index source of target field "'.$fieldName.'" from table(s) '.$tables );
-				$result->value = $parameters->onEmpty;
+				$result = (object) [ 'value' => $parameters->onEmpty ];
 			}
 			if( !empty( $parameters->to ) && $parameters->to === 'request')
 				$input->set( $fieldName, $result->value );
@@ -248,18 +270,63 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	protected function resolveValue( $value, $input )
 	{
 		$prefix	= substr( $value, 0, 1 );
-		if( $prefix === '!' ){
-			switch( substr( $value, 1 ) ){
-				case 'datetime':
-					return date( 'Y-m-d H:i:s' );
-				case 'date':
-					return date( 'Y-m-d' );
-				case 'time':
-					return date( 'H:i:s' );
-			}
+		switch( $prefix ){
+			case '!':
+				return $this->resolveFunction( substr( $value, 1 ) );
+			case '@':
+				return $input->get( substr( $value, 1 ) );
+			default:
+				return $value;
 		}
-		else if( $prefix === '@' )
-			return $input->get( substr( $value, 1 ) );
-		return $value;
+	}
+
+	/**
+	 *	Resolves function and returns created value.
+	 *
+	 *	@access		protected
+	 *	@param		string		$function		Function to execute
+	 *	@param		mixed		$arguments		Function arguments if configured
+	 *	@return		string|integer|NULL
+	 */
+	protected function resolveFunction( string $function, $arguments = '' )
+	{
+		switch( $function ){
+			case 'datetime':
+				return date( 'Y-m-d H:i:s' );
+			case 'date':
+				return date( 'Y-m-d' );
+			case 'time':
+				return date( 'H:i:s' );
+			default:
+				return NULL;
+		}
+	}
+
+	/**
+	 *	Resolves configured opteration an returns operated value.
+	 *
+	 *	@access		protected
+	 *	@param		string		$operation		...
+	 *	@param		string		$value			Input value, if needed
+	 *	@param		mixed		$input			Map of form input data
+	 *	@return		string|integer|NULL
+	 */
+	protected function resolveOperation( $operation, $value, $input )
+	{
+		switch( strtolower( $operation ) ){
+			case 'set':
+				return $this->resolveValue( $value, $input );
+			case 'inc':
+			case 'increment':
+			case '++':
+				return ( (int) $value ) + 1;
+			case 'dec':
+			case 'decrement':
+			case '--':
+				return ( (int) $value ) - 1;
+			case 'remove':
+			case 'delete':
+				return NULL;
+		}
 	}
 }
