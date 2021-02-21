@@ -1,12 +1,28 @@
 <?php
 
+/*
 $helperCategory	= new View_Helper_Info_Manual_CategorySelector( $env );
 $helperCategory->setCategories( $categories );
 $helperCategory->setActiveCategoryId( $categoryId );
 
 $helperNav	= new View_Helper_Info_Manual_CategoryPageList( $env );
 $helperNav->setCategoryId( $categoryId );
+*/
 
+$helperCategory = new View_Helper_Info_Manual_CategorySelector( $env );
+$helperCategory->setCategories( $categories );
+$helperCategory->setActiveCategoryId( $categoryId );
+
+$helperNav  = new View_Helper_Info_Manual_CategoryPageList( $env );
+$helperNav->setCategoryId( $categoryId );
+//$helperNav->setActivePageId( $pageId );
+
+$helperNav  = new View_Helper_Info_Manual_PageTree( $env );
+$helperNav->setCategoryId( $categoryId );
+//$helperNav->setActivePageId( $pageId );
+
+
+/*
 $list	= '<div><em class="muted">'.$words['list']['empty'].'</em></div><br/>';
 if( $files ){
 	$list	= array();
@@ -17,6 +33,11 @@ if( $files ){
 	}
 	$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
 }
+*/
+$optParentId    = array( '' => '- ohne -' );
+foreach( $folders as $folder )
+    $optParentId[$folder->manualPageId] = $folder->title;
+$optParentId    = UI_HTML_Elements::Options( $optParentId );
 
 $buttonAdd		= "";
 $buttonReload	= "";
@@ -38,7 +59,7 @@ return '
 		<h3>'.$words['list']['heading'].'</h3>
 		'.$helperCategory->render().'
 		'.$helperNav->render().'
-		'.$list.'
+		'./*$list.*/'
 		'.$buttonAdd.'
 		'.$buttonReload.'
 	</div>
@@ -56,14 +77,18 @@ return '
 							<label for="input_format">'.$words['add']['labelFormat'].'</label>
 							<select name="format" id="input_format" class="span12">'.$optFormat.'</select>
 						</div>
-						<div class="span2">
+                        <div class="span4">
+                            <label for="input_parentId">'.$words['edit']['labelParent'].'</label>
+                            <select name="parentId" id="input_parentId" class="span12">'.$optParentId.'</select>
+                        </div>
+<!--						<div class="span2">
 							<label for="input_version">'.$words['add']['labelVersion'].'</label>
 							<input type="number" min="1" name="version" id="input_version" class="span12" value="'.htmlentities( max( 1, $version ), ENT_QUOTES, 'UTF-8' ).'" required="required"/>
-						</div>
-						<div class="span2">
+						</div>-->
+<!--						<div class="span2">
 							<label for="input_rank">'.$words['add']['labelRank'].'</label>
 							<input type="number" min="1" name="rank" id="input_rank" class="span12" value="'.htmlentities( max( 1, $rank ), ENT_QUOTES, 'UTF-8' ).'" required="required"/>
-						</div>
+						</div>-->
 					</div>
 					<div class="row-fluid">
 						<div class="span12">

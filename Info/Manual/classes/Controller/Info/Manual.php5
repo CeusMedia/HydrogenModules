@@ -23,14 +23,14 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 
 		$title		= trim( $this->request->get( 'title' ) );
 		$content	= trim( $this->request->get( 'content' ) );
-
+		$parentId	= $this->request->get( 'parentId' );
 		$format		= $this->request->get( 'format' );
 		if( !$format )
 			$format	= Model_Manual_Page::FORMAT_MARKDOWN;						// @todo support module config default or user setting
 
-		$categoryId	= $this->request->get( 'categoryId' );
+		$categoryId	= (int) $this->request->get( 'categoryId' );
 		if( !$categoryId )
-			$categoryId	= $this->session->get( 'filter_info_manual_categoryId' );
+			$categoryId	= (int) $this->session->get( 'filter_info_manual_categoryId' );
 
 		$version	= max( $this->request->get( 'version' ), 1 );
 
@@ -44,6 +44,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 			else{
 				$pageId	= $this->modelPage->add( array(
 					'manualCategoryId'	=> $categoryId,
+					'parentId'			=> $parentId,
 					'creatorId'			=> (int) $this->userId,
 					'status'			=> Model_Manual_Page::STATUS_NEW,
 					'format'			=> $format,
@@ -64,12 +65,17 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 		$this->addData( 'rank', $rank );
 		$this->addData( 'title', $title );
 		$this->addData( 'content', $content );
+
+        $folders    = array();
+        $allPages   = $this->modelPage->getAll( array(), array( 'title' => 'ASC' ) );
+        foreach( $allPages as $folder )
+            $folders[]  = $folder;
+        $this->addData( 'folders', $folders );
 	}
 
 	public function category( $categoryId )
 	{
-//print_m( $categoryId );
-//die;
+		$categoryId	= (int) $categoryId;
 		$category	= $this->checkCategoryId( $categoryId );
 		$this->session->set( 'filter_info_manual_categoryId', $categoryId );
 		$conditions	 = array(
@@ -108,10 +114,11 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 			$words		= (object) $this->getWords( 'edit' );
 			$title		= $this->request->get( 'title' );
 			$content	= $this->request->get( 'content' );
-			if( $page->title === $title && $page->content === $content ){
-				$this->messenger->noteNotice( $words->msgNoChanges );
-				$this->restartToPage( $page );
-			}
+			$parentId	= $this->request->get( 'parentId' );
+//			if( $page->title === $title && $page->content === $content ){
+//				$this->messenger->noteNotice( $words->msgNoChanges );
+//				$this->restartToPage( $page );
+//			}
 			$this->modelVersion->add( array(
 				'userId'	=> $this->userId,
 				'objectId'	=> $page->manualPageId,
@@ -121,12 +128,15 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 				'timestamp'	=> time(),
 			), FALSE );
 
-			$this->modelPage->edit( $page->manualPageId, array(
+			$data	= array(
 				'title'			=> $title,
 				'content'		=> $content,
 				'version'		=> $page->version + 1,
 				'modifiedAt'	=> time(),
-			), FALSE );
+			);
+			if( strlen( trim( $parentId ) ) )
+				$data['parentId']	= $parentId;
+			$this->modelPage->edit( $page->manualPageId, $data, FALSE );
 			$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ) );
 			$this->restartToPage( $page );
 		}
@@ -134,6 +144,16 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 		$this->addData( 'content', $page->content );
 		$this->addData( 'page', $page );
 		$this->addData( 'pageId', $page->manualPageId );
+
+		$folders	= array();
+		$allPages	= $this->modelPage->getAll( array(), array( 'title' => 'ASC' ) );
+		foreach( $allPages as $folder ){
+			if( $folder->manualPageId == $page->manualPageId )
+				continue;
+			$folders[]	= $folder;
+		}
+		$this->addData( 'folders', $folders );
+
 	}
 
 	public function import( $fileHash = NULL )

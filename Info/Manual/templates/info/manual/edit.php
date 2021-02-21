@@ -28,6 +28,11 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconDown		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-chevron-down" ) );
 }
 
+$optParentId	= array( '' => '- ohne -' );
+foreach( $folders as $folder )
+	$optParentId[$folder->manualPageId]	= $folder->title;
+$optParentId	= UI_HTML_Elements::Options( $optParentId, $page->parentId );
+
 $buttonAdd	= "";
 $buttonReload	= "";
 if( $moduleConfig->get( 'editor' ) ){
@@ -64,6 +69,10 @@ $panelEdit	= '
 							<label for="input_title">'.$words['edit']['labelTitle'].'</label>
 							<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
+						<div class="span4">
+							<label for="input_parentId">'.$words['edit']['labelParent'].'</label>
+							<select name="parentId" id="input_parentId" class="span12">'.$optParentId.'</select>
+						</div>
 		<!--				<div class="span2">
 							<label for="input_version">'.$words['add']['labelVersion'].'</label>
 							<input type="number" min="1" name="version" id="input_version" class="span12" value="'.htmlentities( $page->version, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
@@ -85,9 +94,10 @@ $panelEdit	= '
 						<button type="submit" name="save" class="btn btn-success">'.$iconSave.' '.$words['edit']['buttonSave'].'</button>
 						<a href="./info/manual/page/'.$pageId.'-'.$view->urlencode( $file ).'" class="btn">'.$iconPreview.' '.$words['edit']['buttonPreview'].'</a>
 						<a href="./info/manual/removePage/'.$pageId.'-'.$view->urlencode( $file ).'" class="btn btn-small btn-danger" onclick="return confirm(\''. addslashes( $words['edit']['buttonRemoveConfirm'] ).'\');">'.$iconRemove.' '.$words['edit']['buttonRemove'].'</a>
-						&nbsp;&nbsp;|&nbsp;&nbsp;
+<!--						&nbsp;&nbsp;|&nbsp;&nbsp;
 						<a href="./info/manual/movePageUp/'.$pageId.'-'.$view->urlencode( $file ).'" class="btn btn-small">'.$iconUp.' '.$words['edit']['buttonMoveUp'].'</a>
 						<a href="./info/manual/movePageDown/'.$pageId.'-'.$view->urlencode( $file ).'" class="btn btn-small">'.$iconDown.' '.$words['edit']['buttonMoveDown'].'</a>
+-->
 					</div>
 				</form>
 			</div>
