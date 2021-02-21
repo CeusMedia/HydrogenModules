@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Info_Manual_Url{
-
+class View_Helper_Info_Manual_Url
+{
 	const MODE_UNKNONW		= 0;
 	const MODE_CATEGORY		= 1;
 	const MODE_PAGE			= 2;
@@ -13,17 +13,20 @@ class View_Helper_Info_Manual_Url{
 	protected $modelCategory;
 	protected $modelPage;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env				= $env;
 		$this->modelPage		= new Model_Manual_Page( $env );
 		$this->modelCategory	= new Model_Manual_Category( $env );
 	}
 
-	public function __toString(){
+	public function __toString(): string
+	{
 		return $this->render();
 	}
 
-	public function render(){
+	public function render(): self
+	{
 		if( !$this->category && !$this->page )
 			throw new RuntimeException( 'Neither category nor page set' );
 		if( $this->mode === static::MODE_CATEGORY ){
@@ -37,7 +40,8 @@ class View_Helper_Info_Manual_Url{
 		return '';
 	}
 
-	public function setCategory( $categoryOrId ){
+	public function setCategory( $categoryOrId ): self
+	{
 		if( is_object( $categoryOrId ) )
 			$category	= $categoryOrId;
 		else if( is_int( $categoryOrId ) ){
@@ -52,14 +56,16 @@ class View_Helper_Info_Manual_Url{
 		return $this;
 	}
 
-	public function setMode( $mode ){
+	public function setMode( $mode ): self
+	{
 		if( !in_array( $mode, array( self::MODE_CATEGORY, self::MODE_PAGE ) ) )
 			throw new RangeException( 'Invalid mode given' );
 		$this->mode	= $mode;
 		return $this;
 	}
 
-	public function setPage( $pageOrId ){
+	public function setPage( $pageOrId ): self
+	{
 		if( is_object( $pageOrId ) )
 			$page	= $pageOrId;
 		else if( is_int( $pageOrId ) ){
@@ -74,7 +80,8 @@ class View_Helper_Info_Manual_Url{
 		return $this;
 	}
 
-	static public function spawn( $env ){
+	public static function spawn( $env ): self
+	{
 		return new static( $env );
 	}
 }

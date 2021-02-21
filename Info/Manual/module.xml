@@ -23,7 +23,7 @@ list>
 <list
 This module can be localized.
 ]]></description>
-	<version>0.7.5</version>
+	<version>0.7.6</version>
 	<log version="0.6.3">Extract CSS to style file.</log>
 	<log version="0.6.4">Add support for serverside Markdown rendering.</log>
 	<log version="0.6.5">Add configuration and detection of renderer.</log>
@@ -37,6 +37,7 @@ This module can be localized.
 	<log version="0.7.3">Support nested pages.</log>
 	<log version="0.7.4">Add hook for shortcodes.</log>
 	<log version="0.7.5">Migrate to support CeusMedia::Common 0.8.5.</log>
+	<log version="0.7.6">Improve code style to catch up with PHP 7.3+.</log>
 <!--	<log version="0.6.x">Use editor configuration switch for read-only mode.</log>-->
 	<category>Info</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>

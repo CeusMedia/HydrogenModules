@@ -48,7 +48,14 @@ $panelEdit	= '
 						<div class="span12">
 							<label for="input_content">'.$words['edit']['labelContent'].'</label>
 							<!--noShortcode-->
-							<textarea class="span12 CodeMirror-auto ace-auto" name="content" id="input_content" rows="'.$moduleConfig->get( 'editor.rows' ).'">'.$content.'</textarea>
+							'.UI_HTML_Tag::create( 'textarea', $content, array(
+								'class'		=> "span12 CodeMirror-auto ace-auto",
+								'name'		=> "content",
+								'id'		=> "input_content",
+								'rows'		=> $moduleConfig->get( 'editor.rows' ),
+								'data-ace-option-max-lines'	=> 20,
+							) ).'
+<!--							<textarea class="span12 CodeMirror-auto ace-auto" name="content" id="input_content" rows="'.$moduleConfig->get( 'editor.rows' ).'">'.$content.'</textarea>-->
 							<!--/noShortcode-->
 						</div>
 					</div>

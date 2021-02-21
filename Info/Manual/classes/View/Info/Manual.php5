@@ -1,7 +1,8 @@
 <?php
-class View_Info_Manual extends CMF_Hydrogen_View{
-
-	public function __onInit(){
+class View_Info_Manual extends CMF_Hydrogen_View
+{
+	public function __onInit()
+	{
 		$page	= $this->env->getPage();
 		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );
 
@@ -9,22 +10,28 @@ class View_Info_Manual extends CMF_Hydrogen_View{
 		$page->js->addUrl( $pathJs.'Info.Manual.js' );
 	}
 
-	public function add(){
+	public function add()
+	{
 	}
 
 	public function category(){
+
 	}
 
-	public function edit(){
+	public function edit()
+	{
 	}
 
-	public function import(){
+	public function import()
+	{
 	}
 
-	public function index(){
+	public function index()
+	{
 	}
 
-	public function page(){
+	public function page()
+	{
 		$renderer	= $this->getData( 'renderer' );
 		if( $renderer === "server-inline" ){
 			$content	= $this->getData( 'content' );
@@ -33,10 +40,9 @@ class View_Info_Manual extends CMF_Hydrogen_View{
 		}
 	}
 
-	public function urlencode( $name ){
+	public function urlencode( string $name ): string
+	{
 		return urlencode( $name );
 		return str_replace( "%2F", "/", rawurldecode( $name ) );
 	}
-
 }
-?>

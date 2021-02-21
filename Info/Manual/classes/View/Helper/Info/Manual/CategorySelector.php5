@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Info_Manual_CategorySelector {
-
+class View_Helper_Info_Manual_CategorySelector
+{
 	protected $env;									// CMF_Hydrogen_Environment
 	protected $categories		 = array();
 	protected $categoryId;
@@ -11,11 +11,13 @@ class View_Helper_Info_Manual_CategorySelector {
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->categories ){
 			$model	= new Model_Manual_Category( $this->env );
 			$this->categories	= $model->getAll( array(
@@ -43,11 +45,15 @@ class View_Helper_Info_Manual_CategorySelector {
 			</div>';
 	}
 
-	public function setActiveCategoryId( $categoryId ){
+	public function setActiveCategoryId( $categoryId ): self
+	{
 		$this->categoryId	= $categoryId;
+		return $this;
 	}
 
-	public function setCategories( $categories ){
+	public function setCategories( $categories ): self
+	{
 		$this->categories	= $categories;
+		return $this;
 	}
 }
