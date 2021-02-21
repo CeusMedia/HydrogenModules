@@ -11,7 +11,7 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$currentUserId	= $logicAuth->getCurrentUserId();
 
-		$words		= $this->getWords( NULL, 'work/time' );
+		$words		= $this->getWords( '', 'work/time' );
 		$modules	= View_Helper_Work_Time_Timer::getRegisteredModules();
 		$module		= $modules[$this->module];
 		$w			= (object) $words['add'];
