@@ -155,7 +155,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 		try{
 			if( $this->checkUserDashboardsEnabled( FALSE ) && $this->userId ){
 				if( $this->moduleConfig->get( 'perUser.autoCreate' ) ){
-					if( !$this->getUserDashboards( $this->userId ) ){
+					if( !$this->logic->getUserDashboards( $this->userId ) ){
 						$this->logic->addUserDashboard(
 							$this->userId,
 							'Standard-Dashboard',
