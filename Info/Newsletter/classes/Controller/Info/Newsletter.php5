@@ -97,7 +97,7 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller{
 
 		}
 		$this->addData( 'reader', $reader );
-		$this->addData( 'groups', $this->logic->getGroups( array( 'type' => array( 0, 2 ), 'status' => '>0' ) ) );
+		$this->addData( 'groups', $this->logic->getGroups( array( 'type' => array( 0, 2 ), 'status' => '> 0' ) ) );
 		$this->addData( 'subscriptions', $this->logic->getGroupsOfReader( $readerId ) );
 		$this->addData( 'reader', $this->logic->getReader( $readerId ) );
 		$this->addData( 'letters', $this->logic->getLettersOfReader( $readerId ) );
@@ -182,7 +182,7 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller{
 
 	public function preview( $newsletterId = NULL ){
 		if( !$newsletterId ){
-			$newsletters	= $this->logic->getNewsletters( array( 'status' => '>=1' ), array( 'newsletterId' => 'DESC' ) );
+			$newsletters	= $this->logic->getNewsletters( array( 'status' => '>= 1' ), array( 'newsletterId' => 'DESC' ) );
 			if( $newsletters ){
 				$latest			= array_shift( $newsletters );
 				$newsletterId	= $latest->newsletterId;

@@ -59,7 +59,7 @@ class Controller_Test_Table extends CMF_Hydrogen_Controller
 				$messenger->noteError( 'Title is missing.' );
 			else
 			{
-				if( $model->getAll( array( 'title' => $title, 'testId' => '!='.$testId ) ) )
+				if( $model->getAll( array( 'title' => $title, 'testId' => '!= '.$testId ) ) )
 					$messenger->noteError( 'Already exists: '.$title );
 				else
 				{

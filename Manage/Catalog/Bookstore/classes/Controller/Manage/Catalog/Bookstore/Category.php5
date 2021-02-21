@@ -54,10 +54,10 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 			$logic		= new Logic_Catalog_Bookstore( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
 			$language	= $env->getLanguage()->getLanguage();
-			$conditions	= array( 'visible' => '>0', 'parentId' => 0 );
+			$conditions	= array( 'visible' => '> 0', 'parentId' => 0 );
 			$categories	= $logic->getCategories( $conditions, array( 'rank' => 'ASC' ) );
 			foreach( $categories as $nr1 => $item ){
-				$conditions	= array( 'visible' => '>0', 'parentId' => $item->categoryId );
+				$conditions	= array( 'visible' => '> 0', 'parentId' => $item->categoryId );
 				$subs		= $logic->getCategories( $conditions, array( 'rank' => 'ASC' ) );
 				foreach( $subs as $nr2 => $sub ){
 					$subs[$nr2] = (object) array(

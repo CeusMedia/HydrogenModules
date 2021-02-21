@@ -311,7 +311,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		$results	= array();
 		$outdatedUserLicenses	= $this->modelUserLicense->getAllByIndices( array(
 			'status'	=> Model_Provision_User_License::STATUS_ACTIVE,
-			'endsAt'	=> '<'.time(),
+			'endsAt'	=> '< '.time(),
 		), array( 'endsAt' => 'ASC' ) );
 		foreach( $outdatedUserLicenses as $outdatedUserLicense )
 			$results[]	= $this->handleOutdatedUserLicense( $outdatedUserLicense->userLicenseId );
@@ -434,7 +434,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	public function getOutdatedUserLicenseKeys(){
 		$indices	= array(
 			'status'	=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
-			'endsAt'	=> '<'.time(),
+			'endsAt'	=> '< '.time(),
 		);
 		return $this->modelUserKey->getAllByIndices( $indices );
 	}
@@ -566,8 +566,8 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		);
 		if( $activeOnly ){
 			$indices['status']		= Model_Provision_User_License_Key::STATUS_ASSIGNED;
-			$indices['startsAt']	= '<'.time();
-			$indices['endsAt']		= '>'.time();
+			$indices['startsAt']	= '< '.time();
+			$indices['endsAt']		= '> '.time();
 		}
 		if( $productId )
 			$indices['productId']	= $productId;

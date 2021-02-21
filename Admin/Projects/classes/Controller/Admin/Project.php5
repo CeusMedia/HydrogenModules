@@ -83,7 +83,7 @@ class Controller_Admin_Project extends CMF_Hydrogen_Controller
 				$messenger->noteError( $words->msgErrorTitleEmpty );
 			else
 			{
-				if( $model->getAll( array( 'title' => $title, 'projectId' => '!='.$projectId ) ) )
+				if( $model->getAll( array( 'title' => $title, 'projectId' => '!= '.$projectId ) ) )
 					$messenger->noteError( $words->msgErrorTitleNotUnique, $title );
 				else
 				{

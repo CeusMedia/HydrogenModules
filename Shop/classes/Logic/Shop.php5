@@ -257,7 +257,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 /*	public function getOpenSessionOrder( $sessionId ){
 		$conditions	= array(
 			'sessionId'		=> $sessionId,
-			'status'		=> '<2',
+			'status'		=> '< 2',
 		);
 		return $this->modelOrder->getAll( $conditions );
 	}*/

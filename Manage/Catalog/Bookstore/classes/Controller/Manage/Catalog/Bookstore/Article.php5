@@ -49,7 +49,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 			$pathCovers	= $frontend->getPath( 'contents' ).$config->get( 'path.covers' );			//  get path to cover images
 			$pathCovers	= substr( $pathCovers, strlen( $frontend->getPath() ) );					//  strip frontend base path
 			$list       = array();
-			$conditions	= array( 'cover' => '>0' );
+			$conditions	= array( 'cover' => '> 0' );
 			$orders		= array( 'title' => 'ASC' );
 			foreach( $logic->getArticles( $conditions, $orders, array( 0, 200 ) ) as $item ){
 				$id		= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );

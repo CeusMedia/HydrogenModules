@@ -150,7 +150,7 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller{
 
 		$this->addData( 'groups', $this->logic->getGroups( array(), array( 'title' => 'ASC' ) ) );
 		$this->addData( 'readerGroups', $this->logic->getGroupsOfReader( $readerId,  array(), array( 'title' => 'ASC' ) ) );
-		$this->addData( 'readerLetters', $this->logic->getLettersOfReader( $readerId,  array( 'status' => '>=1' ), array( 'title' => 'ASC' ) ) );
+		$this->addData( 'readerLetters', $this->logic->getLettersOfReader( $readerId,  array( 'status' => '>= 1' ), array( 'title' => 'ASC' ) ) );
 	}
 
 	public function export( $mode = 'csv' ){
@@ -392,7 +392,7 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller{
 	public function remove( $readerId ){
 		$words		= (object) $this->getWords( 'remove' );
 
-/*		$readerLetters	= $this->logic->getLettersOfReader( $readerId,  array( 'status' => '>=1' ) );
+/*		$readerLetters	= $this->logic->getLettersOfReader( $readerId,  array( 'status' => '>= 1' ) );
 		if( $readerLetters ){
 			$this->messenger->noteError( $words->msgErrorReaderHasLetters );
 			$this->restart( 'edit/'.$readerId, TRUE );

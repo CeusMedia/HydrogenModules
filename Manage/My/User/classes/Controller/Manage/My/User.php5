@@ -290,8 +290,8 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 		}
 		$indices	= array(
 			'username'	=> $username,
-			'userId'	=> '!='.$this->userId,
-//			'status'	=> '>=-1',																//  disabled for integrity
+			'userId'	=> '!= '.$this->userId,
+//			'status'	=> '>= -1',																//  disabled for integrity
 		);
 		if( $this->modelUser->getByIndices( $indices ) ){
 			$this->messenger->noteError( $words->msgUsernameExisting, $username );

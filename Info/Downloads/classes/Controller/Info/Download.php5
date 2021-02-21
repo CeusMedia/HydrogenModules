@@ -31,7 +31,7 @@ class Controller_Info_Download extends CMF_Hydrogen_Controller{
 
 	static public function ___onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$model		= new Model_Download_File( $env );
-		$conditions	= array( 'uploadedAt' => '>'.( time() - 270 * 24 * 60 * 60 ) );
+		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, array( 'uploadedAt' => 'DESC' ) );
 		foreach( $files as $file ){
 			$context->add( (object) array(
@@ -48,7 +48,7 @@ class Controller_Info_Download extends CMF_Hydrogen_Controller{
 
 	static public function ___onPageCollectNews( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		$model		= new Model_Download_File( $env );
-		$conditions	= array( 'uploadedAt' => '>'.( time() - 270 * 24 * 60 * 60 ) );
+		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, array( 'uploadedAt' => 'DESC' ) );
 		foreach( $files as $file ){
 			$context->add( (object) array(

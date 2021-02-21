@@ -141,7 +141,7 @@ class Controller_Manage_Branch extends CMF_Hydrogen_Controller
 		if( $request->get( 'doEdit' ) ){
 			if( empty( $data['title'] ) )
 				$messenger->noteError( $words->msgNoTitle );
-			else if( $modelBranch->getAll( array( 'title' => $data['title'], 'branchId' => '!='.$branchId ) ) )
+			else if( $modelBranch->getAll( array( 'title' => $data['title'], 'branchId' => '!= '.$branchId ) ) )
 				$messenger->noteError( $words->msgTitleExisting, $data['title'] );
 			if( empty( $data['companyId'] ) )
 				$messenger->noteError( $words->msgNoCompany );

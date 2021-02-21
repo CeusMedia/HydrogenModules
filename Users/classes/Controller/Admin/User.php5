@@ -160,7 +160,7 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 			if( $needsEmail && empty( $email ) )
 				$messenger->noteError( $words->msgNoEmail );
 			else if( !empty( $email ) )
-				if( $modelUser->getByIndices( array( 'email' => $email, 'userId' => '!='.$userId ) ) )
+				if( $modelUser->getByIndices( array( 'email' => $email, 'userId' => '!= '.$userId ) ) )
 					$messenger->noteError( $words->msgEmailExisting, $email );
 
 			if( $needsFirstname && empty( $data['firstname'] ) )

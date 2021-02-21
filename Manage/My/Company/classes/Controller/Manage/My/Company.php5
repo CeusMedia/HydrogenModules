@@ -57,7 +57,7 @@ class Controller_Manage_My_Company extends CMF_Hydrogen_Controller{
 			$data	= $this->request->getAllFromSource( 'POST' );
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->errorTitleMissing );
-			else if( $this->modelCompany->getAll( array( 'title' => $data['title'], 'companyId' => '!='.$companyId ) ) )
+			else if( $this->modelCompany->getAll( array( 'title' => $data['title'], 'companyId' => '!= '.$companyId ) ) )
 				$this->messenger->noteError( $words->errorTitleExisting, $data['title'] );
 			if( empty( $data['city'] ) )
 				$this->messenger->noteError( $words->errorCityMissing );

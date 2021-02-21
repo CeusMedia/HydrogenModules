@@ -18,7 +18,7 @@ class Controller_Manage_Shop extends CMF_Hydrogen_Controller{
 
 		$orders			= array( 'orderId' => 'ASC' );
 
-		$ordersTotal	= $this->logicShop->getOrders( array( 'status' => '>=2' ), $orders );
+		$ordersTotal	= $this->logicShop->getOrders( array( 'status' => '>= 2' ), $orders );
 		$customerIds		= array();
 		foreach( $ordersTotal as $order )
 			$customerIds[]	= (int) $order->customerId;

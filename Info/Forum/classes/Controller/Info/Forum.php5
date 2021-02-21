@@ -42,7 +42,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller{
 		}
 		else{
 			$data	= array( 'status' => 'data', 'data' => array( 'count' => 0, 'postId' => NULL ) );
-			$conditions		= array( 'threadId' => $threadId, 'postId' => '>'.$lastPostId );
+			$conditions		= array( 'threadId' => $threadId, 'postId' => '> '.$lastPostId );
 			$orders			= array( 'postId' => 'ASC' );
 			$posts			= $this->modelPost->getAll( $conditions, $orders );
 			$data['data']['count']	= count( $posts );

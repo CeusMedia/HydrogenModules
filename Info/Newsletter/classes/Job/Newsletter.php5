@@ -168,7 +168,7 @@ class Job_Newsletter extends Job_Abstract{
 				Model_Mail::STATUS_REPLIED,														//  status: 5
 			),
 			'mailClass'		=> 'Mail_Newsletter',
-			'enqueuedAt' 	=> '<'.$threshold->format( 'U' ),
+			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
 		);
 		$orders		= array( 'mailId' => 'ASC' );
 		$limits		= array();

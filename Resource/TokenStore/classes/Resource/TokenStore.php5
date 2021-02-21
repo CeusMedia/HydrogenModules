@@ -127,7 +127,7 @@ class Resource_TokenStore {
 		if( !$lifetime )																			//  no token lifetime defined
 			return 0;																				//  no tokens will be removed
 		$maxTimestamp	= time() - $lifetime;														//  timestamp of oldest allowed tokens
-		$outdatedTokens	= $this->model->getAll( array( 'timestamp' => '<'.$maxTimestamp ) );		//  find tokens with older timestamp
+		$outdatedTokens	= $this->model->getAll( array( 'timestamp' => '< '.$maxTimestamp ) );		//  find tokens with older timestamp
 		foreach( $outdatedTokens as $outdatedToken )												//  iterate outdated tokens
 			$this->model->remove( $outdatedToken->tokenId );										//  remove each outdated token
 		return count( $outdatedTokens );															//  return number of removed tokens

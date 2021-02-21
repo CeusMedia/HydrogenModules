@@ -40,7 +40,7 @@ class Job_Shop_Payment_Stripe extends Job_Abstract{
 			'status'		=> Model_Stripe_Payin::STATUS_FAILED,								//  only failed payins
 			'type'			=> Model_Stripe_Payin::TYPE_BANK_WIRE,							//  only bankwire payins
 			'id'			=> array_keys( $openShopBankWirePayments ),							//  only for open shop payments
-//			'modifiedAt'	=> '>'.( time() - 60 ),
+//			'modifiedAt'	=> '> '.( time() - 60 ),
 		) );
 		foreach( $failedStripeBankWirePayments as $payment ){
 			$shopPayment	= $openShopBankWirePayments[$payment->id];
@@ -84,7 +84,7 @@ class Job_Shop_Payment_Stripe extends Job_Abstract{
 			'status'		=> Model_Stripe_Payin::STATUS_SUCCEEDED,							//  only succeeded payins
 			'type'			=> Model_Stripe_Payin::TYPE_BANK_WIRE,							//  only bankwire payins
 			'id'			=> array_keys( $openShopBankWirePayments ),							//  only for open shop payments
-//			'modifiedAt'	=> '>'.( time() - 60 ),
+//			'modifiedAt'	=> '> '.( time() - 60 ),
 		) );
 		foreach( $succeededStripeBankWirePayments as $payment ){
 			$shopPayment	= $openShopBankWirePayments[$payment->id];

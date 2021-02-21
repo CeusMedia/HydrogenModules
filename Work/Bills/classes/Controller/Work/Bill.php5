@@ -127,9 +127,9 @@ class Controller_Work_Bill extends CMF_Hydrogen_Controller{
 			}
 			else{
 				if( $filters->get( 'start' ) )
-					$conditions['date']	= '>='.date( "Ymd", strtotime( $filters->get( 'start' ) ) );
+					$conditions['date']	= '>= '.date( "Ymd", strtotime( $filters->get( 'start' ) ) );
 				if( $filters->get( 'end' ) )
-					$conditions['date']	= '<='.date( "Ymd", strtotime( $filters->get( 'end' ) ) );
+					$conditions['date']	= '<= '.date( "Ymd", strtotime( $filters->get( 'end' ) ) );
 			}
 		}
 

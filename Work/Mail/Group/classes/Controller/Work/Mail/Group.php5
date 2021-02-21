@@ -128,11 +128,11 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		if( $this->request->has( 'save' ) ){
 			$title		= trim( $this->request->get( 'title' ) );
 			$address	= trim( $this->request->get( 'address' ) );
-			if( $this->modelGroup->getAll( array( 'title' => $title, 'mailGroupId' => '!='.$groupId ) ) ){
+			if( $this->modelGroup->getAll( array( 'title' => $title, 'mailGroupId' => '!= '.$groupId ) ) ){
 				$this->messenger->noteError( 'Title "%s" is already existing.' );
 				$this->restart( 'edit/'.$groupId, TRUE );
 			}
-			if( $this->modelGroup->getAll( array( 'address' => $address, 'mailGroupId' => '!='.$groupId ) ) ){
+			if( $this->modelGroup->getAll( array( 'address' => $address, 'mailGroupId' => '!= '.$groupId ) ) ){
 				$this->messenger->noteError( 'Address "%s" is already existing.' );
 				$this->restart( 'edit/'.$groupId, TRUE );
 			}

@@ -323,7 +323,7 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 
 	protected function rerankCategories( $start = 1 ){
 		$rank		= max( 1, (int) $start );
-		$conditions	= $start ? array( 'rank' => '>='.(int) $rank ) : array();
+		$conditions	= $start ? array( 'rank' => '>= '.(int) $rank ) : array();
 		$categories	= $this->modelCategory->getAll( $conditions, array( 'rank' => 'ASC', 'modifiedAt' => 'DESC' ) );
 		foreach( $categories as $category ){
 			$this->modelCategory->edit( $category->galleryCategoryId, array( 'rank'	=> $rank ) );
@@ -334,7 +334,7 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 	protected function rerankImages( $categoryId, $start = 1 ){
 		$conditions	= array( 'galleryCategoryId' => $categoryId );
 		if( ( $rank = max( 1, (int) $start ) ) > 1 )
-			$conditions['rank']	= '>='.(int) $rank;
+			$conditions['rank']	= '>= '.(int) $rank;
 		$images		= $this->modelImage->getAll( $conditions, array( 'rank' => 'ASC', 'modifiedAt' => 'DESC' ) );
 		foreach( $images as $image ){
 			$this->modelImage->edit( $image->galleryImageId, array( 'rank'	=> $rank ) );

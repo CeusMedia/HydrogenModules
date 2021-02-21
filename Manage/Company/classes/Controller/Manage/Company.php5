@@ -82,7 +82,7 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 		if( $request->get( 'doEdit' ) ){
 			if( empty( $data['title'] ) )
 				$messenger->noteError( $words->msgNoTitle );
-			else if( $modelCompany->getAll( array( 'title' => $data['title'], 'companyId' => '!='.$companyId ) ) )
+			else if( $modelCompany->getAll( array( 'title' => $data['title'], 'companyId' => '!= '.$companyId ) ) )
 				$messenger->noteError( $words->msgTitleExisting, $data['title'] );
 			if( empty( $data['city'] ) )
 				$messenger->noteError( $words->msgNoCity );

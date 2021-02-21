@@ -16,7 +16,7 @@ class View_Catalog_Bookstore extends CMF_Hydrogen_View{
 			$code		= preg_replace( '/( ){2,}/', " ", $code );
 			$code		= trim( $code );
 			try{
-				$node		= new XML_Element( '<'.substr( $code, 1, -1 ).'/>' );
+				$node		= new XML_Element( '< '.substr( $code, 1, -1 ).'/>' );
 				$attr		= array_merge( $defaultAttr, $node->getAttributes() );
 				if( $attr['articleId'] )
 					$helper->setArticleId( $attr['articleId'] );

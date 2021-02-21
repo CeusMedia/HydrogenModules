@@ -269,7 +269,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 //		if( $filterPublic > 0 )
 //			$conditions['public']		= $filterPublic == 2 ? 0 : 1;
 		if( $filterAuthor > 0 )
-			$conditions['userId']		= $filterAuthor == 1 ? $userId : '!='.$userId;
+			$conditions['userId']		= $filterAuthor == 1 ? $userId : '!= '.$userId;
 		if( strlen( trim( (string) $filterProjectId ) ) )
 			$conditions['projectId']	= $filterProjectId;
 		else if( $this->env->getModules()->has( 'Manage_Projects' ) ){

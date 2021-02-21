@@ -173,7 +173,7 @@ class Logic_ShopManager extends CMF_Hydrogen_Environment_Resource_Logic{
 	public function getOpenSessionOrder( $sessionId ){
 		$conditions	= array(
 			'session_id'		=> $sessionId,
-			'status'			=> '<2',
+			'status'			=> '< 2',
 		);
 		return $this->modelOrder->getAll( $conditions );
 	}

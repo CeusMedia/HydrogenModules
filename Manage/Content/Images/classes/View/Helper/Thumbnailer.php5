@@ -75,7 +75,7 @@ class View_Helper_Thumbnailer{
 
 	public function flushCache(){
 //		return $this->model->truncate();
-		return $this->model->removeByIndex( 'imageThumbnailId', '>0' );
+		return $this->model->removeByIndex( 'imageThumbnailId', '> 0' );
 	}
 }
 ?>

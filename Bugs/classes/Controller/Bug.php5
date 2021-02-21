@@ -47,7 +47,7 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 			}
 		}
 		$model	= new Model_Project( $this->env );
-		$this->addData( 'projects', $model->getAll( array( 'status' => '>0' ), array( 'title' => 'ASC' ) ) );
+		$this->addData( 'projects', $model->getAll( array( 'status' => '> 0' ), array( 'title' => 'ASC' ) ) );
 	}
 
 	protected function compactFilterInput( $input ){

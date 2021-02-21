@@ -15,7 +15,7 @@ class Resource_Database_Undo{
 		if( $tableName )
 			$conditions['tableName']	= $tableName;
 		if( $maxAge > 0 )
-			$conditions['timestamp']	= '<='.( time() - $maxAge );
+			$conditions['timestamp']	= '<= '.( time() - $maxAge );
 		return $this->storage->getAll( $conditions );
 	}
 
@@ -26,7 +26,7 @@ class Resource_Database_Undo{
 	public function getLatestChangeOfTable( $tableName, $maxAge = 0 ){
 		$conditions	= array( 'userId' => $this->userId, 'tableName' => $tableName );
 		if( $maxAge > 0 )
-			$conditions['timestamp']	= '<='.( time() - $maxAge );
+			$conditions['timestamp']	= '<= '.( time() - $maxAge );
 		$orders		= array( 'timestamp' => 'DESC' );
 		$limits		= array( 0, 1 );
 		$actions	= $this->storage->getAll( $conditions, $orders, $limits );

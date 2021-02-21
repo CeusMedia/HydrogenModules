@@ -35,7 +35,7 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission
 	protected function initFilters( $userId )
 	{
 		parent::initFilters( $userId );
-		$this->logic->generalConditions['dayStart']	= '>='.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+		$this->logic->generalConditions['dayStart']	= '>= '.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
 	}
 
 	public function ajaxRenderIndex()

@@ -255,7 +255,7 @@ class Job_Work_Mission extends Job_Abstract
 			$filters	= array(																//  task filters
 			'type'		=> 0,																	//  tasks only
 			'status'	=> array( 0, 1, 2, 3 ),													//  states: new, accepted, progressing, ready
-			'dayStart'	=> "<=".date( "Y-m-d", time() ),										//  present and past (overdue)
+			'dayStart'	=> '<= '.date( "Y-m-d", time() ),										//  present and past (overdue)
 		);
 		$order	= array( 'priority' => 'ASC' );
 		$tasks	= $this->modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered tasks ordered by priority
@@ -264,7 +264,7 @@ class Job_Work_Mission extends Job_Abstract
 		$filters	= array(																	//  event filters
 			'type'		=> 1,																	//  events only
 			'status'	=> array( 0, 1, 2, 3 ),													//  states: new, accepted, progressing, ready
-			'dayStart'	=> "<=".date( "Y-m-d", time() ),										//  starting today
+			'dayStart'	=> '<= '.date( "Y-m-d", time() ),										//  starting today
 		);
 		$order	= array( 'timeStart' => 'ASC' );
 		$events	= $this->modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered events ordered by start time

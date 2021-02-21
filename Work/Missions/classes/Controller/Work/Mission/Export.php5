@@ -171,7 +171,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 /*		if( !$ical && file_exists( "test.ical" ) )
 			$ical	= file_get_contents( "test.ical" );
 */		$projects	= array();
-		$conditions	= array( 'dayStart' => '>0' );
+		$conditions	= array( 'dayStart' => '> 0' );
 		$defaultProjectId	= 0;
 		foreach( $this->logic->getUserProjects( $this->userId, $conditions ) as $project ){
 			if( $project->isDefault )

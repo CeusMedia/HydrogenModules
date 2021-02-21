@@ -146,7 +146,7 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 			1		=> "Bestellbar"
 		);
 
-		$conditions		= array( 'price' => '>0', 'isn' => '>0'/*, 'status' => array( 0, 1 )*/ );
+		$conditions		= array( 'price' => '> 0', 'isn' => '> 0'/*, 'status' => array( 0, 1 )*/ );
 		$orders			= array( 'createdAt' => 'DESC' );
 		foreach( $this->logic->getArticles( $conditions, $orders ) as $article ){
 			$pubDate	= strtotime( $article->publication );

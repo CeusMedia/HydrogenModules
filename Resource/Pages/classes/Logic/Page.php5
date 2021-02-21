@@ -274,7 +274,7 @@ class Logic_Page extends CMF_Hydrogen_Logic
 	public function hasPages( bool $visible = TRUE ): bool
 	{
 		$minimumStatus	= $visible ? Model_Page::STATUS_VISIBLE : Model_Page::STATUS_HIDDEN;
-		$indices		= array( 'status' => '>='.$minimumStatus );
+		$indices		= array( 'status' => '>= '.$minimumStatus );
 		return $this->getPageModel()->count( $indices );
 	}
 

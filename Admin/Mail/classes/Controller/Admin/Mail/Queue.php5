@@ -291,11 +291,11 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
 
 	public function send()
 	{
-		$count	= $this->logic->countQueue( array( 'status' => '<'.Model_Mail::STATUS_SENT ) );
+		$count	= $this->logic->countQueue( array( 'status' => '< '.Model_Mail::STATUS_SENT ) );
 		if( $count ){
 			$this->messenger->noteNotice( "Mails in Queue: ".$this->logic->countQueue() );
-			if( $this->logic->countQueue( array( 'status' => '<'.Model_Mail::STATUS_SENT ) ) ){
-				foreach( $this->logic->getQueuedMails( array( 'status' => '<'.Model_Mail::STATUS_SENT ) ) as $mail ){
+			if( $this->logic->countQueue( array( 'status' => '< '.Model_Mail::STATUS_SENT ) ) ){
+				foreach( $this->logic->getQueuedMails( array( 'status' => '< '.Model_Mail::STATUS_SENT ) ) as $mail ){
 					try{
 						$this->logic->sendQueuedMail( $mail->mailId );
 						$this->messenger->noteSuccess( "Mail #".$mail->mailId." sent ;-)" );

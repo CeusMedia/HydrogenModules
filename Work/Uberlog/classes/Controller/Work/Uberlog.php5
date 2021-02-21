@@ -10,7 +10,7 @@ class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
 
 	public function ajaxUpdateIndex(){
 		$lastId	= $this->env->getRequest()->get( 'lastId' );
-		$filters	= array( 'logRecordId' => '>'.$lastId );
+		$filters	= array( 'logRecordId' => '> '.$lastId );
 		$orders		= array( 'logRecordId' => 'ASC' );
 		print( json_encode( $this->listRecords( $filters, $orders ) ) );
 		exit;
