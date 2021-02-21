@@ -25,7 +25,7 @@ class View_Helper_Info_Manual_Url
 		return $this->render();
 	}
 
-	public function render(): self
+	public function render(): string
 	{
 		if( !$this->category && !$this->page )
 			throw new RuntimeException( 'Neither category nor page set' );

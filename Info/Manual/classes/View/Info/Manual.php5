@@ -8,6 +8,7 @@ class View_Info_Manual extends CMF_Hydrogen_View
 
 		$page->css->theme->addUrl( 'module.info.manual.css' );
 		$page->js->addUrl( $pathJs.'Info.Manual.js' );
+		$page->js->addScriptOnReady( 'InfoManual.UI.Filter.init();' );
 	}
 
 	public function add()
@@ -33,6 +34,12 @@ class View_Info_Manual extends CMF_Hydrogen_View
 	public function page()
 	{
 		$renderer	= $this->getData( 'renderer' );
+
+		$script	= '
+InfoManual.UI.Page.renderer = "'.$renderer.'";
+InfoManual.UI.Page.init("#content-container", "#content-index");';
+		$this->env->getPage()->js->addScriptOnReady( $script );
+
 		if( $renderer === "server-inline" ){
 			$content	= $this->getData( 'content' );
 			$content	= View_Helper_Markdown::transformStatic( $this->env, $content );

@@ -18,6 +18,8 @@ class View_Helper_Info_Manual_CategorySelector
 
 	public function render(): string
 	{
+		$categoryId	= $this->env->getSession()->get( 'filter_info_manual_categoryId' );
+
 		if( !$this->categories ){
 			$model	= new Model_Manual_Category( $this->env );
 			$this->categories	= $model->getAll( array(
@@ -30,11 +32,11 @@ class View_Helper_Info_Manual_CategorySelector
 		foreach( $this->categories as $category ){
 			$options[$category->manualCategoryId]	= $category->title;
 		}
-		$options	= UI_HTML_Elements::Options( $options );
+		$options	= UI_HTML_Elements::Options( $options, $categoryId );
 		$select		= UI_HTML_Tag::create( 'select', $options, array(
 			'id'		=> 'select_category',
 			'class'		=> 'span12',
-			'onchange'	=> 'document.location.href=\'./info/manual/category/'.$category->manualCategoryId.'\';',
+//			'onchange'	=> 'document.location.href=\'./info/manual/category/'.$category->manualCategoryId.'\';',
 		) );
 		return '
 			<div class="row-fluid">
@@ -42,7 +44,8 @@ class View_Helper_Info_Manual_CategorySelector
 					<label for="select_category">Kategorie</label>
 					'.$select.'
 				</div>
-			</div>';
+			</div>
+			<script></script>';
 	}
 
 	public function setActiveCategoryId( $categoryId ): self

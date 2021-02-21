@@ -45,6 +45,7 @@ class View_Helper_Info_Manual_PageTree
 		$tree		= $this->getPageTree( $pages );
 
 		$tree		= $this->renderPageTree( $tree );
+//print_m($tree);die;
 		$container	= UI_HTML_Tag::create( 'div', '', array( 'id' => 'page-tree' ) );
 		$script		= '
 jQuery("#page-tree").treeview({
@@ -58,9 +59,7 @@ jQuery("#page-tree").treeview({
 	showIcon: true,
 	onhoverColor: "transparent",
 });
-jQuery("#page-tree li.list-group-item").on("click", function(){
-//	document.location.href=jQuery(this).children("a").prop("href");
-})';
+InfoManual.UI.Tree.init("#page-tree");';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 		return $container;
 
@@ -132,23 +131,42 @@ jQuery("#page-tree li.list-group-item").on("click", function(){
 
 	protected function renderPageTree( array $tree ): array
 	{
+		$session		= $this->env->getSession();
+		$sessionPrefix	= 'filter_info_manual_';
+		$categoryId		= $session->get( $sessionPrefix.'categoryId' );
+		$sessionKeyOpen	= $sessionPrefix.'categoryId_'.$categoryId.'_openFolders';
+		$openPages		= array_filter( explode( ',', $session->get( $sessionKeyOpen ) ) );
+		$openPages		= array_merge( $openPages, $this->openParents );
+
+
 		$list	= array();
 		foreach( $tree as $entry ){
+			$isOpen		= in_array( $entry->manualPageId, $openPages );
+
+/*print_m($entry);
+print_m($session->getAll());
+print_m($categoryId);
+print_m($sessionKeyOpen);
+print_m($session->get( $sessionKeyOpen ));
+print_m($openPages);
+print_m($isOpen);
+die;*/
+
 			$sublist	= '';
 			$link		= './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title );
 			$children	= $this->renderPageTree( $entry->children );
-			$icon		= 'fa fa-fw fa-minus';
-			$icon		= 'fa fa-fw fa-chevron-down';
 			$list[]	= (object) array(
-				'text'	=> $entry->title,
-				'href'	=> $link,
-//				'icon'	=> $icon,
+				'text'			=> $entry->title,
+				'href'			=> $link,
 				'selectable'	=> false,
-				'state'	=> (object) array(
-					'expanded'	=> in_array( $entry->manualPageId, $this->openParents ),
+				'state'			=> (object) array(
+					'expanded'	=> $isOpen,
 					'selected'	=> $this->activePageId == $entry->manualPageId,
 				),
-				'nodes'	=> $children ? $children : NULL,
+				'color'			=> '!inherit',
+//				'data'			=> array( 'pageId' => $entry->manualPageId ),				//  not working with this version of bootstrap-treeview
+//				'tags'			=> array( 'pageId:'.$entry->manualPageId ),					//  not working with this version of bootstrap-treeview
+				'nodes'			=> $children ? $children : NULL,
 			);
 		}
 		return $list;

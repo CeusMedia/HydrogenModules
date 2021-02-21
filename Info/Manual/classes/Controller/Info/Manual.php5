@@ -68,7 +68,10 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 
 	public function category( $categoryId )
 	{
+//print_m( $categoryId );
+//die;
 		$category	= $this->checkCategoryId( $categoryId );
+		$this->session->set( 'filter_info_manual_categoryId', $categoryId );
 		$conditions	 = array(
 			'manualCategoryId'	=> $category->manualCategoryId,
 			'status'			=> '>= '.Model_Manual_Category::STATUS_NEW,
@@ -317,7 +320,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 		if( !$markdownOnServer && preg_match( "/^server/", $renderer ) )
 			$renderer	= 'client';
 		if( !$markdownOnClient && $renderer === 'client' )
-			$this->env->getMessenger()->noteFailure( 'No Markdown renderer installed.' );
+			$this->messenger->noteFailure( 'No Markdown renderer installed.' );
 
 		$this->addData( 'file', $page->title );
 		$this->addData( 'files', $this->files );
@@ -386,20 +389,15 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 			) );
 			$this->restart( NULL, TRUE );
 		}
-		if( count( $this->categories ) === 1 ){
-			if( !$this->session->get( 'filter_info_manual_categoryId' ) ){
-				$categories	= array_values( $this->categories );
-				$category	= $categories[0];
-				$this->session->set( 'filter_info_manual_categoryId', $category->manualCategoryId );
-				$this->restartToCategory( $category );
-/*				$this->restart( vsprintf( 'category/%d-%s', array(
-					$category->manualCategoryId,
-					$this->urlencode( $category->title ),
-				) ), TRUE );*/
-			}
+		$sessionKeyCategoryId	= 'filter_info_manual_categoryId';
+		if( !$this->session->get( $sessionKeyCategoryId ) ){
+			$categories		= array_values( $this->categories );
+			$category		= $categories[0];
+			$this->session->set( $sessionKeyCategoryId, $category->manualCategoryId );
+			$this->restartToCategory( $category );
 		}
 		$this->addData( 'categories', $this->categories );
-		$this->addData( 'categoryId', $this->session->get( 'filter_info_manual_categoryId' ) );
+		$this->addData( 'categoryId', $this->session->get( $sessionKeyCategoryId ) );
 	}
 
 	protected function __callbackEncode( array $matches ): string
@@ -429,7 +427,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 	{
 		if( !strlen( trim( $pageId ) ) )
 			throw new InvalidArgumentException( 'No page ID given' );
-		$page	= $this->modelPage->get( $pageId );
+		$page	= $this->modelPage->get( (int) $pageId );
 		if( !$page )
 			throw new InvalidArgumentException( 'Invalid page ID given' );
 		if( $page->manualCategoryId )
