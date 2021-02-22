@@ -150,4 +150,3 @@ div.modal div.modal-header .myModalLabel {
 	color: #444 !important;
 	}
 </style>'.$textBottom;
-?>

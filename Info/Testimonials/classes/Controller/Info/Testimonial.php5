@@ -1,23 +1,12 @@
 <?php
-class Controller_Info_Testimonial extends CMF_Hydrogen_Controller{
-
+class Controller_Info_Testimonial extends CMF_Hydrogen_Controller
+{
 	protected $request;
 	protected $messenger;
 	protected $model;
 
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_testimonials.', TRUE );
-		$this->model		= new Model_Testimonial( $this->env );
-
-		$indices	= array( 'status' => 1 );
-		$orders		= array( 'rank' => 'ASC', 'timestamp' => 'DESC' );
-		$entries	= $this->model->getAll( $indices, $orders );
-		$this->addData( 'testimonials', $entries );
-	}
-
-	public function addComment(){
+	public function addComment()
+	{
 		if( $this->request->get( 'save' ) ){
 			$language	= $this->env->getLanguage();
 			$data		= $this->request->getAll();
@@ -35,6 +24,20 @@ class Controller_Info_Testimonial extends CMF_Hydrogen_Controller{
 		$this->restart( './info/testimonial' );
 	}
 
-	public function index(){}
+	public function index()
+	{
+	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_testimonials.', TRUE );
+		$this->model		= new Model_Testimonial( $this->env );
+
+		$indices	= array( 'status' => 1 );
+		$orders		= array( 'rank' => 'ASC', 'timestamp' => 'DESC' );
+		$entries	= $this->model->getAll( $indices, $orders );
+		$this->addData( 'testimonials', $entries );
+	}
 }
-?>

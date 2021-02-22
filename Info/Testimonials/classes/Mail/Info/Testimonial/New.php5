@@ -1,7 +1,8 @@
 <?php
-class Mail_Info_Testimonial_New extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Info_Testimonial_New extends Mail_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		$config			= $this->env->getConfig()->getAll( 'module.info_testimonials.', TRUE );
 		$words			= $this->env->getLanguage()->getWords( 'info/testimonial' );
 
@@ -19,4 +20,3 @@ class Mail_Info_Testimonial_New extends Mail_Abstract{
 //		$this->setSender( $config->get( 'mail.sender' ) );
 	}
 }
-?>

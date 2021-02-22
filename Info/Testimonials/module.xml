@@ -3,12 +3,13 @@
 	<title>Info: Testimonials</title>
 	<description/>
 	<category>Info</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add language support.</log>
 	<log version="0.3.1">Add more locale blocks.</log>
 	<log version="0.3.2">Inform about new visitor opinion by mail.</log>
+	<log version="0.3.3">Improve code style.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
