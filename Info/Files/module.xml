@@ -3,7 +3,7 @@
 	<title>Info: Files</title>
 	<description><![CDATA[]]></description>
 	<category>Info</category>
-	<version>0.4.8</version>
+	<version>0.4.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydroge module.</log>
 	<log version="0.2.1">Added support for news list via hook.</log>
@@ -21,6 +21,7 @@
 	<log version="0.4.6">Migrate to support CeusMedia::Common 0.8.5.</log>
 	<log version="0.4.7">Replace job file by module configuration.</log>
 	<log version="0.4.8">Update code style and code doc.</log>
+	<log version="0.4.9">Use module Info:NewsList for collecting news.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -49,6 +50,7 @@
 	<link xml:lang="de" access="acl" rank="21" path="info/file">Dateien</link>
 	<link xml:lang="en" access="acl" rank="21" path="info/file">Files</link>
 	<relations>
+		<needs type="module">Info_NewsList</needs>
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">UI_Helper_Input_File</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
