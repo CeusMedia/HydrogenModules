@@ -1,6 +1,7 @@
 <?php
 if( !in_array( 'addFolder', $rights ) )
 	return '';
+
 return '
 <div class="content-panel">
 	<h4>'.$words['addFolder']['heading'].'</h4>
@@ -18,4 +19,3 @@ return '
 		</form>
 	</div>
 </div>';
-?>

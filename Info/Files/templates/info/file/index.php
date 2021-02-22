@@ -181,4 +181,3 @@ return $textIndexTop.'
 	</div>
 </div>
 '.$textIndexBottom;
-?>
