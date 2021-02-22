@@ -23,9 +23,22 @@ class Model_Page extends CMF_Hydrogen_Model
 	const TYPE_MODULE		= 2;
 	const TYPE_COMPONENT	= 3;
 
+	const TYPES				= [
+		self::TYPE_CONTENT,
+		self::TYPE_BRANCH,
+		self::TYPE_MODULE,
+		self::TYPE_COMPONENT,
+	];
+
 	const STATUS_DISABLED	= -1;
 	const STATUS_HIDDEN		= 0;
 	const STATUS_VISIBLE	= 1;
+
+	const STATUSES			= [
+		self::STATUS_DISABLED,
+		self::STATUS_HIDDEN,
+		self::STATUS_VISIBLE,
+	];
 
 	protected $name		= 'pages';
 	protected $columns	= array(

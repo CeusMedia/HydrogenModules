@@ -26,4 +26,3 @@ class Controller_Info_Page extends CMF_Hydrogen_Controller
 		}
 	}
 }
-?>
