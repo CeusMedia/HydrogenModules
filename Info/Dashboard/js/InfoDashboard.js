@@ -25,7 +25,7 @@ var InfoDashboard = {
 						list.push($(this).data("panel-id"))
 					});
 					jQuery.ajax({
-						url: "./info/dashboard/ajax/saveOrder",
+						url: "./ajax/info/dashboard/saveOrder",
 						mathodType: "post",
 						dataType: "json",
 						data: {list: list}
@@ -54,7 +54,7 @@ var InfoDashboard = {
 	},
 	rename: function(dashboardId, title){
 		jQuery.ajax({
-			url: './info/dashboard/ajax/rename',
+			url: './ajax/info/dashboard/rename',
 			data: {title: title},
 			method: 'post',
 			dataType: 'json',
