@@ -20,5 +20,3 @@ return '
 	<li>'.sprintf( $w->lastDownload, $helper->convert( $lastDownload, TRUE ) ).'</li>
 </ul>
 ';
-
-?>
