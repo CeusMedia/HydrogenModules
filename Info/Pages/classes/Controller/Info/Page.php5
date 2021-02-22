@@ -1,7 +1,8 @@
 <?php
-class Controller_Info_Page extends CMF_Hydrogen_Controller{
-
-	public function index( $pageId = 'index' ){
+class Controller_Info_Page extends CMF_Hydrogen_Controller
+{
+	public function index( $pageId = 'index' )
+	{
 		$directAccess	= $this->env->getConfig()->get( 'module.info_page.direct' );				//  get right to directly access page controller
 		$isRedirected	= $this->env->getRequest()->get( '__redirected' );							//  check if page controller has been redirected to
 		$accessGranted	= $directAccess === "allowed" || $isRedirected;								//

@@ -1,13 +1,19 @@
 <?php
-class View_Helper_Navigation_Pages_Navbar extends CMF_Hydrogen_View_Helper_Abstract{
+/**
+ *	@todo		check if needed. seems to be no used yet or anymore. UI_Navigation has same function, but this is usable stand-alone.
+ */
+class View_Helper_Navigation_Pages_Navbar extends CMF_Hydrogen_View_Helper_Abstract
+{
+	protected $current;
+	protected $scopeId		= 0;
 
-	public function setCurrent( $path ){
-		$this->current		= $path;
-	}
-
-	public function render( $scope = 0 ){
+	public function render(): string
+	{
 		$model		= new Model_Page( $this->env );
-		$indices	= array( 'parentId' => 0, 'scope' => $scope );
+		$indices	= array(
+			'parentId'	=> 0,
+			'scope'		=> $this->scopeId,
+		);
 		$pages		= $model->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
 		$list	= array();
 		foreach( $pages as $page ){
@@ -46,5 +52,16 @@ class View_Helper_Navigation_Pages_Navbar extends CMF_Hydrogen_View_Helper_Abstr
 		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => "nav nav-pills" ) );
 		return UI_HTML_Tag::create( 'div', $list, array( 'id' => 'layout-nav-main' ) );
 	}
+
+	public function setCurrent( string $current ): self
+	{
+		$this->current		= $current;
+		return $this;
+	}
+
+	public function setScopeId( $scopeId ): self
+	{
+		$this->scopeId		= $scopeId;
+		return $this;
+	}
 }
-?>

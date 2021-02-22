@@ -1,7 +1,8 @@
 <?php
-class View_Info_Page extends CMF_Hydrogen_View{
-
-	public function index(){
+class View_Info_Page extends CMF_Hydrogen_View
+{
+	public function index()
+	{
 //		$config		= $this->env->getConfig()->get( 'module.info_pages.', TRUE );
 		$page		= $this->env->getPage();
 
@@ -25,12 +26,13 @@ class View_Info_Page extends CMF_Hydrogen_View{
 		}
 	}
 
-	protected function loadSubpage( $path ){
+	protected function loadSubpage( string $path ): string
+	{
 		$logic	= new Logic_Page( $this->env );
 		$page	= $logic->getPageFromPath( $path, TRUE );
 		if( $page )
 			return $page->content;
 		$this->env->getMessenger()->noteFailure( 'Die eingebundene Seite "'.$path.'" existiert nicht.' );
+		return '';
 	}
 }
-?>

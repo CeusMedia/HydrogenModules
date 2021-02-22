@@ -1,10 +1,11 @@
 <?php
-class Hook_Info_Page extends CMF_Hydrogen_Hook{
-
-	static public function onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_Info_Page extends CMF_Hydrogen_Hook
+{
+	public static function onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		if( $env->getModules()->has( 'Resource_Frontend' ) )										//  frontend resource exists
 			if( $env->getConfig()->get( 'module.resource_frontend.path' ) !== './' )				//  this app is a backend
-				return;																				//  no (frontend) pages for backend
+				return FALSE;																		//  no (frontend) pages for backend
 
 		$request	= $env->getRequest();
 		$logic		= $env->getLogic()->get( 'page' );												//  get page logic instance
@@ -16,53 +17,48 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 			return FALSE;																			//  quit hook call and return without result
 
 		if( (int) $page->status === Model_Page::STATUS_DISABLED ){									//  page is deactivated
-			$reasons		= 0;																	//  reasons to pass disabled state
 			$previewCode	= $request->get( 'preview' );											//  get preview code if requested (iE. by page management)
-			$reasons		+= (int) ( $previewCode == $page->createdAt.$page->modifiedAt );		//  add pass by valid preview code
-			if( !$reasons )																			//  no reasons found to bypass disabled state
+			if( $previewCode != $page->createdAt.$page->modifiedAt )								//  no valid preview code => no bypassing disabled state
 				return FALSE;																		//  quit hook call and return without result
 		}
-		$types	= Alg_Object_Constant::staticGetAll( 'Model_Page', 'TYPE' );						//  get page types from model constants
-		if( !in_array( (int) $page->type, $types ) )												//  found unknown page type
-			throw new RangeException( 'Page type '.$page->type.' is unsupported' );					//  quit with exception
-		if( (int) $page->type === Model_Page::TYPE_COMPONENT ){										//  page is static component
-			return FALSE;																			//  ignore this page
-		}
 
-		if( (int) $page->type === Model_Page::TYPE_CONTENT ){										//  page is static content
-			$request->set( '__redirected', TRUE );													//  note redirection for access check
-			return static::redirect( $env, 'info/page', 'index', array( $pagePath ) );				//  redirect to page controller and quit hook
-		}
-
-		if( (int) $page->type === Model_Page::TYPE_BRANCH ){										//  page is branch (and has no content)
-			if( !( $children = $logic->getChildren( $page->pageId ) ) )								//  identified branch page has children
-				throw new RangeException( 'Page branch '.$page->title.' has no pages' );
-			if( (int) $children[0]->status === Model_Page::STATUS_DISABLED )						//  child page is disabled
-				throw new RangeException( 'Page branch '.$page->title.' has no active pages' );
-			static::restart( $env, $page->identifier.'/'.$children[0]->identifier );				//  redirect to child page and exit hook
-		}
-
-		if( (int) $page->type === Model_Page::TYPE_MODULE ){										//  page is a module controlled
-			if( !$page->controller )																//  but no module controller has been selected
-				throw new RangeException( 'Module page '.$page->title.' has no assigned controller' );
-			$controllerName	= strtolower( str_replace( "_", "/", $page->controller ) );				//  get module controller path
-			if( substr( $pagePath, 0, strlen( $controllerName ) ) === $controllerName )				//  module has been addressed by page link
-				return TRUE;																		//  let the general dispatcher do the job
-			$page->arguments	= isset( $page->arguments ) ? $page->arguments : array();
-			$action	= $page->action ? $page->action : 'index';										//  default action is 'index'
-			if( $page->arguments ){																	//  but there are path arguments
-				$classMethods	= get_class_methods( 'Controller_'.$page->controller );				//  get methods of module controller class
-				if( in_array( $page->arguments[0], $classMethods ) ){								//  first argument seems to be a controller method
-					$action	= $page->arguments[0];													//  set first argument as action
-					array_shift( $page->arguments );												//  remove first argument from argument list
+		switch( (int) $page->type ){
+			case Model_Page::TYPE_COMPONENT:
+				break;
+			case Model_Page::TYPE_CONTENT:
+				$request->set( '__redirected', TRUE );												//  note redirection for access check
+				return static::redirect( $env, 'info/page', 'index', array( $pagePath ) );			//  redirect to page controller and quit hook
+				break;
+			case Model_Page::TYPE_BRANCH:
+				if( !( $children = $logic->getChildren( $page->pageId ) ) )							//  identified branch page has children
+					throw new RangeException( 'Page branch '.$page->title.' has no pages' );
+				if( (int) $children[0]->status === Model_Page::STATUS_DISABLED )					//  child page is disabled
+					throw new RangeException( 'Page branch '.$page->title.' has no active pages' );
+				static::restart( $env, $page->identifier.'/'.$children[0]->identifier );			//  redirect to child page and exit hook
+				break;
+			case Model_Page::TYPE_MODULE:
+				if( !$page->controller )															//  but no module controller has been selected
+					throw new RangeException( 'Module page '.$page->title.' has no assigned controller' );
+				$controllerName	= strtolower( str_replace( "_", "/", $page->controller ) );			//  get module controller path
+				if( substr( $pagePath, 0, strlen( $controllerName ) ) === $controllerName )			//  module has been addressed by page link
+					return TRUE;																	//  let the general dispatcher do the job
+				$page->arguments	= isset( $page->arguments ) ? $page->arguments : array();
+				$action	= $page->action ? $page->action : 'index';									//  default action is 'index'
+				if( count( $page->arguments ) !== 1 ){												//  but there are path arguments
+					$classMethods	= get_class_methods( 'Controller_'.$page->controller );			//  get methods of module controller class
+					if( in_array( $page->arguments[0], $classMethods ) )							//  first argument seems to be a controller method
+						$action	= array_shift( $page->arguments );									//  set first argument as action and remove it from argument list
 				}
-			}
-			return static::redirect( $env, $controllerName, $action, $page->arguments );			//  redirect to module controller action
+				return static::redirect( $env, $controllerName, $action, $page->arguments );		//  redirect to module controller action
+				break;
+			default:
+				throw new RangeException( 'Page type '.$page->type.' is unsupported' );				//  quit with exception
 		}
 		return FALSE;																				//  continue ongoing dispatching
 	}
 
-	static public function onAppGetMasterTemplate( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onAppGetMasterTemplate( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$page	= $env->getLogic()->get( 'page' )->getPageFromRequest( TRUE, FALSE );
 		if( $page ){
 			$parents	= $page->parents;
@@ -76,12 +72,13 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		return NULL;
 	}
 
-	static public function onControllerDetectPath( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function onControllerDetectPath( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		$modelPage			= new Model_Page( $env );
 		$controllerPages	= $modelPage->getAllByIndices( array(
 			'status'		=> array( Model_Page::STATUS_HIDDEN, Model_Page::STATUS_VISIBLE ),		//  hidden or visible, only (not disabled)
 			'type'			=> Model_Page::TYPE_MODULE,												//  type 'module', only
-			'controller'	=> $data['controllerName'],
+			'controller'	=> $payload['controllerName'],
 		) );
 		if( $controllerPages ){
 			$pages				= array();
@@ -101,7 +98,8 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		return FALSE;
 	}
 
-	static public function onEnvConstructEnd( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function onEnvConstructEnd( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		if( !$env->getModules()->has( 'Resource_Authentication' ) )
 			return;
 		if( file_exists( 'config/pages.json' ) )
@@ -136,18 +134,19 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		$acl->setPublicOutsideLinks( $paths['outside'], 'append' );									//  append collected outside paths to ACL
 	}
 
-	static public function onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		try{
 			$moduleConfig	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );				//  get configuration of module
 			if( $moduleConfig->get( 'sitemap' ) ){													//  sitemap is enabled
 				$urls		= array();
 				$orders		= array( 'scope' => 'ASC', 'rank' => 'ASC', 'modifiedAt' => 'DESC' );	//  collect latest changed pages first
-				for( $scope=0; $scope<10; $scope++ ){
+				for( $scopeId = 0; $scopeId < 10; $scopeId++ ){
 					$model		= new Model_Page( $env );											//  get model of pages
 					$indices	= array(															//  focus on ...
 						'status'	=> Model_Page::STATUS_VISIBLE,									//  ... visible pages ...
 						'parentId'	=> 0,															//  ... in top level ...
-						'scope'		=> $scope,														//  ... of scoped navigation
+						'scope'		=> $scopeId,													//  ... of scoped navigation
 						'access'	=> array( 'public', 'outside' ),								//  ... accessible by everyone
 					);
 					$pages		= $model->getAllByIndices( $indices, $orders );						//  get all active top level pages
@@ -160,7 +159,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 							);
 							$subpages	= $model->getAllByIndices( $indices, $orders );				//  get all active sub level pages of top level page
 							foreach( $subpages as $subpage ){										//  iterate found pages
-								$url		= $env->url.$page->identifier.'/'.$subpage->identifier;	//  build absolute URI of sub level page
+								$url	= $env->url.$page->identifier.'/'.$subpage->identifier;		//  build absolute URI of sub level page
 								if( in_array( $url, $urls ) )
 									continue;
 								$urls[]		= $url;
@@ -190,33 +189,35 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 	}
 
 	/**
-	 *	@todo			log errors
-	 *	@todo			localize error messages
+	 *	@todo		log errors
+	 *	@todo		localize error messages
+	 *	@todo		remove old code
 	 */
-	static public function onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 
 		//  OLD CODE
 		$pattern	= "/^(.*)(\[page:(.+)\])(.*)$/sU";
 		$logic		= $env->getLogic()->get( 'page' );
 		$matches	= array();
-		while( preg_match( $pattern, $data->content, $matches ) ){
+		while( preg_match( $pattern, $payload->content, $matches ) ){
 			CMF_Hydrogen_Deprecation::getInstance()
 				->setVersion( $env->getModules()->get( 'Info_Pages' )->version )
 				->setErrorVersion( '0.7.7' )
 				->setExceptionVersion( '0.9' )
 				->message( 'Page inclusion should use shortcode with id or nr attribute (having: page:'.$matches[3].')' );
 
-			$path	= trim( preg_replace( $pattern, "\\3", $data->content ) );
+			$path	= trim( preg_replace( $pattern, "\\3", $payload->content ) );
 			$page	= $logic->getPageFromPath( $path, TRUE );
 			if( !$page ){
-				$data->content	= preg_replace( $pattern, "", $data->content );
+				$payload->content	= preg_replace( $pattern, "", $payload->content );
 				$env->getMessenger()->noteFailure( 'Die eingebundene Seite "'.$path.'" existiert nicht.' );
 			}
 			else{
 				$subcontent		= $page->content;													//  load nested page content
 				$subcontent		= preg_replace( "/<h(1|2)>.*<\/h(1|2)>/", "", $subcontent );		//  remove headings above level 3
 				$replacement	= "\\1".$subcontent."\\4";											//  insert content of nested page...
-				$data->content	= preg_replace( $pattern, $replacement, $data->content );		//  ...into page content
+				$payload->content	= preg_replace( $pattern, $replacement, $payload->content );		//  ...into page content
 			}
 		}
 
@@ -224,7 +225,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		if( !$env->getModules()->has( 'UI_Shortcode' ) )
 			return;
 		$processor		= new Logic_Shortcode( $env );
-		$processor->setContent( $data->content );
+		$processor->setContent( $payload->content );
 		$shortCodes		= array(
 			'page'		=> array(
 				'nr'		=> 0,
@@ -296,15 +297,16 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 				}
 			}
 		}
-		$data->content	= $processor->getContent();
+		$payload->content	= $processor->getContent();
 	}
 
-	static public function onRenderSearchResults( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function onRenderSearchResults( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		$logic		= $env->getLogic()->get( 'page' );
 		$options	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'main' );
 
-		foreach( $data->documents as $resultDocument  ){
+		foreach( $payload->documents as $resultDocument  ){
 			if( isset( $resultDocument->facts ) )
 				continue;
 			$page	= $logic->getPageFromPath( $resultDocument->path );
@@ -323,4 +325,3 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook{
 		}
 	}
 }
-?>
