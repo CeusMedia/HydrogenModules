@@ -1,7 +1,8 @@
 <?php
-class Mail_Forum_Answer extends Mail_Forum_Abstract{
-
-	public function renderBody( $data = array() ){
+class Mail_Forum_Answer extends Mail_Forum_Abstract
+{
+	public function renderBody( $data = array() )
+	{
 		extract( $data );
 		$this->setSubject( 'Antwort im Forum zum Thema: '.$thread->title );
 
@@ -57,4 +58,3 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract{
 		return $body;
 	}
 }
-?>

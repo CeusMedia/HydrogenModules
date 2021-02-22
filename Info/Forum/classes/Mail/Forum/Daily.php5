@@ -1,7 +1,8 @@
 <?php
-class Mail_Forum_Daily extends Mail_Forum_Abstract{
-
-	public function renderBody( $data = array() ){
+class Mail_Forum_Daily extends Mail_Forum_Abstract
+{
+	public function renderBody( $data = array() )
+	{
 //		extract( $data );
 
 		$this->setSubject( 'Moderation im Forum notwendig' );
@@ -56,4 +57,3 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract{
 		return $body;
 	}
 }
-?>

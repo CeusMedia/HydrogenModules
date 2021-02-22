@@ -5,7 +5,6 @@
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
 /**
  *	Forum Thread Model.
@@ -14,11 +13,11 @@
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
-class Model_Forum_Thread extends CMF_Hydrogen_Model {
-
+class Model_Forum_Thread extends CMF_Hydrogen_Model
+{
 	protected $name		= 'forum_threads';
+
 	protected $columns	= array(
 		'threadId',
 		'topicId',
@@ -29,7 +28,9 @@ class Model_Forum_Thread extends CMF_Hydrogen_Model {
 		'createdAt',
 		'modifiedAt'
 	);
+
 	protected $primaryKey	= 'threadId';
+
 	protected $indices		= array(
 		'topicId',
 		'authorId',
@@ -37,6 +38,6 @@ class Model_Forum_Thread extends CMF_Hydrogen_Model {
 		'status',
 		'title',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

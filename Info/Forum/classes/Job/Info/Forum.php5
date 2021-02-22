@@ -1,17 +1,16 @@
 <?php
-class Job_Info_Forum extends Job_Abstract{
+class Job_Info_Forum extends Job_Abstract
+{
+	protected $config;
 
 	protected $language;
+
+	protected $options;
+
 	protected $words;
 
-	protected function __onInit(){
-		$this->config		= $this->env->getConfig();												//  get app config
-		$this->language		= $this->env->getLanguage();											//  get language support
-		$this->options		= $this->config->getAll( 'module.info_forum.', TRUE );					//  get module options for job
-		$this->words		= (object) $this->language->getWords( 'info/forum' );					//  get module words
-	}
-
-	public function sendDaily( $verbose = FALSE ){
+	public function sendDaily( bool $verbose = FALSE )
+	{
 //		if( $this->isLocked( 'info.forum.send' ) )
 //			return;
 //		$this->lock( 'info.forum.send' );
@@ -67,5 +66,12 @@ class Job_Info_Forum extends Job_Abstract{
 			$this->log( sprintf( 'No daily forum mail sent.', $time ) );
 //		$this->unlock( 'info.forum.send' );
 	}
+
+	protected function __onInit()
+	{
+		$this->config		= $this->env->getConfig();												//  get app config
+		$this->language		= $this->env->getLanguage();											//  get language support
+		$this->options		= $this->config->getAll( 'module.info_forum.', TRUE );					//  get module options for job
+		$this->words		= (object) $this->language->getWords( 'info/forum' );					//  get module words
+	}
 }
-?>

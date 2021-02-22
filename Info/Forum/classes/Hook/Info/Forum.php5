@@ -1,7 +1,8 @@
 <?php
-class Hook_Info_Forum extends CMF_Hydrogen_Hook{
-
-	static public function onPageCollectNews( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_Info_Forum extends CMF_Hydrogen_Hook
+{
+	public static function onPageCollectNews( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$model			= new Model_Forum_Thread( $env );
 		$oneDay			= 24 * 60 * 60;
 		$conditions		= array( 'modifiedAt' => '> '.( time() - 7 * $oneDay ) );
@@ -23,7 +24,8 @@ class Hook_Info_Forum extends CMF_Hydrogen_Hook{
 		}
 	}
 
-	static public function onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		try{
 			$config			= $env->getConfig()->getAll( 'module.info_forum.', TRUE );
 			if( !$config->get( 'sitemap' ) )
