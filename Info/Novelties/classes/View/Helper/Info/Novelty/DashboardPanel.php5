@@ -1,17 +1,22 @@
 <?php
-class View_Helper_Info_Novelty_DashboardPanel extends CMF_Hydrogen_View_Helper_Abstract{
+class View_Helper_Info_Novelty_DashboardPanel extends CMF_Hydrogen_View_Helper_Abstract
+{
+	protected $env;
+	protected $news		= array();
 
-	protected $news	= array();
-
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 	}
 
-	public function add( $item ){
+	public function add( $item ): self
+	{
 		$this->news[]	= $item;
+		return $this;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$options	= array();
 		$this->env->getCaptain()->callHook( 'Novelties', 'collect', $this, $options );
 		if( !$this->news )
@@ -70,15 +75,15 @@ $script	= '
 var InfoNoveltyDashboardPanel = {
 	init: function(){
 		jQuery("#dashboard-panel-info-novelty button.btn").on("click", function(){
-			var _this = jQuery(this);
-			_this.parent().parent().fadeOut();
+			var that = jQuery(this);
+			that.parent().parent().fadeOut();
 			jQuery.ajax({
-				url:  "./info/novelty/ajaxDismiss/",
+				url:  "./info/novelty/ajax/dismiss/",
 				data: jQuery(this).data(),
 				method: "POST",
 				dataType: "json",
 				success: function(json){
-					console.log(json);
+//					console.log(json);
 				}
 			});
 		});
@@ -90,8 +95,9 @@ InfoNoveltyDashboardPanel.init();
 		return $list.$script;
 	}
 
-	public function setLimit( $limit ){
+	public function setLimit( int $limit ): self
+	{
 		$this->limit	= min( 100, max( 0, abs( $limit ) ) );
+		return $this;
 	}
 }
-?>

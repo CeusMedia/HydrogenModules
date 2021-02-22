@@ -1,16 +1,14 @@
 <?php
 /**
  *	Model.
- *	@version		$Id$
  */
 /**
  *	Model.
- *	@version		$Id$
  *	@todo			implement
  *	@todo			code documentation
  */
-class Model_Novelty extends CMF_Hydrogen_Model{
-
+class Model_Novelty extends CMF_Hydrogen_Model
+{
 	/**	@var	$name		string		Table name without prefix of database connection */
 	protected $name			= "novelties";
 
@@ -37,4 +35,3 @@ class Model_Novelty extends CMF_Hydrogen_Model{
 	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>
