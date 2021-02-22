@@ -27,4 +27,3 @@ return $panelSearch.$helper->render().'
 		</div>
 	</div>
 </form>';
-?>

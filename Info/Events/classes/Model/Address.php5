@@ -1,5 +1,6 @@
 <?php
-class Model_Address extends CMF_Hydrogen_Model{
+class Model_Address extends CMF_Hydrogen_Model
+{
 
 	const STATUS_INACTIVE	= -2;
 	const STATUS_REJECTED	= -1;
@@ -7,9 +8,18 @@ class Model_Address extends CMF_Hydrogen_Model{
 	const STATUS_CHANGED	= 1;
 	const STATUS_ACTIVE		= 2;
 
+	const STATUSES			= [
+		self::STATUS_INACTIVE,
+		self::STATUS_REJECTED,
+		self::STATUS_NEW,
+		self::STATUS_CHANGED,
+		self::STATUS_ACTIVE,
+	];
+
 	protected $radiusEarth  = 6371;
 
 	protected $name			= 'addresses';
+
 	protected $columns		= array(
 		'addressId',
 		'status',
@@ -27,13 +37,17 @@ class Model_Address extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'addressId';
+
 	protected $indices		= array(
 		'status',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function extendWithGeocodes( $addressId ){
+	public function extendWithGeocodes( $addressId ): bool
+	{
 		$address	= $this->get( $addressId );
 		try{
 			$geocoder	= new Logic_Geocoder( $this->env );
@@ -61,7 +75,8 @@ die( $e->getMessage() );
 		}
 	}
 
-	public function getAllInDistance( $x, $y, $z, $distance, $havingIds = array() ){
+	public function getAllInDistance( $x, $y, $z, $distance, array $havingIds = array() ): array
+	{
 		$query		= 'SELECT *
 		FROM addresses as a
 		WHERE
@@ -85,11 +100,11 @@ die( $e->getMessage() );
 	/**
 	 *	@todo		move to branch module and remove
 	 */
-	public function getBranchesInRangeOf( $point, $radius, $havingIds = array() ){
+	public function getBranchesInRangeOf( $point, $radius, array $havingIds = array() )
+	{
 		$list		= array();
 		$model		= new Model_Branch( $this->env );
 		$distance	= 2 * $this->radiusEarth * sin( $radius / ( 2 * $this->radiusEarth ) );
 		return $model->getAllInDistance( $point->x, $point->y, $point->z, $distance, $havingIds );
-	}/**/
+	}
 }
-?>

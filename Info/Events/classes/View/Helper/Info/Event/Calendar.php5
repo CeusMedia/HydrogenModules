@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Info_Event_Calendar{
-
+class View_Helper_Info_Event_Calendar
+{
 	protected $env;
 	protected $logic;
 	protected $projects	= array();
@@ -8,7 +8,8 @@ class View_Helper_Info_Event_Calendar{
 	protected $words;
 	protected $events	= array();
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->today	= new DateTime( date( 'Y-m-d', time() ) );
 		$this->words	= $this->env->getLanguage()->load( 'info/event' );
@@ -16,7 +17,8 @@ class View_Helper_Info_Event_Calendar{
 		$this->month	= date( "m" );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$showMonth		= str_pad( $this->month, 2, "0", STR_PAD_LEFT );
 		$showScope		= $this->year.'-'.$showMonth.'-01';
 		$monthDate		= new DateTime( $showScope );
@@ -131,7 +133,8 @@ $(document).ready(function(){
 		return $table;
 	}
 
-	protected function renderControls(){
+	protected function renderControls(): string
+	{
 		$isNow		= $this->year	=== date( "Y" ) && $this->month === date( "m" );
 
 		$nextYear		= $this->year;
@@ -190,7 +193,8 @@ $(document).ready(function(){
 	</div>';
 	}
 
-	protected function renderDay( DateTime $date, $orders, $cellClass = NULL ){
+	protected function renderDay( DateTime $date, $orders, string $cellClass = NULL ): string
+	{
 		$diff		= $this->today->diff( $date );
 		$isPast		= $diff->invert;
 		$isToday	= $diff->days == 0;
@@ -202,7 +206,7 @@ $(document).ready(function(){
 				continue;
 			$title		= htmlentities( $event->title, ENT_QUOTES, 'UTF-8' );
 			$title		= UI_HTML_Tag::create( 'a', $title, array(
-				'href'			=> './info/event/modalView/'.$event->eventId,
+				'href'			=> './ajax/info/event/modalView/'.$event->eventId,
 				'data-toggle'	=> 'modal',
 				'data-target'	=> "#modal-event-view",
 			) );
@@ -228,7 +232,8 @@ $(document).ready(function(){
 		) );
 	}
 
-	protected function renderLabel( $year, $month ){
+	protected function renderLabel( string $year, string $month ): string
+	{
 		$month	= (int) $month;
 		if( $month < 1 || $month > 12 )
 			throw new InvalidArgumentException( 'Invalid month' );
@@ -238,13 +243,16 @@ $(document).ready(function(){
 		), array( 'id' => 'mission-calendar-control-label' ) );
 	}
 
-	public function setEvents( $events ){
+	public function setEvents( array $events ): self
+	{
 		$this->events	= $events;
+		return $this;
 	}
 
-	public function setMonth( $year, $month ){
+	public function setMonth( string $year, string $month ): self
+	{
 		$this->year		= $year;
 		$this->month	= $month;
+		return $this;
 	}
 }
-?>

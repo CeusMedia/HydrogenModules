@@ -50,7 +50,7 @@ var Module_Info_Event = {
 			minLength: 1,
 			matcher: function(){return true;},
 			source: function(query, process){
-				var url = "./info/event/ajaxTypeaheadCities";
+				var url = "./ajax/info/event/typeaheadCities";
 				return $.getJSON(url, {query: query}, function(data){
 					return process(data.options);
 				});

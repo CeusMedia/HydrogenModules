@@ -62,7 +62,7 @@ if( $center ){
 				'href'	=> './index/view/'.$event->eventId
 			) );
 			$buttonView		= UI_HTML_Tag::create( 'a', $iconView.'&nbsp;anzeigen', array(
-				'href'			=> './info/event/modalView/'.$event->eventId,
+				'href'			=> './ajax/info/event/modalView/'.$event->eventId,
 				'data-toggle'	=> 'modal',
 				'data-target'	=> "#modal-event-view",
 				'class'			=> 'btn btn-info',
