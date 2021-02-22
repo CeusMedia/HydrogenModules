@@ -6,7 +6,7 @@
 Calls hook Dashboard::registerPanels.
 ]]></description>
 	<category>Info</category>
-	<version>0.4.5</version>
+	<version>0.4.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locale HTML blocks.</log>
