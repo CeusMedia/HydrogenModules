@@ -1,14 +1,16 @@
 <?php
-class View_Helper_Info_Dashboard_Modal_AddPanel extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_Info_Dashboard_Modal_AddPanel extends CMF_Hydrogen_View_Helper_Abstract
+{
 	protected $dashboard;
 	protected $panels		= array();
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->setEnv( $env );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$w				= (object) $this->getWords( 'add-panel', 'info/dashboard' );
 
 		$fieldPanels	= UI_HTML_Tag::create( 'div', $w->emptyPanels, array( 'class' => 'alert alert-info' ) );
@@ -65,11 +67,15 @@ class View_Helper_Info_Dashboard_Modal_AddPanel extends CMF_Hydrogen_View_Helper
 </form>';
 	}
 
-	public function setDashboard( $dashboard ){
+	public function setDashboard( $dashboard ): self
+	{
 		$this->dashboard	= $dashboard;
+		return $this;
 	}
 
-	public function setPanels( $panels ){
+	public function setPanels( array $panels ): self
+	{
 		$this->panels		= $panels;
+		return $this;
 	}
 }

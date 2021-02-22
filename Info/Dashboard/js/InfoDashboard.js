@@ -25,7 +25,7 @@ var InfoDashboard = {
 						list.push($(this).data("panel-id"))
 					});
 					jQuery.ajax({
-						url: "./info/dashboard/ajaxSaveOrder",
+						url: "./info/dashboard/ajax/saveOrder",
 						mathodType: "post",
 						dataType: "json",
 						data: {list: list}
@@ -48,12 +48,13 @@ var InfoDashboard = {
 		jQuery(".button-rename-board").on("click", function(){
 			var title = prompt('Neuen Titel', jQuery(this).data('title'));
 			var dashboardId = jQuery(this).data('dashboard-id');
-			if(title) InfoDashboard.rename(dashboardId, title);
+			if(title)
+				InfoDashboard.rename(dashboardId, title);
 		});
 	},
 	rename: function(dashboardId, title){
 		jQuery.ajax({
-			url: './info/dashboard/ajaxRename',
+			url: './info/dashboard/ajax/rename',
 			data: {title: title},
 			method: 'post',
 			dataType: 'json',

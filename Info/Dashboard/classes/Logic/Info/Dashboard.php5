@@ -2,20 +2,10 @@
 /**
  *	@todo		code doc
  */
-class Logic_Info_Dashboard extends CMF_Hydrogen_Logic{
-
+class Logic_Info_Dashboard extends CMF_Hydrogen_Logic
+{
 	protected $model;
 	protected $moduleConfig;
-
-	/**
-	 *	Constructor. Protected to force singleton use.
-	 *	@access		protected
-	 *	@return		void
-	 */
-	protected function __onInit(){
-		$this->model		= new Model_Dashboard( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
-	}
 
 	/**
 	 *	Adds a new user dashboard.
@@ -28,7 +18,8 @@ class Logic_Info_Dashboard extends CMF_Hydrogen_Logic{
 	 *	@return		integer			ID of new user dashboard
 	 *	@throws		InvalidArgumentException		if given panels is neither an array nor a valid string
 	 */
-	public function addUserDashboard( $userId, $title, $description, $panels = array(), $select = FALSE ){
+	public function addUserDashboard( $userId, string $title, string $description, array $panels = array(), bool $select = FALSE )
+	{
 		if( is_string( $panels ) )
 			$panels		= strlen( trim( $panels ) ) ? explode( ',', $panels ) : array();
 		if( !is_array( $panels ) )
@@ -56,7 +47,8 @@ class Logic_Info_Dashboard extends CMF_Hydrogen_Logic{
 	 *	@throws		DomainException					if user is not having a current dashboard
 	 *	@throws		RangeException					if limit of panels per dashboard has been reached
 	 */
-	public function addPanelToUserDashboard( $userId, $panelId, $position = 'bottom' ){
+	public function addPanelToUserDashboard( $userId, $panelId, string $position = 'bottom' ): bool
+	{
 		$dashboard	= $this->getUserDashboard( $userId );
 		$panels		= strlen( $dashboard->panels ) ? explode( ',', $dashboard->panels ) : array();
 		if( count( $panels ) >= $this->moduleConfig->get( 'perUser.maxPanels' ) )
@@ -88,7 +80,8 @@ class Logic_Info_Dashboard extends CMF_Hydrogen_Logic{
 	 *	@return		object|boolean	Data object of current user dashboard or FALSE if not available and strict mode disabled
 	 *	@throws		DomainException					if dashboard is not existing or not assigned to user and strict mode enabled
 	 */
-	public function checkUserDashboard( $userId, $dashboardId, $strict = TRUE ){
+	public function checkUserDashboard( $userId, $dashboardId, bool $strict = TRUE )
+	{
 		foreach( $this->getUserDashboards( $userId ) as $dashboard )
 			if( $dashboard->dashboardId == $dashboardId )
 				return $dashboard;
@@ -106,7 +99,8 @@ class Logic_Info_Dashboard extends CMF_Hydrogen_Logic{
 	 *	@return		boolean
 	 *	@throws		RuntimeException				if not enabled and strict mode enabled
 	 */
-	public function checkUserDashboardsEnabled( $strict = TRUE ){
+	public function checkUserDashboardsEnabled( bool $strict = TRUE ): bool
+	{
 		if( $this->moduleConfig->get( 'perUser' ) )
 			return TRUE;
 		if( $strict )
@@ -122,7 +116,8 @@ class Logic_Info_Dashboard extends CMF_Hydrogen_Logic{
 	 *	@return		integer			ID of new user dashboard
 	 *	@throws		DomainException					if user is not having a current dashboard
 	 */
-	public function getUserDashboard( $userId, $strict = TRUE ){
+	public function getUserDashboard( $userId, bool $strict = TRUE )
+	{
 		$dashboard	= $this->model->getByIndices( array( 'userId' => $userId, 'isCurrent' => 1 ) );
 		if( $dashboard )
 			return $dashboard;
@@ -138,10 +133,12 @@ class Logic_Info_Dashboard extends CMF_Hydrogen_Logic{
 	 *	@param		integer			$userId			ID of user to assign dashboard to
 	 *	@return		array			List of user dashboards
 	 */
-	public function getUserDashboards( $userId ){
-		return $this->model->getAllByIndices( array(
-			'userId' => $userId
-		), array( 'modifiedAt'	=> 'DESC' ) );
+	public function getUserDashboards( $userId ): array
+	{
+		return $this->model->getAllByIndices(
+			array( 'userId' => $userId ),
+			array( 'modifiedAt'	=> 'DESC' )
+		);
 	}
 
 	/**
@@ -152,7 +149,8 @@ class Logic_Info_Dashboard extends CMF_Hydrogen_Logic{
 	 *	@return		boolean			Whether changes has been made or not
 	 *	@throws		DomainException					if dashboard is not existing or not assigned to user and strict mode enabled
 	 */
-	public function setUserDashboard( $userId, $dashboardId ){
+	public function setUserDashboard( $userId, $dashboardId ): bool
+	{
 		$dashboardToSelect	= $this->checkUserDashboard( $userId, $dashboardId );
 		if( ( $dashboardCurrent = $this->getUserDashboard( $userId, FALSE ) ) ){
 			if( $dashboardId == $dashboardCurrent->dashboardId )
@@ -172,7 +170,8 @@ class Logic_Info_Dashboard extends CMF_Hydrogen_Logic{
 	 *	@throws		DomainException					if user is not having a current dashboard
 	 *	@throws		InvalidArgumentException		if given panels is neither an array nor a valid string
 	 */
-	public function setUserPanels( $userId, $panels = array() ){
+	public function setUserPanels( $userId, array $panels = array() ): bool
+	{
 		$dashboard	= $this->getUserDashboard( $userId );
 		if( is_string( $panels ) )
 			$panels		= strlen( trim( $panels ) ) ? explode( ',', $panels ) : array();
@@ -186,5 +185,16 @@ class Logic_Info_Dashboard extends CMF_Hydrogen_Logic{
 			'modifiedAt'	=> time(),
 		) );
 	}
+
+	/**
+	 *	Constructor.
+	 *	Protected to force singleton use.
+	 *	@access		protected
+	 *	@return		void
+	 */
+	protected function __onInit()
+	{
+		$this->model		= new Model_Dashboard( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
+	}
 }
-?>

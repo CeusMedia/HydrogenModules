@@ -1,8 +1,9 @@
 <?php
-class Hook_Info_Dashboard /*extends CMF_Hydrogen_Hook*/{
-
-	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$data	= (object) $data;
+class Hook_Info_Dashboard extends CMF_Hydrogen_Hook
+{
+	public static function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
+		$data	= (object) $payload;
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Info_Dashboard::onListUserRelations" is missing user ID in data.';
 			$env->getMessenger()->noteFailure( $message );
@@ -35,8 +36,9 @@ class Hook_Info_Dashboard /*extends CMF_Hydrogen_Hook*/{
 		);
 	}
 
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$data	= (object) $data;
+	public static function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
+		$data	= (object) $payload;
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Info_Dashboard::onUserRemove" is missing user ID in data.';
 			$env->getMessenger()->noteFailure( $message );

@@ -1,15 +1,17 @@
 <?php
-class View_Helper_Info_Dashboard extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_Info_Dashboard extends CMF_Hydrogen_View_Helper_Abstract
+{
 	protected $columns		= 3;
 	protected $dashboard;
 	protected $panels;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$w	= (object) $this->getWords( 'board', 'info/dashboard' );
 
 		$list	= array();
@@ -62,25 +64,31 @@ class View_Helper_Info_Dashboard extends CMF_Hydrogen_View_Helper_Abstract{
 		return UI_HTML_Tag::create( 'div', $desc.$list, array( 'id' => 'dashboard-board' ) );
 	}
 
-	public function setColumns( $columns ){
+	public function setColumns( int $columns ): self
+	{
 		if( !in_array( $columns, array( 1, 2, 3, 4, 6 ) ) )
 			$columns	= 3;
-		$this->setColumns	= $columns;
+		$this->columns	= $columns;
+		return $this;
 	}
 
-	public function setDashboard( $dashboard ){
+	public function setDashboard( $dashboard ): self
+	{
 		$this->dashboard	= $dashboard;
+		return $this;
 	}
 
-	public function setPanels( $panels ){
+	public function setPanels( array $panels ): self
+	{
 		$this->panels	= $panels;
+		return $this;
 	}
 /*
-	public function unregisterPanel( $key ){
+	public function unregisterPanel( $key )
+	{
 		if( !isset( $this->panels[$key] ) )
 			return FALSE;
 		unset( $this->panels[$key] );
 		return TRUE;
 	}*/
 }
-?>

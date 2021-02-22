@@ -1,6 +1,6 @@
 <?php
-class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
-
+class Controller_Info_Dashboard extends CMF_Hydrogen_Controller
+{
 	protected $logic;
 	protected $messenger;
 	protected $model;
@@ -9,34 +9,10 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 	protected $request;
 	protected $session;
 	protected $userId			= 0;
+	protected $messages;
 
-	public function __onInit(){
-		/*  --  ENV RESOURCES  --  */
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-
-		/*  --  MODULE RESOURCES  --  */
-		$this->logic		= Logic_Info_Dashboard::getInstance( $this->env );
-		$this->model		= new Model_Dashboard( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-		$this->messages	= (object) $this->getWords( 'msg', 'info/dashboard' );
-
-		/*  --  USER SUPPORT  --  */
-		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
-			$logicAuth		= Logic_Authentication::getInstance( $this->env );
-			$this->userId	= $logicAuth->getCurrentUserId( FALSE );
-			$this->user		= $logicAuth->getCurrentUser( FALSE, TRUE );
-		}
-		$this->addData( 'currentUserId', $this->userId );
-
-		/*  --  REGISTER PANELS  --  */
-		$this->env->getCaptain()->callHook( 'Dashboard', 'registerPanels', $this );
-		$this->addData( 'panels', $this->panels );
-	}
-
-	public function add(){
+	public function add()
+	{
 		try{
 			$this->checkUserDashboardsEnabled();
 			if( $this->request->has( 'save' ) ){
@@ -57,7 +33,8 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function addPanels(){
+	public function addPanels()
+	{
 		try{
 			$this->checkUserDashboardsEnabled();
 			if( !( $dashboard = $this->logic->getUserDashboard( $this->userId ) ) ){
@@ -98,60 +75,8 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function ajaxRename(){
-		$this->checkUserDashboardsEnabled();
-		$dashboardId	= trim( $this->request->get( 'dashboardId' ) );
-		$title			= trim( $this->request->get( 'title' ) );
-		$result			= FALSE;
-		if( !strlen( $title ) ){
-			print( json_encode( -1 ) );
-			exit;
-		}
-		if( !( $dashboard = $this->logic->getUserDashboard( $this->userId ) ) ){
-			print( json_encode( -11 ) );
-			exit;
-		}
-		foreach( $this->logic->getUserDashboards( $this->userId ) as $entry ){
-			if( $entry->title === $title ){
-				print( json_encode( -2 ) );
-				exit;
-			}
-		}
-		print( json_encode( (bool) $this->model->edit( $dashboard->dashboardId, array(
-			'title'			=> $title,
-			'modifiedAt'	=> time(),
-		) ) ) );
-		exit;
-	}
-
-	public function ajaxSaveOrder(){
-		if( !$this->checkUserDashboardsEnabled( FALSE ) ){
-			print( json_encode( -11 ) );
-			exit;
-		}
-		if( !( $dashboard = $this->logic->getUserDashboard( $this->userId ) ) ){
-			print( json_encode( -3 ) );
-			exit;
-		}
-		$list	= array();
-		foreach( $this->request->get( 'list' ) as $panelId )
-			if( array_key_exists( $panelId, $this->panels ) )
-				$list[]	= $panelId;
-		print( json_encode( $this->logic->setUserPanels( $this->userId, $list ) ) );
-		exit;
-	}
-
-	protected function checkUserDashboardsEnabled( $strict = TRUE ){
-		if( $this->logic->checkUserDashboardsEnabled( FALSE ) )
-			return TRUE;
-		if( $strict ){
-			$this->messenger->noteError( $this->messages->errorUserDashboardsDisabled );
-			$this->restart( NULL, TRUE );
-		}
-		return FALSE;
-	}
-
-	public function index(){
+	public function index()
+	{
 		try{
 			if( $this->checkUserDashboardsEnabled( FALSE ) && $this->userId ){
 				if( $this->moduleConfig->get( 'perUser.autoCreate' ) ){
@@ -185,7 +110,8 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 		$this->addData( 'user', $this->user );
 	}
 
-	public function registerPanel( $panelId, $data ){
+	public function registerPanel( $panelId, $data )
+	{
 		$data		= array_merge( array(
 			'id'		=> $panelId,
 			'url'		=> NULL,
@@ -201,7 +127,8 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 		$this->panels[$panelId]	= (object) $data;
 	}
 
-	public function remove( $dashboardId ){
+	public function remove( $dashboardId )
+	{
 		try{
 			$this->checkUserDashboardsEnabled();
 			if( !( $dashboard = $this->logic->checkUserDashboard( $this->userId, $dashboardId, FALSE ) ) ){
@@ -223,7 +150,8 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function removePanel( $panelId ){
+	public function removePanel( $panelId )
+	{
 		try{
 			$this->checkUserDashboardsEnabled();
 			if( !( $dashboard = $this->logic->getUserDashboard( $this->userId ) ) ){
@@ -251,7 +179,8 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function select( $dashboardId ){
+	public function select( $dashboardId )
+	{
 		try{
 			$this->checkUserDashboardsEnabled();
 			if( !( $dashboard = $this->checkUserDashboard( $this->userId, $dashboardId, FALSE ) ) ){
@@ -266,5 +195,42 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 	}
+
+	protected function __onInit()
+	{
+		/*  --  ENV RESOURCES  --  */
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+
+		/*  --  MODULE RESOURCES  --  */
+		$this->logic		= Logic_Info_Dashboard::getInstance( $this->env );
+		$this->model		= new Model_Dashboard( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$this->messages		= (object) $this->getWords( 'msg', 'info/dashboard' );
+
+		/*  --  USER SUPPORT  --  */
+		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
+			$logicAuth		= Logic_Authentication::getInstance( $this->env );
+			$this->userId	= $logicAuth->getCurrentUserId( FALSE );
+			$this->user		= $logicAuth->getCurrentUser( FALSE, TRUE );
+		}
+		$this->addData( 'currentUserId', $this->userId );
+
+		/*  --  REGISTER PANELS  --  */
+		$this->env->getCaptain()->callHook( 'Dashboard', 'registerPanels', $this );
+		$this->addData( 'panels', $this->panels );
+	}
+
+	protected function checkUserDashboardsEnabled( bool $strict = TRUE ): bool
+	{
+		if( $this->logic->checkUserDashboardsEnabled( FALSE ) )
+			return TRUE;
+		if( $strict ){
+			$this->messenger->noteError( $this->messages->errorUserDashboardsDisabled );
+			$this->restart( NULL, TRUE );
+		}
+		return FALSE;
+	}
 }
-?>

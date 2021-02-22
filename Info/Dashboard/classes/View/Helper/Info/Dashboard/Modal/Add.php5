@@ -1,14 +1,16 @@
 <?php
-class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abstract
+{
 	protected $dashboards	= array();
 	protected $panels		= array();
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->setEnv( $env );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$w			= (object) $this->getWords( 'add', 'info/dashboard' );
 
 		$list		= UI_HTML_Tag::create( 'div', $w->emptyPanels, array( 'class' => 'alert alert-warning' ) );
@@ -88,19 +90,23 @@ class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abst
 	 *	Set list of user dashboards.
 	 *	@access		public
 	 *	@param		array		$dashboards			List of user dashboards
-	 *	@return		void
+	 *	@return		self
 	 */
-	public function setDashboards( $dashboards ){
+	public function setDashboards( $dashboards ): self
+	{
 		$this->dashboards	= $dashboards;
+		return $this;
 	}
 
 	/**
 	 *	Set map of registered panels.
 	 *	@access		public
 	 *	@param		array		$panels				Map of registered panels
-	 *	@return		void
+	 *	@return		self
 	 */
-	public function setPanels( $panels ){
+	public function setPanels( $panels ): self
+	{
 		$this->panels		= $panels;
+		return $this;
 	}
 }
