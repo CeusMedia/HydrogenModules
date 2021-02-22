@@ -32,4 +32,3 @@ return '
 		'.$buttonReload.'
 	</div>
 </div>';
-?>

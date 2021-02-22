@@ -34,4 +34,3 @@ return '
 		'.print_m( $category, NULL, NULL, TRUE ).'
 	</div>
 </div>';
-?>

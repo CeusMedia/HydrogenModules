@@ -39,7 +39,11 @@ This module can be localized.
 	<log version="0.7.5">Migrate to support CeusMedia::Common 0.8.5.</log>
 	<log version="0.7.6">Improve code style to catch up with PHP 7.3+.</log>
 	<log version="0.7.7">Save open folders.</log>
-<!--	<log version="0.6.x">Use editor configuration switch for read-only mode.</log>-->
+<!--	<log version="0.8.x">Use editor configuration switch for read-only mode.</log>-->
+<!--	<log version="0.8.x">Replace CodeMirror as Markdown editor by SimpleMDE.</log>-->
+<!--	<log version="0.8.x">Remove file based solution.</log>-->
+<!--	<log version="0.8.x">Migration relinking to database solution.</log>-->
+<!--	<log version="0.8.x">Improve JavaScript handling of page tree.</log>-->
 	<category>Info</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

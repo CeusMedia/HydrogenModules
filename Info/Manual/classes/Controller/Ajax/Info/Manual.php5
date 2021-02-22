@@ -1,13 +1,10 @@
 <?php
 class Controller_Ajax_Info_Manual extends CMF_Hydrogen_Controller_Ajax
 {
-	protected $request;
-	protected $session;
 	protected $sessionPrefix	= 'filter_info_manual_';
 
 	public function setBranchStatus()
 	{
-
 		$pageId		= (string) $this->request->get( 'pageId' );
 		$categoryId	= $this->session->get( $this->sessionPrefix.'categoryId' );
 		$sessionKey	= $this->sessionPrefix.'categoryId_'.$categoryId.'_openFolders';
