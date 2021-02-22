@@ -1,7 +1,8 @@
 <?php
 class Hook_Info_Gallery extends CMF_Hydrogen_Hook
 {
-	static public function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload ){
+	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		if( !preg_match( "/(\[gallery:([0-9]+)\])|(\[galleries\])/sU", $payload->content ) )
 			return;
 

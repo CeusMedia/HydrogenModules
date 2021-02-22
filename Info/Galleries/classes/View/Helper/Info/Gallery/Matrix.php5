@@ -1,7 +1,8 @@
 <?php
-class View_Helper_Info_Gallery_Matrix extends View_Helper_Info_Gallery{
-
-	public function render(){
+class View_Helper_Info_Gallery_Matrix extends View_Helper_Info_Gallery
+{
+	public function render(): string
+	{
 		$list		= array();
 		$helper		= new View_Helper_Info_Gallery_Images( $this->env );
 		foreach( $this->getGalleries() as $gallery ){
@@ -14,4 +15,3 @@ class View_Helper_Info_Gallery_Matrix extends View_Helper_Info_Gallery{
 		return join( '<hr/>', $list );
 	}
 }
-?>

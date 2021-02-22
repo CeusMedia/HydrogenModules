@@ -1,7 +1,8 @@
 <?php
-class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery{
-
-	public function render(){
+class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery
+{
+	public function render(): string
+	{
 		$list		= array();
 		$words		= $this->env->getLanguage()->getWords( 'info/gallery' );
 		foreach( $this->getGalleries() as $gallery ){
@@ -20,11 +21,18 @@ class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery{
 		return join( '<hr/>', $list );
 	}
 
-	protected function renderGalleryImage( $galleryId ){
+	public function setBaseUriPath( string $path ): self
+	{
+		$this->baseUriPath	= $path;
+		return $this;
+	}
+
+	protected function renderGalleryImage( $galleryId ): string
+	{
 		$gallery		= $this->modelGallery->get( $galleryId );
 		$images			= $this->getGalleryImages( $galleryId );
 		if( !count( $images ) )
-			return;
+			return '';
 
 		$thumb	= UI_HTML_Tag::create( 'img', NULL, array(
 			'src'	=> $this->baseFilePath.$gallery->path.'/thumbs/'.$images[0]->filename,
@@ -38,9 +46,4 @@ class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery{
 		) );
 		return $link;
 	}
-
-	public function setBaseUriPath( $path ){
-		$this->baseUriPath	= $path;
-	}
 }
-?>

@@ -1,27 +1,18 @@
 <?php
-class Controller_Info_Gallery extends CMF_Hydrogen_Controller{
-
+class Controller_Info_Gallery extends CMF_Hydrogen_Controller
+{
 	protected $moduleConfig;
 	protected $baseFilePath;
 
-	public function __onInit(){
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_galleries.', TRUE );
-		$config			= $this->env->getConfig();
-		$pathImages		= $config->get( 'path.images' ) ? $config->get( 'path.images' ) : 'images/';
-		$pathGalleries	= $this->moduleConfig->get( 'folder' );
-		$this->addData( 'baseUriPath', $this->path );
-		$this->addData( 'baseFilePath', $this->baseFilePath = $pathImages.$pathGalleries );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-		$this->addData( 'indexMode', $this->moduleConfig->get( 'index.mode' ) );
-	}
-
-	public function index( $galleryId = NULL ){
+	public function index( $galleryId = NULL )
+	{
 		$this->env->getSession()->set( 'gallery_referer', new ADT_URL( getEnv( 'HTTP_REFERER' ) ) );
 		if( $galleryId )
 			$this->restart( 'view/'.$galleryId, TRUE );
 	}
 
-	public function view( $galleryId = NULL ){
+	public function view( $galleryId = NULL )
+	{
 		$modelGallery	= new Model_Gallery( $this->env );
 
 		if( !$galleryId )
@@ -55,5 +46,16 @@ class Controller_Info_Gallery extends CMF_Hydrogen_Controller{
 		$this->addData( 'referer', $this->env->getSession()->get( 'gallery_referer' ) );
 		$this->env->getSession()->remove( 'gallery_referer' );
 	}
+
+	protected function __onInit()
+	{
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_galleries.', TRUE );
+		$config			= $this->env->getConfig();
+		$pathImages		= $config->get( 'path.images' ) ? $config->get( 'path.images' ) : 'images/';
+		$pathGalleries	= $this->moduleConfig->get( 'folder' );
+		$this->addData( 'baseUriPath', $this->path );
+		$this->addData( 'baseFilePath', $this->baseFilePath = $pathImages.$pathGalleries );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$this->addData( 'indexMode', $this->moduleConfig->get( 'index.mode' ) );
+	}
 }
-?>

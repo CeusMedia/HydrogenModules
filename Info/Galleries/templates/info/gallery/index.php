@@ -21,4 +21,3 @@ return $textIndexTop.'
 	text-align: center;
 	}
 </style>';
-?>

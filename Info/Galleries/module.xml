@@ -19,7 +19,7 @@ A gallery index can be injected by shortcode [galleries].
 To register galleries and images, use module Manage_Content_Images within a backend instance.
 ]]></description>
 	<category>Info</category>
-	<version>0.5.1</version>
+	<version>0.5.2</version>
 	<log version="0.2.3">Added relation to UI:JS:Darkbox.</log>
 	<log version="0.2.4">Added support for UI:JS:fancyBox.</log>
 	<log version="0.2.5">Added hook support and event onRenderContent.</log>
@@ -38,6 +38,7 @@ To register galleries and images, use module Manage_Content_Images within a back
 	<log version="0.4.3">Improve support for fancyBox 3+.</log>
 	<log version="0.5">Imported module from protected SVN repository.</log>
 	<log version="0.5.1">Extract hook to own class.</log>
+	<log version="0.5.2">Improve code style.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

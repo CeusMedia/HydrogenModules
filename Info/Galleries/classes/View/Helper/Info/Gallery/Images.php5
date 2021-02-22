@@ -1,7 +1,8 @@
 <?php
-class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery{
-
-	public function render(){
+class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
+{
+	public function render(): string
+	{
 		$list	= array();
 		$images	= $this->getGalleryImages( $this->galleryId );
 		foreach( $images as $image ){
@@ -24,7 +25,8 @@ class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery{
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbnails equalize-auto' ) );
 	}
 
-	public function setGallery( $galleryId ){
+	public function setGallery( $galleryId ): self
+	{
 		$this->galleryId	= $galleryId;
 		$this->gallery		= $this->modelGallery->get( $galleryId );
 
@@ -32,7 +34,6 @@ class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery{
 		foreach( preg_split( '@/@', $this->gallery->path ) as $part )
 			$parts[]	= rawurlencode( $part );
 		$this->gallery->path = join( '/', $parts );
-
+		return $this;
 	}
 }
-?>
