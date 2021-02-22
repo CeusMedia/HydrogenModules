@@ -72,6 +72,4 @@ return '
 			<a href="#" class="btn btn-small btn-danger"><i class="icon-remove icon-white"></i>&nbsp;komplett abmelden</a>
 		</form>
 	</div>
-</div>
-';
-?>
+</div>';

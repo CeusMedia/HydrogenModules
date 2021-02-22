@@ -20,4 +20,3 @@ extract( $view->populateTexts( array( 'info/news/top', 'info/news/bottom' ), 'ht
 
 //  @todo push collected content thru View::renderContent for module shortcodes
 return $textInfoNewsTop.$list.$article.$textInfoNewsBottom;
-?>

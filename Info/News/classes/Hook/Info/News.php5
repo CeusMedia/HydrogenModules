@@ -1,9 +1,10 @@
 <?php
-class Hook_Info_News extends CMF_Hydrogen_Hook{
-
-	static public function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_Info_News extends CMF_Hydrogen_Hook
+{
+	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$processor		= new Logic_Shortcode( $env );
-		$processor->setContent( $data->content );
+		$processor->setContent( $payload->content );
 		$words			= $env->getLanguage()->getWords( 'info/news' );
 		$shortCodes		= array(
 			'news'	=> array(
@@ -47,6 +48,6 @@ class Hook_Info_News extends CMF_Hydrogen_Hook{
 				}
 			}
 		}
-		$data->content	= $processor->getContent();
+		$payload->content	= $processor->getContent();
 	}
 }

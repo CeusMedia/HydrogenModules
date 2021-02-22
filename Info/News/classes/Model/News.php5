@@ -16,13 +16,20 @@
  *	@copyright		2013 Ceus Media
  *	@version		$Id$
  */
-class Model_News extends CMF_Hydrogen_Model {
-
+class Model_News extends CMF_Hydrogen_Model
+{
 	const STATUS_HIDDEN		= -1;
 	const STATUS_NEW		= 0;
 	const STATUS_PUBLIC		= 1;
 
+	const STATUSES			= [
+		self::STATUS_HIDDEN,
+		self::STATUS_NEW,
+		self::STATUS_PUBLIC,
+	];
+
 	protected $name		= 'news';
+
 	protected $columns	= array(
 		'newsId',
 		'status',
@@ -34,7 +41,9 @@ class Model_News extends CMF_Hydrogen_Model {
 		'endsAt',
 		'createdAt',
 	);
+
 	protected $primaryKey	= 'newsId';
+
 	protected $indices		= array(
 		'status',
 		'type',
@@ -43,6 +52,6 @@ class Model_News extends CMF_Hydrogen_Model {
 		'endsAt',
 		'createdAt',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

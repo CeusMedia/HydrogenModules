@@ -104,4 +104,3 @@ return $textIndexTop.'
 </div>
 <!--'.$panelLatest.'-->
 '.$textIndexBottom
-?>

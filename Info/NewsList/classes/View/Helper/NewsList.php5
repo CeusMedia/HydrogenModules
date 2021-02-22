@@ -1,10 +1,10 @@
 <?php
-class View_Helper_NewsList implements Countable{
-
-	public $news		= array();
+class View_Helper_NewsList implements Countable
+{
+	protected $news		= array();
 	protected $limit	= 5;
 
-	static public $defaultAttributes	= array(
+	public static $defaultAttributes	= array(
 		'title'		=> NULL,
 		'timestamp'	=> NULL,
 		'module'	=> NULL,
@@ -13,29 +13,36 @@ class View_Helper_NewsList implements Countable{
 		'icon'		=> NULL,
 	);
 
-	public function __construct( $env ){
-		$this->env		= $env;
-		$this->words	= $env->getLanguage()->getWords( 'info/newslist' );
-	}
 
-	public function add( $item ){
+	public function add( $item ): self
+	{
 		$this->news[]	= $item;
+		return $this;
 	}
 
-	public function collect( $resource = 'Info_NewsList', $event = 'collectNews', $options = array() ){
+	public function collect( $resource = 'Info_NewsList', $event = 'collectNews', $options = array() ): int
+	{
 		$this->env->getCaptain()->callHook( $resource, $event, $this, $options );
 		return $this->count();
 	}
 
-	public function count(){
+	public function count(): int
+	{
 		return count( $this->news );
 	}
 
-	public function has(){
+	public function get(): array
+	{
+		return $this->news;
+	}
+
+	public function has(): bool
+	{
 		return (bool) $this->count();
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->news )
 			return '';
 		$list	= array();
@@ -67,8 +74,15 @@ class View_Helper_NewsList implements Countable{
 		return $list;
 	}
 
-	public function setLimit( $limit ){
-		return $this->limit	= $limit;
+	public function setLimit( int $limit ): self
+	{
+		$this->limit	= max( 0, $limit );
+		return $this;
+	}
+
+	protected function __construct( CMF_Hydrogen_Environment $env )
+	{
+		$this->env		= $env;
+		$this->words	= $env->getLanguage()->getWords( 'info/newslist' );
 	}
 }
-?>

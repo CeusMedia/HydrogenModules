@@ -1,24 +1,11 @@
 <?php
-class Controller_Info_Newsletter extends CMF_Hydrogen_Controller{
-
+class Controller_Info_Newsletter extends CMF_Hydrogen_Controller
+{
 	/**	@var	Logic_Newsletter	$logic */
 	protected $logic;
 	protected $messenger;
 	protected $request;
 	protected $session;
-
-	protected function __onInit(){
-		$this->logic		= new Logic_Newsletter( $this->env );
-		$this->session		= $this->env->getSession();
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-
-		$hostReferer	= parse_url( getEnv( 'HTTP_REFERER' ), PHP_URL_HOST );
-		$hostSelf		= parse_url( $this->env->getConfig()->get( 'app.base.url' ), PHP_URL_HOST );
-
-		if( $hostReferer && $hostReferer !== $hostSelf )
-			$this->env->getPage()->addBodyClass( 'iframed' );
-	}
 
 	/**
 	 *	...
@@ -29,13 +16,15 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller{
 	 *	@param		object						$module		Module object
 	 *	@param		public						$arguments	Map of hook arguments
 	 *	@return		void
+	 *	@todo		finish implementation, extract to hook class and register in module config
 	 */
-	static public function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		if( empty( $data['orderId'] ) || empty( $data['paymentBackends'] ) )
+	public static function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
+		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;
 		$view		= new CMF_Hydrogen_View( $env );
 //		$modelOrder	= new Model_Shop_Order( $env );
-//		$order		= $modelOrder->get( $data['orderId'] );
+//		$order		= $modelOrder->get( $payload['orderId'] );
 
 		$path	= 'html/info/newsletter/';
 		$files	= array(
@@ -61,7 +50,8 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function confirm( $readerId, $key = NULL ){
+	public function confirm( $readerId, $key = NULL )
+	{
 		$words		= (object) $this->getWords( 'confirm' );
 		$reader		= $this->logic->getReader( $readerId );
 
@@ -107,7 +97,8 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller{
 		$this->addData( 'readerId', $readerId );
 	}*/
 
-	public function index( $arg1 = NULL ){
+	public function index( $arg1 = NULL )
+	{
 		$words		= (object) $this->getWords( 'index' );
 		if( $this->request->has( 'save' ) ){
 			$language			= $this->env->getLanguage()->getLanguage();
@@ -180,7 +171,8 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller{
 		$this->addData( 'latest', $latest );
 	}
 
-	public function preview( $newsletterId = NULL ){
+	public function preview( $newsletterId = NULL )
+	{
 		if( !$newsletterId ){
 			$newsletters	= $this->logic->getNewsletters( array( 'status' => '>= 1' ), array( 'newsletterId' => 'DESC' ) );
 			if( $newsletters ){
@@ -204,7 +196,8 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function unregister( $emailHash = NULL, $readerLetterId = NULL ){
+	public function unregister( $emailHash = NULL, $readerLetterId = NULL )
+	{
 		$email		= trim( $emailHash ? base64_decode( $emailHash ) : $this->request->get( 'email' ) );
 		$words		= (object) $this->getWords( 'unregister' );
 		$reader		= NULL;
@@ -254,7 +247,8 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller{
 		$this->addData( 'reader', $reader );
 	}
 
-	public function track( $letterId ){
+	public function track( $letterId )
+	{
 		$pixelGIF	= "R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 		if( !$this->request->has( 'dry' ) ){
 			$referer	= getEnv( 'HTTP_REFERER' );
@@ -269,7 +263,8 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function view( $readerLetterId ){
+	public function view( $readerLetterId )
+	{
 		try{
 			$letter		= $this->logic->getReaderLetter( $readerLetterId );
 			$helper		= new View_Helper_Newsletter_Mail( $this->env );;
@@ -292,5 +287,20 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->logic		= new Logic_Newsletter( $this->env );
+		$this->session		= $this->env->getSession();
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+
+		$hostReferer	= parse_url( getEnv( 'HTTP_REFERER' ), PHP_URL_HOST );
+		$hostSelf		= parse_url( $this->env->getConfig()->get( 'app.base.url' ), PHP_URL_HOST );
+
+		if( $hostReferer && $hostReferer !== $hostSelf )
+			$this->env->getPage()->addBodyClass( 'iframed' );
+	}
 }
-?>

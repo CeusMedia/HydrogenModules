@@ -1,13 +1,17 @@
 <?php
-class View_Helper_News{
+class View_Helper_News
+{
+	protected $env;
 
 	protected $limit	= 10;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$config		= $this->env->getConfig()->getAll( 'module.info_news.', TRUE );
 		$model		= new Model_News( $this->env );
 		$words		= $this->env->getLanguage()->getWords( 'info/news' );
@@ -42,8 +46,9 @@ class View_Helper_News{
 		return '';
 	}
 
-	public function setLimit( $limit ){
+	public function setLimit( int $limit ): self
+	{
 		$this->limit	= min( 100, max( 1, $limit ) );
+		return $this;
 	}
 }
-?>

@@ -140,4 +140,3 @@ var ModuleInfoNewsletter = {
 }
 $(document).ready(ModuleInfoNewsletter.init);
 </script>';
-?>

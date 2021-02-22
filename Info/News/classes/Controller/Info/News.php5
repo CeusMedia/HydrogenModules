@@ -1,8 +1,8 @@
 <?php
-class Controller_Info_News extends CMF_Hydrogen_Controller{
-
-	public function calendar(){
-
+class Controller_Info_News extends CMF_Hydrogen_Controller
+{
+	public function calendar()
+	{
 		$list	= $this->getVisibleNews();
 
 		$root		= new XML_DOM_Node( 'event');
@@ -34,7 +34,24 @@ class Controller_Info_News extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	protected function getVisibleNews( $limit = 10 ){
+	public function index()
+	{
+		$config	= $this->env->getConfig()->getAll( 'module.info_news.', TRUE );
+
+		//   @todo extract this data collection as hook to module Catalog
+		if( $this->env->getModules()->has( 'Catalog' ) ){
+			$logic		= new Logic_Catalog( $this->env );
+			$articles   = $logic->getArticles( array( 'new' => 1 ), array( 'createdAt' => 'DESC' ) );
+			$this->addData( 'article', $articles[array_rand( $articles, 1 )] );
+		}
+		$this->addData( 'news', $this->getVisibleNews( $config->get( 'show.max' ) ) );
+		$this->addData( 'showOnEmpty', $config->get( 'show.empty' ) );
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function getVisibleNews( $limit = 10 )
+	{
 		$model		= new Model_News( $this->env );
 		$news		= $model->getAllByIndices(
 			array( 'status' => 1 ),
@@ -58,18 +75,4 @@ class Controller_Info_News extends CMF_Hydrogen_Controller{
 		}
 		return array_slice( $list, 0, $limit );
 	}
-
-	public function index(){
-		$config	= $this->env->getConfig()->getAll( 'module.info_news.', TRUE );
-
-		//   @todo extract this data collection as hook to module Catalog
-		if( $this->env->getModules()->has( 'Catalog' ) ){
-			$logic		= new Logic_Catalog( $this->env );
-			$articles   = $logic->getArticles( array( 'new' => 1 ), array( 'createdAt' => 'DESC' ) );
-			$this->addData( 'article', $articles[array_rand( $articles, 1 )] );
-		}
-		$this->addData( 'news', $this->getVisibleNews( $config->get( 'show.max' ) ) );
-		$this->addData( 'showOnEmpty', $config->get( 'show.empty' ) );
-	}
 }
-?>
