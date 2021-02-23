@@ -10,10 +10,7 @@ $helper->setFilterUrl( './work/billing/corporation/reserve/filter/'.$corporation
 $helper->setFilterPrefix( $filterSessionPrefix );
 $panelTransactions	= $helper->render();
 
-$tabs	= View_Work_Billing_Corporation::renderTabs( $env, $corporationId, 1 );
+$tabs		= View_Work_Billing_Corporation::renderTabs( $env, $corporationId, 1 );
+$heading	= '<h2 class="autocut"><span class="muted">Unternehmen</span> '.$corporation->title.'</h2>';
 
-return '<h2 class="autocut"><span class="muted">Unternehmen</span> '.$corporation->title.'</h2>
-'.$tabs.'
-'.$panelTransactions.'
-';
-?>
+return $heading.$tabs.$panelTransactions;

@@ -66,10 +66,10 @@ $panelFacts		= '
 	</div>
 </div>';
 
-$tabs	= View_Work_Billing_Person::renderTabs( $env, $person->personId, 0 );
+$tabs		= View_Work_Billing_Person::renderTabs( $env, $person->personId, 0 );
+$heading	= '<h2 class="autocut"><span class="muted">Person</span> '.$person->firstname.' '.$person->surname.'</h2>';
 
-return '<h2 class="autocut"><span class="muted">Person</span> '.$person->firstname.' '.$person->surname.'</h2>
-'.$tabs.'
+return $heading.$tabs.'
 <div class="row-fluid">
 	<div class="span12">
 		'.$panelFacts.'

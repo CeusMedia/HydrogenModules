@@ -1,11 +1,10 @@
 <?php
-class Job_Billing extends Job_Abstract{
+class Job_Billing extends Job_Abstract
+{
+	protected $logic;
 
-	public function __onInit(){
-		$this->logic	= new Logic_Billing( $this->env );
-	}
-
-	public function bookExpenses(){
+	public function bookExpenses()
+	{
 		$timestamp	= time();
 //		$timestamp	= strtotime( "2017-10-01" );
 		$dayOfWeek	= (int) date( 'w', $timestamp );
@@ -62,7 +61,13 @@ class Job_Billing extends Job_Abstract{
 			$this->out( 'Booked '.$total.' expenses.' );
 	}
 
-	protected function _bookExpense( $expense ){
+	protected function __onInit()
+	{
+		$this->logic	= new Logic_Billing( $this->env );
+	}
+
+	protected function _bookExpense( $expense )
+	{
 		$title	= $expense->title;
 		if( preg_match( '/\[date\.Y\]/', $title ) )
 			$title	= preg_replace( '/\[date.Y\]/', date( 'Y' ), $title );
@@ -102,4 +107,3 @@ class Job_Billing extends Job_Abstract{
 		);
 	}
 }
-?>

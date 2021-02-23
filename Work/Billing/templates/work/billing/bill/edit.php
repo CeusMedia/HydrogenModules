@@ -124,4 +124,3 @@ return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.
 		'.$panelFacts.'
 	</div>
 </div>';
-?>

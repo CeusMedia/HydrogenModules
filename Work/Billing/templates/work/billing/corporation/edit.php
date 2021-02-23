@@ -45,10 +45,10 @@ $panelFacts		= '
 </div>';
 
 
-$tabs	= View_Work_Billing_Corporation::renderTabs( $env, $corporation->corporationId, 0 );
+$tabs		= View_Work_Billing_Corporation::renderTabs( $env, $corporation->corporationId, 0 );
+$heading	= '<h2 class="autocut"><span class="muted">Unternehmen</span> '.$corporation->title.'</h2>';
 
-return '<h2 class="autocut"><span class="muted">Unternehmen</span> '.$corporation->title.'</h2>
-'.$tabs.'
+return $heading.$tabs.'
 <div class="row-fluid">
 	<div class="span12">
 		'.$panelFacts.'

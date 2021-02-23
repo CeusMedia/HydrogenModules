@@ -1,21 +1,14 @@
 <?php
-class Controller_Work_Billing_Bill extends CMF_Hydrogen_Controller{
+class Controller_Work_Billing_Bill extends CMF_Hydrogen_Controller
+{
+	protected $request;
+	protected $session;
+	protected $filterPrefix;
+	protected $logic;
+	protected $modelBill;
 
-	public function __onInit(){
-		$this->logic		= new Logic_Billing( $this->env );
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->filterPrefix	= 'filter_work_billing_bill_';
-		$this->modelBill	= new Model_Billing_Bill( $this->env );
-
-		if( !$this->session->has( $this->filterPrefix.'year' ) )
-			$this->session->set( $this->filterPrefix.'year', date( 'Y' ) );
-		if( !$this->session->has( $this->filterPrefix.'month' ) )
-			$this->session->set( $this->filterPrefix.'month', date( 'm' ) );
-		$this->addData( 'filterSessionPrefix', $this->filterPrefix );
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$billId		= $this->modelBill->add( array(
 				'number'		=> $this->request->get( 'number' ),
@@ -29,7 +22,8 @@ class Controller_Work_Billing_Bill extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function edit( $billId ){
+	public function edit( $billId )
+	{
 		if( $this->request->has( 'save' ) ){
 			$this->logic->editBill( $billId, $this->request->getAll() );
 			$this->restart( './work/billing/bill/breakdown/'.$billId );
@@ -56,7 +50,8 @@ class Controller_Work_Billing_Bill extends CMF_Hydrogen_Controller{
 		$this->addData( 'corporationTransactions', $this->logic->getBillCorporationTransactions( $billId ) );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'status' );
 			$this->session->remove( $this->filterPrefix.'year' );
@@ -76,7 +71,8 @@ class Controller_Work_Billing_Bill extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 		$filterStatus	= $this->session->get( $this->filterPrefix.'status' );
 		$filterYear	= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
@@ -113,7 +109,8 @@ class Controller_Work_Billing_Bill extends CMF_Hydrogen_Controller{
 		$this->addData( 'pages', ceil( $total / 15 ) );
 	}
 
-	public function unbook( $billId ){
+	public function unbook( $billId )
+	{
 		$bill			= $this->logic->getBill( $billId );
 		$modelBillShare		= new Model_Billing_Bill_Share( $this->env );
 		$modelBillReserve	= new Model_Billing_Bill_Reserve( $this->env );
@@ -149,5 +146,20 @@ class Controller_Work_Billing_Bill extends CMF_Hydrogen_Controller{
 //		remark( 'Bill '.$bill->billId.': set status from "booked" to "new"' );
 //		die;
 		$this->restart( './work/billing/bill/breakdown/'.$billId );
+	}
+
+	protected function __onInit()
+	{
+		$this->logic		= new Logic_Billing( $this->env );
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->filterPrefix	= 'filter_work_billing_bill_';
+		$this->modelBill	= new Model_Billing_Bill( $this->env );
+
+		if( !$this->session->has( $this->filterPrefix.'year' ) )
+			$this->session->set( $this->filterPrefix.'year', date( 'Y' ) );
+		if( !$this->session->has( $this->filterPrefix.'month' ) )
+			$this->session->set( $this->filterPrefix.'month', date( 'm' ) );
+		$this->addData( 'filterSessionPrefix', $this->filterPrefix );
 	}
 }

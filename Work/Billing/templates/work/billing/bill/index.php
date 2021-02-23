@@ -144,5 +144,5 @@ return '
 </div>
 <style>
 table td.cell-bill-tax {
-}
+	}
 </style>';

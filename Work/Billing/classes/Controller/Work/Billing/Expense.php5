@@ -1,14 +1,13 @@
 <?php
-class Controller_Work_Billing_Expense extends CMF_Hydrogen_Controller{
+class Controller_Work_Billing_Expense extends CMF_Hydrogen_Controller
+{
+	protected $request;
+	protected $session;
+	protected $logic;
+	protected $modelExpense;
 
-	public function __onInit(){
-		$this->logic	= new Logic_Billing( $this->env );
-		$this->request	= $this->env->getRequest();
-		$this->session	= $this->env->getSession();
-		$this->modelExpense		= new Model_Billing_Expense( $this->env );
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$data	= array(
 				'status'		=> $this->request->get( 'status' ),
@@ -31,7 +30,8 @@ class Controller_Work_Billing_Expense extends CMF_Hydrogen_Controller{
 		$this->addData( 'persons', $this->logic->getPersons() );
 	}
 
-	public function edit( $expenseId ){
+	public function edit( $expenseId )
+	{
 		if( $this->request->has( 'save' ) ){
 			$data	= array(
 				'title'				=> $this->request->get( 'title' ),
@@ -60,7 +60,8 @@ class Controller_Work_Billing_Expense extends CMF_Hydrogen_Controller{
 		$this->addData( 'persons', $this->logic->getPersons() );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$expenses	= $this->logic->getExpenses();
 		$this->addData( 'expenses', $expenses );
 
@@ -75,10 +76,18 @@ class Controller_Work_Billing_Expense extends CMF_Hydrogen_Controller{
 		$this->addData( 'persons', $persons );
 	}
 
-	public function remove( $expenseId ){
+	public function remove( $expenseId )
+	{
 		$expense	= $this->modelExpense->get( $expenseId );
 		$this->modelExpense->remove( $expenseId );
 		$this->restart( NULL, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->logic	= new Logic_Billing( $this->env );
+		$this->request	= $this->env->getRequest();
+		$this->session	= $this->env->getSession();
+		$this->modelExpense		= new Model_Billing_Expense( $this->env );
+	}
 }
-?>

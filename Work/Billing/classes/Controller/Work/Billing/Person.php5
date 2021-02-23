@@ -1,13 +1,12 @@
 <?php
-class Controller_Work_Billing_Person extends CMF_Hydrogen_Controller{
+class Controller_Work_Billing_Person extends CMF_Hydrogen_Controller
+{
+	protected $request;
+	protected $session;
+	protected $logic;
 
-	public function __onInit(){
-		$this->logic	= new Logic_Billing( $this->env );
-		$this->request	= $this->env->getRequest();
-		$this->session	= $this->env->getSession();
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$personId		= $this->logic->addPerson(
 				Model_Billing_Person::STATUS_NEW,
@@ -19,7 +18,8 @@ class Controller_Work_Billing_Person extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function edit( $personId ){
+	public function edit( $personId )
+	{
 		$this->addData( 'person', $this->logic->getPerson( $personId ) );
 		$dbc	= $this->env->getDatabase();
 		$query	= "SELECT SUM(amount) as income FROM billing_transactions AS t WHERE t.toType = 2 AND toId = ".$personId;
@@ -28,7 +28,8 @@ class Controller_Work_Billing_Person extends CMF_Hydrogen_Controller{
 		$this->addData( 'outcome', (float) $dbc->query( $query)->fetch( PDO::FETCH_OBJ )->outcome );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$persons	= $this->logic->getPersons();
 		foreach( $persons as $person ){
 			$person->payouts	= $this->logic->getPersonPayouts( $person->personId );
@@ -36,8 +37,14 @@ class Controller_Work_Billing_Person extends CMF_Hydrogen_Controller{
 		$this->addData( 'persons', $persons );
 	}
 
-	public function remove( $personId ){
+	public function remove( $personId )
+	{
+	}
 
+	protected function __onInit()
+	{
+		$this->logic	= new Logic_Billing( $this->env );
+		$this->request	= $this->env->getRequest();
+		$this->session	= $this->env->getSession();
 	}
 }
-?>

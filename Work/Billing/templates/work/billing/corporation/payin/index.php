@@ -65,4 +65,3 @@ return '<h2 class="autocut"><span class="muted">Unternehmen</span> '.$corporatio
 		</div>
 	</form>
 </div>';
-?>

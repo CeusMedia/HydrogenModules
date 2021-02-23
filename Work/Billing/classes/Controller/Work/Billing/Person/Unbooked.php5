@@ -1,11 +1,10 @@
 <?php
-class Controller_Work_Billing_Person_Unbooked extends CMF_Hydrogen_Controller{
+class Controller_Work_Billing_Person_Unbooked extends CMF_Hydrogen_Controller
+{
+	protected $logic;
 
-	public function __onInit(){
-		$this->logic			= new Logic_Billing( $this->env );
-	}
-
-	public function index( $personId ){
+	public function index( $personId )
+	{
 		$unpayedBillShares	= $this->logic->getPersonBillShares( $personId, array(
 			'status' => Model_Billing_Bill_Share::STATUS_NEW
 		) );
@@ -13,5 +12,10 @@ class Controller_Work_Billing_Person_Unbooked extends CMF_Hydrogen_Controller{
 			$unpayedBillShare->bill	= $this->logic->getBill( $unpayedBillShare->billId );
 		$this->addData( 'unpayedBillShares', $unpayedBillShares );
 		$this->addData( 'person', $this->logic->getPerson( $personId ) );
+	}
+
+	protected function __onInit()
+	{
+		$this->logic	= new Logic_Billing( $this->env );
 	}
 }

@@ -1,14 +1,13 @@
 <?php
-class Controller_Work_Billing_Corporation extends CMF_Hydrogen_Controller{
+class Controller_Work_Billing_Corporation extends CMF_Hydrogen_Controller
+{
+	protected $request;
+	protected $session;
+	protected $logic;
+	protected $modelCorporation;
 
-	public function __onInit(){
-		$this->logic	= new Logic_Billing( $this->env );
-		$this->request	= $this->env->getRequest();
-		$this->session	= $this->env->getSession();
-		$this->modelCorporation	= new Model_Billing_Corporation( $this->env );
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$corporationId		= $this->modelCorporation->add( array(
 				'status'	=> Model_Billing_Corporation::STATUS_NEW,
@@ -21,7 +20,8 @@ class Controller_Work_Billing_Corporation extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function edit( $corporationId ){
+	public function edit( $corporationId )
+	{
 		if( $this->request->has( 'save' ) ){
 			$this->modelCorporation->edit( $corporationId, array(
 				'title'		=> $this->request->get( 'title' ),
@@ -33,9 +33,17 @@ class Controller_Work_Billing_Corporation extends CMF_Hydrogen_Controller{
 		$this->addData( 'corporation', $this->modelCorporation->get( $corporationId ) );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$corporations	= $this->modelCorporation->getAll();
 		$this->addData( 'corporations', $corporations );
 	}
+
+	protected function __onInit()
+	{
+		$this->logic	= new Logic_Billing( $this->env );
+		$this->request	= $this->env->getRequest();
+		$this->session	= $this->env->getSession();
+		$this->modelCorporation	= new Model_Billing_Corporation( $this->env );
+	}
 }
-?>

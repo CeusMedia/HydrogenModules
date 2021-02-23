@@ -1,104 +1,69 @@
 <?php
-class View_Work_Billing_Helper_Transactions{
-
+class View_Work_Billing_Helper_Transactions
+{
 	const MODE_NONE				= 0;
 	const MODE_CORPORATION		= 1;
 	const MODE_PERSON			= 2;
 
+	const MODES					= [
+		self::MODE_NONE,
+		self::MODE_CORPORATION,
+		self::MODE_PERSON,
+	];
+
 	protected $buttons;
 	protected $heading			= 'Transaktionen';
 	protected $mode				= 0;
-	protected $transactions;
+	protected $transactions		= array();
 	protected $filterPrefix;
 	protected $filterUrl;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 		$this->logic	= new Logic_Billing( $this->env );
 		$this->modelBill	= new Model_Billing_Bill( $this->env );
 		$this->modelExpense	= new Model_Billing_Expense( $this->env );
 	}
 
-	public function setButtons( $buttons ){
+	public function setButtons( string $buttons ): self
+	{
 		$this->buttons	= $buttons;
+		return $this;
 	}
 
-	public function setFilterPrefix( $prefix ){
+	public function setFilterPrefix( string $prefix ): self
+	{
 		$this->filterPrefix	= $prefix;
+		return $this;
 	}
 
-	public function setFilterUrl( $url ){
+	public function setFilterUrl( $url ): self
+	{
 		$this->filterUrl	= $url;
+		return $this;
 	}
 
-	public function setHeading( $heading ){
+	public function setHeading( string $heading ): self
+	{
 		$this->heading	= $heading;
+		return $this;
 	}
 
-	public function setMode( $mode ){
+	public function setMode( int $mode ): self
+	{
 		$this->mode	= $mode;
+		return $this;
 	}
 
-	public function setTransactions( $transactions ){
+	public function setTransactions( array $transactions ): self
+	{
 		$this->transactions	= $transactions;
+		return $this;
 	}
 
-	protected function transformDateInTitle( $title ){
-		if( preg_match( '/\[date\.Y\]/', $title ) )
-			$title	= preg_replace( '/\[date.Y\]/', date( 'Y' ), $title );
-		if( preg_match( '/\[date.m\]/', $title ) )
-			$title	= preg_replace( '/\[date.m\]/', date( 'm' ), $title );
-		if( preg_match( '/\[date.d\]/', $title ) )
-			$title	= preg_replace( '/\[date.d\]/', date( 'd' ), $title );
-		return $title;
-	}
-
-	protected function transformRelationToTitle( $transaction ){
-		$parts		= array();
-		$title		= '';
-		$relation	= $transaction->relation;
-		if( preg_match( '/\|billShare:([0-9]+)\|/', $relation ) ){
-			$billShareId	= preg_replace( '/\|billShare:([0-9]+)\|/', '\\1', $relation );
-			$billShare		= $this->logic->getBillShare( $billShareId );
-			$bill			= $this->logic->getBill( $billShare->billId );
-			$linkBill		= UI_HTML_Tag::create( 'a', $bill->title, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
-			$title			= 'Anteil aus Rechnung '.$linkBill;
-		}
-		else if( preg_match( '/\|billReserve:([0-9]+)\|/', $relation ) ){
-			$billReserveId	= preg_replace( '/\|billReserve:([0-9]+)\|/', '\\1', $relation );
-			$billReserve	= $this->logic->getBillReserve( $billReserveId );
-			$bill			= $this->logic->getBill( $billReserve->billId );
-			$linkReserve	= UI_HTML_Tag::create( 'a', $billReserve->title, array( 'href' => './work/billing/reserve/edit/'.$billReserve->reserveId ) );
-			$linkBill		= UI_HTML_Tag::create( 'a', $bill->title, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
-			$prefix			= UI_HTML_Tag::create( 'small', 'Rücklage '.$linkReserve.' aus Rechnung: ', array( 'class' => 'muted' ) );
-			$title			= $prefix.$linkBill;
-		}
-/*		else if( preg_match( '/^bill:([0-9]+)$/', $relation ) ){
-			$id			= preg_replace( '/^bill:([0-9]+)$/', '\\1', $relation );
-			$bill		= $this->modelBill->get( $id );
-			$link		= UI_HTML_Tag::create( 'a', 'RNr.'.$bill->number, array( 'href' => './work/billing/bill/edit/'.$id ) );
-			$relation	= $link;
-		}*/
-		else if( preg_match( '/\|expense:([0-9]+)\|/', $relation ) ){
-			$id			= preg_replace( '/\|expense:([0-9]+)\|/', '\\1', $relation );
-			$expense	= $this->modelExpense->get( $id );
-			$prefix		= UI_HTML_Tag::create( 'small', 'Ausgabe: ', array( 'class' => 'muted' ) );
-			$link		= UI_HTML_Tag::create( 'a', $prefix.$transaction->title, array( 'href' => './work/billing/expense/edit/'.$id ) );
-			$title		= $link;
-		}
-		else if( preg_match( '/\|payin\|/', $relation ) ){
-			$prefix		= UI_HTML_Tag::create( 'small', 'Einzahlung: ', array( 'class' => 'muted' ) );
-			$title		= $prefix.$transaction->title;
-		}
-		else if( preg_match( '/\|payout\|/', $relation ) ){
-			$prefix		= UI_HTML_Tag::create( 'small', 'Auszahlung: ', array( 'class' => 'muted' ) );
-			$title		= $prefix.$transaction->title;
-		}
-		return $title;
-	}
-
-	public function render(){
-
+	public function render(): string
+	{
 		$modelPerson		= new Model_Billing_Person( $this->env );
 		$modelCorporation	= new Model_Billing_Corporation( $this->env );
 
@@ -209,16 +174,71 @@ class View_Work_Billing_Helper_Transactions{
 		</div>';
 	}
 
-	protected function renderFilter(){
-		if( !$this->filterPrefix )
-			return;
-		if( !$this->filterUrl )
-			return;
+	protected function renderFilter(): string
+	{
+		if( !$this->filterPrefix || !$this->filterUrl )
+			return '';
 
 		$filter	= new View_Work_Billing_Helper_Filter( $this->env );
 		$filter->setFilters( array( 'year', 'month' ) );
 		$filter->setSessionPrefix( $this->filterPrefix );
 		$filter->setUrl( $this->filterUrl );
 		return $filter->render();
+	}
+
+	protected function transformDateInTitle( $title ): string
+	{
+		if( preg_match( '/\[date\.Y\]/', $title ) )
+			$title	= preg_replace( '/\[date.Y\]/', date( 'Y' ), $title );
+		if( preg_match( '/\[date.m\]/', $title ) )
+			$title	= preg_replace( '/\[date.m\]/', date( 'm' ), $title );
+		if( preg_match( '/\[date.d\]/', $title ) )
+			$title	= preg_replace( '/\[date.d\]/', date( 'd' ), $title );
+		return $title;
+	}
+
+	protected function transformRelationToTitle( $transaction ): string
+	{
+		$parts		= array();
+		$title		= '';
+		$relation	= $transaction->relation;
+		if( preg_match( '/\|billShare:([0-9]+)\|/', $relation ) ){
+			$billShareId	= preg_replace( '/\|billShare:([0-9]+)\|/', '\\1', $relation );
+			$billShare		= $this->logic->getBillShare( $billShareId );
+			$bill			= $this->logic->getBill( $billShare->billId );
+			$linkBill		= UI_HTML_Tag::create( 'a', $bill->title, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
+			$title			= 'Anteil aus Rechnung '.$linkBill;
+		}
+		else if( preg_match( '/\|billReserve:([0-9]+)\|/', $relation ) ){
+			$billReserveId	= preg_replace( '/\|billReserve:([0-9]+)\|/', '\\1', $relation );
+			$billReserve	= $this->logic->getBillReserve( $billReserveId );
+			$bill			= $this->logic->getBill( $billReserve->billId );
+			$linkReserve	= UI_HTML_Tag::create( 'a', $billReserve->title, array( 'href' => './work/billing/reserve/edit/'.$billReserve->reserveId ) );
+			$linkBill		= UI_HTML_Tag::create( 'a', $bill->title, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
+			$prefix			= UI_HTML_Tag::create( 'small', 'Rücklage '.$linkReserve.' aus Rechnung: ', array( 'class' => 'muted' ) );
+			$title			= $prefix.$linkBill;
+		}
+/*		else if( preg_match( '/^bill:([0-9]+)$/', $relation ) ){
+			$id			= preg_replace( '/^bill:([0-9]+)$/', '\\1', $relation );
+			$bill		= $this->modelBill->get( $id );
+			$link		= UI_HTML_Tag::create( 'a', 'RNr.'.$bill->number, array( 'href' => './work/billing/bill/edit/'.$id ) );
+			$relation	= $link;
+		}*/
+		else if( preg_match( '/\|expense:([0-9]+)\|/', $relation ) ){
+			$id			= preg_replace( '/\|expense:([0-9]+)\|/', '\\1', $relation );
+			$expense	= $this->modelExpense->get( $id );
+			$prefix		= UI_HTML_Tag::create( 'small', 'Ausgabe: ', array( 'class' => 'muted' ) );
+			$link		= UI_HTML_Tag::create( 'a', $prefix.$transaction->title, array( 'href' => './work/billing/expense/edit/'.$id ) );
+			$title		= $link;
+		}
+		else if( preg_match( '/\|payin\|/', $relation ) ){
+			$prefix		= UI_HTML_Tag::create( 'small', 'Einzahlung: ', array( 'class' => 'muted' ) );
+			$title		= $prefix.$transaction->title;
+		}
+		else if( preg_match( '/\|payout\|/', $relation ) ){
+			$prefix		= UI_HTML_Tag::create( 'small', 'Auszahlung: ', array( 'class' => 'muted' ) );
+			$title		= $prefix.$transaction->title;
+		}
+		return $title;
 	}
 }

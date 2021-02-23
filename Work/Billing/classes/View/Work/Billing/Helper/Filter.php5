@@ -1,33 +1,25 @@
 <?php
-class View_Work_Billing_Helper_Filter{
-
+class View_Work_Billing_Helper_Filter
+{
+	protected $env;
 	protected $filters			= array();
 	protected $session;
 	protected $sessionPrefix;
 	protected $url;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->session	= $this->env->getSession();
 	}
 
-	public function __toString(){
+	public function __toString(): string
+	{
 		return $this->render();
 	}
 
-	public function setFilters( $filters ){
-		$this->filters	= $filters;
-	}
-
-	public function setSessionPrefix( $sessionPrefix ){
-		$this->sessionPrefix	= $sessionPrefix;
-	}
-
-	public function setUrl( $url ){
-		$this->url	= $url;
-	}
-
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->filters )
 			throw new RuntimeException( 'No filter columns set' );
 		if( !$this->url )
@@ -85,5 +77,23 @@ class View_Work_Billing_Helper_Filter{
 				'.join( $formFields ).'
 			</div>
 		</form>';
+	}
+
+	public function setFilters( array $filters ): self
+	{
+		$this->filters	= $filters;
+		return $this;
+	}
+
+	public function setSessionPrefix( string $sessionPrefix ): self
+	{
+		$this->sessionPrefix	= $sessionPrefix;
+		return $this;
+	}
+
+	public function setUrl( string $url ): self
+	{
+		$this->url	= $url;
+		return $this;
 	}
 }

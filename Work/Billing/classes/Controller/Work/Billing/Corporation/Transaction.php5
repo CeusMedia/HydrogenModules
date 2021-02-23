@@ -1,20 +1,13 @@
 <?php
-class Controller_Work_Billing_Corporation_Transaction extends CMF_Hydrogen_Controller{
+class Controller_Work_Billing_Corporation_Transaction extends CMF_Hydrogen_Controller
+{
+	protected $request;
+	protected $session;
+	protected $filterPrefix;
+	protected $logic;
 
-	public function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-		$this->filterPrefix		= 'filter_work_billing_corporation_transaction_';
-		$this->logic			= new Logic_Billing( $this->env );
-
-		if( !$this->session->has( $this->filterPrefix.'year' ) )
-			$this->session->set( $this->filterPrefix.'year', date( 'Y' ) );
-		if( !$this->session->has( $this->filterPrefix.'month' ) )
-			$this->session->set( $this->filterPrefix.'month', date( 'm' ) );
-		$this->addData( 'filterSessionPrefix', $this->filterPrefix );
-	}
-
-	public function filter( $corporationId, $reset = FALSE ){
+	public function filter( $corporationId, $reset = FALSE )
+	{
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'year' );
 			$this->session->remove( $this->filterPrefix.'month' );
@@ -26,8 +19,8 @@ class Controller_Work_Billing_Corporation_Transaction extends CMF_Hydrogen_Contr
 		$this->restart( $corporationId, TRUE );
 	}
 
-	public function index( $corporationId ){
-
+	public function index( $corporationId )
+	{
 		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
 
@@ -46,5 +39,19 @@ class Controller_Work_Billing_Corporation_Transaction extends CMF_Hydrogen_Contr
 		$this->addData( 'corporationId', $corporationId );
 		$this->addData( 'filterYear', $filterYear );
 		$this->addData( 'filterMonth', $filterMonth );
+	}
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+		$this->filterPrefix		= 'filter_work_billing_corporation_transaction_';
+		$this->logic			= new Logic_Billing( $this->env );
+
+		if( !$this->session->has( $this->filterPrefix.'year' ) )
+			$this->session->set( $this->filterPrefix.'year', date( 'Y' ) );
+		if( !$this->session->has( $this->filterPrefix.'month' ) )
+			$this->session->set( $this->filterPrefix.'month', date( 'm' ) );
+		$this->addData( 'filterSessionPrefix', $this->filterPrefix );
 	}
 }

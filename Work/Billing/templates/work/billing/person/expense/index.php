@@ -24,10 +24,10 @@ $helper->setFilterPrefix( $filterSessionPrefix );
 $helper->setButtons( $buttonAdd );
 $panelTransactions	= $helper->render();
 
-$tabs	= View_Work_Billing_Person::renderTabs( $env, $person->personId, 2 );
+$tabs		= View_Work_Billing_Person::renderTabs( $env, $person->personId, 2 );
+$heading	= '<h2 class="autocut"><span class="muted">Person</span> '.$person->firstname.' '.$person->surname.'</h2>';
 
-return '<h2 class="autocut"><span class="muted">Person</span> '.$person->firstname.' '.$person->surname.'</h2>
-'.$tabs.'
+return $heading.$tabs.'
 <div class="row-fluid">
 	<div class="span12">
 		'.$panelTransactions.'

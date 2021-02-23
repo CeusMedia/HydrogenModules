@@ -1,8 +1,13 @@
 <?php
-class Model_Billing_Transaction extends CMF_Hydrogen_Model{
-
+class Model_Billing_Transaction extends CMF_Hydrogen_Model
+{
 	const STATUS_NEW		= 0;
 	const STATUS_BOOKED		= 1;
+
+	const STATUSES				= [
+		self::STATUS_NEW,
+		self::STATUS_BOOKED,
+	];
 
 	const TYPE_NONE			= 0;
 	const TYPE_CORPORATION	= 1;
@@ -14,6 +19,7 @@ class Model_Billing_Transaction extends CMF_Hydrogen_Model{
 	const TYPE_PAYOUT		= 7;
 
 	protected $name		= "billing_transactions";
+
 	protected $columns	= array(
 		'transactionId',
 		'fromType',
@@ -26,7 +32,9 @@ class Model_Billing_Transaction extends CMF_Hydrogen_Model{
 		'title',
 		'dateBooked',
 	);
+
 	protected $primaryKey	= 'transactionId';
+
 	protected $indices		= array(
 		'fromType',
 		'fromId',
@@ -35,5 +43,6 @@ class Model_Billing_Transaction extends CMF_Hydrogen_Model{
 		'status',
 		'relation',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

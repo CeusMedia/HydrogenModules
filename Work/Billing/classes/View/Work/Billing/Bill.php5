@@ -1,22 +1,24 @@
 <?php
-class View_Work_Billing_Bill extends CMF_Hydrogen_View{
-
-	public function __onInit(){}
-	public function add(){}
-	public function edit(){}
-	public function index(){}
-
-	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-//		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user' );						//  load words
-//		$context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
-		$modelBill	= new Model_Billing_Bill( $env );
-		$bill		= $modelBill->get( $data['billId'] );
-		$context->registerTab( 'edit/'.$data['billId'], '<i class="fa fa-fw fa-edit"></i> Daten', 0 );
-		$context->registerTab( 'breakdown/'.$data['billId'], '<i class="fa fa-fw fa-pie-chart"></i> Aufteilung', 1 );
-		$context->registerTab( 'transaction/'.$data['billId'], '<i class="fa fa-fw fa-exchange"></i> Transaktionen', 2, $bill->status == 0 );
+class View_Work_Billing_Bill extends CMF_Hydrogen_View
+{
+	public function __onInit()
+	{
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment $env, $billId, $current = 0 ){
+	public function add()
+	{
+	}
+
+	public function edit()
+	{
+	}
+
+	public function index()
+	{
+	}
+
+	public static function renderTabs( CMF_Hydrogen_Environment $env, $billId, $current = 0 ): string
+	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/billing/bill/' );
 		$data	= array( 'billId' => $billId );
@@ -24,4 +26,3 @@ class View_Work_Billing_Bill extends CMF_Hydrogen_View{
 		return $tabs->renderTabs( $current );
 	}
 }
-?>

@@ -1,14 +1,13 @@
 <?php
-class Controller_Work_Billing_Reserve extends CMF_Hydrogen_Controller{
+class Controller_Work_Billing_Reserve extends CMF_Hydrogen_Controller
+{
+	protected $request;
+	protected $session;
+	protected $logic;
+	protected $modelReserve;
 
-	public function __onInit(){
-		$this->logic	= new Logic_Billing( $this->env );
-		$this->request	= $this->env->getRequest();
-		$this->session	= $this->env->getSession();
-		$this->modelReserve	= new Model_Billing_Reserve( $this->env );
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$reserveId		= $this->modelReserve->add( $this->request->getAll() );
 			$this->restart( 'edit/'.$reserveId, TRUE );
@@ -16,7 +15,8 @@ class Controller_Work_Billing_Reserve extends CMF_Hydrogen_Controller{
 		$this->addData( 'corporations', $this->logic->getCorporations() );
 	}
 
-	public function edit( $reserveId ){
+	public function edit( $reserveId )
+	{
 		if( $this->request->has( 'save' ) ){
 			$this->modelReserve->edit( $reserveId, $this->request->getAll() );
 			$this->restart( NULL, TRUE );
@@ -25,7 +25,8 @@ class Controller_Work_Billing_Reserve extends CMF_Hydrogen_Controller{
 		$this->addData( 'corporations', $this->logic->getCorporations() );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$reserves	= $this->modelReserve->getAll();
 		$this->addData( 'reserves', $reserves );
 
@@ -35,10 +36,18 @@ class Controller_Work_Billing_Reserve extends CMF_Hydrogen_Controller{
 		$this->addData( 'corporations', $corporations );
 	}
 
-	public function remove( $reserveId ){
+	public function remove( $reserveId )
+	{
 		$reserve	= $this->modelReserve->get( $reserveId );
 		$this->modelReserve->remove( $reserveId );
 		$this->restart( NULL, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->logic	= new Logic_Billing( $this->env );
+		$this->request	= $this->env->getRequest();
+		$this->session	= $this->env->getSession();
+		$this->modelReserve	= new Model_Billing_Reserve( $this->env );
+	}
 }
-?>

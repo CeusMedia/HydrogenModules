@@ -1,21 +1,19 @@
 <?php
-class Controller_Work_Billing_Bill_Breakdown extends CMF_Hydrogen_Controller{
+class Controller_Work_Billing_Bill_Breakdown extends CMF_Hydrogen_Controller
+{
+	protected $request;
+	protected $logic;
+	protected $modelBill;
 
-	public function __onInit(){
-		$this->logic		= new Logic_Billing( $this->env );
-		$this->request		= $this->env->getRequest();
-//		$this->session		= $this->env->getSession();
-//		$this->filterPrefix	= 'filter_work_billing_bill_';
-		$this->modelBill	= new Model_Billing_Bill( $this->env );
-	}
-
-	public function addReserve( $billId ){
+	public function addReserve( $billId )
+	{
 		$reserveId	= $this->request->get( 'reserveId' );
 		$this->logic->addBillReserve( $billId, $reserveId );
 		$this->restart( $billId, TRUE );
 	}
 
-	public function addShare( $billId ){
+	public function addShare( $billId )
+	{
 		$type		= (int) $this->request->get( 'type' );
 		$percent	= $this->request->get( 'percent' );
 		$amount		= $this->request->get( 'amount' );
@@ -32,7 +30,8 @@ class Controller_Work_Billing_Bill_Breakdown extends CMF_Hydrogen_Controller{
 		$this->restart( $billId, TRUE );
 	}
 
-	public function addExpense( $billId ){
+	public function addExpense( $billId )
+	{
 		$title	= $this->request->get( 'title' );
 		$amount	= $this->request->get( 'amount' );
 		$status	= $this->request->get( 'status' );
@@ -40,12 +39,14 @@ class Controller_Work_Billing_Bill_Breakdown extends CMF_Hydrogen_Controller{
 		$this->restart( $billId, TRUE );
 	}
 
-	public function book( $billId ){
+	public function book( $billId )
+	{
 		$this->logic->closeBill( $billId );
 		$this->restart( './work/billing/bill/transaction/'.$billId );
 	}
 
-	public function index( $billId ){
+	public function index( $billId )
+	{
 		$bill	= $this->logic->getBill( $billId );
 		$billShares	= $this->logic->getBillShares( $billId );
 		foreach( $billShares as $billShare ){
@@ -73,7 +74,8 @@ class Controller_Work_Billing_Bill_Breakdown extends CMF_Hydrogen_Controller{
 //		$this->addData( 'corporationTransactions', $this->logic->getBillCorporationTransactions( $billId ) );
 	}
 
-	public function removeReserve( $billReserveId ){
+	public function removeReserve( $billReserveId )
+	{
 		$billReserve	= $this->logic->getBillReserve( $billReserveId );
 		if( !$billReserve )
 			$this->restart( NULL, TRUE );
@@ -81,7 +83,8 @@ class Controller_Work_Billing_Bill_Breakdown extends CMF_Hydrogen_Controller{
 		$this->restart( $billReserve->billId, TRUE );
 	}
 
-	public function removeShare( $billShareId ){
+	public function removeShare( $billShareId )
+	{
 		$billShare	= $this->logic->getBillShare( $billShareId );
 		if( !$billShare )
 			$this->restart( NULL, TRUE );
@@ -89,11 +92,21 @@ class Controller_Work_Billing_Bill_Breakdown extends CMF_Hydrogen_Controller{
 		$this->restart( $billShare->billId, TRUE );
 	}
 
-	public function removeExpense( $billExpenseId ){
+	public function removeExpense( $billExpenseId )
+	{
 		$billExpense	= $this->logic->getBillExpense( $billExpenseId );
 		if( !$billExpense )
 			$this->restart( NULL, TRUE );
 		$this->logic->removeBillExpense( $billExpenseId );
 		$this->restart( $billExpense->billId, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->logic		= new Logic_Billing( $this->env );
+		$this->request		= $this->env->getRequest();
+//		$this->session		= $this->env->getSession();
+//		$this->filterPrefix	= 'filter_work_billing_bill_';
+		$this->modelBill	= new Model_Billing_Bill( $this->env );
 	}
 }

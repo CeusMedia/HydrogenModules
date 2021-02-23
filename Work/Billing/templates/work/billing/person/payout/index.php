@@ -31,12 +31,12 @@ if( 0 && $person->balance <= 0 ){							//  disabled for now
 	) );
 }
 
-$amount	= $person->balance > 0 ? floor( $person->balance * 100 ) / 100 : 0;
+$amount		= $person->balance > 0 ? floor( $person->balance * 100 ) / 100 : 0;
 
-$tabs	= View_Work_Billing_Person::renderTabs( $env, $person->personId, 4 );
+$tabs		= View_Work_Billing_Person::renderTabs( $env, $person->personId, 4 );
+$heading	= '<h2 class="autocut"><span class="muted">Person</span> '.$person->firstname.' '.$person->surname.'</h2>';
 
-return '<h2 class="autocut"><span class="muted">Person</span> '.$person->firstname.' '.$person->surname.'</h2>
-'.$tabs.'
+return $heading.$tabs.'
 <div class="row-fluid">
 	<div class="span12">
 		'.$panelTransactions.'
@@ -73,4 +73,3 @@ return '<h2 class="autocut"><span class="muted">Person</span> '.$person->firstna
 		</div>
 	</form>
 </div>';
-?>
