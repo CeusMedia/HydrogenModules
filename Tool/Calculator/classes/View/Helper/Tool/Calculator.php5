@@ -1,17 +1,15 @@
 <?php
-class View_Helper_Tool_Calculator{
-
+class View_Helper_Tool_Calculator
+{
 	protected $id	= 'calc1';
 
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env	= $env;
 	}
 
-	public function setId( $id ){
-		$this->id	= $id;
-	}
-
-	public function render(){
+	public function render(): string
+	{
 		return '
 			<div class="calculator" id="'.$this->id.'">
 				<div class="panel-left">
@@ -54,5 +52,11 @@ class View_Helper_Tool_Calculator{
 				<div class="clearfix">
 				</div>
 			</div>';
+	}
+
+	public function setId( string $id ): self
+	{
+		$this->id	= $id;
+		return $this;
 	}
 }

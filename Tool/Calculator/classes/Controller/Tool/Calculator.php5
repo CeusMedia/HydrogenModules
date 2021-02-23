@@ -1,7 +1,8 @@
 <?php
-class Controller_Tool_Calculator extends CMF_Hydrogen_Controller{
-
-	public function index(){
+class Controller_Tool_Calculator extends CMF_Hydrogen_Controller
+{
+	public function index()
+	{
 		if( !$this->env->getRequest()->isAjax() )
 			return;
 		$status		= "void";
@@ -27,4 +28,3 @@ class Controller_Tool_Calculator extends CMF_Hydrogen_Controller{
 		exit;
 	}
 }
-?>

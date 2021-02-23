@@ -1,26 +1,29 @@
 <?php
-class Model_Calculator_Parenthesis extends Model_Calculator_TerminalExpression {
+class Model_Calculator_Parenthesis extends Model_Calculator_TerminalExpression
+{
+	protected $precidence	= 7;
 
-    protected $precidence = 7;
+	public function operate( Model_Calculator_Stack $stack )
+	{
+	}
 
-    public function operate(Model_Calculator_Stack $stack) {
-    }
+	public function getPrecidence(): int
+	{
+		return $this->precidence;
+	}
 
-    public function getPrecidence() {
-        return $this->precidence;
-    }
+	public function isNoOp(): bool
+	{
+		return TRUE;
+	}
 
-    public function isNoOp() {
-        return true;
-    }
+	public function isParenthesis(): bool
+	{
+		return TRUE;
+	}
 
-    public function isParenthesis() {
-        return true;
-    }
-
-    public function isOpen() {
-        return $this->value == '(';
-    }
-
+	public function isOpen(): bool
+	{
+		return $this->value == '(';
+	}
 }
-?>
