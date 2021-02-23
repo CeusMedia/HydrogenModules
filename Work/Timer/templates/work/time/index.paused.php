@@ -19,4 +19,3 @@ return '
 		'.$listActive.'
 	</div>
 </div>';
-?>

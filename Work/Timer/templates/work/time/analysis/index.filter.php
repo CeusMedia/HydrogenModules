@@ -1,8 +1,5 @@
 <?php
 
-
-//print_m( $projects );
-
 $optMode	= $words['index-filter-modes'];
 $optMode	= UI_HTML_Elements::Options( $words['index-filter-modes'], $filterMode );
 

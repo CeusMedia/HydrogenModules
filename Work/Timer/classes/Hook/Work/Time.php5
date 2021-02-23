@@ -1,7 +1,7 @@
 <?php
 class Hook_Work_Time extends CMF_Hydrogen_Hook
 {
-	public static function onBeforeLogout( CMF_Hydrogen_Environment $env, $module, $context, $payload = array() )
+	public static function onAuthBeforeLogout( CMF_Hydrogen_Environment $env, $module, $context, $payload = array() )
 	{
 		$data	= new ADT_List_Dictionary( $payload );
 		if( ( $userId = $data->get( 'userId' ) ) ){
@@ -16,12 +16,12 @@ class Hook_Work_Time extends CMF_Hydrogen_Hook
 		}
 	}
 
-	public static function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onDashboardRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload )
 	{
-		if( !$env->getAcl()->has( 'work/time', 'ajaxRenderDashboardPanel' ) )
+		if( !$env->getAcl()->has( 'ajax/work/time', 'renderDashboardPanel' ) )
 			return;
 		$context->registerPanel( 'work-timer-my', array(
-			'url'			=> 'work/time/ajaxRenderDashboardPanel',
+			'url'			=> 'ajax/work/time/renderDashboardPanel',
 			'title'			=> 'Aktivität: Meine',
 			'heading'		=> 'Meine letzte Aktivität',
 			'icon'			=> 'fa fa-fw fa-play',
@@ -42,13 +42,13 @@ class Hook_Work_Time extends CMF_Hydrogen_Hook
 		$this->modelTimer->removeByIndex( 'projectId', $projectId );
 	}
 
-	public static function onCallForModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onEnvCallForModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
 	{
 		$context	= new View_Helper_Work_Time_Timer( $env );
 		$env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, array() );
 	}
 
-	public static function onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onWorkTimeRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $payload )
 	{
 		$words	= (object) $env->getLanguage()->getWords( 'work/time' );						//  load words
 		$context->registerTab( '', $words->tabs['dashboard'], 0 );								//  register main tab
@@ -65,7 +65,7 @@ class Hook_Work_Time extends CMF_Hydrogen_Hook
 		$context->registerPanel( 'work-timer-others', 'Aktivitäten Anderer', $helper->render(), '3col-flex', 10 );
 	}*/
 
-	public static function onRegisterAnalysisTab( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onWorkTimeRegisterAnalysisTab( CMF_Hydrogen_Environment $env, $context, $module, $payload )
 	{
 		$words	= (object) $env->getLanguage()->getWords( 'work/time' );							//  load words
 //		$context->registerTab( '', $words->tabs['dashboard'], 0 );									//  register main tab
@@ -73,7 +73,7 @@ class Hook_Work_Time extends CMF_Hydrogen_Hook
 //		$context->registerTab( 'report', $words->tabs['report'], 2 );								//  register main tab
 	}
 
-	public static function onRegisterArchiveTab( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onWorkTimeRegisterArchiveTab( CMF_Hydrogen_Environment $env, $context, $module, $payload )
 	{
 		$words	= (object) $env->getLanguage()->getWords( 'work/time' );							//  load words
 //		$context->registerTab( '', $words->tabs['dashboard'], 0 );									//  register main tab

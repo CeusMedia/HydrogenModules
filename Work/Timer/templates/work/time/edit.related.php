@@ -27,4 +27,3 @@ return '
 		'.$listRelated.'
 	</div>
 </div>';
-?>

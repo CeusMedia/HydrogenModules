@@ -11,52 +11,6 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller
 	protected $projectMap;
 	protected $modules			= array();
 
-	static public function ___onBeforeLogout( CMF_Hydrogen_Environment $env, $module, $context, $payload = array() )
-	{
-		$data	= new ADT_List_Dictionary( $payload );
-		if( ( $userId = $data->get( 'userId' ) ) ){
-			$logicTimer	= Logic_Work_Timer::getInstance( $env );
-			$modelTimer	= new Model_Work_Timer( $env );
-			$indices	= array( 'userId' => $userId, 'status' => 1 );
-			$active		= $modelTimer->getByIndices( $indices );
-			if( $active ){
-				$logic	= Logic_Work_Timer::getInstance( $env );
-				$logic->pause( $active->workTimerId );
-			}
-		}
-	}
-
-	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload )
-	{
-		if( !$env->getAcl()->has( 'work/time', 'ajaxRenderDashboardPanel' ) )
-			return;
-		$context->registerPanel( 'work-timer-my', array(
-			'url'			=> 'work/time/ajaxRenderDashboardPanel',
-			'title'			=> 'Aktivität: Meine',
-			'heading'		=> 'Meine letzte Aktivität',
-			'icon'			=> 'fa fa-fw fa-play',
-			'rank'			=> 10,
-		) );
-		$context->registerPanel( 'work-timer-others', array(
-			'url'			=> 'work/time/ajaxRenderDashboardPanel',
-			'title'			=> 'Aktivität: Andere',
-			'heading'		=> 'Aktivitäten der Anderen',
-			'rank'			=> 20,
-			'refresh'		=> 10,
-		) );
-	}
-
-	static public function ___onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload )
-	{
-		$projectId	= $payload['projectId'];
-		$this->modelTimer->removeByIndex( 'projectId', $projectId );
-	}
-
-/*	public function registerModule( $moduleId, $modelClass, $link ){
-		View_Helper_Work_Time_Timer::registerModule( $this->env, $moduleId, $modelClass, $link );
-	}
-*/
-
 	public function add()
 	{
 		if( !$this->projectMap && !$this->env->getRequest()->isAjax() )
@@ -104,20 +58,6 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller
 		$this->addData( 'defaultStatus', (int) $this->request->get( 'status' ) );
 		$this->addData( 'from', $this->request->get( 'from' ) );
 		$this->addData( 'workers', $this->logicProject->getCoworkers( $this->userId ) );
-	}
-
-	public function ajaxRenderDashboardPanel( $panelId )
-	{
-		switch( $panelId ){
-			case 'work-timer-my':
-				$helper		= new View_Helper_Work_Time_Dashboard_My( $this->env );
-				break;
-			case 'work-timer-others':
-				$helper		= new View_Helper_Work_Time_Dashboard_Others( $this->env );
-				break;
-		}
-		print( $helper->render() );
-		exit;
 	}
 
 	public function assign()

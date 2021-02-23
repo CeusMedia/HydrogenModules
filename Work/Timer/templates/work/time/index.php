@@ -29,4 +29,3 @@ return $tabs.$textIndexTop.'
 	<div class="span6">
 	</div>
 </div>'.$textIndexBottom;
-?>

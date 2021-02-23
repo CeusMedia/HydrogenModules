@@ -67,4 +67,3 @@ return $textAddTop.'
 	</div>
 </div>
 '.$textAddBottom;
-?>

@@ -4,7 +4,6 @@ $indicator	= new UI_HTML_Indicator( array(
 	'useColor'	=> FALSE,
 ) );
 
-
 function renderTime( $seconds ){
 	if( $seconds )
 		return View_Work_Mission::formatSeconds( $seconds );
@@ -45,8 +44,6 @@ if( !$data )
 	return;
 
 //$table	= UI_HTML_Tag::create( 'div', '...', array( 'class' => 'alert alert-info' ) );
-
-
 
 if( $filterMode === "users" ){
 	$rows	= array();

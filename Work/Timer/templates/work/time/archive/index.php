@@ -20,4 +20,3 @@ return $tabs.$textIndexTop.'
 		'.$panelList.'
 	</div>
 </div>'.$textIndexBottom;
-?>

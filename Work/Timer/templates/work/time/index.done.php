@@ -19,4 +19,3 @@ return '
 		'.$listDone.'
 	</div>
 </div>';
-?>

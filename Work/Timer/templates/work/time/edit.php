@@ -126,4 +126,3 @@ return $textEditTop.'
 	</div>
 </div>
 '.$textEditBottom;
-?>
