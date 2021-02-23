@@ -3,7 +3,7 @@
 	<title>Server: IP Lock</title>
 	<description><![CDATA[]]></description>
 	<category>Server</category>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen Module.</log>
 	<log version="0.2.1">Extracted logic to class.</log>
@@ -18,6 +18,7 @@
 	<log version="0.3.2">Use status constants in models and logic.</log>
 	<log version="0.3.3">Extract hook to own class.</log>
 	<log version="0.3.4">Add strictness parameter.</log>
+	<log version="0.3.5">Improve code style.</log>
 <!--	<log version="0.3.x">Added whitelist.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

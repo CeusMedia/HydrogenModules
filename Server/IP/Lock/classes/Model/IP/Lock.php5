@@ -1,11 +1,19 @@
 <?php
-class Model_IP_Lock extends CMF_Hydrogen_Model{
-
+class Model_IP_Lock extends CMF_Hydrogen_Model
+{
 	const STATUS_UNLOCKED		= -2;
 	const STATUS_CANCELLED		= -1;
 	const STATUS_REQUEST_LOCK	= 0;
 	const STATUS_LOCKED			= 1;
 	const STATUS_REQUEST_UNLOCK	= 2;
+
+	const STATUSES			= [
+		self::STATUS_UNLOCKED,
+		self::STATUS_CANCELLED,
+		self::STATUS_REQUEST_LOCK,
+		self::STATUS_LOCKED,
+		self::STATUS_REQUEST_UNLOCK,
+	];
 
 	protected $name		= 'ip_locks';
 
@@ -33,4 +41,3 @@ class Model_IP_Lock extends CMF_Hydrogen_Model{
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

@@ -1,22 +1,17 @@
 <?php
-class Logic_IP_Lock extends CMF_Hydrogen_Logic{
-
+class Logic_IP_Lock extends CMF_Hydrogen_Logic
+{
 	protected $modelFilter;
 	protected $modelLock;
 	protected $modelReason;
 
-	protected function __onInit() {
-		$this->modelLock	= new Model_IP_Lock( $this->env );
-		$this->modelFilter	= new Model_IP_Lock_Filter( $this->env );
-		$this->modelReason	= new Model_IP_Lock_Reason( $this->env );
-	}
-
-	public function applyFilters(){
+	public function applyFilters(): bool
+	{
 		$ip		= getEnv( 'REMOTE_ADDR' );
 		$uri	= getEnv( 'REQUEST_URI' );
 		$method	= getEnv( 'REQUEST_METHOD' );
 		if( $this->isLockedIp( $ip ) )
-			return;
+			return FALSE;
 		$conditions	= array( 'status' => Model_IP_Lock_Filter::STATUS_ENABLED );
 		$filters	= $this->modelFilter->getAll( $conditions );
 		foreach( $filters as $filter ){
@@ -37,18 +32,21 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return FALSE;
 	}
 
-	public function cancel( $ipLockId, $strict = TRUE ){
+	public function cancel( $ipLockId, bool $strict = TRUE ): bool
+	{
 		$lock	= $this->get( $ipLockId, $strict );
 		if( $lock->status == Model_IP_Lock_Filter::STATUS_CANCELLED )
 			return FALSE;																			//  indicate: lock already cancelled
 		return $this->setStatus( $ipLockId, Model_IP_Lock_Filter::STATUS_CANCELLED, $strict );		//  cancel lock and return TRUE
 	}
 
-	public function count( $conditions ){
+	public function count( array $conditions ): int
+	{
 		return $this->modelLock->count( $conditions );
 	}
 
-	public function countView( $ipLockId ){
+	public function countView( $ipLockId ): int
+	{
 		$lock	= $this->get( $ipLockId );
 		$this->modelLock->edit( $ipLockId, array(
 			'views'		=> $lock->views + 1,
@@ -56,7 +54,8 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		) );
 	}
 
-	public function get( $ipLockId, $strict = TRUE ){
+	public function get( $ipLockId, bool $strict = TRUE )
+	{
 		$lock	= $this->modelLock->get( $ipLockId );
 		if( !$lock ){
 			if( $strict )
@@ -76,14 +75,16 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return $lock;
 	}
 
-	public function getAll( $conditions = array(), $orders = array(), $limits = array() ){
+	public function getAll( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	{
 		$list	= $this->modelLock->getAll( $conditions, $orders, $limits );
 		foreach( $list as $nr => $lock )
 			$lock->reason	= $this->modelReason->get( $lock->reasonId );
 		return $list;
 	}
 
-	public function getByIp( $ip, $strict = TRUE ){
+	public function getByIp( $ip, bool $strict = TRUE )
+	{
 		$lock	= $this->modelLock->getByIndex( 'IP', $ip );
 		if( !$lock ){
 			if( $strict )
@@ -93,27 +94,32 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return $this->get( $lock->ipLockId, $strict );
 	}
 
-	public function getFilters( $conditions = array(), $orders = array(), $limits = array() ){
+	public function getFilters( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	{
 		return $this->modelFilter->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getFiltersOfReason( $reasonId, $conditions = array(), $orders = array(), $limits = array() ){
+	public function getFiltersOfReason( $reasonId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	{
 		$conditions['reasonId']	= $reasonId;
 		return $this->getFilters( $conditions, $orders, $limits );
 	}
 
-	public function getReasons( $conditions = array(), $orders = array(), $limits = array() ){
+	public function getReasons( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	{
 		return $this->modelReason->getAll( $conditions, $orders, $limits );
 	}
 
-	public function isLockedIp( $ip ){
+	public function isLockedIp( string $ip ): bool
+	{
 		$lock	= $this->getByIp( $ip, FALSE );
 		if( !$lock )
 			return FALSE;
 		return $lock->status >= Model_IP_Lock_Filter::STATUS_LOCKED;								//  lock is set or has release request
 	}
 
-	public function lock( $ipLockId, $strict = TRUE ){
+	public function lock( $ipLockId, bool $strict = TRUE ): bool
+	{
 		$lock	= $this->get( $ipLockId, $strict );
 		$states	= array(
 			Model_IP_Lock_Filter::STATUS_UNLOCKED,
@@ -125,7 +131,8 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return $this->setStatus( $ipLockId, Model_IP_Lock_Filter::STATUS_LOCKED, $strict );			//  realize lock and return TRUE
 	}
 
-	public function lockIp( $ip, $reasonId = NULL, $filter = NULL ){
+	public function lockIp( string $ip, $reasonId = NULL, $filter = NULL )
+	{
 		$lock	= $this->getByIp( $ip, FALSE );
 		if( !$lock ){
 			$lockId	= $this->modelLock->add( array(
@@ -146,12 +153,14 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return $lock->ipLockId;
 	}
 
-	public function remove( $ipLockId, $strict = TRUE ){
+	public function remove( $ipLockId, bool $strict = TRUE )
+	{
 		$lock	= $this->get( $ipLockId, $strict );
 		return $this->modelLock->remove( $lock->ipLockId );
 	}
 
-	public function removeAll( $locks = TRUE, $filters = FALSE, $reasons = FALSE ){
+	public function removeAll( bool $locks = TRUE, bool $filters = FALSE, bool $reasons = FALSE )
+	{
 		if( $locks )
 			$this->modelLock->truncate();
 		if( $filters )
@@ -160,7 +169,8 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 			$this->modelReason->truncate();
 	}
 
-	public function requestUnlock( $ipLockId, $strict = TRUE ){
+	public function requestUnlock( $ipLockId, bool $strict = TRUE ): bool
+	{
 		$lock	= $this->get( $ipLockId, $strict );
 		if( $lock->status != Model_IP_Lock_Filter::STATUS_LOCKED )
 			return FALSE;																			//  indicate: lock is not locked
@@ -168,7 +178,8 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return $this->setStatus( $ipLockId, $targetStatis, $strict );								//  note unlock request and return TRUE
 	}
 
-	public function setStatus( $ipLockId, $status, $strict = TRUE ){
+	public function setStatus( $ipLockId, int $status, bool $strict = TRUE ): bool
+	{
 		$lock	= $this->get( $ipLockId, $strict );
 		$data	= array( 'status' => $status );
 		if( $status == Model_IP_Lock_Filter::STATUS_UNLOCKED )
@@ -180,7 +191,8 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return (bool) $this->modelLock->edit( $ipLockId, $data );
 	}
 
-	public function unlockIfOverdue( $ipLockIdOrIp, $strict = TRUE ){
+	public function unlockIfOverdue( $ipLockIdOrIp, bool $strict = TRUE ): bool
+	{
 		if( is_int( $ipLockIdOrIp ) )
 			$lock	= $this->get( $ipLockId, $strict );
 		else
@@ -194,7 +206,8 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 		return (bool) $this->unlock( $lock->ipLockId );												//  release lock and return TRUE
 	}
 
-	public function unlock( $ipLockId, $strict = TRUE ){
+	public function unlock( $ipLockId, bool $strict = TRUE ): bool
+	{
 		$lock	= $this->get( $ipLockId, $strict );
 		if( !$lock )
 			return NULL;
@@ -202,5 +215,11 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic{
 			return FALSE;																			//  indicate: lock not locked
 		return $this->setStatus( $ipLockId, Model_IP_Lock_Filter::STATUS_UNLOCKED, $strict );		//  unlock lock and return TRUE
 	}
+
+	protected function __onInit()
+	{
+		$this->modelLock	= new Model_IP_Lock( $this->env );
+		$this->modelFilter	= new Model_IP_Lock_Filter( $this->env );
+		$this->modelReason	= new Model_IP_Lock_Reason( $this->env );
+	}
 }
-?>

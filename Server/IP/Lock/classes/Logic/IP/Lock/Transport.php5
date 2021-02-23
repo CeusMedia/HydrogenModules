@@ -1,19 +1,10 @@
 <?php
-class Logic_IP_Lock_Transport extends CMF_Hydrogen_Logic{
-
+class Logic_IP_Lock_Transport extends CMF_Hydrogen_Logic
+{
 	protected $modelFilter;
 	protected $modelReason;
 	protected $modelLock;
-
 	protected $logicLock;
-	protected $logicTransport;
-
-	protected function __onInit(){
-		$this->modelFilter	= new Model_IP_Lock_Filter( $this->env );
-		$this->modelReason	= new Model_IP_Lock_Reason( $this->env );
-		$this->modelLock	= new Model_IP_Lock( $this->env );
-		$this->logicLock		= $this->env->getLogic()->get( 'ipLock' );
-	}
 
 	/**
 	 *	Export reasons and filters.
@@ -22,7 +13,8 @@ class Logic_IP_Lock_Transport extends CMF_Hydrogen_Logic{
 	 *	@param		array		$filterIds		List if filter IDs (empty: all)
 	 *	@return		object		Map of reasons and filters (keys: reasons, filters)
 	 */
-	public function export( $reasonIds = array(), $filterIds = array() ){
+	public function export( array $reasonIds = array(), array $filterIds = array() )
+	{
 		if( !$reasonIds ){
 			$reasons	= $this->modelReason->getAll();
 			$filters	= $this->modelFilter->getAll();
@@ -60,7 +52,8 @@ class Logic_IP_Lock_Transport extends CMF_Hydrogen_Logic{
 	 *	@param		boolean		$pretty			Flag: return pretty JSON string
 	 *	@return		string		JSON string containing exported reasons and filters
 	 */
-	public function exportAsJson( $reasonIds = array(), $filterIds = array(), $pretty = FALSE ){
+	public function exportAsJson( array $reasonIds = array(), array $filterIds = array(), bool $pretty = FALSE ): string
+	{
 		$data	= $this->export( $reasonIds, $filterIds );
 		return json_encode( $data, $pretty ? JSON_PRETTY_PRINT : NULL );
 	}
@@ -76,7 +69,8 @@ class Logic_IP_Lock_Transport extends CMF_Hydrogen_Logic{
 	 *	@return		object		Data object containging number of affected reasons and filters
 	 *	@throws		RuntimeException	if import transaction failed
 	 */
-	public function import( $data, $resetAllBefore = FALSE ){
+	public function import( $data, bool $resetAllBefore = FALSE )
+	{
 		$dbc	= $this->env->getDatabase();
 		try{
 			$dbc->beginTransaction();
@@ -106,23 +100,51 @@ class Logic_IP_Lock_Transport extends CMF_Hydrogen_Logic{
 	}
 
 	/**
-	 *	Tries to import lists of reasons and filters from JSON string.
+	 *	Tries to import lists of reasons and filters from JSON file.
 	 *	Will import reasons and filters directly if having none set or reset is forced.
 	 *	Other will try to merge new reasons and filters with existing ones.
 	 *
 	 *	@access		public
-	 *	@param		object		Data object containing reasons and filters
-	 *	@param		boolean		Flag: clear locks, filters and reasons beforehand
+	 *	@param		string		$jsonFile			Data object containing reasons and filters
+	 *	@param		boolean		$resetAllBefore		Flag: clear locks, filters and reasons beforehand
 	 *	@return		object		Data object containging number of affected reasons and filters
 	 *	@throws		RuntimeException	if import transaction failed
 	 */
-	public function importFromJson( $json, $resetAllBefore = FALSE ){
-		$data	= FS_File_JSON_Reader::load( $json );
-		$this->import( $data, $resetAllBefore );
+	public function importFromJson( string $json, bool $resetAllBefore = FALSE )
+	{
+		$data	= ADT_JSON_Parser::getNew()->parse( $json );
+		return $this->import( $data, $resetAllBefore );
+	}
+
+	/**
+	 *	Tries to import lists of reasons and filters from JSON file.
+	 *	Will import reasons and filters directly if having none set or reset is forced.
+	 *	Other will try to merge new reasons and filters with existing ones.
+	 *
+	 *	@access		public
+	 *	@param		string		$jsonFile			JSON file containing reasons and filters
+	 *	@param		boolean		$resetAllBefore		Flag: clear locks, filters and reasons beforehand
+	 *	@return		object		Data object containging number of affected reasons and filters
+	 *	@throws		RuntimeException	if import transaction failed
+	 */
+	public function importFromJsonFile( string $jsonFile, bool $resetAllBefore = FALSE )
+	{
+		$json	= FS_File_Reader::load( $jsonFile );
+		return $this->importFromJson( $json, $resetAllBefore );
 	}
 
 	/*  --  PROTECTED  --  */
-	protected function importByMerge( $data ){
+
+	protected function __onInit()
+	{
+		$this->modelFilter	= new Model_IP_Lock_Filter( $this->env );
+		$this->modelReason	= new Model_IP_Lock_Reason( $this->env );
+		$this->modelLock	= new Model_IP_Lock( $this->env );
+		$this->logicLock	= $this->env->getLogic()->get( 'ipLock' );
+	}
+
+	protected function importByMerge( $data )
+	{
 		$countReasons	= 0;
 		$countFilters	= 0;
 		$reasonIdMap	= array();

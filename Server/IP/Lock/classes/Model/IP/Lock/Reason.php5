@@ -1,8 +1,13 @@
 <?php
-class Model_IP_Lock_Reason extends CMF_Hydrogen_Model{
-
+class Model_IP_Lock_Reason extends CMF_Hydrogen_Model
+{
 	const STATUS_DISABLED	= 0;
 	const STATUS_ENABLED	= 1;
+
+	const STATUSES			= [
+		self::STATUS_DISABLED,
+		self::STATUS_ENABLED,
+	];
 
 	protected $name		= 'ip_lock_reasons';
 
@@ -27,4 +32,3 @@ class Model_IP_Lock_Reason extends CMF_Hydrogen_Model{
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

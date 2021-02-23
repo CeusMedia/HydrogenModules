@@ -1,7 +1,8 @@
 <?php
-class Hook_IP_Lock extends CMF_Hydrogen_Hook{
-
-	static public function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_IP_Lock extends CMF_Hydrogen_Hook
+{
+	public static function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		$ip		= getEnv( 'REMOTE_ADDR' );																	//  get IP address of request
 		$logic	= Logic_IP_Lock::getInstance( $env );														//  get instance of IP lock logic
 		$logic->unlockIfOverdue( $ip, FALSE );																//  clear lock if existing and outdated
