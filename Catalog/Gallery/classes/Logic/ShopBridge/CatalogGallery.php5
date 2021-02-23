@@ -26,6 +26,23 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract{
 		$this->taxRate			= $this->env->getConfig()->get( 'module.catalog_gallery.tax.rate' );
 	}
 
+	public function getAll( $conditions = array(), $orders = array(), $limits = array() ){
+		return array();
+	}
+
+
+	/**
+	 *	Change stock quantity of article.
+	 *	No need to do anything here, since digital images are sold by right, not be quantity.
+	 *	@access		public
+	 *	@param		integer		$articleId		ID of article
+	 *	@param		integer		$change			Negative value on payed order, positive value on restock.
+	 *	@return		integer						Article quantity in stock after change
+	 *	@throws		InvalidArgumentException	if not found
+	 */
+	public function changeQuantity( $articleId, $change ){
+	}
+
 	/**
 	 *	Checks existance of article and returns data object if found.
 	 *	@access		public
@@ -65,6 +82,10 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract{
 				'one'	=> $this->getTax( $articleId ),
 				'rate'	=> $this->taxRate,
 				'all'	=> $this->getTax( $articleId, $quantity ),
+			),
+			'weight'	=> (object) array(
+				'one'	=> $this->getWeight( $articleId ),
+				'all'	=> $this->getWeight( $articleId, $quantity ),
 			),
 			'single'		=> TRUE,
 			'title'			=> $this->getTitle( $articleId ),
@@ -145,5 +166,16 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract{
 		$image	= $this->check( $articleId );
 		return $image->title ? $image->title : $image->filename;
 	}
+
+	/**
+	 *	Returns weight of article (one or many).
+	 *	@access		public
+	 *	@param		integer		$articleId		ID of article
+	 *	@param		integer		$amount			Amount to articles to get weight for
+	 *	@return		integer
+	 */
+	public function getWeight( $articleId, $amount = 1 ){
+		return 0;
+	}
 }
-?>
+
