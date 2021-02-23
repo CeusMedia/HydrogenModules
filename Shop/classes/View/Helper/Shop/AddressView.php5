@@ -76,7 +76,8 @@ class View_Helper_Shop_AddressView{
 		$helperFacts->add( 'email', '', $d->get( 'email' ) );
 		if( trim( $d->get( 'phone' ) ) )
 			$helperFacts->add( 'phone', '', $d->get( 'phone' ) );
-		return $helperFacts->renderAsText();
+		$helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT );
+		return $helperFacts->render();
 	}
 
 	protected function renderRow( $labelKey, $content ){

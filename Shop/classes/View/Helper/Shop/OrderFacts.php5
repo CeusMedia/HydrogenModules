@@ -59,7 +59,8 @@ class View_Helper_Shop_OrderFacts{
 		$helperFacts->add( 'price', $this->helperShop->formatPrice( $this->order->priceTaxed, TRUE, FALSE ) );
 		$helperFacts->add( 'payment', $this->paymentBackend->title );
 		$helperFacts->add( 'orderId', $this->order->orderId );
-		$list[]	= $helperFacts->renderAsText();
+		$helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT );
+		$list[]	= $helperFacts->render();
 		$list[]	= $helperText->line( "-", 78 );
 		return join( PHP_EOL, $list );
 	}

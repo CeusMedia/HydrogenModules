@@ -245,7 +245,7 @@ class View_Helper_Shop_CartPositions{
 
 		$tfoot			= UI_HTML_Tag::create( 'tfoot', $rows );
 		$tableAttr		= array( 'class' => 'table table-hover table-striped table-fixed articleList' );
-		if( $allSingle ){
+		if( 0 && $allSingle ){
 //			$colgroup		= UI_HTML_Elements::ColumnGroup( '7%', '', '140' );
 			$tableAttr['class']	.= ' articleList-allSingle';
 		}

@@ -205,6 +205,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic{
 		$taxRate		= 19;				//  @todo: make configurable
 		$price			= 0;
 		$priceTaxed		= 0;
+		$tax			= 0;
 		if( $this->useShipping ){
 			$customer		= $this->getOrderCustomer( $orderId );
 			if( $customer && $customer->addressDelivery ){
