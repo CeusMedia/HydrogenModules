@@ -19,6 +19,14 @@ abstract class Logic_ShopBridge_Abstract{
 		$this->__onInit();
 	}
 
+	/**
+	 *	Change stock quantity of article.
+	 *	@access		public
+	 *	@param		integer		$articleId		ID of article
+	 *	@param		integer		$change			Negative value on payed order, positive value on restock.
+	 *	@return		integer						Article quantity in stock after change
+	 *	@throws		InvalidArgumentException	if not found
+	 */
 	abstract public function changeQuantity( $articleId, $change );
 
 	/**
@@ -47,7 +55,7 @@ abstract class Logic_ShopBridge_Abstract{
 		return $this->bridge->getBridgeId( $this );
 	}
 
-	abstract public function getAll( $conditions = array(), $orders = array(), $limits = array());
+//	abstract public function getAll( $conditions = array(), $orders = array(), $limits = array());
 
 	/**
 	 *	Returns short description of article.
