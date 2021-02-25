@@ -3,7 +3,7 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.5.9</version>
+	<version>0.6</version>
 	<log version="0.3.7">Added robots file and locked log folder.</log>
 	<log version="0.3.8">Using new script auto load level support to load layout.css at last.</log>
 	<log version="0.3.9">Adjusted .htaccess for newer Apache: strict option switches.</log>
@@ -30,6 +30,7 @@
 	<log version="0.5.7">Use module Server:Log:Exception.</log>
 	<log version="0.5.8">Add robots file as template and autocreate copy.</log>
 	<log version="0.5.9">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
+	<log version="0.6">Update index handling by merging in vanishing module Index.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -87,4 +88,6 @@
 	<hook type="resource" resource="Page" event="init">Hook_App_Site::onPageInit</hook>
 	<hook type="resource" resource="Env" event="constructEnd">Hook_App_Site::onEnvConstructEnd</hook>
 	<hook type="resource" resource="Framework" event="calledDeprecationResource">Hook_App_Site::onFrameworkDeprecation</hook>
+	<link xml:lang="de" access="public" path="index/index" link="" rank="0">Start</link>
+	<link xml:lang="en" access="public" path="index/index" link="" rank="0">Home</link>
 </module>

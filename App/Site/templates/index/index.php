@@ -1,38 +1,32 @@
 <?php
 
-//  --  LOAD STATIC HTML CONTENT FILE ...
+//  TRY LOADING STATIC HTML CONTENT FILES ...
 
-//  --  ... BY REQUESTED PATH  --  //
+//  ... BY REQUESTED PATH
 if( !empty( $path ) ){
 	if( $view->hasContentFile( 'html/'.$path.'.html' ) )
 		return $view->loadContentFile( 'html/'.$path.'.html' );
 }
 
-
-//  --  ... OR DEFAULT INDEX  --  //
-if( $isInside ){
+//  ... OR DEFAULT INDEX FOR AUTHENTICATED USERS
+if( $isInside )
 	if( $view->hasContentFile( 'html/index/index.inside.html' ) )
 		if( $content = $view->loadContentFile( 'html/index/index.inside.html' ) )
 			return $content;
-}
+
+//  ... OR DEFAULT INDEX
 if( $view->hasContentFile( 'html/index/index.html' ) )
 	if( $content = $view->loadContentFile( 'html/index/index.html' ) )
 		return $content;
 
-
-//  --  ... OR DEFAULT INDEX THE OLD WAY  --  //
-//  @todo	remove this deprecated fallback method
-if( $view->hasContentFile( 'html/index.html' ) ){
-	return $view->loadContentFile( 'html/index.html'/*, $data*/ );
-}
-
-//  --  ... OR RETURN PLACEHOLDER CONTENT --  //
+//  ... OR RETURN PLACEHOLDER CONTENT
 return '
 <h2>Hello World!</h2>
-<p>
-	It seems you just have installed the (rather empty) <cite>Hydrogen</cite> module <cite>App:Site</cite>.<br/>
+<blockquote>
+	It seems you just have installed the <cite>Hydrogen</cite> module <cite>App:Site</cite>.<br/>
+	So, this installation is rather empty and ready to be extended and filled with life.</br/>
 	To go on, consider to install an application module or start creating HTML files in locale HTML folders.<br/>
-</p>
+</blockquote>
 <hr/>
 <div class="row-fluid">
 	<div class="span4">
@@ -44,6 +38,4 @@ return '
 	<div class="span4">
 		Spare ribs ham hock shankle ribeye biltong chicken, hamburger ham doner beef ribs tail kielbasa. Ham hock bacon spare ribs, tenderloin pork strip steak ground round. Bresaola biltong filet mignon pork loin swine jerky, venison fatback shoulder tenderloin strip steak tongue drumstick andouille ham. Tail short ribs rump pork belly sausage tongue tenderloin tri-tip pork boudin frankfurter meatball pastrami. Hamburger pork belly tenderloin, shankle shoulder ball tip brisket biltong tri-tip turkey swine beef filet mignon capicola pork.
 	</div>
-</div>
-';
-?>
+</div>';
