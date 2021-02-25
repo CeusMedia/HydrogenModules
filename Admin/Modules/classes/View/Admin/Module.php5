@@ -1,10 +1,16 @@
 <?php
-class View_Admin_Module extends CMF_Hydrogen_View{
-
-	protected function __onInit(){
-		$this->env->page->addThemeStyle( 'site.admin.module.css' );
+class View_Admin_Module extends CMF_Hydrogen_View
+{
+	public function index()
+	{
 	}
-	public function index(){}
-	public function view(){}
+
+	public function view()
+	{
+	}
+
+	protected function __onInit()
+	{
+		$this->env->page->addThemeStyle( 'module.admin.module.css' );
+	}
 }
-?>

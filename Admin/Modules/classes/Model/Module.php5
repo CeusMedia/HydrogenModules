@@ -1,20 +1,36 @@
 <?php
-class Model_Module{
-
+class Model_Module
+{
 	const TYPE_UNKNOWN	= 0;
 	const TYPE_CUSTOM	= 1;
 	const TYPE_COPY		= 2;
 	const TYPE_LINK		= 3;
 	const TYPE_SOURCE	= 4;
 
-	public function __construct( $env ){
+	const TYPES			= [
+		self::TYPE_UNKNOWN,
+		self::TYPE_CUSTOM,
+		self::TYPE_COPY,
+		self::TYPE_LINK,
+		self::TYPE_SOURCE,
+	];
+
+	protected $env;
+
+	protected $cache;
+
+	protected $pathConfig;
+
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env			= $env;
-		$this->pathRepos	= $env->config->get( 'module.modules.path' );
+		$this->pathRepos	= $env->config->get( 'module.admin_modules.path' );
 		$this->pathConfig	= 'config/modules/';
 		$this->cache		= array();
 	}
 
-	public function getAll(){
+	public function getAll(): array
+	{
 		$globalModules	= $this->getAvailable();
 		$localModules	= $this->getInstalled( $globalModules );
 		$list			= $globalModules;
@@ -43,20 +59,23 @@ class Model_Module{
 		return $list;
 	}
 
-	public function get( $moduleId ){
+	public function get( string $moduleId )
+	{
 		$all	= $this->getAll();
 		if( array_key_exists( $moduleId, $all ) )
 			return $all[$moduleId];
 		return NULL;
 	}
 
-	public function getPath( $moduleId = NULL ){
+	public function getPath( string $moduleId = NULL ): string
+	{
 		if( $moduleId )
 			return $this->pathRepos.str_replace( '_', '/', $moduleId ).'/';
 		return $this->pathRepos;
 	}
 
-	public function getInstalled(){
+	public function getInstalled(): array
+	{
 		$list	= array();
 		$index	= new FS_File_RecursiveRegexFilter( $this->pathConfig, '/^\w+.xml$/' );
 		foreach( $index as $entry )
@@ -80,7 +99,8 @@ class Model_Module{
 		return $list;
 	}
 
-	public function getAvailable(){
+	public function getAvailable(): array
+	{
 		if( $this->cache )
 			return $this->cache;
 		$list	= array();
@@ -105,19 +125,24 @@ class Model_Module{
 		ksort( $list );
 		return $list;
 	}
-	public function getNotInstalled(){
+
+	public function getNotInstalled(): array
+	{
 		$globalModules	= $this->getAvailable();
 		$localModules	= $this->getInstalled( $globalModules );
 		return array_diff_key( $globalModules, $localModules );
 	}
 
-	public function install( $moduleId ){
+	public function install( string $moduleId )
+	{
 	}
 
-	public function uninstall( $moduleId ){
+	public function uninstall( string $moduleId )
+	{
 	}
 
-	protected function readXml( $fileName ){
+	protected function readXml( string $fileName )
+	{
 		$xml	= @XML_ElementReader::readFile( $fileName );
 		$obj	= new stdClass();
 		$obj->title				= (string) $xml->title;
@@ -159,4 +184,3 @@ class Model_Module{
 		return $obj;
 	}
 }
-?>
