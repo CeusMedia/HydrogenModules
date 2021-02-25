@@ -1,125 +1,308 @@
 <?php
 class Controller_Admin_Module extends CMF_Hydrogen_Controller{
 
-	protected function __onInit(){
-		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= Logic_Module::getInstance( $this->env );
-		$this->categories	= $this->logic->getCategories();
-#		$this->envApp		= $this->env->getRemote();
-#		print_m( $this->envApp );
-#		die;
-		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );
-/*		if( !$this->env->getSession()->get( 'instanceId' ) ){
-			$words	= $this->getWords( 'msg' );
-			$this->messenger->noteError( $words['noInstanceSelected'] );
-			$this->restart( 'viewer', TRUE );
-		}*/
+	const INSTALL_TYPE_UNKNOWN	= 0;
+	const INSTALL_TYPE_LINK		= 1;
+	const INSTALL_TYPE_COPY		= 2;
+
+	/**
+	 *	@deprecated		replaced by module installer
+	 *	@todo			remove
+	 */
+	public function copy( $moduleId ){
+		if( $this->installModule( $moduleId, self::INSTALL_TYPE_COPY ) )
+			$this->env->messenger->noteSuccess( 'Module "'.$moduleId.'" successfully copied.' );
+		else
+			$this->env->messenger->noteError( 'Failed: '.$e->getMessage() );
+		$this->restart( './admin/module/view/'.$moduleId );
 	}
 
-	public function filter(){
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
-		if( $request->has( 'reset' ) ){
-			$session->remove( 'filter-modules-types' );
-			$session->remove( 'filter-modules-query' );
-			$session->remove( 'filter-modules-categories' );
-			$session->remove( 'filter-modules-sources' );
+	protected function copyModuleFile( $moduleId, $fileIn, $fileOut ){
+		$pathModules	= $this->getModulesPath();
+		$fileIn			= $pathModules.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
+		$pathNameIn		= realpath( $fileIn );
+		if( !$pathNameIn ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is missing.' );
+			return FALSE;
 		}
-		if( $request->get( 'filter' ) ){
-			$session->set( 'filter-modules-types', $request->get( 'filter_types' ) );
-			$session->set( 'filter-modules-query', $request->get( 'filter_query' ) );
-			$session->set( 'filter-modules-categories', $request->get( 'filter_category' ) );
-			$session->set( 'filter-modules-sources', $request->get( 'filter_source' ) );
+		if( !file_exists( $pathNameIn ) ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not existing.' );
+			return FALSE;
 		}
-		$this->restart( '', TRUE );
+		if( !is_readable( $pathNameIn ) ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not readable.' );
+			return FALSE;
+		}
+		$pathOut	= dirname( $fileOut );
+		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) ){
+			$this->env->messenger->noteFailure( 'Path "'.$pathOut.'" is not creatable.' );
+			return FALSE;
+		}
+		if( file_exists( $fileOut ) ){
+			$this->env->messenger->noteFailure( 'Target "'.$fileOut.'" is already existing.' );
+			return FALSE;
+		}
+		if( !copy( $pathNameIn, $fileOut ) ){
+			$this->env->messenger->noteFailure( 'Link for "'.$fileOut.'" failed.' );
+			return FALSE;
+		}
+		return TRUE;
 	}
 
-	public function ajaxEditConfig( $moduleId, $key, $value ){
-		$fileName	= $this->env->pathConfig.'modules/'.$moduleId.'.xml';
-		$module		= XML_ElementReader::readFile( $fileName );
-		foreach( $module->config as $pair )
-			if( $pair->getAttribute( 'name' ) == $key )
-				$pair->{0}	= $value;
-		return FS_File_Editor::save( $fileName, $module->asXML() );
+	/**
+	 *	Creates a Path by creating all Path Steps.
+	 *	@access		protected
+	 *	@param		string		$path				Path to create
+	 *	@return		void
+	 */
+	protected static function createPath( $path ){
+		$dirname	= dirname( $path );
+		if( file_exists( $path ) && is_dir( $path ) )
+			return;
+		$hasParent	= file_exists( $dirname ) && is_dir( $dirname );
+		if( $dirname != "./" && !$hasParent )
+			self::createPath( $dirname );
+		return mkdir( $path, 02770, TRUE );
 	}
 
-	public function ajaxAddConfig( $moduleId, $key, $value ){
-
+	protected function executeSql( $sql ){
+		$lines	= explode( "\n", trim( $sql ) );
+		$cmds	= array();
+		$buffer	= array();
+		if( !$this->env->has( 'dbc' ) )
+			return;
+		$prefix	= $this->env->config->get( 'database.prefix' );
+		while( count( $lines ) ){
+			$line = array_shift( $lines );
+			if( !trim( $line ) )
+				continue;
+			$buffer[]	= UI_Template::renderString( trim( $line ), array( 'prefix' => $prefix ) );
+			if( preg_match( '/;$/', trim( $line ) ) )
+			{
+				$cmds[]	= join( "\n", $buffer );
+				$buffer	= array();
+			}
+			if( !count( $lines ) && $buffer )
+				$cmds[]	= join( "\n", $buffer ).';';
+		}
+		$state	= NULL;
+		foreach( $cmds as $command ){
+			error_log( nl2br( $command )."\n", 3, 'a.log' );
+			if( $state !== FALSE ){
+				try{
+					$this->env->dbc->exec( $command );
+					$state	= TRUE;
+				}
+				catch( Exception $e )
+				{
+					$state	= FALSE;
+					$this->env->messenger->noteFailure( $e->getMessage() );
+				}
+			}
+		}
+		return $state;
 	}
 
-	public function index( $page = 0 ){
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
-		$limit		= 15;
-		$offset		= $page * $limit;
-		$filters	= array(
-			'types'			=> $session->get( 'filter-modules-types' ),
-			'query'			=> $session->get( 'filter-modules-query' ),
-			'categories'	=> $session->get( 'filter-modules-categories' ),
-			'sources'		=> $session->get( 'filter-modules-sources' ),
-		);
+	protected function getModulesPath(){
+		$config		= $this->env->getConfig();
+		$path		= $config->get( 'module.modules.path' );
+		if( $path )
+			return $path;
+		throw new RuntimeException( 'No module path defined in module configuration' );
+	}
 
-		$modelSource	= new Model_ModuleSource( $this->env );
-
-		$this->addData( 'modules', $this->logic->model->getAll( $filters, $limit, $offset ) );
-		$this->addData( 'modulesTotal', $this->logic->model->countAll( $filters ) );
-		$this->addData( 'categories', $this->categories );
-		$this->addData( 'sources', $modelSource->getAll() );
-		$this->addData( 'filters', $filters );
-		$this->addData( 'limit', $limit );
-		$this->addData( 'offset', $offset );
-		$this->addData( 'page', $page );
-/*		$this->addData( 'modulesAvailable', $this->logic->model->getAvailable() );
-		$this->addData( 'modulesInstalled', $this->logic->model->getInstalled() );
-		$this->addData( 'modulesNotInstalled', $this->logic->model->getNotInstalled() );
+	public function index(){
+		$model	= new Model_Module( $this->env );
+		$this->addData( 'modules', $model->getAll() );
+/*		$this->addData( 'modulesAvailable', $model->getAvailable() );
+		$this->addData( 'modulesInstalled', $model->getInstalled() );
+		$this->addData( 'modulesNotInstalled', $model->getNotInstalled() );
 */	}
 
-	public function showRelationGraph( $moduleId, /*$instanceId,*/ $direction = 'out', $type = 'needs', $recursive = FALSE ){
-		$solver	= new Logic_Module_Relation( $this->logic );														//	calculator for module installation order
-		if( $direction == "in" )
-			$this->addData( 'graph', $solver->renderRelatingGraph( $moduleId, $type, $recursive ) );												//  load module and related modules
-		else
-			$this->addData( 'graph', $solver->renderGraph( $moduleId, $type, $recursive ) );												//  load module and related modules
+	/**
+	 * @deprecated	use Logic_Module::installModule instead
+	 */
+	public function installModule( $moduleId, $installType = 0, $verbose = NULL ){
+		$config		= $this->env->getConfig();
+		$model		= new Model_Module( $this->env );
+		$module		= $model->get( $moduleId );
+		$pathModule	= $model->getPath( $moduleId );
+		$pathTheme	= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/';
+		$filesLink	= array();
+		$filesCopy	= array();
+		
+		switch( $installType ){
+			
+			case self::INSTALL_TYPE_LINK:
+				$array	= 'filesLink'; break;
+			case self::INSTALL_TYPE_COPY:
+				$array	= 'filesCopy'; break;
+			default:
+				throw new InvalidArgumentException( 'Unknown installation type' );
+		}
+		foreach( $module->files->classes as $class )
+			${$array}['classes/'.$class]	= 'classes/'.$class;
+		foreach( $module->files->templates as $template )
+			${$array}['templates/'.$template]	= $config->get( 'path.templates' ).$template;
+		foreach( $module->files->locales as $locale )
+			${$array}['locales/'.$locale]	= $config->get( 'path.locales' ).$locale;
+		foreach( $module->files->scripts as $script )
+			${$array}['js/'.$script]	= $config->get( 'path.scripts' ).$script;
+		foreach( $module->files->styles as $style )
+			${$array}['css/'.$style]	= $pathTheme.'css/'.$style;
+		$filesCopy['module.xml']	= 'config/modules/'.$moduleId.'.xml';
+		if( file_exists( $pathModule.'config.ini' ) )
+			$filesCopy['config.ini']	= 'config/modules/'.$moduleId.'.ini';
+
+		$state		= NULL;
+		$listDone	= array();
+		foreach( array( 'filesLink', 'filesCopy' ) as $type ){
+			foreach( $$type as $fileIn => $fileOut ){
+				if( $state !== FALSE ){
+					if( $type == 'filesLink' )														//  @todo: OS check -> no links in windows <7
+						$state	= $this->linkModuleFile( $moduleId, $fileIn, $fileOut );
+					else
+						$state	= $this->copyModuleFile( $moduleId, $fileIn, $fileOut );
+					if( $state )
+						$listDone[]	= $fileOut;
+				}
+			}
+		}
+
+		//  --  SQL  --  //
+		if( $state !== FALSE ){
+			$driver	= $this->env->dbc->getDriver();
+			if( $driver && !empty( $module->sql['install@'.$driver] ) )
+				$state	= $this->executeSql( $module->sql['install@'.$driver] );
+			else if( !empty( $module->sql['install@*'] ) )
+				$state	= $this->executeSql( $module->sql['install@*'] );
+		}
+		if( $state === FALSE )
+			foreach( $listDone as $fileName )
+				@unlink( $fileName );
+		else if( $verbose ){
+			$list	= '<ul><li>'.join( '</li><li>', $listDone ).'</li></ul>';
+			$this->env->messenger->noteNotice( 'Installed: '.$list );
+		}
+		return $state !== FALSE;
 	}
 
-	public function viewCode( $moduleId, $type, $fileName ){
-		$pathModule	= $this->logic->getModulePath( $moduleId );
-		$pathFile	= '';
-		$xmpClass	= '';
-		switch( $type ){
-			case 'class':
-				$pathFile	= 'classes/';
-				$xmpClass	= 'php';
-				break;
-			case 'locale':
-				$pathFile	= 'locales/';
-				$xmpClass	= 'ini';
-				break;
-			case 'script':
-				$pathFile	= 'js/';
-				$xmpClass	= 'js';
-				break;
-			case 'style':
-				$pathFile	= 'css/';
-				$xmpClass	= 'css';
-				break;
-			case 'template':
-				$pathFile	= 'templates/';
-				$xmpClass	= 'php';
-				break;
+	/**
+	 *
+	 *	@deprecated		replaced by module installer
+	 *	@todo			remove
+	 */
+	public function link( $moduleId ){
+		if( $this->installModule( $moduleId, self::INSTALL_TYPE_LINK ) )
+			$this->env->messenger->noteSuccess( 'Module "'.$moduleId.'" successfully linked.' );
+		else
+			$this->env->messenger->noteError( 'Link to module "'.$moduleId.'" failed.' );
+		$this->restart( './admin/module/view/'.$moduleId );
+	}
+	
+	protected function linkModuleFile( $moduleId, $fileIn, $fileOut ){
+		$path		= $this->getModulesPath();
+		$fileIn		= $path.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
+		$pathNameIn	= realpath( $fileIn );
+		if( !$pathNameIn ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is missing.' );
+			return FALSE;
 		}
-		if( !file_exists( $pathModule.$pathFile.$fileName ) )
-			die( 'Invalid file: '.$pathModule.$pathFile.$fileName );
-		$content	= FS_File_Reader::load( $pathModule.$pathFile.$fileName );
-		$code		= UI_HTML_Tag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
-		$body		= '<h2>'.$moduleId.' - '.$fileName.'</h2>'.$code;
-		$page		= new UI_HTML_PageFrame();
-		$page->addStylesheet( 'css/reset.css' );
-		$page->addStylesheet( 'css/typography.css' );
-		$page->addStylesheet( 'css/xmp.formats.css' );
-		$page->addBody( $body );
-		print( $page->build( array( 'style' => 'margin: 1em' ) ) );
-		exit;
+		if( !file_exists( $pathNameIn ) ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not existing.' );
+			return FALSE;
+		}
+		if( !is_readable( $pathNameIn ) ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not readable.' );
+			return FALSE;
+		}
+		if( !is_executable( $pathNameIn ) ){
+			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not executable.' );
+			return FALSE;
+		}
+		$pathOut	= dirname( $fileOut );
+		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) ){
+			$this->env->messenger->noteFailure( 'Path "'.$pathOut.'" is not creatable.' );
+			return FALSE;
+		}
+		if( file_exists( $fileOut ) ){
+			$this->env->messenger->noteFailure( 'Target "'.$fileOut.'" is already existing.' );
+			return FALSE;
+		}
+		if( !symlink( $pathNameIn, $fileOut ) ){
+			$this->env->messenger->noteFailure( 'Link for "'.$fileOut.'" failed.' );
+			return FALSE;
+		}
+		return TRUE;
+	}
+
+	public function uninstall( $moduleId, $verbose = TRUE ){
+		$config		= $this->env->getConfig();
+		$pathTheme	= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/';
+		$model		= new Model_Module( $this->env );
+		$module		= $model->get( $moduleId );
+
+		$files	= array();
+#		try{
+			//  --  FILES  --  //
+			foreach( $module->files->classes as $class )
+				$files[]	= 'classes/'.$class;
+			foreach( $module->files->templates as $template )
+				$files[]	= $config->get( 'path.templates' ).$template;
+			foreach( $module->files->locales as $locale )
+				$files[]	= $config->get( 'path.locales' ).$locale;
+			foreach( $module->files->scripts as $script )
+				$files[]	= $config->get( 'path.scripts' ).$script;
+			foreach( $module->files->styles as $style )
+				$files[]	= $pathTheme.'css/'.$style;
+
+			//  --  CONFIG  --  //
+			$files[]	= 'config/modules/'.$moduleId.'.xml';
+			if( file_exists( 'config/modules/'.$moduleId.'.ini' ) )
+				$files[]	= 'config/modules/'.$moduleId.'.ini';
+
+			$state	= NULL;
+			foreach( $files as $file )
+				$state = @unlink( $file );
+
+			if( $state !== FALSE ){
+				//  --  SQL  --  //
+				$driver	= $this->env->dbc->getDriver();
+				$data	= array( 'prefix' => $config->get( 'database.prefix' ) );
+				$sql	= "";
+				if( $driver && !empty( $module->sql['uninstall@'.$driver] ) )
+					$sql	= UI_Template::renderString( $module->sql['uninstall@'.$driver], $data );
+				else if( !empty( $module->sql['uninstall@*'] ) )
+					$sql	= UI_Template::renderString( $module->sql['uninstall@*'], $data );
+				if( $sql )
+					$state = $this->executeSql( $sql );
+			}
+			
+			if( $state )
+				$this->env->messenger->noteSuccess(  'Module "'.$moduleId.'" successfully removed.' );
+			else
+				$this->env->messenger->noteSuccess(  'Module "'.$moduleId.'" successfully removed.' );
+#		}
+#		catch( Exception $e ){
+#			$this->env->messenger->noteError( 'Failed: '.$e->getMessage() );
+#		}
+		$this->restart( './admin/module/view/'.$moduleId );
+	}
+
+	protected function unlinkModuleFile( $moduleId, $fileName, $path )
+	{
+		$fileName	= $path.$fileName;
+		if( file_exists( $fileName ) ){
+			if( @unlink( $fileName ) )
+				$this->env->messenger->noteSuccess( 'Removed "'.$fileName.'".' );
+			else
+				$this->env->messenger->noteFailure( 'Removal failed for "'.$fileName.'".' );
+		}
+	}
+
+	public function view( $moduleId ){
+		$model	= new Model_Module( $this->env );
+		$this->addData( 'module', $model->get( $moduleId ) );
 	}
 }
 ?>

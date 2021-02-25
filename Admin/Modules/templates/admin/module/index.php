@@ -1,35 +1,14 @@
 <?php
 
-$panelFilter	= $this->loadTemplateFile( 'admin/module/index.filter.php' );
-
-$pagination	= '';
-if( $modulesTotal > $limit ){
-/*	$pagination	= new UI_HTML_Pagination();
-	$pagination->setOption( 'uri', './admin/module' );
-	$pagination	= $pagination->build( $modulesTotal, $limit, $offset );*/
-	$pagination	= new \CeusMedia\Bootstrap\PageControl( './admin/module', $page, ceil( $modulesTotal / $limit ) );
-}
 
 /*  --  MODULE TABLE  --  */
 $list	= array();
 foreach( $modules as $moduleId => $module ){
-	$descLines	= explode( "\n", $module->description );
-	$abstract	= $descLines[0];
 	$attributes	= array(
 		'class'		=> 'module available',
-		'title'		=> htmlentities( $abstract,ENT_QUOTES, 'UTF-8' ),
-		'href'		=> './admin/module/viewer/index/'.$moduleId
+		'title'		=> $module->description,
+		'href'		=> './admin/module/view/'.$moduleId
 	);
-
-	$icon		= '';
-	if( !empty( $module->icon ) ){
-		$image	= UI_HTML_Elements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
-		$icon	= UI_HTML_Tag::create( 'a', $image, array( 'class' => 'image' ) );
-	}
-	$icon		= '<div style="width: 16px; height: 16px; float: left; display: block">'.$icon.'</div>';
-
-	$category	= $module->category;
-	$abstract	= strlen( $abstract ) ? $abstract : '&nbsp;';
 	$link		= UI_HTML_Tag::create( 'a', $module->title, $attributes );
 	$type		= '<span class="module-type type-'.$module->type.'">'.$words['types'][(int) $module->type].'</span>';
 	$class		= 'module available type-'.$module->type;
@@ -41,76 +20,67 @@ foreach( $modules as $moduleId => $module ){
 			$version	= $module->versionInstalled.' / '.$module->versionAvailable;
 	}
 	$version	= '<span class="module-version">'.$version.'</span>';
-	$list[]		= '<tr class="'.$class.'">
-		<td>'.$icon.'&nbsp;'.$link.'<br/><small class="shorten">'.$abstract.'</small></td>
-		<td>'.$type.'</td>
-		<td>'.$version.'</td>
-		<td>'.$category.'</td>
-	</tr>';
+	$list[]		= '<tr class="'.$class.'"><td>'.$link.'</td><td>'.$type.'</td><td>'.$version.'</td></tr>';
 }
-$heads		= array(
-	$words['index']['headTitle'],
-	$words['index']['headType'],
-	$words['index']['headVersion'],
-	$words['index']['headCategory'],
-);
+$heads		= array( $words['index']['headTitle'], $words['index']['headType'], $words['index']['headVersion'] );
 $heads		= UI_HTML_Elements::TableHeads( $heads );
-$colGroup	= UI_HTML_Elements::ColumnGroup( "58%,14%,8%,20%" );
-$listAll	= '<table class="modules all table table-striped" style="table-layout: fixed">
-	'.$colGroup.'
-	<thead>'.$heads.'</thead>
-	<tbody>'.join( $list ).'</tbody>
-</table>';
+$listAll	= '<table class="modules all">'.$heads.join( $list ).'</table>';
 
 
-function renderPagesIndicator( $count, $total, $offset, $template = '%1$s - %2$s / %3$s' ){
-	$nrFrom		= 1 + (int) $offset;
-	$nrTo		= $count + (int) $offset;
-	$nrTotal	= $total;
-	$spanFrom	= UI_HTML_Tag::create( 'span', $nrFrom, array( 'class' => 'pages-from' ) );
-	$spanTo		= UI_HTML_Tag::create( 'span', $nrTo, array( 'class' => 'pages-to' ) );
-	$spanTotal	= UI_HTML_Tag::create( 'span', $nrTotal, array( 'class' => 'pages-total' ) );
-	$line		= sprintf( $template, $spanFrom, $spanTo, $spanTotal );
-	return UI_HTML_Tag::create( 'div', $line, array( 'class' => 'pages-indicator' ) );
+/*  --  AVAILABLE  --  */
+/*$list	= array();
+foreach( $modulesAvailable as $moduleId => $module ){
+	$attributes	= array(
+		'class'		=> 'module available',
+		'title'		=> $module->description,
+		'href'		=> './admin/module/view/'.$moduleId
+	);
+	$link	= UI_HTML_Tag::create( 'a', $module->title, $attributes );
+	$list[]	= '<li class="module available">'.$link.'</li>';
 }
+$listAvailable	= '<ul class="modules available">'.join( $list ).'</ul>';
+*/
 
-$template	= '%1$s bis %2$s von %3$s';
-$count		= count( $modules );
-$pages		= renderPagesIndicator( $count, $modulesTotal, $offset, $template );
+/*  --  INSTALLED  --  */
+/*$list	= array();
+foreach( $modulesInstalled as $moduleId => $module ){
+	$attributes	= array(
+		'class'		=> 'module installed',
+		'title'		=> $module->description,
+		'href'		=> './admin/module/view/'.$moduleId
+	);
+	$link	= UI_HTML_Tag::create( 'a', $module->title, $attributes );
+	$list[]	= '<li class="module installed">'.$link.'</li>';
+}
+$listInstalled	= '<ul class="modules installed">'.join( $list ).'</ul>';
+*/
+
+/*  --  NOT INSTALLED  --  */
+/*$list	= array();
+foreach( $modulesNotInstalled as $moduleId => $module ){
+	$attributes	= array(
+		'class'		=> 'module',
+		'title'		=> $module->description,
+		'href'		=> './admin/module/view/'.$moduleId
+	);
+	$link	= UI_HTML_Tag::create( 'a', $module->title, $attributes );
+	$list[]	= '<li class="module">'.$link.'</li>';
+}
+$listNotInstalled	= '<ul class="modules">'.join( $list ).'</ul>';
+*/
 
 return '
-<style>
-.pages-indicator {
-	float: right;
-	padding: 4px;
-	}
-.pages-indicator .pages-from,
-.pages-indicator .pages-to,
-.pages-indicator .pages-total {
-	font-weight: bold;
-	}
-table.modules.all tr td {
-	border-bottom: 1px solid #DFDFDF;
-	}
-table.modules.all tr:last-child td {
-	border-bottom: 0px;
-	}
-table {
-	border: 0px;
-	}
-</style>
-<div class="row-fluid">
-	<div class="span3">
-		'.$panelFilter.'
-	</div>
-	<div class="span9">
-		<div class="content-panel">
-			<div class="content-panel-inner">
-				'.$listAll.'
-				'.$pages.'
-				'.$pagination.'
-			</div>
-		</div>
-	</div>
+<div>
+	<h2>'.$words['index']['heading'].'</h2>
+	<fieldset>
+		<legend>'.$words['index']['legend'].'</legend>
+	'.$listAll.'
+	</fieldset>
+<!--	<h3>Verfügbar</h3>
+	'./*$listAvailable.*/'
+	<h3>Installiert</h3>
+	'./*$listInstalled.*/'
+	<h3>Nicht installiert</h3>
+	'./*$listNotInstalled.*/'-->
 </div>';
 ?>

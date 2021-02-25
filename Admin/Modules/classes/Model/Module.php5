@@ -7,39 +7,40 @@ class Model_Module{
 	const TYPE_LINK		= 3;
 	const TYPE_SOURCE	= 4;
 
-	protected $env;
-	protected $pathRepos;
-	protected $pathConfig;
-	protected $modulesAll			= array();
-	protected $modulesAvailable		= array();
-	protected $source;
-	protected $sources				= array();
-
 	public function __construct( $env ){
 		$this->env			= $env;
-		$this->pathConfig	= $env->uri.( get_class( $env )::$configPath ).'modules';
-
-		$model	= new Model_ModuleSource( $env );
-		foreach( $model->getAll() as $sourceId => $source )
-			$this->sources[$sourceId]	= $source;
-
-//		$this->modulesAvailable	= $this->getAvailable();											//  @todo	???
-
-		if( !file_exists( $this->pathConfig ) ){
-			try{
-				FS_Folder_Editor::createFolder( $this->pathConfig, 0770 );
-			}
-			catch( Exception $e ){
-				throw new RuntimeException( 'Modules configuration folder missing in "'.$this->pathConfig.'" and cannot be created', 2 );
-			}
-		}
+		$this->pathRepos	= $env->config->get( 'module.modules.path' );
+		$this->pathConfig	= 'config/modules/';
+		$this->cache		= array();
 	}
 
-	/**
-	 *	@todo		increase performance / scalability
-	 */
-	public function countAll( $filters = array() ){
-		return count( $this->getAll( $filters ) );
+	public function getAll(){
+		$globalModules	= $this->getAvailable();
+		$localModules	= $this->getInstalled( $globalModules );
+		$list			= $globalModules;
+		foreach( $localModules as $moduleId => $module ){
+			if( !array_key_exists( $moduleId, $list ) )
+				$list[$moduleId]	= $module;
+			else if( $module->type != self::TYPE_LINK )
+				$module->type	= self::TYPE_COPY;
+			switch( $module->type ){
+				case self::TYPE_LINK:
+					$module->versionAvailable	= $module->version;
+					$module->versionInstalled	= $module->version;
+					break;
+				case self::TYPE_COPY:
+					$module->versionInstalled	= $module->version;
+					$module->versionAvailable	= $globalModules[$moduleId]->version;
+					break;
+				case self::TYPE_CUSTOM:
+					$module->version			= $module->versionInstalled;
+					$module->versionAvailable	= NULL;
+					break;
+			}
+			$list[$moduleId]	= $module;
+		}
+		ksort( $list );
+		return $list;
 	}
 
 	public function get( $moduleId ){
@@ -49,370 +50,113 @@ class Model_Module{
 		return NULL;
 	}
 
-	public function getAll( $filters = array(), $limit = NULL, $offset = NULL ){
-		if( !$this->modulesAll ){
-			$this->modulesAll		= $this->modulesAvailable;
-			foreach( $this->getInstalled( $this->modulesAvailable ) as $moduleId => $module ){
-				if( !array_key_exists( $moduleId, $this->modulesAll ) ){
-					$module->source	= 'Local';
-					$this->modulesAll[$moduleId]	= $module;
-//					$module->type	= self::TYPE_CUSTOM;
-				}
-				else{
-					$module->source	= $this->modulesAll[$moduleId]->source;
-#					if( $module->type != self::TYPE_LINK )
-#						$module->type	= self::TYPE_COPY;
-				}
-				switch( $module->type ){
-					case self::TYPE_LINK:
-						$module->versionInstalled	= $module->version;
-						$module->versionAvailable	= $this->modulesAvailable[$moduleId]->version;
-						break;
-					case self::TYPE_COPY:
-						$module->versionInstalled	= $module->version;
-						$module->versionAvailable	= $this->modulesAvailable[$moduleId]->version;
-						break;
-					case self::TYPE_CUSTOM:
-						$module->versionInstalled	= $module->versionInstalled;
-						$module->versionAvailable	= NULL;
-						break;
-				}
-				$this->modulesAll[$moduleId]	= $module;
-			}
-		}
-
-		$modulesAll	= $this->modulesAll;
-		if( $filters ){
-			foreach( $filters as $filterKey => $filterValue ){
-				foreach( $modulesAll as $moduleId => $module ){
-					switch( $filterKey ){
-						case 'types':
-							if( is_array( $filterValue ) )
-								if( !in_array( $module->type, $filterValue ) )
-									unset( $modulesAll[$moduleId] );
-							break;
-						case 'categories':
-							if( is_array( $filterValue ) )
-								if( !in_array( $module->category, $filterValue ) )
-									unset( $modulesAll[$moduleId] );
-							break;
-						case 'sources':
-							if( is_array( $filterValue ) )
-								if( !in_array( $module->source, $filterValue ) )
-									unset( $modulesAll[$moduleId] );
-							break;
-						case 'relation:needs':
-						case 'relation:supports':
-							$type		= preg_replace( "/^(.+):(.+)$/", "\\2", $filterKey );
-							$moduleIds	= $filterValue;
-							if( !is_array( $moduleIds ) && strlen( trim( $moduleIds ) ) )
-								$moduleIds	= array( $moduleIds );
-							$common	= array_intersect( $moduleIds, $module->relations->$type );
-							if( $common !== $moduleIds )
-								unset( $modulesAll[$moduleId] );
-							break;
-						case 'query':
-							if( !strlen( trim( $filterValue ) ) )
-								break;
-							$text	= $module->title.$module->description;
-							$parts	= explode( ' ', trim( $filterValue ) );
-							$found	= FALSE;
-							foreach( $parts as $part )
-								if( substr_count( $text, $part ) )
-									$found	= TRUE;
-							if( !$found )
-								unset( $modulesAll[$moduleId] );
-							break;
-					}
-				}
-			}
-		}
-		ksort( $modulesAll );
-		if( $limit || $offset )
-			return array_slice( $modulesAll, (int) $offset, (int) $limit );
-		return $modulesAll;
+	public function getPath( $moduleId = NULL ){
+		if( $moduleId )
+			return $this->pathRepos.str_replace( '_', '/', $moduleId ).'/';
+		return $this->pathRepos;
 	}
 
-	public function getAllNeededModules( $moduleId, $uninstalledOnly = FALSE, $list = array() ){
-		$module	= $this->get( $moduleId );
-		if( !$module )
-			$list[$moduleId]	= 0;
-		else{
-			foreach( $module->relations->needs as $moduleName ){
-				if( array_key_exists( $moduleName, $list ) )
-					continue;
-				$isInstalled	= $this->isInstalled( $moduleName );
-				if( $uninstalledOnly && $isInstalled )
-					continue;
-				$list[$moduleName]	= $isInstalled;
-				$needs	= $this->getAllNeededModules( $moduleName, $uninstalledOnly, $list );
-				foreach( $needs as $id => $status )
-					if( $id !== $moduleId)
-						$list[$id]	= $status;
+	public function getInstalled(){
+		$list	= array();
+		$index	= new FS_File_RecursiveRegexFilter( $this->pathConfig, '/^\w+.xml$/' );
+		foreach( $index as $entry )
+		{
+			$id	= preg_replace( '/\.xml$/i', '', $entry->getFilename() );
+			try{
+				$module	= $this->readXml( $entry->getPathname() );
 			}
+			catch( Exception $e ){
+				$this->env->messenger->noteFailure( 'XML of Module "'.$id.'" is broken.' );
+			}
+			$module->type	= self::TYPE_CUSTOM;
+			if( is_link( 'config/modules/'.$id.'.xml' ) ){
+				$module->type	= self::TYPE_LINK;
+			}
+			$module->id		= $id;
+			$module->versionInstalled	= $module->version;
+			$list[$id]		= $module;
 		}
-		return $list;
-	}
-
-	public function getAllSupportedModules( $moduleId, $uninstalledOnly = FALSE, $list = array() ){
-		$module	= $this->get( $moduleId );
-		if( !$module )
-			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		foreach( $module->relations->supports as $moduleName ){
-			if( array_key_exists( $moduleName, $list ) )
-				continue;
-			$isInstalled	= $this->isInstalled( $moduleName );
-			if( $uninstalledOnly && $isInstalled )
-				continue;
-			$list[$moduleName]	= $isInstalled;
-			foreach( $this->getAllSupportedModules( $moduleName, $uninstalledOnly,$list ) as $id => $status )
-				if( $id !== $moduleId)
-					$list[$id]	= $status;
-		}
+		ksort( $list );
 		return $list;
 	}
 
 	public function getAvailable(){
-		return $this->modulesAvailable;
-	}
-
-	public function getCategories(){
+		if( $this->cache )
+			return $this->cache;
 		$list	= array();
-		foreach( $this->getAll() as $module )
-			if( !empty( $module->category ) )
-				$list[]	= $module->category;
-		$list	= array_unique( $list );
-		natcasesort( $list );
-		$list	= array_values( $list );
-		return $list;
-	}
-
-	public function getFromSource( $moduleId, $source = NULL ){
-		if( !is_null( $source ) ){
-			die( 'not implemented: Model_Module::getFromSource with parameter "source"' );
-		}
-		if( !isset( $this->modulesAvailable[$moduleId] ) )
-			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		return $this->modulesAvailable[$moduleId];
-	}
-
-	public function getInstalled(){
-		$list		= array();
-		$modules	= $this->env/*->getRemote()*/->getModules();
-		if( $modules ){
-			foreach( $modules->getAll() as $id => $module ){
-				$module->type	= self::TYPE_CUSTOM;
-				if( is_int( $module->install->type ) && $module->install->type ){
-					$module->type	= self::TYPE_UNKNOWN;
-					if( $module->install->type === 1 )
-						$module->type	= self::TYPE_LINK;
-					else if( $module->install->type === 2 )
-						$module->type	= self::TYPE_COPY;
-				}
-				else if( array_key_exists( $id, $this->modulesAvailable ) )
-					$module->type	= self::TYPE_COPY;
-
-				if( !empty( $this->modulesAvailable[$id] ) ){
-					$module->icon	= $this->modulesAvailable[$id]->icon;
-				}
-				$list[$id]		= $module;
-			}
-			ksort( $list );
-		}
-		return $list;
-	}
-
-	public function getLocal( $moduleId ){
-		$module		= $this->model->get( $moduleId );
-		print_m( $module );
-		die;
-	}
-
-	/**
-	 *	Reads and returns XML of locale module, in plain text or parsed to XML object structure.
-	 *	@access		public
-	 *	@param		string		$moduleId		Module ID
-	 *	@param		boolean		$parse			Flag: parse XML string to object structure
-	 *	@return		XML_Element
-	 */
-	public function getLocalModuleXml( $moduleId, $parse = FALSE ){
-		$moduleFile	= $this->pathConfig."/".$moduleId.'.xml';
-		if( !file_exists( $moduleFile ) )
-			throw new InvalidArgumentException( 'Module "'.$moduleId.'" is not installed' );
-		if( $parse )
-			return XML_ElementReader::readFile( $moduleFile );
-		return FS_File_Reader::load( $moduleFile );
-	}
-
-	public function getNeededModulesWithStatus( $moduleId ){										//  @todo	refactor to getNeededModuleIdsWithStatus
-		$module	= $this->get( $moduleId );
-		if( !$module )
-			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		$list		= array();
-		$modules	= $this->getAll();
-		foreach( $module->relations->needs as $relatedModuleId ){
-			$status	= self::TYPE_UNKNOWN;
-			if( array_key_exists( $relatedModuleId, $modules ) )
-				$status	= self::TYPE_SOURCE;
-			if( $status && $this->isInstalled( $relatedModuleId ) )
-				$status	= self::TYPE_COPY;
-			$list[$relatedModuleId]	= $status;
-		}
-		array_unique( $list );
-		return $list;
-	}
-
-	public function getNeedingModulesWithStatus( $moduleId ){									//  @todo	refactor to getSupportedModuleIdsWithStatus
-		$module	= $this->get( $moduleId );
-		if( !$module )
-			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		$list		= array();
-		$modules	= $this->getAll();
-		$found		= $this->getAll( array( 'relation:needs' => $moduleId ) );
-		foreach( array_keys( $found ) as $relatedModuleId ){
-			$status	= Model_Module::TYPE_UNKNOWN;
-			if( array_key_exists( $relatedModuleId, $modules ) )
-				$status	= Model_Module::TYPE_SOURCE;
-			if( $status && $this->isInstalled( $relatedModuleId ) )
-				$status	= Model_Module::TYPE_COPY;
-			$list[$relatedModuleId]	= $status;
-		}
-		array_unique( $list );
-		return $list;
-	}
-
-	public function getNotInstalled(){
-		$localModules	= $this->getInstalled( $this->modulesAvailable );
-		return array_diff_key( $this->modulesAvailable, $localModules );
-	}
-
-	public function getPath( $moduleId = NULL ){
-		$module		= $this->get( $moduleId );
-		if( !$module )
-			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		if( empty( $module->source ) )
-			throw new RuntimeException( 'Module "'.$moduleId.'" is not assigned to any source' );
-		$model	= new Model_ModuleSource( $this->env );
-		$source	= $model->get( $module->source );
-		if( !$source )
-			throw new RuntimeException( 'Module source "'.$module->source.'" is not available' );
-		return preg_replace( "/\/+$/", '/', $source->path ).str_replace( '_', '/', $moduleId ).'/';
-	}
-
-	public function getStatus( $moduleId ){
-		$module		= $this->get( $moduleId );
-		if( !$module )
-			return self::TYPE_UNKNOWN;
-		if( $this->isInstalled( $moduleId ) )
-			return self::TYPE_COPY;
-		if( array_key_exists( $moduleId, $this->getAll() ) )
-			return self::TYPE_SOURCE;
-	}
-
-	public function getSource( $moduleId ){
-		$module		= $this->getFromSource( $moduleId );
-		if( !$module )
-			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		return $module->source;
-	}
-
-	public function getSupportedModulesWithStatus( $moduleId ){										//  @todo	refactor to getSupportedModuleIdsWithStatus
-		$module	= $this->get( $moduleId );
-		if( !$module )
-			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		$list		= array();
-		$modules	= $this->getAll();
-		foreach( $module->relations->supports as $relatedModuleId ){
-			$status	= Model_Module::TYPE_UNKNOWN;
-			if( array_key_exists( $relatedModuleId, $modules ) )
-				$status	= Model_Module::TYPE_SOURCE;
-			if( $status && $this->isInstalled( $relatedModuleId ) )
-				$status	= Model_Module::TYPE_COPY;
-			$list[$relatedModuleId]	= $status;
-		}
-		array_unique( $list );
-		return $list;
-	}
-
-	public function getSupportingModulesWithStatus( $moduleId ){									//  @todo	refactor to getSupportedModuleIdsWithStatus
-		$module	= $this->get( $moduleId );
-		if( !$module )
-			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		$list		= array();
-		$modules	= $this->getAll();
-		$found		= $this->getAll( array( 'relation:supports' => $moduleId ) );
-		foreach( array_keys( $found ) as $relatedModuleId ){
-			$status	= Model_Module::TYPE_UNKNOWN;
-			if( array_key_exists( $relatedModuleId, $modules ) )
-				$status	= Model_Module::TYPE_SOURCE;
-			if( $status && $this->isInstalled( $relatedModuleId ) )
-				$status	= Model_Module::TYPE_COPY;
-			$list[$relatedModuleId]	= $status;
-		}
-		array_unique( $list );
-		return $list;
-	}
-
-	/**
-	 *	@deprecated
-	 */
-	public function isInstalled( $moduleId ){
-		$list	= array();
-		$index	= new FS_File_RecursiveRegexFilter( $this->pathConfig."/", '/^\w+.xml$/' );
+		$index	= new FS_File_RecursiveNameFilter( $this->pathRepos, 'module.xml' );
 		foreach( $index as $entry ){
-			$id	= preg_replace( '/\.xml$/i', '', $entry->getFilename() );
-			if( $id == $moduleId )
-				return TRUE;
-		}
-		return FALSE;
-	}
-
-	public function loadSources(){
-		$list		= array();
-		$results	= array();
-		foreach( $this->sources as $sourceId => $source ){
+			$id		= preg_replace( '@^'.$this->pathRepos.'@', '', $entry->getPath() );
+			$id		= str_replace( '/', '_', $id );
 			try{
-				$results[$sourceId]	= 0;
-				if( $source->active ){
-					$source->id	= $sourceId;
-					$library	= new CMF_Hydrogen_Environment_Resource_Module_Library_Source( $this->env, $source );
-					$results[$sourceId]	= 1;
-					foreach( $library->getAll() as $module ){
-						$module->source			= $sourceId;
-						$module->type			= self::TYPE_SOURCE;
-						$list[$module->id]		= $module;
-						$results[$sourceId]	= 2;
-					}
-				}
+				$obj	= $this->readXml( $entry->getPathname() );
+				$obj->path	= $entry->getPath();
+				$obj->file	= $entry->getPathname();
+				$obj->type	= self::TYPE_SOURCE;
+				$obj->id	= $id;
+				$obj->versionAvailable	= $obj->version;
+				$list[$id]	= $obj;
 			}
 			catch( Exception $e ){
-				$results[$sourceId]	= $e;
+				$this->env->messenger->noteFailure( 'a: XML of Module "'.$id.'" is broken.' );
 			}
-			$this->env->clock->profiler->tick( 'Model_Module: Source: '.$sourceId );
 		}
+		$this->cache	= $list;
 		ksort( $list );
-		$this->modulesAvailable	= $list;
-		return $results;
+		return $list;
+	}
+	public function getNotInstalled(){
+		$globalModules	= $this->getAvailable();
+		$localModules	= $this->getInstalled( $globalModules );
+		return array_diff_key( $globalModules, $localModules );
 	}
 
-	public function registerLocalFile( $moduleId, $type, $fileName ){								//  @todo: use getLocalModuleXml instead
-		$moduleFile	= $this->pathConfig."/".$moduleId.'.xml';
-		if( !file_exists( $moduleFile ) )
-			throw new InvalidArgumentException( 'Module "'.$moduleId.'" is not installed' );
-		$xml	= XML_ElementReader::readFile( $moduleFile );
-		$xml->files->addChild( $type, $fileName );													//  @todo: add attribute support
-		File_Writer::save( $moduleFile, XML_DOM_Formater::format( $xml->asXml() ) );
+	public function install( $moduleId ){
 	}
 
-	public function setLocalModuleXml( $moduleId, $content ){
-		if( $content instanceof SimpleXMLElement )
-			$content	= XML_DOM_Formater::format( $content->asXML(), TRUE );
-		if( !is_string( $content ) )
-			throw new InvalidArgumentException( 'No valid XML string given' );
-		$moduleFile	= $this->pathConfig."/".$moduleId.'.xml';
-		if( !file_exists( $moduleFile ) )
-			throw new InvalidArgumentException( 'Module "'.$moduleId.'" is not installed' );
-		return FS_File_Writer::save( $moduleFile, $content );
+	public function uninstall( $moduleId ){
+	}
+
+	protected function readXml( $fileName ){
+		$xml	= @XML_ElementReader::readFile( $fileName );
+		$obj	= new stdClass();
+		$obj->title				= (string) $xml->title;
+		$obj->description		= (string) $xml->description;
+		$obj->files				= new stdClass();
+		$obj->files->classes	= array();
+		$obj->files->locales	= array();
+		$obj->files->templates	= array();
+		$obj->files->styles		= array();
+		$obj->files->scripts	= array();
+		$obj->files->images		= array();
+		$obj->config			= array();
+		$obj->version			= (string) $xml->version;
+		$obj->versionAvailable	= NULL;
+		$obj->versionInstalled	= NULL;
+		$obj->sql				= array();
+		foreach( $xml->files->class as $link )
+			$obj->files->classes[]	= (string) $link;
+		foreach( $xml->files->locale as $link )
+			$obj->files->locales[]	= (string) $link;
+		foreach( $xml->files->template as $link )
+			$obj->files->templates[]	= (string) $link;
+		foreach( $xml->files->style as $link )
+			$obj->files->styles[]	= (string) $link;
+		foreach( $xml->files->script as $link )
+			$obj->files->scripts[]	= (string) $link;
+		foreach( $xml->files->image as $link )
+			$obj->files->images[]	= (string) $link;
+		foreach( $xml->config as $pair )
+			$obj->config[$pair->getAttribute( 'name' )]	= (string) $pair;
+		foreach( $xml->sql as $sql ){
+			$event	= $sql->getAttribute( 'on' );
+			$type	= $sql->hasAttribute( 'type' ) ? $sql->getAttribute( 'type' ) : '*';
+			foreach( explode( ',', $type ) as $type ){
+				$key	= $event.'@'.$type;
+				$obj->sql[$key]	= (string) $sql;
+			}
+		}
+		return $obj;
 	}
 }
 ?>

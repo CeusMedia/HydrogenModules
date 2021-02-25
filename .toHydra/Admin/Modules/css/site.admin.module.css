@@ -1,0 +1,551 @@
+
+#layout-field {
+	position: relative;
+	}
+
+h3.position span {
+	color: #777;
+	font-weight: normal;
+	font-size: 0.9em;
+	}
+
+
+
+	
+a.module {
+	font-size: 1.1em;
+	line-height: 0.9em;
+	text-decoration: none;
+	padding-left: 3px;
+	}
+tr.module td small{
+	padding-left: 23px;
+	}
+
+	
+table.modules.all td div a.image img {
+	max-width: 16px;
+	max-height: 16px;
+	}
+table.modules.all small.shorten {
+	display: block;
+	width: 92%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	}
+
+
+/*  --  LIST: RELATED MODULES  --  */
+ul.relations {
+	list-style: none;
+	margin: 0px;
+	}
+ul.relations li {
+	border: 1px solid white;
+	padding: 2px 2px 1px 4px;
+	}
+ul.relations li span {
+	font-size: 1.1em
+	}
+ul.relations li.current {
+	border: 2px solid #00BF00;
+	background-color: #BFFFBF;
+	}
+
+
+/*  --  RESOURCE LIST  -- */
+dl.resources>dt {
+	clear: left;
+	}
+dl.resources>dd>ul,
+dl.resources>dd>ul li {
+	clear: left;
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	height: 20px;
+	}
+dl.resources>dd>ul li a,
+dl.resources>dd>ul li span{
+	float: left;
+	display: block;
+	min-height: 20px;
+	}
+dl.resources>dd>ul li.missing {
+	background-color: #FFDDCC;
+	}
+
+.missing {
+	background-color: #FFDDCC;
+	}
+	
+
+/*  --  DATABASE STATEMENT LIST  -- */
+dl.database > dt{
+	clear: left;
+	float: left;
+	width: 20%;
+	margin-bottom: 1.5em;
+	}
+dl.database > dd{
+	float: left;
+	margin-bottom: 1.5em;
+	max-height: 200px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	width: 77%;
+	margin-left: 0;
+	padding: 6px 10px 6px 10px;
+	background-color: rgba(239, 239, 239, 0.5);
+	border: 1px solid rgba(223, 223, 223, 0.5);
+	}
+dl.database > dd > xmp{
+	margin: 0;
+	}
+
+	
+/*  --  JQUERY UI WIDGET  --  */
+.ui-widget {
+	border: 2px solid rgba(0,0,0,0.33);
+	padding: 0px;
+	font-size: 1em;
+	box-shadow: 2px 2px 6px 1px rgba(127,127,127,0.2);
+	}
+.ui-widget-content {
+	background: none;
+	overflow: auto;
+	}
+.ui-widget-header {
+	border: 0px;
+	border-bottom: 1px solid #BFBFBF;
+	border-radius: 0px;
+	background-position: 50% 30%;
+	}
+.ui-tabs-nav li a {
+	outline: 0;
+	}
+.ui-widget-header .ui-state-default,
+.ui-widget-header .ui-state-active {
+	border: 1px solid #BFBFBF;
+	background-color: #EFEFEF;
+	}	
+.ui-widget-header .ui-state-active{
+	border: 1px solid #BFBFBF;
+	background-color: #FFFFFF;
+	}
+.ui-tabs .ui-tabs-panel {
+	background-color: #FFFFFF;
+	}
+
+
+fieldset {
+	}
+	
+	
+
+span.icon {
+	display: inline-block;
+	min-height: 18px;
+	margin: 0px;
+	padding: 0px;
+	background-repeat: no-repeat;
+	background-position: 1px 1px;
+	padding-left: 22px;
+	min-height: 16px;
+/*	height: 16px;
+	display: block;
+	float: left;
+*/	}
+span.icon.class {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/page_white_php.png);
+	}
+span.icon.locale {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/page_white_world.png);
+	}
+span.icon.template {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/html.png);
+	}
+span.icon.script {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/script.png);
+	}
+span.icon.style {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/css.png);
+	}
+span.icon.image {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/image.png);
+	}
+span.icon.file {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/page_white.png);
+	}
+
+span.icon.module {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin.png);
+	}
+span.icon.module.add {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_add.png);
+	}
+span.icon.module.edit {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_edit.png);
+	}
+span.icon.module.disabled {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_disabled.png);
+	}
+	
+span.icon.module.module-status-0 {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_disabled.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_delete.png);
+	}
+span.icon.module.module-status-1 {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_edit.png);
+	}
+span.icon.module.module-status-2 {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin.png);
+	}
+span.icon.module.module-status-3 {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_link.png);
+	}
+span.icon.module.module-status-4 {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_error.png);
+	}
+	
+	
+	
+	
+legend.module,
+legend.module-add,
+legend.module-edit {
+	background-repeat: no-repeat;
+	background-position: 7px 7px;
+	padding-left: 28px;
+	}
+legend.module {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/package.png);
+	}
+legend.module-add {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_add.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/package_add.png);
+	}
+legend.module-edit {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_edi.png);
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/package_edit.png);
+	}
+
+.module-type.type-1 {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_add.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+.module-type.type-2 {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_edit.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+.module-type.type-3 {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+.module-type.type-4 {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin_disabled.png);
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+
+
+
+
+
+/*  --  MODULE OVERVIEW  --  */
+div.module-overview div.module {
+	float: left;
+	width: 22.1%;
+	height: 42px;
+	border:1px solid gray;
+	margin: 0px 0.5%;
+	margin-bottom: 1em;
+	padding: 0.5% 8px
+	}
+
+div.module-overview div.module {
+	background-position: 0px 0px;
+	background-repeat: repeat-x;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #CCCCCC #999999 #999999 #CCCCCC;
+	border-radius: 0.4em;
+	-moz-border-radius: 0.4em;
+	font-size: 1em;
+	cursor: pointer;
+	outline: none;
+
+	background: #f6f8f9; /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y2ZjhmOSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2U1ZWJlZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUxJSIgc3RvcC1jb2xvcj0iI2Q3ZGVlMyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmNWY3ZjkiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 50%, #d7dee3 51%, #f5f7f9 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f8f9), color-stop(50%,#e5ebee), color-stop(51%,#d7dee3), color-stop(100%,#f5f7f9)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #f6f8f9 0%,#e5ebee 50%,#d7dee3 51%,#f5f7f9 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-8 */
+	}
+
+div.module-overview div.module.module-installed {
+	border-left: 5px solid rgba(13, 128, 36, 0.8);
+	border-left: 5px solid rgba(9, 79, 23, 0.7);
+	}
+div.module-overview div.module.module-not-installed {
+	border-left: 5px solid rgba(139, 0, 0, 0.7);
+	}
+
+div.module-overview div.module.available {
+	}	
+div.module-overview div.module.installed {
+	background-color: rgba(191,255,191,0.8);
+	}	
+div.module-overview div.module.local {
+	background-color: rgba(191,255,191,0.8);
+	}	
+	
+	
+div.module-overview div.module div.module-icon{
+	margin-top: 3px;
+	}
+div.module-overview div.module div.module-icon,
+div.module-overview div.module div.module-icon img {
+	display: block;
+	float: right;
+	width: 32px;
+	height: 32px;
+	}
+div.module-overview div.module div.module-title {
+	margin: 5px 5px 0px 5px;
+	font-size: 1.2em;
+	font-width: normal;
+	text-shadow: 0px 1px 1px white;
+	line-height: 1em;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	}
+div.module-overview div.module div.module-desc {
+	margin: 0px 10px 0px 5px;
+	font-size: 0.9em;
+	text-shadow: 0px 1px 1px white;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	}
+/*div.module-overview div.module * {
+	color: #333;
+	}*/
+div.module-overview fieldset {
+	border-width: 1px 0px 0px 0px;
+	border-style: dotted;
+	border-radius: 0px;
+	border-color: gray;
+	margin: 0px;
+	padding: 2px 0px;
+	box-shadow: none;
+}
+div.module-overview fieldset legend {
+	text-align: left;
+	border-radius: 0px;
+	margin: 0px 0px 0px 10px;
+	padding: 2px 6px;
+	border: 0px;
+	font-size: 1.2em;
+	}
+
+	
+button.form-trigger,
+button.legend-form-trigger {
+	float: right;
+	}
+	
+button.form-trigger{
+	margin-top: -5px;
+	}
+button.legend-form-trigger {
+	margin-left: 1em;
+	}
+
+	
+
+ul.general-info {
+	list-style: none;
+	margin: 0px 0px 10px 0px;
+	padding: 0px;
+	}
+ul.general-info li.author,
+ul.general-info li.company,
+ul.general-info li.licence {
+	clear: both;
+	background-repeat: no-repeat;
+	background-position: 1px 2px;
+	padding: 1px 0px 1px 21px;
+	padding: 1px 0px 1px 2px;
+	border-bottom: 1px solid #ccc;
+	height: 20px;
+	}
+/*
+ul.general-info li.company {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/building.png);
+	}
+ul.general-info li.author {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/user.png);
+	}
+ul.general-info li.license {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/script.png);
+	}
+*/	
+legend.icon.author{
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/user.png);
+	}
+legend.icon.company{
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/building.png);
+	}
+legend.icon.license{
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/script.png);
+	}
+
+
+#form_admin_module_config input.label {
+	background-color: #F7F7F7;
+	border-color: #EFEFEF;
+	cursor: pointer;
+	}
+	
+#form_admin_module_config input.label.active-yes {
+	background-color: #EEFFEE;
+	font-style: italic;
+	}
+
+#form_admin_module_config input.label.active-no {
+	background-color: #FFEEEE;
+	font-style: italic;
+	}
+	
+select.active-yes {
+	background-color: #BBFFBB;
+	background-color: #EEFFEE;
+	background-color: #DDFFDD;
+	background-color: #CCFFCC;
+	}
+
+select.active-no {
+	background-color: #FFBBBB;
+	background-color: #FFEEEE;
+	background-color: #FFDDDD;
+	background-color: #FFCCCC;
+	}
+
+#form_admin_module_config td.cell-config-type {
+	color: gray;
+	font-size: 0.9em;
+	font-style: italic;
+	}
+
+#form_admin_module_config td.cell-config-value {
+	}
+
+
+	
+	
+#search {
+	position: absolute;
+	top: -29px;
+	right: 20px;
+	padding: 0.3em 1.25em 0.5em 1.25em;
+	border-radius: 0 0 0.75em 0.75em;
+	background-color: #00AFC4;
+	background-color: rgba(127,127,127,0.15);
+	}
+#search input#input_query{
+	width: 80px;
+	background-image: url(../img/search-magnifier.gif);
+	background-position: 1px 1px;
+	background-repeat: no-repeat;
+	padding: 2px 22px;
+	border-width: 2px;
+	}
+#search input#input_query:focus{
+	border-color: #008FAF;
+	border-width: 2px;
+	}
+#search #search-reset {
+	display: none;
+	position: absolute;
+	width: 13px;
+	height: 13px;
+	top: 0.9em;
+	right: 1.9em;
+	background-image: url(../img/clearSearch.png);
+	background-position: 1px 1px;
+	background-repeat: no-repeat;
+	border-radius: 0.6em;
+	cursor: pointer;
+	}
+
+.button.refresh span {
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/arrow_refresh.png);
+	padding-left: 22px;
+	}
+
+
+/*  --  MODULE LABEL  --  */
+.module-label {
+	font-weight: light;
+	text-decoration: none;
+	}
+.module-label span.module-label-prefix {
+	opacity: 0.5;
+	font-size: 75%;
+	}
+.module-label span.module-label-separator {
+	opacity: 0.6;
+	font-size: 50%;
+	padding-right: 0.2em;
+	}
+.module-label span.module-label-name {
+	opacity: 1;
+	font-weight: bold;
+	padding-left: 0.2em;
+	text-shadow: 0px 1px 0px 1px white;
+	}
+
+
+
+#layout-messenger ul li .message div.exception-view {
+	opacity: 0.75;
+	border: 1px solid #555;
+	background: white;
+	font-size: 1.0em;
+	padding: 0.3em 0.6em;
+	}
+#layout-messenger ul li .message cite {
+	font-weight: bold;
+	}
+#layout-messenger ul li .message cite.module {
+	font-style: normal;
+	background-image: url(//cdn.ceusmedia.de/img/famfamfam/silk/plugin.png);
+	background-position: 1px -1px;
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	}
+
+
+body.site-admin-module-viewer-index #module-scope-selector {
+    position: absolute;
+    right: 20px;
+    top: 5px;
+    padding: 0.5em 1em 0.5em 1em;
+    border-radius: 0.75em 0 0.75em 0.75em;
+    background-color: rgba(127,127,127,0.15)
+    }
+body.site-admin-module-viewer-index #search {
+    border-radius: 0px;
+    }
+
