@@ -1,6 +1,6 @@
 <?php
-class Controller_Shop_Payment_Mangopay extends CMF_Hydrogen_Controller{
-
+class Controller_Shop_Payment_Mangopay extends CMF_Hydrogen_Controller
+{
 	/**	@var	ADT_List_Dictionary			$config			Module configuration dictionary */
 	protected $config;
 
@@ -21,7 +21,129 @@ class Controller_Shop_Payment_Mangopay extends CMF_Hydrogen_Controller{
 	protected $userId;
 	protected $wallet;
 
-	public function __onInit(){
+	public function index( $transactionId = NULL )
+	{
+		if( !( $transactionId = $this->request->get( 'transactionId' ) ) ){
+			$this->restart( 'shop/payment' );
+		}
+		if( $transactionId != $this->session->get( 'shop_payment_mangopay_payInId' ) ){
+			$this->messenger->noteError( 'Invalid payment transaction ID' );
+			$this->restart( 'shop/payment' );
+		}
+		if( !( $payIn = $this->provider->getPayin( $transactionId ) ) ){
+			$this->messenger->noteError( 'Invalid payment transaction ID' );
+			$this->restart( 'shop/payment' );
+		}
+		if( $payIn->Status === "SUCCEEDED" ){
+			$result	= $this->logicPayment->transferOrderAmountToClientSeller(
+				$this->orderId,
+				$payIn,
+				TRUE
+			);
+			if( $result ){
+				$this->logicPayment->updatePayment( $payIn );
+				$this->logicShop->setOrderStatus( $this->orderId, Model_Shop_Order::STATUS_PAYED );
+				$this->messenger->noteSuccess( 'Payin succeeded.' );
+				$this->restart( 'shop/finish' );
+			}
+		}
+		if( $payIn->Status === "FAILED" ){
+			$this->logicPayment->updatePayment( $payIn );
+			$this->restart( 'shop/checkout' );
+		}
+		print_m( $payIn );die;
+	}
+
+
+	public function perBankWire()
+	{
+		$returnUrl		= $this->env->url.'shop/checkout';
+		try{
+			$createdPayIn	= $this->provider->createPayInFromBankAccount(
+				$this->userId,
+				$this->wallet->Id,
+				0,
+				$this->order->currency,
+				round( $this->order->priceTaxed * 100 )
+			);
+			$this->logicPayment->notePayment( $createdPayIn, $this->userId, $this->orderId );
+			$this->restart( 'shop/finish' );
+		}
+		catch( MangoPay\Libraries\ResponseException $e ){
+			$this->handleMangopayResponseException( $e );
+		}
+		catch( Exception $e ){
+			UI_HTML_Exception_Page::display( $e );
+			exit;
+		}
+		throw new Exception( 'No implemented' );
+	}
+
+	public function perDirectDebit()
+	{
+		$returnUrl		= $this->env->url.'shop/payment/mangopay';
+		try{
+			$createdPayIn	= $this->provider->createBankPayInViaWeb(
+				'GIROPAY',
+				$this->userId,
+				$this->wallet->Id,
+				$this->order->currency,
+				round( $this->order->priceTaxed * 100 ),
+				$returnUrl
+			);
+			$this->logicPayment->notePayment( $createdPayIn, $this->userId, $this->orderId );
+			$this->restart( $createdPayIn->ExecutionDetails->RedirectURL, FALSE, NULL, TRUE );
+		}
+		catch( MangoPay\Libraries\ResponseException $e ){
+			$this->handleMangopayResponseException( $e );
+		}
+		catch( Exception $e ){
+			UI_HTML_Exception_Page::display( $e );
+			exit;
+		}
+		throw new Exception( 'No implemented' );
+	}
+
+	public function perCreditCard()
+	{
+/*		if( $this->request->has( 'transactionId' ) ){
+			$result = $this->provider->getPayin( $this->request->get( 'transactionId' ) );
+			if( $result->Status === "SUCCEEDED" ){
+
+				$this->messenger->noteSuccess( 'Payin succeeded.' );
+				$this->restart( './shop/finish' );
+			}
+			else{
+				$helper	= new View_Helper_Mangopay_Error( $this->env );
+				$helper->setCode( $result->ResultCode );
+				$this->messenger->noteError( $helper->render() );
+				$this->restart( './shop/payment/mangopay' );
+			}
+		}*/
+		try{
+			$returnUrl		= $this->env->url.'shop/payment/mangopay';
+			$createdPayIn	= $this->provider->createCardPayInViaWeb(
+				$this->userId,
+				$this->wallet->Id,
+				'CB_VISA_MASTERCARD',//$this->request->get( 'cardType' ),
+				$this->order->currency,
+				round( $this->order->priceTaxed * 100 ),
+				$returnUrl
+			);
+			$this->logicPayment->notePayment( $createdPayIn, $this->userId, $this->orderId );
+			$this->restart( $createdPayIn->ExecutionDetails->RedirectURL, FALSE, NULL, TRUE );
+		}
+		catch( MangoPay\Libraries\ResponseException $e ){
+			$this->handleMangopayResponseException( $e );
+		}
+		catch( Exception $e ){
+			UI_HTML_Exception_Page::display( $e );
+			exit;
+		}
+	}
+
+	protected function __onInit()
+	{
 		$this->config		= $this->env->getConfig()->getAll( 'module.shop_payment.', TRUE );
 		$this->provider		= new Logic_Payment_Mangopay( $this->env );
 		$this->logicShop	= new Logic_Shop( $this->env );
@@ -63,128 +185,12 @@ class Controller_Shop_Payment_Mangopay extends CMF_Hydrogen_Controller{
 		$this->addData( 'paymentBackends', $this->backends );*/
 	}
 
-	protected function handleMangopayResponseException( $e ){
+	protected function handleMangopayResponseException( $e )
+	{
 		ob_start();
 		print_r( $e->GetErrorDetails()->Errors );
 		$details	= ob_get_clean();
 		$message	= 'Response Exception "%s" (%s)<br/><small>%s</small>';
 		$this->messenger->noteFailure( $message, $e->getMessage(), $e->getCode(), $details );
-	}
-
-	public function index( $transactionId = NULL ){
-		if( !( $transactionId = $this->request->get( 'transactionId' ) ) ){
-			$this->restart( 'shop/payment' );
-		}
-		if( $transactionId != $this->session->get( 'shop_payment_mangopay_payInId' ) ){
-			$this->messenger->noteError( 'Invalid payment transaction ID' );
-			$this->restart( 'shop/payment' );
-		}
-		if( !( $payIn = $this->provider->getPayin( $transactionId ) ) ){
-			$this->messenger->noteError( 'Invalid payment transaction ID' );
-			$this->restart( 'shop/payment' );
-		}
-		if( $payIn->Status === "SUCCEEDED" ){
-			$result	= $this->logicPayment->transferOrderAmountToClientSeller(
-				$this->orderId,
-				$payIn,
-				TRUE
-			);
-			if( $result ){
-				$this->logicPayment->updatePayment( $payIn );
-				$this->logicShop->setOrderStatus( $this->orderId, Model_Shop_Order::STATUS_PAYED );
-				$this->messenger->noteSuccess( 'Payin succeeded.' );
-				$this->restart( 'shop/finish' );
-			}
-		}
-		if( $payIn->Status === "FAILED" ){
-			$this->logicPayment->updatePayment( $payIn );
-			$this->restart( 'shop/checkout' );
-		}
-		print_m( $payIn );die;
-	}
-
-
-	public function perBankWire(){
-		$returnUrl		= $this->env->url.'shop/checkout';
-		try{
-			$createdPayIn	= $this->provider->createPayInFromBankAccount(
-				$this->userId,
-				$this->wallet->Id,
-				0,
-				$this->order->currency,
-				round( $this->order->priceTaxed * 100 )
-			);
-			$this->logicPayment->notePayment( $createdPayIn, $this->userId, $this->orderId );
-			$this->restart( 'shop/finish' );
-		}
-		catch( MangoPay\Libraries\ResponseException $e ){
-			$this->handleMangopayResponseException( $e );
-		}
-		catch( Exception $e ){
-			UI_HTML_Exception_Page::display( $e );
-			exit;
-		}
-		throw new Exception( 'No implemented' );
-	}
-
-	public function perDirectDebit(){
-		$returnUrl		= $this->env->url.'shop/payment/mangopay';
-		try{
-			$createdPayIn	= $this->provider->createBankPayInViaWeb(
-				'GIROPAY',
-				$this->userId,
-				$this->wallet->Id,
-				$this->order->currency,
-				round( $this->order->priceTaxed * 100 ),
-				$returnUrl
-			);
-			$this->logicPayment->notePayment( $createdPayIn, $this->userId, $this->orderId );
-			$this->restart( $createdPayIn->ExecutionDetails->RedirectURL, FALSE, NULL, TRUE );
-		}
-		catch( MangoPay\Libraries\ResponseException $e ){
-			$this->handleMangopayResponseException( $e );
-		}
-		catch( Exception $e ){
-			UI_HTML_Exception_Page::display( $e );
-			exit;
-		}
-		throw new Exception( 'No implemented' );
-	}
-
-	public function perCreditCard(){
-/*		if( $this->request->has( 'transactionId' ) ){
-			$result = $this->provider->getPayin( $this->request->get( 'transactionId' ) );
-			if( $result->Status === "SUCCEEDED" ){
-
-				$this->messenger->noteSuccess( 'Payin succeeded.' );
-				$this->restart( './shop/finish' );
-			}
-			else{
-				$helper	= new View_Helper_Mangopay_Error( $this->env );
-				$helper->setCode( $result->ResultCode );
-				$this->messenger->noteError( $helper->render() );
-				$this->restart( './shop/payment/mangopay' );
-			}
-		}*/
-		try{
-			$returnUrl		= $this->env->url.'shop/payment/mangopay';
-			$createdPayIn	= $this->provider->createCardPayInViaWeb(
-				$this->userId,
-				$this->wallet->Id,
-				'CB_VISA_MASTERCARD',//$this->request->get( 'cardType' ),
-				$this->order->currency,
-				round( $this->order->priceTaxed * 100 ),
-				$returnUrl
-			);
-			$this->logicPayment->notePayment( $createdPayIn, $this->userId, $this->orderId );
-			$this->restart( $createdPayIn->ExecutionDetails->RedirectURL, FALSE, NULL, TRUE );
-		}
-		catch( MangoPay\Libraries\ResponseException $e ){
-			$this->handleMangopayResponseException( $e );
-		}
-		catch( Exception $e ){
-			UI_HTML_Exception_Page::display( $e );
-			exit;
-		}
 	}
 }

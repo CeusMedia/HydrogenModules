@@ -1,28 +1,14 @@
 <?php
-class Logic_Shop_Payment_Mangopay extends CMF_Hydrogen_Environment_Resource_Logic{
-
+class Logic_Shop_Payment_Mangopay extends CMF_Hydrogen_Environment_Resource_Logic
+{
 	protected $logicMangopay;
 	protected $logicShop;
 	protected $modelPayin;
 	protected $modelPayment;
 	protected $session;
 
-	protected function __onInit(){
-		$this->logicMangopay	= new Logic_Payment_Mangopay( $this->env );
-		$this->logicShop		= new Logic_Shop( $this->env );
-		$this->modelPayins		= new Model_Mangopay_Payin( $this->env );
-		$this->modelPayment		= new Model_Shop_Payment_Mangopay( $this->env );
-		$this->session			= $this->env->getSession();
-	}
-
-	protected function getWalletForOrder( $mangopayUserId, $orderCurrency ){
-		$wallets		= $this->logicMangopay->getUserWalletsByCurrency( $mangopayUserId, $orderCurrency );
-		if( !$wallets )
-			$wallets	= array( $this->logicMangopay->createUserWallet( $mangopayUserId, $orderCurrency ) );
-		$wallet	= $wallets[0];
-	}
-
-	public function notePayment( $payIn, $mangopayUserId, $orderId ){
+	public function notePayment( $payIn, $mangopayUserId, $orderId )
+	{
 		$paymentId	= $this->modelPayment->add( array(
 			'orderId'		=> $orderId,
 			'userId'		=> $mangopayUserId,
@@ -38,7 +24,8 @@ class Logic_Shop_Payment_Mangopay extends CMF_Hydrogen_Environment_Resource_Logi
 		return $paymentId;
 	}
 
-	public function updatePayment( $payIn ){
+	public function updatePayment( $payIn )
+	{
 		$payment	= $this->modelPayment->getByIndex( 'payInId', $payIn->Id );
 		if( !$payment )
 			throw new DomainException( 'No payment found for pay in ID' );
@@ -55,7 +42,8 @@ class Logic_Shop_Payment_Mangopay extends CMF_Hydrogen_Environment_Resource_Logi
 		) );
 	}
 
-	public function transferOrderAmountToClientSeller( $orderId, $payIn, $strict = TRUE ){
+	public function transferOrderAmountToClientSeller( $orderId, $payIn, bool $strict = TRUE )
+	{
 		$order		= $this->logicShop->getOrder( $orderId );
 		if( !$order )
 			throw new RangeException( 'Invalid order ID' );
@@ -98,5 +86,21 @@ class Logic_Shop_Payment_Mangopay extends CMF_Hydrogen_Environment_Resource_Logi
 		}
 		return NULL;
 	}
+
+	protected function __onInit()
+	{
+		$this->logicMangopay	= new Logic_Payment_Mangopay( $this->env );
+		$this->logicShop		= new Logic_Shop( $this->env );
+		$this->modelPayins		= new Model_Mangopay_Payin( $this->env );
+		$this->modelPayment		= new Model_Shop_Payment_Mangopay( $this->env );
+		$this->session			= $this->env->getSession();
+	}
+
+	protected function getWalletForOrder( $mangopayUserId, $orderCurrency )
+	{
+		$wallets		= $this->logicMangopay->getUserWalletsByCurrency( $mangopayUserId, $orderCurrency );
+		if( !$wallets )
+			$wallets	= array( $this->logicMangopay->createUserWallet( $mangopayUserId, $orderCurrency ) );
+		$wallet	= $wallets[0];
+	}
 }
-?>
