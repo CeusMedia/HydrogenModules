@@ -1,18 +1,34 @@
 <?php
-class Model_Finance_Bank_Account_Reader_Postbank{
-	
+class Model_Finance_Bank_Account_Reader_Postbank
+{
 	protected $bank;
+
 	protected $userAgent;
+
 	protected $url;
-	
-	public function __construct( $bank ){
+
+	public function __construct( $bank )
+	{
 		$this->bank		= $bank;
 		$this->userAgent	= 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Ubuntu/11.10 Chromium/18.0.1025.151 Chrome/18.0.1025.151 Safari/535.19';
 		$this->urlLogin		= 'https://banking.postbank.de/rai/login/wicket:interface/:0:login:loginForm::IFormSubmitListener::';
 #		$this->urlLogout	= 'http://localhost/sandbox/Hydrogen/?wicket:bookmarkablePage=:de.postbank.ucp.application.rai.fs.FinanzstatusPage&wicket:interface=:1:header:4:navLogout::ILinkListener::';
 	}
 
-	protected function getPostString(){
+	public function getAccountValues(): array
+	{
+#		if( !file_exists( $this->bank->cacheFile ) ){
+			$html	= $this->fetchAccountsUsingCurl();
+#			$html	= $this->fetchAccountsUsingWget();
+#			FS_File_Writer::save( $this->bank->cacheFile, $html );
+#		}
+#		else
+#			$html	= FS_File_Reader::load( $this->bank->cacheFile );
+		return $this->parseAccounts( $html );
+	}
+
+	protected function getPostString(): string
+	{
 		$data	 = array(
 			'nutzername'	=> $this->bank->username,
 			'kennwort'		=> $this->bank->password,
@@ -21,22 +37,9 @@ class Model_Finance_Bank_Account_Reader_Postbank{
 		);
 		return http_build_query( $data, NULL, '&' );
 	}
-	
-	protected function fetchAccountsUsingWget(){
-		$cacheFile	= 'cache.'.$this->bank->bankId.'.html';
-		$post		= $this->getPostString();
-		$options	= '-O'.$cacheFile.' --no-check-certificate --post-data=\''.$post.'\' --user-agent="'.$this->userAgent.'"';
-		$command	= 'wget '.$options.' '.$this->urlLogin;
-		exec( $command, $a, $b );
-		if( $b )
-			throw new RuntimeException( 'Request failed with code '.$b );
-		$html	= FS_File_Reader::load( $cacheFile );
-		unlink( $cacheFile );
-#		Net_Reader::readUrl( $this->urlLogout );
-		return $html;
-	}
 
-	protected function fetchAccountsUsingCurl(){
+	protected function fetchAccountsUsingCurl(): string
+	{
 		$ch = curl_init();
 		$cookieFile	= 'cookie.jar';
 		@unlink( $cookieFile );
@@ -54,14 +57,31 @@ class Model_Finance_Bank_Account_Reader_Postbank{
 		$html	= curl_exec( $ch );
 #		Net_Reader::readUrl( $this->urlLogout );
 		return $html;
-	}	
+	}
 
-	protected function parseAccount( $html, $nr ){
+	protected function fetchAccountsUsingWget(): string
+	{
+		$cacheFile	= 'cache.'.$this->bank->bankId.'.html';
+		$post		= $this->getPostString();
+		$options	= '-O'.$cacheFile.' --no-check-certificate --post-data=\''.$post.'\' --user-agent="'.$this->userAgent.'"';
+		$command	= 'wget '.$options.' '.$this->urlLogin;
+		exec( $command, $a, $b );
+		if( $b )
+			throw new RuntimeException( 'Request failed with code '.$b );
+		$html	= FS_File_Reader::load( $cacheFile );
+		unlink( $cacheFile );
+#		Net_Reader::readUrl( $this->urlLogout );
+		return $html;
+	}
+
+	protected function parseAccount( string $html, $nr ): array
+	{
 		$values	= $this->parseAccounts( $html );
 		return $values[$nr];
 	}
-	
-	protected function parseAccounts( $html ){
+
+	protected function parseAccounts( string $html ): array
+	{
 		$html	= str_replace( '></img>', '/>', $html );
 		$html	= str_replace( ' p class="account-notice">', '<p class="account-notice">', $html );
 		$html	= preg_replace( '/<wicket:[^>]+>.*<\/wicket:[^>]+>/iU', '', $html );
@@ -81,16 +101,4 @@ class Model_Finance_Bank_Account_Reader_Postbank{
 		}
 		return $values;
 	}
-
-	public function getAccountValues(){
-#		if( !file_exists( $this->bank->cacheFile ) ){
-			$html	= $this->fetchAccountsUsingCurl();
-#			$html	= $this->fetchAccountsUsingWget();
-#			FS_File_Writer::save( $this->bank->cacheFile, $html );
-#		}
-#		else
-#			$html	= FS_File_Reader::load( $this->bank->cacheFile );
-		return $this->parseAccounts( $html );
-	}
 }
-?>

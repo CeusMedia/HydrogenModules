@@ -44,6 +44,4 @@ return '
 			'.UI_HTML_Elements::Button( 'add', $w->buttonAdd, 'button icon add' ).'
 		</div>
 	</fieldset>
-</form>
-';
-?>
+</form>';

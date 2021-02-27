@@ -1,33 +1,34 @@
 <?php
-class Model_Finance_Bank_Account_Reader_DeutscheBank{
-
+class Model_Finance_Bank_Account_Reader_DeutscheBank
+{
 	protected $account;
+
 	protected $userAgent;
+
 	protected $url;
-	
-	public function __construct( $account ){
+
+	public function __construct( $account )
+	{
 		$this->account		= $account;
 		$this->userAgent	= 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Ubuntu/11.10 Chromium/18.0.1025.151 Chrome/18.0.1025.151 Safari/535.19';
 		$this->urlLogin		= 'https://meine.deutsche-bank.de/trxm/db/gvo/login/login.do';
 #		$this->urlLogout	= '';
 	}
-	
-	protected function fetchAccountUsingWget(){
-		$cacheFile	= 'cache.'.$this->account->bankAccountId.'.html';
-		$post		= $this->getPostString();
-		$options	= '-O'.$cacheFile.' --keep-session-cookies --save-cookies=cookies.txt --load-cookies=cookies.txt --no-check-certificate --post-data=\''.$post.'\' --user-agent="'.$this->userAgent.'"';
-		$command	= 'wget '.$options.' '.$this->urlLogin;
-		exec( $command, $a, $b );
-		if( $b )
-			throw new RuntimeException( 'Request failed with code '.$b );
-		$html	= FS_File_Reader::load( $cacheFile );
-		unlink( $cacheFile );
-#		@unlink( 'cookies.txt' );
-#		Net_Reader::readUrl( $this->urlLogout );
-		return $html;
+
+	public function getAccount()
+	{
+		if( !file_exists( $this->account->cacheFile ) ){
+			$html	= $this->fetchAccountUsingCurl();
+#			$html	= $this->fetchAccountUsingWget();
+			FS_File_Writer::save( $this->account->cacheFile, $html );
+		}
+		else
+			$html	= FS_File_Reader::load( $this->account->cacheFile );
+		return $this->parseAccount( $html );
 	}
 
-	protected function fetchAccountUsingCurl(){
+	protected function fetchAccountUsingCurl(): string
+	{
 		$ch = curl_init();
 		$cookieFile	= 'cookie.jar';
 		curl_setopt( $ch, CURLOPT_URL, $this->urlLogin );
@@ -49,7 +50,24 @@ class Model_Finance_Bank_Account_Reader_DeutscheBank{
 		return $html;
 	}
 
-	protected function getPostString(){
+	protected function fetchAccountUsingWget(): string
+	{
+		$cacheFile	= 'cache.'.$this->account->bankAccountId.'.html';
+		$post		= $this->getPostString();
+		$options	= '-O'.$cacheFile.' --keep-session-cookies --save-cookies=cookies.txt --load-cookies=cookies.txt --no-check-certificate --post-data=\''.$post.'\' --user-agent="'.$this->userAgent.'"';
+		$command	= 'wget '.$options.' '.$this->urlLogin;
+		exec( $command, $a, $b );
+		if( $b )
+			throw new RuntimeException( 'Request failed with code '.$b );
+		$html	= FS_File_Reader::load( $cacheFile );
+		unlink( $cacheFile );
+#		@unlink( 'cookies.txt' );
+#		Net_Reader::readUrl( $this->urlLogout );
+		return $html;
+	}
+
+	protected function getPostString(): string
+	{
 		$number		= str_pad( $this->account->username, 10, 0, STR_PAD_RIGHT );
 		$data	 = array(
 			'branch'			=> $this->account->code,
@@ -65,20 +83,9 @@ class Model_Finance_Bank_Account_Reader_DeutscheBank{
 		return http_build_query( $data, NULL, '&' );
 	}
 
-	public function getAccount(){
-		if( !file_exists( $this->account->cacheFile ) ){
-			$html	= $this->fetchAccountUsingCurl();
-#			$html	= $this->fetchAccountUsingWget();
-			FS_File_Writer::save( $this->account->cacheFile, $html );
-		}
-		else
-			$html	= FS_File_Reader::load( $this->account->cacheFile );
-		return $this->parseAccount( $html );
-	}
-
-	protected function parseAccount( $html ){
+	protected function parseAccount( string $html )
+	{
 		print( $html );
 		die;
 	}
 }
-?>

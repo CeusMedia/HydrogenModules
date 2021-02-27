@@ -40,6 +40,4 @@ return '
 			'.UI_HTML_Elements::LinkButton( './work/finance/fund/remove/'.$fund->fundId, $w->buttonRemove, 'button icon remove', $w->buttonRemoveConfirm, TRUE ).'
 		</div>
 	</fieldset>
-</form>
-';
-?>
+</form>';

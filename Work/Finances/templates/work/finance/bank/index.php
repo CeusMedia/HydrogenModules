@@ -40,4 +40,3 @@ tr .currency {
 		'.UI_HTML_Elements::LinkButton( './work/finance/bank/update', 'aktualisieren', 'button update' ).'
 	</div>
 </fieldset>';
-?>

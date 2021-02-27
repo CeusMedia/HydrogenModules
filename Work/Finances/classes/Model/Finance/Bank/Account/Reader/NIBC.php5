@@ -1,7 +1,8 @@
 <?php
-class Model_Finance_Bank_Account_Reader_NIBC{
-	
-	public function __construct( $account ){
+class Model_Finance_Bank_Account_Reader_NIBC
+{
+	public function __construct( $account )
+	{
 		$this->account		= $account;
 		$this->userAgent	= 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Ubuntu/11.10 Chromium/18.0.1025.151 Chrome/18.0.1025.151 Safari/535.19';
 		$this->urlBase		= 'https://finanzportal.fiducia.de';
@@ -10,8 +11,8 @@ class Model_Finance_Bank_Account_Reader_NIBC{
 		$this->urlLogout	= '/p13pepe/portal?token=%s';
 	}
 
-	public function getAccountValues(){
-
+	public function getAccountValues(): array
+	{
 		//  --  GET LOGIN FORM  --  //
 		$ch = curl_init();
 		$cookieFile	= 'cookie.jar';
@@ -37,7 +38,7 @@ class Model_Finance_Bank_Account_Reader_NIBC{
 			$data[(string) $form->input[$i]['name']]	= (string) $form->input[$i]['value'];
 		$data[(string) $form->div[1]->div->table->tr[2]->td[1]->input['name']]	= $this->account->username;
 		$data[(string) $form->div[1]->div->table->tr[3]->td[1]->input['name']]	= $this->account->password;
-		
+
 		//  --  SEND LOGIN DATA  --  //
 		$ch = curl_init();
 		$cookieFile	= 'cookie.jar';
@@ -53,7 +54,7 @@ class Model_Finance_Bank_Account_Reader_NIBC{
 		curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
 		curl_setopt( $ch, CURLOPT_USERAGENT, $this->userAgent );
 		$html	= curl_exec( $ch );
-		
+
 		$html	= str_replace( '&', '&amp;', $html );
 		$doc	= new DomDocument();
 		$xml	= @$doc->loadHTML( $html );
@@ -85,9 +86,9 @@ class Model_Finance_Bank_Account_Reader_NIBC{
 			$xml	= @$doc->loadHTML( $html );
 			$xml	= simplexml_import_dom( $doc );
 		}
-		
+
 		$token	= (string) $xml->body->form->input[0]['value'];
-		
+
 		//  --  GET BANKING PAGE  --  //
 		$ch = curl_init();
 		$cookieFile	= 'cookie.jar';
@@ -101,14 +102,14 @@ class Model_Finance_Bank_Account_Reader_NIBC{
 		curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
 		curl_setopt( $ch, CURLOPT_USERAGENT, $this->userAgent );
 		$html	= curl_exec( $ch );
-		
+
 		$html	= str_replace( '&', '&amp;', $html );
 		$doc	= new DomDocument();
 		$xml	= @$doc->loadHTML( $html );
 		$xml	= simplexml_import_dom( $doc );
 
 		$table	= $xml->body->div->div[4]->form->div[1]->div->table->tr->td->table->tbody;
-		
+
 		$accounts	= array();
 		for( $i=2; $i<10; $i++){
 			if( isset( $table->tr[$i]->td[1]->span ) ){
@@ -119,14 +120,14 @@ class Model_Finance_Bank_Account_Reader_NIBC{
 				$accounts[$key]	= $value;
 			}
 		}
-	
+
 		$button	= $xml->body->div[0]->div[3]->div->form->div->div->table->tr[1]->td->div->table->tr->td->div->table->tr->td->span->input[1];
-		
+
 		$data	= array();
 		$data['token']		= (string) $xml->body->form->input[0]['value'];
 		$data['frontletId']	= (string) $xml->body->form->input[1]['value'];
 		$data[(string) $button['name']]	= (string) $button['value'];
-		
+
 		//  --  REQUEST LOGOUT  --  //
 		$ch = curl_init();
 		$cookieFile	= 'cookie.jar';
@@ -146,4 +147,3 @@ class Model_Finance_Bank_Account_Reader_NIBC{
 		return $accounts;
 	}
 }
-?>

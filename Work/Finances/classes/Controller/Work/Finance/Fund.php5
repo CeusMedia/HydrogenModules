@@ -1,14 +1,11 @@
 <?php
-class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller
+{
 	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger		Shortcut to messenger object */
 	protected $messenger;
 
-	protected function __onInit(){
-		$this->messenger	= $this->env->getMessenger();
-	}
-	
-	public function add(){
+	public function add()
+	{
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'add' );
 		$userId		= $this->env->getSession()->get( 'userId' );
@@ -44,8 +41,9 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 			$fund->$column	= $request->has( $column ) ? $request->get( $column ) : '';
 		$this->addData( 'fund', $fund );
 	}
-	
-	public function edit( $fundId ){
+
+	public function edit( $fundId )
+	{
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'edit' );
 		$userId		= $this->env->getSession()->get( 'userId' );
@@ -56,7 +54,7 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( $words->msgFundInvalid );
 			$this->restart( NULL, TRUE );
 		}
-		
+
 		if( $request->has( 'save' ) ){
 			if( !strlen( trim( $request->get( 'title' ) ) ) )
 				$this->messenger->noteError( $words->msgNoTitle );
@@ -79,8 +77,9 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'fund', $model->get( $fundId ) );
 	}
-	
-	public function index(){
+
+	public function index()
+	{
 		$userId		= $this->env->getSession()->get( 'userId' );
 		$modelFund	= new Model_Finance_Fund( $this->env );
 		$modelPrice	= new Model_Finance_FundPrice( $this->env );
@@ -96,8 +95,50 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'funds', $funds );
 	}
-	
-	public function remove(){}
+
+	public function remove()
+	{
+	}
+
+	public function requestPrices()
+	{
+		$userId		= $this->env->getSession()->get( 'userId' );
+		$words		= (object) $this->getWords( 'request' );
+		$modelFund	= new Model_Finance_Fund( $this->env );
+		$modelPrice	= new Model_Finance_FundPrice( $this->env );
+		$funds		= $modelFund->getAllByIndex( 'userId', $userId );
+		foreach( $funds as $fund ){
+			$price	= $modelPrice->getAll(
+				array( 'fundId' => $fund->fundId ),
+				array( 'timestamp' => 'DESC' ),
+				array( 0, 1 )
+			);
+			$timestamp	= $price ? $price[0]->timestamp : 0;
+			if( time() - $timestamp < 23 * 60 * 60 ){												//  23 hours: 1 hour open work time
+				$this->messenger->noteNotice( $words->msgNoUpdate, $fund->ISIN );
+				continue;
+			}
+
+			$price	= $this->fetchFromYahoo( $fund );
+			if( $price ){
+				$data	= array(
+					'fundId'	=> $fund->fundId,
+					'price'		=> $price,
+					'pieces'	=> $fund->pieces,
+					'timestamp'	=> time()
+				);
+				$modelPrice->add( $data );
+				$this->messenger->noteSuccess( $words->msgSuccess, $fund->ISIN );
+			}
+			else
+				$this->messenger->noteError( $words->msgNoPrices, $fund->ISIN );
+		}
+		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit(){
+		$this->messenger	= $this->env->getMessenger();
+	}
 
 	/**
 	 *	Fetchs current fund price for ISIN by requesting Yahoo! Finance
@@ -105,7 +146,8 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 	 *	@param		string		$fund		Fund data object
 	 *	@return		float		Current price or 0 if request failed
 	 */
-	protected function fetchFromYahoo( $fund ){
+	protected function fetchFromYahoo( $fund )
+	{
 		$words	= (object) $this->getWords( 'request' );
 		$url	= 'http://de.finance.yahoo.com/lookup?s=';
 		try{
@@ -142,40 +184,4 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller{
 		}
 		return 0;																					//  return 0 as fallback value, indicating that the request failed
 	}
-	
-	public function requestPrices(){
-		$userId		= $this->env->getSession()->get( 'userId' );
-		$words		= (object) $this->getWords( 'request' );
-		$modelFund	= new Model_Finance_Fund( $this->env );
-		$modelPrice	= new Model_Finance_FundPrice( $this->env );
-		$funds		= $modelFund->getAllByIndex( 'userId', $userId );
-		foreach( $funds as $fund ){
-			$price	= $modelPrice->getAll(
-				array( 'fundId' => $fund->fundId ),
-				array( 'timestamp' => 'DESC' ),
-				array( 0, 1 )
-			);
-			$timestamp	= $price ? $price[0]->timestamp : 0;
-			if( time() - $timestamp < 23 * 60 * 60 ){												//  23 hours: 1 hour open work time
-				$this->messenger->noteNotice( $words->msgNoUpdate, $fund->ISIN );
-				continue;
-			}
-
-			$price	= $this->fetchFromYahoo( $fund );
-			if( $price ){
-				$data	= array(
-					'fundId'	=> $fund->fundId,
-					'price'		=> $price,
-					'pieces'	=> $fund->pieces,
-					'timestamp'	=> time()
-				);
-				$modelPrice->add( $data );
-				$this->messenger->noteSuccess( $words->msgSuccess, $fund->ISIN );
-			}
-			else
-				$this->messenger->noteError( $words->msgNoPrices, $fund->ISIN );
-		}
-		$this->restart( NULL, TRUE );
-	}
 }
-?>

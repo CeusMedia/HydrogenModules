@@ -1,18 +1,31 @@
 <?php
-class Model_Finance_Bank_Account_Reader_DKB{
-
+class Model_Finance_Bank_Account_Reader_DKB
+{
 	protected $account;
 	protected $userAgent;
 	protected $url;
-	
-	public function __construct( $account ){
+
+	public function __construct( $account )
+	{
 		$this->account		= $account;
 		$this->userAgent	= 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Ubuntu/11.10 Chromium/18.0.1025.151 Chrome/18.0.1025.151 Safari/535.19';
 		$this->urlLogin		= 'https://banking.dkb.de/dkb/-';
 		$this->urlLogout	= 'https://banking.dkb.de/dkb/-?$part=DkbTransactionBanking.login-status&$event=logout';
 	}
 
-	protected function fetchAccountUsingCurl(){
+	public function getAccountValues(): array
+	{
+#		if( !file_exists( $this->account->cacheFile ) ){
+			$html	= $this->fetchAccountUsingCurl();
+#			FS_File_Writer::save( $this->account->cacheFile, $html );
+#		}
+#		else
+#			$html	= FS_File_Reader::load( $this->account->cacheFile );
+		return $this->parseAccount( $html );
+	}
+
+	protected function fetchAccountUsingCurl(): string
+	{
 		$ch = curl_init();
 		$cookieFile	= 'cookies.jar';
 		@unlink( $cookieFile );
@@ -42,7 +55,8 @@ class Model_Finance_Bank_Account_Reader_DKB{
 		return $html;
 	}
 
-	protected function getPostString(){
+	protected function getPostString(): string
+	{
 		$data	 = array(
 			'j_username'		=> $this->account->username,
 			'j_password'		=> $this->account->password,
@@ -50,17 +64,8 @@ class Model_Finance_Bank_Account_Reader_DKB{
 		return http_build_query( $data, NULL, '&' );
 	}
 
-	public function getAccountValues(){
-#		if( !file_exists( $this->account->cacheFile ) ){
-			$html	= $this->fetchAccountUsingCurl();
-#			FS_File_Writer::save( $this->account->cacheFile, $html );
-#		}
-#		else
-#			$html	= FS_File_Reader::load( $this->account->cacheFile );
-		return $this->parseAccount( $html );
-	}
-
-	protected function parseAccount( $html ){
+	protected function parseAccount( string $html ): array
+	{
 		$html	= str_replace( '&', '&amp;', $html );
 		$doc	= new DomDocument();
 		$xml	= @$doc->loadHTML( $html );
@@ -76,4 +81,3 @@ class Model_Finance_Bank_Account_Reader_DKB{
 		return $values;
 	}
 }
-?>

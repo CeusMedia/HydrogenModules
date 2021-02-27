@@ -69,6 +69,4 @@ return '
 			'.UI_HTML_Elements::LinkButton( './work/finance/bank/remove/'.$account->bankId, $w->buttonRemove, 'button icon remove', $w->buttonRemoveConfirm, TRUE ).'
 		</div>
 	</fieldset>
-</form>
-';
-?>
+</form>';

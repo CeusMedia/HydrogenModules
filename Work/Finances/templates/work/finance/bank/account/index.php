@@ -17,4 +17,3 @@ return '
 		'.UI_HTML_Elements::LinkButton( './work/finance/bank/account/add', 'neues Konto', 'button icon add' ).'
 	</div>
 </fieldset>';
-?>

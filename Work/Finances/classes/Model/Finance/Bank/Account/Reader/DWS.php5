@@ -1,18 +1,33 @@
 <?php
-class Model_Finance_Bank_Account_Reader_DWS{
-
+class Model_Finance_Bank_Account_Reader_DWS
+{
 	protected $account;
+
 	protected $userAgent;
+
 	protected $url;
-	
-	public function __construct( $account ){
+
+	public function __construct( $account )
+	{
 		$this->account		= $account;
 		$this->userAgent	= 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Ubuntu/11.10 Chromium/18.0.1025.151 Chrome/18.0.1025.151 Safari/535.19';
 		$this->urlLogin		= 'https://depot.dws.de/';
 		$this->urlLogout	= 'https://banking.dkb.de/dkb/-?$part=DkbTransactionBanking.login-status&$event=logout';
 	}
 
-	protected function fetchAccountUsingCurl(){
+	public function getAccountValues(): array
+	{
+		if( !file_exists( $this->account->cacheFile ) ){
+			$html	= $this->fetchAccountUsingCurl();
+			FS_File_Writer::save( $this->account->cacheFile, $html );
+		}
+		else
+			$html	= FS_File_Reader::load( $this->account->cacheFile );
+		return $this->parseAccount( $html );
+	}
+
+	protected function fetchAccountUsingCurl(): string
+	{
 		$ch = curl_init();
 		$cookieFile	= 'cookies.jar';
 		curl_setopt( $ch, CURLOPT_URL, $this->urlLogin );
@@ -63,7 +78,8 @@ die;
 		return $html;
 	}
 
-	protected function getPostString(){
+	protected function getPostString(): string
+	{
 		$data	 = array(
 			'_ctl0:MainPlaceHolder:mainPanel:loginPanel:txtUserID'		=> $this->account->username,
 			'_ctl0:MainPlaceHolder:mainPanel:loginPanel:passwordBox'	=> $this->account->password,
@@ -78,17 +94,8 @@ die;
 		return http_build_query( $data, NULL, '&' );
 	}
 
-	public function getAccountValues(){
-		if( !file_exists( $this->account->cacheFile ) ){
-			$html	= $this->fetchAccountUsingCurl();
-			FS_File_Writer::save( $this->account->cacheFile, $html );
-		}
-		else
-			$html	= FS_File_Reader::load( $this->account->cacheFile );
-		return $this->parseAccount( $html );
-	}
-
-	protected function parseAccount( $html ){
+	protected function parseAccount( string $html ): array
+	{
 		$html	= str_replace( '&', '&amp;', $html );
 		$doc	= new DomDocument();
 		$xml	= @$doc->loadHTML( $html );
@@ -104,4 +111,3 @@ die;
 		return $values;
 	}
 }
-?>

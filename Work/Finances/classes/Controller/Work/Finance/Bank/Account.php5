@@ -1,25 +1,11 @@
 <?php
-class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller
+{
 	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger		Shortcut to messenger object */
 	protected $messenger;
 
-	protected function __onInit(){
-		$this->messenger	= $this->env->getMessenger();
-	}
-
-	protected function getBanksWithAccounts(){
-		$userId			= $this->env->getSession()->get( 'userId' );
-		$modelBank		= new Model_Finance_Bank( $this->env );
-		$modelAccount	= new Model_Finance_Bank_Account( $this->env );
-		$banks			= $modelBank->getAllByIndex( 'userId', $userId );
-		foreach( $banks as $nr => $bank ){
-			$accounts	= $modelAccount->getAllByIndex( 'bankId', $bank->bankId );
-			$banks[$nr]->accounts	= $accounts;
-		}
-		return $banks;
-	}
-	public function add(){
+	public function add()
+	{
 		$request		= $this->env->getRequest();
 		$words			= (object) $this->getWords( 'add' );
 		$userId			= $this->env->getSession()->get( 'userId' );
@@ -34,7 +20,7 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
 				if( substr_count( $value, ',' ) && substr_count( $value, '.' ) )
 					$value	= str_replace( '.', '', $value );
 				$value	= str_replace( ',', '.', $value );
-						
+
 				$data	= array(
 					'bankId'		=> $request->get( 'bankId' ),
 					'type'			=> trim( $request->get( 'type' ) ),
@@ -59,8 +45,9 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
 		$this->addData( 'account', $account );
 		$this->addData( 'banks', $modelBank->getAllByIndex( 'userId', $userId ) );
 	}
-	
-	public function edit( $bankAccountId ){
+
+	public function edit( $bankAccountId )
+	{
 		$request		= $this->env->getRequest();
 		$words			= (object) $this->getWords( 'edit' );
 		$userId			= $this->env->getSession()->get( 'userId' );
@@ -77,7 +64,7 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( $words->msgAccountInvalid );
 			$this->restart( NULL, TRUE );
 		}
-		
+
 		if( $request->has( 'save' ) ){
 			if( !strlen( trim( $request->get( 'title' ) ) ) )
 				$this->messenger->noteError( $words->msgNoTitle );
@@ -107,8 +94,9 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
 		$this->addData( 'account', $account );
 		$this->addData( 'banks', $modelBank->getAllByIndex( 'userId', $userId ) );
 	}
-	
-	public function index(){
+
+	public function index()
+	{
 		$userId			= $this->env->getSession()->get( 'userId' );
 		$modelBank		= new Model_Finance_Bank( $this->env );
 		$modelAccount	= new Model_Finance_Bank_Account( $this->env );
@@ -116,7 +104,7 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
 		$banks		= array();
 		foreach( $modelBank->getAllByIndex( 'userId', $userId ) as $bank )
 			$banks[$bank->bankId]	= $bank;
-		
+
 		$accounts	= $modelAccount->getAllByIndex( 'bankId', array_keys( $banks ) );
 		foreach( $accounts as $nr => $account ){
 			$accounts[$nr]->bank	= $banks[$account->bankId];
@@ -124,8 +112,9 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
 		$this->addData( 'banks', $banks );
 		$this->addData( 'accounts', $accounts );
 	}
-	
-	public function update(){
+
+	public function update()
+	{
 		$count			= 0;
 		$banks			= $this->getBanksWithAccounts();
 		$modelAccount	= new Model_Finance_Bank_Account( $this->env );
@@ -136,18 +125,18 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
 				$reader	= NULL;
 				switch( $bank->type ){
 					case 'Postbank':
-		#				@unlink( $banks->cacheFile ); 
+		#				@unlink( $banks->cacheFile );
 						$reader	= new Model_Finance_Bank_Account_Reader_Postbank( $bank );
 						break;
 		#			case 'DeutscheBank':
 		#				$reader	= new Model_Finance_Bank_Account_Reader_DeutscheBank( $account );
 		#				break;
 					case 'DKB':
-		#				@unlink( $banks->cacheFile ); 
+		#				@unlink( $banks->cacheFile );
 		#				$reader	= new Model_Finance_Bank_Account_Reader_DKB( $bank );
 						break;
 		#			case 'DWS':
-		#				@unlink( $banks->cacheFile ); 
+		#				@unlink( $banks->cacheFile );
 		#				$reader	= new Model_Finance_Bank_Account_Reader_DWS( $bank );
 						break;
 		#			default:
@@ -176,6 +165,22 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller{
 		}
 		$this->restart( NULL, TRUE );
 	}
-}
 
-?>
+	protected function __onInit()
+	{
+		$this->messenger	= $this->env->getMessenger();
+	}
+
+	protected function getBanksWithAccounts()
+	{
+		$userId			= $this->env->getSession()->get( 'userId' );
+		$modelBank		= new Model_Finance_Bank( $this->env );
+		$modelAccount	= new Model_Finance_Bank_Account( $this->env );
+		$banks			= $modelBank->getAllByIndex( 'userId', $userId );
+		foreach( $banks as $nr => $bank ){
+			$accounts	= $modelAccount->getAllByIndex( 'bankId', $bank->bankId );
+			$banks[$nr]->accounts	= $accounts;
+		}
+		return $banks;
+	}
+}

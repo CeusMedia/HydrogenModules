@@ -11,14 +11,14 @@ foreach( $funds as $fund ){
 	$date	= $fund->price->timestamp ? date( 'd.m.Y H:i', $fund->price->timestamp ) : '-';
 	$value	= $fund->price->price ? number_format( $fund->price->price * $fund->pieces, 2, ',', '.' ) : '-';
 	$price	= $fund->price->price ? number_format( $fund->price->price, 2, ',', '.' ) : '-';
-	
+
 
 	$icon1	= UI_HTML_Tag::create( 'img',NULL, array( 'src' => './images/fondsweb.de.ico' ) );
 	$link1	= UI_HTML_Tag::create( 'a', $icon1, array( 'href' => $urlView1.$fund->ISIN, 'class' => 'image', 'target' => '_blank' ) );
 
 	$icon2	= UI_HTML_Tag::create( 'img',NULL, array( 'src' => './images/finanzen.net.ico' ) );
 	$link2	= UI_HTML_Tag::create( 'a', $icon2, array( 'href' => $urlView2.$fund->ISIN, 'class' => 'image', 'target' => '_blank' ) );
-	
+
 	$label	= UI_HTML_Tag::create( 'a', $fund->title, array( 'href' => './work/finance/fund/edit/'.$fund->fundId ) );
 	$row	= array(
 		UI_HTML_Tag::create( 'td', $label ),
@@ -64,6 +64,4 @@ table tr .currency {
 		'.UI_HTML_Elements::LinkButton( './work/finance/fund/add', $w->buttonAdd, 'button icon add' ).'
 		'.UI_HTML_Elements::LinkButton( './work/finance/fund/requestPrices', $w->buttonUpdate, 'button icon reload refresh' ).'
 	</div>
-</fieldset>
-';
-?>
+</fieldset>';

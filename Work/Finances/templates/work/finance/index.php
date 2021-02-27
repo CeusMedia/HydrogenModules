@@ -33,7 +33,7 @@ foreach( $banks as $bank ){
 if( $number > 1 )
 	$rows[]	= '<tr class="total"><td colspan="2">Total: '.count( $banks ).' Bank(en) mit '.$number.' Konten</td><td class="currency">'.number_format( $total, 2, ',', '.' ).'&nbsp;&euro;</td></tr>';
 $table	= '<table>'.join( $rows ).'</table>';
-	
+
 $panelList	= '
 <fieldset>
 	<legend>Bankkonten</legend>
@@ -94,4 +94,3 @@ tr .currency {
 </div><div class="column-left-80">
 	'.$panelList.'
 </div>';
-?>

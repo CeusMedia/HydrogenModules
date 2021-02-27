@@ -1,7 +1,8 @@
 <?php
-class Model_Finance_Fund extends CMF_Hydrogen_Model{
-
+class Model_Finance_Fund extends CMF_Hydrogen_Model
+{
 	protected $name		= 'finance_funds';
+
 	protected $columns	= array(
 		'fundId',
 		'userId',
@@ -15,7 +16,9 @@ class Model_Finance_Fund extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'fundId';
+
 	protected $indices		= array(
 		'userId',
 		'type',
@@ -23,10 +26,6 @@ class Model_Finance_Fund extends CMF_Hydrogen_Model{
 		'ISIN',
 		'currency',
 	);
-	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function  __construct( CMF_Hydrogen_Environment $env, $id = NULL ){
-		parent::__construct( $env, $id );
-	}
+	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>
