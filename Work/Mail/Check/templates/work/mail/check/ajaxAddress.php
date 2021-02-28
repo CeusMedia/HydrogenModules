@@ -1,5 +1,6 @@
 <?php
-function renderFacts( $facts ){
+function renderFacts( array $facts ): string
+{
 	$list	= array();
 	foreach( $facts as $term => $definition ){
 		$list[]	= UI_HTML_Tag::create( 'dt', $term );
@@ -9,7 +10,8 @@ function renderFacts( $facts ){
 }
 
 
-function renderCodeBadge( $check, $label = NULL ){
+function renderCodeBadge( $check, string $label = NULL ): string
+{
 	$code	= $check->code;
 	switch( (int) substr( $check->code, 0, 1 ) ){
 		case 0:
@@ -64,7 +66,4 @@ return '
 <h4>Prüfungen <small class="muted">('.count( $address->checks ).')</small></h4>
 '.$checks.'
 <br/>
-<br/>
-';
-
-?>
+<br/>';

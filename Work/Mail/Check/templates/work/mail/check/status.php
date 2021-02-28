@@ -1,8 +1,6 @@
 <?php
 
-
 $percentTested	= round( ( $positive + $negative ) / $total * 100, 2 );
-
 $percentQuality	= $positive + $negative ? round( $positive / ( $positive + $negative ) * 100, 1 ) : 0;
 
 $percentPositive	= round( $positive / $total * 100, 1 );
@@ -20,10 +18,9 @@ $bar2->addBar( $percentNegative, \CeusMedia\Bootstrap\ProgressBar::BAR_CLASS_DAN
 $bar3	= new \CeusMedia\Bootstrap\ProgressBar( \CeusMedia\Bootstrap\ProgressBar::CLASS_DANGER );
 $bar3->addBar( $percentQuality, \CeusMedia\Bootstrap\ProgressBar::BAR_CLASS_SUCCESS, $percentQuality.'%' );
 
-
 	$content	= '
 <div>
-	<h4>Getested</h4>
+	<h4>Getestet</h4>
 	'.$bar1.'
 	<h4>Ergebnis</h4>
 	'.$bar2.'
@@ -49,8 +46,7 @@ $(document).ready(function(){
 		document.location.reload();
 	}, 12000);
 })
-</script>
-';
+</script>';
 
 if( $open ){
 }
