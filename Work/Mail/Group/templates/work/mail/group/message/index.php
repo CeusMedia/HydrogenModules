@@ -1,6 +1,5 @@
 <?php
 
-
 $optGroup	= array( '' => '- alle -');
 foreach( $groups as $group )
 	$optGroup[$group->mailGroupId]	= $group->title;

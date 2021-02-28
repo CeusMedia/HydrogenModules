@@ -1,16 +1,10 @@
 <?php
-class Controller_Work_Mail_Group_Role extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Mail_Group_Role extends CMF_Hydrogen_Controller
+{
 	protected $modelRole;
 
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->modelRole	= new Model_Mail_Group_Role( $this->env );
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$title	= trim( $this->request->get( 'title' ) );
 			$this->modelRole->add( array(
@@ -30,7 +24,8 @@ class Controller_Work_Mail_Group_Role extends CMF_Hydrogen_Controller{
 		$this->addData( 'role', (object) $role );
 	}
 
-	public function checkId( $roleId ){
+	public function checkId( $roleId )
+	{
 		$role	= $this->modelRole->get( $roleId );
 		if( $role )
 			return $role;
@@ -39,7 +34,8 @@ class Controller_Work_Mail_Group_Role extends CMF_Hydrogen_Controller{
 		return NULL;
 	}
 
-	public function edit( $roleId ){
+	public function edit( $roleId )
+	{
 		$role	= $this->checkId( $roleId );
 		if( $this->request->has( 'save' ) ){
 			$title	= trim( $this->request->get( 'title' ) );
@@ -55,7 +51,8 @@ class Controller_Work_Mail_Group_Role extends CMF_Hydrogen_Controller{
 		$this->addData( 'role', $role );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$indices	= array();
 		$orders		= array( 'title' => 'ASC' );
 		$limits		= array();
@@ -63,7 +60,17 @@ class Controller_Work_Mail_Group_Role extends CMF_Hydrogen_Controller{
 		$this->addData( 'roles', $roles );
 	}
 
-	public function setStatus( $roleId, $status ){
+	public function remove()
+	{
+		$role	= $this->checkId( $roleId );
+		if( $role ){
+			$this->modelRole->remove( $roleId );
+			$this->restart( NULL, TRUE );
+		}
+	}
+
+	public function setStatus( $roleId, $status )
+	{
 		$role	= $this->checkId( $roleId );
 		if( $role ){
 			$this->modelRole->edit( $roleId, array(
@@ -73,11 +80,11 @@ class Controller_Work_Mail_Group_Role extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function remove(){
-		$role	= $this->checkId( $roleId );
-		if( $role ){
-			$this->modelRole->remove( $roleId );
-			$this->restart( NULL, TRUE );
-		}
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->modelRole	= new Model_Mail_Group_Role( $this->env );
 	}
 }

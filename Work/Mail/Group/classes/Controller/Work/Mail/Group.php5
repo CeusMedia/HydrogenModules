@@ -1,6 +1,6 @@
 <?php
-class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller
+{
 	protected $request;
 	protected $session;
 	protected $messenger;
@@ -13,23 +13,8 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 	protected $logicGroup;
 	protected $logicMail;
 
-	protected function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-
-		$this->modelGroup	= $this->getModel( 'mailGroup' );
-		$this->modelMember	= $this->getModel( 'mailGroupMember' );
-		$this->modelRole	= $this->getModel( 'mailGroupRole' );
-		$this->modelAction	= $this->getModel( 'mailGroupAction' );
-		$this->modelServer	= $this->getModel( 'mailGroupServer' );
-		$this->modelGroup	= $this->getModel( 'mailGroup' );
-		$this->modelUser	= $this->getModel( 'user' );
-		$this->logicGroup	= $this->getLogic( 'mailGroup' );
-		$this->logicMail	= $this->getLogic( 'mail' );
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$title		= trim( $this->request->get( 'title' ) );
 			$address	= trim( $this->request->get( 'address' ) );
@@ -67,7 +52,8 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->addData( 'roles', $roles );
 	}
 
-	public function addMember( $groupId ){
+	public function addMember( $groupId )
+	{
 		$title		= $this->request->get( 'title' );
 		$address	= $this->request->get( 'address' );
 
@@ -115,15 +101,8 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$groupId, TRUE );
 	}
 
-	protected function checkGroupId( $groupId, $strict = TRUE ){
-		return $this->logicGroup->checkGroupId( $groupId, $strict );
-	}
-
-	protected function checkMemberId( $memberId, $strict = TRUE ){
-		return $this->logicGroup->checkMemberId( $memberId, $strict );
-	}
-
-	public function edit( $groupId ){
+	public function edit( $groupId )
+	{
 		$group	= $this->checkGroupId( $groupId );
 		if( $this->request->has( 'save' ) ){
 			$title		= trim( $this->request->get( 'title' ) );
@@ -165,7 +144,8 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->addData( 'roles', $roles );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$groups		= $this->modelGroup->getAll();
 		foreach( $groups as $group )
 			$group->members		= $this->modelMember->getAll(
@@ -176,13 +156,15 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->addData( 'groups', $groups );
 	}
 
-	public function removeMember( $mailGroupId, $mailGroupMemberId ){
+	public function removeMember( $mailGroupId, $mailGroupMemberId )
+	{
 		$member	= $this->checkMemberId( $mailGroupMemberId );
 		$this->modelMember->remove( $mailGroupMemberId );
 		$this->restart( 'edit/'.$mailGroupId, TRUE );
 	}
 
-	public function editMember( $mailGroupId, $mailGroupMemberId ){
+	public function editMember( $mailGroupId, $mailGroupMemberId )
+	{
 		$member	= $this->checkMemberId( $mailGroupMemberId );
 		$this->modelMember->edit( $mailGroupMemberId, array(
 			'address'		=> $this->request->get( 'address' ),
@@ -193,7 +175,8 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$mailGroupId, TRUE );
 	}
 
-	public function setMemberStatus( $mailGroupId, $mailGroupMemberId, $status ){
+	public function setMemberStatus( $mailGroupId, $mailGroupMemberId, $status )
+	{
 		$group		= $this->checkGroupId( $mailGroupId );
 		$member		= $this->checkMemberId( $mailGroupMemberId );
 		$message	= '';
@@ -208,5 +191,32 @@ class Controller_Work_Mail_Group extends CMF_Hydrogen_Controller{
 				$this->messenger->noteSuccess( $message );
 		}
 		$this->restart( 'edit/'.$mailGroupId, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+
+		$this->modelGroup	= $this->getModel( 'mailGroup' );
+		$this->modelMember	= $this->getModel( 'mailGroupMember' );
+		$this->modelRole	= $this->getModel( 'mailGroupRole' );
+		$this->modelAction	= $this->getModel( 'mailGroupAction' );
+		$this->modelServer	= $this->getModel( 'mailGroupServer' );
+		$this->modelGroup	= $this->getModel( 'mailGroup' );
+		$this->modelUser	= $this->getModel( 'user' );
+		$this->logicGroup	= $this->getLogic( 'mailGroup' );
+		$this->logicMail	= $this->getLogic( 'mail' );
+	}
+
+	protected function checkGroupId( $groupId, bool $strict = TRUE )
+	{
+		return $this->logicGroup->checkGroupId( $groupId, $strict );
+	}
+
+	protected function checkMemberId( $memberId, bool $strict = TRUE )
+	{
+		return $this->logicGroup->checkMemberId( $memberId, $strict );
 	}
 }

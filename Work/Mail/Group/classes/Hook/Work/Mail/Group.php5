@@ -1,7 +1,8 @@
 <?php
-class Hook_Work_Mail_Group extends CMF_Hydrogen_Hook{
-
-	public static function onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $payload ){
+class Hook_Work_Mail_Group extends CMF_Hydrogen_Hook
+{
+	public static function onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		$words	= (object) $env->getLanguage()->getWords( 'work/mail/group' );					//  load words
 		$context->registerTab( '', $words->tabs['group'], 0 );									//  register main tab
 	//	$context->registerTab( 'member', $words->tabs['members'], 1 );							//  register members tab
