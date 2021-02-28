@@ -1,9 +1,15 @@
 <?php
-class Model_Shop_Cart{
-
+class Model_Shop_Cart
+{
 	const CUSTOMER_MODE_UNKNOWN		= 0;
 	const CUSTOMER_MODE_GUEST		= 1;
 	const CUSTOMER_MODE_ACCOUNT		= 2;
+
+	const CUSTOMER_MODES			= [
+		self::CUSTOMER_MODE_UNKNOWN,
+		self::CUSTOMER_MODE_GUEST,
+		self::CUSTOMER_MODE_ACCOUNT,
+	];
 
 	/**	@var	Logic_ShopBridge		$brige */
 	protected $bridge;
@@ -14,7 +20,8 @@ class Model_Shop_Cart{
 		'priceTaxed',
 	);
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env				= $env;
 		$this->session			= $env->getSession();
 		$this->bridge			= new Logic_ShopBridge( $env );
@@ -38,33 +45,23 @@ class Model_Shop_Cart{
 
 	}
 
-	protected function createEmpty(){
-		$this->data	= new ADT_List_Dictionary( array(
-			'orderStatus'		=> Model_Shop_Order::STATUS_NEW,
-			'acceptRules'		=> FALSE,
-			'paymentMethod'		=> NULL,
-			'paymentId'			=> NULL,
-			'currency'			=> $this->defaultCurrency,
-			'positions'			=> array(),
-			'customer'			=> array(),
-			'customerMode'		=> Model_Shop_CART::CUSTOMER_MODE_UNKNOWN,
-		) );
-		$this->session->set( 'shop_cart', $this->data->getAll() );
-	}
-
-	public function get( $key ){
+	public function get( $key )
+	{
 		return $this->data->get( $key );
 	}
 
-	public function getAll(){
+	public function getAll(): array
+	{
 		return $this->data->getAll();
 	}
 
-	public function has( $key ){
+	public function has( $key )
+	{
 		return $this->data->has( $key );
 	}
 
-	public function loadOrder( $orderId = NULL ){
+	public function loadOrder( $orderId = NULL )
+	{
 		$orderId	= $orderId ? $orderId : $this->data->get( 'orderId' );
 		if( $orderId ){
 			$order	= $this->modelOrder->get( $orderId );
@@ -91,13 +88,15 @@ class Model_Shop_Cart{
 		}
 	}
 
-	public function releaseOrder(){
+	public function releaseOrder()
+	{
 		if( $this->data->get( 'orderId' ) )
 			$this->createEmpty();
 	}
 
 
-	public function remove( $key ){
+	public function remove( $key )
+	{
 		$this->data->remove( $key );
 		if( $this->data->get( 'orderId' ) )
 			if( !in_array( $key, $this->ignoreOnUpdate ) )
@@ -110,7 +109,8 @@ class Model_Shop_Cart{
 	 *	@access		public
 	 *	@return		integer		Order ID
 	 */
-	public function saveOrder(){
+	public function saveOrder()
+	{
 		$orderId	= $this->data->get( 'orderId' );
 		if( $orderId && $this->modelOrder->get( $orderId ) ){
 			return $this->updateOrder( $orderId );
@@ -118,7 +118,8 @@ class Model_Shop_Cart{
 		return $this->createOrder();
 	}
 
-	public function set( $key, $value ){
+	public function set( $key, $value )
+	{
 		$this->data->set( $key, $value );
 		if( $this->data->get( 'orderId' ) )
 			if( !in_array( $key, $this->ignoreOnUpdate ) )
@@ -128,7 +129,23 @@ class Model_Shop_Cart{
 
 	/*  --  PROTECTED  --  */
 
-	protected function createOrder(){
+	protected function createEmpty()
+	{
+		$this->data	= new ADT_List_Dictionary( array(
+			'orderStatus'		=> Model_Shop_Order::STATUS_NEW,
+			'acceptRules'		=> FALSE,
+			'paymentMethod'		=> NULL,
+			'paymentId'			=> NULL,
+			'currency'			=> $this->defaultCurrency,
+			'positions'			=> array(),
+			'customer'			=> array(),
+			'customerMode'		=> Model_Shop_CART::CUSTOMER_MODE_UNKNOWN,
+		) );
+		$this->session->set( 'shop_cart', $this->data->getAll() );
+	}
+
+	protected function createOrder()
+	{
 		$orderId	= $this->modelOrder->add( array(
 			'userId'		=> $this->data->get( 'userId' ),
 			'status'		=> $this->data->get( 'orderStatus' ),
@@ -167,7 +184,8 @@ class Model_Shop_Cart{
 		return $orderId;
 	}
 
-	protected function updateOrder( $orderId ){
+	protected function updateOrder( $orderId )
+	{
 		$this->modelOrder->edit( $orderId, array(
 			'userId'		=> $this->data->get( 'userId' ),
 			'status'		=> $this->data->get( 'orderStatus' ),
@@ -231,7 +249,8 @@ class Model_Shop_Cart{
 		return $orderId;
 	}
 
-	protected function updateOrderPrices( $orderId ){
+	protected function updateOrderPrices( $orderId )
+	{
 		$price			= 0;
 		$priceTaxed		= 0;
 		$logicShop		= Logic_Shop::getInstance( $this->env );

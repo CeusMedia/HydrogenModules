@@ -1,14 +1,16 @@
 <?php
-class View_Helper_Shop{
-
-	public function __construct( CMF_Hydrogen_Environment $env ){
+class View_Helper_Shop
+{
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->config	= $env->getConfig()->getAll( 'module.shop.', TRUE );
 		$this->words	= $env->getLanguage()->getWords( 'shop' );
 		$this->language	= $env->getLanguage()->getLanguage();
 	}
 
-	public function formatPrice( $price, $spaceBeforeCurrency = TRUE, $asHtml = TRUE ){
+	public function formatPrice( $price, bool $spaceBeforeCurrency = TRUE, bool $asHtml = TRUE ): string
+	{
 		$decimals	= (int) $this->config->get( 'price.accuracy' );
 		$currency	= (string) $this->config->get( 'price.currency' );
 		$decPoint	= $this->language === 'de' ? ',' : '.';
@@ -17,21 +19,24 @@ class View_Helper_Shop{
 		return number_format( $price, $decimals, $decPoint, NULL ).$space.$currency;
 	}
 
-	public function renderCartPanelAsText( $positions ){
+	public function renderCartPanelAsText( array $positions ): string
+	{
 		$helper	= new View_Helper_Shop_CartPositions( $this->env );
 		$helper->setPositions( $positions );
 		$helper->setOutput( View_Helper_Shop_CartPositions::OUTPUT_TEXT );
 		return $helper->render();
 	}
 
-	public function renderCartPanel( $positions ){
+	public function renderCartPanel( array $positions ): string
+	{
 		$helper	= new View_Helper_Shop_CartPositions( $this->env );
 		$helper->setPositions( $positions );
 		$helper->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML );
 		return '<h4>Warenkorb</h4>'.$helper->render();
 	}
 
-	public function renderCustomerPanel( $data ){
+	public function renderCustomerPanel( $data ): string
+	{
 		$words	= (object) $this->words['panel-customer'];
 		$helper	= new View_Helper_Shop_AddressView( $this->env );
 		$helper->setAddress( $data );
@@ -41,7 +46,8 @@ class View_Helper_Shop{
 			<br/>';
 	}
 
-	public function renderBillingPanel( $data ){
+	public function renderBillingPanel( $data ): string
+	{
 		if( !$data )
 			return '';
 		$words	= (object) $this->words['panel-billing'];
@@ -53,4 +59,3 @@ class View_Helper_Shop{
 			<br/>';
 	}
 }
-?>

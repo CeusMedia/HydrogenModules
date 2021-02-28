@@ -1,14 +1,27 @@
 <?php
-class View_Helper_Shop_CartPositions{
-
+class View_Helper_Shop_CartPositions
+{
 	const DISPLAY_UNKNOWN			= 0;
 	const DISPLAY_BROWSER			= 1;
 	const DISPLAY_MAIL				= 2;
+
+	const DISPLAYS					= [
+		self::DISPLAY_UNKNOWN,
+		self::DISPLAY_BROWSER,
+		self::DISPLAY_MAIL,
+	];
 
 	const OUTPUT_UNKNOWN			= 0;
 	const OUTPUT_TEXT				= 1;
 	const OUTPUT_HTML				= 2;
 	const OUTPUT_HTML_LIST			= 3;
+
+	const OUTPUTS					= [
+		self::OUTPUT_UNKNOWN,
+		self::OUTPUT_TEXT,
+		self::OUTPUT_HTML,
+		self::OUTPUT_HTML_LIST,
+	];
 
 	protected $bridge;
 	protected $changeable;
@@ -19,16 +32,12 @@ class View_Helper_Shop_CartPositions{
 	protected $display				= self::DISPLAY_BROWSER;
 	protected $output				= self::OUTPUT_HTML;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->config	= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
 		$this->words	= $this->env->getLanguage()->getWords( 'shop' );
 		$this->bridge	= new Logic_ShopBridge( $this->env );
-	}
-
-	protected function formatPrice( $price, $spaceBeforeCurrency = TRUE, $asHtml = TRUE ){
-		$helper		= new View_Helper_Shop( $this->env );
-		return $helper->formatPrice( $price, $spaceBeforeCurrency, $asHtml );
 	}
 
 	public function render(){
@@ -44,7 +53,61 @@ class View_Helper_Shop_CartPositions{
 		}
 	}
 
-	public function renderAsHtmlList(){
+	public function setChangeable( bool $isChangeable = TRUE ): self
+	{
+		$this->changeable	= $isChangeable;
+		return $this;
+	}
+
+	public function setForwardPath( string $forwardPath ): self
+	{
+		$this->forwardPath		= $forwardPath;
+		return $this;
+	}
+
+	public function setDeliveryAddress( $address ): self
+	{
+		$this->deliveryAddress	= $address;
+	}
+
+	public function setDisplay( $display ){
+		if( !in_array( (int) $display, array( self::DISPLAY_BROWSER, self::DISPLAY_MAIL	) ) )
+			throw new InvalidArgumentException( 'Invalid display format' );
+		$this->display		= $display;
+		return $this;
+	}
+
+	public function setOutput( int $format ): self
+	{
+		$formats	= array( self::OUTPUT_HTML, self::OUTPUT_TEXT, self::OUTPUT_HTML_LIST );
+		if( !in_array( (int) $format, $formats ) )
+			throw new InvalidArgumentException( 'Invalid output format' );
+		$this->output		= (int) $format;
+		return $this;
+	}
+
+	public function setPositions( array $positions ): self
+	{
+		$this->positions		= $positions;
+		foreach( $positions as $nr => $position ){
+			if( !isset( $position->article ) ){
+				$source		= $this->bridge->getBridgeObject( (int) $position->bridgeId );
+				$article	= $source->get( $position->articleId, $position->quantity );
+				$positions[$nr]->article	= $article;
+			}
+		}
+		return $this;
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function formatPrice( float $price, bool $spaceBeforeCurrency = TRUE, bool $asHtml = TRUE ): string
+	{
+		$helper		= new View_Helper_Shop( $this->env );
+		return $helper->formatPrice( $price, $spaceBeforeCurrency, $asHtml );
+	}
+
+	protected function renderAsHtmlList(){
 		$words		= (object) $this->words['panel-cart'];
 		$wordsCart	= (object) $this->words['cart'];
 		$rows		= array();
@@ -148,7 +211,8 @@ class View_Helper_Shop_CartPositions{
 
 	}
 
-	public function renderAsHtml(){
+	protected function renderAsHtml(): string
+	{
 		$words		= (object) $this->words['panel-cart'];
 		$wordsCart	= (object) $this->words['cart'];
 		$rows			= array();
@@ -256,7 +320,8 @@ class View_Helper_Shop_CartPositions{
 		return $tablePositions;
 	}
 
-	protected function renderAsText(){
+	protected function renderAsText(): string
+	{
 		$words		= (object) $this->words['panel-cart'];
 		$helperText	= new View_Helper_Mail_Text();
 		$list		= array();
@@ -327,7 +392,8 @@ class View_Helper_Shop_CartPositions{
 		return join( "\n", $list );
 	}
 
-	protected function renderPositionQuantityButtons( $position ){
+	protected function renderPositionQuantityButtons( $position ): string
+	{
 		$w				= (object) $this->words['cart'];
 		$iconPlus		= "&plus;";
 		$iconMinus		= "&minus;";
@@ -370,46 +436,5 @@ class View_Helper_Shop_CartPositions{
 			return $buttonRemove;
 		$buttons		= array( $buttonPlus, $buttonMinus, $buttonRemove );
 		return new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
-	}
-
-	public function setChangeable( $isChangeable = TRUE ){
-		$this->changeable	= $isChangeable;
-		return $this;
-	}
-
-	public function setForwardPath( $forwardPath ){
-		$this->forwardPath		= $forwardPath;
-		return $this;
-	}
-
-	public function setDeliveryAddress( $address ){
-		$this->deliveryAddress	= $address;
-	}
-
-	public function setDisplay( $display ){
-		if( !in_array( (int) $display, array( self::DISPLAY_BROWSER, self::DISPLAY_MAIL	) ) )
-			throw new InvalidArgumentException( 'Invalid display format' );
-		$this->display		= $display;
-		return $this;
-	}
-
-	public function setOutput( $format ){
-		$formats	= array( self::OUTPUT_HTML, self::OUTPUT_TEXT, self::OUTPUT_HTML_LIST );
-		if( !in_array( (int) $format, $formats ) )
-			throw new InvalidArgumentException( 'Invalid output format' );
-		$this->output		= (int) $format;
-		return $this;
-	}
-
-	public function setPositions( $positions ){
-		$this->positions		= $positions;
-		foreach( $positions as $nr => $position ){
-			if( !isset( $position->article ) ){
-				$source		= $this->bridge->getBridgeObject( (int) $position->bridgeId );
-				$article	= $source->get( $position->articleId, $position->quantity );
-				$positions[$nr]->article	= $article;
-			}
-		}
-		return $this;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
-class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
-
+class Controller_Shop_Customer extends CMF_Hydrogen_Controller
+{
 	/**	@var	array					$backends			List of available payment backends */
 	protected $backends					= array();
 
@@ -22,33 +22,6 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 	/** @var	Logic_Authentication	$logicAuth			Instance of authentication logic, if available */
 	protected $logicAuth;
 
-	protected function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->modelUser	= new Model_User( $this->env );
-		$this->modelAddress	= new Model_Address( $this->env );
-		$this->modelCart	= new Model_Shop_Cart( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
-
-		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
-			$this->useAuth		= TRUE;
-			$this->logicAuth	= Logic_Authentication::getInstance( $this->env );
-		}
-
-		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
-		$this->addData( 'paymentBackends', $this->backends );
-
-		if( $this->modelCart->get( 'positions' ) ){
-			foreach( $this->modelCart->get( 'positions' ) as $position ){
-				$this->cartTotal	+= $position->article->price->all;
-			}
-		}
-		// @todo  implement shipping and options (insurance, handling etc)
-
-		$this->addData( 'cartTotal', $this->cartTotal );
-	}
-
 	/**
 	 *	...
 	 *	@access		public
@@ -57,7 +30,8 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 	 *	@param		boolean		$remove			Flag: remove address and return
 	 *	@return		void
 	 */
-	public function address( $addressId, $type = NULL, $remove = NULL ){
+	public function address( $addressId, $type = NULL, $remove = NULL )
+	{
 		$type			= (int) $type;
 		$customerMode	= $this->modelCart->get( 'customerMode' );
 		$countries		= $this->env->getLanguage()->getWords( 'countries' );
@@ -168,7 +142,8 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 	 *	@param		string		$mode		Optional: Customer mode to set (account|guest)
 	 *	@return		void
 	 */
-	public function index( $mode = NULL ){
+	public function index( $mode = NULL )
+	{
 		if( $mode === 'account' && $this->useAuth )
 			$mode	= Model_Shop_CART::CUSTOMER_MODE_ACCOUNT;
 		else if( $mode === 'guest' )
@@ -202,12 +177,110 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 		}
 	}
 
+
+	/**
+	 *	Register a payment backend.
+	 *	@access		public
+	 *	@param		string		$backend		...
+	 *	@param		string		$key			...
+	 *	@param		string		$title			...
+	 *	@param		string		$path			...
+	 *	@param		integer		$priority		...
+	 *	@param		string		$icon			...
+	 *	@return		void
+	 */
+	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = array() )
+	{
+		$this->backends[]	= (object) array(
+			'backend'	=> $backend,
+			'key'		=> $key,
+			'title'		=> $title,
+			'path'		=> $path,
+			'priority'	=> $priority,
+			'icon'		=> $icon,
+			'countries'	=> $countries,
+		);
+	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->modelUser	= new Model_User( $this->env );
+		$this->modelAddress	= new Model_Address( $this->env );
+		$this->modelCart	= new Model_Shop_Cart( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
+
+		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
+			$this->useAuth		= TRUE;
+			$this->logicAuth	= Logic_Authentication::getInstance( $this->env );
+		}
+
+		$captain	= $this->env->getCaptain();
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
+		$this->addData( 'paymentBackends', $this->backends );
+
+		if( $this->modelCart->get( 'positions' ) ){
+			foreach( $this->modelCart->get( 'positions' ) as $position ){
+				$this->cartTotal	+= $position->article->price->all;
+			}
+		}
+		// @todo  implement shipping and options (insurance, handling etc)
+
+		$this->addData( 'cartTotal', $this->cartTotal );
+	}
+
+	/**
+	 *	Handle customer having an user account.
+	 *	@access		protected
+	 *	@return		void
+	 */
+	protected function handleAccount()
+	{
+		$countries	= $this->env->getLanguage()->getWords( 'countries' );
+		$userId		= 0;
+		if( $this->logicAuth->isAuthenticated() ){
+			$userId	= $this->logicAuth->getCurrentUserId();
+			if( $userId ){
+				if( !$this->modelCart->get( 'userId' ) )
+					$this->modelCart->set( 'userId', $userId );
+				$user		= $this->modelUser->get( $userId );
+				$addressDelivery	= $this->modelAddress->getByIndices( array(
+					'relationType'	=> 'user',
+					'relationId'	=> $userId,
+					'type'			=> Model_Address::TYPE_DELIVERY,
+				) );
+				$addressBilling		= $this->modelAddress->getByIndices( array(
+					'relationType'	=> 'user',
+					'relationId'	=> $userId,
+					'type'			=> Model_Address::TYPE_BILLING,
+				) );
+				if( $this->request->has( 'save' ) && $addressDelivery && $addressBilling ){
+					$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_AUTHENTICATED );
+					$this->modelCart->set( 'userId', $userId );
+					$this->restart( 'shop/conditions' );
+				}
+				if( !array_key_exists( $user->country, $countries ) )
+					$user->country	= 'DE';
+				$this->addData( 'countries', $countries );
+				$this->addData( 'user', $user );
+				$this->addData( 'addressBilling', $addressBilling );
+				$this->addData( 'addressDelivery', $addressDelivery );
+			}
+		}
+//		$this->addData( 'mode', Model_Shop_CART::CUSTOMER_MODE_ACCOUNT );
+		$this->addData( 'userId', $userId );
+		$this->addData( 'username', $this->request->get( 'username' ) );
+		$this->addData( 'useOauth2', $this->env->getModules()->has( 'Resource_Authentication_Backend_OAuth2' ) );
+	}
+
 	/**
 	 *	Handle customer having a guest account.
 	 *	@access		protected
 	 *	@return		void
 	 */
-	protected function handleGuest(){
+	protected function handleGuest()
+	{
 		$countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$this->addData( 'mode', Model_Shop_CART::CUSTOMER_MODE_GUEST );
 		$this->addData( 'userId', 0 );
@@ -263,71 +336,5 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller{
 			$user	= $addressBilling;
 		}
 		$this->addData( 'user', $user );
-	}
-
-	/**
-	 *	Handle customer having an user account.
-	 *	@access		protected
-	 *	@return		void
-	 */
-	protected function handleAccount(){
-		$countries	= $this->env->getLanguage()->getWords( 'countries' );
-		$userId		= 0;
-		if( $this->logicAuth->isAuthenticated() ){
-			$userId	= $this->logicAuth->getCurrentUserId();
-			if( $userId ){
-				if( !$this->modelCart->get( 'userId' ) )
-					$this->modelCart->set( 'userId', $userId );
-				$user		= $this->modelUser->get( $userId );
-				$addressDelivery	= $this->modelAddress->getByIndices( array(
-					'relationType'	=> 'user',
-					'relationId'	=> $userId,
-					'type'			=> Model_Address::TYPE_DELIVERY,
-				) );
-				$addressBilling		= $this->modelAddress->getByIndices( array(
-					'relationType'	=> 'user',
-					'relationId'	=> $userId,
-					'type'			=> Model_Address::TYPE_BILLING,
-				) );
-				if( $this->request->has( 'save' ) && $addressDelivery && $addressBilling ){
-					$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_AUTHENTICATED );
-					$this->modelCart->set( 'userId', $userId );
-					$this->restart( 'shop/conditions' );
-				}
-				if( !array_key_exists( $user->country, $countries ) )
-					$user->country	= 'DE';
-				$this->addData( 'countries', $countries );
-				$this->addData( 'user', $user );
-				$this->addData( 'addressBilling', $addressBilling );
-				$this->addData( 'addressDelivery', $addressDelivery );
-			}
-		}
-//		$this->addData( 'mode', Model_Shop_CART::CUSTOMER_MODE_ACCOUNT );
-		$this->addData( 'userId', $userId );
-		$this->addData( 'username', $this->request->get( 'username' ) );
-		$this->addData( 'useOauth2', $this->env->getModules()->has( 'Resource_Authentication_Backend_OAuth2' ) );
-	}
-
-	/**
-	 *	Register a payment backend.
-	 *	@access		public
-	 *	@param		string		$backend		...
-	 *	@param		string		$key			...
-	 *	@param		string		$title			...
-	 *	@param		string		$path			...
-	 *	@param		integer		$priority		...
-	 *	@param		string		$icon			...
-	 *	@return		void
-	 */
-	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL, $countries = array() ){
-		$this->backends[]	= (object) array(
-			'backend'	=> $backend,
-			'key'		=> $key,
-			'title'		=> $title,
-			'path'		=> $path,
-			'priority'	=> $priority,
-			'icon'		=> $icon,
-			'countries'	=> $countries,
-		);
 	}
 }

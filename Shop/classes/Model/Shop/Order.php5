@@ -16,8 +16,8 @@
  *	@since			02.07.2006
  *	@version		3.0
  */
-class Model_Shop_Order extends CMF_Hydrogen_Model {
-
+class Model_Shop_Order extends CMF_Hydrogen_Model
+{
 	const STATUS_REFUNDED			= -6;
 	const STATUS_COMPLAINED			= -5;
 	const STATUS_NOT_DELIVERED		= -4;
@@ -33,6 +33,7 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 	const STATUS_COMPLETED			= 6;
 
 	protected $name		= 'shop_orders';
+
 	protected $columns	= array(
 		"orderId",
 		"sessionId",
@@ -50,6 +51,7 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 		"modifiedAt",
 	);
 	protected $primaryKey	= 'orderId';
+
 	protected $indices		= array(
 		"sessionId",
 		"customerId",
@@ -59,6 +61,6 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 		"status",
 		"currency"
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

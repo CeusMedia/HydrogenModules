@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Shop_AddressForm{
-
+class View_Helper_Shop_AddressForm
+{
 	protected $env;
 	protected $address;
 	protected $heading;
@@ -8,12 +8,14 @@ class View_Helper_Shop_AddressForm{
 	protected $type					= 0;
 	protected $defaultCountryCode	= 'DE';
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->words	= $this->env->getLanguage()->getWords( 'address' );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$addressId	= isset( $this->address->addressId ) ? $this->address->addressId : 0;
 		$w			= (object) $this->words['form'];
 		$d			= $this->address;
@@ -117,7 +119,8 @@ $(document).ready(function(){
 </script>';
 	}
 
-	public function setAddress( $addressOrId ){
+	public function setAddress( $addressOrId ): self
+	{
 		if( is_object( $addressOrId ) )
 			$this->address	= $addressOrId;
 		else if( preg_match( '/^[0-9]+$/', $addressOrId ) )
@@ -127,24 +130,29 @@ $(document).ready(function(){
 		return $this;
 	}
 
-	public function setHeading( $heading ){
+	public function setHeading( string $heading ): self
+	{
 		$this->heading		= $heading;
 		return $this;
 	}
 
-	public function setTextTop( $text ){
+	public function setTextTop( string $text ): self
+	{
 		$this->textTop	= $text;
 		return $this;
 	}
 
-	public function setType( $type ){
+	public function setType( $type ): self
+	{
 		$this->type		= $type;
 		return $this;
 	}
 
-	public function setDefaultCountryCode( $countryCode ){
+	public function setDefaultCountryCode( string $countryCode ): self
+	{
 		if( !array_key_exists( $countryCode, $this->words['countries'] ) )
 			throw new DomainException( 'Invalid country code: '.$countryCode );
 		$this->defaultCountryCode	= $countryCode;
+		return $this;
 	}
 }

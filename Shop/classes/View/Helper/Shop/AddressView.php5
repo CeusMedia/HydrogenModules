@@ -1,35 +1,46 @@
 <?php
-class View_Helper_Shop_AddressView{
+class View_Helper_Shop_AddressView
+{
+	const OUTPUT_UNKNOWN		= 0;
+	const OUTPUT_TEXT			= 1;
+	const OUTPUT_HTML			= 2;
 
-	const OUTPUT_UNKNOWN			= 0;
-	const OUTPUT_TEXT				= 1;
-	const OUTPUT_HTML				= 2;
+	const OUTPUTS				= [
+		self::OUTPUT_UNKNOWN,
+		self::OUTPUT_TEXT,
+		self::OUTPUT_HTML,
+	];
 
 	protected $env;
 	protected $address;
-	protected $output				= self::OUTPUT_HTML;
+	protected $output			= self::OUTPUT_HTML;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->words	= $this->env->getLanguage()->getWords( 'address' );
 	}
 
-	public function __toString(){
+	public function __toString(): string
+	{
 		return $this->render();
 	}
 
-	protected function escape( $value ){
+	protected function escape( string $value ): string
+	{
 		return htmlentities( $value, ENT_QUOTES, 'UTF-8' );
 	}
 
-	protected function getCountryLabel( $countryCode ){
+	protected function getCountryLabel( string $countryCode ): string
+	{
 		if( $countryCode && array_key_exists( $countryCode, $this->words['countries'] ) )
 			return $this->words['countries'][$countryCode];
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->address )
-			return;
+			return '';
 		switch( $this->output ){
 			case self::OUTPUT_HTML:
 				return $this->renderAsHtml();
@@ -38,7 +49,33 @@ class View_Helper_Shop_AddressView{
 		}
 	}
 
-	public function renderAsHtml(){
+	public function setAddress( $addressOrId ): self
+	{
+		if( is_object( $addressOrId ) )
+			$this->address	= $addressOrId;
+		else if( preg_match( '/^[0-9]+$/', $addressOrId ) )
+			$this->address	= $this->model->get( $addressOrId );
+		if( !$this->address )
+			throw new InvalidArgumentException( 'Neither address nor valid address ID given' );
+		return $this;
+	}
+
+	public function setOutput( int $format ): string
+	{
+		if( !in_array( (int) $format, array( self::OUTPUT_HTML, self::OUTPUT_TEXT ) ) )
+			throw new InvalidArgumentException( 'Invalid output format' );
+		$this->output		= (int) $format;
+		return $this;
+	}
+
+	public function setTextTop( string $text ): self
+	{
+		$this->textTop		= $text;
+		return $this;
+	}
+
+	protected function renderAsHtml(): string
+	{
 		$w		= (object) $this->words['view'];
 		$d		= new ADT_List_Dictionary( $this->address );
 //		print_m( $d->getAll() );die;
@@ -58,7 +95,8 @@ class View_Helper_Shop_AddressView{
 		return join( $list );
 	}
 
-	public function renderAsText(){
+	protected function renderAsText(): string
+	{
 	//	$helperText		= new View_Helper_Mail_Text();
 		$helperFacts	= new View_Helper_Mail_Facts();
 		$helperFacts->setLabels( $this->words['view'] );
@@ -80,7 +118,8 @@ class View_Helper_Shop_AddressView{
 		return $helperFacts->render();
 	}
 
-	protected function renderRow( $labelKey, $content ){
+	protected function renderRow( string $labelKey, string $content ): string
+	{
 		$w		= $this->words['view'];
 		$label	= $w['label'.ucfirst( $labelKey )];
 		return UI_HTML_Tag::create( 'div', array(
@@ -93,27 +132,5 @@ class View_Helper_Shop_AddressView{
 				) ),
 			), array( 'class' => 'span12' ) )
 		), array( 'class' => 'row-fluid' ) );
-	}
-
-	public function setAddress( $addressOrId ){
-		if( is_object( $addressOrId ) )
-			$this->address	= $addressOrId;
-		else if( preg_match( '/^[0-9]+$/', $addressOrId ) )
-			$this->address	= $this->model->get( $addressOrId );
-		if( !$this->address )
-			throw new InvalidArgumentException( 'Neither address nor valid address ID given' );
-		return $this;
-	}
-
-	public function setOutput( $format ){
-		if( !in_array( (int) $format, array( self::OUTPUT_HTML, self::OUTPUT_TEXT ) ) )
-			throw new InvalidArgumentException( 'Invalid output format' );
-		$this->output		= (int) $format;
-		return $this;
-	}
-
-	public function setTextTop( $text ){
-		$this->textTop		= $text;
-		return $this;
 	}
 }

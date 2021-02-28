@@ -2,42 +2,25 @@
 /**
  *	@todo	complete flow implementation, currently stoppted at method "pay"
  */
-class Controller_Shop extends CMF_Hydrogen_Controller{
-
+class Controller_Shop extends CMF_Hydrogen_Controller
+{
 	/**	@var	Logic_ShopBridge		$brige */
 	protected $bridge;
+
 	/**	@var	Logic_Shop				$logic */
 	protected $logic;
+
 	/**	@var	ADT_List_Dictionary		$options */
 	protected $options;
+
 	/**	@var	Model_Shop_Cart				$modelCart */
 	protected $modelCart;
 
 	protected $backends			= array();
+
 	protected $servicePanels	= array();
 
 	protected $cartTotal		= 0;
-
-	public function __onInit() {
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= new Logic_Shop( $this->env );
-		$this->bridge		= new Logic_ShopBridge( $this->env );
-		$this->modelCart	= new Model_Shop_Cart( $this->env );
-		$this->words		= (object) $this->getWords( 'msg' );
-		$this->options		= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
-
-		$this->addData( 'options', $this->options );
-		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
-		$this->addData( 'paymentBackends', $this->backends );
-		$this->addData( 'cart', $this->modelCart );
-		if( $this->modelCart->get( 'positions' ) )
-			foreach( $this->modelCart->get( 'positions' ) as $position )
-				$this->cartTotal	+= $position->article->price->all;
-		$this->addData( 'cartTotal', $this->cartTotal );
-	}
 
 	/**
 	 *	Add article to cart.
@@ -48,7 +31,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 	 *	@param		integer		$articleId			ID of article to remove from cart
 	 *	@return		void
 	 */
-	public function addArticle( $bridgeId, $articleId, $quantity = 1 ){
+	public function addArticle( $bridgeId, $articleId, $quantity = 1 )
+	{
 		$bridgeId		= (int) $bridgeId;
 		$articleId		= (int) $articleId;
 		$quantity		= abs( $quantity );
@@ -79,7 +63,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->restart( $forwardTo ? $forwardTo : 'shop/cart' );
 	}
 
-	public function cart(){
+	public function cart()
+	{
 /*		$this->addData( 'order', $this->session->get( 'shop_order' ) );
 		$this->addData( 'customer', $this->session->get( 'shop_order_customer' ) );
 		$this->addData( 'billing', $this->session->get( 'shop_order_billing' ) );
@@ -94,7 +79,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->addData( 'address', $this->logic->getDeliveryAddressFromCart() );
 	}
 
-	public function changePositionQuantity( $bridgeId, $articleId, $quantity, $operation = NULL ){
+	public function changePositionQuantity( $bridgeId, $articleId, $quantity, $operation = NULL )
+	{
 		$bridgeId		= (int) $bridgeId;
 		$articleId		= (int) $articleId;
 		$quantity		= abs( $quantity );
@@ -130,7 +116,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->restart( $forwardTo ? $forwardTo : 'shop/cart' );
 	}
 
-	public function checkout(){
+	public function checkout()
+	{
 		$customerMode	= $this->modelCart->get( 'customerMode' );
 //		print_m( $this->session->getAll( 'shop_' ) );die;
 		if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_ACCOUNT ){
@@ -194,7 +181,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->addData( 'address', $this->logic->getDeliveryAddressFromCart() );
 	}
 
-	public function conditions(){
+	public function conditions()
+	{
 //		$order		= $this->session->get( 'shop_order' );
 		$positions	= $this->modelCart->get( 'positions' );
 
@@ -223,7 +211,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->addData( 'cart', $this->modelCart );
 	}
 
-	public function finish(){
+	public function finish()
+	{
 		$orderId	= $this->modelCart->get( 'orderId' );
 		if( !$orderId ){
 			$this->env->getMessenger()->noteError( $this->words->errorFinishEmptyCart );
@@ -245,11 +234,13 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->restart( 'service', TRUE );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$this->restart( 'cart', TRUE );
 	}
 
-	public function payment(){
+	public function payment()
+	{
 		if( $this->cartTotal == 0 || count( $this->backends ) === 1 ){
 			$paymentBackend		= $this->backends[0];
 			$this->restart( 'setPaymentBackend/'.$paymentBackend->key, TRUE );
@@ -317,7 +308,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 	 *	@param		string		$icon			...
 	 *	@return		void
 	 */
-	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL, $countries = array() ){
+	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = array() )
+	{
 		$this->backends[]	= (object) array(
 			'backend'	=> $backend,
 			'key'		=> $key,
@@ -329,7 +321,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		);
 	}
 
-	public function registerServicePanel( $key, $content, $priority ){
+	public function registerServicePanel( $key, $content, $priority )
+	{
 		$this->servicePanels[$key]	= (object) array(
 			'key'		=> $key,
 			'content'	=> $content,
@@ -345,7 +338,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 	 *	@param		integer		$articleId			ID of article to remove from cart
 	 *	@return		void
 	 */
-	public function removeArticle( $articleId ){
+	public function removeArticle( $articleId )
+	{
 		$positions		= $this->modelCart->get( 'positions' );
 		foreach( $positions as $nr => $position )
 			if( $position->articleId == $articleId )
@@ -356,10 +350,12 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->restart( 'cart', TRUE );
 	}
 
-	public function rules(){
+	public function rules()
+	{
 	}
 
-	public function service(){
+	public function service()
+	{
 		$orderId	= $this->session->get( 'shop_order_lastId' );
 		if( !$orderId )
 			$this->restart( 'cart', TRUE );
@@ -375,15 +371,40 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$this->env->getModules()->callHook( 'Shop', 'onPaymentSuccess', $this, $arguments );
 	}
 
-	public function setPaymentBackend( $paymentBackendKey = NULL ){
+	public function setPaymentBackend( $paymentBackendKey = NULL )
+	{
 		if( $paymentBackendKey ){
 			$this->modelCart->set( 'paymentMethod', $paymentBackendKey );
 			$this->restart( 'checkout', TRUE );
 		}
+		$this->restart( 'payment', TRUE );
 	}
 
 	/*  --  PROTECTED  --  */
-	protected function calculateCharges(){
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logic		= new Logic_Shop( $this->env );
+		$this->bridge		= new Logic_ShopBridge( $this->env );
+		$this->modelCart	= new Model_Shop_Cart( $this->env );
+		$this->words		= (object) $this->getWords( 'msg' );
+		$this->options		= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
+
+		$this->addData( 'options', $this->options );
+		$captain	= $this->env->getCaptain();
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
+		$this->addData( 'paymentBackends', $this->backends );
+		$this->addData( 'cart', $this->modelCart );
+		if( $this->modelCart->get( 'positions' ) )
+			foreach( $this->modelCart->get( 'positions' ) as $position )
+				$this->cartTotal	+= $position->article->price->all;
+		$this->addData( 'cartTotal', $this->cartTotal );
+	}
+
+	protected function calculateCharges(): float
+	{
 		if( !$this->env->getModules()->has( 'Shop_Shipping' ) )
 			return 0;
 //		$customer	= $this->session->get( 'shop_order_customer', TRUE );
@@ -407,7 +428,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		return $charges;
 	}
 
-	protected function sentOrderMailCustomer( $orderId ){
+	protected function sentOrderMailCustomer( $orderId )
+	{
 		$order		= $this->logic->getOrder( $orderId );
 		$customer	= $this->logic->getOrderCustomer( $orderId );
 		$language	= $this->env->getLanguage()->getLanguage();
@@ -422,7 +444,8 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$logic->handleMail( $mail, $customer, $language );
 	}
 
-	protected function sentOrderMailManager( $orderId ){
+	protected function sentOrderMailManager( $orderId )
+	{
 		$language	= $this->env->getLanguage()->getLanguage();
 		$email		= $this->env->getConfig()->get( 'module.shop.mail.manager' );
 		$logic		= Logic_Mail::getInstance( $this->env );
@@ -434,11 +457,11 @@ class Controller_Shop extends CMF_Hydrogen_Controller{
 		$logic->handleMail( $mail, (object) array( 'email' => $email ), $language );
 	}
 
-	protected function submitOrder(){
+	protected function submitOrder()
+	{
 //		$this->acceptRules();
 		$this->saveConditions();
 		$this->closeOrder();
 		$this->restart( 'cart', TRUE );
 	}
 }
-?>

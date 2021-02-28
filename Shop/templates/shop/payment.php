@@ -61,4 +61,3 @@ $helperTabs->setCartTotal( $cartTotal );
 $helperTabs->setPaymentBackends( $this->getData( 'paymentBackends' ) );
 
 return $textTop.$helperTabs->render().$textBottom;
-?>

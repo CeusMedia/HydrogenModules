@@ -1,29 +1,37 @@
 <?php
-class View_Shop extends CMF_Hydrogen_View{
-
-/*	public function address(){
+class View_Shop extends CMF_Hydrogen_View
+{
+/*	public function address()
+	{
 }*/
 
-	public function cart(){
+	public function cart()
+	{
 	}
 
-	public function checkout(){
+	public function checkout()
+	{
 	}
 
-	public function conditions(){
+	public function conditions()
+	{
 	}
 
-/*	public function customer(){
+/*	public function customer()
+	{
 }*/
 
-	public function payment(){
+	public function payment()
+	{
 	}
 
-	public function rules(){
+	public function rules()
+	{
 		return $this->loadContent( 'shop', 'rules' );
 	}
 
-	public function service(){
+	public function service()
+	{
 		$panelPayment	= '';
 		if( ( $orderId = $this->getData( 'orderId' ) ) ){
 			$order		= $this->getData( 'order' );
@@ -43,6 +51,7 @@ class View_Shop extends CMF_Hydrogen_View{
 		$this->addData( 'panelPayment', $panelPayment );
 	}
 
-	public function register(){
+	public function register()
+	{
 	}
 }

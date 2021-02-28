@@ -72,4 +72,3 @@ ul.payment-method-list li.payment-method-list-item a i {
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/pay/' ) );
 
 return $textTop.$this->renderTabs( $tabContent, 4, $options->get( 'tabs.icons.white' ) ).$textBottom;
-?>
