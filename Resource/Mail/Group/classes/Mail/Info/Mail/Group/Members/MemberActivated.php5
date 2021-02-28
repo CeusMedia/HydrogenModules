@@ -1,7 +1,8 @@
 <?php
-class Mail_Info_Mail_Group_Members_MemberActivated extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Info_Mail_Group_Members_MemberActivated extends Mail_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 //		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/local', 'mails' );
 
@@ -21,11 +22,6 @@ class Mail_Info_Mail_Group_Members_MemberActivated extends Mail_Abstract{
 
 		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/members/memberActivated.txt', $data );
 		$this->setText( $plain );
-
-		return (object) array(
-			'plain'	=> $plain,
-			'html'	=> NULL,
-		);
+		return $this;
 	}
 }
-?>

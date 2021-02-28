@@ -1,31 +1,32 @@
 <?php
-class Hook_Resource_Mail_Group{
-
-
-	static public function onGroupActivated( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_Resource_Mail_Group
+{
+	public static function onGroupActivated( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$logicGroup		= new Logic_Mail_Group( $env );
 		$logicMail		= Logic_Mail::getInstance( $env );
 
-		$data	= (object) $data;
-		if( property_exists( $data->group ) && is_object( $data->group ) )
-			$group	= $data->group;
-		else if( property_exists( $data->groupId ) && $data->groupId )
-			$group	= $logicGroup->getGroup( $data->groupId );
+		$payload	= (object) $data;
+		if( property_exists( $payload->group ) && is_object( $payload->group ) )
+			$group	= $payload->group;
+		else if( property_exists( $payload->groupId ) && $payload->groupId )
+			$group	= $logicGroup->getGroup( $payload->groupId );
 		else
 			throw new DomainException( 'No group data set' );
 
 	//	@todo implement
 	}
 
-	static public function onGroupDeactivated( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onGroupDeactivated( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$logicGroup		= new Logic_Mail_Group( $env );
 		$logicMail		= Logic_Mail::getInstance( $env );
 
-		$data	= (object) $data;
-		if( property_exists( $data->group ) && is_object( $data->group ) )
-			$group	= $data->group;
-		else if( property_exists( $data->groupId ) && $data->groupId )
-			$group	= $logicGroup->getGroup( $data->groupId );
+		$payload	= (object) $data;
+		if( property_exists( $payload->group ) && is_object( $payload->group ) )
+			$group	= $payload->group;
+		else if( property_exists( $payload->groupId ) && $payload->groupId )
+			$group	= $logicGroup->getGroup( $payload->groupId );
 		else
 			throw new DomainException( 'No group data set' );
 
@@ -33,7 +34,8 @@ class Hook_Resource_Mail_Group{
 	}
 
 
-	static public function onConfirmAfterJoin( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onConfirmAfterJoin( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$modelGroup		= new Model_Mail_Group( $env );
 		$modelMember	= new Model_Mail_Group_Member( $env );
 		$modelUser		= new Model_User( $env );
@@ -152,7 +154,8 @@ class Hook_Resource_Mail_Group{
 		return FALSE;
 	}
 
-	static public function onDeactivateAfterLeaving( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onDeactivateAfterLeaving( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$modelGroup		= new Model_Mail_Group( $env );
 		$modelMember	= new Model_Mail_Group_Member( $env );
 		$modelUser		= new Model_User( $env );

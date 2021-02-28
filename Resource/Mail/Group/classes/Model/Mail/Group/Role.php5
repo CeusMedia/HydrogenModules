@@ -1,24 +1,17 @@
 <?php
 /**
- *	Data Model of Customers.
- *	@category		cmProjects
- *	@package		LUV.Model
+ *	Data model of mail group roles.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
- *	@version		3.0
  */
 /**
- *	Data Model of Customers.
- *	@category		cmProjects
- *	@package		LUV.Model
+ *	Data model of mail group roles.
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
- *	@version		3.0
  */
-class Model_Mail_Group_Role extends CMF_Hydrogen_Model {
-
+class Model_Mail_Group_Role extends CMF_Hydrogen_Model
+{
 	protected $name		= 'mail_group_roles';
+
 	protected $columns	= array(
 		"mailGroupRoleId",
 		"status",
@@ -29,7 +22,9 @@ class Model_Mail_Group_Role extends CMF_Hydrogen_Model {
 		"createdAt",
 		"modifiedAt",
 	);
+
 	protected $primaryKey	= 'mailGroupRoleId';
+
 	protected $indices		= array(
 		"status",
 		"rank",
@@ -37,6 +32,6 @@ class Model_Mail_Group_Role extends CMF_Hydrogen_Model {
 		"read",
 		"write",
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

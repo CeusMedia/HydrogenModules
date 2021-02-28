@@ -1,17 +1,12 @@
 <?php
-class Job_Mail_Group extends Job_Abstract{
-
+class Job_Mail_Group extends Job_Abstract
+{
 	protected $logicGroup;
 	protected $logicMail;
 	protected $logicMessage;
 
-	protected function __onInit(){
-		$this->logicGroup		= Logic_Mail_Group::getInstance( $this->env );
-		$this->logicMessage		= Logic_Mail_Group_Message::getInstance( $this->env );
-		$this->logicMail		= Logic_Mail::getInstance( $this->env );
-	}
-
-	public function activateConfirmedMembers(){
+	public function activateConfirmedMembers()
+	{
 		$modelMember	= new Model_Mail_Group_Member( $this->env );
 		$modelAction	= new Model_Mail_Group_Action( $this->env );
 		$modelUser		= new Model_User( $this->env );
@@ -87,7 +82,8 @@ class Job_Mail_Group extends Job_Abstract{
 		$this->out( $count.' members activated' );
 	}
 
-	public function informMembersAboutNewMember(){
+	public function informMembersAboutNewMember()
+	{
 		$modelMember	= new Model_Mail_Group_Member( $this->env );
 		$modelAction	= new Model_Mail_Group_Action( $this->env );
 		$modelUser		= new Model_User( $this->env );
@@ -150,14 +146,16 @@ class Job_Mail_Group extends Job_Abstract{
 		$this->out( $count.' members activated' );
 	}
 
-	public function test(){
+	public function test()
+	{
 		$this->out( 'Dry Mode: '.( $this->dryMode ? 'yes' : 'no' ) );
 		$this->out( 'Verbose Mode: '.( $this->verbose ? 'yes' : 'no' ) );
 		$this->out( 'DEPRECATED: Use job Mail.Group.handle with dry mode, instead!' );
 		return;
 	}
 
-	public function handle(){
+	public function handle()
+	{
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );
 //			$this->out( 'Would send '.$count.' mails.' );
@@ -245,5 +243,12 @@ class Job_Mail_Group extends Job_Abstract{
 			}
 			$this->logicGroup->setGroupStatus( $groupId, Model_Mail_Group::STATUS_ACTIVATED );
 		}
+	}
+
+	protected function __onInit()
+	{
+		$this->logicGroup		= Logic_Mail_Group::getInstance( $this->env );
+		$this->logicMessage		= Logic_Mail_Group_Message::getInstance( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 	}
 }
