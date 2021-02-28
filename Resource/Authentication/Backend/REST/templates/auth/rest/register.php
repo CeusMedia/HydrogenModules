@@ -19,4 +19,3 @@ HTML::DivClass( "row-fluid", array(
 	)
 ) ).
 HTML::DivClass( "auth-register-text-below", $textBelow );
-?>

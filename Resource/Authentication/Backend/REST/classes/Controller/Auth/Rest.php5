@@ -1,6 +1,6 @@
 <?php
-class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
-
+class Controller_Auth_Rest extends CMF_Hydrogen_Controller
+{
 	protected $config;
 	protected $request;
 	protected $session;
@@ -9,36 +9,24 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 	protected $useCsrf;
 	protected $moduleConfig;
 
-	public function __onInit(){
-		$this->config		= $this->env->getConfig();
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-//		$this->cookie		= new Net_HTTP_PartitionCookie( "hydrogen", "/" );
-		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
-		if( isset( $this->env->version ) )
-			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
-				$this->cookie	= $this->env->getCookie();
-		$this->messenger	= $this->env->getMessenger();
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication_backend_rest.', TRUE );
-		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Rest' );
-		$this->addData( 'useCsrf', $this->useCsrf );
-	}
-
-	public function ajaxUsernameExists(){
+	public function ajaxUsernameExists()
+	{
 		$username	= trim( $this->request->get( 'username' ) );
 		$result		= $this->logic->checkUsername( $username );
 		print( json_encode( $result ) );
 		exit;
 	}
 
-	public function ajaxEmailExists(){
+	public function ajaxEmailExists()
+	{
 		$email		= trim( $this->request->get( 'email' ) );
 		$result		= $this->logic->checkEmail( $email );
 		print( json_encode( $result ) );
 		exit;
 	}
 
-	public function ajaxPasswordStrength(){
+	public function ajaxPasswordStrength()
+	{
 		$password	= trim( $this->request->get( 'password' ) );
 		$result		= 0;
 		if( strlen( $password ) ){
@@ -48,21 +36,8 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		exit;
 	}
 
-	/**
-	 *	Check given user password against old and newer password storage.
-	 *	If newer password store is supported and old password has been found, migration will apply.
-	 *
-	 *	@access		protected
-	 *	@param   	object   	$user		User data object
-	 *	@param   	string		$password	Password to check on login
-	 *	@todo   	clean up if support for old passwort decays
-	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
-	 */
-	protected function checkPasswordOnLogin( $user, $password ){
-		return $this->logic->checkPassword( $username, $password );
-	}
-
-	public function index(){
+	public function index()
+	{
 		if( !$this->session->has( 'userId' ) )
 			return $this->redirect( 'auth/rest', 'login' );										// @todo replace redirect
 
@@ -79,7 +54,8 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		return $this->restart( NULL );
 	}
 
-	public function confirm( $userId, $token ){
+	public function confirm( $userId, $token )
+	{
 		$words		= (object) $this->getWords( 'confirm' );
 		$result		= $this->logic->confirm( $userId, $token );
 		if( is_object( $result ) ){
@@ -99,7 +75,8 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		$this->restart( 'login', TRUE );
 	}
 
-	public function login( $username = NULL ){
+	public function login( $username = NULL )
+	{
 		if( $this->session->has( 'userId' ) ){
 			if( $this->request->has( 'from' ) )
 				$this->restart( $from );
@@ -164,7 +141,8 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 //		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
 	}
 
-	public function logout( $redirectController = NULL, $redirectAction = NULL ){
+	public function logout( $redirectController = NULL, $redirectAction = NULL )
+	{
 		$words		= (object) $this->getWords( 'logout' );
 
 		if( $this->session->has( 'userId' ) ){
@@ -203,7 +181,8 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		$this->restart( $redirectTo );															//  restart (to redirect URL if set)
 	}
 
-	public function register(){
+	public function register()
+	{
 		$data	= array();
 		if( $this->request->has( 'save' ) ){
 			$data	= $this->request->getAllFromSource( 'POST', TRUE );
@@ -266,6 +245,37 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		return "YESSSSS!";
 	}
 
+	protected function __onInit()
+	{
+		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+//		$this->cookie		= new Net_HTTP_PartitionCookie( "hydrogen", "/" );
+		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+		if( isset( $this->env->version ) )
+			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
+				$this->cookie	= $this->env->getCookie();
+		$this->messenger	= $this->env->getMessenger();
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication_backend_rest.', TRUE );
+		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Rest' );
+		$this->addData( 'useCsrf', $this->useCsrf );
+	}
+
+	/**
+	 *	Check given user password against old and newer password storage.
+	 *	If newer password store is supported and old password has been found, migration will apply.
+	 *
+	 *	@access		protected
+	 *	@param   	object   	$user		User data object
+	 *	@param   	string		$password	Password to check on login
+	 *	@todo   	clean up if support for old passwort decays
+	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
+	 */
+	protected function checkPasswordOnLogin( $user, $password )
+	{
+		return $this->logic->checkPassword( $username, $password );
+	}
+
 	/**
 	 *	@todo    	rewrite this method! local use of model is not possible a the JSON server has no method to compare password hashes, yet.
 	 *	This method is deactivated because the currently only available JSON server auth controller (@App_Chat_Server) does not support relogin.
@@ -315,4 +325,3 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller {
 		}
 	}*/
 }
-?>

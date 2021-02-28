@@ -16,13 +16,20 @@
  *	@copyright		2014 Ceus Media
  *	@version		$Id$
  */
-class Model_Oauth_Provider extends CMF_Hydrogen_Model {
-
+class Model_Oauth_Provider extends CMF_Hydrogen_Model
+{
 	const STATUS_INACTIVE		= -1;
 	const STATUS_NEW			= 0;
 	const STATUS_ACTIVE			= 1;
 
+	const STATUSES				= [
+		self::STATUS_INACTIVE,
+		self::STATUS_NEW,
+		self::STATUS_ACTIVE,
+	];
+
 	protected $name		= 'oauth_providers';
+
 	protected $columns	= array(
 		'oauthProviderId',
 		'status',
@@ -38,7 +45,9 @@ class Model_Oauth_Provider extends CMF_Hydrogen_Model {
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'oauthProviderId';
+
 	protected $indices		= array(
 		'status',
 		'clientId',
@@ -47,6 +56,6 @@ class Model_Oauth_Provider extends CMF_Hydrogen_Model {
 		'className',
 		'title',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>
