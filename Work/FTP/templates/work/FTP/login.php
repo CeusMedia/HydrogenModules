@@ -43,4 +43,3 @@ return $textLoginTop.'
 	</div>
 </div>
 '.$textLoginBottom;
-?>

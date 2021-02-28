@@ -1,8 +1,8 @@
 <?php
-class View_Work_FTP extends CMF_Hydrogen_View{
-
-	public function index(){
-
+class View_Work_FTP extends CMF_Hydrogen_View
+{
+	public function index()
+	{
 		$pathCurrent	= $this->getData( 'pathCurrent' );
 		$pathDeepest	= $this->getData( 'pathDeepest' );
 		$entries		= $this->getData( 'entries' );
@@ -11,10 +11,12 @@ class View_Work_FTP extends CMF_Hydrogen_View{
 		$this->addData( 'position', $this->renderPosition( $pathCurrent, $pathDeepest ) );
 	}
 
-	public function login(){
+	public function login()
+	{
 	}
 
-	protected function renderPosition( $pathCurrent, $pathDeepest, $labelHome = "Home", $labelPosition = "Position: " ){
+	protected function renderPosition( string $pathCurrent, string $pathDeepest, string $labelHome = "Home", string $labelPosition = "Position: " ): string
+	{
 		$way	= "";
 		$levels	= array( ''	=> $labelHome );
 		foreach( explode( "/", $pathDeepest ) as $part ){
@@ -40,7 +42,8 @@ class View_Work_FTP extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'breadcrumb' ) );
 	}
 
-	protected function renderFileTable( $path, $entries ){
+	protected function renderFileTable( string $path, array $entries ): string
+	{
 		$rows		= array();
 		$folders	= array();
 		$files		= array();
@@ -85,4 +88,3 @@ class View_Work_FTP extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed table-striped' ) );
 	}
 }
-?>

@@ -1,32 +1,27 @@
 <?php
-class Logic_FTP{
-
+class Logic_FTP
+{
 	/**	@var	File_Cache	$cache */
 	protected $cache;
+
 	/**	@var	Net_FTP_Client	$client */
 	protected $client;
 
 	protected $cachePrefix;
 
-	public function __construct( $pathCache = "contents/cache/" ){
+	public function __construct( string $pathCache = 'contents/cache/' )
+	{
 		$this->cache	= new FS_File_Cache( $pathCache );
 	}
 
-	public function setCache( $cache ){
-		$this->cache	= $cache;
-	}
-	
-	public function connect( $host, $port, $username, $password, $path ){
+	public function connect( string $host, $port, string $username, string $password, string $path )
+	{
 		$this->client	= new Net_FTP_Client( $host, $port, $path, $username, $password );
 		$this->cachePrefix	= 'ftp_'.$host.$path.'_';
 	}
 
-	protected function checkConnection(){
-		if( !$this->client )
-			throw new RuntimeException( 'Not connected' );
-	}
-
-	public function countFiles( $path ){
+	public function countFiles( string $path ): int
+	{
 		$entries	= $this->index( $path );
 		$number		= 0;
 		foreach( $entries as $entry )
@@ -35,7 +30,8 @@ class Logic_FTP{
 		return $number;
 	}
 
-	public function countFolders( $path ){
+	public function countFolders( string $path ): int
+	{
 		$entries	= $this->index( $path );
 		$number		= 0;
 		foreach( $entries as $entry )
@@ -48,11 +44,13 @@ class Logic_FTP{
 	 *	@todo		remove after testing
 	 *	@return		Net_FTP_Client
 	 */
-	public function getClient(){
+	public function getClient()
+	{
 		return $this->client;
 	}
-	
-	public function index( $path = "/" ){
+
+	public function index( string $path = '/' )
+	{
 		$this->checkConnection();
 		if( ( $data = $this->cache->get( $this->cachePrefix.'path_'.$path ) ) )
 			return $data;
@@ -61,12 +59,25 @@ class Logic_FTP{
 		return $list;
 	}
 
-	public function isConnected(){
+	public function isConnected(): bool
+	{
 		return (bool) $this->client;
 	}
 
-	public function uncache( $path ){
+	public function setCache( $cache ): self
+	{
+		$this->cache	= $cache;
+		return $this;
+	}
+
+	public function uncache( string $path )
+	{
 		return $this->cache->remove( $this->cachePrefix.'path_'.$path );
 	}
+
+	protected function checkConnection()
+	{
+		if( !$this->client )
+			throw new RuntimeException( 'Not connected' );
+	}
 }
-?>

@@ -27,6 +27,4 @@ $(document).ready(function(){
 </div>
 <div id="position">'.$position.'</div>
 <div id="list">'.$table.'</div>
-<div>'.$time.'</div>
-';
-?>
+<div>'.$time.'</div>';
