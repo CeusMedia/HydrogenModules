@@ -16,14 +16,16 @@ class View_Helper_Shop_FinishPanel_Mangopay
 	protected $outputFormat			= self::OUTPUT_FORMAT_HTML;
 	protected $listClass			= 'dl-horizontal';
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env			= $env;
 		$this->modelPayment	= new Model_Shop_Payment_Mangopay( $env );
 		$this->modelOrder	= new Model_Shop_Order( $env );
 		$this->heading		= 'Bezahlung';
 	}
 
-	public function render(){
+	public function render()
+	{
 		if( !$this->payment )
 			throw new RuntimeException( 'No payment selected' );
 		switch( $this->order->paymentMethod ){
@@ -36,7 +38,40 @@ class View_Helper_Shop_FinishPanel_Mangopay
 		}
 	}
 
-	protected function renderBankWire(){
+	public function setListClass( $class ): self
+	{
+		$this->listClass	= $class;
+		return $this;
+	}
+
+	public function setOrderId( $orderId ): self
+	{
+		$this->order	= $this->modelOrder->get( $orderId );
+		if( $this->order->paymentId > 0 ){
+			$this->payment	= $this->modelPayment->get( $this->order->paymentId );
+			if( strlen( $this->payment->object ) )
+				$this->payin	= json_decode( $this->payment->object );
+		}
+		return $this;
+	}
+
+	public function setOutputFormat( $format ): self
+	{
+		$this->outputFormat	= $format;
+		return $this;
+	}
+
+	public function setPaymentId( $paymentId ): self
+	{
+		$this->payment	= $this->modelPayment->get( $paymentId );
+		if( strlen( $this->payment->object ) )
+			$this->payin	= json_decode( $this->payment->object );
+		$this->order	= $this->modelOrder->get( $this->payment->orderId );
+		return $this;
+	}
+
+	protected function renderBankWire()
+	{
 		$facts		= new View_Helper_Mail_Facts( $this->env );
 		$facts->add( 'Methode', 'Vorkasse per Überweisung' );
 		$facts->add( 'Kontoinhaber', $this->payin->PaymentDetails->BankAccount->OwnerName );
@@ -66,7 +101,8 @@ PHP_EOL.
 'Beachten Sie dabei, unbedingt die Referenz in der Überweisung anzugeben!'.PHP_EOL;
 	}
 
-	protected function renderBankWireWeb(){
+	protected function renderBankWireWeb()
+	{
 		$facts		= new View_Helper_Mail_Facts( $this->env );
 		$facts->add( 'Methode', 'per Sofortüberweisung' );
 		$facts->add( 'Preis', number_format( $this->order->price, 2, ',', '' ).' '.$this->order->currency );
@@ -88,7 +124,8 @@ $facts->renderAsText().PHP_EOL.PHP_EOL.
 'Wir haben den Betrag dankend erhalten.'.PHP_EOL;
 	}
 
-	protected function renderCreditCardWeb(){
+	protected function renderCreditCardWeb()
+	{
 		$facts		= new View_Helper_Mail_Facts( $this->env );
 		$facts->add( 'Methode', 'per Kreditkarte' );
 		$facts->add( 'Preis', number_format( $this->order->price, 2, ',', '' ).' '.$this->order->currency );
@@ -108,29 +145,5 @@ $facts->renderAsText().PHP_EOL.PHP_EOL.
 View_Helper_Mail_Text::underscore( $this->heading ).PHP_EOL.
 $facts->renderAsText().PHP_EOL.PHP_EOL.
 'Wir haben den Betrag dankend erhalten.'.PHP_EOL;
-	}
-
-	public function setListClass( $class ){
-		$this->listClass	= $class;
-	}
-
-	public function setOrderId( $orderId ){
-		$this->order	= $this->modelOrder->get( $orderId );
-		if( $this->order->paymentId > 0 ){
-			$this->payment	= $this->modelPayment->get( $this->order->paymentId );
-			if( strlen( $this->payment->object ) )
-				$this->payin	= json_decode( $this->payment->object );
-		}
-	}
-
-	public function setOutputFormat( $format ){
-		$this->outputFormat	= $format;
-	}
-
-	public function setPaymentId( $paymentId ){
-		$this->payment	= $this->modelPayment->get( $paymentId );
-		if( strlen( $this->payment->object ) )
-			$this->payin	= json_decode( $this->payment->object );
-		$this->order	= $this->modelOrder->get( $this->payment->orderId );
 	}
 }

@@ -1,6 +1,6 @@
 <?php
-class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
-
+class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller
+{
 	/**	@var	ADT_List_Dictionary			$config			Module configuration dictionary */
 	protected $config;
 
@@ -13,28 +13,8 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 	/**	@var	Net_HTTP_PartitionSession	$session		Session resource */
 	protected $session;
 
-	public function __onInit(){
-		$this->config		= $this->env->getConfig()->getAll( 'module.shop_payment_paypal.', TRUE );
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logicProvider	= new Logic_Payment_Paypal( $this->env );
-		$this->logicShop		= new Logic_Shop( $this->env );
-
-		$modelCart			= new Model_Shop_Cart( $this->env );
-		$this->orderId		= $modelCart->get( 'orderId' );
-		if( !$this->orderId ){
-			$this->messenger->noteError( 'Invalid order' );
-			$this->restart( 'shop' );
-		}
-		$this->order		= $this->logicShop->getOrder( $this->orderId );
-		$this->logicProvider->setAccount(
-			$this->config->get( 'merchant.username' ),
-			$this->config->get( 'merchant.password' ),
-			$this->config->get( 'merchant.signature' )
-		);
-	}
-
-	public function authorize(){
+	public function authorize()
+	{
 		$price		= $this->order->priceTaxed;
 		$paymentId	= $this->logicProvider->requestToken( $this->orderId, $price );
 		$payment	= $this->logicProvider->getPayment( $paymentId );
@@ -47,7 +27,8 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 		$this->restart( $url, FALSE, NULL, TRUE );
 	}
 
-	public function authorized(){
+	public function authorized()
+	{
 		$token		= $this->env->getRequest()->get( 'token' );
 		try{
 			$payment	= $this->logicProvider->getPaymentFromToken( $token );
@@ -60,7 +41,8 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function cancelled(){
+	public function cancelled()
+	{
 		$this->session->remove( 'paymentId' );
 		$this->session->remove( 'token' );
 		$this->restart( './shop/checkout' );
@@ -82,7 +64,8 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 		$this->addData( 'payment', $payment );
 	}*/
 
-	public function pay(){
+	public function pay()
+	{
 		$messenger	= $this->env->getMessenger();
 		$paymentId	= $this->session->get( 'paymentId' );
 		if( !$paymentId ){
@@ -108,5 +91,26 @@ class Controller_Shop_Payment_Paypal extends CMF_Hydrogen_Controller{
 		$this->logicShop->setOrderStatus( $payment->orderId, 3 );
 		$this->restart( './shop/finish' );
 	}
+
+	protected function __onInit()
+	{
+		$this->config		= $this->env->getConfig()->getAll( 'module.shop_payment_paypal.', TRUE );
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logicProvider	= new Logic_Payment_Paypal( $this->env );
+		$this->logicShop		= new Logic_Shop( $this->env );
+
+		$modelCart			= new Model_Shop_Cart( $this->env );
+		$this->orderId		= $modelCart->get( 'orderId' );
+		if( !$this->orderId ){
+			$this->messenger->noteError( 'Invalid order' );
+			$this->restart( 'shop' );
+		}
+		$this->order		= $this->logicShop->getOrder( $this->orderId );
+		$this->logicProvider->setAccount(
+			$this->config->get( 'merchant.username' ),
+			$this->config->get( 'merchant.password' ),
+			$this->config->get( 'merchant.signature' )
+		);
+	}
 }
-?>

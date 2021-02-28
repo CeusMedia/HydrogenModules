@@ -1,6 +1,6 @@
 <?php
-class Logic_Payment_PayPal{
-
+class Logic_Payment_PayPal
+{
 	protected $password;
 	protected $username;
 	protected $signature;
@@ -12,13 +12,15 @@ class Logic_Payment_PayPal{
 	/**	@var	ADT_List_Dictionary			$config			Module configuration dictionary */
 	protected $config;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->model	= new Model_Shop_Payment_Paypal( $env );
 		$this->config	= $this->env->getConfig()->getAll( 'module.shop_payment_paypal.', TRUE );
 	}
 
-	public function finishPayment( $paymentId ){
+	public function finishPayment( $paymentId )
+	{
 		$payment	= $this->getPayment( $paymentId );
 		if( !$payment->payerId )
 			throw new RuntimeException( 'Payer not logged in' );
@@ -49,55 +51,44 @@ class Logic_Payment_PayPal{
 		}
 	}
 
-	public function getPayerId( $paymentId ){
+	public function getPayerId( $paymentId )
+	{
 		$payment	= $this->getPayment( $paymentId );
 		return $payment->payerId;
 	}
 
-	public function getPayment( $paymentId ){
+	public function getPayment( $paymentId )
+	{
 		$payment	= $this->model->get( $paymentId );
 		if( !$payment )
 			throw new InvalidArgumentException( 'No payment with ID "'.$paymentId.'"' );
 		return $payment;
 	}
 
-	public function getPaymentFromToken( $token ){
+	public function getPaymentFromToken( string $token )
+	{
 		$payment	= $this->model->getByIndex( 'token', $token );
 		if( !$payment )
 			throw new InvalidArgumentException( 'No payment with token "'.$token.'"' );
 		return $payment;
 	}
 
-	public function getStatus( $paymentId ){
+	public function getStatus( $paymentId )
+	{
 		$payment	= $this->getPaymentData( $paymentId );
 		return $payment->status;
 	}
 
-	public function getToken( $paymentId ){
+	public function getToken( $paymentId )
+	{
 		$payment	= $this->model->get( $paymentId );
 		if( !$payment )
 			throw new InvalidArgumentException( 'No payment with ID "'.$paymentId.'"' );
 		return $payment->token;
 	}
 
-	protected function request( $data ){
-		if( !( $this->username && $this->password && $this->signature ) )
-			throw new RuntimeException( 'No merchant account set' );
-		$data	= array_merge( array(
-			'USER'		=> $this->username,
-			'PWD'		=> $this->password,
-			'SIGNATURE'	=> $this->signature,
-			'VERSION'	=> $this->config->get( 'server.api.version' ),
-		), $data );
-		$mode		= $this->config->get( 'mode' );
-		$server		= $this->config->get( 'server.api.'.$mode );
-		$response	= Net_HTTP_Post::sendData( $server, $data );
-		$data		= array();
-		parse_str( $response, $data );
-		return $data;
-	}
-
-	public function requestPayerDetails( $paymentId ){
+	public function requestPayerDetails( $paymentId )
+	{
 		$payment	= $this->getPayment( $paymentId );
 		$data	= array(
 			'METHOD'	=> 'getExpressCheckoutDetails',
@@ -133,7 +124,8 @@ class Logic_Payment_PayPal{
 	 *	@param		float		$amount			Total cart price
 	 *	@return		integer		Payment ID
 	 */
-	public function requestToken( $orderId, $amount, $subject = NULL ){
+	public function requestToken( $orderId, $amount, $subject = NULL )
+	{
 		$language		= $this->env->getLanguage();
 		$titleCart		= $language->getWords( 'shop/payment/paypal' )['cart']['title'];
 		$titleApp		= $language->getWords( 'main' )['main']['title'];
@@ -246,7 +238,8 @@ $insurance	= 0;
 		}
 	}
 
-	public function setAccount( $username, $password, $signature ){
+	public function setAccount( string $username, string $password, string $signature ): self
+	{
 		if( !strlen( trim( $username ) ) )
 			throw new Exception( "Merchant username is missing" );
 		if( !strlen( trim( $password ) ) )
@@ -256,6 +249,24 @@ $insurance	= 0;
 		$this->username	= $username;
 		$this->password	= $password;
 		$this->signature = $signature;
+		return $this;
+	}
+
+	protected function request( array $data ): array
+	{
+		if( !( $this->username && $this->password && $this->signature ) )
+			throw new RuntimeException( 'No merchant account set' );
+		$data	= array_merge( array(
+			'USER'		=> $this->username,
+			'PWD'		=> $this->password,
+			'SIGNATURE'	=> $this->signature,
+			'VERSION'	=> $this->config->get( 'server.api.version' ),
+		), $data );
+		$mode		= $this->config->get( 'mode' );
+		$server		= $this->config->get( 'server.api.'.$mode );
+		$response	= Net_HTTP_Post::sendData( $server, $data );
+		$data		= array();
+		parse_str( $response, $data );
+		return $data;
 	}
 }
-?>

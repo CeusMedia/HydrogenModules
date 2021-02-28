@@ -1,24 +1,39 @@
 <?php
-class View_Helper_Shop_FinishPanel_Stripe{
-
+class View_Helper_Shop_FinishPanel_Stripe
+{
 	const OUTPUT_FORMAT_HTML		= 1;
 	const OUTPUT_FORMAT_TEXT		= 2;
 
+	const OUTPUT_FORMATS			= [
+		self::OUTPUT_FORMAT_HTML,
+		self::OUTPUT_FORMAT_TEXT,
+	];
+
+	/**
+	 * @var		CMF_Hydrogen_Environment		$env
+	 */
 	protected $env;
+
 	protected $modelPayment;
+
 	protected $modelOrder;
+
 	protected $payin;
+
 	protected $outputFormat			= self::OUTPUT_FORMAT_HTML;
+
 	protected $listClass			= 'dl-horizontal';
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env			= $env;
 		$this->modelPayment	= new Model_Shop_Payment_Stripe( $env );
 		$this->modelOrder	= new Model_Shop_Order( $env );
 		$this->heading		= 'Bezahlvorgang';
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->payment )
 //			throw new RuntimeException( 'No payment selected' );
 			return '';
@@ -33,7 +48,40 @@ class View_Helper_Shop_FinishPanel_Stripe{
 		}
 	}
 
-	protected function renderCreditCard(){
+	public function setListClass( string $class ): self
+	{
+		$this->listClass	= $class;
+		return $this;
+	}
+
+	public function setOrderId( $orderId ): self
+	{
+		$this->order	= $this->modelOrder->get( $orderId );
+		if( $this->order->paymentId > 0 ){
+			$this->payment	= $this->modelPayment->get( $this->order->paymentId );
+			if( strlen( $this->payment->object ) )
+				$this->payin	= json_decode( $this->payment->object );
+		}
+		return $this;
+	}
+
+	public function setOutputFormat( string $format ): self
+	{
+		$this->outputFormat	= $format;
+		return $this;
+	}
+
+	public function setPaymentId( $paymentId ): self
+	{
+		$this->payment	= $this->modelPayment->get( $paymentId );
+		if( strlen( $this->payment->object ) )
+			$this->payin	= json_decode( $this->payment->object );
+		$this->order	= $this->modelOrder->get( $this->payment->orderId );
+		return $this;
+	}
+
+	protected function renderCreditCard(): string
+	{
 		$facts		= new View_Helper_Mail_Facts( $this->env );
 		$facts->add( 'Methode', 'per Kreditkarte' );
 		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
@@ -53,7 +101,8 @@ class View_Helper_Shop_FinishPanel_Stripe{
 		) ).PHP_EOL.PHP_EOL;
 	}
 
-	protected function renderGiropay(){
+	protected function renderGiropay(): string
+	{
 		$facts		= new View_Helper_Mail_Facts( $this->env );
 		$facts->add( 'Methode', 'per GiroPay' );
 		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
@@ -73,7 +122,8 @@ class View_Helper_Shop_FinishPanel_Stripe{
 		) ).PHP_EOL.PHP_EOL;
 	}
 
-	protected function renderSofort(){
+	protected function renderSofort(): string
+	{
 		$facts		= new View_Helper_Mail_Facts( $this->env );
 		$facts->add( 'Methode', 'per Sofortüberweisung' );
 		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
@@ -91,29 +141,5 @@ class View_Helper_Shop_FinishPanel_Stripe{
 			View_Helper_Mail_Text::underscore( $this->heading ),
 			$facts->renderAsText(),
 		) ).PHP_EOL.PHP_EOL;
-	}
-
-	public function setListClass( $class ){
-		$this->listClass	= $class;
-	}
-
-	public function setOrderId( $orderId ){
-		$this->order	= $this->modelOrder->get( $orderId );
-		if( $this->order->paymentId > 0 ){
-			$this->payment	= $this->modelPayment->get( $this->order->paymentId );
-			if( strlen( $this->payment->object ) )
-				$this->payin	= json_decode( $this->payment->object );
-		}
-	}
-
-	public function setOutputFormat( $format ){
-		$this->outputFormat	= $format;
-	}
-
-	public function setPaymentId( $paymentId ){
-		$this->payment	= $this->modelPayment->get( $paymentId );
-		if( strlen( $this->payment->object ) )
-			$this->payin	= json_decode( $this->payment->object );
-		$this->order	= $this->modelOrder->get( $this->payment->orderId );
 	}
 }
