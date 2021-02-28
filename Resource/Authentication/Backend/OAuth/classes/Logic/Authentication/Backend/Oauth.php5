@@ -1,22 +1,14 @@
 <?php
-class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
-
+class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic
+{
 	protected $config;
 	protected $modelUser;
 	protected $modelRole;
 	protected $moduleConfig;
 	protected $providerUri;
 
-	protected function __onInit(){
-		$this->config		= $this->env->getConfig();
-		$this->session		= $this->env->getSession();
-		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth', TRUE );
-		$this->providerUri	= $this->moduleConfig->get( 'provider.URI' );
-		$this->modelUser	= new Model_User( $this->env );
-		$this->modelRole	= new Model_Role( $this->env );
-	}
-
-	public function checkPassword( $userId, $password ){
+	public function checkPassword( $userId, string $password ): bool
+	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return FALSE;
 		if( !$this->modelUser->get( $userId ) )
@@ -48,14 +40,16 @@ class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 		return FALSE;
 	}
 
-	public function clearCurrentUser(){
+	public function clearCurrentUser()
+	{
 		$this->session->remove( 'auth_user_id' );
 		$this->session->remove( 'auth_role_id' );
 		$this->session->remove( 'auth_status_id' );
 		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this );
 	}
 
-	public function getCurrentRole( $strict = TRUE ){
+	public function getCurrentRole( bool $strict = TRUE )
+	{
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
 			$role	= $this->modelRole->get( $roleId );
@@ -67,7 +61,8 @@ class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 		return NULL;
 	}
 
-	public function getCurrentRoleId( $strict = TRUE ){
+	public function getCurrentRoleId( bool $strict = TRUE )
+	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
 				throw new RuntimeException( 'No user authenticated' );
@@ -76,7 +71,8 @@ class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 		return $this->session->get( 'auth_role_id');
 	}
 
-	public function getCurrentUser( $strict = TRUE, $withRole = FALSE ){
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
+	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
 			$user	= $this->modelUser->get( $userId );
@@ -91,7 +87,8 @@ class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 		return NULL;
 	}
 
-	public function getCurrentUserId( $strict = TRUE ){
+	public function getCurrentUserId( bool $strict = TRUE )
+	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
 				throw new RuntimeException( 'No user authenticated' );
@@ -100,34 +97,40 @@ class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 		return $this->session->get( 'auth_user_id' );
 	}
 
-	public function isAuthenticated(){
+	public function isAuthenticated(): bool
+	{
 		if( !$this->isIdentified() )
 			return FALSE;
 		$authStatus	= (int) $this->session->get( 'auth_status' );
 		return $authStatus == Logic_Authentication::STATUS_AUTHENTICATED;
 	}
 
-	public function isIdentified(){
+	public function isIdentified(): bool
+	{
 		return (int) $this->session->get( 'auth_user_id' ) > 0;
 	}
 
-	public function isCurrentUserId( $userId ){
+	public function isCurrentUserId( $userId ): bool
+	{
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}
 
 	/**
 	 *	@todo		implement if possible
 	 */
-	public function noteUserActivity(){
+	public function noteUserActivity()
+	{
 	}
 
-	public function setAuthenticatedUser( $user ){
+	public function setAuthenticatedUser( $user )
+	{
 		$this->setIdentifiedUser( $user );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
 		return $this;
 	}
 
-	public function setIdentifiedUser( $user ){
+	public function setIdentifiedUser( $user )
+	{
 		$this->session->set( 'auth_user_id', $user->userId );
 		$this->session->set( 'auth_role_id', $user->roleId );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_IDENTIFIED );
@@ -138,4 +141,13 @@ class Logic_Authentication_Backend_Oauth extends CMF_Hydrogen_Logic{
 		return $this;
 	}
 
+	protected function __onInit()
+	{
+		$this->config		= $this->env->getConfig();
+		$this->session		= $this->env->getSession();
+		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth', TRUE );
+		$this->providerUri	= $this->moduleConfig->get( 'provider.URI' );
+		$this->modelUser	= new Model_User( $this->env );
+		$this->modelRole	= new Model_Role( $this->env );
+	}
 }

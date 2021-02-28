@@ -39,4 +39,3 @@ HTML::DivClass( "row-fluid", array(
 		$textInfo
 	) )
 ) ).HTML::DivClass( "auth-confirm-text-bottom", $textBottom );
-?>

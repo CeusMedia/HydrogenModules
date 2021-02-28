@@ -1,7 +1,8 @@
 <?php
-class Mail_Auth_OAuth_Password extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Auth_OAuth_Password extends Mail_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/oauth', 'mails' );
 
@@ -13,4 +14,3 @@ class Mail_Auth_OAuth_Password extends Mail_Abstract{
 		$this->addTextBody( $body );
 	}
 }
-?>
