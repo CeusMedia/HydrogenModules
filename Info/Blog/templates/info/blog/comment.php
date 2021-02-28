@@ -121,5 +121,4 @@ var Blog = {
 $(document).ready(function(){
 	Blog.init();
 });
-</script>
-';
+</script>';
