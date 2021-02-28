@@ -265,5 +265,5 @@
 	<link xml:lang="de" access="acl" path="work/newsletter/group" rank="34">Gruppe</link>
 	<link xml:lang="de" access="acl" path="work/newsletter/template" rank="35">Vorlagen</link>
 	<link access="public" path="work/newsletter/template/preview"/>
-	<hook type="resource" resource="HintHelper" event="registerHints">Controller_Work_Newsletter::___registerHints</hook>
+	<hook type="resource" resource="HintHelper" event="registerHints">Hook_Work_Newsletter::onRegisterHints</hook>
 </module>

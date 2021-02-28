@@ -67,4 +67,3 @@ $content	= $textTop.'
 </div>'.$textBottom.$textPlaceholders;
 
 return $content;
-?>

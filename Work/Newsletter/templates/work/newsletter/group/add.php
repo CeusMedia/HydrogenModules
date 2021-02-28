@@ -66,6 +66,4 @@ return $textTop.'
 			'.$textInfo.'
 		</div>
 	</div>
-</div>
-'.$textBottom;
-?>
+</div>'.$textBottom;

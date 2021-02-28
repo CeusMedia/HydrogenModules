@@ -6,7 +6,6 @@ extract( $view->populateTexts( array( 'above', 'bottom', 'top' ), 'html/work/new
 $panelFilter	= $view->loadTemplateFile( 'work/newsletter/group/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'work/newsletter/group/index.list.php' );
 
-
 return $textTop.'
 <div class="newsletter-content">
 	'.$tabsMain.'
@@ -14,8 +13,8 @@ return $textTop.'
 	'.$panelList.'
 </div>
 '.$textBottom;
-?>
 
+/*
 return $textTop.'
 <div class="newsletter-content">
 	'.$tabsMain.'
@@ -30,4 +29,4 @@ return $textTop.'
 	</div>
 </div>
 '.$textBottom;
-?>
+*/

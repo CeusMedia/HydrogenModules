@@ -1,16 +1,15 @@
 <?php
-class View_Work_Newsletter_Template extends View_Work_Newsletter{
-
-	public function __onInit(){
-	}
-
-	public function add(){
+class View_Work_Newsletter_Template extends View_Work_Newsletter
+{
+	public function add()
+	{
 		$words				= (object) $this->getWords( NULL, 'work/newsletter/template' );
 		$words->add			= (object) $words->add;
 		$this->addData( 'words', $words );
 	}
 
-	public function edit(){
+	public function edit()
+	{
 		$words				= (object) $this->getWords( NULL, 'work/newsletter/template' );
 		$words->edit		= (object) $words->edit;
 		$words->preview		= (object) $words->preview;
@@ -19,15 +18,18 @@ class View_Work_Newsletter_Template extends View_Work_Newsletter{
 		$this->addData( 'words', $words );
 	}
 
-	public function export(){
+	public function export()
+	{
 	}
 
-	public function index(){
+	public function index()
+	{
 		$words			= (object) $this->getWords( NULL, 'work/newsletter/template' );
 		$words->index	= (object) $words->index;
 		$this->addData( 'words', $words );
 	}
 
-	public function viewTheme(){}
+	public function viewTheme()
+	{
+	}
 }
-?>

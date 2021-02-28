@@ -145,6 +145,4 @@ return '
 jQuery(document).ready(function(){
 	ModuleWorkNewsletter.init();
 });
-</script>
-';
-?>
+</script>';

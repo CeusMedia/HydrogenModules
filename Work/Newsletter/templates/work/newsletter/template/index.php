@@ -23,4 +23,3 @@ return 	$textTop.'
 </div>
 '.$panelThemes.'
 '.$textBottom;
-?>

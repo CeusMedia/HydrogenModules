@@ -124,5 +124,3 @@ return '
 		'.$panelPreview.'
 	</div>
 </div>';
-
-?>

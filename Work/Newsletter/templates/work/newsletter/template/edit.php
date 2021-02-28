@@ -135,4 +135,3 @@ return $textTop.'
 		'.$tabsContent.'
 	</form>
 </div>'.$textBottom.$modalPreview.$modalStyleAdd;
-?>

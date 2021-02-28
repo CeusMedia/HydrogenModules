@@ -73,9 +73,6 @@ else{
 	}
 }
 
-$script	= "
-	";
-
 return '
 <div class="content-panel">
 	<h3>'.$words->statistics['heading'].'</h3>
@@ -93,15 +90,12 @@ return '
 </div>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
-  google.load("visualization", "1", {packages:["corechart"]});
-  google.setOnLoadCallback(drawChart);
-  function drawChart() {
-	var data = google.visualization.arrayToDataTable('.json_encode( $list ).');
-	var options = {};
-	var chart = new google.visualization.LineChart(document.getElementById("chart_div"));
-	chart.draw(data, options);
-  }
-</script>
-
-'.$script;
-?>
+	google.load("visualization", "1", {packages:["corechart"]});
+	google.setOnLoadCallback(drawChart);
+	function drawChart() {
+		var data = google.visualization.arrayToDataTable('.json_encode( $list ).');
+		var options = {};
+		var chart = new google.visualization.LineChart(document.getElementById("chart_div"));
+		chart.draw(data, options);
+	}
+</script>';

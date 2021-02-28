@@ -65,4 +65,3 @@ $page->addBody( $body );
 $page->addBody( UI_HTML_Tag::create( 'style', $template->style ) );
 print( $page->build( array( 'class' => 'mail mail-newsletter' ) ) );
 exit;
-?>

@@ -1,6 +1,6 @@
 <?php
-class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller
+{
 	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
 	protected $logic;
 
@@ -17,24 +17,8 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
 
 	protected $limiter;
 
-	/**
-	 *	...
-	 *	@todo		kriss: code doc
-	 */
-	public function __onInit(){
-		$this->session		= $this->env->getSession();
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= new Logic_Newsletter_Editor( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-		$this->addData( 'tabbedLinks', $this->moduleConfig->get( 'tabbedLinks' ) );
-		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
-			$this->limiter	= Logic_Limiter::getInstance( $this->env );
-		$this->addData( 'limiter', $this->limiter );
-	}
-
-	public function add(){
+	public function add()
+	{
 		$pathDefaults	= 'html/work/newsletter/template/';
 		$words			= (object) $this->getWords( 'add' );
 		$copyTemplateId	= (int) $this->request->get( 'templateId' );
@@ -92,7 +76,8 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
 		$this->addData( 'totalTemplates', $totalTemplates );
 	}
 
-	public function addStyle( $templateId, $url = NULL ){
+	public function addStyle( $templateId, $url = NULL )
+	{
 		$url	= strlen( trim( $url ) ) ? $url : $this->request->get( 'style_url' );				//
 		$this->logic->addTemplateStyle( $templateId, $url );
 		$this->restart( './work/newsletter/template/edit/'.$templateId );
@@ -106,7 +91,8 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
 	 *	@param		boolean		$inEditor		Flag: set additional style for TinyMCE editor
 	 *	@return		void
 	 */
-	public function ajaxGetStyle( $templateId, $inEditor = FALSE ){
+	public function ajaxGetStyle( $templateId, $inEditor = FALSE )
+	{
 		$template	= $this->logic->getTemplate( $templateId );
 		header( 'Content-Type: text/css' );
 		print $template->style;
@@ -117,7 +103,8 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function edit( $templateId ){
+	public function edit( $templateId )
+	{
 		$words		= (object) $this->getWords( 'edit' );
 		if( !$this->logic->checkTemplateId( $templateId ) ){
 			$this->messenger->noteError( $words->msgErrorInvalidId, $templateId );
@@ -145,7 +132,8 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
 		$this->addData( 'format', $format );
 	}
 
-	public function export( $templateId ){
+	public function export( $templateId )
+	{
 		$words		= (object) $this->getWords( 'export' );
 		if( !$this->logic->checkTemplateId( $templateId ) ){
 			$this->messenger->noteError( $words->msgErrorInvalidId, $templateId );
@@ -160,7 +148,8 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
 		$this->addData( 'template', $this->logic->getTemplate( $templateId ) );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$conditions		= array();
 		$orders			= array( 'title' => 'ASC' );
 		$this->addData( 'templates', $this->logic->getTemplates( $conditions, $orders ) );
@@ -169,7 +158,8 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
 		$this->addData( 'themes', $model->getAll() );
 	}
 
-	public function installTheme( $themeId ){
+	public function installTheme( $themeId )
+	{
 		try{
 			$model	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
 			$theme	= $model->getFromId( $themeId );
@@ -214,7 +204,8 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 
-	public function preview( $format, $templateId, $simulateOffline = FALSE ){
+	public function preview( $format, $templateId, $simulateOffline = FALSE )
+	{
 		try{
 			$words		= (object) $this->getWords( 'preview' );
 			$template	= $this->logic->getTemplate( $templateId );
@@ -259,7 +250,8 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function previewTheme( $theme ){
+	public function previewTheme( $theme )
+	{
 		try{
 			$path	= 'contents/themes/';
 			$model	= new Model_Newsletter_Theme( $this->env, $path );
@@ -296,24 +288,28 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function remove( $templateId ){
+	public function remove( $templateId )
+	{
 		$this->logic->removeTemplate( $templateId );
 		$words	= (object) $this->getWords( 'remove' );
 		$this->messenger->noteSuccess( $words->msgSuccess );
 		$this->restart( './work/newsletter/template' );
 	}
 
-	public function removeStyle( $templateId, $index ){
+	public function removeStyle( $templateId, $index )
+	{
 		$this->logic->removeTemplateStyle( $templateId, $index );
 		$this->restart( './work/newsletter/template/edit/'.$templateId );
 	}
 
-	public function setContentTab( $templateId, $tabKey ){
+	public function setContentTab( $templateId, $tabKey )
+	{
 		$this->session->set( 'work.newsletter.template.content.tab', $tabKey );
 		$this->restart( './work/newsletter/template/edit/'.$templateId );
 	}
 
-	public function viewTheme( $themeId ){
+	public function viewTheme( $themeId )
+	{
 		try{
 			$model	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
 			$this->addData( 'theme', $model->getFromId( $themeId ) );
@@ -324,5 +320,18 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 	}
+
+	protected function __onInit()
+	{
+		$this->session		= $this->env->getSession();
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logic		= new Logic_Newsletter_Editor( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$this->addData( 'tabbedLinks', $this->moduleConfig->get( 'tabbedLinks' ) );
+		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
+			$this->limiter	= Logic_Limiter::getInstance( $this->env );
+		$this->addData( 'limiter', $this->limiter );
+	}
 }
-?>

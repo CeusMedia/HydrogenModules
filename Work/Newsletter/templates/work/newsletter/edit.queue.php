@@ -20,7 +20,6 @@ $buttonCancelDisabled	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;abbrechen&n
 	'class'	=> 'btn btn-mini btn-danger disabled',
 ) );
 
-
 foreach( $queues as $queue ){
 //	print_m( $queue);die;
 	$bar	= new \CeusMedia\Bootstrap\Progress();
@@ -135,7 +134,4 @@ if( $letterQueue ){
 
 return '
 <h4>Offene Vorgänge</h4>
-<p>Die folgende Liste zeigt die noch zu verschickenden Mails.</p>
-'.$table.'
-';
-?>
+<p>Die folgende Liste zeigt die noch zu verschickenden Mails.</p>'.$table;

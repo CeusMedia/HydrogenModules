@@ -65,4 +65,3 @@ return $textTop.'
 		'.$panelPreview.'
 	</div>
 </div>'.$textBottom;
-?>

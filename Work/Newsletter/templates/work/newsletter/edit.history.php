@@ -54,4 +54,3 @@ return '
 		'.$table.'
 	</div>
 </div>';
-?>

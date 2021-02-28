@@ -55,8 +55,7 @@ $panelGroups	= '
 			</div>
 		</form>
 	</div>
-</div>
-';
+</div>';
 
 $list		= '<div class="alert"><em><small class="not-muted">Keine Testgruppe gewählt.</small></em></div>';
 $disabled	= ' disabled="disabled"';
@@ -127,4 +126,3 @@ jQuery(document).ready(function(){
 	}
 });
 </script>';
-?>

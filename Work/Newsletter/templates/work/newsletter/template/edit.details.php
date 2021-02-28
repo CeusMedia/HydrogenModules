@@ -321,4 +321,3 @@ $content	= '
 <div class="row-fluid"></div>';
 
 return $content;
-?>
