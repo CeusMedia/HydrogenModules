@@ -3,7 +3,7 @@
 	<title>Work: Newsletter</title>
 	<description><![CDATA[Creating and sending newsletter mails.]]></description>
 	<category>Work</category>
-	<version>1.4</version>
+	<version>1.4.1</version>
 	<log version="0.8.3">Added simple text export of grouped readers for manual mails.</log>
 	<log version="0.8.4">Removed locking from job in favour of locking mechanism in jobber class in module Resource:Jobs.</log>
 	<log version="0.8.5">Prepare to remove usage of TinyMCE module config key auto_baseUrl.</log>
@@ -58,6 +58,7 @@
 	<log version="1.3.5">Use new module UI:Helper:Pagination:PrevNext in newsletter editor.</log>
 	<log version="1.3.6">Improve reader CSV export.</log>
 	<log version="1.4">Imported module from protected repositry.</log>
+	<log version="1.4.1">Improve code style.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
