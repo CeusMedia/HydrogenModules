@@ -1,16 +1,14 @@
 <?php
 /**
  *	Controller.
- *	@version		$Id$
  */
 /**
  *	Controller.
- *	@version		$Id$
  *	@todo			implement
  *	@todo			code documentation
  */
-class Controller_Admin_Database_Connection extends CMF_Hydrogen_Controller{
-
+class Controller_Admin_Database_Connection extends CMF_Hydrogen_Controller
+{
 	public function ajaxCheck(){
 		$post		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$status		= 0;
@@ -35,7 +33,8 @@ class Controller_Admin_Database_Connection extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function configure(){
+	public function configure()
+	{
 		$messenger	= $this->env->getMessenger();
 		$request	= $this->env->getRequest();
 
@@ -53,7 +52,8 @@ class Controller_Admin_Database_Connection extends CMF_Hydrogen_Controller{
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function index(){
+	public function index()
+	{
 		$config			= $this->env->getConfig();
 		$session		= $this->env->getSession();
 		$request		= $this->env->getRequest();
@@ -81,4 +81,3 @@ class Controller_Admin_Database_Connection extends CMF_Hydrogen_Controller{
 		$this->addData( 'data', (object) $data );
 	}
 }
-?>

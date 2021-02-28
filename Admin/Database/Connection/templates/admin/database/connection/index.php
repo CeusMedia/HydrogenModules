@@ -119,4 +119,3 @@ $(document).ready(function(){
 	'.$panelInfo.'
 </div>
 <div class="column-clear"></div>';
-?>

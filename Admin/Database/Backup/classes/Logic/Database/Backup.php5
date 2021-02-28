@@ -1,29 +1,12 @@
 <?php
-class Logic_Database_Backup extends CMF_Hydrogen_Logic{
-
+class Logic_Database_Backup extends CMF_Hydrogen_Logic
+{
 	protected $dumps;
+
 	protected $prefixPlaceholder	= '<%?prefix%>';
 
-	public function __onInit(){
-		$this->config		= $this->env->getConfig();
-
-		$moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
-		$basePath		= $this->env->uri;
-		if( $this->env->hasModule( 'Resource_Frontend' ) ){
-			$frontend	= $this->env->getLogic()->get( 'Frontend' );
-			$basePath	= $frontend->getPath();
-		}
-		$this->path			= $basePath.$moduleConfig->get( 'path' );
-		$this->commentsFile	= $this->path.'comments.json';
-		if( !file_exists( $this->path ) )
-			\FS_Folder_Editor::createFolder( $this->path );
-		if( !file_exists( $this->commentsFile ) )
-			file_put_contents( $this->commentsFile, '[]' );
-		$this->comments	= \FS_File_JSON_Reader::load( $this->commentsFile, TRUE );
-		$this->dumps	= $this->readIndex();
-	}
-
-	public function check( $id, $strict = TRUE ){
+	public function check( $id, bool $strict = TRUE )
+	{
 		if( array_key_exists( $id, $this->dumps ) )
 			return $this->dumps[$id];
 		if( $strict )
@@ -31,7 +14,8 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 		return FALSE;
 	}
 
-	public function dump( $comment = NULL ){
+	public function dump( string $comment = NULL )
+	{
 		$filename	= "dump_".date( "Y-m-d_H:i:s" ).".sql";
 		$pathname	= $this->path.$filename;
 		$dbc		= $this->env->getDatabase();
@@ -89,11 +73,13 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 		return $id;
 	}
 
-	public function index(){
+	public function index(): array
+	{
 		return $this->dumps;
 	}
 
-	public function load( $id, $dbName, $prefix = NULL ){
+	public function load( $id, string $dbName, string $prefix = NULL )
+	{
 		$dump	= $this->check( $id );
 		if( !is_readable( $dump->pathname ) )
 			throw new RuntimeException( 'Missing read access to SQL script' );
@@ -126,7 +112,8 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 		unlink( $tempName );
 	}
 
-	public function remove( $id ){
+	public function remove( $id )
+	{
 		$dump	= $this->check( $id );
 		@unlink( $dump->pathname );
 		if( array_key_exists( $id, $this->comments ) ){
@@ -135,7 +122,8 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 		}
 	}
 
-	public function storeDataInComment( $id, $data ){
+	public function storeDataInComment( $id, $data )
+	{
 		$dump	= $this->check( $id );
 		if( !array_key_exists( $id, $this->comments ) )
 			$this->comments[$id]	= array( 'comment' => '' );
@@ -152,13 +140,35 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic{
 
 	//  --  PROTECTED METHODS  --  //
 
-	protected function _callbackReplacePrefix( $matches ){
+	protected function __onInit()
+	{
+		$this->config		= $this->env->getConfig();
+
+		$moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
+		$basePath		= $this->env->uri;
+		if( $this->env->hasModule( 'Resource_Frontend' ) ){
+			$frontend	= $this->env->getLogic()->get( 'Frontend' );
+			$basePath	= $frontend->getPath();
+		}
+		$this->path			= $basePath.$moduleConfig->get( 'path' );
+		$this->commentsFile	= $this->path.'comments.json';
+		if( !file_exists( $this->path ) )
+			\FS_Folder_Editor::createFolder( $this->path );
+		if( !file_exists( $this->commentsFile ) )
+			file_put_contents( $this->commentsFile, '[]' );
+		$this->comments	= \FS_File_JSON_Reader::load( $this->commentsFile, TRUE );
+		$this->dumps	= $this->readIndex();
+	}
+
+	protected function _callbackReplacePrefix( array $matches ): string
+	{
 		if( $matches[1] === 'for table' )
 			return $matches[1].$matches[2].$matches[4].$matches[5];
 		return $matches[1].$matches[2].$this->prefixPlaceholder.$matches[4].$matches[5];
 	}
 
-	protected function readIndex(){
+	protected function readIndex(): array
+	{
 		$list	= array();
 		$map	= array();
 		$index	= new DirectoryIterator( $this->path );

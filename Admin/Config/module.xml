@@ -2,7 +2,7 @@
 <module>
 	<title>Admin: Config</title>
 	<description><![CDATA[Editor for module application configuration.]]></description>
-	<version>0.5.2</version>
+	<version>0.5.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Render table instead of list.</log>
@@ -17,12 +17,14 @@
 	<log version="0.5">Add filter and extract labels to locales.</log>
 	<log version="0.5.1">Hide password values.</log>
 	<log version="0.5.2">Change filter, list and add view.</log>
+	<log version="0.5.3">Improve code style.</log>
 	<category>Administration</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Admin/Config.php5</class>
+		<class>Hook/Admin/Config.php5</class>
 		<class>View/Admin/Config.php5</class>
 		<template>admin/config/edit.php</template>
 		<template>admin/config/index.php</template>
@@ -41,7 +43,7 @@
 	</files>
 	<link xml:lang="de" access="acl" path="admin/config">Konfiguration</link>
 	<link xml:lang="en" access="acl" path="admin/config">Configuration</link>
-	<hook type="resource" resource="Admin_Config" event="registerTabs">View_Admin_Config::___onRegisterTab</hook>
+	<hook type="resource" resource="Admin_Config" event="registerTabs">Hook_Admin_Config::onAdminConfigRegisterTab</hook>
 	<relations>
 		<needs type="module">App_Site</needs>
 	</relations>

@@ -1,23 +1,8 @@
 <?php
-class Controller_Admin_Config extends CMF_Hydrogen_Controller {
-
-	protected function __onInit(){
-		$this->request	= $this->env->getRequest();
-		$this->session	= $this->env->getSession();
-		$modules	= $this->env->getModules()->getAll();
-		$versions	= array();
-		foreach( array_keys( $modules ) as $moduleId ){
-			$fileName	= "config/modules/".$moduleId.".xml";
-			$file		= new FS_File_Backup( $fileName );
-			$version	= $file->getVersion();
-			$version	= is_int( $version ) ? $version + 1 : 0;
-			$versions[$moduleId]	= $version;
-		}
-		$this->addData( 'modules', $modules );
-		$this->addData( 'versions', $versions );
-	}
-
-/*	public function direct(){
+class Controller_Admin_Config extends CMF_Hydrogen_Controller
+{
+/*	public function direct()
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$request	= $this->env->getRequest();
 		$modules	= $this->env->getModules()->getAll();
@@ -33,7 +18,8 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller {
 		$this->addData( 'versions', $versions );
 	}*/
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			$this->session->remove( 'filter_admin_config_category' );
 			$this->session->remove( 'filter_admin_config_moduleId' );
@@ -48,7 +34,8 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller {
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$filterCategory	= $this->session->get( 'filter_admin_config_category' );
 		$filterModuleId	= $this->session->get( 'filter_admin_config_moduleId' );
 
@@ -92,7 +79,8 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller {
 		$this->addData( 'modules', $foundModules );
 	}
 
-	public function edit( $moduleId = NULL ){
+	public function edit( $moduleId = NULL )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$request	= $this->env->getRequest();
 		$modules	= $this->env->getModules()->getAll();
@@ -158,7 +146,47 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller {
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function configureLocalModule( $moduleId, $pairs ){
+	public function view( $moduleId )
+	{
+		$words		= (object) $this->getWords( 'msg' );
+		$request	= $this->env->getRequest();
+		$modules	= $this->env->getModules()->getAll();
+		if( !array_key_exists( $moduleId, $modules ) ){
+			$this->env->getMessenger()->noteError( 'Invalid module ID.' );
+			$this->restart( NULL, TRUE );
+		}
+		$module		= $modules[$moduleId];
+
+		$versions	= array();
+		$fileName	= "config/modules/".$moduleId.".xml";
+		$file		= new FS_File_Backup( $fileName );
+		$version	= $file->getVersion();
+		$version	= is_int( $version ) ? $version + 1 : 0;
+		$versions	= $version;
+		$this->addData( 'module', $module );
+		$this->addData( 'moduleId', $moduleId );
+		$this->addData( 'versions', $versions );
+	}
+
+	protected function __onInit()
+	{
+		$this->request	= $this->env->getRequest();
+		$this->session	= $this->env->getSession();
+		$modules	= $this->env->getModules()->getAll();
+		$versions	= array();
+		foreach( array_keys( $modules ) as $moduleId ){
+			$fileName	= "config/modules/".$moduleId.".xml";
+			$file		= new FS_File_Backup( $fileName );
+			$version	= $file->getVersion();
+			$version	= is_int( $version ) ? $version + 1 : 0;
+			$versions[$moduleId]	= $version;
+		}
+		$this->addData( 'modules', $modules );
+		$this->addData( 'versions', $versions );
+	}
+
+	protected function configureLocalModule( $moduleId, array $pairs ): int
+	{
 		$fileName	= $this->env->uri.'config/modules/'.$moduleId.'.xml';
 		if( !is_writable( $fileName ) )
 			throw new RuntimeException( 'Config file of module "'.$moduleId.'" is not writable' );
@@ -197,26 +225,5 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller {
 			$this->env->getMessenger()->noteError( $e->getMessage() );
 			$this->env->getMessenger()->noteNotice( UI_HTML_Exception_View::render( $e ) );
 		}
-	}
-
-	public function view( $moduleId ){
-		$words		= (object) $this->getWords( 'msg' );
-		$request	= $this->env->getRequest();
-		$modules	= $this->env->getModules()->getAll();
-		if( !array_key_exists( $moduleId, $modules ) ){
-			$this->env->getMessenger()->noteError( 'Invalid module ID.' );
-			$this->restart( NULL, TRUE );
-		}
-		$module		= $modules[$moduleId];
-
-		$versions	= array();
-		$fileName	= "config/modules/".$moduleId.".xml";
-		$file		= new FS_File_Backup( $fileName );
-		$version	= $file->getVersion();
-		$version	= is_int( $version ) ? $version + 1 : 0;
-		$versions	= $version;
-		$this->addData( 'module', $module );
-		$this->addData( 'moduleId', $moduleId );
-		$this->addData( 'versions', $versions );
 	}
 }

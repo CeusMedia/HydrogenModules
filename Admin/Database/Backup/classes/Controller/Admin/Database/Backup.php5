@@ -1,6 +1,6 @@
 <?php
-class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
-
+class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller
+{
 	protected $config;
 	protected $request;
 	protected $session;
@@ -8,22 +8,8 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 	protected $moduleConfig;
 	protected $logicBackup;
 
-	public function __onInit(){
-		$this->config		= $this->env->getConfig();
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
-
-		$this->logicBackup	= Logic_Database_Backup::getInstance( $this->env );
-
-		if( !$this->env->getModules()->has( 'Resource_Database' ) ){
-			$this->messenger->noteError( 'Kein Datenbank-Modul vorhanden.' );
-			$this->restart();
-		}
-	}
-
-	public function backup(){
+	public function backup()
+	{
 		if( $this->request->has( 'save' ) ){
 			try{
 				$comment	= $this->request->get( 'comment' );
@@ -38,20 +24,15 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 		$this->addData( 'path', $this->path );
 	}
 
-	protected function check( $id ){
-		if( ( $backup = $this->logicBackup->check( $id, FALSE ) ) )
-			return $backup;
-		$this->messenger->noteError( 'Ungültige Sicherungs-ID.' );
-		$this->restart( NULL, TRUE );
-	}
-
-	public function index(){
+	public function index()
+	{
 		$prefix		= $this->session->get( 'admin-database-backup-copy-prefix' );
 		$this->addData( 'backups', $this->logicBackup->index() );
 		$this->addData( 'currentCopyPrefix', $prefix );
 	}
 
-	public function download( $id ){
+	public function download( $id )
+	{
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$userId			= $logicAuth->getCurrentUserId();
 		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password' ) ) ){
@@ -62,14 +43,16 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 		\Net_HTTP_Download::sendFile( $backup->pathname, $backup->filename, TRUE );
 	}
 
-	public function remove( $id ){
+	public function remove( $id )
+	{
 		$backup	= $this->check( $id );
 		$this->logicBackup->remove( $id );
 		$this->messenger->noteSuccess( 'Die Sicherung "%s" wurde entfernt.', $backup->filename );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function restore( $id ){
+	public function restore( $id )
+	{
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$userId			= $logicAuth->getCurrentUserId();
 		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password' ) ) ){
@@ -87,11 +70,35 @@ class Controller_Admin_Database_Backup extends CMF_Hydrogen_Controller{
 		$this->restart( 'view/'.$id, TRUE );
 	}
 
-	public function view( $id ){
+	public function view( $id )
+	{
 		$backup		= $this->check( $id );
 		$prefix		= $this->env->getSession()->get( 'admin-database-backup-copy-prefix' );
 		$this->addData( 'backup', $backup );
 		$this->addData( 'currentCopyPrefix', $prefix );
 	}
+
+	protected function __onInit()
+	{
+		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
+
+		$this->logicBackup	= Logic_Database_Backup::getInstance( $this->env );
+
+		if( !$this->env->getModules()->has( 'Resource_Database' ) ){
+			$this->messenger->noteError( 'Kein Datenbank-Modul vorhanden.' );
+			$this->restart();
+		}
+	}
+
+	protected function check( $id )
+	{
+		if( ( $backup = $this->logicBackup->check( $id, FALSE ) ) )
+			return $backup;
+		$this->messenger->noteError( 'Ungültige Sicherungs-ID.' );
+		$this->restart( NULL, TRUE );
+	}
 }
-?>
