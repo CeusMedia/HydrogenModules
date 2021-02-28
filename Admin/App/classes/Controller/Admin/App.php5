@@ -1,18 +1,13 @@
 <?php
-class Controller_Admin_App extends CMF_Hydrogen_Controller{
-
+class Controller_Admin_App extends CMF_Hydrogen_Controller
+{
 	protected $config;
 	protected $language;
 	protected $messenger;
 	protected $request;
 
-	protected function __onInit(){
-		$this->config		= $this->env->getConfig();
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->language		= $this->env->getLanguage();
-	}
-	public function index(){
+	public function index()
+	{
 		$words	= $this->language->getWords( 'main' );
 		$this->addData( 'appTitle', $words['main']['title'] );
 		$this->addData( 'appBrand', $words['main']['brand'] );
@@ -20,7 +15,8 @@ class Controller_Admin_App extends CMF_Hydrogen_Controller{
 		$this->addData( 'appIcon', $this->config->get( 'app.icon' ) );
 	}
 
-	public function removeIcon(){
+	public function removeIcon()
+	{
 		if( $current = $this->config->get( 'app.icon' ) ){
 			@unlink( $current );
 			$this->setConfig( 'app.icon', '' );
@@ -28,7 +24,8 @@ class Controller_Admin_App extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeLogo(){
+	public function removeLogo()
+	{
 		if( $current = $this->config->get( 'app.logo' ) ){
 			@unlink( $current );
 			$this->setConfig( 'app.logo', '' );
@@ -36,7 +33,8 @@ class Controller_Admin_App extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setBrand(){
+	public function setBrand()
+	{
 		if( strlen( trim( $brand = $this->request->get( 'brand' ) ) ) ){
 			if( $this->setMainWord( 'brand', $brand ) )
 				$this->messenger->noteSuccess( 'Der Brand wurde geändert.' );
@@ -44,16 +42,8 @@ class Controller_Admin_App extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function setConfig( $key, $value ){
-		if( $this->config->get( $key ) == $value )
-			return NULL;
-		$fileName	= 'config/config.ini';
-		$editor		= new FS_File_INI_Editor( $fileName );
-		$editor->setProperty( $key, $value );
-		return TRUE;
-	}
-
-	public function setIcon(){
+	public function setIcon()
+	{
 		try{
 			$icon = (object) $this->request->get( 'icon' );
 			if( $fileName = $this->uploadImage( $icon ) ){
@@ -67,7 +57,8 @@ class Controller_Admin_App extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setLogo(){
+	public function setLogo()
+	{
 		try{
 			$logo = (object) $this->request->get( 'logo' );
 			if( $fileName = $this->uploadImage( $logo ) ){
@@ -81,7 +72,27 @@ class Controller_Admin_App extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function setMainWord( $key, $value ){
+	public function setTitle()
+	{
+		if( strlen( trim( $title = $this->request->get( 'title' ) ) ) ){
+			if( $this->setMainWord( 'title', $title ) )
+				$this->messenger->noteSuccess( 'Der Titel wurde geändert.' );
+		}
+		$this->restart( NULL, TRUE );
+	}
+
+	protected function setConfig( string $key, $value )
+	{
+		if( $this->config->get( $key ) == $value )
+			return NULL;
+		$fileName	= 'config/config.ini';
+		$editor		= new FS_File_INI_Editor( $fileName );
+		$editor->setProperty( $key, $value );
+		return TRUE;
+	}
+
+	protected function setMainWord( string $key, $value )
+	{
 		$language	= $this->language->getLanguage();
 		$fileName	= $this->config['path.locales'].$language.'/main.ini';
 		$editor		= new FS_File_INI_Editor( $fileName );
@@ -91,15 +102,8 @@ class Controller_Admin_App extends CMF_Hydrogen_Controller{
 		return TRUE;
 	}
 
-	public function setTitle(){
-		if( strlen( trim( $title = $this->request->get( 'title' ) ) ) ){
-			if( $this->setMainWord( 'title', $title ) )
-				$this->messenger->noteSuccess( 'Der Titel wurde geändert.' );
-		}
-		$this->restart( NULL, TRUE );
-	}
-
-	protected function uploadImage( $upload ){
+	protected function uploadImage( $upload )
+	{
 		if( !is_object( $upload ) )
 			throw new InvalidArgumentException( 'Invalid upload given' );
 		if( $upload->error === 4 )
@@ -119,5 +123,13 @@ class Controller_Admin_App extends CMF_Hydrogen_Controller{
 			$this->messenger->noteError( $helper->render() );
 			return FALSE;
 		}
+	}
+
+	protected function __onInit()
+	{
+		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->language		= $this->env->getLanguage();
 	}
 }
