@@ -2,10 +2,11 @@
 <module>
 	<title><![CDATA[Info: Companies & Branches]]></title>
 	<description></description>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Integrate map module.</log>
+	<log version="0.2.2">Improve code style.</log>
 	<category>Info</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

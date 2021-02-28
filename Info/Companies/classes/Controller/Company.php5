@@ -1,15 +1,11 @@
 <?php
-class Controller_Company extends CMF_Hydrogen_Controller{
-
+class Controller_Company extends CMF_Hydrogen_Controller
+{
 	protected $modelBranch;
 	protected $modelCompany;
 
-	public function __onInit(){
-		$this->modelBranch	= new Model_Branch( $this->env );
-		$this->modelCompany	= new Model_Company( $this->env );
-	}
-
-	public function index( $companyId = NULL ){
+	public function index( $companyId = NULL )
+	{
 		if( $companyId !== NULL && strlen( trim( $companyId ) ) && (int) $companyId > 0 ){
 			$this->restart( 'view/'.$companyId );
 		}
@@ -17,7 +13,8 @@ class Controller_Company extends CMF_Hydrogen_Controller{
 		$this->addData( 'companies', $companies );
 	}
 
-	public function view( $companyId ){
+	public function view( $companyId )
+	{
 		$companyId	= (int) $companyId;
 
 		$company    = $this->modelCompany->get( $companyId );
@@ -31,5 +28,10 @@ class Controller_Company extends CMF_Hydrogen_Controller{
 		$this->addData( 'branches', $branches );
 		$this->addData( 'companyId', $companyId );
 	}
+
+	protected function __onInit()
+	{
+		$this->modelBranch	= new Model_Branch( $this->env );
+		$this->modelCompany	= new Model_Company( $this->env );
+	}
 }
-?>
