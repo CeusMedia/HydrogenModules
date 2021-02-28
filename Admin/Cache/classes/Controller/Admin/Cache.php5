@@ -1,7 +1,8 @@
 <?php
-class Controller_Admin_Cache extends CMF_Hydrogen_Controller{
-
-	public function add(){
+class Controller_Admin_Cache extends CMF_Hydrogen_Controller
+{
+	public function add()
+	{
 		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$cache	= $this->getCache();
 		$result	= NULL;
@@ -25,24 +26,8 @@ class Controller_Admin_Cache extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function ajaxRemove(){
-		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
-		$cache	= $this->getCache();
-		$result	= NULL;
-		if( $cache )
-			$result	= $cache->remove( $post->get( 'key' ) );
-		print( json_encode( $result ) );
-		exit;
-	}
-
-	protected function getCache(){
-		$env	= $this->env->has( 'remote' ) ? $this->env->getRemote() : $this->env;
-		if( $env->has( 'cache' ) )
-			return $env->getCache();
-		return NULL;
-	}
-
-	public function index(){
+	public function index()
+	{
 		$list		= array();
 		$cache		= $this->getCache();
 		$persistent	= $cache->getType() !== 'Noop';
@@ -59,5 +44,12 @@ class Controller_Admin_Cache extends CMF_Hydrogen_Controller{
 		$this->addData( 'hasCache', $cache && $persistent );
 		$this->addData( 'list', $list );
 	}
+
+	protected function getCache()
+	{
+		$env	= $this->env->has( 'remote' ) ? $this->env->getRemote() : $this->env;
+		if( $env->has( 'cache' ) )
+			return $env->getCache();
+		return NULL;
+	}
 }
-?>
