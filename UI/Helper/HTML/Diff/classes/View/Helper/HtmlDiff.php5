@@ -377,7 +377,7 @@ class HtmlDiff {
 		$positionInNew = 0;
 		$operations = array();
 		$matches = $this->MatchingBlocks();
-		$matches[] = new Match( count( $this->oldWords ), count( $this->newWords ), 0 );
+		$matches[] = new DiffMatch( count( $this->oldWords ), count( $this->newWords ), 0 );
 		foreach(  $matches as $i => $match ) {
 			$matchStartsAtCurrentPositionInOld = ( $positionInOld == $match->StartInOld );
 			$matchStartsAtCurrentPositionInNew = ( $positionInNew == $match->StartInNew );
@@ -393,10 +393,10 @@ class HtmlDiff {
 				$action = 'none';
 			}
 			if( $action != 'none' ) {
-				$operations[] = new Operation( $action, $positionInOld, $match->StartInOld, $positionInNew, $match->StartInNew );
+				$operations[] = new DiffOperation( $action, $positionInOld, $match->StartInOld, $positionInNew, $match->StartInNew );
 			}
 			if( count( $match ) != 0 ) {
-				$operations[] = new Operation( 'equal', $match->StartInOld, $match->EndInOld(), $match->StartInNew, $match->EndInNew() );
+				$operations[] = new DiffOperation( 'equal', $match->StartInOld, $match->EndInOld(), $match->StartInNew, $match->EndInNew() );
 			}
 			$positionInOld = $match->EndInOld();
 			$positionInNew = $match->EndInNew();
@@ -460,11 +460,11 @@ class HtmlDiff {
 			}
 			$matchLengthAt = $newMatchLengthAt;
 		}
-		return $bestMatchSize != 0 ? new Match( $bestMatchInOld, $bestMatchInNew, $bestMatchSize ) : null;
+		return $bestMatchSize != 0 ? new DiffMatch( $bestMatchInOld, $bestMatchInNew, $bestMatchSize ) : null;
 	}
 }
 
-class Match {
+class DiffMatch {
 
 	public $StartInOld;
 	public $StartInNew;
@@ -485,7 +485,7 @@ class Match {
 	}
 }
 
-class Operation {
+class DiffOperation {
 
 	public $Action;
 	public $StartInOld;
