@@ -2,7 +2,6 @@
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-
 $iconActivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-toggle-on' ) );
 $iconDeactivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-toggle-off' ) );
 
@@ -32,7 +31,7 @@ $buttonRemove	= UI_HTML_Tag::create( 'button', $iconRemove.' entfernen', array(
 	'disabled'	=> 'disabled',
 ) );
 
-if(0 && !$exists){
+if( 0 && !$exists){
 	$buttonActivate		= UI_HTML_Tag::create( 'button', $iconActivate.' aktivieren', array(
 		'type'		=> 'button',
 		'class'		=> 'btn btn-small btn-success disabled',
@@ -47,7 +46,7 @@ if( $provider->status != Model_Oauth_Provider::STATUS_ACTIVE )
 		'class'		=> 'btn btn-danger btn-small',
 	) );
 
-$form			= UI_HTML_Tag::create( 'form', array(
+$form	= UI_HTML_Tag::create( 'form', array(
 	UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'label', 'Titel', array( 'for' => 'input_title', 'class' => 'required mandatory' ) ),

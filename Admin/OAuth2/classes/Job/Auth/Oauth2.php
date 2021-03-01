@@ -1,16 +1,50 @@
 <?php
-class Job_Auth_Oauth2 extends Job_Abstract{
+class Job_Auth_Oauth2 extends Job_Abstract
+{
+	protected $modelProvider;
+	protected $modelProviderDefault;
+	protected $providersIndex				= array();
+	protected $providersAvailable			= array();
 
-	protected function __onInit(){
-		$this->
-	}
-
-
-	public function migrate(){
+	public function migrate()
+	{
 		$this->migrateScopes();
 	}
 
-	protected function migrateScopes(){
+/*
+	public function showMigrationSqlForScopes( $all = TRUE ){
+		$list	= array();
+		foreach( $this->providersIndex as $providerKey => $providerData ){
+			$scopes		= join(',', $providerData->scopes );
+			if( $providerData->scopes ){
+				$list[]	= vsprintf( "UPDATE %s SET scopes='%s' WHERE title='%s';", array(
+					'<%?prefix%>oauth_providers',
+					$scopes,
+					$providerData->title,
+				) );
+			}
+		}
+		xmp( join( PHP_EOL, $list ) );die;
+	}*/
+
+	protected function __onInit()
+	{
+		$this->modelProvider		= new Model_Oauth_Provider( $this->env );
+		$this->modelProviderDefault	= new Model_Oauth_ProviderDefault();
+		$this->providersIndex		= array();
+		$this->providersAvailable	= array();
+		foreach( $this->modelProviderDefault->getAll() as $provider ){
+			$provider->exists = class_exists( $provider->class );
+			$this->providersIndex[$provider->class]	= $provider;
+		}
+		foreach( $this->providersIndex as $provider ){
+			if( $provider->exists )
+				$this->providersAvailable[]	= $provider;
+		}
+	}
+
+	protected function migrateScopes()
+	{
 		$module	= $this->env->modules->get( 'Resource_Authentication_Backend_OAuth2' );
 		$versionInstalled	= $module->versionInstalled;
 		remark( 'versionInstalled: '.$versionInstalled );
@@ -46,20 +80,4 @@ class Job_Auth_Oauth2 extends Job_Abstract{
 			}
 		}
 	}
-/*
-	public function showMigrationSqlForScopes( $all = TRUE ){
-		$list	= array();
-		foreach( $this->providersIndex as $providerKey => $providerData ){
-			$scopes		= join(',', $providerData->scopes );
-			if( $providerData->scopes ){
-				$list[]	= vsprintf( "UPDATE %s SET scopes='%s' WHERE title='%s';", array(
-					'<%?prefix%>oauth_providers',
-					$scopes,
-					$providerData->title,
-				) );
-			}
-		}
-		xmp( join( PHP_EOL, $list ) );die;
-	}*/
-
 }

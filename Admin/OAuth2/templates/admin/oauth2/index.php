@@ -3,7 +3,6 @@ $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' )
 
 $helperTime		= new View_Helper_TimePhraser( $env );
 
-
 $words	= array( 'statuses' => array(
 	-1		=> 'deaktiviert',
 	0		=> 'in Arbeit',
@@ -69,7 +68,8 @@ return $textTop.UI_HTML_Tag::create( 'div', array(
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) ).$textBottom;
 
-function calculateColor( $ratio ){
+function calculateColor( float $ratio ): string
+{
 	$hue	= 255;
 	$r		= $ratio < 0.5 ? 255 : round( ( 1 - $ratio ) * 2 * $hue );	//  calculate red channel
 	$g		= $ratio > 0.5 ? 255 : round( $ratio * 2 * $hue );			//  calculate green channel
