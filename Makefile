@@ -16,3 +16,6 @@ show-todos:
 
 dev-test-units:
 	@vendor/bin/phpunit
+
+dev-test-syntax:
+	@./migrate.php OldStructure::testSyntax
