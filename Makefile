@@ -19,3 +19,10 @@ dev-test-units:
 
 dev-test-syntax:
 	@./migrate.php OldStructure::testSyntax
+
+dev-show-work:
+	@./migrate.php OldStructure::findFilesWhichNeedWork
+
+dev-migrate-to-new-structure:
+	@./migrate.php NewStructure::removePhpVersionInClassFileName
+	@./migrate.php NewStructure::createLinksToOldStructure
