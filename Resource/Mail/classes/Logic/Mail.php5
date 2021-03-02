@@ -177,10 +177,10 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 			$this->frontendPath	= $this->env->getConfig()->get( 'module.resource_frontend.path' );
 			if( $this->frontendPath != './' ){
 				$logicFrontend	= $this->env->getLogic->get( 'Frontend' );
-				$envFrontend	= $logicFrontend->getRemoteEnv( $this->env );
+				$env	= $logicFrontend->getRemoteEnv( $this->env );
 			}
 		}
-		return Alg_Object_Factory::createObject( $className, array( $envFrontend, $data ) );
+		return Alg_Object_Factory::createObject( $className, array( $env, $data ) );
 	}
 
 	/**
