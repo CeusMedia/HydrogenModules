@@ -196,5 +196,3 @@ small>a {
 	color: green;
 }
 </style>';
-
-?>

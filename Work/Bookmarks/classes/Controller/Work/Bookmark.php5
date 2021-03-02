@@ -1,25 +1,18 @@
 <?php
 #Fresh Moods - Orfine
 #Rena Jones - Mesmerized
-class Controller_Work_Bookmark extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Bookmark extends CMF_Hydrogen_Controller
+{
 	protected $useAuthentication	= FALSE;
 	protected $userId				= 0;
 	protected $request;
+	protected $session;
+	protected $model;
+	protected $modelComment;
+	protected $modelTag;
 
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->model		= new Model_Bookmark( $this->env );
-		$this->modelComment	= new Model_Bookmark_Comment( $this->env );
-		$this->modelTag		= new Model_Bookmark_Tag( $this->env );
-		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
-			$this->useAuthentication	= TRUE;
-			$this->userId	= (int) Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
-		}
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			try{
 				$pageHtml	= Net_Reader::readUrl( $this->request->get( 'url' ) );
@@ -64,14 +57,8 @@ class Controller_Work_Bookmark extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	protected function check( $bookmarkId ){
-		$bookmark	= $this->model->get( $bookmarkId );
-		if( !$bookmark )
-			throw new RangeException( 'Invalid bookmark ID' );
-		return $bookmark;
-	}
-
-	public function comment( $bookmarkId ){
+	public function comment( $bookmarkId )
+	{
 		$this->check( $bookmarkId );
 		if( $this->request->has( 'save' ) ){
 			$data		= array(
@@ -86,7 +73,8 @@ class Controller_Work_Bookmark extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function edit( $bookmarkId ){
+	public function edit( $bookmarkId )
+	{
 		if( $this->request->has( 'save' ) ){
 			$data	= $this->request->getAll();
 			$data['modifiedAt']	= time();
@@ -96,7 +84,8 @@ class Controller_Work_Bookmark extends CMF_Hydrogen_Controller{
 		$this->addData( 'bookmark', $this->model->get( $bookmarkId ) );
 	}
 
-	public function filter( $reset = FALSE ){
+	public function filter( $reset = FALSE )
+	{
 
 		if( $reset ){
 			foreach( array_keys( $this->session->getAll( 'filter_work_bookmark_' ) ) as $key )
@@ -109,7 +98,8 @@ class Controller_Work_Bookmark extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 		$filterQuery	= $this->session->get( 'filter_work_bookmark_query' );
 		$conditions		= array(
 			'userId'	=> $this->userId,
@@ -139,7 +129,8 @@ class Controller_Work_Bookmark extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterLimit', $this->session->get( 'filter_work_bookmark_limit' ) );
 	}
 
-	public function view( $bookmarkId ){
+	public function view( $bookmarkId )
+	{
 		$this->addData( 'bookmark', $this->check( $bookmarkId ) );
 		$this->addData( 'comments', $this->modelComment->getAll( array(
 			'bookmarkId'	=> $bookmarkId,
@@ -149,7 +140,8 @@ class Controller_Work_Bookmark extends CMF_Hydrogen_Controller{
 		), array( 'title' => 'ASC' ) ) );
 	}
 
-	public function visit( $bookmarkId ){
+	public function visit( $bookmarkId )
+	{
 		$bookmark	= $this->check( $bookmarkId );
 		$this->model->edit( $bookmarkId, array(
 			'visits'	=> $bookmark->visits + 1,
@@ -159,7 +151,8 @@ class Controller_Work_Bookmark extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function addTag( $bookmarkId ){
+	public function addTag( $bookmarkId )
+	{
 		$bookmark	= $this->check( $bookmarkId );
 		if( $this->request->has( 'save' ) ){
 			$this->modelTag->add( array(
@@ -172,5 +165,25 @@ class Controller_Work_Bookmark extends CMF_Hydrogen_Controller{
 			$this->restart( './view/'.$bookmarkId, TRUE );
 		}
 	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->model		= new Model_Bookmark( $this->env );
+		$this->modelComment	= new Model_Bookmark_Comment( $this->env );
+		$this->modelTag		= new Model_Bookmark_Tag( $this->env );
+		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
+			$this->useAuthentication	= TRUE;
+			$this->userId	= (int) Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
+		}
+	}
+
+	protected function check( $bookmarkId )
+	{
+		$bookmark	= $this->model->get( $bookmarkId );
+		if( !$bookmark )
+			throw new RangeException( 'Invalid bookmark ID' );
+		return $bookmark;
+	}
 }
-?>

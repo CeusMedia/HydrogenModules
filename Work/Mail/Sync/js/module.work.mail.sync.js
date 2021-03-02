@@ -18,6 +18,12 @@ var WorkMailSync = {
 		jQuery("#input_sourceMailHostId").trigger("change");
 		jQuery("#input_sameUsername").trigger("change");
 		jQuery("#input_samePassword").trigger("change");
+
+		jQuery("#input_ssl").on("change", function(){
+			jQuery("#input_port").val(143);
+			if(jQuery("#input_ssl").is(":checked"))
+				jQuery("#input_port").val(993);
+		});
 	},
 	validateForm: function(){
 		var sourceId = jQuery("#input_sourceMailHostId").val();

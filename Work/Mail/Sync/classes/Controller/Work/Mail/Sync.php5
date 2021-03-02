@@ -1,15 +1,15 @@
 <?php
-class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
+class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller
+{
+	protected $request;
+	protected $logic;
 
-	public function __onInit(){
-		$this->request	= $this->env->getRequest();
-		$this->logic	= new Logic_Mail_Sync( $this->env );
+	public function add()
+	{
 	}
 
-	public function add(){
-	}
-
-	public function addHost(){
+	public function addHost()
+	{
 		if( $this->request->has( 'save' ) ){
 			$host		= $this->request->get( 'host' );
 			$ip			= $this->request->get( 'ip' );
@@ -30,7 +30,8 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 		$this->addData( 'hosts', $this->logic->getSyncHosts() );
 	}
 
-	public function addSync(){
+	public function addSync()
+	{
 		if( $this->request->has( 'save' ) ){
 			$sourceUsername	= $this->request->get( 'sourceUsername' );
 			$sourcePassword	= $this->request->get( 'sourcePassword' );
@@ -57,7 +58,8 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 		$this->addData( 'hosts', $this->logic->getSyncHosts() );
 	}
 
-	public function editSync( $id ){
+	public function editSync( $id )
+	{
 		if( $this->request->has( 'save' ) ){
 			$sourceUsername	= $this->request->get( 'sourceUsername' );
 			$sourcePassword	= $this->request->get( 'sourcePassword' );
@@ -85,7 +87,8 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 		$this->addData( 'sync', $this->logic->getSync( $id ) );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$hosts		= $this->logic->getSyncHosts();
 		$syncs		= $this->logic->getSyncs();
 		foreach( $syncs as $sync ){
@@ -106,5 +109,11 @@ class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller{
 			'modifiedAt'	=> time(),
 		) );
 		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->request	= $this->env->getRequest();
+		$this->logic	= new Logic_Mail_Sync( $this->env );
 	}
 }

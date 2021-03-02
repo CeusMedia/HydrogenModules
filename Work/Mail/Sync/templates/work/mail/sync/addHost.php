@@ -41,14 +41,4 @@ return '
 			</div>
 		</div>
 	</div>
-</div>
-<script>
-jQuery(document).ready(function(){
-	jQuery("#input_ssl").on("change", function(){
-		jQuery("#input_port").val(143);
-		if(jQuery("#input_ssl").is(":checked"))
-			jQuery("#input_port").val(993);
-	});
-});
-</script>
-';
+</div>';

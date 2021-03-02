@@ -1,7 +1,8 @@
 <?php
-class Model_Mail_Sync_Host extends CMF_Hydrogen_Model{
-
+class Model_Mail_Sync_Host extends CMF_Hydrogen_Model
+{
 	protected $name		= 'mail_sync_hosts';
+
 	protected $columns	= array(
 		'mailSyncHostId',
 		'ip',
@@ -12,7 +13,9 @@ class Model_Mail_Sync_Host extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'mailSyncHostId';
+
 	protected $indices		= array(
 		'ip',
 		'host',
@@ -20,6 +23,6 @@ class Model_Mail_Sync_Host extends CMF_Hydrogen_Model{
 		'ssl',
 		'auth',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>
