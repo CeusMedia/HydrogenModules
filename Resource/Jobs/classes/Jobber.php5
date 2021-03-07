@@ -40,13 +40,14 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 //		$this->modelLock	= new \Model_Job_Lock( $this->env );
 	}
 
+/**	not working
 	public function __destruct()
 	{
 		if( $this->runningJob ){
 			echo "Running Job: ".$this->runningJob->jobRunId.PHP_EOL;
 			$this->logic->quitJobRun( $this->runningJob->jobRunId, Model_Job_Run::STATUS_TERMINATED );
 		}
-	}
+	}*/
 
 	public function loadJobs( array $modes, bool $strict = TRUE ): self
 	{
