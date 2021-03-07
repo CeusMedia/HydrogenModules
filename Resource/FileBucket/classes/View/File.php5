@@ -5,7 +5,7 @@ class View_File extends CMF_Hydrogen_View{
 		$file	= $this->getData( 'file' );
 		$path	= $this->getData( 'sourcePath' );
 
-		$mimeTypes		= array( '*/*' => 1 );														//  default if no Accept header is set
+		$mimeTypes		= array( '*'.'/'.'*' => 1 );												//  default if no Accept header is set
 		if( $acceptField = $this->env->getRequest()->getHeader( 'Accept', FALSE ) )					//  Accept header for content negotiation found
 			$mimeTypes	= $acceptField->decodeQualifiedValues( $acceptField->getValue() );			//  decode qualified MIME types
 
@@ -44,9 +44,9 @@ class View_File extends CMF_Hydrogen_View{
 		}
 		header( 'Content-Type: '.$file->mimeType );
 		header( 'Content-Length: '.$file->fileSize );
-//		header( 'Cache-Control: max-age=2592000, public' );
+		header( 'Cache-Control: max-age=2592000, public' );
 		header( 'Last-Modified: '.date( 'r', $file->modifiedAt ) );
-//		header( 'Expires: '.date( 'r', time() + 2592000 ) );
+		header( 'Expires: '.date( 'r', time() + 2592000 ) );
 		$handle	= fopen( $sourceFilePath, 'rb' );
 		while( !feof( $handle ) )
 			print( fread( $handle, 1024 ) );
