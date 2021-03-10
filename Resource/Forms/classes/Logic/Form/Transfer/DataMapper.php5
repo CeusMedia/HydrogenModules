@@ -127,13 +127,11 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 			else{
 				if( !empty( $parameters->else ) ){
 					$action		= $parameters->else;
-					if( !empty( $action->operation ) ){
-						$operation	= strtolower( $action->operation );
-						$value		= $action->value ?? $input->get( $fieldName );
-						$value		= $this->resolveOperation( $operation, $value, $input );
-						$target		= $action->to ?? fieldName;
-						NULL === $value ? $input->remove( $target ) : $input->set( $target, $value );
-					}
+					$operation	= strtolower( $action->operation ?? 'set' );
+					$value		= $action->value ?? $input->get( $fieldName );
+					$value		= $this->resolveOperation( $operation, $value, $input );
+					$target		= $action->to ?? fieldName;
+					NULL === $value ? $input->remove( $target ) : $input->set( $target, $value );
 				}
 			}
 		}
@@ -177,7 +175,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 					throw new RuntimeException( 'DB: No table data found for index source of target field "'.$fieldName.'" from table(s) '.$tables );
 				$result = (object) [ 'value' => $parameters->onEmpty ];
 			}
-			if( !empty( $parameters->to ) && $parameters->to === 'request')
+			if( !empty( $parameters->to ) && in_array( $parameters->to, ['input', 'request'], TRUE ) )
 				$input->set( $fieldName, $result->value );
 			else
 				$output->set( $fieldName, $result->value );
