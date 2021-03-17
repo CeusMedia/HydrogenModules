@@ -1,6 +1,8 @@
 <?php
 class View_Helper_NewsList implements Countable
 {
+	protected $env;
+	protected $words;
 	protected $news		= array();
 	protected $limit	= 5;
 
@@ -13,6 +15,12 @@ class View_Helper_NewsList implements Countable
 		'icon'		=> NULL,
 	);
 
+
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
+		$this->env		= $env;
+		$this->words	= $env->getLanguage()->getWords( 'info/newslist' );
+	}
 
 	public function add( $item ): self
 	{
@@ -78,11 +86,5 @@ class View_Helper_NewsList implements Countable
 	{
 		$this->limit	= max( 0, $limit );
 		return $this;
-	}
-
-	protected function __construct( CMF_Hydrogen_Environment $env )
-	{
-		$this->env		= $env;
-		$this->words	= $env->getLanguage()->getWords( 'info/newslist' );
 	}
 }
