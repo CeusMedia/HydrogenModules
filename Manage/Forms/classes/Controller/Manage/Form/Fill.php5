@@ -151,10 +151,12 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 					case Model_Form_Fill_Transfer::STATUS_ERROR:
 						$transfer->status		= 'error';
 						$reportData['message']	= join( PHP_EOL, $transfer->result->errors );
+//						$reportData['message']	= print_m( $transfer->result->errors, NULL, NULL, TRUE );
 						break;
 					case Model_Form_Fill_Transfer::STATUS_EXCEPTION:
 						$transfer->status		= 'exception';
 						$reportData['message']	= join( PHP_EOL, $transfer->result->errors );
+//						$reportData['message']	= print_m( $transfer->result->errors, NULL, NULL, TRUE );
 						if( !empty( $transfer->result->trace ) )
 							$reportData['trace']	= $transfer->result->trace;
 						break;
@@ -584,8 +586,13 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller{
 
 	public function view( $fillId ){
 		$fill	= $this->checkId( $fillId );
+		$form	= $this->modelForm->get( $fill->formId );
+		$form->transferRules	= [];
+		foreach( $this->modelTransferRule->getAllByIndex( 'formId', $fill->formId ) as $transferRule )
+			$form->transferRules[$transferRule->formTransferRuleId]	= $transferRule;
 		$this->addData( 'fill', $fill );
 		$this->addData( 'form', $this->modelForm->get( $fill->formId ) );
+//		$this->addData( 'transferRules', $this->modelTransferRule->getAllByIndex( 'formId', $fill->formId ) );
 		$this->addData( 'fillTransfers', $this->modelFillTransfer->getAllByIndex( 'fillId', $fillId ) );
 		$this->addData( 'transferTargetMap', $this->transferTargetMap );
 	}

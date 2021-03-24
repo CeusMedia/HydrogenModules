@@ -49,7 +49,10 @@ $panelFacts	= UI_HTML_Tag::create( 'div', array(
 ), array( 'class' => 'content-panel' ) );
 
 
+
 //  --  PANEL: TRANSFERS  --  //
+$parser			= new ADT_JSON_Parser;
+$mapper			= new Logic_Form_Transfer_DataMapper( $env );
 $panelTransfers	= '';
 if( $fillTransfers ){
 	$rows	= array();
@@ -62,19 +65,16 @@ if( $fillTransfers ){
 
 		$button			= '';
 		if( $fillTransfer->data ){
-			$list	= array();
-			$modalId	= 'transfer-report-'.$fillTransfer->formFillTransferId;
-			$button		= new CeusMedia\Bootstrap\Modal\Trigger( $modalId );
-			$button->setLabel( $iconInfo )->setClass( 'btn-info btn-mini' );
-			foreach( json_decode( $fillTransfer->data, TRUE ) as $key => $value )
-				$list[]	= UI_HTML_Tag::create( 'tr', array(
-					UI_HTML_Tag::create( 'th', $key ),
-					UI_HTML_Tag::create( 'td', $value ),
-				) );
-			$tbody	= UI_HTML_Tag::create( 'tbody', $list );
+			$formData		= json_decode( $fillTransfer->data, TRUE );
+			$modalId		= 'transfer-report-'.$fillTransfer->formFillTransferId;
+			$ruleSet		= $parser->parse( $form->transferRules[$fillTransfer->formTransferRuleId]->rules, FALSE );
+			$transferData	= $mapper->applyRulesToFormData( $formData, $ruleSet );
+
 			$modalBody	= array(
+				UI_HTML_Tag::create( 'h4', 'Formulardaten' ),
+				arrayToTable( $formData ),
 				UI_HTML_Tag::create( 'h4', 'Transferdaten' ),
-				UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-condensed table-bordered' ) ),
+				arrayToTable( $transferData ),
 			);
 			if( in_array( (int) $fillTransfer->status, array( Model_Form_Fill_Transfer::STATUS_ERROR, Model_Form_Fill_Transfer::STATUS_EXCEPTION ) ) ){
 				$modalBody[]	= UI_HTML_Tag::create( 'h4', 'Fehlermeldung' );
@@ -91,6 +91,9 @@ if( $fillTransfers ){
 			$modal->setCloseButtonLabel( 'schließen' );
 			$modal->setCloseButtonIconClass( 'fa fa-fw fa-close' );
 			$modals[]	= $modal;
+
+			$button		= new CeusMedia\Bootstrap\Modal\Trigger( $modalId );
+			$button->setLabel( $iconInfo )->setClass( 'btn-info btn-mini' );
 		}
 		$rows[]			= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $targetTitle ),
@@ -163,3 +166,16 @@ return UI_HTML_Tag::create( 'div', array(
 	$helperData->render(),
 	$buttonbar,
 ) );
+
+
+function arrayToTable( $data ){
+	$list	= array();
+	foreach( $data as $key => $value ){
+		$list[]	= UI_HTML_Tag::create( 'tr', array(
+			UI_HTML_Tag::create( 'th', $key ),
+			UI_HTML_Tag::create( 'td', $value ),
+		) );
+	}
+	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
+	return UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-condensed table-bordered' ) );
+}
