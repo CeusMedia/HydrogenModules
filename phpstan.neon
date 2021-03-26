@@ -1,0 +1,29 @@
+includes:
+#	- vendor/phpstan/phpstan-strict-rules/rules.neon
+#	- phpstan-baseline.neon
+	
+parameters:
+	level: 1
+	paths:
+#		- Admin
+#		- App
+#		- Base
+#		- Catalog
+#		- Info
+#		- JS
+#		- Manage
+#		- Members
+		- Resource
+#		- Security
+#		- Server
+#		- Shop
+#		- Tool
+#		- UI
+#		- Work
+	fileExtensions:
+		- php5
+	excludePaths:
+		- templates
+	checkMissingIterableValueType: false
+	treatPhpDocTypesAsCertain: false
+							

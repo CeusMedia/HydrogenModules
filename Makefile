@@ -26,3 +26,9 @@ dev-show-work:
 dev-migrate-to-new-structure:
 	@./migrate.php NewStructure::removePhpVersionInClassFileName
 	@./migrate.php NewStructure::createLinksToOldStructure
+
+dev-phpstan:
+	@vendor/bin/phpstan analyse --configuration phpstan.neon --xdebug || true
+
+dev-phpstan-save-baseline:
+	@vendor/bin/phpstan analyse --configuration phpstan.neon --generate-baseline phpstan-baseline.neon || true
