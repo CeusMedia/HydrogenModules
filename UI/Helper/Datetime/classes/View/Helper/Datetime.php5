@@ -23,23 +23,19 @@
  *	@copyright		2010-2013 Christian Würker
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@link			http://code.google.com/p/cmframeworks/
- *	@version		$Id: Timestamp.php5 433 2012-05-23 15:49:34Z christian.wuerker $
  */
 /**
  *	View helper for converting and displaying timestamps.
  *
  *	@category		cmFrameworks
  *	@package		Hydrogen.View.Helper
- *	@extends		CMF_Hydrogen_View_Helper_Abstract
- *	@uses			UI_HTML_Tag
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2013 Christian Würker
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@link			http://code.google.com/p/cmframeworks/
- *	@version		$Id: Timestamp.php5 433 2012-05-23 15:49:34Z christian.wuerker $
  */
-class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract
+{
 	public $stringEmpty			= "";
 	public $formatDatetime		= 'Y-m-d H:i:s';
 	public $formatDate			= 'Y-m-d';
@@ -50,26 +46,29 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract{
 	/**	@var	Alg_Time_DurationPhraser	$phraser */
 	protected $phraser			= NULL;
 
-
 	/**
 	 *	Constructor.
 	 *	@access		public
 	 *	@param		CMF_Hydrogen_Environment	$env	Environment object
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->setEnv( $env );
 	}
 
-	public function convertToTimestamp( $datetime ){
+	public function convertToTimestamp( string $datetime ): int
+	{
 		return strtotime( $datetime );
 	}
 
-	public function convertFromTimestamp( $timestamp, $format = "r" ){
+	public function convertFromTimestamp( $timestamp, string $format = "r" ): string
+	{
 		return date( $format, (float)$timestamp );
 	}
 
-	public function getDateFromTimestamp( $timestamp, $format = NULL ){
+	public function getDateFromTimestamp( $timestamp, string $format = NULL ): string
+	{
 		if( (int)$timestamp < 1 )
 			return $this->stringEmpty;
 		$format	= $format ? $format : $this->formatDate;
@@ -79,7 +78,8 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract{
 		return $date;
 	}
 
-	public function getDatetimeFromTimestamp( $timestamp, $format = NULL ){
+	public function getDatetimeFromTimestamp( $timestamp, string $format = NULL ): string
+	{
 		if( (int)$timestamp < 1 )
 			return $this->stringEmpty;
 		$format	= $format ? $format : $this->formatDatetime;
@@ -89,7 +89,8 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract{
 		return $date;
 	}
 
-	public function getDurationPhraseFromTimestamp( $timestamp, $showDatetime = FALSE ){
+	public function getDurationPhraseFromTimestamp( $timestamp, bool $showDatetime = FALSE ): string
+	{
 		if( (int)$timestamp < 0 )
 			return $this->stringEmpty;
 		if( !$this->phraser ){
@@ -107,7 +108,8 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract{
 		return UI_HTML_Tag::create( 'span', $phrase, $attributes );
 	}
 
-	public function getTimeFromTimestamp( $timestamp, $format = NULL ){
+	public function getTimeFromTimestamp( $timestamp, $format = NULL ): string
+	{
 		if( (int)$timestamp < 1 )
 			return $this->stringEmpty;
 		$format	= $format ? $format : $this->formatTime;
@@ -117,11 +119,12 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract{
 		return $time;
 	}
 
-	public function setPhraserLanguage( $fileKey, $section ){
+	public function setPhraserLanguage( string $fileKey, string $section ): self
+	{
 		$words		= $this->env->language->getWords( $fileKey );
 		if( !isset( $words[$section] ) )
 			throw new InvalidArgumentException( 'Invalid language section "'.$section.'" in topic "'.$topic.'"' );
 		$this->phraser	= new Alg_Time_DurationPhraser( $words[$section] );
+		return $this;
 	}
 }
-?>

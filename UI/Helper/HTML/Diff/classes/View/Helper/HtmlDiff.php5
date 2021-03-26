@@ -1,11 +1,14 @@
 <?php
-class View_Helper_HtmlDiff{
-
+class View_Helper_HtmlDiff
+{
 	protected $env;
+
 	protected $html1;
+
 	protected $html2;
 
-	public function __construct( $env = NULL, $html1 = NULL, $html2 = NULL ){
+	public function __construct( CMF_Hydrogen_Environment $env = NULL, string $html1 = NULL, string $html2 = NULL )
+	{
 		if( $env )
 			$this->setEnv( $env );
 		if( !is_null( $html1 ) && !is_null( $html2 ) )
@@ -16,7 +19,8 @@ class View_Helper_HtmlDiff{
 		return $this->render();
 	}
 */
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->env )
 			throw new RuntimeException( "No environment set" );
 		if( is_null( $this->html1 ) || is_null( $this->html2 ) )
@@ -26,19 +30,24 @@ class View_Helper_HtmlDiff{
 		return new UI_HTML_Tag( 'div', $diff->getDifference(), array( 'class' => 'htmldiff' ) );
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $html1, $html2 ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, string $html1, string $html2 )
+	{
 		$helper	= new View_Helper_HtmlDiff( $env );
 		$helper->setContents( $html1, $html2 );
 		return $helper->render();
 	}
 
-	public function setContents( $html1, $html2 ){
+	public function setContents( string $html1, string $html2 ): self
+	{
 		$this->html1	= $html1;
 		$this->html2	= $html2;
+		return $this;
 	}
 
-	public function setEnv( $env ){
+	public function setEnv( CMF_Hydrogen_Environment $env ): self
+	{
 		$this->env	= $env;
+		return $this;
 	}
 }
 

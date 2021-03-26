@@ -38,7 +38,7 @@ class View_Helper_Image_Slider
 	 *	@return		string
 	 *	@todo		reactivate scaling after fixing it
 	 */
-	public function render( $sliderId )
+	public function render( $sliderId ): string
 	{
 		$slider		= $this->modelSlider->get( $sliderId );
 		if( !$slider )
@@ -79,7 +79,7 @@ class View_Helper_Image_Slider
 		return UI_HTML_Tag::create( 'div', $images, $attr );
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $sliderId )
+	public static function renderStatic( CMF_Hydrogen_Environment $env, $sliderId ): string
 	{
 		$instance	= new self( $env );
 		return $instance->render( $sliderId );
@@ -91,7 +91,7 @@ class View_Helper_Image_Slider
 	 *	@param		string		$path		Absolute base path to all slider images
 	 *	@return		self
 	 */
-	public function setBasePath( $path ): self
+	public function setBasePath( string $path ): self
 	{
 		$this->basePath	= $path;
 		if( !file_exists( $path ) )
@@ -105,7 +105,7 @@ class View_Helper_Image_Slider
 	 *	@param		string		$prefix		Prefix for CSS classes and IDs used as selector by JavaScript and CSS
 	 *	@return		self
 	 */
-	public function setSelectorPrefix( $prefix ): self
+	public function setSelectorPrefix( string $prefix ): self
 	{
 		$this->selectorPrefix	= $prefix;
 		return $this;
@@ -113,10 +113,10 @@ class View_Helper_Image_Slider
 
 	//  --  PROTECTED  --  //
 
-	protected function renderButtons( $slider )
+	protected function renderButtons( $slider ): string
 	{
 		if( !$slider->showButtons || count( $slider->slides ) < 2 )
-			return;
+			return '';
 		$buttonPrev	= UI_HTML_Tag::create( 'button', '‹', array(
 			'type'	=> 'button',
 			'class'	=> $this->selectorPrefix.'button-prev'
@@ -128,10 +128,10 @@ class View_Helper_Image_Slider
 		return $buttonPrev.$buttonNext;
 	}
 
-	protected function renderDots( $slider )
+	protected function renderDots( $slider ): string
 	{
 		if( !$slider->showDots || count( $slider->slides ) < 2 )
-			return;
+			return '';
 		$dots		= array();
 		$number		= 0;
 		foreach( $slider->slides as $slide ){
@@ -154,7 +154,7 @@ class View_Helper_Image_Slider
 		return UI_HTML_Tag::create( 'div', join( $dots ), $attr );
 	}
 
-	protected function renderSlides( $slider )
+	protected function renderSlides( $slider ): string
 	{
 		$list		= array();
 		$number		= 0;

@@ -1,7 +1,7 @@
 <?php
 class Hook_UI_Image_Slider extends CMF_Hydrogen_Hook
 {
-	static public function onRenderContent( CMF_Hydrogen_Environment $env, $context, $modules, $payload = array() )
+	public static function onRenderContent( CMF_Hydrogen_Environment $env, $context, $modules, $payload = array() )
 	{
 		$payload		= (object) $payload;
 		$processor		= $env->getLogic()->get( 'Shortcode' );

@@ -1,25 +1,29 @@
 <?php
-class View_Helper_Navigation_Mobile{
-
+class View_Helper_Navigation_Mobile
+{
 	protected $env;
 	protected $menu;
 	protected $inverse			= FALSE;
 	protected $linksToSkip		= array();
 	protected $scope			= 'main';
 
-	public function __construct( CMF_Hydrogen_Environment $env, Model_Menu $menu ){
+	public function __construct( CMF_Hydrogen_Environment $env, Model_Menu $menu )
+	{
 		$this->env		= $env;
-		$this->menu		= $menu;
+		if( NULL !== $menu )
+			$this->setMenuModel( $menu );
 	}
 
 	/**
 	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
-	public function __toString(){
+	public function __toString()
+	{
 		return $this->render();
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$list	= array();
 		foreach( $this->menu->getPages( $this->scope, FALSE ) as $page ){
 			if( $page->type == 'menu' ){
@@ -48,7 +52,26 @@ class View_Helper_Navigation_Mobile{
 		return UI_HTML_Tag::create( 'div', $list, array( 'id' => "menu", 'class' => "mm-hidden" ) );
 	}
 
-	protected function renderLabelWithIcon( $entry ){
+	public function setInverse( bool $boolean = NULL ): self
+	{
+		$this->inverse	= (boolean) $boolean;
+		return $this;
+	}
+
+	public function setLinksToSkip( array $links ): self
+	{
+		$this->linksToSkip	= $links;
+		return $this;
+	}
+
+	public function setScope( string $scope ): self
+	{
+		$this->scope	= $scope;
+		return $this;
+	}
+
+	protected function renderLabelWithIcon( $entry ): string
+	{
 		if( empty( $entry->icon ) || !strlen( trim( $entry->icon ) ) )
 			return $entry->label;
 		$class	= $entry->icon;
@@ -57,17 +80,4 @@ class View_Helper_Navigation_Mobile{
 		$icon   = UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
 		return $icon.'&nbsp;'.$entry->label;
 	}
-
-	public function setInverse( $boolean = NULL ){
-		$this->inverse	= (boolean) $boolean;
-	}
-
-	public function setLinksToSkip( $links ){
-		$this->linksToSkip	= $links;
-	}
-
-	public function setScope( $scope ){
-		$this->scope	= $scope;
-	}
 }
-?>

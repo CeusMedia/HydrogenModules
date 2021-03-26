@@ -1,7 +1,7 @@
 <?php
 class Hook_UI_DevLayers_Profiler extends CMF_Hydrogen_Hook
 {
-	public static function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() )
+	public static function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $payload )
 	{
 		if( $env->getConfig()->get( 'module.ui_devlayers_profiler.active' ) ){
 			$context->addThemeStyle( 'module.ui.dev.layer.profiler.css' );

@@ -1,7 +1,6 @@
 <?php
 class View_Helper_TimePhraser
 {
-
 	const MODE_HINT		= 1;
 	const MODE_BREAK	= 2;
 
@@ -50,7 +49,7 @@ class View_Helper_TimePhraser
 		return $phrase;
 	}
 
-	static public function convertStatic( CMF_Hydrogen_Environment $env, $timestamp, bool $asHtml = FALSE, ?string $prefix = NULL, ?string $suffix = NULL )
+	public static function convertStatic( CMF_Hydrogen_Environment $env, $timestamp, bool $asHtml = FALSE, ?string $prefix = NULL, ?string $suffix = NULL )
 	{
 		$helper	= new self( $env );
 		return $helper->convert( $timestamp, $asHtml, $prefix, $suffix );

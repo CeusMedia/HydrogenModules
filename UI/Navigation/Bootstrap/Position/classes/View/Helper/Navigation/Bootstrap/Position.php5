@@ -1,25 +1,27 @@
 <?php
-class View_Helper_Navigation_Bootstrap_Position extends CMF_Hydrogen_View_Helper_Abstract {
-
+class View_Helper_Navigation_Bootstrap_Position extends CMF_Hydrogen_View_Helper_Abstract
+{
 	protected $divider			= '&nbsp;/&nbsp;';
 	protected $hasPageSupport	= FALSE;
 	protected $moduleConfig;
 	protected $moduleId			= "UI_Navigation_Bootstrap_Position";
 	protected $labelHome		= "Home";
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->setEnv( $env );
 		$this->hasPageSupport	= $this->env->getModules()->has( 'Info_Pages' );
 		$moduleConfigKey		= 'module.'.strtolower( $this->moduleId ).'.';
 		$this->moduleConfig		= $this->env->getConfig()->getAll( $moduleConfigKey, TRUE );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->moduleConfig->get( 'active' ) )
-			return;
+			return '';
 		if( !$this->hasPageSupport){
 			$this->env->getMessenger()->noteFailure( 'Module "UI:Navigation:Bootstrap:Position" needs module "Info:Pages".' );
-			return;
+			return '';
 		}
 		$itemList		= array();
 		$model			= new Model_Menu( $this->env );
@@ -52,7 +54,7 @@ class View_Helper_Navigation_Bootstrap_Position extends CMF_Hydrogen_View_Helper
 		}
 		else {
 			if( !$this->moduleConfig->get( 'showOnHome' ) )
-				return;
+				return '';
 			array_unshift( $itemList, (object) array(
 				'label'		=> $this->labelHome,
 				'link'		=> NULL,
@@ -77,12 +79,15 @@ class View_Helper_Navigation_Bootstrap_Position extends CMF_Hydrogen_View_Helper
 		return $content;
 	}
 
-	public function setPathDivider( $string ){
-		$this->divider		= $string;
+	public function setHomeLabel( string $string ): self
+	{
+		$this->labelHome	= $string;
+		return $this;
 	}
 
-	public function setHomeLabel( $string ){
-		$this->labelHome	= $string;
+	public function setPathDivider( string $string ): self
+	{
+		$this->divider		= $string;
+		return $this;
 	}
 }
-?>

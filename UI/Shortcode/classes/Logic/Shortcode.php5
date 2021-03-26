@@ -8,6 +8,15 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 	const PARSE_STATUS_READ_ATTR_VALUE			= 4;
 	const PARSE_STATUS_FINAL					= 5;
 
+	const PARSE_STATUSES						= [
+		self::PARSE_STATUS_START,
+		self::PARSE_STATUS_READ_CODE,
+		self::PARSE_STATUS_READ_ATTR_KEY,
+		self::PARSE_STATUS_READ_ATTR_VALUE_QUOTE,
+		self::PARSE_STATUS_READ_ATTR_VALUE,
+		self::PARSE_STATUS_FINAL,
+	];
+
 	protected $content;
 	protected $ignoredBlocks		= array();
 	protected $moduleConfig;
@@ -18,7 +27,7 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_shortcode.', TRUE );
 	}
 
-	public function find( $shortCode, $defaultAttributes = array(), $defaultMode = "allow" )
+	public function find( string $shortCode, array $defaultAttributes = array(), string $defaultMode = 'allow' )
 	{
 		$mode	= $this->moduleConfig->get( 'mode' );
 		if( !in_array( $mode, array( 'allow', 'deny' ) ) )
@@ -40,7 +49,7 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 		return FALSE;
 	}
 
-	public function getContent()
+	public function getContent(): string
 	{
 		if( !$this->ignoredBlocks )
 			return $this->content;
@@ -52,7 +61,7 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 		return $content;
 	}
 
-	public function has( $shortCode, $defaultAttributes = array(), $defaultMode = "allow" )
+	public function has( string $shortCode, array $defaultAttributes = array(), string $defaultMode = 'allow' ): string
 	{
 		return preg_match( $this->getShortCodePattern( $shortCode ), $this->content );
 	}
@@ -62,9 +71,9 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 	 *	Removal will be applied to set content.
 	 *	@access		public
 	 *	@param		string		$shortCode		Shortcode to remove
-	 *	@return		void
+	 *	@return		self
 	 */
-	public function removeNext( $shortCode )
+	public function removeNext( string $shortCode ): self
 	{
 		return $this->replaceNext( $shortCode, '' );
 	}
@@ -75,17 +84,17 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 	 *	@access		protected
 	 *	@param		string		$shortCode		Shortcode to insert content for
 	 *	@param		string		$replacement	Content to insert instead of shortcode-
-	 *	@return		void
+	 *	@throws		RuntimeException			if no content has been set
+	 *	@return		self
 	 */
-	public function replaceNext( $shortCode, $replacement )
+	public function replaceNext( string $shortCode, string $replacement ): self
 	{
 		if( !is_string( $this->content ) )
 			throw new RuntimeException( 'No content set' );
-		if( !is_string( $replacement ) )
-			throw new InvalidArgumentException( 'Replacement must be of string' );
 		$pattern		= $this->getShortCodePattern( $shortCode );
 		$replacement	= "\\1".$replacement."\\4";													//  insert content of nested page...
 		$this->content	= preg_replace( $pattern, $replacement, $this->content, 1 );				//  apply replacement once
+		return $this;
 	}
 
 	/**
@@ -95,7 +104,7 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 	 *	@param		string			$content		Content to process on
 	 *	@return		void
 	 */
-	public function setContent( $content )
+	public function setContent( string $content ): self
 	{
 		if( substr_count( $content, '<!--noShortcode-->' ) ){										//  there are blocks to ignore
 			$this->ignoredBlocks	= array();														//  reset list of ignored blocks
@@ -109,6 +118,7 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 			}
 		}
 		$this->content	= $content;
+		return $this;
 	}
 
 	//  --  PROTECTED  --  //
@@ -119,7 +129,7 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 	 *	@param		string			$shortCode		Shortcode to get regular expression for
 	 *	@return		string
 	 */
-	protected function getShortCodePattern( $shortCode )
+	protected function getShortCodePattern( string $shortCode ): string
 	{
 		if( !strlen( trim( $shortCode ) ) || preg_match( "/\n/", $shortCode ) )
 			throw new InvalidArgumentException( 'Invalid shortcode given' );
@@ -133,7 +143,7 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 	 *	@param		string			$string
 	 *	@return		array
 	 */
-	protected function parse( $string )
+	protected function parse( string $string ): array
 	{
 		$status		= self::PARSE_STATUS_START;
 		$position	= 0;

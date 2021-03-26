@@ -15,7 +15,11 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends CMF_Hydrogen_View_Helper
 	protected $moduleKey	= 'ui_navigation_bootstrap_plusmenu';
 	protected $moduleConfig;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	protected $menu;
+	protected $scope;
+
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->setEnv( $env );
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.'.$this->moduleKey.'.', TRUE );
 		if( $this->moduleConfig->get( 'button.class' ) )
@@ -29,7 +33,7 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends CMF_Hydrogen_View_Helper
 		return $this->render();
 	}
 
-	public function addLink( $url, $label, $icon = NULL ): self
+	public function addLink( string $url, string $label, string $icon = NULL ): self
 	{
 		$this->links[]	= (object) array(
 			'url'		=> $url,
@@ -70,25 +74,25 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends CMF_Hydrogen_View_Helper
 		return (string) $container;
 	}
 
-	public function setAlignRight( $alignRight ): self
+	public function setAlignRight( bool $alignRight ): self
 	{
 		$this->alignRight	= $alignRight;
 		return $this;
 	}
 
-	public function setAlignBottom( $alignBottom ): self
+	public function setAlignBottom( bool $alignBottom ): self
 	{
 		$this->alignBottom	= $alignBottom;
 		return $this;
 	}
 
-	public function setButtonClass( $buttonClass ): self
+	public function setButtonClass( string $buttonClass ): self
 	{
 		$this->buttonClass	= $buttonClass;
 		return $this;
 	}
 
-	public function setButtonIcon( $buttonIcon ): self
+	public function setButtonIcon( string $buttonIcon ): self
 	{
 		$this->buttonIcon	= $buttonIcon;
 		return $this;

@@ -1,9 +1,10 @@
 <?php
-class View_Helper_Navigation_Bootstrap_DropdownPillBar extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_Navigation_Bootstrap_DropdownPillBar extends CMF_Hydrogen_View_Helper_Abstract
+{
 	protected $current	= "";
 
-	public function render( $scope = 0 ){
+	public function render( $scope = 0 ): string
+	{
 		$model		= new Model_Page( $this->env );
 		$indices	= array( 'parentId' => 0, 'scope' => $scope );
 		$pages		= $model->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
@@ -40,7 +41,7 @@ class View_Helper_Navigation_Bootstrap_DropdownPillBar extends CMF_Hydrogen_View
 					$sublist[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
 				}
 				$class		= $found ? 'dropdown active' : 'dropdown';
-				$sublist	= UI_HTML_Tag::create( 'ul', $sublist, array( 'class' => 'dropdown-menu' ) ); 
+				$sublist	= UI_HTML_Tag::create( 'ul', $sublist, array( 'class' => 'dropdown-menu' ) );
 				$title		= $page->title.' <b class="caret"></b>';
 				$link	= UI_HTML_Tag::create( 'a', $title, array( 'href' => '#', 'class' => 'dropdown-toggle', 'data-toggle' => 'dropdown' ) );
 				$list[]	= UI_HTML_Tag::create( 'li', $link.$sublist, array( 'class' => $class ) );
@@ -56,9 +57,9 @@ class View_Helper_Navigation_Bootstrap_DropdownPillBar extends CMF_Hydrogen_View
 		return UI_HTML_Tag::create( 'div', $list, array( 'id' => 'layout-nav-main' ) );
 	}
 
-	public function setCurrent( $path ){
+	public function setCurrent( string $path ): self
+	{
 		$this->current		= $path;
+		return $this;
 	}
 }
-?>
-

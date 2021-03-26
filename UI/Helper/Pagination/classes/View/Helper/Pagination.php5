@@ -1,19 +1,19 @@
 <?php
-class View_Helper_Pagination{
-
+class View_Helper_Pagination
+{
 	/**	@var		object		$env		... */
 	protected $env;
 
 	/**	@var		integer		$total		... */
 	protected $total;
 
-	/**	@var		integer		$total		... */
+	/**	@var		integer		$limit		... */
 	protected $limit;
 
-	/**	@var		integer		$total		... */
+	/**	@var		integer		$page		... */
 	protected $page;
 
-	/**	@var		integer		$total		... */
+	/**	@var		integer		$count		... */
 	protected $count;
 
 	/**
@@ -25,31 +25,24 @@ class View_Helper_Pagination{
 	 *	@param		integer		$page		...
 	 *	@param		integer		$count		...
 	 *	@return		void
-	 *	@todo		implement, remove render attributes, change all calling modules
 	 */
-/*	public function __construct( CMF_Hydrogen_Environment $env, $total, $limit, $page, $count ){
+	public function __construct( CMF_Hydrogen_Environment $env = NULL, $total = NULL, $limit = NULL, $page = NULL, $count = NULL )
+	{
 		$this->env		= $env;
-		$this->total	= $total;
-		$this->limit	= $limit;
-		$this->page		= $page;
-		$this->count	= $count;
-	}*/
-
-	public function __construct( CMF_Hydrogen_Environment $env = NULL, $total = NULL, $limit = NULL, $page = NULL, $count = NULL ){
-		$this->env	= $env;
 		$this->total	= $total;
 		$this->limit	= $limit;
 		$this->page		= $page;
 		$this->count	= $count;
 	}
 
-
 	/**
 	 *	...
 	 *	@access		public
 	 *	@todo		remove parameters in favour of full construction
+	 *	@todo		replace support for CMM_Bootstrap by CeusMedia/Bootstrap
 	 */
-	public function render( $baseUri, $total, $limit, $page, $wrapIntoButtonbar = TRUE ){
+	public function render( string $baseUri, int $total, int $limit, int $page, bool $wrapIntoButtonbar = TRUE ): string
+	{
 		if( $this->env && $this->env->getModules()->has( 'Resource_Library_cmModules' ) ){
 			if( $total <= $limit )
 				return "";
@@ -61,7 +54,33 @@ class View_Helper_Pagination{
 		return $this->renderOld( $baseUri, $total, $limit, $page );
 	}
 
-	protected function renderOld( $baseUri, $number, $limit, $page ){
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		integer		$total		...
+	 *	@param		integer		$limit		...
+	 *	@param		integer		$page		...
+	 *	@param		integer		$count		...
+	 *	@return		string					...
+	 */
+	public function renderListNumbers( int $total, int $limit, int $page, int $count ): string
+	{
+		$label	= $count;
+		if( $total > $limit ){
+			$spanTotal	= $this->renderListNumber( 'total', $total );
+			$spanRange	= $this->renderListNumber( 'range', $page * $limit + 1 );
+			if( $count > 1 ){
+				$spanFrom	= $this->renderListNumber( 'from', $page * $limit + 1 );
+				$spanTo		= $this->renderListNumber( 'to', $page * $limit + $count );
+				$spanRange	= $this->renderListNumber( 'range', $spanFrom.'&minus;'.$spanTo );
+			}
+			$label	= $spanRange.' / '.$spanTotal;
+		}
+		return UI_HTML_Tag::create( 'small', '('.$label.')', array( 'class' => 'list-numbers muted' ) );
+	}
+
+	protected function renderOld( string $baseUri, $number, $limit, $page ): string
+	{
 		$pages		= ceil( $number / $limit );
 		if( $pages < 2 )
 			return '';
@@ -100,34 +119,10 @@ class View_Helper_Pagination{
 		return UI_HTML_Tag::create( 'div', $list, array( 'class' => 'pagination' ) );
 	}
 
-	/**
-	 *	...
-	 *	@access		public
-	 *	@param		integer		$total		...
-	 *	@param		integer		$limit		...
-	 *	@param		integer		$page		...
-	 *	@param		integer		$count		...
-	 *	@return		string					...
-	 */
-	public function renderListNumbers( $total, $limit, $page, $count ){
-		$label	= $count;
-		if( $total > $limit ){
-			$spanTotal	= $this->renderListNumber( 'total', $total );
-			$spanRange	= $this->renderListNumber( 'range', $page * $limit + 1 );
-			if( $count > 1 ){
-				$spanFrom	= $this->renderListNumber( 'from', $page * $limit + 1 );
-				$spanTo		= $this->renderListNumber( 'to', $page * $limit + $count );
-				$spanRange	= $this->renderListNumber( 'range', $spanFrom.'&minus;'.$spanTo );
-			}
-			$label	= $spanRange.' / '.$spanTotal;
-		}
-		return UI_HTML_Tag::create( 'small', '('.$label.')', array( 'class' => 'list-numbers muted' ) );
-	}
-
-	protected function renderListNumber( $type, $value ){
+	protected function renderListNumber( string $type, $value ): string
+	{
 		return UI_HTML_Tag::create( 'span', $value, array(
 			'class'	=> 'list-number-'.$type
 		) );
 	}
 }
-?>

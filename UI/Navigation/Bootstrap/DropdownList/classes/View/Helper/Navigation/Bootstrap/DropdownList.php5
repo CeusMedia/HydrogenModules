@@ -1,21 +1,10 @@
 <?php
-class View_Helper_Navigation_Bootstrap_DropdownList{
+class View_Helper_Navigation_Bootstrap_DropdownList
+{
+	protected static $matches	= array();
 
-	static protected $matches	= array();
-
-	static protected function calculateMatches( $map, $current ){
-		foreach( $map as $entry ){
-			if( $entry->type === "menu" )
-				self::calculateMatches( $entry->links, $current );
-			else if( $entry->type === "link" )
-				self::$matches[$entry->path]	= levenshtein( $current, $entry->path );
-		}
-		asort( self::$matches );
-		$matches	= array_keys( self::$matches );
-		return array_shift( $matches );
-	}
-
-	static public function render( $map, $current ){
+	public static function render( $map, $current ): string
+	{
 		$current	= self::calculateMatches( $map, $current ? $current : 'index' );
 		$list		= array();
 		foreach( $map as $nr => $entry ){
@@ -38,13 +27,28 @@ class View_Helper_Navigation_Bootstrap_DropdownList{
 		) );
 	}
 
-	static protected function renderDivider( $entry, $vertical = FALSE ){
+	protected static function calculateMatches( $map, $current )
+	{
+		foreach( $map as $entry ){
+			if( $entry->type === "menu" )
+				self::calculateMatches( $entry->links, $current );
+			else if( $entry->type === "link" )
+				self::$matches[$entry->path]	= levenshtein( $current, $entry->path );
+		}
+		asort( self::$matches );
+		$matches	= array_keys( self::$matches );
+		return array_shift( $matches );
+	}
+
+	protected static function renderDivider( $entry, bool $vertical = FALSE ): string
+	{
 		if( $vertical )
 			return UI_HTML_Tag::create( 'li', '', array( 'class' => 'divider-vertical' ) );
 		return UI_HTML_Tag::create( 'li', '', array( 'class' => 'divider' ) );
 	}
 
-	static protected function renderDropdownItem( $map, $current, $nr ){
+	protected static function renderDropdownItem( $map, $current, $nr ): string
+	{
 		$list	= array();
 		$active	= FALSE;
 		foreach( $map->links as $entry ){
@@ -78,7 +82,8 @@ class View_Helper_Navigation_Bootstrap_DropdownList{
 		) );
 	}
 
-	static protected function renderLabelWithIcon( $entry ){
+	protected static function renderLabelWithIcon( $entry ): string
+	{
 		if( !isset( $entry->icon ) )
 			return $entry->label;
 		if( preg_match( '/^fa /', $entry->icon ) )
@@ -88,7 +93,8 @@ class View_Helper_Navigation_Bootstrap_DropdownList{
 		return $icon.'&nbsp;'.$entry->label;
 	}
 
-	static protected function renderLinkItem( $entry, $current ){
+	protected static function renderLinkItem( $entry, $current ): string
+	{
 		$class	= NULL;
 		if( $current === $entry->path ){
 			$active	= TRUE;
@@ -105,4 +111,3 @@ class View_Helper_Navigation_Bootstrap_DropdownList{
 		) );
 	}
 }
-?>

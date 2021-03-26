@@ -1,6 +1,6 @@
 <?php
-class View_Helper_ItemRelationLister{
-
+class View_Helper_ItemRelationLister
+{
 	protected $env;
 	protected $relations;
 	protected $hookResource;
@@ -19,7 +19,8 @@ class View_Helper_ItemRelationLister{
 	protected $types;
 	protected $words;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->words	= $this->env->getLanguage()->getWords( 'helper/relation' );
 		$this->labels	= array(
@@ -30,7 +31,8 @@ class View_Helper_ItemRelationLister{
 		);
 	}
 
-	static public function enqueueRelations( $data, $module, $type, $items, $label, $controller = NULL, $action = NULL ){
+	public static function enqueueRelations( $data, $module, $type, $items, $label, $controller = NULL, $action = NULL )
+	{
 		if( !isset( $data->list ) )
 			$data->list	= array();
 		if( count( $items ) ){
@@ -49,13 +51,79 @@ class View_Helper_ItemRelationLister{
 		}
 	}
 
-	public function hasRelations(){
+	public function hasRelations(): bool
+	{
 		if( $this->relations === NULL )
 			$this->load();
-		return (boolean) $this->relations;
+		return count( $this->relations ) !== 0;
 	}
 
-	protected function load(){
+
+	public function render(): string
+	{
+		if( $this->relations === NULL )
+			$this->load();
+		$this->renderTypes();
+		if( $this->renderMode == 'table' )
+			return $this->renderRelationsAsTable();
+		return $this->renderRelationsAsList();
+	}
+
+	public function setActiveOnly( bool $boolean ): self
+	{
+		$this->activeOnly	= $boolean;
+		$this->relations	= NULL;
+		return $this;
+	}
+
+	public function setHintTextForEntities( string $text ): self
+	{
+		$this->labels['entities.count.hint']	= $text;
+	}
+
+	public function setHintTextForRelations( string $text ): self
+	{
+		$this->labels['relations.count.hint']	= $text;
+	}
+
+	public function setHook( string $resource, string $event, array $indices ): self
+	{
+		$this->hookResource		= $resource;
+		$this->hookEvent		= $event;
+		$this->hookIndices		= $indices;
+		$this->relations		= NULL;
+		return $this;
+	}
+
+	public function setLimit( ínt $limit ): self
+	{
+		$this->limit		= $limit;
+		return $this;
+	}
+
+	public function setLinkable( bool $boolean ): self
+	{
+		$this->linkable		= $boolean;
+		$this->relations	= NULL;
+		return $this;
+	}
+
+	public function setMode( string $mode ): self
+	{
+		$this->renderMode	= $mode;
+		return $this;
+	}
+
+	public function setTableClass( string $class ): self
+	{
+		$this->tableClass	= $class;
+		return $this;
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function load()
+	{
 		if( !$this->hookResource || !$this->hookEvent )
 			throw new RuntimeException( 'No hook for event call defined' );
 		if( !$this->hookIndices )
@@ -70,16 +138,8 @@ class View_Helper_ItemRelationLister{
 		$this->relations	= $data->list;
 	}
 
-	public function render( ){
-		if( $this->relations === NULL )
-			$this->load();
-		$this->renderTypes();
-		if( $this->renderMode == 'table' )
-			return $this->renderRelationsAsTable();
-		return $this->renderRelationsAsList();
-	}
-
-	protected function renderRelationsAsList(){
+	protected function renderRelationsAsList(): string
+	{
 		if( !$this->relations )
 			return '';
 //		$roleId		= $this->env->getSession()->get( 'roleId' );
@@ -118,7 +178,8 @@ class View_Helper_ItemRelationLister{
 		return UI_HTML_Tag::create( 'div', $list, array( 'class' => 'item-relations' ) );
 	}
 
-	protected function renderRelationsAsTable(){
+	protected function renderRelationsAsTable(): string
+	{
 		if( !$this->relations )
 			return '';
 //		$roleId		= $this->env->getSession()->get( 'roleId' );
@@ -176,7 +237,8 @@ class View_Helper_ItemRelationLister{
 	/**
 	 *	@todo			code style
 	 */
-	protected function renderTypes(){
+	protected function renderTypes()
+	{
 		$this->types	= array();
 		$this->types['entity']		= $this->labels['entities.count.label'];
 		$this->types['relation']	= $this->labels['relations.count.label'];
@@ -185,48 +247,4 @@ class View_Helper_ItemRelationLister{
 		if( $this->labels['relations.count.hint'] )
 			$this->types['relation']	=  UI_HTML_Tag::create( 'abbr', $this->types['relation'], array( 'title' => $this->labels['relations.count.hint'] ) );
 	}
-
-	public function setActiveOnly( $boolean ){
-		$this->activeOnly	= $boolean;
-		$this->relations	= NULL;
-		return $this;
-	}
-
-	public function setHintTextForEntities( $text ){
-		$this->labels['entities.count.hint']	= $text;
-	}
-
-	public function setHintTextForRelations( $text ){
-		$this->labels['relations.count.hint']	= $text;
-	}
-
-	public function setHook( $resource, $event, $indices ){
-		$this->hookResource		= $resource;
-		$this->hookEvent		= $event;
-		$this->hookIndices		= $indices;
-		$this->relations		= NULL;
-		return $this;
-	}
-
-	public function setLimit( $limit ){
-		$this->limit		= $limit;
-		return $this;
-	}
-
-	public function setLinkable( $boolean ){
-		$this->linkable		= $boolean;
-		$this->relations	= NULL;
-		return $this;
-	}
-
-	public function setMode( $mode ){
-		$this->renderMode	= $mode;
-		return $this;
-	}
-
-	public function setTableClass( $class ){
-		$this->tableClass	= $class;
-		return $this;
-	}
 }
-?>

@@ -1,7 +1,7 @@
 <?php
-class View_Helper_ContextHelp{
-
-	static public function ___onRegisterContextHelp( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class View_Helper_ContextHelp
+{
+	public static function ___onRegisterContextHelp( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( isset( $data['path'] ) ){
 			self::registerFile( $env, $data['path'] );
 			return;
@@ -33,7 +33,5 @@ class View_Helper_ContextHelp{
 				$env->getPage()->js->addScript( $script );
 			}
 		}
-
 	}
 }
-?>

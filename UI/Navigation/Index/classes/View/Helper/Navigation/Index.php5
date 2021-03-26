@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Navigation_Index{
-
+class View_Helper_Navigation_Index
+{
 	protected $env;
 	protected $menu;
 	protected $scope			= 'main';
@@ -12,7 +12,8 @@ class View_Helper_Navigation_Index{
 	 *	@param		CMF_Hydrogen_Environment	Environment instance
 	 *	@throws		RuntimeException	if module UI_Navigation is not installed
 	 */
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env	= $env;
 		if( !$this->env->getModules()->has( 'UI_Navigation' ) )
 			throw new RuntimeException( 'Module "UI_Navigation" is required' );
@@ -25,7 +26,8 @@ class View_Helper_Navigation_Index{
 	 *	@access		public
 	 *	@return		string		Rendered index
 	 */
-	public function render(){
+	public function render(): string
+	{
 		$pages	= $this->menu->getPages( $this->scope, FALSE );
 		foreach( $pages as $page ){
 			if( in_array( $page->path, $this->linksToSkip ) )
@@ -45,13 +47,44 @@ class View_Helper_Navigation_Index{
 	}
 
 	/**
+	 *	Set list of paths to skip on rendering.
+	 *	@access		public
+	 *	@param		array		$linksToSkip		List of paths to skip on rendering
+	 *	@return		self		This instance for chainability
+	 *	@throws		InvalidArgumentException	if given argument is not an array
+	 */
+	public function setLinksToSkip( array $linksToSkip ): self
+	{
+		if( !is_array( $linksToSkip ) )
+			throw new InvalidArgumentException( 'Must be an array' );
+		$this->linksToSkip	= $linksToSkip;
+		return $this;
+	}
+
+	/**
+	 *	Sets menu scope to render index for.
+	 *	@access		public
+	 *	@param		string		Menu scope to render index for
+	 *	@return		self		This instance for chainability
+	 *	@throws		RangeException		if scope is not known
+	 */
+	public function setScope( string $scope ): self
+	{
+		if( !in_array( $this->menu->getScopes() ) )
+			throw new RangeException( 'Invalid scope' );
+		$this->scope		= $scope;
+		return $this;
+	}
+
+	/**
 	 *	Renders nav index list item of a menu page.
 	 *	@access		protected
 	 *	@param		object		$page		Page object to render list item for
 	 *	@return		string
 	 *	@todo		add page type check
 	 */
-	protected function renderItem( $page ){
+	protected function renderItem( $page ): string
+	{
 //		if( $page->type !== '...' )
 //			return;
 		$href		= $page->path == "index" ? './' : './'.$page->link;
@@ -70,39 +103,12 @@ class View_Helper_Navigation_Index{
 	 *	@return		string		List item containing heading of menu page, if page is of type menu
 	 *	@todo		add page type check
 	 */
-	protected function renderTopicHeadingItem( $page ){
+	protected function renderTopicHeadingItem( $page ): string
+	{
 //		if( $page->type !== 'menu' )
 //			return;
 		$icon		= $page->icon ? UI_HTML_Tag::create( 'i', '', array( 'class' => $page->icon ) ).'&nbsp;' : '';
 		$heading	= UI_HTML_Tag::create( 'div', $icon.$page->label, array( 'class' => 'nav-index-topic-heading' ) );
 		return UI_HTML_Tag::create( 'li', $heading, array( 'class' => 'nav-index-topic' ) );
-	}
-
-	/**
-	 *	Set list of paths to skip on rendering.
-	 *	@access		public
-	 *	@param		array		$linksToSkip		List of paths to skip on rendering
-	 *	@return		self		This instance for chainability
-	 *	@throws		InvalidArgumentException	if given argument is not an array
-	 */
-	public function setLinksToSkip( $linksToSkip ){
-		if( !is_array( $linksToSkip ) )
-			throw new InvalidArgumentException( 'Must be an array' );
-		$this->linksToSkip	= $linksToSkip;
-		return $this;
-	}
-
-	/**
-	 *	Sets menu scope to render index for.
-	 *	@access		public
-	 *	@param		string		Menu scope to render index for
-	 *	@return		self		This instance for chainability
-	 *	@throws		RangeException		if scope is not known
-	 */
-	public function setScope( $scope ){
-		if( !in_array( $this->menu->getScopes() ) )
-			throw new RangeException( 'Invalid scope' );
-		$this->scope		= $scope;
-		return $this;
 	}
 }

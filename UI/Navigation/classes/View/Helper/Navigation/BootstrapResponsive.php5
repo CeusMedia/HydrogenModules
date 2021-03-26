@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Navigation_BootstrapResponsive{
-
+class View_Helper_Navigation_BootstrapResponsive
+{
 	protected $env;
 	protected $menu;
 	protected $linksToSkip	= array();
@@ -11,18 +11,14 @@ class View_Helper_Navigation_BootstrapResponsive{
 	protected $logoLink;
 	protected $logoIcon;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->menu		= new Model_Menu( $this->env );
 	}
 
-	public function setLogo( $title, $url = NULL, $icon = NULL ){
-		$this->logoTitle	= $title;
-		$this->logoLink		= $url;
-		$this->logoIcon		= $icon;
-	}
-
-	public function render(){
+	public function render(): string
+	{
 		$config			= $this->env->getConfig()->getAll( 'module.ui_navigation.', TRUE );
 		$useMobile		= $config->get( 'render.mobile' );
 		$useDesktop		= $config->get( 'render.desktop' );
@@ -93,19 +89,35 @@ class View_Helper_Navigation_BootstrapResponsive{
 		return join( $navbars );
 	}
 
-	public function setAccountMenuHelper( $helper ){
+	public function setAccountMenuHelper( $helper ): self
+	{
 		$this->helperAccountMenu	= $helper;
+		return $this;
 	}
 
-	public function setLinksToSkip( $links ){
+	public function setLinksToSkip( array $links ): self
+	{
 		$this->linksToSkip	= $links;
+		return $this;
 	}
 
-	public function setPosition( $position ){
+	public function setLogo( string $title, string $url = NULL, string $icon = NULL ): self
+	{
+		$this->logoTitle	= $title;
+		$this->logoLink		= $url;
+		$this->logoIcon		= $icon;
+		return $this;
+	}
+
+	public function setPosition( string $position ): self
+	{
 		$this->position	= $position;
+		return $this;
 	}
 
-	public function setScope( $scope ){
+	public function setScope( string $scope ): self
+	{
 		$this->scope	= $scope;
+		return $this;
 	}
 }

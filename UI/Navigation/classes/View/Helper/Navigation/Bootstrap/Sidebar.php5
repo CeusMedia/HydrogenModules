@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Navigation_Bootstrap_Sidebar{
-
+class View_Helper_Navigation_Bootstrap_Sidebar
+{
 	protected $env;
 	protected $menu;
 	protected $inverse			= FALSE;
@@ -12,19 +12,23 @@ class View_Helper_Navigation_Bootstrap_Sidebar{
 	protected $style;
 	protected $helperAccountMenu;
 
-	public function __construct( CMF_Hydrogen_Environment $env, Model_Menu $menu ){
+	public function __construct( CMF_Hydrogen_Environment $env, Model_Menu $menu = NULL )
+	{
 		$this->env		= $env;
-		$this->menu		= $menu;
+		if( NULL !== $menu )
+			$this->setMenuModel( $menu );
 	}
 
 	/**
 	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
-	public function __toString(){
+	public function __toString()
+	{
 		return $this->render();
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$list	= array();
 		$pages	= $this->menu->getPages( $this->scope, FALSE );
 		foreach( $pages as $page ){
@@ -67,19 +71,8 @@ class View_Helper_Navigation_Bootstrap_Sidebar{
 		return $logo.$account.$list;
 	}
 
-	protected function renderLabelWithIcon( $entry ){
-		if( empty( $entry->icon ) || !strlen( trim( $entry->icon ) )  )
-			return $entry->label;
-		$class	= $entry->icon;
-		if( !preg_match( "/^fa/", trim( $entry->icon ) ) )
-			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
-		$icon   = UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
-		if( strlen( $entry->label ) )
-			return $icon.'&nbsp;'.$entry->label;
-		return $icon;
-	}
-
-	public function renderLogo(){
+	public function renderLogo(): string
+	{
 		if( !( strlen( trim( $this->logoTitle ) ) || strlen( trim( $this->logoIcon ) ) ) )
 			return '';
 		$icon	= "";
@@ -101,30 +94,60 @@ class View_Helper_Navigation_Bootstrap_Sidebar{
 		return UI_HTML_Tag::create( 'div', $link, array( 'class' => 'brand' ) );
 	}
 
-	public function setInverse( $boolean = NULL ){
+	public function setInverse( bool $boolean = NULL ): self
+	{
 		$this->inverse	= (boolean) $boolean;
+		return $this;
 	}
 
-	public function setLinksToSkip( $links ){
+	public function setLinksToSkip( array $links ): self
+	{
 		$this->linksToSkip	= $links;
+		return $this;
 	}
 
-	public function setLogo( $title, $url = NULL, $icon = NULL ){
+	public function setLogo( string $title, string $url = NULL, string $icon = NULL ): self
+	{
 		$this->logoTitle	= $title;
 		$this->logoLink		= $url;
 		$this->logoIcon		= $icon;
+		return $this;
 	}
 
-	public function setScope( $scope ){
+	public function setMenuModel( Model_Menu $menu ): self
+	{
+		$this->menu		= $menu;
+		return $this;
+	}
+
+	public function setScope( string $scope ): self
+	{
 		$this->scope	= $scope;
+		return $this;
 	}
 
-	public function setStyle( $style ){
+	public function setStyle( string $style ): self
+	{
 		$this->style	= $style;
+		return $this;
 	}
 
-	public function setAccountMenuHelper( $helper ){
+	public function setAccountMenuHelper( $helper ): self
+	{
 		$this->helperAccountMenu	= $helper;
+		return $this;
+	}
+
+	protected function renderLabelWithIcon( $entry ): string
+	{
+		if( empty( $entry->icon ) || !strlen( trim( $entry->icon ) )  )
+			return $entry->label;
+		$class	= $entry->icon;
+		if( !preg_match( "/^fa/", trim( $entry->icon ) ) )
+			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
+		$icon   = UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
+		if( strlen( $entry->label ) )
+			return $icon.'&nbsp;'.$entry->label;
+		return $icon;
 	}
 }
-?>

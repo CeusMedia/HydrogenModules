@@ -1,7 +1,8 @@
 <?php
-class Hook_Helper_Input_Resource extends CMF_Hydrogen_Hook {
-
-	static public function onPageInitModules( CMF_Hydrogen_Environment $env, $module, $context, $payload ){
+class Hook_Helper_Input_Resource extends CMF_Hydrogen_Hook
+{
+	public static function onPageInitModules( CMF_Hydrogen_Environment $env, $module, $context, $payload )
+	{
 		$config		= $env->getConfig();
 		$page		= $env->getPage();
 		$modules	= $env->getModules();
