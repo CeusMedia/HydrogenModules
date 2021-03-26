@@ -10,7 +10,7 @@ set-rights:
 	@sudo find . -type d -print0 | xargs -0 chmod ${PERMS_DIR}
 	@sudo find . -type f -print0 | xargs -0 chmod ${PERMS_FILE}
 
-show-todos:
+dev-show-old-hooks:
 	@echo "- Hooks to extract:"
 	@find . -type f | grep xml | xargs grep hook | grep CDATA
 
@@ -19,6 +19,9 @@ dev-test-units:
 
 dev-test-syntax:
 	@./migrate.php OldStructure::testSyntax
+
+dev-test-syntax-parallel:
+	@./vendor/bin/parallel-lint . -e php5 -j 10 --colors --exclude test --exclude vendor --exclude */templates/*
 
 dev-show-work:
 	@./migrate.php OldStructure::findFilesWhichNeedWork

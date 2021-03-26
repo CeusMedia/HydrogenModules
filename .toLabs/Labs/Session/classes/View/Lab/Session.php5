@@ -24,6 +24,6 @@ class View_Lab_Session extends CMF_Hydrogen_View
 			<dd>'.session_id().'</dd>
 			<dt>Session Content</dt>
 			<dd>'.$sessionTree.'</dd>
-		</dl>'.$buttonReset.'<div style="clear: both"></div>'';
+		</dl>'.$buttonReset.'<div style="clear: both"></div>';
 	}
 }
