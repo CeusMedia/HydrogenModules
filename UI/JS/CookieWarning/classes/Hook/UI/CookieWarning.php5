@@ -1,7 +1,8 @@
 <?php
-class View_Helper_CookieWarning{
-
-	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+class Hook_UI_CookieWarning extends CMF_Hydrogen_Hook
+{
+	public static function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		$config		= $env->getConfig();
 		$options	= $config->getAll( 'module.ui_js_cookiewarning.', TRUE );
 		if( $options->get( 'active' ) && !$env->getRequest()->has( 'acceptCookies' ) ){
@@ -31,7 +32,7 @@ class View_Helper_CookieWarning{
 				) );
 				$script		= 'function acceptCookies(){Cookies.set("acceptCookies",true); $("#cookie-warning").slideUp()};';
 				$env->getPage()->js->addScript( $script );
-				$data->content	= $bar.$data->content;
+				$payload->content	= $bar.$payload->content;
 			}
 			else{
 				if( $env->getRequest()->has( 'removeAcceptCookies' ) )
@@ -41,4 +42,3 @@ class View_Helper_CookieWarning{
 		}
 	}
 }
-?>
