@@ -5,7 +5,7 @@
 This is the second step for protecting mail addresses against harvesting bots.<br/>The first part is to store mail addresses encrypted within HTML contents, like this:
 code:html><span class="encrypted-mail" data-name="john" data-host="example.net">John Doe</span><code
 ]]></description>
-	<version>0.4.3</version>
+	<version>0.4.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Changed syntax.</log>
@@ -14,6 +14,7 @@ code:html><span class="encrypted-mail" data-name="john" data-host="example.net">
 	<log version="0.4.1">Support mail subject attribute.</log>
 	<log version="0.4.2">Fix bug in encoding pattern.</log>
 	<log version="0.4.3">Use general module main switch.</log>
+	<log version="0.4.4">Extract hook to own class.</log>
 	<category>JavaScript</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -23,6 +24,6 @@ code:html><span class="encrypted-mail" data-name="john" data-host="example.net">
 		<script load="auto">UI.MailEncryption.js</script>
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
-	<hook type="resource" resource="Page" event="applyModules">View_Helper_MailEncryption::___onPageApplyModules</hook>
-	<hook type="resource" resource="Page" event="build">View_Helper_MailEncryption::___onPageBuild</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_MailEncryption::onPageApplyModules</hook>
+	<hook type="resource" resource="Page" event="build">Hook_UI_MailEncryption::onPageBuild</hook>
 </module>
