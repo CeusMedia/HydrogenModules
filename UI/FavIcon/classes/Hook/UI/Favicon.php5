@@ -1,7 +1,8 @@
 <?php
-class View_Helper_Favicon{
-
-	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_UI_Favicon extends CMF_Hydrogen_Hook
+{
+	public static function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		$config			= $env->getConfig();
 		$configFav		= $config->getAll( 'module.ui_favicon.favorite.', TRUE );
 		$configTouch	= $config->getAll( 'module.ui_favicon.touch.', TRUE );
@@ -36,4 +37,3 @@ class View_Helper_Favicon{
 		}
 	}
 }
-?>
