@@ -1,28 +1,28 @@
 <?php
-class Controller_DevCenter extends CMF_Hydrogen_Controller{
-
-	public function __onInit(){
+class Controller_DevCenter extends CMF_Hydrogen_Controller_Ajax
+{
+	public function __onInit()
+	{
 		$this->request	= $this->env->getRequest();
 		$this->session	= $this->env->getSession();
 	}
 
-	public function ajaxSetHeight(){
+	public function setHeight()
+	{
 		$height		= round( (float) $this->request->get( 'height' ), 6 );
 		$this->session->set( 'DevCenterHeight', $height );
-		print( json_encode( TRUE ) );
-		exit;
+		$this->respondData( TRUE );
 	}
 
-	public function ajaxSetState(){
+	public function setState()
+	{
 		$this->session->set( 'DevCenterStatus', (bool) $this->request->get( 'open' ) );
-		print( json_encode( TRUE ) );
-		exit;
+		$this->respondData( TRUE );
 	}
 
-	public function ajaxSetTab(){
+	public function setTab()
+	{
 		$this->session->set( 'DevCenterTab', $this->request->get( 'tab' ) );
-		print( json_encode( TRUE ) );
-		exit;
+		$this->respondData( TRUE );
 	}
 }
-?>
