@@ -1,9 +1,10 @@
 <?php
-class View_Helper_Footer{
-
-	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_UI_Layout_Footer extends CMF_Hydrogen_Hook
+{
+	public static function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		$pattern	= "/^(.*)(\[footer\])(.*)$/sU";
-		if( preg_match( $pattern, $data->content ) ){
+		if( preg_match( $pattern, $payload->content ) ){
 			$links	= array();
 			if( isset( $scopes->footer ) )
 				foreach( $scopes->footer as $pageId => $page )
@@ -29,8 +30,7 @@ class View_Helper_Footer{
 			$footer		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
 			$footer		= UI_HTML_Tag::create( 'div', $footer, array( 'class' => 'container' ) );
 			$content	= UI_HTML_Tag::create( 'div', $footer, array( 'id' => 'layout-footer' ) );
-			$data->content  = preg_replace( $pattern, "\\1".$content."\\4", $data->content );
+			$payload->content  = preg_replace( $pattern, "\\1".$content."\\4", $payload->content );
 		}
 	}
 }
-?>
