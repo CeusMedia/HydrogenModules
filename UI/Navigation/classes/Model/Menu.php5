@@ -255,6 +255,7 @@ class Model_Menu
 		$this->pages		= array();
 		$this->pageMap		= array();
 		$isAuthenticated	= (bool) $this->userId;
+		$subpages			= [];
 		foreach( $scopes as $scopeId => $scope ){
 			$this->pages[$scope]	= array();
 			$pages		= $model->getAllByIndices( array(

@@ -18,6 +18,7 @@ class View_Helper_ItemRelationLister
 
 	protected $types;
 	protected $words;
+	protected $labels;
 
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{

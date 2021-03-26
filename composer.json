@@ -9,7 +9,7 @@
         {
             "name": "Christian Würker",
             "email": "christian.wuerker@ceusmedia.de",
-            "homepage": "https://ceusmedia.de",
+            "homepage": "https://ceusmedia.de/",
             "role": "Developer"
         }
     ],
@@ -19,11 +19,12 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "ceus-media/hydrogen-framework": "dev-master",
         "ceus-media/common": "dev-master",
-        "ceus-media/bootstrap": "dev-master"
+        "ceus-media/hydrogen-framework": "dev-master"
     },
     "require-dev": {
+        "ceus-media/bootstrap": "dev-master",
+        "ceus-media/markdown": "dev-master",
         "phpunit/phpunit": "^8.5@dev",
         "phpstan/phpstan": "0.12.x-dev",
         "phpstan/phpstan-strict-rules": "0.12.x-dev",

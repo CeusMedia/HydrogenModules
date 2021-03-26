@@ -32,6 +32,8 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 
 	protected $title;
 
+	protected $model;
+
 	/**
 	 *	Constructor.
 	 *	Sets case sensitivity by module configuration.

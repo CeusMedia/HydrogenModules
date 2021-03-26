@@ -18,7 +18,9 @@ class View_Helper_Panel
 	protected $contentFoot;
 	protected $contentHead;
 	protected $theme;
-
+	protected $body;
+	protected $foot;
+	protected $head;
 
 	public static function create( CMF_Hydrogen_Environment $env, string $head, string $body, string $foot, array $attributes = array(), array $classes = array(), string $theme = NULL, string $id = NULL )
 	{

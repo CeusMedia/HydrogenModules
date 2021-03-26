@@ -4,6 +4,7 @@ class View_Helper_Image_Slider
 	public $config;
 	public $slides;
 	public $options;
+
 	protected $env;
 	protected $modelSlider;
 	protected $modelSlide;

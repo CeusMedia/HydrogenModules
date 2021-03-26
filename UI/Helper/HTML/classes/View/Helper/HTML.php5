@@ -245,9 +245,8 @@ class HTML/* extends UI_HTML_Elements*/
 			'readonly'	=> $readonly ? 'readonly' : NULL,
 			'multiple'	=> substr( trim( $name ), -2 ) == "[]"	? "multiple" : NULL,
 			'onchange'	=> $onChange,
+			'readonly'	=> $readonly ? 'readonly' : NULL,
 		);
-		if( $readonly )
-			self::addReadonlyAttributes( $attributes, $readonly );
 		return HTML::Tag( "select", $options, $attributes );
 	}
 

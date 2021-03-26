@@ -1,6 +1,8 @@
 <?php
 class View_Helper_Messenger_Bootstrap
 {
+	protected $env;
+
 	protected $classes	= array(
 		'0'	=> 'messenger messenger-failure alert alert-danger bs4-alert-dark',
 		'1'	=> 'messenger messenger-error alert alert-danger',

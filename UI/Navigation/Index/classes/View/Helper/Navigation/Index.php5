@@ -28,6 +28,7 @@ class View_Helper_Navigation_Index
 	 */
 	public function render(): string
 	{
+		$list	= [];
 		$pages	= $this->menu->getPages( $this->scope, FALSE );
 		foreach( $pages as $page ){
 			if( in_array( $page->path, $this->linksToSkip ) )
@@ -70,7 +71,7 @@ class View_Helper_Navigation_Index
 	 */
 	public function setScope( string $scope ): self
 	{
-		if( !in_array( $this->menu->getScopes() ) )
+		if( !in_array( $scope, $this->menu->getScopes() ) )
 			throw new RangeException( 'Invalid scope' );
 		$this->scope		= $scope;
 		return $this;

@@ -13,6 +13,7 @@ class View_Helper_TimePhraser
 	protected $asHtml			= TRUE;
 	protected $template			='%s';
 	protected $mode				= self::MODE_HINT;
+	protected $timestamp;
 
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{

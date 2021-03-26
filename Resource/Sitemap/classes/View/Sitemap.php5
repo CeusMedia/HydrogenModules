@@ -1,7 +1,8 @@
 <?php
-class View_Sitemap extends CMF_Hydrogen_View{
-
-	public function index(){
+class View_Sitemap extends CMF_Hydrogen_View
+{
+	public function index()
+	{
 		$format		= $this->getData( 'format' );
 		$links		= $this->getData( 'links' );
 		$options	= $this->getData( 'options' );
@@ -25,7 +26,8 @@ class View_Sitemap extends CMF_Hydrogen_View{
 		exit;
 	}
 
-	protected function renderXml( $links, $options ){
+	protected function renderXml( array $links, $options )
+	{
 		$root	= new XML_DOM_Node( 'urlset' );
 		$root->setAttribute( 'xmlns', "http://www.sitemaps.org/schemas/sitemap/0.9" );
 		foreach( $links as $link ){

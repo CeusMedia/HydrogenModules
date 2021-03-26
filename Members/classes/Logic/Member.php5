@@ -1,25 +1,17 @@
 <?php
-class Logic_Member{
-
+class Logic_Member
+{
 	static protected $instance;
 
-	protected function __clone(){}
-
-	protected function __construct( $env ){
-		$this->env		= $env;
-		$this->messenger		= $this->env->getMessenger();
-		$this->modelUser		= new Model_User( $this->env );
-		$this->modelRelation	= new Model_User_Relation( $this->env );
-		$this->userId			= $this->env->getSession()->get( 'userId' );
-	}
-
-	static public function getInstance( $env ){
+	public static function getInstance( CMF_Hydrogen_Environment $env ): self
+	{
 		if( !self::$instance )
 			self::$instance	= new Logic_Member( $env );
 		return self::$instance;
 	}
 
-	public function getRelatedUserIds( $userId, $status = NULL ){
+	public function getRelatedUserIds( $userId, $status = NULL )
+	{
 		$userIds	= array();
 		$relations	= $this->modelRelation->getAllByIndices( array(
 			'fromUserId'	=> $userId,
@@ -36,7 +28,8 @@ class Logic_Member{
 		return $userIds;
 	}
 
-	public function getUserIdsByQuery( $query ){
+	public function getUserIdsByQuery( string $query ): array
+	{
 		$dbc		= $this->env->getDatabase();
 		$prefix		= $dbc->getPrefix();
 		$userIds	= array();
@@ -61,7 +54,8 @@ class Logic_Member{
 		return $userIds;
 	}
 
-	public function getUserRelation( $currentUserId, $relatedUserId, $status = NULL ){
+	public function getUserRelation( $currentUserId, $relatedUserId, $status = NULL )
+	{
 		$conditions	= array(
 			'fromUserId'	=> $currentUserId,
 			'toUserId'		=> $relatedUserId,
@@ -87,7 +81,8 @@ class Logic_Member{
 		return NULL;
 	}
 
-	public function getUsersWithRelations( $currentUserId, $userIds, $limit = 0, $offset = 0 ){
+	public function getUsersWithRelations( $currentUserId, array $userIds, int $limit = 0, int $offset = 0 ): array
+	{
 		$key	= array_search( $currentUserId, $userIds );
 		if ( $key !== FALSE )
 			unset( $userIds[$key] );
@@ -99,5 +94,18 @@ class Logic_Member{
 		foreach( $users as $user )
 			$user->relation	= $this->getUserRelation( $currentUserId, $user->userId );
 		return $users;
+	}
+
+	protected function __clone()
+	{
+	}
+
+	protected function __construct( CMF_Hydrogen_Environment $env )
+	{
+		$this->env		= $env;
+		$this->messenger		= $this->env->getMessenger();
+		$this->modelUser		= new Model_User( $this->env );
+		$this->modelRelation	= new Model_User_Relation( $this->env );
+		$this->userId			= $this->env->getSession()->get( 'userId' );
 	}
 }

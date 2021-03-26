@@ -8,6 +8,11 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 	protected $mode			= 'default';
 	protected $recaptchaApi	= 'https://www.google.com/recaptcha/api.js';
 
+	protected $env;
+	protected $session;
+	protected $moduleConfig;
+	protected $captcha;
+
 	CONST FORMAT_IMAGE		= 0;
 	CONST FORMAT_RAW		= 1;
 

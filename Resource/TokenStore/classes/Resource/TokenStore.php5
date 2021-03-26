@@ -18,11 +18,16 @@
  *	@todo			problem: several clients behind same IP will have same token
  *	@todo			concept: binding token to unique client id and unique client instance id
  */
-class Resource_TokenStore {
+class Resource_TokenStore
+{
+	protected static $instance;
 
 	/**	@var	Model_Token		$token		Token storage in database */
 	protected $model;
-	protected static $instance;
+
+	protected $env;
+
+	protected $config;
 
 	/**
 	 *	Constructor, not callable. Use Resource_TokenStore::getInstance( $env ) instead.

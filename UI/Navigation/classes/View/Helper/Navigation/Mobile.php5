@@ -64,6 +64,12 @@ class View_Helper_Navigation_Mobile
 		return $this;
 	}
 
+	public function setMenuModel( Model_Menu $menu ): self
+	{
+		$this->menu	= $menu;
+		return $this;
+	}
+
 	public function setScope( string $scope ): self
 	{
 		$this->scope	= $scope;

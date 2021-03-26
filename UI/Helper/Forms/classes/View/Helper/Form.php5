@@ -1,5 +1,5 @@
 <?php
-class View_Helper_Form extends CMF_Hydrogen_View_Helper
+class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $env;
 	protected $blocks				= array();

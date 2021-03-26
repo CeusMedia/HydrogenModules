@@ -13,17 +13,19 @@ parameters:
 #		- JS
 #		- Manage
 #		- Members
-		- Resource
+#		- Resource
 #		- Security
 #		- Server
 #		- Shop
 #		- Tool
-#		- UI
+		- UI
 #		- Work
 	fileExtensions:
 		- php5
 	excludePaths:
-		- templates
+		- */templates
+	scanDirectories:
+		- Resource
 	checkMissingIterableValueType: false
 	treatPhpDocTypesAsCertain: false
 							

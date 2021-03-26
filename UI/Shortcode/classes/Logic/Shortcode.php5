@@ -145,11 +145,13 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 	 */
 	protected function parse( string $string ): array
 	{
-		$status		= self::PARSE_STATUS_START;
-		$position	= 0;
-		$nodename	= '';
-		$attributes	= array();
-		$length		= strlen( $string );
+		$status			= self::PARSE_STATUS_START;
+		$position		= 0;
+		$nodename		= '';
+		$attributes		= array();
+		$length			= strlen( $string );
+		$bufferAttrKey	= '';
+		$bufferAttrVal	= '';
 		while( $position < $length ){
 			$char	= $string[$position];
 			if( $status == self::PARSE_STATUS_START ){

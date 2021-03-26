@@ -6,7 +6,7 @@ class Controller_Ajax_Helper_Input_Resource extends CMF_Hydrogen_Controller_Ajax
 		'style'	=> array( 'css', 'scss', 'less' ),
 	);
 
-	public function render(): string
+	public function render()
 	{
 		$paths		= (array) $this->env->getRequest()->get( 'paths' );
 		$mode		= $this->env->getRequest()->get( 'mode' );

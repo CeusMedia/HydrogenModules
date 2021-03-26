@@ -3,6 +3,12 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $dropdownAlign	= 'right';
 	protected $mode				= 0;
+	protected $language;
+	protected $languages;
+	protected $current;
+	protected $words;
+	protected $labels;
+	protected $path;
 
 	const MODE_SELECT			= 0;
 	const MODE_DROPDOWN			= 1;
