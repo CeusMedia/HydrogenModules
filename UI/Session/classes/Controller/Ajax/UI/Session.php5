@@ -1,7 +1,8 @@
 <?php
-class Controller_UI_Session extends CMF_Hydrogen_Controller{
-
-	public function ajaxKeepAlive(){
+class Controller_Ajax_UI_Session extends CMF_Hydrogen_Controller
+{
+	public function keepAlive()
+	{
 		exit;
 /*		$config		= $this->env->getConfig();
 		$session	= $this->env->getSession();
@@ -9,7 +10,7 @@ class Controller_UI_Session extends CMF_Hydrogen_Controller{
 		switch( $config->get( 'module.ui_session.keepAlive.keepAliveFor' ) ){
 			case 'users':
 				if( $this->env->getSession()->has( 'userId' ) ){
-					
+
 				}
 				break;
 			case 'all':
@@ -19,4 +20,3 @@ class Controller_UI_Session extends CMF_Hydrogen_Controller{
 		exit;*/
 	}
 }
-?>
