@@ -1,31 +1,20 @@
 <?php
-class View_Helper_Map {
+class View_Helper_Map
+{
+	protected $env;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 	}
 
-	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$key	= $env->getConfig()->get( 'module.ui_map.apiKey' );
-		if( $key ){
-			$env->getPage()->js->addUrl( "https://maps.google.com/maps/api/js?key=".$key );
-			return;
-		}
-		$url	= 'https://developers.google.com/maps/documentation/javascript/get-api-key';
-		$msg	= 'Module <b>UI_Map</b> has no Google API key. Please <a href="'.$url.'" target="_blank">create</a> one and set in module configuration!';
-		$env->getMessenger()->noteNotice( $msg );
-	}
-
-	public function build( $latitude, $longitude, $title = NULL, $class = NULL, $zoom = NULL ){
+	public function build( $latitude, $longitude, $title = NULL, $class = NULL, $zoom = NULL ): string
+	{
 		return $this->render( $latitude, $longitude, $title, $class, $zoom );
 	}
 
-	static protected function getMapId( $latitude, $longitude, $title = NULL, $zoom = NULL ){
-		$hash	= md5( json_encode( array( $latitude, $longitude, $title, $zoom ) ) );
-		return 'map-'.$hash;
-	}
-
-	public function render( $latitude, $longitude, $title = NULL, $class = NULL, $zoom = NULL ){
+	public function render( $latitude, $longitude, $title = NULL, $class = NULL, $zoom = NULL ): string
+	{
 		$id		= self::getMapId( $latitude, $longitude, $title, $zoom );
 		$html	= $this->renderHtml( $latitude, $longitude, $title, $class, $zoom );
 		$script	= $this->renderScript( $latitude, $longitude, $title, $zoom );
@@ -33,7 +22,8 @@ class View_Helper_Map {
 		return $html;
 	}
 
-	public function renderHtml( $latitude, $longitude, $title = NULL, $class = NULL, $zoom = NULL ){
+	public function renderHtml( $latitude, $longitude, $title = NULL, $class = NULL, $zoom = NULL ): string
+	{
 		$id		= self::getMapId( $latitude, $longitude, $title, $zoom );
 		$map	= UI_HTML_Tag::create( 'div', '', array(
 			'id'				=> $id,
@@ -46,9 +36,16 @@ class View_Helper_Map {
 		return $map;
 	}
 
-	public function renderScript( $latitude, $longitude, $title = NULL, $zoom = NULL ){
+	public function renderScript( $latitude, $longitude, $title = NULL, $zoom = NULL ): string
+	{
 		$id		= self::getMapId( $latitude, $longitude, $title, $zoom );
 		$script	= sprintf( 'loadMap("%s");', $id );
 		return $script;
+	}
+
+	protected static function getMapId( $latitude, $longitude, $title = NULL, $zoom = NULL ): string
+	{
+		$hash	= md5( json_encode( array( $latitude, $longitude, $title, $zoom ) ) );
+		return 'map-'.$hash;
 	}
 }
