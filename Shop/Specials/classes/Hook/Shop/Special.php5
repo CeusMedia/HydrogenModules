@@ -1,6 +1,6 @@
 <?php
-class Hook_Shop_Special extends CMF_Hydrogen_Hook{
-
+class Hook_Shop_Special extends CMF_Hydrogen_Hook
+{
 	static public $articleId		= 0;
 
 	/**
@@ -10,10 +10,11 @@ class Hook_Shop_Special extends CMF_Hydrogen_Hook{
 	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
 	 *	@param		object						$context		Hook context object
 	 *	@param		object						$module			Module object
-	 *	@param		public						$arguments		Map of hook arguments
+	 *	@param		public						$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	static public function __onPageInit( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	public static function onPageInit( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$request	= $env->getRequest();
 		$model		= new Model_Shop_Bridge( $env );
 		$bridge		= $model->getByIndices( array(
@@ -35,10 +36,11 @@ class Hook_Shop_Special extends CMF_Hydrogen_Hook{
 	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
 	 *	@param		object						$context		Hook context object
 	 *	@param		object						$module			Module object
-	 *	@param		public						$arguments		Map of hook arguments
+	 *	@param		public						$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	static public function __onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 //		remark( 'articleId: '.static::$articleId );die;
 		if( !static::isSpecial() )
 			return;
@@ -59,7 +61,7 @@ class Hook_Shop_Special extends CMF_Hydrogen_Hook{
 		$context->addBodyClass( 'specialOffer' );
 	}
 
-	static public function isSpecial(){
+	public static function isSpecial(){
 		return static::$articleId > 0;
 	}
 }

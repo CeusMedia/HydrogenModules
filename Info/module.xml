@@ -3,11 +3,12 @@
 	<title>Info</title>
 	<description><![CDATA[Presents static contents.]]></description>
 	<category></category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Major redesign with dispatch hook.</log>
 	<log version="0.3.1">Support for Markdown.</log>
+	<log version="0.3.2">Extract hook to own class.</log>
 	<files>
 		<class>Controller/Info.php5</class>
 		<class>View/Info.php5</class>
@@ -19,5 +20,5 @@
 	<relations>
 		<supports type="module">UI_Markdown</supports>
 	</relations>
-	<hook type="resource" resource="App" event="onDispatch">Controller_Info::___onAppDispatch</hook>
+	<hook type="resource" resource="App" event="onDispatch">Hook_Info::onAppDispatch</hook>
 </module>

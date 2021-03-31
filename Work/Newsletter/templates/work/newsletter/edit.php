@@ -99,7 +99,6 @@ $helperNav	= View_Helper_Pagination_PrevNext::create( $env )
 	->useIndex()->setIndexUrl( './work/newsletter' );
 $navPrevNext	= UI_HTML_Tag::create( 'div', $helperNav->render(), array( 'class' => 'pull-right' ) );
 
-
 extract( $view->populateTexts(
 	array( 'above', 'bottom', 'top' ),
 	'html/work/newsletter/edit/',
@@ -121,4 +120,3 @@ $(document).ready(function(){
 	<hr/>
 	'.$tabsContent.'
 </div>'.$modalPreview.$textBottom;
-

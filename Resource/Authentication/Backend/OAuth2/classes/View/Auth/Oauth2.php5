@@ -7,20 +7,30 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Auth.php 1644 2010-11-03 20:39:04Z christian.wuerker $
  */
-class View_Auth_Oauth2 extends CMF_Hydrogen_View {
+class View_Auth_Oauth2 extends CMF_Hydrogen_View
+{
+	public function confirm()
+	{
+	}
 
-	public function confirm(){}
+	public function index()
+	{
+	}
 
-	public function index() {}
+	public function login()
+	{
+	}
 
-	public function login() {}
+	public function password()
+	{
+	}
 
-	public function password(){}
+	public function register()
+	{
+	}
 
-	public function register(){}
-
-	public function renderRegisterFormExtensions(){
+	public function renderRegisterFormExtensions()
+	{
 		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, array() );
 	}
 }
-?>

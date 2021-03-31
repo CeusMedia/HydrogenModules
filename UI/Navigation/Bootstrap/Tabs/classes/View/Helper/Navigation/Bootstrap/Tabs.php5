@@ -1,7 +1,6 @@
 <?php
-class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abstract{
-
-	protected $tabs				= array();
+class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abstract
+{
 	public $classList			= 'nav nav-tabs';
 	public $classItem			= '';
 	public $classItemActive		= 'active';
@@ -9,28 +8,35 @@ class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abs
 	public $classLink			= '';
 	public $classLinkActive		= '';
 	public $classLinkDisabled	= '';
+
+	protected $tabs				= array();
 	protected $current			= 0;
 	protected $basePath			= '';
 
-	public function __construct( CMF_Hydrogen_Environment $env, $basePath = './' ){
+	public function __construct( CMF_Hydrogen_Environment $env, string $basePath = './' )
+	{
 		$this->setEnv( $env );
 		$this->setBasePath( $basePath );
 	}
 
-	public function registerTab( $url, $label, $priority = 5, $disabled = NULL ){
+	public function registerTab( string $url, string $label, int $priority = 5, bool $disabled = NULL ): self
+	{
 		$this->tabs[]	= (object) array(
 			'url'		=> $url,
 			'label'		=> $label,
 			'priority'	=> $priority,
 			'disabled'	=> $disabled,
 		);
+		return $this;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		return $this->renderTabs( $this->current );
 	}
 
-	public function renderTabs( $current = 0 ){
+	public function renderTabs( $current = 0 ): string
+	{
 		$list	= array();																			//  prepare empty list
 		foreach( $this->tabs as $nr => $tab ){														//  iterate registered tabs
 			$link	= array();
@@ -61,14 +67,18 @@ class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abs
 				'class'			=> $this->classList,
 				'data-toggle'	=> $tab->url[0] == '#' ? 'tab' : NULL,
 			) );
+		return '';
 	}
 
-	public function setBasePath( $path ){
+	public function setBasePath( string $path ): self
+	{
 		$this->basePath	= $path;
+		return $this;
 	}
 
-	public function setCurrent( $current ){
+	public function setCurrent( $current ): self
+	{
 		$this->current		= $current;
+		return $this;
 	}
 }
-?>

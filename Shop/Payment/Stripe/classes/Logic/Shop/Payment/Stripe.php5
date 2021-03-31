@@ -1,28 +1,14 @@
 <?php
-class Logic_Shop_Payment_Stripe extends CMF_Hydrogen_Environment_Resource_Logic{
-
+class Logic_Shop_Payment_Stripe extends CMF_Hydrogen_Environment_Resource_Logic
+{
 	protected $logicStripe;
 	protected $logicShop;
 	protected $modelPayin;
 	protected $modelPayment;
 	protected $session;
 
-	protected function __onInit(){
-		$this->logicStripe		= new Logic_Payment_Stripe( $this->env );
-		$this->logicShop		= new Logic_Shop( $this->env );
-		$this->modelPayins		= new Model_Stripe_Payin( $this->env );
-		$this->modelPayment		= new Model_Shop_Payment_Stripe( $this->env );
-		$this->session			= $this->env->getSession();
-	}
-
-	protected function getWalletForOrder( $stripeUserId, $orderCurrency ){
-		$wallets		= $this->logicStripe->getUserWalletsByCurrency( $stripeUserId, $orderCurrency );
-		if( !$wallets )
-			$wallets	= array( $this->logicStripe->createUserWallet( $stripeUserId, $orderCurrency ) );
-		$wallet	= $wallets[0];
-	}
-
-	public function notePayment( $source, $stripeUserId, $orderId ){
+	public function notePayment( $source, $stripeUserId, $orderId )
+	{
 		$paymentId	= $this->modelPayment->add( array(
 			'orderId'		=> $orderId,
 			'userId'		=> $stripeUserId,
@@ -38,7 +24,8 @@ class Logic_Shop_Payment_Stripe extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $paymentId;
 	}
 
-	public function updatePayment( $source ){
+	public function updatePayment( $source )
+	{
 		$payment	= $this->modelPayment->getByIndex( 'payInId', $source->id );
 		if( $source->redirect->status === "succeeded" )
 			$status	= Model_Shop_Payment_Stripe::STATUS_SUCCEEDED;
@@ -53,7 +40,8 @@ class Logic_Shop_Payment_Stripe extends CMF_Hydrogen_Environment_Resource_Logic{
 		) );
 	}
 
-	public function transferOrderAmountToClientSeller( $orderId, $payIn, $strict = TRUE ){
+	public function transferOrderAmountToClientSeller( $orderId, $payIn, bool $strict = TRUE )
+	{
 		$order		= $this->logicShop->getOrder( $orderId );
 		if( !$order )
 			throw new RangeException( 'Invalid order ID' );
@@ -96,5 +84,21 @@ class Logic_Shop_Payment_Stripe extends CMF_Hydrogen_Environment_Resource_Logic{
 		}
 		return NULL;
 	}
+
+	protected function __onInit()
+	{
+		$this->logicStripe		= new Logic_Payment_Stripe( $this->env );
+		$this->logicShop		= new Logic_Shop( $this->env );
+		$this->modelPayins		= new Model_Stripe_Payin( $this->env );
+		$this->modelPayment		= new Model_Shop_Payment_Stripe( $this->env );
+		$this->session			= $this->env->getSession();
+	}
+
+	protected function getWalletForOrder( $stripeUserId, $orderCurrency )
+	{
+		$wallets		= $this->logicStripe->getUserWalletsByCurrency( $stripeUserId, $orderCurrency );
+		if( !$wallets )
+			$wallets	= array( $this->logicStripe->createUserWallet( $stripeUserId, $orderCurrency ) );
+		$wallet	= $wallets[0];
+	}
 }
-?>

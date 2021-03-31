@@ -1,27 +1,21 @@
 <?php
-class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller
+{
 	protected $request;
 	protected $session;
 	protected $messenger;
-	protected $logic;
+	protected $logicGroup;
+	protected $logicMessage;
 	protected $modelMessage;
+	protected $filterPrefix;
 
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logicGroup	= new Logic_Mail_Group( $this->env );
-		$this->logicMessage	= new Logic_Mail_Group_Message( $this->env );
-		$this->modelMessage	= new Model_Mail_Group_Message( $this->env );
-		$this->filterPrefix	= 'filter_work_mail_group_message_';
-	}
-
-	public function checkId( $messageId ){
+	public function checkId( $messageId )
+	{
 		return $this->logicMessage->checkId( $messageId );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'groupId' );
 		}
@@ -29,7 +23,8 @@ class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function html( $messageId ){
+	public function html( $messageId )
+	{
 		try{
 			$message	= $this->checkId( $messageId );
 			$object		= $this->logicMessage->getMessageObject( $message );
@@ -53,7 +48,8 @@ class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller{
 		Net_HTTP_Response_Sender::sendResponse( $response, NULL, TRUE, TRUE );
 	}
 
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 		$filterGroupId	= $this->session->get( $this->filterPrefix.'groupId' );
 
 		$limit		= 15;
@@ -73,7 +69,8 @@ class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller{
 		$this->addData( 'pages', ceil( $total / $limit ) );
 	}
 
-	public function setStatus( $serverId, $status ){
+	public function setStatus( $serverId, $status )
+	{
 		$server	= $this->checkId( $serverId );
 		if( $server ){
 			$this->modelServer->edit( $serverId, array(
@@ -91,7 +88,8 @@ class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller{
 		}
 	}*/
 
-	public function parseAgainFromRaw( $messageId ){
+	public function parseAgainFromRaw( $messageId )
+	{
 		$message		= $this->checkId( $messageId );
 		if( $message->status == Model_Mail_Group_Message::STATUS_NEW ){
 			$rawMail	= bzdecompress(substr($message->raw,6));
@@ -102,10 +100,22 @@ class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller{
 		$this->restart( 'view/'.$messageId );
 	}
 
-	public function view( $messageId ){
+	public function view( $messageId )
+	{
 		$message		= $this->checkId( $messageId );
 		$message->raw		= $this->logicMessage->getMessageRawMail( $message );
 		$message->object	= $this->logicMessage->getMessageObject( $message );
 		$this->addData( 'message', $message );
+	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logicGroup	= new Logic_Mail_Group( $this->env );
+		$this->logicMessage	= new Logic_Mail_Group_Message( $this->env );
+		$this->modelMessage	= new Model_Mail_Group_Message( $this->env );
+		$this->filterPrefix	= 'filter_work_mail_group_message_';
 	}
 }

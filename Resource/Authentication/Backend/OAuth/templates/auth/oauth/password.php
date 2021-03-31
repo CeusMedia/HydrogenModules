@@ -47,4 +47,3 @@ HTML::DivClass( "row-fluid", array(
 		$textInfo
 	) ),
 ) ).HTML::DivClass( "auth-password-text-bottom", $textBottom );
-?>

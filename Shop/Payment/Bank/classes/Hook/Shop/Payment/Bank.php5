@@ -1,6 +1,6 @@
 <?php
-class Hook_Shop_Payment_Bank/* extends CMF_Hydrogen_Hook*/{
-
+class Hook_Shop_Payment_Bank extends CMF_Hydrogen_Hook
+{
 	/**
 	 *	...
 	 *	@static
@@ -8,10 +8,11 @@ class Hook_Shop_Payment_Bank/* extends CMF_Hydrogen_Hook*/{
 	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
 	 *	@param		object						$context		Hook context object
 	 *	@param		object						$module			Module object
-	 *	@param		public						$arguments		Map of hook arguments
+	 *	@param		public						$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	static public function __onRegisterShopPaymentBackends( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	public static function onRegisterShopPaymentBackends( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_bank.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/bank' );
 		$labels		= (object) $words['payment-methods'];
@@ -45,20 +46,21 @@ class Hook_Shop_Payment_Bank/* extends CMF_Hydrogen_Hook*/{
 	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
 	 *	@param		object						$context		Hook context object
 	 *	@param		object						$module			Module object
-	 *	@param		public						$arguments		Map of hook arguments
+	 *	@param		public						$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	static public function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		if( empty( $data['orderId'] ) || empty( $data['paymentBackends'] ) )
+	public static function onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
+		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;
 		$model	= new Model_Shop_Order( $env );
-		$order	= $model->get( $data['orderId'] );
-		foreach( $data['paymentBackends'] as $backend ){
+		$order	= $model->get( $payload['orderId'] );
+		foreach( $payload['paymentBackends'] as $backend ){
 			if( $backend->key === $order->paymentMethod ){
 				$className	= 'View_Helper_Shop_FinishPanel_'.$backend->backend;
 				if( class_exists( $className ) ){
 					$object	= Alg_Object_Factory::createObject( $className, array( $env ) );
-					$object->setOrderId( $data['orderId'] );
+					$object->setOrderId( $payload['orderId'] );
 					$object->setOutputFormat( $className::OUTPUT_FORMAT_HTML );
 					$panelPayment	= $object->render();
 					$context->registerServicePanel( 'ShopPaymentBank', $panelPayment, 2 );

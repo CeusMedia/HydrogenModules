@@ -2,15 +2,18 @@
 /**
  *	@todo		apply module config main switch
  */
-class View_Helper_DevLayers{
+class View_Helper_DevLayers
+{
+	protected $env;
+	protected static $layers	= array();
 
-	static protected $layers	= array();
-
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 	}
 
-	static public function add( $id, $label, $content, $measure = NULL ){
+	public static function add( $id, string $label, $content, $measure = NULL )
+	{
 		self::$layers[]	= (object) array(
 			'id'		=> $id,
 			'label'		=> $label,
@@ -19,7 +22,8 @@ class View_Helper_DevLayers{
 		);
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !count( self::$layers ) )
 			return "";
 		$layers		= array();
@@ -40,4 +44,3 @@ class View_Helper_DevLayers{
 		return $layers.$buttons;
 	}
 }
-?>

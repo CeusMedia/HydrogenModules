@@ -1,31 +1,24 @@
 <?php
 use \CeusMedia\Bootstrap;
 
-class View_Helper_Input_Resource{
-
+class View_Helper_Input_Resource
+{
 	protected $env;
 	protected $inputId;
 	protected $modalId;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 	}
 
-	public function __toString(){
+	public function __toString()
+	{
 		return $this->render();
 	}
 
-	public function setInputId( $id ){
-		$this->inputId	= $id;
-		return $this;
-	}
-
-	public function setModalId( $id ){
-		$this->modalId	= $id;
-		return $this;
-	}
-
-	public function render(){
+	public function render(): string
+	{
 //		$modal			= new View_Helper_Bootstrap_Modal( $this->env );
 		$modal			= new Bootstrap\Modal( $this->env );
 		$modal->setHeading( 'Auswahl' );
@@ -34,11 +27,23 @@ class View_Helper_Input_Resource{
 		$modal->setFade( FALSE );
 		return $modal->render();
 	}
+
+	public function setInputId( string $id ): self
+	{
+		$this->inputId	= $id;
+		return $this;
+	}
+
+	public function setModalId( string $id ): self
+	{
+		$this->modalId	= $id;
+		return $this;
+	}
 }
 
 
-class View_Helper_Input_ResourceTrigger{
-
+class View_Helper_Input_ResourceTrigger
+{
 	const MODE_IMAGE			= 'image';
 	const MODE_STYLE			= 'style';
 	const MODE_DOCUMENT			= 'document';
@@ -51,46 +56,18 @@ class View_Helper_Input_ResourceTrigger{
 	protected $class			= 'btn';
 	protected $paths			= array();
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 	}
 
-	public function __toString(){
+	public function __toString()
+	{
 		return $this->render();
 	}
 
-	public function setClass( $class ){
-		$this->class	= $class;
-		return $this;
-	}
-
-	public function setInputId( $inputId ){
-		$this->inputId	= $inputId;
-		return $this;
-	}
-
-	public function setLabel( $label ){
-		$this->label	= $label;
-		return $this;
-	}
-
-	public function setModalId( $modalId ){
-		$this->modalId	= $modalId;
-		return $this;
-	}
-
-	public function setMode( $mode ){
-		$this->mode	= $mode;
-		return $this;
-	}
-
-	public function setPaths( $paths ){
-		$this->paths	= $paths;
-		return $this;
-	}
-
-
-	public function render(){
+	public function render(): string
+	{
 		return UI_HTML_Tag::create( 'button', $this->label, array(
 			'type'		=> "button",
 			'onclick'	=> "HelperInputResource.open(this)",
@@ -101,5 +78,41 @@ class View_Helper_Input_ResourceTrigger{
 			'mode'		=> $this->mode,
 			'paths'		=> join( ',', $this->paths ),
 		) );
+	}
+
+	public function setClass( string $class ): self
+	{
+		$this->class	= $class;
+		return $this;
+	}
+
+	public function setInputId( string $inputId ): self
+	{
+		$this->inputId	= $inputId;
+		return $this;
+	}
+
+	public function setLabel( string $label ): self
+	{
+		$this->label	= $label;
+		return $this;
+	}
+
+	public function setModalId( string $modalId ): self
+	{
+		$this->modalId	= $modalId;
+		return $this;
+	}
+
+	public function setMode( string $mode ): self
+	{
+		$this->mode	= $mode;
+		return $this;
+	}
+
+	public function setPaths( string $paths ): self
+	{
+		$this->paths	= $paths;
+		return $this;
 	}
 }

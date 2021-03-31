@@ -1,14 +1,25 @@
 <?php
-class View_Helper_Navigation_Bootstrap_NavbarMobileTitle extends View_Helper_Navigation_Bootstrap_Navbar{
-
+class View_Helper_Navigation_Bootstrap_NavbarMobileTitle extends View_Helper_Navigation_Bootstrap_Navbar
+{
 	/**
 	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
-	public function __toString(){
+	public function __toString()
+	{
 		return $this->render();
 	}
 
-	public function renderLogo(){
+	public function render(): string
+	{
+		$brand	= $this->renderLogo();
+		$iconBars	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bars' ) );
+		$link		= UI_HTML_Tag::create( 'a', $iconBars, array( 'href' => '#menu' ) );
+		$trigger	= UI_HTML_Tag::create( 'div', $link, array( 'id' => "mmenu-trigger-left", 'class' => "mmenu-trigger" ) );
+		return $trigger.$brand;
+	}
+
+	public function renderLogo(): string
+	{
 		if( strlen( trim( $this->logoTitle ) ) || strlen( trim( $this->logoIcon ) ) ){
 			$icon	= "";
 			if( $this->logoIcon ){
@@ -22,13 +33,4 @@ class View_Helper_Navigation_Bootstrap_NavbarMobileTitle extends View_Helper_Nav
 		}
 		return '';
 	}
-
-	public function render(){
-		$brand	= $this->renderLogo();
-		$iconBars	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bars' ) );
-		$link		= UI_HTML_Tag::create( 'a', $iconBars, array( 'href' => '#menu' ) );
-		$trigger	= UI_HTML_Tag::create( 'div', $link, array( 'id' => "mmenu-trigger-left", 'class' => "mmenu-trigger" ) );
-		return $trigger.$brand;
-	}
 }
-?>

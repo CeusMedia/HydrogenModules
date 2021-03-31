@@ -1,6 +1,6 @@
 <?php
-class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
-
+class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller
+{
 	protected $request;
 	protected $session;
 	protected $messenger;
@@ -13,44 +13,8 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 	protected $filterPrefix		= 'filter_info_mail_group_';
 	protected $defaultLimit		= 10;
 
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= new Logic_Mail_Group( $this->env );
-		$this->logicMail	= Logic_Mail::getInstance( $this->env );
-		$this->modelGroup	= new Model_Mail_Group( $this->env );
-		$this->modelMember	= new Model_Mail_Group_Member( $this->env );
-		$this->modelAction	= new Model_Mail_Group_Action( $this->env );
-		$this->modelUser	= new Model_User( $this->env );
-		if( $this->session->get( $this->filterPrefix.'limit' ) < $this->defaultLimit )
-			$this->session->set( $this->filterPrefix.'limit', $this->defaultLimit );
-	}
-
-	protected function checkId( $groupId, $restart = TRUE ){
-		try{
- 			$group				= $this->logic->getGroup( $groupId, TRUE );
-			$group->members		= $this->logic->countGroupMembers( $groupId );					//  does not scale very vell
-			$group->messages	= $this->logic->countGroupMessages( $groupId );					//  does not scale very vell
-			return $group;
-		}
-		catch( Exception $e ){
-			$this->messenger->noteError( 'Die angesteuerte Gruppe existent nicht, nicht mehr oder ist nicht mehr sichtbar.<br/>Weiterleitung zur Übersicht.' );
-			if( $restart )
-				$this->restart( NULL, TRUE );
-		}
-	}
-
-	protected function checkGroupByIdOrAddress( $idOrAddress, $strict = TRUE ){
-		if( is_int( $idOrAddress ) )
-			return $this->checkId( $idOrAddress, $strict );
-		if( ( $group = $this->logic->getMailGroupFromAddress( $address, TRUE ) ) )
-			return $group;
-		$this->messenger->noteError( 'Die gewählte Gruppe existent nicht oder nicht mehr.' );
-		return FALSE;
-	}
-
-	public function completeMemberAction( $actionId, $hash ){
+	public function completeMemberAction( $actionId, $hash )
+	{
 		$indices	= array( 'mailGroupActionId' => $actionId, 'uuid' => $hash );
 		$action		= $this->modelAction->getByIndices( $indices );
 		if( !$action ){
@@ -86,7 +50,8 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'page' );
 			$this->session->remove( $this->filterPrefix.'limit' );
@@ -97,7 +62,8 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL, $limit = NULL ){
+	public function index( $page = NULL, $limit = NULL )
+	{
 		if( !is_null( $page ) && $page >= 0 )
 			$this->session->set( $this->filterPrefix.'page', (int) $page );
 		if( !is_null( $limit ) && $limit >= $this->defaultLimit )
@@ -126,7 +92,8 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterPages', ceil( $total / $limit ) );
 	}
 
-	public function join( $groupId = 0 ){
+	public function join( $groupId = 0 )
+	{
 		if( $this->request->has( 'save' ) ){
 			$address	= trim( $this->request->get( 'address' ) );
 			$email		= trim( $this->request->get( 'email' ) );
@@ -196,14 +163,16 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->addData( 'data', (object) $this->request->getAll() );
 	}
 
-	public function joined( $groupId, $memberId ){
+	public function joined( $groupId, $memberId )
+	{
 		$group = $this->checkId( (int) $groupId );
 		$member = $this->logic->checkMemberId( (int) $memberId );
 		$this->addData( 'group', $group );
 		$this->addData( 'member', $member );
 	}
 
-	public function leave( $groupId = NULL ){
+	public function leave( $groupId = NULL )
+	{
 		if( $this->request->has( 'save' ) ){
 			$address	= trim( $this->request->get( 'address' ) );
 			$email		= trim( $this->request->get( 'email' ) );
@@ -256,7 +225,50 @@ class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller{
 		$this->addData( 'data', (object) $this->request->getAll() );
 	}
 
-	public function view( $groupId ){
+	public function view( $groupId )
+	{
 		$this->addData( 'group', $this->checkId( $groupId ) );
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logic		= new Logic_Mail_Group( $this->env );
+		$this->logicMail	= Logic_Mail::getInstance( $this->env );
+		$this->modelGroup	= new Model_Mail_Group( $this->env );
+		$this->modelMember	= new Model_Mail_Group_Member( $this->env );
+		$this->modelAction	= new Model_Mail_Group_Action( $this->env );
+		$this->modelUser	= new Model_User( $this->env );
+		if( $this->session->get( $this->filterPrefix.'limit' ) < $this->defaultLimit )
+			$this->session->set( $this->filterPrefix.'limit', $this->defaultLimit );
+	}
+
+	protected function checkId( $groupId, bool $restart = TRUE )
+	{
+		try{
+ 			$group				= $this->logic->getGroup( $groupId, TRUE );
+			$group->members		= $this->logic->countGroupMembers( $groupId );					//  does not scale very vell
+			$group->messages	= $this->logic->countGroupMessages( $groupId );					//  does not scale very vell
+			return $group;
+		}
+		catch( Exception $e ){
+			$this->messenger->noteError( 'Die angesteuerte Gruppe existent nicht, nicht mehr oder ist nicht mehr sichtbar.<br/>Weiterleitung zur Übersicht.' );
+			if( $restart )
+				$this->restart( NULL, TRUE );
+		}
+	}
+
+	protected function checkGroupByIdOrAddress( $idOrAddress, bool $strict = TRUE )
+	{
+		if( is_int( $idOrAddress ) )
+			return $this->checkId( $idOrAddress, $strict );
+		if( ( $group = $this->logic->getMailGroupFromAddress( $address, TRUE ) ) )
+			return $group;
+		$this->messenger->noteError( 'Die gewählte Gruppe existent nicht oder nicht mehr.' );
+		return FALSE;
 	}
 }

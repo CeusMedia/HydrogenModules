@@ -21,10 +21,9 @@ class View_Helper_Markdown extends CMF_Hydrogen_View
 		return $html;
 	}
 
-	static public function transformStatic( CMF_Hydrogen_Environment $env, string $markdown, bool $wrapped = TRUE ): string
+	public static function transformStatic( CMF_Hydrogen_Environment $env, string $markdown, bool $wrapped = TRUE ): string
 	{
 		$helper	= new self( $env );
 		return $helper->transform( $markdown, $wrapped );
 	}
 }
-

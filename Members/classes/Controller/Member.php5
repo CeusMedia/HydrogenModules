@@ -1,23 +1,19 @@
 <?php
-class Controller_Member extends CMF_Hydrogen_Controller{
+class Controller_Member extends CMF_Hydrogen_Controller
+{
+	protected $request;
+	protected $session;
+	protected $messenger;
+	protected $modelUser;
+	protected $modelRelation;
+	protected $userId;
+	protected $logicMember;
+	protected $logicMail;
 
-	protected function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-		$this->messenger		= $this->env->getMessenger();
-		$this->modelUser		= new Model_User( $this->env );
-		$this->modelRelation	= new Model_User_Relation( $this->env );
-		$this->userId			= $this->env->getSession()->get( 'userId' );
-		$this->addData( 'currentUserId', $this->userId );
-		if( !$this->session->get( 'filter_member_limit' ) )
-			$this->session->set( 'filter_member_limit', 9 );
-		$this->logicMember		= Logic_Member::getInstance( $this->env );
-		$this->logicMail		= Logic_Mail::getInstance( $this->env );
-	}
-
-	static public function ___onGetRelatedUsers( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function ___onGetRelatedUsers( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		$modelUser	= new Model_User( $env );
-		$userIds	= Logic_Member::getInstance( $env )->getRelatedUserIds( $data->userId, 2 );
+		$userIds	= Logic_Member::getInstance( $env )->getRelatedUserIds( $payload->userId, 2 );
 		$list		= array();
 		if( $userIds ){
 			$relatedUsers	= $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
@@ -25,7 +21,7 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 				$list[$relatedUser->userId]	= $relatedUser;
 		}
 		$words	= $env->getLanguage()->getWords( 'member' );
-		$data->list[]	= (object) array(
+		$payload->list[]	= (object) array(
 			'module'		=> 'Members',
 			'label'			=> $words['hook-getRelatedUsers']['label'],
 			'count'			=> count( $list ),
@@ -33,7 +29,8 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		);
 	}
 
-	public function accept( $userRelationId ){
+	public function accept( $userRelationId )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );
 		if( !$relation ){
@@ -63,7 +60,8 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->restart( $url, TRUE );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			foreach( $this->session->getAll( 'filter_member_' ) as $key => $value ){
 				$this->session->remove( 'filter_member_'.$key );
@@ -79,19 +77,8 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function getReferrer(/* $encoded = FALSE */){
-		if( $this->request->has( 'from' )  )
-			return $this->request->get( 'from' );
-		$from		= '';
-		$regex		= "/^".preg_quote( $this->env->url, "/" )."/";
-		$referer	= preg_replace( $regex, "", getEnv( 'HTTP_REFERER' ) );
-		if( $referer ){
-			if( !preg_match( '@member/view@', $referer ) )
-				return $referer;
-		}
-	}
-
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 		$limit		= $this->session->get( 'filter_member_limit' );
 		$offset		= $page * $limit;
 		$userIds	= $this->logicMember->getRelatedUserIds( $this->userId, 2 );
@@ -123,7 +110,8 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterRelation', $this->session->get( 'filter_member_relation' ) );
 	}
 
-	public function reject( $userRelationId ){
+	public function reject( $userRelationId )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );
 		if( !$relation ){
@@ -153,7 +141,8 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->restart( $url, TRUE );
 	}
 
-	public function release( $userRelationId ){
+	public function release( $userRelationId )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );
 		if( !$relation ){
@@ -184,7 +173,8 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->restart( $url, TRUE );
 	}
 
-	public function request( $userId ){
+	public function request( $userId )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->getByIndices( array(
 			'fromUserId'	=> $this->userId,
@@ -225,7 +215,8 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
 	}
 
-	public function search(){
+	public function search()
+	{
 		$query		= trim( $this->request->get( 'username' ) );
 		$users		= array();
 		if( $query ){
@@ -247,7 +238,8 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->addData( 'users', $users );
 	}
 
-	public function view( $userId ){
+	public function view( $userId )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$user = $this->modelUser->get( $userId );
 		if( !$user ){
@@ -261,5 +253,33 @@ class Controller_Member extends CMF_Hydrogen_Controller{
 		$this->addData( 'role', $role );
 		$this->addData( 'from', $this->getReferrer() );
 		$this->addData( 'relation', $relation );
+	}
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+		$this->messenger		= $this->env->getMessenger();
+		$this->modelUser		= new Model_User( $this->env );
+		$this->modelRelation	= new Model_User_Relation( $this->env );
+		$this->userId			= $this->env->getSession()->get( 'userId' );
+		$this->addData( 'currentUserId', $this->userId );
+		if( !$this->session->get( 'filter_member_limit' ) )
+			$this->session->set( 'filter_member_limit', 9 );
+		$this->logicMember		= Logic_Member::getInstance( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
+	}
+
+	protected function getReferrer(/* $encoded = FALSE */)
+	{
+		if( $this->request->has( 'from' )  )
+			return $this->request->get( 'from' );
+		$from		= '';
+		$regex		= "/^".preg_quote( $this->env->url, "/" )."/";
+		$referer	= preg_replace( $regex, "", getEnv( 'HTTP_REFERER' ) );
+		if( $referer ){
+			if( !preg_match( '@member/view@', $referer ) )
+				return $referer;
+		}
 	}
 }

@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_Abstract
+{
 	protected $container			= FALSE;
 	protected $inverse				= FALSE;
 	protected $logoTitle;
@@ -15,11 +15,19 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 	/**
 	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
-	public function __toString(){
+	public function __toString()
+	{
 		return $this->render();
 	}
 
-	public function render(){
+	public function hideOnMobileDevice( bool $hide ): self
+	{
+		$this->hideOnMobileDevice	= $hide;
+		return $this;
+	}
+
+	public function render(): string
+	{
 		$this->env->getPage()->addBodyClass( "navbar-".$this->position );
 
 		if( $this->helperNavigation ){
@@ -67,7 +75,8 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 		return $content;
 	}
 
-	public function renderLogo(){
+	public function renderLogo(): string
+	{
 		if( strlen( trim( $this->logoTitle ) ) || strlen( trim( $this->logoIcon ) ) ){
 			$icon	= "";
 			if( $this->logoIcon ){
@@ -82,38 +91,47 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 		return '';
 	}
 
-	public function setAccountMenuHelper( $helper ){
+	public function setAccountMenuHelper( $helper ): self
+	{
 		$this->helperAccountMenu	= $helper;
+		return $this;
 	}
 
-	public function setNavigationHelper( $helper ){
+	public function setNavigationHelper( $helper ): self
+	{
 		$this->helperNavigation	= $helper;
+		return $this;
 	}
 
-	public function setContainer( $boolean = NULL ){
-		$this->container	= (boolean) $boolean;
+	public function setContainer( bool $boolean = NULL ): self
+	{
+		$this->container	= $boolean;
+		return $this;
 	}
 
-	public function setInverse( $boolean = NULL ){
-		$this->inverse	= (boolean) $boolean;
+	public function setInverse( bool $boolean = NULL ): self
+	{
+		$this->inverse	= $boolean;
+		return $this;
 	}
 
-	public function hideOnMobileDevice( $hide ){
-		$this->hideOnMobileDevice	= $hide;
-	}
-
-	public function setLinksToSkip( $links ){
+	public function setLinksToSkip( array $links ): self
+	{
 		$this->linksToSkip	= $links;
+		return $this;
 	}
 
-	public function setLogo( $title, $url = NULL, $icon = NULL ){
+	public function setLogo( string $title, string $url = NULL, string $icon = NULL ): self
+	{
 		$this->logoTitle	= $title;
 		$this->logoLink		= $url;
 		$this->logoIcon		= $icon;
+		return $this;
 	}
 
-	public function setPosition( $mode ){
+	public function setPosition( string $mode ): self
+	{
 		$this->position	= $mode;
+		return $this;
 	}
 }
-?>

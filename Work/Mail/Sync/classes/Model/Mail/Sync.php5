@@ -8,7 +8,17 @@ class Model_Mail_Sync extends CMF_Hydrogen_Model{
 	const STATUS_SYNCHED		= 3;
 	const STATUS_CLOSED			= 4;
 
+	const STATUSES				= [
+		self::STATUS_ERROR,
+		self::STATUS_NEW,
+		self::STATUS_ACTIVE,
+		self::STATUS_SYNCHING,
+		self::STATUS_SYNCHED,
+		self::STATUS_CLOSED,
+	];
+
 	protected $name		= 'mail_syncs';
+
 	protected $columns	= array(
 		'mailSyncId',
 		'sourceMailHostId',
@@ -22,7 +32,9 @@ class Model_Mail_Sync extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'mailSyncId';
+
 	protected $indices		= array(
 		'sourceMailHostId',
 		'targetMailHostId',
@@ -30,6 +42,6 @@ class Model_Mail_Sync extends CMF_Hydrogen_Model{
 		'targetUsername',
 		'status',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

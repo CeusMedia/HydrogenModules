@@ -1,6 +1,6 @@
 <?php
-class Logic_Shop_Shipping extends CMF_Hydrogen_Logic{
-
+class Logic_Shop_Shipping extends CMF_Hydrogen_Logic
+{
 	/**	@var		Model_Shop_Shipping_Country			$modelCountry */
 	protected $modelCountry;
 
@@ -16,14 +16,6 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Logic{
 	/**	@var		Model_Shop_Shipping_Zone			$modelZone */
 	protected $modelZone;
 
-	protected function __onInit(){
-		$this->modelCountry	= new Model_Shop_Shipping_Country( $this->env );
-		$this->modelGrade	= new Model_Shop_Shipping_Grade( $this->env );
-		$this->modelOption	= new Model_Shop_Shipping_Option( $this->env );
-		$this->modelPrice	= new Model_Shop_Shipping_Price( $this->env );
-		$this->modelZone	= new Model_Shop_Shipping_Zone( $this->env );
-	}
-
 	/**
 	 *	Returns shipping price by country code and total weight of cart content.
 	 *	@access		public
@@ -31,7 +23,8 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Logic{
 	 *	@param		integer		$weight				Total weight of cart content
 	 *	@return		float
 	 */
-	public function getPriceFromCountryCodeAndWeight( $countryCode, $weight ){
+	public function getPriceFromCountryCodeAndWeight( string $countryCode, $weight )
+	{
 		$zone	= $this->getZoneFromCountryCode( $countryCode );
 		$grade	= $this->getGradeFromWeight( $weight );
 		$price	= $this->modelPrice->getByIndices( array(
@@ -49,7 +42,8 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Logic{
 	 *	@return 	object
 	 *	@throws		RangeException if country code is neither assigned to a zone nor a fallback zone is existing.
 	 */
-	public function getZoneFromCountryCode( $countryCode ){
+	public function getZoneFromCountryCode( string $countryCode )
+	{
 		$country	= $this->modelCountry->getByIndex( 'countryCode', $countryCode );
 		if( $country )
 			return $this->modelZone->get( $country->zoneId );
@@ -67,7 +61,8 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Logic{
 	 *	@return 	object
 	 *	@throws		RangeException if weight is neither covered by a zone nor a fallback grade is existing.
 	 */
-	public function getGradeFromWeight( $weight ){
+	public function getGradeFromWeight( $weight )
+	{
 		$grades	= $this->modelGrade->getAll( array( 'fallback' => 0 ), array( 'weight' => 'ASC' ) );
 		foreach( $grades as $grade ){
 			if( (int) $grade->weight > (int) $weight )
@@ -88,7 +83,8 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Logic{
 	 *	@todo		remove method and its calls
 	 *	@deprecated
 	 */
-	public function getPrice( $zoneId, $gradeId ){
+	public function getPrice( $zoneId, $gradeId )
+	{
 		$indices	= array( 'zoneId' => $zoneId, 'gradeId' => $gradeId );
 		$data		= $this->modelPrice->getByIndices( $indices );
 		if( $data )
@@ -103,11 +99,20 @@ class Logic_Shop_Shipping extends CMF_Hydrogen_Logic{
 	 *	@todo		remove method and its calls
 	 *	@deprecated
 	 */
-	public function getZoneId( $countryId ){
+	public function getZoneId( $countryId )
+	{
 		$data	= $this->modelZone->getByIndex( 'countryId', $countryId );
 		if( $data )
 			return $data->shippingzoneId;
 		return NULL;
 	}
+
+	protected function __onInit()
+	{
+		$this->modelCountry	= new Model_Shop_Shipping_Country( $this->env );
+		$this->modelGrade	= new Model_Shop_Shipping_Grade( $this->env );
+		$this->modelOption	= new Model_Shop_Shipping_Option( $this->env );
+		$this->modelPrice	= new Model_Shop_Shipping_Price( $this->env );
+		$this->modelZone	= new Model_Shop_Shipping_Zone( $this->env );
+	}
 }
-?>

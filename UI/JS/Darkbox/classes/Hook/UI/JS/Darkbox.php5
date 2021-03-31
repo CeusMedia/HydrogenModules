@@ -1,7 +1,8 @@
 <?php
 class Hook_UI_JS_Darkbox extends CMF_Hydrogen_Hook
 {
-	public static function onPageApplyModules( $env, $context, $module, $payload ){
+	public static function onPageApplyModules( $env, $context, $module, $payload )
+	{
 		$config	= $env->getConfig()->getAll( 'module.ui_js_darkbox.', TRUE );
 		if( $config->get( 'auto' ) ){
 			$options	= json_encode( array(

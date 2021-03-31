@@ -1,5 +1,8 @@
 <?php
-class View_Helper_Navigation_Bootstrap_AccountMenu{
+class View_Helper_Navigation_Bootstrap_AccountMenu
+{
+	public $guestLabel			= "Guest";
+	public $guestEmail			= "<em>(not logged in)</em>";
 
 	protected $env;
 	protected $user;
@@ -10,13 +13,12 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 	protected $linksInside		= array();
 	protected $linksOutside		= array();
 	protected $imageSize		= 32;
-	public $guestLabel			= "Guest";
-	public $guestEmail			= "<em>(not logged in)</em>";
 	protected $menu;
 	protected $scope;
 	protected $moduleConfig;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.ui_navigation_bootstrap_accountmenu.', TRUE );
 		$this->showAvatar		= $this->moduleConfig->get( 'show.avatar' );
@@ -29,53 +31,52 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 	 *	@deprecated 	use menu instead by calling setLinks
 	 *	@todo   		to be removed in version 0.8
 	 */
-	public function addInsideLink( $path, $label, $icon = NULL ){
+	public function addInsideLink( string $path, string $label, string $icon = NULL ): self
+	{
 		$this->linksInside[]	= (object)array(
 			'icon'		=> $icon,
 			'label'		=> $label,
 			'link'		=> $path,
 		);
+		return $this;
 	}
 
 	/**
 	 *	@deprecated 	use menu instead by calling setLinks
 	 *	@todo   		to be removed in version 0.8
 	 */
-	public function addInsideLinkLine(){
+	public function addInsideLinkLine(): self
+	{
 		$this->linksInside[]	= 'line';
+		return $this;
 	}
 
 	/**
 	 *	@deprecated 	use menu instead by calling setLinks
 	 *	@todo   		to be removed in version 0.8
 	 */
-	public function addOutsideLink( $path, $label, $icon = NULL ){
-		$this->linksOutside[]	= (object)array(
+	public function addOutsideLink( string $path, string $label, string $icon = NULL ): self
+	{
+		$this->linksOutside[]	= (object) array(
 			'icon'		=> $icon,
 			'label'		=> $label,
 			'link'		=> $path,
 		);
+		return $this;
 	}
 
 	/**
 	 *	@deprecated 	use menu instead by calling setLinks
 	 *	@todo   		to be removed in version 0.8
 	 */
-	public function addOutsideLinkLine(){
+	public function addOutsideLinkLine(): self
+	{
 		$this->linksOutside[]	= 'line';
+		return $this;
 	}
 
-	protected function renderLabelWithIcon( $entry ){
-		if( !isset( $entry->icon ) )
-			return $entry->label;
-		$class	= $entry->icon;
-		if( !preg_match( "/^fa/", $entry->icon ) )
-			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
-		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
-		return $icon.'&nbsp;'.$entry->label;
-    }
-
-	public function render( $classMenu = "" ){
+	public function render( string $classMenu = '' ): string
+	{
 		$config		= $this->env->getConfig();
 		$username	= $this->guestLabel;
 		$fullname	= '';
@@ -88,7 +89,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 		if( $this->menu ){																			//  @todo: remove
 			$links	= $this->renderMenuLinks();
 			if( !$links )
-				return;
+				return '';
 		}
 		else{																						//  @todo: remove
 			if( $this->user )																		//  @todo: remove
@@ -147,11 +148,12 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 		) );
 	}
 
-	protected function renderMenuLinks(){
+	protected function renderMenuLinks(): string
+	{
 		$list	= array();
 		$pages	= $this->menu->getPages( $this->scope );
 		if( !$pages )
-			return;
+			return '';
 		foreach( $pages as $page ){
 			$class	= $page->active ? 'active' : NULL;
 //			$href	= $page->path == "index" ? './' : './'.$page->link;
@@ -169,7 +171,8 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 		) );
 	}
 
-	protected function renderSetLinks( $links ){
+	protected function renderSetLinks( array $links ): string
+	{
 		foreach( $links as $link ){
 			if( is_object( $link ) ){
 				$icon	= "";
@@ -200,12 +203,15 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 		return $links;
 	}
 
-	public function setLinks( $menu, $scope ){
+	public function setLinks( $menu, $scope ): self
+	{
 		$this->menu		= $menu;
 		$this->scope	= $scope;
+		return $this;
 	}
 
-	public function setUser( $userObjectOrId ){
+	public function setUser( $userObjectOrId ): self
+	{
 		if( is_object( $userObjectOrId ) )
 			$this->user	= $userObjectOrId;
 		else if( is_int( $userObjectOrId ) ){
@@ -214,34 +220,57 @@ class View_Helper_Navigation_Bootstrap_AccountMenu{
 		}
 		else
 			throw new InvalidArgumentException( "Given data is neither an user object nor an user ID" );
+		return $this;
 	}
 
-	public function setImageSize( $size ){
+	public function setImageSize( int $size ): self
+	{
 		$this->imageSize	= $size;
+		return $this;
 	}
 
 	/**
 	 *	@deprecated		use method showAvatar instead
 	 *	@todo   		to be removed in version 0.8
 	 */
-	public function useAvatar( $boolean = NULL ){
+	public function useAvatar( bool $boolean = NULL ): self
+	{
 		$this->showAvatar( $boolean );
+		return $this;
 	}
 
-	public function showAvatar( $boolean = NULL ){
-		$this->showAvatar		= (boolean) $boolean;
+	public function showAvatar( bool $boolean = NULL ): self
+	{
+		$this->showAvatar		= $boolean;
+		return $this;
 	}
 
-	public function showEmail( $boolean = NULL ){
-		$this->showEmail		= (boolean) $boolean;
+	public function showEmail( bool $boolean = NULL ): self
+	{
+		$this->showEmail		= $boolean;
+		return $this;
 	}
 
-	public function showFullname( $boolean = NULL ){
-		$this->showFullname		= (boolean) $boolean;
+	public function showFullname( bool $boolean = NULL ): self
+	{
+		$this->showFullname		= $boolean;
+		return $this;
 	}
 
-	public function showUsername( $boolean = NULL ){
-		$this->showUsername		= (boolean) $boolean;
+	public function showUsername( bool $boolean = NULL ): self
+	{
+		$this->showUsername		= $boolean;
+		return $this;
 	}
+
+	protected function renderLabelWithIcon( $entry ): string
+	{
+		if( !isset( $entry->icon ) )
+			return $entry->label;
+		$class	= $entry->icon;
+		if( !preg_match( "/^fa/", $entry->icon ) )
+			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
+		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
+		return $icon.'&nbsp;'.$entry->label;
+    }
 }
-?>

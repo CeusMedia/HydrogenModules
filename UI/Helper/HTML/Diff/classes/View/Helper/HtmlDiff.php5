@@ -1,11 +1,14 @@
 <?php
-class View_Helper_HtmlDiff{
-
+class View_Helper_HtmlDiff
+{
 	protected $env;
+
 	protected $html1;
+
 	protected $html2;
 
-	public function __construct( $env = NULL, $html1 = NULL, $html2 = NULL ){
+	public function __construct( CMF_Hydrogen_Environment $env = NULL, string $html1 = NULL, string $html2 = NULL )
+	{
 		if( $env )
 			$this->setEnv( $env );
 		if( !is_null( $html1 ) && !is_null( $html2 ) )
@@ -16,7 +19,8 @@ class View_Helper_HtmlDiff{
 		return $this->render();
 	}
 */
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->env )
 			throw new RuntimeException( "No environment set" );
 		if( is_null( $this->html1 ) || is_null( $this->html2 ) )
@@ -26,19 +30,24 @@ class View_Helper_HtmlDiff{
 		return new UI_HTML_Tag( 'div', $diff->getDifference(), array( 'class' => 'htmldiff' ) );
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $html1, $html2 ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, string $html1, string $html2 )
+	{
 		$helper	= new View_Helper_HtmlDiff( $env );
 		$helper->setContents( $html1, $html2 );
 		return $helper->render();
 	}
 
-	public function setContents( $html1, $html2 ){
+	public function setContents( string $html1, string $html2 ): self
+	{
 		$this->html1	= $html1;
 		$this->html2	= $html2;
+		return $this;
 	}
 
-	public function setEnv( $env ){
+	public function setEnv( CMF_Hydrogen_Environment $env ): self
+	{
 		$this->env	= $env;
+		return $this;
 	}
 }
 
@@ -377,7 +386,7 @@ class HtmlDiff {
 		$positionInNew = 0;
 		$operations = array();
 		$matches = $this->MatchingBlocks();
-		$matches[] = new Match( count( $this->oldWords ), count( $this->newWords ), 0 );
+		$matches[] = new DiffMatch( count( $this->oldWords ), count( $this->newWords ), 0 );
 		foreach(  $matches as $i => $match ) {
 			$matchStartsAtCurrentPositionInOld = ( $positionInOld == $match->StartInOld );
 			$matchStartsAtCurrentPositionInNew = ( $positionInNew == $match->StartInNew );
@@ -393,10 +402,10 @@ class HtmlDiff {
 				$action = 'none';
 			}
 			if( $action != 'none' ) {
-				$operations[] = new Operation( $action, $positionInOld, $match->StartInOld, $positionInNew, $match->StartInNew );
+				$operations[] = new DiffOperation( $action, $positionInOld, $match->StartInOld, $positionInNew, $match->StartInNew );
 			}
 			if( count( $match ) != 0 ) {
-				$operations[] = new Operation( 'equal', $match->StartInOld, $match->EndInOld(), $match->StartInNew, $match->EndInNew() );
+				$operations[] = new DiffOperation( 'equal', $match->StartInOld, $match->EndInOld(), $match->StartInNew, $match->EndInNew() );
 			}
 			$positionInOld = $match->EndInOld();
 			$positionInNew = $match->EndInNew();
@@ -460,11 +469,11 @@ class HtmlDiff {
 			}
 			$matchLengthAt = $newMatchLengthAt;
 		}
-		return $bestMatchSize != 0 ? new Match( $bestMatchInOld, $bestMatchInNew, $bestMatchSize ) : null;
+		return $bestMatchSize != 0 ? new DiffMatch( $bestMatchInOld, $bestMatchInNew, $bestMatchSize ) : null;
 	}
 }
 
-class Match {
+class DiffMatch {
 
 	public $StartInOld;
 	public $StartInNew;
@@ -485,7 +494,7 @@ class Match {
 	}
 }
 
-class Operation {
+class DiffOperation {
 
 	public $Action;
 	public $StartInOld;

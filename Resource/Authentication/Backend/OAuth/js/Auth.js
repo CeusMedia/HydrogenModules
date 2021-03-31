@@ -1,3 +1,8 @@
+/**
+ *	This is not working!
+ *	It seems, this is a copy from another module, but it will not be installed and is not called anywhere.
+ *	@todo find origin and purpose
+ */
 var Auth = {
 
 	autoLogout: {
@@ -44,7 +49,7 @@ var Auth = {
 			return;
 		Auth.autoLogout.seconds = minutes * 60;
 		$.ajax({
-			url: './auth/ajaxIsAuthenticated',
+			url: './ajax/auth/isAuthenticated',
 			dataType: 'json',
 			success: function(status){
 				if(!status)
@@ -73,7 +78,7 @@ var Auth = {
 		window.setInterval(
 			function(){
 				$.ajax({
-					url: './auth/ajaxRefreshSession',
+					url: './ajax/auth/refreshSession',
 					dataType: 'json',
 					type: 'POST',
 					success: function(json){
@@ -128,7 +133,7 @@ Auth.Check = {
 			return;
 		}
 		$.ajax({
-			url: "./auth/ajaxEmailExists",
+			url: "./ajax/auth/emailExists",
 			method: "post",
 			data: {email: input.val()},
 			dataType: "json",
@@ -152,7 +157,7 @@ Auth.Check = {
 		}
 		else if(settings.Resource_Users.password_strength_min){
 			$.ajax({
-				url: "./auth/ajaxPasswordStrength",
+				url: "./ajax/passwordStrength",
 				method: "post",
 				data: {password: input.val()},
 				dataType: "json",
@@ -194,7 +199,7 @@ Auth.Check = {
 				return;
 			}
 			$.ajax({
-				url: "./auth/ajaxUsernameExists",
+				url: "./ajax/auth/usernameExists",
 				method: "post",
 				data: {username: input.val()},
 				dataType: "json",

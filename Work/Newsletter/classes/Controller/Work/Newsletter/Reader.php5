@@ -1,6 +1,6 @@
 <?php
-class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller
+{
 	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
 	protected $logic;
 	protected $session;
@@ -19,23 +19,8 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller{
 	);
 	protected $filterPrefix	= 'filter_work_newsletter_reader_';
 
-	public function __onInit(){
-		$this->logic		= new Logic_Newsletter_Editor( $this->env );
-		$this->session		= $this->env->getSession();
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-		$this->addData( 'tabbedLinks', $this->moduleConfig->get( 'tabbedLinks' ) );
-		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
-			$this->limiter	= Logic_Limiter::getInstance( $this->env );
-		$this->addData( 'limiter', $this->limiter );
-
-		if( $this->session->get( $this->filterPrefix.'limit' ) < 1 )
-			$this->session->set( $this->filterPrefix.'limit', 10 );
-	}
-
-	public function add(){
+	public function add()
+	{
 		$words		= (object) $this->getWords( 'add' );
 		if( $this->request->has( 'save' ) ){
 			$data		= $this->request->getAll();
@@ -127,14 +112,16 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller{
 		$this->addData( 'totalReaders', $totalReaders );
 	}
 
-	public function addGroup( $readerId, $groupId = NULL ){
+	public function addGroup( $readerId, $groupId = NULL )
+	{
 		$groupId	= is_null( $groupId ) ? $this->request->get( 'groupId' ) : $groupId;
 		if( $groupId )
 			$this->logic->addReaderToGroup( $readerId, $groupId );
 		$this->restart( 'edit/'.$readerId, TRUE );
 	}
 
-	public function edit( $readerId ){
+	public function edit( $readerId )
+	{
 		$words		= (object) $this->getWords( 'edit' );
 		if( !$this->logic->checkReaderId( $readerId ) ){
 			$this->messenger->noteError( $words->msgErrorInvalidId, $readerId );
@@ -153,7 +140,8 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller{
 		$this->addData( 'readerLetters', $this->logic->getLettersOfReader( $readerId,  array( 'status' => '>= 1' ), array( 'title' => 'ASC' ) ) );
 	}
 
-	public function export( $mode = 'csv' ){
+	public function export( $mode = 'csv' )
+	{
 		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Reader:allowExport' ) ){
 			$this->messenger->noteNotice( 'Exportieren ist deaktivert. Vorgang abgebrochen.' );
 			$this->restart( NULL, TRUE );
@@ -252,7 +240,8 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function filter( $reset = FALSE ){
+	public function filter( $reset = FALSE )
+	{
 		if( $reset ){
 			foreach( $this->filters as $key )
 				$this->session->remove( $this->filterPrefix.''.$key );
@@ -266,7 +255,8 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller{
 		$this->restart( './work/newsletter/reader' );
 	}
 
-	public function import( $mode = 'csv' ){
+	public function import( $mode = 'csv' )
+	{
 		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Reader:allowImport' ) ){
 			$this->messenger->noteNotice( 'Importieren ist deaktivert. Vorgang abgebrochen.' );
 			$this->restart( NULL, TRUE );
@@ -324,7 +314,8 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL ){
+	public function index( $page = NULL )
+	{
 		if( is_null( $page ) ){
 			$page	= 0;
 //			if( $this->session->has( $this->filterPrefix.'page' ) )
@@ -389,7 +380,8 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller{
 		$this->addData( 'totalReaders', $total );
 	}
 
-	public function remove( $readerId ){
+	public function remove( $readerId )
+	{
 		$words		= (object) $this->getWords( 'remove' );
 
 /*		$readerLetters	= $this->logic->getLettersOfReader( $readerId,  array( 'status' => '>= 1' ) );
@@ -402,10 +394,27 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeGroup( $readerId, $groupId = NULL ){
+	public function removeGroup( $readerId, $groupId = NULL )
+	{
 		$groupId	= is_null( $groupId ) ? $this->request->get( 'groupId' ) : $groupId;
 		$this->logic->removeReaderFromGroup( $readerId, $groupId );
 		$this->restart( 'edit/'.$readerId, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->logic		= new Logic_Newsletter_Editor( $this->env );
+		$this->session		= $this->env->getSession();
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$this->addData( 'tabbedLinks', $this->moduleConfig->get( 'tabbedLinks' ) );
+		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
+			$this->limiter	= Logic_Limiter::getInstance( $this->env );
+		$this->addData( 'limiter', $this->limiter );
+
+		if( $this->session->get( $this->filterPrefix.'limit' ) < 1 )
+			$this->session->set( $this->filterPrefix.'limit', 10 );
+	}
 }
-?>

@@ -77,6 +77,4 @@ return $textTop.'
 			</div>
 		</div>
 	</div>
-</div>
-'.$textBottom;
-?>
+</div>'.$textBottom;

@@ -1,6 +1,6 @@
 <?php
-class Job_Shop_Payment_Stripe extends Job_Abstract{
-
+class Job_Shop_Payment_Stripe extends Job_Abstract
+{
 	protected $logicStripe;
 	protected $logicShop;
 	protected $modelEvent;
@@ -8,7 +8,39 @@ class Job_Shop_Payment_Stripe extends Job_Abstract{
 	protected $modelShopPayin;
 	protected $backends				= array();
 
-	protected function __onInit(){
+	public function handle()
+	{
+		$this->handleFailedBankWirePayIns();
+		$this->handleSucceededBankWirePayIns();
+	}
+
+	/**
+	 *	Register a payment backend.
+	 *	@access		public
+	 *	@param		string		$backend		...
+	 *	@param		string		$key			...
+	 *	@param		string		$title			...
+	 *	@param		string		$path			...
+	 *	@param		integer		$priority		...
+	 *	@param		string		$icon			...
+	 *	@param		array		$countries		...
+	 *	@return		void
+	 */
+	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = array() )
+	{
+		$this->backends[]	= (object) array(
+			'backend'	=> $backend,
+			'key'		=> $key,
+			'title'		=> $title,
+			'path'		=> $path,
+			'priority'	=> $priority,
+			'icon'		=> $icon,
+			'countries'	=> $countries,
+		);
+	}
+
+	protected function __onInit()
+	{
 		$this->logicStripe			= new Logic_Shop_Payment_Stripe( $this->env );
 		$this->logicShop			= new Logic_Shop( $this->env );
 		$this->modelEvent			= new Model_Stripe_Event( $this->env );
@@ -20,12 +52,8 @@ class Job_Shop_Payment_Stripe extends Job_Abstract{
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
 	}
 
-	public function handle(){
-		$this->handleFailedBankWirePayIns();
-		$this->handleSucceededBankWirePayIns();
-	}
-
-	protected function handleFailedBankWirePayIns(){
+	protected function handleFailedBankWirePayIns()
+	{
 		$logic		= Logic_Mail::getInstance( $this->env );
 		$orders		= array( 'paymentId' => 'ASC' );
 		$indices	= array(
@@ -69,7 +97,8 @@ class Job_Shop_Payment_Stripe extends Job_Abstract{
 		}
 	}
 
-	protected function handleSucceededBankWirePayIns(){
+	protected function handleSucceededBankWirePayIns()
+	{
 		$logic		= Logic_Mail::getInstance( $this->env );
 		$orders		= array( 'paymentId' => 'ASC' );
 		$indices	= array(
@@ -117,28 +146,5 @@ class Job_Shop_Payment_Stripe extends Job_Abstract{
 				}
 			}
 		}
-	}
-
-	/**
-	 *	Register a payment backend.
-	 *	@access		public
-	 *	@param		string		$backend		...
-	 *	@param		string		$key			...
-	 *	@param		string		$title			...
-	 *	@param		string		$path			...
-	 *	@param		integer		$priority		...
-	 *	@param		string		$icon			...
-	 *	@return		void
-	 */
-	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL, $countries = array() ){
-		$this->backends[]	= (object) array(
-			'backend'	=> $backend,
-			'key'		=> $key,
-			'title'		=> $title,
-			'path'		=> $path,
-			'priority'	=> $priority,
-			'icon'		=> $icon,
-			'countries'	=> $countries,
-		);
 	}
 }

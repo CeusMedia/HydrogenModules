@@ -33,7 +33,7 @@ UI.DevCenter = {
 		$(document).on("mouseup", function(event){
 			if($(document).data("dragging") !== "#DevCenterHandleTop")
 			$.ajax({
-				url: "./DevCenter/ajaxSetHeight",
+				url: "./ajax/DevCenter/setHeight",
 				data: {height: $("#DevCenter").height() / $(window).height() * 100},
 				type: "POST",
 				success: function(){}
@@ -52,7 +52,7 @@ UI.DevCenter = {
 		});
 		$("#DevCenter #DevCenterContent .tabbable .navbar .nav-collapse a").on("click", function(){
 			$.ajax({
-				url: "./?action=ajaxSetTab",
+				url: "./ajax/DevCenter/setTab",
 				data: {tab: $(this).attr("href").substring(1)},
 				type: "POST",
 				success: function(){}
@@ -61,10 +61,10 @@ UI.DevCenter = {
 	},
 	hide: function(){
 		$("#DevCenter").hide();
-		$.ajax("./DevCenter/ajaxSetState?open=0");
+		$.ajax("./ajax/DevCenter/setState?open=0");
 	},
 	show: function(){
 		$("#DevCenter").show();
-		$.ajax("./DevCenter/ajaxSetState?open=1");
+		$.ajax("./ajax/DevCenter/setState?open=1");
 	}
 };

@@ -1,34 +1,6 @@
 <?php
-class Hook_UI_Font_FontAwesome/* extends CMF_Hook*/{
-
-	static protected function addV5CdnResource( $env, $style = 'all' ){
-		$config			= $env->getConfig()->getAll( 'module.ui_font_fontawesome.', TRUE );
-		$urlTemplateCss	= 'https://%s.fontawesome.com/releases/v%s/css/%s.css';
-		$urlTemplateJs	= 'https://%s.fontawesome.com/releases/v%s/js/%s.js';
-		if( $config->get( 'v5.mode' ) === 'css+font' ){
-			$env->getPage()->addHead( UI_HTML_Tag::create( 'link', NULL, array(
-				'href'			=> vsprintf( $urlTemplateCss, array(
-					$config->get( 'v5.license' ) === 'pro' ? 'pro' : 'use',
-					$config->get( 'version' ),
-					$style,
-				) ),
-				'rel'			=> 'stylesheet',
-				'crossorigin'	=> 'anonymous',
-			) ) );
-		}
-		if( $config->get( 'v5.mode' ) === 'js+svg' ){
-			$env->getPage()->addHead( UI_HTML_Tag::create( 'script', '', array(
-				'src'			=> vsprintf( $urlTemplateJs, array(
-					$config->get( 'v5.license' ) === 'pro' ? 'pro' : 'use',
-					$config->get( 'version' ),
-					$style,
-				) ),
-				'defer'			=> 'defer',
-				'crossorigin'	=> 'anonymous',
-			) ) );
-		}
-	}
-
+class Hook_UI_Font_FontAwesome extends CMF_Hook
+{
 	/**
 	 *	...
 	 *	@static
@@ -39,7 +11,8 @@ class Hook_UI_Font_FontAwesome/* extends CMF_Hook*/{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $module, $context, $data = array() ){
+	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $module, $context, $payload )
+	{
 		$config	= $env->getConfig();
 		$mc		= $config->getAll( 'module.ui_font_fontawesome.', TRUE );
 		if( !$config->get( 'module.ui_font.active' ) )
@@ -80,6 +53,35 @@ class Hook_UI_Font_FontAwesome/* extends CMF_Hook*/{
 
 		if( 1 || $mc->get( 'v5.shim' ) ){
 			self::addV5CdnResource( $env, 'v4-shims' );
+		}
+	}
+
+	protected static function addV5CdnResource( $env, $style = 'all' )
+	{
+		$config			= $env->getConfig()->getAll( 'module.ui_font_fontawesome.', TRUE );
+		$urlTemplateCss	= 'https://%s.fontawesome.com/releases/v%s/css/%s.css';
+		$urlTemplateJs	= 'https://%s.fontawesome.com/releases/v%s/js/%s.js';
+		if( $config->get( 'v5.mode' ) === 'css+font' ){
+			$env->getPage()->addHead( UI_HTML_Tag::create( 'link', NULL, array(
+				'href'			=> vsprintf( $urlTemplateCss, array(
+					$config->get( 'v5.license' ) === 'pro' ? 'pro' : 'use',
+					$config->get( 'version' ),
+					$style,
+				) ),
+				'rel'			=> 'stylesheet',
+				'crossorigin'	=> 'anonymous',
+			) ) );
+		}
+		if( $config->get( 'v5.mode' ) === 'js+svg' ){
+			$env->getPage()->addHead( UI_HTML_Tag::create( 'script', '', array(
+				'src'			=> vsprintf( $urlTemplateJs, array(
+					$config->get( 'v5.license' ) === 'pro' ? 'pro' : 'use',
+					$config->get( 'version' ),
+					$style,
+				) ),
+				'defer'			=> 'defer',
+				'crossorigin'	=> 'anonymous',
+			) ) );
 		}
 	}
 }

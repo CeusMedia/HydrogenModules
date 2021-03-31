@@ -1,12 +1,19 @@
 <?php
-class Model_Shop_Payment_Mangopay extends CMF_Hydrogen_Model{
-
+class Model_Shop_Payment_Mangopay extends CMF_Hydrogen_Model
+{
 	const STATUS_CREATED	= 0;
 	const STATUS_FAILED		= 1;
 	const STATUS_SUCCEEDED	= 2;
 
-	protected $name		= 'shop_payments_mangopay';
-	protected $columns	= array(
+	const STATUSES			= [
+		self::STATUS_CREATED,
+		self::STATUS_FAILED,
+		self::STATUS_SUCCEEDED,
+	];
+
+	protected $name			= 'shop_payments_mangopay';
+
+	protected $columns		= array(
 		'paymentId',
 		'orderId',
 		'userId',
@@ -16,13 +23,15 @@ class Model_Shop_Payment_Mangopay extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'paymentId';
+
 	protected $indices		= array(
 		'orderId',
 		'userId',
 		'payInId',
 		'status',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

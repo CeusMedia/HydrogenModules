@@ -1,2 +1,6 @@
-composer.lock
-vendor
+/composer.lock
+/vendor
+
+
+## temporary
+/test

@@ -1,6 +1,6 @@
 <?php
-class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
-
+class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller
+{
 	protected $config;
 	protected $session;
 	protected $reqest;
@@ -15,29 +15,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		'omines/oauth2-gitlab'			=> ['read_user']
 	);
 
-	protected function __onInit(){
-		$this->config		= $this->env->getConfig();
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
-		if( isset( $this->env->version ) )
-			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
-				$this->cookie	= $this->env->getCookie();
-		$this->cookie			= $this->env->getCookie();
-		$this->moduleConfig		= $this->config->getAll( 'module.resource_authentication_backend_oauth2.', TRUE );
-		$this->useCsrf			 = $this->env->getModules()->has( 'Security_CSRF' );
-
-		if( !class_exists( 'League\OAuth2\Client\Provider\GenericProvider' ) )
-			$this->messenger->noteFailure( '<strong>OAuth2-Client is missing.</strong><br/>Please install package "league/oauth2-client" using composer.' );
-		$this->modelProvider	= new Model_Oauth_Provider( $this->env );
-		$this->modelRelation	= new Model_Oauth_User( $this->env );
-
-		$this->addData( 'useCsrf', $this->useCsrf );
-		$this->refreshToken();
-	}
-
-	public function login( $providerId = NULL ){
+	public function login( $providerId = NULL )
+	{
 		if( $this->session->has( 'userId' ) )
 			$this->redirectAfterLogin();
 
@@ -166,7 +145,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		return;
 	}
 
-	public function logout(){
+	public function logout()
+	{
 		$this->session->remove( 'oauth2_token' );
 
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
@@ -193,7 +173,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		$this->redirectAfterLogout( $redirectController, $redirectAction );
 	}
 
-	public function register( $providerId = NULL ){
+	public function register( $providerId = NULL )
+	{
 		$modelUser		= new Model_User( $this->env );
 
 		$words		= $this->getWords();
@@ -277,7 +258,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 	 *	@todo		code doc: what is this method doing at all?
 	 *	@todo		check where this is used
 	 */
-	public function unbind(){
+	public function unbind()
+	{
 		$keys	= array_keys( $this->session->getAll( 'auth_register_oauth_' ) );
 		foreach( $keys as $key )
 			$this->session->remove( 'auth_register_oauth_'.$key );
@@ -288,14 +270,39 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 
 	/*  --  PROTECTED --  */
 
-	protected function getProvider( $providerId ){
+	protected function __onInit()
+	{
+		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+		if( isset( $this->env->version ) )
+			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
+				$this->cookie	= $this->env->getCookie();
+		$this->cookie			= $this->env->getCookie();
+		$this->moduleConfig		= $this->config->getAll( 'module.resource_authentication_backend_oauth2.', TRUE );
+		$this->useCsrf			 = $this->env->getModules()->has( 'Security_CSRF' );
+
+		if( !class_exists( 'League\OAuth2\Client\Provider\GenericProvider' ) )
+			$this->messenger->noteFailure( '<strong>OAuth2-Client is missing.</strong><br/>Please install package "league/oauth2-client" using composer.' );
+		$this->modelProvider	= new Model_Oauth_Provider( $this->env );
+		$this->modelRelation	= new Model_Oauth_User( $this->env );
+
+		$this->addData( 'useCsrf', $this->useCsrf );
+		$this->refreshToken();
+	}
+
+	protected function getProvider( $providerId )
+	{
 		$provider		= $this->modelProvider->get( $providerId );
 		if( !$provider )
 			throw new RangeException( 'Invalid provider ID' );
 		return $provider;
 	}
 
-	protected function getProviderObject( $providerId, $redirectPath = 'auth/oauth2/login' ){
+	protected function getProviderObject( $providerId, $redirectPath = 'auth/oauth2/login' )
+	{
 		$provider		= $this->modelProvider->get( $providerId );
 		if( !$provider )
 			throw new RangeException( 'Invalid provider ID' );
@@ -323,7 +330,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogin( $controller = NULL, $action = NULL ){
+	protected function redirectAfterLogin( $controller = NULL, $action = NULL )
+	{
 		if( $controller )																			//  a redirect contoller has been argumented
 			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
@@ -355,7 +363,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogout( $controller = NULL, $action = NULL ){
+	protected function redirectAfterLogout( $controller = NULL, $action = NULL )
+	{
 		if( $controller )																			//  a redirect contoller has been argumented
 			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
@@ -372,7 +381,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		$this->restart( NULL );																		//  fallback: go to index (empty path)
 	}
 
-	protected function refreshToken(){
+	protected function refreshToken()
+	{
 		$token	= $this->session->get( 'oauth2_token' );
 		if( !$token )
 			return FALSE;
@@ -393,7 +403,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller {
 		}
 	}
 
-	protected function retrieveOwnerDate( $provider, $user ){
+	protected function retrieveOwnerDate( $provider, $user )
+	{
 		$data	= array( 'data' => $user->toArray() );
 		if( $provider->composerPackage === 'league/oauth2-facebook' ){
 			$data['username']	= $user->getName();

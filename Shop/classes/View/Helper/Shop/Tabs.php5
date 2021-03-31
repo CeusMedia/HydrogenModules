@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Shop_Tabs{
-
+class View_Helper_Shop_Tabs
+{
 	protected $backends;
 	protected $cartTotal			= 0;
 	protected $content;
@@ -8,36 +8,19 @@ class View_Helper_Shop_Tabs{
 	protected $env;
 	protected $whiteIcons;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->words	= $this->env->getLanguage()->getWords( 'shop' );
 	}
 
-	public function __toString(){
+	public function __toString(): string
+	{
 		return $this->render();
 	}
 
-	public function setCartTotal( $cartTotal ){
-		$this->cartTotal	= $cartTotal;
-	}
-
-	public function setContent( $content ){
-		$this->content	= $content;
-	}
-
-	public function setCurrent( $current ){
-		$this->current	= $current;
-	}
-
-	public function setPaymentBackends( $backends ){
-		$this->backends	= $backends;
-	}
-
-	public function setWhiteIcons( $bool ){
-		$this->whiteIcons	= $bool;
-	}
-
-	public function render(){
+	public function render(): string
+	{
 		$tabs	= new \CeusMedia\Bootstrap\Tabs( "tabs-cart" );
 		$session	= $this->env->getSession();
 		$modelCart	= new Model_Shop_Cart( $this->env );
@@ -118,5 +101,35 @@ class View_Helper_Shop_Tabs{
 		foreach( $disabled as $nr )
 			$tabs->disableTab( $nr );
 		return $tabs->render();
+	}
+
+	public function setCartTotal( $cartTotal ): self
+	{
+		$this->cartTotal	= $cartTotal;
+		return $this;
+	}
+
+	public function setContent( $content ): self
+	{
+		$this->content	= $content;
+		return $this;
+	}
+
+	public function setCurrent( $current ): self
+	{
+		$this->current	= $current;
+		return $this;
+	}
+
+	public function setPaymentBackends( $backends ): self
+	{
+		$this->backends	= $backends;
+		return $this;
+	}
+
+	public function setWhiteIcons( $bool ): self
+	{
+		$this->whiteIcons	= $bool;
+		return $this;
 	}
 }

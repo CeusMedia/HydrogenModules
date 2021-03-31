@@ -1,9 +1,10 @@
 <?php
-class Model_Shop_Payment_Register{
-
+class Model_Shop_Payment_Register
+{
 	protected $backends	= array();
 
-	public function add( $backend, $key, $title, $path, $priority = 5, $icon = NULL ){
+	public function add( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL )
+	{
 		$this->backends[$key]	= (object) array(
 			'backend'	=> $backend,
 			'key'		=> $key,
@@ -15,7 +16,8 @@ class Model_Shop_Payment_Register{
 		return $key;
 	}
 
-	public function get( $key, $strict = TRUE ){
+	public function get( string $key, bool $strict = TRUE )
+	{
 		if( !$this->has( $key ) ){
 			if( $strict )
 				throw new RangeException( 'Invalid payment backend key: '.$key );
@@ -24,15 +26,18 @@ class Model_Shop_Payment_Register{
 		return $this->backends[$key];
 	}
 
-	public function getAll(){
+	public function getAll(): array
+	{
 		return $this->backends;
 	}
 
-	public function has( $key ){
+	public function has( string $key ): bool
+	{
 		return array_key_exists( $key, $this->backends );
 	}
 
-	public function remove( $key, $strict = TRUE ){
+	public function remove( string $key, bool $strict = TRUE ): bool
+	{
 		if( !$this->has( $key ) ){
 			if( $strict )
 				throw new RangeException( 'Invalid payment backend key: '.$key );

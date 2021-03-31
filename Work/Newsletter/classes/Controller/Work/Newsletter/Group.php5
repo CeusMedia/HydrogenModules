@@ -1,6 +1,6 @@
 <?php
-class Controller_Work_Newsletter_Group extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Newsletter_Group extends CMF_Hydrogen_Controller
+{
 	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
 	protected $logic;
 	protected $session;
@@ -9,20 +9,8 @@ class Controller_Work_Newsletter_Group extends CMF_Hydrogen_Controller{
 	protected $moduleConfig;
 	protected $limiter;
 
-	public function __onInit(){
-		$this->logic		= new Logic_Newsletter_Editor( $this->env );
-		$this->session		= $this->env->getSession();
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-		$this->addData( 'tabbedLinks', $this->moduleConfig->get( 'tabbedLinks' ) );
-		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
-			$this->limiter	= Logic_Limiter::getInstance( $this->env );
-		$this->addData( 'limiter', $this->limiter );
-	}
-
-	public function add(){
+	public function add()
+	{
 		$words		= (object) $this->getWords( 'add' );
 		if( $this->request->has( 'save' ) ){
 			$groupId	= $this->logic->addGroup( $this->request->getAll() );
@@ -61,7 +49,8 @@ class Controller_Work_Newsletter_Group extends CMF_Hydrogen_Controller{
 		$this->addData( 'totalGroups', $totalGroups );
 	}
 
-	public function edit( $groupId ){
+	public function edit( $groupId )
+	{
 		$words		= (object) $this->getWords( 'edit' );
 		if( !$this->logic->checkGroupId( $groupId ) ){
 			$this->messenger->noteError( $words->msgErrorInvalidId, $groupId );
@@ -80,7 +69,8 @@ class Controller_Work_Newsletter_Group extends CMF_Hydrogen_Controller{
 		$this->addData( 'groupReaders', $readers );
 	}
 
-	public function export( $groupId ){
+	public function export( $groupId )
+	{
 		$conditions	= array( 'status' => '1' );
 		$orders		= array( 'firstname' => 'ASC', 'surname' => 'ASC' );
 		$readers	= $this->logic->getReadersOfGroup( $groupId, $conditions, $orders );
@@ -92,7 +82,8 @@ class Controller_Work_Newsletter_Group extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			$this->session->remove( 'filter_work_newsletter_group_query' );
 			$this->session->remove( 'filter_work_newsletter_group_status' );
@@ -108,7 +99,8 @@ class Controller_Work_Newsletter_Group extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$orders		= array( 'title' => 'ASC' );
 
 		$filterQuery	= $this->session->get( 'filter_work_newsletter_group_query' );
@@ -131,17 +123,32 @@ class Controller_Work_Newsletter_Group extends CMF_Hydrogen_Controller{
 		$this->addData( 'totalGroups', $model->count() );
 	}
 
-	public function remove( $groupId ){
+	public function remove( $groupId )
+	{
 		$words		= (object) $this->getWords( 'remove' );
 		$this->logic->removeGroup( $groupId );
 		$this->messenger->noteSuccess( $words->msgSuccess );
 		$this->restart( NULL,  TRUE );
 	}
 
-	public function removeReader( $groupId, $readerId ){
+	public function removeReader( $groupId, $readerId )
+	{
 		$readerId	= is_null( $readerId ) ? $this->request->get( 'readerId' ) : $readerId;
 		$this->logic->removeReaderFromGroup( $readerId, $groupId );
 		$this->restart( 'edit/'.$groupId, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->logic		= new Logic_Newsletter_Editor( $this->env );
+		$this->session		= $this->env->getSession();
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$this->addData( 'tabbedLinks', $this->moduleConfig->get( 'tabbedLinks' ) );
+		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
+			$this->limiter	= Logic_Limiter::getInstance( $this->env );
+		$this->addData( 'limiter', $this->limiter );
+	}
 }
-?>

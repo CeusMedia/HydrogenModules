@@ -1,30 +1,24 @@
 <?php
-class View_Admin_Config extends CMF_Hydrogen_View {
-
-	protected function __onInit(){
-		$this->env->getPage()->addThemeStyle( 'module.admin.config.css' );
+class View_Admin_Config extends CMF_Hydrogen_View
+{
+	public function edit()
+	{
 	}
 
-/*	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$words	= (object) $env->getLanguage()->getWords( 'admin/config' );						//  load words
-		$context->registerTab( '', $words->tabs['index'], 0 );										//  register index tab
-//		$context->registerTab( 'module', $words->tabs['module'], 1 );										//  register module tab
-//		$context->registerTab( 'direct', $words->tabs['direct'], 1 );										//  register direct tab
-	}*/
-
-	public function edit(){
+	public function direct()
+	{
 	}
 
-	public function direct(){
+	public function index()
+	{
 	}
 
-	public function index(){
+	public function module()
+	{
 	}
 
-	public function module(){
-	}
-
-	public function renderConfigInput( $moduleId, $item ){
+	public function renderConfigInput( $moduleId, $item )
+	{
 		$isNumeric		= in_array( $item->type, array( "integer", "float" ) ) || preg_match( "/^[0-9\.]+$/", $item->value );
 		if( $item->values ){
 			$values		= array_combine( $item->values, $item->values );
@@ -77,6 +71,12 @@ class View_Admin_Config extends CMF_Hydrogen_View {
 		return $input;
 	}
 
-	public function view(){
+	public function view()
+	{
+	}
+
+	protected function __onInit()
+	{
+		$this->env->getPage()->addThemeStyle( 'module.admin.config.css' );
 	}
 }

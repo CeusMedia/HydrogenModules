@@ -1,27 +1,27 @@
 <?php
-class Logic_Newsletter_Editor extends Logic_Newsletter{
-
-	protected function __onInit(){
-		parent::__onInit();
-	}
-
-	public function addGroup( $data ){
+class Logic_Newsletter_Editor extends Logic_Newsletter
+{
+	public function addGroup( array $data )
+	{
 		$data['createdAt']	= time();
 		return $this->modelGroup->add( $data );
 	}
 
-	public function addNewsletter( $data ){
+	public function addNewsletter( array $data )
+	{
 		$data['creatorId']	= 0;
 		$data['createdAt']	= time();
 		return $this->modelNewsletter->add( $data, FALSE );
 	}
 
-	public function addTemplate( $data ){
+	public function addTemplate( array $data )
+	{
 		$data['createdAt']	= time();
 		return $this->modelTemplate->add( $data, FALSE );
 	}
 
-	public function addTemplateStyle( $templateId, $url ){
+	public function addTemplateStyle( $templateId, $url )
+	{
 		if( !strlen( trim( $url ) ) )
 			throw new RuntimeException( 'No URL given' );
 		$this->checkTemplateId( $templateId, TRUE );
@@ -30,7 +30,8 @@ class Logic_Newsletter_Editor extends Logic_Newsletter{
 		$this->setTemplateAttributeList( $templateId, 'styles', $styles );
 	}
 
-	public function convertHtmlToText( $html, $wrap = 65 ){
+	public function convertHtmlToText( string $html, int $wrap = 65 )
+	{
 		if( $this->env->getConfig()->get( 'module.resource_newsletter.premailer.plain' ) ){
 			$premailer	= new Net_API_Premailer();
 			$premailer->convertFromHtml( $html, array( 'line_length' => $wrap ) );
@@ -69,7 +70,8 @@ return $html;
 		return strip_tags( $html );
 	}
 
-	public function createQueue( $newsletterId, $creatorId = NULL ){
+	public function createQueue( $newsletterId, $creatorId = NULL )
+	{
 		return $this->modelQueue->add( array(
 			'newsletterId'	=> $newsletterId,
 			'creatorId'		=> (int) $creatorId,
@@ -79,31 +81,36 @@ return $html;
 		) );
 	}
 
-	public function dequeue( $readerLetterId ){
+	public function dequeue( $readerLetterId )
+	{
 		$letter	= $this->getReaderLetter( $readerLetterId );
 		if( (int) $letter->status > 0 )
 			throw new RuntimeException( 'Letter has been sent and cannot be removed' );
 		return $this->modelReaderLetter->remove( $readerLetterId );
 	}
 
-	public function editGroup( $groupId, $data ){
+	public function editGroup( $groupId, array $data )
+	{
 		$this->checkGroupId( $groupId, TRUE );
 		$data['modifiedAt']	= time();
 		$this->modelGroup->edit( $groupId, $data );
 	}
 
-	public function editReaderLetter( $letterId, $data ){
+	public function editReaderLetter( $letterId, array $data )
+	{
 		$this->checkReaderLetterId( $letterId, TRUE );
 		$this->modelReaderLetter->edit( $letterId, $data );
 	}
 
-	public function editTemplate( $templateId, $data ){
+	public function editTemplate( $templateId, array $data )
+	{
 		$this->checkTemplateId( $templateId, TRUE );
 		$data['modifiedAt']	= time();
 		$this->modelTemplate->edit( $templateId, $data, FALSE );
 	}
 
-	public function enqueue( $queueId, $readerId, $newsletterId, $allowDoubles = FALSE ){
+	public function enqueue( $queueId, $readerId, $newsletterId, bool $allowDoubles = FALSE )
+	{
 		$indices	= array(
 			'newsletterReaderId'	=> $readerId,
 			'newsletterQueueId'		=> $queueId,
@@ -122,7 +129,8 @@ return $html;
 		return $this->modelReaderLetter->add( $data );
 	}
 
-	public function removeGroup( $groupId ){
+	public function removeGroup( $groupId )
+	{
 		$modelMail	= new Model_Mail( $this->env );
 		$readers	= $this->getReadersOfGroup( $groupId );
 		foreach( $readers as $reader ){
@@ -142,7 +150,8 @@ return $html;
 		return $this->modelGroup->remove( $groupId );
 	}
 
-	public function removeReader( $readerId ){
+	public function removeReader( $readerId )
+	{
 		$this->checkReaderId( $readerId );
 		$groups		= $this->getGroupsOfReader( $readerId );
 		$letters	= $this->getLettersOfReader( $readerId );
@@ -163,7 +172,8 @@ return $html;
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException		if newsletter ID is not valid
 	 */
-	public function removeNewsletter( $newsletterId ){
+	public function removeNewsletter( $newsletterId )
+	{
 		$this->checkNewsletterId( $newsletterId, TRUE );
 		$modelMail	= new Model_Mail( $this->env );												//  get mail model
 		$this->env->getCaptain()->callHook( 'Newsletter', 'removeNewsletter', $this, array(
@@ -180,7 +190,8 @@ return $html;
 		return $this->modelNewsletter->remove( $newsletterId );									//  remove newsletter itself
 	}
 
-	public function removeTemplate( $templateId ){
+	public function removeTemplate( $templateId )
+	{
 		$this->checkTemplateId( $templateId, TRUE );
 		$newsletterConditions	= array( 'newsletterTemplateId' => $templateId, 'status' => 2 );
 		if( $this->getNewsletters( $newsletterConditions ) )
@@ -188,7 +199,8 @@ return $html;
 		return $this->modelTemplate->remove( $templateId );
 	}
 
-	public function removeTemplateStyle( $templateId, $index ){
+	public function removeTemplateStyle( $templateId, $index )
+	{
 		$this->checkTemplateId( $templateId, TRUE );
 		$styles		= $this->getTemplateAttributeList( $templateId, 'styles' );
 		if( isset( $styles[$index] ) )
@@ -226,7 +238,8 @@ return $html;
 		return $status;
 	}*/
 
-	public function sendTestLetter( $newsletterId, $readerId ){
+	public function sendTestLetter( $newsletterId, $readerId )
+	{
 		if( !$this->env->getModules()->has( 'Resource_Mail' ) )
 			throw new RuntimeException( 'Module "Resource_Mail" is not installed' );
 		$logicMail		= Logic_Mail::getInstance( $this->env );
@@ -245,7 +258,8 @@ return $html;
 		return $logicMail->sendMail( $mail, $receiver );
 	}
 
-	public function setTemplateStatus( $templateId, $status ){
+	public function setTemplateStatus( $templateId, $status )
+	{
 		$template	= $this->getTemplate( $templateId );
 		if( $template->status == $status )
 			return;
@@ -255,10 +269,10 @@ return $html;
 		) );
 	}
 
-	public function setTemplateAttributeList( $templateId, $columnKey, $list ){
+	public function setTemplateAttributeList( $templateId, string $columnKey, array $list )
+	{
 		$this->checkTemplateId( $templateId, TRUE );
 		$list		= $list ? "|".implode( "|", $list )."|" : "";
 		return $this->modelTemplate->edit( $templateId, array( $columnKey => $list ) );
 	}
 }
-?>

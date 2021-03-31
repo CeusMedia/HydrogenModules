@@ -3,7 +3,7 @@
 	<title>Info: Relocation</title>
 	<description><![CDATA[Short-URL relocation to external internet resources.]]></description>
 	<category>Info</category>
-	<version>0.3</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Support localization.</log>
@@ -15,6 +15,8 @@
 	<log version="0.2.6">Count views only for requests from outside.</log>
 	<log version="0.2.7">Set new status "used" for relocations requested from outside.</log>
 	<log version="0.3">First production version.</log>
+	<log version="0.3.1">Improve code style.</log>
+	<log version="0.3.2">Extract hook to own class.</log>
 <!--
 	<log version="0.3.x">Inform manager on failed relocations.</log>
 	<log version="0.3.x">Add generation of QR-Code.</log>
@@ -24,6 +26,7 @@
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Info/Relocation.php5</class>
+		<class>Hook/Info/Relocation.php5</class>
 		<class>Model/Relocation.php5</class>
 		<class>View/Info/Relocation.php5</class>
 		<locale>de/info/relocation.ini</locale>
@@ -38,7 +41,7 @@
     <config protected="yes" type="string" name="shortcut.target">info/relocation/$1</config>
 	<link path="info/relocation/index" access="public"></link>
 	<link path="info/relocation/fail" access="public"></link>
-    <hook type="event" resource="Page" event="applyModules">Controller_Info_Relocation::___onReadyCheckShortcutRoute</hook>
+    <hook type="event" resource="Page" event="applyModules">Hook_Info_Relocation::onPageApplyModulesCheckShortcutRoute</hook>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>relocations`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>relocations` (

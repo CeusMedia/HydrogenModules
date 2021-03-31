@@ -32,13 +32,16 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 
 	protected $title;
 
+	protected $model;
+
 	/**
 	 *	Constructor.
 	 *	Sets case sensitivity by module configuration.
 	 *	@access		public
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
 	 */
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->setEnv( $env );
 		$module		= $this->env->getModules()->get( 'UI_Helper_SEO' );
 		$this->setLowerCase( $module->config['lowerCase']->value );
@@ -50,7 +53,8 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@access		public
 	 *	@return		string			Optimized link title
 	 */
-	public function __toString(){
+	public function __toString()
+	{
 		try{
 			return $this->render();
 		}
@@ -70,7 +74,8 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@throws		RuntimeException	if mode is MODE_MODEL and no object is existing for given ID
 	 *	@throws		RuntimeException	if mode is MODE_OBJECT and no object is set
 	 */
-	public function render(){
+	public function render(): string
+	{
 		switch( $this->mode ){
 			case self::MODE_MODEL:
 				if( !$this->model )
@@ -102,7 +107,8 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@param		integer		$id		Object ID to get object on render
 	 *	@return		self
 	 */
-	public function setId( $id ){
+	public function setId( string $id ): self
+	{
 		$this->id		= $id;
 		$this->setMode( self::MODE_MODEL );
 		return $this;
@@ -115,7 +121,8 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@param		object		$object		Object to get title from on render
 	 *	@return		self
 	 */
-	public function setObject( $object ){
+	public function setObject( $object ): self
+	{
 		$this->object	= $object;
 		$this->setMode( self::MODE_OBJECT );
 		return $this;
@@ -127,7 +134,8 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@param		integer		$mode		One of self::MODE_*
 	 *	@return		self
 	 */
-	public function setMode( $mode ){
+	public function setMode( int $mode ): self
+	{
 		$this->mode		= $mode;
 		return $this;
 	}
@@ -140,7 +148,8 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@param		object		$model		Model instance for getting object b given ID
 	 *	@return		self
 	 */
-	public function setModel( $model ){
+	public function setModel( string $model ): self
+	{
 		$this->model	= $model;
 		$this->setMode( self::MODE_MODEL );
 		return $this;
@@ -152,7 +161,8 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@param		string		$column		Name of title column on model object
 	 *	@return		self
 	 */
-	public function setModelTitleColumn( $column ){
+	public function setModelTitleColumn( string $column ): self
+	{
 		$this->column	= $column;
 		return $this;
 	}
@@ -166,7 +176,8 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@param		string		$title		Title to optimize on render
 	 *	@return		self
 	 */
-	public function setTitle( $title ){
+	public function setTitle( string $title ): self
+	{
 		$this->title	= $title;
 		$this->setMode( self::MODE_TITLE );
 		return $this;
@@ -178,8 +189,10 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@param		boolean		$lowerCase	Flag: convert to lower case on render
 	 *	@return		self
 	 */
-	public function setLowerCase( $lowerCase = TRUE ){
+	public function setLowerCase( bool $lowerCase = TRUE ): self
+	{
 		$this->lowerCase	= $lowerCase;
+		return $this;
 	}
 
 	//  --  PROTECTED  --  //

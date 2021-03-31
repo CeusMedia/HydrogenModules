@@ -1,7 +1,7 @@
 <?php
 class Hook_Info_Page extends CMF_Hydrogen_Hook
 {
-	public static function onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $payload )
 	{
 		if( $env->getModules()->has( 'Resource_Frontend' ) )										//  frontend resource exists
 			if( $env->getConfig()->get( 'module.resource_frontend.path' ) !== './' )				//  this app is a backend
@@ -57,7 +57,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 		return FALSE;																				//  continue ongoing dispatching
 	}
 
-	public static function onAppGetMasterTemplate( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onAppGetMasterTemplate( CMF_Hydrogen_Environment $env, $context, $module, $payload )
 	{
 		$page	= $env->getLogic()->get( 'page' )->getPageFromRequest( TRUE, FALSE );
 		if( $page ){

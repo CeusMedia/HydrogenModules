@@ -1,23 +1,20 @@
 <?php
-class Mail_Work_Newsletter_Add extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Work_Newsletter_Add extends Mail_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		$words		= (object) $this->getWords( 'work/newsletter/reader', 'mail-add' );
 		$prefix	= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
 		$subject	= ( $prefix ? $prefix.' ' : '' ) . $words->mailSubject;
 		$this->mail->setSubject( $subject );
 
-		$text		= $this->renderTextBody( $data );
-		$html		= $this->renderHtmlBody( $data );
-		$this->addHtmlBody( $html );
-		$this->addTextBody( $text );
-		return (object) array(
-			'html'	=> $html,
-			'text'	=> $text,
-		);
+		$this->setHtml( $this->renderHtmlBody( $data ) );
+		$this->setText( $this->renderTextBody( $data ) );
+		return $this;
 	}
 
-	public function renderHtmlBody( $data ){
+	protected function renderHtmlBody( array $data ): string
+	{
 		$baseUrl	= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
@@ -36,7 +33,8 @@ class Mail_Work_Newsletter_Add extends Mail_Abstract{
 		return $this->view->loadContentFile( 'mail/work/newsletter/add.html', $data );
 	}
 
-	public function renderTextBody( $data ){
+	protected function renderTextBody( array $data ): string
+	{
 		$baseUrl	= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();

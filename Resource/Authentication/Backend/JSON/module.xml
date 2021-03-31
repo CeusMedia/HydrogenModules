@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.3</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial fork from module Auth:JSON.</log>
 	<log version="0.2">Add hook call Auth::onBeforeLogin.</log>
 	<log version="0.2.1">Add method to note latest user activity (not implemented yet).</log>
@@ -20,10 +20,13 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.2.5">Extract hooks to own hook class.</log>
 	<log version="0.2.6">Use general module main switch.</log>
 	<log version="0.3">Refactoring to support new identified state.</log>
+	<log version="0.3.1">Improve code style.</log>
+	<log version="0.3.2">Extract AJAX actions to own class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Controller/Ajax/Auth/Json.php5</class>
 		<class>Controller/Auth/Json.php5</class>
 		<class>View/Auth/Json.php5</class>
 		<class>Logic/Authentication/Backend/Json.php5</class>
@@ -39,7 +42,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 		<locale>en/html/auth/json/login/info.html</locale>
 		<locale>en/html/auth/json/login/bottom.html</locale>
 		<style source="theme">module.resource.auth.json.css</style>
-		<script load="auto">Auth.JSON.js</script>
+		<script load="auto">Module.Auth.Json.js</script>
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config protected="yes" type="string" name="login.forward.path"/>
@@ -58,9 +61,9 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<link xml:lang="de" rank="99" access="inside" path="auth/json/logout">Logout</link>
 	<link xml:lang="en" rank="10" access="outside" path="auth/json/login">Login</link>
 	<link xml:lang="en" rank="99" access="inside" path="auth/json/logout">Logout</link>
-	<link rank="99" access="public" path="auth/json/ajaxEmailExists"></link>
-	<link rank="99" access="public" path="auth/json/ajaxIsAuthenticated"></link>
-	<link rank="99" access="public" path="auth/json/ajaxUsernameExists"></link>
+	<link rank="99" access="public" path="ajax/auth/json/emailExists"></link>
+	<link rank="99" access="public" path="ajax/auth/json/isAuthenticated"></link>
+	<link rank="99" access="public" path="ajax/auth/json/usernameExists"></link>
 	<link rank="99" access="public" path="auth/json/index"></link>
 	<hook type="resource" resource="Auth" event="registerBackends">Hook_Auth_Json::onAuthRegisterBackend</hook>
 	<hook type="resource" resource="Auth" event="registerLoginTabs">Hook_Auth_Json::onAuthRegisterLoginTab</hook>

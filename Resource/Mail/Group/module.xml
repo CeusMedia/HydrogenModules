@@ -3,7 +3,7 @@
 	<title>Resource: Mail: Group</title>
 	<description/>
 	<category>Resource</category>
-	<version>0.4.3</version>
+	<version>0.4.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add database models for groups and members.</log>
@@ -23,6 +23,7 @@
 	<log version="0.4.1">Refactor mail classes and plain part locales.</log>
 	<log version="0.4.2">Add terms of use and privacy note.</log>
 	<log version="0.4.3">Replace job file by module configuration.</log>
+	<log version="0.4.4">Improve code style.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

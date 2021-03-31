@@ -1,16 +1,10 @@
 <?php
-class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller
+{
 	protected $modelServer;
 
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->modelServer		= new Model_Mail_Group_Server( $this->env );
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$title		= trim( $this->request->get( 'title' ) );
 			$imapHost	= trim( $this->request->get( 'imap_host' ) );
@@ -31,7 +25,8 @@ class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function checkId( $serverId ){
+	public function checkId( $serverId )
+	{
 		$server	= $this->modelServer->get( $serverId );
 		if( $server )
 			return $server;
@@ -40,7 +35,8 @@ class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller{
 		return NULL;
 	}
 
-	public function edit( $serverId ){
+	public function edit( $serverId )
+	{
 		$server	= $this->checkId( $serverId );
 		if( $this->request->has( 'save' ) ){
 			$title		= trim( $this->request->get( 'title' ) );
@@ -62,7 +58,8 @@ class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller{
 		$this->addData( 'server', $server );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$indices	= array();
 		$orders		= array( 'title' => 'ASC' );
 		$limits		= array();
@@ -70,7 +67,17 @@ class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller{
 		$this->addData( 'servers', $servers );
 	}
 
-	public function setStatus( $serverId, $status ){
+	public function remove()
+	{
+		$server	= $this->checkId( $serverId );
+		if( $server ){
+			$this->modelServer->remove( $serverId );
+			$this->restart( NULL, TRUE );
+		}
+	}
+
+	public function setStatus( $serverId, $status )
+	{
 		$server	= $this->checkId( $serverId );
 		if( $server ){
 			$this->modelServer->edit( $serverId, array(
@@ -80,11 +87,11 @@ class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function remove(){
-		$server	= $this->checkId( $serverId );
-		if( $server ){
-			$this->modelServer->remove( $serverId );
-			$this->restart( NULL, TRUE );
-		}
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->modelServer		= new Model_Mail_Group_Server( $this->env );
 	}
 }

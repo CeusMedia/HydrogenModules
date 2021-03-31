@@ -1,13 +1,11 @@
 <?php
-class Job_Work_Mail_Check extends Job_Abstract{
-
+class Job_Work_Mail_Check extends Job_Abstract
+{
 	protected $logic;
+	protected $options;
 
-	public function __onInit(){
-		$this->options	= $this->env->getConfig()->getAll( 'module.work_mail_check.', TRUE );
-	}
-
-	public function run(){
+	public function run()
+	{
 		$modelAddress	= new Model_Mail_Address( $this->env );
 		$modelCheck		= new Model_Mail_Address_Check( $this->env );
 		$sender			= new \CeusMedia\Mail\Participant( $this->options->get( 'sender' ) );
@@ -58,5 +56,10 @@ class Job_Work_Mail_Check extends Job_Abstract{
 			}
 		}
 		$this->out( 'Done checking '.count( $addresses ).' mail address(es)' );
+	}
+
+	protected function __onInit()
+	{
+		$this->options	= $this->env->getConfig()->getAll( 'module.work_mail_check.', TRUE );
 	}
 }

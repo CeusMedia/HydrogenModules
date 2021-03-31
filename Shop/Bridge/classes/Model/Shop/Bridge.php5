@@ -16,9 +16,10 @@
  *	@since			02.07.2006
  *	@version		3.0
  */
-class Model_Shop_Bridge extends CMF_Hydrogen_Model {
-
+class Model_Shop_Bridge extends CMF_Hydrogen_Model
+{
 	protected $name		= 'shop_bridges';
+
 	protected $columns	= array(
 		'bridgeId',
 		'title',
@@ -31,12 +32,14 @@ class Model_Shop_Bridge extends CMF_Hydrogen_Model {
 		'articleIdColumn',
 		'createdAt',
 	);
+
 	protected $primaryKey	= 'bridgeId';
+
 	protected $indices		= array(
 		'class',
 		'frontendController',
 		'frontendUriPath',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

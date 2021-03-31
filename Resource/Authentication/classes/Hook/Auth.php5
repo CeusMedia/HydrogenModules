@@ -1,8 +1,9 @@
 <?php
-class Hook_Auth extends CMF_Hydrogen_Hook{
-
-	static public function onAppException( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		$payload	= (object) $data;
+class Hook_Auth extends CMF_Hydrogen_Hook
+{
+	public static function onAppException( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
+		$payload	= (object) $payload;
 		if( !property_exists( $payload, 'exception' ) )
 			throw new Exception( 'No exception data given' );
 		if( !( $payload->exception instanceof Exception ) )
@@ -27,7 +28,8 @@ class Hook_Auth extends CMF_Hydrogen_Hook{
 		return FALSE;
 	}
 
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		$userId		= (int) $env->getSession()->get( 'userId' );														//  get ID of current user (or zero)
 		if( $userId ){
 			$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
@@ -36,5 +38,13 @@ class Hook_Auth extends CMF_Hydrogen_Hook{
 			$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';											//  initialize Auth class with user ID
 			$env->getPage()->js->addScriptOnReady( $script, 1 );															//  enlist script to be run on ready
 		}
+	}
+
+	public static function onEnvInitAcl( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
+		$payload	= (object) $payload;
+//		$payload->className	= 'CMF_Hydrogen_Environment_Resource_Acl_Database';
+		$payload->className	= 'Resource_Acl_Authentication';
+		return TRUE;
 	}
 }

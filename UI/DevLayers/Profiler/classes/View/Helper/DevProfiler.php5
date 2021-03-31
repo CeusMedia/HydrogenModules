@@ -1,12 +1,8 @@
 <?php
-class View_Helper_DevProfiler{
-
-	static protected function formatTime( $microseconds ){
-		$time	= Alg_UnitFormater::formatMicroSeconds( $microseconds );
-		return substr( str_replace( ' ', '', $time ), 0, -1 );
-	}
-
-	static public function render( $env ){
+class View_Helper_DevProfiler
+{
+	public static function render( CMF_Hydrogen_Environment $env )
+	{
 		$profiler	= $env->clock->profiler;
 		$words		= $env->getLanguage()->getWords( 'ui.dev.layer.profiler' );
 		$options	= $env->getConfig()->getAll( 'module.ui_devlayers_profiler.', TRUE );
@@ -53,5 +49,10 @@ class View_Helper_DevProfiler{
 		$content	= $colgroup.$thead.$tbody;
 		return UI_HTML_Tag::create( 'table', $content, array( 'class' => 'profiler' ) );
 	}
+
+	protected static function formatTime( $microseconds ): string
+	{
+		$time	= Alg_UnitFormater::formatMicroSeconds( $microseconds );
+		return substr( str_replace( ' ', '', $time ), 0, -1 );
+	}
 }
-?>

@@ -34,4 +34,3 @@ return $textTop.'
 	<br/>
 </div>
 '.$textBottom.$modalImportList.$modalImportCsv;
-?>

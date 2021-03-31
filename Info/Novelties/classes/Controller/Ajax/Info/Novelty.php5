@@ -1,7 +1,6 @@
 <?php
 class Controller_Ajax_Info_Novelty extends CMF_Hydrogen_Controller_Ajax
 {
-
 	public function dismiss()
 	{
 		$userId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();

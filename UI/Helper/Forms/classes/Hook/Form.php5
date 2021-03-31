@@ -1,19 +1,19 @@
 <?php
-class Hook_Form/* extends CMF_Hydrogen_Hook*/{
-
+class Hook_Form extends CMF_Hydrogen_Hook
+{
 	/**
 	 *	...
-	 *	@static
 	 *	@access		public
+	 *	@static
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 *	@param		object						$context	Object scope to apply hook within
 	 *	@param		???							$module		???
-	 *	@param		array|object				$data		Data array or object for hook event handler
+	 *	@param		object						$payload	Data array or object for hook event handler
 	 *	@return		boolean|NULL				...
 	 */
-	static public function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload ){
 		$processor		= new Logic_Shortcode( $env );
-		$processor->setContent( $data->content );
+		$processor->setContent( $payload->content );
 //		$words			= $env->getLanguage()->getWords( 'info/news' );
 		$shortCodes		= array(
 			'form'		=> array(
@@ -39,6 +39,6 @@ class Hook_Form/* extends CMF_Hydrogen_Hook*/{
 				}
 			}
 		}
-		$data->content	= $processor->getContent();
+		$payload->content	= $processor->getContent();
 	}
 }

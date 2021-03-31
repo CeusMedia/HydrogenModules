@@ -1,20 +1,17 @@
 <?php
-class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic{
-
+class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic
+{
 	protected $client;
 	protected $session;
 
-	protected function __onInit(){
-		$this->client		= $this->env->get( 'restClient' );
-		$this->session		= $this->env->getSession();
-	}
-
-	public function checkEmail( $email ){
+	public function checkEmail( string $email )
+	{
 		$parameters	= array( 'email' => $email );
 		return $this->client->post( 'email/check', $parameters )->data;
 	}
 
-	public function checkPassword( $username, $password ){
+	public function checkPassword( string $username, string $password )
+	{
 		$parameters	= array(
 			'username'	=> $username,
 			'password'	=> $password,
@@ -23,12 +20,14 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic{
 		return $result;
 	}
 
-	public function checkUsername( $username ){
+	public function checkUsername( string $username )
+	{
 		$parameters	= array( 'username' => $username );
 		return $this->client->post( 'username/check', $parameters )->data;
 	}
 
-	public function clearCurrentUser(){
+	public function clearCurrentUser()
+	{
 		$this->session->remove( 'auth_user_id' );
 		$this->session->remove( 'auth_role_id' );
 		$this->session->remove( 'auth_status' );
@@ -39,7 +38,8 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic{
 	/**
  	 *	@todo		send mail to user after confirmation with user data
 	 */
-	public function confirm( $userId, $token ){
+	public function confirm( $userId, string $token )
+	{
 		$parameters	= array(
 			'userId'	=> $userId,
 			'token'		=> $token,
@@ -48,7 +48,8 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic{
 		return $result;
 	}
 
-	public function getCurrentRole( $strict = TRUE ){
+	public function getCurrentRole( bool $strict = TRUE )
+	{
 		throw new Exception( 'deprecated' );
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
@@ -61,7 +62,8 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic{
 		return NULL;
 	}
 
-	public function getCurrentRoleId( $strict = TRUE ){
+	public function getCurrentRoleId( bool $strict = TRUE )
+	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
 				throw new RuntimeException( 'No user authenticated' );
@@ -70,7 +72,8 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic{
 		return $this->session->get( 'roleId');
 	}
 
-	public function getCurrentUser( $strict = TRUE, $withRole = FALSE ){
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
+	{
 		throw new Exception( 'deprecated' );
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
@@ -86,7 +89,8 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic{
 		return NULL;
 	}
 
-	public function getCurrentUserId( $strict = TRUE ){
+	public function getCurrentUserId( bool $strict = TRUE )
+	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
 				throw new RuntimeException( 'No user authenticated' );
@@ -95,32 +99,36 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic{
 		return $this->session->get( 'userId' );
 	}
 
-	public function isAuthenticated(){
+	public function isAuthenticated(): bool
+	{
 		if( !$this->isIdentified() )
 			return FALSE;
 		$authStatus	= (int) $this->session->get( 'auth_status' );
 		return $authStatus == Logic_Authentication::STATUS_AUTHENTICATED;
 	}
 
-	public function isIdentified(){
+	public function isIdentified(): bool
+	{
 		return $this->session->get( 'auth_user_id' );
 	}
 
-	public function isCurrentUserId( $userId ){
+	public function isCurrentUserId( $userId ): bool
+	{
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}
 
 	/**
 	 *	@todo		implement if possible, for example by using available REST resource
 	 */
-	protected function noteUserActivity(){
+	protected function noteUserActivity()
+	{
 	}
 
 	/**
  	 *	@todo		send mail to user with confirmation link
 	 */
-	public function register( $postData ){
-
+	public function register( $postData )
+	{
 		$data	= array(
 			'username'		=> $postData->get( 'username' ),
 			'email'			=> $postData->get( 'email' ),
@@ -180,13 +188,15 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic{
 		);
 	}
 
-	public function setAuthenticatedUser( $user ){
+	public function setAuthenticatedUser( $user )
+	{
 		$this->setIdentifiedUser( $user );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
 		return $this;
 	}
 
-	public function setIdentifiedUser( $user ){
+	public function setIdentifiedUser( $user )
+	{
 		$this->session->set( 'auth_user_id', $user->userId );
 		$this->session->set( 'auth_role_id', $user->roleId );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_IDENTIFIED );
@@ -195,5 +205,11 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic{
 		$this->session->set( 'auth_rights', $user->data->rights );
 		$this->session->set( 'auth_backend', 'Rest' );
 		return $this;
+	}
+
+	protected function __onInit()
+	{
+		$this->client		= $this->env->get( 'restClient' );
+		$this->session		= $this->env->getSession();
 	}
 }

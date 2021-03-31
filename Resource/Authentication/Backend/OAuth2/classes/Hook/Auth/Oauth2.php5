@@ -1,16 +1,18 @@
 <?php
-class Hook_Auth_Oauth2 extends CMF_Hydrogen_Hook{
+class Hook_Auth_Oauth2 extends CMF_Hydrogen_Hook
+{
+	protected static $configPrefix	= 'module.resource_authentication_backend_oauth2.';
 
-	static protected $configPrefix	= 'module.resource_authentication_backend_oauth2.';
-
-	static public function onAuthRegisterBackend( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onAuthRegisterBackend( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
 		$words	= $env->getLanguage()->getWords( 'auth/oauth2' );
 		$context->registerBackend( 'Oauth2', 'oauth2', $words['backend']['title'] );
 	}
 
-	static public function onAuthRegisterLoginTab( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onAuthRegisterLoginTab( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
 		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
 //		if( !$env->getConfig()->get( self::$configPrefix.'loginTab' ) )

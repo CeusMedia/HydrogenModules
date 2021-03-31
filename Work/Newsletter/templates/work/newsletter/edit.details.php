@@ -296,9 +296,6 @@ if( $newsletter->status < Model_Newsletter::STATUS_SENT )
 	</div>
 </div>';
 
-
-
-
 return '
 <div class="row-fluid">
 	<div class="span7">

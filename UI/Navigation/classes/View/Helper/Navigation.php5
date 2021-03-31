@@ -11,7 +11,7 @@ class View_Helper_Navigation
 	protected $logoIcon;
 	protected $helperAccount;
 
-	public function __construct( $env )
+	public function __construct( CMF_Hydrogen_Environment $env )
 	{
 		$this->env			= $env;
 		$this->menu			= new Model_Menu( $env );
@@ -23,7 +23,7 @@ class View_Helper_Navigation
 		return $this->menu;
 	}
 
-	public function render( $scope = 'main', $class = NULL, $style = NULL ): string
+	public function render( string $scope = 'main', string $class = NULL, string $style = NULL ): string
 	{
 		$class		= $class ? $class : $this->moduleConfig->get( 'render.desktop.class' );
 		$style		= $style ? $style : $this->moduleConfig->get( 'render.desktop.style' );
@@ -47,18 +47,19 @@ class View_Helper_Navigation
 		return $this;
 	}
 
-	public function setInverse( $boolean = NULL ): self
+	public function setInverse( bool $boolean = NULL ): self
 	{
 		$this->inverse	= (boolean) $boolean;
 		return $this;
 	}
 
-	public function setLinksToSkip( $links ): self
+	public function setLinksToSkip( array $links ): self
 	{
 		$this->linksToSkip	= $links;
 		return $this;
 	}
-	public function setLogo( $title, $url = NULL, $icon = NULL ): self
+
+	public function setLogo( string $title, string $url = NULL, string $icon = NULL ): self
 	{
 		$this->logoTitle	= $title;
 		$this->logoLink		= $url;
@@ -66,4 +67,3 @@ class View_Helper_Navigation
 		return $this;
 	}
 }
-?>

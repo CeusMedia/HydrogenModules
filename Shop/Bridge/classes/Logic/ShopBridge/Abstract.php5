@@ -1,6 +1,6 @@
 <?php
-abstract class Logic_ShopBridge_Abstract{
-
+abstract class Logic_ShopBridge_Abstract
+{
 	/**	@var	Logic_ShopBridge			$bridge		Shop bridge logic instance */
 	protected $bridge;
 
@@ -13,7 +13,8 @@ abstract class Logic_ShopBridge_Abstract{
 	 *	@param		CMF_Hydrogen_Environment	$env
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env, Logic_ShopBridge $bridge ){
+	public function __construct( CMF_Hydrogen_Environment $env, Logic_ShopBridge $bridge )
+	{
 		$this->env		= $env;
 		$this->bridge	= $bridge;
 		$this->__onInit();
@@ -27,7 +28,7 @@ abstract class Logic_ShopBridge_Abstract{
 	 *	@return		integer						Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	abstract public function changeQuantity( $articleId, $change );
+	abstract public function changeQuantity( $articleId, int $change );
 
 	/**
 	 *	Checks existance of article and returns data object if found.
@@ -37,7 +38,7 @@ abstract class Logic_ShopBridge_Abstract{
 	 *	@return		object|FALSE				Bridged article data object if found, otherwise FALSE if strict mode is off
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	abstract public function check( $articleId, $strict = TRUE );
+	abstract public function check( $articleId, bool $strict = TRUE );
 
 	/**
 	 *	...
@@ -45,13 +46,15 @@ abstract class Logic_ShopBridge_Abstract{
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	abstract public function get( $articleId, $quantity = 1 );
+	abstract public function get( $articleId, int $quantity = 1 );
 
-	public function getBridgeClass(){
+	public function getBridgeClass()
+	{
 		return preg_replace( "/^Logic_ShopBridge_/", "", get_class( $this ) );
 	}
 
-	public function getBridgeId(){
+	public function getBridgeId()
+	{
 		return $this->bridge->getBridgeId( $this );
 	}
 
@@ -80,7 +83,7 @@ abstract class Logic_ShopBridge_Abstract{
 	 *	@param		boolean		$absolute
 	 *	@return		string
 	 */
-	abstract public function getPicture( $articleId, $absolute = FALSE );
+	abstract public function getPicture( $articleId, bool $absolute = FALSE );
 
 	/**
 	 *	Returns price of article (one or many).
@@ -89,7 +92,7 @@ abstract class Logic_ShopBridge_Abstract{
 	 *	@param		integer		$amount			Amount to articles to get price for
 	 *	@return		float
 	 */
-	abstract public function getPrice( $articleId, $amount = 1 );
+	abstract public function getPrice( $articleId, int $amount = 1 );
 
 	/**
 	 *	Returns tax of article (one or many).
@@ -98,7 +101,7 @@ abstract class Logic_ShopBridge_Abstract{
 	 *	@param		integer		$amount			Amount to articles to get tax for
 	 *	@return		float
 	 */
-	abstract public function getTax( $articleId, $amount = 1 );
+	abstract public function getTax( $articleId, int $amount = 1 );
 
 	/**
 	 *	...
@@ -115,6 +118,5 @@ abstract class Logic_ShopBridge_Abstract{
 	 *	@param		integer		$amount			Amount to articles to get weight for
 	 *	@return		integer
 	 */
-	abstract public function getWeight( $articleId, $amount = 1 );
+	abstract public function getWeight( $articleId, int $amount = 1 );
 }
-?>

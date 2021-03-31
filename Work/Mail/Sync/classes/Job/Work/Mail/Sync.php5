@@ -1,17 +1,12 @@
 <?php
-class Job_Work_Mail_Sync extends Job_Abstract{
-
+class Job_Work_Mail_Sync extends Job_Abstract
+{
 	protected $logic;
 	protected $statistics	= array();
+	protected $hostMap;
 
-	public function __onInit(){
-		$this->logic	= new Logic_Mail_Sync( $this->env );
-		$this->hostMap	= array();
-		foreach( $this->logic->getSyncHosts() as $host )
-			$this->hostMap[$host->mailSyncHostId]	= $host;
-	}
-
-	public function sync(){
+	public function sync()
+	{
 		$indices	= array( 'status' => Model_Mail_Sync::STATUS_SYNCHING );
 		$running	= $this->logic->getSyncs( $indices );
 		if( $running )
@@ -42,7 +37,16 @@ class Job_Work_Mail_Sync extends Job_Abstract{
 		}
 	}
 
-	protected function executeMailboxSync( $sync ){
+	protected function __onInit()
+	{
+		$this->logic	= new Logic_Mail_Sync( $this->env );
+		$this->hostMap	= array();
+		foreach( $this->logic->getSyncHosts() as $host )
+			$this->hostMap[$host->mailSyncHostId]	= $host;
+	}
+
+	protected function executeMailboxSync( $sync )
+	{
 		$parameters	= array(
 			'--host1 '.$this->hostMap[$sync->sourceMailHostId]->ip,
 			'--host2 '.$this->hostMap[$sync->targetMailHostId]->ip,
@@ -111,7 +115,8 @@ $this->out( 'Code: '.$code );
 		}
 	}
 
-	protected function readStatistics( $lines ){
+	protected function readStatistics( array $lines ): array
+	{
 		$list	= array();
 		foreach( $lines as $line ){
 			$parts	= explode( ":", $line, 2 );

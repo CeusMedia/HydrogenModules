@@ -16,9 +16,10 @@
  *	@since			20.1.2005
  *	@version		3.0
  */
-class Model_Shop_CustomerOld extends CMF_Hydrogen_Model {
-
+class Model_Shop_CustomerOld extends CMF_Hydrogen_Model
+{
 	protected $name		= 'shop_customers_old';
+
 	protected $columns	= array(
 		"customerId",
 		"firstname",
@@ -46,12 +47,14 @@ class Model_Shop_CustomerOld extends CMF_Hydrogen_Model {
 		"billing_phone",
 		"billing_email",
 	);
+
 	protected $primaryKey	= 'customerId';
+
 	protected $indices		= array(
 		"lastname",
 		"country",
 		"email",
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

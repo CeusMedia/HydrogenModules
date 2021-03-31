@@ -3,29 +3,26 @@
  *	Renders list of linked friend sites.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012 Ceus Media <https://ceusmedia.de/>
+ *	@copyright		2012-2021 Ceus Media <https://ceusmedia.de/>
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
- *	@since			01.08.2012
- *	@version		$Id: FriendLister.php5 1606 2014-03-02 11:54:41Z christian.wuerker $
  */
 /**
  *	Renders list of linked friend sites.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012 Ceus Media <https://ceusmedia.de/>
+ *	@copyright		2012-2021 Ceus Media <https://ceusmedia.de/>
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
- *	@since			01.08.2012
- *	@version		$Id: FriendLister.php5 1606 2014-03-02 11:54:41Z christian.wuerker $
  */
-class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract
+{
 	/**
 	 *	Constructor.
 	 *	@access		public
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->setEnv( $env );
 	}
 
@@ -35,7 +32,8 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract{
 	 *	@return		string
 	 *	@throws		RuntimeException if XML file is not existing
 	 */
-	public function build(){
+	public function build(): string
+	{
 		$config		= $this->env->getConfig();														//
 		$c			= new ADT_List_Dictionary( $config->getAll( 'module.ui_friendlister.' ) );		//
 		if( !file_exists( $c->get( 'file' ) ) )														//
@@ -68,7 +66,8 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract{
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 *	@return		string
 	 */
-	public static function render( CMF_Hydrogen_Environment $env ){
+	public static function render( CMF_Hydrogen_Environment $env ): string
+	{
 		$helper	= new View_Helper_FriendLister( $env );
 		return $helper->build();
 	}
@@ -79,7 +78,8 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract{
 	 *	@param		XML_Element		$friend		Element of XML file to get icon for
 	 *	@return		string|NULL
 	 */
-	protected function renderIcon( $friend ){
+	protected function renderIcon( $friend ): string
+	{
 		$config		= $this->env->getConfig();														//
 		$icon		= $config->get( 'module.ui_friendlister.icon.male' );							//
 		if( $friend->hasAttribute( 'gender' ) && $friend->getAttribute( 'gender' ) == "f" )			//
@@ -92,4 +92,3 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract{
 		return UI_HTML_Tag::create( 'img', NULL, $attributes );										//
 	}
 }
-?>

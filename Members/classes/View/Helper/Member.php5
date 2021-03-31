@@ -1,18 +1,21 @@
 <?php
-class View_Helper_Member{
-
+class View_Helper_Member
+{
 	protected $useGravatar	= TRUE;
 	protected $user;
 	protected $url;
-	protected $mode	= 'inline';
+	protected $mode			= 'inline';
+	protected $modelUser;
 
-	public function __construct( $env ){
-		$this->env	= $env;
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
+		$this->env				= $env;
 		$this->helperGravatar	= new View_Helper_Gravatar( $this->env );
 		$this->modelUser		= new Model_User( $this->env );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->user )
 			return "UNKNOWN";
 		if( !$this->useGravatar )
@@ -61,9 +64,10 @@ class View_Helper_Member{
 		}
 	}
 
-	public function renderImage(){
+	public function renderImage(): string
+	{
 		if( !$this->user )
-			return;
+			return '';
 		$helperGravatar	= new View_Helper_Gravatar( $this->env );
 		$helperGravatar->setUser( $this->user );
 		$helperAvatar	= NULL;
@@ -101,7 +105,8 @@ class View_Helper_Member{
 		return $image;
 	}
 
-	static public function renderImageStatic( CMF_Hydrogen_Environment $env, $userObjectOrId, $url = NULL, $mode = NULL ){
+	public static function renderImageStatic( CMF_Hydrogen_Environment $env, $userObjectOrId, string $url = NULL, string $mode = NULL ): string
+	{
 		$helper	= new self( $env );
 		$helper->setUser( $userObjectOrId );
 		if( $url )
@@ -111,7 +116,8 @@ class View_Helper_Member{
 		return $helper->renderImage();
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $userObjectOrId, $url = NULL, $mode = NULL ){
+	public static function renderStatic( CMF_Hydrogen_Environment $env, $userObjectOrId, string $url = NULL, string $mode = NULL ): string
+	{
 		$helper	= new self( $env );
 		$helper->setUser( $userObjectOrId );
 		if( $url )
@@ -121,18 +127,24 @@ class View_Helper_Member{
 		return $helper->render();
 	}
 
-	public function setMode( $mode ){
+	public function setMode( string $mode ): self
+	{
 		$this->mode	= $mode;
+		return $this;
 	}
 
-	public function setLinkUrl( $url ){
+	public function setLinkUrl( string $url ): self
+	{
 		$this->url	= $url;
+		return $this;
 	}
 
-	public function setUser( $userObjectOrId ){
+	public function setUser( $userObjectOrId ): self
+	{
 		if( is_object( $userObjectOrId ) )
 			$this->user	= $userObjectOrId;
 		else
 			$this->user	= $this->modelUser->get( $userObjectOrId );
+		return $this;
 	}
 }

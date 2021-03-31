@@ -40,7 +40,6 @@ $panelBrand	= '<div class="content-panel">
 	</div>
 </div>';
 
-
 $helperUploadLogo	= new View_Helper_Input_File( $env );
 $helperUploadLogo->setName( 'logo' );
 $helperUploadLogo->setLabel( $iconFile );

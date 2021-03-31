@@ -1,25 +1,8 @@
 <?php
-class Hook_Resource_Mail_Group_Member /*extends CMF_Hydrogen_Hook*/{
-
-	static protected function checkGroupPayload( $env, $payload ){
-		if( property_exists( $payload, 'group' ) && is_object( $payload->group ) )
-			return $payload->group;
-		$logicGroup		= Logic_Mail_Group::getInstance( $env );
-		if( property_exists( $payload, 'groupId' ) && $payload->groupId )
-			return $logicGroup->getGroup( $payload->groupId );
-		throw new DomainException( 'No group data set' );
-	}
-
-	static protected function checkMemberPayload( $env, $payload ){
-		if( property_exists( $payload, 'member' ) && is_object( $payload->member ) )
-			return $payload->member;
-		$logicGroup		= Logic_Mail_Group::getInstance( $env );
-		if( property_exists( $payload, 'memberId' ) && $payload->memberId )
-			return $logicGroup->getGroupMember( $group->mailGroupId, $payload->memberId );
-		throw new DomainException( 'No member data set' );
-	}
-
-	static public function onMemberActivated( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_Resource_Mail_Group_Member extends CMF_Hydrogen_Hook
+{
+	public static function onMemberActivated( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$payload		= (object) $data;
 		$modelGroup		= new Model_Mail_Group( $env );
 		$modelMember	= new Model_Mail_Group_Member( $env );
@@ -61,7 +44,8 @@ class Hook_Resource_Mail_Group_Member /*extends CMF_Hydrogen_Hook*/{
 	}
 
 	// @todo call this event
-	static public function onMemberDeactivated( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onMemberDeactivated( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$payload		= (object) $data;
 		$modelGroup		= new Model_Mail_Group( $env );
 		$modelMember	= new Model_Mail_Group_Member( $env );
@@ -102,7 +86,8 @@ class Hook_Resource_Mail_Group_Member /*extends CMF_Hydrogen_Hook*/{
 		}
 	}
 
-	static public function onMemberReject( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onMemberReject( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		$payload		= (object) $data;
 		$modelGroup		= new Model_Mail_Group( $env );
 		$modelMember	= new Model_Mail_Group_Member( $env );
@@ -123,15 +108,36 @@ class Hook_Resource_Mail_Group_Member /*extends CMF_Hydrogen_Hook*/{
 		$logicMail->handleMail( $mail, $receiver, $language );
 	}
 
+	protected static function checkGroupPayload( CMF_Hydrogen_Environment $env, $payload )
+	{
+		if( property_exists( $payload, 'group' ) && is_object( $payload->group ) )
+			return $payload->group;
+		$logicGroup		= Logic_Mail_Group::getInstance( $env );
+		if( property_exists( $payload, 'groupId' ) && $payload->groupId )
+			return $logicGroup->getGroup( $payload->groupId );
+		throw new DomainException( 'No group data set' );
+	}
+
+	protected static function checkMemberPayload( CMF_Hydrogen_Environment $env, $payload )
+	{
+		if( property_exists( $payload, 'member' ) && is_object( $payload->member ) )
+			return $payload->member;
+		$logicGroup		= Logic_Mail_Group::getInstance( $env );
+		if( property_exists( $payload, 'memberId' ) && $payload->memberId )
+			return $logicGroup->getGroupMember( $group->mailGroupId, $payload->memberId );
+		throw new DomainException( 'No member data set' );
+	}
 
 
 	// @todo call this event
-	static public function onMemberJoined( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onMemberJoined( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		// @todo implement
 	}
 
 	// @todo call this event
-	static public function onMemberLeft( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onMemberLeft( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	{
 		// @todo implement
 	}
 }

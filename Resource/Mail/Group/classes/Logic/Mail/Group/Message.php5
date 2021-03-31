@@ -1,6 +1,6 @@
 <?php
-class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
-
+class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic
+{
 	protected $logicGroup;
 	protected $modelMember;
 	protected $modelMessage;
@@ -13,16 +13,6 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 	protected $modelUser;
 	protected $logicMail;*/
 	protected $transports		= array();
-
-	public function __onInit(){
-		$this->logicGroup	= Logic_Mail_Group::getInstance( $this->env );
-		$this->modelMember	= new Model_Mail_Group_Member( $this->env );
-		$this->modelMessage	= new Model_Mail_Group_Message( $this->env );
-/*		$this->modelGroup	= new Model_Mail_Group( $this->env );
-		$this->modelServer	= new Model_Mail_Group_Server( $this->env );
-		$this->modelUser	= new Model_User( $this->env );
-		$this->logicMail	= Logic_Mail::getInstance( $this->env );*/
-	}
 
 	public function addFromRawMail( $groupId, $rawMail ){
 		$parser		= new \CeusMedia\Mail\Message\Parser();
@@ -241,7 +231,19 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 
 	//  --  PROTECTED METHODS  --  //
 
-	protected function forwardMessage( $message, $dryMode = FALSE ){
+	protected function __onInit()
+	{
+		$this->logicGroup	= Logic_Mail_Group::getInstance( $this->env );
+		$this->modelMember	= new Model_Mail_Group_Member( $this->env );
+		$this->modelMessage	= new Model_Mail_Group_Message( $this->env );
+/*		$this->modelGroup	= new Model_Mail_Group( $this->env );
+		$this->modelServer	= new Model_Mail_Group_Server( $this->env );
+		$this->modelUser	= new Model_User( $this->env );
+		$this->logicMail	= Logic_Mail::getInstance( $this->env );*/
+	}
+
+	protected function forwardMessage( $message, bool $dryMode = FALSE )
+	{
 		$group	= $this->logicGroup->getGroup( $message->mailGroupId, TRUE, TRUE );
 		$allowedMessageStatuses	= array(
 			Model_Mail_Group_Message::STATUS_NEW,
@@ -259,7 +261,8 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 		return $mails;
 	}
 
-	protected function forwardMessageToMember( $messageObjectOrId, $memberObjectOrId, $dry = FALSE ){
+	protected function forwardMessageToMember( $messageObjectOrId, $memberObjectOrId, bool $dry = FALSE )
+	{
 		if( is_object( $messageObjectOrId ) )
 			$message	= $messageObjectOrId;
 		else if( is_int( $messageObjectOrId ) )
@@ -320,7 +323,8 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 		return $forwardMail;
 	}
 
-	protected function getTransport( $groupId ){
+	protected function getTransport( $groupId )
+	{
 		$groupId	= (int) $groupId;
 		if( !array_key_exists( $groupId, $this->transports ) ){
 			$group	= $this->logicGroup->checkGroupId( $groupId );
@@ -335,7 +339,8 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 		return $this->transports[$groupId];
 	}
 
-	protected function rejectMessage( $messageObjectOrId ){
+	protected function rejectMessage( $messageObjectOrId )
+	{
 		if( is_object( $messageObjectOrId ) )
 			$message	= $messageObjectOrId;
 		else if( is_int( $messageObjectOrId ) )
@@ -351,7 +356,8 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 		//	... @todo send mail to sender
 	}
 
-	protected function stallMessage( $messageObjectOrId ){
+	protected function stallMessage( $messageObjectOrId )
+	{
 		if( is_object( $messageObjectOrId ) )
 			$message	= $messageObjectOrId;
 		else if( is_int( $messageObjectOrId ) )
@@ -369,7 +375,8 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic{
 
 	//  --  PRIVATE METHODS  --  //
 
-	private function setMessageStatus( $messageId, $status, $method = NULL ){
+	private function setMessageStatus( $messageId, $status, $method = NULL )
+	{
 		$message	= $this->checkId( $messageId );
 		$data		= array(
 			'status'		=> $status,

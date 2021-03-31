@@ -1,6 +1,7 @@
 <?php
-class View_Helper_Bootstrap_Modal_Trigger{
-
+class View_Helper_Bootstrap_Modal_Trigger
+{
+	protected $env;
 	protected $attributes	= array();
 	protected $id;
 	protected $label;
@@ -11,15 +12,18 @@ class View_Helper_Bootstrap_Modal_Trigger{
 	 *	@access		public
 	 *	@param		object		$env			Instance of Hydrogen Environment
 	 */
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 	}
 
-	public function __toString(){
+	public function __toString()
+	{
 		return $this->render();
 	}
 
-	static public function create( $env ){
+	public static function create( CMF_Hydrogen_Environment $env ): self
+	{
 		return new static( $env );
 	}
 
@@ -28,7 +32,8 @@ class View_Helper_Bootstrap_Modal_Trigger{
 	 *	@access		public
 	 *	@return		string
 	 */
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->label )
 			throw new RuntimeException( 'No label set' );
 		if( !$this->modalId )
@@ -65,7 +70,8 @@ class View_Helper_Bootstrap_Modal_Trigger{
 	 *	@param		array		$attributes		Map of button attributes
 	 *	@return		self
 	 */
-	public function setAttributes( $attributes ){
+	public function setAttributes( array $attributes ): self
+	{
 		$this->attributes	= $attributes;
 		return $this;
 	}
@@ -77,7 +83,8 @@ class View_Helper_Bootstrap_Modal_Trigger{
 	 *	@return		self
 	 *	@todo		code doc
 	 */
-	public function setId( $id ){
+	public function setId( string $id ): self
+	{
 		$this->id		= $id;
 		return $this;
 	}
@@ -89,7 +96,8 @@ class View_Helper_Bootstrap_Modal_Trigger{
 	 *	@return		self
 	 *	@todo		code doc
 	 */
-	public function setLabel( $label ){
+	public function setLabel( string $label ): self
+	{
 		$this->label	= $label;
 		return $this;
 	}
@@ -101,9 +109,9 @@ class View_Helper_Bootstrap_Modal_Trigger{
 	 *	@return		self
 	 *	@todo		code doc
 	 */
-	public function setModalId( $modalId ){
+	public function setModalId( string $modalId ): self
+	{
 		$this->modalId	= $modalId;
 		return $this;
 	}
 }
-?>

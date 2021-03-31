@@ -76,7 +76,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 		return UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
 	}
 
-	public function setButtonSize( $buttonSize ): self
+	public function setButtonSize( string $buttonSize ): self
 	{
 		if( !in_array( $buttonSize, self::BUTTON_SIZES ) )
 			throw new RangeException( 'Invalid button size' );
@@ -84,7 +84,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 		return $this;
 	}
 
-	public function setButtonState( $buttonState ): self
+	public function setButtonState( string $buttonState ): self
 	{
 		if( !in_array( $buttonState, self::BUTTON_STATES ) )
 			throw new RangeException( 'Invalid button state (must be on of {'.join( ',', self::BUTTON_STATES ).'})' );

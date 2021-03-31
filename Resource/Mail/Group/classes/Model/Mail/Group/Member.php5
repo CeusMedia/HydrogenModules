@@ -1,23 +1,15 @@
 <?php
 /**
- *	Data Model of Customers.
- *	@category		cmProjects
- *	@package		LUV.Model
+ *	Data model of mail group members.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
- *	@version		3.0
  */
 /**
- *	Data Model of Customers.
- *	@category		cmProjects
- *	@package		LUV.Model
+ *	Data model of mail group members.
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
- *	@version		3.0
  */
-class Model_Mail_Group_Member extends CMF_Hydrogen_Model {
-
+class Model_Mail_Group_Member extends CMF_Hydrogen_Model
+{
 	const STATUS_ARCHIVED			= -9;
 	const STATUS_DEACTIVATED		= -3;
 	const STATUS_REJECTED			= -2;
@@ -26,7 +18,18 @@ class Model_Mail_Group_Member extends CMF_Hydrogen_Model {
 	const STATUS_CONFIRMED			= 1;
 	const STATUS_ACTIVATED			= 2;
 
+	const STATUSES					= [
+		self::STATUS_ARCHIVED,
+		self::STATUS_DEACTIVATED,
+		self::STATUS_REJECTED,
+		self::STATUS_UNREGISTERED,
+		self::STATUS_REGISTERED,
+		self::STATUS_CONFIRMED,
+		self::STATUS_ACTIVATED,
+	];
+
 	protected $name		= 'mail_group_members';
+
 	protected $columns	= array(
 		"mailGroupMemberId",
 		"mailGroupId",
@@ -37,13 +40,15 @@ class Model_Mail_Group_Member extends CMF_Hydrogen_Model {
 		"createdAt",
 		"modifiedAt",
 	);
+
 	protected $primaryKey	= 'mailGroupMemberId';
+
 	protected $indices		= array(
 		"mailGroupId",
 		"status",
 		"address",
 		"title",
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

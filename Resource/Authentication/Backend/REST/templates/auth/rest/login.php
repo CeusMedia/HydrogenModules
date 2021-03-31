@@ -20,4 +20,3 @@ return $tabs.'<br/></br/><br/><br/><br/><br/>'.$textTop.
 	HTML::DivClass( "row-fluid", array(
 		HTML::DivClass( "span4 offset4", $panelLogin )
 	) ).$textBottom;
-?>

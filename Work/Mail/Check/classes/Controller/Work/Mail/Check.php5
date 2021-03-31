@@ -1,6 +1,6 @@
 <?php
-class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller
+{
 	protected $messenger;
 	protected $modelAddress;
 	protected $modelCheck;
@@ -9,48 +9,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 	protected $request;
 	protected $session;
 
-	protected function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-		$this->messenger		= $this->env->getMessenger();
-		$this->moduleOptions	= $this->env->getConfig()->getAll( 'module.work_mail_check.', TRUE );
-
-		//  --  PREPARE MODELS  --  //
-		$this->modelAddress		= new Model_Mail_Address( $this->env );
-		$this->modelCheck		= new Model_Mail_Address_Check( $this->env );
-		$this->modelGroup		= new Model_Mail_Group( $this->env );
-	}
-
-
-	/**
-	 *	Checks whether a group ID is existing and returns data entity.
-	 *	Otherwise, in default strict mode, an exception will be thrown.
-	 *	Otherwise a user message will be noted followed by a redirection.
-	 *	The default redirection is to the root of this module.
-	 *	Redirections can be set by third "from" parameter.
-	 *	Disabling the fourth "withinModule" parameter will unlock the module scope for redirections.
-	 *
-	 *	@access		protected
-	 *	@param		integer		$groupId		ID of mail check group to check
-	 *	@param		boolean		$strict			Flag: throw exception it not existing
-	 *	@param		string		$from			Path to redirect to
-	 *	@param		boolean		$withinModule	Flag: reduce scope of redirection to current module
-	 *	@return		object|array				Group data entity
-	 *	@throws		InvalidArgumentException	if group is not existing and strict mode is enabled
-	 *	@todo		kriss: implement OAuth user focus for ASP solution
-	 */
-	protected function checkGroupId( $groupId, $strict = TRUE, $from = NULL, $withinModule = TRUE ){
-		if( $group = $this->modelGroup->get( $groupId ) )
-			return $group;
-		if( $strict )
-			throw new InvalidArgumentException( 'Invalid group ID' );
-		$this->messenger->noteError( 'Invalid group ID.' );
-		if( $from )
-			$this->restart( $from, $withinModule );
-		$this->restart( NULL, $withinModule );
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$addresses	= $this->request->get( 'address' );
 			$groupId	= $this->request->get( 'groupId' );
@@ -77,7 +37,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function addGroup(){
+	public function addGroup()
+	{
 		if( $this->request->has( 'save' ) ){
 			$title		= $this->request->get( 'title' );
 			$mailColumn	= $this->request->get( 'mailColumn' );
@@ -103,7 +64,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->restart( 'group', TRUE );
 	}
 
-	public function ajaxAddress( $addressId ){
+	public function ajaxAddress( $addressId )
+	{
 		$address	= $this->modelAddress->get( $addressId );
 		if( $address ){
 			$address->checks	= $this->modelCheck->getAllByIndex( 'mailAddressId', $addressId, array( 'createdAt' => 'DESC' ) );
@@ -112,7 +74,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function ajaxEditAddress(){
+	public function ajaxEditAddress()
+	{
 		$addressId	= $this->request->get( 'id' );
 		$address	= $this->request->get( 'address' );
 
@@ -128,7 +91,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function check(){
+	public function check()
+	{
 		$addressIds	= $this->request->get( 'addressId' );
 		if( !is_array( $addressIds ) )
 			$addressIds	= array( $addressIds );
@@ -190,7 +154,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function checkAll(){
+	public function checkAll()
+	{
 		$conditions		= array();
 		$filterGroupId	= $this->session->get( 'work_mail_check_filter_groupId' );
 		$filterStatus	= $this->session->get( 'work_mail_check_filter_status' );
@@ -209,7 +174,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );*/
 	}
 
-	public function export( $show = FALSE ){
+	public function export( $show = FALSE )
+	{
 		if( $this->request->has( 'save' ) ){
 
 			$words	= $this->getWords();
@@ -269,7 +235,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->addData( 'groups', $this->modelGroup->getAll( array(), array( 'title' => 'ASC' ) ) );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			$this->session->remove( 'work_mail_check_filter_groupId' );
 			$this->session->remove( 'work_mail_check_filter_status' );
@@ -283,7 +250,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function group(){
+	public function group()
+	{
 		$groups	= $this->modelGroup->getAll( array(), array( 'title' => 'ASC' ) );
 		foreach( $groups as $group ){
 			$addresses	= $this->modelAddress->getAll( array( 'mailGroupId' => $group->mailGroupId ) );
@@ -307,7 +275,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->addData( 'groups', $groups );
 	}
 
-	public function import( $abort = NULL ){
+	public function import( $abort = NULL )
+	{
 		if( $abort ){
 			$this->session->remove( 'addressesToImport' );
 			$this->restart( 'import', TRUE );
@@ -371,7 +340,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 		$limit			= 20;															//  @todo	kriss: replace by configurable default limit (not existing in config atm)
 		if( !$this->session->get( 'work_mail_check_filter_limit' ) )
 			$this->session->set( 'work_mail_check_filter_limit', $limit );
@@ -432,7 +402,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->addData( 'groups', $groups );
 	}
 
-	public function remove(){
+	public function remove()
+	{
 		$addressIds	= $this->request->get( 'addressId' );
 		if( !is_array( $addressIds ) )
 			$addressIds	= array( $addressIds );
@@ -444,7 +415,8 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeGroup( $groupId ){
+	public function removeGroup( $groupId )
+	{
 		$group	= $this->checkGroupId( $groupId );
 		foreach( $this->modelAddress->getAllByIndex( 'mailGroupId', $groupId ) as $address )
 			$this->modelCheck->removeByIndex( 'mailAddressId', $address->mailAddressId );
@@ -469,5 +441,46 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller{
 			) ) ),
 		) );
 	}
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+		$this->messenger		= $this->env->getMessenger();
+		$this->moduleOptions	= $this->env->getConfig()->getAll( 'module.work_mail_check.', TRUE );
+
+		//  --  PREPARE MODELS  --  //
+		$this->modelAddress		= new Model_Mail_Address( $this->env );
+		$this->modelCheck		= new Model_Mail_Address_Check( $this->env );
+		$this->modelGroup		= new Model_Mail_Group( $this->env );
+	}
+
+	/**
+	 *	Checks whether a group ID is existing and returns data entity.
+	 *	Otherwise, in default strict mode, an exception will be thrown.
+	 *	Otherwise a user message will be noted followed by a redirection.
+	 *	The default redirection is to the root of this module.
+	 *	Redirections can be set by third "from" parameter.
+	 *	Disabling the fourth "withinModule" parameter will unlock the module scope for redirections.
+	 *
+	 *	@access		protected
+	 *	@param		integer		$groupId		ID of mail check group to check
+	 *	@param		boolean		$strict			Flag: throw exception it not existing
+	 *	@param		string		$from			Path to redirect to
+	 *	@param		boolean		$withinModule	Flag: reduce scope of redirection to current module
+	 *	@return		object|array				Group data entity
+	 *	@throws		InvalidArgumentException	if group is not existing and strict mode is enabled
+	 *	@todo		kriss: implement OAuth user focus for ASP solution
+	 */
+	protected function checkGroupId( $groupId, bool $strict = TRUE, string $from = NULL, bool $withinModule = TRUE )
+	{
+		if( $group = $this->modelGroup->get( $groupId ) )
+			return $group;
+		if( $strict )
+			throw new InvalidArgumentException( 'Invalid group ID' );
+		$this->messenger->noteError( 'Invalid group ID.' );
+		if( $from )
+			$this->restart( $from, $withinModule );
+		$this->restart( NULL, $withinModule );
+	}
 }
-?>

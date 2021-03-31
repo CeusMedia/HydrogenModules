@@ -1,6 +1,6 @@
 <?php
-class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
-
+class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller
+{
 	protected $request;
 	protected $session;
 	protected $messenger;
@@ -11,26 +11,8 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 	protected $providersAvailable			= array();
 	protected $filterPrefix					= 'filter_admin_oauth2_';
 
-	public function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-		$this->messenger		= $this->env->getMessenger();
-		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin_oauth2.', TRUE );
-		$this->modelProvider		= new Model_Oauth_Provider( $this->env );
-		$this->modelProviderDefault	= new Model_Oauth_ProviderDefault();
-		$this->providersIndex		= array();
-		$this->providersAvailable	= array();
-		foreach( $this->modelProviderDefault->getAll() as $provider ){
-			$provider->exists = class_exists( $provider->class );
-			$this->providersIndex[$provider->class]	= $provider;
-		}
-		foreach( $this->providersIndex as $provider ){
-			if( $provider->exists )
-				$this->providersAvailable[]	= $provider;
-		}
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$data	= $this->request->getAll();
 			$data['status']	= Model_Oauth_Provider::STATUS_NEW;
@@ -79,7 +61,8 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		$this->addData( 'providers', $this->modelProvider->getAll() );
 	}
 
-	public function edit( $providerId ){
+	public function edit( $providerId )
+	{
 		$provider	= $this->modelProvider->get( $providerId );
 		if( !$provider ){
 			$this->messenger->noteError( 'Invalid provider ID.' );
@@ -96,7 +79,8 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		$this->addData( 'provider', $provider );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			$filters	= $this->session->getAll( $this->filterPrefix );
 			foreach( array_keys( $filters ) as $filterKey )
@@ -111,7 +95,8 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$conditions	= array();
 		$orders		= array( 'rank' => 'ASC' );
 		$providers	= $this->modelProvider->getAll( $conditions, $orders );
@@ -120,7 +105,8 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		$this->addData( 'providers', $providers );
 	}
 
-	public function remove( $providerId ){
+	public function remove( $providerId )
+	{
 		$provider	= $this->modelProvider->get( $providerId );
 		if( !$provider ){
 			$this->messenger->noteError( 'Invalid provider ID.' );
@@ -134,7 +120,8 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setStatus( $providerId, $status ){
+	public function setStatus( $providerId, $status )
+	{
 		$provider	= $this->modelProvider->get( $providerId );
 		if( !$provider ){
 			$this->messenger->noteError( 'Invalid provider ID.' );
@@ -142,5 +129,25 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller{
 		}
 		$this->modelProvider->edit( $providerId, array( 'status' => $status ) );
 		$this->restart( 'edit/'.$providerId, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+		$this->messenger		= $this->env->getMessenger();
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin_oauth2.', TRUE );
+		$this->modelProvider		= new Model_Oauth_Provider( $this->env );
+		$this->modelProviderDefault	= new Model_Oauth_ProviderDefault();
+		$this->providersIndex		= array();
+		$this->providersAvailable	= array();
+		foreach( $this->modelProviderDefault->getAll() as $provider ){
+			$provider->exists = class_exists( $provider->class );
+			$this->providersIndex[$provider->class]	= $provider;
+		}
+		foreach( $this->providersIndex as $provider ){
+			if( $provider->exists )
+				$this->providersAvailable[]	= $provider;
+		}
 	}
 }

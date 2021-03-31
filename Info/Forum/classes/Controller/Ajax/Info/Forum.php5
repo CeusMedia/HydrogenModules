@@ -1,7 +1,7 @@
 <?php
 class Controller_Ajax_Info_Forum extends CMF_Hydrogen_Controller_Ajax
 {
-	public function ajaxCountUpdates( $threadId, $lastPostId )
+	public function countUpdates( $threadId, $lastPostId )
 	{
 		$thread		= $this->modelThread->get( $threadId );
 		if( !$thread ){
@@ -19,7 +19,7 @@ class Controller_Ajax_Info_Forum extends CMF_Hydrogen_Controller_Ajax
 		$this->respondData( $data );
 	}
 
-	public function ajaxEditPost()
+	public function editPost()
 	{
 		$postId		= $this->request->get( 'postId' );
 		$content	= $this->request->get( 'content' );
@@ -31,7 +31,7 @@ class Controller_Ajax_Info_Forum extends CMF_Hydrogen_Controller_Ajax
 		exit;
 	}
 
-	public function ajaxGetPost( $postId )
+	public function getPost( $postId )
 	{
 		$post		= $this->modelPost->get( $postId );
 		if( !$post )
@@ -39,7 +39,7 @@ class Controller_Ajax_Info_Forum extends CMF_Hydrogen_Controller_Ajax
 		$this->respondData( $post );
 	}
 
-	public function ajaxRenameThread()
+	public function renameThread()
 	{
 		$threadId	= $this->request->get( 'threadId' );
 		$name		= $this->request->get( 'name' );
@@ -49,7 +49,7 @@ class Controller_Ajax_Info_Forum extends CMF_Hydrogen_Controller_Ajax
 		exit;
 	}
 
-	public function ajaxRenameTopic()
+	public function renameTopic()
 		{
 		$topicId	= $this->request->get( 'topicId' );
 		$name		= $this->request->get( 'name' );
@@ -59,7 +59,7 @@ class Controller_Ajax_Info_Forum extends CMF_Hydrogen_Controller_Ajax
 		exit;
 	}
 
-	public function ajaxStarThread( $threadId )
+	public function starThread( $threadId )
 	{
 		$thread		= $this->modelThread->get( (int) $threadId );
 		if( $thread ){

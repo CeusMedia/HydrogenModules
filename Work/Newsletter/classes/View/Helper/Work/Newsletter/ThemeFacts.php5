@@ -3,6 +3,7 @@ class View_Helper_Work_Newsletter_ThemeFacts
 {
 	protected $attributes	= array();
 	protected $data;
+	protected $env;
 
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{

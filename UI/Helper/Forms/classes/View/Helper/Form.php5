@@ -1,7 +1,7 @@
 <?php
-class View_Helper_Form/* extends CMF_Hydrogen_View_Helper*/{
-
-	protected $emv;
+class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
+{
+	protected $env;
 	protected $blocks				= array();
 	protected $form;
 	protected $formId;
@@ -10,7 +10,8 @@ class View_Helper_Form/* extends CMF_Hydrogen_View_Helper*/{
 	protected $returnCode;
 	protected $mode					= '';
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 		$this->modelForm	= new Model_Form( $this->env );
 		$this->modelBlock	= new Model_Form_Block( $this->env );
@@ -19,28 +20,8 @@ class View_Helper_Form/* extends CMF_Hydrogen_View_Helper*/{
 		$this->returnCode	= (int) $this->env->getRequest()->get( 'rc' );
 	}
 
-	public function renderStatic( CMF_Hydrogen_Environment $env, $formId ){
-		$helper	= new View_Helper_Form( $env );
-		return $helper->setId( $formId )->render();
-	}
-
-	public function setId( $formId ){
-		$form	= $this->modelForm->get( $formId );
-		if( !$form )
-			throw new RangeException( 'Invalid form ID given: '.$formId );
-		$this->form		= $form;
-		$this->formId	= $formId;
-		return $this;
-	}
-
-	public function setMode( $mode ){
-		if( in_array( $mode, array( NULL, '', 'extended' ) ) ){
-			$this->mode	= (string) $mode;
-		}
-		return $this;
-	}
-
-	public function render(){
+	public function render(): string
+	{
 		$resultMessages	= $this->renderResultMessages();
 		$content		= $resultMessages;
 		if( !$this->returnCode )
@@ -83,7 +64,32 @@ class View_Helper_Form/* extends CMF_Hydrogen_View_Helper*/{
 		return $content;
 	}
 
-	protected function renderForm(){
+	public static function renderStatic( CMF_Hydrogen_Environment $env, string $formId ): string
+	{
+		$helper	= new View_Helper_Form( $env );
+		return $helper->setId( $formId )->render();
+	}
+
+	public function setId( string $formId ): self
+	{
+		$form	= $this->modelForm->get( $formId );
+		if( !$form )
+			throw new RangeException( 'Invalid form ID given: '.$formId );
+		$this->form		= $form;
+		$this->formId	= $formId;
+		return $this;
+	}
+
+	public function setMode( string $mode ): self
+	{
+		if( in_array( $mode, array( NULL, '', 'extended' ) ) ){
+			$this->mode	= (string) $mode;
+		}
+		return $this;
+	}
+
+	protected function renderForm(): string
+	{
 		$form		= $this->modelForm->get( $this->formId );
 		$button		= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'button', 'abschicken', array( 'type' => 'submit', 'name' => 'send', 'class' => 'cmsmasters_button btn btn-primary' ) ),
@@ -109,7 +115,8 @@ class View_Helper_Form/* extends CMF_Hydrogen_View_Helper*/{
 		) );
 	}
 
-	protected function renderResultMessages(){
+	protected function renderResultMessages(): string
+	{
 		$messageCode	= '';
 		$messageError	= '';
 		$messageSuccess	= '';

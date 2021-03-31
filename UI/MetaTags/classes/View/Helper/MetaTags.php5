@@ -1,11 +1,15 @@
 <?php
-class View_Helper_MetaTags{
+class View_Helper_MetaTags
+{
+	protected $env;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env	= $env;
 	}
 
-	public function apply(){
+	public function apply(): bool
+	{
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$language	= $this->env->getLanguage();
@@ -131,4 +135,3 @@ class View_Helper_MetaTags{
 		return TRUE;
 	}
 }
-?>

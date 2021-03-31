@@ -1,20 +1,12 @@
 <?php
-class View_Info extends CMF_Hydrogen_View{
-
-	protected function __onInit() {
-		$this->env->page->addThemeStyle( 'site.info.css' );
-	}
-
-	public function index(){
+class View_Info extends CMF_Hydrogen_View
+{
+	public function index()
+	{
 		$site		= $this->getData( 'site' );
 		$types		= explode( ',', $this->env->getConfig()->get( 'module.info.types' ) );
 		foreach( $types as $type ){
 			switch( strtolower( trim( $type ) ) ){
-				case 'html':
-					$fileKey	= 'html/info/'.$site.".html";
-					if( $this->hasContentFile( $fileKey ) )
-						return $this->renderContent( $this->loadContentFile( $fileKey ) );
-					break;
 				case 'md':
 				case 'markdown':
 					if( $this->env->getModules()->has( 'UI_Markdown' ) ){
@@ -26,10 +18,20 @@ class View_Info extends CMF_Hydrogen_View{
 						}
 					}
 					break;
+				case 'html':
+				default:
+					$fileKey	= 'html/info/'.$site.".html";
+					if( $this->hasContentFile( $fileKey ) )
+						return $this->renderContent( $this->loadContentFile( $fileKey ) );
+					break;
 			}
 		}
 		$this->env->getResponse()->setStatus( 404 );
 		return $this->loadContentFile( 'html/info/404.html' );										//  load content from file
 	}
+
+	protected function __onInit()
+	{
+		$this->env->page->addThemeStyle( 'module.info.css' );
+	}
 }
-?>

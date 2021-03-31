@@ -44,5 +44,4 @@ return '
 			<button type="submit" name="save" class="btn btn-primary">'.$iconSave.'importieren</button>
 		</div>
 	</div>
-</form>
-';
+</form>';

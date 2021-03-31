@@ -1,6 +1,7 @@
 <?php
-class View_Helper_Bootstrap_Modal{
-
+class View_Helper_Bootstrap_Modal
+{
+	protected $env;
 	protected $attributes			= array();
 	protected $body;
 	protected $fade					= TRUE;
@@ -17,7 +18,8 @@ class View_Helper_Bootstrap_Modal{
 	 *	@access		public
 	 *	@param		object		$env			Instance of Hydrogen Environment
 	 */
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env			= $env;
 		$this->id			= 'modal-'.uniqid();
 		$this->bsVersion	= $env->getModules()->get( 'UI_Bootstrap' )->config['version']->value;
@@ -28,7 +30,8 @@ class View_Helper_Bootstrap_Modal{
 		return $this->render();
 	}
 
-	static public function create( $env ){
+	public static function create( CMF_Hydrogen_Environment $env ): self
+	{
 		return new static( $env );
 	}
 
@@ -37,7 +40,8 @@ class View_Helper_Bootstrap_Modal{
 	 *	@access		public
 	 *	@return		string
 	 */
-	public function render(){
+	public function render(): string
+	{
 		$body		= UI_HTML_Tag::create( 'div', $this->body, array(
 			'class'	=> 'modal-body',
 		) );
@@ -85,7 +89,111 @@ class View_Helper_Bootstrap_Modal{
 		return $modal;
 	}
 
-	protected function renderFooter(){
+	/**
+	 *	Sets additional modal attributes.
+	 *	Set values for id, role, tabindex, aria-hidden will be ignored.
+	 *	Set value for class will be added.
+	 *	@access		public
+	 *	@param		array		$attributes		Map of button attributes
+	 *	@return		self
+	 */
+	public function setAttributes( array $attributes ): self
+	{
+		$this->attributes	= $attributes;
+		return $this;
+	}
+
+	/**
+	 *	Set label of cancel button in modal footer.
+	 *	@access		public
+	 *	@param		string		$label			Label of cancel button in modal footer
+	 *	@return		self
+	 */
+	public function setButtonLabelCancel( string $label ): self
+	{
+		$this->labelButtonCancel	= $label;
+		return $this;
+	}
+
+	/**
+	 *	Set label of submit button in modal footer.
+	 *	@access		public
+	 *	@param		string		$label			Label of submit button in modal footer
+	 *	@return		self
+	 */
+	public function setButtonLabelSubmit( string $label ): self
+	{
+		$this->labelButtonSubmit	= $label;
+		return $this;
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		string		$body			...
+	 *	@return		self
+	 *	@todo		code doc
+	 */
+	public function setBody( string $body ): self
+	{
+		$this->body		= $body;
+		return $this;
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		string		$fade			...
+	 *	@return		self
+	 *	@todo		code doc
+	 */
+	public function setFade( string $fade ): self
+	{
+		$this->fade		= $fade;
+		return $this;
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		string		$action			...
+	 *	@return		self
+	 *	@todo		code doc
+	 */
+	public function setFormAction( string $action ): self
+	{
+		$this->formAction	= $action;
+		return $this;
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		string		$heading		...
+	 *	@return		self
+	 *	@todo		code doc
+	 */
+	public function setHeading( string $heading ): self
+	{
+		$this->heading		= $heading;
+		return $this;
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		string		$id				...
+	 *	@return		self
+	 *	@todo		code doc
+	 */
+	public function setId( string $id ): self
+	{
+		$this->id		= $id;
+		return $this;
+	}
+
+	protected function renderFooter(): string
+	{
 		$buttonClose	= UI_HTML_Tag::create( 'button', $this->labelButtonCancel, array(
 			'class'			=> 'btn',
 			'data-dismiss'	=> 'modal',
@@ -102,7 +210,8 @@ class View_Helper_Bootstrap_Modal{
 		return $footer;
 	}
 
-	protected function renderHeader(){
+	protected function renderHeader(): string
+	{
 		$buttonClose	= UI_HTML_Tag::create( 'button', '×', array(
 			'type'			=> "button",
 			'class'			=> "close",
@@ -114,100 +223,5 @@ class View_Helper_Bootstrap_Modal{
 			'class'	=> 'modal-header',
 		) );
 		return $header;
-	}
-
-	/**
-	 *	Sets additional modal attributes.
-	 *	Set values for id, role, tabindex, aria-hidden will be ignored.
-	 *	Set value for class will be added.
-	 *	@access		public
-	 *	@param		array		$attributes		Map of button attributes
-	 *	@return		self
-	 */
-	public function setAttributes( $attributes ){
-		$this->attributes	= $attributes;
-		return $this;
-	}
-
-	/**
-	 *	Set label of cancel button in modal footer.
-	 *	@access		public
-	 *	@param		string		$label			Label of cancel button in modal footer
-	 *	@return		self
-	 */
-	public function setButtonLabelCancel( $label ){
-		$this->labelButtonCancel	= $label;
-		return $this;
-	}
-
-	/**
-	 *	Set label of submit button in modal footer.
-	 *	@access		public
-	 *	@param		string		$label			Label of submit button in modal footer
-	 *	@return		self
-	 */
-	public function setButtonLabelSubmit( $label ){
-		$this->labelButtonSubmit	= $label;
-		return $this;
-	}
-
-	/**
-	 *	...
-	 *	@access		public
-	 *	@param		string		$body			...
-	 *	@return		self
-	 *	@todo		code doc
-	 */
-	public function setBody( $body ){
-		$this->body		= $body;
-		return $this;
-	}
-
-	/**
-	 *	...
-	 *	@access		public
-	 *	@param		string		$fade			...
-	 *	@return		self
-	 *	@todo		code doc
-	 */
-	public function setFade( $fade ){
-		$this->fade		= $fade;
-		return $this;
-	}
-
-	/**
-	 *	...
-	 *	@access		public
-	 *	@param		string		$action			...
-	 *	@return		self
-	 *	@todo		code doc
-	 */
-	public function setFormAction( $action ){
-		$this->formAction	= $action;
-		return $this;
-	}
-
-	/**
-	 *	...
-	 *	@access		public
-	 *	@param		string		$heading		...
-	 *	@return		self
-	 *	@todo		code doc
-	 */
-	public function setHeading( $heading ){
-		$this->heading		= $heading;
-		return $this;
-	}
-
-	/**
-	 *	...
-	 *	@access		public
-	 *	@param		string		$id				...
-	 *	@return		self
-	 *	@todo		code doc
-	 */
-	public function setId( $id ){
-		$this->id		= $id;
-		return $this;
 	}
 }

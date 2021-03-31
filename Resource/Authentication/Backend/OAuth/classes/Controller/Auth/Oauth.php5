@@ -1,6 +1,6 @@
 <?php
-class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
-
+class Controller_Auth_Oauth extends CMF_Hydrogen_Controller
+{
 	protected $clientId;
 	protected $clientSecret;
 	protected $clientUri;
@@ -12,25 +12,6 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 	protected $messenger;
 	protected $logic;
 
-	protected function __onInit(){
-		$this->config		= $this->env->getConfig();
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
-		if( isset( $this->env->version ) )
-			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
-				$this->cookie	= $this->env->getCookie();
-		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth.', TRUE );
-		$this->clientUri	= $this->env->url;
-		$this->clientId		= $this->moduleConfig->get( 'provider.client.ID' );
-		$this->clientSecret	= $this->moduleConfig->get( 'provider.client.secret' );
-		$this->providerUri	= $this->moduleConfig->get( 'provider.URI' );
-		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Oauth' );
-		$this->useCsrf		= $this->env->getModules()->has( 'Security_CSRF' );
-		$this->addData( 'useCsrf', $this->useCsrf );
-		$this->refreshToken();
-	}
 
 /*	public function ajaxEmailExists(){
 		print( json_encode( NULL ) );
@@ -42,7 +23,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 		exit;
 	}
 */
-	public function index(){
+	public function index()
+	{
 //		if( $this->session->get( 'oauth_access_token' ) ){
 //		}
 //		else{
@@ -129,7 +111,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 		}
 	}
 
-	public function login(){
+	public function login()
+	{
 		if( $this->logic->isAuthenticated() )
 			$this->redirectAfterLogin();
 		if( $this->moduleConfig->get( 'login.grantType' ) === 'password' ){
@@ -225,7 +208,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
 	}
 
-	public function logout(){
+	public function logout()
+	{
 		$this->session->remove( 'oauth_access_token' );
 		$this->session->remove( 'oauth_access_expires_in' );
 		$this->session->remove( 'oauth_access_expires_at' );
@@ -256,6 +240,27 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 		$this->redirectAfterLogout( $redirectController, $redirectAction );
 	}
 
+	protected function __onInit()
+	{
+		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+		if( isset( $this->env->version ) )
+			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
+				$this->cookie	= $this->env->getCookie();
+		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth.', TRUE );
+		$this->clientUri	= $this->env->url;
+		$this->clientId		= $this->moduleConfig->get( 'provider.client.ID' );
+		$this->clientSecret	= $this->moduleConfig->get( 'provider.client.secret' );
+		$this->providerUri	= $this->moduleConfig->get( 'provider.URI' );
+		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Oauth' );
+		$this->useCsrf		= $this->env->getModules()->has( 'Security_CSRF' );
+		$this->addData( 'useCsrf', $this->useCsrf );
+		$this->refreshToken();
+	}
+
 	/**
 	 *	Dispatch next route after login, by these rules:
 	 *	1. Given controller and action
@@ -268,7 +273,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogin( $controller = NULL, $action = NULL ){
+	protected function redirectAfterLogin( $controller = NULL, $action = NULL )
+	{
 		if( $controller )																			//  a redirect contoller has been argumented
 			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
@@ -297,7 +303,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogout( $controller = NULL, $action = NULL ){
+	protected function redirectAfterLogout( $controller = NULL, $action = NULL )
+	{
 		if( $controller )																			//  a redirect contoller has been argumented
 			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
@@ -314,7 +321,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 		$this->restart( NULL );																		//  fallback: go to index (empty path)
 	}
 
-	protected function refreshToken(){
+	protected function refreshToken()
+	{
 		if( $this->session->get( 'oauth_access_token' ) ){
 			if( time() >= $this->session->get( 'oauth_access_expires_at' ) ){
 				if( $this->session->get( 'oauth_refresh_token' ) ){
@@ -372,7 +380,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller {
 	 *	@access		public
 	 *	@return		void
 	 */
-	protected function tryLoginByCookie(){
+	protected function tryLoginByCookie()
+	{
 		if( $this->cookie->get( 'auth_remember' ) ){												//  autologin has been activated
 			$userId		= (int) $this->cookie->get( 'auth_remember_id' );							//  get user ID from cookie
 			$password	= (string) $this->cookie->get( 'auth_remember_pw' );						//  get hashed password from cookie

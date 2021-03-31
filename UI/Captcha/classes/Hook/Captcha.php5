@@ -1,7 +1,8 @@
 <?php
-class Hook_Captcha extends CMF_Hydrogen_Hook{
-
-	static public function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_Captcha extends CMF_Hydrogen_Hook
+{
+	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		$config	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
 
 		$default	= $config->getAll( 'default.', TRUE );
@@ -11,7 +12,7 @@ class Hook_Captcha extends CMF_Hydrogen_Hook{
 		$height		= $default->get( 'height' ) > 0 ? $default->get( 'height' ) : 40;
 
 		$processor		= new Logic_Shortcode( $env );
-		$processor->setContent( $data->content );
+		$processor->setContent( $payload->content );
 		$shortCodes		= array(
 			'captcha'	=> array(
 				'mode'		=> $config->get( 'mode' ),
@@ -44,6 +45,6 @@ class Hook_Captcha extends CMF_Hydrogen_Hook{
 				}
 			}
 		}
-		$data->content	= $processor->getContent();
+		$payload->content	= $processor->getContent();
 	}
 }

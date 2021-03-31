@@ -1,6 +1,6 @@
 <?php
-class Controller_Shop_Payment_Bank extends CMF_Hydrogen_Controller{
-
+class Controller_Shop_Payment_Bank extends CMF_Hydrogen_Controller
+{
 	/**	@var	ADT_List_Dictionary			$config			Module configuration dictionary */
 	protected $config;
 
@@ -19,7 +19,41 @@ class Controller_Shop_Payment_Bank extends CMF_Hydrogen_Controller{
 	protected $wallet;
 	protected $backends			= array();
 
-	public function __onInit(){
+	/**
+	 *	Entry point for payment.
+	 *	Since "Transfer" (user pays on another channel) is selected, no further actions are needed.
+	 *	Forwards to shop finish.
+	 */
+	public function perTransfer()
+	{
+		$this->restart( 'shop/finish' );
+	}
+
+	/**
+	 *	Entry point for payment.
+	 *	Since "Bill" (user pays bill coming on delivery) is selected, no further actions are needed.
+	 *	Forwards to shop finish.
+	 */
+	public function perBill()
+	{
+		$this->restart( 'shop/finish' );
+	}
+
+	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL )
+	{
+		$this->backends[]	= (object) array(
+			'backend'	=> $backend,
+			'key'		=> $key,
+			'title'		=> $title,
+			'path'		=> $path,
+			'priority'	=> $priority,
+			'icon'		=> $icon,
+			'mode'		=> 'delayed',
+		);
+	}
+
+	protected function __onInit()
+	{
 		$this->session			= $this->env->getSession();
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();
@@ -39,35 +73,5 @@ class Controller_Shop_Payment_Bank extends CMF_Hydrogen_Controller{
 			$this->restart( 'shop' );
 		}
 		$this->order		= $this->logicShop->getOrder( $this->orderId );
-	}
-
-	/**
-	 *	Entry point for payment.
-	 *	Since "Transfer" (user pays on another channel) is selected, no further actions are needed.
-	 *	Forwards to shop finish.
-	 */
-	public function perTransfer(){
-		$this->restart( 'shop/finish' );
-	}
-
-	/**
-	 *	Entry point for payment.
-	 *	Since "Bill" (user pays bill coming on delivery) is selected, no further actions are needed.
-	 *	Forwards to shop finish.
-	 */
-	public function perBill(){
-		$this->restart( 'shop/finish' );
-	}
-
-	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL ){
-		$this->backends[]	= (object) array(
-			'backend'	=> $backend,
-			'key'		=> $key,
-			'title'		=> $title,
-			'path'		=> $path,
-			'priority'	=> $priority,
-			'icon'		=> $icon,
-			'mode'		=> 'delayed',
-		);
 	}
 }

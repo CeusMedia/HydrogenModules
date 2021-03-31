@@ -1,37 +1,22 @@
 <?php
-class Controller_Info_Blog extends CMF_Hydrogen_Controller{
-
+class Controller_Info_Blog extends CMF_Hydrogen_Controller
+{
 	protected $modelCategory;
 	protected $modelComment;
 	protected $modelPost;
 	protected $modelUser;
 	protected $messenger;
 
-	protected function __onInit(){
-		$this->modelCategory	= new Model_Blog_Category( $this->env );
-		$this->modelComment		= new Model_Blog_Comment( $this->env );
-		$this->modelPost		= new Model_Blog_Post( $this->env );
-		$this->modelUser		= new Model_User( $this->env );
-		$this->messenger		= $this->env->getMessenger();
-
-		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.info_blog.', TRUE );
-		if( $this->moduleConfig->get( 'mail' ) ){
-			if( !$this->env->getModules()->has( 'Resource_Mail' ) ){
-				$words		= (object )$this->getWords( 'msg' );
-				$this->messenger->noteFailure( $words->failureMailModuleMissing );
-			}
-		}
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-	}
-
-	static public function getUriPart( $label, $delimiter = "_" ){
+	public static function getUriPart( $label, $delimiter = "_" )
+	{
 		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
 		$label	= preg_replace( "/ +/", $delimiter, $label );
 		return $label;
 	}
 
-	public function ajaxComment(){
+	public function ajaxComment()
+	{
 		$request	= $this->env->getRequest();
 		$language	= $this->env->getLanguage();
 //		$this->checkAjaxRequest();
@@ -66,19 +51,8 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	protected function checkPost( $postId, $strict = FALSE ){
-		$post	= $this->modelPost->get( (int) $postId );
-		if( !$post ){
-			if( $strict )
-				throw new OutOfRangeException( 'Invalid post ID' );
-			$words		= (object )$this->getWords( 'msg' );
-			$this->messenger->noteError( $words->errorInvalidPostId );
-			$this->restart( NULL, TRUE );
-		}
-		return $post;
-	}
-
-	public function comment( $postId ){
+	public function comment( $postId )
+	{
 		if( !$postId )
 			$this->restart( NULL, TRUE );
 		$post		= $this->checkPost( $postId );
@@ -103,7 +77,8 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		$this->restart( View_Info_Blog::renderPostUrlStatic( $env, $post ) );
 	}
 
-	public function index( $page = NULL ){
+	public function index( $page = NULL )
+	{
 		$limit		= 5;
 		$offset		= (int) $page * $limit;
 		$orders		= array( 'createdAt' => 'DESC' );
@@ -120,7 +95,74 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 		$this->addData( 'page', $page );
 	}
 
-	protected function informAboutNewComment( $commentId ){
+	public function post( $postId = NULL )
+	{
+		if( !$postId )
+			$this->restart( NULL, TRUE );
+		$postId			= (int) preg_replace( '/^([0-9]+)-?.*$/', '\\1', $postId );
+		$post			= $this->checkPost( $postId );
+		$this->modelPost->edit( $postId, array(														//  save in post
+			'nrViews'	=> $post->nrViews + 1,														//  ... increased views
+			'viewedAt'	=> time(),																	//  ... last view timestamp
+		) );
+		$post->author	= $this->modelUser->get( $post->authorId );									//  extend post by author
+		$post->comments	= $this->modelComment->getAllByIndices( array(								//  collect post comments
+			'postId'	=> $post->postId,															//  ... related to this post
+			'status'	=> '>= 0'																	//  ... and visible
+		) );
+		$this->addData( 'post', $post );															//  assign post data to template
+
+		$indices	= array( 'status' => 1 );
+		$orders		= array( 'createdAt' => 'DESC' );
+		$posts		= $this->modelPost->getAllByIndices( $indices, $orders );
+		$lastPost	= NULL;
+		$nextPost	= NULL;
+		foreach( $posts as $nr => $item ){
+			if( $item->postId == $post->postId ){
+				if( isset( $posts[$nr + 1] ) )
+					$nextPost	= $posts[$nr + 1];
+				break;
+			}
+			$lastPost	= $item;
+		}
+		$this->addData( 'prevPost', $lastPost );
+		$this->addData( 'nextPost', $nextPost );
+
+	}
+
+	protected function __onInit()
+	{
+		$this->modelCategory	= new Model_Blog_Category( $this->env );
+		$this->modelComment		= new Model_Blog_Comment( $this->env );
+		$this->modelPost		= new Model_Blog_Post( $this->env );
+		$this->modelUser		= new Model_User( $this->env );
+		$this->messenger		= $this->env->getMessenger();
+
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.info_blog.', TRUE );
+		if( $this->moduleConfig->get( 'mail' ) ){
+			if( !$this->env->getModules()->has( 'Resource_Mail' ) ){
+				$words		= (object )$this->getWords( 'msg' );
+				$this->messenger->noteFailure( $words->failureMailModuleMissing );
+			}
+		}
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+	}
+
+	protected function checkPost( $postId, bool $strict = FALSE )
+	{
+		$post	= $this->modelPost->get( (int) $postId );
+		if( !$post ){
+			if( $strict )
+				throw new OutOfRangeException( 'Invalid post ID' );
+			$words		= (object )$this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorInvalidPostId );
+			$this->restart( NULL, TRUE );
+		}
+		return $post;
+	}
+
+	protected function informAboutNewComment( $commentId )
+	{
 		if( !$this->moduleConfig->get( 'mail' ) )													//  do not send mails to participants
 			return;
 		$logic		= Logic_Mail::getInstance( $this->env );										//  get mailer logic
@@ -160,39 +202,5 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller{
 			$receiver	= array( 'username' => $item->username, 'email' => $item->email );			//  receiver is former comment author
 			$logic->handleMail( $mail, $receiver, $language->getLanguage() );						//  enqueue mail
 		}
-	}
-
-	public function post( $postId = NULL ){
-		if( !$postId )
-			$this->restart( NULL, TRUE );
-		$postId			= (int) preg_replace( '/^([0-9]+)-?.*$/', '\\1', $postId );
-		$post			= $this->checkPost( $postId );
-		$this->modelPost->edit( $postId, array(														//  save in post
-			'nrViews'	=> $post->nrViews + 1,														//  ... increased views
-			'viewedAt'	=> time(),																	//  ... last view timestamp
-		) );
-		$post->author	= $this->modelUser->get( $post->authorId );									//  extend post by author
-		$post->comments	= $this->modelComment->getAllByIndices( array(								//  collect post comments
-			'postId'	=> $post->postId,															//  ... related to this post
-			'status'	=> '>= 0'																	//  ... and visible
-		) );
-		$this->addData( 'post', $post );															//  assign post data to template
-
-		$indices	= array( 'status' => 1 );
-		$orders		= array( 'createdAt' => 'DESC' );
-		$posts		= $this->modelPost->getAllByIndices( $indices, $orders );
-		$lastPost	= NULL;
-		$nextPost	= NULL;
-		foreach( $posts as $nr => $item ){
-			if( $item->postId == $post->postId ){
-				if( isset( $posts[$nr + 1] ) )
-					$nextPost	= $posts[$nr + 1];
-				break;
-			}
-			$lastPost	= $item;
-		}
-		$this->addData( 'prevPost', $lastPost );
-		$this->addData( 'nextPost', $nextPost );
-
 	}
 }

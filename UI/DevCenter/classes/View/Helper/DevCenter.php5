@@ -1,19 +1,24 @@
 <?php
-class View_Helper_DevCenter{
-
+class View_Helper_DevCenter
+{
 	public $options	= array();
+
 	protected $session;
+
 	protected $height;
+
 	protected $open;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->session	= $env->getSession();
 		$height			= $this->session->get( 'DevCenterHeight' );
 		$this->height	= $height ? $height."%" : NULL;
 		$this->open		= (bool) $this->session->get( 'DevCenterStatus' );
 	}
 
-	public function render( Resource_DevCenter $resourceDevCenter, $label, $url = NULL ){
+	public function render( Resource_DevCenter $resourceDevCenter, string $label, $url = NULL ): string
+	{
 		$tabs	= new \CeusMedia\Bootstrap\TabbableNavbar();
 		$tabs->setFixed( 'top' );
 		foreach( $resourceDevCenter->getResources() as $resource ){
@@ -46,4 +51,3 @@ class View_Helper_DevCenter{
 		return UI_HTML_Tag::create( 'div', $handleTop.$content, $attributes );
 	}
 }
-?>

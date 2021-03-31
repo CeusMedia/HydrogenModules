@@ -1,12 +1,8 @@
 <?php
-class Hook_UI_Bootstrap /*extends CMF_Hydrogen_Hook*/{
-
-	static protected function getMajorVersion( $version ){
-		$versionParts	= explode( '.', $version );
-		return (int) array_shift( $versionParts );
-	}
-
-	static public function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+class Hook_UI_Bootstrap extends CMF_Hydrogen_Hook
+{
+	public static function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		if( get_class( $env ) === 'CMF_Hydrogen_Environment_Remote' )
 			return;
 		$config			= $env->getConfig();
@@ -78,7 +74,8 @@ class Hook_UI_Bootstrap /*extends CMF_Hydrogen_Hook*/{
 		}
 	}
 
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
 		if( !$env->getConfig()->get( 'module.ui_bootstrap.active' ) )
 			return;
 
@@ -133,7 +130,9 @@ class Hook_UI_Bootstrap /*extends CMF_Hydrogen_Hook*/{
 		$context->addBodyClass( 'uses-bootstrap bootstrap'.$majorVersion );
 	}
 
-	static public function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	{
+		$data	= (object) $payload;
 		if( !$env->getConfig()->get( 'module.ui_bootstrap.active' ) )
 			return;
 		$options		= $env->getConfig()->getAll( 'module.ui_bootstrap.', TRUE );
@@ -153,5 +152,10 @@ class Hook_UI_Bootstrap /*extends CMF_Hydrogen_Hook*/{
 		$data->content	= preg_replace( '/(class=")\s*([^ ]*)\s*(")/', '\\1\\2\\3', $data->content );
 		$data->content	= preg_replace( '/ class=""/', '', $data->content );
 	}
+
+	protected static function getMajorVersion( string $version )
+	{
+		$versionParts	= explode( '.', $version );
+		return (int) array_shift( $versionParts );
+	}
 }
-?>

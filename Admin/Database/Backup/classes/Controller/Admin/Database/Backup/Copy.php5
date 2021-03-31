@@ -1,6 +1,6 @@
 <?php
-class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller{
-
+class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller
+{
 	protected $config;
 	protected $request;
 	protected $session;
@@ -9,24 +9,8 @@ class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller{
 	protected $logicCopy;
 	protected $moduleConfig;
 
-	public function __onInit(){
-		$this->config		= $this->env->getConfig();
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-
-		$this->logicBackup	= Logic_Database_Backup::getInstance( $this->env );
-		$this->logicCopy	= Logic_Database_Backup_Copy::getInstance( $this->env );
-
-		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
-
-		if( !$this->env->getModules()->has( 'Resource_Database' ) ){
-			$this->messenger->noteError( 'Kein Datenbank-Modul vorhanden.' );
-			$this->restart();
-		}
-	}
-
-	public function activate( $backupId ){
+	public function activate( $backupId )
+	{
 		$backup		= $this->checkBackupId( $backupId );
 		$copyPrefix	= isset( $backup->comment['copyPrefix'] ) ? $backup->comment['copyPrefix'] : NULL;
 		if( strlen( trim( $copyPrefix ) ) ){
@@ -43,7 +27,8 @@ class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller{
 	 *	@access		public
 	 *	@dodo		...
 	 */
-	public function create( $backupId ){
+	public function create( $backupId )
+	{
 		$backup		= $this->checkBackupId( $backupId );
 		if( !empty( $backup->comment['copyPrefix'] ) ){
 			$this->messenger->noteError( 'Eine Kopie dieser Sicherung wurde bereits installiert.' );
@@ -71,7 +56,8 @@ class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller{
 		$this->restart( 'admin/database/backup/view/'.$backupId );
 	}
 
-	public function deactivate( $backupId ){
+	public function deactivate( $backupId )
+	{
 		$database	= $this->env->getDatabase();
 		$backup		= $this->checkBackupId( $backupId );
 		$copyPrefix	= $this->session->get( 'admin-database-backup-copy-prefix' );
@@ -94,7 +80,8 @@ class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller{
 		$this->restart( 'admin/database/backup/view/'.$backupId );
 	}
 
-	public function drop( $backupId ){
+	public function drop( $backupId )
+	{
 		$backup		= $this->checkBackupId( $backupId );
 		$database	= $this->env->getDatabase();
 		$copyPrefix	= $this->session->get( 'admin-database-backup-copy-prefix' );
@@ -132,11 +119,29 @@ class Controller_Admin_Database_Backup_Copy extends CMF_Hydrogen_Controller{
 
 	//  --  PROTECTED  --  //
 
-	protected function checkBackupId( $backupId ){
+	protected function checkBackupId( $backupId )
+	{
 		if( ( $backup = $this->logicBackup->check( $backupId, FALSE ) ) )
 			return $backup;
 		$this->messenger->noteError( 'Invalid backup ID' );
 		$this->restart( 'admin/database/backup' );
 	}
+
+	protected function __onInit()
+	{
+		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+
+		$this->logicBackup	= Logic_Database_Backup::getInstance( $this->env );
+		$this->logicCopy	= Logic_Database_Backup_Copy::getInstance( $this->env );
+
+		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
+
+		if( !$this->env->getModules()->has( 'Resource_Database' ) ){
+			$this->messenger->noteError( 'Kein Datenbank-Modul vorhanden.' );
+			$this->restart();
+		}
+	}
 }
-?>

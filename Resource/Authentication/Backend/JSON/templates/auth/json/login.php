@@ -16,4 +16,3 @@ HTML::DivClass( "row-fluid", array(
 	)
 ) ).
 HTML::DivClass( "auth-login-text-bottom", $textBottom );
-?>

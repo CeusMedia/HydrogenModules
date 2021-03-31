@@ -1,7 +1,8 @@
 <?php
-class Mail_Info_Mail_Group_Manager_GroupActivated extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Info_Mail_Group_Manager_GroupActivated extends Mail_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 //		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/local', 'mails' );
 
@@ -20,11 +21,6 @@ class Mail_Info_Mail_Group_Manager_GroupActivated extends Mail_Abstract{
 /*		$html	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $plain );
 		$html	= nl2br( $html );
 		$this->setHtml( $html );*/
-
-		return (object) array(
-			'plain'	=> $plain,
-			'html'	=> NULL,
-		);
+		return $this;
 	}
 }
-?>

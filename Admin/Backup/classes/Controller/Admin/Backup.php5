@@ -1,6 +1,6 @@
 <?php
-class Controller_Admin_Backup extends CMF_Hydrogen_Controller{
-
+class Controller_Admin_Backup extends CMF_Hydrogen_Controller
+{
 	protected $moduleConfig;
 	protected $path;
 	protected $filterPrefix				= 'filter_admin_backup_';
@@ -9,21 +9,8 @@ class Controller_Admin_Backup extends CMF_Hydrogen_Controller{
 	protected $defaultOrderDirection	= 'DESC';
 	protected $filters					= array();
 
-	protected function __onInit(){
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.admin_backup.', TRUE );
-		$this->pathFiles	= $this->moduleConfig->get( 'path' );
-		$this->model		= new Model_Backup( $this->env );
-		if( !file_exists( $this->pathFiles ) )
-			FS_Folder::createFolder( $this->pathFiles );
-		if( !$this->session->has( $this->filterPrefix.'limit' ) )
-			$this->session->set( $this->filterPrefix.'limit', $this->defaultLimit );
-		if( !$this->session->has( $this->filterPrefix.'orderColumn' ) ){
-			$this->session->set( $this->filterPrefix.'orderColumn', $this->defaultOrderColumn );
-			$this->session->set( $this->filterPrefix.'orderDirection', $this->defaultOrderDirection );
-		}
-	}
-
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			foreach( $filters as $filterKey )
 				$this->session->remove( $this->filterPrefix.$filterKey );
@@ -40,7 +27,8 @@ class Controller_Admin_Backup extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0, $limit = 0 ){
+	public function index( $page = 0, $limit = 0 )
+	{
 		$conditions	= array();
 		$filters	= $this->session->getAll( $this->filterPrefix, TRUE );
 		if( $filters->has( 'aaa' ) )
@@ -60,18 +48,36 @@ class Controller_Admin_Backup extends CMF_Hydrogen_Controller{
 		$this->addData( 'backups', $backups );
 	}
 
-	public function add(){
+	public function add()
+	{
 		$this->messenger->noteFailure( 'Not implemented, yet' );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function restore( $backupId ){
+	public function restore( $backupId )
+	{
 		$this->messenger->noteFailure( 'Not implemented, yet' );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function remove( $backupId ){
+	public function remove( $backupId )
+	{
 		$this->messenger->noteFailure( 'Not implemented, yet' );
 		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.admin_backup.', TRUE );
+		$this->pathFiles	= $this->moduleConfig->get( 'path' );
+		$this->model		= new Model_Backup( $this->env );
+		if( !file_exists( $this->pathFiles ) )
+			FS_Folder::createFolder( $this->pathFiles );
+		if( !$this->session->has( $this->filterPrefix.'limit' ) )
+			$this->session->set( $this->filterPrefix.'limit', $this->defaultLimit );
+		if( !$this->session->has( $this->filterPrefix.'orderColumn' ) ){
+			$this->session->set( $this->filterPrefix.'orderColumn', $this->defaultOrderColumn );
+			$this->session->set( $this->filterPrefix.'orderDirection', $this->defaultOrderDirection );
+		}
 	}
 }

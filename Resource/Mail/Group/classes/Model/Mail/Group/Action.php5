@@ -8,13 +8,20 @@
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Group_Action extends CMF_Hydrogen_Model {
-
+class Model_Mail_Group_Action extends CMF_Hydrogen_Model
+{
 	const STATUS_FAILED				= -1;
 	const STATUS_REGISTERED			= 0;
 	const STATUS_HANDLED			= 1;
 
+	const STATUSES					= [
+		self::STATUS_FAILED,
+		self::STATUS_REGISTERED,
+		self::STATUS_HANDLED,
+	];
+
 	protected $name		= 'mail_group_actions';
+
 	protected $columns	= array(
 		"mailGroupActionId",
 		"mailGroupId",
@@ -26,7 +33,9 @@ class Model_Mail_Group_Action extends CMF_Hydrogen_Model {
 		"createdAt",
 		"modifiedAt",
 	);
+
 	protected $primaryKey	= 'mailGroupActionId';
+
 	protected $indices		= array(
 		"mailGroupId",
 		"mailGroupMemberId",
@@ -34,6 +43,6 @@ class Model_Mail_Group_Action extends CMF_Hydrogen_Model {
 		"uuid",
 		"action",
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

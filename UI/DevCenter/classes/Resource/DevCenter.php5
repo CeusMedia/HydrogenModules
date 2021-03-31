@@ -2,8 +2,8 @@
 /**
  *	@todo		apply module config main switch
  */
-class Resource_DevCenter{
-
+class Resource_DevCenter
+{
 	/**	@var	CMF_Hydrogen_Environment		$env		*/
 	protected $env;
 
@@ -13,7 +13,8 @@ class Resource_DevCenter{
 
 	protected $resources		= array();
 
-	protected function __construct( CMF_Hydrogen_Environment $env ){
+	protected function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->modules	= array(
 			'request'		=> array(
@@ -43,31 +44,38 @@ class Resource_DevCenter{
 		);
 	}
 
-	protected function __clone(){}
+	protected function __clone()
+	{
+	}
 
-	public function add( $key, $label, $value ){
+	public function add( string $key, string $label, $value ): self
+	{
 		$this->resources[]	= (object) array(
 			'key'	=> $key,
 			'label'	=> $label,
 			'value'	=> $value,
 		);
+		return $this;
 	}
 
-	public function addByModule( $module, $label = NULL ){
+	public function addByModule( string $module, $label = NULL ): self
+	{
 		if( !array_key_exists( $module, $this->modules ) )
 			throw new DomainException( 'Unknown module "'.$module.'"' );
 		$label		= strlen( trim( $label ) ) ? $label : $this->modules[$module]['label'];
 		$this->add( $module, $label, $this->modules[$module]['resource'] );
+		return $this;
 	}
 
-	public static function getInstance( CMF_Hydrogen_Environment $env ){
+	public static function getInstance( CMF_Hydrogen_Environment $env ): self
+	{
 		if( !self::$instance )
 			self::$instance	= new Resource_DevCenter( $env );
 		return self::$instance;
 	}
 
-	public function getResources(){
+	public function getResources(): array
+	{
 		return $this->resources;
 	}
 }
-?>

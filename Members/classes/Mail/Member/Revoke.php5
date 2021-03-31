@@ -1,7 +1,8 @@
 <?php
-class Mail_Member_Revoke extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Member_Revoke extends Mail_Abstract
+{
+	protected function generate( array $data = array() )
+	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$wordsMails	= $this->env->getLanguage()->getWords( 'member', 'mails' );
 
@@ -19,4 +20,3 @@ class Mail_Member_Revoke extends Mail_Abstract{
 		$this->setHtml( $body );
 	}
 }
-?>

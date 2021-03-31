@@ -2,6 +2,7 @@
 class Model_Image_Slide extends CMF_Hydrogen_Model
 {
 	protected $name		= 'slider_slides';
+
 	protected $columns	= array(
 		'sliderSlideId',
 		'sliderId',
@@ -13,12 +14,15 @@ class Model_Image_Slide extends CMF_Hydrogen_Model
 		'rank',
 		'timestamp',
 	);
+
 	protected $primaryKey	= 'sliderSlideId';
+
 	protected $indices		= array(
 		'sliderId',
 		'status',
 		'source',
 		'title',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

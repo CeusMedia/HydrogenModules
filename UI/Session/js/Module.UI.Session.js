@@ -17,7 +17,7 @@ Module.UI.Session = {
 		window.setInterval(
 			function(){
 				$.ajax({
-					url: './ui/session/ajaxKeepAlive',
+					url: './ajax/ui/session/keepAlive',
 				});
 			}, minutes * 60 * 1000
 		);

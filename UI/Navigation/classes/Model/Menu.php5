@@ -1,6 +1,6 @@
 <?php
-class Model_Menu {
-
+class Model_Menu
+{
 	protected $acl;
 	protected $current				= NULL;
 	protected $env;
@@ -16,7 +16,8 @@ class Model_Menu {
 
 	public static $pathRequestKey	= "__path";			//  @todo get from env or router?
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env			= $env;
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_navigation.', TRUE );
 		$this->userId		= $this->env->getSession()->get( 'userId' );
@@ -37,14 +38,20 @@ class Model_Menu {
 			$this->source	= "Modules";
 		}
 		$this->readUserPages();
-
 	}
 
-	public function getCurrent(){
+	public function getCurrent()
+	{
 		return $this->current;
 	}
 
-	public function getPages( $scope = NULL, $strict = TRUE ){
+	public function getPageMap(): array
+	{
+		return $this->pageMap;
+	}
+
+	public function getPages( $scope = NULL, bool $strict = TRUE ): array
+	{
 		if( is_null( $scope ) )
 			return $this->pages;
 		if( array_key_exists( $scope, $this->pages ) )
@@ -54,9 +61,20 @@ class Model_Menu {
 		return array();
 	}
 
-	public function getPageMap(){
-		return $this->pageMap;
+	/**
+	 *	Sets currenty active path.
+	 *	@access		public
+	 *	@param		string		Path to set as currently active
+	 *	@return		self		This instance for chainability
+	 */
+	public function setCurrent( string $path ): self
+	{
+//		$this->current	= $path;
+		$this->identifyActive( $path );
+		return $this;
 	}
+
+	//  --  PROTECTED  --  //
 
 	/**
 	 *	...
@@ -64,7 +82,8 @@ class Model_Menu {
 	 *	@param		string		$current		Currently requested path, autodetected if not set
 	 *	@return		string
 	 */
-	protected function identifyActive( $path = NULL ){
+	protected function identifyActive( $path = NULL )
+	{
 		if( isset( $_REQUEST[self::$pathRequestKey] ) && $path === NULL )
 			$path	= utf8_decode( $_REQUEST[self::$pathRequestKey] );
 		$path		= $path ? $path : 'index';
@@ -107,7 +126,8 @@ class Model_Menu {
 		return '';
 	}
 
-	protected function readUserPages(){
+	protected function readUserPages()
+	{
 		switch( $this->source ){
 			case 'Modules':
 				$this->readUserPagesFromModules();
@@ -124,7 +144,8 @@ class Model_Menu {
 		$this->identifyActive();
 	}
 
-	protected function readUserPagesFromConfigFile(){
+	protected function readUserPagesFromConfigFile()
+	{
 		$pagesFile		= $this->env->getPath( 'config' ).'pages.json';
 		if( !file_exists( $pagesFile ) ){
 			$message	= 'Page configuration file "%s" is not existing';
@@ -222,7 +243,8 @@ class Model_Menu {
 	 *	@access		protected
 	 *	@todo		repair flag "active"
 	 */
-	protected function readUserPagesFromDatabase(){
+	protected function readUserPagesFromDatabase()
+	{
 		$model		= new Model_Page( $this->env );
 		$scopes		= array(
 			0		=> 'main',
@@ -233,6 +255,7 @@ class Model_Menu {
 		$this->pages		= array();
 		$this->pageMap		= array();
 		$isAuthenticated	= (bool) $this->userId;
+		$subpages			= [];
 		foreach( $scopes as $scopeId => $scope ){
 			$this->pages[$scope]	= array();
 			$pages		= $model->getAllByIndices( array(
@@ -319,7 +342,8 @@ class Model_Menu {
 	 *	@access		protected
 	 *	@todo		repair flag "active"
 	 */
-	protected function readUserPagesFromModules(){
+	protected function readUserPagesFromModules()
+	{
 		$scopes			= array( 'main' );
 		$this->scopes	= array_keys( $scopes );
 		$this->pages	= array();
@@ -375,17 +399,4 @@ class Model_Menu {
 			$this->pages[$scope]	= array_values( $this->pages[$scope] );
 		}
 	}
-
-	/**
-	 *	Sets currenty active path.
-	 *	@access		public
-	 *	@param		string		Path to set as currently active
-	 *	@return		self		This instance for chainability
-	 */
-	public function setCurrent( $path ){
-//		$this->current	= $path;
-		$this->identifyActive( $path );
-		return $this;
-	}
 }
-?>

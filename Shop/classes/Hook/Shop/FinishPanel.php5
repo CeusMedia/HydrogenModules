@@ -1,6 +1,6 @@
 <?php
-class Hook_Shop_FinishPanel{
-
+class Hook_Shop_FinishPanel
+{
 	/**
 	 *	...
 	 *	@static
@@ -11,12 +11,13 @@ class Hook_Shop_FinishPanel{
 	 *	@param		public						$arguments		Map of hook arguments
 	 *	@return		void
 	 */
-	static public function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
-		if( empty( $data['orderId'] ) || empty( $data['paymentBackends'] ) )
+	public static function onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	{
+		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;
 		$view		= new CMF_Hydrogen_View( $env );
 //		$modelOrder	= new Model_Shop_Order( $env );
-//		$order		= $modelOrder->get( $data['orderId'] );
+//		$order		= $modelOrder->get( $payload['orderId'] );
 
 		$path	= 'html/shop/panel/';
 		$files	= array(

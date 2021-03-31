@@ -76,7 +76,8 @@ class Controller_Ajax_Helper_Input_Resource extends CMF_Hydrogen_Controller_Ajax
 		$this->respondData( array( 'html' => $html ) );
 	}
 
-	static protected function renderThumbnail( CMF_Hydrogen_Environment $env, $mode, $path, $relativePath ){
+	protected static function renderThumbnail( CMF_Hydrogen_Environment $env, string $mode, string $path, string $relativePath ): string
+	{
 		switch( $mode ){
 			case 'image':
 				$div	= UI_HTML_Tag::create( 'div', '&nbsp;', array(

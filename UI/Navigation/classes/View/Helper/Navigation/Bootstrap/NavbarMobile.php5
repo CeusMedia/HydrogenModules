@@ -1,20 +1,24 @@
 <?php
-class View_Helper_Navigation_Bootstrap_NavbarMobile extends View_Helper_Navigation_Bootstrap_Navbar{
-
+class View_Helper_Navigation_Bootstrap_NavbarMobile extends View_Helper_Navigation_Bootstrap_Navbar
+{
 	protected $hideOnDesktop	= FALSE;
 
 	/**
 	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
-	public function __toString(){
+	public function __toString()
+	{
 		return $this->render();
 	}
 
-	public function hideOnDesktop( $hide ){
+	public function hideOnDesktop( bool $hide ): self
+	{
 		$this->hideOnDesktop	= $hide;
+		return $this;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$this->hideOnMobileDevice( FALSE );
 		$classes	= array( 'layout-navbar-mobile navbar-fixed-top mm-fixed-top' );
 		if( $this->hideOnDesktop )

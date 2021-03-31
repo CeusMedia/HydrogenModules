@@ -30,4 +30,3 @@ $helperTabs->setPaymentBackends( $this->getData( 'paymentBackends' ) );
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );
 
 return $textTop.$helperTabs->render().$textBottom;
-?>

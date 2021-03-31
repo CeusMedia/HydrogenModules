@@ -2,13 +2,14 @@
 class View_Helper_Work_Newsletter_ThemeList
 {
 	protected $env;
+	protected $moduleConfig;
 	protected $themePath;
 	protected $themes			= array();
 
 	/**
 	 *	@todo		clear theme path handling
 	 */
-	public function __construct( $env )
+	public function __construct( CMF_Hydrogen_Environment $env )
 	{
 		$this->env	= $env;
 		$this->moduleConfig	= $this->env->config->getAll( 'module.work_newsletter.theme.', TRUE );
@@ -65,4 +66,3 @@ class View_Helper_Work_Newsletter_ThemeList
 </li>';
 	}
 }
-

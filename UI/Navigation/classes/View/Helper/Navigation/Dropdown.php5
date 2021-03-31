@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Navigation_Dropdown{
-
+class View_Helper_Navigation_Dropdown
+{
 	protected $env;
 	protected $menu;
 	protected $inverse			= FALSE;
@@ -11,19 +11,23 @@ class View_Helper_Navigation_Dropdown{
 	protected $scope			= 'main';
 	protected $style;
 
-	public function __construct( CMF_Hydrogen_Environment $env, Model_Menu $menu ){
+	public function __construct( CMF_Hydrogen_Environment $env, Model_Menu $menu )
+	{
 		$this->env		= $env;
-		$this->menu		= $menu;
+		if( NULL !== $menu )
+			$this->setMenuModel( $menu );
 	}
 
 	/**
 	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
-	public function __toString(){
+	public function __toString()
+	{
 		return $this->render();
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$listClass	= 'nav';
 		if( strtolower( $this->style ) == "pills" )
 			$listClass	.= ' nav-pills';
@@ -63,17 +67,8 @@ class View_Helper_Navigation_Dropdown{
 		return $logo.UI_HTML_Tag::create( 'ul', $list, array( "class" => $listClass ) );
 	}
 
-	protected function renderLabelWithIcon( $entry ){
-		if( !isset( $entry->icon ) )
-			return $entry->label;
-		$class	= $entry->icon;
-		if( !preg_match( "/^fa/", $entry->icon ) )
-			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
-		$icon   = UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
-		return $icon.'&nbsp;'.$entry->label;
-	}
-
-	public function renderLogo(){
+	public function renderLogo(): string
+	{
 		if( !( strlen( trim( $this->logoTitle ) ) || strlen( trim( $this->logoIcon ) ) ) )
 			return '';
 		$icon	= "";
@@ -94,26 +89,52 @@ class View_Helper_Navigation_Dropdown{
 		) );
 	}
 
-	public function setInverse( $boolean = NULL ){
+	public function setInverse( bool $boolean = NULL ): self
+	{
 		$this->inverse	= (boolean) $boolean;
+		return $this;
 	}
 
-	public function setLinksToSkip( $links ){
+	public function setLinksToSkip( array $links ): self
+	{
 		$this->linksToSkip	= $links;
+		return $this;
 	}
 
-	public function setLogo( $title, $url = NULL, $icon = NULL ){
+	public function setLogo( string $title, string $url = NULL, string $icon = NULL ): self
+	{
 		$this->logoTitle	= $title;
 		$this->logoLink		= $url;
 		$this->logoIcon		= $icon;
+		return $this;
 	}
 
-	public function setScope( $scope ){
+	public function setMenuModel( Model_Menu $menu ): self
+	{
+		$this->menu		= $menu;
+		return $this;
+	}
+
+	public function setScope( string $scope ): self
+	{
 		$this->scope	= $scope;
+		return $this;
 	}
 
-	public function setStyle( $style ){
+	public function setStyle( string $style ): self
+	{
 		$this->style	= $style;
+		return $this;
+	}
+
+	protected function renderLabelWithIcon( $entry ): string
+	{
+		if( !isset( $entry->icon ) )
+			return $entry->label;
+		$class	= $entry->icon;
+		if( !preg_match( "/^fa/", $entry->icon ) )
+			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
+		$icon   = UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
+		return $icon.'&nbsp;'.$entry->label;
 	}
 }
-?>

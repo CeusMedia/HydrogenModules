@@ -1,6 +1,6 @@
 <?php
-class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Newsletter extends CMF_Hydrogen_Controller
+{
 	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
 	protected $logic;
 	protected $session;
@@ -10,39 +10,8 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 	protected $limiter;
 	protected $filterPrefix	= 'filter_work_newsletter_';
 
-	protected function __onInit(){
-		$this->logic		= new Logic_Newsletter_Editor( $this->env );
-		$this->session		= $this->env->getSession();
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-		$this->addData( 'tabbedLinks', $this->moduleConfig->get( 'tabbedLinks' ) );
-
-		$this->frontendUrl		= $this->env->url;
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$this->frontendUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
-		$this->addData( 'frontendUrl', $this->frontendUrl );
-
-		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
-			$this->limiter	= Logic_Limiter::getInstance( $this->env );
-		$this->addData( 'limiter', $this->limiter );
-
-		if( !count( $this->logic->getTemplates( array( 'status' => '> 0' ) ) ) ){
-			$this->messenger->noteNotice( '<b>Keine verwendbare Vorlage vorhanden.</b><br/>Bitte zuerst eine Vorlage erstellen und auf "bereit" stellen!' );
-			$this->restart( 'template', TRUE );
-		}
-
-		if( $this->session->get( $this->filterPrefix.'limit' ) < 1 )
-			$this->session->set( $this->filterPrefix.'limit', 10 );
-	}
-
-	public static function ___registerHints( CMF_Hydrogen_Environment $env, $context, $module, $arguments = NULL ){
-		$words	= $env->getLanguage()->getWords( 'work/newsletter' );
-		View_Helper_Hint::registerHints( $words['hints'], 'Work_Newsletter' );
-	}
-
-	public function add(){
+	public function add()
+	{
 		$words		= (object) $this->getWords( 'add' );
 		if( $this->request->getMethod()->isPost() ){
 			$data	= array(
@@ -108,21 +77,15 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 		$this->addData( 'newsletter', $newsletter );
 	}
 
-	protected function checkNewsletterId( $newsletterId ){
-		if( !$this->logic->checkNewsletterId( $newsletterId, FALSE ) ){
-			$words		= (object) $this->getWords( 'edit' );
-			$this->messenger->noteError( $words->msgErrorInvalidId, $newsletterId );
-			$this->restart( NULL, TRUE );
-		}
-	}
-
-	public function dequeueLetter( $readerLetterId ){
+	public function dequeueLetter( $readerLetterId )
+	{
 		$letter		= $this->logic->getReaderLetter( $readerLetterId );
 		$this->logic->dequeue( $readerLetterId );
 		$this->restart( 'edit/'.$letter->newsletterId, TRUE );
 	}
 
-	public function edit( $newsletterId ){
+	public function edit( $newsletterId )
+	{
 		$this->checkNewsletterId( $newsletterId );
 		$words		= (object) $this->getWords( 'edit' );
 		if( $this->request->has( 'save' ) ){
@@ -187,7 +150,6 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 			'status'		=> '!= 0'
 		) );
 
-
 		$isUsed	= $newsletter->status >= Model_Newsletter::STATUS_SENT;
 		$this->addData( 'isUsed', $isUsed );
 		$this->addData( 'newsletterId', $newsletterId );
@@ -205,7 +167,8 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 		$this->addData( 'askForReady', $this->request->has( 'askForReady' ) );
 	}
 
-	public function editFull( $newsletterId ){
+	public function editFull( $newsletterId )
+	{
 		$this->checkNewsletterId( $newsletterId );
 		$newsletter		= $this->logic->getNewsletter( $newsletterId );
 		$template		= $this->logic->getTemplate( $newsletter->newsletterTemplateId );
@@ -216,7 +179,8 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 		$this->addData( 'styles', $this->logic->getTemplateAttributeList( $newsletter->newsletterTemplateId, 'styles' ) );
 	}
 
-	public function enqueue( $newsletterId ){
+	public function enqueue( $newsletterId )
+	{
 		$this->checkNewsletterId( $newsletterId );
 		$words		= (object) $this->getWords( 'enqueue' );
 		$readerIds	= $this->request->get( 'readerIds' );
@@ -262,7 +226,8 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 		$this->restart( 'setContentTab/'.$newsletterId.'/5', TRUE );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'title' );
 			$this->session->remove( $this->filterPrefix.'status' );
@@ -274,7 +239,8 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 		$templates		= $this->logic->getTemplates( array( 'status' => '> 0' ), array( 'title' => 'ASC' ) );
 		$newsletters	= $this->logic->getNewsletters( array(), array( 'title' => 'ASC' ) );
 		$this->addData( 'addTemplates', $templates );
@@ -302,7 +268,8 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterLimit', $filterLimit );
 	}
 
-	public function preview( $format, $newsletterId, $simulateOffline = FALSE ){
+	public function preview( $format, $newsletterId, $simulateOffline = FALSE )
+	{
 		$this->checkNewsletterId( $newsletterId );
 		$words		= (object) $this->getWords( 'preview' );
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );
@@ -362,7 +329,8 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 	 *	@return		void
 	 *	@todo		extend by queue support, otherwise this wont work anymore
 	 */
-	public function sendLetter( $readerLetterId ){
+	public function sendLetter( $readerLetterId )
+	{
 		$letter		= $this->logic->getReaderLetter( $readerLetterId );
 		if( !$letter )
 			$this->messenger->noteError( 'Invalid letter ID.' );
@@ -374,13 +342,15 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$letter->newsletterId, TRUE );
 	}
 
-	public function setContentTab( $newsletterId, $tabKey ){
+	public function setContentTab( $newsletterId, $tabKey )
+	{
 		$this->checkNewsletterId( $newsletterId );
 		$this->session->set( 'work.newsletter.content.tab', $tabKey );
 		$this->restart( './work/newsletter/edit/'.$newsletterId );
 	}
 
-	public function setStatus( $newsletterId, $status ){
+	public function setStatus( $newsletterId, $status )
+	{
 		$this->checkNewsletterId( $newsletterId );
 		$urlForwardTo	= $this->request->get( 'forwardTo' );
 
@@ -399,7 +369,8 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 		$this->restart( $urlForwardTo ? $urlForwardTo : 'edit/'.$newsletterId, TRUE );
 	}
 
-	public function test( $newsletterId ){
+	public function test( $newsletterId )
+	{
 		$this->checkNewsletterId( $newsletterId );
 		$w			= (object) $this->getWords( 'test' );
 		$readerIds	= $this->request->get( 'readerIds' );
@@ -419,7 +390,8 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 //		$this->restart( 'setContentTab/'.$newsletterId.'/4', TRUE );
 	}
 
-	public function view( $readerLetterId ){
+	public function view( $readerLetterId )
+	{
 		try{
 			$letter		= $this->logic->getReaderLetter( $readerLetterId );
 			$newsletter	= $this->logic->getNewsletter( $letter->newsletterId );
@@ -437,11 +409,48 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function remove( $newsletterId ){
+	public function remove( $newsletterId )
+	{
 		$this->checkNewsletterId( $newsletterId );
 		$this->logic->removeNewsletter( $newsletterId );
 		$this->messenger->noteSuccess( 'Kampagne entfernt.' );
 		$this->restart( NULL, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->logic		= new Logic_Newsletter_Editor( $this->env );
+		$this->session		= $this->env->getSession();
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$this->addData( 'tabbedLinks', $this->moduleConfig->get( 'tabbedLinks' ) );
+
+		$this->frontendUrl		= $this->env->url;
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$this->frontendUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+		$this->addData( 'frontendUrl', $this->frontendUrl );
+
+		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
+			$this->limiter	= Logic_Limiter::getInstance( $this->env );
+		$this->addData( 'limiter', $this->limiter );
+
+		if( !count( $this->logic->getTemplates( array( 'status' => '> 0' ) ) ) ){
+			$this->messenger->noteNotice( '<b>Keine verwendbare Vorlage vorhanden.</b><br/>Bitte zuerst eine Vorlage erstellen und auf "bereit" stellen!' );
+			$this->restart( 'template', TRUE );
+		}
+
+		if( $this->session->get( $this->filterPrefix.'limit' ) < 1 )
+			$this->session->set( $this->filterPrefix.'limit', 10 );
+	}
+
+	protected function checkNewsletterId( $newsletterId )
+	{
+		if( !$this->logic->checkNewsletterId( $newsletterId, FALSE ) ){
+			$words		= (object) $this->getWords( 'edit' );
+			$this->messenger->noteError( $words->msgErrorInvalidId, $newsletterId );
+			$this->restart( NULL, TRUE );
+		}
+	}
 }
-?>

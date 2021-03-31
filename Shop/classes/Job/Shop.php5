@@ -1,30 +1,21 @@
 <?php
-class Job_Shop extends Job_Abstract{
-
+class Job_Shop extends Job_Abstract
+{
 	protected $versionShop;
+
 	protected $configFileOldCustomers;
+
 	protected $data;
 
-	protected function __onInit(){
-		$this->versionShop	= $this->env->getModules()->get( 'Shop' )->versionInstalled;
-		$this->configFileOldCustomers	= 'config/job.shop.oldCustomers.json';
-	}
-
-	protected function loadConfig(){
-		if( $this->data )
-			return;
-		if( !file_exists( $this->configFileOldCustomers ) )
-		 	$this->createOldCustomersConfig();
-		$this->data	= json_decode( file_get_contents( $this->configFileOldCustomers ) );
-	}
-
-	public function cleanupOldCustomers(){
+	public function cleanupOldCustomers()
+	{
 		$this->cleanupOldCustomerTestOrders();
 //		$this->cleanupOldCustomerInvalidOrders();
 		$this->sanitizeOldCustomerCountries();
 	}
 
-	public function cleanupOldCustomerTestOrders(){
+	public function cleanupOldCustomerTestOrders()
+	{
 		$this->loadConfig();
 		if( !isset( $this->data->testOrders ) ){
 			$this->out( 'No test order configuration found in '.$this->configFileOldCustomers );
@@ -62,7 +53,8 @@ class Job_Shop extends Job_Abstract{
 		}
 	}
 
-	public function createOldCustomersConfig( $arguments = array(), $parameters = array() ){
+	public function createOldCustomersConfig( array $arguments = array(), array $parameters = array() )
+	{
 		$force	= in_array( 'force', $arguments );
 		if( file_exists( $this->configFileOldCustomers ) && !$force ){
 			$this->out( 'Shop job configuration is already existing in '.$this->configFileOldCustomers );
@@ -131,7 +123,8 @@ class Job_Shop extends Job_Abstract{
 		file_put_contents( $this->configFileOldCustomers, json_encode( $data, JSON_PRETTY_PRINT ) );
 	}
 
-	public function importOldCustomersAsMigrantsAndSaveAsCsv( $arguments = array(), $parameters = array() ){
+	public function importOldCustomersAsMigrantsAndSaveAsCsv( array $arguments = array(), array $parameters = array() )
+	{
 		$this->loadConfig();
 		if( !isset( $this->data->migrants ) ){
 			$this->out( 'No migrants configuration found in '.$this->configFileOldCustomers );
@@ -220,7 +213,8 @@ class Job_Shop extends Job_Abstract{
 		}
 	}
 
-	public function migrateOldCustomers( $arguments = array(), $parameters = array() ){
+	public function migrateOldCustomers( array $arguments = array(), array $parameters = array() )
+	{
 		$modelCustomerNew	= new Model_Shop_Customer( $this->env );
 		$modelCustomerOld	= new Model_Shop_CustomerOld( $this->env );
 		$modelAddress		= new Model_Address( $this->env );
@@ -287,7 +281,8 @@ class Job_Shop extends Job_Abstract{
 		$this->out();
 	}
 
-	public function sanitizeOldCustomerCountries(){
+	public function sanitizeOldCustomerCountries()
+	{
 		$this->loadConfig();
 		if( !isset( $this->data->countries->sanitizeMap ) ){
 			$this->out( 'No country sanitation configuration found in '.$this->configFileOldCustomers );
@@ -335,6 +330,21 @@ class Job_Shop extends Job_Abstract{
 	}
 
 	/*  --  PROTECTED  --  */
+
+	protected function __onInit()
+	{
+		$this->versionShop	= $this->env->getModules()->get( 'Shop' )->versionInstalled;
+		$this->configFileOldCustomers	= 'config/job.shop.oldCustomers.json';
+	}
+
+	protected function loadConfig()
+	{
+		if( $this->data )
+			return;
+		if( !file_exists( $this->configFileOldCustomers ) )
+		 	$this->createOldCustomersConfig();
+		$this->data	= json_decode( file_get_contents( $this->configFileOldCustomers ) );
+	}
 
 	/**
 	 *	seems to be dysfunctional or rather incomplete (takes no actions)

@@ -4,7 +4,7 @@ $wf		= (object) $words['index'];
 $rows	= array();
 if( !$hasCache )
 	return '<div class="hint">'.$wf->hintNoCache.'</div>';
-	
+
 foreach( $list as $item ){
 	$buttonRemove	= '<button type="button" class="btn btn-mini btn-danger btn-cache-remove"><i class="icon-remove icon-white" title="'.$wf->buttonRemove.'"></i>&nbsp;</button>';
 	$value	= trim( print_m( $item->value, NULL, NULL, TRUE ) );
@@ -21,7 +21,7 @@ foreach( $list as $item ){
 $columns	= UI_HTML_Elements::ColumnGroup( array( '20%', '5%', '65%', '10%' ) );
 $heads		= array( $wf->headKey, $wf->headType, $wf->headValue, $wf->headAction );
 $heads		= UI_HTML_Elements::TableHeads( $heads );
-$table		= UI_HTML_Tag::create( 'table', $columns.$heads.implode( $rows ), array( 'class' => "table table-condensed table-striped" ) ); 
+$table		= UI_HTML_Tag::create( 'table', $columns.$heads.implode( $rows ), array( 'class' => "table table-condensed table-striped" ) );
 
 $panelEdit	= '
 	<h3>'.$wf->legend.'</h3>
@@ -56,6 +56,4 @@ return '
 <div class="row-fluid">
 	'.$panelEdit.'
 	'.$panelAdd.'
-</div>
-';
-?>
+</div>';

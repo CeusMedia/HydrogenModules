@@ -20,7 +20,7 @@ var InfoForum = {
 		input.addClass("span12").attr("rows", 10).attr("required", "required");						//  configure text area styling and state
 		InfoForum.lastPostCell.html(input);															//  replace post HTML by text area
 		$.ajax({																					//  request via AJAX
-			url: InfoForum.baseUrl + "/ajaxGetPost/" + postId,										//  ... get post data
+			url: InfoForum.baseUrl + "/getPost/" + postId,										//  ... get post data
 			dataType: "json",																		//  ... as JSON
 			async: false,																			//  ... wait for it
 			success: function(json){																//  ... and on response
@@ -36,7 +36,7 @@ var InfoForum = {
 					else{																			//  post text has been changed
 						$(this).attr("disabled", "disabled");										//  disable text area to indicate action
 						$.ajax({																	//  request via AJAX
-							url: InfoForum.baseUrl + "/ajaxEditPost",								//  ... to edit post
+							url: InfoForum.baseUrl + "/editPost",								//  ... to edit post
 							data: {postId: InfoForum.lastPostId, content: $(this).val()},			//  ... by content
 							type: "post",															//  ... via POST request
 							success: function(){													//  ... and on success
@@ -52,7 +52,7 @@ var InfoForum = {
 		var value = prompt("Neuer Name:", currentName);
 		if(value.length){
 			$.ajax({
-				url: InfoForum.baseUrl + "/ajaxRenameTopic/",
+				url: InfoForum.baseUrl + "/renameTopic/",
 				data: {
 					topicId: topicId,
 					name: value
@@ -67,7 +67,7 @@ var InfoForum = {
 		var value = prompt("Neuer Name:", currentName);
 		if(value.length){
 			$.ajax({
-				url: InfoForum.baseUrl + "/ajaxRenameThread/",
+				url: InfoForum.baseUrl + "/renameThread/",
 				data: {
 					threadId: threadId,
 					name: value
@@ -80,7 +80,7 @@ var InfoForum = {
 	},
 	changeThreadType: function(threadId, topicId){
 		$.ajax({
-			url: InfoForum.baseUrl + "/ajaxStarThread/" + threadId,
+			url: InfoForum.baseUrl + "/starThread/" + threadId,
 			success: function(){
 				document.location.href = InfoForum.baseUrl + "/topic/" + topicId;
 			}
@@ -89,7 +89,7 @@ var InfoForum = {
     pollForUpdates: function(threadId, lastPostId){
 		window.setInterval(function(){
 			$.ajax({
-				url: './info/forum/ajaxCountUpdates/'+threadId+'/'+lastPostId,
+				url: './info/forum/countUpdates/'+threadId+'/'+lastPostId,
 				dataType: 'json',
 				type: 'GET',
 				success: function(json){

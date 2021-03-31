@@ -29,7 +29,4 @@ return '
 		<h4>Fakten über Newsletters</h4>
 		<em><small class="muted">Hier kommen ein paar statistische Angaben.</small></em>
 	</div>
-</div>
-'.$textIndexBottom.'
-';
-?>
+</div>'.$textIndexBottom;

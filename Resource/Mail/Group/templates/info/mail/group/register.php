@@ -117,5 +117,4 @@ jQuery(document).ready(function(){
 		button.prop("disabled", isAccepted ? null : "disabled");
 	}).trigger("change");
 });
-</script>
-';
+</script>';

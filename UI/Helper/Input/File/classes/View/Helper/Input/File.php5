@@ -1,21 +1,25 @@
 <?php
-class View_Helper_Input_File{
-
+class View_Helper_Input_File
+{
+	protected $env;
 	protected $buttonClass		= 'btn-primary';
 	protected $label			= 'durchsuchen';
 	protected $name				= 'upload';
 	protected $multiple			= FALSE;
 	protected $required			= FALSE;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 	}
 
-	public function __toString(){
+	public function __toString()
+	{
 		return $this->render();
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$input		= UI_HTML_Tag::create( 'input', NULL, array(
 			'type'		=> "file",
 			'name'		=> $this->name,
@@ -42,8 +46,9 @@ class View_Helper_Input_File{
 		return $container;
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $name = NULL, $label = NULL, $required = FALSE, $buttonClass = 'btn-primary' ){
-		$instance	= new static( $env );
+	public static function renderStatic( CMF_Hydrogen_Environment $env, string $name = NULL, string $label = NULL, bool $required = FALSE, string $buttonClass = 'btn-primary' ): string
+	{
+		$instance	= new self( $env );
 		if( $name )
 			$instance->setName( $name );
 		if( $label )
@@ -53,29 +58,33 @@ class View_Helper_Input_File{
 		return $instance->render();
 	}
 
-	public function setButtonClass( $class ){
+	public function setButtonClass( $class ): self
+	{
 		$this->buttonClass	= $class;
 		return $this;
 	}
 
-	public function setLabel( $label ){
+	public function setLabel( $label ): self
+	{
 		$this->label	= $label;
 		return $this;
 	}
 
-	public function setMultiple( $multiple ){
+	public function setMultiple( bool $multiple ): self
+	{
 		$this->multiple	= $multiple;
 		return $this;
 	}
 
-	public function setName( $name ){
+	public function setName( string $name ): self
+	{
 		$this->name		= $name;
 		return $this;
 	}
 
-	public function setRequired( $boolean ){
+	public function setRequired( bool $boolean ): self
+	{
 		$this->required	= $boolean;
 		return $this;
 	}
 }
-?>

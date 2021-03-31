@@ -1,7 +1,8 @@
 <?php
-class Mail_Info_Mail_Group_Member_Joined extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Info_Mail_Group_Member_Joined extends Mail_Abstract
+{
+	protected function generate( $data = array() )
+	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 //		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/local', 'mails' );
 
@@ -22,11 +23,6 @@ class Mail_Info_Mail_Group_Member_Joined extends Mail_Abstract{
 
 		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/member/joined.txt', $data );
 		$this->setText( $plain );
-
-		return (object) array(
-			'plain'	=> $plain,
-			'html'	=> NULL,
-		);
+		return $this;
 	}
 }
-?>

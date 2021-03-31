@@ -1,23 +1,15 @@
 <?php
 /**
- *	Data Model of Customers.
- *	@category		cmProjects
- *	@package		LUV.Model
+ *	Data model of mail groups.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
- *	@version		3.0
  */
 /**
- *	Data Model of Customers.
- *	@category		cmProjects
- *	@package		LUV.Model
+ *	Data model of mail groups.
  *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
- *	@version		3.0
  */
-class Model_Mail_Group extends CMF_Hydrogen_Model {
-
+class Model_Mail_Group extends CMF_Hydrogen_Model
+{
 	const STATUS_ARCHIVED		= -9;
 	const STATUS_DEACTIVATED	= -1;
 	const STATUS_NEW			= 0;
@@ -25,18 +17,41 @@ class Model_Mail_Group extends CMF_Hydrogen_Model {
 	const STATUS_ACTIVATED		= 2;
 	const STATUS_WORKING		= 3;
 
+	const STATUSES				= [
+		self::STATUS_ARCHIVED,
+		self::STATUS_DEACTIVATED,
+		self::STATUS_NEW,
+		self::STATUS_EXISTING,
+		self::STATUS_ACTIVATED,
+		self::STATUS_WORKING,
+	];
+
 	const TYPE_AUTOJOIN			= 0;
 	const TYPE_JOIN				= 1;
 	const TYPE_REGISTER			= 2;
 	const TYPE_INVITE			= 3;
+
+	const TYPES					= [
+		self::TYPE_AUTOJOIN,
+		self::TYPE_JOIN,
+		self::TYPE_REGISTER,
+		self::TYPE_INVITE,
+	];
 
 	const VISIBILITY_PUBLIC		= 0;
 	const VISIBILITY_INSIDE		= 1;
 	const VISIBILITY_MANAGER	= 2;
 	const VISIBILITY_HIDDEN		= 3;
 
+	const VISIBILITES			= [
+		self::VISIBILITY_PUBLIC,
+		self::VISIBILITY_INSIDE,
+		self::VISIBILITY_MANAGER,
+		self::VISIBILITY_HIDDEN,
+	];
 
 	protected $name		= 'mail_groups';
+
 	protected $columns	= array(
 		"mailGroupId",
 		"mailGroupServerId",
@@ -54,7 +69,9 @@ class Model_Mail_Group extends CMF_Hydrogen_Model {
 		"createdAt",
 		"modifiedAt",
 	);
+
 	protected $primaryKey	= 'mailGroupId';
+
 	protected $indices		= array(
 		"mailGroupServerId",
 		"defaultRoleId",
@@ -65,6 +82,6 @@ class Model_Mail_Group extends CMF_Hydrogen_Model {
 		"title",
 		"address",
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

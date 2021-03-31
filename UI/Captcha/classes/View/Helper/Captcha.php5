@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
-
+class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
+{
 	protected $background	= array( 255, 255, 255 );
 	protected $height		= 55;
 	protected $fontSize		= 16;
@@ -8,10 +8,16 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 	protected $mode			= 'default';
 	protected $recaptchaApi	= 'https://www.google.com/recaptcha/api.js';
 
+	protected $env;
+	protected $session;
+	protected $moduleConfig;
+	protected $captcha;
+
 	CONST FORMAT_IMAGE		= 0;
 	CONST FORMAT_RAW		= 1;
 
-	public function __construct( $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env			= $env;
 		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
@@ -19,11 +25,12 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 		$this->captcha->useUnique	= TRUE;
 	}
 
-	static public function checkCaptcha( CMF_Hydrogen_Environment $env, $word ){
+	public static function checkCaptcha( CMF_Hydrogen_Environment $env, string $word )
+	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
 		if( $moduleConfig->get( 'mode' ) === 'recaptcha' ){
 			$request	= new Net_HTTP_Post();
-			$url			= 'https://www.google.com/recaptcha/api/siteverify';
+			$url		= 'https://www.google.com/recaptcha/api/siteverify';
 			$response	= json_decode( $request->send( $url, array(
 				'response'	=> $env->getRequest()->get( 'g-recaptcha-response' ),
 				'secret'		=> $moduleConfig->get( 'recaptcha.secret' ),
@@ -34,13 +41,70 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 		return $env->getSession()->get( 'captcha' ) == $word;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( $this->mode === "recaptcha" )
 			return $this->renderRecaptcha();
 		return $this->renderDefault();
 	}
 
-	protected function renderDefault(){
+	public function setBackgroundColor( int $red, int $green, int $blue ): self
+	{
+		$this->background	= array( $red, $green, $blue );
+		return $this;
+	}
+
+	public function setFontSize( int $size ): self
+	{
+		$this->fontSize	= $size;
+		return $this;
+	}
+
+	public function setFormat( int $format ): self
+	{
+		$this->format	= $format;
+	}
+
+	public function setHeight( int $height ): self
+	{
+		$this->captcha->height	= $height;
+		return $this;
+	}
+
+	public function setMode( string $mode ): self
+	{
+		if( !in_array( $mode, array( 'default', 'recaptcha' ) ) )
+			throw new InvalidArgumentException( 'Invalid mode' );
+		$this->mode	= $mode;
+	}
+
+	public function setLength( int $length ): self
+	{
+		$this->captcha->length	= max( 1, min( 8, (int) $length ) );
+	}
+
+	public function setStrength( string $strength ): self
+	{
+		switch( strtolower( $strength ) ){
+			case 'soft':
+				$this->captcha->useDigits	= FALSE;
+				$this->captcha->useLarge	= FALSE;
+				break;
+			case 'hard':
+				$this->captcha->useDigits	= TRUE;
+				$this->captcha->useLarge	= TRUE;
+				break;
+		}
+	}
+
+	public function setWidth( int $width ): self
+	{
+		$this->captcha->width	= $width;
+		return $this;
+	}
+
+	protected function renderDefault(): string
+	{
 		$word		= $this->captcha->generateWord();
 		$this->session->set( 'captcha', $word );
 		$this->captcha->background	= $this->background;
@@ -61,58 +125,12 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/{
 		) );
 	}
 
-	protected function renderRecaptcha(){
+	protected function renderRecaptcha(): string
+	{
 		$this->env->getPage()->js->addUrl( 'https://www.google.com/recaptcha/api.js' );
 		return UI_HTML_Tag::create( 'div', '', array(
 			'class'					=> "g-recaptcha",
 			'data-sitekey'	=> $this->moduleConfig->get( 'recaptcha.key' ),
 		) );
-	}
-
-	public function setBackgroundColor( $red, $green, $blue ){
-		$this->background	= array( $red, $green, $blue );
-		return $this;
-	}
-
-	public function setFontSize( $size ){
-		$this->fontSize	= $size;
-		return $this;
-	}
-
-	public function setFormat( $format ){
-		$this->format	= $format;
-	}
-
-	public function setHeight( $height ){
-		$this->captcha->height	= $height;
-		return $this;
-	}
-
-	public function setMode( $mode ){
-		if( !in_array( $mode, array( 'default', 'recaptcha' ) ) )
-			throw new InvalidArgumentException( 'Invalid mode' );
-		$this->mode	= $mode;
-	}
-
-	public function setLength( $length ){
-		$this->captcha->length	= max( 1, min( 8, (int) $length ) );
-	}
-
-	public function setStrength( $strength ){
-		switch( strtolower( $strength ) ){
-			case 'soft':
-				$this->captcha->useDigits	= FALSE;
-				$this->captcha->useLarge	= FALSE;
-				break;
-			case 'hard':
-				$this->captcha->useDigits	= TRUE;
-				$this->captcha->useLarge	= TRUE;
-				break;
-		}
-	}
-
-	public function setWidth( $width ){
-		$this->captcha->width	= $width;
-		return $this;
 	}
 }
