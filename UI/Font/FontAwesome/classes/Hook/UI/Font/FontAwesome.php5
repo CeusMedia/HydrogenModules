@@ -1,5 +1,5 @@
 <?php
-class Hook_UI_Font_FontAwesome extends CMF_Hook
+class Hook_UI_Font_FontAwesome extends CMF_Hydrogen_Hook
 {
 	/**
 	 *	...

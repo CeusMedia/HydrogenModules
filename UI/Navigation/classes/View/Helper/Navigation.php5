@@ -33,7 +33,8 @@ class View_Helper_Navigation
 		$helper	= Alg_Object_Factory::createObject( $class, $argments );
 		$helper->setInverse( $this->inverse );
 		$helper->setLinksToSkip( $this->linksToSkip );
-		$helper->setLogo( $this->logoTitle, $this->logoLink, $this->logoIcon );
+		if( $this->logoTitle )
+			$helper->setLogo( $this->logoTitle, $this->logoLink, $this->logoIcon );
 		$helper->setScope( $scope );
 		$helper->setStyle( $style );
 		if( $this->helperAccount )

@@ -2,7 +2,7 @@
 $errorReporting		= E_ALL;										//  enable full reporting
 $displayErrors		= TRUE;											//  enable error display
 $pathClasses		= "classes/";
-$configFile			= "config/config.ini";							//  set an alternative config file
+$configFile			= "config.ini";									//  set an alternative config file
 $classRouter		= "CMF_Hydrogen_Environment_Router_Recursive";	//  set an alternative router class
 $defaultTimezone	= "Europe/Berlin";								//  default time zone
 
