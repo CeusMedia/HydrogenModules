@@ -57,8 +57,8 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller
 				$this->messenger->noteError( 'role_title_missing' );
 		}
 
-		$data	= $this->request->getAllFromSource( 'POST', TRUE );
-		$this->addData( 'role', new ADT_List_Dictionary( $data ) );
+		$postDataArray	= $this->request->getAllFromSource( 'POST' );
+		$this->addData( 'role', new ADT_List_Dictionary( $postDataArray ) );
 		$this->addData( 'words', $words );
 	}
 

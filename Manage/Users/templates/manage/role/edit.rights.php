@@ -63,7 +63,7 @@ function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, 
 			}
 		}
 		$actions	= UI_HTML_Tag::create( 'ul', join( $actionToggles->list ), array() );
-		$path		= strtolower( str_replace( '_', '/', $controller->name ) ).'/';
+		$path		= strtolower( str_replace( '_', '/', $controller->name ) )/*.'/'*/;
 		$path		= UI_HTML_Tag::create( 'abbr', $path, array( 'title' => 'Controller: '.$controller->name ) );
 		$path		= UI_HTML_Tag::create( 'small', '&nbsp;'.$iconController.$path, array( 'class' => 'not-muted' ) );
 
