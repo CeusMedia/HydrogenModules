@@ -3,19 +3,19 @@ class View_Helper_DevProfiler
 {
 	public static function render( CMF_Hydrogen_Environment $env )
 	{
-		$profiler	= $env->clock->profiler;
+		$runtime	= $env->getRuntime();
 		$words		= $env->getLanguage()->getWords( 'ui.dev.layer.profiler' );
 		$options	= $env->getConfig()->getAll( 'module.ui_devlayers_profiler.', TRUE );
 		$filter		= $options->get( 'filter' ) ? $options->get( 'filter.type' ) : NULL;
 		$threshold	= $options->get( 'filter.threshold' );
-		$profiler->tick( 'UI:Helper:Dev:Profiler::render: init' );
-		$timeTotal	= $env->clock->stop( 6, 0 );
+		$runtime->reach( 'UI:Helper:Dev:Profiler::render: init' );
+		$timeTotal	= $runtime->get( 6, 0 );
 
 		$current	= 0;
 		$list		= array();
-		foreach( $profiler->get() as $task ){
-			$width		= $task['timeMicro'] / $timeTotal * 100;
-			if( $filter === "ms" && $task['timeMicro'] / 1000 <= $threshold )
+		foreach( $runtime->getGoals() as $task ){
+			$width		= $task->timeMicro / $timeTotal * 100;
+			if( $filter === "ms" && $task->timeMicro / 1000 <= $threshold )
 				continue;
 			if( $filter === "%" && $width <= $threshold )
 				continue;
@@ -27,13 +27,13 @@ class View_Helper_DevProfiler
 			$about		= round( $width / 5 ) * 5;
 			$classes	= array( 'task-line', 'about-'.$about );
 			$cells		= array(
-				'<td class="task-title">'.$task['label'].'</td>',
-				'<td class="task-measure">'.round( $task['timeMicro'] / $timeTotal * 100 ).'%</td>',
-				'<td class="task-measure">'.self::formatTime( $task['timeMicro'] ).'s</td>',
+				'<td class="task-title">'.$task->label.'</td>',
+				'<td class="task-measure">'.round( $task->timeMicro / $timeTotal * 100 ).'%</td>',
+				'<td class="task-measure">'.self::formatTime( $task->timeMicro ).'s</td>',
 				'<td><div class="task-line">'.$bar.'</div></td>'
 			);
 			$list[]		= '<tr class="'.join( ' ', $classes ).'">'.join( $cells ).'</tr>';
-			$current	= $task['totalMicro'];
+			$current	= $task->totalMicro;
 		}
 		$total		= '<tr class="total"><td>Total</td><td colspan="2" class="task-measure">'.self::formatTime( $timeTotal ).'s</td><td></td></tr>';
 		$list[]		= UI_HTML_Tag::create( 'tfoot', $total );
