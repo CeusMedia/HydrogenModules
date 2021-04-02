@@ -30,7 +30,7 @@
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@link			https://github.com/CeusMedia/HydrogenModules
  */
-class Resource_Acl_Database extends CMF_Hydrogen_Environment_Resource_Acl_Abstract
+class Resource_Acl_Authentication extends CMF_Hydrogen_Environment_Resource_Acl_Abstract
 {
 	public function index( string $controller = NULL, $roleId = NULL ): array
 	{
