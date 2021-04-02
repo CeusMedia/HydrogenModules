@@ -40,14 +40,24 @@ class Controller_Index extends CMF_Hydrogen_Controller
 			}
 		}
 
-		if( $this->env->getModules()->has( 'Resource_Users' ) ){
+		if( $this->env->getModules()->has( 'Resource_Authentication_Backend_Local' ) ){				//  high level: use local auth module
+			$logic	= $this->env->getLogic()->get( 'Authentication' );
+			if( $logic->isAuthenticated() )
+				$this->setData( [
+					'user'	=> $logic->getCurrentUser(),
+					'role'	=> $logic->getCurrentRole(),
+				] );
+		}
+		else if( $this->env->getModules()->has( 'Resource_Users' ) ){								//  fallback: no local auth, but local users
 			$userId		= $session->get( 'userId' );
+			$roleId		= $session->get( 'roleId' );
 			if( $userId ){
 				$this->addData( 'user', $this->getModel( 'user' )->get( $userId ) );
-				$this->addData( 'role', $this->getModel( 'role' )->get( $roleId ) );
+				if( $roleId )
+					$this->addData( 'role', $this->getModel( 'role' )->get( $roleId ) );
 			}
-			$this->addData( 'isInside', $isInside );
 		}
+		$this->addData( 'isInside', $isInside );
 		$this->addData( 'pathLocales', $pathLocales );
 		$this->addData( 'pathHtml', $pathHtml );
 		$this->addData( 'language', $language );
