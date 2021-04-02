@@ -317,7 +317,8 @@ class Model_Menu
 						$public		= $subpage->access == "public";
 						$outside	= !$isAuthenticated && $subpage->access == "outside";
 						$inside		= $isAuthenticated && $subpage->access == "inside";
-						$acl		= $subpage->access == "acl" && $this->acl->has( $subitem->path );
+						$acl		= $subpage->access == "acl" && $this->acl->has( $subpage->path );
+
 						if( !( $public || $outside || $inside || $acl ) )
 							continue;
 						$item->items[]	= $subitem;
