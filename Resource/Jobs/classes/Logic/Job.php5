@@ -370,6 +370,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 			) );
 		}
 
+
 		$className	= 'Job_'.$jobDefinition->className;												//  build job class name
 		$classArgs	= array( $this->env, $this );													//  prepare job class instance arguments
 		$arguments	= array( $commands, $parameters );												//
@@ -382,11 +383,13 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		$result			= -255;
 		$output			= '';
 		try{																						//  try to ...
+
 			$outputBuffer	= new UI_OutputBuffer( FALSE );
 			if( $jobRun->type == Model_Job_Run::TYPE_SCHEDULED )
 				$outputBuffer->open();
 			$factory	= new \Alg_Object_MethodFactory( $jobObject );								//  create a factory for this job
 			$result		= $factory->callMethod( $methodName, $arguments );							//  call job method with arguments
+
 			if( $jobRun->type == Model_Job_Run::TYPE_SCHEDULED )
 				$output	= $outputBuffer->get( TRUE );
 			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_DONE, array(			//  finish job run since no exception has been thrown
