@@ -5,6 +5,7 @@ $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check'
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 unset( $folders[$folder->downloadFolderId] );
+$folders	= array_merge( array( 0	=> '' ), $folders );
 $optFolder	= UI_HTML_Elements::Options( $folders, $folder->parentId );
 
 $buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array(
@@ -46,7 +47,7 @@ $panelEdit	= UI_HTML_Tag::create( 'div', array(
 						'name'		=> 'parentId',
 						'id'		=> 'input_parentId',
 						'class'		=> 'span12',
-						'required'	=> 'required',
+				 //		'required'	=> 'required',
 					) ),
 				), array( 'class' => 'span6' ) ),
 			), array( 'class' => 'row-fluid' ) ),
