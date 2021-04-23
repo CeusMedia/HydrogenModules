@@ -46,6 +46,7 @@
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Import</needs>
 	</relations>
+	<job id="Form.Import.import">FormImport::import</log>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>form_blocks`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>form_blocks` (
