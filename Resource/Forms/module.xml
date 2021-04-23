@@ -44,6 +44,7 @@
 	<config protected="yes" type="integer" name="mail.template"></config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
+		<needs type="module">Resource_Import</needs>
 	</relations>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>form_blocks`;
