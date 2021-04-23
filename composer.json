@@ -19,8 +19,8 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "ceus-media/common": "dev-master",
-        "ceus-media/hydrogen-framework": "dev-master"
+        "ceus-media/common": "^0.8 | dev-master",
+        "ceus-media/hydrogen-framework": "^0.8 | dev-master"
     },
     "require-dev": {
         "ceus-media/bootstrap": "dev-master",
