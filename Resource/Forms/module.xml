@@ -301,8 +301,27 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>form_fill_transfers` (
   KEY `fillId` (`fillId`),
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+<sql type="mysql" on="update" version="0.3.7"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>form_import_rules`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_import_rules` (
+  `formImportRuleId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `importConnectionId` int(10) UNSIGNED NOT NULL,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `title` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `searchCriteria` text COLLATE utf8_unicode_ci NOT NULL,
+  `rules` text COLLATE utf8_unicode_ci NOT NULL,
+  `renameTo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `moveTo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`formImportRuleId`),
+  KEY `formId` (`formId`),
+  KEY `importConnectionId` (`importConnectionId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 	]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
+		DROP TABLE IF EXISTS `<%?prefix%>form_import_rules`;
 		DROP TABLE IF EXISTS `<%?prefix%>form_fill_transfers`;
 		DROP TABLE IF EXISTS `<%?prefix%>form_transfer_rules`;
 		DROP TABLE IF EXISTS `<%?prefix%>form_transfer_targets`;
