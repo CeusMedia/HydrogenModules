@@ -106,7 +106,7 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 		return $this;
 	}
 
-	public function setLogo( string $title, string $url = NULL, string $icon = NULL ): self
+	public function setLogo( ?string $title, ?string $url = NULL, ?string $icon = NULL ): self
 	{
 		$this->logoTitle	= $title;
 		$this->logoLink		= $url;
