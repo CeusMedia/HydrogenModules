@@ -9,6 +9,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 	protected $modelMail;
 	protected $modelTransferTarget;
 	protected $modelFillTransfer;
+	protected $modelTransferRule;
 
 	protected $transferTargetMap	= [];
 
@@ -299,9 +300,10 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 		$this->modelFill			= new Model_Form_Fill( $this->env );
 		$this->modelMail			= new Model_Form_Mail( $this->env );
 		$this->modelTransferTarget	= new Model_Form_Transfer_Target( $this->env );
+		$this->modelTransferRule	= new Model_Form_Transfer_Rule( $this->env );
 		$this->modelFillTransfer	= new Model_Form_Fill_Transfer( $this->env );
 		$this->logicMail			= Logic_Mail::getInstance( $this->env );
-		$this->logicFill			= $this->getLogic( 'FormFill' );
+		$this->logicFill			= $this->getLogic( 'formFill' );
 
 		foreach( $this->modelTransferTarget->getAll() as $target )
 			$this->transferTargetMap[$target->formTransferTargetId]	= $target;
