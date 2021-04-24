@@ -116,7 +116,19 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 		return $transfers;
 	}
 
-	public function get( $fillId, $strict = TRUE ){
+	public function checkId( $fillId, bool $strict = TRUE )
+	{
+		$fill	= $this->modelFill->get( $fillId );
+		if( !$fill ){
+			if( $strict )
+				throw new RuntimeException( 'Invalid fill ID' );
+			return NULL;
+		}
+		return $fill;
+	}
+
+	public function get( $fillId, bool $strict = TRUE )
+	{
 		$fillId	= (int) $fillId;
 		if( !$fillId ){
 			if( $strict )
@@ -144,10 +156,7 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 
 		//  -  SEND MAIL  --  //
 		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
-		if( class_exists( '\CeusMedia\Mail\Participant' ) )
-			$sender			= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
-		else
-			$sender			= new \CeusMedia\Mail\Address( $configResource->get( 'sender.address' ) );
+		$sender			= $this->createMailAddress( $configResource->get( 'sender.address' ) );
 		if( $configResource->get( 'sender.name' ) )
 			$sender->setName( $configResource->get( 'sender.name' ) );
 		if( isset( $form->senderAddress ) && $form->senderAddress )
@@ -199,15 +208,12 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 
 		//  -  SEND MAIL  --  //
 		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
-		if( class_exists( '\CeusMedia\Mail\Participant' ) )
-			$sender			= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
-		else
-			$sender			= new \CeusMedia\Mail\Address( $configResource->get( 'sender.address' ) );
+		$sender			= $this->createMailAddress( $configResource->get( 'sender.address' ) );
 		if( $configResource->get( 'sender.name' ) )
 			$sender->setName( $configResource->get( 'sender.name' ) );
 		if( isset( $form->senderAddress ) && $form->senderAddress )
 			$sender		= $form->senderAddress;
-		$subject	= $formMail->subject ? $formMail->subject : 'DtHPS: Anfrage erhalten';
+		$subject	= $formMail->subject ? $formMail->subject : 'Anfrage erhalten';
 		$mail		= new Mail_Form_Customer_Result( $this->env, array(
 			'fill'				=> $fill,
 			'form'				=> $form,
@@ -217,22 +223,19 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 		$mail->setSubject( $subject );
 		$mail->setSender( $sender );
 		$language	= $this->env->getLanguage()->getLanguage();
-		$receiver	= (object) array( 'email'	=> $fill->email );
+		$receiver	= (object) array( 'email' => $fill->email );
 		return $this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
 	public function sendManagerErrorMail( $formId, $data )
 	{
 		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
-		if( class_exists( '\CeusMedia\Mail\Participant' ) )
-			$sender		= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
-		else
-			$sender		= new \CeusMedia\Mail\Address( $configResource->get( 'sender.address' ) );
+		$sender			= $this->createMailAddress( $configResource->get( 'sender.address' ) );
 		if( $configResource->get( 'sender.name' ) )
 			$sender->setName( $configResource->get( 'sender.name' ) );
 
 		$form		= $this->modelForm->get( $formId );
-		$subject	= 'DtHPS: Fehler bei Formular "'.$form->title.'" ('.date( 'd.m.Y' ).')';
+		$subject	= 'Fehler bei Formular "'.$form->title.'" ('.date( 'd.m.Y' ).')';
 		$mail		= new Mail_Form_Manager_Error( $this->env, array(
 			'form'				=> $form,
 			'data'				=> $data,
@@ -283,17 +286,16 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 		}
 
 		$receivers		= array_unique( $receivers );
+
 		//  -  SEND MAIL  --  //
-		$subject		= 'DtHPS: '.$form->title.' ('.date( 'd.m.Y' ).')';
+		$subject		= $form->title.' ('.date( 'd.m.Y' ).')';
 		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
-		if( class_exists( '\CeusMedia\Mail\Participant' ) )
-			$sender			= new \CeusMedia\Mail\Participant( $configResource->get( 'sender.address' ) );
-		else
-			$sender			= new \CeusMedia\Mail\Address( $configResource->get( 'sender.address' ) );
+		$sender			= $this->createMailAddress( $configResource->get( 'sender.address' ) );
 		if( $configResource->get( 'sender.name' ) )
 			$sender->setName( $configResource->get( 'sender.name' ) );
 		if( isset( $form->senderAddress ) && $form->senderAddress )
 			$sender		= $form->senderAddress;
+
 		$mail		= new Mail_Form_Manager_Filled( $this->env, array(
 			'form'				=> $form,
 			'fill'				=> $fill,
@@ -307,5 +309,12 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 			$this->logicMail->handleMail( $mail, $receiver, $language );
 		}
 		return count( $receivers );
+	}
+
+	protected function createMailAddress( string $address )
+	{
+		if( class_exists( '\CeusMedia\Mail\Participant' ) )
+			return new \CeusMedia\Mail\Participant( $address );
+		return new \CeusMedia\Mail\Address( $address );
 	}
 }
