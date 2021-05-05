@@ -8,40 +8,52 @@ class Job_FormImport extends Job_Abstract
 {
 	protected $logicImport;
 	protected $logicFill;
+	protected $modelConnection;
+	protected $modelConnector;
 	protected $modelForm;
 	protected $modelFill;
 	protected $modelImportRule;
 	protected $jsonMapper;
 	protected $dataMapper;
 
-	public function import( $verbose = FALSE )
+	public function import( $arguments = array() )
 	{
-		$importRules	= $this->modelImportRule->getAll();
+		$verbose		= in_array( 'verbose', $arguments ) || $this->parameters->get( 'verbose' );
+		$errors			= [];
+		$importRules	= $this->getActiveFormImportRules();
 		foreach( $importRules as $importRule ){
-//			print_m( $importRule );
-			$connection	= $this->logicImport->getConnection( $importRule->importConnectionId );
-//			print_m( $connection );
-			$searchCriteria	= explode( PHP_EOL, $importRule->searchCriteria );
-			$clock			= new Alg_Time_Clock();
-			$messages		= $connection->find( $searchCriteria, [], [0, 1] );
-			$verbose && $this->out( 'Found: '.count( $messages ).' mails' );
-			$verbose && $this->out( 'Time needed: '.$clock->stop( 3, 0 ).' ms' );
-		}
+			$connection			= $this->modelConnection->get( $importRule->importConnectionId );
+			$connector			= $this->modelConnector->get( $connection->importConnectorId );
+			$connectionInstance	= $this->logicImport->getConnectionInstanceFromId( $importRule->importConnectionId );
+			$connectionInstance->setOptions( $this->jsonParser->parse( $importRule->options, FALSE ) );
+			$searchCriteria		= explode( PHP_EOL, $importRule->searchCriteria );
+			$clock				= new Alg_Time_Clock();
+			$results			= $connectionInstance->find( $searchCriteria, [], [0, 1] );
 
-		foreach( $messages as $mailId => $message ){
 			if( $verbose ){
-				$this->out( str_pad( '--  #'.$mailId.'  ', '76', '-', STR_PAD_RIGHT ) );
-				$this->out( 'Subject: '.$message->getSubject() );
-				$this->out( 'Sender: '.$message->getSender()->get() );
-				$this->displayMessageHeaders( $message );
-				$this->displayMessageContent( $message );
+				$this->out( 'Rule: '.$importRule->title );
+				$this->out( 'Form: '.$importRule->form->title );
+				$this->out( 'Connection: '.$connection->title );
+				$this->out( 'Connector: '.$connector->title );
+				$this->out( 'Data Sources: '.count( $results ).' found' );
+				$this->out( 'Time needed: '.$clock->stop( 3, 0 ).' ms' );
 			}
-			if( $message->hasAttachments() ){
-				foreach( $message->getAttachments() as $part ){
-					$this->importMessageAttachment( $importRule, $part, $verbose );
+			$ruleSet	= $this->jsonParser->parse( $importRule->rules, FALSE );
+			foreach( $results as $result ){
+				foreach( $result->data as $dataSet ){
+					foreach( $dataSet as $data ){
+						try{
+							$fillId	= $this->importData( $importRule, $ruleSet, $data, $verbose );
+						}
+						catch( Exception $e ){
+							$errors[]	= $e->getMessage();
+							$this->env->getLog()->logException( $e );
+						}
+					}
 				}
 			}
 		}
+		return $errors;
 	}
 
 	//  --  PROTECTED  --  //
@@ -50,6 +62,8 @@ class Job_FormImport extends Job_Abstract
 	{
 		$this->logicImport			= new Logic_Import( $this->env );
 		$this->logicFill			= new Logic_Form_Fill( $this->env );
+		$this->modelConnection		= new Model_Import_Connection( $this->env );
+		$this->modelConnector		= new Model_Import_Connector( $this->env );
 		$this->modelForm			= new Model_Form( $this->env );
 		$this->modelFill			= new Model_Form_Fill( $this->env );
 		$this->modelImportRule		= new Model_Form_Import_Rule( $this->env );
@@ -57,47 +71,31 @@ class Job_FormImport extends Job_Abstract
 		$this->dataMapper			= new Logic_Form_Transfer_DataMapper( $this->env );
 	}
 
-	protected function displayMessageContent( $message )
+	protected function getActiveFormImportRules(): array
 	{
-		if( $message->hasText() ){
-			$this->out( 'Text Part Content:' );
-			$this->out( $message->getText()->getContent() );
-			$this->out( '' );
+		$rules		= array();
+		$forms		= $this->modelForm->getAllByIndex( 'status', Model_Form::STATUS_ACTIVATED );
+		if( count( $forms ) !== 0 ){
+			$formMap	= array();
+			foreach( $forms as $form )
+				$formMap[$form->formId]	= $form;
+			$conditions		= array(
+				'formId'	=> array_keys( $formMap ),
+				'status'	=> array(
+					Model_Form_Import_Rule::STATUS_TEST,
+					Model_Form_Import_Rule::STATUS_ACTIVE,
+				),
+			);
+			$orders		= array(
+				'importConnectionId'	=> 'ASC',
+				'formId'				=> 'ASC',
+			);
+			$limits		= array();
+			$rules		= $this->modelImportRule->getAll( $conditions, $orders, $limits );
+			foreach( $rules as $rule )
+				$rule->form = $formMap[$rule->formId];
 		}
-	}
-
-	protected function displayMessageHeaders( $message )
-	{
-		$this->out( 'Headers:' );
-		foreach( $message->getHeaders()->getFields() as $field ){
-			if( $field->getName() === 'Authentication-Results' )
-				continue;
-			if( preg_match( '/^Received/', $field->getName() ) )
-				continue;
-			$this->out( '- '.$field->getName().': '.$field->getValue() );
-		}
-		$this->out();
-	}
-
-	protected function importCsvFile( $importRule, $filePath, bool $verbose = FALSE )
-	{
-		$ruleSet	= $this->jsonParser->parse( $importRule->rules, FALSE );
-		$reader		= new FS_File_CSV_Reader( $filePath, FALSE, ';' );
-
-		if( $verbose ){
-			remark( 'Rules:' );
-			print_m( $ruleSet );
-		}
-		foreach( $reader->toArray() as $importData ){
-			if( !count( $importData ) )
-				continue;
-			if( $verbose ){
-				remark( 'Import Data:' );
-				print_m( $importData );
-			}
-			$fillId	= $this->importData( $importRule->formId, $ruleSet, $importData, $verbose );
-		}
-		return TRUE;
+		return $rules;
 	}
 
 	/**
@@ -105,7 +103,7 @@ class Job_FormImport extends Job_Abstract
 	 *	@param		boolean		$verbose			Show details in CLI output, default: no
 	 *	@return		integer		Fill ID
 	 */
-	protected function importData( $formId, $ruleSet, array $importData, bool $verbose ): int
+	protected function importData( $importRule, $ruleSet, array $importData, bool $verbose ): int
 	{
 		if( !count( $importData ) )
 			throw new Exception( 'No import data given.' );
@@ -126,7 +124,7 @@ class Job_FormImport extends Job_Abstract
 		}
 
 		$data		= array(
-			'formId'		=> $formId,
+			'formId'		=> $importRule->formId,
 			'status'		=> Model_Form_Fill::STATUS_CONFIRMED,
 			'email'			=> $formData['email'] ?? '',
 //				'data'			=> json_encode( $fillData, JSON_PRETTY_PRINT ),
@@ -136,6 +134,8 @@ class Job_FormImport extends Job_Abstract
 			'createdAt'		=> $formData['createdAt'] ?? time(),
 			'modifiedAt'	=> time(),
 		);
+		if( $importRule->status == Model_Form_Import_Rule::STATUS_TEST )
+			return 0;
 		$fillId		= $this->modelFill->add( $data, FALSE );
 		if( $verbose ){
 			remark( 'Fill Entry Data:' );
@@ -148,42 +148,24 @@ class Job_FormImport extends Job_Abstract
 		return $fillId;
 	}
 
-	protected function importMessageAttachment( $importRule, $part, bool $verbose = FALSE ): bool
-	{
-		$fileName	= $part->getFileName();
-		$ext		= pathinfo( $fileName, PATHINFO_EXTENSION );
-		if( $verbose ){
-			$this->out( 'Attachment Part:' );
-			$this->out( '- File Name: '.$fileName );
-			$this->out( '- File Size: '.Alg_UnitFormater::formatBytes( $part->getFileSize() ) );
-			$this->out( '- MIME Type: '.$part->getMimeType() );
-			$this->out( str_repeat( '-', 76 ) );
-		}
-		if( strtolower( $ext ) !== 'csv' ){
-			$this->out( '  - skipped: not a report: '.$fileName );
-			return FALSE;
-		}
-		try{
-			$tempFile	= tempnam( sys_get_temp_dir(), 'import' );
-			file_put_contents( $tempFile, $part->getContent() );
-			$result		= $this->importCsvFile( $importRule, $tempFile, $verbose );
-			if( $verbose )
-				$this->out( '- Import Result: '.$result );
-			@unlink( $tempFile );
-			return TRUE;
-		}
-		catch( Exception $e ){
-			@unlink( $tempFile );
-			$this->out( 'Error: '.$e->getMessage() );
-			return FALSE;
-		}
-	}
-
 	protected function translateFormDataToFillData( array $formData, $ruleSet ): array
 	{
 		$fillLabels			= (array) $ruleSet->label;
 		$fillTypes			= (array) $ruleSet->type;
 		$fillValueLabels	= (array) $ruleSet->valueLabel ?? [];
+
+		//  get value labels for base and topic from database (school_bases, school_courses)
+		foreach( $formData as $key => $value ){
+			if( in_array( $key, ['base', 'topic'] ) ){
+				if( $key === 'base' )
+					$model	= new Model_School_Base( $this->env );
+				else if( $key === 'topic' )
+					$model	= new Model_School_Course( $this->env );
+				$entry	= $model->getByIndex( 'identifier', $value );
+				if( $entry )
+					$fillValueLabels[$key.'-'.$value]	= $entry->title;
+			}
+		}
 
 		$fillData	= [];
 		foreach( $formData as $key => $value ){
