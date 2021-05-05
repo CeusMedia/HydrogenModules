@@ -22,7 +22,7 @@ class Model_Import_Connector extends CMF_Hydrogen_Model
 		'status',
 		'className',
 		'type',
-		'label',
+		'title',
 		'description',
 		'createdAt',
 		'modifiedAt',

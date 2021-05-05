@@ -4,14 +4,14 @@ class Logic_Import extends CMF_Hydrogen_Logic
 	protected $modelConnection;
 	protected $modelConnector;
 
-	public function getConnection( $connectionId ){
+	public function getConnectionInstanceFromId( $connectionId ){
 		if( !isset( $this->connections[$connectionId] ) ){
 			$connection	= $this->modelConnection->get( $connectionId );
 			if( !$connection )
 				throw new RangeException( 'Invalid connection ID' );
 			$connector	= $this->modelConnector->get( $connection->importConnectorId  );
 			if( (int) $connector->status !== Model_Import_Connector::STATUS_ENABLED )
-				throw new RuntimeException( 'Connector "'.$connector->label.'" is not enabled' );
+				throw new RuntimeException( 'Connector "'.$connector->title.'" is not enabled' );
 
 			$factory	= new Alg_Object_Factory();
 			$instance	= $factory->create( $connector->className, array( $this->env ) );
