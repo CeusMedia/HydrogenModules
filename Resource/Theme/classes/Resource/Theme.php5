@@ -3,7 +3,7 @@ class Resource_Theme{
 
 	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $module, $context, $data = array() ){
 		foreach( $env->getModules()->getAll() as $module ){
-			if( !preg_match( '/^Theme_/', $module->id ) )
+			if( !preg_match( '/^(UI_)?Theme_/', $module->id ) )
 				continue;
 			if( !$module->config['active']->value )
 				continue;
