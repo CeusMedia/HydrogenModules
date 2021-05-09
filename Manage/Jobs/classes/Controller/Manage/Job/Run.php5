@@ -132,6 +132,18 @@ die;*/
 		$this->addData( 'page', $page );
 	}
 
+	public function remove( $jobRunId )
+	{
+		try{
+			$this->logic->removeJobRun( $jobRunId );
+		}
+		catch( Exception $e ){
+			$this->env->getMessenger()->noteError( $e->getMessage() );
+		}
+		$from	= $this->request->get( 'from' );
+		$this->restart( $from, !$from );
+	}
+
 	public function terminate( $jobRunId )
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );

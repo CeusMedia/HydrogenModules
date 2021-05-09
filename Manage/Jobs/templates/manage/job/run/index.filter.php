@@ -81,7 +81,7 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(
 					UI_HTML_Tag::create( 'label', $words['filter']['labelArchived'], array( 'for' => 'input_archived' ) ),
 					UI_HTML_Tag::create( 'select', $optArchived, array(
-						'name' 		=> 'type',
+						'name' 		=> 'archived',
 						'id'		=> 'input_archived',
 						'class' 	=> 'span12',
 //						'oninput'	=> 'this.form.submit();',
