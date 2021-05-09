@@ -10,6 +10,7 @@ $helperTime->setMode( View_Helper_TimePhraser::MODE_BREAK );
 $iconArchive	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) );
 $iconAbort		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 $iconTerminate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
 
 $table		= UI_HTML_Tag::create( 'div', 'Keine Ausführungen gefunden.', array( 'class' => 'alert alert-warning' ) );
 if( $runs ){
@@ -19,8 +20,11 @@ if( $runs ){
 		$definition	= $definitions[$item->jobDefinitionId];
 		$output		= '';
 		if( in_array( $item->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS_DONE, Model_Job_Run::STATUS_SUCCESS ) ) ){
-			$message	= json_decode( $item->message );
-			$output		= $message->type;
+			$output		= '';
+			if( $item->message ){
+				$message	= json_decode( $item->message );
+				$output		= $message->type;
+			}
 /*			switch( $message->type ){
 				case 'throwable':
 					$file	= View_Manage_Job::removeEnvPath( $env, $message->file );
@@ -50,7 +54,7 @@ if( $runs ){
 		}
 
 		$buttonArchive	= '';
-		if( in_array( (int) $item->status, Model_Job_Run::STATUSES_ARCHIVABLE ) ){
+		if( in_array( (int) $item->status, Model_Job_Run::STATUSES_ARCHIVABLE ) && !$item->archived ){
 			$buttonArchive	= UI_HTML_Tag::create( 'a', $iconArchive, array(
 				'href'	=> './manage/job/run/archive/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-inverse',
@@ -73,12 +77,20 @@ if( $runs ){
 				'title'	=> 'abbrechen',
 			) );
 		}
+		$buttonRemove	= '';
+		if( in_array( (int) $item->status, Model_Job_Run::STATUSES_ARCHIVABLE ) ){
+			$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+				'href'	=> './manage/job/run/remove/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
+				'class'	=> 'btn btn-mini btn-danger',
+				'title'	=> 'entfernen',
+			) );
+		}
 
 
 		$link		= UI_HTML_Tag::create( 'a', $title, array(
 			'href'	=> './manage/job/run/view/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' )
 		) );
-		$buttons	= UI_HTML_Tag::create( 'div', array( $buttonAbort, $buttonTerminate, $buttonArchive ), array( 'class' => 'btn-group' ) );
+		$buttons	= UI_HTML_Tag::create( 'div', array( $buttonAbort, $buttonTerminate, $buttonArchive, $buttonRemove ), array( 'class' => 'btn-group' ) );
 		$rows[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', '<small class="muted">'.$item->jobRunId.'</small>' ),
 //			UI_HTML_Tag::create( 'td', '<a href="./manage/job/definition/view/'.$definition->jobDefinitionId.'">'.$title.'</a>' ),

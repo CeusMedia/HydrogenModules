@@ -425,6 +425,16 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return $returnCode;																					//  quit with negative status
 	}
 
+	public function removeJobRun( $jobRunId )
+	{
+		$job			= $this->modelRun->get( $jobRunId );
+		if( $job && in_array( (int) $job->status, Model_Job_Run::STATUSES_ARCHIVABLE, TRUE ) ){
+			$this->modelRun->remove( $jobRunId );
+			return TRUE;
+		}
+		return FALSE;
+	}
+
 	public function terminateDiscontinuedJobRuns( ?string $reason = NULL ): array
 	{
 		$list	= array();

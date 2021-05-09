@@ -8,6 +8,7 @@ $helperAttribute	= new View_Helper_Job_Attribute( $env );
 
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconArchive	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) );
+$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $runReportChannelLabels	= $wordsGeneral['job-run-report-channels'];
 
@@ -46,8 +47,10 @@ if( $run->reportMode ){
 	}
 }
 if( in_array( $run->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS_DONE, Model_Job_Run::STATUS_SUCCESS ) ) ){
-	$message			= json_decode( $run->message );
-	$facts['Output']	= $message->type;
+	if( !$run->archived ){
+		$message			= json_decode( $run->message );
+		$facts['Output']	= $message->type;
+	}
 }
 
 $list	= array();
@@ -66,6 +69,11 @@ $buttonArchive	= UI_HTML_Tag::create( 'a', $iconArchive.'&nbsp;archivieren', arr
 	'class'	=> 'btn btn-inverse',
 ) );
 
+$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+	'href'	=> './manage/job/run/remove/'.$run->jobRunId,
+	'class'	=> 'btn btn-danger',
+) );
+
 
 $panelFactsJob	= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h4', 'Job Run Facts' ),
@@ -74,6 +82,7 @@ $panelFactsJob	= UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'div', join( ' ', array(
 			$buttonCancel,
 			$buttonArchive,
+			$buttonRemove,
 		) ), array( 'class' => 'buttonbar' ) )
 	), array( 'class' => 'content-panel-inner' ) )
 ), array( 'class' => 'content-panel' ) );
@@ -113,31 +122,33 @@ $tabs	= View_Manage_Job::renderTabs( $env, 'run' );
 
 $panelMessage	= '';
 if( in_array( $run->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS_DONE, Model_Job_Run::STATUS_SUCCESS ) ) ){
-	$message	= json_decode( $run->message );
-	$output		= '';
-	switch( $message->type ){
-		case 'throwable':
-			$file	= View_Manage_Job::removeEnvPath( $env, $message->file );
-			$output	= '<div>
-				<div>Error: '.$message->message.'</div>
-				<div>File: '.$file.' - Line: '.$message->line.'</div>
-				<xmp>'.View_Manage_Job::removeEnvPath( $env, $message->trace ).'</xmp>
-			</div>';
-			break;
-		case 'result':
-		case 'data':
-			$output	= '<div>
-				<div>Type: '.ucfirst( $message->type ).'</div>
-				<pre>'.print_m( $message->{$message->type}, NULL, NULL, TRUE ).'</pre>
-			</div>';
-			break;
+	if( !$run->archived ){
+		$message	= json_decode( $run->message );
+		$output		= '';
+		switch( $message->type ){
+			case 'throwable':
+				$file	= View_Manage_Job::removeEnvPath( $env, $message->file );
+				$output	= '<div>
+					<div>Error: '.$message->message.'</div>
+					<div>File: '.$file.' - Line: '.$message->line.'</div>
+					<xmp>'.View_Manage_Job::removeEnvPath( $env, $message->trace ).'</xmp>
+				</div>';
+				break;
+			case 'result':
+			case 'data':
+				$output	= '<div>
+					<div>Type: '.ucfirst( $message->type ).'</div>
+					<pre>'.print_m( $message->{$message->type}, NULL, NULL, TRUE ).'</pre>
+				</div>';
+				break;
+		}
+		$panelMessage	= UI_HTML_Tag::create( 'div', array(
+			UI_HTML_Tag::create( 'h4', 'Job Run' ),
+			UI_HTML_Tag::create( 'div', array(
+				$output
+			), array( 'class' => 'content-panel-inner' ) )
+		), array( 'class' => 'content-panel' ) );
 	}
-	$panelMessage	= UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'h4', 'Job Run' ),
-		UI_HTML_Tag::create( 'div', array(
-			$output
-		), array( 'class' => 'content-panel-inner' ) )
-	), array( 'class' => 'content-panel' ) );
 }
 
 
