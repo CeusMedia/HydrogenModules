@@ -104,6 +104,7 @@ code:shell>./job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 	<job id="Job.Lock.clear">Job_Lock::clear</job>
 <!--	<job id="Job.Lock.alert">Job_Lock::alert</job>-->
 	<job id="Job.Schedule.archive">Job_Schedule::archive</job>
+	<job id="Job.Schedule.clean">Job_Schedule::remove</job>
 	<job id="Job.Schedule.run" multiple="yes">Job_Schedule::run</job>
 	<job id="Job.Test.reflect">Job_Test::reflect</job>
 	<job id="Job.Test.reflectCommands">Job_Test::reflectCommands</job>
