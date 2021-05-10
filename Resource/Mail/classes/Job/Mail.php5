@@ -15,6 +15,7 @@ class Job_Mail extends Job_Abstract
 	 *			- modes: direct, queue
 	 *				- direct: send mail directly without queue
 	 *				- queue: place test message in queue if enabled
+	 *			- default: direct
 	 *
 	 *	@access		public
 	 *	@return		void
@@ -41,8 +42,12 @@ class Job_Mail extends Job_Abstract
 			$receiver		= $appConfig->get( 'admin.email' );
 		}
 
+		$moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
+
+
 
 		$data	= array(
+			'verbose'	=> $this->verbose,
 			'html'		=> $this->getMailContentAsHtml(),
 			'text'		=> $this->getMailContentAsText(),
 			'subject'	=> $this->getMailSubject(),
@@ -51,6 +56,17 @@ class Job_Mail extends Job_Abstract
 		if( $this->verbose ){
 			$this->out( 'Receiver: '.$receiver );
 			$this->out( 'Subject:  '.$data['subject'] );
+
+			$transport	= $moduleConfig->getAll( 'transport.', TRUE );
+			$this->out( 'Transport Type: '.$transport->get( 'type' ) );
+			if( strlen( trim( $transport->get( 'host' ) ) ) )
+				$this->out( 'Transport Host: '.$transport->get( 'host' ) );
+			if( strlen( trim( $transport->get( 'username' ) ) ) )
+				$this->out( 'Transport User: '.$transport->get( 'username' ) );
+			if( strlen( trim( $transport->get( 'password' ) ) ) ){
+				$password	= $this->maskPassword( $transport->get( 'password' ) );
+				$this->out( 'Transport Pass: '.$password.' ('.strlen( $password ).')' );
+			}
 		}
 
 		$mail	= new Mail_Test( $this->env, $data );
@@ -110,5 +126,13 @@ class Job_Mail extends Job_Abstract
 			$subject	= $prefix.$subject;
 		}
 		return $subject;
+	}
+
+	protected function maskPassword( string $password ): string
+	{
+		$length	= strlen( $password );
+		if( $length < 6 )
+			return str_repeat( '*', $length );
+		return substr( $password, 0, 1 ).str_repeat( '*', $length - 2 ).substr( $password, -1, 1 );
 	}
 }

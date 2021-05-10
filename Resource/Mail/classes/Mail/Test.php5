@@ -1,8 +1,11 @@
 <?php
 class Mail_Test extends Mail_Abstract
 {
-	public function generate( $data = array() )
+	public function generate( array $data = array() )
 	{
+		if( isset( $data['verbose'] ) && is_bool( $data['verbose'] ) )
+			$this->transport->setVerbose( $data['verbose'] );
+
 		$data		= new ADT_List_Dictionary( $data );
 		$subject	= $data->get( 'subject', 'Test' );
 		$text		= $data->get( 'text', $this->renderText( $data ) );
@@ -17,7 +20,7 @@ class Mail_Test extends Mail_Abstract
 		return $this;
 	}
 
-	public function renderHtml( $data = array() )
+	protected function renderHtml( ADT_List_Dictionary $viewData ): string
 	{
 		$content	= '
 <h2>E-Mail-Test</h2>
@@ -28,7 +31,7 @@ class Mail_Test extends Mail_Abstract
 		return $content;
 	}
 
-	public function renderText( $data = array() )
+	protected function renderText( ADT_List_Dictionary $viewData ): string
 	{
 		$content	= '
 *E-Mail-Test*
