@@ -19,6 +19,7 @@ class Job_FormImport extends Job_Abstract
 	public function import( $arguments = array() )
 	{
 		$verbose		= in_array( 'verbose', $arguments ) || $this->parameters->get( 'verbose' );
+		$dryMode		= in_array( 'dry', $arguments ) || $this->parameters->get( 'dry' );
 		$errors			= [];
 		$importRules	= $this->getActiveFormImportRules();
 		foreach( $importRules as $importRule ){
@@ -43,13 +44,19 @@ class Job_FormImport extends Job_Abstract
 				foreach( $result->data as $dataSet ){
 					foreach( $dataSet as $data ){
 						try{
-							$fillId	= $this->importData( $importRule, $ruleSet, $data, $verbose );
+							$fillId	= $this->importData( $importRule, $ruleSet, $data, $verbose, $dryMode );
 						}
 						catch( Exception $e ){
 							$errors[]	= $e->getMessage();
 							$this->env->getLog()->logException( $e );
 						}
 					}
+				}
+				if( !$dryMode ){
+					if( $importRule->moveTo )
+						$connectionInstance->moveTo( $result->source->id, $importRule->moveTo );
+				//	if( $importRule->renameTo )
+				//		$connectionInstance->renameTo( $result->source->id, $importRule->renameTo );
 				}
 			}
 		}
@@ -99,11 +106,16 @@ class Job_FormImport extends Job_Abstract
 	}
 
 	/**
+	 *	...
+	 *	@access		protected
+	 *	@param		object		$importRule			Data object of form input rule
+	 *	@param		object		$ruleSet			Data object of rules for data mapper
 	 *	@param		array		$importData			Data from connected import source
 	 *	@param		boolean		$verbose			Show details in CLI output, default: no
+	 *	@param		boolean		$dryMode			Flag: do not change anything, default: no
 	 *	@return		integer		Fill ID
 	 */
-	protected function importData( $importRule, $ruleSet, array $importData, bool $verbose ): int
+	protected function importData( $importRule, $ruleSet, array $importData, bool $verbose, bool $dryMode ): int
 	{
 		if( !count( $importData ) )
 			throw new Exception( 'No import data given.' );
@@ -122,6 +134,7 @@ class Job_FormImport extends Job_Abstract
 			remark( 'Fill Data:' );
 			print_m( $fillData );
 		}
+		$createdAt	= $formData['createdAt'] ?? time();
 
 		$data		= array(
 			'formId'		=> $importRule->formId,
@@ -133,16 +146,17 @@ class Job_FormImport extends Job_Abstract
 			'createdAt'		=> $formData['createdAt'] ?? time(),
 			'modifiedAt'	=> time(),
 		);
-		if( $importRule->status == Model_Form_Import_Rule::STATUS_TEST )
+		if( $dryMode || $importRule->status == Model_Form_Import_Rule::STATUS_TEST )
 			return 0;
+
 		$fillId		= $this->modelFill->add( $data, FALSE );
 		if( $verbose ){
 			remark( 'Fill Entry Data:' );
 			print_m( $data );
 			remark( 'Fill ID: '.$fillId );
 		}
-		$this->logicFill->sendCustomerResultMail( $fillId );
-		$this->logicFill->sendManagerResultMails( $fillId );
+//		$this->logicFill->sendCustomerResultMail( $fillId );
+//		$this->logicFill->sendManagerResultMails( $fillId );
 		$this->logicFill->applyTransfers( $fillId );
 		return $fillId;
 	}
@@ -168,6 +182,8 @@ class Job_FormImport extends Job_Abstract
 
 		$fillData	= [];
 		foreach( $formData as $key => $value ){
+			if( in_array( $key, ['createdAt'], TRUE ) )
+				continue;
 			$value	= strip_tags( $value );
 			$fillData[$key]	= [
 				'id'			=> 'import_'.$key,

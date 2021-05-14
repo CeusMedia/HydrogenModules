@@ -16,7 +16,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 		$input	= new ADT_List_Dictionary( $formData );
 		$output	= new ADT_List_Dictionary();
 
-		$this->applyTranslation( $rules->translate ?? [], $input, $output );
+		$this->applyTranslation( (array) $rules->translate ?? [], $input, $output );
 		$this->applyFilters( $rules->filter ?? [], $input, $output );
 		$this->applyDatabaseSearches( $rules->db ?? [], $input, $output );
 
@@ -183,10 +183,10 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	}
 
 	/**
-	 *	Applies filter rules.
+	 *	Applies translater rules.
 	 *
 	 *	@access		protected
-	 *	@param		array				$filters	Map of filter rules
+	 *	@param		array				$translates	Map of translate rules
 	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
 	 *	@param		ADT_List_Dictionary	$output		Output data dictionary
 	 *	@return		void
@@ -196,7 +196,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 		foreach( $translates as $fieldName => $map ){
 			if( $input->has( $fieldName ) ){
 				$value		= $input->get( $fieldName );
-				$translate	= new ADT_List_Dictionary( $map );
+				$translate	= new ADT_List_Dictionary( (array) $map );
 				if( $translate->has( $value ) ){
 					$input->set( $fieldName, $translate->get( $value ) );
 					continue;
