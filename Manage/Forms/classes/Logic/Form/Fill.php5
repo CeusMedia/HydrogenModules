@@ -92,11 +92,13 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 						break;
 					case Model_Form_Fill_Transfer::STATUS_ERROR:
 						$transfer->status		= 'error';
-						$reportData['message']	= join( PHP_EOL, $transfer->result->errors );
+//						$reportData['message']	= join( PHP_EOL, $transfer->result->errors );
+						$reportData['message']	= json_encode( $transfer->result->errors, JSON_PRETTY_PRINT );
 						break;
 					case Model_Form_Fill_Transfer::STATUS_EXCEPTION:
 						$transfer->status		= 'exception';
-						$reportData['message']	= join( PHP_EOL, $transfer->result->errors );
+//						$reportData['message']	= join( PHP_EOL, $transfer->result->errors );
+						$reportData['message']	= json_encode( $transfer->result->errors, JSON_PRETTY_PRINT );
 						if( !empty( $transfer->result->trace ) )
 							$reportData['trace']	= $transfer->result->trace;
 						break;
