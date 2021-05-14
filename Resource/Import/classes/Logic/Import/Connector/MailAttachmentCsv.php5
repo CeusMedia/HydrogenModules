@@ -24,11 +24,9 @@ class Logic_Import_Connector_MailAttachmentCsv extends Logic_Import_Connector_Ma
 				try{
 					$tempFile	= tempnam( sys_get_temp_dir(), 'import' );
 					file_put_contents( $tempFile, $part->getContent() );
-					$reader		= new FS_File_CSV_Reader( $tempFile, TRUE, ';' );
-					if( isset( $this->options->headers ) && $this->options->headers )
-						$item->data[$fileName]	= $reader->toAssocArray();
-					else
-						$item->data[$fileName]	= $reader->toArray();
+					$useHeaders	= isset( $this->options->headers ) && $this->options->headers;
+					$reader		= new FS_File_CSV_Reader( $tempFile, $useHeaders, ';' );
+					$item->data[$fileName]	= $reader->toArray();
 
 					if( isset( $this->options->encoding ) && $this->options->encoding !== 'UTF-8' ){
 						foreach( $item->data as $fileName => $dataSet ){
@@ -56,13 +54,13 @@ class Logic_Import_Connector_MailAttachmentCsv extends Logic_Import_Connector_Ma
 	}
 
 
-	public function renameTo( $id, $newName )
+	public function renameTo( $id, $newName ): bool
 	{
-
+		return FALSE;
 	}
 
-	public function moveTo( $id, $target )
+	public function moveTo( $id, $target ): bool
 	{
-
+		return $this->mailbox->moveMail( $id, $target, TRUE );
 	}
 }
