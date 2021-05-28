@@ -29,7 +29,7 @@ class Job_FormImport extends Job_Abstract
 			$connectionInstance->setOptions( $this->jsonParser->parse( $importRule->options, FALSE ) );
 			$searchCriteria		= explode( PHP_EOL, $importRule->searchCriteria );
 			$clock				= new Alg_Time_Clock();
-			$results			= $connectionInstance->find( $searchCriteria, [], [0, 1] );
+			$results			= $connectionInstance->find( $searchCriteria, [], [0, 10] );
 
 			if( $verbose ){
 				$this->out( 'Rule: '.$importRule->title );
@@ -155,8 +155,8 @@ class Job_FormImport extends Job_Abstract
 			print_m( $data );
 			remark( 'Fill ID: '.$fillId );
 		}
-//		$this->logicFill->sendCustomerResultMail( $fillId );
-//		$this->logicFill->sendManagerResultMails( $fillId );
+		$this->logicFill->sendCustomerResultMail( $fillId );
+		$this->logicFill->sendManagerResultMails( $fillId );
 		$this->logicFill->applyTransfers( $fillId );
 		return $fillId;
 	}

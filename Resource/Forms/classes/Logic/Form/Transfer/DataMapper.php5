@@ -16,12 +16,12 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 		$input	= new ADT_List_Dictionary( $formData );
 		$output	= new ADT_List_Dictionary();
 
+		$this->applySets( $rules->set ?? [], $input, $output );
 		$this->applyTranslation( (array) $rules->translate ?? [], $input, $output );
 		$this->applyFilters( $rules->filter ?? [], $input, $output );
 		$this->applyDatabaseSearches( $rules->db ?? [], $input, $output );
 
 		$this->applyCreations( $rules->create ?? [], $input, $output );
-		$this->applySets( $rules->set ?? [], $input, $output );
 		$this->applyCopies( $rules->copy ?? [], $input, $output );
 		$this->applyMappings( $rules->map ?? [], $input, $output );
 

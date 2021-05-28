@@ -34,8 +34,11 @@ class View_Helper_Form_Fill_Data{
 				$value	= date( 'd.m.Y', strtotime( $value ) );
 			else if( $input['type'] == 'check' )
 				$value	= in_array( $input['value'], $checkValues ) ? "ja" : "nein";
-			else if( in_array( $input['type'], array( 'select', 'choice' ) ) )
+			else if( in_array( $input['type'], array( 'select', 'choice' ) ) ){
 				$value	= $input['valueLabel'];
+				if( $input['valueLabel'] !== $input['value'] )
+					$value .= ' <small><tt>('.$input['value'].')</tt></small>';
+			}
 			else if( $input['type'] == 'radio' && strlen( $value ) )
 				$value	= $input['valueLabel'].'<br/><tt>('.$input['value'].')</tt>';
 
