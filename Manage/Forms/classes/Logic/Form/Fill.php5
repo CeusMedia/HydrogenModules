@@ -172,7 +172,7 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 		$mail->setSubject( $formMail->subject );
 		$mail->setSender( $sender );
 		$language	= $this->env->getLanguage()->getLanguage();
-		$receiver	= (object) array( 'email'	=> $fill->email );
+		$receiver	= (object) array( 'email' => $fill->email );
 		return $this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
@@ -182,24 +182,26 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 		if( !$fill->email )
 			return NULL;
 
-		$form		= $this->modelForm->get( $fill->formId );
+		$form		= clone $this->modelForm->get( $fill->formId );
 		$data		= json_decode( $fill->data, TRUE );
 		$rulesets	= $this->modelRule->getAllByIndices( array(
 			'formId'	=> $fill->formId,
 			'type'		=> Model_Form_Rule::TYPE_CUSTOMER,
 		) );
-		foreach( $rulesets as $ruleset ){
+		foreach( $rulesets as $rulesetNr => $ruleset ){
 			$ruleset->rules	= json_decode( $ruleset->rules );
-			$valid	= TRUE;
-			foreach( $ruleset->rules as $rule ){
-				if( !isset( $data[$rule->key] ) )
-					$valid = FALSE;
-				else if( $data[$rule->key]['value'] != $rule->value )
-					$valid = FALSE;
-			}
-			if( $valid ){
-				$form->customerMailId	= $ruleset->mailId;
-				break;
+			if( count( $ruleset->rules ) ){
+				$valid	= TRUE;
+				foreach( $ruleset->rules as $ruleNr => $rule ){
+					if( !isset( $data[$rule->key] ) )
+						$valid = FALSE;
+					else if( (string) $data[$rule->key]['value'] !== (string) $rule->value )
+						$valid = FALSE;
+				}
+				if( $valid ){
+					$form->customerMailId	= $ruleset->mailId;
+					break;
+				}
 			}
 		}
 		if( !$form->customerMailId )

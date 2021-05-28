@@ -35,6 +35,15 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 		$this->restart( 'confirmed/'.$fillId, TRUE );
 	}
 
+
+	public function testResultMails( $fillId )
+	{
+		$this->logicFill->sendCustomerResultMail( $fillId );
+		$this->logicFill->sendManagerResultMails( $fillId );
+		$this->env->getMessenger()->noteSuccess( 'Result-Mails versendet' );
+		$this->restart( 'view/'.$fillId, TRUE );
+	}
+
 	public function testTransfer( $fillId )
 	{
 		print_m( $this->logicFill->applyTransfers( $fillId ) );
@@ -94,10 +103,13 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 		$session	= $this->env->getSession();
 		$request	= $this->env->getRequest();
 		if( $reset ){
+			$session->remove( 'manage_form_fill_fillId' );
 			$session->remove( 'manage_form_fill_email' );
 			$session->remove( 'manage_form_fill_formId' );
 			$session->remove( 'manage_form_fill_status' );
 		}
+		if( $request->has( 'fillId' ) )
+			$session->set( 'manage_form_fill_fillId', $request->get( 'fillId' ) );
 		if( $request->has( 'email' ) )
 			$session->set( 'manage_form_fill_email', $request->get( 'email' ) );
 		if( $request->has( 'formId' ) )
@@ -110,11 +122,14 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 	public function index( $page = NULL )
 	{
 		$session		= $this->env->getSession();
+		$filterFillId	= $session->get( 'manage_form_fill_fillId' );
 		$filterEmail	= $session->get( 'manage_form_fill_email' );
 		$filterFormId	= $session->get( 'manage_form_fill_formId' );
 		$filterStatus	= $session->get( 'manage_form_fill_status' );
 
 		$conditions		= array();
+		if( strlen( trim( $filterFillId ) ) )
+			$conditions['fillId']	= $filterFillId;
 		if( strlen( trim( $filterEmail ) ) )
 			$conditions['email']	= '%'.$filterEmail.'%';
 		if( strlen( trim( $filterFormId ) ) )
@@ -138,6 +153,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 		$this->addData( 'pages', $pages );
 		$this->addData( 'limit', $limit );
 
+		$this->addData( 'filterFillId', $filterFillId );
 		$this->addData( 'filterEmail', $filterEmail );
 		$this->addData( 'filterFormId', $filterFormId );
 		$this->addData( 'filterStatus', $filterStatus );

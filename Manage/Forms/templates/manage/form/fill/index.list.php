@@ -48,7 +48,7 @@ foreach( $fills as $fill ){
 		UI_HTML_Tag::create( 'td', $buttons ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '', '100px', '130px', '80px' );
+$colgroup	= UI_HTML_Elements::ColumnGroup( '50px', '', '', '100px', '130px', '80px' );
 $thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Name / E-Mail', 'Formular', 'Zustand', 'Datum / Zeit', '' ) ) );
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped not-table-condensed' ) );

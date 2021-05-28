@@ -68,7 +68,13 @@ if( $fillTransfers ){
 			$formData		= json_decode( $fillTransfer->data, TRUE );
 			$modalId		= 'transfer-report-'.$fillTransfer->formFillTransferId;
 			$ruleSet		= $parser->parse( $form->transferRules[$fillTransfer->formTransferRuleId]->rules, FALSE );
-			$transferData	= $mapper->applyRulesToFormData( $formData, $ruleSet );
+			try{
+				$transferData	= $mapper->applyRulesToFormData( $formData, $ruleSet );
+			}
+			catch( Exception $e ){
+				$transferData	= [];
+				$env->getMessenger()->noteFailure( 'Export-Regeln lassen sich nicht anwenden. Fehler: '.$e->getMessage() );
+			}
 
 			$modalBody	= array(
 				UI_HTML_Tag::create( 'h4', 'Formulardaten' ),

@@ -21,6 +21,18 @@ return UI_HTML_Tag::create( 'div', array(
 		UI_HTML_Tag::create( 'form', array(
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(
+					UI_HTML_Tag::create( 'label', 'ID', array( 'for' => 'input_fillId' ) ),
+					UI_HTML_Tag::create( 'input', NULL, array(
+						'type'		=> 'text',
+						'name'		=> 'fillId',
+						'id'		=> 'input_fillId',
+						'class'		=> 'span12',
+						'value'		=> htmlentities( $filterFillId, ENT_QUOTES, 'UTF-8' ),
+					) ),
+				), array( 'class' => 'span4' ) ),
+			), array( 'class' => 'row-fluid' ) ),
+			UI_HTML_Tag::create( 'div', array(
+				UI_HTML_Tag::create( 'div', array(
 					UI_HTML_Tag::create( 'label', 'E-Mail <small class="muted">(ungefähr)</small>', array( 'for' => 'input_email' ) ),
 					UI_HTML_Tag::create( 'input', NULL, array(
 						'type'		=> 'text',
