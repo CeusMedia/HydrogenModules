@@ -12,7 +12,7 @@ class Mail_Form_Manager_Filled extends Mail_Form_Abstract{
 			throw new RuntimeException( 'No form fill manager/receiver mail defined (shortcode: manager_filled)' );
 
 		$content	= str_replace( "[form_title]", $form->title, $mail->content );
-		$content	= $this->applyHelpers( $content, $fill, $form );
+		$content	= $this->applyHelpers( $content, $fill, $form, TRUE );
 		$this->setHtml( $content );
 	}
 }

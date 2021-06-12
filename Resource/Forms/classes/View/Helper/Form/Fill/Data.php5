@@ -1,14 +1,20 @@
 <?php
-class View_Helper_Form_Fill_Data{
-
+class View_Helper_Form_Fill_Data
+{
 	protected $fill;
 	protected $form;
+	protected $mode;
 
-	public function __construct( $env ){
+	const MODE_NORMAL		= 0;
+	const MODE_EXTENDED		= 1;
+
+	public function __construct( $env )
+	{
 		$this->env		= $env;
 	}
 
-	public function render(){
+	public function render()
+	{
 		if( !$this->fill )
 			throw new DomainException( 'No fill given' );
 		if( !$this->form )
@@ -36,11 +42,14 @@ class View_Helper_Form_Fill_Data{
 				$value	= in_array( $input['value'], $checkValues ) ? "ja" : "nein";
 			else if( in_array( $input['type'], array( 'select', 'choice' ) ) ){
 				$value	= $input['valueLabel'];
-				if( $input['valueLabel'] !== $input['value'] )
+				if( $this->mode === self::MODE_EXTENDED && $input['valueLabel'] !== $input['value'] )
 					$value .= ' <small><tt>('.$input['value'].')</tt></small>';
 			}
-			else if( $input['type'] == 'radio' && strlen( $value ) )
-				$value	= $input['valueLabel'].'<br/><tt>('.$input['value'].')</tt>';
+			else if( $input['type'] == 'radio' && strlen( $value ) ){
+				$value	= $input['valueLabel'];
+				if( $this->mode === self::MODE_EXTENDED )
+					$value .= '<br/><tt>('.$input['value'].')</tt>';
+			}
 
 			if( !strlen( $value ) )
 				$value		= '<em class="muted">keine Angabe</em>';
@@ -84,6 +93,10 @@ class View_Helper_Form_Fill_Data{
 
 	public function setForm( $form ){
 		$this->form		= $form;
+	}
+
+	public function setMode( $mode ){
+		$this->mode = $mode;
 	}
 }
 

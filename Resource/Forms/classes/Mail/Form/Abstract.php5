@@ -32,7 +32,7 @@ abstract class Mail_Form_Abstract extends Mail_Abstract{
 		return $content;
 	}
 
-	protected function applyHelpers( $content, $fill, $form ){
+	protected function applyHelpers( $content, $fill, $form, $extended = FALSE ){
 		while( preg_match( '/\[helper_(\S+)\]/su', $content ) ){
 			$identifier		= preg_replace( '/.*\[helper_(\S+)\].*/su', "\\1", $content );
 			$replace		= '';
@@ -44,6 +44,8 @@ abstract class Mail_Form_Abstract extends Mail_Abstract{
 			}
 			else if( $identifier === "fill_data" ){
 				$helperData	= new View_Helper_Form_Fill_Data( $this->env );
+				if( $extended )
+					$helperData->setMode( View_Helper_Form_Fill_Data::MODE_EXTENDED );
 				$helperData->setFill( $fill );
 				$helperData->setForm( $form );
 				$replace		= $helperData->render();
