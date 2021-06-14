@@ -14,7 +14,7 @@ The form action will save the entered data and send mails according to rules.
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.5.3</version>
+	<version>0.5.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
@@ -34,6 +34,7 @@ The form action will save the entered data and send mails according to rules.
 	<log version="0.5.1">Add fill transfers panel.</log>
 	<log version="0.5.2">Add transfer target management.</log>
 	<log version="0.5.3">Extract logic from controller to own class.</log>
+	<log version="0.5.4">Add import rule management.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -41,12 +42,14 @@ The form action will save the entered data and send mails according to rules.
 		<class>Controller/Manage/Form.php5</class>
 		<class>Controller/Manage/Form/Block.php5</class>
 		<class>Controller/Manage/Form/Fill.php5</class>
+		<class>Controller/Manage/Form/Import.php5</class>
 		<class>Controller/Manage/Form/Mail.php5</class>
 		<class>Controller/Manage/Form/Target.php5</class>
 		<class>Logic/Form/Fill.php5</class>
 		<class>View/Manage/Form.php5</class>
 		<class>View/Manage/Form/Block.php5</class>
 		<class>View/Manage/Form/Fill.php5</class>
+		<class>View/Manage/Form/Import.php5</class>
 		<class>View/Manage/Form/Mail.php5</class>
 		<class>View/Manage/Form/Target.php5</class>
 		<template>manage/form/add.php</template>
@@ -72,6 +75,9 @@ The form action will save the entered data and send mails according to rules.
 		<template>manage/form/fill/index.filter.php</template>
 		<template>manage/form/fill/index.list.php</template>
 		<template>manage/form/fill/view.php</template>
+		<template>manage/form/import/add.php</template>
+		<template>manage/form/import/edit.php</template>
+		<template>manage/form/import/index.php</template>
 		<template>manage/form/mail/add.php</template>
 		<template>manage/form/mail/edit.php</template>
 		<template>manage/form/mail/index.php</template>
@@ -95,11 +101,14 @@ The form action will save the entered data and send mails according to rules.
 	<link xml:lang="de" access="acl" rank="46" path="manage/form/fill">Einträge</link>
 	<link xml:lang="de" access="acl" rank="47" path="manage/form/block">Blöcke</link>
 	<link xml:lang="de" access="acl" rank="48" path="manage/form/mail">E-Mails</link>
+	<link xml:lang="de" access="acl" rank="49" path="manage/form/import">Imports</link>
 	<link xml:lang="en" access="acl" rank="45" path="manage/form">Forms</link>
 	<link xml:lang="en" access="acl" rank="46" path="manage/form/fill">Entries</link>
 	<link xml:lang="en" access="acl" rank="47" path="manage/form/block">Blocks</link>
 	<link xml:lang="en" access="acl" rank="48" path="manage/form/mail">Mails</link>
+	<link xml:lang="en" access="acl" rank="49" path="manage/form/import">Imports</link>
 	<link access="public" path="manage/form/view"/>
 	<link access="public" path="manage/form/fill/receive"/>
 	<link access="public" path="manage/form/fill/confirm"/>
+	<link access="acl" path="manage/form/import/ajaxTestRules"/>
 </module>

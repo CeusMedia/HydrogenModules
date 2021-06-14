@@ -31,7 +31,7 @@ $iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) 
 $buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array( 'class' => 'btn btn-success', 'href' => './manage/form/target/add' ) );
 
 return '<div class="content-panel">
-	<h3><span class="muted">Transferziel: </span>'.$target->title.'</h3>
+	<h3><span class="muted">Transferziele</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 		<div class="buttonbar">
