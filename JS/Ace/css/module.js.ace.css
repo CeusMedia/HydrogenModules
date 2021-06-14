@@ -3,6 +3,7 @@
     box-sizing: border-box;
 	border: 1px solid rgba(127, 127, 127, 0.5);
 	transition: background-color 0.25s ease-out;
+	margin-bottom: 10px;
 /*	position: relative !important;
 	min-height: 200px;
 */	}
