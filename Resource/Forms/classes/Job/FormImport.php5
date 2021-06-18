@@ -41,6 +41,12 @@ class Job_FormImport extends Job_Abstract
 			}
 			$ruleSet	= $this->jsonParser->parse( $importRule->rules, FALSE );
 			foreach( $results as $result ){
+				if( !$dryMode ){
+					if( $importRule->moveTo )
+						$connectionInstance->moveTo( $result->source->id, $importRule->moveTo );
+				//	if( $importRule->renameTo )
+				//		$connectionInstance->renameTo( $result->source->id, $importRule->renameTo );
+				}
 				foreach( $result->data as $dataSet ){
 					foreach( $dataSet as $data ){
 						try{
@@ -52,15 +58,26 @@ class Job_FormImport extends Job_Abstract
 						}
 					}
 				}
-				if( !$dryMode ){
-					if( $importRule->moveTo )
-						$connectionInstance->moveTo( $result->source->id, $importRule->moveTo );
-				//	if( $importRule->renameTo )
-				//		$connectionInstance->renameTo( $result->source->id, $importRule->renameTo );
-				}
 			}
 		}
 		return $errors;
+	}
+
+	public function test()
+	{
+		$importRules	= $this->getActiveFormImportRules();
+		foreach( $importRules as $importRule ){
+			$connection			= $this->modelConnection->get( $importRule->importConnectionId );
+			$connector			= $this->modelConnector->get( $connection->importConnectorId );
+			$connectionInstance	= $this->logicImport->getConnectionInstanceFromId( $importRule->importConnectionId );
+			$connectionInstance->setOptions( $this->jsonParser->parse( $importRule->options, FALSE ) );
+			$searchCriteria		= explode( PHP_EOL, $importRule->searchCriteria );
+			$clock				= new Alg_Time_Clock();
+			$results			= $connectionInstance->find( $searchCriteria, [], [0, 10] );
+			echo "The current read timeout is " . imap_timeout(IMAP_READTIMEOUT) . "\n";
+			$connectionInstance->disconnect();
+			break;
+		}
 	}
 
 	//  --  PROTECTED  --  //

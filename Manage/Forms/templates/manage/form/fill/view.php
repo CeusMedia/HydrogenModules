@@ -26,6 +26,7 @@ $helperPerson->setForm( $form );
 $helperData		= new View_Helper_Form_Fill_Data( $env );
 $helperData->setFill( $fill );
 $helperData->setForm( $form );
+$helperData->setMode(View_Helper_Form_Fill_Data::MODE_EXTENDED);
 
 
 //  --  PANEL: FACTS  --  //
