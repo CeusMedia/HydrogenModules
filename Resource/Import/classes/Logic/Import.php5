@@ -2,9 +2,11 @@
 class Logic_Import extends CMF_Hydrogen_Logic
 {
 	protected $modelConnection;
+
 	protected $modelConnector;
 
-	public function getConnectionInstanceFromId( $connectionId ){
+	public function getConnectionInstanceFromId( $connectionId )
+	{
 		if( !isset( $this->connections[$connectionId] ) ){
 			$connection	= $this->modelConnection->get( $connectionId );
 			if( !$connection )

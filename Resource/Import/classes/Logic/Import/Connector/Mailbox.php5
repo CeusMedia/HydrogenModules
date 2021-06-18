@@ -49,6 +49,11 @@ class Logic_Import_Connector_Mailbox extends Logic_Import_Connector_Abstract imp
 		return $list;
 	}
 
+	public function disconnect()
+	{
+		$this->mailbox->disconnect();
+	}
+
 	public function renameTo( $id, $newName )
 	{
 
