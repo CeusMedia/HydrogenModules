@@ -4,6 +4,8 @@ class Controller_Manage_Form_Import extends CMF_Hydrogen_Controller
 	protected $request;
 	protected $modelForm;
 	protected $modelRule;
+	protected $modelConnection;
+	protected $modelConnector;
 	protected $connectionMap	= [];
 	protected $formMap			= [];
 
@@ -14,6 +16,7 @@ class Controller_Manage_Form_Import extends CMF_Hydrogen_Controller
 		$this->modelForm		= new Model_Form( $this->env );
 		$this->modelRule		= new Model_Form_Import_Rule( $this->env );
 		$this->modelConnection	= new Model_Import_Connection( $this->env );
+		$this->modelConnector	= new Model_Import_Connector( $this->env );
 		foreach( $this->modelForm->getAll( [], ['title' => 'ASC'] ) as $form )
 			$this->formMap[$form->formId]	= $form;
 		foreach( $this->modelConnection->getAll( [], ['title' => 'ASC'] ) as $connection )
@@ -77,6 +80,19 @@ class Controller_Manage_Form_Import extends CMF_Hydrogen_Controller
 
 	public function edit( $ruleId )
 	{
+		$rule		= $this->modelRule->get( $ruleId );
+		$connection	= $this->modelConnection->get( $rule->importConnectionId );
+		$connector	= $this->modelConnector->get( $connection->importConnectorId );
+
+		$factory	= new Alg_Object_Factory();
+		$remoteResource	= $factory->create( $connector->className, array( $this->env ) );
+		$remoteResource->setConnection( $connection )->connect();
+		$folders	= $remoteResource->getFolders( TRUE );
+
+//		if( strlen( trim( $this->request->get( 'moveTo' ) ) ) > 0 )
+//			if( !in_array( $this->request->get( 'moveTo' ), $folders ) )
+//				throw new InvalidArgumentException( 'Invalid folder' );
+
 		if( $this->request->getMethod()->isPost() ){
 			$data		= [
 				'importConnectionId'	=> $this->request->get( 'importConnectionId' ),
@@ -94,6 +110,7 @@ class Controller_Manage_Form_Import extends CMF_Hydrogen_Controller
 		}
 		$this->addData( 'rule', $this->modelRule->get( $ruleId ) );
 		$this->addData( 'forms', $this->formMap );
+		$this->addData( 'folders', $folders );
 		$this->addData( 'connections', $this->connectionMap );
 	}
 

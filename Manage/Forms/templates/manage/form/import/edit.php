@@ -34,8 +34,10 @@ foreach( $forms as $formId => $form )
 	$optForm[$formId]	= $form->title;
 $optForm	= UI_HTML_Elements::Options( $optForm, $rule->formId );
 
-
-
+$optMoveTo	= ['' => ''];
+foreach( $folders as $folder )
+	$optMoveTo[$folder]	= $folder;
+$optMoveTo	= UI_HTML_Elements::Options( $optMoveTo, $rule->moveTo );
 
 $form	= '<div class="content-panel" id="rule-import-edit-'.$rule->formImportRuleId.'">
 	<h3><span class="muted">Importquelle: </span>'.$rule->title.'</h3>
@@ -80,7 +82,8 @@ $form	= '<div class="content-panel" id="rule-import-edit-'.$rule->formImportRule
 			<div class="row-fluid">
 				<div class="span4">
 					<label for="input_renameTo">anschließend verschieben nach</label>
-					<input type="text" name="moveTo" id="input_moveTo" class="span12" value="'.htmlentities( $rule->moveTo, ENT_QUOTES, 'UTF-8' ).'"/>
+<!--					<input type="text" name="moveTo" id="input_moveTo" class="span12" value="'.htmlentities( $rule->moveTo, ENT_QUOTES, 'UTF-8' ).'"/>-->
+					<select name="moveTo" id="input_moveTo" class="span12">'.$optMoveTo.'</select>
 				</div>
 				<div class="span4">
 					<label for="input_renameTo"><strike class="muted">anschließend umbenennen zu</strike></label>
