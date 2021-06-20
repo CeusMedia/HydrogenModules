@@ -8,4 +8,6 @@ interface Logic_Import_Connector_Interface
 	public function setConnection( $connection );
 
 	public function setConnectionId( $connectionId );
+
+	public function getFolders( bool $recursive = FALSE ): array;
 }

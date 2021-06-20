@@ -11,6 +11,8 @@ abstract class Logic_Import_Connector_Abstract extends CMF_Hydrogen_Logic
 
 	abstract public function find( $conditions, $orders = array(), $limit = array() ): array;
 
+	abstract public function getFolders( bool $recursive = FALSE ): array;
+
 	public function getConnection()
 	{
 		return $this->connection;

@@ -49,4 +49,9 @@ abstract class Logic_Import_Connector_MailAbstract extends Logic_Import_Connecto
 	{
 
 	}
+
+	public function getFolders( bool $recursive = FALSE ): array
+	{
+		return $this->mailbox->getFolders( $recursive );
+	}
 }
