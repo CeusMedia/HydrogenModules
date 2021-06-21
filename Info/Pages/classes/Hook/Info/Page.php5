@@ -159,7 +159,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 							);
 							$subpages	= $model->getAllByIndices( $indices, $orders );				//  get all active sub level pages of top level page
 							foreach( $subpages as $subpage ){										//  iterate found pages
-								$url	= $env->url.$page->identifier.'/'.$subpage->identifier;		//  build absolute URI of sub level page
+								$url		= $env->url.$page->identifier.'/'.$subpage->identifier;	//  build absolute URI of sub level page
 								if( in_array( $url, $urls ) )
 									continue;
 								$urls[]		= $url;
@@ -170,7 +170,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 							}
 						}
 						else{																		//  page is static of dynamic (using a module)
-							$url		= $env->url.$page->identifier;								//  build absolute URI of top level page
+							$url	= $env->url.$page->identifier;									//  build absolute URI of top level page
 							if( in_array( $url, $urls ) )
 								continue;
 							$urls[]		= $url;

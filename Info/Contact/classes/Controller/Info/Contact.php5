@@ -89,7 +89,8 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller
 		$words			= (object) $this->getWords( 'index' );
 
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
-			$valid	= TRUE;
+			$referer	= getEnv( 'HTTP_REFERER' );
+			$valid		= TRUE;
 			if( !strlen( trim( $this->request->get( 'fullname' ) ) ) ){
 				$this->messenger->noteError( $words->msgErrorFullNameMissing );
 				$valid	= FALSE;
@@ -121,6 +122,11 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller
 						$this->messenger->noteError( $words->msgErrorCsrfFailed );
 					$valid	= FALSE;
 				}
+			}
+//			if( substr( getEnv( 'HTTP_REFERER' ), 0, strlen( $this->env->url ) ) === $this->env->url ){
+			if( !preg_match( '/^'.preg_quote( $this->env->url, '/' ).'/', getEnv( 'HTTP_REFERER' ) ) ){
+				$this->messenger->noteError( $words->msgErrorRefererInvalid );
+				$valid	= FALSE;
 			}
 			if( $this->useCaptcha ){
 				$captchaWord	= $this->request->get( 'captcha' );
