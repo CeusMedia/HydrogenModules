@@ -44,7 +44,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 					return TRUE;																	//  let the general dispatcher do the job
 				$page->arguments	= isset( $page->arguments ) ? $page->arguments : array();
 				$action	= $page->action ? $page->action : 'index';									//  default action is 'index'
-				if( count( $page->arguments ) !== 1 ){												//  but there are path arguments
+				if( count( $page->arguments ) > 1 && count( $page->arguments ) !== 1 ){												//  but there are path arguments
 					$classMethods	= get_class_methods( 'Controller_'.$page->controller );			//  get methods of module controller class
 					if( in_array( $page->arguments[0], $classMethods ) )							//  first argument seems to be a controller method
 						$action	= array_shift( $page->arguments );									//  set first argument as action and remove it from argument list
