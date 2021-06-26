@@ -63,6 +63,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 	public function setFormat( int $format ): self
 	{
 		$this->format	= $format;
+		return $this;
 	}
 
 	public function setHeight( int $height ): self
@@ -76,11 +77,13 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 		if( !in_array( $mode, array( 'default', 'recaptcha' ) ) )
 			throw new InvalidArgumentException( 'Invalid mode' );
 		$this->mode	= $mode;
+		return $this;
 	}
 
 	public function setLength( int $length ): self
 	{
 		$this->captcha->length	= max( 1, min( 8, (int) $length ) );
+		return $this;
 	}
 
 	public function setStrength( string $strength ): self
@@ -95,6 +98,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 				$this->captcha->useLarge	= TRUE;
 				break;
 		}
+		return $this;
 	}
 
 	public function setWidth( int $width ): self
