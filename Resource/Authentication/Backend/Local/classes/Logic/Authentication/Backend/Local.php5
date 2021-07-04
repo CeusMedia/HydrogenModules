@@ -48,7 +48,7 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic
 	{
 		$this->session->remove( 'auth_user_id' );
 		$this->session->remove( 'auth_role_id' );
-		$this->session->remove( 'auth_status_id' );
+		$this->session->remove( 'auth_status' );
 		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this );
 	}
 
@@ -129,19 +129,17 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic
 
 	public function setAuthenticatedUser( $user ): self
 	{
-		$this->session->set( 'auth_user_id', $user->userId );
-		$this->session->set( 'auth_role_id', $user->roleId );
+		$this->setIdentifiedUser( $user );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
 		return $this;
 	}
 
 	public function setIdentifiedUser( $user ): self
 	{
-		if( !$this->isAuthenticated() ){
-			$this->session->set( 'auth_user_id', $user->userId );
-			$this->session->set( 'auth_role_id', $user->roleId );
-			$this->session->set( 'auth_status', Logic_Authentication::STATUS_IDENTIFIED );
-		}
+		$this->session->set( 'auth_backend', 'Local' );
+		$this->session->set( 'auth_user_id', $user->userId );
+		$this->session->set( 'auth_role_id', $user->roleId );
+		$this->session->set( 'auth_status', Logic_Authentication::STATUS_IDENTIFIED );
 		return $this;
 	}
 }

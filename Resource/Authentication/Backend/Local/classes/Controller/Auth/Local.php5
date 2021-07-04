@@ -148,7 +148,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller
 		if( $this->session->has( 'userId' ) )
 			$this->redirectAfterLogin();
 
-		$this->session->set( 'authBackend', 'Local' );
+		$this->session->set( 'auth_backend', 'Local' );
 
 		$this->tryLoginByCookie();
 

@@ -18,7 +18,9 @@ class Logic_Authentication_Backend_Json extends CMF_Hydrogen_Logic
 		$this->session->remove( 'auth_user_id' );
 		$this->session->remove( 'auth_role_id' );
 		$this->session->remove( 'auth_status' );
-		$this->session->remove( 'token' );
+		$this->session->remove( 'auth_account_id' );
+		$this->session->remove( 'auth_token' );
+		$this->session->remove( 'auth_rights' );
 		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this );
 	}
 

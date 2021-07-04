@@ -21,7 +21,7 @@ list>
 <list
 
 ]]></description>
-	<version>0.6.1</version>
+	<version>0.6.2</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated locale backend functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -61,6 +61,7 @@ list>
 	<log version="0.5.7">Improve centered panel mode.</log>
 	<log version="0.6">Extract AJAX actions to own class AJAX controller.</log>
 	<log version="0.6.1">Deny registration if no default role is set.</log>
+	<log version="0.6.2">Upgrade to changes in authentication core.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

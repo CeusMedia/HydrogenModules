@@ -38,7 +38,7 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller
 
 	public function index()
 	{
-		if( !$this->session->has( 'userId' ) )
+		if( !$this->session->has( 'auth_user_id' ) )
 			return $this->redirect( 'auth/rest', 'login' );										// @todo replace redirect
 
 		$from			= $this->request->get( 'from' );
@@ -77,7 +77,7 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller
 
 	public function login( $username = NULL )
 	{
-		if( $this->session->has( 'userId' ) ){
+		if( $this->session->has( 'auth_user_id' ) ){
 			if( $this->request->has( 'from' ) )
 				$this->restart( $from );
 			$this->restart( NULL, TRUE );
@@ -100,8 +100,8 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller
 				$user	= $this->logic->checkPassword( $username, $password );
 				if( isset( $user->data->userId ) ){
 					$this->messenger->noteSuccess( $words->msgSuccess );
-					$this->session->set( 'userId', $user->data->userId );
-					$this->session->set( 'roleId', $user->data->roleId );
+					$this->session->set( 'auth_user_id', $user->data->userId );
+					$this->session->set( 'auth_role_id', $user->data->roleId );
 					$this->logic->setAuthenticatedUser( $user );
 	//				if( $this->request->get( 'login_remember' ) )
 	//					$this->rememberUserInCookie( $user->userId, $password );
@@ -145,13 +145,11 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller
 	{
 		$words		= (object) $this->getWords( 'logout' );
 
-		if( $this->session->has( 'userId' ) ){
+		if( $this->logic->isAuthenticated() ){
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
 				'userId'	=> $this->session->get( 'auth_user_id' ),
 				'roleId'	=> $this->session->get( 'auth_role_id' ),
 			) );
-			$this->session->remove( 'userId' );
-			$this->session->remove( 'roleId' );
 			$this->logic->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->env->getMessenger()->noteNotice( $words->msgAutoLogout );
@@ -310,12 +308,12 @@ class Controller_Auth_Rest extends CMF_Hydrogen_Controller
 				$role		= $modelRole->get( $user->roleId );										//  get role of user
 				if( $role && $role->access ){														//  role exists and allows login
 					$passwordMatch	= md5( sha1( $user->password ) ) === $password;					//  compare hashed password with user password
-					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )								//  for PHP 5.5.0+
+					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )						//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
-						$this->session->set( 'userId', $user->userId );								//  set user ID in session
-						$this->session->set( 'roleId', $user->roleId );								//  set user role in session
+						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
+						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
 						$this->restart( './'.$from );												//  restart (or go to redirect URL)

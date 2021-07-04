@@ -31,7 +31,11 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic
 		$this->session->remove( 'auth_user_id' );
 		$this->session->remove( 'auth_role_id' );
 		$this->session->remove( 'auth_status' );
-		$this->session->remove( 'token' );
+		$this->session->remove( 'auth_account_id' );
+		$this->session->remove( 'auth_token' );
+		$this->session->remove( 'auth_rights' );
+		$this->session->remove( 'auth_type' );
+		$this->session->remove( 'auth_username' );
 		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this );
 	}
 
@@ -50,10 +54,10 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic
 
 	public function getCurrentRole( bool $strict = TRUE )
 	{
-		throw new Exception( 'deprecated' );
+return NULL;
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
-			$role	= $this->env->getServer()->postData( 'role', 'get', array( $roleId ) );
+			$role	= $this->client->post( 'role/get', array( $roleId ) );
 			if( $role )
 				return $role;
 			if( $strict )
@@ -74,13 +78,12 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic
 
 	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
 	{
-		throw new Exception( 'deprecated' );
+return NULL;
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
-			$user	= $this->env->getServer()->postData( 'user', 'get', array( $userId ) );
+			$user	= $this->client->post( 'user/get', array( $userId ) );
 			if( $user ){
-				if( $withRole )
-					$user->role	= $this->env->getServer()->postData( 'role', 'get', array( $user->roleId ) );
+				$user->role	= $withRole ? $this->getCurrentRole() : NULL;
 				return $user;
 			}
 		}
@@ -96,7 +99,7 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic
 				throw new RuntimeException( 'No user authenticated' );
 			return 0;
 		}
-		return $this->session->get( 'userId' );
+		return $this->session->get( 'auth_user_id' );
 	}
 
 	public function isAuthenticated(): bool
@@ -109,7 +112,7 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic
 
 	public function isIdentified(): bool
 	{
-		return $this->session->get( 'auth_user_id' );
+		return (bool) $this->session->get( 'auth_user_id' );
 	}
 
 	public function isCurrentUserId( $userId ): bool
@@ -120,7 +123,7 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic
 	/**
 	 *	@todo		implement if possible, for example by using available REST resource
 	 */
-	protected function noteUserActivity()
+	public function noteUserActivity()
 	{
 	}
 
@@ -197,13 +200,15 @@ class Logic_Authentication_Backend_Rest extends CMF_Hydrogen_Logic
 
 	public function setIdentifiedUser( $user )
 	{
-		$this->session->set( 'auth_user_id', $user->userId );
-		$this->session->set( 'auth_role_id', $user->roleId );
+		$this->session->set( 'auth_backend', 'Rest' );
+		$this->session->set( 'auth_user_id', $user->data->userId );
+		$this->session->set( 'auth_role_id', $user->data->roleId );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_IDENTIFIED );
 		$this->session->set( 'auth_account_id', $user->data->accountId );
 		$this->session->set( 'auth_token', $user->data->token );
 		$this->session->set( 'auth_rights', $user->data->rights );
-		$this->session->set( 'auth_backend', 'Rest' );
+		$this->session->set( 'auth_type', $user->data->loginType );
+		$this->session->set( 'auth_username', $user->data->username );
 		return $this;
 	}
 
