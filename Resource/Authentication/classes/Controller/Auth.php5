@@ -1,6 +1,6 @@
 <?php
-class Controller_Auth extends CMF_Hydrogen_Controller {
-
+class Controller_Auth extends CMF_Hydrogen_Controller
+{
 	protected $config;
 	protected $request;
 	protected $session;
@@ -9,7 +9,66 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	protected $useCsrf;
 	protected $moduleConfig;
 
-	public function __onInit(){
+	/**
+	 *	@deprecated		use Ajax::isAuthenticated instead
+	 */
+	public function ajaxIsAuthenticated()
+	{
+		print( json_encode( $this->session->has( 'userId' ) ) );
+		exit;
+	}
+
+	/**
+	 *	@deprecated		use Ajax::refreshSession instead
+	 */
+	public function ajaxRefreshSession()
+	{
+		$this->ajaxIsAuthenticated();
+	}
+
+	public function confirm()
+	{
+		$this->forwardToBackendAction( 'confirm' );
+	}
+
+	public function index( $arg1 = NULL, $arg2 = NULL )
+	{
+		if( !$this->logic->isAuthenticated() )
+			return $this->restart( 'login', TRUE );
+		$this->redirectAfterLogin();
+	}
+
+	public function login( ?string $username = NULL )
+	{
+		if( $this->logic->isAuthenticated() )
+			$this->redirectAfterLogin();
+		$action		= 'login';
+		if( $username )
+			$action	.= '/'.$username;
+		$this->forwardToBackendAction( $action );
+	}
+
+	public function logout()
+	{
+		if( !$this->logic->isAuthenticated() )
+			$this->redirectAfterLogout();
+		$this->forwardToBackendAction( 'logout' );
+	}
+
+	public function password()
+	{
+		$this->forwardToBackendAction( 'password' );
+	}
+
+	public function register()
+	{
+		$this->forwardToBackendAction( 'register' );
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
@@ -23,61 +82,6 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
 	}
 
-	public function ajaxIsAuthenticated(){
-		print( json_encode( $this->session->has( 'userId' ) ) );
-		exit;
-	}
-
-	public function ajaxRefreshSession(){
-		$this->ajaxIsAuthenticated();
-	}
-
-	public function confirm(){
-		$this->forwardToBackendAction( 'confirm' );
-	}
-
-	public function index( $arg1 = NULL, $arg2 = NULL ){
-		if( !$this->logic->isAuthenticated() )
-			return $this->restart( 'login', TRUE );
-		$this->redirectAfterLogin();
-	}
-
-	protected function getBackend(){
-		$backends		= $this->logic->getBackends();
-		$backendKey		= $this->session->get( 'authBackend' );
-		$backendKeys	= array_keys( $backends );
-		if( !$backends )
-			throw new RuntimeException( 'No authentication backend available' );
-		if( !$backendKey || !array_key_exists( $backendKey, $backends ) )
-			$backendKey	= $backendKeys[0];
-		return $backends[$backendKey];
-	}
-
-	public function login( $username = NULL ){
-		if( $this->logic->isAuthenticated() )
-			$this->redirectAfterLogin();
-		$action		= 'login';
-		if( $username )
-			$action	.= '/'.$username;
-		$this->forwardToBackendAction( $action );
-	}
-
-	public function logout(){
-		if( !$this->logic->isAuthenticated() )
-			$this->redirectAfterLogout();
-		$this->forwardToBackendAction( 'logout' );
-	}
-
-	public function password(){
-		$this->forwardToBackendAction( 'password' );
-	}
-
-	public function register(){
-		$this->forwardToBackendAction( 'register' );
-	}
-
-	//  --  PROTECTED  --  //
-
 	protected function forwardToBackendAction( $action, $carryFrom = TRUE ){
 		$backend	= $this->getBackend();
 		$path		= 'auth/'.strtolower( $backend->path ).'/'.$action;
@@ -87,7 +91,20 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->restart( $path );
 	}
 
-	protected function redirectAfterLogin(){
+	protected function getBackend()
+	{
+		$backends		= $this->logic->getBackends();
+		$backendKey		= $this->session->get( 'auth_backend' );
+		$backendKeys	= array_keys( $backends );
+		if( !$backends )
+			throw new RuntimeException( 'No authentication backend available' );
+		if( !$backendKey || !array_key_exists( $backendKey, $backends ) )
+			$backendKey	= $backendKeys[0];
+		return $backends[$backendKey];
+	}
+
+	protected function redirectAfterLogin()
+	{
 		$moduleConfig	= $this->config->getAll( 'module.resource_authentication.', TRUE );
 		$from			= str_replace( "index/index", "", $this->request->get( 'from' ) );
 		$forwardPath	= $moduleConfig->get( 'login.forward.path' );
@@ -102,7 +119,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->restart( NULL );
 	}
 
-	protected function redirectAfterLogout(){
+	protected function redirectAfterLogout()
+	{
 		$moduleConfig	= $this->config->getAll( 'module.resource_authentication.', TRUE );
 		$from			= $this->request->get( 'from' );
 		$forwardPath	= $moduleConfig->get( 'logout.forward.path' );
@@ -117,7 +135,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->restart( NULL );
 	}
 
-	protected function rememberUserInCookie( $user ){
+	protected function rememberUserInCookie( $user )
+	{
 		$expires	= strtotime( "+2 years" ) - time();
 		$passwordHash	= md5( sha1( $user->password ) );											//  hash password using SHA1 and MD5
 		if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )											//  for PHP 5.5.0+
@@ -136,7 +155,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	 *	@access		public
 	 *	@return		void
 	 */
-	protected function tryLoginByCookie(){
+	protected function tryLoginByCookie()
+	{
 		if( $this->cookie->get( 'auth_remember' ) ){												//  autologin has been activated
 			$userId		= (int) $this->cookie->get( 'auth_remember_id' );							//  get user ID from cookie
 			$password	= (string) $this->cookie->get( 'auth_remember_pw' );						//  get hashed password from cookie

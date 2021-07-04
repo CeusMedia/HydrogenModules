@@ -1,6 +1,6 @@
 <?php
-class Logic_Authentication extends CMF_Hydrogen_Logic{
-
+class Logic_Authentication extends CMF_Hydrogen_Logic
+{
 	protected $env;
 	protected $backend;
 	protected $backends	= array();
@@ -10,46 +10,39 @@ class Logic_Authentication extends CMF_Hydrogen_Logic{
 	const STATUS_IDENTIFIED		= 1;
 	const STATUS_AUTHENTICATED	= 2;
 
-	protected function __onInit(){
-		$this->session		= $this->env->getSession();
-		$this->env->getCaptain()->callHook( 'Auth', 'registerBackends', $this );
-		if( !$this->backends )
-			throw new RuntimeException( 'No authentication backend installed' );
-		$backend = $this->session->get( 'auth_backend' );
-		if( !$backend ){
-			$backends	= array_keys( $this->getBackends() );
-			$backend	= current( $backends );
-		}
-		$this->setBackend( $backend );
-		$this->noteUserActivity();
-	}
-
-	public function checkPassword( $userId, $password ){
+	public function checkPassword( $userId, string $password )
+	{
 		return $this->backend->checkPassword( $userId, $password );
 	}
 
-	public function clearCurrentUser(){
+	public function clearCurrentUser()
+	{
 		$this->backend->clearCurrentUser();
 		return $this;
 	}
 
-	public function getBackends(){
+	public function getBackends(): array
+	{
 		return $this->backends;
 	}
 
-	public function getCurrentRole( $strict = TRUE ){
+	public function getCurrentRole( bool $strict = TRUE )
+	{
 		return $this->backend->getCurrentRole( $strict );
 	}
 
-	public function getCurrentRoleId( $strict = TRUE ){
+	public function getCurrentRoleId( bool $strict = TRUE )
+	{
 		return $this->backend->getCurrentRoleId( $strict );
 	}
 
-	public function getCurrentUser( $strict = TRUE, $withRole = FALSE ){
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
+	{
 		return $this->backend->getCurrentUser( $strict, $withRole );
 	}
 
-	public function getCurrentUserId( $strict = TRUE ){
+	public function getCurrentUserId( bool $strict = TRUE )
+	{
 		return $this->backend->getCurrentUserId( $strict );
 	}
 
@@ -67,7 +60,8 @@ class Logic_Authentication extends CMF_Hydrogen_Logic{
 	 *	@return		array		Map of related users or list of reporting modules with related users
 	 *	@triggers	Resource:User::getRelatedUsers
 	 */
-	public function getRelatedUsers( $userId, $groupByModules = FALSE ){
+	public function getRelatedUsers( $userId, bool $groupByModules = FALSE ): array
+	{
 		$payload	= (object) array( 'userId' => $userId, 'list' => array() );
 		$this->env->getCaptain()->callHook( 'Resource:Users', 'getRelatedUsers', $this, $payload );
 		if( $groupByModules )
@@ -86,21 +80,25 @@ class Logic_Authentication extends CMF_Hydrogen_Logic{
 		return $map;
 	}
 
-	public function hasFullAccess(){
+	public function hasFullAccess(): bool
+	{
 		if( !$this->isAuthenticated() )
 			return FALSE;
 		return $this->env->getAcl()->hasFullAccess( $this->getCurrentRoleId() );
 	}
 
-	public function isAuthenticated(){
+	public function isAuthenticated(): bool
+	{
 		return $this->backend->isAuthenticated();
 	}
 
-	public function isIdentified(){
+	public function isIdentified(): bool
+	{
 		return $this->backend->isIdentified();
 	}
 
-	public function isCurrentUserId( $userId ){
+	public function isCurrentUserId( $userId )
+	{
 		return $this->backend->getCurrentUserId( FALSE ) == $userId;
 	}
 
@@ -109,12 +107,14 @@ class Logic_Authentication extends CMF_Hydrogen_Logic{
 	 *	@access		protected
 	 *	@return		void
 	 */
-	protected function noteUserActivity(){
+	protected function noteUserActivity()
+	{
 		$this->backend->noteUserActivity();
 		return $this;
 	}
 
-	public function registerBackend( $key, $path, $label ){
+	public function registerBackend( string $key, string $path, string $label )
+	{
 		if( array_key_exists( $key, $this->backends ) )
 			throw new RangeException( 'Backend "'.$key.'" is already registered' );
 		$backend	= (object) array(
@@ -134,23 +134,42 @@ class Logic_Authentication extends CMF_Hydrogen_Logic{
 		return $this;
 	}
 
-	public function setBackend( $key ){
+	public function setBackend( string $key )
+	{
 		if( !array_key_exists( $key, $this->backends ) )
 			throw new OutOfRangeException( 'Authentication backend "'.$key.'" is not registered' );
 		$backend		= $this->backends[$key];
 		$factory		= new ReflectionMethod( $backend->classes->logic, 'getInstance' );
 		$this->backend	= $factory->invokeArgs( NULL, array( $this->env ) );
 //		$this->backend	= call_user_func_array( array( $className, 'getInstance' ), array( $this->env ) );
+		$this->env->getMessenger()->noteNotice( 'Auth Backend: '.$key );
 		return $this;
 	}
 
-	public function setAuthenticatedUser( $user ){
+	public function setAuthenticatedUser( $user )
+	{
 		$this->backend->setAuthenticatedUser( $user );
 		return $this;
 	}
 
-	public function setIdentifiedUser( $user ){
+	public function setIdentifiedUser( $user )
+	{
 		$this->backend->setIdentifiedUser( $user );
 		return $this;
+	}
+
+	protected function __onInit()
+	{
+		$this->session		= $this->env->getSession();
+		$this->env->getCaptain()->callHook( 'Auth', 'registerBackends', $this );
+		if( !$this->backends )
+			throw new RuntimeException( 'No authentication backend installed' );
+		$backend = $this->session->get( 'auth_backend' );
+		if( !$backend ){
+			$backends	= array_keys( $this->getBackends() );
+			$backend	= current( $backends );
+		}
+		$this->setBackend( $backend );
+		$this->noteUserActivity();
 	}
 }

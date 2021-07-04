@@ -37,7 +37,7 @@ class Resource_Acl_Authentication extends CMF_Hydrogen_Environment_Resource_Acl_
 		if( $roleId === NULL ){
 			if( !$this->env->has( 'session' ) )
 				return array();
-			$roleId	= $this->env->getSession()->get( 'roleId' );
+			$roleId	= $this->env->getSession()->get( 'auth_role_id' );
 		}
 		if( $this->hasFullAccess( $roleId ) ){
 			if( !$this->controllerActions )
