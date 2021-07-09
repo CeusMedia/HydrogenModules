@@ -31,6 +31,39 @@ foreach( $mailsManager as $item )
 $optMailManager		= UI_HTML_Elements::Options( $optMailManager, $form->managerMailId );
 
 
+
+$listReferences = '<em class="muted">Keine.</em>';
+
+if( !empty( $references ) ){
+	$domains	= array();
+	foreach( $references as $reference ){
+		$url	= new ADT_URL( $reference );
+		$domain	= $url->getHost();
+		if( strlen( $url->getPath().$url->getQuery() ) < 2 )
+			continue;
+		if( !array_key_exists( $domain, $domains ) )
+			$domains[$domain]   = array();
+		$title  = preg_replace( '/^\//', '', $url->getPath() );
+		if( strlen( $url->getQuery() ) > 0 ){
+			$title	.= '<small class="muted">?'.$url->getQuery().'</small>';
+		}
+		$domains[$domain][] = UI_HTML_Tag::create( 'li', [
+			UI_HTML_Tag::create( 'a', $title, [
+				'href'		=> $reference,
+				'target'	=> '_blank',
+			])
+		], ['class' => 'autocut']);
+	}
+	$lists = array();
+	foreach( $domains as $domain => $domainReferences ){
+		$list		= UI_HTML_Tag::create( 'ul', $domainReferences, ['class' => 'unstyled'] );
+		$lists[]	= UI_HTML_Tag::create( 'h5', $domain ).$list;
+	}
+    $listReferences = UI_HTML_Tag::create( 'div', $lists );
+}
+
+
+
 return '
 <div class="content-panel">
 	<div class="content-panel-inner">
@@ -85,6 +118,12 @@ return '
 				) ).'
 			</div>
 		</form>
+	</div>
+</div>
+<div class="content-panel">
+	<div class="content-panel-inner">
+		<h3>Verwendung</h3>
+		'.$listReferences.'
 	</div>
 </div>
 ';

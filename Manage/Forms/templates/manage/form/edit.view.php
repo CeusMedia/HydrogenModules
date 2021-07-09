@@ -38,7 +38,7 @@ return '
 		</div>
 	</div>
 	<div class="span3">
-		<div class="content-panel" data-spy="affix" data-offset-top="0">
+		<div class="content-panel" not-data-spy="affix" not-data-offset-top="0">
 			<div class="content-panel-inner">
 				<div class="row-fluid">
 					<div class="span12" id="list-blocks-within">

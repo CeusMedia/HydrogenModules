@@ -118,6 +118,23 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$fills	= $this->modelFill->getAll( array( 'formId' => $formId ) );
 		$this->addData( 'fills', $fills );
 		$this->addData( 'hasFills', count( $fills ) > 0 );
+
+		$parameterBlacklist	= ['gclid', 'fclid'];
+		$references	= $this->modelFill->getDistinct( 'referer', array( 'formId' => $formId ), array( 'referer' => 'ASC'));
+		$list		= array();
+		foreach( array_filter( $references ) as $nr => $reference ){
+			if( preg_match( '@&preview=true@', $reference ) )
+				continue;
+			$url = new ADT_URL( $reference );
+			$parameters	= parse_str( $url->getQuery() );
+			foreach( $parameters as $key => $value ){
+				if( in_array( $key, $parameterBlacklist ) )
+					unset( $parameters[$key] );
+			}
+			$url->setQuery( http_build_query( $parameters, NULL, '&' ) );
+			$list[]	= $url->getAbsolute();
+		}
+		$this->addData( 'references', array_unique( $list ) );
 	}
 
 	public function editTransferRule( $formId, $transferRuleId )
@@ -255,6 +272,7 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->addData( 'mode', (string) $mode );
 //		$helper	= new View_Helper_Form( $this->env );
 //		return $helper->setId( $formId )->render();
+		$this->addData( 'references', ['http://a.b.c']);
 	}
 
 	//  --  PROTECTED METHODS  --  //
