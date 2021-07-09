@@ -39,6 +39,7 @@ else{
 						$text	= $part->getContent();
 					else if( $part instanceof \CeusMedia\Mail\Message\Part\Attachment )
 						$attachments[]	= (object) array(
+							'partKey'	=> $key,
 							'fileName'	=> $part->getFileName(),
 							'fileSize'	=> $part->getFileSize(),
 							'fileATime'	=> $part->getFileATime(),
@@ -48,6 +49,7 @@ else{
 						);
 					else if( $part instanceof \CeusMedia\Mail\Message\Part\InlineImage )
 						$images[]	= (object) array(
+							'partKey'	=> $key,
 							'fileName'	=> $part->getFileName(),
 							'fileSize'	=> $part->getFileSize(),
 							'fileMTime'	=> $part->getFileMTime(),
@@ -64,6 +66,7 @@ else{
 						$text	= $part->getContent();
 					else if( $part instanceof \CeusMedia\Mail\Part\Attachment )
 						$attachments[]	= (object) array(
+							'partKey'	=> $key,
 							'fileName'	=> $part->getFileName(),
 							'fileSize'	=> $part->getFileSize(),
 							'fileATime'	=> $part->getFileATime(),
@@ -73,6 +76,7 @@ else{
 						);
 					else if( $part instanceof \CeusMedia\Mail\Part\InlineImage )
 						$images[]	= (object) array(
+							'partKey'	=> $key,
 							'fileName'	=> $part->getFileName(),
 							'fileSize'	=> $part->getFileSize(),
 							'fileMTime'	=> $part->getFileMTime(),
@@ -99,6 +103,7 @@ else{
 					}
 					else if( $part instanceof Net_Mail_Attachment ){
 						$attachments[]	= (object) array(
+							'partKey'	=> $key,
 							'fileName'	=> $part->getFileName(),
 							'mimeType'	=> $part->getMimeType(),
 						);
@@ -129,13 +134,14 @@ else{
 		}
 
 		if( $attachments ){																		//  realize attachments view if available
-			foreach( $attachments as $nr => $attachment ){
+			$list	= array();
+			foreach( $attachments as $attachment ){
 				$buttonDownload	= UI_HTML_Tag::create( 'a', $iconDownload.' speichern', array(
-					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$nr.'/download',
+					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$attachment->partKey.'/download',
 					'class'	=> 'btn btn-small',
 				) );
 /*				$buttonView		= UI_HTML_Tag::create( 'a', $iconView.' öffnen', array(
-					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$nr,
+					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$attachment->partKey,
 					'class'	=> 'btn btn-small',
 				) );*/
 				$buttons	= UI_HTML_Tag::create( 'div', array( $buttonDownload ), array(
@@ -146,9 +152,9 @@ else{
 					$date	= date( 'Y-m-d H:i:s', $attachment->fileMTime );
 				}
 				$link		= UI_HTML_Tag::create( 'a', $iconFile.' '.$attachment->fileName, array(
-					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$nr,
+					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$attachment->partKey,
 				) );
-				$attachments[$nr]	= UI_HTML_Tag::create( 'tr', array(
+				$list[]	= UI_HTML_Tag::create( 'tr', array(
 					UI_HTML_Tag::create( 'td', $link ),
 					UI_HTML_Tag::create( 'td', $attachment->mimeType ),
 					UI_HTML_Tag::create( 'td', Alg_UnitFormater::formatBytes( $attachment->fileSize ) ),
@@ -165,22 +171,23 @@ else{
 			), array( 'style' => 'background-color: rgba(255, 255, 255, 0.75);' ) );
 			$colgroup	= UI_HTML_Elements::ColumnGroup( '', '15%', '10%', '20%', '15%' );
 			$thead	= UI_HTML_Tag::create( 'thead', $heads );
-			$tbody	= UI_HTML_Tag::create( 'tbody', $attachments );
+			$tbody	= UI_HTML_Tag::create( 'tbody', $list );
 			$displayAttachments	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table not-table-condensed table-striped' ) );
 			$headingAttachments	= '<h4>Anhänge</h4>';
 			$parts[]	= $headingAttachments.$displayAttachments;
 		}
 
 		if( $images ){																			//  realize inline images view if available
-			foreach( $images as $nr => $image ){
+			$list = array();
+			foreach( $images as $image ){
 				$date		= '';
 				if( $image->fileMTime ){
 					$date	= date( 'Y-m-d H:i:s', $image->fileMTime );
 				}
 				$link		= UI_HTML_Tag::create( 'a', $iconFile.' '.$image->fileName, array(
-					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$nr,
+					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$image->partKey,
 				) );
-				$images[$nr]	= UI_HTML_Tag::create( 'tr', array(
+				$list[]	= UI_HTML_Tag::create( 'tr', array(
 					UI_HTML_Tag::create( 'td', $link ),
 					UI_HTML_Tag::create( 'td', $image->mimeType ),
 					UI_HTML_Tag::create( 'td', Alg_UnitFormater::formatBytes( $image->fileSize ) ),
@@ -197,7 +204,7 @@ else{
 			), array( 'style' => 'background-color: rgba(255, 255, 255, 0.75);' ) );
 			$colgroup	= UI_HTML_Elements::ColumnGroup( '', '15%', '10%', '20%', '15%' );
 			$thead	= UI_HTML_Tag::create( 'thead', $heads );
-			$tbody	= UI_HTML_Tag::create( 'tbody', $images );
+			$tbody	= UI_HTML_Tag::create( 'tbody', $list );
 			$displayImages	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table not-table-condensed table-striped' ) );
 			$headingImages	= '<h4>Eingebundene Bilder</h4>';
 			$parts[]	= $headingImages.$displayImages;

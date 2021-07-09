@@ -51,23 +51,28 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
 			$this->env->getMessenger()->noteError( $message );
 			$this->restart( 'view/'.$mailId, TRUE );
 		}
-		$mailObjectParts	= $mail->object->instance->mail->getParts( TRUE );
+		$mailObjectParts	= $mail->object->instance->mail->getParts();
 		$attachments		= array();
-		foreach( $mailObjectParts as $part ){
+		foreach( $mailObjectParts as $key => $part ){
 			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
-				if( $part instanceof \CeusMedia\Mail\Message\Part\Attachment )
-					$attachments[]	= $part;
+				$isAttachment	= $part instanceof \CeusMedia\Mail\Message\Part\Attachment;
+				$isInlineImage	= $part instanceof \CeusMedia\Mail\Message\Part\InlineImage;
+				if( $isAttachment || $isInlineImage )
+					$attachments[$key]	= $part;
 			}
 			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
-				if( $part instanceof \CeusMedia\Mail\Part\Attachment )
-					$attachments[]	= $part;
+				$isAttachment	= $part instanceof \CeusMedia\Mail\Part\Attachment;
+				$isInlineImage	= $part instanceof \CeusMedia\Mail\Part\InlineImage;
+				if( $isAttachment || $isInlineImage )
+					$attachments[$key]	= $part;
 			}
 			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_COMMON ){
 				if( $part instanceof Net_Mail_Attachment )
-					$attachments[]	= $part;
+					$attachments[$key]	= $part;
 			}
 		}
-		if( !isset( $attachmentNr, $attachments ) ){
+
+		if( !array_key_exists( $attachmentNr, $attachments ) ){
 			$message	= 'Die ID des Anhangs ist ungültig.';
 			$this->env->getMessenger()->noteError( $message );
 			$this->restart( 'view/'.$mailId, TRUE );
