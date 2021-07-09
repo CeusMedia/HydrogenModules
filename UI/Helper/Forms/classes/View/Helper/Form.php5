@@ -46,9 +46,8 @@ class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 		}
 		$pattern	= '/'.preg_quote( '[helper_captcha]', '/' ).'/';
 		if( preg_match( $pattern, $content ) ){
-			$replacement	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => 'https://service.deutsche-heilpraktikerschule.de/captcha/image' ) );
-//			$helper			= new View_Helper_Captcha( $this->env );
-//			$replacement	= $helper->render();
+			$helper			= new View_Helper_Captcha( $this->env );
+			$replacement	= $helper->render();
 			$content		= preg_replace( $pattern, $replacement, $content );
 		}
 		if( !$this->returnCode ){
