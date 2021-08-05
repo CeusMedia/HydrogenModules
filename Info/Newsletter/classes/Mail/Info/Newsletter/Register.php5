@@ -19,7 +19,7 @@ class Mail_Info_Newsletter_Register extends Mail_Abstract
 		$this->mail->setSubject( $subject );
 
 		$text		= $this->renderBody( $data );
-		$this->addTextBody( $text );
+		$this->setText( $text );
 		return $text;
 	}
 }
