@@ -17,7 +17,7 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller
 
 	public function login( $providerId = NULL )
 	{
-		if( $this->session->has( 'userId' ) )
+		if( $this->session->has( 'auth_user_id' ) )
 			$this->redirectAfterLogin();
 
 		$modelUser		= new Model_User( $this->env );
@@ -121,7 +121,7 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller
 		}
 		if( $providerId ){
 			if( $this->moduleConfig->get( 'loginMode' ) === 'tab' )
-				$this->session->set( 'authBackend', 'Oauth2' );
+				$this->session->set( 'auth_backend', 'Oauth2' );
 			$provider	= $this->modelProvider->get( $providerId );
 			if( !$provider ){
 				$this->messenger->noteError( 'Invalid OAuth2 provider ID.' );
