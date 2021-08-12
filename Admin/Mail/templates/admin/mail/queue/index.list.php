@@ -18,6 +18,7 @@ $helper	= new View_Helper_TimePhraser( $env );
 
 //$modelUser	= new Model_User( $env );
 
+$dropdown	= '';
 $table		= UI_HTML_Tag::create( 'em', $wl->noEntries, array( 'class' => 'muted' ) );
 if( $mails ){
 	$rows	= array();
@@ -100,27 +101,27 @@ if( $mails ){
 	$thead			= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
 	$table			= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
+
+	$dropdownMenu	= UI_HTML_Tag::create( 'ul', array(
+		UI_HTML_Tag::create( 'li',
+			UI_HTML_Tag::create( 'a', '<i class="fa fa-remove"></i> <strike>abbrechen</strike>', array( 'class' => '#', 'id' => 'action-button-abort' ) )
+		),
+		UI_HTML_Tag::create( 'li',
+			UI_HTML_Tag::create( 'a', '<i class="fa fa-refresh"></i> <strike>erneut versuchen</strike>', array( 'class' => '#', 'id' => 'action-button-retry' ) )
+		),
+		UI_HTML_Tag::create( 'li',
+			UI_HTML_Tag::create( 'a', '<i class="fa fa-trash"></i> entfernen', array( 'class' => '#', 'id' => 'action-button-remove' ) )
+		),
+	), array( 'class' => 'dropdown-menu not-pull-right' ) );
+
+	$dropdownToggle	= UI_HTML_Tag::create( 'button', 'Aktion <span class="caret"></span>', array(
+		'type'		=> 'button',
+		'class'		=> 'btn dropdown-toggle',
+	), array( 'toggle' => 'dropdown' ) );
+	$dropdown		= UI_HTML_Tag::create( 'div', array( $dropdownToggle, $dropdownMenu ), array( 'class' => 'btn-group dropup' ) );
 }
 
 $pagination		= new \CeusMedia\Bootstrap\PageControl( './admin/mail/queue', $page, ceil( $total / $limit ) );
-
-$dropdownMenu	= UI_HTML_Tag::create( 'ul', array(
-	UI_HTML_Tag::create( 'li',
-		UI_HTML_Tag::create( 'a', '<i class="fa fa-remove"></i> <strike>abbrechen</strike>', array( 'class' => '#', 'id' => 'action-button-abort' ) )
-	),
-	UI_HTML_Tag::create( 'li',
-		UI_HTML_Tag::create( 'a', '<i class="fa fa-refresh"></i> <strike>erneut versuchen</strike>', array( 'class' => '#', 'id' => 'action-button-retry' ) )
-	),
-	UI_HTML_Tag::create( 'li',
-		UI_HTML_Tag::create( 'a', '<i class="fa fa-trash"></i> entfernen', array( 'class' => '#', 'id' => 'action-button-remove' ) )
-	),
-), array( 'class' => 'dropdown-menu not-pull-right' ) );
-
-$dropdownToggle	= UI_HTML_Tag::create( 'button', 'Aktion <span class="caret"></span>', array(
-	'type'		=> 'button',
-	'class'		=> 'btn dropdown-toggle',
-), array( 'toggle' => 'dropdown' ) );
-$dropdown		= UI_HTML_Tag::create( 'div', array( $dropdownToggle, $dropdownMenu ), array( 'class' => 'btn-group dropup' ) );
 
 
 return '
