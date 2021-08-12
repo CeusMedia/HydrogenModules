@@ -19,7 +19,7 @@ class Hook_Server_Log_Exception extends CMF_Hydrogen_Hook{
 //		$logic->sendCollectedDataAsMail( $content );
 		$logic->sendExceptionAsMail( $data['exception'] );
 
-		return TRUE;															//  mark hook as handled
+		return !TRUE;															//  mark hook as unhandled
 	}
 
 }
