@@ -73,7 +73,7 @@ return NULL;
 				throw new RuntimeException( 'No user authenticated' );
 			return NULL;
 		}
-		return $this->session->get( 'roleId');
+		return $this->session->get( 'auth_role_id');
 	}
 
 	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )

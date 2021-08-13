@@ -7,7 +7,7 @@ class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller{
 	public function __onInit(){
 		parent::__onInit();
 		$this->model	= new Model_User_Setting( $this->env );
-		$this->userId	= $this->env->getSession()->get( 'userId' );
+		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
 	}
 
 	public function index(){

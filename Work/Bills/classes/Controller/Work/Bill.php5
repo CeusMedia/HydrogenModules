@@ -6,7 +6,7 @@ class Controller_Work_Bill extends CMF_Hydrogen_Controller{
 
 	protected function __onInit(){
 		$this->model	= new Model_Bill( $this->env );
-		$this->userId	= $this->env->getSession()->get( 'userId' );
+		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
 	}
 
 	public function add(){
@@ -157,4 +157,3 @@ class Controller_Work_Bill extends CMF_Hydrogen_Controller{
 	public function remove(){
 	}
 }
-

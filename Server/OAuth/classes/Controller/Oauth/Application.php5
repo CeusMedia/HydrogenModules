@@ -150,7 +150,7 @@ class Controller_Oauth_Application extends CMF_Hydrogen_Controller
 		$this->model		= new Model_Oauth_Application( $this->env );
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
-		$this->userId		= (int) $this->env->getSession()->get( 'userId' );
+		$this->userId		= (int) $this->env->getSession()->get( 'auth_user_id' );
 	}
 
 	protected function checkAccess( $applicationId )

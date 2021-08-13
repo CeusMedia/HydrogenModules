@@ -28,7 +28,7 @@ class Logic_CustomerProject{
 		return $this->modelRelation->add( array(
 			'customerId'	=> $customerId,
 			'projectId'		=> $projectId,
-			'userId'		=> $session->get( 'userId' ),
+			'userId'		=> $session->get( 'auth_user_id' ),
 			'type'			=> $type,
 			'status'		=> 1,
 			'createdAt'		=> time(),

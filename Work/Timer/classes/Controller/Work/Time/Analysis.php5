@@ -174,7 +174,7 @@ class Controller_Work_Time_Analysis extends CMF_Hydrogen_Controller
 	{
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
-		$this->userId			= $this->session->get( 'userId' );
+		$this->userId			= $this->session->get( 'auth_user_id' );
 		$this->modelProject		= new Model_Project( $this->env );
 		$this->modelMission		= new Model_Mission( $this->env );
 		$this->modelTimer		= new Model_Work_Timer( $this->env );

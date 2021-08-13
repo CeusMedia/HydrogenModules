@@ -30,7 +30,7 @@ class Hook_Database_Lock extends CMF_Hydrogen_Hook
 			return FALSE;
 //		error_log( time().": ".json_encode( $request->getAll() )."\n", 3, "unlock.log" );
 		return $env->getModules()->callHook( 'Database_Lock', 'checkRelease', $context, array(
-			'userId'		=> $env->getSession()->get( 'userId' ),
+			'userId'		=> $env->getSession()->get( 'auth_user_id' ),
 			'request'		=> $request,
 			'controller'	=> $request->get( '__controller' ),
 			'action'		=> $request->get( '__action' ),

@@ -9,8 +9,8 @@ class Hook_Work_Note extends CMF_Hydrogen_Hook
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= Logic_Note::getInstance( $this->env );
 		$this->logic->setContext(
-			$this->session->get( 'userId' ),
-			$this->session->get( 'roleId' ),
+			$this->session->get( 'auth_user_id' ),
+			$this->session->get( 'auth_role_id' ),
 			$this->session->get( 'filter_notes_projectId' )
 		);
 		$this->addData( 'logicNote', $this->logic );

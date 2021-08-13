@@ -343,7 +343,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller
 	protected function __onInit()
 	{
 		$this->logic		= new Logic_Issue( $this->env );
-		$this->userId		= $this->env->getSession()->get( 'userId' );
+		$this->userId		= $this->env->getSession()->get( 'auth_user_id' );
 		$this->userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );
 	}
 
@@ -366,4 +366,3 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller
 		return $this->logic->noteChange( $issueId, $noteId, $type, $from, $to );
 	}
 }
-

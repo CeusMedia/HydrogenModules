@@ -93,7 +93,7 @@ class Controller_Work_FTP extends CMF_Hydrogen_Controller
 				$config->set( 'module.work_ftp.access.'.$key, $value );
 		}
 		else if( class_exists( 'Model_User_Setting' ) ){
-			if( ( $userId = $this->session->get( 'userId' ) ) )
+			if( ( $userId = $this->session->get( 'auth_user_id' ) ) )
 				$config	= Model_User_Setting::applyConfigStatic( $this->env, $userId, FALSE );
 		}
 		$access		= $config->getAll( "module.work_ftp.access.", TRUE );

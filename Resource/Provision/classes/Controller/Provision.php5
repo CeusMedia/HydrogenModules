@@ -15,12 +15,12 @@ class Controller_Provision extends CMF_Hydrogen_Controller{
 
 	public function index(){
 		$this->addData( 'serverUrl', $this->moduleConfig->get( 'server.url' ) );
-		$this->addData( 'userId', $this->session->get( 'userId' ) );
+		$this->addData( 'userId', $this->session->get( 'auth_user_id' ) );
 	}
 
 	public function status( $userId = NULL ){
-//		$userId	= $this->session->get( 'userId' ) ? $this->session->get( 'userId' ) : $userId;
-		$userId	= $this->session->get( 'userId' );
+//		$userId	= $this->session->get( 'auth_user_id' ) ? $this->session->get( 'auth_user_id' ) : $userId;
+		$userId	= $this->session->get( 'auth_user_id' );
 		if( !$userId )
 			$this->restart( NULL, TRUE );
 		try{

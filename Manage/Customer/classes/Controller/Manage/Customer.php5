@@ -25,7 +25,7 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 		$request		= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$data	= $request->getAll();
-			$data['userId']		= (int) $this->env->getSession()->get( 'userId' );
+			$data['userId']		= (int) $this->env->getSession()->get( 'auth_user_id' );
 			$data['createdAt']	= time();
 			$customerId			= $this->modelCustomer->add( $data );
 			$this->env->getMessenger()->noteSuccess( 'Customer has been saved.' );

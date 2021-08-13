@@ -53,7 +53,7 @@ class Controller_Manage_Form_Import extends CMF_Hydrogen_Controller
 		$rules	= $this->request->get( 'rules' );
 
 		$response	= [
-			'userId'	=> $this->session->get( 'userId' ),
+			'userId'	=> $this->session->get( 'auth_user_id' ),
 			'ruleId'	=> $ruleId,
 			'rules'		=> $rules,
 			'status'	=> 'empty',

@@ -14,7 +14,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller
 	 */
 	public function ajaxIsAuthenticated()
 	{
-		print( json_encode( $this->session->has( 'userId' ) ) );
+		print( json_encode( $this->session->has( 'auth_user_id' ) ) );
 		exit;
 	}
 
@@ -170,8 +170,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
-						$this->session->set( 'userId', $user->userId );								//  set user ID in session
-						$this->session->set( 'roleId', $user->roleId );								//  set user role in session
+						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
+						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
 						$from	= str_replace( "index/index", "", $this->request->get( 'from' ) );	//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
 						$this->restart( './'.$from );												//  restart (or go to redirect URL)

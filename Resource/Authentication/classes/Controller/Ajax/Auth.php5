@@ -18,7 +18,7 @@ class Controller_Ajax_Auth extends CMF_Hydrogen_Controller_Ajax
 
 	public function isAuthenticated()
 	{
-		$this->respondData( array( 'result' => $this->session->has( 'userId' ) ) );
+		$this->respondData( array( 'result' => $this->session->has( 'auth_user_id' ) ) );
 	}
 
 	/**

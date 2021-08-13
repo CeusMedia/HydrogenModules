@@ -168,7 +168,7 @@ class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
 
 	public function index(){
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
-		$roleId		= $this->session->get( 'roleId' );
+		$roleId		= $this->session->get( 'auth_role_id' );
 		$modelRole	= new Model_Role( $this->env );
 
 		if( !$this->userId ){

@@ -11,7 +11,7 @@ class Hook_Auth extends CMF_Hydrogen_Hook
 		$request	= $env->getRequest();
 		$session	= $env->getSession();
 		if( $payload->exception->getCode() == 403 ){
-			if( !$session->get( 'userId' ) ){
+			if( !$session->get( 'auth_user_id' ) ){
 				$forwardUrl	= $request->get( '__controller' );
 				if( $request->get( '__action' ) )
 					$forwardUrl	.= '/'.$request->get( '__action' );
@@ -30,13 +30,14 @@ class Hook_Auth extends CMF_Hydrogen_Hook
 
 	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
 	{
-		$userId		= (int) $env->getSession()->get( 'userId' );														//  get ID of current user (or zero)
+		$session	= $env->getSession();
+		$userId		= (int) $session->get( 'auth_user_id' );										//  get ID of current user (or zero)
 		if( $userId ){
 			$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
 			$remember	= (bool) $cookie->get( 'auth_remember' );
-			$env->getSession()->set( 'isRemembered', $remember );
-			$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';											//  initialize Auth class with user ID
-			$env->getPage()->js->addScriptOnReady( $script, 1 );															//  enlist script to be run on ready
+			$session->set( 'isRemembered', $remember );
+			$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';					//  initialize Auth class with user ID
+			$env->getPage()->js->addScriptOnReady( $script, 1 );									//  enlist script to be run on ready
 		}
 	}
 

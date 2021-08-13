@@ -97,7 +97,7 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 		$this->session->set( 'work-mission-view-month', $month );
 */
 /*		$this->setData( array(
-			'userId'	=> $this->session->get( 'userId' ),
+			'userId'	=> $this->session->get( 'auth_user_id' ),
 			'year'		=> $year,
 			'month'		=> $month,
 		) );

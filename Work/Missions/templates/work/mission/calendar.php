@@ -50,7 +50,7 @@ $content	= '
 $script	= '
 <script>
 $(document).ready(function(){
-	WorkMissionsCalendar.userId = '.(int) $env->getSession()->get( 'userId' ).';
+	WorkMissionsCalendar.userId = '.(int) $env->getSession()->get( 'auth_user_id' ).';
 	WorkMissionsCalendar.year = '.$year.';
 	WorkMissionsCalendar.month = '.$month.';
 	WorkMissionsCalendar.init();

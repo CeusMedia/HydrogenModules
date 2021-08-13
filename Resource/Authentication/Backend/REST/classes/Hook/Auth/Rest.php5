@@ -23,7 +23,7 @@ class Hook_Auth_Rest extends CMF_Hydrogen_Hook
 
 /*	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
 	{
-		$userId		= (int) $env->getSession()->get( 'userId' );								//  get ID of current user (or zero)
+		$userId		= (int) $env->getSession()->get( 'auth_user_id' );							//  get ID of current user (or zero)
 		$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
 //		$remember	= (bool) $cookie->get( 'auth_remember' );
 //		$env->getSession()->set( 'isRemembered', $remember );

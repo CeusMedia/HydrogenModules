@@ -36,7 +36,7 @@ class Model_User_Setting extends CMF_Hydrogen_Model {
 	public function applyConfig( $userId = NULL, $hidePasswords = TRUE ){
 		$config		= $this->env->getConfig()->getAll();
 		if( $userId === NULL )
-			$userId		= $this->env->getSession()->get( 'userId' );
+			$userId		= $this->env->getSession()->get( 'auth_user_id' );
 		$model		= new Model_User_Setting( $this->env );
 
 		$settings	= $model->getAllByIndex( 'userId', $userId );

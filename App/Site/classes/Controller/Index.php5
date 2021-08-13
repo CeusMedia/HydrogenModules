@@ -13,7 +13,7 @@ class Controller_Index extends CMF_Hydrogen_Controller
 
 		$pathByFrom		= $request->get( 'from' );
 		$pathByPath		= $request->get( '__path' );
-		$isInside		= $session->get( 'userId' ) > 0 && $session->get( 'auth_user_id' ) > 0;
+		$isInside		= $session->get( 'auth_user_id' ) > 0;
 		$pathsSelf		= ['', 'index', 'index/index'];
 
 		//  redirect forced by auth module ?
@@ -49,8 +49,8 @@ class Controller_Index extends CMF_Hydrogen_Controller
 				] );
 		}
 		else if( $this->env->getModules()->has( 'Resource_Users' ) ){								//  fallback: no local auth, but local users
-			$userId		= $session->get( 'userId' );
-			$roleId		= $session->get( 'roleId' );
+			$userId		= $session->get( 'auth_user_id' );
+			$roleId		= $session->get( 'auth_role_id' );
 			if( $userId ){
 				$this->addData( 'user', $this->getModel( 'user' )->get( $userId ) );
 				if( $roleId )

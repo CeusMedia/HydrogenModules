@@ -8,7 +8,7 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller
 	{
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'add' );
-		$userId		= $this->env->getSession()->get( 'userId' );
+		$userId		= $this->env->getSession()->get( 'auth_user_id' );
 		$model		= new Model_Finance_Fund( $this->env );
 
 		if( $request->has( 'add' ) ){
@@ -46,7 +46,7 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller
 	{
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'edit' );
-		$userId		= $this->env->getSession()->get( 'userId' );
+		$userId		= $this->env->getSession()->get( 'auth_user_id' );
 		$model		= new Model_Finance_Fund( $this->env );
 
 		$fund		= $model->get( $fundId );
@@ -80,7 +80,7 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller
 
 	public function index()
 	{
-		$userId		= $this->env->getSession()->get( 'userId' );
+		$userId		= $this->env->getSession()->get( 'auth_user_id' );
 		$modelFund	= new Model_Finance_Fund( $this->env );
 		$modelPrice	= new Model_Finance_FundPrice( $this->env );
 		$funds		= $modelFund->getAllByIndex( 'userId', $userId );
@@ -102,7 +102,7 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller
 
 	public function requestPrices()
 	{
-		$userId		= $this->env->getSession()->get( 'userId' );
+		$userId		= $this->env->getSession()->get( 'auth_user_id' );
 		$words		= (object) $this->getWords( 'request' );
 		$modelFund	= new Model_Finance_Fund( $this->env );
 		$modelPrice	= new Model_Finance_FundPrice( $this->env );

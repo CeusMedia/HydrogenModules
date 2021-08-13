@@ -161,7 +161,7 @@ class Controller_Shop_Payment_Mangopay extends CMF_Hydrogen_Controller
 		}
 		$this->order		= $this->logicShop->getOrder( $this->orderId );
 
-		$this->localUserId	= $this->session->get( 'userId' );
+		$this->localUserId	= $this->session->get( 'auth_user_id' );
 		if( !$this->localUserId ){
 			$this->messenger->noteError( 'Not authenticated' );
 			$this->restart( 'shop/customer' );

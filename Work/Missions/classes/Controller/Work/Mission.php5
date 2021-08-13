@@ -861,7 +861,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller
 	 */
 	protected function hasFullAccess()
 	{
-		return $this->env->getAcl()->hasFullAccess( $this->session->get( 'roleId' ) );
+		return $this->env->getAcl()->hasFullAccess( $this->session->get( 'auth_role_id' ) );
 	}
 
 	public function import()

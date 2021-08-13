@@ -4,7 +4,7 @@ class View_Helper_Work_Mission_Filter_Worker{
 	public function __construct( $env ){
 		$this->env		= $env;
 		$this->words	= $this->env->getLanguage()->getWords( 'work/mission' );
-		$this->userId	= $this->env->getSession()->get( 'userId' );
+		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
 	}
 
 	public function setModalRegistry( $modalRegistry ){

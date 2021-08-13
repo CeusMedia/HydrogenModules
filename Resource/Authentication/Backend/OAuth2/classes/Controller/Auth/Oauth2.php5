@@ -99,8 +99,8 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller
 
 					$this->messenger->noteSuccess( $msgs->msgSuccess, $provider->title );
 					$this->session->set( 'oauth2_token', $token );
-					$this->session->set( 'userId', $user->userId );
-					$this->session->set( 'roleId', $user->roleId );
+					$this->session->set( 'auth_user_id', $user->userId );
+					$this->session->set( 'auth_role_id', $user->roleId );
 					$this->logic->setAuthenticatedUser( $user );
 					if( $this->request->get( 'login_remember' ) )
 						$this->rememberUserInCookie( $user );
@@ -150,13 +150,13 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller
 		$this->session->remove( 'oauth2_token' );
 
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
-		if( $this->session->has( 'userId' ) ){
+		if( $this->session->has( 'auth_user_id' ) ){
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
-				'userId'	=> $this->session->get( 'userId' ),
-				'roleId'	=> $this->session->get( 'roleId' ),
+				'userId'	=> $this->session->get( 'auth_user_id' ),
+				'roleId'	=> $this->session->get( 'auth_role_id' ),
 			) );
-			$this->session->remove( 'userId' );
-			$this->session->remove( 'roleId' );
+			$this->session->remove( 'auth_user_id' );
+			$this->session->remove( 'auth_role_id' );
 			$this->logic->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->messenger->noteNotice( $words['logout']['msgAutoLogout'] );

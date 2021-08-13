@@ -16,7 +16,7 @@ class Controller_Manage_My_Company extends CMF_Hydrogen_Controller{
 		$this->modelCompany		= new Model_Company( $this->env );
 		$this->modelCompanyUser	= new Model_Company_User( $this->env );
 		$this->modelUser		= new Model_User( $this->env );
-		$this->userId			= $this->env->getSession()->get( 'userId' );
+		$this->userId			= $this->env->getSession()->get( 'auth_user_id' );
 		$this->companies		= $this->getMyCompanies();
 	}
 

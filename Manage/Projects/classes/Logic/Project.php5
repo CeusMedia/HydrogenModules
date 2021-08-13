@@ -202,7 +202,6 @@ class Logic_Project extends CMF_Hydrogen_Logic
 
 	protected function hasFullAccess()
 	{
-		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'roleId' ) );
+		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'auth_role_id' ) );
 	}
 }
-

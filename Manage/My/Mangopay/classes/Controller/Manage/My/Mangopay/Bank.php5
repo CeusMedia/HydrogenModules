@@ -45,7 +45,7 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 	public function deactivate( $bankAccountId ){
 		if( $this->request->getMethod() === "POST" ){									//  form has been executed
 			$password		= $this->request->get( 'password' );
-			$localUserId	= $this->session->get( 'userId' );
+			$localUserId	= $this->session->get( 'auth_user_id' );
 			$logicAuth		= $this->env->logic->authentication;
 			if( $logicAuth->checkPassword( $localUserId, $password ) ){
 				try{

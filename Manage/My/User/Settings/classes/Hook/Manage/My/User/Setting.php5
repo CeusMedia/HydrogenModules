@@ -12,7 +12,7 @@ class Hook_Manage_My_User_Setting extends CMF_Hydrogen_Hook{
 	 */
 	static public function onSessionInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
 		if( $env->has( 'session' ) ){															//  environment has session support
-			if( ( $userId = $env->getSession()->get( 'userId' ) ) ){							//  an user is logged in
+			if( ( $userId = $env->getSession()->get( 'auth_user_id' ) ) ){						//  an user is logged in
 				$config	= Model_User_Setting::applyConfigStatic( $env, $userId, FALSE );		//  apply user configuration
 				$env->set( 'config', $config, TRUE );											//  override config by user config
 			}

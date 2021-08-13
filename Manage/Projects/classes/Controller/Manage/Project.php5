@@ -54,7 +54,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller
 				$data['modifiedAt']	= time();
 				$projectId			= $this->modelProject->add( $data, FALSE );
 
-				if( 1 || !$this->env->getAcl()->hasFullAccess( $this->session->get( 'roleId' ) ) ){
+				if( 1 || !$this->env->getAcl()->hasFullAccess( $this->session->get( 'auth_role_id' ) ) ){
 					$this->modelProjectUser->add( array(
 						'projectId'		=> $projectId,
 						'userId'		=> $this->userId,
@@ -465,8 +465,8 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller
 		$this->useMissions		= $this->env->getModules()->has( 'Work_Missions' );
 		$this->useCompanies		= $this->env->getModules()->has( 'Manage_Projects_Companies' );
 		$this->useCustomers		= $this->env->getModules()->has( 'Manage_Customers' );
-		$this->userId			= $this->session->get( 'userId' );
-		$this->roleId			= $this->session->get( 'roleId' );
+		$this->userId			= $this->session->get( 'auth_user_id' );
+		$this->roleId			= $this->session->get( 'auth_role_id' );
 //		$this->logic			= Logic_Project::getInstance( $this->env );
 //		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		$this->logic			= $this->getLogic( 'Project' );

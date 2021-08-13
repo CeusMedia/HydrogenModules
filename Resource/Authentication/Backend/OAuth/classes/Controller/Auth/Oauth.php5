@@ -77,8 +77,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller
 					$modelUser	= new Model_User( $this->env );
 					$user 		= $modelUser->getByIndex( 'accountId', $response->user_id );
 					if( $user ){
-						$this->session->set( 'userId', $user->userId );
-						$this->session->set( 'roleId', $user->roleId );
+						$this->session->set( 'auth_user_id', $user->userId );
+						$this->session->set( 'auth_role_id', $user->roleId );
 						$this->logic->setAuthenticatedUser( $user );
 //						if( $this->request->get( 'login_remember' ) )
 //							$this->rememberUserInCookie( $user );
@@ -93,8 +93,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller
 							$data->roleId		= $modelRole->getByIndex( 'register', 128, array(), 'roleId' );
 							unset( $data->userId );
 							$userId				= $modelUser->add( (array) $data );
-							$this->session->set( 'userId', $userId );
-							$this->session->set( 'roleId', $data->roleId );
+							$this->session->set( 'auth_user_id', $userId );
+							$this->session->set( 'auth_role_id', $data->roleId );
 							$this->logic->setAuthenticatedUser( $modelUser->get( $userId ) );
 							if( $this->request->get( 'login_remember' ) )
 								$this->rememberUserInCookie( $user );
@@ -175,8 +175,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller
 					$modelUser	= new Model_User( $this->env );
 					$user = $modelUser->getByIndex( 'username', $this->request->get( 'login_username' ) );
 					if( $user ){
-						$this->session->set( 'userId', $user->userId );
-						$this->session->set( 'roleId', $user->roleId );
+						$this->session->set( 'auth_user_id', $user->userId );
+						$this->session->set( 'auth_role_id', $user->roleId );
 						$this->logic->setAuthenticatedUser( $user );
 						if( $this->request->get( 'login_remember' ) )
 							$this->rememberUserInCookie( $user );
@@ -189,8 +189,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller
 						$data			= $response->data->user;
 						$data['roleId']	= $modelRole->getByIndex( 'register', 128, 'roleId' );
 						$userId			= $modelUser->add( $data );
-						$this->session->set( 'userId', $userId );
-						$this->session->set( 'roleId', $roleId );
+						$this->session->set( 'auth_user_id', $userId );
+						$this->session->set( 'auth_role_id', $roleId );
 						$this->logic->setAuthenticatedUser( $user );
 						if( $this->request->get( 'login_remember' ) )
 							$this->rememberUserInCookie( $user );
@@ -222,8 +222,8 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller
 				'userId'	=> $this->session->get( 'auth_user_id' ),
 				'roleId'	=> $this->session->get( 'auth_role_id' ),
 			) );
-			$this->session->remove( 'userId' );
-			$this->session->remove( 'roleId' );
+			$this->session->remove( 'auth_user_id' );
+			$this->session->remove( 'auth_role_id' );
 			$this->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->messenger->noteNotice( $words['logout']['msgAutoLogout'] );
@@ -391,12 +391,12 @@ class Controller_Auth_Oauth extends CMF_Hydrogen_Controller
 				$role		= $modelRole->get( $user->roleId );										//  get role of user
 				if( $role && $role->access ){														//  role exists and allows login
 					$passwordMatch	= md5( sha1( $user->password ) ) === $password;					//  compare hashed password with user password
-					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )								//  for PHP 5.5.0+
+					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )						//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
-						$this->session->set( 'userId', $user->userId );								//  set user ID in session
-						$this->session->set( 'roleId', $user->roleId );								//  set user role in session
+						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
+						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
 						$this->logic->setAuthenticatedUser( $user );
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request

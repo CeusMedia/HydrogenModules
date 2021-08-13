@@ -89,8 +89,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 					if( !$this->messenger->gotError() ){
 						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
 						$this->messenger->noteSuccess( $words->msgSuccess );
-						$this->session->set( 'userId', $user->userId );
-						$this->session->set( 'roleId', $user->roleId );
+						$this->session->set( 'auth_user_id', $user->userId );
+						$this->session->set( 'auth_role_id', $user->roleId );
 						$redirectUrl	= $from	= $this->request->get( 'from' );					//  get redirect URL from request if set
 						$this->restart( './'.$redirectUrl );										//  restart (or go to redirect URL)
 					}
@@ -104,12 +104,12 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 	public function logout( $redirectController = NULL, $redirectAction = NULL ){
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
 		$message	= $words['logout']['msgSuccess'];
-		if( $this->session->remove( 'userId' ) ){
+		if( $this->session->remove( 'auth_user_id' ) ){
 			$this->env->getMessenger()->noteSuccess( $message );
 			if( $this->request->has( 'autoLogout' ) )
 				$this->env->getMessenger()->noteNotice( $words['logout']['msgAutoLogout'] );
-			$this->session->remove( 'userId' );
-			$this->session->remove( 'roleId' );
+			$this->session->remove( 'auth_user_id' );
+			$this->session->remove( 'auth_role_id' );
 			if( $this->env->getConfig()->get( 'module.auth.logout.clearSession' ) )
 				session_destroy();
 		}

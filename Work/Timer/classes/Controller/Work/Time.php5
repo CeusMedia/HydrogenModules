@@ -260,7 +260,7 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
-		$this->userId			= $this->session->get( 'userId' );
+		$this->userId			= $this->session->get( 'auth_user_id' );
 		$this->logicTimer		= Logic_Work_Timer::getInstance( $this->env );
 		$this->logicProject		= Logic_Project::getInstance( $this->env );
 //		$this->modelProject		= new Model_Project( $this->env );

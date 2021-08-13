@@ -20,7 +20,7 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_mangopay.', TRUE );
 
 		$modelAccount		= new Model_User_Payment_Account( $this->env );
-		$localUserId		= $this->session->get( 'userId' );
+		$localUserId		= $this->session->get( 'auth_user_id' );
 
 		try{
 			if( !$this->logic->hasPaymentAccount( $localUserId ) )

@@ -22,12 +22,12 @@ $message	= sprintf( $message, $config->get( 'app.name' ), $userName );
 
 if( $env->getModules()->has( 'Manage_Projects' ) ){
 	$modelProject	= new Model_Project( $env );
-	$projects		= $modelProject->getUserProjects( $env->getSession()->get( 'userId' ) );
+	$projects		= $modelProject->getUserProjects( $env->getSession()->get( 'auth_user_id' ) );
 	$optProject		= array();
 	foreach( $projects as $project )
 		$optProject[$project->projectId]	= $project->title;
 	$optProject		= UI_HTML_Elements::Options( $optProject, $request->get( 'projectId' ) );
-	
+
 }
 
 return '

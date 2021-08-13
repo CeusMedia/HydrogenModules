@@ -20,7 +20,7 @@ class Model_Menu
 	{
 		$this->env			= $env;
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_navigation.', TRUE );
-		$this->userId		= $this->env->getSession()->get( 'userId' );
+		$this->userId		= $this->env->getSession()->get( 'auth_user_id' );
 		$this->language		= $this->env->getLanguage()->getLanguage();
 		$this->useAcl		= $this->env->getModules()->has( 'Resource_Users' );
 		$this->acl			= $this->env->getAcl();

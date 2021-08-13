@@ -174,7 +174,7 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller
 			$imprint	= $theme->imprint;
 
 		$data	= array(
-			'creatorId'		=> $this->env->getSession()->get( 'userId' ),
+			'creatorId'		=> $this->env->getSession()->get( 'auth_user_id' ),
 			'themeId'		=> $themeId,
 			'status'		=> 0,
 			'title'			=> $theme->title,

@@ -1,6 +1,6 @@
 <?php
 $modelUser	= new Model_User( $env );
-$userId		= $session->get( 'userId' );
+$userId		= $session->get( 'auth_user_id' );
 $user		= $modelUser->get( $userId );
 
 $buttonInvite	= UI_HTML_Elements::LinkButton( './manage/my/user/invite/invite', 'jemanden einladen', 'button icon add' );
@@ -91,7 +91,7 @@ ulist>
 <ulist
 ###Nice to have###
 list>
-- Modus <cite>bonus</cite> 
+- Modus <cite>bonus</cite>
 - Einlade-Limit pro Monat >>(hardlimit)<<
 - Limit pro Benutzer pro Monat  >>(softlimit)<<
 <list

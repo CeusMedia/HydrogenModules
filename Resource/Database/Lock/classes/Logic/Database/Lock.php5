@@ -5,7 +5,7 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic{
 
 	public function __onInit(){
 		$this->model	= new Model_Lock( $this->env );
-		$this->userId	= (int) $this->env->getSession()->get( 'userId' );
+		$this->userId	= (int) $this->env->getSession()->get( 'auth_user_id' );
 	}
 
 	/**
@@ -18,7 +18,7 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic{
 			return FALSE;
 //		error_log( time().": ".json_encode( $request->getAll() )."\n", 3, "unlock.log" );
 		return $env->getModules()->callHook( 'Database_Lock', 'checkRelease', $context, array(
-			'userId'		=> $env->getSession()->get( 'userId' ),
+			'userId'		=> $env->getSession()->get( 'auth_user_id' ),
 			'request'		=> $request,
 			'controller'	=> $request->get( '__controller' ),
 			'action'		=> $request->get( '__action' ),

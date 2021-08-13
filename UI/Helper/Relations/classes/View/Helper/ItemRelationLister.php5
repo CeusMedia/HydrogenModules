@@ -143,7 +143,7 @@ class View_Helper_ItemRelationLister
 	{
 		if( !$this->relations )
 			return '';
-//		$roleId		= $this->env->getSession()->get( 'roleId' );
+//		$roleId		= $this->env->getSession()->get( 'auth_role_id' );
 //		$fullAccess
 		$acl		= $this->env->getAcl();
 		$list		= array();
@@ -183,7 +183,7 @@ class View_Helper_ItemRelationLister
 	{
 		if( !$this->relations )
 			return '';
-//		$roleId		= $this->env->getSession()->get( 'roleId' );
+//		$roleId		= $this->env->getSession()->get( 'auth_role_id' );
 //		$fullAccess
 		$acl		= $this->env->getAcl();
 		$rows		= array();

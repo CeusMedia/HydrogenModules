@@ -106,6 +106,6 @@ class Logic_Member
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelUser		= new Model_User( $this->env );
 		$this->modelRelation	= new Model_User_Relation( $this->env );
-		$this->userId			= $this->env->getSession()->get( 'userId' );
+		$this->userId			= $this->env->getSession()->get( 'auth_user_id' );
 	}
 }

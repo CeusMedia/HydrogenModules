@@ -22,7 +22,7 @@ class Controller_Work_Finance extends CMF_Hydrogen_Controller
 	public function index()
 	{
 		$session		= $this->env->getSession();
-		$userId			= $this->env->getSession()->get( 'userId' );
+		$userId			= $this->env->getSession()->get( 'auth_user_id' );
 		$modelBank		= new Model_Finance_Bank( $this->env );
 		$modelAccount	= new Model_Finance_Bank_Account( $this->env );
 		$modelFund		= new Model_Finance_Fund( $this->env );
@@ -72,7 +72,7 @@ class Controller_Work_Finance extends CMF_Hydrogen_Controller
 
 	protected function getBanksWithAccounts()
 	{
-		$userId			= $this->env->getSession()->get( 'userId' );
+		$userId			= $this->env->getSession()->get( 'auth_user_id' );
 		$modelBank		= new Model_Finance_Bank( $this->env );
 		$modelAccount	= new Model_Finance_Bank_Account( $this->env );
 		$banks			= $modelBank->getAllByIndex( 'userId', $userId );

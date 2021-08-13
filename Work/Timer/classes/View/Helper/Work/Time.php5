@@ -14,7 +14,7 @@ abstract class View_Helper_Work_Time extends CMF_Hydrogen_View_Helper_Abstract
 	{
 		$this->setEnv( $env );
 		$this->session			= $this->env->getSession();
-		$this->userId			= $this->session->get( 'userId' );
+		$this->userId			= $this->session->get( 'auth_user_id' );
 		$this->logicTimer		= Logic_Work_Timer::getInstance( $this->env );
 		$this->logicProject		= Logic_Project::getInstance( $this->env );
 		$this->modelMission		= new Model_Mission( $this->env );

@@ -33,7 +33,7 @@ else if( class_exists( 'View_Helper_Navigation' ) ){							//  fallback: outdate
 else{
 	$links	= array();
 	if( file_exists( 'config/pages.json' ) ){									//  fallback: pages but no renderer
-		$isAuthenticated	= (bool) $env->getSession()->get( 'userId' );
+		$isAuthenticated	= (bool) $env->getSession()->get( 'auth_user_id' );
 		if( $env->getModules()->has( 'Resource_Authentication' ) ){
 			$auth				= Logic_Authentication::getInstance( $env );
 			$isAuthenticated	= $auth->isAuthenticated();

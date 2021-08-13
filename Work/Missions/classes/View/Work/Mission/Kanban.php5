@@ -9,7 +9,7 @@ class View_Work_Mission_Kanban extends CMF_Hydrogen_View{
 
 		$script	= '<script>
 $(document).ready(function(){
-	WorkMissionsKanban.userId = '.(int) $this->env->getSession()->get( 'userId' ).';
+	WorkMissionsKanban.userId = '.(int) $this->env->getSession()->get( 'auth_user_id' ).';
 /*	if(typeof cmContextMenu !== "undefined"){
 		WorkMissionsKanban.initContextMenu();
 	};*/

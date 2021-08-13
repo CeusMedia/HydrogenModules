@@ -280,7 +280,7 @@ class Logic_Page extends CMF_Hydrogen_Logic
 
 	public function isAccessible( $page ): bool
 	{
-		$isAuthenticated	= $this->env->getSession()->get( 'userId' );
+		$isAuthenticated	= $this->env->getSession()->get( 'auth_user_id' );
 		$hasRight			= FALSE;
 		if( $page->type == Model_Page::TYPE_MODULE && $page->access == 'acl' )
 			$hasRight	= $this->env->getAcl()->has( $page->controller, $page->action ?: 'index' );

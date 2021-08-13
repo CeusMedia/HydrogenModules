@@ -2,7 +2,7 @@
 class Controller_Manage_My_User_Invite extends CMF_Hydrogen_Controller{
 
 	protected $messenger;
-	
+
 	/**	@var	Model_User_Invite		$model		Instance of user invite model */
 	protected $model;
 	protected $request;
@@ -12,12 +12,12 @@ class Controller_Manage_My_User_Invite extends CMF_Hydrogen_Controller{
 		$this->request		= $this->env->getRequest();
 		$this->model		= new Model_User_Invite( $this->env );
 	}
-	
+
 	public function cancel( $userInviteId ){
 		$this->model->setStatus( $userInviteId, -2 );
 		$this->restart( NULL, TRUE );
 	}
-	
+
 	public function index(){
 		$config		= $this->env->getConfig();
 		$invites	= (object) array(
@@ -35,7 +35,7 @@ class Controller_Manage_My_User_Invite extends CMF_Hydrogen_Controller{
 	}
 
 	public function invite(){
-		$userId		= $this->env->getSession()->get( 'userId' );
+		$userId		= $this->env->getSession()->get( 'auth_user_id' );
 		$words		= (object) $this->getWords( 'invite' );
 		if( $this->env->getRequest()->get( 'send' ) ){
 			$email		= $this->request->get( 'email' );
@@ -64,7 +64,7 @@ class Controller_Manage_My_User_Invite extends CMF_Hydrogen_Controller{
 
 	public function promote(){
 		if( $this->env->getRequest()->get( 'send' ) ){
-		
+
 			$this->restart( NULL, TRUE );
 		}
 	}

@@ -25,7 +25,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$data			= $request->getAllFromSource( 'POST' );
 
 		$modelUser		= new Model_User( $this->env );
-		$user			= $modelUser->get( (int) $session->get( 'userId' ) );
+		$user			= $modelUser->get( (int) $session->get( 'auth_user_id' ) );
 		$data['companyId']	= $user->companyId;
 
 
@@ -186,7 +186,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 
 	protected function getCurrentUser( $redirect = 'auth/logout' ){
 		$modelUser	= new Model_User( $this->env );
-		$userId		= (int) $this->env->getSession()->get( 'userId' );
+		$userId		= (int) $this->env->getSession()->get( 'auth_user_id' );
 		$user		= $modelUser->get( $userId );
 		if( !$user )
 			return $this->breakOnFailure( 'userIdInvalid', $redirect );
@@ -210,7 +210,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$session		= $this->env->getSession();
 		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'index' );
-		$userId			= $session->get( 'userId' );
+		$userId			= $session->get( 'auth_user_id' );
 		$modelBranch	= new Model_Branch( $this->env );
 		$modelUser		= new Model_User( $this->env );
 		$modelCompany	= new Model_Company( $this->env );

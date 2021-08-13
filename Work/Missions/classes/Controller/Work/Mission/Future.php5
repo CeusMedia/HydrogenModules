@@ -40,7 +40,7 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission
 
 	public function ajaxRenderIndex()
 	{
-		$userId		= $this->session->get( 'userId' );
+		$userId		= $this->session->get( 'auth_user_id' );
 
 		//  get list limit and page filters and sanitize them
 		$limitMin	= 10;

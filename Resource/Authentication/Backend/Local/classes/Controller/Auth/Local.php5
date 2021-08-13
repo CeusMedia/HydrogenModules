@@ -108,8 +108,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller
 					) );
 					if( 1 ){
 						$this->messenger->noteSuccess( $words->msgSuccessAutoLogin );
-						$this->session->set( 'userId', $user->userId );
-						$this->session->set( 'roleId', $user->roleId );
+						$this->session->set( 'auth_user_id', $user->userId );
+						$this->session->set( 'auth_role_id', $user->roleId );
 						if( $from )
 							$this->restart( $from );
 					}
@@ -124,7 +124,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller
 
 	public function index()
 	{
-		if( !$this->session->has( 'userId' ) )
+		if( !$this->session->has( 'auth_user_id' ) )
 			return $this->redirect( 'auth', 'login' );											// @todo replace redirect
 
 		$from			= $this->request->get( 'from' );
@@ -145,7 +145,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller
 	 */
 	public function login( $username = NULL )
 	{
-		if( $this->session->has( 'userId' ) )
+		if( $this->session->has( 'auth_user_id' ) )
 			$this->redirectAfterLogin();
 
 		$this->session->set( 'auth_backend', 'Local' );
@@ -174,8 +174,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller
 				$this->messenger->noteSuccess( $words->msgSuccess );
 
 				$user	= $modelUser->get( $userId );
-				$this->session->set( 'userId', $user->userId );
-				$this->session->set( 'roleId', $user->roleId );
+				$this->session->set( 'auth_user_id', $user->userId );
+				$this->session->set( 'auth_role_id', $user->roleId );
 				$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
 				$logicAuth->setAuthenticatedUser( $user, $password );
 				if( $this->request->get( 'login_remember' ) )
@@ -206,13 +206,13 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller
 	{
 		$words		= (object) $this->getWords( 'logout' );
 		$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
-		if( $this->session->has( 'userId' ) ){
+		if( $this->session->has( 'auth_user_id' ) ){
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
-				'userId'	=> $this->session->get( 'userId' ),
-				'roleId'	=> $this->session->get( 'roleId' ),
+				'userId'	=> $this->session->get( 'auth_user_id' ),
+				'roleId'	=> $this->session->get( 'auth_role_id' ),
 			) );
-			$this->session->remove( 'userId' );
-			$this->session->remove( 'roleId' );
+			$this->session->remove( 'auth_user_id' );
+			$this->session->remove( 'auth_role_id' );
 			$logicAuth->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->env->getMessenger()->noteNotice( $words->msgAutoLogout );
@@ -657,8 +657,8 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
-						$this->session->set( 'userId', $user->userId );								//  set user ID in session
-						$this->session->set( 'roleId', $user->roleId );								//  set user role in session
+						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
+						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
 						$this->logic->setAuthenticatedUser( $user );
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request

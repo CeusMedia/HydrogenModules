@@ -30,7 +30,7 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 		if( $request->has( 'save' ) ){
 			$model		= new Model_Bug( $this->env );
 			$data		= array(
-				'reporterId'	=> $this->env->getSession()->get( 'userId' ),
+				'reporterId'	=> $this->env->getSession()->get( 'auth_user_id' ),
 				'type'			=> (int) $request->get( 'type' ),
 				'severity'		=> (int) $request->get( 'severity' ),
 				'status'		=> 0,
@@ -90,10 +90,10 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 			}
 
 			if( count( $changes ) > 1 || $request->get( 'note') ){
-			
+
 				$data	= array(
 					'bugId'		=> $bugId,
-					'userId'	=> $this->env->getSession()->get( 'userId' ),
+					'userId'	=> $this->env->getSession()->get( 'auth_user_id' ),
 					'note'		=> $request->get( 'note'),
 					'timestamp'	=> time(),
 				);
@@ -112,9 +112,9 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 		}
 		$this->restart( './bug/edit/'.$bugId );
 	}
-	
+
 	public function edit( $bugId ){
-		
+
 		$logic	= new Logic_Bug( $this->env );
 		$request	= $this->env->request;
 
@@ -215,7 +215,7 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 			$bugs[$nr]->notes = $modelNote->getAllByIndex( 'bugId', $bug->bugId, array( 'timestamp' => 'ASC' ) );
 			$bugs[$nr]->changes	= $modelChange->getAllByIndex( 'bugId', $bug->bugId, array( 'timestamp' => 'ASC' ) );
 		}
-		$this->addData( 'bugs', $bugs );	
+		$this->addData( 'bugs', $bugs );
 
 
 		$users	= array();
@@ -229,7 +229,7 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 		$model		= new Model_Bug_Change( $this->env );
 		$data	= array(
 			'bugId'		=> $bugId,
-			'userId'	=> $this->env->getSession()->get( 'userId' ),
+			'userId'	=> $this->env->getSession()->get( 'auth_user_id' ),
 			'noteId'	=> $noteId,
 			'type'		=> $type,
 			'from'		=> $from,

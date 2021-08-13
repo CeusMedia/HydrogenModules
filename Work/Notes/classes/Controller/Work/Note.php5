@@ -13,8 +13,8 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= Logic_Note::getInstance( $this->env );
 		$this->logic->setContext(
-			$this->session->get( 'userId' ),
-			$this->session->get( 'roleId' ),
+			$this->session->get( 'auth_user_id' ),
+			$this->session->get( 'auth_role_id' ),
 			$this->session->get( 'filter_notes_projectId' )
 		);
 		$this->addData( 'logicNote', $this->logic );
@@ -28,7 +28,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 
 		if( $this->request->has( 'save' ) ){
 			$data		= array(
-				'userId'		=> $this->session->get( 'userId' ),
+				'userId'		=> $this->session->get( 'auth_user_id' ),
 				'projectId'		=> $this->request->get( 'note_projectId' ),
 				'status'		=> '0',
 				'title'			=> $this->request->get( 'note_title' ),
@@ -71,7 +71,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 		$projects	= array();
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logic		= Logic_Project::getInstance( $this->env );
-			$userId		= $this->session->get( 'userId' );
+			$userId		= $this->session->get( 'auth_user_id' );
 			$projects	= $logic->getUserProjects( $userId, FALSE );
 		}
 		$this->addData( 'projects', $projects );
@@ -160,7 +160,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 		$projects	= array();
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logic		= Logic_Project::getInstance( $this->env );
-			$userId		= $this->session->get( 'userId' );
+			$userId		= $this->session->get( 'auth_user_id' );
 			$projects	= $logic->getUserProjects( $userId, FALSE );
 		}
 		$this->addData( 'projects', $projects );
@@ -257,7 +257,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 		if( !is_array( $tags ) )
 			$tags	= array();
 
-		$userId		= $this->session->get( 'userId' );
+		$userId		= $this->session->get( 'auth_user_id' );
 		$projects	= array();
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logic		= Logic_Project::getInstance( $this->env );

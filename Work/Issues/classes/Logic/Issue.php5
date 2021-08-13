@@ -126,7 +126,7 @@ class Logic_Issue extends CMF_Hydrogen_Logic
 	 */
 	public function getUserProjects()
 	{
-		$userId		= $this->env->getSession()->get( 'userId' );
+		$userId		= $this->env->getSession()->get( 'auth_user_id' );
 		return $this->logicProject->getUserProjects( $userId, TRUE );
 	}
 
@@ -188,7 +188,7 @@ class Logic_Issue extends CMF_Hydrogen_Logic
 	{
 		$data	= array(
 			'issueId'	=> $issueId,
-			'userId'	=> $this->env->getSession()->get( 'userId' ),
+			'userId'	=> $this->env->getSession()->get( 'auth_user_id' ),
 			'noteId'	=> $noteId,
 			'type'		=> $type,
 			'from'		=> $from,

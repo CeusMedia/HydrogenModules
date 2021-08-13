@@ -8,7 +8,7 @@ class Controller_Work_Finance_Bank extends CMF_Hydrogen_Controller
 	{
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'add' );
-		$userId		= $this->env->getSession()->get( 'userId' );
+		$userId		= $this->env->getSession()->get( 'auth_user_id' );
 		$model		= new Model_Finance_Bank( $this->env );
 
 		if( $request->has( 'add' ) ){
@@ -43,7 +43,7 @@ class Controller_Work_Finance_Bank extends CMF_Hydrogen_Controller
 	{
 		$request	= $this->env->getRequest();
 		$words		= (object) $this->getWords( 'edit' );
-		$userId		= $this->env->getSession()->get( 'userId' );
+		$userId		= $this->env->getSession()->get( 'auth_user_id' );
 		$model		= new Model_Finance_Bank( $this->env );
 
 		$bank		= $model->get( $bankId );
@@ -143,7 +143,7 @@ class Controller_Work_Finance_Bank extends CMF_Hydrogen_Controller
 
 	protected function getBanksWithAccounts()
 	{
-		$userId			= $this->env->getSession()->get( 'userId' );
+		$userId			= $this->env->getSession()->get( 'auth_user_id' );
 		$modelBank		= new Model_Finance_Bank( $this->env );
 		$modelAccount	= new Model_Finance_Bank_Account( $this->env );
 		$banks			= $modelBank->getAllByIndex( 'userId', $userId );

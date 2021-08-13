@@ -34,7 +34,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller
 		if( in_array( 'approvePost', $this->rights ) )
 			$data['status']	= 1;
 		$data['threadId']	= $threadId;
-		$data['authorId']	= $this->env->getSession()->get( 'userId' );
+		$data['authorId']	= $this->env->getSession()->get( 'auth_user_id' );
 		$data['createdAt']	= time();
 		$data['type']		= 0;
 
@@ -77,7 +77,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$data		= $this->request->getAll();
-		$data['authorId']	= $this->env->getSession()->get( 'userId' );
+		$data['authorId']	= $this->env->getSession()->get( 'auth_user_id' );
 		$data['createdAt']	= time();
 		$threadId	= $this->modelThread->add( $data, FALSE );
 		$thread		= $this->modelThread->get( $threadId );
@@ -90,7 +90,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$data		= $this->request->getAll();
-		$data['authorId']	= $this->env->getSession()->get( 'userId' );
+		$data['authorId']	= $this->env->getSession()->get( 'auth_user_id' );
 		$data['rank']		= $this->modelTopic->count();
 		$data['createdAt']	= time();
 		$postId		= $this->modelTopic->add( $data );
@@ -206,7 +206,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller
 		}
 		$userCanEdit	= in_array( 'editPost', $this->rights );
 		$userIsManager	= in_array( 'removeTopic', $this->rights );
-		$userOwnsPost	= $post->authorId === (int) $this->env->getSession()->get( 'userId' );
+		$userOwnsPost	= $post->authorId === (int) $this->env->getSession()->get( 'auth_user_id' );
 		if( !( $userCanEdit && $userOwnsPost || $userIsManager ) )
 			$this->messenger->noteError( $words->errorAccessDenied );
 		else{
@@ -268,7 +268,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller
 		$this->messenger	= $this->env->getMessenger();
 		$this->options		= $this->env->getConfig()->getAll( 'module.info_forum.', TRUE );
 		$this->rights		= $this->env->getAcl()->index( 'info/forum' );
-		$this->userId		= $this->env->getSession()->get( 'userId' );
+		$this->userId		= $this->env->getSession()->get( 'auth_user_id' );
 		$this->cache		= $this->env->getCache();
 
 		if( !( $this->userPosts = $this->cache->get( 'info.forum.userPosts' ) ) ){

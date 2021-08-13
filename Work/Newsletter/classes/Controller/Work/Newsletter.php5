@@ -15,7 +15,7 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller
 		$words		= (object) $this->getWords( 'add' );
 		if( $this->request->getMethod()->isPost() ){
 			$data	= array(
-				'creatorId'				=> $this->session->get( 'userId' ),
+				'creatorId'				=> $this->session->get( 'auth_user_id' ),
 				'newsletterTemplateId'	=> $this->request->get( 'newsletterTemplateId' ),
 			);
 			if( ( $newsletterId = $this->request->get( 'newsletterId' ) ) ){
@@ -32,7 +32,7 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller
 				) );
 			}
 			$data	= array_merge( $data, array(
-				'creatorId'			=> (int) $this->session->get( 'userId' ),
+				'creatorId'			=> (int) $this->session->get( 'auth_user_id' ),
 				'title'				=> $this->request->get( 'title' ),
 				'subject'			=> trim( $this->request->get( 'subject' ) ),
 				'heading'			=> trim( $this->request->get( 'heading' ) ),
@@ -64,7 +64,7 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller
 		$newsletter		= (object) array(
 			'newsletterTemplateId'	=> (int) $this->request->get( 'newsletterTemplateId' ),
 			'newsletterId'			=> (int) $this->request->get( 'newsletterId' ),
-			'creatorId'				=> (int) $this->session->get( 'userId' ),
+			'creatorId'				=> (int) $this->session->get( 'auth_user_id' ),
 			'title'					=> trim( $this->request->get( 'title' ) ),
 			'senderAddress'			=> trim( $this->request->get( 'senderAddress' ) ),
 			'senderName'			=> trim( $this->request->get( 'senderName' ) ),
@@ -184,7 +184,7 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller
 		$this->checkNewsletterId( $newsletterId );
 		$words		= (object) $this->getWords( 'enqueue' );
 		$readerIds	= $this->request->get( 'readerIds' );
-		$creatorId	= $this->session->get( 'userId' );								//  get current user
+		$creatorId	= $this->session->get( 'auth_user_id' );						//  get current user
 
 		if( !( $queueId = $this->session->get( 'queueId-'.$newsletterId ) ) ){		//  no queue within this session yet
 			$queueId	= $this->logic->createQueue( $newsletterId, $creatorId );	//  create a new queue

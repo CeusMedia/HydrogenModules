@@ -29,7 +29,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 	public function add(){
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		$userId		= $this->env->getSession()->get( 'userId' );
+		$userId		= $this->env->getSession()->get( 'auth_user_id' );
 		if( $request->get( 'do' ) == 'save' ){
 			if( !strlen( trim( $request->get( 'title' ) ) ) )
 				$messenger->noteError( 'Der Titel des Artikels fehlt.' );
@@ -181,7 +181,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		if( $version < 1 )
 			$version	= $article->version;
 
-		$userId		= $this->env->getSession()->get( 'userId' );
+		$userId		= $this->env->getSession()->get( 'auth_user_id' );
 
 		if( $request->get( 'save' ) ){
 			if( !strlen( trim( $request->get( 'title' ) ) ) )

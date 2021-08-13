@@ -12,7 +12,7 @@ class View_Work_Mission_Calendar extends CMF_Hydrogen_View{
 
 		$script	= '<script>
 $(document).ready(function(){
-	WorkMissionsCalendar.userId = '.(int) $this->env->getSession()->get( 'userId' ).';
+	WorkMissionsCalendar.userId = '.(int) $this->env->getSession()->get( 'auth_user_id' ).';
 	if(typeof cmContextMenu !== "undefined"){
 		WorkMissionsCalendar.initContextMenu();
 	};
@@ -48,7 +48,7 @@ $(document).ready(function(){
 WorkMissionsCalendar.monthNames = '.json_encode( $words['months'] ).';
 WorkMissionsCalendar.monthNamesShort = '.json_encode( $words['months-short'] ).';
 WorkMissions.init("calendar");
-WorkMissionsCalendar.userId = '.(int) $this->env->getSession()->get( 'userId' ).';
+WorkMissionsCalendar.userId = '.(int) $this->env->getSession()->get( 'auth_user_id' ).';
 WorkMissionsCalendar.monthCurrent	= '.date( "n" ).';
 WorkMissionsCalendar.month			= '.(int) $this->getData( 'month' ).';
 WorkMissionsCalendar.year			= '.(int) $this->getData( 'year' ).';

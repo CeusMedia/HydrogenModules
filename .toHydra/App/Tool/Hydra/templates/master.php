@@ -42,8 +42,8 @@ if( !$config->get( 'app.production' ) ){
 		$infos[]	= sprintf( $words['footer_info']['requests'], $env->getDatabase()->numberStatements );
 }
 
-$userId		= (int) $session->get( 'userId' );
-$roleId		= (int) $session->get( 'roleId' );
+$userId		= (int) $session->get( 'auth_user_id' );
+$roleId		= (int) $session->get( 'auth_role_id' );
 if( $userId ){
 	$modelUser	= new Model_User( $env );
 	$infos[]	= 'Benutzer: '.$modelUser->get( $userId, 'username' ).' <small>('.$userId.')</small>';
