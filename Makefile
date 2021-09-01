@@ -35,3 +35,12 @@ dev-phpstan:
 
 dev-phpstan-save-baseline:
 	@vendor/bin/phpstan analyse --configuration phpstan.neon --generate-baseline phpstan-baseline.neon || true
+
+dev-index-json:
+	@php vendor/ceus-media/hydrogen-source-indexer/index.php json
+
+dev-index-json-humanreadable:
+	@php vendor/ceus-media/hydrogen-source-indexer/index.php json-dev
+
+dev-index-html:
+	@php vendor/ceus-media/hydrogen-source-indexer/index.php html

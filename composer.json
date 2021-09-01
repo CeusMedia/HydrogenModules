@@ -25,6 +25,7 @@
     "require-dev": {
         "ceus-media/bootstrap": "dev-master",
         "ceus-media/markdown": "dev-master",
+        "ceus-media/hydrogen-source-indexer": "dev-main",
         "phpunit/phpunit": "^8.5@dev",
         "phpstan/phpstan": "0.12.x-dev",
         "phpstan/phpstan-strict-rules": "0.12.x-dev",
