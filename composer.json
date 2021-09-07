@@ -20,7 +20,7 @@
     "minimum-stability": "dev",
     "require": {
         "ceus-media/common": "^0.8 | dev-master",
-        "ceus-media/hydrogen-framework": "^0.8 | dev-master"
+        "ceus-media/hydrogen-framework": "^0.8 | dev-master | dev-namespaces"
     },
     "require-dev": {
         "ceus-media/bootstrap": "dev-master",
