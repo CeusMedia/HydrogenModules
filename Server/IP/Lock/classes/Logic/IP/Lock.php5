@@ -191,7 +191,7 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic
 		return (bool) $this->modelLock->edit( $ipLockId, $data );
 	}
 
-	public function unlockIfOverdue( $ipLockIdOrIp, bool $strict = TRUE ): bool
+	public function unlockIfOverdue( $ipLockIdOrIp, bool $strict = TRUE ): ?bool
 	{
 		if( is_int( $ipLockIdOrIp ) )
 			$lock	= $this->get( $ipLockId, $strict );
