@@ -17,25 +17,17 @@
  *	You should have received a copy of the GNU General Public License
  *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *	@category		cmFrameworks
- *	@package		Hydrogen.Environment.Resource.Database
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Christian Würker
+ *	@copyright		2011-2021 Christian Würker
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
- *	@link			http://code.google.com/p/cmframeworks/
- *	@since			0.4
  */
 /**
  *	Database resource using PDO wrapper from cmClasses.
- *	@category		cmFrameworks
- *	@package		Hydrogen.Environment.Resource.Database
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011 Christian Würker
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
- *	@link			http://code.google.com/p/cmframeworks/
- *	@since			0.4
  */
-class Resource_Database extends \CeusMedia\Database\PDO\Connection
+class Resource_Database_Base extends \CeusMedia\Database\PDO\Connection
 {
 	const STATUS_LOST			= -1;
 	const STATUS_UNKNOWN		= 0;
@@ -57,27 +49,15 @@ class Resource_Database extends \CeusMedia\Database\PDO\Connection
 
 	protected $status	= self::STATUS_UNKNOWN;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( CMF_Hydrogen_Environment $env )
+	{
 		$this->env		= $env;
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_database.', TRUE );
 		$this->setUp();
 	}
 
-	/**
-	 *	Wrapper for PDO::exec to support lazy connection mode.
-	 *	Tries to connect database if not connected yet (lazy mode).
-	 *	@access		public
-	 *	@param		string		$statement		SQL statement to execute
-	 *	@return		integer		Number of affected rows
-	 */
-	public function exec( $statement ): int
+	public function getMode(): string
 	{
-		if( $this->status == self::STATUS_UNKNOWN )
-			$this->tryToConnect();
-		return parent::exec( $statement );
-	}
-
-	public function getMode(){
 		return isset( $this->options->mode ) ? $this->options->mode : 'instant';
 	}
 
@@ -88,7 +68,8 @@ class Resource_Database extends \CeusMedia\Database\PDO\Connection
 	 *	@param		boolean		$used		Get currently used database (default) or by configuration
 	 *	@return		string
 	 */
-	public function getName( $used = TRUE ){
+	public function getName( bool $used = TRUE ): string
+	{
 		if( $this->status === self::STATUS_CONNECTED && $used )
 			return $this->query( 'SELECT DATABASE();' )->fetch( PDO::FETCH_NUM )[0];
 		return $this->options->get( 'access.name' );
@@ -99,32 +80,21 @@ class Resource_Database extends \CeusMedia\Database\PDO\Connection
 	 *	@access		public
 	 *	@return		string
 	 */
-	public function getPrefix(){
+	public function getPrefix(): string
+	{
 		return $this->options->get( 'access.prefix' );
-	}
-
-	/**
-	 *	Wrapper for PDO::query to support lazy connection mode.
-	 *	Tries to connect database if not connected yet (lazy mode).
-	 *	@access		public
-	 *	@param		string		$statement		SQL statement to query
-	 *	@param		integer		$fetchMode		... (default: 2)
-	 *	@return		PDOStatement				PDO statement containing fetchable results
-	 */
-	public function query( string $statement, int $fetchMode = 2 ){
-		if( $this->status == self::STATUS_UNKNOWN )
-			$this->tryToConnect();
-		return parent::query( $statement, $fetchMode );
 	}
 
 	/**
 	 *	Sets database name in configuration.
 	 *	@access		public
+	 *	@param		string		$name		Database name
 	 *	@param		boolean		$use		Use in database connection (default) or only edit configuration
 	 *	@return		self
 	 *	@todo		check persistent mode change on instant connections, see disabled lines below
 	 */
-	public function setName( $name, $use = TRUE ){
+	public function setName( string $name, bool $use = TRUE ): self
+	{
 		if( $name !== $this->getName( $use ) ){
 			if( $use ){
 //				if( $this->getMode() !== 'lazy' )
@@ -142,7 +112,8 @@ class Resource_Database extends \CeusMedia\Database\PDO\Connection
 	 *	@param		string		$prefix		Table prefix to set in configuration
 	 *	@return		self
 	 */
-	public function setPrefix( $prefix ){
+	public function setPrefix( string $prefix ): self
+	{
 		$this->options->set( 'access.prefix', $prefix );
 		return $this;
 	}
@@ -153,13 +124,15 @@ class Resource_Database extends \CeusMedia\Database\PDO\Connection
 	 *	@access		public
 	 *	@return		self
 	 */
-	public function tearDown(){
+	public function tearDown(): self
+	{
 		return $this;
 	}
 
 	//  --  PROTECTED  --  //
 
-	protected function realizeDriverOptions(){
+	protected function realizeDriverOptions()
+	{
 		$options	= array_merge(																	//  merge option pairs ...
 			$this->defaultDriverOptions,															//  ... from default driver options
 			$this->options->getAll( 'option.' )														//  ...  and options configured by module
@@ -211,12 +184,14 @@ class Resource_Database extends \CeusMedia\Database\PDO\Connection
 	 *	@todo		implement lazy mode
 	 *	@todo		realize todos above now that lazy mode has been integrated by a different solution
 	 */
-	protected function setUp(){
+	protected function setUp()
+	{
 		if( $this->getMode() === 'instant' )
 			$this->tryToConnect();
 	}
 
-	protected function tryToConnect(){
+	protected function tryToConnect()
+	{
 		$access		= (object) $this->options->getAll( 'access.' );									//  extract connection access configuration
 		if( empty( $access->driver ) )
 			throw new RuntimeException( 'No database driver set' );
@@ -242,4 +217,72 @@ class Resource_Database extends \CeusMedia\Database\PDO\Connection
 #			$this->exec( "SET NAMES '".$charset."';" );												//  set character set
 	}
 }
-?>
+
+
+if( version_compare( PHP_VERSION, '8.0.0', '>=' ) ){
+	class Resource_Database_PHP8 extends Resource_Database_Base
+	{
+		/**
+		 *	Wrapper for PDO::exec to support lazy connection mode.
+		 *	Tries to connect database if not connected yet (lazy mode).
+		 *	@access		public
+		 *	@param		string		$statement		SQL statement to execute
+		 *	@return		integer		Number of affected rows
+		 */
+		public function exec( string $statement ): int
+		{
+			if( $this->status == self::STATUS_UNKNOWN )
+				$this->tryToConnect();
+			return parent::exec( $statement );
+		}
+
+		/**
+		 *	Wrapper for PDO::query to support lazy connection mode.
+		 *	Tries to connect database if not connected yet (lazy mode).
+		 *	@access		public
+		 *	@param		string		$statement		SQL statement to query
+		 *	@param		integer		$fetchMode		... (default: 2)
+		 *	@return		PDOStatement				PDO statement containing fetchable results
+		 */
+		public function query( string $statement, int $fetchMode = 2 ){
+			if( $this->status == self::STATUS_UNKNOWN )
+				$this->tryToConnect();
+			return parent::query( $statement, $fetchMode );
+		}
+	}
+	class Resource_Database extends Resource_Database_PHP8 {}
+}
+else{
+	class Resource_Database_PHP7 extends Resource_Database_Base
+	{
+		/**
+		 *	Wrapper for PDO::exec to support lazy connection mode.
+		 *	Tries to connect database if not connected yet (lazy mode).
+		 *	@access		public
+		 *	@param		string		$statement		SQL statement to execute
+		 *	@return		integer		Number of affected rows
+		 */
+		public function exec( $statement ): int
+		{
+			if( $this->status == self::STATUS_UNKNOWN )
+				$this->tryToConnect();
+			return parent::exec( $statement );
+		}
+
+		/**
+		 *	Wrapper for PDO::query to support lazy connection mode.
+		 *	Tries to connect database if not connected yet (lazy mode).
+		 *	@access		public
+		 *	@param		string		$statement		SQL statement to query
+		 *	@param		integer		$fetchMode		... (default: 2)
+		 *	@return		PDOStatement				PDO statement containing fetchable results
+		 */
+		public function query( $statement, $fetchMode = 2 ){
+			if( $this->status == self::STATUS_UNKNOWN )
+				$this->tryToConnect();
+			return parent::query( $statement, $fetchMode );
+		}
+	}
+	class Resource_Database extends Resource_Database_PHP7 {}
+}
+
