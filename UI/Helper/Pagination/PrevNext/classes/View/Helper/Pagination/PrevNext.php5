@@ -116,7 +116,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 		return $this;
 	}
 
-	public function setNextEntry( ?stdObject $nextEntry ): self
+	public function setNextEntry( ?object $nextEntry ): self
 	{
 		$this->nextEntry	= $nextEntry;
 		return $this;
@@ -132,10 +132,10 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 	 *	Set already found previous entry.
 	 *	This will disable automatic fetching of previous entry using the model.
 	 *	@access		public
-	 *	@param		?stdObject		$previousEntry		Already fetched previous entry to use
-	 *	@return		self			for method chaining
+	 *	@param		?object		$previousEntry		Already fetched previous entry to use
+	 *	@return		self		for method chaining
 	 */
-	public function setPreviousEntry( ?stdObject $previousEntry ): self
+	public function setPreviousEntry( ?object $previousEntry ): self
 	{
 		$this->previousEntry	= $previousEntry;
 		return $this;

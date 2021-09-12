@@ -234,7 +234,7 @@ class View_Helper_ContentConverter
 		return $content;
 	}
 
-	public static function register( string $class, string $method ): string
+	public static function register( string $class, string $method )
 	{
 		$key	= $class.'::'.$method;
 		if( array_key_exists( $key, self::$callbacks ) )
