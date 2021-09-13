@@ -30,7 +30,13 @@ if( $page->icon ){
 
 $path	= preg_replace( '@^(https?://)(.+)$@', '<small class="muted">\\1</small><strong>\\2</strong>', $path );
 
-return '
+$isWritable	= $source === 'Database';		//  not writable for 'Config' or 'Modules'
+$hints		= array();
+if( !$isWritable )
+	$hints[]	= '<div class="alert alert-warning">Pages of source "'.$source.'" are not writable right now.</div>';
+$hints	= join( $hints );
+
+return $hints.'
 <div class="content-panel content-panel-form">
 <!--	<h3><span class="muted">Seite:</span> '.$page->title.'</h3>-->
 	<div class="content-panel-inner">
@@ -108,7 +114,7 @@ return '
 				</div>
 				'.$fieldAccess.'
 			</div>
-			<div class="buttonbar">
+			<div class="buttonbar" style="'.( !$isWritable ? 'display: none' : '' ).'">
 				<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
 				<button type="reset" class="btn btn-small">'.$w->buttonReset.'</button>
 				<a href="./manage/page/copy/'.$current.'" class="btn btn-small">'.$w->buttonCopy.'</a>

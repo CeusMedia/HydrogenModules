@@ -62,13 +62,38 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 		if( $this->session->get( $this->sessionPrefix.'app' ) !== $this->appFocus )
 			$this->session->set( $this->sessionPrefix.'app', $this->appFocus );
 
-		$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
-		if( $source === 'Database' )
-			$this->model		= new Model_Page( $this->envManaged );
-		else if( $source === 'Config' )
-			$this->model		= new Model_Config_Page( $this->envManaged );
-		else if( $source === 'Modules' )
-			$this->model		= new Model_Module_Page( $this->envManaged );
+		$managesModules	= $this->envManaged->getModules( TRUE );
+		if( $managesModules->has( 'UI_Navigation' ) ){
+			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+		}
+		else if( $this->appSession->has( 'source' ) ){
+			$source			= $this->appSession->get( 'source' );
+		}
+		else{
+			if( $managesModules->has( 'Resource_Pages' ) )
+				$source			= 'Database';
+			else if( file_exists( 'config/pages.json' ) )
+				$source			= 'Config';
+			else
+				$source			= 'Modules';
+		}
+//		//  persist the source decission
+//		if( $source !== $this->appSession->get( 'source' ) )
+//			$this->appSession->set( 'source', $source );
+
+		//  connect to model of source
+		switch( $source ){
+			case 'Database':
+				$this->model	= new Model_Page( $this->envManaged );
+				break;
+			case 'Config':
+				$this->model	= new Model_Config_Page( $this->envManaged );
+				break;
+			case 'Modules':
+				$this->model	= new Model_Module_Page( $this->envManaged );
+				break;
+		}
+
 //		$this->env->getLog()->log("debug","default language during init: ".print_r($this->defaultLanguage,true),$this);
 		if( $this->defaultLanguage )
 			if( !$this->appSession->get( 'language' ) )
@@ -339,6 +364,7 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'pagePreviewUrl', $path.$page->identifier.'?preview='.$page->createdAt.$page->modifiedAt );
 		$this->addData( 'tab', $this->appSession->get( 'tab' ) );
 		$this->addData( 'scope', $this->appSession->get( 'scope' ) );
+		$this->addData( 'source', $this->appSession->get( 'source' ) );
 		$this->addData( 'editor', $editor );
 		$this->addData( 'editors', $editors );
 		$this->addData( 'isAccessible', $logic->isAccessible( $page ) );
@@ -460,7 +486,11 @@ ModuleManagePages.PageEditor.init();
 
 	protected function preparePageTree( $currentPageId = NULL ){
 		$scope		= (int) $this->appSession->get( 'scope' );
-		$indices	= array( 'parentId' => 0, 'status' => '> -2', 'scope' => $scope );
+		$indices	= array(
+			'parentId'	=> 0,
+			'status'	=> '> -2',
+			'scope'		=> $scope,
+		);
 		$pages		= $this->model->getAllByIndices( $indices, array( 'rank' => "ASC" ) );
 		$tree		= array();
 		$parentMap	= array( '0' => '-' );
@@ -488,9 +518,8 @@ ModuleManagePages.PageEditor.init();
 
 	public function setApp( $app ){
 		$currentApp	= $this->session->get( $this->sessionPrefix.'app' );
-		if( $app !== $currentApp ){
+		if( $app !== $currentApp )
 			$this->session->set( $this->sessionPrefix.'app', (string) $app );
-		}
 		$this->restart( NULL, TRUE );
 	}
 
@@ -501,6 +530,13 @@ ModuleManagePages.PageEditor.init();
 
 	public function setScope( $scope ){
 		$this->session->set( $this->sessionPrefix.$this->appFocus.'.scope', (int) $scope );
+		$this->restart( NULL, TRUE );
+	}
+
+	public function setSource( $source ){
+		$currentSource	= $this->session->get( $this->sessionPrefix.'source' );
+		if( $source !== $currentSource )
+			$this->session->set( $this->sessionPrefix.$this->appFocus.'.source', (string) $source );
 		$this->restart( NULL, TRUE );
 	}
 

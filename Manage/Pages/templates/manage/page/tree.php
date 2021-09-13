@@ -15,6 +15,22 @@ if( count( $apps ) > 1 ){
 		</div>';
 }
 
+$sources	= [
+	'Database'	=> 'Database Pages',
+	'Config'	=> 'Config Pages',
+	'Modules'	=> 'Module Pages'
+];
+$optSource	= UI_HTML_Elements::Options( $sources, $source );
+
+	$filterSource	= '
+		<div class="row-fluid">
+			<div class="span12">
+				<label for="input_source" class="mandatory">Quelle './*$words['filter']['labelSource'].*/'</label>
+				<select name="source" id="input_source" class="span12" onchange="document.location.href=\'./manage/page/setSource/\'+this.value;">'.$optSource.'</select>
+			</div>
+		</div>';
+
+
 //print_m( $tree );die;
 
 $filterLanguage		= '';
@@ -70,6 +86,7 @@ return '
 <div class="content-panel">
 	<div class="content-panel-inner">
 		'.$filterApp.'
+		'.$filterSource.'
 		'.$filterLanguage.'
 		'.$filterScope.'
 		'.$listPages.'
