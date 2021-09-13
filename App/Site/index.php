@@ -1,5 +1,5 @@
 <?php
-( include_once __DIR__.'/autoload.php' ) or die( 'Install packages using composer, first!' );
+( include_once 'vendor/autoload.php' ) or die( 'Install packages using composer, first!' );
 
 use CMF_Hydrogen_Environment_Router_Recursive as RecursiveRouter;
 use CMF_Hydrogen_Environment_Web as WebEnvironment;
