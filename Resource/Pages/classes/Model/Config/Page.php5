@@ -4,6 +4,28 @@ class Model_Config_Page
 	protected $env;
 	protected $filePath;
 	protected $pages;
+	protected $baseItem		= array(
+		'parentId'		=> 0,
+		'status'		=> 0,
+		'type'			=> 0,
+		'controller'	=> '',
+		'action'		=> '',
+		'access'		=> 'acl',
+		'content'		=> '',
+		'keywords'		=> '',
+		'changefreq'	=> '',
+		'priority'		=> '',
+		'icon'			=> '',
+		'format'		=> 'HTML',
+		'template'		=> '',
+		'createdAt'		=> 0,
+		'modifiedAt'	=> 0,
+	);
+	protected $types		= array(
+		0	=> 'page',
+		1	=> 'menu',
+		2	=> 'module'
+	);
 
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{
@@ -76,17 +98,19 @@ class Model_Config_Page
 						unset( $data[$nr] );
 				}
 				else if( preg_match( $regExp, $indexValue, $matches ) ){
-					if( $matches[1] === '!= ' && $pageValue !== (string) $matches[2] ||
-						$matches[1] === '>= ' && (int) $pageValue >= (int) $matches[2] ||
-						$matches[1] === '<= ' && (int) $pageValue <= (int) $matches[2] ||
-						$matches[1] === '> ' && (int) $pageValue > (int) $matches[2] ||
-						$matches[1] === '< ' && (int) $pageValue < (int) $matches[2] )
-						unset( $data[$nr] );
+					if( $matches[1] === '!=' && $pageValue === trim( (string) $matches[2], '"\'' ) ||
+						$matches[1] === '>=' && (float) $pageValue < (float) $matches[2] ||
+						$matches[1] === '<=' && (float) $pageValue > (float) $matches[2] ||
+						$matches[1] === '>' && (float) $pageValue <= (float) $matches[2] ||
+						$matches[1] === '<' && (float) $pageValue >= (float) $matches[2] )
+							unset( $data[$nr] );
 				}
 				else if( $pageValue != $indexValue )
 					unset( $data[$nr] );
 			}
 		}
+		if( count( $limits ) === 2 )
+			$data	= array_slice( $data, $limits[0], $limits[1] );
 		return $data;
 	}
 
@@ -103,22 +127,6 @@ class Model_Config_Page
 		$this->scopes	= array_keys( (array) $this->fileData );
 		$this->pages	= array();
 		$pageId			= 0;
-		$baseItem		= array(
-			'parentId'		=> 0,
-			'status'		=> 0,
-			'type'			=> 0,
-			'controller'	=> '',
-			'action'		=> '',
-			'access'		=> 'acl',
-			'content'		=> '',
-			'keywords'		=> '',
-			'changefreq'	=> '',
-			'priority'		=> '',
-			'format'		=> 'HTML',
-			'createdAt'		=> 0,
-			'modifiedAt'	=> 0,
-		);
-		$types			= array( 'page', 'menu', 'module' );
 		foreach( $this->scopes as $scopeNr => $scope ){
 			foreach( $this->fileData[$scope] as $pageNr => $page ){
 				$pageId++;
@@ -129,10 +137,10 @@ class Model_Config_Page
 					else if( !empty( $page['controller'] ) )
 						$page['type']	= 2;
 				}
-				$pageItem	= (object) array_merge( $baseItem, array(
+				$pageItem	= (object) array_merge( $this->baseItem, array(
 					'pageId'		=> $pageId,
 					'status'		=> 1,			//@todo realize
-					'type'			=> (int) array_search( $page['type'], $types ),
+					'type'			=> (int) array_search( $page['type'], $this->types ),
 					'controller'	=> !empty( $page['controller'] ) ? $page['controller'] : '',
 					'action'		=> !empty( $page['action'] ) ? $page['action'] : '',
 					'scope'			=> $scopeNr,
@@ -157,11 +165,11 @@ class Model_Config_Page
 							else if( !empty( $subpage['controller'] ) )
 								$subpage['type']	= 2;
 						}
-						$subpageItem	= (object) array_merge( $baseItem, array(
+						$subpageItem	= (object) array_merge( $this->baseItem, array(
 							'pageId'		=> $pageId,
 							'parentId'		=> $pageItem->pageId,
 							'status'		=> 1,			//@todo realize
-							'type'			=> (int) array_search( $subpage['type'], $types ),
+							'type'			=> (int) array_search( $subpage['type'], $this->types ),
 							'controller'	=> !empty( $subpage['controller'] ) ? $subpage['controller'] : '',
 							'action'		=> !empty( $subpage['action'] ) ? $subpage['action'] : '',
 							'scope'			=> $scopeNr,
