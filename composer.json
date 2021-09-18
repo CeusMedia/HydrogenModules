@@ -14,22 +14,22 @@
         }
     ],
     "support": {
-        "email": "cw@ceusmedia.de",
-        "jabber": "cw@ceusmedia.de"
+        "email": "christian.wuerker@ceusmedia.de",
+        "jabber": "cwuerker@ceusmedia.de"
     },
     "minimum-stability": "dev",
     "require": {
         "ceus-media/common": "^0.8 | dev-master",
-        "ceus-media/hydrogen-framework": "^0.8 | dev-master | dev-namespaces"
+        "ceus-media/hydrogen-framework": "^0.8 | dev-0.8.x | dev-namespaces | dev-master"
     },
     "require-dev": {
         "ceus-media/bootstrap": "dev-master",
         "ceus-media/markdown": "dev-master",
         "ceus-media/hydrogen-source-indexer": "dev-main",
         "phpunit/phpunit": "^8.5@dev",
-        "phpstan/phpstan": "0.12.x-dev",
-        "phpstan/phpstan-strict-rules": "0.12.x-dev",
+        "phpstan/phpstan": "*",
+        "phpstan/phpstan-strict-rules": "*",
         "squizlabs/php_codesniffer": "^3.0@dev",
-        "php-parallel-lint/php-parallel-lint": "9999999-dev"
+        "php-parallel-lint/php-parallel-lint": "^1.3 | dev-master"
     }
 }
