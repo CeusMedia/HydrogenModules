@@ -44,3 +44,6 @@ dev-index-json-humanreadable:
 
 dev-index-html:
 	@php vendor/ceus-media/hydrogen-source-indexer/index.php html
+
+dev-index-serial:
+	@php vendor/ceus-media/hydrogen-source-indexer/index.php serial
