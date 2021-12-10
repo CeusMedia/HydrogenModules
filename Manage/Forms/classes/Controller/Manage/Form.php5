@@ -7,6 +7,7 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	protected $modelMail;
 	protected $modelTranserTarget;
 	protected $modelTransferRule;
+	protected $modelImportRule;
 	protected $filters		= array(
 		'formId',
 		'type',
@@ -15,6 +16,8 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		'managerMailId',
 		'title'
 	);
+
+	protected $transferTargetMap		= [];
 
 	public function add(){
 		if( $this->request->has( 'save' ) ){
@@ -107,6 +110,7 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 			'formId'	=> $formId,
 			'type'		=> Model_Form_Rule::TYPE_CUSTOMER,
 		) ) );
+
 		$transferTargetMap	= array();
 		foreach( $this->modelTransferTarget->getAll() as $target )
 			$transferTargetMap[$target->formTransferTargetId]	= $target;
@@ -125,8 +129,9 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		foreach( array_filter( $references ) as $nr => $reference ){
 			if( preg_match( '@&preview=true@', $reference ) )
 				continue;
+
 			$url = new ADT_URL( $reference );
-			$parameters	= parse_str( $url->getQuery() );
+			parse_str( $url->getQuery(), $parameters );
 			foreach( $parameters as $key => $value ){
 				if( in_array( $key, $parameterBlacklist ) )
 					unset( $parameters[$key] );
@@ -199,6 +204,16 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$limits		= array( $page * $limit, $limit );
 		$total		= $this->modelForm->count( $conditions );
 		$forms		= $this->modelForm->getAll( $conditions, $orders, $limits );
+		foreach( $forms as $form ){
+			$form->transfers	= $this->modelTransferRule->getAllByIndex( 'formId', $form->formId );
+			$form->imports		= $this->modelImportRule->getAllByIndex( 'formId', $form->formId );
+		}
+
+		$transferTargetMap	= [];
+		foreach( $this->modelTransferTarget->getAll() as $transferTarget )
+			$transferTargetMap[$transferTarget->formTransferTargetId]	= $transferTarget;
+		$this->addData( 'transferTargets', $transferTargetMap );
+
 		$this->addData( 'forms', $forms );
 		$this->addData( 'page', $page );
 		$this->addData( 'pages', ceil( $total / $limit ) );
@@ -337,8 +352,11 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->modelFill	= new Model_Form_Fill( $this->env );
 		$this->modelRule	= new Model_Form_Rule( $this->env );
 		$this->modelMail	= new Model_Form_Mail( $this->env );
-		$this->modelTransferTarget	= new Model_Form_Transfer_Target( $this->env );
-		$this->modelTransferRule	= new Model_Form_Transfer_Rule( $this->env );
+		$this->modelTransferTarget		= new Model_Form_Transfer_Target( $this->env );
+		$this->modelTransferRule		= new Model_Form_Transfer_Rule( $this->env );
+		$this->modelImportRule			= new Model_Form_Import_Rule( $this->env );
+		$this->modelImportConnector		= new Model_Import_Connector( $this->env );
+		$this->modelImportConnection	= new Model_Import_Connection( $this->env );
 
 		$module			= $this->env->getModules()->get( 'Manage_Forms' );
 		$mailDomains	= trim( $module->config['mailDomains']->value );

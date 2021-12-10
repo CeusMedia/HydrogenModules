@@ -1,11 +1,16 @@
 <?php
 
+//print_m( $transferTargets );die;
+
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 $iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
 $iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 
 $iconMail		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope-o' ) );
 $iconReceiver	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-at' ) );
+$iconTransfer	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
+$iconImport		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+$iconExchange	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exchange' ) );
 
 $iconsType	= array(
 	Model_Form::TYPE_NORMAL		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) ),
@@ -69,19 +74,44 @@ foreach( $forms as $form ){
 	}
 	$receivers	= $receivers ? $iconReceiver.'&nbsp;'.join( ', ', $receivers ) : '-';
 	$receivers	= UI_HTML_Tag::create( 'small', $receivers );
+
+	$transfers	= '';
+	if( count( $form->transfers ) ){
+		$list	= [];
+		foreach( $form->transfers as $transfer ){
+			$list[]	= $transferTargets[$transfer->formTransferTargetId]->title;
+		}
+		$list		= 'Transfers:'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
+		$label		= count( $form->transfers );
+		$transfers	= UI_HTML_Tag::create( 'span', $iconTransfer.'&nbsp;'.$label, ['class' => 'label label-info', 'title' => $list] );
+	}
+
+	$importers	= '';
+	if( count( $form->imports ) ){
+		$list	= [];
+		foreach( $form->imports as $import ){
+			$list[]	= $import->title;
+		}
+		$list		= 'Imports:'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
+		$label		= count( $form->imports );
+		$importers	= UI_HTML_Tag::create( 'span', $iconImport.'&nbsp;'.$label, ['class' => 'label label-info', 'title' => $list] );
+	}
+
 	$rows[]	= UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $form->formId ), array( 'style' => 'text-align: right' ) ),
 		UI_HTML_Tag::create( 'td', $linkEdit.'<br/>'.$customerMail, array( 'data-class' => 'data-autocut' ) ),
 		UI_HTML_Tag::create( 'td', $listLabelsStatus[$form->status].'<br/>'.$listLabelsType[$form->type] ),
 		UI_HTML_Tag::create( 'td', $receivers.'<br/>'.$managerMail, array( 'data-class' => 'autocut' ) ),
+		UI_HTML_Tag::create( 'td', $importers.'<br/>'.$transfers ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '160px', '260px' );
+$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '160px', '260px', '40px' );
 $thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
 	UI_HTML_Tag::create( 'th', 'ID', array( 'style' => 'text-align: right' ) ),
 	UI_HTML_Tag::create( 'th', 'Titel / E-Mail an Absender' ),
 	UI_HTML_Tag::create( 'th', 'Typ / Zustand' ),
 	UI_HTML_Tag::create( 'th', 'Empfänger und -E-Mail' ),
+	UI_HTML_Tag::create( 'th', UI_HTML_Tag::create( 'acronym', $iconExchange, ['title' => 'Datenübertragung'] ) ),
 ) ) );
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped table-condensed' ) );
