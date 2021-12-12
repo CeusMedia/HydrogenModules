@@ -3,7 +3,7 @@
     "title": "Hydrogen Modules",
     "url": "https:\/\/github.com\/CeusMedia\/HydrogenModules",
     "description": "Collection of public (free and open) modules for <a href=\"https:\/\/github.com\/CeusMedia\/HydrogenFramework\">Hydrogen Framework<\/a>",
-    "date": "2021-09-18",
+    "date": "2021-12-12",
     "modules": {
         "Admin_App": {
             "id": "Admin_App",
@@ -6649,7 +6649,7 @@
                 "templates": [],
                 "styles": [
                     {
-                        "file": "site.info.css",
+                        "file": "module.info.css",
                         "load": null,
                         "level": null,
                         "source": "theme"
