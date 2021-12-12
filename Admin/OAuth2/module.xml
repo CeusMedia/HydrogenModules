@@ -37,5 +37,5 @@
 	</relations>
 	<link xml:lang="de" access="acl" path="admin/server" rank="96">OAuth2 Anbieter</link>
 	<link xml:lang="en" access="acl" path="admin/server" rank="96">OAuth2 Providers</link>
-	<job id="OAuth2.migrate">Auth_Oauth2::migrate</job>
+	<job id="OAuth2.migrate">Admin_Oauth2::migrate</job>
 </module>

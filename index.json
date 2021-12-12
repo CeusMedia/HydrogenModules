@@ -2144,7 +2144,7 @@
             "jobs": [
                 {
                     "id": "OAuth2.migrate",
-                    "class": "Auth_Oauth2",
+                    "class": "Admin_Oauth2",
                     "method": "migrate",
                     "commands": "",
                     "arguments": "",
