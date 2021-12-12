@@ -14,7 +14,7 @@
 		<class>View/Info.php5</class>
 		<locale>de/html/info/404.html</locale>
 		<locale>en/html/info/404.html</locale>
-		<style source="theme">site.info.css</style>
+		<style source="theme">module.info.css</style>
 	</files>
 	<config protected="yes" type="string" name="types" title="Order of supported content types.">HTML,Markdown</config>
 	<relations>
