@@ -96,7 +96,7 @@ class View_Helper_ItemRelationLister
 		return $this;
 	}
 
-	public function setLimit( ínt $limit ): self
+	public function setLimit( int $limit ): self
 	{
 		$this->limit		= $limit;
 		return $this;
