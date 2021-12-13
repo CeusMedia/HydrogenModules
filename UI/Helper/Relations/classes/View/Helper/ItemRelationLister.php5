@@ -80,11 +80,13 @@ class View_Helper_ItemRelationLister
 	public function setHintTextForEntities( string $text ): self
 	{
 		$this->labels['entities.count.hint']	= $text;
+		return $this;
 	}
 
 	public function setHintTextForRelations( string $text ): self
 	{
 		$this->labels['relations.count.hint']	= $text;
+		return $this;
 	}
 
 	public function setHook( string $resource, string $event, array $indices ): self
