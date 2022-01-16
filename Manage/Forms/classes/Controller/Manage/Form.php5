@@ -1,6 +1,6 @@
 <?php
-class Controller_Manage_Form extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Form extends CMF_Hydrogen_Controller
+{
 	protected $modelForm;
 	protected $modelFill;
 	protected $modelRule;
@@ -8,18 +8,22 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 	protected $modelTranserTarget;
 	protected $modelTransferRule;
 	protected $modelImportRule;
-	protected $filters		= array(
+	protected $modelImportConnector;
+	protected $modelImportConnection;
+
+	protected $filters		= [
 		'formId',
 		'type',
 		'status',
 		'customerMailId',
 		'managerMailId',
 		'title'
-	);
+	];
 
 	protected $transferTargetMap		= [];
 
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$this->checkIsPost();
 			$data	= $this->request->getAll();
@@ -28,30 +32,31 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 			$this->restart( 'edit/'.$formId, TRUE );
 		}
 
-		$orders		= array( 'identifier' => 'customer_result_%' );
-		$mails		= $this->modelMail->getAll( $orders, array( 'title' => 'ASC' ) );
+		$orders		= ['identifier' => 'customer_result_%'];
+		$mails		= $this->modelMail->getAll( $orders, ['title' => 'ASC'] );
 		$this->addData( 'mails', $mails );
 	}
 
-	public function addRule( $formId, $formType ){
-		$data		= array();
+	public function addRule( $formId, $formType )
+	{
+		$data		= [];
 		for( $i=0; $i<3; $i++ ){
 			if( $this->request->get( 'ruleKey_'.$i ) ){
-				$data[]	= array(
+				$data[]	= [
 					'key'			=> $this->request->get( 'ruleKey_'.$i ),
 					'keyLabel'		=> $this->request->get( 'ruleKeyLabel_'.$i ),
 					'value'			=> $this->request->get( 'ruleValue_'.$i ),
 					'valueLabel'	=> $this->request->get( 'ruleValueLabel_'.$i ),
-				);
+				];
 			}
 		}
-		$this->modelRule->add( array(
+		$this->modelRule->add( [
 			'formId'		=> $formId,
 			'type'			=> $formType,
 			'rules'			=> json_encode( $data ),
 			'mailAddresses'	=> $this->request->get( 'mailAddresses' ),
 			'mailId'		=> $this->request->get( 'mailId' ),
-		) );
+		] );
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
@@ -78,17 +83,19 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	public function confirm(){
+	public function confirm()
+	{
 		$fillId		= $this->request->get( 'fillId' );
 		$fill		= $this->modelFill->get( $fillId );
-		$this->modelFill->edit( $fillId, array(
+		$this->modelFill->edit( $fillId, [
 			'status'		=> Model_Fill::STATUS_CONFIRMED,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		return 'Okay.';
 	}
 
-	public function edit( $formId ){
+	public function edit( $formId )
+	{
 		$this->addData( 'activeTab', $this->session->get( 'manage_forms_tab' ) );
 		$form		= $this->checkId( $formId );
 		if( $this->request->has( 'save' ) ){
@@ -102,30 +109,30 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->addData( 'mailsCustomer', $this->getAvailableCustomerMails() );
 		$this->addData( 'mailsManager', $this->getAvailableManagerMails() );
 		$this->addData( 'blocksWithin', $this->getBlocksFromFormContent( $form->content ) );
-		$this->addData( 'rulesManager', $this->modelRule->getAllByIndices( array(
+		$this->addData( 'rulesManager', $this->modelRule->getAllByIndices( [
 			'formId'	=> $formId,
 			'type'		=> Model_Form_Rule::TYPE_MANAGER,
-		) ) );
-		$this->addData( 'rulesCustomer', $this->modelRule->getAllByIndices( array(
+		] ) );
+		$this->addData( 'rulesCustomer', $this->modelRule->getAllByIndices( [
 			'formId'	=> $formId,
 			'type'		=> Model_Form_Rule::TYPE_CUSTOMER,
-		) ) );
+		] ) );
 
-		$transferTargetMap	= array();
+		$transferTargetMap	= [];
 		foreach( $this->modelTransferTarget->getAll() as $target )
 			$transferTargetMap[$target->formTransferTargetId]	= $target;
 		$this->addData( 'transferTargets', $transferTargetMap );
-		$this->addData( 'transferRules', $this->modelTransferRule->getAllByIndices( array(
+		$this->addData( 'transferRules', $this->modelTransferRule->getAllByIndices( [
 			'formId'	=> $formId,
-		) ) );
+		] ) );
 
-		$fills	= $this->modelFill->getAll( array( 'formId' => $formId ) );
+		$fills	= $this->modelFill->getAll( ['formId' => $formId] );
 		$this->addData( 'fills', $fills );
 		$this->addData( 'hasFills', count( $fills ) > 0 );
 
 		$parameterBlacklist	= ['gclid', 'fclid'];
-		$references	= $this->modelFill->getDistinct( 'referer', array( 'formId' => $formId ), array( 'referer' => 'ASC'));
-		$list		= array();
+		$references	= $this->modelFill->getDistinct( 'referer', ['formId' => $formId], ['referer' => 'ASC'] );
+		$list		= [];
 		foreach( array_filter( $references ) as $nr => $reference ){
 			if( preg_match( '@&preview=true@', $reference ) )
 				continue;
@@ -173,7 +180,8 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			foreach( $this->filters as $filterKey )
 				$this->session->remove( 'filter_manage_form_'.$filterKey );
@@ -186,22 +194,23 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 		$limit		= 15;
-		$conditions	= array();
+		$conditions	= [];
 		foreach( $this->filters as $filterKey ){
 			$value	= $this->session->get( 'filter_manage_form_'.$filterKey );
 			$this->addData( 'filter'.ucfirst( $filterKey ), $value );
 			if( strlen( trim( $value ) ) ){
-				if( in_array( $filterKey, array( 'orderColumn', 'orderDirection' ) ) )
+				if( in_array( $filterKey, ['orderColumn', 'orderDirection'] ) )
 					continue;
 				if( $filterKey === 'title' )
 					$value	= '%'.$value.'%';
 				$conditions[$filterKey]	= $value;
 			}
 		}
-		$orders		= array( 'status' => 'DESC', 'title' => 'ASC' );
-		$limits		= array( $page * $limit, $limit );
+		$orders		= ['status' => 'DESC', 'title' => 'ASC'];
+		$limits		= [$page * $limit, $limit];
 		$total		= $this->modelForm->count( $conditions );
 		$forms		= $this->modelForm->getAll( $conditions, $orders, $limits );
 		foreach( $forms as $form ){
@@ -221,7 +230,8 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->addData( 'mailsManager', $this->getAvailableManagerMails() );
 	}
 
-	public function ajaxTestTransferRules(){
+	public function ajaxTestTransferRules()
+	{
 		$this->checkIsPost();
 		$ruleId	= $this->request->get( 'ruleId' );
 		$this->checkTransferRuleId( $ruleId );
@@ -253,13 +263,15 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->respond( $rules );
 	}
 
-	public function remove( $formId ){
+	public function remove( $formId )
+	{
 		$this->checkId( $formId );
 		$this->modelForm->remove( $formId );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeRule( $formId, $ruleId ){
+	public function removeRule( $formId, $ruleId )
+	{
 		$this->modelRule->remove( $ruleId );
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
@@ -271,17 +283,19 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	public function setTab( $formId, $tabId ){
+	public function setTab( $formId, $tabId )
+	{
 		$this->session->set( 'manage_forms_tab', $tabId );
 		if( $this->request->isAjax() ){
 			header( "Content-Type: application/json" );
-			print( json_encode( array( 'status' => 'data', 'data' => 'ok' ) ) );
+			print( json_encode( ['status' => 'data', 'data' => 'ok'] ) );
 			exit;
 		}
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	public function view( $formId, $mode = NULL ){
+	public function view( $formId, $mode = NULL )
+	{
 		$form	= $this->checkId( (int) $formId );
 		$this->addData( 'formId', $formId );
 		$this->addData( 'mode', (string) $mode );
@@ -290,62 +304,10 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		$this->addData( 'references', ['http://a.b.c']);
 	}
 
-	//  --  PROTECTED METHODS  --  //
-
-	protected function getAvailableCustomerMails( $conditions = array(), $orders = array() ){
-//		$conditions	= array( 'identifier' => 'customer_result_%' );
-		$conditions	= array_merge( $conditions, array( 'roleType' => array(
-			Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT,
-			Model_Form_Mail::ROLE_TYPE_CUSTOMER_REACT,
-			Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL,
-			Model_Form_Mail::ROLE_TYPE_LEADER_RESULT,
-			Model_Form_Mail::ROLE_TYPE_LEADER_REACT,
-			Model_Form_Mail::ROLE_TYPE_LEADER_ALL,
-		) ) );
-		$orders		= $orders ? $orders : array(
-			'roleType'	=> 'ASC',
-			'title'		=> 'ASC',
-		);
-		return $this->modelMail->getAll( $conditions, $orders );
-	}
-
-	protected function getAvailableManagerMails( $conditions = array(), $orders = array() ){
-//		$conditions	= array( 'identifier' => 'manager_%' );
-		$conditions	= array_merge( $conditions, array( 'roleType' => array(
-			Model_Form_Mail::ROLE_TYPE_LEADER_RESULT,
-			Model_Form_Mail::ROLE_TYPE_LEADER_REACT,
-			Model_Form_Mail::ROLE_TYPE_LEADER_ALL,
-			Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT,
-			Model_Form_Mail::ROLE_TYPE_MANAGER_REACT,
-			Model_Form_Mail::ROLE_TYPE_MANAGER_ALL,
-		) ) );
-		$orders		= $orders ? $orders : array(
-			'roleType'	=> 'ASC',
-			'title'		=> 'ASC',
-		);
-		return $this->modelMail->getAll( $conditions, $orders );
-	}
-
-	protected function getBlocksFromFormContent( $content ){
-		$modelBlock	= new Model_Form_Block( $this->env );
-		$list		= array();
-		$matches	= array();
-		$content	= preg_replace( '@<!--.*-->@', '', $content );
-		preg_match_all( '/\[block_(\S+)\]/', $content, $matches );
-		if( isset( $matches[0] ) && count( $matches[0] ) ){
-			foreach( array_keys( $matches[0] ) as $nr ){
-				$item	= $modelBlock->getByIndex( 'identifier', $matches[1][$nr] );
-				if( !$item )
-					continue;
-				$list[$matches[1][$nr]]	= $item;
-			}
-		}
-		return $list;
-	}
-
 	//  --  PROTECTED  --  //
 
-	protected function __onInit(){
+	protected function __onInit()
+	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->modelForm	= new Model_Form( $this->env );
@@ -360,11 +322,12 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 
 		$module			= $this->env->getModules()->get( 'Manage_Forms' );
 		$mailDomains	= trim( $module->config['mailDomains']->value );
-		$mailDomains	= strlen( $mailDomains ) ? preg_split( '/\s*,\s*/', $mailDomains ) : array();
+		$mailDomains	= strlen( $mailDomains ) ? preg_split( '/\s*,\s*/', $mailDomains ) : [];
 		$this->addData( 'mailDomains', $mailDomains );
 	}
 
-	protected function checkId( $formId, $strict = TRUE ){
+	protected function checkId( $formId, bool $strict = TRUE )
+	{
 		if( !$formId )
 			throw new RuntimeException( 'No form ID given' );
 		if( $form = $this->modelForm->get( $formId ) )
@@ -374,7 +337,8 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		return FALSE;
 	}
 
-	protected function checkIsPost( $strict = TRUE ){
+	protected function checkIsPost( bool $strict = TRUE ): bool
+	{
 		if( $this->request->getMethod()->is( 'POST' ) )
 			return TRUE;
 		if( $strict )
@@ -382,30 +346,66 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller{
 		return FALSE;
 	}
 
-	protected function checkTransferRuleId( $transferRuleId ){
+	protected function checkTransferRuleId( $transferRuleId )
+	{
 		if( !$transferRuleId )
 			throw new RuntimeException( 'No transfer rule ID given' );
 		if( !( $transferRule = $this->modelTransferRule->get( $transferRuleId ) ) )
 			throw new DomainException( 'Invalid transfer rule ID given' );
 		return $transferRule;
 	}
-}
 
+	protected function getAvailableCustomerMails( $conditions = [], $orders = [] ): array
+	{
+//		$conditions	= ['identifier' => 'customer_result_%'];
+		$conditions	= array_merge( $conditions, ['roleType' => [
+			Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT,
+			Model_Form_Mail::ROLE_TYPE_CUSTOMER_REACT,
+			Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL,
+			Model_Form_Mail::ROLE_TYPE_LEADER_RESULT,
+			Model_Form_Mail::ROLE_TYPE_LEADER_REACT,
+			Model_Form_Mail::ROLE_TYPE_LEADER_ALL,
+		] ] );
+		$orders		= $orders ? $orders : [
+			'roleType'	=> 'ASC',
+			'title'		=> 'ASC',
+		];
+		return $this->modelMail->getAll( $conditions, $orders );
+	}
 
-/*
-{
-	"copy": ["personDate1"],
-	"map": {"personDate3": "personDate2"},
-	"db": {
-		"course_id": {
-			"table": "school_course_bases",
-			"column": "schoolCourseBaseId",
-			"index": {
-				"schoolCourseId": "__courseId__",
-				"schoolBaseId": "__base__"
+	protected function getAvailableManagerMails( $conditions = [], $orders = [] ): array
+	{
+//		$conditions	= ['identifier' => 'manager_%'];
+		$conditions	= array_merge( $conditions, ['roleType' => [
+			Model_Form_Mail::ROLE_TYPE_LEADER_RESULT,
+			Model_Form_Mail::ROLE_TYPE_LEADER_REACT,
+			Model_Form_Mail::ROLE_TYPE_LEADER_ALL,
+			Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT,
+			Model_Form_Mail::ROLE_TYPE_MANAGER_REACT,
+			Model_Form_Mail::ROLE_TYPE_MANAGER_ALL,
+		] ] );
+		$orders		= $orders ? $orders : [
+			'roleType'	=> 'ASC',
+			'title'		=> 'ASC',
+		];
+		return $this->modelMail->getAll( $conditions, $orders );
+	}
+
+	protected function getBlocksFromFormContent( $content ): array
+	{
+		$modelBlock	= new Model_Form_Block( $this->env );
+		$list		= [];
+		$matches	= [];
+		$content	= preg_replace( '@<!--.*-->@', '', $content );
+		preg_match_all( '/\[block_(\S+)\]/', $content, $matches );
+		if( isset( $matches[0] ) && count( $matches[0] ) ){
+			foreach( array_keys( $matches[0] ) as $nr ){
+				$item	= $modelBlock->getByIndex( 'identifier', $matches[1][$nr] );
+				if( !$item )
+					continue;
+				$list[$matches[1][$nr]]	= $item;
 			}
 		}
+		return $list;
 	}
 }
-
-*/
