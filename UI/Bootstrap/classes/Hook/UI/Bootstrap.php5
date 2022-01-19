@@ -9,7 +9,7 @@ class Hook_UI_Bootstrap extends CMF_Hydrogen_Hook
 		$modules		= $env->getModules();
 		$moduleConfig	= $config->getAll( 'module.ui_bootstrap.', TRUE );
 		$optionsMissing	= $moduleConfig->getAll( 'missing.', TRUE );
-		if( !class_exists( '\CeusMedia\Bootstrap\Modal' ) ){
+		if( !class_exists( '\CeusMedia\Bootstrap\Icon' ) ){
 			switch( $optionsMissing->get( 'library' ) ){
 				case 'note':
 					$env->getMessenger()->noteFailure( join( '<br/>', array(
