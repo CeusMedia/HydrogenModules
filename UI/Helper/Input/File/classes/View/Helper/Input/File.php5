@@ -6,6 +6,7 @@ class View_Helper_Input_File
 	protected $label			= 'durchsuchen';
 	protected $name				= 'upload';
 	protected $multiple			= FALSE;
+	protected $folder			= FALSE;
 	protected $required			= FALSE;
 
 	public function __construct( CMF_Hydrogen_Environment $env )
@@ -21,11 +22,12 @@ class View_Helper_Input_File
 	public function render(): string
 	{
 		$input		= UI_HTML_Tag::create( 'input', NULL, array(
-			'type'		=> "file",
-			'name'		=> $this->name,
-			'class'		=> 'bs-input-file',
-			'id'		=> 'input_'.$this->name,
-			'multiple'	=> $this->multiple ? 'multiple' : NULL,
+			'type'				=> "file",
+			'name'				=> $this->name,
+			'class'				=> 'bs-input-file',
+			'id'				=> 'input_'.$this->name,
+			'multiple'			=> $this->multiple ? 'multiple' : NULL,
+			'webkitdirectory'	=> $this->folder ? '' : NULL,
 		) );
 		$toggle		= UI_HTML_Tag::create( 'a', $this->label, array(
 			'class'		=> 'btn '.$this->buttonClass.' bs-input-file-toggle',
@@ -58,13 +60,19 @@ class View_Helper_Input_File
 		return $instance->render();
 	}
 
-	public function setButtonClass( $class ): self
+	public function setButtonClass( string $class ): self
 	{
 		$this->buttonClass	= $class;
 		return $this;
 	}
 
-	public function setLabel( $label ): self
+	public function setFolder( bool $folder ): self
+	{
+		$this->folder	= $folder;
+		return $this;
+	}
+
+	public function setLabel( string $label ): self
 	{
 		$this->label	= $label;
 		return $this;
