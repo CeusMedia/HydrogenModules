@@ -40,7 +40,6 @@ switch( $renderer ){
 	default:
 		break;
 }
-
 //$contentContainer	= UI_HTML_Tag::create( 'div', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), $attributes );
 $contentContainer	= UI_HTML_Tag::create( 'div', $content, $attributes );
 

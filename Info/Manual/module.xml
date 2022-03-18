@@ -23,7 +23,7 @@ list>
 <list
 This module can be localized.
 ]]></description>
-	<version>0.7.7</version>
+	<version>0.7.8</version>
 	<log version="0.6.3">Extract CSS to style file.</log>
 	<log version="0.6.4">Add support for serverside Markdown rendering.</log>
 	<log version="0.6.5">Add configuration and detection of renderer.</log>
@@ -39,6 +39,7 @@ This module can be localized.
 	<log version="0.7.5">Migrate to support CeusMedia::Common 0.8.5.</log>
 	<log version="0.7.6">Improve code style to catch up with PHP 7.3+.</log>
 	<log version="0.7.7">Save open folders.</log>
+	<log version="0.7.8">Use specific markdown renderer.</log>
 <!--	<log version="0.8.x">Use editor configuration switch for read-only mode.</log>-->
 <!--	<log version="0.8.x">Replace CodeMirror as Markdown editor by SimpleMDE.</log>-->
 <!--	<log version="0.8.x">Remove file based solution.</log>-->

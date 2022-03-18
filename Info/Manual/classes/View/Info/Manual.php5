@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Markdown\Renderer\Html as MarkdownToHtmlRenderer;
+
 class View_Info_Manual extends CMF_Hydrogen_View
 {
 	public function __onInit()
@@ -42,8 +45,9 @@ InfoManual.UI.Page.init("#content-container", "#content-index");';
 
 		if( $renderer === "server-inline" ){
 			$content	= $this->getData( 'content' );
-			$content	= View_Helper_Markdown::transformStatic( $this->env, $content );
-			$this->addData( 'content', $content );
+			$helper		= new View_Helper_Markdown( $this->env );
+			$helper->setRenderer( MarkdownToHtmlRenderer::RENDERER_MICHELF );
+			$this->addData( 'content', $helper->transform( $content ) );
 		}
 	}
 
