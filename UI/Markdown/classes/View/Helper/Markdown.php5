@@ -1,9 +1,21 @@
 <?php
+
+use CeusMedia\Markdown\Renderer\Html as MarkdownToHtmlRenderer;
+
 class View_Helper_Markdown extends CMF_Hydrogen_View
 {
+	protected $renderer;
+
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{
 		$this->env	= $env;
+		$module		= $this->env->getModules()->get( 'UI_Markdown' );
+		if( array_key_exists( 'renderer', $module->config ) ){
+			$constant	= 'RENDERER_'.strtoupper( $module->config['renderer']->value );
+			$constants	= new Alg_Object_Constant( MarkdownToHtmlRenderer::class );
+			if( $constants->hasValue( $constant ) )
+				$this->renderer	= $constants->getValue( $constant );
+		}
 	}
 
 /*	static public function ___onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data )
@@ -12,18 +24,28 @@ class View_Helper_Markdown extends CMF_Hydrogen_View
 			$data->content	= Markdown::defaultTransform( $data->content );
 	}*/
 
-	public function transform( string $markdown, bool $wrapped = TRUE ): string
+	public function setRenderer( int $renderer ): self
 	{
-		$renderer	= new CeusMedia\Markdown\Renderer\Html();			//  create renderer
+		$this->renderer		= $renderer;
+		return $this;
+	}
+
+	public function transform( string $markdown, bool $wrapped = TRUE, ?int $renderer = NULL ): string
+	{
+		$renderer	= new MarkdownToHtmlRenderer();			//  create renderer
+		if( NULL !== $this->renderer )
+			$renderer->setRenderer( $this->renderer );
+		else if( NULL !== $renderer )
+			$renderer->setRenderer( $renderer );
 		$html		= $renderer->convert( $markdown );					//  convert to HTML
 		if( !$wrapped )
 			$html	= preg_replace( "/^<p>(.*)<\/p>$/s", "\\1", $html );
 		return $html;
 	}
 
-	public static function transformStatic( CMF_Hydrogen_Environment $env, string $markdown, bool $wrapped = TRUE ): string
+	public static function transformStatic( CMF_Hydrogen_Environment $env, string $markdown, bool $wrapped = TRUE, ?int $renderer = NULL ): string
 	{
 		$helper	= new self( $env );
-		return $helper->transform( $markdown, $wrapped );
+		return $helper->transform( $markdown, $wrapped, $renderer );
 	}
 }
