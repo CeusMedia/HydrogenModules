@@ -87,6 +87,16 @@ $panelFactsJob	= UI_HTML_Tag::create( 'div', array(
 	), array( 'class' => 'content-panel-inner' ) )
 ), array( 'class' => 'content-panel' ) );
 
+function formatNumber( $number ): string
+{
+	$units  = ['', 'K', 'M', 'G', 'P', 'E'];
+	$unit   = 0;
+	while( $number >= 1000 ){
+		$unit++;
+		$number = round( $number / 1000, 1);
+	}
+	return $number.$units[$unit];
+}
 
 //  --  PANEL FACTS: DEFINITION  -- //
 $helperAttribute->setObject( $definition );
@@ -96,9 +106,9 @@ $facts['Job-ID']		= UI_HTML_Tag::create( 'a', $definition->jobDefinitionId, arra
 $facts['Mode']			= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_MODE )->render();
 $facts['Status']		= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_STATUS )->render();
 $facts['Class Method']	= $definition->className.' :: '.$definition->methodName;
-$facts['Runs']			= UI_HTML_Tag::create( 'span', $definition->runs, array( 'class' => 'badge' ) );
-$facts['Success']		= UI_HTML_Tag::create( 'span', $definition->runs - $definition->fails, array( 'class' => 'badge badge-success' ) ).( $definition->runs ? ' <small class="muted">('.round( ( $definition->runs - $definition->fails ) / $definition->runs * 100 ).'%)</small>' : '' );
-$facts['Fails']			= UI_HTML_Tag::create( 'span', $definition->fails, array( 'class' => 'badge badge-important' ) ).( $definition->runs ? ' <small class="muted">('.round( $definition->fails / $definition->runs * 100 ).'%)</small>' : '' );
+$facts['Runs']			= UI_HTML_Tag::create( 'span', formatNumber( $definition->runs ), array( 'class' => 'badge' ) );
+$facts['Success']		= UI_HTML_Tag::create( 'span', formatNumber( $definition->runs - $definition->fails ), array( 'class' => 'badge badge-success' ) ).( $definition->runs ? ' <small class="muted">('.round( ( $definition->runs - $definition->fails ) / $definition->runs * 100 ).'%)</small>' : '' );
+$facts['Fails']			= UI_HTML_Tag::create( 'span', formatNumber( $definition->fails ), array( 'class' => 'badge badge-important' ) ).( $definition->runs ? ' <small class="muted">('.round( $definition->fails / $definition->runs * 100 ).'%)</small>' : '' );
 $facts['Created At']	= date( 'd.m.Y H:i:s', $definition->createdAt );
 if( $definition->modifiedAt )
 	$facts['Modified At']	= date( 'd.m.Y H:i:s', $definition->modifiedAt );
