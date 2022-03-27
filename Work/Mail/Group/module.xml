@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <module>
 	<title>Work: Mail Group</title>
+	<deprecation version="0.4.3">Moved to GitLab::CeusMedia:MailGroup.</deprecation>
 	<description/>
 	<category>Work</category>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add database models for groups and members.</log>
@@ -21,6 +22,7 @@
 	<log version="0.4">Extract hook to own class.</log>
 	<log version="0.4.1">Apply Bootstrap to HTML view of message.</log>
 	<log version="0.4.2">Improve code style.</log>
+	<log version="0.4.3">EOL: Moved to GitLab::CeusMedia:MailGroup.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
