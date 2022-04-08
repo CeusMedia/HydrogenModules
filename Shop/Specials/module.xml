@@ -19,8 +19,8 @@
 	<relations>
 		<needs type="module">Shop</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="init">Hook_Shop_Special::__onPageInit</hook>
-	<hook type="resource" resource="Page" event="applyModules">Hook_Shop_Special::__onPageApplyModules</hook>
+	<hook type="resource" resource="Page" event="init">Hook_Shop_Special::onPageInit</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_Shop_Special::onPageApplyModules</hook>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_specials` (
   `shopSpecialId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
