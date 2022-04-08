@@ -11,6 +11,7 @@
 	<log version="0.3.2">Extract hook to own class.</log>
 	<files>
 		<class>Controller/Info.php5</class>
+		<class>Hook/Info.php5</class>
 		<class>View/Info.php5</class>
 		<locale>de/html/info/404.html</locale>
 		<locale>en/html/info/404.html</locale>
