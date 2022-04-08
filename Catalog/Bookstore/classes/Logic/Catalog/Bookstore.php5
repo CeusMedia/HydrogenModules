@@ -34,7 +34,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: code doc
 	 */
 	protected function __onInit( $a = NULL ){
-		$this->env->clock->profiler->tick( 'Logic_Catalog_Bookstore::init start' );
+		$this->env->getRuntime()->reach( 'Logic_Catalog_Bookstore::init start' );
 		$this->cache				= $this->env->getCache();
 
 		$this->modelArticle			= new Model_Catalog_Bookstore_Article( $this->env );
@@ -46,10 +46,6 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->modelAuthor			= new Model_Catalog_Bookstore_Author( $this->env );
 		$this->modelCategory		= new Model_Catalog_Bookstore_Category( $this->env );
 #		$this->modelReview			= new Model_Catalog_Review( $this->env );
-		$this->pathArticleCovers	= dirname( __FILE__ ).'/../../../Univerlag/contents/articles/covers/';
-		$this->pathArticleDocuments	= dirname( __FILE__ ).'/../../../Univerlag/contents/articles/documents/';//$this->config['frontend.document.uri'];
-		$this->pathAuthorImages		= dirname( __FILE__ ).'/../../../Univerlag/contents/authors/';
-//		$this->clean();
 	}
 
 	/**

@@ -16,36 +16,6 @@ class Controller_Catalog_Bookstore extends CMF_Hydrogen_Controller{
 		$this->messenger	= $this->env->getMessenger();
 	}
 
-	static public function ___onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $data ){
-		$baseUrl	= $env->url.'catalog/bookstore/';
-		$logic		= new Logic_Catalog_Bookstore( $env );
-		$language	= $env->getLanguage()->getLanguage();
-
-		$conditions	= array();
-		$orders		= array( 'articleId' => 'DESC' );
-		foreach( $logic->getArticles( $conditions, $orders ) as $article ){
-			$url	= $logic->getArticleUri( $article, TRUE );
-			$date	= max( $article->createdAt, $article->modifiedAt );
-			$context->addLink( $url, $date > 0 ? $data : NULL );
-		}
-
-		$conditions	= array();
-		$orders		= array( 'authorId' => 'DESC' );
-		foreach( $logic->getAuthors( $conditions, $orders ) as $author ){
-			$url	= $logic->getAuthorUri( $author, TRUE );
-			$date	= NULL;//max( $author->createdAt, $author->modifiedAt );
-			$context->addLink( $url, $date );
-		}
-
-		$conditions	= array( 'visible' => 1 );
-		$orders		= array( 'categoryId' => 'DESC' );
-		foreach( $logic->getCategories( $conditions, $orders ) as $category ){
-			$url	= $logic->getCategoryUri( $category, $language, TRUE );
-			$date	= NULL;//max( $author->createdAt, $author->modifiedAt );
-			$context->addLink( $url, $date );
-		}
-	}
-
 	public function article( $articleId ){
 		$articleId	= (int) $articleId;
 		$article	= $this->logic->getArticle( $articleId );
