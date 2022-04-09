@@ -3,7 +3,7 @@
     "title": "Hydrogen Modules",
     "url": "https:\/\/github.com\/CeusMedia\/HydrogenModules",
     "description": "Collection of public (free and open) modules for <a href=\"https:\/\/github.com\/CeusMedia\/HydrogenFramework\">Hydrogen Framework<\/a>",
-    "date": "2021-12-13",
+    "date": "2022-04-09",
     "modules": {
         "Admin_App": {
             "id": "Admin_App",
@@ -5073,7 +5073,7 @@
             "frameworks": {
                 "Hydrogen": "<0.9"
             },
-            "version": "0.7.8",
+            "version": "0.7.9",
             "versionLog": [
                 {
                     "note": "Responsive Design for category index.",
@@ -5182,6 +5182,10 @@
                 {
                     "note": "Add categories to sitemap \/ search index.",
                     "version": "0.7.8"
+                },
+                {
+                    "note": "Extract hooks to own class.",
+                    "version": "0.7.9"
                 }
             ],
             "deprecation": null,
@@ -5207,6 +5211,12 @@
                 "classes": [
                     {
                         "file": "Controller\/Catalog\/Bookstore.php5",
+                        "load": null,
+                        "level": null,
+                        "source": null
+                    },
+                    {
+                        "file": "Hook\/Catalog\/Bookstore.php5",
                         "load": null,
                         "level": null,
                         "source": null
@@ -5724,7 +5734,7 @@
                     "registerLinks": [
                         {
                             "level": 5,
-                            "hook": "Controller_Catalog_Bookstore::___onRegisterSitemapLinks"
+                            "hook": "Hook_Catalog_Bookstore::onRegisterSitemapLinks"
                         }
                     ]
                 },
@@ -5732,7 +5742,7 @@
                     "renderResults": [
                         {
                             "level": 5,
-                            "hook": "View_Catalog_Bookstore::___onRenderSearchResults"
+                            "hook": "Hook_Catalog_Bookstore::onRenderSearchResults"
                         }
                     ]
                 },
@@ -5748,7 +5758,7 @@
                     "onRenderContent": [
                         {
                             "level": 5,
-                            "hook": "View_Catalog_Bookstore::___onRenderContent"
+                            "hook": "Hook_Catalog_Bookstore::onRenderContent"
                         }
                     ]
                 }
@@ -6621,6 +6631,12 @@
                 "classes": [
                     {
                         "file": "Controller\/Info.php5",
+                        "load": null,
+                        "level": null,
+                        "source": null
+                    },
+                    {
+                        "file": "Hook\/Info.php5",
                         "load": null,
                         "level": null,
                         "source": null
@@ -10058,7 +10074,7 @@
             "frameworks": {
                 "Hydrogen": "<0.9"
             },
-            "version": "0.7.7",
+            "version": "0.7.8",
             "versionLog": [
                 {
                     "note": "Extract CSS to style file.",
@@ -10115,6 +10131,10 @@
                 {
                     "note": "Save open folders.",
                     "version": "0.7.7"
+                },
+                {
+                    "note": "Use specific markdown renderer.",
+                    "version": "0.7.8"
                 }
             ],
             "deprecation": null,
@@ -51087,13 +51107,13 @@
                     "init": [
                         {
                             "level": 5,
-                            "hook": "Hook_Shop_Special::__onPageInit"
+                            "hook": "Hook_Shop_Special::onPageInit"
                         }
                     ],
                     "applyModules": [
                         {
                             "level": 5,
-                            "hook": "Hook_Shop_Special::__onPageApplyModules"
+                            "hook": "Hook_Shop_Special::onPageApplyModules"
                         }
                     ]
                 }
@@ -56751,7 +56771,7 @@
             "frameworks": {
                 "Hydrogen": "<0.9"
             },
-            "version": "0.3.2",
+            "version": "0.3.4",
             "versionLog": [
                 {
                     "note": "Initial prototype.",
@@ -56792,6 +56812,14 @@
                 {
                     "note": "Extract hook to own hook class.",
                     "version": "0.3.2"
+                },
+                {
+                    "note": "Allow folder selection.",
+                    "version": "0.3.3"
+                },
+                {
+                    "note": "Improve code syntax style.",
+                    "version": "0.3.4"
                 }
             ],
             "deprecation": null,
@@ -59533,7 +59561,7 @@
             "frameworks": {
                 "Hydrogen": "<0.9"
             },
-            "version": "1.3.2",
+            "version": "1.3.4",
             "versionLog": [
                 {
                     "note": "Add support for INS(++) and DEL(--).",
@@ -59590,6 +59618,14 @@
                 {
                     "note": "Cleanup.",
                     "version": "1.3.2"
+                },
+                {
+                    "note": "Support selection of renderer.",
+                    "version": "1.3.3"
+                },
+                {
+                    "note": "Add default renderer to config.",
+                    "version": "1.3.4"
                 }
             ],
             "deprecation": null,
@@ -59654,6 +59690,26 @@
                     "mandatory": false,
                     "protected": "no",
                     "title": "Main switch of module"
+                },
+                "renderer": {
+                    "key": "renderer",
+                    "value": "Ciconia",
+                    "type": "string",
+                    "values": [
+                        "CommonMark",
+                        "Parsedown",
+                        "MichelF",
+                        "MichelF_Extra",
+                        "Cebe",
+                        "Cebe_Extra",
+                        "Cebe_GitHub",
+                        "Ciconia",
+                        "Ciconia_GitHub",
+                        "Markdown_Extended"
+                    ],
+                    "mandatory": false,
+                    "protected": "yes",
+                    "title": "Default Markdown renderer library"
                 }
             },
             "relations": {
@@ -65062,7 +65118,7 @@
             "frameworks": {
                 "Hydrogen": "<0.9"
             },
-            "version": "0.4.2",
+            "version": "0.4.3",
             "versionLog": [
                 {
                     "note": "Initial prototype.",
@@ -65131,9 +65187,16 @@
                 {
                     "note": "Improve code style.",
                     "version": "0.4.2"
+                },
+                {
+                    "note": "EOL: Moved to GitLab::CeusMedia:MailGroup.",
+                    "version": "0.4.3"
                 }
             ],
-            "deprecation": null,
+            "deprecation": {
+                "message": "Moved to GitLab::CeusMedia:MailGroup.",
+                "url": ""
+            },
             "isActive": true,
             "companies": [
                 {
