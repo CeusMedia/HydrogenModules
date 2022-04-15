@@ -1,4 +1,9 @@
 <?php
+
+use CeusMedia\Bootstrap\Button as BootstrapButton;
+use CeusMedia\Bootstrap\Button\Group as BootstrapButtonGroup;
+use CeusMedia\Bootstrap\Icon as BootstrapIcon;
+
 extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/forum/' ) );
 $textTop	= $textIndexTop	? $textIndexTop : '';
 $textBottom	= $textIndexBottom	? $textIndexBottom : '';
@@ -67,9 +72,9 @@ $panelList	= '
 
 $panelAdd	= $view->loadTemplateFile( 'info/forum/index.add.php' );
 
-$iconHome	= new \CeusMedia\Bootstrap\Icon( 'home', TRUE );
-$buttons	= array( new \CeusMedia\Bootstrap\Button( $iconHome, 'btn-inverse', NULL, TRUE ) );
-$position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
+$iconHome	= new BootstrapIcon( 'home', TRUE );
+$buttons	= array( new BootstrapButton( $iconHome, 'btn-inverse', NULL, TRUE ) );
+$position	= new BootstrapButtonGroup( $buttons );
 $position->setClass( 'position-bar' );
 
 return $textTop.'

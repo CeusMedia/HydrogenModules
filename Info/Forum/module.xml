@@ -3,7 +3,7 @@
 	<title>Info: Forum</title>
 	<description><![CDATA[Simple forum boards.]]></description>
 	<category>Info</category>
-	<version>0.5.9</version>
+	<version>0.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3.5">Extended thread addition handling.</log>
@@ -26,6 +26,7 @@
 	<log version="0.5.7">Use module Info:NewsList for collecting news.</log>
 	<log version="0.5.8">Update code style.</log>
 	<log version="0.5.9">Extract AJAX actions to own controller class.</log>
+	<log version="0.6">Apply Bootstrap.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

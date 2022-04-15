@@ -1,4 +1,10 @@
 <?php
+
+use CeusMedia\Bootstrap\Button as BootstrapButton;
+use CeusMedia\Bootstrap\Button\Group as BootstrapButtonGroup;
+use CeusMedia\Bootstrap\Button\Link as BootstrapLinkButton;
+use CeusMedia\Bootstrap\Icon as BootstrapIcon;
+
 extract( $view->populateTexts( array( 'index.top', 'index.bottom', 'thread.top', 'thread.bottom' ), 'html/info/forum/' ) );
 $textTop	= $textThreadTop	? $textThreadTop: $textIndexTop;
 $textBottom	= $textThreadBottom ? $textThreadBottom : $textIndexBottom;
@@ -98,16 +104,16 @@ $panelList	= '
 
 $panelAdd	= $view->loadTemplateFile( 'info/forum/thread.add.php' );
 
-$iconHome	= new \CeusMedia\Bootstrap\Icon( 'home' );
-$iconFolder	= new \CeusMedia\Bootstrap\Icon( 'folder-open' );
-$iconFile	= new \CeusMedia\Bootstrap\Icon( 'file', TRUE );
+$iconHome	= new BootstrapIcon( 'home' );
+$iconFolder	= new BootstrapIcon( 'folder-open' );
+$iconFile	= new BootstrapIcon( 'file', TRUE );
 $url		= './info/forum/';
 $buttons	= array(
-	new \CeusMedia\Bootstrap\LinkButton( $url, $iconHome ),
-	new \CeusMedia\Bootstrap\LinkButton( $url.'topic/'.$topic->topicId, $topic->title, NULL, $iconFolder ),
-	new \CeusMedia\Bootstrap\Button( $thread->title, 'btn-inverse disabled', $iconFile, TRUE ),
+	new BootstrapLinkButton( $url, $iconHome ),
+	new BootstrapLinkButton( $url.'topic/'.$topic->topicId, $topic->title, NULL, $iconFolder ),
+	new BootstrapButton( $thread->title, 'btn-inverse disabled', $iconFile, TRUE ),
 );
-$position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
+$position	= new BootstrapButtonGroup( $buttons );
 $position->setClass( 'position-bar' );
 
 return $textTop.'

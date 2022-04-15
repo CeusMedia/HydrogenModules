@@ -1,4 +1,10 @@
 <?php
+
+use CeusMedia\Bootstrap\Button as BootstrapButton;
+use CeusMedia\Bootstrap\Button\Group as BootstrapButtonGroup;
+use CeusMedia\Bootstrap\Button\Link as BootstrapLinkButton;
+use CeusMedia\Bootstrap\Icon as BootstrapIcon;
+
 extract( $view->populateTexts( array( 'index.top', 'index.bottom', 'topic.top', 'topic.bottom' ), 'html/info/forum/' ) );
 $textTop	= $textTopicTop	? $textTopicTop: $textIndexTop;
 $textBottom	= $textTopicBottom ? $textTopicBottom : $textIndexBottom;
@@ -81,14 +87,14 @@ $panelList	= '
 $panelAdd	= $view->loadTemplateFile( 'info/forum/topic.add.php' );
 
 
-$iconHome	= new \CeusMedia\Bootstrap\Icon( 'home' );
-$iconFolder	= new \CeusMedia\Bootstrap\Icon( 'folder-open', TRUE );
+$iconHome	= new BootstrapIcon( 'home' );
+$iconFolder	= new BootstrapIcon( 'folder-open', TRUE );
 $url		= './info/forum/';
 $buttons	= array(
-	new \CeusMedia\Bootstrap\LinkButton( $url, $iconHome ),
-	new \CeusMedia\Bootstrap\Button( $topic->title, 'btn-inverse', $iconFolder, TRUE ),
+	new BootstrapLinkButton( $url, $iconHome ),
+	new BootstrapButton( $topic->title, 'btn-inverse', $iconFolder, TRUE ),
 );
-$position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
+$position	= new BootstrapButtonGroup( $buttons );
 $position->setClass( 'position-bar' );
 
 return $textTop.'
