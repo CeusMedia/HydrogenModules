@@ -258,6 +258,55 @@ class Job_Mail_Archive extends Job_Abstract
 	}
 
 	/**
+	 *	Re-generates mail object from raw mail.
+	 *	This can be necessary after updating the used mail library.
+	 *	Apply this after upgrading CeusMedia\Mail to v2.5 or higher.
+	 *
+	 *	Parameters:
+	 *		--limit=NUMBER
+	 *			- maximum number of mails to work on
+	 *			- optional, default: 1000
+	 *		--offset=NUMBER
+	 *			- offset if using limit
+	 *			- optional, default: 0
+	 *
+	 *	@access		public
+	 *	@return		void
+	 */
+	public function regenerate()
+	{
+		$conditions	= array( 'status' > $this->statusesHandledMails );
+		$orders		= array( 'mailId' => 'ASC' );
+		$limits		= array(
+			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
+			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
+		);
+		$count		= 0;
+		$fails		= array();
+		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
+		foreach( $mailIds as $mailId ){
+			$mail		= $this->model->get( $mailId );
+			$mailClone	= clone( $mail );
+			try{
+				$compression	= (int) $mail->compression;
+				$objectSerial	= $this->logicMail->decompressString( $mail->object, $compression );
+				$raw			= $this->logicMail->decompressString( $mail->raw, $compression );
+				$object			= unserialize( $objectSerial );
+				$object->mail	= CeusMedia\Mail\Message\Parser::getInstance()->parse( $raw );
+				$newObject		= $this->logicMail->compressString( serialize( $object ), $compression );
+				$this->model->edit( $mailId, ['object' => $newObject], FALSE );
+				$this->showProgress( ++$count, count( $mailIds ) );
+			}
+			catch( Exception $e ){
+				$fails[$mailId]	= $e->getMessage().PHP_EOL.$e->getTraceAsString();
+				$this->showProgress( ++$count, count( $mailIds ), 'E' );
+			}
+		}
+		$this->out();
+		$this->showErrors( 'regenerate', $fails );
+	}
+
+	/**
 	 *	Remove attachments from mails in database table.
 	 *	Mails to be removed can be filtered by minimum age and mail class(es).
 	 *	Supports dry mode.
@@ -463,7 +512,7 @@ class Job_Mail_Archive extends Job_Abstract
 			if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
 				if( in_array( 'raw', $this->model->getColumns() ) ){
 					if( !empty( $mail->raw ) && is_string( $mail->raw ) && strlen( $mail->raw ) ){
-						$raw	= $this->logicMail->decompressString( $mail->raw, $mail->compression );
+						$raw	= $this->logicMail->decompressString( $mail->raw, (int) $mail->compression );
 						$parser	= new \CeusMedia\Mail\Message\Parser();
 						$mail->object->instance->mail	= $parser->parse( $raw );
 						$this->logicMail->compressMailObject( $mail, TRUE, TRUE );
