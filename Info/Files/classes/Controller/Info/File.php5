@@ -22,18 +22,6 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 	/**	@var	array											$rights				List of access rights of current user */
 	protected $rights		= array();
 
-	public function __onInit()
-	{
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->options		= $this->env->getConfig()->getAll( 'module.info_files.', TRUE );
-		$this->rights		= $this->env->getAcl()->index( 'info/file' );
-		$this->path			= $this->options->get( 'path' );
-		$this->modelFolder	= new Model_Download_Folder( $this->env );
-		$this->modelFile	= new Model_Download_File( $this->env );
-		$this->messages		= (object) $this->getWords( 'msg' );
-	}
-
 	public function addFolder( $folderId = NULL )
 	{
 		$path		= $this->getPathFromFolderId( $folderId );
@@ -77,25 +65,6 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 		}
 		print( json_encode( $this->modelFolder->get( $folderId ) ) );
 		exit;
-	}
-
-	protected function checkFolder( $folderId )
-	{
-		if( (int) $folderId > 0 ){
-			$folder		= $this->modelFolder->get( $folderId );
-			if( $folder && file_exists( $this->path.$folder->title ) )
-				return TRUE;
-			if( !$folder )
-				$this->messenger->noteError( 'Invalid folder with ID '.$folderId );
-			else if( file_exists( $this->path.$folder->title ) )
-				$this->messenger->noteError( 'Folder %s is not existing', $folder->title );
-		}
-		else{
-			if( file_exists( $this->path ) )
-				return TRUE;
-			$this->messenger->noteError( 'Base folder %s is not existing', $this->path );
-		}
-		return FALSE;
 	}
 
 	public function deliver( $fileId = NULL )
@@ -409,6 +378,37 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 	}
 
 	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->options		= $this->env->getConfig()->getAll( 'module.info_files.', TRUE );
+		$this->rights		= $this->env->getAcl()->index( 'info/file' );
+		$this->path			= $this->options->get( 'path' );
+		$this->modelFolder	= new Model_Download_Folder( $this->env );
+		$this->modelFile	= new Model_Download_File( $this->env );
+		$this->messages		= (object) $this->getWords( 'msg' );
+	}
+
+	protected function checkFolder( $folderId ): bool
+	{
+		if( (int) $folderId > 0 ){
+			$folder		= $this->modelFolder->get( $folderId );
+			if( $folder && file_exists( $this->path.$folder->title ) )
+				return TRUE;
+			if( !$folder )
+				$this->messenger->noteError( 'Invalid folder with ID '.$folderId );
+			else if( file_exists( $this->path.$folder->title ) )
+				$this->messenger->noteError( 'Folder %s is not existing', $folder->title );
+		}
+		else{
+			if( file_exists( $this->path ) )
+				return TRUE;
+			$this->messenger->noteError( 'Base folder %s is not existing', $this->path );
+		}
+		return FALSE;
+	}
 
 	protected function cleanRecursive( $parentId, $path, $stats )
 	{

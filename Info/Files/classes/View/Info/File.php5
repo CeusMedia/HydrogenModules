@@ -1,44 +1,58 @@
 <?php
+
+use CeusMedia\Bootstrap\Button as BootstrapButton;
+use CeusMedia\Bootstrap\Button\Group as BootstrapButtonGroup;
+use CeusMedia\Bootstrap\Button\Link as BootstrapLinkButton;
+use CeusMedia\Bootstrap\Icon as BootstrapIcon;
+
 class View_Info_File extends CMF_Hydrogen_View
 {
-	protected function __onInit()
+	public function index()
 	{
-		$this->env->getPage()->addThemeStyle( 'module.info.files.css' );
 	}
 
-	public function index(){}
+	public function editFile()
+	{
+	}
 
-	public function editFile(){}
+	public function editFolder()
+	{
+	}
 
-	public function editFolder(){}
+	public function view()
+	{
+	}
 
-	public function view(){}
-
-	static public function renderPosition( CMF_Hydrogen_Environment $env, $folderId, $search )
+	public static function renderPosition( CMF_Hydrogen_Environment $env, $folderId, $search ): string
 	{
 		$steps		= self::getStepsFromFolderId( $env, $folderId );
 		$folderPath	= self::getPathFromFolderId( $env, $folderId );
 		$way		= '';
 		$parts		= $folderPath ? explode( "/", '/'.trim( $folderPath, " /\t" ) ) : array( '' );
-		$iconHome	= new \CeusMedia\Bootstrap\Icon( 'fa fa-fw fa-home', !$folderPath );
-		$buttonHome	= new \CeusMedia\Bootstrap\LinkButton( './info/file/index', $iconHome );
+		$iconHome	= new BootstrapIcon( 'fa fa-fw fa-home', !$folderPath );
+		$buttonHome	= new BootstrapLinkButton( './info/file/index', $iconHome );
 		if( !$folderPath && !$search )
-			$buttonHome	= new \CeusMedia\Bootstrap\Button( $iconHome, 'btn-inverse', NULL, TRUE );
+			$buttonHome	= new BootstrapButton( $iconHome, 'btn-inverse', NULL, TRUE );
 		$buttons	= array( $buttonHome );
 		foreach( $steps as $nr => $stepFolder ){
 			$way		.= strlen( $stepFolder->title ) ? $stepFolder->title.'/' : '';
 			$isCurrent	= $folderId === (int) $stepFolder->downloadFolderId;
 			$url		= './info/file/index/'.$stepFolder->downloadFolderId;
-			$icon		= new \CeusMedia\Bootstrap\Icon( 'fa fa-fw fa-folder-open', $isCurrent );
+			$icon		= new BootstrapIcon( 'fa fa-fw fa-folder-open', $isCurrent );
 			$class		= $isCurrent ? 'btn-inverse' : NULL;
-			$buttons[]	= new \CeusMedia\Bootstrap\LinkButton( $url, $stepFolder->title, $class, $icon, $isCurrent );
+			$buttons[]	= new BootstrapLinkButton( $url, $stepFolder->title, $class, $icon, $isCurrent );
 		}
-		$position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
+		$position	= new BootstrapButtonGroup( $buttons );
 		$position->setClass( 'position-bar' );
 		return $position;
 	}
 
-	static protected function getStepsFromFolderId( CMF_Hydrogen_Environment $env, $folderId )
+	protected function __onInit()
+	{
+		$this->env->getPage()->addThemeStyle( 'module.info.files.css' );
+	}
+
+	protected static function getStepsFromFolderId( CMF_Hydrogen_Environment $env, $folderId ): array
 	{
 		$model	= new Model_Download_Folder( $env );
 		$steps		= array();
@@ -53,7 +67,7 @@ class View_Info_File extends CMF_Hydrogen_View
 		return $steps;
 	}
 
-	static protected function getPathFromFolderId( CMF_Hydrogen_Environment $env, $folderId )
+	protected static function getPathFromFolderId( CMF_Hydrogen_Environment $env, $folderId ): string
 	{
 		$model	= new Model_Download_Folder( $env );
 		$path	= '';
