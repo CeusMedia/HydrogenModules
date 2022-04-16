@@ -32,7 +32,7 @@ code>* * * * * cd /path/to/project && php job.php5 Mail.Archive.clean --age=3M</
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.9.8</version>
+	<version>1.0.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -96,10 +96,11 @@ code>* * * * * cd /path/to/project && php job.php5 Mail.Archive.clean --age=3M</
 	<log version="0.9.5">Add general mail job class and simple send test job.</log>
 	<log version="0.9.6">Extend logic to list used mail class names.</log>
 	<log version="0.9.7">Replace job file by job definition in module config.</log>
-	<log version="0.9.8">Add job to generate mail objects.</log>
-<!--	<log version="0.9.9">Code style review and strict type hinting.</log>-->
-<!--	<log version="1.0">First officially public stable release.</log>-->
-<!--	<log version="1.1">Support pausing mails.</log>-->
+	<log version="1">First officially public stable release.</log>
+	<log version="1.0.1">Add job to regenerate mail objects.</log>
+	<log version="1.0.2">Extract migration jobs to own class.</log>
+<!--	<log version="1.1">Code style review and strict type hinting.</log>-->
+<!--	<log version="1.2">Support pausing mails.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -150,6 +151,7 @@ code>* * * * * cd /path/to/project && php job.php5 Mail.Archive.clean --age=3M</
 	<config protected="yes" type="string" name="encoding.html" values="base64,quoted-printable">base64</config>
 	<config protected="yes" type="string" name="encoding.text" values="base64,quoted-printable">base64</config>
 	<config protected="yes" type="string" name="encoding.subject" values="base64,quoted-printable">quoted-printable</config>
+	<config protected="yes" type="string" name="onDatabaseDumpSkipTables">mails</config>
 	<relations>
 		<needs type="module">Resource_Jobs</needs>
 		<supports type="module">Resource_Maintainer</supports>
@@ -159,7 +161,8 @@ code>* * * * * cd /path/to/project && php job.php5 Mail.Archive.clean --age=3M</
 	<job id="Mail.test">Mail::test</job>
 	<job id="Mail.Archive.clean">Mail_Archive::clean</job>
 	<job id="Mail.Archive.detach">Mail_Archive::removeAttachments</job>
-	<job id="Mail.Archive.migrate">Mail_Archive::migrate</job>
+	<job id="Mail.Archive.dump">Mail_Archive::dump</job>
+	<job id="Mail.Archive.migrate">Mail_Migration::migrate</job>
 	<job id="Mail.Archive.regenerate">Mail_Archive::regenerate</job>
 	<job id="Mail.Archive.shard">Mail_Archive::shard</job>
 	<job id="Mail.Queue.count">Mail_Queue::countQueuedMails</job>
