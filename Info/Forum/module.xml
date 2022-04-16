@@ -77,7 +77,7 @@
 	<hook type="resource" resource="Sitemap" event="registerLinks">Hook_Info_Forum::onRegisterSitemapLinks</hook>
 	<hook type="resource" resource="Page" event="collectNews">Hook_Info_Forum::onPageCollectNews</hook>
 	<job id="Info.Forum.sendDaily">Info_Forum::sendDaily</job>
-	<sql on="install" type="mysql"><![CDATA[
+	<sql on="install" type="mysql" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>forum_posts`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>forum_posts` (
   `postId` int(11) unsigned NOT NULL AUTO_INCREMENT,
