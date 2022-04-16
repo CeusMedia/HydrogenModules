@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Mail\Mailbox;
+use CeusMedia\Mail\Mailbox\Connection;
 use CeusMedia\Mail\Mailbox\Mail;
 use CeusMedia\Mail\Mailbox\Search;
 use CeusMedia\Mail\Message;
@@ -22,13 +23,13 @@ abstract class Logic_Import_Connector_MailAbstract extends Logic_Import_Connecto
 			die( 'Error: No mailbox user name defined.' );
 		if( !$this->connection->authPassword )
 			die( 'Error: No mailbox user password defined.' );
-		$this->mailbox	= new Mailbox(
+		$connection	= new Connection(
 			$this->connection->hostName,
 			$this->connection->authUsername,
 			$this->connection->authPassword
 		);
-		$this->mailbox->setSecure( TRUE, TRUE );
-		$this->mailbox->connect();
+		$connection->setSecure( TRUE, TRUE )->connect();
+		$this->mailbox	= new Mailbox( $connection );
 		return $this;
 	}
 
