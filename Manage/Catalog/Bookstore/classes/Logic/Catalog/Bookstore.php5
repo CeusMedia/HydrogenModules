@@ -2,9 +2,9 @@
 /**
  *	@todo	extract classes Logic_Upload and Alg_UnitParser
  */
-class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
-
-	/**	@var	CMM_SEA_Adapter_Abstract					$cache */
+class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic
+{
+	/**	@var	CeusMedia\Cache\SimpleCacheInterface		$cache */
 	protected $cache;
 
 	/**	@var	Logic_Frontend								$frontend */
@@ -39,41 +39,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	protected function __onInit( $a = NULL ){
-		$this->env->clock->profiler->tick( 'Logic_Catalog_Bookstore::init start' );
-		$this->config				= $this->env->getConfig();
-		$this->frontend				= Logic_Frontend::getInstance( $this->env );
-		$this->moduleConfig			= $this->config->getAll( 'module.manage_catalog_bookstore.', TRUE );
-		$this->cache				= $this->env->getCache();
-		$this->modelArticle			= new Model_Catalog_Bookstore_Article( $this->env );
-		$this->modelArticleAuthor	= new Model_Catalog_Bookstore_Article_Author( $this->env );
-		$this->modelArticleCategory	= new Model_Catalog_Bookstore_Article_Category( $this->env );
-		$this->modelArticleDocument	= new Model_Catalog_Bookstore_Article_Document( $this->env );
-#		$this->modelArticleReview	= new Model_Catalog_Bookstore_Article_Review( $this->env );
-		$this->modelArticleTag		= new Model_Catalog_Bookstore_Article_Tag( $this->env );
-		$this->modelAuthor			= new Model_Catalog_Bookstore_Author( $this->env );
-		$this->modelCategory		= new Model_Catalog_Bookstore_Category( $this->env );
-#		$this->modelReview			= new Model_Catalog_Review( $this->env );
-
-		$basePath					= $this->frontend->getPath( 'contents' );
-		$this->pathArticleCovers	= $basePath.$this->moduleConfig->get( 'path.covers' );
-		$this->pathArticleDocuments	= $basePath.$this->moduleConfig->get( 'path.documents' );
-		$this->pathAuthorImages		= $basePath.$this->moduleConfig->get( 'path.authors' );
-
-		$cacheKey	= 'catalog.bookstore.count.categories.articles';
-		if( NULL === ( $this->countArticlesInCategories = $this->cache->get( $cacheKey ) ) ){
-			$list	= array();
-			foreach( $this->getCategories() as $category )
-				$list[$category->categoryId]	= $this->countArticlesInCategory( $category->categoryId, TRUE );
-			$this->cache->set( $cacheKey, $this->countArticlesInCategories = $list );
-		}
-		$this->env->clock->profiler->tick( 'Logic_Catalog_Bookstore::init done' );
-	}
-
-	/**
-	 *	@todo		kriss: code doc
-	 */
-	public function addArticle( $data ){
+	public function addArticle( $data )
+	{
 		$data['createdAt']	= time();
 		$articleId	= $this->modelArticle->add( $data );
 		$this->clearCacheForArticle( $articleId );
@@ -83,7 +50,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addArticleDocument( $articleId, $sourceFile, $title, $mimeType ){
+	public function addArticleDocument( $articleId, $sourceFile, $title, $mimeType )
+	{
 		if( !file_exists( $sourceFile ) )
 			throw new RuntimeException( 'File is not existing' );
 		if( !is_readable( $sourceFile ) )
@@ -112,7 +80,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addArticleTag( $articleId, $tag ){
+	public function addArticleTag( $articleId, $tag )
+	{
 		$data	= array(
 			'articleId'	=> $articleId,
 			'tag'		=> $tag,
@@ -124,7 +93,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addAuthor( $data ){
+	public function addAuthor( $data )
+	{
 //		$data['createdAt']	= time();
 		$this->clearCacheForAuthor( 0 );
 		return  $this->modelAuthor->add( $data );
@@ -133,7 +103,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addAuthorImage( $authorId, $sourceFile, $mimeType ){
+	public function addAuthorImage( $authorId, string $sourceFile, string $mimeType )
+	{
 		if( !file_exists( $sourceFile ) )
 			throw new RuntimeException( 'File is not existing' );
 		if( !is_readable( $sourceFile ) )
@@ -164,7 +135,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addAuthorToArticle( $articleId, $authorId, $role ){
+	public function addAuthorToArticle( $articleId, $authorId, $role )
+	{
 		$data		= array(
 			'articleId'	=> $articleId,
 			'authorId'	=> $authorId,
@@ -179,7 +151,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addCategory( $data ){
+	public function addCategory( $data )
+	{
 //		$data['registeredAt']	= time();
 		$this->clearCacheForCategory( 0 );
 		return $this->modelCategory->add( $data );
@@ -188,7 +161,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addCategoryToArticle( $articleId, $categoryId, $volume = NULL ){
+	public function addCategoryToArticle( $articleId, $categoryId, $volume = NULL )
+	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
 		$rank		= count( $this->getCategoryArticles( $categoryId ) ) + 1;
@@ -206,7 +180,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function checkArticleId( $articleId, $throwException = FALSE ){
+	public function checkArticleId( $articleId, bool $throwException = FALSE ): bool
+	{
 		if( $this->modelArticle->has( (int) $articleId ) )
 			return TRUE;
 		if( $throwException )
@@ -217,7 +192,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function checkAuthorId( $authorId, $throwException = FALSE ){
+	public function checkAuthorId( $authorId, bool $throwException = FALSE ): bool
+	{
 		if( $this->modelAuthor->has( (int) $authorId ) )
 			return TRUE;
 		if( $throwException )
@@ -228,7 +204,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function checkCategoryId( $categoryId, $throwException = FALSE ){
+	public function checkCategoryId( $categoryId, bool $throwException = FALSE ): bool
+	{
 		if( $this->modelCategory->has( (int) $categoryId ) )
 			return TRUE;
 		if( $throwException )
@@ -244,7 +221,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@param		integer		$articleId			ID of article to clear cache files for
 	 *	@return		void
 	 */
-	protected function clearCacheForArticle( $articleId ){
+	protected function clearCacheForArticle( $articleId )
+	{
 		$article	= $this->modelArticle->get( $articleId );										//  get article
 		$this->cache->remove( 'catalog.bookstore.article.'.$articleId );										//  remove article cache
 		$this->cache->remove( 'catalog.bookstore.article.author.'.$articleId );								//  remove article author cache
@@ -265,7 +243,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@param		integer		$authorId			ID of author
 	 *	@return		void
 	 */
-	protected function clearCacheForAuthor( $authorId ){
+	protected function clearCacheForAuthor( $authorId )
+	{
 		$relations	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $authorId );			//  get all articles of author
 		foreach( $relations as $relation ){															//  iterate article relations
 			$this->clearCacheForArticle( $relation->articleId );									//  clear article cache
@@ -283,7 +262,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@param		integer		$categoryId			ID of category
 	 *	@return		void
 	 */
-	protected function clearCacheForCategory( $categoryId ){
+	protected function clearCacheForCategory( $categoryId )
+	{
 		while( $categoryId ){																		//  loop while category ID exists
 			$category	= $this->modelCategory->get( $categoryId );									//  get category of category ID
 			if( $category ){																		//  category exists
@@ -304,7 +284,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function countArticles( $conditions = array() ){
+	public function countArticles( $conditions = array() ): int
+	{
 		return $this->modelArticle->count( $conditions );
 	}
 
@@ -316,7 +297,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@param 		boolean		$recursive		Flag: count in sub categories, default: FALSE
 	 *	@return		integer						Number of found articles in category
 	 */
-	public function countArticlesInCategory( $categoryId, $recursive = FALSE ){
+	public function countArticlesInCategory( $categoryId, bool $recursive = FALSE ): int
+	{
 		if( $recursive && isset( $this->countArticlesInCategories[$categoryId] ) )
 			return $this->countArticlesInCategories[$categoryId];
 		$number		= count( $this->modelArticleCategory->getAllByIndex( 'categoryId', $categoryId ) );
@@ -331,7 +313,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function editArticle( $articleId, $data ){
+	public function editArticle( $articleId, $data )
+	{
 		$this->checkArticleId( $articleId, TRUE );
 //		$data['modifiedAt']	= time();
 		$this->modelArticle->edit( $articleId, $data );
@@ -341,7 +324,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function editAuthor( $authorId, $data ){
+	public function editAuthor( $authorId, $data )
+	{
 		$this->checkAuthorId( $authorId, TRUE );
 //		$data['modifiedAt']	= time();																//
 		$this->clearCacheForAuthor( $authorId );													//
@@ -351,7 +335,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function editCategory( $categoryId, $data ){
+	public function editCategory( $categoryId, $data )
+	{
 		$this->checkCategoryId( $categoryId, TRUE );
 		$old	= $this->modelCategory->get( $categoryId );
 //		$data['modifiedAt']	= time();																//
@@ -365,7 +350,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticle( $articleId, $strict = TRUE ){
+	public function getArticle( $articleId, bool $strict = TRUE )
+	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.article.'.$articleId ) ) )
 			return $data;
 		$this->checkArticleId( $articleId, $strict );
@@ -378,7 +364,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticles( $conditions = array(), $orders = array(), $limits = array() ){
+	public function getArticles( $conditions = array(), array $orders = array(), array $limits = array() ): array
+	{
 #		$cacheKey	= md5( json_encode( array( $conditions, $orders, $limits ) ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.articles.'.$cacheKey ) ) )
 #			return $data;
@@ -392,7 +379,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticlesFromAuthor( $author, $orders = array(), $limits = array() ){
+	public function getArticlesFromAuthor( $author, array $orders = array(), array $limits = array() ): array
+	{
 		$articles	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $author->authorId );
 		$articleIds	= array();
 		foreach( $articles as $article )
@@ -407,7 +395,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticlesFromAuthorIds( $authorIds, $returnIds = FALSE ){
+	public function getArticlesFromAuthorIds( $authorIds, bool $returnIds = FALSE ): array
+	{
 		$model		= new Model_Catalog_Bookstore_Article_Author( $this->env );
 		$articles	= $model->getAll( array( 'authorId' => array_values( $authorIds ) ) );
 		if( !$returnIds )
@@ -421,7 +410,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticlesFromAuthors( $authors, $returnIds = FALSE ){
+	public function getArticlesFromAuthors( $authors, bool $returnIds = FALSE ): array
+	{
 		$authorIds	= array();
 		foreach( $authors as $author )
 			$authorIds[]	= $author->authorId;
@@ -431,7 +421,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticleUri( $articleOrId ){
+	public function getArticleUri( $articleOrId ): string
+	{
 		$article	= $articleOrId;
 		if( is_int( $articleOrId ) )
 			$article	= $this->getArticle( $articleOrId );
@@ -444,7 +435,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: use cache
 	 */
-	public function getAuthor( $authorId ){
+	public function getAuthor( $authorId )
+	{
 		$this->checkAuthorId( $authorId, TRUE );
 		return $this->modelAuthor->get( $authorId );
 	}
@@ -452,7 +444,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getAuthors( $conditions = array(), $orders = array() ){
+	public function getAuthors( $conditions = array(), array $orders = array() ): array
+	{
 		$list	= array();
 		foreach( $this->modelAuthor->getAll( $conditions, $orders ) as $author )
 			$list[$author->authorId]	= $author;
@@ -465,7 +458,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@param		integer		$articleId			Article ID
 	 *	@return		array
 	 */
-	public function getAuthorsOfArticle( $articleId ){
+	public function getAuthorsOfArticle( $articleId ): array
+	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.article.author.'.$articleId ) ) )
 			return $data;
 		$data	= $this->modelArticleAuthor->getAllByIndex( 'articleId', $articleId );
@@ -483,7 +477,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getAuthorUri( $authorOrId, $absolute = FALSE ){
+	public function getAuthorUri( $authorOrId, bool $absolute = FALSE )
+	{
 		$author = $authorOrId;
 		if( is_int( $authorOrId ) )
 			$author	= $this->getAuthor( $authorOrId, TRUE );
@@ -499,7 +494,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: clean up
 	 */
-	public function getCategories( $conditions = array(), $orders = array() ){
+	public function getCategories( $conditions = array(), array $orders = array() ): array
+	{
 #		$cacheKey	= md5( json_encode( array( $conditions, $orders ) ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.categories.'.$cacheKey ) ) )
 #			return $data;
@@ -514,7 +510,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getCategoriesOfArticle( $articleId ){
+	public function getCategoriesOfArticle( $articleId ): array
+	{
 		$this->checkArticleId( $articleId, TRUE );
 		$list			= array();
 		$categoryIds	= array();
@@ -544,7 +541,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getCategory( $categoryId ){
+	public function getCategory( $categoryId )
+	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.category.'.$categoryId ) ) )
 			return $data;
 		$this->checkCategoryId( $categoryId, TRUE );
@@ -558,7 +556,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function getCategoryArticles( $category, $orders = array(), $limits = array() ){
+	public function getCategoryArticles( $category, array $orders = array(), array $limits = array() ): array
+	{
 #		$cacheKey	= md5( json_encode( array( $category->categoryId, $orders, $limits ) ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.category.articles.'.$cacheKey ) ) )
 #			return $data;
@@ -583,7 +582,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getCategoryOfArticle( $article ){
+	public function getCategoryOfArticle( $article )
+	{
 		$relation	= $this->modelArticleCategory->getByIndex( 'articleId', $article->articleId );
 		$category			= $this->modelCategory->get( $relation->categoryId );
 		$category			= $this->getCategory( $relation->categoryId );							//  @todo use this line for caching and remove line above
@@ -592,18 +592,21 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $category;
 	}
 
-	public function getDocuments( $conditions = array(), $orders = array(), $limits = array() ){
+	public function getDocuments( $conditions = array(), array $orders = array(), array $limits = array() ): array
+	{
 		return $this->modelArticleDocument->getAll( $conditions, $orders, $limits );
 	}
 
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getDocumentsOfArticle( $articleId ){
+	public function getDocumentsOfArticle( $articleId ): array
+	{
 		return $this->modelArticleDocument->getAllByIndex( 'articleId', $articleId );
 	}
 
-	public function getTags( $conditions = array(), $orders = array(), $limits = array() ){
+	public function getTags( $conditions = array(), array $orders = array(), array $limits = array() ): array
+	{
 		return $this->modelArticleTag->getAll( $conditions, $orders, $limits );
 	}
 
@@ -611,7 +614,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: code doc
 	 *	@todo		kriss: use cache by storing tags in article cache file
 	 */
-	public function getTagsOfArticle( $articleId, $sort = FALSE ){
+	public function getTagsOfArticle( $articleId, bool $sort = FALSE ): array
+	{
 		$tags	= $this->modelArticleTag->getAllByIndex( 'articleId', $articleId );
 		$list	= array();
 		foreach( $tags as $tag )
@@ -624,7 +628,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getUriPart( $label, $delimiter = "_" ){
+	public function getUriPart( $label, string $delimiter = "_" ): string
+	{
 		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
 		$label	= preg_replace( "/ +/", $delimiter, $label );
@@ -636,7 +641,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	Caches will be removed.
 	 *	@todo		kriss: code doc
 	 */
-	public function removeArticle( $articleId ){
+	public function removeArticle( $articleId )
+	{
 		$this->removeArticleCover( $articleId );
 		foreach( $this->getCategoriesOfArticle( $articleId ) as $relation )
 			$this->removeArticleFromCategory( $articleId, $relation->categoryId );
@@ -655,7 +661,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function removeArticleCover( $articleId ){
+	public function removeArticleCover( $articleId )
+	{
 		$article		= $this->getArticle( $articleId );
 		$logicBucket	= new Logic_FileBucket( $this->env );
 		$prefix			= 'bookstore/article/';
@@ -674,7 +681,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function removeArticleDocument( $documentId ){
+	public function removeArticleDocument( $documentId )
+	{
 		$document		= $this->modelArticleDocument->get( $documentId );
 		$logicBucket	= new Logic_FileBucket( $this->env );
 		$prefix			= 'bookstore/document/';
@@ -691,7 +699,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function removeArticleFromCategory( $articleId, $categoryId ){
+	public function removeArticleFromCategory( $articleId, $categoryId )
+	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
 		$indices	= array(
@@ -707,7 +716,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function removeArticleTag( $articleTagId ){
+	public function removeArticleTag( $articleTagId )
+	{
 		$relation	= $this->modelArticleTag->get( $articleTagId );
 		if( $relation ){
 			$this->clearCacheForArticle( $relation->articleId );
@@ -718,7 +728,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function removeAuthor( $authorId ){
+	public function removeAuthor( $authorId )
+	{
 		$this->checkAuthorId( $authorId );
 		$articles	= $this->getArticlesFromAuthorIds( array( $authorId ) );
 		foreach( $articles as $article )
@@ -731,7 +742,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function removeAuthorFromArticle( $articleId, $authorId ){
+	public function removeAuthorFromArticle( $articleId, $authorId )
+	{
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
 		$indices	= array(
@@ -749,7 +761,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function removeAuthorImage( $authorId ){
+	public function removeAuthorImage( $authorId )
+	{
 		$author			= $this->getAuthor( $authorId );
 		$logicBucket	= new Logic_FileBucket( $this->env );
 		$prefix			= 'bookstore/author/';
@@ -763,7 +776,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function removeCategory( $categoryId ){
+	public function removeCategory( $categoryId )
+	{
 		$this->checkCategoryId( $categoryId );
 		if( $this->countArticlesInCategory( $categoryId, TRUE ) )
 			throw new RuntimeException( 'Category not empty' );
@@ -774,7 +788,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function removeCategoryFromArticle( $articleId, $categoryId ){
+	public function removeCategoryFromArticle( $articleId, $categoryId )
+	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
 		$indices	= array(
@@ -791,7 +806,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function setArticleAuthorRole( $articleId, $authorId, $role ){
+	public function setArticleAuthorRole( $articleId, $authorId, $role )
+	{
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
 		$indices	= array( 'articleId' => $articleId, 'authorId' => $authorId );
@@ -806,7 +822,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function setArticleCover( $articleId, $sourceFile, $mimeType ){
+	public function setArticleCover( $articleId, $sourceFile, $mimeType )
+	{
 		if( !file_exists( $sourceFile ) )
 			throw new RuntimeException( 'File is not existing' );
 		if( !is_readable( $sourceFile ) )
@@ -851,5 +868,39 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$this->editArticle( $articleId, array( 'cover' => $title ) );
 		$this->cache->remove( 'catalog.bookstore.tinymce.images.articles' );
 	}
+
+	/**
+	 *	@todo		kriss: code doc
+	 */
+	protected function __onInit( $a = NULL )
+	{
+		$this->env->getRuntime()->reach( 'Logic_Catalog_Bookstore::init start' );
+		$this->config				= $this->env->getConfig();
+		$this->frontend				= Logic_Frontend::getInstance( $this->env );
+		$this->moduleConfig			= $this->config->getAll( 'module.manage_catalog_bookstore.', TRUE );
+		$this->cache				= $this->env->getCache();
+		$this->modelArticle			= new Model_Catalog_Bookstore_Article( $this->env );
+		$this->modelArticleAuthor	= new Model_Catalog_Bookstore_Article_Author( $this->env );
+		$this->modelArticleCategory	= new Model_Catalog_Bookstore_Article_Category( $this->env );
+		$this->modelArticleDocument	= new Model_Catalog_Bookstore_Article_Document( $this->env );
+#		$this->modelArticleReview	= new Model_Catalog_Bookstore_Article_Review( $this->env );
+		$this->modelArticleTag		= new Model_Catalog_Bookstore_Article_Tag( $this->env );
+		$this->modelAuthor			= new Model_Catalog_Bookstore_Author( $this->env );
+		$this->modelCategory		= new Model_Catalog_Bookstore_Category( $this->env );
+#		$this->modelReview			= new Model_Catalog_Review( $this->env );
+
+		$basePath					= $this->frontend->getPath( 'contents' );
+		$this->pathArticleCovers	= $basePath.$this->moduleConfig->get( 'path.covers' );
+		$this->pathArticleDocuments	= $basePath.$this->moduleConfig->get( 'path.documents' );
+		$this->pathAuthorImages		= $basePath.$this->moduleConfig->get( 'path.authors' );
+
+		$cacheKey	= 'catalog.bookstore.count.categories.articles';
+		if( NULL === ( $this->countArticlesInCategories = $this->cache->get( $cacheKey, NULL ) ) ){
+			$list	= array();
+			foreach( $this->getCategories() as $category )
+				$list[$category->categoryId]	= $this->countArticlesInCategory( $category->categoryId, TRUE );
+			$this->cache->set( $cacheKey, $this->countArticlesInCategories = $list );
+		}
+		$this->env->getRuntime()->reach( 'Logic_Catalog_Bookstore::init done' );
+	}
 }
-?>

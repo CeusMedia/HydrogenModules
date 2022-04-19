@@ -1,7 +1,8 @@
 <?php
-class Controller_Manage_Shop_Report extends Controller_Manage_Shop{
-
-	public function index(){
+class Controller_Manage_Shop_Report extends Controller_Manage_Shop
+{
+	public function index()
+	{
 		$dbc			= $this->env->getDatabase();
 		$prefix			= $dbc->getPrefix();
 //		$frontend		= Logic_Frontend::getInstance( $this->env );
@@ -82,4 +83,3 @@ WHERE
 		$this->addData( 'ordersPerYear', $years );
 	}
 }
-?>

@@ -1,21 +1,15 @@
 <?php
-class Controller_Manage_Shop extends CMF_Hydrogen_Controller{
+class Controller_Manage_Shop extends CMF_Hydrogen_Controller
+{
 	/**	@var		Logic_Shop			$logicShop			Instance of shop logic */
 	protected $logicShop;
+
 	/**	@var		Logic_ShopBridge	$logicBridge		Instance of shop bridge logic */
 	protected $logicBridge;
 
-	protected function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logicShop	= new Logic_ShopManager( $this->env );
-		$this->logicBridge	= new Logic_ShopBridge( $this->env );
-	}
 
-	public function index(){
-
-
+	public function index()
+	{
 		$orders			= array( 'orderId' => 'ASC' );
 
 		$ordersTotal	= $this->logicShop->getOrders( array( 'status' => '>= 2' ), $orders );
@@ -58,9 +52,18 @@ class Controller_Manage_Shop extends CMF_Hydrogen_Controller{
 
 	}
 
-	public function setTab( $newsletterId, $tabKey ){
+	public function setTab( $newsletterId, $tabKey )
+	{
 		$this->session->set( 'manage.shop.tab', $tabKey );
 #		$this->restart( './work/newsletter/edit/'.$newsletterId );
 	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logicShop	= new Logic_ShopManager( $this->env );
+		$this->logicBridge	= new Logic_ShopBridge( $this->env );
+	}
 }
-?>

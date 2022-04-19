@@ -1,7 +1,8 @@
 <?php
-class Controller_System_Exception extends CMF_Hydrogen_Controller{
-
-	public function index(){
+class Controller_System_Exception extends CMF_Hydrogen_Controller
+{
+	public function index()
+	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		if( $session->has( 'exception' ) ){
@@ -31,7 +32,8 @@ class Controller_System_Exception extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function reset( $path = NULL ){
+	public function reset( $path = NULL )
+	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		if( $session->has( 'exception' ) ){
@@ -42,7 +44,8 @@ class Controller_System_Exception extends CMF_Hydrogen_Controller{
 		$this->restart( $path );
 	}
 
-	public function test( $useHook = FALSE ){
+	public function test( $useHook = FALSE )
+	{
 		if( $useHook ){
 			try{
 				throw new Exception( 'This is a test' );

@@ -1,24 +1,14 @@
 <?php
-class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
-
-	/**	@var		Logic_Shop			$logicShop			Instance of shop logic */
+class Controller_Manage_Shop_Order extends Controller_Manage_Shop
+{
+	/**	@var		Logic_ShopManager	$logicShop			Instance of shop manager logic */
 	protected $logicShop;
+
 	/**	@var		Logic_ShopBridge	$logicBridge		Instance of shop bridge logic */
 	protected $logicBridge;
 
-	protected function __onInit(){
-		parent::__onInit();
-		$this->logicShop	= new Logic_ShopManager( $this->env );
-		$this->logicBridge	= new Logic_ShopBridge( $this->env );
-
-		$sessionPrefix		= 'module.manage_shop_order.filter.';
-		if( !$this->session->get( $sessionPrefix.'order' ) )
-				$this->session->set( $sessionPrefix.'order', 'createdAt:DESC' );
-		if( !$this->session->get( $sessionPrefix.'status' ) )
-				$this->session->set( $sessionPrefix.'status', array( -5, 2, 3, 4, 5 ) );
-	}
-
-	public function edit( $orderId ){
+	public function edit( $orderId )
+	{
 		$order	= $this->logicShop->getOrder( $orderId, TRUE );
 		if( !$order ){
 			$this->env->getMessenger()->noteError( 'Invalid order ID.' );
@@ -39,7 +29,8 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 		$this->addData( 'order', $order );
 	}
 
-	public function filter( $reset = FALSE ){
+	public function filter( $reset = FALSE )
+	{
 		$sessionPrefix	= 'module.manage_shop_order.filter.';
 		$this->session->set( $sessionPrefix.'customer', trim( $this->request->get( 'customer' ) ) );
 		$this->session->set( $sessionPrefix.'status', $this->request->get( 'status' ) );
@@ -52,7 +43,8 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $pageNr = 0 ){
+	public function index( $pageNr = 0 )
+	{
 		$filters	= $this->session->getAll( 'module.manage_shop_order.filter.' );
 		$orders		= array();
 		$conditions	= array();
@@ -95,15 +87,29 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop{
 //		$this->addData( 'customers', $customers );
 	}
 
-	public function setPositionStatus( $positionId, $status ){
+	public function setPositionStatus( $positionId, $status )
+	{
 		$this->logicShop->setOrderPositionStatus( $positionId, $status );
 		$position	= $this->logicShop->getOrderPosition( $positionId );
 		$this->restart( 'edit/'.$position->orderId, TRUE );
 	}
 
-	public function setStatus( $orderId, $status ){
+	public function setStatus( $orderId, $status )
+	{
 		$this->logicShop->setOrderStatus( $orderId, $status );
 		$this->restart( 'edit/'.$orderId, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		parent::__onInit();
+		$this->logicShop	= new Logic_ShopManager( $this->env );
+		$this->logicBridge	= new Logic_ShopBridge( $this->env );
+
+		$sessionPrefix		= 'module.manage_shop_order.filter.';
+		if( !$this->session->get( $sessionPrefix.'order' ) )
+				$this->session->set( $sessionPrefix.'order', 'createdAt:DESC' );
+		if( !$this->session->get( $sessionPrefix.'status' ) )
+				$this->session->set( $sessionPrefix.'status', array( -5, 2, 3, 4, 5 ) );
+	}
 }
-?>

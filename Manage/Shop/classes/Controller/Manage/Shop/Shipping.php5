@@ -1,15 +1,20 @@
 <?php
-class Controller_Manage_Shop_Shipping extends CMF_Hydrogen_Controller{
+class Controller_Manage_Shop_Shipping extends CMF_Hydrogen_Controller
+{
+	/** @var		Model_Shop_Shipping_Grade		$modelGrade */
+	protected $modelGrade;
 
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->modelGrade	= new Model_Shop_Shipping_Grade( $this->env );
-		$this->modelZone	= new Model_Shop_Shipping_Zone( $this->env );
-		$this->modelPrice	= new Model_Shop_Shipping_Price( $this->env );
-		$this->modelCountry	= new Model_Shop_Shipping_Country( $this->env );
-	}
+	/** @var		Model_Shop_Shipping_Zone		$modelZone */
+	protected $modelZone;
 
-	public function index(){
+	/** @var		Model_Shop_Shipping_Price		$modelPrice */
+	protected $modelPrice;
+
+	/** @var		Model_Shop_Shipping_Country		$modelCountry */
+	protected $modelCountry;
+
+	public function index()
+	{
 		$countryMap		= $this->getWords( 'countries', 'address' );
 		$grades			= $this->modelGrade->getAll( array(), array( 'fallback' => 'ASC', 'weight' => 'ASC' ) );
 		$prices			= $this->modelPrice->getAll( array(), array( 'zoneId' => 'ASC', 'gradeId' => 'ASC' ) );
@@ -35,7 +40,8 @@ class Controller_Manage_Shop_Shipping extends CMF_Hydrogen_Controller{
 		$this->addData( 'countryMap', $countryMap );
 	}
 
-	public function addGrade(){
+	public function addGrade()
+	{
 		$data		= array( 'title' => $this->request->get( 'title' ) );
 		if( $this->request->get( 'fallback' ) )
 			$data['fallback']	= 1;
@@ -53,7 +59,8 @@ class Controller_Manage_Shop_Shipping extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function addZone(){
+	public function addZone()
+	{
 		$zoneId	= $this->modelZone->add( array(
 			'title'	=> $this->request->get( 'title' ),
 		) );
@@ -77,7 +84,8 @@ class Controller_Manage_Shop_Shipping extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setPrices(){
+	public function setPrices()
+	{
 		$grades	= $this->modelGrade->getAll();
 		$zones	= $this->modelZone->getAll();
 		$prices	= $this->request->get( 'price' );
@@ -116,17 +124,27 @@ class Controller_Manage_Shop_Shipping extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeGrade( $gradeId ){
+	public function removeGrade( $gradeId )
+	{
 		$this->modelPrice->removeByIndex( 'gradeId', $gradeId );
 		$this->modelGrade->remove( $gradeId );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeZone( $zoneId ){
+	public function removeZone( $zoneId )
+	{
 		$this->modelPrice->removeByIndex( 'zoneId', $zoneId );
 		$this->modelCountry->removeByIndex( 'zoneId', $zoneId );
 		$this->modelZone->remove( $zoneId );
 		$this->restart( NULL, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->modelGrade	= new Model_Shop_Shipping_Grade( $this->env );
+		$this->modelZone	= new Model_Shop_Shipping_Zone( $this->env );
+		$this->modelPrice	= new Model_Shop_Shipping_Price( $this->env );
+		$this->modelCountry	= new Model_Shop_Shipping_Country( $this->env );
+	}
 }
-?>
