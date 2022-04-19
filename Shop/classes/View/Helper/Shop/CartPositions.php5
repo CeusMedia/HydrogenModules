@@ -436,6 +436,6 @@ class View_Helper_Shop_CartPositions
 		if( isset( $position->article->single ) && $position->article->single )
 			return $buttonRemove;
 		$buttons		= array( $buttonPlus, $buttonMinus, $buttonRemove );
-		return new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
+		return new \CeusMedia\Bootstrap\Button\Group( $buttons );
 	}
 }

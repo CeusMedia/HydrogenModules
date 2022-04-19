@@ -21,7 +21,7 @@ class View_Helper_Shop_Tabs
 
 	public function render(): string
 	{
-		$tabs	= new \CeusMedia\Bootstrap\Tabs( "tabs-cart" );
+		$tabs	= new \CeusMedia\Bootstrap\Nav\Tabs( "tabs-cart" );
 		$session	= $this->env->getSession();
 		$modelCart	= new Model_Shop_Cart( $this->env );
 		$positions	= $modelCart->get( 'positions' );

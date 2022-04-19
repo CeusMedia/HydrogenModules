@@ -11,7 +11,7 @@ if( count( $positions = $cart->get( 'positions' ) ) ){
 	$helperCart->setChangeable( TRUE );
 	$tablePositions	= $helperCart->render();
 	$buttonbar		= UI_HTML_Tag::create( 'div', array(
-		new \CeusMedia\Bootstrap\LinkButton( './shop/customer', $w->buttonToCustomer, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', !$positions )
+		new \CeusMedia\Bootstrap\Button\Link( './shop/customer', $w->buttonToCustomer, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', !$positions )
 	), array( 'class' => 'buttonbar well well-small' ) );
 }
 
