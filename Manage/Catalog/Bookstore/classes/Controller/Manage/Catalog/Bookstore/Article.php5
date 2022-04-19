@@ -10,7 +10,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 
 	public function __onInit(){
 		parent::__onInit();
-		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Bookstore_Article::init start' );
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Article::init start' );
 		$this->messenger		= $this->env->getMessenger();
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
@@ -26,7 +26,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 
 		if( !$this->session->get( $this->sessionPrefix.'order' ) )
 				$this->session->set( $this->sessionPrefix.'order', 'createdAt:DESC' );
-		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Bookstore_Article::init done' );
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Article::init done' );
 	}
 
 	/**

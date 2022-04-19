@@ -93,6 +93,6 @@ div.page-preview-blocked div.page-preview-container div.page-preview-mask {
 	}
 </style>
 </fieldset>';
-$env->clock->profiler->tick( 'Template: index/index - info' );
+$env->getRuntime()->reach( 'Template: index/index - info' );
 return $panel;
 ?>

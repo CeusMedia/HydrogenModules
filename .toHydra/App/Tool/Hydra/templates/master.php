@@ -110,7 +110,7 @@ function selectInstanceId(id, forward){
 	</div>
 </div>';
 
-$env->clock->profiler->tick( 'interface: master' );
+$env->getRuntime()->reach( 'interface: master' );
 
 $pathJsLib		= $config->get( 'path.scripts.lib' );
 $pathCssLib		= $config->get( 'path.styles.lib' );

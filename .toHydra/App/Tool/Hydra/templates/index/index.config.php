@@ -44,6 +44,6 @@ $panel	= '
 		'.join( $listModules ).'
 	</div>
 </fieldset>';
-$env->clock->profiler->tick( 'Template: index/index - config' );
+$env->getRuntime()->reach( 'Template: index/index - config' );
 return empty( $listModules ) ? "" : $panel;
 ?>

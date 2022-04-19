@@ -71,6 +71,6 @@ $panel	= '
 	'.$list.'
 </fieldset>
 ';
-$env->clock->profiler->tick( 'Template: index/index - instances' );
+$env->getRuntime()->reach( 'Template: index/index - instances' );
 return $panel;
 ?>

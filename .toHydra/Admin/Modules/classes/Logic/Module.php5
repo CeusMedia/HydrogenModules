@@ -24,14 +24,14 @@ class Logic_Module extends CMF_Hydrogen_Logic
 	{
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_Module( $this->env );
-		$this->env->clock->profiler->tick( 'Logic_Module: init' );
+		$this->env->getRuntime()->reach( 'Logic_Module: init' );
 
 		$moduleSource		= new Model_ModuleSource( $this->env );
 		$this->sources		= $moduleSource->getAll( FALSE );
-		$this->env->clock->profiler->tick( 'Logic_Module: get sources' );
+		$this->env->getRuntime()->reach( 'Logic_Module: get sources' );
 		foreach( $this->model->loadSources() as $sourceId => $status )
 			$this->sources[$sourceId]->status = $status;
-		$this->env->clock->profiler->tick( 'Logic_Module: load sources' );
+		$this->env->getRuntime()->reach( 'Logic_Module: load sources' );
 
 		foreach( $this->sources as $sourceId => $source ){
 			if( isset( $source->status ) && !is_integer( $source->status ) ){
@@ -44,7 +44,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 				$this->messenger->noteError( 'Die Quelle '.$label.' ist nicht verfügbar oder falsch konfiguriert.' );
 			}
 		}
-		$this->env->clock->profiler->tick( 'Logic_Module: check sources' );
+		$this->env->getRuntime()->reach( 'Logic_Module: check sources' );
 	}
 
 	public function checkForUpdate( string $moduleId )
@@ -498,18 +498,18 @@ class Logic_Module extends CMF_Hydrogen_Logic
 	public function listModulesMissing( string $instanceId ): array
 	{
 		$remote		= $this->env/*->getRemote()*/;
-		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
+		$this->env->getRuntime()->reach( 'Logic_Module::list: got remote' );
 		$list		= array();
 		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
 			$modulesAll				= $this->model->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
+			$this->env->getRuntime()->reach( 'Logic_Module::list: got  all' );
 			$modulesInstalled		= $remote->getModules()->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
+			$this->env->getRuntime()->reach( 'Logic_Module::list: got installed' );
 			foreach( $modulesInstalled as $module )
 				foreach( $module->relations->needs as $need )
 					if( !array_key_exists( $need, $modulesInstalled ) )
 						$list[$need]	= isset( $list[$need] ) ? $list[$need] + 1 : 1;
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
+			$this->env->getRuntime()->reach( 'Logic_Module::list: got list' );
 			arsort( $list );
 		}
 		return $list;
@@ -518,18 +518,18 @@ class Logic_Module extends CMF_Hydrogen_Logic
 	public function listModulesPossible( string $instanceId ): array
 	{
 		$remote		= $this->env/*->getRemote()*/;
-		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
+		$this->env->getRuntime()->reach( 'Logic_Module::list: got remote' );
 		$list		= array();
 		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
 			$modulesAll				= $this->model->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
+			$this->env->getRuntime()->reach( 'Logic_Module::list: got  all' );
 			$modulesInstalled		= $remote->getModules()->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
+			$this->env->getRuntime()->reach( 'Logic_Module::list: got installed' );
 			foreach( $modulesInstalled as $module )
 				foreach( $module->relations->supports as $support )
 					if( !array_key_exists( $support, $modulesInstalled ) )
 						$list[$support]	= isset( $list[$support] ) ? $list[$support] + 1 : 1;
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
+			$this->env->getRuntime()->reach( 'Logic_Module::list: got list' );
 			arsort( $list );
 		}
 		return $list;
@@ -538,18 +538,18 @@ class Logic_Module extends CMF_Hydrogen_Logic
 	public function listModulesOutdated( string $instanceId ): array
 	{
 		$remote		= $this->env/*->getRemote()*/;
-		$this->env->clock->profiler->tick( 'Logic_Module::list: got remote' );
+		$this->env->getRuntime()->reach( 'Logic_Module::list: got remote' );
 		$list		= array();
 		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
 			$modulesAll				= $this->model->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got  all' );
+			$this->env->getRuntime()->reach( 'Logic_Module::list: got  all' );
 			$modulesInstalled		= $remote->getModules()->getAll();
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got installed' );
+			$this->env->getRuntime()->reach( 'Logic_Module::list: got installed' );
 			foreach( $modulesInstalled as $module )
 				if( $module->versionInstalled && $module->versionAvailable )
 					if( version_compare( $module->versionAvailable, $module->versionInstalled ) > 0 )
 						$list[$module]	= isset( $list[$module] ) ? $list[$module] + 1 : 1;
-			$this->env->clock->profiler->tick( 'Logic_Module::list: got list' );
+			$this->env->getRuntime()->reach( 'Logic_Module::list: got list' );
 			arsort( $list );
 		}
 		return $list;

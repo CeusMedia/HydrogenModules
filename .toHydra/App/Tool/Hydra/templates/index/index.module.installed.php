@@ -6,7 +6,7 @@ foreach( $modulesInstalled as $moduleId => $module ){
 	$label	= $desc ? '<acronym title="'.$desc.'">'.$module->title.'</acronym>' : $module->title;
 	$label	= '<span class="module">'.$label.'</span>';
 	$link	= '<a href="./admin/module/viewer/view/'.$moduleId.'">'.$label.'</a>';
-	$listModulesInstalled[$module->title]	= '<li>'.$link.'</li>';	
+	$listModulesInstalled[$module->title]	= '<li>'.$link.'</li>';
 }
 natcasesort( $listModulesInstalled );
 $panel	= '
@@ -19,6 +19,6 @@ $panel	= '
 		<ul>'.join( $listModulesInstalled ).'</ul>
 	</div>
 </fieldset>';
-$env->clock->profiler->tick( 'Template: index/index - installed' );
+$env->getRuntime()->reach( 'Template: index/index - installed' );
 return $panel;
 ?>

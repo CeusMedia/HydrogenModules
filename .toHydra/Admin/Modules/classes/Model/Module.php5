@@ -388,7 +388,7 @@ class Model_Module{
 			catch( Exception $e ){
 				$results[$sourceId]	= $e;
 			}
-			$this->env->clock->profiler->tick( 'Model_Module: Source: '.$sourceId );
+			$this->env->getRuntime()->reach( 'Model_Module: Source: '.$sourceId );
 		}
 		ksort( $list );
 		$this->modulesAvailable	= $list;

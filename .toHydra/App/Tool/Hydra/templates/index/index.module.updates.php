@@ -17,7 +17,7 @@ foreach( $modulesUpdate as $module ){
 	$versions	= '<span class="muted" style="float: right">'.$module->versionInstalled.'&nbsp;&rArr;&nbsp;'.$module->versionAvailable.'</span>';
 
 	$listMessenger[]	= $link;
-	$listModulesUpdatable[$module->title]	= UI_HTML_Tag::create( 'li', $link.'&nbsp;'.$versions );	
+	$listModulesUpdatable[$module->title]	= UI_HTML_Tag::create( 'li', $link.'&nbsp;'.$versions );
 }
 ksort( $listModulesUpdatable );
 if( $listMessenger )
@@ -29,6 +29,6 @@ $panel	= '
 		<ul>'.join( $listModulesUpdatable ).'</ul>
 	</div>
 </fieldset>';
-$env->clock->profiler->tick( 'Template: index/index - updates' );
+$env->getRuntime()->reach( 'Template: index/index - updates' );
 return $panel;
 ?>

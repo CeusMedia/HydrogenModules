@@ -40,12 +40,12 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 	}
 
 	protected function __onInit(){
-		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Bookstore_Category::init start' );
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Category::init start' );
 		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
 		$this->session		= $this->env->getSession();
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
-		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Bookstore_Category::init done' );
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Category::init done' );
 	}
 
 	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){

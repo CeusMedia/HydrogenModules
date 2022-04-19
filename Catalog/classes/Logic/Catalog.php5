@@ -29,7 +29,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: code doc
 	 */
 	protected function __onInit( $a = NULL ){
-		$this->env->clock->profiler->tick( 'Logic_Catalog::init start' );
+		$this->env->getRuntime()->reach( 'Logic_Catalog::init start' );
 		$this->cache				= $this->env->getCache();
 
 		$this->modelArticle			= new Model_Catalog_Article( $this->env );

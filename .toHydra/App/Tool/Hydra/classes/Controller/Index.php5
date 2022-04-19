@@ -35,7 +35,7 @@ class Controller_Index extends CMF_Hydrogen_Controller{
 		if( $instanceId ){
 			$remote			= $this->env->getRemote();
 			$logicModule	= Logic_Module::getInstance( $this->env );
-			$this->env->clock->profiler->tick( 'Index::index: init' );
+			$this->env->getRuntime()->reach( 'Index::index: init' );
 
 			$listModulesMissing		= array();
 			$listModulesPossible	= array();
@@ -43,10 +43,10 @@ class Controller_Index extends CMF_Hydrogen_Controller{
 			$modulesInstalled		= array();
 
 			$modulesAll				= $logicModule->model->getAll();
-			$this->env->clock->profiler->tick( 'Index::index: get all' );
+			$this->env->getRuntime()->reach( 'Index::index: get all' );
 			if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
 				$modulesInstalled		= $remote->getModules()->getAll();
-				$this->env->clock->profiler->tick( 'Index::index: get installed' );
+				$this->env->getRuntime()->reach( 'Index::index: get installed' );
 
 				foreach( $modulesInstalled as $module ){
 					foreach( $module->relations->needs as $need )
@@ -56,7 +56,7 @@ class Controller_Index extends CMF_Hydrogen_Controller{
 						if( !array_key_exists( $support, $modulesInstalled ) )
 							$listModulesPossible[]	= $support;
 				}
-				$this->env->clock->profiler->tick( 'Index::index: get more' );
+				$this->env->getRuntime()->reach( 'Index::index: get more' );
 
 				foreach( $modulesInstalled as $module )
 					if( $module->versionInstalled && $module->versionAvailable )
@@ -81,7 +81,7 @@ class Controller_Index extends CMF_Hydrogen_Controller{
 			$this->addData( 'modulesUpdate', $listModulesUpdate );
 		}
 
-		$this->env->clock->profiler->tick( 'Index::index: done' );
+		$this->env->getRuntime()->reach( 'Index::index: done' );
 	}
 
 	public function showTodos(){

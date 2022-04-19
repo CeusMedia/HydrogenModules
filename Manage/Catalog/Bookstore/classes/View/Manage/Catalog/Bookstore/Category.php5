@@ -13,11 +13,11 @@ class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Booksto
 	protected function renderTree( $categories, $categoryId = NULL ){
 /*		$cache	= $this->env->getCache();
 		if( NULL !== ( $data = $cache->get( 'admin.categories.list.html' ) ) ){
-			$this->env->clock->profiler->tick( 'View_Catalog_Bookstore_Category::renderTree from cache' );
+			$this->env->getRuntime()->reach( 'View_Catalog_Bookstore_Category::renderTree from cache' );
 			return $data;
 		}*/
 
-		$this->env->clock->profiler->tick( 'View_Catalog_Bookstore_Category::renderTree start' );
+		$this->env->getRuntime()->reach( 'View_Catalog_Bookstore_Category::renderTree start' );
 		$logic		= new Logic_Catalog_Bookstore( $this->env );
 		$listMain	= array();
 		foreach( $categories as $nr => $category ){
@@ -53,11 +53,11 @@ class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Booksto
 			$link		= UI_HTML_Tag::create( 'a', $label, $attributes );
 			$class		= $categoryId == $category->categoryId ? "active" : NULL;
 			$listMain[$category->rank]	= UI_HTML_Tag::create( 'li', $link.$listSub, array( 'class' => $class ) );
-//			$this->env->clock->profiler->tick( 'View_Catalog_Bookstore_Category::renderTree run '.$nr );
+//			$this->env->getRuntime()->reach( 'View_Catalog_Bookstore_Category::renderTree run '.$nr );
 		}
 		ksort( $listMain );
 		$listMain	= UI_HTML_Tag::create( 'ul', $listMain, array( 'class' => 'nav nav-pills nav-stacked main boxed', 'style' => 'display: none' ) );
-		$this->env->clock->profiler->tick( 'View_Catalog_Bookstore_Category::renderTree done' );
+		$this->env->getRuntime()->reach( 'View_Catalog_Bookstore_Category::renderTree done' );
 //		$cache->set( 'admin.categories.list.html', $listMain );
 		return $listMain;
 	}

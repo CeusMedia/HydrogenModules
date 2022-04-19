@@ -10,7 +10,7 @@ class Controller_Manage_Catalog_Tag extends CMF_Hydrogen_Controller{
 
 	public function __onInit(){
 		parent::__onInit();
-		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Article::init start' );
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Article::init start' );
 		$this->messenger		= $this->env->getMessenger();
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();

@@ -417,7 +417,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller								//  
 
 	protected function __onInit()
 	{
-		$this->env->clock->profiler->tick( 'Controller_Admin_Module_Editor::init: start' );
+		$this->env->getRuntime()->reach( 'Controller_Admin_Module_Editor::init: start' );
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= Logic_Module::getInstance( $this->env );

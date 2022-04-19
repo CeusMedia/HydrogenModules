@@ -21,7 +21,7 @@ function countCores(){
 
 $diskTotal	= (double) disk_total_space( __DIR__ );
 $diskFree	= (double) disk_free_space( __DIR__ );
-$diskRatio	= round( $diskFree / $diskTotal * 100, 1 ); 
+$diskRatio	= round( $diskFree / $diskTotal * 100, 1 );
 
 #$diskTotal	= 10;
 #$diskFree	= 1.9;
@@ -63,6 +63,6 @@ $panel	= '
 		</dd>
 	</dl>
 </fieldset>';
-$env->clock->profiler->tick( 'Template: index/index - system' );
+$env->getRuntime()->reach( 'Template: index/index - system' );
 return $panel;
 ?>

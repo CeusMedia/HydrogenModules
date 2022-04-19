@@ -40,7 +40,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: code doc
 	 */
 	protected function __onInit( $a = NULL ){
-		$this->env->clock->profiler->tick( 'Logic_Catalog::init start' );
+		$this->env->getRuntime()->reach( 'Logic_Catalog::init start' );
 		$this->config				= $this->env->getConfig();
 		$this->frontend				= Logic_Frontend::getInstance( $this->env );
 		$this->moduleConfig			= $this->config->getAll( 'module.manage_catalog.', TRUE );
@@ -67,7 +67,7 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 				$list[$category->categoryId]	= $this->countArticlesInCategory( $category->categoryId, TRUE );
 			$this->cache->set( $cacheKey, $this->countArticlesInCategories = $list );
 		}
-		$this->env->clock->profiler->tick( 'Logic_Catalog::init done' );
+		$this->env->getRuntime()->reach( 'Logic_Catalog::init done' );
 	}
 
 	/**

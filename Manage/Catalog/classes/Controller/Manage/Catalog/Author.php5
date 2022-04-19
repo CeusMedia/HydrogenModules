@@ -8,7 +8,7 @@ class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 	protected $session;
 
 	protected function __onInit(){
-		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Author::init start' );
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Author::init start' );
 		$this->messenger	= $this->env->getMessenger();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
@@ -20,7 +20,7 @@ class Controller_Manage_Catalog_Author extends CMF_Hydrogen_Controller{
 		$this->addData( 'pathAuthors', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.authors' ) );
 		$this->addData( 'pathCovers', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.covers' ) );
 		$this->addData( 'pathDocuments', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.documents' ) );
-		$this->env->clock->profiler->tick( 'Controller_Manage_Catalog_Author::init done' );
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Author::init done' );
 	}
 
 	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){

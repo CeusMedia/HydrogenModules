@@ -20,7 +20,7 @@ class Tool_Hydrogen_Setup_App extends CMF_Hydrogen_Application_Web_Site{
 		}
 */
 		parent::__construct( $env );
-		$this->env->clock->profiler->tick( 'app' );
+		$this->env->getRuntime()->reach( 'app' );
 	}
 }
 ?>
