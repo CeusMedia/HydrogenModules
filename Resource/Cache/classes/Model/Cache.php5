@@ -13,7 +13,13 @@ class Model_Cache
 		$this->env		= $env;
 		$this->config	= (object) $this->env->getConfig()->getAll( 'module.resource_cache.' );
 
-		$factory	= new \CeusMedia\Cache\Factory();
+		if( class_exists( '\\CeusMedia\\Cache\\SimpleCacheFactory' ) )						//  CeusMedia/Cache v0.3
+			$factory	= new \CeusMedia\Cache\SimpleCacheFactory;
+		else if( class_exists( '\\CeusMedia\\Cache\\Factory' ) )							//  CeusMedia/Cache v0.2
+			$factory	= new \CeusMedia\Cache\Factory();
+		else
+			throw new RuntimeException( 'No suitable cache implementation found' );
+
 		$type		= $this->config->type;
 		$resource	= $this->config->resource ? $this->config->resource : NULL;
 		$context	= $this->config->context ? $this->config->context : NULL;
