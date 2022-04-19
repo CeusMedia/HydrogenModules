@@ -68,6 +68,7 @@ class View_Helper_Shop_CartPositions
 	public function setDeliveryAddress( $address ): self
 	{
 		$this->deliveryAddress	= $address;
+		return $this;
 	}
 
 	public function setDisplay( $display ){

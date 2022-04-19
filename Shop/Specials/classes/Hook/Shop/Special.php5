@@ -24,9 +24,10 @@ class Hook_Shop_Special extends CMF_Hydrogen_Hook
 			return;
 //		if( $request->get( '__action' ) !== 'article' )
 //			return;
-		if( !count( $request->get( '__arguments' ) ) )
+		$_arguments = $request->get( '__arguments' );
+		if( !is_array( $_arguments ) || 0 === count( $_arguments ) )
 			return;
-		static::$articleId = (int) $request->get( '__arguments' )[0];
+		static::$articleId = (int) $_arguments[0];
 	}
 
 	/**

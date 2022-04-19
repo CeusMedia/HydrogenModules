@@ -39,13 +39,13 @@ class Controller_Catalog_Bookstore extends CMF_Hydrogen_Controller{
 		$this->addData( 'uriCoverLarge', $fileImageLarge );
 
 		if( getEnv( 'HTTP_REFERER' ) ){
-			$urlFrom	=  new ADT_URL( getEnv( 'HTTP_REFERER' ), $this->env->url );
+			$urlFrom	=  new ADT_URL( getEnv( 'HTTP_REFERER' ), new ADT_URL( $this->env->url ) );
 			if( ADT_URL_Compare::sameBaseStatic( $urlFrom, $this->env->url ) ){
 				$this->addData( 'from', $urlFrom->getRelative() );
 			}
 		}
 		if( $this->request->get( 'from' ) ){
-			$urlFrom	=  new ADT_URL( $this->request->get( 'from' ), $this->env->url );
+			$urlFrom	=  new ADT_URL( $this->request->get( 'from' ), new ADT_URL( $this->env->url ) );
 			if( ADT_URL_Compare::sameBaseStatic( $urlFrom, $this->env->url ) ){
 				$this->addData( 'from', $urlFrom->getRelative() );
 			}

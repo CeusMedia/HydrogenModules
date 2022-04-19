@@ -290,6 +290,7 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller
 			$userId		= $this->modelUser->add( array(
 				'username'		=> 'Guest User '.uniqid(),
 				'password'		=> '-1',
+				'status'		=> Model_User::STATUS_UNCONFIRMED,
 				'roleId'		=> $this->moduleConfig->get( 'customerRoleId' ),
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),

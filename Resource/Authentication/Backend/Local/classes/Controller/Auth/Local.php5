@@ -317,7 +317,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller
 		$status			= (int) $options->get( 'status.register' );
 		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
-		if( !!$roleDefault ){
+		if( !$roleDefault ){
 			$this->messenger->noteFailure( $words->msgNoDefaultRoleDefined );
 			$from	= $this->request->get( 'from' );
 			$this->restart( $from ? $from : NULL, !$from );

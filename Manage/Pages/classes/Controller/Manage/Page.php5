@@ -67,7 +67,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
 		}
 		else if( $this->appSession->has( 'source' ) ){
-			$source			= $this->appSession->get( 'source' );
+			$source	= $this->appSession->get( 'source' );
 		}
 		else{
 			if( $managesModules->has( 'Resource_Pages' ) )
@@ -77,9 +77,9 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 			else
 				$source			= 'Modules';
 		}
-//		//  persist the source decission
-//		if( $source !== $this->appSession->get( 'source' ) )
-//			$this->appSession->set( 'source', $source );
+		//  persist the source decission
+		if( !$this->appSession->get( 'source' ) )
+			$this->appSession->set( 'source', $source );
 
 		//  connect to model of source
 		switch( $source ){

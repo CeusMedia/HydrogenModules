@@ -275,8 +275,8 @@ class Job_Shop extends Job_Abstract
 				}
 				$modelCustomerNew->add( array( 'customerId' => $customer->customerId ) );
 				$modelCustomerOld->remove( $customer->customerId );
-				$this->showProgress( ++$count, count( $customers ) );
 			}
+			$this->showProgress( ++$count, count( $customers ) );
 		}
 		$this->out();
 	}

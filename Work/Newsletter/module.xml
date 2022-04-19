@@ -68,6 +68,7 @@
 		<class>Controller/Work/Newsletter/Group.php5</class>
 		<class>Controller/Work/Newsletter/Reader.php5</class>
 		<class>Controller/Work/Newsletter/Template.php5</class>
+		<class>Hook/Work/Newsletter.php5</class>
 		<class>Logic/Newsletter/Editor.php5</class>
 		<class>Mail/Work/Newsletter/Add.php5</class>
 		<class>Mail/Work/Newsletter/Invite.php5</class>

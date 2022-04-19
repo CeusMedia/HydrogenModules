@@ -140,12 +140,12 @@ class Logic_UserPassword
 	 *	ATTENTION: You need to prepend a password salt, if enabled!
 	 *
 	 *	@access		public
-	 *	@param    	string		$password		Password to encrypt (prefixed by salt)
-	 *	@param    	integer		$algo			Encryption algorithm to use (default: PASSWORD_BCRYPT)
+	 *	@param    	string			$password		Password to encrypt (prefixed by salt)
+	 *	@param    	integer|string	$algo			Encryption algorithm to use (default: PASSWORD_BCRYPT)
 	 *	@return 	string			Hash of encrypted (salted) password
 	 *	@see		http://php.net/manual/en/password.constants.php
 	 */
-	public function encryptPassword( $password, int $algo = PASSWORD_BCRYPT )
+	public function encryptPassword( $password, $algo = PASSWORD_BCRYPT )
 	{
 		$options	= array();
 		return password_hash( $password, $algo, $options );
