@@ -1,4 +1,7 @@
 <?php
+use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
+use UI_HTML_Tag as Html;
+
 class View_Helper_Info_Contact_Form_Modal
 {
 	protected $id;
@@ -25,8 +28,8 @@ class View_Helper_Info_Contact_Form_Modal
 		$optType	= $this->renderTypeOptions();
 
 		$fieldSubject	= array(
-			UI_HTML_Tag::create( 'label', $w->labelSubject, array( 'for' => 'input_subject', 'class' => 'mandatory required' ) ),
-			UI_HTML_Tag::create( 'input', NULL, array(
+			Html::create( 'label', $w->labelSubject, array( 'for' => 'input_subject', 'class' => 'mandatory required' ) ),
+			Html::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'name'		=> 'subject',
 				'id'		=> 'input_subject',
@@ -36,18 +39,18 @@ class View_Helper_Info_Contact_Form_Modal
 			) ),
 		);
 		$fieldType	= array(
-			UI_HTML_Tag::create( 'label', $w->labelType, array( 'for' => 'input_type' ) ),
-			UI_HTML_Tag::create( 'select', $optType, array(
+			Html::create( 'label', $w->labelType, array( 'for' => 'input_type' ) ),
+			Html::create( 'select', $optType, array(
 				'name'		=> 'type',
 				'id'		=> 'input_type',
 				'class'		=> 'span12 has-optionals',
 			) ),
 		);
 		$fieldBody	= array(
-			UI_HTML_Tag::create( 'label', $w->labelBodyQuestion, array( 'for' => 'input_body', 'class' => 'mandatory required optional type type-question'  ) ),
-			UI_HTML_Tag::create( 'label', $w->labelBodyRequest, array( 'for' => 'input_body', 'class' => 'mandatory required optional type type-request'  ) ),
-			UI_HTML_Tag::create( 'label', $w->labelBodyProblem, array( 'for' => 'input_body', 'class' => 'mandatory required optional type type-problem'  ) ),
-			UI_HTML_Tag::create( 'textarea', NULL, array(
+			Html::create( 'label', $w->labelBodyQuestion, array( 'for' => 'input_body', 'class' => 'mandatory required optional type type-question'  ) ),
+			Html::create( 'label', $w->labelBodyRequest, array( 'for' => 'input_body', 'class' => 'mandatory required optional type type-request'  ) ),
+			Html::create( 'label', $w->labelBodyProblem, array( 'for' => 'input_body', 'class' => 'mandatory required optional type type-problem'  ) ),
+			Html::create( 'textarea', NULL, array(
 				'name'		=> 'body',
 				'id'		=> 'input_body',
 				'class'		=> 'span12',
@@ -56,8 +59,8 @@ class View_Helper_Info_Contact_Form_Modal
 			) ),
 		);
 		$fieldEmail	= array(
-			UI_HTML_Tag::create( 'label', $w->labelEmail, array( 'for' => 'input_email', 'class' => 'mandatory required' ) ),
-			UI_HTML_Tag::create( 'input', NULL, array(
+			Html::create( 'label', $w->labelEmail, array( 'for' => 'input_email', 'class' => 'mandatory required' ) ),
+			Html::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'name'		=> 'email',
 				'id'		=> 'input_email',
@@ -66,8 +69,8 @@ class View_Helper_Info_Contact_Form_Modal
 			) ),
 		);
 		$fieldPhone	= array(
-			UI_HTML_Tag::create( 'label', $w->labelPhone, array( 'for' => 'input_phone', 'class' => '' ) ),
-			UI_HTML_Tag::create( 'input', NULL, array(
+			Html::create( 'label', $w->labelPhone, array( 'for' => 'input_phone', 'class' => '' ) ),
+			Html::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'name'		=> 'phone',
 				'id'		=> 'input_phone',
@@ -75,8 +78,8 @@ class View_Helper_Info_Contact_Form_Modal
 			) ),
 		);
 		$fieldPerson	= array(
-			UI_HTML_Tag::create( 'label', $w->labelPerson, array( 'for' => 'input_person', 'class' => 'mandatory required' ) ),
-			UI_HTML_Tag::create( 'input', NULL, array(
+			Html::create( 'label', $w->labelPerson, array( 'for' => 'input_person', 'class' => 'mandatory required' ) ),
+			Html::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'name'		=> 'person',
 				'id'		=> 'input_person',
@@ -85,8 +88,8 @@ class View_Helper_Info_Contact_Form_Modal
 			) ),
 		);
 		$fieldCompany	= array(
-			UI_HTML_Tag::create( 'label', $w->labelCompany, array( 'for' => 'input_company' ) ),
-			UI_HTML_Tag::create( 'input', NULL, array(
+			Html::create( 'label', $w->labelCompany, array( 'for' => 'input_company' ) ),
+			Html::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'name'		=> 'company',
 				'id'		=> 'input_company',
@@ -94,8 +97,8 @@ class View_Helper_Info_Contact_Form_Modal
 			) ),
 		);
 		$fieldStreet	= array(
-			UI_HTML_Tag::create( 'label', $w->labelStreet, array( 'for' => 'input_street'/*, 'class' => 'mandatory required'*/ ) ),
-			UI_HTML_Tag::create( 'input', NULL, array(
+			Html::create( 'label', $w->labelStreet, array( 'for' => 'input_street'/*, 'class' => 'mandatory required'*/ ) ),
+			Html::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'name'		=> 'street',
 				'id'		=> 'input_street',
@@ -104,8 +107,8 @@ class View_Helper_Info_Contact_Form_Modal
 			) ),
 		);
 		$fieldCity	= array(
-			UI_HTML_Tag::create( 'label', $w->labelCity, array( 'for' => 'input_city'/*, 'class' => 'mandatory required'*/ ) ),
-			UI_HTML_Tag::create( 'input', NULL, array(
+			Html::create( 'label', $w->labelCity, array( 'for' => 'input_city'/*, 'class' => 'mandatory required'*/ ) ),
+			Html::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'name'		=> 'city',
 				'id'		=> 'input_city',
@@ -114,8 +117,8 @@ class View_Helper_Info_Contact_Form_Modal
 			) ),
 		);
 		$fieldPostcode	= array(
-			UI_HTML_Tag::create( 'label', 'PLZ', array( 'for' => 'input_postcode'/*, 'class' => 'mandatory required'*/ ) ),
-			UI_HTML_Tag::create( 'input', NULL, array(
+			Html::create( 'label', 'PLZ', array( 'for' => 'input_postcode'/*, 'class' => 'mandatory required'*/ ) ),
+			Html::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'name'		=> 'postcode',
 				'id'		=> 'input_postcode',
@@ -126,34 +129,34 @@ class View_Helper_Info_Contact_Form_Modal
 		if( !$this->moduleConfig->get( 'modal.show.company' ) )
 			$fieldCompany	= '';
 
-		$form	= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $fieldSubject, array( 'class' => 'span10 offset1' ) ),
+		$form	= Html::create( 'div', array(
+			Html::create( 'div', array(
+				Html::create( 'div', $fieldSubject, array( 'class' => 'span10 offset1' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $fieldType, array( 'class' => 'span10 offset1' ) ),
+			Html::create( 'div', array(
+				Html::create( 'div', $fieldType, array( 'class' => 'span10 offset1' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $fieldBody, array( 'class' => 'span10 offset1' ) ),
+			Html::create( 'div', array(
+				Html::create( 'div', $fieldBody, array( 'class' => 'span10 offset1' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $fieldEmail, array( 'class' => 'span6 offset1' ) ),
-				UI_HTML_Tag::create( 'div', $fieldPhone, array( 'class' => 'span4' ) ),
+			Html::create( 'div', array(
+				Html::create( 'div', $fieldEmail, array( 'class' => 'span6 offset1' ) ),
+				Html::create( 'div', $fieldPhone, array( 'class' => 'span4' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $fieldPerson, array( 'class' => 'span5 offset1' ) ),
-				UI_HTML_Tag::create( 'div', $fieldCompany, array( 'class' => 'span5' ) ),
+			Html::create( 'div', array(
+				Html::create( 'div', $fieldPerson, array( 'class' => 'span5 offset1' ) ),
+				Html::create( 'div', $fieldCompany, array( 'class' => 'span5' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $fieldStreet, array( 'class' => 'span5 offset1' ) ),
-				UI_HTML_Tag::create( 'div', $fieldCity, array( 'class' => 'span3' ) ),
-				UI_HTML_Tag::create( 'div', $fieldPostcode, array( 'class' => 'span2' ) ),
+			Html::create( 'div', array(
+				Html::create( 'div', $fieldStreet, array( 'class' => 'span5 offset1' ) ),
+				Html::create( 'div', $fieldCity, array( 'class' => 'span3' ) ),
+				Html::create( 'div', $fieldPostcode, array( 'class' => 'span2' ) ),
 			), array( 'class' => 'row-fluid optional type type-request' ) ),
 		) );
 
-		$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-		$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-		$modal	= new \CeusMedia\Bootstrap\Modal( $this->id );
+		$iconCancel	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+		$iconSave	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+		$modal	= new BootstrapModalDialog( $this->id );
 //		$modal->setFormAction( './info/contact/form'.( $this->from ? '?from='.$this->from : '' ) );
 		$modal->setFormAction( './info/contact/ajax/form' );
 		$modal->setFormSubmit( 'ModuleInfoContactForm.sendContactForm(this)' );

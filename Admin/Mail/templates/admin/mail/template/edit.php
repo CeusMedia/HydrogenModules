@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Bootstrap\Nav\Tabs as BootstrapTabs;
+
 $w			= (object) $words['edit'];
 
 $iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
@@ -49,7 +51,7 @@ $contentFacts	= $view->loadTemplateFile( 'admin/mail/template/edit.facts.php', a
 $contentStyles	= $view->loadTemplateFile( 'admin/mail/template/edit.styles.php', array( 'buttonList' => $buttonList ) );
 $contentImages	= $view->loadTemplateFile( 'admin/mail/template/edit.images.php', array( 'buttonList' => $buttonList ) );
 
-$tabs		= new \CeusMedia\Bootstrap\Tabs( 'admin-mail-template-edit' );
+$tabs		= new BootstrapTabs( 'admin-mail-template-edit' );
 $tabs->add( 'admin-mail-template-edit-tab-facts', '#', $w->tabFacts, $contentFacts );
 $tabs->add( 'admin-mail-template-edit-tab-text', '#', $w->tabText, $contentText );
 $tabs->add( 'admin-mail-template-edit-tab-html', '#', $w->tabHtml, $contentHtml );
@@ -76,4 +78,3 @@ $heading3	= UI_HTML_Tag::create( 'h3', vsprintf( $w->heading, array(
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/template/edit/' ) );
 
 return $textTop.$heading3.$tabs.$textBottom;
-?>

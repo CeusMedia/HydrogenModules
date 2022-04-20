@@ -1,5 +1,5 @@
 <?php
-use \CeusMedia\Bootstrap;
+use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 
 class View_Helper_Input_Resource
 {
@@ -20,7 +20,7 @@ class View_Helper_Input_Resource
 	public function render(): string
 	{
 //		$modal			= new View_Helper_Bootstrap_Modal( $this->env );
-		$modal			= new Bootstrap\Modal( $this->env );
+		$modal			= new BootstrapModalDialog( $this->env );
 		$modal->setHeading( 'Auswahl' );
 		$modal->setBody( '<div id="'.$this->modalId.'-content"></div><div id="'.$this->modalId.'-loader"><div class="alert alert-info">... Loading ...</div></div>' );
 		$modal->setId( $this->modalId );

@@ -1,25 +1,29 @@
 <?php
+use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
+use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
+use UI_HTML_Tag as Html;
+use UI_HTML_Elements as HtmlElements;
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconMail	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
+$iconAdd	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconSave	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRemove	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconMail	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
 
 $optMailCustomer	= array();
 //if( count( $mailsCustomer ) != 1 )
 //	$optMailCustomer['']	= '- keine -';
 foreach( $mailsCustomer as $item )
 	$optMailCustomer[$item->mailId]	= $item->title;
-$optMailCustomer	= UI_HTML_Elements::Options( $optMailCustomer, $form->customerMailId );
+$optMailCustomer	= HtmlElements::Options( $optMailCustomer, $form->customerMailId );
 
-$listRules	= UI_HTML_Tag::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
+$listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $rulesCustomer ){
 	$listRules	= array();
 	foreach( $rulesCustomer as $rule ){
 		$mail	= '<em>unbekannt</em>';
 		foreach( $mailsCustomer as $item ){
 			if( $item->mailId == $rule->mailId ){
-				$mail	= UI_HTML_Tag::create( 'a', $iconMail.'&nbsp;'.$item->title, array(
+				$mail	= Html::create( 'a', $iconMail.'&nbsp;'.$item->title, array(
 					'href'	=> './manage/form/mail/edit/'.$item->mailId,
 				) );
 			}
@@ -27,26 +31,26 @@ if( $rulesCustomer ){
 
 		$list	= array();
 		foreach( json_decode( $rule->rules ) as $item )
-			$list[]	= UI_HTML_Tag::create( 'li', $item->keyLabel.' => '.$item->valueLabel );
-		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'style' => 'margin-bottom: 0' ) );
+			$list[]	= Html::create( 'li', $item->keyLabel.' => '.$item->valueLabel );
+		$list	= Html::create( 'ul', $list, array( 'style' => 'margin-bottom: 0' ) );
 
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$buttonRemove	= Html::create( 'a', $iconRemove, array(
 			'href'	=> './manage/form/removeRule/'.$form->formId.'/'.$rule->formRuleId,
 			'class'	=> 'btn btn-danger btn-small',
 		) );
-		$listRules[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $list ),
-			UI_HTML_Tag::create( 'td', $mail ),
-			UI_HTML_Tag::create( 'td', $buttonRemove ),
+		$listRules[]	= Html::create( 'tr', array(
+			Html::create( 'td', $list ),
+			Html::create( 'td', $mail ),
+			Html::create( 'td', $buttonRemove ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '35%', '60px' ) );
-	$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Regeln', 'E-Mail' ) ) );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $listRules );
-	$listRules	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped' ) );
+	$colgroup	= HtmlElements::ColumnGroup( array( '', '35%', '60px' ) );
+	$thead		= Html::create( 'thead', HtmlElements::TableHeads( array( 'Regeln', 'E-Mail' ) ) );
+	$tbody		= Html::create( 'tbody', $listRules );
+	$listRules	= Html::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped' ) );
 }
 
-$modal	= new \CeusMedia\Bootstrap\Modal( 'rule-customer-add' );
+$modal	= new BootstrapModalDialog( 'rule-customer-add' );
 $modal->setHeading( 'Neue Kunden-Regel' );
 $modal->setFormAction( './manage/form/addRule/'.$form->formId.'/'.Model_Form_Rule::TYPE_CUSTOMER );
 $modal->setSubmitButtonLabel( 'speichern' );
@@ -96,7 +100,8 @@ $modal->setBody( '
 <input type="hidden" name="ruleValueLabel_1" id="input_customer_ruleValueLabel_1"/>
 <input type="hidden" name="ruleValueLabel_2" id="input_customer_ruleValueLabel_2"/>
 ' );
-$modalTrigger	= new \CeusMedia\Bootstrap\Modal\Trigger( 'rule-customer-add-trigger' );
+$modalTrigger	= new BootstrapModalTrigger();
+$modalTrigger->setId( 'rule-customer-add-trigger' );
 $modalTrigger->setModalId( 'rule-customer-add' )->setLabel( $iconAdd.'&nbsp;neue Regel' );
 $modalTrigger->setAttributes( array( 'class' => 'btn btn-primary' ) );
 
@@ -116,4 +121,3 @@ return '
 		</div>
 	</div>
 </div>'.$modal->render();
-?>

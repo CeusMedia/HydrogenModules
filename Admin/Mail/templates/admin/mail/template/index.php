@@ -1,9 +1,13 @@
 <?php
+use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
+use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
+use UI_HTML_Tag as Html;
+
 $modelMail		= new Model_Mail( $env );
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconImport		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconAdd		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconImport		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
+$iconCancel		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 
 $rows	= array();
 foreach( $templates as $template ){
@@ -13,7 +17,7 @@ foreach( $templates as $template ){
 		$title		= $template->title.'&nbsp;<small class="muted">(Standard)</small>';
 		$rowClass	= 'success';
 	}
-	$title	= UI_HTML_Tag::create( 'a', $title, array(
+	$title	= Html::create( 'a', $title, array(
 		'href'	=> './admin/mail/template/edit/'.$template->mailTemplateId,
 		'class'	=> 'autocut',
 	) );
@@ -31,13 +35,13 @@ foreach( $templates as $template ){
 			$badgeClass	= 'badge badge-success';
 			break;
 	}
-	$badgeStatus	= UI_HTML_Tag::create( 'span', $words['status'][$template->status], array( 'class' => $badgeClass ) );
-	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $title ),
-		UI_HTML_Tag::create( 'td', $badgeStatus ),
-		UI_HTML_Tag::create( 'td', sprintf( $words['index']['valueUsedInMail'], $template->used ) ),
-		UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i', $template->createdAt ) ),
-		UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i', $template->modifiedAt ) ),
+	$badgeStatus	= Html::create( 'span', $words['status'][$template->status], array( 'class' => $badgeClass ) );
+	$rows[]	= Html::create( 'tr', array(
+		Html::create( 'td', $title ),
+		Html::create( 'td', $badgeStatus ),
+		Html::create( 'td', sprintf( $words['index']['valueUsedInMail'], $template->used ) ),
+		Html::create( 'td', date( 'd.m.Y H:i', $template->createdAt ) ),
+		Html::create( 'td', date( 'd.m.Y H:i', $template->modifiedAt ) ),
 	), array( 'class' => $rowClass ) );
 }
 $tableHeads	= UI_HTML_Elements::tableHeads( array(
@@ -48,30 +52,30 @@ $tableHeads	= UI_HTML_Elements::tableHeads( array(
 	$words['index']['headModified']
 ) );
 
-$table	= UI_HTML_Tag::create( 'table', array(
+$table	= Html::create( 'table', array(
 	UI_HTML_Elements::ColumnGroup( array( '', '120', '120', '140', '140' ) ),
-	UI_HTML_Tag::create( 'thead', $tableHeads ),
-	UI_HTML_Tag::create( 'tbody', $rows ),
+	Html::create( 'thead', $tableHeads ),
+	Html::create( 'tbody', $rows ),
 ), array( 'class' => 'table table-fixed' ) );
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
+$buttonAdd	= Html::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
 	'href'	=> './admin/mail/template/add',
 	'class'	=> 'btn btn-success',
 ) );
-$buttonImport	= UI_HTML_Tag::create( 'a', $iconImport.'&nbsp;'.$words['index']['buttonImport'], array(
+$buttonImport	= Html::create( 'a', $iconImport.'&nbsp;'.$words['index']['buttonImport'], array(
 	'href'	=> './admin/mail/template/import',
 	'class'	=> 'btn',
 ) );
 
-$iconList		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'icon-list' ) );
-$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'icon-arrow-left' ) );
-$iconFile		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
-$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconList		= Html::create( 'b', '', array( 'class' => 'icon-list' ) );
+$iconCancel		= Html::create( 'b', '', array( 'class' => 'icon-arrow-left' ) );
+$iconFile		= Html::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
+$iconSave		= Html::create( 'b', '', array( 'class' => 'icon-ok icon-white' ) );
 if( $env->hasModule( 'UI_Font_FontAwesome' ) ){
-	$iconList		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconFile		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
-	$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconList		= Html::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconCancel		= Html::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconFile		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
+	$iconSave		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 }
 
 $helperUpload	= new View_Helper_Input_File( $env );
@@ -93,7 +97,7 @@ $modalImportBody	= $textTop.'
 			'.$helperUpload->render().'
 		</div>
 	</div>'.$textBottom;
-$modalImport		= new \CeusMedia\Bootstrap\Modal( 'modal-mail-template-upload' );
+$modalImport	= new BootstrapModalDialog( 'modal-mail-template-upload' );
 $modalImport->setBody( $modalImportBody );
 $modalImport->setHeading( 'Import eines Mail-Templates <small class="muted">(aus einer Datei)</small>' );
 $modalImport->setFormAction( './admin/mail/template/import' );
@@ -102,7 +106,7 @@ $modalImport->setSubmitButtonLabel( $iconImport.'&nbsp;hochladen' );
 $modalImport->setSubmitButtonClass( 'btn btn-primary' );
 $modalImport->setCloseButtonLabel( $iconCancel.'&nbsp;abbrechen' );
 
-$modalImportTrigger	= new \CeusMedia\Bootstrap\Modal\Trigger( 'modal-mail-template-upload-trigger' );
+$modalImportTrigger	= new BootstrapModalTrigger( 'modal-mail-template-upload-trigger' );
 $modalImportTrigger->setModalId( 'modal-mail-template-upload' );
 $modalImportTrigger->setLabel( $iconImport.'&nbsp;Vorlage importieren' );
 
@@ -121,5 +125,3 @@ return '
 		</div>
 	</div>
 </div>'.$modalImport;
-
-?>

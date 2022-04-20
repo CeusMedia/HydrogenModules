@@ -1,12 +1,15 @@
 <?php
+use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
+use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
+use UI_HTML_Tag as Html;
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
-$iconActivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconDeactivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconAdd		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconEdit		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconCancel		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRemove		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
+$iconActivate	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconDeactivate	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $roleMap	= array();
 foreach( $roles as $role )
@@ -73,7 +76,7 @@ $body	= '
 	</div>
 </div>';
 
-$modalMemberAdd	= new \CeusMedia\Bootstrap\Modal( 'modalWorkMailGroupMemberAdd' );
+$modalMemberAdd	= new BootstrapModalDialog( 'modalWorkMailGroupMemberAdd' );
 $modalMemberAdd->setHeading( 'Mitglied hinzufügen' );
 $modalMemberAdd->setBody( $body );
 $modalMemberAdd->setCloseButtonLabel( $iconCancel.'&nbsp;abbrechen' );
@@ -81,37 +84,37 @@ $modalMemberAdd->setSubmitButtonLabel( $iconSave.'&nbsp;speichern' );
 $modalMemberAdd->setSubmitButtonClass( 'btn btn-primary' );
 $modalMemberAdd->setFormAction( './work/mail/group/addMember/'.$group->mailGroupId );
 
-$modalMemberAddTrigger	= new \CeusMedia\Bootstrap\Modal\Trigger( 'modalWorkMailGroupMemberAddTrigger' );
+$modalMemberAddTrigger	= new BootstrapModalTrigger( 'modalWorkMailGroupMemberAddTrigger' );
 $modalMemberAddTrigger->setModalId( 'modalWorkMailGroupMemberAdd' );
 $modalMemberAddTrigger->setLabel( $iconAdd.'&nbsp;hinzufügen' );
 $modalMemberAddTrigger->setAttributes( array( 'class' => 'btn btn-success' ) );
 
 //  --  MEMBERS LIST  --  //
 
-$list	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
+$list	= Html::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $members ){
 	$list	= array();
 	foreach( $members as $member ){
-		$buttonEdit	= new \CeusMedia\Bootstrap\Modal\Trigger( 'modal-trigger-edit-'.$member->mailGroupMemberId );
+		$buttonEdit	= new BootstrapModalTrigger( 'modal-trigger-edit-'.$member->mailGroupMemberId );
 		$buttonEdit->setModalId( 'modal-edit-'.$member->mailGroupMemberId );
 		$buttonEdit->setLabel( $iconEdit );
 		$buttonEdit->setAttributes( array( 'class' => 'btn btn-mini' ) );
-		$buttonActivate	= UI_HTML_Tag::create( 'a', $iconActivate, array(
+		$buttonActivate	= Html::create( 'a', $iconActivate, array(
 			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/2',
 			'class'	=> 'btn btn-success btn-mini',
 			'title'	=> 'aktivieren',
 		) );
-		$buttonDeactivate	= UI_HTML_Tag::create( 'a', $iconDeactivate, array(
+		$buttonDeactivate	= Html::create( 'a', $iconDeactivate, array(
 			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/-3',
 			'class'	=> 'btn btn-inverse btn-mini',
 			'title'	=> 'deaktivieren',
 		) );
-		$buttonReject	= UI_HTML_Tag::create( 'a', $iconDeactivate, array(
+		$buttonReject	= Html::create( 'a', $iconDeactivate, array(
 			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/-2',
 			'class'	=> 'btn btn-inverse btn-mini',
 			'title'	=> 'ablehnen',
 		) );
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$buttonRemove	= Html::create( 'a', $iconRemove, array(
 			'href'	=> './work/mail/group/removeMember/'.$group->mailGroupId.'/'.$member->mailGroupMemberId,
 			'class'	=> 'btn btn-danger btn-mini',
 			'title'	=> 'entfernen',
@@ -131,14 +134,14 @@ if( $members ){
 			$buttons	= array( $buttonEdit, $buttonActivate, $buttonReject );
 		if( $member->status == Model_Mail_Group_Member::STATUS_UNREGISTERED )
 			$buttons	= array( $buttonEdit, $buttonRemove );
-		$buttons	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
-		$address	= UI_HTML_Tag::create( 'span', $member->address, array( 'class' => 'muted' ) );
-		$name		= UI_HTML_Tag::create( 'small', $member->title, array( 'class' => '' ) );
-		$status		= UI_HTML_Tag::create( 'span', $words['member-statuses'][$member->status], array( 'class' => 'label '.$statusClasses[$member->status] ) );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $name.'<br/>'.$address, array() ),
-			UI_HTML_Tag::create( 'td', $roleMap[$member->roleId].'<br/>'.$status, array() ),
-			UI_HTML_Tag::create( 'td', $buttons, array( 'style' => 'text-align: right' ) ),
+		$buttons	= Html::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
+		$address	= Html::create( 'span', $member->address, array( 'class' => 'muted' ) );
+		$name		= Html::create( 'small', $member->title, array( 'class' => '' ) );
+		$status		= Html::create( 'span', $words['member-statuses'][$member->status], array( 'class' => 'label '.$statusClasses[$member->status] ) );
+		$list[]	= Html::create( 'tr', array(
+			Html::create( 'td', $name.'<br/>'.$address, array() ),
+			Html::create( 'td', $roleMap[$member->roleId].'<br/>'.$status, array() ),
+			Html::create( 'td', $buttons, array( 'style' => 'text-align: right' ) ),
 		) );
 
 		$optRoleId	= array();
@@ -146,17 +149,17 @@ if( $members ){
 			$optRoleId[$role->mailGroupRoleId]	= $role->title;
 		$optRoleId	= UI_HTML_Elements::Options( $optRoleId, $member->roleId );
 
-		$modal	= new \CeusMedia\Bootstrap\Modal( 'modal-edit-'.$member->mailGroupMemberId );
+		$modal	= new BootstrapModalDialog( 'modal-edit-'.$member->mailGroupMemberId );
 		$modal->setHeading( 'Mitglied bearbeiten' );
 		$modal->setSubmitButtonClass( 'btn btn-primary' );
 		$modal->setFormAction( './work/mail/group/editMember/'.$group->mailGroupId.'/'.$member->mailGroupMemberId );
 		$modal->setSubmitButtonLabel( $iconSave.' speichern' );
 		$modal->setCloseButtonLabel( $iconCancel.' abbrechen' );
 		$modal->setBody( array(
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Name', array( 'for' => 'input_title' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+			Html::create( 'div', array(
+				Html::create( 'div', array(
+					Html::create( 'label', 'Name', array( 'for' => 'input_title' ) ),
+					Html::create( 'input', NULL, array(
 						'type'	=> 'text',
 						'id'	=> 'input_title',
 						'name'	=> 'title',
@@ -164,19 +167,19 @@ if( $members ){
 						'value'	=> $member->title,
 					) ),
 				), array( 'class' => 'span8' ) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Rolle', array( 'for' => 'input_' ) ),
-					UI_HTML_Tag::create( 'select', $optRoleId, array(
+				Html::create( 'div', array(
+					Html::create( 'label', 'Rolle', array( 'for' => 'input_' ) ),
+					Html::create( 'select', $optRoleId, array(
 						'id'	=> 'input_roleId',
 						'name'	=> 'roleId',
 						'class'	=> 'span12',
 					) ),
 				), array( 'class' => 'span4' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'E-Mail-Adresse', array( 'for' => 'input_address' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+			Html::create( 'div', array(
+				Html::create( 'div', array(
+					Html::create( 'label', 'E-Mail-Adresse', array( 'for' => 'input_address' ) ),
+					Html::create( 'input', NULL, array(
 						'type'	=> 'text',
 						'id'	=> 'input_address',
 						'name'	=> 'address',
@@ -189,24 +192,24 @@ if( $members ){
 		$modals[]	= $modal;
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( '', '20%', '100px' );
-	$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$thead		= Html::create( 'thead', UI_HTML_Elements::TableHeads( array(
 		'Name & E-Mail-Adresse',
 		'Rolle',
 		'',
 	) ) );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
-	$list		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed' ) );
+	$tbody		= Html::create( 'tbody', $list );
+	$list		= Html::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed' ) );
 }
 
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Mitglieder der Gruppe' ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'div', array(
+return Html::create( 'div', array(
+	Html::create( 'h3', 'Mitglieder der Gruppe' ),
+	Html::create( 'div', array(
+		Html::create( 'div', array(
+			Html::create( 'div', array(
 				$list
 			), array( 'class' => 'span12' ) ),
 		), array( 'class' => 'row-fluid' ) ),
-		UI_HTML_Tag::create( 'div', array(
+		Html::create( 'div', array(
 			$modalMemberAddTrigger
 		), array( 'class' => 'buttonbar' ) ),
 	), array( 'class' => 'content-panel-inner' ) )

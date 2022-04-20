@@ -1,11 +1,14 @@
 <?php
+use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
+use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
+use UI_HTML_Tag as Html;
 
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconRemove	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $heads	= array();
 $cols	= array();
 foreach( $grades as $grade ){
-	$input	= UI_HTML_Tag::create( 'input', NULL, array(
+	$input	= Html::create( 'input', NULL, array(
 		'type'	=> 'number',
 		'step'	=> '0.01',
 		'min'	=> 0,
@@ -14,33 +17,33 @@ foreach( $grades as $grade ){
 		'class'	=> 'span12',
 		'value'	=> number_format( 0, 2 ),
 	) );
-	$label		= UI_HTML_Tag::create( 'label', $input, array( 'class' => 'checkbox' ) );
-	$heads[]	= UI_HTML_Tag::create( 'th', $grade->title, array( 'class' => 'cell-price' ) );
-	$cols[]		= UI_HTML_Tag::create( 'td', $input, array( 'class' => 'cell-price' ) );
+	$label		= Html::create( 'label', $input, array( 'class' => 'checkbox' ) );
+	$heads[]	= Html::create( 'th', $grade->title, array( 'class' => 'cell-price' ) );
+	$cols[]		= Html::create( 'td', $input, array( 'class' => 'cell-price' ) );
 }
-$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', $heads ) );
-$tbody		= UI_HTML_Tag::create( 'tbody', UI_HTML_Tag::create( 'tr', $cols ) );
-$listGrades	= UI_HTML_Tag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-condensed table-striped' ) );
+$thead		= Html::create( 'thead', Html::create( 'tr', $heads ) );
+$tbody		= Html::create( 'tbody', Html::create( 'tr', $cols ) );
+$listGrades	= Html::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-condensed table-striped' ) );
 
 $listCountries	= array();
 foreach( $countryMap as $countryCode => $countryLabel ){
 	if( in_array( $countryCode, $zoneCountries ) )
 		continue;
-	$input	= UI_HTML_Tag::create( 'input', NULL, array(
+	$input	= Html::create( 'input', NULL, array(
 		'type'	=> 'checkbox',
 		'name'	=> 'country[]',
 		'id'	=> 'input_country_'.$countryCode,
 		'value'	=> $countryCode,
 	) );
-	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$countryLabel, array( 'class' => 'checkbox' ) );
-	$listCountries[]	= UI_HTML_Tag::create( 'li', $label );
+	$label	= Html::create( 'label', $input.'&nbsp;'.$countryLabel, array( 'class' => 'checkbox' ) );
+	$listCountries[]	= Html::create( 'li', $label );
 }
-$listCountries	= UI_HTML_Tag::create( 'ul', $listCountries, array( 'class' => 'unstyled' ) );
+$listCountries	= Html::create( 'ul', $listCountries, array( 'class' => 'unstyled' ) );
 $modalBody	= array(
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'label', 'Titel', array( 'class' => 'mandatory required') ),
-			UI_HTML_Tag::create( 'input', NULL, array(
+	Html::create( 'div', array(
+		Html::create( 'div', array(
+			Html::create( 'label', 'Titel', array( 'class' => 'mandatory required') ),
+			Html::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'name'		=> 'title',
 				'id'		=> 'input_title',
@@ -49,11 +52,11 @@ $modalBody	= array(
 			) ),
 		), array( 'class' => 'span12' ) ),
 	), array( 'class' => 'row-fluid' ) ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'label', 'Länder' ),
-			UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'label', join( array(
-				UI_HTML_Tag::create( 'input', NULL, array(
+	Html::create( 'div', array(
+		Html::create( 'div', array(
+			Html::create( 'label', 'Länder' ),
+			Html::create( 'div', Html::create( 'label', join( array(
+				Html::create( 'input', NULL, array(
 					'type'		=> 'checkbox',
 					'name'		=> 'fallback',
 					'id'		=> 'input_fallback',
@@ -62,22 +65,21 @@ $modalBody	= array(
 				) ),
 				'&nbsp;weltweit'
 			) ), array( 'class' => 'checkbox' ) ) ),
-			UI_HTML_Tag::create( 'div', $listCountries, array(
+			Html::create( 'div', $listCountries, array(
 				'id'	=> 'modal-countries',
 				'class'	=> '',
 				'style'	=> 'max-height: 120px; overflow: hidden; overflow-y: auto; padding: 0.5em; border: 1px solid gray; border: 1px solid rgba(127, 127, 127, 0.45); border-radius: 0.3em 0em 0em 0.3em',
 			) ),
 		), array( 'class' => 'span12' ) ),
 	), array( 'class' => 'row-fluid' ) ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'label', 'Preise' ),
+	Html::create( 'div', array(
+		Html::create( 'div', array(
+			Html::create( 'label', 'Preise' ),
 			$listGrades
 		), array( 'class' => 'span12' ) ),
 	), array( 'class' => 'row-fluid' ) ),
 );
-$modalZone	= new \CeusMedia\Bootstrap\Modal();
-$modalZone->setId( 'modalAddZone' );
+$modalZone	= new BootstrapModalDialog( 'modalAddZone' );
 $modalZone->setBody( $modalBody )->setHeading( 'Neue Zone' );
 $modalZone->setFormAction( './manage/shop/shipping/addZone' );
 $modalZone->setSubmitButtonClass( 'btn btn-primary' );
@@ -87,38 +89,37 @@ $modalZone->setCloseButtonClass( 'btn' );
 $modalZone->setCloseButtonLabel( 'abbrechen' );
 $modalZone->setCloseButtonIconClass( 'fa fa-fw fa-arrow-left' );
 
-$modalZoneTrigger	= new \CeusMedia\Bootstrap\Modal\Trigger();
-$modalZoneTrigger->setModalId( 'modalAddZone' );
+$modalZoneTrigger	= new BootstrapModalTrigger( 'modalAddZone' );
 $modalZoneTrigger->setLabel( 'neue Zone' )->setIcon( 'fa fa-fw fa-plus' );
 $modalZoneTrigger->setAttributes( array( 'class' => 'btn btn-success' ) );
-//$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Zone', array( 'href' => './manage/shop/shipping/addZone', 'class' => 'btn btn-success' ) );
+//$buttonAdd	= Html::create( 'a', $iconAdd.'&nbsp;neue Zone', array( 'href' => './manage/shop/shipping/addZone', 'class' => 'btn btn-success' ) );
 $rows	= array();
 foreach( $zones as $zone ){
-	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array( 'href' => './manage/shop/shipping/removeZone/'.$zone->zoneId, 'class' => 'btn btn-danger btn-small' ) );
-	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array( 'href' => './manage/shop/shipping/removeZone/'.$zone->zoneId, 'class' => 'btn btn-inverse btn-mini' ) );
+	$buttonRemove	= Html::create( 'a', $iconRemove.'&nbsp;entfernen', array( 'href' => './manage/shop/shipping/removeZone/'.$zone->zoneId, 'class' => 'btn btn-danger btn-small' ) );
+	$buttonRemove	= Html::create( 'a', $iconRemove, array( 'href' => './manage/shop/shipping/removeZone/'.$zone->zoneId, 'class' => 'btn btn-inverse btn-mini' ) );
 	if( $zone->fallback )
 		$countries	= '*';
 	else{
 		$countries		= array();
 		foreach( $zone->countries as $countryCode )
-			$countries[]	= UI_HTML_Tag::create( 'abbr', $countryCode, array( 'title' => $countryMap[$countryCode] ) );
+			$countries[]	= Html::create( 'abbr', $countryCode, array( 'title' => $countryMap[$countryCode] ) );
 		$countries	= join( ', ', $countries );
 	}
-	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $zone->title ),
-		UI_HTML_Tag::create( 'td', $countries ),
-		UI_HTML_Tag::create( 'td', $buttonRemove, array( 'style' => 'text-align: right' ) ),
+	$rows[]	= Html::create( 'tr', array(
+		Html::create( 'td', $zone->title ),
+		Html::create( 'td', $countries ),
+		Html::create( 'td', $buttonRemove, array( 'style' => 'text-align: right' ) ),
 	) );
 }
-$thead	= UI_HTML_Tag::create( 'tr', array( UI_HTML_Tag::create( 'th', 'Titel' ), UI_HTML_Tag::create( 'th', 'Länder' ) ) );
-$thead	= UI_HTML_Tag::create( 'thead', $thead );
-$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-$table	= UI_HTML_Tag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table' ) );
-$panelZones	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Zonen' ),
-	UI_HTML_Tag::create( 'div', array(
+$thead	= Html::create( 'tr', array( Html::create( 'th', 'Titel' ), Html::create( 'th', 'Länder' ) ) );
+$thead	= Html::create( 'thead', $thead );
+$tbody	= Html::create( 'tbody', $rows );
+$table	= Html::create( 'table', array( $thead, $tbody ), array( 'class' => 'table' ) );
+$panelZones	= Html::create( 'div', array(
+	Html::create( 'h3', 'Zonen' ),
+	Html::create( 'div', array(
 		$table,
-		UI_HTML_Tag::create( 'div', $modalZoneTrigger, array( 'class' => 'buttonbar' ) ),
+		Html::create( 'div', $modalZoneTrigger, array( 'class' => 'buttonbar' ) ),
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );
 

@@ -1,9 +1,9 @@
 <?php
-use \CeusMedia\Bootstrap\Icon;
-use \CeusMedia\Bootstrap\Modal;
-use \CeusMedia\Bootstrap\Modal\Trigger;
-use \CeusMedia\Bootstrap\LinkButton;
-use \CeusMedia\Bootstrap\SubmitButton;
+use CeusMedia\Bootstrap\Button\Link as LinkButton;
+use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
+use CeusMedia\Bootstrap\Icon;
+use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
+use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 
 $buttonActivate	= LinkButton::create(
 	'./admin/mail/template/setStatus/'.$template->mailTemplateId.'/'.Model_Mail_Template::STATUS_ACTIVE,
@@ -146,14 +146,14 @@ if( $template->used )
 	$panelRemove	= '';
 
 /*  --  PANEL: PREVIEW: HTML  --  */
-$modalPreviewHtml		= new Modal( 'modal-admin-mail-template-preview-html' );
+$modalPreviewHtml	= new BootstrapModalDialog( 'modal-admin-mail-template-preview-html' );
 $modalPreviewHtml->setHeading( $words['modal-preview']['heading-html'] );
 $modalPreviewHtml->setBody( '<iframe src="./admin/mail/template/preview/'.$template->mailTemplateId.'/html"></iframe>' );
 $modalPreviewHtml->setFade( FALSE );
 //$modalPreviewHtml->useHeader( FALSE );
 $modalPreviewHtml->useFooter( FALSE );
 $modalPreviewHtml->setCloseButtonLabel( $words['modal-preview']['buttonClose'] );
-$buttonPreviewHtml	= Trigger::create(
+$buttonPreviewHtml	= BootstrapModalTrigger::create(
 	'modal-admin-mail-template-preview-html',
 	$words['edit']['buttonPreview']
 )	->setIcon( 'eye' )
@@ -164,13 +164,13 @@ $iframeHtml		= UI_HTML_Tag::create( 'iframe', '', array(
 ) );
 
 /*  --  PANEL: PREVIEW: TEXT  --  */
-$modalPreviewText		= new Modal( 'modal-admin-mail-template-preview-text' );
+$modalPreviewText	= new BootstrapModalDialog( 'modal-admin-mail-template-preview-text' );
 $modalPreviewText->setHeading( $words['modal-preview']['heading-text'] );
 $modalPreviewText->setBody( '<iframe src="./admin/mail/template/preview/'.$template->mailTemplateId.'/text"></iframe>' );
 $modalPreviewText->setFade( FALSE );
 //$modalPreviewText->useHeader( FALSE );
 $modalPreviewText->useFooter( FALSE );
-$buttonPreviewText	= Trigger::create(
+$buttonPreviewText	= BootstrapModalTrigger::create(
 	'modal-admin-mail-template-preview-text',
 	$words['edit']['buttonPreview']
 )	->setIcon( 'eye' )
@@ -213,30 +213,27 @@ $panelPreview		= '
 	</div>
 </div>';
 
-return '
-	<div class="row-fluid">
-		<div class="span6">
-			'.$panelMain.'
-			<div class="row-fluid">
-				<div class="span6">
-					'.$panelTest.'
-				</div>
-				<div class="span6">
-					'.$panelCopy.'
-				</div>
+return '<div class="row-fluid">
+	<div class="span6">
+		'.$panelMain.'
+		<div class="row-fluid">
+			<div class="span6">
+				'.$panelTest.'
 			</div>
-			<div class="row-fluid">
-				<div class="span6">
-					'.$panelExport.'
-				</div>
-				<div class="span6">
-					'.$panelRemove.'
-				</div>
+			<div class="span6">
+				'.$panelCopy.'
 			</div>
 		</div>
-		<div class="span6">
-			'.$panelPreview.'
+		<div class="row-fluid">
+			<div class="span6">
+				'.$panelExport.'
+			</div>
+			<div class="span6">
+				'.$panelRemove.'
+			</div>
 		</div>
-	</div>'.$modalPreviewHtml.$modalPreviewText;
-
-?>
+	</div>
+	<div class="span6">
+		'.$panelPreview.'
+	</div>
+</div>'.$modalPreviewHtml.$modalPreviewText;

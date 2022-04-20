@@ -1,9 +1,11 @@
 <?php
+use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
+use UI_HTML_Tag as Html;
 
 $w	= (object) $words->add;
 
-$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) ).'&nbsp;';
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) ).'&nbsp;';
+$iconCancel	= Html::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) ).'&nbsp;';
+$iconSave	= Html::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) ).'&nbsp;';
 
 $optTemplate	= array();
 foreach( $addTemplates as $entry )
@@ -68,7 +70,7 @@ jQuery(document).ready(function(){
 </script>
 ';
 
-$modalAdd	= new \CeusMedia\Bootstrap\Modal( 'modal-add' );
+$modalAdd	= new BootstrapModalDialog( 'modal-add' );
 $modalAdd->setFormAction( './work/newsletter/add' );
 $modalAdd->setBody( $formAdd );
 $modalAdd->setHeading( $w->heading );

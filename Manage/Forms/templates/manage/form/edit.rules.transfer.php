@@ -1,13 +1,16 @@
 <?php
+use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
+use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
+use UI_HTML_Tag as Html;
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconTest	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cogs' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconMail	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
+$iconAdd	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconEdit	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconSave	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconTest	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-cogs' ) );
+$iconRemove	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconMail	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
 
-$listRules	= UI_HTML_Tag::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
+$listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $transferRules ){
 	$listRules	= array();
 	$modals		= array();
@@ -15,7 +18,7 @@ if( $transferRules ){
 		$ruleId		= $rule->formTransferRuleId;
 		$target		= $transferTargets[$rule->formTransferTargetId];
 
-		$buttonTest	= UI_HTML_Tag::create( 'button', $iconTest, array(
+		$buttonTest	= Html::create( 'button', $iconTest, array(
 			'type'	=> 'button',
 			'id'	=> 'button-test-'.$ruleId,
 			'class'	=> 'btn not-btn-info not-btn-small btn-mini button-test-rules',
@@ -26,7 +29,7 @@ if( $transferRules ){
 			$optTransferTarget[$item->formTransferTargetId]	= $item->title;
 		$optTransferTarget	= UI_HTML_Elements::Options( $optTransferTarget, $rule->formTransferTargetId );
 
-		$modal	= new \CeusMedia\Bootstrap\Modal( 'rule-transfer-edit-'.$ruleId );
+		$modal	= new BootstrapModalDialog( 'rule-transfer-edit-'.$ruleId );
 		$modal->setHeading( 'Transfer-Regel: '.$rule->title );
 		$modal->setFormAction( './manage/form/editTransferRule/'.$form->formId.'/'.$ruleId );
 		$modal->setSubmitButtonLabel( 'speichern' );
@@ -50,27 +53,27 @@ if( $transferRules ){
 			</div>
 		</div>
 		' );
-		$modalTrigger	= new \CeusMedia\Bootstrap\Modal\Trigger( 'rule-transfer-edit-'.$ruleId.'-trigger' );
+		$modalTrigger	= new BootstrapModalTrigger( 'rule-transfer-edit-'.$ruleId.'-trigger' );
 		$modalTrigger->setModalId( 'rule-transfer-edit-'.$ruleId )->setLabel( $iconEdit.'&nbsp;bearbeiten' );
 		$modalTrigger->setAttributes( array( 'class' => 'btn not-btn-primary btn-small' ) );
 
 
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+		$buttonRemove	= Html::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 			'href'	=> './manage/form/removeTransferRule/'.$form->formId.'/'.$rule->formTransferRuleId,
 			'class'	=> 'btn btn-inverse btn-small',
 		) );
-		$buttons		= UI_HTML_Tag::create( 'div', [$modalTrigger, $buttonRemove], ['class' => 'btn-group'] );
-		$listRules[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $rule->title ),
-			UI_HTML_Tag::create( 'td', $target->title ),
-			UI_HTML_Tag::create( 'td', $buttons ),
+		$buttons		= Html::create( 'div', [$modalTrigger, $buttonRemove], ['class' => 'btn-group'] );
+		$listRules[]	= Html::create( 'tr', array(
+			Html::create( 'td', $rule->title ),
+			Html::create( 'td', $target->title ),
+			Html::create( 'td', $buttons ),
 		) );
 		$modals[]		= $modal;
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '25%', '20%' ) );
-	$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Bezeichnung', 'Transfer-Ziel' ) ) );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $listRules );
-	$listRules	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped' ) ).join( $modals );
+	$thead		= Html::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Bezeichnung', 'Transfer-Ziel' ) ) );
+	$tbody		= Html::create( 'tbody', $listRules );
+	$listRules	= Html::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped' ) ).join( $modals );
 }
 
 $optTransferTarget	= array();
@@ -78,7 +81,7 @@ foreach( $transferTargets as $item )
 	$optTransferTarget[$item->formTransferTargetId]	= $item->title;
 $optTransferTarget	= UI_HTML_Elements::Options( $optTransferTarget );
 
-$modal	= new \CeusMedia\Bootstrap\Modal( 'rule-transfer-add' );
+$modal	= new BootstrapModalDialog( 'rule-transfer-add' );
 $modal->setHeading( 'Neue Transfer-Regel' );
 $modal->setFormAction( './manage/form/addTransferRule/'.$form->formId );
 $modal->setSubmitButtonLabel( 'speichern' );
@@ -102,7 +105,8 @@ $modal->setBody( '
 	</div>
 </div>
 ' );
-$modalTrigger	= new \CeusMedia\Bootstrap\Modal\Trigger( 'rule-transfer-add-trigger' );
+$modalTrigger	= new BootstrapModalTrigger();
+$modalTrigger->setId( 'rule-transfer-add-trigger' );
 $modalTrigger->setModalId( 'rule-transfer-add' )->setLabel( $iconAdd.'&nbsp;neuer Transfer' );
 $modalTrigger->setAttributes( array( 'class' => 'btn btn-primary' ) );
 
