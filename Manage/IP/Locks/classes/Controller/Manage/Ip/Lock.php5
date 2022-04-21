@@ -46,7 +46,7 @@ class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller{
 	public function index( $limit = 15, $page = 0 ){
 		$session	= $this->env->getSession();
 		$conditions	= array(
-			'status'	=> '!=-1',
+			'status'	=> '!= -1',
 		);
 		$order		= array();
 		if( $session->get( $this->filterSessionPrefix.'ip' ) )

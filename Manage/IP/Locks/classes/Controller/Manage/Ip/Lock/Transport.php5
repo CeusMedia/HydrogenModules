@@ -5,11 +5,11 @@ class Controller_Manage_Ip_Lock_Transport extends CMF_Hydrogen_Controller{
 		$this->request			= $this->env->getRequest();
 		$this->modelFilter		= new Model_IP_Lock_Filter( $this->env );
 		$this->modelReason		= new Model_IP_Lock_Reason( $this->env );
-	//	$this->logicTransport	= Logic_IP_Lock_Transport::getInstance();
+		$this->logicTransport	= Logic_IP_Lock_Transport::getInstance( $this->env );
 
-		$logicPool				= $this->env->getLogic();
-		$logicPoolKey			= $logicPool->getKeyFromClassName( 'Logic_IP_Lock_Transport' );
-		$this->logicTransport	= $logicPool->get( $logicPoolKey );
+//		$logicPool				= $this->env->getLogic();
+//		$logicPoolKey			= $logicPool->getKeyFromClassName( 'Logic_IP_Lock_Transport' );
+//		$this->logicTransport	= $logicPool->get( $logicPoolKey );
 	}
 
 	public function index(){
