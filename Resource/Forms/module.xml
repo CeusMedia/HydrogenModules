@@ -159,6 +159,46 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>form_fills` (
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DROP TABLE IF EXISTS `<%?prefix%>form_fill_transfers`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_fill_transfers` (
+  `formFillTransferId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `formTransferRuleId` int(10) UNSIGNED NOT NULL,
+  `formTransferTargetId` int(10) UNSIGNED NOT NULL,
+  `fillId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) UNSIGNED NOT NULL,
+  `data` text COLLATE utf8_unicode_ci NOT NULL,
+  `message` text COLLATE utf8_unicode_ci NULL,
+  `trace` TEXT COLLATE utf8_unicode_ci NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`formFillTransferId`),
+  KEY `formId` (`formId`),
+  KEY `formTransferRuleId` (`formTransferRuleId`),
+  KEY `formTransferTargetId` (`formTransferTargetId`),
+  KEY `fillId` (`fillId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_import_rules`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_import_rules` (
+  `formImportRuleId` int(10) UNSIGNED NOT NULL,
+  `importConnectionId` int(10) UNSIGNED NOT NULL,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:new, 1:test, 2:active, 3:paused, 4:disabled',
+  `title` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `searchCriteria` text COLLATE utf8_unicode_ci NOT NULL,
+  `options` text COLLATE utf8_unicode_ci,
+  `rules` text COLLATE utf8_unicode_ci NOT NULL,
+  `renameTo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `moveTo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`formImportRuleId`),
+  KEY `formId` (`formId`),
+  KEY `status` (`status`),
+  KEY `importConnectionId` (`importConnectionId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 DROP TABLE IF EXISTS `<%?prefix%>form_mails`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>form_mails` (
   `mailId` int(11) NOT NULL AUTO_INCREMENT,
