@@ -114,7 +114,7 @@ code:shell>./job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 	<job id="Job.Util.getDate">Job_Util::getDate</job>
 	<job id="Job.Util.getExtensionVersion">Job_Util::getExtensionVersion</job>
 	<job id="Job.Util.getPhpVersion">Job_Util::getPhpVersion</job>
-	<sql type="mysql" on="update" version="0.7.2"><![CDATA[
+	<sql type="mysql" on="install" version="0.7.2"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>job_definitions`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>job_definitions` (
   `jobDefinitionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
