@@ -5,7 +5,13 @@ class Model_Form_Transfer_Rule extends CMF_Hydrogen_Model
 	const STATUS_CONFIRMED	= 1;
 	const STATUS_HANDLED	= 2;
 
-	protected $columns		= array(
+	const STATUSES			= [
+		self::STATUS_NEW,
+		self::STATUS_CONFIRMED,
+		self::STATUS_HANDLED,
+	];
+
+	protected $columns		= [
 		'formTransferRuleId',
 		'formTransferTargetId',
 		'formId',
@@ -13,12 +19,16 @@ class Model_Form_Transfer_Rule extends CMF_Hydrogen_Model
 		'rules',
 		'createdAt',
 		'modifiedAt',
-	);
-	protected $indices		= array(
+	];
+
+	protected $indices		= [
 		'formTransferTargetId',
 		'formId',
-	);
+	];
+
 	protected $primaryKey	= 'formTransferRuleId';
+
 	protected $name			= 'form_transfer_rules';
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

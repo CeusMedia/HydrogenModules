@@ -13,7 +13,7 @@ class Model_Form_Fill_Transfer extends CMF_Hydrogen_Model
 		self::STATUS_EXCEPTION,
 	];
 
-	protected $columns		= array(
+	protected $columns		= [
 		'formFillTransferId',
 		'formId',
 		'formTransferRuleId',
@@ -24,15 +24,19 @@ class Model_Form_Fill_Transfer extends CMF_Hydrogen_Model
 		'message',
 		'trace',
 		'createdAt',
-	);
-	protected $indices		= array(
+	];
+
+	protected $indices		= [
 		'formId',
 		'formTransferRuleId',
 		'formTransferTargetId',
 		'fillId',
 		'status',
-	);
+	];
+
 	protected $primaryKey	= 'formFillTransferId';
+
 	protected $name			= 'form_fill_transfers';
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

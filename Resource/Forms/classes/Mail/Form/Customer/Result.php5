@@ -1,7 +1,8 @@
 <?php
-class Mail_Form_Customer_Result extends Mail_Form_Abstract{
-
-	public function generate( $data = array() ){
+class Mail_Form_Customer_Result extends Mail_Form_Abstract
+{
+	public function generate( $data = [] )
+	{
 		$form	= $this->data['form'];
 		$fill	= $this->data['fill'];
 		$mail	= $this->data['mail'];
@@ -15,5 +16,11 @@ class Mail_Form_Customer_Result extends Mail_Form_Abstract{
 		}
 		else
 			$this->setText( $content );
+
+		if( count( $form->attachments ?? [] ) !== 0 ){
+			$path	= $this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
+			foreach( $form->attachments as $attachment )
+				$this->addAttachment( $path.$attachment );
+		}
 	}
 }

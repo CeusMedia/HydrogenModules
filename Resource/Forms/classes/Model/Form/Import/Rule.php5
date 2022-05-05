@@ -7,45 +7,45 @@ class Model_Form_Import_Rule extends CMF_Hydrogen_Model
 	const STATUS_PAUSED		= 3;
 	const STATUS_DISABLED	= 4;
 
-	const STATUSES			= array(
+	const STATUSES			= [
 		self::STATUS_NEW,
 		self::STATUS_TEST,
 		self::STATUS_ACTIVE,
 		self::STATUS_PAUSED,
 		self::STATUS_DISABLED,
-	);
+	];
 
-	const TRANSITINS_STATUS	= array(
-		self::STATUS_NEW		=> array(
+	const TRANSITIONS_STATUS	= [
+		self::STATUS_NEW		=> [
 			self::STATUS_TEST,
 			self::STATUS_ACTIVE,
 			self::STATUS_PAUSED,
 			self::STATUS_DISABLED,
-		),
-		self::STATUS_TEST		=> array(
+		],
+		self::STATUS_TEST		=> [
 			self::STATUS_ACTIVE,
 			self::STATUS_PAUSED,
 			self::STATUS_DISABLED,
-		),
-		self::STATUS_ACTIVE		=> array(
+		],
+		self::STATUS_ACTIVE		=> [
 			self::STATUS_PAUSED,
 			self::STATUS_ACTIVE,
 			self::STATUS_DISABLED,
 			self::STATUS_TEST,
-		),
-		self::STATUS_PAUSED		=> array(
+		],
+		self::STATUS_PAUSED		=> [
 			self::STATUS_ACTIVE,
 			self::STATUS_DISABLED,
 			self::STATUS_TEST,
-		),
-		self::STATUS_DISABLED		=> array(
+		],
+		self::STATUS_DISABLED		=> [
 			self::STATUS_PAUSED,
 			self::STATUS_ACTIVE,
 			self::STATUS_TEST,
-		),
-	);
+		],
+	];
 
-	protected $columns		= array(
+	protected $columns		= [
 		'formImportRuleId',
 		'importConnectionId',
 		'formId',
@@ -58,13 +58,17 @@ class Model_Form_Import_Rule extends CMF_Hydrogen_Model
 		'renameTo',
 		'createdAt',
 		'modifiedAt',
-	);
-	protected $indices		= array(
+	];
+
+	protected $indices		= [
 		'importConnectionId',
 		'formId',
 		'status',
-	);
+	];
+
 	protected $primaryKey	= 'formImportRuleId';
+
 	protected $name			= 'form_import_rules';
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
