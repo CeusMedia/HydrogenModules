@@ -7,6 +7,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 	protected $modelForm;
 	protected $modelFill;
 	protected $modelMail;
+	protected $modelRule;
 	protected $modelTransferTarget;
 	protected $modelFillTransfer;
 	protected $modelTransferRule;
@@ -35,11 +36,10 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 		$this->restart( 'confirmed/'.$fillId, TRUE );
 	}
 
-
 	public function testResultMails( $fillId )
 	{
 		$this->logicFill->sendCustomerResultMail( $fillId );
-		$this->logicFill->sendManagerResultMails( $fillId );
+//		$this->logicFill->sendManagerResultMails( $fillId );
 		$this->env->getMessenger()->noteSuccess( 'Result-Mails versendet' );
 		$this->restart( 'view/'.$fillId, TRUE );
 	}
@@ -315,6 +315,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 		$this->modelForm			= new Model_Form( $this->env );
 		$this->modelFill			= new Model_Form_Fill( $this->env );
 		$this->modelMail			= new Model_Form_Mail( $this->env );
+		$this->modelRule			= new Model_Form_Rule( $this->env );
 		$this->modelTransferTarget	= new Model_Form_Transfer_Target( $this->env );
 		$this->modelTransferRule	= new Model_Form_Transfer_Rule( $this->env );
 		$this->modelFillTransfer	= new Model_Form_Fill_Transfer( $this->env );

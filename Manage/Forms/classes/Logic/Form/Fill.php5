@@ -210,6 +210,32 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 		if( !$formMail )
 			throw new DomainException( 'Invalid mail ID ('.$form->customerMailId.') connected to form ('.$form->formId.')' );
 
+		$form->attachments	= [];
+		$rulesets	= $this->modelRule->getAllByIndices( array(
+			'formId'	=> $fill->formId,
+			'type'		=> Model_Form_Rule::TYPE_ATTACHMENT,
+		) );
+//print_m( $rulesets );
+
+		foreach( $rulesets as $rulesetNr => $ruleset ){
+			$ruleset->rules	= json_decode( $ruleset->rules );
+			if( count( $ruleset->rules ) ){
+				$valid	= TRUE;
+				foreach( $ruleset->rules as $ruleNr => $rule ){
+					if( !isset( $data[$rule->key] ) )
+						$valid = FALSE;
+					else if( (string) $data[$rule->key]['value'] !== (string) $rule->value )
+						$valid = FALSE;
+				}
+				if( $valid ){
+					$form->attachments[]	= $ruleset->filePath;
+				}
+			}
+		}
+
+//print_m( $form->attachments );
+//die;
+
 		//  -  SEND MAIL  --  //
 		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
 		$sender			= $this->createMailAddress( $configResource->get( 'sender.address' ) );

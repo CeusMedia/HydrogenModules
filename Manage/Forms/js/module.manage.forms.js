@@ -42,6 +42,7 @@ var RuleManager = {
 		this.formId = formId;
 		this.modalManager = jQuery("#rule-manager-add");
 		this.modalCustomer = jQuery("#rule-customer-add");
+		this.modalAttachment = jQuery("#rule-attachment-add");
 	},
 	loadFormView: function(){
 		jQuery.ajax({
@@ -84,9 +85,13 @@ var RuleManager = {
 		});
 	},
 	onReady: function(){
-		for(var type=0; type<2; type++){
+		for(var type=0; type<=2; type++){
 			for(var i=0; i<3; i++){
-				if(type === 1){
+				if(type === 2){
+					var selectKey = RuleManager.modalAttachment.find("select#input_attachment_ruleKey_"+i);
+					var selectValue = RuleManager.modalAttachment.find("select#input_attachment_ruleValue_"+i);
+				}
+				else if(type === 1){
 					var selectKey = RuleManager.modalManager.find("select#input_manager_ruleKey_"+i);
 					var selectValue = RuleManager.modalManager.find("select#input_manager_ruleValue_"+i);
 				}
@@ -111,7 +116,10 @@ var RuleManager = {
 		}
 	},
 	getCurrentSelect: function(type, i){
-		if(type === 1){
+		if(type === 2){
+			var selectKey = RuleManager.modalAttachment.find("select#input_attachment_ruleKey_"+i).val();
+		}
+		else if(type === 1){
 			var selectKey = RuleManager.modalManager.find("select#input_manager_ruleKey_"+i).val();
 		}
 		else if(type === 0){
@@ -129,7 +137,12 @@ var RuleManager = {
 	onRuleKeyChange: function(type, i){
 //		console.log({on: 'onRuleKeyChange', type: type, row: i});
 		var current = RuleManager.getCurrentSelect(type, i);
-		if(type === 1){
+		if(type === 2){
+			var selectKey = RuleManager.modalAttachment.find("select#input_attachment_ruleKey_"+i);
+			var selectValue = RuleManager.modalAttachment.find("select#input_attachment_ruleValue_"+i);
+			RuleManager.modalAttachment.find("input#input_attachment_ruleKeyLabel_"+i).val(current.label);
+		}
+		else if(type === 1){
 			var selectKey = RuleManager.modalManager.find("select#input_manager_ruleKey_"+i);
 			var selectValue = RuleManager.modalManager.find("select#input_manager_ruleValue_"+i);
 			RuleManager.modalManager.find("input#input_manager_ruleKeyLabel_"+i).val(current.label);
@@ -150,7 +163,14 @@ var RuleManager = {
 	onRuleValueChange: function(type, i){
 		console.log({on: 'onRuleValueChange', type: type, row: i});
 		var current = RuleManager.getCurrentSelect(type, i);
-		if(type === 1){
+		if(type === 2){
+			var selectKey = RuleManager.modalAttachment.find("select#input_attachment_ruleKey_"+i);
+			var selectValue = RuleManager.modalAttachment.find("select#input_attachment_ruleValue_"+i);
+			for(var j=0; j<current.values.length; j++)
+				if(current.values[j].value == selectValue.val())
+					RuleManager.modalAttachment.find("input#input_attachment_ruleValueLabel_"+i).val(current.values[j].label);
+		}
+		else if(type === 1){
 			var selectKey = RuleManager.modalManager.find("select#input_manager_ruleKey_"+i);
 			var selectValue = RuleManager.modalManager.find("select#input_manager_ruleValue_"+i);
 			for(var j=0; j<current.values.length; j++)

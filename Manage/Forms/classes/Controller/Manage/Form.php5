@@ -56,6 +56,7 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller
 			'rules'			=> json_encode( $data ),
 			'mailAddresses'	=> $this->request->get( 'mailAddresses' ),
 			'mailId'		=> $this->request->get( 'mailId' ),
+			'filePath'		=> $this->request->get( 'filePath' ),
 		] );
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
@@ -109,6 +110,10 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller
 		$this->addData( 'mailsCustomer', $this->getAvailableCustomerMails() );
 		$this->addData( 'mailsManager', $this->getAvailableManagerMails() );
 		$this->addData( 'blocksWithin', $this->getBlocksFromFormContent( $form->content ) );
+		$this->addData( 'rulesAttachment', $this->modelRule->getAllByIndices( [
+			'formId'	=> $formId,
+			'type'		=> Model_Form_Rule::TYPE_ATTACHMENT,
+		] ) );
 		$this->addData( 'rulesManager', $this->modelRule->getAllByIndices( [
 			'formId'	=> $formId,
 			'type'		=> Model_Form_Rule::TYPE_MANAGER,
@@ -324,6 +329,12 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller
 		$mailDomains	= trim( $module->config['mailDomains']->value );
 		$mailDomains	= strlen( $mailDomains ) ? preg_split( '/\s*,\s*/', $mailDomains ) : [];
 		$this->addData( 'mailDomains', $mailDomains );
+
+		$pathApp			= '';
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$pathApp		= Logic_Frontend::getInstance( $this->env )->getPath();
+		$this->path			= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
+		$this->addData( 'files', $this->listFiles() );
 	}
 
 	protected function checkId( $formId, bool $strict = TRUE )
@@ -406,6 +417,31 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller
 				$list[$matches[1][$nr]]	= $item;
 			}
 		}
+		return $list;
+	}
+
+	protected function getMimeTypeOfFile( $fileName )
+	{
+		if( !file_exists( $this->path.$fileName ) )
+			throw new RuntimeException( 'File "'.$fileName.'" is not existing is attachments folder.' );
+		$info	= finfo_open( FILEINFO_MIME_TYPE/*, '/usr/share/file/magic'*/ );
+		return finfo_file( $info, $this->path.$fileName );
+	}
+
+	protected function listFiles()
+	{
+		$list	= array();
+		$index	= new DirectoryIterator( $this->path );
+		foreach( $index as $entry ){
+			if( $entry->isDir() || $entry->isDot() || $entry->getFilename()[0] === "." )
+				continue;
+			$key	= strtolower( $entry->getFilename() );
+			$list[$entry->getFilename()]	= (object) array(
+				'fileName'		=> $entry->getFilename(),
+				'mimeType'		=> $this->getMimeTypeOfFile( $entry->getFilename() )
+			);
+		}
+		ksort( $list );
 		return $list;
 	}
 }

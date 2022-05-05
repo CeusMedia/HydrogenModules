@@ -89,8 +89,8 @@ $modal->setBody( '
 </div>
 <div class="row-fluid">
 	<div class="span8">
-		<label for="input_mailId" class="mandatory required">Kunden-E-Mail</label>
-		<select name="mailId" id="input_mailId" class="span12" required="required">'.$optMailCustomer.'</select>
+		<label for="input_customer_mailId" class="mandatory required">Kunden-E-Mail</label>
+		<select name="mailId" id="input_customer_mailId" class="span12" required="required">'.$optMailCustomer.'</select>
 	</div>
 </div>
 <input type="hidden" name="ruleKeyLabel_0" id="input_customer_ruleKeyLabel_0"/>

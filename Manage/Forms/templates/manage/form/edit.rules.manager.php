@@ -97,14 +97,14 @@ $modal->setBody( '
 </div>
 <div class="row-fluid">
 	<div class="span12">
-		<label for="input_mailAddresses" class="mandatory required">E-Mail-Adressen <small class="muted">(getrennt mit Komma)</small></label>
-		<input type="text" name="mailAddresses" id="input_mailAddresses" class="span12" required="required"/>
+		<label for="input_manager_mailAddresses" class="mandatory required">E-Mail-Adressen <small class="muted">(getrennt mit Komma)</small></label>
+		<input type="text" name="mailAddresses" id="input_manager_mailAddresses" class="span12" required="required"/>
 	</div>
 </div>
 <div class="row-fluid">
 	<div class="span8">
-		<label for="input_mailId" class="mandatory required">Manager-E-Mail</label>
-		<select name="mailId" id="input_mailId" class="span12" required="required">'.$optMailManager.'</select>
+		<label for="input_manager_mailId" class="mandatory required">Manager-E-Mail</label>
+		<select name="mailId" id="input_manager_mailId" class="span12" required="required">'.$optMailManager.'</select>
 	</div>
 </div>
 <input type="hidden" name="ruleKeyLabel_0" id="input_manager_ruleKeyLabel_0"/>
