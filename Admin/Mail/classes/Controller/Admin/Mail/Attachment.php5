@@ -115,12 +115,12 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function getMimeTypeOfFile( $fileName )
+	protected function getMimeTypeOfFile( $filePath )
 	{
-		if( !file_exists( $this->path.$fileName ) )
-			throw new RuntimeException( 'File "'.$fileName.'" is not existing is attachments folder.' );
+		if( !file_exists( $this->path.$filePath ) )
+			throw new RuntimeException( 'File "'.$filePath.'" is not existing is attachments folder.' );
 		$info	= finfo_open( FILEINFO_MIME_TYPE/*, '/usr/share/file/magic'*/ );
-		return finfo_file( $info, $this->path.$fileName );
+		return finfo_file( $info, $this->path.$filePath );
 	}
 
 	public function index( $page = NULL )
@@ -157,42 +157,17 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller
 
 	protected function listFiles()
 	{
-		$list	= array();
-		$index	= new DirectoryIterator( $this->path );
-		foreach( $index as $entry ){
-			if( $entry->isDir() || $entry->isDot() || $entry->getFilename()[0] === "." )
-				continue;
-			$key	= strtolower( $entry->getFilename() );
-			$list[$entry->getFilename()]	= (object) array(
+		$list	= [];
+		foreach( FS_Folder_RecursiveLister::getFileList( $this->path ) as $entry ){
+			$pathName	= preg_replace( '@^'.preg_quote( $this->path, '@' ).'@', '', $entry->getPathName() );
+			$list[$pathName]	= (object) [
 				'fileName'		=> $entry->getFilename(),
-				'mimeType'		=> $this->getMimeTypeOfFile( $entry->getFilename() )
-			);
+				'filePath'		=> $entry->getPathname(),
+				'path'			=> $pathName,
+				'mimeType'		=> $this->getMimeTypeOfFile( $pathName )
+			];
 		}
-		ksort( $list );
 		return $list;
-	}
-
-	public function remove( $fileName )
-	{
-		$words		= (object) $this->getWords( 'msg' );
-		if( $this->model->getAllByIndex( 'filename', $fileName ) )
-			$this->messenger->noteError( $words->errorFileInUse, $fileName );
-		else if( !file_exists( $this->path.$fileName ) )
-			$this->messenger->noteError( $words->errorFileNotExisting, $fileName );
-		else{
-			@unlink( $this->path.$fileName );
-			if( file_exists( $this->path.$fileName ) )
-				$this->messenger->noteFailure(
-					$words->failureRemoveFailed,
-					htmlentities( $fileName, ENT_QUOTES, 'UTF-8' )
- 				);
-			else
-				$this->messenger->noteSuccess(
-					$words->successRemoved,
-					htmlentities( $fileName, ENT_QUOTES, 'UTF-8' )
-				);
-		}
-		$this->restart( 'upload', TRUE );
 	}
 
 	public function setStatus( $attachmentId, $status )
@@ -210,43 +185,6 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller
 			);
 		}
 		$this->restart( NULL, TRUE );
-	}
-
-	/**
-	 *	Stores a new attachment file via HTTP upload to attachment file folder.
-	 *	@access		public
-	 *	@return		void
-	 *	@todo		kriss: handle failure (with mail to developer or exception log)
-	 */
-	public function upload()
-	{
-		$words		= (object) $this->getWords( 'msg' );
-		if( $this->request->has( 'upload' ) ){
-			$file		= (object) $this->request->get( 'file' );
-			$this->logicUpload->setUpload( $this->request->get( 'file' ) );
-			$maxSize	= $this->logicUpload->getMaxUploadSize();
-			if( !$this->logicUpload->checkSize( $maxSize ) ){
-				$this->messenger->noteError( $words->errorFileTooLarge, Alg_UnitFormater::formatBytes( $maxSize ) );
-			}
-			else if( $file->error ){
-				$handler    = new Net_HTTP_UploadErrorHandler();
-				$handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
-				$this->messenger->noteError( $handler->getErrorMessage( $file->error ) );
-			}
-			else{
-				try{
-					$this->logicUpload->saveTo( $this->path.$file->name );
-					$this->messenger->noteSuccess(
-						$words->successUploaded,
-						htmlentities( $file->name, ENT_QUOTES, 'UTF-8' )
-					);
-				}
-				catch( Exception $e ){
-					$this->messenger->noteFailure( $words->failureUploadFailed );
-				}
-			}
-			$this->restart( 'upload', TRUE );
-		}
 	}
 
 	public function unregister( $attachmentId )

@@ -3,7 +3,7 @@
 	<title>Admin: Mail</title>
 	<description/>
 	<category>Administration</category>
-	<version>0.9.9</version>
+	<version>1.0</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
@@ -65,11 +65,13 @@
 	<log version="0.9.7">Use module UI:Helper:Pagination:PrevNext for mail templates.</log>
 	<log version="0.9.8">Extract hooks to own classes.</log>
 	<log version="0.9.9">Add bulk actions in queue index.</log>
+	<log version="1.0">Support attachment folders.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Admin/Mail/Attachment.php5</class>
+		<class>Controller/Admin/Mail/Attachment/Folder.php5</class>
 		<class>Controller/Admin/Mail/Queue.php5</class>
 		<class>Controller/Admin/Mail/Template.php5</class>
 		<class>Controller/Admin/Mail/Template/Export.php5</class>
@@ -78,6 +80,7 @@
 		<class>Hook/Admin/Mail/Attachment.php5</class>
 		<class>Hook/Admin/Mail/Queue.php5</class>
 		<class>View/Admin/Mail/Attachment.php5</class>
+		<class>View/Admin/Mail/Attachment/Folder.php5</class>
 		<class>View/Admin/Mail/Queue.php5</class>
 		<class>View/Admin/Mail/Template.php5</class>
 		<template>admin/mail/attachment/add.php</template>
@@ -85,7 +88,8 @@
 		<template>admin/mail/attachment/index.files.php</template>
 		<template>admin/mail/attachment/index.filter.php</template>
 		<template>admin/mail/attachment/index.list.php</template>
-		<template>admin/mail/attachment/upload.php</template>
+		<template>admin/mail/attachment/folder/index.php</template>
+		<template>admin/mail/attachment/folder/index.list.php</template>
 		<template>admin/mail/queue/enqueue.php</template>
 		<template>admin/mail/queue/index.php</template>
 		<template>admin/mail/queue/index.filter.php</template>
@@ -103,6 +107,7 @@
 		<template>admin/mail/template/edit.styles.php</template>
 		<template>admin/mail/template/index.php</template>
 		<locale>de/admin/mail/attachment.ini</locale>
+		<locale>de/admin/mail/attachment/folder.ini</locale>
 		<locale>de/admin/mail/queue.ini</locale>
 		<locale>de/admin/mail/template.ini</locale>
 		<locale>de/html/admin/mail/attachment/bottom.html</locale>

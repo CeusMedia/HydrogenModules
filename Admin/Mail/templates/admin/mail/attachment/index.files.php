@@ -1,8 +1,14 @@
 <?php
 $w	= (object) $words['index.files'];
 
+use CeusMedia\Bootstrap\Icon;
+
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 $iconDownload	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-down' ) );
+
+$iconRemove		= new Icon( 'remove' );
+$iconDownload	= new Icon( 'download' );
+
 
 $list	= '<div class="alert alert-error">'.$w->noEntries.'</div>';
 
@@ -17,11 +23,11 @@ if( $files ){
 		$label	= UI_HTML_Tag::create( 'big', $file->fileName );
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
 			'href'		=> './admin/mail/attachment/remove/'.urlencode( $file->fileName ),
-			'class'		=> 'btn btn-mini btn-danger',
+			'class'		=> 'btn btn-small btn-danger',
 		) );
 		$buttonDownload	= UI_HTML_Tag::create( 'a', $iconDownload, array(
 			'href'		=> './admin/mail/attachment/download/'.urlencode( $file->fileName ),
-			'class'		=> 'btn btn-mini',
+			'class'		=> 'btn btn-small',
 		) );
 
 		$mimeType	= UI_HTML_Tag::create( 'span', $w->labelMimeType.': '.$file->mimeType );
