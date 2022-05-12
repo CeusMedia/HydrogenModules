@@ -162,8 +162,7 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller
 			$pathName	= preg_replace( '@^'.preg_quote( $this->path, '@' ).'@', '', $entry->getPathName() );
 			$list[$pathName]	= (object) [
 				'fileName'		=> $entry->getFilename(),
-				'filePath'		=> $entry->getPathname(),
-				'path'			=> $pathName,
+				'filePath'		=> $pathName,
 				'mimeType'		=> $this->getMimeTypeOfFile( $pathName )
 			];
 		}

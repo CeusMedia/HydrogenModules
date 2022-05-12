@@ -1,10 +1,12 @@
 <?php
-$iconEnable		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok-circle icon-white' ) );
-$iconDisable	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ban-circle icon-white' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+use CeusMedia\Bootstrap\icon;
+
+$iconEnable		= new Icon( 'toggle-on' );
+$iconDisable	= new Icon( 'toggle-off' );
+$iconRemove		= new Icon( 'trash' );
 
 $w		= (object) $words['index'];
-$list	= '<div><em class="muted">'.$w->noEntries.'</em></div><br/>';
+$list	= '<div class="alert alert-warning"><em class="muted">'.$w->noEntries.'</em></div><br/>';
 if( count( $attachments ) ){
 	$list	= array();
 	foreach( $attachments as $attachment ){
@@ -16,12 +18,12 @@ if( count( $attachments ) ){
 		if( $attachment->status )
 			$buttonStatus	= UI_HTML_Tag::create( 'a', $iconDisable, array(
 				'href'	=> './admin/mail/attachment/setStatus/'.$attachment->mailAttachmentId.'/0',
-				'class'	=> 'btn btn-warning not-btn-small',
+				'class'	=> 'btn btn-danger',
 				'title'	=> $w->buttonDeactivate
 			) );
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
 			'href'	=> './admin/mail/attachment/unregister/'.$attachment->mailAttachmentId,
-			'class'	=> 'btn btn-danger not-btn-small',
+			'class'	=> 'btn btn-inverse',
 			'title'	=> $w->buttonUnregister
 		) );
 

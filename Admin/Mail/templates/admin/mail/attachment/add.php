@@ -1,9 +1,10 @@
 <?php
 $w			= (object) $words['add'];
 
+ksort( $files );
 $optFile	= array( '' => '' );
 foreach( $files as $file )
-	$optFile[$file->fileName]	= $file->fileName;
+	$optFile[$file->filePath]	= $file->filePath;
 $optFile	= UI_HTML_Elements::Options( $optFile );
 
 $optClass	= array( '' => '' );

@@ -11,22 +11,6 @@ class Controller_Admin_Mail_Attachment_Folder extends CMF_Hydrogen_Controller
 	protected $logicMail;
 	protected $logicUpload;
 
-	public function __onInit()
-	{
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->model		= new Model_Mail_Attachment( $this->env );
-		$this->logicMail	= Logic_Mail::getInstance( $this->env );
-		$this->logicUpload	= new Logic_Upload( $this->env );
-		$pathApp			= '';
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$pathApp		= Logic_Frontend::getInstance( $this->env )->getPath();
-		$this->basePath		= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
-		$this->addData( 'basePath', $this->basePath );
-
-//		$this->addData( 'files', $this->listFiles() );
-	}
-
 	public function add()
 	{
 //		$words		= (object) $this->getWords( 'msg' );
@@ -165,6 +149,24 @@ class Controller_Admin_Mail_Attachment_Folder extends CMF_Hydrogen_Controller
 			}
 		}
 		$this->restart( NULL, TRUE );
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->model		= new Model_Mail_Attachment( $this->env );
+		$this->logicMail	= Logic_Mail::getInstance( $this->env );
+		$this->logicUpload	= new Logic_Upload( $this->env );
+		$pathApp			= '';
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$pathApp		= Logic_Frontend::getInstance( $this->env )->getPath();
+		$this->basePath		= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
+		$this->addData( 'basePath', $this->basePath );
+
+//		$this->addData( 'files', $this->listFiles() );
 	}
 
 	protected function getMimeTypeOfFile( string $fileName )

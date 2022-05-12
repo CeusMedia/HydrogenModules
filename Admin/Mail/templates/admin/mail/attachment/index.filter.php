@@ -1,9 +1,10 @@
 <?php
 $w	= (object) $words['filter'];
 
+ksort( $files );
 $optFile	= array( '' => $w->optAll );
 foreach( $files as $file )
-	$optFile[$file->fileName]	= $file->fileName;
+	$optFile[$file->filePath]	= $file->filePath;
 $optFile	= UI_HTML_Elements::Options( $optFile, $filterFile );
 
 $optClass	= array( '' => $w->optAll );
@@ -35,12 +36,6 @@ return '
 				<div class="span12">
 					<label for="input_file">'.$w->labelFile.'</label>
 					<select name="file" id="input_file" class="span12">'.$optFile.'</select>
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span12">
-					<label for="input_class">'.$w->labelClass.'</label>
-					<select name="class" id="input_class" class="span12">'.$optClass.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
