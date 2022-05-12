@@ -43,7 +43,7 @@ if( $rulesAttachment ){
 
 $optFile	= [];
 foreach( $files as $file )
-	$optFile[$file->fileName]	= $file->fileName;
+	$optFile[$file->filePath]	= $file->filePath;
 $optFile	= UI_HTML_Elements::Options( $optFile );
 
 $modal	= new BootstrapModalDialog( 'rule-attachment-add' );

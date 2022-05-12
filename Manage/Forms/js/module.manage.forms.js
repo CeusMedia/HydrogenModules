@@ -125,10 +125,9 @@ var RuleManager = {
 		else if(type === 0){
 			var selectKey = RuleManager.modalCustomer.find("select#input_customer_ruleKey_"+i).val();
 		}
-//		console.log("SEARCH: " + selectKey);
+//		console.log({"type": type, "row": i, "selectKey": selectKey});
 		for(var j=0; j<RuleManager.selects.length; j++){
 			if(RuleManager.selects[j].name == selectKey){
-//				console.log("FOUND: " + selectKey);
 				return RuleManager.selects[j];
 			}
 		}
@@ -159,9 +158,10 @@ var RuleManager = {
 			option.html(current.values[i].label);
 			selectValue.append(option);
 		}
+		selectValue.trigger("change");
 	},
 	onRuleValueChange: function(type, i){
-		console.log({on: 'onRuleValueChange', type: type, row: i});
+//		console.log({on: 'onRuleValueChange', type: type, row: i});
 		var current = RuleManager.getCurrentSelect(type, i);
 		if(type === 2){
 			var selectKey = RuleManager.modalAttachment.find("select#input_attachment_ruleKey_"+i);

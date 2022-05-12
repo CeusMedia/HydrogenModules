@@ -1,4 +1,7 @@
 <?php
+
+use FS_Folder_RecursiveLister as RecursiveFolderIndex;
+
 class Controller_Manage_Form extends CMF_Hydrogen_Controller
 {
 	protected $modelForm;
@@ -10,6 +13,7 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller
 	protected $modelImportRule;
 	protected $modelImportConnector;
 	protected $modelImportConnection;
+	protected $basePath;
 
 	protected $filters		= [
 		'formId',
@@ -54,7 +58,7 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller
 			'formId'		=> $formId,
 			'type'			=> $formType,
 			'rules'			=> json_encode( $data ),
-			'mailAddresses'	=> $this->request->get( 'mailAddresses' ),
+			'mailAddresses'	=> $this->request->get( 'mailAddresses' ) ?? '',
 			'mailId'		=> $this->request->get( 'mailId' ),
 			'filePath'		=> $this->request->get( 'filePath' ),
 		] );
@@ -333,7 +337,7 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller
 		$pathApp			= '';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$pathApp		= Logic_Frontend::getInstance( $this->env )->getPath();
-		$this->path			= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
+		$this->basePath		= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
 		$this->addData( 'files', $this->listFiles() );
 	}
 
@@ -420,26 +424,25 @@ class Controller_Manage_Form extends CMF_Hydrogen_Controller
 		return $list;
 	}
 
-	protected function getMimeTypeOfFile( $fileName )
+	protected function getMimeTypeOfFile( string $fileName )
 	{
-		if( !file_exists( $this->path.$fileName ) )
+		if( !file_exists( $this->basePath.$fileName ) )
 			throw new RuntimeException( 'File "'.$fileName.'" is not existing is attachments folder.' );
 		$info	= finfo_open( FILEINFO_MIME_TYPE/*, '/usr/share/file/magic'*/ );
-		return finfo_file( $info, $this->path.$fileName );
+		return finfo_file( $info, $this->basePath.$fileName );
 	}
 
-	protected function listFiles()
+	protected function listFiles(): array
 	{
-		$list	= array();
-		$index	= new DirectoryIterator( $this->path );
-		foreach( $index as $entry ){
-			if( $entry->isDir() || $entry->isDot() || $entry->getFilename()[0] === "." )
-				continue;
-			$key	= strtolower( $entry->getFilename() );
-			$list[$entry->getFilename()]	= (object) array(
-				'fileName'		=> $entry->getFilename(),
-				'mimeType'		=> $this->getMimeTypeOfFile( $entry->getFilename() )
-			);
+		$list	= [];
+		$basePathRegex	= '@^'.preg_quote( $this->basePath, '@' ).'@';
+		foreach( RecursiveFolderIndex::getFileList( $this->basePath ) as $item ){
+			$filePath	= preg_replace( $basePathRegex, '', $item->getPathName() );
+			$list[$filePath]	= (object) [
+				'fileName'		=> $item->getFilename(),
+				'filePath'		=> $filePath,
+				'mimeType'		=> $this->getMimeTypeOfFile( $filePath )
+			];
 		}
 		ksort( $list );
 		return $list;
