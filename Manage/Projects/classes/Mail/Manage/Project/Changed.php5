@@ -1,12 +1,13 @@
 <?php
 class Mail_Manage_Project_Changed extends Mail_Manage_Project_Abstract
 {
-	protected function generate( $data = array() )
+	protected function generate(): self
 	{
-		parent::generate( $data );
+		parent::generate();
 		$baseUrl	= $this->env->url;
 		$config		= $this->env->getConfig();
 		$words		= $this->getWords( 'manage/project' );
+		$data		= $this->data;
 		$w			= (object) $words['mail-changed'];
 		$project	= $data['project'];
 

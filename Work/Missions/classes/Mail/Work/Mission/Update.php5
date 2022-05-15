@@ -4,18 +4,15 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 	protected $languageSection	= 'mail-update';
 	protected $helperFacts;
 
-	public function generate( $data = array() )
+	public function generate(): self
 	{
-		parent::generate( $data );
-		$this->setSubjectFromMission( $data['missionBefore'] );
-		$this->prepareFacts( $data );
+		parent::generate();
+		$this->setSubjectFromMission( $this->data['missionBefore'] );
+		$this->prepareFacts( $this->data );
 		$this->addBodyClass( 'job-work-mission-mail-update' );
-		$this->setHtml( $html = $this->renderHtml( $data ) );
-		$this->setText( $text = $this->renderText( $data ) );
-		return (object) array(
-			'html'	=> $html,
-			'text'	=> $text,
-		);
+		$this->setHtml( $this->renderHtml() );
+		$this->setText( $this->renderText() );
+		return $this;
 	}
 
 	protected function renderLabel( $content, $class = NULL )
@@ -185,8 +182,9 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 		}
 	}
 
-	public function renderHtml( $data )
+	public function renderHtml(): string
 	{
+		$data			= $this->data;
 		$indicator		= new UI_HTML_Indicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
@@ -226,8 +224,9 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 		return $this->view->loadContentFile( 'mail/work/mission/update.html', $data );
 	}
 
-	public function renderText( $data )
+	public function renderText(): string
 	{
+		$data			= $this->data;
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
 		$old			= $data['missionBefore'];

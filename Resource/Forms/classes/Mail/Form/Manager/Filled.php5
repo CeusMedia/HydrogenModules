@@ -1,8 +1,9 @@
 <?php
-class Mail_Form_Manager_Filled extends Mail_Form_Abstract{
-
+class Mail_Form_Manager_Filled extends Mail_Form_Abstract
+{
 	/* @todo use block of mail */
-	public function generate( $data = array() ){
+	public function generate()
+	{
 		$form	= $this->data['form'];
 		$fill	= $this->data['fill'];
 
@@ -14,5 +15,6 @@ class Mail_Form_Manager_Filled extends Mail_Form_Abstract{
 		$content	= str_replace( "[form_title]", $form->title, $mail->content );
 		$content	= $this->applyHelpers( $content, $fill, $form, TRUE );
 		$this->setHtml( $content );
+		return $this;
 	}
 }

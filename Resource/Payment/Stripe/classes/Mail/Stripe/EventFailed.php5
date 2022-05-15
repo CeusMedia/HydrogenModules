@@ -1,7 +1,8 @@
 <?php
-class Mail_Stripe_EventFailed extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Stripe_EventFailed extends Mail_Abstract
+{
+	protected function generate(): self
+	{
 		$data		= new ADT_List_Dictionary( $this->data );
 		$buffer		= new UI_OutputBuffer();
 		print UI_HTML_Tag::create( 'h2', 'Error on handling event' );
@@ -25,6 +26,6 @@ class Mail_Stripe_EventFailed extends Mail_Abstract{
 		phpinfo( INFO_VARIABLES );
 		$this->setSubject( 'Event handling failed' );
 		$this->setHtml( $buffer->get( TRUE ) );
+		return $this;
 	}
 }
-?>

@@ -1,11 +1,11 @@
 <?php
 class Mail_Info_Contact extends Mail_Abstract
 {
-	protected function generate( $data = array() )
+	protected function generate(): self
 	{
 		$config		= $this->env->getConfig()->getAll( 'module.info_contact.', TRUE );
 		$words		= $this->env->getLanguage()->getWords( 'info/contact' );
-		$do			= (object) $data;
+		$data		= $this->data;
 		$do			= (object) array(
 			'email'			=> strip_tags( @$data['email'] ),
 			'subject'		=> strip_tags( @$data['subject'] ),

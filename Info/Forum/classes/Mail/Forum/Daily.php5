@@ -1,10 +1,10 @@
 <?php
 class Mail_Forum_Daily extends Mail_Forum_Abstract
 {
-	public function renderBody( $data = array() )
+	protected function renderHtmlBody(): string
 	{
 //		extract( $data );
-
+		$data	= $this->data;
 		$this->setSubject( 'Moderation im Forum notwendig' );
 
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );

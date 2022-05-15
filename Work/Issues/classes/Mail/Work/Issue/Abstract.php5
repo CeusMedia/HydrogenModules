@@ -133,4 +133,3 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 		return $user;
 	}
 }
-

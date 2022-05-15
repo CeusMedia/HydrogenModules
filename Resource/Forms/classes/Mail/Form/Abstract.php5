@@ -1,6 +1,6 @@
 <?php
-abstract class Mail_Form_Abstract extends Mail_Abstract{
-
+abstract class Mail_Form_Abstract extends Mail_Abstract
+{
 	/**
 	 *	Sets subject without applying default subject extensions.
 	 *	Overrides default mail subject handling to avoid adding default subject prefix or template.
@@ -8,22 +8,25 @@ abstract class Mail_Form_Abstract extends Mail_Abstract{
 	 *	@param		string		$subject		Subject to set on mail
 	 *	@param		boolean		$usePrefix		For compatibility only, no function
 	 *	@param		boolean		$useTemplate	For compatibility only, no function
-	 *	@return		void
+	 *	@return		self
 	 */
-	public function setSubject( $subject, $usePrefix = TRUE, $useTemplate = TRUE ){
+	public function setSubject( string $subject, bool $usePrefix = TRUE, bool $useTemplate = TRUE ): self
+	{
 		$this->mail->setSubject( $subject, $this->encodingSubject );
+		return $this;
 	}
 
 	//  --  PROTECTED  --  //
 
-	protected function applyFillData( $content, $fill ){
+	protected function applyFillData( string $content, $fill ): string
+	{
 		$data	= json_decode( $fill->data, TRUE );
 		while( preg_match( '/\[data_(\S+)\]/su', $content ) ){
 			$identifier		= preg_replace( '/.*\[data_(\S+)\].*/su', "\\1", $content );
 			$replace		= '';
 			if( isset( $data[$identifier] ) ){
 				$replace	= $data[$identifier]['value'];
-				if( in_array( $data[$identifier]['type'], array( 'select' ) ) )
+				if( in_array( $data[$identifier]['type'], ['select'] ) )
 					$replace	= $data[$identifier]['valueLabel'];
 			}
 			$pattern		= '/'.preg_quote( '[data_'.$identifier.']' ).'/su';
@@ -32,7 +35,8 @@ abstract class Mail_Form_Abstract extends Mail_Abstract{
 		return $content;
 	}
 
-	protected function applyHelpers( $content, $fill, $form, $extended = FALSE ){
+	protected function applyHelpers( string $content, $fill, $form, bool $extended = FALSE ): string
+	{
 		while( preg_match( '/\[helper_(\S+)\]/su', $content ) ){
 			$identifier		= preg_replace( '/.*\[helper_(\S+)\].*/su', "\\1", $content );
 			$replace		= '';

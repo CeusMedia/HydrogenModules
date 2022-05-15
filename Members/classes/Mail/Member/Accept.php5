@@ -1,8 +1,9 @@
 <?php
 class Mail_Member_Accept extends Mail_Abstract
 {
-	protected function generate( array $data = array() )
+	protected function generate(): self
 	{
+		$data		= $this->data;
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$wordsMails	= $this->env->getLanguage()->getWords( 'member', 'mails' );
 
@@ -17,5 +18,6 @@ class Mail_Member_Accept extends Mail_Abstract
 
 		$body	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $body );
 		$this->setHtml( nl2br( $body ) );
+		return $this;
 	}
 }

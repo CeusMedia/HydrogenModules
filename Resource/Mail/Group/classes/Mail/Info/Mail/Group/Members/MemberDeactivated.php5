@@ -1,8 +1,9 @@
 <?php
 class Mail_Info_Mail_Group_Members_MemberDeactivated extends Mail_Abstract
 {
-	protected function generate( $data = array() )
+	protected function generate(): self
 	{
+		$data		= $this->data;
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 //		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/local', 'mails' );
 

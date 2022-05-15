@@ -1,12 +1,13 @@
 <?php
 class Mail_Manage_Project_Members extends Mail_Manage_Project_Abstract
 {
-	protected function generate( $data = array() )
+	protected function generate(): self
 	{
-		parent::generate( $data );
+		parent::generate();
 		$baseUrl	= $this->env->url;
 		$config		= $this->env->getConfig();
 		$words		= $this->getWords( 'manage/project' );
+		$data		= $this->data;
 		$w			= (object) $words['mail-members'];
 		$project	= $data['project'];
 
@@ -50,4 +51,3 @@ class Mail_Manage_Project_Members extends Mail_Manage_Project_Abstract
 		return $this->setText( $text )->setHtml( $body );
 	}
 }
-

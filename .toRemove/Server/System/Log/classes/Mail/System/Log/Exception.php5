@@ -1,6 +1,6 @@
 <?php
-class Mail_System_Log_Exception extends Mail_Abstract{
-
+class Mail_System_Log_Exception extends Mail_Abstract
+{
 	protected $helperFacts;
 
 	protected function prepareFacts( $data ){
@@ -10,9 +10,11 @@ class Mail_System_Log_Exception extends Mail_Abstract{
 			$this->helperFacts->setShowPrevious( TRUE );
 	}
 
-	public function generate( $data = array() ){
+	protected function generate(): self
+	{
 		$config		= $this->env->getConfig();
 		$appName	= $config->get( 'app.name' );
+		$data		= $this->data;
 		$exception	= $data['exception'];
 
 		$this->prepareFacts( $data );
@@ -42,10 +44,6 @@ class Mail_System_Log_Exception extends Mail_Abstract{
 		) ).PHP_EOL;
 		$this->setText( $plain );
 
-		return (object) array(
-			'plain'	=> $plain,
-			'html'	=> $html,
-		);
+		return $this;
 	}
 }
-?>

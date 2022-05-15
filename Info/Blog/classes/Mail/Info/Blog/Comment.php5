@@ -1,10 +1,11 @@
 <?php
 class Mail_Info_Blog_Comment extends Mail_Abstract
 {
-	protected function generate( $data = array() )
+	protected function generate(): self
 	{
-		$config			= $this->env->getConfig()->getAll( 'module.info_blog.', TRUE );
-		$words			= $this->env->getLanguage()->getWords( 'info/blog' );
+		$config		= $this->env->getConfig()->getAll( 'module.info_blog.', TRUE );
+		$words		= $this->env->getLanguage()->getWords( 'info/blog' );
+		$data		= $this->data;
 
 		$data['comment']->date	= date( 'd.m.Y', $data['comment']->createdAt );
 		$data['comment']->time	= date( 'H:i', $data['comment']->createdAt );

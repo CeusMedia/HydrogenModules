@@ -1,23 +1,22 @@
 <?php
 class Mail_Work_Mission_Done extends Mail_Work_Mission_Change
 {
-	protected function generate( $data = array() )
+	protected function generate(): self
 	{
 		$w			= (object) $this->getWords( 'work/mission', 'mail-change' );
-		$html		= $this->renderBody( $data );
-		$body		= chunk_split( base64_encode( $html ), 78 );
-		$mailBody	= new Net_Mail_Body( $body, Net_Mail_Body::TYPE_HTML );
-		$mailBody->setContentEncoding( 'base64' );
-		$prefix	= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
-		$this->mail->setSubject( ( $prefix ? $prefix.' ' : '' ) . $w->subject );
-		$this->mail->addBody( $mailBody );
-		return $html;
+
+		parent::generate();
+		$this->setHtml( $this->renderBody() );
+//		$this->setText( $this->renderText() );
+		return $this;
 	}
 
-	public function renderBody( $data )
+	public function renderBody(): string
 	{
 		return "not implemented, yet";
-/*		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
+/*
+		$data			= $this->data;
+		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$w				= (object) $this->getWords( 'work/mission', 'mail-daily' );
 		$monthNames		= (array) $this->getWords( 'work/mission', 'months' );
 		$weekdays		= (array) $this->getWords( 'work/mission', 'days' );

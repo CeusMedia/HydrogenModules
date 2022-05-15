@@ -23,11 +23,12 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 		$this->facts[$key]   =   $term.$definition;
 	}
 
-	protected function generate( $data = array() )
+	protected function generate(): self
 	{
 		$this->baseUrl			= $this->env->getConfig()->get( 'app.base.url' );
 		$this->words			= (object) $this->getWords( 'work/mission', $this->languageSection );
 		$this->labels			= (object) $this->getWords( 'work/mission', 'add' );
+		return $this;
 	}
 
 	protected function renderUser( $user, $link = FALSE )

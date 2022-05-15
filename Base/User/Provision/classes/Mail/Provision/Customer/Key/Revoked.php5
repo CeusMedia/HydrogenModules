@@ -1,9 +1,11 @@
 <?php
-class Mail_Provision_Customer_Key_Revoked extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Provision_Customer_Key_Revoked extends Mail_Abstract
+{
+	protected function generate(): self
+	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$words		= $this->env->getLanguage()->getWords( 'user/provision' );
+		$data		= $this->data;
 
 		$mailData	= array_merge( $data, array(
 			'appBaseUrl'	=> $this->env->url,
@@ -18,17 +20,18 @@ class Mail_Provision_Customer_Key_Revoked extends Mail_Abstract{
 			$data['product']->title,
 			$data['productLicense']->title,
 		) ) );
-		$this->setText( $text = $this->renderText( $mailData ) );
-		$this->setHtml( $html = $this->renderHtml( $mailData ) );
-		return (object) array( 'text' => $text, 'html' => $html );
+		$this->setText( $this->renderText( $mailData ) );
+		$this->setHtml( $this->renderHtml( $mailData ) );
+		return $this;
 	}
 
-	protected function renderHtml( $data = array() ){
+	protected function renderHtml( array $data = [] ): string
+	{
 		return $this->view->loadContentFile( 'mail/provision/customer/key/revoked.html', $data );
 	}
 
-	protected function renderText( $data = array() ){
+	protected function renderText( array $data = [] ): string
+	{
 		return $this->view->loadContentFile( 'mail/provision/customer/key/revoked.txt', $data );
 	}
 }
-?>

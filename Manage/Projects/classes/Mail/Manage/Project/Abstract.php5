@@ -1,7 +1,7 @@
 <?php
 abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
 {
-	protected function generate( $data = array() )
+	protected function generate(): self
 	{
 //		$this->addThemeStyle( $modules->has( 'UI_Bootstrap' ) ? 'bootstrap.min.css' : 'mail.min.css' );
 /*		if( $this->env->getModules()->has( 'UI_CSS_Panel' ) ){
@@ -11,6 +11,7 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
 				$this->addCommonStyle( 'layout.panels.css' );
 			}
 		}*/
+		return $this;
 	}
 
 	protected function collectFacts( $project ): View_Helper_Mail_Facts

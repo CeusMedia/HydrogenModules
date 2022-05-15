@@ -5,8 +5,9 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 	protected $labelsStates;
 	protected $note;
 
-	protected function generate( $data = array() )
+	protected function generate(): self
 	{
+		$data	= $this->data;
 		$this->labelsStates		= (array) $this->getWords( 'work/issue', 'states' );
 		$this->prepareFacts( $data );
 
@@ -14,6 +15,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 		$this->setSubject( 'Problemreport #'.$issue->issueId.': ['.$this->labelsStates[$issue->status].'] '.$issue->title );
 		$this->setHtml( $this->renderHtmlBody( $data ) );
 		$this->setText( $this->renderTextBody( $data ) );
+		return $this;
 	}
 
 	protected function prepareFacts( array $data )
@@ -32,11 +34,11 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 		}
 	}
 
-	protected function renderHtmlBody( array $data ): string
+	protected function renderHtmlBody(): string
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
-		$issue		= $data['issue'];
+		$issue		= $this->data['issue'];
 
 		$message	= array();
 		$panelFacts	= '';
@@ -89,11 +91,11 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 		return $body;
 	}
 
-	protected function renderTextBody( array $data ): string
+	protected function renderTextBody(): string
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
-		$issue		= $data['issue'];
+		$issue		= $this->data['issue'];
 
 		$message	= array();
 		if( $this->note )

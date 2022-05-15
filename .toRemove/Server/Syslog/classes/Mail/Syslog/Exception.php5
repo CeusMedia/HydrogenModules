@@ -1,10 +1,12 @@
 <?php
-class Mail_Syslog_Exception extends Mail_Abstract{
-
-	public function generate( $data = array() ){
+class Mail_Syslog_Exception extends Mail_Abstract
+{
+	protected function generate(): self
+	{
 		$config		= $this->env->getConfig();
 		$appName	= $config->get( 'app.name' );
 		$prefix		= trim( $config->get( 'module.resource_mail.subject.prefix' ) );
+		$data		= $this->data;
 		$exception	= $data['exception'];
 
 		$subject	= 'Exception: '.$exception->getMessage();
@@ -31,6 +33,6 @@ class Mail_Syslog_Exception extends Mail_Abstract{
 		$body->setContentEncoding( 'base64' );
 		$this->mail->setSubject( $subject );
 		$this->mail->addBody( $body );
+		return $this;
 	}
 }
-?>

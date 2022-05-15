@@ -1,16 +1,17 @@
 <?php
 class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract
 {
-	protected function generate( $data = array() )
+	protected function generate(): self
 	{
 		$w			= (object) $this->getWords( 'work/mission', 'mail-daily' );
 		$this->setSubject( $w->subject );
 		$this->addBodyClass( 'job-work-mission-mail-daily' );
-		return $this->setHtml( $this->renderBody( $data ) );
+		return $this->setHtml( $this->renderBody() );
 	}
 
-	public function renderBody( $data )
+	public function renderBody(): string
 	{
+		$data			= $this->data;
 		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$w				= (object) $this->getWords( 'work/mission', 'mail-daily' );
 		$monthNames		= (array) $this->getWords( 'work/mission', 'months' );

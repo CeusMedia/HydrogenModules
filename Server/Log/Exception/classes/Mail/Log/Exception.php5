@@ -1,21 +1,23 @@
 <?php
-class Mail_Log_Exception extends Mail_Abstract{
-
+class Mail_Log_Exception extends Mail_Abstract
+{
 	protected $helperFacts;
 
-	protected function prepareFacts( $data ){
+	protected function prepareFacts( $data )
+	{
 		$this->helperFacts	= new View_Helper_Mail_Exception_Facts( $this->env );
 		$this->helperFacts->setException( $data['exception'] );
 		if( !( isset( $data['showPrevious'] ) && !$data['showPrevious'] ) )
 			$this->helperFacts->setShowPrevious( TRUE );
 	}
 
-	public function generate( $data = array() ){
+	protected function generate(): self
+	{
 		$config		= $this->env->getConfig();
 		$appName	= $config->get( 'app.name' );
-		$exception	= $data['exception'];
+		$exception	= $this->data['exception'];
 
-		$this->prepareFacts( $data );
+		$this->prepareFacts( $this->data );
 
 		$this->setSubject( sprintf(
 			'%s%s: %s',
@@ -40,5 +42,6 @@ class Mail_Log_Exception extends Mail_Abstract{
 			View_Helper_Mail_Text::underscore( 'Trace' ).PHP_EOL.
 			str_replace( ' '.$root, ' ', $exception->getTraceAsString() ).PHP_EOL
 		);
+		return $this;
 	}
 }

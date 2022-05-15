@@ -1,8 +1,9 @@
 <?php
 class Mail_Newsletter extends Mail_Abstract
 {
-	protected function generate( $data = array() )
+	protected function generate(): self
 	{
+		$data	= $this->data;
 		$logic	= new Logic_Newsletter( $this->env );
 		$this->data['mailTemplateId']	= 0;
 //		$logic->checkTemplateId( $data['templateId'], TRUE );
@@ -53,12 +54,7 @@ class Mail_Newsletter extends Mail_Abstract
 			}
 			catch( Exception $e ){}
 		}
-
 		$this->setHtml( $html );
-
-		return (object) array(
-			'plain'	=> $plain,
-			'html'	=> $html,
-		);
+		return $this;
 	}
 }

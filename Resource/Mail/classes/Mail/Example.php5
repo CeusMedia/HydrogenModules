@@ -11,7 +11,7 @@ class Mail_Example extends Mail_Abstract
 	 *	@param		array		$data		Map of body template data
 	 *	@return		self
 	 */
-	protected function generate()
+	protected function generate(): self
 	{
 		$wordsMain		= $this->getWords( 'main' );												//  main words of application
 		$wordsModule	= (object) $this->getWords( 'myModule', 'myMailSection' );					//  @todo change this!
@@ -26,7 +26,7 @@ class Mail_Example extends Mail_Abstract
 		return $this;
 	}
 
-	protected function renderBodyHtml( $wordsModule )
+	protected function renderBodyHtml( $wordsModule ): string
 	{
 		if( $this->view->hasContentFile( 'mails/myModule/myAction.html' ) )
 			$body	= $this->view->loadContentFile( 'mails/myModule/myAction.html', $this->data );
@@ -40,7 +40,7 @@ class Mail_Example extends Mail_Abstract
 		return $body;
 	}
 
-	protected function renderBodyText( $wordsModule )
+	protected function renderBodyText( $wordsModule ): string
 	{
 		if( $this->view->hasContentFile( 'mails/myModule/myAction.txt' ) )
 			$body	= $this->view->loadContentFile( 'mails/myModule/myAction.txt', $this->data );

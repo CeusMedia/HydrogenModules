@@ -1,7 +1,7 @@
 <?php
 class Mail_Form_Customer_Result extends Mail_Form_Abstract
 {
-	public function generate( $data = [] )
+	public function generate(): self
 	{
 		$form	= $this->data['form'];
 		$fill	= $this->data['fill'];
@@ -22,5 +22,6 @@ class Mail_Form_Customer_Result extends Mail_Form_Abstract
 			foreach( $form->attachments as $attachment )
 				$this->addAttachment( $path.$attachment );
 		}
+		return $this;
 	}
 }

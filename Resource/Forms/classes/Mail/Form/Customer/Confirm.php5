@@ -1,7 +1,8 @@
 <?php
-class Mail_Form_Customer_Confirm extends Mail_Form_Abstract{
-
-	public function generate( $data = array() ){
+class Mail_Form_Customer_Confirm extends Mail_Form_Abstract
+{
+	public function generate(): self
+	{
 		$form	= $this->data['form'];
 		$fill	= $this->data['fill'];
 
@@ -21,5 +22,6 @@ class Mail_Form_Customer_Confirm extends Mail_Form_Abstract{
 		}
 		else
 			$this->setText( $content );
+		return $this;
 	}
 }

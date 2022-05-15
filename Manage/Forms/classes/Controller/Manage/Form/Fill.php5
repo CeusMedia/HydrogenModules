@@ -52,50 +52,11 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 
 	public function export( $format, $type, $id )
 	{
-		$data	= array();
-		$keys	= array( 'dateCreated', 'dateConfirmed' );
-
-		if( $type == "form" ){
-			$fills	= $this->modelFill->getAllByIndex( 'formId', $id );
-		}
-		else if( $type == "fill" ){
-			$fills	= $this->modelFill->getAllByIndex( 'fillId', $id );
-		}
-		foreach( $fills as $fill ){
-//print_m( $fill );
-			$fill->data	= json_decode( $fill->data );
-			$row	= array(
-				'dateCreated'	=> date( 'Y-m-d H:i:s', $fill->createdAt ),
-				'dateConfirmed'	=> $fill->modifiedAt ? date( 'Y-m-d H:i:s', $fill->modifiedAt ) : '',
-			);
-			foreach( $fill->data as $item ){
-				if( !empty( $item->valueLabel ) )
-					$row[$item->name]	= $item->valueLabel;
-				else
-					$row[$item->name]	= $item->value;
-				if( !in_array( $item->name, $keys ) ){
-					$keys[]	= $item->name;
-				}
-			}
-			$data[]	= $row;
-		}
-		$lines	= array( join( ';', $keys ) );
-		foreach( $data as $line ){
-			$row	= array(
-			);
-			foreach( $keys as $key ){
-				$value = isset( $line[$key] ) ? $line[$key] : '';
-				$row[]	= '"'.addslashes( $value ).'"';
-			}
-			$lines[]	= join( ';', $row );
-		}
-		$csv	= join( "\r\n", $lines );
+		$csv		= $this->logicFill->renderToCsv( $type, $id );
 		$fileName	= 'Export_'.date( 'Y-m-d_H:i:s' ).'.csv';
 		Net_HTTP_Download::sendString( $csv, $fileName, TRUE );
-		xmp( $csv );
-//		print_m( $keys );
-//		print_m( $data );
-		die;
+//		xmp( $csv );
+//		die;
 	}
 
 	public function filter( $reset = NULL )

@@ -1,15 +1,15 @@
 <?php
 class Mail_Test extends Mail_Abstract
 {
-	public function generate( array $data = array() )
+	public function generate(): self
 	{
-		if( isset( $data['verbose'] ) && is_bool( $data['verbose'] ) )
-			$this->transport->setVerbose( $data['verbose'] );
+		if( isset( $this->data['verbose'] ) && is_bool( $this->data['verbose'] ) )
+			$this->transport->setVerbose( $this->data['verbose'] );
 
 		$data		= new ADT_List_Dictionary( $data );
 		$subject	= $data->get( 'subject', 'Test' );
-		$text		= $data->get( 'text', $this->renderText( $data ) );
-		$html		= $data->get( 'html', $this->renderHtml( $data ) );
+		$text		= $data->get( 'text', $this->renderText() );
+		$html		= $data->get( 'html', $this->renderHtml() );
 
 		if( !empty( $data['forceTemplateId'] ) )
 			$this->setTemplateId( $data['forceTemplateId'] );
@@ -20,7 +20,7 @@ class Mail_Test extends Mail_Abstract
 		return $this;
 	}
 
-	protected function renderHtml( ADT_List_Dictionary $viewData ): string
+	protected function renderHtml(): string
 	{
 		$content	= '
 <h2>E-Mail-Test</h2>
@@ -31,7 +31,7 @@ class Mail_Test extends Mail_Abstract
 		return $content;
 	}
 
-	protected function renderText( ADT_List_Dictionary $viewData ): string
+	protected function renderText(): string
 	{
 		$content	= '
 *E-Mail-Test*

@@ -1,7 +1,8 @@
 <?php
-class Mail_Stripe_EventAgain extends Mail_Abstract{
-
-	protected function generate( $data = array() ){
+class Mail_Stripe_EventAgain extends Mail_Abstract
+{
+	protected function generate(): self
+	{
 		$data		= new ADT_List_Dictionary( $this->data );
 		$buffer		= new UI_OutputBuffer();
 		$event		= $data->get( 'event' );
@@ -12,6 +13,6 @@ class Mail_Stripe_EventAgain extends Mail_Abstract{
 		phpinfo( INFO_VARIABLES );
 		$this->setSubject( 'Attempt to add duplicate event' );
 		$this->setHtml( $buffer->get( TRUE ) );
+		return $this;
 	}
 }
-?>

@@ -7,58 +7,74 @@
  */
 abstract class Mail_Abstract
 {
-	/**	@var		object								$mail			Mail objectm, build on construction */
+	/**	@var		object							$mail			Mail objectm, build on construction */
 	public $mail;
 
-	/**	@var		CMF_Hydrogen_Environment			$env			Environment object */
+	/**	@var		CMF_Hydrogen_Environment		$env			Environment object */
 	protected $env;
-	/**	@var		ADT_List_Dictionary					$config			Application configuration object */
+
+	/**	@var		ADT_List_Dictionary				$config			Application configuration object */
 	protected $config;
-	/**	@var		ADT_List_Dictionary					$options		Module configuration object */
+
+	/**	@var		ADT_List_Dictionary				$options		Module configuration object */
 	protected $options;
-	/** @var		Logic_Mail							$logicMail		Mail logic object */
+
+	/** @var		Logic_Mail						$logicMail		Mail logic object */
 	protected $logicMail;
-	/** @var		UI_HTML_PageFrame					$page			Empty page oject for HTML mails */
+
+	/** @var		UI_HTML_PageFrame				$page			Empty page oject for HTML mails */
 	protected $page;
-	/** @var		object								$transport		Mail transport object, build on construction */
+
+	/** @var		object							$transport		Mail transport object, build on construction */
 	protected $transport;
-	/** @var		CMF_Hydrogen_View					$view			General view instance */
+
+	/** @var		CMF_Hydrogen_View				$view			General view instance */
 	protected $view;
-	/** @var		Model_Mail_Template					$modelTemplate	Mail template model object */
+
+	/** @var		Model_Mail_Template				$modelTemplate	Mail template model object */
 	protected $modelTemplate;
-	/** @var		string								$baseUrl		Application base URL */
+
+	/** @var		string							$baseUrl		Application base URL */
 	protected $baseUrl;
-	/** @var		array								$bodyClasses	List of Stylesheet files to integrate into HTML body */
-	protected $addedStyles				= array();
-	/** @var		array								$bodyClasses	List of classes to apply to HTML body */
-	protected $bodyClasses				= array();
-	/** @var		array								$data			Data assigned for mail body generation, for HTML and text */
-	protected $data						= array();
-	/** @var		array								$contents		Map of generated and rendered contents */
-	protected $contents					= array(
+
+	/** @var		array							$bodyClasses	List of Stylesheet files to integrate into HTML body */
+	protected $addedStyles				= [];
+
+	/** @var		array							$bodyClasses	List of classes to apply to HTML body */
+	protected $bodyClasses				= [];
+
+	/** @var		array							$data			Data assigned for mail body generation, for HTML and text */
+	protected $data						= [];
+
+	/** @var		array							$contents		Map of generated and rendered contents */
+	protected $contents					= [
 		'htmlGenerated'		=> '',
 		'htmlRendered'		=> '',
 		'textGenerated'		=> '',
 		'textRendered'		=> '',
-	);
-	/** @var		integer								$templateId		ID of template to force to use on rendering of mail contents */
+	];
+
+	/** @var		integer							$templateId		ID of template to force to use on rendering of mail contents */
 	protected $templateId				= 0;
-	/** @var		string								$encodingHtml	Default encoding for HTML */
+
+	/** @var		string							$encodingHtml	Default encoding for HTML */
 	protected $encodingHtml				= 'quoted-printable';
-	/** @var		string								$encodingHtml	Default encoding for subject */
+
+	/** @var		string							$encodingHtml	Default encoding for subject */
 	protected $encodingSubject			= 'quoted-printable';
-	/** @var		string								$encodingHtml	Default encoding for text */
+
+	/** @var		string							$encodingHtml	Default encoding for text */
 	protected $encodingText				= 'quoted-printable';
 
 	/**
 	 *	Contructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment			$env			Environment object
-	 *	@param		array								$data			Map of template mail data
-	 *	@param		boolean								$defaultStyle	Flag: load default mail style file
+	 *	@param		CMF_Hydrogen_Environment	$env			Environment object
+	 *	@param		array						$data			Map of template mail data
+	 *	@param		boolean						$defaultStyle	Flag: load default mail style file
 	 *	@todo		resolve todos below after all modules have adjusted
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env, $data = array(), $defaultStyle = TRUE )
+	public function __construct( CMF_Hydrogen_Environment $env, $data = [], bool $defaultStyle = TRUE )
 	{
 		$this->setEnv( $env );
 		$this->modelTemplate	= new Model_Mail_Template( $env );
@@ -96,7 +112,7 @@ abstract class Mail_Abstract
 	 */
 	public function __sleep()
 	{
-		return array( 'mail', 'page'/*, 'logicMail'/*, 'transport', 'options'*/ );
+		return ['mail', 'page'/*, 'logicMail'/*, 'transport', 'options'*/];
 	}
 
 /*	public function __wakeup(){
@@ -104,7 +120,7 @@ abstract class Mail_Abstract
 		$this->logicMail		= $this->env->getLogic()->get( 'Mail' );
 	}*/
 
-	public function addAttachment( $filePath, $mimeType = NULL, $encoding = NULL, $fileName = NULL )
+	public function addAttachment( string $filePath, ?string $mimeType = NULL, ?string $encoding = NULL, ?string $fileName = NULL )
 	{
 		$libraries		= $this->logicMail->detectAvailableMailLibraries();
 		$library		= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this );
@@ -126,9 +142,9 @@ abstract class Mail_Abstract
 		return $this;
 	}
 
-	public function getAttachments()
+	public function getAttachments(): array
 	{
-		$list			= array();
+		$list			= [];
 		$libraries		= $this->logicMail->detectAvailableMailLibraries();
 		$library		= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this );
 
@@ -160,7 +176,7 @@ abstract class Mail_Abstract
 	 *	@return		string|NULL
 	 *	@throws		DomainException			if content key is not valid
 	 */
-	public function getContent( $key )
+	public function getContent( string $key ): ?string
 	{
 		if( !array_key_exists( $key, $this->contents ) )
 			throw new DomainException( 'Invalid content key' );
@@ -177,7 +193,7 @@ abstract class Mail_Abstract
 	 *	@access		public
 	 *	@return		string		Subject set for mail
 	 */
-	public function getSubject()
+	public function getSubject(): string
 	{
 		return $this->mail->getSubject();
 	}
@@ -190,7 +206,7 @@ abstract class Mail_Abstract
 		return 0;
 	}
 
-	public function initTransport( $verbose = FALSE )
+	public function initTransport( bool $verbose = FALSE ): self
 	{
 		if( empty( $this->logicMail ) )
 			$this->logicMail	= $this->env->getLogic()->get( 'Mail' );
@@ -226,6 +242,7 @@ abstract class Mail_Abstract
 			default:
 				throw new RuntimeException( 'No mail transport configured' );
 		}
+		return $this;
 	}
 
 	/**
@@ -234,7 +251,7 @@ abstract class Mail_Abstract
 	 *	@param		stdClass	$user		User model object
 	 *	@return		boolean		TRUE if success
 	 */
-	public function sendTo( $user )
+	public function sendTo( $user ): bool
 	{
 		if( is_array( $user ) )
 			$user	= (object) $user;
@@ -250,7 +267,7 @@ abstract class Mail_Abstract
 	 *	@param		integer		$userId		ID of user to send mail to
 	 *	@return		boolean		TRUE if success
 	 */
-	public function sendToUser( $userId )
+	public function sendToUser( $userId ): bool
 	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			throw new RuntimeException( 'Module "Resource_Users" is not installed' );
@@ -261,20 +278,22 @@ abstract class Mail_Abstract
 		return $this->sendTo( $user );
 	}
 
-	public function setEnv( CMF_Hydrogen_Environment $env )
+	public function setEnv( CMF_Hydrogen_Environment $env ): self
 	{
 		$this->env		= $env;
+		return $this;
 	}
 
 	/**
 	 *	Sets address of mail sender.
 	 *	@access		public
 	 *	@param		string		$sender		Mail address of sender
-	 *	@return		void
+	 *	@return		self
 	 */
-	public function setSender( $sender )
+	public function setSender( $sender ): self
 	{
 		$this->mail->setSender( $sender );
+		return $this;
 	}
 
 	/**
@@ -286,29 +305,24 @@ abstract class Mail_Abstract
 	 *	@param		string		$subject		Mail subject to set
 	 *	@param		boolean		$usePrefix		Flag: Prepend mail subject prefix defined by mail module
 	 *	@param		boolean		$useTemplate	Flag: Insert subject into mail subject prefix defined by mail module
-	 *	@return		void
+	 *	@return		self
 	 */
-	public function setSubject( $subject, $usePrefix = TRUE, $useTemplate = TRUE )
+	public function setSubject( string $subject, bool $usePrefix = TRUE, bool $useTemplate = TRUE ): self
 	{
-		if( $useTemplate ){
-			$template	= $this->options->get( 'subject.template' );
-			if( strlen( trim( $template ) ) )
-				$subject	= sprintf( $template, $subject );
-		}
-		if( $usePrefix ){
-			$prefix		= $this->options->get( 'subject.prefix' );
-			if( strlen( trim( $prefix ) ) )
-				$subject	= trim( $prefix ).' '.$subject;
-		}
-		$host		= isset( $this->env->host ) ? $this->env->host : parse_url( $this->baseUrl, PHP_URL_HOST );
-		$data		= array(
-			'app'	=> array(
-				'title'	=> $this->env->getConfig()->get( 'app.name' ),
-				'host'	=> $host,
-			)
-		);
-		$subject	= UI_Template::renderString( $subject, $data );
+		$template	= $this->options->get( 'subject.template' );
+		$prefix		= $this->options->get( 'subject.prefix' );
+
+		if( $useTemplate && strlen( trim( $template ) ) )
+			$subject	= sprintf( $template, $subject );
+		if( $usePrefix && strlen( trim( $prefix ) ) )
+			$subject	= trim( $prefix ).' '.$subject;
+
+		$subject	= UI_Template::renderString( $subject, ['app' => [
+			'title'	=> $this->env->getConfig()->get( 'app.name' ),
+			'host'	=> $this->env->host ?? parse_url( $this->baseUrl, PHP_URL_HOST ),
+		]] );
 		$this->mail->setSubject( $subject, $this->encodingSubject );
+		return $this;
 	}
 
 	//  --  PROTECTED  --  //
@@ -326,10 +340,11 @@ abstract class Mail_Abstract
 	{
 	}
 
-	protected function addBodyClass( $class )
+	protected function addBodyClass( string $class ): self
 	{
 		if( strlen( trim( $class ) ) )
 			$this->bodyClasses[]	= $class;
+		return $this;
 	}
 
 	/**
@@ -359,7 +374,7 @@ abstract class Mail_Abstract
 	 *	@deprecated	use setText instead
 	 *	@todo		to be removed
 	 */
-	protected function addTextBody( $text )
+	protected function addTextBody( string $text ): self
 	{
 		CMF_Hydrogen_Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Resource_Mail' )->version )
@@ -367,23 +382,23 @@ abstract class Mail_Abstract
 			->setExceptionVersion( '0.9' )
 			->message( 'Abstract_Mail::addTextBody is deprecated, use ::setText instead' );
 		$this->setText( $text );
+		return $this;
 	}
 
-	protected function addPrimerStyle( $fileName )
+	protected function addPrimerStyle( string $fileName ): bool
 	{
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.themes' ).$config->get( 'layout.primer' ).'/css/';
 		return $this->addStyle( $path.$fileName );
 	}
 
-	protected function addScriptFile( $fileName )
+	protected function addScriptFile( string $fileName ): bool
 	{
 		$filePath	= $this->env->getConfig()->get( 'path.scripts' ).$fileName;
 		if( !file_exists( $filePath ) )
 			return FALSE;
 		$script	= FS_File_Reader::load( $filePath );
-		$script	= str_replace( '(/lib/', '(http://'.getEnv( 'HTTP_HOST' ).'/lib/', $script );
-		$tag	= UI_HTML_Tag::create( 'script', $script, array( 'type' => 'text/javascript' ) );
+		$tag	= UI_HTML_Tag::create( 'script', $script, ['type' => 'text/javascript'] );
 		$this->page->addHead( $tag );
 		return TRUE;
 	}
@@ -395,7 +410,7 @@ abstract class Mail_Abstract
 	 *	@param		string		$filePath		URI of file from app root
 	 *	@return		boolean		TRUE if file was added, FALSE if not found or already added
 	 */
-	protected function addStyle( $filePath )
+	protected function addStyle( string $filePath ): bool
 	{
 		if( !file_exists( $filePath ) )
 			return FALSE;
@@ -408,35 +423,36 @@ abstract class Mail_Abstract
 		$style	= str_replace( '(../../../', '('.$this->env->url.dirname( dirname( dirname( $path ) ) ).'/', $style );
 		$style	= str_replace( '(../../', '('.$this->env->url.dirname( dirname( $path ) ).'/', $style );
 		$style	= str_replace( '(../', '('.$this->env->url.dirname( $path ).'/', $style );
-		$tag	= UI_HTML_Tag::create( 'style', $style, array( 'type' => 'text/css' ) );
+		$tag	= UI_HTML_Tag::create( 'style', $style, ['type' => 'text/css'] );
 		$this->page->addHead( $tag );
 		$this->addedStyles[]	= $filePath;
 		return TRUE;
 	}
 
-	protected function addCommonStyle( $fileName )
+	protected function addCommonStyle( string $filePath ): bool
 	{
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.themes' ).'/common/css/';
-		return $this->addStyle( $path.$fileName );
+		return $this->addStyle( $path.$filePath );
 	}
 
-	protected function addThemeStyle( $fileName )
+	protected function addThemeStyle( string $filePath ): bool
 	{
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/css/';
-		return $this->addStyle( $path.$fileName );
+		return $this->addStyle( $path.$filePath );
 	}
 
-	protected function applyTemplateToHtml( $content, $templateId = NULL )
+	protected function applyTemplateToHtml( string $content, $templateId = NULL ): string
 	{
+		$messenger	= $this->env->getMessenger();
 		$libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$template	= $this->getTemplateToUse( $templateId, TRUE, FALSE );
 		if( !$template )
 			return $content;
 		$wordsMain		= $this->env->getLanguage()->getWords( 'main' );
 		$baseUrl		= $this->env->getBaseUrl();
-		$replacements	= array(
+		$replacements	= [
 			'content'		=> $content,
 			'template.css'	=> $template->css,
 			'app.email'		=> $this->env->getConfig()->get( 'app.email' ),
@@ -444,7 +460,7 @@ abstract class Mail_Abstract
 			'app.host'		=> parse_url( $baseUrl, PHP_URL_HOST ),
 			'app.path'		=> rtrim( parse_url( $baseUrl, PHP_URL_PATH ), '/' ),
 			'app.title'		=> $wordsMain['main']['title'],
-		);
+		];
 		$contentFull	= $template->html;
 		foreach( $replacements as $key => $value )
 		 	$contentFull	= str_replace( '[#'.$key.'#]', $value, $contentFull );
@@ -453,13 +469,12 @@ abstract class Mail_Abstract
 			if( strlen( trim( $template->images ) ) && preg_match( "/^[a-z0-9]/", $template->images ) )
 				$template->images	= json_encode( explode( ",", $template->images ) );
 			foreach( json_decode( $template->images, TRUE ) as $nr => $image ){
-				if( preg_match( '/^http/', $image ) ){
+				if( preg_match( '/^http/', $image ) )
 					throw new Exception( 'Not implemented yet' );
-				}
 				else{
 					if( !file_exists( $this->env->uri.$image ) ){
 //						throw new RuntimeException( 'Loading image from "'.$image.'" failed' );
-						$this->env->getMessenger()->noteError( 'Loading image from "'.$this->env->uri.$image.'" failed.' );
+						$messenger->noteError( 'Loading image from "'.$this->env->uri.$image.'" failed.' );
 						continue;
 					}
 				}
@@ -479,24 +494,24 @@ abstract class Mail_Abstract
 						$content = Net_Reader::readUrl( $style );
 					}
 					catch( Exception $e ){
-						$this->env->getMessenger()->noteError( 'Loading mail style from "'.$style.'" failed.' );
+						$messenger->noteError( 'Loading mail style from "'.$style.'" failed.' );
 						continue;
 					}
 				}
 				else{
 					if( !file_exists( $this->env->uri.$style ) ){
-						$this->env->getMessenger()->noteError( 'Loading mail style from "'.$this->env->uri.$style.'" failed.' );
+						$messenger->noteError( 'Loading mail style from "'.$this->env->uri.$style.'" failed.' );
 						continue;
 					}
 					$content	= FS_File_Reader::load( $this->env->uri.$style );
 				}
 	//			$content	= preg_replace( '/\/\*.*\*\//su', '', $content );
-				$styleTag	= UI_HTML_Tag::create( 'style', $content, array( 'type' => 'text/css' ) );
+				$styleTag	= UI_HTML_Tag::create( 'style', $content, ['type' => 'text/css'] );
 				$this->page->addHead( $styleTag );
 			}
 		}
 		if( $template->css ){
-			$styleTag	= UI_HTML_Tag::create( 'style', $template->css, array( 'type' => 'text/css' ) );
+			$styleTag	= UI_HTML_Tag::create( 'style', $template->css, ['type' => 'text/css'] );
 			$this->page->addHead( $styleTag );
 		}
 		return $contentFull;
@@ -510,14 +525,14 @@ abstract class Mail_Abstract
 	 *	@param		integer		$templateId		ID of template to use in favor of defaults (must be usable)
 	 *	@return		string						Fully rendered content
 	 */
-	protected function applyTemplateToText( $content, $templateId = NULL )
+	protected function applyTemplateToText( string $content, $templateId = NULL ): string
 	{
 		$template	= $this->getTemplateToUse( $templateId, TRUE, FALSE );
 		if( !$template )
 			return $content;
 		$wordsMain		= $this->env->getLanguage()->getWords( 'main' );
 		$baseUrl		= $this->env->getBaseUrl();
-		$replacements	= array(
+		$replacements	= [
 			'content'		=> $content,
 			'template.css'	=> $template->css,
 			'app.email'		=> $this->env->getConfig()->get( 'app.email' ),
@@ -525,7 +540,7 @@ abstract class Mail_Abstract
 			'app.host'		=> parse_url( $baseUrl, PHP_URL_HOST ),
 			'app.path'		=> rtrim( parse_url( $baseUrl, PHP_URL_PATH ), '/' ),
 			'app.title'		=> $wordsMain['main']['title'],
-		);
+		];
 		$contentFull	= $template->plain;
 		foreach( $replacements as $key => $value )
 		 	$contentFull	= str_replace( '[#'.$key.'#]', $value, $contentFull );
@@ -540,7 +555,6 @@ abstract class Mail_Abstract
 	 *	generated and rendered contents will be stored in mail class as contents.
 	 *	@abstract
 	 *	@access		protected
-	 *	@param		array		$data		Map of body template data
 	 *	@return		self
 	 *	@example
 	 *		$wordsMain		= $this->env->getLanguage()->getWords( 'main' );
@@ -558,8 +572,9 @@ abstract class Mail_Abstract
 	 *
 	 *		$bodyHtml		= $this->view->loadContentFile( 'mails/myModule/myEvent.html', $data );
 	 *		$this->setHtml( $bodyHtml, $templateId );
+	 *		return $this;
 	 */
-	abstract protected function generate();
+	abstract protected function generate(): self
 
 	/**
 	 *	Get template to use.
@@ -578,7 +593,7 @@ abstract class Mail_Abstract
 	 *	@param		boolean		$strict					Flag: throw exception if something goes wrong
 	 *	@return		objects		Model entity object of detected mail template
 	 */
-	protected function getTemplateToUse( $preferredTemplateId = 0, $considerFrontend = FALSE, $strict = TRUE )
+	protected function getTemplateToUse( $preferredTemplateId = 0, bool $considerFrontend = FALSE, bool $strict = TRUE )
 	{
 		if( $this->templateId )
 			if( ( $template = $this->modelTemplate->get( $this->templateId ) ) )
@@ -590,10 +605,10 @@ abstract class Mail_Abstract
 	 *	Loads View Class of called Controller.
 	 *	@access		protected
 	 *	@param		string		$topic		Locale file key, eg. test/my
-	 *	@param		string		$section	Section in locale file
-	 *	@return		void
+	 *	@param		string|NULL	$section	Section in locale file
+	 *	@return		array
 	 */
-	protected function getWords( $topic, $section = NULL )
+	protected function getWords( string $topic, ?string $section = NULL ): array
 	{
 		$language	= $this->env->getLanguage();
 		if( !$language->hasWords( $topic ) )
@@ -630,7 +645,7 @@ abstract class Mail_Abstract
 	 *	@param		integer		$templateId		ID of mail template to use in favour
 	 *	@return		self
 	 */
-	protected function setHtml( $content, $templateId = 0 )
+	protected function setHtml( string $content, $templateId = 0 ): self
 	{
 		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];
@@ -641,19 +656,19 @@ abstract class Mail_Abstract
 			$page	= $this->getPage();
 			$page->addBody( $contentFull );
 
-	/*		$page->addMetaTag( 'name', 'viewport', join( ', ', array(
+	/*		$page->addMetaTag( 'name', 'viewport', join( ', ', [
 				'width=device-width',
 				'initial-scale=1.0',
 				'minimum-scale=0.75',
 				'maximum-scale=2.0',
 				'user-scalable=yes',
-			) ) );*/
+			] ) );*/
 
-			$classes	= array_merge( array( 'mail' ), $this->bodyClasses );
+			$classes	= array_merge( ['mail'], $this->bodyClasses );
 			$options	= $this->env->getConfig()->getAll( 'module.ui_css_panel.', TRUE );
 			if( count( $options->getAll() ) )
 				$classes[]	= 'content-panel-style-'.$options->get( 'style' );
-			$contentFull	= $page->build( array( 'class' => $classes ) );
+			$contentFull	= $page->build( ['class' => $classes] );
 		}
 		$this->contents['htmlGenerated']	= $content;
 		$this->contents['htmlRendered']		= $contentFull;
@@ -684,7 +699,7 @@ abstract class Mail_Abstract
 	 *	@param		integer		$templateId		ID of mail template to use in favour
 	 *	@return		self
 	 */
-	protected function setText( $content, $templateId = 0 )
+	protected function setText( string $content, $templateId = 0 ): string
 	{
 		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];

@@ -1,8 +1,9 @@
 <?php
 class Mail_Job_Report extends Mail_Abstract
 {
-	public function generate( $data = array() )
+	protected function generate(): self
 	{
+		$data	= $this->data;
 //		$words	= $this->env->getLanguage()->getWords( 'resource/jobs' );
 		$words	= array(
 			'job-run-statuses'	=> array(
@@ -27,16 +28,17 @@ class Mail_Job_Report extends Mail_Abstract
 			$data['definition']->identifier,
 			$words['job-run-statuses'][$data['run']->status],
 		) ) );
-		$this->setHtml( $this->renderHtml( $data ) );
-		$this->setText( $this->renderText( $data ) );
+		$this->setHtml( $this->renderHtml() );
+		$this->setText( $this->renderText() );
+		return $this;
 	}
 
-	protected function renderHtml( $data )
+	protected function renderHtml(): string
 	{
-		$blockException	= $this->renderExceptionBlockAsHtml( $data );
-		$blockFacts		= $this->renderFactsBlockAsHtml( $data );
+		$blockException	= $this->renderExceptionBlockAsHtml( $this->data );
+		$blockFacts		= $this->renderFactsBlockAsHtml( $this->data );
 
-		$title	= $data['run']->title  ?: $data['definition']->identifier;
+		$title	= $this->data['run']->title  ?: $this->data['definition']->identifier;
 		$html	= '
 		<div>
 			<h2><span class="muted">Job:</span> '.$title.'</h2>
@@ -44,7 +46,7 @@ class Mail_Job_Report extends Mail_Abstract
 			'.$blockException.'
 			<small>
 				<h4>Raw Data Object</h4>
-				'.print_m( $data, NULL, NULL, TRUE, 'html' ).'
+				'.print_m( $this->data, NULL, NULL, TRUE, 'html' ).'
 			</small>
 		</div>
 		<style>
@@ -53,9 +55,9 @@ class Mail_Job_Report extends Mail_Abstract
 
 	}
 
-	protected function renderText( $data )
+	protected function renderText(): self
 	{
-		return json_encode( $data, JSON_PRETTY_PRINT );
+		return json_encode( $this->data, JSON_PRETTY_PRINT );
 	}
 
 	protected function parseTraceString( string $trace ): array

@@ -145,6 +145,50 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 		return $fill;
 	}
 
+	/**
+	 *	Returns one fill or many fills by form ID as CSV.
+	 *	@access		public
+	 *	@param		string		$type		Type of ID (form|fill)
+	 *	@param		mixed		$id			ID of fill or form of fills
+	 *	@return		string
+	 */
+	public function renderToCsv( string $type, $id ): string
+	{
+		$types	= ['fill', 'form'];
+		if( !in_array( $type, $types, TRUE ) )
+			throw new DomainException( 'Invalid type given' );
+
+		$data	= [];
+		$keys	= ['dateCreated', 'dateConfirmed'];
+		$fills	= $this->modelFill->getAllByIndex( $type.'Id', $id );
+		foreach( $fills as $fill ){
+//print_m( $fill );
+			$fill->data	= json_decode( $fill->data );
+			$row		= [
+				'dateCreated'	=> date( 'Y-m-d H:i:s', $fill->createdAt ),
+				'dateConfirmed'	=> $fill->modifiedAt ? date( 'Y-m-d H:i:s', $fill->modifiedAt ) : '',
+			];
+			foreach( $fill->data as $item ){
+				$row[$item->name]	= $item->value;
+				if( !empty( $item->valueLabel ) )
+					$row[$item->name]	= $item->valueLabel;
+				if( !in_array( $item->name, $keys ) )
+					$keys[]	= $item->name;
+			}
+			$data[]	= $row;
+		}
+		$lines	= [join( ';', $keys )];
+		foreach( $data as $line ){
+			$row	= [];
+			foreach( $keys as $key ){
+				$value	= isset( $line[$key] ) ? $line[$key] : '';
+				$row[]	= '"'.addslashes( $value ).'"';
+			}
+			$lines[]	= join( ';', $row );
+		}
+		return join( "\r\n", $lines );
+	}
+
 	public function sendConfirmMail( $fillId )
 	{
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )

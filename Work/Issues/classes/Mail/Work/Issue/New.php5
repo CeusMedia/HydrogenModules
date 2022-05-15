@@ -1,28 +1,24 @@
 <?php
 class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 {
-	protected function generate( $data = array() )
+	protected function generate(): self
 	{
+		$data	= $this->data;
 		$this->prepareFacts( $data );
 
-		$issue		= $data['issue'];
+		$issue		= $this->data['issue'];
 		$subject	= 'Neuer Problemreport #%s: %s';
 		$this->setSubject( sprintf( $subject, $issue->issueId, $issue->title ) );
 
-		$html		= $this->renderHtmlBody( $data );
-		$text		= $this->renderTextBody( $data );
-		$this->setHtml( $html );
-		$this->setText( $text );
-		return (object) array(
-			'html'		=> $html,
-			'text'		=> $text,
-		);
+		$this->setHtml( $this->renderHtmlBody() );
+		$this->setText( $this->renderTextBody() );
+		return $this;
 	}
 
-	protected function renderHtmlBody( array $data ): string
+	protected function renderHtmlBody(): string
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
-		$issue		= $data['issue'];
+		$issue		= $this->data['issue'];
 		$message	= array();
 		if( $issue->reporterId ){
 			$reporter	= $this->renderUser( $issue->reporter, TRUE );
@@ -55,10 +51,10 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 		return $body;
 	}
 
-	protected function renderTextBody( array $data ): string
+	protected function renderTextBody(): string
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
-		$issue		= $data['issue'];
+		$issue		= $this->data['issue'];
 		$message	= array();
 		if( $issue->reporterId )
 			$message[]	= $this->renderUser( $issue->reporter, FALSE ).' hat einen neuen Problemreport geschrieben.';

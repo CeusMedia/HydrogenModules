@@ -1,8 +1,9 @@
 <?php
-class Mail_Form_Manager_Error extends Mail_Form_Abstract{
-
+class Mail_Form_Manager_Error extends Mail_Form_Abstract
+{
 	/* @todo use block of mail */
-	public function generate( $data = array() ){
+	public function generate()
+	{
 		$errorMsg	= $this->data['error'];
 		$formData	= $this->data['data'];
 
@@ -14,5 +15,6 @@ class Mail_Form_Manager_Error extends Mail_Form_Abstract{
 		$content	= str_replace( "[form_title]", $form->title, $mail->content );
 		$content	= $this->applyHelpers( $content, $fill, $form );
 		$this->setHtml( $content );
+		return $this;
 	}
 }
