@@ -49,7 +49,6 @@ class Job_Mail_Migration extends Job_Abstract
 				$this->_migrateMailClass( $mailClone );
 				$this->_migrateMailObject( $mailClone );
 				$this->_saveRaw( $mailClone );
-				$this->_regenerateMailObject( $mailClone );
 				if( is_object( $mailClone->object ) )
 					$mailClone->object	= $mailClone->object->raw;
 				if( is_object( $mailClone->raw ) )
@@ -174,13 +173,6 @@ class Job_Mail_Migration extends Job_Abstract
 		$mail->mailClass	= $newerClass;
 		$this->logMigration( $mail, 'Migrated mail class names' );
 		return TRUE;
-	}
-
-	private function _regenerateMailObject( $mail )
-	{
-
-		$this->logicMail->decompressMailObject( $mail );
-
 	}
 
 	private function _migrateMailObject( $mail )

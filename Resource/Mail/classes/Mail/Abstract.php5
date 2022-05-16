@@ -574,7 +574,7 @@ abstract class Mail_Abstract
 	 *		$this->setHtml( $bodyHtml, $templateId );
 	 *		return $this;
 	 */
-	abstract protected function generate(): self
+	abstract protected function generate(): self;
 
 	/**
 	 *	Get template to use.
