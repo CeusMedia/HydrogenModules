@@ -99,6 +99,56 @@ class Job_Mail_Migration extends Job_Abstract
 		$this->_migrateMailTemplates();
 	}
 
+	/**
+	 *	Recreates mail objects from raw mails.
+	 *	Supports dry mode.
+	 *
+	 *	Parameters:
+	 *		--limit=NUMBER
+	 *			- maximum number of mails to work on
+	 *			- optional, default: 1000
+	 *		--offset=NUMBER
+	 *			- offset if using limit
+	 *			- optional, default: 0
+	 *
+	 *	@access		public
+	 *	@return		void
+	 */
+	public function regenerate()
+	{
+		$conditions	= array( 'status' > $this->statusesHandledMails );
+		$orders		= array( 'mailId' => 'ASC' );
+		$limits		= array(
+			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
+			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
+		);
+		$parser		= new \CeusMedia\Mail\Message\Parser();
+		$regex		= '/^O:[0-9]+:"([^"]+)":.+$/U';
+		$logic		= $this->logicMail;
+		$count		= 0;
+		$fails		= array();
+		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
+		foreach( $mailIds as $mailId ){
+			$mail			= $this->model->get( $mailId );
+			$compression	= $mail->compression;
+			try{
+				$objectString	= $logic->decompressString( $mail->object, $compression );
+				$messageRaw		= $logic->decompressString( $mail->raw, $compression );
+				$mailClass		= preg_replace( $regex, '\\1', substr( $objectString, 0, 60 ) );
+				$object			= Alg_Object_Factory::createObject( $mailClass, NULL, FALSE );
+				$object->mail	= $parser->parse( $messageRaw );
+				$mail->object	= $logic->compressString( serialize( $object ), $compression );
+				if( !$this->dryMode )
+					$this->model->edit( $mailId, ['object' => $mail->object], FALSE );
+				$this->showProgress( ++$count, count( $mailIds ), '+' );
+			}
+			catch( Exception $e ){
+				$fails[$mailId]	= $e->getMessage().PHP_EOL.$e->getTraceAsString();
+				$this->showProgress( ++$count, count( $mailIds ), 'E' );
+			}
+		}
+	}
+
 	//  --  PROTECTED  --  //
 
 	protected function __onInit()
