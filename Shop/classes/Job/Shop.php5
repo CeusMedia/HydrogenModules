@@ -25,7 +25,7 @@ class Job_Shop extends Job_Abstract
 		$dataTesters	= $this->data->testOrders->accounts;
 		$dataEmails		= $this->data->testOrders->emails;
 
-		$transEmail		= array();
+		$transEmail		= [];
 		foreach( $dataEmails as $email => $accountKey )
 			$transEmail[$email]	= array_merge( (array) $dataDefault, (array) $dataTesters->{$accountKey} );
 
@@ -53,7 +53,7 @@ class Job_Shop extends Job_Abstract
 		}
 	}
 
-	public function createOldCustomersConfig( array $arguments = array(), array $parameters = array() )
+	public function createOldCustomersConfig( array $arguments = [], array $parameters = [] )
 	{
 		$force	= in_array( 'force', $arguments );
 		if( file_exists( $this->configFileOldCustomers ) && !$force ){
@@ -123,7 +123,7 @@ class Job_Shop extends Job_Abstract
 		file_put_contents( $this->configFileOldCustomers, json_encode( $data, JSON_PRETTY_PRINT ) );
 	}
 
-	public function importOldCustomersAsMigrantsAndSaveAsCsv( array $arguments = array(), array $parameters = array() )
+	public function importOldCustomersAsMigrantsAndSaveAsCsv( array $arguments = [], array $parameters = [] )
 	{
 		$this->loadConfig();
 		if( !isset( $this->data->migrants ) ){
@@ -145,7 +145,7 @@ class Job_Shop extends Job_Abstract
 
 		$blocked		= $this->data->migrants->skipEmails;
 		$countryMap		= array_flip( $this->env->getLanguage()->getWords( 'countries' ) );
-		$emails			= array();
+		$emails			= [];
 		$conditions		= array( 'customerId' => '> 0', 'status' => '>= '.Model_Shop_Order::STATUS_ORDERED );
 		$orders			= array( 'orderId' => 'ASC' );
 		$shopOrders		= $modelOrder->getAll( $conditions, $orders );
@@ -174,7 +174,7 @@ class Job_Shop extends Job_Abstract
 		$regExp		= '/^(.+)\s+([0-9]+.*)$/';
 		$count		= 0;
 		$total		= count( $emails );
-		$migrants	= array();
+		$migrants	= [];
 		foreach( $emails as $email => $data ){
 			$data->customer->number	= '';
 			if( preg_match( $regExp, $data->customer->address ) ){
@@ -213,7 +213,7 @@ class Job_Shop extends Job_Abstract
 		}
 	}
 
-	public function migrateOldCustomers( array $arguments = array(), array $parameters = array() )
+	public function migrateOldCustomers( array $arguments = [], array $parameters = [] )
 	{
 		$modelCustomerNew	= new Model_Shop_Customer( $this->env );
 		$modelCustomerOld	= new Model_Shop_CustomerOld( $this->env );
@@ -221,7 +221,7 @@ class Job_Shop extends Job_Abstract
 		$modelOrders		= new Model_Shop_Order( $this->env );
 		$pathLocales		= $this->env->getConfig()->get( 'path.locales' );
 //		$modelOrders->getAll()
-		$conditions	= array();
+		$conditions	= [];
 		$orders		= array( 'customerId' => 'ASC' );
 		$limit		= array( 0, 1000 );
 		$countries	= FS_File_INI_Reader::load( $pathLocales.'de/countries.ini' );
@@ -294,8 +294,8 @@ class Job_Shop extends Job_Abstract
 		if( version_compare( $this->versionShop, '0.8', '>=' ) )
 			$modelCustomer	= new Model_Shop_CustomerOld( $this->env );
 
-		$countries		= array();
-		$list			= array();
+		$countries		= [];
+		$list			= [];
 		$customers		= $modelCustomer->getAll();
 		foreach( $customers as $nr => $customer ){
 			$customer->country	= trim( $customer->country );

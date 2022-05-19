@@ -30,7 +30,7 @@ class View_Helper_Form_Fill_Data
 		}
 
 		$checkValues	= array( 'true', 'ja', 'yes' );
-		$listInfo		= array();
+		$listInfo		= [];
 //print_m( $inputs );die;
 		foreach( $inputs as $name => $input ){
 			$value	= $input['value'];
@@ -71,7 +71,7 @@ class View_Helper_Form_Fill_Data
 	}
 
 	protected function renderTable( $rows ){
-		$list	= array();
+		$list	= [];
 		foreach( $rows as $row ){
 			$text	= '';
 			if( !empty( $row->text ) )

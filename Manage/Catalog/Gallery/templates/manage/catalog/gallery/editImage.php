@@ -21,7 +21,7 @@ $uriPreview		=  $pathPreview.rawurlencode( $category->path ).'/'.$image->filenam
 $uriThumbnail	=  $pathThumbnail.rawurlencode( $category->path ).'/'.$image->filename;
 
 
-$optCategory	= array();
+$optCategory	= [];
 foreach( $categories as $item )
 	$optCategory[$item->galleryCategoryId]  = $item->title;
 $optCategory	= UI_HTML_Elements::Options( $optCategory, $image->galleryCategoryId );
@@ -141,7 +141,7 @@ if( $env->getModules()->has( 'UI_Image_Slider' ) ){
 	$w				= (object) $words['editImage.slider'];
 	$modelSliders	= new Model_Image_Slider( $env );
 	$sliders		= $modelSliders->getAll( array(), array() );
-	$optSlider		= array();
+	$optSlider		= [];
 	foreach( $sliders as $slider )
 		$optSlider[$slider->sliderId]	= $slider->title;
 	$optSlider		= UI_HTML_Elements::Options( $optSlider );

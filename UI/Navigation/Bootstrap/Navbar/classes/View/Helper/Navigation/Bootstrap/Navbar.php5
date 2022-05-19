@@ -9,7 +9,7 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 	protected $position				= "static";
 	protected $helperAccountMenu;
 	protected $helperNavigation;
-	protected $linksToSkip			= array();
+	protected $linksToSkip			= [];
 	protected $hideOnMobileDevice	= FALSE;
 
 	/**
@@ -65,7 +65,7 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 		if( $this->helperAccountMenu )
 			$accountMenu	= $this->helperAccountMenu->render( $inverse );
 		$content		= $this->renderLogo().$links.$accountMenu;
-		$classes		= array();
+		$classes		= [];
 		if( $this->inverse )
 			$classes[]	= 'inverse';
 		if( $this->hideOnMobileDevice )

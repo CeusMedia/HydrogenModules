@@ -3,9 +3,9 @@
 class View_Helper_Accordion{
 
 	protected $id			= NULL;
-	protected $open			= array();
+	protected $open			= [];
 	protected $singleOpen	= FALSE;
-	protected $parts		= array();
+	protected $parts		= [];
 
 	public function __construct( $id ){
 		$this->setId( $id );
@@ -37,7 +37,7 @@ class View_Helper_Accordion{
 	}
 
 	public function render(){
-		$groups		= array();
+		$groups		= [];
 		foreach( $this->parts as $part ){
 			$class		= 'accordion-toggle '.( $part->class ? $part->class : '' );
 			$link		= UI_HTML_Tag::create( 'a', $part->title, array(

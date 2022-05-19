@@ -2,7 +2,7 @@
 $helper	= new View_Helper_Catalog( $env );
 
 
-$list	= array();
+$list	= [];
 foreach( $authors as $author ){
 	$link	= $helper->renderAuthorLink( $author );
 	$list[]	= UI_HTML_Tag::create( 'li', $link );

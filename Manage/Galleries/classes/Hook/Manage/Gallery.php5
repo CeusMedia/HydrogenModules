@@ -9,14 +9,14 @@ class Hook_Manage_Gallery extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
 		$moduleConfig		= $env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
 		$frontend			= Logic_Frontend::getInstance( $env );
 		$remotePathImages	= $frontend->getPath( 'images' ).( trim( $moduleConfig->get( 'image.path' ) ) );
 		$virtualPathImages	= substr( $remotePathImages, strlen( $frontend->getPath() ) );
 		$words				= $env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes			= (object) $words['link-prefixes'];
-		$list				= array();
+		$list				= [];
 
 		$modelGallery		= new Model_Gallery( $env );
 		$modelImage			= new Model_Gallery_Image( $env );
@@ -50,13 +50,13 @@ class Hook_Manage_Gallery extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
 		$moduleConfig	= $env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
 		$frontend		= Logic_Frontend::getInstance( $env );
 		$pathFrontend	= $frontend->getPath();
 		$words			= $env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes		= (object) $words['link-prefixes'];
-		$list			= array();
+		$list			= [];
 
 		$modelGallery	= new Model_Gallery( $env );
 		$galleries	= $modelGallery->getAll( array( 'status' => 1 ), array( 'title' => 'ASC' ) );

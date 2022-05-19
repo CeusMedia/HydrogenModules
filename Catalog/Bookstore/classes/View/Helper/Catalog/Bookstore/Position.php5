@@ -44,7 +44,7 @@ class View_Helper_Catalog_Bookstore_Position{
 			'label_de'		=> 'Übersicht',
 			'categoryId'	=> 0,
 		));
-		$list	= array();
+		$list	= [];
 		foreach( $categories as $nr => $category ){
 			$url	= './catalog'.( $category->categoryId ? '/category/bookstore/'.$category->categoryId : '' );
 			$url	= $this->helper->getCategoryUri( $category );

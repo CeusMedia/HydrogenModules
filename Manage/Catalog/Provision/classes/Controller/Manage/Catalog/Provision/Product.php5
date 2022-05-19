@@ -18,7 +18,7 @@ class Controller_Manage_Catalog_Provision_Product extends CMF_Hydrogen_Controlle
 			$this->messenger->noteSuccess( 'Product added.' );
 			$this->restart( 'edit/'.$productId, TRUE );
 		}
-		$product	= array();
+		$product	= [];
 		foreach( $this->modelProduct->getColumns() as $column )
 			$product[$column]	= $this->request->get( $column );
 		$this->addData( 'product', (object) $product );

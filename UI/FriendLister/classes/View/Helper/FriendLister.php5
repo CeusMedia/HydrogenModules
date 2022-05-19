@@ -39,7 +39,7 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract
 		if( !file_exists( $c->get( 'file' ) ) )														//
 			throw new RuntimeException( 'File "'.$c->get( 'file' ).'" is not existing' );			//
 
-		$list	= array();																			//
+		$list	= [];																			//
 		$xml	= XML_ElementReader::readFile( $c->get( 'file' ) );									//
 		foreach( $xml->friend as $item ){															//
 			if( $item->hasAttribute( 'disabled' ) )													//

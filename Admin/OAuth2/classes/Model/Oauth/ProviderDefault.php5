@@ -3,7 +3,7 @@ class Model_Oauth_ProviderDefault
 {
 	protected $filePath		= 'config/oauth2_providers.json';
 
-	protected $providers	= array();
+	protected $providers	= [];
 
 	public function __construct()
 	{
@@ -37,7 +37,7 @@ class Model_Oauth_ProviderDefault
 	 *	@param		array		$changes			Map of changed to apply on provider default
 	 *	@return		integer		Number of bytes saved to file.
 	 */
-	public function set( string $providerKey, array $changes = array() )
+	public function set( string $providerKey, array $changes = [] )
 	{
 		$currentValues	= $this->get( $providerKey );
 		$newValues		= array_merge( (array) $currentValues, (array) $changes );
@@ -52,13 +52,13 @@ class Model_Oauth_ProviderDefault
 	protected function read()
 	{
 		$reader				= new FS_File_JSON_Reader( $this->filePath );
-		$this->providers	= array();
+		$this->providers	= [];
 		foreach( $reader->read( FALSE ) as $provider ){
 			$key	= strtolower( $provider->title );
 			if( !isset( $provider->options ) )
 				$provider->options	= (object) array();
 			if( !isset( $provider->scopes ) )
-				$provider->scopes	= array();
+				$provider->scopes	= [];
 			$this->providers[$key]	= $provider;
 		}
 		ksort( $this->providers );

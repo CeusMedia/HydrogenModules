@@ -10,7 +10,7 @@ class Hook_Manage_My_User_Setting extends CMF_Hydrogen_Hook{
 	 *	@param		array						$data		Payload map
 	 *	@return		void
 	 */
-	static public function onSessionInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onSessionInit( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
 		if( $env->has( 'session' ) ){															//  environment has session support
 			if( ( $userId = $env->getSession()->get( 'auth_user_id' ) ) ){						//  an user is logged in
 				$config	= Model_User_Setting::applyConfigStatic( $env, $userId, FALSE );		//  apply user configuration
@@ -28,7 +28,7 @@ class Hook_Manage_My_User_Setting extends CMF_Hydrogen_Hook{
 	 *	@param		array						$data		Payload map
 	 *	@return		void
 	 */
-	static public function onViewRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onViewRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
 		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user/setting' );			//  load words
 		$context->registerTab( 'setting', $words->module['tab'], 4 );							//  register main tab
 	}
@@ -75,7 +75,7 @@ class Hook_Manage_My_User_Setting extends CMF_Hydrogen_Hook{
 		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
 		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
 
-		$list		= array();
+		$list		= [];
 		$model		= new Model_User_Setting( $env );
 		$settings	= $model->getAllByIndex( 'userId', $data->userId );
 		foreach( $settings as $setting ){

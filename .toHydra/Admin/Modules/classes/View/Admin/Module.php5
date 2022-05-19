@@ -42,10 +42,10 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 	 *	@param		array		$filters		Map of filters to apply on overview, example: array( 'type' => array( Model_Module::TYPE_CUSTOM ) )
 	 *	@return		string		Rendered HTML of section modules.
 	 */
-	protected function renderModuleSections( $modules, $categories, $filters = array() ){
-		$listSections	= array();
+	protected function renderModuleSections( $modules, $categories, $filters = [] ){
+		$listSections	= [];
 		foreach( $categories as $categoryId => $category ){
-			$listModules	= array();
+			$listModules	= [];
 			$url			= './'.$this->controller.'/view/';
 			foreach( $modules as $module ){
 				if( $module->category != $categoryId )
@@ -70,7 +70,7 @@ class View_Admin_Module extends CMF_Hydrogen_View{
 
 	public function renderRelatedModulesList( $allModules, $relatedModules, $url = NULL, $listClass = NULL ){
 		$words	= $this->env->getLanguage()->getWords( 'admin/module' );
-		$list	= array();
+		$list	= [];
 		foreach( $relatedModules as $relatedModuleId => $status ){
 			$alt	= $words['status-alt'][$status];
 			$label	= $relatedModuleId;

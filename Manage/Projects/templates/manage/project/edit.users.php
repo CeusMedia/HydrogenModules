@@ -13,7 +13,7 @@ if( $useMembers ){
 	$helperMember->setMode( 'inline' );
 }
 
-$list	= array();
+$list	= [];
 foreach( $projectUsers as $user ){
 	$class	= 'role role'.$user->roleId;
 	$from	= '?from=./manage/project/edit/'.$project->projectId;

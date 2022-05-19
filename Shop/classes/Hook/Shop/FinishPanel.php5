@@ -11,7 +11,7 @@ class Hook_Shop_FinishPanel
 	 *	@param		public						$arguments		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;

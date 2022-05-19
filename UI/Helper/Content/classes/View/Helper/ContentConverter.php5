@@ -7,7 +7,7 @@ class View_Helper_ContentConverter
 
 	public static $linkTarget		= '_self';
 
-	protected static $callbacks		= array();
+	protected static $callbacks		= [];
 
 	public static function formatBreaks( Environment $env, string $content ): string
 	{
@@ -23,7 +23,7 @@ class View_Helper_ContentConverter
 	{
 		$content	= preg_replace( '/<(\/?)code>/', "_____\\1code_____", $content );				//  preserve <code> tags
 		$pattern	= "/(\r?\n)*code:?(\w+)?>(.*)<code(\r?\n)*/siU";
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( $pattern, $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$type		= $matches[2][$i];
@@ -38,7 +38,7 @@ class View_Helper_ContentConverter
 
 	public static function formatLinks( Environment $env, string $content ): string
 	{
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[link:(\S+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$url		= $matches[1][$i];
@@ -52,7 +52,7 @@ class View_Helper_ContentConverter
 
 	public static function formatImageSearch( Environment $env, string $content ): string
 	{
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[image-search:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$query		= trim( $matches[1][$i] );
@@ -67,7 +67,7 @@ class View_Helper_ContentConverter
 
 	public static function formatMapSearch( Environment $env, string $content ): string
 	{
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[map-search:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$query		= trim( $matches[1][$i] );
@@ -94,7 +94,7 @@ class View_Helper_ContentConverter
 
 	public static function formatWikiLinks( Environment $env, string $content ): string
 	{
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[wiki:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count($matches[0]); $i++ ){
 			$query		= trim( $matches[1][$i] );
@@ -109,7 +109,7 @@ class View_Helper_ContentConverter
 
 	public static function formatYoutubeLinks( Environment $env, string $content ): string
 	{
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[youtube:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$query		= trim( $matches[1][$i] );
@@ -124,7 +124,7 @@ class View_Helper_ContentConverter
 
 	public static function formatMapLinks( Environment $env, string $content ): string
 	{
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[(link-)?map:([0-9,.]+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$geocode	= trim( $matches[2][$i] );
@@ -143,7 +143,7 @@ class View_Helper_ContentConverter
 
 	public static function formatDiscogsLinks( Environment $env, string $content ): string
 	{
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[discogs:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$query		= trim( $matches[1][$i] );
@@ -158,7 +158,7 @@ class View_Helper_ContentConverter
 
 	public static function formatMyspaceLinks( Environment $env, string $content ): string
 	{
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[myspace:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$query		= trim( $matches[1][$i] );
@@ -173,7 +173,7 @@ class View_Helper_ContentConverter
 
 	public static function formatImdbLinks( Environment $env, string $content ): string
 	{
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[imdb:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$query		= trim( $matches[1][$i] );
@@ -208,7 +208,7 @@ class View_Helper_ContentConverter
 	public static function formatLists( Environment $env, string $content ): string
 	{
 		$pattern	= "/(\r?\n)*(o|u)?list:?(\w+)?>(.*)<(o|u)?list(\r?\n)*/siU";
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( $pattern, $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$type		= $matches[2][$i] ? $matches[2][$i] : 'u';

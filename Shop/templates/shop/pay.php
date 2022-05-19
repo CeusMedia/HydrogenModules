@@ -1,7 +1,7 @@
 <?php
 
 
-$list	= array();
+$list	= [];
 foreach( $paymentBackends as $paymentBackend ){
 	$icon	= '';
 	if( $paymentBackend->icon )

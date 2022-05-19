@@ -12,8 +12,8 @@ $iconMail	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
 
 $listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $transferRules ){
-	$listRules	= array();
-	$modals		= array();
+	$listRules	= [];
+	$modals		= [];
 	foreach( $transferRules as $rule ){
 		$ruleId		= $rule->formTransferRuleId;
 		$target		= $transferTargets[$rule->formTransferTargetId];
@@ -24,7 +24,7 @@ if( $transferRules ){
 			'class'	=> 'btn not-btn-info not-btn-small btn-mini button-test-rules',
 		), array( 'rule-id' => $ruleId ) );
 
-		$optTransferTarget	= array();
+		$optTransferTarget	= [];
 		foreach( $transferTargets as $item )
 			$optTransferTarget[$item->formTransferTargetId]	= $item->title;
 		$optTransferTarget	= UI_HTML_Elements::Options( $optTransferTarget, $rule->formTransferTargetId );
@@ -76,7 +76,7 @@ if( $transferRules ){
 	$listRules	= Html::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped' ) ).join( $modals );
 }
 
-$optTransferTarget	= array();
+$optTransferTarget	= [];
 foreach( $transferTargets as $item )
 	$optTransferTarget[$item->formTransferTargetId]	= $item->title;
 $optTransferTarget	= UI_HTML_Elements::Options( $optTransferTarget );

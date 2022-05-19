@@ -11,7 +11,7 @@ class Hook_Resource_User extends CMF_Hydrogen_Hook
 	 *	@param		public						$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$payload	= (object) $payload;
 		if( !empty( $payload->userId ) ){

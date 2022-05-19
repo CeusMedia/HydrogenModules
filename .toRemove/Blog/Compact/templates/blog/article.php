@@ -1,6 +1,6 @@
 <?php
-$articleIndex	= array();
-$articleList	= array();
+$articleIndex	= [];
+$articleList	= [];
 foreach( $articles as $item ){
 	$articleIndex[]	= $item->articleId;
 	$articleList[$item->articleId]	= $item;
@@ -29,7 +29,7 @@ if( isset( $articleIndex[$index+1] ) ){
 }
 
 $listVersions	= '';
-$list	= array();
+$list	= [];
 if( $article->versions ){
 	foreach( $article->versions as $nr => $articleVersion ){
 		$label	= ++$nr;

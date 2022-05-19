@@ -26,7 +26,7 @@ class Model_Module
 		$this->env			= $env;
 		$this->pathRepos	= $env->config->get( 'module.admin_modules.path' );
 		$this->pathConfig	= 'config/modules/';
-		$this->cache		= array();
+		$this->cache		= [];
 	}
 
 	public function getAll(): array
@@ -76,7 +76,7 @@ class Model_Module
 
 	public function getInstalled(): array
 	{
-		$list	= array();
+		$list	= [];
 		$index	= new FS_File_RecursiveRegexFilter( $this->pathConfig, '/^\w+.xml$/' );
 		foreach( $index as $entry )
 		{
@@ -103,7 +103,7 @@ class Model_Module
 	{
 		if( $this->cache )
 			return $this->cache;
-		$list	= array();
+		$list	= [];
 		$index	= new FS_File_RecursiveNameFilter( $this->pathRepos, 'module.xml' );
 		foreach( $index as $entry ){
 			$id		= preg_replace( '@^'.$this->pathRepos.'@', '', $entry->getPath() );
@@ -148,17 +148,17 @@ class Model_Module
 		$obj->title				= (string) $xml->title;
 		$obj->description		= (string) $xml->description;
 		$obj->files				= new stdClass();
-		$obj->files->classes	= array();
-		$obj->files->locales	= array();
-		$obj->files->templates	= array();
-		$obj->files->styles		= array();
-		$obj->files->scripts	= array();
-		$obj->files->images		= array();
-		$obj->config			= array();
+		$obj->files->classes	= [];
+		$obj->files->locales	= [];
+		$obj->files->templates	= [];
+		$obj->files->styles		= [];
+		$obj->files->scripts	= [];
+		$obj->files->images		= [];
+		$obj->config			= [];
 		$obj->version			= (string) $xml->version;
 		$obj->versionAvailable	= NULL;
 		$obj->versionInstalled	= NULL;
-		$obj->sql				= array();
+		$obj->sql				= [];
 		foreach( $xml->files->class as $link )
 			$obj->files->classes[]	= (string) $link;
 		foreach( $xml->files->locale as $link )

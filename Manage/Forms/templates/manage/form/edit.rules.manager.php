@@ -8,7 +8,7 @@ $iconSave	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 $iconRemove	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 $iconMail	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
 
-$optMailManager	= array();
+$optMailManager	= [];
 //if( count( $mailsManager ) != 1 )
 //	$optMailManager['']	= '- keine -';
 foreach( $mailsManager as $item )
@@ -17,7 +17,7 @@ $optMailManager	= UI_HTML_Elements::Options( $optMailManager, $form->managerMail
 
 $listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $rulesManager ){
-	$listRules	= array();
+	$listRules	= [];
 	foreach( $rulesManager as $rule ){
 		$mail	= '<em>unbekannt</em>';
 		foreach( $mailsManager as $item ){
@@ -28,7 +28,7 @@ if( $rulesManager ){
 			}
 		}
 
-		$list	= array();
+		$list	= [];
 		foreach( json_decode( $rule->rules ) as $item ){
 			$keyLabel	= Html::create( 'acronym', $item->keyLabel, array( 'title' => 'Interner Schlüssel: '.$item->key ) );
 			$valueLabel	= Html::create( 'acronym', $item->valueLabel, array( 'title' => 'Interner Schlüssel: '.$item->value ) );

@@ -36,7 +36,7 @@ class Controller_Manage_Blog_Category extends CMF_Hydrogen_Controller{
 			$categoryId		= $this->modelCategory->add( $data );
 			$this->restart( NULL, TRUE );
 		}
-		$data	= array();
+		$data	= [];
 		foreach( $this->modelCategory->getColumns() as $column ){
 			$data[$column]	= $this->request->get( $column );
 		}

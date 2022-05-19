@@ -89,7 +89,7 @@ class Resource_Server_Json {
 	 *	@todo			localization of messages
 	 *	@todo			allow other auth methods than 'shared secred'
 	 */
-	static public function ___onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function ___onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
 		$server		= new Resource_Server_Json( $context );
 		$context->set( 'server', $server );
 		$config		= $context->getConfig();
@@ -117,10 +117,10 @@ class Resource_Server_Json {
 
 	}
 
-	protected function buildServerGetUrl( $controller, $action = NULL, $arguments = array(), $parameters = array() ) {
+	protected function buildServerGetUrl( $controller, $action = NULL, $arguments = [], $parameters = [] ) {
 		$url	= $this->buildServerPostUrl( $controller, $action, $arguments );
 		if( is_null( $parameters ) )
-			$parameters	= array();
+			$parameters	= [];
 		if( !is_array( $parameters ) )
 			throw new InvalidArgumentException( 'Parameters must be an array or NULL' );
 		if( $this->env->getSession()->get( 'token' ) )
@@ -140,7 +140,7 @@ class Resource_Server_Json {
 	 *	@param		array		$arguments		List of URI arguments
 	 *	@return		strring		URL on server
 	 */
-	protected function buildServerPostUrl( $controller, $action = NULL, $arguments = array() ) {
+	protected function buildServerPostUrl( $controller, $action = NULL, $arguments = [] ) {
 		if( $arguments && empty( $action ) )
 			$action		= 'index';
 		if( $action && !$controller )
@@ -186,16 +186,16 @@ class Resource_Server_Json {
 		return $this->curlOptions[$method];
 	}
 
-	public function getData( $controller, $action = NULL, $arguments = array(), $parameters = array(), $curlOptions = array() ) {
-		$url	= $this->buildServerGetUrl( $controller, $action, $arguments, $parameters = array() );
+	public function getData( $controller, $action = NULL, $arguments = [], $parameters = [], $curlOptions = [] ) {
+		$url	= $this->buildServerGetUrl( $controller, $action, $arguments, $parameters = [] );
 		return	$this->getDataFromUrl( $url, $curlOptions );
 	}
 
-	public function getDataFromUri( $uri, $curlOptions = array() ) {
+	public function getDataFromUri( $uri, $curlOptions = [] ) {
 		return $this->getDataFromUrl( $this->serverUri.$uri, $curlOptions );
 	}
 
-	public function getDataFromUrl( $url, $curlOptions = array() ) {
+	public function getDataFromUrl( $url, $curlOptions = [] ) {
 		$reader		= new Net_HTTP_Reader();
 		$headers	= array( 'Accept-Encoding: gzip, deflate' );
 		$options	= $this->curlOptions['ALL'] + $this->curlOptions['GET'] + $curlOptions;
@@ -226,16 +226,16 @@ class Resource_Server_Json {
 		throw unserialize( $response->serial );
 	}
 
-	public function postData( $controller, $action = NULL, $arguments = NULL, $data = array(), $curlOptions = array() ) {
+	public function postData( $controller, $action = NULL, $arguments = NULL, $data = [], $curlOptions = [] ) {
 		$url	= $this->buildServerPostUrl( $controller, $action, $arguments );
 		return $this->postDataToUrl( $url, $data, $curlOptions );
 	}
 
-	public function postDataToUri( $uri, $data = array(), $curlOptions = array() ) {
+	public function postDataToUri( $uri, $data = [], $curlOptions = [] ) {
 		return $this->postDataToUrl( $this->serverUri.$uri, $data, $curlOptions );
 	}
 
-	public function postDataToUrl( $url, $data = array(), $curlOptions = array() ) {
+	public function postDataToUrl( $url, $data = [], $curlOptions = [] ) {
 		if( $data instanceof ADT_List_Dictionary )
 			$data	= $data->getAll();
 		if( $this->env->getSession()->get( 'token' ) )

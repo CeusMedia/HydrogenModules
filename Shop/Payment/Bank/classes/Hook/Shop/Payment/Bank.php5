@@ -11,7 +11,7 @@ class Hook_Shop_Payment_Bank extends CMF_Hydrogen_Hook
 	 *	@param		public						$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onRegisterShopPaymentBackends( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onRegisterShopPaymentBackends( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_bank.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/bank' );
@@ -49,7 +49,7 @@ class Hook_Shop_Payment_Bank extends CMF_Hydrogen_Hook
 	 *	@param		public						$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;

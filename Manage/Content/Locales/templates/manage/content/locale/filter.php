@@ -20,7 +20,7 @@ if( count( $languages ) > 1 ){
 //$optEmpty	= $words['show-types'];
 //$optEmpty	= UI_HTML_Elements::Options( $optEmpty, $filterEmpty );
 
-$optFolder	= array();
+$optFolder	= [];
 foreach( $folders as $folderKey => $folderPath )
 	$optFolder[$folderKey]	= $words['folders'][$folderKey];
 $optFolder	= UI_HTML_Elements::Options( $optFolder, $folder );

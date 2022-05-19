@@ -28,7 +28,7 @@ class Hook_Helper_Input_Resource extends CMF_Hydrogen_Hook
 			'document'	=> $pathDocuments ? array( $pathDocuments ) : array(),
 			'download'	=> $pathDownloads ? array( $pathDownloads ) : array(),
 		);
-		$scripts	= array();
+		$scripts	= [];
 		foreach( $modePaths as $key => $paths ){
 			if( !count( $paths ) )
 				continue;

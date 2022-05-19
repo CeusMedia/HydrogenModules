@@ -7,7 +7,7 @@ $w	= (object) $words->add;
 $iconCancel	= Html::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) ).'&nbsp;';
 $iconSave	= Html::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) ).'&nbsp;';
 
-$optTemplate	= array();
+$optTemplate	= [];
 foreach( $addTemplates as $entry )
 	$optTemplate[$entry->newsletterTemplateId]	= $entry->title;
 $optTemplate	= UI_HTML_Elements::Options( $optTemplate, 0 );

@@ -1,14 +1,8 @@
 <?php
-class Controller_Manage_Catalog_Clothing_Category extends CMF_Hydrogen_Controller{
-
-	public function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->messenger		= $this->env->getMessenger();
-//		$this->modelArticle		= new Model_Catalog_Clothing_Article( $this->env );
-		$this->modelCategory	= new Model_Catalog_Clothing_Category( $this->env );
-	}
-
-	public function add(){
+class Controller_Manage_Catalog_Clothing_Category extends CMF_Hydrogen_Controller
+{
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$data				= $this->request->getAll();
 			$data['createdAt']	= time();
@@ -18,7 +12,8 @@ class Controller_Manage_Catalog_Clothing_Category extends CMF_Hydrogen_Controlle
 		}
 	}
 
-	public function edit( $categoryId ){
+	public function edit( $categoryId )
+	{
 		if( $this->request->has( 'save' ) ){
 			$data	= $this->request->getAll();
 			$data['modifiedAt']	= time();
@@ -29,14 +24,24 @@ class Controller_Manage_Catalog_Clothing_Category extends CMF_Hydrogen_Controlle
 		$this->addData( 'category', $this->modelCategory->get( $categoryId ) );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$this->addData( 'categories', $this->modelCategory->getAll() );
 	}
 
-	public function remove( $categoryId ){
+	public function remove( $categoryId )
+	{
 		$this->addData( 'category', $this->modelCategory->get( $categoryId ) );
 		$this->modelCategory->remove( $categoryId );
 		$this->messenger->noteSuccess( 'Removed.' );
 		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->messenger		= $this->env->getMessenger();
+//		$this->modelArticle		= new Model_Catalog_Clothing_Article( $this->env );
+		$this->modelCategory	= new Model_Catalog_Clothing_Category( $this->env );
 	}
 }

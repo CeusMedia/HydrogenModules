@@ -19,7 +19,7 @@ function renderUserLabel( $user ){
 
 $panelVersions		= '';
 if( 1 || $mission->versions ){
-	$list	= array();
+	$list	= [];
 	foreach( $mission->versions as $version ){
 		$date	= date( 'Y-m-d H:i:s', $version->timestamp );
 		$date	= $phraser->convert( $version->timestamp, TRUE );

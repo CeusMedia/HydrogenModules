@@ -5,7 +5,7 @@ class View_Helper_ItemRelationLister
 	protected $relations;
 	protected $hookResource;
 	protected $hookEvent;
-	protected $hookIndices				= array();
+	protected $hookIndices				= [];
 	protected $tableClass				= '';
 	protected $renderMode				= 'table';
 	protected $activeOnly				= FALSE;
@@ -35,7 +35,7 @@ class View_Helper_ItemRelationLister
 	public static function enqueueRelations( $data, $module, $type, $items, $label, $controller = NULL, $action = NULL )
 	{
 		if( !isset( $data->list ) )
-			$data->list	= array();
+			$data->list	= [];
 		if( count( $items ) ){
 			$data->list[]	= (object) array(
 				'module'		=> (object) array(
@@ -148,11 +148,11 @@ class View_Helper_ItemRelationLister
 //		$roleId		= $this->env->getSession()->get( 'auth_role_id' );
 //		$fullAccess
 		$acl		= $this->env->getAcl();
-		$list		= array();
+		$list		= [];
 		$iconMore	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 		foreach( $this->relations as $relation ){
 			$type	= sprintf( $this->types[$relation->type], $relation->count );
-			$items	= array();
+			$items	= [];
 			$icon	= '';
 			if( !empty( $relation->icon ) )
 				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $relation->icon ) ).'&nbsp;';
@@ -188,10 +188,10 @@ class View_Helper_ItemRelationLister
 //		$roleId		= $this->env->getSession()->get( 'auth_role_id' );
 //		$fullAccess
 		$acl		= $this->env->getAcl();
-		$rows		= array();
+		$rows		= [];
 		$iconMore	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 		foreach( $this->relations as $relation ){
-			$items	= array();
+			$items	= [];
 			$icon	= '';
 			if( !empty( $relation->icon ) )
 				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $relation->icon ) ).'&nbsp;';
@@ -242,7 +242,7 @@ class View_Helper_ItemRelationLister
 	 */
 	protected function renderTypes()
 	{
-		$this->types	= array();
+		$this->types	= [];
 		$this->types['entity']		= $this->labels['entities.count.label'];
 		$this->types['relation']	= $this->labels['relations.count.label'];
 		if( $this->labels['entities.count.hint'] )

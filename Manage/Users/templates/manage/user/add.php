@@ -10,7 +10,7 @@ if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
 	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
 }
 
-$roleMap	= array();
+$roleMap	= [];
 foreach( $roles as $role )
 	$roleMap[$role->roleId] = $role->title;
 

@@ -4,7 +4,7 @@ class View_Helper_Navigation_Dropdown
 	protected $env;
 	protected $menu;
 	protected $inverse			= FALSE;
-	protected $linksToSkip		= array();
+	protected $linksToSkip		= [];
 	protected $logoTitle;
 	protected $logoLink;
 	protected $logoIcon;
@@ -32,10 +32,10 @@ class View_Helper_Navigation_Dropdown
 		if( strtolower( $this->style ) == "pills" )
 			$listClass	.= ' nav-pills';
 
-		$list	= array();
+		$list	= [];
 		foreach( $this->menu->getPages( $this->scope, FALSE ) as $page ){
 			if( $page->type == 'menu' ){
-				$sublist	= array();
+				$sublist	= [];
 				foreach( $page->items as $subpage ){
 					$class		= $subpage->active ? 'active' : NULL;
 					$href		= './'.$subpage->link;

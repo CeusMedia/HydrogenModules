@@ -6,7 +6,7 @@ $w	= (object) $words['tab-relations'];
 
 $tableRelations	= '<br/><div>'.$w->listNone.'</div><br/>';
 
-$relations	= array();
+$relations	= [];
 foreach( $module->relations->needs as $relatedModuleId ){
 	if( isset( $modules[$relatedModuleId] ) )
 		$item	= $modules[$relatedModuleId];
@@ -26,7 +26,7 @@ foreach( $module->relations->supports as $relatedModuleId ){
 $count	= count( $relations );
 
 if( $relations ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $relations as $relatedModuleId => $relatedModule ){
 		$status		= 2;
 		if( !array_key_exists( $relatedModuleId, $modules ) )
@@ -55,7 +55,7 @@ if( $relations ){
 }
 
 
-$optModule	= array();
+$optModule	= [];
 foreach( $modules as $id => $item )
 	if( $moduleId != $id )
 		if( !in_array( $id, $module->relations->needs ) )

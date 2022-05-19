@@ -17,7 +17,7 @@ class View_Helper_Work_Mission_Filter_Priority{
 
 	public function render(){
 		$changedPriorities	= array_diff( $this->values, $this->selected );
-		$list	= array();
+		$list	= [];
 		foreach( $this->values as $priority ){
 			$input	= UI_HTML_Tag::create( 'input', NULL, array(
 				'type'		=> 'checkbox',

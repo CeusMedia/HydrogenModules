@@ -12,7 +12,7 @@ $iconsStatus = array(
 
 $list	= '<div class="muted"><em>'.$w->noEntries.'</em></div><br/>';
 if( $licenses ){
-	$list	= array();
+	$list	= [];
 	foreach( $licenses as $license ){
 		$class		= isset( $licenseId ) && $licenseId == $license->productLicenseId ? 'active' : NULL;
 		$label		= $license->title.' <small class="muted">('.$license->count.')</small>';

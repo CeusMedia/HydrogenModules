@@ -12,7 +12,7 @@ class Logic_Member
 
 	public function getRelatedUserIds( $userId, $status = NULL )
 	{
-		$userIds	= array();
+		$userIds	= [];
 		$relations	= $this->modelRelation->getAllByIndices( array(
 			'fromUserId'	=> $userId,
 			'status'		=> $status ? $status : "!0",
@@ -32,7 +32,7 @@ class Logic_Member
 	{
 		$dbc		= $this->env->getDatabase();
 		$prefix		= $dbc->getPrefix();
-		$userIds	= array();
+		$userIds	= [];
 
 		$query		= str_replace( ' ', '%', trim( $query ) );
 		$conditions	= array(

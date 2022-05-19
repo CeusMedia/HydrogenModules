@@ -6,20 +6,6 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 	protected $messenger;
 	protected $logic;
 
-	public function __onInit()
-	{
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= Logic_Note::getInstance( $this->env );
-		$this->logic->setContext(
-			$this->session->get( 'auth_user_id' ),
-			$this->session->get( 'auth_role_id' ),
-			$this->session->get( 'filter_notes_projectId' )
-		);
-		$this->addData( 'logicNote', $this->logic );
-	}
-
 	public function add()
 	{
 		$model		= new Model_Note( $this->env );
@@ -68,7 +54,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 			$note->$column	= $this->request->get( $column );
 		$this->addData( 'note', $note );
 
-		$projects	= array();
+		$projects	= [];
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logic		= Logic_Project::getInstance( $this->env );
 			$userId		= $this->session->get( 'auth_user_id' );
@@ -157,7 +143,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 		$this->addData( 'note', $this->logic->getNoteData( $noteId ) );
 		$this->addData( 'relatedTags', $this->logic->getRelatedTags( $noteId ) );
 
-		$projects	= array();
+		$projects	= [];
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logic		= Logic_Project::getInstance( $this->env );
 			$userId		= $this->session->get( 'auth_user_id' );
@@ -196,7 +182,7 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 			if( trim( $query = $this->request->get( 'filter_query' ) ) ){
 				$tags		= $this->session->get( 'filter_notes_tags' );
 				if( !is_array( $tags ) )
-					$tags	= array();
+					$tags	= [];
 				$modelTag	= new Model_Tag( $this->env );
 				$parts		= explode( ' ', $query );																			//  split query into parts
 				foreach( $parts as $nr => $part ){																				//  iterate query parts
@@ -255,16 +241,16 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 			$this->session->set( 'filter_notes_offset', (int) $filterOffset );
 
 		if( !is_array( $tags ) )
-			$tags	= array();
+			$tags	= [];
 
 		$userId		= $this->session->get( 'auth_user_id' );
-		$projects	= array();
+		$projects	= [];
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logic		= Logic_Project::getInstance( $this->env );
 			$projects	= $logic->getUserProjects( $userId );
 		}
-		$notes		= array();
-		$conditions	= array();
+		$notes		= [];
+		$conditions	= [];
 		$orders		= array( $filterOrder => $filterDirection );
 //		if( $filterPublic > 0 )
 //			$conditions['public']		= $filterPublic == 2 ? 0 : 1;
@@ -348,5 +334,19 @@ class Controller_Work_Note extends CMF_Hydrogen_Controller
 			$this->restart( './work/note/' );
 		}
 		$this->addData( 'note', $note );
+	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logic		= Logic_Note::getInstance( $this->env );
+		$this->logic->setContext(
+			$this->session->get( 'auth_user_id' ),
+			$this->session->get( 'auth_role_id' ),
+			$this->session->get( 'filter_notes_projectId' )
+		);
+		$this->addData( 'logicNote', $this->logic );
 	}
 }

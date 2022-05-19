@@ -16,7 +16,7 @@ if( $customer->ratings ){
 
 	$averages	= array( 0, 0, 0, 0, 0, 0, 0 );
 
-	$rows = array();
+	$rows = [];
 	foreach( $customer->ratings as $rating ){
 		$averages[0]	+= $rating->affability;
 		$averages[1]	+= $rating->guidability;

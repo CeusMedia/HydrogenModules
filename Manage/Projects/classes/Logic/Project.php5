@@ -53,11 +53,11 @@ class Logic_Project extends CMF_Hydrogen_Logic
 		return $this->modelProject->get( $projectId );
 	}
 
-	public function getProjects( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getProjects( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$projects	= $this->modelProject->getAll( $conditions, $orders, $limits );
 //		@todo   	replace the last 3 lines below by this more performant code after testing
-//		$projectIds	= array();
+//		$projectIds	= [];
 //		foreach( $projects as $project )
 //			$projectIds[]	= $project->projectId;
 		foreach( $projects as $project )
@@ -73,7 +73,7 @@ class Logic_Project extends CMF_Hydrogen_Logic
 	 *	@param		array       $orders         Map how to order users, defaults to 'username ASC'
 	 *	@return		array		Map of users assigned to project
 	 */
-	public function getProjectUsers( $projectId, array $conditions = array(), array $orders = array() ): array
+	public function getProjectUsers( $projectId, array $conditions = [], array $orders = [] ): array
 	{
 		return $this->modelProject->getProjectUsers( $projectId, $conditions, $orders );
 	}
@@ -86,7 +86,7 @@ class Logic_Project extends CMF_Hydrogen_Logic
 	 *	@param		array       $orders         Map how to order users, defaults to 'username ASC'
 	 *	@return		array		Map of users assigned to project
 	 */
-	public function getProjectsUsers( $projectIds, array $conditions = array(), array $orders = array() ): array
+	public function getProjectsUsers( $projectIds, array $conditions = [], array $orders = [] ): array
 	{
 		return $this->modelProject->getProjectUsers( $projectIds, $conditions, $orders );
 	}
@@ -100,10 +100,10 @@ class Logic_Project extends CMF_Hydrogen_Logic
 	 *	@param		array		$orders			Map how to order projects, defaults to 'title ASC'
 	 *	@return		array		List of projects of user
 	 */
-	public function getUserProjects( $userId, bool $activeOnly = FALSE, array $conditions = array(), array $orders = array() ): array
+	public function getUserProjects( $userId, bool $activeOnly = FALSE, array $conditions = [], array $orders = [] ): array
 	{
 		$orders			= $orders ? $orders : array( 'title' => 'ASC' );							//  sanitize project orders
-		$userProjects	= array();																	//  create empty project map
+		$userProjects	= [];																	//  create empty project map
 		if( $this->hasFullAccess() ){																//  super access
 			foreach( $this->modelProject->getAll( $conditions, $orders ) as $project )				//  iterate all projects
 				$userProjects[$project->projectId]  = $project;										//  add to projects map
@@ -127,10 +127,10 @@ class Logic_Project extends CMF_Hydrogen_Logic
 	 *	@param		array		$orders			Map how to order projects, defaults to 'title ASC'
 	 *	@return		array		List of projects of user
 	 */
-	public function getUsersProjects( $userIds, bool $activeOnly = FALSE, array $conditions = array(), array $orders = array() ): array
+	public function getUsersProjects( $userIds, bool $activeOnly = FALSE, array $conditions = [], array $orders = [] ): array
 	{
 		$orders			= $orders ? $orders : array( 'title' => 'ASC' );							//  sanitize project orders
-		$userProjects	= array();																	//  create empty project map
+		$userProjects	= [];																	//  create empty project map
 		if( $this->hasFullAccess() ){																//  super access
 			foreach( $this->modelProject->getAll( $conditions, $orders ) as $project )				//  iterate all projects
 				$userProjects[$project->projectId]  = $project;										//  add to projects map

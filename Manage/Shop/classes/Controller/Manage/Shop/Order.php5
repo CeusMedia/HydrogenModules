@@ -46,8 +46,8 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 	public function index( $pageNr = 0 )
 	{
 		$filters	= $this->session->getAll( 'module.manage_shop_order.filter.' );
-		$orders		= array();
-		$conditions	= array();
+		$orders		= [];
+		$conditions	= [];
 		foreach( $filters as $filterKey => $filterValue ){
 			switch( $filterKey ){
 				case 'customer':
@@ -56,7 +56,7 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 						$value		= '%'.str_replace( " ", "%", str_replace( ' ', '', $filterValue ) ).'%';
 						$find		= array( 'CONCAT(firstname, surname)' => $value );
 						if( ( $customers = $model->getAll( $find ) ) ){
-							$conditions['userId']	= array();
+							$conditions['userId']	= [];
 							foreach( $customers as $customer )
 								$conditions['userId'][]	= $customer->userId;
 						}
@@ -73,7 +73,7 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 		}
 
 		$orders			= $this->logicShop->getOrders( $conditions, $orders, array( $pageNr * 15, 15 ) );
-		$customerIds	= array();
+		$customerIds	= [];
 		foreach( $orders as $nr => $order ){
 			$customerIds[]	= $order->userId;
 			$orders[$nr]->positions	= $this->logicShop->getOrderPositions( $order->orderId );

@@ -1,17 +1,17 @@
 <?php
 
-$dataYearsPieOrders	= array();
+$dataYearsPieOrders	= [];
 foreach( $ordersPerYear as $nr => $entry )
 	$dataYearsPieOrders[]	= array( (string)$entry->year, (int)$entry->orders );
 
-$dataYearsPieTurnover	= array();
+$dataYearsPieTurnover	= [];
 foreach( $ordersPerYear as $nr => $entry )
 	$dataYearsPieTurnover[]	= array( (string)$entry->year, array( 'v' => (int)$entry->turnover, 'f' => (int)$entry->turnover." €" ) );
 
 
 $sumOrders		= 0;
 $sumTurnover	= 0;
-$dataYearsTable	= array();
+$dataYearsTable	= [];
 foreach( $ordersPerYear as $nr => $entry ){
 	$sumOrders		+= (float)$entry->orders;
 	$sumTurnover	+= (float)$entry->turnover;

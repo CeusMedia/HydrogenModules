@@ -5,7 +5,7 @@ $w			= (object) $words['edit'];
 
 $tabsMain	= $this->renderMainTabs();
 
-$tabs		= array();
+$tabs		= [];
 $panes		= array(
 	'details'		=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.details.php', array( 'w' => $w ) ),
 	'authors'		=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.authors.php', array( 'w' => $w ) ),

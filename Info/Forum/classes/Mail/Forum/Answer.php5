@@ -22,7 +22,7 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract
 			$content	= UI_HTML_Tag::create( 'figure', $image.$caption );
 		}
 		else{
-			$matches	= array();
+			$matches	= [];
 			preg_match_all( '@https?://[\w.:/?&=-_+\@|]+@', $content, $matches );
 			foreach( $matches as $match ){
 				if( array_key_exists( 0, $match ) ){

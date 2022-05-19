@@ -263,15 +263,15 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller
 		$filterDirection	= $this->session->get( 'filter_manage_project_direction' );
 		$filterLimit		= $this->session->get( 'filter_manage_project_limit' );
 		if( !is_array( $filterStatus ) )
-			$filterStatus	= array();
+			$filterStatus	= [];
 		if( !is_array( $filterPriority ) )
-			$filterPriority	= array();
+			$filterPriority	= [];
 		if( !is_array( $filterUser ) )
-			$filterUser		= array();
+			$filterUser		= [];
 
-		$conditions	= array();
+		$conditions	= [];
 		if( !$this->isAdmin ){
-			$projects	= array();
+			$projects	= [];
 			foreach( $this->modelProjectUser->getAllByIndex( 'userId', $this->userId ) as $relation )
 				$projects[$relation->projectId]	= NULL;
 			$conditions['projectId']	= array_keys( $projects );
@@ -281,7 +281,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller
 			$conditions['projectId']	= array( $filterId );
 		else{
 			if( strlen( trim( $filterQuery ) ) ){
-				$projectIds		= array();
+				$projectIds		= [];
 				$filters	= array(
 					"title LIKE '%".$filterQuery."%'",
 					"description LIKE '%".$filterQuery."%'",
@@ -295,7 +295,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller
 					$conditions['projectId']	= $projectIds;
 			}
 			if( $filterUser ){
-				$projectIds	= array();
+				$projectIds	= [];
 				foreach( $this->modelProjectUser->getAll( array( 'userId' => $filterUser ) ) as $relation )
 					$projectIds[]	= $relation->projectId;
 				if( isset( $conditions['projectId'] ) )
@@ -311,7 +311,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller
 		if( isset( $conditions['projectId'] ) && !$conditions['projectId'] )
 			$conditions['projectId'] = array( 0 );
 
-		$orders	= array();
+		$orders	= [];
 		if( !( $filterOrder && $filterDirection ) ){
 			$filterOrder		= "title";
 			$filterDirection	= "ASC";
@@ -325,7 +325,7 @@ class Controller_Manage_Project extends CMF_Hydrogen_Controller
 		$limit	= $this->session->get( 'filter_manage_project_limit' );
 		$limits	= array( $page * $filterLimit, $filterLimit );
 
-		$projects	= array();
+		$projects	= [];
 		foreach( $this->modelProject->getAll( $conditions, $orders, $limits ) as $project ){
 			$projects[$project->projectId]	= $project;
 			$project->users	= $this->modelProjectUser->getAllByIndex( 'projectId', $project->projectId );

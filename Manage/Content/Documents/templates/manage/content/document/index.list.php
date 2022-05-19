@@ -9,7 +9,7 @@ if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
 
 $list		= '<div><small class="muted"><em>'.$w->noEntries.'</em></small></div>';
 if( $documents ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $documents as $entry ){
 		$attributes	= array(
 			'class'		=> 'btn btn-mini btn-danger pull-right',

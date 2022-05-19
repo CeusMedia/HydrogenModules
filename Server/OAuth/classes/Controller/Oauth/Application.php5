@@ -70,7 +70,7 @@ class Controller_Oauth_Application extends CMF_Hydrogen_Controller
 		$orders			= array( 'title' => 'ASC' );
 		$limits			= array( abs( $page ) * abs( $limit ), abs( $limit ) );
 
-		$conditions		= array();
+		$conditions		= [];
 //		if( !Logic_Authentication::getInstance( $this->env )->hasFullAccess() )
 //			$conditions		= array( 'userId' => (int) $this->userId );
 

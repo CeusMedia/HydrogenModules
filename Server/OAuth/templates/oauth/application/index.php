@@ -3,7 +3,7 @@
 $list	= '<div class="muted"><em><small>Keine Applikationen angemeldet.</small></em></div><br/>';
 if( $applications ){
 	$trClasses	= array( -2 => 'error', -1 => 'error', 0 => 'warning', 1 => 'success', 2 => 'info' );
-	$list		= array();
+	$list		= [];
 	foreach( $applications as $application ){
 		$urlEdit	= './oauth/application/view/'.$application->oauthApplicationId;
 		$label		= UI_HTML_Tag::create( 'big', $application->title );
@@ -49,7 +49,7 @@ $iconsType	= array(
 
 $list	= '<div class="muted"><em><small>Keine Applikationen angemeldet.</small></em></div><br/>';
 if( $applications ){
-	$list		= array();
+	$list		= [];
 	foreach( $applications as $application ){
 		$urlEdit	= './oauth/application/view/'.$application->oauthApplicationId;
 		$label		= UI_HTML_Tag::create( 'big', $application->title );

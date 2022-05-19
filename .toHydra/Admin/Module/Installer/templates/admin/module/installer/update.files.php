@@ -25,9 +25,9 @@ else{
 		5	=> 'refered',
 	);
 
-	$list	= array();
+	$list	= [];
 	foreach( $files as $file ){
-		$actions	= array();
+		$actions	= [];
 		$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
 			'type'		=> 'checkbox',
 			'name'		=> 'files[]',

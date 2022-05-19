@@ -2,8 +2,8 @@
 if( empty( $modulesUpdate ) )
 	return "";
 
-$listModulesUpdatable	= array();
-$listMessenger			= array();
+$listModulesUpdatable	= [];
+$listMessenger			= [];
 foreach( $modulesUpdate as $module ){
 	$desc		= explode( "\n", $module->description );
 	$desc		= trim( array_shift( $desc ) );

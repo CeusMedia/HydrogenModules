@@ -6,7 +6,7 @@ $iconLicense	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-gave
 
 $list	= '<div class="alert alert-info former-hint">'.$wf->listNone.'</div>';
 if( $module->licenses ){
-	$list	= array();
+	$list	= [];
 	foreach( $module->licenses as $license ){
 		$label	= $license->label;
 		if( $license->source )

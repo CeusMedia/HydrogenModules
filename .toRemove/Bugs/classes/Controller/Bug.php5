@@ -123,7 +123,7 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 		$modelBugChange	= new Model_Bug_Change( $this->env );
 		$modelUser		= new Model_User( $this->env );
 
-		$users	= array();
+		$users	= [];
 		foreach( $modelUser->getAll() as $user )
 			$users[$user->userId]	= $user;
 
@@ -189,7 +189,7 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 
 	public function index(){
 		$session	= $this->env->getSession();
-		$filters	= array();
+		$filters	= [];
 		foreach( $session->getAll() as $key => $value )
 			if( preg_match( '/^filter-bug-/', $key ) ){
 				$column	= preg_replace( '/^filter-bug-/', '', $key );
@@ -197,7 +197,7 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 					$filters[$column] = $value;
 			}
 
-		$orders	= array();
+		$orders	= [];
 		$order	= $session->get( 'filter-bug-order' );
 		$dir	= $session->get( 'filter-bug-direction' );
 		$limit	= $session->get( 'filter-bug-limit' );
@@ -218,7 +218,7 @@ class Controller_Bug extends CMF_Hydrogen_Controller{
 		$this->addData( 'bugs', $bugs );
 
 
-		$users	= array();
+		$users	= [];
 		foreach( $modelUser->getAll() as $user )
 			$users[$user->userId]	= $user;
 

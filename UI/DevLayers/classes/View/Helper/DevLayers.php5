@@ -5,7 +5,7 @@
 class View_Helper_DevLayers
 {
 	protected $env;
-	protected static $layers	= array();
+	protected static $layers	= [];
 
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{
@@ -26,8 +26,8 @@ class View_Helper_DevLayers
 	{
 		if( !count( self::$layers ) )
 			return "";
-		$layers		= array();
-		$buttons	= array();
+		$layers		= [];
+		$buttons	= [];
 		foreach( self::$layers as $layer ){
 			$attributes	= array( 'class' => 'dev-layer', 'id' => 'dev-layer-'.$layer->id );
 			$layers[]	= UI_HTML_Tag::create( 'div', $layer->content, $attributes );

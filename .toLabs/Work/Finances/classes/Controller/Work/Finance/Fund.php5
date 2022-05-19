@@ -162,7 +162,7 @@ class Controller_Work_Finance_Fund extends CMF_Hydrogen_Controller
 			try{
 				$xml	= new XML_Element( $html );
 				$price	= 0;
-				$prices	= array();
+				$prices	= [];
 				foreach( $xml->tr as $row ){														//  iterate table rows
 					$price	= str_replace( ',', '.', trim( (string) $row->td[3] ) );				//  extract price from 4th cell
 					$prices[(string) $row->td[5]]	= $price;										//  extract market from 6th cell and store with price

@@ -14,7 +14,7 @@ class View_Helper_Info_Dashboard extends CMF_Hydrogen_View_Helper_Abstract
 	{
 		$w	= (object) $this->getWords( 'board', 'info/dashboard' );
 
-		$list	= array();
+		$list	= [];
 		foreach( explode( ',', $this->dashboard->panels ) as $panelId ){
 			if( !array_key_exists( $panelId, $this->panels ) )
 				continue;

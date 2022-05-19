@@ -17,7 +17,7 @@ $trigger->setMode( View_Helper_Input_ResourceTrigger::MODE_STYLE );
 
 $listStyles	= '<em class="muted">Keine.</em>';
 if( $template->styles ){
-	$list	= array();
+	$list	= [];
 	foreach( json_decode( $template->styles, TRUE ) as $item ){
 		$rowClass	= 'error';
 		$buttonOpen	= UI_HTML_Tag::create( 'button', $iconView, array(

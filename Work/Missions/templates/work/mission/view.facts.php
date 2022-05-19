@@ -22,7 +22,7 @@ function renderUserLabel( $user ){
 	return UI_HTML_Tag::create( 'span', $label, array( 'class' => $spanClass ) );
 }
 
-$viewers	= array();
+$viewers	= [];
 foreach( $missionUsers as $user )
 	$viewers[]	= renderUserLabel( $user );
 $viewers	= join( '<br/>', $viewers );
@@ -91,7 +91,7 @@ function renderDuration( $minutes, $useTimerHelper = FALSE ){
 }
 
 /*  --  FACTS: PROJECTED, TRACKED AND REQUIRED TIME */
-$list	= array();
+$list	= [];
 $totalMinsProjected	= $hoursProjected * 60 + $minutesProjected;
 $totalMinsRequired	= $hoursRequired * 60 + $minutesRequired;
 $totalMinsTracked	= 0;

@@ -16,7 +16,7 @@ $trigger->setInputId( 'input_template_image' );
 
 $listImages	= '<em class="muted">'.$words['edit-image-list']['empty'].'</em>';
 if( $template->images ){
-	$list	= array();
+	$list	= [];
 	foreach( json_decode( $template->images, TRUE ) as $nr => $item ){
 		$image		= '';
 		$rowClass	= 'error';

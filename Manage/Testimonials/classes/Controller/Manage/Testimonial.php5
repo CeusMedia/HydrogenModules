@@ -25,7 +25,7 @@ class Controller_Manage_Testimonial extends CMF_Hydrogen_Controller{
 			$this->messenger->noteSuccess( $words->successAdded );
 			$this->restart( NULL, TRUE );
 		}
-		$comment	= array();
+		$comment	= [];
 		foreach( $this->model->getColumns() as $key )
 			$testimonial[$key]	= $this->request->get( $key );
 		$testimonial['courseId']	= $this->session->get( 'filter_manage_course_courseId' );

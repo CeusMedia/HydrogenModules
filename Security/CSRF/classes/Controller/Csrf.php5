@@ -5,13 +5,6 @@ class Controller_Csrf extends CMF_Hydrogen_Controller
 	protected $messenger;
 	protected $moduleConfig;
 
-	public function __onInit()
-	{
-		$this->logic		= $this->env->getLogic()->get( 'CSRF' );
-		$this->messenger	= $this->env->getMessenger();
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.security_csrf.', TRUE );
-	}
-
 	public function checkToken( $redirectUrl = NULL )
 	{
 		$token		= $this->env->getRequest()->get( 'csrf_token' );							//  get token from request
@@ -61,5 +54,12 @@ class Controller_Csrf extends CMF_Hydrogen_Controller
 			$this->restart( getEnv( 'HTTP_REFERER' ), $statusCode );
 		}
 		return TRUE;
+	}
+
+	protected function __onInit()
+	{
+		$this->logic		= $this->env->getLogic()->get( 'CSRF' );
+		$this->messenger	= $this->env->getMessenger();
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.security_csrf.', TRUE );
 	}
 }

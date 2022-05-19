@@ -23,7 +23,7 @@ class Controller_Manage_Workshop extends CMF_Hydrogen_Controller{
 			$this->messenger->noteSuccess( 'Added.' );
 			$this->restart( './edit/'.$workshopId, TRUE );
 		}
-		$data	= array();
+		$data	= [];
 		foreach( $this->model->getColumns() as $column )
 			if( !in_array( $column, array( 'workshopId', 'createdAt', 'modifiedAt' ) ) )
 				$data[$column]	= NULL;
@@ -52,7 +52,7 @@ class Controller_Manage_Workshop extends CMF_Hydrogen_Controller{
 	}
 
 	public function index(){
-		$conditions	= array();
+		$conditions	= [];
 		$orders		= array( 'status' => 'ASC', 'rank' => 'ASC' );
 		$this->addData( 'workshops', $this->model->getAll( $conditions, $orders ) );
 	}

@@ -18,7 +18,7 @@ class Hook_UI_MetaTags_MobileWebApp extends CMF_Hydrogen_Hook
 		$context->addMetaTag( 'name', 'mobile-web-app-capable', 'yes' );
 		$context->addMetaTag( 'name', 'apple-mobile-web-app-capable', 'yes' );
 
-/*		$options	= array();
+/*		$options	= [];
 		foreach( $moduleConfig->getAll() as $key => $value )
 			if( strlen( trim( $value ) ) && $key !== 'active' )
 				$options[]	= $key.'='.htmlentities( $value, ENT_QUOTES, 'UTF-8' );

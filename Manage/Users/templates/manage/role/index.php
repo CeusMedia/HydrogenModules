@@ -9,7 +9,7 @@ $heads	= array(
 	$wf->headRegister
 );
 
-$rows	= array();
+$rows	= [];
 foreach( $roles as $nr => $role ){
 	$labelRole	= $role->title;
 	if( $hasRightToEdit ){

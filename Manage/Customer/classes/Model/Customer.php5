@@ -24,7 +24,7 @@ class Model_Customer extends CMF_Hydrogen_Model{
 		'modifiedAt',
 	);
 	protected $primaryKey	= 'customerId';
-	protected $indizes		= array();
+	protected $indizes		= [];
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
 ?>

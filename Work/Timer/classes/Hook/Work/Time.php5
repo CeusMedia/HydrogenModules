@@ -1,7 +1,7 @@
 <?php
 class Hook_Work_Time extends CMF_Hydrogen_Hook
 {
-	public static function onAuthBeforeLogout( CMF_Hydrogen_Environment $env, $module, $context, $payload = array() )
+	public static function onAuthBeforeLogout( CMF_Hydrogen_Environment $env, $module, $context, $payload = [] )
 	{
 		$data	= new ADT_List_Dictionary( $payload );
 		if( ( $userId = $data->get( 'userId' ) ) ){
@@ -42,7 +42,7 @@ class Hook_Work_Time extends CMF_Hydrogen_Hook
 		$this->modelTimer->removeByIndex( 'projectId', $projectId );
 	}
 
-	public static function onEnvCallForModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onEnvCallForModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$context	= new View_Helper_Work_Time_Timer( $env );
 		$env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, array() );

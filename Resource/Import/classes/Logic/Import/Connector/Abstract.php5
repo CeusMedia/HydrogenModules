@@ -3,13 +3,13 @@ abstract class Logic_Import_Connector_Abstract extends CMF_Hydrogen_Logic
 {
 	protected $modelConnection;
 
-	protected $options			= array();
+	protected $options			= [];
 
 	protected $limit			= 0;
 
 	protected $offet			= 0;
 
-	abstract public function find( $conditions, $orders = array(), $limit = array() ): array;
+	abstract public function find( $conditions, $orders = [], $limit = [] ): array;
 
 	abstract public function getFolders( bool $recursive = FALSE ): array;
 

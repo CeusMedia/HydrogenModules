@@ -38,7 +38,7 @@ class Job_Mail_Migration extends Job_Abstract
 			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
 		);
 		$count		= 0;
-		$fails		= array();
+		$fails		= [];
 		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
 		foreach( $mailIds as $mailId ){
 			$mail		= $this->model->get( $mailId );
@@ -54,7 +54,7 @@ class Job_Mail_Migration extends Job_Abstract
 				if( is_object( $mailClone->raw ) )
 					$mailClone->raw	= $mailClone->raw->raw;
 
-				$changes	= array();
+				$changes	= [];
 				foreach( $mailClone as $key => $value ){
 					if( in_array( $key, $this->model->getColumns() ) ){
 						$newColumn = !isset( $mail->$key ) && $value;
@@ -70,8 +70,8 @@ class Job_Mail_Migration extends Job_Abstract
 				}
 				if( $changes ){
 //					print_m($mailClone->raw);die;
-					$changeList	= array();
-					$changeMap	= array();
+					$changeList	= [];
+					$changeMap	= [];
 					foreach( $changes as $key => $values ){
 						$changeMap[$key]	= $values->new;
 						$changeList[]		= vsprintf( '%s: %s => %s', array(
@@ -126,7 +126,7 @@ class Job_Mail_Migration extends Job_Abstract
 		$regex		= '/^O:[0-9]+:"([^"]+)":.+$/U';
 		$logic		= $this->logicMail;
 		$count		= 0;
-		$fails		= array();
+		$fails		= [];
 		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
 		foreach( $mailIds as $mailId ){
 			$mail			= $this->model->get( $mailId );
@@ -183,7 +183,7 @@ class Job_Mail_Migration extends Job_Abstract
 
 	private function _loadMailClasses()
 	{
-		$loadedClasses	= array();
+		$loadedClasses	= [];
 		$mailClassPaths	= array( './', 'admin/' );
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$mailClassPaths[]	= Logic_Frontend::getInstance( $this->env )->getPath();
@@ -334,7 +334,7 @@ class Job_Mail_Migration extends Job_Abstract
 			$this->logMigration( $mail, 'Saved raw using CeusMedia/Mail v1' );
 		}
 		else if( $this->libraries & Logic_Mail::LIBRARY_COMMON ){
-			$rawLines	= array();
+			$rawLines	= [];
 			foreach( $libraryObject->getHeaders()->getFields() as $header )
 				$rawLines[]	= $header->toString();
 			$rawLines[]	= '';

@@ -16,7 +16,7 @@
  */
 class Jobber extends \CMF_Hydrogen_Application_Console
 {
-	protected $jobs	= array();
+	protected $jobs	= [];
 	protected $lock;
 	protected $modelJob;
 //	protected $modelLock;
@@ -55,7 +55,7 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 		return $this;
 	}
 
-	public function getJobs( $conditions = array() ): array
+	public function getJobs( $conditions = [] ): array
 	{
 		if( $this->mode && !isset( $conditions['mode'] ) )
 			$conditions['mode']	= $this->mode;

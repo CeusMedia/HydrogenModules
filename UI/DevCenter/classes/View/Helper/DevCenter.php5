@@ -1,7 +1,7 @@
 <?php
 class View_Helper_DevCenter
 {
-	public $options	= array();
+	public $options	= [];
 
 	protected $session;
 
@@ -35,7 +35,7 @@ class View_Helper_DevCenter
 		$content	= UI_HTML_Tag::create( 'div', $tabs, array( 'id' => "DevCenterContent" ) );		//
 		$handleTop	= UI_HTML_Tag::create( 'div', "====", array( 'id' => 'DevCenterHandleTop' ) );	//
 
-		$style		= array();
+		$style		= [];
 		if( is_int( $height = $this->height ) || is_string( $this->height ) )
 			$style['height']	= strpos( $height, '%' ) ? $height : $height.'px';
 		if( !$this->open )
@@ -43,7 +43,7 @@ class View_Helper_DevCenter
 
 		$attributes	= array( 'id' => "DevCenter" );
 		if( $style ){
-			$attributes['style']	= array();
+			$attributes['style']	= [];
 			foreach( $style as $key => $value )
 				$attributes['style'][]	= $key.': '.$value;
 			$attributes['style']	= join( '; ', $attributes['style'] );

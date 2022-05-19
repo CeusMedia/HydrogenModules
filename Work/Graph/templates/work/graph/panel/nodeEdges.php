@@ -1,12 +1,12 @@
 <?php
 
-$nodeIndex	= array();
+$nodeIndex	= [];
 foreach( $nodes as $node )
 	$nodeIndex[$node->nodeId]	= $node->label ? $node->label : $node->ID;
 
 $listEdgesIn	= '<small class="muted"><em>None.</em></small>';
 if( $edgesIn ){
-	$listEdgesIn	= array();
+	$listEdgesIn	= [];
 	foreach( $edgesIn as $edge ){
 		$nodeFrom		= UI_HTML_Tag::create( 'small', $nodeIndex[$edge->fromNodeId].' -> ', array( 'class' => 'muted' ) );
 		$nodeTo			= UI_HTML_Tag::create( 'small', ' -> '.$nodeIndex[$edge->toNodeId], array( 'class' => 'muted' ) );
@@ -23,7 +23,7 @@ if( $edgesIn ){
 
 $listEdgesOut	= '<small class="muted"><em>None.</em></small>';
 if( $edgesOut ){
-	$listEdgesOut	= array();
+	$listEdgesOut	= [];
 	foreach( $edgesOut as $edge ){
 		$nodeFrom		= UI_HTML_Tag::create( 'small', $nodeIndex[$edge->fromNodeId].' -> ', array( 'class' => 'muted' ) );
 		$nodeTo			= UI_HTML_Tag::create( 'small', ' -> '.$nodeIndex[$edge->toNodeId], array( 'class' => 'muted' ) );

@@ -1,7 +1,7 @@
 <?php
 class Model_Project extends CMF_Hydrogen_Model{
 
-//	const STATES_ACTIVE		= array();
+//	const STATES_ACTIVE		= [];
 
 	protected $name			= 'projects';
 
@@ -30,10 +30,10 @@ class Model_Project extends CMF_Hydrogen_Model{
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function getUserProjects( $userId, $conditions = array(), $orders = array() ){
+	public function getUserProjects( $userId, $conditions = [], $orders = [] ){
 		$modelProject	= new Model_Project( $this->env );
 		$modelRelation	= new Model_Project_User( $this->env );
-		$projectIds		= array();
+		$projectIds		= [];
 		$defaultProject	= 0;
 		foreach( $modelRelation->getAllByIndex( 'userId', $userId ) as $relation ){
 			$defaultProject	= $relation->isDefault ? $relation->projectId : $defaultProject;
@@ -43,7 +43,7 @@ class Model_Project extends CMF_Hydrogen_Model{
 			return array();
 		$conditions['projectId']	= $projectIds;
 		$orders		= $orders ? $orders : array( 'title' => 'ASC' );
-		$projects	= array();
+		$projects	= [];
 		foreach( $modelProject->getAll( $conditions, $orders ) as $project ){
 			$project->isDefault = $defaultProject == $project->projectId;
 			$projects[$project->projectId]	= $project;
@@ -51,17 +51,17 @@ class Model_Project extends CMF_Hydrogen_Model{
 		return $projects;
 	}
 
-	public function getProjectUsers( $projectId, $conditions = array(), $orders = array() ){
+	public function getProjectUsers( $projectId, $conditions = [], $orders = [] ){
 		$modelUser		= new Model_User( $this->env );
 		$modelRelation	= new Model_Project_User( $this->env );
-		$userIds		= array();
+		$userIds		= [];
 		foreach( $modelRelation->getAllByIndex( 'projectId', $projectId ) as $relation )
 			$userIds[]	= $relation->userId;
 		if( !$userIds )
 			return array();
 		$conditions['userId']	= $userIds;
 		$orders		= $orders ? $orders : array( /*'roleId' => 'ASC', */'username' => 'ASC' );
-		$users		= array();
+		$users		= [];
 		foreach( $modelUser->getAll( $conditions, $orders ) as $user ){
 			unset( $user->password );
 			$users[$user->userId]	= $user;

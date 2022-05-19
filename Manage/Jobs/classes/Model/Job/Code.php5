@@ -1,7 +1,7 @@
 <?php
 class Model_Job_Code
 {
-	protected $classes	= array();
+	protected $classes	= [];
 
 	public function getClassesNames(): array
 	{
@@ -62,7 +62,7 @@ class Model_Job_Code
 		$parser	= new CeusMedia\PhpParser\Parser\Regular();
 		$file	= $parser->parseFile( $filePath, '' );
 		foreach( $file->getClasses() as $className => $class ){
-			$methods	= array();
+			$methods	= [];
 			$this->classes[$className]	= (object) array(
 				'file'		=> $filePath,
 				'methods'	=> & $methods,
@@ -71,7 +71,7 @@ class Model_Job_Code
 			foreach( $class->getMethods( FALSE ) as $methodName => $method ){
 				if( $method->getAccess() !== 'public' )
 					continue;
-				$arguments	= array();
+				$arguments	= [];
 				$methods[$methodName]	= (object) array(
 					'arguments'	=> & $arguments,
 					'source' 	=> $this->clearSourceCode( $method->getSourceCode() ),

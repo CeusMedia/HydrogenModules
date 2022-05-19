@@ -5,13 +5,6 @@ class Job_EventQueue extends Job_Abstract
 	protected $model;
 	protected $options;
 
-	public function __onInit()
-	{
-		$this->options	= $this->env->getConfig()->getAll( 'module.resource_eventqueue.', TRUE );
-		$this->logic	= $this->env->getLogic()->get( 'Job' );
-		$this->model	= new Model_Event( $this->env );
-	}
-
 	public function count()
 	{
 		$conditions	= [
@@ -85,5 +78,12 @@ class Job_EventQueue extends Job_Abstract
 			$this->model->edit( $event->eventId, $data );
 		}
 		$this->results	= $results;
+	}
+
+	protected function __onInit()
+	{
+		$this->options	= $this->env->getConfig()->getAll( 'module.resource_eventqueue.', TRUE );
+		$this->logic	= $this->env->getLogic()->get( 'Job' );
+		$this->model	= new Model_Event( $this->env );
 	}
 }

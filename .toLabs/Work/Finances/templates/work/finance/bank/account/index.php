@@ -2,7 +2,7 @@
 
 $w		= (object) $words['index'];
 
-$list	= array();
+$list	= [];
 foreach( $accounts as $account ){
 	$link	= UI_HTML_Tag::create( 'a', $account->title, array( 'href' => './work/finance/bank/account/edit/'.$account->bankAccountId ) );
 	$list[]	= UI_HTML_Tag::create( 'li', $link );

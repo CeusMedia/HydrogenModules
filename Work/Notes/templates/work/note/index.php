@@ -7,22 +7,22 @@ $iconTag	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-tag' ) );
 
 $tags	= $env->session->get( 'filter_notes_tags' );
 if( !is_array( $tags ) )
-	$tags	= array();
+	$tags	= [];
 
 $indicator	= new UI_HTML_Indicator();
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './work/note', $page, ceil( $notes['number'] / $filterLimit ) );
 $helper		= new View_Helper_TimePhraser( $this->env );
-$list	= array();
+$list	= [];
 foreach( $notes['list'] as $note ){
 	$url		= './work/note/view/'.$note->noteId;
 	$title		= '<div class="note-title"><a href="'.$url.'">'.htmlentities( $note->title, ENT_QUOTES, 'UTF-8' ).'</a></div>';
-	$listLinks	= array();
+	$listLinks	= [];
 	foreach( $note->links as $link ){
 		$label	= $link->title ? '<acronym title="'.$link->url.'">'.htmlentities( $link->title, ENT_QUOTES, 'UTF-8' ).'</acronym>' : $link->url;
 		$listLinks[]	= '<a class="link" href="'.$link->url.'">'.$label.'</a>';
 	}
 	$listLinks	= join( ' | ', $listLinks );
-	$listTags	= array();
+	$listTags	= [];
 	foreach( $note->tags as $tag ){
 		if( !in_array( $tag, $tags ) ){
 /*			$listTags[$tag->content]	= UI_HTML_Tag::create( 'a', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), array(

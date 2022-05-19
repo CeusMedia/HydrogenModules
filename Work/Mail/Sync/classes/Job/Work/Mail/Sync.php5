@@ -2,7 +2,7 @@
 class Job_Work_Mail_Sync extends Job_Abstract
 {
 	protected $logic;
-	protected $statistics	= array();
+	protected $statistics	= [];
 	protected $hostMap;
 
 	public function sync()
@@ -40,7 +40,7 @@ class Job_Work_Mail_Sync extends Job_Abstract
 	protected function __onInit()
 	{
 		$this->logic	= new Logic_Mail_Sync( $this->env );
-		$this->hostMap	= array();
+		$this->hostMap	= [];
 		foreach( $this->logic->getSyncHosts() as $host )
 			$this->hostMap[$host->mailSyncHostId]	= $host;
 	}
@@ -77,7 +77,7 @@ class Job_Work_Mail_Sync extends Job_Abstract
 		$lastline	= exec( $command, $results, $code );
 $this->out( 'Code: '.$code );
 
-		$lines		= array();
+		$lines		= [];
 		$status		= 0;
 		foreach( $results as $line ){
 			if( $status == 1 )
@@ -117,7 +117,7 @@ $this->out( 'Code: '.$code );
 
 	protected function readStatistics( array $lines ): array
 	{
-		$list	= array();
+		$list	= [];
 		foreach( $lines as $line ){
 			$parts	= explode( ":", $line, 2 );
 			if( count( $parts ) > 1 )

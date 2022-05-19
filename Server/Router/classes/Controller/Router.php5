@@ -5,7 +5,7 @@ class Controller_Router extends CMF_Hydrogen_Controller{
 		return 'config/routes.xml';												//  @todo get config path from app base config (config.ini)
 	}
 
-	static public function ___onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function ___onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
 		$request		= $env->getRequest();
 		$moduleConfig	= $env->getConfig()->getAll( 'module.server_router.', TRUE );
 		$path			= $request->get( '__path' );
@@ -52,7 +52,7 @@ class Controller_Router extends CMF_Hydrogen_Controller{
 	static protected function readRoutes( $env ){
 		$moduleConfig	= $env->getConfig()->getAll( 'module.server_router.', TRUE );
 		$requestIsAjax	= $env->getRequest()->isAjax();
-		$list			= array();
+		$list			= [];
 		$sourceType		= strtolower( $moduleConfig->get( 'source' ) );
 		switch( $sourceType ){
 			case 'xml':
@@ -70,13 +70,13 @@ class Controller_Router extends CMF_Hydrogen_Controller{
 
 	static protected function readRoutesFromDatabase( $env ){
 		$model			= new Model_Route( $env );
-		$list			= array();
+		$list			= [];
 		$indices		= array(
 			'status'	=> '> 0',
 			'ajax'		=> $env->getRequest()->isAjax() ? 1 : 0,
 		);
 		foreach( $model->getAllByIndices( $indices ) as $route ){
-			$methods	= array();
+			$methods	= [];
 			if( strlen( trim( $route->methods ) ) ){
 				if( $route->methods !== '*' )
 					$methods	= preg_split( '/\s*,\s*/', trim( $route->methods ) );
@@ -88,7 +88,7 @@ class Controller_Router extends CMF_Hydrogen_Controller{
 	}
 
 	static protected function readRoutesFromXml( $env ){
-		$list		= array();
+		$list		= [];
 		$fileName	= self::getRouteXmlFilePath( $env );
 		if( !file_exists( $fileName ) )
 			return $list;
@@ -103,7 +103,7 @@ class Controller_Router extends CMF_Hydrogen_Controller{
 		foreach( $routes as $route ){
 			if( $route->hasAttribute( 'status' ) ){
 				if( (int) $route->getAttribute( 'status' ) > 0 ){
-					$methods	= array();
+					$methods	= [];
 					$ajax		= FALSE;
 					if( $route->hasAttribute( 'methods' ) ){
 						$methodsString	= trim( $route->getAttribute( 'methods' ) );

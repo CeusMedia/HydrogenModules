@@ -9,7 +9,7 @@ $iconsStatus	= array(
 	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok' ) ),
 );
 
-$list	= array();
+$list	= [];
 foreach( $products as $item ){
 	$class		= isset( $productId ) && $productId == $item->productId ? 'active' : NULL;
 	$label		= $iconsStatus[(int) $item->status].'&nbsp;'.$item->title;

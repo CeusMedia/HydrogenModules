@@ -6,7 +6,7 @@ $wf			= (object) $words['tab-database-add'];
 $count	= 0;
 $list	= '<br/><div>'.$w->listNone.'</div><br/>';
 if( $module->sql ){
-	$list	= array();
+	$list	= [];
 	foreach( $module->sql as $type => $sql ){
 		if( !strlen( trim( $sql->sql ) ) )
 			continue;

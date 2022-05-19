@@ -91,17 +91,17 @@ WorkMissionsKanban.loadCurrentList();
 				if( !in_array( $projectId, $filters->get( 'projects' ) ) )
 					unset( $this->projects[$projectId] );
 
-		$lanes		= array();
+		$lanes		= [];
 		foreach( $this->projects as $projectId => $project ){
 			$missionCount	= 0;
-			$columns		= array();
+			$columns		= [];
 			foreach( $statuses as $status => $statusLabel ){
 				$conditions	= $this->logic->getFilterConditions( 'filter.work.mission.kanban.' );
 				$conditions['status']		= $status;
 				$conditions['projectId']	= $projectId;
 
 				$missions	= $this->logic->getUserMissions( $userId, $conditions, array( 'priority' => 'ASC' ) );
-				$rows	= array();
+				$rows	= [];
 				foreach( $missions as $mission ){
 					$missionCount++;
 					$buttonView	= UI_HTML_Tag::create( 'a', '<i class="fa fa-eye"></i>&nbsp;<span class="hidden-tablet">anzeigen</span>', array(
@@ -116,7 +116,7 @@ WorkMissionsKanban.loadCurrentList();
 						'alt'	=> 'bearbeiten',
 						'title'	=> 'bearbeiten',
 					) );
-					$cells	= array();
+					$cells	= [];
 					$cells[]	= UI_HTML_Tag::create( 'div', $mission->title, array( 'class' => 'mission-title' ) );
 					$userMap	= $this->getData( 'users' );
 					if( $mission->workerId ){
@@ -183,7 +183,7 @@ WorkMissionsKanban.loadCurrentList();
 		$conditions	= $this->logic->getFilterConditions( 'filter.work.mission.calendar.' );
 		$conditions['dayStart']	= $date->format( "Y-m-d" );
 		$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
-		$list		= array();
+		$list		= [];
 		foreach( $missions as $mission ){
 		//	$title		= Alg_Text_Trimmer::trim( $mission->title, 20 );
 			$title		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );

@@ -88,7 +88,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 		$filterFormId	= $session->get( 'manage_form_fill_formId' );
 		$filterStatus	= $session->get( 'manage_form_fill_status' );
 
-		$conditions		= array();
+		$conditions		= [];
 		if( strlen( trim( $filterFillId ) ) )
 			$conditions['fillId']	= $filterFillId;
 		if( strlen( trim( $filterEmail ) ) )

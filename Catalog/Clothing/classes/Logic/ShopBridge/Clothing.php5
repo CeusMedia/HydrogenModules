@@ -1,6 +1,6 @@
 <?php
-class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
-
+class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
+{
 	/**	@var	Model_Catalog_Clothing_Category		$modelCategory	Category model instance */
 	protected $modelCategory;
 
@@ -11,27 +11,6 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	protected $taxRate = 19;
 
 	/**
-	 *	Constructor.
-	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment		$env
-	 *	@return		void
-	 */
-	public function __onInit(){
-//		$this->logic			= new Logic_Catalog_Gallery( $this->env );
-		$this->modelArticle		= new Model_Catalog_Clothing_Article( $this->env );
-		$this->modelCategory	= new Model_Catalog_Clothing_Category( $this->env );
-		$this->taxRate			= $this->env->getConfig()->get( 'module.catalog_clothing.tax.rate' );
-		$this->pathImages		= $this->env->getConfig()->get( 'path.images' );
-		if( class_exists( 'Logic_Frontend' ) ){
-			$frontend			= Logic_Frontend::getInstance( $this->env );
-			$this->pathImages	= $frontend->getPath( 'images' );
-		}
-		if( class_exists( 'Logic_Localization' ) ){
-			$this->localization	= new Logic_Localization( $this->env );
-		}
-	}
-
-	/**
 	 *	Change stock quantity of article.
 	 *	@access		public
 	 *	@param		integer		$articleId		ID of article
@@ -39,7 +18,8 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	 *	@return		integer						Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function changeQuantity( $articleId, $change ){
+	public function changeQuantity( $articleId, $change )
+	{
 		$change		= (int) $change;
 		$article	= $this->modelArticle->get( $articleId );
 		if( !$article && $strict )
@@ -59,7 +39,8 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	 *	@return		object						Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function check( $articleId, $strict = TRUE ){
+	public function check( $articleId, $strict = TRUE )
+	{
 		$article	= $this->modelArticle->get( $articleId );
 		if( $article )
 			return $article;
@@ -74,7 +55,8 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	public function get( $articleId, $quantity = 1 ){
+	public function get( $articleId, $quantity = 1 )
+	{
 		$article	= $this->check( $articleId );
 		$data		= (object) array(
 			'id'		=> $articleId,
@@ -114,7 +96,8 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	public function getDescription( $articleId ){
+	public function getDescription( $articleId )
+	{
 		$article	= $this->check( $articleId );
 		return $article->description;
 	}
@@ -125,7 +108,8 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	public function getLink( $articleId ){
+	public function getLink( $articleId )
+	{
 		$article	= $this->check( $articleId );
 		return $this->pathImages.'products/'.$article->image;
 	}
@@ -138,7 +122,8 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	 *	@return		string
 	 *	@todo		implement absolute mode
 	 */
-	public function getPicture( $articleId, $absolute = FALSE ){
+	public function getPicture( $articleId, $absolute = FALSE )
+	{
 		$article		= $this->check( $articleId );
 		$category	= $this->modelCategory->get( $article->categoryId );
 		$uri		= $this->pathImages.'products/'.$article->image;
@@ -152,7 +137,8 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getPrice( $articleId, $amount = 1 ){
+	public function getPrice( $articleId, $amount = 1 )
+	{
 		$article	= $this->check( $articleId );
 		return $article->price * $amount;
 	}
@@ -164,7 +150,8 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getTax( $articleId, $amount = 1 ){
+	public function getTax( $articleId, $amount = 1 )
+	{
 		$article	= $this->check( $articleId );
 		return $article->price * ( $this->taxRate / 100 ) * $amount;
 	}
@@ -175,9 +162,31 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract{
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	public function getTitle( $articleId ){
+	public function getTitle( $articleId )
+	{
 		$article	= $this->check( $articleId );
 		return $article->title ? $article->title : $article->filename;
 	}
+
+	/**
+	 *	Constructor.
+	 *	@access		public
+	 *	@param		CMF_Hydrogen_Environment		$env
+	 *	@return		void
+	 */
+	protected function __onInit()
+	{
+//		$this->logic			= new Logic_Catalog_Gallery( $this->env );
+		$this->modelArticle		= new Model_Catalog_Clothing_Article( $this->env );
+		$this->modelCategory	= new Model_Catalog_Clothing_Category( $this->env );
+		$this->taxRate			= $this->env->getConfig()->get( 'module.catalog_clothing.tax.rate' );
+		$this->pathImages		= $this->env->getConfig()->get( 'path.images' );
+		if( class_exists( 'Logic_Frontend' ) ){
+			$frontend			= Logic_Frontend::getInstance( $this->env );
+			$this->pathImages	= $frontend->getPath( 'images' );
+		}
+		if( class_exists( 'Logic_Localization' ) ){
+			$this->localization	= new Logic_Localization( $this->env );
+		}
+	}
 }
-?>

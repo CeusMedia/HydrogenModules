@@ -40,7 +40,7 @@ $env->page->js->addUrl( 'http://js.ceusmedia.de/jquery/pstrength/2.1.0.min.js' )
 $env->page->js->addScriptOnReady( $script );
 */
 
-$roleMap	= array();
+$roleMap	= [];
 foreach( $roles as $role )
 	$roleMap[$role->roleId] = $role;
 
@@ -50,12 +50,12 @@ $indicator->setIndicatorClass( 'indicator-small' );
 $ind1		= $indicator->build( 75, 100 );
 */
 
-$optRole	= array();
+$optRole	= [];
 foreach( array_reverse( $roles, TRUE ) as $role )
 	$optRole[]	= UI_HTML_Elements::Option( $role->roleId, $role->title, $role->roleId == $user->roleId, NULL, 'role role'.$role->roleId );
 $optRole	= join( $optRole );
 
-$optStatus  = array();
+$optStatus  = [];
 foreach( array_reverse( $words['status'], TRUE ) as $key => $label )
 	$optStatus[]    = UI_HTML_Elements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
 $optStatus  = join( $optStatus );

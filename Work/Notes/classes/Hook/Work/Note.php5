@@ -1,21 +1,6 @@
 <?php
 class Hook_Work_Note extends CMF_Hydrogen_Hook
 {
-
-	public function __onInit()
-	{
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= Logic_Note::getInstance( $this->env );
-		$this->logic->setContext(
-			$this->session->get( 'auth_user_id' ),
-			$this->session->get( 'auth_role_id' ),
-			$this->session->get( 'filter_notes_projectId' )
-		);
-		$this->addData( 'logicNote', $this->logic );
-	}
-
 	public static function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload )
 	{
 		$data		= (object) $payload;
@@ -45,7 +30,7 @@ class Hook_Work_Note extends CMF_Hydrogen_Hook
 		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
 		$language		= $env->getLanguage();
 //		$statusesActive	= array( 0, 1, 2, 3, 4, 5 );
-		$list			= array();
+		$list			= [];
 		$modelNote		= new Model_Note( $env );
 		$indices		= array( 'projectId' => $data->projectId );
 //		if( $data->activeOnly )
@@ -104,7 +89,7 @@ class Hook_Work_Note extends CMF_Hydrogen_Hook
 		$language	= $env->getLanguage();
 		$words		= $language->getWords( 'work/note' );
 		$icon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz' ) );
-		$list		= array();
+		$list		= [];
 		foreach( $notes as $note ){
 			$isOpen		= TRUE;//in_array( $issue->status, $statusesActive );
 //			$status		= '('.$words['states'][$issue->status].')';
@@ -125,5 +110,19 @@ class Hook_Work_Note extends CMF_Hydrogen_Hook
 			'Work_Note',																			//  controller of entity
 			'view'																					//  action to view or edit entity
 		);
+	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logic		= Logic_Note::getInstance( $this->env );
+		$this->logic->setContext(
+			$this->session->get( 'auth_user_id' ),
+			$this->session->get( 'auth_role_id' ),
+			$this->session->get( 'filter_notes_projectId' )
+		);
+		$this->addData( 'logicNote', $this->logic );
 	}
 }

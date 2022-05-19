@@ -10,7 +10,7 @@ class View_Manage_Bookmark extends CMF_Hydrogen_View{
 	protected function renderList( $bookmarkId = NULL ){
 		$list	= '<div><small class="muted"><em>Keine vorhanden.</em></small></div>';
 		if( ( $bookmarks = $this->getData( 'bookmarks' ) ) ){
-			$list	= array();
+			$list	= [];
 			foreach( $bookmarks as $entry ){
 				$class	= $entry->bookmarkId == $bookmarkId ? 'active' : NULL;
 				$link	= UI_HTML_Tag::create( 'a', $entry->title, array( 'href' => './manage/bookmark/edit/'.$entry->bookmarkId ) );

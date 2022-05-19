@@ -3,7 +3,7 @@ class Logic_Authentication extends CMF_Hydrogen_Logic
 {
 	protected $env;
 	protected $backend;
-	protected $backends	= array();
+	protected $backends	= [];
 	protected $session;
 
 	const STATUS_UNKNOWN		= 0;
@@ -67,8 +67,8 @@ class Logic_Authentication extends CMF_Hydrogen_Logic
 		if( $groupByModules )
 			return $payload->list;
 
-		$list		= array();
-		$map		= array();
+		$list		= [];
+		$map		= [];
 		foreach( $payload->list as $group ){
 			if( $group->count )
 				foreach( $group->list as $user )

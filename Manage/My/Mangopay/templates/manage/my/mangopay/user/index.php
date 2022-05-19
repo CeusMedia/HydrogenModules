@@ -57,7 +57,7 @@ $panelView	= '
 	</div>
 </div>';
 
-$list	= array();
+$list	= [];
 foreach( $bankAccounts as $bankAccount ){
 	$link	= UI_HTML_Tag::create( 'a', $bankAccount->Id, array( 'href' => './manage/my/mangopay/bank/view/'.$bankAccount->Id ) );
 	$list[]	= UI_HTML_Tag::create( 'tr', array(
@@ -95,7 +95,7 @@ $panelTransactions	= '
 </div>';
 
 
-$rows		= array();
+$rows		= [];
 foreach( $wallets as $wallet ){
 	$link	= UI_HTML_Tag::create( 'a', $wallet->Id, array( 'href' => './manage/my/mangopay/wallet/view/'.$wallet->Id ) );
 	$rows[]	= UI_HTML_Tag::create( 'tr', array(

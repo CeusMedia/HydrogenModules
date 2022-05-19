@@ -8,23 +8,6 @@ class Controller_Manage_Image_Slider extends CMF_Hydrogen_Controller
 	protected $request;
 	protected $basePath;
 
-	public function __onInit()
-	{
-		$this->frontend		= Logic_Frontend::getInstance( $this->env );
-		$this->modelSlider	= new Model_Image_Slider( $this->env );
-		$this->modelSlide	= new Model_Image_Slide( $this->env );
-		$this->messenger	= $this->env->getMessenger();
-		$this->request		= $this->env->getRequest();
-
-		$pathImages		= $this->frontend->getPath( 'images' );
-		if( !$this->frontend->hasModule( 'UI_Image_Slider' ) ){
-			$this->messenger->noteFailure( 'Module "UI_Image_Slider" is not installed in frontend instance. Your request has been reset to start.' );
-			$this->restart( NULL );
-		}
-		$pathSliders	= $this->frontend->getModuleConfigValue( 'UI_Image_Slider', 'path' );
-		$this->addData( 'basePath', $this->basePath = $pathImages.$pathSliders );
-	}
-
 	public function add()
 	{
 		$words	= (object) $this->getWords( 'msg' );
@@ -190,7 +173,7 @@ class Controller_Manage_Image_Slider extends CMF_Hydrogen_Controller
 	{
 		$slider	= $this->checkSliderId( $sliderId );
 		$slides	= $this->modelSlide->getAll( array( 'sliderId' => $sliderId ) );
-		$list	= array();
+		$list	= [];
 		$index	= new DirectoryIterator( $this->basePath );
 		foreach( $index as $entry ){
 			if( $entry->isDir() || $entry->isDot() )
@@ -222,7 +205,7 @@ class Controller_Manage_Image_Slider extends CMF_Hydrogen_Controller
 
 	public function index()
 	{
-		$conditions	= array();
+		$conditions	= [];
 		$orders		= array( 'status' => 'DESC', 'title' => 'ASC' );
 		$sliders	= $this->modelSlider->getAll( $conditions, $orders );
 		foreach( $sliders as $nr => $slider )
@@ -279,6 +262,23 @@ class Controller_Manage_Image_Slider extends CMF_Hydrogen_Controller
 	}
 
 	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->modelSlider	= new Model_Image_Slider( $this->env );
+		$this->modelSlide	= new Model_Image_Slide( $this->env );
+		$this->messenger	= $this->env->getMessenger();
+		$this->request		= $this->env->getRequest();
+
+		$pathImages		= $this->frontend->getPath( 'images' );
+		if( !$this->frontend->hasModule( 'UI_Image_Slider' ) ){
+			$this->messenger->noteFailure( 'Module "UI_Image_Slider" is not installed in frontend instance. Your request has been reset to start.' );
+			$this->restart( NULL );
+		}
+		$pathSliders	= $this->frontend->getModuleConfigValue( 'UI_Image_Slider', 'path' );
+		$this->addData( 'basePath', $this->basePath = $pathImages.$pathSliders );
+	}
 
 	protected function checkSlideId( $slideId )
 	{

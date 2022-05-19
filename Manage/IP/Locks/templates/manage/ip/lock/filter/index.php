@@ -35,7 +35,7 @@ $lockStates	= array(
 
 $list	= '<div><em><small>Keine IP-Lock-Filter gefunden.</small></em></div>';
 if( $filters ){
-	$list	= array();
+	$list	= [];
 	foreach( $filters as $filter ){
 		if( $filter->reason->status < 1 )
 			$filter->status	= -10;

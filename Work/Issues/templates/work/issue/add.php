@@ -13,7 +13,7 @@ foreach( $priorities as $key => $value )
 
 $severities	= $words['severities'];
 krsort( $severities );
-$optSeverity	= array();
+$optSeverity	= [];
 foreach( $severities as $key => $value )
 	$optSeverity[$key]	= $value;
 //$optSeverity['_selected']	= $severity;

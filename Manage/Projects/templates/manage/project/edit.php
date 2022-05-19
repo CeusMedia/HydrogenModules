@@ -3,7 +3,7 @@
 //print_m( $project );die;
 
 /*  --  STATES  --  */
-$optStatus	= array();
+$optStatus	= [];
 foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 	$attributes		= array(
 		'value'		=> $key,
@@ -15,7 +15,7 @@ foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 $optStatus		= join( '', $optStatus );
 
 /*  --  PRIORITIES  --  */
-$optPriority	= array();
+$optPriority	= [];
 foreach( $words['priorities'] as $key => $value ){
 	$attributes		= array(
 		'value'		=> $key,
@@ -28,13 +28,13 @@ $optPriority		= join( '', $optPriority );
 
 $optCompany	= "";
 if( isset( $projectCompanies ) ){
-	$optCompany	= array();
+	$optCompany	= [];
 	foreach( $projectCompanies as $company )
 		$optCompany[$company->companyId]	= $company->title;
 	$optCompany	= UI_HTML_Elements::Options( $optCompany, $projectId );
 }
 
-$optCreatorId	= array();
+$optCreatorId	= [];
 foreach( $projectUsers as $user )
 	$optCreatorId[$user->userId]	= $user->username;
 $optCreatorId	= UI_HTML_Elements::Options( $optCreatorId, $project->creatorId );

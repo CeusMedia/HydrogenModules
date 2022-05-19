@@ -22,9 +22,9 @@ $colors		= array(
 );
 
 
-$list	= array();
+$list	= [];
 foreach( $eventTypes as $topic => $types ){
-	$sublist	= array();
+	$sublist	= [];
 	foreach( $types as $type ){
 		if( !array_key_exists( $type, $hookedEventTypes ) )
 			continue;

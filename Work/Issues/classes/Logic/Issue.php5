@@ -47,10 +47,10 @@ class Logic_Issue extends CMF_Hydrogen_Logic
 				$issue->manager	= $this->modelUser->get( $issue->managerId );
 			$issue->project	= $this->logicProject->get( $issue->projectId );
 			$issueNotes		= $this->modelIssueNote->getAll( array( 'issueId' => $issueId ) );		//  get issue notes
-			$issue->notes	= array();																//  prepare empty note list
+			$issue->notes	= [];																//  prepare empty note list
 			foreach( $issueNotes as $note ){														//  iterate issue notes
 				$note->user	= $this->modelUser->get( $note->userId );								//  resolve note user
-				$note->changes	= array();															//  prepare empty change list
+				$note->changes	= [];															//  prepare empty change list
 				$issueChanges	= $this->modelIssueChange->getAll( array( 'noteId' => $note->issueNoteId ) );	//  get issue changes
 				foreach( $issueChanges as $change ){												//  iterate issue changes
 					$note->changes[]	= $change;													//  note issue change
@@ -73,7 +73,7 @@ class Logic_Issue extends CMF_Hydrogen_Logic
 	public function getParticitatingUsers( $issueId )
 	{
 		$issue		= $this->get( $issueId, TRUE );
-		$userIds	= array();																		//  prepare empty list of user IDs
+		$userIds	= [];																		//  prepare empty list of user IDs
 		$usersProject	= $this->getProjectUsers( $issue->projectId );								//  get users of issue project
 		foreach( $usersProject as $user )															//  iterate users of issue project
 			$userIds[]	= (int) $user->userId;														//  note user ID
@@ -90,7 +90,7 @@ class Logic_Issue extends CMF_Hydrogen_Logic
 			}
 		}
 
-		$users		= array();																		//  prepare empty result map
+		$users		= [];																		//  prepare empty result map
 		$conditions	= array( 'userId' => array_unique( $userIds ) );								//  reduce to unique user IDs
 		$orders		= array( 'username' => 'ASC' );													//  order by username
 		foreach( $this->modelUser->getAll( $conditions, $orders ) as $user ){						//  iterate found users

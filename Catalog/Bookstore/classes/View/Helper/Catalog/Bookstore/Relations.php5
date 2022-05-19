@@ -6,7 +6,7 @@ class View_Helper_Catalog_Bookstore_Relations{
 	protected $limit		= 20;
 	protected $logic;
 	protected $heading		= "Ähnliche Veröffentlichungen";
-	protected $tags			= array();
+	protected $tags			= [];
 
 	public function __construct( $env ){
 		$this->env		= $env;
@@ -27,7 +27,7 @@ class View_Helper_Catalog_Bookstore_Relations{
 
 		$helper				= new View_Helper_Catalog_Bookstore( $this->env );
 
-		$list		= array();
+		$list		= [];
 		foreach( $relatedArticles as $relation ){
 			$title		= $relation->article->title;//Alg_Text_Trimmer::trim( $relation->article->title, 60 );
 			$subtitle	= $relation->article->subtitle;//Alg_Text_Trimmer::trim( $relation->article->subtitle, 60 );
@@ -57,7 +57,7 @@ class View_Helper_Catalog_Bookstore_Relations{
 	}
 
 	public function setArticleId( $articleId ){
-		$this->tags			= array();
+		$this->tags			= [];
 		$this->articleId	= $articleId;
 		foreach( $this->logic->getTagsOfArticle( $articleId, FALSE ) as $tag )
 			$this->tags[]	= $tag->tag;

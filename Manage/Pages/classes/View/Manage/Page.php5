@@ -25,13 +25,13 @@ class View_Manage_Page extends CMF_Hydrogen_View
 		$isFromConfig	= $source === 'Config';
 		$isFromDatabase	= $source === 'Database';
 
-		$list	= array();
+		$list	= [];
 		foreach( $tree as $item ){
 			$sublist	= '';
 			if( isset( $item->subpages ) ){
-				$sublist	= array();
+				$sublist	= [];
 				foreach( $item->subpages as $subitem ){
-					$classes	= array();
+					$classes	= [];
 					if( $currentPageId && $currentPageId == $subitem->pageId )
 						$classes[]	= 'active';
 					if( $subitem->status < Model_Page::STATUS_VISIBLE || $item->status < Model_Page::STATUS_VISIBLE )
@@ -104,8 +104,8 @@ class View_Manage_Page extends CMF_Hydrogen_View
 //		$isFromDatabase	= $source === 'Database';
 //		$isFromModules	= $source === 'Modules';
 
-		$listTabs	= array();
-		$listPanes	= array();
+		$listTabs	= [];
+		$listPanes	= [];
 		foreach( $labels as $tabKey => $label ){
 			$isPage		= (int) $page->type === Model_Page::TYPE_CONTENT;
 			$isBranch	= (int) $page->type === Model_Page::TYPE_BRANCH;

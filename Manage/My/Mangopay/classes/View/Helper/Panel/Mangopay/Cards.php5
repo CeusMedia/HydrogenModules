@@ -14,7 +14,7 @@ class View_Helper_Panel_Mangopay_Cards extends View_Helper_Panel_Mangopay{
 	}
 
 	public function render(){
-		$rows		= array();
+		$rows		= [];
 		foreach( $this->data as $item ){
 		//	if( !$item->Active )
 		//		continue;

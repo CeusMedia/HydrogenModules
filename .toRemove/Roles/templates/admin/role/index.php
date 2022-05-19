@@ -10,7 +10,7 @@ $heads	= array(
 $heads	= UI_HTML_Elements::TableHeads( $heads );
 $number	= 0;
 
-$rows	= array();
+$rows	= [];
 foreach( $roles as $nr => $role )
 {
 	$classes	= array( 'role' );
@@ -70,7 +70,7 @@ return '
 
 
 /*
-$list	= array();
+$list	= [];
 foreach( $roles as $role )
 {
 	$label	= $role->title;

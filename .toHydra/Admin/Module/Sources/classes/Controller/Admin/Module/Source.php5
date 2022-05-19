@@ -217,7 +217,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 	}
 
 	protected function renderModuleLinkList( $modules, $linkToViewer = FALSE ){
-		$list	= array();
+		$list	= [];
 		foreach( $modules as $module ){
 			$label	= $module->title;
 			if( $linkToViewer ){
@@ -258,7 +258,7 @@ class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
 
 		$modulesRemoved		= array_diff_key( $modulesOld, $modulesNew );
 		$modulesAdded		= array_diff_key( $modulesNew, $modulesOld );
-		$modulesUpdated		= array();
+		$modulesUpdated		= [];
 		foreach( $modulesOld as $moduleKey => $module ){
 			if( array_key_exists( $moduleKey, $modulesNew ) ){
 				if( version_compare( $module->version, $modulesNew[$moduleKey]->version ) < 0 ){

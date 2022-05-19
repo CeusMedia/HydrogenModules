@@ -5,7 +5,7 @@ $w		= (object) $words['filter'];
 $term	= $env->session->get( 'filter_notes_term' );
 $tags	= $env->session->get( 'filter_notes_tags' );
 if( !is_array( $tags ) )
-	$tags	= array();
+	$tags	= [];
 
 $iconAdd	= '<i class="icon-plus icon-white"></i>';
 $iconRemove	= '<i class="icon-remove icon-white"></i>';
@@ -14,7 +14,7 @@ $optOrder	= array( '' => '-', 'modifiedAt' => 'letzte Änderung', 'createdAt' =>
 $optOrder	= UI_HTML_Elements::Options( $optOrder, $filterOrder );
 
 /*
-$not	= array();
+$not	= [];
 foreach( $tags as $tag )
 	$not[]	= $tag->tagId;
 
@@ -22,7 +22,7 @@ $tags	= $logicNote->getTopTags( 3, 0, $filterProjectId, $not );
 
 $tagsMore	= "";
 if( $tags ){
-	$list	= array();
+	$list	= [];
 	foreach( $tags as $tag ){
 		$url	= './work/note/addSearchTag/'.$tag->tagId;
 		$label	= '<div class="item-tag-label">'.$tag->content.'</div>';
@@ -38,7 +38,7 @@ if( $tags ){
 $tags	= $session->get( 'filter_notes_tags' );
 $tagsSearch	= "";
 if( $tags ){
-	$list	= array();
+	$list	= [];
 	foreach( $tags as $tag ){
 		$url	= './work/note/forgetTag/'.$tag->tagId;
 		$label	= '<div class="item-tag-label">'.$tag->content.'</div>';

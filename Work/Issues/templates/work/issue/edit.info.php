@@ -1,6 +1,6 @@
 <?php
 
-$changers	= array();
+$changers	= [];
 foreach( $issue->notes as $note )
 	foreach( $note->changes as $change )
 		if( $change->userId )

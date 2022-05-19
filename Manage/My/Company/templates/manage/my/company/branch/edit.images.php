@@ -7,7 +7,7 @@ $iconOpen	= HTML::Icon( 'folder-open', TRUE );
 
 $listImages	= $words['images']['noEntries'];
 if( $branch->images ){
-	$listImages	= array();
+	$listImages	= [];
 	foreach( $branch->images as $image ){
 		$urlImage		= 'images/branches/'.$image->filename;
 		$urlRemove		= './manage/my/company/branch/removeImage/'.$branch->branchId.'/'.$image->branchImageId;

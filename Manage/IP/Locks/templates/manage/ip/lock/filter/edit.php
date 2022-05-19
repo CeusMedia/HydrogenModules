@@ -36,12 +36,12 @@ $optStatus	= UI_HTML_Elements::Options( array(
 	0		=> 'inaktiv',
 ), $filter->status );
 
-$optReason	= array();
+$optReason	= [];
 foreach( $reasons as $reason )
 	$optReason[$reason->ipLockReasonId]	= $reason->title;
 $optReason	= UI_HTML_Elements::Options( $optReason, $filter->reasonId );
 
-$reasonMap	= array();
+$reasonMap	= [];
 foreach( $reasons as $reason )
 	$reasonMap[$reason->ipLockReasonId]	= $reason;
 

@@ -16,7 +16,7 @@ foreach( $words['indexFilterOrders'] as $column => $label )
 	$optOrder[$column]	= $label;
 $optOrder['_selected']	= $this->env->getSession()->get( 'filter-bug-order' );
 
-$optDirection	= array();
+$optDirection	= [];
 foreach( $words['indexFilterDirections'] as $key => $label ){
 	$selected	= $key == $session->get( 'filter-bug-direction' );
 	$class		= 'direction direction'.$key;

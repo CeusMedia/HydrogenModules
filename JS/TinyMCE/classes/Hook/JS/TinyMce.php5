@@ -9,7 +9,7 @@ class Hook_JS_TinyMce extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
 		View_Helper_TinyMce::load( $env );
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 
@@ -27,8 +27,8 @@ class Hook_JS_TinyMce extends CMF_Hydrogen_Hook{
 			);
 
 			/* @todo	WHY? please implement self::getLanguages similar to self::getLanguage */
-			$languages	= array();
-			$matches	= array();
+			$languages	= [];
+			$matches	= [];
 			foreach( explode( ',', getEnv( 'HTTP_ACCEPT_LANGUAGE' ) ) as $item ){
 				preg_match( "/^([a-z]{2})(-([A-Z]{2}))?(;q=([0-9].?[0-9]*))?$/", $item, $matches );
 				if( isset( $matches[1] ) && isset( $labels[$matches[1]] ) ){
@@ -156,7 +156,7 @@ class Hook_JS_TinyMce extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onGetAvailableContentEditor( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onGetAvailableContentEditor( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
 		if( !empty( $payload->type ) && !in_array( $payload->type, array( 'wys' ) ) )
 			return;
 		if( !empty( $payload->format ) && !in_array( $payload->format, array( 'html' ) ) )

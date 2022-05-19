@@ -2,7 +2,7 @@
 class View_Helper_Info_Dashboard_Modal_AddPanel extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $dashboard;
-	protected $panels		= array();
+	protected $panels		= [];
 
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{
@@ -17,7 +17,7 @@ class View_Helper_Info_Dashboard_Modal_AddPanel extends CMF_Hydrogen_View_Helper
 		$panelsInBoard	= explode( ',', $this->dashboard->panels );
 		if( $this->panels ){
 			$fieldPanels	= UI_HTML_Tag::create( 'div', $w->noMorePanels, array( 'class' => 'alert alert-info' ) );
-			$list	= array();
+			$list	= [];
 			foreach( $this->panels as $panelId => $panel ){
 				if( in_array( $panelId, $panelsInBoard ) )
 					continue;

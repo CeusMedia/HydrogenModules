@@ -7,12 +7,12 @@ $buttonInvite	= UI_HTML_Elements::LinkButton( './manage/my/user/invite/invite', 
 
 $listInvites	= '<em><small>Noch keine Einladungen verschickt.</em></small><br/>';
 if( $invites->all ){
-	$listInvites	= array();
+	$listInvites	= [];
 	foreach( $invites->all as $invite ){
 		$email		= UI_HTML_Tag::create( 'span', $invite->email );
 		$date		= date( 'd.m.Y H:i', $invite->createdAt );
 		$status		= UI_HTML_Tag::create( 'span', $words['states'][$invite->status] );
-		$buttons	= array();
+		$buttons	= [];
 		if( $invite->type == 1 ){
 			if( $invite->status == 1 ){
 				$expire	= date( 'd.m.Y', $invite->createdAt + $daysValid * 24 * 60 * 60 );
@@ -22,7 +22,7 @@ if( $invites->all ){
 				$buttons[]	= UI_HTML_Elements::LinkButton( './manage/my/user/invite/cancel/'.$invite->userInviteId, '', 'button tiny remove', NULL, NULL, 'abbrechen' );
 			}
 		}
-		$cells		= array();
+		$cells		= [];
 		$cells[]	= UI_HTML_Tag::create( 'td', $date, array( 'class' => 'invite-date' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $status, array( 'class' => 'invite-status' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $email, array( 'class' => 'invite-email' ) );
@@ -115,7 +115,7 @@ return '
 /*
 $listInvitesOpen	= '<em><small>Keine.</em></small>';
 if( $invites->open ){
-	$listInvitesOpen	= array();
+	$listInvitesOpen	= [];
 	foreach( $invites->open as $invite ){
 		$url	= './manage/my/user/invite/invite/?code='.$invite->userInviteId;
 		$link	= UI_HTML_Tag::create( 'a', $invite->email, array( 'href' => $url ) );
@@ -126,7 +126,7 @@ if( $invites->open ){
 
 $listInvitesDone	= '<em><small>Keine.</em></small>';
 if( $invites->done ){
-	$listInvitesDone	= array();
+	$listInvitesDone	= [];
 	foreach( $invites->done as $invite ){
 		$url	= './manage/my/user/invite/invite/?code='.$invite->userInviteId;
 		$link	= UI_HTML_Tag::create( 'a', $invite->email, array( 'href' => $url ) );

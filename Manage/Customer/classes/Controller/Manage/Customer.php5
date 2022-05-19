@@ -1,27 +1,18 @@
 <?php
-class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Customer extends CMF_Hydrogen_Controller
+{
 	protected $messenger;
 	protected $modelCustomer;
 	protected $modelRating;
 
-	public function __onInit(){
-		$this->messenger		= $this->env->getMessenger();
-		$this->modelCustomer	= new Model_Customer( $this->env );
-		if( $this->env->getModules()->has( 'Manage_Customer_Rating' ) ){
-			$this->modelRating	= new Model_Customer_Rating( $this->env );
-		}
-		$this->addData( 'useMap', $this->env->getModules()->has( 'UI_Map' ) );
-		$this->addData( 'useRatings', $this->env->getModules()->has( 'Manage_Customer_Rating' ) );
-		$this->addData( 'useProjects', TRUE );#$this->env->getModules()->has( 'Manage_Customer_Project' ) );
-	}
-
-	public static function ___registerHints( CMF_Hydrogen_Environment $env, $context, $module, $arguments = NULL ){
+	public static function ___registerHints( CMF_Hydrogen_Environment $env, $context, $module, $arguments = NULL )
+	{
 		if( class_exists( 'View_Helper_Hint' ) )
 			View_Helper_Hint::registerHintsFromModuleHook( $env, $module );
 	}
 
-	public function add(){
+	public function add()
+	{
 		$request		= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$data	= $request->getAll();
@@ -33,13 +24,14 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 				$this->messenger->noteNotice( 'Für diese Adresse konnte keine Geokoordinaten ermittelt werden.' );
 			$this->restart( NULL, TRUE );
 		}
-		$customer	= array();
+		$customer	= [];
 		foreach( $this->modelCustomer->getColumns() as $key )
 			$customer[$key]	= $request->get( $key );
 		$this->addData( 'customer', (object) $customer );
 	}
 
-	public function edit( $customerId ){
+	public function edit( $customerId )
+	{
 		$request	= $this->env->getRequest();
 		$customer	= $this->modelCustomer->get( $customerId );
 		if( !$customer ){
@@ -65,7 +57,8 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 		$this->addData( 'customer', $customer );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$customers		=  $this->modelCustomer->getAll();
 		if( $this->modelRating )
 			foreach( $customers as $nr => $customer ){
@@ -81,7 +74,8 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 		$this->addData( 'customers', $customers );
 	}
 
-	public function map( $customerId ){
+	public function map( $customerId )
+	{
 		$customer	= $this->modelCustomer->get( $customerId );
 		if( !$customer ){
 			$this->messenger->noteError( 'Invalid customer' );
@@ -91,7 +85,8 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 		$this->addData( 'customer', $customer );
 	}
 
-	public function rate( $customerId ){
+	public function rate( $customerId )
+	{
 		$request		= $this->env->getRequest();
 
 		$customer	= $this->modelCustomer->get( $customerId );
@@ -121,7 +116,8 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 		$this->addData( 'customerId', $customerId );
 	}
 
-	public function resolveGeocode( $customerId ){
+	public function resolveGeocode( $customerId )
+	{
 		$customer	= $this->modelCustomer->get( $customerId );
 		if( !$customer ){
 			$this->messenger->noteError( 'Invalid customer' );
@@ -138,5 +134,16 @@ class Controller_Manage_Customer extends CMF_Hydrogen_Controller{
 		}
 		return TRUE;
 	}
+
+	protected function __onInit()
+	{
+		$this->messenger		= $this->env->getMessenger();
+		$this->modelCustomer	= new Model_Customer( $this->env );
+		if( $this->env->getModules()->has( 'Manage_Customer_Rating' ) ){
+			$this->modelRating	= new Model_Customer_Rating( $this->env );
+		}
+		$this->addData( 'useMap', $this->env->getModules()->has( 'UI_Map' ) );
+		$this->addData( 'useRatings', $this->env->getModules()->has( 'Manage_Customer_Rating' ) );
+		$this->addData( 'useProjects', TRUE );#$this->env->getModules()->has( 'Manage_Customer_Project' ) );
+	}
 }
-?>

@@ -26,7 +26,7 @@ class Job_Newsletter extends Job_Abstract
 			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
 		);
 		$orders		= array( 'mailId' => 'ASC' );
-		$limits		= array();
+		$limits		= [];
 		$mails		= $modelMail->getAll( $conditions, $orders, $limits );
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );
@@ -34,7 +34,7 @@ class Job_Newsletter extends Job_Abstract
 		}
 		else{
 			$count		= 0;
-//			$fails		= array();
+//			$fails		= [];
 			foreach( $mails as $mail ){
 				$logicMail->removeMail( $mail->mailId );
 				$this->showProgress( ++$count, count( $mails ) );
@@ -104,7 +104,7 @@ class Job_Newsletter extends Job_Abstract
 			Model_Newsletter_Queue::STATUS_RUNNING
 		) );
 		$queues		= $this->logic->getQueues( $conditions );
-		$queueIds	= array();
+		$queueIds	= [];
 		foreach( $queues as $queue ){
 			$queueIds[]	= $queue->newsletterQueueId;
 			if( $queue->status == Model_Newsletter_Queue::STATUS_NEW )
@@ -117,7 +117,7 @@ class Job_Newsletter extends Job_Abstract
 			'newsletterQueueId'	=> $queueIds,
 		);
 		$number		= 0;																		//  prepare counter for round limit
-		$orders		= array();																	//  no order
+		$orders		= [];																	//  no order
 		$limits		= array( 0, $max );															//  limit letters
 		$letters	= $this->logic->getReaderLetters( $conditions, $orders, $limits );			//  get letters to send
 		$start		= microtime( TRUE );
@@ -184,8 +184,8 @@ class Job_Newsletter extends Job_Abstract
 		$modelMail		= new Model_Mail( $this->env );
 		$countLetters	= 0;
 		$countRecovered	= 0;
-		$readers		= array();
-		$entries		= array();
+		$readers		= [];
+		$entries		= [];
 		$conditions		= array( 'status' => Model_Newsletter::STATUS_SENT );
 		$orders			= array( 'newsletterId' => 'ASC' );
 		$newsletters	= $this->logic->getNewsletters( $conditions, $orders );
@@ -244,7 +244,7 @@ class Job_Newsletter extends Job_Abstract
 		$conditions	= array( 'newsletterQueueId' => 0 );
 		$orders		= array( 'newsletterId'	=> 'ASC', 'newsletterReaderLetterId' => 'ASC' );
 		$letters	= $modelLetter->getAll( $conditions, $orders );
-		$newsletterIds	= array();
+		$newsletterIds	= [];
 		foreach( $letters as $letter ){
 			if( !array_key_exists( $letter->newsletterId, $newsletterIds ) ){
 				$newsletterIds[$letter->newsletterId]	= array(

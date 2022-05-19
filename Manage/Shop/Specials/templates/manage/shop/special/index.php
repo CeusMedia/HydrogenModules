@@ -1,11 +1,11 @@
 <?php
 $iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
-$bridgeMap	= array();
+$bridgeMap	= [];
 foreach( $catalogs as $bridge )
 	$bridgeMap[$bridge->data->bridgeId]	= $bridge->data->title;
 
-$rows	= array();
+$rows	= [];
 foreach( $specials as $special ){
 	$link	= UI_HTML_Tag::create( 'a', $special->title, array(
 		'href'	=> './manage/shop/special/edit/'.$special->shopSpecialId,

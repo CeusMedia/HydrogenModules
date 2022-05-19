@@ -108,7 +108,7 @@ class Job_Mail_Archive extends Job_Abstract
 			escapeshellarg( $pathname ),															//  dump output filename
 		) );
 		$resultCode		= 0;
-		$resultOutput	= array();
+		$resultOutput	= [];
 		exec( $command, $resultOutput, $resultCode );
 		if( $resultCode !== 0 )
 			throw new RuntimeException( 'Database dump failed' );
@@ -154,7 +154,7 @@ class Job_Mail_Archive extends Job_Abstract
 			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
 		);
 		$count		= 0;
-		$fails		= array();
+		$fails		= [];
 		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
 		foreach( $mailIds as $mailId ){
 			$mail		= $this->model->get( $mailId );
@@ -221,7 +221,7 @@ class Job_Mail_Archive extends Job_Abstract
 		);
 
 		$orders		= array( 'mailId' => 'DESC' );
-		$fails		= array();
+		$fails		= [];
 		$results	= (object) array(
 			'mails'			=> 0,
 			'attachments'	=> 0,
@@ -322,7 +322,7 @@ class Job_Mail_Archive extends Job_Abstract
 			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
 		);
 		$count		= 0;
-		$fails		= array();
+		$fails		= [];
 		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
 		foreach( $mailIds as $mailId ){
 			$count++;
@@ -407,7 +407,7 @@ class Job_Mail_Archive extends Job_Abstract
 
 	protected function _loadMailClasses()
 	{
-		$loadedClasses	= array();
+		$loadedClasses	= [];
 		$mailClassPaths	= array( './', 'admin/' );
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$mailClassPaths[]	= Logic_Frontend::getInstance( $this->env )->getPath();

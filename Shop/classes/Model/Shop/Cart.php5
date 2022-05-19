@@ -72,7 +72,7 @@ class Model_Shop_Cart
 //				$this->data->set( 'options', $order->options );
 				$this->data->set( 'price', $order->price );
 				$this->data->set( 'priceTaxed', $order->priceTaxed );
-				$positions	= array();
+				$positions	= [];
 				foreach( $this->modelPosition->getAllByIndex( 'orderId', $orderId ) as $item ){
 					$source		= $this->bridge->getBridgeObject( (int) $item->bridgeId );
 					$article	= $source->get( $item->articleId, $item->quantity );

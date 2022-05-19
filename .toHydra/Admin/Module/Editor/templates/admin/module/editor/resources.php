@@ -54,7 +54,7 @@ function checkFile( $uri ){
 //  --  TABLE: CLASSES  --  //
 $classes	= '';
 if( $module->files->classes ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $module->files->classes as $item ){
 		$count++;
 		$class	= NULL;
@@ -82,7 +82,7 @@ if( $module->files->classes ){
 //  --  TABLE: TEMPLATES  --  //
 $templates	= '';
 if( $module->files->templates ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $module->files->templates as $item ){
 		$count++;
 		$class	= NULL;
@@ -115,7 +115,7 @@ if( $module->files->templates ){
 //  --  TABLE: LOCALES  --  //
 $locales	= '';
 if( $module->files->locales ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $module->files->locales as $item ){
 		$count++;
 		$class	= NULL;
@@ -143,7 +143,7 @@ if( $module->files->locales ){
 //  --  TABLE: STYLES  --  //
 $styles	= '';
 if( $module->files->styles ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $module->files->styles as $item ){
 		$count++;
 		$class	= NULL;
@@ -183,8 +183,8 @@ if( $module->files->styles ){
 //  --  TABLE: SCRIPTS  --  //
 $scripts	= '';
 if( $module->files->scripts ){
-	$rows	= array();
-	$scripts	= array();
+	$rows	= [];
+	$scripts	= [];
 	foreach( $module->files->scripts as $item ){
 		$count++;
 		$class	= NULL;
@@ -227,7 +227,7 @@ if( $module->files->scripts ){
 //  --  TABLE: IMAGES  --  //
 $images	= '';
 if( $module->files->images ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $module->files->images as $item ){
 		$count++;
 		$class		= NULL;
@@ -265,7 +265,7 @@ if( $module->files->images ){
 //  --  TABLE: FILES  --  //
 $files	= '';
 if( $module->files->files ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $module->files->files as $item ){
 		$count++;
 		$class		= NULL;

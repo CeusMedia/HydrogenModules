@@ -83,7 +83,7 @@ class Controller_Manage_News extends CMF_Hydrogen_Controller{
 		$filterQuery	= $this->session->get( 'filter_manage_news_query' );
 		$filterStatus	= $this->session->get( 'filter_manage_news_status' );
 
-		$conditions	= array();
+		$conditions	= [];
 		if( strlen( trim( $filterQuery ) ) )
 			$conditions['title']	= '%'.str_replace( ' ', '%', $filterQuery );
 		if( strlen( $filterStatus ) )

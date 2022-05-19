@@ -111,10 +111,10 @@ class View_Helper_Shop_CartPositions
 	protected function renderAsHtmlList(){
 		$words		= (object) $this->words['panel-cart'];
 		$wordsCart	= (object) $this->words['cart'];
-		$rows		= array();
+		$rows		= [];
 		$totalPrice	= 0;
 		$totalTax	= 0;
-		$taxes		= array();
+		$taxes		= [];
 		$allSingle	= TRUE;
 		foreach( $this->positions as $nr => $position ){
 			$isSingle		= isset( $position->article->single ) && $position->article->single;
@@ -182,7 +182,7 @@ class View_Helper_Shop_CartPositions
 
 		$priceTax		= $this->formatPrice( $totalTax );
 		$taxMode		= $this->config->get( 'tax.included' ) ? $words->taxInclusive : $words->taxExclusive;
-		$rows	= array();
+		$rows	= [];
 		foreach( $taxes as $rate => $amount ){
 			$amount	= $this->formatPrice( $amount );
 			$rows[]	= UI_HTML_Tag::create( 'tr', array(
@@ -216,11 +216,11 @@ class View_Helper_Shop_CartPositions
 	{
 		$words		= (object) $this->words['panel-cart'];
 		$wordsCart	= (object) $this->words['cart'];
-		$rows			= array();
+		$rows			= [];
 		$totalPrice		= 0;
 		$totalTax		= 0;
 		$totalWeight	= 0;
-		$taxes			= array();
+		$taxes			= [];
 		$allSingle		= TRUE;
 		foreach( $this->positions as $nr => $position ){
 			$isSingle		= isset( $position->article->single ) && $position->article->single;
@@ -273,7 +273,7 @@ class View_Helper_Shop_CartPositions
 		$priceShipping	= 0;
 		$priceTax		= $this->formatPrice( $totalTax );
 		$taxMode		= $this->config->get( 'tax.included' ) ? $words->taxInclusive : $words->taxExclusive;
-		$rows	= array();
+		$rows	= [];
 		foreach( $taxes as $rate => $amount ){
 			$amount	= $this->formatPrice( $amount );
 			$rows[]	= UI_HTML_Tag::create( 'tr', array(
@@ -325,7 +325,7 @@ class View_Helper_Shop_CartPositions
 	{
 		$words		= (object) $this->words['panel-cart'];
 		$helperText	= new View_Helper_Mail_Text();
-		$list		= array();
+		$list		= [];
 		$list[]		= $helperText->line( "=", 78 );
 
 		$list[]	= join( ' ', array(

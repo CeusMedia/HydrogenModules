@@ -3,7 +3,7 @@
 $w	= (object) $words['add'];
 
 /*  --  STATES  --  */
-$optStatus	= array();
+$optStatus	= [];
 foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 	$attributes		= array(
 		'value'		=> $key,
@@ -15,7 +15,7 @@ foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 $optStatus		= join( '', $optStatus );
 
 /*  --  PRIORITIES  --  */
-$optPriority	= array();
+$optPriority	= [];
 foreach( $words['priorities'] as $key => $value ){
 	$attributes		= array(
 		'value'		=> $key,

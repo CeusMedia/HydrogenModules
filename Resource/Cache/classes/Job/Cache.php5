@@ -6,11 +6,6 @@ class Job_Cache extends Job_Abstract
 {
 	protected $cache;
 
-	public function __onInit()
-	{
-		$this->cache	= $this->env->getCache();
-	}
-
 	public function countObjects()
 	{
 		$number		= 0;
@@ -27,5 +22,10 @@ class Job_Cache extends Job_Abstract
 			if( $entry !== '.htaccess' )
 				$this->cache->remove( $entry );
 		$this->out( 'All cache objects removed.' );
+	}
+
+	protected function __onInit()
+	{
+		$this->cache	= $this->env->getCache();
 	}
 }

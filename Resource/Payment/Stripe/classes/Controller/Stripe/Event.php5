@@ -1,17 +1,10 @@
 <?php
-class Controller_Stripe_Event extends CMF_Hydrogen_Controller{
-
+class Controller_Stripe_Event extends CMF_Hydrogen_Controller
+{
 //	public static $verbose	= TRUE;
 
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->stripe		= Logic_Payment_Stripe::getInstance( $this->env );
-		$this->model		= new Model_Stripe_Event( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_stripe.', TRUE );
-	}
-
-	public function receive(){
+	public function receive()
+	{
 		$response	= $this->env->getResponse();
 		$eventId	= 0;
 		try{
@@ -57,7 +50,17 @@ class Controller_Stripe_Event extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	protected function sendMail( $type, $data ){
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->stripe		= Logic_Payment_Stripe::getInstance( $this->env );
+		$this->model		= new Model_Stripe_Event( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_stripe.', TRUE );
+	}
+
+	protected function sendMail( $type, $data )
+	{
 		if( !$this->moduleConfig->get( 'mail.hook' ) )
 			return;
 		$className	= 'Mail_Stripe_'.$type;
@@ -68,7 +71,8 @@ class Controller_Stripe_Event extends CMF_Hydrogen_Controller{
 		return $this->env->logic->mail->sendMail( $mail, $receiver, $language );
 	}
 
-	protected function verify( $eventType, $resourceId ){
+	protected function verify( $eventType, $resourceId )
+	{
 		if( preg_match( '@_CREATED$@', $eventType ) )
 			$status	= 'CREATED';
 		else if( preg_match( '@_FAILED$@', $eventType ) )
@@ -89,4 +93,3 @@ class Controller_Stripe_Event extends CMF_Hydrogen_Controller{
 		return FALSE;
 	}
 }
-?>

@@ -18,7 +18,7 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller
 	 *	@return		void
 	 *	@todo		finish implementation, extract to hook class and register in module config
 	 */
-	public static function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;
@@ -216,7 +216,7 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller
 
 				$unregisterGroups	= $this->request->get( 'groupIds' );
 				if( $mode === "all" ){
-					$unregisterGroups	= array();
+					$unregisterGroups	= [];
 					foreach( $reader->groups as $registeredGroup )
 						$unregisterGroups[]	= $registeredGroup->newsletterGroupId;
 				}

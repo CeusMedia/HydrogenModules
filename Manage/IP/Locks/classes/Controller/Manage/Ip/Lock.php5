@@ -1,16 +1,12 @@
 <?php
-class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller
+{
 	protected $logic;
 	protected $messenger;
 	protected $filterSessionPrefix	= 'filter_manage_ip_lock_';
 
-	public function __onInit(){
-		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
-		$this->messenger	= $this->env->getMessenger();
-	}
-
-	public function add(){
+	public function add()
+	{
 		$request	= $this->env->getRequest();
 		if( $request->get( 'ip' ) && $request->get( 'reasonId' ) ){
 			$this->logic->lockIp( $request->get( 'ip' ), $request->get( 'reasonId' ) );
@@ -24,7 +20,8 @@ class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function cancel( $ipLockId ){
+	public function cancel( $ipLockId )
+	{
 		if( $this->logic->cancel( $ipLockId ) )
 			$this->messenger->noteSuccess( 'IP lock cancelled.' );
 		if( ( $from = $this->env->getRequest()->get( 'from' ) ) )
@@ -32,7 +29,8 @@ class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $ipLockId ){
+	public function edit( $ipLockId )
+	{
 		$lock	= $this->logic->get( $ipLockId, FALSE );
 		if( !$lock ){
 			$this->messenger->noteError( 'Invalid lock ID.' );
@@ -43,12 +41,13 @@ class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller{
 		$this->addData( 'lock', $lock );
 	}
 
-	public function index( $limit = 15, $page = 0 ){
+	public function index( $limit = 15, $page = 0 )
+	{
 		$session	= $this->env->getSession();
 		$conditions	= array(
 			'status'	=> '!= -1',
 		);
-		$order		= array();
+		$order		= [];
 		if( $session->get( $this->filterSessionPrefix.'ip' ) )
 			$conditions['IP']	= $session->get( $this->filterSessionPrefix.'ip' );
 		if( strlen( trim( $session->get( $this->filterSessionPrefix.'status' ) ) ) )
@@ -78,7 +77,8 @@ class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller{
 		$this->addData( 'count', count( $locks ) );
 	}
 
-	public function lock( $ipLockId ){
+	public function lock( $ipLockId )
+	{
 		if( $this->logic->lock( $ipLockId ) )
 			$this->messenger->noteSuccess( 'IP locked.' );
 		if( ( $from = $this->env->getRequest()->get( 'from' ) ) )
@@ -86,7 +86,8 @@ class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function order( $reset = NULL ){
+	public function order( $reset = NULL )
+	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 
@@ -105,11 +106,18 @@ class Controller_Manage_IP_Lock extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function unlock( $ipLockId ){
+	public function unlock( $ipLockId )
+	{
 		if( $this->logic->unlock( $ipLockId ) )
 			$this->messenger->noteSuccess( 'IP unlocked.' );
 		if( ( $from = $this->env->getRequest()->get( 'from' ) ) )
 			$this->restart( $from );
 		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
+		$this->messenger	= $this->env->getMessenger();
 	}
 }

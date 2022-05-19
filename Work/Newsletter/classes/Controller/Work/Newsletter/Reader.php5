@@ -87,7 +87,7 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller
 
 		$selectedGroups	= $this->request->get( 'groups' );
 		if( !is_array( $selectedGroups ) )
-			$selectedGroups	= array();
+			$selectedGroups	= [];
 
 		$groups		= $this->logic->getGroups( array(), array( 'title' => 'ASC' ) );
 		if( !$groups ){
@@ -152,7 +152,7 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller
 		$filterFirstname	= $this->session->get( $this->filterPrefix.'firstname' );
 		$filterSurname		= $this->session->get( $this->filterPrefix.'surname' );
 		$filterGroupId		= $this->session->get( $this->filterPrefix.'groupId' );
-		$conditions	= array();
+		$conditions	= [];
 		if( strlen( $filterStatus ) )
 			$conditions['status']	= $filterStatus;
 		if( strlen( $filterEmail ) )
@@ -179,7 +179,7 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller
 		$readers		= $this->logic->getReaders( $conditions, $filterOrder );
 		switch( strtolower( $mode ) ){
 			case 'list':
-				$list	= array();
+				$list	= [];
 				foreach( $readers as $reader ){
 					$receiver	= $reader->email;
 					if( $reader->firstname && $reader->surname )
@@ -208,7 +208,7 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller
 				);
 				$data	= array( join( ';', array_keys( $headers ) ) );
 				foreach( array_values( $readers ) as $nr => $reader ){
-					$row	= array();
+					$row	= [];
 					foreach( $headers as $header => $toBeQuoted ){
 						if( $header === 'nr' )
 							$value	= $nr + 1;
@@ -221,7 +221,7 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller
 						else if( $header == 'status' )
 		 					$row[]	= $statuses[$reader->status];
 						else if( $header === 'groups' ){
-							$list	= array();
+							$list	= [];
 							foreach( $this->logic->getGroupsOfReader( $reader->newsletterReaderId ) as $group )
 								$list[]	= $group->title;
 							$value	= join( ',', $list );
@@ -333,7 +333,7 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller
 		$filterGroupId		= $this->session->get( $this->filterPrefix.'groupId' );
 		$filterLimit		= $this->session->get( $this->filterPrefix.'limit' );
 		$groups		= $this->logic->getGroups( array(), array( 'title' => 'ASC' ) );
-		$conditions	= array();
+		$conditions	= [];
 		if( strlen( $filterStatus ) )
 			$conditions['status']	= $filterStatus;
 		if( strlen( $filterEmail ) )
@@ -358,7 +358,7 @@ class Controller_Work_Newsletter_Reader extends CMF_Hydrogen_Controller
 		$model		= new Model_Newsletter_Reader_Group( $this->env );
 		foreach( $readers as $nr => $reader ){
 			$conditions	= array( 'newsletterReaderId' => $reader->newsletterReaderId );
-			$list		= array();
+			$list		= [];
 			foreach( $relations	= $model->getAll( $conditions ) as $relation )
 				$list[]	= $groups[$relation->newsletterGroupId];
 			$readers[$nr]->groups	= $list;

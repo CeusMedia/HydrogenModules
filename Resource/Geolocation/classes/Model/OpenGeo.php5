@@ -49,7 +49,7 @@ class Model_OpenGeo{
 	}
 
 	public function getCities( $startsWith, $limit = 10, $offset = 0 ){
-		$list	= array();
+		$list	= [];
 		if( !strlen( trim( $startsWith ) ) )
 			return $list;
 		$column	= 'city';
@@ -76,7 +76,7 @@ class Model_OpenGeo{
 	}
 
 	public function getCities_old( $startsWith, $limit = 10, $offset = 0 ){
-		$list	= array();
+		$list	= [];
 		if( !strlen( trim( $startsWith ) ) )
 			return $list;
 		$column	= 'zc_location_name';

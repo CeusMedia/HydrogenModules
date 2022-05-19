@@ -17,7 +17,7 @@ $map	= '';
 if( $center ){
 /*	$list	= '<div><em class="muted">Nichts gefunden.</em></div>';
 	if( $branches ){
-		$list	= array();
+		$list	= [];
 		foreach( $branches as $branch ){
 			$link	= UI_HTML_Tag::create( 'a', $branch->title, array(
 				'href'		=> './index/view/'.$branch->branchId,
@@ -33,7 +33,7 @@ if( $center ){
 */
 	$list	= '<div><em class="muted">Nichts gefunden.</em></div>';
 	if( $events ){
-		$list	= array();
+		$list	= [];
 		foreach( $events as $nr => $event ){
 			$link	= UI_HTML_Tag::create( 'a', $iconMarker.'&nbsp;'.$event->title, array(
 			//	'href'				=> './index/view/'.$branch->branchId,

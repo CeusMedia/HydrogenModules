@@ -156,7 +156,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller
 
 	public function checkAll()
 	{
-		$conditions		= array();
+		$conditions		= [];
 		$filterGroupId	= $this->session->get( 'work_mail_check_filter_groupId' );
 		$filterStatus	= $this->session->get( 'work_mail_check_filter_status' );
 		$filterQuery	= $this->session->get( 'work_mail_check_filter_query' );
@@ -192,7 +192,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller
 				'mailGroupId'	=> $groupId,
 			);
 			$addresses	= $this->modelAddress->getAll( $conditions, array( 'address' => 'ASC' ), array( 10, 0 ) );
-			$data		= array();
+			$data		= [];
 
 			$columns	= array_merge( json_decode( $group->columns ), array(
 				'Code',
@@ -375,7 +375,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller
 		}
 		$this->addData( 'addresses', $addresses );
 
-		$indices		= array();
+		$indices		= [];
 		if( $filterGroupId )
 			$indices['mailGroupId']	= $filterGroupId;
 		$countByStatus	= array(
@@ -386,7 +386,7 @@ class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller
 			2	=> $this->modelAddress->countByIndices( array_merge( $indices, array( 'status' => 2 ) ) ),
 		);
 
-		$countByGroup	= array();
+		$countByGroup	= [];
 		foreach( $groups as $group )
 			$countByGroup[$group->mailGroupId]	= $this->modelAddress->countByIndex( 'mailGroupId', $group->mailGroupId );
 

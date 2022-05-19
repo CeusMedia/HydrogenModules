@@ -1,9 +1,9 @@
 <?php
 class View_Helper_Work_Mission_Dashboard_MyEvents extends CMF_Hydrogen_View_Helper_Abstract
 {
-	protected $events		= array();
+	protected $events		= [];
 
-	protected $projects		= array();
+	protected $projects		= [];
 
 	public function __construct( $env )
 	{
@@ -30,7 +30,7 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends CMF_Hydrogen_View_Help
 		) );
 		$content	= UI_HTML_Tag::create( 'div', 'Keine Termine.', array( 'class' => 'alert alert-info' ) );
 		if( $this->events ){
-			$rows	= array();
+			$rows	= [];
 			foreach( $this->events as $event ){
 				$project		= $this->projects[$event->projectId];
 				$labelProject	= UI_HTML_Tag::create( 'span', $project->title, array(

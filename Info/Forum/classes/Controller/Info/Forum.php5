@@ -119,7 +119,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller
 			$threads	= $this->modelThread->getAllByIndex( 'topicId', $topic->topicId );
 			$topic->threads	= count( $threads );
 			$topic->posts	= 0;
-			$threadIds	= array();
+			$threadIds	= [];
 			foreach( $threads as $thread )
 				$threadIds[]	= $thread->threadId;
 			if( $threadIds )
@@ -273,7 +273,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller
 
 		if( !( $this->userPosts = $this->cache->get( 'info.forum.userPosts' ) ) ){
 			$model	= new Model_User( $this->env );
-			$this->userPosts		= array();
+			$this->userPosts		= [];
 			foreach( $model->getAll() as $user )
 				$this->userPosts[$user->userId]	= $this->modelPost->countByIndex( 'authorId', $user->userId );
 			$this->cache->set( 'info.forum.userPosts', $this->userPosts );
@@ -291,7 +291,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller
 			throw new InvalidArgumentException( 'Invalid thread ID' );
 		if( !( $post = $this->modelPost->get( (int) $postId ) ) )
 			throw new InvalidArgumentException( 'Invalid post ID' );
-		$authors	= array();
+		$authors	= [];
 		$modelUser	= new Model_User( $this->env );
 		$posts		= $this->modelPost->getAllByIndex( 'threadId', $threadId, array( 'postId' => 'ASC' ) );
 		foreach( $posts as $entry )

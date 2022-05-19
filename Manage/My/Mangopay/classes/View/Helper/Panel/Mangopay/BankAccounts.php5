@@ -2,7 +2,7 @@
 class View_Helper_Panel_Mangopay_BankAccounts extends View_Helper_Panel_Mangopay{
 
 	public function render(){
-		$list	= array();
+		$list	= [];
 		foreach( $this->data as $bankAccount ){
 			$link	= UI_HTML_Tag::create( 'a', $bankAccount->Id, array( 'href' => './manage/my/mangopay/bank/view/'.$bankAccount->Id ) );
 			$list[]	= UI_HTML_Tag::create( 'tr', array(

@@ -78,8 +78,8 @@ class Logic_Catalog_Gallery{
 		$cacheKey	= 'catalog.gallery.categories';
 		$categories	= $this->cache->get( $cacheKey );
 		if( !$categories ){
-			$conditions	= array();
-			$orders		= array();
+			$conditions	= [];
+			$orders		= [];
 			$categories	= $this->modelCategory->getAll( $conditions, $orders );
 			$this->cache->set( $cacheKey, $categories );
 		}

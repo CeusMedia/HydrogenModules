@@ -22,7 +22,7 @@ class Model_Gallery extends CMF_Hydrogen_Model{
 		$model	= new Model_GalleryAuthor( $this->env );
 		$ids	= $model->getAllByIndex( 'galleryId', $galleryId );
 		$model	= new Model_User( $this->env );
-		$users	= array();
+		$users	= [];
 		foreach( $ids as $relation )
 			$users[]	= $model->get( $relation->userId );
 		return $users;
@@ -32,7 +32,7 @@ class Model_Gallery extends CMF_Hydrogen_Model{
 		$model	= new Model_GalleryTag( $this->env );
 		$ids	= $model->getAllByIndex( 'galleryId', $galleryId );
 		$model	= new Model_Tag( $this->env );
-		$tags	= array();
+		$tags	= [];
 		foreach( $ids as $relation ){
 			$tag	= $model->get( $relation->tagId );
 			$tags[$tag->title]	= $tag;

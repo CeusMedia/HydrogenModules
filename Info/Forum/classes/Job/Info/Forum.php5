@@ -23,11 +23,11 @@ class Job_Info_Forum extends Job_Abstract
 		$modelPost		= new Model_Forum_Post( $this->env );
 		$logicMail		= Logic_Mail::getInstance( $this->env );
 
-		$receivers		= array();
+		$receivers		= [];
 		$roleIds		= trim( $this->options->get( 'mail.inform.managers.roleIds' ) );
 		$userIds		= trim( $this->options->get( 'mail.inform.managers.userIds' ) );
 		if( strlen( $roleIds ) ){
-			$listIds	= array();
+			$listIds	= [];
 			foreach( explode( ",", $roleIds ) as $roleId )
 				if( strlen( trim( $roleId ) ) && (int) $roleId > 0 )
 					$listIds[]	= (int) trim( $roleId );
@@ -36,7 +36,7 @@ class Job_Info_Forum extends Job_Abstract
 					$receivers[(int) $user->userId]	= $user;
 		}
 		if( strlen( $userIds ) ){
-			$listIds	= array();
+			$listIds	= [];
 			foreach( explode( ",", $userIds ) as $userId )
 				if( strlen( trim( $userId ) ) && (int) $userId > 0 )
 					$listIds[]	= (int) $userId;

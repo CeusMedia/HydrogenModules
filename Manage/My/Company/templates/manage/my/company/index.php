@@ -3,7 +3,7 @@ $w	= (object) $words['index'];
 
 if( $companies ){
 	$timeHelper	= new View_Helper_TimePhraser( $env );
-	$rows		= array();
+	$rows		= [];
 	foreach( $companies as $company ){
 		$link	= UI_HTML_Tag::create( 'a', $company->title, array(
 			'href' => './manage/my/company/edit/'.$company->companyId

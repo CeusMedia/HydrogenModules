@@ -12,7 +12,7 @@ $buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
 	'class'		=> 'btn btn-primary',
 ) );
 
-$providerMap	= array();
+$providerMap	= [];
 $optProvider	= array( '' => '- keine -' );
 foreach( $providersIndex as $indexItem ){
 	$key	= preg_replace( '~/~', '__', $indexItem->package );

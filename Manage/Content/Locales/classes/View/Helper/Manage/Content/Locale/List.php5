@@ -20,7 +20,7 @@ class View_Helper_Manage_Content_Locale_List{
 //		if( !$this->folders )
 // 			throw new RuntimeException( 'No folders set' );
 		$showEmpty	= $this->env->getSession()->get( $filterPrefix.'empty' );
-		$list		= array();
+		$list		= [];
 		$lastPath	= NULL;
 		$iconFolder	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-chevron-down' ) );
 		$iconFile	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-file' ) );

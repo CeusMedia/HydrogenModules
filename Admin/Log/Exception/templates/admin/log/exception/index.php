@@ -5,7 +5,7 @@ $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-w
 
 $selectInstance	= '';
 if( count( $instances ) > 1 ){
-	$optInstance	= array();
+	$optInstance	= [];
 	foreach( $instances as $instanceKey => $instanceData )
 		$optInstance[$instanceKey]	= $instanceData->title;
 	$optInstance	= UI_HTML_Elements::Options( $optInstance, $currentInstance );
@@ -19,7 +19,7 @@ if( count( $instances ) > 1 ){
 
 $list	= '<div class="muted"><em><small>No exceptions logged.</small></em></div>';
 if( $exceptions ){
-	$list	= array();
+	$list	= [];
 	foreach( $exceptions as $nr => $exception ){
 //print_m($exception);die;
 		$link	= UI_HTML_Tag::create( 'a', $exception->message, array( 'href' => './admin/log/exception/view/'.$exception->exceptionId ) );

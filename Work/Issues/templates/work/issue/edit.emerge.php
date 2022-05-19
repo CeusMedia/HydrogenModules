@@ -18,7 +18,7 @@ $orders		= array( 'username' => 'ASC' );
 $users		= $modelUser->getAll( $conditions, $orders, array( 100 ) );
 */
 
-$optReporter	= array();
+$optReporter	= [];
 $optManager	= array( '' => '-' );
 $optWorker	= array( '' => '-' );
 

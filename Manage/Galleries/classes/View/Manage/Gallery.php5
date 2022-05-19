@@ -23,7 +23,7 @@ class View_Manage_Gallery extends CMF_Hydrogen_View{
 
 		$list	= '<div><em><small class="muted">'.$words->noEntries.'</small></em></div>';
 		if( $galleries ){
-			$list	= array();
+			$list	= [];
 			foreach( $galleries as $gallery ){
 				$label		= htmlentities( $gallery->path, ENT_QUOTES, 'UTF-8' );
 //				$label		= UI_HTML_Tag::create( 'abbr', $gallery->title, array( 'title' => $label ) );

@@ -2,7 +2,7 @@
 
 $listBranches	="";
 if( $branches ){
-	$list	= array();
+	$list	= [];
 	foreach( $branches as $entry){
 		$label	= $entry->title.' in '.$entry->city;
 		$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => './company/branch/'.$entry->branchId, 'class' => '' ) );

@@ -1,18 +1,11 @@
 <?php
-class Controller_Admin_Payment_Mangopay_Payin extends CMF_Hydrogen_Controller{
-
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->mangopay		= Logic_Payment_Mangopay::getInstance( $this->env );
-		$this->model		= new Model_Mangopay_Payin( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
-	}
-
-	public function index( $page = 0 ){
+class Controller_Admin_Payment_Mangopay_Payin extends CMF_Hydrogen_Controller
+{
+	public function index( $page = 0 )
+	{
 		$limit		= 15;
 		$offset		= $page * $limit;
-		$conditions	= array();
+		$conditions	= [];
 		$orders		= array( 'modifiedAt' => 'DESC' );
 		$limits		= array( $offset, $limit );
 		$total		= $this->model->count();
@@ -30,7 +23,8 @@ class Controller_Admin_Payment_Mangopay_Payin extends CMF_Hydrogen_Controller{
 		$this->addData( 'page', $page );
 	}
 
-	public function view( $payinId ){
+	public function view( $payinId )
+	{
 		$payin	= $this->model->get( $payinId );
 		if( !$payin ){
 			$this->messenger->noteError( 'Invalid payin ID.' );
@@ -39,5 +33,13 @@ class Controller_Admin_Payment_Mangopay_Payin extends CMF_Hydrogen_Controller{
 		$this->addData( 'payin', $payin );
 //		$this->addData( 'page', $this->request->get( 'page' ) );
 	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->mangopay		= Logic_Payment_Mangopay::getInstance( $this->env );
+		$this->model		= new Model_Mangopay_Payin( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
+	}
 }
-?>

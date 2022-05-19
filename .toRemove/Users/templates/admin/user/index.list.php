@@ -20,7 +20,7 @@ $number	= 0;
 
 if( count( $total ) ){
 
-	$rows	= array();
+	$rows	= [];
 	foreach( $users as $nr => $user ){
 
 		$classes	= array( 'user' );

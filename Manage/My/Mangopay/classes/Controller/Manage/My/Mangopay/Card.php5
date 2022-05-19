@@ -1,27 +1,15 @@
 <?php
-class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_Abstract{
-
+class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_Abstract
+{
 	protected $words;
 
-	public function __onInit(){
-		parent::__onInit();
-		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/card' );
-		$this->sessionPrefix	= 'manage_my_mangopay_card_';
-
-		$cards	= $this->logic->getUserCards( $this->userId );
-		foreach( $cards as $nr => $card ){
-			if( !$card->Active )
-				unset( $cards[$nr] );
-		}
-		$this->addData( 'cards', $cards );
-
-	}
-
-	public function add(){
+	public function add()
+	{
 		$this->restart( 'registration', TRUE );
 	}
 
-	public function deactivate( $cardId ){
+	public function deactivate( $cardId )
+	{
 		$card	= $this->checkIsOwnCard( $cardId );
 		$card->Active	= FALSE;
 		$this->mangopay->Cards->Update( $card );
@@ -30,17 +18,8 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function handleErrorCode( $errorCode, $goBack = TRUE ){
-		$errorCodes	= ADT_List_Dictionary::create( $this->words )->getAll( 'errorCode-' );
-		if( !array_key_exists( $errorCode, $errorCodes ) )
-			throw new InvalidArgumentException( 'Unknown error code: '.$errorCode );
-		$this->messenger->noteError( $errorCodes[(string) $errorCode] );
-
-		if( $goBack )
-			$this->followBackLink( 'payin_from' );
-	}
-
-	public function index( $cardId = NULL, $refresh = NULL ){
+	public function index( $cardId = NULL, $refresh = NULL )
+	{
 		if( $cardId )
 			$this->restart( 'view/'.$cardId, TRUE );
 		try{
@@ -57,7 +36,8 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		$this->addData( 'from', $this->session->get( $this->sessionPrefix.'from' ) );
 	}
 
-	public function edit( $cardId ){
+	public function edit( $cardId )
+	{
 		$card	= $this->checkIsOwnCard( $cardId );
 		if( $this->request->has( 'save' ) ){
 			$tag	= $this->request->get( 'title' );
@@ -82,7 +62,8 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 	}
 
-	public function payOut(){
+	public function payOut()
+	{
 		throw new RuntimeException( 'Not implemented yet' );
 
 		$wallets	= $this->logic->getUserWalletsByCurrency( $this->userId, $card->Currency, TRUE );
@@ -91,7 +72,8 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		$this->cache->remove( 'user_'.$this->userId.'_transactions' );
 	}
 
-	public function view( $cardId ){
+	public function view( $cardId )
+	{
 
 		$card	= $this->checkIsOwnCard( $cardId );
 		$this->addData( 'cardId', $cardId );
@@ -105,5 +87,30 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
+	}
+
+	protected function __onInit()
+	{
+		parent::__onInit();
+		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/card' );
+		$this->sessionPrefix	= 'manage_my_mangopay_card_';
+
+		$cards	= $this->logic->getUserCards( $this->userId );
+		foreach( $cards as $nr => $card ){
+			if( !$card->Active )
+				unset( $cards[$nr] );
+		}
+		$this->addData( 'cards', $cards );
+	}
+
+	protected function handleErrorCode( $errorCode, $goBack = TRUE )
+	{
+		$errorCodes	= ADT_List_Dictionary::create( $this->words )->getAll( 'errorCode-' );
+		if( !array_key_exists( $errorCode, $errorCodes ) )
+			throw new InvalidArgumentException( 'Unknown error code: '.$errorCode );
+		$this->messenger->noteError( $errorCodes[(string) $errorCode] );
+
+		if( $goBack )
+			$this->followBackLink( 'payin_from' );
 	}
 }

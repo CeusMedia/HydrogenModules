@@ -27,8 +27,8 @@ else{
 	try{
 		$html			= '';
 		$text			= '';
-		$attachments	= array();
-		$images			= array();
+		$attachments	= [];
+		$images			= [];
 
 		if( $libraries & $mail->usedLibrary ){
 			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
@@ -112,7 +112,7 @@ else{
 			}
 		}
 
-		$parts	= array();
+		$parts	= [];
 
 		if( $html ){																			//  realize HTML view if available
 			$headingHtml	= UI_HTML_Tag::create( 'h4', 'HTML' );
@@ -134,7 +134,7 @@ else{
 		}
 
 		if( $attachments ){																		//  realize attachments view if available
-			$list	= array();
+			$list	= [];
 			foreach( $attachments as $attachment ){
 				$buttonDownload	= UI_HTML_Tag::create( 'a', $iconDownload.' speichern', array(
 					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$attachment->partKey.'/download',
@@ -178,7 +178,7 @@ else{
 		}
 
 		if( $images ){																			//  realize inline images view if available
-			$list = array();
+			$list = [];
 			foreach( $images as $image ){
 				$date		= '';
 				if( $image->fileMTime ){
@@ -223,7 +223,7 @@ else{
 	}
 	catch( Exception $e ){
 		$message	= $e->getMessage();
-		$parts		= array();
+		$parts		= [];
 	}
 }
 return '

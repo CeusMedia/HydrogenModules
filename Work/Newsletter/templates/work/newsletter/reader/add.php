@@ -12,7 +12,7 @@ $optStatus	= UI_HTML_Elements::Options( $optStatus, Model_Newsletter_Reader::STA
 
 $optGender	= UI_HTML_Elements::Options( $words->gender, $reader->gender );
 
-$listGroups	= array();
+$listGroups	= [];
 foreach( $groups as $group ){
 	$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
 		'type'	=> 'checkbox',
@@ -25,7 +25,7 @@ foreach( $groups as $group ){
 }
 $listGroups	= join( $listGroups );
 
-$nextActions	= array();
+$nextActions	= [];
 if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:maxItems', $totalReaders + 2 ) )
 	$nextActions[]	='<label class="radio muted"><input type="radio" name="nextAction" value="add" disabled="disabled">&nbsp;einen weiteren Leser hinzufügen</label>';
 else

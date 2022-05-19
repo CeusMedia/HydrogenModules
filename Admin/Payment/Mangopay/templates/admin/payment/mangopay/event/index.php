@@ -22,7 +22,7 @@ $colors		= array(
 );
 
 
-$list	= array();
+$list	= [];
 foreach( $events as $item ){
 	$labelType		= ucwords( strtolower( str_replace( '_', ' ', $item->type ) ) );
 	$labelStatus	= UI_HTML_Tag::create( 'label', $statuses[$item->status], array( 'class' => 'label '.$colors[$item->status] ) );

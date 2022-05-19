@@ -2,7 +2,7 @@
 
 $iconUpload     = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
 
-$optFolder	= array();
+$optFolder	= [];
 foreach( $folders as $folder )
 	$optFolder[$folder]	= $folder;
 $optFolder	= UI_HTML_Elements::Options( $optFolder, $path );

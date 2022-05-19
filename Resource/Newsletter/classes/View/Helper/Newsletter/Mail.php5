@@ -5,7 +5,7 @@ class View_Helper_Newsletter_Mail
 	const MODE_HTML			= 1;
 
 	protected $cachePath	= "contents/cache/";
-	protected $data			= array();
+	protected $data			= [];
 	protected $mode			= self::MODE_PLAIN;
 	protected $template;
 	protected $letter;
@@ -200,7 +200,7 @@ class View_Helper_Newsletter_Mail
 
 		$page->addHead( "<!--[if mso]><style>* {font-family: sans-serif !important;}</style><![endif]-->" );
 
-/*		$scripts		= array();
+/*		$scripts		= [];
 		foreach( $this->template->scripts as $url ){
 			if( file_exists( $this->cachePath.md5( $url ) ) )
 				$scripts[]	= File_Reader::load( $this->cachePath.md5( $url ) );

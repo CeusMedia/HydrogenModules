@@ -7,7 +7,7 @@ $table		= '<div class="alert alert-hint">'.$w->noEntries.'</div>';
 if( !$documents )
 	return;
 
-$rows	= array();
+$rows	= [];
 foreach( $documents as $document ){
 	$modifiedAt	= max( $document->createdAt, $document->modifiedAt );
 	$modifiedAt	= 'vor '.$phraser->convert( $modifiedAt, TRUE );

@@ -9,7 +9,7 @@ $iconSave	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 $iconRemove	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 $iconMail	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
 
-$optMailCustomer	= array();
+$optMailCustomer	= [];
 //if( count( $mailsCustomer ) != 1 )
 //	$optMailCustomer['']	= '- keine -';
 foreach( $mailsCustomer as $item )
@@ -18,7 +18,7 @@ $optMailCustomer	= HtmlElements::Options( $optMailCustomer, $form->customerMailI
 
 $listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $rulesCustomer ){
-	$listRules	= array();
+	$listRules	= [];
 	foreach( $rulesCustomer as $rule ){
 		$mail	= '<em>unbekannt</em>';
 		foreach( $mailsCustomer as $item ){
@@ -29,7 +29,7 @@ if( $rulesCustomer ){
 			}
 		}
 
-		$list	= array();
+		$list	= [];
 		foreach( json_decode( $rule->rules ) as $item )
 			$list[]	= Html::create( 'li', $item->keyLabel.' => '.$item->valueLabel );
 		$list	= Html::create( 'ul', $list, array( 'style' => 'margin-bottom: 0' ) );

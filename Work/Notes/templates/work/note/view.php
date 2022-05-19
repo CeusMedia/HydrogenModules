@@ -3,7 +3,7 @@ $helper		= new View_Helper_TimePhraser( $this->env );
 
 $panelLinks	= '';
 if( count( $note->links ) ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $note->links as $item ){
 		$link	= UI_HTML_Tag::create( 'div',
 			UI_HTML_Tag::create( 'small',
@@ -45,7 +45,7 @@ if( count( $note->links ) ){
 		) ),
 	), array( 'class' => 'content-panel content-panel-table' ) );
 
-/*	$list	= array();
+/*	$list	= [];
 	foreach( $note->links as $item ){
 		$label	= '<span class="link untitled">'.$item->url.'</span>';
 		if( $item->title )
@@ -66,7 +66,7 @@ if( count( $note->links ) ){
 
 $panelTags	= '';
 if( count( $note->tags ) ){
-	$list	= array();
+	$list	= [];
 	foreach( $note->tags as $tag ){
 		$label	= '<span class="tag">'.htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ).'</span>';
 		$list[]	= '<li class="tag">'.$label.'</li>';

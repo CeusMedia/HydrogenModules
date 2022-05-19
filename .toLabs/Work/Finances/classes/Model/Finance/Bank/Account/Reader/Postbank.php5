@@ -94,7 +94,7 @@ class Model_Finance_Bank_Account_Reader_Postbank
 		$accounts	= $path[0]->div->div->div->xpath( "//span[@class='account-number']" );
 		$balances	= $path[0]->div->div->div->xpath( "//div[@class='account-balance']/p" );
 
-		$values		= array();
+		$values		= [];
 		foreach( $accounts as $nr => $a1 ){
 			$value	= str_replace( '.', '', $balances[$nr] );
 			$values[trim( $a1 )]	= (float) str_replace( ',', '.', $value );

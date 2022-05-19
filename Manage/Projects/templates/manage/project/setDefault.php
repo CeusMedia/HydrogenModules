@@ -1,7 +1,7 @@
 <?php
 
 
-$optProjectId	= array();
+$optProjectId	= [];
 foreach( $projects as $project )
 	$optProjectId[$project->projectId]	= $project->title;
 $optProjectId	= UI_HTML_Elements::Options( $optProjectId );

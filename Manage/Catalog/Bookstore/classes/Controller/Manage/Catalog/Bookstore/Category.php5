@@ -48,7 +48,7 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Category::init done' );
 	}
 
-	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
 		$cache		= $env->getCache();
 		if( !( $categories = $cache->get( 'catalog.tinymce.links.catalog.bookstore.categories' ) ) ){
 			$logic		= new Logic_Catalog_Bookstore( $env );
@@ -91,7 +91,7 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 			}
 		}
 		$model		= new Model_Catalog_Bookstore_Category( $this->env );
-		$category	= array();
+		$category	= [];
 		foreach( $model->getColumns() as $column )
 			$category[$column]	= $this->request->get( $column );
 		$category['parentId']	= (int) $parentId;

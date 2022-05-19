@@ -167,7 +167,7 @@ $insurance	= 0;
 
 		$totalPrice	= 0;
 		$totalTax	= 0;
-		$items		= array();
+		$items		= [];
 		foreach( array_values( $positions ) as $nr => $position ){
 			$article	= $logicBridge->getArticle( $position->bridgeId, $position->articleId, $position->quantity );
 			$totalPrice	+= $article->price->all;
@@ -265,7 +265,7 @@ $insurance	= 0;
 		$mode		= $this->config->get( 'mode' );
 		$server		= $this->config->get( 'server.api.'.$mode );
 		$response	= Net_HTTP_Post::sendData( $server, $data );
-		$data		= array();
+		$data		= [];
 		parse_str( $response, $data );
 		return $data;
 	}

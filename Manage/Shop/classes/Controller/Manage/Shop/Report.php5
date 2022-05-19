@@ -7,7 +7,7 @@ class Controller_Manage_Shop_Report extends Controller_Manage_Shop
 		$prefix			= $dbc->getPrefix();
 //		$frontend		= Logic_Frontend::getInstance( $this->env );
 		$logicBridge	= new Logic_ShopBridge( $this->env );
-/*		$bridges		= array();
+/*		$bridges		= [];
 		foreach( $logicBridge->getBridges() as $bridge )
 			$bridges[$bridge->data->bridgeId]	= $bridge->data->title;
 		$bridgeId		= (int) $this->request->get( 'bridgeId' );
@@ -61,7 +61,7 @@ AND o.status >= 2
 GROUP BY FROM_UNIXTIME(o.createdAt, '%Y')
 ORDER BY year ASC";
 
-		$years	= array();
+		$years	= [];
 		foreach( $dbc->query( $queryOrdersPerYear )->fetchAll( PDO::FETCH_OBJ ) as $row ){
 			$queryYearTurnover	= "
 SELECT

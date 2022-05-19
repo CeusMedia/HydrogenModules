@@ -7,8 +7,8 @@ class Job_Job_Lock extends Job_Abstract
 	public function alert(){
 	}
 
-	public function clear( $jobIds = array(), $reason = NULL ){
-		$list	= array();
+	public function clear( $jobIds = [], $reason = NULL ){
+		$list	= [];
 		foreach( $this->getLockedJobs() as $runningJob ){
 			$messageData	= $reason ? array( 'reason' => $reason ) : array();
 			$this->logic->quitJobRun( (int) $runningJob->jobRunId, Model_Job_Run::STATUS_TERMINATED, $messageData );
@@ -27,7 +27,7 @@ class Job_Job_Lock extends Job_Abstract
 	}
 
 	public function list(){
-		$list	= array();
+		$list	= [];
 		foreach( $this->getLockedJobs() as $runningJob ){
 			$list[]	= (object) array(
 				'jobRunId'			=> $runningJob->jobRunId,
@@ -56,7 +56,7 @@ class Job_Job_Lock extends Job_Abstract
 
 	protected function getLockedJobs(){
 		$runningJobs	= $this->logic->getRunningJobs( array(), array( 'ranAt' => 'ASC' ) );
-		$list			= array();
+		$list			= [];
 		foreach( $runningJobs as $runningJob )
 			if( !in_array( $runningJob->jobDefinitionId, $this->skipJobs ) )
 				$list[]	= $runningJob;

@@ -1,13 +1,8 @@
 <?php
-class View_Work_Mission_Calendar extends CMF_Hydrogen_View{
-
-	public function __onInit(){
-		$this->logic	= Logic_Work_Mission::getInstance( $this->env );
-		$this->words	= $this->env->getLanguage()->load( 'work/mission' );
-		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
-	}
-
-	public function ajaxRenderIndex(){
+class View_Work_Mission_Calendar extends CMF_Hydrogen_View
+{
+	public function ajaxRenderIndex()
+	{
 		extract( $this->getData() );
 
 		$script	= '<script>
@@ -35,7 +30,8 @@ $(document).ready(function(){
 		exit;
 	}
 
-	public function index(){
+	public function index()
+	{
 		$page		= $this->env->getPage();
 		$words		= $this->env->getLanguage()->load( 'work/mission' );
 
@@ -64,7 +60,8 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$this->addData( 'filter', $this->loadTemplateFile( 'work/mission/index.filter.php' ) );
 	}
 
-	public function renderCalendarLarge( $userId, $year, $month ){
+	public function renderCalendarLarge( $userId, $year, $month )
+	{
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
 		$showScope		= $year.'-'.$showMonth.'-01';
@@ -75,9 +72,9 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
 		$orders			= array( 'priority' => 'ASC' );
 
-		$rows			= array();
+		$rows			= [];
 		for( $i=0; $i<$weeks; $i++ ){
-			$row	= array();
+			$row	= [];
 			$j	= 0;
 			$class	= '';
 			if( $i == 0 ){
@@ -116,7 +113,15 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		return $tableLarge;
 	}
 
-	protected function renderCalendarSmall( $userId, $year, $month ){
+	protected function __onInit()
+	{
+		$this->logic	= Logic_Work_Mission::getInstance( $this->env );
+		$this->words	= $this->env->getLanguage()->load( 'work/mission' );
+		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
+	}
+
+	protected function renderCalendarSmall( $userId, $year, $month )
+	{
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
 		$showScope		= $year.'-'.$showMonth.'-01';
@@ -127,9 +132,9 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
 		$orders			= array( 'priority' => 'ASC' );
 
-		$rows			= array();
+		$rows			= [];
 		for( $i=0; $i<$weeks; $i++ ){
-			$row	= array();
+			$row	= [];
 			$j		= 0;
 			$class	= '';
 			if( $i == 0 ){
@@ -170,7 +175,8 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		return $tableSmall;
 	}
 
-	protected function renderControls( $year, $month ){
+	protected function renderControls( $year, $month )
+	{
 		$isNow		= $year	=== date( "Y" ) && $month === date( "m" );
 		$btnControlPrev	= UI_HTML_Tag::create( 'button', '&laquo;',  array(
 			'type'		=> 'button',
@@ -244,14 +250,15 @@ WorkMissionsList.loadCurrentListAndDayControls();
 	</div>';
 	}
 
-	protected function renderDay( $userId, DateTime $date, $orders, $cellClass = NULL ){
+	protected function renderDay( $userId, DateTime $date, $orders, $cellClass = NULL )
+	{
 		$diff		= $this->today->diff( $date );
 		$isPast		= $diff->invert;
 		$isToday	= $diff->days == 0;
 		$conditions	= $this->logic->getFilterConditions( 'filter.work.mission.calendar.' );
 		$conditions['dayStart']	= $date->format( "Y-m-d" );
 		$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
-		$list		= array();
+		$list		= [];
 		foreach( $missions as $mission ){
 		//	$title		= Alg_Text_Trimmer::trim( $mission->title, 20 );
 			$title		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );
@@ -288,7 +295,8 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		) );
 	}
 
-	protected function renderLabel( $year, $month ){
+	protected function renderLabel( $year, $month )
+	{
 		$month	= (int) $month;
 		if( $month < 1 || $month > 12 )
 			throw new InvalidArgumentException( 'Invalid month' );
@@ -304,11 +312,11 @@ WorkMissionsList.loadCurrentListAndDayControls();
 	 *	@param		object		$mission		Mission data object
 	 *	@return		string		DIV container with number of overdue days or empty string
 	 */
-	protected function renderOverdue( $mission ){
+	protected function renderOverdue( $mission )
+	{
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
 			return UI_HTML_Tag::create( 'div', $diff->days, array( 'class' => "overdue" ) );		//  render overdue container
 	}
 }
-?>

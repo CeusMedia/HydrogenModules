@@ -2,7 +2,7 @@
 class Job_User_Provision extends Job_Abstract{
 
 	/** @todo rework */
-	public function manageLicenses( $parameters = array() ){
+	public function manageLicenses( $parameters = [] ){
 //		$this->handleOutdatedUserLicenses();
 		$this->manageOrderedLicenses();
 	}

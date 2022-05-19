@@ -6,7 +6,7 @@ $iconAuthor		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user
 
 $list	= '<div class="alert alert-info former-hint">'.$wf->listNone.'</div>';
 if( $module->authors ){
-	$list	= array();
+	$list	= [];
 	foreach( $module->authors as $author ){
 		$label	= $author->name;
 		if( $author->email )

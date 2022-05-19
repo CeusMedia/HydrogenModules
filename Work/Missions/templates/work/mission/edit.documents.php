@@ -8,7 +8,7 @@ $phraser	= new View_Helper_TimePhraser( $env );
 $table		= '<div class="alert alert-hint">'.$w->noEntries.'</div>';
 
 if( $documents ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $documents as $document ){
 
 		$modifiedAt	= max( $document->createdAt, $document->modifiedAt );

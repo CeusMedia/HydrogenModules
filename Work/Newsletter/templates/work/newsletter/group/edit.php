@@ -20,7 +20,7 @@ $labelEmpty		= UI_HTML_Tag::create( 'em', $w->empty, array( 'class' => 'muted' )
 $listReaders	= UI_HTML_Tag::create( 'div', $labelEmpty, array( 'class' => 'alert alert-info' ) );
 
 if( $groupReaders ){
-	$listReaders	= array();
+	$listReaders	= [];
 	foreach( $groupReaders as $reader ){
 		$iconStatus		= UI_HTML_Tag::create( 'i', "", array( 'class' => 'fa fa-fw fa-'.$statusIcons[$reader->status] ) );
 		$name			= UI_HTML_Tag::create( 'small', $reader->firstname.' '.$reader->surname );

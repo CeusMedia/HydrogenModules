@@ -1,6 +1,6 @@
 <?php
 
-$nodeIndex	= array();
+$nodeIndex	= [];
 foreach( $nodes as $node )
 	$nodeIndex[$node->nodeId]	= $node->label ? $node->label : '<tt><em>'.$node->ID.'</em></tt>';
 

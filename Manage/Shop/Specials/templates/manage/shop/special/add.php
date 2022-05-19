@@ -1,11 +1,11 @@
 <?php
 $iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
-$bridgeMap	= array();
+$bridgeMap	= [];
 foreach( $catalogs as $bridge )
 	$bridgeMap[$bridge->data->bridgeId]	= $bridge->data->title;
 
-$optBridge	= array();
+$optBridge	= [];
 if( count($bridgeMap) > 1 )
 	$optBridge['']	= '- auswählen -';
 foreach( $bridgeMap as $bridgeId => $label )

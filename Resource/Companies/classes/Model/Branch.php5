@@ -61,7 +61,7 @@ die( $e->getMessage() );
 		}
 	}
 
-	public function getAllInDistance( $x, $y, $z, $distance, $havingIds = array() ){
+	public function getAllInDistance( $x, $y, $z, $distance, $havingIds = [] ){
 		$query		= 'SELECT *
 		FROM branches as b
 		WHERE
@@ -72,7 +72,7 @@ die( $e->getMessage() );
 		if( $havingIds )
 			$query	.= " AND branchId IN(".join( ", ", $havingIds ).")";
 //xmp( $query );die;
-		$list	= array();
+		$list	= [];
 		foreach( $this->env->dbc->query( $query )->fetchAll( PDO::FETCH_OBJ ) as $branch ){
 			$powX	= pow( $x - $branch->x, 2);
 			$powY	= pow( $y - $branch->y, 2);
@@ -86,8 +86,8 @@ die( $e->getMessage() );
 	/**
 	 *	@todo		move to branch module and remove
 	 */
-	public function getBranchesInRangeOf( $point, $radius, $havingIds = array() ){
-		$list		= array();
+	public function getBranchesInRangeOf( $point, $radius, $havingIds = [] ){
+		$list		= [];
 		$model		= new Model_Branch( $this->env );
 		$distance	= 2 * $this->radiusEarth * sin( $radius / ( 2 * $this->radiusEarth ) );
 		return $model->getAllInDistance( $point->x, $point->y, $point->z, $distance, $havingIds );

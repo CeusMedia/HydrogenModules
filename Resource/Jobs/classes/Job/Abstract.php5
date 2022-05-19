@@ -15,7 +15,7 @@ class Job_Abstract
 	/**	@var	string						$jobModuleId	Module ID of inheriting job */
 	protected $jobModuleId;
 
-	protected $commands			= array();
+	protected $commands			= [];
 	protected $dryMode			= FALSE;
 	protected $verbose			= FALSE;
 	protected $parameters;
@@ -65,7 +65,7 @@ class Job_Abstract
 	 *	@param		array		$parameters		...
 	 *	@return		self
 	 */
-	public function noteArguments( array $commands = array(), array $parameters = array() ): self
+	public function noteArguments( array $commands = [], array $parameters = [] ): self
 	{
 		$this->commands		= array_diff( $commands, array( 'dry', 'verbose' ) );
 		$this->parameters	= new ADT_List_Dictionary( $parameters );

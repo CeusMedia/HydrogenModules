@@ -15,7 +15,7 @@ $mapTabs	= array(
 	'relations'	=> 'tabRelations',
 );
 $nr			= 0;
-$disabled	= array();
+$disabled	= [];
 foreach( $mapTabs as $key => $tabLabel ){
 	$count		= 0;
 	$content	= require_once( 'templates/admin/module/viewer/'.$key.'.php' );

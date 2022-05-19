@@ -1,8 +1,8 @@
 <?php
 
 $classAutoEditor	= $editor;
-$options			= array();
-$style				= array();
+$options			= [];
+$style				= [];
 $fileExt			= strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
 
 if( $editor === "CodeMirror" ){

@@ -1,23 +1,19 @@
 <?php
-class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller
+{
 	protected $module;
 	protected $userId;
 
-	public function __onInit(){
-		parent::__onInit();
-		$this->model	= new Model_User_Setting( $this->env );
-		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
-	}
-
-	public function index(){
+	public function index()
+	{
 		$this->addData( 'from', $this->env->getRequest()->get( 'from' ) );
 		$this->addData( 'userId', $this->userId );													//  assign ID of current user
 		$this->addData( 'modules', $this->env->getModules()->getAll() );
 		$this->addData( 'settings', $this->model->getAllByIndex( 'userId', $this->userId ) );		//  get all user settings from database
 	}
 
-	public function reset( $moduleId, $configKey ){
+	public function reset( $moduleId, $configKey )
+	{
 		$from		= $this->env->getRequest()->get( 'from' );
 		$model		= new Model_User_Setting( $this->env );
 		$indices	= array(																		//  prepare indices for search for user setting in database
@@ -31,7 +27,8 @@ class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );																//  @todo: make another redirect possible
 	}
 
-	public function update(){
+	public function update()
+	{
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'update' );
@@ -105,5 +102,11 @@ class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller{
 			$this->restart( $request->get( 'from' ) );
 		$this->restart( NULL, TRUE );																//  @todo: make another redirect possible
 	}
+
+	protected function __onInit()
+	{
+		parent::__onInit();
+		$this->model	= new Model_User_Setting( $this->env );
+		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
+	}
 }
-?>

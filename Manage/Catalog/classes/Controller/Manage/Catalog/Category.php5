@@ -10,7 +10,7 @@ class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init done' );
 	}
 
-	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
 		$cache		= $env->getCache();
 		if( !( $categories = $cache->get( 'catalog.tinymce.links.categories' ) ) ){
 			$logic		= new Logic_Catalog( $env );
@@ -52,7 +52,7 @@ class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
 			}
 		}
 		$model		= new Model_Catalog_Category( $this->env );
-		$category	= array();
+		$category	= [];
 		foreach( $model->getColumns() as $column )
 			$category[$column]	= $this->request->get( $column );
 		$category['parentId']	= (int) $parentId;

@@ -11,7 +11,7 @@ class Controller_Piwik extends CMF_Hydrogen_Controller{
 	 *	@param		public						$arguments	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function ___onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	static public function ___onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );				//  get module configuration as dictionary
 		if( !$config->get( 'active' ) || !( $id = $config->get( 'ID' ) ) )							//  piwik tracking is disabled or ID is not set
 			return;
@@ -37,7 +37,7 @@ class Controller_Piwik extends CMF_Hydrogen_Controller{
 	 *	@param		public						$arguments	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );				//  get module configuration as array map
 		CMF_Hydrogen_Deprecation::getInstance()
 			->setVersion( $env->getModules()->get( 'Resource_Tracker_Piwik' )->version )
@@ -74,7 +74,7 @@ initPiwik('.json_encode( $config->getAll() ).');';
 	 *	@param		public						$arguments	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );				//  get module configuration as dictionary
 		if( !$config->get( 'active' ) || !( $id = $config->get( 'ID' ) ) )							//  piwik tracking is disabled or ID is not set
 			return;

@@ -101,7 +101,7 @@ class Controller_Work_Finance_Bank_Account extends CMF_Hydrogen_Controller
 		$modelBank		= new Model_Finance_Bank( $this->env );
 		$modelAccount	= new Model_Finance_Bank_Account( $this->env );
 
-		$banks		= array();
+		$banks		= [];
 		foreach( $modelBank->getAllByIndex( 'userId', $userId ) as $bank )
 			$banks[$bank->bankId]	= $bank;
 

@@ -17,7 +17,7 @@ class View_Manage_Content_Style extends CMF_Hydrogen_View{
 
 	public function listFiles( $files, $currentFile ){
 		$words		= (object) $this->getWords( 'index.filter' );
-		$list	= array();
+		$list	= [];
 		if( !$files )
 			return '<div class="muted"><em>'.$words->noEntries.'</em></div>';
 		foreach( $files as $file ){

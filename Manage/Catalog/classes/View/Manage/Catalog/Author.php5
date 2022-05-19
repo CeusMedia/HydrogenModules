@@ -8,7 +8,7 @@ class View_Manage_Catalog_Author extends View_Manage_Catalog{
 	public function index(){}
 
 	protected function renderList( $authors, $authorId = NULL ){
-		$list	= array();
+		$list	= [];
 		foreach( $authors as $author ){
 			$url	= './manage/catalog/author/edit/'.$author->authorId;
 			$label	= $author->lastname.', '.$author->firstname;

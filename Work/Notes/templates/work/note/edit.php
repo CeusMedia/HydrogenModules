@@ -11,7 +11,7 @@ $iconRemove	= '<i class="fa fa-fw fa-remove"></i>';
 //  --  TAG MANAGEMENT  --  //
 $listTags	= "";
 if( $note->tags ){
-	$list	= array();
+	$list	= [];
 	foreach( $note->tags as $tag ){
 		$url	= './work/note/removeTag/'.$note->noteId.'/'.$tag->tagId;
 		$label	= '<div class="item-tag-label">'.$tag->content.'</div>';
@@ -25,7 +25,7 @@ if( $note->tags ){
 
 $listRelatedTags	= "";
 if( $relatedTags ){
-	$list	= array();
+	$list	= [];
 	$relatedTags	= array_slice( $relatedTags, 0, 5 );
 	foreach( $relatedTags as $tag ){
 		$urlAdd			= './work/note/addTag/'.$note->noteId.'/'.$tag->tagId;
@@ -63,7 +63,7 @@ $panelTags	= '
 //  --  LINK MANAGEMENT  --  //
 $listLinks	= '';
 if( $note->links ){
-	$list	= array();
+	$list	= [];
 	foreach( $note->links as $link ){
 		$url	= './work/note/removeLink/'.$note->noteId.'/'.$link->noteLinkId;
 		$link	= '<a href="'.$link->url.'">'.htmlentities( $link->title, ENT_QUOTES ).'</a>';
@@ -115,7 +115,7 @@ foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject	= UI_HTML_Elements::Options( $optProject, $note->projectId );
 
-$optFormat	= array();
+$optFormat	= [];
 foreach( $words['formats'] as $formatKey => $formatLabel )
 	$optFormat[$formatKey]	= $formatLabel;
 $optFormat  = UI_HTML_Elements::Options( $optFormat, $note->format );

@@ -18,7 +18,7 @@ class Controller_Work_Mail_Group_Role extends CMF_Hydrogen_Controller
 			) );
 			$this->restart( NULL, TRUE );
 		}
-		$role	= array();
+		$role	= [];
 		foreach( $this->modelRole->getColumns() as $column )
 			$role[$column]	= $this->request->get( $column );
 		$this->addData( 'role', (object) $role );
@@ -53,9 +53,9 @@ class Controller_Work_Mail_Group_Role extends CMF_Hydrogen_Controller
 
 	public function index()
 	{
-		$indices	= array();
+		$indices	= [];
 		$orders		= array( 'title' => 'ASC' );
-		$limits		= array();
+		$limits		= [];
 		$roles		= $this->modelRole->getAll( $indices, $orders,$limits );
 		$this->addData( 'roles', $roles );
 	}

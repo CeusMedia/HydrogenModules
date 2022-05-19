@@ -142,16 +142,16 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 		if( !$graph )
 			return;
 
-		$nodeIndex	= array();
+		$nodeIndex	= [];
 		foreach( $nodes as $node )
 			$nodeIndex[$node->nodeId]	= $node->ID;
 
 		$indent		= '    ';
-		$lines		= array();
+		$lines		= [];
 		$lines[]	= $graph->type.' graph_'.$graph->graphId.' {';
 		$lines[]	= $indent.'rankdir="'.$graph->rankdir.'"';
 		foreach( $nodes as $node ){
-			$attr	= array();
+			$attr	= [];
 			$attr['shape']		= $node->shape ? $node->shape : $graph->nodeShape;
 			$attr['style']		= $node->style ? $node->style : $graph->nodeStyle;
 			$attr['color']		= $node->color ? $node->color : $graph->nodeColor;
@@ -167,7 +167,7 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 		}
 		$lines[]	= '';
 		foreach( $edges as $edge ){
-			$attr		= array();
+			$attr		= [];
 			$attr['arrowhead']	= $edge->arrowhead ? $edge->arrowhead : $graph->edgeArrowhead;
 			$attr['arrowsize']	= $edge->arrowsize ? $edge->arrowsize : $graph->edgeArrowsize;
 			$attr['color']		= $edge->color ? $edge->color : $graph->edgeColor;
@@ -238,12 +238,12 @@ class Controller_Work_Graph extends CMF_Hydrogen_Controller{
 		if( !$graph )
 			throw new RuntimeException( 'Graph with ID %d is not existing', $graphId );
 		if( $withNodes ){
-			$graph->nodes	= array();
+			$graph->nodes	= [];
 			foreach( $this->modelNodes->getAll() as $node )
 				$graph->nodes[$node->nodeId]	= $node;
 		}
 		if( $withEdges ){
-			$graph->edges	= array();
+			$graph->edges	= [];
 			foreach( $this->modelEdges->getAll() as $edge )
 				$graph->edges[$edge->edgeId]	= $edge;
 		}

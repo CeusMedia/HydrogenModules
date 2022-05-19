@@ -124,7 +124,7 @@ class Controller_Resource extends CMF_Hydrogen_Controller
 
 	protected function getPostData(): array
 	{
-		$data	= array();
+		$data	= [];
 		$body	= $this->env->getRequest()->getBody();
 		if( strlen( trim( $body ) ) ){
 			if( function_exists( 'mb_parse_str' ) )

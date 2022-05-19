@@ -1,6 +1,6 @@
 <?php
 
-$optProduct	= array();
+$optProduct	= [];
 foreach( $products as $item )
 	$optProduct[$item->productId]	= $item->title;
 $optProduct	= UI_HTML_Elements::Options( $optProduct, $product->productId );

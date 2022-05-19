@@ -7,7 +7,7 @@ $tableConfig	= '';
 
 $tableConfig	= '<br/><div>'.$w->listNone.'</div><br/>';
 if( count( $module->config ) ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $module->config as $key => $value ){
 
 		$urlRemove	= './admin/module/editor/removeConfig/'.$moduleId.'/'.$key;

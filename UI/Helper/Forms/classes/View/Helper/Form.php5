@@ -2,7 +2,7 @@
 class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $env;
-	protected $blocks				= array();
+	protected $blocks				= [];
 	protected $form;
 	protected $formId;
 	protected $modelBlock;

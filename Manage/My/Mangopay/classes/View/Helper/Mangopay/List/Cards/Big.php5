@@ -15,7 +15,7 @@ class View_Helper_Mangopay_List_Cards_Big extends View_Helper_Mangopay_Abstract{
 		$helperCardLogo		= new View_Helper_Mangopay_Entity_CardProviderLogo( $this->env );
 		$helperCardLogo->setSize( View_Helper_Mangopay_Entity_CardProviderLogo::SIZE_LARGE );
 		$helperCardNumber	= new View_Helper_Mangopay_Entity_CardNumber( $this->env );
-		$list	= array();
+		$list	= [];
 		foreach( $this->cards as $card ){
 		//	print_m( $card );die;
 			$logo	= $helperCardLogo->setProvider( $card->CardProvider )->render();

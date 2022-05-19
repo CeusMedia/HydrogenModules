@@ -2,7 +2,7 @@
 
 $list	= '<div class="alert alert-info">Keine Backups vorhanden.</div>';
 if( $backups ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $backups as $backup ){
 		$rows[]	= U_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $backup->backupId ),

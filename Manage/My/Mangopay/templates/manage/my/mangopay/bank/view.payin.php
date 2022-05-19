@@ -9,12 +9,12 @@ $wordsCurrencies	= array(
 	'USD'		=> 'USD',
 );
 
-$currencies	= array();
+$currencies	= [];
 foreach( $wallets as $item )
 	if( !in_array( $item->Currency, $currencies ) )
 		$currencies[$item->Currency]	= $wordsCurrencies[$item->Currency];
 
-$optCurrency	= array();
+$optCurrency	= [];
 foreach( $currencies as $key => $label )
 	$optCurrency[$key]	= $label;
 $optCurrency	= UI_HTML_Elements::Options( $optCurrency );
@@ -34,7 +34,7 @@ if( count( $currencies ) == 1 )
 
 
 if( count( $wallets ) > 1 ){
-	$optWallet	= array();
+	$optWallet	= [];
 	foreach( $wallets as $item )
 		$optWallet[$item->Id]	= $item->Description.' ('.$view->formatMoney( $item->Balance, ' ', 0 ).')';
 	$optWallet	= UI_HTML_Elements::Options( $optWallet );

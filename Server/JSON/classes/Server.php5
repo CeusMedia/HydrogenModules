@@ -143,7 +143,7 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		return $supported[0];
 	}
 
-	protected function respond( $body, $headers = array() ){
+	protected function respond( $body, $headers = [] ){
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$response	= $this->env->getResponse();

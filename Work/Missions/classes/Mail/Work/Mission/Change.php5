@@ -2,7 +2,7 @@
 abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 {
 	protected $baseUrl;
-	protected $facts				= array();
+	protected $facts				= [];
 	protected $labels;
 	protected $languageSection		= NULL;
 	protected $changedFactClassPos	= 'label label-success';
@@ -57,7 +57,7 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 			return '-';
 		$fullname	= '';
 		if( strlen( trim( $user->firstname ) ) && strlen( trim( $user->surname ) ) ){
-			$parts	= array();
+			$parts	= [];
 			if( strlen( trim( $user->firstname ) ) )
 				$parts[]	= trim( $user->firstname );
 			if( strlen( trim( $user->surname ) ) )

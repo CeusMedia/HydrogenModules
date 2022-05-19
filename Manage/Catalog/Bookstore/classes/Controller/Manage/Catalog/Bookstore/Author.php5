@@ -23,7 +23,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends CMF_Hydrogen_Controller
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Author::init done' );
 	}
 
-	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
 		$cache		= $env->getCache();
 		if( !( $list = $cache->get( 'catalog.tinymce.images.catalog.bookstore.authors' ) ) ){
 			$logic		= new Logic_Catalog_Bookstore( $env );
@@ -31,7 +31,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends CMF_Hydrogen_Controller
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );				//  focus module configuration
 			$pathImages	= $frontend->getPath( 'contents' ).$config->get( 'path.authors' );			//  get path to author images
 			$pathImages	= substr( $pathImages, strlen( $frontend->getPath() ) );					//  strip frontend base path
-			$list		= array();
+			$list		= [];
 			$authors	= $logic->getAuthors( array(), array( 'lastname' => 'ASC', 'firstname' => 'ASC' ) );
 			foreach( $authors as $item ){
 				if( $item->image ){
@@ -53,7 +53,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends CMF_Hydrogen_Controller
 		) ) );
 	}
 
-	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
 		$cache		= $env->getCache();
 		if( !( $authors = $cache->get( 'catalog.tinymce.links.catalog.bookstore.authors' ) ) ){
 			$logic		= new Logic_Catalog_Bookstore( $env );
@@ -85,7 +85,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends CMF_Hydrogen_Controller
 			}
 		}
 		$model		= new Model_Catalog_Bookstore_Author( $this->env );
-		$author		= array();
+		$author		= [];
 		foreach( $model->getColumns() as $column )
 			$author[$column]	= $this->request->get( $column );
 		$this->addData( 'author', (object) $author );

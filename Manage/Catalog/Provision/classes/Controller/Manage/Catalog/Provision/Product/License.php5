@@ -26,7 +26,7 @@ class Controller_Manage_Catalog_Provision_Product_License extends CMF_Hydrogen_C
 			$this->messenger->noteSuccess( 'Product license added.' );
 			$this->restart( './manage/catalog/provision/product/edit/'.$productId );
 		}
-		$license	= array();
+		$license	= [];
 		foreach( $this->modelLicense->getColumns() as $column )
 			$license[$column]	= $this->request->get( $column );
 		$this->addData( 'license', (object) $license );

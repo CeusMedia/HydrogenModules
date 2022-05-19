@@ -19,7 +19,7 @@ $trigger->setMode( View_Helper_Input_ResourceTrigger::MODE_STYLE );
 
 $listStyleFiles	= array( UI_HTML_Tag::create( 'li', UI_HTML_Tag::create( 'em', '- keine -', array( 'class' => 'muted' ) ) ) );
 if( $special->styleFiles ){
-	$listStyleFiles	= array();
+	$listStyleFiles	= [];
 	foreach( $special->styleFiles as $nr => $styleFile ){
 		$itemFile		= UI_HTML_Tag::create( 'big', pathinfo( $styleFile, PATHINFO_BASENAME ) );
 		$itemPath		= UI_HTML_Tag::create( 'small', pathinfo( $styleFile, PATHINFO_DIRNAME ), array( 'class' => 'muted' ) );

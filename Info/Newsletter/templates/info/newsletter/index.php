@@ -13,7 +13,7 @@ $optGender	= UI_HTML_Elements::Options( $optGender, $data->get( 'gender' ) );
 
 $topics		= '';
 if( $groups ){
-	$list   = array();
+	$list   = [];
 	foreach( $groups as $group ){
 		$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
 			'type'		=> 'checkbox',

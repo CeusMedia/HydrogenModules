@@ -1,6 +1,6 @@
 <?php
-class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Relocation extends CMF_Hydrogen_Controller
+{
 	protected $model;
 	protected $messenger;
 	protected $request;
@@ -8,30 +8,8 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 	protected $filterSessionPrefix		= 'filter-manage-relocation-';
 	protected $shortcut;
 
-	public function __onInit(){
-		$this->model		= new Model_Relocation( $this->env );
-		$this->messenger	= $this->env->getMessenger();
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-
-		$frontend	= Logic_Frontend::getInstance( $this->env );
-		$moduleConfig	= $frontend->getModuleConfigValues( 'Info_Relocation' );
-
-		if( $moduleConfig['shortcut'] )
-			$this->shortcut		= preg_replace( "/^[^a-z]+([a-z]+)[^a-z]+$/", "\\1", $moduleConfig['shortcut.source'] );
-	}
-
-	protected function checkRelocation( $relocationId ){
-		$words		= (object) $this->getWords( 'msg' );
-		$relocation	= $this->model->get( $relocationId );
-		if( !$relocation ){
-			$this->messenger->noteError( $words->errorIdInvalid );
-			$this->restart( NULL, TRUE );
-		}
-		return $relocation;
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'msg' );
 			$title	= $this->request->get( 'title' );
@@ -59,7 +37,8 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 		$this->addData( 'relocation', $data );
 	}
 
-	public function edit( $relocationId ){
+	public function edit( $relocationId )
+	{
 		$relocation	= $this->checkRelocation( $relocationId );
 		$words		= (object) $this->getWords( 'msg' );
 
@@ -92,7 +71,8 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 		$this->addData( 'shortcut', $this->shortcut );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		$filterKeys	= array( 'id', 'status', 'title', 'orderColumn', 'orderDirection' );
 		foreach( $filterKeys as $key ){
 			if( $reset )
@@ -103,8 +83,9 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 ){
-		$conditions		= array();
+	public function index( $page = 0 )
+	{
+		$conditions		= [];
 		$filterId		= $this->session->get( $this->filterSessionPrefix.'id' );
 		$filterStates	= $this->session->get( $this->filterSessionPrefix.'status' );
 		$filterTitle	= $this->session->get( $this->filterSessionPrefix.'title' );
@@ -119,7 +100,7 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 				$conditions['title']	= '%'.$filterTitle.'%';
 		}
 
-		$orders			= array();
+		$orders			= [];
 		$allowedColumns	= array( 'relocationId', 'title', 'views', 'usedAt' );
 		if( !in_array( $filterOrderCol, $allowedColumns ) )
 			$filterOrderCol	= 'relocationId';
@@ -142,16 +123,43 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller{
 		$this->addData( 'filterOrderDirection', $filterOrderDir );
 	}
 
-	public function setStatus( $relocationId, $status ){
+	public function setStatus( $relocationId, $status )
+	{
 		$relocation	= $this->checkRelocation( $relocationId );
 		$this->model->edit( $relocationId, array( 'status' => (int) $status ) );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function remove( $relocationId ){
+	public function remove( $relocationId )
+	{
 		$relocation	= $this->checkRelocation( $relocationId );
 		$this->model->remove( $relocationId );
 		$this->messenger->noteSuccess( $words->successRemoved, $relocation->title );
 		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->model		= new Model_Relocation( $this->env );
+		$this->messenger	= $this->env->getMessenger();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+
+		$frontend	= Logic_Frontend::getInstance( $this->env );
+		$moduleConfig	= $frontend->getModuleConfigValues( 'Info_Relocation' );
+
+		if( $moduleConfig['shortcut'] )
+			$this->shortcut		= preg_replace( "/^[^a-z]+([a-z]+)[^a-z]+$/", "\\1", $moduleConfig['shortcut.source'] );
+	}
+
+	protected function checkRelocation( $relocationId )
+	{
+		$words		= (object) $this->getWords( 'msg' );
+		$relocation	= $this->model->get( $relocationId );
+		if( !$relocation ){
+			$this->messenger->noteError( $words->errorIdInvalid );
+			$this->restart( NULL, TRUE );
+		}
+		return $relocation;
 	}
 }

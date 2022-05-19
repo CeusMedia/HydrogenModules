@@ -32,7 +32,7 @@ class Scheduler extends \CMF_Hydrogen_Application_Console {
 		'year'	=> array(),
 	);
 	protected $jobber;
-	protected $jobs		= array();
+	protected $jobs		= [];
 
 	protected function getChanges( $last, $now ){
 		$minute1	= date( 'i', $last );
@@ -86,10 +86,10 @@ class Scheduler extends \CMF_Hydrogen_Application_Console {
 		print( $message."\n" );
 	}
 
-	public static function readJobXmlFile( $modes = array() ){
+	public static function readJobXmlFile( $modes = [] ){
 		$map			= new stdClass();
-		$map->jobs		= array();
-		$map->intervals	= array();
+		$map->jobs		= [];
+		$map->intervals	= [];
 		$index			= new \FS_File_RegexFilter( 'config/jobs/', '/\.xml$/i' );
 		foreach( $index as $file ){
 			$xml	= \XML_ElementReader::readFile( $file->getPathname() );
@@ -100,7 +100,7 @@ class Scheduler extends \CMF_Hydrogen_Application_Console {
 				$jobObj->method		= (string) $job->method;
 				$jobObj->mode		= (string) $job->mode;
 				$jobObj->interval	= (string) $job->interval;
-				$jobObj->data		= array();
+				$jobObj->data		= [];
 				if( !strlen( $jobObj->interval ) )
 					continue;
 				if( $modes && !in_array( $job->mode, $modes ) )
@@ -111,7 +111,7 @@ class Scheduler extends \CMF_Hydrogen_Application_Console {
 #					$jobObj->data[$date->getAttribute( 'key' )]	= (string) $job;
 				$map->jobs[$jobObj->id] = $jobObj;
 				if( !array_key_exists( $jobObj->interval, $map->intervals ) )
-					$map->intervals[$jobObj->interval]	= array();
+					$map->intervals[$jobObj->interval]	= [];
 				$map->intervals[$jobObj->interval][]	= $jobObj;
 			}
 		}

@@ -5,7 +5,7 @@ $iconUnregister	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-s
 
 $list	= UI_HTML_Tag::create( 'div', 'Keine gefunden.', array( 'class' => 'alert alert-info' ) );
 if( $groups ){
-	$list	= array();
+	$list	= [];
 	foreach( $groups as $group ){
 		$labelMessages	= $group->messages == 1 ? $group->messages.' Nachricht' : $group->messages.' Nachrichten';
 		$labelMembers	= $group->members == 1 ? $group->members.' Mitglied' : $group->members.' Mitglieder';
@@ -22,7 +22,7 @@ if( $groups ){
 		$title		= UI_HTML_Tag::create( 'a', $group->title, array( 'href' => './info/mail/group/view/'.$group->mailGroupId ) );
 		$subtitle	= strlen( trim( $group->subtitle ) ) ? UI_HTML_Tag::create( 'strong', $group->subtitle ).'<br/>' : '';
 
-		$buttons	= array();
+		$buttons	= [];
 		if( in_array( $group->type, array( Model_Mail_Group::TYPE_AUTOJOIN, Model_Mail_Group::TYPE_JOIN, Model_Mail_Group::TYPE_REGISTER ) ) )
 			$buttons[]	= UI_HTML_Tag::create( 'a', $iconJoin.'&nbsp;beitreten', array(
 				'href'	=> './info/mail/group/join/'.$group->mailGroupId,

@@ -20,7 +20,7 @@ $helperIban	= new View_Helper_Mangopay_Entity_IBAN( $env );
 $helperBic	= new View_Helper_Mangopay_Entity_BIC( $env );
 
 if( $sellerBanks ){
-	$list	= array();
+	$list	= [];
 	foreach( $sellerBanks as $bankAccount ){
 		$buttonPayOut	= UI_HTML_Tag::create( 'button', $iconBank.'&nbsp;auszahlen', array(
 			'type'		=> 'button',

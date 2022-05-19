@@ -1,5 +1,5 @@
 <?php
-$list		= array();
+$list		= [];
 $nrUpdates	= 0;
 foreach( $instances as $id => $entry ){
 	$entry->configPath	= !empty( $entry->configPath ) ? $entry->configPath : 'config/';

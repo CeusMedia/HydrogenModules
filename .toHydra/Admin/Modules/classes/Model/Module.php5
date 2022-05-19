@@ -10,10 +10,10 @@ class Model_Module{
 	protected $env;
 	protected $pathRepos;
 	protected $pathConfig;
-	protected $modulesAll			= array();
-	protected $modulesAvailable		= array();
+	protected $modulesAll			= [];
+	protected $modulesAvailable		= [];
 	protected $source;
-	protected $sources				= array();
+	protected $sources				= [];
 
 	public function __construct( $env ){
 		$this->env			= $env;
@@ -38,7 +38,7 @@ class Model_Module{
 	/**
 	 *	@todo		increase performance / scalability
 	 */
-	public function countAll( $filters = array() ){
+	public function countAll( $filters = [] ){
 		return count( $this->getAll( $filters ) );
 	}
 
@@ -49,7 +49,7 @@ class Model_Module{
 		return NULL;
 	}
 
-	public function getAll( $filters = array(), $limit = NULL, $offset = NULL ){
+	public function getAll( $filters = [], $limit = NULL, $offset = NULL ){
 		if( !$this->modulesAll ){
 			$this->modulesAll		= $this->modulesAvailable;
 			foreach( $this->getInstalled( $this->modulesAvailable ) as $moduleId => $module ){
@@ -133,7 +133,7 @@ class Model_Module{
 		return $modulesAll;
 	}
 
-	public function getAllNeededModules( $moduleId, $uninstalledOnly = FALSE, $list = array() ){
+	public function getAllNeededModules( $moduleId, $uninstalledOnly = FALSE, $list = [] ){
 		$module	= $this->get( $moduleId );
 		if( !$module )
 			$list[$moduleId]	= 0;
@@ -154,7 +154,7 @@ class Model_Module{
 		return $list;
 	}
 
-	public function getAllSupportedModules( $moduleId, $uninstalledOnly = FALSE, $list = array() ){
+	public function getAllSupportedModules( $moduleId, $uninstalledOnly = FALSE, $list = [] ){
 		$module	= $this->get( $moduleId );
 		if( !$module )
 			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
@@ -177,7 +177,7 @@ class Model_Module{
 	}
 
 	public function getCategories(){
-		$list	= array();
+		$list	= [];
 		foreach( $this->getAll() as $module )
 			if( !empty( $module->category ) )
 				$list[]	= $module->category;
@@ -197,7 +197,7 @@ class Model_Module{
 	}
 
 	public function getInstalled(){
-		$list		= array();
+		$list		= [];
 		$modules	= $this->env/*->getRemote()*/->getModules();
 		if( $modules ){
 			foreach( $modules->getAll() as $id => $module ){
@@ -248,7 +248,7 @@ class Model_Module{
 		$module	= $this->get( $moduleId );
 		if( !$module )
 			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		$list		= array();
+		$list		= [];
 		$modules	= $this->getAll();
 		foreach( $module->relations->needs as $relatedModuleId ){
 			$status	= self::TYPE_UNKNOWN;
@@ -266,7 +266,7 @@ class Model_Module{
 		$module	= $this->get( $moduleId );
 		if( !$module )
 			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		$list		= array();
+		$list		= [];
 		$modules	= $this->getAll();
 		$found		= $this->getAll( array( 'relation:needs' => $moduleId ) );
 		foreach( array_keys( $found ) as $relatedModuleId ){
@@ -320,7 +320,7 @@ class Model_Module{
 		$module	= $this->get( $moduleId );
 		if( !$module )
 			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		$list		= array();
+		$list		= [];
 		$modules	= $this->getAll();
 		foreach( $module->relations->supports as $relatedModuleId ){
 			$status	= Model_Module::TYPE_UNKNOWN;
@@ -338,7 +338,7 @@ class Model_Module{
 		$module	= $this->get( $moduleId );
 		if( !$module )
 			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
-		$list		= array();
+		$list		= [];
 		$modules	= $this->getAll();
 		$found		= $this->getAll( array( 'relation:supports' => $moduleId ) );
 		foreach( array_keys( $found ) as $relatedModuleId ){
@@ -357,7 +357,7 @@ class Model_Module{
 	 *	@deprecated
 	 */
 	public function isInstalled( $moduleId ){
-		$list	= array();
+		$list	= [];
 		$index	= new FS_File_RecursiveRegexFilter( $this->pathConfig."/", '/^\w+.xml$/' );
 		foreach( $index as $entry ){
 			$id	= preg_replace( '/\.xml$/i', '', $entry->getFilename() );
@@ -368,8 +368,8 @@ class Model_Module{
 	}
 
 	public function loadSources(){
-		$list		= array();
-		$results	= array();
+		$list		= [];
+		$results	= [];
 		foreach( $this->sources as $sourceId => $source ){
 			try{
 				$results[$sourceId]	= 0;

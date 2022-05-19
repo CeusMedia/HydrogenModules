@@ -4,7 +4,7 @@ $iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) 
 $iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
 $iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 
-$rows		= array();
+$rows		= [];
 foreach( $blocks as $block ){
 	$linkView	= UI_HTML_Tag::create( 'a', $iconView.'&nbsp;anzeigen', array(
 		'href'	=> './manage/form/block/view/'.$block->blockId,

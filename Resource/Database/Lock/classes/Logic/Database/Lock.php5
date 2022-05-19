@@ -1,18 +1,14 @@
 <?php
-class Logic_Database_Lock extends CMF_Hydrogen_Logic{
-
+class Logic_Database_Lock extends CMF_Hydrogen_Logic
+{
 	protected $model;
-
-	public function __onInit(){
-		$this->model	= new Model_Lock( $this->env );
-		$this->userId	= (int) $this->env->getSession()->get( 'auth_user_id' );
-	}
 
 	/**
 	 *	@deprecated		use hook class instead
 	 *	@todo			remove after all installations are updated
 	 */
-	static public function ___onAutoModuleLockRelease( CMF_Hydrogen_Environment $env, $context/*, $module, $data = array()*/ ){
+	public static function ___onAutoModuleLockRelease( CMF_Hydrogen_Environment $env, $context/*, $module, $data = []*/ )
+	{
 		$request	= $env->getRequest();
 		if( $request->isAjax() )
 			return FALSE;
@@ -26,7 +22,14 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic{
 		) );
 	}
 
-	public function getLock( $subject, $entryId ){
+	public static function release( CMF_Hydrogen_Environment $env, $subject, $entryId = NULL )
+	{
+		$lock	= new self( $env );
+		$lock->unlock( $subject, $entryId );
+	}
+
+	public function getLock( $subject, $entryId )
+	{
 		$lock	= $this->model->getByIndices( array(
 			'subject'	=> $subject,
 			'entryId'	=> $entryId,
@@ -36,7 +39,8 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic{
 		return $lock;
 	}
 
-	public function getLockUser( $subject, $entryId ){
+	public function getLockUser( $subject, $entryId )
+	{
 		$lockUserId	= $this->getLockUserId( $subject, $entryId );
 		$modelUser	= new Model_User( $this->env );
 		$lockUser	= $modelUser->get( $lockUserId );
@@ -45,20 +49,24 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic{
 		return $lockUser;
 	}
 
-	public function getLockUserId( $subject, $entryId ){
+	public function getLockUserId( $subject, $entryId )
+	{
 		$lock	= $this->getLock( $subject, $entryId );
 		return $lock->userId;
 	}
 
-	public function getUserLocks( $userId ){
+	public function getUserLocks( $userId )
+	{
 		return $this->model->getAllByIndex( 'userId', $userId );
 	}
 
-	public function getSubjectLocks( $subject ){
+	public function getSubjectLocks( $subject )
+	{
 		return $this->model->getAllByIndex( 'subject', $subject );
 	}
 
-	public function isLocked( $subject, $entryId, $userId = NULL ){
+	public function isLocked( $subject, $entryId, $userId = NULL )
+	{
 		$indices	= array( 'subject' => $subject );
 		if( $entryId )
 			$indices['entryId']	= (int) $entryId;
@@ -67,15 +75,18 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic{
 		return (bool) $this->model->countByIndices( $indices );
 	}
 
-	public function isLockedByMe( $subject, $entryId ){
+	public function isLockedByMe( $subject, $entryId )
+	{
 		return $this->isLocked( $subject, $entryId, $this->userId );
 	}
 
-	public function isLockedByOther( $subject, $entryId ){
+	public function isLockedByOther( $subject, $entryId )
+	{
 		return $this->isLocked( $subject, $entryId, '!= '.$this->userId );
 	}
 
-	public function lock( $subject, $entryId, $userId ){
+	public function lock( $subject, $entryId, $userId )
+	{
 		if( $this->isLocked( $subject, $entryId, $userId ) )
 			return NULL;
 		if( $this->isLocked( $subject, $entryId, '!= '.$userId ) )
@@ -89,16 +100,13 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic{
 		return TRUE;
 	}
 
-	public function lockByMe( $subject, $entryId ){
+	public function lockByMe( $subject, $entryId )
+	{
 		return $this->lock( $subject, $entryId, $this->userId );
 	}
 
-	static public function release( CMF_Hydrogen_Environment $env, $subject, $entryId = NULL ){
-		$lock	= new self( $env );
-		$lock->unlock( $subject, $entryId );
-	}
-
-	public function unlock( $subject, $entryId = 0, $userId = NULL ){
+	public function unlock( $subject, $entryId = 0, $userId = NULL )
+	{
 		$userId		= $userId !== NULL ? (int) $userId : $this->userId;				//  insert current userId of none given
 		if( !$this->isLocked( $subject, $entryId, $userId ) )
 			return FALSE;
@@ -109,5 +117,10 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic{
 			$indices['userId']	= $userId;
 		return (bool) $this->model->removeByIndices( $indices );
 	}
+
+	protected function __onInit()
+	{
+		$this->model	= new Model_Lock( $this->env );
+		$this->userId	= (int) $this->env->getSession()->get( 'auth_user_id' );
+	}
 }
-?>

@@ -12,7 +12,7 @@ $disabled		= (int) $newsletter->status !== 0 ? 'disabled="disabled"' : "";
 
 $optStatus		= UI_HTML_Elements::Options( $words->states, $newsletter->status );
 
-$optTemplate	= array();
+$optTemplate	= [];
 foreach( $templates as $entry )
 	$optTemplate[$entry->newsletterTemplateId]	= $entry->title;
 $optTemplate	= UI_HTML_Elements::Options( $optTemplate, $newsletter->newsletterTemplateId );

@@ -1,7 +1,7 @@
 <?php
 class View_Helper_ModalRegistry extends CMF_Hydrogen_View_Helper_Abstract{
 
-	protected $modals	= array();
+	protected $modals	= [];
 
 	public function __construct( $env ){
 		$this->env	= $env;
@@ -14,7 +14,7 @@ class View_Helper_ModalRegistry extends CMF_Hydrogen_View_Helper_Abstract{
 	}
 
 	public function render(){
-		$list	= array();
+		$list	= [];
 		foreach( $this->modals as $modal )
 			$list[]	= $modal->render();
 		return join( $list );

@@ -10,7 +10,7 @@ class Hook_Catalog_Bookstore extends CMF_Hydrogen_Hook
 			'tags'			=> '',
 			'heading'		=> '',
 		);
-		$modals			= array();
+		$modals			= [];
 		if( preg_match( $pattern, $data->content ) ){
 			$code		= preg_replace( $pattern, "\\2", $data->content );
 			$code		= preg_replace( '/(\r|\n|\t)/', " ", $code );
@@ -111,7 +111,7 @@ class Hook_Catalog_Bookstore extends CMF_Hydrogen_Hook
 		$logic		= new Logic_Catalog_Bookstore( $env );
 		$language	= $env->getLanguage()->getLanguage();
 
-		$conditions	= array();
+		$conditions	= [];
 		$orders		= array( 'articleId' => 'DESC' );
 		foreach( $logic->getArticles( $conditions, $orders ) as $article ){
 			$url	= $logic->getArticleUri( $article, TRUE );
@@ -119,7 +119,7 @@ class Hook_Catalog_Bookstore extends CMF_Hydrogen_Hook
 			$context->addLink( $url, $date > 0 ? $data : NULL );
 		}
 
-		$conditions	= array();
+		$conditions	= [];
 		$orders		= array( 'authorId' => 'DESC' );
 		foreach( $logic->getAuthors( $conditions, $orders ) as $author ){
 			$url	= $logic->getAuthorUri( $author, TRUE );

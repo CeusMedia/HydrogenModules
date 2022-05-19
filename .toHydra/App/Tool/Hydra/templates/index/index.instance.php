@@ -6,7 +6,7 @@ $panelModulesInstalled	= $view->loadTemplate( 'index', 'index.module.installed' 
 /*  --  LIST: MODULES INSTALLED  --  */
 
 /*  --  LIST: MODULES MISSING  --  */
-$listModulesMissing	= array();
+$listModulesMissing	= [];
 foreach( $modulesMissing as $moduleId ){
 	$label	= $title	= $moduleId;
 	if( array_key_exists( $moduleId, $modulesAll ) ){
@@ -21,7 +21,7 @@ foreach( $modulesMissing as $moduleId ){
 }
 
 /*  --  LIST: MODULES POSSIBLE  --  */
-$listModulesPossible	= array();
+$listModulesPossible	= [];
 foreach( $modulesPossible as $moduleId ){
 	$label	= $title	= $moduleId;
 	if( array_key_exists( $moduleId, $modulesAll ) ){
@@ -40,7 +40,7 @@ natcasesort( $listModulesPossible );
 $panelModulesRelated	= "";
 $sumReleations	= count( $listModulesMissing ) + count( $listModulesPossible );
 if( 1 || $sumReleations ){
-	$list	= array();
+	$list	= [];
 	if( $listModulesMissing )
 		$list[]	= '<dt>Fehlen</dt><dd><ul>'.join( $listModulesMissing ).'</ul></dd>';
 	if( $listModulesPossible )

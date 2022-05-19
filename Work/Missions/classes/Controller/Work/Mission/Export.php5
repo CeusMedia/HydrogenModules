@@ -159,7 +159,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		return trim( $ical->build( $root ) );
 	}
 
-	protected function getUserMissions( $conditions = array(), $orders = array(), $limits = array() )
+	protected function getUserMissions( $conditions = [], $orders = [], $limits = [] )
 	{
 		$userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );							//  get user projects from model
 		$conditions['projectId']	= array_keys( $userProjects );									//
@@ -170,7 +170,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 	{
 /*		if( !$ical && file_exists( "test.ical" ) )
 			$ical	= file_get_contents( "test.ical" );
-*/		$projects	= array();
+*/		$projects	= [];
 		$conditions	= array( 'dayStart' => '> 0' );
 		$defaultProjectId	= 0;
 		foreach( $this->logic->getUserProjects( $this->userId, $conditions ) as $project ){
@@ -178,7 +178,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 				$defaultProjectId	=  $project->projectId;
 			$projects[$project->title]	= $project->projectId;
 		}
-		$missions	= array();
+		$missions	= [];
 		$conditions	= array( 'status' => array( 0, 1, 2, 3 ) );
 		$orders		= array( 'dayStart' => 'ASC' );
 		foreach( $this->getUserMissions( $conditions, $orders ) as $mission )
@@ -192,7 +192,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		foreach( $root->getChildren() as $node ){										//  iterate ical nodes
 			if( !in_array( $node->getNodeName(), array( 'vevent', 'vtodo' ) ) )			//  neither a task nor an event
 				continue;																//  go on
-			$item	= array();															//  prepare empty item
+			$item	= [];															//  prepare empty item
 			foreach( $node->getChildren() as $child )									//  iterate node's subnodes
 				$item[$child->getNodeName()]	= $child->getContent();					//  note them as item attributes
 			$item['type']		= $node->getNodeName();									//  note ical node type
@@ -200,7 +200,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 				$item	= $this->remapCalendarItem( $item, $projects, $defaultProjectId );					//  translate ical node item to mission item
 				$item['modifierId']	= $this->userId;									//  node modifing user
 				if( isset( $missions[$item['uid']] ) ){									//  ical node UID is known
-					$changes	= array();												//  prepare empty changes array
+					$changes	= [];												//  prepare empty changes array
 					$mission	= (array) $missions[$item['uid']];						//  get mission by UID
 					unset( $missions[$item['uid']] );									//  remove mission from list of local missions
 					foreach( $item as $key => $value )									//  iterate item attributes
@@ -243,7 +243,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 
 	protected function remapCalendarItem( $item, $projects, $defaultProjectId )
 	{
-		$data	= array();
+		$data	= [];
 		foreach( $item as $attribute => $content ){
 			switch( $attribute ){
 				case 'dtstart':

@@ -1,7 +1,7 @@
 <?php
 class Hook_Resource_Mail_Group_Member extends CMF_Hydrogen_Hook
 {
-	public static function onMemberActivated( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	public static function onMemberActivated( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
 	{
 		$payload		= (object) $data;
 		$modelGroup		= new Model_Mail_Group( $env );
@@ -44,7 +44,7 @@ class Hook_Resource_Mail_Group_Member extends CMF_Hydrogen_Hook
 	}
 
 	// @todo call this event
-	public static function onMemberDeactivated( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	public static function onMemberDeactivated( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
 	{
 		$payload		= (object) $data;
 		$modelGroup		= new Model_Mail_Group( $env );
@@ -86,7 +86,7 @@ class Hook_Resource_Mail_Group_Member extends CMF_Hydrogen_Hook
 		}
 	}
 
-	public static function onMemberReject( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	public static function onMemberReject( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
 	{
 		$payload		= (object) $data;
 		$modelGroup		= new Model_Mail_Group( $env );
@@ -130,13 +130,13 @@ class Hook_Resource_Mail_Group_Member extends CMF_Hydrogen_Hook
 
 
 	// @todo call this event
-	public static function onMemberJoined( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	public static function onMemberJoined( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
 	{
 		// @todo implement
 	}
 
 	// @todo call this event
-	public static function onMemberLeft( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	public static function onMemberLeft( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
 	{
 		// @todo implement
 	}

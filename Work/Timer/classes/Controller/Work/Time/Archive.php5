@@ -47,7 +47,7 @@ class Controller_Work_Time_Archive extends CMF_Hydrogen_Controller
 		$filterProjectId	= $this->session->get( 'filter_work_timer_projectId' );
 		$filterStatus		= $this->session->get( 'filter_work_timer_status' );
 
-		$conditions		= array();
+		$conditions		= [];
 		$conditions['projectId']	= array_keys( $this->projectMap );
 		if( strlen( $filterQuery ) )
 			$conditions['title']	= '%'.$filterQuery.'%';

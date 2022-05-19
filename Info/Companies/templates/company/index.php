@@ -1,7 +1,7 @@
 <?php
 
 if( $companies ){
-	$list   = array();
+	$list   = [];
 	foreach( $companies as $company ){
 		$link		= UI_HTML_Tag::create( 'a', $company->title.' in '.$company->city, array( 'href' => './company/'.$company->companyId ) );
 		$list[]		= UI_HTML_Tag::create( 'li', $link );

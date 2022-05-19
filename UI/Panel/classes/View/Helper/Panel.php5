@@ -1,14 +1,14 @@
 <?php
 class View_Helper_Panel
 {
-	static protected $defaultAttributes		= array();
+	static protected $defaultAttributes		= [];
 	static protected $defaultClass			= 'panel';
 	static protected $defaultClassBody		= 'panel-body';
 	static protected $defaultClassFoot		= 'panel-foot';
 	static protected $defaultClassHead		= 'panel-head';
 	static protected $defaultTheme			= 'default';
 
-	protected $attributes					= array();
+	protected $attributes					= [];
 	protected $env;
 	protected $class;
 	protected $classBody;
@@ -22,7 +22,7 @@ class View_Helper_Panel
 	protected $foot;
 	protected $head;
 
-	public static function create( CMF_Hydrogen_Environment $env, string $head, string $body, string $foot, array $attributes = array(), array $classes = array(), string $theme = NULL, string $id = NULL )
+	public static function create( CMF_Hydrogen_Environment $env, string $head, string $body, string $foot, array $attributes = [], array $classes = [], string $theme = NULL, string $id = NULL )
 	{
 		$instance	= new static( $env );
 		$instance->setHead( $head )->setBody( $body )->setFoot( $foot );
@@ -48,7 +48,7 @@ class View_Helper_Panel
 	 *	@static
 	 *	@return		string		Rendered output of this view helper component
 	 */
-	public static function renderStatic( CMF_Hydrogen_Environment $env, string $head, string $body, string $foot, array $attributes = array(), array $classes = array(), string $theme = NULL, string $id = NULL ): string
+	public static function renderStatic( CMF_Hydrogen_Environment $env, string $head, string $body, string $foot, array $attributes = [], array $classes = [], string $theme = NULL, string $id = NULL ): string
 	{
 		$instance	= static::create( $env, $head, $body, $foot, $attributes, $classes, $theme, $id );
 		return $instance->render();
@@ -105,7 +105,7 @@ class View_Helper_Panel
 	}
 
 
-	public function setAttributes( array $attributes = array() ): self
+	public function setAttributes( array $attributes = [] ): self
 	{
 		if( !is_array( $attributes ) )
 			throw new InvalidArgumentException( 'Attributes must be of array' );

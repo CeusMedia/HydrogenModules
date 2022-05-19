@@ -1,7 +1,7 @@
 <?php
 class Hook_Info_Dashboard extends CMF_Hydrogen_Hook
 {
-	public static function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$data	= (object) $payload;
 		if( empty( $data->userId ) ){
@@ -15,7 +15,7 @@ class Hook_Info_Dashboard extends CMF_Hydrogen_Hook
 
 		$activeOnly		= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
 		$linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
-		$list			= array();
+		$list			= [];
 		$icon			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th', 'title' => 'Dashboard' ) );
 		$words			= $env->getLanguage()->getWords( 'info/dashboard' );
 
@@ -36,7 +36,7 @@ class Hook_Info_Dashboard extends CMF_Hydrogen_Hook
 		);
 	}
 
-	public static function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$data	= (object) $payload;
 		if( empty( $data->userId ) ){

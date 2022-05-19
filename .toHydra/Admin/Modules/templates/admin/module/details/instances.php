@@ -4,7 +4,7 @@ $count	= 0;
 /*print_m( $module );
 print_m( $moduleId );
 die;*/
-$instances	= array();
+$instances	= [];
 $logic		= Logic_Instance::getInstance( $this->env );
 $model		= new Model_Instance( $this->env );
 foreach( $model->getAll() as $instanceId => $instance ){
@@ -20,7 +20,7 @@ if( !$instances )
 	return;
 
 $instanceId	= $this->env->getSession()->get( 'instanceId' );
-$list		= array();
+$list		= [];
 foreach( $instances as $instance ){
 	$count			+= 1;
 	$version		= $instance->modules['installed'][$moduleId]->versionInstalled;

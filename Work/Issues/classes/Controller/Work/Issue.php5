@@ -207,7 +207,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller
 			$this->restart( './manage/project/add?from=work/issue' );
 
 		$session	= $this->env->getSession();
-		$filters	= array();
+		$filters	= [];
 		$setFilters	= $session->getAll( 'filter-issue-' );
 		foreach( $setFilters as $key => $value ){
 			if( $key == 'title' )
@@ -227,7 +227,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller
 			$filters['projectId']	= array_keys( $this->userProjects );
 		}
 
-		$orders	= array();
+		$orders	= [];
 		$order	= $session->get( 'filter-issue-order' );
 		$dir	= $session->get( 'filter-issue-direction' );
 		$limit	= $session->get( 'filter-issue-limit' );
@@ -269,14 +269,14 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller
 			6	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 6 ) ) ),
 		);
 
-		$numberProjects	= array();
+		$numberProjects	= [];
 		foreach( $this->userProjects as $project ){
 			$count	= $modelIssue->count( array_merge( $filters, array( 'projectId'	=> $project->projectId ) ) );
 			$numberProjects[$project->projectId]	= $count;
 		}
 		$this->addData( 'numberProjects', $numberProjects );
 
-		$userIds	= array();
+		$userIds	= [];
 		$issues		= $modelIssue->getAll( $filters, $orders, array( $limit * $page, $limit ) );
 		foreach( $issues as $nr => $issue ){
 			$issues[$nr]->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
@@ -305,7 +305,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller
 		$this->addData( 'issues', $issues );
 		$this->addData( 'projects', $projects );
 
-		$users	= array();
+		$users	= [];
 		if( $userIds )
 			foreach( $modelUser->getAll( array( 'userId' => array_unique( $userIds ) ) ) as $user )
 				$users[$user->userId]	= $user;
@@ -318,8 +318,8 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller
 		$request	= $this->env->getRequest();
 		$terms		= explode( " ", trim( $request->get( 'term' ) ) );
 		$modelIssue	= new Model_Issue( $this->env );
-		$issues		= array();
-		$ids		= array();
+		$issues		= [];
+		$ids		= [];
 		foreach( $terms as $term ){
 			$filters	= array( 'title' => '%'.$term.'%' );
 			foreach( $modelIssue->getAll( $filters ) as $issue ){
@@ -330,7 +330,7 @@ class Controller_Work_Issue extends CMF_Hydrogen_Controller
 			}
 		}
 		arsort( $ids );
-		$list	= array();
+		$list	= [];
 		foreach( $ids as $id => $number )
 			if( $number == count( $terms ) )
 				$list[]	= $issues[$id];

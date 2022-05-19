@@ -19,7 +19,7 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 		$optStatus	= $words['states'];
 		$optStatus	= UI_HTML_Elements::Options( $optStatus, 0 );
 
-		$optWorker	= array();
+		$optWorker	= [];
 		$users	= $logicProject->getProjectUsers( $this->projectId, array(), array( 'username' => 'ASC' ) );
 		foreach( $users as $user )
 			$optWorker[$user->userId]	= $user->username;

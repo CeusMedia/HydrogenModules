@@ -1,6 +1,6 @@
 <?php
-class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller
+{
 	protected $modelForm;
 	protected $modelBlock;
 	protected $filterPrefix		= 'filter_manage_form_block_';
@@ -10,29 +10,8 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
 		'identifier',
 	);
 
-	public function __onInit(){
-		$this->modelForm	= new Model_Form( $this->env );
-		$this->modelBlock	= new Model_Form_Block( $this->env );
-	}
-
-	protected function checkId( $blockId, $strict = TRUE ){
-		if( !$blockId )
-			throw new RuntimeException( 'No block ID given' );
-		if( $block = $this->modelBlock->get( $blockId ) )
-			return $block;
-//		if( $block = $this->modelBlock->getByIndex( 'identifier', $blockId ) )
-//			return $block;
-		if( $strict )
-			throw new DomainException( 'Invalid block ID given' );
-		return FALSE;
-	}
-
-	protected function checkIsPost(){
-		if( !$this->env->getRequest()->isMethod( 'POST' ) )
-			throw new RuntimeException( 'Access denied: POST requests, only' );
-	}
-
-	public function add(){
+	public function add()
+	{
 		if( $this->env->getRequest()->has( 'save' ) ){
 			$data		= $this->env->getRequest()->getAll();
 			$blockId	= $this->modelBlock->add( $data, FALSE );
@@ -40,7 +19,8 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function edit( $blockId ){
+	public function edit( $blockId )
+	{
 		$block	= $this->checkId( $blockId );
 
 		if( $this->env->getRequest()->has( 'save' ) ){
@@ -63,7 +43,8 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
 		) );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		if( $reset ){
@@ -79,14 +60,15 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 		$session		= $this->env->getSession();
 		$filters		= new ADT_List_Dictionary( array_merge(
 			array_combine( $this->filters, array_fill( 0, count( $this->filters ), NULL ) ),
 			$session->getAll( $this->filterPrefix )
 		) );
 		$limit		= 15;
-		$conditions	= array();
+		$conditions	= [];
 
 		if( (int) $filters->get( 'blockId' ) )
 		 	$conditions['blockId']		= (int) $filters->get( 'blockId' );
@@ -117,19 +99,28 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
 		$this->addData( 'identifiers', $identifiers );
 	}
 
-	public function view( $blockId ){
+	public function view( $blockId )
+	{
 		$block	= $this->checkId( $blockId );
 		$this->addData( 'block', $block );
 	}
 
-	public function remove( $blockId ){
+	public function remove( $blockId )
+	{
 		$this->checkId( $blockId );
 		$this->modelBlock->remove( $blockId );
 		$this->restart( NULL, TRUE );
 	}
 
 	/*  --  PROTECTED  --  */
-	protected function applyChangedIdentifier( $oldIdentifier, $newIdentifier ){
+	protected function __onInit()
+	{
+		$this->modelForm	= new Model_Form( $this->env );
+		$this->modelBlock	= new Model_Form_Block( $this->env );
+	}
+
+	protected function applyChangedIdentifier( $oldIdentifier, $newIdentifier )
+	{
 		$forms	= $this->modelForm->getAll(
 			array( 'content'	=> '%[block_'.$oldIdentifier.']%' )
 		);
@@ -159,5 +150,24 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller{
 			'blocks'	=> count( $blocks ),
 			'total'		=> count( $forms ) + count( $blocks ),
 		);
+	}
+
+	protected function checkId( $blockId, bool $strict = TRUE )
+	{
+		if( !$blockId )
+			throw new RuntimeException( 'No block ID given' );
+		if( $block = $this->modelBlock->get( $blockId ) )
+			return $block;
+//		if( $block = $this->modelBlock->getByIndex( 'identifier', $blockId ) )
+//			return $block;
+		if( $strict )
+			throw new DomainException( 'Invalid block ID given' );
+		return FALSE;
+	}
+
+	protected function checkIsPost()
+	{
+		if( !$this->env->getRequest()->isMethod( 'POST' ) )
+			throw new RuntimeException( 'Access denied: POST requests, only' );
 	}
 }

@@ -16,9 +16,9 @@ class Controller_Shop extends CMF_Hydrogen_Controller
 	/**	@var	Model_Shop_Cart				$modelCart */
 	protected $modelCart;
 
-	protected $backends			= array();
+	protected $backends			= [];
 
-	protected $servicePanels	= array();
+	protected $servicePanels	= [];
 
 	protected $cartTotal		= 0;
 
@@ -308,7 +308,7 @@ class Controller_Shop extends CMF_Hydrogen_Controller
 	 *	@param		string		$icon			...
 	 *	@return		void
 	 */
-	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = array() )
+	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] )
 	{
 		$this->backends[]	= (object) array(
 			'backend'	=> $backend,

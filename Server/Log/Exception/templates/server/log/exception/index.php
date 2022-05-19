@@ -11,7 +11,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 
 $list	= '<div class="muted"><em><small>No exceptions logged.</small></em></div>';
 if( $exceptions ){
-	$list	= array();
+	$list	= [];
 	foreach( $exceptions as $item ){
 		$link	= UI_HTML_Tag::create( 'a', $item->message, array(
 			'href'	=> './server/log/exception/view/'.$item->exceptionId,

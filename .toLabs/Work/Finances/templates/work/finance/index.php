@@ -5,7 +5,7 @@ $urlIcons	= 'https://cdn.ceusmedia.de/img/';
 $imgEdit	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlIcons.'famfamfam/silk/pencil.png', 'verändern' ) );
 $total	= 0;
 $number	= 0;
-$rows	= array();
+$rows	= [];
 foreach( $banks as $bank ){
 	if( $bank->title == "Fonds" ){
 		$rows[]	= '<tr><th>Fonds</th><th></th><th></th></tr>';

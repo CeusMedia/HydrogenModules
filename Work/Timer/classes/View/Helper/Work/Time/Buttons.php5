@@ -5,7 +5,7 @@ use UI_HTML_Tag as Html;
 
 class View_Helper_Work_Time_Buttons
 {
-	protected $buttons	= array();
+	protected $buttons	= [];
 	protected $env;
 	protected $from;
 	protected $size;
@@ -30,8 +30,8 @@ class View_Helper_Work_Time_Buttons
 			throw new RangeException( 'Invalid ID set' );
 		$userIsOwner	= $timer->userId == $this->userId;
 		$userIsWorker	= $timer->workerId == $this->userId;
-		$buttons	= array();
-		$modals		= array();
+		$buttons	= [];
+		$modals		= [];
 		foreach( $this->buttons as $buttonKey ){
 			switch( $buttonKey ){
 				case 'start':
@@ -131,7 +131,7 @@ class View_Helper_Work_Time_Buttons
 		return $helper->render();
 	}
 
-	public function setButtons( array $buttons = array() ): self
+	public function setButtons( array $buttons = [] ): self
 	{
 		$this->buttons	= $buttons;
 		return $this;

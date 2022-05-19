@@ -12,7 +12,7 @@ $list		= '<div><em><small class="muted">'.$w->empty.'</small></em></div><br/>';
 if( !$timers )
 	return $list;
 
-$rows		= array();
+$rows		= [];
 $rowClasses	= array(
 	0	=> '',
 	1	=> 'success',

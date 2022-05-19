@@ -17,7 +17,7 @@ $buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['butto
 $table	= UI_HTML_Tag::create( 'div', 'Noch keine Jobs geplant.', array( 'class' => 'alert' ) );
 
 if( $scheduledJobs ){
-	$rows	= array();
+	$rows	= [];
 
 	foreach( $scheduledJobs as $item ){
 		$buttonView		= UI_HTML_Tag::create( 'a', $iconView, array(

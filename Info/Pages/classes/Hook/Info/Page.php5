@@ -81,7 +81,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 			'controller'	=> $payload['controllerName'],
 		) );
 		if( $controllerPages ){
-			$pages				= array();
+			$pages				= [];
 			foreach( $controllerPages as $page ){
 				$page->fullpath	= $page->identifier;
 				if( $page->parentId ){
@@ -139,7 +139,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 		try{
 			$moduleConfig	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );				//  get configuration of module
 			if( $moduleConfig->get( 'sitemap' ) ){													//  sitemap is enabled
-				$urls		= array();
+				$urls		= [];
 				$orders		= array( 'scope' => 'ASC', 'rank' => 'ASC', 'modifiedAt' => 'DESC' );	//  collect latest changed pages first
 				for( $scopeId = 0; $scopeId < 10; $scopeId++ ){
 					$model		= new Model_Page( $env );											//  get model of pages
@@ -199,7 +199,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 		//  OLD CODE
 		$pattern	= "/^(.*)(\[page:(.+)\])(.*)$/sU";
 		$logic		= $env->getLogic()->get( 'page' );
-		$matches	= array();
+		$matches	= [];
 		while( preg_match( $pattern, $payload->content, $matches ) ){
 			CMF_Hydrogen_Deprecation::getInstance()
 				->setVersion( $env->getModules()->get( 'Info_Pages' )->version )

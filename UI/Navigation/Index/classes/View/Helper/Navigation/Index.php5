@@ -4,7 +4,7 @@ class View_Helper_Navigation_Index
 	protected $env;
 	protected $menu;
 	protected $scope			= 'main';
-	protected $linksToSkip		= array();
+	protected $linksToSkip		= [];
 
 	/**
 	 *	Constructor.

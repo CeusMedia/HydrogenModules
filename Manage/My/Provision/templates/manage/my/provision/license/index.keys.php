@@ -3,7 +3,7 @@
 if( !$userLicensesWithNotAssignedKeys )
 	return '';
 
-$list	= array();
+$list	= [];
 foreach( $userLicensesWithNotAssignedKeys as $userLicense ){
 	$link	= UI_HTML_Tag::create( 'a', $userLicense->productLicense->title, array(
 		'href'	=> './manage/my/provision/license/view/'.$userLicense->userLicenseId

@@ -4,13 +4,13 @@ $w			= (object) $words['editRights'];
 
 $showAll	= !TRUE;
 
-$usedModules	= array();
+$usedModules	= [];
 foreach( $controllerActions as $controller )
 	$usedModules[]	= $controller->module->id;
 $usedModules	= array_unique( $usedModules );
 asort( $usedModules );
 
-$list	= array();
+$list	= [];
 foreach( $usedModules as $usedModule ){
 	$result	= renderModuleControllers( $acl, $roleId, $usedModule, $controllerActions, $words );
 	$list[] = $result->list;
@@ -40,8 +40,8 @@ return '
 </div>';
 
 function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, $words ){
-	$list		= array();
-	$rows		= array();
+	$list		= [];
+	$rows		= [];
 	$changable	= FALSE;
 	$iconModule		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) ).'&nbsp;';
 	$iconController	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cog' ) ).'&nbsp;';
@@ -92,7 +92,7 @@ function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, 
 }
 
 function renderControllerActions( $acl, $roleId, $controller, $words ){
-	$list		= array();
+	$list		= [];
 	$changableAtAll	= FALSE;
 	foreach( $controller->methods as $action => $method ){
 //print_m( $modules[$controller->module->id] );die;

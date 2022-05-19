@@ -32,7 +32,7 @@ class Controller_Sitemap extends CMF_Hydrogen_Controller{
 	}
 
 	protected function negotiateContentType( $headerFieldValue, $contentTypes ){
-		$list	= array();
+		$list	= [];
 		$values	= $this->getQualifiedValues( $headerFieldValue );
 		foreach( $values as $mimeType => $quality ){
 			if( in_array( $mimeType, $contentTypes ) )
@@ -42,7 +42,7 @@ class Controller_Sitemap extends CMF_Hydrogen_Controller{
 	}
 
 	protected function getQualifiedValues( $headerFieldValue ){
-		$list	= array();
+		$list	= [];
 		$values	= preg_split( '/, */', $headerFieldValue );
 		foreach( $values as $value ){
 			$parts				= explode( ';q=', $value, 2 );

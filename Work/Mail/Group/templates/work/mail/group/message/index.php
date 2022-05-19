@@ -29,7 +29,7 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 
 $list	= UI_HTML_Tag::create( 'div', 'Keine gefunden.', array( 'class' => 'alert alert-info' ) );
 if( count( $messages ) ){
-	$list	= array();
+	$list	= [];
 	foreach( $messages as $message ){
 		$sender	=  $message->object->getSender();
 		if( $sender->getName() ){

@@ -1,7 +1,7 @@
 <?php
 class View_Helper_Panel_Mangopay_Transactions extends View_Helper_Panel_Mangopay{
 
-	public function __construct( CMF_Hydrogen_Environment $env, $options = array() ){
+	public function __construct( CMF_Hydrogen_Environment $env, $options = [] ){
 		parent::__construct( $env, array_merge( array(
 			'linkItem'	=> './manage/my/mangopay/transaction/view/%s',
 			'linkBack'	=> '',
@@ -10,7 +10,7 @@ class View_Helper_Panel_Mangopay_Transactions extends View_Helper_Panel_Mangopay
 	}
 
 	public function render(){
-		$rows		= array();
+		$rows		= [];
 		foreach( $this->data as $transaction ){
 //			print_m( $transaction );die;
 			$statusClass	= 'label-warning';

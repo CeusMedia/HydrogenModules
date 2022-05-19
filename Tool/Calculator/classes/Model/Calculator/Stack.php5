@@ -1,7 +1,7 @@
 <?php
 class Model_Calculator_Stack
 {
-	protected $data	= array();
+	protected $data	= [];
 
 	public function push( $element )
 	{

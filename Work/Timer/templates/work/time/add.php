@@ -4,7 +4,7 @@ $w			= (object) $words['add'];
 $optStatus	= $words['states'];
 $optStatus	= UI_HTML_Elements::Options( $optStatus, $defaultStatus );
 
-$optProject	= array();
+$optProject	= [];
 foreach( $projectMap as $projectId => $project )
 	$optProject[$projectId]	= $project->title;
 $optProject	= UI_HTML_Elements::Options( $optProject, $defaultProjectId );

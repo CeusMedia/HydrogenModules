@@ -87,13 +87,13 @@ if( $user->userId !== $currentUserId ){
 }
 
 function renderFacts( $facts, $class = 'dl-horizontal' ){
-	$list	= array();
+	$list	= [];
 	foreach( $facts as $term => $values )
 		$list[]	= '<dt>'.$term.'</dt><dd>'.join( '</dd><dd>', $values ).'</dd>';
 	return '<dl class="'.$class.'">'.join( $list ).'</dl>';
 }
 
-$facts	= array();
+$facts	= [];
 $facts[$w->labelUsername]	= array( '<big><strong>'.$user->username.'</strong></big>' );
 if( $isRelated || $isCurrentUser ){
 	$facts[$w->labelName]	= array( $user->firstname.' '.$user->surname );

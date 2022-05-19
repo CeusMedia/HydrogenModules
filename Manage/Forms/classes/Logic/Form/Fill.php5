@@ -45,7 +45,7 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 		$parser		= new ADT_JSON_Parser;
 		$mapper		= new Logic_Form_Transfer_DataMapper( $this->env );
 
-		$transfers	= array();
+		$transfers	= [];
 		$transferData	= [];
 		foreach( $rules as $rule ){
 			$target = $this->modelTransferTarget->get( $rule->formTransferTargetId );
@@ -327,7 +327,7 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 		$fill		= $this->get( $fillId );
 		$form		= $this->modelForm->get( $fill->formId );
 		$data		= json_decode( $fill->data, TRUE );
-		$receivers	= array();
+		$receivers	= [];
 		$rulesets	= $this->modelRule->getAllByIndices( array(
 			'formId'	=> $fill->formId,
 			'type'		=> Model_Form_Rule::TYPE_MANAGER,

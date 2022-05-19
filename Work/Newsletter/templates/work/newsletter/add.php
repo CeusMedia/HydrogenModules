@@ -3,7 +3,7 @@
 $iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) ).'&nbsp;';
 $iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) ).'&nbsp;';
 
-$optTemplate	= array();
+$optTemplate	= [];
 foreach( $templates as $entry )
 	$optTemplate[$entry->newsletterTemplateId]	= $entry->title;
 $optTemplate	= UI_HTML_Elements::Options( $optTemplate, $newsletter->newsletterTemplateId );

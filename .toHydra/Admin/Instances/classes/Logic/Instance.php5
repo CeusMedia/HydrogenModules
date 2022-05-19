@@ -22,10 +22,10 @@ class Logic_Instance{
 		if( !$list ){
 			$this->env->setRemoteInstance( $instanceId );
 			$env		= $this->env->getRemote();
-			$list['installed']	= array();
-			$list['missing']	= array();
-			$list['updatable']	= array();
-			$list['supported']	= array();
+			$list['installed']	= [];
+			$list['missing']	= [];
+			$list['updatable']	= [];
+			$list['supported']	= [];
 			if( $env->getModules() instanceof CMF_Hydrogen_Environment_Resource_Module_Library_Local ){
 				$logic		= Logic_Module::getInstance( $this->env );
 				$modulesAll	= $logic->model->getAll();

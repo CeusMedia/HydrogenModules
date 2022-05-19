@@ -58,7 +58,7 @@ abstract class Logic_ShopBridge_Abstract
 		return $this->bridge->getBridgeId( $this );
 	}
 
-//	abstract public function getAll( $conditions = array(), $orders = array(), $limits = array());
+//	abstract public function getAll( $conditions = [], $orders = [], $limits = []);
 
 	/**
 	 *	Returns short description of article.

@@ -4,7 +4,7 @@
  */
 class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 {
-	static protected $modules	= array();
+	static protected $modules	= [];
 
 	protected $missionId		= NULL;
 
@@ -61,7 +61,7 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 
 	public function render(): string
 	{
-		$conditions	= array();
+		$conditions	= [];
 		$conditions['userId']	= (int) $this->userId;
 		$conditions['status']	= 1;
 		if( $this->module )

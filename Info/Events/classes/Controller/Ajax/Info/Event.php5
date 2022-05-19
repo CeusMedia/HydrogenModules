@@ -9,7 +9,7 @@ class Controller_Ajax_Info_Event extends CMF_Hydrogen_Controller
 
 	public function typeaheadCities( $startsWith = NULL )
 	{
-		$list		= array();
+		$list		= [];
 		$startsWith	= $startsWith ? $startsWith : $this->request->get( 'query' );
 		if( strlen( trim( $startsWith ) ) ){
 			$geocoder	= new Logic_Geocoder( $this->env );

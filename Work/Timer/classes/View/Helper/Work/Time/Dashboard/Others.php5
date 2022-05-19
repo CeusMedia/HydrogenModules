@@ -26,7 +26,7 @@ class View_Helper_Work_Time_Dashboard_Others extends CMF_Hydrogen_View_Helper_Ab
 			), array(
 				'modifiedAt'	=> 'DESC',
 			), array( 10, 0 ) );
-			$rows	= array();
+			$rows	= [];
 			foreach( $timers as $timer ){
 				View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
 				$secondsNeeded	= $timer->secondsNeeded + ( time() - $timer->modifiedAt );

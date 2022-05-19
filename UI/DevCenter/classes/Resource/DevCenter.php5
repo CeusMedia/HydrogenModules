@@ -9,9 +9,9 @@ class Resource_DevCenter
 
 	protected static $instance	= NULL;
 
-	protected $modules			= array();
+	protected $modules			= [];
 
-	protected $resources		= array();
+	protected $resources		= [];
 
 	protected function __construct( CMF_Hydrogen_Environment $env )
 	{

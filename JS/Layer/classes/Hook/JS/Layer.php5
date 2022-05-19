@@ -10,7 +10,7 @@ class Hook_JS_Layer extends CMF_Hydrogen_Hook{
 	 *	@return		void
 	 *	@todo		implement module main switch
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
 		$config	= $env->getConfig()->getAll( 'module.js_layer.', TRUE );
 		if( !$config->get( 'active' ) )
 			return;

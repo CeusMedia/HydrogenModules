@@ -3,7 +3,7 @@ class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery
 {
 	public function render(): string
 	{
-		$list		= array();
+		$list		= [];
 		$words		= $this->env->getLanguage()->getWords( 'info/gallery' );
 		foreach( $this->getGalleries() as $gallery ){
 			$urlGallery		= self::getGalleryUrl( $gallery, $this->baseUriPath );

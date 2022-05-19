@@ -11,7 +11,7 @@ $articleList	= $helper->renderCategory( $category/*, $heading*/ );
 
 $children		= "";
 if( $category->children ){
-	$children	= array();
+	$children	= [];
 	foreach( $category->children as $child ){
 		$children[]	= $helper->renderCategory( $child, TRUE );
 	}

@@ -1,26 +1,12 @@
 <?php
-class Controller_Manage_My_User_Oauth2 extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_My_User_Oauth2 extends CMF_Hydrogen_Controller
+{
 	protected $messenger;
 	protected $modelProvider;
 	protected $modelUserOauth;
 
-	public function __onInit(){
-		$this->messenger		= $this->env->getMessenger();
-		$this->modelProvider	= new Model_Oauth_Provider( $this->env );
-		$this->modelUserOauth	= new Model_Oauth_User( $this->env );
-		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
-	}
-
-	protected function checkProvider( $providerId, $strict = TRUE ){
-		if( $provider = $this->modelProvider->get( $providerId ) )
-			return $provider;
-		if( $strict )
-			throw new RangeException( 'Invalid provider ID' );
-		return NULL;
-	}
-
-	public function add( $providerId ){
+	public function add( $providerId )
+	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		$provider	= $this->modelProvider->get( $providerId );
@@ -62,7 +48,7 @@ class Controller_Manage_My_User_Oauth2 extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 		else{
-			$scopes	= array();
+			$scopes	= [];
 			if( $provider->composerPackage === "adam-paterson/oauth2-slack" )
 				$scopes	= array( 'scope' => ['identity.basic'] );
 			else if( $provider->composerPackage === "stevenmaguire/oauth2-paypal" )
@@ -75,12 +61,13 @@ class Controller_Manage_My_User_Oauth2 extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function index(){
+	public function index()
+	{
 		$providers	= $this->modelProvider->getAll(
 			array( 'status' => Model_Oauth_Provider::STATUS_ACTIVE ),
 			array( 'rank' => 'ASC' )
 		);
-		$list	= array();
+		$list	= [];
 		foreach( $providers as $provider )
 			$list[$provider->oauthProviderId]	= $provider;
 		$this->addData( 'providers', $list );
@@ -89,27 +76,14 @@ class Controller_Manage_My_User_Oauth2 extends CMF_Hydrogen_Controller{
 			array( 'localUserId' => $this->logicAuth->getCurrentUserId() ),
 			array( 'oauthUserId' => 'ASC' )
 		);
-		$list	= array();
+		$list	= [];
 		foreach( $relations as $relation )
 			$list[$relation->oauthProviderId]	= $relation;
 		$this->addData( 'relations', $list );
 	}
 
-	protected function getProviderObject( $providerId ){
-		$provider	= $this->checkProvider( $providerId );
-		if( !class_exists( $provider->className ) )
-			throw new RuntimeException( 'OAuth2 provider class is not existing: '.$provider->className );
-		$options		= array(
-			'clientId'		=> $provider->clientId,
-			'clientSecret'	=> $provider->clientSecret,
-			'redirectUri'	=> $this->env->url.'manage/my/user/oauth2/add/'.$providerId,
-		);
-		if( $provider->options )
-			$options	= array_merge( $options, json_decode( $provider->options, TRUE ) );
-		return Alg_Object_Factory::createObject( $provider->className, array( $options ) );
-	}
-
-	public function remove( $providerId ){
+	public function remove( $providerId )
+	{
 		$words		= (object) $this->getWords( 'remove' );
 		$provider	= $this->checkProvider( $providerId );
 		$indices	= array(
@@ -124,5 +98,37 @@ class Controller_Manage_My_User_Oauth2 extends CMF_Hydrogen_Controller{
 		$this->modelUserOauth->remove( $relation->oauthUserId );
 		$this->messenger->noteSuccess( $words->msgSuccess, $provider->title );
 		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->messenger		= $this->env->getMessenger();
+		$this->modelProvider	= new Model_Oauth_Provider( $this->env );
+		$this->modelUserOauth	= new Model_Oauth_User( $this->env );
+		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
+	}
+
+	protected function checkProvider( $providerId, bool $strict = TRUE )
+	{
+		if( $provider = $this->modelProvider->get( $providerId ) )
+			return $provider;
+		if( $strict )
+			throw new RangeException( 'Invalid provider ID' );
+		return NULL;
+	}
+
+	protected function getProviderObject( $providerId )
+	{
+		$provider	= $this->checkProvider( $providerId );
+		if( !class_exists( $provider->className ) )
+			throw new RuntimeException( 'OAuth2 provider class is not existing: '.$provider->className );
+		$options		= array(
+			'clientId'		=> $provider->clientId,
+			'clientSecret'	=> $provider->clientSecret,
+			'redirectUri'	=> $this->env->url.'manage/my/user/oauth2/add/'.$providerId,
+		);
+		if( $provider->options )
+			$options	= array_merge( $options, json_decode( $provider->options, TRUE ) );
+		return Alg_Object_Factory::createObject( $provider->className, array( $options ) );
 	}
 }

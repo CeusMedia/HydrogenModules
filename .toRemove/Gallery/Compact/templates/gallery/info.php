@@ -5,7 +5,7 @@ $imageName	= basename( $source );
 //  --  NAVI CONTROL  --  //
 $linkNext	= '';
 $linkPrev	= '';
-$images		= array();
+$images		= [];
 foreach( $files as $file )
 	if( !preg_match( '/\.(medium|small)\./', $file->getFilename() ) )
 		$images[]	= $file->getFilename();
@@ -48,8 +48,8 @@ $useDownload	= $options->get( 'download' );
 $useExif		= $options->get( 'exif' );
 
 //  --  VIEW MODE CONTROLS  --  //
-$modes		= array();
-$hints		= array();
+$modes		= [];
+$hints		= [];
 if( $useFullscreen ){
 	$label		= UI_HTML_Tag::create( 'span', "Vollbild" );
 	$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-arrows-alt fa-fw' ) ).'&nbsp;';
@@ -75,7 +75,7 @@ $hints	= UI_HTML_Tag::create( 'div', $hints, array( 'class' => 'gallery-image-vi
 
 
 //  --  ACTION CONTROLS  --  //
-$buttons	= array();
+$buttons	= [];
 if( 1 ){
 	$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-arrow-left fa-fw' ) ).'&nbsp;';
 	$label	= UI_HTML_Tag::create( 'span', $icon.'zur Galerieansicht' );
@@ -94,7 +94,7 @@ if( $useWallpaper ){
 	$attr	= array( 'type' => "button", 'class' => "not-button not-save btn btn-small", 'id' => "button-wallpaper" );
 	$buttons[$label]	= $attr;
 }
-$list	= array();
+$list	= [];
 foreach( $buttons as $label => $attributes )
 	$list[]	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'button', $label, $attributes ) );
 $buttons	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'buttons list-actions' ) );
@@ -102,9 +102,9 @@ $buttons	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'buttons list-ac
 //  --  IMAGE DATA / EXIF  --  //
 $listExif	= '';
 if( $useExif ){
-	$list	= array();
+	$list	= [];
 	$mps	= round( $exif->get( 'COMPUTED.Width' ) * $exif->get( 'COMPUTED.Height' ) / 1024 / 1024, 1 );
-	$data	= array();
+	$data	= [];
 	if( strlen( $exif->get( 'Make' ) ) && strlen( $exif->get( 'Model' ) ) ){
 		$model	= preg_replace( '/^'.$exif->get( 'Make' ).' /', '', $exif->get( 'Model' ) );
 		$data['Kamera']			= $exif->get( 'Make' ).' <b>'.$model.'</b>';
@@ -139,7 +139,7 @@ if( $useExif ){
 }
 
 //  --  IMAGE VIEW  --  //
-$class	= array();
+$class	= [];
 if( $useMagnifier )
 	$class[]	= 'zoomable';
 if( $useFullscreen )

@@ -2,7 +2,7 @@
 
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
 if( $testimonials ){
-	$list	= array();
+	$list	= [];
 	foreach( $testimonials as $entry ){
 		$author	= $entry->username.',&nbsp;'.date( 'd.m.Y', $entry->timestamp );
 		$quote	= UI_HTML_Tag::create( 'blockquote', array(

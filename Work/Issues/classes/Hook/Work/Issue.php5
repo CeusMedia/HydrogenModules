@@ -1,7 +1,7 @@
 <?php
 class Hook_Work_Issue extends CMF_Hydrogen_Hook
 {
-	static public function onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$context->registerModule( (object) array(
 			'moduleId'		=> 'Work_Issues',
@@ -88,7 +88,7 @@ class Hook_Work_Issue extends CMF_Hydrogen_Hook
 		$activeOnly		= isset( $payload->activeOnly ) ? $payload->activeOnly : FALSE;
 		$linkable		= isset( $payload->linkable ) ? $payload->linkable : FALSE;
 		$statusesActive	= array( 0, 1, 2, 3, 4, 5 );
-		$list			= array();
+		$list			= [];
 		$indices		= array( 'reporterId' => $payload->userId );
 		if( $activeOnly )
 			$indices['status']	= $statusesActive;
@@ -140,7 +140,7 @@ class Hook_Work_Issue extends CMF_Hydrogen_Hook
 		$payload->linkable		= isset( $payload->linkable ) ? $payload->linkable : FALSE;
 		$language		= $env->getLanguage();
 		$statusesActive	= array( 0, 1, 2, 3, 4, 5 );
-		$list			= array();
+		$list			= [];
 		$modelIssue		= new Model_Issue( $env );
 		$indices		= array( 'projectId' => $payload->projectId );
 		if( $payload->activeOnly )

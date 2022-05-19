@@ -1,7 +1,7 @@
 <?php
 class Hook_Info_Forum extends CMF_Hydrogen_Hook
 {
-	public static function onPageCollectNews( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onPageCollectNews( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$model			= new Model_Forum_Thread( $env );
 		$oneDay			= 24 * 60 * 60;

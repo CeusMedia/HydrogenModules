@@ -5,12 +5,6 @@ class Job_Mail_Queue extends Job_Abstract
 	protected $options;
 //	protected $greylistingDelay	= 900;
 
-	public function __onInit()
-	{
-		$this->logic		= Logic_Mail::getInstance( $this->env );
-		$this->options		= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
-	}
-
 	public function countQueuedMails()
 	{
 		$conditions		= array( 'status' => array( Model_Mail::STATUS_NEW ) );
@@ -30,8 +24,8 @@ class Job_Mail_Queue extends Job_Abstract
 			$this->logic->abortMailsWithTooManyAttempts();
 
 		$counter	= 0;
-		$listSent	= array();
-		$listFailed	= array();
+		$listSent	= [];
+		$listFailed	= [];
 		$conditions	= array(
 			'status'		=> array(
 				Model_Mail::STATUS_NEW,
@@ -77,5 +71,11 @@ class Job_Mail_Queue extends Job_Abstract
 			'timestamp'	=> time(),
 			'datetime'	=> date( "Y-m-d H:i:s" ),
 		), $this->results ) ) );
+	}
+
+	protected function __onInit()
+	{
+		$this->logic		= Logic_Mail::getInstance( $this->env );
+		$this->options		= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 	}
 }

@@ -51,7 +51,7 @@ AND POWER(".$coords->x." - a.x, 2) + POWER(".$coords->y." - a.y, 2) + POWER(".$c
 ORDER BY dateStart ASC, timeStart ASC
 ";
 //xmp( $query );die;
-		$list	= array();
+		$list	= [];
 		foreach( $this->env->dbc->query( $query )->fetchAll( PDO::FETCH_OBJ ) as $event ){
 			$powX	= pow( $coords->x - $event->x, 2);
 			$powY	= pow( $coords->y - $event->y, 2);

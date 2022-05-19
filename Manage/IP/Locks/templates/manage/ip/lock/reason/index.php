@@ -24,7 +24,7 @@ if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){
 
 $list	= '<div><em><small>Keine IP-Lock-Gründe gefunden.</small></em></div>';
 if( $reasons ){
-	$list	= array();
+	$list	= [];
 	foreach( $reasons as $reason ){
 		$buttonEdit		= UI_HTML_Tag::create( 'a', $iconEdit, array(
 			'href'		=> './manage/ip/lock/reason/edit/'.$reason->ipLockReasonId,

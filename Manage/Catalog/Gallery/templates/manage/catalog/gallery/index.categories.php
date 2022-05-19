@@ -1,5 +1,5 @@
 <?php
-$list	= array();
+$list	= [];
 foreach( $categories as $item ){
 	$count	= new UI_HTML_Tag( 'span', '('.count( $item->images ).')', array( 'class' => 'muted' ) );
 	$href	= './manage/catalog/gallery/editCategory/'.$item->galleryCategoryId;

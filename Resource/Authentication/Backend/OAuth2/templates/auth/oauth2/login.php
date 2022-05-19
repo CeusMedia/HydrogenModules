@@ -3,7 +3,7 @@
 $list	= UI_HTML_Tag::create( 'div', 'Keine OAuth2-Provider verfügbar.', array( 'class' => 'alert alert-error' ) );
 
 if( $providers ){
-	$list	= array();
+	$list	= [];
 	foreach( $providers as $provider ){
 		$icon	= '';
 		if( $provider->icon )

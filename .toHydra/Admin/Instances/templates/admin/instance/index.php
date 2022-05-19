@@ -25,7 +25,7 @@ function formatUrl( $url ){
 	return $scheme.$host.$path;
 }
 
-$rows	= array();
+$rows	= [];
 foreach( $instances as $instanceId => $instance ){
 	$instance->host     = $instance->host === "localhost" ? $env->host . ( $env->port && $env->port != 80 ? ":".$env->port : "" ) : $instance->host;
 	$instance->protocol	= empty( $instance->protocol ) ? 'http://' : $instance->protocol;

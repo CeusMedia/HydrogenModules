@@ -130,7 +130,7 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 		return $this->modelReaderGroup->countByIndex( 'newsletterGroupId', $groupId );
 	}
 
-	public function countNewsletters( $conditions = array() )
+	public function countNewsletters( $conditions = [] )
 	{
 		return $this->modelNewsletter->count( $conditions );
 	}
@@ -170,8 +170,8 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 
 	public function getGroupReaders( $groupId )
 	{
-		$list		= array();
-		$readers	= array();
+		$list		= [];
+		$readers	= [];
 		foreach( $this->modelReader->getAllByIndex( 'status', '> 0' ) as $reader )
 			$readers[$reader->newsletterReaderId]	= $reader;
 		$relations	= $this->modelReaderGroup->getAllByIndex( 'newsletterGroupId', $groupId );
@@ -181,19 +181,19 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 		return $list;
 	}
 
-	public function getGroups( $conditions = array(), $orders = array() )
+	public function getGroups( $conditions = [], $orders = [] )
 	{
-		$list	= array();
+		$list	= [];
 		foreach( $this->modelGroup->getAll( $conditions, $orders ) as $group )
 			$list[$group->newsletterGroupId]	= $group;
 		return $list;
 	}
 
-	public function getGroupsOfReader( $readerId, $conditions = array(), $orders = array() )
+	public function getGroupsOfReader( $readerId, $conditions = [], $orders = [] )
 	{
 		$this->checkReaderId( $readerId, TRUE );
-		$list		= array();
-		$groupIds	= array();
+		$list		= [];
+		$groupIds	= [];
 		$conditions['newsletterReaderId']	= $readerId;
 		$relations	= $this->modelReaderGroup->getAll( $conditions );
 		foreach( $relations as $relation )
@@ -206,7 +206,7 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 		return $list;
 	}
 
-	public function getLettersOfReader( $readerId, $conditions = array(), $orders = array() )
+	public function getLettersOfReader( $readerId, $conditions = [], $orders = [] )
 	{
 		$this->checkReaderId( $readerId, TRUE );
 		$letters	= $this->modelReaderLetter->getAllByIndex( 'newsletterReaderId', $readerId );
@@ -221,9 +221,9 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 		return $this->modelNewsletter->get( $newsletterId );
 	}
 
-	public function getNewsletters( $conditions = array(), $orders = array(), $limits = array() )
+	public function getNewsletters( $conditions = [], $orders = [], $limits = [] )
 	{
-		$list	= array();
+		$list	= [];
 		foreach( $this->modelNewsletter->getAll( $conditions, $orders, $limits ) as $newsletter )
 			$list[$newsletter->newsletterId]	= $newsletter;
 		return $list;
@@ -235,7 +235,7 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 		if( $extended ){
 			$indices	= array( 'newsletterQueueId' => $queueId );
 			$queue->countLetters	= $this->modelReaderLetter->count( $indices );
-			$queue->countLettersByStatus	= array();
+			$queue->countLettersByStatus	= [];
 			for( $i=-3; $i<3; $i++ ){
 				$queue->countLettersByStatus[$i]	= $this->modelReaderLetter->count(
 					array_merge( $indices, array( 'status' => $i ) )
@@ -250,7 +250,7 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 		return $queue;
 	}
 
-	public function getQueues( $conditions = array(), $orders = array(), $limits = array() )
+	public function getQueues( $conditions = [], $orders = [], $limits = [] )
 	{
 		return $this->modelQueue->getAll( $conditions, $orders, $limits );
 	}
@@ -265,7 +265,7 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 				$modelUser		= new Model_User( $this->env );
 				$queue->creator	= $modelUser->get( $queue->creatorId );
 			}
-			$queue->countLettersByStatus	= array();
+			$queue->countLettersByStatus	= [];
 			for( $i=-3; $i<3; $i++ ){
 				$queue->countLettersByStatus[$i]	= $this->modelReaderLetter->count(
 					array_merge( $indices, array( 'status' => $i ) )
@@ -291,9 +291,9 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 		return $this->modelReaderLetter->get( $readerLetterId );
 	}
 
-	public function getReaderLetters( $conditions = array(), $orders = array(), $limits = array() )
+	public function getReaderLetters( $conditions = [], $orders = [], $limits = [] )
 	{
-		$list	= array();
+		$list	= [];
 		foreach( $this->modelReaderLetter->getAll( $conditions, $orders, $limits ) as $letter ){
 			$letter->reader		= $this->getReader( $letter->newsletterReaderId );
 			$list[$letter->newsletterReaderLetterId]	= $letter;
@@ -301,23 +301,23 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 		return $list;
 	}
 
-	public function getReaders( $conditions = array(), $orders = array(), $limits = array() )
+	public function getReaders( $conditions = [], $orders = [], $limits = [] )
 	{
-		$list	= array();
+		$list	= [];
 		foreach( $this->modelReader->getAll( $conditions, $orders, $limits ) as $reader )
 			$list[$reader->newsletterReaderId]	= $reader;
 		return $list;
 	}
 
-	public function getReadersOfGroup( $groupId, $conditions = array(), $orders = array() )
+	public function getReadersOfGroup( $groupId, $conditions = [], $orders = [] )
 	{
 		return $this->getReadersOfGroups( array( $groupId ), $conditions, $orders );
 	}
 
-	public function getReadersOfGroups( $groupIds, $conditions = array(), $orders = array() )
+	public function getReadersOfGroups( $groupIds, $conditions = [], $orders = [] )
 	{
-		$list		= array();
-		$readerIds	= array();
+		$list		= [];
+		$readerIds	= [];
 		foreach( $groupIds as $groupId ){
 			$relations	= $this->modelReaderGroup->getAllByIndex( 'newsletterGroupId', $groupId );
 			foreach( $relations as $relation )
@@ -346,9 +346,9 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 		return $this->modelTemplate->get( $templateId );
 	}
 
-	public function getTemplates( $conditions = array(), $orders = array() )
+	public function getTemplates( $conditions = [], $orders = [] )
 	{
-		$list		= array();
+		$list		= [];
 		$modelTheme	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
 		foreach( $this->modelTemplate->getAll( $conditions, $orders ) as $template ){
 			if( $template->themeId )
@@ -362,7 +362,7 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 	{
 		$this->checkTemplateId( $templateId, $strict );
 		$template	= $this->modelTemplate->get( $templateId );
-		$list		= array();
+		$list		= [];
 
 		if( !empty( $template->$columnKey ) && strlen( trim( $template->$columnKey ) ) ){
 			$list	= substr( $template->$columnKey, 1, -1 );

@@ -11,7 +11,7 @@ die;
 function renderDefinitionList( $data ){
 	if( !count( $data ) )
 		return '';
-	$list	= array();
+	$list	= [];
 	foreach( $data as $key => $value ){
 		$list[]	= UI_HTML_Tag::create( 'dt', $key );
 		$list[]	= UI_HTML_Tag::create( 'dd', $value );
@@ -31,7 +31,7 @@ function renderDefinitionList( $data ){
 		}
 */
 
-$data1	= array();
+$data1	= [];
 $data1['Produkt']				= $product->title;
 $data1['Lizenz']				= $userLicense->productLicense->title;
 $data1['Schlüssel in Lizenz']	= $userLicense->users;

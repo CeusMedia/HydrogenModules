@@ -1,6 +1,6 @@
 <?php
 
-$facts	= array();
+$facts	= [];
 if( isset( $missions ) && count( $missions ) ){
 	$url	= './work/mission/filter?projects[]='.$project->projectId;
 	$label	= UI_HTML_Tag::create( 'a', count( $missions ), array( 'href' => $url ) );

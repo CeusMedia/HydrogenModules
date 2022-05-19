@@ -127,7 +127,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 			$this->addData( 'content', File_Reader::load( $filePath ) );
 			$this->addData( 'readonly', !is_writeable( $filePath ) );
 
-			$editors	= array();
+			$editors	= [];
 			if( $this->env->getModules()->has( 'JS_Ace' ) )
 				$editors[]	= 'Ace';
 			if( $this->env->getModules()->has( 'JS_CodeMirror' ) )
@@ -195,7 +195,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 	}
 
 	protected function indexFiles(){
-		$list		= array();
+		$list		= [];
 		foreach( static::$folders as $folderKey => $folderPath ){
 			if( $folderKey !== $this->folder )
 				continue;

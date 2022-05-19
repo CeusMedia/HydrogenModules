@@ -1,7 +1,7 @@
 <?php
 class Controller_Manage_My_Order extends CMF_Hydrogen_Controller{
 
-	protected $backends	= array();
+	protected $backends	= [];
 	protected $logicShop;
 	protected $logicAuth;
 
@@ -11,7 +11,7 @@ class Controller_Manage_My_Order extends CMF_Hydrogen_Controller{
 
 		$captain	= $this->env->getCaptain();
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
-		$backends	= array();
+		$backends	= [];
 		foreach( $this->backends as $backend )
 			$backends[$backend->key]	= $backend;
 		$this->addData( 'paymentBackends', $backends );
@@ -40,7 +40,7 @@ class Controller_Manage_My_Order extends CMF_Hydrogen_Controller{
 	 *	@param		string		$icon			...
 	 *	@return		void
 	 */
-	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL, $countries = array() ){
+	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL, $countries = [] ){
 		$this->backends[]	= (object) array(
 			'backend'	=> $backend,
 			'key'		=> $key,

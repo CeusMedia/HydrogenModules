@@ -13,7 +13,7 @@ foreach( $images as $nr => $item ){
 	}
 }
 
-$list			= array();
+$list			= [];
 $pathPreview	= $pathImages.'preview/'.$category->path.'/';
 $pathOriginal	= $pathImages.'original/'.$category->path.'/';
 

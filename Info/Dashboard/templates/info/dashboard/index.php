@@ -55,7 +55,7 @@ try{
 			'onclick'	=> 'if(!confirm(\'Wirklich das aktuelle Dashboard auflösen?\'))return false;',
 		) );
 
-		$optDashboardId	= array();
+		$optDashboardId	= [];
 		foreach( $dashboards as $entry )
 			$optDashboardId[$entry->dashboardId]	= $entry->title;
 		$optDashboardId	= UI_HTML_Elements::Options( $optDashboardId, $dashboard->dashboardId );

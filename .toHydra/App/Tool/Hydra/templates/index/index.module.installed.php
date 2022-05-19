@@ -1,5 +1,5 @@
 <?php
-$listModulesInstalled	= array();
+$listModulesInstalled	= [];
 foreach( $modulesInstalled as $moduleId => $module ){
 	$desc	= explode( "\n", $module->description );
 	$desc	= trim( array_shift( $desc ) );

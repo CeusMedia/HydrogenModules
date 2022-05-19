@@ -21,7 +21,7 @@ $(document).ready(function(){loadMap("map_canvas")});
 /*$panelCoupons	= "";
 if( $env->getModules()->has( 'Manage_Coupon' ) ){
 	$w				= (object) $words['coupons'];
-	$listCoupons	= array();
+	$listCoupons	= [];
 	foreach( $coupons as $coupon ){
 		$url	= './manage/my/coupon/edit/'.$coupon->couponId;
 		$listCoupons[]	= HTML::Li( HTML::Link( $url, $coupon->title ), 'coupon' );
@@ -39,7 +39,7 @@ $w	= (object) $words['edit'];
 extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/manage/my/branch/edit/' ) );
 
 $optStatus	= HTML::Options( $words['states'], $branch->status );
-$optCompany	= array();
+$optCompany	= [];
 foreach( $companies as $company )
 	$optCompany[$company->companyId]	= $company->title;
 

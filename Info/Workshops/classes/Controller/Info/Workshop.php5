@@ -3,12 +3,6 @@ class Controller_Info_Workshop extends CMF_Hydrogen_Controller
 {
 	protected $model;
 
-	public function __onInit()
-	{
-		$this->model	= new Model_Workshop( $this->env );
-		$this->addData( 'pathImages', '' );
-	}
-
 	public function index()
 	{
 		$conditions	= array( 'status' => array( 1, 2 ) );
@@ -25,5 +19,11 @@ class Controller_Info_Workshop extends CMF_Hydrogen_Controller
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'workshop', $this->model->get( $id ) );
+	}
+
+	protected function __onInit()
+	{
+		$this->model	= new Model_Workshop( $this->env );
+		$this->addData( 'pathImages', '' );
 	}
 }

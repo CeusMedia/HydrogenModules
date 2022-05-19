@@ -10,7 +10,7 @@ $helper		= new View_Helper_Catalog( $env );
 $position	= $helper->renderPositionFromCategory();
 
 /*
-$lists	= array();
+$lists	= [];
 for( $i=0; $i<$columns; $i++ ){
 	$column	= $helper->renderCategoryList( array_slice( $categories, $i*$edge, ($i+1)*$edge ), $language );
 	$column	= '<div class="column column-'.$columns.'">'.$column.'</div>';
@@ -21,7 +21,7 @@ $lists	= join( $lists );
 
 $total	= count( $categories );
 $edge	= ceil( $total / 2 );
-$lists	= array();
+$lists	= [];
 for( $i=0; $i<2; $i++ ){
 	$column	= $helper->renderCategoryList( array_slice( $categories, $i*$edge, ($i+1)*$edge ), $language );
 	$column	= '<div class="column span6">'.$column.'</div>';

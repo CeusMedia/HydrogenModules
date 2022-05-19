@@ -7,7 +7,7 @@ $tabs	 = array(
 	'manage/content/image'		=> 'Bilder',
 );
 $current	= 'manage/content/link';
-$list	= array();
+$list	= [];
 foreach( $tabs as $key => $value ){
 	$class	= $key == $current ? 'active' : NULL;
 	$link	= UI_HTML_Tag::create( 'a', $value, array( 'href' => $key ) );

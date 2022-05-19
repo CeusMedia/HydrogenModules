@@ -22,7 +22,7 @@ $labelEmpty	= UI_HTML_Tag::create( 'em', $w->empty, array( 'class' => 'muted' ) 
 $list		= UI_HTML_Tag::create( 'div', $labelEmpty, array( 'class' => 'alert alert-info' ) );
 
 if( $templates ){
-	$list	= array();
+	$list	= [];
 	foreach( $templates as $template ){
 		$attributes	= array( 'href' => './work/newsletter/template/edit/'.$template->newsletterTemplateId );
 		$link	= UI_HTML_Tag::create( 'a', $template->title, $attributes );

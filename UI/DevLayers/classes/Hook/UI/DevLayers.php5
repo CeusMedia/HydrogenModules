@@ -11,7 +11,7 @@ class Hook_UI_DevLayers extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onAppRespond( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onAppRespond( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		if( !$env->getConfig()->get( 'module.ui_devlayers.active' ) )
 			return;
@@ -29,7 +29,7 @@ class Hook_UI_DevLayers extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		if( !$env->getConfig()->get( 'module.ui_devlayers.active' ) )
 			return;

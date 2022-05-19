@@ -4,7 +4,7 @@ class Model_ModuleSource
 	const STATUS_NONE			= 0;
 	const STATUS_OKAY			= 1;
 
-	protected $data			= array();
+	protected $data			= [];
 	protected $fileName;
 	protected $hymn;
 	protected $status		= self::STATUS_NONE;
@@ -93,7 +93,7 @@ class Model_ModuleSource
 
 	public function getAll( bool $activeOnly = TRUE ): array
 	{
-		$list		= array();
+		$list		= [];
 		if( !$this->checkSupport( FALSE ) )
 			return $list;
 		foreach( $this->data as $id => $data ){

@@ -1,23 +1,14 @@
 <?php
-class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
-
+class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
+{
 	/**	@var	Logic_Catalog_Provision				$logic */
 	protected $logic;
 
 	/**	@var	integer								$taxRate		Tax rate, configured by module */
 	protected $taxRate = 19;
 
-	/**
-	 *	Constructor.
-	 *	@access		public
-	 *	@return		void
-	 */
-	public function __onInit(){
-		$this->logic		= Logic_Catalog_Provision::getInstance( $this->env );
-		$this->taxRate		= $this->env->getConfig()->get( 'module.catalog_provision.tax.rate' );
-	}
-
-	public function changeQuantity( $articleId, $change ){
+	public function changeQuantity( $articleId, $change )
+	{
 	}
 
 	/**
@@ -28,7 +19,8 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 	 *	@return		object						Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function check( $articleId, $strict = TRUE ){
+	public function check( $articleId, $strict = TRUE )
+	{
 		$article	= $this->logic->getProductLicense( $articleId );
 		if( !$article )
 			throw new RuntimeException( 'Article with ID '.$articleId.' is not existing' );
@@ -41,7 +33,8 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	public function get( $articleId, $quantity = 1 ){
+	public function get( $articleId, $quantity = 1 )
+	{
 		return (object) array(
 			'id'		=> $articleId,
 			'link'		=> $this->getLink( $articleId ),
@@ -72,7 +65,8 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	public function getDescription( $articleId ){
+	public function getDescription( $articleId )
+	{
 		$productLicense		= $this->check( $articleId );
 		$descriptionLines	= explode( "\n", strip_tags ( $productLicense->description ) );
 		return html_entity_decode( array_shift( $descriptionLines ) );
@@ -84,7 +78,8 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	public function getLink( $articleId ){
+	public function getLink( $articleId )
+	{
 		$productLicense		= $this->check( $articleId );
 		return 'catalog/provision/license/view/'.$productLicense->productId.'/'.$articleId;
 	}
@@ -97,7 +92,8 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 	 *	@return		string
 	 *	@todo		implement absolute mode
 	 */
-	public function getPicture( $articleId, $absolute = FALSE ){
+	public function getPicture( $articleId, $absolute = FALSE )
+	{
 		return '';
 		$productLicense		= $this->check( $articleId );
 //		$category	= $this->modelCategory->get( $image->galleryCategoryId );
@@ -112,7 +108,8 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getPrice( $articleId, $amount = 1 ){
+	public function getPrice( $articleId, $amount = 1 )
+	{
 		$productLicense		= $this->check( $articleId );
 		return $productLicense->price * $amount;
 	}
@@ -124,7 +121,8 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getTax( $articleId, $amount = 1 ){
+	public function getTax( $articleId, $amount = 1 )
+	{
 		$productLicense		= $this->check( $articleId );
 		return $productLicense->price * ( $this->taxRate / 100 ) * $amount;
 	}
@@ -135,9 +133,20 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract{
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	public function getTitle( $articleId ){
+	public function getTitle( $articleId )
+	{
 		$productLicense		= $this->check( $articleId );
 		return $productLicense->product->title.': '.$productLicense->title;
 	}
+
+	/**
+	 *	Constructor.
+	 *	@access		public
+	 *	@return		void
+	 */
+	protected function __onInit()
+	{
+		$this->logic		= Logic_Catalog_Provision::getInstance( $this->env );
+		$this->taxRate		= $this->env->getConfig()->get( 'module.catalog_provision.tax.rate' );
+	}
 }
-?>

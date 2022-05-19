@@ -9,7 +9,7 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller
 	protected $logicProject;
 	protected $modelTimer;
 	protected $projectMap;
-	protected $modules			= array();
+	protected $modules			= [];
 
 	public function add()
 	{
@@ -94,7 +94,7 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller
 		View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer, FALSE );
 
 		if( $this->request->has( 'save' ) ){
-			$data			= array();
+			$data			= [];
 			if( $timer->status != 1 )
 				$data['modifiedAt'] = time();
 			if( $this->request->has( 'workerId' ) )
@@ -147,7 +147,7 @@ class Controller_Work_Time extends CMF_Hydrogen_Controller
 
         $logicAuth      = Logic_Authentication::getInstance( $this->env );
         $currentUserId  = $logicAuth->getCurrentUserId();
-		$projectUsers	= array();
+		$projectUsers	= [];
 		if( $timer->projectId ){
 	        $logicProject   = Logic_Project::getInstance( $this->env );
 			$projectUsers	= $logicProject->getProjectUsers( $timer->projectId, array(), array( 'username' => 'ASC' ) );

@@ -112,7 +112,7 @@ class Controller_Manage_Job_Schedule extends CMF_Hydrogen_Controller
 		$this->modelRun			= new Model_Job_Run( $this->env );
 		$this->logic			= $this->env->getLogic()->get( 'Job' );
 
-		$this->allDefinitions	= array();
+		$this->allDefinitions	= [];
 		$definitions	= $this->modelDefinition->getAll( array(), array( 'identifier' => 'ASC' ) );
 		foreach( $definitions as $definition )
 			$this->allDefinitions[(int) $definition->jobDefinitionId] = $definition;

@@ -12,7 +12,7 @@ $listGroups		= '<div class="alert alert-danger">
 	Diese Testgruppe muss Empfänger beinhalten und verwendbar sein.
 </div>';
 $disabled		= ' disabled="disabled"';
-$list			= array();
+$list			= [];
 foreach( $groups as $group ){
 	if( (int) $group->status !== 1 )
 		continue;
@@ -60,7 +60,7 @@ $panelGroups	= '
 $list		= '<div class="alert"><em><small class="not-muted">Keine Testgruppe gewählt.</small></em></div>';
 $disabled	= ' disabled="disabled"';
 if( $readers ){
-	$list	= array();
+	$list	= [];
 	foreach( $readers as $reader ){
 		$label	= $reader->firstname.' '.$reader->surname.' <small class="muted">&lt;'.$reader->email.'&gt;</small>';
 		$list[]	= '<label class="checkbox"><input type="checkbox" name="readerIds[]" checked="checked" value="'.$reader->newsletterReaderId.'"/> '.$label.'</label>';

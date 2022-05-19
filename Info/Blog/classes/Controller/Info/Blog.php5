@@ -178,7 +178,7 @@ class Controller_Info_Blog extends CMF_Hydrogen_Controller
 		$postAuthor	= $this->modelUser->get( $post->authorId );										//  set post author as mail receiver
 		$logic->handleMail( $mail, $postAuthor, $language->getLanguage() );							//  enqueue mail
 
-		$addresses	= array();
+		$addresses	= [];
 		$indices	= array( 'postId' => $post->postId, 'status' => '>= 0' );						//  get all visible post comments
 		foreach( $this->modelComment->getAllByIndices( $indices ) as $item ){						//  find former comment authors
 			if( empty( $item->email ) )																//  comment without email address

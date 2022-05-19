@@ -29,7 +29,8 @@ class Logic_Mail_Sync extends CMF_Hydrogen_Logic
 		return $this->modelRun->add( $data );
 	}
 
-	public function editSync( $id, array $data ){
+	public function editSync( $id, array $data )
+	{
 		$data['modifiedAt']	= time();
 		return $this->modelSync->edit( $id, $data );
 	}
@@ -61,22 +62,22 @@ class Logic_Mail_Sync extends CMF_Hydrogen_Logic
 		return $this->modelRun->get( $id );
 	}
 
-	public function getSyncs( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getSyncs( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelSync->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getSyncHosts( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getSyncHosts( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelHost->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getSyncRuns( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getSyncRuns( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelRun->getAll( $conditions, $orders, $limits );
 	}
 
-	public function __onInit()
+	protected function __onInit()
 	{
 		$this->modelSync	= new Model_Mail_Sync( $this->env );
 		$this->modelHost	= new Model_Mail_Sync_Host( $this->env );

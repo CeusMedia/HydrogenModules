@@ -7,7 +7,7 @@ class View_Helper_UserAvatar{
 	protected $moduleConfig;
 	protected $modelAvatar;
 	protected $useGravatar;
-	protected $cache			= array();
+	protected $cache			= [];
 
 	public function __construct( $env ){
 		$this->env			= $env;

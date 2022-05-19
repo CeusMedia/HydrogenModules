@@ -15,7 +15,7 @@ class View_Helper_Catalog{
 		$this->cache	= $this->env->getCache();
 	}
 
-	static public function ___onRenderNewsItem( CMF_Hydrogen_Environment $env, &$context, $module, $data = array() ){
+	static public function ___onRenderNewsItem( CMF_Hydrogen_Environment $env, &$context, $module, $data = [] ){
 		$context->content	= self::applyLinks( $env, $context->content );
 	}
 
@@ -24,7 +24,7 @@ class View_Helper_Catalog{
 		$patternAuthor = "/\[author:([0-9]+)\|?([^\]]+)?\]/";
 		$logic	= new Logic_Catalog( $env );
 		while( preg_match( $patternAuthor, $content ) ){
-			$matches	= array();
+			$matches	= [];
 			preg_match( $patternAuthor, $content, $matches );
 			$url		= $logic->getAuthorUri( (int) $matches[1] );
 			if( !isset( $matches[2] ) ){
@@ -36,7 +36,7 @@ class View_Helper_Catalog{
 		}
 		$patternArticle	= "/\[article:([0-9]+)\|?([^\]]+)?\]/";
 		while( preg_match( $patternArticle, $content ) ){
-			$matches		= array();
+			$matches		= [];
 			preg_match( $patternArticle, $content, $matches );
 			$url		= $logic->getArticleUri( (int) $matches[1] );
 			if( !isset( $matches[2] ) )
@@ -46,7 +46,7 @@ class View_Helper_Catalog{
 		}
 		$patternCategory	= "/\[category:([0-9]+)\|?([^\]]+)?\]/";
 		while( preg_match( $patternCategory, $content ) ){
-			$matches		= array();
+			$matches		= [];
 			preg_match( $patternCategory, $content, $matches );
 			$url		= $logic->getCategoryUri( (int) $matches[1] );
 			if( !isset( $matches[2] ) )
@@ -92,10 +92,10 @@ class View_Helper_Catalog{
 		$words		= $language->getWords( 'catalog' );
 
 		$words		= $words['index'];
-		$item		= array();
+		$item		= [];
 		$item['volume']	= !empty( $article->volume ) ? $words['volume'].$article->volume : "";
 
-		$authorlist	= array();
+		$authorlist	= [];
 		$logic		= new Logic_Catalog( $this->env );
 		$authors	= $logic->getAuthorsOfArticle( $article->articleId );
 		foreach( $authors as $author ){
@@ -113,7 +113,7 @@ class View_Helper_Catalog{
 		$item['image']	= $this->renderArticleImage( $article );
 		$item['title']	= $this->renderArticleLink( $article );
 		$item['text']	= View_Helper_Text::applyFormat( $article->subtitle );
-		$info	= array();
+		$info	= [];
 		if( $article->size )
 			$info[]	= $article->size;
 		if( $article->digestion )
@@ -194,7 +194,7 @@ class View_Helper_Catalog{
 		}
 #		if($data['label_former'])
 #			$content = '<small>'.$words['aka'].'</small>&nbsp;'.$data['label_former'].'<br/><br/>'.$content;
-		$descriptions	= array();
+		$descriptions	= [];
 		if( strlen( trim( $category->publisher ) ) )
 			$descriptions[]	= $category->publisher;
 		if( strlen( trim( $category->issn ) ) )
@@ -211,7 +211,7 @@ class View_Helper_Catalog{
 		if( NULL === ( $list = $this->cache->get( $cacheKey ) ) ){
 			$orders		= array( 'ABS(volume)' => 'DESC', 'articleId' => 'DESC' );
 			$articles	= $this->logic->getCategoryArticles( $category, $orders );
-			$list	= array();
+			$list	= [];
 			foreach( $articles as $article )
 				$list[]	= $this->renderArticleListItem( $article );
 			$this->cache->set( $cacheKey, $list );
@@ -227,9 +227,9 @@ class View_Helper_Catalog{
 	}
 
 	public function renderCategoryList( $data, $language = "de" ){
-		$list	= array();
+		$list	= [];
 		foreach( $data as $category ){
-			$sub	= array();
+			$sub	= [];
 			foreach( $category->categories as $subcategory ){
 				$link	= $this->renderCategoryLink( $subcategory, $language );
 				$sub[]	= UI_HTML_Elements::ListItem( $link, 1, array( 'class' => 'topic' ) );

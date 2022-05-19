@@ -19,7 +19,7 @@ class View_Helper_Mangopay_List_Wallets_Big extends View_Helper_Mangopay_Abstrac
 		$helperMoney->setFormat( View_Helper_Mangopay_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
 		$helperMoney->setNumberFormat( View_Helper_Mangopay_Entity_Money::NUMBER_FORMAT_COMMA );
 		$helperMoney->setNodeName( 'div' );
-		$list	= array();
+		$list	= [];
 		foreach( $this->wallets as $wallet ){
 		//	print_m( $card );die;
 			$logo		= $helperWalletLogo->setWallet( $wallet->Balance )->render();

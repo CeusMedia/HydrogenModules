@@ -1,6 +1,6 @@
 <?php
 
-$list	= array();
+$list	= [];
 
 #$instance->path	= empty( $instance->path ) ? '/' : $instance->path;
 #if( !preg_match( '/^\//', $instance->path ) )

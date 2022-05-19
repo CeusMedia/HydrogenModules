@@ -126,7 +126,7 @@ $buttons	= new \CeusMedia\Bootstrap\Button\Toolbar( array( new \CeusMedia\Bootst
 
 
 function renderDataList( $keys, $data, $labels ){
-	$list	= array();
+	$list	= [];
 	foreach( $keys as $key ){
 		if( isset( $data->$key ) && strlen( trim( $data->$key ) ) ){
 			$list[]	= UI_HTML_Tag::create( 'dt', $labels->$key );
@@ -140,7 +140,7 @@ function renderDataList( $keys, $data, $labels ){
 $optStatus	= $words['states'];
 $optStatus	= UI_HTML_Elements::Options( $optStatus, (string)$order->status );
 
-$panels	= array();
+$panels	= [];
 $panels[]	= '
 	<div class="span4">
 		<div class="content-panel">
@@ -180,7 +180,7 @@ if( $order->customer && $order->customer->addressBilling )
 	</div>';
 
 $w		= (object) $words['positions'];
-$rows	= array();
+$rows	= [];
 foreach( $order->positions as $position ){
 	$url	= './'.$position->bridge->data->backendUriPath.'edit/'.$position->articleId;
 	if( substr_count( $position->bridge->data->backendUriPath, "%s" ) )

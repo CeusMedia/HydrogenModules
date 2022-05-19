@@ -150,7 +150,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$topic		= strlen( $topic ) ? $topic : NULL;
 
 		$index	= new FS_File_RegexFilter( 'contents/dev/', "/\.txt$/" );
-		$list	= array();
+		$list	= [];
 		foreach( $index as $file ){
 			$fileName	= pathinfo( $file->getFilename(), PATHINFO_FILENAME );
 			$list[$fileName]	= filemtime( $file->getPathname() );
@@ -350,7 +350,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		switch( $mode ){
 			case 'add':
 				if( !is_array( $store ) )
-					$store	= array();
+					$store	= [];
 				$store[]	= $value;
 				$session->set( 'filter_blog_'.$name, $store );
 				break;
@@ -387,8 +387,8 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 		$model		= new Model_Tag( $this->env );
 		$tag		= $model->getByIndex( 'title', $tagName );
 		$states		= $this->getFilteredStates();
-		$articles		= array();
-		$relatedTags	= array();
+		$articles		= [];
+		$relatedTags	= [];
 		if( $tag ){
 			$model		= new Model_ArticleTag( $this->env );
 			$relations	= $model->getAllByIndex( 'tagId', $tag->tagId );

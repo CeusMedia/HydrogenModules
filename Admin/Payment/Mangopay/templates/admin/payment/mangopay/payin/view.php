@@ -15,7 +15,7 @@ $panelFacts	= UI_HTML_Tag::create( 'div', array(
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );
 
-$panelSteps	= array();
+$panelSteps	= [];
 foreach( $steps as $key => $item ){
 	if( !$item )
 		continue;

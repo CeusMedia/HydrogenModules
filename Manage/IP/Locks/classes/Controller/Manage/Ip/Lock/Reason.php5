@@ -1,23 +1,19 @@
 <?php
-class Controller_Manage_IP_Lock_Reason extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_IP_Lock_Reason extends CMF_Hydrogen_Controller
+{
 	protected $logic;
 	protected $messenger;
 
-	public function __onInit(){
-		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
-		$this->messenger	= $this->env->getMessenger();
-		$this->model		= new Model_IP_Lock_Reason( $this->env );
-	}
-
-	public function activate( $reasonId ){
+	public function activate( $reasonId )
+	{
 		$this->model->edit( $reasonId, array(
 			'status' => Model_IP_Lock_Reason::STATUS_ENABLED
 		) );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function add(){
+	public function add()
+	{
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$data		= $request->getAll();
@@ -29,14 +25,16 @@ class Controller_Manage_IP_Lock_Reason extends CMF_Hydrogen_Controller{
 		$this->setData( $request->getAll() );
 	}
 
-	public function deactivate( $reasonId ){
+	public function deactivate( $reasonId )
+	{
 		$this->model->edit( $reasonId, array(
 			'status' => Model_IP_Lock_Reason::STATUS_DISABLED
 		) );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $reasonId ){
+	public function edit( $reasonId )
+	{
 		$request	= $this->env->getRequest();
 		$reason		= $this->model->get( $reasonId );
 		if( !$reason ){
@@ -54,10 +52,11 @@ class Controller_Manage_IP_Lock_Reason extends CMF_Hydrogen_Controller{
 		$this->addData( 'reason', $reason );
 	}
 
-	public function index(){
-		$conditions	= array();
-		$orders		= array();
-		$limits		= array();
+	public function index()
+	{
+		$conditions	= [];
+		$orders		= [];
+		$limits		= [];
 		$reasons	= $this->model->getAll( $conditions, $orders, $limits );
 		$model		= new Model_IP_Lock_Filter( $this->env );
 		foreach( $reasons as $nr => $reason ){
@@ -66,7 +65,8 @@ class Controller_Manage_IP_Lock_Reason extends CMF_Hydrogen_Controller{
 		$this->addData( 'reasons', $reasons );
 	}
 
-	public function remove( $reasonId ){
+	public function remove( $reasonId )
+	{
 		$request	= $this->env->getRequest();
 		$reason		= $this->model->get( $reasonId );
 		if( !$reason ){
@@ -76,5 +76,12 @@ class Controller_Manage_IP_Lock_Reason extends CMF_Hydrogen_Controller{
 		$this->model->remove( $reasonId );
 		$this->messenger->noteSuccess( 'Reason removed.' );
 		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
+		$this->messenger	= $this->env->getMessenger();
+		$this->model		= new Model_IP_Lock_Reason( $this->env );
 	}
 }

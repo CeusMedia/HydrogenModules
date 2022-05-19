@@ -50,7 +50,7 @@ class Controller_Manage_My_Provision_License extends CMF_Hydrogen_Controller{
 
 		$product			= NULL;
 		$productLicense		= NULL;
-		$productLicenses	= array();
+		$productLicenses	= [];
 		if( $productId ){
 			$product			= $this->logicProvision->getProduct( $productId );
 			$productLicenses	= $this->logicProvision->getProductLicenses( $productId, 2 );
@@ -97,7 +97,7 @@ class Controller_Manage_My_Provision_License extends CMF_Hydrogen_Controller{
 
 	public function ajaxGetUsers(){
 		$query		= $this->request->get( 'query' );
-		$list		= array();
+		$list		= [];
 		if( $query ){
 			$userIds	= $this->logicMember->getUserIdsByQuery( $query );
 //			$userIds	= array_merge( $userIds, $userIds, $userIds, $userIds, $userIds );
@@ -157,7 +157,7 @@ class Controller_Manage_My_Provision_License extends CMF_Hydrogen_Controller{
 
 			if( $userId ){
 				$keys		= $this->logicProvision->getUserLicenseKeysFromUserLicense( $userLicenseKey->userLicenseId );
-				$userIds	= array();
+				$userIds	= [];
 				foreach( $keys as $key )
 					if( $key->userId )
 						$userIds[]	= $key->userId;

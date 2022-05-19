@@ -10,7 +10,7 @@ $statusIcons	= array(
 $optStatus	= UI_HTML_Elements::Options( $words->states, $reader->status );
 $optGender	= UI_HTML_Elements::Options( $words->gender, $reader->gender );
 
-$optGroup	= array();
+$optGroup	= [];
 foreach( $groups as $group )
 	if( !array_key_exists( $group->newsletterGroupId, $readerGroups ) )
 		$optGroup[$group->newsletterGroupId]	= $group->title;
@@ -19,7 +19,7 @@ $optGroup	= UI_HTML_Elements::Options( $optGroup, array_keys( $readerGroups ) );
 
 $listGroups	= UI_HTML_Tag::create( 'div', 'Keine Gruppen zugewiesen.', array( 'class' => 'alert alert-info' ) );
 if( $readerGroups ){
-	$listGroups	= array();
+	$listGroups	= [];
 	foreach( $readerGroups as $readerGroup ){
 		$label			= $readerGroup->title;
 		$urlRemove		= './work/newsletter/reader/removeGroup/'.$reader->newsletterReaderId.'/'.$readerGroup->newsletterGroupId;
@@ -55,7 +55,7 @@ if( $readerLetters ){
 		'opened'	=> 0,
 		'ratio'		=> 0,
 	);
-	$listLetters	= array();
+	$listLetters	= [];
 	foreach( $readerLetters as $letter ){
 		$attributes		= array(
 			'href'	=> './work/newsletter/edit/'.$letter->newsletterId
@@ -78,7 +78,7 @@ if( $readerLetters ){
 	}
 	$listLetters	= UI_HTML_Tag::create( 'ul', $listLetters, array( 'class' => 'unstyled' ) );
 	if( $stats->sent > 0 ){
-		$list	= array();
+		$list	= [];
 		$list[]	= UI_HTML_Tag::create( 'dt', 'Zugestellt' );
 		$list[]	= UI_HTML_Tag::create( 'dd', $stats->sent );
 		$list[]	= UI_HTML_Tag::create( 'dt', 'Geöffnet' );

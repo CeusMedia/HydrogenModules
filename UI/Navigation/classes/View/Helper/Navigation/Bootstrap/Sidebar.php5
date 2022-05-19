@@ -4,7 +4,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 	protected $env;
 	protected $menu;
 	protected $inverse			= FALSE;
-	protected $linksToSkip		= array();
+	protected $linksToSkip		= [];
 	protected $logoTitle;
 	protected $logoLink;
 	protected $logoIcon;
@@ -29,11 +29,11 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 
 	public function render(): string
 	{
-		$list	= array();
+		$list	= [];
 		$pages	= $this->menu->getPages( $this->scope, FALSE );
 		foreach( $pages as $page ){
 			if( $page->type == 'menu' ){
-				$sublist	= array();
+				$sublist	= [];
 				if( !$page->items )
 					continue;
 				$title		= $this->renderLabelWithIcon( $page );

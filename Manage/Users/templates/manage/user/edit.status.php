@@ -2,7 +2,7 @@
 
 $w	= (object) $words['editStatus'];
 
-$optStatus	= array();
+$optStatus	= [];
 foreach( array_reverse( $words['status'], TRUE ) as $key => $label )
 	$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
 $optStatus	= join( $optStatus );
@@ -16,7 +16,7 @@ if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
 	$iconRemove		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 }
 
-$buttons	= array();
+$buttons	= [];
 if( $user->status != 1 ){
 	$buttons[]	= UI_HTML_Elements::LinkButton(
 		'./manage/user/accept/'.$userId,

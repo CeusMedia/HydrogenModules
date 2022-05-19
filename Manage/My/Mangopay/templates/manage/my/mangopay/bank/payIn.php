@@ -30,7 +30,7 @@ if( isset( $payin ) ){
 	return $panelShow;
 }
 else{
-	$optWallet	= array();
+	$optWallet	= [];
 	foreach( $wallets as $item )
 		$optWallet[$item->Id]	= $item->Description.' ('.$view->formatMoney( $item->Balance, ' ', 0 ).')';
 

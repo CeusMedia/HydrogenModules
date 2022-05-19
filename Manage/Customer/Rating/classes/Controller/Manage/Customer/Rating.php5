@@ -1,23 +1,17 @@
 <?php
-class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller
+{
 	protected $messenger;
 	protected $modelCustomer;
 	protected $modelRating;
 
-	public function __onInit(){
-		$this->messenger		= $this->env->getMessenger();
-		$this->modelCustomer	= new Model_Customer( $this->env );
-		$this->modelRating		= new Model_Customer_Rating( $this->env );
-		$this->addData( 'useMap', $this->env->getModules()->has( 'UI_Map' ) );
-		$this->addData( 'useProjects', TRUE );#$this->env->getModules()->has( 'Manage_Customer_Project' ) );
-	}
-
-	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context ){
+	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context )
+	{
 		View_Manage_Customer::registerTab( 'rating/%s', 'Bewertungen' );
 	}
 
-	public function add( $customerId ){
+	public function add( $customerId )
+	{
 		$request		= $this->env->getRequest();
 		$customer		= $this->modelCustomer->get( $customerId );
 		if( $request->has( 'save' ) ){
@@ -40,7 +34,8 @@ class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 		$this->addData( 'customer', $customer );
 	}
 
-/*	public function index(){
+/*	public function index()
+	{
 		$modelCustomer	= new Model_Customer( $this->env );
 		$modelRating	= new Model_Customer_Rating( $this->env );
 		$customers		=  $modelCustomer->getAll();
@@ -57,7 +52,8 @@ class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 		$this->addData( 'customers', $customers );
 	}
 */
-	public function index( $customerId ){
+	public function index( $customerId )
+	{
 		$modelCustomer	= new Model_Customer( $this->env );
 		$modelRating	= new Model_Customer_Rating( $this->env );
 
@@ -87,5 +83,13 @@ class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller{
 		$this->addData( 'customerId', $customerId );
 		$this->addData( 'customer', $customer );
 	}
+
+	protected function __onInit()
+	{
+		$this->messenger		= $this->env->getMessenger();
+		$this->modelCustomer	= new Model_Customer( $this->env );
+		$this->modelRating		= new Model_Customer_Rating( $this->env );
+		$this->addData( 'useMap', $this->env->getModules()->has( 'UI_Map' ) );
+		$this->addData( 'useProjects', TRUE );#$this->env->getModules()->has( 'Manage_Customer_Project' ) );
+	}
 }
-?>

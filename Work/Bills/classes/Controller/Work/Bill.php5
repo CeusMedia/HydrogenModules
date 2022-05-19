@@ -117,7 +117,7 @@ class Controller_Work_Bill extends CMF_Hydrogen_Controller{
 				$duration	= $end - $start;
 				$days		= round( $duration / ( 24 * 60 * 60 ) );
 				if( $duration > 0 && $days > 0 ){
-					$conditions['date']	= array();
+					$conditions['date']	= [];
 					for( $i=0; $i<$days; $i++ )
 						$conditions['date'][]	= date( "Ymd", $start + ( $i * 24 * 60 * 60 ) );
 				}

@@ -133,7 +133,7 @@ class View_Helper_Image_Slider
 	{
 		if( !$slider->showDots || count( $slider->slides ) < 2 )
 			return '';
-		$dots		= array();
+		$dots		= [];
 		$number		= 0;
 		foreach( $slider->slides as $slide ){
 			$attr	= array(
@@ -157,7 +157,7 @@ class View_Helper_Image_Slider
 
 	protected function renderSlides( $slider ): string
 	{
-		$list		= array();
+		$list		= [];
 		$number		= 0;
 		$width		= $slider->width;
 		$height		= $slider->height;

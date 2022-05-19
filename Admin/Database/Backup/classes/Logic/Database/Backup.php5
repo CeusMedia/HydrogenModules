@@ -23,7 +23,7 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic
 		$prefix		= $dba->get( 'prefix' );
 		$tables		= '';																	//  no table selection by default
 		if( $prefix ){																		//  prefix has been set
-			$tables		= array();															//  prepare list of tables matching prefix
+			$tables		= [];															//  prepare list of tables matching prefix
 			foreach( $dbc->query( "SHOW TABLES LIKE '".$prefix."%'" ) as $table )			//  iterate found tables with prefix
 				$tables[]	= escapeshellarg( $table[0] );									//  collect table as escaped shell arg
 			$tables	= join( ' ', $tables );													//  reduce tables list to tables arg
@@ -40,7 +40,7 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic
 			escapeshellarg( $pathname ),													//  dump output filename
 		) );
 		$resultCode		= 0;
-		$resultOutput	= array();
+		$resultOutput	= [];
 		exec( $command, $resultOutput, $resultCode );
 		if( $resultCode !== 0 )
 			throw new RuntimeException( 'Database dump failed' );
@@ -169,8 +169,8 @@ class Logic_Database_Backup extends CMF_Hydrogen_Logic
 
 	protected function readIndex(): array
 	{
-		$list	= array();
-		$map	= array();
+		$list	= [];
+		$map	= [];
 		$index	= new DirectoryIterator( $this->path );
 		foreach( $index as $entry ){
 			if( $entry->isDir() || $entry->isDot() )

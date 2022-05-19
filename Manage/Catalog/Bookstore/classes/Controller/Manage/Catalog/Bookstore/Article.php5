@@ -1,33 +1,12 @@
 <?php
-class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controller
+{
 	protected $fontend;
 	protected $logic;
 	protected $messenger;
 	protected $request;
 	protected $session;
 	protected $sessionPrefix;
-
-	public function __onInit(){
-		parent::__onInit();
-		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Article::init start' );
-		$this->messenger		= $this->env->getMessenger();
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-		$this->logic			= new Logic_Catalog_Bookstore( $this->env );
-		$this->frontend			= Logic_Frontend::getInstance( $this->env );
-		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
-		$this->sessionPrefix	= 'module.manage_catalog_bookstore_article.filter.';
-		$this->addData( 'frontend', $this->frontend );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-		$this->addData( 'pathAuthors', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.authors' ) );
-		$this->addData( 'pathCovers', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.covers' ) );
-		$this->addData( 'pathDocuments', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.documents' ) );
-
-		if( !$this->session->get( $this->sessionPrefix.'order' ) )
-				$this->session->set( $this->sessionPrefix.'order', 'createdAt:DESC' );
-		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Article::init done' );
-	}
 
 	/**
 	 *	...
@@ -40,7 +19,8 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 	 *	@return		void
 	 *	@todo		kriss: code doc
 	 */
-	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	public static function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] )
+	{
 		$cache		= $env->getCache();
 		if( 1 || !( $list = $cache->get( 'catalog.tinymce.images.catalog.bookstore.articles' ) ) ){
 			$logic		= new Logic_Catalog_Bookstore( $env );
@@ -48,7 +28,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );				//  focus module configuration
 			$pathCovers	= $frontend->getPath( 'contents' ).$config->get( 'path.covers' );			//  get path to cover images
 			$pathCovers	= substr( $pathCovers, strlen( $frontend->getPath() ) );					//  strip frontend base path
-			$list       = array();
+			$list       = [];
 			$conditions	= array( 'cover' => '> 0' );
 			$orders		= array( 'title' => 'ASC' );
 			foreach( $logic->getArticles( $conditions, $orders, array( 0, 200 ) ) as $item ){
@@ -60,7 +40,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 			}
 			$cache->set( 'catalog.tinymce.images.catalog.bookstore.articles', $list );
 		}
-        $context->list  = array_merge( $context->list, array( (object) array(		//  extend global collection by submenu with list of items
+		$context->list  = array_merge( $context->list, array( (object) array(		//  extend global collection by submenu with list of items
 			'title'	=> 'Veröffentlichungen:',									//  label of submenu @todo extract
 			'menu'	=> array_values( $list ),									//  items of submenu
 		) ) );
@@ -77,7 +57,8 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 	 *	@return		void
 	 *	@todo		kriss: code doc
 	 */
-	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	public static function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] )
+	{
 		$cache		= $env->getCache();
 		$logic		= new Logic_Catalog_Bookstore( $env );
 		$frontend	= Logic_Frontend::getInstance( $env );
@@ -85,7 +66,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 
 		if( !( $articles = $cache->get( 'catalog.tinymce.links.catalog.bookstore.articles' ) ) ){
 			$orders		= array( 'articleId' => 'DESC' );
-			$limits		= array();//array( 0, 200 );
+			$limits		= [];//array( 0, 200 );
 			$articles	= $logic->getArticles( array(), $orders, $limits );
 			foreach( $articles as $nr => $item ){
 /*				$category	= $logic->getCategoryOfArticle( $article->articleId );
@@ -106,7 +87,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 
 		if( 1 ||  !( $documents = $cache->get( 'catalog.tinymce.links.catalog.bookstore.documents' ) ) ){
 			$pathDocs	= $frontend->getPath( 'contents' ).$config->get( 'path.documents' );
-			$limits		= array();//array( 0, 200 );
+			$limits		= [];//array( 0, 200 );
 			$orders		= array( 'articleDocumentId' => 'DESC' );
 			$documents	= $logic->getDocuments( array(), $orders, $limits );
 			foreach( $documents as $nr => $item ){
@@ -127,7 +108,8 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 		) ) );
 	}
 
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
 			$data		= $this->request->getAll();
@@ -140,28 +122,31 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 			}
 		}
 		$model		= new Model_Catalog_Bookstore_Article( $this->env );
-		$article	= array();
+		$article	= [];
 		foreach( $model->getColumns() as $column )
 			$article[$column]	= $this->request->get( $column );
 		$this->addData( 'article', (object) $article );
 		$this->addData( 'articles', $this->getFilteredArticles() );
 	}
 
-	public function addAuthor( $articleId ){
+	public function addAuthor( $articleId )
+	{
 		$authorId	= $this->request->get( 'authorId' );
 		$editor		= $this->request->get( 'editor' );
 		$this->logic->addAuthorToArticle( $articleId, $authorId, $editor );
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function addCategory( $articleId ){
+	public function addCategory( $articleId )
+	{
 		$categoryId		= $this->request->get( 'categoryId' );
 		$volume			= $this->request->get( 'volume' );
 		$this->logic->addCategoryToArticle( $articleId, $categoryId, $volume );
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function addDocument( $articleId ){
+	public function addDocument( $articleId )
+	{
 		$file		= $this->request->get( 'document' );
 		$title		= $this->request->get( 'title' );
 		$words		= (object) $this->getWords( 'upload' );
@@ -197,19 +182,21 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function addTag( $articleId, $tag = NULL ){
+	public function addTag( $articleId, $tag = NULL )
+	{
 		$tag	= $tag ? $tag : $this->request->get( 'tag' );
 		$this->logic->addArticleTag( $articleId, $tag );
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function ajaxGetTags(){
+	public function ajaxGetTags()
+	{
 		$startsWith	= $this->request->get( 'query' );
 		$conditions	= array( 'tag' => $startsWith.'%' );
 		$orders		= array( 'tag' => 'ASC' );
 		$limits		= array( 0, 10 );
 		$tags		= $this->logic->getTags( $conditions, $orders, $limits );
-		$list		= array();
+		$list		= [];
 		foreach( $tags as $tag )
 			$list[$tag->tag]	= $tag->tag;
 		ksort( $list );
@@ -220,13 +207,14 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 		exit;
 	}
 
-	public function ajaxGetIsns(){
+	public function ajaxGetIsns()
+	{
 		$startsWith	= $this->request->get( 'query' );
 		$conditions	= array( 'isn' => $startsWith.'%' );
 		$orders		= array( 'isn' => 'ASC' );
 		$limits		= array( 0, 10 );
 		$articles	= $this->logic->getArticles( $conditions, $orders, $limits );
-		$list		= array();
+		$list		= [];
 		foreach( $articles as $article )
 			$list[$article->isn]	= $article->isn;
 		ksort( $list );
@@ -237,12 +225,14 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 		exit;
 	}
 
-	public function ajaxSetTab( $tabKey ){
+	public function ajaxSetTab( $tabKey )
+	{
 		$this->session->set( 'manage.catalog.bookstore.article.tab', $tabKey );
 		exit;
 	}
 
-	public function edit( $articleId ){
+	public function edit( $articleId )
+	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'edit' );
 			$data	= $this->request->getAll();
@@ -265,7 +255,8 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 		$this->addData( 'filters', $this->session->getAll( $this->sessionPrefix ) );
 	}
 
-	public function filter( $reset = FALSE ){
+	public function filter( $reset = FALSE )
+	{
 		$this->session->set( $this->sessionPrefix.'id', trim( $this->request->get( 'id' ) ) );
 		$this->session->set( $this->sessionPrefix.'term', trim( $this->request->get( 'term' ) ) );
 		$this->session->set( $this->sessionPrefix.'term', trim( $this->request->get( 'term' ) ) );
@@ -290,11 +281,126 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function getFilteredArticles(){
+	public function index()
+	{
+		$articles	= $this->getFilteredArticles();
+		if( count( $articles ) === 1 ){
+			$article	= array_pop( $articles );
+			$this->restart( './manage/catalog/bookstore/article/edit/'.$article->articleId );
+		}
+		$this->addData( 'articles', $articles );
+		$this->addData( 'filters', $this->session->getAll( 'module.manage_catalog_bookstore_article.filter.' ) );
+	}
+
+	/**
+	 *	Removes article with images and relations to categories and authors.
+	 *	@access		public
+	 *	@param		$articleId
+	 */
+	public function remove( $articleId )
+	{
+		$this->logic->removeArticle( $articleId );
+		$this->restart( NULL, TRUE );
+	}
+
+	public function removeAuthor( $articleId, $authorId )
+	{
+		$this->logic->removeAuthorFromArticle( $articleId, $authorId );
+		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
+	}
+
+	public function removeCategory( $articleId, $categoryId )
+	{
+		$this->logic->removeCategoryFromArticle( $articleId, $categoryId );
+		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
+	}
+
+	public function removeCover( $articleId )
+	{
+		$this->logic->removeArticleCover( $articleId );
+		$this->restart( 'edit/'.$articleId, TRUE );
+	}
+
+	public function removeDocument( $articleId, $articleDocumentId )
+	{
+		$this->logic->removeArticleDocument( $articleDocumentId );
+		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
+	}
+
+	public function removeTag( $articleId, $articleTagId )
+	{
+		$this->logic->removeArticleTag( $articleTagId );
+		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
+	}
+
+	public function setAuthorRole( $articleId, $authorId, $role )
+	{
+		$this->logic->setArticleAuthorRole( $articleId, $authorId, $role );
+		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
+	}
+
+	public function setCover( $articleId )
+	{
+		$file		= $this->request->get( 'image' );
+		$words		= (object) $this->getWords( 'upload' );
+		if( isset( $file['name'] ) && !empty( $file['name'] ) ){
+			$extensions	= $this->moduleConfig->get( 'article.image.extensions' );
+			$logic		= new Logic_Upload( $this->env );
+			try{
+				$logic->setUpload( $file );
+				$logic->checkExtension( preg_split( '/\s*,\s*/', $extensions ), TRUE );
+				$logic->checkIsImage( TRUE );
+				$logic->checkSize( $this->moduleConfig->get( 'article.image.size' )."M", TRUE );
+
+//				$logic->sanitizeFileName();
+				if( $logic->getError() ){
+					$helper	= new View_Helper_UploadError( $this->env );
+					$helper->setUpload( $logic );
+					$this->messenger->noteError( $helper->render() );
+				}
+				else{
+					$targetFile		= uniqid().'.'.$logic->getExtension( TRUE );
+					$logic->saveTo( $targetFile );
+					$this->logic->removeArticleCover( $articleId );										//  remove previously set cover
+					$this->logic->setArticleCover( $articleId, $targetFile, $logic->getMimeType() );	//  set newer image
+					@unlink( $targetFile );																//  remove original
+				}
+			}
+			catch( Exception $e ){
+				$this->messenger->noteFailure( 'Upload Error: '.$e->getMessage() );
+			}
+		}
+		$this->restart( 'edit/'.$articleId, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		parent::__onInit();
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Article::init start' );
+		$this->messenger		= $this->env->getMessenger();
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+		$this->logic			= new Logic_Catalog_Bookstore( $this->env );
+		$this->frontend			= Logic_Frontend::getInstance( $this->env );
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
+		$this->sessionPrefix	= 'module.manage_catalog_bookstore_article.filter.';
+		$this->addData( 'frontend', $this->frontend );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$this->addData( 'pathAuthors', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.authors' ) );
+		$this->addData( 'pathCovers', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.covers' ) );
+		$this->addData( 'pathDocuments', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.documents' ) );
+
+		if( !$this->session->get( $this->sessionPrefix.'order' ) )
+				$this->session->set( $this->sessionPrefix.'order', 'createdAt:DESC' );
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Article::init done' );
+	}
+
+	protected function getFilteredArticles()
+	{
 		$filters	= $this->session->getAll( 'module.manage_catalog_bookstore_article.filter.' );
-		$orders		= array();
-		$conditions	= array();
-		$articleIds	= array();
+		$orders		= [];
+		$conditions	= [];
+		$articleIds	= [];
 		foreach( $filters as $filterKey => $filterValue ){
 			switch( $filterKey ){
 				case 'author':
@@ -307,7 +413,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 							$articleIds	= $articleIds ? array_intersect( $articleIds, $articles ) : $articles;
 						}
 						else
-							$articleIds	= array();
+							$articleIds	= [];
 					}
 					break;
 				case 'tag':
@@ -315,13 +421,13 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 						$find	= array( 'tag' => $filterValue );
 						$tags	= $this->logic->getTags( $find );
 						if( $tags ){
-							$list	= array();
+							$list	= [];
 							foreach( $tags as $tag )
 								$list[]	= $tag->articleId;
 							$articleIds	= $articleIds ? array_intersect( $articleIds, $list ) : $list;
 						}
 						else
-							$articleIds	= array();
+							$articleIds	= [];
 					}
 					break;
 				case 'isn':
@@ -357,88 +463,4 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 		$articles	= $this->logic->getArticles( $conditions, $orders, array( $offset, 50 ) );
 		return $articles;
 	}
-
-	public function index(){
-		$articles	= $this->getFilteredArticles();
-		if( count( $articles ) === 1 ){
-			$article	= array_pop( $articles );
-			$this->restart( './manage/catalog/bookstore/article/edit/'.$article->articleId );
-		}
-		$this->addData( 'articles', $articles );
-		$this->addData( 'filters', $this->session->getAll( 'module.manage_catalog_bookstore_article.filter.' ) );
-	}
-
-	/**
-	 *	Removes article with images and relations to categories and authors.
-	 *	@access		public
-	 *	@param		$articleId
-	 */
-	public function remove( $articleId ){
-		$this->logic->removeArticle( $articleId );
-		$this->restart( NULL, TRUE );
-	}
-
-	public function removeAuthor( $articleId, $authorId ){
-		$this->logic->removeAuthorFromArticle( $articleId, $authorId );
-		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
-	}
-
-	public function removeCategory( $articleId, $categoryId ){
-		$this->logic->removeCategoryFromArticle( $articleId, $categoryId );
-		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
-	}
-
-	public function removeCover( $articleId ){
-		$this->logic->removeArticleCover( $articleId );
-		$this->restart( 'edit/'.$articleId, TRUE );
-	}
-
-	public function removeDocument( $articleId, $articleDocumentId ){
-		$this->logic->removeArticleDocument( $articleDocumentId );
-		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
-	}
-
-	public function removeTag( $articleId, $articleTagId ){
-		$this->logic->removeArticleTag( $articleTagId );
-		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
-	}
-
-	public function setAuthorRole( $articleId, $authorId, $role ){
-		$this->logic->setArticleAuthorRole( $articleId, $authorId, $role );
-		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
-	}
-
-	public function setCover( $articleId ){
-		$file		= $this->request->get( 'image' );
-		$words		= (object) $this->getWords( 'upload' );
-		if( isset( $file['name'] ) && !empty( $file['name'] ) ){
-			$extensions	= $this->moduleConfig->get( 'article.image.extensions' );
-			$logic		= new Logic_Upload( $this->env );
-			try{
-				$logic->setUpload( $file );
-				$logic->checkExtension( preg_split( '/\s*,\s*/', $extensions ), TRUE );
-				$logic->checkIsImage( TRUE );
-				$logic->checkSize( $this->moduleConfig->get( 'article.image.size' )."M", TRUE );
-
-//				$logic->sanitizeFileName();
-				if( $logic->getError() ){
-					$helper	= new View_Helper_UploadError( $this->env );
-					$helper->setUpload( $logic );
-					$this->messenger->noteError( $helper->render() );
-				}
-				else{
-					$targetFile		= uniqid().'.'.$logic->getExtension( TRUE );
-					$logic->saveTo( $targetFile );
-					$this->logic->removeArticleCover( $articleId );										//  remove previously set cover
-					$this->logic->setArticleCover( $articleId, $targetFile, $logic->getMimeType() );	//  set newer image
-					@unlink( $targetFile );																//  remove original
-				}
-			}
-			catch( Exception $e ){
-				$this->messenger->noteFailure( 'Upload Error: '.$e->getMessage() );
-			}
-		}
-		$this->restart( 'edit/'.$articleId, TRUE );
-	}
 }
-?>

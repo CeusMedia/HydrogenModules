@@ -24,9 +24,9 @@ $userIsManager	= in_array( 'removeTopic', $rights );
 
 $table		= '<em><small class="muted">Keine.</small></em>';
 if( $threads ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $threads as $thread ){
-		$buttons		= array();
+		$buttons		= [];
 		$userIsAuthor	= $thread->authorId == $userId;
 		$userCanChange	= $userIsManager || $userIsAuthor;
 		if( $userCanEdit && $userCanChange ){

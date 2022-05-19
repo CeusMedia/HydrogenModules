@@ -27,8 +27,8 @@ class Controller_Dev_Todo extends CMF_Hydrogen_Controller{
 		$this->addData( 'data', $sources );
 	}
 
-	protected function check( $path, $extensions = array() ){
-		$list	= array();
+	protected function check( $path, $extensions = [] ){
+		$list	= [];
 		$keys	= array( "//TODO", "@deprecated", "@todo" );
 		$lister	= new FS_File_RecursiveTodoLister( $extensions, $keys );
 		$lister->scan( $path );

@@ -2,7 +2,7 @@
 $tabs	= View_Work_Mail_Check::renderTabs( $env, 'import' );
 
 if( !empty( $type ) ){
-	$optColumn	= array();
+	$optColumn	= [];
 	foreach( $columns as $column )
 		$optColumn[$column]	= $column;
 	$optColumn	= UI_HTML_Elements::Options( $optColumn, $columns[0] );

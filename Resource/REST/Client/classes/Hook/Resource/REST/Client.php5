@@ -12,7 +12,7 @@ class Hook_Resource_REST_Client extends CMF_Hydrogen_Hook
 	 *	@param		public						$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onEnvConstructEnd( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onEnvConstructEnd( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
 		$env->set( 'restClient', new Resource_REST_Client( $env ) );
 	}
 }

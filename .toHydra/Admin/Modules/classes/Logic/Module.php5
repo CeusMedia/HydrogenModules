@@ -85,7 +85,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 			return array();
 		if( !( $driver = $this->env/*->getRemote()*/->getDatabase()->getDriver() ) )					//  no PDO driver set on database connection
 			return array();
-		$list			= array();
+		$list			= [];
 		$module			= $this->model->get( $moduleId );
 		$moduleSource	= $this->model->getFromSource( $moduleId );
 		$versionStart	= $versionStart ? $versionStart : $module->versionInstalled;
@@ -184,7 +184,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 
 	public function getModuleFileMap( CMF_Hydrogen_Environment_Remote $env, $module ): array
 	{
-		$map		= array();
+		$map		= [];
 		$fileTypes	= array(
 			'classes'		=> 'class',
 			'files'			=> 'file',
@@ -344,7 +344,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 				'pathTarget'	=> 'img/',															//  set target folder
 			);
 
-		$list	= array();
+		$list	= [];
 		foreach( $types as $type ){
 			foreach( $type->resources as $targetFile => $resource ){
 				if( !empty( $resource->source ) && $resource->source != 'theme' )
@@ -392,7 +392,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		return FALSE;
 	}
 
-	public function installModule( string $sourceId, string $moduleId, int $installType = 0, array $settings = array(), bool $force = FALSE, bool $database = TRUE, bool $verbose = NULL ): bool
+	public function installModule( string $sourceId, string $moduleId, int $installType = 0, array $settings = [], bool $force = FALSE, bool $database = TRUE, bool $verbose = NULL ): bool
 	{
 		try{
 			if( $database )
@@ -423,7 +423,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		}
 	}
 
-	public function updateModule( string $moduleId, int $installType = 0, array $files = array(), array $settings = array(), bool $verbose = TRUE ): array
+	public function updateModule( string $moduleId, int $installType = 0, array $files = [], array $settings = [], bool $verbose = TRUE ): array
 	{
 		$exceptions	= $this->updateModuleFiles( $moduleId, $installType, $files, $verbose );
 		if( !count( $exceptions ) ){
@@ -499,7 +499,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 	{
 		$remote		= $this->env/*->getRemote()*/;
 		$this->env->getRuntime()->reach( 'Logic_Module::list: got remote' );
-		$list		= array();
+		$list		= [];
 		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
 			$modulesAll				= $this->model->getAll();
 			$this->env->getRuntime()->reach( 'Logic_Module::list: got  all' );
@@ -519,7 +519,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 	{
 		$remote		= $this->env/*->getRemote()*/;
 		$this->env->getRuntime()->reach( 'Logic_Module::list: got remote' );
-		$list		= array();
+		$list		= [];
 		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
 			$modulesAll				= $this->model->getAll();
 			$this->env->getRuntime()->reach( 'Logic_Module::list: got  all' );
@@ -539,7 +539,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 	{
 		$remote		= $this->env/*->getRemote()*/;
 		$this->env->getRuntime()->reach( 'Logic_Module::list: got remote' );
-		$list		= array();
+		$list		= [];
 		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
 			$modulesAll				= $this->model->getAll();
 			$this->env->getRuntime()->reach( 'Logic_Module::list: got  all' );
@@ -557,7 +557,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 
 	public function listSources( bool $activeOnly = FALSE ): array
 	{
-		$list	= array();
+		$list	= [];
 		$model	= new Model_ModuleSource( $this->env );
 		return $model->getAll( $activeOnly );
 	}
@@ -628,8 +628,8 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		if( !trim( $sql ) )
 			return 0;
 		$lines		= explode( "\n", trim( $sql ) );
-		$statements	= array();
-		$buffer		= array();
+		$statements	= [];
+		$buffer		= [];
 		if( !$this->env/*->getRemote()*/->has( 'dbc' ) )
 			throw new RuntimeException( 'Remvote environment has no database connection' );
 		$dbc	= $this->env/*->getRemote()*/->getDatabase();
@@ -641,7 +641,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 			$buffer[]	= UI_Template::renderString( trim( $line ), array( 'prefix' => $prefix ) );
 			if( preg_match( '/;$/', trim( $line ) ) ){
 				$statements[]	= join( "\n", $buffer );
-				$buffer			= array();
+				$buffer			= [];
 			}
 			if( !count( $lines ) && $buffer )
 				$statements[]	= join( "\n", $buffer ).';';
@@ -669,8 +669,8 @@ class Logic_Module extends CMF_Hydrogen_Logic
 
 		$files		= array( 'link' => array(), 'copy' => array() );
 		$fileMap	= $this->getModuleFileMap( $this->env/*->getRemote()*/, $module );
-		$listDone	= array();
-		$exceptions	= array();
+		$listDone	= [];
+		$exceptions	= [];
 
 		$files[( $installType == self::INSTALL_TYPE_LINK ? 'link' : 'copy' )]	= $fileMap;
 
@@ -759,7 +759,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 			$files[]	= 'config/modules/'.$moduleId.'.ini';
 		$this->invalidateFileCache( $this->env/*->getRemote()*/ );
 
-		$folders	= array();
+		$folders	= [];
 		$baseAppPaths	= $configApp->getAll( 'path.' );
 		foreach( $files as $file ){
 			if( $file === "config/config.ini" )														//  @todo	fix this hack
@@ -799,7 +799,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		}
 	}
 
-	protected function updateModuleFiles( string $moduleId, int $installType = 0, array $files = array(), bool $verbose = TRUE ): array
+	protected function updateModuleFiles( string $moduleId, int $installType = 0, array $files = [], bool $verbose = TRUE ): array
 	{
 		$module		= $this->model->getFromSource( $moduleId );
 		$pathApp	= $this->env/*->getRemote()*/->path;
@@ -807,9 +807,9 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		if( !in_array( $installType, array( self::INSTALL_TYPE_LINK, self::INSTALL_TYPE_COPY ) ) )	//  unsupported install type
 			throw new InvalidArgumentException( 'Unknown installation type', 10 );
 
-		$list	= array();																			//  prepare new module file list
+		$list	= [];																			//  prepare new module file list
 		foreach( array_keys( (array) $module->files ) as $type )									//  iterate module file types
-			$list[$type]	= array();																//  ...
+			$list[$type]	= [];																//  ...
 
 		foreach( $files as $file ){																	//  iterate file selection
 			$type	= $file->typeMember;															//  ...
@@ -822,8 +822,8 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		$fileMap	= $this->getModuleFileMap( $this->env/*->getRemote()*/, $module );
 		$fileLists[( $installType == self::INSTALL_TYPE_LINK ? 'link' : 'copy' )]	= $fileMap;
 
-		$listDone	= array();
-		$exceptions	= array();
+		$listDone	= [];
+		$exceptions	= [];
 		$fileLists['copy']['module.xml']	= 'config/modules/'.$moduleId.'.xml';
 		foreach( $fileLists as $type => $map ){
 			foreach( $map as $fileIn => $fileOut ){

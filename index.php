@@ -69,7 +69,7 @@ class Modules
 
 	protected function buildHTML( array $modules ): string
 	{
-		$list		= array();
+		$list		= [];
 		foreach( $modules as $moduleName => $moduleData ){
 			$label	= $moduleData->title." ".$moduleData->version;
 			if( !empty( $moduleData->description ) )
@@ -86,7 +86,7 @@ class Modules
 
 	protected function getModuleList( bool $full = FALSE ): array
 	{
-		$list	= array();
+		$list	= [];
 		$index	= new FS_File_RecursiveNameFilter( './', 'module.xml' );
 		foreach( $index as $entry ){
 			$id		= preg_replace( '@^./@', '', $entry->getPath() );

@@ -1,7 +1,7 @@
 <?php
 class Hook_Server_Log_Exception extends CMF_Hydrogen_Hook{
 
-	static public function onEnvLogException( $env, $context, $module, $data = array() ){
+	static public function onEnvLogException( $env, $context, $module, $data = [] ){
 		if( is_object( $data ) && $data instanceof Exception )
 			$data	= array( 'exception' => $data );
 		if( !isset( $data['exception'] ) )

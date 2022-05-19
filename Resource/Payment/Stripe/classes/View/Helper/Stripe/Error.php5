@@ -3,7 +3,7 @@ class View_Helper_Stripe_Error{
 
 	protected $env;
 	protected $code;
-	protected $map			= array();
+	protected $map			= [];
 	protected $mode			= 1;
 
 	const MODE_PLAIN		= 0;

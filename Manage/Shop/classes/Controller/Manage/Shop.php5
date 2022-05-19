@@ -13,7 +13,7 @@ class Controller_Manage_Shop extends CMF_Hydrogen_Controller
 		$orders			= array( 'orderId' => 'ASC' );
 
 		$ordersTotal	= $this->logicShop->getOrders( array( 'status' => '>= 2' ), $orders );
-		$customerIds		= array();
+		$customerIds		= [];
 		foreach( $ordersTotal as $order )
 			$customerIds[]	= (int) $order->customerId;
 
@@ -22,7 +22,7 @@ class Controller_Manage_Shop extends CMF_Hydrogen_Controller
 		$this->addData( 'ordersNotDelievered', $this->logicShop->getOrders( array( 'status' => array( 3, 4 ) ), $orders ) );
 		$this->addData( 'ordersTotal', $ordersTotal );
 
-		$customers	= array();
+		$customers	= [];
 		if( $customerIds )
 			$customers	= $this->logicShop->getCustomers( array( 'customerId' => $customerIds ), array( 'customerId' => 'DESC' ), array( 10 ) );
 
@@ -30,7 +30,7 @@ class Controller_Manage_Shop extends CMF_Hydrogen_Controller
 /*		$geocoder	= new Net_API_Google_Maps_Geocoder( "" );
 		$geocoder->setCachePath( 'cache/' );
 		$modelCustomer	= new Model_Shop_Customer( $this->env );
-		$markers	= array();
+		$markers	= [];
 		foreach( $customers as $customer ){
 			if( !$customer->longitude ){
 				try{

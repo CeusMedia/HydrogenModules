@@ -5,7 +5,7 @@ class Hook_UI_Layout_Footer extends CMF_Hydrogen_Hook
 	{
 		$pattern	= "/^(.*)(\[footer\])(.*)$/sU";
 		if( preg_match( $pattern, $payload->content ) ){
-			$links	= array();
+			$links	= [];
 			if( isset( $scopes->footer ) )
 				foreach( $scopes->footer as $pageId => $page )
 					$links[$page->path]	= $page->label;
@@ -18,7 +18,7 @@ class Hook_UI_Layout_Footer extends CMF_Hydrogen_Hook
 			foreach( $links as $path => $label )
 				$footer[]	= array( 'label' => UI_HTML_Tag::create( 'a', $label, array( 'href' => $path ) ) );
 
-			$list	= array();
+			$list	= [];
 			foreach( $footer as $entry ){
 				$label	= "";
 				if( isset( $entry['label'] ) ){

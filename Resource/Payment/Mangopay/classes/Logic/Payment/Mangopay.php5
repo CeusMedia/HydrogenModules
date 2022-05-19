@@ -555,7 +555,7 @@ print_m( $items );
 		return $items;
 	}
 
-	public function getUserCards( $userId, $conditions = array(), $orders = array(), $limits = array() ){
+	public function getUserCards( $userId, $conditions = [], $orders = [], $limits = [] ){
 		$pagination	= new \MangoPay\Pagination();
 		$sorting	= new \MangoPay\Sorting();
 		if( !$orders )
@@ -587,7 +587,7 @@ print_m( $items );
 		return $this->provider->Clients->GetWallets();
 	}
 
-	public function getUserWallets( $userId, $orders = array(), $limits = array() ){
+	public function getUserWallets( $userId, $orders = [], $limits = [] ){
 		$pagination	= new \MangoPay\Pagination();
 		$sorting	= new \MangoPay\Sorting();
 		if( !$orders )
@@ -604,7 +604,7 @@ print_m( $items );
 		$sorting	= new \MangoPay\Sorting();
 		$sorting->AddField( 'CreationDate', 'DESC' );
 		$all	= $this->provider->Users->GetWallets( $userId, $pagination, $sorting );
-		$list	= array();
+		$list	= [];
 		foreach( $all as $wallet )
 			if( $wallet->Currency === $currency )
 				$list[]	= $wallet;
@@ -654,7 +654,7 @@ print_m( $items );
 	/**
 	 *	@todo		extend cache key by filters
 	 */
-	public function getWalletTransactions( $walletId, $orders = array(), $limits = array() ){
+	public function getWalletTransactions( $walletId, $orders = [], $limits = [] ){
 		$cacheKey	= 'mangopay_wallet_'.$walletId.'_transactions';
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){

@@ -5,7 +5,7 @@ $helperAttribute	= new View_Helper_Job_Attribute( $env );
 $runList	= UI_HTML_Tag::create( 'div', 'Keine Ausführungen gefunden.', array( 'class' => 'alert alert-info' ) );
 
 if( $runs ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $runs as $item ){
 		$helperAttribute->setObject( $item );
 		$output		= '<em class="muted">none</em>';
@@ -33,8 +33,8 @@ if( $runs ){
 $tabs	= View_Manage_Job::renderTabs( $env, 'definition' );
 
 $helperAttribute->setObject( $definition );
-$list	= array();
-$facts	= array();
+$list	= [];
+$facts	= [];
 $facts['Identifier']	= $definition->identifier;
 $facts['Job-ID']		= $definition->jobDefinitionId;
 $facts['Mode']			= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_MODE )->render();

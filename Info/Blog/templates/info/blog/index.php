@@ -1,6 +1,6 @@
 <?php
 
-$list	= array();
+$list	= [];
 foreach( $posts as $post ){
 	$list[]		= View_Info_Blog::renderPostAbstractStatic( $this->env, $post );
 }

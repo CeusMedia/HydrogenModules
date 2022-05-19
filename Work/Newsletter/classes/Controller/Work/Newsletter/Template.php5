@@ -150,7 +150,7 @@ class Controller_Work_Newsletter_Template extends CMF_Hydrogen_Controller
 
 	public function index()
 	{
-		$conditions		= array();
+		$conditions		= [];
 		$orders			= array( 'title' => 'ASC' );
 		$this->addData( 'templates', $this->logic->getTemplates( $conditions, $orders ) );
 

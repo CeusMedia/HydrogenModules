@@ -32,7 +32,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 //		$this->env->getLog()->log("debug","found languages in env:".print_r($this->env->getLanguage()->getLanguages(),true),$this);
 		$this->defaultLanguage	= current( array_values( $this->env->getLanguage()->getLanguages() ) );
 
-		$apps	= array();
+		$apps	= [];
 
 		if( realpath( $this->frontend->getPath() ) !== realpath( $this->env->uri ) ){				//  frontend is different from self
 			$apps			= array(
@@ -111,7 +111,7 @@ class Controller_Manage_Page extends CMF_Hydrogen_Controller{
 	public function add( $parentId = 0 ){
 		$parent	= $parentId ? $this->checkPageId( $parentId ) : NULL;
 		if( $this->request->has( 'save' ) ){
-			$data	= array();
+			$data	= [];
 			foreach( $this->model->getColumns() as $column ){
 				if( $this->request->has( 'page_'.$column ) ){
 					$value	= $this->request->get( 'page_'.$column );
@@ -220,7 +220,7 @@ ModuleManagePages.PageEditor.init();
 		$defaultEditor	= $this->moduleConfig->get( 'editor'.'.'.strtolower( $page->format ) );
 		$currentEditor	= $this->session->get( $this->sessionPrefix.$this->appFocus.'.editor' );
 
-		$editors	= array();
+		$editors	= [];
 		$helper		= new UI_Helper_ContentEditor( $this->env );
 		$helper->setDefaultEditor( $defaultEditor );
 		$helper->setCurrentEditor( $currentEditor );
@@ -295,7 +295,7 @@ ModuleManagePages.PageEditor.init();
 				}
 
 
-				$data		= array();
+				$data		= [];
 				foreach( $this->model->getColumns() as $column )
 					if( $this->request->has( 'page_'.$column ) )
 						$data[$column]	= $this->request->get( 'page_'.$column );
@@ -310,7 +310,7 @@ ModuleManagePages.PageEditor.init();
 			}
 		}
 
-		$pages	= array();
+		$pages	= [];
 		$visiblePages	= $this->model->getAllByIndices(
 			array( 'status'	=> Model_Page::STATUS_VISIBLE ),
 			array( 'title' => "ASC" )
@@ -333,7 +333,7 @@ ModuleManagePages.PageEditor.init();
 		}
 
 		$path		= $this->envManaged->getBaseUrl();
-		$versions	= array();
+		$versions	= [];
 		$this->session->set( $this->sessionPrefix.$this->appFocus.'.scope', $page->scope );
 		if( $page->parentId ){
 			$parent	= $this->model->get( (int) $page->parentId );
@@ -412,7 +412,7 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'appHasMetaModule', $appHasMetaModule );
 
 		/*  --  META: KEYWORD BLACKLIST  --  */
-		$blacklist		= array();																	//  prepare empty blacklist
+		$blacklist		= [];																	//  prepare empty blacklist
 		$blacklistFile	= 'config/terms.blacklist.txt';												//  @todo make configurable
 		if( file_exists( $blacklistFile ) )															//  blacklist file is existing
 			$blacklist	= \FS_File_List_Reader::read( $blacklistFile );								//  read blacklist
@@ -421,7 +421,7 @@ ModuleManagePages.PageEditor.init();
 	}
 
 	protected function getFrontendControllers(){
-		$controllers	= array();
+		$controllers	= [];
 		$pathConfig		= $this->envManaged->getConfig()->get( 'path.config' );
 		$pathModules	= $this->envManaged->getConfig()->get( 'path.modules' );
 		$pathModules	= $pathModules ? $pathModules : $pathConfig.'modules/';
@@ -492,7 +492,7 @@ ModuleManagePages.PageEditor.init();
 			'scope'		=> $scope,
 		);
 		$pages		= $this->model->getAllByIndices( $indices, array( 'rank' => "ASC" ) );
-		$tree		= array();
+		$tree		= [];
 		$parentMap	= array( '0' => '-' );
 		foreach( $pages as $item ){
 			$item	= $this->translatePage( $item );
@@ -573,7 +573,7 @@ class UI_Helper_ContentEditor
 	protected $bestEditorKey;
 	protected $status				= 0;
 	protected $format;
-	protected $editors				= array();
+	protected $editors				= [];
 	protected $type;
 
 	public function __construct( $env )
@@ -669,7 +669,7 @@ class UI_Helper_ContentEditor
 		);
 		$this->status		= static::STATUS_COLLECTED;
 		krsort( $payload->list );
-		$this->editors	= array();
+		$this->editors	= [];
 		$this->bestEditorKey = $payload->list ? current( $payload->list )->key : '';
 		foreach( $payload->list as $editor ){
 			if( $this->labelTemplate )

@@ -4,7 +4,7 @@ $iconBack		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) );
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
-$buttons		= array();
+$buttons		= [];
 $buttons[]	= UI_HTML_Tag::create( 'a', $iconBack.'&nbsp;zurück', array(
 	'href'	=> './admin/mail/queue/',
 	'class'	=> 'btn btn-small'
@@ -38,7 +38,7 @@ $listKeys	= array(
 	'mailClass',
 	'language',
 );
-$list	= array();
+$list	= [];
 foreach( $listKeys as $key )
 	if( $fact = $view->renderFact( $key, $mail->{$key} ) )
 		$list[]	= $fact;
@@ -52,7 +52,7 @@ $listKeys	= array(
 	'attemptedAt',
 	'sentAt',
 );
-$list	= array();
+$list	= [];
 foreach( $listKeys as $key )
 	if( $fact = $view->renderFact( $key, $mail->{$key} ) )
 		$list[]	= $fact;

@@ -4,7 +4,7 @@ class View_Helper_Navigation_Mobile
 	protected $env;
 	protected $menu;
 	protected $inverse			= FALSE;
-	protected $linksToSkip		= array();
+	protected $linksToSkip		= [];
 	protected $scope			= 'main';
 
 	public function __construct( CMF_Hydrogen_Environment $env, Model_Menu $menu )
@@ -24,10 +24,10 @@ class View_Helper_Navigation_Mobile
 
 	public function render(): string
 	{
-		$list	= array();
+		$list	= [];
 		foreach( $this->menu->getPages( $this->scope, FALSE ) as $page ){
 			if( $page->type == 'menu' ){
-				$sublist	= array();
+				$sublist	= [];
 				foreach( $page->items as $subpage ){
 					$class		= $subpage->active ? 'Selected' : NULL;
 					$href		= './'.$subpage->link;

@@ -7,7 +7,7 @@ $add 		= UI_HTML_Elements::LinkButton( './manage/my/company/branch/add', $iconAd
 
 
 $timeHelper	= new View_Helper_TimePhraser( $env );
-$rows		= array();
+$rows		= [];
 $number		= 0;
 foreach( $branches as $entry ){
 	$class		= ( $number % 2 ) ? 'even' : 'odd';

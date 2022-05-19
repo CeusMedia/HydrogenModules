@@ -5,7 +5,7 @@ $iconSend		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelo
 
 $listGroups		= '<div class="alert alert-danger"><strong>Keine Testgruppe vorhanden.</strong><br/>Bitte zuerst eine Testgruppe mit Empfängern anlegen!</div>';
 $disabled		= ' disabled="disabled"';
-$list			= array();
+$list			= [];
 foreach( $groups as $group ){
 	if( (int) $group->status !== 1 )
 		continue;
@@ -53,7 +53,7 @@ $panelGroups	= '
 $list		= '<div class="alert"><em class="not-muted">Keine Gruppe gewählt.</em></div>';
 $disabled	= ' disabled="disabled"';
 if( $readers ){
-	$list	= array();
+	$list	= [];
 	foreach( $readers as $reader ){
 		$label	= $reader->firstname.' '.$reader->surname.' <small class="muted">&lt;'.$reader->email.'&gt;</small>';
 		$list[]	= '<label class="checkbox"><input type="checkbox" name="readerIds[]" checked="checked" value="'.$reader->newsletterReaderId.'"/> '.$label.'</label>';

@@ -1,21 +1,15 @@
 <?php
-class Controller_Catalog_Provision_Product extends CMF_Hydrogen_Controller{
-
+class Controller_Catalog_Provision_Product extends CMF_Hydrogen_Controller
+{
 	protected $modelProduct;
 	protected $modelLicense;
 	protected $logicCatalog;
 
-	public function __onInit(){
-		$this->modelProduct	= new Model_Provision_Product( $this->env );
-		$this->modelLicense	= new Model_Provision_Product_License( $this->env );
-		$this->logicCatalog	= new Logic_Catalog_Provision( $this->env );
-		$this->addData( 'logic', $this->logicCatalog );
-	}
-
-	public function index( $productId = NULL ){
+	public function index( $productId = NULL )
+	{
 		if( !is_null( $productId ) && strlen( trim( $productId ) ) )
 			$this->restart( 'view/'.$productId );
-		$conditions	= array();
+		$conditions	= [];
 		$orders		= array( 'rank' => 'ASC' );
 		$products	= $this->modelProduct->getAll( $conditions, $orders );
 		foreach( $products as $nr => $product ){
@@ -28,7 +22,8 @@ class Controller_Catalog_Provision_Product extends CMF_Hydrogen_Controller{
 		$this->addData( 'products', $products );
 	}
 
-	public function license( $licenseId ){
+	public function license( $licenseId )
+	{
 		$licenseId		= (int) $licenseId;
 		$license		= $this->modelLicense->get( $licenseId );
 		$product		= $this->modelProduct->get( $license->productId );
@@ -38,10 +33,19 @@ class Controller_Catalog_Provision_Product extends CMF_Hydrogen_Controller{
 		$this->addData( 'licenseId', $licenseId );
 	}
 
-	public function view( $productId ){
+	public function view( $productId )
+	{
 		$productId		= (int) $productId;
 		$this->addData( 'product', $this->modelProduct->get( $productId ) );
 		$this->addData( 'licenses', $this->modelLicense->getAllByIndex( 'productId', $productId, array( 'rank' => 'ASC' ) ) );
 		$this->addData( 'productId', $productId );
+	}
+
+	protected function __onInit()
+	{
+		$this->modelProduct	= new Model_Provision_Product( $this->env );
+		$this->modelLicense	= new Model_Provision_Product_License( $this->env );
+		$this->logicCatalog	= new Logic_Catalog_Provision( $this->env );
+		$this->addData( 'logic', $this->logicCatalog );
 	}
 }

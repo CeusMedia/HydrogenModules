@@ -5,9 +5,9 @@ $w			= (object) $words['index.filter'];
 $helperPages    = new \CeusMedia\Bootstrap\PageControl( './manage/catalog/tag/'.$limit, $page, ceil( $total / $limit ) );
 $pagination     = $helperPages->render();
 
-$rows	= array();
+$rows	= [];
 foreach( $tags as $tag ){
-	$articleList	= array();
+	$articleList	= [];
 	foreach( $tag->articleIds as $articleId ){
 		$link	= UI_HTML_Tag::create( 'a', $articles[$articleId]->title, array( 'href' => './manage/catalog/article/edit/'.$articleId ) );
 		$articleList[]	= UI_HTML_Tag::create( 'li', $link );

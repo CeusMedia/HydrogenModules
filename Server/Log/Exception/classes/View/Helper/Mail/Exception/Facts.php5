@@ -53,7 +53,7 @@ class View_Helper_Mail_Exception_Facts{
 		$this->helper->add( 'message', htmlentities( $this->exception->getMessage(), ENT_COMPAT, 'UTF-8' ) );
 		$this->helper->add( 'code', htmlentities( $this->exception->getCode(), ENT_COMPAT, 'UTF-8' ) );
 
-		$list	= array();
+		$list	= [];
 
 		if( $this->exception instanceof Exception_SQL && $this->exception->getSQLSTATE() ){
 			$meaning	= self::getMeaningOfSQLSTATE( $this->exception->getSQLSTATE() );

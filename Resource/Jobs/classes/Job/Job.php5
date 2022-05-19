@@ -4,40 +4,46 @@ class Job_Job extends Job_Abstract
 	protected $pathJobs		= 'config/jobs/';
 	protected $logic;
 
-	public function __onInit()
-	{
-		$this->options	= $this->env->getConfig()->getAll( 'module.resource_cache.', TRUE );
-		$this->logic	= $this->env->getLogic()->get( 'Job' );
-	}
-
 	/**
-	 *	@todo		implement
+	 *	@deprecated		Conversion from XML file to JSON file not needed anymore, since new solution is migration to module XML file + database import by jobs module
+	 *	@todo			use parts of this code to implement automatic migration to module XML file
 	 */
-	public function updateStats()
+	public function convertJobConfigToJson()
 	{
-		$modelStats	= new Model_Job_Statistic( $this->env );
-		$modelRun	= new Model_Job_Run( $this->env );
-
-		$now	= new DateTime();
-
-
-		$lastUpdate	= $modelStats->getByIndices( array(
-			'span'
-		) );
-		if( $lastUpdate ){
-
-		}
-		else{
-			$firstRun	= $modelRun->getAll(
-				array(),
-				array( 'jobRunId' => 'ASC' ),
-				array( 0, 1 ),
-				array( 'createdAt' ),
+		$model		= new Model_Job( $this->env );
+		$modes		= [];																		//  no specific modes
+		$index		= new \FS_File_RegexFilter( $this->pathJobs, '/\.xml$/i' );
+		foreach( $index as $file ){
+			$this->out( 'Reading job XML: '.$file->getFilename() );
+			$moduleJobs		= (object) array(
+				'moduleId'	=> NULL,
+				'version'	=> NULL,
+				'jobs'		=> array(),
 			);
-			if( $firstRun ){
-				$nextDate	= new DateTimeImmutable();
-				$nextDate->setTimestamp( $firstRun[0] );
+			$fileJobs	= $model->readJobsFromXmlFile( $file->getPathname(), $modes );
+			foreach( $fileJobs as $jobId => $jobSource ){
+				$jobTarget	= (object) array(
+					'class'		=> $jobSource->class,
+					'method'	=> $jobSource->method,
+					'mode'		=> $jobSource->mode,
+				);
+				if( !empty( $jobSource->interval ) )
+					$jobTarget->interval	= $jobSource->interval;
+				if( $jobSource->deprecated )
+					$jobTarget->deprecated	= $jobSource->deprecated;
+				if( $jobSource->multiple )
+					$jobTarget->multiple	= $jobSource->multiple;
+				if( !empty( $jobSource->arguments ) )
+					$jobTarget->arguments	= $jobSource->arguments;
+				$moduleJobs->jobs[$jobId]	= $jobTarget;
 			}
+			$fileName	= preg_replace( '@\.[^.]+$@', '', $file->getFilename() );
+			$default	= str_replace( ' ', '_', ucwords( str_replace( '.', ' ', $fileName ) ) );
+			$moduleId	= CLI_Question::askStatic( 'Module ID', 'string', $default, NULL, FALSE );
+			$moduleJobs->moduleId	= $moduleId;
+			$targetFile	= $this->pathJobs.$moduleId.'.json';
+			$this->out( 'Writing job JSON: '.$targetFile );
+			FS_File_JSON_Writer::save( $targetFile, $moduleJobs, TRUE );
 		}
 	}
 
@@ -50,7 +56,7 @@ class Job_Job extends Job_Abstract
 	 */
 	public function index( $mode = NULL )
 	{
-		$conditions	= array();
+		$conditions	= [];
 //		if( $mode )
 //			$conditions['mode']	= $mode;
 //		$this->out( 'List of available jobs:' );
@@ -100,45 +106,39 @@ class Job_Job extends Job_Abstract
 	}
 
 	/**
-	 *	@deprecated		Conversion from XML file to JSON file not needed anymore, since new solution is migration to module XML file + database import by jobs module
-	 *	@todo			use parts of this code to implement automatic migration to module XML file
+	 *	@todo		implement
 	 */
-	public function convertJobConfigToJson()
+	public function updateStats()
 	{
-		$model		= new Model_Job( $this->env );
-		$modes		= array();																		//  no specific modes
-		$index		= new \FS_File_RegexFilter( $this->pathJobs, '/\.xml$/i' );
-		foreach( $index as $file ){
-			$this->out( 'Reading job XML: '.$file->getFilename() );
-			$moduleJobs		= (object) array(
-				'moduleId'	=> NULL,
-				'version'	=> NULL,
-				'jobs'		=> array(),
-			);
-			$fileJobs	= $model->readJobsFromXmlFile( $file->getPathname(), $modes );
-			foreach( $fileJobs as $jobId => $jobSource ){
-				$jobTarget	= (object) array(
-					'class'		=> $jobSource->class,
-					'method'	=> $jobSource->method,
-					'mode'		=> $jobSource->mode,
-				);
-				if( !empty( $jobSource->interval ) )
-					$jobTarget->interval	= $jobSource->interval;
-				if( $jobSource->deprecated )
-					$jobTarget->deprecated	= $jobSource->deprecated;
-				if( $jobSource->multiple )
-					$jobTarget->multiple	= $jobSource->multiple;
-				if( !empty( $jobSource->arguments ) )
-					$jobTarget->arguments	= $jobSource->arguments;
-				$moduleJobs->jobs[$jobId]	= $jobTarget;
-			}
-			$fileName	= preg_replace( '@\.[^.]+$@', '', $file->getFilename() );
-			$default	= str_replace( ' ', '_', ucwords( str_replace( '.', ' ', $fileName ) ) );
-			$moduleId	= CLI_Question::askStatic( 'Module ID', 'string', $default, NULL, FALSE );
-			$moduleJobs->moduleId	= $moduleId;
-			$targetFile	= $this->pathJobs.$moduleId.'.json';
-			$this->out( 'Writing job JSON: '.$targetFile );
-			FS_File_JSON_Writer::save( $targetFile, $moduleJobs, TRUE );
+		$modelStats	= new Model_Job_Statistic( $this->env );
+		$modelRun	= new Model_Job_Run( $this->env );
+
+		$now	= new DateTime();
+
+
+		$lastUpdate	= $modelStats->getByIndices( array(
+			'span'
+		) );
+		if( $lastUpdate ){
+
 		}
+		else{
+			$firstRun	= $modelRun->getAll(
+				array(),
+				array( 'jobRunId' => 'ASC' ),
+				array( 0, 1 ),
+				array( 'createdAt' ),
+			);
+			if( $firstRun ){
+				$nextDate	= new DateTimeImmutable();
+				$nextDate->setTimestamp( $firstRun[0] );
+			}
+		}
+	}
+
+	protected function __onInit()
+	{
+		$this->options	= $this->env->getConfig()->getAll( 'module.resource_cache.', TRUE );
+		$this->logic	= $this->env->getLogic()->get( 'Job' );
 	}
 }

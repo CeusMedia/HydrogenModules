@@ -12,7 +12,7 @@ $path		= 'classes/Controller/';
 $path		= realpath( $path );
 $regexClass	= '/^[A-Z][A-Za-z0-9]+\.'.$ext.'$/U';
 
-$classes	= array();
+$classes	= [];
 $index		= new FS_File_RecursiveRegexFilter( $path, $regexClass );
 foreach( $index as $entry ){
 	$fileName	= preg_replace( '@^'.$path.'/(.+)\.'.$ext.'$@', '\\1', $entry->getPathname() );
@@ -23,9 +23,9 @@ ksort( $classes );
 
 $ladder	= new UI_HTML_Ladder( 'controllers' );
 foreach( $classes as $className => $classReflection ){
-	$methods	= array();
+	$methods	= [];
 	foreach( $classReflection->getMethods( ReflectionMethod::IS_PUBLIC ) as $methodReflection ){
-		$parameters	= array();
+		$parameters	= [];
 		foreach( $methodReflection->getParameters() as $key => $parameterReflection )
 			$parameters[]	= $parameterReflection->name;
 		$parameters	= ' <small class="parameters">('.join( ', ', $parameters ).')</small>';

@@ -12,7 +12,7 @@ $helper		= new View_Helper_Catalog( $env );
 
 $list		= '<div><em class="muted">Bisher keine Veröffentlichungen.</em></div><br/>';
 if( $articles ){
-	$list	= array();
+	$list	= [];
 	foreach( $articles as $article )
 		$list[]	= $helper->renderArticleListItem( $article );
 	$list	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'articleList' ) );

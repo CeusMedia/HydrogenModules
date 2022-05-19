@@ -9,7 +9,7 @@ $iconDeactivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove i
 $heading	= UI_HTML_Tag::create( 'h2', $w->heading );
 $buttonAdd 	= UI_HTML_Elements::LinkButton( './manage/company/branch/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-primary' );
 
-$rows		= array();
+$rows		= [];
 $number		= 0;
 $helperTime	= new View_Helper_TimePhraser( $env );
 foreach( $branches as $entry ){

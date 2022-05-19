@@ -10,8 +10,8 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 	protected $showEmail		= FALSE;
 	protected $showFullname		= TRUE;
 	protected $showUsername		= TRUE;
-	protected $linksInside		= array();
-	protected $linksOutside		= array();
+	protected $linksInside		= [];
+	protected $linksOutside		= [];
 	protected $imageSize		= 32;
 	protected $menu;
 	protected $scope;
@@ -119,7 +119,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 			$avatar	= UI_HTML_Tag::create( 'div', $avatar, array( 'class' => 'avatar' ) );			//  embed avatar in container
 		}
 
-		$labels	= array();
+		$labels	= [];
 		if( $this->showUsername )
 			$labels[]	= UI_HTML_Tag::create( 'div', $username, array( 'class' => 'username' ) );
 		if( $this->showFullname )
@@ -150,7 +150,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 
 	protected function renderMenuLinks(): string
 	{
-		$list	= array();
+		$list	= [];
 		$pages	= $this->menu->getPages( $this->scope );
 		if( !$pages )
 			return '';

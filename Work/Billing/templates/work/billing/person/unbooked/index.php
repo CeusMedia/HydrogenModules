@@ -2,7 +2,7 @@
 
 $list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
 if( $unpayedBillShares ){
-	$list	= array();
+	$list	= [];
 	foreach( $unpayedBillShares as $unpayedBillShare ){
 		$link		= UI_HTML_Tag::create( 'a', $unpayedBillShare->bill->number, array(
 			'href'	=> './work/billing/bill/edit/'.$unpayedBillShare->bill->billId

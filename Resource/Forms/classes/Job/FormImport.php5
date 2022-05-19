@@ -16,7 +16,7 @@ class Job_FormImport extends Job_Abstract
 	protected $jsonMapper;
 	protected $dataMapper;
 
-	public function import( $arguments = array() )
+	public function import( $arguments = [] )
 	{
 		$verbose		= in_array( 'verbose', $arguments ) || $this->parameters->get( 'verbose' );
 		$dryMode		= in_array( 'dry', $arguments ) || $this->parameters->get( 'dry' );
@@ -97,10 +97,10 @@ class Job_FormImport extends Job_Abstract
 
 	protected function getActiveFormImportRules(): array
 	{
-		$rules		= array();
+		$rules		= [];
 		$forms		= $this->modelForm->getAllByIndex( 'status', Model_Form::STATUS_ACTIVATED );
 		if( count( $forms ) !== 0 ){
-			$formMap	= array();
+			$formMap	= [];
 			foreach( $forms as $form )
 				$formMap[$form->formId]	= $form;
 			$conditions		= array(
@@ -114,7 +114,7 @@ class Job_FormImport extends Job_Abstract
 				'importConnectionId'	=> 'ASC',
 				'formId'				=> 'ASC',
 			);
-			$limits		= array();
+			$limits		= [];
 			$rules		= $this->modelImportRule->getAll( $conditions, $orders, $limits );
 			foreach( $rules as $rule )
 				$rule->form = $formMap[$rule->formId];

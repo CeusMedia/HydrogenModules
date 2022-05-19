@@ -21,7 +21,7 @@ $list	= array(
 	7 => array(),
 );
 $indicator	= new UI_HTML_Indicator();
-$disabled	= array();
+$disabled	= [];
 $today		= strtotime( date( 'Y-m-d', time() ) );
 foreach( $missions as $mission ){
 	$label		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );
@@ -78,7 +78,7 @@ $tableHeads	= UI_HTML_Elements::TableHeads( array(
 	UI_HTML_Tag::create( 'div', 'Aktion', array( 'class' => 'sortable', 'data-column' => NULL ) )
 ) );
 
-$folders	= array();
+$folders	= [];
 
 if( count( $list[0] ) ){
 	$heading	= UI_HTML_Tag::create( 'div', '<b>Heute</b>, '.getFutureDate( 0, $words ).getCount( $list, 0 ) );

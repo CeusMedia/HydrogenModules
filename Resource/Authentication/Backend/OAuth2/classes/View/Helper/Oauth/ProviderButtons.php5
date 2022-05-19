@@ -23,8 +23,8 @@ class View_Helper_Oauth_ProviderButtons
 		$conditions	= array( 'status' => Model_Oauth_Provider::STATUS_ACTIVE );
 		$orders		= array( 'rank' => 'ASC' );
 		$providers	= $this->modelProvider->getAll( $conditions, $orders );
-		$buttons	= array();
-		$dropdown	= array();
+		$buttons	= [];
+		$dropdown	= [];
 		$from		= strlen( trim( $this->from ) ) ? '?from='.$this->from : '';
 		foreach( $providers as $provider ){
 			$icon	= '';

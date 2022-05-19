@@ -1,15 +1,15 @@
 <?php
 class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission_List{
 
-	protected $dayMissions	= array();
+	protected $dayMissions	= [];
 
 	public function __construct( $env ){
 		parent::__construct( $env );
 	}
 
 	public function render(){
-		$buttons	= array();
-		$numbers	= array();
+		$buttons	= [];
+		$numbers	= [];
 		for( $i=0; $i<6; $i++ )
 			$numbers[$i]	= count( $this->dayMissions[$i] );										//  @todo	kriss: exception management
 		$max		= max( $numbers );
@@ -88,15 +88,15 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 <?php
 /*class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission_List{
 
-	protected $dayMissions	= array();
+	protected $dayMissions	= [];
 
 	public function __construct( $env ){
 		parent::__construct( $env );
 	}
 
 	public function render(){
-		$buttons	= array();
-		$numbers	= array();
+		$buttons	= [];
+		$numbers	= [];
 		for( $i=0; $i<6; $i++ )
 			$numbers[$i]	= count( $this->dayMissions[$i] );										//  @todo	kriss: exception management
 		$max		= max( $numbers );

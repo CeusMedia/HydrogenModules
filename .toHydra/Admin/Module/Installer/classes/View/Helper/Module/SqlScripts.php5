@@ -8,7 +8,7 @@ class View_Helper_Module_SqlScripts{
 	public function render( $scripts ){
 		if( !$scripts )
 			return;
-		$list	= array();
+		$list	= [];
 		foreach( $scripts as $key => $step ){
 			$version	= $this->fixVersionBug( $step->version );
 			$facts		= array( 'Version: '.$step->version, 'DBMS: '.$step->type );		//  collect facts

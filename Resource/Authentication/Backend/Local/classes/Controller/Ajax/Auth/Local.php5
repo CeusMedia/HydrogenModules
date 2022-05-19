@@ -9,20 +9,6 @@ class Controller_Ajax_Auth_Local extends CMF_Hydrogen_Controller_Ajax
 //	protected $limiter;
 //	protected $logic;
 
-	public function __onInit()
-	{
-//		$this->config		= $this->env->getConfig();
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-//		$this->modules		= $this->env->getModules();
-//		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Local' );
-
-//		$this->moduleConfig			= $this->config->getAll( 'module.resource_authentication_backend_local.', TRUE );
-//		if( $this->modules->has( 'Resource_Limiter' ) )
-//			if( $this->modules->get( 'Resource_Limiter' )->isActive )				// @todo apply this line here and anywhere else
-//				$this->limiter	= Logic_Limiter::getInstance( $this->env );
-	}
-
 	public function usernameExists()
 	{
 		$username	= trim( $this->request->get( 'username' ) );
@@ -53,5 +39,19 @@ class Controller_Ajax_Auth_Local extends CMF_Hydrogen_Controller_Ajax
 			$result	= Alg_Crypt_PasswordStrength::getStrength( $password );
 		}
 		$this->respondData( $result );
+	}
+
+	protected function __onInit()
+	{
+//		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+//		$this->modules		= $this->env->getModules();
+//		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Local' );
+
+//		$this->moduleConfig			= $this->config->getAll( 'module.resource_authentication_backend_local.', TRUE );
+//		if( $this->modules->has( 'Resource_Limiter' ) )
+//			if( $this->modules->get( 'Resource_Limiter' )->isActive )				// @todo apply this line here and anywhere else
+//				$this->limiter	= Logic_Limiter::getInstance( $this->env );
 	}
 }

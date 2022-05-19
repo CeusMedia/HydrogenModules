@@ -8,29 +8,6 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller
 	protected $logicMail;
 	protected $logicUpload;
 
-	public function __onInit()
-	{
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->model		= new Model_Mail_Attachment( $this->env );
-		$this->logicMail	= Logic_Mail::getInstance( $this->env );
-		$this->logicUpload	= new Logic_Upload( $this->env );
-		$pathApp			= '';
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$pathApp		= Logic_Frontend::getInstance( $this->env )->getPath();
-		$this->path			= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
-		$this->addData( 'path', $this->path );
-		$this->addData( 'files', $this->listFiles() );
-
-		$this->languages	= array();
-		$select	= "SELECT DISTINCT(language) FROM ".$this->model->getName();
-		foreach( $this->env->getDatabase()->query( $select )->fetchAll( PDO::FETCH_OBJ ) as $language )
-			$this->languages[]	= $language->language;
-
-		$this->addData( 'classes', $this->logicMail->getMailClassNames( FALSE ) );
-		$this->addData( 'languages', $this->languages );
-	}
-
 	public function add()
 	{
 		$words		= (object) $this->getWords( 'msg' );
@@ -135,7 +112,7 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller
 		$this->addData( 'filterOrder', $filterOrder = $session->get( $prefix.'order' ) );
 		$this->addData( 'filterDirection', $filterDirection = $session->get( $prefix.'direction' ) );
 
-		$conditions	= array();
+		$conditions	= [];
 		if( strlen( trim( $filterStatus ) ) )
 			$conditions['status']		= $filterStatus;
 		if( strlen( trim( $filterClass ) ) )
@@ -145,7 +122,7 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller
 		if( strlen( trim( $filterLanguage ) ) )
 			$conditions['language']		= $filterLanguage;
 
-		$orders	= array();
+		$orders	= [];
 		$limit	= max( (int) $filterLimit, 10 );
 		$limits	= array( (int) $page * $limit, $limit );
 
@@ -153,20 +130,6 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller
 		$this->addData( 'page', (int) $page );
 		$this->addData( 'total', $this->model->count( $conditions ) );
 		$this->addData( 'attachments', $this->model->getAll( $conditions, $orders, $limits ) );
-	}
-
-	protected function listFiles()
-	{
-		$list	= [];
-		foreach( FS_Folder_RecursiveLister::getFileList( $this->path ) as $entry ){
-			$pathName	= preg_replace( '@^'.preg_quote( $this->path, '@' ).'@', '', $entry->getPathName() );
-			$list[$pathName]	= (object) [
-				'fileName'		=> $entry->getFilename(),
-				'filePath'		=> $pathName,
-				'mimeType'		=> $this->getMimeTypeOfFile( $pathName )
-			];
-		}
-		return $list;
 	}
 
 	public function setStatus( $attachmentId, $status )
@@ -201,5 +164,42 @@ class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller
 			);
 		}
 		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->model		= new Model_Mail_Attachment( $this->env );
+		$this->logicMail	= Logic_Mail::getInstance( $this->env );
+		$this->logicUpload	= new Logic_Upload( $this->env );
+		$pathApp			= '';
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$pathApp		= Logic_Frontend::getInstance( $this->env )->getPath();
+		$this->path			= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
+		$this->addData( 'path', $this->path );
+		$this->addData( 'files', $this->listFiles() );
+
+		$this->languages	= [];
+		$select	= "SELECT DISTINCT(language) FROM ".$this->model->getName();
+		foreach( $this->env->getDatabase()->query( $select )->fetchAll( PDO::FETCH_OBJ ) as $language )
+			$this->languages[]	= $language->language;
+
+		$this->addData( 'classes', $this->logicMail->getMailClassNames( FALSE ) );
+		$this->addData( 'languages', $this->languages );
+	}
+
+	protected function listFiles()
+	{
+		$list	= [];
+		foreach( FS_Folder_RecursiveLister::getFileList( $this->path ) as $entry ){
+			$pathName	= preg_replace( '@^'.preg_quote( $this->path, '@' ).'@', '', $entry->getPathName() );
+			$list[$pathName]	= (object) [
+				'fileName'		=> $entry->getFilename(),
+				'filePath'		=> $pathName,
+				'mimeType'		=> $this->getMimeTypeOfFile( $pathName )
+			];
+		}
+		return $list;
 	}
 }

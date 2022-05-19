@@ -1,12 +1,6 @@
 <?php
 class Controller_DevCenter extends CMF_Hydrogen_Controller_Ajax
 {
-	public function __onInit()
-	{
-		$this->request	= $this->env->getRequest();
-		$this->session	= $this->env->getSession();
-	}
-
 	public function setHeight()
 	{
 		$height		= round( (float) $this->request->get( 'height' ), 6 );
@@ -24,5 +18,11 @@ class Controller_DevCenter extends CMF_Hydrogen_Controller_Ajax
 	{
 		$this->session->set( 'DevCenterTab', $this->request->get( 'tab' ) );
 		$this->respondData( TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->request	= $this->env->getRequest();
+		$this->session	= $this->env->getSession();
 	}
 }

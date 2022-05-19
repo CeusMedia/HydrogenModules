@@ -1,6 +1,6 @@
 <?php
 
-$rows		= array();
+$rows		= [];
 foreach( $files as $fileName ){
 	$buttonImport	= UI_HTML_Tag::create( 'a', 'import', array(
 		'href'	=> './info/manual/import/'.base64_encode( $fileName ),
@@ -26,7 +26,7 @@ if( $env->php->version->has( 7 ) )																//  @todo remove in v1 using P
 	$optCategory	= array_column( $categories, 'title', 'manualCategoryId' );
 /*  @todo remove in v1 using PGP 7
 */else{
-	$optCategory	= array();
+	$optCategory	= [];
 	foreach( $categories as $category )
 		$optCategory[$category->manualCategoryId]	= $category->title;
 }/**/

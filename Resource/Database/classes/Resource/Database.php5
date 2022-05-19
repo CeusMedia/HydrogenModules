@@ -137,7 +137,7 @@ class Resource_Database_Base extends \CeusMedia\Database\PDO\Connection
 			$this->defaultDriverOptions,															//  ... from default driver options
 			$this->options->getAll( 'option.' )														//  ...  and options configured by module
 		);
-		$list		= array();
+		$list		= [];
 		foreach( $options as $key => $value ){														//  iterate all database options
 			if( $key == "ATTR_ERRMODE" ){
 				if( !preg_match( '/^PDO/', $value ) ){												//  value is newer style without PDO prefix

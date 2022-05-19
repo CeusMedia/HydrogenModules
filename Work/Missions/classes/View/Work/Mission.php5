@@ -81,7 +81,7 @@ class View_Work_Mission extends CMF_Hydrogen_View{
 		$regexMins	= '@([0-9]+)m\s*@';
 		$regexSecs	= '@([0-9]+)s\s*@';
 		$seconds	= 0;
-		$matches	= array();
+		$matches	= [];
 		if( preg_match( $regexDays, $time, $matches ) ){
 			$time		= preg_replace( $regexDays, '', $time );
 			$seconds	+= (int) $matches[1] * 8 * 60 * 60;

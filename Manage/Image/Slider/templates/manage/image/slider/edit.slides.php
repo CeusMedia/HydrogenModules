@@ -8,7 +8,7 @@ $iconRankDown	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-down
 
 $list	= '<div><em class="muted">No slides available.</em></div>';
 if( $slider->slides ){
-	$list	= array();
+	$list	= [];
 	foreach( $slider->slides as $nr => $slide ){
 		$buttonEdit	= UI_HTML_Tag::create( 'a', $iconEdit, array( 'href' => './manage/image/slider/editSlide/'.$slide->sliderSlideId, 'class' => 'btn btn-mini' ) );
 		$buttonUp	= UI_HTML_Tag::create( 'a', $iconRankUp, array( 'href' => './manage/image/slider/rankSlide/'.$slide->sliderSlideId.'/-1', 'class' => 'btn btn-mini' ) );

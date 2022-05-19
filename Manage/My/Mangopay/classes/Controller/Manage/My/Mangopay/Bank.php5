@@ -1,15 +1,10 @@
 <?php
-class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_Abstract{
-
+class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_Abstract
+{
 	protected $words;
 
-	public function __onInit(){
-		parent::__onInit();
-		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/card' );
-		$this->sessionPrefix	= 'manage_my_mangopay_bank_';
-	}
-
-	public function add(){
+	public function add()
+	{
 		$this->saveBackLink( 'from', 'from', TRUE );
 		if( $this->request->has( 'save' ) ){
 			try{
@@ -32,7 +27,8 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 	}
 
-	public function mandate( $bankAccountId ){
+	public function mandate( $bankAccountId )
+	{
 		try{
 			$mandate	= $this->logic->createMandate( $bankAccountId, $this->env->url.'manage/my/mangopay/bank/view/'.$bankAccountId );
 			$this->restart( $mandate->RedirectURL, FALSE, TRUE );
@@ -42,7 +38,8 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 		}
 	}
 
-	public function deactivate( $bankAccountId ){
+	public function deactivate( $bankAccountId )
+	{
 		if( $this->request->getMethod() === "POST" ){									//  form has been executed
 			$password		= $this->request->get( 'password' );
 			$localUserId	= $this->session->get( 'auth_user_id' );
@@ -62,17 +59,20 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 		$this->restart( 'view/'.$bankAccountId, TRUE );
 	}
 
-	public function payOut( $bankAccountId ){
+	public function payOut( $bankAccountId )
+	{
 		if( $this->request->has( 'save' ) ){
 			throw new RuntimeException( 'Not implemented yet' );
 		}
 	}
 
-	public function index(){
+	public function index()
+	{
 		$this->addData( 'bankAccounts', $this->logic->getBankAccounts( $this->userId ) );
 	}
 
-	public function view( $bankAccountId ){
+	public function view( $bankAccountId )
+	{
 		$bankAccount	= $this->checkIsOwnBankAccount( $bankAccountId );
 		try{
 			$this->addData( 'mandates', $this->logic->getBankAccountMandates( $this->userId, $bankAccountId ) );
@@ -85,5 +85,12 @@ class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_A
 		$this->addData( 'wallets', $this->logic->getUserWallets( $this->userId ) );
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
+	}
+
+	protected function __onInit()
+	{
+		parent::__onInit();
+		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/card' );
+		$this->sessionPrefix	= 'manage_my_mangopay_bank_';
 	}
 }

@@ -6,7 +6,7 @@ $w		= (object) $words['indexList'];
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/user', $page, ceil( $total / $limit ) );
 
 if( $total ){
-	$rows		= array();
+	$rows		= [];
 	$phraser	= new View_Helper_TimePhraser( $env );
 
 	foreach( $users as $nr => $user ){

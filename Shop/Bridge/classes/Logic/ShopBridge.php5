@@ -5,10 +5,10 @@ class Logic_ShopBridge
 	protected $env;
 
 	/**	@var	array						$bridges		Map of registered bridges by ID */
-	protected $bridges						= array();
+	protected $bridges						= [];
 
 	/**	@var	array						$bridgeClasses	Map of registered bridges by class name */
-	protected $bridgeClasses				= array();
+	protected $bridgeClasses				= [];
 
 	/**	@var	string						$pathToBridges */
 	static public $pathToBridges			= "classes/Logic/ShopBridge/";
@@ -34,7 +34,7 @@ class Logic_ShopBridge
 
 	public function discoverBridges( bool $install = FALSE )
 	{
-		$list	= array();
+		$list	= [];
 		foreach( new DirectoryIterator( self::$pathToBridges ) as $entry ){							//  iterate list of classes in bridge class folder
 			if( $entry->isDir() || $entry->isDot() )												//  exclude folders and folder links
 				continue;
@@ -234,8 +234,8 @@ class Logic_ShopBridge
 
 	protected function readBridges()
 	{
-		$this->bridges			= array();
-		$this->bridgeClasses	= array();
+		$this->bridges			= [];
+		$this->bridgeClasses	= [];
 		foreach( $this->model->getAll() as $bridge ){
 			$className	= "Logic_ShopBridge_".$bridge->class;
 			$bridge		= (object) array(

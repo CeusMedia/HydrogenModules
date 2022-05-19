@@ -1,7 +1,7 @@
 <?php
 //  --  PANEL: BRANCHES  --  //
 $w				= (object) $words['branches'];
-$listBranches	= array();
+$listBranches	= [];
 foreach( $company->branches as $branch ){
 	$url	= './manage/branch/edit/'.$branch->branchId;
 	$listBranches[]	= HTML::Li( HTML::Link( $url, $branch->title ), 'branch' );
@@ -14,7 +14,7 @@ $panelBranches	= HTML::Fields(
 
 //  --  PANEL: USERS  --  //
 $w			= (object) $words['users'];
-$listUsers	= array();
+$listUsers	= [];
 foreach( $company->users as $user ){
 	$url	= './manage/user/edit/'.$user->userId;
 	$label	= HTML::Link( $url, $user->username, 'user' );

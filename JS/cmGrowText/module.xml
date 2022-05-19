@@ -14,7 +14,7 @@
 		<needs type="module">JS_jQuery</needs>
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$options	= array();
+		$options	= [];
 		$script		= '$(".cmGrowText").cmGrowText('.json_encode( $options ).')';
 		$script		= '$(document).ready(function(){'.$script.'});';
 		$context->js->addScript( $script );

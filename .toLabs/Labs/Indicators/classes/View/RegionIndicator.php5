@@ -13,7 +13,7 @@
  */
 class View_RegionIndicator{
 
-	protected $regions		= array();
+	protected $regions		= [];
 	protected $minBarHeight	= NULL;
 
 	public function __construct( $minBarHeight = NULL ){
@@ -29,7 +29,7 @@ class View_RegionIndicator{
 	}
 
 	public function render( $width, $height ){
-		$values	= array();
+		$values	= [];
 		foreach( $this->regions as $nr => $region )
 			$values[]	= $region->weight;
 

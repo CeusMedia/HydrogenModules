@@ -17,7 +17,7 @@ $authTypes	= [
 
 
 if( count( $connections ) > 0 ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $connections as $connection ){
 		$link	= UI_HTML_Tag::create( 'a', $connection->title, ['href' => 'manage/import/edit/'.$connection->importConnectionId] );
 		$rows[]	= UI_HTML_Tag::create( 'tr', [

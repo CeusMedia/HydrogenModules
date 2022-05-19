@@ -10,7 +10,7 @@ $optStatus	= UI_HTML_Elements::Options( $optStatus );
 
 $w	= (object) $words->add;
 
-$optGroupId	= array();
+$optGroupId	= [];
 foreach( $groups as $group )
 	$optGroupId[$group->newsletterGroupId]	= $group->title;
 $optGroupId	= UI_HTML_Elements::Options( $optGroupId );

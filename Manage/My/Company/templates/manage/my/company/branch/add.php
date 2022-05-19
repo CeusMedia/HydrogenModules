@@ -6,7 +6,7 @@ $iconSave	= HTML::Icon( 'ok', TRUE );
 
 extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/manage/my/branch/add/' ) );
 
-$optCompany	= array();
+$optCompany	= [];
 foreach( $companies as $company )
 	$optCompany[$company->companyId]	= $company->title;
 

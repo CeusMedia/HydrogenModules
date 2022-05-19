@@ -22,7 +22,7 @@ $helper		= new View_Helper_Member( $this->env );
 
 
 if( $userLicenseKeys ){
-	$list	= array();
+	$list	= [];
 	foreach( $userLicenseKeys as $userLicenseKey ){
 		$class		= NULL;
 		$dateStart	= NULL;

@@ -55,7 +55,7 @@ $documentMaxSize	= $moduleConfig->get( 'article.document.maxSize' );
 $limits				= array( 'document' => Alg_UnitParser::parse( $documentMaxSize, "M" ) );
 $documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
 
-$list				= array();
+$list				= [];
 $documentExtensions	= $moduleConfig->get( 'article.image.extensions' );
 foreach( explode( ",", $documentExtensions ) as $nr => $type )
 	if( !in_array( trim( $type ), array( "jpe", "jpeg" ) ) )

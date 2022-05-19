@@ -2,7 +2,7 @@
 $count	= 0;
 $list	= '-';
 if( $module->sql ){
-	$list	= array();
+	$list	= [];
 	foreach( $module->sql as $type => $sql ){
 		if( !strlen( trim( $sql->sql ) ) )
 			continue;

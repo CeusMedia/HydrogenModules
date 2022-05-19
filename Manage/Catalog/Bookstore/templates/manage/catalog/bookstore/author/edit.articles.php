@@ -3,8 +3,8 @@ $w			= (object) $words['edit'];
 
 $list		= '<div><em class="muted">Keine Veröffentlichungen vorhanden.</em></div>';
 if( $articles ){
-	$list		= array();
-//	$rows		= array();
+	$list		= [];
+//	$rows		= [];
 	foreach( $articles as $article ){
 		$url	= './manage/catalog/bookstore/article/edit/'.$article->articleId;
 		$label	= htmlentities( $article->title, ENT_QUOTES, 'UTF-8' );

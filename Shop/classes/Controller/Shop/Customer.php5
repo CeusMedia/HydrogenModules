@@ -2,7 +2,7 @@
 class Controller_Shop_Customer extends CMF_Hydrogen_Controller
 {
 	/**	@var	array					$backends			List of available payment backends */
-	protected $backends					= array();
+	protected $backends					= [];
 
 	/**	@var	float					$cartTotal			Total price of cart */
 	protected $cartTotal				= 0;
@@ -189,7 +189,7 @@ class Controller_Shop_Customer extends CMF_Hydrogen_Controller
 	 *	@param		string		$icon			...
 	 *	@return		void
 	 */
-	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = array() )
+	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] )
 	{
 		$this->backends[]	= (object) array(
 			'backend'	=> $backend,

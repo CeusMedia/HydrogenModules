@@ -1,6 +1,6 @@
 <?php
-$articleList	= array();
-$list			= array();
+$articleList	= [];
+$list			= [];
 foreach( $articles as $article ){
 	$url	= './blog/article/'.$article->articleId.'/'.rawurlencode( $article->title );
 	$link	= UI_HTML_Tag::create( 'a', $article->title, array( 'href' => $url ) );
@@ -9,7 +9,7 @@ foreach( $articles as $article ){
 $articleList	= UI_HTML_Tag::create( 'ul', join( $list ) );
 $articleList	= $this->renderArticleAbstractList( $articles, FALSE, FALSE, FALSE );
 
-$list	= array();
+$list	= [];
 foreach( $friends as $friend ){
 	$link	= View_Helper_Blog::renderTagLink( $env, $friend->title );
 	$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-article-tag-list-item' ) );

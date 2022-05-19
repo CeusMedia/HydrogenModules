@@ -45,7 +45,7 @@ class Resource_Oauth{
 		return $response->data;
 	}
 
-	public function write( $resourcePath, $postData = array() ){
+	public function write( $resourcePath, $postData = [] ){
 		if( !trim( $resourcePath ) && ltrim( $resourcePath, '/' ) )
 			throw new InvalidArgumentException( 'Missing resource path to request' );
 		$resourcePath	= ltrim( $resourcePath, '/' );

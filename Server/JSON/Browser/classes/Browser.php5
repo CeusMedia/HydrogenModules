@@ -11,7 +11,7 @@ class Browser{
 		$this->time1	= $this->env->getClock()->stop( 3, 1 );
 	}
 
-	public function render( $body, $headers = array() ){
+	public function render( $body, $headers = [] ){
 		$config			= $this->env->getConfig();
 		$request		= $this->env->getRequest();
 
@@ -23,7 +23,7 @@ class Browser{
 
 		$disclosure		= new CMF_Hydrogen_Environment_Resource_Disclosure();
 		$options		= array( 'classPrefix' => 'Controller_', 'readMethods' => FALSE );
-		$controllers	= array();
+		$controllers	= [];
 		foreach( array_keys( $disclosure->reflect( 'classes/Controller/', $options ) ) as $item ){
 			if( $item !== "Abstract" ){
 				$path	= str_replace( '_', '/', strtolower( $item ) );
@@ -33,7 +33,7 @@ class Browser{
 		natcasesort( $controllers );
 
 		$actions		= array( 'index' => '(index)' );
-		$arguments		= array();
+		$arguments		= [];
 		$options		= array( 'classPrefix' => 'Controller_', 'readParameters' => TRUE );
 		foreach( $disclosure->reflect( 'classes/Controller/', $options ) as $className => $class ){
 			if( str_replace( '_', '/', strtolower( $className ) ) == $controller ){

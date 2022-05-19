@@ -11,7 +11,7 @@ $table	= '<div class="muted"><em><small class="muted">'.$w->noEntries.'</small><
 
 if( $relocations ){
 	$helper		= new View_Helper_TimePhraser( $env );
-	$rows		= array();
+	$rows		= [];
 	foreach( $relocations as $relocation ){
 		$class	= "warning";
 		if( $relocation->status > 0 )

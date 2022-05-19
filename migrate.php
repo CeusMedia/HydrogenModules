@@ -82,7 +82,7 @@ class Tool_OldStructure
 	public static function testSyntax()
 	{
 		$files		= Tool_Utilities::scanFolder( '.' );
-		$phpFiles	= array();
+		$phpFiles	= [];
 		foreach( $files as $filePathAbsolute => $filePathShort ){
 			if( preg_match( '/\.php5?$/', $filePathShort ) ){
 				$phpFiles[$filePathAbsolute]	= $filePathShort;
@@ -90,7 +90,7 @@ class Tool_OldStructure
 		}
 
 		$nr			= 0;
-		$list		= array();
+		$list		= [];
 		$progress	= new CLI_Output_Progress();
 		$progress->setTotal( count( $phpFiles ) );
 		$progress->start();
@@ -111,7 +111,7 @@ class Tool_OldStructure
 	{
 		$files	= Tool_Utilities::scanFolder( '.' );
 		$i		= 0;
-		$list	= array();
+		$list	= [];
 		foreach( $files as $filePathAbsolute => $filePathShort ){
 			if( preg_match( '/\.php5?$/', $filePathShort ) ){
 				$content	= trim( FS_File_Reader::load( $filePathAbsolute ) );
@@ -158,7 +158,7 @@ class Tool_NewStructure
 	public static function removePhpVersionInClassFileName()
 	{
 		$files	= Tool_Utilities::scanFolder( self::$pathNew );
-		$list	= array();
+		$list	= [];
 		foreach( $files as $filePathAbsolute => $filePathShort ){
 			if( preg_match( '@/classes/.+\.php5$@', $filePathShort ) ){
 				if( self::$verbose )
@@ -212,7 +212,7 @@ class Tool_Utilities
 	{
 		$path	= rtrim( $path, '/' );
 		$baseFolderToRemove	= $baseFolderToRemove ? $baseFolderToRemove : $path;
-		$list	= array();
+		$list	= [];
 		$index	= new DirectoryIterator( $path );
 		foreach( $index as $item ){
 			$fileName	= $item->getFilename();

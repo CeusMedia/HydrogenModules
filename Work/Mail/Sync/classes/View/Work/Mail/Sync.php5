@@ -1,7 +1,7 @@
 <?php
 class View_Work_Mail_Sync extends CMF_Hydrogen_View
 {
-	static public function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
 	}
 
 	public function add()

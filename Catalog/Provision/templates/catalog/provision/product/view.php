@@ -10,7 +10,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 
 $list	= UI_HTML_Tag::create( 'div', 'Keine Lizenzen vorhanden.', array( 'class' => 'alert alert-notice' ) );
 if( $licenses ){
-	$list	= array();
+	$list	= [];
 	foreach( $licenses as $license ){
 		$list[]	= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'div', array(

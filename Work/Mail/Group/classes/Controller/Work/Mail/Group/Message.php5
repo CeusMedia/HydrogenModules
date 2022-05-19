@@ -53,7 +53,7 @@ class Controller_Work_Mail_Group_Message extends CMF_Hydrogen_Controller
 		$filterGroupId	= $this->session->get( $this->filterPrefix.'groupId' );
 
 		$limit		= 15;
-		$indices	= array();
+		$indices	= [];
 		if( $filterGroupId )
 			$indices['mailGroupId']	= $filterGroupId;
 		$orders		= array( 'createdAt' => 'ASC' );

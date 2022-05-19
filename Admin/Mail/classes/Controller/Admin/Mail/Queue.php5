@@ -8,23 +8,6 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
 	protected $model;
 	protected $filterPrefix	= 'filter_admin_mail_queue_';
 
-	public function __onInit()
-	{
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= Logic_Mail::getInstance( $this->env );
-		$this->model		= new Model_Mail( $this->env );
-
-		$path				= '';
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
-			$path	= Logic_Frontend::getInstance( $this->env )->getPath();
-			CMC_Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
-		}
-		if( !is_array( $this->session->get( $this->filterPrefix.'status' ) ) )
-			$this->session->set( $this->filterPrefix.'status', array());
-	}
-
 	public function ajaxRenderDashboardPanel( $panelId )
 	{
 		return $this->view->ajaxRenderDashboardPanel();
@@ -52,7 +35,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
 			$this->restart( 'view/'.$mailId, TRUE );
 		}
 		$mailObjectParts	= $mail->object->instance->mail->getParts();
-		$attachments		= array();
+		$attachments		= [];
 		foreach( $mailObjectParts as $key => $part ){
 			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
 				$isAttachment	= $part instanceof \CeusMedia\Mail\Message\Part\Attachment;
@@ -116,7 +99,8 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function cancel( $mailId ){
+	public function cancel( $mailId )
+	{
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
 		if( !$mail ){
@@ -227,7 +211,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
 		$dateStart	= $filters->get( 'dateStart' );
 		$dateEnd	= $filters->get( 'dateEnd' );
 
-		$conditions	= array();
+		$conditions	= [];
 
 		if( $filters->get( 'subject' ) )
 			$conditions['subject'] = '%'.$filters->get( 'subject' ).'%';
@@ -334,6 +318,23 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
 	}
 
 	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logic		= Logic_Mail::getInstance( $this->env );
+		$this->model		= new Model_Mail( $this->env );
+
+		$path				= '';
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			$path	= Logic_Frontend::getInstance( $this->env )->getPath();
+			CMC_Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
+		}
+		if( !is_array( $this->session->get( $this->filterPrefix.'status' ) ) )
+			$this->session->set( $this->filterPrefix.'status', array());
+	}
 
 	protected function bulkAbort( $mailIds )
 	{

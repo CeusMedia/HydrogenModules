@@ -238,7 +238,7 @@ class Controller_Auth_Oauth2 extends CMF_Hydrogen_Controller
 			}
 			$this->session->set( 'oauth2_providerId', $providerId );
 			$providerObject	= $this->getProviderObject( $providerId, 'auth/oauth2/register' );
-			$scopes	= array();
+			$scopes	= [];
 			if( isset( $this->scopes[$provider->composerPackage] ) )
 				$scopes	= $this->scopes[$provider->composerPackage];
 			$authUrl = $providerObject->getAuthorizationUrl( $scopes );

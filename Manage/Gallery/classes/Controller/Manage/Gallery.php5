@@ -1,14 +1,10 @@
 <?php
-class Controller_Manage_Gallery extends CMF_Hydrogen_Controller{
-	
+class Controller_Manage_Gallery extends CMF_Hydrogen_Controller
+{
 	protected $path;
 	
-	public function __onInit(){
-		$config		= $this->env->getConfig();
-#		$this->path	= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
-	}
-	
-	public function add( $folder = NULL ){
+	public function add( $folder = NULL )
+	{
 		$this->addData( 'folder', $folder );
 		$request	= $this->env->getRequest();
 		if( $request->has( 'add' ) ){
@@ -26,12 +22,18 @@ class Controller_Manage_Gallery extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function index( $galleryId = NULL ){
-		
+	public function index( $galleryId = NULL )
+	{
 	}
 
-	public function edit( $galleryId ){
-		
+	public function edit( $galleryId )
+	{
+
+	}
+
+	protected function __onInit()
+	{
+		$config		= $this->env->getConfig();
+#		$this->path	= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
 	}
 }
-?>

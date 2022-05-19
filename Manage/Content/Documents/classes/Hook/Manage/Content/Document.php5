@@ -6,7 +6,7 @@ class Hook_Manage_Content_Document extends CMF_Hydrogen_Hook{
 		View_Helper_Hint::registerHints( $words['hints'], 'Manage_Content_Documents' );
 	}
 
-	static public function onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	static public function onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
 		$frontend		= $env->getLogic()->get( 'Frontend' );
 		$moduleConfig	= $env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
 		$pathFront		= $frontend->getPath();
@@ -15,7 +15,7 @@ class Hook_Manage_Content_Document extends CMF_Hydrogen_Hook{
 		$words			= $env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes		= (object) $words['link-prefixes'];
 
-		$list			= array();
+		$list			= [];
 		if( file_exists( $pathFront ) && is_dir( $pathFront.$pathDocuments ) ){
 			$model			= new Model_Document( $env, $pathFront.$pathDocuments );
 			foreach( $model->index() as $nr => $entry ){

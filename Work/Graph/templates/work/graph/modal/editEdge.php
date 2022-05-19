@@ -1,11 +1,11 @@
 <?php
 
-$optGraph	= array();
+$optGraph	= [];
 foreach( $graphs as $graph )
 	$optGraph[$graph->graphId]	= $graph->title;
 $optGraph	= UI_HTML_Elements::Options( $optGraph );
 
-$optNode	= array();
+$optNode	= [];
 foreach( $nodes as $node )
 	$optNode[$node->nodeId]	= $node->label ? $node->label : $node->ID;
 $optFromNode	= UI_HTML_Elements::Options( $optNode, $edge->fromNodeId );
@@ -71,7 +71,7 @@ $panelStyle	= '
 	</div>
 </div>';
 
-$nodeIndex	= array();
+$nodeIndex	= [];
 foreach( $nodes as $node )
 	$nodeIndex[$node->nodeId]	= $node->label ? $node->label : '<tt><em>'.$node->ID.'</em></tt>';
 

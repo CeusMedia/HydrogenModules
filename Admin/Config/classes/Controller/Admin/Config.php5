@@ -7,7 +7,7 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller
 		$request	= $this->env->getRequest();
 		$modules	= $this->env->getModules()->getAll();
 
-		$versions	= array();
+		$versions	= [];
 		foreach( array_keys( $modules ) as $moduleId ){
 			$fileName	= "config/modules/".$moduleId.".xml";
 			$file		= new FS_File_Backup( $fileName );
@@ -40,7 +40,7 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller
 		$filterModuleId	= $this->session->get( 'filter_admin_config_moduleId' );
 
 		$foundModules	= $this->env->getModules()->getAll();
-		$categories		= array();
+		$categories		= [];
 		foreach( $foundModules as $module ){
 			if( $module->category && $module->config ){
 				if( !isset( $categories[$module->category] ) )
@@ -51,7 +51,7 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller
 		$filteredModules	= $foundModules;
 
 		if( $filterCategory ){
-			$modules		= array();
+			$modules		= [];
 			foreach( $foundModules as $moduleId => $module )
 				if( $module->config )
 					if( $filterCategory === $module->category )
@@ -65,7 +65,7 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller
 		if( $filterModuleId ){
 			if( !array_key_exists( $filterModuleId, $foundModules ) )
 				$this->restart( 'filter?moduleId=', TRUE );
-			$modules		= array();
+			$modules		= [];
 			foreach( $foundModules as $moduleId => $module )
 				if( $module->id === $filterModuleId )
 					$modules[$moduleId]	= $module;
@@ -93,7 +93,7 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller
 			$module		= $modules[$moduleId];
 
 			if( $request->has( 'save' ) ){
-				$list	= array();
+				$list	= [];
 				foreach( $request->getAll() as $key => $value ){
 					if( preg_match( '/password/', $key ) && !strlen( $value ) )
 						continue;
@@ -101,7 +101,7 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller
 						list( $partModuleId, $partKey ) = explode( "|", $key );
 						$partKey	= preg_replace( "/([a-z0-9])_(\S)/", "\\1.\\2", $partKey );
 						if( !isset( $list[$partModuleId] ) )
-							$list[$partModuleId]	= array();
+							$list[$partModuleId]	= [];
 						if( preg_match( "@(\r)\n@", $value ) )
 							$value	= preg_replace( "@(\r)\n@", ",", $value );
 						else if( strlen( $value ) == 0 )
@@ -116,7 +116,7 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller
 				$this->restart( NULL, TRUE );
 			}
 
-			$versions	= array();
+			$versions	= [];
 			$fileName	= "config/modules/".$moduleId.".xml";
 			$file		= new FS_File_Backup( $fileName );
 			$version	= $file->getVersion();
@@ -157,7 +157,7 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller
 		}
 		$module		= $modules[$moduleId];
 
-		$versions	= array();
+		$versions	= [];
 		$fileName	= "config/modules/".$moduleId.".xml";
 		$file		= new FS_File_Backup( $fileName );
 		$version	= $file->getVersion();
@@ -173,7 +173,7 @@ class Controller_Admin_Config extends CMF_Hydrogen_Controller
 		$this->request	= $this->env->getRequest();
 		$this->session	= $this->env->getSession();
 		$modules	= $this->env->getModules()->getAll();
-		$versions	= array();
+		$versions	= [];
 		foreach( array_keys( $modules ) as $moduleId ){
 			$fileName	= "config/modules/".$moduleId.".xml";
 			$file		= new FS_File_Backup( $fileName );

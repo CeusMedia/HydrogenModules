@@ -3,7 +3,7 @@ $w	= (object) $words['edit'];
 
 $tabsMain	= $this->renderMainTabs();
 
-$tabs       = array();
+$tabs       = [];
 $panes      = array(
 	'details'	=> $this->loadTemplateFile( 'manage/catalog/category/edit.details.php', array( 'w' => $w ) ),
 	'articles'	=> $this->loadTemplateFile( 'manage/catalog/category/edit.articles.php', array( 'w' => $w ) ),

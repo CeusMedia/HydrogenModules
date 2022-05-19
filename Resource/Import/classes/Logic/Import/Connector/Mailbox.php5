@@ -31,7 +31,7 @@ class Logic_Import_Connector_Mailbox extends Logic_Import_Connector_Abstract imp
 		return $this;
 	}
 
-	public function find( $conditions, $orders = array(), $limit = array() ): array
+	public function find( $conditions, $orders = [], $limit = [] ): array
 	{
 		$list		= [];
 		$mailIds    = $this->mailbox->index( $conditions );

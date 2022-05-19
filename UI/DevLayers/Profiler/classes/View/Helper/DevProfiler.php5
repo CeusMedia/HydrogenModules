@@ -12,7 +12,7 @@ class View_Helper_DevProfiler
 		$timeTotal	= $runtime->get( 6, 0 );
 
 		$current	= 0;
-		$list		= array();
+		$list		= [];
 		foreach( $runtime->getGoals() as $task ){
 			$width		= $task->timeMicro / $timeTotal * 100;
 			if( $filter === "ms" && $task->timeMicro / 1000 <= $threshold )

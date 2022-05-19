@@ -1,75 +1,10 @@
 <?php
-class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mangopay_Abstract{
-
+class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mangopay_Abstract
+{
 	protected $words;
 
-	public function __onInit(){
-		parent::__onInit();
-		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/card' );
-		$this->sessionPrefix	= 'manage_my_mangopay_card_payin_';
-	}
-
-	protected function followBackLink( $sessionKey ){
-		$from = $this->session->get( $this->sessionPrefix.$sessionKey );
-		if( $from ){
-			$this->session->remove( $this->sessionPrefix.$sessionKey );
-			$this->restart( $from );
-		}
-	}
-
-	protected function handleErrorCode( $errorCode, $goBack = TRUE ){
-		$helper		= new View_Helper_Mangopay_Error( $this->env );
-		try{
-			$helper->setCode( $errorCode );
-			$helper->setMode( View_Helper_Mangopay_Error::MODE_HTML );
-			$message	= $helper->render();
-		}
-		catch( Exception $e ){
-			$message	= sprintf( 'Unknown error code: %s', $errorCode );
-		}
-		$this->messenger->noteError( $message );
-//		$errorCodes	= ADT_List_Dictionary::create( $this->words )->getAll( 'errorCode-' );
-//		if( !array_key_exists( $errorCode, $errorCodes ) )
-//			throw new InvalidArgumentException( 'Unknown error code: '.$errorCode );
-//		$this->messenger->noteError( $errorCodes[(string) $errorCode] );
-
-		if( $goBack )
-			$this->followBackLink( 'payin_from' );
-	}
-
-	protected function handlePreAuthorized( $preAuthId, $cardId, $walletId ){
-		$preAuth	= $this->mangopay->CardPreAuthorizations->Get( $preAuthId );
-		if( !$preAuth ){
-			$this->messenger->noteError( 'Invalid Payment Card payInPreAuthorization.' );
-			$this->restart( NULL, TRUE );
-		}
-		$card	= $this->checkIsOwnCard( $cardId );
-		$fees	= $this->moduleConfig->getAll( 'fees.payin.' );
-		$payIn	= new \MangoPay\PayIn();
-		$payIn->PreauthorizationId	= $preAuthId;
-		$payIn->AuthorId			= $preAuth->AuthorId;
-		$payIn->CreditedUserId		= $preAuth->AuthorId;
-		$payIn->CreditedWalletId	= $walletId;
-		$payIn->DebitedFunds		= $preAuth->DebitedFunds;
-		$payIn->Fees				= new \MangoPay\Money();
-		$payIn->Fees->Amount		= $preAuth->DebitedFunds->Amount * $fees['percent'] + ( $fees['fix'] * 100 );
-		$payIn->Fees->Currency		= $preAuth->DebitedFunds->Currency;
-
-		// payment type as CARD
-		$payIn->PaymentDetails = new \MangoPay\PayInPaymentDetailsPreAuthorized();
-		$payIn->PaymentDetails->CardType	= $card->CardType;
-		$payIn->PaymentDetails->CardId		= $card->Id;
-
-		// execution type as DIRECT
-		$payIn->ExecutionDetails	= new \MangoPay\PayInExecutionDetailsDirect();
-		$payIn->ExecutionDetails->SecureModeReturnURL = $this->env->url.'manage/my/mangopay/card/payin/handleSecureMode';
-
-		// create Pay-In
-		$createdPayIn = $this->mangopay->PayIns->Create( $payIn );
-		$this->handleStatus( $createdPayIn, $card, $wallet );
-	}
-
-	public function handlePreAuthorizedSecureMode( $cardId, $walletId ){
+	public function handlePreAuthorizedSecureMode( $cardId, $walletId )
+	{
 		$preAuthId	= $this->request->get( 'preAuthorizationId' );
 		if( !$preAuthId ){
 			$this->messenger->noteError( 'No PreAuthorization ID given.' );
@@ -88,7 +23,8 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		$this->handlePreAuthorized( $preAuthId, $cardId, $walletId );
 	}
 
-	public function handleSecureMode(){
+	public function handleSecureMode()
+	{
 		$payInId	= $this->session->get( 'payInId' );
 		if( !$payInId ){
 			$this->messenger->noteError( 'Payment has already been handled or expired.' );
@@ -122,29 +58,8 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		throw new OutOfBoundsException( 'PayIn status "'.$payIn->Status.'" is not handled.' );
 	}
 
-	protected function handleStatus( $payIn, $card, $wallet ){
-		$price	= View_Manage_My_Mangopay::formatMoney( $payIn->DebitedFunds );
-		if( $payIn->Status === \MangoPay\PayInStatus::Failed ){
-			$this->handleErrorCode( $payIn->ResultCode );
-
-			if( ( $from = $this->request->get( 'from' ) ) )
-				$this->restart( $from );
-			$this->restart( 'payin/'.$card->Id, TRUE );
-		}
-		else if( $payIn->Status === \MangoPay\PayInStatus::Created ){
-			$this->session->set( 'payInId', $payIn->Id );
-//				print_m( $createdPayIn );die;
-			header( 'Location: '.$payIn->ExecutionDetails->SecureModeRedirectURL );
-			exit;
-		}
-		$this->cache->remove( 'user_'.$this->userId.'_wallets' );
-		$this->cache->remove( 'user_'.$this->userId.'_transactions' );
-		$this->messenger->noteSuccess( 'Payed <strong>%s</strong> into Wallet <strong>%s</strong>.', $price, $wallet->Description );
-		$this->followBackLink( 'payin_from' );
-		$this->restart( '..', TRUE );
-	}
-
-	public function index( $cardId = NULL, $walletId = NULL ){
+	public function index( $cardId = NULL, $walletId = NULL )
+	{
 		$this->addData( 'walletLocked', (bool) $walletId );
 		$card		= $this->checkIsOwnCard( $cardId );
 		$fees		= $this->moduleConfig->getAll( 'fees.payin.' );
@@ -174,7 +89,8 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 //		throw new RuntimeException( 'Not implemented yet' );
 	}
 
-	public function preAuthorized( $cardId, $walletId = NULL ){
+	public function preAuthorized( $cardId, $walletId = NULL )
+	{
 		$this->addData( 'walletLocked', (bool) $walletId );
 		$card	= $this->checkIsOwnCard( $cardId, FALSE, array( '') );
 		$this->saveBackLink( 'from', 'from', TRUE );
@@ -215,5 +131,98 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		$this->addData( 'card', $this->mangopay->Cards->Get( $cardId ) );
 		$this->addData( 'from', $this->request->get( 'from' ) );
 //		throw new RuntimeException( 'Not implemented yet' );
+	}
+
+	protected function __onInit()
+	{
+		parent::__onInit();
+		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/card' );
+		$this->sessionPrefix	= 'manage_my_mangopay_card_payin_';
+	}
+
+	protected function followBackLink( $sessionKey )
+	{
+		$from = $this->session->get( $this->sessionPrefix.$sessionKey );
+		if( $from ){
+			$this->session->remove( $this->sessionPrefix.$sessionKey );
+			$this->restart( $from );
+		}
+	}
+
+	protected function handleErrorCode( $errorCode, $goBack = TRUE )
+	{
+		$helper		= new View_Helper_Mangopay_Error( $this->env );
+		try{
+			$helper->setCode( $errorCode );
+			$helper->setMode( View_Helper_Mangopay_Error::MODE_HTML );
+			$message	= $helper->render();
+		}
+		catch( Exception $e ){
+			$message	= sprintf( 'Unknown error code: %s', $errorCode );
+		}
+		$this->messenger->noteError( $message );
+//		$errorCodes	= ADT_List_Dictionary::create( $this->words )->getAll( 'errorCode-' );
+//		if( !array_key_exists( $errorCode, $errorCodes ) )
+//			throw new InvalidArgumentException( 'Unknown error code: '.$errorCode );
+//		$this->messenger->noteError( $errorCodes[(string) $errorCode] );
+
+		if( $goBack )
+			$this->followBackLink( 'payin_from' );
+	}
+
+	protected function handlePreAuthorized( $preAuthId, $cardId, $walletId )
+	{
+		$preAuth	= $this->mangopay->CardPreAuthorizations->Get( $preAuthId );
+		if( !$preAuth ){
+			$this->messenger->noteError( 'Invalid Payment Card payInPreAuthorization.' );
+			$this->restart( NULL, TRUE );
+		}
+		$card	= $this->checkIsOwnCard( $cardId );
+		$fees	= $this->moduleConfig->getAll( 'fees.payin.' );
+		$payIn	= new \MangoPay\PayIn();
+		$payIn->PreauthorizationId	= $preAuthId;
+		$payIn->AuthorId			= $preAuth->AuthorId;
+		$payIn->CreditedUserId		= $preAuth->AuthorId;
+		$payIn->CreditedWalletId	= $walletId;
+		$payIn->DebitedFunds		= $preAuth->DebitedFunds;
+		$payIn->Fees				= new \MangoPay\Money();
+		$payIn->Fees->Amount		= $preAuth->DebitedFunds->Amount * $fees['percent'] + ( $fees['fix'] * 100 );
+		$payIn->Fees->Currency		= $preAuth->DebitedFunds->Currency;
+
+		// payment type as CARD
+		$payIn->PaymentDetails = new \MangoPay\PayInPaymentDetailsPreAuthorized();
+		$payIn->PaymentDetails->CardType	= $card->CardType;
+		$payIn->PaymentDetails->CardId		= $card->Id;
+
+		// execution type as DIRECT
+		$payIn->ExecutionDetails	= new \MangoPay\PayInExecutionDetailsDirect();
+		$payIn->ExecutionDetails->SecureModeReturnURL = $this->env->url.'manage/my/mangopay/card/payin/handleSecureMode';
+
+		// create Pay-In
+		$createdPayIn = $this->mangopay->PayIns->Create( $payIn );
+		$this->handleStatus( $createdPayIn, $card, $wallet );
+	}
+
+	protected function handleStatus( $payIn, $card, $wallet )
+	{
+		$price	= View_Manage_My_Mangopay::formatMoney( $payIn->DebitedFunds );
+		if( $payIn->Status === \MangoPay\PayInStatus::Failed ){
+			$this->handleErrorCode( $payIn->ResultCode );
+
+			if( ( $from = $this->request->get( 'from' ) ) )
+				$this->restart( $from );
+			$this->restart( 'payin/'.$card->Id, TRUE );
+		}
+		else if( $payIn->Status === \MangoPay\PayInStatus::Created ){
+			$this->session->set( 'payInId', $payIn->Id );
+//				print_m( $createdPayIn );die;
+			header( 'Location: '.$payIn->ExecutionDetails->SecureModeRedirectURL );
+			exit;
+		}
+		$this->cache->remove( 'user_'.$this->userId.'_wallets' );
+		$this->cache->remove( 'user_'.$this->userId.'_transactions' );
+		$this->messenger->noteSuccess( 'Payed <strong>%s</strong> into Wallet <strong>%s</strong>.', $price, $wallet->Description );
+		$this->followBackLink( 'payin_from' );
+		$this->restart( '..', TRUE );
 	}
 }

@@ -19,7 +19,7 @@ class View_Helper_News
 			array( 'status' => 1 ),
 			array( 'newsId' => 'DESC' )
 		);
-		$list	= array();
+		$list	= [];
 		foreach( $news as $item ){
 			if( $item->startsAt && (int)time() < (int)$item->startsAt )
 				continue;

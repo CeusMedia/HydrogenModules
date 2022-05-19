@@ -7,7 +7,7 @@ $iconBlock	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square
 
 $listBlocksWithin	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $blocksWithin = $this->getData( 'blocksWithin', array() ) ){
-	$list	= array();
+	$list	= [];
 	foreach( $blocksWithin as $identifier => $item ){
 		$link	= UI_HTML_Tag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
 			'href'	=> './manage/form/block/edit/'.$item->blockId,

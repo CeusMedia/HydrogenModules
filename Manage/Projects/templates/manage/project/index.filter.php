@@ -5,7 +5,7 @@ $w			= (object) $words['filter'];
 $isFiltered	= count( $filterStatus ) || count( $filterPriority ) || count( $filterUser ) || $filterId || $filterQuery;
 
 /*  --  STATUS  --  */
-$optStatus	= array();
+$optStatus	= [];
 foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 	$attributes		= array(
 		'value'		=> $key,
@@ -17,7 +17,7 @@ foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 $optStatus	= join( '', $optStatus );
 
 /*  --  PRIORITY  --  */
-$optPriority	= array();
+$optPriority	= [];
 foreach( $words['priorities'] as $key => $value ){
 	$attributes		= array(
 		'value'		=> $key,
@@ -29,7 +29,7 @@ foreach( $words['priorities'] as $key => $value ){
 $optPriority	= join( '', $optPriority );
 
 /*  --  USERS  --  */
-$optUser	= array();
+$optUser	= [];
 foreach( $users as $user ){
 	$attributes		= array(
 		'value'		=> $user->userId,

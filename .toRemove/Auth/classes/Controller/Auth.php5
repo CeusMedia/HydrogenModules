@@ -1,28 +1,24 @@
 <?php
-class Controller_Auth extends CMF_Hydrogen_Controller {
-
+class Controller_Auth extends CMF_Hydrogen_Controller
+{
 	protected $config;
 	protected $request;
 	protected $session;
 	protected $messenger;
 
-	public function __onInit(){
-		$this->config		= $this->env->getConfig();
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-	}
-
-	public function ajaxIsAuthenticated(){
+	public function ajaxIsAuthenticated()
+	{
 		print( json_encode( $this->session->has( 'userId' ) ) );
 		exit;
 	}
 
-	public function ajaxRefreshSession(){
+	public function ajaxRefreshSession()
+	{
 		exit;
 	}
 
-	public function ajaxUsernameExists(){
+	public function ajaxUsernameExists()
+	{
 		$username	= trim( $this->request->get( 'username' ) );
 		$result		= FALSE;
 		if( strlen( $username ) ){
@@ -33,7 +29,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		exit;
 	}
 
-	public function confirm(){
+	public function confirm()
+	{
 		$words		= (object) $this->getWords( 'confirm' );
 
 		if( $this->request->has( 'confirm_code' ) ){
@@ -54,7 +51,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		}
 	}
 
-	public function login( $username = NULL ){
+	public function login( $username = NULL )
+	{
 		$words		= (object) $this->getWords( 'login' );
 
 		if( $this->session->has( 'userId' ) )
@@ -101,7 +99,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->addData( 'login_username', $username );
 	}
 
-	public function logout( $redirectController = NULL, $redirectAction = NULL ){
+	public function logout( $redirectController = NULL, $redirectAction = NULL )
+	{
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
 		$message	= $words['logout']['msgSuccess'];
 		if( $this->session->remove( 'auth_user_id' ) ){
@@ -123,9 +122,12 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$this->restart( './'.$redirectTo );															//  restart (to redirect URL if set)
 	}
 
-	public function loginInside(){}
+	public function loginInside()
+	{
+	}
 
-	public function password(){
+	public function password()
+	{
 		$words		= (object) $this->getWords( 'password' );
 
 		if( $this->request->has( 'password_email' ) ){
@@ -147,7 +149,8 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		}
 	}
 
-	public function register(){
+	public function register()
+	{
 #		print_m( $this->config->getAll() );
 #		remark( CMC_VERSION );
 #		die;
@@ -158,7 +161,7 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 		$modelRole	= new Model_Role( $this->env );
 
 		$roleDefaultId	= $modelRole->getByIndex( 'register', 128, 'roleId' );
-		$rolesAllowed	= array();
+		$rolesAllowed	= [];
 		foreach( $modelRole->getAllByIndex( 'register', array( 64, 128 ) ) as $role )
 				$rolesAllowed[]	= $role->roleId;
 
@@ -245,5 +248,12 @@ class Controller_Auth extends CMF_Hydrogen_Controller {
 			$input[$key]	= htmlentities( $value, ENT_COMPAT, 'UTF-8' );
 		$this->addData( 'register', $input );
 	}
+
+	protected function __onInit()
+	{
+		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+	}
 }
-?>

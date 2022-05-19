@@ -13,7 +13,7 @@ if( isset( $modules ) && count( $modules ) ){
 		'disabled'	=> isset( $modules ) && count( $modules ) ? NULL : 'disabled',
 	) );
 
-	$panels		= array();
+	$panels		= [];
 	foreach( $modules as $module ){
 		$moduleWords	= $view->getModuleWords( $module );
 		$key			= isset( $moduleWords['title'] ) ? $moduleWords['title'] : $module->id;

@@ -30,10 +30,10 @@ class Controller_Manage_Page_Ajax extends CMF_Hydrogen_Controller_Ajax
 			$page			= $this->checkPageId( $pageId );					//  check if page ID is valid
 			$blacklistFile	= 'config/terms.blacklist.txt';
 			$wordsInput		= trim( $this->request->get( 'words' ) );			//  get string of whitespace concatenated words from request
-			$wordsGiven		= array();											//  prepare empty list of given words to add to blacklist
+			$wordsGiven		= [];											//  prepare empty list of given words to add to blacklist
 			if( strlen( trim( $wordsInput ) ) )									//  given string of listed keywords is not empty
 				$wordsGiven		= preg_split( '/\s*(,|\s)\s*/', $wordsInput );	//  split to list of words to add to blacklist
-			$wordsAdded		= array();											//  prepare empty list of words added to blacklist
+			$wordsAdded		= [];											//  prepare empty list of words added to blacklist
 			if( count( $wordsGiven ) ){											//  atleast one word is given
 				if( !file_exists( $blacklistFile ) )							//  blacklist file is not existing, yet
 					touch( $blacklist );										//  create empty list file
@@ -47,7 +47,7 @@ class Controller_Manage_Page_Ajax extends CMF_Hydrogen_Controller_Ajax
 
 			$pages	= $this->model->getAll();
 			foreach( $pages as $page ){
-				$keywords	= array();
+				$keywords	= [];
 				if( strlen( trim( $page->keywords ) ) )
 					$keywords	= preg_split( '/\s*,\s*/', $page->keywords );
 				if( $keywords ){
@@ -141,7 +141,7 @@ class Controller_Manage_Page_Ajax extends CMF_Hydrogen_Controller_Ajax
 		if( file_exists( $blacklist ) )
 			Alg_Text_TermExtractor::loadBlacklist( $blacklist );
 		$terms	= Alg_Text_TermExtractor::getTerms( $html );
-		$list	= array();
+		$list	= [];
 		foreach( $terms as $term => $count )
 			if( preg_match( '/^[A-Z]/', $term ) )
 				if( preg_match( '/[A-Z]$/i', $term ) )

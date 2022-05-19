@@ -14,7 +14,7 @@ class View_Helper_Work_Issue_Changes
 	{
 		if( !$this->issue )
 			throw new RuntimeException( 'No issue set.' );
-		$list			= array();
+		$list			= [];
 		$notes			= $this->modelNote->getAllByIndex( 'issueId', $this->issue->issueId );
 		$helper			= new View_Helper_Work_Issue_ChangeNote( $this->env );
 		$helperFacts	= new View_Helper_Work_Issue_ChangeFacts( $this->env );

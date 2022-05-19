@@ -107,7 +107,7 @@ class View_Helper_Shop_OrderFacts
 	{
 		$words			= (object) $this->words['panel-facts'];
 		$helperText		= new View_Helper_Mail_Text();
-		$list			= array();
+		$list			= [];
 		$list[]			= $helperText->line( "=", 78 );
 		$helperFacts	= new View_Helper_Mail_Facts();
 		$helperFacts->setLabels( $this->words['panel-facts'] );

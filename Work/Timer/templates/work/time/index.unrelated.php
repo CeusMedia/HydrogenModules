@@ -5,7 +5,7 @@ $w		= (object) $words['index-unrelated'];
 $list	= UI_HTML_Tag::create( 'div', '<em class="muted">'.$w->empty.'</em>', array( 'class' => 'alert alert-info' ) );
 
 if( $unrelatedTimers ){
-	$list	= array();
+	$list	= [];
 	foreach( $unrelatedTimers as $timer ){
 		$label	= $timer->title;
 		$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => './work/time/edit/'.$timer->workTimerId ) );

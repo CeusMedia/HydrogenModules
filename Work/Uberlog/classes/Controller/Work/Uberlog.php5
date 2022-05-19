@@ -1,14 +1,11 @@
 <?php
-class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
-
+class Controller_Work_Uberlog extends CMF_Hydrogen_Controller
+{
 	/**	@var	Model_Log		$model		Instance of log record model */
 	protected $model;
 
-	public function __onInit(){
-		$this->model	= new Model_Log_Record( $this->env );
-	}
-
-	public function ajaxUpdateIndex(){
+	public function ajaxUpdateIndex()
+	{
 		$lastId	= $this->env->getRequest()->get( 'lastId' );
 		$filters	= array( 'logRecordId' => '> '.$lastId );
 		$orders		= array( 'logRecordId' => 'ASC' );
@@ -16,7 +13,69 @@ class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	protected function getCategoryId( $categoryName ){
+	public function index()
+	{
+		$records	= $this->listRecords();
+		$this->addData( 'records', $records );
+	}
+
+	public function record()
+	{
+		$request	= $this->env->getRequest();
+		$post		= $request->getAllFromSource( 'POST', TRUE );
+		$data		= $post->getAll();
+		$data['timestamp']	= $post->has( 'timestamp' ) ? $post->get( 'timestamp' ) : time();
+		$data['logCategoryId']	= $this->getCategoryId( $post->get( 'category' ) );
+		$data['logClientId']	= $this->getClientId( $post->get( 'client' ) );
+		$data['logHostId']		= $this->getHostId( $post->get( 'host' ) );
+		$data['logUserAgentId']	= $this->getUserAgentId( $post->get( 'userAgent' ) );
+		$recordId	= $this->model->add( $data );
+		print( $recordId );
+		exit;
+		if( $request->isAjax() ){
+			print( json_encode( $recordId ) );
+			exit;
+		}
+		$this->restart( NULL, TRUE );
+	}
+
+	public function remove( $recordId )
+	{
+		$this->model->remove( $recordId );
+		$this->messenger->noteSuccess( 'Record '.$recordId.' has been removed.' );
+		if( $request->isAjax() )
+			exit;
+		$this->restart( NULL, TRUE );
+	}
+
+	public function testRecord( $type = 0 )
+	{
+		$data		= array(
+			'category'	=> 'test',
+			'message'	=> 'Test',
+			'timestamp'	=> time(),
+			'type'		=> $type,
+		);
+		$response	= $this->env->uberlog->report( $data );
+		$this->restart( NULL, TRUE );
+
+#		if( !$this->env->getModules()->has( 'Resource_Uberlog' ) )
+#			throw new RuntimeException( 'Module "Resource:Uberlog" is not installed' );
+#		$this->env->get( 'uberlog' )->report( $data );
+
+	}
+
+	public function view()
+	{
+	}
+
+	protected function __onInit()
+	{
+		$this->model	= new Model_Log_Record( $this->env );
+	}
+
+	protected function getCategoryId( $categoryName )
+	{
 		if( !strlen( trim( $categoryName ) ) )
 			return 0;
 		$modelCategory	= new Model_Log_Category( $this->env );
@@ -32,7 +91,8 @@ class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
 		return $modelCategory->add( $data );
 	}
 
-	protected function getClientId( $clientName ){
+	protected function getClientId( $clientName )
+	{
 		if( !strlen( trim( $clientName ) ) )
 			return 0;
 		$modelClient	= new Model_Log_Client( $this->env );
@@ -48,7 +108,8 @@ class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
 		return $modelClient->add( $data );
 	}
 
-	protected function getHostId( $hostName ){
+	protected function getHostId( $hostName )
+	{
 		if( !strlen( trim( $hostName ) ) )
 			return 0;
 		$modelHost	= new Model_Log_Host( $this->env );
@@ -64,7 +125,8 @@ class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
 		return $modelHost->add( $data );
 	}
 
-	protected function getUserAgentId( $userAgent ){
+	protected function getUserAgentId( $userAgent )
+	{
 		if( !strlen( trim( $userAgent ) ) )
 			return 0;
 		$modelAgent	= new Model_Log_UserAgent( $this->env );
@@ -80,18 +142,14 @@ class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
 		return $modelAgent->add( $data );
 	}
 
-	public function index(){
-		$records	= $this->listRecords();
-		$this->addData( 'records', $records );
-	}
-
-	protected function listRecords( $filters = array(), $orders = array() ){
+	protected function listRecords( $filters = [], $orders = [] )
+	{
 		$orders				= $orders ? $orders : array( 'logRecordId' => 'DESC' );
 		$records			= $this->model->getAll( $filters, $orders, array( 10 ,0 ) );
-		$listCategories		= array();
-		$listClients		= array();
-		$listHosts			= array();
-		$listUserAgentId	= array();
+		$listCategories		= [];
+		$listClients		= [];
+		$listHosts			= [];
+		$listUserAgentId	= [];
 		foreach( $records as $record ){
 			$listCategories[$record->logCategoryId]		= $record->logCategoryId;
 			$listClients[$record->logClientId]			= $record->logClientId;
@@ -131,50 +189,4 @@ class Controller_Work_Uberlog extends CMF_Hydrogen_Controller{
 		}
 		return $records;
 	}
-
-	public function record(){
-		$request	= $this->env->getRequest();
-		$post		= $request->getAllFromSource( 'POST', TRUE );
-		$data		= $post->getAll();
-		$data['timestamp']	= $post->has( 'timestamp' ) ? $post->get( 'timestamp' ) : time();
-		$data['logCategoryId']	= $this->getCategoryId( $post->get( 'category' ) );
-		$data['logClientId']	= $this->getClientId( $post->get( 'client' ) );
-		$data['logHostId']		= $this->getHostId( $post->get( 'host' ) );
-		$data['logUserAgentId']	= $this->getUserAgentId( $post->get( 'userAgent' ) );
-		$recordId	= $this->model->add( $data );
-		print( $recordId );
-		exit;
-		if( $request->isAjax() ){
-			print( json_encode( $recordId ) );
-			exit;
-		}
-		$this->restart( NULL, TRUE );
-	}
-
-	public function remove( $recordId ){
-		$this->model->remove( $recordId );
-		$this->messenger->noteSuccess( 'Record '.$recordId.' has been removed.' );
-		if( $request->isAjax() )
-			exit;
-		$this->restart( NULL, TRUE );
-	}
-
-	public function testRecord( $type = 0 ){
-		$data		= array(
-			'category'	=> 'test',
-			'message'	=> 'Test',
-			'timestamp'	=> time(),
-			'type'		=> $type,
-		);
-		$response	= $this->env->uberlog->report( $data );
-		$this->restart( NULL, TRUE );
-
-#		if( !$this->env->getModules()->has( 'Resource_Uberlog' ) )
-#			throw new RuntimeException( 'Module "Resource:Uberlog" is not installed' );
-#		$this->env->get( 'uberlog' )->report( $data );
-
-	}
-
-	public function view(){}
 }
-?>

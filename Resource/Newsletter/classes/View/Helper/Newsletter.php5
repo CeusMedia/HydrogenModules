@@ -161,7 +161,7 @@ class View_Helper_Newsletter
 	/**
 	 *	@todo  			check if deprecated
 	 */
-	public function renderNewsletterPlain( $newsletterId, $readerId = NULL, $data = array() )
+	public function renderNewsletterPlain( $newsletterId, $readerId = NULL, $data = [] )
 	{
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );
 		$helper		= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId );
@@ -180,7 +180,7 @@ class View_Helper_Newsletter
 	/**
 	 *	@todo  			check if deprecated
 	 */
-	public function renderNewsletterHtml( $newsletterId, $readerId = NULL, $data = array(), $strict = TRUE )
+	public function renderNewsletterHtml( $newsletterId, $readerId = NULL, $data = [], $strict = TRUE )
 	{
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );
 		$helper		= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId, $this->preview );

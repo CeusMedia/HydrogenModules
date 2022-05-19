@@ -11,7 +11,7 @@ class Controller_Tool_Index extends CMF_Hydrogen_Controller{
 	{
 		$labels		= parse_ini_file( "config.ini", TRUE );
 		$index		= FS_Folder_Lister::getMixedList( "./tools/" );
-		$list		= array();
+		$list		= [];
 		foreach( $index as $entry )
 		{
 			$fileName		= $entry->getFilename();

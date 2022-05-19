@@ -10,7 +10,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 
 $list	= UI_HTML_Tag::create( 'div', 'Keine Produkte vorhanden.', array( 'class' => 'alert alert-notice' ) );
 if( $products ){
-	$list	= array();
+	$list	= [];
 	foreach( $products as $product ){
 		$list[]	= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'div', array(

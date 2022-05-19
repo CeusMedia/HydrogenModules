@@ -3,7 +3,7 @@ class View_Helper_Work_Mission_Calendar{
 
 	protected $env;
 	protected $logic;
-	protected $projects	= array();
+	protected $projects	= [];
 	protected $today;
 	protected $words;
 
@@ -25,9 +25,9 @@ class View_Helper_Work_Mission_Calendar{
 		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
 		$orders			= array( 'priority' => 'ASC' );
 
-		$rows			= array();
+		$rows			= [];
 		for( $i=0; $i<$weeks; $i++ ){
-			$row	= array();
+			$row	= [];
 			$j	= 0;
 			$class	= '';
 			if( $i == 0 ){
@@ -65,9 +65,9 @@ class View_Helper_Work_Mission_Calendar{
 		$tableLarge	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
 
 
-		$rows			= array();
+		$rows			= [];
 		for( $i=0; $i<$weeks; $i++ ){
-			$row	= array();
+			$row	= [];
 			$j		= 0;
 			$class	= '';
 			if( $i == 0 ){
@@ -195,7 +195,7 @@ $(document).ready(function(){
 		$isToday	= $diff->days == 0;
 		$conditions	= array( 'dayStart' => $date->format( "Y-m-d" ), 'status' => array( 0, 1, 2, 3 ) );
 		$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
-		$list		= array();
+		$list		= [];
 		foreach( $missions as $mission ){
 		//	$title		= Alg_Text_Trimmer::trim( $mission->title, 20 );
 			$title		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );

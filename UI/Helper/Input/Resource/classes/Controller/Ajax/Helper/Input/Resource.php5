@@ -29,11 +29,11 @@ class Controller_Ajax_Helper_Input_Resource extends CMF_Hydrogen_Controller_Ajax
 		}
 		$realpath	= realpath( $path ).'/';
 
-		$list		= array();
+		$list		= [];
 		foreach( $paths as $path ){
 			if( !file_exists( $realpath.$path ) )
 				continue;
-			$sublist	= array();
+			$sublist	= [];
 			$index		= new \FS_File_RecursiveIterator( $realpath.$path );
 			foreach( $index as $entry ){
 				if( $entry->isDir() )

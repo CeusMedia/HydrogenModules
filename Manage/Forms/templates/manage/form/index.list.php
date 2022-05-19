@@ -47,7 +47,7 @@ $listLabelsType		= array(
 $modelForm	= new Model_Form( $env );
 $modelMail	= new Model_Form_Mail( $env );
 
-$rows		= array();
+$rows		= [];
 foreach( $forms as $form ){
 	$customerMail	= UI_HTML_Tag::create( 'small', '- keine Empfänger-E-Mail zugewiesen -', array( 'class' => "muted" ) );
 	if( $form->customerMailId > 0 ){
@@ -66,7 +66,7 @@ foreach( $forms as $form ){
 	}
 
 	$linkEdit	= UI_HTML_Tag::create( 'a', $form->title, array( 'href' => './manage/form/edit/'.$form->formId ) );
-	$receivers	= array();
+	$receivers	= [];
 	if( strlen( trim( $form->receivers ) ) ){
 		foreach( preg_split( '/\s*,\s*/', $form->receivers ) as $receiver )
 			if( preg_match( '/^\S+@\S+$/', $receiver ) )

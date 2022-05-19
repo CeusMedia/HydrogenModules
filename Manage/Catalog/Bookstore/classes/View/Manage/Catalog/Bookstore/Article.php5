@@ -6,7 +6,7 @@ class View_Manage_Catalog_Bookstore_Article extends View_Manage_Catalog_Bookstor
 	public function index(){}
 
 	protected function renderList( $articles, $articleId = NULL ){
-		$list	= array();
+		$list	= [];
 		foreach( $articles as $article ){
 			$url	= './manage/catalog/bookstore/article/edit/'.$article->articleId;
 			$label	= $article->title;

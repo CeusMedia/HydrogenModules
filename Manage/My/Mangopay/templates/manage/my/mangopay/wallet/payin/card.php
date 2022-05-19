@@ -1,5 +1,5 @@
 <?php
-$rows		= array();
+$rows		= [];
 foreach( $cards as $item ){
 	if( !$item->Active )
 		continue;

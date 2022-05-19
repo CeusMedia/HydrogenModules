@@ -1,9 +1,9 @@
 <?php
 class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 
-	public $list		= array();
-	public $listImages	= array();
-	public $listLinks	= array();
+	public $list		= [];
+	public $listImages	= [];
+	public $listLinks	= [];
 
 	static protected $loaded	= FALSE;
 
@@ -74,11 +74,11 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 	public function getImageList( $refresh = FALSE ){
 		$cacheKey	= 'tinymce.images';
 		if( $refresh ){
-			$this->listImages	= array();
+			$this->listImages	= [];
 			$this->cache->remove( $cacheKey );
 		}
 		if( !( $this->listImages = $this->cache->get( $cacheKey ) ) ){
-			$this->list	= array();
+			$this->list	= [];
 			if( ( $modules = $this->env->getModules() ) )											//  get module handler resource if existing
 				$modules->callHook( 'TinyMCE', 'getImageList', $this, array( 'hidePrefix' => FALSE ) );								//  call related module event hooks
 			$this->listImages	= $this->list;
@@ -96,11 +96,11 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 	public function getLinkList( $refresh = FALSE ){
 		$cacheKey	= 'tinymce.links';
 		if( $refresh || 1 ){
-			$this->listLinks	= array();
+			$this->listLinks	= [];
 			$this->cache->remove( $cacheKey );
 		}
 		if( !( $this->listLinks = $this->cache->get( $cacheKey ) ) ){
-			$this->list	= array();
+			$this->list	= [];
 			if( ( $modules = $this->env->getModules() ) )											//  get module handler resource if existing
 				$modules->callHook( 'TinyMCE', 'getLinkList', $this );								//  call related module event hooks
 			$this->listLinks	= $this->list;
@@ -110,7 +110,7 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 		return $this->listLinks;
 	}
 
-	static public function tidyHtml( $html, $options = array() ){
+	static public function tidyHtml( $html, $options = [] ){
 		if( function_exists( 'tidy_repair_string' ) ){
 			$html	= tidy_repair_string( $html, array_merge( array(
 				'clean'				=> FALSE,

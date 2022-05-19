@@ -1,7 +1,7 @@
 <?php
 class View_Manage_Catalog_Gallery extends CMF_Hydrogen_View{
 
-	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
 		$frontend	= Logic_Frontend::getInstance( $env );
 		$basePath	= $frontend->getConfigValue( 'path.images' );
 		$options	= $env->getConfig()->getAll( 'module.manage_catalog_gallery.', TRUE );
@@ -11,7 +11,7 @@ class View_Manage_Catalog_Gallery extends CMF_Hydrogen_View{
 		$modelCategory	= new Model_Catalog_Gallery_Category( $env );
 
 		/*  --  CATEGORIES  --  */
-		$list			= array();
+		$list			= [];
 		$categories		= $modelCategory->getAllByIndex( 'status', '1' );
 		foreach( $categories as $category ){
 			$list[]	= (object) array(
@@ -26,7 +26,7 @@ class View_Manage_Catalog_Gallery extends CMF_Hydrogen_View{
 		$context->list	= array_merge( $context->list, $list );
 
 		/*  --  CATEGORY IMAGES  --  */
-		$list			= array();
+		$list			= [];
 		$categories		= $modelCategory->getAllByIndex( 'status', '1' );
 		foreach( $categories as $category ){
 			$images		= $modelImage->getAllByIndices( array(
@@ -52,13 +52,13 @@ class View_Manage_Catalog_Gallery extends CMF_Hydrogen_View{
 		$context->list	= array_merge( $context->list, $list );
 	}
 
-	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
 
 		$modelImage		= new Model_Catalog_Gallery_Image( $env );
 		$modelCategory	= new Model_Catalog_Gallery_Category( $env );
 
 		/*  --  CATEGORIES  --  */
-		$list			= array();
+		$list			= [];
 		$categories		= $modelCategory->getAllByIndex( 'status', '1' );
 		foreach( $categories as $category ){
 			$list[]	= (object) array(
@@ -73,7 +73,7 @@ class View_Manage_Catalog_Gallery extends CMF_Hydrogen_View{
 		$context->list	= array_merge( $context->list, $list );
 
 		/*  --  CATEGORY IMAGES  --  */
-		$list			= array();
+		$list			= [];
 		$categories		= $modelCategory->getAllByIndex( 'status', '1' );
 		foreach( $categories as $category ){
 			$images		= $modelImage->getAllByIndices( array(
@@ -131,9 +131,9 @@ class View_Manage_Catalog_Gallery extends CMF_Hydrogen_View{
 	}
 
 	public function renderCategoryMatrix( $categories, $urlAdd = NULL ){
-		$list  		= array();
+		$list  		= [];
 		$pathImages	= $this->getData( 'pathImages' );
-		$list		= array();
+		$list		= [];
 		foreach( $categories as $category ){
 			$urlLink	= './manage/catalog/gallery/editCategory/'.$category->galleryCategoryId;
 			$urlImage	= $pathImages.$category->image;
@@ -152,9 +152,9 @@ class View_Manage_Catalog_Gallery extends CMF_Hydrogen_View{
 	}
 
 	public function renderImageMatrix( $category, $urlAdd = NULL ){
-		$list  		= array();
+		$list  		= [];
 		$pathImages	= $this->getData( 'pathPreview' );
-		$list		= array();
+		$list		= [];
 		foreach( $category->images as $image ){
 			$urlLink	= './manage/catalog/gallery/editImage/'.$image->galleryImageId;
 			$urlImage	= $pathImages.rawurlencode( $category->path ).'/'.$image->filename;

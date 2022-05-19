@@ -6,7 +6,7 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 	protected $modelEvent;
 	protected $modelStripePayin;
 	protected $modelShopPayin;
-	protected $backends				= array();
+	protected $backends				= [];
 
 	public function handle()
 	{
@@ -26,7 +26,7 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 	 *	@param		array		$countries		...
 	 *	@return		void
 	 */
-	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = array() )
+	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] )
 	{
 		$this->backends[]	= (object) array(
 			'backend'	=> $backend,
@@ -60,7 +60,7 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 			'status'	=> Model_Shop_Payment_Stripe::STATUS_CREATED,
 		 	'object'	=> '%"BANK_WIRE"%',
 		);
-		$openShopBankWirePayments	= array();
+		$openShopBankWirePayments	= [];
 		foreach( $this->modelShopPayin->getAll( $indices, $orders ) as $payment )
 			$openShopBankWirePayments[$payment->payInId]	= $payment;
 
@@ -105,7 +105,7 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 			'status'	=> Model_Shop_Payment_Stripe::STATUS_CREATED,
 		 	'object'	=> '%"BANK_WIRE"%',
 		);
-		$openShopBankWirePayments	= array();
+		$openShopBankWirePayments	= [];
 		foreach( $this->modelShopPayin->getAll( $indices, $orders ) as $payment )
 			$openShopBankWirePayments[$payment->payInId]	= $payment;
 

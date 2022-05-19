@@ -61,7 +61,7 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 /*	public function transfer( $sourceWalletId ){
 		$sourceWallet		= $this->mangopay->Wallets->Get( $sourceWalletId );
 
-		$targetWallets		= array();
+		$targetWallets		= [];
 		foreach( $this->mangopay->Users->GetWallets( $this->userId ) as $wallet )
 			if( $wallet->Id != $sourceWalletId )
 				if( $wallet->Currency === $sourceWallet->Currency )

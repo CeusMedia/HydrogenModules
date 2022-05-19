@@ -1,15 +1,8 @@
 <?php
-class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_Mangopay{
-
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-//		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->mangopay		= Logic_Payment_Mangopay::getInstance( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
-	}
-
-	public function index(){
+class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_Mangopay
+{
+	public function index()
+	{
 		$sellerUserId = $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
 		if( $sellerUserId ){
 			$user		= $this->mangopay->getUser( $sellerUserId );
@@ -30,7 +23,8 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 		$this->addData( 'sellerUser', $user );
 	}
 
-	public function bank(){
+	public function bank()
+	{
 		if( $this->request->getMethod()->isPost() ){
 			$sellerUserId	= $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
 			$iban			= $this->request->get( 'iban' );
@@ -60,7 +54,8 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 		$this->restart( NULL, TRUE );
 	}
 
-	public function wallet(){
+	public function wallet()
+	{
 		if( $this->request->getMethod()->isPost() ){
 			$sellerUserId	= $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
 			$currency		= $this->request->get( 'currency' );
@@ -72,7 +67,8 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 		$this->restart( NULL, TRUE );
 	}
 
-	public function user(){
+	public function user()
+	{
 		$sellerUserId = $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
 		if( $sellerUserId ){
 			$this->mangopay->updateLegalUser( $sellerUserId, $this->request->getAll() );
@@ -94,7 +90,17 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function configureLocalModule( $moduleId, $pairs ){
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+//		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->mangopay		= Logic_Payment_Mangopay::getInstance( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
+	}
+
+	protected function configureLocalModule( $moduleId, $pairs )
+	{
 		$fileName	= $this->env->uri.'config/modules/'.$moduleId.'.xml';
 		if( !is_writable( $fileName ) )
 			throw new RuntimeException( 'Config file of module "'.$moduleId.'" is not writable' );

@@ -9,7 +9,7 @@ class Hook_Gallery_Compact extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
 		$env->getLanguage()->load( 'gallery' );														//  load gallery language file
 		$words		= $env->getLanguage()->getWords( 'gallery' );									//  get gallery feed words
 		$context->addHead( UI_HTML_Tag::create( 'link', NULL, array(								//  create link with attributes

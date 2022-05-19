@@ -13,7 +13,7 @@ class Logic_IP_Lock_Transport extends CMF_Hydrogen_Logic
 	 *	@param		array		$filterIds		List if filter IDs (empty: all)
 	 *	@return		object		Map of reasons and filters (keys: reasons, filters)
 	 */
-	public function export( array $reasonIds = array(), array $filterIds = array() )
+	public function export( array $reasonIds = [], array $filterIds = [] )
 	{
 		if( !$reasonIds ){
 			$reasons	= $this->modelReason->getAll();
@@ -52,7 +52,7 @@ class Logic_IP_Lock_Transport extends CMF_Hydrogen_Logic
 	 *	@param		boolean		$pretty			Flag: return pretty JSON string
 	 *	@return		string		JSON string containing exported reasons and filters
 	 */
-	public function exportAsJson( array $reasonIds = array(), array $filterIds = array(), bool $pretty = FALSE ): string
+	public function exportAsJson( array $reasonIds = [], array $filterIds = [], bool $pretty = FALSE ): string
 	{
 		$data	= $this->export( $reasonIds, $filterIds );
 		return json_encode( $data, $pretty ? JSON_PRETTY_PRINT : NULL );
@@ -147,14 +147,14 @@ class Logic_IP_Lock_Transport extends CMF_Hydrogen_Logic
 	{
 		$countReasons	= 0;
 		$countFilters	= 0;
-		$reasonIdMap	= array();
+		$reasonIdMap	= [];
 		foreach( $data->reasons as $reason ){
 			$importId			= $reason->ipLockReasonId;
 			$reason->appliedAt	= 0;
 			unset( $reason->ipLockReasonId );
 			$reasonIdMap[$importId]	= $reason;
 		}
-		$filterIdMap	= array();
+		$filterIdMap	= [];
 		foreach( $data->filters as $filter ){
 			$importId			= $filter->ipLockFilterId;
 			$filter->appliedAt	= 0;

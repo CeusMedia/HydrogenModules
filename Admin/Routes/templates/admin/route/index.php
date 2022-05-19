@@ -3,14 +3,14 @@ $iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) 
 
 $table		= UI_HTML_Tag::create( 'div', '<em>Keine Routen definiert.</em>', array( 'alert alert-info' ) );
 if( $routes ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $routes as $id => $route ){
 		$regex	= $route->regex ? 'ja' : 'nein';
 		$code	= $route->code ? UI_HTML_Tag::create( 'abbr', $route->code, array( 'title' => Net_HTTP_Status::getText( $route->code ) ) ) : '-';
 		$status	= $route->status ? 'aktiv' : 'inaktiv';
 		$status	= UI_HTML_Tag::create( 'span', $status, array( 'class' => 'label '.( $route->status ? 'label-success' : 'label-important' ) ) );
 
-		$buttons = array();
+		$buttons = [];
 		if( !$route->regex )
 			$buttons[]	= UI_HTML_Tag::create( 'a', '<i class="icon-eye-open"></i>', array( 'href' => $route->source, 'target' => '_blank', 'class' => 'btn btn-small' ) );
 		$buttons[]	= UI_HTML_Tag::create( 'a', '<i class="fa fa-fw fa-pencil"></i>', array( 'href' => './admin/route/edit/'.$id, 'class' => 'btn btn-small' ) );

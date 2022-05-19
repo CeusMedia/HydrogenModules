@@ -4,7 +4,7 @@ $w		= (object) $words['comments'];
 
 $listComments	= '<div class="alert">'.$w->empty.'</div>';
 
-$list	= array();
+$list	= [];
 foreach( $post->comments as $comment ){
 	if( $comment->status >= 0 ){
 		$list[]	= $view->renderComment( $comment );

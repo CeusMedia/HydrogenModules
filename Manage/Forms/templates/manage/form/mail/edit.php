@@ -15,7 +15,7 @@ $withinForms		= array_merge(
 );
 $listWithinForms	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinForms ){
-	$list	= array();
+	$list	= [];
 	foreach( $withinForms as $item ){
 		$link	= UI_HTML_Tag::create( 'a', $iconForm.'&nbsp;'.$item->title, array(
 			'href'	=> './manage/form/edit/'.$item->formId,

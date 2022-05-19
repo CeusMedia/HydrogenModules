@@ -2,7 +2,7 @@
 
 $iconBack		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 
-$facts	= array();
+$facts	= [];
 $facts[]	= UI_HTML_Tag::create( 'dt', 'Datum' );
 $facts[]	= UI_HTML_Tag::create( 'dd', date( 'j.n.Y', strtotime( $event->dateStart ) ) );
 $facts[]	= UI_HTML_Tag::create( 'dt', 'Zeit' );

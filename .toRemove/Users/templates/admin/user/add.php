@@ -27,7 +27,7 @@ $(document).ready(function(){
 });';
 $env->page->js->addScript( $script );
 
-$roleMap	= array();
+$roleMap	= [];
 foreach( $roles as $role )
 	$roleMap[$role->roleId] = $role->title;
 

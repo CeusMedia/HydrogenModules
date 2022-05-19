@@ -61,7 +61,7 @@ abstract class View_Helper_Work_Time extends CMF_Hydrogen_View_Helper_Abstract
 		$regexMins	= '@([0-9]+)m\s*@';
 		$regexSecs	= '@([0-9]+)s\s*@';
 		$seconds	= 0;
-		$matches	= array();
+		$matches	= [];
 		if( preg_match( $regexWeeks, $time, $matches ) ){
 			$time		= preg_replace( $regexWeeks, '', $time );
 			$seconds	+= (int) $matches[1] * 7 * 24 * 60 * 60;

@@ -4,10 +4,10 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 	protected $baseUrl;
 	protected $indicator;
 	protected $logic;
-	protected $projects			= array();
+	protected $projects			= [];
 	protected $titleLength		= 80;
 	protected $today;
-	protected $words			= array();
+	protected $words			= [];
 	protected $isEditor;
 	protected $isViewer;
 	protected $icons;
@@ -21,7 +21,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$this->indicator	= new UI_HTML_Indicator();
 		$this->logic		= Logic_Work_Mission::getInstance( $env );
 		$this->today		= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
-		$this->projects		= array();
+		$this->projects		= [];
 		$modelProject		= new Model_Project( $this->env );
 		foreach( $modelProject->getAll() as $project )
 			$this->projects[$project->projectId] = $project;
@@ -78,8 +78,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$list			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
 		if( !strlen( $list ) )
 			return '';
-		$colgroup		= array();
-		$tableHeads		= array();
+		$colgroup		= [];
+		$tableHeads		= [];
 
 		if( 0 && $showCheckbox ){
 			$colgroup[]		= "20px";
@@ -118,8 +118,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$list			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
 		if( !strlen( $list ) )
 			return '';
-		$colgroup		= array();
-		$tableHeads		= array();
+		$colgroup		= [];
+		$tableHeads		= [];
 
 		if( 0 && $showCheckbox ){
 			$colgroup[]		= "20px";
@@ -233,7 +233,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$worker		= $this->renderUser( $modelUser->get( $event->workerId ) );
 		$project	= $event->projectId ? $this->projects[$event->projectId]->title : '-';
 		$buttonEdit	= $showActions ? $this->renderRowButtonEdit( $event ) : '';
-		$cells		= array();
+		$cells		= [];
 
 /*		$checkbox	= UI_HTML_Tag::create( 'input', '', array(
 			'type'	=> 'checkbox',
@@ -275,7 +275,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 		$worker		= $this->renderUser( $modelUser->get( $task->workerId ) );
 		$project	= $task->projectId ? $this->projects[$task->projectId]->title : '-';
 		$buttonEdit	= $this->renderRowButtonEdit( $task );
-		$cells		= array();
+		$cells		= [];
 
 /*		$checkbox	= UI_HTML_Tag::create( 'input', '', array(
 			'type'	=> 'checkbox',
@@ -306,7 +306,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 	}
 
 	public function renderRows( $day, $showStatus, $showPriority, $showDate, $showActions, $typeOnly = NULL ){
-		$list	= array();
+		$list	= [];
 		foreach( $this->missions as $nr => $mission ){
 			$nr	= str_pad( $nr, 4, 0, STR_PAD_LEFT );
 			if( ( is_null( $typeOnly ) || $typeOnly == $mission->type ) && $mission->type == 0 ){

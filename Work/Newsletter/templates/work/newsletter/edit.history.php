@@ -10,7 +10,7 @@ $labelLetterButtonView		= '<i class="icon-eye-open"></i> '.$words->edit->buttonQ
 $labelLetterButtonRetry		= '<i class="icon-refresh icon-white"></i> '.$words->edit->buttonQueueRetry;
 $table						= '<em><small class="muted">Nichts versendet bisher.</small></em>';
 if( $letterHistory ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $letterHistory as $readerLetter ){
 		if( $readerLetter->status == 0 )
 			continue;

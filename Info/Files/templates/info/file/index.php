@@ -29,7 +29,7 @@ foreach( $files as $item ){
 
 	$url			= in_array( 'view', $rights ) ? $urlView : $urlDownload;
 	$label			= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'name' ) );
-	$buttons		= array();
+	$buttons		= [];
 	if( in_array( 'download', $rights ) ){
 		$buttons[]	= UI_HTML_Tag::create( 'a', $iconDownload, array(
 			'href'	=> $urlDownload,
@@ -75,7 +75,7 @@ foreach( $folders as $item ){
 		$info	= '<small class="muted">leer</small>';
 	$label	= UI_HTML_Tag::create( 'a', $label.$info, array( 'class' => 'name', 'href' => $url ) );
 
-	$buttons	= array();
+	$buttons	= [];
 	$buttons[]	= UI_HTML_Tag::create( 'a', $iconOpenFolder, array(
 		'href'	=> $url,
 		'class'	=> 'btn not-btn-small btn-info',
@@ -154,7 +154,7 @@ if( !$search && $folderId && $folder->downloadFolderId > 0 ){
 	) );
 }
 
-$panels		= array();
+$panels		= [];
 if( 1 )
 	$panels[]	= $view->loadTemplateFile( 'info/file/index.search.php' );
 if( !in_array( 'upload', $rights ) )

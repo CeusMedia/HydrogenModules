@@ -1,41 +1,85 @@
 <?php
-class View_Blog extends CMF_Hydrogen_View{
-
-	public function __onInit(){
-		$converters	= array(
-			"formatText",
-			"formatLinks",
-			"formatImageSearch",
-			"formatMapSearch",
-			"formatCurrencies",
-			"formatWikiLinks",
-			"formatYoutubeLinks",
-			"formatImdbLinks",
-			"formatDiscogsLinks",
-			"formatMyspaceLinks",
-			"formatMapLinks",
-			"formatBreaks",
-			"formatCodeBlocks",
-			"formatLists",
-		);
-#		foreach( $converters as $converter )
-#			View_Helper_ContentConverter::register( "View_Helper_ContentConverter", $converter );
+class View_Blog extends CMF_Hydrogen_View
+{
+	public static function renderInfoList( $article, $date = TRUE, $time = TRUE )
+	{
+		$infoList	= [];
+		$attrItem	= array( 'class' => 'blog-article-info-list-item' );
+		if( $date && $article->createdAt ){
+			$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-calendar-o fa-fw' ) ).'&nbsp;';
+			$date		= date( 'd.m.Y', $article->createdAt );
+			$label		= UI_HTML_Tag::create( 'span', $icon.$date, array( 'class' => 'blog-article-date' ) );
+			$infoList[]	= UI_HTML_Tag::create( 'li', $label, $attrItem );
+		}
+		if( $time && $article->createdAt ){
+			$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-time fa-fw' ) ).'&nbsp;';
+			$time		= date( 'H:i', $article->createdAt );
+			$label		= UI_HTML_Tag::create( 'span', $icon.$time, array( 'class' => 'blog-article-time' ) );
+			$infoList[]	= UI_HTML_Tag::create( 'li', $label, $attrItem );
+		}
+		$attrList	= array( 'class' => 'blog-article-info-list' );
+		return UI_HTML_Tag::create( 'ul', join( $infoList ), $attrList );
 	}
 
-	public function add(){}
+	public static function renderAuthorList( CMF_Hydrogen_Environment $env, $authors, $linked = FALSE )
+	{
+		$authorList	= [];
+		if( !$authors )
+			return '';
+		$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-user fa-fw' ) ).'&nbsp;';
+		foreach( $authors as $author ){
+			$url		= './blog/author/'.rawurlencode( $author->username );
+			$label		= UI_HTML_Tag::create( 'span', $icon.$author->username, array( 'class' => 'not-link-author' ) );
+			if( $linked )
+				$label		= UI_HTML_Tag::create( 'a', $icon.$author->username, array( 'href' => $url, 'class' => 'not-link-author' ) );
+			$authorList[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'blog-article-author-list-item' ) );
+		}
+		return UI_HTML_Tag::create( 'ul', join( $authorList ), array( 'class' => 'blog-article-author-list' ) );
+	}
 
-	public function article(){}
+	public static function renderTagList( CMF_Hydrogen_Environment $env, $tags )
+	{
+		$tagList	= [];
+		$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-tags fa-fw' ) ).'&nbsp;';
+		if( $tags ){
+			foreach( $tags as $tag ){
+				$url	= './blog/tag/'.rawurlencode( str_replace( '&', '%26', $tag->title ) );
+				$tagList[]	= UI_HTML_Tag::create( 'a', $tag->title, array( 'href' => $url ) );
+			}
+			$span	= UI_HTML_Tag::create( 'span', join( ' ', $tagList ), array( 'class' => 'not-icon-label not-link-tag' ) );
+			return UI_HTML_Tag::create( 'span', $icon.$span, array( 'class' => 'blog-article-tag-list' ) );
+		}
+		return '';
 
-	public function author(){}
+		$tagList	= [];
+		foreach( $tags as $tag ){
+			$link		= View_Helper_Blog::renderTagLink( $env, $tag->title );
+			$tagList[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-article-tag-list-item' ) );
+		}
+		return UI_HTML_Tag::create( 'ul', join( $tagList ), array( 'class' => 'blog-article-tag-list' ) );
+	}
 
-	public function dev(){
+	public function add()
+	{
+	}
+
+	public function article()
+	{
+	}
+
+	public function author()
+	{
+	}
+
+	public function dev()
+	{
 		if( ( $content = $this->getData( 'content' ) ) ){
 			$content	= View_Helper_ContentConverter::render( $this->env, $content );
 			$attributes	= array( 'class' => 'blog-article blog-article-content' );
 			$content	= UI_HTML_Tag::create( 'div', $content, $attributes );
 		}
 		else if( ( $files = $this->getData( 'files' ) ) ){
-			$list	= array();
+			$list	= [];
 			arsort( $files );
 			foreach( $files as $fileName => $timestamp ){
 				$url	= './blog/dev/'.$fileName;
@@ -49,9 +93,12 @@ class View_Blog extends CMF_Hydrogen_View{
 		return $content;
 	}
 
-	public function edit(){}
+	public function edit()
+	{
+	}
 
-	public function feed(){
+	public function feed()
+	{
 		$words		= $this->getWords( 'feed' );
 		$articles	= $this->getData( 'articles' );
 		$debug		= $this->getData( 'debug' );
@@ -133,12 +180,51 @@ class View_Blog extends CMF_Hydrogen_View{
 		exit;
 	}
 
-	public function index(){}
+	public function index()
+	{
+	}
 
-	public function tag(){}
+	public function tag()
+	{
+	}
 
-	protected function renderArticleAbstractList( $articles, $date = TRUE, $time = TRUE, $authors = TRUE, $linkAuthors = TRUE ){
-		$list		= array();
+	/**
+	 *	Renders scaled image if not existing and returns it directly (binary) to the browser.
+	 *	@access		public
+	 *	@return		void
+	 *	@todo		configure thumb dimensions by module
+	 */
+	public function thumb()
+	{
+		$path	= $this->getData( 'path' );
+		$file	= $this->getData( 'file' );
+
+		$data		= pathinfo( $file );
+		$thumb		= $path.'/'.$data['filename'].'.thumb.'.$data['extension'];
+		$url		= $path.$file;
+
+		$image		= new UI_Image( $thumb );
+		$response	= new Net_HTTP_Response();
+		$response->addHeaderPair( 'Content-type', $image->getMimeType() );
+		$response->addHeaderPair( 'Last-modified', date( 'r', filemtime( $url ) ) );
+		$response->addHeaderPair( 'Cache-control', 'max-age: '.( 24*60*60 ) );
+		$response->addHeaderPair( 'Expires', date('r', time()+24*60*60 ) );
+		if( !file_exists( $thumb ) ){
+			if( !function_exists( 'imagecreatetruecolor' ) )
+				$response->setBody( file_get_contents( $url ) );
+			else{
+				$a	= new UI_Image_ThumbnailCreator( $url, $thumb, 100 );
+				$a->thumbizeByLimit( 240, 180 );
+			}
+		}
+		$response->setBody( file_get_contents( $thumb ) );
+		Net_HTTP_Response_Sender::sendResponse( $response );
+		exit;
+	}
+
+	protected function renderArticleAbstractList( $articles, $date = TRUE, $time = TRUE, $authors = TRUE, $linkAuthors = TRUE )
+	{
+		$list		= [];
 		$config		= $this->env->getConfig();
 		$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-comment fa-fw fa-lg' ) ).'&nbsp';
 		foreach( $articles as $article ){
@@ -168,93 +254,25 @@ class View_Blog extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'blog-article-list' ) );
 	}
 
-	static public function renderInfoList( $article, $date = TRUE, $time = TRUE ){
-		$infoList	= array();
-		$attrItem	= array( 'class' => 'blog-article-info-list-item' );
-		if( $date && $article->createdAt ){
-			$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-calendar-o fa-fw' ) ).'&nbsp;';
-			$date		= date( 'd.m.Y', $article->createdAt );
-			$label		= UI_HTML_Tag::create( 'span', $icon.$date, array( 'class' => 'blog-article-date' ) );
-			$infoList[]	= UI_HTML_Tag::create( 'li', $label, $attrItem );
-		}
-		if( $time && $article->createdAt ){
-			$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-time fa-fw' ) ).'&nbsp;';
-			$time		= date( 'H:i', $article->createdAt );
-			$label		= UI_HTML_Tag::create( 'span', $icon.$time, array( 'class' => 'blog-article-time' ) );
-			$infoList[]	= UI_HTML_Tag::create( 'li', $label, $attrItem );
-		}
-		$attrList	= array( 'class' => 'blog-article-info-list' );
-		return UI_HTML_Tag::create( 'ul', join( $infoList ), $attrList );
-	}
-
-	static public function renderAuthorList( CMF_Hydrogen_Environment $env, $authors, $linked = FALSE ){
-		$authorList	= array();
-		if( !$authors )
-			return '';
-		$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-user fa-fw' ) ).'&nbsp;';
-		foreach( $authors as $author ){
-			$url		= './blog/author/'.rawurlencode( $author->username );
-			$label		= UI_HTML_Tag::create( 'span', $icon.$author->username, array( 'class' => 'not-link-author' ) );
-			if( $linked )
-				$label		= UI_HTML_Tag::create( 'a', $icon.$author->username, array( 'href' => $url, 'class' => 'not-link-author' ) );
-			$authorList[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'blog-article-author-list-item' ) );
-		}
-		return UI_HTML_Tag::create( 'ul', join( $authorList ), array( 'class' => 'blog-article-author-list' ) );
-	}
-
-	static public function renderTagList( CMF_Hydrogen_Environment $env, $tags ){
-		$tagList	= array();
-		$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-tags fa-fw' ) ).'&nbsp;';
-		if( $tags ){
-			foreach( $tags as $tag ){
-				$url	= './blog/tag/'.rawurlencode( str_replace( '&', '%26', $tag->title ) );
-				$tagList[]	= UI_HTML_Tag::create( 'a', $tag->title, array( 'href' => $url ) );
-			}
-			$span	= UI_HTML_Tag::create( 'span', join( ' ', $tagList ), array( 'class' => 'not-icon-label not-link-tag' ) );
-			return UI_HTML_Tag::create( 'span', $icon.$span, array( 'class' => 'blog-article-tag-list' ) );
-		}
-		return '';
-
-		$tagList	= array();
-		foreach( $tags as $tag ){
-			$link		= View_Helper_Blog::renderTagLink( $env, $tag->title );
-			$tagList[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-article-tag-list-item' ) );
-		}
-		return UI_HTML_Tag::create( 'ul', join( $tagList ), array( 'class' => 'blog-article-tag-list' ) );
-	}
-
-	/**
-	 *	Renders scaled image if not existing and returns it directly (binary) to the browser.
-	 *	@access		public
-	 *	@return		void
-	 *	@todo		configure thumb dimensions by module
-	 */
-	public function thumb(){
-
-		$path	= $this->getData( 'path' );
-		$file	= $this->getData( 'file' );
-
-		$data		= pathinfo( $file );
-		$thumb		= $path.'/'.$data['filename'].'.thumb.'.$data['extension'];
-		$url		= $path.$file;
-
-		$image		= new UI_Image( $thumb );
-		$response	= new Net_HTTP_Response();
-		$response->addHeaderPair( 'Content-type', $image->getMimeType() );
-		$response->addHeaderPair( 'Last-modified', date( 'r', filemtime( $url ) ) );
-		$response->addHeaderPair( 'Cache-control', 'max-age: '.( 24*60*60 ) );
-		$response->addHeaderPair( 'Expires', date('r', time()+24*60*60 ) );
-		if( !file_exists( $thumb ) ){
-			if( !function_exists( 'imagecreatetruecolor' ) )
-				$response->setBody( file_get_contents( $url ) );
-			else{
-				$a	= new UI_Image_ThumbnailCreator( $url, $thumb, 100 );
-				$a->thumbizeByLimit( 240, 180 );
-			}
-		}
-		$response->setBody( file_get_contents( $thumb ) );
-		Net_HTTP_Response_Sender::sendResponse( $response );
-		exit;
+	protected function __onInit()
+	{
+		$converters	= array(
+			"formatText",
+			"formatLinks",
+			"formatImageSearch",
+			"formatMapSearch",
+			"formatCurrencies",
+			"formatWikiLinks",
+			"formatYoutubeLinks",
+			"formatImdbLinks",
+			"formatDiscogsLinks",
+			"formatMyspaceLinks",
+			"formatMapLinks",
+			"formatBreaks",
+			"formatCodeBlocks",
+			"formatLists",
+		);
+#		foreach( $converters as $converter )
+#			View_Helper_ContentConverter::register( "View_Helper_ContentConverter", $converter );
 	}
 }
-?>

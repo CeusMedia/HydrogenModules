@@ -9,7 +9,7 @@ class Hook_Admin_Mail_Queue extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		if( !$env->getAcl()->has( 'admin/mail/queue', 'ajaxRenderDashboardPanel' ) )
 			return;

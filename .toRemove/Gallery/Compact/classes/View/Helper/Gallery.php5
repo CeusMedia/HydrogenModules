@@ -1,7 +1,7 @@
 <?php
 class View_Helper_Gallery{
 
-	static public function calculateFraction( $fraction, $words = array() ){
+	static public function calculateFraction( $fraction, $words = [] ){
 		if( !strlen( trim( $fraction ) ) )
 			return "";
 		if( !$words )
@@ -14,7 +14,7 @@ class View_Helper_Gallery{
 	}
 
 	static public function formatGalleryLinks( CMF_Hydrogen_Environment $env, $content ){
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[gallery:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$uri		= './gallery/index/'.str_replace( '%2F', '/', rawurlencode( $matches[1][$i] ) );
@@ -89,7 +89,7 @@ class View_Helper_Gallery{
 		$dateFormat	= $config->get( 'module.gallery_compact.format.date' );
 		$reverse	= $config->get( 'module.gallery_compact.latest.reverse' );
 
-		$list		= array();
+		$list		= [];
 		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
 		$index		= FS_Folder_RecursiveLister::getFolderList( $path, $pattern );
 		foreach( $index as $folder )
@@ -98,7 +98,7 @@ class View_Helper_Gallery{
 		$latest		= array_slice( array_reverse( $list ), $offset, $limit );
 		if( !$reverse )
 			$latest	= array_reverse( $latest );
-		$list		= array();
+		$list		= [];
 		foreach( $latest as $title => $path ){
 			$link	= self::renderGalleryLink( $env, $path, $dateMode, $dateFormat );
 			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'gallery-item' ) );
@@ -107,8 +107,8 @@ class View_Helper_Gallery{
 	}
 
 	static public function renderStepNavigation( CMF_Hydrogen_Environment $env, $source ){
-		$steps	= array();
-		$list	= array();
+		$steps	= [];
+		$list	= [];
 		$source	= preg_replace( '/\/$/', '', $source );
 		$parts	= $source ? explode( '/', $source ) : array();
 		for( $i=0; $i<count( $parts ); $i++ ){

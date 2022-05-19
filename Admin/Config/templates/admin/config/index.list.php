@@ -17,7 +17,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconRestore	= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-backward' ) );
 }
 
-$list	= array();
+$list	= [];
 foreach( $modules as $module ){
 	if( !count( $module->config ) )
 		continue;

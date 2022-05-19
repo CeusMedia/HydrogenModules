@@ -49,7 +49,7 @@
 			throw new RuntimeException( 'Template Engine Abstraction (TEA) is not available' );
 
 		//  --  GET ACTIVE TEMPLATE ENGINES  --  //
-		$engines	= array();													//  prepare empty engine map
+		$engines	= [];													//  prepare empty engine map
 		$parameters	= array( 'loadFile', 'loadPath', 'loadExtension' );			//  list of possible engine parameters
 		foreach( $config as $pair ){											//  iterate module configuration pairs
 			$pattern	= "/^engine\.([a-z0-9]+)$/i";							//  regular expression for finding engines

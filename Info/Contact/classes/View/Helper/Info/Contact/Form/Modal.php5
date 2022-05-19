@@ -211,7 +211,7 @@ class View_Helper_Info_Contact_Form_Modal
 	protected function renderTypeOptions()
 	{
 		//  TYPES: Enabled thru config and hook param
-		$typesConfig	= array();
+		$typesConfig	= [];
 		foreach( $this->moduleConfig->getAll( 'modal.show.type.' ) as $key => $value )
 			if( $value )
 				$typesConfig[]	= $key;

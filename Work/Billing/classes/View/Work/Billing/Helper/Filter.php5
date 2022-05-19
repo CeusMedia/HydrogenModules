@@ -2,7 +2,7 @@
 class View_Work_Billing_Helper_Filter
 {
 	protected $env;
-	protected $filters			= array();
+	protected $filters			= [];
 	protected $session;
 	protected $sessionPrefix;
 	protected $url;
@@ -27,7 +27,7 @@ class View_Work_Billing_Helper_Filter
 		if( !$this->sessionPrefix )
 			throw new RuntimeException( 'No filter session prefix set' );
 
-		$formFields		= array();
+		$formFields		= [];
 		foreach( $this->filters as $filter ){
 			$value		= $this->session->get( $this->sessionPrefix.$filter );
 			switch( $filter ){

@@ -5,8 +5,8 @@ use UI_HTML_Tag as Html;
 
 $iconRemove	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
-$heads	= array();
-$cols	= array();
+$heads	= [];
+$cols	= [];
 foreach( $grades as $grade ){
 	$input	= Html::create( 'input', NULL, array(
 		'type'	=> 'number',
@@ -25,7 +25,7 @@ $thead		= Html::create( 'thead', Html::create( 'tr', $heads ) );
 $tbody		= Html::create( 'tbody', Html::create( 'tr', $cols ) );
 $listGrades	= Html::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-condensed table-striped' ) );
 
-$listCountries	= array();
+$listCountries	= [];
 foreach( $countryMap as $countryCode => $countryLabel ){
 	if( in_array( $countryCode, $zoneCountries ) )
 		continue;
@@ -93,14 +93,14 @@ $modalZoneTrigger	= new BootstrapModalTrigger( 'modalAddZone' );
 $modalZoneTrigger->setLabel( 'neue Zone' )->setIcon( 'fa fa-fw fa-plus' );
 $modalZoneTrigger->setAttributes( array( 'class' => 'btn btn-success' ) );
 //$buttonAdd	= Html::create( 'a', $iconAdd.'&nbsp;neue Zone', array( 'href' => './manage/shop/shipping/addZone', 'class' => 'btn btn-success' ) );
-$rows	= array();
+$rows	= [];
 foreach( $zones as $zone ){
 	$buttonRemove	= Html::create( 'a', $iconRemove.'&nbsp;entfernen', array( 'href' => './manage/shop/shipping/removeZone/'.$zone->zoneId, 'class' => 'btn btn-danger btn-small' ) );
 	$buttonRemove	= Html::create( 'a', $iconRemove, array( 'href' => './manage/shop/shipping/removeZone/'.$zone->zoneId, 'class' => 'btn btn-inverse btn-mini' ) );
 	if( $zone->fallback )
 		$countries	= '*';
 	else{
-		$countries		= array();
+		$countries		= [];
 		foreach( $zone->countries as $countryCode )
 			$countries[]	= Html::create( 'abbr', $countryCode, array( 'title' => $countryMap[$countryCode] ) );
 		$countries	= join( ', ', $countries );

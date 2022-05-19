@@ -80,7 +80,7 @@ class Logic_ShopManager extends CMF_Hydrogen_Logic
 		return $user;
 	}
 
-	public function getCustomers( $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getCustomers( $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return array();//$this->modelCustomer->getAll( $conditions, $orders, $limits );
 	}
@@ -95,7 +95,7 @@ class Logic_ShopManager extends CMF_Hydrogen_Logic
 		return $order;
 	}
 
-	public function getOrders( $conditions = array(), array $orders = array(), array $limits = array() )
+	public function getOrders( $conditions = [], array $orders = [], array $limits = [] )
 	{
 		return $this->modelOrder->getAll( $conditions, $orders, $limits );
 	}

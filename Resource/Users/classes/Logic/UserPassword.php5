@@ -147,7 +147,7 @@ class Logic_UserPassword
 	 */
 	public function encryptPassword( $password, $algo = PASSWORD_BCRYPT )
 	{
-		$options	= array();
+		$options	= [];
 		return password_hash( $password, $algo, $options );
 	}
 

@@ -14,7 +14,7 @@ $helperMoney->setNumberFormat( View_Helper_Mangopay_Entity_Money::NUMBER_FORMAT_
 $list		= UI_HTML_Tag::create( 'div', 'Keine gefunden.', array( 'class' => 'alert alert-info' ) );
 
 if( $payins ){
-	$list	= array();
+	$list	= [];
 	foreach( $payins as $item ){
 		$resource	= Model_Mangopay_Payin::getLatestResourceFromPayinData( $item->data );
 	//	print_m( $resource );die;

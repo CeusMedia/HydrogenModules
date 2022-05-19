@@ -1,7 +1,7 @@
 <?php
 class View_Helper_Modal{
 
-	protected $attributes	= array();
+	protected $attributes	= [];
 	protected $id;
 	protected $fade				= TRUE;
 	protected $heading;

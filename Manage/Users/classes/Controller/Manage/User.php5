@@ -34,23 +34,6 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 		'limit'
 	);
 
-	public function __onInit()
-	{
-		$options			= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
-		$this->countries	= $this->env->getLanguage()->getWords( 'countries' );
-		$this->setData( array(
-			'nameMinLength'		=> $options->get( 'name.length.min' ),
-			'nameMaxLength'		=> $options->get( 'name.length.max' ),
-			'pwdMinLength'		=> $options->get( 'password.length.min' ),
-			'pwdMinStrength'	=> $options->get( 'password.strength.min' ),
-			'needsEmail'		=> $options->get( 'email.mandatory' ),
-			'needsFirstname'	=> $options->get( 'firstname.mandatory' ),
-			'needsSurname'		=> $options->get( 'surname.mandatory' ),
-			'needsTac'			=> $options->get( 'tac.mandatory' ),
-			'countries'			=> $this->countries,
-		) );
-	}
-
 	public function accept( $userId )
 	{
 		$this->setStatus( $userId, Model_User::STATUS_ACTIVE );
@@ -400,7 +383,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 //		$limit		= ( (int) $limit <= 0 || (int) $limit > 1000 ) ? 10 : (int) $limit;		//  ensure that limit is within bounds
 		$offset		= !is_null( $page ) ? abs( $page * $limit ) : 0;						//  get offset from request or reset
 
-		$filters	= array();																//  prepare filters map
+		$filters	= [];																//  prepare filters map
 		foreach( $session->getAll() as $key => $value ){									//  iterate session settings
 			if( preg_match( '/^filter-user-/', $key ) ){									//  if setting is users filter
 				$column	= preg_replace( '/^filter-user-/', '', $key );						//  extract database module column
@@ -411,7 +394,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 				}
 			}
 		}
-		$orders	= array();
+		$orders	= [];
 		$order	= $session->get( 'filter-user-order' );
 		$dir	= $session->get( 'filter-user-direction' );
 		if( $order && $dir )
@@ -423,7 +406,7 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
-		$roleMap	= array();
+		$roleMap	= [];
 		foreach( $modelRole->getAll() as $role )
 			$roleMap[$role->roleId]	= $role;
 
@@ -482,5 +465,22 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 		$model->remove( $userId );
 		$messenger->noteSuccess( $words->msgSuccess, $user->username );
 		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$options			= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$this->countries	= $this->env->getLanguage()->getWords( 'countries' );
+		$this->setData( array(
+			'nameMinLength'		=> $options->get( 'name.length.min' ),
+			'nameMaxLength'		=> $options->get( 'name.length.max' ),
+			'pwdMinLength'		=> $options->get( 'password.length.min' ),
+			'pwdMinStrength'	=> $options->get( 'password.strength.min' ),
+			'needsEmail'		=> $options->get( 'email.mandatory' ),
+			'needsFirstname'	=> $options->get( 'firstname.mandatory' ),
+			'needsSurname'		=> $options->get( 'surname.mandatory' ),
+			'needsTac'			=> $options->get( 'tac.mandatory' ),
+			'countries'			=> $this->countries,
+		) );
 	}
 }

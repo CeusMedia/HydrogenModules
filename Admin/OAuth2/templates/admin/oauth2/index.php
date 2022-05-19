@@ -11,7 +11,7 @@ $words	= array( 'statuses' => array(
 
 $table	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $providers ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $providers as $provider ){
 		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plug' ) ).'&nbsp;';
 		if( $provider->icon )

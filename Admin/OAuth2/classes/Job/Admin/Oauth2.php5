@@ -3,8 +3,8 @@ class Job_Auth_Oauth2 extends Job_Abstract
 {
 	protected $modelProvider;
 	protected $modelProviderDefault;
-	protected $providersIndex				= array();
-	protected $providersAvailable			= array();
+	protected $providersIndex				= [];
+	protected $providersAvailable			= [];
 
 	public function migrate()
 	{
@@ -13,7 +13,7 @@ class Job_Auth_Oauth2 extends Job_Abstract
 
 /*
 	public function showMigrationSqlForScopes( $all = TRUE ){
-		$list	= array();
+		$list	= [];
 		foreach( $this->providersIndex as $providerKey => $providerData ){
 			$scopes		= join(',', $providerData->scopes );
 			if( $providerData->scopes ){
@@ -31,8 +31,8 @@ class Job_Auth_Oauth2 extends Job_Abstract
 	{
 		$this->modelProvider		= new Model_Oauth_Provider( $this->env );
 		$this->modelProviderDefault	= new Model_Oauth_ProviderDefault();
-		$this->providersIndex		= array();
-		$this->providersAvailable	= array();
+		$this->providersIndex		= [];
+		$this->providersAvailable	= [];
 		foreach( $this->modelProviderDefault->getAll() as $provider ){
 			$provider->exists = class_exists( $provider->class );
 			$this->providersIndex[$provider->class]	= $provider;
@@ -53,7 +53,7 @@ class Job_Auth_Oauth2 extends Job_Abstract
 //			}
 //		}
 
-		$list	= array();
+		$list	= [];
 		foreach( $this->providersIndex as $providerData ){
 			$provider	= $this->modelProvider->getByIndex( 'title', $providerData->title );
 			if( !$provider )
@@ -61,7 +61,7 @@ class Job_Auth_Oauth2 extends Job_Abstract
 			if( strlen( trim( $provider->scopes ) ) )
 				$provider->scopes	= preg_split( '/\s*,\s*/', $provider->scopes );
 			else
-				$provider->scopes	= array();
+				$provider->scopes	= [];
 //			remark( 'Provider: '.$providerData->title );
 //			remark( 'Provider Scopes: ' );
 //			print_m( $provider->scopes );

@@ -19,7 +19,7 @@ $buttonInstall	= UI_HTML_Elements::Button( 'doInstall', $w->buttonInstall, 'butt
 if( $mainModuleId ){
 	$buttonList		= '';
 	$buttonCancel	= UI_HTML_Elements::LinkButton( './admin/module/installer/'.$mainModuleId, $w->buttonCancel, 'button cancel' );
-	$needs	= array();
+	$needs	= [];
 }
 
 /*  --  RELATIONS  --  */
@@ -34,13 +34,13 @@ if( $module->supportedModules )
 	$relationsSupported	= $this->renderRelatedModulesList( $modules, $module->supportedModules, $url, 'relations relations-supported' );
 
 
-$listCritical	= array();
+$listCritical	= [];
 $neededModules	= '-';
 $panelProgress	= '';
 
 $graphNeeds		= "";
 if( count( $needs ) ){
-	$neededModules	= array();
+	$neededModules	= [];
 	foreach( array_keys( $needs ) as $id ){
 		$label	= $id;
 		$status	= 0;
@@ -79,7 +79,7 @@ if( $module->supportedModules ){
 
 /*  --  PANEL: PROGRESS  --  */
 if( $mainModuleId ){
-	$list	= array();
+	$list	= [];
 	foreach( $mainModule->neededModules as $id => $status ){
 		if( $id == $moduleId || $id == $mainModule->id || !$status )
 			continue;
@@ -133,7 +133,7 @@ $helper	= new View_Helper_Module( $this->env );
 $tableConfig	= '';
 if( $isInstallable ){
 	if( count( $module->config ) ){
-		$rows	= array();
+		$rows	= [];
 		foreach( $module->config as $item ){
 			$input	= View_Helper_Module::renderModuleConfigInput( $item, $words['boolean-values'] );
 			$label	= View_Helper_Module::renderModuleConfigLabel( $module, $item );
@@ -191,7 +191,7 @@ if( $files ){
 
 /*  --  POSITION BAR  --  */
 function renderPositions( $positions ){
-	$list	= array();
+	$list	= [];
 	foreach( $positions as $label => $url )
 		$list[]	= '&laquo;&nbsp;'.UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
 	$positions	= join( '&nbsp;&nbsp;|&nbsp;&nbsp;', $list );

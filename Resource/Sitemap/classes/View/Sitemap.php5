@@ -7,7 +7,7 @@ class View_Sitemap extends CMF_Hydrogen_View
 		$links		= $this->getData( 'links' );
 		$options	= $this->getData( 'options' );
 		if( $options->get( 'html.enabled' ) && $format === 'HTML' ){
-			$list	= array();
+			$list	= [];
 			foreach( $links as $link ){
 				$label	= substr( $link->location, strlen( $this->env->url ) );
 				$label	= str_replace( array( 'ae', 'oe', 'ue' ), array( 'ä', 'ö', 'ü' ), $label );

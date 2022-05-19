@@ -4,7 +4,7 @@ $w			= (object) $words['edit'];
 $optStatus	= $words['states'];
 $optStatus	= UI_HTML_Elements::Options( $optStatus, $timer->status );
 
-$optProject	= array();
+$optProject	= [];
 foreach( $projectMap as $projectId => $project )
 	$optProject[$projectId]	= $project->title;
 $optProject	= UI_HTML_Elements::Options( $optProject, $timer->projectId );
@@ -14,7 +14,7 @@ extract( $view->populateTexts( array( 'edit.top', 'edit.bottom', 'edit.info' ), 
 $timePlanned	= View_Helper_Work_Time::formatSeconds( $timer->secondsPlanned );
 $timeNeeded		= View_Helper_Work_Time::formatSeconds( $timer->secondsNeeded );
 
-$optWorker	= array();
+$optWorker	= [];
 foreach( $projectUsers as $projectUser )
 	$optWorker[$projectUser->userId]	= $projectUser->username;
 $optWorker	= UI_HTML_Elements::Options( $optWorker, $timer->workerId );

@@ -5,7 +5,7 @@ $list	= join( "\n", $list );
 print PHP_EOL.$list.PHP_EOL.PHP_EOL;
 
 function listFolder( $basePath, $path ){
-	$list	= array();
+	$list	= [];
 	$index	= new DirectoryIterator( $basePath.$path );
 	foreach( $index as $entry ){
 		if( $entry->isDot() )

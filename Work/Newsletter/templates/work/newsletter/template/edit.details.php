@@ -9,7 +9,7 @@ $optStatus		= UI_HTML_Elements::Options( $words->states, $template->status );
 
 $listNewsletters	= '<em><small class="muted">Nicht verwendet.</small></em>';
 if( $newsletters ){
-	$listNewsletters	= array();
+	$listNewsletters	= [];
 	foreach( $newsletters as $newsletter ){
 		$link	= UI_HTML_Tag::create( 'a', $newsletter->title, array( 'href' => './work/newsletter/edit/'.$newsletter->newsletterId ) );
 		$listNewsletters[]	= UI_HTML_Tag::create( 'li', $link, array() );

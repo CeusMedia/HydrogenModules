@@ -5,7 +5,7 @@ $w	= (object) $words['tab-config'];
 $count	= 0;
 $table	= '';
 if( $module->config ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $module->config as $item ){
 		$count++;
 		if( $item->type == 'boolean' )

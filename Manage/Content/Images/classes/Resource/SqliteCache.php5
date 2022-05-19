@@ -29,7 +29,7 @@ class Resource_SqliteCache{
 	}
 
 	public function index(){
-		$list	= array();
+		$list	= [];
 		$q		= $this->db->query( "SELECT id FROM store" );
 		foreach( $q->fetchAll( PDO::FETCH_OBJ ) as $entry )
 			$list[]	= $entry->id;

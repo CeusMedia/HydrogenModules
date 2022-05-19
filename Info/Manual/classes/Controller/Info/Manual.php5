@@ -5,7 +5,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 	protected $request;
 	protected $messenger;
 	protected $config;
-	protected $files			= array();
+	protected $files			= [];
 	protected $userId			= 0;
 	protected $modelCategory;
 	protected $modelPage;
@@ -66,7 +66,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 		$this->addData( 'title', $title );
 		$this->addData( 'content', $content );
 
-        $folders    = array();
+        $folders    = [];
         $allPages   = $this->modelPage->getAll( array(), array( 'title' => 'ASC' ) );
         foreach( $allPages as $folder )
             $folders[]  = $folder;
@@ -145,7 +145,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 		$this->addData( 'page', $page );
 		$this->addData( 'pageId', $page->manualPageId );
 
-		$folders	= array();
+		$folders	= [];
 		$allPages	= $this->modelPage->getAll( array(), array( 'title' => 'ASC' ) );
 		foreach( $allPages as $folder ){
 			if( $folder->manualPageId == $page->manualPageId )
@@ -162,7 +162,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 			$categoryId	= $this->request->get( 'categoryId' );
 			$format		= $this->request->get( 'format' );
 			$files		= $this->request->get( 'files' );
-			$newPages	= array();
+			$newPages	= [];
 			foreach( $files as $fileHash ){
 				$fileName	= base64_decode( $fileHash );
 				if( file_exists( $this->path.$fileName ) ){
@@ -238,7 +238,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 		}
 
 		$conditions	= array( 'status' => '>= '.Model_Manual_Page::STATUS_NEW );
-		$orders		= array();
+		$orders		= [];
 		$pages	= $this->modelPage->getAll( $conditions, $orders );
 		$this->addData( 'pages', $pages );
 	}
@@ -310,7 +310,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 
 	public function scanFiles()
 	{
-		$this->files	= array();
+		$this->files	= [];
 		$index	= new FS_File_RecursiveRegexFilter( $this->path, "/\\".$this->ext."$/" );
 		foreach( $index as $entry ){
 			$pathName	= substr( $entry->getPathname(), strlen( $this->path ) );
@@ -390,7 +390,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 		$this->addData( 'order', $this->order );
 		$this->addData( 'rights', $this->rights );
 
-		$this->categories	= array();
+		$this->categories	= [];
 		$conditions			= array( 'status' => '>= '.Model_Manual_Category::STATUS_NEW );
 		$orders				= array( 'rank' => 'ASC' );
 		foreach( $this->modelCategory->getAll( $conditions, $orders ) as $category )
@@ -457,7 +457,7 @@ class Controller_Info_Manual extends CMF_Hydrogen_Controller
 
 	protected function relink( string $oldName, string $newName ): array
 	{
-		$list	= array();
+		$list	= [];
 		$this->scanFiles();
 		foreach( $this->files as $entry ){
 			$filePath	= $this->path.$entry;

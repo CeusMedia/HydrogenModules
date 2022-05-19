@@ -14,7 +14,7 @@ class Controller_Member extends CMF_Hydrogen_Controller
 	{
 		$modelUser	= new Model_User( $env );
 		$userIds	= Logic_Member::getInstance( $env )->getRelatedUserIds( $payload->userId, 2 );
-		$list		= array();
+		$list		= [];
 		if( $userIds ){
 			$relatedUsers	= $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
 			foreach( $relatedUsers as $relatedUser )
@@ -218,7 +218,7 @@ class Controller_Member extends CMF_Hydrogen_Controller
 	public function search()
 	{
 		$query		= trim( $this->request->get( 'username' ) );
-		$users		= array();
+		$users		= [];
 		if( $query ){
 			$userIds	= $this->logicMember->getUserIdsByQuery( $query );
 			$key		= array_search( $this->userId, $userIds );

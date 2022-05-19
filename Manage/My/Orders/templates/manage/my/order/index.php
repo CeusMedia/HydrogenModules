@@ -4,7 +4,7 @@ $wordsShop	= $env->getLanguage()->getWords( 'shop' );
 
 $table	= UI_HTML_Tag::create( 'div', 'Noch keine vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $orders ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $orders as $item ){
 		$link	= UI_HTML_Tag::create( 'a', 'Bestellung am '.date( 'd.m.Y', $item->createdAt ), array(
 			'href'	=> './manage/my/order/view/'.$item->orderId,

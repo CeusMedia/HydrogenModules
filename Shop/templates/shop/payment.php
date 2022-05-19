@@ -4,7 +4,7 @@ $w		= (object) $words['payment'];
 
 //print_m($cart->getAll());
 
-$list	= array();
+$list	= [];
 foreach( $paymentBackends as $paymentBackend ){
 	$icon	= '';
 	if( $paymentBackend->countries && !in_array( $billingAddress->country, $paymentBackend->countries ) )

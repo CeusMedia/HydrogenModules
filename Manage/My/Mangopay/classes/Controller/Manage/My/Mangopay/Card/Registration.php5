@@ -1,15 +1,10 @@
 <?php
-class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_My_Mangopay_Abstract{
-
+class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_My_Mangopay_Abstract
+{
 	protected $words;
 
-	public function __onInit(){
-		parent::__onInit();
-		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/card' );
-		$this->sessionPrefix	= 'manage_my_mangopay_card_';
-	}
-
-	public function ajaxValidateCardNumber(){
+	public function ajaxValidateCardNumber()
+	{
 		$number		= $this->request->get( 'cardNumber' );
 		$provider	= $this->request->get( 'cardProvider' );
 		$result		= $this->logic->validateCardNumber( $number, $provider );
@@ -20,7 +15,8 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 		exit;
 	}
 
-	public function index(){
+	public function index()
+	{
 //			$this->logic->uncache( 'user_'.$this->userId.'_cards' );
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
@@ -28,7 +24,7 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 		$this->addData( 'cards', $cards );
 		$cardType	= $this->request->get( 'cardType' );
 		if( $cardType ){
-			$param	= array();
+			$param	= [];
 			if( $this->request->get( 'backwardTo' ) )
 				$param['backwardTo']	= $this->request->get( 'backwardTo' );
 			if( $this->request->get( 'forwardTo' ) )
@@ -58,7 +54,8 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 		$this->addData( 'cardProvider', $this->request->get( 'cardProvider' ) );
 	}
 
-	public function finish(){
+	public function finish()
+	{
 		$registrationId	= $this->env->getSession()->get( 'cardRegisterId' );
 		$registration	= $this->mangopay->CardRegistrations->Get( $registrationId );
 
@@ -111,7 +108,15 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function handleErrorCode( $errorCode ){
+	protected function __onInit()
+	{
+		parent::__onInit();
+		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/card' );
+		$this->sessionPrefix	= 'manage_my_mangopay_card_';
+	}
+
+	protected function handleErrorCode( $errorCode )
+	{
 		$errorCodes	= ADT_List_Dictionary::create( $this->words )->getAll( 'errorCode-' );
 		if( !array_key_exists( $errorCode, $errorCodes ) )
 			throw new InvalidArgumentException( 'Unknown error code: '.$errorCode );

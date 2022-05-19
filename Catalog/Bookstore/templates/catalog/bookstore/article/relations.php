@@ -10,8 +10,8 @@ $total				= count( $relatedArticles );
 $relatedArticles	= array_slice( $relatedArticles, 0, $limit );
 $helper				= new View_Helper_Catalog_Bookstore( $env );
 
-$list	= array();
-$tagList	= array();
+$list	= [];
+$tagList	= [];
 foreach( $tags as $tag ){
 	$tagList[]	= UI_HTML_Tag::create( 'a', $tag->tag, array(
 		'href'	=> $helper->getTagUri( $tag ),

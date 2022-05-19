@@ -14,7 +14,7 @@ $list	= '<div class="alert alert-error">'.$w->noEntries.'</div>';
 
 
 if( $files ){
-	$list	= array();
+	$list	= [];
 	foreach( $files as $file ){
 		$link	= UI_HTML_Tag::create( 'a', $file->fileName, array(
 			'href'		=> './admin/mail/attachment/download/'.urlencode( $file->fileName ),

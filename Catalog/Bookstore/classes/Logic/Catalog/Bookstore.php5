@@ -105,7 +105,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function countArticles( $conditions = array() ){
+	public function countArticles( $conditions = [] ){
 		return $this->modelArticle->count( $conditions );
 	}
 
@@ -170,33 +170,33 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticles( $conditions = array(), $orders = array(), $limits = array() ){
+	public function getArticles( $conditions = [], $orders = [], $limits = [] ){
 #		$cacheKey	= md5( json_encode( array( $conditions, $orders, $limits ) ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.articles.'.$cacheKey ) ) )
 #			return $data;
-		$list	= array();
+		$list	= [];
 		foreach( $this->modelArticle->getAll( $conditions, $orders, $limits ) as $article )
 			$list[$article->articleId]	= $article;
 #		$this->cache->set( 'catalog.bookstore.articles.'.$cacheKey, $list );
 		return $list;
 	}
 
-	public function getArticlesFromTags( $tags, $excludeArticleIds = array(), $orders = array(), $limits = array() ){
-		$articleIds		= array();
-		$articleTagsMap	= array();
+	public function getArticlesFromTags( $tags, $excludeArticleIds = [], $orders = [], $limits = [] ){
+		$articleIds		= [];
+		$articleTagsMap	= [];
 		$relations		= $this->modelArticleTag->getAll( array( 'tag' => $tags ) );
 
 		foreach( $relations as $relation ){
 			if( in_array( $relation->articleId, $excludeArticleIds ) )
 				continue;
 			if( !isset( $articleTagsMap[$relation->articleId] ) )
-				$articleTagsMap[$relation->articleId]	= array();
+				$articleTagsMap[$relation->articleId]	= [];
 			$articleTagsMap[$relation->articleId][]	= $relation;
 		}
 		foreach( $articleTagsMap as $articleId => $articleTags )
 			$articleIds[$articleId]	= count( $articleTags );
 
-		$list	= array();
+		$list	= [];
 		if( count( $articleTagsMap ) ){
 			arsort( $articleIds );
 			$filteredArticleIds	= array_diff( array_keys( $articleIds ), $excludeArticleIds );
@@ -215,9 +215,9 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticlesFromAuthor( $author, $orders = array(), $limits = array() ){
+	public function getArticlesFromAuthor( $author, $orders = [], $limits = [] ){
 		$articles	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $author->authorId );
-		$articleIds	= array();
+		$articleIds	= [];
 		foreach( $articles as $article )
 			$articleIds[]	= $article->articleId;
 		if( $articleIds ){
@@ -236,7 +236,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		$articles	= $model->getAll( array( 'authorId' => array_values( $authorIds ) ) );
 		if( !$returnIds )
 			return $articles;
-		$ids	= array();
+		$ids	= [];
 		foreach( $articles as $article )
 			$ids[]	= $article->articleId;
 		return $ids;
@@ -246,7 +246,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: code doc
 	 */
 	public function getArticlesFromAuthors( $authors, $returnIds = FALSE ){
-		$authorIds	= array();
+		$authorIds	= [];
 		foreach( $authors as $author )
 			$authorIds[]	= $author->authorId;
 		return $this->getArticlesFromAuthorIds( $authorIds, $returnIds );
@@ -280,8 +280,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getAuthors( $conditions = array(), $orders = array(), $limits = array() ){
-		$list	= array();
+	public function getAuthors( $conditions = [], $orders = [], $limits = [] ){
+		$list	= [];
 		foreach( $this->modelAuthor->getAll( $conditions, $orders, $limits ) as $author )
 			$list[$author->authorId]	= $author;
 		return $list;
@@ -297,7 +297,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.article.author.'.$articleId ) ) )
 			return $data;
 		$data	= $this->modelArticleAuthor->getAllByIndex( 'articleId', $articleId );
-		$list	= array();
+		$list	= [];
 		foreach( $data as $entry ){
 			$author	= $this->modelAuthor->get( $entry->authorId );
 			$author->editor	= $entry->editor;
@@ -327,12 +327,12 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getCategories( $conditions = array(), $orders = array() ){
+	public function getCategories( $conditions = [], $orders = [] ){
 #		$cacheKey	= md5( json_encode( array( $conditions, $orders ) ) );
 #		if( ( $data = $this->cache->get( 'catalog.bookstore.categories.'.$cacheKey ) ) )
 #			return $data;
 
-		$list	= array();
+		$list	= [];
 		foreach( $this->modelCategory->getAll( $conditions, $orders ) as $category )
 			$list[$category->categoryId]	= $category;
 #		$this->cache->set( 'catalog.bookstore.categories.'.$cacheKey, $list );
@@ -344,8 +344,8 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 */
 	public function getCategoriesOfArticle( $articleId ){
 		$this->checkArticleId( $articleId, TRUE );
-		$list			= array();
-		$categoryIds	= array();
+		$list			= [];
+		$categoryIds	= [];
 		$relations		= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );
 		foreach( $relations as $relation ){
 			$category	= $this->modelCategory->get( $relation->categoryId );
@@ -376,14 +376,14 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function getCategoryArticles( $category, $orders = array(), $limits = array() ){
+	public function getCategoryArticles( $category, $orders = [], $limits = [] ){
 #		$cacheKey	= md5( json_encode( array( $category->categoryId, $orders, $limits ) ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.category.articles.'.$cacheKey ) ) )
 #			return $data;
 		$conditions	= array( 'categoryId' => $category->categoryId );
 		$relations	= $this->modelArticleCategory->getAll( $conditions, $orders, $limits );
-		$articles	= array();
-		$volumes	= array();
+		$articles	= [];
+		$volumes	= [];
 
 		foreach( $relations as $relation ){
 			$article			= $this->getArticle( $relation->articleId );
@@ -434,7 +434,7 @@ class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
 	 */
 	public function getTagsOfArticle( $articleId, $sort = FALSE ){
 		$tags	= $this->modelArticleTag->getAllByIndex( 'articleId', $articleId );
-		$list	= array();
+		$list	= [];
 		foreach( $tags as $tag )
 			$list[$tag->tag]	= $tag;
 		if( $sort )

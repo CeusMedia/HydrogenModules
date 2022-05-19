@@ -38,7 +38,7 @@ class Model_Module_Page
 		$this->loadPages();
 	}
 
-	public function edit( $pageId, $data = array() )
+	public function edit( $pageId, $data = [] )
 	{
 		throw new RuntimeException( 'Not implemented yet' );
 	}
@@ -57,12 +57,12 @@ class Model_Module_Page
 		return $this->pages;
 	}
 
-	public function getByIndices( array $indices = array(), array $orders = array() )
+	public function getByIndices( array $indices = [], array $orders = [] )
 	{
 		return current( $this->getAllByIndices( $indices, $orders, array( 0, 1 ) ) );
 	}
 
-	public function getAllByIndices( array $indices = array(), array $orders = array(), array $limits = array() ): array
+	public function getAllByIndices( array $indices = [], array $orders = [], array $limits = [] ): array
 	{
 		$indices['title']	= '!= ""';
 		if( !isset( $indices['scope'] ) )
@@ -73,7 +73,7 @@ class Model_Module_Page
 		foreach( $indices as $indexKey => $indexValue ){
 			foreach( $data as $nr => $page ){
 				$pageValue	= $page->$indexKey;
-				$matches	= array();
+				$matches	= [];
 				if( is_array( $indexValue ) ){
 					if( !in_array( $pageValue, $indexValue ) )
 						unset( $data[$nr] );
@@ -100,7 +100,7 @@ class Model_Module_Page
 	protected function loadPages()
 	{
 		$pageId		= 0;
-		$pages		= array();
+		$pages		= [];
 		foreach( array_keys( $this->scopes ) as $scope ){
 			foreach( $this->env->getModules()->getAll() as $module ){
 				foreach( $module->links as $link ){

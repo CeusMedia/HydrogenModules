@@ -7,8 +7,8 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller
 	protected $moduleConfig;
 	protected $modelProvider;
 	protected $modelProviderDefault;
-	protected $providersIndex				= array();
-	protected $providersAvailable			= array();
+	protected $providersIndex				= [];
+	protected $providersAvailable			= [];
 	protected $filterPrefix					= 'filter_admin_oauth2_';
 
 	public function add()
@@ -38,7 +38,7 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller
 			$this->restart( 'edit/'.$providerId, TRUE );
 		}
 
-		$provider	= array();
+		$provider	= [];
 		foreach( $this->modelProvider->getColumns() as $column )
 			if( !in_array( $column, array( 'oauthProviderId', 'createdAt', 'modifiedAt' ) ) )
 				$provider[$column]	= $this->request->get( $column );
@@ -86,7 +86,7 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller
 			foreach( array_keys( $filters ) as $filterKey )
 				$this->session->remove( $this->filterPrefix.$filterKey );
 		}
-/*		$filters	= array();
+/*		$filters	= [];
 		foreach( $filters as $filter ){
 			if( $this->request->has( $filter ) ){
 				$this->session->set( $this->filterPrefix.$filter, $this->request->get( $filter ) );
@@ -97,7 +97,7 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller
 
 	public function index()
 	{
-		$conditions	= array();
+		$conditions	= [];
 		$orders		= array( 'rank' => 'ASC' );
 		$providers	= $this->modelProvider->getAll( $conditions, $orders );
 		$this->addData( 'providersIndex', array_values( $this->providersIndex ) );
@@ -139,8 +139,8 @@ class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin_oauth2.', TRUE );
 		$this->modelProvider		= new Model_Oauth_Provider( $this->env );
 		$this->modelProviderDefault	= new Model_Oauth_ProviderDefault();
-		$this->providersIndex		= array();
-		$this->providersAvailable	= array();
+		$this->providersIndex		= [];
+		$this->providersAvailable	= [];
 		foreach( $this->modelProviderDefault->getAll() as $provider ){
 			$provider->exists = class_exists( $provider->class );
 			$this->providersIndex[$provider->class]	= $provider;

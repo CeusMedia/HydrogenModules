@@ -4,7 +4,7 @@ $helper		= new View_Helper_TimePhraser( $env );
 
 $w			= (object) $words['info'];
 
-$mapInfo	= array();
+$mapInfo	= [];
 
 $mapInfo[$w->labelUsername]	= $user->username;
 $mapInfo[$w->labelEmail]		= $user->email;
@@ -27,7 +27,7 @@ $mapInfo[$w->labelPasswordChange]	= $helper->convert( $lastPasswordChange, TRUE,
 $mapInfo[$w->labelLogin]		= $helper->convert( $user->loggedAt, TRUE, $w->timePhrasePrefixAgo, $w->timePhraseSuffixAgo );
 //$mapInfo[$w->labelActive]		= $helper->convert( $user->activeAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix );
 
-$listInfo	= array();
+$listInfo	= [];
 foreach( $mapInfo as $term => $definition )
 	$listInfo[]	= UI_HTML_Tag::create( 'dt', $term ).UI_HTML_Tag::create( 'dd', $definition );
 $listInfo	= UI_HTML_Tag::create( 'dl', join( $listInfo ), array( 'class' => 'dl-horizontal' ) );

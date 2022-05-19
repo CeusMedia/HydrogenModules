@@ -31,7 +31,7 @@ class Model_Customer_Rating extends CMF_Hydrogen_Model{
 			'uptightness'	=> -2,
 		);
 		$index		= 0;
-		$properties	= array();
+		$properties	= [];
 		foreach( $factors as $property => $factor ){
 			if( $rating->$property <= 0 )
 				continue;

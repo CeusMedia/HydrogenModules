@@ -12,7 +12,7 @@ function renderUserLabel( $user ){
 
 $phraser	= new View_Helper_TimePhraser( $env );
 
-$infos		= array();
+$infos		= [];
 
 if( isset( $mission->creator ) )
 	$infos['creator']	= array(
@@ -83,7 +83,7 @@ if( isset( $mission->projectId ) ){
 }
 
 if( count( $missionUsers ) > 1 ){
-	$list	= array();
+	$list	= [];
 	$iconUser	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-user' ) );
 	foreach( $missionUsers as $user ){
 		$list[$user->username]	= renderUserLabel( $user );
@@ -136,7 +136,7 @@ $factInfoKeys	= array(
 	'links',
 );
 
-$facts	= array();
+$facts	= [];
 foreach( $factInfoKeys as $key ){
 	if( isset( $infos[$key] ) )
 		$facts[]	= (object) $infos[$key];
@@ -145,7 +145,7 @@ foreach( $factInfoKeys as $key ){
 if( !count( $facts ) )
 	return '';
 
-$list		= array();
+$list		= [];
 foreach( $facts as $fact ){
 	$class	= NULL;
 	if( is_array( $fact->value ) ){

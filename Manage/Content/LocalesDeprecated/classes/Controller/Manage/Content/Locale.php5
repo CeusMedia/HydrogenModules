@@ -15,7 +15,7 @@
 class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 
 	protected $frontend;
-	protected $languages	= array();
+	protected $languages	= [];
 	protected $types		= array(
 		'language'	=> array(
 			'folder'		=> '',
@@ -121,7 +121,7 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 
 		$folder		= $this->types[$type]['folder'];
 		$extensions	= $this->types[$type]['extensions'] ? explode( ',', $this->types[$type]['extensions'] ) : array();
-		$list		= array();
+		$list		= [];
 		$path		= $this->basePath.$language.'/';
 		if( file_exists( $path.$folder ) ){
 			$index	= FS_Folder_RecursiveLister::getFileList( $path.$folder );

@@ -26,12 +26,12 @@ $optLockStatus	= UI_HTML_Elements::Options( array(
 	0		=> 'nur Sperrantrag',
 ) );
 
-$optReason	= array();
+$optReason	= [];
 foreach( $reasons as $reason )
 	$optReason[$reason->ipLockReasonId]	= $reason->title;
 $optReason	= UI_HTML_Elements::Options( $optReason );
 
-$reasonMap	= array();
+$reasonMap	= [];
 foreach( $reasons as $reason )
 	$reasonMap[$reason->ipLockReasonId]	= $reason;
 

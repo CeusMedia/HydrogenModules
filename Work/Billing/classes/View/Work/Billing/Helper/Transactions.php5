@@ -14,7 +14,7 @@ class View_Work_Billing_Helper_Transactions
 	protected $buttons;
 	protected $heading			= 'Transaktionen';
 	protected $mode				= 0;
-	protected $transactions		= array();
+	protected $transactions		= [];
 	protected $filterPrefix;
 	protected $filterUrl;
 
@@ -74,7 +74,7 @@ class View_Work_Billing_Helper_Transactions
 		$list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
 		if( $this->transactions ){
 			$sum	= 0;
-			$list	= array();
+			$list	= [];
 			foreach( $this->transactions as $transaction ){
 				$sum	+= (float) $transaction->amount;
 				$from	= UI_HTML_Tag::create( 'em', 'extern', array( 'class' => 'muted' ) );
@@ -199,7 +199,7 @@ class View_Work_Billing_Helper_Transactions
 
 	protected function transformRelationToTitle( $transaction ): string
 	{
-		$parts		= array();
+		$parts		= [];
 		$title		= '';
 		$relation	= $transaction->relation;
 		if( preg_match( '/\|billShare:([0-9]+)\|/', $relation ) ){

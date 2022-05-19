@@ -11,7 +11,7 @@ class Hook_Tracker_Google_TagManager extends CMF_Hydrogen_Controller{
 	 *	@param		public						$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
 		$configKey	= 'module.resource_tracker_google_tagmanager.';
 		$config		= $env->getConfig()->getAll( $configKey, TRUE );								//  get module configuration as dictionary
 		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )									//  module is disabled or ID is not set

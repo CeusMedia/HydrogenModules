@@ -13,7 +13,7 @@ foreach( $files as $entry ){
 
 $word	= count( $folders ) ? $w->filesInFolders : $w->files;
 
-$facts		= array();
+$facts		= [];
 $facts[]	= sprintf( $word, count( $files ), count( $folders ) );
 if( $downloads > 6 )
 	$facts[]	= sprintf( $w->downloads, $downloads );

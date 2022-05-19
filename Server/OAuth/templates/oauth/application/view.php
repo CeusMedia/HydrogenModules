@@ -18,7 +18,7 @@ $data	= print_m( $application, NULL, NULL, TRUE );
 
 $listAccessTokens	= '<div class="muted"><em><small>Keine Access-Tokens aktiv.</small></em></div>';
 if( !empty( $accessTokens ) ){
-	$listAccessTokens	= array();
+	$listAccessTokens	= [];
 	foreach( $accessTokens as $token ){
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' revoke', array( 'href' => './oauth/application/remove/'.$token->oauthApplicationId.'/access/'.$token->oauthAccessTokenId, 'class' => 'btn btn-mini btn-danger' ) );
 		$listAccessTokens[]	= UI_HTML_Tag::create( 'tr', array(
@@ -33,7 +33,7 @@ if( !empty( $accessTokens ) ){
 
 $listRefreshTokens	= '<div class="muted"><em><small>Keine Refresh-Tokens aktiv.</small></em></div>';
 if( !empty( $refreshTokens ) ){
-	$listRefreshTokens	= array();
+	$listRefreshTokens	= [];
 	foreach( $refreshTokens as $token ){
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' revoke', array(
 			'href'		=> './oauth/application/remove/'.$token->oauthApplicationId.'/refresh/'.$token->oauthRefreshTokenId,

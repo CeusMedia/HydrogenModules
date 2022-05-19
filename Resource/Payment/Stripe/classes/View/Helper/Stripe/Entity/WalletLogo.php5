@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Stripe_Entity_WalletLogo extends View_Helper_Stripe_Abstract{
-
+class View_Helper_Stripe_Entity_WalletLogo extends View_Helper_Stripe_Abstract
+{
 	protected $nodeClass	= NULL;
 	protected $nodeName		= 'div';
 	protected $wallet;
@@ -10,11 +10,18 @@ class View_Helper_Stripe_Entity_WalletLogo extends View_Helper_Stripe_Abstract{
 	const SIZE_MEDIUM		= 'fa-2x';
 	const SIZE_LARGE		= 'fa-4x';
 
-	public function __onInit(){
-		$this->setSize( self::SIZE_MEDIUM );
+	public static function renderStatic( CMF_Hydrogen_Environment $env, $number, $nodeName = NULL, $nodeClass = NULL )
+	{
+		$instance	= new View_Helper_Stripe_Entity_CardNumber( $env );
+		if( $nodeName !== NULL )
+			$this->setNodeName( $nodeName );
+		if( $nodeClass !== NULL )
+			$this->setNodeClass( $nodeClass );
+		return $instance->set( $number )->render();
 	}
 
-	public function render(){
+	public function render()
+	{
 		$icon	= 'fa-money';
 		switch( $this->wallet->Currency ){
 			case 'EUR':
@@ -34,33 +41,32 @@ class View_Helper_Stripe_Entity_WalletLogo extends View_Helper_Stripe_Abstract{
 		) );
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $number, $nodeName = NULL, $nodeClass = NULL ){
-		$instance	= new View_Helper_Stripe_Entity_CardNumber( $env );
-		if( $nodeName !== NULL )
-			$this->setNodeName( $nodeName );
-		if( $nodeClass !== NULL )
-			$this->setNodeClass( $nodeClass );
-		return $instance->set( $number )->render();
-	}
-
-	public function setNodeClass( $classNames ){
+	public function setNodeClass( $classNames )
+	{
 		$this->nodeClass	= $classNames;
 		return $this;
 	}
 
-	public function setNodeName( $nodeName ){
+	public function setNodeName( $nodeName )
+	{
 		$this->nodeName	= $nodeName;
 		return $this;
 	}
 
-	public function setSize( $size ){
+	public function setSize( $size )
+	{
 		$this->size	= $size;
 		return $this;
 	}
 
-	public function setWallet( $wallet ){
+	public function setWallet( $wallet )
+	{
 		$this->wallet	= $wallet;
 		return $this;
 	}
+
+	protected function __onInit()
+	{
+		$this->setSize( self::SIZE_MEDIUM );
+	}
 }
-?>

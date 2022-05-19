@@ -17,7 +17,7 @@ class Controller_Work_Newsletter_Group extends CMF_Hydrogen_Controller
 			$this->messenger->noteSuccess( $words->msgSuccess );
 			$copyUsersOfGroupIds	= $this->request->get( 'copyUsersOfGroupIds' );
 			if( is_array( $copyUsersOfGroupIds ) && count( $copyUsersOfGroupIds ) ){
-				$readerIds	= array();
+				$readerIds	= [];
 				foreach( $this->request->get( 'copyUsersOfGroupIds' ) as $copyGroupId ){
 					foreach( $this->logic->getGroupReaders( $copyGroupId ) as $reader ){
 						if( !in_array( $reader->newsletterReaderId, $readerIds ) ){
@@ -74,7 +74,7 @@ class Controller_Work_Newsletter_Group extends CMF_Hydrogen_Controller
 		$conditions	= array( 'status' => '1' );
 		$orders		= array( 'firstname' => 'ASC', 'surname' => 'ASC' );
 		$readers	= $this->logic->getReadersOfGroup( $groupId, $conditions, $orders );
-		$list		= array();
+		$list		= [];
 		foreach( $readers as $reader )
 			$list[]	= $reader->email;
 		header( 'Content-Type: text/plain; charset=utf8' );
@@ -106,7 +106,7 @@ class Controller_Work_Newsletter_Group extends CMF_Hydrogen_Controller
 		$filterQuery	= $this->session->get( 'filter_work_newsletter_group_query' );
 		$filterStatus	= $this->session->get( 'filter_work_newsletter_group_status' );
 
-		$conditions		= array();
+		$conditions		= [];
 		if( $filterQuery )
 			$conditions['title']	= '%'.$filterQuery.'%';
 		if( strlen( $filterStatus ) )

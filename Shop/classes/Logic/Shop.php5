@@ -192,7 +192,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic
 		return $positions;
 	}
 
-	public function getOrders( array $conditions = array(), array $orders = array(), array$limits = array() ): array
+	public function getOrders( array $conditions = [], array $orders = [], array$limits = [] ): array
 	{
 		return $this->modelOrder->getAll( $conditions, $orders, $limits );
 	}
@@ -236,7 +236,7 @@ class Logic_Shop extends CMF_Hydrogen_Logic
 
 	public function getOrderTaxes( $orderId )
 	{
-		$taxes		= array();
+		$taxes		= [];
 		$sum		= 0;
 		$positions	= $this->getOrderPositions( $orderId, TRUE );
 		foreach( $positions as $position ){

@@ -46,7 +46,7 @@ LocaleEditor.setupCodeMirror();';
 	}
 
 	protected function getFolders( $files ){
-		$list	= array();
+		$list	= [];
 		foreach( array_keys( $files ) as $item ){
 			if( preg_match( "/\//", $item ) ){
 				$folder	= preg_replace( "/^(.+)\/.*$/U", "\\1", $item );
@@ -60,7 +60,7 @@ LocaleEditor.setupCodeMirror();';
 	public function renderTree( $baseUrl, $files, $current = NULL, $path = NULL, $level = 0 ){
 		$dict	= new ADT_List_Dictionary( $files );
 		$sub	= $dict->getAll( $path );
-		$list	= array();
+		$list	= [];
 		foreach( $sub as $filePath => $fileName ){
 			if( !preg_match( "/\//", $filePath ) ){
 				$extension	= pathinfo( $fileName, PATHINFO_EXTENSION );

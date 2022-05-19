@@ -14,12 +14,12 @@ unset( $priorities[0] );
 
 $optType		= UI_HTML_Elements::Options( $words['types'], $mission->type );
 
-$optPriority	= array();
+$optPriority	= [];
 foreach( $priorities as $key => $value )
 	$optPriority[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->priority == $key, NULL, 'mission priority'.$key );
 $optPriority	= join( $optPriority/*, $mission->priority*/ );
 
-$optStatus		= array();
+$optStatus		= [];
 $wordsStatus	= $words['states'];
 unset( $wordsStatus[-3] );
 unset( $wordsStatus[-2] );
@@ -28,12 +28,12 @@ foreach( $wordsStatus as $key => $value )
 	$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
 $optStatus	= join( $optStatus/*, $mission->status*/ );
 
-$optWorker	= array();
+$optWorker	= [];
 foreach( $users as $user )
 	$optWorker[$user->userId]	= $user->username;
 $optWorker		= UI_HTML_Elements::Options( $optWorker, $mission->workerId );
 
-$optProject	= array();
+$optProject	= [];
 foreach( $userProjects as $projectId => $project )
 	$optProject[$projectId]	= $project->title;
 $optProject	= UI_HTML_Elements::Options( $optProject, $mission->projectId );

@@ -30,7 +30,7 @@ $user	= '<div id="user-container">
 </div>';
 
 
-$data	= array();
+$data	= [];
 $data['Produkt']				= $userLicense->product->title;
 $data['Lizenz']					= $userLicense->productLicense->title;
 $data['Lizenznummer']			= $userLicense->uid;
@@ -57,7 +57,7 @@ $panelLicense	= '
 
 
 
-$data	= array();
+$data	= [];
 $data['Produkt']				= $userLicense->product->title;
 $data['Lizenz']					= $userLicense->productLicense->title;
 //$data['Lizenznummer']			= $userLicense->uid;

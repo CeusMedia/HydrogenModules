@@ -21,7 +21,7 @@ class Controller_Syslog extends Controller_Abstract {
 	/**	@var		Environment		$env		Environment instance */
 	protected $env;
 
-	static public function ___onLogException( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function ___onLogException( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
 		$fileName	= $env->getConfig()->get( 'log.exception' );
 		if( !isset( $data['exception'] ) )
 			throw new InvalidArgumentException( 'Missing exception in given hook call data' );

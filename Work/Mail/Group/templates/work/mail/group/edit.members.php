@@ -11,7 +11,7 @@ $iconRemove		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
 $iconActivate	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 $iconDeactivate	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
-$roleMap	= array();
+$roleMap	= [];
 foreach( $roles as $role )
 	$roleMap[$role->mailGroupRoleId]	= $role->title;
 
@@ -26,7 +26,7 @@ $statusClasses	= array(
 
 //  --  MODAL: ADD  --  //
 
-$optRoleId	= array();
+$optRoleId	= [];
 foreach( $roles as $role )
 	$optRoleId[$role->mailGroupRoleId]	= $role->title;
 $optRoleId	= UI_HTML_Elements::Options( $optRoleId, $group->defaultRoleId );
@@ -93,7 +93,7 @@ $modalMemberAddTrigger->setAttributes( array( 'class' => 'btn btn-success' ) );
 
 $list	= Html::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $members ){
-	$list	= array();
+	$list	= [];
 	foreach( $members as $member ){
 		$buttonEdit	= new BootstrapModalTrigger( 'modal-trigger-edit-'.$member->mailGroupMemberId );
 		$buttonEdit->setModalId( 'modal-edit-'.$member->mailGroupMemberId );
@@ -128,7 +128,7 @@ if( $members ){
 		if( $member->status == Model_Mail_Group_Member::STATUS_REGISTERED ){
 			$buttons	= array( $buttonEdit, $buttonReject );
 //			if( $group->type == Model_Mail_Group::TYPE_JOIN )
-//				$buttons	= array();
+//				$buttons	= [];
 		}
 		if( $member->status == Model_Mail_Group_Member::STATUS_CONFIRMED )
 			$buttons	= array( $buttonEdit, $buttonActivate, $buttonReject );
@@ -144,7 +144,7 @@ if( $members ){
 			Html::create( 'td', $buttons, array( 'style' => 'text-align: right' ) ),
 		) );
 
-		$optRoleId	= array();
+		$optRoleId	= [];
 		foreach( $roles as $role )
 			$optRoleId[$role->mailGroupRoleId]	= $role->title;
 		$optRoleId	= UI_HTML_Elements::Options( $optRoleId, $member->roleId );

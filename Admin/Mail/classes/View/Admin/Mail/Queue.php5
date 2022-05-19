@@ -1,12 +1,6 @@
 <?php
 class View_Admin_Mail_Queue extends CMF_Hydrogen_View
 {
-	public function __onInit()
-	{
-		$this->env->getPage()->addCommonStyle( 'module.admin.mail.css' );
-		$this->env->getPage()->js->addModuleFile( 'module.admin.mail.js' );
-	}
-
 	public function ajaxRenderDashboardPanel()
 	{
 		$model			= new Model_Mail( $this->env );
@@ -22,9 +16,9 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View
 			30		=> 'Monat',
 			365		=> 'Jahr',
 		);
-		$data	= array();
+		$data	= [];
 		foreach( $statuses as $statusKey => $statusLabel ){
-			$data[$statusKey]	= array();
+			$data[$statusKey]	= [];
 			foreach( $ranges as $rangeKey => $rangeLabel ){
 				$conditions	= array(
 					'status'		=> $statusKey,
@@ -40,9 +34,9 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View
 
 		$lastRangeLength	= @array_pop( array_keys( $ranges ) );
 
-		$rows	= array();
+		$rows	= [];
 		foreach( $statuses as $statusKey => $statusLabel ){
-			$row	= array();
+			$row	= [];
 			foreach( array_reverse( $ranges, TRUE ) as $days => $label ){
 				$lastRange	= (object) array(
 					'key'		=> $days,
@@ -84,7 +78,9 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View
 		return $table1.'<br/>'.$table2;
 	}
 
-	public function enqueue(){}
+	public function enqueue()
+	{
+	}
 
 	public function html()
 	{
@@ -100,12 +96,15 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View
 		exit;
 	}
 
-	public function index(){
+	public function index()
+	{
 		$script	= 'ModuleAdminMail.Queue.init();';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
-	public function view(){}
+	public function view()
+	{
+	}
 
 	public function renderFact( $key, $value )
 	{
@@ -149,5 +148,11 @@ class View_Admin_Mail_Queue extends CMF_Hydrogen_View
 		$term	= UI_HTML_Tag::create( 'dt', $label );
 		$def	= UI_HTML_Tag::create( 'dd', $value.'&nbsp;' );
 		return $term.$def;
+	}
+
+	protected function __onInit()
+	{
+		$this->env->getPage()->addCommonStyle( 'module.admin.mail.css' );
+		$this->env->getPage()->js->addModuleFile( 'module.admin.mail.js' );
 	}
 }

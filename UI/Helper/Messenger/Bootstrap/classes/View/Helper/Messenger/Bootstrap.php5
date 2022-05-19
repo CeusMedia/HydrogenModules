@@ -21,7 +21,7 @@ class View_Helper_Messenger_Bootstrap
 		if( !$messages )
 			return '';
 
-		$list	= array();
+		$list	= [];
 		foreach( $messages as $nr => $message ){
 			$message	= (object) $message;
 			if( $linkResources )

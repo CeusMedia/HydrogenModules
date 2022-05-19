@@ -52,7 +52,7 @@ class Logic_Versions{
 		return $this->model->getByIndices( $conditions, array( 'version' => 'DESC' ) );
 	}
 
-	public function getAll( $module, $id, $conditions = array(), $orders = array(), $limits = array() ){
+	public function getAll( $module, $id, $conditions = [], $orders = [], $limits = [] ){
 		$indices	= array(
 			'module'	=> $module,
 			'id'		=> $id,

@@ -48,7 +48,7 @@ else
 	$filterLanguage		= UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
 
 
-$optScope	= array();
+$optScope	= [];
 foreach( $words['scopes'] as $key => $value )
 	$optScope[$key]	= $value;
 $optScope	= UI_HTML_Elements::Options( $optScope, $scope );

@@ -1,8 +1,9 @@
 <?php
-class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller{
-
+class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller
+{
 	/**	@var	Logic_ShopBridge				$bridge */
 	protected $bridge;
+
 	/**	@var	integer							$bridgeId */
 	protected $bridgeId							= 0;
 
@@ -13,37 +14,12 @@ class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller{
 
 	/**	@var	Model_Catalog_Gallery_Category	$modelCategory */
 	protected $modelCategory;
+
 	/**	@var	Model_Catalog_Gallery_Image		$modelImage */
 	protected $modelImage;
 
-	public function __onInit(){
-		$this->messenger		= $this->env->getMessenger();
-
-		$this->logic			= new Logic_Catalog_Gallery( $this->env );
-		$this->modelCategory	= new Model_Catalog_Gallery_Category( $this->env );
-		$this->modelImage		= new Model_Catalog_Gallery_Image( $this->env );
-		if( $this->env->getModules()->has( 'Shop' ) ){
-			$this->bridge			= new Logic_ShopBridge( $this->env );
-			$this->bridgeId			= $this->bridge->getBridgeId( 'CatalogGallery' );
-		}
-//		$this->logic->cache->flush();
-		$this->categories	= $this->logic->cache->get( 'catalog.gallery.categories' );
-		if( !$this->categories ){
-			$this->categories		= $this->modelCategory->getAll( array( 'parentId' => 0 ), array( 'rank' => 'ASC' ) );
-			foreach( $this->categories as $nr => $category )
-				$this->categories[$nr]->images	= $this->logic->getCategoryImages( $category->galleryCategoryId );
-			$this->logic->cache->set( 'catalog.gallery.categories', $this->categories );
-		}
-//		print_m( $this->logic->cache->index() );
-//		die;
-
-		$this->addData( 'categories', $this->categories );
-		$this->addData( 'pathModule', $this->logic->pathModule );
-		$this->addData( 'pathImages', $this->logic->pathImages );
-		$this->addData( 'bridgeId', $this->bridgeId );
-	}
-
-	static public function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	{
 		$arguments	= new ADT_List_Dictionary( $data );
 		if( $orderId = $arguments->get( 'orderId' ) ){
 			$view		= new View_Catalog_Gallery( $env );
@@ -57,7 +33,8 @@ class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function category( $categoryId, $arg2 = NULL, $arg3 = NULL ){
+	public function category( $categoryId, $arg2 = NULL, $arg3 = NULL )
+	{
 //		$categoryId	= (int) $categoryId;
 		$category	= $this->logic->getCategory( $categoryId );
 		if( !$category ){
@@ -70,7 +47,8 @@ class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller{
 
 	}
 
-	public function downloadOrder( $orderId ){
+	public function downloadOrder( $orderId )
+	{
 
 		$logic	= new Logic_Shop( $this->env );
 		$order	= $logic->getOrder( $orderId, TRUE );
@@ -110,7 +88,8 @@ class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function image( $imageId = NULL, $arg2 = NULL, $arg3 = NULL ){
+	public function image( $imageId = NULL, $arg2 = NULL, $arg3 = NULL )
+	{
 		$imageId	= (int) $imageId;
 		$image	= $this->logic->getImage( $imageId );
 		if( !$image ){
@@ -123,10 +102,12 @@ class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		$this->addData( 'images', $this->logic->getCategoryImages( $image->galleryCategoryId ) );
 	}
 
-	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL ){
+	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL )
+	{
 	}
 
-	public function order( $imageId ){
+	public function order( $imageId )
+	{
 		$image	= $this->modelImage->get( $imageId );
 		if( !$image ){
 			$this->messenger->noteError( 'Invalid image ID "'.$imageId.'".' );
@@ -136,5 +117,32 @@ class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		$restartUrl	= 'shop/addArticle/'.$this->bridgeId.'/'.$imageId.'/1?forwardTo='.$forwardUrl;
 		$this->restart( $restartUrl );
 	}
+
+	protected function __onInit()
+	{
+		$this->messenger		= $this->env->getMessenger();
+
+		$this->logic			= new Logic_Catalog_Gallery( $this->env );
+		$this->modelCategory	= new Model_Catalog_Gallery_Category( $this->env );
+		$this->modelImage		= new Model_Catalog_Gallery_Image( $this->env );
+		if( $this->env->getModules()->has( 'Shop' ) ){
+			$this->bridge			= new Logic_ShopBridge( $this->env );
+			$this->bridgeId			= $this->bridge->getBridgeId( 'CatalogGallery' );
+		}
+//		$this->logic->cache->flush();
+		$this->categories	= $this->logic->cache->get( 'catalog.gallery.categories' );
+		if( !$this->categories ){
+			$this->categories		= $this->modelCategory->getAll( array( 'parentId' => 0 ), array( 'rank' => 'ASC' ) );
+			foreach( $this->categories as $nr => $category )
+				$this->categories[$nr]->images	= $this->logic->getCategoryImages( $category->galleryCategoryId );
+			$this->logic->cache->set( 'catalog.gallery.categories', $this->categories );
+		}
+//		print_m( $this->logic->cache->index() );
+//		die;
+
+		$this->addData( 'categories', $this->categories );
+		$this->addData( 'pathModule', $this->logic->pathModule );
+		$this->addData( 'pathImages', $this->logic->pathImages );
+		$this->addData( 'bridgeId', $this->bridgeId );
+	}
 }
-?>

@@ -2,7 +2,7 @@
 abstract class View_Helper_Work_Mission_Abstract extends CMF_Hydrogen_View_Helper_Abstract{
 
 	protected $useAvatar	= FALSE;
-	protected $users		= array();
+	protected $users		= [];
 	protected $modules;
 
 	public function __construct( $env ){

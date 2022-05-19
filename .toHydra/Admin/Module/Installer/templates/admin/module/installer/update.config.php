@@ -1,7 +1,7 @@
 <?php
 $configKeys		= array_keys( $moduleSource->config ) + array_keys( $moduleLocal->config );
 if( $hasUpdate && count( $configKeys ) ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $configKeys as $key ){
 		$item	= (object) array();
 		$itemNew	= isset( $moduleSource->config[$key] ) ? $moduleSource->config[$key] : NULL;

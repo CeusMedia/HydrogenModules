@@ -101,11 +101,11 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller
 			}
 		}
 		$company		= $modelCompany->get( $companyId );
-		$branches		= array();
+		$branches		= [];
 		$modelBranch	= new Model_Branch( $this->env );
 		$branches		= $modelBranch->getAllByIndex( 'companyId', $companyId );
 		$company->branches	= $branches;
-		$users		= array();
+		$users		= [];
 		if( in_array( 'companyId', $modelUser->getColumns() ) )
 			$users	= $modelUser->getAllByIndex( 'companyId', $companyId );
 		$company->users		= $users;

@@ -7,7 +7,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
 
 $list	= '<div class=alert">'.$w->empty.'</div>';
 if( $categories ){
-	$list	= array();
+	$list	= [];
 	foreach( $categories as $item ){
 		$link	= UI_HTML_Tag::create( 'a', $item->title, array( 'href' => './manage/blog/category/edit/'.$item->categoryId ) );
 		$list[]	= UI_HTML_Tag::create( 'tr', array(

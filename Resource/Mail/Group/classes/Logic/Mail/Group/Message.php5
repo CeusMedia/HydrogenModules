@@ -12,7 +12,7 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic
 	protected $modelAction;
 	protected $modelUser;
 	protected $logicMail;*/
-	protected $transports		= array();
+	protected $transports		= [];
 
 	public function addFromRawMail( $groupId, $rawMail ){
 		$parser		= new \CeusMedia\Mail\Message\Parser();
@@ -253,7 +253,7 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic
 			throw new RuntimeException( 'Only new or stalled messages can be sent' );
 		if( !$message->mailGroupMemberId )
 			throw new RuntimeException( 'Message sender is not assigned to a group member' );
-		$mails		= array();
+		$mails		= [];
 		$members	= $this->logicGroup->getGroupMembers( $group->mailGroupId, TRUE );
 		foreach( $members as $member ){
 			$mails[]	= $this->forwardMessageToMember( $message, $member, $dryMode );

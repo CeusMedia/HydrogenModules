@@ -28,7 +28,7 @@ class Controller_Admin_Cache extends CMF_Hydrogen_Controller
 
 	public function index()
 	{
-		$list		= array();
+		$list		= [];
 		$cache		= $this->getCache();
 		$persistent	= $cache->getType() !== 'Noop';
 		if( $cache && $persistent ){

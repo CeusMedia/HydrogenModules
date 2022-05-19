@@ -7,7 +7,7 @@ class Controller_Admin_Backup extends CMF_Hydrogen_Controller
 	protected $defaultLimit				= 10;
 	protected $defaultOrderColumn		= 'createdAt';
 	protected $defaultOrderDirection	= 'DESC';
-	protected $filters					= array();
+	protected $filters					= [];
 
 	public function filter( $reset = NULL )
 	{
@@ -29,7 +29,7 @@ class Controller_Admin_Backup extends CMF_Hydrogen_Controller
 
 	public function index( $page = 0, $limit = 0 )
 	{
-		$conditions	= array();
+		$conditions	= [];
 		$filters	= $this->session->getAll( $this->filterPrefix, TRUE );
 		if( $filters->has( 'aaa' ) )
 			$conditions['aaa']	= $filters->get( 'aaa' );

@@ -9,7 +9,7 @@ class View_Manage_Blog extends CMF_Hydrogen_View{
 			''				=> 'Blog-Einträge',
 			'/category'		=> 'Kategorien',
 		);
-		$list	= array();
+		$list	= [];
 		$badge	= '';
 		if( $this->hasData( 'course' ) && $this->hasData( 'courses' ) ){
 			$course	= $this->getData( 'course' );

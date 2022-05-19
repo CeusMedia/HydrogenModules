@@ -1,6 +1,6 @@
 <?php
-class Controller_Manage_My_Company extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_My_Company extends CMF_Hydrogen_Controller
+{
 	protected $request;
 	protected $messenger;
 	protected $modelBranch;
@@ -9,47 +9,8 @@ class Controller_Manage_My_Company extends CMF_Hydrogen_Controller{
 	protected $modelUser;
 	protected $userId;
 
-	public function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->messenger		= $this->env->getMessenger();
-		$this->modelBranch		= new Model_Branch( $this->env );
-		$this->modelCompany		= new Model_Company( $this->env );
-		$this->modelCompanyUser	= new Model_Company_User( $this->env );
-		$this->modelUser		= new Model_User( $this->env );
-		$this->userId			= $this->env->getSession()->get( 'auth_user_id' );
-		$this->companies		= $this->getMyCompanies();
-	}
-
-	protected function checkCompany( $companyId ){
-		$words	= (object) $this->getWords( 'msg' );
-		if( !array_key_exists( $companyId, $this->companies ) ){
-			$this->messenger->noteFailure( $words->errorCompanyInvalid );
-			$this->restart( NULL, TRUE );
-		}
-		if( !$this->isMyCompany( $companyId ) ){
-			$this->messenger->noteError( $words->errorCompanyNotOwned );
-			$this->restart( NULL, TRUE );
-		}
-		return $this->companies[$companyId];
-	}
-
-	protected function getMyCompanies( $sortByColumn = 'companyId' ){
-		$list		= array();
-		$relations	= $this->modelCompanyUser->getAllByIndex( 'userId', $this->userId );
-		foreach( $relations as $relation ){
-			$company	= $this->modelCompany->get( $relation->companyId );
-			$list[$company->{$sortByColumn}]	= $company;
-		}
-		ksort( $list );
-		return $list;
-	}
-
-	protected function isMyCompany( $companyId ){
-		$indices	= array( 'companyId' => $companyId, 'userId' => $this->userId );
-		return $this->modelCompanyUser->countByIndices( $indices );
-	}
-
-	public function edit( $companyId ){
+	public function edit( $companyId )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$company	= $this->checkCompany( $companyId );
 
@@ -79,7 +40,7 @@ class Controller_Manage_My_Company extends CMF_Hydrogen_Controller{
 		$user->role			= $modelRole->get( $user->roleId );
 		$user->company		= $this->modelCompany->get( $companyId );
 		$company->branches	= $this->modelBranch->getAllByIndex( 'companyId', $companyId, array( 'title' => 'ASC' ) );
-		$company->users		= array();
+		$company->users		= [];
 		$relations	= $this->modelCompanyUser->getAllByIndex( 'companyId', $companyId );
 		foreach( $relations as $relation )
 			$company->users[$relation->userId]	= $this->modelUser->get( $relation->userId );
@@ -87,7 +48,8 @@ class Controller_Manage_My_Company extends CMF_Hydrogen_Controller{
 		$this->view->addData( 'company', $company );
 	}
 
-	public function index(){
+	public function index()
+	{
 
 /*		if( !$this->companies ){
 			$messenger->noteFailure( 'Kein Unternehmen zugewiesen. Weiterleitung zu Startseite.' );
@@ -100,7 +62,8 @@ class Controller_Manage_My_Company extends CMF_Hydrogen_Controller{
 		$this->addData( 'companies', $this->companies );
 	}
 
-	public function uploadLogo( $companyId ){
+	public function uploadLogo( $companyId )
+	{
 		$company	= $this->checkCompany( $companyId );
 		$image		= $this->request->get( 'image' );
 		try{
@@ -139,5 +102,48 @@ class Controller_Manage_My_Company extends CMF_Hydrogen_Controller{
 		}
 		$this->restart( 'edit/'.$companyId, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->messenger		= $this->env->getMessenger();
+		$this->modelBranch		= new Model_Branch( $this->env );
+		$this->modelCompany		= new Model_Company( $this->env );
+		$this->modelCompanyUser	= new Model_Company_User( $this->env );
+		$this->modelUser		= new Model_User( $this->env );
+		$this->userId			= $this->env->getSession()->get( 'auth_user_id' );
+		$this->companies		= $this->getMyCompanies();
+	}
+
+	protected function checkCompany( $companyId )
+	{
+		$words	= (object) $this->getWords( 'msg' );
+		if( !array_key_exists( $companyId, $this->companies ) ){
+			$this->messenger->noteFailure( $words->errorCompanyInvalid );
+			$this->restart( NULL, TRUE );
+		}
+		if( !$this->isMyCompany( $companyId ) ){
+			$this->messenger->noteError( $words->errorCompanyNotOwned );
+			$this->restart( NULL, TRUE );
+		}
+		return $this->companies[$companyId];
+	}
+
+	protected function getMyCompanies( $sortByColumn = 'companyId' )
+	{
+		$list		= [];
+		$relations	= $this->modelCompanyUser->getAllByIndex( 'userId', $this->userId );
+		foreach( $relations as $relation ){
+			$company	= $this->modelCompany->get( $relation->companyId );
+			$list[$company->{$sortByColumn}]	= $company;
+		}
+		ksort( $list );
+		return $list;
+	}
+
+	protected function isMyCompany( $companyId )
+	{
+		$indices	= array( 'companyId' => $companyId, 'userId' => $this->userId );
+		return $this->modelCompanyUser->countByIndices( $indices );
+	}
 }
-?>

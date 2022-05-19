@@ -20,7 +20,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 	protected $request;
 
 	/**	@var	array											$rights				List of access rights of current user */
-	protected $rights		= array();
+	protected $rights		= [];
 
 	public function addFolder( $folderId = NULL )
 	{
@@ -117,7 +117,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
-			$data		= array();
+			$data		= [];
 			$path		= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
 			$title		= $this->request->get( 'title' );
 			$folderId	= $this->request->get( 'folderId' );
@@ -157,7 +157,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
-			$data		= array();
+			$data		= [];
 			$path		= $this->getPathFromFolderId( $folder->parentId, TRUE );
 			$title		= $this->request->get( 'title' );
 			$parentId	= $this->request->get( 'parentId' );
@@ -196,7 +196,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 		$search		= trim( $this->request->get( 'search' ) );
 		$folderId	= (int) $folderId;
 
-		$folders	= array();
+		$folders	= [];
 		if( $search ){
 			$conditions	= array( 'title' => '%'.$search.'%' );
 			if( $folderId ){
@@ -205,7 +205,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 				$conditions['downloadFolderId']	= $folderIds;
 			}
 			$orders		= array( 'title' => 'ASC' );
-			$limits		= array();
+			$limits		= [];
 			$files		= $this->modelFile->getAll( $conditions, $orders, $limits );
 		}
 		else{
@@ -303,7 +303,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 		$removedSomething	= count( $statsClean->folders ) + count( $statsClean->folders ) > 0;
 		if( $addedSomething || $removedSomething ){
 			if( $addedSomething ){
-				$list	= array();
+				$list	= [];
 				foreach( $statsImport->files as $file ){
 					$path	= UI_HTML_Tag::create( 'small', $file->path, array( 'class' => "muted" ) );
 					$list[]	= UI_HTML_Tag::create( 'li', $path.$file->title );
@@ -312,7 +312,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 				$this->messenger->noteNotice( $this->messages->infoScanFoundSomething, count( $statsImport->folders ), count( $statsImport->files ), $list );
 			}
 			if( $removedSomething ){
-				$list	= array();
+				$list	= [];
 				foreach( $statsClean->files as $file ){
 					$path	= UI_HTML_Tag::create( 'small', $file->path, array( 'class' => "muted" ) );
 					$list[]	= UI_HTML_Tag::create( 'li', $path.$file->title );
@@ -454,7 +454,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 
 	protected function listFolderNested( $parentId = 0, $excludeFolderId = 0, int $level = 0 ): array
 	{
-		$list		= array();
+		$list		= [];
 		$orders		= array( 'title' => 'ASC' );
 		$folders	= $this->modelFolder->getAll( array( 'parentId' => $parentId ), $orders );
 		$icon		= '<i class="fa fa-fw fa-folder-open"></i>';
@@ -484,7 +484,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 
 	protected function getStepsFromFolderId( $folderId ): array
 	{
-		$steps		= array();
+		$steps		= [];
 		while( $folderId ){
 			$folder	= $this->modelFolder->get( $folderId );
 			if( !$folder )
@@ -498,7 +498,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 
 	protected function getNestedFolderIds( $parentId ): array
 	{
-		$list		= array();
+		$list		= [];
 		$folders	= $this->modelFolder->getAllByIndex( 'parentId', $parentId );
 		foreach( $folders as $folder ){
 			$list[]	= $folder->downloadFolderId;

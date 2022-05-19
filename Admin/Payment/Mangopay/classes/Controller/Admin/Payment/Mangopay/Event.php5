@@ -1,25 +1,10 @@
 <?php
-class Controller_Admin_Payment_Mangopay_Event extends CMF_Hydrogen_Controller{
-
+class Controller_Admin_Payment_Mangopay_Event extends CMF_Hydrogen_Controller
+{
 	public static $verbose	= TRUE;
 
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->mangopay		= Logic_Payment_Mangopay::getInstance( $this->env );
-		$this->model		= new Model_Mangopay_Event( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
-	}
-
-	protected function checkEvent( $eventId, $failUrl = 'view/%s' ){
-		$event	= $this->model->get( $eventId );
-		if( $event )
-			return $event;
-		$this->messenger->noteError( 'Invalid event ID.' );
-		$this->restart( strintf( $failUrl, $eventId ), TRUE );
-	}
-
-	public function close( $eventId ){
+	public function close( $eventId )
+	{
 		$event	= $this->checkEvent( $eventId, 'view/'.$eventId.'?page='.$this->request->get( 'page' ) );
 		$this->model->edit( $eventId, array(
 			'status'	=> Model_Mangopay_Event::STATUS_CLOSED,
@@ -29,9 +14,10 @@ class Controller_Admin_Payment_Mangopay_Event extends CMF_Hydrogen_Controller{
 		$this->restart( 'view/'.$eventId.'?page='.$this->request->get( 'page' ), TRUE );
 	}
 
-	public function index( $page = 0 ){
+	public function index( $page = 0 )
+	{
 		$limit		= 10;
-		$conditions = array();
+		$conditions = [];
 		$orders		= array( 'eventId' => 'DESC' );
 		$limits		= array( $page * $limit, $limit );
 
@@ -43,7 +29,8 @@ class Controller_Admin_Payment_Mangopay_Event extends CMF_Hydrogen_Controller{
 		$this->addData( 'pages', ceil( $total / $limit ) );
 	}
 
-	public function receive(){
+	public function receive()
+	{
 		$response	= $this->env->getResponse();
 		$eventId	= 0;
 		try{
@@ -89,7 +76,8 @@ class Controller_Admin_Payment_Mangopay_Event extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function retry( $eventId ){
+	public function retry( $eventId )
+	{
 		$event	= $this->checkEvent( $eventId );
 		$statuses	= array( Model_Mangopay_Event::STATUS_FAILED, Model_Mangopay_Event::STATUS_HANDLED );
 		if( !in_array( (int) $event->status, $statuses ) ){
@@ -102,7 +90,8 @@ class Controller_Admin_Payment_Mangopay_Event extends CMF_Hydrogen_Controller{
 		$this->restart( 'view/'.$eventId.'?page='.$this->request->get( 'page' ), TRUE );
 	}
 
-	protected function sendMail( $type, $data ){
+	protected function sendMail( $type, $data )
+	{
 		if( !$this->moduleConfig->get( 'mail.hook' ) )
 			return;
 		$className	= 'Mail_Mangopay_'.$type;
@@ -113,7 +102,8 @@ class Controller_Admin_Payment_Mangopay_Event extends CMF_Hydrogen_Controller{
 		return $this->env->logic->mail->sendMail( $mail, $receiver, $language );
 	}
 
-	public function view( $eventId, $run = NULL ){
+	public function view( $eventId, $run = NULL )
+	{
 		$event	= $this->model->get( $eventId );
 		if( !$event ){
 			$this->messenger->noteError( 'Invalid event ID.' );
@@ -123,7 +113,26 @@ class Controller_Admin_Payment_Mangopay_Event extends CMF_Hydrogen_Controller{
 		$this->addData( 'page', $this->request->get( 'page' ) );
 	}
 
-	protected function verify( $eventType, $resourceId ){
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->mangopay		= Logic_Payment_Mangopay::getInstance( $this->env );
+		$this->model		= new Model_Mangopay_Event( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
+	}
+
+	protected function checkEvent( $eventId, $failUrl = 'view/%s' )
+	{
+		$event	= $this->model->get( $eventId );
+		if( $event )
+			return $event;
+		$this->messenger->noteError( 'Invalid event ID.' );
+		$this->restart( strintf( $failUrl, $eventId ), TRUE );
+	}
+
+	protected function verify( $eventType, $resourceId )
+	{
 		if( preg_match( '@_CREATED$@', $eventType ) )
 			$status	= 'CREATED';
 		else if( preg_match( '@_FAILED$@', $eventType ) )
@@ -144,4 +153,3 @@ class Controller_Admin_Payment_Mangopay_Event extends CMF_Hydrogen_Controller{
 		return FALSE;
 	}
 }
-?>

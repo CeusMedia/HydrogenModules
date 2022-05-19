@@ -1,14 +1,10 @@
 <?php
-class Controller_Gallery extends CMF_Hydrogen_Controller{
-
+class Controller_Gallery extends CMF_Hydrogen_Controller
+{
 	protected $path;
 
-	public function __onInit(){
-		$config		= $this->env->getConfig();
-		$this->path	= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
-	}
-
-	public function download( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL ){
+	public function download( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL )
+	{
 		$args	= func_get_args();
 		$source	= $arg1 ? join( '/', $args ) : $this->env->getRequest()->get( 'source' );
 		if( !$source )
@@ -26,7 +22,8 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 	 *	@param		boolean		$debug
 	 *	@return		void
 	 */
-	public function feed( $limit = 10, $debug = NULL ){
+	public function feed( $limit = 10, $debug = NULL )
+	{
 		$limit		= ( (int) $limit > 0 ) ? (int) $limit : 10;
 
 		$config		= $this->env->getConfig();
@@ -58,12 +55,14 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 		$this->addData( 'debug', (bool) $debug );
 	}
 
-	public function image(){
+	public function image()
+	{
 		$this->addData( 'path', $this->path );
 		$this->addData( 'source', $this->env->getRequest()->get( 'source' ) );
 	}
 
-	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL ){
+	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL )
+	{
 		$source	= urldecode( implode( '/', $this->env->getRequest()->get( '__arguments' ) ) );
 		$source	= stripslashes( $source );
 		$info	= $this->readGalleryInfo( $source );
@@ -80,7 +79,8 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 		);
 	}
 
-	public function info( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL ){
+	public function info( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL )
+	{
 		$source	= join( '/', func_get_args() );
 		$uri	= $this->path.$source;
 		if( !$source || !file_exists( $uri ) ){
@@ -103,17 +103,24 @@ class Controller_Gallery extends CMF_Hydrogen_Controller{
 		);
 	}
 
-	protected function readGalleryInfo( $source ){
+	public function thumb()
+	{
+		$this->addData( 'path', $this->path );
+		$this->addData( 'source', urldecode( $this->env->getRequest()->get( 'source' ) ) );
+	}
+
+	protected function __onInit()
+	{
+		$config		= $this->env->getConfig();
+		$this->path	= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
+	}
+
+	protected function readGalleryInfo( $source )
+	{
 		$uri	= $this->path.$source.'/info.ini';
 		if( !file_exists( $uri ) )
 			return array();
 		$reader	= new FS_File_INI_Reader( $uri, TRUE );
 		return $reader->toArray( TRUE );
 	}
-
-	public function thumb(){
-		$this->addData( 'path', $this->path );
-		$this->addData( 'source', urldecode( $this->env->getRequest()->get( 'source' ) ) );
-	}
 }
-?>

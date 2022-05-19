@@ -7,9 +7,9 @@ $w	= (object) $words['list'];
 if( !$files )
 	throw new RuntimeException( 'No file data provided by controller' );
 
-$list	= array();
+$list	= [];
 foreach( $files as $file ){
-	$classes	= array();
+	$classes	= [];
 	$pathName		= substr( $file->getPathname(), strlen( $path ) );
 	if( $filePath === $pathName )
 		$classes[]	= 'active';

@@ -19,7 +19,7 @@ $iconsStatus	= array(
 
 $avatar	= View_Helper_Member::renderStatic( $env, $userLicense->userId );
 
-$data1	= array();
+$data1	= [];
 $data1['Produkt']				= $product->title;
 $data1['Lizenz']				= $userLicense->productLicense->title;
 $data1['Lizenznummer']			= $userLicense->uid;

@@ -25,7 +25,7 @@ class Controller_Work_Billing_Person_Transaction extends CMF_Hydrogen_Controller
 		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
 
-		$conditions	= array();
+		$conditions	= [];
 		if( $filterYear || $filterMonth ){
 			if( $filterYear && $filterMonth )
 				$conditions['dateBooked']	= $filterYear.'-'.$filterMonth.'-%';

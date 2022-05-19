@@ -4,7 +4,7 @@ $env->getRuntime()->reach( 'Template: Catalog/News: start' );
 extract( $view->populateTexts( array( 'news.top', 'news.bottom' ), 'html/catalog/' ) );
 $helper	= new View_Helper_Catalog( $env );
 
-$list	= array();
+$list	= [];
 foreach( $articles as $article ){
 	$list[]	= $helper->renderArticleListItem( $article );
 }

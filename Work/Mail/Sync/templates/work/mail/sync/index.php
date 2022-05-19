@@ -2,7 +2,7 @@
 
 $table	= '<div class="alert alert-info">Keine.</div>';
 if( $hosts ){
-	$list	= array();
+	$list	= [];
 	foreach( $hosts as $host ){
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $host->host ),
@@ -42,7 +42,7 @@ $helperTimestamp	= new View_Helper_TimePhraser( $env );
 
 $table	= '<div class="alert alert-info">Keine.</div>';
 if( $syncs ){
-	$list	= array();
+	$list	= [];
 	foreach( $syncs as $sync ){
 		foreach( $hosts as $host )
 			if( $host->mailSyncHostId == $sync->sourceMailHostId ){
@@ -78,7 +78,7 @@ if( $syncs ){
 		$buttonEdit		= UI_HTML_Tag::create( 'a', $iconEdit.'&nbsp;bearbeiten', array( 'href' => './work/mail/sync/editSync/'.$sync->mailSyncId ) );
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array( 'href' => './work/mail/sync/removeSync/'.$sync->mailSyncId ) );
 
-		$buttons	= array();
+		$buttons	= [];
 		if( $sync->status == Model_Mail_Sync::STATUS_NEW ){
 			$buttons[]	= $buttonActivate;
 		}

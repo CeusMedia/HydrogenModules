@@ -34,7 +34,7 @@ class Controller_Manage_Job_Definition extends CMF_Hydrogen_Controller
 		$filterClass	= $this->session->get( $this->filterPrefix.'class' );
 		$filterMethod	= $this->session->get( $this->filterPrefix.'method' );
 
-		$conditions		= array();
+		$conditions		= [];
 		if( strlen( $filterStatus ) )
 			$conditions['status']		= $filterStatus;
 		if( strlen( $filterMode ) )
@@ -52,8 +52,8 @@ class Controller_Manage_Job_Definition extends CMF_Hydrogen_Controller
 			$item->scheduled	= $this->modelSchedule->getAllByIndex( 'jobDefinitionId', $item->jobDefinitionId );
 		}
 
-		$classNames		= array();
-		$methodNames	= array();
+		$classNames		= [];
+		$methodNames	= [];
 		foreach( $this->modelDefinition->getAll() as $definition ){
 			if( !in_array( $definition->className, $classNames ) )
 				$classNames[]	= $definition->className;

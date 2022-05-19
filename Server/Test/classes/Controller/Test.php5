@@ -62,7 +62,7 @@ class Controller_Test extends CMF_Hydrogen_Controller {
 	}
 
 	protected function listFilesInFolder( $path, $extension = "php" ) {
-		$list	= array();																			//  create empty list
+		$list	= [];																			//  create empty list
 		$index	= new FS_File_RegexFilter( $path, '/\.'.$extension.'$/' );								//  list all classes in folder
 		foreach( $index as $file ) {																//  iterate index
 			$name			= pathinfo( $file->getFilename(), PATHINFO_FILENAME );					//  get file name
@@ -80,7 +80,7 @@ class Controller_Test extends CMF_Hydrogen_Controller {
 	}
 
 	public function syntaxControllers() {
-		$list	= array();
+		$list	= [];
 		$index	= $this->listFilesInFolder( 'classes/Controller' );
 		foreach( array_keys( $index ) as $controller )
 			$list[$controller]	 = $this->syntaxController( $controller );
@@ -88,7 +88,7 @@ class Controller_Test extends CMF_Hydrogen_Controller {
 	}
 
 	public function syntaxCore() {
-		$list	= array();																			//  create empty list
+		$list	= [];																			//  create empty list
 		$index	= $this->listFilesInFolder( 'classes' );											//  list all core classes
 		foreach( $index as $fileName => $filePath )													//  iterate index
 			$list[$fileName]	= self::checkSyntax( $filePath, $error );							//  check class syntax
@@ -106,7 +106,7 @@ class Controller_Test extends CMF_Hydrogen_Controller {
 	}
 
 	public function syntaxModels() {
-		$list	= array();
+		$list	= [];
 		$index	= $this->listFilesInFolder( 'classes/Model' );
 		foreach( array_keys( $index ) as $model )
 			$list[$model]	 = $this->syntaxModel( $model );

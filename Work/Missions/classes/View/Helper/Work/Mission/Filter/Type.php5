@@ -28,7 +28,7 @@ class View_Helper_Work_Mission_Filter_Type{
 			);
 		}
 
-		$list	= array();
+		$list	= [];
 		foreach( $this->values as $type ){
 			$input	= UI_HTML_Tag::create( 'input', NULL, array(
 				'type'		=> 'checkbox',

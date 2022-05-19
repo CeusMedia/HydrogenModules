@@ -7,7 +7,7 @@ $helperMoney		= new View_Helper_Mangopay_Entity_Money( $this->env );
 $helperMoney->setFormat( View_Helper_Mangopay_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
 $helperMoney->setNumberFormat( View_Helper_Mangopay_Entity_Money::NUMBER_FORMAT_COMMA );
 
-$list	= array();
+$list	= [];
 foreach( $clientWallets as $wallet ){
 	$wallet->Description	= $wallet->Id;
 	$balance	= UI_HTML_Tag::create( 'strong', $helperMoney->set( $wallet->Balance ) );

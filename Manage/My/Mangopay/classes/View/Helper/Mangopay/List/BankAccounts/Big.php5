@@ -15,7 +15,7 @@ class View_Helper_Mangopay_List_BankAccounts_Big extends View_Helper_Mangopay_Ab
 		$logoBank	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bank fa-4x' ) );
 		$logoAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus fa-4x' ) );
 
-		$list	= array();
+		$list	= [];
 		foreach( $this->bankAccounts as $item ){
 			if( !$item->Active )
 				continue;

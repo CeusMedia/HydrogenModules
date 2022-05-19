@@ -5,7 +5,7 @@ $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check'
 $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 $iconUndo		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-undo' ) );
 
-$list	= array();
+$list	= [];
 $leftAmount	= (float) $bill->amountNetto;
 
 if( $billExpenses ){
@@ -126,17 +126,17 @@ $optType	= array(
 $optType	= UI_HTML_Elements::Options( $optType );
 
 
-$optCorporation	= array();
+$optCorporation	= [];
 foreach( $corporations as $corporation )
 	$optCorporation[$corporation->corporationId]	= $corporation->title;
 $optCorporation	= UI_HTML_Elements::Options( $optCorporation );
 
-$optPerson	= array();
+$optPerson	= [];
 foreach( $persons as $person )
 	$optPerson[$person->personId]	= $person->firstname.' '.$person->surname;
 $optPerson	= UI_HTML_Elements::Options( $optPerson );
 
-$optReserve	= array();
+$optReserve	= [];
 foreach( $reserves as $reserve )
 	$optReserve[$reserve->reserveId]	= $reserve->title;
 $optReserve	= UI_HTML_Elements::Options( $optReserve );

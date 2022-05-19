@@ -36,7 +36,7 @@ class Logic_CustomerProject{
 	}
 
 	public function getProjects( $customerId ){
-		$list		= array();
+		$list		= [];
 		$relations	= $this->modelRelation->getAll( array( 'customerId' => $customerId ) );
 		foreach( $relations as $relation ){
 			$relation->project	= $this->modelProject->get( $relation->projectId );

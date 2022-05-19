@@ -4,7 +4,7 @@ if( empty( $nodeId ) )
 	$nodeId	= NULL;
 $listNodes		= '<em class="muted">Keine vorhanden.</em>';
 if( $nodes ){
-	$listNodes		= array();
+	$listNodes		= [];
 	foreach( $nodes as $node ){
 		$class		= $nodeId == $node->nodeId ? 'active' : NULL;
 		$label			= $node->label ? $node->label : $node->ID;

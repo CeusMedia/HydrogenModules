@@ -72,7 +72,7 @@ if( isset( $linkNr ) && strlen( trim( $linkNr ) ) ){
 
 $panelList	= '<br/><div><em>Keine Links definiert.</em></div><br/>';
 if( $module->links ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $module->links as $nr => $link ){
 		$access	= $words['tab-links']['optAccessUndefined'];
 		if( in_array( $link->access, array_keys( $words['access-types'] ) ) )

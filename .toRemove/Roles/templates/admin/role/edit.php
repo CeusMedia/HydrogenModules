@@ -1,5 +1,5 @@
 <?php
-$optAccess	= array();
+$optAccess	= [];
 foreach( $words['type-access'] as $key => $label ){
 	$selected		= $key == $role->access;
 	$class			= 'role-access access'.$key;
@@ -7,7 +7,7 @@ foreach( $words['type-access'] as $key => $label ){
 }
 $optAccess	= join( $optAccess );
 
-$optRegister	= array();
+$optRegister	= [];
 foreach( $words['type-register'] as $key => $label ){
 	$selected		= $key == $role->register;
 	$class			= 'role-register register'.$key;

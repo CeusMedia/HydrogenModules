@@ -36,7 +36,7 @@ $panelAddVersion	= '
 ';
 
 //  --  VERSIONS  --  //
-$list	= array();
+$list	= [];
 foreach( $versions as $version ){
 	$label	= $version->version;
 	$status	= $words['version-states'][$version->status];

@@ -33,7 +33,7 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
 			) ) );
 
 		//  --  FACTS: MEMBERS  --  //
-		$list	= array();
+		$list	= [];
 		foreach( $members as $nr => $member ){
 			$list[]	= $member->username;
 			$members[$nr] = UI_HTML_Tag::create( 'li', $member->username );

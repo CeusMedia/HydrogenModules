@@ -1,7 +1,7 @@
 <?php
 class Model_Calculator_Math
 {
-	protected $variables = array();
+	protected $variables = [];
 
 	public function evaluate( $string )
 	{

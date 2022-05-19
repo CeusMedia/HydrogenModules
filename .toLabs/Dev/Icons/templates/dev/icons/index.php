@@ -17,7 +17,7 @@ $projects	= array(
 	'lib/cmIcons/sublink/SweetiePlus-v2/'		=> 'SweetiePlus',
 );
 
-$list	= array();
+$list	= [];
 foreach( $projects as $path => $label ){
 	$class	= $path == $selected ? 'active' : NULL;
 	$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => './dev/icons/?project='.urlencode( $path ) ) );
@@ -35,9 +35,9 @@ $panelFilter	= '
 	$skip	= array( 'animations' );
 
 
-function listFolder( $path, $uri, $skip = array() ){
+function listFolder( $path, $uri, $skip = [] ){
 	$folders	= FS_Folder_Lister::getFolderList( $path );
-	$list		= array();
+	$list		= [];
 	foreach( $folders as $folder ){
 		if( in_array( $folder->getFilename(), $skip ) )
 			continue;

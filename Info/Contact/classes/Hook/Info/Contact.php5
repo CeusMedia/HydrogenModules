@@ -1,7 +1,7 @@
 <?php
 class Hook_Info_Contact extends CMF_Hydrogen_Hook
 {
-	static public function onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	static public function onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
 	{
 		if( !$env->getModules()->has( 'UI_Shortcode' ) )
 			return;

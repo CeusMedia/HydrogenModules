@@ -1,21 +1,26 @@
 <?php
-class View_Bug extends CMF_Hydrogen_View{
+class View_Bug extends CMF_Hydrogen_View
+{
+	public function add()
+	{
+	}
 
-	public function __onInit(){
+	public function edit()
+	{
+	}
+
+	public function index()
+	{
+	}
+
+	protected function __onInit()
+	{
 		$this->env->getPage()->addThemeStyle( 'site.bug.css' );
 	}
 
-	public function add(){
-	}
-
-	public function edit(){
-	}
-
-	public function index(){
-	}
-
-	protected function renderOptions( $options, $key, $values, $class = '' ){
-		$list		= array();
+	protected function renderOptions( $options, $key, $values, $class = '' )
+	{
+		$list		= [];
 		if( !is_array( $values ) )
 			$values = $values ? array( $values ) : array();
 		foreach( $options as $key => $value ){
@@ -32,4 +37,3 @@ class View_Bug extends CMF_Hydrogen_View{
 		return join( $list );
 	}
 }
-?>

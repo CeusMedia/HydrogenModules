@@ -15,7 +15,7 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 			'status'	=> array( 0, 1, 2, 3 ),
 		 	'projectId'	=> array_keys( $userProjects ),
 		), array( 'type' => 'ASC', 'priority' => 'ASC' )/*, array( 0, 20 )*/ );
-		$rows	= array();
+		$rows	= [];
 		$icons			= array(
 			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler' ) ),
 			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe' ) ),
@@ -41,7 +41,7 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 	}
 
 	public function renderOptions( $options, $key, $values, $class = '' ){
-		$list		= array();
+		$list		= [];
 		if( !is_array( $values ) )
 			$values = $values ? array( $values ) : array();
 		foreach( $options as $key => $value ){
@@ -76,11 +76,11 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 
 		$statistics		= $data[$type];
 
-		$data	= array();
-		$legend	= array();
-		$targ	= array();
-		$alts	= array();
-		$data	= array();
+		$data	= [];
+		$legend	= [];
+		$targ	= [];
+		$alts	= [];
+		$data	= [];
 		$total	= 0;
 		foreach( $statistics as $stat ){
 			$data[]		= $stat['count'];
@@ -132,10 +132,10 @@ class View_Work_Issue extends CMF_Hydrogen_View{
 		if( !( empty( $graphConfig['cropX'] ) && empty( $graphConfig['cropY'] ) ) ){
 			$offsetX	= (int) $graphConfig['cropX'];
 			$offsetY	= (int) $graphConfig['cropY'];
-			$matches	= array();
+			$matches	= [];
 			preg_match_all( '/ coords="(.+)"/U', $map, $matches );
 			foreach( $matches[1] as $nr => $match ){
-				$coords	= array();
+				$coords	= [];
 				foreach( explode( ",", $match ) as $a => $coord ){
 					$coord	-= $a % 2 ? $offsetY : $offsetX;
 					$coords[]	= $coord;

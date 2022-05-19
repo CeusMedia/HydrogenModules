@@ -44,7 +44,7 @@ $panelPreview	= '
 $w				= (object) $words->edit_html_styles;
 $panelStyles	= '';
 if( $styles ){
-	$listStyles		= array();
+	$listStyles		= [];
 	foreach( $styles as $nr => $item ){
 //		$label			= preg_replace( "@^([a-z]+://[^/]+/)@", '<small class="muted">\\1</small>', $item );
 		$link			= UI_HTML_Tag::create( 'a', $iconExternal.$item, array(

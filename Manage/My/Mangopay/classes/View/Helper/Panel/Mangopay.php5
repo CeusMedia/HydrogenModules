@@ -1,7 +1,7 @@
 <?php
 abstract class View_Helper_Panel_Mangopay{
 
-	protected $data			= array();
+	protected $data			= [];
 	protected $env;
 	protected $options;
 
@@ -33,7 +33,7 @@ abstract class View_Helper_Panel_Mangopay{
 		return $helper->set( $number )->render();
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $data, $options = array() ){
+	static public function renderStatic( CMF_Hydrogen_Environment $env, $data, $options = [] ){
 		$helper	= new static( $env );
 		return $helper->setData( $data )->setOptions( $options )->render();
 	}
@@ -48,7 +48,7 @@ abstract class View_Helper_Panel_Mangopay{
 		return $this;
 	}
 
-	public function setOptions( $options = array() ){
+	public function setOptions( $options = [] ){
 		$this->options	= new ADT_List_Dictionary( $options );
 		return $this;
 	}

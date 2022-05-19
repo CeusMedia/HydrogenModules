@@ -1,5 +1,5 @@
 <?php
-$rows	= array();
+$rows	= [];
 
 $iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 $iconTest	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check-circle' ) );
@@ -127,7 +127,7 @@ $panelList	= '
 	</div>
 </div>';
 
-$optGroup	= array();
+$optGroup	= [];
 foreach( $groups as $group )
 	$optGroup[$group->mailGroupId]	= $group->title;
 $optGroup	= UI_HTML_Elements::Options( $optGroup, $filterGroupId );
@@ -157,7 +157,7 @@ $panelAdd	= '
 	</div>
 </div>';
 
-$optGroup	= array();
+$optGroup	= [];
 foreach( $groups as $group )
 	$optGroup[$group->mailGroupId]	= $group->title.' ('.$countByGroup[$group->mailGroupId].')';
 $optGroup	= UI_HTML_Elements::Options( $optGroup, $filterGroupId );
@@ -171,7 +171,7 @@ $statuses	= array(
 	2	=> 'erreichbar ('.$countByStatus[2].')',
 );
 
-$optStatus	= array();
+$optStatus	= [];
 foreach( $statuses as $key => $label )
 	$optStatus[$key]	= $label;
 $optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );

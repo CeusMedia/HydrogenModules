@@ -5,7 +5,7 @@ $iconDown	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron
 /*  --  ARTICLES IN CATEGORY  --  */
 $listArticles	= '<em class="muted">Keine vorhanden.</em>';
 if( $articles ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $articles as $article ){
 		$url	= './manage/catalog/bookstore/article/edit/'.$article->articleId;
 		$link	= UI_HTML_Tag::create( 'a', $article->title, array( 'href' => $url, 'title' => $article->volume ) );

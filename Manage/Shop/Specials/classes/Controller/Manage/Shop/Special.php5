@@ -1,28 +1,8 @@
 <?php
-class Controller_Manage_Shop_Special extends CMF_Hydrogen_Controller{
-
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->modelSpecial	= new Model_Shop_Special( $this->env );
-		$this->logicBridge	= new Logic_ShopBridge( $this->env );
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
-			$frontend	= Logic_Frontend::getInstance( $this->env );
-			$this->appPath	= $frontend->getPath();
-			$this->appUrl	= $frontend->getUri();
-		}
-		else{
-			$this->appPath	= $this->env->path;
-			$this->appUrl	= $this->env->url;
-		}
-		$this->addData( 'appPath', $this->appPath );
-		$this->addData( 'appUrl', $this->appUrl );
-		$this->shopBridges	= $this->logicBridge->getBridges();
-		$this->addData( 'catalogs', $this->shopBridges );
-		$this->addData( 'specials', $this->modelSpecial->getAll() );
-	}
-
-	public function ajaxLoadCatalogArticles( $bridgeId ){
+class Controller_Manage_Shop_Special extends CMF_Hydrogen_Controller
+{
+	public function ajaxLoadCatalogArticles( $bridgeId )
+	{
 		$bridge 	= $this->logicBridge->getBridge( $bridgeId );
 		$articles	= $bridge->object->getAll( array(), array( 'title' => 'ASC' ) );
 
@@ -37,7 +17,8 @@ class Controller_Manage_Shop_Special extends CMF_Hydrogen_Controller{
 		die;
 	}
 
-	public function add(){
+	public function add()
+	{
 		if( $this->request->getMethod()->isPost() ){
 			$logicAuth	= $this->env->getLogic()->get( 'authentication' );
 			$data	= array(
@@ -55,7 +36,8 @@ class Controller_Manage_Shop_Special extends CMF_Hydrogen_Controller{
 		$this->addData( 'specials', $this->modelSpecial->getAll() );
 	}
 
-	public function edit( $specialId ){
+	public function edit( $specialId )
+	{
 		if( !( $special = $this->checkId( $specialId, FALSE ) ) ){
 			$this->messenger->noteError( 'Ungültige ID.' );
 			$this->restart( NULL, TRUE );
@@ -67,7 +49,7 @@ class Controller_Manage_Shop_Special extends CMF_Hydrogen_Controller{
 		$special->styleFiles	= json_decode( $special->styleFiles );
 
 		if( $this->request->getMethod()->isPost() ){
-			$data	= array();
+			$data	= [];
 			if( strlen( trim( $this->request->get( 'title' ) ) ) ){
 				if( $special->title != $this->request->get( 'title' ) )
 					$data['title']	= $this->request->get( 'title' );
@@ -94,10 +76,12 @@ class Controller_Manage_Shop_Special extends CMF_Hydrogen_Controller{
 		$this->addData( 'special', $special );
 	}
 
-	public function index(){
+	public function index()
+	{
 	}
 
-	public function removeStyleFile( $specialId, $nr ){
+	public function removeStyleFile( $specialId, $nr )
+	{
 		if( !( $special = $this->checkId( $specialId, FALSE ) ) ){
 			$this->messenger->noteError( 'Ungültige ID.' );
 			$this->restart( NULL, TRUE );
@@ -115,7 +99,30 @@ class Controller_Manage_Shop_Special extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$specialId, TRUE );
 	}
 
-	protected function checkId( $specialId, $strict = TRUE  ){
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->modelSpecial	= new Model_Shop_Special( $this->env );
+		$this->logicBridge	= new Logic_ShopBridge( $this->env );
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			$frontend	= Logic_Frontend::getInstance( $this->env );
+			$this->appPath	= $frontend->getPath();
+			$this->appUrl	= $frontend->getUri();
+		}
+		else{
+			$this->appPath	= $this->env->path;
+			$this->appUrl	= $this->env->url;
+		}
+		$this->addData( 'appPath', $this->appPath );
+		$this->addData( 'appUrl', $this->appUrl );
+		$this->shopBridges	= $this->logicBridge->getBridges();
+		$this->addData( 'catalogs', $this->shopBridges );
+		$this->addData( 'specials', $this->modelSpecial->getAll() );
+	}
+
+	protected function checkId( $specialId, bool $strict = TRUE  )
+	{
 		$special	= $this->modelSpecial->get( $specialId );
 		if( $special )
 			return $special;

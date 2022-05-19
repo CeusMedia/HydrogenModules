@@ -11,7 +11,7 @@ class Hook_Resource_Cache extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onEnvInitCache( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onEnvInitCache( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
 		$env->set( 'cache', new Model_Cache( $env ) );
 	}
 }

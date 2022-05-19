@@ -7,7 +7,7 @@ class Controller_Manage_Content_Style extends CMF_Hydrogen_Controller{
 	protected $basePath;
 	protected $pathCss;
 	protected $theme;
-	protected $files		= array();
+	protected $files		= [];
 
 	protected function __onInit(){
 		$this->request		= $this->env->getRequest();

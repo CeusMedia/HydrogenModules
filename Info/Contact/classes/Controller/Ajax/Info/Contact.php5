@@ -8,7 +8,32 @@ class Controller_Ajax_Info_Contact extends CMF_Hydrogen_Controller_Ajax
 	protected $useCsrf;
 	protected $useHoneypot;
 
-	public function __onInit()
+	/**
+	 *	@todo		add support for captcha and CSRF
+	 */
+	public function form()
+	{
+		$message	= '';
+		$data		= NULL;
+		if( !$this->request->getMethod()->isPost() )
+			$this->respondError( 'Access granted for POST requests, only.' );
+		else{
+			$message	= "";
+			try{
+				$logic		= Logic_Mail::getInstance( $this->env );
+				$mail		= new Mail_Info_Contact_Form( $this->env, $this->request->getAll() );
+				$receiver	= (object) array( 'email' => $this->moduleConfig->get( 'mail.receiver' ) );
+				$logic->handleMail( $mail, $receiver, 'de' );
+				$this->respondData( TRUE );
+			}
+			catch( Exception $e ){
+				$this->env->getLog()->logException( $e );
+				$this->respondError( 'Access granted for POST requests, only.' );
+			}
+		}
+	}
+
+	protected function __onInit()
 	{
 		$this->moduleConfig		= $this->env->getConfig()->getAll( "module.info_contact.", TRUE );
 
@@ -37,30 +62,5 @@ class Controller_Ajax_Info_Contact extends CMF_Hydrogen_Controller_Ajax
 				$this->useCsrf	= TRUE;
 		}
 		$this->useHoneypot		= $this->moduleConfig->get( 'honeypot.enable' );
-	}
-
-	/**
-	 *	@todo		add support for captcha and CSRF
-	 */
-	public function form()
-	{
-		$message	= '';
-		$data		= NULL;
-		if( !$this->request->getMethod()->isPost() )
-			$this->respondError( 'Access granted for POST requests, only.' );
-		else{
-			$message	= "";
-			try{
-				$logic		= Logic_Mail::getInstance( $this->env );
-				$mail		= new Mail_Info_Contact_Form( $this->env, $this->request->getAll() );
-				$receiver	= (object) array( 'email' => $this->moduleConfig->get( 'mail.receiver' ) );
-				$logic->handleMail( $mail, $receiver, 'de' );
-				$this->respondData( TRUE );
-			}
-			catch( Exception $e ){
-				$this->env->getLog()->logException( $e );
-				$this->respondError( 'Access granted for POST requests, only.' );
-			}
-		}
 	}
 }

@@ -77,7 +77,7 @@ class View_Helper_Mail_View_Source
 	protected function shortenMailCode( $code )
 	{
 		$status	= 0;
-		$list	= array();
+		$list	= [];
 		foreach( explode( PHP_EOL, $code ) as $nr => $line ){
 			$isEmpty	= !strlen( trim( $line ) );
 			$isBased	= preg_match( '/^[\S]{74,80}$/', trim( $line ) );

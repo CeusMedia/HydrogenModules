@@ -32,7 +32,7 @@ $panelFilter	= '
 </div>
 ';
 
-		$list	= array();
+		$list	= [];
 		$lastId	= 0;
 
 		foreach( $records as $record ){

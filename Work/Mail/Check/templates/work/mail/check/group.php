@@ -34,7 +34,7 @@ $panelAdd	= '
 </div>';
 
 
-$rows	= array();
+$rows	= [];
 foreach( $groups as $group ){
 
 	$percentTested	= 0;

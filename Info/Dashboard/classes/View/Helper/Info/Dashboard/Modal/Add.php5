@@ -1,8 +1,8 @@
 <?php
 class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abstract
 {
-	protected $dashboards	= array();
-	protected $panels		= array();
+	protected $dashboards	= [];
+	protected $panels		= [];
 
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{
@@ -19,7 +19,7 @@ class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abst
 		$defaultPanels	= explode( ',', $moduleConfig->get( 'panels' ) );
 
 		if( $this->panels ){
-			$list	= array();
+			$list	= [];
 			foreach( $this->panels as $panelId => $panel ){
 				$input	= UI_HTML_Tag::create( 'input', NULL, array(
 					'type'		=> 'checkbox',

@@ -10,7 +10,7 @@ class Hook_UI_CookieWarning extends CMF_Hydrogen_Hook
 			if( !$cookie->has( 'acceptCookies' ) ){
 				$words		= $env->getLanguage()->getWords( 'cookiewarning' );
 				$text		= $words['warning']['label'];
-				$buttons	= array();
+				$buttons	= [];
 				$buttons[]	= UI_HTML_Tag::create( 'button', $words['warning']['buttonAccept'], array(
 					'class'		=> 'btn btn-mini not-btn-primary',
 					'onclick'	=> 'acceptCookies();',

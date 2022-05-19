@@ -1,7 +1,7 @@
 <?php
 
 $wf		= (object) $words['index'];
-$rows	= array();
+$rows	= [];
 if( !$hasCache )
 	return '<div class="hint">'.$wf->hintNoCache.'</div>';
 

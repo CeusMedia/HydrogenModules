@@ -1,6 +1,6 @@
 <?php
-class View_Helper_Mangopay_Entity_CardProviderLogo extends View_Helper_Mangopay_Abstract{
-
+class View_Helper_Mangopay_Entity_CardProviderLogo extends View_Helper_Mangopay_Abstract
+{
 	protected $nodeClass	= NULL;
 	protected $nodeName		= 'div';
 	protected $provider		= 'Visa';
@@ -10,11 +10,18 @@ class View_Helper_Mangopay_Entity_CardProviderLogo extends View_Helper_Mangopay_
 	const SIZE_MEDIUM		= 'medium';
 	const SIZE_LARGE		= 'large';
 
-	public function __onInit(){
-		$this->setSize( self::SIZE_MEDIUM );
+	public static function renderStatic( CMF_Hydrogen_Environment $env, $number, $nodeName = NULL, $nodeClass = NULL )
+	{
+		$instance	= new View_Helper_Mangopay_Entity_CardNumber( $env );
+		if( $nodeName !== NULL )
+			$this->setNodeName( $nodeName );
+		if( $nodeClass !== NULL )
+			$this->setNodeClass( $nodeClass );
+		return $instance->set( $number )->render();
 	}
 
-	public function render(){
+	public function render()
+	{
 		$path		= 'images/paymentProviderLogo/'.$this->size.'/';
 		$path		.= strtolower( $this->provider ).'-1.png';
 		$image		= UI_HTML_Tag::create( 'img', NULL, array(
@@ -25,26 +32,20 @@ class View_Helper_Mangopay_Entity_CardProviderLogo extends View_Helper_Mangopay_
 		) );
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $number, $nodeName = NULL, $nodeClass = NULL ){
-		$instance	= new View_Helper_Mangopay_Entity_CardNumber( $env );
-		if( $nodeName !== NULL )
-			$this->setNodeName( $nodeName );
-		if( $nodeClass !== NULL )
-			$this->setNodeClass( $nodeClass );
-		return $instance->set( $number )->render();
-	}
-
-	public function setNodeClass( $classNames ){
+	public function setNodeClass( $classNames )
+	{
 		$this->nodeClass	= $classNames;
 		return $this;
 	}
 
-	public function setNodeName( $nodeName ){
+	public function setNodeName( $nodeName )
+	{
 		$this->nodeName	= $nodeName;
 		return $this;
 	}
 
-	public function setProvider( $provider ){
+	public function setProvider( $provider )
+	{
 		$this->provider	= $provider;
 		return $this;
 	}
@@ -53,5 +54,9 @@ class View_Helper_Mangopay_Entity_CardProviderLogo extends View_Helper_Mangopay_
 		$this->size	= $size;
 		return $this;
 	}
+
+	protected function __onInit()
+	{
+		$this->setSize( self::SIZE_MEDIUM );
+	}
 }
-?>

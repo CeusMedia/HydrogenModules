@@ -18,7 +18,7 @@ class Logic_Info_Dashboard extends CMF_Hydrogen_Logic
 	 *	@return		integer			ID of new user dashboard
 	 *	@throws		InvalidArgumentException		if given panels is neither an array nor a valid string
 	 */
-	public function addUserDashboard( $userId, string $title, string $description, array $panels = array(), bool $select = FALSE )
+	public function addUserDashboard( $userId, string $title, string $description, array $panels = [], bool $select = FALSE )
 	{
 		if( is_string( $panels ) )
 			$panels		= strlen( trim( $panels ) ) ? explode( ',', $panels ) : array();
@@ -170,7 +170,7 @@ class Logic_Info_Dashboard extends CMF_Hydrogen_Logic
 	 *	@throws		DomainException					if user is not having a current dashboard
 	 *	@throws		InvalidArgumentException		if given panels is neither an array nor a valid string
 	 */
-	public function setUserPanels( $userId, array $panels = array() ): bool
+	public function setUserPanels( $userId, array $panels = [] ): bool
 	{
 		$dashboard	= $this->getUserDashboard( $userId );
 		if( is_string( $panels ) )

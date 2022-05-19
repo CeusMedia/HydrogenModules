@@ -12,7 +12,7 @@ switch( (int) $filterModuleScope ){
 		break;
 	case 0;
 	default:
-		$filters	= array();
+		$filters	= [];
 		break;
 }
 

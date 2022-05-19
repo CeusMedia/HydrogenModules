@@ -7,25 +7,6 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller
 	protected $appPath;
 	protected $appUrl;
 
-	public function __onInit()
-	{
-		$this->request			= $this->env->getRequest();
-		$this->messenger		= $this->env->getMessenger();
-		$this->modelTemplate	= new Model_Mail_Template( $this->env );
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
-			$frontend	= Logic_Frontend::getInstance( $this->env );
-			$this->appPath	= $frontend->getPath();
-			$this->appUrl	= $frontend->getUri();
-		}
-		else{
-			$this->appPath	= $this->env->uri;
-			$this->appUrl	= $this->env->url;
-		}
-		$this->addData( 'appPath', $this->appPath );
-		$this->addData( 'appUrl', $this->appUrl );
-		$logicMail	= Logic_Mail::getInstance( $this->env );
-	}
-
 	public function add()
 	{
 		if( $this->request->has( 'save' ) ){
@@ -296,7 +277,26 @@ class Controller_Admin_Mail_Template extends CMF_Hydrogen_Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function checkTemplate( $templateId, $strict = TRUE )
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->messenger		= $this->env->getMessenger();
+		$this->modelTemplate	= new Model_Mail_Template( $this->env );
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			$frontend	= Logic_Frontend::getInstance( $this->env );
+			$this->appPath	= $frontend->getPath();
+			$this->appUrl	= $frontend->getUri();
+		}
+		else{
+			$this->appPath	= $this->env->uri;
+			$this->appUrl	= $this->env->url;
+		}
+		$this->addData( 'appPath', $this->appPath );
+		$this->addData( 'appUrl', $this->appUrl );
+		$logicMail	= Logic_Mail::getInstance( $this->env );
+	}
+
+	protected function checkTemplate( $templateId, bool $strict = TRUE )
 	{
 		$template	= $this->modelTemplate->get( $templateId );
 		if( $template )

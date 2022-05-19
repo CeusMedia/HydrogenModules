@@ -19,7 +19,7 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$issue		= $this->data['issue'];
-		$message	= array();
+		$message	= [];
 		if( $issue->reporterId ){
 			$reporter	= $this->renderUser( $issue->reporter, TRUE );
 			$message[]	= $reporter.' hat einen neuen Problemreport geschrieben.';
@@ -55,7 +55,7 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$issue		= $this->data['issue'];
-		$message	= array();
+		$message	= [];
 		if( $issue->reporterId )
 			$message[]	= $this->renderUser( $issue->reporter, FALSE ).' hat einen neuen Problemreport geschrieben.';
 		else
@@ -72,7 +72,7 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 '.View_Helper_Mail_Text::underscore( 'Informationen' ).PHP_EOL.'
 '.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.'';
 
-		$list	= array();
+		$list	= [];
 		foreach( explode( PHP_EOL, $body ) as $nr => $line )
 			$list[]	= View_Helper_Mail_Text::indent( $line, 0, 76 );
 		return join( PHP_EOL, $list );

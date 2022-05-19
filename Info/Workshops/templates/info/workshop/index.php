@@ -15,7 +15,7 @@ $imageAlignV	= array(
 
 $list	= '<em>Momentan werden keine Workshops angeboten.</em>';
 if( $workshops ){
-	$list	= array();
+	$list	= [];
 	foreach( $workshops as $workshop ){
 		$list[]	= UI_HTML_Tag::create( 'div', array(
 			UI_HTML_Tag::create( 'div', array(

@@ -6,7 +6,7 @@ class Model_Instance{
 
 	public function __construct( $env ){
 		$this->env		= $env;
-		$this->data		= array();
+		$this->data		= [];
 		$this->fileName	= 'config/instances.json';
 		if( !file_exists( $this->fileName ) ){
 			FS_File_Writer::save( $this->fileName, '[]' );
@@ -57,7 +57,7 @@ class Model_Instance{
 	}
 
 	public function getAll(){
-		$list		= array();
+		$list		= [];
 		foreach( $this->data as $id => $data ){
 			$data->path		= empty( $data->path ) ? '' : $data->path;
 			$data->protocol	= empty( $data->protocol ) ? 'http://' : $data->protocol;

@@ -9,7 +9,7 @@ class Hook_Resource_Mail extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
 	{
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){
@@ -58,7 +58,7 @@ class Hook_Resource_Mail extends CMF_Hydrogen_Hook
 		$indices	= array( 'receiverId' => $data->userId );
 		if( $activeOnly )
 			$indices['status']	= $statusesActive;
-		$list		= array();
+		$list		= [];
 		$mails	 	= $modelMail->getAll( $indices, $orders, array(), $fields );
 		foreach( $mails as $mail )
 			$list[]		= (object) array(
@@ -79,7 +79,7 @@ class Hook_Resource_Mail extends CMF_Hydrogen_Hook
 		$indices	= array( 'senderId' => $data->userId );
 		if( $activeOnly )
 			$indices['status']	= $statusesActive;
-		$list		= array();
+		$list		= [];
 
 		$mails	 	= $modelMail->getAll( $indices, $orders, array(), $fields );
 		foreach( $mails as $mail )
@@ -106,7 +106,7 @@ class Hook_Resource_Mail extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
 	{
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){

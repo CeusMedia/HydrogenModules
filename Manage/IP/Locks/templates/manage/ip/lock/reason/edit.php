@@ -41,7 +41,7 @@ $optStatus	= UI_HTML_Elements::Options( array(
 
 $list	= '<div><em><small>Keine Filter vorhanden.</small></em></div>';
 if( $reason->filters ){
-	$list	= array();
+	$list	= [];
 	foreach( $reason->filters as $filter ){
 		$link	= UI_HTML_Tag::create( 'a', $filter->title, array(
 			'href'	=> './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId

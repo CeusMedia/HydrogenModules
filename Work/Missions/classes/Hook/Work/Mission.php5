@@ -8,7 +8,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		Model_Mission::STATUS_READY,
 	);
 
-	static public function onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$model		= new Model_Mission_Document( $env );
 		$conditions	= array( 'modifiedAt' => '> '.( time() - 30 * 24 * 60 * 60 ) );
@@ -26,7 +26,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		}
 	}
 
-	static public function onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$context->registerModule( (object) array(
 			'moduleId'		=> 'Work_Missions',
@@ -36,7 +36,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		) );
 	}
 
-	static public function onDatabaseLockReleaseCheck( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onDatabaseLockReleaseCheck( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$data	= (object) $payload;
 		$controllerAction	= $data->controller.'/'.$data->action;
@@ -63,7 +63,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		}
 	}
 
-	static public function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$data				= (object) $payload;
 		$data->informOthers	= isset( $data->informOthers ) ? $data->informOthers : FALSE;
@@ -86,7 +86,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		}
 	}
 
-	static public function onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$data			= (object) $payload;
 		$modelProject	= new Model_Project( $env );
@@ -106,7 +106,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		$modelMission	= new Model_Mission( $env );
 		$words			= $env->getLanguage()->getWords( 'work/mission' );
 
-		$list			= array();
+		$list			= [];
 		$indices		= array( 'projectId' => $data->projectId );
 		if( $data->activeOnly )
 			$indices['status']	= self::$statusesActive;
@@ -140,7 +140,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		);
 	}
 
-	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$data		= (object) $payload;
 		if( empty( $data->userId ) ){
@@ -152,7 +152,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		$modelProject	= new Model_Project( $env );
 		$words			= $env->getLanguage()->getWords( 'work/mission' );
 
-		$projectIds		= array();
+		$projectIds		= [];
 		$projects		= $logic->getUserProjects( $data->userId, FALSE );
 		foreach( $projects as $project ){
 			$users		= $logic->getProjectUsers( $project->projectId );
@@ -165,7 +165,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 			return;
 		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
 		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
-		$list			= array();
+		$list			= [];
 		$modelMission	= new Model_Mission( $env );
 		$indices		= array( 'projectId' => $projectIds );
 		if( $data->activeOnly )
@@ -201,7 +201,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 			);
 	}
 
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$data				= (object) $payload;
 		$data->informOthers	= isset( $data->informOthers ) ? $data->informOthers : FALSE;
@@ -222,7 +222,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 
 		$nrMissionsRemoved	= 0;
 		$nrMissionsChanged	= 0;
-		$projectIds		= array();
+		$projectIds		= [];
 		$projects		= $logicProject->getUserProjects( $data->userId, FALSE );
 		foreach( $projects as $project ){
 			$users		= $logicProject->getProjectUsers( $project->projectId );
@@ -274,7 +274,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 			);
 	}
 
-	static public function onStartTimer( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onStartTimer( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$timer	= $payload['timer'];
 		if( $timer->module === 'Work_Missions' && $timer->moduleId ){
@@ -286,17 +286,17 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		}
 	}
 
-	static public function onPauseTimer( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onPauseTimer( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 //		self::___onStartTimer( $env, $context, $module, $data );
 	}
 
-	static public function onStopTimer( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onStopTimer( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 //		self::___onStartTimer( $env, $context, $module, $data );
 	}
 
-	static public function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$context->registerPanel( 'work-mission-my-today', array(
 			'url'		=> 'work/mission/ajaxRenderDashboardPanel',

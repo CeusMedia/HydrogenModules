@@ -6,7 +6,7 @@ class Controller_Info_Event extends CMF_Hydrogen_Controller
 		$location	= "04109 Leipzig";
 		$range		= 10;
 
-		$events		= array();
+		$events		= [];
 		$geocoder	= new Logic_Geocoder( $this->env );
 		try{
 			$parts		= preg_split( "/\s+/", $location );
@@ -70,7 +70,7 @@ class Controller_Info_Event extends CMF_Hydrogen_Controller
 		$location	= "04109 Leipzig";
 		$range		= 10;
 
-		$events		= array();
+		$events		= [];
 		$center		= NULL;
 		if( $location && $range ){
 			$geocoder	= new Logic_Geocoder( $this->env );

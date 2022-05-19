@@ -227,7 +227,7 @@ class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 	}
 
 	public function getProducts( $status = NULL ){
-		$indices	= array();
+		$indices	= [];
 		if( $status !== NULL )
 			$indices['status']	= $status;
 		$orders		= array( 'rank' => 'ASC', 'title' => 'ASC' );

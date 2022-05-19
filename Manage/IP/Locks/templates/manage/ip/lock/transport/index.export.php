@@ -2,7 +2,7 @@
 
 $iconDownload	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fw fa-download' ) );
 
-$listReasons	= array();
+$listReasons	= [];
 foreach( $reasons as $reason ){
 	$listReasons[]	= UI_HTML_Tag::create( 'li', array(
 		UI_HTML_Tag::create( 'label', array(
@@ -28,7 +28,7 @@ $listReasons	= UI_HTML_Tag::create( 'ul', $listReasons, array(
 	'style'		=> 'padding-left: 1.5em;',
 ) );
 
-$listFilters	= array();
+$listFilters	= [];
 foreach( $filters as $filter ){
 	$listFilters[]	= UI_HTML_Tag::create( 'li', array(
 		UI_HTML_Tag::create( 'label', array(

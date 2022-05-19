@@ -65,12 +65,12 @@ class Controller_Work_Billing_Expense extends CMF_Hydrogen_Controller
 		$expenses	= $this->logic->getExpenses();
 		$this->addData( 'expenses', $expenses );
 
-		$corporations	= array();
+		$corporations	= [];
 		foreach( $this->logic->getCorporations() as $corporation )
 			$corporations[$corporation->corporationId]	= $corporation;
 		$this->addData( 'corporations', $corporations );
 
-		$persons	= array();
+		$persons	= [];
 		foreach( $this->logic->getPersons() as $person )
 			$persons[$person->personId]	= $person;
 		$this->addData( 'persons', $persons );

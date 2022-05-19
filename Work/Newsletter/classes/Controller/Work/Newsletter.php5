@@ -121,7 +121,7 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller
 		$newsletter		= $this->logic->getNewsletter( $newsletterId );
 		$template		= $this->logic->getTemplate( $newsletter->newsletterTemplateId );
 		$templates		= $this->logic->getTemplates( array( 'status' => '> 0' ), array( 'title' => 'ASC' ) );
-		$groups			= array();
+		$groups			= [];
 		foreach( $this->logic->getGroups( array( 'status' => 1 ), array( 'title' => 'ASC' ) ) as $group ){
 			$group->readers	= $this->logic->getGroupReaders( $group->newsletterGroupId );
 			$groups[$group->newsletterGroupId]	= $group;
@@ -130,9 +130,9 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller
 		$model			= new Model_Newsletter_Reader_Group( $this->env );
 		$groupIds		= $this->request->get( 'groupIds' );
 		if( !$groupIds )
-			$groupIds	= array();
+			$groupIds	= [];
 
-		$readers		= array();
+		$readers		= [];
 		if( $groupIds ){
 			foreach( $groupIds as $groupId )
 				foreach( $this->logic->getGroupReaders( $groupId ) as $reader )
@@ -250,7 +250,7 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller
 		$filterStatus	= $this->session->get( $this->filterPrefix.'status' );
 		$filterLimit	= $this->session->get( $this->filterPrefix.'limit' );
 
-		$conditions	= array();
+		$conditions	= [];
 		if( strlen( $filterTitle ) )
 			$conditions['title']	= '%'.$filterTitle.'%';
 		if( strlen( $filterStatus ) )
@@ -378,7 +378,7 @@ class Controller_Work_Newsletter extends CMF_Hydrogen_Controller
 			$this->messenger->noteError( 'No receivers selected.' );
 			$this->restart( 'edit/'.$newsletterId, TRUE );
 		}
-		$readerLetterIds	= array();
+		$readerLetterIds	= [];
 		foreach( $readerIds as $readerId )
 			$this->logic->sendTestLetter( $newsletterId, $readerId );
 		$this->messenger->noteSuccess( $w->msgSuccess, count( $readerIds ) );

@@ -14,7 +14,7 @@ $runReportChannelLabels	= $wordsGeneral['job-run-report-channels'];
 
 //  --  PANEL FACTS: JOB  -- //
 $helperAttribute->setObject( $run );
-$facts	= array();
+$facts	= [];
 $facts['Title']				= $run->title ? $run->title : $definition->identifier;
 $facts['Run ID']			= $run->jobRunId;
 $facts['Process ID']		= $run->processId;
@@ -38,7 +38,7 @@ if( $run->arguments )
 	$facts['Arguments']			= $run->arguments;
 if( $run->reportMode ){
 	$facts['Report Channel']	= $runReportChannelLabels[$run->reportChannel];
-	$reportReceivers	= array();
+	$reportReceivers	= [];
 	if( $run->reportReceivers ){
 		foreach( preg_split( '/\s*,\s*/', $run->reportReceivers ) as $receiver )
 		$reportReceivers	= UI_HTML_Tag::create( 'li', $receiver );
@@ -53,7 +53,7 @@ if( in_array( $run->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::
 	}
 }
 
-$list	= array();
+$list	= [];
 foreach( $facts as $factKey => $factValue ){
 	$list[]	= UI_HTML_Tag::create( 'dt', $factKey );
 	$list[]	= UI_HTML_Tag::create( 'dd', $factValue );
@@ -100,7 +100,7 @@ function formatNumber( $number ): string
 
 //  --  PANEL FACTS: DEFINITION  -- //
 $helperAttribute->setObject( $definition );
-$facts	= array();
+$facts	= [];
 $facts['Identifier']	= UI_HTML_Tag::create( 'a', $definition->identifier, array( 'href' => './manage/job/definition/view/'.$definition->jobDefinitionId ) );
 $facts['Job-ID']		= UI_HTML_Tag::create( 'a', $definition->jobDefinitionId, array( 'href' => './manage/job/definition/view/'.$definition->jobDefinitionId ) );
 $facts['Mode']			= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_MODE )->render();
@@ -115,7 +115,7 @@ if( $definition->modifiedAt )
 if( $definition->lastRunAt )
 	$facts['Last Run At']	= date( 'd.m.Y H:i:s', $definition->lastRunAt );
 
-$list	= array();
+$list	= [];
 foreach( $facts as $factKey => $factValue ){
 	$list[]	= UI_HTML_Tag::create( 'dt', $factKey );
 	$list[]	= UI_HTML_Tag::create( 'dd', $factValue );

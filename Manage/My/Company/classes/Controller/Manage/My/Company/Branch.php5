@@ -1,6 +1,6 @@
 <?php
-class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller
+{
 	protected $userId;
 	protected $messenger;
 	protected $request;
@@ -13,23 +13,10 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 	protected $companies;
 	protected $user;
 
-	public function __onInit(){
-		$this->messenger	= $this->env->getMessenger();
-		$this->request		= $this->env->getRequest();
-		$this->modelBranch		= new Model_Branch( $this->env );
-		$this->modelBranchImage	= new Model_Branch_Image( $this->env );
-		$this->modelCompany		= new Model_Company( $this->env );
-		$this->modelCompanyUser	= new Model_Company_User( $this->env );
-		$this->modelUser		= new Model_User( $this->env );
-		$this->userId			= $this->env->getSession()->get( 'auth_user_id' );
-		$this->user				= $this->checkCurrentUser();
-		$this->companies		= $this->getMyCompanies();
-		$this->branches			= $this->getMyBranches();
-	}
-
-	public function add( $companyId = NULL ){
-		$words			= (object) $this->getWords( 'msg' );
-		$data			= $this->request->getAllFromSource( 'POST' );
+	public function add( $companyId = NULL )
+	{
+		$words		= (object) $this->getWords( 'msg' );
+		$data		= $this->request->getAllFromSource( 'POST' );
 
 		if( $this->request->get( 'save' ) ){
 			if( empty( $data['title'] ) )
@@ -71,7 +58,8 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->view->addData( 'companies', $this->companies );
 	}
 
-	public function addImage( $branchId ){
+	public function addImage( $branchId )
+	{
 		$this->checkBranch( $branchId );
 		$image		= $this->request->get( 'image' );
 		try{
@@ -102,26 +90,6 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->restart( 'edit/'.$branchId, TRUE );
 	}
 
-	protected function checkBranch( $branchId ){
-		if( !$this->modelBranch->get( $branchId ) ){
-			$words	= (object) $this->getWords( 'msg' );
-			$this->messenger->noteError( $words->errorBranchInvalid );
-			$this->restart( NULL, TRUE );
-		}
-		if( !$this->isMyBranch( $branchId ) ){
-			$this->messenger->noteError( $words->errorBranchNotOwned );
-			$this->restart( NULL, TRUE );
-		}
-		return $this->branches[$branchId];
-	}
-
-	protected function checkCurrentUser(){
-		$user		= $this->modelUser->get( $this->userId );
-		if( !$user )
-			$this->restart();
-		return $user;
-	}
-
 /*	public function delete( $branchId ){
 		$data			= $this->modelBranch->get( $branchId );
 		if( !$data ){
@@ -133,7 +101,8 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}*/
 
-	public function edit( $branchId ){
+	public function edit( $branchId )
+	{
 		$words			= (object) $this->getWords( 'msg' );
 		$branch			= $this->checkBranch( $branchId );
 
@@ -171,30 +140,9 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->view->addData( 'companies', $this->companies );
 	}
 
-	protected function getMyBranches( $sortByColumn = 'branchId' ){
-		$list		= array();
-		foreach( $this->getMyCompanies() as $company ){
-			$branches	= $this->modelBranch->getAllByIndex( 'companyId', $company->companyId );
-			foreach( $branches as $branch ){
-				$branch->company				= $company;
-				$list[$branch->{$sortByColumn}]	= $branch;
-			}
-		}
-		ksort( $list );
-		return $list;
-	}
 
-	protected function getMyCompanies( $sortByColumn = 'companyId' ){
-		$list		= array();
-		$relations	= $this->modelCompanyUser->getAllByIndex( 'userId', $this->userId );
-		foreach( $relations as $relation ){
-			$company	= $this->modelCompany->get( $relation->companyId );
-			$list[$company->{$sortByColumn}]	= $company;
-		}
-		return $list;
-	}
-
-	public function index(){
+	public function index()
+	{
 		$words		= (object) $this->getWords( 'index' );
 		$branches	= $this->getMyBranches( 'title' );
 		if( count( $branches ) === 1 ){
@@ -203,18 +151,11 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->view->addData( 'branches', $branches );
 	}
 
-	protected function isMyBranch( $branchId ){
-		return array_key_exists( $branchId, $this->branches );
-	}
-
-	protected function isMyCompany( $companyId ){
-		return array_key_exists( $companyId, $this->companies );
-	}
-
 	/**
 	 *	@todo		check ownership of branch
 	 */
-	public function removeImage( $branchId, $imageId ){
+	public function removeImage( $branchId, $imageId )
+	{
 		$model			= new Model_Branch_Image( $this->env );
 		$words			= (object) $this->getWords( 'msg' );
 
@@ -230,5 +171,76 @@ class Controller_Manage_My_Company_Branch extends CMF_Hydrogen_Controller{
 		}
 		$this->restart( 'edit/'.$branchId, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->messenger		= $this->env->getMessenger();
+		$this->request			= $this->env->getRequest();
+		$this->modelBranch		= new Model_Branch( $this->env );
+		$this->modelBranchImage	= new Model_Branch_Image( $this->env );
+		$this->modelCompany		= new Model_Company( $this->env );
+		$this->modelCompanyUser	= new Model_Company_User( $this->env );
+		$this->modelUser		= new Model_User( $this->env );
+		$this->userId			= $this->env->getSession()->get( 'auth_user_id' );
+		$this->user				= $this->checkCurrentUser();
+		$this->companies		= $this->getMyCompanies();
+		$this->branches			= $this->getMyBranches();
+	}
+
+	protected function checkBranch( $branchId )
+	{
+		if( !$this->modelBranch->get( $branchId ) ){
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorBranchInvalid );
+			$this->restart( NULL, TRUE );
+		}
+		if( !$this->isMyBranch( $branchId ) ){
+			$this->messenger->noteError( $words->errorBranchNotOwned );
+			$this->restart( NULL, TRUE );
+		}
+		return $this->branches[$branchId];
+	}
+
+	protected function checkCurrentUser()
+	{
+		$user		= $this->modelUser->get( $this->userId );
+		if( !$user )
+			$this->restart();
+		return $user;
+	}
+
+	protected function getMyBranches( $sortByColumn = 'branchId' ): array
+	{
+		$list		= [];
+		foreach( $this->getMyCompanies() as $company ){
+			$branches	= $this->modelBranch->getAllByIndex( 'companyId', $company->companyId );
+			foreach( $branches as $branch ){
+				$branch->company				= $company;
+				$list[$branch->{$sortByColumn}]	= $branch;
+			}
+		}
+		ksort( $list );
+		return $list;
+	}
+
+	protected function getMyCompanies( $sortByColumn = 'companyId' ): array
+	{
+		$list		= [];
+		$relations	= $this->modelCompanyUser->getAllByIndex( 'userId', $this->userId );
+		foreach( $relations as $relation ){
+			$company	= $this->modelCompany->get( $relation->companyId );
+			$list[$company->{$sortByColumn}]	= $company;
+		}
+		return $list;
+	}
+
+	protected function isMyBranch( $branchId ): bool
+	{
+		return array_key_exists( $branchId, $this->branches );
+	}
+
+	protected function isMyCompany( $companyId ): bool
+	{
+		return array_key_exists( $companyId, $this->companies );
+	}
 }
-?>

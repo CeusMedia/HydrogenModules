@@ -11,7 +11,7 @@ $tabs	= array(
 );
 
 $currentTab		= $this->env->getSession()->get( 'module.manage_galleries.tab' );
-$listTabs		= array();
+$listTabs		= [];
 foreach( $tabs as $nr => $tab ){
 	$attributes	= array( 'href' => '#tab'.++$nr, 'data-toggle' => 'tab' );
 	$link		= UI_HTML_Tag::create( 'a', $tab, $attributes );

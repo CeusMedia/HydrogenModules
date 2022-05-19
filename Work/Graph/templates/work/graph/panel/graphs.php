@@ -1,6 +1,6 @@
 <?php
 
-$listGraphs	= array();
+$listGraphs	= [];
 foreach( $graphs as $graph ){
 	$class		= $graphId == $graph->graphId ? 'active' : '';
 	$link		= UI_HTML_Tag::create( 'a', $graph->title, array(

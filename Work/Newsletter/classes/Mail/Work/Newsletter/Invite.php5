@@ -20,7 +20,7 @@ class Mail_Work_Newsletter_Invite extends Mail_Abstract
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
 
-		$groups	= array();
+		$groups	= [];
 		foreach( $data['groups'] as $item )
 			$groups[]	= UI_HTML_Tag::create( 'li', $item->title );
 
@@ -41,7 +41,7 @@ class Mail_Work_Newsletter_Invite extends Mail_Abstract
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
 
-		$groups	= array();
+		$groups	= [];
 		foreach( $data['groups'] as $item )
 			$groups[]	= '- '.$item->title;
 

@@ -4,7 +4,7 @@ $w		= (object) $words['addImage'];
 
 $panelCategories	= $view->loadTemplateFile( 'manage/catalog/gallery/index.categories.php' );
 
-$optCategory	= array();
+$optCategory	= [];
 foreach( $categories as $item )
 	$optCategory[$item->galleryCategoryId]  = $item->title;
 $optCategory	= UI_HTML_Elements::Options( $optCategory, $categoryId );

@@ -38,7 +38,7 @@ if( !$reader ){
 
 $listGroups	= UI_HTML_Tag::create( 'em', 'Keine Bereiche mehr abonniert.', array( 'class' => 'muted' ) );
 if( $groups ){
-	$list	= array();
+	$list	= [];
 	foreach( $groups as $group ){
 		$isRegisteredGroup	= array_key_exists( $group->newsletterGroupId, $reader->groups );
 		$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(

@@ -3,10 +3,10 @@ class View_Helper_Info_Event_Calendar
 {
 	protected $env;
 	protected $logic;
-	protected $projects	= array();
+	protected $projects	= [];
 	protected $today;
 	protected $words;
-	protected $events	= array();
+	protected $events	= [];
 
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{
@@ -28,9 +28,9 @@ class View_Helper_Info_Event_Calendar
 		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
 		$orders			= array( 'priority' => 'ASC' );
 
-		$rows			= array();
+		$rows			= [];
 		for( $i=0; $i<$weeks; $i++ ){
-			$row	= array();
+			$row	= [];
 			$j	= 0;
 			$class	= '';
 			if( $i == 0 ){
@@ -68,9 +68,9 @@ class View_Helper_Info_Event_Calendar
 		$tableLarge	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
 
 
-		$rows			= array();
+		$rows			= [];
 		for( $i=0; $i<$weeks; $i++ ){
-			$row	= array();
+			$row	= [];
 			$j		= 0;
 			$class	= '';
 			if( $i == 0 ){
@@ -199,7 +199,7 @@ $(document).ready(function(){
 		$isPast		= $diff->invert;
 		$isToday	= $diff->days == 0;
 		$conditions	= array( 'dayStart' => $date->format( "Y-m-d" ), 'status' => array( 0, 1, 2, 3 ) );
-		$list		= array();
+		$list		= [];
 		foreach( $this->events as $event ){
 			$eventDate	= new DateTime( $event->dateStart );
 			if( $eventDate->diff( $date )->days !== 0 )

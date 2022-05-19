@@ -3,7 +3,7 @@
 /*
 $list		= '<div><em><small class="muted">Noch keine vorhanden.</small></em></div>';
 if( $users ){
-	$list	= array();
+	$list	= [];
 	foreach( $users as $user ){
 		$link	= UI_HTML_Tag::create( 'a', $user->username, array(
 			'href'	=> './member/view/'.$user->userId,
@@ -38,7 +38,7 @@ $panelList	= '';
 if( $username ){
 	$list	= '<div><em><small class="muted">Keine gefunden.</small></em></div><br/>';
 	if( $users ){
-		$list	= array();
+		$list	= [];
 		$helperMember	= new View_Helper_Member( $env );
 		$helperMember->setLinkUrl( './member/view/%d' );
 		$helperMember->setMode( 'thumbnail' );
@@ -61,7 +61,7 @@ if( $username ){
 $panelAdvice	= "";
 if( isset( $advices ) && $advices ){
 //	$list	= '<div><em><small class="muted">Keine.</small></em></div><br/>';
-	$list	= array();
+	$list	= [];
 	foreach( $advices as $advice ){
 
 	}

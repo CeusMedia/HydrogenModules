@@ -57,7 +57,7 @@ class Controller_Info_News extends CMF_Hydrogen_Controller
 			array( 'status' => 1 ),
 			array( 'newsId' => 'DESC' )
 		);
-		$list	= array();
+		$list	= [];
 		foreach( $news as $entry ){
 			if( $entry->startsAt && (int)time() < (int)$entry->startsAt )
 				continue;

@@ -5,7 +5,7 @@ $iconRun		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' )
 $iconStop		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) );
 $iconRefresh	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
 
-$list	= array();
+$list	= [];
 
 $buttonRunDisabled	= UI_HTML_Tag::create( 'button', $iconRun.'&nbsp;starten&nbsp;', array(
 	'type'	=> 'button',
@@ -108,7 +108,7 @@ $labelLetterButtonRemove	= '<i class="icon-remove icon-white"></i> '.$words->edi
 $labelLetterButtonView		= '<i class="icon-eye-open"></i> '.$words->edit->buttonQueueView;
 $table						= '<em><small class="muted">Keine offenen Vorgänge vorhanden.</small></em>';
 if( $letterQueue ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $letterQueue as $readerLetter ){
 		if( $readerLetter->status != 0 )
 			continue;

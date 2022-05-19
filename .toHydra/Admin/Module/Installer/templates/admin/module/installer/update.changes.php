@@ -3,7 +3,7 @@ if( !$moduleSource->versionLog )
 	return '';
 
 $w			= (object) $words['update'];
-$changes	= array();
+$changes	= [];
 foreach( $moduleSource->versionLog as $entry ){
 	$isNewer	= version_compare( $entry->version, $moduleLocal->version ) > 0;
 	$class		= $isNewer ? 'new' : 'old';

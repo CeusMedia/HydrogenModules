@@ -64,7 +64,7 @@ die;*/
 
 	public function index( $page = 0 )
 	{
-		$definitionMap	= array();
+		$definitionMap	= [];
 		$definitions	= $this->modelDefinition->getAll( array(), array( 'identifier' => 'ASC' ) );
 		foreach( $definitions as $definition )
 			$definitionMap[$definition->jobDefinitionId]	= $definition;
@@ -79,7 +79,7 @@ die;*/
 		$filterArchived		= $this->session->get( $this->filterPrefix.'archived' );
 
 		if( $filterStatus === Model_Job_Run::STATUSES )
-			$filterStatus	= array();
+			$filterStatus	= [];
 
 		$conditions	= array(
 			'archived'	=> (int) $filterArchived,
@@ -89,7 +89,7 @@ die;*/
 		if( strlen( $filterType ) && in_array( $filterType, Model_Job_Run::TYPES ) )
 			$conditions['type']			= $filterType;
 
-		$definitionIds	= array();
+		$definitionIds	= [];
 		if( $filterJobId )
 			$definitionIds	= array( $filterJobId );
 		if( $filterClassName )

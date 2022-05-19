@@ -7,7 +7,7 @@ class Model_Job
 	const FORMAT_MODULE		= 3;
 
 	protected $pathJobs		= 'config/jobs/';
-	protected $jobs			= array();
+	protected $jobs			= [];
 	protected $format		= 0;
 
 	public function __construct( CMF_Hydrogen_Environment $env )
@@ -22,9 +22,9 @@ class Model_Job
 		throw new RangeException( 'Job with ID "'.$jobId.'" is not existing' );
 	}
 
-	public function getAll( $conditions = array() ): array
+	public function getAll( $conditions = [] ): array
 	{
-		$list	= array();
+		$list	= [];
 		foreach( $this->jobs as $jobId => $job ){
 			foreach( $conditions as $key => $value ){
 				if( is_array( $value ) ){
@@ -55,12 +55,12 @@ class Model_Job
 
 	public function getByInterval( $interval = NULL ): array
 	{
-		$intervals	= array();
+		$intervals	= [];
 		foreach( $this->jobs as $jobId => $job ){
 			if( !$job->interval )
 				continue;
 			if( !in_array( $job->interval, $intervals ) )
-				$intervals[$job->interval]	= array();
+				$intervals[$job->interval]	= [];
 			$intervals[$job->interval][$jobId]	= $job;
 		}
 		if( $interval ){
@@ -78,7 +78,7 @@ class Model_Job
 
 	public function load( array $modes, bool $strict = TRUE ): self
 	{
-		$this->jobs	= array();
+		$this->jobs	= [];
 		if( $this->format === static::FORMAT_XML ){
 			foreach( self::readJobsFromXmlFiles( $this->pathJobs, $modes ) as $jobId => $job ){
 				if( $strict && array_key_exists( $jobId, $this->jobs ) )
@@ -109,9 +109,9 @@ class Model_Job
 		return $this;
 	}
 
-	public function readJobsFromJsonFile( string $pathName, $modes = array() ): array
+	public function readJobsFromJsonFile( string $pathName, $modes = [] ): array
 	{
-		$jobs			= array();
+		$jobs			= [];
 		$json	= \FS_File_JSON_Reader::load( $pathName, FALSE );
 		foreach( $json as $jobId => $job ){
 			$job->id		= $jobId;
@@ -128,9 +128,9 @@ class Model_Job
 		return $jobs;
 	}
 
-	public function readJobsFromXmlFile( string $pathName, $modes = array() ): array
+	public function readJobsFromXmlFile( string $pathName, $modes = [] ): array
 	{
-		$jobs	= array();
+		$jobs	= [];
 		$xml	= \XML_ElementReader::readFile( $pathName );
 		foreach( $xml->job as $job ){
 			$jobObj				= new \stdClass();
@@ -165,9 +165,9 @@ class Model_Job
 
 	/*  --  PROTECTED  --  */
 
-	protected function readJobsFromJsonFiles( $modes = array() ): array
+	protected function readJobsFromJsonFiles( $modes = [] ): array
 	{
-		$jobs		= array();
+		$jobs		= [];
 		$index			= new \FS_File_RegexFilter( $this->pathJobs, '/\.json$/i' );
 		foreach( $index as $file ){
 			$fileJobs	= $this->readJobsFromJsonFile( $file->getPathname(), $modes );
@@ -182,18 +182,18 @@ class Model_Job
 		return $jobs;
 	}
 
-	protected function readJobsFromModules( $modes = array() ): array
+	protected function readJobsFromModules( $modes = [] ): array
 	{
-		$jobs	= array();
+		$jobs	= [];
 		foreach( $this->env->getModules()->getAll() as $moduleId => $module )
 			foreach( $module->jobs as $job )
 				$jobs[$job->id]	= $job;
 		return $jobs;
 	}
 
-	protected function readJobsFromXmlFiles( $modes = array() ): array
+	protected function readJobsFromXmlFiles( $modes = [] ): array
 	{
-		$jobs			= array();
+		$jobs			= [];
 		$index			= new \FS_File_RegexFilter( $this->pathJobs, '/\.xml$/i' );
 		foreach( $index as $file ){
 			$fileJobs	= $this->readJobsFromXmlFile( $file->getPathname(), $modes );

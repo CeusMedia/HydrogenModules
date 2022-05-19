@@ -23,7 +23,7 @@ $exceptionEnv		= unserialize( $exception->env );
 $exceptionRequest	= unserialize( $exception->request );
 $exceptionSession	= unserialize( $exception->session );
 
-$facts	= array();
+$facts	= [];
 $facts['Message']	= '<big><strong>'.$exception->message.'</strong></big>';
 if( (int) $exception->code != 0 )
 	$facts['Code']	= $exception->code;
@@ -36,7 +36,7 @@ $facts['Environment']	= $exceptionEnv['class'];
 
 
 
-$list	= array();
+$list	= [];
 foreach( $facts as $key => $value )
 	$list[]	= UI_HTML_Tag::create( 'dt', $key ).UI_HTML_Tag::create( 'dd', $value );
 $list	= UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
@@ -64,7 +64,7 @@ if( file_exists( $exception->file ) ){
 	$fileLines	= FS_File_Reader::loadArray( $exception->file );
 	$firstLine	= max( 0, $exception->line - 5 );
 	$fileLines	= array_slice( $fileLines, $firstLine, 11 );
-	$lines		= array();
+	$lines		= [];
 	foreach( $fileLines as $nr => $line ){
 		$lines[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'th', $firstLine + $nr + 1 ),
@@ -114,7 +114,7 @@ return '
 </div>';
 
 function renderMapTable( $map, $sort = TRUE ){
-	$rows	= array();
+	$rows	= [];
 	if( $sort )
 		ksort( $map );
 	foreach( $map as $key => $value ){

@@ -8,7 +8,7 @@ foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject	= UI_HTML_Elements::Options( $optProject, $note->projectId );
 
-$optFormat	= array();
+$optFormat	= [];
 foreach( $words['formats'] as $formatKey => $formatLabel )
 	$optFormat[$formatKey]	= $formatLabel;
 $optFormat	= UI_HTML_Elements::Options( $optFormat, $note->format );

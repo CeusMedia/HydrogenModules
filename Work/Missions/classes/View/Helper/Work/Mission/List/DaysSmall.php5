@@ -14,8 +14,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 			) )
 		) );
 
-		$colgroup		= array();
-		$tableHeads		= array();
+		$colgroup		= [];
+		$tableHeads		= [];
 
 		$colgroup		= UI_HTML_Elements::ColumnGroup( $colgroup );
 		$tableHeads		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) );
@@ -33,10 +33,10 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 	protected $indicator;
 	protected $logic;
 	protected $pathIcons	= 'https://cdn.ceusmedia.de/img/famfamfam/silk/';
-	protected $projects		= array();
+	protected $projects		= [];
 	protected $titleLength	= 80;
 	protected $today;
-	protected $words		= array();
+	protected $words		= [];
 	protected $isEditor;
 	protected $isViewer;
 
@@ -46,7 +46,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$this->indicator	= new UI_HTML_Indicator();
 		$this->logic		= Logic_Work_Mission::getInstance( $env );
 		$this->today		= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
-		$this->projects		= array();
+		$this->projects		= [];
 		$modelProject		= new Model_Project( $this->env );
 		foreach( $modelProject->getAll() as $project )
 			$this->projects[$project->projectId] = $project;
@@ -108,7 +108,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 	}
 
 	public function renderRowButtons( $mission, $days ){
-		$buttons	= array();
+		$buttons	= [];
 		$baseUrl	= './work/mission/changeDay/'.$mission->missionId;
 
 		$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open' ) );
@@ -116,7 +116,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$iconLeft	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
 		$iconRight	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) );
 
-		$list		= array();
+		$list		= [];
 		if( $this->isViewer ){
 			$linkView	= UI_HTML_Tag::create( 'a', $iconView.' anzeigen', array(
 				'href'	=> './work/mission/view/'.$mission->missionId
@@ -255,7 +255,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$worker		= $this->renderUserWithAvatar( $event->workerId );
 		$project	= $event->projectId ? $this->projects[$event->projectId]->title : '-';
 
-		$cells		= array();
+		$cells		= [];
 		if( $showStatus )
 			$cells[]	= UI_HTML_Tag::create( 'td', $times, array( 'class' => 'cell-time' ) );
 		if( $showDate ){
@@ -294,7 +294,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$worker		= '<i class="icon-user"></i> <span>'.$username.'</span>';
 		$project	= '<i class="icon-folder-close"></i> <span>'.$project.'</span>';
 
-//		$cells		= array();
+//		$cells		= [];
 //		if( $showStatus )
 //			$cells[]	= UI_HTML_Tag::create( 'td', $graph, array( 'class' => 'cell-graph' ) );
 //		if( $showDate ){
@@ -338,7 +338,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 	public function renderRows( $day, $showStatus, $showPriority, $showDate, $showActions, $typeOnly = NULL ){
 		if( !count( $this->missions ) )
 			return "";
-		$list	= array();
+		$list	= [];
 		foreach( $this->missions as $mission ){
 			if( ( is_null( $typeOnly ) || $typeOnly == $mission->type ) && $mission->type == 0 )
 				$list[]	= UI_HTML_Tag::create( 'tr',

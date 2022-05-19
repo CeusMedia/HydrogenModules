@@ -5,7 +5,7 @@ $panelDocuments	= '<div class="alert alert-error">Noch keine Dokumente gespeiche
 $iconRemove		= '<i class="icon-remove icon-white"></i>';
 
 if( $articleDocuments ){
-	$listDocuments	= array();
+	$listDocuments	= [];
 	foreach( $articleDocuments as $item ){
 		$idPrefix		= str_pad( $article->articleId, 5, "0", STR_PAD_LEFT ).'_';
 		$urlRemove		= './manage/catalog/bookstore/article/removeDocument/'.$article->articleId.'/'.$item->articleDocumentId;
@@ -46,7 +46,7 @@ $documentMaxSize	= Alg_UnitParser::parse( $moduleConfig->get( 'article.document.
 $documentMaxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $documentMaxSize ) );
 $documentMaxSize	= Alg_UnitFormater::formatBytes( $documentMaxSize );
 
-$list				= array();
+$list				= [];
 $documentExtensions	= $moduleConfig->get( 'article.document.extensions' );
 foreach( explode( ",", $documentExtensions ) as $nr => $type )
 	if( !in_array( trim( $type ), array( "jpe", "jpeg" ) ) )

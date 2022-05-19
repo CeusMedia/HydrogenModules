@@ -33,7 +33,7 @@ class Model_Finance_Bank_Account_Reader_NIBC
 		$xml	= @$doc->loadHTML( $html );
 		$xml	= simplexml_import_dom( $doc );
 		$form	= $xml->body->div->div[4]->form;
-		$data	= array();
+		$data	= [];
 		for( $i=0; $i<4; $i++)
 			$data[(string) $form->input[$i]['name']]	= (string) $form->input[$i]['value'];
 		$data[(string) $form->div[1]->div->table->tr[2]->td[1]->input['name']]	= $this->account->username;
@@ -62,7 +62,7 @@ class Model_Finance_Bank_Account_Reader_NIBC
 
 		//  --  HINT PAGE  --  //
 		if( substr_count( $html, '<h1 class="stackedFrontletTitle">Hinweis</h1>' ) ){
-			$data	= array();
+			$data	= [];
 			$form	= $xml->body->div->div[4]->form;
 			foreach( $form->input as $input )
 				$data[(string) $input['name']]	= (string) $input['value'];
@@ -110,7 +110,7 @@ class Model_Finance_Bank_Account_Reader_NIBC
 
 		$table	= $xml->body->div->div[4]->form->div[1]->div->table->tr->td->table->tbody;
 
-		$accounts	= array();
+		$accounts	= [];
 		for( $i=2; $i<10; $i++){
 			if( isset( $table->tr[$i]->td[1]->span ) ){
 				$key	= (string) $table->tr[$i]->td[1]->span;
@@ -123,7 +123,7 @@ class Model_Finance_Bank_Account_Reader_NIBC
 
 		$button	= $xml->body->div[0]->div[3]->div->form->div->div->table->tr[1]->td->div->table->tr->td->div->table->tr->td->span->input[1];
 
-		$data	= array();
+		$data	= [];
 		$data['token']		= (string) $xml->body->form->input[0]['value'];
 		$data['frontletId']	= (string) $xml->body->form->input[1]['value'];
 		$data[(string) $button['name']]	= (string) $button['value'];

@@ -118,7 +118,7 @@ class Job_Work_Mission extends Job_Abstract
 		}
 
 		$modelProject	= new Model_Project( $this->env );
-		$projects		= array();
+		$projects		= [];
 		foreach( $modelProject->getAll() as $project )
 			$projects[$project->projectId]	= $project;
 		$projectIds	= array_keys( $projects );
@@ -196,9 +196,9 @@ class Job_Work_Mission extends Job_Abstract
 	 *	@param		array		$excludes			List of user IDs to exclude
 	 *  @return		array		List of mail receiving users
 	 */
-	protected function getUpdateMailReceivers( $projectIds, $includes = array(), $excludes = array() )
+	protected function getUpdateMailReceivers( $projectIds, $includes = [], $excludes = [] )
 	{
-		$list	= array();																		//  prepare empty user list
+		$list	= [];																		//  prepare empty user list
 		$projectIds	= array_unique( $projectIds );
 		foreach( $projectIds as $projectId )												//  iterate given projects IDs
 			foreach( $this->modelProject->getProjectUsers( (int) $projectId ) as $user )	//  iterate project users
@@ -210,7 +210,7 @@ class Job_Work_Mission extends Job_Abstract
 		foreach( $excludes as $userId )															//  iterate users to exclude
 			if( array_key_exists( (int) $userId, $list ) )										//  user is in list
 				unset( $list[(int) $userId] );													//  remove user from list
-		$users			= array();																//  prepare final user list
+		$users			= [];																//  prepare final user list
 		$config			= $this->env->getConfig();												//  get default config
 		foreach( $list as $userId => $user ){													//  iterate so far listed users
 			if( $this->useSettings )															//  user settings are enabled

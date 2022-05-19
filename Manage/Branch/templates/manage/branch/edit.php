@@ -27,7 +27,7 @@ if( $branch->longitude ){
 }
 
 
-$list	= array();
+$list	= [];
 foreach( $images as $image ){
 	$urlImage	= 'images/branches/'.$image->filename;
 	$urlRemove	= './manage/branch/removeImage/'.$branch->branchId.'/'.$image->imageId;

@@ -21,11 +21,11 @@ $panelReader	= '
 #print_m( $subscriptions );
 #die;
 
-$readerGroups	= array();
+$readerGroups	= [];
 foreach( $subscriptions as $subscription )
 	$readerGroups[]	= $subscription->newsletterGroupId;
 
-$list	= array();
+$list	= [];
 foreach( $groups as $group ){
 	$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
 		'type'		=> 'checkbox',

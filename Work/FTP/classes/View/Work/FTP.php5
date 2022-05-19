@@ -44,9 +44,9 @@ class View_Work_FTP extends CMF_Hydrogen_View
 
 	protected function renderFileTable( string $path, array $entries ): string
 	{
-		$rows		= array();
-		$folders	= array();
-		$files		= array();
+		$rows		= [];
+		$folders	= [];
+		$files		= [];
 		foreach( $entries as $entry ){
 #			print_m( $entry );
 #			die;

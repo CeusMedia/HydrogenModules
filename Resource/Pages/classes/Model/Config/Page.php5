@@ -34,7 +34,7 @@ class Model_Config_Page
 		$this->loadPages();
 	}
 
-	public function edit( $pageId, $data = array() )
+	public function edit( $pageId, $data = [] )
 	{
 		throw new RuntimeException( 'Not implemented yet' );
 	}
@@ -80,19 +80,19 @@ class Model_Config_Page
 		);
 	}
 
-	public function getByIndices( array $indices = array(), array $orders = array() )
+	public function getByIndices( array $indices = [], array $orders = [] )
 	{
 		return current( $this->getAllByIndices( $indices, $orders, array( 0, 1 ) ) );
 	}
 
-	public function getAllByIndices( array $indices = array(), array $orders = array(), array $limits = array() ): array
+	public function getAllByIndices( array $indices = [], array $orders = [], array $limits = [] ): array
 	{
 		$data	= $this->pages;
 		$regExp	= '/^(!=|>=|<=|>|<) (.+)$/';
 		foreach( $indices as $indexKey => $indexValue ){
 			foreach( $data as $nr => $page ){
 				$pageValue	= $page->$indexKey;
-				$matches	= array();
+				$matches	= [];
 				if( is_array( $indexValue ) ){
 					if( !in_array( $pageValue, $indexValue ) )
 						unset( $data[$nr] );
@@ -125,7 +125,7 @@ class Model_Config_Page
 	{
 		$this->fileData	= FS_File_JSON_Reader::load( $this->filePath, TRUE );
 		$this->scopes	= array_keys( (array) $this->fileData );
-		$this->pages	= array();
+		$this->pages	= [];
 		$pageId			= 0;
 		foreach( $this->scopes as $scopeNr => $scope ){
 			foreach( $this->fileData[$scope] as $pageNr => $page ){

@@ -10,7 +10,7 @@ $list	= '<div class=alert">'.$w->empty.'</div>';
 
 
 if( $posts ){
-	$list	= array();
+	$list	= [];
 	foreach( $posts as $post ){
 		$link	= UI_HTML_Tag::create( 'a', $post->title, array( 'href' => './manage/blog/edit/'.$post->postId ) );
 		$list[]	= UI_HTML_Tag::create( 'tr', array(

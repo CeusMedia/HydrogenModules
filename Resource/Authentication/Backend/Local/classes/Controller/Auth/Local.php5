@@ -15,38 +15,6 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller
 	protected $limiter;
 	protected $logic;
 
-	public function __onInit()
-	{
-		$this->config		= $this->env->getConfig();
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
-		if( isset( $this->env->version ) )
-			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
-				$this->cookie	= $this->env->getCookie();
-		$this->messenger	= $this->env->getMessenger();
-		$this->modules		= $this->env->getModules();
-		$this->useCsrf		= $this->modules->has( 'Security_CSRF' );
-		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Local' );
-
-		$this->useOauth2	= FALSE;																//  assume that OAuth2 is not installed or registers as login tab
-		if( $this->modules->has( 'Resource_Authentication_Backend_OAuth2' ) ){						//  OAuth2 is installed
-			$module		= $this->modules->get( 'Resource_Authentication_Backend_OAuth2' );			//  get module object
-			if( $module->isActive && isset( $module->config['loginMode'] ) )						//  module is enabled and login mode is defined
-				$this->useOauth2	= $module->config['loginMode']->value === 'buttons';			//  use OAuth2 in local login only in buttons mode
-		}
-
-		$this->moduleConfig			= $this->config->getAll( 'module.resource_authentication_backend_local.', TRUE );
-		$this->moduleConfigAuth		= $this->config->getAll( 'module.resource_authentication.', TRUE );
-		$this->moduleConfigUsers	= $this->config->getAll( 'module.resource_users.', TRUE );
-		if( $this->modules->has( 'Resource_Limiter' ) )
-//			if( $this->modules->get( 'Resource_Limiter' )->isActive )				// @todo apply this line here and anywhere else
-				$this->limiter	= Logic_Limiter::getInstance( $this->env );
-		$this->addData( 'limiter', $this->limiter );
-		$this->addData( 'useCsrf', $this->useCsrf );
-		$this->addData( 'useOauth2', $this->useOauth2 );
-	}
-
 	public function ajaxUsernameExists()
 	{
 		$username	= trim( $this->request->get( 'username' ) );
@@ -299,7 +267,7 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller
 		$modelRole	= new Model_Role( $this->env );
 
 		$roleDefault	= $modelRole->getByIndex( 'register', 128 );
-		$rolesAllowed	= array();
+		$rolesAllowed	= [];
 		foreach( $modelRole->getAllByIndex( 'register', array( 64, 128 ) ) as $role )
 			$rolesAllowed[]	= $role->roleId;
 
@@ -454,6 +422,38 @@ class Controller_Auth_Local extends CMF_Hydrogen_Controller
 	}
 
 	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+		if( isset( $this->env->version ) )
+			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
+				$this->cookie	= $this->env->getCookie();
+		$this->messenger	= $this->env->getMessenger();
+		$this->modules		= $this->env->getModules();
+		$this->useCsrf		= $this->modules->has( 'Security_CSRF' );
+		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Local' );
+
+		$this->useOauth2	= FALSE;																//  assume that OAuth2 is not installed or registers as login tab
+		if( $this->modules->has( 'Resource_Authentication_Backend_OAuth2' ) ){						//  OAuth2 is installed
+			$module		= $this->modules->get( 'Resource_Authentication_Backend_OAuth2' );			//  get module object
+			if( $module->isActive && isset( $module->config['loginMode'] ) )						//  module is enabled and login mode is defined
+				$this->useOauth2	= $module->config['loginMode']->value === 'buttons';			//  use OAuth2 in local login only in buttons mode
+		}
+
+		$this->moduleConfig			= $this->config->getAll( 'module.resource_authentication_backend_local.', TRUE );
+		$this->moduleConfigAuth		= $this->config->getAll( 'module.resource_authentication.', TRUE );
+		$this->moduleConfigUsers	= $this->config->getAll( 'module.resource_users.', TRUE );
+		if( $this->modules->has( 'Resource_Limiter' ) )
+//			if( $this->modules->get( 'Resource_Limiter' )->isActive )				// @todo apply this line here and anywhere else
+				$this->limiter	= Logic_Limiter::getInstance( $this->env );
+		$this->addData( 'limiter', $this->limiter );
+		$this->addData( 'useCsrf', $this->useCsrf );
+		$this->addData( 'useOauth2', $this->useOauth2 );
+	}
 
 	protected function authenticateUserByCredentials( string $username, string $password )
 	{

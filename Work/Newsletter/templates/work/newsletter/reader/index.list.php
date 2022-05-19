@@ -15,7 +15,7 @@ $labelEmpty	= UI_HTML_Tag::create( 'em', $w->empty, array( 'class' => 'muted' ) 
 $list		= UI_HTML_Tag::create( 'div', $labelEmpty, array( 'class' => 'alert alert-info' ) );
 
 if( $readers ){
-	$list	= array();
+	$list	= [];
 	foreach( $readers as $reader ){
 		$attributes		= array( 'href' => './work/newsletter/reader/edit/'.$reader->newsletterReaderId );
 		$iconStatus		= UI_HTML_Tag::create( 'i', "", array( 'class' => 'fa fa-fw fa-'.$statusIcons[$reader->status] ) );
@@ -23,7 +23,7 @@ if( $readers ){
 		$label			= $reader->email;
 		$fullname		= '<br/><small class="muted">'.trim( $prefix.' '.$reader->firstname.' '.$reader->surname ).'&nbsp;</small>';
 		$link			= UI_HTML_Tag::create( 'a', $label, $attributes );
-		$groups			= array();
+		$groups			= [];
 		foreach( $reader->groups as $group )
 			$groups[]		= $group->title;
 	//	$groups			= UI_HTML_Tag::create( 'span', count( $groups ), array( 'class' => 'badge', 'title' => join( ', ', $groups ) ) );

@@ -3,7 +3,7 @@ $urlIcons	= 'https://cdn.ceusmedia.de/img/';
 $imgEdit	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlIcons.'famfamfam/silk/pencil.png', 'verändern' ) );
 	$total	= 0;
 	$number	= 0;
-	$rows	= array();
+	$rows	= [];
 	foreach( $banks as $bank ){
 		$linkEdit	= UI_HTML_Tag::create( 'a', $bank->title, array( 'href' => './work/finance/bank/edit/'.$bank->bankId ) );
 		$rows[]	= '<tr><th>'.$linkEdit.'</th><th></th><th></th></tr>';

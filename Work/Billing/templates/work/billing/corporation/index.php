@@ -7,7 +7,7 @@ $iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-buil
 $list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
 
 if( $corporations ){
-	$list	= array();
+	$list	= [];
 	foreach( $corporations as $corporation ){
 		$link	= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
 			'href' => './work/billing/corporation/edit/'.$corporation->corporationId

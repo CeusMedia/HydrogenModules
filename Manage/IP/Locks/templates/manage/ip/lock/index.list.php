@@ -26,7 +26,7 @@ if( $page > 0 )
 
 $list	= '<div><em><small>Keine IP-Locks gefunden.</small></em></div>';
 if( $locks ){
-	$list	= array();
+	$list	= [];
 	foreach( $locks as $lock ){
 		if( $lock->reason->status < 1 )
 			$lock->status = -10;

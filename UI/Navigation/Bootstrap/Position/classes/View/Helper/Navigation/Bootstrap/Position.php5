@@ -23,7 +23,7 @@ class View_Helper_Navigation_Bootstrap_Position extends CMF_Hydrogen_View_Helper
 			$this->env->getMessenger()->noteFailure( 'Module "UI:Navigation:Bootstrap:Position" needs module "Info:Pages".' );
 			return '';
 		}
-		$itemList		= array();
+		$itemList		= [];
 		$model			= new Model_Menu( $this->env );
 		$pageMap		= $model->getPageMap();
 		if( ( $currentPage = $model->getCurrent() ) ){
@@ -60,7 +60,7 @@ class View_Helper_Navigation_Bootstrap_Position extends CMF_Hydrogen_View_Helper
 				'link'		=> NULL,
 			) );
 		}
-		$barList	= array();
+		$barList	= [];
 		foreach( $itemList as $entry ){
 			$label	= $entry->label;
 			if( isset( $entry->link ) )

@@ -2,7 +2,7 @@
 $optType	= array( 'CSV' => 'CSV' );
 $optType	= UI_HTML_Elements::Options( $optType, key( $optType ) );
 
-$optGroup	= array();
+$optGroup	= [];
 foreach( $groups as $group )
 	$optGroup[$group->mailGroupId]	= $group->title;
 $optGroup	= UI_HTML_Elements::Options( $optGroup, $groups ? $groups[0]->mailGroupId : NULL );
@@ -13,7 +13,7 @@ $statuses	= array(
 	2	=> 'erreichbar',
 );
 
-$optStatus	= array();
+$optStatus	= [];
 foreach( $statuses as $key => $label )
 	$optStatus[$key]	= $label;
 $optStatus	= UI_HTML_Elements::Options( $optStatus, array( 2 ) );

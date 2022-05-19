@@ -20,7 +20,7 @@ class Controller_Admin_Server extends CMF_Hydrogen_Controller{
 				$this->restart( NULL, TRUE );
 			}
 		}
-		$server	= array();
+		$server	= [];
 		foreach( $model->getColumns() as $column )
 			$server[$column]	= (string) $post->get( $column );
 		$this->addData( 'server', (object) $server );
@@ -69,7 +69,7 @@ class Controller_Admin_Server extends CMF_Hydrogen_Controller{
 		$modelRelation			= new Model_Server_Project( $this->env );
 		$this->addData( 'server', $model->get( $serverId ) );
 		$this->addData( 'projects', $modelProject->getAll() );
-		$relations	= array();
+		$relations	= [];
 		foreach( $modelRelation->getAllByIndex( 'serverId', $serverId ) as $relation ){
 			if( $relation->projectVersionId ){
 				$relation->projectVersion	= $modelProjectVersion->get( $relation->projectVersionId );
@@ -87,7 +87,7 @@ class Controller_Admin_Server extends CMF_Hydrogen_Controller{
 	public function index(){
 		$session	= $this->env->getSession();
 		$model		= new Model_Server( $this->env );
-		$conditions	= array();
+		$conditions	= [];
 		$this->addData( 'servers', $model->getAll( $conditions ) );
 	}
 

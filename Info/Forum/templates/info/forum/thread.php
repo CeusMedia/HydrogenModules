@@ -23,9 +23,9 @@ $userIsManager	= in_array( 'removeTopic', $rights );
 $lastPostId		= 0;
 
 if( $posts ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $posts as $nr => $post ){
-		$buttons		= array();
+		$buttons		= [];
 		$postIsLast		= count( $posts ) === $nr + 1;
 		$userIsAuthor	= $post->authorId == $userId;
 		$userCanChange	= $userIsManager || ( $userIsAuthor && $postIsLast );

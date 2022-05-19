@@ -1,6 +1,6 @@
 <?php
 
-$hostMap	= array();
+$hostMap	= [];
 foreach( $hosts as $host )
 	$hostMap[$host->mailSyncHostId]	= $host->host ? $host->host : $host->ip;
 

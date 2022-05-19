@@ -3,7 +3,7 @@ class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 {
 	public function render(): string
 	{
-		$list	= array();
+		$list	= [];
 		$images	= $this->getGalleryImages( $this->galleryId );
 		foreach( $images as $image ){
 			$thumb	= UI_HTML_Tag::create( 'img', NULL, array(
@@ -30,7 +30,7 @@ class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 		$this->galleryId	= $galleryId;
 		$this->gallery		= $this->modelGallery->get( $galleryId );
 
-		$parts	= array();
+		$parts	= [];
 		foreach( preg_split( '@/@', $this->gallery->path ) as $part )
 			$parts[]	= rawurlencode( $part );
 		$this->gallery->path = join( '/', $parts );

@@ -8,7 +8,7 @@ $iconRemove		= new Icon( 'trash' );
 $w		= (object) $words['index'];
 $list	= '<div class="alert alert-warning"><em class="muted">'.$w->noEntries.'</em></div><br/>';
 if( count( $attachments ) ){
-	$list	= array();
+	$list	= [];
 	foreach( $attachments as $attachment ){
 		$buttonStatus	= UI_HTML_Tag::create( 'a', $iconEnable, array(
 			'href'	=> './admin/mail/attachment/setStatus/'.$attachment->mailAttachmentId.'/1',

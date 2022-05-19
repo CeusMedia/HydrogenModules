@@ -1,22 +1,17 @@
 <?php
-class Controller_Catalog extends CMF_Hydrogen_Controller{
-
+class Controller_Catalog extends CMF_Hydrogen_Controller
+{
 	/**	@var	Logic_ShopBridge	$bridge */
 	protected $bridge;
+
 	/**	@var	integer				$bridgeId */
 	protected $bridgeId;
+
 	/**	@var	Logic_Catalog		$logic */
 	protected $logic;
 
-	public function __onInit(){
-		$this->logic		= new Logic_Catalog( $this->env );
-		$this->bridge		= new Logic_ShopBridge( $this->env );
-		$this->bridgeId		= $this->bridge->getBridgeId( 'CatalogArticle' );
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-	}
-
-	static public function ___onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function ___onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $data )
+	{
 		$baseUrl	= $env->url.'catalog/';
 		$logic		= new Logic_Catalog( $env );
 		$articles	= $logic->getArticles( array(), array( 'articleId' => 'DESC' ) );
@@ -33,7 +28,8 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function article( $articleId ){
+	public function article( $articleId )
+	{
 		$articleId	= (int) $articleId;
 		$article	= $this->logic->getArticle( $articleId );
 		if( !$article ){
@@ -48,20 +44,22 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		$this->addData( 'documents', $this->logic->getDocumentsOfArticle( $articleId ) );
 		$this->addData( 'cart', (bool) $logicShop->countArticlesInCart() );
 		$this->addData( 'inCart', $logicShop->countArticleInCart( $this->bridgeId, $articleId ) );
-		$tags	= array();
+		$tags	= [];
 		foreach( $this->logic->getTagsOfArticle( $articleId, FALSE ) as $tag )
 			$tags[]	= $tag->tag;
-		$relatedArticles	= array();
+		$relatedArticles	= [];
 		if( $tags ){
 			$relatedArticles	= $this->logic->getArticlesFromTags( $tags, array( $article->articleId ) );
 			$this->addData( 'relatedArticles', $relatedArticles );
 		}
 	}
 
-	public function articles(){
+	public function articles()
+	{
 	}
 
-	public function author( $authorId ){
+	public function author( $authorId )
+	{
 //		$authorId	= preg_replace( "/-[a-z0-9_-]*$/", "", $authorId );
 		$authorId	= (int) $authorId;
 		$author		= $this->logic->getAuthor( $authorId );
@@ -72,11 +70,13 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		$this->addData( 'articles', $articles );
 	}
 
-	public function authors(){
+	public function authors()
+	{
 		$this->addData( 'authors', $this->logic->getAuthors( array(), array( 'lastname' => 'ASC' ) ) );
 	}
 
-	public function categories(){
+	public function categories()
+	{
 		$cache	= $this->env->getCache();
 		if( NULL === ( $categories = $cache->get( 'catalog.categories' ) ) ){
 			$orders		= array( 'rank' => 'ASC' );
@@ -91,7 +91,8 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		$this->addData( 'categories', $categories );
 	}
 
-	public function category( $categoryId ){
+	public function category( $categoryId )
+	{
 		$categoryId	= (int) $categoryId;
 		$category	= $this->logic->getCategory( $categoryId );
 
@@ -104,7 +105,8 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		$this->addData( 'category', $category );
 	}
 
-	public function index( $categoryId = NULL ){
+	public function index( $categoryId = NULL )
+	{
 		if( $categoryId && (int) $categoryId )
 			$this->restart( 'category/'.$categoryId, TRUE );
 		$this->restart( 'categories', TRUE );
@@ -116,7 +118,8 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 	 *	@todo		kriss: extract labels
 	 *	@todo		kriss: BONUS: draft resolution for Google categories and implement solution for hooked modules
 	 */
-	public function feed(){
+	public function feed()
+	{
 		$options	= $this->env->getConfig()->getAll( 'module.catalog.feed.', TRUE );
 		$language	= $this->env->getLanguage()->getLanguage();
 		$words		= (object) $this->getWords( 'rss' );
@@ -150,7 +153,7 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		$orders			= array( 'createdAt' => 'DESC' );
 		foreach( $this->logic->getArticles( $conditions, $orders ) as $article ){
 			$pubDate	= strtotime( $article->publication );
-			$categories	= array();
+			$categories	= [];
 			foreach( $this->logic->getCategoriesOfArticle( $article->articleId ) as $category )
 				$categories[]	= $category->{"label_".$language};
 			$price	= (float) str_replace( ",", ".", $article->price );
@@ -181,12 +184,14 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function news(){
+	public function news()
+	{
 		$articles	= $this->logic->getArticles( array( 'new' => 1 ), array( 'createdAt' => 'DESC' ) );
 		$this->addData( 'articles', $articles );
 	}
 
-	public function order(){
+	public function order()
+	{
 		$request	= $this->env->getRequest();
 		$articleId	= (int) $request->get( 'articleId' );
 		$article	= $this->logic->getArticle( $articleId );
@@ -198,7 +203,8 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		$this->restart( $url );
 	}
 
-	public function rss( $categoryId = NULL ){
+	public function rss( $categoryId = NULL )
+	{
 		$options	= $this->env->getConfig()->getAll( 'module.catalog.feed.', TRUE );
 		$language	= $this->env->getLanguage()->getLanguage();
 		$categoryId	= (int) $categoryId;
@@ -236,7 +242,7 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 			foreach( $children as $category )
 				$categories[]	= $category->categoryId;
 			$model		= new Model_Catalog_Article_Category( $this->env );
-			$articleIds	= array();
+			$articleIds	= [];
 			foreach( $model->getAll( array( 'categoryId' => $categories ) ) as $relation )
 				$articleIds[]	= $relation->articleId;
 			if( $articleIds )
@@ -245,7 +251,7 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		$orders			= array( 'createdAt' => 'DESC' );
 		foreach( $this->logic->getArticles( $conditions, $orders, array( 0, 35 ) ) as $article ){
 			$pubDate	= strtotime( $article->publication );
-			$categories	= array();
+			$categories	= [];
 			foreach( $this->logic->getCategoriesOfArticle( $article->articleId ) as $category )
 				$categories[]	= $category->{"label_".$language};
 			$item	= array(
@@ -266,7 +272,8 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function search( $page = 0 ){
+	public function search( $page = 0 )
+	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 
@@ -295,12 +302,12 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		$prefix		= $database->getPrefix();
 
 		$total		= 0;
-		$articles	= array();
+		$articles	= [];
 
-		$idsTags	= array();
-		$idsSearch	= array();
+		$idsTags	= [];
+		$idsSearch	= [];
 
-			$articleIds	= array();
+			$articleIds	= [];
 
 		if( strlen( trim( $session->get( 'catalog_search_term' ) ) ) ){
 			$terms		= explode( " ", trim( $session->get( 'catalog_search_term' ) ) );
@@ -407,7 +414,8 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		$this->addData( 'limit', $limit );
 	}
 
-	public function tag( $tagId = NULL ){
+	public function tag( $tagId = NULL )
+	{
 		if( !$tagId || !( $tag = $this->logic->getArticleTag( $tagId ) ) )
 			$this->restart( NULL, TRUE );
 
@@ -417,5 +425,13 @@ class Controller_Catalog extends CMF_Hydrogen_Controller{
 		$this->addData( 'tagId', $tagId );
 		$this->addData( 'articles', $articles );
 	}
+
+	protected function __onInit()
+	{
+		$this->logic		= new Logic_Catalog( $this->env );
+		$this->bridge		= new Logic_ShopBridge( $this->env );
+		$this->bridgeId		= $this->bridge->getBridgeId( 'CatalogArticle' );
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+	}
 }
-?>

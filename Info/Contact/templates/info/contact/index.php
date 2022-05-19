@@ -11,7 +11,7 @@ $newsletter    = '';
 if( $useNewsletter ){
 	$inputTopics	= '';
 	if( isset( $newsletterTopics ) && count( $newsletterTopics ) ){
-		$list	= array();
+		$list	= [];
 		foreach( $newsletterTopics as $topic ){
 			$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
 				'type'		=> 'checkbox',

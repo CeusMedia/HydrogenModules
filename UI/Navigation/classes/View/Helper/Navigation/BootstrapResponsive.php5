@@ -3,7 +3,7 @@ class View_Helper_Navigation_BootstrapResponsive
 {
 	protected $env;
 	protected $menu;
-	protected $linksToSkip	= array();
+	protected $linksToSkip	= [];
 	protected $scope		= 'main';
 	protected $position		= 'static';
 	protected $helperAccountMenu;
@@ -23,7 +23,7 @@ class View_Helper_Navigation_BootstrapResponsive
 		$useMobile		= $config->get( 'render.mobile' );
 		$useDesktop		= $config->get( 'render.desktop' );
 
-		$navbars	= array();
+		$navbars	= [];
 
 		if( $useDesktop ){
 			$configDesktop		= $config->getAll( 'render.desktop.', TRUE );

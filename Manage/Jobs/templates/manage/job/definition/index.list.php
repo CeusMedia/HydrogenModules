@@ -24,7 +24,7 @@ if( $definitions ){
 	$helperTime->setTemplate( '%s ago' );
 	$helperTime->setMode( View_Helper_TimePhraser::MODE_BREAK );
 
-	$rows	= array();
+	$rows	= [];
 	foreach( $definitions as $item ){
 		$helperAttribute->setObject( $item );
 		$parts	= explode( '.', $item->identifier );

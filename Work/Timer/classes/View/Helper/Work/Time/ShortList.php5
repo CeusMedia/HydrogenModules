@@ -13,7 +13,7 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 
 	public function render(): string
 	{
-		$conditions	= array();
+		$conditions	= [];
 //		$conditions['userId']		= (int) $this->userId;
 		if( $this->ownerId )
 			$conditions['userId']	= $this->ownerId;
@@ -31,7 +31,7 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 		if( !$timers )
 			return '';
 
-		$rows		= array();
+		$rows		= [];
 		foreach( $timers as $timer ){
 			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer, FALSE );
 
@@ -162,14 +162,14 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	{
 		$secondsPlanned	= $timer->secondsPlanned;
 		$secondsNeeded	= $timer->status == 1 ? $timer->secondsNeeded + ( time() - $timer->modifiedAt ) : $timer->secondsNeeded;
-		$classes		= array();
+		$classes		= [];
 		if( $timer->status == 1 )
 			$classes[]	= 'timer-short-list';
 		$timeNeeded		= UI_HTML_Tag::create( 'small', View_Helper_Work_Time::formatSeconds( $secondsNeeded, '&nbsp;' ), array(
 			'class'			=> join( ' ', $classes ),
 			'data-value'	=> $secondsNeeded,
 		) );
-		$classes	= array();
+		$classes	= [];
 		$timePlanned	= UI_HTML_Tag::create( 'small', View_Helper_Work_Time::formatSeconds( $secondsPlanned, '&nbsp;' ), array(
 			'class'			=> join( ' ', $classes ),
 			'data-value'	=> $secondsPlanned,

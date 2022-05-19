@@ -9,7 +9,7 @@ class Hook_JS_Form_Optionals extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
 //		$config		= $env->getConfig()->getAll( 'module.js_form_optionals', TRUE );
 		$context->js->addScriptOnReady( 'FormOptionals.init();' );
 	}

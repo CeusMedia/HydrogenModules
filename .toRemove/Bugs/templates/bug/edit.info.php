@@ -1,7 +1,7 @@
 <?php
 
 $modelBugChange	= new Model_Bug_Change( $this->env );
-$changers	= array();
+$changers	= [];
 $changes	= $modelBugChange->getAllByIndex( 'bugId', $bug->bugId );
 foreach( $changes as $change ){
 	if( !array_key_exists( $change->userId, $changers ) )

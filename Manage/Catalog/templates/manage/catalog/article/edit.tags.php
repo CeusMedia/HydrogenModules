@@ -7,7 +7,7 @@ $iconRemove	= '<i class="icon-remove icon-white"></i>';
 $iconPlus	= '<i class="icon-plus icon-white"></i>';
 
 if( $articleTags ){
-	$listTags	= array();
+	$listTags	= [];
 	foreach( $articleTags as $item ){
 		$urlRemove	= './manage/catalog/article/removeTag/'.$article->articleId.'/'.$item->articleTagId;
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(

@@ -1,7 +1,7 @@
 <?php
 class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
 
-	protected $icons		= array();
+	protected $icons		= [];
 	protected $list			= array(
 		0 => array(),
 		1 => array(),
@@ -55,7 +55,7 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
 	}
 
 	public function render(){
-		$list	= array();
+		$list	= [];
 		for( $i=0; $i<6; $i++ )
 			$list[]		= $this->renderDayList( 1, $i, TRUE, TRUE, FALSE, TRUE );
 		return join( $list );

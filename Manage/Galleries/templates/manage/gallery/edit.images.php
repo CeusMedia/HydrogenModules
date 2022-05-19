@@ -1,7 +1,7 @@
 <?php
 $listImages	= '<div><em><small class="muted">'.$words['editImages']['noImages'].'</small></em></div>';
 if( $images ){
-	$list	= array();
+	$list	= [];
 	foreach( $images as $image ){
 		$thumb		= $this->renderThumbnail( $image, TRUE, $gallery->path );
 		$thumb		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $baseUri.$gallery->path.'/'.$image->filename ) );

@@ -22,7 +22,7 @@ class View_Helper_Work_Mission_Filter_Project{
 		$iconWarning		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-warning' ) );
 		$iconCheck			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check-square-o' ) );
 		$changedProjects	= array_diff( array_keys( $this->values ), $this->selected );
-		$list				= array();
+		$list				= [];
 		foreach( $this->values as $project ){
 			$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
 				'type'		=> 'checkbox',

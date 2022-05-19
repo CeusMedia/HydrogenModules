@@ -5,7 +5,7 @@ if( $bookmarks ){
 	$iconVisit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) );
 	$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open fa fa-eye' ) );
 	$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil fa fa-pencil' ) );
-	$rows	= array();
+	$rows	= [];
 	foreach( $bookmarks as $bookmark ){
 		$urlVisit	= './work/bookmark/visit/'.$bookmark->bookmarkId;
 		$urlView	= './work/bookmark/view/'.$bookmark->bookmarkId;
@@ -40,7 +40,7 @@ if( $bookmarks ){
 			) );
 		}
 
-		$tags	= array();
+		$tags	= [];
 		foreach( $bookmark->tags as $tag ){
 			$tags[]	= UI_HTML_Tag::create( 'span', $tag->title, array( 'class' => 'label label-info' ) );
 		}

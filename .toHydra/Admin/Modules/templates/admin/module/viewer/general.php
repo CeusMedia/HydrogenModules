@@ -1,7 +1,7 @@
 <?php
 
 $w			= (object) $words['view'];
-$sources	= array();
+$sources	= [];
 $model		= new Model_ModuleSource( $this->env );
 $sources	= $model->getAll();
 
@@ -24,7 +24,7 @@ $facts	= array(
 );
 
 if( $module->authors ){
-	$authors	= array();
+	$authors	= [];
 	foreach( $module->authors as $author){
 		$label	= $author->name;
 		if( $author->email )
@@ -37,7 +37,7 @@ if( $module->authors ){
 	array_unshift( $facts[0], UI_HTML_Tag::create( 'dt', $label ).join( $authors ) );
 }
 if( $module->companies ){
-	$companies	= array();
+	$companies	= [];
 	foreach( $module->companies as $company){
 		$label	= $company->name;
 		if( $company->site )
@@ -50,7 +50,7 @@ if( $module->companies ){
 }
 
 if( $module->licenses ){
-	$licenses	= array();
+	$licenses	= [];
 	foreach( $module->licenses as $license ){
 		$label	= $license->label;
 		if( $license->source )

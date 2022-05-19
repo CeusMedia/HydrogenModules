@@ -85,7 +85,7 @@ class Resource_REST_Client{
 	 *	@param		array		$data		GET parameters
 	 *	@return		mixed		Server response
 	 */
-	public function delete( $path, $data = array() ){
+	public function delete( $path, $data = [] ){
 		$this->invalidateCachePathRecursive( $path );
 		return $this->client->delete( $path, $data );
 	}
@@ -130,7 +130,7 @@ class Resource_REST_Client{
 	 *	@param		array		$data		GET parameters
 	 *	@return		mixed		Resource content
 	 */
-	public function get( $path, $parameters = array() ){
+	public function get( $path, $parameters = [] ){
 		$isEnabled	= $this->moduleConfig->get( 'cache.enabled' );					//  shortcut cache status
 		$isCachable	= $isEnabled && !count( $parameters );							//  also request has no GET parameters
 		$cacheKey	= $this->getCacheKey( $path );									//  render cache key
@@ -164,7 +164,7 @@ class Resource_REST_Client{
 	 *	@param		array		$data		GET parameters
 	 *	@return		mixed		Resource content
 	 */
-	public function post( $path, $data = array() ){
+	public function post( $path, $data = [] ){
 		$this->invalidateCachePathRecursive( $path );
 		return $this->client->post( $path, $data );
 	}
@@ -176,7 +176,7 @@ class Resource_REST_Client{
 	 *	@param		array		$data		GET parameters
 	 *	@return		mixed		Resource content
 	 */
-	public function put( $path, $data = array() ){
+	public function put( $path, $data = [] ){
 		$this->invalidateCachePathRecursive( $path );
 		return $this->client->put( $path, $data );
 	}

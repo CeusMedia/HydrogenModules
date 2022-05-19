@@ -8,6 +8,6 @@ class Model_Test_Table extends CMF_Hydrogen_Model
 		'timestamp',
 	);
 	protected $primaryKey	= 'testId';
-	protected $indices		= array();
+	protected $indices		= [];
 }
 ?>

@@ -13,7 +13,7 @@ class View_Manage_Shop_Order extends View_Manage_Shop{
 
 	protected function renderList( $orders, $orderId = NULL ){
 		return '[LIST]';
-		$list	= array();
+		$list	= [];
 		foreach( $articles as $article ){
 			$url	= './manage/catalog/article/edit/'.$article->article_id;
 			$label	= $article->title;

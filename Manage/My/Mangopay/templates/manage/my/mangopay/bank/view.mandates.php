@@ -14,7 +14,7 @@ $countActive	= 0;
 
 $list	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $mandates ){
-	$list	= array();
+	$list	= [];
 	foreach( $mandates as $mandate ){
 		$status	= UI_HTML_Tag::create( 'span', $statuses[$mandate->Status], array( 'class' => 'label' ) );
 		$buttonDocument	= UI_HTML_Tag::create( 'a', $iconDownload.' Dokument', array(

@@ -101,11 +101,11 @@ class Resource_Acl_Authentication extends CMF_Hydrogen_Environment_Resource_Acl_
 			return array();
 		if( !isset( $this->rights[$roleId] ) ){
 			$model	= new Model_Role_Right( $this->env );
-			$this->rights[$roleId]	= array();
+			$this->rights[$roleId]	= [];
 			foreach( $model->getAllByIndex( 'roleId', $roleId ) as $right ){
 				$controller = strtolower( str_replace( '/', '_', $right->controller ) );
 				if( !isset( $this->rights[$roleId][$controller] ) )
-					$this->rights[$roleId][$controller]	= array();
+					$this->rights[$roleId][$controller]	= [];
 				$this->rights[$roleId][$controller][]	= $right->action;
 			}
 		}
@@ -134,7 +134,7 @@ class Resource_Acl_Authentication extends CMF_Hydrogen_Environment_Resource_Acl_
 
 /*	protected function listActions( $controller ){
 		$model	= new Model_Role_Right( $this->env );
-		$list	= array();
+		$list	= [];
 		foreach( $model->getAllByIndex( 'controller', $controller ) as $action )
 			if( !in_array( $action, $list ) )
 				$list[]	= $action;
@@ -144,7 +144,7 @@ class Resource_Acl_Authentication extends CMF_Hydrogen_Environment_Resource_Acl_
 	protected function listControllers(): array
 	{
 		$model	= new Model_Role_Right( $this->env );
-		$list	= array();
+		$list	= [];
 		foreach( $model->getAll( array(), array( 'controller' => 'ASC' ) ) as $controller )
 			if( !in_array( $controller, $list ) )
 				$list[]	= $controller;
@@ -167,7 +167,7 @@ class Resource_Acl_Authentication extends CMF_Hydrogen_Environment_Resource_Acl_
 		$classes	= $disclosure->reflect( 'classes/Controller/' );
 		foreach( $classes as $className => $classData ){
 			$className	= strtolower( str_replace( '/', '_', $className ) );
-			$this->controllerActions[$className]	= array();
+			$this->controllerActions[$className]	= [];
 			foreach( $classData->methods as $methodName => $methodData )
 				$this->controllerActions[$className][]	= $methodName;
 		}

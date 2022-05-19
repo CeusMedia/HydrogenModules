@@ -14,7 +14,7 @@ if( $branch->longitude && $branch->latitude ){
 $panelCoupons	= "";
 if( $env->getModules()->has( 'Manage_Coupon' ) ){
 	$w				= (object) $words['coupons'];
-	$listCoupons	= array();
+	$listCoupons	= [];
 	foreach( $coupons as $coupon ){
 		$url	= './manage/my/coupon/edit/'.$coupon->couponId;
 		$listCoupons[]	= HTML::Li( HTML::Link( $url, $coupon->title ), 'coupon' );
@@ -31,7 +31,7 @@ if( $env->getModules()->has( 'Manage_Coupon' ) ){
 $w	= (object) $words['edit'];
 $text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/manage/my/branch.edit.' );
 
-$listImages	= array();
+$listImages	= [];
 foreach( $branch->images as $image ){
 	$urlImage		= 'images/branches/'.$image->filename;
 	$urlRemove		= './manage/my/branch/removeImage/'.$branch->branchId.'/'.$image->imageId;

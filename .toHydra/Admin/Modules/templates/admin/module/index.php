@@ -11,7 +11,7 @@ if( $modulesTotal > $limit ){
 }
 
 /*  --  MODULE TABLE  --  */
-$list	= array();
+$list	= [];
 foreach( $modules as $moduleId => $module ){
 	$descLines	= explode( "\n", $module->description );
 	$abstract	= $descLines[0];

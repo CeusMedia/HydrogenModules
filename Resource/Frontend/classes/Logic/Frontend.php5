@@ -10,9 +10,9 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 
 	protected $config;
 	protected $env;
-	protected $installedModules	= array();
+	protected $installedModules	= [];
 	protected $path;
-	protected $paths			= array();
+	protected $paths			= [];
 	protected $defaultPaths		= array(
 		'config'	=> 'config/',
 		'modules'	=> 'config/modules/',
@@ -32,11 +32,11 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 		return array_pop( $values );
 	}
 
-	public function getAppConfigValues( array $keys = array() ): array
+	public function getAppConfigValues( array $keys = [] ): array
 	{
 		if( is_string( $keys ) && strlen( trim( $keys ) ) )
 			$keys	= array( $keys );
-		$list	= array();
+		$list	= [];
 		foreach( $this->config->getAll( 'app.' ) as $key => $value ){
 			if( !$keys || in_array( $key, $keys ) )
 				$list[$key]	= $value;
@@ -89,10 +89,10 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 		return array_pop( $values );
 	}
 
-	public function getModuleConfigValues( string $moduleId, array $keys = array(), bool $useFasterUncachedSolution = TRUE, bool $strict = TRUE ): array
+	public function getModuleConfigValues( string $moduleId, array $keys = [], bool $useFasterUncachedSolution = TRUE, bool $strict = TRUE ): array
 	{
 		$fileName	= $this->getPath( 'modules' ).$moduleId.'.xml';
-		$list		= array();
+		$list		= [];
 		if( !file_exists( $fileName ) ){
 			if( $strict )
 				throw new OutOfBoundsException( 'Invalid module ID: '.$moduleId );
@@ -163,7 +163,7 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 		throw new OutOfBoundsException( 'Invalid path key: '.$key );
 	}
 
-	static public function getRemoteEnv( CMF_Hydrogen_Environment $parentEnv, array $options = array() ): CMF_Hydrogen_Environment_Remote
+	static public function getRemoteEnv( CMF_Hydrogen_Environment $parentEnv, array $options = [] ): CMF_Hydrogen_Environment_Remote
 	{
 		$path		= $parentEnv->getConfig()->get( 'module.resource_frontend.path' );
 		$env		= new CMF_Hydrogen_Environment_Remote( array(
@@ -249,7 +249,7 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 	}
 
 	protected function detectModules(){
-		$this->installedModules	= array();
+		$this->installedModules	= [];
 		$index	= new DirectoryIterator( $this->getPath( 'modules' ) );
 		foreach( $index as $entry ){
 			if( preg_match( '@^(.+)(\.xml)$@', $entry->getFilename() ) ){

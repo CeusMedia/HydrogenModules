@@ -16,7 +16,7 @@ if( count( $wallets ) && ( $walletLocked || count( $wallets ) == 1 ) ){
 			'.$helperWallet->render().'';
 }
 else if( count( $wallets ) > 1 ){
-	$optWallet	= array();
+	$optWallet	= [];
 	foreach( $wallets as $item )
 		$optWallet[$item->Id]	= $item->Description.' ('.$view->formatMoney( $item->Balance, ' ', 0 ).')';
 	$optWallet	= UI_HTML_Elements::Options( $optWallet, $walletId );

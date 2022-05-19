@@ -25,7 +25,7 @@ $helperNav->setCategoryId( $categoryId );
 /*
 $list	= '<div><em class="muted">'.$words['list']['empty'].'</em></div><br/>';
 if( $files ){
-	$list	= array();
+	$list	= [];
 	foreach( $order as $entry ){
 		$entry	= preg_replace( "/\.md$/", "", $entry );
 		$link	= UI_HTML_Tag::create( 'a', $entry, array( 'href' => './info/manual/view/'.$view->urlencode( $entry ) ) );

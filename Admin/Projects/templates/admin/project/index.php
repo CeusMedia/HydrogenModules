@@ -3,7 +3,7 @@
 $buttonAdd 		= UI_HTML_Elements::LinkButton( './admin/project/add', $words['index']['buttonAdd'], 'button add' );
 
 /*  --  PROJECT TABLE  --  */
-$list	= array();
+$list	= [];
 foreach( $projects as $projectId => $project ){
 	$attributes	= array(
 		'class'		=> 'project available',

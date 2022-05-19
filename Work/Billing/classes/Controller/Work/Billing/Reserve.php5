@@ -30,7 +30,7 @@ class Controller_Work_Billing_Reserve extends CMF_Hydrogen_Controller
 		$reserves	= $this->modelReserve->getAll();
 		$this->addData( 'reserves', $reserves );
 
-		$corporations	= array();
+		$corporations	= [];
 		foreach( $this->logic->getCorporations() as $corporation )
 			$corporations[$corporation->corporationId]	= $corporation;
 		$this->addData( 'corporations', $corporations );

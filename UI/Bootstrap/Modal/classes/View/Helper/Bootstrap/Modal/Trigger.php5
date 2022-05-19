@@ -2,7 +2,7 @@
 class View_Helper_Bootstrap_Modal_Trigger
 {
 	protected $env;
-	protected $attributes	= array();
+	protected $attributes	= [];
 	protected $id;
 	protected $label;
 	protected $modalId;

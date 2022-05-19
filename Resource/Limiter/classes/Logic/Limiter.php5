@@ -2,32 +2,26 @@
 /**
  *	@todo		apply module config main switch
  */
-class Logic_Limiter{
+class Logic_Limiter
+{
+	const OPERATION_BOOLEAN				= 0;
+	const OPERATION_COMPARE_NUMBER		= 1;
+
+	static protected $instance;
 
 	protected $env;
 
 	protected $rules;
 
-	static protected $instance;
-
-	const OPERATION_BOOLEAN				= 0;
-	const OPERATION_COMPARE_NUMBER		= 1;
-
-	protected function __construct( CMF_Hydrogen_Environment $env ){
-		$this->env			= $env;
-		$this->moduleConfig	= $env->getConfig()->getAll( 'module.resource_limiter.', TRUE );
-		$this->enabled		= $this->moduleConfig->get( 'active' );
-		$this->rules		= new ADT_List_Dictionary();
-		$this->__onInit();
+	public static function getInstance( $env )
+	{
+		if( !self::$instance )
+			self::$instance		= new self( $env );
+		return self::$instance;
 	}
 
-	protected function __clone(){}
-
-	public function __onInit(){
-//		$this->env->getCaptain()->callHook( 'Limiter', 'registerLimits', $this );
-	}
-
-	public function allows( $key, $value = NULL, $operation = self::OPERATION_COMPARE_NUMBER ){
+	public function allows( $key, $value = NULL, $operation = self::OPERATION_COMPARE_NUMBER )
+	{
 		if( !$this->rules->has( $key ) )
 			return TRUE;
 		if( $value === NULL )
@@ -40,19 +34,16 @@ class Logic_Limiter{
 		}
 	}
 
-	public function denies( $key, $value = NULL, $operation = self::OPERATION_COMPARE_NUMBER ){
+	public function denies( $key, $value = NULL, $operation = self::OPERATION_COMPARE_NUMBER )
+	{
 		if( !$this->rules->has( $key ) )
 			return FALSE;
 		return !$this->allows( $key, $value, $operation );
 	}
 
-	static public function getInstance( $env ){
-		if( !self::$instance )
-			self::$instance		= new self( $env );
-		return self::$instance;
-	}
 
-	public function get( $key ){
+	public function get( $key )
+	{
 		return $this->rules->get( $key );
 	}
 
@@ -67,26 +58,48 @@ class Logic_Limiter{
 	 *	@param		boolean		$caseSensitive	Flag: return list with lowercase rule keys or dictionary with no case sensitivy
 	 *	@return		array|ADT_List_Dictionary	Map or dictionary object containing all or filtered rules
 	 */
-	public function getAll( $prefix = NULL, $asDictionary = FALSE, $caseSensitive = TRUE ){
+	public function getAll( $prefix = NULL, $asDictionary = FALSE, $caseSensitive = TRUE )
+	{
 		return $this->rules->getAll( $prefix, $asDictionary, $caseSensitive );
 	}
 
-	public function getRules(){
+	public function getRules()
+	{
 		return $this->rules;
 	}
 
-	public function has( $key ){
+	public function has( $key )
+	{
 		return $this->rules->has( $key );
 	}
 
-	public function index(){
+	public function index()
+	{
 		return $this->rules->getAll();
 	}
 
-	public function set( $key, $value ){
+	public function set( $key, $value )
+	{
 		if( !$this->enabled )
 			return NULL;
 		return $this->rules->set( $key, $value );
 	}
+
+	protected function __construct( CMF_Hydrogen_Environment $env )
+	{
+		$this->env			= $env;
+		$this->moduleConfig	= $env->getConfig()->getAll( 'module.resource_limiter.', TRUE );
+		$this->enabled		= $this->moduleConfig->get( 'active' );
+		$this->rules		= new ADT_List_Dictionary();
+		$this->__onInit();
+	}
+
+	protected function __clone()
+	{
+	}
+
+	protected function __onInit()
+	{
+//		$this->env->getCaptain()->callHook( 'Limiter', 'registerLimits', $this );
+	}
 }
-?>

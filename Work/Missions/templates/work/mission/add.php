@@ -7,23 +7,23 @@ $optType		= UI_HTML_Elements::Options( $words['types'], $mission->type );
 #$optPriority	= UI_HTML_Elements::Options( $words['priorities'], $mission->priority );
 #$optStatus		= UI_HTML_Elements::Options( $words['states'], $mission->status );
 
-$optPriority	= array();
+$optPriority	= [];
 foreach( $words['priorities'] as $key => $value )
 	$optPriority[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->priority == $key, NULL, 'mission priority'.$key );
 $optPriority	= join( $optPriority );
 
-$optStatus	= array();
+$optStatus	= [];
 foreach( $words['states'] as $key => $value )
 	if( $key >= 0 && $key <= 3 )
 		$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
 $optStatus	= join( $optStatus );
 
-$optWorker	= array();
+$optWorker	= [];
 foreach( $users as $user )
 	$optWorker[$user->userId]	= $user->username;
 $optWorker		= UI_HTML_Elements::Options( $optWorker, $userId );
 
-$optProject	= array();
+$optProject	= [];
 foreach( $userProjects as $projectId => $project )
 	$optProject[$projectId]	= $project->title;
 $optProject	= UI_HTML_Elements::Options( $optProject, $mission->projectId );

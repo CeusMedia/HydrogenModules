@@ -31,7 +31,7 @@ class Logic_Billing
 		return $transactionId;
 	}
 
-	public function getTransactions( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getTransactions( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
@@ -375,12 +375,12 @@ class Logic_Billing
 		return $this->modelBill->get( $billId );
 	}
 
-	public function getBills( array $conditions, array $orders = array(), array $limits = array() ): array
+	public function getBills( array $conditions, array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelBill->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getBillCorporationTransactions( $billId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getBillCorporationTransactions( $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, array(
 			'toType'	=> Model_Billing_Transaction::TYPE_CORPORATION,
@@ -402,7 +402,7 @@ class Logic_Billing
 		);
 	}
 
-	public function getBillPersonTransactions( $billId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getBillPersonTransactions( $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, array(
 			'toType'	=> Model_Billing_Transaction::TYPE_PERSON,
@@ -419,7 +419,7 @@ class Logic_Billing
 		return $relation;
 	}
 
-	public function getBillReserves( $billId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getBillReserves( $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( array( 'billId' => $billId ), $conditions );
 		$orders		= $orders ? $orders : array( 'billReserveId' => 'ASC' );
@@ -434,7 +434,7 @@ class Logic_Billing
 		return $this->modelBillShare->get( $shareId );
 	}
 
-	public function getBillShares( $billId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getBillShares( $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( array( 'billId' => $billId ), $conditions );
 		$orders		= $orders ? $orders : array( 'billShareId' => 'ASC' );
@@ -446,12 +446,12 @@ class Logic_Billing
 		return $this->modelCorporation->get( $corporationId );
 	}
 
-	public function getCorporations( array $conditions = array(), array $orders = array(), array$limits = array() ): array
+	public function getCorporations( array $conditions = [], array $orders = [], array$limits = [] ): array
 	{
 		return $this->modelCorporation->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getCorporationExpenses( $corporationId, array $conditions = array(), array $orders = array(), array $limits = array() )
+	public function getCorporationExpenses( $corporationId, array $conditions = [], array $orders = [], array $limits = [] )
 	{
 		$conditions	= array_merge( $conditions, array(
 			'fromType'	=> Model_Billing_Transaction::TYPE_CORPORATION,
@@ -466,7 +466,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getCorporationPayins( $corporationId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getCorporationPayins( $corporationId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, array(
 			'fromType'	=> Model_Billing_Transaction::TYPE_PAYIN,
@@ -477,7 +477,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getCorporationPayouts( $corporationId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getCorporationPayouts( $corporationId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, array(
 			'fromType'	=> Model_Billing_Transaction::TYPE_CORPORATION,
@@ -488,7 +488,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getCorporationReserves( $corporationId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getCorporationReserves( $corporationId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions		= array_merge( $conditions, array(
 			'fromType'	=> array(
@@ -507,7 +507,7 @@ class Logic_Billing
 		return $this->modelExpense->get( $expenseId );
 	}
 
-	public function getExpenses( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getExpenses( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelExpense->getAll( $conditions, $orders, $limits );
 	}
@@ -517,14 +517,14 @@ class Logic_Billing
 		return $this->modelPerson->get( $personId );
 	}
 
-	public function getPersonBillShares( $personId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getPersonBillShares( $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( array( 'personId' => $personId ), $conditions );
 		$orders		= $orders ? $orders : array( 'billShareId' => 'ASC' );
 		return $this->modelBillShare->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getPersonExpenses( $personId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getPersonExpenses( $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, array(
 			'fromType'	=> Model_Billing_Transaction::TYPE_PERSON,
@@ -539,7 +539,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getPersonReserves( $personId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getPersonReserves( $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, array(
 			'fromType'	=> array(
@@ -553,7 +553,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getPersonPayins( $personId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getPersonPayins( $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, array(
 			'fromType'	=> Model_Billing_Transaction::TYPE_PAYIN,
@@ -564,7 +564,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getPersonPayouts( $personId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getPersonPayouts( $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, array(
 			'fromType'	=> Model_Billing_Transaction::TYPE_PERSON,
@@ -575,7 +575,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getPersons( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getPersons( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelPerson->getAll( $conditions, $orders, $limits );
 	}
@@ -585,7 +585,7 @@ class Logic_Billing
 		return $this->modelReserve->get( $reserveId );
 	}
 
-	public function getReserves( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getReserves( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelReserve->getAll( $conditions, $orders, $limits );
 	}

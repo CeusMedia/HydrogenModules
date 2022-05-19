@@ -3,14 +3,14 @@
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 
-$authorRelationsByAuthorId	= array();
+$authorRelationsByAuthorId	= [];
 foreach( $articleAuthors as $item )
 	$authorRelationsByAuthorId[$item->authorId]	= $item;
 
 $panelAuthors	= '<div class="alert alert-error">Noch keine Autoren/Herausgeber zugewiesen.</div>';
 
 if( $articleAuthors ){
-	$listAuthors	= array();
+	$listAuthors	= [];
 	foreach( $articleAuthors as $item ){
 
 		$optRole		= $words['authorRoles'];
@@ -53,7 +53,7 @@ if( $articleAuthors ){
 <hr/>';
 }
 
-$optAuthor	= array();
+$optAuthor	= [];
 foreach( $authors as $item )
 	if( !in_array( $item->authorId, array_keys( $authorRelationsByAuthorId ) ) ){
 		$label	= $item->lastname . ( $item->firstname ? ', '.$item->firstname : "" );

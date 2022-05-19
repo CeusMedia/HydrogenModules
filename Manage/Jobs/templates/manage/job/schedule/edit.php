@@ -17,7 +17,7 @@ $optStatus	= $wordsGeneral['job-definition-statuses'];
 $optStatus	= UI_HTML_Elements::Options( $optStatus, $item->status );
 
 
-$optDefinition	= array();
+$optDefinition	= [];
 foreach( $definitionMap as $definitionId => $definition )
 	$optDefinition[$definitionId]	= $definition->identifier;
 $optDefinition	= UI_HTML_Elements::Options( $optDefinition );
@@ -61,12 +61,12 @@ $optDayOfMonth		= UI_HTML_Elements::Options( $optDayOfMonth );
 $optMonthOfYear		= array_merge( $words['options-monthOfYear'], array( 'value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:' ) );
 $optMonthOfYear		= UI_HTML_Elements::Options( $optMonthOfYear );
 
-$optMinutes	= array();
+$optMinutes	= [];
 for( $i=0; $i<=59; $i++ )
 	$optMinutes[$i]	= $i;
 $optMinutes		= UI_HTML_Elements::Options( $optMinutes );
 
-$optHour	= array();
+$optHour	= [];
 for( $i=0; $i<=23; $i++ )
 	$optHour[$i]	= $i;
 $optHour		= UI_HTML_Elements::Options( $optHour );
@@ -82,7 +82,7 @@ $optWeekday	= array(
 );
 $optWeekday		= UI_HTML_Elements::Options( $optWeekday );
 
-$optDay	= array();
+$optDay	= [];
 for( $i=1; $i<=31; $i++ )
 	$optDay[$i]	= $i;
 $optDay		= UI_HTML_Elements::Options( $optDay );

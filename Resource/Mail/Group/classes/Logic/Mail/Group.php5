@@ -215,13 +215,13 @@ class Logic_Mail_Group extends CMF_Hydrogen_Logic
 
 	public function getGroups( bool $activeOnly = FALSE ): array
 	{
-		$indices	= array();
+		$indices	= [];
 		if( $activeOnly )
 			$indices['status']	= array(
 				Model_Mail_Group::STATUS_ACTIVATED,
 				Model_Mail_Group::STATUS_WORKING,
 			);
-		$list	= array();
+		$list	= [];
 		foreach( $this->modelGroup->getAll( $indices ) as $group )
 			$list[$group->mailGroupId]	= $group;
 		return $list;

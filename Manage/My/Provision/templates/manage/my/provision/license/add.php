@@ -9,7 +9,7 @@ $iconOrder		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopp
 if( !$productId ){
 	$list	= 'Keine Produkte vorhanden.';
 	if( $products ){
-		$list	= array();
+		$list	= [];
 		foreach( $products as $itemProduct ){
 			$link		= UI_HTML_Tag::create( 'a', array(
 				UI_HTML_Tag::create( 'h5', $itemProduct->title ),
@@ -41,7 +41,7 @@ if( !$productId ){
 </div>';
 }
 else if( !$productLicenseId ){
-	$list	= array();
+	$list	= [];
 	foreach( $productLicenses as $itemProductLicense ){
 		if( $itemProductLicense->productId != $productId )
 			continue;

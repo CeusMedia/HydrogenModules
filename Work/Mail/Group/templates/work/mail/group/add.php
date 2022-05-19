@@ -3,7 +3,7 @@
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
-$optManagerId	= array();
+$optManagerId	= [];
 foreach( $users as $user )
 	$optManagerId[$user->userId]	= $user->username;
 $optManagerId	= UI_HTML_Elements::Options( $optManagerId );
@@ -15,7 +15,7 @@ $optStatus		= array(
 );
 $optStatus		= UI_HTML_Elements::Options( $optStatus, 0 );
 
-$optRoleId	= array();
+$optRoleId	= [];
 foreach( $roles as $role )
 	$optRoleId[$role->mailGroupRoleId]	= $role->title;
 $optRoleId	= UI_HTML_Elements::Options( $optRoleId );
@@ -25,7 +25,7 @@ $optVisibility	= UI_HTML_Elements::Options( $words['group-visibilities'], @$data
 
 //print_m( $servers );die;
 
-$optServerId		= array();
+$optServerId		= [];
 foreach( $servers as $server )
 	$optServerId[$server->mailGroupServerId]	= $server->title;
 $optServerId		= UI_HTML_Elements::Options( $optServerId, @$data->mailGroupServerId );

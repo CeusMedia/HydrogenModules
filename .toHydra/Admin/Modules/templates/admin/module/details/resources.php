@@ -2,10 +2,10 @@
 
 $w		= (object) $words['view'];
 $count	= 0;
-$list	= array();
+$list	= [];
 
 if( $module->files->classes ){
-	$classes	= array();
+	$classes	= [];
 	foreach( $module->files->classes as $item ){
 		$count++;
 		$class	= NULL;
@@ -24,7 +24,7 @@ if( $module->files->classes ){
 
 
 if( $module->files->locales ){
-	$locales	= array();
+	$locales	= [];
 	foreach( $module->files->locales as $item ){
 		$count++;
 		$class	= NULL;
@@ -40,7 +40,7 @@ if( $module->files->locales ){
 
 
 if( $module->files->templates ){
-	$templates	= array();
+	$templates	= [];
 	foreach( $module->files->templates as $item ){
 		$count++;
 		$class	= NULL;
@@ -56,7 +56,7 @@ if( $module->files->templates ){
 
 
 if( $module->files->styles ){
-	$styles	= array();
+	$styles	= [];
 	foreach( $module->files->styles as $item ){
 		$count++;
 		$class	= NULL;
@@ -72,7 +72,7 @@ if( $module->files->styles ){
 
 
 if( $module->files->scripts ){
-	$scripts	= array();
+	$scripts	= [];
 	foreach( $module->files->scripts as $item ){
 		$count++;
 		$class	= NULL;
@@ -88,7 +88,7 @@ if( $module->files->scripts ){
 
 
 if( $module->files->images ){
-	$images	= array();
+	$images	= [];
 	foreach( $module->files->images as $item ){
 		$count++;
 		$class	= NULL;
@@ -101,7 +101,7 @@ if( $module->files->images ){
 }
 
 if( $module->files->files ){
-	$files	= array();
+	$files	= [];
 	foreach( $module->files->files as $item ){
 		$count++;
 		$class	= NULL;

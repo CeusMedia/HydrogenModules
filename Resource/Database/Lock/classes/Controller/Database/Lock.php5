@@ -7,7 +7,7 @@ class Controller_Database_Lock extends CMF_Hydrogen_Controller
 	 *	@deprecated		use hook class instead
 	 *	@todo			remove after all installations are updated
 	 */
-	static public function ___onAuthLogout( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	static public function ___onAuthLogout( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
 	{
 		$model		= new Model_Lock( $env );
 		$model->removeByIndices( array(

@@ -2,7 +2,7 @@
 //print_m( $article );
 //die;
 
-$optStatus	= array();
+$optStatus	= [];
 foreach( $words['states'] as $value => $label )
 	$optStatus[$value]	= $label;
 $optStatus	= UI_HTML_Elements::Options( $optStatus, $article->status );
@@ -20,7 +20,7 @@ $listAuthors	= '<b><em>noch keine</em></b>';
 $listTags		= '<b><em>noch keine</em></b>';
 $listVersions	= '<b><em>noch keine</em></b>';
 
-$list	= array();
+$list	= [];
 if( $tags ){
 	foreach( $tags as $tag ){
 		$url		= './blog/removeTag/'.$article->articleId.'/'.$tag->tagId;
@@ -31,7 +31,7 @@ if( $tags ){
 	$listTags	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
 }
 
-$list	= array();
+$list	= [];
 if( $authors ){
 	foreach( $authors as $author ){
 		$urlUser	= './admin/user/edit/'.$author->userId;
@@ -43,7 +43,7 @@ if( $authors ){
 	$listAuthors	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
 }
 
-$list	= array();
+$list	= [];
 if( $article->versions ){
 	$label	= 'Version '.( count( $article->versions ) + 1 );
 	$link	= UI_HTML_Elements::Link( './blog/edit/'.$article->articleId, $label, 'version latest' );

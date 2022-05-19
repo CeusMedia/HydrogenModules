@@ -1,7 +1,7 @@
 <?php
 class Hook_System_Load extends CMF_Hydrogen_Hook
 {
-	public static function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() )
+	public static function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] )
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.server_system_load.', TRUE );			//  shortcut module configuration
 		$cores			= (int) $moduleConfig->get( 'cores' );										//  get number of cpu cores from module config
@@ -26,7 +26,7 @@ class Hook_System_Load extends CMF_Hydrogen_Hook
 		}
 	}
 
-	public static function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	public static function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
 	{
 		$context->registerPanel( 'system-server-load', array(
 			'url'		=> './system/load/ajaxRenderDashboardPanel',

@@ -2,12 +2,12 @@
 
 $nodeId	= isset( $nodeId ) ? $nodeId : NULL;
 
-$optGraph	= array();
+$optGraph	= [];
 foreach( $graphs as $graph )
 	$optGraph[$graph->graphId]	= $graph->title;
 $optGraph	= UI_HTML_Elements::Options( $optGraph );
 
-$optNode	= array();
+$optNode	= [];
 foreach( $nodes as $node )
 	$optNode[$node->nodeId]	= $node->label ? $node->label : $node->ID;
 $optFromNode	= UI_HTML_Elements::Options( $optNode, $nodeId );

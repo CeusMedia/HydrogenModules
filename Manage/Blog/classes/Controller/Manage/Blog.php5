@@ -33,14 +33,14 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 		return $label;
 	}
 
-	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
 		$frontend		= Logic_Frontend::getInstance( $env );
 		if( !$frontend->hasModule( 'Info_Blog' ) )
 			return;
 
 		$words		= $env->getLanguage()->getWords( 'manage/blog' );
 		$model		= new Model_Blog_Post( $env );
-		$list		= array();
+		$list		= [];
 		$conditions	= array( 'status' => 1 );
 		$orders		= array( 'createdAt' => 'DESC' );
 		foreach( $model->getAll( $conditions, $orders ) as $nr => $post ){
@@ -88,7 +88,7 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 			}
 
 		}
-		$data	= array();
+		$data	= [];
 		foreach( $this->modelPost->getColumns() as $column ){
 			$data[$column]	= $this->request->get( $column );
 		}
@@ -194,7 +194,7 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 		$limit		= 15;
 		$offset		= (int) $page * $limit;
 		$orders		= array( 'createdAt' => 'DESC' );
-		$conditions	= array();
+		$conditions	= [];
 		if( strlen( $filterStatus ) )
 			$conditions['status']	= $filterStatus;
 		if( strlen( $filterCategoryId ) )
@@ -233,7 +233,7 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 		$postAuthor	= $this->modelUser->get( $post->authorId );										//  set post author as mail receiver
 		$logic->handleMail( $mail, $postAuthor, $language->getLanguage() );							//  enqueue mail
 
-		$addresses	= array();
+		$addresses	= [];
 		$indices	= array( 'postId' => $post->postId, 'status' => '>= 0' );						//  get all visible post comments
 		foreach( $this->modelComment->getAllByIndices( $indices ) as $item ){						//  find former comment authors
 			if( empty( $item->email ) )																//  comment without email address

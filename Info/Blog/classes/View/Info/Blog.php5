@@ -9,7 +9,7 @@ class View_Info_Blog extends CMF_Hydrogen_View
 	{
 	}
 
-	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$data		= (object) $payload;
 		$pattern	= "/^(.*)(\[blog:(.+)\])(.*)$/sU";
@@ -130,7 +130,7 @@ class View_Info_Blog extends CMF_Hydrogen_View
 	}
 
 	protected static function renderFactsStatic( CMF_Hydrogen_Environment $env, $facts, $listClass = 'dl-horizontal' ){
-		$list	= array();
+		$list	= [];
 		foreach( $facts as $label => $value ){
 			$list[]	= UI_HTML_Tag::create( 'dt', $label ).UI_HTML_Tag::create( 'dd', $value );
 		}

@@ -1,6 +1,6 @@
 <?php
-class View_Helper_TinyMce_FileBrowser{
-
+class View_Helper_TinyMce_FileBrowser
+{
 	protected $thumbnailer;
 	protected $displayMode			= 0;
 	protected $sourceMode			= 0;
@@ -12,58 +12,14 @@ class View_Helper_TinyMce_FileBrowser{
 	const SOURCE_MODE_IMAGE			= 0;
 	const SOURCE_MODE_LINK			= 1;
 
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env	= $env;
 		$this->__onInit();
 	}
 
-	public function __onInit(){
-		$this->thumbnailer	= new View_Helper_Thumbnailer( $this->env, 128, 128 );
-		$this->baseUrl	= $this->env->url;
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$this->baseUrl	= Logic_Frontend::getInstance( $this->env )->getPath();
-		$this->timePhraser	= new View_Helper_TimePhraser( $this->env );
-	}
-
-	protected function filterFoldersByPath( $items, $path ){
-		$list	= array();
-		foreach( $items as $item ){
-			$itemPath	= $item->title;
-			if( strlen( $path ) ){
-				if( substr( $item->title, 0, strlen( $path ) + 1 ) !== $path.'/' )
-					continue;
-				$itemPath	= substr( $item->title, strlen( $path ) + 1 );
-			}
-			$parts			= explode( "/", $itemPath );
-			if( count( $parts ) < 2 )
-				continue;
-			if( !isset( $list[$parts[0]] ) )
-				$list[$parts[0]]	= 0;
-//			if( count( $parts ) === 2 )
-				$list[$parts[0]]++;
-		}
-		return $list;
-	}
-
-	protected function filterItemsByPath( $items, $path ){
-		$list	= array();
-		foreach( $items as $item ){
-			if( strlen( $path ) ){
-				if( substr( $item->title, 0, strlen( $path ) + 1 ) !== $path.'/' )
-					continue;
-				if( substr_count( $item->title, '/' ) !== count( explode( "/", $path ) ) )
-					continue;
-			}
-			else{
-				if( preg_match( "@/@", $item->title ) )
-					continue;
-			}
-			$list[]	= $item;
-		}
-		return $list;
-	}
-
-	public function render(){
+	public function render()
+	{
 		$buffer		= new UI_OutputBuffer();
 		$helper		= new View_Helper_TinyMce( $this->env );
 		try{
@@ -97,8 +53,89 @@ class View_Helper_TinyMce_FileBrowser{
 		exit;
 	}
 
-	protected function renderFolderItem( $path, $label, $count = NULL, $icon = 'folder-open' ){
-		$facts		= array();
+	public function setDisplayMode( $displayMode )
+	{
+		$this->displayMode		= $displayMode;
+		$this->cssClassPrefix	= $displayMode == self::DISPLAY_MODE_GRID ? 'grid' : 'list';
+		return $this;
+	}
+
+	public function setSourceMode( $sourceMode )
+	{
+		$this->sourceMode	= $sourceMode;
+		return $this;
+	}
+
+	public function setTopicId( $topicId )
+	{
+		$this->topicId	= $topicId;
+		return $this;
+	}
+
+	public function setTopics( $topics )
+	{
+		$this->topics	= $topics;
+		return $this;
+	}
+
+	public function setPath( $path )
+	{
+		$this->path		= $path;
+		return $this;
+	}
+
+	protected function __onInit()
+	{
+		$this->thumbnailer	= new View_Helper_Thumbnailer( $this->env, 128, 128 );
+		$this->baseUrl	= $this->env->url;
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$this->baseUrl	= Logic_Frontend::getInstance( $this->env )->getPath();
+		$this->timePhraser	= new View_Helper_TimePhraser( $this->env );
+	}
+
+	protected function filterFoldersByPath( $items, string $path ): array
+	{
+		$list	= [];
+		foreach( $items as $item ){
+			$itemPath	= $item->title;
+			if( strlen( $path ) ){
+				if( substr( $item->title, 0, strlen( $path ) + 1 ) !== $path.'/' )
+					continue;
+				$itemPath	= substr( $item->title, strlen( $path ) + 1 );
+			}
+			$parts			= explode( "/", $itemPath );
+			if( count( $parts ) < 2 )
+				continue;
+			if( !isset( $list[$parts[0]] ) )
+				$list[$parts[0]]	= 0;
+//			if( count( $parts ) === 2 )
+				$list[$parts[0]]++;
+		}
+		return $list;
+	}
+
+	protected function filterItemsByPath( $items, string $path ): array
+	{
+		$list	= [];
+		foreach( $items as $item ){
+			if( strlen( $path ) ){
+				if( substr( $item->title, 0, strlen( $path ) + 1 ) !== $path.'/' )
+					continue;
+				if( substr_count( $item->title, '/' ) !== count( explode( "/", $path ) ) )
+					continue;
+			}
+			else{
+				if( preg_match( "@/@", $item->title ) )
+					continue;
+			}
+			$list[]	= $item;
+		}
+		return $list;
+	}
+
+	protected function renderFolderItem( $path, $label, $count = NULL, $icon = 'folder-open' )
+	{
+		$facts		= [];
 		if( is_int( $count ) && $count > 0 ){
 			$facts[]	= sprintf( $count > 1 ? '%d Einträge' : '%d Eintrag', $count );
 		}
@@ -117,14 +154,16 @@ class View_Helper_TinyMce_FileBrowser{
 		) );
 	}
 
-	protected function renderItemException( $itemUri, $itemLabel, $exception ){
+	protected function renderItemException( $itemUri, $itemLabel, $exception )
+	{
 		return UI_HTML_Tag::create( 'li', $exception->getMessage(), array(
 			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-file',
 			'data-url'	=> '',
 		) );
 	}
 
-	protected function renderImageItem( $path, $filePath, $size = NULL, $icon = 'image' ){
+	protected function renderImageItem( $path, $filePath, $size = NULL, $icon = 'image' )
+	{
 		$labelParts	= explode( "/", $filePath );
 		$label	= $labelParts[count( $labelParts ) - 1];
 //		if( is_string( $size ) )
@@ -187,11 +226,12 @@ class View_Helper_TinyMce_FileBrowser{
 		) );
 	}
 
-	protected function renderImageMode(){
+	protected function renderImageMode()
+	{
 		if( !isset( $this->topics[$this->topicId] ) )
 			throw new DomainException( 'Invalid topic ID' );
 
-		$list		= array();
+		$list		= [];
 		$folders	= $this->filterFoldersByPath( $this->topics[$this->topicId]->menu, $this->path );
 		$images		= $this->filterItemsByPath( $this->topics[$this->topicId]->menu, $this->path );
 
@@ -225,7 +265,8 @@ class View_Helper_TinyMce_FileBrowser{
 		return $listItems;
 	}
 
-	protected function renderLinkItem( $path, $filePath, $size = NULL, $icon = 'link' ){
+	protected function renderLinkItem( $path, $filePath, $size = NULL, $icon = 'link' )
+	{
 		$fullpath	= preg_replace( '/^\.\//', '', $path );
 		if( !preg_match( '/^https?:\/\//', $fullpath ) )
 			$fullpath	= $this->baseUrl.$fullpath;
@@ -248,11 +289,12 @@ class View_Helper_TinyMce_FileBrowser{
 		) );
 	}
 
-	protected function renderLinkMode(){
+	protected function renderLinkMode()
+	{
 		if( !isset( $this->topics[$this->topicId] ) )
 			throw new DomainException( 'Invalid topic ID' );
 
-		$list		= array();
+		$list		= [];
 		$folders	= $this->filterFoldersByPath( $this->topics[$this->topicId]->menu, $this->path );
 		$links		= $this->filterItemsByPath( $this->topics[$this->topicId]->menu, $this->path );
 
@@ -294,14 +336,15 @@ class View_Helper_TinyMce_FileBrowser{
 		return $listItems;
 	}
 
-	protected function renderTopBar(){
+	protected function renderTopBar()
+	{
 		$mode		= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
 		$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 		$iconGrid	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
 
 		$parts		= explode( '/', $this->path );
-		$pathLabel	= array();
-		$way		= array();
+		$pathLabel	= [];
+		$way		= [];
 		foreach( $parts as $nr => $part ){
 			if( $nr == count( $parts ) - 1 )
 				break;
@@ -333,8 +376,9 @@ class View_Helper_TinyMce_FileBrowser{
 			), array( 'class' => 'buttons' ) );
 	}
 
-	protected function renderTopicList(){
-		$list	= array();
+	protected function renderTopicList()
+	{
+		$list	= [];
 		$mode	= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
 		foreach( $this->topics as $topicId => $topic ){
 			$count	= UI_HTML_Tag::create( 'small', '('.count( $topic->menu ).')', array( 'class' => 'muted' ) );
@@ -349,31 +393,5 @@ class View_Helper_TinyMce_FileBrowser{
 		return UI_HTML_Tag::create( 'ul', $list, array(
 			'class'	=> 'nav nav-pills nav-stacked'
 		) );
-	}
-
-	public function setDisplayMode( $displayMode ){
-		$this->displayMode		= $displayMode;
-		$this->cssClassPrefix	= $displayMode == self::DISPLAY_MODE_GRID ? 'grid' : 'list';
-		return $this;
-	}
-
-	public function setSourceMode( $sourceMode ){
-		$this->sourceMode	= $sourceMode;
-		return $this;
-	}
-
-	public function setTopicId( $topicId ){
-		$this->topicId	= $topicId;
-		return $this;
-	}
-
-	public function setTopics( $topics ){
-		$this->topics	= $topics;
-		return $this;
-	}
-
-	public function setPath( $path ){
-		$this->path		= $path;
-		return $this;
 	}
 }

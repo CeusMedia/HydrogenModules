@@ -110,7 +110,7 @@ $panelInfo	= UI_HTML_Tag::create( 'div', array(
 
 $list	= 'keine kommentare';
 if( count( $comments ) ){
-	$list	= array();
+	$list	= [];
 	foreach( $comments as $comment ){
 		$list[]	= UI_HTML_Tag::create( 'li', $comment->content );
 	}
@@ -146,7 +146,7 @@ $panelComments	= UI_HTML_Tag::create( 'div', array(
 
 $list	= 'keine kommentare';
 if( count( $tags ) ){
-	$list	= array();
+	$list	= [];
 	foreach( $tags as $tag ){
 		$list[]	= UI_HTML_Tag::create( 'li', $tag->title );
 	}

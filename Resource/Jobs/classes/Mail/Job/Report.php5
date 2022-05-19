@@ -62,9 +62,9 @@ class Mail_Job_Report extends Mail_Abstract
 
 	protected function parseTraceString( string $trace ): array
 	{
-		$list	= array();
+		$list	= [];
 		foreach( explode( PHP_EOL, $trace ) as $nr => $line ){
-			$matches	= array();
+			$matches	= [];
 			$item		= (object) array(
 				'nr'	=> $nr,
 				'file'	=> NULL,
@@ -127,7 +127,7 @@ class Mail_Job_Report extends Mail_Abstract
 		$duration		= $seconds ? $durationHelper->convertSecondsToDuration( $seconds, ' ' ) : '0s';
 		$message		= json_decode( $data['run']->message );
 
-		$facts	= array();
+		$facts	= [];
 		if( $data['run']->title )
 			$facts['Job-ID']	= $data['definition']->identifier;
 		$facts['Typ']		= $typeLabel;
@@ -143,7 +143,7 @@ class Mail_Job_Report extends Mail_Abstract
 
 	protected function renderTraceStringAsHtml( $traceAsString ): string
 	{
-		$list	= array();
+		$list	= [];
 		$traces	= $this->parseTraceString( $traceAsString );
 		foreach( $traces as $item ){
 			$nr	= count( $traces ) - $item->nr;
@@ -166,7 +166,7 @@ class Mail_Job_Report extends Mail_Abstract
 
 	protected function renderFactsAsHtml( array $facts, ?string $listClass = 'dl-horizontal', ?string $listId = NULL ): string
 	{
-		$list	= array();
+		$list	= [];
 		foreach( $facts as $key => $value ){
 			$list[]	= UI_HTML_Tag::create( 'dt', $key );
 			$list[]	= UI_HTML_Tag::create( 'dd', $value );

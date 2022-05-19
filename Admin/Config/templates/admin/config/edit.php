@@ -19,7 +19,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconCancel		= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 }
 
-$rows	= array();
+$rows	= [];
 foreach( $module->config as $item ){
 	$input	= $view->renderConfigInput( $moduleId, $item );
 

@@ -32,7 +32,7 @@ class Controller_Work_Billing_Person_Expense extends CMF_Hydrogen_Controller
 	{
 		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
-		$conditions	= array();
+		$conditions	= [];
 		if( $filterYear || $filterMonth ){
 			if( $filterYear && $filterMonth )
 				$conditions['dateBooked']	= $filterYear.'-'.$filterMonth.'-%';
@@ -42,7 +42,7 @@ class Controller_Work_Billing_Person_Expense extends CMF_Hydrogen_Controller
 				$conditions['dateBooked']	= '%-'.$filterMonth.'-%';
 		}
 		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
-		$limits		= array();
+		$limits		= [];
 		$expenses	= $this->logic->getPersonExpenses( $personId, $conditions, $orders, $limits );
 		$this->addData( 'person', $this->logic->getPerson( $personId ) );
 		$this->addData( 'expenses', $expenses );

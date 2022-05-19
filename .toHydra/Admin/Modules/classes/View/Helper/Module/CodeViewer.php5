@@ -24,7 +24,7 @@ class View_Helper_Module_CodeViewer extends CMF_Hydrogen_View_Helper_Abstract {
 		if( !$module )
 			throw new RuntimeException( 'Invalid module ID "'.$moduleId.'"' );
 		$sourceType	= $sourceType !== NULL ? $sourceType : $module->type;
-		$modes	= array();
+		$modes	= [];
 		if( $sourceType > 0 && $sourceType < 4 ){													//  module is custom, copied or linked
 			$pathApp	= $this->env->pathApp;															//  get path to remote application
 			$config		= $this->env->getRemote()->getConfig();											//  get config object of remote application

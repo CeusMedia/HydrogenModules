@@ -17,7 +17,7 @@ class Controller_Info_Download extends CMF_Hydrogen_Controller
 	protected $path;
 
 	/**	@var	array											$rights				List of access rights of current user */
-	protected $rights		= array();
+	protected $rights		= [];
 
 	public function deliver( $fileId = NULL )
 	{
@@ -160,7 +160,7 @@ class Controller_Info_Download extends CMF_Hydrogen_Controller
 
 	protected function getStepsFromFolderId( $folderId ): array
 	{
-		$steps		= array();
+		$steps		= [];
 		while( $folderId ){
 			$folder	= $this->modelFolder->get( $folderId );
 			if( !$folder )

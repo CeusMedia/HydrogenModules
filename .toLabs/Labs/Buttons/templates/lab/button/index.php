@@ -56,7 +56,7 @@ $types	= array(
 	'run',
 );
 $url	= './lab?t='.time();
-$r		= array();
+$r		= [];
 foreach( $types as $nr => $type ){
 	$class	= 'button icon '.$type;
 	$a	= ButtonLink( $url, $type, $class, 'Really?' );
@@ -69,7 +69,7 @@ foreach( $types as $nr => $type ){
 	$h	= IconButtonLink( $url, $type, $class.' icon-only tiny', 'Really?', TRUE );
 	$r[]= '<tr id="type-'.$nr.'" style="clear: left"><td>'.$a.'</td><td>'.$b.'</td><td>'.$c.'</td><td>'.$d.'</td><td>'.$e.' '.$f.'</td><td>'.$g.' '.$h.'</td></tr>';
 }
-$optStyle	= array();
+$optStyle	= [];
 foreach( $styles as $item )
 	$optStyle[$item]	= $item;
 $optStyle	= UI_HTML_Elements::Options( $optStyle, $style );

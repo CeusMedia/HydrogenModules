@@ -4,22 +4,12 @@ use CeusMedia\Markdown\Renderer\Html as MarkdownToHtmlRenderer;
 
 class View_Info_Manual extends CMF_Hydrogen_View
 {
-	public function __onInit()
-	{
-		$page	= $this->env->getPage();
-		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );
-
-		$page->css->theme->addUrl( 'module.info.manual.css' );
-		$page->js->addUrl( $pathJs.'Info.Manual.js' );
-		$page->js->addScriptOnReady( 'InfoManual.UI.Filter.init();' );
-	}
-
 	public function add()
 	{
 	}
 
-	public function category(){
-
+	public function category()
+	{
 	}
 
 	public function edit()
@@ -55,5 +45,15 @@ InfoManual.UI.Page.init("#content-container", "#content-index");';
 	{
 		return urlencode( $name );
 		return str_replace( "%2F", "/", rawurldecode( $name ) );
+	}
+
+	protected function __onInit()
+	{
+		$page	= $this->env->getPage();
+		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );
+
+		$page->css->theme->addUrl( 'module.info.manual.css' );
+		$page->js->addUrl( $pathJs.'Info.Manual.js' );
+		$page->js->addScriptOnReady( 'InfoManual.UI.Filter.init();' );
 	}
 }

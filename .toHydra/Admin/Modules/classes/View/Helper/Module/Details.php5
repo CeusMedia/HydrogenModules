@@ -43,7 +43,7 @@ class View_Helper_Module_Details extends CMF_Hydrogen_View_Helper_Abstract{
 		);
 
 		$nr			= 0;
-		$disabled	= array();
+		$disabled	= [];
 		foreach( $mapTabs as $key => $tabLabel ){
 			$count		= 0;
 			$template	= 'templates/admin/module/details/'.$key.'.php';

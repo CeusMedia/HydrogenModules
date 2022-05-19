@@ -56,8 +56,8 @@ $parser			= new ADT_JSON_Parser;
 $mapper			= new Logic_Form_Transfer_DataMapper( $env );
 $panelTransfers	= '';
 if( $fillTransfers ){
-	$rows	= array();
-	$modals	= array();
+	$rows	= [];
+	$modals	= [];
 	foreach( $fillTransfers as $fillTransfer ){
 		$targetTitle	= $transferTargetMap[$fillTransfer->formTransferTargetId]->title;
 		$status			= $iconCheck.'&nbsp;erfolgreich';
@@ -176,7 +176,7 @@ return UI_HTML_Tag::create( 'div', array(
 
 
 function arrayToTable( $data ){
-	$list	= array();
+	$list	= [];
 	foreach( $data as $key => $value ){
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'th', $key ),

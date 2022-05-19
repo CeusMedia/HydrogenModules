@@ -9,7 +9,7 @@ $iconsStatus = array(
 
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
 if( $licenses ){
-	$list	= array();
+	$list	= [];
 	foreach( $licenses as $license ){
 		$class		= isset( $licenseId ) && $licenseId == $license->productLicenseId ? 'active' : NULL;
 		$label		= $license->license->title.' <small class="muted">()</small>';

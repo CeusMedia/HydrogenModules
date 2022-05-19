@@ -1,19 +1,12 @@
 <?php
-class Controller_Manage_Customer_Project extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Customer_Project extends CMF_Hydrogen_Controller
+{
 	protected $messenger;
 	protected $modelCustomer;
 	protected $logic;
 
-	public function __onInit(){
-		$this->messenger		= $this->env->getMessenger();
-		$this->modelCustomer	= new Model_Customer( $this->env );
-		$this->addData( 'useRatings', $this->env->getModules()->has( 'Manage_Customer_Rating' ) );
-		$this->addData( 'useMap', $this->env->getModules()->has( 'UI_Map' ) );
-		$this->logic	= Logic_CustomerProject::getInstance( $this->env );
-	}
-
-	public function add( $customerId ){
+	public function add( $customerId )
+	{
 		$request	= $this->env->getRequest();
 		$projectId	= $request->get( 'projectId' );
 		$type		= $request->get( 'type' );
@@ -27,12 +20,13 @@ class Controller_Manage_Customer_Project extends CMF_Hydrogen_Controller{
 		$this->restart( $customerId, TRUE );
 	}
 
-	public function index( $customerId ){
+	public function index( $customerId )
+	{
 
 		$relations	= $this->logic->getProjects( $customerId );
 
 		$logic		= Logic_Project::getInstance( $this->env );
-		$list		= array();
+		$list		= [];
 		$projects	= $logic->getProjects( array( 'status' => array( 1, 2, 3, 4, 5 ) ) );
 		foreach( $projects as $project ){
 			if( !array_key_exists( $project->projectId, $relations ) )
@@ -44,10 +38,19 @@ class Controller_Manage_Customer_Project extends CMF_Hydrogen_Controller{
 		$this->addData( 'projects', $list );
 	}
 
-	public function remove( $customerId, $projectId ){
+	public function remove( $customerId, $projectId )
+	{
 		if( $this->logic->remove( $customerId, $projectId ) )
 			$this->messenger->noteSuccess( 'Relation removed.' );
 		$this->restart( $customerId, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->messenger		= $this->env->getMessenger();
+		$this->modelCustomer	= new Model_Customer( $this->env );
+		$this->addData( 'useRatings', $this->env->getModules()->has( 'Manage_Customer_Rating' ) );
+		$this->addData( 'useMap', $this->env->getModules()->has( 'UI_Map' ) );
+		$this->logic	= Logic_CustomerProject::getInstance( $this->env );
+	}
 }
-?>

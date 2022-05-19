@@ -5,7 +5,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller
 	protected $messenger;
 	protected $model;
 	protected $moduleConfig;
-	protected $panels			= array();
+	protected $panels			= [];
 	protected $request;
 	protected $session;
 	protected $userId			= 0;
@@ -20,7 +20,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller
 				$desc	= trim( $this->request->get( 'description' ) );
 				$panels	= $this->request->get( 'panels' );
 				if( !( is_array( $panels ) && count( $panels ) ) )
-					$panels	= array();
+					$panels	= [];
 				$select	= $this->request->has( 'select' );
 				$this->logic->addUserDashboard( $this->userId, $title, $desc, $panels, $select );
 				$this->messenger->noteSuccess( $this->messages->successDashboardAdded, $title );
@@ -47,7 +47,7 @@ class Controller_Info_Dashboard extends CMF_Hydrogen_Controller
 			if( strlen( trim( $dashboard->panels ) ) )
 				$dashboard->panels	= explode( ',', $dashboard->panels );
 			else
-				$dashboard->panels	= array();
+				$dashboard->panels	= [];
 			$count	= 0;
 			foreach( $panels as $panelId ){
 				$panelId	= trim( $panelId );

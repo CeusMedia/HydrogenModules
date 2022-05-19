@@ -5,7 +5,7 @@ class Logic_Sitemap{
 
 	protected $config;
 	protected $env;
-	protected $links		= array();
+	protected $links		= [];
 	protected $frequencies  = array(
 		'always',
 		'hourly',
@@ -64,7 +64,7 @@ class Logic_Sitemap{
 	}
 
 	public function submitToProviders(){
-		$result	= array();
+		$result	= [];
 		foreach( $this->providers as $key => $value ){
 			$url	= sprintf( $value, urlencode( $this->env->url.'sitemap' ) );
 //print_m( $this->env->getConfig()->getAll() );

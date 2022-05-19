@@ -35,14 +35,14 @@ $optMailManager		= UI_HTML_Elements::Options( $optMailManager, $form->managerMai
 $listReferences = '<em class="muted">Keine.</em>';
 
 if( !empty( $references ) ){
-	$domains	= array();
+	$domains	= [];
 	foreach( $references as $reference ){
 		$url	= new ADT_URL( $reference );
 		$domain	= $url->getHost();
 		if( strlen( $url->getPath().$url->getQuery() ) < 2 )
 			continue;
 		if( !array_key_exists( $domain, $domains ) )
-			$domains[$domain]   = array();
+			$domains[$domain]   = [];
 		$title  = preg_replace( '/^\//', '', $url->getPath() );
 		if( strlen( $url->getQuery() ) > 0 ){
 			$title	.= '<small class="muted">?'.$url->getQuery().'</small>';
@@ -54,7 +54,7 @@ if( !empty( $references ) ){
 			])
 		], ['class' => 'autocut']);
 	}
-	$lists = array();
+	$lists = [];
 	foreach( $domains as $domain => $domainReferences ){
 		$list		= UI_HTML_Tag::create( 'ul', $domainReferences, ['class' => 'unstyled'] );
 		$lists[]	= UI_HTML_Tag::create( 'h5', $domain ).$list;

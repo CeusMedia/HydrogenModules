@@ -9,7 +9,7 @@ extract( $view->populateTexts( array( 'top', 'bottom', 'right' ), 'html/manage/m
 $w				= (object) $words['branches'];
 $listBranches	= '<div>'.$w->noEntries.'</div><br/>';
 if( $company->branches ){
-	$listBranches	= array();
+	$listBranches	= [];
 	foreach( $company->branches as $branch ){
 		$url	= './manage/my/company/branch/edit/'.$branch->branchId;
 		$listBranches[]	= HTML::Li( HTML::Link( $url, $branch->title ), 'branch' );
@@ -29,7 +29,7 @@ $panelBranches	= '
 $w			= (object) $words['users'];
 $listUsers	= '<div>'.$w->noEntries.'</div><br/>';
 if( $company->users ){
-	$listUsers	= array();
+	$listUsers	= [];
 	foreach( $company->users as $user ){
 		$label		= $user->username;
 		$salutation	= $words['salutations'][(int) $user->salutation];

@@ -10,14 +10,14 @@ $wordsCurrencies	= array(
 );
 
 //Logic_Payment_Mangopay::$typeCurrencies;
-//$possibleCurrencies	= array();
+//$possibleCurrencies	= [];
 
-$currencies	= array();
+$currencies	= [];
 foreach( $wallets as $item )
 	if( !in_array( $item->Currency, $currencies ) )
 		$currencies[$item->Currency]	= $wordsCurrencies[$item->Currency];
 
-$optCurrency	= array();
+$optCurrency	= [];
 foreach( $currencies as $key => $label )
 	$optCurrency[$key]	= $label;
 $optCurrency	= UI_HTML_Elements::Options( $optCurrency );
@@ -39,7 +39,7 @@ if( count( $wallets ) && ( $walletLocked || count( $wallets ) == 1 ) ){
 			'.$helperWallet->render().'<input type="hidden" name="walletId" value="'.$wallets[0]->Id.'"/>';
 }
 else if( count( $wallets ) > 1 ){
-	$optWallet	= array();
+	$optWallet	= [];
 	foreach( $wallets as $item )
 		$optWallet[$item->Id]	= $item->Description.' ('.$view->formatMoney( $item->Balance, ' ', 0 ).')';
 	$optWallet	= UI_HTML_Elements::Options( $optWallet, $walletId );

@@ -14,7 +14,7 @@ function renderTime( $seconds ){
 function renderTimers( CMF_Hydrogen_Environment $env, $timers ){
 	if( !$timers )
 		return '';
-	$list	= array();
+	$list	= [];
 	foreach( $timers as $timer ){
 		View_Helper_Work_Time_Timer::decorateTimer( $env, $timer );
 
@@ -46,7 +46,7 @@ if( !$data )
 //$table	= UI_HTML_Tag::create( 'div', '...', array( 'class' => 'alert alert-info' ) );
 
 if( $filterMode === "users" ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $data as $projectId => $entry ){
 		if( $projectId === '@total' )
 			continue;
@@ -74,7 +74,7 @@ if( $filterMode === "users" ){
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
 }
 else {
-	$rows	= array();
+	$rows	= [];
 	foreach( $data as $userId => $entry ){
 		if( $userId === '@total' )
 			continue;

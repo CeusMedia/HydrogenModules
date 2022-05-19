@@ -14,13 +14,13 @@ $pagination		= $pagination->render();
 
 $list	= '<div><em class="muted">'.$w->noEntries.'</em></div><br/>';
 if( $projects ){
-	$rows		= array();
+	$rows		= [];
 	foreach( $projects as $project ){
-		$cells		= array();
+		$cells		= [];
 		$url		= './manage/project/view/'.$project->projectId;
 		$label		= $project->title.( $project->isDefault ? '&nbsp;'.$iconDefault : '' );
 		$link		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
-		$users		= array();
+		$users		= [];
 		foreach( $project->users as $projectUser ){
 			if( $projectUser->userId === $project->creatorId )
 				$users[]	= UI_HTML_Tag::create( 'u', $projectUser->username );

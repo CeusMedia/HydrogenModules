@@ -13,41 +13,13 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 	const LIBRARY_MAIL_V1		= 2;
 	const LIBRARY_MAIL_V2		= 4;
 
-	protected $detectedTemplates	= array();
+	protected $detectedTemplates	= [];
 	protected $libraries			= 0;
 	protected $options;
 	protected $modelQueue;
 	protected $modelTemplate;
 	protected $modelAttachment;
 	protected $pathAttachments;
-
-	public function __onInit()
-	{
-		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
-		$this->libraries		= $this->detectAvailableMailLibraries();
-
-		/*  --  INIT QUEUE  --  */
-		$this->modelQueue		= new Model_Mail( $this->env );
-		$this->modelTemplate	= new Model_Mail_Template( $this->env );
-
-		$this->_repair();
-//		$this->detectTemplateToUse();
-
-		/*  --  INIT ATTACHMENTS  --  */
-		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
-		$this->pathAttachments	= $this->options->get( 'path.attachments' );
-		$this->frontendPath		= './';
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
-			$frontend				= Logic_Frontend::getInstance( $this->env );
-			$this->frontendPath		= $frontend->getPath();
-			$this->pathAttachments	= $this->frontendPath.$this->pathAttachments;
-		}
-		if( !file_exists( $this->pathAttachments ) ){
-			mkdir( $this->pathAttachments, 0755, TRUE );
-			if( !file_exists( $this->pathAttachments.'.htaccess' ) )
-				copy( 'classes/.htaccess', $this->pathAttachments.'.htaccess' );
-		}
-	}
 
 	public function abortMailsWithTooManyAttempts()
 	{
@@ -89,11 +61,11 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 		return function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' );
 	}
 
-	public function collectConfiguredReceivers( $userIds, $roleIds = array(), $listConfigKeysToCheck = array() )
+	public function collectConfiguredReceivers( $userIds, $roleIds = [], $listConfigKeysToCheck = [] )
 	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return array();
-		$receivers		= array();
+		$receivers		= [];
 		if( is_string( $userIds ) )
 			$userIds	= explode( ",", trim( $userIds ) );
 		if( is_string( $roleIds ) )
@@ -158,7 +130,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 	 *	@param		array		$conditions		Map of column conditions to look for
 	 *	@return		integer						Number of mails in queue matching conditions
 	 */
-	public function countQueue( array $conditions = array() ): int
+	public function countQueue( array $conditions = [] ): int
 	{
 		return $this->modelQueue->count( $conditions );
 	}
@@ -417,7 +389,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 		}
 
 		//  collect template defaults and overrides
-		$templateIds	= array();
+		$templateIds	= [];
 		array_push( $templateIds, $defaultFromMailModule ? $defaultFromMailModule : 0 );
 		array_push( $templateIds, $defaultFromDatabase ? $defaultFromDatabase : 0 );
 		array_push( $templateIds, $defaultFromFrontend ? $defaultFromFrontend : 0 );
@@ -528,7 +500,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 			$raw	= \CeusMedia\Mail\Renderer::render( $libraryObject );
 		}
 		else if( $this->libraries & Logic_Mail::LIBRARY_COMMON ){
-			$rawLines	= array();
+			$rawLines	= [];
 			foreach( $libraryObject->getHeaders()->getFields() as $header )
 				$rawLines[]	= $header->toString();
 			$rawLines[]	= '';
@@ -587,8 +559,8 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 	 */
 	public function getMailClassNames( bool $strict = TRUE, string $sort = 'ASC' )
 	{
-		$list			= array();																	//  prepare empty result list
-		$matches		= array();																	//  prepare empty matches list
+		$list			= [];																	//  prepare empty result list
+		$matches		= [];																	//  prepare empty matches list
 		$pathClasses	= $this->options->get( 'path.classes' );									//  get path to mail classes from module config
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$pathClasses	= Logic_Frontend::getInstance( $this->env )->getPath().$pathClasses;
@@ -629,7 +601,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 			throw new Exception( 'No mail object available' );
 		if( !is_a( $mail->object->instance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
 			throw new Exception( 'Mail object is not extending Mail_Abstract' );
-		$list		= array();
+		$list		= [];
 		foreach( $mail->object->instance->mail->getHeaders()->getFields() as $headerField )
 			$list[$headerField->getName()]	= $headerField->getValue();
 		return $list;
@@ -684,7 +656,7 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 	 *	@param		array			$havings		List of conditions to apply after grouping
 	 *	@return		array
 	 */
-	public function getQueuedMails( $conditions = array(), array $orders = array(), array $limits = array(), array $columns = array() ): array
+	public function getQueuedMails( $conditions = [], array $orders = [], array $limits = [], array $columns = [] ): array
 	{
 		return $this->modelQueue->getAll( $conditions, $orders, $limits, $columns );
 	}
@@ -696,9 +668,9 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 	 *	@return 	array
 	 *	@todo		remove check for model method "getDistinct" after next minor framework release (0.8.8)
 	 */
-	public function getUsedMailClassNames( array $conditions = array() ): array
+	public function getUsedMailClassNames( array $conditions = [] ): array
 	{
-		$list			= array();
+		$list			= [];
 		$orders			= array( 'mailClass' => 'ASC' );
 		if( method_exists( $this->modelQueue, 'getDistinct' ) )
 			$mailClassNames	= $this->modelQueue->getDistinct( 'mailClass', $conditions, $orders );
@@ -859,6 +831,34 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 	public function decompressObjectInMail( $mail, bool $unserialize = TRUE, bool $force = FALSE )
 	{
 		return $this->decompressMailObject( $mail, $unserialize, $force );
+	}
+
+	protected function __onInit()
+	{
+		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
+		$this->libraries		= $this->detectAvailableMailLibraries();
+
+		/*  --  INIT QUEUE  --  */
+		$this->modelQueue		= new Model_Mail( $this->env );
+		$this->modelTemplate	= new Model_Mail_Template( $this->env );
+
+		$this->_repair();
+//		$this->detectTemplateToUse();
+
+		/*  --  INIT ATTACHMENTS  --  */
+		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
+		$this->pathAttachments	= $this->options->get( 'path.attachments' );
+		$this->frontendPath		= './';
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			$frontend				= Logic_Frontend::getInstance( $this->env );
+			$this->frontendPath		= $frontend->getPath();
+			$this->pathAttachments	= $this->frontendPath.$this->pathAttachments;
+		}
+		if( !file_exists( $this->pathAttachments ) ){
+			mkdir( $this->pathAttachments, 0755, TRUE );
+			if( !file_exists( $this->pathAttachments.'.htaccess' ) )
+				copy( 'classes/.htaccess', $this->pathAttachments.'.htaccess' );
+		}
 	}
 
 	protected function getMailFromObjectOrId( $mailObjectOrId )

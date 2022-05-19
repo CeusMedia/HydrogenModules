@@ -227,7 +227,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	 *	@todo		add hook in module config
 	 *	@todo		add hook call in module Resource:Users, better implement Logic_UserStatus before
 	 */
-	public function __onChangeUserStatus( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public function __onChangeUserStatus( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
 		if( !isset( $data['status'] ) )
 			throw new InvalidArgumentException( 'Missing new status' );
 		if( !isset( $data['userId'] ) )
@@ -256,8 +256,8 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		), array( 'userLicenseId' => 'ASC' ) );														//  ... and order be creation date
 
 		//  --  COLLECT USERS TO INFORM ABOUT REVOKATION  --  //
-		$usersAssigned	= array();																	//  prepare list of users to inform about assignment
-		$usersRevoked	= array();																	//  prepare list of users to inform about revokation
+		$usersAssigned	= [];																	//  prepare list of users to inform about assignment
+		$usersRevoked	= [];																	//  prepare list of users to inform about revokation
 		foreach( $outdatedUserLicenseKeys as $outdatedUserLicenseKey )								//  iterate keys of outdated user license
 			$usersRevoked[$outdatedUserLicenseKey->userId]	= $outdatedUserLicenseKey;				//  note user id of outdated user license key
 
@@ -308,7 +308,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	}
 
 	public function handleOutdatedUserLicenses(){
-		$results	= array();
+		$results	= [];
 		$outdatedUserLicenses	= $this->modelUserLicense->getAllByIndices( array(
 			'status'	=> Model_Provision_User_License::STATUS_ACTIVE,
 			'endsAt'	=> '< '.time(),
@@ -327,7 +327,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		$dbc		= $this->env->getDatabase();
 		$language	= $this->env->getLanguage()->getLanguage();
 		$logicMail	= Logic_Mail::getInstance( $this->env );
-		$list		= array();
+		$list		= [];
 		foreach( $this->getOutdatedUserLicenseKeys() as $key ){
 			$data	= array(
 				'key'		=> $key,
@@ -466,7 +466,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	}
 
 	public function getProducts( $status = NULL ){
-		$indices	= array();
+		$indices	= [];
 		if( $status !== NULL )
 			$indices['status']	= $status;
 		$orders		= array( 'rank' => 'ASC', 'title' => 'ASC' );
@@ -533,7 +533,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	}
 
 	public function getNotAssignedUserLicenseKeysFromUser( $userId, $projectId = NULL ){
-		$list		= array();
+		$list		= [];
 		$licenses	= $this->getUserLicensesFromUser( $userId, $projectId );
 		foreach( $licenses as $userLicense ){
 			$userLicense->keys	= $this->getNotAssignedUserLicenseKeysFromUserLicense( $userLicense->userLicenseId );

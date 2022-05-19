@@ -79,7 +79,7 @@ class View_Helper_Shop_AddressView
 		$w		= (object) $this->words['view'];
 		$d		= new ADT_List_Dictionary( $this->address );
 //		print_m( $d->getAll() );die;
-		$list	= array();
+		$list	= [];
 		if( trim( $d->get( 'institution' ) ) )
 			$list[]	= $this->renderRow( 'institution', $this->escape( $d->get( 'institution' ) ) );
 		$list[]	= $this->renderRow( 'name', $this->escape( $d->get( 'firstname' ).' '.$d->get( 'surname' ) ) );

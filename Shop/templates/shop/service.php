@@ -2,7 +2,7 @@
 
 extract( $view->populateTexts( array( 'top', 'bottom', 'service' ), 'html/shop/' ) );
 
-$panels	= array();
+$panels	= [];
 foreach( $servicePanels as $servicePanel ){
 	$key	= (float) $servicePanel->priority.'.'.time();
 	$panels[$key]	= UI_HTML_Tag::create( 'div', $servicePanel->content, array(

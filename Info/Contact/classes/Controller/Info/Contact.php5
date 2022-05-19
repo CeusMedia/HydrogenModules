@@ -10,44 +10,6 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller
 	protected $useHoneypot;
 	protected $useNewsletter;
 
-	public function __onInit()
-	{
-		$this->request			= $this->env->getRequest();
-		$this->messenger		= $this->env->getMessenger();
-		$this->moduleConfig		= $this->env->getConfig()->getAll( "module.info_contact.", TRUE );
-		$this->useCaptcha		= NULL;
-		$this->useCsrf			= FALSE;
-
-		if( $this->moduleConfig->get( 'captcha.enable' ) ){
-			$configCaptcha	= $this->env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
-			if( !$configCaptcha->get( 'active' ) )
-				$this->messenger->noteFailure( 'Module "UI_Captcha" needs to be installed to use CAPTCHA.' );
-			else
-				$this->useCaptcha	= $configCaptcha->get( 'mode' );
-		}
-		if( $this->moduleConfig->get( 'csrf.enable' ) ){
-			$configCsrf	= $this->env->getConfig()->getAll( 'module.security_csrf.', TRUE );
-			if( !$this->env->getModules()->has( 'Security_CSRF' ) ){
-				$this->messenger->noteFailure( 'Module "Security_CSRF" needs to be installed.' );
-				$this->env->getLog()->log( 'warn', 'Module "Security_CSRF" needs to be installed.' );
-			}
-//	@todo activate these lines after module Security:CSRF got config switch "active", maybe at version 0.2.8
-//			else if( !$configCsrf->get( 'active' ) ){
-//				$this->messenger->noteFailure( 'Module "Security_CSRF" needs to be enabled.' );
-//				$this->env->getLog()->log( 'warn', 'Module "Security_CSRF" needs to be enabled.' );
-//			}
-			else
-				$this->useCsrf	= TRUE;
-		}
-		$this->useNewsletter	= $this->moduleConfig->get( 'newsletter.enable' );
-		$this->useHoneypot		= $this->moduleConfig->get( 'honeypot.enable' );
-
-		$this->addData( 'useCaptcha', $this->useCaptcha );
-		$this->addData( 'useCsrf', $this->useCsrf );
-		$this->addData( 'useNewsletter', $this->useNewsletter );
-		$this->addData( 'useHoneypot', $this->useHoneypot );
-	}
-
 	public function ajaxForm()
 	{
 		$message	= '';
@@ -197,7 +159,7 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller
 		}
 
 		if( $this->useNewsletter ){
-			$topics		= array();
+			$topics		= [];
 			if( $this->env->getModules()->has( 'Resource_Newsletter' ) ){
 				$model	= new Model_Newsletter_Group( $this->env );
 				$conditions	= array(
@@ -221,5 +183,43 @@ class Controller_Info_Contact extends CMF_Hydrogen_Controller
 		$this->addData( 'email', $this->request->get( 'email' ) );
 		$this->addData( 'subject', $this->request->get( 'subject' ) );
 		$this->addData( 'message', $this->request->get( 'message' ) );
+	}
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->messenger		= $this->env->getMessenger();
+		$this->moduleConfig		= $this->env->getConfig()->getAll( "module.info_contact.", TRUE );
+		$this->useCaptcha		= NULL;
+		$this->useCsrf			= FALSE;
+
+		if( $this->moduleConfig->get( 'captcha.enable' ) ){
+			$configCaptcha	= $this->env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
+			if( !$configCaptcha->get( 'active' ) )
+				$this->messenger->noteFailure( 'Module "UI_Captcha" needs to be installed to use CAPTCHA.' );
+			else
+				$this->useCaptcha	= $configCaptcha->get( 'mode' );
+		}
+		if( $this->moduleConfig->get( 'csrf.enable' ) ){
+			$configCsrf	= $this->env->getConfig()->getAll( 'module.security_csrf.', TRUE );
+			if( !$this->env->getModules()->has( 'Security_CSRF' ) ){
+				$this->messenger->noteFailure( 'Module "Security_CSRF" needs to be installed.' );
+				$this->env->getLog()->log( 'warn', 'Module "Security_CSRF" needs to be installed.' );
+			}
+//	@todo activate these lines after module Security:CSRF got config switch "active", maybe at version 0.2.8
+//			else if( !$configCsrf->get( 'active' ) ){
+//				$this->messenger->noteFailure( 'Module "Security_CSRF" needs to be enabled.' );
+//				$this->env->getLog()->log( 'warn', 'Module "Security_CSRF" needs to be enabled.' );
+//			}
+			else
+				$this->useCsrf	= TRUE;
+		}
+		$this->useNewsletter	= $this->moduleConfig->get( 'newsletter.enable' );
+		$this->useHoneypot		= $this->moduleConfig->get( 'honeypot.enable' );
+
+		$this->addData( 'useCaptcha', $this->useCaptcha );
+		$this->addData( 'useCsrf', $this->useCsrf );
+		$this->addData( 'useNewsletter', $this->useNewsletter );
+		$this->addData( 'useHoneypot', $this->useHoneypot );
 	}
 }

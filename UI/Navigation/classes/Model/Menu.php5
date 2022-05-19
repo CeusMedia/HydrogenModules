@@ -7,9 +7,9 @@ class Model_Menu
 	protected $language;			//  @todo rename to current language or user language
 	protected $localization			= NULL;
 	protected $moduleConfig;
-	protected $pageMap				= array();
-	protected $pages				= array();
-	protected $scopes				= array();
+	protected $pageMap				= [];
+	protected $pages				= [];
+	protected $scopes				= [];
 	protected $source;				//  @todo needed?
 	protected $userId;
 	protected $useAcl;				//  @todo needed?
@@ -87,8 +87,8 @@ class Model_Menu
 		if( isset( $_REQUEST[self::$pathRequestKey] ) && $path === NULL )
 			$path	= utf8_decode( $_REQUEST[self::$pathRequestKey] );
 		$path		= $path ? $path : 'index';
-		$matches	= array();																		//  empty array to regular matching
-		$selected	= array();																		//  list of possibly selected links
+		$matches	= [];																		//  empty array to regular matching
+		$selected	= [];																		//  list of possibly selected links
 		foreach( $this->pageMap as $pagePath => $page ){											//  iterate link map
 			$page->active = FALSE;
 			if( $pagePath == $path ){																//  page path matches requested path
@@ -157,11 +157,11 @@ class Model_Menu
 			throw new RuntimeException( sprintf( $message, $pagesFile ) );
 		}
 		$this->scopes		= array_keys( get_object_vars( $scopes ) );
-		$this->pages		= array();
-		$this->pageMap		= array();
+		$this->pages		= [];
+		$this->pageMap		= [];
 		$isAuthenticated	= (bool) $this->userId;
 		foreach( $scopes as $scope => $pages ){
-			$this->pages[$scope]	= array();
+			$this->pages[$scope]	= [];
 			foreach( $pages as $pageId => $page ){
 				if( isset( $page->disabled ) && !in_array( $page->disabled, array( 'no', FALSE ) ) )
 					continue;
@@ -180,10 +180,10 @@ class Model_Menu
 					'active'	=> FALSE,
 					'icon'		=> isset( $page->icon ) ? $page->icon : NULL,
 				);
-				$subpages	= array();
+				$subpages	= [];
 				if( isset( $page->pages ) ){
 					$item->type		= 'menu';
-					$item->items	= array();
+					$item->items	= [];
 					foreach( $page->pages as $subpageId => $subpage ){
 						if( isset( $subpage->disabled ) && !in_array( $subpage->disabled, array( 'no', FALSE ) ) )
 							continue;
@@ -252,12 +252,12 @@ class Model_Menu
 			2		=> 'top',
 		);
 		$this->scopes		= array_values( $scopes );
-		$this->pages		= array();
-		$this->pageMap		= array();
+		$this->pages		= [];
+		$this->pageMap		= [];
 		$isAuthenticated	= (bool) $this->userId;
 		$subpages			= [];
 		foreach( $scopes as $scopeId => $scope ){
-			$this->pages[$scope]	= array();
+			$this->pages[$scope]	= [];
 			$pages		= $model->getAllByIndices( array(
 				'parentId'	=> 0,
 				'scope'		=> $scopeId,
@@ -283,7 +283,7 @@ class Model_Menu
 				}
 				if( $page->type == 1 ){
 					$item->type		= 'menu';
-					$item->items	= array();
+					$item->items	= [];
 					$subpages		= $model->getAllByIndices( array(
 						'parentId'	=> $page->pageId,
 						'scope'		=> 0,
@@ -347,10 +347,10 @@ class Model_Menu
 	{
 		$scopes			= array( 'main' );
 		$this->scopes	= array_keys( $scopes );
-		$this->pages	= array();
-		$this->pageMap	= array();
+		$this->pages	= [];
+		$this->pageMap	= [];
 		foreach( $scopes as $scope ){
-			$this->pages[$scope]	= array();
+			$this->pages[$scope]	= [];
 			foreach( $this->env->getModules()->getAll() as $module ){
 				foreach( $module->links as $link ){
 					if( $link->language && $link->language != $this->language )

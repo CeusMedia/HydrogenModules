@@ -32,7 +32,7 @@ class Controller_Work_Billing_Corporation_Payout extends CMF_Hydrogen_Controller
 	{
 		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
-		$conditions		= array();
+		$conditions		= [];
 		if( $filterYear || $filterMonth ){
 			if( $filterYear && $filterMonth )
 				$conditions['dateBooked']	= $filterYear.'-'.$filterMonth.'-%';
@@ -42,7 +42,7 @@ class Controller_Work_Billing_Corporation_Payout extends CMF_Hydrogen_Controller
 				$conditions['dateBooked']	= '%-'.$filterMonth.'-%';
 		}
 		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
-		$limits		= array();
+		$limits		= [];
 		$payouts	= $this->logic->getCorporationPayouts( $corporationId, $conditions, $orders, $limits );
 		$this->addData( 'corporation', $this->logic->getCorporation( $corporationId ) );
 		$this->addData( 'payouts', $payouts );

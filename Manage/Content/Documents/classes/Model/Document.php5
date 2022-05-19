@@ -44,7 +44,7 @@ class Model_Document {
 
 	public function index( $limit = 0, $offset = 0 ){
 		$index	= new DirectoryIterator( $this->path );
-		$list	= array();
+		$list	= [];
 		foreach( $index as $entry ){
 			if( $entry->isDir() || $entry->isDot() )
 				continue;

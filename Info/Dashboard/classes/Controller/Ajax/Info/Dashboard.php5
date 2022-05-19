@@ -3,7 +3,7 @@ class Controller_Ajax_Info_Dashboard extends CMF_Hydrogen_Controller_Ajax
 {
 	protected $logic;
 	protected $model;
-	protected $panels			= array();
+	protected $panels			= [];
 	protected $userId			= 0;
 
 	public function rename()
@@ -44,7 +44,7 @@ class Controller_Ajax_Info_Dashboard extends CMF_Hydrogen_Controller_Ajax
 		if( !$currentDashboard )
 			$this->respondError( -2, 'Current user has no active dashboard.' );
 
-		$list	= array();
+		$list	= [];
 		foreach( $this->request->get( 'list' ) as $panelId )
 			if( array_key_exists( $panelId, $this->panels ) )
 				$list[]	= $panelId;

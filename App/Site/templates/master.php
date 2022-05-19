@@ -31,7 +31,7 @@ else if( class_exists( 'View_Helper_Navigation' ) ){							//  fallback: outdate
 	$navMain	= $helperNav->render();
 }
 else{
-	$links	= array();
+	$links	= [];
 	if( file_exists( 'config/pages.json' ) ){									//  fallback: pages but no renderer
 		$isAuthenticated	= (bool) $env->getSession()->get( 'auth_user_id' );
 		if( $env->getModules()->has( 'Resource_Authentication' ) ){
@@ -65,7 +65,7 @@ else{
 	$controller	= $this->env->getRequest()->get( '__controller' );
 	$current	= CMF_Hydrogen_View_Helper_Navigation_SingleList::getCurrentKey( $links, $controller );
 
-	$list	= array();
+	$list	= [];
 	foreach( $links as $key => $value ){
 		$link	= UI_HTML_Tag::create( 'a', $value, array( 'href' => './'.$key ) );
 		$class	= $key == $current ? "active" : NULL;

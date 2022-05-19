@@ -2,17 +2,12 @@
 /**
  *	@todo   			migrate index to add and implement payin history on index
  */
-class Controller_Manage_My_Mangopay_Bank_Payin extends Controller_Manage_My_Mangopay_Abstract{
-
+class Controller_Manage_My_Mangopay_Bank_Payin extends Controller_Manage_My_Mangopay_Abstract
+{
 	protected $words;
 
-	public function __onInit(){
-		parent::__onInit();
-//		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/bank/payin' );
-		$this->sessionPrefix	= 'manage_my_mangopay_bank_payin_';
-	}
-
-	public function index( $bankAccountId, $walletId = NULL, $amount = NULL ){
+	public function index( $bankAccountId, $walletId = NULL, $amount = NULL )
+	{
 		$bankAccount	= $this->checkIsOwnBankAccount( $bankAccountId );
 		$walletId = $walletId ? $walletId : $this->request->get( 'walletId' );
 		if( $walletId ){
@@ -56,5 +51,12 @@ class Controller_Manage_My_Mangopay_Bank_Payin extends Controller_Manage_My_Mang
 		$this->addData( 'bankAccount', $bankAccount );
 		$this->addData( 'from', $this->request->get( 'from' ) );
 		$this->addData( 'amount', $amount );
+	}
+
+	protected function __onInit()
+	{
+		parent::__onInit();
+//		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/bank/payin' );
+		$this->sessionPrefix	= 'manage_my_mangopay_bank_payin_';
 	}
 }

@@ -31,7 +31,7 @@ $buttonAdd		=UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neuen Kontakt herstellen'
 
 $table	= '<div><em><small class="muted">Keine gefunden.</small></em></div>';
 if( $users ){
-	$list	= array();
+	$list	= [];
 	$helperMember	= new View_Helper_Member( $env );
 	$helperMember->setLinkUrl( './member/view/%d' );
 	$helperMember->setMode( 'thumbnail' );
@@ -61,7 +61,7 @@ $helperMember->setLinkUrl( "member/view/%d" );
 
 $list	= '<div><em><small class="muted">Keine.</small></em></div><br/>';
 if( $incoming || $outgoing ){
-	$list	= array();
+	$list	= [];
 	foreach( $incoming as $relation ){
 		$helperMember->setUser( $relation->user );
 		$list[]	= UI_HTML_Tag::create( 'tr', array(

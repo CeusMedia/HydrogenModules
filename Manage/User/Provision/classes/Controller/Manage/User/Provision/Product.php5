@@ -27,7 +27,7 @@ class Controller_Manage_User_Provision_Product extends CMF_Hydrogen_Controller{
 			$this->messenger->noteSuccess( 'Product license added.' );
 			$this->restart( './manage/user/provision/product/edit/'.$productId );
 		}
-		$license	= array();
+		$license	= [];
 		foreach( $this->modelLicense->getColumns() as $column )
 			$license[$column]	= $this->request->get( $column );
 		$this->addData( 'license', (object) $license );
@@ -69,7 +69,7 @@ class Controller_Manage_User_Provision_Product extends CMF_Hydrogen_Controller{
 	}
 
 	public function index( $page = NULL ){
-		$indices	= array();
+		$indices	= [];
 		$columns	= $this->modelLicense->getColumns();
 		foreach( $this->filters as $filter ){
 			$filterValue	= $this->session->get( $this->prefixSession.$filter );
@@ -78,14 +78,14 @@ class Controller_Manage_User_Provision_Product extends CMF_Hydrogen_Controller{
 				$indices[$filter]	= $filterValue;
 		}
 
-		$productLicenses	= array();
+		$productLicenses	= [];
 		if( $filterProductId = $this->session->get( $this->prefixSession.'productId' ) ){
 			$productLicenses	= $this->logicProvision->getProductLicenses( $filterProductId );
 		}
 		$this->addData( 'productLicenses', $productLicenses );
 
 		$limit		= 2;
-		$orders		= array();
+		$orders		= [];
 		$limits		= array( $limit, floor( $page / $limit ) );
 		$licenses	= $this->modelLicense->getAll( $indices, $orders );
 		$total		= $this->modelLicense->count( $indices );

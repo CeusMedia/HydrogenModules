@@ -21,7 +21,7 @@ $helper	= new View_Helper_TimePhraser( $env );
 $dropdown	= '';
 $table		= UI_HTML_Tag::create( 'em', $wl->noEntries, array( 'class' => 'muted' ) );
 if( $mails ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $mails as $mail ){
 /*		$timestamp	= $mail->enqueuedAt;
 		if( (int) $mail->status === Model_Mail::STATUS_SENDING )
@@ -41,7 +41,7 @@ if( $mails ){
 		$paramPage		= $page ? '?page='.$page : '';
 		$link			= UI_HTML_Tag::create( 'a', $mail->subject, array( 'href' => './admin/mail/queue/view/'.$mail->mailId.$paramPage ) );
 
-		$buttons		= array();
+		$buttons		= [];
 		$buttons[]		= UI_HTML_Tag::create( 'a', $iconView, array(
 			'href'		=> './admin/mail/queue/view/'.$mail->mailId.$paramPage,
 			'class'		=> 'btn btn-info btn-mini',
@@ -71,7 +71,7 @@ if( $mails ){
 			'id'		=> 'admin-mail-queue-list-all-item-'.$mail->mailId,
 		), array( 'id' => $mail->mailId, ) );
 
-		$cells		= array();
+		$cells		= [];
 		$cells[]	= UI_HTML_Tag::create( 'td', $checkbox, array( 'class' => '' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $senderMail.'<br/>'.$link, array( 'class' => 'autocut cell-mail-subject' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $receiverName.'<br/>'.$receiverMail, array( 'class' => 'autocut cell-mail-receiver' ) );

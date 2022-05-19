@@ -3,7 +3,7 @@ $w			= (object) $words['edit'];
 
 $optCurrency	= UI_HTML_Elements::Options( $words['currencies'], $account->currency );
 
-$optBankId	= array();
+$optBankId	= [];
 foreach( $banks as $bank )
 	$optBankId[$bank->bankId]	= $bank->title;
 $optBankId	= UI_HTML_Elements::Options( $optBankId, $account->bankId );

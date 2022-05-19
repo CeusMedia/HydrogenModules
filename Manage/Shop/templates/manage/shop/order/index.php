@@ -20,7 +20,7 @@ $statusIcons		= array(
 );
 
 
-$listOrders	= array();
+$listOrders	= [];
 foreach( $orders as $order ){
 	$attributes		= array( 'href' => './manage/shop/order/edit/'.$order->orderId );
 	$iconStatus		= UI_HTML_Tag::create( 'i', "", array( 'class' => 'icon-'.$statusIcons[$order->status] ) );

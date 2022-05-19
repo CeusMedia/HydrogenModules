@@ -5,7 +5,7 @@ $urlView1	= $env->getConfig()->get( 'module.work_funds.urlView' );
 $urlView2	= 'http://www.finanzen.net/suchergebnis.asp?frmAktiensucheTextfeld=';
 
 $total		= 0;
-$rows		= array();
+$rows		= [];
 foreach( $funds as $fund ){
 	$total	= $total + $fund->price->price * $fund->pieces;
 	$date	= $fund->price->timestamp ? date( 'd.m.Y H:i', $fund->price->timestamp ) : '-';

@@ -1,10 +1,6 @@
 <?php
-class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
-
-	public function __onInit(){
-		$this->env->page->js->addUrl( "https://maps.google.com/maps/api/js?sensor=false" );
-	}
-
+class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller
+{
 	public function activate( $branchId )
 	{
 		$request		= $this->env->getRequest();
@@ -16,7 +12,8 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/my/branch' );
 	}
 
-	public function add(){
+	public function add()
+	{
 		$request		= $this->env->getRequest();
 		$session		= $this->env->getSession();
 		$messenger		= $this->env->getMessenger();
@@ -59,7 +56,8 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$this->view->addData( 'branch', $data );
 	}
 
-	public function addImage( $branchId ){
+	public function addImage( $branchId )
+	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$image			= $request->get( 'image' );
@@ -104,14 +102,8 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/my/branch/edit/'.$branchId );
 	}
 
-	protected function breakOnFailure( $messageKey, $redirect = 'manage/my' ){
-		$this->env->getLanguage()->load( 'manage/my' );
-		$words		= (object) $this->getWords( 'msg', 'manage/my' );
-		$this->env->getMessenger()->noteFailure( $words->$messageKey );
-		$this->restart( $redirect );
-	}
-
-/*	public function delete( $branchId ){
+/*	public function delete( $branchId )
+	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Branch( $this->env );
@@ -136,7 +128,8 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $branchId ){
+	public function edit( $branchId )
+	{
 		$config			= $this->env->getConfig();
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
@@ -176,7 +169,7 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		}
 		$this->view->addData( 'branch', $branch	);
 
-		$coupons	= array();
+		$coupons	= [];
 		if( $this->env->getModules()->has( 'Model_Coupon' ) ){
 			$modelCoupon	= new Model_Coupon( $this->env );
 			$coupons		= $modelCoupon->getAllByIndex( 'branchId', $branchId );
@@ -184,7 +177,8 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$this->view->addData( 'coupons', $coupons );
 	}
 
-	protected function getCurrentUser( $redirect = 'auth/logout' ){
+	protected function getCurrentUser( $redirect = 'auth/logout' )
+	{
 		$modelUser	= new Model_User( $this->env );
 		$userId		= (int) $this->env->getSession()->get( 'auth_user_id' );
 		$user		= $modelUser->get( $userId );
@@ -193,19 +187,22 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		return $user;
 	}
 
-	protected function getMyCompany(){
+	protected function getMyCompany()
+	{
 		$user		= $this->getCurrentUser();
 		$model		= new Model_Company( $this->env );
 		return $model->get( $user->companyId );
 	}
 
-	protected function getMyBranches(){
+	protected function getMyBranches()
+	{
 		$user		= $this->getCurrentUser();
 		$model		= new Model_Branch( $this->env );
 		return $model->getAllByIndex( 'companyId', $user->companyId );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$config			= $this->env->getConfig();
 		$session		= $this->env->getSession();
 		$messenger		= $this->env->getMessenger();
@@ -236,27 +233,6 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		$this->view->addData( 'branches', $branches );
 	}
 
-	protected function isMyBranch( $branchId ){
-		$user		= $this->getCurrentUser();
-		$model		= new Model_Branch( $this->env );
-		$conditions	= array( 'companyId' => $user->companyId, 'branchId' => $branchId );
-		return (bool) $model->count( $conditions );
-	}
-
-	protected function isMyCompany( $companyId ){
-		$user		= $this->getCurrentUser();
-		$model		= new Model_Company( $this->env );
-		$conditions	= array( 'companyId' => $user->companyId, 'companyId' => $companyId );
-		return (bool) $model->count( $conditions );
-	}
-
-	protected function isMyCoupon( $couponId ){
-		$user		= $this->getCurrentUser();
-		$model		= new Model_Coupon( $this->env );
-		$conditions	= array( 'companyId' => $user->companyId, 'couponId' => $couponId );
-		return (bool) $model->count( $conditions );
-	}
-
 	/**
 	 *	@todo		check ownership of branch
 	 */
@@ -277,5 +253,41 @@ class Controller_Manage_My_Branch extends CMF_Hydrogen_Controller{
 		}
 		$this->restart( 'edit/'.$branchId, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->env->page->js->addUrl( "https://maps.google.com/maps/api/js?sensor=false" );
+	}
+
+	protected function breakOnFailure( $messageKey, $redirect = 'manage/my' )
+	{
+		$this->env->getLanguage()->load( 'manage/my' );
+		$words		= (object) $this->getWords( 'msg', 'manage/my' );
+		$this->env->getMessenger()->noteFailure( $words->$messageKey );
+		$this->restart( $redirect );
+	}
+
+	protected function isMyBranch( $branchId )
+	{
+		$user		= $this->getCurrentUser();
+		$model		= new Model_Branch( $this->env );
+		$conditions	= array( 'companyId' => $user->companyId, 'branchId' => $branchId );
+		return (bool) $model->count( $conditions );
+	}
+
+	protected function isMyCompany( $companyId )
+	{
+		$user		= $this->getCurrentUser();
+		$model		= new Model_Company( $this->env );
+		$conditions	= array( 'companyId' => $user->companyId, 'companyId' => $companyId );
+		return (bool) $model->count( $conditions );
+	}
+
+	protected function isMyCoupon( $couponId )
+	{
+		$user		= $this->getCurrentUser();
+		$model		= new Model_Coupon( $this->env );
+		$conditions	= array( 'companyId' => $user->companyId, 'couponId' => $couponId );
+		return (bool) $model->count( $conditions );
+	}
 }
-?>

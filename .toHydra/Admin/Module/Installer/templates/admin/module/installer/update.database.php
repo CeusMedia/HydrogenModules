@@ -21,7 +21,7 @@ if( $remote->getModules() && $remote->getModules()->has( 'Resource_Database' ) )
 	}
 	else{
 		$table	= '';
-		$list	= array();
+		$list	= [];
 		foreach( $sql as $key => $step ){
 			$version	= fixVersionBug( $step->version );
 			$facts		= array( 'Version: '.$step->version, 'DBMS: '.$step->type );		//  collect facts

@@ -55,7 +55,7 @@ class Resource_SSH{
 	}
 
 	public function index( $path = './', $pattern = NULL ){
-		$options	= array();
+		$options	= [];
 		$options[]	= 'a';																//  show all files/folders
 		$options[]	= 'h';																//  show hidden files/folders
 		$options	= count( $options ) ? '-'.join( $options ) : '';					//  collect command options

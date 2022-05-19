@@ -34,7 +34,7 @@ class View_Work_Newsletter extends CMF_Hydrogen_View
 		$currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.tab' );
 		$tabs			= (object) $this->getWords( 'tabsMain', 'work/newsletter' );
 		$current	= strtolower( $this->env->getRequest()->get( 'controller' ) );
-		$list		= array();
+		$list		= [];
 		foreach( $tabs as $key => $value ){
 			$attributes	= array( 'href'	=> './'.$key );
 			$link		= UI_HTML_Tag::create( 'a', $value, $attributes );
@@ -44,9 +44,9 @@ class View_Work_Newsletter extends CMF_Hydrogen_View
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => "nav nav-tabs" ) );
 	}
 
-	protected function renderTabs( $tabs, $baseUrl, $current, $disabled = array() )
+	protected function renderTabs( $tabs, $baseUrl, $current, $disabled = [] )
 	{
-		$list	= array();
+		$list	= [];
 		$number	= 0;
 		foreach( $tabs as $key => $value ){
 			$number++;

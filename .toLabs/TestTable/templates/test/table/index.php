@@ -1,6 +1,6 @@
 <?php
 
-$list		= array();
+$list		= [];
 foreach( $tests as $entry )
 {
 	$format	= $config->get( 'layout.format.timestamp' );
@@ -15,7 +15,7 @@ $list		= $list ? UI_HTML_Elements::unorderedList( $list, 0, array( '' => '' ) ) 
 $heading	= UI_HTML_Tag::create( 'h2', $words['index']['heading'] );
 $add 		= UI_HTML_Elements::LinkButton( './test/table/add', 'add entry', 'button add' );
 
-$rows		= array();
+$rows		= [];
 $number		= 0;
 foreach( $tests as $entry )
 {

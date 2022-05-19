@@ -18,16 +18,11 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 	];
 
 	protected $content;
-	protected $ignoredBlocks		= array();
+	protected $ignoredBlocks		= [];
 	protected $moduleConfig;
 	protected $pattern				= "/^(.*)(\[##shortcode##(\s[^\]]+)?\])(.*)$/sU";
 
-	public function __onInit()
-	{
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_shortcode.', TRUE );
-	}
-
-	public function find( string $shortCode, array $defaultAttributes = array(), string $defaultMode = 'allow' )
+	public function find( string $shortCode, array $defaultAttributes = [], string $defaultMode = 'allow' )
 	{
 		$mode	= $this->moduleConfig->get( 'mode' );
 		if( !in_array( $mode, array( 'allow', 'deny' ) ) )
@@ -61,7 +56,7 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 		return $content;
 	}
 
-	public function has( string $shortCode, array $defaultAttributes = array(), string $defaultMode = 'allow' ): string
+	public function has( string $shortCode, array $defaultAttributes = [], string $defaultMode = 'allow' ): string
 	{
 		return preg_match( $this->getShortCodePattern( $shortCode ), $this->content );
 	}
@@ -107,7 +102,7 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 	public function setContent( string $content ): self
 	{
 		if( substr_count( $content, '<!--noShortcode-->' ) ){										//  there are blocks to ignore
-			$this->ignoredBlocks	= array();														//  reset list of ignored blocks
+			$this->ignoredBlocks	= [];														//  reset list of ignored blocks
 			$intro	= preg_quote( '<!--noShortcode-->', '@' );										//  prepare start string for regex
 			$outro	= preg_quote( '<!--/noShortcode-->', '@' );										//  prepare stop string for regex
 			$regExpReplace	= '@^(.*)('.$intro.')(.+)('.$outro.')(.*)@su';							//  prepare regex for matching and replacing
@@ -122,6 +117,11 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 	}
 
 	//  --  PROTECTED  --  //
+
+	protected function __onInit()
+	{
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_shortcode.', TRUE );
+	}
 
 	/**
 	 *	Returns regular expression to find shortcode blocks for given shortcode.
@@ -148,7 +148,7 @@ class Logic_Shortcode extends CMF_Hydrogen_Logic
 		$status			= self::PARSE_STATUS_START;
 		$position		= 0;
 		$nodename		= '';
-		$attributes		= array();
+		$attributes		= [];
 		$length			= strlen( $string );
 		$bufferAttrKey	= '';
 		$bufferAttrVal	= '';

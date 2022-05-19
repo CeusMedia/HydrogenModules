@@ -11,14 +11,14 @@ else if( isset( $exception->traceAsString ) )
 else
 	$trace	= '<xmp style="overflow: auto; border: 1px solid gray; background-color: #EFEFEF; padding: 1em 2em;">'.$exception->trace.'</xmp>';
 
-$facts	= array();
+$facts	= [];
 $facts['Message']	= '<big><strong>'.$exception->message.'</strong></big>';
 if( (int) $exception->code != 0 )
 	$facts['Code']	= $exception->code;
 $facts['File (Line)']	= $file.' ('.$exception->line.')';
 $facts['Date (Time)']	= $date.' <small class="muted">('.$time.')</small>';
 
-$list	= array();
+$list	= [];
 foreach( $facts as $key => $value )
 	$list[]	= UI_HTML_Tag::create( 'dt', $key ).UI_HTML_Tag::create( 'dd', $value );
 $list	= UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );

@@ -66,7 +66,7 @@ $imageMaxSize	= Alg_UnitParser::parse( $moduleConfig->get( 'article.image.size' 
 $imageMaxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $imageMaxSize ) );
 $imageMaxSize	= Alg_UnitFormater::formatBytes( $imageMaxSize );
 
-$list				= array();
+$list				= [];
 $imageExtensions	= $moduleConfig->get( 'article.image.extensions' );
 foreach( explode( ",", $imageExtensions ) as $nr => $type )
 	if( !in_array( trim( $type ), array( "jpe", "jpeg" ) ) )

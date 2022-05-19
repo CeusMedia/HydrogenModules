@@ -4,7 +4,7 @@ $iconEnabled	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/
 $iconDisabled	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/delete.png', $words['states'][0] );
 $iconRefresh	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/mini/borderless/png/action_refresh_blue.png', '' );
 
-$rows	= array();
+$rows	= [];
 foreach( $sources as $sourceId => $source ){
 	$state	= $iconDisabled;
 	if( $source->active ){

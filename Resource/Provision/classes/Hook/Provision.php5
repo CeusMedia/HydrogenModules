@@ -149,7 +149,7 @@ return;
 		$response	= $resource->getProductLicenses( $moduleConfig->get( 'productId' ) );
 
 		$body	= '';
-		$list	= array();
+		$list	= [];
 		foreach( $response as $license ){
 			$check	= UI_HTML_Tag::create( 'input', NULL, array(
 				'type'	=> 'radio',
@@ -168,7 +168,7 @@ return;
 			$list[]	= UI_HTML_Tag::create( 'div', $label, array( 'class' => 'span4' ) );
 			if( count( $list ) % 3 === 0 ){
 				$body	.= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'row-fluid' ) );
-				$list	= array();
+				$list	= [];
 			}
 		}
 		if( count( $list ) )

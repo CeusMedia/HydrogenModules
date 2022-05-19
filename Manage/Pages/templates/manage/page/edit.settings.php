@@ -31,7 +31,7 @@ if( $page->icon ){
 $path	= preg_replace( '@^(https?://)(.+)$@', '<small class="muted">\\1</small><strong>\\2</strong>', $path );
 
 $isWritable	= $source === 'Database';		//  not writable for 'Config' or 'Modules'
-$hints		= array();
+$hints		= [];
 if( !$isWritable )
 	$hints[]	= '<div class="alert alert-warning">Pages of source "'.$source.'" are not writable right now.</div>';
 $hints	= join( $hints );

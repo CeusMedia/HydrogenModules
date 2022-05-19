@@ -26,7 +26,7 @@ $rowColors	= array(
 );
 if( $userLicenseKeys ){
 	$rank	= 0;
-	$list	= array();
+	$list	= [];
 	foreach( $userLicenseKeys as $userLicenseKey ){
 		$class		= NULL;
 		$dateStart	= NULL;

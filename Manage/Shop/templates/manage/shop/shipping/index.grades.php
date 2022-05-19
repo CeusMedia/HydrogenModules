@@ -5,8 +5,8 @@ use UI_HTML_Tag as Html;
 
 $iconRemove	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
-$heads	= array();
-$cols	= array();
+$heads	= [];
+$cols	= [];
 foreach( $zones as $zone ){
 	$input	= Html::create( 'input', NULL, array(
 		'type'	=> 'number',
@@ -86,7 +86,7 @@ $modalGradeTrigger	= new BootstrapModalTrigger( 'modalAddGrade' );
 $modalGradeTrigger->setLabel( 'neue Gewichtsklasse' )->setIcon( 'fa fa-fw fa-plus' );
 $modalGradeTrigger->setAttributes( array( 'class' => 'btn btn-success' ) );
 
-$rows	= array();
+$rows	= [];
 foreach( $grades as $grade ){
 	$buttonRemove	= Html::create( 'a', $iconRemove.'&nbsp;entfernen', array( 'href' => './manage/shop/shipping/removeGrade/'.$grade->gradeId, 'class' => 'btn btn-danger btn-small' ) );
 	$buttonRemove	= Html::create( 'a', $iconRemove, array( 'href' => './manage/shop/shipping/removeGrade/'.$grade->gradeId, 'class' => 'btn btn-inverse btn-mini' ) );

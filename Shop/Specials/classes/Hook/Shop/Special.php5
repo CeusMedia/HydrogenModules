@@ -13,7 +13,7 @@ class Hook_Shop_Special extends CMF_Hydrogen_Hook
 	 *	@param		public						$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onPageInit( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onPageInit( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$request	= $env->getRequest();
 		$model		= new Model_Shop_Bridge( $env );
@@ -40,7 +40,7 @@ class Hook_Shop_Special extends CMF_Hydrogen_Hook
 	 *	@param		public						$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 //		remark( 'articleId: '.static::$articleId );die;
 		if( !static::isSpecial() )

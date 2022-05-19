@@ -1,7 +1,7 @@
 <?php
 class View_Helper_ModalTrigger{
 
-	protected $attributes	= array();
+	protected $attributes	= [];
 	protected $id;
 	protected $label;
 	protected $modalId;

@@ -4,7 +4,7 @@ $data	= array( 0.15, 0.5, 0.75, 1 );
 $graph	= View_EvolutionIndicator::render( $data, array( 'width' => 150, 'height' => 10 ) );
 
 
-$list	= array();
+$list	= [];
 $number	= rand( 5, 1000 );
 for( $i=0; $i<$number; $i++ )
 	$list[]	= round( rand( 25, 100 ) / 100, 2 );

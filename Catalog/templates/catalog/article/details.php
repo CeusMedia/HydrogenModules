@@ -20,7 +20,7 @@ $a->recension		= View_Helper_Text::applyExpandable( $a->recension, 200, '<span c
 $a->volume			= $category->volume ? $w->volume."&nbsp;".$category->volume : "";
 $a->status			= UI_HTML_Tag::create( 'span', $words['status'][$article->status], array( 'class' => 'status_'.$article->status ) );
 
-$list		= array();
+$list		= [];
 foreach( $authors as $author )
 	$list[] = $helper->renderAuthorLink( $author );
 $a->authors	= implode( "<br/>", $list );
@@ -28,7 +28,7 @@ $a->authors	= implode( "<br/>", $list );
 /*  LANGUAGES  */
 if( empty( $a->language ) )
 	$a->language	= 'de';
-$languages		= array();
+$languages		= [];
 $wordsLanguage	= $words['languages'];
 foreach( explode( ',', $a->language ) as $language )
 	$languages[]	= $wordsLanguage[trim( $language )];
@@ -37,7 +37,7 @@ $a->languages		= implode( ', ', $languages );
 
 $a->documents		= '<small class="muted"><em>keine</em></small>';
 if( $documents ){
-	$list	= array();
+	$list	= [];
 	foreach( $documents as $document ){
 		$link	= $helper->renderDocumentLink( $document );
 		$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'document') );
@@ -48,7 +48,7 @@ if( $documents ){
 //  --  LIST: FACTS (next to image)  --  //
 $a->tags			= "-";
 if( $tags ){
-	$list	= array();
+	$list	= [];
 	foreach( $tags as $tag ){
 		$label	= $tag->tag;
 		$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $helper->getTagUri( $tag ), 'class' => 'link-article-tag' ) );
@@ -70,7 +70,7 @@ $keys	= array(
 //	'tags'			=> 'tags',
 	'status'		=> 'status',
 );
-$list	= array();
+$list	= [];
 foreach( $keys as $key => $value )
 	if( !empty( $value ) )
 		$list[]	= '<dt>'.$w->$key.'</dt><dd>'.$a->$value.'</dd>';
@@ -79,7 +79,7 @@ $listFacts	= '<dl class="dl-horizontal">'.join( $list ).'</dl>';
 //  --  LIST: DEFINITIONS (full width) --  //
 $a->tags			= "-";
 if( $tags ){
-	$list	= array();
+	$list	= [];
 	foreach( $tags as $tag ){
 		$list[]	= UI_HTML_Tag::create( 'a', $tag->tag, array(
 			'href'	=> $helper->getTagUri( $tag ),
@@ -99,7 +99,7 @@ if( $env->getRequest()->has( 'testing123' ) ){
 }
 
 
-$list	= array();
+$list	= [];
 foreach( $keys as $key )
 	if( !empty( $a->$key ) )
 		$list[]	= '<dt>'.$w->$key.'</dt><dd>'.$a->$key.'</dd>';

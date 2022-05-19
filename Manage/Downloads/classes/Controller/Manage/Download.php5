@@ -1,6 +1,6 @@
 <?php
-class Controller_Manage_Download extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Download extends CMF_Hydrogen_Controller
+{
 	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	*/
 	protected $messenger;
 
@@ -17,19 +17,10 @@ class Controller_Manage_Download extends CMF_Hydrogen_Controller{
 	protected $path;
 
 	/**	@var	array											$rights				List of access rights of current user */
-	protected $rights		= array();
+	protected $rights		= [];
 
-	public function __onInit(){
-		$this->messenger	= $this->env->getMessenger();
-		$this->frontend		= Logic_Frontend::getInstance( $this->env );
-		$this->rights		= $this->env->getAcl()->index( 'manage/downloads' );
-		$this->path			= $this->frontend->getModuleConfigValue( 'info_downloads', 'path' );
-		$this->modelFolder	= new Model_Download_Folder( $this->env );
-		$this->modelFile	= new Model_Download_File( $this->env );
-		$this->messages		= (object) $this->getWords( 'msg' );
-	}
-
-	public function addFolder( $folderId = NULL ){
+	public function addFolder( $folderId = NULL )
+	{
 		$path		= $this->getPathFromFolderId( $folderId );
 		$folder		= trim( $this->env->getRequest()->get( 'folder' ) );
 		if( preg_match( "/[\/\?:]/", $folder) ){
@@ -55,7 +46,8 @@ class Controller_Manage_Download extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function ajaxRenameFolder(){
+	public function ajaxRenameFolder()
+	{
 		$folderId	= $this->env->getRequest()->get( 'folderId' );
 		$title		= $this->env->getRequest()->get( 'name' );
 
@@ -71,7 +63,221 @@ class Controller_Manage_Download extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	protected function checkFolder( $folderId ){
+	public function deliver( $fileId = NULL )
+	{
+		$file		= $this->modelFile->get( $fileId );
+		if( !$file ){
+			$this->messenger->noteError( 'Invalid download file ID: '.$fileId );
+			$this->restart( NULL, TRUE );
+		}
+		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		$mimeType	= mime_content_type( $path.$file->title );
+		header( 'Content-Type: '.$mimeType );
+		header( 'Content-Length: '.filesize( $path.$file->title ) );
+		$fp = @fopen( $path.$file->title, "rb" );
+		if( !$fp )
+			header("HTTP/1.0 500 Internal Server Error");
+		fpassthru( $fp );
+		exit;
+	}
+
+	public function download( $fileId )
+	{
+		$file		= $this->modelFile->get( $fileId );
+		if( !$file ){
+			$this->messenger->noteError( 'Invalid download file ID: '.$fileId );
+			$this->restart( NULL, TRUE );
+		}
+		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		$this->modelFile->edit( $fileId, array(
+			'nrDownloads'	=> $file->nrDownloads++,
+			'downloadedAt'	=> time(),
+		) );
+		Net_HTTP_Download::sendFile( $path.$file->title );
+		exit;
+	}
+
+	public function index( $folderId = NULL )
+	{
+		$folderId	= (int) $folderId;
+		$orders		= array( 'rank' => 'ASC' );
+		if( $folderId ){
+			$folder		= $this->modelFolder->get( $folderId );
+			if( !$folder ){
+				$this->messenger->noteError( sprintf( 'Invalid folder ID: '.$folderId ) );
+				$this->restart( NULL, TRUE );
+			}
+		}
+		$folders	= $this->modelFolder->getAll( array( 'parentId' => $folderId ), $orders );
+		$files		= $this->modelFile->getAll( array( 'downloadFolderId' => $folderId ), $orders );
+
+		$this->addData( 'files', $files );
+		$this->addData( 'folders', $folders );
+		$this->addData( 'folderId', $folderId );
+		$this->addData( 'pathBase', $this->path );
+		$this->addData( 'folderPath', $this->getPathFromFolderId( $folderId ) );
+		$this->addData( 'rights', $this->rights );
+		$this->addData( 'steps', $this->getStepsFromFolderId( $folderId ) );
+	}
+
+	public function rankFolder( $folderId, $downwards = NULL )
+	{
+		$words		= (object) $this->getWords( 'msg' );
+		$direction	= (boolean) $downwards ? +1 : -1;
+		if( !( $folder = $this->modelFolder->get( (int) $folderId ) ) )
+			$this->messenger->noteError( $words->errorInvalidFolderId, $folderId );
+		else{
+			$rank		= $folder->rank + $direction;
+			$conditions	= array( 'rank' => $rank, 'parentId' => $folder->parentId );
+			if( ( $next = $this->modelFolder->getByIndices( $conditions ) ) ){
+				$this->modelFolder->edit( (int) $folderId, array( 'rank' => $rank, 'modifiedAt' => time() ) );
+				$this->modelFolder->edit( $next->downloadFolderId, array( 'rank' => $folder->rank, 'modifiedAt' => time() ) );
+			}
+		}
+		$this->restart( 'index/'.$folder->parentId, TRUE );
+	}
+
+	public function remove( $fileId )
+	{
+		$file		= $this->modelFile->get( $fileId );
+		if( !$file ){
+			$this->messenger->noteError( 'Invalid download file ID: '.$fileId );
+			$this->restart( NULL, TRUE );
+		}
+		$path	= $this->path;
+		if( $file->downloadFolderId ){
+			$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		}
+		@unlink( $path.$file->title );
+		$this->modelFile->remove( $fileId );
+		$this->updateNumber( $file->downloadFolderId, 'file', -1 );
+		$this->messenger->noteSuccess( 'Datei <b>"%s"</b> entfernt.', $file->title );
+		$this->restart( 'index/'.$file->downloadFolderId, TRUE );
+	}
+
+	public function removeFolder( $folderId )
+	{
+		if( $folderId ){
+			$folder		= $this->modelFolder->get( $folderId );
+			if( !$folder ){
+				$this->messenger->noteError( sprintf( 'Invalid download folder ID: '.$folderId ) );
+			}
+			else{
+				$hasSubfolders	= $this->modelFile->count( array( 'downloadFolderId' => $folderId ) );
+				$hasSubfiles	= $this->modelFolder->count( array( 'parentId' => $folderId ) );
+				if( $hasSubfolders && $hasSubfiles ){
+					$this->messenger->noteError( 'Der Ordner <b>"%s"</b> ist nicht leer und kann daher nicht entfernt werden.', $folder->title );
+				}
+				else{
+					rmdir( $this->getPathFromFolderId( $folderId, TRUE ) );
+					$this->modelFolder->remove( $folderId );
+					$this->updateNumber( $folder->parentId, 'folder', -1 );
+				}
+				$this->restart( $folder->parentId ? 'index/'.$folder->parentId : '', TRUE );
+			}
+		}
+		$this->restart( NULL, TRUE );
+	}
+
+	public function scan()
+	{
+		$statsImport	= (object) array( 'folders' => array(), 'files' => array() );
+		$statsClean		= (object) array( 'folders' => array(), 'files' => array() );
+		$this->scanRecursive( 0, '', $statsImport );
+		$this->cleanRecursive( 0, '', $statsClean );
+
+		$addedSomething		= count( $statsImport->folders ) + count( $statsImport->folders ) > 0;
+		$removedSomething	= count( $statsClean->folders ) + count( $statsClean->folders ) > 0;
+		if( $addedSomething || $removedSomething ){
+			if( $addedSomething ){
+				$list	= [];
+				foreach( $statsImport->files as $file ){
+					$path	= UI_HTML_Tag::create( 'small', $file->path, array( 'class' => "muted" ) );
+					$list[]	= UI_HTML_Tag::create( 'li', $path.$file->title );
+				}
+				$list	= UI_HTML_Tag::create( 'ul', $list );
+				$this->messenger->noteNotice( $this->messages->infoScanFoundSomething, count( $statsImport->folders ), count( $statsImport->files ), $list );
+			}
+			if( $removedSomething ){
+				$list	= [];
+				foreach( $statsClean->files as $file ){
+					$path	= UI_HTML_Tag::create( 'small', $file->path, array( 'class' => "muted" ) );
+					$list[]	= UI_HTML_Tag::create( 'li', $path.$file->title );
+				}
+				$list	= UI_HTML_Tag::create( 'ul', $list );
+				$this->messenger->noteNotice( $this->messages->infoScanRemovedSomething, count( $statsClean->folders ), count( $statsClean->files ), $list );
+			}
+		}
+		else
+			$this->messenger->noteNotice( $this->messages->infoScanNoChanges );
+		$this->restart( NULL, TRUE );
+	}
+
+	public function upload( $folderId = NULL )
+	{
+		if( !in_array( 'upload', $this->rights ) )
+			$this->restart( NULL, TRUE );
+		$request	= $this->env->getRequest();
+		if( $request->has( 'save' ) ){
+			$upload	= (object) $request->get( 'upload' );
+			$logicUpload	= new Logic_Upload( $this->env );
+			try{
+				$logicUpload->setUpload( $upload );
+				$logicUpload->checkSize( Logic_Upload::getMaxUploadSize(), TRUE );
+//				$logicUpload->checkVirus( TRUE );
+				$targetFile	= $this->getPathFromFolderId( $folderId, TRUE ).$upload->name;
+				$logicUpload->saveTo( $targetFile );
+				$rank	= $this->modelFile->count( array( 'downloadFolderId' => $folderId ) );
+				$this->modelFile->add( array(
+					'downloadFolderId'	=> $folderId,
+					'rank'				=> $rank,
+					'size'				=> $logicUpload->getFileSize(),
+					'title'				=> $logicUpload->getFileName(),
+					'description'		=> (string) $request->get( 'description' ),
+					'uploadedAt'		=> time()
+				) );
+				$this->updateNumber( $folderId, 'file', 1 );
+				$this->messenger->noteSuccess( 'Datei "%s" hochgeladen.', $upload->name );
+			}
+			catch( Exception $e ){
+				$helperError	= new View_Helper_UploadError( $this->env );
+				$helperError->setUpload( $logicUpload );
+				$message	= $helperError->render();
+				$this->messenger->noteError( $message ? $message : $e->getMessage() );
+			}
+		}
+		$this->restart( 'index/'.$folderId, TRUE );
+	}
+
+	public function view( $fileId = NULL )
+	{
+		$file		= $this->modelFile->get( $fileId );
+		if( !$file ){
+			$this->messenger->noteError( 'Invalid download file ID: '.$fileId );
+			$this->restart( NULL, TRUE );
+		}
+		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		$this->addData( 'file', $file );
+		$this->addData( 'path', $path );
+		$this->addData( 'rights', $this->rights );
+		$this->addData( 'filesize', filesize( $path.$file->title ) );
+		$this->addData( 'type', pathinfo( $file->title, PATHINFO_EXTENSION ) );
+		$this->addData( 'mimeType', mime_content_type( $path.$file->title ) );
+	}
+
+	protected function __onInit()
+	{
+		$this->messenger	= $this->env->getMessenger();
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->rights		= $this->env->getAcl()->index( 'manage/downloads' );
+		$this->path			= $this->frontend->getModuleConfigValue( 'info_downloads', 'path' );
+		$this->modelFolder	= new Model_Download_Folder( $this->env );
+		$this->modelFile	= new Model_Download_File( $this->env );
+		$this->messages		= (object) $this->getWords( 'msg' );
+	}
+
+	protected function checkFolder( $folderId )
+	{
 		if( (int) $folderId > 0 ){
 			$folder		= $this->modelFolder->get( $folderId );
 			if( $folder && file_exists( $this->path.$folder->title ) )
@@ -108,11 +314,13 @@ class Controller_Manage_Download extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	protected function countFolders( $folderId ){
+	protected function countFolders( $folderId )
+	{
 		return $this->modelFolder->count( array( 'parentId' => $folderId ) );
 	}
 
-	protected function countIn( $path, $recursive = FALSE ){
+	protected function countIn( $path, $recursive = FALSE )
+	{
 		$files		= 0;
 		$folders	= 0;
 		if( $recursive ){
@@ -127,39 +335,8 @@ class Controller_Manage_Download extends CMF_Hydrogen_Controller{
 		return array( 'folders' => $folders, 'files' => $files );
 	}
 
-	public function deliver( $fileId = NULL ){
-		$file		= $this->modelFile->get( $fileId );
-		if( !$file ){
-			$this->messenger->noteError( 'Invalid download file ID: '.$fileId );
-			$this->restart( NULL, TRUE );
-		}
-		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
-		$mimeType	= mime_content_type( $path.$file->title );
-		header( 'Content-Type: '.$mimeType );
-		header( 'Content-Length: '.filesize( $path.$file->title ) );
-		$fp = @fopen( $path.$file->title, "rb" );
-		if( !$fp )
-			header("HTTP/1.0 500 Internal Server Error");
-		fpassthru( $fp );
-		exit;
-	}
-
-	public function download( $fileId ){
-		$file		= $this->modelFile->get( $fileId );
-		if( !$file ){
-			$this->messenger->noteError( 'Invalid download file ID: '.$fileId );
-			$this->restart( NULL, TRUE );
-		}
-		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
-		$this->modelFile->edit( $fileId, array(
-			'nrDownloads'	=> $file->nrDownloads++,
-			'downloadedAt'	=> time(),
-		) );
-		Net_HTTP_Download::sendFile( $path.$file->title );
-		exit;
-	}
-
-	protected function getPathFromFolderId( $folderId, $withBasePath = FALSE ){
+	protected function getPathFromFolderId( $folderId, $withBasePath = FALSE )
+	{
 		$path	= '';
 		while( $folderId ){
 			$folder	= $this->modelFolder->get( $folderId );
@@ -171,8 +348,9 @@ class Controller_Manage_Download extends CMF_Hydrogen_Controller{
 		return $withBasePath ? $this->path.$path : $path;
 	}
 
-	protected function getStepsFromFolderId( $folderId ){
-		$steps		= array();
+	protected function getStepsFromFolderId( $folderId )
+	{
+		$steps		= [];
 		while( $folderId ){
 			$folder	= $this->modelFolder->get( $folderId );
 			if( !$folder )
@@ -184,118 +362,8 @@ class Controller_Manage_Download extends CMF_Hydrogen_Controller{
 		return $steps;
 	}
 
-	public function index( $folderId = NULL ){
-		$folderId	= (int) $folderId;
-		$orders		= array( 'rank' => 'ASC' );
-		if( $folderId ){
-			$folder		= $this->modelFolder->get( $folderId );
-			if( !$folder ){
-				$this->messenger->noteError( sprintf( 'Invalid folder ID: '.$folderId ) );
-				$this->restart( NULL, TRUE );
-			}
-		}
-		$folders	= $this->modelFolder->getAll( array( 'parentId' => $folderId ), $orders );
-		$files		= $this->modelFile->getAll( array( 'downloadFolderId' => $folderId ), $orders );
-
-		$this->addData( 'files', $files );
-		$this->addData( 'folders', $folders );
-		$this->addData( 'folderId', $folderId );
-		$this->addData( 'pathBase', $this->path );
-		$this->addData( 'folderPath', $this->getPathFromFolderId( $folderId ) );
-		$this->addData( 'rights', $this->rights );
-		$this->addData( 'steps', $this->getStepsFromFolderId( $folderId ) );
-	}
-
-	public function rankFolder( $folderId, $downwards = NULL ){
-		$words		= (object) $this->getWords( 'msg' );
-		$direction	= (boolean) $downwards ? +1 : -1;
-		if( !( $folder = $this->modelFolder->get( (int) $folderId ) ) )
-			$this->messenger->noteError( $words->errorInvalidFolderId, $folderId );
-		else{
-			$rank		= $folder->rank + $direction;
-			$conditions	= array( 'rank' => $rank, 'parentId' => $folder->parentId );
-			if( ( $next = $this->modelFolder->getByIndices( $conditions ) ) ){
-				$this->modelFolder->edit( (int) $folderId, array( 'rank' => $rank, 'modifiedAt' => time() ) );
-				$this->modelFolder->edit( $next->downloadFolderId, array( 'rank' => $folder->rank, 'modifiedAt' => time() ) );
-			}
-		}
-		$this->restart( 'index/'.$folder->parentId, TRUE );
-	}
-
-	public function remove( $fileId ){
-		$file		= $this->modelFile->get( $fileId );
-		if( !$file ){
-			$this->messenger->noteError( 'Invalid download file ID: '.$fileId );
-			$this->restart( NULL, TRUE );
-		}
-		$path	= $this->path;
-		if( $file->downloadFolderId ){
-			$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
-		}
-		@unlink( $path.$file->title );
-		$this->modelFile->remove( $fileId );
-		$this->updateNumber( $file->downloadFolderId, 'file', -1 );
-		$this->messenger->noteSuccess( 'Datei <b>"%s"</b> entfernt.', $file->title );
-		$this->restart( 'index/'.$file->downloadFolderId, TRUE );
-	}
-
-	public function removeFolder( $folderId ){
-		if( $folderId ){
-			$folder		= $this->modelFolder->get( $folderId );
-			if( !$folder ){
-				$this->messenger->noteError( sprintf( 'Invalid download folder ID: '.$folderId ) );
-			}
-			else{
-				$hasSubfolders	= $this->modelFile->count( array( 'downloadFolderId' => $folderId ) );
-				$hasSubfiles	= $this->modelFolder->count( array( 'parentId' => $folderId ) );
-				if( $hasSubfolders && $hasSubfiles ){
-					$this->messenger->noteError( 'Der Ordner <b>"%s"</b> ist nicht leer und kann daher nicht entfernt werden.', $folder->title );
-				}
-				else{
-					rmdir( $this->getPathFromFolderId( $folderId, TRUE ) );
-					$this->modelFolder->remove( $folderId );
-					$this->updateNumber( $folder->parentId, 'folder', -1 );
-				}
-				$this->restart( $folder->parentId ? 'index/'.$folder->parentId : '', TRUE );
-			}
-		}
-		$this->restart( NULL, TRUE );
-	}
-
-	public function scan(){
-		$statsImport	= (object) array( 'folders' => array(), 'files' => array() );
-		$statsClean		= (object) array( 'folders' => array(), 'files' => array() );
-		$this->scanRecursive( 0, '', $statsImport );
-		$this->cleanRecursive( 0, '', $statsClean );
-
-		$addedSomething		= count( $statsImport->folders ) + count( $statsImport->folders ) > 0;
-		$removedSomething	= count( $statsClean->folders ) + count( $statsClean->folders ) > 0;
-		if( $addedSomething || $removedSomething ){
-			if( $addedSomething ){
-				$list	= array();
-				foreach( $statsImport->files as $file ){
-					$path	= UI_HTML_Tag::create( 'small', $file->path, array( 'class' => "muted" ) );
-					$list[]	= UI_HTML_Tag::create( 'li', $path.$file->title );
-				}
-				$list	= UI_HTML_Tag::create( 'ul', $list );
-				$this->messenger->noteNotice( $this->messages->infoScanFoundSomething, count( $statsImport->folders ), count( $statsImport->files ), $list );
-			}
-			if( $removedSomething ){
-				$list	= array();
-				foreach( $statsClean->files as $file ){
-					$path	= UI_HTML_Tag::create( 'small', $file->path, array( 'class' => "muted" ) );
-					$list[]	= UI_HTML_Tag::create( 'li', $path.$file->title );
-				}
-				$list	= UI_HTML_Tag::create( 'ul', $list );
-				$this->messenger->noteNotice( $this->messages->infoScanRemovedSomething, count( $statsClean->folders ), count( $statsClean->files ), $list );
-			}
-		}
-		else
-			$this->messenger->noteNotice( $this->messages->infoScanNoChanges );
-		$this->restart( NULL, TRUE );
-	}
-
-	protected function scanRecursive( $parentId, $path, $stats ){
+	protected function scanRecursive( $parentId, $path, $stats )
+	{
 		$index	= new DirectoryIterator( $this->path.$path );
 		foreach( $index as $entry ){
 			if( $entry->isDot() || substr( $entry->getFilename(), 0, 1 ) === '.' )
@@ -336,7 +404,8 @@ class Controller_Manage_Download extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	protected function updateNumber( $folderId, $type, $diff = 1 ){
+	protected function updateNumber( $folderId, $type, $diff = 1 )
+	{
 		if( !in_array( $type, array( 'folder', 'file' ) ) )
 			throw new InvalidArgumentException( 'Type must be folder or file' );
 		while( $folderId ){
@@ -356,55 +425,4 @@ class Controller_Manage_Download extends CMF_Hydrogen_Controller{
 			$folderId	= $folder->parentId;
 		}
 	}
-
-	public function upload( $folderId = NULL ){
-		if( !in_array( 'upload', $this->rights ) )
-			$this->restart( NULL, TRUE );
-		$request	= $this->env->getRequest();
-		if( $request->has( 'save' ) ){
-			$upload	= (object) $request->get( 'upload' );
-			$logicUpload	= new Logic_Upload( $this->env );
-			try{
-				$logicUpload->setUpload( $upload );
-				$logicUpload->checkSize( Logic_Upload::getMaxUploadSize(), TRUE );
-//				$logicUpload->checkVirus( TRUE );
-				$targetFile	= $this->getPathFromFolderId( $folderId, TRUE ).$upload->name;
-				$logicUpload->saveTo( $targetFile );
-				$rank	= $this->modelFile->count( array( 'downloadFolderId' => $folderId ) );
-				$this->modelFile->add( array(
-					'downloadFolderId'	=> $folderId,
-					'rank'				=> $rank,
-					'size'				=> $logicUpload->getFileSize(),
-					'title'				=> $logicUpload->getFileName(),
-					'description'		=> (string) $request->get( 'description' ),
-					'uploadedAt'		=> time()
-				) );
-				$this->updateNumber( $folderId, 'file', 1 );
-				$this->messenger->noteSuccess( 'Datei "%s" hochgeladen.', $upload->name );
-			}
-			catch( Exception $e ){
-				$helperError	= new View_Helper_UploadError( $this->env );
-				$helperError->setUpload( $logicUpload );
-				$message	= $helperError->render();
-				$this->messenger->noteError( $message ? $message : $e->getMessage() );
-			}
-		}
-		$this->restart( 'index/'.$folderId, TRUE );
-	}
-
-	public function view( $fileId = NULL ){
-		$file		= $this->modelFile->get( $fileId );
-		if( !$file ){
-			$this->messenger->noteError( 'Invalid download file ID: '.$fileId );
-			$this->restart( NULL, TRUE );
-		}
-		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
-		$this->addData( 'file', $file );
-		$this->addData( 'path', $path );
-		$this->addData( 'rights', $this->rights );
-		$this->addData( 'filesize', filesize( $path.$file->title ) );
-		$this->addData( 'type', pathinfo( $file->title, PATHINFO_EXTENSION ) );
-		$this->addData( 'mimeType', mime_content_type( $path.$file->title ) );
-	}
 }
-?>

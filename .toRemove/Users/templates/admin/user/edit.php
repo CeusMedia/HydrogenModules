@@ -25,7 +25,7 @@ $(document).ready(function(){
 ';
 $env->page->js->addScript( $script );
 
-$roleMap	= array();
+$roleMap	= [];
 foreach( $roles as $role )
 	$roleMap[$role->roleId] = $role;
 
@@ -35,7 +35,7 @@ $indicator->setIndicatorClass( 'indicator-small' );
 $ind1		= $indicator->build( 75, 100 );
 */
 
-$optStatus	= array();
+$optStatus	= [];
 foreach( array_reverse( $words['status'], TRUE ) as $key => $label )
 	$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
 $optStatus	= join( $optStatus );
@@ -81,7 +81,7 @@ $panelStatus	= '
 	</fieldset>
 </form>';
 
-$facts	= array();
+$facts	= [];
 
 $createdAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->createdAt );
 $facts[]	= array(
@@ -103,7 +103,7 @@ if( $user->activeAt ){
 	);
 }
 if( !empty( $projects ) ){
-	$list	= array();
+	$list	= [];
 	foreach( $projects as $project ){
 		$url	= './manage/project/edit/'.$project->projectId;
 		$link	= UI_HTML_Tag::create( 'a', $project->title, array( 'href' => $url, 'class' => 'project' ) );
@@ -137,7 +137,7 @@ $panelInfo	= '
 $w	= (object) $words['edit'];
 
 
-$optRole	= array();
+$optRole	= [];
 foreach( array_reverse( $roles, TRUE ) as $role )
 	$optRole[]	= UI_HTML_Elements::Option( $role->roleId, $role->title, $role->roleId == $user->roleId, NULL, 'role role'.$role->roleId );
 $optRole	= join( $optRole );

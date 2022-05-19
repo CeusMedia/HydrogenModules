@@ -21,7 +21,7 @@ $list		= $textNoneExisting;
 if( $total ){
 	$list		= $textNoneFound;
 	if( $newsletters ){
-		$list	= array();
+		$list	= [];
 		foreach( $newsletters as $newsletter ){
 			$attributes		= array( 'href' => './work/newsletter/edit/'.$newsletter->newsletterId );
 			$link			= UI_HTML_Tag::create( 'a', $newsletter->title, $attributes );

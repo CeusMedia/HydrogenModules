@@ -6,7 +6,7 @@ use CeusMedia\Mail\Message;
 
 class Logic_Import_Connector_MailAttachmentCsv extends Logic_Import_Connector_MailAbstract implements Logic_Import_Connector_Interface
 {
-	public function find( $conditions, $orders = array(), $limit = array() ): array
+	public function find( $conditions, $orders = [], $limit = [] ): array
 	{
 		$list		= [];
 		$mailIds    = $this->mailbox->index( $conditions );

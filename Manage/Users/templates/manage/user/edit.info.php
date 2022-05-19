@@ -3,11 +3,11 @@ $w			= (object) $words['editInfo'];
 
 $helperAge	= new View_Helper_TimePhraser( $env );
 
-$roleMap	= array();
+$roleMap	= [];
 foreach( $roles as $role )
 	$roleMap[$role->roleId] = $role;
 
-$facts		= array();
+$facts		= [];
 $facts[]	= array(
 	'label'	=> $w->labelRegisteredAt,
 	'value'	=> $helperAge->convert( $user->createdAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix )
@@ -28,7 +28,7 @@ if( $user->activeAt ){
 }
 
 if( !empty( $projects ) ){
-	$list	= array();
+	$list	= [];
 	foreach( $projects as $project ){
 		$label	= $project->title;
 		if( !in_array( (int) $project->status, array( 0, 1, 2, 3 ) ) )

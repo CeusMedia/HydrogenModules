@@ -4,7 +4,7 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 	static public function onGetRelatedUsers( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$modelUser			= new Model_User( $env );
 		$modelProjectUser	= new Model_Project_User( $env );
-		$projectIds			= array();
+		$projectIds			= [];
 		$userIds			= array( -1 );
 		$myProjects			= $modelProjectUser->getAll( array( 'userId' => $data->userId ) );
 		foreach( $myProjects as $relation )
@@ -23,7 +23,7 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 		);
 	}
 
-	static public function onUpdate( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onUpdate( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
 		if( empty( $data['projectId'] ) )
 			throw new InvalidArgumentException( 'Missing project ID' );
 		$model	= new Model_Project( $env );
@@ -145,14 +145,14 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 
 		$modelUser			= new Model_User( $env );
 
-		$conditions		= array();
+		$conditions		= [];
 		if( $data->activeOnly )
 			$conditions['status']	= 1;
 
 		$logic			= Logic_Project::getInstance( $env );
 		$projectUsers	= $logic->getProjectUsers( $data->projectId, $conditions, array( 'username' => 'ASC' ) );
 
-		$list				= array();
+		$list				= [];
 		$iconUser			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
 		foreach( $projectUsers as $user ){
 			if( $env->getModules()->has( 'Members' ) ){

@@ -7,7 +7,7 @@ $table		= '<div class="muted"><em><small>'.$w->empty.'</small></em></div><br/>';
 $indicator	= new UI_HTML_Indicator();
 
 if( $customers ){
-	$list	= array();
+	$list	= [];
 	foreach( $customers as $customer ){
 		$index	= '-';
 		$graph	= '';

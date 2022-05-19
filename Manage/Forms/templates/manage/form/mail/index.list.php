@@ -26,7 +26,7 @@ $roleTypeMap	= array(
 
 $modelForm	= new Model_Form( $env );
 
-$rows		= array();
+$rows		= [];
 foreach( $mails as $mail ){
 	$linkView	= UI_HTML_Tag::create( 'a', $iconView.'&nbsp;anzeigen', array(
 		'href'	=> './manage/form/mail/view/'.$mail->mailId,

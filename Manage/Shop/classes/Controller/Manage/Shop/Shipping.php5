@@ -19,10 +19,10 @@ class Controller_Manage_Shop_Shipping extends CMF_Hydrogen_Controller
 		$grades			= $this->modelGrade->getAll( array(), array( 'fallback' => 'ASC', 'weight' => 'ASC' ) );
 		$prices			= $this->modelPrice->getAll( array(), array( 'zoneId' => 'ASC', 'gradeId' => 'ASC' ) );
 
-		$priceMatrix	= array();
+		$priceMatrix	= [];
 		foreach( $prices as $price ){
 			if( !isset( $priceMatrix[$price->zoneId] ) )
-				$priceMatrix[$price->zoneId]	= array();
+				$priceMatrix[$price->zoneId]	= [];
 			$priceMatrix[$price->zoneId][$price->gradeId]	= $price->price;
 		}
 
@@ -90,10 +90,10 @@ class Controller_Manage_Shop_Shipping extends CMF_Hydrogen_Controller
 		$zones	= $this->modelZone->getAll();
 		$prices	= $this->request->get( 'price' );
 
-		$priceMatrix	= array();
+		$priceMatrix	= [];
 		foreach( $this->modelPrice->getAll() as $price ){
 			if( !isset( $priceMatrix[$price->zoneId] ) )
-				$priceMatrix[$price->zoneId]	= array();
+				$priceMatrix[$price->zoneId]	= [];
 			$priceMatrix[$price->zoneId][$price->gradeId]	= $price->price;
 		}
 

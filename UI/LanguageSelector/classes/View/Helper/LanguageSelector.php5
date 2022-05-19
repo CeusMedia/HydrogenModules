@@ -69,7 +69,7 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract
 
 	protected function renderDropDown(): string
 	{
-		$list	= array();
+		$list	= [];
 		foreach( $this->languages as $entry ){
 			if( isset( $this->labels[$entry] ) ){
 				$icon	= UI_HTML_Tag::create( 'i', '', array(
@@ -116,7 +116,7 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract
 
 	protected function renderSelect(): string
 	{
-		$options	= array();
+		$options	= [];
 		foreach( $this->languages as $entry )
 			if( isset( $this->labels[$entry] ) )
 				$options[$entry]	= $this->labels[$entry];

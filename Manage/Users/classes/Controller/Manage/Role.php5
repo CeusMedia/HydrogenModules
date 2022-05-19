@@ -23,17 +23,6 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller
 	protected $language;
 	protected $request;
 
-	public function __onInit()
-	{
-		$this->request			= $this->env->getRequest();
-		$this->messenger		= $this->env->getMessenger();
-		$this->language			= $this->env->getLanguage();
-		$this->modelRole		= $this->getModel( 'Role' );
-		$this->modelRoleRight	= $this->getModel( 'Role_Right' );
-		$this->modelUser		= $this->getModel( 'User' );
-		$this->addData( 'modules', $this->env->getModules()->getAll() );
-	}
-
 	public function add()
 	{
 		$words	= $this->language->getWords( 'manage/role' );
@@ -79,7 +68,8 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller
 		$this->restart( 'edit/'.$roleId, TRUE );
 	}
 
-	public function edit( int $roleId ) {
+	public function edit( int $roleId )
+	{
 		$words		= $this->language->getWords( 'manage/role' );
 		$role		= $this->modelRole->get( $roleId );
 
@@ -98,7 +88,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller
 		$disclosure	= new CMF_Hydrogen_Environment_Resource_Disclosure();
 		$options	= array( 'classPrefix' => 'Controller_', 'readParameters' => FALSE );
 
-		$list		= array();
+		$list		= [];
 		$actions	= $disclosure->reflect( 'classes/Controller/', $options );
 		foreach( $actions as $controllerName => $controller ){
 			$module	= $this->getModuleFromControllerClassName( $controllerName );
@@ -164,6 +154,17 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller
 
 	//  --  PROTECTED  --  //
 
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->messenger		= $this->env->getMessenger();
+		$this->language			= $this->env->getLanguage();
+		$this->modelRole		= $this->getModel( 'Role' );
+		$this->modelRoleRight	= $this->getModel( 'Role_Right' );
+		$this->modelUser		= $this->getModel( 'User' );
+		$this->addData( 'modules', $this->env->getModules()->getAll() );
+	}
+
 	protected function getModuleFromControllerClassName( string $controller )
 	{
 		$controllerPathName	= "Controller/".str_replace( "_", "/", $controller );
@@ -183,7 +184,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller
 		$language	= $this->env->getLanguage()->getLanguage();
 		$moduleKey	= $this->getSingular( str_replace( '_', '/', strtolower( $module->id ) ) );
 		$localeFile	= $language.'/'.$moduleKey.'.ini';
-		$moduleWords	= array();
+		$moduleWords	= [];
 		foreach( $module->files->locales as $locale ){
 			if( $localeFile == $locale->file ){
 				if( file_exists( $path.$locale->file ) ){

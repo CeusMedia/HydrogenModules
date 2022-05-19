@@ -1,11 +1,8 @@
 <?php
-class Job_System_Load extends Job_Abstract{
-
-	public function __onInit(){
-		$this->options	= $this->env->getConfig()->getAll( 'module.system_server_load.', TRUE );
-	}
-
-	public function note(){
+class Job_System_Load extends Job_Abstract
+{
+	public function note()
+	{
 		if( !class_exists( 'RRDCreator' ) )
 			return;
 		$fileStore	= 'load.rrd';
@@ -41,9 +38,12 @@ class Job_System_Load extends Job_Abstract{
 		$renderer->save();
 	}
 
-	public function test(){
-
+	public function test()
+	{
 	}
 
+	protected function __onInit()
+	{
+		$this->options	= $this->env->getConfig()->getAll( 'module.system_server_load.', TRUE );
+	}
 }
- ?>

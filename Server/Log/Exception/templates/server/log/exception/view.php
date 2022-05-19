@@ -13,7 +13,7 @@ $file		= preg_replace( "/^".preg_quote( realpath( $env->uri ), '/' )."/", '.', $
 $date		= date( 'Y.m.d', $exception->createdAt );
 $time		= date( 'H:i:s', $exception->createdAt );
 
-$facts	= array();
+$facts	= [];
 $facts['message']	= '<big><strong>'.$exception->message.'</strong></big>';
 if( (int) $exception->code != 0 )
 	$facts['code']	= $exception->code;
@@ -60,7 +60,7 @@ if( !( isset( $data['showPrevious'] ) && !$data['showPrevious'] ) )
 	$helperFacts->setShowPrevious( TRUE );
 $list	= $helperFacts->render();*/
 
-$list	= array();
+$list	= [];
 foreach( $facts as $key => $value ){
 	$list[]	= UI_HTML_Tag::create( 'dt', $words['view']['label'.ucfirst( $key)] );
 	$list[]	= UI_HTML_Tag::create( 'dd', $value );
@@ -83,7 +83,7 @@ if( !empty( $exception->request ) ){
 	$request	= unserialize( $exception->request );
 
 	if( $request instanceof Net_HTTP_Request ){
-		$rows	= array();
+		$rows	= [];
 		foreach( $request->getHeaders()->getFields() as $field ){
 			$value	= $field->getValue();
 			if( $field->getName() === 'cookie' )

@@ -1,7 +1,7 @@
 <?php
 class Hook_Info_News extends CMF_Hydrogen_Hook
 {
-	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload->content );

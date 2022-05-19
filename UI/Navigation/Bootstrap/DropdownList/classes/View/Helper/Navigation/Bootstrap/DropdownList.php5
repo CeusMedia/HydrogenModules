@@ -1,12 +1,12 @@
 <?php
 class View_Helper_Navigation_Bootstrap_DropdownList
 {
-	protected static $matches	= array();
+	protected static $matches	= [];
 
 	public static function render( $map, $current ): string
 	{
 		$current	= self::calculateMatches( $map, $current ? $current : 'index' );
-		$list		= array();
+		$list		= [];
 		foreach( $map as $nr => $entry ){
 			$entry	= (object) $entry;
 			switch( $entry->type ){
@@ -49,7 +49,7 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 
 	protected static function renderDropdownItem( $map, $current, $nr ): string
 	{
-		$list	= array();
+		$list	= [];
 		$active	= FALSE;
 		foreach( $map->links as $entry ){
 			$entry	= (object) $entry;

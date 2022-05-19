@@ -135,7 +135,7 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 				'JS_jQuery_UI'				=> array(),
 				'JS_Layer'					=> array(),
 			);
-			$list	= array();
+			$list	= [];
 			foreach( $modules as $moduleId => $settings )
 				if( !$this->getModules()->has( $moduleId ) )
 					$list[$moduleId]	= $settings;
@@ -157,7 +157,7 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 		}
 		catch( Exception_Logic $e ){
 			if( $e->getCode() == 2 ){
-				$messages	= array();
+				$messages	= [];
 				foreach( $e->getSubject() as $exception ){
 					if( $exception instanceof Exception_IO )
 						$messages[]	= '<li>'.$exception->getMessage().': '.$exception->getResource().'</li>';

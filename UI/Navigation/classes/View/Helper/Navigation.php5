@@ -5,7 +5,7 @@ class View_Helper_Navigation
 	protected $menu;
 	protected $moduleConfig;
 	protected $inverse			= FALSE;
-	protected $linksToSkip		= array();
+	protected $linksToSkip		= [];
 	protected $logoTitle;
 	protected $logoLink;
 	protected $logoIcon;

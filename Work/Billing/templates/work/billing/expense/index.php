@@ -15,7 +15,7 @@ $frequencies	= array(
 );
 
 if( $expenses ){
-	$list	= array();
+	$list	= [];
 	foreach( $expenses as $expense ){
 		$title	= $expense->title;
 		if( preg_match( '/\[date.Y\]/', $title ) )

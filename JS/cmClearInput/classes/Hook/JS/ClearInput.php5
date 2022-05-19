@@ -9,9 +9,9 @@ class Hook_JS_ClearInput extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
-		$options	= array();													//  @todo add offsets to config and apply here
+		$options	= [];													//  @todo add offsets to config and apply here
 		$options	= json_encode( $options );									//  encode options to JSON
 		$selector	= '.cmClearInput';											//  @todo add default auto selector to config and apply here
 		$script		= 'jQuery("'.$selector.'").cmClearInput('.$options.');';	//  render script

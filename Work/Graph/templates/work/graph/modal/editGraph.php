@@ -1,6 +1,6 @@
 <?php
 
-$optGraph	= array();
+$optGraph	= [];
 foreach( $graphs as $item )
 	$optGraph[$item->graphId]	= $item->title;
 $optGraph	= UI_HTML_Elements::Options( $optGraph );

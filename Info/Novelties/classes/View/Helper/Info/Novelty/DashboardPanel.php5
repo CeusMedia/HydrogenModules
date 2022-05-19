@@ -2,7 +2,7 @@
 class View_Helper_Info_Novelty_DashboardPanel extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $env;
-	protected $news		= array();
+	protected $news		= [];
 
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{
@@ -17,11 +17,11 @@ class View_Helper_Info_Novelty_DashboardPanel extends CMF_Hydrogen_View_Helper_A
 
 	public function render(): string
 	{
-		$options	= array();
+		$options	= [];
 		$this->env->getCaptain()->callHook( 'Novelties', 'collect', $this, $options );
 		if( !$this->news )
 			return '';
-		$list	= array();
+		$list	= [];
 		$userId		= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
 		$model		= new Model_Novelty( $this->env );
 		$iconAck	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );

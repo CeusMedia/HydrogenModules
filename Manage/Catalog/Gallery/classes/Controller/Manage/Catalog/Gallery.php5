@@ -1,6 +1,6 @@
 <?php
-class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller
+{
 	protected $request;
 	protected $options;
 
@@ -9,46 +9,8 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 	protected $pathImagesPreview;
 	protected $pathImagesThumbnail;
 
-	public function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->messenger		= $this->env->getMessenger();
-		$this->frontend			= Logic_Frontend::getInstance( $this->env );
-		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_catalog_gallery.', TRUE );
-
-		$this->pathImages			= $this->frontend->getPath( 'images' ).$this->moduleConfig->get( 'path.images' );
-		$this->pathImagesOriginal	= $this->pathImages.'original/';
-		$this->pathImagesPreview	= $this->pathImages.'preview/';
-		$this->pathImagesThumbnail	= $this->pathImages.'thumbnail/';
-
-		$this->modelImage		= new Model_Catalog_Gallery_Image( $this->env );
-		$this->modelCategory	= new Model_Catalog_Gallery_Category( $this->env );
-
-		if( !is_dir( $this->pathImagesOriginal ) )
-			mkdir( $this->pathImagesOriginal );
-		if( !is_dir( $this->pathImagesPreview ) )
-			mkdir( $this->pathImagesPreview );
-		if( !is_dir( $this->pathImagesThumbnail ) )
-			mkdir( $this->pathImagesThumbnail );
-
-		if( !file_exists( $this->pathImagesOriginal.'.htaccess' ) )
-			File_Writer::save( $this->pathImagesOriginal.'.htaccess', 'Deny from all' );
-
-		$categories	= $this->modelCategory->getAll( array(), array( 'rank' => 'ASC', 'galleryCategoryId' => 'ASC' ));
-		foreach( $categories as $nr => $category ){
-			$category->images	= $this->modelImage->getAll( array(
-				'galleryCategoryId'	=> (int) $category->galleryCategoryId
-			), array( 'rank' => 'ASC', 'galleryImageId' => 'ASC' ) );
-		}
-		$this->addData( 'categories', $categories );
-		$this->addData( 'frontend', $this->frontend );
-		$this->addData( 'pathImages', $this->pathImages );
-		$this->addData( 'pathOriginal', $this->pathImagesOriginal );
-		$this->addData( 'pathThumbnail', $this->pathImagesThumbnail );
-		$this->addData( 'pathPreview', $this->pathImagesPreview );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-	}
-
-	public function addCategory( $parentCategoryId = 0 ){
+	public function addCategory( $parentCategoryId = 0 )
+	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'msg' );
 			$data	= array(
@@ -69,7 +31,7 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 			$this->restart( $categoryId, TRUE );
 		}
 
-		$data	= array();
+		$data	= [];
 		foreach( $this->modelCategory->getColumns() as $column )
 			$data[$column]	= $this->request->get( $column );
 		$lastRank	= $this->modelCategory->getAll( array(), array( 'rank' => 'DESC' ), array( 0, 1 ) );
@@ -80,7 +42,8 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		$this->addData( 'categoryId', $parentCategoryId );
 	}
 
-	public function addImage( $categoryId ){
+	public function addImage( $categoryId )
+	{
 		$category	= $this->checkCategoryId( $categoryId );
 		if( $this->request->has( 'save') ){
 			$words	= (object) $this->getWords( 'msg' );
@@ -120,7 +83,7 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 			$this->restart( 'editCategory/'.$categoryId, TRUE );
 		}
 		$lastRank	= (int) $this->modelImage->getByIndex( 'galleryCategoryId', $categoryId, 'rank', array( 'rank' => 'DESC' ) );
-		$data	= array();
+		$data	= [];
 		$number		= $this->modelImage->countByIndex( 'galleryCategoryId', $categoryId );
 		foreach( $this->modelImage->getColumns() as $column )
 			$data[$column]	= $this->request->get( $column );
@@ -130,29 +93,13 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		$this->addData( 'category', $category );
 	}
 
-	public function addImageToSlider( $imageId ){
+	public function addImageToSlider( $imageId )
+	{
 		$this->restart( './manage/catalog/gallery/editImage/'.$imageId );
 	}
 
-	protected function checkCategoryId( $categoryId ){
-		$category	= $this->modelCategory->get( $categoryId );
-		if( $category )
-			return $category;
-		$words		= (object) $this->getWords( 'msg' );
-		$this->messenger->noteError( $words->errorCategoryIdInvalid );
-		$this->restart( NULL, TRUE );
-	}
-
-	protected function checkImageId( $imageId ){
-		$image	= $this->modelImage->get( $imageId );
-		if( $image )
-			return $image;
-		$words		= (object) $this->getWords( 'msg' );
-		$this->messenger->noteError( $words->errorImageIdInvalid );
-		$this->restart( NULL, TRUE );
-	}
-
-	public function editCategory( $categoryId ){
+	public function editCategory( $categoryId )
+	{
 		$category	= $this->checkCategoryId( $categoryId );
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'msg' );
@@ -204,11 +151,13 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		$this->addData( 'category', $category );
 	}
 
-	public function edit( $imageId ){
+	public function edit( $imageId )
+	{
 		$this->restart( 'editImage/'.$imageId, TRUE );
 	}
 
-	public function editImage( $imageId ){
+	public function editImage( $imageId )
+	{
 		$image		= $this->checkImageId( $imageId );
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'msg' );
@@ -262,12 +211,14 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		$this->addData( 'imageObject', new UI_Image( $pathOriginal ) );
 	}
 
-	public function index( $categoryId = 0 ){
+	public function index( $categoryId = 0 )
+	{
 		if( $categoryId )
 			$this->restart( 'editCategory/'.$categoryId, TRUE );
 	}
 
-	public function viewOriginal( $imageId ){
+	public function viewOriginal( $imageId )
+	{
 		$image			= $this->checkImageId( $imageId );
 		$category		= $this->checkCategoryId( $image->galleryCategoryId );
 		$uri			= $this->pathImagesOriginal.$category->path.'/'.$image->filename;
@@ -278,7 +229,8 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		exit;
 	}
 
-	public function removeCategory( $categoryId ){
+	public function removeCategory( $categoryId )
+	{
 		$category	= $this->checkCategoryId( $categoryId );
 		$words		= (object) $this->getWords( 'msg' );
 		$images	= $this->modelImage->getAllByIndex( 'galleryCategoryId', $categoryId );
@@ -298,7 +250,8 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeCategoryCover( $categoryId ){
+	public function removeCategoryCover( $categoryId )
+	{
 		$category	= $this->checkCategoryId( $categoryId );
 		$words		= (object) $this->getWords( 'msg' );
 		unlink( $this->pathImages.$category->image );
@@ -309,7 +262,8 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		$this->restart( 'editCategory/'.$categoryId, TRUE );
 	}
 
-	public function removeImage( $imageId ){
+	public function removeImage( $imageId )
+	{
 		$image		= $this->checkImageId( $imageId );
 		$category	= $this->checkCategoryId( $image->galleryCategoryId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -321,7 +275,68 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		$this->restart( $image->galleryCategoryId, TRUE );
 	}
 
-	protected function rerankCategories( $start = 1 ){
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->messenger		= $this->env->getMessenger();
+		$this->frontend			= Logic_Frontend::getInstance( $this->env );
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_catalog_gallery.', TRUE );
+
+		$this->pathImages			= $this->frontend->getPath( 'images' ).$this->moduleConfig->get( 'path.images' );
+		$this->pathImagesOriginal	= $this->pathImages.'original/';
+		$this->pathImagesPreview	= $this->pathImages.'preview/';
+		$this->pathImagesThumbnail	= $this->pathImages.'thumbnail/';
+
+		$this->modelImage		= new Model_Catalog_Gallery_Image( $this->env );
+		$this->modelCategory	= new Model_Catalog_Gallery_Category( $this->env );
+
+		if( !is_dir( $this->pathImagesOriginal ) )
+			mkdir( $this->pathImagesOriginal );
+		if( !is_dir( $this->pathImagesPreview ) )
+			mkdir( $this->pathImagesPreview );
+		if( !is_dir( $this->pathImagesThumbnail ) )
+			mkdir( $this->pathImagesThumbnail );
+
+		if( !file_exists( $this->pathImagesOriginal.'.htaccess' ) )
+			File_Writer::save( $this->pathImagesOriginal.'.htaccess', 'Deny from all' );
+
+		$categories	= $this->modelCategory->getAll( array(), array( 'rank' => 'ASC', 'galleryCategoryId' => 'ASC' ));
+		foreach( $categories as $nr => $category ){
+			$category->images	= $this->modelImage->getAll( array(
+				'galleryCategoryId'	=> (int) $category->galleryCategoryId
+			), array( 'rank' => 'ASC', 'galleryImageId' => 'ASC' ) );
+		}
+		$this->addData( 'categories', $categories );
+		$this->addData( 'frontend', $this->frontend );
+		$this->addData( 'pathImages', $this->pathImages );
+		$this->addData( 'pathOriginal', $this->pathImagesOriginal );
+		$this->addData( 'pathThumbnail', $this->pathImagesThumbnail );
+		$this->addData( 'pathPreview', $this->pathImagesPreview );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+	}
+
+	protected function checkCategoryId( $categoryId )
+	{
+		$category	= $this->modelCategory->get( $categoryId );
+		if( $category )
+			return $category;
+		$words		= (object) $this->getWords( 'msg' );
+		$this->messenger->noteError( $words->errorCategoryIdInvalid );
+		$this->restart( NULL, TRUE );
+	}
+
+	protected function checkImageId( $imageId )
+	{
+		$image	= $this->modelImage->get( $imageId );
+		if( $image )
+			return $image;
+		$words		= (object) $this->getWords( 'msg' );
+		$this->messenger->noteError( $words->errorImageIdInvalid );
+		$this->restart( NULL, TRUE );
+	}
+
+	protected function rerankCategories( $start = 1 )
+	{
 		$rank		= max( 1, (int) $start );
 		$conditions	= $start ? array( 'rank' => '>= '.(int) $rank ) : array();
 		$categories	= $this->modelCategory->getAll( $conditions, array( 'rank' => 'ASC', 'modifiedAt' => 'DESC' ) );
@@ -331,7 +346,8 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	protected function rerankImages( $categoryId, $start = 1 ){
+	protected function rerankImages( $categoryId, $start = 1 )
+	{
 		$conditions	= array( 'galleryCategoryId' => $categoryId );
 		if( ( $rank = max( 1, (int) $start ) ) > 1 )
 			$conditions['rank']	= '>= '.(int) $rank;
@@ -342,7 +358,8 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	protected function uploadImage( $imageId, $uploadData ){
+	protected function uploadImage( $imageId, $uploadData )
+	{
 		$image		= $this->checkImageId( $imageId );
 		$category	= $this->checkCategoryId( $image->galleryCategoryId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -386,4 +403,3 @@ class Controller_Manage_Catalog_Gallery extends CMF_Hydrogen_Controller{
 		return FALSE;
 	}
 }
-?>

@@ -10,7 +10,7 @@ $statuses	= array(
 );
 
 if( $bills ){
-	$list	= array();
+	$list	= [];
 	$totalAmount	= 0;
 	foreach( $bills as $bill ){
 		$totalAmount	+= $bill->amountNetto;

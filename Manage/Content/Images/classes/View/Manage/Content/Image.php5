@@ -1,25 +1,65 @@
 <?php
-class View_Manage_Content_Image extends CMF_Hydrogen_View{
-
+class View_Manage_Content_Image extends CMF_Hydrogen_View
+{
 	protected $path;
 	protected $frontend;
 	protected $moduleConfig;
 	protected $extensions;
 
-	public function __onInit(){
+	public function addFolder()
+	{
+	}
+
+	public function addImage()
+	{
+	}
+
+	public function editFolder()
+	{
+	}
+
+	public function editImage()
+	{
+	}
+
+	public function index()
+	{
+	}
+
+	public function listImages( $path, $maxWidth, $maxHeight )
+	{
+		$list			= [];
+		$index			= new DirectoryIterator( $this->path.$path );
+		$thumbnailer	= $this->getData( 'helperThumbnailer' );
+		foreach( $index as $entry ){
+			if( !$entry->isFile() )
+				continue;
+			$extension	= strtolower( pathinfo( $entry->getFilename(), PATHINFO_EXTENSION ) );
+			if( !in_array( $extension, $this->extensions ) )
+				continue;
+			$imagePath	= substr( $entry->getPathname(), strlen( $this->path ) );
+			$thumb		= $thumbnailer->get( $entry->getPathname(), $maxWidth, $maxHeight );
+			$image		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $thumb ) );
+			$label		= UI_HTML_Tag::create( 'div', $entry->getFilename() );
+			$thumbnail	= UI_HTML_Tag::create( 'div', $image.$label );
+			$key		= $entry->getFilename();
+			$list[$key]	= UI_HTML_Tag::create( 'li', $thumbnail, array( 'data-image-hash' => addslashes( base64_encode( $imagePath ) ) ) );
+		}
+		natcasesort( $list );
+		if( $list )
+			return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbs' ) );
+	}
+
+	protected function __onInit()
+	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->path			= $this->frontend->getPath().$this->moduleConfig->get( 'path.images' );
 		$this->extensions	= preg_split( "/\s*,\s*/", $this->moduleConfig->get( 'extensions' ) );
 	}
 
-	public function addFolder(){}
-	public function addImage(){}
-	public function editFolder(){}
-	public function editImage(){}
-	public function index(){}
-
-	protected function countFilesInFolder( $path ){
+	protected function countFilesInFolder( string $path )
+	{
 		$number	= 0;
 		$index	= new DirectoryIterator( $path );													//  create folder lister
 		foreach( $index as $entry ){																//  iterate folder entries
@@ -31,10 +71,11 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 		return $number;
 	}
 
-	protected function listFolders( $currentPath ){
+	protected function listFolders( string $currentPath )
+	{
 		$words	= (object) $this->getWords( 'index' );
 		$start	= microtime( TRUE );
-		$list   = array();
+		$list   = [];
 		$folders	= $this->getData( 'folders' );
 		foreach( $folders as $folder ){
 			$name		= preg_replace( "/^\.\//", "", $folder );
@@ -63,28 +104,4 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View{
 				'id'	=> 'list-folders',
 		) );
 	}
-
-	public function listImages( $path, $maxWidth, $maxHeight ){
-		$list			= array();
-		$index			= new DirectoryIterator( $this->path.$path );
-		$thumbnailer	= $this->getData( 'helperThumbnailer' );
-		foreach( $index as $entry ){
-			if( !$entry->isFile() )
-				continue;
-			$extension	= strtolower( pathinfo( $entry->getFilename(), PATHINFO_EXTENSION ) );
-			if( !in_array( $extension, $this->extensions ) )
-				continue;
-			$imagePath	= substr( $entry->getPathname(), strlen( $this->path ) );
-			$thumb		= $thumbnailer->get( $entry->getPathname(), $maxWidth, $maxHeight );
-			$image		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $thumb ) );
-			$label		= UI_HTML_Tag::create( 'div', $entry->getFilename() );
-			$thumbnail	= UI_HTML_Tag::create( 'div', $image.$label );
-			$key		= $entry->getFilename();
-			$list[$key]	= UI_HTML_Tag::create( 'li', $thumbnail, array( 'data-image-hash' => addslashes( base64_encode( $imagePath ) ) ) );
-		}
-		natcasesort( $list );
-		if( $list )
-			return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbs' ) );
-	}
 }
-?>

@@ -13,7 +13,7 @@
  */
 class Controller_Oauth_Resource extends CMF_Hydrogen_Controller
 {
-	static protected $resources	= array();
+	static protected $resources	= [];
 
 	public function __construct( CMF_Hydrogen_Environment $env, $setupView = TRUE )
 	{

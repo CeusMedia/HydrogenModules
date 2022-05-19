@@ -4,7 +4,7 @@ class View_Helper_Work_Newsletter_ThemeList
 	protected $env;
 	protected $moduleConfig;
 	protected $themePath;
-	protected $themes			= array();
+	protected $themes			= [];
 
 	/**
 	 *	@todo		clear theme path handling
@@ -23,7 +23,7 @@ class View_Helper_Work_Newsletter_ThemeList
 	 */
 	public function render(): string
 	{
-		$list	= array();
+		$list	= [];
 		foreach( $this->themes as $theme ){
 			$list[]	= $this->renderItem( $theme );
 		}

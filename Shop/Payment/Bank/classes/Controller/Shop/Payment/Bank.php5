@@ -17,7 +17,7 @@ class Controller_Shop_Payment_Bank extends CMF_Hydrogen_Controller
 	protected $localUserId;
 	protected $userId;
 	protected $wallet;
-	protected $backends			= array();
+	protected $backends			= [];
 
 	/**
 	 *	Entry point for payment.

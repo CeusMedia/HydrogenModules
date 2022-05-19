@@ -9,7 +9,7 @@ class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abs
 	public $classLinkActive		= '';
 	public $classLinkDisabled	= '';
 
-	protected $tabs				= array();
+	protected $tabs				= [];
 	protected $current			= 0;
 	protected $basePath			= '';
 
@@ -37,10 +37,10 @@ class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abs
 
 	public function renderTabs( $current = 0 ): string
 	{
-		$list	= array();																			//  prepare empty list
+		$list	= [];																			//  prepare empty list
 		foreach( $this->tabs as $nr => $tab ){														//  iterate registered tabs
-			$link	= array();
-			$item	= array();
+			$link	= [];
+			$item	= [];
 			$link['class']	= $this->classLink ? $this->classLink : NULL;
 			$item['class']	= $this->classItem ? $this->classItem : NULL;
 			$isActive	= $nr === $current || ( $tab->url === $current ) || !$nr && !$current;		//  is tab active ?

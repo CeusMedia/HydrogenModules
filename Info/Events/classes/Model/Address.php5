@@ -75,7 +75,7 @@ die( $e->getMessage() );
 		}
 	}
 
-	public function getAllInDistance( $x, $y, $z, $distance, array $havingIds = array() ): array
+	public function getAllInDistance( $x, $y, $z, $distance, array $havingIds = [] ): array
 	{
 		$query		= 'SELECT *
 		FROM addresses as a
@@ -86,7 +86,7 @@ die( $e->getMessage() );
 		<= ' . pow( $distance, 2 );
 		if( $havingIds )
 			$query	.= " AND addressId IN(".join( ", ", $havingIds ).")";
-		$list	= array();
+		$list	= [];
 		foreach( $this->env->dbc->query( $query )->fetchAll( PDO::FETCH_OBJ ) as $address ){
 			$powX	= pow( $x - $address->x, 2);
 			$powY	= pow( $y - $address->y, 2);
@@ -100,9 +100,9 @@ die( $e->getMessage() );
 	/**
 	 *	@todo		move to branch module and remove
 	 */
-	public function getBranchesInRangeOf( $point, $radius, array $havingIds = array() )
+	public function getBranchesInRangeOf( $point, $radius, array $havingIds = [] )
 	{
-		$list		= array();
+		$list		= [];
 		$model		= new Model_Branch( $this->env );
 		$distance	= 2 * $this->radiusEarth * sin( $radius / ( 2 * $this->radiusEarth ) );
 		return $model->getAllInDistance( $point->x, $point->y, $point->z, $distance, $havingIds );

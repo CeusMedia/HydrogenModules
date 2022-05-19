@@ -1,7 +1,7 @@
 <?php
 function renderFacts( array $facts ): string
 {
-	$list	= array();
+	$list	= [];
 	foreach( $facts as $term => $definition ){
 		$list[]	= UI_HTML_Tag::create( 'dt', $term );
 		$list[]	= UI_HTML_Tag::create( 'dd', $definition );
@@ -39,7 +39,7 @@ function renderCodeBadge( $check, string $label = NULL ): string
 
 $checks		= UI_HTML_Tag::create( 'div', 'Keine Prüfungen bisher.', array( 'class' => 'text text-info' ) );
 if( $address->checks ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $address->checks as $check ){
 		$codeLabel		= renderCodeBadge( $check );
 		$codeDesc		= \CeusMedia\Mail\Transport\SMTP\Code::getText( $check->code );

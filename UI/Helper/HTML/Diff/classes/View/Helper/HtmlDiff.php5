@@ -56,8 +56,8 @@ class HtmlDiff {
 	private $content;
 	private $oldText;
 	private $newText;
-	private $oldWords = array();
-	private $newWords = array();
+	private $oldWords = [];
+	private $newWords = [];
 	private $wordIndices;
 	private $encoding;
 	private $specialCaseOpeningTags = array( "/<strong[^>]*/i", "/<b[^>]*/i", "/<i[^>]*/i", "/<big[^>]*/i", "/<small[^>]*/i", "/<u[^>]*/i", "/<sub[^>]*/i", "/<sup[^>]*/i", "/<strike[^>]*/i", "/<s[^>]*/i", '/<p[^>]*/i' );
@@ -116,7 +116,7 @@ class HtmlDiff {
 	}
 
 	private function IndexNewWords() {
-		$this->wordIndices = array();
+		$this->wordIndices = [];
 		foreach( $this->newWords as $i => $word ) {
 			if( $this->IsTag( $word ) ) {
 				$word = $this->StripTagAttributes( $word );
@@ -137,7 +137,7 @@ class HtmlDiff {
 	private function ConvertHtmlToListOfWords( $characterString ) {
 		$mode = 'character';
 		$current_word = '';
-		$words = array();
+		$words = [];
 		foreach( $characterString as $character ) {
 			switch ( $mode ) {
 				case 'character':
@@ -246,7 +246,7 @@ class HtmlDiff {
 	}
 
 	private function ProcessInsertOperation( $operation, $cssClass ) {
-		$text = array();
+		$text = [];
 		foreach( $this->newWords as $pos => $s ) {
 			if( $pos >= $operation->StartInNew && $pos < $operation->EndInNew ) {
 				$text[] = $s;
@@ -256,7 +256,7 @@ class HtmlDiff {
 	}
 
 	private function ProcessDeleteOperation( $operation, $cssClass ) {
-		$text = array();
+		$text = [];
 		foreach( $this->oldWords as $pos => $s ) {
 			if( $pos >= $operation->StartInOld && $pos < $operation->EndInOld ) {
 				$text[] = $s;
@@ -266,7 +266,7 @@ class HtmlDiff {
 	}
 
 	private function ProcessEqualOperation( $operation ) {
-		$result = array();
+		$result = [];
 		foreach( $this->newWords as $pos => $s ) {
 			if( $pos >= $operation->StartInNew && $pos < $operation->EndInNew ) {
 				$result[] = $s;
@@ -347,7 +347,7 @@ class HtmlDiff {
 			}
 		}
 		if( $indexOfFirstTag !== null ) {
-			$items = array();
+			$items = [];
 			foreach( $words as $pos => $s ) {
 				if( $pos >= 0 && $pos < $indexOfFirstTag ) {
 					$items[] = $s;
@@ -358,7 +358,7 @@ class HtmlDiff {
 			}
 			return $items;
 		} else {
-			$items = array();
+			$items = [];
 			foreach( $words as $pos => $s ) {
 				if( $pos >= 0 && $pos <= count( $words ) ) {
 					$items[] = $s;
@@ -384,7 +384,7 @@ class HtmlDiff {
 	private function Operations() {
 		$positionInOld = 0;
 		$positionInNew = 0;
-		$operations = array();
+		$operations = [];
 		$matches = $this->MatchingBlocks();
 		$matches[] = new DiffMatch( count( $this->oldWords ), count( $this->newWords ), 0 );
 		foreach(  $matches as $i => $match ) {
@@ -414,7 +414,7 @@ class HtmlDiff {
 	}
 
 	private function MatchingBlocks() {
-		$matchingBlocks = array();
+		$matchingBlocks = [];
 		$this->FindMatchingBlocks( 0, count( $this->oldWords ), 0, count( $this->newWords ), $matchingBlocks );
 		return $matchingBlocks;
 	}
@@ -441,9 +441,9 @@ class HtmlDiff {
 		$bestMatchInOld = $startInOld;
 		$bestMatchInNew = $startInNew;
 		$bestMatchSize = 0;
-		$matchLengthAt = array();
+		$matchLengthAt = [];
 		for( $indexInOld = $startInOld; $indexInOld < $endInOld; $indexInOld++ ) {
-			$newMatchLengthAt = array();
+			$newMatchLengthAt = [];
 			$index = $this->oldWords[ $indexInOld ];
 			if( $this->IsTag( $index ) ) {
 				$index = $this->StripTagAttributes( $index );

@@ -7,7 +7,7 @@ $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remov
 $panelCategories	= '<div class="alert alert-error">Noch keine Kategorie zugewiesen.</div>';
 
 if( $articleCategories ){
-	$listCategories	= array();
+	$listCategories	= [];
 	foreach( $articleCategories as $item ){
 		$labelVolume	= $item->volume ? ''.$item->volume : "-";
 		if( $item->parentId ){
@@ -68,11 +68,11 @@ if( $articleCategories ){
 <hr/>';
 }
 
-$subs	= array();
+$subs	= [];
 foreach( $categories as $item ){
 	if( $item->parentId ){
 		if( !isset( $subs[$item->parentId] ) )
-			$subs[$item->parentId]	= array();
+			$subs[$item->parentId]	= [];
 		$subs[$item->parentId][$item->rank]	= $item;
 		ksort( $subs[$item->parentId] );
 	}
@@ -80,12 +80,12 @@ foreach( $categories as $item ){
 foreach( $subs as $parentId => $items ){
 }
 
-$optCategory	= array();
+$optCategory	= [];
 foreach( $categories as $item ){
 	if( !$item->parentId ){
 		$sub	= "";
 		if( isset( $subs[$item->categoryId] ) ){
-			$list	= array();
+			$list	= [];
 			foreach( $subs[$item->categoryId] as $sub )
 				if( 1 || !array_key_exists( $sub->categoryId, $articleCategories ) )
 					$list[]	= '<option value="'.$sub->categoryId.'"> - '.$sub->label_de.'</option>';

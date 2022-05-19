@@ -24,7 +24,7 @@ class View_Helper_MetaTags
 		$description	= $tags->get( 'description' );
 		$keywords		= $tags->get( 'keywords' );
 		if( file_exists( $keywords ) ){
-			$list	= array();
+			$list	= [];
 			foreach( explode( "\n", file_get_contents( $tags->get( 'keywords' ) ) ) as $line )
 				if( trim( $line ) )
 					$list[]	= trim( $line );

@@ -14,9 +14,9 @@ $iconDown	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-d
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 $iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 
-$rows	= array();
+$rows	= [];
 foreach( $topics as $topic ){
-	$buttons	= array();
+	$buttons	= [];
 	if( in_array( 'rankTopic', $rights ) ){
 		$buttons[]	= UI_HTML_Tag::create( 'a', $iconUp, array(
 			'href'	=> './info/forum/rankTopic/'.$topic->topicId,

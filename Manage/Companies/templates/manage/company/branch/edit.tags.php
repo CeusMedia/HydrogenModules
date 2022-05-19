@@ -6,7 +6,7 @@ $iconRemove	= HTML::Icon( 'trash', TRUE );
 
 $list		= '<div><em><small class="muted">(Noch nicht implementiert.)</small></em></div>';
 if( $branch->tags ){
-	$list	= array();
+	$list	= [];
 	foreach( $branch->tags as $tag ){
 		$label	= $tag->label;
 		$button	= UI_HTML_Tag::create( 'a', $iconRemove, array(

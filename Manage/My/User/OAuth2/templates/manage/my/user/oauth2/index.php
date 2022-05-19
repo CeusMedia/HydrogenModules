@@ -7,7 +7,7 @@ $w			= (object) $words['index'];
 
 $table		= UI_HTML_Tag::create( 'div', $w->empty, array( 'class' => 'alert alert-info' ) );
 if( $providers ){
-	$rows		= array();
+	$rows		= [];
 	foreach( $providers as $provider ){
 		$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, array(
 			'href'	=> './manage/my/user/oauth2/add/'.$provider->oauthProviderId,

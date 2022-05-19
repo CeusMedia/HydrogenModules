@@ -11,7 +11,7 @@ class Hook_Shop_Payment_Stripe extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of hook payload data
 	 *	@return		void
 	 */
-	public static function onRegisterShopPaymentBackends( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ): void
+	public static function onRegisterShopPaymentBackends( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ): void
 	{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_stripe.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/stripe' );
@@ -63,7 +63,7 @@ class Hook_Shop_Payment_Stripe extends CMF_Hydrogen_Hook
 	 *	@param		public						$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;

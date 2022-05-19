@@ -61,7 +61,7 @@ foreach( $folders as $folder ){
 	$info	= UI_HTML_Tag::create( 'small', $folder->nrFiles.' Dateien und '.$folder->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
 	$label	= UI_HTML_Tag::create( 'a', $label.$info, array( 'class' => 'name', 'href' => $url ) );
 
-	$buttons	= array();
+	$buttons	= [];
 	$buttons[]	= UI_HTML_Tag::create( 'a', $iconOpenFolder, array(
 		'href'	=> $url,
 		'class'	=> 'btn not-btn-small btn-info',
@@ -125,7 +125,7 @@ $panelList	= '
 </div>';
 
 
-$panels		= array();
+$panels		= [];
 if( 0 )
 	$panels[]	= $view->loadTemplateFile( 'manage/download/index.info.php' );
 if( in_array( 'upload', $rights ) )

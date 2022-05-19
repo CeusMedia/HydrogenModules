@@ -25,7 +25,7 @@ $showFacts	= 1 && !empty( $exception );
 
 $panelFacts	= '';
 if( $showFacts ){
-	$facts	= array();
+	$facts	= [];
 	foreach( $words['facts'] as $key => $label ){
 		if( property_exists( $exception, $key ) ){
 			if( $key === "code" && (int) $exception->code === 0 )

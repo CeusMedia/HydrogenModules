@@ -202,7 +202,7 @@ class Logic_Upload{
 	 *	@param		array			$otherLimits		Map of other given limits
 	 *	@return		integer
 	 */
-	static function getMaxUploadSize( $otherLimits = array() ){
+	static function getMaxUploadSize( $otherLimits = [] ){
 		foreach( $otherLimits as $key => $value )
 			if( preg_match( "/[a-z]$/i", trim( $value ) ) )
 				$otherLimits[$key]	= Alg_UnitParser::parse( trim( $value ) );
@@ -313,7 +313,7 @@ class Logic_Upload{
 	 *	@throws		InvalidArgumentException			if given upload data is neither array nor object
 	 *	@throws		InvalidArgumentException			if given upload data is missing error property
 	 */
-	public function setUpload( $uploadData, $maxSize = 0, $allowedExtensions = array() ){
+	public function setUpload( $uploadData, $maxSize = 0, $allowedExtensions = [] ){
 		if( is_array( $uploadData ) )
 			$uploadData	= (object) $uploadData;
 		if( !is_object( $uploadData ) )
@@ -321,7 +321,7 @@ class Logic_Upload{
 		if( !isset( $uploadData->error ) )
 			throw new InvalidArgumentException( 'No valid upload data given' );
 		$this->upload	= $uploadData;
-		$this->upload->allowedMimeTypes		= array();
+		$this->upload->allowedMimeTypes		= [];
 		$this->upload->allowedExtensions	= $allowedExtensions;
 		$this->upload->allowedSize			= Alg_UnitParser::parse( trim( $maxSize ) );
 

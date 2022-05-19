@@ -5,7 +5,7 @@ $iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' )
 
 $list	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $backups ){
-	$list	= array();
+	$list	= [];
 	foreach( $backups as $backup ){
 		if( is_string( $backup->comment ) ){
 			$backup->comment	= array(

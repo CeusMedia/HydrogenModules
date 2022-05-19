@@ -4,7 +4,7 @@ $atLeastOne			= TRUE;
 if( !$atLeastOne || count( $passwords ) > 1 ){
 	$passwordCryptTypes = array_flip( ADT_Constant::getAll( 'PASSWORD_' ) );
 
-	$rows	= array();
+	$rows	= [];
 	foreach( $passwords as $password ){
 		$rowClass	= 'info';
 		if( $password->status == 0 )

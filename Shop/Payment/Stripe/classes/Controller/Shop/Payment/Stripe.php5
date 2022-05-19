@@ -23,7 +23,7 @@ class Controller_Shop_Payment_Stripe extends CMF_Hydrogen_Controller
 	protected $localUserId;
 	protected $userId;
 	protected $wallet;
-	protected $backends			= array();
+	protected $backends			= [];
 	protected $modelCart;
 
 	public function index()

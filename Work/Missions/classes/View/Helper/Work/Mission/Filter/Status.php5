@@ -16,7 +16,7 @@ class View_Helper_Work_Mission_Filter_Status{
 	}
 
 	public function render(){
-		$list			= array();
+		$list			= [];
 		$changedStates	= array_diff( $this->values, $this->selected );
 		foreach( $this->values as $status ){
 			$input	= UI_HTML_Tag::create( 'input', NULL, array(

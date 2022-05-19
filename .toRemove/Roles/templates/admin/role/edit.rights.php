@@ -1,7 +1,7 @@
 <?php
-$rows	= array();
+$rows	= [];
 foreach( $actions as $controller => $class ){
-	$list	= array();
+	$list	= [];
 	foreach( $class->methods as $action => $method ){
 		$access	= $acl->hasRight( $roleId, $controller, $action );
 		$check	= "";

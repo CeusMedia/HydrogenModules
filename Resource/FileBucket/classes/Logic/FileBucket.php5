@@ -62,24 +62,24 @@ class Logic_FileBucket extends CMF_Hydrogen_Logic{
 		return $this->model->get( $fileId );
 	}
 
-	public function getAllFromModuleAndPath( $moduleId, $filePath, $orders = array(), $limits = array() ){
+	public function getAllFromModuleAndPath( $moduleId, $filePath, $orders = [], $limits = [] ){
 		return $this->getAllByIndices( array(
 			'moduleId'		=> $moduleId,
 			'filePath'		=> $filePath,
 		), $orders, $limits );
 	}
 
-	public function getAllByIndices( $indices, $orders = array(), $limits = array() ){
+	public function getAllByIndices( $indices, $orders = [], $limits = [] ){
 		if( !$orders )
 			$orders		= array( 'filePath' => 'ASC', 'fileName' => 'ASC' );
 		return $this->model->getAllByIndices( $indices, $orders, $limits );
 	}
 
-	public function getAllFromModule( $moduleId, $orders = array(), $limits = array() ){
+	public function getAllFromModule( $moduleId, $orders = [], $limits = [] ){
 		return $this->getAllByIndices( array( 'moduleId' => $moduleId ), $orders, $limits );
 	}
 
-	public function getAllFromPath( $filePath, $orders = array(), $limits = array() ){
+	public function getAllFromPath( $filePath, $orders = [], $limits = [] ){
 		return $this->getAllByIndices( array( 'filePath' => $filePath ), $orders, $limits );
 	}
 

@@ -1,10 +1,10 @@
 <?php
-class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller
+{
 	protected $basePath;
 	protected $baseUri;
 	protected $extensions;
-	protected $folders			= array();
+	protected $folders			= [];
 	protected $frontend;
 	protected $messenger;
 	protected $moduleConfig;
@@ -12,91 +12,15 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 	protected $thumbnailer;
 	protected $path;
 
-	static protected $cacheImageList	= array();
+	protected static $cacheImageList	= [];
 
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->frontend		= Logic_Frontend::getInstance( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
-		$this->extensions	= preg_split( "/\s*,\s*/", $this->moduleConfig->get( 'extensions' ) );
-		$pathIgnore			= trim( $this->moduleConfig->get( 'path.ignore' ) );
-
-		$words				= (object) $this->getWords( 'msg' );
-		$this->basePath		= $this->frontend->getPath().$this->moduleConfig->get( 'path.images' );
-		$this->baseUri		= $this->frontend->getUri().$this->moduleConfig->get( 'path.images' );
-		if( $this->moduleConfig->get( 'path.images' ) === "auto" ){
-			$this->basePath	= $this->frontend->getPath( 'path.images' );
-//			$this->baseUri	= $this->frontend->getUri().$this->moduleConfig->get( 'path.images' );
-		}
-		if( !file_exists( $this->basePath ) ){
-			if( realpath( $this->frontend->getPath() ) === realpath( $this->env->uri ) )
-				mkdir( $this->basePath );
-			else
-				$this->messenger->noteFailure( $words->errorBasePathInvalid, $this->basePath );
-		}
-		if( file_exists( $this->basePath ) ){
-			$this->folders	= array( '' => '.' );
-			foreach( FS_Folder_RecursiveLister::getFolderList( $this->basePath ) as $entry ){
-				$path	= substr( $entry->getPathname(), strlen( $this->basePath ) );
-				if( !( $pathIgnore && preg_match( $pathIgnore, $path ) ) )
-					$this->folders[]	= './'.$path;
-			}
-			natcasesort( $this->folders );
-		}
-		$this->path	= $this->session->get( 'filter_manage_content_image_path' );
-		$this->thumbnailer	= new View_Helper_Thumbnailer( $this->env, 120, 80 );
-
-//		$path	= trim( $this->env->getRequest()->get( 'path' ) );
-//		$path	= str_replace( "../", "", base64_decode( $path ) );
-//		$path	= strlen( trim( $path ) ) ? trim( $path ) : ".";
-		$this->addData( 'path', $this->path );
-		$this->addData( 'basePath', $this->basePath );
-		$this->addData( 'folders', $this->folders );
-		$this->addData( 'extensions', $this->extensions );
-		$this->addData( 'frontend', $this->frontend );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-		$this->addData( 'helperThumbnailer', $this->thumbnailer );
-	}
-
-	static protected function getImageList( $env ){
-		$cache		= $env->getCache();
-		if( $list = $env->cache->get( 'ManageContentImages.list.static' ) )
-			return $list;
-		$frontend		= Logic_Frontend::getInstance( $env );
-		$moduleConfig	= $env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
-		$pathImages		= $frontend->getPath().$moduleConfig->get( 'path.images' );
-		$pathIgnore		= trim( $moduleConfig->get( 'path.ignore' ) );
-		$extensions		= preg_split( "/\s*,\s*/", $moduleConfig->get( 'extensions' ) );
-		$list			= array();
-
-		$regexExt	= "/\.(".join( "|", $extensions ).")$/i";
-		$index		= new FS_File_RecursiveRegexFilter( $pathImages, $regexExt );
-		foreach( $index as $item ){
-			$path	= substr( $item->getPathname(), strlen( $pathImages ) );
-			if( $pathIgnore && preg_match( $pathIgnore, $path ) )
-				continue;
-			$parts	= explode( "/", $path );
-			$level	= count( $parts );
-			$file	= array_pop( $parts );
-//			$path	= implode( '/', array_slice( $parts, 1 ) );
-			$path	= implode( '/', $parts );
-			$label	= $path ? $path.'/'.$file : $file;
-			$uri	= substr( $item->getPathname(), strlen( $frontend->getPath() ) );
-			$key	= str_replace( "/", "_", strtolower( $label ) );
-			$list[$key]	= (object) array( 'label' => $label, 'uri' => $uri );
-		}
-		ksort( $list );
-		$env->getCache()->set( 'ManageContentImages.list.static', $list );
-		return $list;
-	}
-
-	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	public static function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] )
+	{
 		self::___onTinyMCE_getLinkList( $env, $context, $module, array( 'hidePrefix' => TRUE ) );
 	}
 
-	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+	public static function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] )
+	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
 		$frontend		= Logic_Frontend::getInstance( $env );
 		$pathFront		= trim( $frontend->getPath() );
@@ -107,7 +31,7 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes	= (object) $words['link-prefixes'];
 //		$label		= $prefixes->image;
-		$list		= array();
+		$list		= [];
 		$index		= self::getImageList( $env );
 		foreach( $index as $item ){
 			$list[]	= (object) array(
@@ -124,7 +48,8 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$context->list	= array_merge( $context->list, $list );
 	}
 
-	public function addFolder( $folderHash = NULL ){
+	public function addFolder( $folderHash = NULL )
+	{
 		$this->setPathFromHash( $folderHash );
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'msg' );
@@ -152,7 +77,8 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$this->addData( 'imagePath', $this->path );
 	}
 
-	public function addImage(){
+	public function addImage()
+	{
 		$path		= $this->path;
 		$folder		= trim( $this->request->get( 'folder' ) );
 		$file		= $this->request->get( 'file' );
@@ -193,26 +119,8 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$this->addData( 'imagePath', trim( $this->request->get( 'path' ) ) );
 	}
 
-	protected function checkFile( $filePath ){
-		if( !file_exists( $this->basePath.$filePath ) ){
-			$words		= (object) $this->getWords( 'msg' );
-			$this->messenger->noteError( $words->errorImageNotExisting, $filePath );
-			$this->restart( '?path='.dirname( $filePath ), TRUE );
-		}
-	}
-
-	protected function checkFolder( $folderPath ){
-		if( !file_exists( $this->basePath.$folderPath ) ){
-			$words		= (object) $this->getWords( 'msg' );
-			$this->messenger->noteError( $words->errorFolderNotExisting, $folderPath );
-
-			if( $folderPath === $this->path )
-				$this->setPathFromHash( base64_encode( './' ) );
-			$this->restart( NULL, TRUE );
-		}
-	}
-
-	public function editFolder( $folderHash = NULL ){
+	public function editFolder( $folderHash = NULL )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$folderPath	= $this->setPathFromHash( $folderHash );
 		if( $this->request->has( 'save' ) ){
@@ -256,7 +164,8 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function editImage( $imageHash ){
+	public function editImage( $imageHash )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 
 		$imagePath	= base64_decode( $imageHash );
@@ -308,7 +217,8 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$this->addData( 'imageMegaPixels', round( $megapixels, $megapixels < 1 ? 2 : 1 ) );
 	}
 
-	public function index( $folderHash = NULL ){
+	public function index( $folderHash = NULL )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$path		= $this->setPathFromHash( $folderHash );
 
@@ -322,7 +232,8 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function process( $imageHash ){
+	public function process( $imageHash )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 
 		$imagePath	= base64_decode( $imageHash );
@@ -361,7 +272,8 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$this->restart( 'editImage/'.$imageHash, TRUE );
 	}
 
-	public function removeFolder( $folderHash = NULL ){
+	public function removeFolder( $folderHash = NULL )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$folderPath	= $this->setPathFromHash( $folderHash );
 		$this->checkFolder( $folderPath );
@@ -379,7 +291,8 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$this->restart( base64_encode( dirname( $folderPath ) ), TRUE );
 	}
 
-	public function removeImage( $imageHash ){
+	public function removeImage( $imageHash )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$imagePath	= base64_decode( $imageHash );
 		$imageName	= basename( $imagePath );
@@ -395,7 +308,8 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function scale( $imageHash ){
+	public function scale( $imageHash )
+	{
 		$imagePath	= base64_decode( $imageHash );
 		$this->checkFile( $imagePath );
 
@@ -433,24 +347,8 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		$this->restart( 'editImage/'.base64_encode( $imagePath ), TRUE );
 	}
 
-	protected function setPathFromHash( $folderHash ){
-		if( $folderHash ){
-
-			$path		= str_replace( "../", "", base64_decode( $folderHash ) );
-			if( file_exists( $this->basePath.$path ) ){
-				$this->session->set( 'filter_manage_content_image_path', $path );
-				$this->addData( 'path', $this->path = $path );
-			}
-//			$this->checkFolder( $path );
-/*			if( !file_exists( $this->basePath.$path ) ){
-				$this->messenger->noteError( $words->errorPathNotExisting, $this->path, dirname( $path ) );
-				$this->restart( NULL, TRUE );
-			}*/
-		}
-		return $this->path;
-	}
-
-	public function view( $imageHash, $embededInHtml = FALSE ){
+	public function view( $imageHash, $embededInHtml = FALSE )
+	{
 		$imagePath	= base64_decode( $imageHash );
 //		$imagePath	= $this->env->getRequest()->get( 'path' );
 		if( !file_exists( $this->basePath.$imagePath ) ){
@@ -471,5 +369,123 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller{
 		print( FS_File_Reader::load( $this->basePath.$imagePath ) );
 		exit;
 	}
+
+	protected static function getImageList( $env )
+	{
+		$cache		= $env->getCache();
+		if( $list = $env->cache->get( 'ManageContentImages.list.static' ) )
+			return $list;
+		$frontend		= Logic_Frontend::getInstance( $env );
+		$moduleConfig	= $env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
+		$pathImages		= $frontend->getPath().$moduleConfig->get( 'path.images' );
+		$pathIgnore		= trim( $moduleConfig->get( 'path.ignore' ) );
+		$extensions		= preg_split( "/\s*,\s*/", $moduleConfig->get( 'extensions' ) );
+		$list			= [];
+
+		$regexExt	= "/\.(".join( "|", $extensions ).")$/i";
+		$index		= new FS_File_RecursiveRegexFilter( $pathImages, $regexExt );
+		foreach( $index as $item ){
+			$path	= substr( $item->getPathname(), strlen( $pathImages ) );
+			if( $pathIgnore && preg_match( $pathIgnore, $path ) )
+				continue;
+			$parts	= explode( "/", $path );
+			$level	= count( $parts );
+			$file	= array_pop( $parts );
+//			$path	= implode( '/', array_slice( $parts, 1 ) );
+			$path	= implode( '/', $parts );
+			$label	= $path ? $path.'/'.$file : $file;
+			$uri	= substr( $item->getPathname(), strlen( $frontend->getPath() ) );
+			$key	= str_replace( "/", "_", strtolower( $label ) );
+			$list[$key]	= (object) array( 'label' => $label, 'uri' => $uri );
+		}
+		ksort( $list );
+		$env->getCache()->set( 'ManageContentImages.list.static', $list );
+		return $list;
+	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
+		$this->extensions	= preg_split( "/\s*,\s*/", $this->moduleConfig->get( 'extensions' ) );
+		$pathIgnore			= trim( $this->moduleConfig->get( 'path.ignore' ) );
+
+		$words				= (object) $this->getWords( 'msg' );
+		$this->basePath		= $this->frontend->getPath().$this->moduleConfig->get( 'path.images' );
+		$this->baseUri		= $this->frontend->getUri().$this->moduleConfig->get( 'path.images' );
+		if( $this->moduleConfig->get( 'path.images' ) === "auto" ){
+			$this->basePath	= $this->frontend->getPath( 'path.images' );
+//			$this->baseUri	= $this->frontend->getUri().$this->moduleConfig->get( 'path.images' );
+		}
+		if( !file_exists( $this->basePath ) ){
+			if( realpath( $this->frontend->getPath() ) === realpath( $this->env->uri ) )
+				mkdir( $this->basePath );
+			else
+				$this->messenger->noteFailure( $words->errorBasePathInvalid, $this->basePath );
+		}
+		if( file_exists( $this->basePath ) ){
+			$this->folders	= array( '' => '.' );
+			foreach( FS_Folder_RecursiveLister::getFolderList( $this->basePath ) as $entry ){
+				$path	= substr( $entry->getPathname(), strlen( $this->basePath ) );
+				if( !( $pathIgnore && preg_match( $pathIgnore, $path ) ) )
+					$this->folders[]	= './'.$path;
+			}
+			natcasesort( $this->folders );
+		}
+		$this->path	= $this->session->get( 'filter_manage_content_image_path' );
+		$this->thumbnailer	= new View_Helper_Thumbnailer( $this->env, 120, 80 );
+
+//		$path	= trim( $this->env->getRequest()->get( 'path' ) );
+//		$path	= str_replace( "../", "", base64_decode( $path ) );
+//		$path	= strlen( trim( $path ) ) ? trim( $path ) : ".";
+		$this->addData( 'path', $this->path );
+		$this->addData( 'basePath', $this->basePath );
+		$this->addData( 'folders', $this->folders );
+		$this->addData( 'extensions', $this->extensions );
+		$this->addData( 'frontend', $this->frontend );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$this->addData( 'helperThumbnailer', $this->thumbnailer );
+	}
+
+	protected function checkFile( string $filePath )
+	{
+		if( !file_exists( $this->basePath.$filePath ) ){
+			$words		= (object) $this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorImageNotExisting, $filePath );
+			$this->restart( '?path='.dirname( $filePath ), TRUE );
+		}
+	}
+
+	protected function checkFolder( string $folderPath )
+	{
+		if( !file_exists( $this->basePath.$folderPath ) ){
+			$words		= (object) $this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorFolderNotExisting, $folderPath );
+
+			if( $folderPath === $this->path )
+				$this->setPathFromHash( base64_encode( './' ) );
+			$this->restart( NULL, TRUE );
+		}
+	}
+
+	protected function setPathFromHash( $folderHash )
+	{
+		if( $folderHash ){
+
+			$path		= str_replace( "../", "", base64_decode( $folderHash ) );
+			if( file_exists( $this->basePath.$path ) ){
+				$this->session->set( 'filter_manage_content_image_path', $path );
+				$this->addData( 'path', $this->path = $path );
+			}
+//			$this->checkFolder( $path );
+/*			if( !file_exists( $this->basePath.$path ) ){
+				$this->messenger->noteError( $words->errorPathNotExisting, $this->path, dirname( $path ) );
+				$this->restart( NULL, TRUE );
+			}*/
+		}
+		return $this->path;
+	}
 }
-?>

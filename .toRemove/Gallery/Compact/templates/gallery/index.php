@@ -13,7 +13,7 @@ function isMobile(){
 		'Opera'			=> "/(Opera)\/([0-9.]+) /"
 	);
 	foreach( $patterns as $pattern ){
-		$matches	= array();
+		$matches	= [];
 		if( preg_match_all( $pattern, $userAgent, $matches ) ){
 			return (object) array(
 				'browser'	=> $matches[1][0],
@@ -28,7 +28,7 @@ $mobile	= isMobile();
 
 $dateFormat	= $env->getConfig()->get( 'module.gallery_compact.format.date' );
 
-$list	= array();
+$list	= [];
 foreach( $folders as $entry ){
 	$folderName	= $entry->getFilename();
 	$link		= View_Helper_Gallery::renderGalleryLink( $env, $source.$folderName, 2, $dateFormat );
@@ -61,7 +61,7 @@ if( $list ){
 	}
 }
 
-$list		= array();
+$list		= [];
 foreach( $files as $file ){
 	$fileName	= $file->getFilename();
 	if( preg_match( '/\.(small|medium)\.(jpg|jpeg|jpe|png|gif)$/i', $fileName ) )

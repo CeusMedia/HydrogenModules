@@ -36,9 +36,9 @@ class Controller_Manage_Ip_Lock_Transport extends CMF_Hydrogen_Controller{
 		$filterIds	= $this->request->get( 'filterIds' );
 
 		if( $this->request->get( 'reasons' ) === 'all' )
-			$reasonIds	= array();
+			$reasonIds	= [];
 		if( $this->request->get( 'filters' ) === 'all' )
-			$filterIds	= array();
+			$filterIds	= [];
 		$json		= $this->logicTransport->export( $reasonIds, $filterIds );
 
 		if( !strlen( trim( $fileName ) ) )

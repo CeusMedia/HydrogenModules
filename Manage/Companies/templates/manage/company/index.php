@@ -7,7 +7,7 @@ $buttonAdd 	= UI_HTML_Elements::LinkButton( './manage/company/add', $iconAdd.'&n
 
 $helperTime	= new View_Helper_TimePhraser( $env );
 
-$rows		= array();
+$rows		= [];
 $number		= 0;
 $helperTime	= new View_Helper_TimePhraser( $env );
 foreach( $companies as $entry ){

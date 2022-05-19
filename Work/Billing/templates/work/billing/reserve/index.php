@@ -5,7 +5,7 @@ $iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-buil
 $list	= UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) );
 
 if( $reserves ){
-	$list	= array();
+	$list	= [];
 	foreach( $reserves as $reserve ){
 		$link	= UI_HTML_Tag::create( 'a', $reserve->title, array( 'href' => './work/billing/reserve/edit/'.$reserve->reserveId ) );
 		$corporation	= '<em class="muted">Person per Anteil</em>';

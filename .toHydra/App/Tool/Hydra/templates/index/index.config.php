@@ -1,9 +1,9 @@
 <?php
 if( empty( $remoteConfig ) )
 	return "";
-$listModules	= array();
+$listModules	= [];
 foreach( $modulesInstalled as $module ){
-	$list	= array();
+	$list	= [];
 	foreach( $module->config as $item ){
 		if( preg_match( '/password|secret/', $item->key ) )
 			$item->value	= str_repeat( '*', strlen( $item->value ) );

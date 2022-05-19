@@ -261,7 +261,7 @@ die;																								//  @todo handle exception without die
 		}
 	}
 
-	protected function compareModuleFiles( string $moduleId, array $pathLinks = array() )
+	protected function compareModuleFiles( string $moduleId, array $pathLinks = [] )
 	{
 		$fileTypes	= array(
 			'classes'	=> 'class',
@@ -272,7 +272,7 @@ die;																								//  @todo handle exception without die
 			'styles'	=> 'style',
 			'templates'	=> 'template',
 		);
-		$files			= array();
+		$files			= [];
 		$moduleLocal	= $this->logic->getModule( $moduleId );
 
 		$moduleSource	= $this->logic->getModuleFromSource( $moduleId );
@@ -283,7 +283,7 @@ die;																								//  @todo handle exception without die
 
 		foreach( $fileTypes as $typeMember => $typeKey ){
 			foreach( $moduleSource->files->$typeMember as $file ){
-				$diff		= array();
+				$diff		= [];
 				$status		= 0;
 				$pathFileLocal	= $this->logic->getLocalFileTypePath( $envRemote, $typeKey, $file );
 				$pathFileSource	= $this->logic->getSourceFileTypePath( $typeKey, $file );
@@ -380,7 +380,7 @@ die;																								//  @todo handle exception without die
 		}
 	}
 
-	protected function resolveLinkedPath( string $path, array $links = array() ): string
+	protected function resolveLinkedPath( string $path, array $links = [] ): string
 	{
 		foreach( $links as $source => $target )
 			if( preg_match( "/^".str_replace( "/", "\/", $source )."/", $path ) )

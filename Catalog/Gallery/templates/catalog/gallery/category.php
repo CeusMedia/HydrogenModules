@@ -5,7 +5,7 @@
 
 //$images		= '...[images]...';
 
-$list   = array();
+$list   = [];
 $pathThumbs		= $pathImages."thumbnail/".$category->path."/";
 
 $imageMatrix	= $view->renderImageMatrix( $category, $images );

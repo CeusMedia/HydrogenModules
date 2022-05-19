@@ -19,7 +19,7 @@ class View_Manage_Image_Slider extends CMF_Hydrogen_View
 
 	public function index(){}
 
-	public function label( $section, $name, $options = array() )
+	public function label( $section, $name, $options = [] )
 	{
 		$options	= array_merge( array(
 			'titleElement'	=> 'abbr',

@@ -2,7 +2,7 @@
 
 $w			= (object) $words['edit'];
 
-$optCategory	= array();
+$optCategory	= [];
 foreach( $categories as $item )
 	$optCategory[$item->categoryId] = $item->title;
 $optCategory	= UI_HTML_Elements::Options( $optCategory, $post->categoryId );
@@ -13,7 +13,7 @@ $optLanguage	= UI_HTML_Elements::Options( array_combine( $languages, $languages 
 
 $optStatus		= UI_HTML_Elements::Options( $words['states'], $post->status );
 
-$optAuthor		= array();
+$optAuthor		= [];
 foreach( $users as $user )
 	$optAuthor[$user->userId]		= $user->username;
 $optAuthor		= UI_HTML_Elements::Options( $optAuthor, $post->authorId );

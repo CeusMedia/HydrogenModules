@@ -30,7 +30,7 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 		if( !file_exists( $this->path ) )
 			FS_Folder_Editor::createFolder( $this->path );
 
-		$paths	= array();
+		$paths	= [];
 		$index	= FS_Folder_RecursiveLister::getFolderList( $this->path );
 		foreach( $index as $item ){
 			$path	= substr( $item->getPathname(), strlen( $this->path ) );

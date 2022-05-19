@@ -5,7 +5,7 @@ $optStatus	= UI_HTML_Elements::Options( $optStatus, (int) $request->get( 'status
 $optType	= $words['types'];
 $optType	= UI_HTML_Elements::Options( $optType, (int) $request->get( 'type' ) );
 
-$optTopic	= array();
+$optTopic	= [];
 foreach( $topics as $entry )
 	$optTopic[$entry->topicId]	= $entry->title;
 $optTopic	= UI_HTML_Elements::Options( $optTopic, (int) $entry->topicId );

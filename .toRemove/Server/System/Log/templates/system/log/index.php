@@ -5,7 +5,7 @@ $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-w
 
 $list	= '<div class="muted"><em><small>No exceptions logged.</small></em></div>';
 if( $exceptions ){
-	$list	= array();
+	$list	= [];
 	foreach( $exceptions as $nr => $exception ){
 
 		$link	= UI_HTML_Tag::create( 'a', $exception->message, array( 'href' => './system/log/view/'.$exception->id ) );

@@ -68,7 +68,7 @@ class Resource_TokenStore
 	 */
 	protected function calculateToken(){
 		$config	= new ADT_List_Dictionary( $this->config->getAll( 'module.resource_tokenstore.') );	//  extract module configuration
-		$credentials	= array();
+		$credentials	= [];
 		$credentials['ip']	= $this->getClientIp();													//  use remote IP as credential
 		if( $config->get( 'secret' ) )																//  use secret as credential
 			$credentials['secret']		= $config->get( 'secret' );

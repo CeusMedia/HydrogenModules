@@ -13,8 +13,8 @@ class Logic_Note extends CMF_Hydrogen_Logic
 	protected $roleId		= 0;
 	protected $visibility	= 0;
 
-	protected $userNoteIds	= array();
-	protected $userProjects	= array();
+	protected $userNoteIds	= [];
+	protected $userProjects	= [];
 
 	protected function __onInit()
 	{
@@ -120,7 +120,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 			$this->restart( './work/note/index' );
 		}
 
-		$note->links	= array();
+		$note->links	= [];
 		foreach( $this->modelNoteLink->getAllByIndex( 'noteId', $noteId ) as $relation ){
 			$link		= clone $this->modelLink->get( $relation->linkId );
 			$link->noteLinkId	= $relation->noteLinkId;
@@ -128,7 +128,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 			$note->links[]		= $link;
 		}
 
-		$note->tags	= array();
+		$note->tags	= [];
 		$indices	= array(
 			'noteId'	=> $noteId,
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
@@ -153,7 +153,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 			throw new InvalidArgumentException( 'Tag list cannot be empty' );
 
 		if( $strict ){
-			$noteIds	= array();
+			$noteIds	= [];
 			$tagIds		= array_unique( $tagIds );
 			foreach( $tagIds as $tagId ){
 				$indices	= array(
@@ -162,7 +162,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 				);
 				foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $relation ){
 					if( !isset( $noteIds[$relation->noteId] ) )
-						$noteIds[$relation->noteId]	= array();
+						$noteIds[$relation->noteId]	= [];
 					$noteIds[$relation->noteId][]	= $relation->tagId;
 				}
 			}
@@ -172,7 +172,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 			return array_keys( $noteIds );
 		}
 
-		$noteIds			= array();
+		$noteIds			= [];
 		$indices	= array(
 			'tagId'		=> $tagIds,
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
@@ -186,7 +186,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 	{
 		$relatedNoteIds	= $this->getRelatedNoteIds( $noteId );
 
-		$noteTags	= array();
+		$noteTags	= [];
 		$indices	= array(
 			'noteId'	=> $noteId,
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
@@ -194,7 +194,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 		foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $noteTag )
 			$noteTags[]	= $noteTag->tagId;
 
-		$list		= array();
+		$list		= [];
 		foreach( $relatedNoteIds as $relatedNoteId => $count ){
 			$indices	= array(
 				'noteId'	=> $relatedNoteId,
@@ -216,7 +216,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 				unset( $list[$noteTag->tagId] );
 		arsort( $list );
 
-		$relatedTagIds		= array();
+		$relatedTagIds		= [];
 		foreach( $list as $tagId => $count ){
 			if( in_array( $tagId, $noteTags ) )
 				continue;
@@ -229,7 +229,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 
 	public function getRelatedNoteIds( $noteId )
 	{
-		$relatedNoteIds	= array();
+		$relatedNoteIds	= [];
 		$indices	= array(
 			'noteId'	=> $noteId,
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
@@ -255,21 +255,21 @@ class Logic_Note extends CMF_Hydrogen_Logic
 		return $relatedNoteIds;
 	}
 
-/*	public function getNoteIdsFromTagIds( $tagIds = array() ){
+/*	public function getNoteIdsFromTagIds( $tagIds = [] ){
 		if( !is_array( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list must be an array' );
 		if( !count( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list cannot be empty' );
 
-		$noteIds			= array();
+		$noteIds			= [];
 		foreach( $this->modelNoteTag->getAllByIndices( array( 'tagId' => $tagIds, 'status' => '>= '.Model_Note_Tag::STATUS_NORMAL ) ) as $relation )
 			$noteIds[]	= $relation->noteId;
 		return $noteIds;
 	}
 */
-	public function getRankedTagIdsFromNoteIds( $noteIds, $skipTagIds = array() )
+	public function getRankedTagIdsFromNoteIds( $noteIds, $skipTagIds = [] )
 	{
-		$tagIds	= array();
+		$tagIds	= [];
 		$indices	= array(
 			'noteId'	=> $noteIds,
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
@@ -288,7 +288,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 	/**
 	 *	@todo finish implementation or remove
 	 */
-	public function getRelatedTagsFromTags( $tagIds = array() )
+	public function getRelatedTagsFromTags( $tagIds = [] )
 	{
 		if( !is_array( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list must be an array' );
@@ -296,7 +296,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 			throw new InvalidArgumentException( 'Tag list cannot be empty' );
 	}
 
-	public function getTopNotes( $conditions = array(), $orders = array(), $limits = array() )
+	public function getTopNotes( $conditions = [], $orders = [], $limits = [] )
 	{
 		$clock		= new Alg_Time_Clock();
 		if( !$orders )
@@ -321,7 +321,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 		);
 	}
 
-	public function getTopTags( $limit = 10, $offset = 0, $projectId = NULL, $notTagIds = array() )
+	public function getTopTags( $limit = 10, $offset = 0, $projectId = NULL, $notTagIds = [] )
 	{
 		if( $notTagIds ){
 			$noteIds	= $this->getNoteIdsFromTagIds( $notTagIds, !TRUE );
@@ -329,7 +329,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 				$noteIds	= array_intersect( $noteIds, $this->userNoteIds );
 			if( $noteIds ){
 				$tagIds		= $this->getRankedTagIdsFromNoteIds( $noteIds, $notTagIds );
-				$tags		= array();
+				$tags		= [];
 				if( $tagIds ){
 					$tags		= $this->modelTag->getAllByIndices( array( 'tagId' => array_keys( $tagIds ) ) );
 					$tags		= array_slice( $tags, $offset, $limit, TRUE );
@@ -340,7 +340,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 			return $tags;
 		}
 
-		$tagIds	= array();
+		$tagIds	= [];
 		$conditions	= array(
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL
 		);
@@ -365,8 +365,8 @@ class Logic_Note extends CMF_Hydrogen_Logic
 
 	public function populateNote( $note )
 	{
-		$note->links	= array();
-		$note->tags		= array();
+		$note->links	= [];
+		$note->tags		= [];
 
 		$links	= $this->modelNoteLink->getAllByIndex( 'noteId', $note->noteId );
 		$tags	= $this->modelNoteTag->getAllByIndices( array(
@@ -433,7 +433,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 	 *	@todo		use of GREATEST only works for MySQL - improve this!
 	 *	@see		http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
 	 */
-	public function searchNotes( $query, $conditions, $orders = array(), $limits = array() )
+	public function searchNotes( $query, $conditions, $orders = [], $limits = [] )
 	{
 //		if( !strlen( trim( $query ) ) && !$tags )
 //			throw new Exception( 'Neither query nor tags to search for given' );
@@ -443,7 +443,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 		if( !$limits )
 			$limits	= array( 0, 10 );
 
-		$cond		= array();
+		$cond		= [];
 		$pattern	= '/^(<=|>=|<|>|!=)(.+)/';
 		foreach( $conditions as $column => $value ){
 			if( is_array( $value ) )
@@ -451,7 +451,7 @@ class Logic_Note extends CMF_Hydrogen_Logic
 			else if( preg_match( '/^%/', $value ) )
 				$cond[]	= "n.".$column." LIKE '".$value."'";
 			else if( preg_match( $pattern, $value ) ){
-				$matches	= array();
+				$matches	= [];
 				preg_match_all( $pattern, $value, $matches );
 				$operation	= ' '.$matches[1][0].' ';
 				$cond[]	= "n.".$column.$operation."'".$matches[2][0]."'";
@@ -511,8 +511,8 @@ ORDER BY
 		$this->userId			= $userId;
 		$this->roleId			= $roleId;
 		$this->projectId		= $projectId;
-		$this->userNoteIds		= array();
-		$this->userProjects		= array();
+		$this->userNoteIds		= [];
+		$this->userProjects		= [];
 		if( $this->userId ){
 			if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 				$logicProject	= Logic_Project::getInstance( $this->env );

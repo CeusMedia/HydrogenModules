@@ -1,11 +1,11 @@
 <?php
 
-$optProject		= array();
+$optProject		= [];
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject	= UI_HTML_Elements::Options( $optProject );
 
-$optVersion		= array();
+$optVersion		= [];
 /*foreach( $versions as $version ){
 	$label	= $version->version;
 	if( $version->title )

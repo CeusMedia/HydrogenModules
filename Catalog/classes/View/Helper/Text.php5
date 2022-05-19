@@ -26,7 +26,7 @@ class View_Helper_Text{
 	static public function applyExpandable( $text, $length = 0, $labelMore = FALSE, $labelLess = FALSE ){
 		if( $length && strlen( $text ) > $length ){
 			$count	= -1;
-			$list	= array();
+			$list	= [];
 			$parts	= explode( " ", $text );
 			foreach( $parts as $part ){
 				$count	+= strlen( $part ) + 1;

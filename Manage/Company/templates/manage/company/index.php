@@ -4,7 +4,7 @@ $add 		= UI_HTML_Elements::LinkButton( './manage/company/add', $words['index']['
 
 $helperTime	= new View_Helper_TimePhraser( $env );
 
-$rows		= array();
+$rows		= [];
 $number		= 0;
 foreach( $companies as $entry ){
 	$class				= ( $number % 2 ) ? 'even' : 'odd';

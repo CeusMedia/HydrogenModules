@@ -6,7 +6,7 @@ $iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-buil
 
 $list	= '<div class="alert alert-info former-hint">'.$wf->listNone.'</div>';
 if( $module->companies ){
-	$list	= array();
+	$list	= [];
 	foreach( $module->companies as $company ){
 		$label	= $company->name;
 		if( $company->site )

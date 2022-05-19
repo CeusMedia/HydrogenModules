@@ -1,23 +1,17 @@
 <?php
-class Controller_Admin_Payment_Mangopay_Hook extends CMF_Hydrogen_Controller{
-
+class Controller_Admin_Payment_Mangopay_Hook extends CMF_Hydrogen_Controller
+{
 	public static $verbose	= TRUE;
 
-	public function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->mangopay		= Logic_Payment_Mangopay::getInstance( $this->env );
-		$this->model		= new Model_Mangopay_Event( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
-		$this->baseUrl		= $this->env->url;
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$this->baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
-		$this->addData( 'baseUrl', $this->baseUrl );
-	}
+	protected $mangopay;
+	protected $model;
+	protected $modulConfig;
+	protected $baseUrl;
 
-	public function apply(){
+	public function apply()
+	{
 		$hooks		= $this->mangopay->getHooks();
-		$hookedEventTypes	= array();
+		$hookedEventTypes	= [];
 		foreach( $hooks as $hook )
 			$hookedEventTypes[$hook->EventType]	= $hook;
 
@@ -52,20 +46,12 @@ class Controller_Admin_Payment_Mangopay_Hook extends CMF_Hydrogen_Controller{
 		$this->addData( 'currentUrl', $hooks ? $hooks[0]->Url : '' );
 	}
 
-	protected function handleMangopayResponseException( $e ){
-		ob_start();
-		print_r( $e->GetErrorDetails() );
-		$details	= ob_get_clean();
-		$message	= 'Response Exception "%s" (%s)<br/><small>%s</small>';
-		$this->messenger->noteFailure( $message, $e->getMessage(), $e->getCode(), $details );
-	}
-
-
-	public function index( $refresh = NULL ){
+	public function index( $refresh = NULL )
+	{
 		if( $hookId )
 			$this->restart( 'view/'.$hookId, TRUE );
 		$hooks		= $this->mangopay->getHooks( $refresh );
-		$hookedEventTypes	= array();
+		$hookedEventTypes	= [];
 		foreach( $hooks as $hook )
 			$hookedEventTypes[$hook->EventType]	= $hook;
 
@@ -74,7 +60,8 @@ class Controller_Admin_Payment_Mangopay_Hook extends CMF_Hydrogen_Controller{
 		$this->addData( 'hookedEventTypes', $hookedEventTypes );
 	}
 
-	public function view( $hookId ){
+	public function view( $hookId )
+	{
 		$hook	= $this->mangopay->getHook( $hookId );
 		if( !$hook ){
 			$this->messenger->noteError( 'Invalid hook ID.' );
@@ -82,5 +69,25 @@ class Controller_Admin_Payment_Mangopay_Hook extends CMF_Hydrogen_Controller{
 		}
 		$this->addData( 'hook', $hook );
 	}
+
+	protected function __onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->mangopay		= Logic_Payment_Mangopay::getInstance( $this->env );
+		$this->model		= new Model_Mangopay_Event( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
+		$this->baseUrl		= $this->env->url;
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+			$this->baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+		$this->addData( 'baseUrl', $this->baseUrl );
+	}
+
+	protected function handleMangopayResponseException( $e ){
+		ob_start();
+		print_r( $e->GetErrorDetails() );
+		$details	= ob_get_clean();
+		$message	= 'Response Exception "%s" (%s)<br/><small>%s</small>';
+		$this->messenger->noteFailure( $message, $e->getMessage(), $e->getCode(), $details );
+	}
 }
-?>

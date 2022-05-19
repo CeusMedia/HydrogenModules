@@ -9,7 +9,7 @@ class View_Helper_Navigation_Bootstrap_DropdownPillBar extends CMF_Hydrogen_View
 		$indices	= array( 'parentId' => 0, 'scope' => $scope );
 		$pages		= $model->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
 
-		$linkMap	= array();
+		$linkMap	= [];
 		foreach( $pages as $page )
 			if( (int) $page->type === 2)
 				$linkMap[strtolower( str_replace( '_', '/', $page->module ) )]	= $page->identifier;
@@ -19,13 +19,13 @@ class View_Helper_Navigation_Bootstrap_DropdownPillBar extends CMF_Hydrogen_View
 		if( array_key_exists( $current, $linkMap ) )
 			$current	= $linkMap[$current];
 
-		$list	= array();
+		$list	= [];
 		foreach( $pages as $page ){
 			if( $page->status < 1 )
 				continue;
 			if( $page->type == 1 ){
 				$found		= FALSE;
-				$sublist	= array();
+				$sublist	= [];
 				$indices	= array( 'parentId' => $page->pageId, 'scope' => 0 );
 				$subpages	= $model->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
 				foreach( $subpages as $subpage ){

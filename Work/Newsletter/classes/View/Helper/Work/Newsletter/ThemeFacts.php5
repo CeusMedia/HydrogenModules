@@ -1,7 +1,7 @@
 <?php
 class View_Helper_Work_Newsletter_ThemeFacts
 {
-	protected $attributes	= array();
+	protected $attributes	= [];
 	protected $data;
 	protected $env;
 
@@ -12,7 +12,7 @@ class View_Helper_Work_Newsletter_ThemeFacts
 
 	public function render(): string
 	{
-		$list	= array();
+		$list	= [];
 		if( !$this->data )
 			throw new RuntimeException( 'No theme data set yet' );
 

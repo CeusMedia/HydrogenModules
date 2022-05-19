@@ -1,16 +1,12 @@
 <?php
-class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller{
-
-	public function __onInit(){
-		$this->model	= new Model_Bookmark( $this->env );
-		$this->addData( 'bookmarks', $this->model->getAll( array( 'status' => '0' ), array( 'title' => 'ASC' ) ) );
-	}
-
-	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = array() ){
+class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller
+{
+	public static function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] )
+	{
 		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes	= (object) $words['link-prefixes'];
 
-		$list		= array();
+		$list		= [];
 		$model		= new Model_Bookmark( $env );
 		$orders		= array( 'title' => 'ASC' );
 		foreach( $model->getAll( array(), $orders ) as $nr => $link ){
@@ -28,7 +24,8 @@ class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller{
 		$context->list	= array_merge( $context->list, $list );
 	}
 
-	public function add(){
+	public function add()
+	{
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$messenger	= $this->env->getMessenger();
@@ -51,7 +48,8 @@ class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function edit( $bookmarkId ){
+	public function edit( $bookmarkId )
+	{
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		if( !($bookmark = $this->model->get( $bookmarkId ) ) ){
@@ -79,13 +77,19 @@ class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller{
 		$this->addData( 'bookmark', $this->model->get( $bookmarkId ) );
 	}
 
-	public function index(){
+	public function index()
+	{
 	}
 
-
-	public function remove( $bookmarkId ){
+	public function remove( $bookmarkId )
+	{
 		$this->model->remove( $bookmarkId );
 		$this->restart( NULL, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->model	= new Model_Bookmark( $this->env );
+		$this->addData( 'bookmarks', $this->model->getAll( array( 'status' => '0' ), array( 'title' => 'ASC' ) ) );
+	}
 }
-?>

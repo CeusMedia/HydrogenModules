@@ -75,7 +75,7 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic
 		return $lock;
 	}
 
-	public function getAll( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getAll( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$list	= $this->modelLock->getAll( $conditions, $orders, $limits );
 		foreach( $list as $nr => $lock )
@@ -94,18 +94,18 @@ class Logic_IP_Lock extends CMF_Hydrogen_Logic
 		return $this->get( $lock->ipLockId, $strict );
 	}
 
-	public function getFilters( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getFilters( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelFilter->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getFiltersOfReason( $reasonId, array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getFiltersOfReason( $reasonId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions['reasonId']	= $reasonId;
 		return $this->getFilters( $conditions, $orders, $limits );
 	}
 
-	public function getReasons( array $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function getReasons( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelReason->getAll( $conditions, $orders, $limits );
 	}

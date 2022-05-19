@@ -12,7 +12,7 @@ $helperDuration->setPrecisionBySliders( $sliders );
 
 $list	= '<div><em class="muted">'.$words['index']['noEntries'].'</em></div>';
 if( $sliders ){
-	$list	= array();
+	$list	= [];
 	foreach( $sliders as $slider ){
 		$cover	= '';
 		if( $slider->slides )
@@ -119,7 +119,7 @@ class View_Helper_Image_Slider_Duration{
 	protected $precision		= 0;
 
 	function getSlidersPrecision( $sliders, $maxPrecision = self::MAX_PRECISION ){
-		$times	= array();
+		$times	= [];
 		foreach( $sliders as $slider ){
 			$times[]	= $slider->durationShow;
 			$times[]	= $slider->durationSlide;

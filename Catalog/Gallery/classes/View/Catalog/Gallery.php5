@@ -1,40 +1,46 @@
 <?php
-class View_Catalog_Gallery extends CMF_Hydrogen_View{
-
+class View_Catalog_Gallery extends CMF_Hydrogen_View
+{
 	/**	@var	Logic_Catalog_Gallery	$logic */
 	protected $logic;
 
-	public function __onInit(){
-		$this->logic		= new Logic_Catalog_Gallery( $this->env );
-	}
-
-	public function category(){
+	public function category()
+	{
 		$category	= $this->getData( 'category' );
 		$categories	= $this->getData( 'categories' );
 		$this->addData( 'categoryList', $this->renderCategoryList( $categories, $category->galleryCategoryId, FALSE ) );
 	}
 
-	public function image(){
+	public function image()
+	{
 		$category	= $this->getData( 'category' );
 		$categories	= $this->getData( 'categories' );
 		$this->addData( 'categoryList', $this->renderCategoryList( $categories, $category->galleryCategoryId, FALSE ) );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$categories	= $this->getData( 'categories' );
 	}
 
-	public function preview(){
+	public function preview()
+	{
 		$category	= $this->getData( 'category' );
 		$categories	= $this->getData( 'categories' );
 		$this->addData( 'categoryList', $this->renderCategoryList( $categories, $category, FALSE ) );
 	}
 
+	protected function __onInit()
+	{
+		$this->logic		= new Logic_Catalog_Gallery( $this->env );
+	}
+
 	/**
 	 *	@todo	implement auto-path (see controller)
 	 */
-	protected function renderCategoryList( $categories, $currentId = NULL, $badges = TRUE ){
-		$list   	= array();
+	protected function renderCategoryList( $categories, $currentId = NULL, $badges = TRUE )
+	{
+		$list   	= [];
 		$pathModule	= $this->logic->pathModule;
 		$pathImages	= $this->logic->pathImages;
 		foreach( $categories as $item ){
@@ -53,10 +59,11 @@ class View_Catalog_Gallery extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'ul', $list, $attr );
 	}
 
-	protected function renderCategoryMatrix( $categories ){
-		$list  		= array();
+	protected function renderCategoryMatrix( $categories )
+	{
+		$list  		= [];
 		$pathImages	= $this->logic->pathImages;
-		$list		= array();
+		$list		= [];
 		foreach( $categories as $category ){
 			if( $category->status == 1 ){
 //				$count	= '<span class="badge">'.count( $item->images ).'</span>';
@@ -75,15 +82,16 @@ class View_Catalog_Gallery extends CMF_Hydrogen_View{
 				$list[]	= UI_HTML_Tag::create( 'div', $label, $attr );
 			}
 		}
-		$attr	= array();
+		$attr	= [];
 		return UI_HTML_Tag::create( 'div', $list, $attr );
 	}
 
-	protected function renderImageMatrix( $category, $images ){
-		$list  		= array();
+	protected function renderImageMatrix( $category, $images )
+	{
+		$list  		= [];
 		$pathModule	= $this->logic->pathModule;
 		$pathImages	= $this->logic->pathImages;
-		$list		= array();
+		$list		= [];
 		foreach( $images as $image ){
 			if( $image->status == 1 ){
 //				$count	= '<span class="badge">'.count( $item->images ).'</span>';
@@ -99,7 +107,7 @@ class View_Catalog_Gallery extends CMF_Hydrogen_View{
 				$list[]	= UI_HTML_Tag::create( 'a', ''/*$label*/, $attr );
 			}
 		}
-		$attr	= array();
+		$attr	= [];
 		return UI_HTML_Tag::create( 'div', $list, $attr );
 	}
 }

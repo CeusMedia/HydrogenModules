@@ -1,7 +1,7 @@
 <?php
 class View_Manage_Customer extends CMF_Hydrogen_View{
 
-	protected static $tabs	= array();
+	protected static $tabs	= [];
 
 	public function add(){}
 	public function edit(){}
@@ -34,7 +34,7 @@ class View_Manage_Customer extends CMF_Hydrogen_View{
 		$view	= new View_Manage_Customer( $env );													//  prepare view
 		$data	= array( 'customerId' => $customerId );												//  prepare hook data
 		$env->getModules()->callHook( "CustomerManager", "registerTabs", $view, $data );			//  call tabs to be registered
-		$list	= array();																			//  prepare empty list
+		$list	= [];																			//  prepare empty list
 		foreach( self::$tabs as $nr => $tab ){														//  iterate registered tabs
 			$attributes	= array( 'href'	=> './manage/customer/'.$tab->url );						//  collect tab link attributes
 			$link		= UI_HTML_Tag::create( 'a', $tab->label, $attributes );						//  render tab link

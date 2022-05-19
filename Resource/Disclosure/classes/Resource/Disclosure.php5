@@ -34,7 +34,7 @@ class Resource_Disclosure
 		'methodFilter'		=> ReflectionMethod::IS_PUBLIC
 	);
 
-	public function __construct( $env, array $reflectOptions = array() )
+	public function __construct( $env, array $reflectOptions = [] )
 	{
 		$this->env	= $env;
 		$this->reflectOptions	= array_merge( $this->reflectOptions, $reflectOptions );
@@ -42,7 +42,7 @@ class Resource_Disclosure
 
 	public function getFrontendControllers( $frontendEnv )
 	{
-		$controllers	= array();
+		$controllers	= [];
 		$pathConfig		= $frontendEnv->getConfig()->get( 'path.config' );
 		$pathModules	= $frontendEnv->getConfig()->get( 'path.modules' );
 		$pathModules	= $pathModules ? $pathModules : $pathConfig.'modules/';
@@ -67,11 +67,11 @@ class Resource_Disclosure
 	 *	@param		array		$options	Additional options to extend default reflect option
 	 *	@return		array		Map of controllers with methods and arguments
 	 */
-	public function reflect( string $path, array $options = array() ): array
+	public function reflect( string $path, array $options = [] ): array
 	{
 		$options	= array_merge( $this->reflectOptions, $options );
 
-		$classes	= array();
+		$classes	= [];
 		$path		= realpath( $path );
 		$index		= new FS_File_RecursiveRegexFilter( $path, '/^[^_].+\.'.$options['fileExtension'].'$/' );
 		foreach( $index as $entry ){
@@ -85,7 +85,7 @@ class Resource_Disclosure
 			$classReflection	= new ReflectionClass( $className );
 			$class	= new stdClass();
 			$class->name			= $className;
-			$class->methods		= array();
+			$class->methods		= [];
 			if( $options['skipAbstract'] )															//  abstract classes shall be skipped
 				if( $classReflection->isAbstract() )												//  class is abstract
 					continue;																		//  skip this class
@@ -112,7 +112,7 @@ class Resource_Disclosure
 						continue;																	//  skip this method
 				if( $options['reflectMethod'] )														//  reflecting methods is enabled to
 					$method->reflection	= $methodReflection;										//  store the method reflection object
-				$method->parameters	= array();
+				$method->parameters	= [];
 				$class->methods[$method->name]	= $method;
 
 				if( !$options['readParameters'] )													//  do not read method parameters

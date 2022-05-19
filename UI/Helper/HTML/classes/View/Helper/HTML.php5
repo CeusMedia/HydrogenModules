@@ -60,12 +60,12 @@ class HTML/* extends UI_HTML_Elements*/
 		return self::Tag( 'dt', $term ).join( $definitions );
 	}
 
-	public static function DivClass( string $class, $content = '', array $attributes = array() ): string
+	public static function DivClass( string $class, $content = '', array $attributes = [] ): string
 	{
 		return self::Tag( 'div', $content, array( 'class' => $class ) );
 	}
 
-	public static function DivID( string $id, $content, array $attributes = array() ): string
+	public static function DivID( string $id, $content, array $attributes = [] ): string
 	{
 		return self::Tag( 'div', $content, array( 'id' => $id ) );
 	}
@@ -92,7 +92,7 @@ class HTML/* extends UI_HTML_Elements*/
 		return self::Tag( 'input', NULL, $attributes );
 	}
 
-	public static function Form( string $url, string $name, $content, array $attributes = array() ): string
+	public static function Form( string $url, string $name, $content, array $attributes = [] ): string
 	{
 		$enctype	= NULL;
 		if( is_array( $content ) )
@@ -135,7 +135,7 @@ class HTML/* extends UI_HTML_Elements*/
 		return self::Tag( 'i', '', array( 'class' => $class ) );
 	}
 
-	public static function Image( string $source, string $title, string $class = NULL, array $attributes = array() ): string
+	public static function Image( string $source, string $title, string $class = NULL, array $attributes = [] ): string
 	{
 		$attributes['class']	= htmlentities( $class, ENT_QUOTES, 'UTF-8' );
 		$attributes['src']		= htmlentities( $source, ENT_QUOTES, 'UTF-8' );
@@ -200,14 +200,14 @@ class HTML/* extends UI_HTML_Elements*/
 		return self::Tag( 'button', $label, $attributes );
 	}
 
-	static function Options( array $items, $selected = NULL, array $keys = array() ): string
+	static function Options( array $items, $selected = NULL, array $keys = [] ): string
 	{
 		if( !count( $items ) )
 			return '';
 		$values	= array_values( $items );
 		$first	= array_shift( $values );
 		if( is_object( $first ) && count( $keys ) === 2 ){
-			$list	= array();
+			$list	= [];
 			foreach( $items as $item ){
 				$key	= $item->{$keys[0]};
 				$label	= $item->{$keys[1]};
@@ -249,12 +249,12 @@ class HTML/* extends UI_HTML_Elements*/
 		return HTML::Tag( "select", $options, $attributes );
 	}
 
-	public static function SpanClass( string $class, $content = '', array $attributes = array() ): string
+	public static function SpanClass( string $class, $content = '', array $attributes = [] ): string
 	{
 		return HTML::Tag( 'span', $content, array( 'class' => $class ) );
 	}
 
-	public static function Tag( string $nodeName, $content = NULL, array $attributes = array(), array $data = array() ): string
+	public static function Tag( string $nodeName, $content = NULL, array $attributes = [], array $data = [] ): string
 	{
 		return new UI_HTML_Tag( $nodeName, $content, $attributes );
 	}

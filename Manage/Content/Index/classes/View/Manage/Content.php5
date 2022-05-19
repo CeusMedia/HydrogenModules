@@ -10,7 +10,7 @@ class View_Manage_Content extends CMF_Hydrogen_View{
 			'manage/content/document'	=> 'Dokumente',
 			'manage/content/image'		=> 'Bilder',
 		);
-		$list   = array();
+		$list   = [];
 		foreach( $tabs as $key => $value ){
 			$class	= $key == $current ? 'active' : NULL;
 			$link	= UI_HTML_Tag::create( 'a', $value, array( 'href' => $key ) );

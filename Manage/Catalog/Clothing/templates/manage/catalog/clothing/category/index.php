@@ -16,7 +16,7 @@ $panelFilter	= '
 	</div>
 </div>';
 
-$rows	= array();
+$rows	= [];
 foreach( $categories as $category ){
 	$link	= UI_HTML_Tag::create( 'a', $category->title, array(
 		'href'	=> './manage/catalog/clothing/category/edit/'.$category->categoryId,

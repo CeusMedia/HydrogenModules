@@ -9,7 +9,7 @@ $iconAdd		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 $iconImport		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
 $iconCancel		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 
-$rows	= array();
+$rows	= [];
 foreach( $templates as $template ){
 	$title		= $template->title;
 	$rowClass	= '';

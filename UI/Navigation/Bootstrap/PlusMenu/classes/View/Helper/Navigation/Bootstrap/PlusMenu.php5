@@ -8,7 +8,7 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends CMF_Hydrogen_View_Helper
 	protected $class		= 'plus-menu';
 	protected $buttonClass	= '';
 	protected $buttonIcon	= 'fa fa-fw fa-plus';
-	protected $links		= array();
+	protected $links		= [];
 	protected $alignRight	= FALSE;
 	protected $alignBottom	= FALSE;
 

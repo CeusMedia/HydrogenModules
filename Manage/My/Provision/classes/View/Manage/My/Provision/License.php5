@@ -1,16 +1,13 @@
 <?php
-class View_Manage_My_Provision_License extends CMF_Hydrogen_View{
-
+class View_Manage_My_Provision_License extends CMF_Hydrogen_View
+{
 	public function add(){}
 	public function assign(){}
 	public function index(){}
 	public function view(){}
 
-	public function __onInit(){
-		$this->env->getPage()->addThemeStyle( 'module.manage.my.provision.css' );
-	}
-
-	static public function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data )
+	{
 		$logicAuth		= Logic_Authentication::getInstance( $env );
 		$logicProvision = Logic_User_Provision::getInstance( $env );
 		$nrLicenses	= count( $logicProvision->getUserLicensesFromUser( $logicAuth->getCurrentUserId() ) );
@@ -21,7 +18,7 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View{
 		$context->registerTab( 'add', self::renderTabLabel( $env, 'add', 0, 'plus' ) );
 	}
 /*
-	static public function ___onMyUserRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function ___onMyUserRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
 		$logicAuth		= Logic_Authentication::getInstance( $env );
 		$logicProvision = Logic_Accounting::getInstance( $env );
 		$nrLicenses	= count( $logicProvision->getUserLicensesFromUser( $logicAuth->getCurrentUserId() ) );
@@ -31,22 +28,11 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View{
 		$context->registerTab( '../license/key', self::renderTabLabel( $env, 'keys', $nrKeys, 'key' ) );
 	}*/
 
-	static protected function renderTabLabel( CMF_Hydrogen_Environment $env, $labelKey, $count = 0, $icon = NULL ){
-		$words	= (object) $env->getLanguage()->getWords( 'manage/my/provision' );					//  load words
-		$label	= $words->tabs[$labelKey];
-		if( $count )
-			$label	.= '&nbsp;&nbsp;<span class="badge badge-info">'.$count.'</span>&nbsp;';
-		if( $icon ){
-			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-'.$icon ) );
-			$label	= $icon.'&nbsp;'.$label;
-		}
-		return $label;
-	}
-
-	static public function renderDefinitionList( $data ){
+	public static function renderDefinitionList( $data )
+	{
 		if( !count( $data ) )
 			return '';
-		$list	= array();
+		$list	= [];
 		foreach( $data as $key => $value ){
 			$list[]	= UI_HTML_Tag::create( 'dt', $key );
 			$list[]	= UI_HTML_Tag::create( 'dd', $value );
@@ -54,9 +40,10 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 	}
 
-	function renderLicenseFacts( $productLicense, $columns = array() ){
+	public function renderLicenseFacts( $productLicense, $columns = [] )
+	{
 		$words	= $this->getWords();
-		$list = array();
+		$list = [];
 		$facts	= array( 'productTitle', 'licenseTitle', 'users', 'duration', 'price' );
 		foreach( $facts as $fact ){
 			if( $columns && !in_array( $fact, $columns ) )
@@ -93,7 +80,8 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View{
 //			return UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment $env, $current = 0 ){
+	public static function renderTabs( CMF_Hydrogen_Environment $env, $current = 0 )
+	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 
 //		$tabs->setBasePath( './manage/my/user/' );
@@ -104,5 +92,22 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View{
 		$env->getModules()->callHook( "ManageMyProvision", "registerTabs", $tabs/*, $data*/ );		//  call tabs to be registered
 		return UI_HTML_Tag::create( 'div', $tabs->renderTabs( $current ), array( 'id' => 'tabs-manage-my-provision' ) );
 	}
+
+	protected function __onInit()
+	{
+		$this->env->getPage()->addThemeStyle( 'module.manage.my.provision.css' );
+	}
+
+	protected static function renderTabLabel( CMF_Hydrogen_Environment $env, $labelKey, $count = 0, $icon = NULL )
+	{
+		$words	= (object) $env->getLanguage()->getWords( 'manage/my/provision' );					//  load words
+		$label	= $words->tabs[$labelKey];
+		if( $count )
+			$label	.= '&nbsp;&nbsp;<span class="badge badge-info">'.$count.'</span>&nbsp;';
+		if( $icon ){
+			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-'.$icon ) );
+			$label	= $icon.'&nbsp;'.$label;
+		}
+		return $label;
+	}
 }
-?>

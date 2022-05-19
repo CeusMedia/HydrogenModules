@@ -18,7 +18,7 @@ $pages	= '';
 if( $searchTerm || $searchAuthorId ){
 	$list	= '<small class="muted"><em>'.$words->empty.'</em></small>';
 	if( $articles ){
-		$list	= array();
+		$list	= [];
 		foreach( $articles as $article )
 			$list[]	= $helper->renderArticleListItem( $article );
 		$list	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'articleList' ) );

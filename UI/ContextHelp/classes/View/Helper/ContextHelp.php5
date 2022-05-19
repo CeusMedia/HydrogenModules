@@ -1,7 +1,7 @@
 <?php
 class View_Helper_ContextHelp
 {
-	public static function ___onRegisterContextHelp( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	public static function ___onRegisterContextHelp( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
 		if( isset( $data['path'] ) ){
 			self::registerFile( $env, $data['path'] );
 			return;
@@ -16,7 +16,7 @@ class View_Helper_ContextHelp
 		$filePath	= 'html/'.$filePath.'.html';
 		$view		= new CMF_Hydrogen_View( $env );
 		if( $view->hasContentFile( $filePath ) ){
-			$list	= array();
+			$list	= [];
 			$html	= $view->loadContentFile( $filePath );
 			$dom	= new \PHPHtmlParser\Dom();
 			$dom->load( $html );

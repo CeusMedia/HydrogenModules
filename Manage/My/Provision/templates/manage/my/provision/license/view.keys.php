@@ -10,7 +10,7 @@ $iconsStatus	= array(
 	Model_Provision_User_License_Key::STATUS_EXPIRED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
 );
 
-$list	= array();
+$list	= [];
 foreach( $userLicense->keys as $key ){
 	$dateStart	= NULL;
 	$dateEnd	= NULL;

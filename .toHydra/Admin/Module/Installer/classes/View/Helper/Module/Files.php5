@@ -18,7 +18,7 @@ class View_Helper_Module_Files{
 		$this->setEnv( $env );
 	}
 
-	public function render( $files, $words, $options = array() ){
+	public function render( $files, $words, $options = [] ){
 		$options	= array_merge( array(
 			'useCheckboxes'	=> TRUE,
 			'useActions'	=> TRUE,
@@ -26,9 +26,9 @@ class View_Helper_Module_Files{
 
 		if( !count( $files ) )
 			return;
-		$list	= array();
+		$list	= [];
 		foreach( $files as $file ){
-			$actions	= array();
+			$actions	= [];
 			$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
 				'type'		=> 'checkbox',
 				'name'		=> 'files[]',
@@ -52,7 +52,7 @@ class View_Helper_Module_Files{
 			$statusLabel	= $words['update-file-states'][$file->status];
 			$statusDesc		= $words['update-file-state-description'][$file->status];
 			$status	= UI_HTML_Tag::create( 'acronym', $statusLabel, array( 'title' => $statusDesc ) );
-			$cells	= array();
+			$cells	= [];
 			if( $options['useCheckboxes'] )
 				$cells[]	= UI_HTML_Tag::create( 'td', $checkbox, array( 'class' => 'cell-check' ) );
 			$cells[]    = UI_HTML_Tag::create( 'td', $words['file-types'][$file->typeKey], array( 'class' => 'cell-type' ) );
@@ -76,8 +76,8 @@ class View_Helper_Module_Files{
 			'title'			=> 'check/uncheck all',
 		) );
 
-		$colgroup	= array();
-		$heads		= array();
+		$colgroup	= [];
+		$heads		= [];
 		if( $options['useCheckboxes'] ){
 			$colgroup[]	= "3%";
 			$heads[]	= $checkAll;

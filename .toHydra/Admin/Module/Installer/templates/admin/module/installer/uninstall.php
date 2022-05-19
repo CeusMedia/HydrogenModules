@@ -49,7 +49,7 @@ $panelInfo  = '
 
 /*  --  POSITION BAR --  */
 function renderPositions( $positions ){
-	$list	= array();
+	$list	= [];
 	foreach( $positions as $label => $url )
 		$list[]	= '&laquo;&nbsp;'.UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
 	$positions	= join( '&nbsp;&nbsp;|&nbsp;&nbsp;', $list );
@@ -61,7 +61,7 @@ $positions  = array(
 );
 
 /*  --  OPTIONS  --  */
-$options	= array();
+$options	= [];
 if( $module->sql )
 	$options[]	= '
 				<label class="checkbox">
@@ -78,7 +78,7 @@ if( 1 || $keepForeignFiles ){
 
 
 if( $options ){
-	$list	= array();
+	$list	= [];
 	foreach( $options as $option ){
 		$list[]	= '<div>'.$option.'</div>';
 	}

@@ -2,7 +2,7 @@
 
 $helper	= new View_Helper_TimePhraser( $env );
 
-$rows	= array();
+$rows	= [];
 foreach( $issues as $issue ){
 	$reporter	= '';
 	$manager	= '';

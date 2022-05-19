@@ -12,7 +12,7 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract
 		$heading	= $wordsMain['main']['title'];
 
 		if( $data['posts'] ){
-			$list	= array();
+			$list	= [];
 			foreach( $data['posts'] as $post ){
 				if( !isset( $list[$post->threadId] ) ){
 					$thread		= $this->modelThread->get( $post->threadId );
@@ -25,7 +25,7 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract
 				}
 				$list[$post->threadId]->posts[$post->postId]	= $post;
 			}
-			$rows	= array();
+			$rows	= [];
 			foreach( $list as $thread ){
 				$posts		= UI_HTML_Tag::create( 'b', count( $thread->posts ).' '.( count( $thread->posts ) === 1 ? 'Beitrag' : 'Beiträge' ) );
 				$linkTopic	= UI_HTML_Tag::create( 'a', $thread->topic->title, array(

@@ -25,11 +25,11 @@ class View_EvolutionIndicator{
 		return "rgb(".$colorR.",".$colorG.",".$colorB.")";
 	}
 
-	static public function render( $data, $options = array() ){
+	static public function render( $data, $options = [] ){
 		$options	= array_merge( self::$options, $options );
 		if( !count( $data ) )
 			throw new InvalidArgumentException( 'No data given' );
-		$bars	= array();
+		$bars	= [];
 		$regions	= array_fill( 0, count( $data ), 1 );
 		$ranges	= Math_Extrapolation::calculateRanges( $regions, $options['width'] );
 

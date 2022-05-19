@@ -31,8 +31,8 @@ class Controller_Work_FTP extends CMF_Hydrogen_Controller
 	public function ajaxIndex()
 	{
 		$path		= $this->env->getRequest()->getFromResource( 'path', 'GET' );
-		$folders	= array();
-		$files		= array();
+		$folders	= [];
+		$files		= [];
 		foreach( $this->logic->index( $path ) as $entry ){
 			$entry	= (object) $entry;
 			if( $entry->isdir ){

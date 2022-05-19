@@ -4,10 +4,10 @@ if( !$bug->notes )
 	return;
 //	print_m( $bug->notes );
 //	die;
-$list	= array();
+$list	= [];
 foreach( $bug->notes as $note ){
 	
-	$noteChanges	= array();
+	$noteChanges	= [];
 	foreach( $note->changes as $change ){
 		$labelType	= UI_HTML_Tag::create( 'dt', $words['changes'][$change->type] );
 		switch( $change->type ){

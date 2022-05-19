@@ -8,7 +8,7 @@ class Logic_Work_Timer
 		return $this->checkTimerId( $timerId );
 	}
 
-	public function index( $conditions = array(), array $orders = array(), array $limits = array() ): array
+	public function index( $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelTimer->getAll( $conditions, $orders, $limits );
 	}

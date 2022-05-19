@@ -3,11 +3,6 @@ class Controller_Ajax_Csrf extends CMF_Hydrogen_Controller_Ajax
 {
 	protected $logic;
 
-	public function __onInit()
-	{
-		$this->logic	= $this->env->getLogic()->get( 'CSRF' );
-	}
-
 	public function getToken()
 	{
 		$formName	= $this->request->get( 'formName' );
@@ -20,5 +15,10 @@ class Controller_Ajax_Csrf extends CMF_Hydrogen_Controller_Ajax
 		catch( Exception $e ){
 			$this->respondException( $e );
 		}
+	}
+
+	protected function __onInit()
+	{
+		$this->logic	= $this->env->getLogic()->get( 'CSRF' );
 	}
 }

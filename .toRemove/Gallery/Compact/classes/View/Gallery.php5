@@ -1,34 +1,8 @@
 <?php
-class View_Gallery extends CMF_Hydrogen_View{
-
-	public function __onInit(){
-		$converters	= array(
-			"formatText",
-			"formatLinks",
-			"formatImageSearch",
-			"formatMapSearch",
-			"formatCurrencies",
-			"formatWikiLinks",
-			"formatYoutubeLinks",
-			"formatImdbLinks",
-			"formatDiscogsLinks",	
-			"formatMyspaceLinks",
-			"formatMapLinks",
-			"formatBreaks",
-			"formatCodeBlocks",
-			"formatLists",
-		);
-#		foreach( $converters as $converter )
-#			View_Helper_ContentConverter::register( "View_Helper_ContentConverter", $converter );
-
-		$config	= $this->env->getConfig();
-		$path	= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
-		$page	= $this->env->getPage();
-		$page->js->addScript( 'Gallery.pathImages	= "'.$path.'";' );
-		$page->js->addUrl( $config->get( 'path.scripts').'Gallery.js' );
-	}
-	
-	public function feed(){
+class View_Gallery extends CMF_Hydrogen_View
+{
+	public function feed()
+	{
 		$words		= $this->getWords( 'feed' );
 		$galleries	= $this->getData( 'galleries' );
 		$path		= $this->getData( 'path' );
@@ -86,7 +60,7 @@ class View_Gallery extends CMF_Hydrogen_View{
 			$content	= View_Helper_Blog::formatBlogLinks( $this->env, $content );
 			if( $this->env->getModules()->has( 'Gallery_Compact' ) )
 				$content	= View_Helper_Gallery::formatGalleryLinks( $this->env, $content );
-			
+
 			$data	= array(
 				'title'			=> $gallery->label,
 				'description'	=> $content,
@@ -109,7 +83,8 @@ class View_Gallery extends CMF_Hydrogen_View{
 		exit;
 	}
 
-	public function index(){
+	public function index()
+	{
 		$config	= $this->env->getConfig()->getAll( 'module.gallery_compact.' );
 		extract( $this->getData() );
 		foreach( $files as $entry ){
@@ -182,12 +157,40 @@ class View_Gallery extends CMF_Hydrogen_View{
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function info(){
+	public function info()
+	{
 		$keys	= array( 'info.top', 'info.bottom', 'info.info' );
 		$path	= 'html/gallery/';
 		$data		= $this->env->getConfig()->getAll( 'module.gallery_compact.license.' );
 		$this->setData( $this->populateTexts( $keys, $path ) );
 		$this->addData( 'license', $this->loadContentFile( $path.'license.html', $data ) );
 	}
+
+	protected function __onInit()
+	{
+		$converters	= array(
+			"formatText",
+			"formatLinks",
+			"formatImageSearch",
+			"formatMapSearch",
+			"formatCurrencies",
+			"formatWikiLinks",
+			"formatYoutubeLinks",
+			"formatImdbLinks",
+			"formatDiscogsLinks",
+			"formatMyspaceLinks",
+			"formatMapLinks",
+			"formatBreaks",
+			"formatCodeBlocks",
+			"formatLists",
+		);
+#		foreach( $converters as $converter )
+#			View_Helper_ContentConverter::register( "View_Helper_ContentConverter", $converter );
+
+		$config	= $this->env->getConfig();
+		$path	= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
+		$page	= $this->env->getPage();
+		$page->js->addScript( 'Gallery.pathImages	= "'.$path.'";' );
+		$page->js->addUrl( $config->get( 'path.scripts').'Gallery.js' );
+	}
 }
-?>

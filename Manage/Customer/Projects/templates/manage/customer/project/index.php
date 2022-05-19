@@ -7,7 +7,7 @@ $tabs		= View_Manage_Customer::renderTabs( $env, $customerId, 'project/'.$custom
 
 $table		= '';
 if( $relations ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $relations as $relation ){
 //print_m( $relation );
 //die;
@@ -37,7 +37,7 @@ $buttonAdd	= UI_HTML_Tag::create( 'a', '<i class="icon-plus icon-white"></i> hin
 
 
 /*
-$list	= array();
+$list	= [];
 foreach( $projects as $project ){
 	
 	$list[]	= UI_HTML_Tag::create( 'li', $project->title, array( 'class' => 'autocut' ) );

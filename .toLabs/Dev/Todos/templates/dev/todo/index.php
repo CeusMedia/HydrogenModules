@@ -26,12 +26,12 @@ $panelFacts	= '
 </fieldset>
 ';
 
-$rows	= array();
+$rows	= [];
 foreach( $data as $source ){
 #	print_m( array_keys( $source ) );
-	$files	= array();
+	$files	= [];
 	foreach( $source['data']['files'] as $file ){
-		$lines	= array();
+		$lines	= [];
 		foreach( $file['lines'] as $nr => $line )
 			$lines[]	= $nr.': '.$line;
 		$lines		= $lines ? '<xmp>'.join( "\n", $lines ).'</xmp>' : ''; 

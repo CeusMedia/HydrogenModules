@@ -72,7 +72,7 @@ class Model_Finance_Bank_Account_Reader_DKB
 		$xml	= simplexml_import_dom( $doc );
 		$path	= $xml->xpath( "//div[@class='body']" );
 
-		$values	= array();
+		$values	= [];
 		foreach( $path[0]->form[1]->div[1]->table->tr as $row ){
 			if( !$row->td || strlen( $row->td[0] ) == 0 )
 				continue;

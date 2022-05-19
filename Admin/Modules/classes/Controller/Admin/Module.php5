@@ -43,8 +43,8 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller
 		$module		= $model->get( $moduleId );
 		$pathModule	= $model->getPath( $moduleId );
 		$pathTheme	= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/';
-		$filesLink	= array();
-		$filesCopy	= array();
+		$filesLink	= [];
+		$filesCopy	= [];
 
 		switch( $installType ){
 
@@ -70,7 +70,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller
 			$filesCopy['config.ini']	= 'config/modules/'.$moduleId.'.ini';
 
 		$state		= NULL;
-		$listDone	= array();
+		$listDone	= [];
 		foreach( array( 'filesLink', 'filesCopy' ) as $type ){
 			foreach( $$type as $fileIn => $fileOut ){
 				if( $state !== FALSE ){
@@ -123,7 +123,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller
 		$model		= new Model_Module( $this->env );
 		$module		= $model->get( $moduleId );
 
-		$files	= array();
+		$files	= [];
 #		try{
 			//  --  FILES  --  //
 			foreach( $module->files->classes as $class )
@@ -231,8 +231,8 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller
 	protected function executeSql( string $sql )
 	{
 		$lines	= explode( "\n", trim( $sql ) );
-		$cmds	= array();
-		$buffer	= array();
+		$cmds	= [];
+		$buffer	= [];
 		if( !$this->env->has( 'dbc' ) )
 			return;
 		$prefix	= $this->env->config->get( 'database.prefix' );
@@ -244,7 +244,7 @@ class Controller_Admin_Module extends CMF_Hydrogen_Controller
 			if( preg_match( '/;$/', trim( $line ) ) )
 			{
 				$cmds[]	= join( "\n", $buffer );
-				$buffer	= array();
+				$buffer	= [];
 			}
 			if( !count( $lines ) && $buffer )
 				$cmds[]	= join( "\n", $buffer ).';';

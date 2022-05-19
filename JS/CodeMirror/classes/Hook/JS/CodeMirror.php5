@@ -1,7 +1,7 @@
 <?php
 class Hook_JS_CodeMirror extends CMF_Hydrogen_Hook{
 
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = array() ){
+	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
 		$moduleConfig	= $env->getConfig()->getAll( 'module.js_codemirror.', TRUE );
 		if( !$moduleConfig->get( 'active' ) )
 			return;
@@ -11,8 +11,8 @@ class Hook_JS_CodeMirror extends CMF_Hydrogen_Hook{
 		$configLoad	= $moduleConfig->getAll( 'load.', TRUE );
 		$cdn		= $configLoad->get( 'cdn' );
 
-		$scripts	= array();
-		$styles		= array();
+		$scripts	= [];
+		$styles		= [];
 
 		if( $cdn === "cdnjs" ){
 			$collector	= $page->css->theme;
@@ -120,7 +120,7 @@ CodeMirror.on(window, "resize", function() {
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onGetAvailableContentEditor( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onGetAvailableContentEditor( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
 		if( !empty( $payload->type ) && !in_array( $payload->type, array( 'code' ) ) )
 			return;
 		if( !empty( $payload->format ) && !in_array( $payload->format, array( 'html', 'markdown', 'md'/*, '*'*/ ) ) )

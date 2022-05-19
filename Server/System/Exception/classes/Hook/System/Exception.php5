@@ -1,7 +1,7 @@
 <?php
 class Hook_System_Exception extends CMF_Hydrogen_Hook
 {
-	static public function onAppException( CMF_Hydrogen_Environment $env, $context, $module, $data = array() )
+	static public function onAppException( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
 	{
 		$env->getCaptain()->callHook( 'Env', 'logException', $context, $data );	//  @todo replace $data by (array) payload after migration
 

@@ -23,7 +23,7 @@ class Model_Shop_Customer extends CMF_Hydrogen_Model
 
 	protected $primaryKey	= 'customerId';
 
-	protected $indices		= array();
+	protected $indices		= [];
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

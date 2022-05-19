@@ -4,7 +4,7 @@ $wf		= (object) $words['index'];
 $list	= '<em>'.$wf->empty.'</em>';
 
 if( $servers ){
-	$list	= array();
+	$list	= [];
 	foreach( $servers as $server ){
 		$label	= $server->title;
 		$label	= UI_HTML_Elements::Link( './admin/server/edit/'.$server->serverId, $label );

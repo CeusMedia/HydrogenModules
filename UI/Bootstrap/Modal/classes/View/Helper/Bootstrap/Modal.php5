@@ -2,7 +2,7 @@
 class View_Helper_Bootstrap_Modal
 {
 	protected $env;
-	protected $attributes			= array();
+	protected $attributes			= [];
 	protected $body;
 	protected $fade					= TRUE;
 	protected $heading;

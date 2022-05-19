@@ -60,7 +60,7 @@ $panelFilter	= '
 	</div>
 </div>';
 
-$rows	= array();
+$rows	= [];
 foreach( $articles as $article ){
 	$link	= UI_HTML_Tag::create( 'a', $article->title, array(
 		'href'	=> './manage/catalog/clothing/article/edit/'.$article->articleId,

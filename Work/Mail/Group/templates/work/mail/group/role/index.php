@@ -9,7 +9,7 @@ $helperTimestamp	= new View_Helper_TimePhraser( $env );
 
 $list	= UI_HTML_Tag::create( 'div', 'Keine gefunden.', array( 'class' => 'alert alert-info' ) );
 if( count( $roles ) ){
-	$list	= array();
+	$list	= [];
 	foreach( $roles as $role ){
 		$label	= UI_HTML_Tag::create( 'a', $role->title, array( 'href' => './work/mail/group/role/edit/'.$role->mailGroupRoleId ) );
 //		$status	= UI_HTML_Tag::create( 'span', $statusLabels[$group->status], array( 'class' => 'label '.$statusClasses[$group->status] ) );

@@ -1,15 +1,12 @@
 <?php
-class Logic_Share extends CMF_Hydrogen_Logic {
-
+class Logic_Share extends CMF_Hydrogen_Logic
+{
 	protected $logicFileBucket;
+
 	protected $modelShare;
 
-	public function __onInit(){
-		$this->logicFileBucket	= Logic_FileBucket::getInstance( $this->env );
-		$this->modelShare		= new Model_Share( $this->env );
-	}
-
-	public function create( $moduleId, $relationId, $path, $access, $validity ){
+	public function create( $moduleId, $relationId, $path, $access, $validity )
+	{
 		if( $this->get( $moduleId, $relationId ) )
 			throw new RangeException( 'Share for module relation "'.$moduleId.':'.$relationId.'" is already existing' );
 		$shareId	= $this->modelShare->add( array(
@@ -28,7 +25,8 @@ class Logic_Share extends CMF_Hydrogen_Logic {
 		return $this->modelShare->get( $shareId );
 	}
 
-	public function get( $moduleId, $relationId ){
+	public function get( $moduleId, $relationId )
+	{
 		$indices	= array(
 			'moduleId'		=> $moduleId,
 			'relationId'	=> $relationId,
@@ -42,7 +40,8 @@ class Logic_Share extends CMF_Hydrogen_Logic {
 		return $share;
 	}
 
-	public function has( $moduleId, $relationId ){
+	public function has( $moduleId, $relationId )
+	{
 		$indices	= array(
 			'moduleId'		=> $moduleId,
 			'relationId'	=> $relationId,
@@ -50,7 +49,8 @@ class Logic_Share extends CMF_Hydrogen_Logic {
 		return (bool) $this->modelShare->getByIndices( $indices );
 	}
 
-	public function getByUuid( $uuid ){
+	public function getByUuid( $uuid )
+	{
 		$share	= $this->modelShare->getByIndex( 'uuid', $uuid );
 		if( $share ){
 			$share->qr	= $this->logicFileBucket->getByPath( 'share-qr-'.$share->shareId );
@@ -60,20 +60,29 @@ class Logic_Share extends CMF_Hydrogen_Logic {
 		return $share;
 	}
 
-	public function changePath( $moduleId, $relationId, $path ){
+	public function changePath( $moduleId, $relationId, $path )
+	{
 		$share	= $this->get( $moduleId, $relationId );
 		if( $share )
 			$this->modelShare->edit( $share->shareId, array( 'path' => $path ) );
 	}
 
-	public function remove( $moduleId, $relationId ){
+	public function remove( $moduleId, $relationId )
+	{
 		$share	= $this->get( $moduleId, $relationId );
 		if( $share )
 			return 0;
 		return $this->moduleShare->remove( $share->shareId );
 	}
 
-	protected function generateQrCode( $shareId, $url ){
+	protected function __onInit()
+	{
+		$this->logicFileBucket	= Logic_FileBucket::getInstance( $this->env );
+		$this->modelShare		= new Model_Share( $this->env );
+	}
+
+	protected function generateQrCode( $shareId, $url )
+	{
 		$fileName	= sys_get_temp_dir().'/qr-'.$shareId.'.png';
 		$renderer	= new \BaconQrCode\Renderer\Image\Png();
 		$renderer->setHeight( 32 );

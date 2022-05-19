@@ -13,11 +13,11 @@ class View_Manage_Catalog_Category extends View_Manage_Catalog{
 	protected function renderTree( $categories, $categoryId = NULL ){
 		$this->env->getRuntime()->reach( 'View_Catalog_Category::renderTree start' );
 		$logic		= new Logic_Catalog( $this->env );
-		$listMain	= array();
+		$listMain	= [];
 		foreach( $categories as $nr => $category ){
 			if( (int) $category->parentId !== 0 )
 				continue;
-			$listSub	= array();
+			$listSub	= [];
 			foreach( $categories as $entry ){
 				if( (int) $entry->parentId !== (int) $category->categoryId )
 					continue;

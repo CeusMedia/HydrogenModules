@@ -13,7 +13,7 @@ $buttonAdd	= UI_HTML_Tag::create( 'a', '<i class="icon-plus icon-white"></i> neu
 
 $list	= '<div class="muted"><em>Keine gefunden.</em></div>';
 if( $testimonials ){
-	$list	= array();
+	$list	= [];
 	foreach( $testimonials as $testimonial ){
 		$link	= UI_HTML_Tag::create( 'a', $testimonial->title, array(
 			'href'	=> './manage/testimonial/edit/'.$testimonial->testimonialId,

@@ -9,7 +9,7 @@ class View_Database_Lock extends CMF_Hydrogen_View{
 		$locks		= $this->getData( 'locks' );
 		$content	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
 		if( $locks ){
-			$rows	= array();
+			$rows	= [];
 			foreach( $locks as $lock ){
 
 				$module	= $modules[$lock->subject];

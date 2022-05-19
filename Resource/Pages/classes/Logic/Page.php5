@@ -19,24 +19,7 @@
 class Logic_Page extends CMF_Hydrogen_Logic
 {
 	protected $app				= 'self';
-	protected $model			= array();
-
-	public function __onInit()
-	{
-		$moduleNav	= $this->env->getModules()->get( 'UI_Navigation', TRUE, FALSE );
-		if( $moduleNav && $moduleNav->config['menu.source']->value === 'Database' ){
-			$model	= $this->getPageModel();
-			foreach( $model->getAllByIndex( 'fullpath', '' ) as $page ){
-				$way	= '';
-				$parent	= $page;
-				while( $parent->parentId ){
-					$parent	= $model->get( $page->parentId );
-					$way	.= $parent->identifier.'/';
-				}
-				$model->edit( $page->pageId, array( 'fullpath' => $way.$page->identifier ) );
-			}
-		}
-	}
+	protected $model			= [];
 
 	public function updateFullpath( $pageId, string $parentPath = NULL )
 	{
@@ -69,7 +52,7 @@ class Logic_Page extends CMF_Hydrogen_Logic
 	{
 		$model		= $this->getPageModel();
 		$current	= $page;
-		$list		= array();
+		$list		= [];
 		while( $current->parentId ){
 			$candidate	= $model->get( $current->parentId );
 			if( !$candidate )
@@ -137,7 +120,7 @@ class Logic_Page extends CMF_Hydrogen_Logic
 		}
 /*		$way	= array( $page->identifier );
 		$current	= $page;
-		$parents	= array();
+		$parents	= [];
 		while( $current->parentId !== 0 ){
 			$current	= $this->getPageModel()->get( $current->parentId );
 			if( !$current )
@@ -310,6 +293,23 @@ class Logic_Page extends CMF_Hydrogen_Logic
 
 	//  --  PROTECTED  --  //
 
+	protected function __onInit()
+	{
+		$moduleNav	= $this->env->getModules()->get( 'UI_Navigation', TRUE, FALSE );
+		if( $moduleNav && $moduleNav->config['menu.source']->value === 'Database' ){
+			$model	= $this->getPageModel();
+			foreach( $model->getAllByIndex( 'fullpath', '' ) as $page ){
+				$way	= '';
+				$parent	= $page;
+				while( $parent->parentId ){
+					$parent	= $model->get( $page->parentId );
+					$way	.= $parent->identifier.'/';
+				}
+				$model->edit( $page->pageId, array( 'fullpath' => $way.$page->identifier ) );
+			}
+		}
+	}
+
 	/**
 	 *	Tries to find page for given URL path with several strategies.
 	 *	Otherwise returns NULL or throws exception if strict mode is on.
@@ -358,7 +358,6 @@ class Logic_Page extends CMF_Hydrogen_Logic
 				return $candidate;
 			}
 		}
-
 
 		/**
 		 *	Strategy: absolute_backward

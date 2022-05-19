@@ -62,7 +62,7 @@ class Controller_Admin_Database_Connection extends CMF_Hydrogen_Controller
 
 
 		$this->addData( 'drivers', PDO::getAvailableDrivers() );
-		$config	= array();
+		$config	= [];
 		if( !$this->env->getModules()->has( 'Resource_Database' ) ){
 			$messenger->noteError( $words->msgConfigMissing );
 			$this->restart();

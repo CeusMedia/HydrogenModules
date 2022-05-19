@@ -1,7 +1,7 @@
 <?php
 
 //  --  VERSIONS  --  //
-$list	= array();
+$list	= [];
 foreach( $serverProjects as $relation ){
 	$label		= $relation->project->title;
 	$version	= '';

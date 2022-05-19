@@ -1,8 +1,8 @@
 <?php
 class Logic_Module_Relation{
 	public $logic;
-	public $nodes	= array();
-	public $skip	= array();
+	public $nodes	= [];
+	public $skip	= [];
 
 	public function __construct( Logic_Module $logic ){
 		$this->logic	= $logic;
@@ -94,10 +94,10 @@ class Logic_Module_Relation{
 	}
 
 	public function renderGraph( $moduleId, $type = 'needs' ){										//  @todo	rename to produceGraphvizGraph and make indepentent from need/support
-		$this->nodes	= array();
+		$this->nodes	= [];
 		$this->load( $moduleId, $type );
-		$nodes	= array();
-		$edges	= array();
+		$nodes	= [];
+		$edges	= [];
 		$number	= 0;
 		foreach( $this->nodes as $node ){
 			$style		= "";
@@ -132,10 +132,10 @@ class Logic_Module_Relation{
 	}
 
 	public function renderRelatingGraph( $moduleId, $type = 'needs', $recursive = FALSE ){										//  @todo	rename to produceGraphvizGraph and make indepentent from need/support
-		$this->nodes	= array();
+		$this->nodes	= [];
 		$this->loadModulesRelatingTo( $moduleId, $type, $recursive );
-		$nodes	= array();
-		$edges	= array();
+		$nodes	= [];
+		$edges	= [];
 		$number	= 0;
 		foreach( $this->nodes as $node ){
 			$style		= "";
@@ -174,7 +174,7 @@ class Logic_Module_Relation{
 	public function getOrder(){
 		if( !$this->nodes )
 			throw new Exception( 'No modules loaded' );
-		$list	= array();
+		$list	= [];
 		$depth	= 0;
 		foreach( $this->nodes as $name => $node )
 			$depth	= max( $depth, $node->level );

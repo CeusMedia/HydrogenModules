@@ -17,7 +17,7 @@ $statusClasses	= array(
 
 $list	= UI_HTML_Tag::create( 'div', 'Keine gefunden.', array( 'class' => 'alert alert-info' ) );
 if( count( $groups ) ){
-	$list	= array();
+	$list	= [];
 	foreach( $groups as $group ){
 		$label	= UI_HTML_Tag::create( 'a', $group->title, array( 'href' => './work/mail/group/edit/'.$group->mailGroupId ) );
 		$status	= UI_HTML_Tag::create( 'span', $words['group-statuses'][$group->status], array( 'class' => 'label '.$statusClasses[$group->status] ) );

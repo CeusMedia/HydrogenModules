@@ -10,7 +10,7 @@ $colors	= array(
 
 $table	= UI_HTML_Tag::create( 'div', $words['index']['empty'], array( 'class' => 'alert alert-info' ) );
 if( $news ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $news as $item ){
 		$url		= './manage/news/edit/'.$item->newsId;
 		$link		= UI_HTML_Tag::create( 'a', $item->title, array( 'href' => $url ) );

@@ -1,5 +1,5 @@
 <?php
-$tools	= array();
+$tools	= [];
 foreach( $list as $item ){
 	$description	= isset( $labels[$item]['description'] ) ? "<br/>".$labels[$item]['description'] : "";
 	$tags			= "";

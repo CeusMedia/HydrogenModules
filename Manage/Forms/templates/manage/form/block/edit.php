@@ -12,7 +12,7 @@ $iconForm	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) )
 
 $listWithinForms	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinForms ){
-	$list	= array();
+	$list	= [];
 	foreach( $withinForms as $item ){
 		$link	= UI_HTML_Tag::create( 'a', $iconForm.'&nbsp;'.$item->title, array(
 			'href'	=> './manage/form/edit/'.$item->formId,
@@ -24,7 +24,7 @@ if( $withinForms ){
 
 $listWithinBlocks	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinBlocks ){
-	$list	= array();
+	$list	= [];
 	foreach( $withinBlocks as $item ){
 		$link	= UI_HTML_Tag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
 			'href'	=> './manage/form/block/edit/'.$item->blockId,
@@ -35,10 +35,10 @@ if( $withinBlocks ){
 }
 
 $listBlocksWithin	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
-$matches		= array();
+$matches		= [];
 preg_match_all( '/\[block_(\S+)\]/', $block->content, $matches );
 if( isset( $matches[0] ) && count( $matches[0] ) ){
-	$list	= array();
+	$list	= [];
 	foreach( array_keys( $matches[0] ) as $nr ){
 		$item	= $modelBlock->getByIndex( 'identifier', $matches[1][$nr] );
 		if( !$item )

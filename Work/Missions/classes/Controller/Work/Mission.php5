@@ -31,7 +31,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller
 	protected $request;
 	protected $session;
 	protected $useIssues		= FALSE;
-	protected $userMap			= array();
+	protected $userMap			= [];
 	protected $userId			= 0;
 	protected $userRoleId		= 0;
 	protected $moduleConfig;
@@ -180,7 +180,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller
 				$this->restart( 'view/'.$missionId, TRUE );
 			}
 		}
-		$mission	= array();
+		$mission	= [];
 		foreach( $this->model->getColumns() as $key )
 			$mission[$key]	= strlen( $this->request->get( $key ) ) ? $this->request->get( $key ) : NULL;
 		if( $mission['priority'] === NULL )
@@ -253,7 +253,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller
 
 	public function ajaxGetProjectUsers( $projectId )
 	{
-		$list	= array();
+		$list	= [];
 		$model	= new Model_Project( $this->env );
 		$users	= $model->getProjectUsers( (int) $projectId );
 		if( array_key_exists( $this->userId, $users ) || $this->hasFullAccess() ){
@@ -819,7 +819,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller
 //		$this->request->isAjax() ? exit : $this->restart( '', TRUE );
 	}
 
-	protected function getFilteredMissions( $userId, $additionalConditions = array(), $limit = 0, $offset = 0 )
+	protected function getFilteredMissions( $userId, $additionalConditions = [], $limit = 0, $offset = 0 )
 	{
 		$conditions	= $this->logic->getFilterConditions( $this->filterKeyPrefix, $additionalConditions );
 		$direction	= $this->session->get( $this->filterKeyPrefix.'direction' );
@@ -830,7 +830,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller
 		);
 		if( $order != "title" )					//  if not ordered by title
 			$orders['title']	= 'ASC';		//  order by title at last
-		$limits	= array();
+		$limits	= [];
 		if( $limit !== NULL && (int) $limit >= 10 ){
 			$limits	= array( abs( $offset ), $limit );
 		}
@@ -966,7 +966,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller
 		$this->initDefaultFilters();
 
 		//  --  GENERAL LOGIC CONDITIONS  --  //
-		$conditions	= array();
+		$conditions	= [];
 		$conditions['status']	= $this->defaultFilterValues['states'];
 		switch( $this->session->get( $this->filterKeyPrefix.'mode' ) ){
 			case 'now':
@@ -1038,7 +1038,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller
 		if( is_array( $storedValues ) ){
 			$newValues	= $storedValues;
 			if( is_null( $value ) )																	//  no value given at all
-				$newValues	= array();																//  resest values, will be set to all by controller
+				$newValues	= [];																//  resest values, will be set to all by controller
 			else if( $onlyThisOne )																	//  otherwise: only set this value
 				$newValues	= array( $value );														//  replace all by just this value
 			else{																					//  otherwise: specific mode
@@ -1065,7 +1065,7 @@ class Controller_Work_Mission extends CMF_Hydrogen_Controller
 	public function setPriority( $missionId, $priority, $showMission = FALSE )
 	{
 		$this->checkIsEditor( $missionId );
-		$data	= array();
+		$data	= [];
 		$this->model->edit( $missionId, array(														//  store in database
 			'priority'		=> $priority,															//  - new priority
 			'modifierId'	=> $this->userId,														//  - modifying user id

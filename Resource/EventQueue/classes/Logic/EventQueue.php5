@@ -23,7 +23,7 @@ class Logic_EventQueue extends CMF_Hydrogen_Logic
 	 *	@param		string		$origin			...
 	 *	@return		string		ID of new event
 	 */
-	public function add( $identifier, $data = array(), $origin = NULL ): int
+	public function add( $identifier, $data = [], $origin = NULL ): int
 	{
 		return $this->model->add([
 			'userId'		=> $this->userId,

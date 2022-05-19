@@ -7,15 +7,6 @@ class Controller_Ajax_Auth extends CMF_Hydrogen_Controller_Ajax
 //	protected $logic;
 //	protected $moduleConfig;
 
-	public function __onInit()
-	{
-//		$this->config		= $this->env->getConfig();
-//		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-//		$this->logic		= $this->env->getLogic()->get( 'Authentication' );
-//		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication.', TRUE );
-	}
-
 	public function isAuthenticated()
 	{
 		$this->respondData( array( 'result' => $this->session->has( 'auth_user_id' ) ) );
@@ -28,5 +19,14 @@ class Controller_Ajax_Auth extends CMF_Hydrogen_Controller_Ajax
 	public function refreshSession()
 	{
 		$this->ajaxIsAuthenticated();
+	}
+
+	protected function __onInit()
+	{
+//		$this->config		= $this->env->getConfig();
+//		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+//		$this->logic		= $this->env->getLogic()->get( 'Authentication' );
+//		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication.', TRUE );
 	}
 }

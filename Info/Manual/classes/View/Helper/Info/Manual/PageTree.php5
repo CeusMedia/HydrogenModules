@@ -3,9 +3,9 @@ class View_Helper_Info_Manual_PageTree
 {
 	protected $env;
 	protected $modelPage;
-	protected $pages			= array();
+	protected $pages			= [];
 	protected $activePageId		= 0;
-	protected $openParents		= array();
+	protected $openParents		= [];
 
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{
@@ -70,7 +70,7 @@ InfoManual.UI.Tree.init("#page-tree");';
 		return $container;
 		print_m( $tree );die;
 
-		$list	= array();
+		$list	= [];
 		foreach( $this->pages as $entry ){
 			$link	= UI_HTML_Tag::create( 'a', $entry->title, array( 'href' => './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title ) ) );
 			$class	= 'autocut '.( $this->activePageId == $entry->manualPageId ? 'active' : '' );
@@ -83,7 +83,7 @@ InfoManual.UI.Tree.init("#page-tree");';
 	public function setActivePageId( $pageId ): self
 	{
 		$this->activePageId	= $pageId;
-		$this->openParents	= array();
+		$this->openParents	= [];
 		$page	= $this->modelPage->get( $pageId );
 		while( $page && $page->parentId ){
 			$page	= $this->modelPage->get( $page->parentId );
@@ -115,7 +115,7 @@ InfoManual.UI.Tree.init("#page-tree");';
 
 	protected function getPageTree( array $pages ): array
 	{
-		$tree	= array();
+		$tree	= [];
 		foreach( $pages as $page ){
 			$conditions		= array(
 				'status'		=> '>= '.Model_Manual_Page::STATUS_NEW,
@@ -139,7 +139,7 @@ InfoManual.UI.Tree.init("#page-tree");';
 		$openPages		= array_merge( $openPages, $this->openParents );
 
 
-		$list	= array();
+		$list	= [];
 		foreach( $tree as $entry ){
 			$isOpen		= in_array( $entry->manualPageId, $openPages );
 
@@ -171,7 +171,7 @@ die;*/
 		}
 		return $list;
 
-/*		$list	= array();
+/*		$list	= [];
 		foreach( $tree as $entry ){
 			$sublist	= '';
 			if( $entry->children )

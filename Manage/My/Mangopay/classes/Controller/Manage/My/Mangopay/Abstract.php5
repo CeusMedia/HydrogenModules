@@ -55,7 +55,7 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 		throw new DomainException( 'Access to this bank account is denied' );
 	}
 
-	protected function checkIsOwnCard( $cardId, $strict = TRUE, $fallback = array() ){
+	protected function checkIsOwnCard( $cardId, $strict = TRUE, $fallback = [] ){
 		if( !is_array( $fallback ) || !count( $fallback ) )
 			$fallback	= array( NULL, TRUE );
 		$card	= $this->checkCard( $cardId, $fallback );
@@ -63,7 +63,7 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Contr
 		return $card;
 	}
 
-	protected function checkCard( $cardId, $fallback = array() ){
+	protected function checkCard( $cardId, $fallback = [] ){
 		try{
 			if( !strlen( trim( $cardId ) ) )
 				throw new InvalidArgumentException( 'No card ID given' );

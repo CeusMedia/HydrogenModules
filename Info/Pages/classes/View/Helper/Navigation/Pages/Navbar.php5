@@ -15,13 +15,13 @@ class View_Helper_Navigation_Pages_Navbar extends CMF_Hydrogen_View_Helper_Abstr
 			'scope'		=> $this->scopeId,
 		);
 		$pages		= $model->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
-		$list	= array();
+		$list	= [];
 		foreach( $pages as $page ){
 			if( $page->status < 1 )
 				continue;
 			if( $page->type == 1 ){
 				$found		= FALSE;
-				$sublist	= array();
+				$sublist	= [];
 				$indices	= array( 'parentId' => $page->pageId, 'scope' => 0 );
 				$subpages	= $model->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
 				foreach( $subpages as $subpage ){

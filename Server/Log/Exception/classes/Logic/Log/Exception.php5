@@ -67,8 +67,8 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 	//	$content->cookie			= $this->env->getCookie()->getAll();		// @todo activate for Hydrogen 0.8.6.5+
 		$content->previous			= $exception->getPrevious();
 		$content->class				= get_class( $exception );
-		$content->classParents		= array();
-		$content->classInterfaces	= array();
+		$content->classParents		= [];
+		$content->classInterfaces	= [];
 		$content->sqlState			= NULL;
 		if( $content->class ){
 			$content->classParents		= class_parents( $content->class );

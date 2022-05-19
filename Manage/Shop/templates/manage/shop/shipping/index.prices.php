@@ -6,7 +6,7 @@ $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remov
 /*  --  PANEL: PRICES  --  */
 $panelPrices	= '';
 if( $zones || $grades ){
-	$rows	= array();
+	$rows	= [];
 	$thead	= array( UI_HTML_Tag::create( 'th', 'Zonen \ Gewichtsklassen' ) );
 	foreach( $grades as $grade )
 		$thead[]	= UI_HTML_Tag::create( 'th', $grade->title, array( 'class' => 'cell-price' ) );

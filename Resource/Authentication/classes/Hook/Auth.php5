@@ -1,7 +1,7 @@
 <?php
 class Hook_Auth extends CMF_Hydrogen_Hook
 {
-	public static function onAppException( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onAppException( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$payload	= (object) $payload;
 		if( !property_exists( $payload, 'exception' ) )
@@ -28,7 +28,7 @@ class Hook_Auth extends CMF_Hydrogen_Hook
 		return FALSE;
 	}
 
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() )
+	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
 	{
 		$session	= $env->getSession();
 		$userId		= (int) $session->get( 'auth_user_id' );										//  get ID of current user (or zero)

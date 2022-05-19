@@ -14,7 +14,7 @@ $helperMoney		= new View_Helper_Mangopay_Entity_Money( $this->env );
 $helperMoney->setFormat( View_Helper_Mangopay_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
 $helperMoney->setNumberFormat( View_Helper_Mangopay_Entity_Money::NUMBER_FORMAT_COMMA );
 
-$gotCurrencies	= array();
+$gotCurrencies	= [];
 
 $list		= UI_HTML_Tag::create( 'div', array(
 	UI_HTML_Tag::create( 'h5', 'Noch kein Portmoney vorhanden.' ),
@@ -23,7 +23,7 @@ $list		= UI_HTML_Tag::create( 'div', array(
 ), array( 'class' => 'alert alert-info' ) );
 
 if( $sellerWallets ){
-	$list	= array();
+	$list	= [];
 	foreach( $sellerWallets as $wallet ){
 		$gotCurrencies[]	= $wallet->Currency;
 		$buttonPayOut	= UI_HTML_Tag::create( 'button', $iconBank.'&nbsp;auszahlen', array(

@@ -14,7 +14,7 @@ $labelEmpty	= UI_HTML_Tag::create( 'em', $w->empty, array( 'class' => 'muted' ) 
 $list		= UI_HTML_Tag::create( 'div', $labelEmpty, array( 'class' => 'alert alert-info' ) );
 
 if( $groups ){
-	$list	= array();
+	$list	= [];
 	foreach( $groups as $group ){
 		$attributes		= array(
 			'href'	=> './work/newsletter/group/edit/'.$group->newsletterGroupId,
@@ -25,7 +25,7 @@ if( $groups ){
 		$link			= UI_HTML_Tag::create( 'a', $group->title, $attributes );
 		$label			= $link.'&nbsp;<small class="muted">('.count( $group->readers ).' Leser)</small>';
 	//	$label			= UI_HTML_Tag::create( 'span', $label, array( 'class' => '' ) );
-	#	$groups	= array();
+	#	$groups	= [];
 	#	foreach( $reader->groups as $group )
 	#		$groups[]		= $group->title;
 	#	$groups			= UI_HTML_Tag::create( 'span', count( $groups ), array( 'class' => 'badge', 'title' => join( ', ', $groups ) ) );

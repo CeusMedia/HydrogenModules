@@ -77,7 +77,7 @@ class Controller_Manage_Form_Mail extends CMF_Hydrogen_Controller{
 		$filterFormat		= $filters->get( 'format' );
 
 		$limit		= 15;
-		$conditions	= array();
+		$conditions	= [];
 
 		if( (int) $filters->get( 'mailId' ) )
 		 	$conditions['mailId']		= (int) $filters->get( 'mailId' );

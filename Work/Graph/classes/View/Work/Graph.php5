@@ -6,7 +6,7 @@ class View_Work_Graph extends CMF_Hydrogen_View{
 	public function edge(){}
 
 	public function renderFacts( $facts ){
-		$list	= array();
+		$list	= [];
 		foreach( $facts as $fact ){
 			if( !isset( $fact[2] ) )
 				$fact[2]	= NULL;

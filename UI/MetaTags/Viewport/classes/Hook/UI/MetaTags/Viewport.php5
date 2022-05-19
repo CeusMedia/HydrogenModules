@@ -14,7 +14,7 @@ class Hook_UI_MetaTags_Viewport extends CMF_Hydrogen_Hook
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_metatags_viewport.', TRUE );
 		if( !$moduleConfig->get( 'active' ) )
 			return;
-		$options		= array();
+		$options		= [];
 		foreach( $moduleConfig->getAll() as $key => $value )
 			if( strlen( trim( $value ) ) )
 				if( $key !== 'active' )

@@ -11,7 +11,7 @@ $pathImages	= $frontend->getPath( 'images' );
 
 $listImages	= $w->noEntries;
 if( $branch->images ){
-	$listImages	= array();
+	$listImages	= [];
 	foreach( $branch->images as $image ){
 		$urlImage		= $pathImages.'branches/'.$image->filename;
 		$urlRemove		= './manage/company/branch/removeImage/'.$branch->branchId.'/'.$image->branchImageId;

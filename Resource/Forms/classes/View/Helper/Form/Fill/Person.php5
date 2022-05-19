@@ -51,7 +51,7 @@ class View_Helper_Form_Fill_Person{
 		$inputs		= json_decode( $this->fill->data, TRUE );
 
 		$checkValues	= array( 'true', 'ja', 'yes' );
-		$listInfo		= array();
+		$listInfo		= [];
 		foreach( $inputs as $name => $input ){
 			if( in_array( trim( $name ), $this->fields ) ){
 				$value	= $input['value'];
@@ -82,7 +82,7 @@ class View_Helper_Form_Fill_Person{
 	}
 
 	protected function renderFacts( $facts, $horizontal = FALSE ){
-		$list	= array();
+		$list	= [];
 		foreach( $facts as $label => $value ){
 			$list[]	= UI_HTML_Tag::create( 'dt', $label );
 			$list[]	= UI_HTML_Tag::create( 'dd', $value.'&nbsp;' );
@@ -92,7 +92,7 @@ class View_Helper_Form_Fill_Person{
 	}
 
 	protected function renderTable( $rows ){
-		$list	= array();
+		$list	= [];
 		foreach( $rows as $row ){
 			$list[]	= UI_HTML_Tag::create( 'tr', array(
 				UI_HTML_Tag::create( 'th', $row->label ),

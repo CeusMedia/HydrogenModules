@@ -4,7 +4,7 @@ $buttonCancel	= UI_HTML_Elements::LinkButton( './gallery/'.$folder, 'zurück', '
 $buttonAdd	= UI_HTML_Elements::Button( 'add', 'hinzufügen', 'button add' );
 
 
-$optPrefix	= array();
+$optPrefix	= [];
 $optPrefix	= UI_HTML_Elements::Options( $optPrefix );
 
 $panelImport	= '';
@@ -15,14 +15,14 @@ $path	= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path
 
 $model		= new Model_Gallery( $env );
 $galleries	= $model->getAll();
-$galleryMap	= array();
+$galleryMap	= [];
 foreach( $galleries as $gallery ){
 	$galleryMap[$gallery->folder]	= $gallery;
 }
 
 
 $index	= FS_Folder_RecursiveLister::getFolderList( $path );
-$list	= array();
+$list	= [];
 foreach( $index as $entry ){
 	$key	= substr( $entry->getPathname(), strlen( $path ) );
 	if( !array_key_exists( $key, $galleryMap ) )

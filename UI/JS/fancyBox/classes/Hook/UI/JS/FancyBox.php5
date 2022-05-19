@@ -20,7 +20,7 @@ class Hook_UI_JS_FancyBox extends CMF_Hydrogen_Hook
 
 		if( $config->get( 'auto' ) ){
 			$options	= $config->getAll( 'auto.option.' );
-			$options['buttons']	= array();
+			$options['buttons']	= [];
 			foreach( $config->getAll( 'auto.option.button.' ) as $button => $enabled  ){
 				unset( $options['button.'.$button] );
 				$enabled ? ( $options['buttons'][] = $button ) : NULL;

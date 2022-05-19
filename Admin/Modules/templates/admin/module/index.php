@@ -2,7 +2,7 @@
 
 
 /*  --  MODULE TABLE  --  */
-$list	= array();
+$list	= [];
 foreach( $modules as $moduleId => $module ){
 	$attributes	= array(
 		'class'		=> 'module available',
@@ -28,7 +28,7 @@ $listAll	= '<table class="modules all">'.$heads.join( $list ).'</table>';
 
 
 /*  --  AVAILABLE  --  */
-/*$list	= array();
+/*$list	= [];
 foreach( $modulesAvailable as $moduleId => $module ){
 	$attributes	= array(
 		'class'		=> 'module available',
@@ -42,7 +42,7 @@ $listAvailable	= '<ul class="modules available">'.join( $list ).'</ul>';
 */
 
 /*  --  INSTALLED  --  */
-/*$list	= array();
+/*$list	= [];
 foreach( $modulesInstalled as $moduleId => $module ){
 	$attributes	= array(
 		'class'		=> 'module installed',
@@ -56,7 +56,7 @@ $listInstalled	= '<ul class="modules installed">'.join( $list ).'</ul>';
 */
 
 /*  --  NOT INSTALLED  --  */
-/*$list	= array();
+/*$list	= [];
 foreach( $modulesNotInstalled as $moduleId => $module ){
 	$attributes	= array(
 		'class'		=> 'module',

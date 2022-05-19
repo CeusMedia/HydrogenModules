@@ -29,14 +29,14 @@ $rowColors	= array(
 $helper		= new View_Helper_Member( $this->env );
 
 if( $userLicenses ){
-	$list	= array();
+	$list	= [];
 	foreach( $userLicenses as $userLicense ){
 		$rowColor	= $rowColors[$userLicense->status];
 		$link	= UI_HTML_Tag::create( 'a', $userLicense->uid, array(
 			'href'	=> './manage/my/provision/license/view/'.$userLicense->userLicenseId
 		) );
 
-		$buttons	= array();
+		$buttons	= [];
 		$buttons[]	= UI_HTML_Tag::create( 'a', $iconView.' anzeigen', array(
 			'href'		=> './manage/my/provision/license/view/'.$userLicense->userLicenseId,
 			'class'		=> 'btn btn-small'

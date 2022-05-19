@@ -362,7 +362,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller								//  
 
 			$missings = array_keys( $this->logic->model->getAllNeededModules( $moduleId, TRUE ) );
 			if( $missings ){
-				$list	= array();
+				$list	= [];
 				foreach( $missings as $missing ){
 					$missingModule	= $this->logic->getModule( $missing );
 					$status			= 4;
@@ -445,7 +445,7 @@ class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller								//  
 		);
 
 		if( 0 && $this->modules->missing ){
-			$list	= array();
+			$list	= [];
 			$first	= NULL;
 			foreach( $this->modules->missing as $moduleId => $relations ){
 				$first	= $first ? $first : $moduleId;

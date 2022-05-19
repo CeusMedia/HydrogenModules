@@ -9,12 +9,12 @@ $chunks	= array(
 	array_slice( $topics, 11, 6 ),
 );
 
-$lists	= array();
+$lists	= [];
 foreach( $chunks as $nr => $chunk ){
-	$lists[$nr]	= array();
+	$lists[$nr]	= [];
 	foreach( $chunk as $topic ){
 		$types		= $eventTypes[$topic];
-		$sublist	= array();
+		$sublist	= [];
 		foreach( $types as $type ){
 			$input		= UI_HTML_Tag::create( 'input', NULL, array(
 				'name'		=> 'types[]',

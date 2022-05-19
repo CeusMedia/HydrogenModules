@@ -54,7 +54,7 @@ class View_Helper_Input_ResourceTrigger
 	protected $inputId;
 	protected $label			= 'select';
 	protected $class			= 'btn';
-	protected $paths			= array();
+	protected $paths			= [];
 
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{

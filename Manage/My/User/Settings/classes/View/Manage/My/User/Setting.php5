@@ -6,7 +6,7 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 		$language	= $this->env->getLanguage()->getLanguage();
 		$moduleKey	= $this->getSingular( str_replace( '_', '/', strtolower( $module->id ) ) );
 		$localeFile	= $language.'/'.$moduleKey.'.ini';
-		$moduleWords	= array();
+		$moduleWords	= [];
 		foreach( $module->files->locales as $locale ){
 			if( $localeFile == $locale->file ){
 				if( file_exists( $path.$locale->file ) ){
@@ -135,8 +135,8 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 		$words		= $this->env->getLanguage()->getWords( 'manage/my/user/setting' );
 		$words		= (object) $words['index'];
 		$iconReset	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-		$rows	= array();
-		$list	= array();
+		$rows	= [];
+		$list	= [];
 
 		//  collect module settings configurable by user
 		foreach( $module->config as $config ){
@@ -146,7 +146,7 @@ class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
 
 		//  order settings by order of pairs in module related locale file
 		if( is_array( $moduleWords ) ) {										//  module has setting labels
-			$sorted	= array();													//  prepare empty list of sorted pairs
+			$sorted	= [];													//  prepare empty list of sorted pairs
 			foreach( array_keys( $moduleWords ) as $key ){						//  iterate module related locale pairs
 				if( preg_match( "/^config\./", $key ) ){						//  if they begin with 'config.'
 					$key	= preg_replace( "/^config\./", "", $key );			//  get (possible) setting key from locale key

@@ -20,7 +20,7 @@ $typeMap	= array(
 	Model_Module::TYPE_CUSTOM		=> 'eigenständig',
 );
 
-$list	= array();
+$list	= [];
 $types[]	= '';
 foreach( $typeMap as $typeKey => $typeLabel ){
 	$attributes	= array(
@@ -39,7 +39,7 @@ $typeList	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'style' => 'margin:
 if( !$filterCategories )
 	$filterCategories	= array_keys( $categories );
 
-$list	= array();
+$list	= [];
 $categories[]	= '';
 foreach( $categories as $nr => $category ){
 	$attributes	= array(
@@ -62,7 +62,7 @@ if( count( $sources ) > 1 ){
 	$sources['Local']	= (object) array( 'title' => 'Lokal, ohne Quelle' );
 	if( !$filterSources )
 		$filterSources	= array_keys( $sources );
-	$list	= array();
+	$list	= [];
 	foreach( $sources as $sourceId => $source ){
 		$attributes	= array(
 			'type'		=> 'checkbox',

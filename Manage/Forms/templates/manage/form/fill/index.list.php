@@ -14,7 +14,7 @@ $statuses	= array(
 	Model_Form_Fill::STATUS_HANDLED		=> UI_HTML_Tag::create( 'label', 'behandelt', array( 'class' => 'label label-info' ) ),
 );
 
-$rows		= array();
+$rows		= [];
 foreach( $fills as $fill ){
 	$fill->data	= json_decode( $fill->data );
 	$linkView	= UI_HTML_Tag::create( 'a', $iconView, array(

@@ -9,7 +9,7 @@ $controller	= $env->request->get( '__controller' );
 $action		= $env->request->get( '__action' );
 
 if( $controller == "admin/module/source" )
-	$sublinks	= array();
+	$sublinks	= [];
 
 $naviMain	= new CMF_Hydrogen_View_Helper_Navigation_SingleList( $links, NULL, 'layout-navigation-main-inner' );
 $naviMain	= $naviMain->render( $controller.'/'.$action, TRUE );
@@ -30,7 +30,7 @@ asort( $optInstance );
 $instanceId		= $env->getSession()->get( 'instanceId' );
 $optInstance	= UI_HTML_Elements::Options( $optInstance, $instanceId );
 
-$badges	= array();
+$badges	= [];
 $infos	= array(
 	$words['footer_info']['copyright'],
 	sprintf( $words['footer_info']['date'], date( 'd.m.Y') ),

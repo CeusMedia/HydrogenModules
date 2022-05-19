@@ -13,9 +13,9 @@ $iconMail	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
 $listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
 
 if( $rulesAttachment ){
-	$listRules	= array();
+	$listRules	= [];
 	foreach( $rulesAttachment as $rule ){
-		$list	= array();
+		$list	= [];
 		foreach( json_decode( $rule->rules ) as $item ){
 			$keyLabel	= Html::create( 'acronym', $item->keyLabel, array( 'title' => 'Interner Schlüssel: '.$item->key ) );
 			$valueLabel	= Html::create( 'acronym', $item->valueLabel, array( 'title' => 'Interner Schlüssel: '.$item->value ) );

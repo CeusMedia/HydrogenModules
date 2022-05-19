@@ -5,7 +5,7 @@ $iconUser		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user-o
 $list	= UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) );
 
 if( $persons ){
-	$list	= array();
+	$list	= [];
 	$totalPayout	= 0;
 	$totalBalance	= 0;
 	foreach( $persons as $person ){

@@ -17,7 +17,7 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic
 	static protected $instance;
 
 	public $timeOffset			= 0; # nerd mode: 4 hours night shift: 14400;
-	public $generalConditions	= array();
+	public $generalConditions	= [];
 	protected $modelMission;
 	protected $modelVersion;
 	protected $modelChange;
@@ -95,7 +95,7 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic
 		return $model->getAllByIndex( 'missionId', $missionId, $orders );
 	}*/
 
-	public function getFilterConditions( $sessionFilterKeyPrefix, $additionalConditions = array() )
+	public function getFilterConditions( $sessionFilterKeyPrefix, $additionalConditions = [] )
 	{
 		$session	= $this->env->getSession();
 		$query		= $session->get( $sessionFilterKeyPrefix.'query' );
@@ -110,7 +110,7 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic
 //			$order		=> $direction,			//  selected or default order and direction
 //			'timeStart'	=> 'ASC',				//  order events by start time
 //		);
-		$conditions	= array();
+		$conditions	= [];
 		if( is_array( $types ) && count( $types ) )
 			$conditions['type']	= $types;
 		if( is_array( $priorities ) && count( $priorities ) )
@@ -135,13 +135,13 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic
 			$conditions		= $activeOnly ? array( 'status' => array( 0, 1, 2 ) ) : array();		//  ...
 			return $modelProject->getUserProjects( $userId, $conditions );							//  return user projects
 		}
-		$userProjects	= array();																	//  otherwise create empty project map
+		$userProjects	= [];																	//  otherwise create empty project map
 		foreach( $modelProject->getAll( array(), array( 'title' => 'ASC' ) ) as $project )			//  iterate all projects
 			$userProjects[$project->projectId]	= $project;											//  add to projects map
 		return $userProjects;																		//  return projects map
 	}
 
-	public function getUserMissions( $userId, $conditions = array(), $orders = array(), $limits = array() )
+	public function getUserMissions( $userId, $conditions = [], $orders = [], $limits = [] )
 	{
 		$conditions	= array_merge( $this->generalConditions, $conditions );
 		$orders		= $orders ? $orders : array( 'dayStart' => 'ASC' );

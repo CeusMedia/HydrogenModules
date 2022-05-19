@@ -3,7 +3,7 @@ class View_Helper_Info_Manual_CategoryPageList
 {
 	protected $env;
 	protected $activePageId	= 0;
-	protected $pages		= array();
+	protected $pages		= [];
 
 	public function __construct( CMF_Hydrogen_Environment $env )
 	{
@@ -20,7 +20,7 @@ class View_Helper_Info_Manual_CategoryPageList
 		$words	= $this->env->getLanguage()->getWords( 'info/manual' );
 		if( !$this->pages )
 			return '<div><em class="muted">'.$words['list']['empty'].'</em></div><br/>';
-		$list	= array();
+		$list	= [];
 		foreach( $this->pages as $entry ){
 			$link	= UI_HTML_Tag::create( 'a', $entry->title, array( 'href' => './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title ) ) );
 			$class	= 'autocut '.( $this->activePageId == $entry->manualPageId ? 'active' : '' );

@@ -3,7 +3,7 @@ class View_Helper_NewsList implements Countable
 {
 	protected $env;
 	protected $words;
-	protected $news		= array();
+	protected $news		= [];
 	protected $limit	= 5;
 
 	public static $defaultAttributes	= array(
@@ -28,7 +28,7 @@ class View_Helper_NewsList implements Countable
 		return $this;
 	}
 
-	public function collect( $resource = 'Info_NewsList', $event = 'collectNews', $options = array() ): int
+	public function collect( $resource = 'Info_NewsList', $event = 'collectNews', $options = [] ): int
 	{
 		$this->env->getCaptain()->callHook( $resource, $event, $this, $options );
 		return $this->count();
@@ -53,7 +53,7 @@ class View_Helper_NewsList implements Countable
 	{
 		if( !$this->news )
 			return '';
-		$list	= array();
+		$list	= [];
 		foreach( $this->news as $item ){
 			$helper		= new View_Helper_TimePhraser( $this->env );
 			$key		= $item->timestamp.'.'.microtime( TRUE );

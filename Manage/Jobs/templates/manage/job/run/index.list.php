@@ -14,7 +14,7 @@ $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-tras
 
 $table		= UI_HTML_Tag::create( 'div', 'Keine Ausführungen gefunden.', array( 'class' => 'alert alert-warning' ) );
 if( $runs ){
-	$rows	= array();
+	$rows	= [];
 	foreach( $runs as $item ){
 		$helperAttribute->setObject( $item );
 		$definition	= $definitions[$item->jobDefinitionId];

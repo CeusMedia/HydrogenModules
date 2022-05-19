@@ -1,6 +1,6 @@
 <?php
 
-$rows	= array();
+$rows	= [];
 foreach( $bugs as $bug ){
 	
 	$reporter	= '';

@@ -25,7 +25,7 @@ class Controller_Lab_Button extends CMF_Hydrogen_Controller{
 		
 		$path		= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/css/';
 		$index		= new FS_File_RegexFilter( $path, "/^site\.lab\.button.+\.css$/i" );
-		$styles		= array();
+		$styles		= [];
 		foreach( $index as $entry )
 			$styles[]	= $entry->getFilename();
 		natcasesort( $styles );

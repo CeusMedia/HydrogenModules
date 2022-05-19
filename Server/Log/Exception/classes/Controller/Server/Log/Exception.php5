@@ -29,7 +29,7 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 	public function index( $page = 0, $limit = 20 ){
 		$page	= preg_match( "/^[0-9]+$/", $page ) ? (int) $page : 0;
 
-		$conditions	= array();
+		$conditions	= [];
 		$total		= $this->model->count( $conditions );
 
 		while( $page > 0 && $page * $limit >= $total )

@@ -3,7 +3,7 @@
 
 $classes	= '-';
 if( $module->files->classes ){
-	$classes	= array();
+	$classes	= [];
 	foreach( $module->files->classes as $item )
 		$classes[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$classes	= UI_HTML_Elements::unorderedList( $classes, 1, array( 'class' => 'classes' ) );
@@ -14,7 +14,7 @@ if( $module->files->classes ){
 
 $locales	= '-';
 if( $module->files->locales ){
-	$locales	= array();
+	$locales	= [];
 	foreach( $module->files->locales as $item )
 		$locales[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$locales		= UI_HTML_Elements::unorderedList( $locales, 1, array( 'class' => 'locales' ) );
@@ -22,7 +22,7 @@ if( $module->files->locales ){
 
 $templates	= '-';
 if( $module->files->templates ){
-	$templates	= array();
+	$templates	= [];
 	foreach( $module->files->templates as $item )
 		$templates[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$templates	= UI_HTML_Elements::unorderedList( $templates, 1, array( 'class' => 'templates' ) );
@@ -30,7 +30,7 @@ if( $module->files->templates ){
 
 $styles	= '-';
 if( $module->files->styles ){
-	$styles	= array();
+	$styles	= [];
 	foreach( $module->files->styles as $item )
 		$styles[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$styles		= UI_HTML_Elements::unorderedList( $styles, 1, array( 'class' => 'styles' ) );
@@ -38,7 +38,7 @@ if( $module->files->styles ){
 
 $scripts	= '-';
 if( $module->files->scripts ){
-	$scripts	= array();
+	$scripts	= [];
 	foreach( $module->files->scripts as $item )
 		$scripts[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$scripts		= UI_HTML_Elements::unorderedList( $scripts, 1, array( 'class' => 'scripts' ) );
@@ -46,7 +46,7 @@ if( $module->files->scripts ){
 
 $images	= '-';
 if( $module->files->images ){
-	$images	= array();
+	$images	= [];
 	foreach( $module->files->images as $item )
 		$images[]	= UI_HTML_Elements::ListItem( $item, 1 );
 	$images		= UI_HTML_Elements::unorderedList( $images, 1, array( 'class' => 'images' ) );
@@ -54,7 +54,7 @@ if( $module->files->images ){
 
 $config	= '-';
 if( $module->config ){
-	$config	= array();
+	$config	= [];
 	foreach( $module->config as $key => $value )
 		$config[]	= UI_HTML_Tag::create( 'dt', $key ).UI_HTML_Tag::create( 'dd', $value );
 	$config	= UI_HTML_Tag::create( 'dl', join( $config ) );
@@ -62,7 +62,7 @@ if( $module->config ){
 
 $sql	= '-';
 if( $module->sql ){
-	$sql	= array();
+	$sql	= [];
 	foreach( $module->sql as $type => $content )
 		$sql[]	= UI_HTML_Tag::create( 'dt', $type ).UI_HTML_Tag::create( 'dd', UI_HTML_Tag::create( 'xmp', trim( $content ) ) );
 	$sql	= UI_HTML_Tag::create( 'dl', join( $sql ) );

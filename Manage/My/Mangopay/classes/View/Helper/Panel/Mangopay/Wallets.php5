@@ -11,7 +11,7 @@ class View_Helper_Panel_Mangopay_Wallets extends View_Helper_Panel_Mangopay{
 	}
 
 	public function render(){
-		$rows		= array();
+		$rows		= [];
 		foreach( $this->data as $wallet ){
 			$link	= UI_HTML_Tag::create( 'a', $wallet->Id, array( 'href' => sprintf( $this->options->get( 'linkItem' ), $wallet->Id ) ) );
 			$rows[]	= UI_HTML_Tag::create( 'tr', array(

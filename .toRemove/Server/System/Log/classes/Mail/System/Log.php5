@@ -1,7 +1,7 @@
 <?php
 /*class Mail_System_Log extends Mail_Abstract{
 
-	public function generate( $data = array() ){
+	public function generate( $data = [] ){
 		$body	= '
 <h3>ChatServer Syslog Mail</h3>
 <dl>

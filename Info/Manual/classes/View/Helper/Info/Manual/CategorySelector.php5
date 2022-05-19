@@ -2,7 +2,7 @@
 class View_Helper_Info_Manual_CategorySelector
 {
 	protected $env;									// CMF_Hydrogen_Environment
-	protected $categories		 = array();
+	protected $categories		 = [];
 	protected $categoryId;
 
 	/**
@@ -28,7 +28,7 @@ class View_Helper_Info_Manual_CategorySelector
 		}
 		if( count( $this->categories ) === 1 )
 			return '';
-		$options	 = array();
+		$options	 = [];
 		foreach( $this->categories as $category ){
 			$options[$category->manualCategoryId]	= $category->title;
 		}

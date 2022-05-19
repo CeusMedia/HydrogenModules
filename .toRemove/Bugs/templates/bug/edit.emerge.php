@@ -1,7 +1,7 @@
 <?php
 
 $logic	= new Logic_Bug( $this->env );
-$states	= array();
+$states	= [];
 foreach( $words['states'] as $status => $label )
 	if( $logic->canSetStatus( $bug->bugId, $status ) )
 		$states[$status]	= $label;

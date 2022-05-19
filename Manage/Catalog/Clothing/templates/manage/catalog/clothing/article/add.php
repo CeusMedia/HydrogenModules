@@ -3,7 +3,7 @@
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
 $iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
 
-$optCategoryId	= array();
+$optCategoryId	= [];
 foreach( $categoryMap as $item )
 	$optCategoryId[$item->categoryId]	= $item->title;
 $optCategoryId	= UI_HTML_Elements::Options( $optCategoryId);

@@ -14,7 +14,7 @@ class Hook_UI_MailEncryption extends CMF_Hydrogen_Hook
 		$options	=  $env->getConfig()->getAll( 'module.ui_js_mailencryption.', TRUE );
 		if( !$options->get( 'active' ) )
 			return;
-		$matches		= array();
+		$matches		= [];
 		$pattern	= '@^(.*)<a[^>]+href="mailto:(\S+\@\S+)".*>(.+)</a>(.*)$@siU';					//  pattern to match mail shortcode
 		while( preg_match( $pattern, $payload->content ) ){											//  while mail links in content
 			preg_match_all( $pattern, $payload->content, $matches );								//  get all match parts

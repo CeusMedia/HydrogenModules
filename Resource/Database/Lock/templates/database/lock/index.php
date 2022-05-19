@@ -7,7 +7,7 @@ $table		= UI_HTML_Tag::create( 'div', $w->noEntries, array( 'class' => 'alert al
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 
 if( count( $locks ) > 0 ){
-	$list	= array();
+	$list	= [];
 	foreach( $locks as $lock ){
 		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
 			'href'		=> './database/lock/unlock/'.$lock->lockId,

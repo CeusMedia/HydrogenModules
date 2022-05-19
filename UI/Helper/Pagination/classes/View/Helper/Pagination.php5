@@ -84,7 +84,7 @@ class View_Helper_Pagination
 		$pages		= ceil( $number / $limit );
 		if( $pages < 2 )
 			return '';
-		$list	= array();
+		$list	= [];
 		if( $page != 0 ){
 			$url	= $baseUri;
 			if( $page != 1 )

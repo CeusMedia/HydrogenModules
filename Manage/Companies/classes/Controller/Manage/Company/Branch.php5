@@ -1,6 +1,6 @@
 <?php
-class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller
+{
 	protected $frontend;
 	protected $request;
 	protected $messenger;
@@ -9,17 +9,8 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 	protected $modelImage;
 	protected $modelTag;
 
-	public function __onInit(){
-		$this->modelBranch		= new Model_Branch( $this->env );
-		$this->modelCompany		= new Model_Company( $this->env );
-		$this->modelImage		= new Model_Branch_Image( $this->env );
-		$this->modelTag			= new Model_Branch_Tag( $this->env );
-		$this->request			= $this->env->getRequest();
-		$this->messenger		= $this->env->getMessenger();
-		$this->frontend			= Logic_Frontend::getInstance( $this->env );
-	}
-
-	static public function ___onRemoveCompany( CMF_Hydrogen_Environment $env, $module, $content, $data = array() ){
+	public static function ___onRemoveCompany( CMF_Hydrogen_Environment $env, $module, $content, $data = [] )
+	{
 		$modelBranch	= new Model_Branch( $env );
 		$modelImage		= new Model_Branch_Image( $env );
 		$modelTag		= new Model_Branch_Tag( $env );
@@ -40,7 +31,8 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	public function activate( $branchId ){
+	public function activate( $branchId )
+	{
 		$this->modelBranch->edit( $branchId, array(
 			'status'		=> 2,
 			'modifiedAt'	=> time(),
@@ -50,7 +42,8 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/company/branch/edit/'.$branchId );
 	}
 
-	public function deactivate( $branchId ){
+	public function deactivate( $branchId )
+	{
 		$this->modelBranch->edit( $branchId, array(
 			'status'		=> -2,
 			'modifiedAt'	=> time(),
@@ -60,7 +53,8 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/company/branch/edit/'.$branchId );
 	}
 
-	public function reject( $branchId ){
+	public function reject( $branchId )
+	{
 		$this->modelBranch->edit( $branchId, array(
 			'status'		=> -1,
 			'modifiedAt'	=> time(),
@@ -70,7 +64,8 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/company/branch' );
 	}
 
-	public function add( $companyId = NULL ){
+	public function add( $companyId = NULL )
+	{
 		$words			= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'save' ) ){
 			$data	= $this->request->getAllFromSource( 'POST' );
@@ -111,7 +106,8 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->view->setData( array( 'companies' => $this->modelCompany->getAll() ) );
 	}
 
-	public function addImage( $branchId ){
+	public function addImage( $branchId )
+	{
 		try{
 			$image		= $this->request->get( 'image' );
 			$imagePath	= $this->frontend->getPath( 'images' ).'branches/';		//  @todo to configuration
@@ -174,10 +170,11 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/company/branch/edit/'.$branchId );
 	}
 
-	public function addTag( $branchId ){
+	public function addTag( $branchId )
+	{
 		$branch		= $this->checkBranch( $branchId );
 		$tags		= explode( " ", trim( $this->request->get( 'tags' ) ) );
-		$list		= array();
+		$list		= [];
 		if( $tags ){
 			foreach( $tags as $tag ){
 				$indices	= array(
@@ -194,15 +191,8 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->restart( 'manage/company/branch/edit/'.$branchId );
 	}
 
-	protected function checkBranch( $branchId ){
-		if( !$this->modelBranch->get( $branchId ) ){
-			$words	= (object) $this->getWords( 'msg' );
-			$this->messenger->noteError( $words->errorBranchInvalid );
-			$this->restart( NULL, TRUE );
-		}
-	}
-
-	public function edit( $branchId ){
+	public function edit( $branchId )
+	{
 		$config			= $this->env->getConfig();
 		$words			= (object) $this->getWords( 'msg' );
 	//	$modelImage		= new Model_Branch_Image( $this->env );
@@ -247,12 +237,14 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->addData( 'frontend', $this->frontend );
 	}
 
-	public function filter(){
+	public function filter()
+	{
 /*		$this->messenger->noteSuccess( "Companies have been filtered." );
 */		$this->restart( './manage/company/branch' );
 	}
 
-	public function index( $branchId = NULL ){
+	public function index( $branchId = NULL )
+	{
 		if( $branchId )
 			$this->restart( 'edit/'.$branchId, TRUE );
 		$branches	= $this->modelBranch->getAll();
@@ -261,7 +253,8 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->view->addData( 'branches', $branches );
 	}
 
-	public function remove( $branchId ){
+	public function remove( $branchId )
+	{
 		$branch	= $this->modelBranch->get( $branchId );
 		if( !$branch ){
 			$this->messenger->noteError( 'Invalid ID: '.$branchId );
@@ -278,7 +271,8 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/company/branch' );
 	}
 
-	public function removeImage( $branchId, $imageId ){
+	public function removeImage( $branchId, $imageId )
+	{
 		$image			= $this->modelImage->get( $imageId );
 		if( !$image )
 			$this->messenger->noteFailure( 'Invalid imageId' );
@@ -291,12 +285,32 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/company/branch/edit/'.$branchId );
 	}
 
-	public function removeTag( $branchTagId ){
+	public function removeTag( $branchTagId )
+	{
 		$modelTag	= new Model_Branch_Tag( $this->env );
 		$tag		= $this->modelTag->get( $branchTagId );
 		if( $tag )
 			$this->modelTag->remove( $branchTagId );
 		$this->restart( 'manage/company/branch/edit/'.$tag->branchId );
 	}
+
+	protected function __onInit()
+	{
+		$this->modelBranch		= new Model_Branch( $this->env );
+		$this->modelCompany		= new Model_Company( $this->env );
+		$this->modelImage		= new Model_Branch_Image( $this->env );
+		$this->modelTag			= new Model_Branch_Tag( $this->env );
+		$this->request			= $this->env->getRequest();
+		$this->messenger		= $this->env->getMessenger();
+		$this->frontend			= Logic_Frontend::getInstance( $this->env );
+	}
+
+	protected function checkBranch( $branchId )
+	{
+		if( !$this->modelBranch->get( $branchId ) ){
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorBranchInvalid );
+			$this->restart( NULL, TRUE );
+		}
+	}
 }
-?>

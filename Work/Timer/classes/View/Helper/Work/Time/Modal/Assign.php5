@@ -4,7 +4,7 @@ class View_Helper_Work_Time_Modal_Assign extends CMF_Hydrogen_View_Helper_Abstra
 	protected $from;
 	protected $module;
 	protected $moduleId;
-	protected $timers	= array();
+	protected $timers	= [];
 	protected $userId;
 
 	public function __construct( CMF_Hydrogen_Environment $env )
@@ -33,7 +33,7 @@ class View_Helper_Work_Time_Modal_Assign extends CMF_Hydrogen_View_Helper_Abstra
 		}
 
 
-		$listTimers		= array();
+		$listTimers		= [];
 		foreach( $timers as $timer ){
 			$checkbox		= UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'checkbox', 'name' => 'timerIds[]', 'value' => $timer->workTimerId ) );
 			$label			= UI_HTML_Tag::create( 'label', $checkbox.'&nbsp;'.$timer->title, array( 'class' => 'checkbox' ) );

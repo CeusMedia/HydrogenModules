@@ -7,12 +7,12 @@ $wordsRole	= $env->getLanguage()->getWords( 'manage/role' );
 $acl	= $env->getAcl();
 $matrix	= $acl->index();
 $number	= 0;
-$list	= array();
+$list	= [];
 foreach( $matrix as $controller => $actions ){
 	if( ( $size = count( $actions ) ) ){
 		$number++;
 		$width	= round( 100 / $size, 8 ).'%';
-		$row	= array();
+		$row	= [];
 		$row[]	= UI_HTML_Tag::create( 'div', $number, array( 'class' => 'counter' ) );
 		foreach( $actions as $action ){
 			$access		= $acl->hasRight( $user->roleId, $controller, $action );

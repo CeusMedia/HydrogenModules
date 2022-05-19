@@ -1,14 +1,14 @@
 <?php
 class Hook_Manage_Page extends CMF_Hydrogen_Hook
 {
-	static public function onTinyMceGetLinkList( CMF_Hydrogen_Environment $env, $context, $module, $payload = array() ){
+	static public function onTinyMceGetLinkList( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
 		$frontend		= Logic_Frontend::getInstance( $env );
 		if( !$frontend->hasModule( 'Resource_Pages' ) )
 			return;
 
 		$words		= $env->getLanguage()->getWords( 'manage/page' );
 		$model		= new Model_Page( $env );
-		$list		= array();
+		$list		= [];
 		foreach( $model->getAllByIndex( 'status', 1, array( 'rank' => 'ASC' ) ) as $nr => $page ){
 			$page->level		= 0;
 			if( $page->parentId ){

@@ -18,7 +18,7 @@ class Controller_Ajax_Manage_User extends CMF_Hydrogen_Controller_Ajax
 {
 	public static $moduleId		= 'Manage_Users';
 
-	public function __onInit()
+	protected function __onInit()
 	{
 	}
 }

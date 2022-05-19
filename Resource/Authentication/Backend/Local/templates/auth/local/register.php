@@ -32,7 +32,7 @@ function getLegalFileContent( $env, $view, $legal ){
 }
 
 
-$list	= array();
+$list	= [];
 foreach( $files as $file ){
 	if( ( $html = getLegalFileContent( $env, $view, $file ) ) )
 	if( $env->getModules()->has( 'UI_Helper_Content' ) )

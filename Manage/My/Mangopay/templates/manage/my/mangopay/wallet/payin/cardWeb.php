@@ -1,7 +1,7 @@
 <?php
 $optCardType	= UI_HTML_Elements::Options( $wordsCards );
 
-$optCurrency	= array();
+$optCurrency	= [];
 foreach( $wallets as $wallet )
 	$optCurrency[$wallet->Balance->Currency]	= $wallet->Balance->Currency;
 asort( $optCurrency );

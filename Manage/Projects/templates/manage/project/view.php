@@ -45,7 +45,7 @@ function renderUserInline( CMF_Hydrogen_Environment $env, $user ){
 /*  --  COWORKERS  --  */
 $list	= '<div class="muted"><em>'.$words['view.coworkers']['noEntries'].'</em><br/></div>';
 if( $project->users ){
-	$list	= array();
+	$list	= [];
 	foreach( $project->users as $worker ){
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', renderUserBlock( $env, $worker ) ),

@@ -1,23 +1,19 @@
 <?php
-class Controller_Manage_IP_Lock_Filter extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_IP_Lock_Filter extends CMF_Hydrogen_Controller
+{
 	protected $logic;
 	protected $messenger;
 
-	public function __onInit(){
-		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
-		$this->messenger	= $this->env->getMessenger();
-		$this->model		= new Model_IP_Lock_Filter( $this->env );
-	}
-
-	public function activate( $filterId ){
+	public function activate( $filterId )
+	{
 		$this->model->edit( $filterId, array(
 			'status'	=> Model_IP_Lock_Filter::STATUS_ENABLED,
 		) );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function add(){
+	public function add()
+	{
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$data		= $request->getAll();
@@ -31,14 +27,16 @@ class Controller_Manage_IP_Lock_Filter extends CMF_Hydrogen_Controller{
 		$this->addData( 'reasons', $model->getAll() );
 	}
 
-	public function deactivate( $filterId ){
+	public function deactivate( $filterId )
+	{
 		$this->model->edit( $filterId, array(
 			'status'	=> Model_IP_Lock_Filter::STATUS_DISABLED,
 		) );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $filterId ){
+	public function edit( $filterId )
+	{
 		$request	= $this->env->getRequest();
 		$filter		= $this->model->get( $filterId );
 		if( !$filter ){
@@ -57,10 +55,11 @@ class Controller_Manage_IP_Lock_Filter extends CMF_Hydrogen_Controller{
 		$this->addData( 'reasons', $model->getAll() );
 	}
 
-	public function index(){
-		$conditions	= array();
-		$orders		= array();
-		$limits		= array();
+	public function index()
+	{
+		$conditions	= [];
+		$orders		= [];
+		$limits		= [];
 		$model		= new Model_IP_Lock_Reason( $this->env );
 		$filters	= $this->model->getAll( $conditions, $orders, $limits );
 		foreach( $filters as $nr => $filter ){
@@ -69,7 +68,8 @@ class Controller_Manage_IP_Lock_Filter extends CMF_Hydrogen_Controller{
 		$this->addData( 'filters', $filters );
 	}
 
-	public function remove( $filterId ){
+	public function remove( $filterId )
+	{
 		$request	= $this->env->getRequest();
 		$filter		= $this->model->get( $filterId );
 		if( !$filter ){
@@ -82,5 +82,12 @@ class Controller_Manage_IP_Lock_Filter extends CMF_Hydrogen_Controller{
 		$this->model->remove( $filterId );
 		$this->messenger->noteSuccess( 'Filter and related locks removed.' );
 		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
+		$this->messenger	= $this->env->getMessenger();
+		$this->model		= new Model_IP_Lock_Filter( $this->env );
 	}
 }

@@ -55,7 +55,7 @@ class View_Info_File extends CMF_Hydrogen_View
 	protected static function getStepsFromFolderId( CMF_Hydrogen_Environment $env, $folderId ): array
 	{
 		$model	= new Model_Download_Folder( $env );
-		$steps		= array();
+		$steps		= [];
 		while( $folderId ){
 			$folder	= $model->get( $folderId );
 			if( !$folder )

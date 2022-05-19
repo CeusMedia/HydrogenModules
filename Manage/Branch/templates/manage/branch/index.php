@@ -2,7 +2,7 @@
 $heading	= UI_HTML_Tag::create( 'h2', $words['index']['heading'] );
 $add 		= UI_HTML_Elements::LinkButton( './manage/branch/add', $words['index']['buttonAdd'], 'button add' );
 
-$rows		= array();
+$rows		= [];
 $number		= 0;
 foreach( $branches as $entry )
 {

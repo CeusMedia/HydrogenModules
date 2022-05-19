@@ -43,8 +43,8 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	 */
 	public function discoverJobDefinitions(): array
 	{
-		$list			= array();																	//  prepare empty result list
-		$discoveredJobs	= array();
+		$list			= [];																	//  prepare empty result list
+		$discoveredJobs	= [];
 
 		//  read jobs definied by modules
 		foreach( $this->env->getModules()->getAll() as $module )									//  iterate all modules
@@ -85,7 +85,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 			$mode	= Model_Job_Definition::MODE_SINGLE;											//  assume mode is "single"
 			if( $discoveredJob->multiple )															//  job is marked as "multiple"
 				$mode	= Model_Job_Definition::MODE_MULTIPLE;										//  set mode to "multiple"
-			$arguments	= array();																	//  assume no arguments
+			$arguments	= [];																	//  assume no arguments
 			if( $discoveredJob->arguments )															//  job as defined arguments
 				$arguments	= $discoveredJob->arguments;											//  carry arguments
 			$jobDefinitionId	= $this->modelDefinition->add( array(								//  register job in database
@@ -108,7 +108,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return $this->modelDefinition->get( $jobDefinitionId );
 	}
 
-	public function getDefinitionByIdentifier( string $jobDefinitionIdentifier, array $extendBy = array() ): ?object
+	public function getDefinitionByIdentifier( string $jobDefinitionIdentifier, array $extendBy = [] ): ?object
 	{
 		$jobDefinition	= $this->modelDefinition->getByIndex( 'identifier', $jobDefinitionIdentifier );
 		if( $jobDefinition ){
@@ -129,7 +129,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return NULL;
 	}
 
-	public function getDefinitions( $conditions = array(), $orders = array(), $limits = array(), $fields = array() ): array
+	public function getDefinitions( $conditions = [], $orders = [], $limits = [], $fields = [] ): array
 	{
 		return $this->modelDefinition->getAll( $conditions, $orders, $limits, $fields );
 	}
@@ -142,9 +142,9 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	 *	@param		array		$orders			Order rules (defaults to: ranAt -> DESC)
 	 *	@return		array						List ob job run objects not having a process anymore
 	 */
-	public function getDiscontinuedJobRuns( $conditions = array(), $orders = array() ): array
+	public function getDiscontinuedJobRuns( $conditions = [], $orders = [] ): array
 	{
-		$list			= array();
+		$list			= [];
 		$orders			= $orders ? $orders : array( 'ranAt' => 'ASC' );
 		foreach( $this->getRunningJobs( $conditions, $orders ) as $runningJob )
 			if( !$this->isActiveProcessId( (int) $runningJob->processId ) )
@@ -152,7 +152,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return $list;
 	}
 
-	public function getRunningJobs( $conditions = array(), $orders = array(), $limits = array(), $fields = array() ): array
+	public function getRunningJobs( $conditions = [], $orders = [], $limits = [], $fields = [] ): array
 	{
 		$conditions['status']	= Model_Job_Run::STATUS_RUNNING;
 		return $this->modelRun->getAll( $conditions, $orders, $limits, $fields );
@@ -165,7 +165,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	 *	@param		array		$extendBy		List of data extensions (definition, schedules)
 	 *	@return		object|NULL	Found prepared job run
 	 */
-	public function getPreparedJobRun( $jobRunId, $extendBy = array() ): object
+	public function getPreparedJobRun( $jobRunId, $extendBy = [] ): object
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
 		if( $jobRun && $extendBy ){
@@ -184,7 +184,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	 *	@param		array		$extendBy			List of data extensions (definition, schedules)
 	 *	@return		array		list of found prepared job runs
 	 */
-	public function getPreparedJobRuns( $jobDefinitionId = NULL, $extendBy = array() ): array
+	public function getPreparedJobRuns( $jobDefinitionId = NULL, $extendBy = [] ): array
 	{
 		$indices	= array( 'status' => Model_Job_Run::STATUS_PREPARED );
 		if( $jobDefinitionId )
@@ -201,7 +201,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		return $preparedJobs;
 	}
 
-	public function getScheduledJobs( $conditions = array() ): array
+	public function getScheduledJobs( $conditions = [] ): array
 	{
 		$conditions	= array_merge( array(
 			'status'	=> 1,
@@ -321,7 +321,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 		}
 	}
 
-	public function quitJobRun( int $jobRunId, int $status, $messageData = array() )
+	public function quitJobRun( int $jobRunId, int $status, $messageData = [] )
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_RUNNING )
@@ -339,14 +339,14 @@ class Logic_Job extends CMF_Hydrogen_Logic
 				$this->killJobRunProcess( (int) $jobRun->processId );
 		$this->modelRun->edit( $jobRun->jobRunId, $dataRun );
 		$jobDefinition	= $this->modelDefinition->get( $jobRun->jobDefinitionId );
-		$dataDefinition	= array();
+		$dataDefinition	= [];
 		if( in_array( $status, Model_Job_Run::STATUSES_NEGATIVE ) )
 			$dataDefinition['fails']	= $jobDefinition->fails + 1;
 		if( $dataDefinition )
 			$this->modelDefinition->edit( $jobRun->jobDefinitionId, $dataDefinition );
 	}
 
-	public function startJobRun( object $jobRun, $commands = array(), $parameters = array() ): int
+	public function startJobRun( object $jobRun, $commands = [], $parameters = [] ): int
 	{
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED )
 			throw new RuntimeException( 'Job run is not in prepared state' );
@@ -437,7 +437,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 
 	public function terminateDiscontinuedJobRuns( ?string $reason = NULL ): array
 	{
-		$list	= array();
+		$list	= [];
 		foreach( $this->getDiscontinuedJobRuns() as $jobRun ){
 			$messageData	= $reason ? array( 'reason' => $reason ) : array();
 			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_TERMINATED, $messageData );
@@ -482,7 +482,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 
 	protected function getScheduledJobsToPrepare( $jobDefinitionId = NULL ): array
 	{
-		$jobSchedules	= array();
+		$jobSchedules	= [];
 		$indices		= array(
 			'status'	=> Model_Job_Schedule::STATUS_ENABLED,
 			'type'		=> array(
@@ -564,7 +564,7 @@ class Logic_Job extends CMF_Hydrogen_Logic
 
 	protected function prepareJobRunsForScheduledJobs( $scheduledJobRunsToPrepare ): array
 	{
-		$list	= array();
+		$list	= [];
 		foreach( $scheduledJobRunsToPrepare as $scheduledJob ){
 			$date	= date( 'Y-m-d-H-i' );
 			$job	= $this->modelDefinition->get( $scheduledJob->jobDefinitionId );

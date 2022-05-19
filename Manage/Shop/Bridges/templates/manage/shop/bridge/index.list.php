@@ -2,7 +2,7 @@
 
 //print_m( $bridges );die;
 
-$list	= array();
+$list	= [];
 foreach( $bridges as $bridge ){
 	$label	= $bridge->title ? $bridge->title : $bridge->class;
 	$link	= new UI_HTML_Tag( 'a', $label, array(

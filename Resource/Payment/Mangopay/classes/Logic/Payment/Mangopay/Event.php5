@@ -1,11 +1,21 @@
 <?php
-abstract class Logic_Payment_Mangopay_Event extends CMF_Hydrogen_Logic{
-
+abstract class Logic_Payment_Mangopay_Event extends CMF_Hydrogen_Logic
+{
 	protected $entity;
 	protected $event;
 	protected $logicMangopay;
 
-	public function __onInit(){
+	abstract public function handle();
+
+	public function setEvent( $event )
+	{
+		$this->event	= $event;
+		$this->entity	= $this->logicMangopay->getEventResource( $event->type, $event->id );
+		return $this;
+	}
+
+	protected function __onInit()
+	{
 		parent::__onInit();
 		$this->logicMangopay	= Logic_Payment_Mangopay::getInstance( $this->env );
 
@@ -14,9 +24,9 @@ abstract class Logic_Payment_Mangopay_Event extends CMF_Hydrogen_Logic{
 //		later get logic object by: $this->env->logic->paymentMangopay;
 	}
 
-	abstract public function handle();
 
-	protected function sendMail( $mailClass, $data, $receiver, $language = NULL ){
+	protected function sendMail( $mailClass, $data, $receiver, $language = NULL )
+	{
 		$className	= 'Mail_'.$mailClass;
 		if( !class_exists( $className ) )
 			throw new RuntimeException( 'Mail class "'.$className.'" is not existing' );
@@ -26,13 +36,9 @@ abstract class Logic_Payment_Mangopay_Event extends CMF_Hydrogen_Logic{
 		$this->env->logic->mail->sendMail( $mail, $receiver, $language );
 	}
 
-	public function setEvent( $event ){
-		$this->event	= $event;
-		$this->entity	= $this->logicMangopay->getEventResource( $event->type, $event->id );
-		return $this;
-	}
 
-	protected function uncache( $key ){
+	protected function uncache( $key )
+	{
 		$this->env->getCache()->remove( 'mangopay_'.$key );
 	}
 }

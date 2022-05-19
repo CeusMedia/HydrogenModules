@@ -94,7 +94,7 @@ class Model_Newsletter_Theme
 
 	public function getAll(): array
 	{
-		$themes	= array();
+		$themes	= [];
 		$index	= new \DirectoryIterator( $this->themePath );
 		foreach( $index as $entry ){
 			if( $entry->isDot() || !$entry->isDir() )
@@ -103,7 +103,7 @@ class Model_Newsletter_Theme
 			$themes[$entry->getFilename()]	= $data;
 		}
 		ksort( $themes );
-		$list	= array();
+		$list	= [];
 		foreach( $themes as $theme )
 			$list[$theme->id]	= $theme;
 		return $list;

@@ -1,9 +1,9 @@
 <?php
 class View_Helper_Work_Mission_Filter{
 
-	protected $defaultFilterValues	= array();
+	protected $defaultFilterValues	= [];
 	protected $words;
-	protected $modals	= array();
+	protected $modals	= [];
 
 	public function __construct( $env, $defaultFilterValues, $words ){
 		$this->env	= $env;
@@ -89,7 +89,7 @@ class View_Helper_Work_Mission_Filter{
 
 	public function renderViewTypeSwitch( $mode ){
 		$caret	= UI_HTML_Tag::create( 'span', '', array( 'class' => 'caret' ) );
-		$items	= array();
+		$items	= [];
 
 		$wordsViewTypes	= (object) $this->words['viewTypes'];
 
@@ -134,7 +134,7 @@ class View_Helper_Work_Mission_Filter{
 		if( !in_array( $mode, array( 'archive', 'now', 'future' ) ) )
 			return "";
 		$caret	= UI_HTML_Tag::create( 'span', '', array( 'class' => 'caret' ) );
-		$items	= array();
+		$items	= [];
 
 		$wordsViewTypes	= (object) $this->words['modeTypes'];
 

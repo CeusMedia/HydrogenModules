@@ -1,8 +1,8 @@
 <?php
 class View_Helper_Work_Mission_Dashboard_MyTasks extends CMF_Hydrogen_View_Helper_Abstract{
 
-	protected $projects		= array();
-	protected $tasks		= array();
+	protected $projects		= [];
+	protected $tasks		= [];
 	protected $rowStyles	= array(
 		33 => 'warning',
 		66 => 'error',
@@ -25,7 +25,7 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends CMF_Hydrogen_View_Helpe
 		$count				= count( $this->tasks );
 		$tasks				= array_slice( $this->tasks, 0, $showLimit );
 		if( $this->tasks ){
-			$rows	= array();
+			$rows	= [];
 			foreach( $tasks as $task ){
 				$project			= $this->projects[$task->projectId];
 				$daysLeft			= ( strtotime( $task->dayEnd ) - strtotime( date( 'Y-m-d' ) ) ) / ( 24 * 3600 );

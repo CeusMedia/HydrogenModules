@@ -58,8 +58,8 @@ class Job_Job_Schedule extends Job_Abstract
 		$identifierParam	= $this->parameters->get( '--identifier', '*' );
 		$identifierParam	= preg_replace( '/\s/', '', $identifierParam );
 		if( $identifierParam !== '*' ){
-			$jobDefinitionIds	= array();
-			$jobDefinitionMap	= array();
+			$jobDefinitionIds	= [];
+			$jobDefinitionMap	= [];
 			foreach( $this->logic->getDefinitions() as $definition )
 				$jobDefinitionMap[$definition->identifier]	= $definition->jobDefinitionId;
 			foreach( explode( ',', $identifierParam ) as $identifier ){
@@ -74,7 +74,7 @@ class Job_Job_Schedule extends Job_Abstract
 		$statusParam	= strtoupper( $this->parameters->get( '--status', 'done,success' ) );
 		$statusParam	= preg_replace( '/\s/', '', $statusParam );
 		if( $statusParam !== '*' ){
-			$statuses	= array();
+			$statuses	= [];
 			$statusMap	= Alg_Object_Constant::staticGetAll( 'Model_Job_Run', 'STATUS_' );
 			foreach( explode( ',', $statusParam ) as $statusKey ){
 				if( !array_key_exists( $statusKey, $statusMap ) )
@@ -154,8 +154,8 @@ class Job_Job_Schedule extends Job_Abstract
 		$identifierParam	= $this->parameters->get( '--identifier', '*' );
 		$identifierParam	= preg_replace( '/\s/', '', $identifierParam );
 		if( $identifierParam !== '*' ){
-			$jobDefinitionIds	= array();
-			$jobDefinitionMap	= array();
+			$jobDefinitionIds	= [];
+			$jobDefinitionMap	= [];
 			foreach( $this->logic->getDefinitions() as $definition )
 				$jobDefinitionMap[$definition->identifier]	= $definition->jobDefinitionId;
 			foreach( explode( ',', $identifierParam ) as $identifier ){
@@ -170,7 +170,7 @@ class Job_Job_Schedule extends Job_Abstract
 		$statusParam	= strtoupper( $this->parameters->get( '--status', 'done,success' ) );
 		$statusParam	= preg_replace( '/\s/', '', $statusParam );
 		if( $statusParam !== '*' ){
-			$statuses	= array();
+			$statuses	= [];
 			$statusMap	= Alg_Object_Constant::staticGetAll( 'Model_Job_Run', 'STATUS_' );
 			foreach( explode( ',', $statusParam ) as $statusKey ){
 				if( !array_key_exists( $statusKey, $statusMap ) )
@@ -212,8 +212,8 @@ class Job_Job_Schedule extends Job_Abstract
 		foreach( $preparedJobs as $preparedJobRun ){
 			try{
 				$args					= $preparedJobRun->arguments;
-				$commands				= array();
-				$parameters				= array();
+				$commands				= [];
+				$parameters				= [];
 				$fallBackOnEmptyPair	= FALSE;
 				if( strlen( trim( $preparedJobRun->arguments ) ) ){
 					$args	= preg_split( '/ +/', trim( $preparedJobRun->arguments ) );

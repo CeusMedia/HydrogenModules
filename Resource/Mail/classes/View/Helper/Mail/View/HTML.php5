@@ -27,7 +27,7 @@ class View_Helper_Mail_View_HTML
 		$message	= $this->mailObject->mail;
 
 		$html	= '';
-		$images	= array();
+		$images	= [];
 		if( $usedLibrary == Logic_Mail::LIBRARY_COMMON ){										//  mail uses library CeusMedia/Common
 			if( $part->getMimeType() === "text/html" ){
 				$html	= $part->getContent();

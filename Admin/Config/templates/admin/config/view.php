@@ -21,7 +21,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconRestore	= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-backward' ) );
 }
 
-$rows	= array();
+$rows	= [];
 foreach( $module->config as $item ){
 	$isNumeric		= in_array( $item->type, array( "integer", "float" ) ) || preg_match( "/^[0-9\.]+$/", $item->value );
 	if( preg_match( '/password/', $item->key ) )

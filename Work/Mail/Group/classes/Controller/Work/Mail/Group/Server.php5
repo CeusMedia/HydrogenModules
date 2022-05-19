@@ -60,9 +60,9 @@ class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller
 
 	public function index()
 	{
-		$indices	= array();
+		$indices	= [];
 		$orders		= array( 'title' => 'ASC' );
-		$limits		= array();
+		$limits		= [];
 		$servers	= $this->modelServer->getAll( $indices, $orders,$limits );
 		$this->addData( 'servers', $servers );
 	}

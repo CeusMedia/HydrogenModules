@@ -3,7 +3,7 @@ class View_Helper_Blog{
 
 	static public function formatBlogLinks( CMF_Hydrogen_Environment $env, $content ){
 		$baseUri	= $env->getConfig()->get( 'app.base.url' );
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[blog:([0-9]+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$model		= new Model_Article( $env );
@@ -43,7 +43,7 @@ class View_Helper_Blog{
 	static public function formatImages( CMF_Hydrogen_Environment $env, $content ){
 		$config		= $env->getConfig();
 		$path		= $config->get( 'path.images' ).$config->get( 'module.blog_compact.path.images' );
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[image:(\S+)(\|(.*))?\]\r?\n/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$title		= trim( $matches[3][$i] );
@@ -67,7 +67,7 @@ class View_Helper_Blog{
 	}
 
 	static public function formatIFrames( CMF_Hydrogen_Environment $env, $content ){
-		$matches	= array();
+		$matches	= [];
 		preg_match_all( '/\[iframe:(\S+)\]\r?\n/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$uri		= $matches[1][$i];
@@ -112,7 +112,7 @@ class View_Helper_Blog{
 	}
 
 	static public function renderLatestArticles( CMF_Hydrogen_Environment $env, $limit, $offset = 0 ){
-		$list		= array();
+		$list		= [];
 		$model		= new Model_Article( $env );
 		$conditions	= array( 'status' => 1, 'createdAt' => '<= '.time() );
 		$latest		= $model->getAll( $conditions, array( 'createdAt' => 'DESC' ), array( $offset, $limit ) );
@@ -152,7 +152,7 @@ class View_Helper_Blog{
 			ORDER BY nr DESC
 			LIMIT '.$offset.', '.$limit;
 		$tags	= $env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
-		$list	= array();
+		$list	= [];
 		foreach( $tags as $relation ){
 			$nr		= UI_HTML_Tag::create( 'span', $relation->nr, array( 'class' => 'badge badge-info pull-right not-number-indicator' ) );
 			$link	= self::renderTagLink( $env, $relation->title );
@@ -183,7 +183,7 @@ class View_Helper_Blog{
 			ORDER BY nr ASC
 			LIMIT '.$offset.', '.$limit;
 		$tags	= $env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
-		$list	= array();
+		$list	= [];
 		foreach( $tags as $relation ){
 			$nr		= UI_HTML_Tag::create( 'span', $relation->nr, array( 'class' => 'badge badge-info pull-right not-number-indicator' ) );
 			$link	= self::renderTagLink( $env, $relation->title );

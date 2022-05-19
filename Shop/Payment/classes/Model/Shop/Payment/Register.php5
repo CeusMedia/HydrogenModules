@@ -1,7 +1,7 @@
 <?php
 class Model_Shop_Payment_Register
 {
-	protected $backends	= array();
+	protected $backends	= [];
 
 	public function add( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL )
 	{

@@ -1,6 +1,6 @@
 <?php
 //  --  FILTER  --  //
-function numerizeWords( $words, $numbers = array() ){
+function numerizeWords( $words, $numbers = [] ){
 	foreach( $words as $key => $label ){
 		if( !strlen( $key ) ){
 			$number	= ' ('.array_sum( $numbers ).')';
@@ -31,7 +31,7 @@ foreach( $words['indexFilterOrders'] as $column => $label )
 	$optOrder[$column]	= $label;
 $optOrder['_selected']	= $order;
 
-$optDirection	= array();
+$optDirection	= [];
 foreach( $words['indexFilterDirections'] as $key => $label ){
 	$selected	= $key == $direction;
 	$class		= 'direction direction'.$key;
@@ -52,7 +52,7 @@ $optStatus		= $view->renderOptions( $words['states'], 'status', $session->get( '
 $optRelation	= array( '' => 'in einem meiner Projekte', '1' => 'von mir berichtet', '2' => 'mir zugewiesen' );
 $optRelation	= UI_HTML_Elements::Options( $optRelation, $session->get( 'filter-issue-relation' ) );
 
-$filters		= array();
+$filters		= [];
 
 $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span8',
@@ -77,7 +77,7 @@ $filters[]	= HTML::DivClass( 'row-fluid',
 	)
 );
 if( !empty( $projects ) ){
-	$optProject	= array();
+	$optProject	= [];
 	foreach( $projects as $project )
 //		if( $numberProjects[$project->projectId] > 0 )
 			$optProject[$project->projectId]	= $project->title;

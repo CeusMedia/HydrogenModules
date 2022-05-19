@@ -4,7 +4,7 @@ class View_Helper_Module extends CMF_Hydrogen_View_Helper_Abstract{
 	public function __construct( $env ){
 		$this->setEnv( $env );
 		$this->logic	= Logic_Module::getInstance( $env );
-		$this->modules	= array();
+		$this->modules	= [];
 		foreach( $this->logic->model->getAll() as $module )
 			$this->modules[$module->id]	= $module;
 	}

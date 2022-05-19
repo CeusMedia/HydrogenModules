@@ -1,19 +1,13 @@
 <?php
-class Controller_Manage_Company extends CMF_Hydrogen_Controller{
-
+class Controller_Manage_Company extends CMF_Hydrogen_Controller
+{
 	protected $frontend;
 	protected $messenger;
 	protected $modelCompany;
 	protected $request;
 
-	public function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->messenger		= $this->env->getMessenger();
-		$this->frontend			= Logic_Frontend::getInstance( $this->env );
-		$this->modelCompany		= new Model_Company( $this->env );
-	}
-
-	public function activate( $companyId ){
+	public function activate( $companyId )
+	{
 		$company	= $this->checkCompany( $companyId );
 		$this->modelCompany->edit( $companyId, array(
 			'status'		=> 2,
@@ -23,7 +17,8 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/company' );
 	}
 
-	public function add(){
+	public function add()
+	{
 		$words		= (object) $this->getWords( 'add' );
 		$data		= $this->request->getAllFromSource( 'POST' );
 
@@ -54,17 +49,8 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller{
 		$this->view->addData( 'company', $data );
 	}
 
-	protected function checkCompany( $companyId ){
-		$words		= (object) $this->getWords( 'msg' );
-		$company	= $this->modelCompany->get( $companyId );
-		if( !$company ){
-			$this->messenger->noteFailure( $words->errorCompanyInvalid );
-			$this->restart( NULL, TRUE );
-		}
-		return $company;
-	}
-
-	public function deactivate( $companyId ){
+	public function deactivate( $companyId )
+	{
 		$company	= $this->checkCompany( $companyId );
 		$this->modelCompany->edit( $companyId, array(
 			'status'	=> -2,
@@ -74,7 +60,8 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/company' );
 	}
 
-	public function edit( $companyId ){
+	public function edit( $companyId )
+	{
 		$title			= $this->request->get( 'title' );
 		$words			= (object) $this->getWords( 'edit' );
 		$modelUser		= new Model_User( $this->env );
@@ -101,11 +88,11 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller{
 			}
 		}
 		$company		= $this->modelCompany->get( $companyId );
-		$branches		= array();
+		$branches		= [];
 		$modelBranch	= new Model_Branch( $this->env );
 		$branches		= $modelBranch->getAllByIndex( 'companyId', $companyId, array( 'title' => 'ASC' ) );
 		$company->branches	= $branches;
-		$users		= array();
+		$users		= [];
 		if( in_array( 'companyId', $modelUser->getColumns() ) )
 			$users	= $modelUser->getAllByIndex( 'companyId', $companyId );
 		$company->users		= $users;
@@ -113,16 +100,19 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller{
 		$this->view->addData( 'frontend', $this->frontend );
 	}
 
-	public function filter(){
+	public function filter()
+	{
 		$this->messenger->noteSuccess( "Companies have been filtered." );
 		$this->restart( './manage/company' );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$this->addData( 'companies', $this->modelCompany->getAll() );
 	}
 
-	public function reject( $companyId ){
+	public function reject( $companyId )
+	{
 		$company	= $this->checkCompany( $companyId );
 		$this->modelCompany->edit( $companyId, array(
 			'status'	=> -1,
@@ -132,7 +122,8 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/company' );
 	}
 
-	public function remove( $companyId ){
+	public function remove( $companyId )
+	{
 		$company	= $this->checkCompany( $companyId );
 		$this->env->getCaptain()->callHook( 'Company', 'remove', $this, array(
 			'companyId' => $companyId
@@ -146,7 +137,8 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller{
 		$this->restart( './manage/company' );
 	}
 
-	public function uploadLogo( $companyId ){
+	public function uploadLogo( $companyId )
+	{
 		$company	= $this->checkCompany( $companyId );
 		$image		= $this->request->get( 'image' );
 		try{
@@ -185,5 +177,23 @@ class Controller_Manage_Company extends CMF_Hydrogen_Controller{
 		}
 		$this->restart( 'edit/'.$companyId, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->messenger		= $this->env->getMessenger();
+		$this->frontend			= Logic_Frontend::getInstance( $this->env );
+		$this->modelCompany		= new Model_Company( $this->env );
+	}
+
+	protected function checkCompany( $companyId )
+	{
+		$words		= (object) $this->getWords( 'msg' );
+		$company	= $this->modelCompany->get( $companyId );
+		if( !$company ){
+			$this->messenger->noteFailure( $words->errorCompanyInvalid );
+			$this->restart( NULL, TRUE );
+		}
+		return $company;
+	}
 }
-?>

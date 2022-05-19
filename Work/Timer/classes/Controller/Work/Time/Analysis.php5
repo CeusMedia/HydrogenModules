@@ -36,14 +36,14 @@ class Controller_Work_Time_Analysis extends CMF_Hydrogen_Controller
 			$this->session->set( $this->filterPrefix.'userId', $this->request->get( 'userId' ) );
 
 		if( $this->request->has( 'projectIds' ) ){
-			$projectIds	= array();
+			$projectIds	= [];
 			foreach( $this->request->get( 'projectIds' ) as $projectId )
 				if( $projectId )
 					$projectIds[]	= $projectId;
 			$this->session->set( $this->filterPrefix.'projectIds', $projectIds );
 		}
 		if( $this->request->has( 'userIds' ) ){
-			$userIds	= array();
+			$userIds	= [];
 			foreach( $this->request->get( 'userIds' ) as $userId )
 				if( $userId )
 					$userIds[]	= $userId;
@@ -65,9 +65,9 @@ class Controller_Work_Time_Analysis extends CMF_Hydrogen_Controller
 		$filterMonth		= $this->session->get( $this->filterPrefix.'month' );
 		$filterWeek			= $this->session->get( $this->filterPrefix.'week' );
 
-		$data		= array();
-		$users		= array();
-		$projects	= array();
+		$data		= [];
+		$users		= [];
+		$projects	= [];
 
 		$userMap		= Logic_Authentication::getInstance( $this->env )->getRelatedUsers( $this->userId );
 

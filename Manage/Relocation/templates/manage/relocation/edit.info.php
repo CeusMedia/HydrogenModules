@@ -1,7 +1,7 @@
 <?php
 $w			= (object) $words['edit-info'];
 
-$links		= array();
+$links		= [];
 
 $linkTarget		= UI_HTML_Tag::create( 'a', $w->labelLinkTarget, array(
 	'href'		=> $relocation->url,
