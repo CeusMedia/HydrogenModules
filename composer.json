@@ -19,14 +19,14 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "ceus-media/common": "^0.8 | dev-master",
-        "ceus-media/hydrogen-framework": "^0.8 | dev-0.8.x | dev-namespaces | dev-master"
+        "ceus-media/common": "^0.9 | ^0.9@dev | ^0.8 | dev-master",
+        "ceus-media/hydrogen-framework": "^0.9 | ^0.8 | 0.9.x | 0.8.x | dev-master"
     },
     "require-dev": {
-        "ceus-media/bootstrap": "dev-master",
-        "ceus-media/markdown": "dev-master",
-        "ceus-media/hydrogen-source-indexer": "dev-main",
-        "phpunit/phpunit": "^8.5@dev",
+        "ceus-media/bootstrap": "*",
+        "ceus-media/markdown": "*",
+        "ceus-media/hydrogen-source-indexer": "* | dev-main",
+        "phpunit/phpunit": "^9.5",
         "phpstan/phpstan": "*",
         "phpstan/phpstan-strict-rules": "*",
         "squizlabs/php_codesniffer": "^3.0@dev",
