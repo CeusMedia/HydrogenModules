@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Admin_Mail_Template_Import extends CMF_Hydrogen_Controller
+class Controller_Admin_Mail_Template_Import extends Controller
 {
 	protected $messenger;
 	protected $request;

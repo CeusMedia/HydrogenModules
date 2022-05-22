@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Shop_Bridge extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Shop_Bridge extends Controller
 {
 	protected $bridges	= [];
 	protected $logicBridge;

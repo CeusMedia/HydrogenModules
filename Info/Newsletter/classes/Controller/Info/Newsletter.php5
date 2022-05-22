@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Info_Newsletter extends CMF_Hydrogen_Controller
+class Controller_Info_Newsletter extends Controller
 {
 	/**	@var	Logic_Newsletter	$logic */
 	protected $logic;

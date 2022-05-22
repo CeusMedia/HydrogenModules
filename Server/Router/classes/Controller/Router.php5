@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Router extends CMF_Hydrogen_Controller{
+class Controller_Router extends Controller{
 
 	static protected function getRouteXmlFilePath(){
 		return 'config/routes.xml';												//  @todo get config path from app base config (config.ini)

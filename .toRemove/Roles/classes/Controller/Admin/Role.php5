@@ -7,6 +7,9 @@
  *	@copyright		2010-2012 Ceus Media
  *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Role Controller.
  *	@category		cmFrameworks.Hydrogen.Module
@@ -16,7 +19,7 @@
  *	@copyright		2010-2012 Ceus Media
  *	@version		$Id$
  */
-class Controller_Admin_Role extends CMF_Hydrogen_Controller {
+class Controller_Admin_Role extends Controller{
 
 	public function add() {
 		$words	= $this->env->getLanguage()->getWords( 'admin/role' );

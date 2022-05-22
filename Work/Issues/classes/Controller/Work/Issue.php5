@@ -2,10 +2,13 @@
 /**
  *	@todo		Code Doc
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	@todo		Code Doc
  */
-class Controller_Work_Issue extends CMF_Hydrogen_Controller
+class Controller_Work_Issue extends Controller
 {
 	protected $filters	= array(
 		'issueId',

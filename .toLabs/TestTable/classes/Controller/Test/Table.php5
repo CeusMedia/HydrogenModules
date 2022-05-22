@@ -1,5 +1,8 @@
 <?php
-class Controller_Test_Table extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Test_Table extends Controller
 {
 	public function add()
 	{

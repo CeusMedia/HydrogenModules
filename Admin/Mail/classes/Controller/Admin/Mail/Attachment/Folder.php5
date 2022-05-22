@@ -1,8 +1,11 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Controller;
+
 use FS_Folder_Lister as FolderIndex;
 use FS_Folder_RecursiveLister as RecursiveFolderIndex;
 
-class Controller_Admin_Mail_Attachment_Folder extends CMF_Hydrogen_Controller
+class Controller_Admin_Mail_Attachment_Folder extends Controller
 {
 	protected $model;
 	protected $basePath;

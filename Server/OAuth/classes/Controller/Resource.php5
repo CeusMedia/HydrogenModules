@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Resource extends CMF_Hydrogen_Controller
+class Controller_Resource extends Controller
 {
 	public function __construct( Environment $env, $setupView = TRUE )
 	{

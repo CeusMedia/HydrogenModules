@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Hook_Tracker_Google_TagManager extends CMF_Hydrogen_Controller{
+class Hook_Tracker_Google_TagManager extends Controller{
 
 	/**
 	 *	Extends response page by Google Tag Manager invokation.

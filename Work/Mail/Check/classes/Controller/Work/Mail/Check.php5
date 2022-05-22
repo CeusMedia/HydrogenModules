@@ -1,5 +1,8 @@
 <?php
-class Controller_Work_Mail_Check extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Mail_Check extends Controller
 {
 	protected $messenger;
 	protected $modelAddress;

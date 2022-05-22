@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Admin_Mail_Template_Export extends CMF_Hydrogen_Controller
+class Controller_Admin_Mail_Template_Export extends Controller
 {
 	protected $messenger;
 	protected $modelTemplate;
@@ -10,7 +11,7 @@ class Controller_Admin_Mail_Template_Export extends CMF_Hydrogen_Controller
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Application Environment Object
+	 *	@param		Environment	$env			Application Environment Object
 	 *	@return		void
 	 */
     public function __construct( Environment $env )

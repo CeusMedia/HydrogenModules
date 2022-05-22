@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Provision_Rest extends CMF_Hydrogen_Controller{
+class Controller_Provision_Rest extends Controller{
 
 	protected $logic;
 

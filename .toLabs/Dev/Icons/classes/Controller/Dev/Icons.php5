@@ -1,5 +1,8 @@
 <?php
-class Controller_Dev_Icons extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Dev_Icons extends Controller{
 	public function index(){}
 }
 ?>

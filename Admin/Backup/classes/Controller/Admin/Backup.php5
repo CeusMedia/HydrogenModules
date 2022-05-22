@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Backup extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Backup extends Controller
 {
 	protected $moduleConfig;
 	protected $path;

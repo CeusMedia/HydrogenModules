@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Catalog_Provision_Product extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Catalog_Provision_Product extends Controller{
 
 	protected function __onInit(){
 		$this->logicProvision		= Logic_Catalog_Provision::getInstance( $this->env );

@@ -1,5 +1,8 @@
 <?php
-class Controller_Ajax_Auth_Json extends CMF_Hydrogen_Controller_Ajax
+
+use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
+
+class Controller_Ajax_Auth_Json extends AjaxController
 {
 	public function usernameExists()
 	{

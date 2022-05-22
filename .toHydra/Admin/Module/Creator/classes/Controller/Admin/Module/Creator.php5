@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Module_Creator extends CMF_Hydrogen_Controller{								//  @todo	1) inherit from View_Admin_Module after cleanup
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Module_Creator extends Controller{								//  @todo	1) inherit from View_Admin_Module after cleanup
 
 	/**	@var	Logic_Module									$logic		Module logic instance */
 	protected $logic;

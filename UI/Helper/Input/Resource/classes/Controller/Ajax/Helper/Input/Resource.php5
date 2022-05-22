@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Ajax_Helper_Input_Resource extends CMF_Hydrogen_Controller_Ajax
+class Controller_Ajax_Helper_Input_Resource extends AjaxController
 {
 	protected $extensions	= array(
 		'image'	=> array( 'png', 'gif', 'jpg', 'jpeg', 'jpe', 'svg' ),

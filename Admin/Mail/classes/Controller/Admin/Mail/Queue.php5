@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Mail_Queue extends Controller
 {
 	protected $request;
 	protected $session;

@@ -1,5 +1,8 @@
 <?php
-abstract class Controller_Manage_My_Mangopay_Abstract extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+abstract class Controller_Manage_My_Mangopay_Abstract extends Controller{
 
 	protected $request;
 	protected $mangopay;

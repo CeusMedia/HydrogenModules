@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Server_Log extends CMF_Hydrogen_Controller{
+class Controller_Server_Log extends Controller{
 
 	static public function ___onEnvLog( Environment $env, $context, $module, $data ){
 		$options	= $env->getConfig()->getAll( 'module.server_log.', TRUE );

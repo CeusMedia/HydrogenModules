@@ -1,5 +1,8 @@
 <?php
-class Controller_Work_Uberlog extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Uberlog extends Controller
 {
 	/**	@var	Model_Log		$model		Instance of log record model */
 	protected $model;

@@ -1,5 +1,8 @@
 <?php
-class Controller_File extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_File extends Controller
 {
 	public function clean()
 	{

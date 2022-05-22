@@ -6,6 +6,9 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2019 Ceus Media {@link https://ceusmedia.de/}
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Server Log Exception Controller.
  *	@category		CeusMedia.Hydrogen.Module
@@ -14,7 +17,7 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2019 Ceus Media {@link https://ceusmedia.de/}
  */
-class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
+class Controller_Server_Log_Exception extends Controller{
 
 	protected $model;
 	protected $logic;

@@ -1,5 +1,8 @@
 <?php
-class Controller_Ajax_Admin_Mail_Template extends CMF_Hydrogen_Controller_Ajax
+
+use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
+
+class Controller_Ajax_Admin_Mail_Template extends AjxController
 {
 	protected function __onInit()
 	{

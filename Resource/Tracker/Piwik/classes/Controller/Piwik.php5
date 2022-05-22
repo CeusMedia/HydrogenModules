@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Piwik extends CMF_Hydrogen_Controller{
+class Controller_Piwik extends Controller{
 
 	/**
 	 *	Loads connector to local Piwik installation for PHP side tracking, if enabled and available.

@@ -1,5 +1,8 @@
 <?php
-class Controller_Ajax_Info_Event extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Ajax_Info_Event extends Controller
 {
 	protected function __onInit()
 	{

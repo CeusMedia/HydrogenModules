@@ -1,5 +1,8 @@
 <?php
-class Controller_Tool_Index extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Tool_Index extends Controller{
 
 	/**
 	*      Constructor.
@@ -26,6 +29,3 @@ class Controller_Tool_Index extends CMF_Hydrogen_Controller{
 	}
 }
 ?>
-
-
-

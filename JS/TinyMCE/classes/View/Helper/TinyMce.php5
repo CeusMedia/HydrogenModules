@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 
@@ -19,10 +20,10 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment_Web	$env
+	 *	@param		WebEnvironment	$env
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment_Web $env ){
+	public function __construct( WebEnvironment $env ){
 		$this->setEnv( $env );
 		$this->config		= $this->env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 		$this->pathFront	= $this->config->get( 'path' );

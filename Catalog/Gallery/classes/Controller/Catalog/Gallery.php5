@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller
+class Controller_Catalog_Gallery extends Controller
 {
 	/**	@var	Logic_ShopBridge				$bridge */
 	protected $bridge;

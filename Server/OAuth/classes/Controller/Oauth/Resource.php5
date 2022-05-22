@@ -5,6 +5,7 @@
  *	@copyright		2014 Ceus Media
  */
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -14,7 +15,7 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@todo			finish implementation
  *	@todo			code doc
  */
-class Controller_Oauth_Resource extends CMF_Hydrogen_Controller
+class Controller_Oauth_Resource extends Controller
 {
 	static protected $resources	= [];
 

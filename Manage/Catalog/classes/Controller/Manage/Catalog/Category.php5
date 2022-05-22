@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
+class Controller_Manage_Catalog_Category extends Controller{
 
 	protected function __onInit(){
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init start' );

@@ -5,6 +5,9 @@
  *	@copyright		2011-2014 Ceus Media
  *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Content Controller.
  *	@extends		CMF_Hydrogen_Controller
@@ -12,7 +15,7 @@
  *	@copyright		2011-2014 Ceus Media
  *	@version		$Id$
  */
-class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
+class Controller_Manage_Content_Locale extends Controller{
 
 	protected $frontend;
 	protected $languages	= [];

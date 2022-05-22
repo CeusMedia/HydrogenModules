@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Payment_Mangopay_Hook extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Payment_Mangopay_Hook extends Controller
 {
 	public static $verbose	= TRUE;
 

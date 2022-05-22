@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage extends Controller{
 
 	public function index(){
 		$config		= $this->env->getConfig();

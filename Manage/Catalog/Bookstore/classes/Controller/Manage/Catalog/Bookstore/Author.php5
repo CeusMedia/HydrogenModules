@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Manage_Catalog_Bookstore_Author extends CMF_Hydrogen_Controller{
+class Controller_Manage_Catalog_Bookstore_Author extends Controller{
 
 	protected $frontend;
 	protected $logic;

@@ -5,6 +5,9 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Controller for OAuth server.
  *
@@ -14,7 +17,7 @@
  *	@todo			todos within code
  *	@todo			add response headers: "Cache-Control: no-store", "Pragma: no-cache"
  */
-class Controller_Oauth extends CMF_Hydrogen_Controller
+class Controller_Oauth extends Controller
 {
 	/**	@var		Net_HTTP_Request_Receiver	$request */
 	protected $request;

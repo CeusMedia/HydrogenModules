@@ -8,6 +8,7 @@
  *	@version		$Id: Syslog.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -19,7 +20,7 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Syslog.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
-class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
+class Controller_Admin_Log_Exception extends Controller{
 
 	/**	@var		Environment		$env		Environment instance */
 	protected $env;

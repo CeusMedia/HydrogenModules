@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller
+class Controller_Manage_Content_Image extends Controller
 {
 	protected $basePath;
 	protected $baseUri;

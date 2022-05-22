@@ -4,13 +4,16 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
  *	@version		$Id$
  */
-class Controller_Oauth_Application extends CMF_Hydrogen_Controller
+class Controller_Oauth_Application extends Controller
 {
 	/**	@var		Model_Oauth_Application		$model		Application storage model */
 	protected $model;

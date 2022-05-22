@@ -1,5 +1,8 @@
 <?php
-class Controller_Info_Manual extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Info_Manual extends Controller
 {
 	protected $path;
 	protected $request;

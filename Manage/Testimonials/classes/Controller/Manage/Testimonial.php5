@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Testimonial extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Testimonial extends Controller{
 
 	protected $model;
 	protected $messenger;

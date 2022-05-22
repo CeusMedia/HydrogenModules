@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Index extends CMF_Hydrogen_Controller{
+class Controller_Index extends Controller{
 
 	/**	@var	Tool_Hydrogen_Setup_Environment		$env		Environment object */
 	protected $env;

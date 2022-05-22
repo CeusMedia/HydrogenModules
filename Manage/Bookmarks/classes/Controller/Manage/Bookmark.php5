@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller
+class Controller_Manage_Bookmark extends Controller
 {
 	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
 	{

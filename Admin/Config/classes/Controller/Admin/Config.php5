@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Config extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Config extends Controller
 {
 /*	public function direct()
 	{

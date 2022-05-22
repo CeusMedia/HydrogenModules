@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Gallery extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Gallery extends Controller{
 
 	protected function __onInit(){
 		$this->modelGallery	= new Model_Gallery( $this->env );

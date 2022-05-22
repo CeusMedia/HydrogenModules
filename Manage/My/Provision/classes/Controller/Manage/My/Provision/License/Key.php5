@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_My_Provision_License_Key extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_My_Provision_License_Key extends Controller{
 
 	protected $filterPrefix		= 'filter_manage_my_provision_license_key_';
 	protected $request;

@@ -1,5 +1,8 @@
 <?php
-class Controller_Work_Finance_Bank extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Finance_Bank extends Controller
 {
 	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger		Shortcut to messenger object */
 	protected $messenger;

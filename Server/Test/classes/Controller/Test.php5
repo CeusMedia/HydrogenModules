@@ -7,6 +7,9 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Test.php 3004 2012-06-25 23:22:02Z christian.wuerker $
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Controller to test server classes.
  *	@category		cmApps
@@ -16,7 +19,7 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Test.php 3004 2012-06-25 23:22:02Z christian.wuerker $
  */
-class Controller_Test extends CMF_Hydrogen_Controller {
+class Controller_Test extends Controller{
 
 	/**
 	 *	Checks PHP file syntax and returns true if valid.

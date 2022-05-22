@@ -1,5 +1,8 @@
 <?php
-class Controller_Info_Blog extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Info_Blog extends Controller
 {
 	protected $modelCategory;
 	protected $modelComment;

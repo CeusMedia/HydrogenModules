@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controller{
+class Controller_Manage_Catalog_Bookstore_Category extends Controller{
 
 	public function ajaxGetNextRank( $categoryId ){
 		$nextRank			= 0;

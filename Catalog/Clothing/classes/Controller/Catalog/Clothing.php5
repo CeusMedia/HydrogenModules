@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Catalog_Clothing extends CMF_Hydrogen_Controller{
+class Controller_Catalog_Clothing extends Controller{
 
 	protected function __onInit(){
 	}
