@@ -1,5 +1,8 @@
 <?php
-class View_Work_Graph extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Work_Graph extends View{
 
 	public function index(){}
 	public function node(){}

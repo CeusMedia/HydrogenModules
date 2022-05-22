@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\View;
 use CeusMedia\Markdown\Renderer\Html as MarkdownToHtmlRenderer;
 
-class View_Info_Manual extends CMF_Hydrogen_View
+class View_Info_Manual extends View
 {
 	public function add()
 	{

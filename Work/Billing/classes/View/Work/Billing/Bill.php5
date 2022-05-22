@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Work_Billing_Bill extends CMF_Hydrogen_View
+class View_Work_Billing_Bill extends View
 {
 	public static function renderTabs( Environment $env, $billId, $current = 0 ): string
 	{

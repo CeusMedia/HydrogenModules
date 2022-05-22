@@ -1,9 +1,10 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 use CeusMedia\Markdown\Renderer\Html as MarkdownToHtmlRenderer;
 
-class View_Helper_Markdown extends CMF_Hydrogen_View
+class View_Helper_Markdown extends View
 {
 	protected $renderer;
 

@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Admin_Mail_Attachment extends CMF_Hydrogen_View
+class View_Admin_Mail_Attachment extends View
 {
 	public static function renderTabs( Environment $env, $current = 0 )
 	{

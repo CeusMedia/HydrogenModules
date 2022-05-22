@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_My_Provision_License extends CMF_Hydrogen_View
+class View_Manage_My_Provision_License extends View
 {
 	public function add(){}
 	public function assign(){}

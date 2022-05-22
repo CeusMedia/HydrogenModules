@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Work_Time extends CMF_Hydrogen_View
+class View_Work_Time extends View
 {
 /*	protected function __onInit(){
 		$this->modelTimer		= new Model_Work_Timer( $this->env );

@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class Hook_UI_Markdown extends CMF_Hydrogen_View
+class Hook_UI_Markdown extends View
 {
 	/**
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object

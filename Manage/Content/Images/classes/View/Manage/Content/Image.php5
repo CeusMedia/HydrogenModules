@@ -1,5 +1,8 @@
 <?php
-class View_Manage_Content_Image extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_Content_Image extends View
 {
 	protected $path;
 	protected $frontend;

@@ -1,5 +1,8 @@
 <?php
-class View_Manage_Catalog_Bookstore extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_Catalog_Bookstore extends View{
 
 	public function index(){}
 

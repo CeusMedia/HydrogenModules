@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
 class Hook_Info_Contact extends CMF_Hydrogen_Hook
 {
@@ -58,7 +59,7 @@ class Hook_Info_Contact extends CMF_Hydrogen_Hook
 						$replacement
 					);
 					if( $isFirst ){
-						$view		= new CMF_Hydrogen_View( $env );
+						$view		= new View( $env );
 						$blocks		= (object) array(
 							'success'	=> $view->loadContentFile( 'html/info/contact/form/success.html' ),
 							'error'		=> $view->loadContentFile( 'html/info/contact/form/error.html' ),

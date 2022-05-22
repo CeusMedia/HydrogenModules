@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Admin_Payment_Mangopay extends CMF_Hydrogen_View{
+class View_Admin_Payment_Mangopay extends View{
 
 	public static function ___onRegisterTab( Environment $env, $context, $module, $data ){
 		$words	= (object) $env->getLanguage()->getWords( 'admin/payment/mangopay' );				//  load words

@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_IP_Lock extends CMF_Hydrogen_View{
+class View_Manage_IP_Lock extends View{
 
 	public function add(){}
 

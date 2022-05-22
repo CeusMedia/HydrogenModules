@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Work_Mail_Group extends CMF_Hydrogen_View
+class View_Work_Mail_Group extends View
 {
 	public function add()
 	{

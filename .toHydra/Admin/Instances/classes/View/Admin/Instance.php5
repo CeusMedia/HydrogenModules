@@ -1,5 +1,8 @@
 <?php
-class View_Admin_Instance extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Admin_Instance extends View{
 
 	protected function __onInit(){
 //		$this->env->getPage()->addThemeStyle( 'module.admin.instances.css' );

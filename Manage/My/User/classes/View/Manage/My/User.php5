@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_My_User extends CMF_Hydrogen_View {
+class View_Manage_My_User extends View {
 
 	public function index(){}
 

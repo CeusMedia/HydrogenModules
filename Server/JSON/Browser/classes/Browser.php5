@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
 /**
  *	@todo		apply module config main switch
@@ -81,7 +82,7 @@ class Browser{
 			'url'			=> getEnv( 'REQUEST_URI' ),
 		);
 
-		$view	= new CMF_Hydrogen_View( $this->env );
+		$view	= new View( $this->env );
 		$view->setData( $data );
 		$body	= $view->loadTemplateFile( 'browser/index.php' );
 

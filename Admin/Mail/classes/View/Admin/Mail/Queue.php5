@@ -1,5 +1,8 @@
 <?php
-class View_Admin_Mail_Queue extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Admin_Mail_Queue extends View
 {
 	public function ajaxRenderDashboardPanel()
 	{

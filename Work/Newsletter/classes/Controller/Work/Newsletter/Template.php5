@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\View;
 
 class Controller_Work_Newsletter_Template extends Controller
 {
@@ -263,7 +264,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			$css	= \FS_File_Reader::load( $path.$theme->id.'/template.css' );
 			$html	= \FS_File_Reader::load( $path.$theme->id.'/template.html' );
 
-			$view		= new CMF_Hydrogen_View( $this->env );
+			$view		= new View( $this->env );
 			$imprint	= $view->loadContentFile( 'html/work/newsletter/template/imprint.txt' );
 			$imprint	= preg_replace( "/(https?:\/\/(([^\s]+))\/?)/", '<a href="\\1">\\2</a>', $imprint );
 			$imprint	= preg_replace( "/([^\s]+@[^\s]+)/", '<a href="mailto:\\1">\\1</a>', $imprint );

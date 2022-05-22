@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_Shop_Shipping extends CMF_Hydrogen_View
+class View_Manage_Shop_Shipping extends View
 {
 	public static function ___onRegisterTab( Environment $env, $context, $module, $data )
 	{

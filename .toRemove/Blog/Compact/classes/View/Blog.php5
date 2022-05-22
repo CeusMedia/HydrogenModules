@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Blog extends CMF_Hydrogen_View
+class View_Blog extends View
 {
 	public static function renderInfoList( $article, $date = TRUE, $time = TRUE )
 	{

@@ -5,8 +5,9 @@ use CeusMedia\Bootstrap\Button\Group as BootstrapButtonGroup;
 use CeusMedia\Bootstrap\Button\Link as BootstrapLinkButton;
 use CeusMedia\Bootstrap\Icon as BootstrapIcon;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Info_File extends CMF_Hydrogen_View
+class View_Info_File extends View
 {
 	public function index()
 	{

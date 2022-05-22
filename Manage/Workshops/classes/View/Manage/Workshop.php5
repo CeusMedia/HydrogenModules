@@ -1,5 +1,8 @@
 <?php
-class View_Manage_Workshop extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_Workshop extends View{
 
 	protected function __onInit(){
 	}

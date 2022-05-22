@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
 class View_Helper_ContextHelp
 {
@@ -17,7 +18,7 @@ class View_Helper_ContextHelp
 
 	static public function registerFile( Environment $env, $filePath ){
 		$filePath	= 'html/'.$filePath.'.html';
-		$view		= new CMF_Hydrogen_View( $env );
+		$view		= new View( $env );
 		if( $view->hasContentFile( $filePath ) ){
 			$list	= [];
 			$html	= $view->loadContentFile( $filePath );

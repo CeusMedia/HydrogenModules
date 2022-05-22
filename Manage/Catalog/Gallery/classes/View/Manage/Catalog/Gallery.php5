@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_Catalog_Gallery extends CMF_Hydrogen_View{
+class View_Manage_Catalog_Gallery extends View{
 
 	static public function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] ){
 		$frontend	= Logic_Frontend::getInstance( $env );

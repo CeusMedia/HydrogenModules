@@ -6,6 +6,9 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	User View.
  *	@category		cmFrameworks.Hydrogen.Module
@@ -14,7 +17,7 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
  */
-class View_Admin_User extends CMF_Hydrogen_View
+class View_Admin_User extends View
 {
 	public function add()
 	{

@@ -2,6 +2,7 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
 class Controller_Info_Newsletter extends Controller
 {
@@ -26,7 +27,7 @@ class Controller_Info_Newsletter extends Controller
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;
-		$view		= new CMF_Hydrogen_View( $env );
+		$view		= new View( $env );
 //		$modelOrder	= new Model_Shop_Order( $env );
 //		$order		= $modelOrder->get( $payload['orderId'] );
 

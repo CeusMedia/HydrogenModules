@@ -1,5 +1,8 @@
 <?php
-class View_Manage extends CMF_Hydrogen_View {
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage extends View{
 
 	public function index(){
 		return $this->loadContent( 'manage', 'index' );

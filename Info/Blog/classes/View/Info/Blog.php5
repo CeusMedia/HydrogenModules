@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-class View_Info_Blog extends CMF_Hydrogen_View
+class View_Info_Blog extends View
 {
 	public function index()
 	{
@@ -88,7 +89,7 @@ class View_Info_Blog extends CMF_Hydrogen_View
 			'content'	=> $post->abstract,
 			'type'		=> 'html',
 		);
-		$view		= new CMF_Hydrogen_View( $env );
+		$view		= new View( $env );
 		$words		= $view->getWords( 'index', 'info/blog' );
 		$env->getCaptain()->callHook( 'View', 'onRenderContent', $view, $payload );
 		$abstract	= $payload->content;

@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
 /**
  *	Authentication View.
@@ -10,7 +11,7 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Auth.php 1644 2010-11-03 20:39:04Z christian.wuerker $
  */
-class View_Auth extends CMF_Hydrogen_View
+class View_Auth extends View
 {
 	public function confirm()
 	{

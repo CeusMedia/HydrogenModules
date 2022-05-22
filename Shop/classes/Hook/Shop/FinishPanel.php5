@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
 class Hook_Shop_FinishPanel
 {
@@ -18,7 +19,7 @@ class Hook_Shop_FinishPanel
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;
-		$view		= new CMF_Hydrogen_View( $env );
+		$view		= new View( $env );
 //		$modelOrder	= new Model_Shop_Order( $env );
 //		$order		= $modelOrder->get( $payload['orderId'] );
 
