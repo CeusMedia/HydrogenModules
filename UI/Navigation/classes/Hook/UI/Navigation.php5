@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_UI_Navigation extends CMF_Hydrogen_Hook
 {
 	/**
@@ -11,7 +14,7 @@ class Hook_UI_Navigation extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function setupSidebar( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function setupSidebar( Environment $env, $context, $module, $payload )
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_navigation.', TRUE );
 		$desktopRendererClass = $moduleConfig->get( 'render.desktop.class' );

@@ -1,9 +1,12 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Auth_Rest extends CMF_Hydrogen_Hook
 {
 	protected static $configPrefix	= 'module.resource_authentication_backend_rest.';
 
-	public static function onAuthRegisterBackend( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onAuthRegisterBackend( Environment $env, $context, $module, $payload = [] )
 	{
 		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
@@ -11,7 +14,7 @@ class Hook_Auth_Rest extends CMF_Hydrogen_Hook
 		$context->registerBackend( 'Rest', 'rest', $words['backend']['title'] );
 	}
 
-	public static function onAuthRegisterLoginTab( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onAuthRegisterLoginTab( Environment $env, $context, $module, $payload = [] )
 	{
 		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
@@ -21,7 +24,7 @@ class Hook_Auth_Rest extends CMF_Hydrogen_Hook
 		$context->registerTab( 'auth/rest/login', $label, $rank );								//  register main tab
 	}
 
-/*	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+/*	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
 		$userId		= (int) $env->getSession()->get( 'auth_user_id' );							//  get ID of current user (or zero)
 		$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );

@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Info_Dashboard extends CMF_Hydrogen_Hook
 {
-	public static function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onListUserRelations( Environment $env, $context, $module, $payload = [] )
 	{
 		$data	= (object) $payload;
 		if( empty( $data->userId ) ){
@@ -36,7 +39,7 @@ class Hook_Info_Dashboard extends CMF_Hydrogen_Hook
 		);
 	}
 
-	public static function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onUserRemove( Environment $env, $context, $module, $payload = [] )
 	{
 		$data	= (object) $payload;
 		if( empty( $data->userId ) ){

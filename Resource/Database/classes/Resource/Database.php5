@@ -21,6 +21,9 @@
  *	@copyright		2011-2021 Christian Würker
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Database resource using PDO wrapper from cmClasses.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
@@ -49,7 +52,7 @@ class Resource_Database_Base extends \CeusMedia\Database\PDO\Connection
 
 	protected $status	= self::STATUS_UNKNOWN;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_database.', TRUE );
@@ -285,4 +288,3 @@ else{
 	}
 	class Resource_Database extends Resource_Database_PHP7 {}
 }
-

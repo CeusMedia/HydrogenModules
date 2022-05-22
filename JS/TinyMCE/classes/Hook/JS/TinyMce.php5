@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_JS_TinyMce extends CMF_Hydrogen_Hook{
 
 	/**
@@ -9,7 +12,7 @@ class Hook_JS_TinyMce extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
+	static public function onPageApplyModules( Environment $env, $context, $module, $data = [] ){
 		View_Helper_TinyMce::load( $env );
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 
@@ -156,7 +159,7 @@ class Hook_JS_TinyMce extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onGetAvailableContentEditor( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onGetAvailableContentEditor( Environment $env, $context, $module, $payload = [] ){
 		if( !empty( $payload->type ) && !in_array( $payload->type, array( 'wys' ) ) )
 			return;
 		if( !empty( $payload->format ) && !in_array( $payload->format, array( 'html' ) ) )

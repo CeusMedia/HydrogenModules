@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Pagination
 {
 	/**	@var		object		$env		... */
@@ -26,7 +29,7 @@ class View_Helper_Pagination
 	 *	@param		integer		$count		...
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env = NULL, $total = NULL, $limit = NULL, $page = NULL, $count = NULL )
+	public function __construct( Environment $env = NULL, $total = NULL, $limit = NULL, $page = NULL, $count = NULL )
 	{
 		$this->env		= $env;
 		$this->total	= $total;

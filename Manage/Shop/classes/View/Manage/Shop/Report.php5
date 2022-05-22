@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Manage_Shop_Report extends View_Manage_Shop{
 
-	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function ___onRegisterTab( Environment $env, $context, $module, $data ){
 		$words	= (object) $env->getLanguage()->getWords( 'manage/shop' );						//  load words
 		$context->registerTab( 'report', $words->tabs['reports'], 8 );									//  register report tab
 	}

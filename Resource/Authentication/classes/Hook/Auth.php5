@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Auth extends CMF_Hydrogen_Hook
 {
-	public static function onAppException( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onAppException( Environment $env, $context, $module, $payload = [] )
 	{
 		$payload	= (object) $payload;
 		if( !property_exists( $payload, 'exception' ) )
@@ -28,7 +31,7 @@ class Hook_Auth extends CMF_Hydrogen_Hook
 		return FALSE;
 	}
 
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
 		$session	= $env->getSession();
 		$userId		= (int) $session->get( 'auth_user_id' );										//  get ID of current user (or zero)
@@ -41,7 +44,7 @@ class Hook_Auth extends CMF_Hydrogen_Hook
 		}
 	}
 
-	public static function onEnvInitAcl( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onEnvInitAcl( Environment $env, $context, $module, $payload )
 	{
 		$payload	= (object) $payload;
 //		$payload->className	= 'CMF_Hydrogen_Environment_Resource_Acl_Database';

@@ -7,6 +7,9 @@
  *	@copyright		2013 Ceus Media
  *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	...
  *	@category		...
@@ -20,7 +23,7 @@ class Model_Document {
 
 	protected $path;
 
-	public function __construct( CMF_Hydrogen_Environment $env, $path ){
+	public function __construct( Environment $env, $path ){
 		$this->path	= $path;
 	}
 

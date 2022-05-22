@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	@todo	transform to real helper with render and setters
  */
@@ -10,7 +13,7 @@ class View_Helper_Newsletter
 
 	protected $preview		= FALSE;
 
-	public function __construct( CMF_Hydrogen_Environment $env, $templateId, $preview = FALSE )
+	public function __construct( Environment $env, $templateId, $preview = FALSE )
 	{
 		$this->env		= $env;
 		$this->preview	= $preview;

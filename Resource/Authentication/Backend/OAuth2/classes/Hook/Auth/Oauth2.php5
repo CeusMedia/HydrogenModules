@@ -1,9 +1,12 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Auth_Oauth2 extends CMF_Hydrogen_Hook
 {
 	protected static $configPrefix	= 'module.resource_authentication_backend_oauth2.';
 
-	public static function onAuthRegisterBackend( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onAuthRegisterBackend( Environment $env, $context, $module, $payload = [] )
 	{
 		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
@@ -11,7 +14,7 @@ class Hook_Auth_Oauth2 extends CMF_Hydrogen_Hook
 		$context->registerBackend( 'Oauth2', 'oauth2', $words['backend']['title'] );
 	}
 
-	public static function onAuthRegisterLoginTab( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onAuthRegisterLoginTab( Environment $env, $context, $module, $payload = [] )
 	{
 		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;

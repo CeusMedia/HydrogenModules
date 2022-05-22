@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Resource_Frontend extends CMF_Hydrogen_Hook{
 
 	/**
@@ -11,6 +14,6 @@ class Hook_Resource_Frontend extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] ){
 	}
 }

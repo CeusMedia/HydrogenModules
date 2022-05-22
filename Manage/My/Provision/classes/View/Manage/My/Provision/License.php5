@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Manage_My_Provision_License extends CMF_Hydrogen_View
 {
 	public function add(){}
@@ -6,7 +9,7 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View
 	public function index(){}
 	public function view(){}
 
-	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data )
+	public static function ___onRegisterTab( Environment $env, $context, $module, $data )
 	{
 		$logicAuth		= Logic_Authentication::getInstance( $env );
 		$logicProvision = Logic_User_Provision::getInstance( $env );
@@ -18,7 +21,7 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View
 		$context->registerTab( 'add', self::renderTabLabel( $env, 'add', 0, 'plus' ) );
 	}
 /*
-	public static function ___onMyUserRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function ___onMyUserRegisterTab( Environment $env, $context, $module, $data ){
 		$logicAuth		= Logic_Authentication::getInstance( $env );
 		$logicProvision = Logic_Accounting::getInstance( $env );
 		$nrLicenses	= count( $logicProvision->getUserLicensesFromUser( $logicAuth->getCurrentUserId() ) );
@@ -80,7 +83,7 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View
 //			return UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment $env, $current = 0 )
+	public static function renderTabs( Environment $env, $current = 0 )
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 
@@ -98,7 +101,7 @@ class View_Manage_My_Provision_License extends CMF_Hydrogen_View
 		$this->env->getPage()->addThemeStyle( 'module.manage.my.provision.css' );
 	}
 
-	protected static function renderTabLabel( CMF_Hydrogen_Environment $env, $labelKey, $count = 0, $icon = NULL )
+	protected static function renderTabLabel( Environment $env, $labelKey, $count = 0, $icon = NULL )
 	{
 		$words	= (object) $env->getLanguage()->getWords( 'manage/my/provision' );					//  load words
 		$label	= $words->tabs[$labelKey];

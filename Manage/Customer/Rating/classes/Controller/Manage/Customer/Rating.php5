@@ -1,11 +1,14 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Controller_Manage_Customer_Rating extends CMF_Hydrogen_Controller
 {
 	protected $messenger;
 	protected $modelCustomer;
 	protected $modelRating;
 
-	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context )
+	public static function ___onRegisterTab( Environment $env, $context )
 	{
 		View_Manage_Customer::registerTab( 'rating/%s', 'Bewertungen' );
 	}

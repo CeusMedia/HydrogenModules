@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Model_Config_Page
 {
 	protected $env;
@@ -27,7 +30,7 @@ class Model_Config_Page
 		2	=> 'module'
 	);
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->filePath	= $env->uri.'config/pages.json';

@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Model_Job
 {
 	const FORMAT_AUTO		= 0;
@@ -10,7 +13,7 @@ class Model_Job
 	protected $jobs			= [];
 	protected $format		= 0;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}

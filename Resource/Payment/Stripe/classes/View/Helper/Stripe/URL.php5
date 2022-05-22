@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Stripe_URL extends View_Helper_Stripe_Abstract
 {
 	protected $url;
@@ -7,7 +10,7 @@ class View_Helper_Stripe_URL extends View_Helper_Stripe_Abstract
 	protected $from					= TRUE;
 	protected $parameters			= [];
 
-	public static function renderStatic( CMF_Hydrogen_Environment $env, $url, $forwardTo = TRUE, $backwardTo = TRUE, $from = TRUE )
+	public static function renderStatic( Environment $env, $url, $forwardTo = TRUE, $backwardTo = TRUE, $from = TRUE )
 	{
 		$instance	= new self( $env );
 		$instance->set( $url );

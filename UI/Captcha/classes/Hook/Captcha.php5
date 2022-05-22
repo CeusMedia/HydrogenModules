@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Captcha extends CMF_Hydrogen_Hook
 {
-	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onViewRenderContent( Environment $env, $context, $module, $payload )
 	{
 		$config	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
 

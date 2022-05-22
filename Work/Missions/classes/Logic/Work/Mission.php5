@@ -5,6 +5,9 @@
  *	@package		Work.Missions
  *	@extends		CMF_Hydrogen_Logic
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Logic for missions.
  *	@category		Hydrogen.Module
@@ -50,7 +53,7 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 *	@return		object			Singleton instance of logic
 	 */
-	static public function getInstance( CMF_Hydrogen_Environment $env )
+	static public function getInstance( Environment $env )
 	{
 		if( !self::$instance )
 			self::$instance	= new self( $env );

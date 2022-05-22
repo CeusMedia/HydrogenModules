@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Resource_Database extends CMF_Hydrogen_Hook
 {
 	/**
@@ -11,7 +14,7 @@ class Hook_Resource_Database extends CMF_Hydrogen_Hook
 	 *	@param		object						$payload	Data object of payload data
 	 *	@return		void
 	 */
-	static public function onEnvInitDatabase( CMF_Hydrogen_Environment $env, $module, $context, $payload ){
+	static public function onEnvInitDatabase( Environment $env, $module, $context, $payload ){
 		$payload->managers['Module_Resource_Database']	= new Resource_Database( $env );
 	}
 }

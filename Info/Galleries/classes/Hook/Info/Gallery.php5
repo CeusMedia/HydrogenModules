@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Info_Gallery extends CMF_Hydrogen_Hook
 {
-	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onViewRenderContent( Environment $env, $context, $module, $payload )
 	{
 		if( !preg_match( "/(\[gallery:([0-9]+)\])|(\[galleries\])/sU", $payload->content ) )
 			return;

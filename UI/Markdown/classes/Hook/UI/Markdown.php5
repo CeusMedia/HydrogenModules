@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_UI_Markdown extends CMF_Hydrogen_View
 {
 	/**
@@ -9,7 +12,7 @@ class Hook_UI_Markdown extends CMF_Hydrogen_View
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onRenderContent( Environment $env, $context, $module, $payload )
 	{
 		$config	= $env->getConfig()->getAll( 'module.ui_markdown.', TRUE );			//  get module configuration
 		if( !$config->get( 'active' ) )												//  module is not active
@@ -32,7 +35,7 @@ class Hook_UI_Markdown extends CMF_Hydrogen_View
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
 	{
 		$config	= $env->getConfig()->getAll( 'module.ui_markdown.', TRUE );
 		if( !$config->get( 'active' ) )

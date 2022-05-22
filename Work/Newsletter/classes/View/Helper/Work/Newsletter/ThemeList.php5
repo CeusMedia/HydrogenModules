@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Work_Newsletter_ThemeList
 {
 	protected $env;
@@ -9,7 +12,7 @@ class View_Helper_Work_Newsletter_ThemeList
 	/**
 	 *	@todo		clear theme path handling
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 		$this->moduleConfig	= $this->env->config->getAll( 'module.work_newsletter.theme.', TRUE );

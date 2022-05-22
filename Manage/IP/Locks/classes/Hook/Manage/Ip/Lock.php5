@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Manage_IP_Lock extends CMF_Hydrogen_Hook{
 
-	public static function onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function onRegisterTab( Environment $env, $context, $module, $data ){
 		$words  = (object) $env->getLanguage()->getWords( 'manage/ip/lock' );							//  load words
 		$context->registerTab( '', $words->tabs['index'], 0 );											//  register main tab
 		$context->registerTab( 'filter', $words->tabs['filter'], 3 );									//  register filter tab

@@ -1,9 +1,12 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Auth_Local extends CMF_Hydrogen_Hook
 {
 	static protected $configPrefix	= 'module.resource_authentication_backend_local.';
 
-	public static function onAuthRegisterBackend( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onAuthRegisterBackend( Environment $env, $context, $module, $payload = [] )
 	{
 		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
@@ -11,7 +14,7 @@ class Hook_Auth_Local extends CMF_Hydrogen_Hook
 		$context->registerBackend( 'Local', 'local', $words['backend']['title'] );
 	}
 
-	static public function onAuthRegisterLoginTab( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onAuthRegisterLoginTab( Environment $env, $context, $module, $payload = [] ){
 		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
 		$words		= (object) $env->getLanguage()->getWords( 'auth/local' );					//  load words
@@ -19,7 +22,7 @@ class Hook_Auth_Local extends CMF_Hydrogen_Hook
 		$context->registerTab( 'auth/local/login', $words->login['tab'], $rank );				//  register main tab
 	}
 
-	static public function onGetRelatedUsers( CMF_Hydrogen_Environment $env, $context, $module, $payload ){
+	static public function onGetRelatedUsers( Environment $env, $context, $module, $payload ){
 		if( !$env->getConfig()->get( self::$configPrefix.'relateToAllUsers' ) )
 			return;
 		$modelUser	= new Model_User( $env );
@@ -35,7 +38,7 @@ class Hook_Auth_Local extends CMF_Hydrogen_Hook
 		return TRUE;
 	}
 
-/*	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+/*	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
 		$userId		= (int) $env->getSession()->get( 'auth_user_id' );							//  get ID of current user (or zero)
 		$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
@@ -45,7 +48,7 @@ class Hook_Auth_Local extends CMF_Hydrogen_Hook
 		$env->getPage()->js->addScriptOnReady( $script, 1 );									//  enlist script to be run on ready
 	}*/
 
-	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onViewRenderContent( Environment $env, $context, $module, $payload = [] )
 	{
 		$config		= $env->getConfig()->getAll( 'module.resource_auth.', TRUE );
 		$processor	= new Logic_Shortcode( $env );

@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller
 {
 	protected $basePath;
@@ -14,12 +17,12 @@ class Controller_Manage_Content_Image extends CMF_Hydrogen_Controller
 
 	protected static $cacheImageList	= [];
 
-	public static function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] )
+	public static function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] )
 	{
 		self::___onTinyMCE_getLinkList( $env, $context, $module, array( 'hidePrefix' => TRUE ) );
 	}
 
-	public static function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] )
+	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
 		$frontend		= Logic_Frontend::getInstance( $env );

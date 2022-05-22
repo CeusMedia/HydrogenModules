@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Admin_Mail_Attachment_Folder extends CMF_Hydrogen_View
 {
-	public static function renderTabs( CMF_Hydrogen_Environment $env )
+	public static function renderTabs( Environment $env )
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './admin/mail/attachment/' );

@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Resource_Mail_Group
 {
-	public static function onGroupActivated( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	public static function onGroupActivated( Environment $env, $context, $module, $data = [] )
 	{
 		$logicGroup		= new Logic_Mail_Group( $env );
 		$logicMail		= Logic_Mail::getInstance( $env );
@@ -17,7 +20,7 @@ class Hook_Resource_Mail_Group
 	//	@todo implement
 	}
 
-	public static function onGroupDeactivated( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	public static function onGroupDeactivated( Environment $env, $context, $module, $data = [] )
 	{
 		$logicGroup		= new Logic_Mail_Group( $env );
 		$logicMail		= Logic_Mail::getInstance( $env );
@@ -34,7 +37,7 @@ class Hook_Resource_Mail_Group
 	}
 
 
-	public static function onConfirmAfterJoin( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	public static function onConfirmAfterJoin( Environment $env, $context, $module, $data = [] )
 	{
 		$modelGroup		= new Model_Mail_Group( $env );
 		$modelMember	= new Model_Mail_Group_Member( $env );
@@ -154,7 +157,7 @@ class Hook_Resource_Mail_Group
 		return FALSE;
 	}
 
-	public static function onDeactivateAfterLeaving( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	public static function onDeactivateAfterLeaving( Environment $env, $context, $module, $data = [] )
 	{
 		$modelGroup		= new Model_Mail_Group( $env );
 		$modelMember	= new Model_Mail_Group_Member( $env );

@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_System_Maintenance extends CMF_Hydrogen_Hook{
 
 	/**
@@ -9,7 +12,7 @@ class Hook_System_Maintenance extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] ){
 		$env->getMessenger()->noteNotice( 'System Maintenance is <strong>ON</strong>.' );
 		$env->getPage()->js->addScriptOnReady( 'UI.Form.Changes.init();', 9 );
 	}
@@ -22,7 +25,7 @@ class Hook_System_Maintenance extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onAppDispatch( Environment $env, $context, $module, $payload = [] ){
 		$env->getMessenger()->noteNotice( print_m( $payload, NULL, NULL, TRUE ) );
 	}
 }

@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_UI_MetaTags_MobileWebApp extends CMF_Hydrogen_Hook
 {
 	/**
@@ -9,7 +12,7 @@ class Hook_UI_MetaTags_MobileWebApp extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_metatags_mobilewebapp.', TRUE );
 		if( !$moduleConfig->get( 'active' ) )

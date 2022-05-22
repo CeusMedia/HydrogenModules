@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_JS_Ace extends CMF_Hydrogen_Hook{
 
 	/**
@@ -9,7 +12,7 @@ class Hook_JS_Ace extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] ){
 		$moduleConfig	= $env->getConfig()->getAll( 'module.js_ace.', TRUE );
 		if( !$moduleConfig->get( 'active' ) )
 			return;
@@ -69,7 +72,7 @@ class Hook_JS_Ace extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onGetAvailableContentEditor( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onGetAvailableContentEditor( Environment $env, $context, $module, $payload = [] ){
 		if( !empty( $payload->type ) && !in_array( $payload->type, array( 'code' ) ) )
 			return;
 		if( !empty( $payload->format ) && !in_array( $payload->format, array( 'html', 'markdown', 'md'/*, '*'*/ ) ) )

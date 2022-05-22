@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_JS_CodeMirror extends CMF_Hydrogen_Hook{
 
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
+	static public function onPageApplyModules( Environment $env, $context, $module, $data = [] ){
 		$moduleConfig	= $env->getConfig()->getAll( 'module.js_codemirror.', TRUE );
 		if( !$moduleConfig->get( 'active' ) )
 			return;
@@ -120,7 +123,7 @@ CodeMirror.on(window, "resize", function() {
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onGetAvailableContentEditor( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onGetAvailableContentEditor( Environment $env, $context, $module, $payload = [] ){
 		if( !empty( $payload->type ) && !in_array( $payload->type, array( 'code' ) ) )
 			return;
 		if( !empty( $payload->format ) && !in_array( $payload->format, array( 'html', 'markdown', 'md'/*, '*'*/ ) ) )

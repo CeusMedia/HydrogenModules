@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Shop_Payment_Paypal extends CMF_Hydrogen_Hook
 {
 	/**
@@ -11,7 +14,7 @@ class Hook_Shop_Payment_Paypal extends CMF_Hydrogen_Hook
 	 *	@param		public						$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onRegisterShopPaymentBackends( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onRegisterShopPaymentBackends( Environment $env, $context, $module, $payload = [] )
 	{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_paypal.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/paypal' );
@@ -38,7 +41,7 @@ class Hook_Shop_Payment_Paypal extends CMF_Hydrogen_Hook
 	 *	@param		public						$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onRenderServicePanels( Environment $env, $context, $module, $payload = [] )
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;

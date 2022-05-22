@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Tracker_Matomo extends CMF_Hydrogen_Hook
 {
 	/**
@@ -12,7 +15,7 @@ class Hook_Tracker_Matomo extends CMF_Hydrogen_Hook
 	 *	@param		public						$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onEnvInit( Environment $env, $context, $module, $payload = [] )
 	{
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_matomo.', TRUE );			//  get module configuration as dictionary
 		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )								//  Matomo tracking is disabled or ID is not set
@@ -41,7 +44,7 @@ class Hook_Tracker_Matomo extends CMF_Hydrogen_Hook
 	 *	@param		public						$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
 		$config		= $env->getConfig()->getAll( 'module.resource_tracker_matomo.', TRUE );		//  get module configuration as dictionary
 		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )								//  Matomo tracking is disabled or ID is not set
@@ -68,4 +71,3 @@ ModuleTrackerMatomo.init();';
 		$context->addBody( $noscript );															//  append noscript tag to body
 	}
 }
-

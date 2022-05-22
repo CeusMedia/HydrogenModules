@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $env;
@@ -10,7 +13,7 @@ class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 	protected $returnCode;
 	protected $mode					= '';
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 		$this->modelForm	= new Model_Form( $this->env );
@@ -63,7 +66,7 @@ class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 		return $content;
 	}
 
-	public static function renderStatic( CMF_Hydrogen_Environment $env, string $formId ): string
+	public static function renderStatic( Environment $env, string $formId ): string
 	{
 		$helper	= new View_Helper_Form( $env );
 		return $helper->setId( $formId )->render();

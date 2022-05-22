@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_UI_DevCenter extends CMF_Hydrogen_Hook
 {
 	/**
@@ -11,7 +14,7 @@ class Hook_UI_DevCenter extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onAppRespond( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onAppRespond( Environment $env, $context, $module, $payload = [] )
 	{
 		if( $env->getConfig()->get( 'module.ui_devcenter.active' ) ){
 			$center		= Resource_DevCenter::getInstance( $env );
@@ -31,7 +34,7 @@ class Hook_UI_DevCenter extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onEnvInitModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onEnvInitModules( Environment $env, $context, $module, $payload = [] )
 	{
 		if( $env->getConfig()->get( 'module.ui_devcenter.active' ) ){
 		}
@@ -47,7 +50,7 @@ class Hook_UI_DevCenter extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
 		if( $env->getConfig()->get( 'module.ui_devcenter.active' ) ){
 			$center	= Resource_DevCenter::getInstance( $env );

@@ -1,14 +1,17 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Member extends CMF_Hydrogen_View
 {
-	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function ___onRegisterTab( Environment $env, $context, $module, $payload )
 	{
 		$words	= (object) $env->getLanguage()->getWords( 'member' );			//  load words
 		$context->registerTab( '', $words->tabs['index'], 0 );					//  register main tab
 		$context->registerTab( 'search', $words->tabs['search'], 1 );			//  register main tab
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment $env, $current = 0 )
+	public static function renderTabs( Environment $env, $current = 0 )
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './member/' );

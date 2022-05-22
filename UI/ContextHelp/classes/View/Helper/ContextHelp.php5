@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_ContextHelp
 {
-	public static function ___onRegisterContextHelp( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
+	public static function ___onRegisterContextHelp( Environment $env, $context, $module, $data = [] ){
 		if( isset( $data['path'] ) ){
 			self::registerFile( $env, $data['path'] );
 			return;
@@ -12,7 +15,7 @@ class View_Helper_ContextHelp
 		self::registerFile( $env, $controller.'/'.$action.'/contexthelp' );
 	}
 
-	static public function registerFile( CMF_Hydrogen_Environment $env, $filePath ){
+	static public function registerFile( Environment $env, $filePath ){
 		$filePath	= 'html/'.$filePath.'.html';
 		$view		= new CMF_Hydrogen_View( $env );
 		if( $view->hasContentFile( $filePath ) ){

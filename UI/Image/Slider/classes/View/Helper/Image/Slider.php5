@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Image_Slider
 {
 	public $config;
@@ -16,7 +19,7 @@ class View_Helper_Image_Slider
 	 *	@access		public
 	 *	@param		CMF_Hydrogen_Environment		$env			Environment object
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->modelSlider	= new Model_Image_Slider( $env );
@@ -80,7 +83,7 @@ class View_Helper_Image_Slider
 		return UI_HTML_Tag::create( 'div', $images, $attr );
 	}
 
-	public static function renderStatic( CMF_Hydrogen_Environment $env, $sliderId ): string
+	public static function renderStatic( Environment $env, $sliderId ): string
 	{
 		$instance	= new self( $env );
 		return $instance->render( $sliderId );

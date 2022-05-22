@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Resource_User extends CMF_Hydrogen_Hook
 {
 	/**
@@ -11,7 +14,7 @@ class Hook_Resource_User extends CMF_Hydrogen_Hook
 	 *	@param		public						$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onUserRemove( Environment $env, $context, $module, $payload = [] )
 	{
 		$payload	= (object) $payload;
 		if( !empty( $payload->userId ) ){

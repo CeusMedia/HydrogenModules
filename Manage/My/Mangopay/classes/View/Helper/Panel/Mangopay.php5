@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 abstract class View_Helper_Panel_Mangopay{
 
 	protected $data			= [];
@@ -33,7 +36,7 @@ abstract class View_Helper_Panel_Mangopay{
 		return $helper->set( $number )->render();
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $data, $options = [] ){
+	static public function renderStatic( Environment $env, $data, $options = [] ){
 		$helper	= new static( $env );
 		return $helper->setData( $data )->setOptions( $options )->render();
 	}

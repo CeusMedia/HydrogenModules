@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_UI_Shortcode_Example extends CMF_Hydrogen_Hook
 {
-	static public function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	static public function onViewRenderContent( Environment $env, $context, $module, $payload )
 	{
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload->content );

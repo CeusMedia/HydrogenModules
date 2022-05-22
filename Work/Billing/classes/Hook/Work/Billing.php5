@@ -1,12 +1,15 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Work_Billing extends CMF_Hydrogen_Hook
 {
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
 	{
 		$context->js->addScriptOnReady( 'WorkBilling.init()' );
 	}
 
-	public static function onBillingBillRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data )
+	public static function onBillingBillRegisterTab( Environment $env, $context, $module, $data )
 	{
 //		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user' );						//  load words
 //		$context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
@@ -17,7 +20,7 @@ class Hook_Work_Billing extends CMF_Hydrogen_Hook
 		$context->registerTab( 'transaction/'.$data['billId'], '<i class="fa fa-fw fa-exchange"></i> Transaktionen', 2, $bill->status == 0 );
 	}
 
-	public static function onBillingPersonRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data )
+	public static function onBillingPersonRegisterTab( Environment $env, $context, $module, $data )
 	{
 //		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user' );						//  load words
 //		$context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
@@ -30,7 +33,7 @@ class Hook_Work_Billing extends CMF_Hydrogen_Hook
 		$context->registerTab( 'unbooked/'.$data['personId'], '<i class="fa fa-fw fa-question-circle-o"></i> Ausstehend', 5 );
 	}
 
-	public static function onBillingCorporationRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data )
+	public static function onBillingCorporationRegisterTab( Environment $env, $context, $module, $data )
 	{
 //		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user' );						//  load words
 //		$context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab

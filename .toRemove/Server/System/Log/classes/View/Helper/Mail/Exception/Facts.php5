@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Mail_Exception_Facts{
 
 	protected $env;
@@ -12,7 +15,7 @@ class View_Helper_Mail_Exception_Facts{
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( Environment $env ){
 		$this->env		= $env;
 	}
 

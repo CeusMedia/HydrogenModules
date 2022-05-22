@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Panel
 {
 	static protected $defaultAttributes		= [];
@@ -22,7 +25,7 @@ class View_Helper_Panel
 	protected $foot;
 	protected $head;
 
-	public static function create( CMF_Hydrogen_Environment $env, string $head, string $body, string $foot, array $attributes = [], array $classes = [], string $theme = NULL, string $id = NULL )
+	public static function create( Environment $env, string $head, string $body, string $foot, array $attributes = [], array $classes = [], string $theme = NULL, string $id = NULL )
 	{
 		$instance	= new static( $env );
 		$instance->setHead( $head )->setBody( $body )->setFoot( $foot );
@@ -48,7 +51,7 @@ class View_Helper_Panel
 	 *	@static
 	 *	@return		string		Rendered output of this view helper component
 	 */
-	public static function renderStatic( CMF_Hydrogen_Environment $env, string $head, string $body, string $foot, array $attributes = [], array $classes = [], string $theme = NULL, string $id = NULL ): string
+	public static function renderStatic( Environment $env, string $head, string $body, string $foot, array $attributes = [], array $classes = [], string $theme = NULL, string $id = NULL ): string
 	{
 		$instance	= static::create( $env, $head, $body, $foot, $attributes, $classes, $theme, $id );
 		return $instance->render();
@@ -65,7 +68,7 @@ class View_Helper_Panel
 		static::$theme	= $theme;
 	}
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->setAttributes( static::$attributes );

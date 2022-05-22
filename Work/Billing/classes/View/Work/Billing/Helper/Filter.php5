@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Work_Billing_Helper_Filter
 {
 	protected $env;
@@ -7,7 +10,7 @@ class View_Work_Billing_Helper_Filter
 	protected $sessionPrefix;
 	protected $url;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->session	= $this->env->getSession();

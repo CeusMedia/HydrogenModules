@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
+use CeusMedia\HydrogenFramework\Environment;
+
 use UI_HTML_Tag as Html;
 
 class View_Helper_Work_Time_Buttons
@@ -13,7 +15,7 @@ class View_Helper_Work_Time_Buttons
 	protected $workerId;
 	protected $modelTimer;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->modelTimer	= new Model_Work_Timer( $this->env );
@@ -121,7 +123,7 @@ class View_Helper_Work_Time_Buttons
 		return Html::create( 'div', $buttons, array( 'class' => 'btn-group' ) ).join( $modals );
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $timerId, $userId, $buttons, $size, $from ){
+	static public function renderStatic( Environment $env, $timerId, $userId, $buttons, $size, $from ){
 		$helper	= new self( $env );
 		$helper->setTimerId( $userId );
 		$helper->setUserId( $userId );

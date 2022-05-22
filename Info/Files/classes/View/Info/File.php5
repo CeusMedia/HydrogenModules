@@ -4,6 +4,7 @@ use CeusMedia\Bootstrap\Button as BootstrapButton;
 use CeusMedia\Bootstrap\Button\Group as BootstrapButtonGroup;
 use CeusMedia\Bootstrap\Button\Link as BootstrapLinkButton;
 use CeusMedia\Bootstrap\Icon as BootstrapIcon;
+use CeusMedia\HydrogenFramework\Environment;
 
 class View_Info_File extends CMF_Hydrogen_View
 {
@@ -23,7 +24,7 @@ class View_Info_File extends CMF_Hydrogen_View
 	{
 	}
 
-	public static function renderPosition( CMF_Hydrogen_Environment $env, $folderId, $search ): string
+	public static function renderPosition( Environment $env, $folderId, $search ): string
 	{
 		$steps		= self::getStepsFromFolderId( $env, $folderId );
 		$folderPath	= self::getPathFromFolderId( $env, $folderId );
@@ -52,7 +53,7 @@ class View_Info_File extends CMF_Hydrogen_View
 		$this->env->getPage()->addThemeStyle( 'module.info.files.css' );
 	}
 
-	protected static function getStepsFromFolderId( CMF_Hydrogen_Environment $env, $folderId ): array
+	protected static function getStepsFromFolderId( Environment $env, $folderId ): array
 	{
 		$model	= new Model_Download_Folder( $env );
 		$steps		= [];
@@ -67,7 +68,7 @@ class View_Info_File extends CMF_Hydrogen_View
 		return $steps;
 	}
 
-	protected static function getPathFromFolderId( CMF_Hydrogen_Environment $env, $folderId ): string
+	protected static function getPathFromFolderId( Environment $env, $folderId ): string
 	{
 		$model	= new Model_Download_Folder( $env );
 		$path	= '';

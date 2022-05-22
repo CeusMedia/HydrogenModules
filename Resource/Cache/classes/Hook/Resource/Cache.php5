@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Resource_Cache extends CMF_Hydrogen_Hook{
 
 	/**
@@ -11,7 +14,7 @@ class Hook_Resource_Cache extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onEnvInitCache( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onEnvInitCache( Environment $env, $context, $module, $payload = [] ){
 		$env->set( 'cache', new Model_Cache( $env ) );
 	}
 }

@@ -1,11 +1,14 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Info_Dashboard extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $columns		= 3;
 	protected $dashboard;
 	protected $panels;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}

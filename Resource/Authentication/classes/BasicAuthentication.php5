@@ -1,10 +1,13 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	@todo		integrate authentication backends
  */
 class BasicAuthentication
 {
-	public function __construct( CMF_Hydrogen_Environment $env, string $realm )
+	public function __construct( Environment $env, string $realm )
 	{
 		$this->env		= $env;
 		$this->realm	= $realm;

@@ -1,10 +1,13 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Info_Gallery extends CMF_Hydrogen_View_Helper_Abstract
 {
 	const SCOPE_GALLERY		= 0;
 	const SCOPE_IMAGE		= 1;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.info_galleries.', TRUE );
@@ -25,7 +28,7 @@ class View_Helper_Info_Gallery extends CMF_Hydrogen_View_Helper_Abstract
 		);
 	}
 
-	public static function renderGalleryDescription( CMF_Hydrogen_Environment $env, $view, $gallery ): string
+	public static function renderGalleryDescription( Environment $env, $view, $gallery ): string
 	{
 		$content	= "";
 		if( trim( $gallery->description ) ){

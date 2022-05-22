@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Manage_My_User_Setting extends CMF_Hydrogen_Hook{
 
 	/**
@@ -10,7 +13,7 @@ class Hook_Manage_My_User_Setting extends CMF_Hydrogen_Hook{
 	 *	@param		array						$data		Payload map
 	 *	@return		void
 	 */
-	static public function onSessionInit( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
+	static public function onSessionInit( Environment $env, $context, $module, $data = [] ){
 		if( $env->has( 'session' ) ){															//  environment has session support
 			if( ( $userId = $env->getSession()->get( 'auth_user_id' ) ) ){						//  an user is logged in
 				$config	= Model_User_Setting::applyConfigStatic( $env, $userId, FALSE );		//  apply user configuration
@@ -28,7 +31,7 @@ class Hook_Manage_My_User_Setting extends CMF_Hydrogen_Hook{
 	 *	@param		array						$data		Payload map
 	 *	@return		void
 	 */
-	static public function onViewRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
+	static public function onViewRegisterTab( Environment $env, $context, $module, $data = [] ){
 		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user/setting' );			//  load words
 		$context->registerTab( 'setting', $words->module['tab'], 4 );							//  register main tab
 	}
@@ -42,7 +45,7 @@ class Hook_Manage_My_User_Setting extends CMF_Hydrogen_Hook{
 	 *	@param		object						$payload	Payload object
 	 *	@return		void
 	 */
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload ){
+	static public function onUserRemove( Environment $env, $context, $module, $payload ){
 		$payload	= (object) $payload;
 		if( !empty( $payload->userId ) ){
 			$model	= new Model_User_Setting( $env );
@@ -63,7 +66,7 @@ class Hook_Manage_My_User_Setting extends CMF_Hydrogen_Hook{
 	 *	@return		void
 	 *	@todo		active, once config key can be translated labels @see View_Manage_My_User_Setting::getModuleWords
 	 */
-	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function onListUserRelations( Environment $env, $context, $module, $data ){
 		return;
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Manage_My_User_Setting::onListUserRelations" is missing user ID in data.';

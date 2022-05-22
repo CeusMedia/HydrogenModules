@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Model_Newsletter_Theme
 {
 	protected $attributesAuthor	= array(
@@ -27,7 +30,7 @@ class Model_Newsletter_Theme
 		'id'			=> '',
 	);
 
-	public function __construct( CMF_Hydrogen_Environment $env, string $themePath )
+	public function __construct( Environment $env, string $themePath )
 	{
 		$this->env			= $env;
 		$this->themePath	= rtrim( $themePath, '/' ).'/';

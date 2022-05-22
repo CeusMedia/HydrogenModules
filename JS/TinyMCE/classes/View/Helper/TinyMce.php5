@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 
 	public $list		= [];
@@ -26,7 +29,7 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 		$this->cache		= $this->env->getCache();
 	}
 
-	static public function load( CMF_Hydrogen_Environment $env ){
+	static public function load( Environment $env ){
 		if( self::$loaded )
 			return;
 
@@ -51,7 +54,7 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 		self::$loaded	= TRUE;
 	}
 
-	static public function getLanguage( CMF_Hydrogen_Environment $env ){
+	static public function getLanguage( Environment $env ){
 		$language	= $env->getLanguage()->getLanguage();
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 		$languages	= explode( ",", $config->get( 'languages' ) );

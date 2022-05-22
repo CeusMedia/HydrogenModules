@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Messenger_Bootstrap
 {
 	protected $env;
@@ -10,7 +13,7 @@ class View_Helper_Messenger_Bootstrap
 		'3'	=> 'messenger messenger-success alert alert-success',
 	);
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
@@ -61,7 +64,7 @@ class View_Helper_Messenger_Bootstrap
 		return UI_HTML_Tag::create( 'div', $list, array( 'class' => 'messenger-messages messenger-bootstrap' ) );
 	}
 
-	public static function renderStatic( CMF_Hydrogen_Environment $env, string $timeFormat = NULL, bool $linkResources = FALSE ): string
+	public static function renderStatic( Environment $env, string $timeFormat = NULL, bool $linkResources = FALSE ): string
 	{
 		if( !$env->getMessenger()->getMessages() )
 			return '';

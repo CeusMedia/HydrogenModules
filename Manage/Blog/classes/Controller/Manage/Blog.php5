@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 
 	protected $messenger;
@@ -33,7 +36,7 @@ class Controller_Manage_Blog extends CMF_Hydrogen_Controller{
 		return $label;
 	}
 
-	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
+	static public function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] ){
 		$frontend		= Logic_Frontend::getInstance( $env );
 		if( !$frontend->hasModule( 'Info_Blog' ) )
 			return;

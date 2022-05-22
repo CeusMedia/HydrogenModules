@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Logic_ShopBridge
 {
 	/**	@var	CMF_Hydrogen_Environment	$env			Environment instance */
@@ -23,7 +26,7 @@ class Logic_ShopBridge
 	 *	@param		CMF_Hydrogen_Environment	$env	Environment
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->model	= new Model_Shop_Bridge( $env );

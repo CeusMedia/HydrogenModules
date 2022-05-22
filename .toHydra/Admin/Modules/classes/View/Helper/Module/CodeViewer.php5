@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	@todo		implement view for files from available modules
  */
@@ -14,7 +17,7 @@ class View_Helper_Module_CodeViewer extends CMF_Hydrogen_View_Helper_Abstract {
 	 *	@param		Logic_Module					$logic		Module logic instance
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env, Logic_Module $logic ){
+	public function __construct( Environment $env, Logic_Module $logic ){
 		$this->setEnv( $env );
 		$this->logic	= $logic;
 	}

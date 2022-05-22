@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Work_Time_Modal_Assign extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $from;
@@ -7,7 +10,7 @@ class View_Helper_Work_Time_Modal_Assign extends CMF_Hydrogen_View_Helper_Abstra
 	protected $timers	= [];
 	protected $userId;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}

@@ -4,6 +4,9 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
@@ -15,7 +18,7 @@ class Controller_Oauth_Resource extends CMF_Hydrogen_Controller
 {
 	static protected $resources	= [];
 
-	public function __construct( CMF_Hydrogen_Environment $env, $setupView = TRUE )
+	public function __construct( Environment $env, $setupView = TRUE )
 	{
 		parent::__construct( $env, FALSE );
 	}
@@ -32,7 +35,7 @@ class Controller_Oauth_Resource extends CMF_Hydrogen_Controller
 		//this->addData( 'resources', self::$resource );
 	}
 
-	public static function registerResource( CMF_Hydrogen_Environment $env, $path, $class, $method, $scope = NULL )
+	public static function registerResource( Environment $env, $path, $class, $method, $scope = NULL )
 	{
 		self::$resources[]	= (object) array(
 			'env'		=> $env,

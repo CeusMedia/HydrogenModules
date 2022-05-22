@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_JS_SelectBox extends CMF_Hydrogen_Hook{
 
 	/**
@@ -9,7 +12,7 @@ class Hook_JS_SelectBox extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] ){
 		$options	= [];
 		$script		= 'jQuery("select.cmSelectBox.above").cmSelectBox('.json_encode( array_merge( $options, array( 'inverted' => TRUE ) ) ).')';
 		$context->js->addScriptOnReady( $script );

@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Abstract mail class.
  *	Prepares mail and mail transport object.
@@ -74,7 +77,7 @@ abstract class Mail_Abstract
 	 *	@param		boolean						$defaultStyle	Flag: load default mail style file
 	 *	@todo		resolve todos below after all modules have adjusted
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env, $data = [], bool $defaultStyle = TRUE )
+	public function __construct( Environment $env, $data = [], bool $defaultStyle = TRUE )
 	{
 		$this->setEnv( $env );
 		$this->modelTemplate	= new Model_Mail_Template( $env );
@@ -278,7 +281,7 @@ abstract class Mail_Abstract
 		return $this->sendTo( $user );
 	}
 
-	public function setEnv( CMF_Hydrogen_Environment $env ): self
+	public function setEnv( Environment $env ): self
 	{
 		$this->env		= $env;
 		return $this;

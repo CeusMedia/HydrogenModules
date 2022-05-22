@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Manage_Page extends CMF_Hydrogen_Hook
 {
-	static public function onTinyMceGetLinkList( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onTinyMceGetLinkList( Environment $env, $context, $module, $payload = [] ){
 		$frontend		= Logic_Frontend::getInstance( $env );
 		if( !$frontend->hasModule( 'Resource_Pages' ) )
 			return;

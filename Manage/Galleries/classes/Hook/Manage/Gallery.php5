@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Manage_Gallery extends CMF_Hydrogen_Hook{
 
 	/**
@@ -9,7 +12,7 @@ class Hook_Manage_Gallery extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onTinyMCE_getImageList( Environment $env, $context, $module, $payload = [] ){
 		$moduleConfig		= $env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
 		$frontend			= Logic_Frontend::getInstance( $env );
 		$remotePathImages	= $frontend->getPath( 'images' ).( trim( $moduleConfig->get( 'image.path' ) ) );
@@ -50,7 +53,7 @@ class Hook_Manage_Gallery extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	static public function onTinyMCE_getLinkList( Environment $env, $context, $module, $payload = [] ){
 		$moduleConfig	= $env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
 		$frontend		= Logic_Frontend::getInstance( $env );
 		$pathFrontend	= $frontend->getPath();
@@ -86,7 +89,7 @@ class Hook_Manage_Gallery extends CMF_Hydrogen_Hook{
 	 *	@return		void
 	 *	@todo		add hook to module config
 	 */
-	public static function ___registerHints( CMF_Hydrogen_Environment $env, $context, $module, $payload = NULL ){
+	public static function ___registerHints( Environment $env, $context, $module, $payload = NULL ){
 		if( class_exists( 'View_Helper_Hint' ) )
 			View_Helper_Hint::registerHintsFromModuleHook( $env, $module );
 	}

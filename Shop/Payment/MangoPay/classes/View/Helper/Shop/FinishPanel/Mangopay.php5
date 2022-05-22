@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Shop_FinishPanel_Mangopay
 {
 	const OUTPUT_FORMAT_HTML		= 1;
@@ -16,7 +19,7 @@ class View_Helper_Shop_FinishPanel_Mangopay
 	protected $outputFormat			= self::OUTPUT_FORMAT_HTML;
 	protected $listClass			= 'dl-horizontal';
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->modelPayment	= new Model_Shop_Payment_Mangopay( $env );

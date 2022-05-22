@@ -1,16 +1,19 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Manage_Job extends CMF_Hydrogen_View
 {
 	public function index()
 	{
 	}
 
-	public static function removeEnvPath( CMF_Hydrogen_Environment $env, string $string ): string
+	public static function removeEnvPath( Environment $env, string $string ): string
 	{
 		return preg_replace( '@'.preg_quote( $env->uri, '@' ).'@', '', $string );
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment $env, $current = 0 )
+	public static function renderTabs( Environment $env, $current = 0 )
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './manage/job/' );

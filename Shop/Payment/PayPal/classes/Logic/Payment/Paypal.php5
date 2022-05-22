@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Logic_Payment_PayPal
 {
 	protected $password;
@@ -12,7 +15,7 @@ class Logic_Payment_PayPal
 	/**	@var	ADT_List_Dictionary			$config			Module configuration dictionary */
 	protected $config;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->model	= new Model_Shop_Payment_Paypal( $env );

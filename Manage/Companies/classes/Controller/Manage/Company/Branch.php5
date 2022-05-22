@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller
 {
 	protected $frontend;
@@ -9,7 +12,7 @@ class Controller_Manage_Company_Branch extends CMF_Hydrogen_Controller
 	protected $modelImage;
 	protected $modelTag;
 
-	public static function ___onRemoveCompany( CMF_Hydrogen_Environment $env, $module, $content, $data = [] )
+	public static function ___onRemoveCompany( Environment $env, $module, $content, $data = [] )
 	{
 		$modelBranch	= new Model_Branch( $env );
 		$modelImage		= new Model_Branch_Image( $env );

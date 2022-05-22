@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Resource_Mail extends CMF_Hydrogen_Hook
 {
 	/**
@@ -9,7 +12,7 @@ class Hook_Resource_Mail extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function onListUserRelations( Environment $env, $context, $module, $data = [] )
 	{
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){
@@ -106,7 +109,7 @@ class Hook_Resource_Mail extends CMF_Hydrogen_Hook
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function onUserRemove( Environment $env, $context, $module, $data = [] )
 	{
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){

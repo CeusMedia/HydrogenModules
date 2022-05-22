@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_CSRF
 {
 	protected $env;
@@ -33,7 +36,7 @@ class View_Helper_CSRF
 		return $input1.$input2;
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $formName )
+	static public function renderStatic( Environment $env, $formName )
 	{
 		$helper	= new self( $env );
 		$helper->setFormName( $formName );

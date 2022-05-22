@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Catalog_Bookstore extends CMF_Hydrogen_Hook
 {
-	public static function onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data )
+	public static function onRenderContent( Environment $env, $context, $module, $data )
 	{
 		$pattern		= "/^(.*)(\[CatalogBookstoreRelations([^\]]+)?\])(.*)$/sU";
 		$helper			= new View_Helper_Catalog_Bookstore_Relations( $env );
@@ -39,7 +42,7 @@ class Hook_Catalog_Bookstore extends CMF_Hydrogen_Hook
 		}
 	}
 
-	public static function onRenderSearchResults( CMF_Hydrogen_Environment $env, $context, $module, $data )
+	public static function onRenderSearchResults( Environment $env, $context, $module, $data )
 	{
 		$helper			= new View_Helper_Catalog_Bookstore( $env );
 		$modelArticle	= new Model_Catalog_Bookstore_Article( $env );
@@ -105,7 +108,7 @@ class Hook_Catalog_Bookstore extends CMF_Hydrogen_Hook
 		}
 	}
 
-	public static function onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $data )
+	public static function onRegisterSitemapLinks( Environment $env, $context, $module, $data )
 	{
 		$baseUrl	= $env->url.'catalog/bookstore/';
 		$logic		= new Logic_Catalog_Bookstore( $env );
@@ -136,4 +139,3 @@ class Hook_Catalog_Bookstore extends CMF_Hydrogen_Hook
 		}
 	}
 }
-

@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_UI_MailEncryption extends CMF_Hydrogen_Hook
 {
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
 	{
 		$options	=  $env->getConfig()->getAll( 'module.ui_js_mailencryption.', TRUE );
 		if( !$options->get( 'active' ) )
@@ -9,7 +12,7 @@ class Hook_UI_MailEncryption extends CMF_Hydrogen_Hook
 		$context->js->addScriptOnReady( 'UI.MailEncryption.decrypt();', 8 );
 	}
 
-	public static function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onPageBuild( Environment $env, $context, $module, $payload )
 	{
 		$options	=  $env->getConfig()->getAll( 'module.ui_js_mailencryption.', TRUE );
 		if( !$options->get( 'active' ) )

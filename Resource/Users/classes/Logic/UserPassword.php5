@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Logic of user password handling.
  *	This is a singleton.
@@ -249,7 +252,7 @@ class Logic_UserPassword
 	 *	@access		protected
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 */
-	protected function __construct( CMF_Hydrogen_Environment $env )
+	protected function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->model	= new Model_User_Password( $env );

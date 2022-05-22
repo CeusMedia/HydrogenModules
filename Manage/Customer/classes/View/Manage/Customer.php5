@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Manage_Customer extends CMF_Hydrogen_View{
 
 	protected static $tabs	= [];
@@ -9,7 +12,7 @@ class View_Manage_Customer extends CMF_Hydrogen_View{
 	public function map(){}
 	public function rate(){}
 
-	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	public static function ___onRegisterTab( Environment $env, $context, $module, $data ){
 		$words	= (object) $env->getLanguage()->getWords( 'manage/customer' );						//  load words
 		View_Manage_Customer::registerTab( 'edit/'.$data['customerId'], $words->tabs['edit'], 0 );	//  register main tab
 		if( $env->getModules()->has( 'UI_Map' ) ){													//  map module is enabled
@@ -30,7 +33,7 @@ class View_Manage_Customer extends CMF_Hydrogen_View{
 		);
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment $env, $customerId, $current = 0 ){
+	public static function renderTabs( Environment $env, $customerId, $current = 0 ){
 		$view	= new View_Manage_Customer( $env );													//  prepare view
 		$data	= array( 'customerId' => $customerId );												//  prepare hook data
 		$env->getModules()->callHook( "CustomerManager", "registerTabs", $view, $data );			//  call tabs to be registered

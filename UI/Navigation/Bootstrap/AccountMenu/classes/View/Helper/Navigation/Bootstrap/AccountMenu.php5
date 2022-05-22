@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Navigation_Bootstrap_AccountMenu
 {
 	public $guestLabel			= "Guest";
@@ -17,7 +20,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 	protected $scope;
 	protected $moduleConfig;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.ui_navigation_bootstrap_accountmenu.', TRUE );

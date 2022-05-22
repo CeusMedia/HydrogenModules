@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Helper_Input_Resource extends CMF_Hydrogen_Hook
 {
-	public static function onPageInitModules( CMF_Hydrogen_Environment $env, $module, $context, $payload )
+	public static function onPageInitModules( Environment $env, $module, $context, $payload )
 	{
 		$config		= $env->getConfig();
 		$page		= $env->getPage();

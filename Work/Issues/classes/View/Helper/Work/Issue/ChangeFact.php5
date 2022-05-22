@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Work_Issue_ChangeFact
 {
 	const FORMAT_HTML		= 1;
@@ -16,7 +19,7 @@ class View_Helper_Work_Issue_ChangeFact
 	protected $modelNote;
 	protected $modelChange;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 		$this->modelUser	= new Model_User( $this->env );
@@ -167,4 +170,3 @@ class View_Helper_Work_Issue_ChangeFact
 		return $change;
 	}
 }
-

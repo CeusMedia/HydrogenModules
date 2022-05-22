@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Controller_Database_Lock extends CMF_Hydrogen_Controller
 {
 	protected $model;
@@ -7,7 +10,7 @@ class Controller_Database_Lock extends CMF_Hydrogen_Controller
 	 *	@deprecated		use hook class instead
 	 *	@todo			remove after all installations are updated
 	 */
-	static public function ___onAuthLogout( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function ___onAuthLogout( Environment $env, $context, $module, $data = [] )
 	{
 		$model		= new Model_Lock( $env );
 		$model->removeByIndices( array(
@@ -19,7 +22,7 @@ class Controller_Database_Lock extends CMF_Hydrogen_Controller
 	 *	@deprecated		use hook class instead
 	 *	@todo			remove after all installations are updated
 	 */
-	static public function ___onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $data )
+	static public function ___onRegisterDashboardPanels( Environment $env, $context, $module, $data )
 	{
 		if( !$env->getAcl()->has( 'work/time', 'ajaxRenderDashboardPanel' ) )
 			return;
@@ -92,4 +95,3 @@ class Controller_Database_Lock extends CMF_Hydrogen_Controller
 		return $title;
 	}
 }
-

@@ -1,15 +1,18 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Provision extends CMF_Hydrogen_Hook{
 
 	/**
 	 *	@todo    		extract to (atm-not-yet-existing) abstract framework hook class
 	 */
-	static protected function getModuleConfig( CMF_Hydrogen_Environment $env, $moduleKey ){
+	static protected function getModuleConfig( Environment $env, $moduleKey ){
 		$key	= 'modules.'.strtolower( $moduleKey ).'.';
 		return $env->getConfig()->getAll( $key, TRUE );
 	}
 
-	static public function onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function onAppDispatch( Environment $env, $context, $module, $data ){
 		$moduleConfig	= self::getModuleConfig( $env, 'Resource_Provision' );
 		$modules		= $env->getModules();
 		$resource		= new Resource_Provision_Client( $env );
@@ -66,7 +69,7 @@ class Hook_Provision extends CMF_Hydrogen_Hook{
 	 *	@param		$data		array 			Data provided by hook call
 	 *	@return		void
 	 */
-	static public function onAuthAfterConfirm( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function onAuthAfterConfirm( Environment $env, $context, $module, $data ){
 		$moduleConfig	= self::getModuleConfig( $env, 'Resource_Provision' );
 		$resource		= new Resource_Provision_Client( $env );
 		if( !$moduleConfig->get( 'active' ) )
@@ -111,7 +114,7 @@ class Hook_Provision extends CMF_Hydrogen_Hook{
 	 *	@deprecated		if combination of add-free-license-after-confirm and redirect to account-status-on-app-dispatch is used
 	 *	@todo 			kriss: remove if not needed or keep as fallback if upper case is not configured (needs to be configurable)
 	 */
-	static public function onAuthCheckBeforeLogin( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+	static public function onAuthCheckBeforeLogin( Environment $env, $context, $module, $data ){
 return;
 //		$moduleConfig	= self::getModuleConfig( $env, 'Resource_Provision' );
 //		if( !$moduleConfig->get( 'active' ) )

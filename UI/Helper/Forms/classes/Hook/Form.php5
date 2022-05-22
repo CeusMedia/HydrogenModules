@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Form extends CMF_Hydrogen_Hook
 {
 	/**
@@ -11,7 +14,7 @@ class Hook_Form extends CMF_Hydrogen_Hook
 	 *	@param		object						$payload	Data array or object for hook event handler
 	 *	@return		boolean|NULL				...
 	 */
-	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload ){
+	public static function onViewRenderContent( Environment $env, $context, $module, $payload ){
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload->content );
 //		$words			= $env->getLanguage()->getWords( 'info/news' );

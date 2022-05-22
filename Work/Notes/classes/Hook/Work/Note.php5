@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Work_Note extends CMF_Hydrogen_Hook
 {
-	public static function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onProjectRemove( Environment $env, $context, $module, $payload )
 	{
 		$data		= (object) $payload;
 		$projectId	= $data->projectId;
@@ -12,7 +15,7 @@ class Hook_Work_Note extends CMF_Hydrogen_Hook
 		}
 	}
 
-	public static function onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onListProjectRelations( Environment $env, $context, $module, $payload )
 	{
 		$data		= (object) $payload;
 		$modelProject	= new Model_Project( $env );
@@ -66,7 +69,7 @@ class Hook_Work_Note extends CMF_Hydrogen_Hook
 		);
 	}
 
-	public static function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onUserRemove( Environment $env, $context, $module, $payload )
 	{
 		$data		= (object) $payload;
 		$userId		= $data->userId;
@@ -79,7 +82,7 @@ class Hook_Work_Note extends CMF_Hydrogen_Hook
 			$data->counts['Work_Notes']	= (object) array( 'entities' => count( $notes ) );
 	}
 
-	public static function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onListUserRelations( Environment $env, $context, $module, $payload )
 	{
 		$data		= (object) $payload;
 		$userId		= $data->userId;

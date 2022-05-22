@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Model_Shop_Cart
 {
 	const CUSTOMER_MODE_UNKNOWN		= 0;
@@ -20,7 +23,7 @@ class Model_Shop_Cart
 		'priceTaxed',
 	);
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env				= $env;
 		$this->session			= $env->getSession();

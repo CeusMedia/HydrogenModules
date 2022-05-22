@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_UI_Image_Slider extends CMF_Hydrogen_Hook
 {
-	public static function onRenderContent( CMF_Hydrogen_Environment $env, $context, $modules, $payload = [] )
+	public static function onRenderContent( Environment $env, $context, $modules, $payload = [] )
 	{
 		$payload		= (object) $payload;
 		$processor		= $env->getLogic()->get( 'Shortcode' );

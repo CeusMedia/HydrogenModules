@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Hook_Resource_Mail_Group_Member extends CMF_Hydrogen_Hook
 {
-	public static function onMemberActivated( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	public static function onMemberActivated( Environment $env, $context, $module, $data = [] )
 	{
 		$payload		= (object) $data;
 		$modelGroup		= new Model_Mail_Group( $env );
@@ -44,7 +47,7 @@ class Hook_Resource_Mail_Group_Member extends CMF_Hydrogen_Hook
 	}
 
 	// @todo call this event
-	public static function onMemberDeactivated( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	public static function onMemberDeactivated( Environment $env, $context, $module, $data = [] )
 	{
 		$payload		= (object) $data;
 		$modelGroup		= new Model_Mail_Group( $env );
@@ -86,7 +89,7 @@ class Hook_Resource_Mail_Group_Member extends CMF_Hydrogen_Hook
 		}
 	}
 
-	public static function onMemberReject( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	public static function onMemberReject( Environment $env, $context, $module, $data = [] )
 	{
 		$payload		= (object) $data;
 		$modelGroup		= new Model_Mail_Group( $env );
@@ -108,7 +111,7 @@ class Hook_Resource_Mail_Group_Member extends CMF_Hydrogen_Hook
 		$logicMail->handleMail( $mail, $receiver, $language );
 	}
 
-	protected static function checkGroupPayload( CMF_Hydrogen_Environment $env, $payload )
+	protected static function checkGroupPayload( Environment $env, $payload )
 	{
 		if( property_exists( $payload, 'group' ) && is_object( $payload->group ) )
 			return $payload->group;
@@ -118,7 +121,7 @@ class Hook_Resource_Mail_Group_Member extends CMF_Hydrogen_Hook
 		throw new DomainException( 'No group data set' );
 	}
 
-	protected static function checkMemberPayload( CMF_Hydrogen_Environment $env, $payload )
+	protected static function checkMemberPayload( Environment $env, $payload )
 	{
 		if( property_exists( $payload, 'member' ) && is_object( $payload->member ) )
 			return $payload->member;
@@ -130,13 +133,13 @@ class Hook_Resource_Mail_Group_Member extends CMF_Hydrogen_Hook
 
 
 	// @todo call this event
-	public static function onMemberJoined( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	public static function onMemberJoined( Environment $env, $context, $module, $data = [] )
 	{
 		// @todo implement
 	}
 
 	// @todo call this event
-	public static function onMemberLeft( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	public static function onMemberLeft( Environment $env, $context, $module, $data = [] )
 	{
 		// @todo implement
 	}

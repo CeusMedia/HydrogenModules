@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Types:
  *	0	- Promotion
@@ -54,7 +57,7 @@ class Model_User_Setting extends CMF_Hydrogen_Model {
 		return new ADT_List_Dictionary( $config );
 	}
 
-	static public function applyConfigStatic( CMF_Hydrogen_Environment $env, $userId = NULL, $hidePasswords = TRUE ){
+	static public function applyConfigStatic( Environment $env, $userId = NULL, $hidePasswords = TRUE ){
 		$model	= new Model_User_Setting( $env );
 		return $model->applyConfig( $userId, $hidePasswords );
 	}

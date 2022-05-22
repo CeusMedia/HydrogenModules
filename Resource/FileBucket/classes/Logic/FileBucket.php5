@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Logic_FileBucket extends CMF_Hydrogen_Logic{
 
 	const HASH_MD5			= 0;
@@ -9,7 +12,7 @@ class Logic_FileBucket extends CMF_Hydrogen_Logic{
 	protected $hashFunction	= 0;
 	protected $model;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( Environment $env ){
 		$this->env		= $env;
 		$this->model	= new Model_File( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_filebucket.', TRUE );
