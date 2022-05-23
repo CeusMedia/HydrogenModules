@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_UI_MetaTags extends CMF_Hydrogen_Hook
+class Hook_UI_MetaTags extends Hook
 {
 	/**
 	 *	@param		Environment		$env		Environment object

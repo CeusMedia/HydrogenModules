@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Auth_Local extends CMF_Hydrogen_Hook
+class Hook_Auth_Local extends Hook
 {
 	static protected $configPrefix	= 'module.resource_authentication_backend_local.';
 

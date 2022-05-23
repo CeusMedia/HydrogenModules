@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Info_Relocation extends CMF_Hydrogen_Hook
+class Hook_Info_Relocation extends Hook
 {
 	public static function onPageApplyModulesCheckShortcutRoute( Environment $env, $module, $context, $payload )
 	{

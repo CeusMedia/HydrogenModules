@@ -1,10 +1,12 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_JS_CodeMirror extends CMF_Hydrogen_Hook{
-
-	static public function onPageApplyModules( Environment $env, $context, $module, $data = [] ){
+class Hook_JS_CodeMirror extends Hook
+{
+	public static function onPageApplyModules( Environment $env, $context, $module, $data = [] )
+	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.js_codemirror.', TRUE );
 		if( !$moduleConfig->get( 'active' ) )
 			return;
@@ -117,13 +119,14 @@ CodeMirror.on(window, "resize", function() {
 
 	/**
 	 *	@static
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Caller object
-	 *	@param		object						$module		Module config data object
-	 *	@param		array						$payload	Map of payload data
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Caller object
+	 *	@param		object			$module		Module config data object
+	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onGetAvailableContentEditor( Environment $env, $context, $module, $payload = [] ){
+	public static function onGetAvailableContentEditor( Environment $env, $context, $module, $payload = [] )
+	{
 		if( !empty( $payload->type ) && !in_array( $payload->type, array( 'code' ) ) )
 			return;
 		if( !empty( $payload->format ) && !in_array( $payload->format, array( 'html', 'markdown', 'md'/*, '*'*/ ) ) )
@@ -149,4 +152,3 @@ CodeMirror.on(window, "resize", function() {
 		$payload->list[$key]	= $editor;
 	}
 }
-?>

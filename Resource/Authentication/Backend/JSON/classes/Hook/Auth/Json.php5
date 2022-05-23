@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Auth_Json extends CMF_Hydrogen_Hook
+class Hook_Auth_Json extends Hook
 {
 	protected static $configPrefix	= 'module.resource_authentication_backend_json.';
 

@@ -2,16 +2,16 @@
 
 use CeusMedia\HydrogenFramework\Environment;
 
-class Hook_Shop_Payment_Bank extends CMF_Hydrogen_Hook
+class Hook_Shop_Payment_Bank extends Hook
 {
 	/**
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
-	 *	@param		object						$context		Hook context object
-	 *	@param		object						$module			Module object
-	 *	@param		public						$payload		Map of hook arguments
+	 *	@param		Environment		$env			Environment instance
+	 *	@param		object			$context		Hook context object
+	 *	@param		object			$module			Module object
+	 *	@param		public			$payload		Map of hook arguments
 	 *	@return		void
 	 */
 	public static function onRegisterShopPaymentBackends( Environment $env, $context, $module, $payload = [] )
@@ -46,10 +46,10 @@ class Hook_Shop_Payment_Bank extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
-	 *	@param		object						$context		Hook context object
-	 *	@param		object						$module			Module object
-	 *	@param		public						$payload		Map of hook arguments
+	 *	@param		Environment		$env			Environment instance
+	 *	@param		object			$context		Hook context object
+	 *	@param		object			$module			Module object
+	 *	@param		public			$payload		Map of hook arguments
 	 *	@return		void
 	 */
 	public static function onRenderServicePanels( Environment $env, $context, $module, $payload = [] )

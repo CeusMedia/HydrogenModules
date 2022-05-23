@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Info_Novelties extends CMF_Hydrogen_Hook
+class Hook_Info_Novelties extends Hook
 {
 	public static function onRegisterDashboardPanels( Environment $env, $context, $module, $payload )
 	{

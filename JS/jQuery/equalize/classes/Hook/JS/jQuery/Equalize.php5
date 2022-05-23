@@ -1,18 +1,19 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_JS_jQuery_Equalize extends CMF_Hydrogen_Hook
+class Hook_JS_jQuery_Equalize extends Hook
 {
 	/**
 	 *	@static
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Caller object
-	 *	@param		object						$module		Module config data object
-	 *	@param		array						$payload	Map of payload data
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Caller object
+	 *	@param		object			$module		Module config data object
+	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
 		if( !$module->config['auto']->value )
 			return;

@@ -1,10 +1,12 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
-
-	static public function onGetRelatedUsers( Environment $env, $context, $module, $data ){
+class Hook_Manage_Project Hook
+{
+	static public function onGetRelatedUsers( Environment $env, $context, $module, $data )
+	{
 		$modelUser			= new Model_User( $env );
 		$modelProjectUser	= new Model_Project_User( $env );
 		$projectIds			= [];
@@ -26,14 +28,16 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 		);
 	}
 
-	static public function onUpdate( Environment $env, $context, $module, $data = [] ){
+	static public function onUpdate( Environment $env, $context, $module, $data = [] )
+	{
 		if( empty( $data['projectId'] ) )
 			throw new InvalidArgumentException( 'Missing project ID' );
 		$model	= new Model_Project( $env );
 		$model->edit( $data['projectId'], array( 'modifiedAt' => time() ) );
 	}
 
-	static public function onProjectRemove( Environment $env, $context, $module, $data ){
+	static public function onProjectRemove( Environment $env, $context, $module, $data )
+	{
 		$projectId	= $data['projectId'];
 		$modelProject	= new Model_Project( $env );
 		$modelUsers		= new Model_Project_User( $env );
@@ -41,7 +45,8 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 		$modelProject->remove( $projectId );
 	}
 
-	static public function onUserRemove( Environment $env, $context, $module, $data ){
+	static public function onUserRemove( Environment $env, $context, $module, $data )
+	{
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Project::onUserRemove" is missing user ID in data';
@@ -81,7 +86,8 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 			$env->getMessenger()->noteSuccess( 'Removed %d project relations.', count( $lists->relations ) );
 */	}
 
-	static public function onListUserRelations( Environment $env, $context, $module, $data ){
+	static public function onListUserRelations( Environment $env, $context, $module, $data )
+	{
 		$data	= (object) $data;
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Project::onListRelations" is missing user ID in data';
@@ -129,7 +135,8 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 			);
 	}
 
-	static public function onListRelations( Environment $env, $context, $module, $data ){
+	static public function onListRelations( Environment $env, $context, $module, $data )
+	{
 		if( empty( $data->projectId ) ){
 			$message	= 'Hook "Project::onListRelations" is missing project ID in data';
 			$env->getMessenger()->noteFailure( $message );
@@ -187,6 +194,4 @@ class Hook_Manage_Project /*extends CMF_Hydrogen_Hook*/{
 			'edit'																					//  action to view or edit entity
 		);
 	}
-
 }
-?>

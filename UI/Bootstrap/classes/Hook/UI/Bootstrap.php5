@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_UI_Bootstrap extends CMF_Hydrogen_Hook
+class Hook_UI_Bootstrap extends Hook
 {
 	public static function onEnvInit( Environment $env, $context, $module, $payload )
 	{

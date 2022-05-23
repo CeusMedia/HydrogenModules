@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Info_Gallery extends CMF_Hydrogen_Hook
+class Hook_Info_Gallery extends Hook
 {
 	public static function onViewRenderContent( Environment $env, $context, $module, $payload )
 	{

@@ -1,17 +1,18 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_UI_DevCenter extends CMF_Hydrogen_Hook
+class Hook_UI_DevCenter extends Hook
 {
 	/**
 	 *	...
 	 *	@access		public
 	 *	@static
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Caller object
-	 *	@param		object						$module		Module config data object
-	 *	@param		array						$payload	Map of payload data
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Caller object
+	 *	@param		object			$module		Module config data object
+	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
 	public static function onAppRespond( Environment $env, $context, $module, $payload = [] )
@@ -28,10 +29,10 @@ class Hook_UI_DevCenter extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@access		public
 	 *	@static
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Caller object
-	 *	@param		object						$module		Module config data object
-	 *	@param		array						$payload	Map of payload data
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Caller object
+	 *	@param		object			$module		Module config data object
+	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
 	public static function onEnvInitModules( Environment $env, $context, $module, $payload = [] )
@@ -44,10 +45,10 @@ class Hook_UI_DevCenter extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@access		public
 	 *	@static
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Caller object
-	 *	@param		object						$module		Module config data object
-	 *	@param		array						$payload	Map of payload data
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Caller object
+	 *	@param		object			$module		Module config data object
+	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
 	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )

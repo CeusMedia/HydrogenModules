@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Admin_Database_Backup_Copy extends CMF_Hydrogen_Hook
+class Hook_Admin_Database_Backup_Copy extends Hook
 {
 	/**
 	 *	...

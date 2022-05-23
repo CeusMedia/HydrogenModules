@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_UI_Compressor extends CMF_Hydrogen_Hook
+class Hook_UI_Compressor extends Hook
 {
 	public static function onApplyModules( Environment $env, $module, $context, $payload = [] )
 	{

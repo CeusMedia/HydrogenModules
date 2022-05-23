@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_System_Exception extends CMF_Hydrogen_Hook
+class Hook_System_Exception extends Hook
 {
 	static public function onAppException( Environment $env, $context, $module, $data = [] )
 	{

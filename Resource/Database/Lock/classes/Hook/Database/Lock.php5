@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Database_Lock extends CMF_Hydrogen_Hook
+class Hook_Database_Lock extends Hook
 {
 	static public function onAuthLogout( Environment $env, $context, $module, $payload = [] )
 	{

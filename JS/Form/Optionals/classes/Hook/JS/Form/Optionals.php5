@@ -1,9 +1,10 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_JS_Form_Optionals extends CMF_Hydrogen_Hook{
-
+class Hook_JS_Form_Optionals extends Hook
+{
 	/**
 	 *	@static
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
@@ -12,7 +13,8 @@ class Hook_JS_Form_Optionals extends CMF_Hydrogen_Hook{
 	 *	@param		array						$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] ){
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
+	{
 //		$config		= $env->getConfig()->getAll( 'module.js_form_optionals', TRUE );
 		$context->js->addScriptOnReady( 'FormOptionals.init();' );
 	}

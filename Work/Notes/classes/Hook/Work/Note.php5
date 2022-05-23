@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Work_Note extends CMF_Hydrogen_Hook
+class Hook_Work_Note extends Hook
 {
 	public static function onProjectRemove( Environment $env, $context, $module, $payload )
 	{

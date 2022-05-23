@@ -1,18 +1,19 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_App_Site extends CMF_Hydrogen_Hook
+class Hook_App_Site extends Hook
 {
 	/**
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Object scope to apply hook within
-	 *	@param		???							$module		???
-	 *	@param		array|object				$data		Data array or object for hook event handler
-	 *	@return		boolean|NULL				...
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Object scope to apply hook within
+	 *	@param		???				$module		???
+	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@return		boolean|NULL	...
 	 */
 	static public function onFrameworkDeprecation( Environment $env, $context, $module, $data = [] )
 	{
@@ -56,11 +57,11 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Object scope to apply hook within
-	 *	@param		???							$module		???
-	 *	@param		array|object				$data		Data array or object for hook event handler
-	 *	@return		boolean|NULL				...
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Object scope to apply hook within
+	 *	@param		???				$module		???
+	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@return		boolean|NULL	...
 	 */
 	static public function onEnvConstructEnd( Environment $env, $context, $module, $data = [] )
 	{
@@ -112,11 +113,11 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Object scope to apply hook within
-	 *	@param		???							$module		???
-	 *	@param		array|object				$data		Data array or object for hook event handler
-	 *	@return		boolean|NULL				...
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Object scope to apply hook within
+	 *	@param		???				$module		???
+	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@return		boolean|NULL	...
 	 */
 	static public function onPageApplyModules( Environment $env, $context, $module, $data = [] )
 	{
@@ -143,11 +144,11 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Object scope to apply hook within
-	 *	@param		???							$module		???
-	 *	@param		array|object				$data		Data array or object for hook event handler
-	 *	@return		boolean|NULL				...
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Object scope to apply hook within
+	 *	@param		???				$module		???
+	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@return		boolean|NULL	...
 	 */
 	static public function onPageInit( Environment $env, $context, $module, $data = [] )
 	{
@@ -166,11 +167,11 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Object scope to apply hook within
-	 *	@param		???							$module		???
-	 *	@param		array|object				$data		Data array or object for hook event handler
-	 *	@return		boolean|NULL				...
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Object scope to apply hook within
+	 *	@param		???				$module		???
+	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@return		boolean|NULL	...
 	 */
 	static public function onTinyMCEGetImageList( Environment $env, $context, $module, $data = [] )
 	{

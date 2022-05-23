@@ -1,9 +1,10 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 use CeusMedia\HydrogenFramework\View;
 
-class Hook_Info_Contact extends CMF_Hydrogen_Hook
+class Hook_Info_Contact extends Hook
 {
 	static public function onRenderContent( Environment $env, $context, $module, $data = [] )
 	{

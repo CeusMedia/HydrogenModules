@@ -1,17 +1,18 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Shop_Payment_Mangopay extends CMF_Hydrogen_Hook
+class Hook_Shop_Payment_Mangopay extends Hook
 {
 	/**
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
-	 *	@param		object						$context		Hook context object
-	 *	@param		object						$module			Module object
-	 *	@param		object						$payload		Data object of hook arguments
+	 *	@param		Environment		$env			Environment instance
+	 *	@param		object			$context		Hook context object
+	 *	@param		object			$module			Module object
+	 *	@param		object			$payload		Data object of hook arguments
 	 *	@return		void
 	 */
 	public static function onRegisterShopPaymentBackends( Environment $env, $context, $module, $payload )
@@ -53,10 +54,10 @@ class Hook_Shop_Payment_Mangopay extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
-	 *	@param		object						$context		Hook context object
-	 *	@param		object						$module			Module object
-	 *	@param		object						$payload		Data object of hook arguments
+	 *	@param		Environment		$env			Environment instance
+	 *	@param		object			$context		Hook context object
+	 *	@param		object			$module			Module object
+	 *	@param		object			$payload		Data object of hook arguments
 	 *	@return		void
 	 */
 	public static function onRenderServicePanels( Environment $env, $context, $module, $payload )

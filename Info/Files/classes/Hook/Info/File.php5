@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Info_File extends CMF_Hydrogen_Hook
+class Hook_Info_File extends Hook
 {
 	static public function onCollectNovelties( Environment $env, $context, $module, $payload = [] )
 	{

@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Work_Mission extends CMF_Hydrogen_Hook
+class Hook_Work_Mission extends Hook
 {
 	static $statusesActive	= array(
 		Model_Mission::STATUS_NEW,

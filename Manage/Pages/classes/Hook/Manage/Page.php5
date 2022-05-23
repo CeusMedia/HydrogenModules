@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Manage_Page extends CMF_Hydrogen_Hook
+class Hook_Manage_Page extends Hook
 {
 	static public function onTinyMceGetLinkList( Environment $env, $context, $module, $payload = [] ){
 		$frontend		= Logic_Frontend::getInstance( $env );

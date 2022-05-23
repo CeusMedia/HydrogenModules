@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_UI_Map extends CMF_Hydrogen_Hook
+class Hook_UI_Map extends Hook
 {
 	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
 	{

@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Helper_Input_Resource extends CMF_Hydrogen_Hook
+class Hook_Helper_Input_Resource extends Hook
 {
 	public static function onPageInitModules( Environment $env, $module, $context, $payload )
 	{

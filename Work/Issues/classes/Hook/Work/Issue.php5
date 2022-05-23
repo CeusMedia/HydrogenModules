@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Work_Issue extends CMF_Hydrogen_Hook
+class Hook_Work_Issue extends Hook
 {
 	static public function onRegisterTimerModule( Environment $env, $context, $module, $payload = [] )
 	{

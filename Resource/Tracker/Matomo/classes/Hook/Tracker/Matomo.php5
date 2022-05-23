@@ -1,18 +1,19 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Tracker_Matomo extends CMF_Hydrogen_Hook
+class Hook_Tracker_Matomo extends Hook
 {
 	/**
 	 *	Loads connector to local Matomo installation for PHP side tracking, if enabled and available.
 	 *	Adds resource 'piwik' to environment.
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
-	 *	@param		object						$context	Hook context object
-	 *	@param		object						$module		Module object
-	 *	@param		public						$payload	Map of hook arguments
+	 *	@param		Environment		$env		Environment instance
+	 *	@param		object			$context	Hook context object
+	 *	@param		object			$module		Module object
+	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
 	 */
 	static public function onEnvInit( Environment $env, $context, $module, $payload = [] )
@@ -38,10 +39,10 @@ class Hook_Tracker_Matomo extends CMF_Hydrogen_Hook
 	 *	Loads connector to remote Matomo installation for client side tracking, if enabled and available.
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
-	 *	@param		object						$context	Hook context object
-	 *	@param		object						$module		Module object
-	 *	@param		public						$payload	Map of hook arguments
+	 *	@param		Environment		$env		Environment instance
+	 *	@param		object			$context	Hook context object
+	 *	@param		object			$module		Module object
+	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
 	 */
 	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] )

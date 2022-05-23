@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Catalog_Bookstore extends CMF_Hydrogen_Hook
+class Hook_Catalog_Bookstore extends Hook
 {
 	public static function onRenderContent( Environment $env, $context, $module, $data )
 	{

@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Resource_Mail_Group_Member extends CMF_Hydrogen_Hook
+class Hook_Resource_Mail_Group_Member extends Hook
 {
 	public static function onMemberActivated( Environment $env, $context, $module, $data = [] )
 	{

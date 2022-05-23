@@ -1,9 +1,10 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Manage_My_User_Invite extends CMF_Hydrogen_Hook{
-
+class Hook_Manage_My_User_Invite extends Hook
+{
 	static public function onUserRemove( Environment $env, $context, $module, $payload ){
 		$payload	= (object) $payload;
 		if( !empty( $payload->userId ) ){
@@ -16,7 +17,8 @@ class Hook_Manage_My_User_Invite extends CMF_Hydrogen_Hook{
 		}
 	}
 
-	static public function onProjectRemove( Environment $env, $context, $module, $payload ){
+	static public function onProjectRemove( Environment $env, $context, $module, $payload )
+	{
 		$payload		= (object) $payload;
 		if( !empty( $payload->projectId ) ){
 			$model		= new Model_User_Invite( $env );

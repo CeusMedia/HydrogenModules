@@ -1,15 +1,17 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Manage_Content_Document extends CMF_Hydrogen_Hook{
-
+class Hook_Manage_Content_Document extends Hook
+{
 	public static function onRegisterHints( Environment $env, $context, $module, $arguments = NULL ){
 		$words	= $env->getLanguage()->getWords( 'manage/content/document' );
 		View_Helper_Hint::registerHints( $words['hints'], 'Manage_Content_Documents' );
 	}
 
-	static public function onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] ){
+	public static function onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
+	{
 		$frontend		= $env->getLogic()->get( 'Frontend' );
 		$moduleConfig	= $env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
 		$pathFront		= $frontend->getPath();

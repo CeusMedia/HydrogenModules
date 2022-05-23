@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Work_Billing extends CMF_Hydrogen_Hook
+class Hook_Work_Billing extends Hook
 {
 	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
 	{
