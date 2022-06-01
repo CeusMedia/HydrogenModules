@@ -80,6 +80,23 @@ class Logic_ShopManager extends CMF_Hydrogen_Logic
 		return $user;
 	}
 
+	public function getAccountCustomer( $userId ){
+		$user	= $this->modelUser->get( $userId );
+		if( !$user )
+			throw new RangeException( 'No customer found for user ID '.$userId );
+		$user->addressBilling	= $this->modelAddress->getByIndices( array(
+			'relationType'	=> 'user',
+			'relationId'	=> $userId,
+			'type'			=> Model_Address::TYPE_BILLING,
+		) );
+		$user->addressDelivery	= $this->modelAddress->getByIndices( array(
+			'relationType'	=> 'user',
+			'relationId'	=> $userId,
+			'type'			=> Model_Address::TYPE_DELIVERY,
+		) );
+		return $user;
+	}
+
 	public function getCustomers( $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return array();//$this->modelCustomer->getAll( $conditions, $orders, $limits );
