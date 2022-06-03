@@ -58,7 +58,7 @@ if( count( $attachments ) ){
 	$list		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './admin/mail/attachment', $page, ceil( $total / $limit ) );
+$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './admin/mail/attachment', $page, ceil( $total / $limit ) );
 
 return '
 <!-- templates/admin/mail/attachment/index.list.php -->

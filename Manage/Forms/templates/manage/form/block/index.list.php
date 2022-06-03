@@ -32,7 +32,7 @@ $linkAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neuer Block', array(
 	'class'	=> 'btn btn-success'
 ) );
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/form/block', $page, $pages );
+$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/form/block', $page, $pages );
 
 return '
 <div class="content-panel">

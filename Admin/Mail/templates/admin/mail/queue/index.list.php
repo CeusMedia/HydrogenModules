@@ -121,7 +121,7 @@ if( $mails ){
 	$dropdown		= UI_HTML_Tag::create( 'div', array( $dropdownToggle, $dropdownMenu ), array( 'class' => 'btn-group dropup' ) );
 }
 
-$pagination		= new \CeusMedia\Bootstrap\PageControl( './admin/mail/queue', $page, ceil( $total / $limit ) );
+$pagination		= new \CeusMedia\Bootstrap\Nav\PageControl( './admin/mail/queue', $page, ceil( $total / $limit ) );
 
 
 return '

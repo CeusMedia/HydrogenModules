@@ -74,7 +74,7 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
-		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		$path	= getCwd().'/'.$this->getPathFromFolderId( $file->downloadFolderId, TRUE );
 		if( !file_exists( $path.$file->title ) ){
 			$this->messenger->noteError( 'Die Datei wurde nicht am Speicherort gefunden. Bitte informieren Sie den Administator!' );
 			$this->restart( 'index/'.$file->downloadFolderId, TRUE );

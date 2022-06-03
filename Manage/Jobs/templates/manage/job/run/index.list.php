@@ -124,7 +124,7 @@ if( $runs ){
 	$table		= UI_HTML_Tag::create( 'table', array( $cols, $thead, $tbody ), array( 'class' => 'table table-striped table-condensed' ) );
 
 	/*  --  PAGINATION  --  */
-	$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/job/run', $page, ceil( $total / $filterLimit ) );
+	$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/job/run', $page, ceil( $total / $filterLimit ) );
 	$table		.= UI_HTML_Tag::create( 'div', $pagination, array( 'class' => 'buttunbar' ) );
 }
 $panelList	= UI_HTML_Tag::create( 'div', array(

@@ -251,7 +251,7 @@ abstract class Mail_Abstract
 	 *	@param		stdClass	$user		User model object
 	 *	@return		boolean		TRUE if success
 	 */
-	public function sendTo( $user ): bool
+	public function sendTo( $user )
 	{
 		if( is_array( $user ) )
 			$user	= (object) $user;

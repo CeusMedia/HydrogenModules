@@ -69,7 +69,7 @@ if( !$filterFormId )
 $pagination	= '';
 if( $pages > 1 ){
 	\CeusMedia\Bootstrap\Icon::$defaultSet	= 'fontawesome';
-	$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/form/fill/', $page, $pages );
+	$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/form/fill/', $page, $pages );
 	$pagination->patternUrl	= '%s';
 }
 $buttonbar	= UI_HTML_Tag::create( 'div', join( '&nbsp;', array( $buttonExport, $pagination ) ), array( 'class' => 'buttonbar' ) );
