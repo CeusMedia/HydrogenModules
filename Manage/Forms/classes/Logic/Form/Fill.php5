@@ -149,10 +149,10 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 	 *	Returns one fill or many fills by form ID as CSV.
 	 *	@access		public
 	 *	@param		string		$type		Type of ID (form|fill)
-	 *	@param		mixed		$id			ID of fill or form of fills
+	 *	@param		array		$ids		ID list of fill or form of fills
 	 *	@return		string
 	 */
-	public function renderToCsv( string $type, $id ): string
+	public function renderToCsv( string $type, array $ids ): string
 	{
 		$types	= ['fill', 'form'];
 		if( !in_array( $type, $types, TRUE ) )

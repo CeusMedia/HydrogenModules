@@ -68,7 +68,7 @@ $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), arra
 
 
 $buttonExport	= UI_HTML_Tag::create( 'a', $iconDownload.'&nbsp;exportieren', array(
-	'href'		=> './manage/form/fill/export/csv/form/'.$filterFormId,
+	'href'		=> './manage/form/fill/export/csv/form/'.join( ',', $filterFormId ),
 	'class'		=> 'btn',
 ) );
 if( !$filterFormId )
