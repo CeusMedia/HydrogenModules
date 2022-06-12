@@ -59,9 +59,12 @@ UI.Image.Slider = {
 			return $(instance.slides[nr]).find("img").prop("title");
 	},
 	init: function(sliderId, options, events){
+		var options = $.extend({}, this.options, options);
+		var prefix = options.selectorPrefix;
+		var selector = "#"+prefix+sliderId;
 		var instance = {
 			sliderId: sliderId,
-			options: $.extend({}, this.options, options),
+			options: options,
 			events: $.extend({}, this.events, events),
 			container: $(selector),
 			dots: null,
@@ -69,8 +72,6 @@ UI.Image.Slider = {
 			timeout: null,
 			paused: false
 		};
-		var prefix = instance.options.selectorPrefix;
-		selector = "#"+prefix+sliderId;
 		if(!$(selector).length && this.strict)
 			throw 'UI.Image.Slider: Container with ID "' + selector + '" not found';
 		instance.slides = $("div."+prefix+"slide", instance.container);

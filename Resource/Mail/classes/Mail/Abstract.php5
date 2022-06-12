@@ -699,7 +699,7 @@ abstract class Mail_Abstract
 	 *	@param		integer		$templateId		ID of mail template to use in favour
 	 *	@return		self
 	 */
-	protected function setText( string $content, $templateId = 0 ): string
+	protected function setText( string $content, $templateId = 0 ): self
 	{
 		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];
