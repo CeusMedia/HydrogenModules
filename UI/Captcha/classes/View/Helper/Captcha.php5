@@ -28,7 +28,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 		$this->captcha->useUnique	= TRUE;
 	}
 
-	public static function checkCaptcha( Environment $env, string $word )
+	public static function checkCaptcha( Environment $env, ?string $word )
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
 		if( $moduleConfig->get( 'mode' ) === 'recaptcha' ){

@@ -4,6 +4,7 @@ $wl		= (object) $words['index-list'];
 
 $iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconAttachment	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-paperclip' ) );
 
 $statusClasses	= array(
 	-3	=> 'important',
@@ -15,7 +16,7 @@ $statusClasses	= array(
 );
 
 $helper	= new View_Helper_TimePhraser( $env );
-
+$logic	= new Logic_Mail( $env );
 //$modelUser	= new Model_User( $env );
 
 $dropdown	= '';
@@ -23,6 +24,7 @@ $table		= UI_HTML_Tag::create( 'em', $wl->noEntries, array( 'class' => 'muted' )
 if( $mails ){
 	$rows	= [];
 	foreach( $mails as $mail ){
+		$logic->decompressMailObject( $mail );
 /*		$timestamp	= $mail->enqueuedAt;
 		if( (int) $mail->status === Model_Mail::STATUS_SENDING )
 			$timestamp	= $mail->attemptedAt;
@@ -71,8 +73,15 @@ if( $mails ){
 			'id'		=> 'admin-mail-queue-list-all-item-'.$mail->mailId,
 		), array( 'id' => $mail->mailId, ) );
 
+
+		$features	= [];
+		if( $mail->object->instance->mail->hasAttachments() )
+			$features[]	= $iconAttachment;
+		$features	= join( '', $features );
+
 		$cells		= [];
 		$cells[]	= UI_HTML_Tag::create( 'td', $checkbox, array( 'class' => '' ) );
+		$cells[]	= UI_HTML_Tag::create( 'td', $features );
 		$cells[]	= UI_HTML_Tag::create( 'td', $senderMail.'<br/>'.$link, array( 'class' => 'autocut cell-mail-subject' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $receiverName.'<br/>'.$receiverMail, array( 'class' => 'autocut cell-mail-receiver' ) );
 		$cells[]	= UI_HTML_Tag::create( 'td', $status.'<br/>'.$datetime, array( 'class' => 'cell-mail-status' ) );
@@ -91,13 +100,14 @@ if( $mails ){
 
 	$heads	= UI_HTML_Elements::TableHeads( array(
 		$checkboxAll,
+		'',
 		'Sender und Betreff',
 		'Empfänger',
 		'Status',
 		'',
 	) );
 
-	$colgroup		= UI_HTML_Elements::ColumnGroup( array( '40px', '', '30%', '120px', '80px' ) );
+	$colgroup		= UI_HTML_Elements::ColumnGroup( array( '30px', '25px', '', '30%', '120px', '80px' ) );
 	$thead			= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
 	$table			= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
@@ -121,8 +131,7 @@ if( $mails ){
 	$dropdown		= UI_HTML_Tag::create( 'div', array( $dropdownToggle, $dropdownMenu ), array( 'class' => 'btn-group dropup' ) );
 }
 
-$pagination		= new \CeusMedia\Bootstrap\PageControl( './admin/mail/queue', $page, ceil( $total / $limit ) );
-
+$pagination		= new \CeusMedia\Bootstrap\Nav\PageControl( './admin/mail/queue', $page, ceil( $total / $limit ) );
 
 return '
 	<div class="content-panel">

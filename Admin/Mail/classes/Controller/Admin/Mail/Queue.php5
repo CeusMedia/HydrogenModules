@@ -225,7 +225,7 @@ class Controller_Admin_Mail_Queue extends Controller
 		if( $filters->get( 'mailClass' ) )
 			$conditions['mailClass'] = $filters->get( 'mailClass' );
 		if( $dateStart && $dateEnd )
-			$conditions['enqueuedAt']	= '>< '.strtotime( $dateStart ).'&'.( strtotime( $dateEnd ) + 24 * 3600 - 1);
+			$conditions['enqueuedAt']	= '>< '.strtotime( $dateStart ).' & '.( strtotime( $dateEnd ) + 24 * 3600 - 1);
 		else if( $dateStart )
 			$conditions['enqueuedAt']	= '>= '.strtotime( $dateStart );
 		else if( $dateEnd )

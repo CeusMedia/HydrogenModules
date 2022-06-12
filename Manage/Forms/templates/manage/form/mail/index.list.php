@@ -61,7 +61,7 @@ $buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Formular-E-Mail', ar
 	'class'	=> 'btn btn-success'
 ) );
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/form/mail', $page, $pages );
+$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/form/mail', $page, $pages );
 
 return '
 <div class="content-panel">

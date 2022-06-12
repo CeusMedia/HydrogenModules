@@ -74,7 +74,7 @@ class View_Manage_Content_Image extends View
 		return $number;
 	}
 
-	protected function listFolders( string $currentPath )
+	protected function listFolders( ?string $currentPath )
 	{
 		$words	= (object) $this->getWords( 'index' );
 		$start	= microtime( TRUE );

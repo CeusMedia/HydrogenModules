@@ -125,7 +125,7 @@ $linkAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neues Formular', array(
 $pagination	= '';
 if( $pages > 1 ){
 	\CeusMedia\Bootstrap\Icon::$defaultSet	= 'fontawesome';
-	$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/form/', $page, $pages );
+	$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/form/', $page, $pages );
 	$pagination->patternUrl	= '%s';
 }
 $buttonbar	= UI_HTML_Tag::create( 'div', join( '&nbsp;', array( $linkAdd, $pagination ) ), array( 'class' => 'buttonbar' ) );
