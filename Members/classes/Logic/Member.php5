@@ -1,9 +1,12 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Logic_Member
 {
 	static protected $instance;
 
-	public static function getInstance( CMF_Hydrogen_Environment $env ): self
+	public static function getInstance( Environment $env ): self
 	{
 		if( !self::$instance )
 			self::$instance	= new Logic_Member( $env );
@@ -100,7 +103,7 @@ class Logic_Member
 	{
 	}
 
-	protected function __construct( CMF_Hydrogen_Environment $env )
+	protected function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->messenger		= $this->env->getMessenger();

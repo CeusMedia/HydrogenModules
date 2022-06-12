@@ -1,5 +1,8 @@
 <?php
-class View_Manage_Ip_Lock_Transport extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_Ip_Lock_Transport extends View{
 
 	public function index(){
 	}

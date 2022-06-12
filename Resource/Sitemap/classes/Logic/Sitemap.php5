@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Logic_Sitemap{
 
 	static protected $instance;
@@ -26,7 +29,7 @@ class Logic_Sitemap{
 		'moreover'	=> "http://api.moreover.com/ping?u=%s",
     );
 
-	protected function __construct( CMF_Hydrogen_Environment $env ){
+	protected function __construct( Environment $env ){
 		$this->env		= $env;
 		$this->config	= $this->env->getConfig()->getAll( 'module.resource_sitemap.', TRUE );
 	}
@@ -53,7 +56,7 @@ class Logic_Sitemap{
 		);
 	}
 
-	static public function getInstance( CMF_Hydrogen_Environment $env ){
+	static public function getInstance( Environment $env ){
 		if( !self::$instance )
 			self::$instance	= new Logic_Sitemap( $env );
 		return self::$instance;

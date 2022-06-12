@@ -1,8 +1,10 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Controller;
+
 use FS_Folder_RecursiveLister as RecursiveFolderIndex;
 
-class Controller_Manage_Form extends CMF_Hydrogen_Controller
+class Controller_Manage_Form extends Controller
 {
 	protected $modelForm;
 	protected $modelFill;

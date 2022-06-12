@@ -1,5 +1,8 @@
 <?php
-class Hook_UI_Helper_Content extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_UI_Helper_Content extends Hook
 {
 	public static function onPageApplyModules( $env, $context, $module, $payload )
 	{
@@ -27,4 +30,3 @@ class Hook_UI_Helper_Content extends CMF_Hydrogen_Hook
 		}
 	}
 }
-

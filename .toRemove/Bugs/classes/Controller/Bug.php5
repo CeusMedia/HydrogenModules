@@ -1,5 +1,8 @@
 <?php
-class Controller_Bug extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Bug extends Controller{
 
 	const CHANGE_DETAILS		= 1;
 	const CHANGE_MANAGER		= 2;

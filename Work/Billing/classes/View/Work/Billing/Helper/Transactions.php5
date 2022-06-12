@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Work_Billing_Helper_Transactions
 {
 	const MODE_NONE				= 0;
@@ -18,7 +21,7 @@ class View_Work_Billing_Helper_Transactions
 	protected $filterPrefix;
 	protected $filterUrl;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 		$this->logic	= new Logic_Billing( $this->env );

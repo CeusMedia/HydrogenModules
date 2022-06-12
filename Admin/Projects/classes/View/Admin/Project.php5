@@ -1,8 +1,11 @@
 <?php
-class View_Admin_Project extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Admin_Project extends View{
 
 	public function index(){}
-	
+
 	public function add(){}
 
 	public function edit(){}

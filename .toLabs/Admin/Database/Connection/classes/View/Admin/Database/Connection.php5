@@ -1,5 +1,8 @@
 <?php
-class View_Admin_Database_Connection extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Admin_Database_Connection extends View
 {
 	/**
 	 *	Default action view on this view.

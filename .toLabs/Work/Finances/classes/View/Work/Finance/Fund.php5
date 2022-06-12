@@ -1,5 +1,8 @@
 <?php
-class View_Work_Finance_Fund extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Work_Finance_Fund extends View
 {
 	public function add()
 	{

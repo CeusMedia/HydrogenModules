@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Project extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Project extends Controller
 {
 	protected $logic;
 	protected $logicMail;

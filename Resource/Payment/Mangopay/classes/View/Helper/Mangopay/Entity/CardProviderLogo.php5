@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Mangopay_Entity_CardProviderLogo extends View_Helper_Mangopay_Abstract
 {
 	protected $nodeClass	= NULL;
@@ -10,7 +13,7 @@ class View_Helper_Mangopay_Entity_CardProviderLogo extends View_Helper_Mangopay_
 	const SIZE_MEDIUM		= 'medium';
 	const SIZE_LARGE		= 'large';
 
-	public static function renderStatic( CMF_Hydrogen_Environment $env, $number, $nodeName = NULL, $nodeClass = NULL )
+	public static function renderStatic( Environment $env, $number, $nodeName = NULL, $nodeClass = NULL )
 	{
 		$instance	= new View_Helper_Mangopay_Entity_CardNumber( $env );
 		if( $nodeName !== NULL )

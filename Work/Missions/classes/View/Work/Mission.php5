@@ -3,13 +3,16 @@
  *	View.
  *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	View.
  *	@version		$Id$
  *	@todo			implement
  *	@todo			code documentation
  */
-class View_Work_Mission extends CMF_Hydrogen_View{
+class View_Work_Mission extends View{
 
 	public function help(){
 		$topic	= $this->getData( 'topic' );

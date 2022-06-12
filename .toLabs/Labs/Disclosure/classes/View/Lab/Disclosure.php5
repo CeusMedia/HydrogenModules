@@ -1,5 +1,8 @@
 <?php
-class View_Lab_Disclosure extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Lab_Disclosure extends View{
 	public function index(){
 		$config		= $this->env->getConfig();
 		$page		= $this->env->getPage();

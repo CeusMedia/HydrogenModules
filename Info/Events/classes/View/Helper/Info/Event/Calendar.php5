@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Info_Event_Calendar
 {
 	protected $env;
@@ -8,7 +11,7 @@ class View_Helper_Info_Event_Calendar
 	protected $words;
 	protected $events	= [];
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->today	= new DateTime( date( 'Y-m-d', time() ) );

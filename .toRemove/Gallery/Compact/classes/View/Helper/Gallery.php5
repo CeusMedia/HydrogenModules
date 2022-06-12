@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Gallery{
 
 	static public function calculateFraction( $fraction, $words = [] ){
@@ -13,7 +16,7 @@ class View_Helper_Gallery{
 		return $label;
 	}
 
-	static public function formatGalleryLinks( CMF_Hydrogen_Environment $env, $content ){
+	static public function formatGalleryLinks( Environment $env, $content ){
 		$matches	= [];
 		preg_match_all( '/\[gallery:(.+)(\|(.*))?\]/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
@@ -25,12 +28,12 @@ class View_Helper_Gallery{
 		return $content;
 	}
 
-	static public function getFeedUrl( CMF_Hydrogen_Environment $env, $limit = NULL ){
+	static public function getFeedUrl( Environment $env, $limit = NULL ){
 		$limit	= ( $limit !== NULL ) ? '/'.abs( (int) $limit ) : '';
 		return $env->getConfig()->get( 'app.base.url' ).'gallery/feed'.$limit;
 	}
 
-	static public function renderGalleryLink( CMF_Hydrogen_Environment $env, $path, $dateMode = 0, $dateFormat = NULL ){
+	static public function renderGalleryLink( Environment $env, $path, $dateMode = 0, $dateFormat = NULL ){
 		$config		= $env->getConfig();
 		$pattern	= $config->get( 'module.gallery_compact.latest.regex' );
 
@@ -65,7 +68,7 @@ class View_Helper_Gallery{
 		return UI_HTML_Tag::create( 'a', $article->title, $attributes );
 	}
 
-	static public function renderImageLabel( CMF_Hydrogen_Environment $env, $fileName, $withIcon = TRUE ){
+	static public function renderImageLabel( Environment $env, $fileName, $withIcon = TRUE ){
 		$ext	= pathinfo( basename( $fileName ), PATHINFO_EXTENSION );
 		$ext	= UI_HTML_Tag::create( "span", '.'.$ext, array( 'class' => 'file-ext' ) );
 		$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-image fa-fw' ) ).'&nbsp;';
@@ -75,14 +78,14 @@ class View_Helper_Gallery{
 		return $icon.$name.$ext;
 	}
 
-	static public function renderImageLink( CMF_Hydrogen_Environment $env, $pathName ){
+	static public function renderImageLink( Environment $env, $pathName ){
 		$label	= self::renderImageLabel( $env, $pathName );
 		$url	= './gallery/info/'.str_replace( '%2F', '/', rawurlencode( $pathName ) );
 		$class	= 'not-icon-label not-link-image';
 		return UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class'=> $class ) );
 	}
 
-	static public function renderLatestGalleries( CMF_Hydrogen_Environment $env, $limit, $offset = 0, $dateMode = 0 ){
+	static public function renderLatestGalleries( Environment $env, $limit, $offset = 0, $dateMode = 0 ){
 		$config		= $env->getConfig();
 
 		$pattern	= $config->get( 'module.gallery_compact.latest.regex' );
@@ -106,7 +109,7 @@ class View_Helper_Gallery{
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'list-latest-galleries' ) );
 	}
 
-	static public function renderStepNavigation( CMF_Hydrogen_Environment $env, $source ){
+	static public function renderStepNavigation( Environment $env, $source ){
 		$steps	= [];
 		$list	= [];
 		$source	= preg_replace( '/\/$/', '', $source );

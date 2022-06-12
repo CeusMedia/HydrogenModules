@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Form_Block extends Controller
 {
 	protected $modelForm;
 	protected $modelBlock;

@@ -1,5 +1,8 @@
 <?php
-class Controller_Company_User extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Company_User extends Controller
 {
 	public function index( $userId = NULL )
 	{

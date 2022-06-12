@@ -1,8 +1,11 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	@todo	complete flow implementation, currently stoppted at method "pay"
  */
-class Controller_Shop extends CMF_Hydrogen_Controller
+class Controller_Shop extends Controller
 {
 	/**	@var	Logic_ShopBridge		$brige */
 	protected $bridge;

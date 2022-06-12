@@ -1,7 +1,11 @@
 <?php
-class Hook_Tool_Calculator extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Tool_Calculator extends Hook
 {
-	public static function onPageBuild( CMF_Hydrogen_Environment $env, $module, $context, $payload )
+	public static function onPageBuild( Environment $env, $module, $context, $payload )
 	{
 		$payload	= (object) $payload;
 		$helper		= new View_Helper_Tool_Calculator( $env );

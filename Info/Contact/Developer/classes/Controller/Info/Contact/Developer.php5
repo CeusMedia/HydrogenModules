@@ -1,5 +1,8 @@
 <?php
-class Controller_Info_Contact_Developer extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Info_Contact_Developer extends Controller{
 
 	public function index(){
 		$request	= $this->env->getRequest();

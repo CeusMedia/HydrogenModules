@@ -1,5 +1,9 @@
 <?php
-class Controller_Blog extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Blog extends Controller{
 
 	/**	@var	Model_Article		$model		Article model instance */
 	protected $model;
@@ -12,7 +16,7 @@ class Controller_Blog extends CMF_Hydrogen_Controller{
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( Environment $env ){
 		parent::__construct( $env );
 		$config			= $env->getConfig();
 		$roleId			= $env->getSession()->get( 'roleId');

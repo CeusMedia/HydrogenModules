@@ -1,9 +1,12 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_MetaTags
 {
 	protected $env;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}

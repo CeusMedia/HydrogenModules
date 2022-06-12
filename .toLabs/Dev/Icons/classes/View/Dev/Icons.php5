@@ -1,5 +1,8 @@
 <?php
-class View_Dev_Icons extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Dev_Icons extends View{
 	public function index(){}
 }
 ?>

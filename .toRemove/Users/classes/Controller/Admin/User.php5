@@ -7,6 +7,9 @@
  *	@copyright		2010-2012 Ceus Media
  *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	User Controller.
  *	@category		cmFrameworks.Hydrogen.Module
@@ -16,7 +19,7 @@
  *	@copyright		2010-2012 Ceus Media
  *	@version		$Id$
  */
-class Controller_Admin_User extends CMF_Hydrogen_Controller {
+class Controller_Admin_User extends Controller{
 
 	protected $filters	= array(
 		'username',

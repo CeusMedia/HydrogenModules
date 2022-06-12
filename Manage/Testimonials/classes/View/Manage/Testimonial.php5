@@ -1,5 +1,8 @@
 <?php
-class View_Manage_Testimonial extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_Testimonial extends View{
 
 	function add() {}
 	function edit() {}

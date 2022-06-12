@@ -26,6 +26,9 @@
  *	@since			0.3
  *	@version		$Id: Json.php5 613 2012-07-08 11:34:11Z christian.wuerker $
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Resource to communicate with chat server.
  *	@category		cmFrameworks
@@ -56,7 +59,7 @@ class Resource_Server_Json {
 	 *	@param		CMF_Hydrogen_Environment		$env	Environment
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env ) {
+	public function __construct( Environment $env ) {
 		$this->env	= $env;
 		$config		= $env->getConfig();
 		$module		= new ADT_List_Dictionary( $config->getAll( 'module.resource_server_json.', TRUE ) );
@@ -89,7 +92,7 @@ class Resource_Server_Json {
 	 *	@todo			localization of messages
 	 *	@todo			allow other auth methods than 'shared secred'
 	 */
-	static public function ___onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
+	static public function ___onEnvInit( Environment $env, $context, $module, $data = [] ){
 		$server		= new Resource_Server_Json( $context );
 		$context->set( 'server', $server );
 		$config		= $context->getConfig();

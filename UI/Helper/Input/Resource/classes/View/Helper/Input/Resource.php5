@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
+use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Input_Resource
 {
@@ -7,7 +8,7 @@ class View_Helper_Input_Resource
 	protected $inputId;
 	protected $modalId;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 	}
@@ -56,7 +57,7 @@ class View_Helper_Input_ResourceTrigger
 	protected $class			= 'btn';
 	protected $paths			= [];
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 	}

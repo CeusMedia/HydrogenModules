@@ -1,11 +1,14 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Info_Manual_CategoryPageList
 {
 	protected $env;
 	protected $activePageId	= 0;
 	protected $pages		= [];
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}

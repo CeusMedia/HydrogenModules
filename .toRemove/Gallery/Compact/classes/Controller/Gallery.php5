@@ -1,5 +1,8 @@
 <?php
-class Controller_Gallery extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Gallery extends Controller
 {
 	protected $path;
 

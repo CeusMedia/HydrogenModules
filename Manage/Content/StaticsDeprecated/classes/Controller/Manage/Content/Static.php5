@@ -7,6 +7,9 @@
  *	@copyright		2011 Ceus Media
  *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Static Content Management Controller.
  *	@category		cmFrameworks.Hydrogen.Modules
@@ -16,7 +19,7 @@
  *	@copyright		2011 Ceus Media
  *	@version		$Id$
  */
-class Controller_Manage_Content_Static extends CMF_Hydrogen_Controller {
+class Controller_Manage_Content_Static extends Controller{
 
 	protected $path;
 

@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Catalog_Clothing_Article extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Catalog_Clothing_Article extends Controller
 {
 	protected $sessionPrefix	= 'filter_manage_catalog_clothing_';
 

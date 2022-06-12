@@ -1,7 +1,11 @@
 <?php
-class View_Catalog extends CMF_Hydrogen_View{
 
-	static public function ___onRenderSearchResults( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+class View_Catalog extends View{
+
+	static public function ___onRenderSearchResults( Environment $env, $context, $module, $data ){
 		$helper		= new View_Helper_Catalog( $env );
 		foreach( $data->documents as $resultDocument  ){
 

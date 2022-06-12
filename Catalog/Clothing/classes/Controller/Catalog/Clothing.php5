@@ -1,5 +1,9 @@
 <?php
-class Controller_Catalog_Clothing extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Catalog_Clothing extends Controller{
 
 	protected function __onInit(){
 	}
@@ -7,7 +11,7 @@ class Controller_Catalog_Clothing extends CMF_Hydrogen_Controller{
 	public function index(){
 	}
 
-	static public function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
+	static public function __onRenderServicePanels( Environment $env, $context, $module, $data = [] ){
 		$arguments	= new ADT_List_Dictionary( $data );
 		if( $orderId = $arguments->get( 'orderId' ) ){
 			$view		= new View_Catalog_Clothing( $env );

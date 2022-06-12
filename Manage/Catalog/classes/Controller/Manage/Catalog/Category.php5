@@ -1,5 +1,9 @@
 <?php
-class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Manage_Catalog_Category extends Controller{
 
 	protected function __onInit(){
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init start' );
@@ -10,7 +14,7 @@ class Controller_Manage_Catalog_Category extends CMF_Hydrogen_Controller{
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init done' );
 	}
 
-	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
+	static public function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] ){
 		$cache		= $env->getCache();
 		if( !( $categories = $cache->get( 'catalog.tinymce.links.categories' ) ) ){
 			$logic		= new Logic_Catalog( $env );

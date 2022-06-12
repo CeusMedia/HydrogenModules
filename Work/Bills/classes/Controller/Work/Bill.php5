@@ -1,5 +1,8 @@
 <?php
-class Controller_Work_Bill extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Bill extends Controller{
 
 	protected $model;
 	protected $userId;

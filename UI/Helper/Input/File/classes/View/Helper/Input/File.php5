@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Input_File
 {
 	protected $env;
@@ -9,7 +12,7 @@ class View_Helper_Input_File
 	protected $folder			= FALSE;
 	protected $required			= FALSE;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 	}
@@ -48,7 +51,7 @@ class View_Helper_Input_File
 		return $container;
 	}
 
-	public static function renderStatic( CMF_Hydrogen_Environment $env, string $name = NULL, string $label = NULL, bool $required = FALSE, string $buttonClass = 'btn-primary' ): string
+	public static function renderStatic( Environment $env, string $name = NULL, string $label = NULL, bool $required = FALSE, string $buttonClass = 'btn-primary' ): string
 	{
 		$instance	= new self( $env );
 		if( $name )

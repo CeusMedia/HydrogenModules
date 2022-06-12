@@ -1,5 +1,8 @@
 <?php
-class Controller_Work_Graph extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Graph extends Controller{
 
 	protected function __onInit(){
 		$this->request		= $this->env->getRequest();

@@ -1,15 +1,18 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Resource_XMPP{
 
 	protected $env;
 	protected $options;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( Environment $env ){
 		$this->env		= $env;
 		$this->options	= $env->getConfig()->getAll( 'module.resource_xmpp.', TRUE );
 	}
 
-	static public function ___onModulesInit( CMF_Hydrogen_Environment $env ){
+	static public function ___onModulesInit( Environment $env ){
 		$env->set( 'xmpp', new self( $env ) );
 		if( $env->modules )
 			$env->modules->callHook( 'XMPP', 'init', $env );

@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	@todo		apply module config main switch
  */
@@ -85,7 +88,7 @@ class Logic_Limiter
 		return $this->rules->set( $key, $value );
 	}
 
-	protected function __construct( CMF_Hydrogen_Environment $env )
+	protected function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.resource_limiter.', TRUE );

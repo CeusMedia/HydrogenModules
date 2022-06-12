@@ -1,5 +1,9 @@
 <?php
-class Hook_Admin_Database_Backup_Copy extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Admin_Database_Backup_Copy extends Hook
 {
 	/**
 	 *	...
@@ -7,7 +11,7 @@ class Hook_Admin_Database_Backup_Copy extends CMF_Hydrogen_Hook
 	 *	@access		public
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
 		$database		= $env->getDatabase();
 		$copyPrefix		= $env->getSession()->get( 'admin-database-backup-copy-prefix' );
@@ -31,7 +35,7 @@ class Hook_Admin_Database_Backup_Copy extends CMF_Hydrogen_Hook
 	 *	@access		public
 	 *	@return		void
 	 */
-	public static function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onPageBuild( Environment $env, $context, $module, $payload = [] )
 	{
 		$defaultDbName	= (string) $env->getConfig()->get( 'module.resource_database.access.name' );
 		$defaultPrefix	= (string) $env->getConfig()->get( 'module.resource_database.access.prefix' );

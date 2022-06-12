@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Catalog_Provision_Product_License extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Catalog_Provision_Product_License extends Controller{
 
 	protected function __onInit(){
 		$this->request				= $this->env->getRequest();

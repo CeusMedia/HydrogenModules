@@ -4,6 +4,9 @@
  *
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Converts HTML to plain text using a DOM parser.
  *
@@ -15,7 +18,7 @@ class View_Helper_HtmlToPlainText
 
 	protected $html;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}

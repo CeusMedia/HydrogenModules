@@ -1,10 +1,13 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	@todo		localize
  *	@todo		integrate validation from Controller_Admin_User::edit
  *	@todo   	validate email, check against trash mail domains
  */
-class Controller_Manage_My_User extends CMF_Hydrogen_Controller{
+class Controller_Manage_My_User extends Controller{
 
 	protected $modelUser;
 	protected $request;

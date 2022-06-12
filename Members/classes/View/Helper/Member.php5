@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Member
 {
 	protected $useGravatar	= TRUE;
@@ -7,7 +10,7 @@ class View_Helper_Member
 	protected $mode			= 'inline';
 	protected $modelUser;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env				= $env;
 		$this->helperGravatar	= new View_Helper_Gravatar( $this->env );
@@ -105,7 +108,7 @@ class View_Helper_Member
 		return $image;
 	}
 
-	public static function renderImageStatic( CMF_Hydrogen_Environment $env, $userObjectOrId, string $url = NULL, string $mode = NULL ): string
+	public static function renderImageStatic( Environment $env, $userObjectOrId, string $url = NULL, string $mode = NULL ): string
 	{
 		$helper	= new self( $env );
 		$helper->setUser( $userObjectOrId );
@@ -116,7 +119,7 @@ class View_Helper_Member
 		return $helper->renderImage();
 	}
 
-	public static function renderStatic( CMF_Hydrogen_Environment $env, $userObjectOrId, string $url = NULL, string $mode = NULL ): string
+	public static function renderStatic( Environment $env, $userObjectOrId, string $url = NULL, string $mode = NULL ): string
 	{
 		$helper	= new self( $env );
 		$helper->setUser( $userObjectOrId );

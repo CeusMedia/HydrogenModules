@@ -6,6 +6,9 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media (https://ceusmedia.de/)
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Chat maintainer.
  *	@category		cmApps
@@ -26,7 +29,7 @@ class Jobber extends \CMF_Hydrogen_Application_Console
 	protected $logic;
 	protected $runningJob;
 
-	public function __construct( \CMF_Hydrogen_Environment $env = NULL )
+	public function __construct( Environment $env = NULL )
 	{
 		parent::__construct( $env, TRUE );															//  construct parent and call __onInit
 		$config				= $this->env->getConfig();

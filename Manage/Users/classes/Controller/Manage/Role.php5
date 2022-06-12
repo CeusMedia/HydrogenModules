@@ -6,6 +6,9 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Role Controller.
  *	@category		cmFrameworks.Hydrogen.Module
@@ -14,7 +17,7 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media
  */
-class Controller_Manage_Role extends CMF_Hydrogen_Controller
+class Controller_Manage_Role extends Controller
 {
 	protected $modelRole;
 	protected $modelRoleRight;

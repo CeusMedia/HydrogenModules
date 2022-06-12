@@ -7,6 +7,9 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Syslog.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	System Log Controller.
  *	@category		cmApps
@@ -21,7 +24,7 @@ class Controller_Syslog extends Controller_Abstract {
 	/**	@var		Environment		$env		Environment instance */
 	protected $env;
 
-	static public function ___onLogException( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
+	static public function ___onLogException( Environment $env, $context, $module, $data = [] ){
 		$fileName	= $env->getConfig()->get( 'log.exception' );
 		if( !isset( $data['exception'] ) )
 			throw new InvalidArgumentException( 'Missing exception in given hook call data' );

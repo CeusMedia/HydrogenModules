@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	@todo		apply module config main switch
  */
@@ -7,7 +10,7 @@ class View_Helper_DevLayers
 	protected $env;
 	protected static $layers	= [];
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 	}

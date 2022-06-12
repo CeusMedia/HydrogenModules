@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Download extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Download extends Controller
 {
 	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	*/
 	protected $messenger;

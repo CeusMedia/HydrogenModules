@@ -1,5 +1,9 @@
 <?php
-class Hook_Work_Mission extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Work_Mission extends Hook
 {
 	static $statusesActive	= array(
 		Model_Mission::STATUS_NEW,
@@ -8,7 +12,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		Model_Mission::STATUS_READY,
 	);
 
-	static public function onCollectNovelties( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onCollectNovelties( Environment $env, $context, $module, $payload = [] )
 	{
 		$model		= new Model_Mission_Document( $env );
 		$conditions	= array( 'modifiedAt' => '> '.( time() - 30 * 24 * 60 * 60 ) );
@@ -26,7 +30,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		}
 	}
 
-	static public function onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onRegisterTimerModule( Environment $env, $context, $module, $payload = [] )
 	{
 		$context->registerModule( (object) array(
 			'moduleId'		=> 'Work_Missions',
@@ -36,7 +40,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		) );
 	}
 
-	static public function onDatabaseLockReleaseCheck( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onDatabaseLockReleaseCheck( Environment $env, $context, $module, $payload = [] )
 	{
 		$data	= (object) $payload;
 		$controllerAction	= $data->controller.'/'.$data->action;
@@ -63,7 +67,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		}
 	}
 
-	static public function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onProjectRemove( Environment $env, $context, $module, $payload = [] )
 	{
 		$data				= (object) $payload;
 		$data->informOthers	= isset( $data->informOthers ) ? $data->informOthers : FALSE;
@@ -86,7 +90,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		}
 	}
 
-	static public function onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onListProjectRelations( Environment $env, $context, $module, $payload = [] )
 	{
 		$data			= (object) $payload;
 		$modelProject	= new Model_Project( $env );
@@ -140,7 +144,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		);
 	}
 
-	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onListUserRelations( Environment $env, $context, $module, $payload = [] )
 	{
 		$data		= (object) $payload;
 		if( empty( $data->userId ) ){
@@ -201,7 +205,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 			);
 	}
 
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onUserRemove( Environment $env, $context, $module, $payload = [] )
 	{
 		$data				= (object) $payload;
 		$data->informOthers	= isset( $data->informOthers ) ? $data->informOthers : FALSE;
@@ -274,7 +278,7 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 			);
 	}
 
-	static public function onStartTimer( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onStartTimer( Environment $env, $context, $module, $payload = [] )
 	{
 		$timer	= $payload['timer'];
 		if( $timer->module === 'Work_Missions' && $timer->moduleId ){
@@ -286,17 +290,17 @@ class Hook_Work_Mission extends CMF_Hydrogen_Hook
 		}
 	}
 
-	static public function onPauseTimer( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onPauseTimer( Environment $env, $context, $module, $payload = [] )
 	{
 //		self::___onStartTimer( $env, $context, $module, $data );
 	}
 
-	static public function onStopTimer( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onStopTimer( Environment $env, $context, $module, $payload = [] )
 	{
 //		self::___onStartTimer( $env, $context, $module, $data );
 	}
 
-	static public function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onRegisterDashboardPanels( Environment $env, $context, $module, $payload = [] )
 	{
 		$context->registerPanel( 'work-mission-my-today', array(
 			'url'		=> 'work/mission/ajaxRenderDashboardPanel',

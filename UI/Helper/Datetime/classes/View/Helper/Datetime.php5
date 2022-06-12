@@ -24,6 +24,9 @@
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@link			http://code.google.com/p/cmframeworks/
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	View helper for converting and displaying timestamps.
  *
@@ -52,7 +55,7 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@param		CMF_Hydrogen_Environment	$env	Environment object
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 	}

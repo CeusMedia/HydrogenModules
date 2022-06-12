@@ -1,7 +1,11 @@
 <?php
-class Hook_UI_Compressor extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_UI_Compressor extends Hook
 {
-	public static function onApplyModules( CMF_Hydrogen_Environment $env, $module, $context, $payload = [] )
+	public static function onApplyModules( Environment $env, $module, $context, $payload = [] )
 	{
 		$config		= (object) $env->getConfig()->getAll( 'module.ui_compressor.' );
 		$pathCache  = $env->getConfig()->get( 'path.cache' );

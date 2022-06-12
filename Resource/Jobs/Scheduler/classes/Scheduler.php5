@@ -6,6 +6,9 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Job scheduler.
  *	@category		cmApps
@@ -61,7 +64,7 @@ class Scheduler extends \CMF_Hydrogen_Application_Console {
 		return $changes;
 	}
 
-	public function __construct( CMF_Hydrogen_Environment $env = NULL ){
+	public function __construct( Environment $env = NULL ){
 		parent::__construct( $env );
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.server_scheduler.', TRUE );
 	}

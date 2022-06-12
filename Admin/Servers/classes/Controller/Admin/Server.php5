@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Server extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Server extends Controller{
 
 	public function add(){
 		$model	= new Model_Server( $this->env );

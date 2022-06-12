@@ -1,5 +1,7 @@
 <?php
-use CMF_Hydrogen_Environment_Resource_Module_Reader as HydrogenModuleReader;
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader as HydrogenModuleReader;
 
 /**
  *	@todo		remove singleton to have serveral frontend logics for different environments
@@ -64,7 +66,7 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 		return $env;
 	}
 
-	static public function getInstance( CMF_Hydrogen_Environment $env ): self
+	static public function getInstance( Environment $env ): self
 	{
 		if( !self::$instance )
 			self::$instance	= new self( $env );

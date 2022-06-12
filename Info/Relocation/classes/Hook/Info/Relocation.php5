@@ -1,7 +1,11 @@
 <?php
-class Hook_Info_Relocation extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Info_Relocation extends Hook
 {
-	public static function onPageApplyModulesCheckShortcutRoute( CMF_Hydrogen_Environment $env, $module, $context, $payload )
+	public static function onPageApplyModulesCheckShortcutRoute( Environment $env, $module, $context, $payload )
 	{
 		$config	= $env->getConfig()->getAll( 'module.info_relocation.', TRUE );	//  shortcut config
 		if( $env->getModules()->has( 'Server_Router' ) ){						//  router module is installed

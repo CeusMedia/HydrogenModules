@@ -1,9 +1,12 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Resource_Database_Undo{
 
 	protected $userId	= 0;
 
-	public function __construct( CMF_Hydrogen_Environment $env, $userId = 0 ){
+	public function __construct( Environment $env, $userId = 0 ){
 		$this->env		= $env;
 		$this->storage	= new Model_Undo_Log( $env );
 		if( $userId )

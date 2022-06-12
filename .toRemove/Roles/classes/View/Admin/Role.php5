@@ -7,6 +7,9 @@
  *	@copyright		2010-2012 Ceus Media
  *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	Role administration views.
  *	@category		cmFrameworks.Hydrogen.Module
@@ -16,7 +19,7 @@
  *	@copyright		2010-2012 Ceus Media
  *	@version		$Id$
  */
-class View_Admin_Role extends CMF_Hydrogen_View
+class View_Admin_Role extends View
 {
 	public function index()
 	{

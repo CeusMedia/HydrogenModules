@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Navigation_Bootstrap_Position extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $divider			= '&nbsp;/&nbsp;';
@@ -7,7 +9,7 @@ class View_Helper_Navigation_Bootstrap_Position extends CMF_Hydrogen_View_Helper
 	protected $moduleId			= "UI_Navigation_Bootstrap_Position";
 	protected $labelHome		= "Home";
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 		$this->hasPageSupport	= $this->env->getModules()->has( 'Info_Pages' );

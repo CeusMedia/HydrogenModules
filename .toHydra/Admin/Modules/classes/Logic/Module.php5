@@ -2,6 +2,9 @@
 /**
  *	Singleton of module logic.
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Singleton of module logic.
  */
@@ -134,14 +137,14 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		return $list;
 	}
 
-/*	static public function getInstance( CMF_Hydrogen_Environment $env ): self
+/*	static public function getInstance( Environment $env ): self
 	{
 		if( !self::$instance )
 			self::$instance	= new Logic_Module( $env );
 		return self::$instance;
 	}*/
 
-	public function getLocalFileTypePath( CMF_Hydrogen_Environment $env, string $fileType, $file ): string
+	public function getLocalFileTypePath( Environment $env, string $fileType, $file ): string
 	{
 		$config		= $env->getConfig();
 		$paths		= $config->getAll( 'path.', TRUE );
@@ -411,7 +414,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		return FALSE;
 	}
 
-	public function invalidateFileCache( CMF_Hydrogen_Environment $env = NULL, bool $verbose = NULL )
+	public function invalidateFileCache( Environment $env = NULL, bool $verbose = NULL )
 	{
 		if( $env->getConfig()->get( 'system.cache.modules' ) ){
 			$fileCache	= $env->path.'config/modules.cache.serial';

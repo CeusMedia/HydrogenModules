@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Job_Abstract
 {
 	/**	@var	CMF_Hydrogen_Environment	$env			Environment object */
@@ -35,7 +38,7 @@ class Job_Abstract
 	 *	@param		Jobber								$manager	Job manage instance
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env, $manager, ?string $jobClassName = NULL, ?string $jobModuleId = NULL )
+	public function __construct( Environment $env, $manager, ?string $jobClassName = NULL, ?string $jobModuleId = NULL )
 	{
 		$this->env			= $env;
 		$this->manager		= $manager;

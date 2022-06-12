@@ -2,6 +2,7 @@
 use CeusMedia\Bootstrap\Dropdown\Menu as DropdownMenu;
 use CeusMedia\Bootstrap\Dropdown\Trigger as DropdownTrigger;
 use CeusMedia\Bootstrap\Button\Group as Dropdown;
+use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Navigation_Bootstrap_PlusMenu extends CMF_Hydrogen_View_Helper_Abstract
 {
@@ -18,7 +19,7 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends CMF_Hydrogen_View_Helper
 	protected $menu;
 	protected $scope;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.'.$this->moduleKey.'.', TRUE );

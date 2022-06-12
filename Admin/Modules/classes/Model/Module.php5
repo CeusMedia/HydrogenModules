@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Model_Module
 {
 	const TYPE_UNKNOWN	= 0;
@@ -21,7 +24,7 @@ class Model_Module
 
 	protected $pathConfig;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->pathRepos	= $env->config->get( 'module.admin_modules.path' );

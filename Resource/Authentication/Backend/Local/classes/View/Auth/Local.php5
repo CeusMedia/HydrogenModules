@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	Authentication View.
  *	@category		cmApps
@@ -6,7 +9,7 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */
-class View_Auth_Local extends CMF_Hydrogen_View
+class View_Auth_Local extends View
 {
 	protected function __onInit()
 	{

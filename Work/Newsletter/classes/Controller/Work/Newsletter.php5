@@ -1,5 +1,8 @@
 <?php
-class Controller_Work_Newsletter extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Newsletter extends Controller
 {
 	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
 	protected $logic;

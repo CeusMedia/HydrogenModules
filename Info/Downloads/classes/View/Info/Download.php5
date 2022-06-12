@@ -1,5 +1,8 @@
 <?php
-class View_Info_Download extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Info_Download extends View
 {
 	public function index()
 	{

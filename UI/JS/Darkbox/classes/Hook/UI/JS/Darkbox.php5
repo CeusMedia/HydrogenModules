@@ -1,5 +1,8 @@
 <?php
-class Hook_UI_JS_Darkbox extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_UI_JS_Darkbox extends Hook
 {
 	public static function onPageApplyModules( $env, $context, $module, $payload )
 	{

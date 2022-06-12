@@ -1,5 +1,8 @@
 <?php
-class Controller_Catalog_Bookstore extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Catalog_Bookstore extends Controller
 {
 	/**	@var	Logic_ShopBridge			$bridge */
 	protected $bridge;

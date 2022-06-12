@@ -1,5 +1,9 @@
 <?php
-class View_Work_Billing_Person extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+class View_Work_Billing_Person extends View
 {
 	public function add()
 	{
@@ -13,7 +17,7 @@ class View_Work_Billing_Person extends CMF_Hydrogen_View
 	{
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment $env, $personId, $current = 0 ): string
+	public static function renderTabs( Environment $env, $personId, $current = 0 ): string
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/billing/person/' );

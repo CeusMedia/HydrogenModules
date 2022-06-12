@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Logic_User_Provision extends CMF_Hydrogen_Logic{
 
 	protected function __onInit(){
@@ -227,7 +230,7 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	 *	@todo		add hook in module config
 	 *	@todo		add hook call in module Resource:Users, better implement Logic_UserStatus before
 	 */
-	public function __onChangeUserStatus( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
+	public function __onChangeUserStatus( Environment $env, $context, $module, $data = [] ){
 		if( !isset( $data['status'] ) )
 			throw new InvalidArgumentException( 'Missing new status' );
 		if( !isset( $data['userId'] ) )

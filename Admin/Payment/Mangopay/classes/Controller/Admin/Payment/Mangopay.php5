@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Payment_Mangopay extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Payment_Mangopay extends Controller{
 
 	protected $messenger;
 

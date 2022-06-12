@@ -4,6 +4,9 @@
  *	@category		Hydrogen.Module
  *	@package		Work.Missions
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Controller.
  *	@category		Hydrogen.Module
@@ -11,7 +14,7 @@
  *	@todo			implement
  *	@todo			code documentation
  */
-class Controller_Work_Mission extends CMF_Hydrogen_Controller
+class Controller_Work_Mission extends Controller
 {
 	public function help( $topic = NULL )
 	{

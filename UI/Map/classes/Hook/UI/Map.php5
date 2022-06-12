@@ -1,7 +1,11 @@
 <?php
-class Hook_UI_Map extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_UI_Map extends Hook
 {
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
 	{
 		$key	= $env->getConfig()->get( 'module.ui_map.apiKey' );
 		if( $key ){

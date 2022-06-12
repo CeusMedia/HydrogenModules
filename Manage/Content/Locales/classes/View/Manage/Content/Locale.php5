@@ -7,6 +7,9 @@
  *	@copyright		2011 Ceus Media
  *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	Content View.
  *	@category		cmApps
@@ -16,7 +19,7 @@
  *	@copyright		2011 Ceus Media
  *	@version		$Id$
  */
-class View_Manage_Content_Locale extends CMF_Hydrogen_View
+class View_Manage_Content_Locale extends View
 {
 	public function index()
 	{

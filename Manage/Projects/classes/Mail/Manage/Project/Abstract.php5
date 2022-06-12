@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\View;
+
 abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
 {
 	protected function generate(): self
@@ -16,7 +19,7 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
 
 	protected function collectFacts( $project ): View_Helper_Mail_Facts
 	{
-		$view		= new CMF_Hydrogen_View( $this->env );
+		$view		= new View( $this->env );
 		$logic		= Logic_Project::getInstance( $this->env );
 		$words		= $this->getWords( 'manage/project' );
 		$members	= $logic->getProjectUsers( $project->projectId );

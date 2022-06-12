@@ -6,6 +6,9 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Locale Content Management Controller.
  *	@category		cmApps
@@ -14,7 +17,7 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011 Ceus Media
  */
-class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
+class Controller_Manage_Content_Locale extends Controller{
 
 	static public $folders	= array(
 		'locale'		=> '',

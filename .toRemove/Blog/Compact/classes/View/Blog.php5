@@ -1,5 +1,9 @@
 <?php
-class View_Blog extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+class View_Blog extends View
 {
 	public static function renderInfoList( $article, $date = TRUE, $time = TRUE )
 	{
@@ -21,7 +25,7 @@ class View_Blog extends CMF_Hydrogen_View
 		return UI_HTML_Tag::create( 'ul', join( $infoList ), $attrList );
 	}
 
-	public static function renderAuthorList( CMF_Hydrogen_Environment $env, $authors, $linked = FALSE )
+	public static function renderAuthorList( Environment $env, $authors, $linked = FALSE )
 	{
 		$authorList	= [];
 		if( !$authors )
@@ -37,7 +41,7 @@ class View_Blog extends CMF_Hydrogen_View
 		return UI_HTML_Tag::create( 'ul', join( $authorList ), array( 'class' => 'blog-article-author-list' ) );
 	}
 
-	public static function renderTagList( CMF_Hydrogen_Environment $env, $tags )
+	public static function renderTagList( Environment $env, $tags )
 	{
 		$tagList	= [];
 		$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-tags fa-fw' ) ).'&nbsp;';

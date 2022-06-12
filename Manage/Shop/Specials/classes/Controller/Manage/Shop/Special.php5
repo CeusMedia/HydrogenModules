@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Shop_Special extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Shop_Special extends Controller
 {
 	public function ajaxLoadCatalogArticles( $bridgeId )
 	{

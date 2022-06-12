@@ -1,5 +1,8 @@
 <?php
-class Controller_Info_Dashboard extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Info_Dashboard extends Controller
 {
 	protected $logic;
 	protected $messenger;

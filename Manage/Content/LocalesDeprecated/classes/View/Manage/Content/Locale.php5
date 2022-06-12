@@ -5,6 +5,9 @@
  *	@copyright		2011-2014 Ceus Media
  *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	Content View.
  *	@extends		CMF_Hydrogen_View
@@ -12,7 +15,7 @@
  *	@copyright		2011-2014 Ceus Media
  *	@version		$Id$
  */
-class View_Manage_Content_Locale extends CMF_Hydrogen_View {
+class View_Manage_Content_Locale extends View{
 
 	public function index() {
 		$language	= $this->getData( 'language' );

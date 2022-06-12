@@ -1,5 +1,8 @@
 <?php
-class Controller_Info_Forum extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Info_Forum extends Controller
 {
 	/**	@var	Model_Forum_Post		$modelPost */
 	protected $modelPost;

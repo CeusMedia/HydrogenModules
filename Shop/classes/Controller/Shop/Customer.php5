@@ -1,5 +1,8 @@
 <?php
-class Controller_Shop_Customer extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Shop_Customer extends Controller
 {
 	/**	@var	array					$backends			List of available payment backends */
 	protected $backends					= [];

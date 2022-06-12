@@ -7,6 +7,9 @@
  *	@copyright		2012 Ceus Media
  *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	Locale Management View.
  *	@category		cmFrameworks.Hydrogen.Modules
@@ -16,7 +19,7 @@
  *	@copyright		2012 Ceus Media
  *	@version		$Id$
  */
-class View_Manage_Locale extends CMF_Hydrogen_View {
+class View_Manage_Locale extends View{
 	public function add() {}
 	public function edit() {}
 	public function index() {}

@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	@todo		apply module config main switch
  */
@@ -6,7 +10,7 @@ class Browser{
 
 	protected $env;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( Environment $env ){
 		$this->env	= $env;
 		$this->time1	= $this->env->getClock()->stop( 3, 1 );
 	}
@@ -78,7 +82,7 @@ class Browser{
 			'url'			=> getEnv( 'REQUEST_URI' ),
 		);
 
-		$view	= new CMF_Hydrogen_View( $this->env );
+		$view	= new View( $this->env );
 		$view->setData( $data );
 		$body	= $view->loadTemplateFile( 'browser/index.php' );
 

@@ -1,5 +1,8 @@
 <?php
-class View_Database_Lock extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Database_Lock extends View{
 
 	public function ajaxRenderDashboardPanel(){
 		$context	= new View_Helper_Work_Time_Timer( $this->env );

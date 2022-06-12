@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Bootstrap_Modal_Trigger
 {
 	protected $env;
@@ -12,7 +15,7 @@ class View_Helper_Bootstrap_Modal_Trigger
 	 *	@access		public
 	 *	@param		object		$env			Instance of Hydrogen Environment
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 	}
@@ -22,7 +25,7 @@ class View_Helper_Bootstrap_Modal_Trigger
 		return $this->render();
 	}
 
-	public static function create( CMF_Hydrogen_Environment $env ): self
+	public static function create( Environment $env ): self
 	{
 		return new static( $env );
 	}

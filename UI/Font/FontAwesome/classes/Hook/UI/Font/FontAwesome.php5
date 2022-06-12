@@ -1,17 +1,21 @@
 <?php
-class Hook_UI_Font_FontAwesome extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_UI_Font_FontAwesome extends Hook
 {
 	/**
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Caller object
-	 *	@param		object						$module		Module config data object
-	 *	@param		array						$payload	Map of payload data
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Caller object
+	 *	@param		object			$module		Module config data object
+	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $module, $context, $payload )
+	public static function onPageApplyModules( Environment $env, $module, $context, $payload )
 	{
 		$config	= $env->getConfig();
 		$mc		= $config->getAll( 'module.ui_font_fontawesome.', TRUE );

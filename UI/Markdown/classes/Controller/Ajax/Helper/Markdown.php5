@@ -1,5 +1,8 @@
 <?php
-class Controller_Ajax_Helper_Markdown extends CMF_Hydrogen_Controller_Ajax
+
+use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
+
+class Controller_Ajax_Helper_Markdown extends AjaxController
 {
 	public function render()
 	{

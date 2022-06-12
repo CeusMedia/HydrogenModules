@@ -4,13 +4,16 @@
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright	Ceus Media 2015
  */
+
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	View for system CPU load indicating.
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright	Ceus Media 2015
  *	@extends	CMF_Hydrogen_View
  */
-class View_System_Load extends CMF_Hydrogen_View{
+class View_System_Load extends View{
 
 	/**
 	 *	Prints HTML indicator for system load and quits execution.

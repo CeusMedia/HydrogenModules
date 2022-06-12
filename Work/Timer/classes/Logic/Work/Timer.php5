@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Logic_Work_Timer
 {
 	static protected $instance;
@@ -85,7 +88,7 @@ class Logic_Work_Timer
 
 	protected function __clone(){}
 
-	protected function __construct( CMF_Hydrogen_Environment $env )
+	protected function __construct( Environment $env )
 	{
 		$this->env				= $env;
 		$this->session			= $this->env->getSession();

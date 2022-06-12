@@ -7,6 +7,9 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: TokenStore.php 2676 2012-04-02 15:40:34Z christian.wuerker $
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Token Store Singleton.
  *	This is a singleton implementation - please use static call to getInstance() instead of construction with new.
@@ -35,7 +38,7 @@ class Resource_TokenStore
 	 *	@param		CMF_Hydrogen_Environment		$env		Environment object
 	 *	@return		void
 	 */
-	protected function __construct( CMF_Hydrogen_Environment $env ) {
+	protected function __construct( Environment $env ) {
 		$this->env		= $env;																		//  store environment
 		$this->model	= new Model_Token( $this->env );											//  create new token store model
 		$this->config	= $this->env->getConfig();													//  shurtcut configuration
@@ -55,7 +58,7 @@ class Resource_TokenStore
 	 *	@param		CMF_Hydrogen_Environment		$env		Environment object
 	 *	@return		Resource_TokenStore
 	 */
-	public static function getInstance( CMF_Hydrogen_Environment $env ){
+	public static function getInstance( Environment $env ){
 		if( !self::$instance )
 			self::$instance	= new Resource_TokenStore( $env );
 		return self::$instance;

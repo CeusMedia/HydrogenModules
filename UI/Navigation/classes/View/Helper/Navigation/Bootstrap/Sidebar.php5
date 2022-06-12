@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Navigation_Bootstrap_Sidebar
 {
 	protected $env;
@@ -12,7 +15,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 	protected $style;
 	protected $helperAccountMenu;
 
-	public function __construct( CMF_Hydrogen_Environment $env, Model_Menu $menu = NULL )
+	public function __construct( Environment $env, Model_Menu $menu = NULL )
 	{
 		$this->env		= $env;
 		if( NULL !== $menu )

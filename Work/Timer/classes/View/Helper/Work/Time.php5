@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 abstract class View_Helper_Work_Time extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $session;
@@ -10,7 +13,7 @@ abstract class View_Helper_Work_Time extends CMF_Hydrogen_View_Helper_Abstract
 	protected $modelTimer;
 	public $from;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 		$this->session			= $this->env->getSession();
@@ -93,7 +96,7 @@ abstract class View_Helper_Work_Time extends CMF_Hydrogen_View_Helper_Abstract
 		return $this;
 	}
 
-	static public function sumTimersOfModuleId( CMF_Hydrogen_Environment $env, string $moduleKey, $moduleId, array $statuses = array( 3 ), bool $formatAsTime = FALSE )
+	static public function sumTimersOfModuleId( Environment $env, string $moduleKey, $moduleId, array $statuses = array( 3 ), bool $formatAsTime = FALSE )
 	{
 		$logic		= Logic_Work_Timer::getInstance( $env );
 		$seconds	= $logic->sumTimersOfModuleId( $moduleKey, $moduleId, $statuses );

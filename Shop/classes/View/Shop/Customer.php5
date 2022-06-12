@@ -1,5 +1,8 @@
 <?php
-class View_Shop_Customer extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Shop_Customer extends View
 {
 	public function address()
 	{

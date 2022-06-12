@@ -1,5 +1,8 @@
 <?php
-class View_Manage_My_User_Setting extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_My_User_Setting extends View{
 
 	protected function getModuleWords( $module ){
 		$path		= $this->env->getConfig()->get( 'path.locales' );

@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Module extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Module extends Controller
 {
 	const INSTALL_TYPE_UNKNOWN	= 0;
 	const INSTALL_TYPE_LINK		= 1;

@@ -7,6 +7,10 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Syslog.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	System Log Controller.
  *	@category		cmApps
@@ -16,7 +20,7 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Syslog.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
-class Controller_System_Log extends CMF_Hydrogen_Controller{
+class Controller_System_Log extends Controller{
 
 	/**	@var		Environment		$env		Environment instance */
 	protected $env;
@@ -26,7 +30,7 @@ class Controller_System_Log extends CMF_Hydrogen_Controller{
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.server_system_log.', TRUE );
 	}
 
-	static public function ___onLogException( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
+	static public function ___onLogException( Environment $env, $context, $module, $data = [] ){
 		$config = $env->getConfig()->getAll( 'module.server_system_log.', TRUE );
 		if( !$config->get( 'active' ) )
 			return;
@@ -91,7 +95,7 @@ class Controller_System_Log extends CMF_Hydrogen_Controller{
 		return $lines;
 	}
 
-	static public function handleException( CMF_Hydrogen_Environment $env, $exception ){
+	static public function handleException( Environment $env, $exception ){
 		self::logException( $env, $exception );
 		self::mailException( $env, $exception );
 	}
@@ -110,7 +114,7 @@ class Controller_System_Log extends CMF_Hydrogen_Controller{
 		$this->addData( 'limit', $limit );
 	}
 
-	static public function logException( CMF_Hydrogen_Environment $env, $exception ){
+	static public function logException( Environment $env, $exception ){
 		$config		= $env->getConfig()->getAll( 'module.server_system_log.', TRUE );
 		if( $config->get( 'file.active' ) && $config->get( 'file.name' ) ){
 			$serial		= base64_encode( serialize( (object) array(
@@ -125,7 +129,7 @@ class Controller_System_Log extends CMF_Hydrogen_Controller{
 		}
 	}
 
-	static public function mailException( CMF_Hydrogen_Environment $env, $exception ){
+	static public function mailException( Environment $env, $exception ){
 		$config		= $env->getConfig()->getAll( 'module.server_system_log.', TRUE );
 		if( $config->get( 'email.active' ) && $config->get( 'email.receivers' ) ){
 			$language	= $env->getLanguage()->getLanguage();

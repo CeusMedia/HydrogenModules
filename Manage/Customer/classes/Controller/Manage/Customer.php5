@@ -1,11 +1,15 @@
 <?php
-class Controller_Manage_Customer extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Manage_Customer extends Controller
 {
 	protected $messenger;
 	protected $modelCustomer;
 	protected $modelRating;
 
-	public static function ___registerHints( CMF_Hydrogen_Environment $env, $context, $module, $arguments = NULL )
+	public static function ___registerHints( Environment $env, $context, $module, $arguments = NULL )
 	{
 		if( class_exists( 'View_Helper_Hint' ) )
 			View_Helper_Hint::registerHintsFromModuleHook( $env, $module );

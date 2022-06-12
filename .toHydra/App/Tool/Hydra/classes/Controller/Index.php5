@@ -1,10 +1,14 @@
 <?php
-class Controller_Index extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Index extends Controller{
 
 	/**	@var	Tool_Hydrogen_Setup_Environment		$env		Environment object */
 	protected $env;
 
-	static public function ___onCheckAccess( CMF_Hydrogen_Environment $env, $module, $context, $data = [] ){
+	static public function ___onCheckAccess( Environment $env, $module, $context, $data = [] ){
 		$allowUnsecuredLocalhost	= !TRUE;
 		$isAuthorized	= (bool) $env->getRequest()->getHeader( 'Authorization', FALSE );
 		$isLocalhost	= getEnv( 'HTTP_HOST' ) === "localhost";

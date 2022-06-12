@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Payment_Mangopay_Client extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Payment_Mangopay_Client extends Controller
 {
 	public function edit()
 	{
