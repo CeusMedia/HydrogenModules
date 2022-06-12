@@ -71,7 +71,7 @@ class View_Manage_Content_Image extends CMF_Hydrogen_View
 		return $number;
 	}
 
-	protected function listFolders( string $currentPath )
+	protected function listFolders( ?string $currentPath )
 	{
 		$words	= (object) $this->getWords( 'index' );
 		$start	= microtime( TRUE );
