@@ -108,6 +108,15 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 		$fills		= $this->modelFill->getAll( $conditions, $orders, $limits );
 		$forms		= $this->modelForm->getAll( array(), array( 'title' => 'ASC' ) );
 
+		foreach( $fills as $fill ){
+			$fill->transfers	= $this->modelFillTransfer->getAllByIndex( 'fillId', $fill->fillId );
+		}
+
+		$transferTargetMap  = [];
+		foreach( $this->modelTransferTarget->getAll() as $target )
+			$transferTargetMap[$target->formTransferTargetId]   = $target;
+		$this->addData( 'transferTargets', $transferTargetMap );
+
 		$this->addData( 'fills', $fills );
 		$this->addData( 'forms', $forms );
 		$this->addData( 'page', $page );

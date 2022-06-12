@@ -7,6 +7,7 @@ $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remo
 $iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
 $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 $iconDownload	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+$iconTransfer   = UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
 
 $statuses	= array(
 	Model_Form_Fill::STATUS_NEW			=> UI_HTML_Tag::create( 'label', 'unbestätigt', array( 'class' => 'label' ) ),
@@ -39,11 +40,22 @@ foreach( $fills as $fill ){
 	$title		= UI_HTML_Tag::create( 'a', $name.$email, array( 'href' => $linkView ) );
 	$form		= $modelForm->get( $fill->formId );
 	$form		= UI_HTML_Tag::create( 'a', $form->title, array( 'href' => $linkForm ) );
+
+	$transfers	= '';
+	if( count( $fill->transfers ) ){
+		$list	= [];
+		foreach( $fill->transfers as $transfer )
+			$list[]	= $transferTargets[$transfer->formTransferTargetId]->title;
+		$list		= 'Transfers:'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
+		$label		= count( $fill->transfers );
+		$transfers	= UI_HTML_Tag::create( 'span', $iconTransfer.'&nbsp;'.$label, ['class' => 'label label-info', 'title' => $list] );
+	}
+
 	$rows[]		= UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $fill->fillId ) ),
 		UI_HTML_Tag::create( 'td', $title ),
 		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $form ) ),
-		UI_HTML_Tag::create( 'td', $statuses[(int) $fill->status] ),
+		UI_HTML_Tag::create( 'td', $statuses[(int) $fill->status].'&nbsp;'.$transfers ),
 		UI_HTML_Tag::create( 'td', $date ),
 		UI_HTML_Tag::create( 'td', $buttons ),
 	) );
