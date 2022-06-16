@@ -3,7 +3,7 @@ $iconAdd	= UI_HTML_Tag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $table		= UI_HTML_Tag::create( 'div', 'No connections found.', array ('class' => 'hint' ) );
 
-print_m( $connectorMap );
+//print_m( $connectorMap );
 
 $statuses	= [
 	0	=> 'deaktiviert',
