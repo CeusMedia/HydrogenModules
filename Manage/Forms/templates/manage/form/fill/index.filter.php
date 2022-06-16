@@ -4,7 +4,8 @@ $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-searc
 
 $optForm		= array( '' => '- alle -' );
 foreach( $forms as $item )
-	$optForm[$item->formId]	= $item->title;
+	if( $item->status > 0 )
+		$optForm[$item->formId]	= $item->title;
 $optForm		= UI_HTML_Elements::Options( $optForm, $filterFormId );
 
 $optStatus		= array(

@@ -44,11 +44,21 @@ foreach( $fills as $fill ){
 	$transfers	= '';
 	if( count( $fill->transfers ) ){
 		$list	= [];
-		foreach( $fill->transfers as $transfer )
+		$success	= TRUE;
+		foreach( $fill->transfers as $transfer ){
+			if( $success && in_array( (int) $transfer->status, [
+				Model_Form_Fill_Transfer::STATUS_ERROR,
+				Model_Form_Fill_Transfer::STATUS_EXCEPTION,
+			], TRUE ) )
+				$success	= FALSE;
 			$list[]	= $transferTargets[$transfer->formTransferTargetId]->title;
+		}
 		$list		= 'Transfers:'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
 		$label		= count( $fill->transfers );
-		$transfers	= UI_HTML_Tag::create( 'span', $iconTransfer.'&nbsp;'.$label, ['class' => 'label label-info', 'title' => $list] );
+		$transfers	= UI_HTML_Tag::create( 'span', $iconTransfer.'&nbsp;'.$label, [
+			'class'	=> 'label '.( $success ? 'label-success' : 'label-important' ),
+			'title' => $list
+		] );
 	}
 
 	$rows[]		= UI_HTML_Tag::create( 'tr', array(
@@ -65,16 +75,14 @@ $thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped not-table-condensed' ) );
 
-
-
-$buttonExport	= UI_HTML_Tag::create( 'a', $iconDownload.'&nbsp;exportieren', array(
-	'href'		=> './manage/form/fill/export/csv/form/'.join( ',', $filterFormId ),
+$buttonExport	= UI_HTML_Tag::create( 'button', $iconDownload.'&nbsp;exportieren', array(
+	'type'		=> 'button',
+	'disabled'	=> 'disabled',
 	'class'		=> 'btn',
 ) );
-if( !$filterFormId )
-	$buttonExport	= UI_HTML_Tag::create( 'button', $iconDownload.'&nbsp;exportieren', array(
-		'type'		=> 'button',
-		'disabled'	=> 'disabled',
+if( !empty( $filterFormId ) )
+	$buttonExport	= UI_HTML_Tag::create( 'a', $iconDownload.'&nbsp;exportieren', array(
+		'href'		=> './manage/form/fill/export/csv/form/'.join( ',', $filterFormId ),
 		'class'		=> 'btn',
 	) );
 
