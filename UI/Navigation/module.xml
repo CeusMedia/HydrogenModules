@@ -5,7 +5,7 @@
 
 This module combines several navigation types to provide a standard navigation composition.
 ]]></description>
-	<version>0.5.4</version>
+	<version>0.5.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -38,6 +38,7 @@ This module combines several navigation types to provide a standard navigation c
 	<log version="0.5.2">Improve exception handling for pages file.</log>
 	<log version="0.5.3">Improve brand integration for sidebar navigation.</log>
 	<log version="0.5.4">Extract hook to own class.</log>
+	<log version="0.5.5">Support submenu dividers (via page chapters) in dropdown menu.</log>
 	<category>User Interface</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

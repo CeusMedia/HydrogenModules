@@ -39,11 +39,17 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 		foreach( $pages as $page ){
 			if( $page->type == 'menu' ){
 				$sublist	= [];
+				$lastChapter	= '';
 				foreach( $page->items as $subpage ){
 					$class		= $subpage->active ? 'active' : NULL;
 					$href		= './'.$subpage->link;
 //					$link		= UI_HTML_Tag::create( 'a', $subpage->label, array( 'href' => $href ) );
 					$link		= UI_HTML_Tag::create( 'a', $this->renderLabelWithIcon( $subpage ), array( 'href' => $href ) );
+					if( strlen( trim( $subpage->chapter ) ) > 0 && $subpage->chapter !== $lastChapter ){
+						if( count( $sublist ) > 0)
+							$sublist[]	= UI_HTML_Tag::create( 'li', '', ['class' => 'divider'] );
+						$lastChapter = $subpage->chapter;
+					}
 					$sublist[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
 				}
 				if( !$sublist )

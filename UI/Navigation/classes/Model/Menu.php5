@@ -216,6 +216,7 @@ class Model_Menu
 //							'active'	=> $this->current == $page->path.'/'.$subpage->path,
 							'active'	=> FALSE,
 							'icon'		=> isset( $subpage->icon ) ? $subpage->icon : NULL,
+							'chapter'	=> $subpage->chapter ?? '',
 						);
 						$subpages[]	= $subitem;
 					}
@@ -305,6 +306,7 @@ class Model_Menu
 //							'active'	=> $this->current == $page->identifier.'/'.$subpage->identifier,
 							'active'	=> FALSE,
 							'icon'		=> @$subpage->icon,
+							'chapter'	=> $subpage->chapter ?? '',
 						);
 						if( $this->localization ){
 							$id	= 'page.'.$subitem->path.'-title';
