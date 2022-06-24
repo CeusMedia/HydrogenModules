@@ -160,7 +160,7 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 
 		$data	= [];
 		$keys	= ['dateCreated', 'dateConfirmed'];
-		$fills	= $this->modelFill->getAllByIndex( $type.'Id', $id );
+		$fills	= $this->modelFill->getAllByIndex( $type.'Id', $ids );
 		foreach( $fills as $fill ){
 //print_m( $fill );
 			$fill->data	= json_decode( $fill->data );
