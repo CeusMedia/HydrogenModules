@@ -32,6 +32,7 @@ class Hook_UI_Font_FontAwesome extends CMF_Hydrogen_Hook
 					$env->getPage()->css->common->addUrl( $url );
 				}
 			}
+			$env->getPage()->addBodyClass( 'uses-FontAwesome' );
 			return;
 		}
 
