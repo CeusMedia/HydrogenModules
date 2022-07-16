@@ -1,0 +1,39 @@
+.cmClearInput-trigger {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display: block;
+	width: 11px;
+	height: 11px;
+	opacity: 0.5;
+	cursor: pointer;
+	background-image: url(../img/clearInput.png);
+/*	background-color: red;*/ /* show hitbox */
+/*	border-radius: 1em;*/
+	}
+.cmClearInput-trigger:hover {
+	opacity: 0.85;
+	}
+.cmClearInput-trigger > .fa {
+	display: none;
+ 	}
+
+
+body.uses-FontAwesome .cmClearInput-trigger {
+	bottom: 15px;
+	top: auto;
+	left: 4px;
+	width: auto;
+	height: auto;
+	opacity: 0.67;
+	background-image: none;
+/*	background-color: red;*/ /* show hitbox */
+	}
+
+body.uses-FontAwesome .cmClearInput {
+	padding-left: 21px;
+	}
+
+body.uses-FontAwesome .cmClearInput-trigger > .fa {
+	display: inline-block;
+	}
