@@ -2,15 +2,30 @@
 
 use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_Gallery extends View{
+class View_Manage_Gallery extends View
+{
+	public static function urlencodeTitle( $label, $delimiter = "_" )
+	{
+		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
+		$label	= preg_replace( "/ +/", $delimiter, $label );
+		return $label;
+	}
 
-	public function add(){}
+	public function add()
+	{
+	}
 
-	public function edit(){}
+	public function edit()
+	{
+	}
 
-	public function index(){}
+	public function index()
+	{
+	}
 
-	protected function renderList( $galleryId = NULL ){
+	protected function renderList( $galleryId = NULL )
+	{
 		$words		= (object) $this->getWords( 'index' );
 		$model		= new Model_Gallery( $this->env );
 		$order		= $this->env->getConfig()->get( 'module.manage_galleries.sort.by' );
@@ -47,7 +62,8 @@ class View_Manage_Gallery extends View{
 		return $list;
 	}
 
-	protected function renderThumbnail( $image, $linked = FALSE, $galleryPath = NULL ){
+	protected function renderThumbnail( $image, $linked = FALSE, $galleryPath = NULL )
+	{
 		$frontend	= Logic_Frontend::getInstance( $this->env );
 		$baseUri	= $frontend->getPath( 'images' ).$this->env->getConfig()->get( 'module.manage_galleries.image.path' );
 		if( !$galleryPath ){
@@ -69,7 +85,8 @@ class View_Manage_Gallery extends View{
 		return $thumb;
 	}
 
-	protected function getGalleryImages( $galleryId ){
+	protected function getGalleryImages( $galleryId )
+	{
 		if( !isset( $this->images[$galleryId] ) ){
 			$indices	= array( 'galleryId' => $galleryId );
 			$orders		= array( 'rank' => 'ASC', 'timestamp' => 'DESC' );
@@ -78,12 +95,4 @@ class View_Manage_Gallery extends View{
 		}
 		return $this->images[$galleryId];
 	}
-
-	static public function urlencodeTitle( $label, $delimiter = "_" ){
-		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
-		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
-		$label	= preg_replace( "/ +/", $delimiter, $label );
-		return $label;
-    }
 }
-?>

@@ -5,8 +5,10 @@
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Server.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
+
+use CeusMedia\HydrogenFramework\Application\Web\Site as WebSite;
+
 /**
  *	Chat server.
  *	@category		cmApps
@@ -17,10 +19,9 @@
  *	@uses			UI_HTML_PageFrame
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Server.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
-class Server extends CMF_Hydrogen_Application_Web_Site {
-
+class Server extends WebSite
+{
 	protected function logRequestInDatabase( $responseTime, $responseLength )
 	{
 		//  write to Model_Server_Request
@@ -128,7 +129,8 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		return json_encode( $data );
 	}
 
-	protected function negotiateContentType(){
+	protected function negotiateContentType()
+	{
 		$supported	= array( 'text/json', 'text/html' );
 		$request	= $this->env->getRequest();
 
@@ -143,7 +145,8 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		return $supported[0];
 	}
 
-	protected function respond( $body, $headers = [] ){
+	protected function respond( $body, $headers = [] )
+	{
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$response	= $this->env->getResponse();
@@ -228,7 +231,8 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		exit( 1 );
 	}*/
 
-	protected function validateReferer(){
+	protected function validateReferer()
+	{
 		$refererAllowed	= trim( $this->env->config->get( 'module.server_json.referers.only' ) );	//  get allowed referers from config
 		if( !$refererAllowed )																		//  no referers defined
 			return TRUE;																			//  so everyone can access
@@ -243,4 +247,3 @@ class Server extends CMF_Hydrogen_Application_Web_Site {
 		return FALSE;																				//  otherwise block
 	}
 }
-?>

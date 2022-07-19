@@ -1,5 +1,7 @@
 <?php
-class Logic_IP_Lock extends CMF_Hydrogen_Logic
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_IP_Lock extends Logic
 {
 	protected $modelFilter;
 	protected $modelLock;

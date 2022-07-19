@@ -24,6 +24,9 @@
  *	@since			0.1
  *	@version		$Id: Dispatcher.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
+
+use CeusMedia\HydrogenFramework\Dispatcher\General as GeneralDispatcher;
+
 /**
  *	Server Action Dispatcher Class.
  *	@category		cmApps
@@ -33,9 +36,9 @@
  *	@uses			Alg_Object_MethodFactory
  *	@author			Christian Würker <christian.wuerker@ceus-media.de>
  *	@copyright		2010-2013 Ceus Media
- *	@version		$Id: Dispatcher.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
-class Dispatcher extends CMF_Hydrogen_Dispatcher_General {
+class Dispatcher extends GeneralDispatcher
+{
 
 	public $checkClassActionArguments	= TRUE;
 

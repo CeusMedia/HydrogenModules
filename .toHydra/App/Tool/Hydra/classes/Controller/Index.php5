@@ -2,6 +2,7 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 
 class Controller_Index extends Controller{
 
@@ -48,7 +49,7 @@ class Controller_Index extends Controller{
 
 			$modulesAll				= $logicModule->model->getAll();
 			$this->env->getRuntime()->reach( 'Index::index: get all' );
-			if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+			if( $remote instanceof RemoteEnvironment ){
 				$modulesInstalled		= $remote->getModules()->getAll();
 				$this->env->getRuntime()->reach( 'Index::index: get installed' );
 
@@ -122,7 +123,7 @@ class Controller_Index extends Controller{
 					'pathApp'		=> $instance->uri
 				);
 				try{
-					$remote		= new CMF_Hydrogen_Environment_Remote( $options );
+					$remote		= new RemoteEnvironment( $options );
 					$modules	= $remote->getModules()->getAll();
 				}
 				catch( Exception $e ){

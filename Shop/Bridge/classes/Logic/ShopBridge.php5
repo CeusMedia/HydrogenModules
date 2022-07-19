@@ -4,26 +4,26 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Logic_ShopBridge
 {
-	/**	@var	CMF_Hydrogen_Environment	$env			Environment instance */
+	/**	@var	Environment			$env			Environment instance */
 	protected $env;
 
-	/**	@var	array						$bridges		Map of registered bridges by ID */
-	protected $bridges						= [];
+	/**	@var	array				$bridges		Map of registered bridges by ID */
+	protected $bridges				= [];
 
-	/**	@var	array						$bridgeClasses	Map of registered bridges by class name */
-	protected $bridgeClasses				= [];
+	/**	@var	array				$bridgeClasses	Map of registered bridges by class name */
+	protected $bridgeClasses		= [];
 
-	/**	@var	string						$pathToBridges */
-	static public $pathToBridges			= "classes/Logic/ShopBridge/";
+	/**	@var	string				$pathToBridges */
+	static public $pathToBridges	= "classes/Logic/ShopBridge/";
 
-	/**	@var	Model_Shop_Bridge			$model			Model of shop bridges */
+	/**	@var	Model_Shop_Bridge	$model			Model of shop bridges */
 	protected $model;
 
 	/**
 	 *	Constructor.
 	 *	Autodetects available bridge classes.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env	Environment
+	 *	@param		Environment		$env	Environment
 	 *	@return		void
 	 */
 	public function __construct( Environment $env )

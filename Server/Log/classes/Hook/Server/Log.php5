@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Server_Log extends Hook
 {
-	static public function onEnvLog( Environment $env, $context, $module, $data )
+	public static function onEnvLog( Environment $env, $context, $module, $data )
 	{
 		$resource	= new Resource_Server_Log( $env );
 		$format		= isset( $data['format'] ) ? $data['format'] : NULL;

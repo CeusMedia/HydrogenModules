@@ -3,8 +3,8 @@
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Manage_Blog extends Controller{
-
+class Controller_Manage_Blog extends Controller
+{
 	protected $messenger;
 	protected $modelCategory;
 	protected $modelComment;
@@ -14,30 +14,8 @@ class Controller_Manage_Blog extends Controller{
 	protected $request;
 	protected $session;
 
-	protected function __onInit(){
-		$this->modelCategory	= new Model_Blog_Category( $this->env );
-		$this->modelComment		= new Model_Blog_Comment( $this->env );
-		$this->modelPost		= new Model_Blog_Post( $this->env );
-		$this->modelUser		= new Model_User( $this->env );
-		$this->messenger		= $this->env->getMessenger();
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-
-		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_blog.', TRUE );
-		if( $this->moduleConfig->get( 'mail' ) )
-			if( !$this->env->getModules()->has( 'Resource_Mail' ) )
-				$this->messenger->noteFailure( 'Module Info:Blog has mails enabled, but module Resource:Mail is missing.' );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-	}
-
-	static public function getUriPart( $label, $delimiter = "_" ){
-		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
-		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
-		$label	= preg_replace( "/ +/", $delimiter, $label );
-		return $label;
-	}
-
-	static public function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] ){
+	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
+	{
 		$frontend		= Logic_Frontend::getInstance( $env );
 		if( !$frontend->hasModule( 'Info_Blog' ) )
 			return;
@@ -64,7 +42,16 @@ class Controller_Manage_Blog extends Controller{
 		}
 	}
 
-	public function add(){
+	public static function getUriPart( $label, $delimiter = "_" )
+	{
+		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
+		$label	= preg_replace( "/ +/", $delimiter, $label );
+		return $label;
+	}
+
+	public function add()
+	{
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$language		= $this->env->getLanguage();
 		if( $this->request->has( 'save' ) ){
@@ -109,7 +96,8 @@ class Controller_Manage_Blog extends Controller{
 		$this->addData( 'categories', $categories );
 	}
 
-	public function addComment( $postId ){
+	public function addComment( $postId )
+	{
 		if( !$postId )
 			$this->restart( NULL, TRUE );
 		$post		= $this->checkPost( $postId );
@@ -135,18 +123,8 @@ class Controller_Manage_Blog extends Controller{
 		$this->restart( 'post/'.$post->postId, TRUE );
 	}
 
-	protected function checkPost( $postId, $strict = FALSE ){
-		$post	= $this->modelPost->get( (int) $postId );
-		if( !$post ){
-			if( $strict )
-				throw new OutOfRangeException( 'Invalid post ID' );
-			$this->messenger->noteError( 'Invalid post ID.' );
-			$this->restart( NULL, TRUE );
-		}
-		return $post;
-	}
-
-	public function edit( $postId = NULL ){
+	public function edit( $postId = NULL )
+	{
 		if( !$postId )
 			$this->restart( NULL, TRUE );
 		$post			= $this->checkPost( $postId );
@@ -180,7 +158,8 @@ class Controller_Manage_Blog extends Controller{
 		$this->addData( 'users', $users );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			$this->session->remove( 'filter_manage_blog_status' );
 			$this->session->remove( 'filter_manage_blog_categoryId' );
@@ -190,8 +169,8 @@ class Controller_Manage_Blog extends Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL ){
-
+	public function index( $page = NULL )
+	{
 		$filterStatus		= $this->session->get( 'filter_manage_blog_status' );
 		$filterCategoryId	= $this->session->get( 'filter_manage_blog_categoryId' );
 
@@ -219,6 +198,35 @@ class Controller_Manage_Blog extends Controller{
 		$this->addData( 'pages', ceil( $total / $limit ) );
 		$this->addData( 'categories', $this->modelCategory->getAll() );
 
+	}
+
+	protected function __onInit()
+	{
+		$this->modelCategory	= new Model_Blog_Category( $this->env );
+		$this->modelComment		= new Model_Blog_Comment( $this->env );
+		$this->modelPost		= new Model_Blog_Post( $this->env );
+		$this->modelUser		= new Model_User( $this->env );
+		$this->messenger		= $this->env->getMessenger();
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_blog.', TRUE );
+		if( $this->moduleConfig->get( 'mail' ) )
+			if( !$this->env->getModules()->has( 'Resource_Mail' ) )
+				$this->messenger->noteFailure( 'Module Info:Blog has mails enabled, but module Resource:Mail is missing.' );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+	}
+
+	protected function checkPost( $postId, $strict = FALSE )
+	{
+		$post	= $this->modelPost->get( (int) $postId );
+		if( !$post ){
+			if( $strict )
+				throw new OutOfRangeException( 'Invalid post ID' );
+			$this->messenger->noteError( 'Invalid post ID.' );
+			$this->restart( NULL, TRUE );
+		}
+		return $post;
 	}
 
 /*	protected function informAboutNewComment( $commentId ){

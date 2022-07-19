@@ -2,13 +2,21 @@
 
 use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_Company extends View{
-	public function index(){}
+class View_Manage_Company extends View
+{
+	public function index()
+	{
+	}
 
-	public function add(){}
+	public function add()
+	{
+	}
 
-	public function edit(){}
+	public function edit()
+	{
+	}
 
-	public function filter(){}
+	public function filter()
+	{
+	}
 }
-?>

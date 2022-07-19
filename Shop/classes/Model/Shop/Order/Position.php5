@@ -4,16 +4,17 @@
  *	@category		cmProjects
  *	@package		LUV.Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			02.07.2006
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Order Positions.
  *	@category		cmProjects
  *	@package		LUV.Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			02.07.2006
  */
-class Model_Shop_Order_Position extends CMF_Hydrogen_Model
+class Model_Shop_Order_Position extends Model
 {
 	const STATUS_NEW		= 0;
 	const STATUS_ORDERED	= 1;

@@ -1,13 +1,14 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_Bootstrap extends Hook
 {
 	public static function onEnvInit( Environment $env, $context, $module, $payload )
 	{
-		if( get_class( $env ) === 'CMF_Hydrogen_Environment_Remote' )
+		if( get_class( $env ) === RemoteEnvironment::class )
 			return;
 		$config			= $env->getConfig();
 		$modules		= $env->getModules();

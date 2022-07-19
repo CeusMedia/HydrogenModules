@@ -4,7 +4,7 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Logic_Member
 {
-	static protected $instance;
+	protected static $instance;
 
 	public static function getInstance( Environment $env ): self
 	{

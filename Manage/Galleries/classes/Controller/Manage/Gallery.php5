@@ -2,32 +2,10 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Manage_Gallery extends Controller{
-
-	protected function __onInit(){
-		$this->modelGallery	= new Model_Gallery( $this->env );
-		$this->modelImage	= new Model_Gallery_Image( $this->env );
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->frontend		= Logic_Frontend::getInstance( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
-		$this->baseUri		= $this->frontend->getPath( 'images' ).$this->moduleConfig->get( 'image.path' );
-
-		if( !$this->env->getSession()->get( 'module.manage_galleries.tab' ) )
-			$this->env->getSession()->set( 'module.manage_galleries.tab', 1 );
-
-		$this->addData( 'baseUri', $this->baseUri );
-		$this->addData( 'frontend', $this->frontend );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-
-		$order		= $this->moduleConfig->get( 'sort.by' );
-		$direction	= $this->moduleConfig->get( 'sort.direction' );
-		$this->addData( 'galleries', $this->modelGallery->getAll( array(), array( $order => $direction ) ) );
-
-//		$this->baseUri		= '../images/gallery/';
-	}
-
-	public function add(){
+class Controller_Manage_Gallery extends Controller
+{
+	public function add()
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'save' ) ){
 			$data				= $this->request->getAll();
@@ -60,7 +38,8 @@ class Controller_Manage_Gallery extends Controller{
 		$this->addData( 'gallery', $gallery );
 	}
 
-	public function addImage( $galleryId ){
+	public function addImage( $galleryId )
+	{
 		$gallery	= $this->getGallery( $galleryId );
 		$file		= $this->request->get( 'file' );
 		$words		= $this->getWords();
@@ -124,13 +103,15 @@ class Controller_Manage_Gallery extends Controller{
 		$this->restart( 'edit/'.$galleryId, TRUE );
 	}
 
-	public function ajaxSetTab(){
+	public function ajaxSetTab()
+	{
 		$session	= $this->env->getSession();
 		$session->set( 'module.manage_galleries.tab', (int) $this->request->get( 'tab' ) );
 		exit;
 	}
 
-	public function edit( $galleryId ){
+	public function edit( $galleryId )
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$gallery	= $this->getGallery( $galleryId );
 		if( $this->request->has( 'save' ) ){
@@ -165,7 +146,8 @@ class Controller_Manage_Gallery extends Controller{
 
 	}
 
-	public function editImage( $imageId ){
+	public function editImage( $imageId )
+	{
 		$words	= (object) $this->getWords( 'msg' );
 		$image	= $this->getImage( $imageId );
 		$data	= $this->request->getAll();
@@ -174,44 +156,12 @@ class Controller_Manage_Gallery extends Controller{
 		$this->restart( 'edit/'.$image->galleryId, TRUE );
 	}
 
-	protected function getGallery( $galleryId ){
-		$words		= (object) $this->getWords( 'msg' );
-		if( strlen( trim( $galleryId ) ) && (int) $galleryId ){
-			if( ( $gallery = $this->modelGallery->get( (int) $galleryId ) ) )
-				return $gallery;
-			else
-				$this->messenger->noteError( $words->errorGalleryIdEmpty );
-		}
-		else
-			$this->messenger->noteError( $words->errorGalleryIdInvalid );
-		return $this->restart( NULL, TRUE );
+	public function index()
+	{
 	}
 
-	protected function getImage( $imageId ){
-		$words		= (object) $this->getWords( 'msg' );
-		if( strlen( trim( $imageId ) ) && (int) $imageId ){
-			if( $image = $this->modelImage->get( (int) $imageId ) )
-				return $image;
-			$this->messenger->noteError( $words->errorImageIdEmpty );
-		}
-		else
-			$this->messenger->noteError( $words->errorImageIdInvalid );
-		return $this->restart( NULL, TRUE );
-	}
-
-	protected function getPath( $gallery, $thumbs = FALSE ){
-		if( is_int( $gallery ) || is_string( $gallery ) )
-			$gallery	= $this->getGallery( (int) $gallery );
-		if( !is_object( $gallery ) )
-			throw new InvalidArgumentException( 'Neither gallery object nor gallery ID given' );
-		$path	= $gallery->path."/".( $thumbs ? "thumbs/" : "" );
-		return $this->baseUri.$path;
-	}
-
-	public function index(){
-	}
-
-	public function remove( $galleryId ){
+	public function remove( $galleryId )
+	{
 		$gallery	= $this->getGallery( $galleryId );
 		$words		= (object) $this->getWords( 'msg' );
 		foreach( $this->modelGallery->getAllByIndex( 'galleryId', $galleryId ) as $image ){
@@ -230,7 +180,8 @@ class Controller_Manage_Gallery extends Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeImage( $imageId ){
+	public function removeImage( $imageId )
+	{
 		$image		= $this->getImage( $imageId );
 		$path		= $this->getPath( $image->galleryId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -241,5 +192,65 @@ class Controller_Manage_Gallery extends Controller{
 		$this->messenger->noteSuccess( $words->successImageRemoved );
 		$this->restart( 'edit/'.$image->galleryId, TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->modelGallery	= new Model_Gallery( $this->env );
+		$this->modelImage	= new Model_Gallery_Image( $this->env );
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
+		$this->baseUri		= $this->frontend->getPath( 'images' ).$this->moduleConfig->get( 'image.path' );
+
+		if( !$this->env->getSession()->get( 'module.manage_galleries.tab' ) )
+			$this->env->getSession()->set( 'module.manage_galleries.tab', 1 );
+
+		$this->addData( 'baseUri', $this->baseUri );
+		$this->addData( 'frontend', $this->frontend );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+
+		$order		= $this->moduleConfig->get( 'sort.by' );
+		$direction	= $this->moduleConfig->get( 'sort.direction' );
+		$this->addData( 'galleries', $this->modelGallery->getAll( array(), array( $order => $direction ) ) );
+
+//		$this->baseUri		= '../images/gallery/';
+	}
+
+	protected function getGallery( $galleryId )
+	{
+		$words		= (object) $this->getWords( 'msg' );
+		if( strlen( trim( $galleryId ) ) && (int) $galleryId ){
+			if( ( $gallery = $this->modelGallery->get( (int) $galleryId ) ) )
+				return $gallery;
+			else
+				$this->messenger->noteError( $words->errorGalleryIdEmpty );
+		}
+		else
+			$this->messenger->noteError( $words->errorGalleryIdInvalid );
+		return $this->restart( NULL, TRUE );
+	}
+
+	protected function getImage( $imageId )
+	{
+		$words		= (object) $this->getWords( 'msg' );
+		if( strlen( trim( $imageId ) ) && (int) $imageId ){
+			if( $image = $this->modelImage->get( (int) $imageId ) )
+				return $image;
+			$this->messenger->noteError( $words->errorImageIdEmpty );
+		}
+		else
+			$this->messenger->noteError( $words->errorImageIdInvalid );
+		return $this->restart( NULL, TRUE );
+	}
+
+	protected function getPath( $gallery, $thumbs = FALSE )
+	{
+		if( is_int( $gallery ) || is_string( $gallery ) )
+			$gallery	= $this->getGallery( (int) $gallery );
+		if( !is_object( $gallery ) )
+			throw new InvalidArgumentException( 'Neither gallery object nor gallery ID given' );
+		$path	= $gallery->path."/".( $thumbs ? "thumbs/" : "" );
+		return $this->baseUri.$path;
+	}
 }
-?>

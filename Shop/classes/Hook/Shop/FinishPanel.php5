@@ -9,10 +9,10 @@ class Hook_Shop_FinishPanel
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
-	 *	@param		object						$context		Hook context object
-	 *	@param		object						$module			Module object
-	 *	@param		public						$arguments		Map of hook arguments
+	 *	@param		Environment		$env			Environment instance
+	 *	@param		object			$context		Hook context object
+	 *	@param		object			$module			Module object
+	 *	@param		public			$arguments		Map of hook arguments
 	 *	@return		void
 	 */
 	public static function onRenderServicePanels( Environment $env, $context, $module, $payload = [] )

@@ -36,7 +36,7 @@ class View_Helper_CSRF
 		return $input1.$input2;
 	}
 
-	static public function renderStatic( Environment $env, $formName )
+	public static function renderStatic( Environment $env, $formName )
 	{
 		$helper	= new self( $env );
 		$helper->setFormName( $formName );

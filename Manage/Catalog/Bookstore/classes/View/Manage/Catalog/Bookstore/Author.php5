@@ -1,13 +1,20 @@
 <?php
-class View_Manage_Catalog_Bookstore_Author extends View_Manage_Catalog_Bookstore{
+class View_Manage_Catalog_Bookstore_Author extends View_Manage_Catalog_Bookstore
+{
+	public function add()
+	{
+	}
 
-	public function add(){}
+	public function edit()
+	{
+	}
 
-	public function edit(){}
+	public function index()
+	{
+	}
 
-	public function index(){}
-
-	protected function renderList( $authors, $authorId = NULL ){
+	protected function renderList( $authors, $authorId = NULL )
+	{
 		$list	= [];
 		foreach( $authors as $author ){
 			$url	= './manage/catalog/bookstore/author/edit/'.$author->authorId;
@@ -22,4 +29,3 @@ class View_Manage_Catalog_Bookstore_Author extends View_Manage_Catalog_Bookstore
 		return $list;
 	}
 }
-?>

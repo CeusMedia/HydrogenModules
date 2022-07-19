@@ -2,20 +2,10 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Manage_Ip_Lock_Transport extends Controller{
-
-	protected function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->modelFilter		= new Model_IP_Lock_Filter( $this->env );
-		$this->modelReason		= new Model_IP_Lock_Reason( $this->env );
-		$this->logicTransport	= Logic_IP_Lock_Transport::getInstance( $this->env );
-
-//		$logicPool				= $this->env->getLogic();
-//		$logicPoolKey			= $logicPool->getKeyFromClassName( 'Logic_IP_Lock_Transport' );
-//		$this->logicTransport	= $logicPool->get( $logicPoolKey );
-	}
-
-	public function index(){
+class Controller_Manage_Ip_Lock_Transport extends Controller
+{
+	public function index()
+	{
 		$reasons	= $this->modelReason->getAll( array(), array( 'title' => 'ASC' ) );
 		$filters	= $this->modelFilter->getAll( array(), array( 'title' => 'ASC' ) );
 
@@ -29,8 +19,8 @@ class Controller_Manage_Ip_Lock_Transport extends Controller{
 		$this->addData( 'filters', $filters );
 	}
 
-
-	public function export(){
+	public function export()
+	{
 		if( !$this->request->getMethod()->isPost() )
 			$this->restart( NULL, TRUE );
 
@@ -53,7 +43,8 @@ class Controller_Manage_Ip_Lock_Transport extends Controller{
 		Net_HTTP_Download::sendString( $json, $fileName, TRUE );
 	}
 
-	public function import(){
+	public function import()
+	{
 		$request	= $this->env->getRequest();
 		print_m( $this->env->getRequest()->getAll() );
 
@@ -85,5 +76,17 @@ class Controller_Manage_Ip_Lock_Transport extends Controller{
 			$this->env->getMessenger()->noteError( $e->getMessage().'.' );
 		}
 		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
+		$this->modelFilter		= new Model_IP_Lock_Filter( $this->env );
+		$this->modelReason		= new Model_IP_Lock_Reason( $this->env );
+		$this->logicTransport	= Logic_IP_Lock_Transport::getInstance( $this->env );
+
+//		$logicPool				= $this->env->getLogic();
+//		$logicPoolKey			= $logicPool->getKeyFromClassName( 'Logic_IP_Lock_Transport' );
+//		$this->logicTransport	= $logicPool->get( $logicPoolKey );
 	}
 }

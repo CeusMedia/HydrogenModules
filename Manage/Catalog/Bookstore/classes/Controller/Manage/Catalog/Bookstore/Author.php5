@@ -3,31 +3,16 @@
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Manage_Catalog_Bookstore_Author extends Controller{
-
+class Controller_Manage_Catalog_Bookstore_Author extends Controller
+{
 	protected $frontend;
 	protected $logic;
 	protected $messenger;
 	protected $request;
 	protected $session;
 
-	protected function __onInit(){
-		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Author::init start' );
-		$this->messenger	= $this->env->getMessenger();
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
-		$this->frontend		= Logic_Frontend::getInstance( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
-		$this->addData( 'frontend', $this->frontend );
-		$this->addData( 'moduleConfig', $this->moduleConfig );
-		$this->addData( 'pathAuthors', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.authors' ) );
-		$this->addData( 'pathCovers', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.covers' ) );
-		$this->addData( 'pathDocuments', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.documents' ) );
-		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Author::init done' );
-	}
-
-	static public function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] ){
+	public static function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] )
+	{
 		$cache		= $env->getCache();
 		if( !( $list = $cache->get( 'catalog.tinymce.images.catalog.bookstore.authors' ) ) ){
 			$logic		= new Logic_Catalog_Bookstore( $env );
@@ -57,7 +42,8 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller{
 		) ) );
 	}
 
-	static public function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] ){
+	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
+	{
 		$cache		= $env->getCache();
 		if( !( $authors = $cache->get( 'catalog.tinymce.links.catalog.bookstore.authors' ) ) ){
 			$logic		= new Logic_Catalog_Bookstore( $env );
@@ -77,7 +63,8 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller{
 		) ) );
 	}
 
-	public function add(){
+	public function add()
+	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'add' );
 			$data	= $this->request->getAll();
@@ -96,12 +83,14 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller{
 		$this->addData( 'authors', $this->logic->getAuthors() );
 	}
 
-	public function ajaxSetTab( $tabKey ){
+	public function ajaxSetTab( $tabKey )
+	{
 		$this->session->set( 'manage.catalog.bookstore.author.tab', $tabKey );
 		exit;
 	}
 
-	public function edit( $authorId ){
+	public function edit( $authorId )
+	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'edit' );
 			$data	= $this->request->getAll();
@@ -120,7 +109,8 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller{
 		$this->addData( 'articles', $this->logic->getArticlesFromAuthor( $author ) );
 	}
 
-	public function index(){
+	public function index()
+	{
 #		if( !( $authors	= $this->env->getCache()->get( 'authors' ) ) ){
 			$authors	= $this->logic->getAuthors();
 #			$this->env->getCache()->set( 'authors', $authors );
@@ -128,7 +118,8 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller{
 		$this->addData( 'authors', $authors );
 	}
 
-	public function remove( $authorId ){
+	public function remove( $authorId )
+	{
 		$words	= $this->getWords( 'remove' );
 		if( $this->logic->getArticlesFromAuthor( $authorId ) )
 			$this->messenger->noteError( $words->msgErrorNotEmpty );
@@ -138,9 +129,27 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller{
 		}
 	}
 
-	public function removeImage( $authorId ){
+	public function removeImage( $authorId )
+	{
 		$this->logic->removeAuthorImage( $authorId );
 		$this->restart( 'manage/catalog/bookstore/author/edit/'.$authorId );
+	}
+
+	protected function __onInit()
+	{
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Author::init start' );
+		$this->messenger	= $this->env->getMessenger();
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
+		$this->addData( 'frontend', $this->frontend );
+		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$this->addData( 'pathAuthors', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.authors' ) );
+		$this->addData( 'pathCovers', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.covers' ) );
+		$this->addData( 'pathDocuments', $this->frontend->getPath( 'contents' ).$this->moduleConfig->get( 'path.documents' ) );
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Author::init done' );
 	}
 
 	protected function uploadImage( $authorId, $file ){
@@ -174,4 +183,3 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller{
 		}
 	}
 }
-?>

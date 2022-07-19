@@ -1,10 +1,10 @@
 <?php
 ( include_once 'vendor/autoload.php' ) or die( 'Install packages using composer, first!' );
 
-use CMF_Hydrogen_Environment_Router_Recursive as RecursiveRouter;
-use CMF_Hydrogen_Environment_Web as WebEnvironment;
-use CMF_Hydrogen_Application_Web_Site as WebSiteApplication;
-use UI_HTML_Exception_Page as ExceptionPage;
+use CeusMedia\Common\UI\HTML\Exception\Page as ExceptionPage;
+use CeusMedia\HydrogenFramework\Application\Web\Site as WebEnvironment;
+use CeusMedia\HydrogenFramework\Environment\Router\Recursive as RecursiveRouter;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 $errorReporting		= E_ALL;								//  enable full reporting
 $displayErrors		= TRUE;									//  enable error display

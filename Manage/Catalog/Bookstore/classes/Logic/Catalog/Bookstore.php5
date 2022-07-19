@@ -1,10 +1,14 @@
 <?php
+
+use CeusMedia\Cache\SimpleCacheInterface;
+use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
+
 /**
  *	@todo	extract classes Logic_Upload and Alg_UnitParser
  */
-class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic
+class Logic_Catalog_Bookstore extends Logic
 {
-	/**	@var	CeusMedia\Cache\SimpleCacheInterface		$cache */
+	/**	@var	SimpleCacheInterface						$cache */
 	protected $cache;
 
 	/**	@var	Logic_Frontend								$frontend */

@@ -1,16 +1,20 @@
 <?php
-class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Bookstore{
-
-	public function add(){
+class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Bookstore
+{
+	public function add()
+	{
 	}
 
-	public function edit(){
+	public function edit()
+	{
 	}
 
-	public function index(){}
+	public function index()
+	{
+	}
 
-
-	protected function renderTree( $categories, $categoryId = NULL ){
+	protected function renderTree( $categories, $categoryId = NULL )
+	{
 /*		$cache	= $this->env->getCache();
 		if( NULL !== ( $data = $cache->get( 'admin.categories.list.html' ) ) ){
 			$this->env->getRuntime()->reach( 'View_Catalog_Bookstore_Category::renderTree from cache' );
@@ -62,4 +66,3 @@ class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Booksto
 		return $listMain;
 	}
 }
-?>

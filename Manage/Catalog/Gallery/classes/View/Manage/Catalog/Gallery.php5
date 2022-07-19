@@ -3,9 +3,10 @@
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_Catalog_Gallery extends View{
-
-	static public function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] ){
+class View_Manage_Catalog_Gallery extends View
+{
+	public static function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] )
+	{
 		$frontend	= Logic_Frontend::getInstance( $env );
 		$basePath	= $frontend->getConfigValue( 'path.images' );
 		$options	= $env->getConfig()->getAll( 'module.manage_catalog_gallery.', TRUE );
@@ -56,8 +57,8 @@ class View_Manage_Catalog_Gallery extends View{
 		$context->list	= array_merge( $context->list, $list );
 	}
 
-	static public function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] ){
-
+	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
+	{
 		$modelImage		= new Model_Catalog_Gallery_Image( $env );
 		$modelCategory	= new Model_Catalog_Gallery_Category( $env );
 
@@ -103,38 +104,28 @@ class View_Manage_Catalog_Gallery extends View{
 		$context->list	= array_merge( $context->list, $list );
 	}
 
-	public function addCategory(){
+	public function addCategory()
+	{
 	}
 
-	public function addImage(){
+	public function addImage()
+	{
 	}
 
-	public function editCategory(){
+	public function editCategory()
+	{
 	}
 
-	public function editImage(){
+	public function editImage()
+	{
 	}
 
-	public function index(){
+	public function index()
+	{
 	}
 
-	protected function renderMatrixItem( $url, $status, $label, $imageUrl = NULL, $class = NULL ){
-		$image	= UI_HTML_Tag::create( 'div', '', array(
-			'class'		=> "gallery-matrix-image",
-			'style'		=> $imageUrl ? 'background-image: url('.$imageUrl.');' : NULL,
-		) );
-		$label	= strlen( trim( $label ) ) ? trim( $label ) : '&nbsp;';
-		$label	= UI_HTML_Tag::create( 'span', $label, array(
-/*			'href'	=> $url,*/
-			'class'	=> "gallery-matrix-item-label autocut"
-		) );
-		return UI_HTML_Tag::create( 'div', $image.$label, array(
-			'class'		=> "gallery-matrix-item img-polaroid status".$status.' '.$class,
-			'onclick'	=> 'document.location.href="'.$url.'"',
-		) );
-	}
-
-	public function renderCategoryMatrix( $categories, $urlAdd = NULL ){
+	public function renderCategoryMatrix( $categories, $urlAdd = NULL )
+	{
 		$list  		= [];
 		$pathImages	= $this->getData( 'pathImages' );
 		$list		= [];
@@ -155,7 +146,8 @@ class View_Manage_Catalog_Gallery extends View{
 		return UI_HTML_Tag::create( 'div', $list, array( 'class' => 'gallery-matrix' ) );
 	}
 
-	public function renderImageMatrix( $category, $urlAdd = NULL ){
+	public function renderImageMatrix( $category, $urlAdd = NULL )
+	{
 		$list  		= [];
 		$pathImages	= $this->getData( 'pathPreview' );
 		$list		= [];
@@ -169,5 +161,21 @@ class View_Manage_Catalog_Gallery extends View{
 			$list[]	= $this->renderMatrixItem( $urlAdd, 1, '', NULL, 'add' );
 		return UI_HTML_Tag::create( 'div', $list, array( 'class' => 'gallery-matrix' ) );
 	}
+
+	protected function renderMatrixItem( $url, $status, $label, $imageUrl = NULL, $class = NULL )
+	{
+		$image	= UI_HTML_Tag::create( 'div', '', array(
+			'class'		=> "gallery-matrix-image",
+			'style'		=> $imageUrl ? 'background-image: url('.$imageUrl.');' : NULL,
+		) );
+		$label	= strlen( trim( $label ) ) ? trim( $label ) : '&nbsp;';
+		$label	= UI_HTML_Tag::create( 'span', $label, array(
+/*			'href'	=> $url,*/
+			'class'	=> "gallery-matrix-item-label autocut"
+		) );
+		return UI_HTML_Tag::create( 'div', $image.$label, array(
+			'class'		=> "gallery-matrix-item img-polaroid status".$status.' '.$class,
+			'onclick'	=> 'document.location.href="'.$url.'"',
+		) );
+	}
 }
-?>

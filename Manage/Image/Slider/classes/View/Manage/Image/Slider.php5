@@ -4,23 +4,26 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Image_Slider extends View
 {
-	protected function __onInit()
+	public function add()
 	{
-		$this->env->getPage()->css->theme->addUrl( 'module.manage.image.slider.css' );
 	}
-
-	public function add(){}
 
 	public function demo()
 	{
 		$this->env->getCaptain()->disableHook( 'View', 'onRenderContent' );
 	}
 
-	public function edit(){}
+	public function edit()
+	{
+	}
 
-	public function editSlide(){}
+	public function editSlide()
+	{
+	}
 
-	public function index(){}
+	public function index()
+	{
+	}
 
 	public function label( $section, $name, $options = [] )
 	{
@@ -46,5 +49,10 @@ class View_Manage_Image_Slider extends View
 				'class'		=> $options['suffixClass'],
 			) );
 		return $label;
+	}
+
+	protected function __onInit()
+	{
+		$this->env->getPage()->css->theme->addUrl( 'module.manage.image.slider.css' );
 	}
 }

@@ -1,16 +1,18 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 
-class View_Helper_Thumbnailer{
-
-	public function __construct( Environment $env, $maxWidth = 120, $maxHeight = 80 ){
+class View_Helper_Thumbnailer
+{
+	public function __construct( Environment $env, $maxWidth = 120, $maxHeight = 80 )
+	{
 		$this->env			= $env;
 		$this->config		= $this->env->getConfig();
 		$this->model		= new Model_Image_Thumbnail( $this->env );
 		$this->maxWidth		= $maxWidth;
 		$this->maxHeight	= $maxHeight;
-		if( !( $env instanceof CMF_Hydrogen_Environment_Remote ) ){
+		if( !( $env instanceof RemoteEnvironment ) ){
 			if( $this->env->getRequest()->has( 'flushCache' ) ){
 				$number	= $this->flushCache();
 				$this->env->getMessenger()->noteNotice( 'Thumbnail cache cleared (%s entries).', $number );
@@ -18,7 +20,8 @@ class View_Helper_Thumbnailer{
 		}
 	}
 
-	public function get( $imagePath, $maxWidth = NULL, $maxHeight = NULL ){
+	public function get( $imagePath, $maxWidth = NULL, $maxHeight = NULL )
+	{
 		$extension	= pathinfo( $imagePath, PATHINFO_EXTENSION );
 		if( strtolower( $extension ) === "svg" ){
 			$mime		= 'image/svg+xml';
@@ -56,7 +59,8 @@ class View_Helper_Thumbnailer{
 		return $content;
 	}
 
-	public function optimize( $pathImages ){
+	public function optimize( $pathImages )
+	{
 		return;
 		$ids	= $this->cache->index();
 		foreach( FS_Folder_RecursiveLister::getFileList( $pathImages ) as $entry ){
@@ -70,11 +74,13 @@ class View_Helper_Thumbnailer{
 			$this->cache->remove( $id );
 	}
 
-	public function uncacheFolder( $folderPath ){
+	public function uncacheFolder( $folderPath )
+	{
 		return (int) $this->model->removeByIndex( 'imageId', $folderPath.'%' );
 	}
 
-	public function uncacheFile( $imagePath ){
+	public function uncacheFile( $imagePath )
+	{
 		$indices	= array(
 			'imageId'	=> $imagePath,
 			'maxWidth'	=> $this->maxWidth,
@@ -83,9 +89,9 @@ class View_Helper_Thumbnailer{
 		return $this->model->removeByIndices( $indices );
 	}
 
-	public function flushCache(){
+	public function flushCache()
+	{
 //		return $this->model->truncate();
 		return $this->model->removeByIndex( 'imageThumbnailId', '> 0' );
 	}
 }
-?>

@@ -4,16 +4,16 @@ use CeusMedia\HydrogenFramework\Environment;
 
 abstract class Logic_ShopBridge_Abstract
 {
-	/**	@var	Logic_ShopBridge			$bridge		Shop bridge logic instance */
+	/**	@var	Logic_ShopBridge	$bridge		Shop bridge logic instance */
 	protected $bridge;
 
-	/**	@var	CMF_Hydrogen_Environment	$env		Environment instance */
+	/**	@var	Environment			$env		Environment instance */
 	protected $env;
 
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env
+	 *	@param		Environment		$env
 	 *	@return		void
 	 */
 	public function __construct( Environment $env, Logic_ShopBridge $bridge )

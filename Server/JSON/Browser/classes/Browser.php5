@@ -6,16 +6,18 @@ use CeusMedia\HydrogenFramework\View;
 /**
  *	@todo		apply module config main switch
  */
-class Browser{
-
+class Browser
+{
 	protected $env;
 
-	public function __construct( Environment $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env	= $env;
 		$this->time1	= $this->env->getClock()->stop( 3, 1 );
 	}
 
-	public function render( $body, $headers = [] ){
+	public function render( $body, $headers = [] )
+	{
 		$config			= $this->env->getConfig();
 		$request		= $this->env->getRequest();
 
@@ -105,4 +107,3 @@ class Browser{
 		return $page->build();
 	}
 }
-?>

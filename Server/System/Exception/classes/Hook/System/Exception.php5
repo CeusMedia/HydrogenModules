@@ -1,6 +1,8 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Console as ConsoleEnvironment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_System_Exception extends Hook
@@ -21,7 +23,7 @@ class Hook_System_Exception extends Hook
 			return FALSE;
 
 		$e	= $payload->exception;
-		if( $env instanceof CMF_Hydrogen_Environment_Web ){
+		if( $env instanceof WebEnvironment ){
 			$requestUrl	= $env->getRequest()->getUrl();
 			if( $env->getRequest()->isAjax() ){
 				$env->getResponse()->setStatus( 500 );
@@ -37,7 +39,7 @@ class Hook_System_Exception extends Hook
 				exit;
 			}
 		}
-		else if( $env instanceof CMF_Hydrogen_Environment_Console ){
+		else if( $env instanceof ConsoleEnvironment ){
 			global $argv;
 			$requestUrl	= join( ' ', $argv );
 		}

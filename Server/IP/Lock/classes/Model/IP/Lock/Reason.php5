@@ -1,5 +1,8 @@
 <?php
-class Model_IP_Lock_Reason extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_IP_Lock_Reason extends Model
 {
 	const STATUS_DISABLED	= 0;
 	const STATUS_ENABLED	= 1;

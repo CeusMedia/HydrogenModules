@@ -3,18 +3,10 @@
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Manage_Catalog_Category extends Controller{
-
-	protected function __onInit(){
-		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init start' );
-		$this->logic		= new Logic_Catalog( $this->env );
-		$this->session		= $this->env->getSession();
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init done' );
-	}
-
-	static public function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] ){
+class Controller_Manage_Catalog_Category extends Controller
+{
+	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
+	{
 		$cache		= $env->getCache();
 		if( !( $categories = $cache->get( 'catalog.tinymce.links.categories' ) ) ){
 			$logic		= new Logic_Catalog( $env );
@@ -38,13 +30,14 @@ class Controller_Manage_Catalog_Category extends Controller{
 			}
 			$cache->set( 'catalog.tinymce.links.categories', $categories );
 		}
-        $context->list  = array_merge( $context->list, array( (object) array(		//  extend global collection by submenu with list of items
+		$context->list  = array_merge( $context->list, array( (object) array(		//  extend global collection by submenu with list of items
 			'title'	=> 'Kategorien:',											//  label of submenu @todo extract
 			'menu'	=> array_values( $categories ),									//  items of submenu
 		) ) );
 	}
 
-	public function add( $parentId = NULL ){
+	public function add( $parentId = NULL )
+	{
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
 			$data	= $this->request->getAll();
@@ -64,12 +57,14 @@ class Controller_Manage_Catalog_Category extends Controller{
 		$this->addData( 'categories', $this->logic->getCategories() );
 	}
 
-	public function ajaxSetTab( $tabKey ){
+	public function ajaxSetTab( $tabKey )
+	{
 		$this->session->set( 'manage.catalog.category.tab', $tabKey );
 		exit;
 	}
 
-	public function edit( $categoryId ){
+	public function edit( $categoryId )
+	{
 		$words		= (object) $this->getWords( 'edit' );
 		$category	= $this->logic->getCategory( $categoryId );
 		if( !$category ){
@@ -91,11 +86,13 @@ class Controller_Manage_Catalog_Category extends Controller{
 		$this->addData( 'articles', $this->logic->getCategoryArticles( $category ) );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$this->addData( 'categories', $this->logic->getCategories() );
 	}
 
-	public function remove( $categoryId ){
+	public function remove( $categoryId )
+	{
 		$words		= (object) $this->getWords( 'remove' );
 		$category	= $this->logic->getCategory( $categoryId );
 		if( !$category ){
@@ -110,5 +107,14 @@ class Controller_Manage_Catalog_Category extends Controller{
 		$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $category->label_de, ENT_QUOTES, 'UTF-8' ) );
 		$this->restart( ( $category->parentId ? 'edit/'.$category->parentId : NULL ), TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init start' );
+		$this->logic		= new Logic_Catalog( $this->env );
+		$this->session		= $this->env->getSession();
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init done' );
+	}
 }
-?>

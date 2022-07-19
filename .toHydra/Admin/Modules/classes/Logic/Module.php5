@@ -4,6 +4,7 @@
  */
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 
 /**
  *	Singleton of module logic.
@@ -185,7 +186,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		return $this->model->get( $moduleId );
 	}
 
-	public function getModuleFileMap( CMF_Hydrogen_Environment_Remote $env, $module ): array
+	public function getModuleFileMap( RemoteEnvironment $env, $module ): array
 	{
 		$map		= [];
 		$fileTypes	= array(
@@ -503,7 +504,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		$remote		= $this->env/*->getRemote()*/;
 		$this->env->getRuntime()->reach( 'Logic_Module::list: got remote' );
 		$list		= [];
-		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+		if( $remote instanceof RemoteEnvironment ){
 			$modulesAll				= $this->model->getAll();
 			$this->env->getRuntime()->reach( 'Logic_Module::list: got  all' );
 			$modulesInstalled		= $remote->getModules()->getAll();
@@ -523,7 +524,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		$remote		= $this->env/*->getRemote()*/;
 		$this->env->getRuntime()->reach( 'Logic_Module::list: got remote' );
 		$list		= [];
-		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+		if( $remote instanceof RemoteEnvironment ){
 			$modulesAll				= $this->model->getAll();
 			$this->env->getRuntime()->reach( 'Logic_Module::list: got  all' );
 			$modulesInstalled		= $remote->getModules()->getAll();
@@ -543,7 +544,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		$remote		= $this->env/*->getRemote()*/;
 		$this->env->getRuntime()->reach( 'Logic_Module::list: got remote' );
 		$list		= [];
-		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+		if( $remote instanceof RemoteEnvironment ){
 			$modulesAll				= $this->model->getAll();
 			$this->env->getRuntime()->reach( 'Logic_Module::list: got  all' );
 			$modulesInstalled		= $remote->getModules()->getAll();

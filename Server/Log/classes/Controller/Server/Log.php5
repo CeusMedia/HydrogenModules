@@ -3,9 +3,10 @@
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Server_Log extends Controller{
-
-	static public function ___onEnvLog( Environment $env, $context, $module, $data ){
+class Controller_Server_Log extends Controller
+{
+	public static function ___onEnvLog( Environment $env, $context, $module, $data )
+	{
 		$options	= $env->getConfig()->getAll( 'module.server_log.', TRUE );
 
 		if( !$options->get( 'active' ) )
@@ -45,4 +46,3 @@ class Controller_Server_Log extends Controller{
 		return TRUE;
 	}
 }
-?>

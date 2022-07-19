@@ -2,12 +2,22 @@
 
 use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_Blog extends View{
-	public function add(){}
-	public function edit(){}
-	public function index(){}
+class View_Manage_Blog extends View
+{
+	public function add()
+	{
+	}
 
-	public function renderTabs( $current = NULL ){
+	public function edit()
+	{
+	}
+
+	public function index()
+	{
+	}
+
+	public function renderTabs( $current = NULL )
+	{
 		$tabs	= array(
 			''				=> 'Blog-Einträge',
 			'/category'		=> 'Kategorien',

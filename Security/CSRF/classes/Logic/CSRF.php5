@@ -36,7 +36,7 @@ class Logic_CSRF
 		$this->env->getLog()->log( 'warn', 'Logic_CSRF needs to be migrate to extend framework logic class' );
 	}
 
-	static public function getInstance( $env )
+	public static function getInstance( $env )
 	{
 		if( !self::$instance )
 			self::$instance = new Logic_CSRF( $env );

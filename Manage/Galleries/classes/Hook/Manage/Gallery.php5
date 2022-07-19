@@ -13,7 +13,7 @@ class Hook_Manage_Gallery extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onTinyMCE_getImageList( Environment $env, $context, $module, $payload = [] )
+	public static function onTinyMCE_getImageList( Environment $env, $context, $module, $payload = [] )
 	{
 		$moduleConfig		= $env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
 		$frontend			= Logic_Frontend::getInstance( $env );
@@ -55,7 +55,7 @@ class Hook_Manage_Gallery extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onTinyMCE_getLinkList( Environment $env, $context, $module, $payload = [] )
+	public static function onTinyMCE_getLinkList( Environment $env, $context, $module, $payload = [] )
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
 		$frontend		= Logic_Frontend::getInstance( $env );

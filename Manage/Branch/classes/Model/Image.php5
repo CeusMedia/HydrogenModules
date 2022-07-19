@@ -1,6 +1,11 @@
 <?php
-class Model_Image extends CMF_Hydrogen_Model{
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Image extends Model
+{
 	protected $name			= 'images';
+
 	protected $columns		= array(
 		'imageId',
 		'companyId',
@@ -10,7 +15,9 @@ class Model_Image extends CMF_Hydrogen_Model{
 		'title',
 //		'timestamp',
 	);
+
 	protected $primaryKey	= 'imageId';
+
 	protected $indices		= array(
 		'companyId',
 		'branchId',
@@ -18,4 +25,3 @@ class Model_Image extends CMF_Hydrogen_Model{
   		'status',
 	);
 }
-?>
