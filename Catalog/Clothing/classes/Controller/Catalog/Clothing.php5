@@ -1,18 +1,17 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Controller_Catalog_Clothing extends Controller{
-
-	protected function __onInit(){
-	}
-
+class Controller_Catalog_Clothing extends Controller
+{
 	public function index(){
 	}
 
-	static public function __onRenderServicePanels( Environment $env, $context, $module, $data = [] ){
-		$arguments	= new ADT_List_Dictionary( $data );
+	public static function __onRenderServicePanels( Environment $env, $context, $module, $data = [] )
+	{
+		$arguments	= new Dictionary( $data );
 		if( $orderId = $arguments->get( 'orderId' ) ){
 			$view		= new View_Catalog_Clothing( $env );
 			$helper		= new View_Helper_Shop_FinishPanel_CatalogClothing( $env );
@@ -23,5 +22,9 @@ class Controller_Catalog_Clothing extends Controller{
 				2
 			);
 		}
+	}
+
+	protected function __onInit()
+	{
 	}
 }

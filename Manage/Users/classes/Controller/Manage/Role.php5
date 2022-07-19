@@ -7,6 +7,7 @@
  *	@copyright		2010-2020 Ceus Media
  */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -50,7 +51,7 @@ class Controller_Manage_Role extends Controller
 		}
 
 		$postDataArray	= $this->request->getAllFromSource( 'POST' );
-		$this->addData( 'role', new ADT_List_Dictionary( $postDataArray ) );
+		$this->addData( 'role', new Dictionary( $postDataArray ) );
 		$this->addData( 'words', $words );
 	}
 

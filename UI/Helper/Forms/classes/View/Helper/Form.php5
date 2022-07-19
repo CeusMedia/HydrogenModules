@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
@@ -122,7 +123,7 @@ class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 		$messageCode	= '';
 		$messageError	= '';
 		$messageSuccess	= '';
-		$blocks			= ADT_List_Dictionary::create( $this->blocks )->getAll( 'message_' );
+		$blocks			= Dictionary::create( $this->blocks )->getAll( 'message_' );
 		if( $this->returnCode === 2 && isset( $blocks['result_confirmed'] ) )
 			$messageCode	=  UI_HTML_Tag::create( 'div', $blocks['result_confirmed']->content, array(
 				'class'	=> 'form-message-code',

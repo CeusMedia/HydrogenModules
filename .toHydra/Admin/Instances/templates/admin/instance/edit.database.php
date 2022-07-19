@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 //  --  CHECK: DATABASE  --  //
 if( !preg_match( '/^\//', $instance->path ) )
 	$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
@@ -13,7 +15,7 @@ $fileConfig	= $instance->path.$instance->configPath.$instance->configFile;
 
 $panelDatabase	= '';
 if( file_exists( $fileConfig ) ){
-	$config	= new ADT_List_Dictionary( parse_ini_file( $fileConfig, FALSE ) );
+	$config	= new Dictionary( parse_ini_file( $fileConfig, FALSE ) );
 
 	$status	= '';
 	if( $config->get( 'database.driver' ) ){
@@ -28,7 +30,7 @@ if( file_exists( $fileConfig ) ){
 				$status	= 1;
 				$hint	= 'Die Datenbank-Datei wurde gefunden.';
 			}
-			
+
 		}
 		else{
 			$dsn	= Database_PDO_DataSourceName::renderStatic(
@@ -54,7 +56,7 @@ if( file_exists( $fileConfig ) ){
 		$status	= '<li class="column-clear database-status-'.$status.'">'.$hint.'</li>';
 
 	}
-	
+
 	$drivers	= array( '' => '- keiner -' );
 	foreach( PDO::getAvailableDrivers() as $driver )
 		$drivers[$driver]	= $words['database-drivers'][$driver];

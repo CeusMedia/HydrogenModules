@@ -6,6 +6,7 @@
  *	@version		$Id$
  */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\View;
 
 /**
@@ -61,7 +62,7 @@ LocaleEditor.setupCodeMirror();';
 	}
 
 	public function renderTree( $baseUrl, $files, $current = NULL, $path = NULL, $level = 0 ){
-		$dict	= new ADT_List_Dictionary( $files );
+		$dict	= new Dictionary( $files );
 		$sub	= $dict->getAll( $path );
 		$list	= [];
 		foreach( $sub as $filePath => $fileName ){

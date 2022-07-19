@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_Abstract
 {
 	protected $words;
@@ -105,7 +108,7 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 
 	protected function handleErrorCode( $errorCode, $goBack = TRUE )
 	{
-		$errorCodes	= ADT_List_Dictionary::create( $this->words )->getAll( 'errorCode-' );
+		$errorCodes	= Dictionary::create( $this->words )->getAll( 'errorCode-' );
 		if( !array_key_exists( $errorCode, $errorCodes ) )
 			throw new InvalidArgumentException( 'Unknown error code: '.$errorCode );
 		$this->messenger->noteError( $errorCodes[(string) $errorCode] );

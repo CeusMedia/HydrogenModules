@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\CLI\ArgumentParser;
+
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
@@ -44,7 +46,7 @@ $list	= UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 $sectionRequest	= '';
 $sectionRequestHeaders	= '';
 if( $exceptionRequest ){
-	if( get_class( $exceptionRequest ) !== 'CLI_ArgumentParser' ){
+	if( get_class( $exceptionRequest ) !== ArgumentParser::class ){
 		$requestHeaders			= UI_HTML_Tag::create( 'xmp', $exceptionRequest->getHeaders()->render(), array( 'style' => $xmpStyle ) );
 		$sectionRequestHeaders	= UI_HTML_Tag::create( 'h4', 'Request Headers' ).$requestHeaders;
 	}

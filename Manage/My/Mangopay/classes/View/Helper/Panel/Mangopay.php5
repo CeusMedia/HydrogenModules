@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 abstract class View_Helper_Panel_Mangopay{
@@ -10,7 +11,7 @@ abstract class View_Helper_Panel_Mangopay{
 
 	public function __construct( $env ){
 		$this->env		= $env;
-		$this->options	= new ADT_List_Dictionary();
+		$this->options	= new Dictionary();
 	}
 
 	public function __toString(){
@@ -52,8 +53,7 @@ abstract class View_Helper_Panel_Mangopay{
 	}
 
 	public function setOptions( $options = [] ){
-		$this->options	= new ADT_List_Dictionary( $options );
+		$this->options	= new Dictionary( $options );
 		return $this;
 	}
 }
-?>

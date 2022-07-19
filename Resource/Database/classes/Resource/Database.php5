@@ -22,6 +22,7 @@
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -38,7 +39,7 @@ class Resource_Database_Base extends \CeusMedia\Database\PDO\Connection
 	const STATUS_CONNECTED		= 2;
 
 	protected $env;
-	/**	@var	ADT_List_Dictionary		$options	Module configuration options */
+	/**	@var	Dictionary		$options	Module configuration options */
 	protected $options;
 
 	protected $defaultDriverOptions	= array(

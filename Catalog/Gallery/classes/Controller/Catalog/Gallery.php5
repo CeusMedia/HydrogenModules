@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -24,7 +25,7 @@ class Controller_Catalog_Gallery extends Controller
 
 	public static function __onRenderServicePanels( Environment $env, $context, $module, $data = [] )
 	{
-		$arguments	= new ADT_List_Dictionary( $data );
+		$arguments	= new Dictionary( $data );
 		if( $orderId = $arguments->get( 'orderId' ) ){
 			$view		= new View_Catalog_Gallery( $env );
 			$helper		= new View_Helper_Shop_FinishPanel_CatalogGallery( $env );

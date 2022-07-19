@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
@@ -108,7 +109,7 @@ class View_Blog extends View
 		$debug		= $this->getData( 'debug' );
 		$config		= $this->env->getConfig();
 		$baseUrl	= $config->get( 'app.base.url' );
-		$module		= new ADT_List_Dictionary( $config->getAll( 'module.blog_compact.' ) );
+		$module		= new Dictionary( $config->getAll( 'module.blog_compact.' ) );
 		$channel	= array(
 			'link'		=> $baseUrl.'blog',
 			'language'	=> $module->get( 'feed.language' ),

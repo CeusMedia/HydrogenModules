@@ -7,6 +7,7 @@
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -38,7 +39,7 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract
 	public function build(): string
 	{
 		$config		= $this->env->getConfig();														//
-		$c			= new ADT_List_Dictionary( $config->getAll( 'module.ui_friendlister.' ) );		//
+		$c			= new Dictionary( $config->getAll( 'module.ui_friendlister.' ) );		//
 		if( !file_exists( $c->get( 'file' ) ) )														//
 			throw new RuntimeException( 'File "'.$c->get( 'file' ).'" is not existing' );			//
 

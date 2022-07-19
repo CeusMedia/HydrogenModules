@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Download extends Controller
@@ -13,7 +14,7 @@ class Controller_Manage_Download extends Controller
 	/**	@var	Model_Download_Folder							$modelFolder		Database model of folders */
 	protected $modelFolder;
 
-	/**	@var	ADT_List_Dictionary								$options			Module configuration object */
+	/**	@var	Dictionary										$options			Module configuration object */
 	protected $options;
 
 	/**	@var	string											$path				Base path to download files */

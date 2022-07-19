@@ -27,6 +27,7 @@
  *	@version		$Id: Json.php5 613 2012-07-08 11:34:11Z christian.wuerker $
  */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -42,8 +43,8 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@since			0.3
  *	@version		$Id: Json.php5 613 2012-07-08 11:34:11Z christian.wuerker $
  */
-class Resource_Server_Json {
-
+class Resource_Server_Json
+{
 	protected $env;
 	protected $serverUri;
 	protected $curlOptions		= array(
@@ -56,13 +57,14 @@ class Resource_Server_Json {
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment		$env	Environment
+	 *	@param		Environment		$env	Environment
 	 *	@return		void
 	 */
-	public function __construct( Environment $env ) {
+	public function __construct( Environment $env )
+	{
 		$this->env	= $env;
 		$config		= $env->getConfig();
-		$module		= new ADT_List_Dictionary( $config->getAll( 'module.resource_server_json.', TRUE ) );
+		$module		= new Dictionary( $config->getAll( 'module.resource_server_json.', TRUE ) );
 
 		$this->serverUri	= $module->get( 'uri' );
 		if( empty( $this->serverUri ) )
@@ -92,7 +94,8 @@ class Resource_Server_Json {
 	 *	@todo			localization of messages
 	 *	@todo			allow other auth methods than 'shared secred'
 	 */
-	static public function ___onEnvInit( Environment $env, $context, $module, $data = [] ){
+	static public function ___onEnvInit( Environment $env, $context, $module, $data = [] )
+	{
 		$server		= new Resource_Server_Json( $context );
 		$context->set( 'server', $server );
 		$config		= $context->getConfig();
@@ -120,7 +123,8 @@ class Resource_Server_Json {
 
 	}
 
-	protected function buildServerGetUrl( $controller, $action = NULL, $arguments = [], $parameters = [] ) {
+	protected function buildServerGetUrl( $controller, $action = NULL, $arguments = [], $parameters = [] )
+	{
 		$url	= $this->buildServerPostUrl( $controller, $action, $arguments );
 		if( is_null( $parameters ) )
 			$parameters	= [];
@@ -143,7 +147,8 @@ class Resource_Server_Json {
 	 *	@param		array		$arguments		List of URI arguments
 	 *	@return		strring		URL on server
 	 */
-	protected function buildServerPostUrl( $controller, $action = NULL, $arguments = [] ) {
+	protected function buildServerPostUrl( $controller, $action = NULL, $arguments = [] )
+	{
 		if( $arguments && empty( $action ) )
 			$action		= 'index';
 		if( $action && !$controller )
@@ -171,7 +176,8 @@ class Resource_Server_Json {
 	 *	@throws		InvalidArgumentException if method is invaid
 	 *	@throws		InvalidArgumentException if key is not existing and strict mode
 	 */
-	public function getCurlOption( $key, $method = 'ALL', $strict = FALSE ) {
+	public function getCurlOption( $key, $method = 'ALL', $strict = FALSE )
+	{
 		$method	= strtoupper( $method );
 		if( !array_key_exists( $method, $this->curlOptions ) )
 			throw new InvalidArgumentException( 'Invalid method: '.$method );
@@ -182,23 +188,27 @@ class Resource_Server_Json {
 		return NULL;
 	}
 
-	public function getCurlOptions( $method = 'ALL' ) {
+	public function getCurlOptions( $method = 'ALL' )
+	{
 		$method	= strtoupper( $method );
 		if( !array_key_exists( $method, $this->curlOptions ) )
 			throw new InvalidArgumentException( 'Invalid method: '.$method );
 		return $this->curlOptions[$method];
 	}
 
-	public function getData( $controller, $action = NULL, $arguments = [], $parameters = [], $curlOptions = [] ) {
+	public function getData( $controller, $action = NULL, $arguments = [], $parameters = [], $curlOptions = [] )
+	{
 		$url	= $this->buildServerGetUrl( $controller, $action, $arguments, $parameters = [] );
 		return	$this->getDataFromUrl( $url, $curlOptions );
 	}
 
-	public function getDataFromUri( $uri, $curlOptions = [] ) {
+	public function getDataFromUri( $uri, $curlOptions = [] )
+	{
 		return $this->getDataFromUrl( $this->serverUri.$uri, $curlOptions );
 	}
 
-	public function getDataFromUrl( $url, $curlOptions = [] ) {
+	public function getDataFromUrl( $url, $curlOptions = [] )
+	{
 		$reader		= new Net_HTTP_Reader();
 		$headers	= array( 'Accept-Encoding: gzip, deflate' );
 		$options	= $this->curlOptions['ALL'] + $this->curlOptions['GET'] + $curlOptions;
@@ -215,7 +225,8 @@ class Resource_Server_Json {
 		return $response->data;
 	}
 
-	protected function handleResponse( $json, $url, $statusCode ) {
+	protected function handleResponse( $json, $url, $statusCode )
+	{
 
 		if( $statusCode != 200 && $statusCode != 500 )
 			throw new RuntimeException( 'Resource '.$url.' has HTTP code '.$statusCode );
@@ -229,17 +240,20 @@ class Resource_Server_Json {
 		throw unserialize( $response->serial );
 	}
 
-	public function postData( $controller, $action = NULL, $arguments = NULL, $data = [], $curlOptions = [] ) {
+	public function postData( $controller, $action = NULL, $arguments = NULL, $data = [], $curlOptions = [] )
+	{
 		$url	= $this->buildServerPostUrl( $controller, $action, $arguments );
 		return $this->postDataToUrl( $url, $data, $curlOptions );
 	}
 
-	public function postDataToUri( $uri, $data = [], $curlOptions = [] ) {
+	public function postDataToUri( $uri, $data = [], $curlOptions = [] )
+	{
 		return $this->postDataToUrl( $this->serverUri.$uri, $data, $curlOptions );
 	}
 
-	public function postDataToUrl( $url, $data = [], $curlOptions = [] ) {
-		if( $data instanceof ADT_List_Dictionary )
+	public function postDataToUrl( $url, $data = [], $curlOptions = [] )
+	{
+		if( $data instanceof Dictionary )
 			$data	= $data->getAll();
 		if( $this->env->getSession()->get( 'token' ) )
 			$data['token']	= $this->env->getSession()->get( 'token' );
@@ -268,18 +282,19 @@ class Resource_Server_Json {
 		return $response->data;
 	}
 
-	public function setCurlOption( $key, $value, $method = 'ALL' ) {
+	public function setCurlOption( $key, $value, $method = 'ALL' )
+	{
 		$method	= strtoupper( $method );
 		if( !array_key_exists( $method, $this->curlOptions ) )
 			throw new InvalidArgumentException( 'Invalid method: '.$method );
 		$this->curlOptions[$method][$key]	= $value;
 	}
 
-	public function setCurlOptions( $curlOptions, $method = 'ALL' ) {
+	public function setCurlOptions( $curlOptions, $method = 'ALL' )
+	{
 		$method	= strtoupper( $method );
 		if( !array_key_exists( $method, $this->curlOptions ) )
 			throw new InvalidArgumentException( 'Invalid method: '.$method );
 		$this->curlOptions[$method]	= $curlOptions;
 	}
 }
-?>

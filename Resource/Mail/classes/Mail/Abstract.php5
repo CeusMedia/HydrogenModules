@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
@@ -17,10 +18,10 @@ abstract class Mail_Abstract
 	/**	@var		Environment				$env			Environment object */
 	protected $env;
 
-	/**	@var		ADT_List_Dictionary		$config			Application configuration object */
+	/**	@var		Dictionary				$config			Application configuration object */
 	protected $config;
 
-	/**	@var		ADT_List_Dictionary		$options		Module configuration object */
+	/**	@var		Dictionary				$options		Module configuration object */
 	protected $options;
 
 	/** @var		Logic_Mail				$logicMail		Mail logic object */

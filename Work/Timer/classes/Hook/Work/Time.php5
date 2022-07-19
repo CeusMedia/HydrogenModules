@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -7,7 +8,7 @@ class Hook_Work_Time extends Hook
 {
 	public static function onAuthBeforeLogout( Environment $env, $module, $context, $payload = [] )
 	{
-		$data	= new ADT_List_Dictionary( $payload );
+		$data	= new Dictionary( $payload );
 		if( ( $userId = $data->get( 'userId' ) ) ){
 			$logicTimer	= Logic_Work_Timer::getInstance( $env );
 			$modelTimer	= new Model_Work_Timer( $env );

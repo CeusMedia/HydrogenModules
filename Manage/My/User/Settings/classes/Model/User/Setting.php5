@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -14,9 +15,10 @@ use CeusMedia\HydrogenFramework\Environment;
  *	1	- sent
  *	2	- used
  */
-class Model_User_Setting extends CMF_Hydrogen_Model {
-
+class Model_User_Setting extends CMF_Hydrogen_Model
+{
 	protected $name			= 'user_settings';
+
 	protected $columns		= array(
 		'userSettingId',
 		'moduleId',
@@ -27,16 +29,20 @@ class Model_User_Setting extends CMF_Hydrogen_Model {
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'userSettingId';
+
 	protected $indices		= array(
 		'moduleId',
 		'managerId',
 		'userId',
 		'key',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function applyConfig( $userId = NULL, $hidePasswords = TRUE ){
+	public function applyConfig( $userId = NULL, $hidePasswords = TRUE )
+	{
 		$config		= $this->env->getConfig()->getAll();
 		if( $userId === NULL )
 			$userId		= $this->env->getSession()->get( 'auth_user_id' );
@@ -54,15 +60,17 @@ class Model_User_Setting extends CMF_Hydrogen_Model {
 			foreach( $config as $key => $value )
 				if( preg_match( "/password/", $key ) )
 					$config[$key]	= (bool) $value;
-		return new ADT_List_Dictionary( $config );
+		return new Dictionary( $config );
 	}
 
-	static public function applyConfigStatic( Environment $env, $userId = NULL, $hidePasswords = TRUE ){
+	static public function applyConfigStatic( Environment $env, $userId = NULL, $hidePasswords = TRUE )
+	{
 		$model	= new Model_User_Setting( $env );
 		return $model->applyConfig( $userId, $hidePasswords );
 	}
 
-	public function castValue( $type, $value ){
+	public function castValue( $type, $value )
+	{
 		switch( $type ){
 			case 'bool':
 			case 'boolean':
@@ -78,4 +86,3 @@ class Model_User_Setting extends CMF_Hydrogen_Model {
 		return $value;
 	}
 }
-?>

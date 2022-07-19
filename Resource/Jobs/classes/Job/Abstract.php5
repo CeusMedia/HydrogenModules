@@ -1,21 +1,22 @@
 <?php
 
+use CeusMedia\Common\CLI\Output\Progress as ProgressOutput;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Job_Abstract
 {
-	/**	@var	CMF_Hydrogen_Environment	$env			Environment object */
+	/**	@var	Environment				$env			Environment object */
 	protected $env;
 
 	protected $logFile;
 
-	/**	@var	string						$jobClass		Class name of inheriting job */
+	/**	@var	string					$jobClass		Class name of inheriting job */
 	protected $jobClass;
 
-	/**	@var	string						$jobMethod		Method name of job task */
+	/**	@var	string					$jobMethod		Method name of job task */
 	protected $jobMethod;
 
-	/**	@var	string						$jobModuleId	Module ID of inheriting job */
+	/**	@var	string					$jobModuleId	Module ID of inheriting job */
 	protected $jobModuleId;
 
 	protected $commands			= [];
@@ -28,14 +29,14 @@ class Job_Abstract
 
 	protected $results;
 
-	/**	@var		Jobber								$manager		Job manager instance */
+	/**	@var		Jobber				$manager		Job manager instance */
 	protected $manager;
 
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment			$env		Environment instance
-	 *	@param		Jobber								$manager	Job manage instance
+	 *	@param		Environment			$env		Environment instance
+	 *	@param		Jobber				$manager	Job manage instance
 	 *	@return		void
 	 */
 	public function __construct( Environment $env, $manager, ?string $jobClassName = NULL, ?string $jobModuleId = NULL )
@@ -43,7 +44,7 @@ class Job_Abstract
 		$this->env			= $env;
 		$this->manager		= $manager;
 		$this->logFile		= $env->getConfig()->get( 'path.logs' ).'jobs.log';
-		$this->parameters	= new ADT_List_Dictionary();
+		$this->parameters	= new Dictionary();
 		if( $jobClassName )
 			$this->setJobClassName( $jobClassName );
 		if( $jobModuleId )
@@ -71,7 +72,7 @@ class Job_Abstract
 	public function noteArguments( array $commands = [], array $parameters = [] ): self
 	{
 		$this->commands		= array_diff( $commands, array( 'dry', 'verbose' ) );
-		$this->parameters	= new ADT_List_Dictionary( $parameters );
+		$this->parameters	= new Dictionary( $parameters );
 		$this->dryMode		= in_array( 'dry', (array) $commands );
 		$this->verbose		= in_array( 'verbose', (array) $commands );
 		return $this;
@@ -203,9 +204,9 @@ class Job_Abstract
 	 */
 	protected function showProgress( int $count, int $total, string $sign = '.', int $length = 60 ): self
 	{
-		if( class_exists( 'CLI_Output_Progress' ) ){
+		if( class_exists( ProgressOutput::class ) ){
 			if( $count === 0 ){
-				$this->progress	= new CLI_Output_Progress();
+				$this->progress	= new ProgressOutput();
 				$this->progress->setTotal( $total )->start();
 			}
 			else if( $count === $total ){
@@ -216,7 +217,7 @@ class Job_Abstract
 			}
 			else{
 				if( !$this->progress ){
-					$this->progress	= new CLI_Output_Progress();
+					$this->progress	= new ProgressOutput();
 					$this->progress->setTotal( $total );
 					$this->progress->start();
 				}

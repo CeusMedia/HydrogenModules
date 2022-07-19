@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
@@ -11,10 +12,10 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 
 	static protected $loaded	= FALSE;
 
-	/**	@var	ADT_List_Dictionary		$config		Module configuration */
+	/**	@var	Dictionary		$config		Module configuration */
 	protected $config;
 
-	/**	@var 	string					$pathFront	Path to frontend application */
+	/**	@var 	string			$pathFront	Path to frontend application */
 	protected $pathFront;
 
 	/**

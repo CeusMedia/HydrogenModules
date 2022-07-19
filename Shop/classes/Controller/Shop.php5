@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -13,10 +14,10 @@ class Controller_Shop extends Controller
 	/**	@var	Logic_Shop				$logic */
 	protected $logic;
 
-	/**	@var	ADT_List_Dictionary		$options */
+	/**	@var	Dictionary				$options */
 	protected $options;
 
-	/**	@var	Model_Shop_Cart				$modelCart */
+	/**	@var	Model_Shop_Cart			$modelCart */
 	protected $modelCart;
 
 	protected $backends			= [];

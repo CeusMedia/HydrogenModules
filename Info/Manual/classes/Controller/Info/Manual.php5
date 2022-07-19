@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Info_Manual extends Controller
@@ -15,7 +16,7 @@ class Controller_Info_Manual extends Controller
 	protected $modelUser;
 	protected $modelVersion;
 
-	/** @var	ADT_List_Dictionary	$order */
+	/** @var	Dictionary	$order */
 	protected $order;
 	protected $ext				= ".md";
 
@@ -362,7 +363,7 @@ class Controller_Info_Manual extends Controller
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_manual.', TRUE );
 		$this->path			= $this->moduleConfig->get( 'path' );
-		$this->order		= new ADT_List_Dictionary();
+		$this->order		= new Dictionary();
 		$this->rights		= $this->env->getAcl()->index( 'info/manual' );
 		$this->isEditable	= $this->moduleConfig->get( 'editor' );
 		$this->helperUrl	= new View_Helper_Info_Manual_Url( $this->env );
@@ -380,10 +381,10 @@ class Controller_Info_Manual extends Controller
 		$orderFile	= $this->path.'order.list';
 		if( file_exists( $this->path.'order.list' ) ){
 			$order			= trim( FS_File_Reader::load( $orderFile ) );
-			$this->order	= new ADT_List_Dictionary( explode( "\n", $order ) );
+			$this->order	= new Dictionary( explode( "\n", $order ) );
 		}
 		else if( count( $this->files ) ){
-			$this->order	= new ADT_List_Dictionary( array_values( $this->files ) );
+			$this->order	= new Dictionary( array_values( $this->files ) );
 			$this->saveOrder();
 		}
 

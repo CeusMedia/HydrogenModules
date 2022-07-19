@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Logic_Payment_PayPal
@@ -9,10 +10,10 @@ class Logic_Payment_PayPal
 	protected $signature;
 	public $latestResponse;
 
-	/**	@var	Model_Shop_Payment				$model			*/
+	/**	@var	Model_Shop_Payment		$model			*/
 	protected $model;
 
-	/**	@var	ADT_List_Dictionary			$config			Module configuration dictionary */
+	/**	@var	Dictionary				$config			Module configuration dictionary */
 	protected $config;
 
 	public function __construct( Environment $env )

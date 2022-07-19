@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -13,7 +14,7 @@ class Controller_Blog extends Controller{
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 *	@param		Environment		$env		Environment object
 	 *	@return		void
 	 */
 	public function __construct( Environment $env ){
@@ -135,7 +136,7 @@ class Controller_Blog extends Controller{
 			'authors'	=> $this->model->getArticleAuthors( $articleId ),
 			'articleId'	=> rawurldecode( $articleId ),
 			'version'	=> $version,
-			'config'	=> new ADT_List_Dictionary( $this->env->getConfig()->getAll( 'module.blog_compact.' ) )
+			'config'	=> new Dictionary( $this->env->getConfig()->getAll( 'module.blog_compact.' ) )
 		);
 		$this->setData( $data );
 	}
@@ -302,7 +303,7 @@ class Controller_Blog extends Controller{
 			'number'	=> $this->model->count( $conditions ),
 			'topTags'	=> $topTags,
 			'isEditor'	=> $this->isEditor,
-			'config'	=> new ADT_List_Dictionary( $this->env->getConfig()->getAll( 'module.blog_compact.' ) )
+			'config'	=> new Dictionary( $this->env->getConfig()->getAll( 'module.blog_compact.' ) )
 		);
 		$this->setData( $data );
 	}

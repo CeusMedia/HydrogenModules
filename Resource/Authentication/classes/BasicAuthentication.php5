@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -15,7 +16,7 @@ class BasicAuthentication
 
 	public function authenticate()
 	{
-		$server		= new ADT_List_Dictionary( $_SERVER );
+		$server		= new Dictionary( $_SERVER );
 		$username	= trim( $server->get( 'PHP_AUTH_USER' ) );
 		$password	= trim( $server->get( 'PHP_AUTH_PW' ) );
 
