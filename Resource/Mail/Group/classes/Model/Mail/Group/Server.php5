@@ -3,12 +3,14 @@
  *	Data model of mail group servers.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data model of mail group servers.
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Group_Server extends CMF_Hydrogen_Model
+class Model_Mail_Group_Server extends Model
 {
 	protected $name		= 'mail_group_servers';
 

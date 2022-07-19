@@ -9,7 +9,6 @@ use CeusMedia\HydrogenFramework\View;
 
 /**
  *	View.
- *	@extends		CMF_Hydrogen_View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */

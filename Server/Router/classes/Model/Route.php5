@@ -7,18 +7,21 @@
  *	@since			...
  *	@version		...
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Route.
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@since			...
  *	@version		...
  */
-class Model_Route extends CMF_Hydrogen_Model {
-
+class Model_Route extends Model
+{
 	protected $name		= 'routes';
+
 	protected $columns	= array(
 		'routeId',
 		'status',
@@ -31,7 +34,9 @@ class Model_Route extends CMF_Hydrogen_Model {
 		'title',
 		'createdAt',
 	);
+
 	protected $primaryKey	= 'routeId';
+
 	protected $indices		= array(
 		'status',
 		'regex',
@@ -40,6 +45,6 @@ class Model_Route extends CMF_Hydrogen_Model {
 		'source',
 		'target',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

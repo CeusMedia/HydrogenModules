@@ -3,12 +3,14 @@
  *	Data model of mail group roles.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data model of mail group roles.
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Group_Role extends CMF_Hydrogen_Model
+class Model_Mail_Group_Role extends Model
 {
 	protected $name		= 'mail_group_roles';
 

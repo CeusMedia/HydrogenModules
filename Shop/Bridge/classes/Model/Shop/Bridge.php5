@@ -12,7 +12,6 @@ use CeusMedia\HydrogenFramework\Model;
  *	Data Model of Shop Bridges.
  *	@category		cmProjects
  *	@package		LUV.Model
- *	@extends		CMF_Neon_Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
  */
 class Model_Shop_Bridge extends Model

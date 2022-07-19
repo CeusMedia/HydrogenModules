@@ -10,7 +10,6 @@
  *	Controller to index server controllers and actions.
  *	@category		cmApps
  *	@package		Chat.Server.Controller
- *	@extends		Controller_Abstract
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */

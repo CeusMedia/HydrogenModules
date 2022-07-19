@@ -4,21 +4,20 @@
  *	@category		cmProjects
  *	@package		LUV.Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			02.07.2006
- *	@version		3.0
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Orders.
  *	@category		cmProjects
  *	@package		LUV.Model
- *	@extends		CMF_Neon_Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			02.07.2006
- *	@version		3.0
  */
-class Model_Work_Graph extends CMF_Hydrogen_Model {
-
+class Model_Work_Graph extends Model
+{
 	protected $name		= 'graphs';
+
 	protected $columns	= array(
 		"graphId",
 		"type",
@@ -44,11 +43,14 @@ class Model_Work_Graph extends CMF_Hydrogen_Model {
 		"modifiedAt",
 		"renderedAt",
 	);
+
 	protected $primaryKey	= 'graphId';
+
 	protected $indices		= array(
 		"type",
 		"rankdir",
 		"title",
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

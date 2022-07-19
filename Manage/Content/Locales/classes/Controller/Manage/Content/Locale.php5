@@ -13,60 +13,21 @@ use CeusMedia\HydrogenFramework\Controller;
  *	Locale Content Management Controller.
  *	@category		cmApps
  *	@package		Chat.Admin.Controller
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011 Ceus Media
  */
-class Controller_Manage_Content_Locale extends Controller{
-
-	static public $folders	= array(
+class Controller_Manage_Content_Locale extends Controller
+{
+	public static $folders	= array(
 		'locale'		=> '',
 		'html'			=> 'html/',
 		'mail'			=> 'mail/',
 	);
 
-	static public $filterPrefix	= 'filter_manage_content_locale_';
+	public static $filterPrefix	= 'filter_manage_content_locale_';
 
-	public function	__onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_content_locales.', TRUE );
-		$this->basePath		= $this->env->getConfig()->get( 'path.locales' );
-		$this->language		= $this->env->getConfig()->get( 'locale.default' );
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
-			$frontend		= Logic_Frontend::getInstance( $this->env );
-			$this->basePath	= $frontend->getPath( 'locales' );
-			$this->language	= $frontend->getConfigValue( 'locale.default' );
-		}
-		if( $this->session->get( static::$filterPrefix.'folder' ) )
-			$this->folder	= $this->session->get( static::$filterPrefix.'folder' );
-
-		$this->languages	= $this->getLanguages();
-		if( $this->session->get( static::$filterPrefix.'language' ) )
-			$this->language	= $this->session->get( static::$filterPrefix.'language' );
-
-		$this->basePath		= preg_replace( '/^\.\//', '', $this->basePath );
-		$this->file			= $this->session->get( static::$filterPrefix.'file' );
-		$this->folder		= $this->session->get( static::$filterPrefix.'folder' );
-		if( !$this->folder )
-			$this->setFolder( 'html' );
-//		$this->addData( 'basePath', $this->basePath );
-//		$this->addData( 'moduleConfig', $this->moduleConfig );
-		$folderPath		= static::$folders[$this->folder];
-		$this->folderPathFull	= $this->basePath.$this->language.'/'.$folderPath;
-		$this->addData( 'filterEmpty', $this->session->get( static::$filterPrefix.'empty' ) );
-		$this->addData( 'folders', static::$folders );
-		$this->addData( 'folder', $this->folder );
-		$this->addData( 'folderPath', $folderPath );
-		$this->addData( 'folderPathFull', $this->folderPathFull );
-		$this->addData( 'file', $this->file );
-		$this->addData( 'language', $this->language );
-		$this->addData( 'languages', $this->languages );
-		$this->indexFiles();
-	}
-
-	public function ajaxSaveContent(){
+	public function ajaxSaveContent()
+	{
 		$this->checkAjaxRequest();
 		if( !( $this->language && $this->file ) )
 			return;
@@ -76,23 +37,8 @@ class Controller_Manage_Content_Locale extends Controller{
 		$this->handleJsonResponse( 'success', TRUE );
 	}
 
-/*	protected function convertLeadingTabsToSpaces( $content ){
-		$lines	= explode( "\n", $content );
-		foreach( $lines as $nr => $line )
-			while( preg_match( "/^ *\t/", $lines[$nr] ) )
-				$lines[$nr]	= preg_replace( "/^( *)\t/", "\\1 ", $lines[$nr] );
-		return implode( "\n", $lines );
-	}
-
-	protected function convertLeadingSpacesToTabs( $content ){
-		$lines	= explode( "\n", $content );
-		foreach( $lines as $nr => $line )
-			while( preg_match( "/^\t* /", $lines[$nr] ) )
-				$lines[$nr]	= preg_replace( "/^(\t*) /", "\\1\t", $lines[$nr] );
-		return implode( "\n", $lines );
-	}*/
-
-	public function edit( $folder, $language, $file ){
+	public function edit( $folder, $language, $file )
+	{
 		$this->setFolder( $folder );
 		$this->setLanguage( $language );
 		$this->setFile( base64_decode( $file ) );
@@ -150,7 +96,8 @@ class Controller_Manage_Content_Locale extends Controller{
 		}
 	}
 
-	public function filter( $reset = NULL ) {
+	public function filter( $reset = NULL )
+	{
 		if( $reset ){
 			$this->session->remove( static::$filterPrefix.'folder' );
 			$this->session->remove( static::$filterPrefix.'language' );
@@ -177,15 +124,8 @@ class Controller_Manage_Content_Locale extends Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function getLanguages(){
-		$index	= new FS_Folder_Lister( $this->basePath );
-		foreach( $index->getList() as $folder )
-			$languages[]	= $folder->getFilename();
-		natcasesort( $languages );
-		return $languages;
-	}
-
-	public function index( $folder = NULL, $language = NULL ) {
+	public function index( $folder = NULL, $language = NULL )
+	{
 		if( $folder && $language ){
 			$this->setFolder( $folder );
 			$this->setLanguage( $language );
@@ -197,7 +137,96 @@ class Controller_Manage_Content_Locale extends Controller{
 		}
 	}
 
-	protected function indexFiles(){
+	public function setEditor()
+	{
+		$editor		= $this->request->get( 'editor' );
+		$ext		= $this->request->get( 'ext' );
+		$default	= $this->request->get( 'default' );
+		$from		= $this->request->get( 'from' );
+
+		if( $editor ){
+			$this->session->set( static::$filterPrefix.'editor', $editor );
+			if( $default )
+				$this->session->set( static::$filterPrefix.'editor_'.$ext, $editor );
+			if( !$default )
+				$this->session->remove( static::$filterPrefix.'editor_'.$ext );
+		}
+		$this->restart( vsprintf( 'edit/%s/%s/%s', array(
+			$this->folder,
+			$this->language,
+			base64_encode( $this->file ),
+		) ), TRUE );
+	}
+
+	protected function	__onInit()
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_content_locales.', TRUE );
+		$this->basePath		= $this->env->getConfig()->get( 'path.locales' );
+		$this->language		= $this->env->getConfig()->get( 'locale.default' );
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			$frontend		= Logic_Frontend::getInstance( $this->env );
+			$this->basePath	= $frontend->getPath( 'locales' );
+			$this->language	= $frontend->getConfigValue( 'locale.default' );
+		}
+		if( $this->session->get( static::$filterPrefix.'folder' ) )
+			$this->folder	= $this->session->get( static::$filterPrefix.'folder' );
+
+		$this->languages	= $this->getLanguages();
+		if( $this->session->get( static::$filterPrefix.'language' ) )
+			$this->language	= $this->session->get( static::$filterPrefix.'language' );
+
+		$this->basePath		= preg_replace( '/^\.\//', '', $this->basePath );
+		$this->file			= $this->session->get( static::$filterPrefix.'file' );
+		$this->folder		= $this->session->get( static::$filterPrefix.'folder' );
+		if( !$this->folder )
+			$this->setFolder( 'html' );
+//		$this->addData( 'basePath', $this->basePath );
+//		$this->addData( 'moduleConfig', $this->moduleConfig );
+		$folderPath		= static::$folders[$this->folder];
+		$this->folderPathFull	= $this->basePath.$this->language.'/'.$folderPath;
+		$this->addData( 'filterEmpty', $this->session->get( static::$filterPrefix.'empty' ) );
+		$this->addData( 'folders', static::$folders );
+		$this->addData( 'folder', $this->folder );
+		$this->addData( 'folderPath', $folderPath );
+		$this->addData( 'folderPathFull', $this->folderPathFull );
+		$this->addData( 'file', $this->file );
+		$this->addData( 'language', $this->language );
+		$this->addData( 'languages', $this->languages );
+		$this->indexFiles();
+	}
+
+/*	protected function convertLeadingTabsToSpaces( $content )
+	{
+		$lines	= explode( "\n", $content );
+		foreach( $lines as $nr => $line )
+			while( preg_match( "/^ *\t/", $lines[$nr] ) )
+				$lines[$nr]	= preg_replace( "/^( *)\t/", "\\1 ", $lines[$nr] );
+		return implode( "\n", $lines );
+	}
+
+	protected function convertLeadingSpacesToTabs( $content )
+	{
+		$lines	= explode( "\n", $content );
+		foreach( $lines as $nr => $line )
+			while( preg_match( "/^\t* /", $lines[$nr] ) )
+				$lines[$nr]	= preg_replace( "/^(\t*) /", "\\1\t", $lines[$nr] );
+		return implode( "\n", $lines );
+	}*/
+
+	protected function getLanguages()
+	{
+		$index	= new FS_Folder_Lister( $this->basePath );
+		foreach( $index->getList() as $folder )
+			$languages[]	= $folder->getFilename();
+		natcasesort( $languages );
+		return $languages;
+	}
+
+	protected function indexFiles()
+	{
 		$list		= [];
 		foreach( static::$folders as $folderKey => $folderPath ){
 			if( $folderKey !== $this->folder )
@@ -233,27 +262,8 @@ class Controller_Manage_Content_Locale extends Controller{
 		$this->addData( 'files', $list );
 	}
 
-	public function setEditor(){
-		$editor		= $this->request->get( 'editor' );
-		$ext		= $this->request->get( 'ext' );
-		$default	= $this->request->get( 'default' );
-		$from		= $this->request->get( 'from' );
-
-		if( $editor ){
-			$this->session->set( static::$filterPrefix.'editor', $editor );
-			if( $default )
-				$this->session->set( static::$filterPrefix.'editor_'.$ext, $editor );
-			if( !$default )
-				$this->session->remove( static::$filterPrefix.'editor_'.$ext );
-		}
-		$this->restart( vsprintf( 'edit/%s/%s/%s', array(
-			$this->folder,
-			$this->language,
-			base64_encode( $this->file ),
-		) ), TRUE );
-	}
-
-	protected function setFile( $file ){
+	protected function setFile( $file )
+	{
 		if( $this->file === $file )
 			return NULL;
 		if( $file == NULL || !strlen( trim( $file ) ) ){
@@ -271,7 +281,8 @@ class Controller_Manage_Content_Locale extends Controller{
 		return TRUE;
 	}
 
-	protected function setFolder( $folder ){
+	protected function setFolder( $folder )
+	{
 		if( $this->folder === $folder )
 			return NULL;
 		if( !array_key_exists( $folder, static::$folders ) )
@@ -282,7 +293,8 @@ class Controller_Manage_Content_Locale extends Controller{
 		return TRUE;
 	}
 
-	protected function setLanguage( $language ){
+	protected function setLanguage( $language )
+	{
 		if( $this->language === $language )
 			return NULL;
 		if( !in_array( $language, $this->languages ) )
@@ -292,4 +304,3 @@ class Controller_Manage_Content_Locale extends Controller{
 		return TRUE;
 	}
 }
-?>

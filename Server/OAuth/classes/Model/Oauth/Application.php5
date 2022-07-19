@@ -6,15 +6,17 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	OAuth Code Model.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Users.Model
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
  */
-class Model_Oauth_Application extends CMF_Hydrogen_Model
+class Model_Oauth_Application extends Model
 {
 	const STATUS_REMOVED		= -1;
 	const STATUS_DISABLED		= 0;

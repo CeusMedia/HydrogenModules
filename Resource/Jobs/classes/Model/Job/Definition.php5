@@ -5,14 +5,16 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Job Definition Model.
  *	@category		cmFrameworks.Hydrogen.Module
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media
  */
-class Model_Job_Definition extends CMF_Hydrogen_Model
+class Model_Job_Definition extends Model
 {
 	const STATUS_DISABLED	= 0;
 	const STATUS_ENABLED	= 1;
@@ -24,6 +26,7 @@ class Model_Job_Definition extends CMF_Hydrogen_Model
 	const MODE_EXCLUSIVE	= 3;
 
 	protected $name			= 'job_definitions';
+
 	protected $columns		= array(
 		'jobDefinitionId',
 		'mode',
@@ -38,7 +41,9 @@ class Model_Job_Definition extends CMF_Hydrogen_Model
 		'modifiedAt',
 		'lastRunAt',
 	);
+
 	protected $primaryKey	= 'jobDefinitionId';
+
 	protected $indices		= array(
 		'mode',
 		'status',
@@ -48,5 +53,6 @@ class Model_Job_Definition extends CMF_Hydrogen_Model
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

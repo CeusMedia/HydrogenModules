@@ -3,7 +3,6 @@
  *	Content View.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011-2014 Ceus Media
- *	@version		$Id$
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -11,14 +10,13 @@ use CeusMedia\HydrogenFramework\View;
 
 /**
  *	Content View.
- *	@extends		CMF_Hydrogen_View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011-2014 Ceus Media
- *	@version		$Id$
  */
-class View_Manage_Content_Locale extends View{
-
-	public function index() {
+class View_Manage_Content_Locale extends View
+{
+	public function index()
+	{
 		$language	= $this->getData( 'language' );
 		$type		= $this->getData( 'type' );
 		$types		= $this->getData( 'types' );
@@ -49,19 +47,8 @@ LocaleEditor.setupCodeMirror();';
 			$page->js->addScriptOnReady( $script, 9 );
 	}
 
-	protected function getFolders( $files ){
-		$list	= [];
-		foreach( array_keys( $files ) as $item ){
-			if( preg_match( "/\//", $item ) ){
-				$folder	= preg_replace( "/^(.+)\/.*$/U", "\\1", $item );
-				if( !in_array( $folder, $list ) )
-					$list[]	= $folder;
-			}
-		}
-		return $list;
-	}
-
-	public function renderTree( $baseUrl, $files, $current = NULL, $path = NULL, $level = 0 ){
+	public function renderTree( $baseUrl, $files, $current = NULL, $path = NULL, $level = 0 )
+	{
 		$dict	= new Dictionary( $files );
 		$sub	= $dict->getAll( $path );
 		$list	= [];
@@ -96,5 +83,17 @@ LocaleEditor.setupCodeMirror();';
 		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-folder-open' ) );
 		return UI_HTML_Tag::create( 'li', $icon.'&nbsp;'.$folder.$list, array( 'class' => 'folder' ) );
 	}
+
+	protected function getFolders( $files )
+	{
+		$list	= [];
+		foreach( array_keys( $files ) as $item ){
+			if( preg_match( "/\//", $item ) ){
+				$folder	= preg_replace( "/^(.+)\/.*$/U", "\\1", $item );
+				if( !in_array( $folder, $list ) )
+					$list[]	= $folder;
+			}
+		}
+		return $list;
+	}
 }
-?>

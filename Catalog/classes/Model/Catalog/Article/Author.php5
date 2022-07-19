@@ -4,33 +4,34 @@
  *	@category		cmProjects
  *	@package		LUV.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
- *	@version		3.0
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Author.
  *	@category		cmProjects
  *	@package		LUV.Model
- *	@extends		CMF_Neon_Model
  *	@uses			Author
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
- *	@version		3.0
  */
-class Model_Catalog_Article_Author extends CMF_Hydrogen_Model {
-
+class Model_Catalog_Article_Author extends Model
+{
 	protected $name		= 'catalog_article_authors';
+
 	protected $columns	= array(
 		"articleAuthorId",
 		"articleId",
 		"authorId",
 		"editor",
 	);
+
 	protected $primaryKey	= 'articleAuthorId';
+
 	protected $indices		= array(
 		"articleId",
 		"authorId",
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

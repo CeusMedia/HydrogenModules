@@ -5,18 +5,15 @@
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
 /**
  *	...
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
-class Model_Workshop extends CMF_Hydrogen_Model
+class Model_Workshop extends Model
 {
 	const IMAGE_ALIGN_H_AUTO	= 0;
 	const IMAGE_ALIGN_H_LEFT	= 1;

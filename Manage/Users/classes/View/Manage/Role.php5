@@ -13,7 +13,6 @@ use CeusMedia\HydrogenFramework\View;
  *	Basic view for role management.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.View.Manage
- *	@extends		CMF_Hydrogen_View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media
  */

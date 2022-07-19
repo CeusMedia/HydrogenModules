@@ -11,7 +11,6 @@ use CeusMedia\HydrogenFramework\View;
  *	View for system CPU load indicating.
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright	Ceus Media 2015
- *	@extends	CMF_Hydrogen_View
  */
 class View_System_Load extends View{
 
@@ -20,7 +19,8 @@ class View_System_Load extends View{
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function ajaxRenderDashboardPanel(){
+	public function ajaxRenderDashboardPanel()
+	{
 		$panelId	= $this->getData( 'panelId' );
 		switch( $panelId ){
 			case 'system-server-load-current':
@@ -107,7 +107,8 @@ class View_System_Load extends View{
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function ajaxRenderIndicator(){
+	public function ajaxRenderIndicator()
+	{
 		$load		= $this->getData( 'load' );														//  get load registered by controller
 		$cpuCores	= $this->getData( 'cpuCores' );													//  get number of cpu cores from module config
 		$load		= 1 / ( 1 + $load / $cores );													//  calculate load relative to number of cores
@@ -116,7 +117,8 @@ class View_System_Load extends View{
 		exit;																						//  and quit application
 	}
 
-	protected function renderTrend( $number, $unit, $accuracy = 0, $inverse = FALSE ){
+	protected function renderTrend( $number, $unit, $accuracy = 0, $inverse = FALSE )
+	{
 //		$prefix		= '&plus;';
 //		$style		= 'success';
 		$value		= round( abs( $number ), $accuracy );
@@ -126,4 +128,3 @@ class View_System_Load extends View{
 		return UI_HTML_Tag::create( 'span', $prefix.$value.$unit, array( 'class' => 'text text-'.$style ) );
 	}
 }
-?>

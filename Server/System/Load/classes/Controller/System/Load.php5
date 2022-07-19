@@ -11,7 +11,6 @@ use CeusMedia\HydrogenFramework\Controller;
  *	Controller for system CPU load handling and indicating.
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright	Ceus Media 2015
- *	@extends	CMF_Hydrogen_Controller
  */
 class Controller_System_Load extends Controller
 {

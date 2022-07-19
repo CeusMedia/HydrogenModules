@@ -5,7 +5,6 @@
  *	@package		Roles.Controller.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
- *	@version		$Id$
  */
 
 use CeusMedia\HydrogenFramework\Controller;
@@ -14,14 +13,13 @@ use CeusMedia\HydrogenFramework\Controller;
  *	Role Controller.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Roles.Controller.Admin
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
- *	@version		$Id$
  */
-class Controller_Admin_Role extends Controller{
-
-	public function add() {
+class Controller_Admin_Role extends Controller
+{
+	public function add()
+	{
 		$words	= $this->env->getLanguage()->getWords( 'admin/role' );
 		if( $this->env->getRequest()->getMethod()->isPost() ){
 			$data		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
@@ -49,7 +47,8 @@ class Controller_Admin_Role extends Controller{
 		$this->addData( 'words', $words );
 	}
 
-	public function addRight( $roleId ) {
+	public function addRight( $roleId )
+	{
 		$words		= $this->env->getLanguage()->getWords( 'admin/role' );
 		$request	= $this->env->getRequest();
 		if( $request->getMethod()->isPost() ){
@@ -67,7 +66,8 @@ class Controller_Admin_Role extends Controller{
 		$this->restart( './admin/role/edit/'.$roleId );
 	}
 
-	public function ajaxChangeRight( $roleId, $controller, $action ){
+	public function ajaxChangeRight( $roleId, $controller, $action )
+	{
 		if( $this->env->getRequest()->isAjax() ){
 			$modelRight	= new Model_Role_Right( $this->env );
 			$indices	= array(
@@ -88,7 +88,8 @@ class Controller_Admin_Role extends Controller{
 		exit;
 	}
 
-	public function edit( $roleId = NULL ) {
+	public function edit( $roleId = NULL )
+	{
 		if( empty( $roleId ) )
 			throw new InvalidArgumentException( 'Invalid role id' );
 
@@ -114,7 +115,8 @@ class Controller_Admin_Role extends Controller{
 		$this->addData( 'words', $words );
 	}
 
-	public function index() {
+	public function index()
+	{
 		$model	= new Model_Role( $this->env );
 		$roles	= $model->getAll();
 		foreach( $roles as $role ){
@@ -126,7 +128,8 @@ class Controller_Admin_Role extends Controller{
 		$this->addData( 'hasRightToEdit', $this->env->getAcl()->has( 'admin_role', 'edit' ) );
 	}
 
-	public function remove( $roleId ) {
+	public function remove( $roleId )
+	{
 		$words		= $this->env->getLanguage()->getWords( 'admin/role' );
 		$messenger	= $this->env->getMessenger();
 
@@ -149,7 +152,8 @@ class Controller_Admin_Role extends Controller{
 		}
 	}
 
-	public function removeRight( $roleId, $controller, $action ){
+	public function removeRight( $roleId, $controller, $action )
+	{
 		$modelRight	= new Model_Role_Right( $this->env );
 		$indices	= array(
 			'roleId'		=> $roleId,
@@ -160,4 +164,3 @@ class Controller_Admin_Role extends Controller{
 		$this->restart( './admin/role/edit/'.$roleId );
 	}
 }
-?>

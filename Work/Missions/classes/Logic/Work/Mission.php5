@@ -3,57 +3,37 @@
  *	Logic for missions.
  *	@category		Hydrogen.Module
  *	@package		Work.Missions
- *	@extends		CMF_Hydrogen_Logic
  */
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Logic;
 
 /**
  *	Logic for missions.
  *	@category		Hydrogen.Module
  *	@package		Work.Missions
- *	@extends		CMF_Hydrogen_Logic
  *	@todo			code doc
  */
-class Logic_Work_Mission extends CMF_Hydrogen_Logic
+class Logic_Work_Mission extends Logic
 {
 	static protected $instance;
 
 	public $timeOffset			= 0; # nerd mode: 4 hours night shift: 14400;
 	public $generalConditions	= [];
+
 	protected $modelMission;
 	protected $modelVersion;
 	protected $modelChange;
 	protected $modelDocument;
 
 	/**
-	 *	Load models after construction.
-	 *	@access		protected
-	 *	@return		void
-	 */
-	protected function __onInit()
-	{
-		$this->modelMission		= new Model_Mission( $this->env );
-		$this->modelVersion		= new Model_Mission_Version( $this->env );
-		$this->modelChange		= new Model_Mission_Change( $this->env );
-		$this->modelDocument	= new Model_Mission_Document( $this->env );
-	}
-
-	/**
-	 *	Cloning is disabled to force singleton use.
-	 *	@access		protected
-	 *	@return		void
-	 */
-	protected function __clone(){}
-
-	/**
 	 *	Get singleton instance of logic.
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 *	@param		Environment		$env		Environment object
 	 *	@return		object			Singleton instance of logic
 	 */
-	static public function getInstance( Environment $env )
+	public static function getInstance( Environment $env )
 	{
 		if( !self::$instance )
 			self::$instance	= new self( $env );
@@ -199,11 +179,6 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic
 		return $versions;
 	}
 
-	protected function hasFullAccess()
-	{
-		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'auth_role_id' ) );
-	}
-
 	public function noteChange( $type, $missionId, $data, $currentUserId )
 	{
 		$model	= new Model_Mission_Change( $this->env );
@@ -262,5 +237,30 @@ class Logic_Work_Mission extends CMF_Hydrogen_Logic
 			$this->removeDocument( $document->missionDocumentId );
 		$this->modelMission->remove( $missionId );
 		return count( $missionDocuments );
+	}
+
+	/**
+	 *	Load models after construction.
+	 *	@access		protected
+	 *	@return		void
+	 */
+	protected function __onInit()
+	{
+		$this->modelMission		= new Model_Mission( $this->env );
+		$this->modelVersion		= new Model_Mission_Version( $this->env );
+		$this->modelChange		= new Model_Mission_Change( $this->env );
+		$this->modelDocument	= new Model_Mission_Document( $this->env );
+	}
+
+	/**
+	 *	Cloning is disabled to force singleton use.
+	 *	@access		protected
+	 *	@return		void
+	 */
+	protected function __clone(){}
+
+	protected function hasFullAccess()
+	{
+		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'auth_role_id' ) );
 	}
 }

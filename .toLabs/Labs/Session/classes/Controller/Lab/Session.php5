@@ -9,7 +9,6 @@ use CeusMedia\HydrogenFramework\Controller;
 
 /**
  *	Controller.
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */

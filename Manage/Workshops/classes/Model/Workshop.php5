@@ -5,19 +5,19 @@
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	...
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
-class Model_Workshop extends CMF_Hydrogen_Model {
-
+class Model_Workshop extends Model
+{
 	const IMAGE_ALIGN_H_AUTO	= 0;
 	const IMAGE_ALIGN_H_LEFT	= 1;
 	const IMAGE_ALIGN_H_CENTER	= 2;
@@ -42,6 +42,7 @@ class Model_Workshop extends CMF_Hydrogen_Model {
 	const STATUS_CLOSED			= 3;
 
 	protected $name		= 'workshops';
+
 	protected $columns	= array(
 		'workshopId',
 		'status',
@@ -55,13 +56,15 @@ class Model_Workshop extends CMF_Hydrogen_Model {
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'workshopId';
+
 	protected $indices		= array(
 		'status',
 		'rank',
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

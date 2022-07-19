@@ -5,7 +5,6 @@
  *	@package		Chat.Server.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Syslog.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
 
 use CeusMedia\HydrogenFramework\Environment;
@@ -14,17 +13,16 @@ use CeusMedia\HydrogenFramework\Environment;
  *	System Log Controller.
  *	@category		cmApps
  *	@package		Chat.Server.Controller
- *	@extends		Controller_Abstract
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Syslog.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
-class Controller_Syslog extends Controller_Abstract {
-
+class Controller_Syslog extends Controller_Abstract
+{
 	/**	@var		Environment		$env		Environment instance */
 	protected $env;
 
-	static public function ___onLogException( Environment $env, $context, $module, $data = [] ){
+	public static function ___onLogException( Environment $env, $context, $module, $data = [] )
+	{
 		$fileName	= $env->getConfig()->get( 'log.exception' );
 		if( !isset( $data['exception'] ) )
 			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
@@ -40,17 +38,8 @@ class Controller_Syslog extends Controller_Abstract {
 		$mail->sendTo( (object) $user );
 	}
 
-	public function index(){
-		try{
-			return $this->getLinesFromLog();
-		}
-		catch( Exception $e ){
-			$this->logException( $e );
-			return -105;
-		}
-	}
-
-	public function get( $nr ){
+	public function get( $nr )
+	{
 		try{
 			return $this->getLineFromLog( $nr );
 		}
@@ -60,7 +49,8 @@ class Controller_Syslog extends Controller_Abstract {
 		}
 	}
 
-	public function getExceptionView( $nr ){
+	public function getExceptionView( $nr )
+	{
 		try{
 			$line	= $this->getLineFromLog( $nr );													//  get line from log file
 			$parts	= preg_split( '/:/', $line, 2 );												//  extract line parts
@@ -73,7 +63,8 @@ class Controller_Syslog extends Controller_Abstract {
 		}
 	}
 
-	public function getExceptionPage( $nr ){
+	public function getExceptionPage( $nr )
+	{
 		try{
 			$view	= $this->getExceptionView( $nr );												//  get rendered exception view
 			$page	= new UI_HTML_Exception_Page();													//  create new HTML page
@@ -86,7 +77,38 @@ class Controller_Syslog extends Controller_Abstract {
 		}
 	}
 
-	public function sendMailToDeveloper( $fromAddress, $fromName = NULL ){
+	public function index()
+	{
+		try{
+			return $this->getLinesFromLog();
+		}
+		catch( Exception $e ){
+			$this->logException( $e );
+			return -105;
+		}
+	}
+
+	public function logTestException( $message, $code = 0 )
+	{
+		$exception	= new Exception( $message, $code );
+		$this->logException( $exception );
+		return 1;
+	}
+
+	public function remove( $nr )
+	{
+		$lines	= $this->getLinesFromLog();
+		if( isset( $lines[$nr] ) ){
+			unset( $lines[$nr] );
+			$fileName	= $this->env->getConfig()->get( 'log.exception' );
+			FS_File_Writer::saveArray( $fileName, $lines );
+			return 1;
+		}
+		return -1;
+	}
+
+	public function sendMailToDeveloper( $fromAddress, $fromName = NULL )
+	{
 		$subject	= trim( $this->env->getRequest()->get( 'subject' ) );
 		$body		= trim( $this->env->getRequest()->get( 'body' ) );
 		$receiver	= $this->env->config->get( 'app.email.developer' );								//  @todo	replace by module email address (line below)
@@ -119,24 +141,14 @@ class Controller_Syslog extends Controller_Abstract {
 		}
 	}
 
-	public function remove( $nr ){
-		$lines	= $this->getLinesFromLog();
-		if( isset( $lines[$nr] ) ){
-			unset( $lines[$nr] );
-			$fileName	= $this->env->getConfig()->get( 'log.exception' );
-			FS_File_Writer::saveArray( $fileName, $lines );
-			return 1;
-		}
-		return -1;
-	}
-
 	/**
 	 *	Returns a request line from exception log.
 	 *	@access		protected
 	 *	@param		integer		$nr			Line number in log file
 	 *	@return		string		Line content with timestamp and encoded exception view
 	 */
-	protected function getLineFromLog( $nr ){
+	protected function getLineFromLog( $nr )
+	{
 		$lines	= $this->getLinesFromLog();
 		$line	= isset( $lines[$nr] ) ? trim( $lines[$nr] ) : '';
 		if( !$line )
@@ -149,18 +161,12 @@ class Controller_Syslog extends Controller_Abstract {
 	 *	@access		protected
 	 *	@return		array		List if lines with timestamp and encoded exception view
 	 */
-	protected function getLinesFromLog(){
+	protected function getLinesFromLog()
+	{
 		$fileName	= $this->env->getConfig()->get( 'log.exception' );
 		if( !file_exists( $fileName ) )
 			return array();
 #			throw new RuntimeException( 'Log not existing' );
 		return FS_File_Reader::loadArray( $fileName );
 	}
-
-	public function logTestException( $message, $code = 0 ){
-		$exception	= new Exception( $message, $code );
-		$this->logException( $exception );
-		return 1;
-	}
 }
-?>

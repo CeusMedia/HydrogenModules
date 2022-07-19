@@ -5,20 +5,21 @@
  *	@package		Chat.Server.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2012 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Bug Model.
  *	@category		cmApps
  *	@package		Chat.Server.Model
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2012 Ceus Media
- *	@version		$Id$
  */
-class Model_Bug extends CMF_Hydrogen_Model {
-
+class Model_Bug extends Model
+{
 	protected $name			= 'bugs';
+
 	protected $columns		= array(
 		'bugId',
 		'reporterId',
@@ -33,7 +34,9 @@ class Model_Bug extends CMF_Hydrogen_Model {
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'bugId';
+
 	protected $indices		= array(
 		'reporterId',
 		'managerId',
@@ -42,6 +45,6 @@ class Model_Bug extends CMF_Hydrogen_Model {
 		'priority',
 		'status',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

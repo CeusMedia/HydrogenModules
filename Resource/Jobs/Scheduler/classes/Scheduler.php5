@@ -7,18 +7,18 @@
  *	@copyright		2010 Ceus Media
  */
 
+use CeusMedia\HydrogenFramework\Application\Console as ConsoleApplication;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
  *	Job scheduler.
  *	@category		cmApps
  *	@package		Chat.Server
- *	@extends		CMF_Hydrogen_Application_Abstract
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */
-class Scheduler extends \CMF_Hydrogen_Application_Console {
-
+class Scheduler extends ConsoleApplication
+{
 	protected $intervals	= array(
 		'sec'	=> array(),
 		'min'	=> array(),
@@ -37,59 +37,8 @@ class Scheduler extends \CMF_Hydrogen_Application_Console {
 	protected $jobber;
 	protected $jobs		= [];
 
-	protected function getChanges( $last, $now ){
-		$minute1	= date( 'i', $last );
-		$minute2	= date( 'i', $now );
-		$hour1		= date( 'h', $last );
-		$hour2		= date( 'h', $now );
-		$day1		= date( 'd', $last );
-		$day2		= date( 'd', $now );
-		$month1		= date( 'm', $last );
-		$month2		= date( 'm', $now );
-		$changes	= array(
-			'sec'	=> $last != $now,
-			'min'	=> $minute1 != $minute2,
-			'min5'	=> floor( $minute1 / 5 ) != floor( $minute1 / 5 ),
-			'min10'	=> floor( $minute1 / 10 ) != floor( $minute1 / 10 ),
-			'min15'	=> floor( $minute1 / 15 ) != floor( $minute1 / 15 ),
-			'min30'	=> floor( $minute1 / 30 ) != floor( $minute1 / 30 ),
-			'hour'	=> $hour1 != $hour2,
-			'day'	=> $day1 != $day2,
-			'week'	=> date( "w", $last ) != date( "w", $now ),
-			'mon'	=> $month1 != $month2,
-			'mon3'	=> FALSE,
-			'mon6'	=> FALSE,
-			'year'	=> date( "y", $last ) != date( "y", $now ),
-		);
-		return $changes;
-	}
-
-	public function __construct( Environment $env = NULL ){
-		parent::__construct( $env );
-		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.server_scheduler.', TRUE );
-	}
-
-	public function loadJobs( $mode = NULL ){
-		if( $mode === NULL )
-			$mode	= $this->moduleConfig->get( 'mode' );
-		$map	= self::readJobXmlFile( array( $mode ) );
-		$this->jobs	= $map->jobs;
-//		remark( 'Mode: '.$mode );
-//		print_m( array_keys( $this->jobs ) );
-//		print_m( $map->intervals );
-//		die;
-		foreach( $map->intervals as $interval => $jobs )
-			if( $interval )
-				$this->intervals[$interval]	= $jobs;
-		$this->jobber	= new \Jobber( $this->env );
-		$this->jobber->loadJobs( array( $mode ) );
-	}
-
-	protected function out( $message ){
-		print( $message."\n" );
-	}
-
-	public static function readJobXmlFile( $modes = [] ){
+	public static function readJobXmlFile( $modes = [] )
+	{
 		$map			= new stdClass();
 		$map->jobs		= [];
 		$map->intervals	= [];
@@ -121,6 +70,29 @@ class Scheduler extends \CMF_Hydrogen_Application_Console {
 		return $map;
 	}
 
+	public function __construct( Environment $env = NULL )
+	{
+		parent::__construct( $env );
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.server_scheduler.', TRUE );
+	}
+
+	public function loadJobs( $mode = NULL )
+	{
+		if( $mode === NULL )
+			$mode	= $this->moduleConfig->get( 'mode' );
+		$map	= self::readJobXmlFile( array( $mode ) );
+		$this->jobs	= $map->jobs;
+//		remark( 'Mode: '.$mode );
+//		print_m( array_keys( $this->jobs ) );
+//		print_m( $map->intervals );
+//		die;
+		foreach( $map->intervals as $interval => $jobs )
+			if( $interval )
+				$this->intervals[$interval]	= $jobs;
+		$this->jobber	= new \Jobber( $this->env );
+		$this->jobber->loadJobs( array( $mode ) );
+	}
+
 	public function run( $loop = FALSE, $verbose = FALSE )
 	{
 		$sleep		= $this->moduleConfig->get( 'console.sleep' );
@@ -144,6 +116,39 @@ class Scheduler extends \CMF_Hydrogen_Application_Console {
 			\FS_File_Writer::save( $fileName, (string) time() );
 			if( $loop && $sleep )
 				sleep( $sleep );
-		} while( $loop );
+		}
+		while( $loop );
+	}
+
+	protected function getChanges( $last, $now )
+	{
+		$minute1	= date( 'i', $last );
+		$minute2	= date( 'i', $now );
+		$hour1		= date( 'h', $last );
+		$hour2		= date( 'h', $now );
+		$day1		= date( 'd', $last );
+		$day2		= date( 'd', $now );
+		$month1		= date( 'm', $last );
+		$month2		= date( 'm', $now );
+		$changes	= array(
+			'sec'	=> $last != $now,
+			'min'	=> $minute1 != $minute2,
+			'min5'	=> floor( $minute1 / 5 ) != floor( $minute1 / 5 ),
+			'min10'	=> floor( $minute1 / 10 ) != floor( $minute1 / 10 ),
+			'min15'	=> floor( $minute1 / 15 ) != floor( $minute1 / 15 ),
+			'min30'	=> floor( $minute1 / 30 ) != floor( $minute1 / 30 ),
+			'hour'	=> $hour1 != $hour2,
+			'day'	=> $day1 != $day2,
+			'week'	=> date( "w", $last ) != date( "w", $now ),
+			'mon'	=> $month1 != $month2,
+			'mon3'	=> FALSE,
+			'mon6'	=> FALSE,
+			'year'	=> date( "y", $last ) != date( "y", $now ),
+		);
+		return $changes;
+	}
+
+	protected function out( $message ){
+		print( $message."\n" );
 	}
 }

@@ -5,7 +5,6 @@
  *	@package		Controller.Manage.Content.Statics
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011 Ceus Media
- *	@version		$Id$
  */
 
 use CeusMedia\HydrogenFramework\Controller;
@@ -14,36 +13,15 @@ use CeusMedia\HydrogenFramework\Controller;
  *	Static Content Management Controller.
  *	@category		cmFrameworks.Hydrogen.Modules
  *	@package		Controller.Manage.Content.Statics
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011 Ceus Media
- *	@version		$Id$
  */
-class Controller_Manage_Content_Static extends Controller{
-
+class Controller_Manage_Content_Static extends Controller
+{
 	protected $path;
 
-	protected function __onInit() {
-		parent::__onInit();
-		$config		= $this->env->getConfig();
-		$this->path	= $config->get( 'module.manage_content_statics.path' );
-		if( !$this->path ){
-			$locales	= $config->get( 'path.locales' );
-			$language	= $this->env->language->getLanguage();
-			$this->path		= $locales.$language.'/html/';
-		}
-		if( !file_exists( $this->path ) )
-			FS_Folder_Editor::createFolder( $this->path );
-
-		$paths	= [];
-		$index	= FS_Folder_RecursiveLister::getFolderList( $this->path );
-		foreach( $index as $item )
-			$paths[]	= substr( $item->getPathname(), strlen( $this->path ) );
-		$this->addData( 'pathContent', $this->path );
-		$this->addData( 'paths', $paths );
-	}
-
-	public function add() {
+	public function add()
+	{
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -76,7 +54,8 @@ class Controller_Manage_Content_Static extends Controller{
 		$this->restart( './manage/content/static' );
 	}
 
-	public function addFolder() {
+	public function addFolder()
+	{
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -104,23 +83,8 @@ class Controller_Manage_Content_Static extends Controller{
 		$this->restart( './manage/content/static' );
 	}
 
-	protected function convertLeadingTabsToSpaces( $content ){
-		$lines	= explode( "\n", $content );
-		foreach( $lines as $nr => $line )
-			while( preg_match( "/^ *\t/", $lines[$nr] ) )
-				$lines[$nr]	= preg_replace( "/^( *)\t/", "\\1 ", $lines[$nr] );
-		return implode( "\n", $lines );
-	}
-
-	protected function convertLeadingSpacesToTabs( $content ){
-		$lines	= explode( "\n", $content );
-		foreach( $lines as $nr => $line )
-			while( preg_match( "/^\t* /", $lines[$nr] ) )
-				$lines[$nr]	= preg_replace( "/^(\t*) /", "\\1\t", $lines[$nr] );
-		return implode( "\n", $lines );
-	}
-
-	public function edit( $fileHash = NULL ) {
+	public function edit( $fileHash = NULL )
+	{
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -192,18 +156,15 @@ class Controller_Manage_Content_Static extends Controller{
 		$this->loadFileTree();
 	}
 
-	public function index() {
+	public function index()
+	{
 #		$request	= $this->env->getRequest();
 #		$this->addData( 'filename', $request->get( 'key' ) );
 		$this->loadFileTree();
 	}
 
-	protected function loadFileTree(){
-		$files	= new FS_File_RecursiveRegexFilter( $this->path, '/\.html$/' );
-		$this->addData( 'files', $files );
-	}
-
-	public function remove( $fileHash ){
+	public function remove( $fileHash )
+	{
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -226,5 +187,49 @@ class Controller_Manage_Content_Static extends Controller{
 		$messenger->noteSuccess( $words->msgWriteError, $filePath );
 		$this->restart( './manage/content/static/edit/'.$fileHash );
 	}
+
+	protected function __onInit()
+	{
+		parent::__onInit();
+		$config		= $this->env->getConfig();
+		$this->path	= $config->get( 'module.manage_content_statics.path' );
+		if( !$this->path ){
+			$locales	= $config->get( 'path.locales' );
+			$language	= $this->env->language->getLanguage();
+			$this->path		= $locales.$language.'/html/';
+		}
+		if( !file_exists( $this->path ) )
+			FS_Folder_Editor::createFolder( $this->path );
+
+		$paths	= [];
+		$index	= FS_Folder_RecursiveLister::getFolderList( $this->path );
+		foreach( $index as $item )
+			$paths[]	= substr( $item->getPathname(), strlen( $this->path ) );
+		$this->addData( 'pathContent', $this->path );
+		$this->addData( 'paths', $paths );
+	}
+
+	protected function convertLeadingTabsToSpaces( $content )
+	{
+		$lines	= explode( "\n", $content );
+		foreach( $lines as $nr => $line )
+			while( preg_match( "/^ *\t/", $lines[$nr] ) )
+				$lines[$nr]	= preg_replace( "/^( *)\t/", "\\1 ", $lines[$nr] );
+		return implode( "\n", $lines );
+	}
+
+	protected function convertLeadingSpacesToTabs( $content )
+	{
+		$lines	= explode( "\n", $content );
+		foreach( $lines as $nr => $line )
+			while( preg_match( "/^\t* /", $lines[$nr] ) )
+				$lines[$nr]	= preg_replace( "/^(\t*) /", "\\1\t", $lines[$nr] );
+		return implode( "\n", $lines );
+	}
+
+	protected function loadFileTree()
+	{
+		$files	= new FS_File_RecursiveRegexFilter( $this->path, '/\.html$/' );
+		$this->addData( 'files', $files );
+	}
 }
-?>

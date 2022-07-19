@@ -4,19 +4,20 @@
  *	@category		Hydrogen.Modules
  *	@package		Resource.File
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			03.05.2017
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Customers.
  *	@category		Hydrogen.Modules
  *	@package		Resource.File
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			03.05.2017
  */
-class Model_File extends CMF_Hydrogen_Model {
-
+class Model_File extends Model
+{
 	protected $name		= 'files';
+
 	protected $columns	= array(
 		"fileId",
 		"creatorId",
@@ -31,7 +32,9 @@ class Model_File extends CMF_Hydrogen_Model {
 		"viewedAt",
 		"viewCount",
 	);
+
 	protected $primaryKey	= 'fileId';
+
 	protected $indices		= array(
 		"creatorId",
 		"moduleId",
@@ -41,6 +44,6 @@ class Model_File extends CMF_Hydrogen_Model {
 		"filePath",
 		"fileName",
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

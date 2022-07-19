@@ -7,17 +7,17 @@
  *	@copyright		2010-2020 Ceus Media (https://ceusmedia.de/)
  */
 
+use CeusMedia\HydrogenFramework\Application\Console as ConsoleApplication;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
  *	Chat maintainer.
  *	@category		cmApps
  *	@package		Chat.Server
- *	@extends		CMF_Hydrogen_Application_Console
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media (https://ceusmedia.de/)
  */
-class Jobber extends \CMF_Hydrogen_Application_Console
+class Jobber extends ConsoleApplication
 {
 	protected $jobs	= [];
 	protected $lock;

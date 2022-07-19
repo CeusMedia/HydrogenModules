@@ -6,11 +6,13 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	OAuth Code Model.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Users.Model
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
  */
@@ -31,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_codes` (
   KEY `code` (`code`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
  */
-class Model_Oauth_Code extends CMF_Hydrogen_Model
+class Model_Oauth_Code extends Model
 {
 	protected $name		= 'oauth_codes';
 

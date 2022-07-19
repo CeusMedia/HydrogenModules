@@ -13,10 +13,6 @@ use CeusMedia\HydrogenFramework\Application\Web\Site as WebSite;
  *	Chat server.
  *	@category		cmApps
  *	@package		Chat.Server
- *	@extends		CMF_Hydrogen_Application
- *	@uses			Alg_Object_Factory
- *	@uses			Alg_Object_MethodFactory
- *	@uses			UI_HTML_PageFrame
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */

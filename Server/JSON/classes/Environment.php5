@@ -14,8 +14,6 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
  *	Environment for chat client.
  *	@category		cmApps
  *	@package		Chat.Server
- *	@extends		CMF_Hydrogen_Environment
- *	@uses			Logic
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */

@@ -5,7 +5,6 @@
  *	@package		Chat.Server.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Abstract.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
 
 use CeusMedia\HydrogenFramework\Controller;
@@ -14,11 +13,9 @@ use CeusMedia\HydrogenFramework\Controller;
  *	Abstract Controller.
  *	@category		cmApps
  *	@package		Chat.Server.Controller
- *	@extends		CMF_Hydrogen_Controller
  *	@uses			Logic_Chat
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Abstract.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
 class Controller_Abstract extends Controller
 {
