@@ -1,5 +1,8 @@
 <?php
-class Model_Relocation extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Relocation extends Model
 {
 	protected $name		= 'relocations';
 

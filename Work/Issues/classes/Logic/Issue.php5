@@ -2,10 +2,13 @@
 /**
  *	@todo		Code Doc
  */
+
+use CeusMedia\HydrogenFramework\Logic;
+
 /**
  *	@todo		Code Doc
  */
-class Logic_Issue extends CMF_Hydrogen_Logic
+class Logic_Issue extends Logic
 {
 	const CHANGE_UNKNOWN		= 0;
 	const CHANGE_REPORTER		= 1;

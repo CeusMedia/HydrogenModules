@@ -1,6 +1,9 @@
 <?php
-class Model_Provision_User_License extends CMF_Hydrogen_Model{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Provision_User_License extends Model
+{
 	const STATUS_DEACTIVATED	= -2;
 	const STATUS_REVOKED		= -1;
 	const STATUS_NEW			= 0;
@@ -40,4 +43,3 @@ class Model_Provision_User_License extends CMF_Hydrogen_Model{
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

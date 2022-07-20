@@ -12,8 +12,6 @@ use CeusMedia\HydrogenFramework\Model;
  *	Data Model of Articles.
  *	@category		cmProjects
  *	@package		LUV.Model
- *	@uses			ArticleAuthor
- *	@uses			TimeConverter
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 class Model_Catalog_Article extends Model

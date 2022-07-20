@@ -16,7 +16,7 @@ use CeusMedia\HydrogenFramework\Model;
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2012 Ceus Media
  */
-class Model_Bug_Change extends CMF_Hydrogen_Model
+class Model_Bug_Change extends Model
 {
 	protected $name			= 'bug_changes';
 

@@ -13,7 +13,6 @@ use CeusMedia\HydrogenFramework\Controller;
  *	Abstract Controller.
  *	@category		cmApps
  *	@package		Chat.Server.Controller
- *	@uses			Logic_Chat
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */

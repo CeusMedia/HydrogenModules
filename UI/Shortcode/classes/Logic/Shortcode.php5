@@ -1,5 +1,8 @@
 <?php
-class Logic_Shortcode extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Shortcode extends Logic
 {
 	const PARSE_STATUS_START					= 0;
 	const PARSE_STATUS_READ_CODE				= 1;

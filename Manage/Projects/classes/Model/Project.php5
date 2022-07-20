@@ -1,6 +1,9 @@
 <?php
-class Model_Project extends CMF_Hydrogen_Model{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Project extends Model
+{
 //	const STATES_ACTIVE		= [];
 
 	protected $name			= 'projects';
@@ -30,7 +33,8 @@ class Model_Project extends CMF_Hydrogen_Model{
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function getUserProjects( $userId, $conditions = [], $orders = [] ){
+	public function getUserProjects( $userId, $conditions = [], $orders = [] )
+	{
 		$modelProject	= new Model_Project( $this->env );
 		$modelRelation	= new Model_Project_User( $this->env );
 		$projectIds		= [];
@@ -51,7 +55,8 @@ class Model_Project extends CMF_Hydrogen_Model{
 		return $projects;
 	}
 
-	public function getProjectUsers( $projectId, $conditions = [], $orders = [] ){
+	public function getProjectUsers( $projectId, $conditions = [], $orders = [] )
+	{
 		$modelUser		= new Model_User( $this->env );
 		$modelRelation	= new Model_Project_User( $this->env );
 		$userIds		= [];
@@ -69,4 +74,3 @@ class Model_Project extends CMF_Hydrogen_Model{
 		return $users;
 	}
 }
-?>

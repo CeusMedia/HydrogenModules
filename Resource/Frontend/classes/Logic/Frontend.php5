@@ -2,13 +2,14 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Logic;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader as HydrogenModuleReader;
 
 /**
  *	@todo		remove singleton to have serveral frontend logics for different environments
  */
-class Logic_Frontend extends CMF_Hydrogen_Logic
+class Logic_Frontend extends Logic
 {
 	static protected $instance;
 

@@ -2,11 +2,14 @@
 /**
  *	Model for missions.
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
-*	Model for missions.
+ *	Model for missions.
  *	@todo			code documentation
  */
-class Model_Mission extends CMF_Hydrogen_Model
+class Model_Mission extends Model
 {
 	const PRIORITY_NONE			= 0;
 	const PRIORITY_HIGHEST		= 1;

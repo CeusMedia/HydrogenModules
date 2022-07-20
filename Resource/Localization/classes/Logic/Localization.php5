@@ -1,5 +1,8 @@
 <?php
-class Logic_Localization extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Localization extends Logic
 {
 	protected $language;
 	protected $languages;

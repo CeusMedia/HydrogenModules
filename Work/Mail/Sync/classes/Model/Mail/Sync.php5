@@ -1,6 +1,9 @@
 <?php
-class Model_Mail_Sync extends CMF_Hydrogen_Model{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Mail_Sync extends Model
+{
 	const STATUS_ERROR			= -1;
 	const STATUS_NEW			= 0;
 	const STATUS_ACTIVE			= 1;

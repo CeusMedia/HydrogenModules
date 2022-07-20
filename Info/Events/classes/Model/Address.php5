@@ -1,7 +1,9 @@
 <?php
-class Model_Address extends CMF_Hydrogen_Model
-{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Address extends Model
+{
 	const STATUS_INACTIVE	= -2;
 	const STATUS_REJECTED	= -1;
 	const STATUS_NEW		= 0;

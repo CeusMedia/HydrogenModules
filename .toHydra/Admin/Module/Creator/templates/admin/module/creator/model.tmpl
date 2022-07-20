@@ -1,24 +1,25 @@
 <?php
 /**
  *	Model.
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Model.
- *	@version		$Id$
  *	@todo			implement
  *	@todo			code documentation
  */
-class Model_<%className%> extends CMF_Hydrogen_Model{
-
+class Model_<%className%> extends Model
+{
 	/**	@var	$name		string		Table name without prefix of database connection */
-	protected $name			= "";
+	protected $name			= '';
 
 	/**	@var	$name		string		List of columns within table */
 	protected $columns		= [];
 
 	/**	@var	$name		string		Name of column with primary key */
-	protected $primaryKey	= "";
+	protected $primaryKey	= '';
 
 	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
 	protected $indices		= []

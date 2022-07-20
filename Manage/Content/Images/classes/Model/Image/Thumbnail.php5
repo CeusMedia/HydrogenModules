@@ -1,7 +1,11 @@
 <?php
-class Model_Image_Thumbnail extends CMF_Hydrogen_Model{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Image_Thumbnail extends Model
+{
 	protected $name		= 'image_thumbnails';
+
 	protected $columns	= array(
 		'imageThumbnailId',
 		'imageId',
@@ -12,7 +16,9 @@ class Model_Image_Thumbnail extends CMF_Hydrogen_Model{
 		'data',
 		'timestamp',
 	);
+
 	protected $primaryKey	= 'imageThumbnailId';
+
 	protected $indices		= array(
 		'imageId',
 		'maxWidth',
@@ -20,6 +26,6 @@ class Model_Image_Thumbnail extends CMF_Hydrogen_Model{
 		'realWidth',
 		'realHeight',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

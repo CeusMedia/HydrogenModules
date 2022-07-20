@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Model;
 
 /**
  *	Types:
@@ -15,7 +16,7 @@ use CeusMedia\HydrogenFramework\Environment;
  *	1	- sent
  *	2	- used
  */
-class Model_User_Setting extends CMF_Hydrogen_Model
+class Model_User_Setting extends Model
 {
 	protected $name			= 'user_settings';
 

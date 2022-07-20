@@ -1,8 +1,8 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Model;
 
-class Model_TermLog extends CMF_Hydrogen_Model
+class Model_TermLog extends Model
 {
 	protected $name		= 'term_log';
 
@@ -18,9 +18,4 @@ class Model_TermLog extends CMF_Hydrogen_Model
 	protected $primaryKey	= 'termLogId';
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
-
-	public function  __construct( Environment $env, $id = NULL )
-	{
-		parent::__construct( $env, $id );
-	}
 }

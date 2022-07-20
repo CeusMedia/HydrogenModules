@@ -6,6 +6,9 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Project Version Model.
  *	@category		cmApps
@@ -13,7 +16,7 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */
-class Model_Project_Version extends CMF_Hydrogen_Model
+class Model_Project_Version extends Model
 {
 	protected $name		= 'project_versions';
 

@@ -1,5 +1,8 @@
 <?php
-class Model_Billing_Bill extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Billing_Bill extends Model
 {
 	const STATUS_NEW		= 0;
 	const STATUS_BOOKED		= 1;

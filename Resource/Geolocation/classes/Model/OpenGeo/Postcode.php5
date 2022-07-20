@@ -1,7 +1,11 @@
 <?php
-class Model_OpenGeo_Postcode extends CMF_Hydrogen_Model{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_OpenGeo_Postcode extends Model
+{
 	protected $name			= 'postcodes';
+
 	protected $columns		= array(
 		'postcodeId',
 		'postcode',
@@ -9,11 +13,13 @@ class Model_OpenGeo_Postcode extends CMF_Hydrogen_Model{
 		'latitude',
 		'longitude',
 	);
+
 	protected $primaryKey	= 'postcodeId';
+
 	protected $indices		= array(
 		'postcode',
 		'city',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

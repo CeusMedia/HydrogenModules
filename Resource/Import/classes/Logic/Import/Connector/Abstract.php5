@@ -1,5 +1,8 @@
 <?php
-abstract class Logic_Import_Connector_Abstract extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+abstract class Logic_Import_Connector_Abstract extends Logic
 {
 	protected $modelConnection;
 

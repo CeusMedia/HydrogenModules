@@ -1,12 +1,16 @@
 <?php
-class Model_Stripe_Event extends CMF_Hydrogen_Model {
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Stripe_Event extends Model
+{
 	const STATUS_RECEIVED		= 0;
 	const STATUS_FAILED			= 1;
 	const STATUS_HANDLED		= 2;
 	const STATUS_CLOSED			= 3;
 
 	protected $name		= 'stripe_events';
+
 	protected $columns	= array(
 		"eventId",
 		"status",
@@ -17,12 +21,15 @@ class Model_Stripe_Event extends CMF_Hydrogen_Model {
 		"receivedAt",
 		"handledAt",
 	);
+
 	protected $primaryKey	= 'eventId';
+
 	protected $indices		= array(
 		"status",
 		"id",
 		"type",
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
 	public $types			= array(
@@ -41,6 +48,4 @@ class Model_Stripe_Event extends CMF_Hydrogen_Model {
 		'PREAUTHORIZATION_PAYMENT'	=> array( 'PREAUTHORIZATION_PAYMENT_WAITING', 'PREAUTHORIZATION_PAYMENT_EXPIRED', 'PREAUTHORIZATION_PAYMENT_CANCELED', 'PREAUTHORIZATION_PAYMENT_VALIDATED' ),
 		'UBO_DECLARATION'			=> array( 'UBO_DECLARATION_CREATED', 'UBO_DECLARATION_VALIDATION_ASKED', 'UBO_DECLARATION_REFUSED', 'UBO_DECLARATION_VALIDATED' ),
 	);
-
 }
-?>

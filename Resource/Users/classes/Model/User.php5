@@ -3,12 +3,15 @@
  *	User Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	User Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@todo			remove password column after old user password support decayed
  */
-class Model_User extends CMF_Hydrogen_Model
+class Model_User extends Model
 {
 	const GENDER_UNKNOWN	= 0;
 	const GENDER_FEMALE		= 1;

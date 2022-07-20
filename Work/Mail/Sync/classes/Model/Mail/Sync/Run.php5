@@ -1,5 +1,8 @@
 <?php
-class Model_Mail_Sync_Run extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Mail_Sync_Run extends Model
 {
 	const STATUS_FAIL			= -1;
 	const STATUS_NEW			= 0;

@@ -1,5 +1,8 @@
 <?php
-class Model_Mail_Sync_Host extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Mail_Sync_Host extends Model
 {
 	protected $name		= 'mail_sync_hosts';
 

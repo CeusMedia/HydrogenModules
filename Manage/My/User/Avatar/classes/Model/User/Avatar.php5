@@ -1,6 +1,11 @@
 <?php
-class Model_User_Avatar extends CMF_Hydrogen_Model{
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_User_Avatar extends Model
+{
 	protected $name			= 'user_avatars';
+
 	protected $columns		= array(
 		'userAvatarId',
 		'userId',
@@ -9,11 +14,13 @@ class Model_User_Avatar extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'userAvatarId';
+
 	protected $indices		= array(
 		'userId',
 		'status',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

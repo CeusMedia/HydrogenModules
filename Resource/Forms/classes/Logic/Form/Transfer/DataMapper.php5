@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Logic;
 
-class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
+class Logic_Form_Transfer_DataMapper extends Logic
 {
 	protected $env;
 

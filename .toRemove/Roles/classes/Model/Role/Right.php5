@@ -16,7 +16,7 @@ use CeusMedia\HydrogenFramework\Model;
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
  */
-class Model_Role_Right extends CMF_Hydrogen_Model
+class Model_Role_Right extends Model
 {
 	protected $name		= 'role_rights';
 

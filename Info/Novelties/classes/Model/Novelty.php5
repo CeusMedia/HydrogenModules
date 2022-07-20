@@ -2,12 +2,15 @@
 /**
  *	Model.
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Model.
  *	@todo			implement
  *	@todo			code documentation
  */
-class Model_Novelty extends CMF_Hydrogen_Model
+class Model_Novelty extends Model
 {
 	/**	@var	$name		string		Table name without prefix of database connection */
 	protected $name			= "novelties";

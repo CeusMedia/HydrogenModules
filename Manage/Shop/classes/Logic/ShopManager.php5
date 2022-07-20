@@ -1,5 +1,8 @@
 <?php
-class Logic_ShopManager extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_ShopManager extends Logic
 {
 	/**	@var		Model_User					$modelUser */
 	protected $modelUser;

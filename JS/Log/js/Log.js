@@ -3,11 +3,8 @@
  *
  *	@category	mm.ji
  *	@package	Swipeshow.Core
- *	@uses		JSON
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright	mellowmessage 2011
- *	@since		28.03.2011
- *	@version	$Id: Log.js 1221 2011-07-06 02:36:56Z cwuerker $
  */
 var Log = {																		//  literal object, use statically
 

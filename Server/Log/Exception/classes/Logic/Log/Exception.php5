@@ -1,27 +1,14 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Logic;
 
-class Logic_Log_Exception extends CMF_Hydrogen_Logic
+class Logic_Log_Exception extends Logic
 {
 	protected $logFile;
 	protected $model;
 	protected $moduleConfig;
 	protected $pathLogs;
-
-	protected function __onInit()
-	{
-		$this->model		= new Model_Log_Exception( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.server_log_exception.', TRUE );
-		$this->pathLogs		= $this->env->getConfig()->get( 'path.logs' );
-		if( $this->env->getModules()->has( 'Frontend' ) ){
-			$frontend			= Logic_Frontend::getInstance( $this->env );
-			$this->pathLogs		= $frontend->getPath( 'logs' );
-			$moduleConfig		= $frontend->getModuleConfigValues( 'Server_Log_Exception' );;
-			$this->moduleConfig	= new Dictionary( $moduleConfig );
-		}
-		$this->logFile		= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
-	}
 
 	public function check( $id, $strict = TRUE )
 	{
@@ -226,5 +213,19 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic
 				$logicMail->handleMail( $mail, $receiver, $language );
 			}
 		}
+	}
+
+	protected function __onInit()
+	{
+		$this->model		= new Model_Log_Exception( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.server_log_exception.', TRUE );
+		$this->pathLogs		= $this->env->getConfig()->get( 'path.logs' );
+		if( $this->env->getModules()->has( 'Frontend' ) ){
+			$frontend			= Logic_Frontend::getInstance( $this->env );
+			$this->pathLogs		= $frontend->getPath( 'logs' );
+			$moduleConfig		= $frontend->getModuleConfigValues( 'Server_Log_Exception' );;
+			$this->moduleConfig	= new Dictionary( $moduleConfig );
+		}
+		$this->logFile		= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
 	}
 }

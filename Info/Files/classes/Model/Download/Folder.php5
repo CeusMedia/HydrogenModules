@@ -3,11 +3,14 @@
  *	Forum Thread Topic Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Forum Thread Topic Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Download_Folder extends CMF_Hydrogen_Model
+class Model_Download_Folder extends Model
 {
 	protected $name		= 'download_folders';
 

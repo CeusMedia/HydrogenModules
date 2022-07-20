@@ -6,6 +6,9 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	User Model.
  *	@category		cmFrameworks.Hydrogen.Module
@@ -13,7 +16,7 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
  */
-class Model_User extends CMF_Hydrogen_Model
+class Model_User extends Model
 {
 	protected $name		= 'users';
 

@@ -1,6 +1,9 @@
 <?php
-class Model_Form extends CMF_Hydrogen_Model{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Form extends Model
+{
 	const TYPE_NORMAL		= 0;
 	const TYPE_CONFIRM		= 1;
 
@@ -19,12 +22,16 @@ class Model_Form extends CMF_Hydrogen_Model{
 		'content',
 		'timestamp',
 	);
+
 	protected $indices		= array(
 		'customerMailId',
 		'managerMailId',
 		'status',
 	);
+
 	protected $primaryKey	= 'formId';
+
 	protected $name			= 'forms';
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

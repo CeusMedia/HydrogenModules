@@ -1,5 +1,8 @@
 <?php
-class Model_Form_Mail extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Form_Mail extends Model
 {
 	const ROLE_TYPE_NONE			= 0;
 	const ROLE_TYPE_ALL				= 1;

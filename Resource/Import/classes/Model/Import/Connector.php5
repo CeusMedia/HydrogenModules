@@ -4,12 +4,15 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2021 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	User Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2021 Ceus Media
  */
-class Model_Import_Connector extends CMF_Hydrogen_Model
+class Model_Import_Connector extends Model
 {
 	const STATUS_DISABLED	= 0;
 	const STATUS_ENABLED	= 1;

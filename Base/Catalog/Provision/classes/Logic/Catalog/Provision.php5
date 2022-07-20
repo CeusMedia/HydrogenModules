@@ -1,20 +1,14 @@
 <?php
-class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 
-	protected function __onInit(){
-		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
-		$this->logicMail		= Logic_Mail::getInstance( $this->env );
-		$this->modelProduct		= new Model_Provision_Product( $this->env );
-		$this->modelLicense		= new Model_Provision_Product_License( $this->env );
-		$this->modelUserLicense	= new Model_Provision_User_License( $this->env );
-		$this->modelUserKey		= new Model_Provision_User_License_Key( $this->env );
-		$this->modelUser		= new Model_User( $this->env );
-	}
+use CeusMedia\HydrogenFramework\Logic;
 
+class Logic_Catalog_Provision extends Logic
+{
 	/**
 	 *	@todo   		rework, send mails
 	 */
-	public function addUserLicense( $userId, $productLicenseId, $assignFirst = FALSE ){
+	public function addUserLicense( $userId, $productLicenseId, $assignFirst = FALSE )
+	{
 		$productLicense	= $this->modelLicense->get( $productLicenseId );
 		$data		= array(
 			'userId'			=> $userId,
@@ -59,7 +53,8 @@ class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 	 *	@todo		check project existence and activity
 	 *	@todo   		rework
 	 */
-	public function enableNextUserLicenseKeyForProduct( $userId, $productId ){
+	public function enableNextUserLicenseKeyForProduct( $userId, $productId )
+	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 		 	throw new RangeException( 'Invalid user ID' );
@@ -99,7 +94,8 @@ class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo   		rework
 	 */
-	public function getDurationInSeconds( $duration ){
+	public function getDurationInSeconds( $duration )
+	{
 		$number	= (int) preg_replace( "/^([0-9]+)/", "\\1", $duration );
 		$unit	= preg_replace( "/^([0-9]+)([a-z]+)$/", "\\2", $duration );
 		$oneDay	= 24 * 60 * 60;
@@ -132,7 +128,8 @@ class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 	 *	@todo		check project existence and activity
 	 *	@todo   		rework
 	 */
-	public function getNextUserLicenseKeyIdForProduct( $userId, $productId ){
+	public function getNextUserLicenseKeyIdForProduct( $userId, $productId )
+	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 		 	throw new RangeException( 'Invalid user ID' );
@@ -150,14 +147,16 @@ class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 		return 0;
 	}
 
-	public function getProduct( $productId ){
+	public function getProduct( $productId )
+	{
 		$product	= $this->modelProduct->get( $productId );
 		if( !$product )
 			throw new RangeException( 'Product ID '.$productId.' is not existing' );
 		return $product;
 	}
 
-	public function getProductLicense( $productLicenseId = 0 ){
+	public function getProductLicense( $productLicenseId = 0 )
+	{
 		$productLicense	= $this->modelLicense->get( $productLicenseId );
 		if( !$productLicense )
 			throw new RangeException( 'Product license ID '.$productLicenseId.' is not existing' );
@@ -165,7 +164,8 @@ class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 		return $productLicense;
 	}
 
-	public function getProductLicenses( $productId, $status = NULL ){
+	public function getProductLicenses( $productId, $status = NULL )
+	{
 		$indices	= array( 'productId' => $productId );
 		if( $status !== NULL )
 			$indices['status']	= $status;
@@ -176,7 +176,8 @@ class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 		return $productLicenses;
 	}
 
-	public function getProductUri( $productOrId, $absolute = FALSE ){
+	public function getProductUri( $productOrId, $absolute = FALSE )
+	{
 		$product	= $productOrId;
 		if( is_int( $productOrId ) )
 			$product	= $this->getProductLicense( $productOrId );
@@ -189,7 +190,8 @@ class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 		return $absolute ? $this->env->url.$uri : './'.$uri;
 	}
 
-	public function getProductLicenseUri( $productLicenseOrId, $absolute = FALSE ){
+	public function getProductLicenseUri( $productLicenseOrId, $absolute = FALSE )
+	{
 		$productLicense	= $productLicenseOrId;
 		if( is_int( $productLicenseOrId ) )
 			$productLicense	= $this->getProductLicense( $productLicenseOrId );
@@ -203,7 +205,8 @@ class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 		return $absolute ? $this->env->url.$uri : './'.$uri;
 	}
 
-	public function getUserLicensesFromUser( $userId, $productId = NULL ){
+	public function getUserLicensesFromUser( $userId, $productId = NULL )
+	{
 		$indices		= array( 'userId' => $userId );
 		if( $productId )
 			$indices['productId']	= $productId;
@@ -219,14 +222,16 @@ class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getUriPart( $label, $delimiter = "_" ){
+	public function getUriPart( $label, $delimiter = "_" )
+	{
 		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
 		$label	= preg_replace( "/ +/", $delimiter, $label );
 		return $label;
 	}
 
-	public function getProducts( $status = NULL ){
+	public function getProducts( $status = NULL )
+	{
 		$indices	= [];
 		if( $status !== NULL )
 			$indices['status']	= $status;
@@ -234,5 +239,15 @@ class Logic_Catalog_Provision extends CMF_Hydrogen_Logic{
 		$products	= $this->modelProduct->getAll( $indices, $orders );
 		return $products;
 	}
+
+	protected function __onInit()
+	{
+		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
+		$this->modelProduct		= new Model_Provision_Product( $this->env );
+		$this->modelLicense		= new Model_Provision_Product_License( $this->env );
+		$this->modelUserLicense	= new Model_Provision_User_License( $this->env );
+		$this->modelUserKey		= new Model_Provision_User_License_Key( $this->env );
+		$this->modelUser		= new Model_User( $this->env );
+	}
 }
-?>

@@ -30,8 +30,6 @@ use CeusMedia\HydrogenFramework\Dispatcher\General as GeneralDispatcher;
  *	Server Action Dispatcher Class.
  *	@category		cmApps
  *	@package		Chat.Server.Resource
- *	@uses			Alg_Object_Factory
- *	@uses			Alg_Object_MethodFactory
  *	@author			Christian Würker <christian.wuerker@ceus-media.de>
  *	@copyright		2010-2013 Ceus Media
  */

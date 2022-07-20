@@ -1,8 +1,8 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Model;
 
-class Model_Note_Link extends CMF_Hydrogen_Model
+class Model_Note_Link extends Model
 {
 	protected $name		= 'note_links';
 
@@ -22,9 +22,4 @@ class Model_Note_Link extends CMF_Hydrogen_Model
 	);
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
-
-	public function  __construct( Environment $env, $id = NULL )
-	{
-		parent::__construct( $env, $id );
-	}
 }

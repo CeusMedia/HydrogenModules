@@ -3,11 +3,14 @@
  *	Database model of mail templates.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Database model of mail templates.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Template extends CMF_Hydrogen_Model
+class Model_Mail_Template extends Model
 {
 	const STATUS_NEW		= 0;
 	const STATUS_IMPORTED	= 1;

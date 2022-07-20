@@ -2,11 +2,14 @@
 /**
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Logic;
+
 /**
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  *	@todo		code doc
  */
-class Logic_Mail extends CMF_Hydrogen_Logic
+class Logic_Mail extends Logic
 {
 	const LIBRARY_UNKNOWN		= 0;
 	const LIBRARY_COMMON		= 1;

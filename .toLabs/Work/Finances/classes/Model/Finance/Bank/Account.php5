@@ -1,5 +1,8 @@
 <?php
-class Model_Finance_Bank_Account extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Finance_Bank_Account extends Model
 {
 	protected $name		= 'finance_bank_accounts';
 

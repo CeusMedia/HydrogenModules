@@ -1,19 +1,10 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Logic;
 
-class Logic_User_Provision extends CMF_Hydrogen_Logic{
-
-	protected function __onInit(){
-		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
-		$this->logicMail		= Logic_Mail::getInstance( $this->env );
-		$this->modelProduct		= new Model_Provision_Product( $this->env );
-		$this->modelLicense		= new Model_Provision_Product_License( $this->env );
-		$this->modelUserLicense	= new Model_Provision_User_License( $this->env );
-		$this->modelUserKey		= new Model_Provision_User_License_Key( $this->env );
-		$this->modelUser		= new Model_User( $this->env );
-	}
-
+class Logic_User_Provision extends Logic
+{
 	/**
 	 *	Activate user license and send mails to user license key users.
 	 *	@access		protected
@@ -22,7 +13,8 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	 *	@param		boolean			$sendUserMails		Flag: send mails to user license keys users about assigment
 	 *	@return		boolean
 	 */
-	public function activateUserLicense( $userLicenseId, $sendOwnerMail = TRUE, $sendUserMails = TRUE ){
+	public function activateUserLicense( $userLicenseId, $sendOwnerMail = TRUE, $sendUserMails = TRUE )
+	{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		if( !$userLicense )
 			throw new RangeException( 'Invalid user license ID.' );
@@ -59,7 +51,8 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	 *	@param		boolean			$sendUserMails		Flag: send mails to user license keys users about revokation
 	 *	@return		boolean
 	 */
-	public function revokeUserLicense( $userLicenseId, $sendOwnerMail = TRUE, $sendUserMails = TRUE ){
+	public function revokeUserLicense( $userLicenseId, $sendOwnerMail = TRUE, $sendUserMails = TRUE )
+	{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		if( !$userLicense )
 			throw new RangeException( 'Invalid user license ID.' );
@@ -85,7 +78,8 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		return TRUE;
 	}
 
-/*	public function expireUserLicense( $userLicenseId ){
+/*	public function expireUserLicense( $userLicenseId )
+	{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		if( !$userLicense )
 			throw new RangeException( 'Invalid user license ID.' );
@@ -110,7 +104,8 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo   		rework, send mails
 	 */
-	public function addUserLicense( $userId, $productLicenseId, $assignFirst = FALSE ){
+	public function addUserLicense( $userId, $productLicenseId, $assignFirst = FALSE )
+	{
 		$productLicense	= $this->modelLicense->get( $productLicenseId );
 		$data		= array(
 			'userId'			=> $userId,
@@ -144,7 +139,8 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo   		doc
 	 */
-	public function setUserOfUserLicenseKey( $userLicenseKeyId, $userId = 0 ){
+	public function setUserOfUserLicenseKey( $userLicenseKeyId, $userId = 0 )
+	{
 		if( !$this->env->getDatabase()->getOpenTransactions() )										//  only if not database transactions are open
 			$this->getUserLicenseKey( $userLicenseKeyId );											//  check if user
 
@@ -172,7 +168,8 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	/**
 	 *	@todo   		doc
 	 */
-	public function countUserLicensesByProductLicense( $productLicenseId ){
+	public function countUserLicensesByProductLicense( $productLicenseId )
+	{
 		return $this->modelUserLicense->countByIndex( 'productLicenseId', $productLicenseId );
 	}
 
@@ -190,7 +187,8 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	 *	@todo		check project existence and activity
 	 *	@todo   		rework
 	 */
-	public function enableNextUserLicenseKeyForProduct( $userId, $productId ){
+	public function enableNextUserLicenseKeyForProduct( $userId, $productId )
+	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 		 	throw new RangeException( 'Invalid user ID' );
@@ -230,7 +228,8 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 	 *	@todo		add hook in module config
 	 *	@todo		add hook call in module Resource:Users, better implement Logic_UserStatus before
 	 */
-	public function __onChangeUserStatus( Environment $env, $context, $module, $data = [] ){
+	public function __onChangeUserStatus( Environment $env, $context, $module, $data = [] )
+	{
 		if( !isset( $data['status'] ) )
 			throw new InvalidArgumentException( 'Missing new status' );
 		if( !isset( $data['userId'] ) )
@@ -248,8 +247,405 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		}
 	}
 
+	public function handleOutdatedUserLicenses()
+	{
+		$results	= [];
+		$outdatedUserLicenses	= $this->modelUserLicense->getAllByIndices( array(
+			'status'	=> Model_Provision_User_License::STATUS_ACTIVE,
+			'endsAt'	=> '< '.time(),
+		), array( 'endsAt' => 'ASC' ) );
+		foreach( $outdatedUserLicenses as $outdatedUserLicense )
+			$results[]	= $this->handleOutdatedUserLicense( $outdatedUserLicense->userLicenseId );
+		return $results;
+	}
 
-	protected function handleOutdatedUserLicense( $userLicenseId ){
+	/**
+	 *	@deprecated  	use handleOutdatedUserLicenses instead
+	 *	@todo   		remove, after job has been updated
+	 */
+	public function handleExpiredKeys()
+	{
+		return $this->handleOutdatedUserLicenses();
+		$dbc		= $this->env->getDatabase();
+		$language	= $this->env->getLanguage()->getLanguage();
+		$logicMail	= Logic_Mail::getInstance( $this->env );
+		$list		= [];
+		foreach( $this->getOutdatedUserLicenseKeys() as $key ){
+			$data	= array(
+				'key'		=> $key,
+				'license'	=> $this->modelUserLicense->get( $key->userLicenseId ),
+				'product'	=> $this->modelProduct->get( $key->productId ),
+				'user'		=> $this->modelUser->get( $key->userId ),
+			);
+			$nextUserKeyId	= $this->getNextUserLicenseKeyIdForProduct( $key->userId, $key->productId );
+			if( $nextUserKeyId ){
+				try{
+					$dbc->beginTransaction();
+					$data['nextKey']	= $this->modelUserKey->get( $nextUserKeyId );
+					$this->modelUserKey->edit( $key->userLicenseKeyId, array(
+						'status'	=> Model_Provision_User_License_Key::STATUS_EXPIRED,
+					) );
+					$this->enableNextUserLicenseKeyForProduct( $key->userId, $key->productId );
+					$mail	= new Mail_Provision_Key_Continued( $this->env, $data );
+					$logicMail->handleMail( $mail, $data['user'], $language, !TRUE );
+					$dbc->commit();
+					$list[]	= (object) $data;
+				}
+				catch( Exception $e ){
+					$dbc->rollBack();
+					throw new RuntimeException( 'Key renewal failed: '.$e->getMessage() );
+				}
+			}
+			else{
+				try{
+					$dbc->beginTransaction();
+					$this->modelUserKey->edit( $key->userLicenseKeyId, array(
+						'status'	=> Model_Provision_User_License_Key::STATUS_EXPIRED,
+					) );
+					$mail	= new Mail_Provision_Key_Expired( $this->env, $data );
+					$logicMail->handleMail( $mail, $data['user'], $language, !TRUE );
+					$dbc->commit();
+					$list[]	= (object) $data;
+				}
+				catch( Exception $e ){
+					$dbc->rollBack();
+					throw new RuntimeException( 'Key expiration failed: '.$e->getMessage() );
+				}
+			}
+		}
+		return $list;
+	}
+
+	/**
+	 *	@todo   		rework
+	 */
+	public function getDurationInSeconds( $duration )
+	{
+		$number	= (int) preg_replace( "/^([0-9]+)/", "\\1", $duration );
+		$unit	= preg_replace( "/^([0-9]+)([a-z]+)$/", "\\2", $duration );
+		$oneDay	= 24 * 60 * 60;
+
+		switch( $unit ){
+			case 'd':
+				$factor		= $oneDay;
+				break;
+			case 'w':
+				$factor		= 7 * $oneDay;
+				break;
+			case 'm':
+				$factor		= 30 * $oneDay;
+				break;
+			case 'a':
+				$factor		= 365 * $oneDay;
+				break;
+		}
+		return $number * $factor;
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		integer		$userId			User ID
+	 *	@param		integer		$productId		Product ID
+	 *	@return		integer						User license key ID
+	 *	@throws		RangeException				if given user ID is invalid
+	 *	@throws		RuntimeException			if given user is not activated
+	 *	@todo		check project existence and activity
+	 *	@todo   		rework
+	 */
+	public function getNextUserLicenseKeyIdForProduct( $userId, $productId )
+	{
+		$user	= $this->modelUser->get( $userId );
+		if( !$user )
+		 	throw new RangeException( 'Invalid user ID' );
+		if( $user->status < 1 )
+			throw new RuntimeException( 'User is not active' );
+
+		$userLicenses	= $this->getUserLicensesFromUser( $userId, $productId );
+		foreach( $userLicenses as $userLicense ){
+			foreach( $userLicense->userLicenseKeys as $userLicenseKey ){
+				if( $userLicenseKey->status == Model_Provision_User_License_Key::STATUS_ASSIGNED ){
+					return $userLicenseKey->userLicenseKeyId;
+				}
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 *	@todo   		rework
+	 */
+	public function getOutdatedUserLicenseKeys()
+	{
+		$indices	= array(
+			'status'	=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
+			'endsAt'	=> '< '.time(),
+		);
+		return $this->modelUserKey->getAllByIndices( $indices );
+	}
+
+	public function getProduct( $productId )
+	{
+		$product	= $this->modelProduct->get( $productId );
+		if( !$product )
+			throw new RangeException( 'Product ID '.$productId.' is not existing' );
+		return $product;
+	}
+
+	public function getProductLicense( $productLicenseId = 0 )
+	{
+		$productLicense	= $this->modelLicense->get( $productLicenseId );
+		if( !$productLicense )
+			throw new RangeException( 'Product license ID '.$productLicenseId.' is not existing' );
+		$productLicense->product	= $this->modelProduct->get( $productLicense->productId );
+		return $productLicense;
+	}
+
+	public function getProductLicenses( $productId, $status = NULL )
+	{
+		$indices	= array( 'productId' => $productId );
+		if( $status !== NULL )
+			$indices['status']	= $status;
+		$orders		= array( 'rank' => 'ASC', 'title' => 'ASC' );
+		$productLicenses	= $this->modelLicense->getAll( $indices, $orders );
+		foreach( $productLicenses as $nr => $productLicense )
+			$productLicense->product	= $this->modelProduct->get( $productLicense->productId );
+		return $productLicenses;
+	}
+
+	public function getProducts( $status = NULL )
+	{
+		$indices	= [];
+		if( $status !== NULL )
+			$indices['status']	= $status;
+		$orders		= array( 'rank' => 'ASC', 'title' => 'ASC' );
+		$products	= $this->modelProduct->getAll( $indices, $orders );
+		return $products;
+	}
+
+	public function getUser( $userId )
+	{
+		$user	= $this->modelUser->get( $userId );
+		if( !$user )
+			throw new OutOfRangeException( 'User ID '.$userId.' is not existing' );
+		unset( $user->password );
+		return $user;
+	}
+
+	public function getUserLicense( $userLicenseId )
+	{
+		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
+		if( !$userLicense )
+			throw new RangeException( 'User license ID '.$userLicenseId.' is not existing' );
+		$clone					= clone( $userLicense );
+		$clone->user			= $this->modelUser->get( $userLicense->userId );
+		$clone->product			= $this->modelProduct->get( $userLicense->productId );
+		$clone->productLicense	= $this->modelLicense->get( $userLicense->productLicenseId );
+		return $clone;
+	}
+
+	public function getUserLicenseOwner( $userLicenseId )
+	{
+		$userLicense	= $this->getUserLicense( $userLicenseId );
+		$user	= $this->getUser( $userLicense->userId );
+		if( !$user )
+			throw new RangeException( 'User ID '.$userId.' is not existing' );
+		return $user;
+	}
+
+	public function getUserLicenseKey( $userLicenseKeyId )
+	{
+		$userLicenseKey	= $this->modelUserKey->get( $userLicenseKeyId );
+		if( !$userLicenseKey )
+			throw new RangeException( 'User license key ID '.$userLicenseKeyId.' is not existing' );
+		return $userLicenseKey;
+	}
+
+	public function getUserLicenseKeyOwner( $userLicenseKeyId )
+	{
+		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
+		$user	= $this->getUser( $userLicenseKey->userId );
+		if( !$user )
+			throw new RangeException( 'User ID '.$userId.' is not existing' );
+		return $user;
+	}
+
+/*	public function getUserLicenses( $ )
+	{
+	}*/
+
+	public function getUserLicensesFromUser( $userId, $productId = NULL )
+	{
+		$indices		= array( 'userId' => $userId );
+		if( $productId )
+			$indices['productId']	= $productId;
+		$userLicenses	= $this->modelUserLicense->getAllByIndices( $indices );
+		foreach( $userLicenses as $userLicense ){
+			$userLicense->product	= $this->modelProduct->get( $userLicense->productId );
+			$userLicense->productLicense	= $this->modelLicense->get( $userLicense->productLicenseId );
+			$userLicense->userLicenseKeys	= $this->modelUserKey->getAllByIndex( 'userLicenseId', $userLicense->userLicenseId );
+		}
+		return $userLicenses;
+	}
+
+	public function getNotAssignedUserLicenseKeysFromUser( $userId, $projectId = NULL )
+	{
+		$list		= [];
+		$licenses	= $this->getUserLicensesFromUser( $userId, $projectId );
+		foreach( $licenses as $userLicense ){
+			$userLicense->keys	= $this->getNotAssignedUserLicenseKeysFromUserLicense( $userLicense->userLicenseId );
+			if( $userLicense->keys )
+				$list[]	= $userLicense;
+		}
+		return $list;
+	}
+
+	public function getNotAssignedUserLicenseKeysFromUserLicense( $userLicenseId )
+	{
+		$license	= $this->getUserLicense( $userLicenseId );
+		$indices	= array( 'userLicenseId' => $userLicenseId, 'userId' => 0 );
+		$orders		= array( 'userLicenseId' => 'ASC' ) ;
+		$keys		= $this->modelUserKey->getAll( $indices, $orders );
+		return $keys;
+	}
+
+	public function getUserLicenseKeys( $userLicenseId, $assignedOnly = FALSE )
+	{
+		$indices	= array( 'userLicenseId' => $userLicenseId );
+		if( $assignedOnly )
+			$indices['status']	= Model_Provision_User_License_Key::STATUS_ASSIGNED;
+		$orders		= array( 'userLicenseKeyId' => 'ASC' ) ;
+		$keys		= $this->modelUserKey->getAll( $indices, $orders );
+		return $keys;
+	}
+
+	public function getUserLicenseKeysFromUser( $userId, $activeOnly = NULL, $productId = NULL )
+	{
+		$indices	= array(
+			'userId'	=> $userId,
+		);
+		if( $activeOnly ){
+			$indices['status']		= Model_Provision_User_License_Key::STATUS_ASSIGNED;
+			$indices['startsAt']	= '< '.time();
+			$indices['endsAt']		= '> '.time();
+		}
+		if( $productId )
+			$indices['productId']	= $productId;
+
+		$orders		= array( 'userLicenseKeyId' => 'ASC' ) ;
+		$keys		= $this->modelUserKey->getAllByIndices( $indices, $orders );
+		foreach( $keys as $key ){
+			$key->productLicense	= $this->modelLicense->get( $key->productLicenseId );
+			$key->product			= $this->modelProduct->get( $key->productLicense->productId );
+			$key->userLicense		= $this->modelUserLicense->get( $key->userLicenseId );
+		}
+		return $keys;
+	}
+
+	public function sendMailOnActivatedUserLicense( $userLicenseId )
+	{
+		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Activated' );
+	}
+
+	public function sendMailOnDeactivatedUserLicense( $userLicenseId )
+	{
+		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Deactivated' );
+	}
+
+	public function sendMailOnExpiredUserLicense( $userLicenseId )
+	{
+		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Expired' );
+	}
+
+	public function sendMailOnReplacedUserLicense( $userLicenseId )
+	{
+		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Replaced' );
+	}
+
+	public function sendMailOnRevokedUserLicense( $userLicenseId )
+	{
+		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Revoked' );
+	}
+
+	/**
+	 *	Send mail to user of user license key about assigned key or activated license.
+	 *	@access		protected
+	 *	@param		integer			$userLicenseKeyId		User license key ID
+	 *	@return		boolean
+	 *	@todo   	user language
+	 */
+	public function sendMailOnAssignUserLicenseKey( $userLicenseKeyId )
+	{
+		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
+		$userLicense	= $this->getUserLicense( $userLicenseKey->userLicenseId );
+		$user	= $this->getUser( $userLicenseKey->userId );
+		$mail	= $this->logicMail->createMail( 'Provision_Customer_Key_Assigned', array(
+			'product'			=> $userLicense->product,
+			'productLicense'	=> $userLicense->productLicense,
+			'user'				=> $user,
+			'userLicense'		=> $userLicense,
+		) );
+		$language	= $this->env->getLanguage()->getLanguage();
+		return $this->logicMail->handleMail( $mail, $user, $language );
+	}
+
+	/**
+	 *	Send mail to user of user license key about revoked key or deactivated/outdated license.
+	 *	@access		protected
+	 *	@param		integer			$userLicenseKeyId		User license key ID
+	 *	@param		integer			$oldUserId				User ID before revokation
+	 *	@return		boolean
+	 *	@todo   	user language
+	 */
+	public function sendMailOnRevokeUserLicenseKey( $userLicenseKeyId, $oldUserId )
+	{
+		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
+		$userLicense	= $this->getUserLicense( $userLicenseKey->userLicenseId );
+		$user	= $this->getUser( $oldUserId );
+		$mail	= $this->logicMail->createMail( 'Provision_Customer_Key_Revoked', array(
+			'product'			=> $userLicense->product,
+			'productLicense'	=> $userLicense->productLicense,
+			'user'				=> $user,
+			'userLicense'		=> $userLicense,
+		) );
+		$language	= $this->env->getLanguage()->getLanguage();
+		return $this->logicMail->handleMail( $mail, $user, $language );
+	}
+
+	/**
+	 *	@todo 		kriss: finish implementation
+	 */
+	public function setUserLicenseStatus( $userLicenseId, $status )
+	{
+		$userLicense	= $this->getUserLicense( $userLicenseId );
+
+		$data	= array(
+			'status'	=> $status,
+		);
+		$this->modelUserLicense->edit( $userLicenseId, $data );
+
+	//  @todo react to license status within keys:
+	//  		- activate -> activate user license keys if no other user license key is running
+	//  		- deactivate -> deactivate user license keys
+
+//		if( $status == 2 ){
+//			$this->enableNextUserLicenseKeyForProduct( $userLicense->userId, $userLicense->productId );
+//		}
+	}
+
+	protected function __onInit()
+	{
+		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
+		$this->modelProduct		= new Model_Provision_Product( $this->env );
+		$this->modelLicense		= new Model_Provision_Product_License( $this->env );
+		$this->modelUserLicense	= new Model_Provision_User_License( $this->env );
+		$this->modelUserKey		= new Model_Provision_User_License_Key( $this->env );
+		$this->modelUser		= new Model_User( $this->env );
+	}
+
+	protected function handleOutdatedUserLicense( $userLicenseId )
+	{
 		$outdatedUserLicense		= $this->getUserLicense( $userLicenseId );
 		$outdatedUserLicenseKeys	= $this->getUserLicenseKeys( $userLicenseId, TRUE );			//  get assigned keys of outdated user license
 		$nextUserLicense			= $this->modelUserLicense->getByIndices( array(					//  get next user license ...
@@ -310,302 +706,8 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		);
 	}
 
-	public function handleOutdatedUserLicenses(){
-		$results	= [];
-		$outdatedUserLicenses	= $this->modelUserLicense->getAllByIndices( array(
-			'status'	=> Model_Provision_User_License::STATUS_ACTIVE,
-			'endsAt'	=> '< '.time(),
-		), array( 'endsAt' => 'ASC' ) );
-		foreach( $outdatedUserLicenses as $outdatedUserLicense )
-			$results[]	= $this->handleOutdatedUserLicense( $outdatedUserLicense->userLicenseId );
-		return $results;
-	}
-
-	/**
-	 *	@deprecated  	use handleOutdatedUserLicenses instead
-	 *	@todo   		remove, after job has been updated
-	 */
-	public function handleExpiredKeys(){
-		return $this->handleOutdatedUserLicenses();
-		$dbc		= $this->env->getDatabase();
-		$language	= $this->env->getLanguage()->getLanguage();
-		$logicMail	= Logic_Mail::getInstance( $this->env );
-		$list		= [];
-		foreach( $this->getOutdatedUserLicenseKeys() as $key ){
-			$data	= array(
-				'key'		=> $key,
-				'license'	=> $this->modelUserLicense->get( $key->userLicenseId ),
-				'product'	=> $this->modelProduct->get( $key->productId ),
-				'user'		=> $this->modelUser->get( $key->userId ),
-			);
-			$nextUserKeyId	= $this->getNextUserLicenseKeyIdForProduct( $key->userId, $key->productId );
-			if( $nextUserKeyId ){
-				try{
-					$dbc->beginTransaction();
-					$data['nextKey']	= $this->modelUserKey->get( $nextUserKeyId );
-					$this->modelUserKey->edit( $key->userLicenseKeyId, array(
-						'status'	=> Model_Provision_User_License_Key::STATUS_EXPIRED,
-					) );
-					$this->enableNextUserLicenseKeyForProduct( $key->userId, $key->productId );
-					$mail	= new Mail_Provision_Key_Continued( $this->env, $data );
-					$logicMail->handleMail( $mail, $data['user'], $language, !TRUE );
-					$dbc->commit();
-					$list[]	= (object) $data;
-				}
-				catch( Exception $e ){
-					$dbc->rollBack();
-					throw new RuntimeException( 'Key renewal failed: '.$e->getMessage() );
-				}
-			}
-			else{
-				try{
-					$dbc->beginTransaction();
-					$this->modelUserKey->edit( $key->userLicenseKeyId, array(
-						'status'	=> Model_Provision_User_License_Key::STATUS_EXPIRED,
-					) );
-					$mail	= new Mail_Provision_Key_Expired( $this->env, $data );
-					$logicMail->handleMail( $mail, $data['user'], $language, !TRUE );
-					$dbc->commit();
-					$list[]	= (object) $data;
-				}
-				catch( Exception $e ){
-					$dbc->rollBack();
-					throw new RuntimeException( 'Key expiration failed: '.$e->getMessage() );
-				}
-			}
-		}
-		return $list;
-	}
-
-	/**
-	 *	@todo   		rework
-	 */
-	public function getDurationInSeconds( $duration ){
-		$number	= (int) preg_replace( "/^([0-9]+)/", "\\1", $duration );
-		$unit	= preg_replace( "/^([0-9]+)([a-z]+)$/", "\\2", $duration );
-		$oneDay	= 24 * 60 * 60;
-
-		switch( $unit ){
-			case 'd':
-				$factor		= $oneDay;
-				break;
-			case 'w':
-				$factor		= 7 * $oneDay;
-				break;
-			case 'm':
-				$factor		= 30 * $oneDay;
-				break;
-			case 'a':
-				$factor		= 365 * $oneDay;
-				break;
-		}
-		return $number * $factor;
-	}
-
-	/**
-	 *	...
-	 *	@access		public
-	 *	@param		integer		$userId			User ID
-	 *	@param		integer		$productId		Product ID
-	 *	@return		integer						User license key ID
-	 *	@throws		RangeException				if given user ID is invalid
-	 *	@throws		RuntimeException			if given user is not activated
-	 *	@todo		check project existence and activity
-	 *	@todo   		rework
-	 */
-	public function getNextUserLicenseKeyIdForProduct( $userId, $productId ){
-		$user	= $this->modelUser->get( $userId );
-		if( !$user )
-		 	throw new RangeException( 'Invalid user ID' );
-		if( $user->status < 1 )
-			throw new RuntimeException( 'User is not active' );
-
-		$userLicenses	= $this->getUserLicensesFromUser( $userId, $productId );
-		foreach( $userLicenses as $userLicense ){
-			foreach( $userLicense->userLicenseKeys as $userLicenseKey ){
-				if( $userLicenseKey->status == Model_Provision_User_License_Key::STATUS_ASSIGNED ){
-					return $userLicenseKey->userLicenseKeyId;
-				}
-			}
-		}
-		return 0;
-	}
-
-	/**
-	 *	@todo   		rework
-	 */
-	public function getOutdatedUserLicenseKeys(){
-		$indices	= array(
-			'status'	=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
-			'endsAt'	=> '< '.time(),
-		);
-		return $this->modelUserKey->getAllByIndices( $indices );
-	}
-
-	public function getProduct( $productId ){
-		$product	= $this->modelProduct->get( $productId );
-		if( !$product )
-			throw new RangeException( 'Product ID '.$productId.' is not existing' );
-		return $product;
-	}
-
-	public function getProductLicense( $productLicenseId = 0 ){
-		$productLicense	= $this->modelLicense->get( $productLicenseId );
-		if( !$productLicense )
-			throw new RangeException( 'Product license ID '.$productLicenseId.' is not existing' );
-		$productLicense->product	= $this->modelProduct->get( $productLicense->productId );
-		return $productLicense;
-	}
-
-	public function getProductLicenses( $productId, $status = NULL ){
-		$indices	= array( 'productId' => $productId );
-		if( $status !== NULL )
-			$indices['status']	= $status;
-		$orders		= array( 'rank' => 'ASC', 'title' => 'ASC' );
-		$productLicenses	= $this->modelLicense->getAll( $indices, $orders );
-		foreach( $productLicenses as $nr => $productLicense )
-			$productLicense->product	= $this->modelProduct->get( $productLicense->productId );
-		return $productLicenses;
-	}
-
-	public function getProducts( $status = NULL ){
-		$indices	= [];
-		if( $status !== NULL )
-			$indices['status']	= $status;
-		$orders		= array( 'rank' => 'ASC', 'title' => 'ASC' );
-		$products	= $this->modelProduct->getAll( $indices, $orders );
-		return $products;
-	}
-
-	public function getUser( $userId ){
-		$user	= $this->modelUser->get( $userId );
-		if( !$user )
-			throw new OutOfRangeException( 'User ID '.$userId.' is not existing' );
-		unset( $user->password );
-		return $user;
-	}
-
-	public function getUserLicense( $userLicenseId ){
-		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
-		if( !$userLicense )
-			throw new RangeException( 'User license ID '.$userLicenseId.' is not existing' );
-		$clone					= clone( $userLicense );
-		$clone->user			= $this->modelUser->get( $userLicense->userId );
-		$clone->product			= $this->modelProduct->get( $userLicense->productId );
-		$clone->productLicense	= $this->modelLicense->get( $userLicense->productLicenseId );
-		return $clone;
-	}
-
-	public function getUserLicenseOwner( $userLicenseId ){
-		$userLicense	= $this->getUserLicense( $userLicenseId );
-		$user	= $this->getUser( $userLicense->userId );
-		if( !$user )
-			throw new RangeException( 'User ID '.$userId.' is not existing' );
-		return $user;
-	}
-
-	public function getUserLicenseKey( $userLicenseKeyId ){
-		$userLicenseKey	= $this->modelUserKey->get( $userLicenseKeyId );
-		if( !$userLicenseKey )
-			throw new RangeException( 'User license key ID '.$userLicenseKeyId.' is not existing' );
-		return $userLicenseKey;
-	}
-
-	public function getUserLicenseKeyOwner( $userLicenseKeyId ){
-		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
-		$user	= $this->getUser( $userLicenseKey->userId );
-		if( !$user )
-			throw new RangeException( 'User ID '.$userId.' is not existing' );
-		return $user;
-	}
-
-/*	public function getUserLicenses( $ ){
-}*/
-
-	public function getUserLicensesFromUser( $userId, $productId = NULL ){
-		$indices		= array( 'userId' => $userId );
-		if( $productId )
-			$indices['productId']	= $productId;
-		$userLicenses	= $this->modelUserLicense->getAllByIndices( $indices );
-		foreach( $userLicenses as $userLicense ){
-			$userLicense->product	= $this->modelProduct->get( $userLicense->productId );
-			$userLicense->productLicense	= $this->modelLicense->get( $userLicense->productLicenseId );
-			$userLicense->userLicenseKeys	= $this->modelUserKey->getAllByIndex( 'userLicenseId', $userLicense->userLicenseId );
-		}
-		return $userLicenses;
-	}
-
-	public function getNotAssignedUserLicenseKeysFromUser( $userId, $projectId = NULL ){
-		$list		= [];
-		$licenses	= $this->getUserLicensesFromUser( $userId, $projectId );
-		foreach( $licenses as $userLicense ){
-			$userLicense->keys	= $this->getNotAssignedUserLicenseKeysFromUserLicense( $userLicense->userLicenseId );
-			if( $userLicense->keys )
-				$list[]	= $userLicense;
-		}
-		return $list;
-	}
-
-	public function getNotAssignedUserLicenseKeysFromUserLicense( $userLicenseId ){
-		$license	= $this->getUserLicense( $userLicenseId );
-		$indices	= array( 'userLicenseId' => $userLicenseId, 'userId' => 0 );
-		$orders		= array( 'userLicenseId' => 'ASC' ) ;
-		$keys		= $this->modelUserKey->getAll( $indices, $orders );
-		return $keys;
-	}
-
-	public function getUserLicenseKeys( $userLicenseId, $assignedOnly = FALSE ){
-		$indices	= array( 'userLicenseId' => $userLicenseId );
-		if( $assignedOnly )
-			$indices['status']	= Model_Provision_User_License_Key::STATUS_ASSIGNED;
-		$orders		= array( 'userLicenseKeyId' => 'ASC' ) ;
-		$keys		= $this->modelUserKey->getAll( $indices, $orders );
-		return $keys;
-	}
-
-	public function getUserLicenseKeysFromUser( $userId, $activeOnly = NULL, $productId = NULL ){
-		$indices	= array(
-			'userId'	=> $userId,
-		);
-		if( $activeOnly ){
-			$indices['status']		= Model_Provision_User_License_Key::STATUS_ASSIGNED;
-			$indices['startsAt']	= '< '.time();
-			$indices['endsAt']		= '> '.time();
-		}
-		if( $productId )
-			$indices['productId']	= $productId;
-
-		$orders		= array( 'userLicenseKeyId' => 'ASC' ) ;
-		$keys		= $this->modelUserKey->getAllByIndices( $indices, $orders );
-		foreach( $keys as $key ){
-			$key->productLicense	= $this->modelLicense->get( $key->productLicenseId );
-			$key->product			= $this->modelProduct->get( $key->productLicense->productId );
-			$key->userLicense		= $this->modelUserLicense->get( $key->userLicenseId );
-		}
-		return $keys;
-	}
-
-	public function sendMailOnActivatedUserLicense( $userLicenseId ){
-		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Activated' );
-	}
-
-	public function sendMailOnDeactivatedUserLicense( $userLicenseId ){
-		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Deactivated' );
-	}
-
-	public function sendMailOnExpiredUserLicense( $userLicenseId ){
-		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Expired' );
-	}
-
-	public function sendMailOnReplacedUserLicense( $userLicenseId ){
-		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Replaced' );
-	}
-
-	public function sendMailOnRevokedUserLicense( $userLicenseId ){
-		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Revoked' );
-	}
-
-	protected function sendMailOnUserLicenseChange( $userLicenseId, $change ){
+	protected function sendMailOnUserLicenseChange( $userLicenseId, $change )
+	{
 		$changes	= array( 'Activated', 'Deactivated', 'Expired', 'Replaced', 'Revoked' );
 		if( !in_array( $change, $changes ) )
 			throw new DomainException( 'Invalid user license customer mail change "'.$change.'"' );
@@ -620,70 +722,4 @@ class Logic_User_Provision extends CMF_Hydrogen_Logic{
 		$language	= $this->env->getLanguage()->getLanguage();
 		return $this->logicMail->handleMail( $mail, $user, $language );
 	}
-
-	/**
-	 *	Send mail to user of user license key about assigned key or activated license.
-	 *	@access		protected
-	 *	@param		integer			$userLicenseKeyId		User license key ID
-	 *	@return		boolean
-	 *	@todo   	user language
-	 */
-	public function sendMailOnAssignUserLicenseKey( $userLicenseKeyId ){
-		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
-		$userLicense	= $this->getUserLicense( $userLicenseKey->userLicenseId );
-		$user	= $this->getUser( $userLicenseKey->userId );
-		$mail	= $this->logicMail->createMail( 'Provision_Customer_Key_Assigned', array(
-			'product'			=> $userLicense->product,
-			'productLicense'	=> $userLicense->productLicense,
-			'user'				=> $user,
-			'userLicense'		=> $userLicense,
-		) );
-		$language	= $this->env->getLanguage()->getLanguage();
-		return $this->logicMail->handleMail( $mail, $user, $language );
-	}
-
-	/**
-	 *	Send mail to user of user license key about revoked key or deactivated/outdated license.
-	 *	@access		protected
-	 *	@param		integer			$userLicenseKeyId		User license key ID
-	 *	@param		integer			$oldUserId				User ID before revokation
-	 *	@return		boolean
-	 *	@todo   	user language
-	 */
-	public function sendMailOnRevokeUserLicenseKey( $userLicenseKeyId, $oldUserId ){
-		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
-		$userLicense	= $this->getUserLicense( $userLicenseKey->userLicenseId );
-		$user	= $this->getUser( $oldUserId );
-		$mail	= $this->logicMail->createMail( 'Provision_Customer_Key_Revoked', array(
-			'product'			=> $userLicense->product,
-			'productLicense'	=> $userLicense->productLicense,
-			'user'				=> $user,
-			'userLicense'		=> $userLicense,
-		) );
-		$language	= $this->env->getLanguage()->getLanguage();
-		return $this->logicMail->handleMail( $mail, $user, $language );
-	}
-
-	/**
-	 *	@todo 		kriss: finish implementation
-	 */
-	public function setUserLicenseStatus( $userLicenseId, $status ){
-		$userLicense	= $this->getUserLicense( $userLicenseId );
-
-		$data	= array(
-			'status'	=> $status,
-		);
-		$this->modelUserLicense->edit( $userLicenseId, $data );
-
-	//  @todo react to license status within keys:
-	//  		- activate -> activate user license keys if no other user license key is running
-	//  		- deactivate -> deactivate user license keys
-
-//		if( $status == 2 ){
-//			$this->enableNextUserLicenseKeyForProduct( $userLicense->userId, $userLicense->productId );
-//		}
-
-
-	}
 }
-?>

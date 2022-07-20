@@ -1,9 +1,10 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Logic;
 
-class Logic_FileBucket extends CMF_Hydrogen_Logic{
-
+class Logic_FileBucket extends Logic
+{
 	const HASH_MD5			= 0;
 	const HASH_UUID			= 1;
 
@@ -12,7 +13,8 @@ class Logic_FileBucket extends CMF_Hydrogen_Logic{
 	protected $hashFunction	= 0;
 	protected $model;
 
-	public function __construct( Environment $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env		= $env;
 		$this->model	= new Model_File( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_filebucket.', TRUE );
@@ -32,11 +34,10 @@ class Logic_FileBucket extends CMF_Hydrogen_Logic{
 			\FS_Folder_Editor::createFolder( $this->filePath );
 		if( !file_exists( $this->filePath.'.htaccess' ) )
 			file_put_contents( $this->filePath.'.htaccess', 'Deny from all'.PHP_EOL );
-
-
 	}
 
-	public function add( $sourceFilePath, $uriPath, $mimeType, $moduleId = NULL ){
+	public function add( $sourceFilePath, $uriPath, $mimeType, $moduleId = NULL )
+	{
 		if( !file_exists( $sourceFilePath ) )
 			throw new RuntimeException( 'Given source file is not existing' );
 		if( !is_readable( $sourceFilePath ) )
@@ -61,36 +62,43 @@ class Logic_FileBucket extends CMF_Hydrogen_Logic{
 		return $this->model->add( $data );
 	}
 
-	public function get( $fileId ){
+	public function get( $fileId )
+	{
 		return $this->model->get( $fileId );
 	}
 
-	public function getAllFromModuleAndPath( $moduleId, $filePath, $orders = [], $limits = [] ){
+	public function getAllFromModuleAndPath( $moduleId, $filePath, $orders = [], $limits = [] )
+	{
 		return $this->getAllByIndices( array(
 			'moduleId'		=> $moduleId,
 			'filePath'		=> $filePath,
 		), $orders, $limits );
 	}
 
-	public function getAllByIndices( $indices, $orders = [], $limits = [] ){
+	public function getAllByIndices( $indices, $orders = [], $limits = [] )
+	{
 		if( !$orders )
 			$orders		= array( 'filePath' => 'ASC', 'fileName' => 'ASC' );
 		return $this->model->getAllByIndices( $indices, $orders, $limits );
 	}
 
-	public function getAllFromModule( $moduleId, $orders = [], $limits = [] ){
+	public function getAllFromModule( $moduleId, $orders = [], $limits = [] )
+	{
 		return $this->getAllByIndices( array( 'moduleId' => $moduleId ), $orders, $limits );
 	}
 
-	public function getAllFromPath( $filePath, $orders = [], $limits = [] ){
+	public function getAllFromPath( $filePath, $orders = [], $limits = [] )
+	{
 		return $this->getAllByIndices( array( 'filePath' => $filePath ), $orders, $limits );
 	}
 
-	public function getByHash( $hash ){
+	public function getByHash( $hash )
+	{
 		return $this->model->getByIndex( 'hash', $hash );
 	}
 
-	public function getByPath( $uriPath, $moduleId = NULL ){
+	public function getByPath( $uriPath, $moduleId = NULL )
+	{
 		$parts		= $this->getFilePartsFromUriPath( $uriPath );
 		$indices	= array(
 			'filePath'	=> $parts->filePath,
@@ -101,7 +109,8 @@ class Logic_FileBucket extends CMF_Hydrogen_Logic{
 		return $this->model->getByIndices( $indices );
 	}
 
-	protected function getFilePartsFromUriPath( $uriPath ){
+	protected function getFilePartsFromUriPath( $uriPath )
+	{
 		$parts		= explode( "/", $uriPath );
 		$fileName	= array_pop( $parts );
 		$filePath	= join( "/", $parts );
@@ -111,7 +120,8 @@ class Logic_FileBucket extends CMF_Hydrogen_Logic{
 		);
 	}
 
-	protected function getNewHash(){
+	protected function getNewHash()
+	{
 		do{
 			$hash		= md5( microtime( TRUE ) );
 			if( $this->hashFunction === self::HASH_UUID )
@@ -121,11 +131,13 @@ class Logic_FileBucket extends CMF_Hydrogen_Logic{
 		return $hash;
 	}
 
-	public function getPath(){
+	public function getPath()
+	{
 		return $this->filePath;
 	}
 
-	public function limitImageSize( $fileId, $maxWidth, $maxHeight, $quality = NULL ){
+	public function limitImageSize( $fileId, $maxWidth, $maxHeight, $quality = NULL )
+	{
 		$file		= $this->get( $fileId );
 		if( !in_array( $file->mimeType, array( 'image/png', 'image/gif', 'image/jpeg' ) ) )
 			throw new Exception( 'File is not an image' );
@@ -141,7 +153,8 @@ class Logic_FileBucket extends CMF_Hydrogen_Logic{
 		return TRUE;
 	}
 
-	public function noteView( $fileId ){
+	public function noteView( $fileId )
+	{
 		if( $file = $this->get( $fileId ) )
 			$this->model->edit( $fileId, array(
 				'viewedAt'	=> time(),
@@ -149,7 +162,8 @@ class Logic_FileBucket extends CMF_Hydrogen_Logic{
 			) );
 	}
 
-	public function replace( $fileId, $sourceFilePath, $mimeType = NULL ){
+	public function replace( $fileId, $sourceFilePath, $mimeType = NULL )
+	{
 		$file	= $this->get( $fileId );
 		if( !$file )
 			throw new DomainException( 'Given source file is not existing' );
@@ -163,11 +177,13 @@ class Logic_FileBucket extends CMF_Hydrogen_Logic{
 		return $this->add( $sourceFilePath, $uriPath, $mimeType, $file->moduleId );
 	}
 
-	public function rename( $fileId, $name ){
+	public function rename( $fileId, $name )
+	{
 		$this->model->edit( $fileId, array( 'fileName' => $name ) );
 	}
 
-	public function remove( $fileId ){
+	public function remove( $fileId )
+	{
 		$file	= $this->get( $fileId );
 		if( !$file )
 			throw new DomainException( 'Given source file is not existing' );
@@ -175,10 +191,10 @@ class Logic_FileBucket extends CMF_Hydrogen_Logic{
 		return $this->model->remove( $fileId );
 	}
 
-	public function setHashFunction( $function ){
+	public function setHashFunction( $function )
+	{
 		if( !is_int( $function ) )
 			throw new InvalidArgumentException( 'Hash function must be an integer (see constants of Logic_File)' );
 		$this->hashFunction	= $function;
 	}
 }
-?>

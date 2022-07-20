@@ -1,5 +1,8 @@
 <?php
-class Model_Manual_Category extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Manual_Category extends Model
 {
 	const FORMAT_TEXT		= 0;
 	const FORMAT_HTML		= 1;

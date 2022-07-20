@@ -12,7 +12,6 @@ use CeusMedia\HydrogenFramework\Model;
  *	Data Model of Author.
  *	@category		cmProjects
  *	@package		LUV.Model
- *	@uses			Author
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 class Model_Catalog_Bookstore_Article_Author extends Model

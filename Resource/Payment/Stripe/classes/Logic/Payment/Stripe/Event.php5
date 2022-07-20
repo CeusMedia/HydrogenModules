@@ -1,5 +1,8 @@
 <?php
-abstract class Logic_Payment_Stripe_Event extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+abstract class Logic_Payment_Stripe_Event extends Logic
 {
 	protected $entity;
 	protected $event;

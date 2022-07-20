@@ -1,5 +1,8 @@
 <?php
-class Logic_Shop_Shipping extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Shop_Shipping extends Logic
 {
 	/**	@var		Model_Shop_Shipping_Country			$modelCountry */
 	protected $modelCountry;

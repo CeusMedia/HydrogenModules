@@ -1,5 +1,8 @@
 <?php
-class Logic_Note extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Note extends Logic
 {
 	protected $modelNote;
 	protected $modelNoteLink;
@@ -15,16 +18,6 @@ class Logic_Note extends CMF_Hydrogen_Logic
 
 	protected $userNoteIds	= [];
 	protected $userProjects	= [];
-
-	protected function __onInit()
-	{
-		$this->modelNote		= new Model_Note( $this->env );
-		$this->modelNoteLink	= new Model_Note_Link( $this->env );
-		$this->modelNoteTag		= new Model_Note_Tag( $this->env );
-		$this->modelLink		= new Model_Link( $this->env );
-		$this->modelTag			= new Model_Tag( $this->env );
-		$this->prefix			= $this->env->getDatabase()->getPrefix();
-	}
 
 	public function addLinkToNote( $linkId, $noteId, $title = NULL, $strict = TRUE )
 	{
@@ -527,6 +520,16 @@ ORDER BY
 					$this->userNoteIds[]	= $userNote->noteId;
 			}
 		}
+	}
+
+	protected function __onInit()
+	{
+		$this->modelNote		= new Model_Note( $this->env );
+		$this->modelNoteLink	= new Model_Note_Link( $this->env );
+		$this->modelNoteTag		= new Model_Note_Tag( $this->env );
+		$this->modelLink		= new Model_Link( $this->env );
+		$this->modelTag			= new Model_Tag( $this->env );
+		$this->prefix			= $this->env->getDatabase()->getPrefix();
 	}
 
 	protected function sharpenConditions( $conditions )

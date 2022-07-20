@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Logic;
 
-class Logic_Database_Lock extends CMF_Hydrogen_Logic
+class Logic_Database_Lock extends Logic
 {
 	protected $model;
 
