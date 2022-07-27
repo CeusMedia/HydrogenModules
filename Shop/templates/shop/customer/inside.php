@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\Bootstrap\Button\Link as LinkButton;
+use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
+
 $w			= (object) $words['customer'];
 $wDelivery	= (object) $words['customer-delivery'];
 $wBilling	= (object) $words['customer-billing'];
@@ -62,7 +66,7 @@ return '<div class="row-fluid">
 <br/>
 <form action="shop/customer" method="post">
 	<div class="buttonbar well well-small">
-		'.new \CeusMedia\Bootstrap\LinkButton( './shop/cart', $w->buttonToCart, 'not-pull-right', 'fa fa-fw fa-arrow-left' ).'
-		'.new \CeusMedia\Bootstrap\SubmitButton( "save", $w->buttonToConditions, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' ).'
+		'.new LinkButton( './shop/cart', $w->buttonToCart, 'not-pull-right', 'fa fa-fw fa-arrow-left' ).'
+		'.new SubmitButton( "save", $w->buttonToConditions, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' ).'
 	</div>
 </form>';

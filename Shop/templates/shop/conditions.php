@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\Bootstrap\Button\Link as LinkButton;
+use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
+
 $w			= (object) $words['conditions'];
 extract( $view->populateTexts( array( 'conditions' ), 'html/shop/' ) );
 
@@ -21,8 +25,8 @@ $tabContent	= '
 		<div class="clearfloat"></div>
 	</div>
 	<div class="buttonbar well well-small">
-		'.new \CeusMedia\Bootstrap\LinkButton( './shop/customer', $w->buttonToCustomer, 'not-pull-right', 'fa fa-fw fa-arrow-left' ).'
-		'.new \CeusMedia\Bootstrap\SubmitButton( "saveConditions", $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' ).'
+		'.new LinkButton( './shop/customer', $w->buttonToCustomer, 'not-pull-right', 'fa fa-fw fa-arrow-left' ).'
+		'.new SubmitButton( "saveConditions", $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' ).'
 	</div>
 </form>';
 
