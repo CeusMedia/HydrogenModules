@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Shop_Payment_Bank extends Hook
 {
