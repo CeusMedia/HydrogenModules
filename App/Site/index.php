@@ -2,7 +2,7 @@
 ( include_once 'vendor/autoload.php' ) or die( 'Install packages using composer, first!' );
 
 use CeusMedia\Common\UI\HTML\Exception\Page as ExceptionPage;
-use CeusMedia\HydrogenFramework\Application\Web\Site as WebEnvironment;
+use CeusMedia\HydrogenFramework\Application\Web\Site as WebSiteApplication;
 use CeusMedia\HydrogenFramework\Environment\Router\Recursive as RecursiveRouter;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
@@ -29,7 +29,7 @@ if( isset( $defaultTimezone ) )								//  an alternative time zone is defined
 	date_default_timezone_set( $defaultTimezone );			//  set alternative time zone
 
 try{
-	require_once "vendor/ceus-media/common/compat.php";		//  load compatibility layer
+//	require_once "vendor/ceus-media/common/compat.php";		//  load compatibility layer
 	Loader::registerNew( 'php5', NULL, $pathClasses );		//  register autoloader for project classes
 	$app	= new WebSiteApplication();						//  create default web site application instance
 	$app->run();											//  and run it
