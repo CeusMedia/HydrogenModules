@@ -7,6 +7,10 @@
  *	@copyright		2011 Ceus Media
  */
 
+use CeusMedia\Common\FS\File\Editor as FileEditor;
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\Folder\Lister as FolderLister;
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -32,7 +36,7 @@ class Controller_Manage_Content_Locale extends Controller
 		if( !( $this->language && $this->file ) )
 			return;
 		$content	= $this->request->get( 'content' );
-		$editor		= new File_Editor( $this->folderPathFull.$this->file );
+		$editor		= new FileEditor( $this->folderPathFull.$this->file );
 		$editor->writeString( $content );
 		$this->handleJsonResponse( 'success', TRUE );
 	}
@@ -51,7 +55,7 @@ class Controller_Manage_Content_Locale extends Controller
 				try{
 					$content	= $this->request->get( 'content' );
 #					$content	= $this->convertLeadingSpacesToTabs( $content );
-					$editor		= new FS_File_Editor( $pathName );
+					$editor		= new FileEditor( $pathName );
 					$editor->writeString( $content );
 					$this->env->getMessenger()->noteSuccess( sprintf( $words->successSaved, $this->file ) );
 				}
@@ -73,7 +77,7 @@ class Controller_Manage_Content_Locale extends Controller
 				$this->messenger->noteNotice( $words->noticeNotWritable );
 			}
 			$this->addData( 'filePath', $filePath );
-			$this->addData( 'content', File_Reader::load( $filePath ) );
+			$this->addData( 'content', FileReader::load( $filePath ) );
 			$this->addData( 'readonly', !is_writeable( $filePath ) );
 
 			$editors	= [];
@@ -218,7 +222,7 @@ class Controller_Manage_Content_Locale extends Controller
 
 	protected function getLanguages()
 	{
-		$index	= new FS_Folder_Lister( $this->basePath );
+		$index	= new FolderLister( $this->basePath );
 		foreach( $index->getList() as $folder )
 			$languages[]	= $folder->getFilename();
 		natcasesort( $languages );
@@ -233,7 +237,7 @@ class Controller_Manage_Content_Locale extends Controller
 				continue;
 			$path	= $this->basePath.$this->language.'/';
 			if( file_exists( $path.$folderPath ) ){
-				$index	= FS_Folder_RecursiveLister::getFileList( $path.$folderPath );
+				$index	= RecursiveFolderLister::getFileList( $path.$folderPath );
 				foreach( $index as $item ){
 					if( substr( $item->getFilename(), -1 ) !== "~" ){
 						$pathName	= substr( $item->getPathname(), strlen( $path ) );
@@ -243,7 +247,7 @@ class Controller_Manage_Content_Locale extends Controller
 							if( substr( $pathName, 0, 5 ) === 'mail/' )
 								continue;
 						}
-						$content	= FS_File_Reader::load( $item->getPathname() );
+						$content	= FileReader::load( $item->getPathname() );
 						$content	= preg_replace( "/<!--(.|\s)*?-->/", "", $content );			//  @todo better: ungreedy
 						$pathName	= substr( $pathName, strlen( $folderPath ) );
 						$root		= preg_match( '/\//', $pathName ) ? 1 : 0;
