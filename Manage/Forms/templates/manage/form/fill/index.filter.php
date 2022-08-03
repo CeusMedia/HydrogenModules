@@ -4,7 +4,8 @@ $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-searc
 
 $optForm		= array( '' => '- alle -' );
 foreach( $forms as $item )
-	$optForm[$item->formId]	= $item->title;
+	if( $item->status > 0 )
+		$optForm[$item->formId]	= $item->title;
 $optForm		= UI_HTML_Elements::Options( $optForm, $filterFormId );
 
 $optStatus		= array(
@@ -45,21 +46,23 @@ return UI_HTML_Tag::create( 'div', array(
 			), array( 'class' => 'row-fluid' ) ),
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Formular', array( 'for' => 'input_formId' ) ),
-					UI_HTML_Tag::create( 'select', $optForm, array(
-						'name'		=> 'formId',
-						'id'		=> 'input_formId',
+					UI_HTML_Tag::create( 'label', 'Zustand', array( 'for' => 'input_status' ) ),
+					UI_HTML_Tag::create( 'select', $optStatus, array(
+						'name'		=> 'status',
+						'id'		=> 'input_status',
 						'class'		=> 'span12',
 					) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
 			UI_HTML_Tag::create( 'div', array(
 				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Zustand', array( 'for' => 'input_status' ) ),
-					UI_HTML_Tag::create( 'select', $optStatus, array(
-						'name'		=> 'status',
-						'id'		=> 'input_status',
+					UI_HTML_Tag::create( 'label', 'Formulare', array( 'for' => 'input_formId' ) ),
+					UI_HTML_Tag::create( 'select', $optForm, array(
+						'name'		=> 'formId[]',
+						'id'		=> 'input_formId',
 						'class'		=> 'span12',
+						'multiple'	=> 'multiple',
+						'size'		=> 12,
 					) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),

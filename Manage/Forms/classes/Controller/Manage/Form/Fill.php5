@@ -53,9 +53,14 @@ class Controller_Manage_Form_Fill extends Controller
 		exit;
 	}
 
-	public function export( $format, $type, $id )
+	public function export( $format, $type, $ids, $status = NULL )
 	{
-		$csv		= $this->logicFill->renderToCsv( $type, $id );
+		$ids		= explode( ',', $ids );
+		if( $status !== NULL )
+			$csv		= $this->logicFill->renderToCsv( $type, $ids, (int) $status );
+		else
+			$csv		= $this->logicFill->renderToCsv( $type, $ids );
+
 		$fileName	= 'Export_'.date( 'Y-m-d_H:i:s' ).'.csv';
 		Net_HTTP_Download::sendString( $csv, $fileName, TRUE );
 //		xmp( $csv );
@@ -96,8 +101,9 @@ class Controller_Manage_Form_Fill extends Controller
 			$conditions['fillId']	= $filterFillId;
 		if( strlen( trim( $filterEmail ) ) )
 			$conditions['email']	= '%'.$filterEmail.'%';
-		if( strlen( trim( $filterFormId ) ) )
-			$conditions['formId']	= $filterFormId;
+//		if( strlen( trim( $filterFormId ) ) )
+		if( count( array_filter( $filterFormId ) ) !== 0 )
+			$conditions['formId']	= array_filter( $filterFormId );
 		if( strlen( trim( $filterStatus ) ) )
 			$conditions['status']	= $filterStatus;
 
@@ -110,6 +116,15 @@ class Controller_Manage_Form_Fill extends Controller
 		$limits		= array( $page * $limit, $limit );
 		$fills		= $this->modelFill->getAll( $conditions, $orders, $limits );
 		$forms		= $this->modelForm->getAll( array(), array( 'title' => 'ASC' ) );
+
+		foreach( $fills as $fill ){
+			$fill->transfers	= $this->modelFillTransfer->getAllByIndex( 'fillId', $fill->fillId );
+		}
+
+		$transferTargetMap  = [];
+		foreach( $this->modelTransferTarget->getAll() as $target )
+			$transferTargetMap[$target->formTransferTargetId]   = $target;
+		$this->addData( 'transferTargets', $transferTargetMap );
 
 		$this->addData( 'fills', $fills );
 		$this->addData( 'forms', $forms );

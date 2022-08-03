@@ -3,6 +3,7 @@
 use CeusMedia\Mail\Mailbox;
 use CeusMedia\Mail\Mailbox\Mail;
 use CeusMedia\Mail\Mailbox\Search;
+use CeusMedia\Mail\Message\Header\Encoding;
 
 class Job_FormImport extends Job_Abstract
 {
@@ -18,6 +19,7 @@ class Job_FormImport extends Job_Abstract
 
 	public function import( $arguments = [] )
 	{
+//		Encoding::$decodeStrategy = Encoding::DECODE_STRATEGY_ICONV_TOLERANT;
 		$verbose		= in_array( 'verbose', $arguments ) || $this->parameters->get( 'verbose' );
 		$dryMode		= in_array( 'dry', $arguments ) || $this->parameters->get( 'dry' );
 		$errors			= [];
@@ -71,11 +73,12 @@ class Job_FormImport extends Job_Abstract
 			$connector			= $this->modelConnector->get( $connection->importConnectorId );
 			$connectionInstance	= $this->logicImport->getConnectionInstanceFromId( $importRule->importConnectionId );
 			$connectionInstance->setOptions( $this->jsonParser->parse( $importRule->options, FALSE ) );
+
 			$searchCriteria		= explode( PHP_EOL, $importRule->searchCriteria );
 			$clock				= new Alg_Time_Clock();
 			$results			= $connectionInstance->find( $searchCriteria, [], [0, 10] );
 			echo "The current read timeout is " . imap_timeout(IMAP_READTIMEOUT) . "\n";
-			$connectionInstance->disconnect();
+//			$connectionInstance->disconnect();
 			break;
 		}
 	}

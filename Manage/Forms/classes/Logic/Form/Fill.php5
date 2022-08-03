@@ -137,24 +137,28 @@ class Logic_Form_Fill extends Logic
 	 *	Returns one fill or many fills by form ID as CSV.
 	 *	@access		public
 	 *	@param		string		$type		Type of ID (form|fill)
-	 *	@param		mixed		$id			ID of fill or form of fills
+	 *	@param		array		$ids		ID list of fill or form of fills
+	 *	@param		int|NULL	$status		...
 	 *	@return		string
 	 */
-	public function renderToCsv( string $type, $id ): string
+	public function renderToCsv( string $type, array $ids, int $status = NULL ): string
 	{
 		$types	= ['fill', 'form'];
 		if( !in_array( $type, $types, TRUE ) )
 			throw new DomainException( 'Invalid type given' );
 
 		$data	= [];
-		$keys	= ['dateCreated', 'dateConfirmed'];
-		$fills	= $this->modelFill->getAllByIndex( $type.'Id', $id );
+		$keys	= ['dateCreated', 'dateConfirmed', 'formId'];
+		$indices	= [$type.'Id' => $ids];
+		if( !is_null( $status ) )
+			$indices['status']	= $status;
+		$fills	= $this->modelFill->getAllByIndices( $indices );
 		foreach( $fills as $fill ){
-//print_m( $fill );
 			$fill->data	= json_decode( $fill->data );
 			$row		= [
 				'dateCreated'	=> date( 'Y-m-d H:i:s', $fill->createdAt ),
 				'dateConfirmed'	=> $fill->modifiedAt ? date( 'Y-m-d H:i:s', $fill->modifiedAt ) : '',
+				'formId'		=> $fill->formId,
 			];
 			foreach( $fill->data as $item ){
 				$row[$item->name]	= $item->value;

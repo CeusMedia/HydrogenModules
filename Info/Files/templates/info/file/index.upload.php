@@ -2,27 +2,35 @@
 if( !in_array( 'upload', $rights ) )
 	return '';
 
+$w			= (object) $words['upload'];
 $iconFile	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder' ) );
 $iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
 
 $helper		= new View_Helper_Input_File( $env );
 $helper->setName( 'upload' );
-//$helper->setLabel( $words['upload']['labelFile'] );
+//$helper->setLabel( $w->labelFile );
 $helper->setLabel( $iconFile );
 $helper->setRequired( TRUE );
 
+$maxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize() );
+
 return '
 <div class="content-panel">
-	<h4>'.$words['upload']['heading'].'</h4>
+	<h4>'.$w->heading.'</h4>
 	<div class="content-panel-inner">
 		<form action="./info/file/upload/'.$folderId.'" method="post" enctype="multipart/form-data">
+			<div class="row-fluid">
+				<div class="span12">
+					<small><em class="muted">'.sprintf( $w->hintMaxSize, $maxSize ).'</em></small>
+				</div>
+			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					'.$helper->render().'
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-small btn-success">'.$iconSave.' '.$words['upload']['buttonSave'].'</button>
+				<button type="submit" name="save" class="btn btn-small btn-success">'.$iconSave.' '.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>

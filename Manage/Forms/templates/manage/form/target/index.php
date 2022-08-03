@@ -19,10 +19,11 @@ if( count( $targets ) ){
 			UI_HTML_Tag::create( 'td', $statuses[$target->status] ),
 //			UI_HTML_Tag::create( 'td', $target->className ),
 			UI_HTML_Tag::create( 'td', $target->transfers ),
+			UI_HTML_Tag::create( 'td', $target->fails ),
 			UI_HTML_Tag::create( 'td', $target->usedAt ? $helper->setTimestamp( $target->usedAt )->render() : '-' ),
 		] );
 	}
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( ['Titel', 'Zustand'/*, 'Implementierung'*/, 'Transfers', 'Verwendung'] ) );
+	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( ['Titel', 'Zustand'/*, 'Implementierung'*/, 'Transfers', 'Fails', 'Verwendung'] ) );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
 	$table	= UI_HTML_Tag::create( 'table', [$thead, $tbody], array( 'class' => 'table table-striped table-fixed not-table-bordered' ) );
 }

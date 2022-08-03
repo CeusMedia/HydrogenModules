@@ -36,6 +36,7 @@ class Hook_UI_Font_FontAwesome extends Hook
 					$env->getPage()->css->common->addUrl( $url );
 				}
 			}
+			$env->getPage()->addBodyClass( 'uses-FontAwesome' );
 			return;
 		}
 

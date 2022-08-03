@@ -7,6 +7,7 @@ $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remo
 $iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
 $iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 $iconDownload	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+$iconTransfer   = UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
 
 $statuses	= array(
 	Model_Form_Fill::STATUS_NEW			=> UI_HTML_Tag::create( 'label', 'unbestätigt', array( 'class' => 'label' ) ),
@@ -39,11 +40,32 @@ foreach( $fills as $fill ){
 	$title		= UI_HTML_Tag::create( 'a', $name.$email, array( 'href' => $linkView ) );
 	$form		= $modelForm->get( $fill->formId );
 	$form		= UI_HTML_Tag::create( 'a', $form->title, array( 'href' => $linkForm ) );
+
+	$transfers	= '';
+	if( count( $fill->transfers ) ){
+		$list	= [];
+		$success	= TRUE;
+		foreach( $fill->transfers as $transfer ){
+			if( $success && in_array( (int) $transfer->status, [
+				Model_Form_Fill_Transfer::STATUS_ERROR,
+				Model_Form_Fill_Transfer::STATUS_EXCEPTION,
+			], TRUE ) )
+				$success	= FALSE;
+			$list[]	= $transferTargets[$transfer->formTransferTargetId]->title;
+		}
+		$list		= 'Transfers:'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
+		$label		= count( $fill->transfers );
+		$transfers	= UI_HTML_Tag::create( 'span', $iconTransfer.'&nbsp;'.$label, [
+			'class'	=> 'label '.( $success ? 'label-success' : 'label-important' ),
+			'title' => $list
+		] );
+	}
+
 	$rows[]		= UI_HTML_Tag::create( 'tr', array(
 		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $fill->fillId ) ),
 		UI_HTML_Tag::create( 'td', $title ),
 		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $form ) ),
-		UI_HTML_Tag::create( 'td', $statuses[(int) $fill->status] ),
+		UI_HTML_Tag::create( 'td', $statuses[(int) $fill->status].'&nbsp;'.$transfers ),
 		UI_HTML_Tag::create( 'td', $date ),
 		UI_HTML_Tag::create( 'td', $buttons ),
 	) );
@@ -53,16 +75,14 @@ $thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID
 $tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 $table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped not-table-condensed' ) );
 
-
-
-$buttonExport	= UI_HTML_Tag::create( 'a', $iconDownload.'&nbsp;exportieren', array(
-	'href'		=> './manage/form/fill/export/csv/form/'.$filterFormId,
+$buttonExport	= UI_HTML_Tag::create( 'button', $iconDownload.'&nbsp;exportieren', array(
+	'type'		=> 'button',
+	'disabled'	=> 'disabled',
 	'class'		=> 'btn',
 ) );
-if( !$filterFormId )
-	$buttonExport	= UI_HTML_Tag::create( 'button', $iconDownload.'&nbsp;exportieren', array(
-		'type'		=> 'button',
-		'disabled'	=> 'disabled',
+if( !empty( $filterFormId ) && 0 !== count( array_filter( $filterFormId ) ) )
+	$buttonExport	= UI_HTML_Tag::create( 'a', $iconDownload.'&nbsp;exportieren', array(
+		'href'		=> './manage/form/fill/export/csv/form/'.join( ',', $filterFormId ).'/'.$filterStatus,
 		'class'		=> 'btn',
 	) );
 
