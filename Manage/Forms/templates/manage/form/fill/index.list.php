@@ -80,9 +80,9 @@ $buttonExport	= UI_HTML_Tag::create( 'button', $iconDownload.'&nbsp;exportieren'
 	'disabled'	=> 'disabled',
 	'class'		=> 'btn',
 ) );
-if( !empty( $filterFormId ) )
+if( !empty( $filterFormId ) && 0 !== count( array_filter( $filterFormId ) ) )
 	$buttonExport	= UI_HTML_Tag::create( 'a', $iconDownload.'&nbsp;exportieren', array(
-		'href'		=> './manage/form/fill/export/csv/form/'.join( ',', $filterFormId ),
+		'href'		=> './manage/form/fill/export/csv/form/'.join( ',', $filterFormId ).'/'.$filterStatus,
 		'class'		=> 'btn',
 	) );
 

@@ -50,10 +50,14 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 		exit;
 	}
 
-	public function export( $format, $type, $ids )
+	public function export( $format, $type, $ids, $status = NULL )
 	{
 		$ids		= explode( ',', $ids );
-		$csv		= $this->logicFill->renderToCsv( $type, $ids );
+		if( $status !== NULL )
+			$csv		= $this->logicFill->renderToCsv( $type, $ids, (int) $status );
+		else
+			$csv		= $this->logicFill->renderToCsv( $type, $ids );
+
 		$fileName	= 'Export_'.date( 'Y-m-d_H:i:s' ).'.csv';
 		Net_HTTP_Download::sendString( $csv, $fileName, TRUE );
 //		xmp( $csv );
@@ -95,8 +99,8 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 		if( strlen( trim( $filterEmail ) ) )
 			$conditions['email']	= '%'.$filterEmail.'%';
 //		if( strlen( trim( $filterFormId ) ) )
-		if( count( $filterFormId ) !== 0 )
-			$conditions['formId']	= $filterFormId;
+		if( count( array_filter( $filterFormId ) ) !== 0 )
+			$conditions['formId']	= array_filter( $filterFormId );
 		if( strlen( trim( $filterStatus ) ) )
 			$conditions['status']	= $filterStatus;
 
