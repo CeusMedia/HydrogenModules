@@ -35,5 +35,7 @@ try{
 	$app->run();											//  and run it
 }
 catch( Exception $e ){										//  an uncatched exception happend
-	ExceptionPage::display( $e );							//  display report page with call stack
+    class_exists( SentrySdk::class ) && Sentry\captureException( $e );
+    http_response_code(500);
+    ( include_once 'templates/error.php' ) or ExceptionPage::display( $e );
 }
