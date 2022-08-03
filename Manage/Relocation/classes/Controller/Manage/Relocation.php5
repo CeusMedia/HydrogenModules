@@ -87,15 +87,15 @@ class Controller_Manage_Relocation extends CMF_Hydrogen_Controller
 	{
 		$conditions		= [];
 		$filterId		= $this->session->get( $this->filterSessionPrefix.'id' );
-		$filterStates	= $this->session->get( $this->filterSessionPrefix.'status' );
+		$filterStatus	= $this->session->get( $this->filterSessionPrefix.'status' );
 		$filterTitle	= $this->session->get( $this->filterSessionPrefix.'title' );
 		$filterOrderCol	= $this->session->get( $this->filterSessionPrefix.'orderColumn' );
 		$filterOrderDir	= $this->session->get( $this->filterSessionPrefix.'orderDirection' );
 		if( $filterId )
 			$conditions['relocationId']	= $filterId;
 		else{
-			if( $filterStates )
-				$conditions['status']	= $filterStates;
+			if( $filterStatus )
+				$conditions['status']	= $filterStatus;
 			if( $filterTitle )
 				$conditions['title']	= '%'.$filterTitle.'%';
 		}
