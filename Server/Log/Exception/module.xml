@@ -41,7 +41,7 @@ Please think about using the hook instead.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.5.7</version>
+	<version>0.5.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
@@ -57,6 +57,7 @@ Please think about using the hook instead.
 	<log version="0.5.5">Support frontend environment.</log>
 	<log version="0.5.6">Added English Localization files.</log>
 	<log version="0.5.7">Replace job file by module configuration.</log>
+	<log version="0.5.8">Improve import.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

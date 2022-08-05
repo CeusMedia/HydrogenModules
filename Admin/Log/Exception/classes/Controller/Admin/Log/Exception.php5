@@ -21,8 +21,18 @@ class Controller_Admin_Log_Exception extends Controller
 {
 	/**	@var		Environment		$env		Environment instance */
 	protected $env;
+
+	protected $logic;
+
 	protected $messenger;
+
+	protected $model;
+
 	protected $moduleConfig;
+
+	protected $request;
+
+	protected $filterPrefix		= 'filter_admin_log_exception_';
 
 	public static function ___onLogException( Environment $env, $context, $module, $data = [] )
 	{
@@ -34,38 +44,107 @@ class Controller_Admin_Log_Exception extends Controller
 		self::handleException( $env, $exception );
 	}
 
-	public function index( $page = 0, $limit = 20 )
+	public function bulk()
+	{
+		$action	= $this->request->get( 'type' );
+		$from	= $this->request->get( 'from' );
+		$ids	= array_filter( explode( ',', $this->request->get( 'ids', '' ) ) );
+
+		switch( $action ){
+			case 'remove':
+				if( count( $ids ) )
+					$this->model->removeByIndex( 'exceptionId', $ids );
+				break;
+			default:
+				break;
+		}
+		$this->restart( $from, !$from );
+	}
+
+	public function filter( $reset = NULL )
+	{
+        if( $reset ){
+            foreach( $this->session->getAll( $this->filterPrefix ) as $key => $value )
+                $this->session->remove( $this->filterPrefix.$key );
+        }
+        else{
+            $this->session->set( $this->filterPrefix.'message', $this->request->get( 'message' ) );
+            $this->session->set( $this->filterPrefix.'type', $this->request->get( 'type' ) );
+			$this->session->set( $this->filterPrefix.'dateStart', $this->request->get( 'dateStart' ) );
+			$this->session->set( $this->filterPrefix.'dateEnd', $this->request->get( 'dateEnd' ) );
+			$this->session->set( $this->filterPrefix.'order', $this->request->get( 'order' ) );
+			$this->session->set( $this->filterPrefix.'direction', $this->request->get( 'direction' ) );
+		}
+		$this->session->remove( $this->filterPrefix.'page' );
+		$this->restart( NULL, TRUE );
+	}
+
+	public function index( $page = 0, $limit = 0 )
 	{
 		$count		= $this->logic->importFromLogFile();
 		if( $count )
 			$this->messenger->noteNotice( 'Imported %d logged exceptions.', $count );
 
+		$limit	= $limit ?: $this->session->get( $this->filterPrefix.'limit', 10 );
+
+		$filterMessage		= $this->session->get( $this->filterPrefix.'message' );
+		$filterType			= $this->session->get( $this->filterPrefix.'type' );
+		$filterDateStart	= $this->session->get( $this->filterPrefix.'dateStart' );
+		$filterDateEnd		= $this->session->get( $this->filterPrefix.'dateEnd' );
+
+		$conditions		= [];
+		if( strlen( trim( $filterMessage ) ) )
+			$conditions['message']	= '%'.$filterMessage.'%';
+		if( strlen( trim( $filterType ) ) )
+			$conditions['type']	= $filterType;
+		if( $filterDateStart && $filterDateEnd )
+			$conditions['createdAt']	= '>< '.strtotime( $filterDateStart ).' & '.( strtotime( $filterDateEnd ) + 24 * 3600 - 1);
+		else if( $filterDateStart )
+			$conditions['createdAt']	= '>= '.strtotime( $filterDateStart );
+		else if( $filterDateEnd )
+			$conditions['createdAt']	= '<= '.( strtotime( $filterDateEnd ) + 24 * 36000 - 1);
+
+		if( strlen( trim( $filterType ) ) )
+			$conditions['type']	= $filterType;
+		if( strlen( trim( $filterType ) ) )
+			$conditions['type']	= $filterType;
+
 		$page	= preg_match( "/^[0-9]+$/", $page ) ? (int) $page : 0;
 		$limit	= preg_match( "/^[0-9]+$/", $limit ) ? (int) $limit : 20;
-		$count	= $this->count();
-		if( $page > 0 && $page * $limit >= $count )
-			$page = floor( $count / $limit );
+		$count	= $this->model->count( $conditions );
+		$pages	= ceil( $count / $limit );
+		if( $page > 0 && $page + 1 >= $pages )
+			$page = $pages - 1;
 		$offset	= $page * $limit;
-		$this->env->getSession()->set( 'filter_admin_log_exception_page', $page );
-		$this->env->getSession()->set( 'filter_admin_log_exception_limit', $limit );
+		$this->session->set( $this->filterPrefix.'page', $page );
+		$this->session->set( $this->filterPrefix.'limit', $limit );
 		$limits	= array( $offset, $limit );
-		$lines	= $this->model->getAll( array(), array( 'createdAt' => 'DESC' ), $limits );
+		$lines	= $this->model->getAll( $conditions, ['createdAt' => 'DESC'], $limits );
 		$this->addData( 'exceptions', $lines );
 		$this->addData( 'total', $count );
 		$this->addData( 'page', $page );
 		$this->addData( 'limit', $limit );
+		$this->addData( 'filterMessage', $filterMessage );
+		$this->addData( 'filterType', $filterType );
+		$this->addData( 'filterDateStart', $filterDateStart );
+		$this->addData( 'filterDateEnd', $filterDateEnd );
+
+		$types	= $this->model->getDistinct( 'type', [], ['type' => 'ASC'] );
+		$this->addData( 'exceptionTypes', $types );
+
+	}
+
+	public function remove( $id )
+	{
+		$this->model->remove( $id );
+		$page	= $this->session->get( $this->filterPrefix.'page' );
+		$this->restart( $page ? $page : NULL, TRUE );
 	}
 
 	public function setInstance( $instanceKey )
 	{
-		$this->env->getSession()->set( 'filter_admin_log_exception_instance', $instanceKey );
+		$this->session->set( $this->filterPrefix.'instance', $instanceKey );
 		$this->restart( NULL, TRUE );
-	}
-
-	public function remove( $id ){
-		$this->model->remove( $id );
-		$page	= $this->env->getSession()->get( 'filter_admin_log_exception_page' );
-		$this->restart( $page ? $page : NULL, TRUE );
 	}
 
 	public function view( $id )
@@ -76,11 +155,13 @@ class Controller_Admin_Log_Exception extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'exception', $exception );
-		$this->addData( 'page', $this->env->getSession()->get( 'filter_admin_log_exception_page' ) );
+		$this->addData( 'page', $this->session->get( $this->filterPrefix.'page' ) );
 	}
 
 	protected function __onInit()
 	{
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin.', TRUE );
 		$this->logic			= $this->env->getLogic()->get( 'logException' );
@@ -91,7 +172,7 @@ class Controller_Admin_Log_Exception extends Controller
 		$fileName	= $this->env->getConfig()->get( 'module.server_log_exception.file.name' );
 
 /*
-		$instanceKey	= $this->env->getSession()->get( 'filter_admin_log_exception_instance' );
+		$instanceKey	= $this->session->get( $this->filterPrefix.'instance' );
 		$instanceKey 	= !in_array( $instanceKey, array( 'this', 'remote' ) ) ? 'this' : $instanceKey;
 
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
@@ -106,9 +187,5 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->addData( 'instances', $instances );
 //		$this->addData( 'currentInstance', $instanceKey );
 		$this->filePath	= $path.$fileName;
-	}
-
-	protected function count(){
-		return $this->model->count();
 	}
 }

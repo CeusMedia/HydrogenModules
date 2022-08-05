@@ -6,11 +6,14 @@ use CeusMedia\HydrogenFramework\Logic;
 class Logic_Log_Exception extends Logic
 {
 	protected $logFile;
+
 	protected $model;
+
 	protected $moduleConfig;
+
 	protected $pathLogs;
 
-	public function check( $id, $strict = TRUE )
+	public function check( $id, bool $strict = TRUE )
 	{
 		$exception	= $this->model->get( $id );
 		if( $exception )
@@ -20,7 +23,7 @@ class Logic_Log_Exception extends Logic
 		return NULL;
 	}
 
-	public function collectData( $exception )
+	public function collectData( Exception $exception )
 	{
 		try{
 			@serialize( $exception );
@@ -81,42 +84,35 @@ class Logic_Log_Exception extends Logic
 		return $content;
 	}
 
-	public function importFromLogFile()
+	public function importFromLogFile( int $limit = 200 ): int
 	{
 		$count		= 0;
-		$buffer		= '';
-		if( !file_exists( $this->logFile ) || !filesize( $this->logFile ) )
-			return $count;
-		$handle		= fopen( $this->logFile, 'r' );
-		while( $chunk = fread( $handle, 4096 ) ){
-			while( preg_match( '@\\n@', $chunk ) ){
-				$parts	= preg_split( '@\\n@', $chunk, 2 );
-				if( $buffer ){
-					$this->importLogFileItem( $buffer.$parts[0] );
-					$count++;
-					$buffer	= '';
-				}
-				else{
-					$this->importLogFileItem( $parts[0] );
+		if( file_exists( $this->logFile ) && filesize( $this->logFile ) === 0 ){
+			$handle		= fopen( $this->logFile, 'r' );
+			while( !feof( $handle ) && $count < $limit ){
+				$line	= fgets( $handle );
+				if( strlen( trim( $line ) ) ){
+					try{
+						$this->importLogFileItem( $line );
+					}
+					catch( Exception $e ){}
 					$count++;
 				}
-				$chunk		= $parts[1];
 			}
-			$buffer		.= $chunk;
+			if( $count !== 0 ){
+				// @link https://www.baeldung.com/linux/remove-first-line-text-file
+				$command	= 'tail -n +%1$d %2$s > %2$s.tmp && mv %2$s.tmp %2$s';
+				exec( sprintf( $command, $count + 1, $this->logFile ) );
+			}
 		}
-		if( $buffer ){
-			$this->importLogFileItem( $buffer );
-			$count++;
-		}
-		unlink( $this->logFile );
 		return $count;
 	}
 
-	public function importLogFileItem( $line )
+	public function importLogFileItem( string $line )
 	{
-		list($timestamp, $data)	= explode( ":", $line );
-		$data	= base64_decode( $data );
-		$object	= unserialize( $data );
+		list($timestamp, $dataEncoded)	= explode( ":", $line );
+		$data	= base64_decode( $dataEncoded );
+		$object	= @unserialize( $data );
 		if( !is_object( $object ) )
 			throw new InvalidArgumentException( "Line is not containing an exception data object" );
 
@@ -174,10 +170,9 @@ class Logic_Log_Exception extends Logic
 		return $this->model->add( $data, FALSE );
 	}
 
-	public function log( $exception )
+	public function log( Exception $exception )
 	{
-		$data	= array( 'exception' => $exception );
-		$this->captain->callHook( 'Env', 'logException', $this->env, $data );
+		$this->captain->callHook( 'Env', 'logException', $this->env, ['exception' => $exception] );
 	}
 
 	public function saveCollectedDataToLogFile( $data )
@@ -192,9 +187,12 @@ class Logic_Log_Exception extends Logic
 
 	public function sendCollectedDataAsMail( $data )
 	{
+		if( !$this->moduleConfig->get( 'mail.active' ) )
+			return FALSE;
+		die( 'Not implemented, yet.' );
 	}
 
-	public function sendExceptionAsMail( $exception )
+	public function sendExceptionAsMail( Exception $exception )
 	{
 		if( !$this->moduleConfig->get( 'mail.active' ) )
 			return FALSE;
