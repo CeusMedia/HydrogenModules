@@ -34,11 +34,12 @@ if( $exceptions ){
 
 		$list[]	= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $link, array( 'class' => 'autocut' ) ),
+			UI_HTML_Tag::create( 'td', $item->type ),
 			UI_HTML_Tag::create( 'td', $date.'&nbsp;<small class="muted">'.$time.'</small>' ),
 			UI_HTML_Tag::create( 'td', $buttons ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "150px", "100px" );
+	$colgroup	= UI_HTML_Elements::ColumnGroup( '', '180px', '150px', '100px' );
 	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
 	$list	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-striped table-condensed', 'style' => 'table-layout: fixed' ) );
 }

@@ -1,25 +1,16 @@
 <?php
-class Logic_Log_Exception extends CMF_Hydrogen_Logic{
-
+class Logic_Log_Exception extends CMF_Hydrogen_Logic
+{
 	protected $logFile;
+
 	protected $model;
+
 	protected $moduleConfig;
+
 	protected $pathLogs;
 
-	protected function __onInit(){
-		$this->model		= new Model_Log_Exception( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.server_log_exception.', TRUE );
-		$this->pathLogs		= $this->env->getConfig()->get( 'path.logs' );
-		if( $this->env->getModules()->has( 'Frontend' ) ){
-			$frontend			= Logic_Frontend::getInstance( $this->env );
-			$this->pathLogs		= $frontend->getPath( 'logs' );
-			$moduleConfig		= $frontend->getModuleConfigValues( 'Server_Log_Exception' );;
-			$this->moduleConfig	= new ADT_List_Dictionary( $moduleConfig );
-		}
-		$this->logFile		= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
-	}
-
-	public function check( $id, $strict = TRUE ){
+	public function check( $id, bool $strict = TRUE )
+	{
 		$exception	= $this->model->get( $id );
 		if( $exception )
 			return $exception;
@@ -28,7 +19,8 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 		return NULL;
 	}
 
-	public function collectData( $exception ){
+	public function collectData( Exception $exception )
+	{
 		try{
 			@serialize( $exception );
 			$content	= (object) array(
@@ -88,40 +80,35 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 		return $content;
 	}
 
-	public function importFromLogFile(){
+	public function importFromLogFile( int $limit = 200 ): int
+	{
 		$count		= 0;
-		$buffer		= '';
-		if( !file_exists( $this->logFile ) || !filesize( $this->logFile ) )
-			return $count;
-		$handle		= fopen( $this->logFile, 'r' );
-		while( $chunk = fread( $handle, 4096 ) ){
-			while( preg_match( '@\\n@', $chunk ) ){
-				$parts	= preg_split( '@\\n@', $chunk, 2 );
-				if( $buffer ){
-					$this->importLogFileItem( $buffer.$parts[0] );
-					$count++;
-					$buffer	= '';
-				}
-				else{
-					$this->importLogFileItem( $parts[0] );
+		if( file_exists( $this->logFile ) && filesize( $this->logFile ) === 0 ){
+			$handle		= fopen( $this->logFile, 'r' );
+			while( !feof( $handle ) && $count < $limit ){
+				$line	= fgets( $handle );
+				if( strlen( trim( $line ) ) ){
+					try{
+						$this->importLogFileItem( $line );
+					}
+					catch( Exception $e ){}
 					$count++;
 				}
-				$chunk		= $parts[1];
 			}
-			$buffer		.= $chunk;
+			if( $count !== 0 ){
+				// @link https://www.baeldung.com/linux/remove-first-line-text-file
+				$command	= 'tail -n +%1$d %2$s > %2$s.tmp && mv %2$s.tmp %2$s';
+				exec( sprintf( $command, $count + 1, $this->logFile ) );
+			}
 		}
-		if( $buffer ){
-			$this->importLogFileItem( $buffer );
-			$count++;
-		}
-		unlink( $this->logFile );
 		return $count;
 	}
 
-	public function importLogFileItem( $line ){
-		list($timestamp, $data)	= explode( ":", $line );
-		$data	= base64_decode( $data );
-		$object	= unserialize( $data );
+	public function importLogFileItem( string $line )
+	{
+		list($timestamp, $dataEncoded)	= explode( ":", $line );
+		$data	= base64_decode( $dataEncoded );
+		$object	= @unserialize( $data );
 		if( !is_object( $object ) )
 			throw new InvalidArgumentException( "Line is not containing an exception data object" );
 
@@ -179,12 +166,13 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 		return $this->model->add( $data, FALSE );
 	}
 
-	public function log( $exception ){
-		$data	= array( 'exception' => $exception );
-		$this->captain->callHook( 'Env', 'logException', $this->env, $data );
+	public function log( Exception $exception )
+	{
+		$this->captain->callHook( 'Env', 'logException', $this->env, ['exception' => $exception] );
 	}
 
-	public function saveCollectedDataToLogFile( $data ){
+	public function saveCollectedDataToLogFile( $data )
+	{
 		if( $this->moduleConfig->get( 'file.active' ) ){
 			if( trim( $this->moduleConfig->get( 'file.name' ) ) ){
 				$msg	= time().":".base64_encode( serialize( $data ) );
@@ -193,10 +181,15 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 		}
 	}
 
-	public function sendCollectedDataAsMail( $data ){
+	public function sendCollectedDataAsMail( $data )
+	{
+		if( !$this->moduleConfig->get( 'mail.active' ) )
+			return FALSE;
+		die( 'Not implemented, yet.' );
 	}
 
-	public function sendExceptionAsMail( $exception ){
+	public function sendExceptionAsMail( Exception $exception )
+	{
 		if( !$this->moduleConfig->get( 'mail.active' ) )
 			return FALSE;
 		$hasReceivers	= trim( $this->moduleConfig->get( 'mail.receivers' ) );
@@ -214,5 +207,19 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic{
 				$logicMail->handleMail( $mail, $receiver, $language );
 			}
 		}
+	}
+
+	protected function __onInit()
+	{
+		$this->model		= new Model_Log_Exception( $this->env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.server_log_exception.', TRUE );
+		$this->pathLogs		= $this->env->getConfig()->get( 'path.logs' );
+		if( $this->env->getModules()->has( 'Frontend' ) ){
+			$frontend			= Logic_Frontend::getInstance( $this->env );
+			$this->pathLogs		= $frontend->getPath( 'logs' );
+			$moduleConfig		= $frontend->getModuleConfigValues( 'Server_Log_Exception' );;
+			$this->moduleConfig	= new ADT_List_Dictionary( $moduleConfig );
+		}
+		$this->logFile		= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
 	}
 }
