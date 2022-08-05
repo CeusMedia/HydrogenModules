@@ -19,7 +19,7 @@ $buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
 $buttonRemove	= '';
 if( in_array( 'remove', $rights ) )
 	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
-		'href'		=> './info/file/removeFile/'.$file->downloadFileId,
+		'href'		=> './info/file/remove/'.$file->downloadFileId,
 		'class'		=> 'btn btn-danger',
 	) );
 
