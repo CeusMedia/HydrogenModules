@@ -3,6 +3,8 @@
 $iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open not-icon-white' ) );
 $iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
 
+$from		= 'admin/log/exception'.($page ? '/'.$page : '' );
+
 $selectInstance	= '';
 if( count( $instances ) > 1 ){
 	$optInstance	= [];
@@ -17,11 +19,15 @@ if( count( $instances ) > 1 ){
 
 }
 
-$list	= '<div class="muted"><em><small>No exceptions logged.</small></em></div>';
+$dropdown	= '';
+$list		= '<div class="muted"><em><small>No exceptions logged.</small></em></div>';
 if( $exceptions ){
 	$list	= [];
 	foreach( $exceptions as $nr => $exception ){
 //print_m($exception);die;
+		$exceptionEnv		= unserialize( $exception->env );
+		$exceptionRequest	= unserialize( $exception->request );
+
 		$link	= UI_HTML_Tag::create( 'a', $exception->message, array( 'href' => './admin/log/exception/view/'.$exception->exceptionId ) );
 		$date	= date( 'Y.m.d', $exception->createdAt );
 		$time	= date( 'H:i:s', $exception->createdAt );
@@ -37,32 +43,82 @@ if( $exceptions ){
 			) ),
 		), array( 'class' => 'btn-group' ) );
 
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link, array( 'class' => 'autocut' ) ),
+		$checkbox		= UI_HTML_Tag::create( 'input', NULL, [
+			'type'		=> 'checkbox',
+			'class'		=> 'checkbox-item',
+			'data-id'	=> $exception->exceptionId,
+		] );
+
+		$requestPath	= '<small class="muted">'.$exceptionRequest->get( '__path' ).'</small>';
+		$envClass		= preg_replace( '/^(CMF_Hydrogen_Environment_)/', '<small class="muted">\\1</small>', $exceptionEnv['class'] );
+		$exceptionClass	= preg_replace( '/Exception$/', '', $exception->type );
+		$list[]			= UI_HTML_Tag::create( 'tr', array(
+			UI_HTML_Tag::create( 'td', $checkbox ),
+			UI_HTML_Tag::create( 'td', $link.'<br/>'.$requestPath, array( 'class' => 'autocut' ) ),
+//			UI_HTML_Tag::create( 'td', $envClass ),
+			UI_HTML_Tag::create( 'td', '<small class="muted">'.$exceptionClass.'</small>' ),
 			UI_HTML_Tag::create( 'td', $date.'&nbsp;<small class="muted">'.$time.'</small>' ),
 			UI_HTML_Tag::create( 'td', $buttons ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "150px", "100px" );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-	$list	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-striped table-condensed', 'style' => 'table-layout: fixed' ) );
+
+
+	$checkboxAll	= UI_HTML_Tag::create( 'input', NULL, [
+		'type'	=> 'checkbox',
+		'id'	=> 'admin-log-exception-list-all-items-toggle',
+	] );
+
+	$heads	= UI_HTML_Elements::TableHeads( [
+		$checkboxAll,
+		'',
+		'',
+		'',
+	] );
+
+	$colgroup	= UI_HTML_Elements::ColumnGroup( '20px', ''/*, '180px'*/, '180px', '150px', '100px' );
+	$thead		= UI_HTML_Tag::create( 'thead', $heads );
+	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
+	$table		= UI_HTML_Tag::create( 'table', [$colgroup, $thead, $tbody], [
+		'class'	=> 'table table-striped table-condensed',
+		'style'	=> 'table-layout: fixed'
+	] );
+
+	$dropdownMenu	= UI_HTML_Tag::create( 'ul', [
+		UI_HTML_Tag::create( 'li',
+			UI_HTML_Tag::create( 'a', '<i class="fa fa-trash"></i> entfernen', ['class' => '#', 'id' => 'action-button-remove'] )
+		),
+	], ['class' => 'dropdown-menu not-pull-right'] );
+
+	$dropdownToggle	= UI_HTML_Tag::create( 'button', 'Aktion <span class="caret"></span>', [
+		'type'		=> 'button',
+		'class'		=> 'btn dropdown-toggle',
+	], ['toggle' => 'dropdown'] );
+	$dropdown		= UI_HTML_Tag::create( 'div', [$dropdownToggle, $dropdownMenu], ['class' => 'btn-group dropup'] );
 }
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './admin/log/exception', $page, ceil( $total / $limit ) );
+$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './admin/log/exception', $page, ceil( $total / $limit ) );
 $pagination	= $pagination->render();
 
 $panelList	= '
-		<div class="content-panel" style="position: relative">
-			<div style="position: absolute; right: 1em; top: 0.65em; width: 150px;">
-				'.$selectInstance.'
-			</div>
-			<h3>Exceptions</h3>
-			<div class="content-panel-inner">
-				'.$list.'
+<div class="content-panel" style="position: relative">
+	<div style="position: absolute; right: 1em; top: 0.65em; width: 150px;">
+		'.$selectInstance.'
+	</div>
+	<h3>Exceptions</h3>
+	<div class="content-panel-inner">
+		<form action="admin/log/exception/bulk" method="post" id="form-admin-log-exception">
+			<input type="hidden" name="type" id="input_type"/>
+			<input type="hidden" name="ids" id="input_ids"/>
+			<input type="hidden" name="from" value="'.$from.'"/>
+			'.$table.'
+			<div class="buttonbar">
 				'.$pagination.'
+				'.$dropdown.'
 			</div>
-		</div>
-';
+		</form>
+	</div>
+</div>';
+
 return $panelList;
 
 return '
@@ -77,5 +133,4 @@ return '
 	<div class="span9">
 		'.$panelList.'
 	</div>
-</div>
-';
+</div>';

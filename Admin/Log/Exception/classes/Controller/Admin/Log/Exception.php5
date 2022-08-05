@@ -16,14 +16,97 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Syslog.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
-class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
-
+class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller
+{
 	/**	@var		Environment		$env		Environment instance */
 	protected $env;
+
+	protected $logic;
+
 	protected $messenger;
+
+	protected $model;
+
 	protected $moduleConfig;
 
-	protected function __onInit(){
+	protected $request;
+
+	public static function ___onLogException( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	{
+		if( is_object( $data ) && $data instanceof Exception )
+			$data	= array( 'exception' => $data );
+		if( !isset( $data['exception'] ) )
+			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
+		$exception	= $data['exception'];
+		self::handleException( $env, $exception );
+	}
+
+	public function bulk()
+	{
+		$action	= $this->request->get( 'type' );
+		$from	= $this->request->get( 'from' );
+		$ids	= array_filter( explode( ',', $this->request->get( 'ids', '' ) ) );
+
+		switch( $action ){
+			case 'remove':
+				if( count( $ids ) )
+					$this->model->removeByIndex( 'exceptionId', $ids );
+				break;
+			default:
+				break;
+		}
+		$this->restart( $from, !$from );
+	}
+
+	public function index( $page = 0, $limit = 10 )
+	{
+		$count		= $this->logic->importFromLogFile();
+		if( $count )
+			$this->messenger->noteNotice( 'Imported %d logged exceptions.', $count );
+
+		$page	= preg_match( "/^[0-9]+$/", $page ) ? (int) $page : 0;
+		$limit	= preg_match( "/^[0-9]+$/", $limit ) ? (int) $limit : 20;
+		$count	= $this->count();
+		if( $page > 0 && $page * $limit >= $count )
+			$page = floor( $count / $limit );
+		$offset	= $page * $limit;
+		$this->env->getSession()->set( 'filter_admin_log_exception_page', $page );
+		$this->env->getSession()->set( 'filter_admin_log_exception_limit', $limit );
+		$limits	= array( $offset, $limit );
+		$lines	= $this->model->getAll( array(), array( 'createdAt' => 'DESC' ), $limits );
+		$this->addData( 'exceptions', $lines );
+		$this->addData( 'total', $count );
+		$this->addData( 'page', $page );
+		$this->addData( 'limit', $limit );
+	}
+
+	public function remove( $id )
+	{
+		$this->model->remove( $id );
+		$page	= $this->env->getSession()->get( 'filter_admin_log_exception_page' );
+		$this->restart( $page ? $page : NULL, TRUE );
+	}
+
+	public function setInstance( $instanceKey )
+	{
+		$this->env->getSession()->set( 'filter_admin_log_exception_instance', $instanceKey );
+		$this->restart( NULL, TRUE );
+	}
+
+	public function view( $id )
+	{
+		$exception	= $this->model->get( $id );
+		if( !$exception ){
+			$this->messenger->noteError( 'Invalid exception number.' );
+			$this->restart( NULL, TRUE );
+		}
+		$this->addData( 'exception', $exception );
+		$this->addData( 'page', $this->env->getSession()->get( 'filter_admin_log_exception_page' ) );
+	}
+
+	protected function __onInit()
+	{
+		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin.', TRUE );
 		$this->logic			= $this->env->getLogic()->get( 'logException' );
@@ -51,59 +134,9 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller{
 		$this->filePath	= $path.$fileName;
 	}
 
-	static public function ___onLogException( CMF_Hydrogen_Environment $env, $context, $module, $data = [] ){
-		if( is_object( $data ) && $data instanceof Exception )
-			$data	= array( 'exception' => $data );
-		if( !isset( $data['exception'] ) )
-			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
-		$exception	= $data['exception'];
-		self::handleException( $env, $exception );
-	}
-
-	protected function count(){
+	protected function count(): int
+	{
 		return $this->model->count();
 	}
-
-	public function index( $page = 0, $limit = 20 ){
-		$count		= $this->logic->importFromLogFile();
-		if( $count )
-			$this->messenger->noteNotice( 'Imported %d logged exceptions.', $count );
-
-		$page	= preg_match( "/^[0-9]+$/", $page ) ? (int) $page : 0;
-		$limit	= preg_match( "/^[0-9]+$/", $limit ) ? (int) $limit : 20;
-		$count	= $this->count();
-		if( $page > 0 && $page * $limit >= $count )
-			$page = floor( $count / $limit );
-		$offset	= $page * $limit;
-		$this->env->getSession()->set( 'filter_admin_log_exception_page', $page );
-		$this->env->getSession()->set( 'filter_admin_log_exception_limit', $limit );
-		$limits	= array( $offset, $limit );
-		$lines	= $this->model->getAll( array(), array( 'createdAt' => 'DESC' ), $limits );
-		$this->addData( 'exceptions', $lines );
-		$this->addData( 'total', $count );
-		$this->addData( 'page', $page );
-		$this->addData( 'limit', $limit );
-	}
-
-	public function remove( $id ){
-		$this->model->remove( $id );
-		$page	= $this->env->getSession()->get( 'filter_admin_log_exception_page' );
-		$this->restart( $page ? $page : NULL, TRUE );
-	}
-
-	public function view( $id ){
-		$exception	= $this->model->get( $id );
-		if( !$exception ){
-			$this->messenger->noteError( 'Invalid exception number.' );
-			$this->restart( NULL, TRUE );
-		}
-		$this->addData( 'exception', $exception );
-		$this->addData( 'page', $this->env->getSession()->get( 'filter_admin_log_exception_page' ) );
-	}
-
-	public function setInstance( $instanceKey ){
-		$this->env->getSession()->set( 'filter_admin_log_exception_instance', $instanceKey );
-		$this->restart( NULL, TRUE );
-	}
 }
-?>
+
