@@ -1,5 +1,8 @@
 <?php
-class Model_Work_Timer extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Work_Timer extends Model
 {
 	protected $name			= 'work_timers';
 

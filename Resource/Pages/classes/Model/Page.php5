@@ -5,18 +5,18 @@
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	...
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
-class Model_Page extends CMF_Hydrogen_Model
+class Model_Page extends Model
 {
 	const TYPE_CONTENT		= 0;
 	const TYPE_BRANCH		= 1;
@@ -41,6 +41,7 @@ class Model_Page extends CMF_Hydrogen_Model
 	];
 
 	protected $name		= 'pages';
+
 	protected $columns	= array(
 		'pageId',
 		'parentId',
@@ -65,7 +66,9 @@ class Model_Page extends CMF_Hydrogen_Model
 		'createdAt',
 		'modifiedAt'
 	);
+
 	protected $primaryKey	= 'pageId';
+
 	protected $indices		= array(
 		'parentId',
 		'type',
@@ -80,5 +83,6 @@ class Model_Page extends CMF_Hydrogen_Model
 		'changefreq',
 		'priority',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

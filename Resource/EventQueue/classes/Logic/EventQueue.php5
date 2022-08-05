@@ -3,12 +3,14 @@
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Logic;
+
 /**
  *	...
- *	@extends		CMF_Hydrogen_Logic
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Logic_EventQueue extends CMF_Hydrogen_Logic
+class Logic_EventQueue extends Logic
 {
 	protected $model;
 	protected $scope;

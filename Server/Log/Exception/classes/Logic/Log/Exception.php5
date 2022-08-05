@@ -1,5 +1,9 @@
 <?php
-class Logic_Log_Exception extends CMF_Hydrogen_Logic
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Log_Exception extends Logic
 {
 	protected $logFile;
 
@@ -218,7 +222,7 @@ class Logic_Log_Exception extends CMF_Hydrogen_Logic
 			$frontend			= Logic_Frontend::getInstance( $this->env );
 			$this->pathLogs		= $frontend->getPath( 'logs' );
 			$moduleConfig		= $frontend->getModuleConfigValues( 'Server_Log_Exception' );;
-			$this->moduleConfig	= new ADT_List_Dictionary( $moduleConfig );
+			$this->moduleConfig	= new Dictionary( $moduleConfig );
 		}
 		$this->logFile		= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
 	}

@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added text block support for every page (german only).</log>
@@ -81,6 +81,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="1.0.1">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
 	<log version="1.0.2">Provide ACL handler for Hydrogen Framework version 0.8.7.8.</log>
 	<log version="1.0.3">Adjust to changes in authentication backends.</log>
+	<log version="1.0.4">Use module Resource:Disclosure.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -108,6 +109,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<config protected="no" type="boolean" name="session.refresh">yes</config>
 	<config protected="no" type="integer" name="session.refresh.minutes">10</config>
 	<relations>
+		<needs type="module">Resource_Disclosure</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
 	<link xml:lang="de" rank="10" access="outside" path="auth/login">Login</link>

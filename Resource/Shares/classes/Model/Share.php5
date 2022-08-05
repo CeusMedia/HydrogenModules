@@ -1,11 +1,15 @@
 <?php
-class Model_Share extends CMF_Hydrogen_Model{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Share extends Model
+{
 	const ACCESS_PUBLIC			= 0;
 	const ACCESS_CAPTCHA		= 1;
 	const ACCESS_LOGIN			= 2;
 
 	protected $name				= 'shares';
+
 	protected $columns			= array(
 		'shareId',
 		'status',
@@ -18,6 +22,7 @@ class Model_Share extends CMF_Hydrogen_Model{
 		'createdAt',
 		'accessedAt',
 	);
+
 	protected $indices			= array(
 		'status',
 		'access',
@@ -27,7 +32,8 @@ class Model_Share extends CMF_Hydrogen_Model{
 		'path',
 		'uuid',
 	);
+
 	protected $primaryKey		= 'shareId';
+
 	protected $fetchMode		= PDO::FETCH_OBJ;
 }
-?>

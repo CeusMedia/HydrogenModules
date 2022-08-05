@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Oauth2 extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Oauth2 extends Controller
 {
 	protected $request;
 	protected $session;

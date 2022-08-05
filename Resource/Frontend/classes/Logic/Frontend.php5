@@ -1,10 +1,15 @@
 <?php
-use CMF_Hydrogen_Environment_Resource_Module_Reader as HydrogenModuleReader;
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Logic;
+use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader as HydrogenModuleReader;
 
 /**
  *	@todo		remove singleton to have serveral frontend logics for different environments
  */
-class Logic_Frontend extends CMF_Hydrogen_Logic
+class Logic_Frontend extends Logic
 {
 	static protected $instance;
 
@@ -54,9 +59,9 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 		return trim( $this->getConfigValue( 'locale.default' ) );
 	}
 
-	public function getEnv(): CMF_Hydrogen_Environment_Remote
+	public function getEnv(): RemoteEnvironment
 	{
-		$env	= new CMF_Hydrogen_Environment_Remote( array(
+		$env	= new RemoteEnvironment( array(
 			'configFile'	=> $this->path.'config/config.ini',
 			'pathApp' 		=> $this->path,
 			'parentEnv'		=> $this->env,
@@ -64,7 +69,7 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 		return $env;
 	}
 
-	static public function getInstance( CMF_Hydrogen_Environment $env ): self
+	static public function getInstance( Environment $env ): self
 	{
 		if( !self::$instance )
 			self::$instance	= new self( $env );
@@ -150,7 +155,7 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 	public function getModules( bool $asDictionary = FALSE )
 	{
 		if( $asDictionary )
-			return new ADT_List_Dictionary( $this->installedModules );
+			return new Dictionary( $this->installedModules );
 		return array_keys( $this->installedModules );
 	}
 
@@ -163,10 +168,10 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 		throw new OutOfBoundsException( 'Invalid path key: '.$key );
 	}
 
-	static public function getRemoteEnv( CMF_Hydrogen_Environment $parentEnv, array $options = [] ): CMF_Hydrogen_Environment_Remote
+	static public function getRemoteEnv( CMF_Hydrogen_Environment $parentEnv, array $options = [] ): RemoteEnvironment
 	{
 		$path		= $parentEnv->getConfig()->get( 'module.resource_frontend.path' );
-		$env		= new CMF_Hydrogen_Environment_Remote( array(
+		$env		= new RemoteEnvironment( array(
 			'configFile'	=> $path.'config/config.ini',
 			'pathApp' 		=> $path,
 			'parentEnv'		=> $parentEnv,
@@ -226,7 +231,7 @@ class Logic_Frontend extends CMF_Hydrogen_Logic
 		$configFile		= $this->path.'config/config.ini';
 		if( !file_exists( $configFile ) )
 			throw new RuntimeException( 'No Hydrogen application found in: '.$this->path );
-		$this->config	= new ADT_List_Dictionary( parse_ini_file( $configFile ) );
+		$this->config	= new Dictionary( parse_ini_file( $configFile ) );
 		$this->paths	= array_merge( $this->defaultPaths, $this->config->getAll( 'path.', !TRUE ) );
 		unset( $this->paths['scripts.lib'] );
 	}

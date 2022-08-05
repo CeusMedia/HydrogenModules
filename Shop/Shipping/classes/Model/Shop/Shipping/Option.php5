@@ -4,17 +4,17 @@
  *	@category		cmProjects
  *	@package		LUV.Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			02.08.2006
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Shipping Options.
  *	@category		cmProjects
  *	@package		LUV.Model
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			02.08.2006
  */
-final class Model_Shop_Shipping_Option extends CMF_Hydrogen_Model
+final class Model_Shop_Shipping_Option extends Model
 {
 	protected $name		= 'shop_shipping_options';
 

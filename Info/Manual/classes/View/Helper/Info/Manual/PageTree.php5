@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Info_Manual_PageTree
 {
 	protected $env;
@@ -7,7 +10,7 @@ class View_Helper_Info_Manual_PageTree
 	protected $activePageId		= 0;
 	protected $openParents		= [];
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->modelPage	= new Model_Manual_Page( $env );

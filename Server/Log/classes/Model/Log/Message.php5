@@ -1,5 +1,9 @@
 <?php
-class Model_Log_Message extends CMF_Hydrogen_Model{
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Log_Message extends Model
+{
 
 	const TYPE_ERROR		= 1;
 	const TYPE_WARNING		= 2;

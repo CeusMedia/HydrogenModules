@@ -1,7 +1,11 @@
 <?php
-class Hook_UI_CookieWarning extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_UI_CookieWarning extends Hook
 {
-	public static function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onPageBuild( Environment $env, $context, $module, $payload )
 	{
 		$config		= $env->getConfig();
 		$options	= $config->getAll( 'module.ui_js_cookiewarning.', TRUE );

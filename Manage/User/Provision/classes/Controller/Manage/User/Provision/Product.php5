@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_User_Provision_Product extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_User_Provision_Product extends Controller{
 
 	protected $prefixSession		= 'filter_manage_user_provision_product_';
 	protected $filters				= array( 'productId', 'productLicenseId', 'status' );

@@ -1,6 +1,9 @@
 <?php
-class Model_Stripe_Payin extends CMF_Hydrogen_Model {
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Stripe_Payin extends Model
+{
 	const STATUS_UNKNOWN		= 0;
 	const STATUS_CREATED		= 1;
 	const STATUS_FAILED			= 2;
@@ -15,6 +18,7 @@ class Model_Stripe_Payin extends CMF_Hydrogen_Model {
 	const TYPE_PAYPAL				= 6;
 
 	protected $name		= 'stripe_payins';
+
 	protected $columns	= array(
 		"payinId",
 		"userId",
@@ -27,16 +31,20 @@ class Model_Stripe_Payin extends CMF_Hydrogen_Model {
 		"createdAt",
 		"modifiedAt"
 	);
+
 	protected $primaryKey	= 'payinId';
+
 	protected $indices		= array(
 		"userId",
 		"status",
 		"id",
 		"type",
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	static public function getLatestResourceFromPayinData( $payinData ){
+	public static function getLatestResourceFromPayinData( $payinData )
+	{
 		$resource	= json_decode( $payinData );
 		$keys		= array_keys( (array) $resource );
 		while( $key = array_pop( $keys ) ){
@@ -46,7 +54,8 @@ class Model_Stripe_Payin extends CMF_Hydrogen_Model {
 		return NULL;
 	}
 
-	static public function getStatusId( $status ){
+	public static function getStatusId( $status )
+	{
 		switch( $status ){
 			case 'CREATED':
 				return self::STATUS_CREATED;
@@ -58,7 +67,8 @@ class Model_Stripe_Payin extends CMF_Hydrogen_Model {
 		return self::STATUS_UNKNOWN;
 	}
 
-	static public function getStatusLabel( $status ){
+	public static function getStatusLabel( $status )
+	{
 		switch( $status ){
 			case self::STATUS_CREATED:
 				return 'CREATED';
@@ -70,7 +80,8 @@ class Model_Stripe_Payin extends CMF_Hydrogen_Model {
 		return 'UNKNOWN';
 	}
 
-	static public function getTypeId( $type ){
+	public static function getTypeId( $type )
+	{
 		switch( $type ){
 			case 'CARD':
 				return self::TYPE_CARD;
@@ -88,7 +99,8 @@ class Model_Stripe_Payin extends CMF_Hydrogen_Model {
 		return self::TYPE_UNKNOWN;
 	}
 
-	static public function getTypeLabel( $type ){
+	public static function getTypeLabel( $type )
+	{
 		switch( $type ){
 			case self::TYPE_CARD:
 				return 'CARD';
@@ -106,4 +118,3 @@ class Model_Stripe_Payin extends CMF_Hydrogen_Model {
 		return 'UNKNOWN';
 	}
 }
-?>

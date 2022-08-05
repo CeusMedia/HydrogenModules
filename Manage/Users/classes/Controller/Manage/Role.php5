@@ -6,15 +6,18 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media
  */
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Role Controller.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media
  */
-class Controller_Manage_Role extends CMF_Hydrogen_Controller
+class Controller_Manage_Role extends Controller
 {
 	protected $modelRole;
 	protected $modelRoleRight;
@@ -47,7 +50,7 @@ class Controller_Manage_Role extends CMF_Hydrogen_Controller
 		}
 
 		$postDataArray	= $this->request->getAllFromSource( 'POST' );
-		$this->addData( 'role', new ADT_List_Dictionary( $postDataArray ) );
+		$this->addData( 'role', new Dictionary( $postDataArray ) );
 		$this->addData( 'words', $words );
 	}
 

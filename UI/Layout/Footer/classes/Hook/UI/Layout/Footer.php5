@@ -1,7 +1,11 @@
 <?php
-class Hook_UI_Layout_Footer extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_UI_Layout_Footer extends Hook
 {
-	public static function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onPageBuild( Environment $env, $context, $module, $payload )
 	{
 		$pattern	= "/^(.*)(\[footer\])(.*)$/sU";
 		if( preg_match( $pattern, $payload->content ) ){

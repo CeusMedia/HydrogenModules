@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Navigation
 {
 	protected $env;
@@ -11,7 +14,7 @@ class View_Helper_Navigation
 	protected $logoIcon;
 	protected $helperAccount;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->menu			= new Model_Menu( $env );

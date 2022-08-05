@@ -1,12 +1,15 @@
 <?php
-class Hook_Blog_Compact extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Blog_Compact extends Hook
 {
 	public static function onPageApplyModules( $env, $context, $module, $payload )
 	{
 		$env->getLanguage()->load( 'blog' );														//  load blog language file
 		$words		= $env->getLanguage()->getWords( 'blog' );										//  get blog feed words
 		$context->addHead( UI_HTML_Tag::create( 'link', NULL, array(								//  create link with attributes
-			'rel'	=> "alternate",																	//  
+			'rel'	=> "alternate",																	//
 			'type'	=> "application/rss+xml",														//  MIME type of RSS
 			'href'	=> $env->getConfig()->get( 'app.base.url' )."blog/feed",						//  URL to RSS feed
 			'title'	=> $env->getConfig()->get( 'app.name' ).': '.$words['feed']['title']			//  link title

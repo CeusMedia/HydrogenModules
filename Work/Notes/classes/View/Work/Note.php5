@@ -1,5 +1,8 @@
 <?php
-class View_Work_Note extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Work_Note extends View
 {
 	public function add()
 	{

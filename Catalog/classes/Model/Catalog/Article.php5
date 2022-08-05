@@ -4,23 +4,20 @@
  *	@category		cmProjects
  *	@package		LUV.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
- *	@version		3.0
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Articles.
  *	@category		cmProjects
  *	@package		LUV.Model
- *	@extends		CMF_Neon_Model
- *	@uses			ArticleAuthor
- *	@uses			TimeConverter
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
- *	@version		3.0
  */
-class Model_Catalog_Article extends CMF_Hydrogen_Model {
-
+class Model_Catalog_Article extends Model
+{
 	protected $name		= 'catalog_articles';
+
 	protected $columns	= array(
 		"articleId",
 		"status",
@@ -41,7 +38,9 @@ class Model_Catalog_Article extends CMF_Hydrogen_Model {
 		"createdAt",
 		"modifiedAt",
 	);
+
 	protected $primaryKey	= 'articleId';
+
 	protected $indices		= array(
 		"status",
 		"title",
@@ -50,6 +49,6 @@ class Model_Catalog_Article extends CMF_Hydrogen_Model {
 		"price",
 		"new"
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

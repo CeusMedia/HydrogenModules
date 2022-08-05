@@ -1,5 +1,9 @@
 <?php
-class Controller_Catalog extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Catalog extends Controller
 {
 	/**	@var	Logic_ShopBridge	$bridge */
 	protected $bridge;
@@ -10,7 +14,7 @@ class Controller_Catalog extends CMF_Hydrogen_Controller
 	/**	@var	Logic_Catalog		$logic */
 	protected $logic;
 
-	public static function ___onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $data )
+	public static function ___onRegisterSitemapLinks( Environment $env, $context, $module, $data )
 	{
 		$baseUrl	= $env->url.'catalog/';
 		$logic		= new Logic_Catalog( $env );

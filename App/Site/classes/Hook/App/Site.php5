@@ -1,17 +1,21 @@
 <?php
-class Hook_App_Site extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_App_Site extends Hook
 {
 	/**
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Object scope to apply hook within
-	 *	@param		???							$module		???
-	 *	@param		array|object				$data		Data array or object for hook event handler
-	 *	@return		boolean|NULL				...
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Object scope to apply hook within
+	 *	@param		???				$module		???
+	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@return		boolean|NULL	...
 	 */
-	static public function onFrameworkDeprecation( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function onFrameworkDeprecation( Environment $env, $context, $module, $data = [] )
 	{
 		$entity		= 'UNKNOWN';
 		$version	= '';
@@ -53,13 +57,13 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Object scope to apply hook within
-	 *	@param		???							$module		???
-	 *	@param		array|object				$data		Data array or object for hook event handler
-	 *	@return		boolean|NULL				...
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Object scope to apply hook within
+	 *	@param		???				$module		???
+	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@return		boolean|NULL	...
 	 */
-	static public function onEnvConstructEnd( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function onEnvConstructEnd( Environment $env, $context, $module, $data = [] )
 	{
 		if( !$env->getModules()->has( 'Resource_Authentication' ) )
 			return;
@@ -109,13 +113,13 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Object scope to apply hook within
-	 *	@param		???							$module		???
-	 *	@param		array|object				$data		Data array or object for hook event handler
-	 *	@return		boolean|NULL				...
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Object scope to apply hook within
+	 *	@param		???				$module		???
+	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@return		boolean|NULL	...
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function onPageApplyModules( Environment $env, $context, $module, $data = [] )
 	{
 		$messenger	= $context->env->getMessenger();									//  shortcut messenger
 		if( !file_exists( '.htaccess' ) ){												//  .htaccess file is not existing
@@ -140,13 +144,13 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Object scope to apply hook within
-	 *	@param		???							$module		???
-	 *	@param		array|object				$data		Data array or object for hook event handler
-	 *	@return		boolean|NULL				...
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Object scope to apply hook within
+	 *	@param		???				$module		???
+	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@return		boolean|NULL	...
 	 */
-	static public function onPageInit( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function onPageInit( Environment $env, $context, $module, $data = [] )
 	{
 		$config = $env->getConfig();														//  shortcut configuration
 		if( !$config->get( 'app.revision' ) ){												//  no revision set in base app configuration
@@ -163,13 +167,13 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Object scope to apply hook within
-	 *	@param		???							$module		???
-	 *	@param		array|object				$data		Data array or object for hook event handler
-	 *	@return		boolean|NULL				...
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Object scope to apply hook within
+	 *	@param		???				$module		???
+	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@return		boolean|NULL	...
 	 */
-	static public function onTinyMCEGetImageList( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function onTinyMCEGetImageList( Environment $env, $context, $module, $data = [] )
 	{
 		$moduleConfig		= $env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
 		$frontend			= Logic_Frontend::getInstance( $env );
@@ -221,7 +225,7 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	/**
 	 *	@deprecated		use Hook_App_Site::onEnvConstructEnd instead
 	 */
-	static public function ___onEnvConstructEnd( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function ___onEnvConstructEnd( Environment $env, $context, $module, $data = [] )
 	{
 		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
 			'type'		=> 'hook',
@@ -235,7 +239,7 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	/**
 	 *	@deprecated		use Hook_App_Site::onPageApplyModules instead
 	 */
-	static public function ___onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function ___onPageApplyModules( Environment $env, $context, $module, $data = [] )
 	{
 		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
 			'type'		=> 'hook',
@@ -249,7 +253,7 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	/**
 	 *	@deprecated		use Hook_App_Site::onPageInit instead
 	 */
-	static public function ___onPageInit( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function ___onPageInit( Environment $env, $context, $module, $data = [] )
 	{
 		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
 			'type'		=> 'hook',
@@ -263,7 +267,7 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	/**
 	 *	@deprecated		use Hook_App_Site::onTinyMCEGetImageList instead
 	 */
-	static public function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function ___onTinyMCE_getImageList( Environment $env, $context, $module, $data = [] )
 	{
 		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
 			'type'		=> 'hook',
@@ -277,7 +281,7 @@ class Hook_App_Site extends CMF_Hydrogen_Hook
 	/**
 	 *	@deprecated		use Hook_App_Site::onFrameworkDeprecation instead
 	 */
-	static public function ___onFrameworkDeprecation( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function ___onFrameworkDeprecation( Environment $env, $context, $module, $data = [] )
 	{
 		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
 			'type'		=> 'hook',

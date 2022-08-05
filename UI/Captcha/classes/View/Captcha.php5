@@ -1,5 +1,8 @@
 <?php
-class View_Captcha extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Captcha extends View
 {
 	public function image()
 	{

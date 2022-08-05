@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Page_Ajax extends CMF_Hydrogen_Controller_Ajax
+
+use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
+
+class Controller_Manage_Page_Ajax extends AjaxController
 {
 	protected $sessionPrefix		= 'filter_manage_pages_';
 	protected $model;

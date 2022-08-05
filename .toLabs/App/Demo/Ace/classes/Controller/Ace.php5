@@ -1,5 +1,8 @@
 <?php
-class Controller_Ace extends CMF_Hydrogen_Controller_Ajax{
+
+use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
+
+class Controller_Ace extends AjaxController{
 
 	public function save(){
 		$request		= $this->env->getRequest();

@@ -1,6 +1,11 @@
 <?php
-class Model_Customer_Rating extends CMF_Hydrogen_Model{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Model_Customer_Rating extends Model
+{
 	protected $name			= 'customer_ratings';
+
 	protected $columns		= array(
 		'customerRatingId',
 		'customerId',
@@ -15,12 +20,15 @@ class Model_Customer_Rating extends CMF_Hydrogen_Model{
 		'comment',
 		'timestamp',
 	);
+
 	protected $primaryKey	= 'customerRatingId';
+
 	protected $indices		= array( 'customerId', 'userId' );
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-
-	public function calculateCustomerIndex( $rating ){
+	public function calculateCustomerIndex( $rating )
+	{
 		$factors	= array(
 			'affability'	=> 3,
 			'guidability'	=> 4,
@@ -45,4 +53,3 @@ class Model_Customer_Rating extends CMF_Hydrogen_Model{
 		return ( $index / $sum ) + 1;
 	}
 }
-?>

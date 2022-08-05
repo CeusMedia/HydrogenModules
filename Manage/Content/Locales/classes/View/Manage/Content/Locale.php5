@@ -5,18 +5,18 @@
  *	@package		Chat.Client.View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	Content View.
  *	@category		cmApps
  *	@package		Chat.Client.View
- *	@extends		CMF_Hydrogen_View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011 Ceus Media
- *	@version		$Id$
  */
-class View_Manage_Content_Locale extends CMF_Hydrogen_View
+class View_Manage_Content_Locale extends View
 {
 	public function index()
 	{

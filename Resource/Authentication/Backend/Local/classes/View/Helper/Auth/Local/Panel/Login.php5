@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
 class View_Helper_Auth_Local_Panel_Login implements Renderable
 {
 	protected $env;
@@ -6,7 +10,7 @@ class View_Helper_Auth_Local_Panel_Login implements Renderable
 	protected $useRemember	= TRUE;
 	protected $useRegister	= TRUE;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
@@ -16,7 +20,7 @@ class View_Helper_Auth_Local_Panel_Login implements Renderable
 		$words		= $this->env->getLanguage()->getWords( 'auth/local' );
 		$wordsLogin	= $words['login'];
 		$request	= $this->env->getRequest();
-		$view		= new CMF_Hydrogen_View( $this->env );
+		$view		= new View( $this->env );
 		$view->addData( 'words', $words );
 		$view->addData( 'useOauth2', $this->useOAuth2 );
 		$view->addData( 'useRemember', $this->useRemember );
@@ -46,4 +50,3 @@ class View_Helper_Auth_Local_Panel_Login implements Renderable
 		return $this;
 	}
 }
-

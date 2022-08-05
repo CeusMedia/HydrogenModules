@@ -1,5 +1,8 @@
 <?php
-class Controller_Tool_Calculator extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Tool_Calculator extends Controller
 {
 	public function index()
 	{

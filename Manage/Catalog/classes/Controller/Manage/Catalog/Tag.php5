@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Catalog_Tag extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Catalog_Tag extends Controller
 {
 	protected $fontend;
 	protected $logic;

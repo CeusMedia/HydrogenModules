@@ -5,18 +5,18 @@
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	...
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
-class Model_Testimonial extends CMF_Hydrogen_Model
+class Model_Testimonial extends Model
 {
 	protected $name		= 'testimonials';
 

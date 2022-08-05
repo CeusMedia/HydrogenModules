@@ -6,15 +6,17 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013-2020 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	...
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013-2020 Ceus Media
  */
-class Model_Newsletter_Reader extends CMF_Hydrogen_Model
+class Model_Newsletter_Reader extends Model
 {
 	const STATUS_DEACTIVATED	= -2;
 	const STATUS_UNREGISTERED	= -1;

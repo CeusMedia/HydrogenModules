@@ -5,20 +5,21 @@
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	...
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
-class Model_Catalog_Gallery_Category extends CMF_Hydrogen_Model {
-
+class Model_Catalog_Gallery_Category extends Model
+{
 	protected $name		= 'catalog_gallery_categories';
+
 	protected $columns	= array(
 		'galleryCategoryId',
 		'parentId',
@@ -31,7 +32,9 @@ class Model_Catalog_Gallery_Category extends CMF_Hydrogen_Model {
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'galleryCategoryId';
+
 	protected $indices		= array(
 		'parentId',
 		'status',
@@ -40,6 +43,6 @@ class Model_Catalog_Gallery_Category extends CMF_Hydrogen_Model {
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

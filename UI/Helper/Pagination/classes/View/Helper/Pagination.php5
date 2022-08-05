@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Pagination
 {
 	/**	@var		object		$env		... */
@@ -26,7 +30,7 @@ class View_Helper_Pagination
 	 *	@param		integer		$count		...
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env = NULL, $total = NULL, $limit = NULL, $page = NULL, $count = NULL )
+	public function __construct( Environment $env = NULL, $total = NULL, $limit = NULL, $page = NULL, $count = NULL )
 	{
 		$this->env		= $env;
 		$this->total	= $total;
@@ -39,14 +43,14 @@ class View_Helper_Pagination
 	 *	...
 	 *	@access		public
 	 *	@todo		remove parameters in favour of full construction
-	 *	@todo		replace support for CMM_Bootstrap by CeusMedia/Bootstrap
+	 *	@todo		replace module check against composer package check
 	 */
 	public function render( string $baseUri, int $total, int $limit, int $page, bool $wrapIntoButtonbar = TRUE ): string
 	{
 		if( $this->env && $this->env->getModules()->has( 'Resource_Library_cmModules' ) ){
 			if( $total <= $limit )
 				return "";
-			$control = new CMM_Bootstrap_PageControl( $baseUri, $page, ceil( $total / $limit ) );
+			$control = new PageControl( $baseUri, $page, ceil( $total / $limit ) );
 			if( !$wrapIntoButtonbar )
 				return $control->render();
 			return UI_HTML_Tag::create( 'div', $control->render(), array( 'class' => 'buttonbar' ) );

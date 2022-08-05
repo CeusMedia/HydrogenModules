@@ -1,5 +1,8 @@
 <?php
-class Logic_Database_Backup_Copy extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Database_Backup_Copy extends Logic
 {
 	protected $logicBackup;
 

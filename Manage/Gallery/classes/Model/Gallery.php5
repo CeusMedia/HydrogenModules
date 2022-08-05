@@ -1,6 +1,11 @@
 <?php
-class Model_Gallery extends CMF_Hydrogen_Model{
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Gallery extends Model
+{
 	protected $name		= 'galleries';
+
 	protected $columns	= array(
 		'galleryId',
 		'parentId',
@@ -11,14 +16,18 @@ class Model_Gallery extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'galleryId';
+
 	protected $indices	= array(
 		'status',
 		'folder',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function getGalleryAuthors( $galleryId ){
+	public function getGalleryAuthors( $galleryId )
+	{
 		$model	= new Model_GalleryAuthor( $this->env );
 		$ids	= $model->getAllByIndex( 'galleryId', $galleryId );
 		$model	= new Model_User( $this->env );
@@ -28,7 +37,8 @@ class Model_Gallery extends CMF_Hydrogen_Model{
 		return $users;
 	}
 
-	public function getGalleryTags( $galleryId ){
+	public function getGalleryTags( $galleryId )
+	{
 		$model	= new Model_GalleryTag( $this->env );
 		$ids	= $model->getAllByIndex( 'galleryId', $galleryId );
 		$model	= new Model_Tag( $this->env );
@@ -41,4 +51,3 @@ class Model_Gallery extends CMF_Hydrogen_Model{
 		return $tags;
 	}
 }
-?>

@@ -1,5 +1,8 @@
 <?php
-class Model_Billing_Expense extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Billing_Expense extends Model
 {
 	const FREQUENCY_YEARLY		= 1;
 	const FREQUENCY_QUARTER		= 2;

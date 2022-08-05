@@ -1,5 +1,8 @@
 <?php
-class Model_Dashboard extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Dashboard extends Model
 {
 	protected $name		= 'dashboards';
 

@@ -1,5 +1,8 @@
 <?php
-class View_Info_Relocation extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Info_Relocation extends View
 {
 	public function fail()
 	{

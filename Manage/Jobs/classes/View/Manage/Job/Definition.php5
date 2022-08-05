@@ -1,5 +1,8 @@
 <?php
-class View_Manage_Job_Definition extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_Job_Definition extends View
 {
 	public function index()
 	{

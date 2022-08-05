@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_My_User_Setting extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_My_User_Setting extends Controller
 {
 	protected $module;
 	protected $userId;

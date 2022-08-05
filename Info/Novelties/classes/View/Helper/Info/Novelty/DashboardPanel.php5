@@ -1,10 +1,13 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Info_Novelty_DashboardPanel extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $env;
 	protected $news		= [];
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}

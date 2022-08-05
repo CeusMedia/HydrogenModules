@@ -1,6 +1,11 @@
 <?php
-class Model_Article extends CMF_Hydrogen_Model{
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Article extends Model
+{
 	protected $name		= 'articles';
+
 	protected $columns	= array(
 		'articleId',
 //		'authorId',
@@ -10,14 +15,18 @@ class Model_Article extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'articleId';
+
 	protected $indices	= array(
 //		'authorId',
 		'status',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function getArticleAuthors( $articleId ){
+	public function getArticleAuthors( $articleId )
+	{
 		$model	= new Model_ArticleAuthor( $this->env );
 		$ids	= $model->getAllByIndex( 'articleId', $articleId );
 		$model	= new Model_User( $this->env );
@@ -27,7 +36,8 @@ class Model_Article extends CMF_Hydrogen_Model{
 		return $users;
 	}
 
-	public function getArticleTags( $articleId ){
+	public function getArticleTags( $articleId )
+	{
 		$model	= new Model_ArticleTag( $this->env );
 		$ids	= $model->getAllByIndex( 'articleId', $articleId );
 		$model	= new Model_Tag( $this->env );
@@ -40,7 +50,8 @@ class Model_Article extends CMF_Hydrogen_Model{
 		return $tags;
 	}
 
-	public function getArticleVersions( $articleId ){
+	public function getArticleVersions( $articleId )
+	{
 		$model	= new Model_ArticleVersion( $this->env );
 		return $model->getAll(
 			array( 'articleId'			=> $articleId ),
@@ -48,4 +59,3 @@ class Model_Article extends CMF_Hydrogen_Model{
 		);
 	}
 }
-?>

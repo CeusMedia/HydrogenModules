@@ -1,5 +1,9 @@
 <?php
-class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Manage_Catalog_Bookstore_Article extends Controller
 {
 	protected $fontend;
 	protected $logic;
@@ -19,7 +23,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 	 *	@return		void
 	 *	@todo		kriss: code doc
 	 */
-	public static function ___onTinyMCE_getImageList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] )
+	public static function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] )
 	{
 		$cache		= $env->getCache();
 		if( 1 || !( $list = $cache->get( 'catalog.tinymce.images.catalog.bookstore.articles' ) ) ){
@@ -57,7 +61,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends CMF_Hydrogen_Controlle
 	 *	@return		void
 	 *	@todo		kriss: code doc
 	 */
-	public static function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] )
+	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
 	{
 		$cache		= $env->getCache();
 		$logic		= new Logic_Catalog_Bookstore( $env );

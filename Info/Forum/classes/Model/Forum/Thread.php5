@@ -6,15 +6,17 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Forum Thread Model.
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
  */
-class Model_Forum_Thread extends CMF_Hydrogen_Model
+class Model_Forum_Thread extends Model
 {
 	protected $name		= 'forum_threads';
 

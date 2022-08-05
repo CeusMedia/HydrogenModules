@@ -1,5 +1,9 @@
 <?php
-class Controller_Info_File extends CMF_Hydrogen_Controller
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Info_File extends Controller
 {
 	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	*/
 	protected $messenger;
@@ -10,13 +14,13 @@ class Controller_Info_File extends CMF_Hydrogen_Controller
 	/**	@var	Model_Download_Folder							$modelFolder		Database model of folders */
 	protected $modelFolder;
 
-	/**	@var	ADT_List_Dictionary								$options			Module configuration object */
+	/**	@var	Dictionary										$options			Module configuration object */
 	protected $options;
 
 	/**	@var	string											$path				Base path to files */
 	protected $path;
 
-	/**	@var	ADT_List_Dictionary								$request			Object to map request parameters */
+	/**	@var	Dictionary										$request			Object to map request parameters */
 	protected $request;
 
 	/**	@var	array											$rights				List of access rights of current user */

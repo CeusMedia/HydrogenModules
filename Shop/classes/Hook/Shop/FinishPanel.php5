@@ -1,21 +1,25 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
 class Hook_Shop_FinishPanel
 {
 	/**
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
-	 *	@param		object						$context		Hook context object
-	 *	@param		object						$module			Module object
-	 *	@param		public						$arguments		Map of hook arguments
+	 *	@param		Environment		$env			Environment instance
+	 *	@param		object			$context		Hook context object
+	 *	@param		object			$module			Module object
+	 *	@param		public			$arguments		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onRenderServicePanels( Environment $env, $context, $module, $payload = [] )
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;
-		$view		= new CMF_Hydrogen_View( $env );
+		$view		= new View( $env );
 //		$modelOrder	= new Model_Shop_Order( $env );
 //		$order		= $modelOrder->get( $payload['orderId'] );
 

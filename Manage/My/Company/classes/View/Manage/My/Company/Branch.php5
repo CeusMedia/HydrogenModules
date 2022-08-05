@@ -1,5 +1,8 @@
 <?php
-class View_Manage_My_Company_Branch extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_My_Company_Branch extends View{
 
 	public function index(){}
 	public function add(){}

@@ -1,5 +1,8 @@
 <?php
-class View_Work_Time_Analysis extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Work_Time_Analysis extends View
 {
 	protected $modelTimer;
 	protected $modelProject;

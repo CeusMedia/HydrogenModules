@@ -1,5 +1,8 @@
 <?php
-class Controller_Info_Mail_Group extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Info_Mail_Group extends Controller
 {
 	protected $request;
 	protected $session;

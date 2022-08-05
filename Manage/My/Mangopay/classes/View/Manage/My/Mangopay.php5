@@ -1,5 +1,8 @@
 <?php
-class View_Manage_My_Mangopay extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_My_Mangopay extends View
 {
 	public static function formatMoney( $money, $separator = "&nbsp;", $accuracy = 2 )
 	{

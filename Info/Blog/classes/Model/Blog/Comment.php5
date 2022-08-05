@@ -5,14 +5,16 @@
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Blog Post Model.
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Blog_Comment extends CMF_Hydrogen_Model
+class Model_Blog_Comment extends Model
 {
 	protected $name		= 'blog_comments';
 

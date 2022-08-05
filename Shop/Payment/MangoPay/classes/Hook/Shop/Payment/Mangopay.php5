@@ -1,17 +1,21 @@
 <?php
-class Hook_Shop_Payment_Mangopay extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Shop_Payment_Mangopay extends Hook
 {
 	/**
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
-	 *	@param		object						$context		Hook context object
-	 *	@param		object						$module			Module object
-	 *	@param		object						$payload		Data object of hook arguments
+	 *	@param		Environment		$env			Environment instance
+	 *	@param		object			$context		Hook context object
+	 *	@param		object			$module			Module object
+	 *	@param		object			$payload		Data object of hook arguments
 	 *	@return		void
 	 */
-	public static function onRegisterShopPaymentBackends( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onRegisterShopPaymentBackends( Environment $env, $context, $module, $payload )
 	{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_mangopay.method.', TRUE );
 		if( $methods->get( 'CreditCardWeb' ) ){
@@ -50,13 +54,13 @@ class Hook_Shop_Payment_Mangopay extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
-	 *	@param		object						$context		Hook context object
-	 *	@param		object						$module			Module object
-	 *	@param		object						$payload		Data object of hook arguments
+	 *	@param		Environment		$env			Environment instance
+	 *	@param		object			$context		Hook context object
+	 *	@param		object			$module			Module object
+	 *	@param		object			$payload		Data object of hook arguments
 	 *	@return		void
 	 */
-	public static function onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onRenderServicePanels( Environment $env, $context, $module, $payload )
 	{
 		$data	= (object) $payload;
 		if( empty( $data->orderId ) || empty( $data->paymentBackends ) )

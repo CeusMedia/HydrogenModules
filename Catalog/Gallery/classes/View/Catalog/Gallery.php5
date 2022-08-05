@@ -1,5 +1,8 @@
 <?php
-class View_Catalog_Gallery extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Catalog_Gallery extends View
 {
 	/**	@var	Logic_Catalog_Gallery	$logic */
 	protected $logic;

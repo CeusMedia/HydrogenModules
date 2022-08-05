@@ -1,5 +1,8 @@
 <?php
-class Controller_Ajax_UI_Session extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Ajax_UI_Session extends Controller
 {
 	public function keepAlive()
 	{

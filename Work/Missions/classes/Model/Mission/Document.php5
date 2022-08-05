@@ -2,12 +2,15 @@
 /**
  *	Model for documents attached to missions.
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
-*	Model for documents attached to missions.
+ *	Model for documents attached to missions.
  *	@todo			support linked files, e.G. by module Info:Files
  *	@todo			code documentation
  */
-class Model_Mission_Document extends CMF_Hydrogen_Model
+class Model_Mission_Document extends Model
 {
 	/**	@var	$name		string		Table name without prefix of database connection */
 	protected $name			= "mission_documents";

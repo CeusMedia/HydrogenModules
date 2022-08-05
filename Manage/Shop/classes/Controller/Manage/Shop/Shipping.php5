@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Shop_Shipping extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Shop_Shipping extends Controller
 {
 	/** @var		Model_Shop_Shipping_Grade		$modelGrade */
 	protected $modelGrade;

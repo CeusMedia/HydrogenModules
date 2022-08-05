@@ -1,7 +1,11 @@
 <?php
-class Controller_Shop_Payment_Mangopay extends CMF_Hydrogen_Controller
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Shop_Payment_Mangopay extends Controller
 {
-	/**	@var	ADT_List_Dictionary			$config			Module configuration dictionary */
+	/**	@var	Dictionary					$config			Module configuration dictionary */
 	protected $config;
 
 	/**	@var	Logic_Shop					$logicShop		Shop logic instance */

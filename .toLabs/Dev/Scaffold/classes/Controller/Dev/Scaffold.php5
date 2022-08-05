@@ -1,5 +1,8 @@
 <?php
-class Controller_Dev_Scaffold extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Dev_Scaffold extends Controller{
 
 	protected $pathTemplates	= './templates/dev/scaffold/templates/';
 

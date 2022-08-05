@@ -1,15 +1,21 @@
 <?php
-class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 
-	/**	@var	CMF_Hydrogen_Environment_Remote	$remote		Instance of remote environment */
+use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
+use CeusMedia\HydrogenFramework\Environment\Router\Recursive as RecursiveRouter;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+class Tool_Hydrogen_Setup_Environment extends WebEnvironment
+{
+	/**	@var	RemoteEnvironment	$remote		Instance of remote environment */
 	public $remote;
 
 	/**	@var	array							$words		List of main language topics */
 	public $words;
 
-	public function __construct( $forceInstanceId = NULL ){
+	public function __construct( $forceInstanceId = NULL )
+	{
 
-		self::$classRouter	= 'CMF_Hydrogen_Environment_Router_Recursive';
+		self::$classRouter	= RecursiveRouter::class;
 		self::$configFile	= "config/config.ini";
 
 		date_default_timezone_set( "Europe/Berlin" );
@@ -23,7 +29,7 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 
 		$this->pathConfig	= '';
 
-		$pathModules	= CMF_PATH.'modules/Hydrogen/';												//  
+		$pathModules	= CMF_PATH.'modules/Hydrogen/';												//
 		if( !preg_match( '/^\//', $pathModules ) )													//  module path is not absolute @todo kriss: remove
 			$pathModules	= getEnv( 'DOCUMENT_ROOT' ).'/'.$pathModules;							//  prepend document root to module path @todo kriss: remove
 		$this->pathModules	= $pathModules;															//  store module path @todo kriss: remove
@@ -53,24 +59,26 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 		$this->initResponse();																		//  setup HTTP response handler
 		$this->initRouter();																		//  setup request router
 		$this->initLanguage();																		//  setup language support
-		$this->initPage();																			//  
-		$this->initAcl();																			//  
-		$this->initRemote( $this->request->get( 'forceInstanceId' ) );														//  
+		$this->initPage();																			//
+		$this->initAcl();																			//
+		$this->initRemote( $this->request->get( 'forceInstanceId' ) );														//
 		$this->words	= $this->language->getWords( 'main' );
-		$this->__onInit();																			//  
+		$this->__onInit();																			//
 		$this->checkModules();																		//  try to install missing modules
 	}
 
-	protected function checkConfig(){
+	protected function checkConfig()
+	{
 		if( file_exists( self::$configFile ) )														//  config file is existing
-			return;																					//  
+			return;																					//
 		if( !@copy( self::$configFile.'.dist', self::$configFile ) )									//  copy config file
 			die( "Missing write permissions for config folder." );
-//		$editor	= new FS_File_INI_Editor( self::$configFile );											//  
-//		$editor->setProperty( 'app.base.url', $this->url );											//  
+//		$editor	= new FS_File_INI_Editor( self::$configFile );											//
+//		$editor->setProperty( 'app.base.url', $this->url );											//
 	}
 
-	protected function checkInstances(){
+	protected function checkInstances()
+	{
 		$fileName	= 'config/instances.json';
 		if( !file_exists( $fileName ) ){
 			if( file_exists( 'config/instances.ini' ) ){
@@ -98,7 +106,8 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 		FS_File_Writer::save( $fileName, $json );
 	}
 
-	protected function checkModules(){
+	protected function checkModules()
+	{
 #		CMC_Loader::registerNew( 'php5', NULL, 'classes/' );
 #		$modelSource	= new Model_ModuleSource( $this );
 #		$modelInstance	= new Model_Instance( $this );
@@ -173,7 +182,8 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 		$this->clock->profiler->tick( 'env: check: modules' );
 	}
 
-	protected function checkSources(){
+	protected function checkSources()
+	{
 		$fileName	= 'config/modules/sources.json';
 		if( !file_exists( $fileName ) ){
 			if( file_exists( 'config/modules/sources.ini' ) ){
@@ -192,7 +202,8 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 		}
 	}
 
-	protected function checkThemes(){
+	protected function checkThemes()
+	{
 		if( !file_exists( 'themes/petrol' ) ){
 			$source	= CMF_PATH.'themes/Hydrogen/petrol';
 			$target	= $this->uri.'themes/petrol';
@@ -207,15 +218,18 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 		}
 	}
 
-	public function getRemote(){
+	public function getRemote()
+	{
 		return $this->remote;
 	}
 
-	public function setRemoteInstance( $instanceId ){
+	public function setRemoteInstance( $instanceId )
+	{
 		$this->initRemote( $instanceId );
 	}
 
-	protected function initRemote( $forceInstanceId = NULL ){
+	protected function initRemote( $forceInstanceId = NULL )
+	{
 		$messenger		= $this->getMessenger();
 		$instance		= $this;
 		$this->remote	= $this;																	//  use own environment by default
@@ -226,7 +240,7 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 			if( count( $instances ) == 1 )															//  only one instance is configured
 				$instance	= array_pop( $instances );												//  get this instance's environment
 			else if( $instances ){																	//  several instances are configured
-				$sessionedId	= $this->session->get( 'instanceId' );								//  
+				$sessionedId	= $this->session->get( 'instanceId' );								//
 				if( $forceInstanceId ){																//  an instance is forced
 					if( !array_key_exists( $forceInstanceId, $instances ) )							//  but not configured
 						throw new InvalidArgumentException( 'Forced instance "'.$forceInstanceId.'" is not existing' );
@@ -255,7 +269,7 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 				'pathApp'		=> $pathApp
 			);
 			try{
-				$this->remote		= new CMF_Hydrogen_Environment_Remote( $options );
+				$this->remote		= new RemoteEnvironment( $options );
 			}
 			catch( Exception $e )
 			{
@@ -274,7 +288,8 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 		$this->clock->profiler->tick( 'env: remote' );
 	}
 
-	protected function restart( $output = NULL ){
+	protected function restart( $output = NULL )
+	{
 		if( !getEnv( 'HTTP_HOST' ) )
 			die( "Restart is not implemented for console applications by now. Sorry." );
 		if( !is_null( $output ) && strlen( $output ) ){
@@ -289,4 +304,3 @@ class Tool_Hydrogen_Setup_Environment extends CMF_Hydrogen_Environment_Web{
 		exit;
 	}
 }
-?>

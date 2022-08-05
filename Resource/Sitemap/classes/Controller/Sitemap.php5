@@ -1,5 +1,8 @@
 <?php
-class Controller_Sitemap extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Sitemap extends Controller{
 
 	public function index( $forceFormat = NULL ){
 		$logic		= Logic_Sitemap::getInstance( $this->env );

@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Job_Attribute
 {
 	const ATTRIBUTE_DEFINITION_STATUS	= 0;
@@ -73,7 +76,7 @@ class View_Helper_Job_Attribute
 	protected $object;
 	protected $id;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->words	= $env->getLanguage()->getWords( 'manage/job' );

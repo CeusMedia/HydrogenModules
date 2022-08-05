@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	Authentication View.
  *	@category		cmApps
@@ -7,7 +11,7 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: Auth.php 1644 2010-11-03 20:39:04Z christian.wuerker $
  */
-class View_Auth extends CMF_Hydrogen_View
+class View_Auth extends View
 {
 	public function confirm()
 	{
@@ -30,7 +34,7 @@ class View_Auth extends CMF_Hydrogen_View
 		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, array() );
 	}
 
-	public static function renderTabs( CMF_Hydrogen_Environment $env, $current = 0 )
+	public static function renderTabs( Environment $env, $current = 0 )
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './' );

@@ -1,5 +1,8 @@
 <?php
-class Controller_Dev_Todo extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Dev_Todo extends Controller{
 	public function index(){
 		$exts		= array( 'php5', 'php', 'js', 'css' );
 		$sources	= array(

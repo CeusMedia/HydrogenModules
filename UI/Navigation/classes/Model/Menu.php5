@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Model_Menu
 {
 	protected $acl;
@@ -16,7 +19,7 @@ class Model_Menu
 
 	public static $pathRequestKey	= "__path";			//  @todo get from env or router?
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_navigation.', TRUE );

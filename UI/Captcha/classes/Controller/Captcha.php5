@@ -1,5 +1,8 @@
 <?php
-class Controller_Captcha extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Captcha extends Controller
 {
 	public function image()
 	{

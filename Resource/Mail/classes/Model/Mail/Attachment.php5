@@ -3,11 +3,14 @@
  *	Database model of mail attachments.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Database model of mail attachments.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Attachment extends CMF_Hydrogen_Model
+class Model_Mail_Attachment extends Model
 {
 	const STATUS_INACTIVE	= 0;
 	const STATUS_ACTIVE		= 1;

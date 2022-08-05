@@ -3,11 +3,14 @@
  *	Role Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Role Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Role extends CMF_Hydrogen_Model
+class Model_Role extends Model
 {
 	const ACCESS_NONE		= 0;
 //	const ACCESS_			= 1;

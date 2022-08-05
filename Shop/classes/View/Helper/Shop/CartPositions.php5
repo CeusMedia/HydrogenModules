@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Shop_CartPositions
 {
 	const DISPLAY_UNKNOWN			= 0;
@@ -32,7 +35,7 @@ class View_Helper_Shop_CartPositions
 	protected $display				= self::DISPLAY_BROWSER;
 	protected $output				= self::OUTPUT_HTML;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->config	= $this->env->getConfig()->getAll( 'module.shop.', TRUE );

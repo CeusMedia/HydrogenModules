@@ -1,5 +1,8 @@
 <?php
-class Model_Note_Tag extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Note_Tag extends Model
 {
 	const STATUS_DISABLED	= -1;
 	const STATUS_NORMAL		= 0;
@@ -32,4 +35,3 @@ class Model_Note_Tag extends CMF_Hydrogen_Model
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-

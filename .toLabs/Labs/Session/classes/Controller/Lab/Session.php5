@@ -4,13 +4,15 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Controller.
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */
-class Controller_Lab_Session extends CMF_Hydrogen_Controller
+class Controller_Lab_Session extends Controller
 {
 	public function index()
 	{

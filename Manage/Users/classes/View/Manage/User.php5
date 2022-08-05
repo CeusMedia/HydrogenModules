@@ -5,18 +5,18 @@
  *	@package		Manage_Users.View.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	User View.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.View.Manage
- *	@extends		CMF_Hydrogen_View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
- *	@version		$Id$
  */
-class View_Manage_User extends CMF_Hydrogen_View
+class View_Manage_User extends View
 {
 	public function index()
 	{

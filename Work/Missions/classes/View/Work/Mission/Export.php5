@@ -1,5 +1,8 @@
 <?php
-class View_Work_Mission_Export extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Work_Mission_Export extends View{
 
 	public function ical(){
 		$request	= $this->env->getRequest();

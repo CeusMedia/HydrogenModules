@@ -26,8 +26,8 @@ return '
 				</div>
 				<div class="control-group">
 					<div class="controls">
-						'.new CMM_Bootstrap_LinkButton( './manage.php5', 'zurück', 'btn-small', 'arrow-left' ).'
-						'.new CMM_Bootstrap_SubmitButton( 'import', 'importieren', 'btn-small btn-success', 'ok' ).'
+						'.new CeusMedia\Bootstrap\Button\Link( './manage.php5', 'zurück', 'btn-small', 'arrow-left' ).'
+						'.new CeusMedia\Bootstrap\Button\Submit( 'import', 'importieren', 'btn-small btn-success', 'ok' ).'
 					</div>
 				</div>
 			</form>

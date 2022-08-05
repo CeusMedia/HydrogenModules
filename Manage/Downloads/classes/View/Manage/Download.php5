@@ -1,5 +1,8 @@
 <?php
-class View_Manage_Download extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_Download extends View{
 
 	public function index(){
 		$this->env->getPage()->addThemeStyle( 'module.manage.downloads.css' );

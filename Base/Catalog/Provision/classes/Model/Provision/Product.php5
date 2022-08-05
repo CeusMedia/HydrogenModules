@@ -1,6 +1,9 @@
 <?php
-class Model_Provision_Product extends CMF_Hydrogen_Model{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Provision_Product extends Model
+{
 	const STATUS_DEACTIVATED	= -1;
 	const STATUS_NEW			= 0;
 	const STATUS_ACTIVE			= 1;
@@ -29,4 +32,3 @@ class Model_Provision_Product extends CMF_Hydrogen_Model{
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

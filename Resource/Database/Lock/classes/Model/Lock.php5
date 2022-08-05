@@ -3,14 +3,17 @@
  *	Model.
  *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Model.
  *	@version		$Id$
  *	@todo			implement
  *	@todo			code documentation
  */
-class Model_Lock extends CMF_Hydrogen_Model{
-
+class Model_Lock extends Model
+{
 	/**	@var	$name		string		Table name without prefix of database connection */
 	protected $name			= "locks";
 
@@ -36,4 +39,3 @@ class Model_Lock extends CMF_Hydrogen_Model{
 	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

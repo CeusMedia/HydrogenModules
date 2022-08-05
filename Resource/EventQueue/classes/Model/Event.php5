@@ -3,12 +3,14 @@
  *	Data Model of ....
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of ....
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Event extends CMF_Hydrogen_Model
+class Model_Event extends Model
 {
 	const STATUS_NEW		= 0;
 	const STATUS_REVOKED	= 1;

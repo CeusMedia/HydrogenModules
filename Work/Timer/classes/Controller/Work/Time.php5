@@ -1,5 +1,8 @@
 <?php
-class Controller_Work_Time extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Time extends Controller
 {
 	protected $request;
 	protected $session;

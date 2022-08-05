@@ -1,7 +1,12 @@
 <?php
-class Hook_Tracker_Hotjar extends CMF_Hydrogen_Hook{
 
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $modules, $data = [] ){
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Tracker_Hotjar extends Hook
+{
+	static public function onPageApplyModules( Environment $env, $context, $modules, $data = [] )
+	{
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_hotjar.', TRUE );				//  get module configuration as array map
 		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )									//  piwik tracking is disabled or ID is not set
 			return;

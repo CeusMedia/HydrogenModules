@@ -1,9 +1,15 @@
 <?php
-class View_Manage_Catalog_Bookstore extends CMF_Hydrogen_View{
 
-	public function index(){}
+use CeusMedia\HydrogenFramework\View;
 
-	protected function renderMainTabs(){
+class View_Manage_Catalog_Bookstore extends View
+{
+	public function index()
+	{
+	}
+
+	protected function renderMainTabs()
+	{
 		$currentTab		= (int) $this->env->getSession()->get( 'manage.catalog.bookstore.tab' );
 		$tabs			= (object) $this->getWords( 'tabsMain', 'manage/catalog/bookstore' );
 		$current		= strtolower( $this->env->getRequest()->get( '__controller' ) );
@@ -17,4 +23,3 @@ class View_Manage_Catalog_Bookstore extends CMF_Hydrogen_View{
 		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => "nav nav-tabs" ) );
 	}
 }
-?>

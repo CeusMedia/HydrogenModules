@@ -1,5 +1,8 @@
 <?php
-class Controller_UI_Compressor extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_UI_Compressor extends Controller
 {
 	public function flush()
 	{

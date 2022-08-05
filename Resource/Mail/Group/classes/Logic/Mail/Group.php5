@@ -1,5 +1,8 @@
 <?php
-class Logic_Mail_Group extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Mail_Group extends Logic
 {
 	protected $modelGroup;
 	protected $modelMember;

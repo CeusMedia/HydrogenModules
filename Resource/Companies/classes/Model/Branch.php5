@@ -1,6 +1,9 @@
 <?php
-class Model_Branch extends CMF_Hydrogen_Model{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Branch extends Model
+{
 	const STATUS_INACTIVE	= -2;
 	const STATUS_REJECTED	= -1;
 	const STATUS_NEW		= 0;
@@ -10,6 +13,7 @@ class Model_Branch extends CMF_Hydrogen_Model{
 	protected $radiusEarth  = 6371;
 
 	protected $name			= 'branches';
+
 	protected $columns		= array(
 		'branchId',
 		'companyId',
@@ -32,14 +36,18 @@ class Model_Branch extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'branchId';
+
 	protected $indices		= array(
 		'companyId',
 		'status',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function extendWithGeocodes( $branchId ){
+	public function extendWithGeocodes( $branchId )
+	{
 		$branch	= $this->get( $branchId );
 		try{
 			$geocoder	= new Logic_Geocoder( $this->env );
@@ -61,7 +69,8 @@ die( $e->getMessage() );
 		}
 	}
 
-	public function getAllInDistance( $x, $y, $z, $distance, $havingIds = [] ){
+	public function getAllInDistance( $x, $y, $z, $distance, $havingIds = [] )
+	{
 		$query		= 'SELECT *
 		FROM branches as b
 		WHERE
@@ -86,11 +95,11 @@ die( $e->getMessage() );
 	/**
 	 *	@todo		move to branch module and remove
 	 */
-	public function getBranchesInRangeOf( $point, $radius, $havingIds = [] ){
+	public function getBranchesInRangeOf( $point, $radius, $havingIds = [] )
+	{
 		$list		= [];
 		$model		= new Model_Branch( $this->env );
 		$distance	= 2 * $this->radiusEarth * sin( $radius / ( 2 * $this->radiusEarth ) );
 		return $model->getAllInDistance( $point->x, $point->y, $point->z, $distance, $havingIds );
-	}/**/
+	}
 }
-?>

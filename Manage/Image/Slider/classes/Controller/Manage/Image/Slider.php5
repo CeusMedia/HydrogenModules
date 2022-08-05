@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Image_Slider extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Image_Slider extends Controller
 {
 	protected $modelSlider;
 	protected $modelSlide;

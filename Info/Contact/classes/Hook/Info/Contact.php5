@@ -1,7 +1,12 @@
 <?php
-class Hook_Info_Contact extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+use CeusMedia\HydrogenFramework\View;
+
+class Hook_Info_Contact extends Hook
 {
-	static public function onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	static public function onRenderContent( Environment $env, $context, $module, $data = [] )
 	{
 		if( !$env->getModules()->has( 'UI_Shortcode' ) )
 			return;
@@ -55,7 +60,7 @@ class Hook_Info_Contact extends CMF_Hydrogen_Hook
 						$replacement
 					);
 					if( $isFirst ){
-						$view		= new CMF_Hydrogen_View( $env );
+						$view		= new View( $env );
 						$blocks		= (object) array(
 							'success'	=> $view->loadContentFile( 'html/info/contact/form/success.html' ),
 							'error'		=> $view->loadContentFile( 'html/info/contact/form/error.html' ),

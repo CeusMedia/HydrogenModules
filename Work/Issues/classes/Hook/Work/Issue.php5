@@ -1,7 +1,11 @@
 <?php
-class Hook_Work_Issue extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Work_Issue extends Hook
 {
-	static public function onRegisterTimerModule( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onRegisterTimerModule( Environment $env, $context, $module, $payload = [] )
 	{
 		$context->registerModule( (object) array(
 			'moduleId'		=> 'Work_Issues',
@@ -11,7 +15,7 @@ class Hook_Work_Issue extends CMF_Hydrogen_Hook
 		) );
 	}
 
-	static public function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	static public function onRegisterDashboardPanels( Environment $env, $context, $module, $payload )
 	{
 		if( !$env->getAcl()->has( 'work/issue', 'ajaxRenderDashboardPanel' ) )
 			return;
@@ -24,7 +28,7 @@ class Hook_Work_Issue extends CMF_Hydrogen_Hook
 		) );
 	}
 
-	static public function onProjectRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	static public function onProjectRemove( Environment $env, $context, $module, $payload )
 	{
 		$projectId	= $payload['projectId'];
 		$model		= new Model_Issue( $env );
@@ -37,7 +41,7 @@ class Hook_Work_Issue extends CMF_Hydrogen_Hook
 	/**
 	 *	@todo 		maybe reassign issues etc. instead of removing them (as already (partly) implemented for managed issues)
 	 */
-	static public function onUserRemove( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	static public function onUserRemove( Environment $env, $context, $module, $payload )
 	{
 		$payload	= (object) $payload;
 		if( empty( $payload->userId ) ){
@@ -75,7 +79,7 @@ class Hook_Work_Issue extends CMF_Hydrogen_Hook
 			);
 	}
 
-	static public function onListUserRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	static public function onListUserRelations( Environment $env, $context, $module, $payload )
 	{
 		$payload	= (object) $payload;
 		if( empty( $payload->userId ) ){
@@ -123,7 +127,7 @@ class Hook_Work_Issue extends CMF_Hydrogen_Hook
 		);
 	}
 
-	static public function onListProjectRelations( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	static public function onListProjectRelations( Environment $env, $context, $module, $payload )
 	{
 		$modelProject	= new Model_Project( $env );
 		if( empty( $payload->projectId ) ){

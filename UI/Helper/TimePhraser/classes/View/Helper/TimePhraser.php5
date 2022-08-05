@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_TimePhraser
 {
 	const MODE_HINT		= 1;
@@ -15,7 +18,7 @@ class View_Helper_TimePhraser
 	protected $mode				= self::MODE_HINT;
 	protected $timestamp;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
@@ -50,7 +53,7 @@ class View_Helper_TimePhraser
 		return $phrase;
 	}
 
-	public static function convertStatic( CMF_Hydrogen_Environment $env, $timestamp, bool $asHtml = FALSE, ?string $prefix = NULL, ?string $suffix = NULL )
+	public static function convertStatic( Environment $env, $timestamp, bool $asHtml = FALSE, ?string $prefix = NULL, ?string $suffix = NULL )
 	{
 		$helper	= new self( $env );
 		return $helper->convert( $timestamp, $asHtml, $prefix, $suffix );

@@ -1,5 +1,8 @@
 <?php
-class Model_Form_Block extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Form_Block extends Model
 {
 	protected $columns		= [
 		'blockId',

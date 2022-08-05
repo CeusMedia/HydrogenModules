@@ -3,12 +3,14 @@
  *	Data model of mail groups.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data model of mail groups.
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Group extends CMF_Hydrogen_Model
+class Model_Mail_Group extends Model
 {
 	const STATUS_ARCHIVED		= -9;
 	const STATUS_DEACTIVATED	= -1;

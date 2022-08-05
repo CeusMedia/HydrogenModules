@@ -2,11 +2,14 @@
 /**
  *	Model for mission filters.
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
-*	Model for mission filters.
+ *	Model for mission filters.
  *	@todo			code documentation
  */
-class Model_Mission_Filter extends CMF_Hydrogen_Model
+class Model_Mission_Filter extends Model
 {
 	/**	@var	$name		string		Table name without prefix of database connection */
 	protected $name			= "mission_filters";

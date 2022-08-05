@@ -4,20 +4,18 @@
  *	@category		cmProjects
  *	@package		LUV.Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			02.07.2006
- *	@version		3.0
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Orders.
  *	@category		cmProjects
  *	@package		LUV.Model
- *	@extends		CMF_Neon_Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			02.07.2006
- *	@version		3.0
  */
-class Model_Shop_Order extends CMF_Hydrogen_Model {
-
+class Model_Shop_Order extends Model
+{
 	const STATUS_REFUNDED			= -6;
 	const STATUS_COMPLAINED			= -5;
 	const STATUS_NOT_DELIVERED		= -4;
@@ -33,6 +31,7 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 	const STATUS_COMPLETED			= 6;
 
 	protected $name		= 'shop_orders';
+
 	protected $columns	= array(
 		"orderId",
 		"customerId",
@@ -48,7 +47,9 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 		"createdAt",
 		"modifiedAt",
 	);
+
 	protected $primaryKey	= 'orderId';
+
 	protected $indices		= array(
 		"customerId",
 		"sessionId",
@@ -58,6 +59,6 @@ class Model_Shop_Order extends CMF_Hydrogen_Model {
 		"status",
 		"currency",
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

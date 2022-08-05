@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Catalog_Clothing_Category extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Catalog_Clothing_Category extends Controller
 {
 	public function add()
 	{

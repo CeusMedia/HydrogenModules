@@ -5,19 +5,19 @@
  *	@package		Roles.Model.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Role Model.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Roles.Model.Admin
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
- *	@version		$Id$
  */
-class Model_Role extends CMF_Hydrogen_Model {
-
+class Model_Role extends Model
+{
 	const ACCESS_NONE		= 0;
 	const ACCESS_ACL		= 64;
 	const ACCESS_FULL		= 128;
@@ -28,6 +28,7 @@ class Model_Role extends CMF_Hydrogen_Model {
 	const REGISTER_DEFAULT	= 128;
 
 	protected $name		= 'roles';
+
 	protected $columns	= array(
 		'roleId',
 		'access',
@@ -37,12 +38,14 @@ class Model_Role extends CMF_Hydrogen_Model {
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'roleId';
+
 	protected $indices		= array(
 		'access',
 		'register',
 		'title',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

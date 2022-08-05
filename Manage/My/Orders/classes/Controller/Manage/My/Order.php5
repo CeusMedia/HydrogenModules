@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_My_Order extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_My_Order extends Controller{
 
 	protected $backends	= [];
 	protected $logicShop;

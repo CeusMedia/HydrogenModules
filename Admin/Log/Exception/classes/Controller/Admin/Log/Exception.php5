@@ -5,18 +5,19 @@
  *	@package		Chat.Server.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Syslog.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	System Log Controller.
  *	@category		cmApps
  *	@package		Chat.Server.Controller
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Syslog.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
-class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller
+class Controller_Admin_Log_Exception extends Controller
 {
 	/**	@var		Environment		$env		Environment instance */
 	protected $env;
@@ -33,7 +34,7 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller
 
 	protected $filterPrefix		= 'filter_admin_log_exception_';
 
-	public static function ___onLogException( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	public static function ___onLogException( Environment $env, $context, $module, $data = [] )
 	{
 		if( is_object( $data ) && $data instanceof Exception )
 			$data	= array( 'exception' => $data );
@@ -188,4 +189,3 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller
 		$this->filePath	= $path.$fileName;
 	}
 }
-

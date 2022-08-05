@@ -1,6 +1,9 @@
 <?php
-class Model_Provision_Product_License extends CMF_Hydrogen_Model{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Provision_Product_License extends Model
+{
 	protected $name			= 'provision_product_licenses';
 
 	protected $columns		= array(
@@ -29,4 +32,3 @@ class Model_Provision_Product_License extends CMF_Hydrogen_Model{
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

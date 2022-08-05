@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Catalog_Bookstore_Position{
 
 	/**	@var	Logic_Catalog_Bookstore	$logic */
@@ -7,7 +10,7 @@ class View_Helper_Catalog_Bookstore_Position{
 	/**	@var	View_Helper_Catalog_Bookstore	$helper */
 	protected $helper;
 
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( Environment $env ){
 		$this->env		= $env;
 		$this->logic	= new Logic_Catalog_Bookstore( $env );
 		$this->language	= $this->env->getLanguage();

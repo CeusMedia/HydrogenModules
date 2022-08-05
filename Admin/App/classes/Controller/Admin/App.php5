@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_App extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_App extends Controller
 {
 	protected $config;
 	protected $language;

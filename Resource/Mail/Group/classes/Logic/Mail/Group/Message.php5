@@ -1,5 +1,8 @@
 <?php
-class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Mail_Group_Message extends Logic
 {
 	protected $logicGroup;
 	protected $modelMember;
@@ -14,7 +17,8 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic
 	protected $logicMail;*/
 	protected $transports		= [];
 
-	public function addFromRawMail( $groupId, $rawMail ){
+	public function addFromRawMail( $groupId, $rawMail )
+	{
 		$parser		= new \CeusMedia\Mail\Message\Parser();
 		$message	= $parser->parse( $rawMail );
 		$headers	= $message->getHeaders();
@@ -50,17 +54,14 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic
 		return $this->modelMessage->add( $data, FALSE );
 	}
 
-	public function checkId( $messageId, $strict = TRUE ){
+	public function checkId( $messageId, $strict = TRUE )
+	{
 		$message	= $this->modelMessage->get( $messageId );
 		if( $message )
 			return $message;
 		if( $strict )
 			throw new RangeException( 'Invalid message ID: '.$messageId );
 		return NULL;
-	}
-
-	protected function getMailGroupLogic(){
-		return $this->env->getLogic()->get( 'mailGroupMessage' );
 	}
 
 	//  --  PUBLIC METHODS  --  //
@@ -71,7 +72,8 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic
 	 *	@param		integer|object	$messageOrMessageId		Message object or Message ID
 	 *	@return		object			Mail message object
 	 */
-	public function getMessageObject( $messageOrMessageId ){
+	public function getMessageObject( $messageOrMessageId )
+	{
 		if( is_int( $messageOrMessageId ) )
 			$message	= $this->modelMessage->get( $messageOrMessageId );
 		else if( is_object( $messageOrMessageId ) )
@@ -87,7 +89,8 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic
 		return unserialize( $object[1] );
 	}
 
-	public function getMessageRawMail( $messageOrMessageId ){
+	public function getMessageRawMail( $messageOrMessageId )
+	{
 //		trigger_error( "Oh! I thought this method is not used anymore.", E_USER_ERROR );
 		if( is_object( $messageOrMessageId ) )
 			$message	= $messageOrMessageId;
@@ -126,7 +129,8 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic
 		}
 	}*/
 
-	public function handleImportedGroupMessages( $groupId, $dry = FALSE ){
+	public function handleImportedGroupMessages( $groupId, $dry = FALSE )
+	{
 		$senderMemberStatusesToReject	= array(
 			Model_Mail_Group_Member::STATUS_DEACTIVATED,
 			Model_Mail_Group_Member::STATUS_UNREGISTERED,
@@ -205,7 +209,8 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic
 		return $results;
 	}
 
-	public function handleStalledGroupMessages( $groupId, $dry = FALSE ){
+	public function handleStalledGroupMessages( $groupId, $dry = FALSE )
+	{
 		$group		= $this->logicGroup->checkGroupId( $groupId );
 
 		$results	= (object) array(
@@ -321,6 +326,11 @@ class Logic_Mail_Group_Message extends CMF_Hydrogen_Logic
 			);
 		}
 		return $forwardMail;
+	}
+
+	protected function getMailGroupLogic()
+	{
+		return $this->env->getLogic()->get( 'mailGroupMessage' );
 	}
 
 	protected function getTransport( $groupId )

@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_News extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_News extends Controller{
 
 	protected function __onInit(){
 		$this->model		= new Model_News( $this->env );
@@ -61,7 +64,7 @@ class Controller_Manage_News extends CMF_Hydrogen_Controller{
 			$this->restart( NULL, TRUE );
 		}
 //		$news->startsAt	= $news->startsAt ? date( 'Y-m-d', $news->startsAt ) : $news->startsAt;
-//		$news->endsAt	= $news->endsAt ? date( 'Y-m-d', $news->endsAt ) : $news->endsAt; 
+//		$news->endsAt	= $news->endsAt ? date( 'Y-m-d', $news->endsAt ) : $news->endsAt;
 
 		$this->addData( 'news', $news );
 		$this->addData( 'newsId', $newsId );

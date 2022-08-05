@@ -1,5 +1,9 @@
 <?php
-class View_Gallery extends CMF_Hydrogen_View
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\View;
+
+class View_Gallery extends View
 {
 	public function feed()
 	{
@@ -9,7 +13,7 @@ class View_Gallery extends CMF_Hydrogen_View
 		$debug		= $this->getData( 'debug' );
 		$config		= $this->env->getConfig();
 		$baseUrl	= $config->get( 'app.base.url' );
-		$module		= new ADT_List_Dictionary( $config->getAll( 'module.gallery_compact.' ) );
+		$module		= new Dictionary( $config->getAll( 'module.gallery_compact.' ) );
 		$channel	= array(
 			'link'		=> $baseUrl.'gallery',
 			'language'	=> $module->get( 'feed.language' ),

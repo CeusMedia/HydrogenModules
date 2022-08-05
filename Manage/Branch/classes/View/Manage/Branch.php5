@@ -1,12 +1,22 @@
 <?php
-class View_Manage_Branch extends CMF_Hydrogen_View{
 
-	public function index(){}
-	
-	public function add(){}
+use CeusMedia\HydrogenFramework\View;
 
-	public function edit(){}
+class View_Manage_Branch extends View
+{
+	public function index()
+	{
+	}
 
-	public function filter(){}
+	public function add()
+	{
+	}
+
+	public function edit()
+	{
+	}
+
+	public function filter()
+	{
+	}
 }
-?>

@@ -3,11 +3,14 @@
  *	Data model of mail group messages.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data model of mail group messages.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Group_Message extends CMF_Hydrogen_Model
+class Model_Mail_Group_Message extends Model
 {
 	const STATUS_REJECTED	= -1;
 	const STATUS_NEW		= 0;

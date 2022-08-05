@@ -1,5 +1,9 @@
 <?php
-class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Form_Transfer_DataMapper extends Logic
 {
 	protected $env;
 
@@ -13,8 +17,8 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	 */
 	public function applyRulesToFormData( $formData, $rules ): array
 	{
-		$input	= new ADT_List_Dictionary( $formData );
-		$output	= new ADT_List_Dictionary();
+		$input	= new Dictionary( $formData );
+		$output	= new Dictionary();
 
 		$this->applySets( $rules->set ?? [], $input, $output );
 		$this->applyTranslation( (array) $rules->translate ?? [], $input, $output );
@@ -33,9 +37,9 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	/**
 	 *	...
 	 *	@access		protected
-	 *	@param		array				$creations		List of creation rules
-	 *	@param		ADT_List_Dictionary	$input			Input data dictionary
-	 *	@param		ADT_List_Dictionary	$output		Output data dictionary
+	 *	@param		array			$creations		List of creation rules
+	 *	@param		Dictionary		$input			Input data dictionary
+	 *	@param		Dictionary		$output		Output data dictionary
 	 */
 	protected function applyCreations( $creations, $input, $output )
 	{
@@ -63,9 +67,9 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	 *	Applies filter rules.
 	 *
 	 *	@access		protected
-	 *	@param		array				$filters	Map of filter rules
-	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
-	 *	@param		ADT_List_Dictionary	$output		Output data dictionary
+	 *	@param		array			$filters	Map of filter rules
+	 *	@param		Dictionary		$input		Input data dictionary
+	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
 	protected function applyFilters( $filters, $input, $output )
@@ -141,9 +145,9 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	 *	Applies filter rules.
 	 *
 	 *	@access		protected
-	 *	@param		array				$filters	Map of filter rules
-	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
-	 *	@param		ADT_List_Dictionary	$output		Output data dictionary
+	 *	@param		array			$filters	Map of filter rules
+	 *	@param		Dictionary		$input		Input data dictionary
+	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
 	protected function applyDatabaseSearches( $searches, $input, $output )
@@ -186,9 +190,9 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	 *	Applies translater rules.
 	 *
 	 *	@access		protected
-	 *	@param		array				$translates	Map of translate rules
-	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
-	 *	@param		ADT_List_Dictionary	$output		Output data dictionary
+	 *	@param		array			$translates	Map of translate rules
+	 *	@param		Dictionary		$input		Input data dictionary
+	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
 	protected function applyTranslation( $translates, $input, $output )
@@ -196,7 +200,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 		foreach( $translates as $fieldName => $map ){
 			if( $input->has( $fieldName ) ){
 				$value		= $input->get( $fieldName );
-				$translate	= new ADT_List_Dictionary( (array) $map );
+				$translate	= new Dictionary( (array) $map );
 				if( $translate->has( $value ) ){
 					$input->set( $fieldName, $translate->get( $value ) );
 					continue;
@@ -209,9 +213,9 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	 *	Applies filter rules.
 	 *
 	 *	@access		protected
-	 *	@param		array				$filters	Map of filter rules
-	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
-	 *	@param		ADT_List_Dictionary	$output		Output data dictionary
+	 *	@param		array			$filters	Map of filter rules
+	 *	@param		Dictionary		$input		Input data dictionary
+	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
 	protected function applyCopies( $copies, $input, $output )
@@ -225,9 +229,9 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	 *	Applies mappings by copying input values to output fields.
 	 *
 	 *	@access		protected
-	 *	@param		array				$map		Map of input to output field names
-	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
-	 *	@param		ADT_List_Dictionary	$output		Output data dictionary
+	 *	@param		array			$map		Map of input to output field names
+	 *	@param		Dictionary		$input		Input data dictionary
+	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
 	protected function applyMappings( $map, $input, $output )
@@ -241,9 +245,9 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	 *	Applies map of output values to set directly.
 	 *
 	 *	@access		protected
-	 *	@param		array				$map		Map of output values to set
-	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
-	 *	@param		ADT_List_Dictionary	$output		Output data dictionary
+	 *	@param		array			$map		Map of output values to set
+	 *	@param		Dictionary		$input		Input data dictionary
+	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
 	protected function applySets( $map, $input, $output )
@@ -262,7 +266,7 @@ class Logic_Form_Transfer_DataMapper extends CMF_Hydrogen_Logic
 	 *
 	 *	@access		public
 	 *	@param		string
-	 *	@param		ADT_List_Dictionary	$input		Input data dictionary
+	 *	@param		Dictionary		$input		Input data dictionary
 	 *	@return		string
 	 */
 	protected function resolveValue( $value, $input )

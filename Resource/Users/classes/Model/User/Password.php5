@@ -3,11 +3,14 @@
  *	User Password Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	User Password Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_User_Password extends CMF_Hydrogen_Model
+class Model_User_Password extends Model
 {
 	const STATUS_REVOKED	= -2;
 	const STATUS_OUTDATED	= -1;

@@ -5,14 +5,16 @@
  *	@package		LUV.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Customers.
  *	@category		cmProjects
  *	@package		LUV.Model
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail extends CMF_Hydrogen_Model
+class Model_Mail extends Model
 {
 	const STATUS_ABORTED		= -3;
 	const STATUS_FAILED			= -2;

@@ -1,5 +1,8 @@
 <?php
-class Logic_Form_Fill extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Form_Fill extends Logic
 {
 	protected $logicMail;
 	protected $modelFill;
@@ -11,21 +14,6 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 	protected $modelFillTransfer;
 
 	protected $transferTargetMap	= [];
-
-	protected function __onInit()
-	{
-		$this->logicMail			= $this->env->getLogic()->get( 'Mail' );
-		$this->modelForm			= $this->getModel( 'Form' );
-		$this->modelFill			= $this->getModel( 'FormFill' );
-		$this->modelRule			= $this->getModel( 'FormRule' );
-		$this->modelMail			= $this->getModel( 'FormMail' );
-		$this->modelTransferTarget	= $this->getModel( 'FormTransferTarget' );
-		$this->modelTransferRule	= $this->getModel( 'FormTransferRule' );
-		$this->modelFillTransfer	= $this->getModel( 'FormFillTransfer' );
-
-		foreach( $this->modelTransferTarget->getAll() as $target )
-			$this->transferTargetMap[$target->formTransferTargetId]	= $target;
-	}
 
 	public function applyTransfers( $fillId ): array
 	{
@@ -387,6 +375,21 @@ class Logic_Form_Fill extends CMF_Hydrogen_Logic
 			$this->logicMail->handleMail( $mail, $receiver, $language );
 		}
 		return count( $receivers );
+	}
+
+	protected function __onInit()
+	{
+		$this->logicMail			= $this->env->getLogic()->get( 'Mail' );
+		$this->modelForm			= $this->getModel( 'Form' );
+		$this->modelFill			= $this->getModel( 'FormFill' );
+		$this->modelRule			= $this->getModel( 'FormRule' );
+		$this->modelMail			= $this->getModel( 'FormMail' );
+		$this->modelTransferTarget	= $this->getModel( 'FormTransferTarget' );
+		$this->modelTransferRule	= $this->getModel( 'FormTransferRule' );
+		$this->modelFillTransfer	= $this->getModel( 'FormFillTransfer' );
+
+		foreach( $this->modelTransferTarget->getAll() as $target )
+			$this->transferTargetMap[$target->formTransferTargetId]	= $target;
 	}
 
 	protected function createMailAddress( string $address )

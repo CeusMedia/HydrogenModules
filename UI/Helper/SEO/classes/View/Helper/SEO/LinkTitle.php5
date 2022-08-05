@@ -6,6 +6,9 @@
  *
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Helper to convert strings to be valid for URLs.
  *	Can be used to convert database item titles for SEO optimized links.
@@ -40,7 +43,7 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@access		public
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 		$module		= $this->env->getModules()->get( 'UI_Helper_SEO' );

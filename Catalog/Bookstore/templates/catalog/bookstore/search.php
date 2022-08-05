@@ -22,7 +22,7 @@ if( $searchTerm || $searchAuthorId ){
 		foreach( $articles as $article )
 			$list[]	= $helper->renderArticleListItem( $article );
 		$list	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'articleList' ) );
-		$pages	= new CMM_Bootstrap_PageControl( './catalog/bookstore/search', $page, ceil( $total / $limit ) );
+		$pages	= new \CeusMedia\Bootstrap\Nav\PageControl( './catalog/bookstore/search', $page, ceil( $total / $limit ) );
 	}
 }
 

@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\CLI\ArgumentParser;
+
 $iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 

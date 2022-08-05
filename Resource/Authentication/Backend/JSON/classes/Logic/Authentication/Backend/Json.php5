@@ -1,5 +1,8 @@
 <?php
-class Logic_Authentication_Backend_Json extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Authentication_Backend_Json extends Logic
 {
 	public function checkPassword( $userId, string $password )
 	{

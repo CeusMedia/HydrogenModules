@@ -1,5 +1,8 @@
 <?php
-class View_Manage_Project extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_Project extends View{
 
 	public function add(){}
 

@@ -1,5 +1,9 @@
 <?php
-class Hook_Shop_Special extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Shop_Special extends Hook
 {
 	static public $articleId		= 0;
 
@@ -7,13 +11,13 @@ class Hook_Shop_Special extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
-	 *	@param		object						$context		Hook context object
-	 *	@param		object						$module			Module object
-	 *	@param		public						$payload		Map of hook arguments
+	 *	@param		Environment		$env			Environment instance
+	 *	@param		object			$context		Hook context object
+	 *	@param		object			$module			Module object
+	 *	@param		array			$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onPageInit( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onPageInit( Environment $env, $context, $module, $payload = [] )
 	{
 		$request	= $env->getRequest();
 		$model		= new Model_Shop_Bridge( $env );
@@ -34,13 +38,13 @@ class Hook_Shop_Special extends CMF_Hydrogen_Hook
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Environment instance
-	 *	@param		object						$context		Hook context object
-	 *	@param		object						$module			Module object
-	 *	@param		public						$payload		Map of hook arguments
+	 *	@param		Environment		$env			Environment instance
+	 *	@param		object			$context		Hook context object
+	 *	@param		object			$module			Module object
+	 *	@param		array			$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
 //		remark( 'articleId: '.static::$articleId );die;
 		if( !static::isSpecial() )
@@ -62,7 +66,8 @@ class Hook_Shop_Special extends CMF_Hydrogen_Hook
 		$context->addBodyClass( 'specialOffer' );
 	}
 
-	public static function isSpecial(){
+	public static function isSpecial()
+	{
 		return static::$articleId > 0;
 	}
 }

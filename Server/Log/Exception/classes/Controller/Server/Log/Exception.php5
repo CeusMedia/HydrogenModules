@@ -6,27 +6,23 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2019 Ceus Media {@link https://ceusmedia.de/}
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Server Log Exception Controller.
  *	@category		CeusMedia.Hydrogen.Module
  *	@package		Server.Log.Exception
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2019 Ceus Media {@link https://ceusmedia.de/}
  */
-class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
-
+class Controller_Server_Log_Exception extends Controller
+{
 	protected $model;
 	protected $logic;
 
-	protected function __onInit(){
-		$this->model		= new Model_Log_Exception( $this->env );
-		$this->logic		= $this->env->getLogic()->get( 'logException');
-		$this->logic->importFromLogFile();
-		$this->filterPrefix	= 'filter_server_system_';
-	}
-
-	public function index( $page = 0, $limit = 20 ){
+	public function index( $page = 0, $limit = 20 )
+	{
 		$page	= preg_match( "/^[0-9]+$/", $page ) ? (int) $page : 0;
 
 		$conditions	= [];
@@ -48,7 +44,8 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 		$this->addData( 'limit', $limit );
 	}
 
-	public function logTestException( $message, $code = 0 ){
+	public function logTestException( $message, $code = 0 )
+	{
 		$exception	= new Exception( $message, $code );
 //		$this->callHook( 'Env', 'logException', $this, $exception );
 //		self::handleException( $this->env, $exception );
@@ -56,7 +53,8 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function remove( $id, $test = FALSE ){
+	public function remove( $id, $test = FALSE )
+	{
 		if( $test )
 			throw new Exception( 'Test' );
 		$exception	= $this->check( $id, FALSE );
@@ -65,7 +63,8 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 		$this->restart( $page, TRUE );
 	}
 
-	public function view( $id ){
+	public function view( $id )
+	{
 		$exception	= $this->check( $id, FALSE );
 		$page		= $this->env->getSession()->get( $this->filterPrefix.'page' );
 		$this->addData( 'exception', $exception );
@@ -74,7 +73,16 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 
 	/*  --  PROTECTED  --  */
 
-	protected function check( $id, $strict = TRUE ){
+	protected function __onInit()
+	{
+		$this->model		= new Model_Log_Exception( $this->env );
+		$this->logic		= $this->env->getLogic()->get( 'logException');
+		$this->logic->importFromLogFile();
+		$this->filterPrefix	= 'filter_server_system_';
+	}
+
+	protected function check( $id, $strict = TRUE )
+	{
 		$exception	= $this->logic->check( $id, FALSE );
 		if( !$exception ){
 			$this->env->getMessenger()->noteError( 'Invalid exception ID.' );
@@ -83,4 +91,3 @@ class Controller_Server_Log_Exception extends CMF_Hydrogen_Controller{
 		return $exception;
 	}
 }
-?>

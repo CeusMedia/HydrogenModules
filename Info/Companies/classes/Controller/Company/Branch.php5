@@ -1,5 +1,8 @@
 <?php
-class Controller_Company_Branch extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Company_Branch extends Controller
 {
 	protected $messenger;
 	protected $modelBranch;

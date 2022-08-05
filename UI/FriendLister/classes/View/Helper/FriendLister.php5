@@ -6,6 +6,10 @@
  *	@copyright		2012-2021 Ceus Media <https://ceusmedia.de/>
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Renders list of linked friend sites.
  *
@@ -21,7 +25,7 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 	}
@@ -35,7 +39,7 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract
 	public function build(): string
 	{
 		$config		= $this->env->getConfig();														//
-		$c			= new ADT_List_Dictionary( $config->getAll( 'module.ui_friendlister.' ) );		//
+		$c			= new Dictionary( $config->getAll( 'module.ui_friendlister.' ) );		//
 		if( !file_exists( $c->get( 'file' ) ) )														//
 			throw new RuntimeException( 'File "'.$c->get( 'file' ).'" is not existing' );			//
 
@@ -66,7 +70,7 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract
 	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
 	 *	@return		string
 	 */
-	public static function render( CMF_Hydrogen_Environment $env ): string
+	public static function render( Environment $env ): string
 	{
 		$helper	= new View_Helper_FriendLister( $env );
 		return $helper->build();

@@ -4,19 +4,17 @@
  *	@category		cmProjects
  *	@package		LUV.Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			02.07.2006
- *	@version		3.0
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Shop Bridges.
  *	@category		cmProjects
  *	@package		LUV.Model
- *	@extends		CMF_Neon_Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			02.07.2006
- *	@version		3.0
  */
-class Model_Shop_Bridge extends CMF_Hydrogen_Model
+class Model_Shop_Bridge extends Model
 {
 	protected $name		= 'shop_bridges';
 

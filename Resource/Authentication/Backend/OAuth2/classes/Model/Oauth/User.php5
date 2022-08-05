@@ -5,18 +5,18 @@
  *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	OAuth Provider User Model.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Users.Model
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
-class Model_Oauth_User extends CMF_Hydrogen_Model
+class Model_Oauth_User extends Model
 {
 	protected $name		= 'oauth_users';
 

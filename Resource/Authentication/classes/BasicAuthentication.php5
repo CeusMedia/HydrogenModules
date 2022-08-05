@@ -1,10 +1,14 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	@todo		integrate authentication backends
  */
 class BasicAuthentication
 {
-	public function __construct( CMF_Hydrogen_Environment $env, string $realm )
+	public function __construct( Environment $env, string $realm )
 	{
 		$this->env		= $env;
 		$this->realm	= $realm;
@@ -12,7 +16,7 @@ class BasicAuthentication
 
 	public function authenticate()
 	{
-		$server		= new ADT_List_Dictionary( $_SERVER );
+		$server		= new Dictionary( $_SERVER );
 		$username	= trim( $server->get( 'PHP_AUTH_USER' ) );
 		$password	= trim( $server->get( 'PHP_AUTH_PW' ) );
 

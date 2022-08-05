@@ -1,5 +1,8 @@
 <?php
-class Controller_Csrf extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Csrf extends Controller
 {
 	protected $logic;
 	protected $messenger;

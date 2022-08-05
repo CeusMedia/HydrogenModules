@@ -6,15 +6,17 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	...
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
  */
-class Model_Gallery_Image extends CMF_Hydrogen_Model
+class Model_Gallery_Image extends Model
 {
 	protected $name		= 'gallery_images';
 

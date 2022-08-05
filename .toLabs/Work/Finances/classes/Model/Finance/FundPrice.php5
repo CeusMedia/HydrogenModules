@@ -1,5 +1,8 @@
 <?php
-class Model_Finance_FundPrice extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Finance_FundPrice extends Model
 {
 	protected $name		= 'finance_fund_prices';
 

@@ -6,15 +6,17 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2019 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	...
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2019 Ceus Media
  */
-class Model_Backup extends CMF_Hydrogen_Model
+class Model_Backup extends Model
 {
 	protected $name		= 'backups';
 

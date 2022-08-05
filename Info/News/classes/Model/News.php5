@@ -5,18 +5,18 @@
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	...
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
-class Model_News extends CMF_Hydrogen_Model
+class Model_News extends Model
 {
 	const STATUS_HIDDEN		= -1;
 	const STATUS_NEW		= 0;

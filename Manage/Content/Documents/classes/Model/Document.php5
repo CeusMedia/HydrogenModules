@@ -5,26 +5,28 @@
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	...
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
- *	@version		$Id$
  */
-class Model_Document {
-
+class Model_Document
+{
 	protected $path;
 
-	public function __construct( CMF_Hydrogen_Environment $env, $path ){
+	public function __construct( Environment $env, $path )
+	{
 		$this->path	= $path;
 	}
 
-	public function add( $upload ){
+	public function add( $upload )
+	{
 		if( !is_array( $upload ) )
 			throw new InvalidArgumentException( 'No valid upload array given' );
 		if( $upload['error'] ){
@@ -38,11 +40,13 @@ class Model_Document {
 		return TRUE;
 	}
 
-	public function count(){
+	public function count()
+	{
 		return count( $this->index() );
 	}
 
-	public function index( $limit = 0, $offset = 0 ){
+	public function index( $limit = 0, $offset = 0 )
+	{
 		$index	= new DirectoryIterator( $this->path );
 		$list	= [];
 		foreach( $index as $entry ){
@@ -58,11 +62,11 @@ class Model_Document {
 		return $list;
 	}
 
-	public function remove( $fileName ){
+	public function remove( $fileName )
+	{
 		if( substr( $fileName, 0, 1 ) !== '.'  )
 			if( @unlink( $this->path.$fileName ) )
 				return TRUE;
 		return FALSE;
 	}
 }
-?>

@@ -1,7 +1,12 @@
 <?php
-class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controller{
 
-	public function ajaxGetNextRank( $categoryId ){
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Manage_Catalog_Bookstore_Category extends Controller
+{
+	public function ajaxGetNextRank( $categoryId )
+	{
 		$nextRank			= 0;
 		$categoryArticles	= $this->logic->getCategoryArticles( $categoryId, array( 'rank' => 'DESC' ) );
 		if( $categoryArticles )
@@ -11,7 +16,8 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 		exit;
 	}
 
-	public function rankArticle( $categoryId, $articleId, $direction ){
+	public function rankArticle( $categoryId, $articleId, $direction )
+	{
 		$model		= new Model_Catalog_Bookstore_Article_Category( $this->env );
 		$category	= $this->logic->getCategory( $categoryId );
 		$article	= $this->logic->getArticle( $articleId );
@@ -39,16 +45,8 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 		$this->restart( './manage/catalog/bookstore/category/edit/'.$categoryId );
 	}
 
-	protected function __onInit(){
-		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Category::init start' );
-		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
-		$this->session		= $this->env->getSession();
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Category::init done' );
-	}
-
-	static public function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] ){
+	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
+	{
 		$cache		= $env->getCache();
 		if( !( $categories = $cache->get( 'catalog.tinymce.links.catalog.bookstore.categories' ) ) ){
 			$logic		= new Logic_Catalog_Bookstore( $env );
@@ -79,7 +77,8 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 		) ) );
 	}
 
-	public function add( $parentId = NULL ){
+	public function add( $parentId = NULL )
+	{
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
 			$data	= $this->request->getAll();
@@ -99,12 +98,14 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 		$this->addData( 'categories', $this->logic->getCategories( array(), array( 'rank' => 'ASC' ) ) );
 	}
 
-	public function ajaxSetTab( $tabKey ){
+	public function ajaxSetTab( $tabKey )
+	{
 		$this->session->set( 'manage.catalog.bookstore.category.tab', $tabKey );
 		exit;
 	}
 
-	public function edit( $categoryId ){
+	public function edit( $categoryId )
+	{
 		$words		= (object) $this->getWords( 'edit' );
 		$category	= $this->logic->getCategory( $categoryId );
 		if( !$category ){
@@ -126,11 +127,13 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 		$this->addData( 'articles', $this->logic->getCategoryArticles( $category, array( 'rank' => 'ASC' ) ) );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$this->addData( 'categories', $this->logic->getCategories() );
 	}
 
-	public function remove( $categoryId ){
+	public function remove( $categoryId )
+	{
 		$words		= (object) $this->getWords( 'remove' );
 		$category	= $this->logic->getCategory( $categoryId );
 		if( !$category ){
@@ -145,5 +148,14 @@ class Controller_Manage_Catalog_Bookstore_Category extends CMF_Hydrogen_Controll
 		$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $category->label_de, ENT_QUOTES, 'UTF-8' ) );
 		$this->restart( ( $category->parentId ? 'edit/'.$category->parentId : NULL ), TRUE );
 	}
+
+	protected function __onInit()
+	{
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Category::init start' );
+		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
+		$this->session		= $this->env->getSession();
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Category::init done' );
+	}
 }
-?>

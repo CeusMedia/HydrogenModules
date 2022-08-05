@@ -5,18 +5,18 @@
  *	@package		Manage_Users.Controller.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	User Controller.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
- *	@version		$Id$
  */
-class Controller_Manage_User extends CMF_Hydrogen_Controller
+class Controller_Manage_User extends Controller
 {
 	public static $moduleId		= 'Manage_Users';
 

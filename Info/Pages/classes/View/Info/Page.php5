@@ -1,12 +1,16 @@
 <?php
-class View_Info_Page extends CMF_Hydrogen_View
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\View;
+
+class View_Info_Page extends View
 {
 	public function index()
 	{
 //		$config		= $this->env->getConfig()->get( 'module.info_pages.', TRUE );
 		$page		= $this->env->getPage();
 
-		$data		= new ADT_List_Dictionary( $this->getData() );								//  wrap view data into dictionary object
+		$data		= new Dictionary( $this->getData() );										//  wrap view data into dictionary object
 		if( ( $object = $data->get( 'page' ) ) ){												//  a page has been found for called path
 			$separator	= $this->env->getConfig()->get( 'module.info_pages.title.separator' );	//  get title part separator
 			foreach( $object->parents as $parent )												//  iterate superior pages

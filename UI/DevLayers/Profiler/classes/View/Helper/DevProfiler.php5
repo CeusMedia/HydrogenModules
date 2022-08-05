@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_DevProfiler
 {
-	public static function render( CMF_Hydrogen_Environment $env )
+	public static function render( Environment $env )
 	{
 		$runtime	= $env->getRuntime();
 		$words		= $env->getLanguage()->getWords( 'ui.dev.layer.profiler' );

@@ -3,7 +3,7 @@
 	<title>App: Site</title>
 	<description><![CDATA[Empty web site application as base for your projects.]]></description>
 	<category>Application</category>
-	<version>0.6</version>
+	<version>0.6.1</version>
 	<log version="0.3.7">Added robots file and locked log folder.</log>
 	<log version="0.3.8">Using new script auto load level support to load layout.css at last.</log>
 	<log version="0.3.9">Adjusted .htaccess for newer Apache: strict option switches.</log>
@@ -31,6 +31,7 @@
 	<log version="0.5.8">Add robots file as template and autocreate copy.</log>
 	<log version="0.5.9">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
 	<log version="0.6">Update index handling by merging in vanishing module Index.</log>
+	<log version="0.6.1">Add template for unhandled errors.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -49,6 +50,7 @@
 		<locale>.htaccess</locale>
 		<template>index/index.php</template>
 		<template>master.php</template>
+		<template>error.php</template>
 		<template>.htaccess</template>
 		<style source="common" load="auto" level="end">layout.css</style>
 		<image source="common">background/CeusMedia/Logo.xcf</image>

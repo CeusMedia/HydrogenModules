@@ -1,5 +1,8 @@
 <?php
-class Controller_DevCenter extends CMF_Hydrogen_Controller_Ajax
+
+use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
+
+class Controller_DevCenter extends AjaxController
 {
 	public function setHeight()
 	{

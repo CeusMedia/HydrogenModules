@@ -1,5 +1,8 @@
 #!/usr/bin/php
 <?php
+
+use CeusMedia\Common\CLI\Output\Progress as ProgressOutput;
+
 require_once 'vendor/autoload.php';
 
 Tool::$verbose	= TRUE;
@@ -91,7 +94,7 @@ class Tool_OldStructure
 
 		$nr			= 0;
 		$list		= [];
-		$progress	= new CLI_Output_Progress();
+		$progress	= new ProgressOutput();
 		$progress->setTotal( count( $phpFiles ) );
 		$progress->start();
 		foreach( $phpFiles as $filePathAbsolute => $filePathShort ){

@@ -1,7 +1,11 @@
 <?php
-class Hook_IP_Lock extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_IP_Lock extends Hook
 {
-	public static function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onEnvInit( Environment $env, $context, $module, $payload )
 	{
 		$ip		= getEnv( 'REMOTE_ADDR' );																	//  get IP address of request
 		$logic	= Logic_IP_Lock::getInstance( $env );														//  get instance of IP lock logic

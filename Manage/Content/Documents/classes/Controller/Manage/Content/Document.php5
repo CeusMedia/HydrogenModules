@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Content_Document extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Content_Document extends Controller
 {
 
 	protected $frontend;

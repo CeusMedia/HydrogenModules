@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abstract
 {
 	public $classList			= 'nav nav-tabs';
@@ -13,7 +15,7 @@ class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abs
 	protected $current			= 0;
 	protected $basePath			= '';
 
-	public function __construct( CMF_Hydrogen_Environment $env, string $basePath = './' )
+	public function __construct( Environment $env, string $basePath = './' )
 	{
 		$this->setEnv( $env );
 		$this->setBasePath( $basePath );

@@ -1,5 +1,8 @@
 <?php
-class Controller_Provision extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Provision extends Controller{
 
 	protected $config;
 	protected $session;

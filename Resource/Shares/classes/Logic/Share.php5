@@ -1,5 +1,8 @@
 <?php
-class Logic_Share extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Share extends Logic
 {
 	protected $logicFileBucket;
 

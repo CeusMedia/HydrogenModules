@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Navigation_Mobile
 {
 	protected $env;
@@ -7,7 +10,7 @@ class View_Helper_Navigation_Mobile
 	protected $linksToSkip		= [];
 	protected $scope			= 'main';
 
-	public function __construct( CMF_Hydrogen_Environment $env, Model_Menu $menu )
+	public function __construct( Environment $env, Model_Menu $menu )
 	{
 		$this->env		= $env;
 		if( NULL !== $menu )

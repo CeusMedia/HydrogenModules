@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Mail_Attachment extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Mail_Attachment extends Controller
 {
 	protected $model;
 	protected $path;

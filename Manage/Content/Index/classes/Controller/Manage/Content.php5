@@ -1,5 +1,7 @@
 <?php
-class Controller_Manage_Content extends CMF_Hydrogen_Controller{
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Content extends Controller{
 	public function index(){}
 
 	protected function renderTabs(){

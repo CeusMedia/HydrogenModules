@@ -1,5 +1,8 @@
 <?php
-class View_Shop_Payment_Mangopay extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Shop_Payment_Mangopay extends View
 {
 	public function index()
 	{

@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_UserAvatar{
 
 	protected $userId;
@@ -73,7 +76,7 @@ class View_Helper_UserAvatar{
 		return '';
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $userObjectOrId, $size ){
+	static public function renderStatic( Environment $env, $userObjectOrId, $size ){
 		$helper	= new self( $env );
 		$helper->setUser( $userObjectOrId );
 		$helper->setSize( $size );

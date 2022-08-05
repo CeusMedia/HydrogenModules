@@ -1,5 +1,8 @@
 <?php
-class Controller_Ajax_Info_Forum extends CMF_Hydrogen_Controller_Ajax
+
+use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
+
+class Controller_Ajax_Info_Forum extends AjaxController
 {
 	public function countUpdates( $threadId, $lastPostId )
 	{

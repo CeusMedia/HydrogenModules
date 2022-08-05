@@ -1,18 +1,27 @@
 <?php
-class Model_Tag extends CMF_Hydrogen_Model{
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Tag extends Model
+{
 	protected $name		= 'tags';
+
 	protected $columns	= array(
 		'tagId',
 		'title',
 		'number'
 	);
+
 	protected $primaryKey	= 'tagId';
+
 	protected $indices		= array(
 		'title'
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	public function getRelatedTags( $tagId ){
+	public function getRelatedTags( $tagId )
+	{
 		$modelRelation	= new Model_ArticleTag( $this->env );
 		$modelArticle	= new Model_Article( $this->env );
 		$articles	= $modelRelation->getAllByIndex( 'tagId', $tagId );
@@ -40,4 +49,3 @@ class Model_Tag extends CMF_Hydrogen_Model{
 		return $tags;
 	}
 }
-?>

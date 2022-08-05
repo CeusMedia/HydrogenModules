@@ -1,5 +1,8 @@
 <?php
-class Model_Form_Fill_Transfer extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Form_Fill_Transfer extends Model
 {
 	const STATUS_UNKNOWN	= 0;
 	const STATUS_SUCCESS	= 1;

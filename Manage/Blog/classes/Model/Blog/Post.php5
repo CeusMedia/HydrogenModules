@@ -5,20 +5,21 @@
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Blog Post Model.
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
-class Model_Blog_Post extends CMF_Hydrogen_Model {
-
+class Model_Blog_Post extends Model
+{
 	protected $name		= 'blog_posts';
+
 	protected $columns	= array(
 		'postId',
 		'parentId',
@@ -37,7 +38,9 @@ class Model_Blog_Post extends CMF_Hydrogen_Model {
 		'viewedAt',
 		'commentedAt',
 	);
+
 	protected $primaryKey	= 'postId';
+
 	protected $indices		= array(
 		'parentId',
 		'authorId',
@@ -45,6 +48,6 @@ class Model_Blog_Post extends CMF_Hydrogen_Model {
 		'status',
 		'language',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

@@ -1,5 +1,8 @@
 <?php
-class View_Catalog_Bookstore extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Catalog_Bookstore extends View{
 
 	public function article(){
 		$article	= $this->getData( 'article' );

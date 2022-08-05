@@ -1,5 +1,8 @@
 <?php
-class Controller_System_Maintenance extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_System_Maintenance extends Controller{
 
 	protected function __onInit(){
 	}

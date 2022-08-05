@@ -1,5 +1,8 @@
 <?php
-abstract class Logic_Payment_Mangopay_Event extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+abstract class Logic_Payment_Mangopay_Event extends Logic
 {
 	protected $entity;
 	protected $event;
@@ -24,7 +27,6 @@ abstract class Logic_Payment_Mangopay_Event extends CMF_Hydrogen_Logic
 //		later get logic object by: $this->env->logic->paymentMangopay;
 	}
 
-
 	protected function sendMail( $mailClass, $data, $receiver, $language = NULL )
 	{
 		$className	= 'Mail_'.$mailClass;
@@ -35,7 +37,6 @@ abstract class Logic_Payment_Mangopay_Event extends CMF_Hydrogen_Logic
 		$mail		= Alg_Object_Factory::createObject( $className, $arguments );
 		$this->env->logic->mail->sendMail( $mail, $receiver, $language );
 	}
-
 
 	protected function uncache( $key )
 	{

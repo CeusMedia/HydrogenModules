@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	@todo		Code doc
  */
@@ -14,7 +17,7 @@ class Resource_REST_Client{
 	 *	@param		CMF_Hydrogen_Environment		$env		Environment instance
 	 *	@return		void
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env ){
+	public function __construct( Environment $env ){
 		$this->env			= $env;
 		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_rest_client.', TRUE );

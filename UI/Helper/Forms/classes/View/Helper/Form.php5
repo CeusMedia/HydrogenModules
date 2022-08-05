@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $env;
@@ -10,7 +14,7 @@ class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 	protected $returnCode;
 	protected $mode					= '';
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 		$this->modelForm	= new Model_Form( $this->env );
@@ -63,7 +67,7 @@ class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 		return $content;
 	}
 
-	public static function renderStatic( CMF_Hydrogen_Environment $env, string $formId ): string
+	public static function renderStatic( Environment $env, string $formId ): string
 	{
 		$helper	= new View_Helper_Form( $env );
 		return $helper->setId( $formId )->render();
@@ -119,7 +123,7 @@ class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 		$messageCode	= '';
 		$messageError	= '';
 		$messageSuccess	= '';
-		$blocks			= ADT_List_Dictionary::create( $this->blocks )->getAll( 'message_' );
+		$blocks			= Dictionary::create( $this->blocks )->getAll( 'message_' );
 		if( $this->returnCode === 2 && isset( $blocks['result_confirmed'] ) )
 			$messageCode	=  UI_HTML_Tag::create( 'div', $blocks['result_confirmed']->content, array(
 				'class'	=> 'form-message-code',

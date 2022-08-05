@@ -1,5 +1,8 @@
 <?php
-class View_Dev_Scaffold extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Dev_Scaffold extends View{
 	public function index(){}
 	public function controller(){}
 	public function view(){}
