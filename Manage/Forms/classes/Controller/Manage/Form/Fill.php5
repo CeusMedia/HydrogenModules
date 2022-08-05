@@ -90,7 +90,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 		$session		= $this->env->getSession();
 		$filterFillId	= $session->get( 'manage_form_fill_fillId' );
 		$filterEmail	= $session->get( 'manage_form_fill_email' );
-		$filterFormId	= $session->get( 'manage_form_fill_formId' );
+		$filterFormId	= $session->get( 'manage_form_fill_formId', [] );
 		$filterStatus	= $session->get( 'manage_form_fill_status' );
 
 		$conditions		= [];
@@ -238,6 +238,7 @@ class Controller_Manage_Form_Fill extends CMF_Hydrogen_Controller
 			);
 		}
 		catch( Exception $e ){
+			$this->env->getCaptain()->callHook( 'Env', 'logException', $this, ['exception' => $e] );
 //			$this->logicFill->sendManagerErrorMail( @$data );
 			$status	= 'error';
 			$data	= array(

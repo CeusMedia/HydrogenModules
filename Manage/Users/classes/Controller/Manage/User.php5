@@ -434,6 +434,21 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 		$this->restart( './manage/user/edit/'.(int) $userId );
 	}*/
 
+	public function remove( $userId )
+	{
+		$messenger	= $this->env->getMessenger();
+		$words		= (object) $this->getWords( 'remove' );
+		$model		= new Model_User( $this->env );
+		$user		= $model->get( $userId );
+		if( !$user ){
+			$messenger->noteError( $words->msgInvalidUserId );
+			$this->restart( NULL, TRUE );
+		}
+		$model->remove( $userId );
+		$messenger->noteSuccess( $words->msgSuccess, $user->username );
+		$this->restart( NULL, TRUE );
+	}
+
 	protected function setStatus( int $userId, int $status )
 	{
 		$model		= new Model_User( $this->env );
@@ -450,21 +465,6 @@ class Controller_Manage_User extends CMF_Hydrogen_Controller
 		$code		= $server->postData( 'user', 'setStatus', array( (int) $userId, $status ) );
 		$this->handleErrorCode( $code, $user->username );
 */		$this->restart( 'edit/'.(int) $userId, TRUE );
-	}
-
-	public function remove( int $userId )
-	{
-		$messenger	= $this->env->getMessenger();
-		$words		= (object) $this->getWords( 'remove' );
-		$model		= new Model_User( $this->env );
-		$user		= $model->get( $userId );
-		if( !$user ){
-			$messenger->noteError( $words->msgInvalidUserId );
-			$this->restart( NULL, TRUE );
-		}
-		$model->remove( $userId );
-		$messenger->noteSuccess( $words->msgSuccess, $user->username );
-		$this->restart( NULL, TRUE );
 	}
 
 	protected function __onInit()

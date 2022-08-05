@@ -89,7 +89,7 @@ var InfoForum = {
     pollForUpdates: function(threadId, lastPostId){
 		window.setInterval(function(){
 			$.ajax({
-				url: './info/forum/countUpdates/'+threadId+'/'+lastPostId,
+				url: './ajax/info/forum/countUpdates/'+threadId+'/'+lastPostId,
 				dataType: 'json',
 				type: 'GET',
 				success: function(json){

@@ -173,7 +173,7 @@ class Controller_Admin_Mail_Queue extends CMF_Hydrogen_Controller
 		else{
 			$this->session->set( $this->filterPrefix.'subject', $this->request->get( 'subject' ) );
 			$this->session->set( $this->filterPrefix.'receiverAddress', $this->request->get( 'receiverAddress' ) );
-			$this->session->set( $this->filterPrefix.'status', $this->request->get( 'status' ) );
+			$this->session->set( $this->filterPrefix.'status', $this->request->get( 'status', [] ) );
 			$this->session->set( $this->filterPrefix.'mailClass', $this->request->get( 'mailClass' ) );
 			$this->session->set( $this->filterPrefix.'dateStart', $this->request->get( 'dateStart' ) );
 			$this->session->set( $this->filterPrefix.'dateEnd', $this->request->get( 'dateEnd' ) );
