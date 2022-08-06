@@ -1,5 +1,8 @@
 <?php
-class Controller_Work_FTP extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_FTP extends Controller
 {
 	/**	@var	Logic_FTP	$logic */
 	protected $logic;

@@ -1,5 +1,9 @@
 <?php
-class Controller_Ajax_Info_Event extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\View;
+
+class Controller_Ajax_Info_Event extends Controller
 {
 	protected function __onInit()
 	{
@@ -27,7 +31,7 @@ class Controller_Ajax_Info_Event extends CMF_Hydrogen_Controller
 		if( !$event )
 			$this->respondError( 0, 'No event found.' );
 		$event->address	= $this->modelAddress->get( $event->addressId );
-		$view	= new CMF_Hydrogen_View( $this->env );
+		$view	= new View( $this->env );
 		$html	= $view->loadTemplateFile( 'info/event/view.modal.php', array( 'event' => $event ) );
 		$this->respondData( $html );
 	}

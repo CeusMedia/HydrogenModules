@@ -1,29 +1,24 @@
 <?php
-class Logic_CustomerProject{
 
+use CeusMedia\HydrogenFramework\Environment;
+
+class Logic_CustomerProject
+{
 	protected $env;
 	protected static $instance		= NULL;
 	protected $modelCustomer;
 	protected $modelProject;
 	protected $modelRelation;
 
-	protected function __construct( $env ){
-		$this->env	= $env;
-		$this->modelCustomer	= new Model_Customer( $env );
-		$this->modelProject		= new Model_Project( $env );
-		$this->modelRelation	= new Model_Customer_Project( $env );
-	}
-
-	protected function __clone(){
-	}
-
-	public static function getInstance( $env ){
+	public static function getInstance( Environment $env )
+	{
 		if( !self::$instance )
 			self::$instance	= new Logic_CustomerProject( $env );
 		return self::$instance;
 	}
 
-	public function add( $customerId, $projectId, $type ){
+	public function add( $customerId, $projectId, $type )
+	{
 		$session	= $this->env->getSession();
 		return $this->modelRelation->add( array(
 			'customerId'	=> $customerId,
@@ -35,7 +30,8 @@ class Logic_CustomerProject{
 		) );
 	}
 
-	public function getProjects( $customerId ){
+	public function getProjects( $customerId )
+	{
 		$list		= [];
 		$relations	= $this->modelRelation->getAll( array( 'customerId' => $customerId ) );
 		foreach( $relations as $relation ){
@@ -45,11 +41,23 @@ class Logic_CustomerProject{
 		return $list;
 	}
 
-	public function remove( $customerId, $projectId ){
+	public function remove( $customerId, $projectId )
+	{
 		$relations	= $this->modelRelation->getAll( array( 'customerId' => $customerId, 'projectId' => $projectId ) );
 		foreach( $relations as $relation )
 			$this->modelRelation->remove( $relation->customerProjectId );
 		return count( $relations );
 	}
+
+	protected function __construct( Environment $env )
+	{
+		$this->env	= $env;
+		$this->modelCustomer	= new Model_Customer( $env );
+		$this->modelProject		= new Model_Project( $env );
+		$this->modelRelation	= new Model_Customer_Project( $env );
+	}
+
+	protected function __clone()
+	{
+	}
 }
-?>

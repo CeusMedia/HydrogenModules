@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Shop_AddressForm
 {
 	protected $env;
@@ -8,7 +11,7 @@ class View_Helper_Shop_AddressForm
 	protected $type					= 0;
 	protected $defaultCountryCode	= 'DE';
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->words	= $this->env->getLanguage()->getWords( 'address' );

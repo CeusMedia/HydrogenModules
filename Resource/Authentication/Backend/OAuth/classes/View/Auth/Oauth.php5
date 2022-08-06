@@ -1,9 +1,12 @@
 <?php
+
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	Authentication View.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class View_Auth_Oauth extends CMF_Hydrogen_View
+class View_Auth_Oauth extends View
 {
 	public function confirm()
 	{

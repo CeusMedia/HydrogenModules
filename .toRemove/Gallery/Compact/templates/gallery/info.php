@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 $folderPath	= dirname( $source ).'/';
 $imageName	= basename( $source );
 
@@ -39,7 +42,7 @@ $naviControl	= '
 $navigation	= View_Helper_Gallery::renderStepNavigation( $env, $source );
 $feedUrl	= View_Helper_Gallery::getFeedUrl( $env );
 
-$options	= new ADT_List_Dictionary( $config->getAll( 'module.gallery_compact.info.' ) );
+$options	= new Dictionary( $config->getAll( 'module.gallery_compact.info.' ) );
 
 $useMagnifier	= $options->get( 'magnifier' ) && $env->getModules ()->has( 'JS_cmImagnifier' );
 $useFullscreen	= $options->get( 'fullscreen' );

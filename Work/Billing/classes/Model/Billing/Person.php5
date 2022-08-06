@@ -1,5 +1,8 @@
 <?php
-class Model_Billing_Person extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Billing_Person extends Model
 {
 	const STATUS_DISABLED	= -1;
 	const STATUS_NEW		= 0;

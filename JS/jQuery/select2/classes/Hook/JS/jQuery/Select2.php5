@@ -1,15 +1,20 @@
 <?php
-class Hook_JS_jQuery_Select2 extends CMF_Hydrogen_Hook{
 
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_JS_jQuery_Select2 extends Hook
+{
 	/**
 	 *	@static
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Caller object
-	 *	@param		object						$module		Module config data object
-	 *	@param		array						$payload	Map of payload data
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Caller object
+	 *	@param		object			$module		Module config data object
+	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] ){
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
+	{
 		$config		= $env->getConfig()->getAll( 'module.js_jquery_select2.', TRUE );
 		$version	= $config->get( 'version' );
 		$baseUrl	= $env->getConfig()->get( 'path.scripts.lib' ).'jquery/select2/'.$version.'/';

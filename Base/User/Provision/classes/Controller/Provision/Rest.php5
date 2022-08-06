@@ -1,9 +1,13 @@
 <?php
-class Controller_Provision_Rest extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Provision_Rest extends Controller{
 
 	protected $logic;
 
-	public function __construct( CMF_Hydrogen_Environment $env, $setupView = TRUE ){
+	public function __construct( Environment $env, $setupView = TRUE ){
 		parent::__construct( $env, FALSE );
 	}
 

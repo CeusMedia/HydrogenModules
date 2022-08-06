@@ -1,5 +1,8 @@
 <?php
-class Hook_JS_Imagnifier extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_JS_Imagnifier extends Hook
 {
 	public static function onPageApplyModules( $env, $context, $module, $payload ){
 		$options	= (object) $env->getConfig()->getAll( 'module.js_cmimagnifier.' );

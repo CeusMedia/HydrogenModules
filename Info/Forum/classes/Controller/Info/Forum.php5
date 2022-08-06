@@ -1,5 +1,9 @@
 <?php
-class Controller_Info_Forum extends CMF_Hydrogen_Controller
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Info_Forum extends Controller
 {
 	/**	@var	Model_Forum_Post		$modelPost */
 	protected $modelPost;
@@ -13,7 +17,7 @@ class Controller_Info_Forum extends CMF_Hydrogen_Controller
 	/**	@var	array					$rights */
 	protected $rights;
 
-	/**	@var	ADT_List_Dictionary		$options */
+	/**	@var	Dictionary				$options */
 	protected $ptions;
 
 	public function addPost( $threadId )

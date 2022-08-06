@@ -1,6 +1,11 @@
 <?php
-class Model_Branch extends CMF_Hydrogen_Model{
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Branch extends Model
+{
 	protected $name			= 'branches';
+
 	protected $columns		= array(
 		'branchId',
 		'companyId',
@@ -22,14 +27,18 @@ class Model_Branch extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'branchId';
+
 	protected $indices		= array(
 		'companyId',
 		'status',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
-	
-	public function extendWithGeocodes( $branchId ){
+
+	public function extendWithGeocodes( $branchId )
+	{
 		$branch	= $this->get( $branchId );
 		try{
 			$geocoder	= new Logic_Geocoder( $this->env );
@@ -50,15 +59,15 @@ class Model_Branch extends CMF_Hydrogen_Model{
 		}
 	}
 
-	public function getAllInDistance( $x, $y, $z, $distance ){
+	public function getAllInDistance( $x, $y, $z, $distance )
+	{
 		$query		= 'SELECT *
 		FROM branches as b
 		WHERE
 			  POWER(' . $x .' - b.x, 2)
 			+ POWER(' . $y .' - b.y, 2)
 			+ POWER(' . $z .' - b.z, 2)
-		<= ' . pow( $distance, 2 );		
+		<= ' . pow( $distance, 2 );
 		return $this->env->dbc->query( $query )->fetchAll( PDO::FETCH_OBJ );
 	}
 }
-?>

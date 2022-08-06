@@ -5,18 +5,18 @@
  *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	OAuth Provider Model.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Users.Model
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
- *	@version		$Id$
  */
-class Model_Oauth_Provider extends CMF_Hydrogen_Model
+class Model_Oauth_Provider extends Model
 {
 	const STATUS_INACTIVE		= -1;
 	const STATUS_NEW			= 0;

@@ -1,5 +1,9 @@
 <?php
-class Controller_Member extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Member extends Controller
 {
 	protected $request;
 	protected $session;
@@ -10,7 +14,7 @@ class Controller_Member extends CMF_Hydrogen_Controller
 	protected $logicMember;
 	protected $logicMail;
 
-	public static function ___onGetRelatedUsers( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function ___onGetRelatedUsers( Environment $env, $context, $module, $payload )
 	{
 		$modelUser	= new Model_User( $env );
 		$userIds	= Logic_Member::getInstance( $env )->getRelatedUserIds( $payload->userId, 2 );

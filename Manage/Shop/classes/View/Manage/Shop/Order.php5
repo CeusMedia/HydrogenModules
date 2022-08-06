@@ -1,17 +1,30 @@
 <?php
-class View_Manage_Shop_Order extends View_Manage_Shop{
 
-	public function add(){}
-	public function edit(){}
-	public function index(){}
+use CeusMedia\HydrogenFramework\Environment;
 
-	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+class View_Manage_Shop_Order extends View_Manage_Shop
+{
+	public function add()
+	{
+	}
+
+	public function edit()
+	{
+	}
+
+	public function index()
+	{
+	}
+
+	public static function ___onRegisterTab( Environment $env, $context, $module, $data )
+	{
 		$words	= (object) $env->getLanguage()->getWords( 'manage/shop' );								//  load words
 		$context->registerTab( 'order', $words->tabs['orders'], 1 );									//  register orders tab
 //		$context->registerTab( 'shipping', $words->tabs['shipping'], 5 );								//  register shipping tab
 	}
 
-	protected function renderList( $orders, $orderId = NULL ){
+	protected function renderList( $orders, $orderId = NULL )
+	{
 		return '[LIST]';
 		$list	= [];
 		foreach( $articles as $article ){
@@ -25,6 +38,4 @@ class View_Manage_Shop_Order extends View_Manage_Shop{
 		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked boxed' ) );
 		return $list;
 	}
-
 }
-?>

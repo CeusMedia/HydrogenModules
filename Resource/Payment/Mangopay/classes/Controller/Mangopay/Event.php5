@@ -1,5 +1,8 @@
 <?php
-class Controller_Mangopay_Event extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Mangopay_Event extends Controller
 {
 //	public static $verbose	= TRUE;
 

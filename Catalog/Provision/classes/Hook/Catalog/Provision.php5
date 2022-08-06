@@ -1,7 +1,11 @@
 <?php
-class Hook_Catalog_Provision/* extends CMF_Hydrogen_Hook*/{
 
-	static public function onAppDispatch( $env, $context, $module, $data = [] ){
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Catalog_Provision extends Hook
+{
+	static public function onAppDispatch( $env, $context, $module, $data = [] )
+	{
 		$request    = $env->getRequest();
 		$session    = $env->getSession();
 		if( $request->has( 'productId' ) )
@@ -13,7 +17,8 @@ class Hook_Catalog_Provision/* extends CMF_Hydrogen_Hook*/{
 	/**
 	 *	@todo not working, needs Logic_User_Provision, find better solution!
 	 */
-	static public function onShopFinish( $env, $context, $module, $data = [] ){
+	static public function onShopFinish( $env, $context, $module, $data = [] )
+	{
 		$logicCatalog		= Logic_Catalog_Provision::getInstance( $env );
 		$logicProvision		= Logic_User_Provision::getInstance( $env );
 		$logicShop			= new Logic_Shop( $env );

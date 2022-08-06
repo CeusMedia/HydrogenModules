@@ -1,6 +1,9 @@
 <?php
-class Model_Provision_User_License_Key extends CMF_Hydrogen_Model{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Provision_User_License_Key extends Model
+{
 	const STATUS_NEW		= 0;																	//  @de: nicht vergeben
 	const STATUS_ASSIGNED	= 1;																	//  @de: ergeben / zugewiesen
 	const STATUS_EXPIRED	= 2;																	//  @de: ergeben / zugewiesen

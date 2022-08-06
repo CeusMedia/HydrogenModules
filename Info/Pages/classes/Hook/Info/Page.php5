@@ -1,7 +1,11 @@
 <?php
-class Hook_Info_Page extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Info_Page extends Hook
 {
-	public static function onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onAppDispatch( Environment $env, $context, $module, $payload )
 	{
 		if( $env->getModules()->has( 'Resource_Frontend' ) )										//  frontend resource exists
 			if( $env->getConfig()->get( 'module.resource_frontend.path' ) !== './' )				//  this app is a backend
@@ -57,7 +61,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 		return FALSE;																				//  continue ongoing dispatching
 	}
 
-	public static function onAppGetMasterTemplate( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onAppGetMasterTemplate( Environment $env, $context, $module, $payload )
 	{
 		$page	= $env->getLogic()->get( 'page' )->getPageFromRequest( TRUE, FALSE );
 		if( $page ){
@@ -72,7 +76,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 		return NULL;
 	}
 
-	public static function onControllerDetectPath( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onControllerDetectPath( Environment $env, $context, $module, $payload )
 	{
 		$modelPage			= new Model_Page( $env );
 		$controllerPages	= $modelPage->getAllByIndices( array(
@@ -98,7 +102,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 		return FALSE;
 	}
 
-	public static function onEnvConstructEnd( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onEnvConstructEnd( Environment $env, $context, $module, $payload )
 	{
 		if( !$env->getModules()->has( 'Resource_Authentication' ) )
 			return;
@@ -134,7 +138,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 		$acl->setPublicOutsideLinks( $paths['outside'], 'append' );									//  append collected outside paths to ACL
 	}
 
-	public static function onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onRegisterSitemapLinks( Environment $env, $context, $module, $payload )
 	{
 		try{
 			$moduleConfig	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );				//  get configuration of module
@@ -193,7 +197,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 	 *	@todo		localize error messages
 	 *	@todo		remove old code
 	 */
-	public static function onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onRenderContent( Environment $env, $context, $module, $payload )
 	{
 
 		//  OLD CODE
@@ -300,7 +304,7 @@ class Hook_Info_Page extends CMF_Hydrogen_Hook
 		$payload->content	= $processor->getContent();
 	}
 
-	public static function onRenderSearchResults( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onRenderSearchResults( Environment $env, $context, $module, $payload )
 	{
 		$logic		= $env->getLogic()->get( 'page' );
 		$options	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );

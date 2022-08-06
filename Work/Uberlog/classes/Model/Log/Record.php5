@@ -5,16 +5,16 @@
  *	@package		Chat.Server.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2012 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Uberlog Record Model.
  *	@category		cmApps
  *	@package		Chat.Server.Model
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2012 Ceus Media
- *	@version		$Id$
  */
 /**
  *	Types:
@@ -25,9 +25,10 @@
  *	 1		success
  *	 2		done
  */
-class Model_Log_Record extends CMF_Hydrogen_Model {
-
+class Model_Log_Record extends Model
+{
 	protected $name			= 'log_records';
+
 	protected $columns		= array(
 		'recordId',
 		'logCategoryId',
@@ -43,7 +44,9 @@ class Model_Log_Record extends CMF_Hydrogen_Model {
 		'client',
 		'timestamp'
 	);
+
 	protected $primaryKey	= 'recordId';
+
 	protected $indices		= array(
 		'logCategoryId',
 		'logClientId',
@@ -53,6 +56,6 @@ class Model_Log_Record extends CMF_Hydrogen_Model {
 		'category',
 		'client',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

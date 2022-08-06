@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 $helperIndicator	= new UI_HTML_Indicator();
 $helperTime			= new View_Helper_TimePhraser( $env );
 
@@ -11,7 +14,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconEdit		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 }
 
-function renderUserBlock( CMF_Hydrogen_Environment $env, $user ){
+function renderUserBlock( Environment $env, $user ){
 	if( $env->getModules()->has( 'Members' ) ){
 		$helper	= new View_Helper_Member( $env );
 		$helper->setUser( $user );
@@ -25,7 +28,7 @@ function renderUserBlock( CMF_Hydrogen_Environment $env, $user ){
 	return UI_HTML_Tag::create( 'div', $link.$sub );
 }
 
-function renderUserInline( CMF_Hydrogen_Environment $env, $user ){
+function renderUserInline( Environment $env, $user ){
 	if( $env->getModules()->has( 'Members' ) ){
 		$helper	= new View_Helper_Member( $env );
 		$helper->setUser( $user );

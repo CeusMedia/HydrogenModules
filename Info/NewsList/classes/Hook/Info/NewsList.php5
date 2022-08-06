@@ -1,7 +1,11 @@
 <?php
-class Hook_Info_NewsList extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Info_NewsList extends Hook
 {
-	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onViewRenderContent( Environment $env, $context, $module, $payload = [] )
 	{
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload->content );

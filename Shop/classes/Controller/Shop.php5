@@ -1,8 +1,12 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	@todo	complete flow implementation, currently stoppted at method "pay"
  */
-class Controller_Shop extends CMF_Hydrogen_Controller
+class Controller_Shop extends Controller
 {
 	/**	@var	Logic_ShopBridge		$brige */
 	protected $bridge;
@@ -10,10 +14,10 @@ class Controller_Shop extends CMF_Hydrogen_Controller
 	/**	@var	Logic_Shop				$logic */
 	protected $logic;
 
-	/**	@var	ADT_List_Dictionary		$options */
+	/**	@var	Dictionary				$options */
 	protected $options;
 
-	/**	@var	Model_Shop_Cart				$modelCart */
+	/**	@var	Model_Shop_Cart			$modelCart */
 	protected $modelCart;
 
 	protected $backends			= [];

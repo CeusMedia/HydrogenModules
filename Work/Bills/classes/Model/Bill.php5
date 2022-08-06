@@ -1,6 +1,11 @@
 <?php
-class Model_Bill extends CMF_Hydrogen_Model{
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Bill extends Model
+{
 	protected $name			= 'bills';
+
 	protected $columns		= array(
 		'billId',
 		'userId',
@@ -13,7 +18,9 @@ class Model_Bill extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'billId';
+
 	protected $indices		= array(
 		'userId',
 		'customerId',
@@ -21,6 +28,6 @@ class Model_Bill extends CMF_Hydrogen_Model{
 		'status',
 		'date',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

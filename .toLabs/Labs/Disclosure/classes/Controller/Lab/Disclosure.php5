@@ -1,5 +1,8 @@
 <?php
-class Controller_Lab_Disclosure extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Lab_Disclosure extends Controller{
 	public function index(){}
 
 	public function clearCache(){

@@ -3,17 +3,17 @@
  *	Content Controller.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011-2014 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Content Controller.
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011-2014 Ceus Media
- *	@version		$Id$
  */
-class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
-
+class Controller_Manage_Content_Locale extends Controller
+{
 	protected $frontend;
 	protected $languages	= [];
 	protected $types		= array(
@@ -31,14 +31,8 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 		),
 	);
 
-	public function	__onInit(){
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_content_locales.', TRUE );
-		$this->frontend		= Logic_Frontend::getInstance( $this->env );
-		$this->basePath		= $this->frontend->getPath( 'locales' );
-		$this->languages	= $this->frontend->getLanguages();
-	}
-
-	public function ajaxSaveContent(){
+	public function ajaxSaveContent()
+	{
 		$request	= $this->env->getRequest();
 		$language	= $request->get( 'language' );
 		$fileId		= base64_decode( $request->get( 'fileId' ) );
@@ -57,7 +51,8 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 		exit;
 	}
 
-	public function edit( $language, $type, $fileId) {
+	public function edit( $language, $type, $fileId )
+	{
 		$request	= $this->env->getRequest();
 		$filePath	= base64_decode( $fileId );
 		$pathName	= $this->basePath.$language.'/'.$filePath;
@@ -79,12 +74,8 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 		$this->restart( './manage/content/locale/'.$language.'/'.$type.'/'.$fileId );
 	}
 
-	protected function getDefaultLanguage(){
-		$locales	= $this->frontend->getLanguages();
-		return array_shift( $locales );
-	}
-
-	public function index( $language = NULL, $type = NULL, $fileId = NULL) {
+	public function index( $language = NULL, $type = NULL, $fileId = NULL )
+	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'msg' );
@@ -142,5 +133,18 @@ class Controller_Manage_Content_Locale extends CMF_Hydrogen_Controller {
 		$this->addData( 'type', $type );
 		$this->addData( 'fileId', $fileId );
 	}
+
+	protected function	__onInit()
+	{
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_content_locales.', TRUE );
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->basePath		= $this->frontend->getPath( 'locales' );
+		$this->languages	= $this->frontend->getLanguages();
+	}
+
+	protected function getDefaultLanguage()
+	{
+		$locales	= $this->frontend->getLanguages();
+		return array_shift( $locales );
+	}
 }
-?>

@@ -1,16 +1,11 @@
 <?php
-class Controller_Manage_Catalog_Provision_Product_License extends CMF_Hydrogen_Controller{
 
-	protected function __onInit(){
-		$this->request				= $this->env->getRequest();
-		$this->messenger			= $this->env->getMessenger();
-		$this->logicProvision		= Logic_Catalog_Provision::getInstance( $this->env );
-		$this->modelProduct			= new Model_Provision_Product( $this->env );
-		$this->modelLicense			= new Model_Provision_Product_License( $this->env );
-		$this->addData( 'products', $this->logicProvision->getProducts() );
-	}
+use CeusMedia\HydrogenFramework\Controller;
 
-	public function add( $productId = NULL ){
+class Controller_Manage_Catalog_Provision_Product_License extends Controller
+{
+	public function add( $productId = NULL )
+	{
 		if( !$productId ){
 			$this->messenger->noteError( "Please select a product,first!" );
 			$this->restart( './manage/catalog/provision/product' );
@@ -34,7 +29,8 @@ class Controller_Manage_Catalog_Provision_Product_License extends CMF_Hydrogen_C
 		$this->addData( 'product', $this->logicProvision->getProduct( $productId ) );
 	}
 
-	public function edit( $licenseId  ){
+	public function edit( $licenseId  )
+	{
 		$license	= $this->modelLicense->get( $licenseId );
 		if( !$license ){
 			$this->messenger->noteError( 'Invalid license ID.' );
@@ -53,7 +49,8 @@ class Controller_Manage_Catalog_Provision_Product_License extends CMF_Hydrogen_C
 		$this->addData( 'licenses', $this->modelLicense->getAll() );
 	}
 
-	public function index( $productId = NULL ){
+	public function index( $productId = NULL )
+	{
 		if( !$productId ){
 			$this->messenger->noteError( "Please select a product,first!" );
 			$this->restart( './manage/catalog/provision/product' );
@@ -65,5 +62,15 @@ class Controller_Manage_Catalog_Provision_Product_License extends CMF_Hydrogen_C
 		}
 		$this->addData( 'licenses', $licenses );
 		$this->addData( 'product', $this->modelProduct->get( $productId ) );
+	}
+
+	protected function __onInit()
+	{
+		$this->request				= $this->env->getRequest();
+		$this->messenger			= $this->env->getMessenger();
+		$this->logicProvision		= Logic_Catalog_Provision::getInstance( $this->env );
+		$this->modelProduct			= new Model_Provision_Product( $this->env );
+		$this->modelLicense			= new Model_Provision_Product_License( $this->env );
+		$this->addData( 'products', $this->logicProvision->getProducts() );
 	}
 }

@@ -5,8 +5,6 @@ $iconReset	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search
 
 $w			= (object) $words['filter'];
 
-$pagination	= new CMM_Bootstrap_PageControl( './manage/news', $pageNr, ceil( $total / $limit ) );
-
 $optStatus	= array( '' => '- alle -' );
 foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $value;

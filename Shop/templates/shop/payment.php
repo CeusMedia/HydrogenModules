@@ -1,5 +1,9 @@
 <?php
 
+use CeusMedia\Bootstrap\Button;
+use CeusMedia\Bootstrap\Button\Link as LinkButton;
+use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
+
 $w		= (object) $words['payment'];
 
 //print_m($cart->getAll());
@@ -29,11 +33,11 @@ $list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled payment-me
 $iconSubmit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
 
 
-$buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
-//$buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( "save", $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
-$buttonNext	= new \CeusMedia\Bootstrap\LinkButton( './shop/checkout', $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
+$buttonPrev	= new LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
+//$buttonNext	= new SubmitButton( "save", $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
+$buttonNext	= new LinkButton( './shop/checkout', $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
 if( !$cart->get( 'paymentMethod' ) )
-	$buttonNext	= new \CeusMedia\Bootstrap\Button( $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', TRUE );
+	$buttonNext	= new Button( $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', TRUE );
 
 $buttonbar	= '
 <br/>

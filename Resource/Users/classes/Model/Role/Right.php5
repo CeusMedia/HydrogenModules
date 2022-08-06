@@ -3,11 +3,14 @@
  *	Role Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Role Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Role_Right extends CMF_Hydrogen_Model
+class Model_Role_Right extends Model
 {
 	protected $name			= 'role_rights';
 
@@ -29,12 +32,12 @@ class Model_Role_Right extends CMF_Hydrogen_Model
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 
-	static public function maxifyController( string $controller ): string
+	public static function maxifyController( string $controller ): string
 	{
 		return str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $controller ) ) );
 	}
 
-	static public function minifyController( string $controller ): string
+	public static function minifyController( string $controller ): string
 	{
 		return str_replace( array( '-', '/' ), '_', strtolower( $controller ) );
 	}

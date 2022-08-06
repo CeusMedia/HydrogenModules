@@ -1,4 +1,7 @@
 <?php
-class View_Share extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Share extends View{
 	public function index(){}
 }

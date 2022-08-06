@@ -1,5 +1,8 @@
 <?php
-class Controller_Work_Billing_Person_Unbooked extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Billing_Person_Unbooked extends Controller
 {
 	protected $logic;
 

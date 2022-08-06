@@ -1,6 +1,9 @@
 <?php
-class Model_Company extends CMF_Hydrogen_Model{
 
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Company extends Model
+{
 	const STATUS_INACTIVE	= -2;
 	const STATUS_REJECTED	= -1;
 	const STATUS_NEW		= 0;
@@ -8,6 +11,7 @@ class Model_Company extends CMF_Hydrogen_Model{
 	const STATUS_ACTIVE		= 2;
 
 	protected $name			= 'companies';
+
 	protected $columns		= array(
 		'companyId',
 		'status',
@@ -25,11 +29,13 @@ class Model_Company extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'companyId';
+
 	protected $indices		= array(
 		'status',
 		'title',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

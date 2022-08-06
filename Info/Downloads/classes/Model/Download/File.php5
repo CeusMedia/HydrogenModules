@@ -6,15 +6,17 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Forum Thread Topic Model.
  *	@category		...
  *	@package		...
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014 Ceus Media
  */
-class Model_Download_File extends CMF_Hydrogen_Model
+class Model_Download_File extends Model
 {
 	protected $name		= 'download_files';
 

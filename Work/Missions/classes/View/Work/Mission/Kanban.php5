@@ -1,5 +1,8 @@
 <?php
-class View_Work_Mission_Kanban extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Work_Mission_Kanban extends View{
 
 	public function ajaxRenderIndex(){
 		extract( $this->getData() );

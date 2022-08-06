@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Stripe_Entity_CardNumber extends View_Helper_Stripe_Abstract{
 
 	protected $nodeClass	= NULL;
@@ -14,7 +17,7 @@ class View_Helper_Stripe_Entity_CardNumber extends View_Helper_Stripe_Abstract{
 		) );
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $number, $nodeName = NULL, $nodeClass = NULL ){
+	static public function renderStatic( Environment $env, $number, $nodeName = NULL, $nodeClass = NULL ){
 		$instance	= new View_Helper_Stripe_Entity_CardNumber( $env );
 		if( $nodeName !== NULL )
 			$this->setNodeName( $nodeName );

@@ -3,12 +3,14 @@
  *	Data model of mail group actions.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data model of mail group actions.
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Group_Action extends CMF_Hydrogen_Model
+class Model_Mail_Group_Action extends Model
 {
 	const STATUS_FAILED				= -1;
 	const STATUS_REGISTERED			= 0;

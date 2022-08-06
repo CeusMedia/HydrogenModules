@@ -1,16 +1,12 @@
 <?php
-class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Authentication_Backend_Local extends Logic
 {
 	protected $modelUser;
 	protected $modelRole;
 	protected $session;
-
-	protected function __onInit()
-	{
-		$this->session		= $this->env->getSession();
-		$this->modelUser	= new Model_User( $this->env );
-		$this->modelRole	= new Model_Role( $this->env );
-	}
 
 	/**
 	 *	@todo		remove support for old user password
@@ -141,5 +137,12 @@ class Logic_Authentication_Backend_Local extends CMF_Hydrogen_Logic
 		$this->session->set( 'auth_role_id', $user->roleId );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_IDENTIFIED );
 		return $this;
+	}
+
+	protected function __onInit()
+	{
+		$this->session		= $this->env->getSession();
+		$this->modelUser	= new Model_User( $this->env );
+		$this->modelRole	= new Model_Role( $this->env );
 	}
 }

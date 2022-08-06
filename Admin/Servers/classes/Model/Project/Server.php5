@@ -3,17 +3,19 @@
  *	Model to relate projects onto servers.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2012 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Model to relate projects onto servers.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2012 Ceus Media
- *	@version		$Id$
  */
-class Model_Project_Server extends CMF_Hydrogen_Model {
-
+class Model_Project_Server extends Model
+{
 	protected $name		= 'project_servers';
+
 	protected $columns	= array(
 		'projectServerId',
 		'projectId',
@@ -25,12 +27,14 @@ class Model_Project_Server extends CMF_Hydrogen_Model {
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'projectServerId';
+
 	protected $indices		= array(
 		'projectId',
 		'serverId',
 		'status',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

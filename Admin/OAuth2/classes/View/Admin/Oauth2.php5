@@ -1,5 +1,8 @@
 <?php
-class View_Admin_Oauth2 extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Admin_Oauth2 extends View
 {
 	public function add()
 	{

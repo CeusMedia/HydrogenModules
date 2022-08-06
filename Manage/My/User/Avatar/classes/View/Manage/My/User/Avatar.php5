@@ -1,7 +1,11 @@
 <?php
-class View_Manage_My_User_Avatar extends CMF_Hydrogen_View{
 
-	public static function ___onRegisterTab( CMF_Hydrogen_Environment $env, $context, $module, $data ){
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_My_User_Avatar extends View{
+
+	public static function ___onRegisterTab( Environment $env, $context, $module, $data ){
 		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user/avatar' );				//  load words
 		$context->registerTab( 'avatar', $words->module['tab'], 6 );								//  register main tab
 	}

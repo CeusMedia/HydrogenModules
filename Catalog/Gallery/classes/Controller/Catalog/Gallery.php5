@@ -1,5 +1,10 @@
 <?php
-class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Catalog_Gallery extends Controller
 {
 	/**	@var	Logic_ShopBridge				$bridge */
 	protected $bridge;
@@ -18,9 +23,9 @@ class Controller_Catalog_Gallery extends CMF_Hydrogen_Controller
 	/**	@var	Model_Catalog_Gallery_Image		$modelImage */
 	protected $modelImage;
 
-	public static function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $data = [] )
+	public static function __onRenderServicePanels( Environment $env, $context, $module, $data = [] )
 	{
-		$arguments	= new ADT_List_Dictionary( $data );
+		$arguments	= new Dictionary( $data );
 		if( $orderId = $arguments->get( 'orderId' ) ){
 			$view		= new View_Catalog_Gallery( $env );
 			$helper		= new View_Helper_Shop_FinishPanel_CatalogGallery( $env );

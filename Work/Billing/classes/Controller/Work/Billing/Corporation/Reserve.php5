@@ -1,5 +1,8 @@
 <?php
-class Controller_Work_Billing_Corporation_Reserve extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Billing_Corporation_Reserve extends Controller
 {
 	protected $request;
 	protected $session;

@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Module_Editor extends CMF_Hydrogen_Controller								//  @todo	1) inherit from View_Admin_Module after cleanup
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Module_Editor extends Controller								//  @todo	1) inherit from View_Admin_Module after cleanup
 {
 	/** @var	CMF_Hydrogen_Environment_Resource_Module_Editor	$editor		Module XML editor instance */
 	protected $editor;

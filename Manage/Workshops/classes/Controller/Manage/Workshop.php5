@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Workshop extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Workshop extends Controller{
 
 	protected function __onInit(){
 		$this->request		= $this->env->getRequest();

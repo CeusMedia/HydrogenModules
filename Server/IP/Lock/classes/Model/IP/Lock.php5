@@ -1,5 +1,8 @@
 <?php
-class Model_IP_Lock extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_IP_Lock extends Model
 {
 	const STATUS_UNLOCKED		= -2;
 	const STATUS_CANCELLED		= -1;

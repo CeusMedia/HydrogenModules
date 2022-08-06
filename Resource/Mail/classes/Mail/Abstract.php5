@@ -1,4 +1,9 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	Abstract mail class.
  *	Prepares mail and mail transport object.
@@ -7,79 +12,79 @@
  */
 abstract class Mail_Abstract
 {
-	/**	@var		object							$mail			Mail objectm, build on construction */
+	/**	@var		object					$mail			Mail objectm, build on construction */
 	public $mail;
 
-	/**	@var		CMF_Hydrogen_Environment		$env			Environment object */
+	/**	@var		Environment				$env			Environment object */
 	protected $env;
 
-	/**	@var		ADT_List_Dictionary				$config			Application configuration object */
+	/**	@var		Dictionary				$config			Application configuration object */
 	protected $config;
 
-	/**	@var		ADT_List_Dictionary				$options		Module configuration object */
+	/**	@var		Dictionary				$options		Module configuration object */
 	protected $options;
 
-	/** @var		Logic_Mail						$logicMail		Mail logic object */
+	/** @var		Logic_Mail				$logicMail		Mail logic object */
 	protected $logicMail;
 
-	/** @var		UI_HTML_PageFrame				$page			Empty page oject for HTML mails */
+	/** @var		UI_HTML_PageFrame		$page			Empty page oject for HTML mails */
 	protected $page;
 
-	/** @var		object							$transport		Mail transport object, build on construction */
+	/** @var		object					$transport		Mail transport object, build on construction */
 	protected $transport;
 
-	/** @var		CMF_Hydrogen_View				$view			General view instance */
+	/** @var		CMF_Hydrogen_View		$view			General view instance */
 	protected $view;
 
-	/** @var		Model_Mail_Template				$modelTemplate	Mail template model object */
+	/** @var		Model_Mail_Template		$modelTemplate	Mail template model object */
 	protected $modelTemplate;
 
-	/** @var		string							$baseUrl		Application base URL */
+	/** @var		string					$baseUrl		Application base URL */
 	protected $baseUrl;
 
-	/** @var		array							$bodyClasses	List of Stylesheet files to integrate into HTML body */
-	protected $addedStyles				= [];
+	/** @var		array					$bodyClasses	List of Stylesheet files to integrate into HTML body */
+	protected $addedStyles		= [];
 
-	/** @var		array							$bodyClasses	List of classes to apply to HTML body */
-	protected $bodyClasses				= [];
+	/** @var		array					$bodyClasses	List of classes to apply to HTML body */
+	protected $bodyClasses		= [];
 
-	/** @var		array							$data			Data assigned for mail body generation, for HTML and text */
-	protected $data						= [];
+	/** @var		array					$data			Data assigned for mail body generation, for HTML and text */
+	protected $data				= [];
 
-	/** @var		array							$contents		Map of generated and rendered contents */
-	protected $contents					= [
+	/** @var		array					$contents		Map of generated and rendered contents */
+	protected $contents			= [
 		'htmlGenerated'		=> '',
 		'htmlRendered'		=> '',
 		'textGenerated'		=> '',
 		'textRendered'		=> '',
 	];
 
-	/** @var		integer							$templateId		ID of template to force to use on rendering of mail contents */
-	protected $templateId				= 0;
+	/** @var		integer					$templateId		ID of template to force to use on rendering of mail contents */
+	protected $templateId		= 0;
 
-	/** @var		string							$encodingHtml	Default encoding for HTML */
-	protected $encodingHtml				= 'quoted-printable';
+	/** @var		string					$encodingHtml	Default encoding for HTML */
+	protected $encodingHtml		= 'quoted-printable';
 
-	/** @var		string							$encodingHtml	Default encoding for subject */
-	protected $encodingSubject			= 'quoted-printable';
+	/** @var		string					$encodingHtml	Default encoding for subject */
+	protected $encodingSubject	= 'quoted-printable';
 
-	/** @var		string							$encodingHtml	Default encoding for text */
-	protected $encodingText				= 'quoted-printable';
+	/** @var		string					$encodingHtml	Default encoding for text */
+	protected $encodingText		= 'quoted-printable';
 
 	/**
 	 *	Contructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Environment object
-	 *	@param		array						$data			Map of template mail data
-	 *	@param		boolean						$defaultStyle	Flag: load default mail style file
+	 *	@param		Environment		$env			Environment object
+	 *	@param		array			$data			Map of template mail data
+	 *	@param		boolean			$defaultStyle	Flag: load default mail style file
 	 *	@todo		resolve todos below after all modules have adjusted
 	 */
-	public function __construct( CMF_Hydrogen_Environment $env, $data = [], bool $defaultStyle = TRUE )
+	public function __construct( Environment $env, $data = [], bool $defaultStyle = TRUE )
 	{
 		$this->setEnv( $env );
 		$this->modelTemplate	= new Model_Mail_Template( $env );
 		$this->mail				= new \CeusMedia\Mail\Message();
-		$this->view				= new CMF_Hydrogen_View( $env );
+		$this->view				= new View( $env );
 		$this->page				= new UI_HTML_PageFrame();
 		$this->logicMail		= $this->env->getLogic()->get( 'Mail' );
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
@@ -278,7 +283,7 @@ abstract class Mail_Abstract
 		return $this->sendTo( $user );
 	}
 
-	public function setEnv( CMF_Hydrogen_Environment $env ): self
+	public function setEnv( Environment $env ): self
 	{
 		$this->env		= $env;
 		return $this;

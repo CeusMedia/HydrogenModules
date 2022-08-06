@@ -1,6 +1,10 @@
 #!/usr/bin/php
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\CLI\RequestReceiver;
+use CeusMedia\HydrogenFramework\Environment\Console as ConsoleEnvironment;
+
 /*  --  CONFIG  --  */
 /*  --  change these (default) settings if needed  --  */
 /*
@@ -62,7 +66,8 @@ class JobScriptHelper
 		throw new \ErrorException( $errstr, 0, $errno, $errfile, $errline );
 	}
 
-	public function run(){
+	public function run()
+	{
 		$this->changeDirIntoApp()
 			->setupEnvironment()
 			->setupErrorHandling()												//  override error handling after request analysis
@@ -191,8 +196,8 @@ class JobScriptHelper
 		require_once "vendor/ceus-media/common/compat.php";
 		Loader::registerNew( 'php5', NULL, $this->pathClasses );				//  register autoloader for project classes
 
-		$request	= new \CLI_RequestReceiver();								//
-		$this->request	= new \ADT_List_Dictionary( $request->getAll() );		//
+		$request	= new RequestReceiver();									//
+		$this->request	= new Dictionary( $request->getAll() );					//
 
 		if( $request->has( '--verbose' ) || $request->has( '-v' ) )				//
 			$this->setVerbose( TRUE );
@@ -201,7 +206,7 @@ class JobScriptHelper
 		if( class_exists( '\Environment_Console' ) )							//  an individual console environment class is available
 			\Jobber::$classEnvironment	= '\Environment_Console';				//  set individual console environment class
 		if( isset( $configFile ) && strlen( trim( $configFile ) ) )				//  an alternative config file is set
-			\CMF_Hydrogen_Environment_Console::$configFile	= $configFile;		//  set alternative config file
+			ConsoleEnvironment::$configFile	= $configFile;						//  set alternative config file
 		return $this;
 	}
 

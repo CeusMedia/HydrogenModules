@@ -1,5 +1,9 @@
 <?php
-class View_Info_Blog extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+class View_Info_Blog extends View
 {
 	public function index()
 	{
@@ -9,7 +13,7 @@ class View_Info_Blog extends CMF_Hydrogen_View
 	{
 	}
 
-	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onViewRenderContent( Environment $env, $context, $module, $payload = [] )
 	{
 		$data		= (object) $payload;
 		$pattern	= "/^(.*)(\[blog:(.+)\])(.*)$/sU";
@@ -21,7 +25,7 @@ class View_Info_Blog extends CMF_Hydrogen_View
 		}
 	}
 
-	public static function renderCommentInfoBarStatic( CMF_Hydrogen_Environment $env, $comment ){
+	public static function renderCommentInfoBarStatic( Environment $env, $comment ){
 		$facts	= array(
 			'Autor: '	=> $comment->username,
 			'Datum: '	=> date( 'd.m.Y H:i', $comment->createdAt ),
@@ -34,7 +38,7 @@ class View_Info_Blog extends CMF_Hydrogen_View
 		return self::renderCommentStatic( $this->env, $comment );
 	}
 
-	public static function renderCommentStatic( CMF_Hydrogen_Environment $env, $comment ){
+	public static function renderCommentStatic( Environment $env, $comment ){
 		$infobar	= self::renderCommentInfoBarStatic( $env, $comment );
 		$content	= UI_HTML_Tag::create( 'blockquote', nl2br( trim( $comment->content ) ) );
 		$html		= UI_HTML_Tag::create( 'div', $infobar.$content, array(
@@ -43,7 +47,7 @@ class View_Info_Blog extends CMF_Hydrogen_View
 		return $html;
 	}
 
-	public static function renderPostAbstractPanelStatic( CMF_Hydrogen_Environment $env, $modeOrId ){
+	public static function renderPostAbstractPanelStatic( Environment $env, $modeOrId ){
 		$words 	= $env->getLanguage()->getWords( 'info/blog' );
 		$model	= new Model_Blog_Post( $env );
 		$post	= NULL;
@@ -76,7 +80,7 @@ class View_Info_Blog extends CMF_Hydrogen_View
 		) );
 	}
 
-	public static function renderPostAbstractStatic( CMF_Hydrogen_Environment $env, $post, $showInfoBar = TRUE )
+	public static function renderPostAbstractStatic( Environment $env, $post, $showInfoBar = TRUE )
 	{
 		$title		= UI_HTML_Tag::create( 'h4', $post->title );
 		$url		= View_Info_Blog::renderPostUrlStatic( $env, $post );
@@ -85,7 +89,7 @@ class View_Info_Blog extends CMF_Hydrogen_View
 			'content'	=> $post->abstract,
 			'type'		=> 'html',
 		);
-		$view		= new CMF_Hydrogen_View( $env );
+		$view		= new View( $env );
 		$words		= $view->getWords( 'index', 'info/blog' );
 		$env->getCaptain()->callHook( 'View', 'onRenderContent', $view, $payload );
 		$abstract	= $payload->content;
@@ -103,7 +107,7 @@ class View_Info_Blog extends CMF_Hydrogen_View
 		return UI_HTML_Tag::create( 'div', $content, array( 'class' => 'blog-post' ) );
 	}
 
-	public static function renderPostInfoBarStatic( CMF_Hydrogen_Environment $env, $post )
+	public static function renderPostInfoBarStatic( Environment $env, $post )
 	{
 		if( !isset( $post->author ) ){
 			$modelUser		= new Model_User( $env );
@@ -123,13 +127,13 @@ class View_Info_Blog extends CMF_Hydrogen_View
 		return UI_HTML_Tag::create( 'div', $facts, array( 'class' => 'infobar blog-post-info hidden-phone' ) );
 	}
 
-	public static function renderPostUrlStatic( CMF_Hydrogen_Environment $env, $post )
+	public static function renderPostUrlStatic( Environment $env, $post )
 	{
 		$title	= Controller_Info_Blog::getUriPart( $post->title );
 		return './info/blog/post/'.$post->postId.'-'.$title;
 	}
 
-	protected static function renderFactsStatic( CMF_Hydrogen_Environment $env, $facts, $listClass = 'dl-horizontal' ){
+	protected static function renderFactsStatic( Environment $env, $facts, $listClass = 'dl-horizontal' ){
 		$list	= [];
 		foreach( $facts as $label => $value ){
 			$list[]	= UI_HTML_Tag::create( 'dt', $label ).UI_HTML_Tag::create( 'dd', $value );

@@ -1,10 +1,13 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Work_Issue_Changes
 {
 	protected $env;
 	protected $modelNote;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 		$this->modelNote	= new Model_Issue_Note( $this->env );

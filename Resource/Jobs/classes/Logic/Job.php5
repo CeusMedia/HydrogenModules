@@ -1,17 +1,12 @@
 <?php
-class Logic_Job extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Job extends Logic
 {
 	protected $modelSchedule;
 	protected $modelDefinition;
 	protected $modelRun;
-
-	protected function __onInit()
-	{
-		$this->modelDefinition	= new Model_Job_Definition( $this->env );
-		$this->modelSchedule	= new Model_Job_Schedule( $this->env );
-		$this->modelRun			= new Model_Job_Run( $this->env );
-		$this->discoverJobDefinitions();
-	}
 
 	public function archiveJobRun( int $jobRunId ): bool
 	{
@@ -464,6 +459,14 @@ class Logic_Job extends CMF_Hydrogen_Logic
 	}*/
 
 	/*  --  PROTECTED  --  */
+
+	protected function __onInit()
+	{
+		$this->modelDefinition	= new Model_Job_Definition( $this->env );
+		$this->modelSchedule	= new Model_Job_Schedule( $this->env );
+		$this->modelRun			= new Model_Job_Run( $this->env );
+		$this->discoverJobDefinitions();
+	}
 
 	protected function abortPreparedJobRuns( $jobDefinitionId ): array
 	{

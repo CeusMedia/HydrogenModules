@@ -5,27 +5,28 @@
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Environment.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
+
+use CeusMedia\HydrogenFramework\Environment\Router\Recursive as RecursiveRouter;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
 /**
  *	Environment for chat client.
  *	@category		cmApps
  *	@package		Chat.Server
- *	@extends		CMF_Hydrogen_Environment
- *	@uses			Logic
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Environment.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
-class Environment extends CMF_Hydrogen_Environment_Web {
-
+class Environment extends WebEnvironment
+{
 	/**
 	 *	Constructor, sets up all resources.
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function __construct() {
-		self::$classRouter	= 'CMF_Hydrogen_Environment_Router_Recursive';
+	public function __construct()
+	{
+		self::$classRouter	= RecursiveRouter::class;
 		self::$configFile	= "config/config.ini";
 		$this->detectSelf( FALSE );
 		$this->uri	= getCwd().'/';																	//  hack for console jobs
@@ -44,10 +45,10 @@ class Environment extends CMF_Hydrogen_Environment_Web {
 			$this->dbc->query( 'SET NAMES "utf8"' );												//  ...
 	}
 
-	public function get( $key, $strict = TRUE ){
+	public function get( $key, $strict = TRUE )
+	{
 		if( $key == "dbc" )
 			return $this->getDatabase();
 		return parent::get( $key, $strict );
 	}
 }
-?>

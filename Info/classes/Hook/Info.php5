@@ -1,7 +1,11 @@
 <?php
-class Hook_Info extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Info extends Hook
 {
-	public static function onAppDispatch( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onAppDispatch( Environment $env, $context, $module, $payload )
 	{
 		$path	= $env->getRequest()->get( '__path' );
 		if( !preg_match( "/^info/", $path ) )

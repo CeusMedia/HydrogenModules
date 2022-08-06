@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 {
 	protected $background	= array( 255, 255, 255 );
@@ -16,7 +19,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 	CONST FORMAT_IMAGE		= 0;
 	CONST FORMAT_RAW		= 1;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->session		= $this->env->getSession();
@@ -25,7 +28,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 		$this->captcha->useUnique	= TRUE;
 	}
 
-	public static function checkCaptcha( CMF_Hydrogen_Environment $env, ?string $word )
+	public static function checkCaptcha( Environment $env, ?string $word )
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
 		if( $moduleConfig->get( 'mode' ) === 'recaptcha' ){

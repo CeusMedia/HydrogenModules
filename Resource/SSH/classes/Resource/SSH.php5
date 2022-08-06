@@ -1,10 +1,8 @@
 <?php
 /**
- *	@uses		phpseclib\Net\SSH2
- *	@uses		phpseclib\Net\SCP
  */
-class Resource_SSH{
-
+class Resource_SSH
+{
 	const MODE_LAZY				= 0;
 	const MODE_STRAIGHT 		= 1;
 
@@ -19,11 +17,13 @@ class Resource_SSH{
 	protected $scp;
 	protected $status			= 0;
 
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env		= $env;
 	}
 
-	public function connect( $host, $username, $privateKey, $port = 22, $mode = self::MODE_LAZY ){
+	public function connect( $host, $username, $privateKey, $port = 22, $mode = self::MODE_LAZY )
+	{
 		$this->host			= $host;
 		$this->port			= $port;
 		$this->username		= $username;
@@ -33,7 +33,8 @@ class Resource_SSH{
 			$this->_connect();
 	}
 
-	protected function _connect( $forceReconnect = FALSE ){
+	protected function _connect( $forceReconnect = FALSE )
+	{
 		if( $this->connection && !$forceReconnect )
 			return;
 		$key = new \phpseclib\Crypt\RSA();
@@ -50,11 +51,13 @@ class Resource_SSH{
 		$this->connection	= $connection;
 	}
 
-	public function pwd(){
+	public function pwd()
+	{
 		return $this->_exec( 'pwd' );
 	}
 
-	public function index( $path = './', $pattern = NULL ){
+	public function index( $path = './', $pattern = NULL )
+	{
 		$options	= [];
 		$options[]	= 'a';																//  show all files/folders
 		$options[]	= 'h';																//  show hidden files/folders
@@ -75,38 +78,45 @@ class Resource_SSH{
 		return array_values( $list );
 	}
 
-	public function has( $path ){
+	public function has( $path )
+	{
 		$this->_connect();
 		$command	= sprintf( 'test -e %s', $this->path.$path.' && echo 1' );			//  render shell command
 		return $this->connection->exec( $command );
 	}
 
-	public function get( $path ){
+	public function get( $path )
+	{
 		$this->_initScp();
 		return $this->scp->get( $this->path.$path );
 	}
 
-	public function remove( $path ){
+	public function remove( $path )
+	{
 		$this->_connect();
 		$command	= sprintf( 'rm -R %s', $this->path.$path.' && echo 1' );
 		return $this->connection->exec( $command );
 	}
 
-	public function set( $path, $content ){
+	public function set( $path, $content )
+	{
 		$this->_initScp();
 		return $this->scp->put( $this->path.$path, $content );
 	}
 
-	public function setPath( $path ){
+	public function setPath( $path )
+	{
 		$this->path	= rtrim( trim( $path ), '/' ).'/';
 	}
 
-	protected function _exec( $command ){
+	protected function _exec( $command )
+	{
 		$this->_connect();
 		return $this->connection->exec( $command );
 	}
 
-	protected function _initScp(){
+	protected function _initScp()
+	{
 		if( $this->scp )
 			return;
 		$this->_connect();

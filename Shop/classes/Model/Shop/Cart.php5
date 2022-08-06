@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment;
+
 class Model_Shop_Cart
 {
 	const CUSTOMER_MODE_UNKNOWN		= 0;
@@ -20,7 +24,7 @@ class Model_Shop_Cart
 		'priceTaxed',
 	);
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env				= $env;
 		$this->session			= $env->getSession();
@@ -35,7 +39,7 @@ class Model_Shop_Cart
 			$this->createEmpty();
 		}
 		else{
-			$this->data	= new ADT_List_Dictionary( $data );
+			$this->data	= new Dictionary( $data );
 		}
 		if( $this->data->get( 'orderId' ) )
 			$this->loadOrder();
@@ -131,7 +135,7 @@ class Model_Shop_Cart
 
 	protected function createEmpty()
 	{
-		$this->data	= new ADT_List_Dictionary( array(
+		$this->data	= new Dictionary( array(
 			'orderStatus'		=> Model_Shop_Order::STATUS_NEW,
 			'acceptRules'		=> FALSE,
 			'paymentMethod'		=> NULL,

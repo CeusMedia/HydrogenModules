@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Panel_Mangopay_Transactions extends View_Helper_Panel_Mangopay{
 
-	public function __construct( CMF_Hydrogen_Environment $env, $options = [] ){
+	public function __construct( Environment $env, $options = [] ){
 		parent::__construct( $env, array_merge( array(
 			'linkItem'	=> './manage/my/mangopay/transaction/view/%s',
 			'linkBack'	=> '',

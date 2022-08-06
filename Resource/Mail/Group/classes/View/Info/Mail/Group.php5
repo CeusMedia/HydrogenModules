@@ -1,5 +1,8 @@
 <?php
-class View_Info_Mail_Group extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Info_Mail_Group extends View
 {
 	public function index()
 	{

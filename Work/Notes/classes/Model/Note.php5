@@ -1,5 +1,8 @@
 <?php
-class Model_Note extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Note extends Model
 {
 	protected $name		= 'notes';
 

@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\View;
+
 class View_Helper_Shop_FinishPanel_CatalogGallery{
 
 	protected $env;
@@ -24,7 +27,7 @@ class View_Helper_Shop_FinishPanel_CatalogGallery{
 		if( $this->options->get( 'download.auto' ) ){
 			$this->env->getPage()->addMetaTag( 'http-equiv', 'refresh', '1; URL='.$data['url'] );
 		}
-		$view	= new CMF_Hydrogen_View( $this->env );
+		$view	= new View( $this->env );
 		return $view->loadContentFile( 'html/catalog/gallery/delivery.html', $data );
 	}
 

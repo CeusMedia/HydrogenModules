@@ -155,15 +155,14 @@ class Resource_Acl_Authentication extends CMF_Hydrogen_Environment_Resource_Acl_
 	 *	Scan controller classes for actions using disclosure.
 	 *	@access		protected
 	 *	@return		void
-	 *	@todo		remove old framework fallback in v0.9
 	 */
 	protected function scanControllerActions()
 	{
-		if( class_exists( 'Resource_Disclosure' ) )
-			$disclosure	= new Resource_Disclosure( $this->env );
-		else if( class_exists( 'CMF_Hydrogen_Environment_Resource_Disclosure' ) )		//  @deprecated: remove in v0.9
-			$disclosure	= new CMF_Hydrogen_Environment_Resource_Disclosure();
-
+		if( !class_exists( 'Resource_Disclosure' ) ){
+			$this->env->getMessenger()->noteFailure( 'Missing module "Resource_Disclosure".' );
+			return;
+		}
+		$disclosure	= new Resource_Disclosure( $this->env );
 		$classes	= $disclosure->reflect( 'classes/Controller/' );
 		foreach( $classes as $className => $classData ){
 			$className	= strtolower( str_replace( '/', '_', $className ) );

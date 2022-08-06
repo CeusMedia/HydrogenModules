@@ -1,12 +1,14 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 use CeusMedia\Markdown\Renderer\Html as MarkdownToHtmlRenderer;
 
-class View_Helper_Markdown extends CMF_Hydrogen_View
+class View_Helper_Markdown extends View
 {
 	protected $renderer;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 		$module		= $this->env->getModules()->get( 'UI_Markdown' );
@@ -18,7 +20,7 @@ class View_Helper_Markdown extends CMF_Hydrogen_View
 		}
 	}
 
-/*	static public function ___onRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $data )
+/*	static public function ___onRenderContent( Environment $env, $context, $module, $data )
 	{
 		if( in_array( strtolower( $data->type ), array( 'markdown', 'md' ) ) )
 			$data->content	= Markdown::defaultTransform( $data->content );
@@ -43,7 +45,7 @@ class View_Helper_Markdown extends CMF_Hydrogen_View
 		return $html;
 	}
 
-	public static function transformStatic( CMF_Hydrogen_Environment $env, string $markdown, bool $wrapped = TRUE, ?int $renderer = NULL ): string
+	public static function transformStatic( Environment $env, string $markdown, bool $wrapped = TRUE, ?int $renderer = NULL ): string
 	{
 		$helper	= new self( $env );
 		return $helper->transform( $markdown, $wrapped, $renderer );

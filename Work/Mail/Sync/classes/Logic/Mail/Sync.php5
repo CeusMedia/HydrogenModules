@@ -1,5 +1,8 @@
 <?php
-class Logic_Mail_Sync extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Mail_Sync extends Logic
 {
 	protected $modelHost;
 	protected $modelRun;

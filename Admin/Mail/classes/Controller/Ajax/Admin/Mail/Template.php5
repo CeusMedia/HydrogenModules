@@ -1,10 +1,10 @@
 <?php
-class Controller_Ajax_Admin_Mail_Template extends CMF_Hydrogen_Controller_Ajax
+
+use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
+
+class Controller_Ajax_Admin_Mail_Template extends AjaxController
 {
-	protected function __onInit()
-	{
-		$this->modelTemplate	= new Model_Mail_Template( $this->env );
-	}
+	protected $modelTemplate;
 
 	public function render( $templateId )
 	{
@@ -50,5 +50,10 @@ class Controller_Ajax_Admin_Mail_Template extends CMF_Hydrogen_Controller_Ajax
 		if( strlen( trim( $tabId ) ) && $tabId != 'undefined' )
 			$this->env->getSession()->set( 'admin-mail-template-edit-tab', $tabId );
 		$this->respondData( TRUE );
+	}
+
+	protected function __onInit()
+	{
+		$this->modelTemplate	= new Model_Mail_Template( $this->env );
 	}
 }

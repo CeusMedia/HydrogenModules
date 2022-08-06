@@ -3,11 +3,14 @@
  *	Data model of address checks.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data model of address checks.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Address_Check extends CMF_Hydrogen_Model
+class Model_Mail_Address_Check extends Model
 {
 	protected $name		= 'mail_address_checks';
 

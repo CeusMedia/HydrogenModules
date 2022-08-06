@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Stripe_Entity_BIC extends View_Helper_Stripe_Abstract{
 
 	protected $nodeClass	= NULL;
@@ -18,7 +21,7 @@ class View_Helper_Stripe_Entity_BIC extends View_Helper_Stripe_Abstract{
 		) );
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $iban, $nodeName = NULL, $nodeClass = NULL ){
+	static public function renderStatic( Environment $env, $iban, $nodeName = NULL, $nodeClass = NULL ){
 		$instance	= new self( $env );
 		if( $nodeName !== NULL )
 			$this->setNodeName( $nodeName );

@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment;
+
 abstract class View_Helper_Panel_Mangopay{
 
 	protected $data			= [];
@@ -7,7 +11,7 @@ abstract class View_Helper_Panel_Mangopay{
 
 	public function __construct( $env ){
 		$this->env		= $env;
-		$this->options	= new ADT_List_Dictionary();
+		$this->options	= new Dictionary();
 	}
 
 	public function __toString(){
@@ -33,7 +37,7 @@ abstract class View_Helper_Panel_Mangopay{
 		return $helper->set( $number )->render();
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, $data, $options = [] ){
+	static public function renderStatic( Environment $env, $data, $options = [] ){
 		$helper	= new static( $env );
 		return $helper->setData( $data )->setOptions( $options )->render();
 	}
@@ -49,8 +53,7 @@ abstract class View_Helper_Panel_Mangopay{
 	}
 
 	public function setOptions( $options = [] ){
-		$this->options	= new ADT_List_Dictionary( $options );
+		$this->options	= new Dictionary( $options );
 		return $this;
 	}
 }
-?>

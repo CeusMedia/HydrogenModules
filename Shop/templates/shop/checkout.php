@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\Bootstrap\Button\Link as LinkButton;
+use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
+
 $w				= (object) $words['checkout'];
 
 $helperAddress	= new View_Helper_Shop_AddressView( $env );
@@ -14,13 +18,13 @@ $tablePositions			= $tablePositionsDesktop.$tablePositionsPhone;
 
 extract( $view->populateTexts( array( 'top', 'bottom', 'checkout.top', 'checkout.bottom' ), 'html/shop/' ) );
 
-$buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
+$buttonPrev	= new LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 if( count( $paymentBackends ) > 1 && $cartTotal > 0 )
-	$buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/payment', $w->buttonToPayment, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
+	$buttonPrev	= new LinkButton( './shop/payment', $w->buttonToPayment, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 
-$buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( 'save', $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
+$buttonNext	= new SubmitButton( 'save', $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
 if( !$paymentBackends || $cartTotal == 0 )
-	$buttonNext	= new \CeusMedia\Bootstrap\SubmitButton( 'save', $w->buttonNextPriceless, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
+	$buttonNext	= new SubmitButton( 'save', $w->buttonNextPriceless, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
 
 $tabContent	= UI_HTML_Tag::create( 'div', array(
 	$textCheckoutTop,

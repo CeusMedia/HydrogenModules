@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	@todo		apply module config main switch
  */
@@ -13,7 +16,7 @@ class Resource_DevCenter
 
 	protected $resources		= [];
 
-	protected function __construct( CMF_Hydrogen_Environment $env )
+	protected function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->modules	= array(
@@ -67,7 +70,7 @@ class Resource_DevCenter
 		return $this;
 	}
 
-	public static function getInstance( CMF_Hydrogen_Environment $env ): self
+	public static function getInstance( Environment $env ): self
 	{
 		if( !self::$instance )
 			self::$instance	= new Resource_DevCenter( $env );

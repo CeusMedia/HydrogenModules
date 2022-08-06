@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Work_Issue_ChangeNote
 {
 	const FORMAT_HTML		= 1;
@@ -13,7 +16,7 @@ class View_Helper_Work_Issue_ChangeNote
 	protected $note;
 	protected $format		= self::FORMAT_HTML;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}

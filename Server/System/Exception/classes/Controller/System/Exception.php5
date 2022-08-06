@@ -1,5 +1,8 @@
 <?php
-class Controller_System_Exception extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_System_Exception extends Controller
 {
 	public function index()
 	{

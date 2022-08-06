@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $dropdownAlign	= 'right';
@@ -13,7 +16,7 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract
 	const MODE_SELECT			= 0;
 	const MODE_DROPDOWN			= 1;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 		$this->language			= $this->env->getLanguage();
@@ -41,7 +44,7 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract
 		return $this->renderSelect();
 	}
 
-	public static function renderStatic( CMF_Hydrogen_Environment $env ): string
+	public static function renderStatic( Environment $env ): string
 	{
 		$helper = new View_Helper_LanguageSelector( $env );
 		$config	= $env->getConfig()->getAll( 'module.ui_languageselector.', TRUE );

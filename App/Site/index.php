@@ -1,10 +1,10 @@
 <?php
 ( include_once 'vendor/autoload.php' ) or die( 'Install packages using composer, first!' );
 
-use CMF_Hydrogen_Environment_Router_Recursive as RecursiveRouter;
-use CMF_Hydrogen_Environment_Web as WebEnvironment;
-use CMF_Hydrogen_Application_Web_Site as WebSiteApplication;
-use UI_HTML_Exception_Page as ExceptionPage;
+use CeusMedia\Common\UI\HTML\Exception\Page as ExceptionPage;
+use CeusMedia\HydrogenFramework\Application\Web\Site as WebSiteApplication;
+use CeusMedia\HydrogenFramework\Environment\Router\Recursive as RecursiveRouter;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 $errorReporting		= E_ALL;								//  enable full reporting
 $displayErrors		= TRUE;									//  enable error display
@@ -29,11 +29,13 @@ if( isset( $defaultTimezone ) )								//  an alternative time zone is defined
 	date_default_timezone_set( $defaultTimezone );			//  set alternative time zone
 
 try{
-	require_once "vendor/ceus-media/common/compat.php";		//  load compatibility layer
+//	require_once "vendor/ceus-media/common/compat.php";		//  load compatibility layer
 	Loader::registerNew( 'php5', NULL, $pathClasses );		//  register autoloader for project classes
 	$app	= new WebSiteApplication();						//  create default web site application instance
 	$app->run();											//  and run it
 }
 catch( Exception $e ){										//  an uncatched exception happend
-	ExceptionPage::display( $e );							//  display report page with call stack
+    class_exists( SentrySdk::class ) && Sentry\captureException( $e );
+    http_response_code(500);
+    ( include_once 'templates/error.php' ) or ExceptionPage::display( $e );
 }

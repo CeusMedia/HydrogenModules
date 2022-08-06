@@ -5,45 +5,23 @@
  *	@package		Controller.Manage.Content
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Locale Management Controller.
  *	@category		cmFrameworks.Hydrogen.Modules
  *	@package		Controller.Manage.Content
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011 Ceus Media
- *	@version		$Id$
  */
-class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
-
+class Controller_Manage_Locale extends Controller
+{
 	protected $path;
 
-	protected function __onInit() {
-		parent::__onInit();
-		$config		= $this->env->getConfig();
-		$locales	= $config->get( 'path.locales' );
-		$locales	= $config->get( 'module.manage_locales.path' );
-		$language	= $this->env->language->getLanguage();
-		$this->path	= $locales.$language.'/';
-		if( !file_exists( $this->path ) )
-			FS_Folder_Editor::createFolder( $this->path );
-
-		$paths	= [];
-		$index	= FS_Folder_RecursiveLister::getFolderList( $this->path );
-		foreach( $index as $item ){
-			$path	= substr( $item->getPathname(), strlen( $this->path ) );
-			if( substr( $path, 0, 4 ) != 'html' )
-				$paths[$path]	= $path;
-		}
-		ksort( $paths );
-		$this->addData( 'pathLocale', $this->path );
-		$this->addData( 'paths', $paths );
-		$this->addData( 'filePath', NULL );
-	}
-
-	public function add() {
+	public function add()
+	{
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -76,7 +54,8 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 		$this->restart( './manage/locale' );
 	}
 
-	public function addFolder() {
+	public function addFolder()
+	{
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -104,7 +83,8 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 		$this->restart( './manage/locale' );
 	}
 
-	public function edit( $fileHash = NULL ) {
+	public function edit( $fileHash = NULL )
+	{
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -176,7 +156,8 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 		$this->loadFileTree();
 	}
 
-	public function index() {
+	public function index()
+	{
 		$config	= $this->env->getConfig();
 #		$request	= $this->env->getRequest();
 #		$this->addData( 'filename', $request->get( 'key' ) );
@@ -185,12 +166,8 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 		$this->addData( 'showAddForms', $config->get( 'module.manage_locales.create' ) );
 	}
 
-	protected function loadFileTree(){
-		$files	= new FS_File_RecursiveRegexFilter( $this->path, '/^(?!html).+\.ini$/' );
-		$this->addData( 'files', $files );
-	}
-
-	public function remove( $fileHash ){
+	public function remove( $fileHash )
+	{
 		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -213,5 +190,34 @@ class Controller_Manage_Locale extends CMF_Hydrogen_Controller {
 		$messenger->noteSuccess( $words->msgWriteError, $filePath );
 		$this->restart( './manage/locale/edit/'.$fileHash );
 	}
+
+	protected function __onInit()
+	{
+		parent::__onInit();
+		$config		= $this->env->getConfig();
+		$locales	= $config->get( 'path.locales' );
+		$locales	= $config->get( 'module.manage_locales.path' );
+		$language	= $this->env->language->getLanguage();
+		$this->path	= $locales.$language.'/';
+		if( !file_exists( $this->path ) )
+			FS_Folder_Editor::createFolder( $this->path );
+
+		$paths	= [];
+		$index	= FS_Folder_RecursiveLister::getFolderList( $this->path );
+		foreach( $index as $item ){
+			$path	= substr( $item->getPathname(), strlen( $this->path ) );
+			if( substr( $path, 0, 4 ) != 'html' )
+				$paths[$path]	= $path;
+		}
+		ksort( $paths );
+		$this->addData( 'pathLocale', $this->path );
+		$this->addData( 'paths', $paths );
+		$this->addData( 'filePath', NULL );
+	}
+
+	protected function loadFileTree()
+	{
+		$files	= new FS_File_RecursiveRegexFilter( $this->path, '/^(?!html).+\.ini$/' );
+		$this->addData( 'files', $files );
+	}
 }
-?>

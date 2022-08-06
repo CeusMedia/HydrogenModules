@@ -1,34 +1,39 @@
 <?php
-class Controller_Info_News extends CMF_Hydrogen_Controller
+
+use CeusMedia\Common\FS\File\ICal\Builder as IcalFileBuilder;
+use CeusMedia\Common\XML\DOM\Node as XmlNode;
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Info_News extends Controller
 {
 	public function calendar()
 	{
 		$list	= $this->getVisibleNews();
 
-		$root		= new XML_DOM_Node( 'event');
-		$calendar	= new XML_DOM_Node( 'VCALENDAR' );
-		$calendar->addChild( new XML_DOM_Node( 'VERSION', '2.0' ) );
+		$root		= new XmlNode( 'event');
+		$calendar	= new XmlNode( 'VCALENDAR' );
+		$calendar->addChild( new XmlNode( 'VERSION', '2.0' ) );
 
 		foreach( $list as $news ){
-			$node	= new XML_DOM_Node( 'VEVENT' );
+			$node	= new XmlNode( 'VEVENT' );
 			if( $news->startsAt )
-				$node->addChild( new XML_DOM_Node( 'DTSTART', date( "Ymd\THis", $news->startsAt ) ) );
+				$node->addChild( new XmlNode( 'DTSTART', date( "Ymd\THis", $news->startsAt ) ) );
 			if( !$news->endsAt && $news->startsAt )
 				$news->endsAt	= $news->startsAt;
 			if( $news->endsAt )
-				$node->addChild( new XML_DOM_Node( 'DTEND', date( "Ymd\THis", $news->endsAt ) ) );
-			$node->addChild( new XML_DOM_Node( 'SUMMARY', utf8_decode( $news->title ) ) );
-			$node->addChild( new XML_DOM_Node( 'CREATED', date( "Ymd\THis", $news->createdAt ) ) );
+				$node->addChild( new XmlNode( 'DTEND', date( "Ymd\THis", $news->endsAt ) ) );
+			$node->addChild( new XmlNode( 'SUMMARY', utf8_decode( $news->title ) ) );
+			$node->addChild( new XmlNode( 'CREATED', date( "Ymd\THis", $news->createdAt ) ) );
 #			if( $mission->modifiedAt )
-#				$node->addChild( new XML_DOM_Node( 'LAST-MODIFIED', date( "Ymd\THis", $mission->modifiedAt ) ) );
+#				$node->addChild( new XmlNode( 'LAST-MODIFIED', date( "Ymd\THis", $mission->modifiedAt ) ) );
 #			if( $mission->location )
-#				$node->addChild( new XML_DOM_Node( 'LOCATION', $mission->location ) );
+#				$node->addChild( new XmlNode( 'LOCATION', $mission->location ) );
 #			if( $mission->priority )
-#				$node->addChild( new XML_DOM_Node( 'PRIORITY', ( ceil( $mission->priority - 7 ) / -2 ) ) );
+#				$node->addChild( new XmlNode( 'PRIORITY', ( ceil( $mission->priority - 7 ) / -2 ) ) );
 			$calendar->addChild( $node );
 		}
 		$root->addChild( $calendar );
-		$ical	= new File_ICal_Builder();
+		$ical	= new IcalFileBuilder();
 		$ical	= trim( $ical->build( $root ) );
 		print( $ical );
 		exit;

@@ -1,6 +1,18 @@
 <?php
-class View_Manage_Ip_Lock_Filter extends CMF_Hydrogen_View{
-	public function add(){}
-	public function edit(){}
-	public function index(){}
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_Ip_Lock_Filter extends View
+{
+	public function add()
+	{
+	}
+
+	public function edit()
+	{
+	}
+
+	public function index()
+	{
+	}
 }

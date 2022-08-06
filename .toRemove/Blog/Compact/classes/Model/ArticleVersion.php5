@@ -1,6 +1,11 @@
 <?php
-class Model_ArticleVersion extends CMF_Hydrogen_Model{
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_ArticleVersion extends Model
+{
 	protected $name		= 'article_versions';
+
 	protected $columns	= array(
 		'articleVersionId',
 		'articleId',
@@ -9,10 +14,12 @@ class Model_ArticleVersion extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'articleVersionId';
+
 	protected $indices		= array(
 		'articleId',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

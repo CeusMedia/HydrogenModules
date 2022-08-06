@@ -1,5 +1,8 @@
 <?php
-class Model_Event extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Event extends Model
 {
 	const STATUS_INACTIVE	= -2;
 	const STATUS_REJECTED	= -1;
@@ -62,7 +65,6 @@ ORDER BY dateStart ASC, timeStart ASC
 		return $list;
 	}
 }
-
 
 class TimeRange
 {

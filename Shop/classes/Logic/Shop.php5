@@ -1,5 +1,8 @@
 <?php
-class Logic_Shop extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Shop extends Logic
 {
 	/**	@var	Logic_ShopBridge			$bridge */
 	protected $bridge;

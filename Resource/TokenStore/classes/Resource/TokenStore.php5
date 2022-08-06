@@ -7,6 +7,10 @@
  *	@copyright		2010 Ceus Media
  *	@version		$Id: TokenStore.php 2676 2012-04-02 15:40:34Z christian.wuerker $
  */
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	Token Store Singleton.
  *	This is a singleton implementation - please use static call to getInstance() instead of construction with new.
@@ -32,10 +36,11 @@ class Resource_TokenStore
 	/**
 	 *	Constructor, not callable. Use Resource_TokenStore::getInstance( $env ) instead.
 	 *	@access		protected
-	 *	@param		CMF_Hydrogen_Environment		$env		Environment object
+	 *	@param		Environment		$env		Environment object
 	 *	@return		void
 	 */
-	protected function __construct( CMF_Hydrogen_Environment $env ) {
+	protected function __construct( Environment $env )
+	{
 		$this->env		= $env;																		//  store environment
 		$this->model	= new Model_Token( $this->env );											//  create new token store model
 		$this->config	= $this->env->getConfig();													//  shurtcut configuration
@@ -47,15 +52,18 @@ class Resource_TokenStore
 	 *	@access		protected
 	 *	@return		void
 	 */
-	protected function __clone(){}
+	protected function __clone()
+	{
+	}
 
 	/**
 	 *	Returns singleton instance.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment		$env		Environment object
+	 *	@param		Environment		$env		Environment object
 	 *	@return		Resource_TokenStore
 	 */
-	public static function getInstance( CMF_Hydrogen_Environment $env ){
+	public static function getInstance( Environment $env )
+	{
 		if( !self::$instance )
 			self::$instance	= new Resource_TokenStore( $env );
 		return self::$instance;
@@ -66,8 +74,9 @@ class Resource_TokenStore
 	 *	@access		public
 	 *	@return		string
 	 */
-	protected function calculateToken(){
-		$config	= new ADT_List_Dictionary( $this->config->getAll( 'module.resource_tokenstore.') );	//  extract module configuration
+	protected function calculateToken()
+	{
+		$config	= new Dictionary( $this->config->getAll( 'module.resource_tokenstore.') );	//  extract module configuration
 		$credentials	= [];
 		$credentials['ip']	= $this->getClientIp();													//  use remote IP as credential
 		if( $config->get( 'secret' ) )																//  use secret as credential
@@ -90,7 +99,8 @@ class Resource_TokenStore
 	 *	@todo		Security: given IP over GET seems to be risky
 	 *	@todo		Sanity: return REMOVE_ADDR by default makes no sense, since the web site server IP is used in request
 	 */
-	protected function getClientIp() {
+	protected function getClientIp()
+	{
 		if( $this->env->getRequest()->isAjax() )													//  HTTP request is using AJAX
 			return getEnv( 'REMOTE_ADDR' );															//  return request sender IP (since JavaScript is executed in browser)
 		if( $this->env->getRequest()->getFromSource( 'ip', 'POST' ) )								//  an IP has been given by POST request
@@ -102,7 +112,8 @@ class Resource_TokenStore
 		return getEnv( 'REMOTE_ADDR' );																//  @todo	kriss: remove or replace by exception
 	}
 
-	public function getToken( $credentials ) {
+	public function getToken( $credentials )
+	{
 		$config	= $this->env->getConfig();
 		$ip		= $this->getClientIp();																//  get IP of client
 		if( $config->get( 'module.resource_tokenstore.secret' ) )									//  a common secret is
@@ -114,7 +125,8 @@ class Resource_TokenStore
 		return $token;
 	}
 
-	public function hasToken() {
+	public function hasToken()
+	{
 		$ip		= $this->getClientIp();																//  get IP of client
 		return (bool) $this->model->countByIndex( 'ip', $ip );										//  indicate found token
 	}
@@ -126,7 +138,8 @@ class Resource_TokenStore
 	 *	@return		void
 	 *	@todo		prevent read-write-collision of several instances using synchronisation
 	 */
-	protected function cleanUpStore() {
+	protected function cleanUpStore()
+	{
 		$config	= $this->env->getConfig();
 		$lifetime	= (int) $config->get( 'module.resource_tokenstore.lifetime' );					//  get token lifetime from module configuration
 		if( !$lifetime )																			//  no token lifetime defined
@@ -145,7 +158,8 @@ class Resource_TokenStore
 	 *	@throws		RuntimeException		if no token is stored for an IP at all
 	 *	@return		boolean
 	 */
-	public function validateToken( $token ) {
+	public function validateToken( $token )
+	{
 		$ip		= $this->getClientIp();																//  get IP of client
 		$data	= $this->model->getByIndex( 'ip', $ip );											//  try to get a token bound to client IP
 		if( !$data )																				//  no token found for IP
@@ -153,7 +167,8 @@ class Resource_TokenStore
 		return $token === $data->token;															//  indicate validity of given token
 	}
 
-	protected function verifySecret( $credentials ) {
+	protected function verifySecret( $credentials )
+	{
 		$secretConfig	= (string) $this->config->get( 'module.resource_tokenstore.secret' );		//  get common secret from module configuration
 		if( !$secretConfig )																		//  no common secret set
 			return TRUE;																			//
@@ -161,4 +176,3 @@ class Resource_TokenStore
 		return $secretConfig === $secretSent;														//  indicate validity of given secret
 	}
 }
-?>

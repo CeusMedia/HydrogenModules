@@ -1,6 +1,9 @@
 <?php
-class View_Helper_Mail_Exception_Facts{
 
+use CeusMedia\HydrogenFramework\Environment as Environment;
+
+class View_Helper_Mail_Exception_Facts
+{
 	protected $env;
 	protected $exception;
 	protected $helper;
@@ -9,10 +12,11 @@ class View_Helper_Mail_Exception_Facts{
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 *	@param		Environment		$env		Environment object
 	 *	@return		void
 	 */
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env		= $env;
 	}
 
@@ -22,7 +26,8 @@ class View_Helper_Mail_Exception_Facts{
 	 *	@param		Exception	$exception		Exception
 	 *	@return		self
 	 */
-	public function setException( Exception $exception ){
+	public function setException( Exception $exception )
+	{
 		$this->exception	= $exception;
 		$this->prepare();
 		return $this;
@@ -35,7 +40,8 @@ class View_Helper_Mail_Exception_Facts{
 	 *	@see		http://developer.mimer.com/documentation/html_92/Mimer_SQL_Mobile_DocSet/App_Return_Codes2.html
 	 *	@see		http://publib.boulder.ibm.com/infocenter/idshelp/v10/index.jsp?topic=/com.ibm.sqls.doc/sqls520.htm
 	 */
-	protected function getMeaningOfSQLSTATE( $SQLSTATE ){
+	protected function getMeaningOfSQLSTATE( $SQLSTATE )
+	{
 		$class1	= substr( $SQLSTATE, 0, 2 );
 		$class2	= substr( $SQLSTATE, 2, 3 );
 
@@ -45,7 +51,8 @@ class View_Helper_Mail_Exception_Facts{
 		return 'unknown';
 	}
 
-	protected function prepare(){
+	protected function prepare()
+	{
 		$words			= $this->env->getLanguage()->getWords( 'server/log/exception' );
 		$this->helper	= new View_Helper_Mail_Facts( $this->env );
 		$this->helper->setLabels( $words['facts'] );
@@ -92,13 +99,15 @@ class View_Helper_Mail_Exception_Facts{
 		}
 	}
 
-	public function render(){
+	public function render()
+	{
 		if( !$this->helper )
 			throw new RuntimeException( 'No exception set' );
 		return $this->helper->render();
 	}
 
-	public function renderAsText(){
+	public function renderAsText()
+	{
 		if( !$this->helper )
 			throw new RuntimeException( 'No exception set' );
 		return $this->helper->renderAsText();
@@ -110,7 +119,8 @@ class View_Helper_Mail_Exception_Facts{
 	 *	@param		boolean			$show			Flag: show previous exceptions
 	 *	@return		self
 	 */
-	public function setShowPrevious( $show = TRUE ){
+	public function setShowPrevious( $show = TRUE )
+	{
 		$this->showPrevious	= (bool) $show;
 		return $this;
 	}

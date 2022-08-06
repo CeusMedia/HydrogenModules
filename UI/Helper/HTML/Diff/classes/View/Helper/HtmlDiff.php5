@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_HtmlDiff
 {
 	protected $env;
@@ -7,7 +10,7 @@ class View_Helper_HtmlDiff
 
 	protected $html2;
 
-	public function __construct( CMF_Hydrogen_Environment $env = NULL, string $html1 = NULL, string $html2 = NULL )
+	public function __construct( Environment $env = NULL, string $html1 = NULL, string $html2 = NULL )
 	{
 		if( $env )
 			$this->setEnv( $env );
@@ -30,7 +33,7 @@ class View_Helper_HtmlDiff
 		return new UI_HTML_Tag( 'div', $diff->getDifference(), array( 'class' => 'htmldiff' ) );
 	}
 
-	static public function renderStatic( CMF_Hydrogen_Environment $env, string $html1, string $html2 )
+	static public function renderStatic( Environment $env, string $html1, string $html2 )
 	{
 		$helper	= new View_Helper_HtmlDiff( $env );
 		$helper->setContents( $html1, $html2 );
@@ -44,7 +47,7 @@ class View_Helper_HtmlDiff
 		return $this;
 	}
 
-	public function setEnv( CMF_Hydrogen_Environment $env ): self
+	public function setEnv( Environment $env ): self
 	{
 		$this->env	= $env;
 		return $this;

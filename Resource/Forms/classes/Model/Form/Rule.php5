@@ -1,5 +1,8 @@
 <?php
-class Model_Form_Rule extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Form_Rule extends Model
 {
 	const TYPE_CUSTOMER		= 0;
 	const TYPE_MANAGER		= 1;

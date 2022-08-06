@@ -1,8 +1,11 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Logic;
+
 /**
  *	@todo		code doc
  */
-class Logic_Info_Dashboard extends CMF_Hydrogen_Logic
+class Logic_Info_Dashboard extends Logic
 {
 	protected $model;
 	protected $moduleConfig;

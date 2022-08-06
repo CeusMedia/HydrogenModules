@@ -1,5 +1,8 @@
 <?php
-class View_Manage_Content extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_Content extends View{
 	public function index(){}
 
 	protected function renderTabs(){

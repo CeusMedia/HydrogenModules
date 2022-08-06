@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Shop_FinishPanel_Stripe
 {
 	const OUTPUT_FORMAT_HTML		= 1;
@@ -24,7 +27,7 @@ class View_Helper_Shop_FinishPanel_Stripe
 
 	protected $listClass			= 'dl-horizontal';
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->modelPayment	= new Model_Shop_Payment_Stripe( $env );

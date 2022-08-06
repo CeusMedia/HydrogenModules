@@ -1,5 +1,8 @@
 <?php
-class View_Manage_My_Order extends CMF_Hydrogen_View{
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_My_Order extends View{
 
 	public function index(){}
 

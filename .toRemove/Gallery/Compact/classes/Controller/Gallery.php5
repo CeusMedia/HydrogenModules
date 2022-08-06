@@ -1,5 +1,9 @@
 <?php
-class Controller_Gallery extends CMF_Hydrogen_Controller
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Gallery extends Controller
 {
 	protected $path;
 
@@ -98,7 +102,7 @@ class Controller_Gallery extends CMF_Hydrogen_Controller
 				'source'	=> $source,
 				'title'		=> $title,
 				'files'		=> FS_Folder_Lister::getFileList( dirname( $uri ), '/\.(jpg|jpeg|jpe|png|gif)$/i' ),
-				'exif'		=> new ADT_List_Dictionary( $exif->getAll() ),
+				'exif'		=> new Dictionary( $exif->getAll() ),
 			)
 		);
 	}

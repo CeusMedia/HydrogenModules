@@ -1,9 +1,14 @@
 <?php
-class Hook_UI_Bootstrap extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_UI_Bootstrap extends Hook
 {
-	public static function onEnvInit( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onEnvInit( Environment $env, $context, $module, $payload )
 	{
-		if( get_class( $env ) === 'CMF_Hydrogen_Environment_Remote' )
+		if( get_class( $env ) === RemoteEnvironment::class )
 			return;
 		$config			= $env->getConfig();
 		$modules		= $env->getModules();
@@ -74,7 +79,7 @@ class Hook_UI_Bootstrap extends CMF_Hydrogen_Hook
 		}
 	}
 
-	public static function onPageApplyModules( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
 	{
 		if( !$env->getConfig()->get( 'module.ui_bootstrap.active' ) )
 			return;
@@ -130,7 +135,7 @@ class Hook_UI_Bootstrap extends CMF_Hydrogen_Hook
 		$context->addBodyClass( 'uses-bootstrap bootstrap'.$majorVersion );
 	}
 
-	public static function onPageBuild( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onPageBuild( Environment $env, $context, $module, $payload )
 	{
 		$data	= (object) $payload;
 		if( !$env->getConfig()->get( 'module.ui_bootstrap.active' ) )

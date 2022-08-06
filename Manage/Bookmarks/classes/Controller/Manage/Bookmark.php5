@@ -1,7 +1,11 @@
 <?php
-class Controller_Manage_Bookmark extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Manage_Bookmark extends Controller
 {
-	public static function ___onTinyMCE_getLinkList( CMF_Hydrogen_Environment $env, $context, $module, $arguments = [] )
+	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
 	{
 		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes	= (object) $words['link-prefixes'];

@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Shop_AddressView
 {
 	const OUTPUT_UNKNOWN		= 0;
@@ -15,7 +19,7 @@ class View_Helper_Shop_AddressView
 	protected $address;
 	protected $output			= self::OUTPUT_HTML;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->words	= $this->env->getLanguage()->getWords( 'address' );
@@ -77,7 +81,7 @@ class View_Helper_Shop_AddressView
 	protected function renderAsHtml(): string
 	{
 		$w		= (object) $this->words['view'];
-		$d		= new ADT_List_Dictionary( $this->address );
+		$d		= new Dictionary( (array) $this->address );
 //		print_m( $d->getAll() );die;
 		$list	= [];
 		if( trim( $d->get( 'institution' ) ) )
@@ -101,7 +105,7 @@ class View_Helper_Shop_AddressView
 		$helperFacts	= new View_Helper_Mail_Facts();
 		$helperFacts->setLabels( $this->words['view'] );
 
-		$d		= new ADT_List_Dictionary( $this->address );
+		$d		= new Dictionary( (array) $this->address );
 		if( trim( $d->get( 'institution' ) ) )
 			$helperFacts->add( 'institution', '', $d->get( 'institution' ) );
 		$helperFacts->add( 'name', '', $d->get( 'firstname' ).' '.$d->get( 'surname' ) );

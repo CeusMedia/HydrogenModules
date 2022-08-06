@@ -4,17 +4,17 @@
  *	@category		cmProjects
  *	@package		LUV.Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			29.06.2019
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Shop Specials.
  *	@category		cmProjects
  *	@package		LUV.Model
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			29.06.2019
  */
-class Model_Shop_Special extends CMF_Hydrogen_Model
+class Model_Shop_Special extends Model
 {
 	const STATUS_CLOSED				= -2;
 	const STATUS_OUTDATED			= -1;

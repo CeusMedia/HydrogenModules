@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\CLI\Question;
+
 class Job_Job extends Job_Abstract
 {
 	protected $pathJobs		= 'config/jobs/';
@@ -39,7 +42,7 @@ class Job_Job extends Job_Abstract
 			}
 			$fileName	= preg_replace( '@\.[^.]+$@', '', $file->getFilename() );
 			$default	= str_replace( ' ', '_', ucwords( str_replace( '.', ' ', $fileName ) ) );
-			$moduleId	= CLI_Question::askStatic( 'Module ID', 'string', $default, NULL, FALSE );
+			$moduleId	= Question::askStatic( 'Module ID', 'string', $default, NULL, FALSE );
 			$moduleJobs->moduleId	= $moduleId;
 			$targetFile	= $this->pathJobs.$moduleId.'.json';
 			$this->out( 'Writing job JSON: '.$targetFile );

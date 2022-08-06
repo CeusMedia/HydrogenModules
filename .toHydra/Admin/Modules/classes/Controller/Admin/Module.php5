@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Module extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Module extends Controller{
 
 	protected function __onInit(){
 		$this->messenger	= $this->env->getMessenger();

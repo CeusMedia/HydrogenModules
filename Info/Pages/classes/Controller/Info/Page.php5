@@ -1,5 +1,8 @@
 <?php
-class Controller_Info_Page extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Info_Page extends Controller
 {
 	public function index( $pageId = 'index' )
 	{

@@ -5,38 +5,26 @@
  *	@package		Chat.Server.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Test.php 3004 2012-06-25 23:22:02Z christian.wuerker $
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Controller to test server classes.
  *	@category		cmApps
  *	@package		Chat.Server.Controller
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Test.php 3004 2012-06-25 23:22:02Z christian.wuerker $
  */
-class Controller_Test extends CMF_Hydrogen_Controller {
-
-	/**
-	 *	Checks PHP file syntax and returns true if valid.
-	 *	@static
-	 *	@access		protected
-	 *	@param		string		$filePath
-	 *	@param		string		$error			Reference of output if not valid
-	 *	@return		bool		TRUE if valid, FALSE in invalid. See $error for more information.
-	 */
-	protected static function checkSyntax( $filePath, &$error ) {
-		exec( "php -l ".$filePath, $error, $code );
-		return !$code;
-	}
-
+class Controller_Test extends Controller
+{
 	/**
 	 *	Run all tests and return result.
 	 *	@access		public
 	 *	@return		array
 	 */
-	public function index() {
+	public function index()
+	{
 		$core			= $this->syntaxCore();
 		$controllers	= $this->syntaxControllers();
 		$models			= $this->syntaxModels();
@@ -61,25 +49,16 @@ class Controller_Test extends CMF_Hydrogen_Controller {
 		return $data;
 	}
 
-	protected function listFilesInFolder( $path, $extension = "php" ) {
-		$list	= [];																			//  create empty list
-		$index	= new FS_File_RegexFilter( $path, '/\.'.$extension.'$/' );								//  list all classes in folder
-		foreach( $index as $file ) {																//  iterate index
-			$name			= pathinfo( $file->getFilename(), PATHINFO_FILENAME );					//  get file name
-			$list[$name]	= $file->getPathname();
-		}
-		ksort( $list );
-		return $list;
-	}
-
-	public function syntaxController( $controller ) {
+	public function syntaxController( $controller )
+	{
 		$filePath	= 'classes/Controller/'.ucfirst( $controller ).'.php';
 		if( !file_exists( $filePath ) )
 			return NULL;
 		return self::checkSyntax( $filePath, $error );
 	}
 
-	public function syntaxControllers() {
+	public function syntaxControllers()
+	{
 		$list	= [];
 		$index	= $this->listFilesInFolder( 'classes/Controller' );
 		foreach( array_keys( $index ) as $controller )
@@ -87,7 +66,8 @@ class Controller_Test extends CMF_Hydrogen_Controller {
 		return $list;
 	}
 
-	public function syntaxCore() {
+	public function syntaxCore()
+	{
 		$list	= [];																			//  create empty list
 		$index	= $this->listFilesInFolder( 'classes' );											//  list all core classes
 		foreach( $index as $fileName => $filePath )													//  iterate index
@@ -98,14 +78,16 @@ class Controller_Test extends CMF_Hydrogen_Controller {
 		return $list;
 	}
 
-	public function syntaxModel( $model ) {
+	public function syntaxModel( $model )
+	{
 		$filePath	= 'classes/Model/'.ucfirst( $model ).'.php';
 		if( !file_exists( $filePath ) )
 			return NULL;
 		return self::checkSyntax( $filePath, $error );
 	}
 
-	public function syntaxModels() {
+	public function syntaxModels()
+	{
 		$list	= [];
 		$index	= $this->listFilesInFolder( 'classes/Model' );
 		foreach( array_keys( $index ) as $model )
@@ -113,14 +95,41 @@ class Controller_Test extends CMF_Hydrogen_Controller {
 		return $list;
 	}
 
-	public function throwException( $message = NULL, $code = 0 ){
+	public function throwException( $message = NULL, $code = 0 )
+	{
 		$message	= strlen( $message ) ? $message : 'This is a test exception.';
 		throw new RuntimeException( $message, (int) $code );
 	}
 
-	public function throwSerializableException( $message = NULL, $code = 0 ){
+	public function throwSerializableException( $message = NULL, $code = 0 )
+	{
 		$message	= strlen( $message ) ? $message : 'This is a test exception.';
 		throw new Exception_Serializable( $message, (int) $code );
 	}
+
+	/**
+	 *	Checks PHP file syntax and returns true if valid.
+	 *	@static
+	 *	@access		protected
+	 *	@param		string		$filePath
+	 *	@param		string		$error			Reference of output if not valid
+	 *	@return		bool		TRUE if valid, FALSE in invalid. See $error for more information.
+	 */
+	protected static function checkSyntax( $filePath, &$error )
+	{
+		exec( "php -l ".$filePath, $error, $code );
+		return !$code;
+	}
+
+	protected function listFilesInFolder( $path, $extension = "php" )
+	{
+		$list	= [];																			//  create empty list
+		$index	= new FS_File_RegexFilter( $path, '/\.'.$extension.'$/' );								//  list all classes in folder
+		foreach( $index as $file ) {																//  iterate index
+			$name			= pathinfo( $file->getFilename(), PATHINFO_FILENAME );					//  get file name
+			$list[$name]	= $file->getPathname();
+		}
+		ksort( $list );
+		return $list;
+	}
 }
-?>

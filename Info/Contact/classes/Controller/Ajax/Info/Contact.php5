@@ -1,5 +1,8 @@
 <?php
-class Controller_Ajax_Info_Contact extends CMF_Hydrogen_Controller_Ajax
+
+use CeusMedia\HydrogenFramework\Controller\Ajax;
+
+class Controller_Ajax_Info_Contact extends AjaxController
 {
 	protected $messenger;
 	protected $moduleConfig;

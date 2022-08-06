@@ -1,5 +1,8 @@
 <?php
-class Logic_Authentication extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Authentication extends Logic
 {
 	protected $env;
 	protected $backend;

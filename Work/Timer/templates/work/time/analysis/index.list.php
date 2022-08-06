@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment;
+
 $indicator	= new UI_HTML_Indicator( array(
 	'useColor'	=> FALSE,
 ) );
@@ -11,7 +13,7 @@ function renderTime( $seconds ){
 }
 
 
-function renderTimers( CMF_Hydrogen_Environment $env, $timers ){
+function renderTimers( Environment $env, $timers ){
 	if( !$timers )
 		return '';
 	$list	= [];

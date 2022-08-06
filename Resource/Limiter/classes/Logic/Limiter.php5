@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	@todo		apply module config main switch
  */
@@ -56,7 +60,7 @@ class Logic_Limiter
 	 *	@param		string		$prefix			Prefix to filter keys, e.g. "mail." for all rules starting with "mail."
 	 *	@param		boolean		$asDictionary	Flag: return list as dictionary object instead of an array
 	 *	@param		boolean		$caseSensitive	Flag: return list with lowercase rule keys or dictionary with no case sensitivy
-	 *	@return		array|ADT_List_Dictionary	Map or dictionary object containing all or filtered rules
+	 *	@return		array|Dictionary	Map or dictionary object containing all or filtered rules
 	 */
 	public function getAll( $prefix = NULL, $asDictionary = FALSE, $caseSensitive = TRUE )
 	{
@@ -85,12 +89,12 @@ class Logic_Limiter
 		return $this->rules->set( $key, $value );
 	}
 
-	protected function __construct( CMF_Hydrogen_Environment $env )
+	protected function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.resource_limiter.', TRUE );
 		$this->enabled		= $this->moduleConfig->get( 'active' );
-		$this->rules		= new ADT_List_Dictionary();
+		$this->rules		= new Dictionary();
 		$this->__onInit();
 	}
 

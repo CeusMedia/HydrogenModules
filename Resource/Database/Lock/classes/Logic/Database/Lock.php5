@@ -1,5 +1,9 @@
 <?php
-class Logic_Database_Lock extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Database_Lock extends Logic
 {
 	protected $model;
 
@@ -7,7 +11,7 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic
 	 *	@deprecated		use hook class instead
 	 *	@todo			remove after all installations are updated
 	 */
-	public static function ___onAutoModuleLockRelease( CMF_Hydrogen_Environment $env, $context/*, $module, $data = []*/ )
+	public static function ___onAutoModuleLockRelease( Environment $env, $context/*, $module, $data = []*/ )
 	{
 		$request	= $env->getRequest();
 		if( $request->isAjax() )
@@ -22,7 +26,7 @@ class Logic_Database_Lock extends CMF_Hydrogen_Logic
 		) );
 	}
 
-	public static function release( CMF_Hydrogen_Environment $env, $subject, $entryId = NULL )
+	public static function release( Environment $env, $subject, $entryId = NULL )
 	{
 		$lock	= new self( $env );
 		$lock->unlock( $subject, $entryId );

@@ -1,7 +1,11 @@
 <?php
-class Hook_Database_Lock extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Database_Lock extends Hook
 {
-	static public function onAuthLogout( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onAuthLogout( Environment $env, $context, $module, $payload = [] )
 	{
 		$model		= new Model_Lock( $env );
 		$model->removeByIndices( array(
@@ -9,7 +13,7 @@ class Hook_Database_Lock extends CMF_Hydrogen_Hook
 		) );
 	}
 
-	static public function onRegisterDashboardPanels( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	static public function onRegisterDashboardPanels( Environment $env, $context, $module, $payload )
 	{
 		if( !$env->getAcl()->has( 'database/lock', 'ajaxRenderDashboardPanel' ) )
 			return;
@@ -23,7 +27,7 @@ class Hook_Database_Lock extends CMF_Hydrogen_Hook
 		) );
 	}
 
-	static public function onAutoModuleLockRelease( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	static public function onAutoModuleLockRelease( Environment $env, $context, $module, $payload = [] )
 	{
 		$request	= $env->getRequest();
 		if( $request->isAjax() )

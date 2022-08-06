@@ -1,7 +1,11 @@
 <?php
-class Hook_Info_Blog extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Info_Blog extends Hook
 {
-	public static function onViewRenderContent( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onViewRenderContent( Environment $env, $context, $module, $payload = [] )
 	{
 		$data		= (object) $payload;
 		$pattern	= "/^(.*)(\[blog:(.+)\])(.*)$/sU";

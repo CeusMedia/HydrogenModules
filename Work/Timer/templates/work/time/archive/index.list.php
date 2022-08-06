@@ -74,7 +74,7 @@ foreach( $timers as $timer ){
 	) ) );
 	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
 	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
-	$pagination	= new CMM_Bootstrap_PageControl( './work/time/archive/'.$limit, $page, ceil( $total / $limit ) );
+	$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './work/time/archive/'.$limit, $page, ceil( $total / $limit ) );
 }
 return '
 <div class="content-panel conten-panel-table">

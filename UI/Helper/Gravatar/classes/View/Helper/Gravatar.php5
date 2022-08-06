@@ -1,5 +1,8 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
 class View_Helper_Gravatar
+
 {
 	protected $env;
 	protected $user;
@@ -7,7 +10,7 @@ class View_Helper_Gravatar
 	protected $rating	= 'g';
 	protected $default	= 'mm';
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$config	= $this->env->getConfig()->getAll( 'module.ui_helper_gravatar.', TRUE );

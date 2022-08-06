@@ -1,7 +1,11 @@
 <?php
-class Hook_Info_Forum extends CMF_Hydrogen_Hook
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
+
+class Hook_Info_Forum extends Hook
 {
-	public static function onPageCollectNews( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function onPageCollectNews( Environment $env, $context, $module, $payload = [] )
 	{
 		$model			= new Model_Forum_Thread( $env );
 		$oneDay			= 24 * 60 * 60;
@@ -24,7 +28,7 @@ class Hook_Info_Forum extends CMF_Hydrogen_Hook
 		}
 	}
 
-	public static function onRegisterSitemapLinks( CMF_Hydrogen_Environment $env, $context, $module, $payload )
+	public static function onRegisterSitemapLinks( Environment $env, $context, $module, $payload )
 	{
 		try{
 			$config			= $env->getConfig()->getAll( 'module.info_forum.', TRUE );

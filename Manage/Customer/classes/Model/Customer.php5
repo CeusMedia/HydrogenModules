@@ -1,6 +1,11 @@
 <?php
-class Model_Customer extends CMF_Hydrogen_Model{
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Customer extends Model
+{
 	protected $name			= 'customers';
+
 	protected $columns		= array(
 		'customerId',
 		'creatorId',
@@ -23,8 +28,10 @@ class Model_Customer extends CMF_Hydrogen_Model{
 		'createdAt',
 		'modifiedAt',
 	);
+
 	protected $primaryKey	= 'customerId';
+
 	protected $indizes		= [];
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

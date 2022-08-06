@@ -4,21 +4,20 @@
  *	@category		cmProjects
  *	@package		LUV.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
- *	@version		3.0
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Branch.
  *	@category		cmProjects
  *	@package		LUV.Model
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
- *	@version		3.0
  */
-class Model_Catalog_Article_Document extends CMF_Hydrogen_Model {
-
+class Model_Catalog_Article_Document extends Model
+{
 	protected $name		= 'catalog_article_documents';
+
 	protected $columns	= array(
 		'articleDocumentId',
 		'articleId',
@@ -27,7 +26,9 @@ class Model_Catalog_Article_Document extends CMF_Hydrogen_Model {
 		'url',
 		'title',
 	);
+
 	protected $primaryKey	= 'articleDocumentId';
+
 	protected $indices		= array(
 		"articleId",
 		"status",
@@ -35,6 +36,6 @@ class Model_Catalog_Article_Document extends CMF_Hydrogen_Model {
 		"url",
 		'title',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>

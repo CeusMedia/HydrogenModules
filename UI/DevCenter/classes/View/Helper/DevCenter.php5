@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_DevCenter
 {
 	public $options	= [];
@@ -9,7 +12,7 @@ class View_Helper_DevCenter
 
 	protected $open;
 
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->session	= $env->getSession();
 		$height			= $this->session->get( 'DevCenterHeight' );

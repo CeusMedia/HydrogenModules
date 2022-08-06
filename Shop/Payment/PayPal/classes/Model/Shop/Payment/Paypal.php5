@@ -1,5 +1,8 @@
 <?php
-class Model_Shop_Payment_Paypal extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Shop_Payment_Paypal extends Model
 {
 	protected $name		= 'shop_payments_paypal';
 

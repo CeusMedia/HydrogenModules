@@ -2,11 +2,14 @@
 /**
  *	Model for mission versions.
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
-*	Model for mission versions.
+ *	Model for mission versions.
  *	@todo			code documentation
  */
-class Model_Mission_Version extends CMF_Hydrogen_Model
+class Model_Mission_Version extends Model
 {
 	/**	@var	$name		string		Table name without prefix of database connection */
 	protected $name			= "mission_versions";

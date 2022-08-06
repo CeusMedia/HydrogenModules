@@ -3,11 +3,14 @@
  *	Data model of address groups.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data model of address groups.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Group extends CMF_Hydrogen_Model
+class Model_Mail_Group extends Model
 {
 	protected $name		= 'mail_groups';
 

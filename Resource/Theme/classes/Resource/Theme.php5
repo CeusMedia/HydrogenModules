@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Resource_Theme{
 
-	static public function ___onPageBuild( CMF_Hydrogen_Environment $env, $module, $context, $data = [] ){
+	static public function ___onPageBuild( Environment $env, $module, $context, $data = [] ){
 		foreach( $env->getModules()->getAll() as $module ){
 			if( !preg_match( '/^(UI_)?Theme_/', $module->id ) )
 				continue;

@@ -1,5 +1,8 @@
 <?php
-class Model_Work_Activity extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Work_Activity extends Model
 {
 	protected $name			= 'work_activities';
 

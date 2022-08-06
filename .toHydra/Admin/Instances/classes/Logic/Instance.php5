@@ -1,22 +1,28 @@
 <?php
-class Logic_Instance{
 
+//use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
+
+class Logic_Instance
+{
 	protected $env;
 	static protected $instance;
 
-	protected function __construct( $env ){
+	protected function __construct( $env )
+	{
 		$this->env	= $env;
 	}
 
 	protected function __clone(){}
 
-	static public function getInstance( $env ){
+	static public function getInstance( $env )
+	{
 		if( !self::$instance )
 			self::$instance	= new self( $env );
 		return self::$instance;
 	}
 
-	public function listModules( $instanceId ){
+	public function listModules( $instanceId )
+	{
 		$cache	= $this->env->getCache();
 		$list	= $cache->get( 'instance.'.$instanceId );
 		if( !$list ){
@@ -55,7 +61,8 @@ class Logic_Instance{
 		return $list;
 	}
 
-/*	public function showTodos(){
+/*	public function showTodos()
+	{
 		$index	= new FS_File_RecursiveTodoLister( array( 'php', 'js' ) );
 		$index->scan( $this->env->getRemote()->path );
 		$this->addData( 'path', $this->env->getRemote()->path );
@@ -65,7 +72,8 @@ class Logic_Instance{
 		$this->env->getMessenger()->noteNotice( $index->getNumberTodos().' Files found.' );
 	}*/
 
-/*	public function showInstanceModuleGraph( $instanceId = NULL, $showExceptions = NULL ){
+/*	public function showInstanceModuleGraph( $instanceId = NULL, $showExceptions = NULL )
+	{
 		try{
 			if( !UI_Image_Graphviz_Renderer::checkGraphvizSupport() )
 				throw new InvalidArgumentException( "No GraphViz support detected" );
@@ -89,7 +97,7 @@ class Logic_Instance{
 					'pathApp'		=> $instance->uri
 				);
 				try{
-					$remote		= new CMF_Hydrogen_Environment_Remote( $options );
+					$remote		= new RemoteEnvironment( $options );
 					$modules	= $remote->getModules()->getAll();
 				}
 				catch( Exception $e ){
@@ -130,4 +138,3 @@ class Logic_Instance{
 		exit;
 	}*/
 }
-?>

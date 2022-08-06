@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	@deprecated		not used anymore, see template index.active
  */
@@ -8,7 +11,7 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 
 	protected $missionId		= NULL;
 
-	static public function decorateTimer( CMF_Hydrogen_Environment $env, $timer, bool $strict = TRUE )
+	static public function decorateTimer( Environment $env, $timer, bool $strict = TRUE )
 	{
 		$modelProject		= new Model_Project( $env );
 		if( $timer->projectId )

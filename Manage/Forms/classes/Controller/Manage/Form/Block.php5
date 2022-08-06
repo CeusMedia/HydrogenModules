@@ -1,5 +1,9 @@
 <?php
-class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Form_Block extends Controller
 {
 	protected $modelForm;
 	protected $modelBlock;
@@ -63,7 +67,7 @@ class Controller_Manage_Form_Block extends CMF_Hydrogen_Controller
 	public function index( $page = 0 )
 	{
 		$session		= $this->env->getSession();
-		$filters		= new ADT_List_Dictionary( array_merge(
+		$filters		= new Dictionary( array_merge(
 			array_combine( $this->filters, array_fill( 0, count( $this->filters ), NULL ) ),
 			$session->getAll( $this->filterPrefix )
 		) );

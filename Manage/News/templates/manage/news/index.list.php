@@ -49,7 +49,7 @@ $buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['butto
 	'class'	=> 'btn btn-small btn-success',
 ) );
 
-$pagination     = new CMM_Bootstrap_PageControl( './manage/news', $pageNr, ceil( $total / $limit ) );
+$pagination     = new \CeusMedia\Bootstrap\Nav\PageControl( './manage/news', $pageNr, ceil( $total / $limit ) );
 
 return '
 <div class="content-panel">

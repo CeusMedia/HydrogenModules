@@ -1,11 +1,20 @@
 <?php
-class View_Manage_Catalog_Bookstore_Article extends View_Manage_Catalog_Bookstore{
+class View_Manage_Catalog_Bookstore_Article extends View_Manage_Catalog_Bookstore
+{
+	public function add()
+	{
+	}
 
-	public function add(){}
-	public function edit(){}
-	public function index(){}
+	public function edit()
+	{
+	}
 
-	protected function renderList( $articles, $articleId = NULL ){
+	public function index()
+	{
+	}
+
+	protected function renderList( $articles, $articleId = NULL )
+	{
 		$list	= [];
 		foreach( $articles as $article ){
 			$url	= './manage/catalog/bookstore/article/edit/'.$article->articleId;
@@ -18,6 +27,4 @@ class View_Manage_Catalog_Bookstore_Article extends View_Manage_Catalog_Bookstor
 		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked boxed' ) );
 		return $list;
 	}
-
 }
-?>

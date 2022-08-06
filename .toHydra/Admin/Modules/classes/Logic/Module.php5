@@ -2,50 +2,27 @@
 /**
  *	Singleton of module logic.
  */
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
+use CeusMedia\HydrogenFramework\Logic;
+
 /**
  *	Singleton of module logic.
  */
-class Logic_Module extends CMF_Hydrogen_Logic
+class Logic_Module extends Logic
 {
+	public $model;
 
-	static protected $instance	= NULL;
+	protected static $instance	= NULL;
+
 	protected $env;
 	protected $messenger;
 	/**	@var	Model_Module	$model		Module module instance */
-	public $model;
 
 	const INSTALL_TYPE_UNKNOWN	= 0;
 	const INSTALL_TYPE_LINK		= 1;
 	const INSTALL_TYPE_COPY		= 2;
-
-	protected function __clone(){}
-
-	protected function __onInit()
-	{
-		$this->messenger	= $this->env->getMessenger();
-		$this->model		= new Model_Module( $this->env );
-		$this->env->getRuntime()->reach( 'Logic_Module: init' );
-
-		$moduleSource		= new Model_ModuleSource( $this->env );
-		$this->sources		= $moduleSource->getAll( FALSE );
-		$this->env->getRuntime()->reach( 'Logic_Module: get sources' );
-		foreach( $this->model->loadSources() as $sourceId => $status )
-			$this->sources[$sourceId]->status = $status;
-		$this->env->getRuntime()->reach( 'Logic_Module: load sources' );
-
-		foreach( $this->sources as $sourceId => $source ){
-			if( isset( $source->status ) && !is_integer( $source->status ) ){
-				if( $source->status instanceof Exception ){
-					$this->messenger->noteFailure( $source->status->getMessage() );
-				}
-				$label	= '"'.$sourceId.'"';
-				if( $this->env->getAcl()->has( 'admin/source', 'edit' ) )
-					$label	= UI_HTML_Tag::create( 'a', $sourceId, array( 'href' => './admin/module/source/edit/'.$sourceId ) );
-				$this->messenger->noteError( 'Die Quelle '.$label.' ist nicht verfügbar oder falsch konfiguriert.' );
-			}
-		}
-		$this->env->getRuntime()->reach( 'Logic_Module: check sources' );
-	}
 
 	public function checkForUpdate( string $moduleId )
 	{
@@ -134,14 +111,14 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		return $list;
 	}
 
-/*	static public function getInstance( CMF_Hydrogen_Environment $env ): self
+/*	static public function getInstance( Environment $env ): self
 	{
 		if( !self::$instance )
 			self::$instance	= new Logic_Module( $env );
 		return self::$instance;
 	}*/
 
-	public function getLocalFileTypePath( CMF_Hydrogen_Environment $env, string $fileType, $file ): string
+	public function getLocalFileTypePath( Environment $env, string $fileType, $file ): string
 	{
 		$config		= $env->getConfig();
 		$paths		= $config->getAll( 'path.', TRUE );
@@ -182,7 +159,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		return $this->model->get( $moduleId );
 	}
 
-	public function getModuleFileMap( CMF_Hydrogen_Environment_Remote $env, $module ): array
+	public function getModuleFileMap( RemoteEnvironment $env, $module ): array
 	{
 		$map		= [];
 		$fileTypes	= array(
@@ -411,7 +388,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		return FALSE;
 	}
 
-	public function invalidateFileCache( CMF_Hydrogen_Environment $env = NULL, bool $verbose = NULL )
+	public function invalidateFileCache( Environment $env = NULL, bool $verbose = NULL )
 	{
 		if( $env->getConfig()->get( 'system.cache.modules' ) ){
 			$fileCache	= $env->path.'config/modules.cache.serial';
@@ -500,7 +477,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		$remote		= $this->env/*->getRemote()*/;
 		$this->env->getRuntime()->reach( 'Logic_Module::list: got remote' );
 		$list		= [];
-		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+		if( $remote instanceof RemoteEnvironment ){
 			$modulesAll				= $this->model->getAll();
 			$this->env->getRuntime()->reach( 'Logic_Module::list: got  all' );
 			$modulesInstalled		= $remote->getModules()->getAll();
@@ -520,7 +497,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		$remote		= $this->env/*->getRemote()*/;
 		$this->env->getRuntime()->reach( 'Logic_Module::list: got remote' );
 		$list		= [];
-		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+		if( $remote instanceof RemoteEnvironment ){
 			$modulesAll				= $this->model->getAll();
 			$this->env->getRuntime()->reach( 'Logic_Module::list: got  all' );
 			$modulesInstalled		= $remote->getModules()->getAll();
@@ -540,7 +517,7 @@ class Logic_Module extends CMF_Hydrogen_Logic
 		$remote		= $this->env/*->getRemote()*/;
 		$this->env->getRuntime()->reach( 'Logic_Module::list: got remote' );
 		$list		= [];
-		if( $remote instanceof CMF_Hydrogen_Environment_Remote ){
+		if( $remote instanceof RemoteEnvironment ){
 			$modulesAll				= $this->model->getAll();
 			$this->env->getRuntime()->reach( 'Logic_Module::list: got  all' );
 			$modulesInstalled		= $remote->getModules()->getAll();
@@ -570,6 +547,37 @@ class Logic_Module extends CMF_Hydrogen_Logic
 	}
 
 	//  --  PROTECTED  --  //
+
+	protected function __clone()
+	{
+	}
+
+	protected function __onInit()
+	{
+		$this->messenger	= $this->env->getMessenger();
+		$this->model		= new Model_Module( $this->env );
+		$this->env->getRuntime()->reach( 'Logic_Module: init' );
+
+		$moduleSource		= new Model_ModuleSource( $this->env );
+		$this->sources		= $moduleSource->getAll( FALSE );
+		$this->env->getRuntime()->reach( 'Logic_Module: get sources' );
+		foreach( $this->model->loadSources() as $sourceId => $status )
+			$this->sources[$sourceId]->status = $status;
+		$this->env->getRuntime()->reach( 'Logic_Module: load sources' );
+
+		foreach( $this->sources as $sourceId => $source ){
+			if( isset( $source->status ) && !is_integer( $source->status ) ){
+				if( $source->status instanceof Exception ){
+					$this->messenger->noteFailure( $source->status->getMessage() );
+				}
+				$label	= '"'.$sourceId.'"';
+				if( $this->env->getAcl()->has( 'admin/source', 'edit' ) )
+					$label	= UI_HTML_Tag::create( 'a', $sourceId, array( 'href' => './admin/module/source/edit/'.$sourceId ) );
+				$this->messenger->noteError( 'Die Quelle '.$label.' ist nicht verfügbar oder falsch konfiguriert.' );
+			}
+		}
+		$this->env->getRuntime()->reach( 'Logic_Module: check sources' );
+	}
 
 	protected function copyModuleFile( string $moduleId, string $fileIn, string $fileOut, bool $force = FALSE ): bool
 	{

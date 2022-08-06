@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Customer_Project extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Customer_Project extends Controller
 {
 	protected $messenger;
 	protected $modelCustomer;

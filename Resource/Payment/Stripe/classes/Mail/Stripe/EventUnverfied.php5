@@ -1,9 +1,12 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 class Mail_Stripe_EventUnverfied extends Mail_Abstract
 {
 	protected function generate(): self
 	{
-		$data		= new ADT_List_Dictionary( $this->data );
+		$data		= new Dictionary( $this->data );
 		$buffer		= new UI_OutputBuffer();
 
 		$event		= $data->get( 'event' );

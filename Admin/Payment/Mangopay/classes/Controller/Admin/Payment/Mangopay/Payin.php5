@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Payment_Mangopay_Payin extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Payment_Mangopay_Payin extends Controller
 {
 	public function index( $page = 0 )
 	{

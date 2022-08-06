@@ -1,7 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Work_Time_Dashboard_Others extends CMF_Hydrogen_View_Helper_Abstract
 {
-	public function __construct( CMF_Hydrogen_Environment $env )
+	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 	}

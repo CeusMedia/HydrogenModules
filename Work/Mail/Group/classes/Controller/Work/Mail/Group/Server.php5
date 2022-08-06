@@ -1,5 +1,8 @@
 <?php
-class Controller_Work_Mail_Group_Server extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Mail_Group_Server extends Controller
 {
 	protected $modelServer;
 

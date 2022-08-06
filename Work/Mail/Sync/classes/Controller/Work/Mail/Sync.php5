@@ -1,5 +1,8 @@
 <?php
-class Controller_Work_Mail_Sync extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Mail_Sync extends Controller
 {
 	protected $request;
 	protected $logic;

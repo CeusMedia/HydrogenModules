@@ -1,6 +1,9 @@
 <?php
-class Logic_Catalog_Gallery{
 
+use CeusMedia\HydrogenFramework\Environment;
+
+class Logic_Catalog_Gallery
+{
 	/**	@var	string							$pathImages */
 	public $cache;
 
@@ -21,10 +24,11 @@ class Logic_Catalog_Gallery{
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env
+	 *	@param		Environment	$env
 	 *	@return		void
 	 */
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env				= $env;
 		$this->cache			= $this->env->getCache();
 		$this->modelCategory	= new Model_Catalog_Gallery_Category( $this->env );
@@ -46,11 +50,13 @@ class Logic_Catalog_Gallery{
 		$this->pathImport	= $basePath.$this->moduleConfig->get( 'path.import' );
 	}
 
-	public function countCategoryImages( $categoryId ){
+	public function countCategoryImages( $categoryId )
+	{
 		return count( $this->getCategoryImages( $categoryId ) );
 	}
 
-	public function getCategory( $categoryId ){
+	public function getCategory( $categoryId )
+	{
 		$cacheKey	= 'catalog.gallery.category.'.$categoryId;
 		$category	= $this->cache->get( $cacheKey );
 		if( !$category ){
@@ -61,7 +67,8 @@ class Logic_Catalog_Gallery{
 		return $category;
 	}
 
-	public function getCategoryImages( $categoryId ){
+	public function getCategoryImages( $categoryId )
+	{
 		$cacheKey	= 'catalog.gallery.category.'.$categoryId.'.images';
 		$images		= $this->cache->get( $cacheKey );
 		if( !$images ){
@@ -74,7 +81,8 @@ class Logic_Catalog_Gallery{
 		return $images;
 	}
 
-	public function getCategories(){
+	public function getCategories()
+	{
 		$cacheKey	= 'catalog.gallery.categories';
 		$categories	= $this->cache->get( $cacheKey );
 		if( !$categories ){
@@ -86,7 +94,8 @@ class Logic_Catalog_Gallery{
 		return $categories;
 	}
 
-	public function getImage( $imageId ){
+	public function getImage( $imageId )
+	{
 		$cacheKey	= 'catalog.gallery.image.'.$imageId;
 		$image		= $this->cache->get( $cacheKey );
 		if( !$image ){
@@ -97,4 +106,3 @@ class Logic_Catalog_Gallery{
 		return $image;
 	}
 }
-?>

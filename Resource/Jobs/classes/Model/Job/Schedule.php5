@@ -5,14 +5,16 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Job Schedule Model.
  *	@category		cmFrameworks.Hydrogen.Module
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media
  */
-class Model_Job_Schedule extends CMF_Hydrogen_Model
+class Model_Job_Schedule extends Model
 {
 	const STATUS_DISABLED	= 0;
 	const STATUS_ENABLED	= 1;
@@ -62,6 +64,7 @@ class Model_Job_Schedule extends CMF_Hydrogen_Model
 	);
 
 	protected $name			= 'job_schedule';
+
 	protected $columns		= array(
 		'jobScheduleId',
 		'jobDefinitionId',
@@ -77,7 +80,9 @@ class Model_Job_Schedule extends CMF_Hydrogen_Model
 		'modifiedAt',
 		'lastRunAt',
 	);
+
 	protected $primaryKey	= 'jobScheduleId';
+
 	protected $indices		= array(
 		'jobDefinitionId',
 		'type',
@@ -88,5 +93,6 @@ class Model_Job_Schedule extends CMF_Hydrogen_Model
 		'modifiedAt',
 		'lastRunAt',
 	);
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

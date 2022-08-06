@@ -1,5 +1,8 @@
 <?php
-class View_Tool_Calculator extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Tool_Calculator extends View
 {
 	public function index()
 	{

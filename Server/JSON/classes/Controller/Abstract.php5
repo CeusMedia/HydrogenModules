@@ -5,21 +5,21 @@
  *	@package		Chat.Server.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Abstract.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Abstract Controller.
  *	@category		cmApps
  *	@package		Chat.Server.Controller
- *	@extends		CMF_Hydrogen_Controller
- *	@uses			Logic_Chat
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
- *	@version		$Id: Abstract.php5 3022 2012-06-26 20:08:10Z christian.wuerker $
  */
-class Controller_Abstract extends CMF_Hydrogen_Controller {
-
-	protected function logException( Exception $exception ) {
+class Controller_Abstract extends Controller
+{
+	protected function logException( Exception $exception )
+	{
 		UI_HTML_Exception_Page::display( $exception );
 		die;
 
@@ -37,6 +37,7 @@ class Controller_Abstract extends CMF_Hydrogen_Controller {
 		}
 	}
 
-	protected function setupView( $force = TRUE ){}
+	protected function setupView( $force = TRUE )
+	{
+	}
 }
-?>

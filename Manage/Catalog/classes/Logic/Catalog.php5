@@ -1,10 +1,15 @@
 <?php
+
+use CeusMedia\Cache\SimpleCacheInterface;
+use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
+
 /**
  *	@todo	extract classes Logic_Upload and Alg_UnitParser
  */
-class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
+class Logic_Catalog extends Logic
+{
 
-	/**	@var	CMM_SEA_Adapter_Abstract			$cache */
+	/**	@var	SimpleCacheInterface				$cache */
 	protected $cache;
 
 	/**	@var	Logic_Frontend						$frontend */
@@ -39,41 +44,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	protected function __onInit( $a = NULL ){
-		$this->env->getRuntime()->reach( 'Logic_Catalog::init start' );
-		$this->config				= $this->env->getConfig();
-		$this->frontend				= Logic_Frontend::getInstance( $this->env );
-		$this->moduleConfig			= $this->config->getAll( 'module.manage_catalog.', TRUE );
-		$this->cache				= $this->env->getCache();
-		$this->modelArticle			= new Model_Catalog_Article( $this->env );
-		$this->modelArticleAuthor	= new Model_Catalog_Article_Author( $this->env );
-		$this->modelArticleCategory	= new Model_Catalog_Article_Category( $this->env );
-		$this->modelArticleDocument	= new Model_Catalog_Article_Document( $this->env );
-#		$this->modelArticleReview	= new Model_Catalog_Article_Review( $this->env );
-		$this->modelArticleTag		= new Model_Catalog_Article_Tag( $this->env );
-		$this->modelAuthor			= new Model_Catalog_Author( $this->env );
-		$this->modelCategory		= new Model_Catalog_Category( $this->env );
-#		$this->modelReview			= new Model_Catalog_Review( $this->env );
-
-		$basePath					= $this->frontend->getPath( 'contents' );
-		$this->pathArticleCovers	= $basePath.$this->moduleConfig->get( 'path.covers' );
-		$this->pathArticleDocuments	= $basePath.$this->moduleConfig->get( 'path.documents' );
-		$this->pathAuthorImages		= $basePath.$this->moduleConfig->get( 'path.authors' );
-
-		$cacheKey	= 'catalog.count.categories.articles';
-		if( NULL === ( $this->countArticlesInCategories = $this->cache->get( $cacheKey ) ) ){
-			$list	= [];
-			foreach( $this->getCategories() as $category )
-				$list[$category->categoryId]	= $this->countArticlesInCategory( $category->categoryId, TRUE );
-			$this->cache->set( $cacheKey, $this->countArticlesInCategories = $list );
-		}
-		$this->env->getRuntime()->reach( 'Logic_Catalog::init done' );
-	}
-
-	/**
-	 *	@todo		kriss: code doc
-	 */
-	public function addArticle( $data ){
+	public function addArticle( $data )
+	{
 		$data['createdAt']	= time();
 		$articleId	= $this->modelArticle->add( $data );
 		$this->cache->remove( 'catalog.tinymce.images.articles' );
@@ -84,7 +56,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addArticleCover( $articleId, $file ){
+	public function addArticleCover( $articleId, $file )
+	{
 		if( !is_array( $file ) )
 			throw new InvalidArgumentException( 'File must be an upload array' );
 		if( !isset( $file['name'] ) || !isset( $file['tmp_name'] ) )
@@ -124,7 +97,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addArticleDocument( $articleId, $file, $title ){
+	public function addArticleDocument( $articleId, $file, $title )
+	{
 		if( !is_array( $file ) )
 			throw new InvalidArgumentException( 'File must be an upload array' );
 		if( !isset( $file['name'] ) || !isset( $file['tmp_name'] ) )
@@ -156,7 +130,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addArticleTag( $articleId, $tag ){
+	public function addArticleTag( $articleId, $tag )
+	{
 		$data	= array(
 			'articleId'	=> $articleId,
 			'tag'		=> $tag,
@@ -168,7 +143,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addAuthor( $data ){
+	public function addAuthor( $data )
+	{
 //		$data['createdAt']	= time();
 		$this->clearCacheForAuthor( 0 );
 		return  $this->modelAuthor->add( $data );
@@ -177,7 +153,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addAuthorImage( $authorId, $file ){
+	public function addAuthorImage( $authorId, $file )
+	{
 		if( !is_array( $file ) )
 			throw new InvalidArgumentException( 'File must be an upload array' );
 		if( !isset( $file['name'] ) || !isset( $file['tmp_name'] ) )
@@ -208,7 +185,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addAuthorToArticle( $articleId, $authorId, $role ){
+	public function addAuthorToArticle( $articleId, $authorId, $role )
+	{
 		$data		= array(
 			'articleId'	=> $articleId,
 			'authorId'	=> $authorId,
@@ -223,7 +201,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addCategory( $data ){
+	public function addCategory( $data )
+	{
 //		$data['registeredAt']	= time();
 		$this->clearCacheForCategory( 0 );
 		return $this->modelCategory->add( $data );
@@ -232,7 +211,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function addCategoryToArticle( $articleId, $categoryId, $volume = NULL ){
+	public function addCategoryToArticle( $articleId, $categoryId, $volume = NULL )
+	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
 		$indices	= array(
@@ -248,7 +228,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function checkArticleId( $articleId, $throwException = FALSE ){
+	public function checkArticleId( $articleId, $throwException = FALSE )
+	{
 		if( $this->modelArticle->has( (int) $articleId ) )
 			return TRUE;
 		if( $throwException )
@@ -259,7 +240,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function checkAuthorId( $authorId, $throwException = FALSE ){
+	public function checkAuthorId( $authorId, $throwException = FALSE )
+	{
 		if( $this->modelAuthor->has( (int) $authorId ) )
 			return TRUE;
 		if( $throwException )
@@ -270,7 +252,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function checkCategoryId( $categoryId, $throwException = FALSE ){
+	public function checkCategoryId( $categoryId, $throwException = FALSE )
+	{
 		if( $this->modelCategory->has( (int) $categoryId ) )
 			return TRUE;
 		if( $throwException )
@@ -279,70 +262,10 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	}
 
 	/**
-	 *	Removes cache files related to article after changes.
-	 *	Uses clearCacheForCategory to invalidate category cache.
-	 *	Attention: MUST NO call clearCacheForAuthor.
-	 *	@access		public
-	 *	@param		integer		$articleId			ID of article to clear cache files for
-	 *	@return		void
-	 */
-	protected function clearCacheForArticle( $articleId ){
-		$article	= $this->modelArticle->get( $articleId );										//  get article
-		$this->cache->remove( 'catalog.article.'.$articleId );										//  remove article cache
-		$this->cache->remove( 'catalog.article.author.'.$articleId );								//  remove article author cache
-		$categories	= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );		//  get related categories of article
-		foreach( $categories as $category ){														//  iterate assigned categories
-			$categoryId	= $category->categoryId;													//  get category ID of related category
-			$this->clearCacheForCategory( $categoryId );
-		}
-		$this->cache->remove( 'catalog.tinymce.images.articles' );
-		$this->cache->remove( 'catalog.tinymce.links.articles' );
-	}
-
-	/**
-	 *	Removes cache files related to article after changes.
-	 *	Uses clearCacheForArticle to invalidate article cache.
-	 *	@access		public
-	 *	@param		integer		$authorId			ID of author
-	 *	@return		void
-	 */
-	protected function clearCacheForAuthor( $authorId ){
-		$relations	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $authorId );			//  get all articles of author
-		foreach( $relations as $relation ){															//  iterate article relations
-			$this->clearCacheForArticle( $relation->articleId );									//  clear article cache
-		}
-		$this->cache->remove( 'catalog.search.authors' );
-		$this->cache->remove( 'catalog.tinymce.images.authors' );
-		$this->cache->remove( 'catalog.tinymce.links.authors' );
-	}
-
-	/**
-	 *	Removes cache files related to categories after changes.
-	 *	Attention: MUST NO call clearCacheForArticle.
-	 *	@access		public
-	 *	@param		integer		$categoryId			ID of category
-	 *	@return		void
-	 */
-	protected function clearCacheForCategory( $categoryId ){
-		while( $categoryId ){																		//  loop while category ID exists
-			$category	= $this->modelCategory->get( $categoryId );									//  get category of category ID
-			if( $category ){																		//  category exists
-				$this->cache->remove( 'catalog.category.'.$categoryId );							//  remove category cache
-				$this->cache->remove( 'catalog.html.categoryArticleList.'.$categoryId );			//  remove category view cache
-				$categoryId	= (int) $category->parentId;											//  category parent ID is category ID for next loop
-			}
-			else																					//  category is not existing
-				$categoryId	= 0;																	//  no further loops
-		}
-		$this->cache->remove( 'catalog.categories' );
-		$this->cache->remove( 'catalog.tinymce.links.categories' );
-		$this->cache->remove( 'catalog.count.categories.articles' );
-	}
-
-	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function countArticles( $conditions = [] ){
+	public function countArticles( $conditions = [] )
+	{
 		return $this->modelArticle->count( $conditions );
 	}
 
@@ -354,7 +277,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@param 		boolean		$recursive		Flag: count in sub categories, default: FALSE
 	 *	@return		integer						Number of found articles in category
 	 */
-	public function countArticlesInCategory( $categoryId, $recursive = FALSE ){
+	public function countArticlesInCategory( $categoryId, $recursive = FALSE )
+	{
 		if( $recursive && isset( $this->countArticlesInCategories[$categoryId] ) )
 			return $this->countArticlesInCategories[$categoryId];
 		$number		= count( $this->modelArticleCategory->getAllByIndex( 'categoryId', $categoryId ) );
@@ -369,7 +293,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function editArticle( $articleId, $data ){
+	public function editArticle( $articleId, $data )
+	{
 		$this->checkArticleId( $articleId, TRUE );
 //		$data['modifiedAt']	= time();
 		$this->modelArticle->edit( $articleId, $data );
@@ -379,7 +304,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function editAuthor( $authorId, $data ){
+	public function editAuthor( $authorId, $data )
+	{
 		$this->checkAuthorId( $authorId, TRUE );
 //		$data['modifiedAt']	= time();																//
 		$this->clearCacheForAuthor( $authorId );													//
@@ -389,7 +315,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function editCategory( $categoryId, $data ){
+	public function editCategory( $categoryId, $data )
+	{
 		$this->checkCategoryId( $categoryId, TRUE );
 		$old	= $this->modelCategory->get( $categoryId );
 //		$data['modifiedAt']	= time();																//
@@ -403,7 +330,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticle( $articleId ){
+	public function getArticle( $articleId )
+	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.article.'.$articleId ) ) )
 			return $data;
 		$this->checkArticleId( $articleId, TRUE );
@@ -416,7 +344,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticles( $conditions = [], $orders = [], $limits = [] ){
+	public function getArticles( $conditions = [], $orders = [], $limits = [] )
+	{
 #		$cacheKey	= md5( json_encode( array( $conditions, $orders, $limits ) ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.articles.'.$cacheKey ) ) )
 #			return $data;
@@ -430,7 +359,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticlesFromAuthor( $author, $orders = [], $limits = [] ){
+	public function getArticlesFromAuthor( $author, $orders = [], $limits = [] )
+	{
 		$articles	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $author->authorId );
 		$articleIds	= [];
 		foreach( $articles as $article )
@@ -445,7 +375,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticlesFromAuthorIds( $authorIds, $returnIds = FALSE ){
+	public function getArticlesFromAuthorIds( $authorIds, $returnIds = FALSE )
+	{
 		$model		= new Model_Catalog_Article_Author( $this->env );
 		$articles	= $model->getAll( array( 'authorId' => array_values( $authorIds ) ) );
 		if( !$returnIds )
@@ -459,7 +390,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticlesFromAuthors( $authors, $returnIds = FALSE ){
+	public function getArticlesFromAuthors( $authors, $returnIds = FALSE )
+	{
 		$authorIds	= [];
 		foreach( $authors as $author )
 			$authorIds[]	= $author->authorId;
@@ -469,7 +401,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getArticleUri( $articleOrId ){
+	public function getArticleUri( $articleOrId )
+	{
 		$article	= $articleOrId;
 		if( is_int( $articleOrId ) )
 			$article	= $this->getArticle( $articleOrId );
@@ -482,7 +415,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: use cache
 	 */
-	public function getAuthor( $authorId ){
+	public function getAuthor( $authorId )
+	{
 		$this->checkAuthorId( $authorId, TRUE );
 		return $this->modelAuthor->get( $authorId );
 	}
@@ -490,7 +424,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getAuthors( $conditions = [], $orders = [] ){
+	public function getAuthors( $conditions = [], $orders = [] )
+	{
 		$list	= [];
 		foreach( $this->modelAuthor->getAll( $conditions, $orders ) as $author )
 			$list[$author->authorId]	= $author;
@@ -503,7 +438,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@param		integer		$articleId			Article ID
 	 *	@return		array
 	 */
-	public function getAuthorsOfArticle( $articleId ){
+	public function getAuthorsOfArticle( $articleId )
+	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.article.author.'.$articleId ) ) )
 			return $data;
 		$data	= $this->modelArticleAuthor->getAllByIndex( 'articleId', $articleId );
@@ -521,7 +457,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getAuthorUri( $authorOrId, $absolute = FALSE ){
+	public function getAuthorUri( $authorOrId, $absolute = FALSE )
+	{
 		$author = $authorOrId;
 		if( is_int( $authorOrId ) )
 			$author	= $this->getAuthor( $authorOrId, TRUE );
@@ -537,7 +474,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: clean up
 	 */
-	public function getCategories( $conditions = [], $orders = [] ){
+	public function getCategories( $conditions = [], $orders = [] )
+	{
 #		$cacheKey	= md5( json_encode( array( $conditions, $orders ) ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.categories.'.$cacheKey ) ) )
 #			return $data;
@@ -552,7 +490,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getCategoriesOfArticle( $articleId ){
+	public function getCategoriesOfArticle( $articleId )
+	{
 		$this->checkArticleId( $articleId, TRUE );
 		$list			= [];
 		$categoryIds	= [];
@@ -570,7 +509,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getCategory( $categoryId ){
+	public function getCategory( $categoryId )
+	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.category.'.$categoryId ) ) )
 			return $data;
 		$this->checkCategoryId( $categoryId, TRUE );
@@ -584,7 +524,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function getCategoryArticles( $category, $orders = [], $limits = [] ){
+	public function getCategoryArticles( $category, $orders = [], $limits = [] )
+	{
 #		$cacheKey	= md5( json_encode( array( $category->categoryId, $orders, $limits ) ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.category.articles.'.$cacheKey ) ) )
 #			return $data;
@@ -605,7 +546,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getCategoryOfArticle( $article ){
+	public function getCategoryOfArticle( $article )
+	{
 		$relation	= $this->modelArticleCategory->getByIndex( 'articleId', $article->articleId );
 		$category			= $this->modelCategory->get( $relation->categoryId );
 		$category			= $this->getCategory( $relation->categoryId );							//  @todo use this line for caching and remove line above
@@ -614,18 +556,21 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 		return $category;
 	}
 
-	public function getDocuments( $conditions = [], $orders = [], $limits = [] ){
+	public function getDocuments( $conditions = [], $orders = [], $limits = [] )
+	{
 		return $this->modelArticleDocument->getAll( $conditions, $orders, $limits );
 	}
 
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getDocumentsOfArticle( $articleId ){
+	public function getDocumentsOfArticle( $articleId )
+	{
 		return $this->modelArticleDocument->getAllByIndex( 'articleId', $articleId );
 	}
 
-	public function getTags( $conditions = [], $orders = [], $limits = [] ){
+	public function getTags( $conditions = [], $orders = [], $limits = [] )
+	{
 		return $this->modelArticleTag->getAll( $conditions, $orders, $limits );
 	}
 
@@ -633,7 +578,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: code doc
 	 *	@todo		kriss: use cache by storing tags in article cache file
 	 */
-	public function getTagsOfArticle( $articleId, $sort = FALSE ){
+	public function getTagsOfArticle( $articleId, $sort = FALSE )
+	{
 		$tags	= $this->modelArticleTag->getAllByIndex( 'articleId', $articleId );
 		$list	= [];
 		foreach( $tags as $tag )
@@ -646,7 +592,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getUriPart( $label, $delimiter = "_" ){
+	public function getUriPart( $label, $delimiter = "_" )
+	{
 		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
 		$label	= preg_replace( "/ +/", $delimiter, $label );
@@ -658,7 +605,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	Caches will be removed.
 	 *	@todo		kriss: code doc
 	 */
-	public function removeArticle( $articleId ){
+	public function removeArticle( $articleId )
+	{
 		$this->removeArticleCover( $articleId );
 		foreach( $this->getCategoriesOfArticle( $articleId ) as $relation )
 			$this->removeArticleFromCategory( $articleId, $relation->categoryId );
@@ -677,7 +625,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function removeArticleCover( $articleId ){
+	public function removeArticleCover( $articleId )
+	{
 		$article	= $this->getArticle( $articleId );
 		$id			= str_pad( $articleId, 5, 0, STR_PAD_LEFT );
 		if( $article->cover ){
@@ -692,7 +641,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function removeArticleDocument( $documentId ){
+	public function removeArticleDocument( $documentId )
+	{
 		$document	= $this->modelArticleDocument->get( $documentId );
 		$id			= str_pad( $document->articleId, 5, 0, STR_PAD_LEFT );
 		@unlink( $this->pathArticleDocuments.$id."_".$document->url );
@@ -706,7 +656,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function removeArticleFromCategory( $articleId, $categoryId ){
+	public function removeArticleFromCategory( $articleId, $categoryId )
+	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
 		$indices	= array(
@@ -722,7 +673,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function removeArticleTag( $articleTagId ){
+	public function removeArticleTag( $articleTagId )
+	{
 		$relation	= $this->modelArticleTag->get( $articleTagId );
 		if( $relation ){
 			$this->clearCacheForArticle( $relation->articleId );
@@ -733,7 +685,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function removeAuthor( $authorId ){
+	public function removeAuthor( $authorId )
+	{
 		$this->checkAuthorId( $authorId );
 		$articles	= $this->getArticlesFromAuthorIds( array( $authorId ) );
 		foreach( $articles as $article )
@@ -745,7 +698,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function removeAuthorFromArticle( $articleId, $authorId ){
+	public function removeAuthorFromArticle( $articleId, $authorId )
+	{
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
 		$indices	= array(
@@ -763,7 +717,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function removeAuthorImage( $authorId ){
+	public function removeAuthorImage( $authorId )
+	{
 		$author		= $this->getAuthor( $authorId );
 		$id			= str_pad( $authorId, 5, 0, STR_PAD_LEFT );
 		if( $author->image ){
@@ -777,7 +732,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function removeCategory( $categoryId ){
+	public function removeCategory( $categoryId )
+	{
 		$this->checkCategoryId( $categoryId );
 		if( $this->countArticlesInCategory( $categoryId, TRUE ) )
 			throw new RuntimeException( 'Category not empty' );
@@ -788,7 +744,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function removeCategoryFromArticle( $articleId, $categoryId ){
+	public function removeCategoryFromArticle( $articleId, $categoryId )
+	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
 		$indices	= array(
@@ -805,7 +762,8 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 	 *	@todo		kriss: use cache if possible
 	 *	@todo		kriss: code doc
 	 */
-	public function setArticleAuthorRole( $articleId, $authorId, $role ){
+	public function setArticleAuthorRole( $articleId, $authorId, $role )
+	{
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
 		$indices	= array( 'articleId' => $articleId, 'authorId' => $authorId );
@@ -816,5 +774,103 @@ class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 			$this->clearCacheForAuthor( $authorId );
 		}
 	}
+
+	/**
+	 *	@todo		kriss: code doc
+	 */
+	protected function __onInit( $a = NULL )
+	{
+		$this->env->getRuntime()->reach( 'Logic_Catalog::init start' );
+		$this->config				= $this->env->getConfig();
+		$this->frontend				= Logic_Frontend::getInstance( $this->env );
+		$this->moduleConfig			= $this->config->getAll( 'module.manage_catalog.', TRUE );
+		$this->cache				= $this->env->getCache();
+		$this->modelArticle			= new Model_Catalog_Article( $this->env );
+		$this->modelArticleAuthor	= new Model_Catalog_Article_Author( $this->env );
+		$this->modelArticleCategory	= new Model_Catalog_Article_Category( $this->env );
+		$this->modelArticleDocument	= new Model_Catalog_Article_Document( $this->env );
+#		$this->modelArticleReview	= new Model_Catalog_Article_Review( $this->env );
+		$this->modelArticleTag		= new Model_Catalog_Article_Tag( $this->env );
+		$this->modelAuthor			= new Model_Catalog_Author( $this->env );
+		$this->modelCategory		= new Model_Catalog_Category( $this->env );
+#		$this->modelReview			= new Model_Catalog_Review( $this->env );
+
+		$basePath					= $this->frontend->getPath( 'contents' );
+		$this->pathArticleCovers	= $basePath.$this->moduleConfig->get( 'path.covers' );
+		$this->pathArticleDocuments	= $basePath.$this->moduleConfig->get( 'path.documents' );
+		$this->pathAuthorImages		= $basePath.$this->moduleConfig->get( 'path.authors' );
+
+		$cacheKey	= 'catalog.count.categories.articles';
+		if( NULL === ( $this->countArticlesInCategories = $this->cache->get( $cacheKey ) ) ){
+			$list	= [];
+			foreach( $this->getCategories() as $category )
+				$list[$category->categoryId]	= $this->countArticlesInCategory( $category->categoryId, TRUE );
+			$this->cache->set( $cacheKey, $this->countArticlesInCategories = $list );
+		}
+		$this->env->getRuntime()->reach( 'Logic_Catalog::init done' );
+	}
+
+	/**
+	 *	Removes cache files related to article after changes.
+	 *	Uses clearCacheForCategory to invalidate category cache.
+	 *	Attention: MUST NO call clearCacheForAuthor.
+	 *	@access		public
+	 *	@param		integer		$articleId			ID of article to clear cache files for
+	 *	@return		void
+	 */
+	protected function clearCacheForArticle( $articleId )
+	{
+		$article	= $this->modelArticle->get( $articleId );										//  get article
+		$this->cache->remove( 'catalog.article.'.$articleId );										//  remove article cache
+		$this->cache->remove( 'catalog.article.author.'.$articleId );								//  remove article author cache
+		$categories	= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );		//  get related categories of article
+		foreach( $categories as $category ){														//  iterate assigned categories
+			$categoryId	= $category->categoryId;													//  get category ID of related category
+			$this->clearCacheForCategory( $categoryId );
+		}
+		$this->cache->remove( 'catalog.tinymce.images.articles' );
+		$this->cache->remove( 'catalog.tinymce.links.articles' );
+	}
+
+	/**
+	 *	Removes cache files related to article after changes.
+	 *	Uses clearCacheForArticle to invalidate article cache.
+	 *	@access		public
+	 *	@param		integer		$authorId			ID of author
+	 *	@return		void
+	 */
+	protected function clearCacheForAuthor( $authorId )
+	{
+		$relations	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $authorId );			//  get all articles of author
+		foreach( $relations as $relation ){															//  iterate article relations
+			$this->clearCacheForArticle( $relation->articleId );									//  clear article cache
+		}
+		$this->cache->remove( 'catalog.search.authors' );
+		$this->cache->remove( 'catalog.tinymce.images.authors' );
+		$this->cache->remove( 'catalog.tinymce.links.authors' );
+	}
+
+	/**
+	 *	Removes cache files related to categories after changes.
+	 *	Attention: MUST NO call clearCacheForArticle.
+	 *	@access		public
+	 *	@param		integer		$categoryId			ID of category
+	 *	@return		void
+	 */
+	protected function clearCacheForCategory( $categoryId )
+	{
+		while( $categoryId ){																		//  loop while category ID exists
+			$category	= $this->modelCategory->get( $categoryId );									//  get category of category ID
+			if( $category ){																		//  category exists
+				$this->cache->remove( 'catalog.category.'.$categoryId );							//  remove category cache
+				$this->cache->remove( 'catalog.html.categoryArticleList.'.$categoryId );			//  remove category view cache
+				$categoryId	= (int) $category->parentId;											//  category parent ID is category ID for next loop
+			}
+			else																					//  category is not existing
+				$categoryId	= 0;																	//  no further loops
+		}
+		$this->cache->remove( 'catalog.categories' );
+		$this->cache->remove( 'catalog.tinymce.links.categories' );
+		$this->cache->remove( 'catalog.count.categories.articles' );
+	}
 }
-?>

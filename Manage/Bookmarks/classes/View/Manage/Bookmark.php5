@@ -1,13 +1,23 @@
 <?php
-class View_Manage_Bookmark extends CMF_Hydrogen_View{
 
-	public function add(){}
+use CeusMedia\HydrogenFramework\View;
 
-	public function edit(){}
+class View_Manage_Bookmark extends View
+{
+	public function add()
+	{
+	}
 
-	public function index(){}
+	public function edit()
+	{
+	}
 
-	protected function renderList( $bookmarkId = NULL ){
+	public function index()
+	{
+	}
+
+	protected function renderList( $bookmarkId = NULL )
+	{
 		$list	= '<div><small class="muted"><em>Keine vorhanden.</em></small></div>';
 		if( ( $bookmarks = $this->getData( 'bookmarks' ) ) ){
 			$list	= [];
@@ -21,4 +31,3 @@ class View_Manage_Bookmark extends CMF_Hydrogen_View{
 		return $list;
 	}
 }
-?>

@@ -4,13 +4,15 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\View;
+
 /**
  *	View.
- *	@extends		CMF_Hydrogen_View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */
-class View_Lab_Session extends CMF_Hydrogen_View
+class View_Lab_Session extends View
 {
 	public function index()
 	{

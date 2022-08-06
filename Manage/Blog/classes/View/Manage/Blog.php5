@@ -1,10 +1,23 @@
 <?php
-class View_Manage_Blog extends CMF_Hydrogen_View{
-	public function add(){}
-	public function edit(){}
-	public function index(){}
 
-	public function renderTabs( $current = NULL ){
+use CeusMedia\HydrogenFramework\View;
+
+class View_Manage_Blog extends View
+{
+	public function add()
+	{
+	}
+
+	public function edit()
+	{
+	}
+
+	public function index()
+	{
+	}
+
+	public function renderTabs( $current = NULL )
+	{
 		$tabs	= array(
 			''				=> 'Blog-Einträge',
 			'/category'		=> 'Kategorien',

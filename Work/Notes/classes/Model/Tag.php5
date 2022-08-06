@@ -1,5 +1,8 @@
 <?php
-class Model_Tag extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Tag extends Model
 {
 	protected $name		= 'tags';
 
@@ -14,10 +17,4 @@ class Model_Tag extends CMF_Hydrogen_Model
 	protected $indices		= array( 'content' );
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
-
-	public function  __construct( CMF_Hydrogen_Environment $env, $id = NULL )
-	{
-		parent::__construct( $env, $id );
-	}
 }
-

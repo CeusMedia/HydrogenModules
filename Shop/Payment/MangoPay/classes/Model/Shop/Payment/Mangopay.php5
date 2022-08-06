@@ -1,5 +1,8 @@
 <?php
-class Model_Shop_Payment_Mangopay extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Shop_Payment_Mangopay extends Model
 {
 	const STATUS_CREATED	= 0;
 	const STATUS_FAILED		= 1;

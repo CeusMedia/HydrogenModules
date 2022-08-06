@@ -1,5 +1,10 @@
 <?php
-class Controller_Info_Newsletter extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+class Controller_Info_Newsletter extends Controller
 {
 	/**	@var	Logic_Newsletter	$logic */
 	protected $logic;
@@ -18,11 +23,11 @@ class Controller_Info_Newsletter extends CMF_Hydrogen_Controller
 	 *	@return		void
 	 *	@todo		finish implementation, extract to hook class and register in module config
 	 */
-	public static function __onRenderServicePanels( CMF_Hydrogen_Environment $env, $context, $module, $payload = [] )
+	public static function __onRenderServicePanels( Environment $env, $context, $module, $payload = [] )
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;
-		$view		= new CMF_Hydrogen_View( $env );
+		$view		= new View( $env );
 //		$modelOrder	= new Model_Shop_Order( $env );
 //		$order		= $modelOrder->get( $payload['orderId'] );
 

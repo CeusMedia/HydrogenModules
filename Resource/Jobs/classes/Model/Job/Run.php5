@@ -5,14 +5,16 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Job Run Model.
  *	@category		cmFrameworks.Hydrogen.Module
- *	@extends		CMF_Hydrogen_Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2020 Ceus Media
  */
-class Model_Job_Run extends CMF_Hydrogen_Model
+class Model_Job_Run extends Model
 {
 	const ARCHIVED_NO			= 0;
 	const ARCHIVED_YES			= 1;

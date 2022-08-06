@@ -1,5 +1,8 @@
 <?php
-class Logic_Project extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_Project extends Logic
 {
 	protected $modelProject;
 	protected $modelProjectUser;

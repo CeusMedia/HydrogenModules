@@ -1,5 +1,8 @@
 <?php
-class Logic_UserToken extends CMF_Hydrogen_Logic
+
+use CeusMedia\HydrogenFramework\Logic;
+
+class Logic_UserToken extends Logic
 {
 	protected $modelUser;
 	protected $modelPassword;

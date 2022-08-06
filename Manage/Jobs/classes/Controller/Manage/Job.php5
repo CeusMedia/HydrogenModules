@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Job extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Job extends Controller
 {
 	public function index()
 	{

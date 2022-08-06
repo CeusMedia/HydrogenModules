@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Company extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Company extends Controller
 {
 	public function activate( $companyId )
 	{

@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\View;
+
 class View_Helper_Shop_FinishPanel_CatalogClothing{
 
 	protected $env;
@@ -19,7 +22,7 @@ class View_Helper_Shop_FinishPanel_CatalogClothing{
 	public function render(){
 		if( !$this->orderId )
 			throw new RuntimeException( 'No order ID set' );
-		$view	= new CMF_Hydrogen_View( $this->env );
+		$view	= new View( $this->env );
 
 		$order			= $this->logicShop->getOrder( $this->orderId );
 		$modelAddress	= new Model_Address( $this->env );

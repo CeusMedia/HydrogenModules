@@ -1,5 +1,9 @@
 <?php
-class Controller_Ajax_Helper_Input_Resource extends CMF_Hydrogen_Controller_Ajax
+
+use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
+use CeusMedia\HydrogenFramework\Environment;
+
+class Controller_Ajax_Helper_Input_Resource extends AjaxController
 {
 	protected $extensions	= array(
 		'image'	=> array( 'png', 'gif', 'jpg', 'jpeg', 'jpe', 'svg' ),
@@ -76,7 +80,7 @@ class Controller_Ajax_Helper_Input_Resource extends CMF_Hydrogen_Controller_Ajax
 		$this->respondData( array( 'html' => $html ) );
 	}
 
-	protected static function renderThumbnail( CMF_Hydrogen_Environment $env, string $mode, string $path, string $relativePath ): string
+	protected static function renderThumbnail( Environment $env, string $mode, string $path, string $relativePath ): string
 	{
 		switch( $mode ){
 			case 'image':

@@ -5,19 +5,19 @@
  *	@package		Users.Controller.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
- *	@version		$Id$
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	User Controller.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Users.Controller.Admin
- *	@extends		CMF_Hydrogen_Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Ceus Media
- *	@version		$Id$
  */
-class Controller_Admin_User extends CMF_Hydrogen_Controller {
-
+class Controller_Admin_User extends Controller
+{
 	protected $filters	= array(
 		'username',
 		'roomId',
@@ -30,11 +30,13 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		'limit'
 	);
 
-	public function accept( $userId ) {
+	public function accept( $userId )
+	{
 		$this->setStatus( $userId, 1 );
 	}
 
-	public function add() {
+	public function add()
+	{
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -114,15 +116,18 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
 	}
 
-	public function ban( $userId ) {
+	public function ban( $userId )
+	{
 		$this->setStatus( $userId, -1 );
 	}
 
-	public function disable( $userId ) {
+	public function disable( $userId )
+	{
 		$this->setStatus( $userId, -2 );
 	}
 
-	public function edit( $userId ) {
+	public function edit( $userId )
+	{
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -230,7 +235,8 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $limit = NULL, $offset = NULL ) {
+	public function index( $limit = NULL, $offset = NULL )
+	{
 		$session	= $this->env->getSession();
 
 		if( !$limit )
@@ -271,7 +277,8 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$this->addData( 'limit', $limit );
 	}
 
-	public function logout( $userId ) {
+	public function logout( $userId )
+	{
 		$server		= $this->env->getServer();
 		$user		= $server->getdata( 'user', 'get', array( (int) $userId ) );
 		$code		= $server->postData( 'auth', 'logout', array( (int) $userId ) );
@@ -279,7 +286,8 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$this->restart( './user/edit/'.(int) $userId );
 	}
 
-	protected function setStatus( $userId, $status ) {
+	protected function setStatus( $userId, $status )
+	{
 		$server		= $this->env->getServer();
 		$user		= $server->getData( 'user', 'get', array( (int) $userId ) );
 		$code		= $server->postData( 'user', 'setStatus', array( (int) $userId, $status ) );
@@ -287,7 +295,8 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$this->restart( './user/edit/'.(int) $userId );
 	}
 
-	public function remove( $userId ){
+	public function remove( $userId )
+	{
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'remove' );
 		$model		= new Model_User( $this->env );
@@ -301,4 +310,3 @@ class Controller_Admin_User extends CMF_Hydrogen_Controller {
 		$this->restart( NULL, TRUE );
 	}
 }
-?>

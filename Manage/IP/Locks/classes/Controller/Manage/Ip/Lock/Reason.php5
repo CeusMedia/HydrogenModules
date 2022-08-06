@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_IP_Lock_Reason extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_IP_Lock_Reason extends Controller
 {
 	protected $logic;
 	protected $messenger;

@@ -2,12 +2,15 @@
 /**
  *	Controller.
  */
+
+use CeusMedia\HydrogenFramework\Controller;
+
 /**
  *	Controller.
  *	@todo			implement
  *	@todo			code documentation
  */
-class Controller_Admin_Database_Connection extends CMF_Hydrogen_Controller
+class Controller_Admin_Database_Connection extends Controller
 {
 	public function ajaxCheck(){
 		$post		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );

@@ -1,5 +1,8 @@
 <?php
-class View_Shop_Payment_Stripe extends CMF_Hydrogen_View
+
+use CeusMedia\HydrogenFramework\View;
+
+class View_Shop_Payment_Stripe extends View
 {
 	public function checkout()
 	{

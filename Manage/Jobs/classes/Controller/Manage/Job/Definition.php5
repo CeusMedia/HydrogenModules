@@ -1,5 +1,8 @@
 <?php
-class Controller_Manage_Job_Definition extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Manage_Job_Definition extends Controller
 {
 	protected $request;
 	protected $session;

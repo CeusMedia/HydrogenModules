@@ -1,5 +1,8 @@
 <?php
-class Model_Image_Slider extends CMF_Hydrogen_Model
+
+use CeusMedia\HydrogenFramework\Model;
+
+class Model_Image_Slider extends Model
 {
 	protected $name		= 'sliders';
 

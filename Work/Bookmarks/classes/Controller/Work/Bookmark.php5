@@ -1,7 +1,10 @@
 <?php
 #Fresh Moods - Orfine
 #Rena Jones - Mesmerized
-class Controller_Work_Bookmark extends CMF_Hydrogen_Controller
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Bookmark extends Controller
 {
 	protected $useAuthentication	= FALSE;
 	protected $userId				= 0;

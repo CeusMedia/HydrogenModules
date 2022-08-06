@@ -1,5 +1,8 @@
 <?php
-class Controller_Admin_Module_Source extends CMF_Hydrogen_Controller{
+
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Admin_Module_Source extends Controller{
 
 	/**	@var	Model_ModuleSource	$model		Instance of sources model */
 	protected $model;
