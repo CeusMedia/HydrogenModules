@@ -2,8 +2,11 @@
 
 $w	= (object) $words['index.list'];
 
-$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-eye' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-remove' ) );
+$modelUser	= new Model_User( $this->env );
+
+$iconView	= UI_HTML_Tag::create( 'i', '', ['class' => 'fa fa-eye'] );
+$iconRemove	= UI_HTML_Tag::create( 'i', '', ['class' => 'fa fa-remove'] );
+$iconUser	= UI_HTML_Tag::create( 'i', '', ['class' => 'fa fa-user'] );
 
 $from		= 'admin/log/exception'.($page ? '/'.$page : '' );
 
@@ -29,6 +32,7 @@ if( $exceptions ){
 //print_m($exception);die;
 		$exceptionEnv		= unserialize( $exception->env );
 		$exceptionRequest	= unserialize( $exception->request );
+		$exceptionSession	= new ADT_List_Dictionary( unserialize( $exception->session ) ?: [] );
 
 		$link	= UI_HTML_Tag::create( 'a', $exception->message, array( 'href' => './admin/log/exception/view/'.$exception->exceptionId ) );
 		$date	= date( 'Y.m.d', $exception->createdAt );
@@ -58,11 +62,23 @@ if( $exceptions ){
 		$envClass		= preg_replace( '/^(CMF_Hydrogen_Environment_)/', '<small class="muted">\\1</small>', $exceptionEnv['class'] );
 		$exceptionClass	= preg_replace( '/Exception$/', '', $exception->type );
 		$typeClass		= '<small class="muted">'.$exceptionClass.'</small>';
+
+		$icons	= [];
+
+		if( $exceptionSession->get( 'auth_user_id' ) ){
+			$user	= $modelUser->get( $exceptionSession->get( 'auth_user_id' ) );
+			$icons['user']	= UI_HTML_Tag::create( 'span', $iconUser, [
+				'title'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')'
+			] );
+		}
+
 		$list[]			= UI_HTML_Tag::create( 'tr', array(
 			UI_HTML_Tag::create( 'td', $checkbox ),
 			UI_HTML_Tag::create( 'td', $link.'<br/>'.$method.' '.$requestPath, array( 'class' => 'autocut' ) ),
 //			UI_HTML_Tag::create( 'td', $envClass ),
 //			UI_HTML_Tag::create( 'td', '<small class="muted">'.$exceptionClass.'</small>' ),
+
+			UI_HTML_Tag::create( 'td', $icons ),
 			UI_HTML_Tag::create( 'td', $typeClass.'<br/>'.$date.'&nbsp;<small class="muted">'.$time.'</small>' ),
 			UI_HTML_Tag::create( 'td', $buttons ),
 		) );
@@ -81,7 +97,7 @@ if( $exceptions ){
 		'',
 	] );
 
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '20px', ''/*, '180px'*//*, '180px'*/, '150px', '100px' );
+	$colgroup	= UI_HTML_Elements::ColumnGroup( '20px', ''/*, '180px'*//*, '180px'*/, '60px', '150px', '100px' );
 	$thead		= UI_HTML_Tag::create( 'thead', $heads );
 	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
 	$table		= UI_HTML_Tag::create( 'table', [$colgroup, $thead, $tbody], [

@@ -130,7 +130,6 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller
 
 		$types	= $this->model->getDistinct( 'type', [], ['type' => 'ASC'] );
 		$this->addData( 'exceptionTypes', $types );
-
 	}
 
 	public function remove( $id )
@@ -153,7 +152,23 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller
 			$this->messenger->noteError( 'Invalid exception number.' );
 			$this->restart( NULL, TRUE );
 		}
+
+		$exceptionEnv		= unserialize( $exception->env );
+		$exceptionRequest	= unserialize( $exception->request );
+		$exceptionSession	= new ADT_List_Dictionary( unserialize( $exception->session ) ?: [] );
+
+		$user	= NULL;
+		if( $exceptionSession->get( 'auth_user_id' ) ){
+			$model	= new Model_User( $this->env );
+			$user	= $model->get( $exceptionSession->get( 'auth_user_id' ) );
+		}
+
 		$this->addData( 'exception', $exception );
+		$this->addData( 'exceptionEnv', $exceptionEnv );
+		$this->addData( 'exceptionRequest', $exceptionRequest );
+		$this->addData( 'exceptionSession', $exceptionSession );
+		$this->addData( 'user', $user );
+
 		$this->addData( 'page', $this->session->get( $this->filterPrefix.'page' ) );
 	}
 
@@ -188,4 +203,3 @@ class Controller_Admin_Log_Exception extends CMF_Hydrogen_Controller
 		$this->filePath	= $path.$fileName;
 	}
 }
-

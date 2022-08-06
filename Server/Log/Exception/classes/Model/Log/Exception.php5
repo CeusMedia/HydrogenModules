@@ -14,12 +14,15 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2019 Ceus Media
  */
-class Model_Log_Exception extends CMF_Hydrogen_Model {
-
+class Model_Log_Exception extends CMF_Hydrogen_Model
+{
 	const STATUS_NONE		= 0;
+	const STATUS_HANDLED	= 1;
+	const STATUS_MARKED		= 2;
 
 	protected $name		= 'log_exceptions';
-	protected $columns	= array(
+
+	protected $columns	= [
 		'exceptionId',
 		'status',
 		'type',
@@ -37,16 +40,18 @@ class Model_Log_Exception extends CMF_Hydrogen_Model {
 		'session',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
+
 	protected $primaryKey	= 'exceptionId';
-	protected $indices		= array(
+
+	protected $indices		= [
 		'status',
 		'type',
 		'code',
 		'file',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
+
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }
-?>
