@@ -322,9 +322,18 @@ abstract class Mail_Abstract
 		if( $usePrefix && strlen( trim( $prefix ) ) )
 			$subject	= trim( $prefix ).' '.$subject;
 
+		$host	= '';
+		if( $this->env instanceof CMF_Hydrogen_Environment_Remote ){
+			$logic	= Logic_Frontend::getInstance( $this->env );
+			$host	= parse_url( $logic->getUrl(), PHP_URL_HOST );
+		}
+		else if( $this->env instanceof CMF_Hydrogen_Environment_Web ){
+			$host	= $this->env->host ?? parse_url( $this->baseUrl, PHP_URL_HOST );
+		}
+
 		$subject	= UI_Template::renderString( $subject, ['app' => [
 			'title'	=> $this->env->getConfig()->get( 'app.name' ),
-			'host'	=> $this->env->host ?? parse_url( $this->baseUrl, PHP_URL_HOST ),
+			'host'	=> $host,
 		]] );
 		$this->mail->setSubject( $subject, $this->encodingSubject );
 		return $this;

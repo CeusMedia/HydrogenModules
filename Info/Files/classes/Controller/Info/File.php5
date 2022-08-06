@@ -42,13 +42,13 @@ class Controller_Info_File extends Controller
 		else{
 			FS_Folder_Editor::createFolder( $this->path.$path.$folder );
 			$this->messenger->noteSuccess( 'Ordner <b>"%s"</b> hinzugefügt.', $folder );
-			$newId	= $this->modelFolder->add( array(
+			$newId	= $this->modelFolder->add( [
 				'parentId'	=> (int) $folderId,
 				'rank'		=> $this->countFolders( $folderId ),
 				'type'		=> 0,
 				'title'		=> $folder,
 				'createdAt'	=> time(),
-			) );
+			] );
 			$this->updateNumber( $folderId, 'folder', 1 );
 			$this->restart( 'index/'.$folderId, TRUE );
 		}
@@ -62,16 +62,16 @@ class Controller_Info_File extends Controller
 		$pathOld	= $this->getPathFromFolderId( $folderId, TRUE );
 		$pathNew	= dirname( $pathOld ).'/'.$title;
 		if( @rename( $pathOld, $pathNew ) ){
-			$this->modelFolder->edit( $folderId, array(
+			$this->modelFolder->edit( $folderId, [
 				'title'			=> $title,
 				'modifiedAt'	=> time()
-			) );
+			] );
 		}
 		print( json_encode( $this->modelFolder->get( $folderId ) ) );
 		exit;
 	}
 
-	public function deliver( $fileId = NULL )
+	public function deliver( $fileId )
 	{
 		$file		= $this->modelFile->get( $fileId );
 		if( !$file ){
@@ -86,6 +86,7 @@ class Controller_Info_File extends Controller
 		$mimeType	= mime_content_type( $path.$file->title );
 		header( 'Content-Type: '.$mimeType );
 		header( 'Content-Length: '.filesize( $path.$file->title ) );
+		header( 'Content-Disposition: inline; filename="'.addslashes( $file->title ).'"' );
 		$fp = @fopen( $path.$file->title, "rb" );
 		if( !$fp )
 			header("HTTP/1.0 500 Internal Server Error");
@@ -105,10 +106,10 @@ class Controller_Info_File extends Controller
 			$this->messenger->noteError( 'Die Datei wurde nicht am Speicherort gefunden. Bitte informieren Sie den Administator!' );
 			$this->restart( 'index/'.$file->downloadFolderId, TRUE );
 		}
-		$this->modelFile->edit( $fileId, array(
+		$this->modelFile->edit( $fileId, [
 			'nrDownloads'	=> $file->nrDownloads + 1,
 			'downloadedAt'	=> time(),
-		) );
+		] );
 		Net_HTTP_Download::sendFile( $path.$file->title );
 		exit;
 	}
@@ -186,7 +187,7 @@ class Controller_Info_File extends Controller
 				$this->modelFolder->edit( $folderId, $data );
 			$this->restart( 'index/'.$folder->parentId, TRUE );
 		}
-		$files	= $this->modelFile->getAll( array( 'downloadFolderId' => $folderId ), array( 'title' => 'ASC' ) );
+		$files	= $this->modelFile->getAll( ['downloadFolderId' => $folderId], ['title' => 'ASC'] );
 
 		$this->addData( 'folder', $folder );
 		$this->addData( 'folderPath', $this->getPathFromFolderId( $folder->parentId ) );
@@ -202,19 +203,19 @@ class Controller_Info_File extends Controller
 
 		$folders	= [];
 		if( $search ){
-			$conditions	= array( 'title' => '%'.$search.'%' );
+			$conditions	= ['title' => '%'.$search.'%'];
 			if( $folderId ){
 				$folderIds	= $this->getNestedFolderIds( $folderId );
 				array_unshift( $folderIds, $folderId );
 				$conditions['downloadFolderId']	= $folderIds;
 			}
-			$orders		= array( 'title' => 'ASC' );
+			$orders		= ['title' => 'ASC'];
 			$limits		= [];
 			$files		= $this->modelFile->getAll( $conditions, $orders, $limits );
 		}
 		else{
-			$orders		= array( 'rank' => 'ASC' );
-			$orders		= array( 'title' => 'ASC' );
+			$orders		= ['rank' => 'ASC'];
+			$orders		= ['title' => 'ASC'];
 			if( $folderId ){
 				$folder		= $this->modelFolder->get( $folderId );
 				if( !$folder ){
@@ -223,9 +224,9 @@ class Controller_Info_File extends Controller
 				}
 				$this->addData( 'folder', $folder );
 			}
-			$files		= $this->modelFile->getAll( array( 'downloadFolderId' => $folderId ), $orders );
+			$files		= $this->modelFile->getAll( ['downloadFolderId' => $folderId], $orders );
 			$orders		= array( 'title' => 'ASC' );
-			$folders	= $this->modelFolder->getAll( array( 'parentId' => $folderId ), $orders );
+			$folders	= $this->modelFolder->getAll( ['parentId' => $folderId], $orders );
 		}
 
 		$this->addData( 'files', $files );
@@ -245,10 +246,10 @@ class Controller_Info_File extends Controller
 			$this->messenger->noteError( $words->errorInvalidFolderId, $folderId );
 		else{
 			$rank		= $folder->rank + $direction;
-			$conditions	= array( 'rank' => $rank, 'parentId' => $folder->parentId );
+			$conditions	= ['rank' => $rank, 'parentId' => $folder->parentId];
 			if( ( $next = $this->modelFolder->getByIndices( $conditions ) ) ){
-				$this->modelFolder->edit( (int) $folderId, array( 'rank' => $rank, 'modifiedAt' => time() ) );
-				$this->modelFolder->edit( $next->downloadFolderId, array( 'rank' => $folder->rank, 'modifiedAt' => time() ) );
+				$this->modelFolder->edit( (int) $folderId, ['rank' => $rank, 'modifiedAt' => time()] );
+				$this->modelFolder->edit( $next->downloadFolderId, ['rank' => $folder->rank, 'modifiedAt' => time()] );
 			}
 		}
 		$this->restart( 'index/'.$folder->parentId, TRUE );
@@ -280,9 +281,9 @@ class Controller_Info_File extends Controller
 				$this->messenger->noteError( sprintf( 'Invalid folder ID: %s', $folderId ) );
 			}
 			else{
-				$hasSubfolders	= $this->modelFile->count( array( 'downloadFolderId' => $folderId ) );
-				$hasSubfiles	= $this->modelFolder->count( array( 'parentId' => $folderId ) );
-				if( $hasSubfolders && $hasSubfiles ){
+				$hasFiles	= $this->modelFile->count( ['downloadFolderId' => $folderId] );
+				$hasFolders	= $this->modelFolder->count( ['parentId' => $folderId] );
+				if( $hasFiles || $hasFolders ){
 					$this->messenger->noteError( 'Der Ordner <b>"%s"</b> ist nicht leer und kann daher nicht entfernt werden.', $folder->title );
 				}
 				else{
@@ -298,8 +299,8 @@ class Controller_Info_File extends Controller
 
 	public function scan()
 	{
-		$statsImport	= (object) array( 'folders' => array(), 'files' => array() );
-		$statsClean		= (object) array( 'folders' => array(), 'files' => array() );
+		$statsImport	= (object) ['folders' => [], 'files' => []];
+		$statsClean		= (object) ['folders' => [], 'files' => []];
 		$this->scanRecursive( 0, '', $statsImport );
 		$this->cleanRecursive( 0, '', $statsClean );
 
@@ -309,7 +310,7 @@ class Controller_Info_File extends Controller
 			if( $addedSomething ){
 				$list	= [];
 				foreach( $statsImport->files as $file ){
-					$path	= UI_HTML_Tag::create( 'small', $file->path, array( 'class' => "muted" ) );
+					$path	= UI_HTML_Tag::create( 'small', $file->path, ['class' => "muted"] );
 					$list[]	= UI_HTML_Tag::create( 'li', $path.$file->title );
 				}
 				$list	= UI_HTML_Tag::create( 'ul', $list );
@@ -318,7 +319,7 @@ class Controller_Info_File extends Controller
 			if( $removedSomething ){
 				$list	= [];
 				foreach( $statsClean->files as $file ){
-					$path	= UI_HTML_Tag::create( 'small', $file->path, array( 'class' => "muted" ) );
+					$path	= UI_HTML_Tag::create( 'small', $file->path, ['class' => "muted"] );
 					$list[]	= UI_HTML_Tag::create( 'li', $path.$file->title );
 				}
 				$list	= UI_HTML_Tag::create( 'ul', $list );
@@ -343,15 +344,15 @@ class Controller_Info_File extends Controller
 //				$logicUpload->checkVirus( TRUE );
 				$targetFile	= $this->getPathFromFolderId( $folderId, TRUE ).$upload->name;
 				$logicUpload->saveTo( $targetFile );
-				$rank	= $this->modelFile->count( array( 'downloadFolderId' => $folderId ) );
-				$this->modelFile->add( array(
+				$rank	= $this->modelFile->count( ['downloadFolderId' => $folderId] );
+				$this->modelFile->add( [
 					'downloadFolderId'	=> $folderId,
 					'rank'				=> $rank,
 					'size'				=> $logicUpload->getFileSize(),
 					'title'				=> $logicUpload->getFileName(),
 					'description'		=> (string) $this->request->get( 'description' ),
 					'uploadedAt'		=> time()
-				) );
+				] );
 				$this->updateNumber( $folderId, 'file', 1 );
 				$this->messenger->noteSuccess( 'Datei "%s" hochgeladen.', $upload->name );
 			}
@@ -402,7 +403,7 @@ class Controller_Info_File extends Controller
 			if( $folder && file_exists( $this->path.$folder->title ) )
 				return TRUE;
 			if( !$folder )
-				$this->messenger->noteError( 'Invalid folder with ID '.$folderId );
+				$this->messenger->noteError( 'Invalid folder with ID %s', $folderId );
 			else if( file_exists( $this->path.$folder->title ) )
 				$this->messenger->noteError( 'Folder %s is not existing', $folder->title );
 		}
@@ -417,26 +418,26 @@ class Controller_Info_File extends Controller
 	protected function cleanRecursive( $parentId, $path, $stats )
 	{
 		$path		= $this->getPathFromFolderId( $parentId, FALSE );
-		$folders	= $this->modelFolder->getAll( array( 'parentId' => $parentId ) );
-		$files		= $this->modelFile->getAll( array( 'downloadFolderId' => $parentId ) );
+		$folders	= $this->modelFolder->getAll( ['parentId' => $parentId] );
+		$files		= $this->modelFile->getAll( ['downloadFolderId' => $parentId] );
 		foreach( $folders as $folder ){
 			$this->cleanRecursive( $folder->downloadFolderId, $path.$folder->title.'/', $stats );
 			if( !file_exists( $this->path.$path.$folder->title ) ){
 				$this->modelFolder->remove( $folder->downloadFolderId );
-				$stats->folders[]	= (object) array( 'title' => $folder->title, 'path' => $path );
+				$stats->folders[]	= (object) ['title' => $folder->title, 'path' => $path];
 			}
 		}
 		foreach( $files as $file ){
 			if( !file_exists( $this->path.$path.$file->title ) ){
 				$this->modelFile->remove( $file->downloadFileId );
-				$stats->files[]	= (object) array( 'title' => $file->title, 'path' => $path );
+				$stats->files[]	= (object) ['title' => $file->title, 'path' => $path];
 			}
 		}
 	}
 
 	protected function countFolders( $folderId ): int
 	{
-		return $this->modelFolder->count( array( 'parentId' => $folderId ) );
+		return $this->modelFolder->count( ['parentId' => $folderId] );
 	}
 
 	protected function countIn( $path, bool $recursive = FALSE )
@@ -453,14 +454,14 @@ class Controller_Info_File extends Controller
 			foreach( $index as $entry )
 				$entry->isDir() ? $folders++ : $files++;
 		}
-		return (object) array( 'folders' => $folders, 'files' => $files );
+		return (object) ['folders' => $folders, 'files' => $files];
 	}
 
 	protected function listFolderNested( $parentId = 0, $excludeFolderId = 0, int $level = 0 ): array
 	{
 		$list		= [];
-		$orders		= array( 'title' => 'ASC' );
-		$folders	= $this->modelFolder->getAll( array( 'parentId' => $parentId ), $orders );
+		$orders		= ['title' => 'ASC'];
+		$folders	= $this->modelFolder->getAll( ['parentId' => $parentId], $orders );
 		$icon		= '<i class="fa fa-fw fa-folder-open"></i>';
 		foreach( $folders as $folder ){
 			if( $folder->downloadFolderId == $excludeFolderId )
@@ -518,14 +519,14 @@ class Controller_Info_File extends Controller
 		foreach( $index as $entry ){
 			if( $entry->isDot() || substr( $entry->getFilename(), 0, 1 ) === '.' )
 				continue;
-			$nrFolders	= $this->modelFolder->count( array( 'parentId' => $parentId ) );
-			$nrFiles	= $this->modelFile->count( array( 'downloadFolderId' => $parentId ) );
+			$nrFolders	= $this->modelFolder->count( ['parentId' => $parentId] );
+			$nrFiles	= $this->modelFile->count( ['downloadFolderId' => $parentId] );
 			$entryName	= $entry->getFilename();
 			if( $entry->isDir() ){
-				$data	= array(
+				$data	= [
 					'parentId'	=> $parentId,
 					'title'		=> $entryName
-				);
+				];
 				$folder	= $this->modelFolder->getByIndices( $data );
 				if( $folder )
 					$folderId	= $folder->downloadFolderId;
@@ -534,22 +535,22 @@ class Controller_Info_File extends Controller
 					$data['createdAt']	= filemtime( $entry->getPathname() );
 					$folderId			= $this->modelFolder->add( $data );
 					$this->updateNumber( $parentId, 'folder' );
-					$stats->folders[]	= (object) array( 'title' => $entryName, 'path' => $path );
+					$stats->folders[]	= (object) ['title' => $entryName, 'path' => $path];
 				}
 				$this->scanRecursive( $folderId, $path.$entryName.'/',  $stats );
 			}
 			else if( $entry->isFile() ){
-				$data		= array(
+				$data		= [
 					'downloadFolderId'	=> $parentId,
 					'title'				=> $entryName,
-				);
+				];
 				if( !$this->modelFile->count( $data ) ){
 					$data['rank']		= $nrFiles++;
 					$data['size']		= filesize( $entry->getPathname() );
 					$data['uploadedAt']	= filemtime( $entry->getPathname() );
 					$this->modelFile->add( $data );
 					$this->updateNumber( $parentId, 'file' );
-					$stats->files[]	= (object) array( 'title' => $entryName, 'path' => $path );
+					$stats->files[]	= (object) ['title' => $entryName, 'path' => $path];
 				}
 			}
 		}
@@ -560,10 +561,10 @@ class Controller_Info_File extends Controller
 		if( $folderId ){
 			$path		= $this->getPathFromFolderId( $folderId, FALSE );
 			$counts		= $this->countIn( $path, TRUE );
-			$this->modelFolder->edit( $folderId, array(
+			$this->modelFolder->edit( $folderId, [
 				'nrFolders'	=> $counts->folders,
 				'nrFiles'	=> $counts->files,
-			) );
+			] );
 			$folder	= $this->modelFolder->get( $folderId );
 			if( $folder->parentId )
 				$this->updateNumbers( $folder->parentId );
@@ -572,7 +573,7 @@ class Controller_Info_File extends Controller
 
 	protected function updateNumber( $folderId, string $type, int $diff = 1 )
 	{
-		if( !in_array( $type, array( 'folder', 'file' ) ) )
+		if( !in_array( $type, ['folder', 'file'] ) )
 			throw new InvalidArgumentException( 'Type must be folder or file' );
 		while( $folderId ){
 			$folder	= $this->modelFolder->get( $folderId );
@@ -580,10 +581,10 @@ class Controller_Info_File extends Controller
 				throw new RuntimeException( 'Invalid folder ID: %s', $folderId );
 			switch( $type ){
 				case 'folder':
-					$data	= array( 'nrFolders' => $folder->nrFolders + $diff );
+					$data	= ['nrFolders' => $folder->nrFolders + $diff];
 					break;
 				case 'file':
-					$data	= array( 'nrFiles' => $folder->nrFiles + $diff );
+					$data	= ['nrFiles' => $folder->nrFiles + $diff];
 					break;
 			}
 			$data['modifiedAt']	= time();

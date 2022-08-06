@@ -27,15 +27,15 @@ class Logic_Log_Exception extends Logic
 	{
 		try{
 			@serialize( $exception );
-			$content	= (object) array(
+			$content	= (object) [
 				'exception'		=> $exception,
 		//		'traceAsHtml'	=> UI_HTML_Exception_Trace::render( $exception ),
 				'trace'			=> '',
 				'timestamp'		=> time(),
-			);
+			];
 		}
 		catch( Exception $_e ){
-			$content	= (object) array(
+			$content	= (object) [
 				'message'		=> $exception->getMessage(),
 				'code'			=> $exception->getCode(),
 				'file'			=> $exception->getFile(),
@@ -43,7 +43,7 @@ class Logic_Log_Exception extends Logic
 				'trace'			=> $exception->getTraceAsString(),
 				'previous'		=> $exception->getPrevious(),
 				'timestamp'		=> time(),
-			);
+			];
 		}
 		$sessionData	= $this->env->getSession()->getAll();
 		if( isset( $sessionData['exception'] ) )
@@ -52,12 +52,12 @@ class Logic_Log_Exception extends Logic
 		unset( $sessionData['exceptionRequest'] );
 		if( isset( $sessionData['exceptionUrl'] ) )
 		unset( $sessionData['exceptionUrl'] );
-		$content->env				= array(
+		$content->env				= [
 			'appName'	=> $this->env->getConfig()->get( 'app.name' ),
 			'class'		=> get_class( $this->env ),
 			'url'		=> $this->env->url,
 			'uri'		=> $this->env->uri,
-		);
+		];
 		$content->request			= $this->env->getRequest();
 		$content->session			= $sessionData;
 	//	$content->cookie			= $this->env->getCookie()->getAll();		// @todo activate for Hydrogen 0.8.6.5+
@@ -73,7 +73,7 @@ class Logic_Log_Exception extends Logic
 		if( method_exists( $exception, 'getSQLSTATE' ) )
 			$content->sqlState	= $exception->getSQLSTATE();
 
-		$classes	= array_values( array( $content->class ) + $content->classParents );
+		$classes	= array_values( [$content->class] + $content->classParents );
 
 		$content->resource		= NULL;
 		if( in_array( 'Exception_IO', $classes ) )
@@ -87,7 +87,7 @@ class Logic_Log_Exception extends Logic
 	public function importFromLogFile( int $limit = 200 ): int
 	{
 		$count		= 0;
-		if( file_exists( $this->logFile ) && filesize( $this->logFile ) === 0 ){
+		if( file_exists( $this->logFile ) && filesize( $this->logFile ) !== 0 ){
 			$handle		= fopen( $this->logFile, 'r' );
 			while( !feof( $handle ) && $count < $limit ){
 				$line	= fgets( $handle );
@@ -116,16 +116,16 @@ class Logic_Log_Exception extends Logic
 		if( !is_object( $object ) )
 			throw new InvalidArgumentException( "Line is not containing an exception data object" );
 
-		$data	= array(
+		$data	= [
 			'status'		=> 0,
 			'message'		=> '',
 			'trace'			=> '',
 			'createdAt'		=> $timestamp,
 			'modifiedAt'	=> time(),
-		);
+		];
 
 		if( isset( $object->exception ) && $object->exception instanceof Exception ){
-			$data	= array_merge( $data, array(
+			$data	= array_merge( $data, [
 				'type'			=> get_class( $object->exception ),
 				'message'		=> $object->exception->getMessage(),
 				'code'			=> $object->exception->getCode(),
@@ -133,11 +133,11 @@ class Logic_Log_Exception extends Logic
 				'line'			=> $object->exception->getLine(),
 				'trace'			=> $object->exception->getTraceAsString(),
 				'previous'		=> serialize( $object->exception->getPrevious() ),
-			) );
+			] );
 		}
 
 		else if( $object instanceof Exception ){
-			$data	= array_merge( $data, array(
+			$data	= array_merge( $data, [
 				'type'			=> get_class( $object ),
 				'message'		=> $object->getMessage(),
 				'code'			=> $object->getCode(),
@@ -145,17 +145,17 @@ class Logic_Log_Exception extends Logic
 				'line'			=> $object->getLine(),
 				'trace'			=> $object->getTraceAsString(),
 				'previous'		=> serialize( $object->getPrevious() ),
-			) );
+			] );
 		}
 		else{
-			$data	= array_merge( $data, array(
+			$data	= array_merge( $data, [
 				'type'			=> 'Exception',
 				'message'		=> $object->message,
 				'code'			=> $object->code,
 				'file'			=> $object->file,
 				'line'			=> $object->line,
 				'trace'			=> $object->trace,
-			) );
+			] );
 		}
 		if( empty( $data['trace'] ) ){
 			print_m( $object );die;
@@ -203,11 +203,11 @@ class Logic_Log_Exception extends Logic
 			return FALSE;
 		$language		= $this->env->getLanguage()->getLanguage();
 		$logicMail		= Logic_Mail::getInstance( $this->env );
-		$mail			= new Mail_Log_Exception( $this->env, array( 'exception' => $exception ) );
+		$mail			= new Mail_Log_Exception( $this->env, ['exception' => $exception] );
 		$receivers		= preg_split( '/(,|;)/', $this->moduleConfig->get( 'mail.receivers' ) );
 		foreach( $receivers as $receiver ){
 			if( trim( $receiver ) ){
-				$receiver	= (object) array( 'email' => $receiver );
+				$receiver	= (object) ['email' => $receiver];
 				$logicMail->handleMail( $mail, $receiver, $language );
 			}
 		}
