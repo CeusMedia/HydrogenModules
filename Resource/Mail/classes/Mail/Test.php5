@@ -6,7 +6,7 @@ class Mail_Test extends Mail_Abstract
 		if( isset( $this->data['verbose'] ) && is_bool( $this->data['verbose'] ) )
 			$this->transport->setVerbose( $this->data['verbose'] );
 
-		$data		= new ADT_List_Dictionary( $data );
+		$data		= new ADT_List_Dictionary( (array) $this->data );
 		$subject	= $data->get( 'subject', 'Test' );
 		$text		= $data->get( 'text', $this->renderText() );
 		$html		= $data->get( 'html', $this->renderHtml() );
