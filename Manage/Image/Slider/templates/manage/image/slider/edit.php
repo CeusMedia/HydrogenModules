@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['edit'];
@@ -33,14 +34,14 @@ $buttonView		= HtmlTag::create( 'a', $iconView.' '.$w->buttonView, array(
 	'class'	=> 'btn btn-info btn-small',
 ) );
 
-$optStatus		= UI_HTML_Elements::Options( $words['states'], $slider->status );
-$optEasing		= UI_HTML_Elements::Options( $words['optEasing'], $slider->easing );
-$optAnimation	= UI_HTML_Elements::Options( $words['optAnimation'], $slider->animation );
-$optShowButtons	= UI_HTML_Elements::Options( $words['optBoolean'], $slider->showButtons );
-$optShowDots	= UI_HTML_Elements::Options( $words['optBoolean'], $slider->showDots );
-$optShowTitle	= UI_HTML_Elements::Options( $words['optBoolean'], $slider->showTitle );
-$optScaleToFit	= UI_HTML_Elements::Options( $words['optBoolean'], $slider->scaleToFit );
-$optRandomOrder	= UI_HTML_Elements::Options( $words['optBoolean'], $slider->randomOrder );
+$optStatus		= HtmlElements::Options( $words['states'], $slider->status );
+$optEasing		= HtmlElements::Options( $words['optEasing'], $slider->easing );
+$optAnimation	= HtmlElements::Options( $words['optAnimation'], $slider->animation );
+$optShowButtons	= HtmlElements::Options( $words['optBoolean'], $slider->showButtons );
+$optShowDots	= HtmlElements::Options( $words['optBoolean'], $slider->showDots );
+$optShowTitle	= HtmlElements::Options( $words['optBoolean'], $slider->showTitle );
+$optScaleToFit	= HtmlElements::Options( $words['optBoolean'], $slider->scaleToFit );
+$optRandomOrder	= HtmlElements::Options( $words['optBoolean'], $slider->randomOrder );
 
 $panelAddSlide	= $view->loadTemplateFile( 'manage/image/slider/edit.addSlide.php' );
 $panelSlides	= $view->loadTemplateFile( 'manage/image/slider/edit.slides.php' );

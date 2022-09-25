@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['index'];
@@ -21,8 +22,8 @@ if( $posts ){
 			HtmlTag::create( 'td', $post->category->title ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "15%", "20%" );
-	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( $w->headTitle, $w->headStatus, $w->headCategory ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( "", "15%", "20%" );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( $w->headTitle, $w->headStatus, $w->headCategory ) ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }

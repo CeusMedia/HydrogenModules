@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['view'];
@@ -95,7 +96,7 @@ if( !empty( $exception->request ) ){
 			) );
 		}
 		$headers		= HtmlTag::create( 'table', array(
-			UI_HTML_Elements::ColumnGroup( '20%', '' ),
+			HtmlElements::ColumnGroup( '20%', '' ),
 			HtmlTag::create( 'tbody', $rows ),
 		), array( 'class' => 'table table-condensed table-striped' ) );
 		$dumpRequest	= UI_VariableDumper::dump( $request->getAll() );

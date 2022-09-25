@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Module extends CMF_Hydrogen_View_Helper_Abstract{
@@ -43,7 +44,7 @@ class View_Helper_Module extends CMF_Hydrogen_View_Helper_Abstract{
 		switch( $item->type ){
 			case 'boolean':
 				$strValue	= $item->value === TRUE ? 'yes' : 'no';
-				$options	= UI_HTML_Elements::Options( $words, $strValue );
+				$options	= HtmlElements::Options( $words, $strValue );
 				$attributes	= array(
 					'class'		=> 's'.$class.' active-'.$strValue,
 					'name'		=> $name,
@@ -79,7 +80,7 @@ class View_Helper_Module extends CMF_Hydrogen_View_Helper_Abstract{
 				) );
 				if( count( $item->values ) ){
 					$options	= array_combine( $item->values, $item->values );
-					$options	= UI_HTML_Elements::Options( $options, $item->value );
+					$options	= HtmlElements::Options( $options, $item->value );
 					$input	= HtmlTag::create( 'select', $options, array(
 						'name'		=> 'config['.$item->key.']',
 						'id'		=> 'config['.$item->key.']',

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -7,24 +8,24 @@ $iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) )
 $optManagerId	= [];
 foreach( $users as $user )
 	$optManagerId[$user->userId]	= $user->username;
-$optManagerId	= UI_HTML_Elements::Options( $optManagerId, $group->managerId );
+$optManagerId	= HtmlElements::Options( $optManagerId, $group->managerId );
 
 $optStatus		= $words['group-statuses'];
 unset( $optStatus[Model_Mail_Group::STATUS_WORKING] );
-$optStatus		= UI_HTML_Elements::Options( $optStatus, $group->status );
+$optStatus		= HtmlElements::Options( $optStatus, $group->status );
 
-$optType		= UI_HTML_Elements::Options( $words['group-types'], $group->type );
-$optVisibility	= UI_HTML_Elements::Options( $words['group-visibilities'], $group->visibility );
+$optType		= HtmlElements::Options( $words['group-types'], $group->type );
+$optVisibility	= HtmlElements::Options( $words['group-visibilities'], $group->visibility );
 
 $optRoleId	= [];
 foreach( $roles as $role )
 	$optRoleId[$role->mailGroupRoleId]	= $role->title;
-$optRoleId	= UI_HTML_Elements::Options( $optRoleId, $group->defaultRoleId );
+$optRoleId	= HtmlElements::Options( $optRoleId, $group->defaultRoleId );
 
 $optServerId		= [];
 foreach( $servers as $server )
 	$optServerId[$server->mailGroupServerId]	= $server->title;
-$optServerId		= UI_HTML_Elements::Options( $optServerId, @$data->mailGroupServerId );
+$optServerId		= HtmlElements::Options( $optServerId, @$data->mailGroupServerId );
 
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'E-Mail-Gruppe bearbeiten' ),

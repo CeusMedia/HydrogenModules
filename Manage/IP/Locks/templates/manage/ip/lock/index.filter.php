@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
@@ -22,19 +23,19 @@ $optStatus = array(
 	1	=> 'locked',
 	2	=> 'unlock requested',
 );
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 $optSort	= array(
 	'lockedAt'	=> 'Sperrung',
 	'IP'		=> 'IP',
 );
-$optSort	= UI_HTML_Elements::Options( $optSort, $filterSort );
+$optSort	= HtmlElements::Options( $optSort, $filterSort );
 
 $optOrder	= array(
 	'asc'	=> 'aufsteigend',
 	'desc'	=> 'absteigend',
 );
-$optOrder	= UI_HTML_Elements::Options( $optOrder, $filterOrder );
+$optOrder	= HtmlElements::Options( $optOrder, $filterOrder );
 
 $panelFilter	= HTML::DivClass( 'content-panel',
 	HtmlTag::create( 'h3', 'Filter' ).

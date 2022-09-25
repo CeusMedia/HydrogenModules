@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -162,7 +163,7 @@ class View_Helper_Shop_CartPositions
 			);
 			$rows[]	= HtmlTag::create( 'tr', $cells );
 		}
-		$colgroup		= UI_HTML_Elements::ColumnGroup( '25%', '40%', '35%' );
+		$colgroup		= HtmlElements::ColumnGroup( '25%', '40%', '35%' );
 		$tbody			= HtmlTag::create( 'tbody', $rows );
 
 		//  @todo add shipping
@@ -205,7 +206,7 @@ class View_Helper_Shop_CartPositions
 
 		$tableAttr		= array( 'class' => 'table not-table-hover not-table-striped table-fixed articleList table-borderless' );
 		if( $allSingle ){
-//			$colgroup		= UI_HTML_Elements::ColumnGroup( '7%', '', '140' );
+//			$colgroup		= HtmlElements::ColumnGroup( '7%', '', '140' );
 			$tableAttr['class']	.= ' articleList-allSingle';
 		}
 		if( !$allSingle || $this->display === self::DISPLAY_MAIL )
@@ -265,7 +266,7 @@ class View_Helper_Shop_CartPositions
 			);
 			$rows[]	= HtmlTag::create( 'tr', $cells );
 		}
-		$colgroup		= UI_HTML_Elements::ColumnGroup( '7%', '', '140', '140' );
+		$colgroup		= HtmlElements::ColumnGroup( '7%', '', '140', '140' );
 		$thead			= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 				HtmlTag::create( 'th', $wordsCart->headPicture, array( 'class' => 'column-cart-picture th-center' ) ),
 				HtmlTag::create( 'th', $wordsCart->headLabel, array( 'class' => 'column-cart-label' ) ),
@@ -315,7 +316,7 @@ class View_Helper_Shop_CartPositions
 		$tfoot			= HtmlTag::create( 'tfoot', $rows );
 		$tableAttr		= array( 'class' => 'table table-hover table-striped table-fixed articleList' );
 		if( 0 && $allSingle ){
-//			$colgroup		= UI_HTML_Elements::ColumnGroup( '7%', '', '140' );
+//			$colgroup		= HtmlElements::ColumnGroup( '7%', '', '140' );
 			$tableAttr['class']	.= ' articleList-allSingle';
 		}
 		if( !$allSingle || $this->display === self::DISPLAY_MAIL )

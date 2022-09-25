@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
@@ -38,7 +39,7 @@ $ind1		= $indicator->build( 75, 100 );
 
 $optStatus	= [];
 foreach( array_reverse( $words['status'], TRUE ) as $key => $label )
-	$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
+	$optStatus[]	= HtmlElements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
 $optStatus	= join( $optStatus );
 
 
@@ -49,29 +50,29 @@ $panelStatus	= '
 		<ul class="input">
 <!--			<li>
 				<label for="status">'.$words['editStatus']['labelStatus'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'status', $optStatus, 'm', TRUE ).'
+				'.HtmlElements::Select( 'status', $optStatus, 'm', TRUE ).'
 			</li>-->
 			<li>
 				<label for="status">'.$words['editStatus']['labelStatus'].'</label><br/>
-				'.UI_HTML_Elements::Input( 'status', $words['status'][$user->status], 'label m user-status status'.$user->status, TRUE ).'
+				'.HtmlElements::Input( 'status', $words['status'][$user->status], 'label m user-status status'.$user->status, TRUE ).'
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton(
+			'.HtmlElements::LinkButton(
 				'./user/accept/'.$userId,
 					$words['editStatus']['buttonAccept'],
 				'button edit',
 				$words['editStatus']['buttonAcceptConfirm'],
 				$user->status == 1
 			).'
-			'.UI_HTML_Elements::LinkButton(
+			'.HtmlElements::LinkButton(
 				'./user/ban/'.$userId,
 				$words['editStatus']['buttonBan'],
 				'button lock',
 				$words['editStatus']['buttonBanConfirm'],
 				$user->status != 1
 			).'
-			'.UI_HTML_Elements::LinkButton(
+			'.HtmlElements::LinkButton(
 				'./user/disable/'.$userId,
 				$words['editStatus']['buttonDisable'],
 				'button remove',
@@ -140,10 +141,10 @@ $w	= (object) $words['edit'];
 
 $optRole	= [];
 foreach( array_reverse( $roles, TRUE ) as $role )
-	$optRole[]	= UI_HTML_Elements::Option( $role->roleId, $role->title, $role->roleId == $user->roleId, NULL, 'role role'.$role->roleId );
+	$optRole[]	= HtmlElements::Option( $role->roleId, $role->title, $role->roleId == $user->roleId, NULL, 'role role'.$role->roleId );
 $optRole	= join( $optRole );
 
-$optGender	= UI_HTML_Elements::Options( $words['gender'], $user->gender );
+$optGender	= HtmlElements::Options( $words['gender'], $user->gender );
 
 $panelEdit	= '
 <form name="editUser" action="./admin/user/edit/'.$userId.'" method="post">
@@ -207,10 +208,10 @@ $panelEdit	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './admin/user', $w->buttonCancel, 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'saveUser', $w->buttonSave, 'button save' ).'
+			'.HtmlElements::LinkButton( './admin/user', $w->buttonCancel, 'button cancel' ).'
+			'.HtmlElements::Button( 'saveUser', $w->buttonSave, 'button save' ).'
 			&nbsp;&nbsp;|&nbsp;&nbsp;
-			'.UI_HTML_Elements::LinkButton(
+			'.HtmlElements::LinkButton(
 				'./admin/user/remove/'.$userId,
 				$w->buttonRemove,
 				'button remove',

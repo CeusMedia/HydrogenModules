@@ -1,6 +1,6 @@
 <?php
-
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 //  --  CHECK: DATABASE  --  //
 if( !preg_match( '/^\//', $instance->path ) )
@@ -60,7 +60,7 @@ if( file_exists( $fileConfig ) ){
 	$drivers	= array( '' => '- keiner -' );
 	foreach( PDO::getAvailableDrivers() as $driver )
 		$drivers[$driver]	= $words['database-drivers'][$driver];
-	$optDriver	= UI_HTML_Elements::Options( $drivers, $config->get( 'database.driver' ) );
+	$optDriver	= HtmlElements::Options( $drivers, $config->get( 'database.driver' ) );
 	$panelDatabase	= '
 <form action="./admin/instance/configureDatabase/'.$instance->id.'" method="post">
 	<fieldset>
@@ -101,7 +101,7 @@ if( file_exists( $fileConfig ) ){
 			'.$status.'
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'save', 'speichern', 'button edit save' ).'
+			'.HtmlElements::Button( 'save', 'speichern', 'button edit save' ).'
 		</div>
 	</fieldset>
 </form>

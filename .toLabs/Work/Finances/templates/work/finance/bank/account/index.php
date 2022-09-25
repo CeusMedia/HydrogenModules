@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['index'];
@@ -15,6 +16,6 @@ return '
 	<legend>'.$w->legend.'</legend>
 	'.$list.'
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './work/finance/bank/account/add', 'neues Konto', 'button icon add' ).'
+		'.HtmlElements::LinkButton( './work/finance/bank/account/add', 'neues Konto', 'button icon add' ).'
 	</div>
 </fieldset>';

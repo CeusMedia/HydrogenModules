@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $states	= array(
@@ -107,8 +108,8 @@ if( $locks ){
 		'Grund',
 		'Aktion',
 	);
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "140px", "10%", "120px", "140px", "", "110px" );
-	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( $heads ) );
+	$colgroup	= HtmlElements::ColumnGroup( "140px", "10%", "120px", "140px", "", "110px" );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
 }

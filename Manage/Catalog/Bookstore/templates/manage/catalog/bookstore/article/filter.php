@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w			= (object) $view->getWords( 'index.filter', 'manage/catalog/bookstore/article' );
 
 $filterId		= !empty( $filters['id'] ) ? $filters['id'] : "";
@@ -15,7 +17,7 @@ $filterStatus	= isset( $filters['status'] ) && strlen( $filters['status'] ) ? $f
 $optStatus	= array( '' => '- alle -' );
 foreach( $words['states'] as $key => $value )
 	$optStatus[(string)$key]	= $value;
-$optStatus	= UI_HTML_Elements::Options( $optStatus, (string) $filterStatus );
+$optStatus	= HtmlElements::Options( $optStatus, (string) $filterStatus );
 
 $optOrder	= array(
 	'title:ASC'			=> 'Titel aufsteigend',
@@ -23,7 +25,7 @@ $optOrder	= array(
 	'createdAt:ASC'		=> 'Erstellung aufsteigend',
 	'createdAt:DESC'	=> 'Erstellung absteigend',
 );
-$optOrder	= UI_HTML_Elements::Options( $optOrder, $filterOrder );
+$optOrder	= HtmlElements::Options( $optOrder, $filterOrder );
 
 return '
 <div class="content-panel">

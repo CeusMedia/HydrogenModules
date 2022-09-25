@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $script	= '
 $(document).ready(function(){
@@ -39,11 +40,11 @@ foreach( $classes as $className => $classReflection ){
 			$type	= '&nbsp;<small>from '.$methodReflection->class.'</small>';
 			$label	= '<small>'.$methodName.$parameters.$type.'</small>';
 		}
-		$label	= UI_HTML_Elements::ListItem( $label );
+		$label	= HtmlElements::ListItem( $label );
 		$methods[$methodReflection->name]	= $label;
 	}
 	ksort( $methods );
-	$methods	= '<b>Actions</b>'.UI_HTML_Elements::unorderedList( $methods );
+	$methods	= '<b>Actions</b>'.HtmlElements::unorderedList( $methods );
 	$ladder->addStep( preg_replace( '/^Controller_/', '', $className ), $methods );
 }
 

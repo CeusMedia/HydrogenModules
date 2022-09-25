@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $list	= [];
@@ -19,9 +20,9 @@ $fileConfig	= $instance->uri.$instance->configPath.$instance->configFile;
 #print_m( $instance );
 #die;
 
-$iconStatus0	= UI_HTML_Elements::Image( 'http://localhost/lib/cmIcons/famfamfam/silk/error.png', '' );
-$iconStatus1	= UI_HTML_Elements::Image( 'http://localhost/lib/cmIcons/famfamfam/silk/cross.png', '' );
-$iconStatus2	= UI_HTML_Elements::Image( 'http://localhost/lib/cmIcons/famfamfam/silk/tick.png', '' );
+$iconStatus0	= HtmlElements::Image( 'http://localhost/lib/cmIcons/famfamfam/silk/error.png', '' );
+$iconStatus1	= HtmlElements::Image( 'http://localhost/lib/cmIcons/famfamfam/silk/cross.png', '' );
+$iconStatus2	= HtmlElements::Image( 'http://localhost/lib/cmIcons/famfamfam/silk/tick.png', '' );
 
 //  --  CHECK: INSTANCE PATH  --  //
 $status	= 1;
@@ -31,7 +32,7 @@ if( file_exists( $instance->uri ) ){
 	$hint	= 'OK';
 }
 $icon	= HtmlTag::create( 'acronym', ${'iconStatus'.$status}, array( 'title' => $hint ) );
-$buttonCreate	= UI_HTML_Elements::LinkButton( './admin/instance/createPath/'.$instance->id, 'erzeugen', 'button add create', NULL, $status != 1 );
+$buttonCreate	= HtmlElements::LinkButton( './admin/instance/createPath/'.$instance->id, 'erzeugen', 'button add create', NULL, $status != 1 );
 $list[]	= '<tr class="status-'.$status.'"><td>Instanzordner</td><td>'.$instance->uri.'</td><td>'.$icon.'</td><td>'.$buttonCreate.'</td></tr>';
 
 //  --  CHECK: CONFIG PATH  --  //
@@ -46,7 +47,7 @@ if( file_exists( $instance->uri ) ){
 	}
 }
 $icon	= HtmlTag::create( 'acronym', ${'iconStatus'.$status}, array( 'title' => $hint ) );
-$buttonCreate	= UI_HTML_Elements::LinkButton( './admin/instance/createPath/'.$instance->id.'/'.base64_encode( $instance->configPath ), 'erzeugen', 'button add create', NULL, $status != 1 );
+$buttonCreate	= HtmlElements::LinkButton( './admin/instance/createPath/'.$instance->id.'/'.base64_encode( $instance->configPath ), 'erzeugen', 'button add create', NULL, $status != 1 );
 $list[]	= '<tr class="status-'.$status.'"><td>Konfigurationsordner</td><td>'.$instance->configPath.'</td><td>'.$icon.'</td><td>'.$buttonCreate.'</td></tr>';
 
 //  --  CHECK: CONFIG FILE  --  //
@@ -61,7 +62,7 @@ if( file_exists( $instance->uri.$instance->configPath ) ){
 	}
 }
 $icon	= HtmlTag::create( 'acronym', ${'iconStatus'.$status}, array( 'title' => $hint ) );
-$buttonCreate	= UI_HTML_Elements::LinkButton( './admin/instance/createConfig/'.$instance->id, 'erzeugen', 'button add create', NULL, $status != 1 );
+$buttonCreate	= HtmlElements::LinkButton( './admin/instance/createConfig/'.$instance->id, 'erzeugen', 'button add create', NULL, $status != 1 );
 $list[]	= '<tr class="status-'.$status.'"><td>Konfigurationdatei</td><td>'.$instance->configPath.$instance->configFile.'</td><td>'.$icon.'</td><td>'.$buttonCreate.'</td></tr>';
 
 //  --  CHECK: MODULE PATH  --  //
@@ -76,7 +77,7 @@ if( file_exists( $instance->uri.$instance->configPath ) ){
 	}
 }
 $icon	= HtmlTag::create( 'acronym', ${'iconStatus'.$status}, array( 'title' => $hint ) );
-$buttonCreate	= UI_HTML_Elements::LinkButton( './admin/instance/createPath/'.$instance->id.'/'.base64_encode( $instance->configPath."modules/" ), 'erzeugen', 'button add create', NULL, $status != 1 );
+$buttonCreate	= HtmlElements::LinkButton( './admin/instance/createPath/'.$instance->id.'/'.base64_encode( $instance->configPath."modules/" ), 'erzeugen', 'button add create', NULL, $status != 1 );
 $list[]	= '<tr class="status-'.$status.'"><td>Modulordner</td><td>'.$instance->configPath.'modules/</td><td>'.$icon.'</td><td>'.$buttonCreate.'</td></tr>';
 
 
@@ -97,7 +98,7 @@ if( file_exists( $fileConfig ) ){
 	}
 }
 $icon	= HtmlTag::create( 'acronym', ${'iconStatus'.$status}, array( 'title' => $hint ) );
-$buttonCreate	= UI_HTML_Elements::LinkButton( './admin/instance/createPath/'.$instance->id.'/'.base64_encode( $path ), 'erzeugen', 'button add create', NULL, $status != 1 );
+$buttonCreate	= HtmlElements::LinkButton( './admin/instance/createPath/'.$instance->id.'/'.base64_encode( $path ), 'erzeugen', 'button add create', NULL, $status != 1 );
 $list[]	= '<tr class="status-'.$status.'"><td>Klassenordner</td><td>'.$path.'</td><td>'.$icon.'</td><td>'.$buttonCreate.'</td></tr>';
 
 
@@ -119,7 +120,7 @@ if( file_exists( $fileConfig ) ){
 	}
 }
 $icon	= HtmlTag::create( 'acronym', ${'iconStatus'.$status}, array( 'title' => $hint ) );
-$buttonCreate	= UI_HTML_Elements::LinkButton( './admin/instance/createPath/'.$instance->id.'/'.base64_encode( $path ), 'erzeugen', 'button add create', NULL, $status != 1 );
+$buttonCreate	= HtmlElements::LinkButton( './admin/instance/createPath/'.$instance->id.'/'.base64_encode( $path ), 'erzeugen', 'button add create', NULL, $status != 1 );
 $list[]	= '<tr class="status-'.$status.'"><td>Template-Ordner</td><td>'.$path.'</td><td>'.$icon.'</td><td>'.$buttonCreate.'</td></tr>';
 
 $panelCheck	= '

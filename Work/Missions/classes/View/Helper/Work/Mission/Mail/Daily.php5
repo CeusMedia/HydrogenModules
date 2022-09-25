@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Work_Mission_Mail_Daily extends CMF_Hydrogen_View_Helper_Abstract{
@@ -22,7 +23,7 @@ class View_Helper_Work_Mission_Mail_Daily extends CMF_Hydrogen_View_Helper_Abstr
 		if( count( $data['tasks'] ) ){
 			$helper		= new View_Helper_Work_Mission_List( $this->env, $data['tasks'], $words );
 			$rows		= $helper->renderRows( 0 );
-			$colgroup	= UI_HTML_Elements::ColumnGroup( "125", "" );
+			$colgroup	= HtmlElements::ColumnGroup( "125", "" );
 			$attributes	= array( 'class' => 'table-mail table-mail-tasks' );
 			$table		= HtmlTag::create( 'table', $colgroup.$rows, $attributes );
 			$heading	= $w->headingTasks ? HtmlTag::create( 'h4', $w->headingTasks ) : "";
@@ -35,7 +36,7 @@ class View_Helper_Work_Mission_Mail_Daily extends CMF_Hydrogen_View_Helper_Abstr
 		if( count( $data['events'] ) ){
 			$helper		= new View_Helper_Work_Mission_List( $this->env, $data['events'], $words );
 			$rows		= $helper->renderRows( 0 );
-			$colgroup	= UI_HTML_Elements::ColumnGroup( "125", "" );
+			$colgroup	= HtmlElements::ColumnGroup( "125", "" );
 			$attributes	= array( 'class' => 'table-mail table-mail-events' );
 			$table		= HtmlTag::create( 'table', $colgroup.$rows, $attributes );
 			$heading	= $w->headingEvents ? HtmlTag::create( 'h4', $w->headingEvents ) : "";

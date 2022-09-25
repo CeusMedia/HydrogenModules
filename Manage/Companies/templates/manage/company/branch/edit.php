@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['edit'];
@@ -137,13 +138,13 @@ $panelEdit	= HTML::DivClass( 'content-panel',
 			).
 			HTML::DivClass( 'buttonbar',
 				HTML::DivClass( 'btn-toolbar',
-					UI_HTML_Elements::LinkButton( './manage/company/branch', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' ).
-					UI_HTML_Elements::LinkButton( './manage/company/edit/'.$branch->companyId, $iconCompany.'&nbsp;'.$w->buttonCompany, 'btn btn-small' ).
-					UI_HTML_Elements::Button( 'save', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' ).
+					HtmlElements::LinkButton( './manage/company/branch', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' ).
+					HtmlElements::LinkButton( './manage/company/edit/'.$branch->companyId, $iconCompany.'&nbsp;'.$w->buttonCompany, 'btn btn-small' ).
+					HtmlElements::Button( 'save', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' ).
 					$buttonActivate.
 					$buttonReject.
 					$buttonDeactivate.
-					UI_HTML_Elements::LinkButton( './manage/company/branch/remove/'.$branch->branchId, $iconRemove.'&nbsp;'.$w->buttonRemove, 'btn btn-danger btn-small' )
+					HtmlElements::LinkButton( './manage/company/branch/remove/'.$branch->branchId, $iconRemove.'&nbsp;'.$w->buttonRemove, 'btn btn-danger btn-small' )
 				)
 			)
 		)

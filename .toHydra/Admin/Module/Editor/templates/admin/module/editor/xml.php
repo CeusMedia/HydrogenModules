@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 #remark( $moduleFile );
 #remark( '<code>'. ).'</code>' );
@@ -31,7 +32,7 @@ return '
 		<textarea name="content" id="input_content" rows="20">'.$xml.'</textarea>
 		<div class="buttonbar">
 			<button type="button" class="button cancel" onclick="toggleXmlEditor()"><span>Ansicht</span></button>
-			'.UI_HTML_Elements::Button( 'save', 'save', 'button save' ).'
+			'.HtmlElements::Button( 'save', 'save', 'button save' ).'
 		</div>
 	</form>
 </div>

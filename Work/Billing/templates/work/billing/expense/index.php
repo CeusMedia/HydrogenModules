@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
@@ -61,14 +62,14 @@ if( $expenses ){
 			HtmlTag::create( 'td', $amount, array( 'class' => 'cell-number' ) ),
 		), array( 'class' => $expense->status ? 'success' : 'warning' ) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
+	$colgroup	= HtmlElements::ColumnGroup( array(
 		'',
 		'120',
 		'180',
 		'180',
 		'100',
 	) );
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		'Bezeichnung',
 		'Wiederholung',
 		'Belasteter',

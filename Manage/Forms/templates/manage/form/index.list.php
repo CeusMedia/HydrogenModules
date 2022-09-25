@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //print_m( $transferTargets );die;
@@ -106,7 +107,7 @@ foreach( $forms as $form ){
 		HtmlTag::create( 'td', $importers.'<br/>'.$transfers ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '160px', '260px', '40px' );
+$colgroup	= HtmlElements::ColumnGroup( '40px', '', '160px', '260px', '40px' );
 $thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 	HtmlTag::create( 'th', 'ID', array( 'style' => 'text-align: right' ) ),
 	HtmlTag::create( 'th', 'Titel / E-Mail an Absender' ),

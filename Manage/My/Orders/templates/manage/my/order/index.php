@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $wordsShop	= $env->getLanguage()->getWords( 'shop' );
@@ -22,8 +23,8 @@ if( $orders ){
 			HtmlTag::create( 'td', $status ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '', '100px', '200px', '100px' );
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Bestellung', 'Preis', 'Bezahlmethode', 'Zustand' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( '', '100px', '200px', '100px' );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Bestellung', 'Preis', 'Bezahlmethode', 'Zustand' ) ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped table-fixed' ) );
 }

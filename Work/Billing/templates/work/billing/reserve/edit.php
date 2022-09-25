@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
@@ -25,7 +26,7 @@ $optStatus	= array(
 	0	=> 'inaktiv',
 	1	=> 'aktiv',
 );
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $reserve->status );
+$optStatus	= HtmlElements::Options( $optStatus, $reserve->status );
 
 
 $optCorporation	= array(
@@ -33,13 +34,13 @@ $optCorporation	= array(
 );
 foreach( $corporations as $corporation )
 	$optCorporation[$corporation->corporationId]	= $corporation->title;
-$optCorporation	= UI_HTML_Elements::Options( $optCorporation, $reserve->corporationId );
+$optCorporation	= HtmlElements::Options( $optCorporation, $reserve->corporationId );
 
 $optPersonalize	= array(
 	0	=> 'nein',
 	1	=> 'ja',
 );
-$optPersonalize	= UI_HTML_Elements::Options( $optPersonalize, $reserve->personalize );
+$optPersonalize	= HtmlElements::Options( $optPersonalize, $reserve->personalize );
 
 return '
 <div class="row-fluid">

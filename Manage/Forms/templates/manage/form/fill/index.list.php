@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $modelForm	= new Model_Form( $env );
@@ -72,8 +73,8 @@ foreach( $fills as $fill ){
 		HtmlTag::create( 'td', $buttons ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( '50px', '', '', '100px', '130px', '80px' );
-$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Name / E-Mail', 'Formular', 'Zustand', 'Datum / Zeit', '' ) ) );
+$colgroup	= HtmlElements::ColumnGroup( '50px', '', '', '100px', '130px', '80px' );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'ID', 'Name / E-Mail', 'Formular', 'Zustand', 'Datum / Zeit', '' ) ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped not-table-condensed' ) );
 

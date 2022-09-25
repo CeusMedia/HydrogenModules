@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -147,7 +148,7 @@ class View_Work_Billing_Helper_Transactions
 			if( count( $this->transactions ) < 2 )
 				$tfoot		= '';
 
-			$colgroup	= UI_HTML_Elements::ColumnGroup( array( /*'45', */'', '200', '200', '100', '100' ) );
+			$colgroup	= HtmlElements::ColumnGroup( array( /*'45', */'', '200', '200', '100', '100' ) );
 			$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 /*				HtmlTag::create( 'th', 'ID', array( 'class' => 'cell-number' ) ),*/
 				HtmlTag::create( 'th', 'Vorgang' ),

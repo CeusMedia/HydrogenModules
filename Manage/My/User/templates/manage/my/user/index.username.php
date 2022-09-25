@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //  --  PANEL: USERNAME  --  //
@@ -59,7 +60,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 								'autocomplete'	=> 'current-password',
 								'placeholder'	=> $w->labelPasswordCurrent,
 							) ).
-							UI_HTML_Elements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
+							HtmlElements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
 						)
 					) )
 				)

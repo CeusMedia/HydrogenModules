@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $changers	= [];
@@ -19,13 +20,13 @@ $changers	= $changers ? HtmlTag::create( 'ul', join( $changers ), array( 'class'
 
 $reporter	= '-';
 if( $issue->reporter ){
-	$reporter	= UI_HTML_Elements::Link( './manage/user/edit/'.$issue->reporter->userId, $issue->reporter->username );
+	$reporter	= HtmlElements::Link( './manage/user/edit/'.$issue->reporter->userId, $issue->reporter->username );
 	$reporter	= HtmlTag::create( 'span', $reporter, array( 'class' => 'role role'.$issue->reporter->roleId ) );
 }
 
 $manager	= '-';
 if( $issue->managerId ){
-	$manager	= UI_HTML_Elements::Link( './maange/user/edit/'.$issue->manager->userId, $issue->manager->username );
+	$manager	= HtmlElements::Link( './maange/user/edit/'.$issue->manager->userId, $issue->manager->username );
 	$manager	= HtmlTag::create( 'span', $manager, array( 'class' => 'role role'.$issue->manager->roleId ) );
 }
 

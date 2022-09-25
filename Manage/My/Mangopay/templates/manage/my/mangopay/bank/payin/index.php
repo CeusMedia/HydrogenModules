@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $currencyFirst = FALSE;
@@ -21,7 +22,7 @@ foreach( $wallets as $item )
 $optCurrency	= [];
 foreach( $currencies as $key => $label )
 	$optCurrency[$key]	= $label;
-$optCurrency	= UI_HTML_Elements::Options( $optCurrency, isset( $currency ) ? $currency : NULL );
+$optCurrency	= HtmlElements::Options( $optCurrency, isset( $currency ) ? $currency : NULL );
 
 $inputCurrency	= HtmlTag::create( 'select', $optCurrency, array(
 	'id'		=> 'input_currency',
@@ -34,7 +35,7 @@ $inputCurrency	= HtmlTag::create( 'select', $optCurrency, array(
 $optWallet		= [];
 foreach( $wallets as $item )
 	$optWallet[$item->Id]	= $item->Description.' ('.$view->formatMoney( $item->Balance, ' ', 0 ).')';
-$optWallet		= UI_HTML_Elements::Options( $optWallet );
+$optWallet		= HtmlElements::Options( $optWallet );
 $inputWallet	= HtmlTag::create( 'select', $optWallet, array(
 	'id'		=> 'input_walletId',
 	'name'		=> 'walletId',

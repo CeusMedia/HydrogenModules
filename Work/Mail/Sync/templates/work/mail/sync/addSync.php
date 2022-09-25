@@ -1,11 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $hostMap	= [];
 foreach( $hosts as $host )
 	$hostMap[$host->mailSyncHostId]	= $host->host ? $host->host : $host->ip;
 
-$optHost1	= UI_HTML_Elements::Options( $hostMap );
-$optHost2	= UI_HTML_Elements::Options( $hostMap );
+$optHost1	= HtmlElements::Options( $hostMap );
+$optHost2	= HtmlElements::Options( $hostMap );
 
 return '
 <div class="row-fluid">

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
@@ -32,7 +33,7 @@ if( $bills ){
 			HtmlTag::create( 'td', $status ),
 		), array( 'class' => $bill->status > 0 ? 'success' : 'warning' ) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
+	$colgroup	= HtmlElements::ColumnGroup( array(
 		'150',
 		'',
 		'90',
@@ -69,7 +70,7 @@ $optStatus	= array(
 	'0'	=> 'in Arbeit',
 	'1'	=> 'gebucht',
 );
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 $optYear	= array(
 	''	=> '- alle -',
@@ -77,7 +78,7 @@ $optYear	= array(
 $optYear[date( "Y" )]	= date( "Y" );
 $optYear[date( "Y" )-1]	= date( "Y" )-1;
 $optYear[date( "Y" )-2]	= date( "Y" )-2;
-$optYear	= UI_HTML_Elements::Options( $optYear, $filterYear );
+$optYear	= HtmlElements::Options( $optYear, $filterYear );
 
 $optMonth	= array(
 	''		=> '- alle -',
@@ -94,7 +95,7 @@ $optMonth	= array(
 	'11'	=> 'November',
 	'12'	=> 'Dezember',
 );
-$optMonth	= UI_HTML_Elements::Options( $optMonth, $filterMonth );
+$optMonth	= HtmlElements::Options( $optMonth, $filterMonth );
 
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './work/billing/bill', $page, $pages );
 

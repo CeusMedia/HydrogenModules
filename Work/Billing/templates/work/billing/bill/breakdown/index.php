@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
@@ -94,8 +95,8 @@ if( $bill->status != Model_Billing_Bill::STATUS_BOOKED ){
 }
 
 
-$colgroup	= UI_HTML_Elements::ColumnGroup( array( '80', '', '80', '100', '80' ) );
-$thead	= HtmlTag::create( 'thread', UI_HTML_Elements::TableHeads( array( 'Type', 'Bezug', 'Prozent', 'Betrag', '' ) ) );
+$colgroup	= HtmlElements::ColumnGroup( array( '80', '', '80', '100', '80' ) );
+$thead	= HtmlTag::create( 'thread', HtmlElements::TableHeads( array( 'Type', 'Bezug', 'Prozent', 'Betrag', '' ) ) );
 $tbody	= HtmlTag::create( 'tbody', $list );
 $list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 
@@ -124,23 +125,23 @@ $optType	= array(
 	0	=> 'Person',
 	1	=> 'Unternehmen',
 );
-$optType	= UI_HTML_Elements::Options( $optType );
+$optType	= HtmlElements::Options( $optType );
 
 
 $optCorporation	= [];
 foreach( $corporations as $corporation )
 	$optCorporation[$corporation->corporationId]	= $corporation->title;
-$optCorporation	= UI_HTML_Elements::Options( $optCorporation );
+$optCorporation	= HtmlElements::Options( $optCorporation );
 
 $optPerson	= [];
 foreach( $persons as $person )
 	$optPerson[$person->personId]	= $person->firstname.' '.$person->surname;
-$optPerson	= UI_HTML_Elements::Options( $optPerson );
+$optPerson	= HtmlElements::Options( $optPerson );
 
 $optReserve	= [];
 foreach( $reserves as $reserve )
 	$optReserve[$reserve->reserveId]	= $reserve->title;
-$optReserve	= UI_HTML_Elements::Options( $optReserve );
+$optReserve	= HtmlElements::Options( $optReserve );
 
 $buttonBook		= HtmlTag::create( 'button', $iconSave.' buchen', array(
 	'type'		=> 'button',

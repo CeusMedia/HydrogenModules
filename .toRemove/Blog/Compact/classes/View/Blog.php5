@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
@@ -238,7 +239,7 @@ class View_Blog extends View
 			if( $config->get( 'module.blog_compact.niceURLs' ) )
 				$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $article );
 			$label		= str_replace( '&', '&amp;', $article->title );
-			$link		= UI_HTML_Elements::Link( $url, $icon.$label, 'not-icon-label not-link-blog' );
+			$link		= HtmlElements::Link( $url, $icon.$label, 'not-icon-label not-link-blog' );
 
 			$abstract	= preg_split( "/\n/", $article->content );
 			$abstract	= array_shift( $abstract );

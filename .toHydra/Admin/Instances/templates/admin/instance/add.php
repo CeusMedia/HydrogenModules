@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $moduleConfig	= $config->getAll( 'module.admin_instances.', TRUE );
 $protocolLocked	= FALSE;
@@ -26,7 +27,7 @@ if( $moduleConfig->get( 'lock' ) ){
 $optProtocol	= array( '' => '' );
 foreach( $words['protocols'] as $key => $value )
 	$optProtocol[$key.'://']	= $value;
-$optProtocol	= UI_HTML_Elements::Options( $optProtocol, $protocol );
+$optProtocol	= HtmlElements::Options( $optProtocol, $protocol );
 
 $panelAdd	= '
 <form action="./admin/instance/add" method="post">
@@ -67,8 +68,8 @@ $panelAdd	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './admin/instance', 'zur Liste', 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'add', 'hinzufügen', 'button add' ).'
+			'.HtmlElements::LinkButton( './admin/instance', 'zur Liste', 'button cancel' ).'
+			'.HtmlElements::Button( 'add', 'hinzufügen', 'button add' ).'
 		</div>
 	</fieldset>
 </form>

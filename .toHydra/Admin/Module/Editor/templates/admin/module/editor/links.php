@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*
@@ -23,7 +24,7 @@ if( isset( $linkNr ) && strlen( trim( $linkNr ) ) ){
 	if( isset( $module->links[$linkNr] ) ){
 		$link	= $module->links[$linkNr];
 #		print_m( $link );
-		$optAccess	= UI_HTML_Elements::Options( $optAccess, $link->access );
+		$optAccess	= HtmlElements::Options( $optAccess, $link->access );
 		$panelEdit	= '
 <form id="form-module-editor-link-edit" action="./admin/module/editor/editLink/'.$moduleId.'/'.$linkNr.'" method="post">
 	<fieldset>
@@ -63,8 +64,8 @@ if( isset( $linkNr ) && strlen( trim( $linkNr ) ) ){
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './admin/module/editor/view/'.$moduleId.'?tab=links', $w->buttonCancel, 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'add', $w->buttonSave, 'button edit save' ).'
+			'.HtmlElements::LinkButton( './admin/module/editor/view/'.$moduleId.'?tab=links', $w->buttonCancel, 'button cancel' ).'
+			'.HtmlElements::Button( 'add', $w->buttonSave, 'button edit save' ).'
 		</div>
 	</fieldset>
 </form>';
@@ -80,12 +81,12 @@ if( $module->links ){
 		if( in_array( $link->access, array_keys( $words['access-types'] ) ) )
 			$access	= $words['access-types'][$link->access];
 		if( !empty( $link->language ) )
-			$labelLanguage	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/flags/png/'.$link->language.'.png', $link->language );
+			$labelLanguage	= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/flags/png/'.$link->language.'.png', $link->language );
 		else
 			$labelLanguage	= "*";
 
-		$actions	= UI_HTML_Elements::LinkButton( './admin/module/editor/view/'.$moduleId.'?tab=links&linkNr='.$nr, '', 'button icon tiny edit' );
-		$actions	.= UI_HTML_Elements::LinkButton( './admin/module/editor/removeLink/'.$moduleId.'/'.$nr, '', 'button icon tiny remove' );
+		$actions	= HtmlElements::LinkButton( './admin/module/editor/view/'.$moduleId.'?tab=links&linkNr='.$nr, '', 'button icon tiny edit' );
+		$actions	.= HtmlElements::LinkButton( './admin/module/editor/removeLink/'.$moduleId.'/'.$nr, '', 'button icon tiny remove' );
 
 		$row	= array(
 			HtmlTag::create( 'td', $labelLanguage ),
@@ -98,8 +99,8 @@ if( $module->links ){
 		);
 		$rows[]	= HtmlTag::create( 'tr', $row );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '5%', '30%', '25%', '20%', '10%', '10%' ) );
-	$heads		= UI_HTML_Elements::TableHeads( array( '', 'Beschriftung', 'Pfad', /*'Parent',*/ 'Zugriff', 'Rank', 'Aktion' ) );
+	$colgroup	= HtmlElements::ColumnGroup( array( '5%', '30%', '25%', '20%', '10%', '10%' ) );
+	$heads		= HtmlElements::TableHeads( array( '', 'Beschriftung', 'Pfad', /*'Parent',*/ 'Zugriff', 'Rank', 'Aktion' ) );
 	$panelList	='
 <table>
 	'.$colgroup.'
@@ -110,7 +111,7 @@ if( $module->links ){
 }
 
 $optAccess	= array( '' => $words['tab-links']['optAccessUndefined'] ) + $words['access-types'];
-$optAccess	= UI_HTML_Elements::Options( $optAccess );
+$optAccess	= HtmlElements::Options( $optAccess );
 
 $panelAdd	= '
 <form id="form-module-editor-link-add" action="./admin/module/editor/addLink/'.$moduleId.'" method="post">
@@ -143,7 +144,7 @@ $panelAdd	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'add', $w->buttonAdd, 'button add' ).'
+			'.HtmlElements::Button( 'add', $w->buttonAdd, 'button add' ).'
 		</div>
 	</fieldset>
 </form>

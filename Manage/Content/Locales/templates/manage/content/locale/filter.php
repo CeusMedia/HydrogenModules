@@ -1,14 +1,15 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $languageSelector	= '';
 if( count( $languages ) > 1 ){
 	$optFolder		= '';
-	$optLanguage	= UI_HTML_Elements::Options( array_combine( $languages, $languages ), $language );
+	$optLanguage	= HtmlElements::Options( array_combine( $languages, $languages ), $language );
 	if( $language && isset( $folders )){
 		$optFolder	= array( '' );
 		foreach( $folders as $folderKey => $folderPath )
 			$optFolder[$folderKey]	= $folderKey;
-		$optFolder		= UI_HTML_Elements::Options( $optFolder, $folder );
+		$optFolder		= HtmlElements::Options( $optFolder, $folder );
 	}
 	$filterLanguage	= '
 	<div class="span5">
@@ -18,12 +19,12 @@ if( count( $languages ) > 1 ){
 }
 //print_m( $filterShow );die;
 //$optEmpty	= $words['show-types'];
-//$optEmpty	= UI_HTML_Elements::Options( $optEmpty, $filterEmpty );
+//$optEmpty	= HtmlElements::Options( $optEmpty, $filterEmpty );
 
 $optFolder	= [];
 foreach( $folders as $folderKey => $folderPath )
 	$optFolder[$folderKey]	= $words['folders'][$folderKey];
-$optFolder	= UI_HTML_Elements::Options( $optFolder, $folder );
+$optFolder	= HtmlElements::Options( $optFolder, $folder );
 
 $helper	= new View_Helper_Manage_Content_Locale_List( $env );
 $helper->setFiles( $files );

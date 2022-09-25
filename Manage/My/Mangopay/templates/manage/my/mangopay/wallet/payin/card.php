@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $rows		= [];
@@ -12,8 +13,8 @@ foreach( $cards as $item ){
 		HtmlTag::create(' td', $button, array( 'class' => 'cell-actions' ) ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( "60", "", "90", "120" );
-$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Provider', 'Card Number <small class="muted">(anonymisiert)</small>', 'Aktion' ) ) );
+$colgroup	= HtmlElements::ColumnGroup( "60", "", "90", "120" );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Provider', 'Card Number <small class="muted">(anonymisiert)</small>', 'Aktion' ) ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 

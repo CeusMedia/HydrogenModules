@@ -1,15 +1,16 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['edit'];
 
 $optStatus	= $words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $timer->status );
+$optStatus	= HtmlElements::Options( $optStatus, $timer->status );
 
 $optProject	= [];
 foreach( $projectMap as $projectId => $project )
 	$optProject[$projectId]	= $project->title;
-$optProject	= UI_HTML_Elements::Options( $optProject, $timer->projectId );
+$optProject	= HtmlElements::Options( $optProject, $timer->projectId );
 
 extract( $view->populateTexts( array( 'edit.top', 'edit.bottom', 'edit.info' ), 'html/work/time/' ) );
 
@@ -19,7 +20,7 @@ $timeNeeded		= View_Helper_Work_Time::formatSeconds( $timer->secondsNeeded );
 $optWorker	= [];
 foreach( $projectUsers as $projectUser )
 	$optWorker[$projectUser->userId]	= $projectUser->username;
-$optWorker	= UI_HTML_Elements::Options( $optWorker, $timer->workerId );
+$optWorker	= HtmlElements::Options( $optWorker, $timer->workerId );
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );

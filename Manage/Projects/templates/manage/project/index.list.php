@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['index'];
@@ -56,21 +57,21 @@ if( $projects ){
 	) );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', join( $rows ) );
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '30px', '35%', '25%', '10%', '15%' ) );
+	$colgroup	= HtmlElements::ColumnGroup( array( '30px', '35%', '25%', '10%', '15%' ) );
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
 //$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => "icon-plus icon-white" ) );
 $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
-$buttonAdd		= UI_HTML_Elements::LinkButton( './manage/project/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-success not-btn-small' );
+$buttonAdd		= HtmlElements::LinkButton( './manage/project/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-success not-btn-small' );
 $buttonAddSmall	= HtmlTag::create( 'a', $iconAdd, array(
 	'href'	=> './manage/project/add',
 	'class'	=> 'btn btn-success btn-mini',
 ) );
 
 if( !$canAdd ){
-	$buttonAdd	= UI_HTML_Elements::LinkButton( './manage/project/add', $iconAdd.' '.$w->buttonAdd, 'btn btn-success btn-small disabled', NULL, TRUE );
+	$buttonAdd	= HtmlElements::LinkButton( './manage/project/add', $iconAdd.' '.$w->buttonAdd, 'btn btn-success btn-small disabled', NULL, TRUE );
 	$nuttonAddSmall	= "";
 }
 

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w		= (object) $words['addImage'];
 
@@ -7,9 +8,9 @@ $panelCategories	= $view->loadTemplateFile( 'manage/catalog/gallery/index.catego
 $optCategory	= [];
 foreach( $categories as $item )
 	$optCategory[$item->galleryCategoryId]  = $item->title;
-$optCategory	= UI_HTML_Elements::Options( $optCategory, $categoryId );
+$optCategory	= HtmlElements::Options( $optCategory, $categoryId );
 
-$optStatus		= UI_HTML_Elements::Options( $words['states'], 0 );
+$optStatus		= HtmlElements::Options( $words['states'], 0 );
 
 $image->price	= $image->price ? $image->price : $category->price;
 

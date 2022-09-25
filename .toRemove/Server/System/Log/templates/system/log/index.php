@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconView	= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open not-icon-white' ) );
@@ -30,7 +31,7 @@ if( $exceptions ){
 			HtmlTag::create( 'td', $buttons ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "150px", "100px" );
+	$colgroup	= HtmlElements::ColumnGroup( "", "150px", "100px" );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-striped table-condensed', 'style' => 'table-layout: fixed' ) );
 }

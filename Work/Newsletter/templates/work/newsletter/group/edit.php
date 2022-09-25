@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
@@ -42,8 +43,8 @@ if( $groupReaders ){
 			HtmlTag::create( 'td', $linkRemove, array( 'class' => '' ) ),
 		) );
 	}
-	$colgroup		= UI_HTML_Elements::ColumnGroup( '', '120px' );
-	$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Zugeordnete Leser' ) );
+	$colgroup		= HtmlElements::ColumnGroup( '', '120px' );
+	$tableHeads		= HtmlElements::TableHeads( array( 'Zugeordnete Leser' ) );
 	$thead			= HtmlTag::create( 'thead', $tableHeads );
 	$tbody			= HtmlTag::create( 'tbody', $listReaders );
 	$listReaders	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
@@ -61,8 +62,8 @@ $panelReaders	= '
 //  --  PANEL: FORM  --  //
 $w			= (object) $words['edit'];
 
-$optStatus	= UI_HTML_Elements::Options( $words['states'], $group->status );
-$optType	= UI_HTML_Elements::Options( $words['types'], $group->type );
+$optStatus	= HtmlElements::Options( $words['states'], $group->status );
+$optType	= HtmlElements::Options( $words['types'], $group->type );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.$w->buttonCancel, array(
 	'href'		=> './work/newsletter/group',

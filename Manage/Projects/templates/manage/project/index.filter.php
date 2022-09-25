@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['filter'];
@@ -41,7 +42,7 @@ foreach( $users as $user ){
 }
 $optUser	= join( '', $optUser );
 
-$optOrder	= UI_HTML_Elements::Options( $words['filter-orders'], $filterOrder );
+$optOrder	= HtmlElements::Options( $words['filter-orders'], $filterOrder );
 
 $iconOrderAsc	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-up' ) );
 $iconOrderDesc	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-down' ) );
@@ -54,10 +55,10 @@ $iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' 
 $iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 
 $disabled   	= $filterDirection == 'ASC';
-$buttonUp		= UI_HTML_Elements::LinkButton( './manage/project/filter/?direction=ASC', $iconOrderAsc, 'btn not-btn-small', NULL, $disabled );
-$buttonDown		= UI_HTML_Elements::LinkButton( './manage/project/filter/?direction=DESC', $iconOrderDesc, 'btn not-btn-small', NULL, !$disabled );
+$buttonUp		= HtmlElements::LinkButton( './manage/project/filter/?direction=ASC', $iconOrderAsc, 'btn not-btn-small', NULL, $disabled );
+$buttonDown		= HtmlElements::LinkButton( './manage/project/filter/?direction=DESC', $iconOrderDesc, 'btn not-btn-small', NULL, !$disabled );
 
-$buttonFilter	= UI_HTML_Elements::Button( 'filter', $iconFilter.'&nbsp;'.$w->buttonFilter, 'btn not-btn-small btn-info' );
+$buttonFilter	= HtmlElements::Button( 'filter', $iconFilter.'&nbsp;'.$w->buttonFilter, 'btn not-btn-small btn-info' );
 $buttonReset	= HtmlTag::create( 'a', $iconReset/*.'&nbsp;'.$w->buttonReset*/, array(
 	'href'		=> './manage/project/filter/reset',
 	'title'		=> $w->buttonReset,

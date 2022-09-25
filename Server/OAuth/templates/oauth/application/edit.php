@@ -1,8 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$optType	= UI_HTML_Elements::Options( $words['types'], $application->type );
-$optStatus	= UI_HTML_Elements::Options( $words['states'], $application->status );
+$optType	= HtmlElements::Options( $words['types'], $application->type );
+$optStatus	= HtmlElements::Options( $words['states'], $application->status );
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );

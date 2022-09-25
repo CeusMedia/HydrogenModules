@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $rows	= [];
@@ -106,8 +107,8 @@ foreach( $addresses as $address ){
 	) );
 }
 
-$colgroup	= UI_HTML_Elements::ColumnGroup( array( "", "15%", "140px", "130px" ) );
-$heads	= UI_HTML_Elements::TableHeads( array( 'Adresse', 'Status', 'Zeitpunkt', '' ) );
+$colgroup	= HtmlElements::ColumnGroup( array( "", "15%", "140px", "130px" ) );
+$heads	= HtmlElements::TableHeads( array( 'Adresse', 'Status', 'Zeitpunkt', '' ) );
 
 $thead	= HtmlTag::create( 'thead', $heads );
 $tbody	= HtmlTag::create( 'tbody', $rows );
@@ -132,7 +133,7 @@ $panelList	= '
 $optGroup	= [];
 foreach( $groups as $group )
 	$optGroup[$group->mailGroupId]	= $group->title;
-$optGroup	= UI_HTML_Elements::Options( $optGroup, $filterGroupId );
+$optGroup	= HtmlElements::Options( $optGroup, $filterGroupId );
 
 $panelAdd	= '
 <div class="content-panel">
@@ -162,7 +163,7 @@ $panelAdd	= '
 $optGroup	= [];
 foreach( $groups as $group )
 	$optGroup[$group->mailGroupId]	= $group->title.' ('.$countByGroup[$group->mailGroupId].')';
-$optGroup	= UI_HTML_Elements::Options( $optGroup, $filterGroupId );
+$optGroup	= HtmlElements::Options( $optGroup, $filterGroupId );
 
 $statuses	= array(
 	''	=> '- alle -',
@@ -176,7 +177,7 @@ $statuses	= array(
 $optStatus	= [];
 foreach( $statuses as $key => $label )
 	$optStatus[$key]	= $label;
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 $panelFilter	= '
 <div class="content-panel">

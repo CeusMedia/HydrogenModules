@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
@@ -85,8 +86,8 @@ class View_Work_FTP extends View
 		ksort( $folders );
 		ksort( $files );
 		$list	= $folders + $files;
-		$colgroup	= UI_HTML_Elements::ColumnGroup( array( "50%", "15%", "15%", "15%" ) );
-		$heads		= UI_HTML_Elements::TableHeads( array( 'Name', 'Size', 'Date', 'Permissions' ) );
+		$colgroup	= HtmlElements::ColumnGroup( array( "50%", "15%", "15%", "15%" ) );
+		$heads		= HtmlElements::TableHeads( array( 'Name', 'Size', 'Date', 'Permissions' ) );
 		$thead	= HtmlTag::create( 'thead', $heads );
 		$tbody	= HtmlTag::create( 'tbody', HtmlTag::create( 'tr', $list ) );
 		return HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed table-striped' ) );

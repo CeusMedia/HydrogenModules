@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -12,17 +13,17 @@ $statuses	= [
 	Model_Form_Import_Rule::STATUS_TEST		=> 'Testmodus',
 ];
 
-$optStatus		= UI_HTML_Elements::Options( $statuses );
+$optStatus		= HtmlElements::Options( $statuses );
 
 $optConnection	= [];
 foreach( $connections as $connection )
 	$optConnection[$connection->importConnectionId]	= $connection->title;
-$optConnection	= UI_HTML_Elements::Options( $optConnection );
+$optConnection	= HtmlElements::Options( $optConnection );
 
 $optForm	= [];
 foreach( $forms as $formId => $form )
 	$optForm[$formId]	= $form->title;
-$optForm	= UI_HTML_Elements::Options( $optForm );
+$optForm	= HtmlElements::Options( $optForm );
 
 $rulesTemplate	= <<<EOT
 {

@@ -1,12 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$buttonCancel	= UI_HTML_Elements::LinkButton( './gallery/'.$folder, 'zurück', 'button cancel' );
-$buttonAdd	= UI_HTML_Elements::Button( 'add', 'hinzufügen', 'button add' );
+$buttonCancel	= HtmlElements::LinkButton( './gallery/'.$folder, 'zurück', 'button cancel' );
+$buttonAdd	= HtmlElements::Button( 'add', 'hinzufügen', 'button add' );
 
 
 $optPrefix	= [];
-$optPrefix	= UI_HTML_Elements::Options( $optPrefix );
+$optPrefix	= HtmlElements::Options( $optPrefix );
 
 $panelImport	= '';
 

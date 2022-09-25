@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
@@ -16,14 +17,14 @@ $optRoleType	= array(
 	Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT	=> 'Manager: Ergebnis',
 	Model_Form_Mail::ROLE_TYPE_MANAGER_REACT	=> 'Manager: Reaktion',
 );
-$optRoleType	= UI_HTML_Elements::Options( $optRoleType, Model_Form_Mail::ROLE_TYPE_NONE );
+$optRoleType	= HtmlElements::Options( $optRoleType, Model_Form_Mail::ROLE_TYPE_NONE );
 
 $optFormat	= array(
 	0	=> 'nicht definiert',
 	1	=> 'Text',
 	2	=> 'HTML',
 );
-$optFormat	= UI_HTML_Elements::Options( $optFormat, Model_Form_Mail::FORMAT_TEXT );
+$optFormat	= HtmlElements::Options( $optFormat, Model_Form_Mail::FORMAT_TEXT );
 
 return '
 <h2><span class="muted">Mail:</span> Neu</h2>

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $rows	= [];
@@ -17,7 +18,7 @@ foreach( $bugs as $bug ){
 	$notes		= count( $bug->notes );
 	$changes	= count( $bug->changes );
 	$changes	= ( $notes || $changes ) ? ' mit '.$changes.' Veränderung(en) und '.$notes.' Notiz(en)' : '';
-	$link		= UI_HTML_Elements::Link( './bug/edit/'.$bug->bugId, $bug->title, 'bug-title' );
+	$link		= HtmlElements::Link( './bug/edit/'.$bug->bugId, $bug->title, 'bug-title' );
 	$type		= HtmlTag::create( 'span', $words['types'][$bug->type], array( 'class' => 'bug-type type-'.$bug->type ) );
 	$severity	= HtmlTag::create( 'span', $words['severities'][$bug->severity], array( 'class' => 'bug-severity severity-'.$bug->severity ) );
 	$priority	= HtmlTag::create( 'span', $words['priorities'][$bug->priority], array( 'class' => 'bug-priority priority-'.$bug->priority ) );
@@ -56,7 +57,7 @@ return '
 		'.join( $rows ).'
 	</table>
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './bug/add', 'neuer Eintrag', 'button add' ).'
+		'.HtmlElements::LinkButton( './bug/add', 'neuer Eintrag', 'button add' ).'
 	</div>
 </fieldset>
 ';

@@ -1,11 +1,13 @@
 <?php
-$optCardType	= UI_HTML_Elements::Options( $wordsCards );
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
+$optCardType	= HtmlElements::Options( $wordsCards );
 
 $optCurrency	= [];
 foreach( $wallets as $wallet )
 	$optCurrency[$wallet->Balance->Currency]	= $wallet->Balance->Currency;
 asort( $optCurrency );
-$optCurrency	= UI_HTML_Elements::Options( $optCurrency );
+$optCurrency	= HtmlElements::Options( $optCurrency );
 
 return '
 <div class="row-fluid">

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_AddressForm
@@ -26,7 +27,7 @@ class View_Helper_Shop_AddressForm
 		if( empty( $d->country ) || !array_key_exists( $d->country, $this->words['countries'] ) )
 			$d->country	= $this->defaultCountryCode;
 
-		$optCountry	= UI_HTML_Elements::Options( $this->words['countries'], $d->country );
+		$optCountry	= HtmlElements::Options( $this->words['countries'], $d->country );
 
 		return '
 <div class="content-panel">

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $urlIcons	= 'https://cdn.ceusmedia.de/img/';
@@ -39,17 +40,17 @@ $panelList	= '
 	<legend>Bankkonten</legend>
 	'.$table.'
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './work/finance/bank/add', 'neue Bank', 'button add' ).'
-		'.UI_HTML_Elements::LinkButton( './work/finance/bank/account/add', 'neues Konto', 'button add' ).'
-		'.UI_HTML_Elements::LinkButton( './work/finance/fund/add', 'neuer Fond', 'button add' ).'
-		'.UI_HTML_Elements::LinkButton( './work/finance/bank/update', 'aktualisieren', 'button update' ).'
+		'.HtmlElements::LinkButton( './work/finance/bank/add', 'neue Bank', 'button add' ).'
+		'.HtmlElements::LinkButton( './work/finance/bank/account/add', 'neues Konto', 'button add' ).'
+		'.HtmlElements::LinkButton( './work/finance/fund/add', 'neuer Fond', 'button add' ).'
+		'.HtmlElements::LinkButton( './work/finance/bank/update', 'aktualisieren', 'button update' ).'
 	</div>
 </fieldset>';
 
 $w			= (object) $words['filter'];
 
-$optType	= UI_HTML_Elements::Options( $words['types'], $session->get( 'filter_finance_type' ) );
-$optScope	= UI_HTML_Elements::Options( $words['scopes'], $session->get( 'filter_finance_scope' ) );
+$optType	= HtmlElements::Options( $words['types'], $session->get( 'filter_finance_type' ) );
+$optScope	= HtmlElements::Options( $words['scopes'], $session->get( 'filter_finance_scope' ) );
 /*			<li class="column-left-10">
 				<label for="input_currency">'.$w->labelCurrency.'</label><br/>
 				<select type="text" name="currency" id="input_currency" class="max">'.$optCurrency.'</select/>
@@ -71,7 +72,7 @@ $panelFilter	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'filter', $w->buttonFilter, 'button filter' ).'
+			'.HtmlElements::Button( 'filter', $w->buttonFilter, 'button filter' ).'
 		</div>
 	</fieldset>
 </form>';

@@ -1,16 +1,17 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optProduct	= [];
 foreach( $products as $item )
 	$optProduct[$item->productId]	= $item->title;
-$optProduct	= UI_HTML_Elements::Options( $optProduct, $license->productId );
+$optProduct	= HtmlElements::Options( $optProduct, $license->productId );
 
 $optStatus		= $words['states'];
-$optStatus		= UI_HTML_Elements::Options( $optStatus, $license->status );
+$optStatus		= HtmlElements::Options( $optStatus, $license->status );
 
 $optDuration	= $words['durations'];
-$optDuration	= UI_HTML_Elements::Options( $optDuration, $license->duration );
+$optDuration	= HtmlElements::Options( $optDuration, $license->duration );
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
 $iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );

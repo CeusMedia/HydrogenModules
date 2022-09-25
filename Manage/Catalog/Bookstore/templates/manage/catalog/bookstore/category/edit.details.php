@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optParent	= array( 0 => '' );
@@ -6,10 +7,10 @@ foreach( $categories as $item )
 	if( $item->parentId == 0 )
 		$optParent[$item->categoryId]	= $item->label_de;
 natcasesort( $optParent );
-$optParent	= UI_HTML_Elements::Options( $optParent, (int) $category->parentId );
+$optParent	= HtmlElements::Options( $optParent, (int) $category->parentId );
 
 $optVisible	= $words['visible'];
-$optVisible	= UI_HTML_Elements::Options( $optVisible, (int) $category->visible );
+$optVisible	= HtmlElements::Options( $optVisible, (int) $category->visible );
 
 $disableParent	= $category->parentId == 0 ? 'disabled="disabled"' : "";
 $iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );

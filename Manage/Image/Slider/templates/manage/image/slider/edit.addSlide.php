@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
@@ -14,8 +15,8 @@ $minHeight	= ceil( $slider->height / 2 );
 
 $wordsSlide	= (object) $words['edit.addSlide'];
 
-$optPositionX	= UI_HTML_Elements::Options( $words['slide-position-x'], 'center' );
-$optPositionY	= UI_HTML_Elements::Options( $words['slide-position-x'], 'center' );
+$optPositionX	= HtmlElements::Options( $words['slide-position-x'], 'center' );
+$optPositionY	= HtmlElements::Options( $words['slide-position-x'], 'center' );
 
 $helperUpload	= new View_Helper_Input_File( $env );
 $helperUpload->setName( 'image' );

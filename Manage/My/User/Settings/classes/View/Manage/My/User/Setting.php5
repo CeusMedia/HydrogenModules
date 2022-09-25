@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
@@ -66,7 +67,7 @@ class View_Manage_My_User_Setting extends View{
 			case 'float':
 			case 'integer':
 				if( $config->values ){
-					$options	= UI_HTML_Elements::Options( array_combine( $config->values, $config->values ), $config->value );
+					$options	= HtmlElements::Options( array_combine( $config->values, $config->values ), $config->value );
 					$input		= HtmlTag::create( 'select', $options, array(
 						'name'	=> $inputKey,
 						'id'	=> 'input_'.$inputKey,
@@ -93,7 +94,7 @@ class View_Manage_My_User_Setting extends View{
 							$labels[$valueKey]	= $moduleWords[$key];
 						}
 					}
-					$options	= UI_HTML_Elements::Options( $labels, $config->value );
+					$options	= HtmlElements::Options( $labels, $config->value );
 					$input		= HtmlTag::create( 'select', $options, array(
 						'name'	=> $inputKey,
 						'class'	=> 'span6',

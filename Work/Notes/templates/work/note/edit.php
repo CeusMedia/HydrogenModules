@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w		= (object) $words['edit'];
 
@@ -113,12 +114,12 @@ $panelLinks	= '
 $optProject	= array( '0' => '- ohne Projektbezug -' );
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
-$optProject	= UI_HTML_Elements::Options( $optProject, $note->projectId );
+$optProject	= HtmlElements::Options( $optProject, $note->projectId );
 
 $optFormat	= [];
 foreach( $words['formats'] as $formatKey => $formatLabel )
 	$optFormat[$formatKey]	= $formatLabel;
-$optFormat  = UI_HTML_Elements::Options( $optFormat, $note->format );
+$optFormat  = HtmlElements::Options( $optFormat, $note->format );
 
 $panelEdit	= '
 <div class="content-panel content-panel-form">

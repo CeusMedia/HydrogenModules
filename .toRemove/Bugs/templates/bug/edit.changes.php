@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 if( !$bug->notes )
@@ -47,7 +48,7 @@ foreach( $bug->notes as $note ){
 
 	$user	= '-';
 	if( $note->userId ){
-		$user	= UI_HTML_Elements::Link( './user/edit/'.$note->userId, $note->user->username );
+		$user	= HtmlElements::Link( './user/edit/'.$note->userId, $note->user->username );
 		$user	= HtmlTag::create( 'span', $user, array( 'class' => 'role role'.$note->user->roleId ) );
 	}
 

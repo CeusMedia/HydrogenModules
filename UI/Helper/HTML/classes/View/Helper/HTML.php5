@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_HTML
@@ -217,7 +218,7 @@ class HTML/* extends UI_HTML_Elements*/
 			}
 			$items	= $list;
 		}
-		return UI_HTML_Elements::Options( $items, $selected );
+		return HtmlElements::Options( $items, $selected );
 	}
 
 	public static function Password( string $name, string $class = NULL, bool $readonly = NULL ): string

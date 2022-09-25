@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Form_Fill_Data
@@ -84,7 +85,7 @@ class View_Helper_Form_Fill_Data
 			) );
 		}
 		return HtmlTag::create( 'table', array(
-			UI_HTML_Elements::ColumnGroup( array( '50%', '50%' ) ),
+			HtmlElements::ColumnGroup( array( '50%', '50%' ) ),
 			HtmlTag::create( 'tbody', $list ),
 		), array( 'class' => 'table table-striped table-fixed table-bordered table-condensed' ) );
 	}

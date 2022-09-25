@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
@@ -19,7 +20,7 @@ $buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', array(
 	'class'	=> 'btn btn-danger btn-small',
 ) );
 
-$optMethod	= UI_HTML_Elements::Options( array(
+$optMethod	= HtmlElements::Options( array(
 	''		=> 'alle',
 	'GET'	=> 'GET',
 	'HEAD'	=> 'HEAD',
@@ -27,12 +28,12 @@ $optMethod	= UI_HTML_Elements::Options( array(
 	'PUT'	=> 'PUT'
 ), $filter->method );
 
-$optLockStatus	= UI_HTML_Elements::Options( array(
+$optLockStatus	= HtmlElements::Options( array(
 	1		=> 'aktive Sperre',
 	0		=> 'nur Sperrantrag',
 ), $filter->lockStatus );
 
-$optStatus	= UI_HTML_Elements::Options( array(
+$optStatus	= HtmlElements::Options( array(
 	1		=> 'aktiv',
 	0		=> 'inaktiv',
 ), $filter->status );
@@ -40,7 +41,7 @@ $optStatus	= UI_HTML_Elements::Options( array(
 $optReason	= [];
 foreach( $reasons as $reason )
 	$optReason[$reason->ipLockReasonId]	= $reason->title;
-$optReason	= UI_HTML_Elements::Options( $optReason, $filter->reasonId );
+$optReason	= HtmlElements::Options( $optReason, $filter->reasonId );
 
 $reasonMap	= [];
 foreach( $reasons as $reason )

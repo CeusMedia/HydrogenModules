@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $urlIcons	= 'https://cdn.ceusmedia.de/img/';
@@ -36,9 +37,9 @@ tr .currency {
 	<legend>Bankkonten</legend>
 	'.$table.'
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './work/finance/bank/add', 'neue Bank', 'button add' ).'
-		'.UI_HTML_Elements::LinkButton( './work/finance/bank/account/add', 'neues Konto', 'button add' ).'
-		'.UI_HTML_Elements::LinkButton( './work/finance/fund/add', 'neuer Fond', 'button add' ).'
-		'.UI_HTML_Elements::LinkButton( './work/finance/bank/update', 'aktualisieren', 'button update' ).'
+		'.HtmlElements::LinkButton( './work/finance/bank/add', 'neue Bank', 'button add' ).'
+		'.HtmlElements::LinkButton( './work/finance/bank/account/add', 'neues Konto', 'button add' ).'
+		'.HtmlElements::LinkButton( './work/finance/fund/add', 'neuer Fond', 'button add' ).'
+		'.HtmlElements::LinkButton( './work/finance/bank/update', 'aktualisieren', 'button update' ).'
 	</div>
 </fieldset>';

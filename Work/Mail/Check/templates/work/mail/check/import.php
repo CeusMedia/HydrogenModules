@@ -1,11 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $tabs	= View_Work_Mail_Check::renderTabs( $env, 'import' );
 
 if( !empty( $type ) ){
 	$optColumn	= [];
 	foreach( $columns as $column )
 		$optColumn[$column]	= $column;
-	$optColumn	= UI_HTML_Elements::Options( $optColumn, $columns[0] );
+	$optColumn	= HtmlElements::Options( $optColumn, $columns[0] );
 
 	return $tabs.'
 <div class="content-panel">

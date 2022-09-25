@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
@@ -101,13 +102,13 @@ class View_Work_Bill extends View
 					HtmlTag::create( 'td', $action ),
 				), array( 'class' => $class ) );
 			}
-			$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+			$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 				'Title',
 				'Betrag',
 				'Zustand',
 				'Fälligkeit',
 			) ) );
-			$colgroup	= UI_HTML_Elements::ColumnGroup( '40', '15%', '15%', '15%', '15%' );
+			$colgroup	= HtmlElements::ColumnGroup( '40', '15%', '15%', '15%', '15%' );
 			$tbody		= HtmlTag::create( 'tbody', $rows );
 			$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
 			CMF_Hydrogen_View_Helper_Timestamp::$formatDatetime	= $format;

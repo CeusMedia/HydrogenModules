@@ -1,15 +1,16 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optStatus		= array( '' => '- alle -' );
 foreach( $words->states as $key => $value )
 	$optStatus[$key]	= $value;
-$optStatus		= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
 
 $optGroup		= array( '' => '- alle -' );
 foreach( $groups as $group )
 	$optGroup[$group->newsletterGroupId]	= $group->title;
-$optGroup		= UI_HTML_Elements::Options( $optGroup, $filterGroupId );
+$optGroup		= HtmlElements::Options( $optGroup, $filterGroupId );
 
 
 $iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) ).'&nbsp;';

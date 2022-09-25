@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -124,7 +125,7 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract
 		foreach( $this->languages as $entry )
 			if( isset( $this->labels[$entry] ) )
 				$options[$entry]	= $this->labels[$entry];
-		$options	= UI_HTML_Elements::Options( $options, $this->current );
+		$options	= HtmlElements::Options( $options, $this->current );
 
 		$uri	= $this->path.'?switchLanguageTo=';
 		$select	= HtmlTag::create( 'select', $options, array(

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 if( isset( $payin ) ){
 	$helperMoney	= new View_Helper_Mangopay_Entity_Money( $env );
@@ -34,7 +35,7 @@ else{
 	foreach( $wallets as $item )
 		$optWallet[$item->Id]	= $item->Description.' ('.$view->formatMoney( $item->Balance, ' ', 0 ).')';
 
-	$optWallet	= UI_HTML_Elements::Options( $optWallet, $walletId );
+	$optWallet	= HtmlElements::Options( $optWallet, $walletId );
 
 	$panelCreate	= '
 <div class="content-panel">

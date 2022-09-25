@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
@@ -14,14 +15,14 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$words['add']['buttonSav
 	'class'	=> 'btn btn-primary',
 ) );
 
-$optStatus		= UI_HTML_Elements::Options( $words['states'], $data->get( 'status', NULL ) );
-$optEasing		= UI_HTML_Elements::Options( $words['optEasing'], $data->get( 'easing' ) );
-$optAnimation	= UI_HTML_Elements::Options( $words['optAnimation'], $data->get( 'animation' ) );
-$optShowButtons	=  UI_HTML_Elements::Options( $words['optBoolean'], $data->get( 'showButtons' ) );
-$optShowDots	=  UI_HTML_Elements::Options( $words['optBoolean'], $data->get( 'showDots' ) );
-$optShowTitle	=  UI_HTML_Elements::Options( $words['optBoolean'], $data->get( 'showTitle' ) );
-$optScaleToFit	=  UI_HTML_Elements::Options( $words['optBoolean'], $data->get( 'scaleToFit' ) );
-$optRandomOrder	=  UI_HTML_Elements::Options( $words['optBoolean'], $data->get( 'randomOrder' ) );
+$optStatus		= HtmlElements::Options( $words['states'], $data->get( 'status', NULL ) );
+$optEasing		= HtmlElements::Options( $words['optEasing'], $data->get( 'easing' ) );
+$optAnimation	= HtmlElements::Options( $words['optAnimation'], $data->get( 'animation' ) );
+$optShowButtons	=  HtmlElements::Options( $words['optBoolean'], $data->get( 'showButtons' ) );
+$optShowDots	=  HtmlElements::Options( $words['optBoolean'], $data->get( 'showDots' ) );
+$optShowTitle	=  HtmlElements::Options( $words['optBoolean'], $data->get( 'showTitle' ) );
+$optScaleToFit	=  HtmlElements::Options( $words['optBoolean'], $data->get( 'scaleToFit' ) );
+$optRandomOrder	=  HtmlElements::Options( $words['optBoolean'], $data->get( 'randomOrder' ) );
 
 $wordsSlider	= (object) $words['slider'];
 

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['view'];
@@ -12,15 +13,15 @@ $isInstallable	= $mainModuleId || !count( $needs );
 
 $attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
 $buttonBack		= HtmlTag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
-$buttonList		= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
-$buttonView		= UI_HTML_Elements::LinkButton( './admin/module/viewer/index/'.$moduleId, $w->buttonView, 'button view' );
-$buttonIndex	= UI_HTML_Elements::LinkButton( './admin/module/installer', $w->buttonIndex, 'button cancel' );
-$buttonCancel	= UI_HTML_Elements::LinkButton( './admin/module/viewer/index/'.$module->id, $w->buttonView, 'button cancel' );
-$buttonInstall	= UI_HTML_Elements::Button( 'doInstall', $w->buttonInstall, 'button add' );
+$buttonList		= HtmlElements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
+$buttonView		= HtmlElements::LinkButton( './admin/module/viewer/index/'.$moduleId, $w->buttonView, 'button view' );
+$buttonIndex	= HtmlElements::LinkButton( './admin/module/installer', $w->buttonIndex, 'button cancel' );
+$buttonCancel	= HtmlElements::LinkButton( './admin/module/viewer/index/'.$module->id, $w->buttonView, 'button cancel' );
+$buttonInstall	= HtmlElements::Button( 'doInstall', $w->buttonInstall, 'button add' );
 
 if( $mainModuleId ){
 	$buttonList		= '';
-	$buttonCancel	= UI_HTML_Elements::LinkButton( './admin/module/installer/'.$mainModuleId, $w->buttonCancel, 'button cancel' );
+	$buttonCancel	= HtmlElements::LinkButton( './admin/module/installer/'.$mainModuleId, $w->buttonCancel, 'button cancel' );
 	$needs	= [];
 }
 
@@ -53,12 +54,12 @@ if( count( $needs ) ){
 		else
 			$listCritical[]	= $id;
 		$class	= 'icon module module-status-'.$status;
-		$link	= UI_HTML_Elements::Link( './admin/module/viewer/index/'.$id, $label );
+		$link	= HtmlElements::Link( './admin/module/viewer/index/'.$id, $label );
 		$label	= HtmlTag::create( 'span', $link, array( 'class' => $class ) );
-		$neededModules[]	= UI_HTML_Elements::ListItem( $label, 1 );
+		$neededModules[]	= HtmlElements::ListItem( $label, 1 );
 	}
-	$neededModules	= UI_HTML_Elements::unorderedList( $neededModules, 1, array( 'class' => 'relations relations-needed' ) );
-	$buttonInstall	= UI_HTML_Elements::Button( 'doInstall', $w->buttonInstall, 'button add', NULL, TRUE );
+	$neededModules	= HtmlElements::unorderedList( $neededModules, 1, array( 'class' => 'relations relations-needed' ) );
+	$buttonInstall	= HtmlElements::Button( 'doInstall', $w->buttonInstall, 'button add', NULL, TRUE );
 
 	$a		= 'Es müssen erst folgende Module installiert werden:'.$neededModules.'<div class="column-clear"></div>';
 	if( $listCritical ){
@@ -86,22 +87,22 @@ if( $mainModuleId ){
 		if( $id == $moduleId || $id == $mainModule->id || !$status )
 			continue;
 		$label	= HtmlTag::create( 'span', $moduleMap[$id]->title, array( 'class' => 'icon module' ) );
-		$list[]	= UI_HTML_Elements::ListItem( $label, 1 );
+		$list[]	= HtmlElements::ListItem( $label, 1 );
 	}
 	$current	= HtmlTag::create( 'span', $module->title, array( 'class' => 'icon module disabled' ) );
-	$list[]		= UI_HTML_Elements::ListItem( $current, 1, array( 'class' => 'current' ) );
+	$list[]		= HtmlElements::ListItem( $current, 1, array( 'class' => 'current' ) );
 	foreach( $mainModule->neededModules as $id => $status ){
 		if( $id == $moduleId || $id == $mainModule->id || $status )
 			continue;
 		$label	= HtmlTag::create( 'span', $moduleMap[$id]->title, array( 'class' => 'icon module disabled' ) );
-		$list[]	= UI_HTML_Elements::ListItem( $label, 1 );
+		$list[]	= HtmlElements::ListItem( $label, 1 );
 	}
 	if( $module->id != $mainModule->id ){
 		$main		= HtmlTag::create( 'span', $mainModule->title, array( 'class' => 'icon module disabled' ) );
-		$list[]		= UI_HTML_Elements::ListItem( $main, 1 );
+		$list[]		= HtmlElements::ListItem( $main, 1 );
 	}
 
-	$list	= UI_HTML_Elements::unorderedList( $list, 1, array( 'class' => 'relations relations-needed' ) );
+	$list	= HtmlElements::unorderedList( $list, 1, array( 'class' => 'relations relations-needed' ) );
 	$panelProgress	= '
 <fieldset>
 	<legend>Fortschritt</legend>
@@ -148,8 +149,8 @@ if( $isInstallable ){
 			$rows[$item->key]	= HtmlTag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
 		#	natcasesort( $rows );
 		}
-		$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Schlüssel', 'Typ', 'Wert' ) );
-		$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '25%', '10%', '65%' ) );
+		$tableHeads		= HtmlElements::TableHeads( array( 'Schlüssel', 'Typ', 'Wert' ) );
+		$tableColumns	= HtmlElements::ColumnGroup( array( '25%', '10%', '65%' ) );
 		$tableConfig	= '<table>'.$tableColumns.$tableHeads.join( $rows ).'</table>';
 		$tableConfig	= HtmlTag::create( 'h4', 'Konfiguration' ).$tableConfig.'<br/>';
 	}

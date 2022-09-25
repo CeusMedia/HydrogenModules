@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['edit.slides'];
@@ -38,8 +39,8 @@ if( $slider->slides ){
 			'data-slide-id' => $slide->sliderSlideId,
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "50px", "75px", "", "90px" );
-	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$colgroup	= HtmlElements::ColumnGroup( "50px", "75px", "", "90px" );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		$w->headRank,
 		$w->headImage,
 		$w->headSource,

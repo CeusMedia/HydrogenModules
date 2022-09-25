@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
@@ -74,8 +75,8 @@ if( $scheduledJobs ){
 			HtmlTag::create( 'td', $buttons, array( 'class' => '' ) ),
 		) );
 	}
-	$cols	= UI_HTML_Elements::ColumnGroup( '', '180px', '140px', '140px', '140px', '140px' );
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Job ID / Title', 'Typ/Format', 'Ausführung', 'letzter Lauf', 'Zustand', '' ) ) );
+	$cols	= HtmlElements::ColumnGroup( '', '180px', '140px', '140px', '140px', '140px' );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Job ID / Title', 'Typ/Format', 'Ausführung', 'letzter Lauf', 'Zustand', '' ) ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', array( $cols, $thead, $tbody ), array( 'class' => 'table' ) );
 }

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 function IconButtonLink( $url, $title, $class = NULL, $confirm = NULL, $disabled = NULL ){
@@ -62,8 +63,8 @@ foreach( $types as $nr => $type ){
 	$class	= 'button icon '.$type;
 	$a	= ButtonLink( $url, $type, $class, 'Really?' );
 	$b	= ButtonLink( $url, $type, $class, 'Really?', TRUE );
-	$c	= UI_HTML_Elements::LinkButton( $url, $type, $class, 'Really?' );
-	$d	= UI_HTML_Elements::LinkButton( $url, $type, $class, 'Really?', TRUE );
+	$c	= HtmlElements::LinkButton( $url, $type, $class, 'Really?' );
+	$d	= HtmlElements::LinkButton( $url, $type, $class, 'Really?', TRUE );
 	$e	= IconButtonLink( $url, $type, $class.' icon-only', 'Really?' );
 	$f	= IconButtonLink( $url, $type, $class.' icon-only', 'Really?', TRUE );
 	$g	= IconButtonLink( $url, $type, $class.' icon-only tiny', 'Really?' );
@@ -73,7 +74,7 @@ foreach( $types as $nr => $type ){
 $optStyle	= [];
 foreach( $styles as $item )
 	$optStyle[$item]	= $item;
-$optStyle	= UI_HTML_Elements::Options( $optStyle, $style );
+$optStyle	= HtmlElements::Options( $optStyle, $style );
 
 return '<h3>Buttons</h3>
 <div class="column-left-20">

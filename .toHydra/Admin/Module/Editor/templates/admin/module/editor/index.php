@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $categories		= array_combine( $categories, $categories );
 $categories['']	= $words['index']['categoryNone'];
@@ -12,9 +13,9 @@ if( !$listSections )
 	<em>In dieser Instanz sind gerade <b>keine <a href="./admin/module/viewer">Module</a> installiert</b>.</em>
 </p>
 <p>
-	'.UI_HTML_Elements::LinkButton( './admin/module/search', 'Modul suchen', 'button module search' ).'
-	'.UI_HTML_Elements::LinkButton( './admin/module/viewer', 'alle Module betrachten', 'button module view' ).'
-	'.UI_HTML_Elements::LinkButton( './admin/module/installer', 'Modul installieren', 'button module add' ).'
+	'.HtmlElements::LinkButton( './admin/module/search', 'Modul suchen', 'button module search' ).'
+	'.HtmlElements::LinkButton( './admin/module/viewer', 'alle Module betrachten', 'button module view' ).'
+	'.HtmlElements::LinkButton( './admin/module/installer', 'Modul installieren', 'button module add' ).'
 </p>';
 
 return '

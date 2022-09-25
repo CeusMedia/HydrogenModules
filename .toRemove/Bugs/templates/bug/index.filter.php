@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 //  --  FILTER  --  //
 
 $session	= $this->env->getSession();
@@ -20,7 +22,7 @@ $optDirection	= [];
 foreach( $words['indexFilterDirections'] as $key => $label ){
 	$selected	= $key == $session->get( 'filter-bug-direction' );
 	$class		= 'direction direction'.$key;
-	$optDirection[]	= UI_HTML_Elements::Option( $key, $label, $selected, FALSE, $class );
+	$optDirection[]	= HtmlElements::Option( $key, $label, $selected, FALSE, $class );
 }
 $optDirection	= join( $optDirection );
 
@@ -52,15 +54,15 @@ if( $mode == 1 ){
 				<tr>
 					<td>
 						<label for="username">'.$words['indexFilter']['labelTitle'].'</label><br/>
-						'.UI_HTML_Elements::Input( 'title', $title, 'm' ).'
+						'.HtmlElements::Input( 'title', $title, 'm' ).'
 					</td>
 					<td>
 						<label for="username">'.$words['indexFilter']['labelBugId'].'</label><br/>
-						'.UI_HTML_Elements::Input( 'bugId', $bugId, 'xs numeric' ).'
+						'.HtmlElements::Input( 'bugId', $bugId, 'xs numeric' ).'
 					</td>
 					<td>
 						<label for="status">'.$words['indexFilter']['labelProject'].'</label><br/>
-						'.UI_HTML_Elements::Select( 'project', '<option>- alle -</option>', 'm', NULL, 'filter-bugs' ).'
+						'.HtmlElements::Select( 'project', '<option>- alle -</option>', 'm', NULL, 'filter-bugs' ).'
 					</td>
 					<td>
 
@@ -69,41 +71,41 @@ if( $mode == 1 ){
 				<tr>
 					<td>
 						<label for="status">'.$words['indexFilter']['labelStatus'].'</label><br/>
-						'.UI_HTML_Elements::Select( 'status[]', $optStatus, 'm rows-8', NULL, 'filter-bugs' ).'
+						'.HtmlElements::Select( 'status[]', $optStatus, 'm rows-8', NULL, 'filter-bugs' ).'
 					</td>
 					<td>
 						<label for="priority">'.$words['indexFilter']['labelPriority'].'</label><br/>
-						'.UI_HTML_Elements::Select( 'priority[]', $optPriority, 'm rows-7', NULL, 'filter-bugs' ).'
+						'.HtmlElements::Select( 'priority[]', $optPriority, 'm rows-7', NULL, 'filter-bugs' ).'
 					</td>
 					<td>
 						<label for="severity">'.$words['indexFilter']['labelSeverity'].'</label><br/>
-						'.UI_HTML_Elements::Select( 'severity[]', $optSeverity, 'm rows-5', NULL, 'filter-bugs' ).'
+						'.HtmlElements::Select( 'severity[]', $optSeverity, 'm rows-5', NULL, 'filter-bugs' ).'
 					</td>
 					<td>
 						<label for="type">'.$words['indexFilter']['labelType'].'</label><br/>
-						'.UI_HTML_Elements::Select( 'type[]', $optType, 'm rows-4', NULL, 'filter-bugs' ).'
+						'.HtmlElements::Select( 'type[]', $optType, 'm rows-4', NULL, 'filter-bugs' ).'
 					</td>
 				</tr>
 				<tr>
 					<td>
 						<label for="order">'.$words['indexFilter']['labelOrder'].'</label><br/>
-						'.UI_HTML_Elements::Select( 'order', $optOrder, 'm rows-1', NULL, 'filter-bugs' ).'
+						'.HtmlElements::Select( 'order', $optOrder, 'm rows-1', NULL, 'filter-bugs' ).'
 					</td>
 					<td>
 						<label for="direction">'.$words['indexFilter']['labelDirection'].'</label><br/>
-						'.UI_HTML_Elements::Select( 'direction', $optDirection, 'm', NULL, 'filter-bugs' ).'
+						'.HtmlElements::Select( 'direction', $optDirection, 'm', NULL, 'filter-bugs' ).'
 					</td>
 					<td>
 						<label for="limit">'.$words['indexFilter']['labelLimit'].'</label><br/>
-						'.UI_HTML_Elements::Input( 'limit', $limit, 'xs numeric' ).'
+						'.HtmlElements::Input( 'limit', $limit, 'xs numeric' ).'
 					</td>
 					<td></td>
 				</tr>
 			</table>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::Button( 'filter', $words['indexFilter']['buttonFilter'], 'button filter' ).'
-				'.UI_HTML_Elements::LinkButton( './bug/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
-				'.UI_HTML_Elements::LinkButton( './bug/filter/mode/0', $words['indexFilter']['buttonCollapse'], 'button less' ).'
+				'.HtmlElements::Button( 'filter', $words['indexFilter']['buttonFilter'], 'button filter' ).'
+				'.HtmlElements::LinkButton( './bug/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
+				'.HtmlElements::LinkButton( './bug/filter/mode/0', $words['indexFilter']['buttonCollapse'], 'button less' ).'
 			</div>
 		</fieldset>
 	</form>
@@ -125,38 +127,38 @@ else
 				<tr>
 					<td>
 						<label for="username">'.$words['indexFilter']['labelTitle'].'</label><br/>
-						'.UI_HTML_Elements::Input( 'title', $title, 'm' ).'
+						'.HtmlElements::Input( 'title', $title, 'm' ).'
 					</td>
 					<td>
 						<label for="username">'.$words['indexFilter']['labelBugId'].'</label><br/>
-						'.UI_HTML_Elements::Input( 'bugId', $bugId, 'xs numeric' ).'
+						'.HtmlElements::Input( 'bugId', $bugId, 'xs numeric' ).'
 					</td>
 					<td>
 						<label for="status">'.$words['indexFilter']['labelProject'].'</label><br/>
-						'.UI_HTML_Elements::Select( 'project', '<option>- alle -</option>', 'm', NULL, 'filter-bugs' ).'
+						'.HtmlElements::Select( 'project', '<option>- alle -</option>', 'm', NULL, 'filter-bugs' ).'
 					</td>
 					<td></td>
 				</tr>
 				<tr>
 					<td>
 						<label for="order">'.$words['indexFilter']['labelOrder'].'</label><br/>
-						'.UI_HTML_Elements::Select( 'order', $optOrder, 'm rows-1', NULL, 'filter-bugs' ).'
+						'.HtmlElements::Select( 'order', $optOrder, 'm rows-1', NULL, 'filter-bugs' ).'
 					</td>
 					<td>
 						<label for="direction">'.$words['indexFilter']['labelDirection'].'</label><br/>
-						'.UI_HTML_Elements::Select( 'direction', $optDirection, 'm', NULL, 'filter-bugs' ).'
+						'.HtmlElements::Select( 'direction', $optDirection, 'm', NULL, 'filter-bugs' ).'
 					</td>
 					<td>
 						<label for="limit">'.$words['indexFilter']['labelLimit'].'</label><br/>
-						'.UI_HTML_Elements::Input( 'limit', $limit, 'xs numeric' ).'
+						'.HtmlElements::Input( 'limit', $limit, 'xs numeric' ).'
 					</td>
 					<td></td>
 				</tr>
 			</table>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::Button( 'filter', $words['indexFilter']['buttonFilter'], 'button filter' ).'
-				'.UI_HTML_Elements::LinkButton( './bug/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
-				'.UI_HTML_Elements::LinkButton( './bug/filter/mode/1', $words['indexFilter']['buttonExpand'], 'button more' ).'
+				'.HtmlElements::Button( 'filter', $words['indexFilter']['buttonFilter'], 'button filter' ).'
+				'.HtmlElements::LinkButton( './bug/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
+				'.HtmlElements::LinkButton( './bug/filter/mode/1', $words['indexFilter']['buttonExpand'], 'button more' ).'
 			</div>
 		</fieldset>
 	</form>

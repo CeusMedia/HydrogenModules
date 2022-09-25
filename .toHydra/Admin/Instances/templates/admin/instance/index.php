@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
@@ -30,7 +31,7 @@ $rows	= [];
 foreach( $instances as $instanceId => $instance ){
 	$instance->host     = $instance->host === "localhost" ? $env->host . ( $env->port && $env->port != 80 ? ":".$env->port : "" ) : $instance->host;
 	$instance->protocol	= empty( $instance->protocol ) ? 'http://' : $instance->protocol;
-	$link			= UI_HTML_Elements::Link( './admin/instance/edit/'.$instanceId, $instance->title, 'instance' );
+	$link			= HtmlElements::Link( './admin/instance/edit/'.$instanceId, $instance->title, 'instance' );
 	$url			= $instance->protocol.$instance->host.$instance->path;
 	$uriExists		= file_exists( $instance->uri );
 	$linkInstance	= HtmlTag::create( 'a', formatUrl( $url ), array( 'href' => $url ) );
@@ -66,7 +67,7 @@ $panelList	= '
 		<tr><th>'.$w->headTitle.'</th><th>'.$w->headAddress.'</th><th>'.$w->headAvailability.'</th><th>'.$w->headTasks.'</th></tr>
 		'.join( $rows ).'
 	</table>
-	'.UI_HTML_Elements::LinkButton( './admin/instance/add', $w->buttonAdd, 'button add' ).'
+	'.HtmlElements::LinkButton( './admin/instance/add', $w->buttonAdd, 'button add' ).'
 	'.HtmlTag::create( 'button', 'check', array( 'class' => 'button', 'id' => 'button_check' ) ).'
 </fieldset>';
 

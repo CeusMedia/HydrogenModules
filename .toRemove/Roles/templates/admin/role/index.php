@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $wf		= (object) $words['index'];
@@ -9,7 +10,7 @@ $heads	= array(
 	$wf->headAccess,
 	$wf->headRegister
 );
-$heads	= UI_HTML_Elements::TableHeads( $heads );
+$heads	= HtmlElements::TableHeads( $heads );
 $number	= 0;
 
 $rows	= [];
@@ -64,7 +65,7 @@ return '
 			'.$rows.'
 		</table>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './admin/role/add', $wf->buttonAdd, 'button add', NULL, !$hasRightToAdd ).'
+			'.HtmlElements::LinkButton( './admin/role/add', $wf->buttonAdd, 'button add', NULL, !$hasRightToAdd ).'
 		</div>
 	</fieldset>
 </div>
@@ -77,17 +78,17 @@ foreach( $roles as $role )
 {
 	$label	= $role->title;
 	if( trim( $role->description ) )
-		$label	= UI_HTML_Elements::Acronym( $role->title, htmlspecialchars( $role->description ) );
-	$link	= UI_HTML_Elements::Link( './admin/role/edit/'.$role->roleId, $label );
-	$list[]	= UI_HTML_Elements::ListItem( $link, 0, array( 'class' => 'role' ) );
+		$label	= HtmlElements::Acronym( $role->title, htmlspecialchars( $role->description ) );
+	$link	= HtmlElements::Link( './admin/role/edit/'.$role->roleId, $label );
+	$list[]	= HtmlElements::ListItem( $link, 0, array( 'class' => 'role' ) );
 }
-$list	= UI_HTML_Elements::unorderedList( $list, 0, array( 'class' => 'list' ) );
+$list	= HtmlElements::unorderedList( $list, 0, array( 'class' => 'list' ) );
 return '
 <fieldset style="width: 300px">
 	<legend>'.$wf->legend.'</legend>
 	'.$list.'
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './admin/role/add', $wf->buttonNew, 'button add' ).'
+		'.HtmlElements::LinkButton( './admin/role/add', $wf->buttonNew, 'button add' ).'
 	</div>
 </fieldset>
 ';*/

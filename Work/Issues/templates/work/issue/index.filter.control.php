@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //  --  FILTER  --  //
@@ -37,7 +38,7 @@ $optDirection	= [];
 foreach( $words['indexFilterDirections'] as $key => $label ){
 	$selected	= $key == $direction;
 	$class		= 'direction direction'.$key;
-	$optDirection[]	= UI_HTML_Elements::Option( $key, $label, $selected, FALSE, $class );
+	$optDirection[]	= HtmlElements::Option( $key, $label, $selected, FALSE, $class );
 }
 $optDirection	= join( $optDirection );
 
@@ -52,7 +53,7 @@ $optPriority	= $view->renderOptions( $words['priorities'], 'priority', $session-
 $optStatus		= $view->renderOptions( $words['states'], 'status', $session->get( 'filter-issue-status' ), 'issue-status status-%1$d');
 
 $optRelation	= array( '' => 'in einem meiner Projekte', '1' => 'von mir berichtet', '2' => 'mir zugewiesen' );
-$optRelation	= UI_HTML_Elements::Options( $optRelation, $session->get( 'filter-issue-relation' ) );
+$optRelation	= HtmlElements::Options( $optRelation, $session->get( 'filter-issue-relation' ) );
 
 $filters		= [];
 

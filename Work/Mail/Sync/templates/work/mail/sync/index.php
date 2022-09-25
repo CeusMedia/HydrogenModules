@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $table	= '<div class="alert alert-info">Keine.</div>';
@@ -126,7 +127,7 @@ if( $syncs ){
 			HtmlTag::create( 'td', $buttons ),
 		) );
 	}
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		'Quelle',
 		'Ziel',
 		'Zustand',
@@ -135,7 +136,7 @@ if( $syncs ){
 		'',
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '30%', '30%', '20%', '5%', '5%', '10%' );
+	$colgroup	= HtmlElements::ColumnGroup( '30%', '30%', '20%', '5%', '5%', '10%' );
 	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }
 $panelSyncs	= '<div class="content-panel">

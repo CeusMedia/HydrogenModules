@@ -1,14 +1,15 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $optProduct	= array( '' => ' - alle - ' );
 foreach( $products as $item )
 	$optProduct[$item->productId]	= $item->title;
-$optProduct	= UI_HTML_Elements::Options( $optProduct, $filterProductId );
+$optProduct	= HtmlElements::Options( $optProduct, $filterProductId );
 
 $optProductLicense	= array( '' => '- alle -' );
 foreach( $productLicenses as $item )
 	$optProductLicense[$item->productLicenseId]	= $item->title;
-$optProductLicense	= UI_HTML_Elements::Options( $optProductLicense, $filterProductLicenseId );
+$optProductLicense	= HtmlElements::Options( $optProductLicense, $filterProductLicenseId );
 
 return '
 <div class="content-panel content-panel-filter">

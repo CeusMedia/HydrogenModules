@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['index-filter'];
@@ -17,7 +18,7 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, array(
 	'class'	=> 'btn btn-small btn-inverse',
 ) );
 
-$optStatus	= UI_HTML_Elements::Options( $words['states'], $filterStatus );
+$optStatus	= HtmlElements::Options( $words['states'], $filterStatus );
 
 $optOrderColumn	= array(
 	'title'			=> 'Titel',
@@ -25,13 +26,13 @@ $optOrderColumn	= array(
 	'usedAt' 		=> 'Nutzung',
 	'relocationId'	=> 'ID',
 );
-$optOrderColumn	= UI_HTML_Elements::Options( $optOrderColumn, $filterOrderColumn );
+$optOrderColumn	= HtmlElements::Options( $optOrderColumn, $filterOrderColumn );
 
 $optOrderDirection	= array(
 	'asc' 	=> 'aufsteigend',
 	'desc'	=> 'absteigend',
 );
-$optOrderDirection	= UI_HTML_Elements::Options( $optOrderDirection, $filterOrderDirection );
+$optOrderDirection	= HtmlElements::Options( $optOrderDirection, $filterOrderDirection );
 
 return '
 		<div class="content-panel">

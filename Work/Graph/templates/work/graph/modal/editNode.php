@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $optGraph	= [];
 foreach( $graphs as $graph )
 	$optGraph[$graph->graphId]	= $graph->title;
-$optGraph	= UI_HTML_Elements::Options( $optGraph );
+$optGraph	= HtmlElements::Options( $optGraph );
 
 $panelDetails	= '
 <div class="content-panel">

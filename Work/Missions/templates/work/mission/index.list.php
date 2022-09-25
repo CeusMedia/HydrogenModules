@@ -1,14 +1,15 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
 
-$iconUp		= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_up.png', $words['filter-directions']['ASC'] );
-$iconDown	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_down.png', $words['filter-directions']['DESC'] );
-$iconRight	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_right.png', $words['list-actions']['moveRight'] );
-$iconLeft	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_left.png', $words['list-actions']['moveLeft'] );
-$iconEdit	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/pencil.png', $words['list-actions']['edit'] );
-$iconRemove	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/bin_closed.png', $words['list-actions']['remove'] );
+$iconUp		= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_up.png', $words['filter-directions']['ASC'] );
+$iconDown	= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_down.png', $words['filter-directions']['DESC'] );
+$iconRight	= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_right.png', $words['list-actions']['moveRight'] );
+$iconLeft	= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_left.png', $words['list-actions']['moveLeft'] );
+$iconEdit	= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/pencil.png', $words['list-actions']['edit'] );
+$iconRemove	= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/bin_closed.png', $words['list-actions']['remove'] );
 
 //  --  LIST  --  //
 $list	= array(
@@ -28,20 +29,20 @@ foreach( $missions as $mission ){
 	$label		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );
 	$url		= './work/mission/edit/'.$mission->missionId;
 	$class		= 'icon-label mission-type-'.$mission->type;
-	$link		= UI_HTML_Elements::Link( $url, $label, array( 'class' => $class ) );
+	$link		= HtmlElements::Link( $url, $label, array( 'class' => $class ) );
 	$days		= ( strtotime( $mission->dayStart ) - $today ) / ( 24 * 60 * 60 );
 	$daysBound	= max( min( $days , 6 ), 0 );
 	$graph		= $indicator->build( $mission->status, 4 );
 	$type		= $words['types'][$mission->type];
 	$priority	= $words['priorities'][$mission->priority];
 	$class		= 'row-priority priority-'.$mission->priority;
-	$buttonEdit		= UI_HTML_Elements::LinkButton( './work/mission/edit/'.$mission->missionId, $iconEdit, 'tiny' );
-	$buttonRemove	= UI_HTML_Elements::LinkButton( './work/mission/setStatus/'.$mission->missionId.'/'.urlencode( '-3' ), $iconRemove, 'tiny' );
-	$buttonLeft		= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/?date='.urlencode( '-1' ), $iconLeft, 'tiny' );
-	$buttonRight	= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/?date='.urlencode( '+1' ), $iconRight, 'tiny' );
+	$buttonEdit		= HtmlElements::LinkButton( './work/mission/edit/'.$mission->missionId, $iconEdit, 'tiny' );
+	$buttonRemove	= HtmlElements::LinkButton( './work/mission/setStatus/'.$mission->missionId.'/'.urlencode( '-3' ), $iconRemove, 'tiny' );
+	$buttonLeft		= HtmlElements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/?date='.urlencode( '-1' ), $iconLeft, 'tiny' );
+	$buttonRight	= HtmlElements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/?date='.urlencode( '+1' ), $iconRight, 'tiny' );
 
 	if( !$daysBound )
-		$buttonLeft	= UI_HTML_Elements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/'.urlencode( '-1' ), $iconLeft, 'tiny', NULL, TRUE );
+		$buttonLeft	= HtmlElements::LinkButton( './work/mission/changeDay/'.$mission->missionId.'/'.urlencode( '-1' ), $iconLeft, 'tiny', NULL, TRUE );
 
 	$daysOverdue	= '';
 	$days	= ( strtotime( max( $mission->dayStart, $mission->dayEnd ) ) - $today ) / ( 24 * 60 * 60);
@@ -71,8 +72,8 @@ function getCount( $list, $days ){
 		return ' <div class="mission-number">'.$count.'</div>';
 }
 
-$colgroup	= UI_HTML_Elements::ColumnGroup( "120px", "", "90px", "115px" );
-$tableHeads	= UI_HTML_Elements::TableHeads( array(
+$colgroup	= HtmlElements::ColumnGroup( "120px", "", "90px", "115px" );
+$tableHeads	= HtmlElements::TableHeads( array(
 	HtmlTag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
 	HtmlTag::create( 'div', 'Aufgabe', array( 'class' => 'sortable', 'data-column' => 'title' ) ),
 	HtmlTag::create( 'div', 'Priorität', array( 'class' => 'sortable', 'data-column' => 'priority' ) ),

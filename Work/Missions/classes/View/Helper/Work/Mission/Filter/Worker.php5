@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Work_Mission_Filter_Worker{
@@ -83,7 +84,7 @@ class View_Helper_Work_Mission_Filter_Worker{
 			'href'		=> '#',
 		) );
 		$buttons	= HtmlTag::create( 'div', array( $buttonUser, $buttonAll ), array( 'class' => 'btn-group' ) );
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "", "160px" );
+		$colgroup	= HtmlElements::ColumnGroup( "", "160px" );
 		$tableHeads	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'th', "Bearbeiter" ),
 			HtmlTag::create( 'th', $buttons, array( 'style' => 'text-align: right') )

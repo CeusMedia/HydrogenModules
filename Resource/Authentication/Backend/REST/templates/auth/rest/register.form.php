@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
@@ -15,7 +16,7 @@ $optGender	= array(
 	1		=> 'weiblich',
 	2		=> 'transgender',
 );
-$optGender	= UI_HTML_Elements::Options( $optGender );
+$optGender	= HtmlElements::Options( $optGender );
 
 return '
 <div class="content-panel" id="panel-auth-rest-register">

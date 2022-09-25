@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Work_Billing_Helper_Filter
@@ -41,7 +42,7 @@ class View_Work_Billing_Helper_Filter
 					$optYear[date( "Y" )]	= date( "Y" );
 					$optYear[date( "Y" )-1]	= date( "Y" )-1;
 					$optYear[date( "Y" )-2]	= date( "Y" )-2;
-					$optYear	= UI_HTML_Elements::Options( $optYear, $value );
+					$optYear	= HtmlElements::Options( $optYear, $value );
 					$formFields[]	= '
 					<div class="span2">
 						<label for="input_year">Jahr</label>
@@ -64,7 +65,7 @@ class View_Work_Billing_Helper_Filter
 						'11'	=> 'November',
 						'12'	=> 'Dezember',
 					);
-					$optMonth	= UI_HTML_Elements::Options( $optMonth, $value );
+					$optMonth	= HtmlElements::Options( $optMonth, $value );
 					$formFields[]	= '
 					<div class="span2">
 						<label for="input_month">Monat</label>

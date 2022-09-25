@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['edit'];
@@ -22,7 +23,7 @@ $buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, arr
 	'onclick'	=> htmlentities( 'return confirm("'.$w->buttonRemove_confirm.'")', ENT_QUOTES, 'UTF-8' ),
 ) );
 
-$optStatus		= UI_HTML_Elements::Options( $words['states'], $relocation->status );
+$optStatus		= HtmlElements::Options( $words['states'], $relocation->status );
 $urlService		= $env->url.'info/relocation/'.$relocation->relocationId;
 $urlShortcut	= $env->url.$shortcut.'/'.$relocation->relocationId;
 

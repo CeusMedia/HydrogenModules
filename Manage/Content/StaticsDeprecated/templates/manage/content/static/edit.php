@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $panelFilter	= $view->loadTemplate( 'manage/content/static', 'filter' );
@@ -19,12 +20,12 @@ $attributesButton	= array(
 
 $optPath	= array_merge( array( '' ), $paths );
 $optPath	= array_combine( $optPath, $optPath );
-$optPath	= UI_HTML_Elements::Options( $optPath, $pathName );
+$optPath	= HtmlElements::Options( $optPath, $pathName );
 
 $textarea		= HtmlTag::create( 'textarea', utf8_encode( htmlentities( utf8_decode( $content ) ) ), $attributesTextarea );
 $buttonSave		= HtmlTag::create( 'button', '<span>'.$w->buttonSave.'</span>', $attributesButton );
-$buttonCancel	= UI_HTML_Elements::LinkButton( './manage/content/static', $w->buttonCancel, 'button cancel' );
-$buttonRemove	= UI_HTML_Elements::LinkButton( './manage/content/static/remove/'.$fileHash, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm );
+$buttonCancel	= HtmlElements::LinkButton( './manage/content/static', $w->buttonCancel, 'button cancel' );
+$buttonRemove	= HtmlElements::LinkButton( './manage/content/static/remove/'.$fileHash, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm );
 
 $panelEdit	= '
 <form id="form_content-editor" name="editContent" action="./manage/content/static/edit/'.$fileHash.'" method="post">

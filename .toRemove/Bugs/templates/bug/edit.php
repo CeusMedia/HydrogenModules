@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $types	= $words['types'];
@@ -46,7 +47,7 @@ $main	= '
 			<div class="bug-title">'.$bug->title.'</div>
 			<div class="bug-content">'.nl2br( $bug->content ).'</div>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './bug', $words['edit']['buttonCancel'], 'button cancel' ).' |
+				'.HtmlElements::LinkButton( './bug', $words['edit']['buttonCancel'], 'button cancel' ).' |
 				<button type="button" id="bug-edit-trigger-mode-1" class="button edit"><span>verändern</span></button>
 			</div>
 		</div>
@@ -54,7 +55,7 @@ $main	= '
 			<ul class="input">
 				<li>
 					<label for="title">'.$words['edit']['labelTitle'].'</label><br/>
-					'.UI_HTML_Elements::Input( 'title', $bug->title, '' ).'
+					'.HtmlElements::Input( 'title', $bug->title, '' ).'
 				</li>
 				<li>
 					<label for="content">'.$words['edit']['labelContent'].'</label><br/>
@@ -62,9 +63,9 @@ $main	= '
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './bug', $words['edit']['buttonCancel'], 'button cancel' ).' |
+				'.HtmlElements::LinkButton( './bug', $words['edit']['buttonCancel'], 'button cancel' ).' |
 				<button type="button" id="bug-edit-trigger-mode-0" class="button view"><span>anzeigen</span></button>
-				'.UI_HTML_Elements::Button( 'save', $words['edit']['buttonSave'], 'button save' ).'
+				'.HtmlElements::Button( 'save', $words['edit']['buttonSave'], 'button save' ).'
 			</div>
 		</div>
 	</form>

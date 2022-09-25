@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $panelCategories	= '<div class="alert alert-error">Noch keine Kategorie zugewiesen.</div>';
 
@@ -39,7 +40,7 @@ if( $articleCategories ){
 	}
 
 	$listCategories	= '<table class="table table-condensed">
-		'.UI_HTML_Elements::ColumnGroup( '', '60px' ).'
+		'.HtmlElements::ColumnGroup( '', '60px' ).'
 		<thead>
 <!--			<tr>
 				<th>Kategorie</th>

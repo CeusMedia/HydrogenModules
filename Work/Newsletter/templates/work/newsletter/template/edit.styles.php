@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //  --  PANEL: SOURCE LIST  --  //
@@ -36,8 +37,8 @@ if( $styles ){
 			HtmlTag::create( 'td', $linkRemove, array( 'class' => '' ) ),
 		) );
 	}
-	$colgroup		= UI_HTML_Elements::ColumnGroup( "", "120px" );
-	$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Einträge', '' ) );
+	$colgroup		= HtmlElements::ColumnGroup( "", "120px" );
+	$tableHeads		= HtmlElements::TableHeads( array( 'Einträge', '' ) );
 	$thead			= HtmlTag::create( 'thead', $tableHeads );
 	$tbody			= HtmlTag::create( 'tbody', $styles );
 	$listStyles		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(

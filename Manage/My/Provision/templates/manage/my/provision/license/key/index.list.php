@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index.list'];
@@ -69,7 +70,7 @@ if( $userLicenseKeys ){
 		), array( 'class' => $rowColors[$userLicenseKey->status] ) );
 	}
 }
-$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Lizenz', 'Zustand', 'Lizenzschlüssel' ) ) );
+$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Lizenz', 'Zustand', 'Lizenzschlüssel' ) ) );
 $tbody	= HtmlTag::create( 'tbody', $list );
 $list	= HtmlTag::create( 'table', $thead.$tbody, array( 'class' => 'table' ) );
 

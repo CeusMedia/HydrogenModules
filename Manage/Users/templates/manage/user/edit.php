@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['edit'];
@@ -54,22 +55,22 @@ $ind1		= $indicator->build( 75, 100 );
 
 $optRole	= [];
 foreach( array_reverse( $roles, TRUE ) as $role )
-	$optRole[]	= UI_HTML_Elements::Option( $role->roleId, $role->title, $role->roleId == $user->roleId, NULL, 'role role'.$role->roleId );
+	$optRole[]	= HtmlElements::Option( $role->roleId, $role->title, $role->roleId == $user->roleId, NULL, 'role role'.$role->roleId );
 $optRole	= join( $optRole );
 
 $optStatus  = [];
 foreach( array_reverse( $words['status'], TRUE ) as $key => $label )
-	$optStatus[]    = UI_HTML_Elements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
+	$optStatus[]    = HtmlElements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
 $optStatus  = join( $optStatus );
 
-$optGender	= UI_HTML_Elements::Options( $words['gender'], $user->gender );
+$optGender	= HtmlElements::Options( $words['gender'], $user->gender );
 
-$buttonList			= UI_HTML_Elements::LinkButton( $from ? $from : './manage/user', $iconList.'&nbsp;'.$w->buttonList, 'btn not-btn-small' );
-$buttonSave			= UI_HTML_Elements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' );
+$buttonList			= HtmlElements::LinkButton( $from ? $from : './manage/user', $iconList.'&nbsp;'.$w->buttonList, 'btn not-btn-small' );
+$buttonSave			= HtmlElements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' );
 
 $buttonRemove		= '';
 if( $env->getAcl()->has( 'manage/user', 'remove' ) ){
-	$buttonRemove		= UI_HTML_Elements::LinkButton(
+	$buttonRemove		= HtmlElements::LinkButton(
 		'./manage/user/remove/'.$userId,
 		$iconRemove.'&nbsp;'.$w->buttonRemove,
 		'btn btn-mini btn-danger',

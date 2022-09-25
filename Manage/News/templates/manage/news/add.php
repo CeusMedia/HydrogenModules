@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -6,7 +7,7 @@ $iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
 $w			= (object) $words['add'];
 
-$optStatus	= UI_HTML_Elements::Options( $words['states'], $news->status );
+$optStatus	= HtmlElements::Options( $words['states'], $news->status );
 
 $env->getPage()->js->addScriptOnReady( 'ModuleNewsEditor.init();' );
 

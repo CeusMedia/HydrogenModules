@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
@@ -17,7 +18,7 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', array(
 /*$optIdentifier	= array( '' => '- alle -');
 foreach( $identifiers as $identifier )
 	$optIdentifier[$identifier]	= $identifier;
-$optIdentifier	= UI_HTML_Elements::Options( $optIdentifier, $filterIdentifier );
+$optIdentifier	= HtmlElements::Options( $optIdentifier, $filterIdentifier );
 */
 $formatMap	= array(
 	Model_Form_Mail::FORMAT_HTML	=> 'HTML',
@@ -27,7 +28,7 @@ $formatMap	= array(
 $optFormat	= array( '' => '- alle -');
 foreach( $formatMap as $formatKey => $formatLabel )
 	$optFormat[$formatKey]	= $formatLabel;
-$optFormat	= UI_HTML_Elements::Options( $optFormat, $filters->get( 'format' ) );
+$optFormat	= HtmlElements::Options( $optFormat, $filters->get( 'format' ) );
 
 $roleTypeMap	= array(
 	Model_Form_Mail::ROLE_TYPE_NONE				=> 'keinen',
@@ -45,7 +46,7 @@ $roleTypeMap	= array(
 $optRoleType	= array( '' => '- egal -');
 foreach( $roleTypeMap as $roleTypeKey => $roleTypeLabel )
 	$optRoleType[$roleTypeKey]	= $roleTypeLabel;
-$optRoleType	= UI_HTML_Elements::Options( $optRoleType, $filters->get( 'roleType' ) );
+$optRoleType	= HtmlElements::Options( $optRoleType, $filters->get( 'roleType' ) );
 
 return '
 <div class="content-panel">

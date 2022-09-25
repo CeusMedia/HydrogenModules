@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
@@ -10,9 +11,9 @@ $optStatus	= $words->states;
 unset( $optStatus[-2] );
 unset( $optStatus[-1] );
 //$optStatus	= array_reverse( $optStatus );
-$optStatus	= UI_HTML_Elements::Options( $optStatus, Model_Newsletter_Reader::STATUS_REGISTERED );
+$optStatus	= HtmlElements::Options( $optStatus, Model_Newsletter_Reader::STATUS_REGISTERED );
 
-$optGender	= UI_HTML_Elements::Options( $words->gender, $reader->gender );
+$optGender	= HtmlElements::Options( $words->gender, $reader->gender );
 
 $listGroups	= [];
 foreach( $groups as $group ){

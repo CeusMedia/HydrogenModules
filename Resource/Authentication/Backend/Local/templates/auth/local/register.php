@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['register'];
@@ -6,7 +7,7 @@ $w				= (object) $words['register'];
 $moduleConfig	= $config->getAll( 'module.resource_users.', TRUE );
 
 $iconRegister	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$optGender		= UI_HTML_Elements::Options( $words['gender'], $user->get( 'gender' ) );
+$optGender		= HtmlElements::Options( $words['gender'], $user->get( 'gender' ) );
 
 $texts	= array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' );
 extract( $view->populateTexts( $texts, 'html/auth/local/register/' ) );
@@ -211,7 +212,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 			HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', array(
 				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
 					HTML::Label( "country", $w->labelCountry ),
-					HtmlTag::create( 'select', UI_HTML_Elements::Options( $countries, $user->get( 'country' ) ), array(
+					HtmlTag::create( 'select', HtmlElements::Options( $countries, $user->get( 'country' ) ), array(
 						'name'			=> 'country',
 						'id'			=> 'input_country',
 						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',

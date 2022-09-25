@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
@@ -26,7 +27,7 @@ if( $runs ){
 			HtmlTag::create( 'td', $item->finishedAt ? date( 'd.m.Y H:i:s', $item->finishedAt ) : '-' ),
 		) );
 	}
-	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Run-ID', 'Job-ID', 'Zustand', 'vorbereitet', 'gestartet', 'beendet' ) ) );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Run-ID', 'Job-ID', 'Zustand', 'vorbereitet', 'gestartet', 'beendet' ) ) );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$runList	= HtmlTag::create( 'table', array( $tbody ), array( 'class' => 'table table-striped table-condensed' ) );
 }

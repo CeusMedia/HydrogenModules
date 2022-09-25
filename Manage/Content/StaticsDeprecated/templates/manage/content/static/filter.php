@@ -1,9 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 return '';
 
 $optPath	= array_merge( array( '' ), $paths );
 $optPath	= array_combine( $optPath, $optPath );
-$optPath	= UI_HTML_Elements::Options( $optPath, $pathName );
+$optPath	= HtmlElements::Options( $optPath, $pathName );
 
 $w	= (object) $words['filter'];
 

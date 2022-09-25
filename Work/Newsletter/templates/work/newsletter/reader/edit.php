@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
@@ -9,15 +10,15 @@ $statusIcons	= array(
 	1		=> 'ok',
 );
 
-$optStatus	= UI_HTML_Elements::Options( $words->states, $reader->status );
-$optGender	= UI_HTML_Elements::Options( $words->gender, $reader->gender );
+$optStatus	= HtmlElements::Options( $words->states, $reader->status );
+$optGender	= HtmlElements::Options( $words->gender, $reader->gender );
 
 $optGroup	= [];
 foreach( $groups as $group )
 	if( !array_key_exists( $group->newsletterGroupId, $readerGroups ) )
 		$optGroup[$group->newsletterGroupId]	= $group->title;
 $hideGroupAdd	= count( $optGroup ) ? '' : 'style="display: none"';
-$optGroup	= UI_HTML_Elements::Options( $optGroup, array_keys( $readerGroups ) );
+$optGroup	= HtmlElements::Options( $optGroup, array_keys( $readerGroups ) );
 
 $listGroups	= HtmlTag::create( 'div', 'Keine Gruppen zugewiesen.', array( 'class' => 'alert alert-info' ) );
 if( $readerGroups ){
@@ -40,8 +41,8 @@ if( $readerGroups ){
 			HtmlTag::create( 'td', $linkRemove, array( 'class' => '' ) ),
 		) );
 	}
-	$colgroup		= UI_HTML_Elements::ColumnGroup( "", "35px" );
-	$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Zugewiesene Gruppen', '' ) );
+	$colgroup		= HtmlElements::ColumnGroup( "", "35px" );
+	$tableHeads		= HtmlElements::TableHeads( array( 'Zugewiesene Gruppen', '' ) );
 	$thead			= HtmlTag::create( 'thead', $tableHeads );
 	$tbody			= HtmlTag::create( 'tbody', $listGroups );
 	$listGroups		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(

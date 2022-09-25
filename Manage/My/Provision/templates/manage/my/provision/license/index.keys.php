@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 if( !$userLicensesWithNotAssignedKeys )
@@ -15,8 +16,8 @@ foreach( $userLicensesWithNotAssignedKeys as $userLicense ){
 		HtmlTag::create( 'td', $userLicense->productLicense->users.' vorhanden<br/>'.count( $userLicense->keys ).' nicht vergeben' ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( array( "", "25%" ) );
-$heads	= UI_HTML_Elements::TableHeads( array( 'Lizenz', 'Schlüssel' ) );
+$colgroup	= HtmlElements::ColumnGroup( array( "", "25%" ) );
+$heads	= HtmlElements::TableHeads( array( 'Lizenz', 'Schlüssel' ) );
 $thead	= HtmlTag::create( 'thead', $heads );
 $tbody	= HtmlTag::create( 'tbody', $list );
 $list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );

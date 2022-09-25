@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $states	= array(
@@ -101,8 +102,8 @@ if( $filters ){
 		'Anwendung',
 		'Aktion',
 	);
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "80px", "", "", "90px", "120px", "110px", "80px" );
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( $heads ) );
+	$colgroup	= HtmlElements::ColumnGroup( "80px", "", "", "90px", "120px", "110px", "80px" );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
 }

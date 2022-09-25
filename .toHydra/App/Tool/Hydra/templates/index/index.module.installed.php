@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $listModulesInstalled	= [];
 foreach( $modulesInstalled as $moduleId => $module ){
 	$desc	= explode( "\n", $module->description );
@@ -13,7 +15,7 @@ $panel	= '
 <fieldset style="position: relative">
 	<legend class="info">Module installiert <span class="small">('.count( $listModulesInstalled ).')</span></legend>
 	<div style="position: absolute; right: 8px; top: 16px;">
-		'.UI_HTML_Elements::LinkButton( './admin/module/installer', '', 'button tiny icon add' ).'
+		'.HtmlElements::LinkButton( './admin/module/installer', '', 'button tiny icon add' ).'
 	</div>
 	<div style="max-height: 160px; overflow: auto">
 		<ul>'.join( $listModulesInstalled ).'</ul>

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
@@ -35,7 +36,7 @@ class View_Database_Lock extends View{
 					HtmlTag::create( 'td', $time, array( 'style' => 'text-align: right' ) ),
 				) );
 			}
-			$colgroup	= UI_HTML_Elements::ColumnGroup( array( "", "100px" ) );
+			$colgroup	= HtmlElements::ColumnGroup( array( "", "100px" ) );
 			$tbody		= HtmlTag::create( 'tbody', $rows );
 			$content	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed' ) );
 		}

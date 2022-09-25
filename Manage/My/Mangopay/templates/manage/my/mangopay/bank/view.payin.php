@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
@@ -16,7 +17,7 @@ foreach( $wallets as $item )
 $optCurrency	= [];
 foreach( $currencies as $key => $label )
 	$optCurrency[$key]	= $label;
-$optCurrency	= UI_HTML_Elements::Options( $optCurrency );
+$optCurrency	= HtmlElements::Options( $optCurrency );
 
 $inputCurrency	= HtmlTag::create( 'select', $optCurrency, array(
 	'id'		=> 'input_currency',
@@ -36,7 +37,7 @@ if( count( $wallets ) > 1 ){
 	$optWallet	= [];
 	foreach( $wallets as $item )
 		$optWallet[$item->Id]	= $item->Description.' ('.$view->formatMoney( $item->Balance, ' ', 0 ).')';
-	$optWallet	= UI_HTML_Elements::Options( $optWallet );
+	$optWallet	= HtmlElements::Options( $optWallet );
 
 	$fieldWallet	= '
 				<div class="span6">

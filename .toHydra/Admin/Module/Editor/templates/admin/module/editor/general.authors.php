@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $wf		= (object) $words['tab-general-authors'];
@@ -14,7 +15,7 @@ if( $module->authors ){
 		if( $author->email )
 			$label	= HtmlTag::create( 'a', $label, array( 'href' => 'mailto:'.$author->email ) );
 		$url	= './admin/module/editor/removeAuthor/'.$moduleId.'/'.base64_encode( $author->name );
-		$button	= UI_HTML_Elements::LinkButton( $url, '', 'button icon tiny remove', $wf->buttonRemoveConfirm );
+		$button	= HtmlElements::LinkButton( $url, '', 'button icon tiny remove', $wf->buttonRemoveConfirm );
 		$list[]	= '<li class="author">'.$label.'<div style="float: right">'.$button.'</div></li>';
 	}
 	$list	= '<ul class="general-info">'.join( $list ).'</ul>';
@@ -40,7 +41,7 @@ $panelAuthors	= '
 			</li>
 		</ul>
 		<div class="buttonbar"'.$hideForMore.'>
-			'.UI_HTML_Elements::Button( 'addAuthor', $wf->buttonAdd, 'button add' ).'
+			'.HtmlElements::Button( 'addAuthor', $wf->buttonAdd, 'button add' ).'
 		</div>
 		'.$buttonOpen.'
 	</div>

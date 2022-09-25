@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $optFolder	= array( '.' => '' );
 foreach( $folders as $folder )
 	$optFolder[$folder]	= preg_replace( "/\.\/?/", "", $folder );
-$optFolder	= UI_HTML_Elements::Options( $optFolder, $path );
+$optFolder	= HtmlElements::Options( $optFolder, $path );
 
 
 $panelFolders	= $view->loadTemplateFile( 'manage/content/image/folders.php' );

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $listTags	= "";
@@ -40,7 +41,7 @@ if( $articleTags ){
 		HtmlTag::create( 'td', '<div class="pull-right">'.$buttonSave.'</div>' )
 	) );*/
 
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '', '140px' );
+	$colgroup	= HtmlElements::ColumnGroup( '', '140px' );
 	$tbody		= HtmlTag::create( 'tbody', join( $listTags ) );
 	$listTags	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => "table table-condensed" ) );
 

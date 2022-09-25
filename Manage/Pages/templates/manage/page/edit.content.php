@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w				= (object) $words['edit'];
 
 if( $page->type == Model_Page::TYPE_MODULE )
@@ -12,9 +14,9 @@ else{
 
 	$editor		= $editor ?: current( array_keys( $editors ) );
 
-	$optVersion	= UI_HTML_Elements::Options( $optVersion, $version );
-	$optEditor	= UI_HTML_Elements::Options( $editors, $editor );
-	$optFormat	= UI_HTML_Elements::Options( $words['formats'], $page->format );
+	$optVersion	= HtmlElements::Options( $optVersion, $version );
+	$optEditor	= HtmlElements::Options( $editors, $editor );
+	$optFormat	= HtmlElements::Options( $words['formats'], $page->format );
 
 	$format		= $page->format === "MD" ? "Markdown" : "HTML";
 

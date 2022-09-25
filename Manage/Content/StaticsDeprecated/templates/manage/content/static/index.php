@@ -1,11 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $panelFilter	= $view->loadTemplate( 'manage/content/static', 'filter' );
 $panelList		= $view->loadTemplate( 'manage/content/static', 'list' );
 
 $optPath	= array_merge( array( '' ), $paths );
 $optPath	= array_combine( $optPath, $optPath );
-$optPath	= UI_HTML_Elements::Options( $optPath );
+$optPath	= HtmlElements::Options( $optPath );
 
 $w	= (object) $words['addFolder'];
 $panelFolder	= '
@@ -17,7 +18,7 @@ $panelFolder	= '
 		<label for="input_folder_path">'.$w->labelPath.'</label><br/>
 		<select name="folder_path" id="input_folder_path" class="max">'.$optPath.'</select>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'add', $w->buttonAdd, 'button add' ).'
+			'.HtmlElements::Button( 'add', $w->buttonAdd, 'button add' ).'
 		</div>
 	</fieldset>
 </form>
@@ -33,7 +34,7 @@ $panelFile	= '
 		<label for="input_file_path">'.$w->labelPath.'</label><br/>
 		<select name="file_path" id="input_file_path" class="max">'.$optPath.'</select>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'add', $w->buttonAdd, 'button add' ).'
+			'.HtmlElements::Button( 'add', $w->buttonAdd, 'button add' ).'
 		</div>
 	</fieldset>
 </form>

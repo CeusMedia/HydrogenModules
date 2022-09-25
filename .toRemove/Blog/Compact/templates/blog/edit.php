@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //print_m( $article );
@@ -7,7 +8,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $optStatus	= [];
 foreach( $words['states'] as $value => $label )
 	$optStatus[$value]	= $label;
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $article->status );
+$optStatus	= HtmlElements::Options( $optStatus, $article->status );
 
 
 $optAuthor	= array( '' => '- hinzufügen -');
@@ -15,7 +16,7 @@ foreach( $editors as $editor )
 	foreach( $authors as $author )
 		if( $author->userId != $editor->userId )
 			$optAuthor[$editor->userId]	= $editor->username;
-$optAuthor	= UI_HTML_Elements::Options( $optAuthor, NULL );
+$optAuthor	= HtmlElements::Options( $optAuthor, NULL );
 
 
 $listAuthors	= '<b><em>noch keine</em></b>';
@@ -26,9 +27,9 @@ $list	= [];
 if( $tags ){
 	foreach( $tags as $tag ){
 		$url		= './blog/removeTag/'.$article->articleId.'/'.$tag->tagId;
-		$linkRemove	= UI_HTML_Elements::LinkButton( $url, '', 'button tiny remove' );
+		$linkRemove	= HtmlElements::LinkButton( $url, '', 'button tiny remove' );
 		$linkTag	= View_Helper_Blog::renderTagLink( $env, $tag->title );
-		$list[]		= UI_HTML_Elements::ListItem( $linkRemove.$linkTag );
+		$list[]		= HtmlElements::ListItem( $linkRemove.$linkTag );
 	}
 	$listTags	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
 }
@@ -38,9 +39,9 @@ if( $authors ){
 	foreach( $authors as $author ){
 		$urlUser	= './admin/user/edit/'.$author->userId;
 		$urlRemove	= './blog/removeAuthor/'.$article->articleId.'/'.$author->userId;
-		$linkUser	= UI_HTML_Elements::Link( $urlUser, $author->username, 'article-author role role'.$author->roleId );
-		$linkRemove	= UI_HTML_Elements::LinkButton( $urlRemove, '', 'button tiny remove' );
-		$list[]	= UI_HTML_Elements::ListItem( $linkRemove.$linkUser );
+		$linkUser	= HtmlElements::Link( $urlUser, $author->username, 'article-author role role'.$author->roleId );
+		$linkRemove	= HtmlElements::LinkButton( $urlRemove, '', 'button tiny remove' );
+		$list[]	= HtmlElements::ListItem( $linkRemove.$linkUser );
 	}
 	$listAuthors	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
 }
@@ -48,26 +49,26 @@ if( $authors ){
 $list	= [];
 if( $article->versions ){
 	$label	= 'Version '.( count( $article->versions ) + 1 );
-	$link	= UI_HTML_Elements::Link( './blog/edit/'.$article->articleId, $label, 'version latest' );
+	$link	= HtmlElements::Link( './blog/edit/'.$article->articleId, $label, 'version latest' );
 	$class	= $version != count( $article->versions ) ? 'current' : NULL;
-	$list[]	= UI_HTML_Elements::ListItem( $link, 0, array( 'class' => $class ) );
+	$list[]	= HtmlElements::ListItem( $link, 0, array( 'class' => $class ) );
 	foreach( $article->versions as $nr => $articleVersion ){
 		$label	= 'Version '.++$nr;
 		$url	= './blog/edit/'.$article->articleId.'/'.$nr;
 		$class	= $version == $nr ? 'current' : NULL;
-		$link	= UI_HTML_Elements::Link( $url, $label, 'version' );
-		$list[]	= UI_HTML_Elements::ListItem( $link, 0, array( 'class' => $class ) );
+		$link	= HtmlElements::Link( $url, $label, 'version' );
+		$list[]	= HtmlElements::ListItem( $link, 0, array( 'class' => $class ) );
 	}
 	$listVersions	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'not-editor-list versions' ) );
 }
 
 $isHistory			= $version <= count( $article->versions );
 
-$buttonCancel		= UI_HTML_Elements::LinkButton( './blog/article/'.$articleId, 'zurück', 'button cancel' );
-$buttonSave			= UI_HTML_Elements::Button( 'save', 'speichern', 'button save', NULL, $isHistory );
-$buttonStatusShow	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/1', 'veröffentlichen', 'button accept', NULL, $article->status <> 0 || $isHistory );
-$buttonStatusHide	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/0', 'verstecken', 'button lock', NULL, $article->status == 0 || $isHistory );
-$buttonStatusRemove	= UI_HTML_Elements::LinkButton( './blog/setStatus/'.$article->articleId.'/-1', 'entfernen', 'button remove reset', NULL, $article->status < 0 || $isHistory );
+$buttonCancel		= HtmlElements::LinkButton( './blog/article/'.$articleId, 'zurück', 'button cancel' );
+$buttonSave			= HtmlElements::Button( 'save', 'speichern', 'button save', NULL, $isHistory );
+$buttonStatusShow	= HtmlElements::LinkButton( './blog/setStatus/'.$article->articleId.'/1', 'veröffentlichen', 'button accept', NULL, $article->status <> 0 || $isHistory );
+$buttonStatusHide	= HtmlElements::LinkButton( './blog/setStatus/'.$article->articleId.'/0', 'verstecken', 'button lock', NULL, $article->status == 0 || $isHistory );
+$buttonStatusRemove	= HtmlElements::LinkButton( './blog/setStatus/'.$article->articleId.'/-1', 'entfernen', 'button remove reset', NULL, $article->status < 0 || $isHistory );
 
 $dateLastModified	= $article->modifiedAt ? date( 'Y-m-d H:i:s', $article->modifiedAt ) : '-';
 

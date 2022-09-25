@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -23,7 +24,7 @@ class View_Helper_Gallery{
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$uri		= './gallery/index/'.str_replace( '%2F', '/', rawurlencode( $matches[1][$i] ) );
 			$title		= trim( $matches[3][$i] );
-			$link		= UI_HTML_Elements::Link( $uri, $title, 'icon-label link-gallery' );
+			$link		= HtmlElements::Link( $uri, $title, 'icon-label link-gallery' );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 		return $content;
@@ -59,7 +60,7 @@ class View_Helper_Gallery{
 			$date	=  NULL;
 		$label		= implode( " ", $parts );
 		$url		= './gallery/index/'.$pathName.rawurlencode( $folderName );
-		$link		= UI_HTML_Elements::Link( $url, $icon.$label.$date );
+		$link		= HtmlElements::Link( $url, $icon.$label.$date );
 		return HtmlTag::create( 'span', $link, array( 'class' => $class ) );
 
 		$attributes	= array(

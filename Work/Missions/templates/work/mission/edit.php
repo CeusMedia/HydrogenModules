@@ -1,5 +1,17 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object $mission */
+/** @var array $missionUsers */
+/** @var array<object> $users */
+/** @var array<object> $userProjects */
+/** @var string $format */
 
 $panelInfo		= $view->loadTemplateFile( 'work/mission/edit.info.php' );
 $panelClose		= $view->loadTemplateFile( 'work/mission/edit.close.php' );
@@ -13,11 +25,11 @@ $w	= (object) $words['edit'];
 $priorities		= $words['priorities'];
 unset( $priorities[0] );
 
-$optType		= UI_HTML_Elements::Options( $words['types'], $mission->type );
+$optType		= HtmlElements::Options( $words['types'], $mission->type );
 
 $optPriority	= [];
 foreach( $priorities as $key => $value )
-	$optPriority[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->priority == $key, NULL, 'mission priority'.$key );
+	$optPriority[]	= HtmlElements::Option( (string) $key, $value, $mission->priority == $key, NULL, 'mission priority'.$key );
 $optPriority	= join( $optPriority/*, $mission->priority*/ );
 
 $optStatus		= [];
@@ -26,18 +38,18 @@ unset( $wordsStatus[-3] );
 unset( $wordsStatus[-2] );
 unset( $wordsStatus[4] );
 foreach( $wordsStatus as $key => $value )
-	$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
+	$optStatus[]	= HtmlElements::Option( (string) $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
 $optStatus	= join( $optStatus/*, $mission->status*/ );
 
 $optWorker	= [];
 foreach( $users as $user )
 	$optWorker[$user->userId]	= $user->username;
-$optWorker		= UI_HTML_Elements::Options( $optWorker, $mission->workerId );
+$optWorker		= HtmlElements::Options( $optWorker, $mission->workerId );
 
 $optProject	= [];
 foreach( $userProjects as $projectId => $project )
 	$optProject[$projectId]	= $project->title;
-$optProject	= UI_HTML_Elements::Options( $optProject, $mission->projectId );
+$optProject	= HtmlElements::Options( $optProject, $mission->projectId );
 
 $timeProjected		= View_Work_Mission::formatSeconds( $mission->minutesProjected * 60 );
 
@@ -65,10 +77,10 @@ if( count( $missionUsers ) > 1 ){
 	$checkInform	= HtmlTag::create( 'label', $checkInform.'&nbsp;'.$w->labelInform, array( 'class' => 'checkbox' ) );
 }
 
-$buttonCancel	= UI_HTML_Elements::LinkButton( './work/mission', $iconList.' '.$w->buttonList, 'btn btn-small' );
-$buttonView		= UI_HTML_Elements::LinkButton( './work/mission/view/'.$mission->missionId, $iconView.' '.$w->buttonView, 'btn btn-small btn-info' );
-$buttonSave		= UI_HTML_Elements::Button( 'edit', $iconSave.' '.$w->buttonSave, 'btn btn-primary' );
-$buttonCopy		= UI_HTML_Elements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn btn-small btn-mini' );
+$buttonCancel	= HtmlElements::LinkButton( './work/mission', $iconList.' '.$w->buttonList, 'btn btn-small' );
+$buttonView		= HtmlElements::LinkButton( './work/mission/view/'.$mission->missionId, $iconView.' '.$w->buttonView, 'btn btn-small btn-info' );
+$buttonSave		= HtmlElements::Button( 'edit', $iconSave.' '.$w->buttonSave, 'btn btn-primary' );
+$buttonCopy		= HtmlElements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn btn-small btn-mini' );
 
 $fieldContent	= '';
 if( strtoupper( $format ) === "HTML" ){
@@ -178,8 +190,8 @@ $panelEdit	= '
 					), array( 'class' => 'btn-group' ) ).'-->
 				'.$buttonSave.'
 	<!--			&nbsp;|&nbsp;
-				'.UI_HTML_Elements::LinkButton( './work/mission/setStatus/-2', '<i class="icon-remove icon-white"></i> '.$w->buttonCancel, 'btn btn-small btn-danger' ).'
-				'.UI_HTML_Elements::LinkButton( './work/mission/setStatus/-3', '<i class="icon-trash icon-white"></i> '.$w->buttonRemove, 'btn btn-small btn-inverse' ).'
+				'.HtmlElements::LinkButton( './work/mission/setStatus/-2', '<i class="icon-remove icon-white"></i> '.$w->buttonCancel, 'btn btn-small btn-danger' ).'
+				'.HtmlElements::LinkButton( './work/mission/setStatus/-3', '<i class="icon-trash icon-white"></i> '.$w->buttonRemove, 'btn btn-small btn-inverse' ).'
 	-->
 				&nbsp;&nbsp;|&nbsp;&nbsp;
 				'.$buttonCopy.'

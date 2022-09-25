@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
@@ -19,12 +20,12 @@ $trigger->setInputId( 'input_image' );
 
 //print_m( $workshop );die;
 
-$optStatus		= UI_HTML_Elements::Options( $words['statuses'], $workshop->status );
-$optRank		= UI_HTML_Elements::Options( $words['ranks'], $workshop->rank );
+$optStatus		= HtmlElements::Options( $words['statuses'], $workshop->status );
+$optRank		= HtmlElements::Options( $words['ranks'], $workshop->rank );
 $optImageAlignH	= array_diff_key( $words['image-align-h'], array( 0 ) );
 $optImageAlignV	= array_diff_key( $words['image-align-v'], array( 0 ) );
-$optImageAlignH	= UI_HTML_Elements::Options( $optImageAlignH, $workshop->imageAlignH );
-$optImageAlignV	= UI_HTML_Elements::Options( $optImageAlignV, $workshop->imageAlignV );
+$optImageAlignH	= HtmlElements::Options( $optImageAlignH, $workshop->imageAlignH );
+$optImageAlignV	= HtmlElements::Options( $optImageAlignV, $workshop->imageAlignV );
 
 $panelEdit	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Workshop ändern' ),

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['edit'];
@@ -18,8 +19,8 @@ $metaPageTypes	= array(
 if( !in_array( (int) $page->type, $metaPageTypes, TRUE ) )
 	return '<div class="alert alert-info"><em>'.$wMeta->no_meta.'</em></div>';
 
-$optChangefreq	= UI_HTML_Elements::Options( $words['changefreqs'], $page->changefreq );
-$optPriority	= UI_HTML_Elements::Options( $words['priorities'], $page->priority );
+$optChangefreq	= HtmlElements::Options( $words['changefreqs'], $page->changefreq );
+$optPriority	= HtmlElements::Options( $words['priorities'], $page->priority );
 
 $buttonSuggest		= '';
 $buttonBlacklist	= '';

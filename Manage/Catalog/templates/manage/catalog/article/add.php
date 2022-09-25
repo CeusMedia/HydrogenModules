@@ -1,16 +1,18 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w			= (object) $words['add'];
 
 $tabsMain	= $this->renderMainTabs();
 
 $optStatus	= $words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $article->status );
+$optStatus	= HtmlElements::Options( $optStatus, $article->status );
 
 $optType	= $words['types'];
-$optType	= UI_HTML_Elements::Options( $optType, $article->series );
+$optType	= HtmlElements::Options( $optType, $article->series );
 
 $optMark	= $words['marks'];
-$optMark	= UI_HTML_Elements::Options( $optMark, $article->new );
+$optMark	= HtmlElements::Options( $optMark, $article->new );
 
 $panelFilter	= $view->loadTemplateFile( 'manage/catalog/article/filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/catalog/article/list.php' );

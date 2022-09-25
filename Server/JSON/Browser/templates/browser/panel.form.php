@@ -1,7 +1,8 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$optController	= UI_HTML_Elements::Options( $controllers, $controller );
-$optAction		= UI_HTML_Elements::Options( $actions, $action );
+$optController	= HtmlElements::Options( $controllers, $controller );
+$optAction		= HtmlElements::Options( $actions, $action );
 
 return '
 <div class="content-panel content-panel-form">

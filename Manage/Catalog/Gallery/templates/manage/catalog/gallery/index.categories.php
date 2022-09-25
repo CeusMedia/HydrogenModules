@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $list	= [];
@@ -13,7 +14,7 @@ foreach( $categories as $item ){
 		) ),
 	), array( 'class' => $class ) );
 }
-//$colgroup	= UI_HTML_Elements::ColumnGroup( "80%", "20%" );
+//$colgroup	= HtmlElements::ColumnGroup( "80%", "20%" );
 $tbody		= HtmlTag::create( 'tbody', $list );
 $list		= HtmlTag::create( 'table', /*$colgroup.*/$tbody, array( 'class' => 'table' ) );
 

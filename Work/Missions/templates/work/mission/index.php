@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w				= (object) $words['index'];
 
 $panelFilter	= $view->loadTemplateFile( 'work/mission/index.filter.php' );
@@ -28,8 +30,8 @@ $panelContent	.= '<div class="clearfix"></div>';
 		$panelExport	= '<fieldset>
 			<legend class="icon export">Export / Import</legend>
 			<b>Export als:</b>&nbsp;<br/>
-			'.UI_HTML_Elements::LinkButton( './work/mission/export/ical', 'ICS', 'button icon export ical' ).'
-			'.UI_HTML_Elements::LinkButton( './work/mission/export', 'Archiv', 'button icon export archive' ).'
+			'.HtmlElements::LinkButton( './work/mission/export/ical', 'ICS', 'button icon export ical' ).'
+			'.HtmlElements::LinkButton( './work/mission/export', 'Archiv', 'button icon export archive' ).'
 			<hr/>
 			<form action="./work/mission/import" method="post" enctype="multipart/form-data">
 				<b>Import aus:</b>&nbsp;

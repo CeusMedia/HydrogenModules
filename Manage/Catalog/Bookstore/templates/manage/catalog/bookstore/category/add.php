@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w	= (object) $words['add'];
 
 $tabs		= $this->renderMainTabs();
@@ -8,10 +10,10 @@ foreach( $categories as $item )
 	if( $item->parentId == 0 )
 		$optParent[$item->categoryId]	= $item->label_de;
 natcasesort( $optParent );
-$optParent	= UI_HTML_Elements::Options( $optParent, (int) $category->parentId );
+$optParent	= HtmlElements::Options( $optParent, (int) $category->parentId );
 
 $optVisible	= $words['visible'];
-$optVisible	= UI_HTML_Elements::Options( $optVisible, (int) $category->visible );
+$optVisible	= HtmlElements::Options( $optVisible, (int) $category->visible );
 
 $panelList	= $view->loadTemplateFile( 'manage/catalog/bookstore/category/list.php' );
 

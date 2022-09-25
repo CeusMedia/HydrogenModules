@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plug' ) );
@@ -26,8 +27,8 @@ if( $providers ){
 			HtmlTag::create( 'td', $connected ? $buttonRemove : $buttonAdd, array( 'style' => 'text-align: right' ) ),
 		), array( 'class' => $connected ? 'success' : NULL ) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '35%', '120px' ) );
-	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$colgroup	= HtmlElements::ColumnGroup( array( '', '35%', '120px' ) );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		$w->headProvider,
 		$w->headStatus,
 		$w->headAction,

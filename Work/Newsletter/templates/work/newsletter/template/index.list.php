@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
@@ -42,8 +43,8 @@ if( $templates ){
 		$list[]			= HtmlTag::create( 'tr', $cells, $attributes );
 	}
 	$tableRows		= join( $list );
-	$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '', '', '140px', '100px', '100px' ) );
-	$tableHeads		= UI_HTML_Elements::TableHeads( array( $w->columnTitle, $w->columnTheme, $w->columnStatus, $w->columnCreatedAt, $w->columnModifiedAt ) );
+	$tableColumns	= HtmlElements::ColumnGroup( array( '', '', '140px', '100px', '100px' ) );
+	$tableHeads		= HtmlElements::TableHeads( array( $w->columnTitle, $w->columnTheme, $w->columnStatus, $w->columnCreatedAt, $w->columnModifiedAt ) );
 	$tableHead		= HtmlTag::create( 'thead', $tableHeads );
 	$tableBody		= HtmlTag::create( 'tbody', $tableRows );
 	$list			= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped table-fixed' ) );

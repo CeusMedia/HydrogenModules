@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w			= (object) $words['login'];
 extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/login/' ) );
@@ -33,7 +34,7 @@ return '
 				</div>
 				<div class="row-fluid">
 					<div class="buttonbar span12">
-						'.UI_HTML_Elements::Button( 'doLogin', '<b class="fa fa-check fa-fw fa-inverse not-icon-ok not-icon-white"></b> '.$w->button, 'btn btn-primary' ).'
+						'.HtmlElements::Button( 'doLogin', '<b class="fa fa-check fa-fw fa-inverse not-icon-ok not-icon-white"></b> '.$w->button, 'btn btn-primary' ).'
 					</div>
 				</div>
 			</form>

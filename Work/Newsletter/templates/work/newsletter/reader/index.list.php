@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words->index;
@@ -39,13 +40,13 @@ if( $readers ){
 		$list[]			= HtmlTag::create( 'tr', $cells, $attributes );
 	}
 	$tableRows		= join( $list );
-	$tableHeads		= UI_HTML_Elements::TableHeads( array(
+	$tableHeads		= HtmlElements::TableHeads( array(
 		$words->index->columnTitle,
 		$words->index->columnGroups,
 		$words->index->columnStatus,
 		$words->index->columnRegister
 	) );
-	$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '', '40%', '100px', '100px' ) );
+	$tableColumns	= HtmlElements::ColumnGroup( array( '', '40%', '100px', '100px' ) );
 	$tableHead		= HtmlTag::create( 'thead', $tableHeads );
 	$tableBody		= HtmlTag::create( 'tbody', $tableRows );
 	$list	= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped table-fixed' ) );

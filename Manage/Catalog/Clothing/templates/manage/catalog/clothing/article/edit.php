@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
@@ -8,10 +9,10 @@ $iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' 
 $optCategoryId	= [];
 foreach( $categoryMap as $item )
 	$optCategoryId[$item->categoryId]	= $item->title;
-$optCategoryId	= UI_HTML_Elements::Options( $optCategoryId, $article->categoryId );
+$optCategoryId	= HtmlElements::Options( $optCategoryId, $article->categoryId );
 
 $optCurrency	= array( 'EUR' => 'EURO' );
-$optCurrency	= UI_HTML_Elements::Options( $optCurrency, $article->currency );
+$optCurrency	= HtmlElements::Options( $optCurrency, $article->currency );
 
 $panelFacts	= '
 <div class="content-panel">

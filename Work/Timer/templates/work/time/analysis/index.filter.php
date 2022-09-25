@@ -1,30 +1,31 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $optMode	= $words['index-filter-modes'];
-$optMode	= UI_HTML_Elements::Options( $words['index-filter-modes'], $filterMode );
+$optMode	= HtmlElements::Options( $words['index-filter-modes'], $filterMode );
 
 $optDuration	= $words['index-filter-durations'];
-$optDuration	= UI_HTML_Elements::Options( $words['index-filter-durations'], $filterDuration );
+$optDuration	= HtmlElements::Options( $words['index-filter-durations'], $filterDuration );
 
 $optYear	= [];
 $year		= (int) date( "Y" );
 $yearMin	= $year - 4;
 for( $i=$year; $i>$yearMin; $i-- )
 	$optYear[$i]	= $i;
-$optYear	= UI_HTML_Elements::Options( $optYear, $filterYear );
+$optYear	= HtmlElements::Options( $optYear, $filterYear );
 
 $optMonth	= $words['index-filter-months'];
-$optMonth	= UI_HTML_Elements::Options( $words['months'], $filterMonth );
+$optMonth	= HtmlElements::Options( $words['months'], $filterMonth );
 
 $optProjectIds	= [];
 foreach( $allProjects as $project )
 	$optProjectIds[$project->projectId]	= $project->title;
-$optProjectIds	= UI_HTML_Elements::Options( $optProjectIds, $filterProjectIds );
+$optProjectIds	= HtmlElements::Options( $optProjectIds, $filterProjectIds );
 
 $optUserIds	= [];
 foreach( $allUsers as $user )
 	$optUserIds[$user->userId]	= $user->username;
-$optUserIds	= UI_HTML_Elements::Options( $optUserIds, $filterUserIds );
+$optUserIds	= HtmlElements::Options( $optUserIds, $filterUserIds );
 
 
 //$lastWeek	= (int) date( "W", min( strtotime( $filterYear.'-12-31' ), time() ) );
@@ -32,7 +33,7 @@ $lastWeek	= (int) date( "W", min( strtotime( '2016-12-31' ), time() ) );
 $optWeek	= [];
 for( $i=$lastWeek; $i>0; $i-- )
 	$optWeek[$i]	= "KW ".$i;
-$optWeek	= UI_HTML_Elements::Options( $optWeek, $filterWeek );
+$optWeek	= HtmlElements::Options( $optWeek, $filterWeek );
 
 return '
 <div class="content-panel">

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $list		= [];
@@ -8,13 +9,13 @@ foreach( $tests as $entry )
 	$time	= date( $format, (float) $entry['timestamp'] );
 	$time	= HtmlTag::create( 'em', HtmlTag::create( 'small', '['.$time.']' ) );
 	$url	= './test/table/edit/'.$entry['testId'];
-	$link	= UI_HTML_Elements::Link( $url, $entry['title'] );
+	$link	= HtmlElements::Link( $url, $entry['title'] );
 	$label	= $time.'&nbsp;&nbsp;'.$link;
-	$list[]	= UI_HTML_Elements::ListItem( $label );	
+	$list[]	= HtmlElements::ListItem( $label );	
 }
-$list		= $list ? UI_HTML_Elements::unorderedList( $list, 0, array( '' => '' ) ) : '';
+$list		= $list ? HtmlElements::unorderedList( $list, 0, array( '' => '' ) ) : '';
 $heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
-$add 		= UI_HTML_Elements::LinkButton( './test/table/add', 'add entry', 'button add' );
+$add 		= HtmlElements::LinkButton( './test/table/add', 'add entry', 'button add' );
 
 $rows		= [];
 $number		= 0;
@@ -25,7 +26,7 @@ foreach( $tests as $entry )
 	$timeHelper	= new CMF_Hydrogen_View_Helper_Timestamp( $entry['timestamp'] );
 	$timestamp	= $timeHelper->toPhrase( $this->env, TRUE );
 	$url		= './test/table/edit/'.$entry['testId'];
-	$link		= UI_HTML_Elements::Link( $url, $entry['title'] );
+	$link		= HtmlElements::Link( $url, $entry['title'] );
 	$uriEdit		= './test/table/edit/'.$entry['testId'];
 	$buttonEdit		= $this->html->LinkButton( $uriEdit, '', 'tiny edit' );
 	$uriRemove		= './test/table/remove/'.$entry['testId'];
@@ -47,7 +48,7 @@ $heads	= array(
 	$words['index']['headTimestamp'],
 	$words['index']['headAction'],
 );
-$heads	= UI_HTML_Elements::TableHeads( $heads );
+$heads	= HtmlElements::TableHeads( $heads );
 
 
 return '

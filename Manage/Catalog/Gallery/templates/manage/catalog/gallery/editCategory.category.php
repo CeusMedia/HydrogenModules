@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['editCategory'];
 
-$optStatus	= UI_HTML_Elements::Options( $words['states'], $category->status );
+$optStatus	= HtmlElements::Options( $words['states'], $category->status );
 
 $iconUpload	= '<i class="icon-folder-open icon-white"></i>';
 

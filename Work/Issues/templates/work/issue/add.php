@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $types	= $words['types'];
@@ -67,19 +68,19 @@ $(document).ready(function(){
 			<div class="row-fluid">
 				<div class="span3">
 					<label for="type">'.$words['add']['labelType'].'</label>
-					'.UI_HTML_Elements::Select( 'type', $optType, 'span12' ).'
+					'.HtmlElements::Select( 'type', $optType, 'span12' ).'
 				</div>
 				<div class="span3">
 					<label for="priority">'.$words['add']['labelPriority'].'</label>
-					'.UI_HTML_Elements::Select( 'priority', $optPriority, 'span12' ).'
+					'.HtmlElements::Select( 'priority', $optPriority, 'span12' ).'
 				</div>
 	<!--			<div class="column-left-25">
 					<label for="severity">'.$words['add']['labelSeverity'].'</label>
-					'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'span12' ).'
+					'.HtmlElements::Select( 'severity', $optSeverity, 'span12' ).'
 				</div>-->
 				<div class="span3">
 					<label for="input_projectId">'.$words['add']['labelProject'].'</label>
-					'.UI_HTML_Elements::Select( 'projectId', $optProject, 'span12' ).'
+					'.HtmlElements::Select( 'projectId', $optProject, 'span12' ).'
 				</div>
 			</div>
 			<div class="row-fluid">

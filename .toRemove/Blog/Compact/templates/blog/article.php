@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $articleIndex	= [];
@@ -17,7 +18,7 @@ if( isset( $articleIndex[$index-1] ) ){
 	$url		= './blog/article/'.$next->articleId;
 	if( $config->get( 'niceURLs' ) )
 		$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $next );
-	$linkNext	= UI_HTML_Elements::Link( $url, $icon.$label, 'not-icon-label not-link-blog' );
+	$linkNext	= HtmlElements::Link( $url, $icon.$label, 'not-icon-label not-link-blog' );
 	$linkNext	= 'nächster: '.$linkNext;
 }
 if( isset( $articleIndex[$index+1] ) ){
@@ -26,7 +27,7 @@ if( isset( $articleIndex[$index+1] ) ){
 	$url		= './blog/article/'.$previous->articleId;
 	if( $config->get( 'niceURLs' ) )
 		$url	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $previous );
-	$linkPrev	= UI_HTML_Elements::Link( $url, $icon.$label, 'not-icon-label not-link-blog' );
+	$linkPrev	= HtmlElements::Link( $url, $icon.$label, 'not-icon-label not-link-blog' );
 	$linkPrev	= 'vorheriger: '.$linkPrev;
 }
 
@@ -39,14 +40,14 @@ if( $article->versions ){
 		if( $env->getConfig()->get( 'module.blog_compact.niceURLs' ) )
 			$url	.= '/'.View_Helper_Blog::getArticleTitleUrlLabel( $articleVersion );
 		$class	= 'icon-label link-blog version'.( $version == $nr ? ' current' : NULL );
-		$list[]	= UI_HTML_Elements::Link( $url, $label, $class );
+		$list[]	= HtmlElements::Link( $url, $label, $class );
 	}
 	$label	= ( count( $article->versions ) + 1 );
 	$class	= 'icon-label link-blog version latest'.( $article->version == $version  ? ' current' : NULL );
 	$url	= './blog/article/'.$article->articleId;
 	if( $env->getConfig()->get( 'module.blog_compact.niceURLs' ) )
 		$url	.= '/'.View_Helper_Blog::getArticleTitleUrlLabel( $article );
-	$list[]	= UI_HTML_Elements::Link( $url, $label, $class );
+	$list[]	= HtmlElements::Link( $url, $label, $class );
 	$listVersions	= HtmlTag::create( 'span', join( '&nbsp;', $list ), array( 'class' => 'not-editor-list versions' ) );
 }
 else
@@ -71,8 +72,8 @@ $tagList	= View_Blog::renderTagList( $env, $tags );
 $roleId		= $this->env->getSession()->get( 'roleId');
 $canEdit	= $roleId && $this->env->getAcl()->hasRight( $roleId, 'blog', 'edit' );
 $url		= './blog/edit/'.$article->articleId;
-$label		= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/pencil.png', 'Eintrag bearbeiten' );
-$linkEdit	= $canEdit ? UI_HTML_Elements::Link( $url, $label, 'link-edit button' ) : '';
+$label		= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/pencil.png', 'Eintrag bearbeiten' );
+$linkEdit	= $canEdit ? HtmlElements::Link( $url, $label, 'link-edit button' ) : '';
 
 $date	= 'unbekannt';
 if( $article->createdAt ){

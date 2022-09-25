@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['index'];
@@ -9,7 +10,7 @@ $iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-whi
 $iconDeactivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 
 $heading	= HtmlTag::create( 'h2', $w->heading );
-$buttonAdd 	= UI_HTML_Elements::LinkButton( './manage/company/branch/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-primary' );
+$buttonAdd 	= HtmlElements::LinkButton( './manage/company/branch/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-primary' );
 
 $rows		= [];
 $number		= 0;
@@ -19,16 +20,16 @@ foreach( $branches as $entry ){
 	$createdAt			= $helperTime->convert( $entry->createdAt, TRUE, 'vor ' );
 	$modifiedAt			= $entry->modifiedAt ? $helperTime->convert( $entry->modifiedAt, TRUE, 'vor ' ) : '-';
 	$url				= './manage/company/branch/edit/'.$entry->branchId;
-	$link				= UI_HTML_Elements::Link( $url, $entry->title );
+	$link				= HtmlElements::Link( $url, $entry->title );
 	$company			= $entry->company->title;
 	$uriEdit			= './manage/company/branch/edit/'.$entry->branchId;
-	$buttonEdit			= UI_HTML_Elements::LinkButton( $uriEdit, $iconEdit, 'btn btn-mini' );
+	$buttonEdit			= HtmlElements::LinkButton( $uriEdit, $iconEdit, 'btn btn-mini' );
 
 	$uriActivate		= './manage/company/branch/activate/'.$entry->branchId;
 	$uriDeactivate		= './manage/company/branch/deactivate/'.$entry->branchId;
-	$buttonActivate		= UI_HTML_Elements::LinkButton( $uriActivate, $iconActivate, 'btn btn-mini btn-success', NULL, $entry->status == 1 );
-	$buttonDeactivate	= UI_HTML_Elements::LinkButton( $uriDeactivate, $iconDeactivate, 'btn btn-mini btn-inverse', NULL, $entry->status == -1 );
-	$check		= UI_HTML_Elements::Checkbox( 'branchId', $entry->branchId );
+	$buttonActivate		= HtmlElements::LinkButton( $uriActivate, $iconActivate, 'btn btn-mini btn-success', NULL, $entry->status == 1 );
+	$buttonDeactivate	= HtmlElements::LinkButton( $uriDeactivate, $iconDeactivate, 'btn btn-mini btn-inverse', NULL, $entry->status == -1 );
+	$check		= HtmlElements::Checkbox( 'branchId', $entry->branchId );
 	$rows[]		= '	<tr class="'.$class.'">
 <!--		<td>'.$check.'</td>-->
 		<td>'.$link.'</td>
@@ -49,8 +50,8 @@ $heads	= array(
 	$w->headModifiedAt,
 	$w->headAction,
 );
-$heads		= UI_HTML_Elements::TableHeads( $heads );
-$colgroup	= UI_HTML_Elements::ColumnGroup( '', '', '120px', '120px', '100px' );
+$heads		= HtmlElements::TableHeads( $heads );
+$colgroup	= HtmlElements::ColumnGroup( '', '', '120px', '120px', '100px' );
 
 $thead		= HtmlTag::create( 'thead', $heads );
 $tbody		= HtmlTag::create( 'tbody', $rows );

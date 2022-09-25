@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
@@ -14,7 +15,7 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
 	'class'	=> 'btn btn-primary',
 ) );
 
-$optStatus	= UI_HTML_Elements::Options( array(
+$optStatus	= HtmlElements::Options( array(
 	1		=> 'aktiv',
 	0		=> 'inaktiv',
 ) );

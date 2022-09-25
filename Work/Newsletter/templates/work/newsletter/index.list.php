@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words->index;
@@ -38,8 +39,8 @@ if( $total ){
 			$list[]			= HtmlTag::create( 'tr', $cells, $attributes );
 		}
 		$tableRows		= join( $list );
-		$tableHeads		= UI_HTML_Elements::TableHeads( array( $w->columnTitle, $w->columnStatus, $w->columnCreatedAt, $w->columnModifiedAt, $w->columnSentAt ) );
-		$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '', '140px', '120px', '120px', '120px' ) );
+		$tableHeads		= HtmlElements::TableHeads( array( $w->columnTitle, $w->columnStatus, $w->columnCreatedAt, $w->columnModifiedAt, $w->columnSentAt ) );
+		$tableColumns	= HtmlElements::ColumnGroup( array( '', '140px', '120px', '120px', '120px' ) );
 		$tableHead		= HtmlTag::create( 'thead', $tableHeads );
 		$tableBody		= HtmlTag::create( 'tbody', $tableRows );
 		$list			= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );

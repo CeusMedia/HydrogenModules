@@ -1,11 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $modelUser	= new Model_User( $env );
 $userId		= $session->get( 'auth_user_id' );
 $user		= $modelUser->get( $userId );
 
-$buttonInvite	= UI_HTML_Elements::LinkButton( './manage/my/user/invite/invite', 'jemanden einladen', 'button icon add' );
+$buttonInvite	= HtmlElements::LinkButton( './manage/my/user/invite/invite', 'jemanden einladen', 'button icon add' );
 
 $listInvites	= '<em><small>Noch keine Einladungen verschickt.</em></small><br/>';
 if( $invites->all ){
@@ -21,7 +22,7 @@ if( $invites->all ){
 				$expire	= sprintf( 'verfällt am %s', $expire );
 				$image	= HtmlTag::create( 'img', NULL, array( 'src' => 'https://cdn.ceusmedia.de/img/famfamfam/silk/error.png' ) );
 				$date	.= '&nbsp;'.HtmlTag::create( 'span', $image, array( 'title' => $expire ) );
-				$buttons[]	= UI_HTML_Elements::LinkButton( './manage/my/user/invite/cancel/'.$invite->userInviteId, '', 'button tiny remove', NULL, NULL, 'abbrechen' );
+				$buttons[]	= HtmlElements::LinkButton( './manage/my/user/invite/cancel/'.$invite->userInviteId, '', 'button tiny remove', NULL, NULL, 'abbrechen' );
 			}
 		}
 		$cells		= [];
@@ -32,8 +33,8 @@ if( $invites->all ){
 		$listInvites[]	= HtmlTag::create( 'tr', join( $cells ), array( 'class' => 'invite-status status'.$invite->status ) );
 	}
 	$listInvites	= join( $listInvites );
-	$colgroup		= UI_HTML_Elements::ColumnGroup( '140px', '120px', '', '50px' );
-	$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Datum', 'Status', 'E-Mail-Adresse', '' ) );
+	$colgroup		= HtmlElements::ColumnGroup( '140px', '120px', '', '50px' );
+	$tableHeads		= HtmlElements::TableHeads( array( 'Datum', 'Status', 'E-Mail-Adresse', '' ) );
 	$listInvites	= '
 <style>
 .invite-status.status-2{

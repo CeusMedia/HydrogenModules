@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optType		= $view->renderOptions( $words['types'], 'type', $issue->type, 'issue-type type-%1$d');
@@ -29,9 +30,9 @@ foreach( $users as $user ){
 	$optManager[$user->userId]	= $user->username;
 	$optWorker[$user->userId]	= $user->username;
 }
-$optReporter	= UI_HTML_Elements::Options( $optReporter, $issue->reporterId );
-$optManager		= UI_HTML_Elements::Options( $optManager, $issue->managerId );
-$optWorker		= UI_HTML_Elements::Options( $optWorker, $issue->managerId );
+$optReporter	= HtmlElements::Options( $optReporter, $issue->reporterId );
+$optManager		= HtmlElements::Options( $optManager, $issue->managerId );
+$optWorker		= HtmlElements::Options( $optWorker, $issue->managerId );
 
 /*
 $iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
@@ -80,7 +81,7 @@ $(document).ready(function(){
 			<div class="row-fluid">
 				<div class="span4">
 					<label for="input_projectId">'.$words['edit']['labelProject'].'</label>
-					'.UI_HTML_Elements::Select( 'projectId', $optProject, 'span12 -max' ).'
+					'.HtmlElements::Select( 'projectId', $optProject, 'span12 -max' ).'
 				</div>
 				<div class="span4">
 					<label for="input_reporterId">'.$words['edit']['labelReporter'].'</label>
@@ -94,25 +95,25 @@ $(document).ready(function(){
 			<div class="row-fluid">
 				<div class="span4">
 					<label for="type">'.$words['edit']['labelType'].'</label>
-					'.UI_HTML_Elements::Select( 'type', $optType, 'span12 -max' ).'
+					'.HtmlElements::Select( 'type', $optType, 'span12 -max' ).'
 				</div>
 				<div class="span4">
 					<label for="severity">'.$words['edit']['labelSeverity'].'</label>
-					'.UI_HTML_Elements::Select( 'severity', $optSeverity, 'span12 -max' ).'
+					'.HtmlElements::Select( 'severity', $optSeverity, 'span12 -max' ).'
 				</div>
 				<div class="span4">
 					<label for="priority">'.$words['edit']['labelPriority'].'</label>
-					'.UI_HTML_Elements::Select( 'priority', $optPriority, 'span12 -max' ).'
+					'.HtmlElements::Select( 'priority', $optPriority, 'span12 -max' ).'
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span3">
 					<label for="status">'.$words['edit']['labelStatus'].'</label>
-					'.UI_HTML_Elements::Select( 'status', $optStatus, 'span12 -max' ).'
+					'.HtmlElements::Select( 'status', $optStatus, 'span12 -max' ).'
 				</div>
 				<div class="span3">
 					<label for="progress">'.$words['edit']['labelProgress'].': <span id="progress-view"></span></label>
-					'.UI_HTML_Elements::Input( 'progress', (int) $issue->progress, 's numeric' ).'
+					'.HtmlElements::Input( 'progress', (int) $issue->progress, 's numeric' ).'
 					<div id="progress-slider" style="display: none; margin-top: 1em"></div>
 				</div>
 				<div class="span1 muted">

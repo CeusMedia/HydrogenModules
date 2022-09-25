@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w		= (object) $words['password'];
 extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/password.' ) );
 
@@ -16,7 +18,7 @@ return '
 					</li>
 				</ul>
 				<div class="buttonbar">
-					'.UI_HTML_Elements::Button( 'confirm', $w->buttonSend, 'button save' ).'
+					'.HtmlElements::Button( 'confirm', $w->buttonSend, 'button save' ).'
 				</div>
 			</form>
 		</fieldset>

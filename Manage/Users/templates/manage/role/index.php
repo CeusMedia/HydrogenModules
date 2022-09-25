@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $wf		= (object) $words['index'];
@@ -30,9 +31,9 @@ foreach( $roles as $nr => $role ){
 		HtmlTag::create( 'td', $labelRegister ),
 	) );
 }
-$heads	= UI_HTML_Elements::TableHeads( $heads );
+$heads	= HtmlElements::TableHeads( $heads );
 $table	= HtmlTag::create( 'table', array(
-	UI_HTML_Elements::ColumnGroup( "45%", "10%", "25%", "20%" ),
+	HtmlElements::ColumnGroup( "45%", "10%", "25%", "20%" ),
 	HtmlTag::create( 'thead', $heads ),
 	HtmlTag::create( 'tbody', $rows ),
 ), array( 'class' => 'table not-table-condensed table-striped', 'id' => 'roles' ) );

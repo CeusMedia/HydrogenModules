@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
@@ -56,8 +57,8 @@ foreach( $userLicense->keys as $key ){
 		HtmlTag::create( 'td', $buttonAssign ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( array( "15%", "25%", "30%") );
-$heads	= UI_HTML_Elements::TableHeads( array( 'Schlüssel', 'Zustand', 'Besitzer' ) );
+$colgroup	= HtmlElements::ColumnGroup( array( "15%", "25%", "30%") );
+$heads	= HtmlElements::TableHeads( array( 'Schlüssel', 'Zustand', 'Besitzer' ) );
 $thead	= HtmlTag::create( 'thead', $heads );
 $tbody	= HtmlTag::create( 'tbody', $list );
 $list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );

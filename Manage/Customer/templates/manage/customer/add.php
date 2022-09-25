@@ -1,13 +1,14 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $optSize	= $words['sizes'];
-$optSize	= UI_HTML_Elements::Options( $optSize, $customer->size );
+$optSize	= HtmlElements::Options( $optSize, $customer->size );
 
 $optType	= $words['types'];
-$optType	= UI_HTML_Elements::Options( $optType, $customer->type );
+$optType	= HtmlElements::Options( $optType, $customer->type );
 
 $optCountry	= $words['countries'];
-$optCountry	= UI_HTML_Elements::Options( $optCountry, $customer->country );
+$optCountry	= HtmlElements::Options( $optCountry, $customer->country );
 
 $w	= (object) $words['add'];
 

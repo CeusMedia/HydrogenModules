@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
@@ -17,7 +18,7 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', array(
 $optIdentifier	= array( '' => '- alle -');
 foreach( $identifiers as $identifier )
 	$optIdentifier[$identifier]	= $identifier;
-$optIdentifier	= UI_HTML_Elements::Options( $optIdentifier, $filters->get( 'identifier' ) );
+$optIdentifier	= HtmlElements::Options( $optIdentifier, $filters->get( 'identifier' ) );
 
 return '
 <div class="content-panel">

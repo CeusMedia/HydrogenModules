@@ -1,8 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w	= (object) $words['addCategory'];
 
-$optStatus	= UI_HTML_Elements::Options( $words['states'], $category->status );
+$optStatus	= HtmlElements::Options( $words['states'], $category->status );
 
 $panelCategory	= '
 <div class="content-panel">

@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $panelFilter	= $this->loadTemplateFile( 'admin/module/index.filter.php' );
 
@@ -24,7 +25,7 @@ foreach( $modules as $moduleId => $module ){
 
 	$icon		= '';
 	if( !empty( $module->icon ) ){
-		$image	= UI_HTML_Elements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
+		$image	= HtmlElements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
 		$icon	= HtmlTag::create( 'a', $image, array( 'class' => 'image' ) );
 	}
 	$icon		= '<div style="width: 16px; height: 16px; float: left; display: block">'.$icon.'</div>';
@@ -55,8 +56,8 @@ $heads		= array(
 	$words['index']['headVersion'],
 	$words['index']['headCategory'],
 );
-$heads		= UI_HTML_Elements::TableHeads( $heads );
-$colGroup	= UI_HTML_Elements::ColumnGroup( "58%,14%,8%,20%" );
+$heads		= HtmlElements::TableHeads( $heads );
+$colGroup	= HtmlElements::ColumnGroup( "58%,14%,8%,20%" );
 $listAll	= '<table class="modules all table table-striped" style="table-layout: fixed">
 	'.$colGroup.'
 	<thead>'.$heads.'</thead>

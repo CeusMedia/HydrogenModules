@@ -1,11 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $panelFilter	= $this->loadTemplate( 'manage/locale', 'filter' );
 $panelList		= $this->loadTemplate( 'manage/locale', 'list' );
 
 $optPath	= array_merge( array( '' ), $paths );
 $optPath	= array_combine( $optPath, $optPath );
-$optPath	= UI_HTML_Elements::Options( $optPath );
+$optPath	= HtmlElements::Options( $optPath );
 
 $w	= (object) $words['addFolder'];
 $panelFolder	= '
@@ -20,7 +21,7 @@ $panelFolder	= '
 		<select name="folder_path" id="input_folder_path" class="max span11">'.$optPath.'</select>
 	</div>
 	<div class="buttonbar">
-		'.UI_HTML_Elements::Button( 'add', '<i class="icon-plus icon-white"></i> '.$w->buttonAdd, 'button add btn btn-success' ).'
+		'.HtmlElements::Button( 'add', '<i class="icon-plus icon-white"></i> '.$w->buttonAdd, 'button add btn btn-success' ).'
 	</div>
 </form>
 ';
@@ -38,7 +39,7 @@ $panelFile	= '
 		<select name="file_path" id="input_file_path" class="max span11">'.$optPath.'</select>
 	</div>
 	<div class="buttonbar">
-		'.UI_HTML_Elements::Button( 'add', '<i class="icon-plus icon-white"></i> '.$w->buttonAdd, 'button add btn btn-success' ).'
+		'.HtmlElements::Button( 'add', '<i class="icon-plus icon-white"></i> '.$w->buttonAdd, 'button add btn btn-success' ).'
 	</div>
 </form>
 ';

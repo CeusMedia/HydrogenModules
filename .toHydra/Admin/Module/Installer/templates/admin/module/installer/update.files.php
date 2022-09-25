@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /**
@@ -75,8 +76,8 @@ else{
 		'data-state'	=> 1
 	) );
 
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "3%", "12%", "10%", "60%", "15%" );
-	$heads		= UI_HTML_Elements::TableHeads( array( $checkAll, 'Typ', 'Status', 'Datei', 'Aktion' ) );
+	$colgroup	= HtmlElements::ColumnGroup( "3%", "12%", "10%", "60%", "15%" );
+	$heads		= HtmlElements::TableHeads( array( $checkAll, 'Typ', 'Status', 'Datei', 'Aktion' ) );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $list, array( 'id' => 'file-rows' ) );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table module-update-files' ) );

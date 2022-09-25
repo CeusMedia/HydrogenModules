@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
@@ -15,7 +16,7 @@ if( $articleAuthors ){
 	foreach( $articleAuthors as $item ){
 
 		$optRole		= $words['authorRoles'];
-		$optRole		= UI_HTML_Elements::Options( $optRole, (int) $item->editor );
+		$optRole		= HtmlElements::Options( $optRole, (int) $item->editor );
 		$urlRemove		= './manage/catalog/article/removeAuthor/'.$article->articleId.'/'.(int) $item->authorId;
 		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'"><i class="icon-remove icon-white"></i></a>';
 		$label			= $item->lastname.( $item->firstname ? ', '.$item->firstname : "" );
@@ -29,7 +30,7 @@ if( $articleAuthors ){
 
 	$listAuthors	= '
 	<table class="table table-condensed">
-		'.UI_HTML_Elements::ColumnGroup( '', '150px', '40px' ).'
+		'.HtmlElements::ColumnGroup( '', '150px', '40px' ).'
 		<thead>
 			<tr>
 				<th>Autor / Herausgeber</th>
@@ -60,10 +61,10 @@ foreach( $authors as $item )
 		$label	= $item->lastname . ( $item->firstname ? ', '.$item->firstname : "" );
 		$optAuthor[$item->authorId]	= $label;
 	}
-$optAuthor	= UI_HTML_Elements::Options( $optAuthor );
+$optAuthor	= HtmlElements::Options( $optAuthor );
 
 $optRole	= $words['authorRoles'];
-$optRole	= UI_HTML_Elements::Options( $optRole );
+$optRole	= HtmlElements::Options( $optRole );
 
 $panelAdd	= '
 <div class="content-panel">

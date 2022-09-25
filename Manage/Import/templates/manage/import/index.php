@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
@@ -33,7 +34,7 @@ if( count( $connections ) > 0 ){
 			HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $connection->modifiedAt, TRUE, 'vor' ) ),
 		]);
 	}
-	$thead	= UI_HTML_Elements::TableHeads( ['ID', 'Titel', 'Zustand', 'Authentifikation', 'Server', 'Connector', 'Erstellung', 'Veränderung'] );
+	$thead	= HtmlElements::TableHeads( ['ID', 'Titel', 'Zustand', 'Authentifikation', 'Server', 'Connector', 'Erstellung', 'Veränderung'] );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 
 	$table	= HtmlTag::create( 'table', [$thead, $tbody], array( 'class' => 'table' ) );

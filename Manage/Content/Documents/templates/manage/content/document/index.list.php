@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['index'];
@@ -42,7 +43,7 @@ if( $documents ){
 			HtmlTag::create( 'th', $w->headActions )
 		)
 	);
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "140px", "80px", "40px" );
+	$colgroup	= HtmlElements::ColumnGroup( "", "140px", "80px", "40px" );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
 		'class'	=> 'table table-striped table-fixed',

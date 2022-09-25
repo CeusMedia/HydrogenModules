@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Work_Mission_Dashboard_MyTasks extends CMF_Hydrogen_View_Helper_Abstract{
@@ -56,7 +57,7 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends CMF_Hydrogen_View_Helpe
 				), array( 'class' => $rowStyle ) );
 			};
 			krsort( $rows );
-			$colgroup	= UI_HTML_Elements::ColumnGroup( array(
+			$colgroup	= HtmlElements::ColumnGroup( array(
 				'',
 				'50px',
 			) );

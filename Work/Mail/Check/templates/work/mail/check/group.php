@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-times-circle' ) );
@@ -66,8 +67,8 @@ foreach( $groups as $group ){
 		HtmlTag::create( 'td', $buttons, array( 'class' => 'cell-group-createdAt' ) ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( "", "15%", "15%", "15%", "15%" );
-$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Name', 'Getested', 'Qualität', 'Erstellung' ) ) );
+$colgroup	= HtmlElements::ColumnGroup( "", "15%", "15%", "15%", "15%" );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Name', 'Getested', 'Qualität', 'Erstellung' ) ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -7,7 +8,7 @@ $iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' )
 
 $w			= (object) $words['edit'];
 
-$optStatus	= UI_HTML_Elements::Options( $words['states'], $news->status );
+$optStatus	= HtmlElements::Options( $words['states'], $news->status );
 
 $buttonAdd		= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
 	'href'	=> './manage/news',

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
@@ -8,26 +9,26 @@ $iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-mi
 $optStatus	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $wordsGeneral['job-run-statuses'] as $key => $value )
 	$optStatus[(string) $key]	= $value;
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 $optType	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $wordsGeneral['job-run-types'] as $key => $value )
 	$optType[$key]	= $value;
-$optType	= UI_HTML_Elements::Options( $optType, $filterType );
+$optType	= HtmlElements::Options( $optType, $filterType );
 
 $optJobId	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $definitions as $jobId => $definition )
 	$optJobId[$jobId]	= $definition->identifier;
-$optJobId	= UI_HTML_Elements::Options( $optJobId, $filterJobId );
+$optJobId	= HtmlElements::Options( $optJobId, $filterJobId );
 
 $optClassName	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $definitions as $jobId => $definition )
 	$optClassName[$definition->className]	= str_replace( '_', ': ', $definition->className );
 ksort( $optClassName );
-$optClassName	= UI_HTML_Elements::Options( $optClassName, $filterClassName );
+$optClassName	= HtmlElements::Options( $optClassName, $filterClassName );
 
 $optArchived	= array( 0 => 'no', 1 => 'yes' );
-$optArchived	= UI_HTML_Elements::Options( $optArchived, $filterArchived );
+$optArchived	= HtmlElements::Options( $optArchived, $filterArchived );
 
 $panelFilter	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $words['filter']['heading'] ),

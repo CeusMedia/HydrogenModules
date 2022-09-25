@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helperDetails  = new View_Helper_Module_Details( $env );
@@ -16,7 +17,7 @@ $w			= (object) $words['uninstall'];
 /*  --  BUTTONS  --  */
 $attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
 $buttonBack		= HtmlTag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
-$buttonSubmit	= UI_HTML_Elements::Button( 'doUninstall', $w->buttonUninstall, 'button add' );
+$buttonSubmit	= HtmlElements::Button( 'doUninstall', $w->buttonUninstall, 'button add' );
 
 $labelDetails   = HtmlTag::create( 'span', 'Details' );
 $buttonDetails  = HtmlTag::create( 'button', $labelDetails, array( 'class' => 'button info more', 'onclick' => "$('#panel-details').toggle()" ) );

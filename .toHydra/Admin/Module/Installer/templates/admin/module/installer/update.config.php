@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $configKeys		= array_keys( $moduleSource->config ) + array_keys( $moduleLocal->config );
@@ -47,8 +48,8 @@ if( $hasUpdate && count( $configKeys ) ){
 		$rows[$key]	= HtmlTag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
 	#	natcasesort( $rows );
 	}
-	$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Schlüssel', 'Typ', 'Änderung', 'Wert' ) );
-	$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '25%', '10%', '15%', '50%' ) );
+	$tableHeads		= HtmlElements::TableHeads( array( 'Schlüssel', 'Typ', 'Änderung', 'Wert' ) );
+	$tableColumns	= HtmlElements::ColumnGroup( array( '25%', '10%', '15%', '50%' ) );
 	$tableConfig	= '<table>'.$tableColumns.$tableHeads.join( $rows ).'</table>';
 	$tableConfig	= HtmlTag::create( 'h4', 'Konfiguration' ).$tableConfig.'<br/>';
 	return '

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 //	if( $env->getRequest()->isAjax() )								// this is an AJAX request
 //		return $content;													// deliver content only
 
@@ -28,7 +30,7 @@ foreach( $model->getAll() as $instanceId => $instance )
 	$optInstance[$instanceId]	= $instance->title;
 asort( $optInstance );
 $instanceId		= $env->getSession()->get( 'instanceId' );
-$optInstance	= UI_HTML_Elements::Options( $optInstance, $instanceId );
+$optInstance	= HtmlElements::Options( $optInstance, $instanceId );
 
 $badges	= [];
 $infos	= array(

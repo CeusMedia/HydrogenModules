@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -22,7 +23,7 @@ class View_Helper_Blog{
 			}
 			else
 				$title	= HtmlTag::create( 'strike', $title );
-			$link		= UI_HTML_Elements::Link( $uri, $title, 'icon-label link-blog', '_blank' );
+			$link		= HtmlElements::Link( $uri, $title, 'icon-label link-blog', '_blank' );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 		return $content;
@@ -38,7 +39,7 @@ class View_Helper_Blog{
 			' <3'	=> '14.ico',
 		);
 		foreach( $emoticons as $key => $value ){
-			$image		= UI_HTML_Elements::Image( $path.$value, trim( $key ), 16, 16 );
+			$image		= HtmlElements::Image( $path.$value, trim( $key ), 16, 16 );
 			$content	= str_replace( $key, ' '.$image, $content );
 		}
 		return $content;
@@ -54,7 +55,7 @@ class View_Helper_Blog{
 			$fileName	= $matches[1][$i];
 			$uri		= $path.$fileName;
 			$thumb		= './blog/thumb/'.$fileName;
-			$image		= UI_HTML_Elements::Image( $thumb, $title, 'thumb' );
+			$image		= HtmlElements::Image( $thumb, $title, 'thumb' );
 			if( file_exists( $uri ) ){
 				$attributes	= array(
 					'href'	=> $uri,

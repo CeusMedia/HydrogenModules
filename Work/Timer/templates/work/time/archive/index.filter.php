@@ -1,12 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $optProject	= array( '' => '- alle -' );
 foreach( $projectMap as $project )
 	$optProject[$project->projectId]	= $project->title;
-$optProject	= UI_HTML_Elements::Options( $optProject, $filterProjectId );
+$optProject	= HtmlElements::Options( $optProject, $filterProjectId );
 
 $optStatus	= array_merge( array( '' => '- alle -' ), $words['states'] );
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 return '
 <div class="content-panel">

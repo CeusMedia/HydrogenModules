@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 
 $optProjectId	= [];
 foreach( $projects as $project )
 	$optProjectId[$project->projectId]	= $project->title;
-$optProjectId	= UI_HTML_Elements::Options( $optProjectId );
+$optProjectId	= HtmlElements::Options( $optProjectId );
 
 $panelDefault = '
 <div class="content-panel">

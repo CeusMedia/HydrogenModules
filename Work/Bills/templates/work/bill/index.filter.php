@@ -1,16 +1,17 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $optType		= /*array( '' => '- alle -' ) + */$words['types'];
-$optType		= UI_HTML_Elements::Options( $optType, $env->getSession()->get( 'filter_work_bill_type' ) );
+$optType		= HtmlElements::Options( $optType, $env->getSession()->get( 'filter_work_bill_type' ) );
 
 $optStatus		= /*array( '' => '- alle -' ) + */$words['states'];
-$optStatus		= UI_HTML_Elements::Options( $optStatus, $env->getSession()->get( 'filter_work_bill_status' ) );
+$optStatus		= HtmlElements::Options( $optStatus, $env->getSession()->get( 'filter_work_bill_status' ) );
 
 $optOrder		= array( 'date' => 'Fälligkeit', 'status' => 'Status', 'type' => 'Typ' );
-$optOrder		= UI_HTML_Elements::Options( $optOrder, $filters->get( 'order' ) );
+$optOrder		= HtmlElements::Options( $optOrder, $filters->get( 'order' ) );
 
 $optDirection	= array( 'ASC' => 'aufsteigend', 'DESC' => 'absteigend' );
-$optDirection	= UI_HTML_Elements::Options( $optDirection, $filters->get( 'direction' ) );
+$optDirection	= HtmlElements::Options( $optDirection, $filters->get( 'direction' ) );
 
 $filterStart	= $filters->get( 'start' );
 $filterEnd		= $filters->get( 'end' );

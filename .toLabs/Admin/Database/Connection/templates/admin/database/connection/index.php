@@ -1,11 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w	= (object) $words['index'];
 
 $optDriver	= array( '' => '- keiner -' );
 foreach( $drivers as $driver )
 	$optDriver[$driver]	= $words['database-drivers'][$driver];
-$optDriver	= UI_HTML_Elements::Options( $optDriver, $data->driver );
+$optDriver	= HtmlElements::Options( $optDriver, $data->driver );
 
 $panelDatabase	= '
 <form id="form_database_connection" action="./admin/database/connection/configure" method="post">
@@ -48,7 +49,7 @@ $panelDatabase	= '
 		<div id="status-info" class="column-clear"></div>
 		<div class="buttonbar">
 			<button type="button" id="button_check" class="button check connect"><span>'.$w->buttonCheck.'</span></button>
-			'.UI_HTML_Elements::Button( 'save', $w->buttonSave, 'button edit save', NULL, TRUE ).'
+			'.HtmlElements::Button( 'save', $w->buttonSave, 'button edit save', NULL, TRUE ).'
 		</div>
 	</fieldset>
 </form>';

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
@@ -6,17 +7,17 @@ $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'
 $optCategory	= array( '' => '- alle -' );
 foreach( $categories as $category )
 	$optCategory[$category->categoryId]	= $category->title;
-$optCategory	= UI_HTML_Elements::Options( $optCategory, $filterCategoryId );
+$optCategory	= HtmlElements::Options( $optCategory, $filterCategoryId );
 
 $optSize	= array( '' => '- alle -' );
 foreach( array( 'S', 'M', 'L', 'XL' ) as $size )
 	$optSize[$size]	= $size;
-$optSize	= UI_HTML_Elements::Options( $optSize, $filterSize );
+$optSize	= HtmlElements::Options( $optSize, $filterSize );
 
 
 $filterLanguage		= '';
 if( count( $languages ) > 1 ){
-	$optLanguage	= UI_HTML_Elements::Options( array_combine( $languages, $languages ), $language );
+	$optLanguage	= HtmlElements::Options( array_combine( $languages, $languages ), $language );
 	$filterLanguage	= '
 		<div class="row-fluid">
 			<div class="span12">
@@ -85,7 +86,7 @@ foreach( $articles as $article ){
 		HtmlTag::create( 'td', $article->price.'&euro;', array( 'class' => 'cell-article-price', 'style' => 'text-align: right' ) ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( array( '40', '', '15%', '10%', '10%', '10%', '5%', '10%' ) );
+$colgroup	= HtmlElements::ColumnGroup( array( '40', '', '15%', '10%', '10%', '10%', '5%', '10%' ) );
 $thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 	HtmlTag::create( 'th', '' ),
 	HtmlTag::create( 'th', 'Bezeichnung' ),

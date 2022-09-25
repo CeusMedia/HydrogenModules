@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['add'];
@@ -16,7 +17,7 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, arr
 	'class'		=> 'btn btn-success',
 ) );
 
-$optStatus		= UI_HTML_Elements::Options( $words['states'], (int) $relocation->status );
+$optStatus		= HtmlElements::Options( $words['states'], (int) $relocation->status );
 $helper			= new View_Helper_TimePhraser( $env );
 
 $panelAdd	= '

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //  --  PANEL: BRANCHES  --  //
@@ -11,7 +12,7 @@ foreach( $company->branches as $branch ){
 $panelBranches	= HTML::Fields(
 	HTML::Legend( $w->legend, 'list company branches' ).
 	HTML::UlClass( 'list-branches', $listBranches ? join( $listBranches ) : $w->noEntries ).
-	HTML::Buttons( UI_HTML_Elements::LinkButton( './manage/branch/add', $w->buttonAdd, 'button add' ) )
+	HTML::Buttons( HtmlElements::LinkButton( './manage/branch/add', $w->buttonAdd, 'button add' ) )
 );
 
 //  --  PANEL: USERS  --  //
@@ -27,7 +28,7 @@ foreach( $company->users as $user ){
 $panelUsers	= HTML::Fields(
 	HTML::Legend( $w->legend, 'list company users' ).
 	HTML::UlClass( 'list-users', $listUsers ? join( $listUsers ) : $w->noEntries ).
-	HTML::Buttons( UI_HTML_Elements::LinkButton( './manage/user/add/'.$company->companyId, $w->buttonAdd, 'button add' ) )
+	HTML::Buttons( HtmlElements::LinkButton( './manage/user/add/'.$company->companyId, $w->buttonAdd, 'button add' ) )
 );
 
 //  --  PANEL: EDIT  --  //
@@ -87,9 +88,9 @@ $panelEdit	= HTML::Form( './manage/company/edit/'.$company->companyId, 'company_
 			)
 		).
 		HTML::Buttons(
-			UI_HTML_Elements::LinkButton( './manage/company', $w->buttonCancel, 'btn btn-small' ).
+			HtmlElements::LinkButton( './manage/company', $w->buttonCancel, 'btn btn-small' ).
 			'&nbsp;|&nbsp'.
-			UI_HTML_Elements::Button( 'doEdit', $w->buttonSave, 'btn btn-success' )
+			HtmlElements::Button( 'doEdit', $w->buttonSave, 'btn btn-success' )
 #				'&nbsp;|&nbsp'.
 #				HTML::LinkButton( './manage/company/delete/'.$company->companyId, $w['buttonRemove'], 'button delete' ).
 		)

@@ -1,7 +1,8 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
-use UI_HTML_Tag as Html;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as Html;
 
 $iconAdd		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 $iconEdit		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
@@ -29,9 +30,9 @@ $statusClasses	= array(
 $optRoleId	= [];
 foreach( $roles as $role )
 	$optRoleId[$role->mailGroupRoleId]	= $role->title;
-$optRoleId	= UI_HTML_Elements::Options( $optRoleId, $group->defaultRoleId );
+$optRoleId	= HtmlElements::Options( $optRoleId, $group->defaultRoleId );
 
-$optStatus		= UI_HTML_Elements::Options( array(
+$optStatus		= HtmlElements::Options( array(
 	-1		=> 'deaktiviert',
 	0		=> 'in Arbeit',
 	1		=> 'aktiviert',
@@ -147,7 +148,7 @@ if( $members ){
 		$optRoleId	= [];
 		foreach( $roles as $role )
 			$optRoleId[$role->mailGroupRoleId]	= $role->title;
-		$optRoleId	= UI_HTML_Elements::Options( $optRoleId, $member->roleId );
+		$optRoleId	= HtmlElements::Options( $optRoleId, $member->roleId );
 
 		$modal	= new BootstrapModalDialog( 'modal-edit-'.$member->mailGroupMemberId );
 		$modal->setHeading( 'Mitglied bearbeiten' );
@@ -191,8 +192,8 @@ if( $members ){
 		) );
 		$modals[]	= $modal;
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '', '20%', '100px' );
-	$thead		= Html::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$colgroup	= HtmlElements::ColumnGroup( '', '20%', '100px' );
+	$thead		= Html::create( 'thead', HtmlElements::TableHeads( array(
 		'Name & E-Mail-Adresse',
 		'Rolle',
 		'',

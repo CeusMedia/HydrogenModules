@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w	= (object) $words['filter'];
 
 $filterCustomer	= !empty( $filters['customer'] ) ? $filters['customer'] : "";
@@ -6,10 +8,10 @@ $filterCustomer	= !empty( $filters['customer'] ) ? $filters['customer'] : "";
 $optStatus	= array(/* '' => '- alle -' */);
 foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $value;
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $filters['status'] );
+$optStatus	= HtmlElements::Options( $optStatus, $filters['status'] );
 
 $optOrder	= $words['filter-orders'];
-$optOrder	= UI_HTML_Elements::Options( $optOrder, $filters['order'] );
+$optOrder	= HtmlElements::Options( $optOrder, $filters['order'] );
 
 return '
 <div class="content-panel">

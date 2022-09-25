@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['add'];
@@ -44,12 +45,12 @@ $page->js->addUrl( 'https://cdn.ceusmedia.de/js/jquery/pstrength/2.1.0.min.js', 
 $page->js->addScriptOnReady( $script );
 */
 
-$optStatus		= UI_HTML_Elements::Options( array_reverse( $words['status'], TRUE ), @$user->status );
-$optRole		= UI_HTML_Elements::Options( array_reverse( $roleMap, TRUE ), @$user->roleId );
-$optGender		= UI_HTML_Elements::Options( $words['gender'], $user->gender );
+$optStatus		= HtmlElements::Options( array_reverse( $words['status'], TRUE ), @$user->status );
+$optRole		= HtmlElements::Options( array_reverse( $roleMap, TRUE ), @$user->roleId );
+$optGender		= HtmlElements::Options( $words['gender'], $user->gender );
 
-$buttonList		= UI_HTML_Elements::LinkButton( './manage/user', $iconCancel.'&nbsp;'.$w->buttonList, 'btn not-btn-small' );
-$buttonSave		= UI_HTML_Elements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' );
+$buttonList		= HtmlElements::LinkButton( './manage/user', $iconCancel.'&nbsp;'.$w->buttonList, 'btn not-btn-small' );
+$buttonSave		= HtmlElements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' );
 
 $panelAdd	= '
 <div class="content-panel">

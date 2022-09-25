@@ -1,8 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-
-#print_m( $projects );
-#die;
 
 $tabs		= View_Manage_Customer::renderTabs( $env, $customerId, 'project/'.$customerId );
 
@@ -26,8 +24,8 @@ if( $relations ){
 			HtmlTag::create( 'td', $buttonRemove )
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "100%" );
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$colgroup	= HtmlElements::ColumnGroup( "100%" );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		'Titel'
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
@@ -49,9 +47,9 @@ $list	= HtmlTag::create( 'ul', $list );
 $optProject	= array( '' => '' );
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
-$optProject	= UI_HTML_Elements::Options( $optProject );
+$optProject	= HtmlElements::Options( $optProject );
 
-$optType	= UI_HTML_Elements::Options( $words['types'] );
+$optType	= HtmlElements::Options( $words['types'] );
 
 return '
 <h3><span class="muted">Kunde</span> '.$customer->title.'</h3>

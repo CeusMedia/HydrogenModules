@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['indexList'];
@@ -41,9 +42,9 @@ if( $total ){
 			'data-user-status'	=> $user->status,
 		) );
 	}
-	$heads		= UI_HTML_Elements::TableHeads( $words['indexListHeads'] );
+	$heads		= HtmlElements::TableHeads( $words['indexListHeads'] );
 	$list		= HtmlTag::create( 'table', array(
-		UI_HTML_Elements::ColumnGroup( "32%", "17%", "15%", "12%", "12%" ),
+		HtmlElements::ColumnGroup( "32%", "17%", "15%", "12%", "12%" ),
 		HtmlTag::create( 'thead', $heads ),
 		HtmlTag::create( 'tbody', $rows ),
 	), array( 'class' => 'table not-table-condensed table-striped', 'id' => "users" ) );

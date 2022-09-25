@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
@@ -40,7 +41,7 @@ if( $exceptions ){
 			HtmlTag::create( 'td', $buttons ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '', '180px', '150px', '100px' );
+	$colgroup	= HtmlElements::ColumnGroup( '', '180px', '150px', '100px' );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-striped table-condensed', 'style' => 'table-layout: fixed' ) );
 }

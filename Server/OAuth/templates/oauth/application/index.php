@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*
@@ -22,8 +23,8 @@ if( $applications ){
 			HtmlTag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
 		), array( 'class' => $trClasses[(int) $application->status]) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "30%", "40%", "15%", "15%" );
-	$theads		= UI_HTML_Elements::TableHeads( array(
+	$colgroup	= HtmlElements::ColumnGroup( "30%", "40%", "15%", "15%" );
+	$theads		= HtmlElements::TableHeads( array(
 		"Applikation",
 		"Beschreibung",
 		"Zustand",
@@ -71,8 +72,8 @@ if( $applications ){
 			HtmlTag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
 		), array( 'class' => NULL ) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '50%', '15%', '15%', '20%' );
-	$theads		= UI_HTML_Elements::TableHeads( array(
+	$colgroup	= HtmlElements::ColumnGroup( '50%', '15%', '15%', '20%' );
+	$theads		= HtmlElements::TableHeads( array(
 		'Applikation',
 		'Vertraulichkeit',
 		'Zustand',

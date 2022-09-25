@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $labelsCustomer	= $this->getWords( 'customer', 'manage/shop' );
@@ -139,7 +140,7 @@ function renderDataList( $keys, $data, $labels ){
 }
 
 $optStatus	= $words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, (string)$order->status );
+$optStatus	= HtmlElements::Options( $optStatus, (string)$order->status );
 
 $panels	= [];
 $panels[]	= '
@@ -214,13 +215,13 @@ foreach( $order->positions as $position ){
 	$rows[]			= HtmlTag::create( 'tr', $cells, $attributes );
 }
 
-$tableHeads		= UI_HTML_Elements::TableHeads( array(
+$tableHeads		= HtmlElements::TableHeads( array(
 	$w->head_quantity,
 	$w->head_article,
 	$w->head_bridge,
 	$w->head_status,
 ) );
-$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '60', '', '220', '180' ) );
+$tableColumns	= HtmlElements::ColumnGroup( array( '60', '', '220', '180' ) );
 $tableHead		= HtmlTag::create( 'thead', $tableHeads );
 $tableBody		= HtmlTag::create( 'tbody', $rows );
 $tableArticles	= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );

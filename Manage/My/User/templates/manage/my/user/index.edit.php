@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['edit'];
@@ -56,7 +57,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span3',
 					HTML::Label( 'number', $w->labelCountry, $mandatoryAddress ? 'mandatory' : '' ).
-					HtmlTag::create( 'select', UI_HTML_Elements::Options( $countries, $user->country ), array(
+					HtmlTag::create( 'select', HtmlElements::Options( $countries, $user->country ), array(
 						'name'			=> 'country',
 						'id'			=> 'input_country',
 						'class'			=> 'span12',
@@ -136,7 +137,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 								'autocomplete'	=> 'current-password',
 								'placeholder'	=> $w->labelPasswordCurrent,
 							) ).
-							UI_HTML_Elements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
+							HtmlElements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
 						)
 					) )
 				)

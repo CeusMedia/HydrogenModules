@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
@@ -7,14 +8,14 @@ $iconFile		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-folder-open' ) )
 
 $optStatus	= $words->states;
 unset( $optStatus[-1] );
-$optStatus	= UI_HTML_Elements::Options( $optStatus );
+$optStatus	= HtmlElements::Options( $optStatus );
 
 $w	= (object) $words->add;
 
 $optGroupId	= [];
 foreach( $groups as $group )
 	$optGroupId[$group->newsletterGroupId]	= $group->title;
-$optGroupId	= UI_HTML_Elements::Options( $optGroupId );
+$optGroupId	= HtmlElements::Options( $optGroupId );
 
 $helperUpload	= new View_Helper_Input_File( $env );
 $helperUpload->setName( 'upload' );

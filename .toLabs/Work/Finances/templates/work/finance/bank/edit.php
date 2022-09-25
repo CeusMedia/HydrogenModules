@@ -1,8 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w			= (object) $words['edit'];
 
 $optType	= $words['readers'];
-$optType	= UI_HTML_Elements::Options( $optType, $bank->type );
+$optType	= HtmlElements::Options( $optType, $bank->type );
 
 return '
 <form action="./work/finance/bank/edit/'.$bank->bankId.'" method="post">
@@ -27,9 +29,9 @@ return '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './work/finance/bank', $w->buttonCancel, 'button icon cancel' ).'
-			'.UI_HTML_Elements::Button( 'save', $w->buttonSave, 'button icon save' ).'
-			'.UI_HTML_Elements::LinkButton( './work/finance/bank/remove/'.$bank->bankId, $w->buttonRemove, 'button icon remove', $w->buttonRemoveConfirm, TRUE ).'
+			'.HtmlElements::LinkButton( './work/finance/bank', $w->buttonCancel, 'button icon cancel' ).'
+			'.HtmlElements::Button( 'save', $w->buttonSave, 'button icon save' ).'
+			'.HtmlElements::LinkButton( './work/finance/bank/remove/'.$bank->bankId, $w->buttonRemove, 'button icon remove', $w->buttonRemoveConfirm, TRUE ).'
 		</div>
 	</fieldset>
 </form>';

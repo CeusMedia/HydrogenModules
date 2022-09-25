@@ -1,8 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
-$add 		= UI_HTML_Elements::LinkButton( './manage/branch/add', $words['index']['buttonAdd'], 'button add' );
+$add 		= HtmlElements::LinkButton( './manage/branch/add', $words['index']['buttonAdd'], 'button add' );
 
 $rows		= [];
 $number		= 0;
@@ -15,17 +16,17 @@ foreach( $branches as $entry )
 	$timeHelper	= new CMF_Hydrogen_View_Helper_Timestamp( $entry->modifiedAt );
 	$modifiedAt	= $entry->modifiedAt ? $timeHelper->toPhrase( $env, TRUE ) : '';
 	$url		= './manage/branch/edit/'.$entry->branchId;
-	$link		= UI_HTML_Elements::Link( $url, $entry->title );
+	$link		= HtmlElements::Link( $url, $entry->title );
 	$company	= $entry->company->title;
 	$uriEdit		= './manage/branch/edit/'.$entry->branchId;
-	$buttonEdit		= UI_HTML_Elements::LinkButton( $uriEdit, '', 'tiny edit' );
+	$buttonEdit		= HtmlElements::LinkButton( $uriEdit, '', 'tiny edit' );
 	$uriRemove		= './manage/branch/remove/'.$entry->branchId;
-	$buttonRemove	= UI_HTML_Elements::LinkButton( $uriEdit, '', 'tiny remove' );
+	$buttonRemove	= HtmlElements::LinkButton( $uriEdit, '', 'tiny remove' );
 	$uriActivate		= './manage/branch/activate/'.$entry->branchId;
-	$buttonActivate		= UI_HTML_Elements::LinkButton( $uriActivate, '', 'tiny accept', NULL, $entry->status == 1 );
+	$buttonActivate		= HtmlElements::LinkButton( $uriActivate, '', 'tiny accept', NULL, $entry->status == 1 );
 	$uriDeactivate		= './manage/branch/deactivate/'.$entry->branchId;
-	$buttonDeactivate	= UI_HTML_Elements::LinkButton( $uriDeactivate, '', 'tiny decline', NULL, $entry->status == -1 );
-	$check		= UI_HTML_Elements::Checkbox( 'branchId', $entry->branchId );
+	$buttonDeactivate	= HtmlElements::LinkButton( $uriDeactivate, '', 'tiny decline', NULL, $entry->status == -1 );
+	$check		= HtmlElements::Checkbox( 'branchId', $entry->branchId );
 	$rows[]		= '	<tr class="'.$class.'">
 <!--		<td>'.$check.'</td>-->
 		<td>'.$link.'</td>
@@ -46,8 +47,8 @@ $heads	= array(
 	$words['index']['headModifiedAt'],
 	$words['index']['headAction'],
 );
-$heads		= UI_HTML_Elements::TableHeads( $heads );
-$colgroup	= UI_HTML_Elements::ColumnGroup( /*'3%', */'32%', '25%', '15%', '15%', '10%' );
+$heads		= HtmlElements::TableHeads( $heads );
+$colgroup	= HtmlElements::ColumnGroup( /*'3%', */'32%', '25%', '15%', '15%', '10%' );
 
 
 return '

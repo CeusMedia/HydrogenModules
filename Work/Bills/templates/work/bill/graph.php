@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $model	= new Model_Bill( $this->env );
 
@@ -56,10 +57,10 @@ for( $i=0; $i<$daysFuture; $i++ ){
 
 /*  --  FILTERS  --  */
 $optType	= array( '' => '- alle -' ) + $words['types'];
-$optType	= UI_HTML_Elements::Options( $optType, $env->getSession()->get( 'filter_work_bill_type' ) );
+$optType	= HtmlElements::Options( $optType, $env->getSession()->get( 'filter_work_bill_type' ) );
 
 $optStatus	= array( '' => '- alle -' ) +$words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $env->getSession()->get( 'filter_work_bill_status' ) );
+$optStatus	= HtmlElements::Options( $optStatus, $env->getSession()->get( 'filter_work_bill_status' ) );
 
 $tabs	= View_Work_Bill::renderTabs( $env, 'graph' );
 

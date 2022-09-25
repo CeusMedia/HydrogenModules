@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Panel_Mangopay_Wallets extends View_Helper_Panel_Mangopay{
@@ -22,8 +23,8 @@ class View_Helper_Panel_Mangopay_Wallets extends View_Helper_Panel_Mangopay{
 				HtmlTag::create(' td', self::formatMoney( $wallet->Balance ), array( 'class' => 'cell-wallet-balance' ) ),
 			) );
 		}
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "120", "", "120" );
-		$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Wallet Name', 'Betrag' ) ) );
+		$colgroup	= HtmlElements::ColumnGroup( "120", "", "120" );
+		$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'ID', 'Wallet Name', 'Betrag' ) ) );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
 		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 		return '

@@ -1,15 +1,16 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $optGraph	= [];
 foreach( $graphs as $graph )
 	$optGraph[$graph->graphId]	= $graph->title;
-$optGraph	= UI_HTML_Elements::Options( $optGraph );
+$optGraph	= HtmlElements::Options( $optGraph );
 
 $optNode	= [];
 foreach( $nodes as $node )
 	$optNode[$node->nodeId]	= $node->label ? $node->label : $node->ID;
-$optFromNode	= UI_HTML_Elements::Options( $optNode, $edge->fromNodeId );
-$optToNode		= UI_HTML_Elements::Options( $optNode, $edge->toNodeId );
+$optFromNode	= HtmlElements::Options( $optNode, $edge->fromNodeId );
+$optToNode		= HtmlElements::Options( $optNode, $edge->toNodeId );
 
 $panelDetails	= '
 <div class="content-panel">

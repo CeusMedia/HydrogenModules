@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
@@ -23,7 +24,7 @@ if( $persons ){
 			HtmlTag::create( 'td', number_format( $person->balance, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
+	$colgroup	= HtmlElements::ColumnGroup( array(
 		'',
 		'120',
 		'100',

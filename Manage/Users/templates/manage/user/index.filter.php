@@ -1,24 +1,25 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //  --  FILTER  --  //
 $w			= (object) $words['indexFilter'];
 $session	= $env->getSession();
 
-$optRole	= array( UI_HTML_Elements::Option( '', '' ) );
+$optRole	= array( HtmlElements::Option( '', '' ) );
 foreach( array_reverse( $roles ) as $role ){
 	$selected	= $role->roleId == $session->get( 'filter-user-roleId' );
 	$class		= 'role role'.$role->roleId;
-	$optRole[]	= UI_HTML_Elements::Option( $role->roleId, $role->title, $selected, FALSE, $class );
+	$optRole[]	= HtmlElements::Option( $role->roleId, $role->title, $selected, FALSE, $class );
 }
 $optRole	= join( $optRole );
 
 krsort( $states );
-$optStatus	= array( UI_HTML_Elements::Option( '', '' ) );
+$optStatus	= array( HtmlElements::Option( '', '' ) );
 foreach( $states as $status => $label ){
 	$selected	= (string) $status === (string) $session->get( 'filter-user-status' );
 	$class		= 'user-status status'.$status;
-	$optStatus[]	= UI_HTML_Elements::Option( (string) $status, $label, $selected, FALSE, $class );
+	$optStatus[]	= HtmlElements::Option( (string) $status, $label, $selected, FALSE, $class );
 }
 $optStatus	= join( $optStatus );
 
@@ -27,11 +28,11 @@ foreach( $words['indexFilterOrders'] as $column => $label )
 	$optOrder[$column]	= $label;
 $optOrder['_selected']	= $session->get( 'filter-user-order' );
 
-$optDirection	= array( UI_HTML_Elements::Option( '', '' ) );
+$optDirection	= array( HtmlElements::Option( '', '' ) );
 foreach( $words['indexFilterDirections'] as $key => $label ){
 	$selected	= $key == $session->get( 'filter-user-direction' );
 	$class		= 'direction direction'.$key;
-	$optDirection[]	= UI_HTML_Elements::Option( $key, $label, $selected, FALSE, $class );
+	$optDirection[]	= HtmlElements::Option( $key, $label, $selected, FALSE, $class );
 }
 $optDirection	= join( $optDirection );
 
@@ -57,35 +58,35 @@ return '
 			<div class="bs2-row-fluid bs3-row bs4-row">
 				<div class="bs2-span12 bs3-col-md-12 bs3-form-group bs4-col-md-12 bs4-form-group">
 					<label for="username">'.$w->labelUsername.'</label>
-					'.UI_HTML_Elements::Input( 'username', $username, 'bs2-span12 bs3-form-control bs4-form-control complete-username' ).'
+					'.HtmlElements::Input( 'username', $username, 'bs2-span12 bs3-form-control bs4-form-control complete-username' ).'
 				</div>
 			</div>
 			<div class="bs2-row-fluid bs3-row bs4-row">
 				<div class="bs2-span12 bs3-col-md-12 bs3-form-group bs4-col-md-12 bs4-form-group">
 					<label for="roleId">'.$w->labelRole.'</label>
-					'.UI_HTML_Elements::Select( 'roleId', $optRole, 'bs2-span12 bs3-form-control bs4-form-control', NULL, '' ).'
+					'.HtmlElements::Select( 'roleId', $optRole, 'bs2-span12 bs3-form-control bs4-form-control', NULL, '' ).'
 				</div>
 			</div>
 			<div class="bs2-row-fluid bs3-row bs4-row">
 				<div class="bs2-span12 bs3-col-md-12 bs3-form-group bs4-col-md-12 bs4-form-group">
 					<label for="status">'.$w->labelStatus.'</label>
-					'.UI_HTML_Elements::Select( 'status', $optStatus, 'bs2-span12 bs3-form-control bs4-form-control', NULL, '' ).'
+					'.HtmlElements::Select( 'status', $optStatus, 'bs2-span12 bs3-form-control bs4-form-control', NULL, '' ).'
 				</div>
 			</div>
 			<div class="bs2-row-fluid bs3-row bs4-row">
 				<div class="bs2-span12 bs3-col-md-12 bs3-form-group bs4-col-md-12 bs4-form-group">
 					<label for="order">'.$w->labelOrder.'</label>
-					'.UI_HTML_Elements::Select( 'order', $optOrder, 'bs2-span12 bs3-form-control bs4-form-control', NULL, '' ).'
+					'.HtmlElements::Select( 'order', $optOrder, 'bs2-span12 bs3-form-control bs4-form-control', NULL, '' ).'
 				</div>
 			</div>
 			<div class="bs2-row-fluid bs3-row bs4-row">
 				<div class="bs2-span7 bs3-col-md-7 bs3-form-group bs4-col-md-7 bs4-form-group">
 					<label for="direction">'.$w->labelDirection.'</label>
-					'.UI_HTML_Elements::Select( 'direction', $optDirection, 'bs2-span12 bs3-form-control bs4-form-control', NULL, '' ).'
+					'.HtmlElements::Select( 'direction', $optDirection, 'bs2-span12 bs3-form-control bs4-form-control', NULL, '' ).'
 				</div>
 				<div class="bs2-span5 bs3-col-md-5 bs3-form-group bs4-col-md-5 bs4-form-group">
 					<label for="limit">'.$w->labelLimit.'</label>
-					'.UI_HTML_Elements::Input( 'limit', $limit, 'bs2-span12 bs3-form-control bs4-form-control numeric' ).'
+					'.HtmlElements::Input( 'limit', $limit, 'bs2-span12 bs3-form-control bs4-form-control numeric' ).'
 				</div>
 			</div>
 			<div class="buttonbar">

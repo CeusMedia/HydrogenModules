@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -72,7 +73,7 @@ if( $filterMode === "users" ){
 		HtmlTag::create( 'th', 'geplant', array( 'style' => 'text-align: right' ) ),
 		HtmlTag::create( 'th', 'erfasst', array( 'style' => 'text-align: right' ) ),
 	) );
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '', '120', '120' );
+	$colgroup	= HtmlElements::ColumnGroup( '', '120', '120' );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
 }
@@ -101,7 +102,7 @@ else {
 		HtmlTag::create( 'th', 'geplant', array( 'style' => 'text-align: right' ) ),
 		HtmlTag::create( 'th', 'erfasst', array( 'style' => 'text-align: right' ) ),
 	) );
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '', '120', '120' );
+	$colgroup	= HtmlElements::ColumnGroup( '', '120', '120' );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
 }

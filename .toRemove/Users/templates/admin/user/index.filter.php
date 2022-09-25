@@ -1,22 +1,24 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 //  --  FILTER  --  //
 
 $session	= $env->getSession();
 
-$optRole	= array( UI_HTML_Elements::Option( '', '' ) );
+$optRole	= array( HtmlElements::Option( '', '' ) );
 foreach( array_reverse( $roles ) as $role ){
 	$selected	= $role->roleId == $session->get( 'filter-user-roleId' );
 	$class		= 'role role'.$role->roleId;
-	$optRole[]	= UI_HTML_Elements::Option( $role->roleId, $role->title, $selected, FALSE, $class );
+	$optRole[]	= HtmlElements::Option( $role->roleId, $role->title, $selected, FALSE, $class );
 }
 $optRole	= join( $optRole );
 
 krsort( $states );
-$optStatus	= array( UI_HTML_Elements::Option( '', '' ) );
+$optStatus	= array( HtmlElements::Option( '', '' ) );
 foreach( $states as $status => $label ){
 	$selected	= (string) $status === (string) $session->get( 'filter-user-status' );
 	$class		= 'user-status status'.$status;
-	$optStatus[]	= UI_HTML_Elements::Option( (string) $status, $label, $selected, FALSE, $class );
+	$optStatus[]	= HtmlElements::Option( (string) $status, $label, $selected, FALSE, $class );
 }
 $optStatus	= join( $optStatus );
 
@@ -25,11 +27,11 @@ foreach( $words['indexFilterOrders'] as $column => $label )
 	$optOrder[$column]	= $label;
 $optOrder['_selected']	= $env->getSession()->get( 'filter-user-order' );
 
-$optDirection	= array( UI_HTML_Elements::Option( '', '' ) );
+$optDirection	= array( HtmlElements::Option( '', '' ) );
 foreach( $words['indexFilterDirections'] as $key => $label ){
 	$selected	= $key == $session->get( 'filter-user-direction' );
 	$class		= 'direction direction'.$key;
-	$optDirection[]	= UI_HTML_Elements::Option( $key, $label, $selected, FALSE, $class );
+	$optDirection[]	= HtmlElements::Option( $key, $label, $selected, FALSE, $class );
 }
 $optDirection	= join( $optDirection );
 
@@ -47,32 +49,32 @@ return '
 		<ul class="input">
 			<li>
 				<label for="username">'.$words['indexFilter']['labelUsername'].'</label><br/>
-				'.UI_HTML_Elements::Input( 'username', $username, 'm complete-username' ).'
+				'.HtmlElements::Input( 'username', $username, 'm complete-username' ).'
 			</li>
 			<li>
 				<label for="roleId">'.$words['indexFilter']['labelRole'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'roleId', $optRole, 'm', NULL, '' ).'
+				'.HtmlElements::Select( 'roleId', $optRole, 'm', NULL, '' ).'
 			</li>
 			<li>
 				<label for="status">'.$words['indexFilter']['labelStatus'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'status', $optStatus, 'm', NULL, '' ).'
+				'.HtmlElements::Select( 'status', $optStatus, 'm', NULL, '' ).'
 			</li>
 			<li>
 				<label for="order">'.$words['indexFilter']['labelOrder'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'order', $optOrder, 'm', NULL, '' ).'
+				'.HtmlElements::Select( 'order', $optOrder, 'm', NULL, '' ).'
 			</li>
 			<li>
 				<label for="direction">'.$words['indexFilter']['labelDirection'].'</label><br/>
-				'.UI_HTML_Elements::Select( 'direction', $optDirection, 'm', NULL, '' ).'
+				'.HtmlElements::Select( 'direction', $optDirection, 'm', NULL, '' ).'
 			</li>
 			<li>
 				<label for="limit">'.$words['indexFilter']['labelLimit'].'</label><br/>
-				'.UI_HTML_Elements::Input( 'limit', $limit, 'xs numeric' ).'
+				'.HtmlElements::Input( 'limit', $limit, 'xs numeric' ).'
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'filter', $words['indexFilter']['buttonFilter'], 'button filter' ).'
-			'.UI_HTML_Elements::LinkButton( './admin/user/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
+			'.HtmlElements::Button( 'filter', $words['indexFilter']['buttonFilter'], 'button filter' ).'
+			'.HtmlElements::LinkButton( './admin/user/filter/reset', $words['indexFilter']['buttonReset'], 'button reset' ).'
 		</div>
 	</fieldset>
 </form>

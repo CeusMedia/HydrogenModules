@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['editImage'];
@@ -25,9 +26,9 @@ $uriThumbnail	=  $pathThumbnail.rawurlencode( $category->path ).'/'.$image->file
 $optCategory	= [];
 foreach( $categories as $item )
 	$optCategory[$item->galleryCategoryId]  = $item->title;
-$optCategory	= UI_HTML_Elements::Options( $optCategory, $image->galleryCategoryId );
+$optCategory	= HtmlElements::Options( $optCategory, $image->galleryCategoryId );
 
-$optStatus		= UI_HTML_Elements::Options( $words['states'], $image->status );
+$optStatus		= HtmlElements::Options( $words['states'], $image->status );
 
 $imageTitle		= strlen( trim( $image->title ) ) ? $image->title : $image->filename;
 
@@ -145,10 +146,10 @@ if( $env->getModules()->has( 'UI_Image_Slider' ) ){
 	$optSlider		= [];
 	foreach( $sliders as $slider )
 		$optSlider[$slider->sliderId]	= $slider->title;
-	$optSlider		= UI_HTML_Elements::Options( $optSlider );
+	$optSlider		= HtmlElements::Options( $optSlider );
 
-	$optPositionX	= UI_HTML_Elements::Options( $words['slider-positions-x'], 'center' );
-	$optPositionY	= UI_HTML_Elements::Options( $words['slider-positions-y'], 'center' );
+	$optPositionX	= HtmlElements::Options( $words['slider-positions-x'], 'center' );
+	$optPositionY	= HtmlElements::Options( $words['slider-positions-y'], 'center' );
 
 	$panelSlider	= '
 	<div class="content-panel">

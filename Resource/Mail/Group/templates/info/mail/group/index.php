@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconJoin		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
@@ -40,7 +41,7 @@ if( $groups ){
 			HtmlTag::create( 'td', join( ' ', $buttons ), array( 'style' => 'text-align: right' ) ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '240px' ) );
+	$colgroup	= HtmlElements::ColumnGroup( array( '', '240px' ) );
 	$tbody	= HtmlTag::create(' tbody', $list );
 	$list	= HtmlTag::create( 'table', array( $colgroup, $tbody ), array( 'class' => 'table table-striped table-fixed' ) );
 }

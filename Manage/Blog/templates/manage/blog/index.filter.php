@@ -1,14 +1,15 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w				= (object) $words['index.filter'];
 
 $optStatus		= array( '' => '- alle -' ) + $words['states'];
-$optStatus		= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
 
 $optCategory	= array( '' => '- alle -' );
 foreach( $categories as $item )
 	$optCategory[$item->categoryId]	= $item->title;
-$optCategory	= UI_HTML_Elements::Options( $optCategory, $filterCategoryId );
+$optCategory	= HtmlElements::Options( $optCategory, $filterCategoryId );
 
 return '
 <div class="content-panel content-panel-form">

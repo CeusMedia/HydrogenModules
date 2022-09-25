@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['tab-config'];
@@ -22,9 +23,9 @@ if( $module->config ){
 	}
 	ksort( $rows );
 	$tbody		= HtmlTag::create( 'tbody', join( $rows ) );
-	$heads		= UI_HTML_Elements::TableHeads( array( $w->headKey, $w->headValue ) );
+	$heads		= HtmlElements::TableHeads( array( $w->headKey, $w->headValue ) );
 	$thead		= HtmlTag::create( 'thead', $heads );
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '25%', '75%' );
+	$colgroup	= HtmlElements::ColumnGroup( '25%', '75%' );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'striped' ) );
 }
 return $table;

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Mission_Done extends Mail_Work_Mission_Change
@@ -37,7 +38,7 @@ class Mail_Work_Mission_Done extends Mail_Work_Mission_Change
 			$helper->setMissions( $data['tasks'] );
 			$helper->setWords( $words );
 			$rows		= $helper->renderDayList( 1, 0, TRUE, TRUE );
-			$colgroup	= UI_HTML_Elements::ColumnGroup( "80", "100", "", "100" );
+			$colgroup	= HtmlElements::ColumnGroup( "80", "100", "", "100" );
 			$attributes	= array( 'class' => 'table-mail table-mail-tasks' );
 			$table		= HtmlTag::create( 'table', $colgroup.$rows, $attributes );
 			$heading	= $w->headingTasks ? HtmlTag::create( 'h4', $w->headingTasks ) : "";
@@ -52,7 +53,7 @@ class Mail_Work_Mission_Done extends Mail_Work_Mission_Change
 			$helper->setMissions( $data['events'] );
 			$helper->setWords( $words );
 			$rows		= $helper->renderDayList( 1, 0, TRUE, TRUE );
-			$colgroup	= UI_HTML_Elements::ColumnGroup( "125", "" );
+			$colgroup	= HtmlElements::ColumnGroup( "125", "" );
 			$attributes	= array( 'class' => 'table-mail table-mail-events' );
 			$table		= HtmlTag::create( 'table', $colgroup.$rows, $attributes );
 			$heading	= $w->headingEvents ? HtmlTag::create( 'h4', $w->headingEvents ) : "";

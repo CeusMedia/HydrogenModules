@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
@@ -7,7 +8,7 @@ $iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) )
 $optCategoryId	= [];
 foreach( $categoryMap as $item )
 	$optCategoryId[$item->categoryId]	= $item->title;
-$optCategoryId	= UI_HTML_Elements::Options( $optCategoryId);
+$optCategoryId	= HtmlElements::Options( $optCategoryId);
 
 return '
 <div class="row-fluid">

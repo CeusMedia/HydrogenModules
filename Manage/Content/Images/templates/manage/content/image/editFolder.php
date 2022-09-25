@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $panelFolders	= $view->loadTemplateFile( 'manage/content/image/folders.php' );
 
 $w				= (object) $words['editFolder'];
@@ -7,7 +9,7 @@ $optFolder	= array( '.' => '' );
 foreach( $folders as $folder )
 	if( $folder !== $path )
 		$optFolder[$folder]	= preg_replace( "/\.\/?/", "", $folder );
-$optFolder	= UI_HTML_Elements::Options( $optFolder, $folderPath );
+$optFolder	= HtmlElements::Options( $optFolder, $folderPath );
 
 extract( $view->populateTexts( array( 'top', 'bottom', 'edit.folder.right' ), 'html/manage/content/image/' ) );
 

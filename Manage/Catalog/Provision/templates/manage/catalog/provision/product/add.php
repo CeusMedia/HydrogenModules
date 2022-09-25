@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w	= (object) $words['add'];
 
 $optStatus	= $words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus );
+$optStatus	= HtmlElements::Options( $optStatus );
 
 $panelList	= $view->loadTemplateFile( 'manage/catalog/provision/product/index.list.php' );
 

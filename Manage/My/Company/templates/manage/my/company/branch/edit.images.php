@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel	= HTML::Icon( 'arrow-left' );
@@ -39,7 +40,7 @@ if( $branch->images ){
 			)
 		);
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "30%", "70%" );
+	$colgroup	= HtmlElements::ColumnGroup( "30%", "70%" );
 	$tbody		= HtmlTag::create( 'tbody', $listImages );
 	$listImages	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table', 'style' => 'table-layout: fixed' ) );
 }
@@ -65,7 +66,7 @@ $panelAddImage	= 	HTML::DivClass( 'content-panel',
 				)
 			).
 			HTML::Buttons(
-				UI_HTML_Elements::Button( 'doUpload', $words['addImage']['buttonUpload'], 'btn btn-primary btn-small' )
+				HtmlElements::Button( 'doUpload', $words['addImage']['buttonUpload'], 'btn btn-primary btn-small' )
 			)
 		)
 	)

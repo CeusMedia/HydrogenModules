@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['editRights'];
@@ -81,7 +82,7 @@ function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, 
 	}
 	if( $rows ){
 		$rows	= HtmlTag::create( 'table', array(
-			UI_HTML_Elements::ColumnGroup( '300px', '' ),
+			HtmlElements::ColumnGroup( '300px', '' ),
 			HtmlTag::create( 'tbody', $rows ),
 		), array( 'class' => 'table table-fixed table-condensed' ) );
 		$list[]	= HtmlTag::create( 'li', $iconModule.$module.$rows,  array(

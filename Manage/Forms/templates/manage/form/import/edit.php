@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -23,22 +24,22 @@ $statuses	= [
 	Model_Form_Import_Rule::STATUS_DISABLED	=> 'deaktiviert',
 ];
 
-$optStatus		= UI_HTML_Elements::Options( $statuses, $rule->status );
+$optStatus		= HtmlElements::Options( $statuses, $rule->status );
 
 $optConnection	= [];
 foreach( $connections as $connection )
 	$optConnection[$connection->importConnectionId]	= $connection->title;
-$optConnection	= UI_HTML_Elements::Options( $optConnection, $rule->importConnectionId );
+$optConnection	= HtmlElements::Options( $optConnection, $rule->importConnectionId );
 
 $optForm	= [];
 foreach( $forms as $formId => $form )
 	$optForm[$formId]	= $form->title;
-$optForm	= UI_HTML_Elements::Options( $optForm, $rule->formId );
+$optForm	= HtmlElements::Options( $optForm, $rule->formId );
 
 $optMoveTo	= ['' => ''];
 foreach( $folders as $folder )
 	$optMoveTo[$folder]	= $folder;
-$optMoveTo	= UI_HTML_Elements::Options( $optMoveTo, $rule->moveTo );
+$optMoveTo	= HtmlElements::Options( $optMoveTo, $rule->moveTo );
 
 $form	= '<div class="content-panel" id="rule-import-edit-'.$rule->formImportRuleId.'">
 	<h3><span class="muted">Importquelle: </span>'.$rule->title.'</h3>

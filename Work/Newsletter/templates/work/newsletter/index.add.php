@@ -1,6 +1,7 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
-use UI_HTML_Tag as Html;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as Html;
 
 $w	= (object) $words->add;
 
@@ -10,13 +11,13 @@ $iconSave	= Html::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) ).'&n
 $optTemplate	= [];
 foreach( $addTemplates as $entry )
 	$optTemplate[$entry->newsletterTemplateId]	= $entry->title;
-$optTemplate	= UI_HTML_Elements::Options( $optTemplate, 0 );
+$optTemplate	= HtmlElements::Options( $optTemplate, 0 );
 
 $optNewsletter	= array( '0' => '- keine Kopie -' );
 krsort( $addNewsletters );
 foreach( $addNewsletters as $item )
 	$optNewsletter[$item->newsletterId]	= $item->title;
-$optNewsletter	= UI_HTML_Elements::Options( $optNewsletter, 0 );
+$optNewsletter	= HtmlElements::Options( $optNewsletter, 0 );
 
 $formAdd	= '
 <div class="row-fluid">

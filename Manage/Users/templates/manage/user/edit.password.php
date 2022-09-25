@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
@@ -66,7 +67,7 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 //			HtmlTag::create( 'td', $password->failsTotal ),
 		), array( 'class' => $rowClass ) );
 	}
-	$heads	= UI_HTML_Elements::tableHeads( array(
+	$heads	= HtmlElements::tableHeads( array(
 		'erstellt',
 		'zuletzt genutzt',
 		'Zustand',
@@ -75,7 +76,7 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 	) );
 
 	$table	= HtmlTag::create( 'table', array(
-		UI_HTML_Elements::ColumnGroup( array(
+		HtmlElements::ColumnGroup( array(
 			'120px',
 			'120px',
 			'100px',
@@ -132,7 +133,7 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', array(
 //			HTML::BR,
 //			$history,
 			HTML::DivClass( 'buttonbar', array(
-				UI_HTML_Elements::Button( 'savePassword', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
+				HtmlElements::Button( 'savePassword', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
 			) ),
 		), array( 'autocomplete' => 'off' ) )
 	) )
@@ -166,14 +167,14 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 		HtmlTag::create( 'h4', 'Passwörter' ),
 		HTML::DivClass( 'content-panel-inner', array(
 			HtmlTag::create( 'table', array(
-				UI_HTML_Elements::ColumnGroup( array(
+				HtmlElements::ColumnGroup( array(
 					'120px',
 					'120px',
 					'100px',
 //					'',
 //					'',
 				) ),
-				HtmlTag::create( 'thead', UI_HTML_Elements::tableHeads( array(
+				HtmlTag::create( 'thead', HtmlElements::tableHeads( array(
 					'erstellt',
 					'zuletzt genutzt',
 					'Zustand',

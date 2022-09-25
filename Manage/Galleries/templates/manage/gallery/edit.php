@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $galleries	= $this->renderList( $gallery->galleryId );
 
 $optStatus	= $words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $gallery->status );
+$optStatus	= HtmlElements::Options( $optStatus, $gallery->status );
 
 $tabs	= array(
 	$words['tabs'][1],

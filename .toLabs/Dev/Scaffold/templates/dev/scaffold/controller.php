@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $panelCode	= '
 	<fieldset>
@@ -23,9 +24,9 @@ $panel	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './dev/scaffold', 'zurück', 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'preview', 'preview', 'button view' ).'
-			'.UI_HTML_Elements::Button( 'create', 'create', 'button save' ).'
+			'.HtmlElements::LinkButton( './dev/scaffold', 'zurück', 'button cancel' ).'
+			'.HtmlElements::Button( 'preview', 'preview', 'button view' ).'
+			'.HtmlElements::Button( 'create', 'create', 'button save' ).'
 		</div>
 	</fieldset>
 </form>

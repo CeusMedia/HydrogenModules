@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
@@ -118,9 +119,9 @@ if( $runs ){
 		$words['index']['tableHeadActions']			=> '60px',
 	);
 
-	$cols	= UI_HTML_Elements::ColumnGroup( array_values( $columns ) );
+	$cols	= HtmlElements::ColumnGroup( array_values( $columns ) );
 
-	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array_keys( $columns ) ) );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array_keys( $columns ) ) );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$table		= HtmlTag::create( 'table', array( $cols, $thead, $tbody ), array( 'class' => 'table table-striped table-condensed' ) );
 

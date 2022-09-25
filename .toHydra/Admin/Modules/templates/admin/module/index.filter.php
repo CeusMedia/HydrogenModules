@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $filterQuery		= $session->get( 'filter-modules-query' );
@@ -112,8 +113,8 @@ $panelFilter	= '
 			</div>
 			'.$filterItemSources.'
 			<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'filter', 'filtern', 'btn btn-small btn-primary button filter' ).'&nbsp;&nbsp;|&nbsp;&nbsp;
-			'.UI_HTML_Elements::LinkButton( './admin/module/filter?reset', 'kein Filter', 'btn btn-small btn-inverse button reset' ).'
+			'.HtmlElements::Button( 'filter', 'filtern', 'btn btn-small btn-primary button filter' ).'&nbsp;&nbsp;|&nbsp;&nbsp;
+			'.HtmlElements::LinkButton( './admin/module/filter?reset', 'kein Filter', 'btn btn-small btn-inverse button reset' ).'
 			</div>
 		</div>
 	</div>

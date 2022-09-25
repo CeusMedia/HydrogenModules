@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
 $env->page->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
@@ -31,9 +32,9 @@ $roleMap	= [];
 foreach( $roles as $role )
 	$roleMap[$role->roleId] = $role->title;
 
-$optStatus	= UI_HTML_Elements::Options( array_reverse( $words['status'], TRUE ), @$user->status );
-$optRole	= UI_HTML_Elements::Options( array_reverse( $roleMap, TRUE ), @$user->roleId );
-$optGender	= UI_HTML_Elements::Options( $words['gender'], $user->gender );
+$optStatus	= HtmlElements::Options( array_reverse( $words['status'], TRUE ), @$user->status );
+$optRole	= HtmlElements::Options( array_reverse( $roleMap, TRUE ), @$user->roleId );
+$optGender	= HtmlElements::Options( $words['gender'], $user->gender );
 
 $panelAdd	= '
 <form name="editUser" action="./admin/user/add" method="post">
@@ -97,8 +98,8 @@ $panelAdd	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './admin/user', $w->buttonCancel, 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'saveUser', $w->buttonSave, 'button save' ).'
+			'.HtmlElements::LinkButton( './admin/user', $w->buttonCancel, 'button cancel' ).'
+			'.HtmlElements::Button( 'saveUser', $w->buttonSave, 'button save' ).'
 		</div>
 	</fieldset>
 	<div style="clear: both"></div>

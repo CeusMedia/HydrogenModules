@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $list		= [];
@@ -68,7 +69,7 @@ $panel	= '
 <fieldset>
 	<legend>Instanzen&nbsp;'.$badgeNrUpdates.'</legend>
 	<div style="position: absolute; right: 8px; top: 16px;">
-		'.UI_HTML_Elements::LinkButton( './admin/instance/', '', 'button tiny edit' ).'
+		'.HtmlElements::LinkButton( './admin/instance/', '', 'button tiny edit' ).'
 	</div>
 	'.$list.'
 </fieldset>

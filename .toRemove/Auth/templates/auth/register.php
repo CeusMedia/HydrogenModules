@@ -1,6 +1,7 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$optGender	= UI_HTML_Elements::Options( $words['gender'], $request->get( 'gender' ) );
+$optGender	= HtmlElements::Options( $words['gender'], $request->get( 'gender' ) );
 
 $w		= (object) $words['register'];
 $user	= (object) $request->getAll();
@@ -138,7 +139,7 @@ $(document).ready(function(){
 		'.$formTerms.'
 	</ul>
 	<div class="buttonbar">
-		'.UI_HTML_Elements::Button( 'saveUser', $w->buttonSave, 'button save' ).'
+		'.HtmlElements::Button( 'saveUser', $w->buttonSave, 'button save' ).'
 	</div>
 </fieldset>';
 

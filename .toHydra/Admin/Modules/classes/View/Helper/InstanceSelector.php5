@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 class View_Helper_InstanceSelector
 {
 	protected $env;
@@ -25,7 +27,7 @@ class View_Helper_InstanceSelector
 		$currentId	= $this->currentId;
 		if( !$currentId )
 			$currentId	= $this->env->getSession()->get( 'instanceId' );
-		$optInstance	= UI_HTML_Elements::Options( $optInstance, $currentId );
+		$optInstance	= HtmlElements::Options( $optInstance, $currentId );
 
 		$path		= $this->env->getRequest()->get( '__path' );
 		$linkReset	= '<a href="./?resetInstanceId">Instanz</a>';

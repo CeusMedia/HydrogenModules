@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['add'];
@@ -56,9 +57,9 @@ return HTML::DivClass( 'column-left-50',
 				)
 			).
 			HTML::Buttons(
-				UI_HTML_Elements::LinkButton( './manage/company', $w->buttonCancel, 'button cancel' ).
+				HtmlElements::LinkButton( './manage/company', $w->buttonCancel, 'button cancel' ).
 				'&nbsp;|&nbsp'.
-				UI_HTML_Elements::Button( 'doAdd', $w->buttonSave, 'button save' )
+				HtmlElements::Button( 'doAdd', $w->buttonSave, 'button save' )
 			)
 		)
 	)

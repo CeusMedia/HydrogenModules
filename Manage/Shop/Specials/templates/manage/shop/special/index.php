@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
@@ -23,8 +24,8 @@ $buttonbar	= HtmlTag::create( 'div', array(
 		'class'	=> 'btn btn-primary',
 	) )
 ), array( 'class' => 'buttonbar' ) );
-$colgroup	= UI_HTML_Elements::ColumnGroup( '30%', '70%' );
-$tableHeads	= UI_HTML_Elements::TableHeads( array( 'Katalog', 'Artikel' ) );
+$colgroup	= HtmlElements::ColumnGroup( '30%', '70%' );
+$tableHeads	= HtmlElements::TableHeads( array( 'Katalog', 'Artikel' ) );
 $thead	= HtmlTag::create( 'thead', $tableHeads );
 $tbody	= HtmlTag::create( 'tbody', $rows );
 $table	= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table' ) );

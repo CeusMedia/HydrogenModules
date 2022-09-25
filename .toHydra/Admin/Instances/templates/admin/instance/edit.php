@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $moduleConfig	= $config->getAll( 'module.admin_instances.', TRUE );
 $protocolLocked	= FALSE;
@@ -25,7 +26,7 @@ if( $moduleConfig->get( 'lock' ) ){
 $optProtocol	= array( '' => '' );
 foreach( $words['protocols'] as $key => $value )
 	$optProtocol[$key.'://']	= $value;
-$optProtocol	= UI_HTML_Elements::Options( $optProtocol, $instance->protocol );
+$optProtocol	= HtmlElements::Options( $optProtocol, $instance->protocol );
 
 $instanceUrl	= $instance->protocol.$instance->host.$instance->path;
 
@@ -68,13 +69,13 @@ $panelEdit	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './admin/instance', 'zur Liste', 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'edit', 'speichern', 'button save' ).'
+			'.HtmlElements::LinkButton( './admin/instance', 'zur Liste', 'button cancel' ).'
+			'.HtmlElements::Button( 'edit', 'speichern', 'button save' ).'
 			&nbsp;&nbsp;|&nbsp;&nbsp;
-			'.UI_HTML_Elements::LinkButton( './admin/instance/remove/'.$instance->id, 'abmelden', 'button module remove', 'Wollen Sie diese Instanz wirklich abmelden?\n\nHinweis: Der Instanzordner wird dabei nicht gelöscht.\nSie können die Instanz später wieder anmelden.' ).'
+			'.HtmlElements::LinkButton( './admin/instance/remove/'.$instance->id, 'abmelden', 'button module remove', 'Wollen Sie diese Instanz wirklich abmelden?\n\nHinweis: Der Instanzordner wird dabei nicht gelöscht.\nSie können die Instanz später wieder anmelden.' ).'
 			&nbsp;&nbsp;|&nbsp;&nbsp;
-			'.UI_HTML_Elements::LinkButton( './admin/instance/select/'.$instance->id.'?forward=admin/module/editor', 'Module der Instanz', 'button module magic' ).'
-			'.UI_HTML_Elements::LinkButton( $instanceUrl, 'Instanz aufrufen', 'button' ).'
+			'.HtmlElements::LinkButton( './admin/instance/select/'.$instance->id.'?forward=admin/module/editor', 'Module der Instanz', 'button module magic' ).'
+			'.HtmlElements::LinkButton( $instanceUrl, 'Instanz aufrufen', 'button' ).'
 		</div>
 	</fieldset>
 </form>

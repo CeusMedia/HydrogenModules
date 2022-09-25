@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-plus' ) );
@@ -15,7 +16,7 @@ $w	= (object) $words['index.filter'];
 $optProduct	= array( '' => ' - alle - ' );
 foreach( $products as $item )
 	$optProduct[$item->productId]	= $item->title;
-$optProduct	= UI_HTML_Elements::Options( $optProduct, $filterProductId );
+$optProduct	= HtmlElements::Options( $optProduct, $filterProductId );
 
 return '
 <div class="content-panel content-panel-filter">

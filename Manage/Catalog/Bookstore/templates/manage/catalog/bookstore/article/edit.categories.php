@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconUp		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-up' ) );
@@ -46,7 +47,7 @@ if( $articleCategories ){
 	}
 
 	$listCategories	= '<table class="table table-condensed">
-		'.UI_HTML_Elements::ColumnGroup( '', '60px' ).'
+		'.HtmlElements::ColumnGroup( '', '60px' ).'
 		<thead>
 <!--			<tr>
 				<th>Kategorie</th>

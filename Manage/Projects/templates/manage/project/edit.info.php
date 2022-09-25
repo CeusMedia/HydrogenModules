@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $facts	= [];
@@ -10,7 +11,7 @@ if( isset( $missions ) && count( $missions ) ){
 
 if( isset( $issues ) ){
 	$url	= './work/issue/filter?projects[]='.$project->projectId;
-	$button	= UI_HTML_Elements::LinkButton( $url, 'anzeigen', 'button filter' );
+	$button	= HtmlElements::LinkButton( $url, 'anzeigen', 'button filter' );
 	$label	= count( $missions ).'&nbsp;'.$button;
 	$facts[]	= HtmlTag::create( 'dt', 'Probleme' ).HtmlTag::create( 'dd', $label );
 }

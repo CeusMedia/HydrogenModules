@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_List_Days{
@@ -19,8 +20,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$colgroup		= [];
 		$tableHeads		= [];
 
-		$colgroup		= UI_HTML_Elements::ColumnGroup( $colgroup );
-		$tableHeads		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) );
+		$colgroup		= HtmlElements::ColumnGroup( $colgroup );
+		$tableHeads		= HtmlTag::create( 'thead', HtmlElements::TableHeads( $tableHeads ) );
 		$list0			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
 		$list1			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
 
@@ -223,7 +224,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 			'class'		=> 'mission-row-small row-priority priority-'.$event->priority,
 			'style'		=> 'width: 100%; border-top: 1px solid rgba(0, 0, 0, 0.25)'
 		);
-		$colgroup		= UI_HTML_Elements::ColumnGroup( "", "53px" );
+		$colgroup		= HtmlElements::ColumnGroup( "", "53px" );
 		$tbody			= HtmlTag::create( 'tbody', array(
 			HtmlTag::create( 'tr', array(
 				HtmlTag::create( 'td', $link, array( 'class' => 'not-cell-title autocut' ) ),
@@ -320,7 +321,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 			'class'		=> 'mission-row-small row-priority priority-'.$task->priority,
 			'style'		=> 'width: 100%; border-top: 1px solid rgba(0, 0, 0, 0.25)'
 		);
-		$colgroup		= UI_HTML_Elements::ColumnGroup( "", "53px" );
+		$colgroup		= HtmlElements::ColumnGroup( "", "53px" );
 		$tbody			= HtmlTag::create( 'tbody', array(
 			HtmlTag::create( 'tr', array(
 				HtmlTag::create( 'td', $link, array( 'class' => 'not-cell-title autocut' ) ),

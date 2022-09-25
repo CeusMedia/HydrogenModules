@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $panelPasswords		= '';
@@ -28,14 +29,14 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 		HtmlTag::create( 'h4', 'Passwörter' ),
 		HTML::DivClass( 'content-panel-inner', array(
 			HtmlTag::create( 'table', array(
-				UI_HTML_Elements::ColumnGroup( array(
+				HtmlElements::ColumnGroup( array(
 					'120px',
 					'120px',
 					'100px',
 //					'',
 //					'',
 				) ),
-				HtmlTag::create( 'thead', UI_HTML_Elements::tableHeads( array(
+				HtmlTag::create( 'thead', HtmlElements::tableHeads( array(
 					'erstellt',
 					'zuletzt genutzt',
 					'Zustand',

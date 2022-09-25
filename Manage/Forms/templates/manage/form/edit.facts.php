@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
@@ -13,23 +14,23 @@ $statuses	= array(
 	0		=> 'in Arbeit',
 	1		=> 'aktiviert',
 );
-$optStatus	= UI_HTML_Elements::Options( $statuses, $form->status );
+$optStatus	= HtmlElements::Options( $statuses, $form->status );
 
 $types		= array(
 	0		=> 'direkter Versand',
 	1		=> 'mit Double-Opt-In',
 );
-$optType	= UI_HTML_Elements::Options( $types, $form->type );
+$optType	= HtmlElements::Options( $types, $form->type );
 
 $optMailCustomer	= array( '' => '- keine -' );
 foreach( $mailsCustomer as $item )
 	$optMailCustomer[$item->mailId]	= $item->title;
-$optMailCustomer	= UI_HTML_Elements::Options( $optMailCustomer, $form->customerMailId );
+$optMailCustomer	= HtmlElements::Options( $optMailCustomer, $form->customerMailId );
 
 $optMailManager		= array( '' => '- keine -' );
 foreach( $mailsManager as $item )
 	$optMailManager[$item->mailId]	= $item->title;
-$optMailManager		= UI_HTML_Elements::Options( $optMailManager, $form->managerMailId );
+$optMailManager		= HtmlElements::Options( $optMailManager, $form->managerMailId );
 
 
 

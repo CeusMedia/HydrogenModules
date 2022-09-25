@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $words	= (object) $words;
@@ -47,14 +48,14 @@ foreach( $orders as $order ){
 	$listOrders[]	= HtmlTag::create( 'tr', $cells, $attributes );
 }
 $tableRows		= join( $listOrders );
-$tableHeads		= UI_HTML_Elements::TableHeads( array(
+$tableHeads		= HtmlElements::TableHeads( array(
 	$w->columnId,
 	$w->columnCustomer,
 	$w->columnStatus,
 	$w->columnCreated,
 	$w->columnModified,
 ) );
-$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '5%', '46%', '15%', '12%', '12%' ) );
+$tableColumns	= HtmlElements::ColumnGroup( array( '5%', '46%', '15%', '12%', '12%' ) );
 $tableHead		= HtmlTag::create( 'thead', $tableHeads );
 $tableBody		= HtmlTag::create( 'tbody', $tableRows );
 $listOrders		= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );

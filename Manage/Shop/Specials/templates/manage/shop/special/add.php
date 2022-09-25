@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
@@ -12,7 +13,7 @@ if( count($bridgeMap) > 1 )
 	$optBridge['']	= '- auswählen -';
 foreach( $bridgeMap as $bridgeId => $label )
 	$optBridge[$bridgeId]	= $label;
-$optBridge	= UI_HTML_Elements::Options( $optBridge );
+$optBridge	= HtmlElements::Options( $optBridge );
 
 $script	= '
 <script>

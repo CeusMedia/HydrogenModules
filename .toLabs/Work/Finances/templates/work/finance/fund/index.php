@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['index'];
@@ -48,7 +49,7 @@ $heads	= array(
 	HtmlTag::create( 'th', $w->headTimestamp ),
 );
 $heads		= HtmlTag::create( 'tr', $heads );
-$colgroup	= UI_HTML_Elements::ColumnGroup( '30%,20%,15%,10%,10%,15%' );
+$colgroup	= HtmlElements::ColumnGroup( '30%,20%,15%,10%,10%,15%' );
 $table		= '<table class="list">'.$colgroup.$heads.join( $rows ).'</table>';
 return '<style>
 table tr.total td {
@@ -63,7 +64,7 @@ table tr .currency {
 	<legend>Fonds</legend>
 '.$table.'
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './work/finance/fund/add', $w->buttonAdd, 'button icon add' ).'
-		'.UI_HTML_Elements::LinkButton( './work/finance/fund/requestPrices', $w->buttonUpdate, 'button icon reload refresh' ).'
+		'.HtmlElements::LinkButton( './work/finance/fund/add', $w->buttonAdd, 'button icon add' ).'
+		'.HtmlElements::LinkButton( './work/finance/fund/requestPrices', $w->buttonUpdate, 'button icon reload refresh' ).'
 	</div>
 </fieldset>';

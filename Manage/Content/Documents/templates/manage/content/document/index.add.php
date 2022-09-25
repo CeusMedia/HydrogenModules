@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['add'];
@@ -15,7 +16,7 @@ if( count( $documents ) ){
 	$optFilename	= array( '' => '' );
 	foreach( $documents as $entry )
 		$optFilename[$entry]	= $entry;
-	$optFilename	= UI_HTML_Elements::Options( $optFilename );
+	$optFilename	= HtmlElements::Options( $optFilename );
 	$fieldFilename	= '
 	<div class="row-fluid">
 		<div class="span12">

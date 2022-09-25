@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
@@ -66,7 +67,7 @@ foreach( $timers as $timer ){
 /*		HtmlTag::create( 'td', $buttons ),*/
 	), array( 'class' => $rowClasses[$timer->status] ) );
 
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "10%", "20%", "25%", "120" );
+	$colgroup	= HtmlElements::ColumnGroup( "", "10%", "20%", "25%", "120" );
 	$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'th', 'Aktivität' ),
 		HtmlTag::create( 'th', 'Typ <small class="muted">(Modul)</small>' ),

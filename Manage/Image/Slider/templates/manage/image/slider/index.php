@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconDurationShow		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
@@ -58,8 +59,8 @@ if( $sliders ){
 		'Durations',
 		'Views since',
 	);
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "84px", "", "130px", "120px", "135px" );
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( $heads ) );
+	$colgroup	= HtmlElements::ColumnGroup( "84px", "", "130px", "120px", "135px" );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
 }

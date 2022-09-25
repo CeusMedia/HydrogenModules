@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Module_Files{
@@ -97,8 +98,8 @@ class View_Helper_Module_Files{
 			$colgroup[]	= "15%";
 			$heads[]	= 'Aktion';
 		}
-		$colgroup	= UI_HTML_Elements::ColumnGroup( $colgroup );
-		$heads		= UI_HTML_Elements::TableHeads( $heads ) ;
+		$colgroup	= HtmlElements::ColumnGroup( $colgroup );
+		$heads		= HtmlElements::TableHeads( $heads ) ;
 		$thead		= HtmlTag::create( 'thead', $heads );
 		$tbody		= HtmlTag::create( 'tbody', $list, array( 'id' => 'file-rows' ) );
 		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table module-update-files' ) );

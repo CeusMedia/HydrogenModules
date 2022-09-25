@@ -1,7 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w		= (object) $words['add'];
 
-$optStatus	= UI_HTML_Elements::Options( $words['states'], $testimonial->status );
+$optStatus	= HtmlElements::Options( $words['states'], $testimonial->status );
 
 $panelContent = '
 <div class="content-panel content-panel-form">

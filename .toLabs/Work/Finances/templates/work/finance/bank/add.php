@@ -1,9 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w				= (object) $words['add'];
-#$optCurrency	= UI_HTML_Elements::Options( $words['currencies'], $bank->currency );
+#$optCurrency	= HtmlElements::Options( $words['currencies'], $bank->currency );
 
 $optType	= $words['readers'];
-$optType	= UI_HTML_Elements::Options( $optType, $bank->type );
+$optType	= HtmlElements::Options( $optType, $bank->type );
 
 return '
 <form action="./work/finance/bank/add" method="post">
@@ -28,8 +30,8 @@ return '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './work/finance/bank', $w->buttonCancel, 'button icon cancel' ).'
-			'.UI_HTML_Elements::Button( 'add', $w->buttonAdd, 'button icon add' ).'
+			'.HtmlElements::LinkButton( './work/finance/bank', $w->buttonCancel, 'button icon cancel' ).'
+			'.HtmlElements::Button( 'add', $w->buttonAdd, 'button icon add' ).'
 		</div>
 	</fieldset>
 </form>';

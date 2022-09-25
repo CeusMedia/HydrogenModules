@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconsStatus = array(
@@ -27,7 +28,7 @@ if( $licenses ){
 			HtmlTag::create( 'td', '--' ),
 		), array( 'class' => $class ) );
 	}
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'a', 'b', 'c' ) ) );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'a', 'b', 'c' ) ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $thead.$tbody, array( 'class' => "table table-striped" ) );
 }

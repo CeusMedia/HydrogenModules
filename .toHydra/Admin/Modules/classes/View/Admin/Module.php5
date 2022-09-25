@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
@@ -27,7 +28,7 @@ class View_Admin_Module extends View{
 		$class		.= ' module-'.( empty( $module->isInstalled ) ? 'not-' : '' ).'installed';
 		$image		= '';
 		if( !empty( $module->icon ) )
-			$image	= UI_HTML_Elements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
+			$image	= HtmlElements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
 		$icon	= HtmlTag::create( 'div', $image, array( 'class' => 'module-icon' ) );
 		$title	= HtmlTag::create( 'div', self::formatLabel( $module->title ), array( 'class' => 'module-title' ) );
 		$desc	= explode( '<br />', nl2br( $module->description ) );
@@ -62,7 +63,7 @@ class View_Admin_Module extends View{
 						continue;
 				$image		= '';
 				if( !empty( $module->icon ) )
-					$image	= UI_HTML_Elements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
+					$image	= HtmlElements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
 				$listModules[]	= $this->renderModuleButton( $module, $url );
 			}
 			$listModules	= join( $listModules );
@@ -90,9 +91,9 @@ class View_Admin_Module extends View{
 			}
 			$class	= 'icon module module-status-'.$status;
 			$label	= HtmlTag::create( 'span', $label, array( 'class' => $class, 'title' => $alt ) );
-			$list[]	= UI_HTML_Elements::ListItem( $label, 1 );
+			$list[]	= HtmlElements::ListItem( $label, 1 );
 		}
-		return UI_HTML_Elements::unorderedList( $list, 1, array( 'class' => $listClass ) );
+		return HtmlElements::unorderedList( $list, 1, array( 'class' => $listClass ) );
 	}
 
 	public function showRelationGraph(){

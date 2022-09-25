@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['add'];
@@ -87,14 +88,14 @@ else{
 	$optProduct	= array( '' => $w->optionEmpty );
 	foreach( $products as $item )
 		$optProduct[$item->productId]	= $item->title;
-	$optProduct	= UI_HTML_Elements::Options( $optProduct, $productId );
+	$optProduct	= HtmlElements::Options( $optProduct, $productId );
 
 	$optLicense	= array( '' => $w->optionEmpty );
 	foreach( $productLicenses as $item )
 		$optLicense[$item->productLicenseId]	= $item->title;
-	$optLicense	= UI_HTML_Elements::Options( $optLicense, $productLicenseId );
+	$optLicense	= HtmlElements::Options( $optLicense, $productLicenseId );
 
-	$optPayment	= UI_HTML_Elements::Options( $words['paymentTypes'] );
+	$optPayment	= HtmlElements::Options( $words['paymentTypes'] );
 
 	$buttonOrder	= HtmlTag::create( 'button', $iconOrder.'&nbsp;'.$w->buttonOrder, array(
 		'type'		=> "submit",

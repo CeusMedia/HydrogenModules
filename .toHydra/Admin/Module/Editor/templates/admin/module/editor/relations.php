@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['view'];
@@ -34,9 +35,9 @@ if( $relations ){
 			$status		= 4;
 		else if( $modules[$relatedModuleId]->type == Model_Module::TYPE_SOURCE )
 			$status		= 0;
-		$link		= UI_HTML_Elements::Link( './admin/module/viewer/index/'.$relatedModuleId, $relatedModule->title );
+		$link		= HtmlElements::Link( './admin/module/viewer/index/'.$relatedModuleId, $relatedModule->title );
 		$urlRemove	= './admin/module/editor/removeRelation/'.$moduleId.'/'.$relatedModule->relationType.'/'.$relatedModuleId;
-		$linkRemove	= UI_HTML_Elements::LinkButton( $urlRemove, '', 'button icon tiny remove' );
+		$linkRemove	= HtmlElements::LinkButton( $urlRemove, '', 'button icon tiny remove' );
 		$class	= 'icon module module-status-'.$status;
 		$label	= HtmlTag::create( 'span', $link, array( 'class' => $class ) );
 		$type	= $words['relation-types'][$relatedModule->relationType];
@@ -44,14 +45,14 @@ if( $relations ){
 		$status	= $words['types'][$status];
 		$rows[]	= '<tr><td>'.$type.'</td><td>'.$label.'</td><td>'.$status.'</td><td>'.$linkRemove.'</td></tr>';
 	}
-	$colgroup		= UI_HTML_Elements::ColumnGroup( '20%', '50%', '20%', '10%' );
+	$colgroup		= HtmlElements::ColumnGroup( '20%', '50%', '20%', '10%' );
 	$heads			= array(
 		$w->headRelation,
 		$w->headModule,
 		$w->headStatus,
 		$w->headAction,
 	);
-	$heads			= UI_HTML_Elements::TableHeads( $heads );
+	$heads			= HtmlElements::TableHeads( $heads );
 	$tableRelations	= '<table>'.$colgroup.$heads.join( $rows ).'</table>';
 }
 
@@ -63,8 +64,8 @@ foreach( $modules as $id => $item )
 			if( !in_array( $id, $module->relations->supports ) )
 				$optModule[$id]	= $item->title;
 asort( $optModule );
-$optModule	= UI_HTML_Elements::Options( $optModule );
-$optType	= UI_HTML_Elements::Options( $words['relation-types'] );
+$optModule	= HtmlElements::Options( $optModule );
+$optType	= HtmlElements::Options( $words['relation-types'] );
 
 $wf	= (object) $words['tab-relations-add'];
 
@@ -83,7 +84,7 @@ $panelAdd	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'addRelation', $wf->buttonAdd, 'button add' ).'
+			'.HtmlElements::Button( 'addRelation', $wf->buttonAdd, 'button add' ).'
 		</div>
 	</fieldset>
 </form>';

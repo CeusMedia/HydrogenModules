@@ -1,8 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
-$add 		= UI_HTML_Elements::LinkButton( './manage/my/branch/add', $words['index']['buttonAdd'], 'button add' );
+$add 		= HtmlElements::LinkButton( './manage/my/branch/add', $words['index']['buttonAdd'], 'button add' );
 
 $rows		= [];
 $number		= 0;
@@ -19,13 +20,13 @@ foreach( $branches as $entry )
 	$uriRemove		= './manage/my/branch/remove/'.$entry->branchId;
 	$uriActivate	= './manage/my/branch/activate/'.$entry->branchId;
 	$uriDeactivate	= './manage/my/branch/deactivate/'.$entry->branchId;
-	$link		= UI_HTML_Elements::Link( $url, $entry->title );
+	$link		= HtmlElements::Link( $url, $entry->title );
 	$company	= $entry->company ? $entry->company->title : '-';
-	$buttonEdit			= UI_HTML_Elements::LinkButton( $uriEdit, '', 'tiny edit' );
-	$buttonRemove		= UI_HTML_Elements::LinkButton( $uriEdit, '', 'tiny remove' );
-	$buttonActivate		= UI_HTML_Elements::LinkButton( $uriActivate, '', 'tiny accept', NULL, $entry->status == 1 );
-	$buttonDeactivate	= UI_HTML_Elements::LinkButton( $uriDeactivate, '', 'tiny decline', NULL, $entry->status == -1 );
-	$check		= UI_HTML_Elements::Checkbox( 'branchId', $entry->branchId );
+	$buttonEdit			= HtmlElements::LinkButton( $uriEdit, '', 'tiny edit' );
+	$buttonRemove		= HtmlElements::LinkButton( $uriEdit, '', 'tiny remove' );
+	$buttonActivate		= HtmlElements::LinkButton( $uriActivate, '', 'tiny accept', NULL, $entry->status == 1 );
+	$buttonDeactivate	= HtmlElements::LinkButton( $uriDeactivate, '', 'tiny decline', NULL, $entry->status == -1 );
+	$check		= HtmlElements::Checkbox( 'branchId', $entry->branchId );
 	$rows[]		= '	<tr class="'.$class.'">
 <!--		<td>'.$check.'</td>-->
 		<td>'.$link.'</td>
@@ -46,8 +47,8 @@ $heads	= array(
 	$words['index']['headModifiedAt'],
 //	$words['index']['headAction'],
 );
-$heads		= UI_HTML_Elements::TableHeads( $heads );
-$colgroup	= UI_HTML_Elements::ColumnGroup( /*'3%', */'32%', '25%', '15%', '15%'/*, '10%'*/ );
+$heads		= HtmlElements::TableHeads( $heads );
+$colgroup	= HtmlElements::ColumnGroup( /*'3%', */'32%', '25%', '15%', '15%'/*, '10%'*/ );
 
 
 return '

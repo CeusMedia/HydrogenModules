@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
@@ -17,7 +18,7 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
 $optReason	= [];
 foreach( $reasons as $reason )
 	$optReason[$reason->ipLockReasonId]	= $reason->title;
-$optReason	= UI_HTML_Elements::Options( $optReason );
+$optReason	= HtmlElements::Options( $optReason );
 
 $reasonMap	= [];
 foreach( $reasons as $reason )

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) ).'&nbsp;';
@@ -11,12 +12,12 @@ $iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' )
 
 $disabled		= (int) $newsletter->status !== 0 ? 'disabled="disabled"' : "";
 
-$optStatus		= UI_HTML_Elements::Options( $words->states, $newsletter->status );
+$optStatus		= HtmlElements::Options( $words->states, $newsletter->status );
 
 $optTemplate	= [];
 foreach( $templates as $entry )
 	$optTemplate[$entry->newsletterTemplateId]	= $entry->title;
-$optTemplate	= UI_HTML_Elements::Options( $optTemplate, $newsletter->newsletterTemplateId );
+$optTemplate	= HtmlElements::Options( $optTemplate, $newsletter->newsletterTemplateId );
 
 $buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, array(
 	'type'		=> 'submit',

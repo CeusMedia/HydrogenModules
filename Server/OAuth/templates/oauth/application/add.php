@@ -1,5 +1,7 @@
 <?php
-$optType	= UI_HTML_Elements::Options( $words['types'], $application->get( 'type' ) );
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
+$optType	= HtmlElements::Options( $words['types'], $application->get( 'type' ) );
 
 return '
 <h2 class="muted">OAuth-Server</h2>

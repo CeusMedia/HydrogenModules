@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['tab-config'];
@@ -12,7 +13,7 @@ if( count( $module->config ) ){
 	foreach( $module->config as $key => $value ){
 
 		$urlRemove	= './admin/module/editor/removeConfig/'.$moduleId.'/'.$key;
-		$linkRemove	= UI_HTML_Elements::LinkButton( $urlRemove, '', 'button icon tiny remove', $w->buttonRemoveConfirm );
+		$linkRemove	= HtmlElements::LinkButton( $urlRemove, '', 'button icon tiny remove', $w->buttonRemoveConfirm );
 		$class	= "";
 		if( $value->mandatory ){
 			if( $value->mandatory == "yes" )
@@ -34,7 +35,7 @@ if( count( $module->config ) ){
 		switch( $value->type ){
 			case 'boolean':
 				$strValue	= $value->value === TRUE ? 'yes' : 'no';
-				$options	= UI_HTML_Elements::Options( $words['boolean-values'], $strValue );
+				$options	= HtmlElements::Options( $words['boolean-values'], $strValue );
 				$inputLabel	= HtmlTag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $words['boolean-values'][$strValue], 'class' => 'label s active-'.$strValue, 'readonly' => TRUE, 'title' => $inputTitle ) );
 				$input		= HtmlTag::create( 'select', $options, array( 'class' => 's'.$class.' active-'.$strValue, 'name' => $name, 'id' => $inputId, 'title' => $inputTitle ) );
 				break;
@@ -47,7 +48,7 @@ if( count( $module->config ) ){
 				$inputLabel	= HtmlTag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $inputValue, 'class' => 'label max', 'readonly' => TRUE, 'title' => $inputTitle ) );
 				if( count( $value->values ) ){
 					$options	= array_combine( $value->values, $value->values );
-					$options	= UI_HTML_Elements::Options( $options, $value->value );
+					$options	= HtmlElements::Options( $options, $value->value );
 					$input		= HtmlTag::create( 'select', $options, array( 'name' => $inputName, 'id' => $inputId, 'class' => 'm'.$class, 'title' => $inputTitle ) );
 				}
 				else{
@@ -72,15 +73,15 @@ if( count( $module->config ) ){
 	}
 #	natcasesort( $rows );
 	$heads			= array( $w->headKey, $w->headType, $w->headValue, $w->headAction );
-	$tableHeads		= UI_HTML_Elements::TableHeads( $heads );
-	$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '25%', '15%', '50%', '10%' ) );
+	$tableHeads		= HtmlElements::TableHeads( $heads );
+	$tableColumns	= HtmlElements::ColumnGroup( array( '25%', '15%', '50%', '10%' ) );
 	$tableConfig	= '<table>'.$tableColumns.$tableHeads.join( $rows ).'</table>';
-	$tableConfig	.= UI_HTML_Elements::Button( 'save', $w->buttonSave, 'button save' );
+	$tableConfig	.= HtmlElements::Button( 'save', $w->buttonSave, 'button save' );
 }
 
-$optType	= UI_HTML_Elements::Options( $words['config-types'] );
+$optType	= HtmlElements::Options( $words['config-types'] );
 
-$optBoolean	= UI_HTML_Elements::Options( $words['boolean-values'] );
+$optBoolean	= HtmlElements::Options( $words['boolean-values'] );
 
 $wf			= (object) $words['tab-config-add'];
 
@@ -121,7 +122,7 @@ $panelAdd	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'add', $wf->buttonAdd, 'button add' ).'
+			'.HtmlElements::Button( 'add', $wf->buttonAdd, 'button add' ).'
 		</div>
 	</fieldset>
 </form>

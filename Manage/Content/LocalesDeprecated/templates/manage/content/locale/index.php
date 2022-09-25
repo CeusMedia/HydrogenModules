@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $panelEdit		= '';
@@ -43,7 +44,7 @@ else if( $language ){
 
 $filterLanguage		= '';
 if( count( $languages ) > 1 ){
-	$optLanguage	= UI_HTML_Elements::Options( array_combine( $languages, $languages ), $language );
+	$optLanguage	= HtmlElements::Options( array_combine( $languages, $languages ), $language );
 	$filterLanguage	= '
 		<div class="row-fluid">
 			<div class="span12">
@@ -55,7 +56,7 @@ if( count( $languages ) > 1 ){
 else
 	$filterLanguage		= HtmlTag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
 
-$optType	= UI_HTML_Elements::Options( $words['types'], $type );
+$optType	= HtmlElements::Options( $words['types'], $type );
 
 $panelFilter	= '
 <div class="content-panel">

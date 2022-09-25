@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $feedUrl	= View_Helper_Gallery::getFeedUrl( $env );
@@ -34,7 +35,7 @@ $list	= [];
 foreach( $folders as $entry ){
 	$folderName	= $entry->getFilename();
 	$link		= View_Helper_Gallery::renderGalleryLink( $env, $source.$folderName, 2, $dateFormat );
-	$list[$folderName]	= UI_HTML_Elements::ListItem( $link );
+	$list[$folderName]	= HtmlElements::ListItem( $link );
 }
 krsort( $list );
 $folders	= '';
@@ -58,7 +59,7 @@ if( $list ){
 //		}
 	}
 	foreach( $lists as $list ){
-		$list		= UI_HTML_Elements::unorderedList( $list, 0, array( 'class' => 'folders' ) );
+		$list		= HtmlElements::unorderedList( $list, 0, array( 'class' => 'folders' ) );
 		$folders	.= HtmlTag::create( 'div', $list, array( 'class' => 'span'.$width ) );
 	}
 }

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -41,7 +42,7 @@ class View_Helper_DevProfiler
 		}
 		$total		= '<tr class="total"><td>Total</td><td colspan="2" class="task-measure">'.self::formatTime( $timeTotal ).'s</td><td></td></tr>';
 		$list[]		= HtmlTag::create( 'tfoot', $total );
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "400", "50", "75", "" );
+		$colgroup	= HtmlElements::ColumnGroup( "400", "50", "75", "" );
 		$heads		= array(
 			'<th>'.$words['layer']['headTask'].'</th>',
 			'<th class="task-measure">'.$words['layer']['headPercentage'].'</th>',

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
@@ -7,22 +8,22 @@ $iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-mi
 $optStatus	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $wordsGeneral['job-definition-statuses'] as $key => $value )
 	$optStatus[$key]	= $value;
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 $optMode	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $wordsGeneral['job-definition-modes'] as $key => $value )
 	$optMode[$key]	= $value;
-$optMode	= UI_HTML_Elements::Options( $optMode, $filterMode );
+$optMode	= HtmlElements::Options( $optMode, $filterMode );
 
 $optClass	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $classNames as $key => $value )
 	$optClass[$value]	= $value;
-$optClass	= UI_HTML_Elements::Options( $optClass, $filterClass );
+$optClass	= HtmlElements::Options( $optClass, $filterClass );
 
 $optMethod	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $methodNames as $key => $value )
 	$optMethod[$value]	= $value;
-$optMethod	= UI_HTML_Elements::Options( $optMethod, $filterMethod );
+$optMethod	= HtmlElements::Options( $optMethod, $filterMethod );
 
 $panelFilter	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $words['filter']['heading'] ),

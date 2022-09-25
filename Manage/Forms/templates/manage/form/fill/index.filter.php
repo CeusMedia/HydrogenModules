@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
@@ -8,7 +9,7 @@ $optForm		= array( '' => '- alle -' );
 foreach( $forms as $item )
 	if( $item->status > 0 )
 		$optForm[$item->formId]	= $item->title;
-$optForm		= UI_HTML_Elements::Options( $optForm, $filterFormId );
+$optForm		= HtmlElements::Options( $optForm, $filterFormId );
 
 $optStatus		= array(
 	''									=> '- alle -',
@@ -16,7 +17,7 @@ $optStatus		= array(
 	Model_Form_Fill::STATUS_CONFIRMED	=> 'gültig',
 	Model_Form_Fill::STATUS_HANDLED		=> 'behandelt',
 );
-$optStatus		= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
 
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Filter' ),

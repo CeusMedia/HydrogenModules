@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['edit-images'];
@@ -43,7 +44,7 @@ if( $branch->images ){
 			)
 		);
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "30%", "70%" );
+	$colgroup	= HtmlElements::ColumnGroup( "30%", "70%" );
 	$tbody		= HtmlTag::create( 'tbody', $listImages );
 	$listImages	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table', 'style' => 'table-layout: fixed' ) );
 }
@@ -88,7 +89,7 @@ return HTML::DivClass( 'content-panel',
 			)
 		).
 		HTML::Buttons(
-			UI_HTML_Elements::Button( 'doUpload', $iconSave.'&nbsp;'.$w->buttonUpload, 'btn btn-primary btn-small' )
+			HtmlElements::Button( 'doUpload', $iconSave.'&nbsp;'.$w->buttonUpload, 'btn btn-primary btn-small' )
 		)
 	)
 ).$style;

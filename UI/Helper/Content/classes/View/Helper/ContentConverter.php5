@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment as Environment;
 
@@ -45,7 +46,7 @@ class View_Helper_ContentConverter
 			$url		= $matches[1][$i];
 			$title		= str_replace( ' ', '&nbsp;', trim( $matches[3][$i] ) );
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-external';
-			$link		= UI_HTML_Elements::Link( $url, $title, $class, self::$linkTarget );
+			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 		return $content;
@@ -60,7 +61,7 @@ class View_Helper_ContentConverter
 			$title		= empty( $matches[3][$i] ) ? $query : trim( $matches[3][$i] );
 			$url		= 'http://images.google.com/images?q='.$query;
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-search-image';
-			$link		= UI_HTML_Elements::Link( $url, $title, $class, self::$linkTarget );
+			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 		return $content;
@@ -75,7 +76,7 @@ class View_Helper_ContentConverter
 			$title		= trim( $matches[3][$i] );
 			$url		= 'http://maps.google.de/maps?hl=de&q='.$query;
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-search-map';
-			$link		= UI_HTML_Elements::Link( $url, $title, $class, self::$linkTarget );
+			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 		return $content;
@@ -102,7 +103,7 @@ class View_Helper_ContentConverter
 			$title		= empty( $matches[3][$i] ) ? $query : trim( $matches[3][$i] );
 			$url		= 'http://de.wikipedia.org/wiki/'.$query;
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-wiki';
-			$link		= UI_HTML_Elements::Link( $url, $title, $class, self::$linkTarget );
+			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 		return $content;
@@ -117,7 +118,7 @@ class View_Helper_ContentConverter
 			$title		= empty( $matches[3][$i] ) ? $query : trim( $matches[3][$i] );
 			$url		= 'http://www.youtube.com/watch?v='.$query;
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-youtube';
-			$link		= UI_HTML_Elements::Link( $url, $title, $class, self::$linkTarget );
+			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 		return $content;
@@ -136,7 +137,7 @@ class View_Helper_ContentConverter
 			$title		= trim( $matches[4][$i] );
 			$url		= 'http://maps.google.de/maps?hl=de&ll='.$longitude.','.$lattitude.'&z='.$zoomlevel;
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-map';
-			$link		= UI_HTML_Elements::Link( $url, $title, $class, self::$linkTarget );
+			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 		return $content;
@@ -151,7 +152,7 @@ class View_Helper_ContentConverter
 			$title		= empty( $matches[3][$i] ) ? $query : trim( $matches[3][$i] );
 			$url		= 'http://www.discogs.com/'.$query;
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-discogs';
-			$link		= UI_HTML_Elements::Link( $url, $title, $class, self::$linkTarget );
+			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 		return $content;
@@ -166,7 +167,7 @@ class View_Helper_ContentConverter
 			$title		= empty( $matches[3][$i] ) ? $query : trim( $matches[3][$i] );
 			$url		= 'http://www.myspace.com/'.$query;
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-myspace';
-			$link		= UI_HTML_Elements::Link( $url, $title, $class, self::$linkTarget );
+			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 		return $content;
@@ -181,7 +182,7 @@ class View_Helper_ContentConverter
 			$title		= empty( $matches[3][$i] ) ? $query : trim( $matches[3][$i] );
 			$url		= 'http://www.imdb.com/find?s=tt&q='.$query;
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-imdb';
-			$link		= UI_HTML_Elements::Link( $url, $title, $class, self::$linkTarget );
+			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
 		return $content;

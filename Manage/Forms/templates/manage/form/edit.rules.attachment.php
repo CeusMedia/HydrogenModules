@@ -1,7 +1,8 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
-use UI_HTML_Tag as Html;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as Html;
 
 $iconAdd	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 $iconEdit	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
@@ -35,8 +36,8 @@ if( $rulesAttachment ){
 			Html::create( 'td', $buttonRemove ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '30%', '60px' ) );
-	$thead		= Html::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Regeln', 'Datei' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( array( '', '30%', '60px' ) );
+	$thead		= Html::create( 'thead', HtmlElements::TableHeads( array( 'Regeln', 'Datei' ) ) );
 	$tbody		= Html::create( 'tbody', $listRules );
 	$listRules	= Html::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped' ) );
 }
@@ -44,7 +45,7 @@ if( $rulesAttachment ){
 $optFile	= [];
 foreach( $files as $file )
 	$optFile[$file->filePath]	= $file->filePath;
-$optFile	= UI_HTML_Elements::Options( $optFile );
+$optFile	= HtmlElements::Options( $optFile );
 
 $modal	= new BootstrapModalDialog( 'rule-attachment-add' );
 $modal->setHeading( 'Neuer Anhang' );

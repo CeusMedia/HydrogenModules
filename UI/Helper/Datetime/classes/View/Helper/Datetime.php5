@@ -25,6 +25,7 @@
  *	@link			http://code.google.com/p/cmframeworks/
  */
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -103,7 +104,7 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract
 		}
 		if( $showDatetime ){
 			$datetime	= $this->convertFromTimestamp( (int)$timestamp );
-			$phrase		= UI_HTML_Elements::Acronym( $phrase, $datetime );
+			$phrase		= HtmlElements::Acronym( $phrase, $datetime );
 		}
 		$attributes	= array(
 			'class'				=> 'phrase ui-datetime-timephrase',

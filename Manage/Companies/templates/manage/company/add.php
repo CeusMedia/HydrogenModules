@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['add'];
@@ -55,8 +56,8 @@ $panelAdd	= HTML::DivClass( 'content-panel',
 			).
 			HTML::DivClass( 'buttonbar',
 				HTML::DivClass( 'btn-toolbar',
-					UI_HTML_Elements::LinkButton( './manage/company', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' ).
-					UI_HTML_Elements::Button( 'save', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' )
+					HtmlElements::LinkButton( './manage/company', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' ).
+					HtmlElements::Button( 'save', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' )
 				)
 			)
 		)

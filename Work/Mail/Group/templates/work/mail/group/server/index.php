@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
@@ -23,7 +24,7 @@ if( count( $servers ) ){
 			HtmlTag::create( 'td', $helperTimestamp->convert( $server->createdAt, TRUE, 'vor' ) ),
 		) );
 	}
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		'Titel',
 		'IMAP-Server',
 		'SMTP-Server',

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
@@ -32,11 +33,11 @@ if( $news ){
 		);
 		$rows[]	= HtmlTag::create( 'tr', $cells, array( 'class' => $colors[$item->status] ) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
+	$colgroup	= HtmlElements::ColumnGroup( array(
 		'*',
 		'30%',
 	) );
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		$words['index']['headTitle'],
 		$words['index']['headRange'],
 	) ) );

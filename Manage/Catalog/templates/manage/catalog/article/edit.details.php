@@ -1,8 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$optStatus	= UI_HTML_Elements::Options( $words['states'], $article->status );
-$optType	= UI_HTML_Elements::Options( $words['types'], $article->series );
-$optMark	= UI_HTML_Elements::Options( $words['marks'], $article->new );
+$optStatus	= HtmlElements::Options( $words['states'], $article->status );
+$optType	= HtmlElements::Options( $words['types'], $article->series );
+$optMark	= HtmlElements::Options( $words['marks'], $article->new );
 
 return '
 <!--  Manage: Catalog: Article: Details  -->

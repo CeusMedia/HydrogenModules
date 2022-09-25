@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w		= (object) $words['editSlide'];
 
 $optStatus	= $words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $slide->status );
+$optStatus	= HtmlElements::Options( $optStatus, $slide->status );
 
 $wordsSlide	= (object) $words['editSlide'];
 

@@ -1,15 +1,16 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['view'];
 
 $attributes			= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
 $buttonBack			= HtmlTag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
-$buttonList			= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
-$buttonCancel		= UI_HTML_Elements::LinkButton( './admin/module/viewer/index/'.$module->id, $w->buttonCancel, 'button cancel' );
-$buttonSave			= UI_HTML_Elements::Button( 'save', $w->buttonSave, 'button save' );
-$buttonRemove		= UI_HTML_Elements::LinkButton( './admin/module/editor/remove/'.$module->id, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm );
-$buttonExport		= UI_HTML_Elements::LinkButton( './admin/module/editor/export/'.$module->id, 'exportieren', 'button' );
+$buttonList			= HtmlElements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
+$buttonCancel		= HtmlElements::LinkButton( './admin/module/viewer/index/'.$module->id, $w->buttonCancel, 'button cancel' );
+$buttonSave			= HtmlElements::Button( 'save', $w->buttonSave, 'button save' );
+$buttonRemove		= HtmlElements::LinkButton( './admin/module/editor/remove/'.$module->id, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm );
+$buttonExport		= HtmlElements::LinkButton( './admin/module/editor/export/'.$module->id, 'exportieren', 'button' );
 $buttons			= '<div class="buttonbar">
 	'.$buttonBack.'
 <!--	'.$buttonList.'
@@ -70,7 +71,7 @@ foreach( $sources as $sourceId => $source ){
 		if( strtolower( $source->type ) == "folder" )
 			$optSource[$sourceId]	= /*$sourceId.': '.*/$source->title;
 }
-$optSource	= UI_HTML_Elements::Options( $optSource, $request->get( 'source' ) );
+$optSource	= HtmlElements::Options( $optSource, $request->get( 'source' ) );
 
 $panelCommit	= '
 <form action="./admin/module/editor/commit/'.$moduleId.'" method="post">
@@ -88,7 +89,7 @@ $panelCommit	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::Button( 'commit', 'einreichen', 'button add import' ).'
+			'.HtmlElements::Button( 'commit', 'einreichen', 'button add import' ).'
 		</div>
 	</fieldset>
 </form>
@@ -152,8 +153,8 @@ $panelImage	= '
 			</li>
 		</ul>
 		<div class="buttonbar" style="display: none">
-			'.UI_HTML_Elements::Button( 'upload', 'hochladen', 'button add' ).'
-<!--			'.UI_HTML_Elements::LinkButton( $urlRemove, 'entfernen', 'button remove', 'Wirklich?' ).'-->
+			'.HtmlElements::Button( 'upload', 'hochladen', 'button add' ).'
+<!--			'.HtmlElements::LinkButton( $urlRemove, 'entfernen', 'button remove', 'Wirklich?' ).'-->
 		</div>
 	</fieldset>
 </form>

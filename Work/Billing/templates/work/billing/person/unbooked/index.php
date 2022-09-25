@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
@@ -16,8 +17,8 @@ if( $unpayedBillShares ){
 			HtmlTag::create( 'td', $amount ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '60', '', '80' ) );
-	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'RNr', 'Rechnung', 'Betrag' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( array( '60', '', '80' ) );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'RNr', 'Rechnung', 'Betrag' ) ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }

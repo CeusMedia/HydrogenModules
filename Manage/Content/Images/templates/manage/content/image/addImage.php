@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconUpload     = HtmlTag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
@@ -6,7 +7,7 @@ $iconUpload     = HtmlTag::create( 'i', '', array( 'class' => 'icon-folder-open 
 $optFolder	= [];
 foreach( $folders as $folder )
 	$optFolder[$folder]	= $folder;
-$optFolder	= UI_HTML_Elements::Options( $optFolder, $path );
+$optFolder	= HtmlElements::Options( $optFolder, $path );
 
 $panelFolders   = $view->loadTemplateFile( 'manage/content/image/folders.php' );
 $w				= (object) $words['addImage'];

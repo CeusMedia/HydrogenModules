@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['index-list'];
@@ -47,8 +48,8 @@ if( $relocations ){
 			'class'			=> $class
 		) );
 	}
-	$columns	= UI_HTML_Elements::ColumnGroup( "50px", "", "80px", "120px", "100px" );
-	$heads	= UI_HTML_Elements::TableHeads( array( $w->headId, $w->headTitle, $w->headViews, $w->headUsedAt, $w->headActions ) );
+	$columns	= HtmlElements::ColumnGroup( "50px", "", "80px", "120px", "100px" );
+	$heads	= HtmlElements::TableHeads( array( $w->headId, $w->headTitle, $w->headViews, $w->headUsedAt, $w->headActions ) );
 	$thead	= HtmlTag::create( 'thead', $heads );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', $columns.$thead.$tbody, array( 'class' => 'table table-fixed' ) );

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Work_Mission_Calendar{
@@ -60,8 +61,8 @@ class View_Helper_Work_Mission_Calendar{
 			array_unshift( $row, '<th class="week-number"><span>'.$weekNr.'</span></th>' );
 			$rows[]	= '<tr>'.join( $row ).'</tr>';
 		}
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "2%", "14%", "14%", "14%", "14%", "14%", "14%", "14%" );
-		$heads		= UI_HTML_Elements::TableHeads( array( "KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ) );
+		$colgroup	= HtmlElements::ColumnGroup( "2%", "14%", "14%", "14%", "14%", "14%", "14%", "14%" );
+		$heads		= HtmlElements::TableHeads( array( "KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ) );
 		$thead		= HtmlTag::create( 'thead', $heads );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
 		$tableLarge	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
@@ -102,8 +103,8 @@ class View_Helper_Work_Mission_Calendar{
 //			array_unshift( $row, '<th class="week-number"><span>'.$weekNr.'</span></th>' );
 			$rows[]	= join( $row );
 		}
-		$colgroup	= UI_HTML_Elements::ColumnGroup( /*"5%", "95%"*/"100%" );
-		$heads		= UI_HTML_Elements::TableHeads( array( "KW", "..." ) );
+		$colgroup	= HtmlElements::ColumnGroup( /*"5%", "95%"*/"100%" );
+		$heads		= HtmlElements::TableHeads( array( "KW", "..." ) );
 		$thead		= HtmlTag::create( 'thead', ""/*$heads*/ );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
 		$tableSmall	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-small" ) );

@@ -1,21 +1,23 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w				= (object) $words['edit'];
 
 $optController	= array( '' => '-' );
 foreach( $controllers as $item )
 	$optController[$item]	= $item;
 
-$optType		= UI_HTML_Elements::Options( $words['types'], $page->type );
-$optScope		= UI_HTML_Elements::Options( $words['scopes'], $page->scope );
-$optStatus		= UI_HTML_Elements::Options( $words['states'], $page->status );
-$optParent		= UI_HTML_Elements::Options( $parentMap, $page->parentId );
-$optFormat		= UI_HTML_Elements::Options( $words['formats'], $page->format );
-$optController	= UI_HTML_Elements::Options( $optController, $page->controller );
-$optTemplate	= UI_HTML_Elements::Options( $masterTemplates, $page->template );
+$optType		= HtmlElements::Options( $words['types'], $page->type );
+$optScope		= HtmlElements::Options( $words['scopes'], $page->scope );
+$optStatus		= HtmlElements::Options( $words['states'], $page->status );
+$optParent		= HtmlElements::Options( $parentMap, $page->parentId );
+$optFormat		= HtmlElements::Options( $words['formats'], $page->format );
+$optController	= HtmlElements::Options( $optController, $page->controller );
+$optTemplate	= HtmlElements::Options( $masterTemplates, $page->template );
 
 $fieldAccess	= '';
 if( $useAuth ){
-	$optAccess		= UI_HTML_Elements::Options( $words['accesses'], $page->access );
+	$optAccess		= HtmlElements::Options( $words['accesses'], $page->access );
 	$fieldAccess	= '
 		<div class="span4">
 			<label for="input_page_access">'.$w->labelAccess.'</label>

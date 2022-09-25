@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $modelForm	= new Model_Form( $env );
@@ -12,18 +13,18 @@ $statuses	= array(
 	0		=> 'in Arbeit',
 	1		=> 'aktiviert',
 );
-$optStatus	= UI_HTML_Elements::Options( $statuses );
+$optStatus	= HtmlElements::Options( $statuses );
 
 $types		= array(
 	0		=> 'direkter Versand',
 	1		=> 'mit Double-Opt-In',
 );
-$optType	= UI_HTML_Elements::Options( $types );
+$optType	= HtmlElements::Options( $types );
 
 $optDelivery	= array( '' => '- keine -' );
 foreach( $mails as $item )
 	$optDelivery[$item->identifier] = $item->title;
-		$optDelivery	= UI_HTML_Elements::Options( $optDelivery );
+		$optDelivery	= HtmlElements::Options( $optDelivery );
 
 return '
 <h2><span class="muted">Formular:</span> Neu</h2>

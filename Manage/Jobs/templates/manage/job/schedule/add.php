@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -15,13 +16,13 @@ $buttonAdd		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$words['add']['butto
 ) );
 
 $optStatus	= $wordsGeneral['job-definition-statuses'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus );
+$optStatus	= HtmlElements::Options( $optStatus );
 
 
 $optDefinition	= [];
 foreach( $definitionMap as $definitionId => $definition )
 	$optDefinition[$definitionId]	= $definition->identifier;
-$optDefinition	= UI_HTML_Elements::Options( $optDefinition );
+$optDefinition	= HtmlElements::Options( $optDefinition );
 
 
 $optFormat			= array(
@@ -30,32 +31,32 @@ $optFormat			= array(
 	'interval'		=> 'Intervall',
 	'datetime'		=> 'Datum (einmalig)'
 );
-$optFormat			= UI_HTML_Elements::Options( $optFormat );
+$optFormat			= HtmlElements::Options( $optFormat );
 
 $optMinuteOfHour	= array_merge( $words['options-minuteOfHour'], array( 'value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:' ) );
-$optMinuteOfHour	= UI_HTML_Elements::Options( $optMinuteOfHour );
+$optMinuteOfHour	= HtmlElements::Options( $optMinuteOfHour );
 
 $optHourOfDay		= array_merge( $words['options-hourOfDay'], array( 'value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:' ) );
-$optHourOfDay		= UI_HTML_Elements::Options( $optHourOfDay );
+$optHourOfDay		= HtmlElements::Options( $optHourOfDay );
 
 $optDayOfWeek		= array_merge( $words['options-dayOfWeek'], array( 'value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:' ) );
-$optDayOfWeek		= UI_HTML_Elements::Options( $optDayOfWeek );
+$optDayOfWeek		= HtmlElements::Options( $optDayOfWeek );
 
 $optDayOfMonth		= array_merge( $words['options-dayOfMonth'], array( 'value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:' ) );
-$optDayOfMonth		= UI_HTML_Elements::Options( $optDayOfMonth );
+$optDayOfMonth		= HtmlElements::Options( $optDayOfMonth );
 
 $optMonthOfYear		= array_merge( $words['options-monthOfYear'], array( 'value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:' ) );
-$optMonthOfYear		= UI_HTML_Elements::Options( $optMonthOfYear );
+$optMonthOfYear		= HtmlElements::Options( $optMonthOfYear );
 
 $optMinutes	= [];
 for( $i=0; $i<=59; $i++ )
 	$optMinutes[$i]	= $i;
-$optMinutes		= UI_HTML_Elements::Options( $optMinutes );
+$optMinutes		= HtmlElements::Options( $optMinutes );
 
 $optHour	= [];
 for( $i=0; $i<=23; $i++ )
 	$optHour[$i]	= $i;
-$optHour		= UI_HTML_Elements::Options( $optHour );
+$optHour		= HtmlElements::Options( $optHour );
 
 $optWeekday	= array(
 	1	=> 'Montag',
@@ -66,12 +67,12 @@ $optWeekday	= array(
 	6	=> 'Samstag',
 	7	=> 'Sonntag',
 );
-$optWeekday		= UI_HTML_Elements::Options( $optWeekday );
+$optWeekday		= HtmlElements::Options( $optWeekday );
 
 $optDay	= [];
 for( $i=1; $i<=31; $i++ )
 	$optDay[$i]	= $i;
-$optDay		= UI_HTML_Elements::Options( $optDay );
+$optDay		= HtmlElements::Options( $optDay );
 
 
 $optMonth	= array(
@@ -88,10 +89,10 @@ $optMonth	= array(
 	11		=> 'November',
 	12		=> 'Dezember',
 );
-$optMonth		= UI_HTML_Elements::Options( $optMonth );
+$optMonth		= HtmlElements::Options( $optMonth );
 
-$optReportMode		= UI_HTML_Elements::Options( $wordsGeneral['job-schedule-report-modes'] );
-$optReportChannel	= UI_HTML_Elements::Options( $wordsGeneral['job-schedule-report-channels'] );
+$optReportMode		= HtmlElements::Options( $wordsGeneral['job-schedule-report-modes'] );
+$optReportChannel	= HtmlElements::Options( $wordsGeneral['job-schedule-report-channels'] );
 
 
 

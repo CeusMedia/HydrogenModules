@@ -1,15 +1,16 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $optProduct	= [];
 foreach( $products as $item )
 	$optProduct[$item->productId]	= $item->title;
-$optProduct	= UI_HTML_Elements::Options( $optProduct, $product->productId );
+$optProduct	= HtmlElements::Options( $optProduct, $product->productId );
 
 $optStatus		= $words['states'];
-$optStatus		= UI_HTML_Elements::Options( $optStatus, $license->status );
+$optStatus		= HtmlElements::Options( $optStatus, $license->status );
 
 $optDuration	= $words['durations'];
-$optDuration	= UI_HTML_Elements::Options( $optDuration, $license->duration );
+$optDuration	= HtmlElements::Options( $optDuration, $license->duration );
 
 $w	= (object) $words['add'];
 

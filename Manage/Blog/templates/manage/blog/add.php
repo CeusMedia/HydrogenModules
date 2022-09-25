@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['add'];
@@ -6,18 +7,18 @@ $w			= (object) $words['add'];
 $optCategory	= [];
 foreach( $categories as $item )
 	$optCategory[$item->categoryId] = $item->title;
-$optCategory	= UI_HTML_Elements::Options( $optCategory, $post->categoryId );
+$optCategory	= HtmlElements::Options( $optCategory, $post->categoryId );
 
 $languages		= $env->getLanguage()->getLanguages();
 
-$optLanguage	= UI_HTML_Elements::Options( array_combine( $languages, $languages ), $post->language );
+$optLanguage	= HtmlElements::Options( array_combine( $languages, $languages ), $post->language );
 
-$optStatus		= UI_HTML_Elements::Options( $words['states'], $post->status );
+$optStatus		= HtmlElements::Options( $words['states'], $post->status );
 
 $optAuthor		= [];
 foreach( $users as $item )
 	$optAuthor[$item->userId]		= $item->username;
-$optAuthor		= UI_HTML_Elements::Options( $optAuthor, $post->authorId );
+$optAuthor		= HtmlElements::Options( $optAuthor, $post->authorId );
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
 $iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );

@@ -1,13 +1,15 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w			= (object) $words['add'];
 
 $optStatus	= $words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $defaultStatus );
+$optStatus	= HtmlElements::Options( $optStatus, $defaultStatus );
 
 $optProject	= [];
 foreach( $projectMap as $projectId => $project )
 	$optProject[$projectId]	= $project->title;
-$optProject	= UI_HTML_Elements::Options( $optProject, $defaultProjectId );
+$optProject	= HtmlElements::Options( $optProject, $defaultProjectId );
 
 extract( $view->populateTexts( array( 'add.top', 'add.bottom', 'add.info' ), 'html/work/time/' ) );
 

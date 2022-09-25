@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w				= (object) $words['edit'];
 $wSitemap		= (object) $words['edit-sitemap'];
 
@@ -6,8 +8,8 @@ if( $page->type == 1 ){
 	return '<div class="alert alert-info"><em>'.$wSitemap->no_sitemap.'</em></div>';
 }
 
-$optChangefreq	= UI_HTML_Elements::Options( $words['changefreqs'], $page->changefreq );
-$optPriority	= UI_HTML_Elements::Options( $words['priorities'], $page->priority );
+$optChangefreq	= HtmlElements::Options( $words['changefreqs'], $page->changefreq );
+$optPriority	= HtmlElements::Options( $words['priorities'], $page->priority );
 
 extract( $view->populateTexts( array( 'top' ), 'html/manage/page/sitemap' ) );
 

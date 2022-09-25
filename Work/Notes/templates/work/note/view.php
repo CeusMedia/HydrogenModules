@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helper		= new View_Helper_TimePhraser( $this->env );
@@ -112,7 +113,7 @@ $panelInfo	= '
 			<h3>Informationen</h3>
 			<div class="content-panel-inner">
 		<!--		<a href="./?'.$shortHash.'">Kurzlink</a><br/>
-				'.UI_HTML_Elements::Input( NULL, $shortUrl, 'max', TRUE ).'-->
+				'.HtmlElements::Input( NULL, $shortUrl, 'max', TRUE ).'-->
 				<dl class="dl-horizontal">
 					<dt>erstellt</dt>
 					<dd>vor '.$helper->convert( $note->createdAt, TRUE ).'</dd>

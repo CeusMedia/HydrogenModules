@@ -1,9 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w				= (object) $words['add'];
 
-$optType		= UI_HTML_Elements::Options( $words['types'], $fund->type );
-$optScope		= UI_HTML_Elements::Options( $words['scopes'], $fund->scope );
-$optCurrency	= UI_HTML_Elements::Options( $words['currencies'], $fund->currency );
+$optType		= HtmlElements::Options( $words['types'], $fund->type );
+$optScope		= HtmlElements::Options( $words['scopes'], $fund->scope );
+$optCurrency	= HtmlElements::Options( $words['currencies'], $fund->currency );
 
 return '
 <form action="./work/finance/fund/add" method="post">
@@ -40,8 +42,8 @@ return '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './work/finance/fund', $w->buttonCancel, 'button icon cancel' ).'
-			'.UI_HTML_Elements::Button( 'add', $w->buttonAdd, 'button icon add' ).'
+			'.HtmlElements::LinkButton( './work/finance/fund', $w->buttonCancel, 'button icon cancel' ).'
+			'.HtmlElements::Button( 'add', $w->buttonAdd, 'button icon add' ).'
 		</div>
 	</fieldset>
 </form>';

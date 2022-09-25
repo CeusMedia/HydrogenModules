@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -11,7 +12,7 @@ $optStatus		= [
 	0	=> 'inaktiv',
 	1	=> 'aktiv',
 ];
-$optStatus		= UI_HTML_Elements::Options( $optStatus, $target->status );
+$optStatus		= HtmlElements::Options( $optStatus, $target->status );
 
 $table		= '';
 if( count( $fails ) ){
@@ -34,7 +35,7 @@ if( count( $fails ) ){
 		HtmlTag::create( 'th', 'eingegangen' ),
 		HtmlTag::create( 'th', 'gescheitert' ),
 	] );
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '60px', '*', '120px', '120px' );
+	$colgroup	= HtmlElements::ColumnGroup( '40px', '60px', '*', '120px', '120px' );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped'] );
 

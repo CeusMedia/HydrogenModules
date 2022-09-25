@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w	= (object) $words['index'];
 $panelAdd	= '
 <fieldset>
@@ -45,8 +47,8 @@ $panelAdd	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './admin/module', $w->buttonCancel, 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'create', $w->buttonCreate, 'button add' ).'
+			'.HtmlElements::LinkButton( './admin/module', $w->buttonCancel, 'button cancel' ).'
+			'.HtmlElements::Button( 'create', $w->buttonCreate, 'button add' ).'
 		</div>
 	</form>
 </fieldset>

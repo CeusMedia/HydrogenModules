@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
@@ -10,7 +11,7 @@ $optStatus		= array(
 	0		=> 'in Arbeit',
 	1		=> 'aktiviert',
 );
-$optStatus	= UI_HTML_Elements::Options( $optStatus, 0 );
+$optStatus	= HtmlElements::Options( $optStatus, 0 );
 
 $panelAdd		= '
 <div class="content-panel">

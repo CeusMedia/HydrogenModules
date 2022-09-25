@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helperGravatar	= new View_Helper_Gravatar( $env );
@@ -77,8 +78,8 @@ if( $incoming || $outgoing ){
 			HtmlTag::create( 'td', '<small>'.date( 'd.m.Y', $relation->createdAt ).'</small>' ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "80" );
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Mitglied', 'Datum' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( "", "80" );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Mitglied', 'Datum' ) ) );
 	$tbody	= HtmlTag::create( 'tbody', $list, array( '' ) );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }

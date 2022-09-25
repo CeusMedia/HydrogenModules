@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['view'];
@@ -106,9 +107,9 @@ $iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) 
 $labelInstall	= "Das Modul ist <b>nicht installiert</b>.";
 $attributes		= array( 'type' => 'button', 'class' => 'btn auto-back former-button former-cancel', 'readonly' => 'readonly', 'disabled' => 'disabled' );
 $buttonBack		= HtmlTag::create( 'button', $iconCancel.'&nbsp;'.$w->buttonBack, $attributes );
-$buttonList		= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonList, 'btn btn-small button cancel' );
-$buttonCancel	= UI_HTML_Elements::LinkButton( './admin/module', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn' );
-$buttonReload	= UI_HTML_Elements::LinkButton( './admin/module/viewer/reload/'.$module->id, $iconReload.'&nbsp;'.$w->buttonReload, 'btn btn-small'/*, NULL, $disabled*/ );
+$buttonList		= HtmlElements::LinkButton( './admin/module', $w->buttonList, 'btn btn-small button cancel' );
+$buttonCancel	= HtmlElements::LinkButton( './admin/module', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn' );
+$buttonReload	= HtmlElements::LinkButton( './admin/module/viewer/reload/'.$module->id, $iconReload.'&nbsp;'.$w->buttonReload, 'btn btn-small'/*, NULL, $disabled*/ );
 $buttonEdit			= '';
 $buttonInstall		= '';
 $buttonUpdate		= '';
@@ -116,22 +117,22 @@ $buttonUninstall	= '';
 if( $isInstalled ){
 	$labelInstall	= "Das Modul ist installiert.";
 	if( $env->getModules()->has( 'Admin_Module_Installer' ) ){
-		$buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/installer/index/'.$module->id, $iconInstall.'&nbsp;'.$w->buttonInstall, 'btn btn-success disabled former-button former-add', NULL, 'disabled' );
-		$buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/installer/uninstall/'.$module->id, $iconRemove.'&nbsp;'.$w->buttonRemove, 'btn btn-small btn-inverse formder-button former-remove' );
+		$buttonInstall		= HtmlElements::LinkButton( './admin/module/installer/index/'.$module->id, $iconInstall.'&nbsp;'.$w->buttonInstall, 'btn btn-success disabled former-button former-add', NULL, 'disabled' );
+		$buttonUninstall	= HtmlElements::LinkButton( './admin/module/installer/uninstall/'.$module->id, $iconRemove.'&nbsp;'.$w->buttonRemove, 'btn btn-small btn-inverse formder-button former-remove' );
 		if( $hasUpdate )
-			$buttonUpdate		= UI_HTML_Elements::LinkButton( './admin/module/installer/update/'.$module->id, $iconUpdate.'&nbsp;'.$w->buttonUpdate, 'btn btn-primary former-button former-update' );
+			$buttonUpdate		= HtmlElements::LinkButton( './admin/module/installer/update/'.$module->id, $iconUpdate.'&nbsp;'.$w->buttonUpdate, 'btn btn-primary former-button former-update' );
 	}
 	if( $env->getModules()->has( 'Admin_Module_Editor' ) )
-		$buttonEdit			= UI_HTML_Elements::LinkButton( './admin/module/editor/'.$module->id, $iconEdit.'&nbsp;'.$w->buttonEdit, 'btn former-button former-edit' );
+		$buttonEdit			= HtmlElements::LinkButton( './admin/module/editor/'.$module->id, $iconEdit.'&nbsp;'.$w->buttonEdit, 'btn former-button former-edit' );
 }
 else{
 	if( $env->getModules()->has( 'Admin_Module_Installer' ) ){
-		$buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/installer/index/'.$module->id, $iconInstall.'&nbsp;'.$w->buttonInstall, 'btn btn-success former-button former-add' );
-		$buttonUpdate		= UI_HTML_Elements::LinkButton( './admin/module/installer/update/'.$module->id, $iconUpdate.'&nbsp;'.$w->buttonUpdate, 'btn btn-primary disabled former-button former-update', NULL, 'disabled' );
-		$buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/installer/uninstall/'.$module->id, $iconRemove.'&nbsp;'.$w->buttonRemove, 'btn btn-small btn-inverse disabled former-button former-remove', NULL, 'disabled' );
+		$buttonInstall		= HtmlElements::LinkButton( './admin/module/installer/index/'.$module->id, $iconInstall.'&nbsp;'.$w->buttonInstall, 'btn btn-success former-button former-add' );
+		$buttonUpdate		= HtmlElements::LinkButton( './admin/module/installer/update/'.$module->id, $iconUpdate.'&nbsp;'.$w->buttonUpdate, 'btn btn-primary disabled former-button former-update', NULL, 'disabled' );
+		$buttonUninstall	= HtmlElements::LinkButton( './admin/module/installer/uninstall/'.$module->id, $iconRemove.'&nbsp;'.$w->buttonRemove, 'btn btn-small btn-inverse disabled former-button former-remove', NULL, 'disabled' );
 	}
 	if( $env->getModules()->has( 'Admin_Module_Editor' ) )
-		$buttonEdit			= UI_HTML_Elements::LinkButton( './admin/module/editor/'.$module->id, $iconEdit.'&nbsp;'.$w->buttonEdit, 'btn disabled former-button former-edit', NULL, 'disabled' );
+		$buttonEdit			= HtmlElements::LinkButton( './admin/module/editor/'.$module->id, $iconEdit.'&nbsp;'.$w->buttonEdit, 'btn disabled former-button former-edit', NULL, 'disabled' );
 }
 
 $labelDetails	= HtmlTag::create( 'span', 'Details' );

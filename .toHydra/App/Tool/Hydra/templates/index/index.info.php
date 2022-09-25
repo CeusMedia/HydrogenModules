@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 if( empty( $remoteConfig ) )
@@ -26,7 +27,7 @@ $panel	= '
 <fieldset style="position: relative">
 	<legend class="info">Application Instance Information</legend>
 	<div style="position: absolute; right: 8px; top: 16px;">
-		'.UI_HTML_Elements::LinkButton( './admin/instance/edit/'.$instanceId, '', 'button tiny edit' ).'
+		'.HtmlElements::LinkButton( './admin/instance/edit/'.$instanceId, '', 'button tiny edit' ).'
 	</div>
 	<dl>
 		<dt>Application Name</dt>

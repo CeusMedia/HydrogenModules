@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -229,8 +230,8 @@ class View_Helper_ItemRelationLister
 				HtmlTag::create( 'td', $items, array( 'class' => 'cell-relation-items' ) ),
 			) );
 		}
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "30%", "" );
-		$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+		$colgroup	= HtmlElements::ColumnGroup( "30%", "" );
+		$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 			"Typ",
 			"Verknüpfungen / Einträge",
 		) ) );

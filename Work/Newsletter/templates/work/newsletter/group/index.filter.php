@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optStatus		= array( '' => 'alle' );
 foreach( $words['states'] as $key => $label )
 	$optStatus[$key]	= $label;
-$optStatus		= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
 
 $iconFilter	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) ).'&nbsp;';
 $iconReset	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) ).'&nbsp;';

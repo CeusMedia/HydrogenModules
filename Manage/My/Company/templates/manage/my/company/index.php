@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
@@ -25,8 +26,8 @@ if( $companies ){
 		$words['index']['headModifiedAt'],
 	//	$words['index']['headAction'],
 	);
-	$heads		= UI_HTML_Elements::TableHeads( $heads );
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '57%', '15%', '15%' );
+	$heads		= HtmlElements::TableHeads( $heads );
+	$colgroup	= HtmlElements::ColumnGroup( '57%', '15%', '15%' );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );

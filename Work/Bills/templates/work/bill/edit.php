@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $optType	= $words['types'];
-$optType	= UI_HTML_Elements::Options( $optType, $bill->type );
+$optType	= HtmlElements::Options( $optType, $bill->type );
 
 $optStatus	= $words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $bill->status );
+$optStatus	= HtmlElements::Options( $optStatus, $bill->status );
 
 $date		= strtotime( substr( $bill->date, 0, 4 ).'-'.substr( $bill->date, 4, 2).'-'.substr( $bill->date, 6, 2 ) );
 

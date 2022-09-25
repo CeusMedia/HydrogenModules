@@ -1,18 +1,20 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w			= (object) $words['edit'];
 
-$optCurrency	= UI_HTML_Elements::Options( $words['currencies'], $account->currency );
+$optCurrency	= HtmlElements::Options( $words['currencies'], $account->currency );
 
 $optBankId	= [];
 foreach( $banks as $bank )
 	$optBankId[$bank->bankId]	= $bank->title;
-$optBankId	= UI_HTML_Elements::Options( $optBankId, $account->bankId );
+$optBankId	= HtmlElements::Options( $optBankId, $account->bankId );
 
 
 
 
-$optType	= UI_HTML_Elements::Options( $words['types'], $account->type );
-$optScope	= UI_HTML_Elements::Options( $words['scopes'], $account->scope );
+$optType	= HtmlElements::Options( $words['types'], $account->type );
+$optScope	= HtmlElements::Options( $words['scopes'], $account->scope );
 
 $dateDue	= $account->due ? date( "d.m.Y", $account->due ) : "";
 
@@ -63,10 +65,10 @@ return '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './work/finance/bank', $w->buttonToTop, 'button icon cancel top up' ).'
-			'.UI_HTML_Elements::LinkButton( './work/finance/bank/account', $w->buttonCancel, 'button icon cancel' ).'
-			'.UI_HTML_Elements::Button( 'save', $w->buttonSave, 'button icon save' ).'
-			'.UI_HTML_Elements::LinkButton( './work/finance/bank/remove/'.$account->bankId, $w->buttonRemove, 'button icon remove', $w->buttonRemoveConfirm, TRUE ).'
+			'.HtmlElements::LinkButton( './work/finance/bank', $w->buttonToTop, 'button icon cancel top up' ).'
+			'.HtmlElements::LinkButton( './work/finance/bank/account', $w->buttonCancel, 'button icon cancel' ).'
+			'.HtmlElements::Button( 'save', $w->buttonSave, 'button icon save' ).'
+			'.HtmlElements::LinkButton( './work/finance/bank/remove/'.$account->bankId, $w->buttonRemove, 'button icon remove', $w->buttonRemoveConfirm, TRUE ).'
 		</div>
 	</fieldset>
 </form>';

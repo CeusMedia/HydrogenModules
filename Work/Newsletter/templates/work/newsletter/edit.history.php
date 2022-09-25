@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $rowColors	= array(
@@ -43,7 +44,7 @@ if( $letterHistory ){
 			$buttonView.' '.$buttonSend.' '.$buttonRemove
 		) ).'</td></tr>';
 	}
-	$columns	= UI_HTML_Elements::ColumnGroup( "25%", "30%", "20%", "25%" );
+	$columns	= HtmlElements::ColumnGroup( "25%", "30%", "20%", "25%" );
 	$thead		= '<thead><tr><th>Empfänger</th><th>E-Mail-Adresse</th><th>Zustand</th><th>Aktion</th></tr></thead>';
 	$tbody		= '<tbody>'.join( $rows ).'</tbody>';
 	$table		= '<table class="table table-condensed">'.$columns.$thead.$tbody.'</table>';

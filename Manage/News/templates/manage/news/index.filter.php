@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconFilter	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
@@ -9,7 +10,7 @@ $w			= (object) $words['filter'];
 $optStatus	= array( '' => '- alle -' );
 foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $value;
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 
 $buttonFilter	= HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$w->buttonFilter, array(

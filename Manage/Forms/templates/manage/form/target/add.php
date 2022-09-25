@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -11,7 +12,7 @@ $optStatus		= [
 	0	=> 'inaktiv',
 	1	=> 'aktiv',
 ];
-$optStatus		= UI_HTML_Elements::Options( $optStatus );
+$optStatus		= HtmlElements::Options( $optStatus );
 
 return '<div class="content-panel">
 	<h3>Neues Transferziel</h3>

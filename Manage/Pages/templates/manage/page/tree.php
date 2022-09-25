@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
@@ -6,7 +7,7 @@ $iconSortable	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrows-
 
 $filterApp		= '';
 if( count( $apps ) > 1 ){
-	$optApp		= UI_HTML_Elements::Options( $apps, $app );
+	$optApp		= HtmlElements::Options( $apps, $app );
 	$filterApp	= '
 		<div class="row-fluid">
 			<div class="span12">
@@ -21,7 +22,7 @@ $sources	= [
 	'Config'	=> 'Config Pages',
 	'Modules'	=> 'Module Pages'
 ];
-$optSource	= UI_HTML_Elements::Options( $sources, $source );
+$optSource	= HtmlElements::Options( $sources, $source );
 
 	$filterSource	= '
 		<div class="row-fluid">
@@ -36,7 +37,7 @@ $optSource	= UI_HTML_Elements::Options( $sources, $source );
 
 $filterLanguage		= '';
 if( count( $languages ) > 1 ){
-	$optLanguage	= UI_HTML_Elements::Options( array_combine( $languages, $languages ), $language );
+	$optLanguage	= HtmlElements::Options( array_combine( $languages, $languages ), $language );
 	$filterLanguage	= '
 		<div class="row-fluid">
 			<div class="span12">
@@ -52,7 +53,7 @@ else
 $optScope	= [];
 foreach( $words['scopes'] as $key => $value )
 	$optScope[$key]	= $value;
-$optScope	= UI_HTML_Elements::Options( $optScope, $scope );
+$optScope	= HtmlElements::Options( $optScope, $scope );
 $filterScope	= '
 <div class="row-fluid">
 	<div class="span12">

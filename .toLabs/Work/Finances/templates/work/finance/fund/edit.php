@@ -1,8 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w			= (object) $words['edit'];
 
-$optType		= UI_HTML_Elements::Options( $words['types'], $fund->type );
-$optScope	= UI_HTML_Elements::Options( $words['scopes'], $fund->scope );
+$optType		= HtmlElements::Options( $words['types'], $fund->type );
+$optScope	= HtmlElements::Options( $words['scopes'], $fund->scope );
 
 return '
 <form action="./work/finance/fund/edit/'.$fund->fundId.'" method="post">
@@ -35,9 +37,9 @@ return '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './work/finance/fund', $w->buttonCancel, 'button icon cancel' ).'
-			'.UI_HTML_Elements::Button( 'save', $w->buttonSave, 'button icon save' ).'
-			'.UI_HTML_Elements::LinkButton( './work/finance/fund/remove/'.$fund->fundId, $w->buttonRemove, 'button icon remove', $w->buttonRemoveConfirm, TRUE ).'
+			'.HtmlElements::LinkButton( './work/finance/fund', $w->buttonCancel, 'button icon cancel' ).'
+			'.HtmlElements::Button( 'save', $w->buttonSave, 'button icon save' ).'
+			'.HtmlElements::LinkButton( './work/finance/fund/remove/'.$fund->fundId, $w->buttonRemove, 'button icon remove', $w->buttonRemoveConfirm, TRUE ).'
 		</div>
 	</fieldset>
 </form>';

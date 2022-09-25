@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel	= HTML::Icon( 'arrow-left' );
@@ -102,11 +103,11 @@ $panelEdit	= HTML::DivClass( 'content-panel',
 				)
 			).
 			HTML::DivClass( 'buttonbar',
-				UI_HTML_Elements::LinkButton( './manage/my/company/branch', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' ).
+				HtmlElements::LinkButton( './manage/my/company/branch', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' ).
 				'&nbsp;|&nbsp'.
-				UI_HTML_Elements::Button( 'save', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-success' )
+				HtmlElements::Button( 'save', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-success' )
 #				'&nbsp;|&nbsp'.
-#				UI_HTML_Elements::LinkButton( './manage/branch/delete/'.$branch->branchId, $w->buttonRemove, 'button delete' )
+#				HtmlElements::LinkButton( './manage/branch/delete/'.$branch->branchId, $w->buttonRemove, 'button delete' )
 			)
 		)
 	)

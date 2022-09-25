@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -47,7 +48,7 @@ class View_Helper_Panel_Mangopay_Transactions extends View_Helper_Panel_Mangopay
 				HtmlTag::create(' td', $amount.'<br/>'.$fees, array( 'class' => 'cell-transaction-amount', 'style' => 'text-align: right' ) ),
 			) );
 		}
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "100", "", "120", "120" );
+		$colgroup	= HtmlElements::ColumnGroup( "100", "", "120", "120" );
 		$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'th', 'ID' ),
 			HtmlTag::create( 'th', 'Zeitpunkt' ),

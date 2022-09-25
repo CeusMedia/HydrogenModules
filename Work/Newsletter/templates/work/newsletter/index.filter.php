@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words->index_filter;
@@ -8,11 +9,11 @@ $iconReset	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-min
 
 
 $optStatus	= array_merge( array( '' => '- egal -' ), $words->states );
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 $optLimit	= array( 5, 10, 15, 20, 25, 50, 100 );
 $optLimit	= array_combine( $optLimit, $optLimit );
-$optLimit	= UI_HTML_Elements::Options( $optLimit, $filterLimit );
+$optLimit	= HtmlElements::Options( $optLimit, $filterLimit );
 
 if( !$inlineFilter )
 	return '

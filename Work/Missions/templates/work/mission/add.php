@@ -1,32 +1,32 @@
 <?php
-
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w	= (object) $words['add'];
 
-$optType		= UI_HTML_Elements::Options( $words['types'], $mission->type );
-#$optPriority	= UI_HTML_Elements::Options( $words['priorities'], $mission->priority );
-#$optStatus		= UI_HTML_Elements::Options( $words['states'], $mission->status );
+$optType		= HtmlElements::Options( $words['types'], $mission->type );
+#$optPriority	= HtmlElements::Options( $words['priorities'], $mission->priority );
+#$optStatus		= HtmlElements::Options( $words['states'], $mission->status );
 
 $optPriority	= [];
 foreach( $words['priorities'] as $key => $value )
-	$optPriority[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->priority == $key, NULL, 'mission priority'.$key );
+	$optPriority[]	= HtmlElements::Option( (string) $key, $value, $mission->priority == $key, NULL, 'mission priority'.$key );
 $optPriority	= join( $optPriority );
 
 $optStatus	= [];
 foreach( $words['states'] as $key => $value )
 	if( $key >= 0 && $key <= 3 )
-		$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
+		$optStatus[]	= HtmlElements::Option( (string) $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
 $optStatus	= join( $optStatus );
 
 $optWorker	= [];
 foreach( $users as $user )
 	$optWorker[$user->userId]	= $user->username;
-$optWorker		= UI_HTML_Elements::Options( $optWorker, $userId );
+$optWorker		= HtmlElements::Options( $optWorker, $userId );
 
 $optProject	= [];
 foreach( $userProjects as $projectId => $project )
 	$optProject[$projectId]	= $project->title;
-$optProject	= UI_HTML_Elements::Options( $optProject, $mission->projectId );
+$optProject	= HtmlElements::Options( $optProject, $mission->projectId );
 
 $hoursProjected		= floor( $mission->minutesProjected / 60 );
 $minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 2, "0", STR_PAD_LEFT );
@@ -121,10 +121,10 @@ $panelAdd	= '
 		</div>-->
 		'.$fieldContent.'
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './work/mission', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
+			'.HtmlElements::LinkButton( './work/mission', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'btn' ).'
 			<button type="submit" name="add" class="btn btn-primary"><i class="fa fa-fw fa-check"></i> '.$w->buttonSave.'</button>
-<!--			'.UI_HTML_Elements::LinkButton( './work/mission', $w->buttonCancel, 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'add', $w->buttonSave, 'button add' ).'-->
+<!--			'.HtmlElements::LinkButton( './work/mission', $w->buttonCancel, 'button cancel' ).'
+			'.HtmlElements::Button( 'add', $w->buttonSave, 'button add' ).'-->
 		</div>
 	</div>
 </div>

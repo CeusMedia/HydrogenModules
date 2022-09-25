@@ -1,11 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['update'];
 
 $attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
 $buttonBack		= HtmlTag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
-$buttonUpdate	= UI_HTML_Elements::Button( 'doUpdate', $w->buttonUpdate, 'button update' );
+$buttonUpdate	= HtmlElements::Button( 'doUpdate', $w->buttonUpdate, 'button update' );
 
 $panelChanges	= $view->loadTemplateFile( 'admin/module/installer/update.changes.php' );
 $panelDatabase	= $view->loadTemplateFile( 'admin/module/installer/update.database.php' );

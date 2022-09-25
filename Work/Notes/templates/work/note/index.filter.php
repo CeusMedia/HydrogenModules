@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w		= (object) $words['filter'];
 
@@ -11,7 +12,7 @@ $iconAdd	= '<i class="icon-plus icon-white"></i>';
 $iconRemove	= '<i class="icon-remove icon-white"></i>';
 
 $optOrder	= array( '' => '-', 'modifiedAt' => 'letzte Änderung', 'createdAt' => 'Erstellungsdatum' );
-$optOrder	= UI_HTML_Elements::Options( $optOrder, $filterOrder );
+$optOrder	= HtmlElements::Options( $optOrder, $filterOrder );
 
 /*
 $not	= [];
@@ -52,15 +53,15 @@ if( $tags ){
 }
 */
 $optAuthor		= $words['filter-author'];
-$optAuthor		= UI_HTML_Elements::Options( $optAuthor, $filterAuthor );
+$optAuthor		= HtmlElements::Options( $optAuthor, $filterAuthor );
 
 $optPublic		= $words['filter-public'];
-$optPublic		= UI_HTML_Elements::Options( $optPublic, $filterPublic );
+$optPublic		= HtmlElements::Options( $optPublic, $filterPublic );
 
 $optProject		= array( '' => '- alle -', '0' => '- ohne Projektbezug -' );
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
-$optProject		= UI_HTML_Elements::Options( $optProject, $filterProjectId );
+$optProject		= HtmlElements::Options( $optProject, $filterProjectId );
 
 return '
 <div class="content-panel content-panel-filter">

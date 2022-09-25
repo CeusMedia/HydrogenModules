@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
@@ -79,9 +80,9 @@ if( $definitions ){
 //			HtmlTag::create( 'td', $buttons, array( 'class' => '' ) ),
 		) );
 	}
-	$cols	= UI_HTML_Elements::ColumnGroup( '', '100px', '120px', '120px', '140px'/*, '140px'*/ );
+	$cols	= HtmlElements::ColumnGroup( '', '100px', '120px', '120px', '140px'/*, '140px'*/ );
 
-	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 //		$words['index']['tableHeadId'],
 		$words['index']['tableHeadIdentifier'],
 		$words['index']['tableHeadStats'],

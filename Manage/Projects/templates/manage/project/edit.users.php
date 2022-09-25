@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['edit-panel-users'];
@@ -50,9 +51,9 @@ foreach( $users as $user )
 	if( !array_key_exists( $user->userId, $projectUsers ) )
 		if( $user->status > 0 )
 			$optUser[$user->userId]	= $user->username;
-$optUser	= UI_HTML_Elements::Options( $optUser );
+$optUser	= HtmlElements::Options( $optUser );
 
-$buttonAdd	= UI_HTML_Elements::Button( 'addUser', $iconAdd.' hinzufügen', 'btn btn-small btn-primary' );
+$buttonAdd	= HtmlElements::Button( 'addUser', $iconAdd.' hinzufügen', 'btn btn-small btn-primary' );
 if( !$canEdit )
 	$buttonAdd	= HtmlTag::Button( 'addUser', $iconAdd.' hinzufügen', 'btn btn-small btn-primary disabled', NULL, TRUE );
 

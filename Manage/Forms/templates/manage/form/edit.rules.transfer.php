@@ -1,7 +1,8 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
-use UI_HTML_Tag as Html;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as Html;
 
 $iconAdd	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 $iconEdit	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
@@ -27,7 +28,7 @@ if( $transferRules ){
 		$optTransferTarget	= [];
 		foreach( $transferTargets as $item )
 			$optTransferTarget[$item->formTransferTargetId]	= $item->title;
-		$optTransferTarget	= UI_HTML_Elements::Options( $optTransferTarget, $rule->formTransferTargetId );
+		$optTransferTarget	= HtmlElements::Options( $optTransferTarget, $rule->formTransferTargetId );
 
 		$modal	= new BootstrapModalDialog( 'rule-transfer-edit-'.$ruleId );
 		$modal->setHeading( 'Transfer-Regel: '.$rule->title );
@@ -70,8 +71,8 @@ if( $transferRules ){
 		) );
 		$modals[]		= $modal;
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '25%', '20%' ) );
-	$thead		= Html::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Bezeichnung', 'Transfer-Ziel' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( array( '', '25%', '20%' ) );
+	$thead		= Html::create( 'thead', HtmlElements::TableHeads( array( 'Bezeichnung', 'Transfer-Ziel' ) ) );
 	$tbody		= Html::create( 'tbody', $listRules );
 	$listRules	= Html::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped' ) ).join( $modals );
 }
@@ -79,7 +80,7 @@ if( $transferRules ){
 $optTransferTarget	= [];
 foreach( $transferTargets as $item )
 	$optTransferTarget[$item->formTransferTargetId]	= $item->title;
-$optTransferTarget	= UI_HTML_Elements::Options( $optTransferTarget );
+$optTransferTarget	= HtmlElements::Options( $optTransferTarget );
 
 $modal	= new BootstrapModalDialog( 'rule-transfer-add' );
 $modal->setHeading( 'Neue Transfer-Regel' );

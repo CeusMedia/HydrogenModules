@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
@@ -6,7 +7,7 @@ $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 $optTemplate	= array( '' => '-' );
 foreach( $templates as $item )
 	$optTemplate[$item->newsletterTemplateId]	= $item->title;
-$optTemplate	= UI_HTML_Elements::Options( $optTemplate, $template->templateId );
+$optTemplate	= HtmlElements::Options( $optTemplate, $template->templateId );
 
 $iconCancel	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) ).'&nbsp;';
 $iconSave	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) ).'&nbsp;';

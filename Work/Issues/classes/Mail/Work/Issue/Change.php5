@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
@@ -67,7 +68,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 		else
 			$message[]	= 'Ein Problemreport wurde bearbeitet.';
 		if( $issue->projectId ){
-			$projectLink	= UI_HTML_Elements::Link( './manage/project/view/'.$issue->projectId, $issue->project->title );
+			$projectLink	= HtmlElements::Link( './manage/project/view/'.$issue->projectId, $issue->project->title );
 			$message[]		= 'Du bekommst diese Mail, da du im Projekt '.$projectLink.' involviert bist.';
 		}
 		$message	= HtmlTag::create( 'div', join( '<br/>', $message ), array( 'class' => 'alert alert-info' ) );

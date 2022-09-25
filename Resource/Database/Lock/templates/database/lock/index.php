@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['index'];
@@ -24,14 +25,14 @@ if( count( $locks ) > 0 ){
 		) );
 	}
 	$tbody		= HtmlTag::create( 'tbody', $list );
-	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		$w->headUser,
 		$w->headModule,
 		$w->headTitle,
 		$w->headDate,
 		$w->headActions
 	) ) );
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '150px', '180px', '', '160px', '120px' );
+	$colgroup	= HtmlElements::ColumnGroup( '150px', '180px', '', '160px', '120px' );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-not-condensed' ) );
 }
 

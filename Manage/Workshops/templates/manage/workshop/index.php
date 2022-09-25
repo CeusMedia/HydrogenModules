@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-plus' ) );
@@ -20,7 +21,7 @@ if( $workshops ){
 
 		), array() );
 	}
-	$heads	= UI_HTML_Elements::TableHeads( array( 'Bezeichnung', 'Zustand', 'Anordnung', 'letzte Änderung' ) );
+	$heads	= HtmlElements::TableHeads( array( 'Bezeichnung', 'Zustand', 'Anordnung', 'letzte Änderung' ) );
 	$thead	= HtmlTag::create( 'thead', $heads );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-striped' ) );

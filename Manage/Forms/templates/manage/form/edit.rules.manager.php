@@ -1,7 +1,8 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
-use UI_HTML_Tag as Html;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as Html;
 
 $iconAdd	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 $iconSave	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
@@ -13,7 +14,7 @@ $optMailManager	= [];
 //	$optMailManager['']	= '- keine -';
 foreach( $mailsManager as $item )
 	$optMailManager[$item->mailId]	= $item->title;
-$optMailManager	= UI_HTML_Elements::Options( $optMailManager, $form->managerMailId );
+$optMailManager	= HtmlElements::Options( $optMailManager, $form->managerMailId );
 
 $listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
 if( $rulesManager ){
@@ -52,8 +53,8 @@ if( $rulesManager ){
 			Html::create( 'td', $buttonRemove ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '25%', '20%', '60px' ) );
-	$thead		= Html::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Regeln', 'E-Mail', 'Empfänger' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( array( '', '25%', '20%', '60px' ) );
+	$thead		= Html::create( 'thead', HtmlElements::TableHeads( array( 'Regeln', 'E-Mail', 'Empfänger' ) ) );
 	$tbody		= Html::create( 'tbody', $listRules );
 	$listRules	= Html::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped' ) );
 }

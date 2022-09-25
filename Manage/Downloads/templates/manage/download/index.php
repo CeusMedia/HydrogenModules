@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helper			= new View_Helper_TimePhraser( $env );
@@ -109,7 +110,7 @@ $rows	= $rows['folders'] + $rows['files'];
 $table	= '<br/><p><em><small class="muted">'.$words['index']['empty'].'</small></em></p>';
 
 if( $rows ){
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "85%", "15%" );
+	$colgroup	= HtmlElements::ColumnGroup( "85%", "15%" );
 	$heads		= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'th', $words['index']['headFile'] ),
 		HtmlTag::create( 'th', $words['index']['headActions'], array( 'class' => 'pull-right' ) ),

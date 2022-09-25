@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $optType	= $words['types'];
-$optType	= UI_HTML_Elements::Options( $optType );
+$optType	= HtmlElements::Options( $optType );
 
 $optStatus	= $words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, "0" );
+$optStatus	= HtmlElements::Options( $optStatus, "0" );
 
 $w			= (object) $words['add'];
 

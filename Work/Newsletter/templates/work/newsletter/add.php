@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) ).'&nbsp;';
@@ -7,13 +8,13 @@ $iconSave	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) ).
 $optTemplate	= [];
 foreach( $templates as $entry )
 	$optTemplate[$entry->newsletterTemplateId]	= $entry->title;
-$optTemplate	= UI_HTML_Elements::Options( $optTemplate, $newsletter->newsletterTemplateId );
+$optTemplate	= HtmlElements::Options( $optTemplate, $newsletter->newsletterTemplateId );
 
 $optNewsletter	= array( '0' => '- keine Kopie -' );
 krsort( $newsletters );
 foreach( $newsletters as $item )
 	$optNewsletter[$item->newsletterId]	= $item->title;
-$optNewsletter	= UI_HTML_Elements::Options( $optNewsletter, $newsletter->newsletterId );
+$optNewsletter	= HtmlElements::Options( $optNewsletter, $newsletter->newsletterId );
 
 $formAdd	= '
 <form action="./work/newsletter/add" method="post">

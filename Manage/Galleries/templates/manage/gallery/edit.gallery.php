@@ -1,6 +1,8 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $optStatus	= $words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $gallery->status );
+$optStatus	= HtmlElements::Options( $optStatus, $gallery->status );
 
 return '
 <div class="content-panel">

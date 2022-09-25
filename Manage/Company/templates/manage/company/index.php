@@ -1,8 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
-$add 		= UI_HTML_Elements::LinkButton( './manage/company/add', $words['index']['buttonAdd'], 'button add' );
+$add 		= HtmlElements::LinkButton( './manage/company/add', $words['index']['buttonAdd'], 'button add' );
 
 $helperTime	= new View_Helper_TimePhraser( $env );
 
@@ -22,13 +23,13 @@ foreach( $companies as $entry ){
 	$uriActivate		= './manage/company/activate/'.$entry->companyId;
 	$uriDeactivate		= './manage/company/deactivate/'.$entry->companyId;
 
-	$link				= UI_HTML_Elements::Link( $url, $entry->title );
-	$buttonEdit			= UI_HTML_Elements::LinkButton( $uriEdit, '<i class="icon-pencil"></i>', 'btn btn-mini' );
-	$buttonRemove		= UI_HTML_Elements::LinkButton( $uriRemove, '', 'btn btn-mini' );
-	$buttonActivate		= UI_HTML_Elements::LinkButton( $uriActivate, '<i class="icon-check icon-white"></i>', 'btn btn-mini btn-success', NULL, $entry->status == 1 );
-	$buttonDeactivate	= UI_HTML_Elements::LinkButton( $uriDeactivate, '<i class="icon-remove icon-white"></i>', 'btn btn-mini btn-danger', NULL, $entry->status == -1 );
+	$link				= HtmlElements::Link( $url, $entry->title );
+	$buttonEdit			= HtmlElements::LinkButton( $uriEdit, '<i class="icon-pencil"></i>', 'btn btn-mini' );
+	$buttonRemove		= HtmlElements::LinkButton( $uriRemove, '', 'btn btn-mini' );
+	$buttonActivate		= HtmlElements::LinkButton( $uriActivate, '<i class="icon-check icon-white"></i>', 'btn btn-mini btn-success', NULL, $entry->status == 1 );
+	$buttonDeactivate	= HtmlElements::LinkButton( $uriDeactivate, '<i class="icon-remove icon-white"></i>', 'btn btn-mini btn-danger', NULL, $entry->status == -1 );
 
-	$check		= UI_HTML_Elements::Checkbox( 'companyId', $entry->companyId );
+	$check		= HtmlElements::Checkbox( 'companyId', $entry->companyId );
 	$rows[]		= '	<tr class="'.$class.'">
 <!--		<td>'.$check.'</td>-->
 		<td>'.$link.'</td>
@@ -47,8 +48,8 @@ $heads	= array(
 	$words['index']['headModifiedAt'],
 	$words['index']['headAction'],
 );
-$heads		= UI_HTML_Elements::TableHeads( $heads );
-$colgroup	= UI_HTML_Elements::ColumnGroup( /*'3%', */'57%', '15%', '15%', '10%' );
+$heads		= HtmlElements::TableHeads( $heads );
+$colgroup	= HtmlElements::ColumnGroup( /*'3%', */'57%', '15%', '15%', '10%' );
 
 return '
 <!--'.$heading.'-->

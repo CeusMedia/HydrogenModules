@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['tab-database'];
@@ -16,7 +17,7 @@ if( $module->sql ){
 		$url		= './admin/module/editor/removeSql/'.$moduleId;
 
 		$version	= $sql->event === 'update' ? '<br/>Version: '.$sql->version: '';
-		$remove		= UI_HTML_Elements::LinkButton( $url, 'entfernen', 'button icon remove', 'Wirklich?' );
+		$remove		= HtmlElements::LinkButton( $url, 'entfernen', 'button icon remove', 'Wirklich?' );
 		$label		= ucFirst( $sql->event ).$version.'<br/>DBMS: '.$sql->type.'<br/>'.$remove;
 		$list[]		= HtmlTag::create( 'dt', $label );
 		$list[]		= HtmlTag::create( 'dd', $code, array( 'class' => 'sql' ) );
@@ -26,8 +27,8 @@ if( $module->sql ){
 
 $types	= array( '*' => $words['tab-database']['allTypes'] ) + $words['database-types'];
 
-$optEvent	= UI_HTML_Elements::Options( $words['database-events'] );
-$optType	= UI_HTML_Elements::Options( $types );
+$optEvent	= HtmlElements::Options( $words['database-events'] );
+$optType	= HtmlElements::Options( $types );
 
 $panelAdd	= '
 	<form action="./admin/module/editor/addSql/'.$moduleId.'?tab=database" method="post">
@@ -52,7 +53,7 @@ $panelAdd	= '
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::Button( 'addSql', $wf->buttonAdd, 'button add' ).'
+				'.HtmlElements::Button( 'addSql', $wf->buttonAdd, 'button add' ).'
 			</div>
 		</fieldset>
 	</form>

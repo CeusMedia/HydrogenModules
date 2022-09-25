@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['edit'];
 
-$optType	= UI_HTML_Elements::Options( $words['types'], $source->type );
+$optType	= HtmlElements::Options( $words['types'], $source->type );
 
 $panelEdit	= '
 <form action="./admin/module/source/edit/'.$sourceId.'" method="post">
@@ -38,10 +39,10 @@ $panelEdit	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './admin/module/source', $w->buttonCancel, 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'edit', $w->buttonSave, 'button save' ).'
-			'.UI_HTML_Elements::LinkButton( './admin/module/source/refresh/'.$sourceId.'/0', $w->buttonRefresh, 'button icon refresh' ).'
-			'.UI_HTML_Elements::LinkButton( './admin/module/source/remove/'.$sourceId, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm ).'
+			'.HtmlElements::LinkButton( './admin/module/source', $w->buttonCancel, 'button cancel' ).'
+			'.HtmlElements::Button( 'edit', $w->buttonSave, 'button save' ).'
+			'.HtmlElements::LinkButton( './admin/module/source/refresh/'.$sourceId.'/0', $w->buttonRefresh, 'button icon refresh' ).'
+			'.HtmlElements::LinkButton( './admin/module/source/remove/'.$sourceId, $w->buttonRemove, 'button remove', $w->buttonRemoveConfirm ).'
 		</div>
 	</fieldset>
 </form>';

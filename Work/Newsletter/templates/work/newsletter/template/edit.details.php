@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= $words->edit;
@@ -6,7 +7,7 @@ $w		= $words->edit;
 $iconCopy		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clone' ) ).'&nbsp;';
 $iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
 $iconPreview	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) ).'&nbsp;';
-$optStatus		= UI_HTML_Elements::Options( $words->states, $template->status );
+$optStatus		= HtmlElements::Options( $words->states, $template->status );
 
 $listNewsletters	= '<em><small class="muted">Nicht verwendet.</small></em>';
 if( $newsletters ){

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Work_Mission_Dashboard_MyEvents extends CMF_Hydrogen_View_Helper_Abstract
@@ -49,7 +50,7 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends CMF_Hydrogen_View_Help
 //							HtmlTag::create( 'td', '#'.$event->priority ),
 				) );
 			};
-			$colgroup	= UI_HTML_Elements::ColumnGroup( array(
+			$colgroup	= HtmlElements::ColumnGroup( array(
 				'50px',
 //						'20px',
 				'',

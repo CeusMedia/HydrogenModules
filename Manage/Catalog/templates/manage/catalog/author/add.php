@@ -1,10 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w			= (object) $words['add'];
 
 $tabs		= $this->renderMainTabs();
 
 $optGender	= array( /*$words['gender']*/ );
-$optGender	= UI_HTML_Elements::Options( $optGender/*, $author->gender*/ );
+$optGender	= HtmlElements::Options( $optGender/*, $author->gender*/ );
 
 $panelList	= $view->loadTemplateFile( 'manage/catalog/author/list.php' );
 

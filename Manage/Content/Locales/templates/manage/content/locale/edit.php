@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $classAutoEditor	= $editor;
@@ -69,7 +70,7 @@ if( $editor !== "Ace" )
 $optEditor	= array( 'Plain' => $words['editors']['Plain'] );
 foreach( $editors as $key )
 	$optEditor[$key]	= $words['editors'][$key];
-$optEditor	= UI_HTML_Elements::Options( $optEditor, $editor );
+$optEditor	= HtmlElements::Options( $optEditor, $editor );
 
 $panelEdit	= '
 <div class="content-panel">

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconUp		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-up' ) );
@@ -32,7 +33,7 @@ if( $articles ){
 		HtmlTag::create( 'th', 'Rank' ),
 	) ) );
 	$tbody			= HtmlTag::create( 'tbody', $rows );
-	$colgroup		= UI_HTML_Elements::ColumnGroup( array( '', '20%', '15%' ) );
+	$colgroup		= HtmlElements::ColumnGroup( array( '', '20%', '15%' ) );
 	$listArticles	= HtmlTag::create( 'table', $colgroup.$heads.$tbody, array( 'class' => 'table table-striped table-small table-condensed' ) );
 }
 

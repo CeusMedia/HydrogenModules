@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*  --  PAGINATION  --  */
@@ -16,7 +17,7 @@ if( $limit && $total > $limit )
 	$pagination	= $pagination->build( $total, $limit, $offset );
 }
 
-$heads	= UI_HTML_Elements::TableHeads( $words['indexListHeads'] );
+$heads	= HtmlElements::TableHeads( $words['indexListHeads'] );
 $number	= 0;
 
 if( count( $total ) ){
@@ -79,7 +80,7 @@ return '
 	</table>
 	'.$pagination.'<br/>
 	<div class="buttonbar">
-		'.UI_HTML_Elements::LinkButton( './admin/user/add', $words['indexList']['buttonAdd'], 'button add' ).'
+		'.HtmlElements::LinkButton( './admin/user/add', $words['indexList']['buttonAdd'], 'button add' ).'
 	</div>
 </fieldset>
 ';

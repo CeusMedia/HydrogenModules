@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['edit'];
@@ -12,9 +13,9 @@ if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
 
 $languages		= $env->getLanguage()->getLanguages();
 
-$optLanguage	= UI_HTML_Elements::Options( array_combine( $languages, $languages ), $category->language );
+$optLanguage	= HtmlElements::Options( array_combine( $languages, $languages ), $category->language );
 
-$optStatus		= UI_HTML_Elements::Options( $words['states'], $category->status );
+$optStatus		= HtmlElements::Options( $words['states'], $category->status );
 
 
 $buttonCancel		= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(

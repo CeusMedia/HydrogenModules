@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
@@ -18,7 +19,7 @@ $panelBranches	= HTML::DivClass( 'content-panel',
 	HTML::H3( $w->legend ).
 	HTML::DivClass( 'content-panel-inner',
 		HTML::UlClass( 'not-list-branches nav nav-pills nav-stacked', $listBranches ? join( $listBranches ) : $w->noEntries ).
-		HTML::Buttons( UI_HTML_Elements::LinkButton( $urlAdd, $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-small btn-primary' ) )
+		HTML::Buttons( HtmlElements::LinkButton( $urlAdd, $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-small btn-primary' ) )
 	)
 );
 
@@ -36,7 +37,7 @@ $panelUsers	= HTML::DivClass( 'content-panel',
 	HTML::H3( $w->legend ).
 	HTML::DivClass( 'content-panel-inner',
 		HTML::UlClass( 'list-users', $listUsers ? join( $listUsers ) : $w->noEntries ).
-		HTML::Buttons( UI_HTML_Elements::LinkButton( './manage/company/user/add/'.$company->companyId, $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-small btn-primary' ) )
+		HTML::Buttons( HtmlElements::LinkButton( './manage/company/user/add/'.$company->companyId, $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-small btn-primary' ) )
 	)
 );
 
@@ -112,8 +113,8 @@ $panelEdit	= HTML::Form( './manage/company/edit/'.$company->companyId, 'company_
 			).
 			HTML::Buttons(
 				HTML::DivClass( 'btn-toolbar',
-					UI_HTML_Elements::LinkButton( './manage/company', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' ).
-					UI_HTML_Elements::Button( 'save', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' ).
+					HtmlElements::LinkButton( './manage/company', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' ).
+					HtmlElements::Button( 'save', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' ).
 					HTML::LinkButton( './manage/company/remove/'.$company->companyId, $iconRemove.'&nbsp;'.$w->buttonRemove, 'btn btn-small btn-danger' )
 				)
 			)

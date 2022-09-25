@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $roleId			= $this->env->getSession()->get( 'roleId');
@@ -16,7 +17,7 @@ $articleList	= HtmlTag::create( 'em', 'Keine Artikel gefunden.' );
 if( $articles )
 	$articleList	= $this->renderArticleAbstractList( $articles, !FALSE, FALSE, !FALSE, FALSE );
 
-#$heading		= UI_HTML_Elements::Heading( 'Artikel', 3 );
+#$heading		= HtmlElements::Heading( 'Artikel', 3 );
 $heading		= HtmlTag::create( 'h3', 'Blog-Einträge'.$linkAdd );
 
 $helper			= new View_Helper_Pagination();

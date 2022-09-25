@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Work_Mission_Filter_Project{
@@ -65,8 +66,8 @@ class View_Helper_Work_Mission_Filter_Project{
 			'class'	=> 'trigger-select-all',
 			'href'	=> '#',
 		) );
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "30px", "", "140px" );
-		$tableHeads	= UI_HTML_Elements::tableHeads( array( $iconWarning, $buttonAll."&nbsp;&nbsp;Projekt", "" ) );
+		$colgroup	= HtmlElements::ColumnGroup( "30px", "", "140px" );
+		$tableHeads	= HtmlElements::tableHeads( array( $iconWarning, $buttonAll."&nbsp;&nbsp;Projekt", "" ) );
 		$thead		= HtmlTag::create( 'thead', $tableHeads );
 		$tbody		= HtmlTag::create( 'tbody', $list );
 		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(

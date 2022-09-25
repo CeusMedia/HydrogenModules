@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $subject	= 'Einladung zu "%s"';
 $subject	= sprintf( $subject, $config->get( 'app.name' ) );
 if( $request->get( 'subject' ) )
@@ -26,7 +28,7 @@ if( $env->getModules()->has( 'Manage_Projects' ) ){
 	$optProject		= [];
 	foreach( $projects as $project )
 		$optProject[$project->projectId]	= $project->title;
-	$optProject		= UI_HTML_Elements::Options( $optProject, $request->get( 'projectId' ) );
+	$optProject		= HtmlElements::Options( $optProject, $request->get( 'projectId' ) );
 
 }
 
@@ -54,8 +56,8 @@ return '
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './manage/my/user/invite', 'zurück', 'button cancel' ).'
-				'.UI_HTML_Elements::Button( 'send', 'senden', 'button save' ).'
+				'.HtmlElements::LinkButton( './manage/my/user/invite', 'zurück', 'button cancel' ).'
+				'.HtmlElements::Button( 'send', 'senden', 'button save' ).'
 			</div>
 		</fieldset>
 	</form>

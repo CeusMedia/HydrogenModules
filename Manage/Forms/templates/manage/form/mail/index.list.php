@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
@@ -46,7 +47,7 @@ foreach( $mails as $mail ){
 		HtmlTag::create( 'td', $linkView ),
 	) );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', /*'30%',*/ '140px', '70px', '40px', '100px' );
+$colgroup	= HtmlElements::ColumnGroup( '40px', '', /*'30%',*/ '140px', '70px', '40px', '100px' );
 $thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 	HtmlTag::create( 'th', 'ID', array( 'style' => 'text-align: right' ) ),
 	HtmlTag::create( 'th', 'Titel' ),

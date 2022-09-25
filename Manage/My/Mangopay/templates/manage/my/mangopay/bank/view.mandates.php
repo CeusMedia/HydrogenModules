@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $statuses	= array(
@@ -43,7 +44,7 @@ if( $mandates ){
 		) );
 	}
 
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Zustand', 'existiert seit', 'Aktionen' ) ) );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Zustand', 'existiert seit', 'Aktionen' ) ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $tbody, array( 'class' => 'tabe table-fixed' ) );
 }

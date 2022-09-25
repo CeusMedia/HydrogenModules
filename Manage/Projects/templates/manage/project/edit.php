@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //print_m( $project );die;
@@ -32,13 +33,13 @@ if( isset( $projectCompanies ) ){
 	$optCompany	= [];
 	foreach( $projectCompanies as $company )
 		$optCompany[$company->companyId]	= $company->title;
-	$optCompany	= UI_HTML_Elements::Options( $optCompany, $projectId );
+	$optCompany	= HtmlElements::Options( $optCompany, $projectId );
 }
 
 $optCreatorId	= [];
 foreach( $projectUsers as $user )
 	$optCreatorId[$user->userId]	= $user->username;
-$optCreatorId	= UI_HTML_Elements::Options( $optCreatorId, $project->creatorId );
+$optCreatorId	= HtmlElements::Options( $optCreatorId, $project->creatorId );
 
 $w			= (object) $words['edit'];
 

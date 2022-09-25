@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconProcess  = HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
@@ -7,26 +8,26 @@ $optProcess = array(
   'turn'  => 'drehen',
   'flip'  => 'spiegeln',
 );
-$optProcess = UI_HTML_Elements::Options( $optProcess );
+$optProcess = HtmlElements::Options( $optProcess );
 
 $optTurnDegree  = array(
   '90'  => '90°',
   '180'  => '180°',
   '270'  => '270°',
 );
-$optTurnDegree = UI_HTML_Elements::Options( $optTurnDegree );
+$optTurnDegree = HtmlElements::Options( $optTurnDegree );
 
 $optTurnDirection  = array(
   '1'   => 'nach rechts',
   '-1'  => 'nach links',
 );
-$optTurnDirection = UI_HTML_Elements::Options( $optTurnDirection );
+$optTurnDirection = HtmlElements::Options( $optTurnDirection );
 
 $optFlipDirection = array(
   '1'  => 'horizontal (an Y-Achse)',
   '0'  => 'vertikal (an X-Achse)',
 );
-$optFlipDirection = UI_HTML_Elements::Options( $optFlipDirection );
+$optFlipDirection = HtmlElements::Options( $optFlipDirection );
 
 return '
 <div class="content-panel">

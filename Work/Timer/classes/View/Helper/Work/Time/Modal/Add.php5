@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 {
 	protected $module;
@@ -17,13 +19,13 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 		$w			= (object) $words['add'];
 
 		$optStatus	= $words['states'];
-		$optStatus	= UI_HTML_Elements::Options( $optStatus, 0 );
+		$optStatus	= HtmlElements::Options( $optStatus, 0 );
 
 		$optWorker	= [];
 		$users	= $logicProject->getProjectUsers( $this->projectId, array(), array( 'username' => 'ASC' ) );
 		foreach( $users as $user )
 			$optWorker[$user->userId]	= $user->username;
-		$optWorker	= UI_HTML_Elements::Options( $optWorker, $currentUserId );
+		$optWorker	= HtmlElements::Options( $optWorker, $currentUserId );
 
 		$fieldProject	= '';
 		if( $this->projectId ){

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helper	= new View_Helper_TimePhraser( $env );
@@ -18,7 +19,7 @@ foreach( $issues as $issue ){
 	$notes		= count( $issue->notes );
 	$changes	= count( $issue->changes );
 	$changes	= ( $notes || $changes ) ? '<small class="muted">mit '.$changes.' Veränderung(en) und '.$notes.' Notiz(en)</small>' : '';
-	$link		= UI_HTML_Elements::Link( './work/issue/edit/'.$issue->issueId, $issue->title, 'issue-title' );
+	$link		= HtmlElements::Link( './work/issue/edit/'.$issue->issueId, $issue->title, 'issue-title' );
 	$type		= HtmlTag::create( 'span', $words['types'][$issue->type], array( 'class' => 'issue-type type-'.$issue->type ) );
 	$severity	= HtmlTag::create( 'span', $words['severities'][$issue->severity], array( 'class' => 'issue-severity severity-'.$issue->severity ) );
 	$priority	= HtmlTag::create( 'span', $words['priorities'][$issue->priority], array( 'class' => 'issue-priority priority-'.$issue->priority ) );

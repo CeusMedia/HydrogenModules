@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $wf		= (object) $words['tab-general-companies'];
@@ -14,7 +15,7 @@ if( $module->companies ){
 		if( $company->site )
 			$label	= HtmlTag::create( 'a', $label, array( 'href' => $company->site ) );
 		$url	= './admin/module/editor/removeCompany/'.$moduleId.'/'.base64_encode( $company->name );
-		$button	= UI_HTML_Elements::LinkButton( $url, '', 'button icon tiny remove', $wf->buttonRemoveConfirm );
+		$button	= HtmlElements::LinkButton( $url, '', 'button icon tiny remove', $wf->buttonRemoveConfirm );
 		$list[]	= '<li class="company">'.$label.'<div style="float: right">'.$button.'</div></li>';
 	}
 	$list	= '<ul class="general-info">'.join( $list ).'</ul>';
@@ -39,7 +40,7 @@ $panelCompanies	= '
 			</li>
 		</ul>
 		<div class="buttonbar"'.$hideForMore.'>
-			'.UI_HTML_Elements::Button( 'addCompany', $wf->buttonAdd, 'button add' ).'
+			'.HtmlElements::Button( 'addCompany', $wf->buttonAdd, 'button add' ).'
 		</div>
 		'.$buttonOpen.'
 	</div>

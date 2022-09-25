@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $phraser    = new View_Helper_TimePhraser( $env );
@@ -126,9 +127,9 @@ if( $totalMinsRequired ){
 $factHours	= $list ? '<dt>'.$w->labelHours.'</dt>'.join( $list ) : '';
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array( 'href' => './work/mission', 'class' => 'btn btn-small' ) );
-$buttonEdit		= UI_HTML_Elements::LinkButton( './work/mission/edit/'.$mission->missionId, $iconEdit.' '.$w->buttonEdit, 'btn btn-primary' );
-$buttonCopy		= UI_HTML_Elements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn btn-small btn-small' );
-$buttonRevamp	= UI_HTML_Elements::LinkButton( './work/mission/setStatus/'.$mission->missionId.'/2/1', $iconRevamp.' '.$w->buttonRevamp, 'btn btn-small' );
+$buttonEdit		= HtmlElements::LinkButton( './work/mission/edit/'.$mission->missionId, $iconEdit.' '.$w->buttonEdit, 'btn btn-primary' );
+$buttonCopy		= HtmlElements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn btn-small btn-small' );
+$buttonRevamp	= HtmlElements::LinkButton( './work/mission/setStatus/'.$mission->missionId.'/2/1', $iconRevamp.' '.$w->buttonRevamp, 'btn btn-small' );
 
 if( in_array( $mission->status, array( -1, 0, 1, 2, 3 ) ) )
 	$buttonRevamp	= "";

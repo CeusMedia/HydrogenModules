@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
@@ -19,21 +20,21 @@ $optStatus	= array(
 	0		=> 'deaktiviert',
 	1		=> 'aktiv',
 );
-$optStatus	= UI_HTML_Elements::Options( $optStatus, 1 );
+$optStatus	= HtmlElements::Options( $optStatus, 1 );
 
 $optCorporation	= array(
 //	'0'	=> '- kein Unternehmen -',
 );
 foreach( $corporations as $corporation )
 	$optCorporation[$corporation->corporationId]	= $corporation->title;
-$optCorporation	= UI_HTML_Elements::Options( $optCorporation );
+$optCorporation	= HtmlElements::Options( $optCorporation );
 
 $optPerson	= array(
 //	'0'	=> '- keine Person -',
 );
 foreach( $persons as $person )
 	$optPerson[$person->personId]	= $person->firstname.' '.$person->surname;
-$optPerson	= UI_HTML_Elements::Options( $optPerson );
+$optPerson	= HtmlElements::Options( $optPerson );
 
 $optFrequency	= array(
 	1		=> 'jährlich',
@@ -42,19 +43,19 @@ $optFrequency	= array(
 	4		=> 'wöchentlich',
 	5		=> 'täglich',
 );
-$optFrequency	= UI_HTML_Elements::Options( $optFrequency );
+$optFrequency	= HtmlElements::Options( $optFrequency );
 
 $optType	= array(
 	1		=> 'Person',
 	2		=> 'Unternehmen',
 );
-$optFromType	= UI_HTML_Elements::Options( $optType, 1 );
+$optFromType	= HtmlElements::Options( $optType, 1 );
 $optType	= array(
 	0		=> '- keiner / extern -',
 	1		=> 'Person',
 	2		=> 'Unternehmen',
 );
-$optToType	= UI_HTML_Elements::Options( $optType, 0 );
+$optToType	= HtmlElements::Options( $optType, 0 );
 
 return '
 <div class="row-fluid">

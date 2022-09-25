@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['add'];
 
-$optType	= UI_HTML_Elements::Options( $words['types'] );
+$optType	= HtmlElements::Options( $words['types'] );
 
 $panelAdd	= '
 <form action="./admin/module/source/add" method="post" data-locklayer-delay="0" data-locklayer-type="processing">
@@ -38,8 +39,8 @@ $panelAdd	= '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './admin/module/source', $w->buttonCancel, 'button cancel' ).'
-			'.UI_HTML_Elements::Button( 'add', $w->buttonAdd, 'button add' ).'
+			'.HtmlElements::LinkButton( './admin/module/source', $w->buttonCancel, 'button cancel' ).'
+			'.HtmlElements::Button( 'add', $w->buttonAdd, 'button add' ).'
 		</div>
 	</fieldset>
 </form>

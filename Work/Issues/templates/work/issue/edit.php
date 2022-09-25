@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $types	= $words['types'];
@@ -67,11 +68,11 @@ $main	= '
 				<div class="row-fluid">
 					<div class="span12">
 						<label for="title" class="mandatory">'.$words['edit']['labelTitle'].'</label>
-						'.UI_HTML_Elements::Input( 'title', $issue->title, 'span12 -max mandatory' ).'
+						'.HtmlElements::Input( 'title', $issue->title, 'span12 -max mandatory' ).'
 					</div>
 <!--					<div class="span4">
 						<label for="input_projectId">'.$words['add']['labelProject'].'</label>
-						'.UI_HTML_Elements::Select( 'projectId', $optProject, 'span12 -max' ).'
+						'.HtmlElements::Select( 'projectId', $optProject, 'span12 -max' ).'
 					</div>-->
 				</div>
 				<div class="row-fluid">

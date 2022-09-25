@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 if( empty( $remoteConfig ) )
@@ -28,7 +29,7 @@ foreach( $modulesInstalled as $module ){
 	natcasesort( $list );
 	if( $list ){
 		$url		= './admin/module/editor/index/'.$module->id;
-		$button		= UI_HTML_Elements::LinkButton( $url, '', 'button tiny edit' );
+		$button		= HtmlElements::LinkButton( $url, '', 'button tiny edit' );
 		$button		= HtmlTag::create( 'div', $button, array( 'style' => "position: absolute; right: 3px; top: 1px;" ) );
 		$list		= HtmlTag::create( 'dl', $list, array( 'class' => 'index-config' ) );
 		$url		= './admin/module/viewer/index/'.$module->id;

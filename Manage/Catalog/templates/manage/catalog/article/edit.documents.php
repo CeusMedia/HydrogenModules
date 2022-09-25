@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $panelDocuments	= '<div class="alert alert-error">Noch keine Dokumente gespeichert.</div>';
@@ -22,7 +23,7 @@ if( $articleDocuments ){
 	}
 
 	$listDocuments	= '<table class="table table-condensed">
-	'.UI_HTML_Elements::ColumnGroup( '', '70px' ).'
+	'.HtmlElements::ColumnGroup( '', '70px' ).'
 	<thead>
 		<tr>
 			<th>Dokument</th>

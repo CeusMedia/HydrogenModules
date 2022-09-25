@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
@@ -77,8 +78,8 @@ foreach( $queues as $queue ){
 //		HtmlTag::create( 'td', $buttons, array() ),
 	) );
 }
-$columnGroup	= UI_HTML_Elements::columnGroup( array( '100px', '100px', '120px', '120px', '', '140px', '140px'/*, '260px'*/ ) );
-$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+$columnGroup	= HtmlElements::columnGroup( array( '100px', '100px', '120px', '120px', '', '140px', '140px'/*, '260px'*/ ) );
+$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 	'Queue',
 	'Empfänger',
 	'Zustand',
@@ -127,7 +128,7 @@ if( $letterQueue ){
 			$buttonView.' '.$buttonSend.' '.$buttonRemove
 		) ).'</td></tr>';
 	}
-	$columns	= UI_HTML_Elements::ColumnGroup( "35%", "25%", "15%", "25%" );
+	$columns	= HtmlElements::ColumnGroup( "35%", "25%", "15%", "25%" );
 	$thead		= '<thead><tr><th>Empfänger</th><th>E-Mail-Adresse</th><th>Zustand</th><th>Aktion</th></tr></thead>';
 	$tbody		= '<tbody>'.join( $rows ).'</tbody>';
 	$table		= '<table class="table table-condensed">'.$columns.$thead.$tbody.'</table>';

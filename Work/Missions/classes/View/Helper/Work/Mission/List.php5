@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
@@ -108,8 +109,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			$colgroup[]		= "65px";
 			$tableHeads[]	= HtmlTag::create( 'div', ''/*'Aktion'*/, array( 'class' => 'right', 'data-column' => NULL ) );
 		}
-		$colgroup		= UI_HTML_Elements::ColumnGroup( $colgroup );
-		$tableHeads		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) );
+		$colgroup		= HtmlElements::ColumnGroup( $colgroup );
+		$tableHeads		= HtmlTag::create( 'thead', HtmlElements::TableHeads( $tableHeads ) );
 		$tableBody	= HtmlTag::create( 'tbody', $list );
 		$list		= HtmlTag::create( 'table', $colgroup.$tableHeads.$tableBody, array( 'class' => 'table table-striped work-mission-list table-fixed' ) );
 //		$list		= HtmlTag::create( 'h4', 'Termine' ).$list;
@@ -148,8 +149,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract{
 			$colgroup[]		= "65px";
 			$tableHeads[]	= HtmlTag::create( 'div', ''/*'Aktion'*/, array( 'class' => 'not-sortable right', 'data-column' => NULL ) );
 		}
-		$colgroup	= UI_HTML_Elements::ColumnGroup( $colgroup );
-		$tableHeads	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) );
+		$colgroup	= HtmlElements::ColumnGroup( $colgroup );
+		$tableHeads	= HtmlTag::create( 'thead', HtmlElements::TableHeads( $tableHeads ) );
 		$tableBody	= HtmlTag::create( 'tbody', $list );
 		$list		= HtmlTag::create( 'table', $colgroup.$tableHeads.$tableBody, array( 'class' => 'table table-striped work-mission-list table-fixed' ) );
 //		$list		= HtmlTag::create( 'h4', 'Aufgaben' ).$list;

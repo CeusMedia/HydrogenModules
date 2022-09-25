@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
@@ -19,7 +20,7 @@ $optType	= array(
 	Model_Form::TYPE_NORMAL		=> $types[Model_Form::TYPE_NORMAL],
 	Model_Form::TYPE_CONFIRM	=> $types[Model_Form::TYPE_CONFIRM],
 );
-$optType	= UI_HTML_Elements::Options( $optType, $filterType );
+$optType	= HtmlElements::Options( $optType, $filterType );
 
 $optStatus	= array(
 	''							=> '- alle -',
@@ -27,17 +28,17 @@ $optStatus	= array(
 	Model_Form::STATUS_NEW			=> $statuses[Model_Form::STATUS_NEW],
 	Model_Form::STATUS_ACTIVATED	=> $statuses[Model_Form::STATUS_ACTIVATED],
 );
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 $optCustomerMail	= array( '' => '- alle -', 0 => '- keine Zuweisung -' );
 foreach( $mailsCustomer as $mail )
 	$optCustomerMail[$mail->mailId]	= $mail->title;
-$optCustomerMail	= UI_HTML_Elements::Options( $optCustomerMail, $filterCustomerMailId );
+$optCustomerMail	= HtmlElements::Options( $optCustomerMail, $filterCustomerMailId );
 
 $optManagerMail	= array( '' => '- alle -', 0 => '- keine Zuweisung -' );
 foreach( $mailsManager as $mail )
 	$optManagerMail[$mail->mailId] = $mail->title;
-$optManagerMail	= UI_HTML_Elements::Options( $optManagerMail, $filterManagerMailId );
+$optManagerMail	= HtmlElements::Options( $optManagerMail, $filterManagerMailId );
 
 return '
 <div class="content-panel">

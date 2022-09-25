@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $modelForm	= new Model_Form( $env );
@@ -39,14 +40,14 @@ $optRoleType	= array(
 	Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT	=> 'Manager: Ergebnis',
 	Model_Form_Mail::ROLE_TYPE_MANAGER_REACT	=> 'Manager: Reaktion',
 );
-$optRoleType	= UI_HTML_Elements::Options( $optRoleType, (int) $mail->roleType );
+$optRoleType	= HtmlElements::Options( $optRoleType, (int) $mail->roleType );
 
 $optFormat	= array(
 	0	=> 'nicht definiert',
 	1	=> 'Text',
 	2	=> 'HTML',
 );
-$optFormat	= UI_HTML_Elements::Options( $optFormat, $mail->format );
+$optFormat	= HtmlElements::Options( $optFormat, $mail->format );
 
 return '
 <h2><span class="muted">Mails-Vorlage:</span> '.$mail->title.'</h2>

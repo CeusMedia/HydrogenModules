@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconEnabled	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/accept.png', $words['states'][1] );
-$iconDisabled	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/delete.png', $words['states'][0] );
-$iconRefresh	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/mini/borderless/png/action_refresh_blue.png', '' );
+$iconEnabled	= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/accept.png', $words['states'][1] );
+$iconDisabled	= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/delete.png', $words['states'][0] );
+$iconRefresh	= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/mini/borderless/png/action_refresh_blue.png', '' );
 
 $rows	= [];
 foreach( $sources as $sourceId => $source ){
@@ -11,7 +12,7 @@ foreach( $sources as $sourceId => $source ){
 	if( $source->active ){
 		$state		= $iconEnabled;
 		$urlRefresh	= './admin/module/source/refresh/'.$sourceId."?from=admin/module/source";
-		$button		= UI_HTML_Elements::LinkButton( $urlRefresh, $iconRefresh, 'button tiny' );
+		$button		= HtmlElements::LinkButton( $urlRefresh, $iconRefresh, 'button tiny' );
 		$button		= HtmlTag::create( 'a', $iconRefresh, array(
 			'href'		=> $urlRefresh,
 			'class'		=> 'button tiny locklayer-auto',
@@ -21,7 +22,7 @@ foreach( $sources as $sourceId => $source ){
 		$state		.= '&nbsp;'.$button;
 	}
 	$label	= $source->title;
-	$link	= UI_HTML_Elements::Link( './admin/module/source/edit/'.$sourceId, $sourceId );
+	$link	= HtmlElements::Link( './admin/module/source/edit/'.$sourceId, $sourceId );
 	$type	= $words['types'][$source->type].'  <em><small class="counter-modules"></small></em>';
 	$cellId		= HtmlTag::create( 'td', $link );
 	$cellLabel	= HtmlTag::create( 'td', $label );
@@ -46,8 +47,8 @@ $buttonAdd	= HtmlTag::create( 'button', '<span>'.$w->buttonAdd.'</span>', array(
 
 
 $heads		= array( $w->headId, $w->headTitle, $w->headType, $w->headActive );
-$heads		= UI_HTML_Elements::TableHeads( $heads );
-$colgroup	= UI_HTML_Elements::ColumnGroup( '20%,55%,15%,10%' );
+$heads		= HtmlElements::TableHeads( $heads );
+$colgroup	= HtmlElements::ColumnGroup( '20%,55%,15%,10%' );
 $panelList	= '
 <fieldset>
 	<legend class="library">'.$w->legend.'</legend>

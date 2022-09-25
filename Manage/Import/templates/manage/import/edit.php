@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -18,15 +19,15 @@ $authTypes	= [
 ];
 
 $optStatus		= $statuses;
-$optStatus		= UI_HTML_Elements::Options( $optStatus, $connection->status );
+$optStatus		= HtmlElements::Options( $optStatus, $connection->status );
 
 $optConnector	= [];
 foreach( $connectorMap as $connector )
 	$optConnector[$connector->importConnectorId]	= $connector->title;
-$optConnector	= UI_HTML_Elements::Options( $optConnector, $connection->importConnectorId );
+$optConnector	= HtmlElements::Options( $optConnector, $connection->importConnectorId );
 
 $optAuthType	= $authTypes;
-$optAuthType	= UI_HTML_Elements::Options( $optAuthType, $connection->authType );
+$optAuthType	= HtmlElements::Options( $optAuthType, $connection->authType );
 
 return '<div class="content-panel">
 	<h3><span class="muted">Importverbindung: </span>'.$connection->title.'</h3>

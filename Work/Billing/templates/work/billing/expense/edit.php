@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
  
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
@@ -25,23 +26,23 @@ $optStatus	= array(
 	0		=> 'deaktiviert',
 	1		=> 'aktiv',
 );
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $expense->status );
+$optStatus	= HtmlElements::Options( $optStatus, $expense->status );
 
 $optCorporation	= array(
 //	'0'	=> '- kein Unternehmen -',
 );
 foreach( $corporations as $corporation )
 	$optCorporation[$corporation->corporationId]	= $corporation->title;
-$optFromCorporation	= UI_HTML_Elements::Options( $optCorporation, $expense->fromCorporationId );
-$optToCorporation	= UI_HTML_Elements::Options( $optCorporation, $expense->toCorporationId );
+$optFromCorporation	= HtmlElements::Options( $optCorporation, $expense->fromCorporationId );
+$optToCorporation	= HtmlElements::Options( $optCorporation, $expense->toCorporationId );
 
 $optPerson	= array(
 //	'0'	=> '- keine Person -',
 );
 foreach( $persons as $person )
 	$optPerson[$person->personId]	= $person->firstname.' '.$person->surname;
-$optFromPerson	= UI_HTML_Elements::Options( $optPerson, $expense->fromPersonId );
-$optToPerson	= UI_HTML_Elements::Options( $optPerson, $expense->toPersonId );
+$optFromPerson	= HtmlElements::Options( $optPerson, $expense->fromPersonId );
+$optToPerson	= HtmlElements::Options( $optPerson, $expense->toPersonId );
 
 $optFrequency	= array(
 	1		=> 'jährlich',
@@ -50,21 +51,21 @@ $optFrequency	= array(
 	4		=> 'wöchentlich',
 	5		=> 'täglich',
 );
-$optFrequency	= UI_HTML_Elements::Options( $optFrequency, $expense->frequency );
+$optFrequency	= HtmlElements::Options( $optFrequency, $expense->frequency );
 
 
 $optType	= array(
 	1		=> 'Person',
 	2		=> 'Unternehmen',
 );
-$optFromType	= UI_HTML_Elements::Options( $optType, $expense->fromCorporationId ? 2 : 1 );
+$optFromType	= HtmlElements::Options( $optType, $expense->fromCorporationId ? 2 : 1 );
 $optType	= array(
 	0		=> '- keiner / extern -',
 	1		=> 'Person',
 	2		=> 'Unternehmen',
 );
 $toType		= $expense->toCorporationId ? 2 : ( $expense->toPersonId ? 1 : 0 );
-$optToType	= UI_HTML_Elements::Options( $optType, $toType );
+$optToType	= HtmlElements::Options( $optType, $toType );
 
 return '
 <div class="row-fluid">

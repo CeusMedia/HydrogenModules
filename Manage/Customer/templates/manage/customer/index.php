@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['index'];
@@ -24,8 +25,8 @@ if( $customers ){
 			HtmlTag::create( 'td', $graph ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '60%', '10%', '30%' );
-	$heads		= UI_HTML_Elements::TableHeads( array(
+	$colgroup	= HtmlElements::ColumnGroup( '60%', '10%', '30%' );
+	$heads		= HtmlElements::TableHeads( array(
 		'Kunde',
 		'Index',
 		'Graph',

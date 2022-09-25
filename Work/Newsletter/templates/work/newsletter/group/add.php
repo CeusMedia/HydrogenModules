@@ -1,11 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $tabsMain	= $tabbedLinks ? $this->renderMainTabs() : '';
 
 $w			= (object) $words['add'];
 
-$optType	= UI_HTML_Elements::Options( $words['types'], $group->type );
+$optType	= HtmlElements::Options( $words['types'], $group->type );
 
 extract( $view->populateTexts( array( 'above', 'bottom', 'info', 'top' ), 'html/work/newsletter/group/add/', array( 'words' => $words ) ) );
 
@@ -15,7 +16,7 @@ $iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) )
 $optGroup	= array( '' => 'keine' );
 foreach( $groups as $item )
 	$optGroup[$item->newsletterGroupId]	= $item->title.' ('.$item->count.')';
-$optGroup	= UI_HTML_Elements::Options( $optGroup );
+$optGroup	= HtmlElements::Options( $optGroup );
 
 $panelAdd	= '
 <div class="content-panel">

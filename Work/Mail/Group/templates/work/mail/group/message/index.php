@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optGroup	= array( '' => '- alle -');
 foreach( $groups as $group )
 	$optGroup[$group->mailGroupId]	= $group->title;
-$optGroup	= UI_HTML_Elements::Options( $optGroup, $filterGroupId );
+$optGroup	= HtmlElements::Options( $optGroup, $filterGroupId );
 
 $panelFilter	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Filter' ),
@@ -55,14 +56,14 @@ if( count( $messages ) ){
 			HtmlTag::create( 'td', date( 'd.m.y ', $message->createdAt ).' <small>'.date( 'H:i:s', $message->createdAt ).'</small>' ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
+	$colgroup	= HtmlElements::ColumnGroup( array(
 		'20px',
 		'',
 		'30%',
 		'120px',
 		'140px',
 	) );
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		'#',
 		'Betreff',
 		'Absender',

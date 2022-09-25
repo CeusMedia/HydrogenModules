@@ -1,15 +1,17 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w			= (object) $words['add'];
 
-$optCurrency	= UI_HTML_Elements::Options( $words['currencies'], $account->currency );
+$optCurrency	= HtmlElements::Options( $words['currencies'], $account->currency );
 
 $optBankId	= [];
 foreach( $banks as $bank )
 	$optBankId[$bank->bankId]	= $bank->title;
-$optBankId	= UI_HTML_Elements::Options( $optBankId, $account->bankId );
+$optBankId	= HtmlElements::Options( $optBankId, $account->bankId );
 
 $optType	= array( 0 => 'manuell / statisch', 1 => 'automatisch / dynamisch' );
-$optType	= UI_HTML_Elements::Options( $optType, $account->type );
+$optType	= HtmlElements::Options( $optType, $account->type );
 
 return '
 <form action="./work/finance/bank/account/add" method="post">
@@ -42,9 +44,9 @@ return '
 			</li>
 		</ul>
 		<div class="buttonbar">
-			'.UI_HTML_Elements::LinkButton( './work/finance/bank', $w->buttonToTop, 'button icon cancel top up' ).'
-			'.UI_HTML_Elements::LinkButton( './work/finance/bank/account', $w->buttonCancel, 'button icon cancel' ).'
-			'.UI_HTML_Elements::Button( 'add', $w->buttonAdd, 'button icon add' ).'
+			'.HtmlElements::LinkButton( './work/finance/bank', $w->buttonToTop, 'button icon cancel top up' ).'
+			'.HtmlElements::LinkButton( './work/finance/bank/account', $w->buttonCancel, 'button icon cancel' ).'
+			'.HtmlElements::Button( 'add', $w->buttonAdd, 'button icon add' ).'
 		</div>
 	</fieldset>
 </form>';

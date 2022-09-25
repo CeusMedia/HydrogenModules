@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['edit'];
@@ -113,11 +114,11 @@ return HTML::DivClass( 'column-left-50',
 				)
 			).
 			HTML::Buttons(
-				UI_HTML_Elements::LinkButton( './manage/branch', $w->buttonCancel, 'button cancel' ).
+				HtmlElements::LinkButton( './manage/branch', $w->buttonCancel, 'button cancel' ).
 				'&nbsp;|&nbsp'.
-				UI_HTML_Elements::Button( 'doEdit', $w->buttonSave, 'button save' )
+				HtmlElements::Button( 'doEdit', $w->buttonSave, 'button save' )
 #				'&nbsp;|&nbsp'.
-#				UI_HTML_Elements::LinkButton( './manage/branch/delete/'.$branch->branchId, $w->buttonRemove, 'button delete' )
+#				HtmlElements::LinkButton( './manage/branch/delete/'.$branch->branchId, $w->buttonRemove, 'button delete' )
 			)
 		)
 	)
@@ -141,7 +142,7 @@ HTML::DivClass( 'column-left-50',
 				)
 			).
 			HTML::Buttons(
-				UI_HTML_Elements::Button( 'doUpload', $words['addImage']['buttonUpload'], 'button upload add' )
+				HtmlElements::Button( 'doUpload', $words['addImage']['buttonUpload'], 'button upload add' )
 			)
 		)
 	)

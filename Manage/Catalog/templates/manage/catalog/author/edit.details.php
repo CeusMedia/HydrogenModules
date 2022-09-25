@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['edit'];
@@ -9,7 +10,7 @@ $list		= $this->renderList( $authors, $author->authorId );
 $iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 
 $optGender	= array( /*$words['gender']*/ );
-$optGender	= UI_HTML_Elements::Options( $optGender/*, $author->gender*/ );
+$optGender	= HtmlElements::Options( $optGender/*, $author->gender*/ );
 
 $image		= "images/no_author.png";
 if( $author->image ){
