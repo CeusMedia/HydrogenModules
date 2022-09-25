@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Form_Fill_Person{
 
 	protected $fill;
@@ -73,8 +75,8 @@ class View_Helper_Form_Fill_Person{
 
 		$dataPerson		= '';
 		if( $listInfo ){
-			$dataPerson	= UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'h3', 'Person' ),
+			$dataPerson	= HtmlTag::create( 'div', array(
+				HtmlTag::create( 'h3', 'Person' ),
 				$this->renderTable( $listInfo, TRUE ),
 			) );
 		}
@@ -84,24 +86,24 @@ class View_Helper_Form_Fill_Person{
 	protected function renderFacts( $facts, $horizontal = FALSE ){
 		$list	= [];
 		foreach( $facts as $label => $value ){
-			$list[]	= UI_HTML_Tag::create( 'dt', $label );
-			$list[]	= UI_HTML_Tag::create( 'dd', $value.'&nbsp;' );
+			$list[]	= HtmlTag::create( 'dt', $label );
+			$list[]	= HtmlTag::create( 'dd', $value.'&nbsp;' );
 		}
 		if( $list )
-			return UI_HTML_Tag::create( 'dl', $list, array( 'class' => $horizontal ? 'dl-horizontal' : NULL ) );
+			return HtmlTag::create( 'dl', $list, array( 'class' => $horizontal ? 'dl-horizontal' : NULL ) );
 	}
 
 	protected function renderTable( $rows ){
 		$list	= [];
 		foreach( $rows as $row ){
-			$list[]	= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'th', $row->label ),
-				UI_HTML_Tag::create( 'td', $row->value ),
+			$list[]	= HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'th', $row->label ),
+				HtmlTag::create( 'td', $row->value ),
 			) );
 		}
-		return UI_HTML_Tag::create( 'table', array(
+		return HtmlTag::create( 'table', array(
 			UI_HTML_Elements::ColumnGroup( array( '50%', '50%' ) ),
-			UI_HTML_Tag::create( 'tbody', $list ),
+			HtmlTag::create( 'tbody', $list ),
 		), array( 'class' => 'table table-striped table-fixed table-bordered table-condensed' ) );
 	}
 

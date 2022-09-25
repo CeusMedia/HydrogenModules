@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 if( !in_array( $article->status, array( -1, 0, 1 ) ) )
 	return '';
 
@@ -11,19 +13,19 @@ $labelHeading		= '';
 $labelButtonOrder	= 'bestellen';
 $labelButtonCart	= 'zum Warenkorb';
 
-$iconOrder		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus' ) );
-$iconCart		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-shopping-cart icon-white' ) );
+$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus' ) );
+$iconCart		= HtmlTag::create( 'i', '', array( 'class' => 'icon-shopping-cart icon-white' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$labelButtonOrder	= 'in den Warenkorb';
 	$labelButtonCart	= 'weiter zur Kasse';
-	$iconOrder		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-	$iconOrder		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconCart		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
-//	$iconOrder		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
-//	$iconCart		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-money' ) );
+	$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+	$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconCart		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
+//	$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
+//	$iconCart		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-money' ) );
 }
 
-$inputQuantity	= UI_HTML_Tag::create( 'input', NULL, array(
+$inputQuantity	= HtmlTag::create( 'input', NULL, array(
 	'type'		=> 'number',
 	'step'		=> 1,
 	'min'		=> 1,
@@ -35,13 +37,13 @@ $inputQuantity	= UI_HTML_Tag::create( 'input', NULL, array(
 	'value'		=> min( 1000, max( 1, (int) $request->get( 'quantity' ) ) ),
 ) );
 
-$buttonOrder	= UI_HTML_Tag::create( 'button', $iconOrder.' '.$labelButtonOrder, array(
+$buttonOrder	= HtmlTag::create( 'button', $iconOrder.' '.$labelButtonOrder, array(
 	'type'	=> 'submit',
 	'name'	=> 'order',
 //	'class'	=> 'btn btn-primary',
 	'class'	=> 'btn not-btn-primary',
 ) );
-$buttonCart	= UI_HTML_Tag::create( 'a', $iconCart.' '.$labelButtonCart, array(
+$buttonCart	= HtmlTag::create( 'a', $iconCart.' '.$labelButtonCart, array(
 	'href'		=> "./shop/cart",
 //	'class'		=> "btn not-btn-success not-btn-small",
 	'class'		=> "btn btn-success",
@@ -49,7 +51,7 @@ $buttonCart	= UI_HTML_Tag::create( 'a', $iconCart.' '.$labelButtonCart, array(
 if( !$cart )
 	$buttonCart	= '';
 
-$heading	= $labelHeading ? UI_HTML_Tag::create( 'h3', $labelHeading ) : '';
+$heading	= $labelHeading ? HtmlTag::create( 'h3', $labelHeading ) : '';
 return '<div class="content-panel">
 	'.$heading.'
 	<div class="content-panel-inner well alert alert-success" id="panel-catalog-article-order">

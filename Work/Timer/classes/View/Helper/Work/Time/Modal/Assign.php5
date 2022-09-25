@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Time_Modal_Assign extends CMF_Hydrogen_View_Helper_Abstract
@@ -38,11 +39,11 @@ class View_Helper_Work_Time_Modal_Assign extends CMF_Hydrogen_View_Helper_Abstra
 
 		$listTimers		= [];
 		foreach( $timers as $timer ){
-			$checkbox		= UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'checkbox', 'name' => 'timerIds[]', 'value' => $timer->workTimerId ) );
-			$label			= UI_HTML_Tag::create( 'label', $checkbox.'&nbsp;'.$timer->title, array( 'class' => 'checkbox' ) );
-			$listTimers[]	= UI_HTML_Tag::create( 'li', $label );
+			$checkbox		= HtmlTag::create( 'input', NULL, array( 'type' => 'checkbox', 'name' => 'timerIds[]', 'value' => $timer->workTimerId ) );
+			$label			= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$timer->title, array( 'class' => 'checkbox' ) );
+			$listTimers[]	= HtmlTag::create( 'li', $label );
 		}
-		$listTimers		= UI_HTML_Tag::create( 'ul', $listTimers, array( 'class' => 'unstyled' ) );
+		$listTimers		= HtmlTag::create( 'ul', $listTimers, array( 'class' => 'unstyled' ) );
 
 		return '
 <form action="./work/time/assign" method="post">

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $types	= $words['types'];
 krsort( $types );
@@ -75,7 +76,7 @@ $main	= '
 				</div>
 				<div class="row-fluid">
 					<label for="content">'.$words['edit']['labelContent'].'</label>
-					'.UI_HTML_Tag::create( 'textarea', $issue->content, array( 'class' => 'span12 CodeMirror-auto', 'name' => 'content', 'rows' => 9 ) ).'
+					'.HtmlTag::create( 'textarea', $issue->content, array( 'class' => 'span12 CodeMirror-auto', 'name' => 'content', 'rows' => 9 ) ).'
 				</div>
 				<div class="buttonbar">
 					<a href="./work/issue" class="btn btn-small"><i class="icon-arrow-left"></i> '.$words['edit']['buttonCancel'].'</a>

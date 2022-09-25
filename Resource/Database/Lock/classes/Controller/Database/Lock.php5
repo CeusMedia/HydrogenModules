@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -92,7 +93,7 @@ class Controller_Database_Lock extends Controller
 				break;
 		}
 		if( $uri )
-			$title	= UI_HTML_Tag::create( 'a', $title, array( 'href' => $uri ) );
+			$title	= HtmlTag::create( 'a', $title, array( 'href' => $uri ) );
 		return $title;
 	}
 }

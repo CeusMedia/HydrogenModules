@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_AddressView
@@ -126,13 +127,13 @@ class View_Helper_Shop_AddressView
 	{
 		$w		= $this->words['view'];
 		$label	= $w['label'.ucfirst( $labelKey )];
-		return UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'small', $label, array( 'class' => 'muted' ) )
+		return HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'small', $label, array( 'class' => 'muted' ) )
 				) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'big', $content, array( 'class' => NULL ) )
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'big', $content, array( 'class' => NULL ) )
 				) ),
 			), array( 'class' => 'span12' ) )
 		), array( 'class' => 'row-fluid' ) );

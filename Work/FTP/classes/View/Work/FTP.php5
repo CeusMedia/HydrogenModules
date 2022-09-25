@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Work_FTP extends View
@@ -32,17 +33,17 @@ class View_Work_FTP extends View
 			$divider	= "";
 			$attrItem	= array( 'class' => 'active' );
 			if( $path !== $pathDeepest )
-				$divider	= UI_HTML_Tag::create( 'span', '/', array( 'class' => 'divider' ) );
+				$divider	= HtmlTag::create( 'span', '/', array( 'class' => 'divider' ) );
 			if( $pathCurrent !== $path ){
 				$url	= './work/FTP'.( $path ? "?path=".$path : "" );
-				$label	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
+				$label	= HtmlTag::create( 'a', $label, array( 'href' => $url ) );
 				$attrItem['class']	= NULL;
 			}
-			$list[]	= UI_HTML_Tag::create( 'li', $label.' '.$divider, $attrItem );
+			$list[]	= HtmlTag::create( 'li', $label.' '.$divider, $attrItem );
 		}
 		if( $labelPosition )
-			array_unshift( $list, UI_HTML_Tag::create( 'li', $labelPosition ) );
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'breadcrumb' ) );
+			array_unshift( $list, HtmlTag::create( 'li', $labelPosition ) );
+		return HtmlTag::create( 'ul', $list, array( 'class' => 'breadcrumb' ) );
 	}
 
 	protected function renderFileTable( string $path, array $entries ): string
@@ -59,7 +60,7 @@ class View_Work_FTP extends View
 
 			if( $entry->isdir ){
 				$pathNew	= $path ? $path.'/'.$entry->name : $entry->name;
-				$link		= UI_HTML_Tag::create( 'a', $label, array( 'href' => './work/FTP?path='.$pathNew ) );
+				$link		= HtmlTag::create( 'a', $label, array( 'href' => './work/FTP?path='.$pathNew ) );
 				$size		= $entry->folders.' <i class="icon-folder-close"></i> / '.$entry->files.' <i class="icon-file"></i>';
 			}
 			else{
@@ -68,12 +69,12 @@ class View_Work_FTP extends View
 			}
 
 			$cells	= array(
-				UI_HTML_Tag::create( 'td', $link ),
-				UI_HTML_Tag::create( 'td', $size ),
-				UI_HTML_Tag::create( 'td', $entry->day.' '.$entry->month.' '.$entry->year ),
-				UI_HTML_Tag::create( 'td', $entry->permissions ),
+				HtmlTag::create( 'td', $link ),
+				HtmlTag::create( 'td', $size ),
+				HtmlTag::create( 'td', $entry->day.' '.$entry->month.' '.$entry->year ),
+				HtmlTag::create( 'td', $entry->permissions ),
 			);
-			$entry->html	= UI_HTML_Tag::create( 'tr', $cells );
+			$entry->html	= HtmlTag::create( 'tr', $cells );
 			if( $entry->isdir ){
 				$folders[$entry->name]	= $entry->html;
 			}
@@ -86,8 +87,8 @@ class View_Work_FTP extends View
 		$list	= $folders + $files;
 		$colgroup	= UI_HTML_Elements::ColumnGroup( array( "50%", "15%", "15%", "15%" ) );
 		$heads		= UI_HTML_Elements::TableHeads( array( 'Name', 'Size', 'Date', 'Permissions' ) );
-		$thead	= UI_HTML_Tag::create( 'thead', $heads );
-		$tbody	= UI_HTML_Tag::create( 'tbody', UI_HTML_Tag::create( 'tr', $list ) );
-		return UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed table-striped' ) );
+		$thead	= HtmlTag::create( 'thead', $heads );
+		$tbody	= HtmlTag::create( 'tbody', HtmlTag::create( 'tr', $list ) );
+		return HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed table-striped' ) );
 	}
 }

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['edit-panel-close'];
 
@@ -14,7 +15,7 @@ if( $useTimer ){
 		$minutes	= ceil( $seconds / 60 );
 
 	if( $openTimers ){
-		$hint		= UI_HTML_Tag::create( 'div', 'Bitte vorher die Aktivitäten beenden!', array( 'class' => 'alert alert-danger' ) );
+		$hint		= HtmlTag::create( 'div', 'Bitte vorher die Aktivitäten beenden!', array( 'class' => 'alert alert-danger' ) );
 	}
 }
 

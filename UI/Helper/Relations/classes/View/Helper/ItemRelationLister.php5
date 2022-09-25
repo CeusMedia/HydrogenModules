@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_ItemRelationLister
@@ -152,13 +153,13 @@ class View_Helper_ItemRelationLister
 //		$fullAccess
 		$acl		= $this->env->getAcl();
 		$list		= [];
-		$iconMore	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+		$iconMore	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 		foreach( $this->relations as $relation ){
 			$type	= sprintf( $this->types[$relation->type], $relation->count );
 			$items	= [];
 			$icon	= '';
 			if( !empty( $relation->icon ) )
-				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $relation->icon ) ).'&nbsp;';
+				$icon	= HtmlTag::create( 'i', '', array( 'class' => $relation->icon ) ).'&nbsp;';
 			$access	= $acl->has( $relation->controller, $relation->action );
 			$total		= count( $relation->items );
 			if( $this->limit > 0 )
@@ -169,19 +170,19 @@ class View_Helper_ItemRelationLister
 					$controller	= str_replace( "_", "/", strtolower( $relation->controller ) );
 					$arguments	= !empty( $item->arguments ) ? join( "/", $item->arguments ) : $item->id;
 					$url		= './'.$controller.'/'.$relation->action.'/'.$arguments;
-					$label		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'autocut' ) );
+					$label		= HtmlTag::create( 'a', $label, array( 'href' => $url, 'class' => 'autocut' ) );
 				}
-				$items[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'autocut' ) );
+				$items[]	= HtmlTag::create( 'li', $label, array( 'class' => 'autocut' ) );
 			}
 			if( $this->limit > 0 && $total > count( $items ) ){
 				$label		= sprintf( 'und %s weitere', $total - count( $items ) );
-				$items[]	= UI_HTML_Tag::create( 'li', $iconMore.'&nbsp;'.$label );
+				$items[]	= HtmlTag::create( 'li', $iconMore.'&nbsp;'.$label );
 			}
-			$items	= UI_HTML_Tag::create( 'ul', $items, array( 'class' => 'unstyled '.$this->tableClass ) );
-			$count	= UI_HTML_Tag::create( 'small', '('.$type.')', array( 'class' => 'muted' ) );
-			$list[]	= UI_HTML_Tag::create( 'h5', $relation->label.'&nbsp;'.$count ).$items;
+			$items	= HtmlTag::create( 'ul', $items, array( 'class' => 'unstyled '.$this->tableClass ) );
+			$count	= HtmlTag::create( 'small', '('.$type.')', array( 'class' => 'muted' ) );
+			$list[]	= HtmlTag::create( 'h5', $relation->label.'&nbsp;'.$count ).$items;
 		}
-		return UI_HTML_Tag::create( 'div', $list, array( 'class' => 'item-relations' ) );
+		return HtmlTag::create( 'div', $list, array( 'class' => 'item-relations' ) );
 	}
 
 	protected function renderRelationsAsTable(): string
@@ -192,12 +193,12 @@ class View_Helper_ItemRelationLister
 //		$fullAccess
 		$acl		= $this->env->getAcl();
 		$rows		= [];
-		$iconMore	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+		$iconMore	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 		foreach( $this->relations as $relation ){
 			$items	= [];
 			$icon	= '';
 			if( !empty( $relation->icon ) )
-				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $relation->icon ) ).'&nbsp;';
+				$icon	= HtmlTag::create( 'i', '', array( 'class' => $relation->icon ) ).'&nbsp;';
 			$access		= $acl->has( $relation->controller, $relation->action );
 			$total		= count( $relation->items );
 			if( $this->limit > 0 )
@@ -208,36 +209,36 @@ class View_Helper_ItemRelationLister
 					$controller	= str_replace( "_", "/", strtolower( $relation->controller ) );
 					$arguments	= !empty( $item->arguments ) ? join( "/", $item->arguments ) : $item->id;
 					$url		= './'.$controller.'/'.$relation->action.'/'.$arguments;
-					$label		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'autocut' ) );
+					$label		= HtmlTag::create( 'a', $label, array( 'href' => $url, 'class' => 'autocut' ) );
 				}
-				$items[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'autocut' ) );
+				$items[]	= HtmlTag::create( 'li', $label, array( 'class' => 'autocut' ) );
 			}
 			if( $this->limit > 0 && $total > count( $items ) ){
 				$label		= sprintf( 'und %s weitere', $total - count( $items ) );
-				$items[]	= UI_HTML_Tag::create( 'li', $iconMore.'&nbsp;'.$label );
+				$items[]	= HtmlTag::create( 'li', $iconMore.'&nbsp;'.$label );
 			}
 
 			$type	= sprintf( $this->types[$relation->type], $relation->count );
-			$type	= UI_HTML_Tag::create( 'small', $type, array( 'class' => 'muted' ) );
+			$type	= HtmlTag::create( 'small', $type, array( 'class' => 'muted' ) );
 
-			$items	= UI_HTML_Tag::create( 'ul', $items, array( 'class' => 'unstyled' ) );
-			$count	= UI_HTML_Tag::create( 'small', '('.$relation->count.')', array( 'class' => 'muted' ) );
-			$label	= UI_HTML_Tag::create( 'big', $relation->label ).'<br/>'.$type;
-			$rows[]	= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', $label, array( 'class' => 'cell-relation-label' ) ),
-				UI_HTML_Tag::create( 'td', $items, array( 'class' => 'cell-relation-items' ) ),
+			$items	= HtmlTag::create( 'ul', $items, array( 'class' => 'unstyled' ) );
+			$count	= HtmlTag::create( 'small', '('.$relation->count.')', array( 'class' => 'muted' ) );
+			$label	= HtmlTag::create( 'big', $relation->label ).'<br/>'.$type;
+			$rows[]	= HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', $label, array( 'class' => 'cell-relation-label' ) ),
+				HtmlTag::create( 'td', $items, array( 'class' => 'cell-relation-items' ) ),
 			) );
 		}
 		$colgroup	= UI_HTML_Elements::ColumnGroup( "30%", "" );
-		$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+		$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
 			"Typ",
 			"Verknüpfungen / Einträge",
 		) ) );
-		$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-		$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array(
+		$tbody		= HtmlTag::create( 'tbody', $rows );
+		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
 			'class'		=> 'table table-striped item-relation-lister '.$this->tableClass,
 		) );
-		return UI_HTML_Tag::create( 'div', $table, array( 'class' => 'item-relations' ) );
+		return HtmlTag::create( 'div', $table, array( 'class' => 'item-relations' ) );
 	}
 
 	/**
@@ -249,8 +250,8 @@ class View_Helper_ItemRelationLister
 		$this->types['entity']		= $this->labels['entities.count.label'];
 		$this->types['relation']	= $this->labels['relations.count.label'];
 		if( $this->labels['entities.count.hint'] )
-			$this->types['entity']		=  UI_HTML_Tag::create( 'abbr', $this->types['entity'], array( 'title' => $this->labels['entities.count.hint'] ) );
+			$this->types['entity']		=  HtmlTag::create( 'abbr', $this->types['entity'], array( 'title' => $this->labels['entities.count.hint'] ) );
 		if( $this->labels['relations.count.hint'] )
-			$this->types['relation']	=  UI_HTML_Tag::create( 'abbr', $this->types['relation'], array( 'title' => $this->labels['relations.count.hint'] ) );
+			$this->types['relation']	=  HtmlTag::create( 'abbr', $this->types['relation'], array( 'title' => $this->labels['relations.count.hint'] ) );
 	}
 }

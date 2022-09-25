@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconOpen		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-folder-open" ) );
-$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-eye" ) );
-$iconExists		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-check" ) );
-$iconMissing	= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-warning" ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
+$iconOpen		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-folder-open" ) );
+$iconView		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-eye" ) );
+$iconExists		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-check" ) );
+$iconMissing	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-warning" ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
 
 $modalImage		= new View_Helper_Input_Resource( $env );
 $modalImage->setModalId( 'modal-admin-mail-template-select-image' );
@@ -20,62 +21,62 @@ if( $template->images ){
 	foreach( json_decode( $template->images, TRUE ) as $nr => $item ){
 		$image		= '';
 		$rowClass	= 'error';
-		$buttonOpen	= UI_HTML_Tag::create( 'button', $iconView, array(
+		$buttonOpen	= HtmlTag::create( 'button', $iconView, array(
 			'type'		=> 'button',
 			'class'		=> 'btn btn-info disabled',
 			'title'		=> 'Bild-Datei existiert nicht im angegebenen Pfad (in Frontend-Applikation).',
 			'disabled'	=> 'disabled',
 		) );
 		if( file_exists( $appPath.$item ) ){
-			$image		= UI_HTML_Tag::create(' img', NULL, array(
+			$image		= HtmlTag::create(' img', NULL, array(
 				'src' 	=> $appUrl.$item,
 				'style'	=> 'max-height: 40px',
 			) );
-			$image		= UI_HTML_Tag::create(' a', $image, array(
+			$image		= HtmlTag::create(' a', $image, array(
 				'href'		=> $appUrl.$item,
 				'title'		=> 'Bildverweis in neuem Browser-Tab anzeigen',
 				'target'	=> '_blank',
 			) );
 			$rowClass	= 'success';
-			$buttonOpen	= UI_HTML_Tag::create( 'a', $iconView, array(
+			$buttonOpen	= HtmlTag::create( 'a', $iconView, array(
 				'href'		=> $appUrl.$item,
 				'class'		=> 'btn btn-info',
 				'title'		=> 'Bildverweis in neuem Browser-Tab anzeigen',
 				'target'	=> '_blank',
 			) );
 		}
-		$itemFile		= UI_HTML_Tag::create( 'big', pathinfo( $item, PATHINFO_BASENAME ) );
-		$itemPath		= UI_HTML_Tag::create( 'small', pathinfo( $item, PATHINFO_DIRNAME ), array( 'class' => 'not-muted' ) );
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$itemFile		= HtmlTag::create( 'big', pathinfo( $item, PATHINFO_BASENAME ) );
+		$itemPath		= HtmlTag::create( 'small', pathinfo( $item, PATHINFO_DIRNAME ), array( 'class' => 'not-muted' ) );
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
 			'class'	=> 'btn btn-inverse pull-right',
 			'href'	=> './admin/mail/template/removeImage/'.$template->mailTemplateId.'/'.base64_encode( $item ),
 			'title'	=> 'Bildverweis entfernen',
 		) );
-		$buttons	= UI_HTML_Tag::create( 'div', array(
+		$buttons	= HtmlTag::create( 'div', array(
 			$buttonOpen,
 			$buttonRemove,
 		), array( 'class' => 'btn-group' ) );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $image ),
-			UI_HTML_Tag::create( 'td', '<strong><kbd>image'.( $nr + 1).'</kbd></strong>' ),
-			UI_HTML_Tag::create( 'td', $itemFile.'<br/>'.$itemPath ),
-			UI_HTML_Tag::create( 'td', $buttons, array( 'style' => 'text-align: right') ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $image ),
+			HtmlTag::create( 'td', '<strong><kbd>image'.( $nr + 1).'</kbd></strong>' ),
+			HtmlTag::create( 'td', $itemFile.'<br/>'.$itemPath ),
+			HtmlTag::create( 'td', $buttons, array( 'style' => 'text-align: right') ),
 		), array( 'class' => $rowClass ) );
 	}
-	$listImages	= UI_HTML_Tag::create( 'table', array(
+	$listImages	= HtmlTag::create( 'table', array(
 		UI_HTML_Elements::ColumnGroup( array(
 			'120px',
 			'100px',
 			'',
 			'120px'
 		) ),
-		UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+		HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
 			$words['edit-image-list']['headImage'],
 			$words['edit-image-list']['headId'],
 			$words['edit-image-list']['headPath'],
 			$words['edit-image-list']['headActions'],
 		) ) ),
-		UI_HTML_Tag::create( 'tbody', $list ),
+		HtmlTag::create( 'tbody', $list ),
 	), array(
 		'class'	=> 'table table-fixed table-striped',
 	) );
@@ -88,7 +89,7 @@ return '
 			<h4>'.$words['edit-image-list']['heading'].'</h4>
 			<div class="content-panel-inner">
 				'.$listImages.'
-				'.UI_HTML_Tag::create( 'div', $buttonList, array( 'class' => 'buttonbar' ) ).'
+				'.HtmlTag::create( 'div', $buttonList, array( 'class' => 'buttonbar' ) ).'
 			</div>
 		</div>
 	</div>

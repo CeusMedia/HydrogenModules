@@ -1,20 +1,21 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) ).'&nbsp;';
-$iconPrev		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconNext		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) ).'&nbsp;';
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconPreview	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) ).'&nbsp;';
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
-$iconExternal	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-external-link' ) ).'&nbsp;';
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) ).'&nbsp;';
+$iconPrev		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconNext		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconPreview	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
+$iconExternal	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-external-link' ) ).'&nbsp;';
 
 //  --  PANEL: PREVIEW  --  //
-$iframeHtml			= UI_HTML_Tag::create( 'iframe', '', array(
+$iframeHtml			= HtmlTag::create( 'iframe', '', array(
 	'src'			=> './work/newsletter/preview/html/'.$newsletter->newsletterId,
 	'frameborder'	=> '0',
 ) );
-$buttonPreviewHtml	= UI_HTML_Tag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
+$buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
 	'data-toggle'	=> 'modal',
@@ -47,25 +48,25 @@ if( $styles ){
 	$listStyles		= [];
 	foreach( $styles as $nr => $item ){
 //		$label			= preg_replace( "@^([a-z]+://[^/]+/)@", '<small class="muted">\\1</small>', $item );
-		$link			= UI_HTML_Tag::create( 'a', $iconExternal.$item, array(
+		$link			= HtmlTag::create( 'a', $iconExternal.$item, array(
 			'href'		=> $item,
 			'target'	=> '_blank',
 			'class'		=> 'autocut',
 		) );
-		$styles[$nr]	= UI_HTML_Tag::create( 'li', $link );
+		$styles[$nr]	= HtmlTag::create( 'li', $link );
 	}
-	$listStyles		= UI_HTML_Tag::create( 'ul', $styles, array( 'class' => "unstyled" ) );
+	$listStyles		= HtmlTag::create( 'ul', $styles, array( 'class' => "unstyled" ) );
 	$panelStyles	= '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
-		'.( $w->labelList ? UI_HTML_Tag::create( 'p', $w->labelList ) : '' ).'
+		'.( $w->labelList ? HtmlTag::create( 'p', $w->labelList ) : '' ).'
 		'.$listStyles.'
 	</div>
 </div>';
 }
 
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.$words->edit->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, array(
 	'type'		=> 'submit',
 	'class'		=> 'btn btn-primary',
 	'name'		=> 'save',
@@ -73,13 +74,13 @@ $buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.$words->edit->buttonSave
 ) );
 
 
-$buttonPreview	= UI_HTML_Tag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
+$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
 	'href'		=> './work/newsletter/preview/html/'.$newsletterId.'/1',
 	'target'	=> 'NewsletterPreview',
 	'class'		=> 'btn btn-info btn-small',
 ) );
 
-$buttonPreview	= UI_HTML_Tag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
+$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
 	'type'			=> "button",
 	'class'			=> "btn btn-info",
 	'data-toggle'	=> "modal",
@@ -88,11 +89,11 @@ $buttonPreview	= UI_HTML_Tag::create( 'a', $iconPreview.$words->edit->buttonPrev
 ) );
 
 
-$buttonPrev		= UI_HTML_Tag::Create( 'a', $iconNext.$words->edit->buttonPrev, array(
+$buttonPrev		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonPrev, array(
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/0',
 	'class'	=> 'btn not-btn-small',
 ) );
-$buttonNext		= UI_HTML_Tag::Create( 'a', $iconNext.$words->edit->buttonNext, array(
+$buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, array(
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/2',
 	'class'	=> 'btn not-btn-small',
 ) );
@@ -102,7 +103,7 @@ $w				= (object) $words->edit_html;
 $value			= htmlentities( $newsletter->html, ENT_QUOTES, 'UTF-8' );
 //$value		= strlen( $value ) ? $value : $view->loadContentFile( $pathDefaults.'default.html');
 $urlFull		= './work/newsletter/editFull/'.$newsletter->newsletterId;
-$buttonFull		= '';//UI_HTML_Tag::create( 'a', $w->buttonFullscreen, array( 'class' => 'btn btn-mini', 'href' => $urlFull ) );
+$buttonFull		= '';//HtmlTag::create( 'a', $w->buttonFullscreen, array( 'class' => 'btn btn-mini', 'href' => $urlFull ) );
 $disabled		= (int) $newsletter->status !== Model_Newsletter::STATUS_NEW ? 'disabled="disabled"' : "";
 $panelForm		= '
 <div class="content-panel content-panel-form">

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Navigation_Bootstrap_AccountMenu
@@ -117,35 +118,35 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 				$avatar	= $helper->render();														//  render avatar
 			}
 			else if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-				$avatar	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user fa-3x' ) );
+				$avatar	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user fa-3x' ) );
 			}
-			$avatar	= UI_HTML_Tag::create( 'div', $avatar, array( 'class' => 'avatar' ) );			//  embed avatar in container
+			$avatar	= HtmlTag::create( 'div', $avatar, array( 'class' => 'avatar' ) );			//  embed avatar in container
 		}
 
 		$labels	= [];
 		if( $this->showUsername )
-			$labels[]	= UI_HTML_Tag::create( 'div', $username, array( 'class' => 'username' ) );
+			$labels[]	= HtmlTag::create( 'div', $username, array( 'class' => 'username' ) );
 		if( $this->showFullname )
-			$labels[]	= UI_HTML_Tag::create( 'div', $fullname, array( 'class' => 'fullname' ) );
+			$labels[]	= HtmlTag::create( 'div', $fullname, array( 'class' => 'fullname' ) );
 		if( $this->showEmail )
-			$labels[]	= UI_HTML_Tag::create( 'div', $email, array( 'class' => 'email' ) );
+			$labels[]	= HtmlTag::create( 'div', $email, array( 'class' => 'email' ) );
 
 		if( $labels )
-			$labels		= UI_HTML_Tag::create( 'div', $labels, array( 'class' => 'labels' ) );
+			$labels		= HtmlTag::create( 'div', $labels, array( 'class' => 'labels' ) );
 		else
 			$labels		= "";
 
-		$trigger		= UI_HTML_Tag::create( 'div', array(
+		$trigger		= HtmlTag::create( 'div', array(
 			$avatar,
 			$labels,
-			UI_HTML_Tag::create( 'div', '', array( 'class' => 'clearfix' ) ),
+			HtmlTag::create( 'div', '', array( 'class' => 'clearfix' ) ),
 		), array(
 			'id' 			=> 'drop-account',
 			'role'			=> 'button',
 			'class'			=> 'dropdown-toggle',
 			'data-toggle'	=> 'dropdown',
 		) );
-		return UI_HTML_Tag::create( 'div', array( $trigger, $links ), array(
+		return HtmlTag::create( 'div', array( $trigger, $links ), array(
 			'id' => 'account-menu',
 			'class' => 'dropdown '.$classMenu
 		) );
@@ -160,14 +161,14 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 		foreach( $pages as $page ){
 			$class	= $page->active ? 'active' : NULL;
 //			$href	= $page->path == "index" ? './' : './'.$page->link;
-			$link	= UI_HTML_Tag::create( 'a', self::renderLabelWithIcon( $page ), array(
+			$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), array(
 				'role'		=> "menuitem",
 				'tabindex'	=> "-1",
 				'href'		=> $page->link,
 			) );
-			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array(
+		return HtmlTag::create( 'ul', $list, array(
 			'class'				=> "dropdown-menu pull-right",
 			'role'				=> "menu",
 			'aria-labelledby'	=> "drop-account",
@@ -180,21 +181,21 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 			if( is_object( $link ) ){
 				$icon	= "";
 				if( $link->icon )
-					$icon	= UI_HTML_Tag::create( 'i', "", array( 'class' => $link->icon ) ).'&nbsp;';
+					$icon	= HtmlTag::create( 'i', "", array( 'class' => $link->icon ) ).'&nbsp;';
 				$attributes	= array(
 					'role'		=> "menuitem",
 					'tabindex'	=> "-1",
 					'href'		=> $link->link,
 				);
-				$link	= UI_HTML_Tag::create( 'a', $icon.$link->label, $attributes );
-				$list[]	= UI_HTML_Tag::create( 'li', $link , array( 'role' => 'presentation' ) );
+				$link	= HtmlTag::create( 'a', $icon.$link->label, $attributes );
+				$list[]	= HtmlTag::create( 'li', $link , array( 'role' => 'presentation' ) );
 			}
 			else{
 				$attributes	= array(
 					'role'	=> "presentation",
 					'class'	=> "divider"
 				);
-				$list[]	= UI_HTML_Tag::create( 'li', "", $attributes );
+				$list[]	= HtmlTag::create( 'li', "", $attributes );
 			}
 		}
 		$attributes	= array(
@@ -202,7 +203,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 			'role'				=> "menu",
 			'aria-labelledby'	=> "drop-account",
 		);
-		$links	= UI_HTML_Tag::create( 'ul', $list, $attributes );
+		$links	= HtmlTag::create( 'ul', $list, $attributes );
 		return $links;
 	}
 
@@ -273,7 +274,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 		$class	= $entry->icon;
 		if( !preg_match( "/^fa/", $entry->icon ) )
 			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
-		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
+		$icon	= HtmlTag::create( 'i', '', array( 'class' => $class ) );
 		return $icon.'&nbsp;'.$entry->label;
     }
 }

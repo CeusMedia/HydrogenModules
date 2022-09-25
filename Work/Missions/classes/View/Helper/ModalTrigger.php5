@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_ModalTrigger{
 
 	protected $attributes	= [];
@@ -46,7 +48,7 @@ class View_Helper_ModalTrigger{
 					$attributes[$key]	= $value;
 			}
 		}
-		return UI_HTML_Tag::create( 'a', $this->label, $attributes );
+		return HtmlTag::create( 'a', $this->label, $attributes );
 	}
 
 	/**

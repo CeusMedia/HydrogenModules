@@ -1,45 +1,46 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconUndo		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-undo' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconUndo		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-undo' ) );
 
 $list	= [];
 $leftAmount	= (float) $bill->amountNetto;
 
 if( $billExpenses ){
 	foreach( $billExpenses as $expense ){
-		$buttonRemove	= UI_HTML_Tag::create( 'a', 'entfernen', array(
+		$buttonRemove	= HtmlTag::create( 'a', 'entfernen', array(
 			'href'	=> './work/billing/bill/breakdown/removeExpense/'.$expense->billExpenseId,
 			'class'	=> 'btn btn-inverse btn-mini',
 		) );
 		if( $bill->status == Model_Billing_Bill::STATUS_BOOKED )
 			$buttonRemove	= '';
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', '<small>Ausgabe</small>' ),
-			UI_HTML_Tag::create( 'td', $expense->title ),
-			UI_HTML_Tag::create( 'td', '-', array( 'class' => 'cell-number' ) ),
-			UI_HTML_Tag::create( 'td', number_format( $expense->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
-			UI_HTML_Tag::create( 'td', $buttonRemove, array( 'class' => 'cell-actions' ) ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', '<small>Ausgabe</small>' ),
+			HtmlTag::create( 'td', $expense->title ),
+			HtmlTag::create( 'td', '-', array( 'class' => 'cell-number' ) ),
+			HtmlTag::create( 'td', number_format( $expense->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
+			HtmlTag::create( 'td', $buttonRemove, array( 'class' => 'cell-actions' ) ),
 		) );
 		$leftAmount	-= (float) $expense->amount;
 	}
 }
 if( $billReserves ){
 	foreach( $billReserves as $billReserve ){
-		$buttonRemove	= UI_HTML_Tag::create( 'a', 'entfernen', array(
+		$buttonRemove	= HtmlTag::create( 'a', 'entfernen', array(
 			'href'	=> './work/billing/bill/breakdown/removeReserve/'.$billReserve->billReserveId,
 			'class'	=> 'btn btn-inverse btn-mini',
 		) );
 		if( $billReserve->status == Model_Billing_Bill_Reserve::STATUS_BOOKED )
 			$buttonRemove	= '';
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', '<small>Rücklage</small>' ),
-			UI_HTML_Tag::create( 'td', $billReserve->reserve->title ),
-			UI_HTML_Tag::create( 'td', (float) $billReserve->percent ? number_format( $billReserve->percent, 2, ',', '.' ).'&nbsp;%' : '-', array( 'class' => 'cell-number' ) ),
-			UI_HTML_Tag::create( 'td', number_format( $billReserve->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
-			UI_HTML_Tag::create( 'td', $buttonRemove, array( 'class' => 'cell-actions' ) ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', '<small>Rücklage</small>' ),
+			HtmlTag::create( 'td', $billReserve->reserve->title ),
+			HtmlTag::create( 'td', (float) $billReserve->percent ? number_format( $billReserve->percent, 2, ',', '.' ).'&nbsp;%' : '-', array( 'class' => 'cell-number' ) ),
+			HtmlTag::create( 'td', number_format( $billReserve->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
+			HtmlTag::create( 'td', $buttonRemove, array( 'class' => 'cell-actions' ) ),
 		) );
 		$leftAmount	-= (float) $billReserve->amount;
 	}
@@ -48,7 +49,7 @@ if( $billReserves ){
 $sharedAmount	= 0;
 if( $billShares ){
 	foreach( $billShares as $billShare ){
-		$buttonRemove	= UI_HTML_Tag::create( 'a', 'entfernen', array(
+		$buttonRemove	= HtmlTag::create( 'a', 'entfernen', array(
 			'href'	=> './work/billing/bill/breakdown/removeShare/'.$billShare->billShareId,
 			'class'	=> 'btn btn-inverse btn-mini',
 		) );
@@ -56,12 +57,12 @@ if( $billShares ){
 			$buttonRemove	= '';
 
 		$label	= (int) $billShare->personId > 0 ? $billShare->person->firstname.' '.$billShare->person->surname : $billShare->corporation->title;
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', '<small>Anteil</small>' ),
-			UI_HTML_Tag::create( 'td', $label ),
-			UI_HTML_Tag::create( 'td', (float) $billShare->percent ? number_format( $billShare->percent, 2, ',', '.' ).'&nbsp;%' : '-', array( 'class' => 'cell-number' ) ),
-			UI_HTML_Tag::create( 'td', number_format( $billShare->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
-			UI_HTML_Tag::create( 'td', $buttonRemove, array( 'class' => 'cell-actions' ) ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', '<small>Anteil</small>' ),
+			HtmlTag::create( 'td', $label ),
+			HtmlTag::create( 'td', (float) $billShare->percent ? number_format( $billShare->percent, 2, ',', '.' ).'&nbsp;%' : '-', array( 'class' => 'cell-number' ) ),
+			HtmlTag::create( 'td', number_format( $billShare->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
+			HtmlTag::create( 'td', $buttonRemove, array( 'class' => 'cell-actions' ) ),
 		) );
 		$sharedAmount	+= (float) $billShare->amount;
 	}
@@ -72,37 +73,37 @@ if( $bill->status != Model_Billing_Bill::STATUS_BOOKED ){
 	$missingPercent	= $leftAmount > 0 ? ( $leftAmount - $sharedAmount ) / $leftAmount * 100 : 0;
 
 	if( $missingAmount < 0 ){
-		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-error' ) );
-		$labelMissing	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
+		$labelPercent	= HtmlTag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-error' ) );
+		$labelMissing	= HtmlTag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
 	}
 	else if( $missingAmount > 0 ){
-		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-error' ) );
-		$labelMissing	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
+		$labelPercent	= HtmlTag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-error' ) );
+		$labelMissing	= HtmlTag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
 	}
 	else{
-		$labelPercent	= UI_HTML_Tag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-success' ) );
-		$labelMissing	= UI_HTML_Tag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-success' ) );
+		$labelPercent	= HtmlTag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-success' ) );
+		$labelMissing	= HtmlTag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-success' ) );
 	}
 
-	$list[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', '<strong>Noch zu verteilen</strong>', array( 'colspan' => '2' ) ),
-		UI_HTML_Tag::create( 'td', $labelPercent, array( 'class' => 'cell-number' ) ),
-		UI_HTML_Tag::create( 'td', $labelMissing, array( 'class' => 'cell-number' ) ),
-		UI_HTML_Tag::create( 'td', '' ),
+	$list[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', '<strong>Noch zu verteilen</strong>', array( 'colspan' => '2' ) ),
+		HtmlTag::create( 'td', $labelPercent, array( 'class' => 'cell-number' ) ),
+		HtmlTag::create( 'td', $labelMissing, array( 'class' => 'cell-number' ) ),
+		HtmlTag::create( 'td', '' ),
 	) );
 }
 
 
 $colgroup	= UI_HTML_Elements::ColumnGroup( array( '80', '', '80', '100', '80' ) );
-$thead	= UI_HTML_Tag::create( 'thread', UI_HTML_Elements::TableHeads( array( 'Type', 'Bezug', 'Prozent', 'Betrag', '' ) ) );
-$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+$thead	= HtmlTag::create( 'thread', UI_HTML_Elements::TableHeads( array( 'Type', 'Bezug', 'Prozent', 'Betrag', '' ) ) );
+$tbody	= HtmlTag::create( 'tbody', $list );
+$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 
 $tabs	= View_Work_Billing_Bill::renderTabs( $env, $bill->billId, 1 );
 
 if( $bill->status == Model_Billing_Bill::STATUS_BOOKED ){
 
-	$buttonUnbook		= UI_HTML_Tag::create( 'a', $iconUndo.' zurücksetzen', array(
+	$buttonUnbook		= HtmlTag::create( 'a', $iconUndo.' zurücksetzen', array(
 		'href'		=> './work/billing/bill/unbook/'.$bill->billId,
 		'class'		=> 'btn btn-mini',
 	) );
@@ -141,39 +142,39 @@ foreach( $reserves as $reserve )
 	$optReserve[$reserve->reserveId]	= $reserve->title;
 $optReserve	= UI_HTML_Elements::Options( $optReserve );
 
-$buttonBook		= UI_HTML_Tag::create( 'button', $iconSave.' buchen', array(
+$buttonBook		= HtmlTag::create( 'button', $iconSave.' buchen', array(
 	'type'		=> 'button',
 	'disabled'	=> 'disabled',
 	'class'		=> 'btn btn-primary',
 ) );
-$buttonAddExpense	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Ausgabe', array(
+$buttonAddExpense	= HtmlTag::create( 'a', $iconAdd.' neue Ausgabe', array(
 	'href'			=> '#modal-add-expense',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
 ) );
-$buttonAddReserve	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Rücklage', array(
+$buttonAddReserve	= HtmlTag::create( 'a', $iconAdd.' neue Rücklage', array(
 	'href'			=> '#modal-add-reserve',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
 ) );
-$buttonAddShare		= UI_HTML_Tag::create( 'a', $iconAdd.' neuer Anteil', array(
+$buttonAddShare		= HtmlTag::create( 'a', $iconAdd.' neuer Anteil', array(
 	'href'			=> '#modal-add-share',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
 ) );
 if( $bill->amountNetto - $bill->amountAssigned == 0 ){
-	$buttonBook		= UI_HTML_Tag::create( 'a', $iconSave.' buchen', array(
+	$buttonBook		= HtmlTag::create( 'a', $iconSave.' buchen', array(
 		'href'	=> './work/billing/bill/breakdown/book/'.$bill->billId,
 		'class'	=> 'btn btn-primary',
 	) );
-/*	$buttonAddExpense	= UI_HTML_Tag::create( 'button', $iconAdd.' neue Ausgabe', array(
+/*	$buttonAddExpense	= HtmlTag::create( 'button', $iconAdd.' neue Ausgabe', array(
 		'class'			=> 'btn btn-success',
 		'disabled'		=> 'disabled',
 	) );*/
-	$buttonAddShare		= UI_HTML_Tag::create( 'a', $iconAdd.' neuer Anteil', array(
+	$buttonAddShare		= HtmlTag::create( 'a', $iconAdd.' neuer Anteil', array(
 		'class'			=> 'btn btn-success',
 		'disabled'		=> 'disabled',
 	) );

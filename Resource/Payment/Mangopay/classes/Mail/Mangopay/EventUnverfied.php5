@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Mangopay_EventUnverfied extends Mail_Abstract
 {
@@ -12,24 +13,24 @@ class Mail_Mangopay_EventUnverfied extends Mail_Abstract
 		$event		= $data->get( 'event' );
 		$entity		= $data->get( 'entity' );
 
-		print UI_HTML_Tag::create( 'h2', 'Event verification failed' );
-		print UI_HTML_Tag::create( 'h3', 'Event' );
+		print HtmlTag::create( 'h2', 'Event verification failed' );
+		print HtmlTag::create( 'h3', 'Event' );
 		print print_m( $event, NULL, NULL, TRUE, 'html' );
 		if( $entity instanceof Exception ){
 			$e	= $entity;
-			print UI_HTML_Tag::create( 'h3', 'Exception' );
-			print UI_HTML_Tag::create( 'h4', 'Message / Code' );
-			print UI_HTML_Tag::create( 'p', $e->getMessage().' ('.$e->getCode().')' );
-			print UI_HTML_Tag::create( 'h4', 'File / Line' );
-			print UI_HTML_Tag::create( 'p', $e->getFile().' @ '.$e->getLine() );
-			print UI_HTML_Tag::create( 'h4', 'Trace' );
-			print UI_HTML_Tag::create( 'pre', $e->getTraceAsString() );
+			print HtmlTag::create( 'h3', 'Exception' );
+			print HtmlTag::create( 'h4', 'Message / Code' );
+			print HtmlTag::create( 'p', $e->getMessage().' ('.$e->getCode().')' );
+			print HtmlTag::create( 'h4', 'File / Line' );
+			print HtmlTag::create( 'p', $e->getFile().' @ '.$e->getLine() );
+			print HtmlTag::create( 'h4', 'Trace' );
+			print HtmlTag::create( 'pre', $e->getTraceAsString() );
 		}
 		else{
-			print UI_HTML_Tag::create( 'h3', 'Entity' );
+			print HtmlTag::create( 'h3', 'Entity' );
 			print print_m( $entity, NULL, NULL, TRUE, 'html' );
 		}
-		print UI_HTML_Tag::create( 'h3', 'Info' );
+		print HtmlTag::create( 'h3', 'Info' );
 		phpinfo( INFO_VARIABLES );
 		$this->setSubject( 'Event verification failed' );
 		$this->setHtml( $buffer->get( TRUE ) );

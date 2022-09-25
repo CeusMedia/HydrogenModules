@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helper	= new View_Helper_Catalog_Bookstore( $env );
 $words	= (object) $words['tag'];
@@ -9,7 +10,7 @@ if( $articles ){
 	$list	= [];
 	foreach( $articles as $article )
 		$list[]	= $helper->renderArticleListItem( $article->article );
-	$list	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'articleList' ) );
+	$list	= HtmlTag::create( 'div', $list, array( 'class' => 'articleList' ) );
 }
 
 extract( $view->populateTexts( array( 'tag.top', 'tag.bottom' ), 'html/catalog/bookstore/' ) );

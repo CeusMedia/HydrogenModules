@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w				= (object) $words->styles;
 
 //print_m( $template->newsletterTemplateId );die;
@@ -10,7 +12,7 @@ $panelForm		= '
 	<h3>Style-Angaben für HTML-Format <small class="muted"></small></h3>
 	<div class="content-panel-inner">
 <!--		<label for="input_style">'.$words->edit->labelStyle.'</label>-->
-		'.UI_HTML_Tag::create( 'textarea', $value, array(
+		'.HtmlTag::create( 'textarea', $value, array(
 			'name'		=> 'style',
 			'id'		=> 'input_style',
 			'class'		=> 'span12 CodeMirror-auto',
@@ -23,11 +25,11 @@ $panelForm		= '
 </div>';
 
 $urlPreview			= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
-$iframeHtml			= UI_HTML_Tag::create( 'iframe', '', array(
+$iframeHtml			= HtmlTag::create( 'iframe', '', array(
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
 ) );
-$buttonPreviewHtml	= UI_HTML_Tag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
+$buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info',
 	'data-toggle'	=> 'modal',

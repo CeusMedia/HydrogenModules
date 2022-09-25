@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $page	= $env->getPage();
 
 $navbarFixed	= TRUE;
@@ -67,11 +69,11 @@ else{
 
 	$list	= [];
 	foreach( $links as $key => $value ){
-		$link	= UI_HTML_Tag::create( 'a', $value, array( 'href' => './'.$key ) );
+		$link	= HtmlTag::create( 'a', $value, array( 'href' => './'.$key ) );
 		$class	= $key == $current ? "active" : NULL;
-		$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+		$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 	}
-	$navMain	= UI_HTML_Tag::create( 'ul', $list, array( "class" => "nav" ) );
+	$navMain	= HtmlTag::create( 'ul', $list, array( "class" => "nav" ) );
 }
 
 /*  --  USER MESSAGES  --  */
@@ -89,7 +91,7 @@ $page->setTitle( $brand );
 if( !empty( $words['main']['brand'] ) )
 	$brand	= $words['main']['brand'];
 
-$brand		= UI_HTML_Tag::create( 'a', $brand, array( 'href' => './', 'class' => 'brand' ) );
+$brand		= HtmlTag::create( 'a', $brand, array( 'href' => './', 'class' => 'brand' ) );
 if( $view->hasContentFile( 'html/app.brand.html' ) )
 	if( $brandHtml = $view->loadContentFile( 'html/app.brand.html' ) )			//  render brand, words from main.ini are assigned
 		$brand		= $brandHtml;

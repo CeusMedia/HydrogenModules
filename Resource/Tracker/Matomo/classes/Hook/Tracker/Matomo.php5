@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -62,8 +63,8 @@ ModuleTrackerMatomo.options = '.json_encode( $config->getAll( 'option.' ) ).';
 ModuleTrackerMatomo.init();';
 		$context->js->addScriptOnReady( $script );
 
-		$noscript	= UI_HTML_Tag::create( 'noscript', UI_HTML_Tag::create( 'p',				//  create noscript HTML tag
-			UI_HTML_Tag::create( 'img', NULL, array(											//  create tracking image
+		$noscript	= HtmlTag::create( 'noscript', HtmlTag::create( 'p',				//  create noscript HTML tag
+			HtmlTag::create( 'img', NULL, array(											//  create tracking image
 				'src'	=> $serverUrl.'piwik.php?idsite='.$config->get( 'ID' ).'&amp;rec=1',	//
 				'style'	=> 'border: 0',															//  no borders
 				'alt'	=> ''																	//  atleast empty alternative text for XHTML validity

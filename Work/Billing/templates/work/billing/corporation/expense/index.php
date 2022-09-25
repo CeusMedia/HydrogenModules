@@ -1,15 +1,17 @@
 <?php
-//$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Ausgabe', array(
+//$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Ausgabe', array(
 	'href'			=> '#modal-add-expense',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
 ) );
-$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' buchen', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' buchen', array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary'

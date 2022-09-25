@@ -1,17 +1,18 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['index-unrelated'];
 
-$list	= UI_HTML_Tag::create( 'div', '<em class="muted">'.$w->empty.'</em>', array( 'class' => 'alert alert-info' ) );
+$list	= HtmlTag::create( 'div', '<em class="muted">'.$w->empty.'</em>', array( 'class' => 'alert alert-info' ) );
 
 if( $unrelatedTimers ){
 	$list	= [];
 	foreach( $unrelatedTimers as $timer ){
 		$label	= $timer->title;
-		$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => './work/time/edit/'.$timer->workTimerId ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
+		$link	= HtmlTag::create( 'a', $label, array( 'href' => './work/time/edit/'.$timer->workTimerId ) );
+		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'not-unstyled' ) );
+	$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'not-unstyled' ) );
 }
 
 return '

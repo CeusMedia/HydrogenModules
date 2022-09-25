@@ -1,8 +1,9 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
-class View_Helper_Gravatar
 
+class View_Helper_Gravatar
 {
 	protected $env;
 	protected $user;
@@ -37,7 +38,7 @@ class View_Helper_Gravatar
 		$attributes['src']		= $this->getImageUrl( $this->user->email, $this->size, $this->rating );
 		$attributes['width']	= $this->size;
 		$attributes['height']	= $this->size;
-		return UI_HTML_Tag::create( 'img', NULL, $attributes );
+		return HtmlTag::create( 'img', NULL, $attributes );
 	}
 
 	public function setDefault( string $theme ): self

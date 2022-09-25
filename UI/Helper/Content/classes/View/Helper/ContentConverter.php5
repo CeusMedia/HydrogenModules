@@ -1,5 +1,6 @@
 <?php
-use CMF_Hydrogen_Environment as Environment;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment as Environment;
 
 class View_Helper_ContentConverter
 {
@@ -29,7 +30,7 @@ class View_Helper_ContentConverter
 			$type		= $matches[2][$i];
 			$code		= trim( $matches[3][$i] );
 			$attributes	= array( 'class' => $type ? $type : 'code' );
-			$new		= UI_HTML_Tag::create( 'xmp', $code, $attributes );
+			$new		= HtmlTag::create( 'xmp', $code, $attributes );
 			$content	= str_replace( $matches[0][$i], $new, $content );
 		}
 		$content	= preg_replace( '/_____(\/?)code_____/', '<\\1code>', $content );				//  recreate <code> tags
@@ -218,7 +219,7 @@ class View_Helper_ContentConverter
 				$lines[$nr]	= preg_replace( '/^- /', '<li>', trim( $lines[$nr] ) ).'</li>';
 			$lines	= implode( "\n", $lines );
 			$attributes	= array( 'class' => $class ? $class : 'list');
-			$new		= UI_HTML_Tag::create( $type.'l', $lines, $attributes );
+			$new		= HtmlTag::create( $type.'l', $lines, $attributes );
 			$content	= str_replace( $matches[0][$i], $new, $content );
 		}
 		return $content;

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Work_Mission_Filter{
 
 	protected $defaultFilterValues	= [];
@@ -57,7 +59,7 @@ class View_Helper_Work_Mission_Filter{
 
 	/*  -- query search  --  */
 	public function renderSearch( $filteredQuery ){
-		$inputSearch	= UI_HTML_Tag::create( 'input', NULL, array(
+		$inputSearch	= HtmlTag::create( 'input', NULL, array(
 			'type'			=> "text",
 			'name'			=> "query",
 			'id'			=> "filter_query",
@@ -67,7 +69,7 @@ class View_Helper_Work_Mission_Filter{
 		) );
 
 		$label				= '<i class="icon-search '.( $filteredQuery ? 'icon-white' : '' ).'"></i>';
-		$buttonSearch	= UI_HTML_Tag::create( 'button', $label, array(
+		$buttonSearch	= HtmlTag::create( 'button', $label, array(
 			'type'		=> "button",
 			'class'		=> 'btn '.( $filteredQuery ? 'btn-info' : '' ),
 			'id'		=> 'button_filter_search'
@@ -77,7 +79,7 @@ class View_Helper_Work_Mission_Filter{
 
 	public function renderReset(){
 		$label				= '<i class="icon-remove-circle"></i>';
-		$buttonSearchReset	= UI_HTML_Tag::create( 'button', $label, array(
+		$buttonSearchReset	= HtmlTag::create( 'button', $label, array(
 			'type'				=> "button",
 			'disabled'			=> "disabled",/*$changedFilters ? NULL : "disabled",*/
 			'class'				=> 'btn',/*'btn '.( $changedFilters ? 'btn-inverse' : "" ),*/
@@ -88,7 +90,7 @@ class View_Helper_Work_Mission_Filter{
 	}
 
 	public function renderViewTypeSwitch( $mode ){
-		$caret	= UI_HTML_Tag::create( 'span', '', array( 'class' => 'caret' ) );
+		$caret	= HtmlTag::create( 'span', '', array( 'class' => 'caret' ) );
 		$items	= [];
 
 		$wordsViewTypes	= (object) $this->words['viewTypes'];
@@ -115,25 +117,25 @@ class View_Helper_Work_Mission_Filter{
 					$currentModes	= array( 'now', 'archive', 'future' );
 					break;
 			}
-			$icon		= $iconClass ? UI_HTML_Tag::create( 'i', '', array( 'class' => $iconClass ) ).'&nbsp;' : '';
-			$link		= UI_HTML_Tag::create( 'a', $icon.$typeLabel, array( 'href' => './work/mission/'.$typeKey ) );
+			$icon		= $iconClass ? HtmlTag::create( 'i', '', array( 'class' => $iconClass ) ).'&nbsp;' : '';
+			$link		= HtmlTag::create( 'a', $icon.$typeLabel, array( 'href' => './work/mission/'.$typeKey ) );
 			$class		= in_array( $mode, $currentModes ) ? 'active' : NULL;
 			$current	= in_array( $mode, $currentModes ) ? $typeLabel : $current;
-			$items[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+			$items[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 		}
 
 		$labelFilter	= $this->words['filters']['viewType'];
-		return UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'button', '<span class="not-muted">'.$labelFilter.':</span> <b>'.$current.'</b>', array( 'class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown" ) ),
-	//		UI_HTML_Tag::create( 'button', $caret, array( 'class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown" ) ),
-			UI_HTML_Tag::create( 'ul', $items, array( 'class' => 'dropdown-menu' ) ),
+		return HtmlTag::create( 'div', array(
+			HtmlTag::create( 'button', '<span class="not-muted">'.$labelFilter.':</span> <b>'.$current.'</b>', array( 'class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown" ) ),
+	//		HtmlTag::create( 'button', $caret, array( 'class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown" ) ),
+			HtmlTag::create( 'ul', $items, array( 'class' => 'dropdown-menu' ) ),
 		), array( 'class' => 'btn-group' ) );
 	}
 
 	public function renderViewModeSwitch( $mode ){
 		if( !in_array( $mode, array( 'archive', 'now', 'future' ) ) )
 			return "";
-		$caret	= UI_HTML_Tag::create( 'span', '', array( 'class' => 'caret' ) );
+		$caret	= HtmlTag::create( 'span', '', array( 'class' => 'caret' ) );
 		$items	= [];
 
 		$wordsViewTypes	= (object) $this->words['modeTypes'];
@@ -159,16 +161,16 @@ class View_Helper_Work_Mission_Filter{
 					$id			= "work-mission-view-mode-future";
 					break;
 			}
-			$icon		= $iconClass ? UI_HTML_Tag::create( 'i', '', array( 'class' => $iconClass ) ).'&nbsp;' : '';
-			$link		= UI_HTML_Tag::create( 'a', $icon.$modeLabel, array( 'href' => './work/mission/'.$modeKey ) );
-			$items[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $mode === $modeKey ? 'active' : NULL ) );
+			$icon		= $iconClass ? HtmlTag::create( 'i', '', array( 'class' => $iconClass ) ).'&nbsp;' : '';
+			$link		= HtmlTag::create( 'a', $icon.$modeLabel, array( 'href' => './work/mission/'.$modeKey ) );
+			$items[]	= HtmlTag::create( 'li', $link, array( 'class' => $mode === $modeKey ? 'active' : NULL ) );
 			$current	= $mode === $modeKey ? $modeLabel : $current;
 		}
 		$labelFilter	= $this->words['filters']['modeType'];
-		return UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'button', '<span class="not-muted">'.$labelFilter.':</span> <b>'.$current.'</b>', array( 'class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown" ) ),
-//			UI_HTML_Tag::create( 'button', $caret, array( 'class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown" ) ),
-			UI_HTML_Tag::create( 'ul', $items, array( 'class' => 'dropdown-menu' ) ),
+		return HtmlTag::create( 'div', array(
+			HtmlTag::create( 'button', '<span class="not-muted">'.$labelFilter.':</span> <b>'.$current.'</b>', array( 'class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown" ) ),
+//			HtmlTag::create( 'button', $caret, array( 'class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown" ) ),
+			HtmlTag::create( 'ul', $items, array( 'class' => 'dropdown-menu' ) ),
 		), array( 'class' => 'btn-group' ) );
 	}
 

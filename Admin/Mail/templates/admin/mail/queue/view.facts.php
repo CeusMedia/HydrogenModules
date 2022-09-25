@@ -1,27 +1,28 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconBack		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconBack		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $buttons		= [];
-$buttons[]	= UI_HTML_Tag::create( 'a', $iconBack.'&nbsp;zurück', array(
+$buttons[]	= HtmlTag::create( 'a', $iconBack.'&nbsp;zurück', array(
 	'href'	=> './admin/mail/queue/',
 	'class'	=> 'btn btn-small'
 ) );
 if( in_array( $mail->status, array( Model_Mail::STATUS_NEW, Model_Mail::STATUS_RETRY ) ) ){
-	$buttons[]	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;abbrechen', array(
+	$buttons[]	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen', array(
 		'href'	=> './admin/mail/queue/cancel/'.$mail->mailId,
 		'class'	=> 'btn btn-inverse btn-small'
 	) );
 }
 if( $mail->status == 2 || $mail->status == -2 ){
-	$buttons[]	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;noch einmal versenden', array(
+	$buttons[]	= HtmlTag::create( 'a', $iconCancel.'&nbsp;noch einmal versenden', array(
 		'href'	=> './admin/mail/queue/resend/'.$mail->mailId,
 		'class'	=> 'btn btn-primary btn-small'
 	) );
 }
-$buttons[]	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+$buttons[]	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 	'href'	=> './admin/mail/queue/remove/'.$mail->mailId.( $page ? '?page='.$page : '' ),
 	'class'	=> 'btn btn-danger btn-small'
 ) );
@@ -43,7 +44,7 @@ foreach( $listKeys as $key )
 	if( $fact = $view->renderFact( $key, $mail->{$key} ) )
 		$list[]	= $fact;
 
-$listLeft	= UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+$listLeft	= HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 
 $listKeys	= array(
 	'status',
@@ -56,7 +57,7 @@ $list	= [];
 foreach( $listKeys as $key )
 	if( $fact = $view->renderFact( $key, $mail->{$key} ) )
 		$list[]	= $fact;
-$listRight	= UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+$listRight	= HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 
 return '
 <div class="content-panel">

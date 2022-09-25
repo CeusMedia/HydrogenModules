@@ -2,13 +2,14 @@
 
 use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['customer'];
 $wDelivery	= (object) $words['customer-delivery'];
 $wBilling	= (object) $words['customer-billing'];
 
-$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$hint		= UI_HTML_Tag::create( 'a', $iconCancel.' zurück zur Auswahl', array(
+$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$hint		= HtmlTag::create( 'a', $iconCancel.' zurück zur Auswahl', array(
 	'href'		=> './shop/customer/reset',
 	'class'		=> 'btn btn-small',
 ) );

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Issue_ChangeNote
@@ -58,7 +59,7 @@ class View_Helper_Work_Issue_ChangeNote
 			else
 				$noteText	= nl2br( $this->note->note );
 		}
-		$note	= UI_HTML_Tag::create( 'tt', $noteText, array( 'class' => 'issue-change-list-note-content' ) );
+		$note	= HtmlTag::create( 'tt', $noteText, array( 'class' => 'issue-change-list-note-content' ) );
 		return $note;
 	}
 

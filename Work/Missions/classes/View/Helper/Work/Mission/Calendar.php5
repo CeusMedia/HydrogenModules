@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Work_Mission_Calendar{
 
 	protected $env;
@@ -60,9 +62,9 @@ class View_Helper_Work_Mission_Calendar{
 		}
 		$colgroup	= UI_HTML_Elements::ColumnGroup( "2%", "14%", "14%", "14%", "14%", "14%", "14%", "14%" );
 		$heads		= UI_HTML_Elements::TableHeads( array( "KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ) );
-		$thead		= UI_HTML_Tag::create( 'thead', $heads );
-		$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-		$tableLarge	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
+		$thead		= HtmlTag::create( 'thead', $heads );
+		$tbody		= HtmlTag::create( 'tbody', $rows );
+		$tableLarge	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
 
 
 		$rows			= [];
@@ -102,9 +104,9 @@ class View_Helper_Work_Mission_Calendar{
 		}
 		$colgroup	= UI_HTML_Elements::ColumnGroup( /*"5%", "95%"*/"100%" );
 		$heads		= UI_HTML_Elements::TableHeads( array( "KW", "..." ) );
-		$thead		= UI_HTML_Tag::create( 'thead', ""/*$heads*/ );
-		$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-		$tableSmall	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-small" ) );
+		$thead		= HtmlTag::create( 'thead', ""/*$heads*/ );
+		$tbody		= HtmlTag::create( 'tbody', $rows );
+		$tableSmall	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-small" ) );
 
 //		$tableSmall = '<div class="muted"><em><small>Noch nicht implementiert.</small></em></div>';
 
@@ -141,19 +143,19 @@ $(document).ready(function(){
 
 	protected function renderControls( $year, $month ){
 		$isNow		= $year	=== date( "Y" ) && $month === date( "m" );
-		$btnControlPrev	= UI_HTML_Tag::create( 'button', '&laquo;',  array(
+		$btnControlPrev	= HtmlTag::create( 'button', '&laquo;',  array(
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large',
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(-1)',
 			'title'		=> '1 Monat vor',
 		) );
-		$btnControlNext	= UI_HTML_Tag::create( 'button', '&raquo;',  array(
+		$btnControlNext	= HtmlTag::create( 'button', '&raquo;',  array(
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large',
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(1)',
 			'title'		=> '1 Monat weiter',
 		) );
-		$btnControlNow	= UI_HTML_Tag::create( 'button', '&Omicron;',  array(
+		$btnControlNow	= HtmlTag::create( 'button', '&Omicron;',  array(
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large '.( $isNow ? 'disabled' : NULL ),
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(0)',
@@ -163,7 +165,7 @@ $(document).ready(function(){
 
 		$label      = $this->renderLabel( $year, $month );
 
-		$btnExport		= UI_HTML_Tag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', array(
+		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', array(
 			'href'		=> './work/mission/export/ical',
 			'target'	=> '_blank',
 			'class'		=> 'btn not-btn-small btn-warning',
@@ -206,7 +208,7 @@ $(document).ready(function(){
 			$overdue	= '';
 			if( $isPast )
 				$overdue	= $this->renderOverdue( $mission );
-			$list[]	= UI_HTML_Tag::create( 'li', $overdue.$title, array(
+			$list[]	= HtmlTag::create( 'li', $overdue.$title, array(
 				"class"			=> 'priority-'.$mission->priority,
 				"data-id"		=> $mission->missionId,
 				"data-type"		=> $mission->type,
@@ -222,7 +224,7 @@ $(document).ready(function(){
 		$class	= $cellClass ? $cellClass.' '.$class : $class;
 		$list	= '<ul>'.join( $list ).'</ul>';
 		$label	= '<div class="date-label '.$class.'">'.$date->format( "j.n." ).'</div>';
-		return UI_HTML_Tag::create( 'td', $label.$list, array(
+		return HtmlTag::create( 'td', $label.$list, array(
 			"oncontextmenu"	=> "return false",
 			"class"			=> $class,
 			"data-day"		=> $date->format( "j" ),
@@ -252,7 +254,7 @@ $(document).ready(function(){
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
-			return UI_HTML_Tag::create( 'div', $diff->days, array( 'class' => "overdue" ) );		//  render overdue container
+			return HtmlTag::create( 'div', $diff->days, array( 'class' => "overdue" ) );		//  render overdue container
 	}
 }
 ?>

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 {
 	protected $ownerId		= NULL;
@@ -41,14 +43,14 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 			$time			= $this->renderTimes( $timer );
 			$buttonGroup	= $this->renderButtons( $timer );
 
-			$buttons		= UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $buttonGroup, array( 'class' => 'span4' )  ),
-				UI_HTML_Tag::create( 'div', $time , array( 'class' => 'span8', 'style' => 'text-align: right' ) ),
+			$buttons		= HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', $buttonGroup, array( 'class' => 'span4' )  ),
+				HtmlTag::create( 'div', $time , array( 'class' => 'span8', 'style' => 'text-align: right' ) ),
 			), array( 'class' => 'row-fluid' ) );
 
 			$rowClass		= $timer->status == 1 ? 'success' : ( $timer->status == 2 ? 'notice' : '' );
-			$rows[]			= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', array(
+			$rows[]			= HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', array(
 					$title,
 					$worker,
 					$linkRelation,
@@ -56,12 +58,12 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 				) ),
 			), array( 'class' => $rowClass ) );
 		}
-		$tableHeads	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'th', 'Aktivität' ),
+		$tableHeads	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'th', 'Aktivität' ),
 		) );
-		$table		= UI_HTML_Tag::create( 'table', array(
-			UI_HTML_Tag::create( 'thead', $tableHeads ),
-			UI_HTML_Tag::create( 'tbody', $rows ),
+		$table		= HtmlTag::create( 'table', array(
+			HtmlTag::create( 'thead', $tableHeads ),
+			HtmlTag::create( 'tbody', $rows ),
 		), array(
 			'class'	=> 'table table-striped table-condensed',
 			'style'	=> 'table-layout: fixed'
@@ -147,15 +149,15 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	{
 		if( !$timer->moduleId )
 			return '';
-		$labelType		= UI_HTML_Tag::create( 'span', $timer->type.':', array(
+		$labelType		= HtmlTag::create( 'span', $timer->type.':', array(
 			'class' => 'muted',
 		) );
-		$linkRelation	= UI_HTML_Tag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), array(
+		$linkRelation	= HtmlTag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), array(
 			'href'		=> $timer->relationLink,
 			'class'		=> 'title autocut',
 		) );
-		$linkRelation	= UI_HTML_Tag::create( 'small', array( $labelType, $linkRelation ) );
-		return UI_HTML_Tag::create( 'div', $linkRelation, array( 'class' => 'autocut' ) );
+		$linkRelation	= HtmlTag::create( 'small', array( $labelType, $linkRelation ) );
+		return HtmlTag::create( 'div', $linkRelation, array( 'class' => 'autocut' ) );
 	}
 
 	protected function renderTimes( $timer ): string
@@ -165,12 +167,12 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 		$classes		= [];
 		if( $timer->status == 1 )
 			$classes[]	= 'timer-short-list';
-		$timeNeeded		= UI_HTML_Tag::create( 'small', View_Helper_Work_Time::formatSeconds( $secondsNeeded, '&nbsp;' ), array(
+		$timeNeeded		= HtmlTag::create( 'small', View_Helper_Work_Time::formatSeconds( $secondsNeeded, '&nbsp;' ), array(
 			'class'			=> join( ' ', $classes ),
 			'data-value'	=> $secondsNeeded,
 		) );
 		$classes	= [];
-		$timePlanned	= UI_HTML_Tag::create( 'small', View_Helper_Work_Time::formatSeconds( $secondsPlanned, '&nbsp;' ), array(
+		$timePlanned	= HtmlTag::create( 'small', View_Helper_Work_Time::formatSeconds( $secondsPlanned, '&nbsp;' ), array(
 			'class'			=> join( ' ', $classes ),
 			'data-value'	=> $secondsPlanned,
 		) );
@@ -180,8 +182,8 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	protected function renderTitleLink( $timer ): string
 	{
 		$title	= strlen( trim( $timer->title ) ) ? htmlentities( $timer->title, ENT_QUOTES, 'UTF-8' ) : '<em class="muted">unbenannt</em>';
-		$title	= UI_HTML_Tag::create( 'a', $title, array( 'href' => './work/time/edit/'.$timer->workTimerId.'?from='.$this->from ) );
-		$title	= UI_HTML_Tag::create( 'div', $title, array( 'class' => 'autocut' ) );
+		$title	= HtmlTag::create( 'a', $title, array( 'href' => './work/time/edit/'.$timer->workTimerId.'?from='.$this->from ) );
+		$title	= HtmlTag::create( 'div', $title, array( 'class' => 'autocut' ) );
 		return $title;
 	}
 
@@ -192,7 +194,7 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 		$helper	= new View_Helper_Member( $this->env );
 		$helper->setUser( $timer->workerId );
 		$helper->setMode( 'inline' );
-		$label	= UI_HTML_Tag::create( 'span', 'Bearbeiter: ', array( 'class' => 'muted' ) );
-		return UI_HTML_Tag::create( 'div', $label.$helper->render(), array( 'class' => 'autocut' ) );
+		$label	= HtmlTag::create( 'span', 'Bearbeiter: ', array( 'class' => 'muted' ) );
+		return HtmlTag::create( 'div', $label.$helper->render(), array( 'class' => 'autocut' ) );
 	}
 }

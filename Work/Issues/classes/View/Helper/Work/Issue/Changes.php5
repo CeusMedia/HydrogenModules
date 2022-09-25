@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Issue_Changes
@@ -25,14 +26,14 @@ class View_Helper_Work_Issue_Changes
 		foreach( $notes as $note ){
 			$helperFacts->setNote( $note );
 			$helperNote->setNote( $note );
-			$list[]		= UI_HTML_Tag::create( 'tr',
-				UI_HTML_Tag::create( 'td',
-					UI_HTML_Tag::create( 'div', array(
-						UI_HTML_Tag::create( 'div', $helperFacts->render(), array(
+			$list[]		= HtmlTag::create( 'tr',
+				HtmlTag::create( 'td',
+					HtmlTag::create( 'div', array(
+						HtmlTag::create( 'div', $helperFacts->render(), array(
 							'class'	=> 'span5',
 							'id'	=> 'issue-change-list-facts'
 						) ),
-						UI_HTML_Tag::create( 'div', $helperNote->render(), array(
+						HtmlTag::create( 'div', $helperNote->render(), array(
 							'class'	=> 'span7',
 							'id'	=> 'issue-change-list-note'
 						) ),
@@ -41,8 +42,8 @@ class View_Helper_Work_Issue_Changes
 				)
 			);
 		}
-		$tbody		= UI_HTML_Tag::create( 'tbody', $list );
-		$table		= UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-striped table-fixed' ) );
+		$tbody		= HtmlTag::create( 'tbody', $list );
+		$table		= HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-striped table-fixed' ) );
 		return $table;
 	}
 

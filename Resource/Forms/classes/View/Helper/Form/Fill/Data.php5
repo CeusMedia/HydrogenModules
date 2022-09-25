@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Form_Fill_Data
 {
 	protected $fill;
@@ -62,8 +64,8 @@ class View_Helper_Form_Fill_Data
 
 		$dataInfo		= '';
 		if( $listInfo ){
-			$dataInfo	= UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'h3', 'Angaben' ),
+			$dataInfo	= HtmlTag::create( 'div', array(
+				HtmlTag::create( 'h3', 'Angaben' ),
 				$this->renderTable( $listInfo, TRUE ),
 			) );
 		}
@@ -75,15 +77,15 @@ class View_Helper_Form_Fill_Data
 		foreach( $rows as $row ){
 			$text	= '';
 			if( !empty( $row->text ) )
-				$text	= '<br/>'.UI_HTML_Tag::create( 'small', $row->text, array( 'class' => 'muted' ) );
-			$list[]	= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'th', $row->label.$text ),
-				UI_HTML_Tag::create( 'td', $row->value ),
+				$text	= '<br/>'.HtmlTag::create( 'small', $row->text, array( 'class' => 'muted' ) );
+			$list[]	= HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'th', $row->label.$text ),
+				HtmlTag::create( 'td', $row->value ),
 			) );
 		}
-		return UI_HTML_Tag::create( 'table', array(
+		return HtmlTag::create( 'table', array(
 			UI_HTML_Elements::ColumnGroup( array( '50%', '50%' ) ),
-			UI_HTML_Tag::create( 'tbody', $list ),
+			HtmlTag::create( 'tbody', $list ),
 		), array( 'class' => 'table table-striped table-fixed table-bordered table-condensed' ) );
 	}
 

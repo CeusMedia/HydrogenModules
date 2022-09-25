@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //return print_m( $hooks, NULL, NULL, TRUE );
 
@@ -25,22 +26,22 @@ $colors		= array(
 $list	= [];
 foreach( $events as $item ){
 	$labelType		= ucwords( strtolower( str_replace( '_', ' ', $item->type ) ) );
-	$labelStatus	= UI_HTML_Tag::create( 'label', $statuses[$item->status], array( 'class' => 'label '.$colors[$item->status] ) );
-	$link			= UI_HTML_Tag::create( 'a', $labelType, array( 'href' => './admin/payment/mangopay/event/view/'.$item->eventId.'?page='.$page ) );
+	$labelStatus	= HtmlTag::create( 'label', $statuses[$item->status], array( 'class' => 'label '.$colors[$item->status] ) );
+	$link			= HtmlTag::create( 'a', $labelType, array( 'href' => './admin/payment/mangopay/event/view/'.$item->eventId.'?page='.$page ) );
 
-	$list[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $link ),
-		UI_HTML_Tag::create( 'td', $labelStatus ),
-		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', date( 'Y-m-d H:i:s', $item->triggeredAt ) ) ),
+	$list[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', $link ),
+		HtmlTag::create( 'td', $labelStatus ),
+		HtmlTag::create( 'td', HtmlTag::create( 'small', date( 'Y-m-d H:i:s', $item->triggeredAt ) ) ),
 	) );
 }
-$tbody	= UI_HTML_Tag::create( 'tbody', $list );
+$tbody	= HtmlTag::create( 'tbody', $list );
 $colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '80', '140' ) );
-$list	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
+$list	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
 
-$iconRefresh	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
+$iconRefresh	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
 
-$buttonReload	= UI_HTML_Tag::create( 'a', $iconRefresh.' aktualisieren', array(
+$buttonReload	= HtmlTag::create( 'a', $iconRefresh.' aktualisieren', array(
 	'href'		=> './admin/payment/mangopay/event'.( $page ? '/'.$page : '' ).'?'.time(),
 	'class'		=> 'btn',
 ) );
@@ -49,11 +50,11 @@ $pagination	= new \CeusMedia\Bootstrap\PageControl( './admin/payment/mangopay/ev
 
 $tabs	= View_Admin_Payment_Mangopay::renderTabs( $env, 'event' );
 
-return $tabs.UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Events' ),
-	UI_HTML_Tag::create( 'div', array(
+return $tabs.HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', 'Events' ),
+	HtmlTag::create( 'div', array(
 		$list,
-		UI_HTML_Tag::create( 'div', array(
+		HtmlTag::create( 'div', array(
 			$pagination, ' ',
 			$buttonReload, ' ',
 		), array( 'class' => 'buttonbar' ) )

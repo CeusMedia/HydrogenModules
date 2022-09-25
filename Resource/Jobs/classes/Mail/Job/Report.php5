@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class Mail_Job_Report extends Mail_Abstract
 {
 	protected function generate(): self
@@ -122,7 +124,7 @@ class Mail_Job_Report extends Mail_Abstract
 		$status			= $data['run']->status;
 		$statusClass	= $statusClasses[$status];
 		$statusWord		= $data['words']['job-run-statuses'][$status];
-		$statusLabel	= UI_HTML_Tag::create( 'span', $statusWord, array( 'class' => 'label '.$statusClass ) );
+		$statusLabel	= HtmlTag::create( 'span', $statusWord, array( 'class' => 'label '.$statusClass ) );
 		$seconds		= $data['run']->finishedAt - $data['run']->ranAt;
 		$duration		= $seconds ? $durationHelper->convertSecondsToDuration( $seconds, ' ' ) : '0s';
 		$message		= json_decode( $data['run']->message );
@@ -168,10 +170,10 @@ class Mail_Job_Report extends Mail_Abstract
 	{
 		$list	= [];
 		foreach( $facts as $key => $value ){
-			$list[]	= UI_HTML_Tag::create( 'dt', $key );
-			$list[]	= UI_HTML_Tag::create( 'dd', $value );
+			$list[]	= HtmlTag::create( 'dt', $key );
+			$list[]	= HtmlTag::create( 'dd', $value );
 		}
-		return UI_HTML_Tag::create( 'dl', $list, array(
+		return HtmlTag::create( 'dl', $list, array(
 			'class'	=> $listClass,
 			'id'	=> $listId
 		) );

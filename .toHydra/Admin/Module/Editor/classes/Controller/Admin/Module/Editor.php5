@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Module_Editor extends Controller								//  @todo	1) inherit from View_Admin_Module after cleanup
@@ -376,11 +377,11 @@ class Controller_Admin_Module_Editor extends Controller								//  @todo	1) inhe
 						$status					= 0;
 					}
 					$url		= './admin/module/viewer/'.$missingModule->id;
-					$link		= UI_HTML_Tag::create( 'a', $missingModule->title, array( 'href' => $url ) );
-					$span		= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'icon module module-status-'.$status ) );
-					$list[]		= UI_HTML_Tag::create( 'li', $span, array() );
+					$link		= HtmlTag::create( 'a', $missingModule->title, array( 'href' => $url ) );
+					$span		= HtmlTag::create( 'span', $link, array( 'class' => 'icon module module-status-'.$status ) );
+					$list[]		= HtmlTag::create( 'li', $span, array() );
 				}
-				$list			= UI_HTML_Tag::create( 'ul', join( $list ) );
+				$list			= HtmlTag::create( 'ul', join( $list ) );
 				$msg			= 'Das Modul "%1$s" ist unvollständig installiert. Es fehlen folgende Module:<br/>%2$s';
 				$this->messenger->noteError( $msg, $module->title, $list );
 				$this->restart( './admin/module/installer/'.$missingModule->id.'/'.$module->id );
@@ -462,11 +463,11 @@ class Controller_Admin_Module_Editor extends Controller								//  @todo	1) inhe
 					}
 				}
 				$url		= './admin/module/viewer/'.$moduleId;
-				$link		= UI_HTML_Tag::create( 'a', $title, array( 'href' => $url ) );
-				$span		= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'icon module module-status-4' ) );
-				$list[]		= UI_HTML_Tag::create( 'li', $span, array() );
+				$link		= HtmlTag::create( 'a', $title, array( 'href' => $url ) );
+				$span		= HtmlTag::create( 'span', $link, array( 'class' => 'icon module module-status-4' ) );
+				$list[]		= HtmlTag::create( 'li', $span, array() );
 			}
-			$list	= UI_HTML_Tag::create( 'ul', $list );
+			$list	= HtmlTag::create( 'ul', $list );
 			$this->messenger->noteError( 'Folgende Module müssen installiert werden:<br/>'.$list );
 			$this->restart( 'admin/module/viewer/index/'.$first );
 		}

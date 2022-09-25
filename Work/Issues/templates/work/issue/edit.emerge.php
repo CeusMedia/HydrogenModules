@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $optType		= $view->renderOptions( $words['types'], 'type', $issue->type, 'issue-type type-%1$d');
 $optSeverity	= $view->renderOptions( $words['severities'], 'severity', $issue->severity, 'issue-severity severity-%1$d');
 $optPriority	= $view->renderOptions( $words['priorities'], 'priority', $issue->priority, 'issue-priority priority-%1$d');
@@ -32,8 +34,8 @@ $optManager		= UI_HTML_Elements::Options( $optManager, $issue->managerId );
 $optWorker		= UI_HTML_Elements::Options( $optWorker, $issue->managerId );
 
 /*
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-success btn-small btn-mini',
@@ -134,7 +136,7 @@ $(document).ready(function(){
 			</div>
 			<div class="row-fluid">
 				<label for="content">'.$words['edit']['labelContent'].'</label>
-				'.UI_HTML_Tag::create( 'textarea', '', array( 'name' => 'note', 'class' => 'span12 -max CodeMirror-auto', 'rows' => 8 ) ).'
+				'.HtmlTag::create( 'textarea', '', array( 'name' => 'note', 'class' => 'span12 -max CodeMirror-auto', 'rows' => 8 ) ).'
 			</div>
 			<div class="buttonbar">
 				<button type="submit" name="save" class="btn btn-small btn-info"><i class="icon-ok icon-white"></i> aktualisieren</button>

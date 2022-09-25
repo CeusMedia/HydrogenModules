@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Newsletter_Reader extends Controller
@@ -193,7 +194,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 						$receiver	= '"'.$reader->surname.'" <'.$receiver.'>';
 					$list[]	= $receiver;
 				}
-				print( UI_HTML_Tag::create( 'xmp', join( ', ', $list ) ) );
+				print( HtmlTag::create( 'xmp', join( ', ', $list ) ) );
 				exit;
 			case 'csv':
 				$headers	= array(

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -23,7 +24,7 @@ class Hook_UI_MailEncryption extends Hook
 		while( preg_match( $pattern, $payload['content'] ) ){											//  while mail links in content
 			preg_match_all( $pattern, $payload['content'], $matches );								//  get all match parts
 			list( $partName, $partHost )	= explode( '@', $matches[2][0] );						//  extract mail parts
-			$replacement	= UI_HTML_Tag::create( 'span', $matches[3][0], array(					//  build replacement ...
+			$replacement	= HtmlTag::create( 'span', $matches[3][0], array(					//  build replacement ...
 				'class'			=> 'encrypted-mail',												//  ... set identifier class for JS decryption
 				'data-name'		=> $partName,														//  ... set name part
 				'data-host'		=> $partHost,														//  ... set host part
@@ -38,7 +39,7 @@ class Hook_UI_MailEncryption extends Hook
 			$label			= $matches[3][0].'@'.$matches[4][0];									//  glue label from name and host part
 			if( !empty( $matches[6][0] ) )															//  a link label has been set
 				$label	= $matches[6][0];															//  replace glued label by set label
-			$replacement	= UI_HTML_Tag::create( 'span', $label, array(							//  build replacement ...
+			$replacement	= HtmlTag::create( 'span', $label, array(							//  build replacement ...
 				'class'			=> 'encrypted-mail',												//  ... set identifier class for JS decryption
 				'data-name'		=> $matches[3][0],													//  ... set name part
 				'data-host'		=> $matches[4][0],													//  ... set host part

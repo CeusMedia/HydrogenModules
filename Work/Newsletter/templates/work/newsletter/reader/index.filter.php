@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optStatus		= array( '' => '- alle -' );
 foreach( $words->states as $key => $value )
@@ -11,8 +12,8 @@ foreach( $groups as $group )
 $optGroup		= UI_HTML_Elements::Options( $optGroup, $filterGroupId );
 
 
-$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) ).'&nbsp;';
-$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) ).'&nbsp;';
+$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) ).'&nbsp;';
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) ).'&nbsp;';
 
 return '
 <div class="content-panel">

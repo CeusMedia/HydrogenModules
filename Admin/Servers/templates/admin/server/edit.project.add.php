@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optProject		= [];
 foreach( $projects as $project )
@@ -26,23 +27,23 @@ $panelAddProject	= '
 			<legend>'.$wf->legend.'</legend>
 			<ul class="input">
 				<li class="column-left-50">
-					'.UI_HTML_Tag::create( 'label', 'Project' ).'<br/>
+					'.HtmlTag::create( 'label', 'Project' ).'<br/>
 					'.UI_HTML_Elements::Select( 'projectId', $optProject, 'max' ).'
 				</li>
 				<li class="column-left-50">
-					'.UI_HTML_Tag::create( 'label', 'Version' ).'<br/>
+					'.HtmlTag::create( 'label', 'Version' ).'<br/>
 					'.UI_HTML_Elements::Select( 'projectVersionId', $optVersion, 'max' ).'
 				</li>
 				<li class="column-left-50">
-					'.UI_HTML_Tag::create( 'label', 'Status' ).'<br/>
+					'.HtmlTag::create( 'label', 'Status' ).'<br/>
 					'.UI_HTML_Elements::Select( 'status', $optStatus, 'max' ).'
 				</li>
 				<li>
-					'.UI_HTML_Tag::create( 'label', 'Titel' ).'<br/>
+					'.HtmlTag::create( 'label', 'Titel' ).'<br/>
 					'.UI_HTML_Elements::Input( 'title', NULL ).'
 				</li>
 				<li class="column-clear">
-					'.UI_HTML_Tag::create( 'label', 'Beschreibung' ).'<br/>
+					'.HtmlTag::create( 'label', 'Beschreibung' ).'<br/>
 					'.UI_HTML_Elements::Textarea( 'description', NULL ).'
 				</li>
 			</ul>

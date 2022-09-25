@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $tabsMain	= $tabbedLinks ? $this->renderMainTabs() : '';
 
 $w			= (object) $words['add'];
@@ -7,8 +9,8 @@ $optType	= UI_HTML_Elements::Options( $words['types'], $group->type );
 
 extract( $view->populateTexts( array( 'above', 'bottom', 'info', 'top' ), 'html/work/newsletter/group/add/', array( 'words' => $words ) ) );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
 
 $optGroup	= array( '' => 'keine' );
 foreach( $groups as $item )

@@ -1,8 +1,10 @@
 <?php
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
-$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-list" ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-list" ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
 
 //print_m( $route );die;
 
@@ -69,16 +71,16 @@ $optCode	= array(
 
 $optCode	= UI_HTML_Elements::Options( $optCode, $route->code );
 
-$buttonsCancel	= UI_HTML_Tag::create( 'a', $iconList.'&nbsp;zur Liste', array(
+$buttonsCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'href'		=> './admin/route',
 	'class'		=> 'btn',
 ) );
-$buttonsSave	= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;speichern', array(
+$buttonsSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
 ) );
-$buttonsRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+$buttonsRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 	'href'		=> './admin/route/remove/'.$route->routeId,
 	'class'		=> 'btn btn-small btn-danger',
 	'title'		=> 'entfernen'

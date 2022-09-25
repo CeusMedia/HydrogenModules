@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
 $optTemplate	= array( '' => '-' );
@@ -6,8 +8,8 @@ foreach( $templates as $item )
 	$optTemplate[$item->newsletterTemplateId]	= $item->title;
 $optTemplate	= UI_HTML_Elements::Options( $optTemplate, $template->templateId );
 
-$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) ).'&nbsp;';
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) ).'&nbsp;';
+$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) ).'&nbsp;';
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) ).'&nbsp;';
 
 $panelAdd	= '
 <div class="content-panel">
@@ -41,7 +43,7 @@ $panelAdd	= '
 						</div>
 						<div class="span4 optional templateId templateId-">
 							<label for="input_imprint" class="mandatory">'.$words->add->labelImprint.'</label>
-							'.UI_HTML_Tag::create( 'textarea', htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ), array(
+							'.HtmlTag::create( 'textarea', htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ), array(
 								'name'		=> 'imprint',
 								'id'		=> 'input_imprint',
 								'class'		=> 'span12',

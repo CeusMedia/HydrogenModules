@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Navigation_Bootstrap_Dropdown
@@ -46,39 +47,39 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 				foreach( $page->items as $subpage ){
 					$class		= $subpage->active ? 'active' : NULL;
 					$href		= './'.$subpage->link;
-//					$link		= UI_HTML_Tag::create( 'a', $subpage->label, array( 'href' => $href ) );
-					$link		= UI_HTML_Tag::create( 'a', $this->renderLabelWithIcon( $subpage ), array( 'href' => $href ) );
+//					$link		= HtmlTag::create( 'a', $subpage->label, array( 'href' => $href ) );
+					$link		= HtmlTag::create( 'a', $this->renderLabelWithIcon( $subpage ), array( 'href' => $href ) );
 					if( strlen( trim( $subpage->chapter ) ) > 0 && $subpage->chapter !== $lastChapter ){
 						if( count( $sublist ) > 0)
-							$sublist[]	= UI_HTML_Tag::create( 'li', '', ['class' => 'divider'] );
+							$sublist[]	= HtmlTag::create( 'li', '', ['class' => 'divider'] );
 						$lastChapter = $subpage->chapter;
 					}
-					$sublist[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+					$sublist[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 				}
 				if( !$sublist )
 					continue;
 				$class		= $page->active ? 'dropdown active' : 'dropdown';
-				$sublist	= UI_HTML_Tag::create( 'ul', $sublist, array( 'class' => 'dropdown-menu' ) );
+				$sublist	= HtmlTag::create( 'ul', $sublist, array( 'class' => 'dropdown-menu' ) );
 				$title		= $this->renderLabelWithIcon( $page ).' <b class="caret"></b>';
-				$link	= UI_HTML_Tag::create( 'a', $title, array(
+				$link	= HtmlTag::create( 'a', $title, array(
 					'href'			=> '#',
 					'class' 		=> 'dropdown-toggle',
 					'data-toggle'	=> 'dropdown'
 				) );
-				$list[]	= UI_HTML_Tag::create( 'li', $link.$sublist, array( 'class' => $class ) );
+				$list[]	= HtmlTag::create( 'li', $link.$sublist, array( 'class' => $class ) );
 			}
 			else{
 				if( in_array( $page->path, $this->linksToSkip ) )
 					continue;
 				$class	= $page->active ? 'active' : NULL;
 				$href	= $page->path == "index" ? './' : './'.$page->link;
-//				$link	= UI_HTML_Tag::create( 'a', $page->label, array( 'href' => $href ) );
-				$link	= UI_HTML_Tag::create( 'a', self::renderLabelWithIcon( $page ), array( 'href' => $href ) );
-				$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+//				$link	= HtmlTag::create( 'a', $page->label, array( 'href' => $href ) );
+				$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), array( 'href' => $href ) );
+				$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 			}
 		}
 		$logo	= $this->renderLogo();
-		return $logo.UI_HTML_Tag::create( 'ul', $list, array( "class" => $listClass ) );
+		return $logo.HtmlTag::create( 'ul', $list, array( "class" => $listClass ) );
 	}
 
 	public function renderLogo(): string
@@ -88,15 +89,15 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 		$icon	= "";
 		if( $this->logoIcon ){
 			$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
-			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $icon ) );
+			$icon	= HtmlTag::create( 'i', '', array( 'class' => $icon ) );
 		}
 		$label	= $icon.'&nbsp;'.$this->logoTitle;
 		if( !$this->logoLink )
-			return UI_HTML_Tag::create( 'div', $label, array(
+			return HtmlTag::create( 'div', $label, array(
 //				'id'	=> "logo",
 				'class'	=> 'brand'
 			) );
-		return UI_HTML_Tag::create( 'a', $label, array(
+		return HtmlTag::create( 'a', $label, array(
 			'href'	=> $this->logoLink,
 //			'id'	=> "logo",
 			'class'	=> 'brand'
@@ -148,7 +149,7 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 		$class	= $entry->icon;
 		if( !preg_match( "/^fa/", $entry->icon ) )
 			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
-		$icon   = UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
+		$icon   = HtmlTag::create( 'i', '', array( 'class' => $class ) );
 		if( strlen( $entry->label ) )
 			return $icon.'&nbsp;'.$entry->label;
 		return $icon;

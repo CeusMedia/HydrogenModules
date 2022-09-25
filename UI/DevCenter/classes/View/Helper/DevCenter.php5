@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_DevCenter
@@ -35,8 +36,8 @@ class View_Helper_DevCenter
 		}
 		$current	= $this->session->get( 'DevCenterTab' );
 		$tabs		= $tabs->render( $current, $label, $url );
-		$content	= UI_HTML_Tag::create( 'div', $tabs, array( 'id' => "DevCenterContent" ) );		//
-		$handleTop	= UI_HTML_Tag::create( 'div', "====", array( 'id' => 'DevCenterHandleTop' ) );	//
+		$content	= HtmlTag::create( 'div', $tabs, array( 'id' => "DevCenterContent" ) );		//
+		$handleTop	= HtmlTag::create( 'div', "====", array( 'id' => 'DevCenterHandleTop' ) );	//
 
 		$style		= [];
 		if( is_int( $height = $this->height ) || is_string( $this->height ) )
@@ -51,6 +52,6 @@ class View_Helper_DevCenter
 				$attributes['style'][]	= $key.': '.$value;
 			$attributes['style']	= join( '; ', $attributes['style'] );
 		}
-		return UI_HTML_Tag::create( 'div', $handleTop.$content, $attributes );
+		return HtmlTag::create( 'div', $handleTop.$content, $attributes );
 	}
 }

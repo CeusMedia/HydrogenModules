@@ -7,6 +7,7 @@
  *	@copyright		2010 Ceus Media
  */
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Application\Web\Site as WebSite;
 
 /**
@@ -166,8 +167,8 @@ class Server extends WebSite
 	protected function throw401()
 	{
 		$this->env->getResponse()->setStatus( '401 Unauthorized' );
-		$heading	= UI_HTML_Tag::create( 'h1', '401 Unauthorized' );
-		$paragraph	= UI_HTML_Tag::create( 'p', 'You need to send a token, which you get by posting the shared secret to /auth/getToken.' );
+		$heading	= HtmlTag::create( 'h1', '401 Unauthorized' );
+		$paragraph	= HtmlTag::create( 'p', 'You need to send a token, which you get by posting the shared secret to /auth/getToken.' );
 		$page	= new UI_HTML_PageFrame();
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
@@ -182,8 +183,8 @@ class Server extends WebSite
 	protected function throw403()
 	{
 		$this->env->getResponse()->setStatus( '403 Forbidden' );
-		$heading	= UI_HTML_Tag::create( 'h1', '403 Forbidden' );
-		$paragraph	= UI_HTML_Tag::create( 'p', 'This service can not be accessed by your IP address.' );
+		$heading	= HtmlTag::create( 'h1', '403 Forbidden' );
+		$paragraph	= HtmlTag::create( 'p', 'This service can not be accessed by your IP address.' );
 		$page	= new UI_HTML_PageFrame();
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
@@ -198,8 +199,8 @@ class Server extends WebSite
 	protected function throw404()
 	{
 		$this->env->getResponse()->setStatus( '404 Not Found' );
-		$heading	= UI_HTML_Tag::create( 'h1', '404 Not Found' );
-		$paragraph	= UI_HTML_Tag::create( 'p', 'The resource you have requested is not existing on this server.' );
+		$heading	= HtmlTag::create( 'h1', '404 Not Found' );
+		$paragraph	= HtmlTag::create( 'p', 'The resource you have requested is not existing on this server.' );
 		$page	= new UI_HTML_PageFrame();
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
@@ -214,8 +215,8 @@ class Server extends WebSite
 	protected function throw500( $reason )
 	{
 		$this->env->getResponse()->setStatus( '500 Internal Server Error' );
-		$heading	= UI_HTML_Tag::create( 'h1', '500 Internal Server Error' );
-		$paragraph	= UI_HTML_Tag::create( 'p', 'An exception occured while executing your request. Please restart the service.' );
+		$heading	= HtmlTag::create( 'h1', '500 Internal Server Error' );
+		$paragraph	= HtmlTag::create( 'p', 'An exception occured while executing your request. Please restart the service.' );
 		$page	= new UI_HTML_PageFrame();
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );

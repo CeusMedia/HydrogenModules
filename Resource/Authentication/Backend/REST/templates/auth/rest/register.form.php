@@ -1,8 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;erstellen', array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;erstellen', array(
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',

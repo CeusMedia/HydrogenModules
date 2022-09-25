@@ -1,8 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
 
 $optStatus	= $words->states;
 unset( $optStatus[-2] );
@@ -14,14 +16,14 @@ $optGender	= UI_HTML_Elements::Options( $words->gender, $reader->gender );
 
 $listGroups	= [];
 foreach( $groups as $group ){
-	$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
+	$checkbox	= HtmlTag::create( 'input', NULL, array(
 		'type'	=> 'checkbox',
 		'name'	=> 'groupIds[]',
 		'value'	=> $group->newsletterGroupId,
 		'checked'	=> in_array( $group->newsletterGroupId, $selectedGroups ) ? 'checked' : NULL,
 	) );
 	$label	= $checkbox.'&nbsp;'.$group->title;
-	$listGroups[]	= UI_HTML_Tag::create( 'label', $label, array( 'class' => 'checkbox' ) );
+	$listGroups[]	= HtmlTag::create( 'label', $label, array( 'class' => 'checkbox' ) );
 }
 $listGroups	= join( $listGroups );
 

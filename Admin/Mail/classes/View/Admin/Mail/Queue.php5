@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Admin_Mail_Queue extends View
@@ -33,7 +34,7 @@ class View_Admin_Mail_Queue extends View
 
 		$tableHeads		= array( '' );
 		foreach( $ranges as $rangeLabel )
-			$tableHeads[]	= UI_HTML_Tag::create( 'small', $rangeLabel, array( 'class' => 'pull-right' ) );
+			$tableHeads[]	= HtmlTag::create( 'small', $rangeLabel, array( 'class' => 'pull-right' ) );
 
 		$lastRangeLength	= @array_pop( array_keys( $ranges ) );
 
@@ -57,23 +58,23 @@ class View_Admin_Mail_Queue extends View
 					$diff		= $change > 0 ? '+'.$change : $change;
 					$label		.= '&nbsp;<small class="muted">'.$diff.'</small>';
 				}
-				$row[]	= UI_HTML_Tag::create( 'td', $label, array( 'style' => 'text-align: right' ) );
+				$row[]	= HtmlTag::create( 'td', $label, array( 'style' => 'text-align: right' ) );
 			}
-			$row[]	= UI_HTML_Tag::create( 'th', $statusLabel );
-			$rows[]	= UI_HTML_Tag::create( 'tr', array_reverse( $row ) );
+			$row[]	= HtmlTag::create( 'th', $statusLabel );
+			$rows[]	= HtmlTag::create( 'tr', array_reverse( $row ) );
 		}
-		$table2	= UI_HTML_Tag::create( 'table', array(
+		$table2	= HtmlTag::create( 'table', array(
 			UI_HTML_Elements::ColumnGroup( '', '15%', '15%', '15%', '15%' ),
-			UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) ),
-			UI_HTML_Tag::create( 'tbody', $rows ),
+			HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) ),
+			HtmlTag::create( 'tbody', $rows ),
 		), array(
 			'class'		=> 'table table-condensed table-fixed',
 		) );
-		$table1	= UI_HTML_Tag::create( 'table', array(
+		$table1	= HtmlTag::create( 'table', array(
 			UI_HTML_Elements::ColumnGroup( '20%', '80%' ),
-			UI_HTML_Tag::create( 'tbody', UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', '<span style="font-size: 3em">'.$model->count( array( 'status' => 0 ) ).'</span>', array( 'style' => 'text-align: right; vertical-align: bottom' ) ),
-				UI_HTML_Tag::create( 'td', '<span>Mails in der<br/>Warteschlange</span>', array( 'style' => 'vertical-align: bottom' ) ),
+			HtmlTag::create( 'tbody', HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', '<span style="font-size: 3em">'.$model->count( array( 'status' => 0 ) ).'</span>', array( 'style' => 'text-align: right; vertical-align: bottom' ) ),
+				HtmlTag::create( 'td', '<span>Mails in der<br/>Warteschlange</span>', array( 'style' => 'vertical-align: bottom' ) ),
 			) ) ),
 		), array(
 			'class'		=> 'table table-fixed',
@@ -121,7 +122,7 @@ class View_Admin_Mail_Queue extends View
 			$original	= $value;
 			$value	= preg_replace( '/^Mail_/', '', $value );
 			$value	= preg_replace( '/_/', ':', $value );
-			$value	= UI_HTML_Tag::create( 'abbr', $value, array( 'title' => $original ) );
+			$value	= HtmlTag::create( 'abbr', $value, array( 'title' => $original ) );
 		}
 		else if( preg_match( '/At$/', $key ) ){
 			if( !( (int) $value ) )
@@ -136,8 +137,8 @@ class View_Admin_Mail_Queue extends View
 				return;
 		}
 		else if( preg_match( '/Address/', $key ) && strlen( $value ) ){
-			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-envelope' ) );
-			$link	= UI_HTML_Tag::create( 'a', $value, array( 'href' => 'mailto:'.$value ) );
+			$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-envelope' ) );
+			$link	= HtmlTag::create( 'a', $value, array( 'href' => 'mailto:'.$value ) );
 			$value	= $icon.'&nbsp;'.$link;
 		}
 		else if( $key === "status" ){
@@ -148,8 +149,8 @@ class View_Admin_Mail_Queue extends View
 				return;
 		}
 		$label	= $words['view-facts']['label'.ucfirst( $key )];
-		$term	= UI_HTML_Tag::create( 'dt', $label );
-		$def	= UI_HTML_Tag::create( 'dd', $value.'&nbsp;' );
+		$term	= HtmlTag::create( 'dt', $label );
+		$def	= HtmlTag::create( 'dd', $value.'&nbsp;' );
 		return $term.$def;
 	}
 

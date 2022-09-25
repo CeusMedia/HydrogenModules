@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Mangopay_Error{
 
 	protected $env;
@@ -39,7 +41,7 @@ class View_Helper_Mangopay_Error{
 		$message	= $this->map[$this->code]->label;
 		switch( $this->mode ){
 			case self::MODE_HTML:
-				$code	= UI_HTML_Tag::create( 'small', '('.$this->code.')', array( 'class' => 'muted' ) );
+				$code	= HtmlTag::create( 'small', '('.$this->code.')', array( 'class' => 'muted' ) );
 				return $message.' '.$code;
 			case self::MODE_PLAIN:
 			default:

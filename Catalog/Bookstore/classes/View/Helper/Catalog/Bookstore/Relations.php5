@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Catalog_Bookstore_Relations{
 
 	protected $articleId	= 0;
@@ -32,11 +34,11 @@ class View_Helper_Catalog_Bookstore_Relations{
 			$title		= $relation->article->title;//Alg_Text_Trimmer::trim( $relation->article->title, 60 );
 			$subtitle	= $relation->article->subtitle;//Alg_Text_Trimmer::trim( $relation->article->subtitle, 60 );
 			$url		= $helper->getArticleUri( $relation->article->articleId, !TRUE );
-			$image		= UI_HTML_Tag::create( 'a', $helper->renderArticleImage( $relation->article, "" ), array( 'href' => $url ) );
-		    $image		= UI_HTML_Tag::create( 'div', $image, array( 'class' => 'related-articles-image-container' ) );
-		    $title		= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'a', $title, array( 'href' => $url ) ) );
-		    $sub		= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'small', $subtitle, array( 'class' => '' ) ) );
-		    $list[]		=  UI_HTML_Tag::create( 'div', array( $image, $title, $sub ), array(
+			$image		= HtmlTag::create( 'a', $helper->renderArticleImage( $relation->article, "" ), array( 'href' => $url ) );
+		    $image		= HtmlTag::create( 'div', $image, array( 'class' => 'related-articles-image-container' ) );
+		    $title		= HtmlTag::create( 'div', HtmlTag::create( 'a', $title, array( 'href' => $url ) ) );
+		    $sub		= HtmlTag::create( 'div', HtmlTag::create( 'small', $subtitle, array( 'class' => '' ) ) );
+		    $list[]		=  HtmlTag::create( 'div', array( $image, $title, $sub ), array(
 				'class'	=> 'related-articles-list-item',
 			) );
 		}

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Auth_Oauth extends Controller
@@ -63,7 +64,7 @@ class Controller_Auth_Oauth extends Controller
 				if( !empty( $response->error ) ){
 					$error	= $response->error;
 					if( !empty( $response->error_description ) )
-						$error	= UI_HTML_Tag::create( 'abbr', $error, array(
+						$error	= HtmlTag::create( 'abbr', $error, array(
 							'title' => $response->error_description
 						) );
 					$this->messenger->noteError( $error );
@@ -158,7 +159,7 @@ class Controller_Auth_Oauth extends Controller
 				if( !empty( $responseData->error ) ){
 					$error	= $responseData->error;
 					if( !empty( $responseData->error_description ) )
-						$error	= UI_HTML_Tag::create( 'abbr', $error, array(
+						$error	= HtmlTag::create( 'abbr', $error, array(
 							'title' => $responseData->error_description
 						) );
 					$this->messenger->noteError( $error );
@@ -348,7 +349,7 @@ class Controller_Auth_Oauth extends Controller
 					if( !empty( $response->error ) ){
 						$error	= $response->error;
 						if( !empty( $response->error_description ) )
-							$error	= UI_HTML_Tag::create( 'abbr', $error, array(
+							$error	= HtmlTag::create( 'abbr', $error, array(
 								'title' => $response->error_description
 							) );
 						$this->messenger->noteError( $error );

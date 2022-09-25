@@ -1,8 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCategory	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
-$iconPrev		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconNext		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+$iconCategory	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
+$iconPrev		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconNext		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
 
 
 $pos	= -1;
@@ -18,15 +19,15 @@ $pathPreview	= $pathImages.'preview/'.$category->path.'/';
 $pathOriginal	= $pathImages.'original/'.$category->path.'/';
 
 $title		= $image->title ? $image->title : $image->filename;
-$label		= UI_HTML_Tag::create( 'p', $title );
-$preview	= UI_HTML_Tag::create( 'img', NULL, array(
+$label		= HtmlTag::create( 'p', $title );
+$preview	= HtmlTag::create( 'img', NULL, array(
 	'src'	=> $pathPreview.$image->filename,
 	'alt'	=> $title,
 	'title'	=> $title,
 	'class'	=> 'thumb',
 ) );
-//$item	= UI_HTML_Tag::create( 'div', $preview, array( 'class' => 'not-span4 thumb' ) );
-/*$link	= UI_HTML_Tag::create( 'a', $preview, array(
+//$item	= HtmlTag::create( 'div', $preview, array( 'class' => 'not-span4 thumb' ) );
+/*$link	= HtmlTag::create( 'a', $preview, array(
 	'href'	=> './catalog/gallery/image/'.$image->galleryImageId,
 	'title'	=> $title,
 	'class'	=> 'thumb'
@@ -46,19 +47,19 @@ if( $hasShop ){
 		$buttonOrder	= '<a href="./catalog/gallery/order/'.$image->galleryImageId.'" class="btn btn btn-success"><i class="icon icon-shopping-cart icon-white"></i>&nbsp;in den Warenkorb</a>';
 }
 
-$buttonBack	= UI_HTML_Tag::create( 'a', $iconCategory, array(
+$buttonBack	= HtmlTag::create( 'a', $iconCategory, array(
 	'href'		=> './catalog/gallery/category/'.$category->galleryCategoryId,
 	'class'		=> 'btn not-btn-small btn-large',
 	'alt'		=> 'zur Kategorie',
 	'title'		=> 'zur Kategorie',
 ) );
-$buttonPrev		= UI_HTML_Tag::create( 'a', $iconPrev, array(
+$buttonPrev		= HtmlTag::create( 'a', $iconPrev, array(
 	'class'		=> 'btn not-btn-small btn-large',
 	'disabled'	=> 'disabled',
 	'title'		=> 'zum Vorherigen',
 	'alt'		=> 'zum Vorherigen',
 ) );
-$buttonNext		= UI_HTML_Tag::create( 'a', $iconNext, array(
+$buttonNext		= HtmlTag::create( 'a', $iconNext, array(
 	'class'		=> 'btn not-btn-small btn-large',
 	'disabled'	=> 'disabled',
 	'title'		=> 'zum Nächsten',
@@ -67,7 +68,7 @@ $buttonNext		= UI_HTML_Tag::create( 'a', $iconNext, array(
 
 if( $pos > 0 ){
 	$imagePrev		= $images[$pos - 1];
-	$buttonPrev		= UI_HTML_Tag::create( 'a', $iconPrev, array(
+	$buttonPrev		= HtmlTag::create( 'a', $iconPrev, array(
 		'href'		=> './catalog/gallery/image/'.$imagePrev->galleryImageId,
 		'class'		=> 'btn not-btn-small btn-large',
 		'title'		=> 'zum Vorherigen',
@@ -76,7 +77,7 @@ if( $pos > 0 ){
 }
 if( $pos < count( $images ) - 1 ){
 	$imageNext		= $images[$pos + 1];
-	$buttonNext		= UI_HTML_Tag::create( 'a', $iconNext, array(
+	$buttonNext		= HtmlTag::create( 'a', $iconNext, array(
 		'href'		=> './catalog/gallery/image/'.$imageNext->galleryImageId,
 		'class'		=> 'btn not-btn-small btn-large',
 		'title'		=> 'zum Nächsten',

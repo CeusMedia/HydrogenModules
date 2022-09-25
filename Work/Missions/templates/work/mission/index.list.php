@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
 
@@ -45,7 +46,7 @@ foreach( $missions as $mission ){
 	$daysOverdue	= '';
 	$days	= ( strtotime( max( $mission->dayStart, $mission->dayEnd ) ) - $today ) / ( 24 * 60 * 60);
 	if( $days < 0 )
-		$daysOverdue	= UI_HTML_Tag::create( 'div', abs( $days ), array( 'class' => "overdue" ) );
+		$daysOverdue	= HtmlTag::create( 'div', abs( $days ), array( 'class' => "overdue" ) );
 
 	$cells	= array(
 		'<td><div style="padding: 4px 2px 2px 2px;">'.$graph.$daysOverdue.'</div></td>',
@@ -53,7 +54,7 @@ foreach( $missions as $mission ){
 		'<td><small>'.$priority.'</small></td>',
 		'<td class="actions">'.$buttonEdit.' | '.$buttonLeft.$buttonRight.'</td>',
 	);
-	$list[$daysBound][]	= UI_HTML_Tag::create( 'tr', join( $cells ), array( 'class' => $class ) );
+	$list[$daysBound][]	= HtmlTag::create( 'tr', join( $cells ), array( 'class' => $class ) );
 }
 
 function getFutureDate( $daysInFuture = 0, $words = NULL ){
@@ -72,50 +73,50 @@ function getCount( $list, $days ){
 
 $colgroup	= UI_HTML_Elements::ColumnGroup( "120px", "", "90px", "115px" );
 $tableHeads	= UI_HTML_Elements::TableHeads( array(
-	UI_HTML_Tag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
-	UI_HTML_Tag::create( 'div', 'Aufgabe', array( 'class' => 'sortable', 'data-column' => 'title' ) ),
-	UI_HTML_Tag::create( 'div', 'Priorität', array( 'class' => 'sortable', 'data-column' => 'priority' ) ),
-	UI_HTML_Tag::create( 'div', 'Aktion', array( 'class' => 'sortable', 'data-column' => NULL ) )
+	HtmlTag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
+	HtmlTag::create( 'div', 'Aufgabe', array( 'class' => 'sortable', 'data-column' => 'title' ) ),
+	HtmlTag::create( 'div', 'Priorität', array( 'class' => 'sortable', 'data-column' => 'priority' ) ),
+	HtmlTag::create( 'div', 'Aktion', array( 'class' => 'sortable', 'data-column' => NULL ) )
 ) );
 
 $folders	= [];
 
 if( count( $list[0] ) ){
-	$heading	= UI_HTML_Tag::create( 'div', '<b>Heute</b>, '.getFutureDate( 0, $words ).getCount( $list, 0 ) );
-	$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 0, $words ).getCount( $list, 0 ) );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[0] ) );
+	$heading	= HtmlTag::create( 'div', '<b>Heute</b>, '.getFutureDate( 0, $words ).getCount( $list, 0 ) );
+	$heading	= HtmlTag::create( 'div', getFutureDate( 0, $words ).getCount( $list, 0 ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$tableHeads.join( $list[0] ) );
 	$folders[]	= UI_HTML_CollapsePanel::create( 'day-0', $table, $heading, NULL );
 }
 if( count( $list[1] ) ){
-	$heading	= UI_HTML_Tag::create( 'div', '<b>Morgen</b>, '.getFutureDate( 1, $words ).getCount( $list, 1 ) );
-	$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 1, $words ).getCount( $list, 1 ) );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[1] ) );
+	$heading	= HtmlTag::create( 'div', '<b>Morgen</b>, '.getFutureDate( 1, $words ).getCount( $list, 1 ) );
+	$heading	= HtmlTag::create( 'div', getFutureDate( 1, $words ).getCount( $list, 1 ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$tableHeads.join( $list[1] ) );
 	$folders[]	= UI_HTML_CollapsePanel::create( 'day-1', $table, $heading, NULL );
 }
 if( count( $list[2] ) ){
-	$heading	= UI_HTML_Tag::create( 'div', '<b>Übermorgen</b>, '.getFutureDate( 2, $words ).getCount( $list, 2 ) );
-	$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 2, $words ).getCount( $list, 2 ) );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[2] ) );
+	$heading	= HtmlTag::create( 'div', '<b>Übermorgen</b>, '.getFutureDate( 2, $words ).getCount( $list, 2 ) );
+	$heading	= HtmlTag::create( 'div', getFutureDate( 2, $words ).getCount( $list, 2 ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$tableHeads.join( $list[2] ) );
 	$folders[]	= UI_HTML_CollapsePanel::create( 'day-2', $table, $heading, NULL );
 }
 if( count( $list[3] ) ){
-	$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 3, $words ).getCount( $list, 3 ) );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[3] ) );
+	$heading	= HtmlTag::create( 'div', getFutureDate( 3, $words ).getCount( $list, 3 ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$tableHeads.join( $list[3] ) );
 	$folders[]	= UI_HTML_CollapsePanel::create( 'day-3', $table, $heading, NULL );
 }
 if( count( $list[4] ) ){
-	$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 4, $words ).getCount( $list, 4 ) );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[4] ) );
+	$heading	= HtmlTag::create( 'div', getFutureDate( 4, $words ).getCount( $list, 4 ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$tableHeads.join( $list[4] ) );
 	$folders[]	= UI_HTML_CollapsePanel::create( 'day-4', $table, $heading, NULL );
 }
 if( count( $list[5] ) ){
-	$heading	= UI_HTML_Tag::create( 'div', getFutureDate( 5, $words ).getCount( $list, 5 ) );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[5] ) );
+	$heading	= HtmlTag::create( 'div', getFutureDate( 5, $words ).getCount( $list, 5 ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$tableHeads.join( $list[5] ) );
 	$folders[]	= UI_HTML_CollapsePanel::create( 'day-5', $table, $heading, NULL );
 }
 if( count( $list[6] ) ){
-	$heading	= UI_HTML_Tag::create( 'div', 'Zukunft '.getCount( $list, 6 ) );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.join( $list[6] ) );
+	$heading	= HtmlTag::create( 'div', 'Zukunft '.getCount( $list, 6 ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$tableHeads.join( $list[6] ) );
 	$folders[]	= UI_HTML_CollapsePanel::create( 'day-6', $table, $heading, NULL );
 }
 

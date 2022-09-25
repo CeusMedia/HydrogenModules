@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
@@ -126,7 +127,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 		unlink( $filePath );
 		if( $this->format === self::FORMAT_RAW )
 			return $image;
-		return UI_HTML_Tag::create( 'img', NULL, array(
+		return HtmlTag::create( 'img', NULL, array(
 			'src'	=> 'data:image/jpg;base64,'.base64_encode( $image ),
 			'class'	=> 'captcha-image',
 		) );
@@ -135,7 +136,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 	protected function renderRecaptcha(): string
 	{
 		$this->env->getPage()->js->addUrl( 'https://www.google.com/recaptcha/api.js' );
-		return UI_HTML_Tag::create( 'div', '', array(
+		return HtmlTag::create( 'div', '', array(
 			'class'					=> "g-recaptcha",
 			'data-sitekey'	=> $this->moduleConfig->get( 'recaptcha.key' ),
 		) );

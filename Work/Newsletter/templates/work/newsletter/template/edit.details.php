@@ -1,29 +1,30 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= $words->edit;
 
-$iconCopy		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clone' ) ).'&nbsp;';
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
-$iconPreview	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) ).'&nbsp;';
+$iconCopy		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clone' ) ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
+$iconPreview	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) ).'&nbsp;';
 $optStatus		= UI_HTML_Elements::Options( $words->states, $template->status );
 
 $listNewsletters	= '<em><small class="muted">Nicht verwendet.</small></em>';
 if( $newsletters ){
 	$listNewsletters	= [];
 	foreach( $newsletters as $newsletter ){
-		$link	= UI_HTML_Tag::create( 'a', $newsletter->title, array( 'href' => './work/newsletter/edit/'.$newsletter->newsletterId ) );
-		$listNewsletters[]	= UI_HTML_Tag::create( 'li', $link, array() );
+		$link	= HtmlTag::create( 'a', $newsletter->title, array( 'href' => './work/newsletter/edit/'.$newsletter->newsletterId ) );
+		$listNewsletters[]	= HtmlTag::create( 'li', $link, array() );
 	}
-	$listNewsletters	= UI_HTML_Tag::create( 'ul', $listNewsletters, array( 'class' => 'unstyled nav nav-pills nav-stacked' ) );
+	$listNewsletters	= HtmlTag::create( 'ul', $listNewsletters, array( 'class' => 'unstyled nav nav-pills nav-stacked' ) );
 }
 
 /*  --  PANEL: PREVIEW: HTML  --  */
 $urlPreview		= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
-$iframeHtml		= UI_HTML_Tag::create( 'iframe', '', array(
+$iframeHtml		= HtmlTag::create( 'iframe', '', array(
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
 ) );
-$buttonPreviewHtml	= UI_HTML_Tag::create( 'button', $iconPreview.'Vorschau', array(
+$buttonPreviewHtml	= HtmlTag::create( 'button', $iconPreview.'Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
 	'data-toggle'	=> 'modal',
@@ -41,11 +42,11 @@ $panelPreviewHtml	= '
 
 /*  --  PANEL: PREVIEW: TEXT  --  */
 $urlPreview		= './work/newsletter/template/preview/text/'.$template->newsletterTemplateId;
-$iframeText		= UI_HTML_Tag::create( 'iframe', '', array(
+$iframeText		= HtmlTag::create( 'iframe', '', array(
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
 ) );
-$buttonPreviewText	= UI_HTML_Tag::create( 'button', $iconPreview.'Vorschau', array(
+$buttonPreviewText	= HtmlTag::create( 'button', $iconPreview.'Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
 	'data-toggle'	=> 'modal',
@@ -100,7 +101,7 @@ if( isset( $newsletters ) && count( $newsletters ) )
 
 
 /*  --  PANEL: COPY  --  */
-$buttonCopy		= UI_HTML_Tag::create( 'a', $iconCopy.$words->edit->buttonCopy, array(
+$buttonCopy		= HtmlTag::create( 'a', $iconCopy.$words->edit->buttonCopy, array(
 	'class'		=> "btn btn-success",
 	'href'		=> "./work/newsletter/template/add?templateId=".$templateId
 ) );
@@ -127,7 +128,7 @@ $panelCopy		= '
 </div>';
 
 /*  --  PANEL: REMOVE  --  */
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.$words->edit->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, array(
 	'class'		=> "btn btn-danger",
 	'href'		=> $isUsed ? '#' : "./work/newsletter/template/remove/".$templateId,
 	'disabled'	=> $isUsed ? 'disabled' : NULL,
@@ -162,7 +163,7 @@ $panelEdit		= '
 					<div class="span12">
 						<label for="input_title" class="mandatory">'.$words->edit->labelTitle.'</label>
 <!--						<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $template->title, ENT_QUOTES, 'UTF-8' ).'"/>-->
-						'.UI_HTML_Tag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, array(
 							'type'		=> 'text',
 							'name'		=> 'title',
 							'id'		=> 'input_title',
@@ -176,7 +177,7 @@ $panelEdit		= '
 <!--				<div class="row-fluid">
 					<div class="span4">
 						<label for="input_status">'.$words->edit->labelStatus.'</label>
-						'.UI_HTML_Tag::create( 'select', $optStatus, array(
+						'.HtmlTag::create( 'select', $optStatus, array(
 							'name'		=> 'status',
 							'id'		=> 'input_status',
 							'class'		=> 'span12',
@@ -188,7 +189,7 @@ $panelEdit		= '
 				<div class="row-fluid">
 					<div class="span6">
 						<label for="input_senderAddress" class="mandatory">'.$words->edit->labelSenderAddress.'</label>
-						'.UI_HTML_Tag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, array(
 							'type'		=> "text",
 							'name'		=> "senderAddress",
 							'id'		=> "input_senderAddress",
@@ -201,7 +202,7 @@ $panelEdit		= '
 					</div>
 					<div class="span6">
 						<label for="input_senderName" class="mandatory">'.$words->edit->labelSenderName.'</label>
-						'.UI_HTML_Tag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, array(
 							'type'		=> "text",
 							'name'		=> "senderName",
 							'id'		=> "input_senderName",
@@ -216,7 +217,7 @@ $panelEdit		= '
 				<div class="row-fluid">
 					<div class="span6">
 						<label for="input_status" class="checkbox">
-						'.UI_HTML_Tag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, array(
 							'type'		=> 'checkbox',
 							'name'		=> 'status',
 							'value'		=> Model_Newsletter_Template::STATUS_READY,
@@ -232,7 +233,7 @@ $panelEdit		= '
 				<div class="row-fluid">
 					<div class="span6">
 						<label for="input_authorName">'.$w->labelAuthorName.'</label>
-						'.UI_HTML_Tag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, array(
 							'type'		=> "text",
 							'name'		=> "authorName",
 							'id'		=> "input_authorName",
@@ -244,7 +245,7 @@ $panelEdit		= '
 					</div>
 					<div class="span6">
 						<label for="input_authorName">'.$w->labelAuthorEmail.'</label>
-						'.UI_HTML_Tag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, array(
 							'type'		=> "text",
 							'name'		=> "authorEmail",
 							'id'		=> "input_authorEmail",
@@ -258,7 +259,7 @@ $panelEdit		= '
 				<div class="row-fluid">
 					<div class="span6">
 						<label for="input_authorName">'.$w->labelAuthorCompany.'</label>
-						'.UI_HTML_Tag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, array(
 							'type'		=> "text",
 							'name'		=> "authorCompany",
 							'id'		=> "input_authorCompany",
@@ -270,7 +271,7 @@ $panelEdit		= '
 					</div>
 					<div class="span6">
 						<label for="input_authorName">'.$w->labelAuthorUrl.'</label>
-						'.UI_HTML_Tag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, array(
 							'type'		=> "text",
 							'name'		=> "authorUrl",
 							'id'		=> "input_authorUrl",
@@ -284,7 +285,7 @@ $panelEdit		= '
 			</div>
 			<div class="span4">
 				<label for="input_imprint">'.$words->edit->labelImprint.'</label>
-				'.UI_HTML_Tag::create( 'textarea', htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ), array(
+				'.HtmlTag::create( 'textarea', htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ), array(
 					'name'		=> 'imprint',
 					'id'		=> 'input_imprint',
 					'class'		=> 'span12',

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Mail_Facts
 {
 	protected $changedFactClassPos  = 'label label-success';
@@ -91,15 +93,15 @@ class View_Helper_Mail_Facts
 					$class	= $this->changedFactClassPos;
 				else if( $fact->direction === FALSE || $fact->direction === -1 )
 					$class	= $this->changedFactClassNeg;
-				$value	= UI_HTML_Tag::create( 'span', $fact->valueHtml, array(
+				$value	= HtmlTag::create( 'span', $fact->valueHtml, array(
 					'class'	=> $class
 				) );
 			}
-			$term		= UI_HTML_Tag::create( 'dt', $fact->label );
-			$definition	= UI_HTML_Tag::create( 'dd', $value.'&nbsp;' );
+			$term		= HtmlTag::create( 'dt', $fact->label );
+			$definition	= HtmlTag::create( 'dd', $value.'&nbsp;' );
 			$list[]		= $term.$definition;
 		}
-		return UI_HTML_Tag::create( 'dl', $list, array( 'class' => $this->listClass ) );
+		return HtmlTag::create( 'dl', $list, array( 'class' => $this->listClass ) );
 	}
 
 	protected function renderAsText(): string

@@ -1,26 +1,28 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $optType	= UI_HTML_Elements::Options( $words['types'], $application->type );
 $optStatus	= UI_HTML_Elements::Options( $words['states'], $application->status );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
-$iconEnable		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) );
-$iconDisable	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
+$iconEnable		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) );
+$iconDisable	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) );
 
-$buttonEnable	= UI_HTML_Tag::create( 'a', $iconEnable.' aktivieren', array( 'href' => "#", 'disabled' => 'disabled', 'class' => "btn btn-default btn-small disabled" ) );
-$buttonDisable	= UI_HTML_Tag::create( 'a', $iconDisable.' deaktivieren', array( 'href' => "#", 'disabled' => 'disabled', 'class' => "btn not-btn-inverse btn-small disabled" ) );
+$buttonEnable	= HtmlTag::create( 'a', $iconEnable.' aktivieren', array( 'href' => "#", 'disabled' => 'disabled', 'class' => "btn btn-default btn-small disabled" ) );
+$buttonDisable	= HtmlTag::create( 'a', $iconDisable.' deaktivieren', array( 'href' => "#", 'disabled' => 'disabled', 'class' => "btn not-btn-inverse btn-small disabled" ) );
 
 $isEditor		= TRUE;
 
 if( $isEditor && (int) $application->status === 0 )
-	$buttonEnable	= UI_HTML_Tag::create( 'a', $iconEnable.' aktivieren', array(
+	$buttonEnable	= HtmlTag::create( 'a', $iconEnable.' aktivieren', array(
 		'href'		=> "./oauth/application/enable/".$applicationId,
 		'class'		=> "btn btn-default btn-small"
 	) );
 
 if( $isEditor && (int) $application->status === 1 )
-	$buttonDisable	= UI_HTML_Tag::create( 'a', $iconDisable.' deaktivieren', array(
+	$buttonDisable	= HtmlTag::create( 'a', $iconDisable.' deaktivieren', array(
 		'href'		=> "./oauth/application/disable/".$applicationId,
 		'class'		=> "btn not-btn-inverse btn-small"
 	) );

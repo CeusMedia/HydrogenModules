@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 if( empty( $nodeId ) )
 	$nodeId	= NULL;
@@ -8,16 +9,16 @@ if( $nodes ){
 	foreach( $nodes as $node ){
 		$class		= $nodeId == $node->nodeId ? 'active' : NULL;
 		$label			= $node->label ? $node->label : $node->ID;
-		$link			= UI_HTML_Tag::create( 'a', $label, array(
+		$link			= HtmlTag::create( 'a', $label, array(
 			'href'	=> './work/graph/node/'.$node->nodeId
 		) );
 		$key		= strtolower( $label ).'_'.microtime( TRUE );
-		$listNodes[$key]	= UI_HTML_Tag::create( 'li', $link, array(
+		$listNodes[$key]	= HtmlTag::create( 'li', $link, array(
 			'class'	=> $class,
 		) );
 	}
 	ksort( $listNodes );
-	$listNodes		= UI_HTML_Tag::create( 'ul', $listNodes, array( 'class' => 'not-unstyled nav nav-pills nav-stacked' ) );
+	$listNodes		= HtmlTag::create( 'ul', $listNodes, array( 'class' => 'not-unstyled nav nav-pills nav-stacked' ) );
 }
 
 return '

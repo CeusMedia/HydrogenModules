@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $wLogin		= (object) $words['customer-login'];
 $wRegister	= (object) $words['customer-register'];
 $wGuest		= (object) $words['customer-guest'];
@@ -7,17 +9,17 @@ $fieldOauth2	= '';
 if( isset( $useOauth2 ) && $useOauth2 ){
 	$helper				= new View_Helper_Oauth_ProviderButtons( $this->env );
 	if( $helper->count() ){
-		$iconUnbind		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+		$iconUnbind		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 		$helper->setDropdownLabel( 'weitere' );
 		$helper->setLinkPath( './auth/oauth2/login/' );
 		$helper->setFrom( 'shop/customer' );
-		$fieldOauth2	= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'label', 'Anmelden mit' ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'div', $helper->render(), array( 'class' => 'span12' ) ),
+		$fieldOauth2	= HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'label', 'Anmelden mit' ),
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'div', $helper->render(), array( 'class' => 'span12' ) ),
 				), array( 'class' => 'row-fluid' ) ),
-				UI_HTML_Tag::create( 'hr', NULL ),
+				HtmlTag::create( 'hr', NULL ),
 			), array( 'class' => 'span12' ) ),
 		), array( 'class' => 'row-fluid' ) );
 	}

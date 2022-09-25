@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $language	= $env->getLanguage()->getLanguage();
 $helper		= new View_Helper_Catalog( $env );
@@ -27,7 +28,7 @@ for( $i=0; $i<2; $i++ ){
 	$column	= '<div class="column span6">'.$column.'</div>';
 	$lists[]	= $column;
 }
-$lists	= UI_HTML_Tag::create( 'div', $lists, array( 'class' => 'row-fluid' ) );
+$lists	= HtmlTag::create( 'div', $lists, array( 'class' => 'row-fluid' ) );
 
 return '
 	<script>

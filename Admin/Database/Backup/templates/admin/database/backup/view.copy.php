@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconRestore	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cog' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconRestore	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cog' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
-$buttonCreateCopy	= UI_HTML_Tag::create( 'a', $iconRestore.' Kopie installieren', array(
+$buttonCreateCopy	= HtmlTag::create( 'a', $iconRestore.' Kopie installieren', array(
 	'href'	=> './admin/database/backup/copy/create/'.$backup->id,
 	'class'	=> 'btn btn-primary'
 ) );
@@ -14,11 +15,11 @@ $buttonRemoveCopy		= '';
 if( !empty( $backup->comment['copyPrefix'] ) ){
 	$buttonCreateCopy		= '';
 	$buttonDeactivateCopy	= '';
-	$buttonActivateCopy		= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp; Kopie aktivieren', array(
+	$buttonActivateCopy		= HtmlTag::create( 'a', $iconRemove.'&nbsp; Kopie aktivieren', array(
 		'href'	=> './admin/database/backup/copy/activate/'.$backup->id,
 		'class'	=> 'btn btn-success'
 	) );
-	$buttonRemoveCopy	= UI_HTML_Tag::create( 'a', $iconRemove.' Kopie entfernen', array(
+	$buttonRemoveCopy	= HtmlTag::create( 'a', $iconRemove.' Kopie entfernen', array(
 		'href'	=> './admin/database/backup/copy/drop/'.$backup->id,
 		'class'	=> 'btn btn-danger'
 	) );
@@ -32,7 +33,7 @@ if( !empty( $backup->comment['copyPrefix'] ) ){
 	if( $backup->comment['copyPrefix'] === $currentCopyPrefix ){
 		$buttonActivateCopy		= '';
 		$buttonRemoveCopy		= '';
-		$buttonDeactivateCopy	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp; Kopie deaktivieren', array(
+		$buttonDeactivateCopy	= HtmlTag::create( 'a', $iconRemove.'&nbsp; Kopie deaktivieren', array(
 			'href'	=> './admin/database/backup/copy/deactivate/'.$backup->id,
 			'class'	=> 'btn btn-inverse'
 		) );

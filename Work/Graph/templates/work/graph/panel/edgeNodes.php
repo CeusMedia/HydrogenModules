@@ -1,13 +1,14 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $nodeIndex	= [];
 foreach( $nodes as $node )
 	$nodeIndex[$node->nodeId]	= $node->label ? $node->label : $node->ID;
 
-$linkSource	= UI_HTML_Tag::create( 'a', $nodeIndex[$edge->fromNodeId], array(
+$linkSource	= HtmlTag::create( 'a', $nodeIndex[$edge->fromNodeId], array(
 	'href'	=> './work/graph/node/'.$edge->fromNodeId
 ) );
-$linkTarget	= UI_HTML_Tag::create( 'a', $nodeIndex[$edge->toNodeId], array(
+$linkTarget	= HtmlTag::create( 'a', $nodeIndex[$edge->toNodeId], array(
 	'href'	=> './work/graph/node/'.$edge->toNodeId
 ) );
 

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Database_Lock extends View{
@@ -10,7 +11,7 @@ class View_Database_Lock extends View{
 		$modules	= $context->getRegisteredModules();
 
 		$locks		= $this->getData( 'locks' );
-		$content	= UI_HTML_Tag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
+		$content	= HtmlTag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
 		if( $locks ){
 			$rows	= [];
 			foreach( $locks as $lock ){
@@ -23,20 +24,20 @@ class View_Database_Lock extends View{
 				$lock->relation			= $entry;
 				$lock->relationTitle	= $entry->{$module->column};
 				$lock->relationLink		= str_replace( "{id}", $lock->entryId, $module->link );
-				$link		= UI_HTML_Tag::create( 'a', $lock->relationTitle, array(
+				$link		= HtmlTag::create( 'a', $lock->relationTitle, array(
 					'href' => $lock->relationLink,
 				) );
 				$time		= ceil( ( time() - $lock->timestamp ) / 60 ) * 60;
 				$time		= View_Helper_Work_Time::formatSeconds( $time);
-				$username	= UI_HTML_Tag::create( 'small', $lock->user->username );
-				$rows[]	= UI_HTML_Tag::create( 'tr', array(
-					UI_HTML_Tag::create( 'td', $username.'<br/>'.$link, array( 'class' => 'autocut' ) ),
-					UI_HTML_Tag::create( 'td', $time, array( 'style' => 'text-align: right' ) ),
+				$username	= HtmlTag::create( 'small', $lock->user->username );
+				$rows[]	= HtmlTag::create( 'tr', array(
+					HtmlTag::create( 'td', $username.'<br/>'.$link, array( 'class' => 'autocut' ) ),
+					HtmlTag::create( 'td', $time, array( 'style' => 'text-align: right' ) ),
 				) );
 			}
 			$colgroup	= UI_HTML_Elements::ColumnGroup( array( "", "100px" ) );
-			$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-			$content	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed' ) );
+			$tbody		= HtmlTag::create( 'tbody', $rows );
+			$content	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed' ) );
 		}
 		return $content;
 	}

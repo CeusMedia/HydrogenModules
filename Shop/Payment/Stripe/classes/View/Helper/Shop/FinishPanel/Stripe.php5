@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_FinishPanel_Stripe
@@ -91,9 +92,9 @@ class View_Helper_Shop_FinishPanel_Stripe
 		$facts->add( 'Status', 'Wir haben den Betrag dankend erhalten.' );
 
 		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
-			return UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'h3', $this->heading ),
+			return HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'h3', $this->heading ),
 					$facts->render( $this->listClass ),
 				), array( 'class' => 'content-panel-inner' ) ),
 			), array( 'class' => 'content-panel' ) );
@@ -112,9 +113,9 @@ class View_Helper_Shop_FinishPanel_Stripe
 		$facts->add( 'Status', 'Wir haben den Betrag dankend erhalten.' );
 
 		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
-			return UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'h3', $this->heading ),
+			return HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'h3', $this->heading ),
 					$facts->render( $this->listClass ),
 				), array( 'class' => 'content-panel-inner' ) ),
 			), array( 'class' => 'content-panel' ) );
@@ -133,9 +134,9 @@ class View_Helper_Shop_FinishPanel_Stripe
 		$facts->add( 'Status', 'Wir haben den Betrag dankend erhalten.' );
 
 		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
-			return UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'h3', $this->heading ),
+			return HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'h3', $this->heading ),
 					$facts->render( $this->listClass ),
 				), array( 'class' => 'content-panel-inner' ) ),
 			), array( 'class' => 'content-panel' ) );

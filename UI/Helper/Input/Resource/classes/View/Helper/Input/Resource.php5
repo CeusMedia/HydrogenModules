@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Input_Resource
@@ -69,7 +70,7 @@ class View_Helper_Input_ResourceTrigger
 
 	public function render(): string
 	{
-		return UI_HTML_Tag::create( 'button', $this->label, array(
+		return HtmlTag::create( 'button', $this->label, array(
 			'type'		=> "button",
 			'onclick'	=> "HelperInputResource.open(this)",
 			'class'		=> $this->class,

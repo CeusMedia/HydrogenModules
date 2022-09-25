@@ -25,6 +25,7 @@
  *	@link			http://code.google.com/p/cmframeworks/
  */
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -77,7 +78,7 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract
 		$format	= $format ? $format : $this->formatDate;
 		$date	= date( $format, $timestamp );
 		$attr	= array( 'class' => 'date' );
-		$date	= UI_HTML_Tag::create( 'span', $date, $attr );
+		$date	= HtmlTag::create( 'span', $date, $attr );
 		return $date;
 	}
 
@@ -88,7 +89,7 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract
 		$format	= $format ? $format : $this->formatDatetime;
 		$date	= date( $format, $timestamp );
 		$attr	= array( 'class' => 'datetime' );
-		$date	= UI_HTML_Tag::create( 'span', $date, $attr );
+		$date	= HtmlTag::create( 'span', $date, $attr );
 		return $date;
 	}
 
@@ -108,7 +109,7 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract
 			'class'				=> 'phrase ui-datetime-timephrase',
 			'data-timestamp'	=> $timestamp,
 		);
-		return UI_HTML_Tag::create( 'span', $phrase, $attributes );
+		return HtmlTag::create( 'span', $phrase, $attributes );
 	}
 
 	public function getTimeFromTimestamp( $timestamp, $format = NULL ): string
@@ -118,7 +119,7 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract
 		$format	= $format ? $format : $this->formatTime;
 		$time	= date( $format, $timestamp );
 		$attr	= array( 'class' => 'time' );
-		$time	= UI_HTML_Tag::create( 'span', $time, $attr );
+		$time	= HtmlTag::create( 'span', $time, $attr );
 		return $time;
 	}
 

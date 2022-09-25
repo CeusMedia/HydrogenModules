@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $a			= clone( $article );
 $w			= (object) $words['article'];
@@ -18,7 +19,7 @@ $a->price			= $helper->formatPrice( $a->price )."&nbsp;&euro;";
 $a->description		= View_Helper_Text::applyExpandable( $a->description, 200, '...<br/><span class="btn btn-mini">mehr</span>', '<br/><span class="btn btn-mini">weniger</span>' );
 $a->recension		= View_Helper_Text::applyExpandable( $a->recension, 200, '<span class="btn btn-mini">mehr</span>', '<span class="btn btn-mini">weniger</span>' );
 $a->volume			= $category->volume ? $w->volume."&nbsp;".$category->volume : "";
-$a->status			= UI_HTML_Tag::create( 'span', $words['status'][$article->status], array( 'class' => 'status_'.$article->status ) );
+$a->status			= HtmlTag::create( 'span', $words['status'][$article->status], array( 'class' => 'status_'.$article->status ) );
 
 $list		= [];
 foreach( $authors as $author )
@@ -40,9 +41,9 @@ if( $documents ){
 	$list	= [];
 	foreach( $documents as $document ){
 		$link	= $helper->renderDocumentLink( $document );
-		$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'document') );
+		$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'document') );
 	}
-	$a->documents	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled documents documentList' ) );
+	$a->documents	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled documents documentList' ) );
 }
 
 //  --  LIST: FACTS (next to image)  --  //
@@ -51,10 +52,10 @@ if( $tags ){
 	$list	= [];
 	foreach( $tags as $tag ){
 		$label	= $tag->tag;
-		$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $helper->getTagUri( $tag ), 'class' => 'link-article-tag' ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'article-tag-list-item' ) );
+		$link	= HtmlTag::create( 'a', $label, array( 'href' => $helper->getTagUri( $tag ), 'class' => 'link-article-tag' ) );
+		$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'article-tag-list-item' ) );
 	}
-	$a->tags	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'article-tag-list' ) );
+	$a->tags	= HtmlTag::create( 'ul', $list, array( 'class' => 'article-tag-list' ) );
 }
 
 
@@ -81,7 +82,7 @@ $a->tags			= "-";
 if( $tags ){
 	$list	= [];
 	foreach( $tags as $tag ){
-		$list[]	= UI_HTML_Tag::create( 'a', $tag->tag, array(
+		$list[]	= HtmlTag::create( 'a', $tag->tag, array(
 			'href'	=> $helper->getTagUri( $tag ),
 			'class'	=> 'link-article-tag',
 		) );

@@ -5,6 +5,7 @@
  *	@copyright	Ceus Media 2015
  */
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 /**
@@ -58,7 +59,7 @@ class View_System_Load extends View{
 						</div>
 					</div>';
 
-				$contentGraph	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'div', '', array(
+				$contentGraph	= HtmlTag::create( 'div', HtmlTag::create( 'div', '', array(
 						'class'	=> 'bar',
 						'style'	=> 'width: '.round( $barValue, 2 ).'%;',
 					) ), array( 'class' => 'progress progress-'.$barStyle ) );
@@ -125,6 +126,6 @@ class View_System_Load extends View{
 		$prefix		= $number < 0 ? '&minus;' : '&plus;';
 		$factor		= $inverse ? -1 : 1;
 		$style		= ( $number * $factor < 0 ) ? 'error' : 'success';
-		return UI_HTML_Tag::create( 'span', $prefix.$value.$unit, array( 'class' => 'text text-'.$style ) );
+		return HtmlTag::create( 'span', $prefix.$value.$unit, array( 'class' => 'text text-'.$style ) );
 	}
 }

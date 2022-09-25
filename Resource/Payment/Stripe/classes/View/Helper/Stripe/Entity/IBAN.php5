@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Stripe_Entity_IBAN extends View_Helper_Stripe_Abstract{
@@ -11,7 +12,7 @@ class View_Helper_Stripe_Entity_IBAN extends View_Helper_Stripe_Abstract{
 	public function render(){
 		$parts		= str_split( trim( $this->iban ), 4 );
 		$label		= implode( ' ', $parts );
-		return UI_HTML_Tag::create( $this->nodeName, $label, array(
+		return HtmlTag::create( $this->nodeName, $label, array(
 			'class'	=> $this->nodeClass,
 		) );
 	}

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -118,15 +119,15 @@ class Hook_Work_Mission extends Hook
 		$missions		= $modelMission->getAllByIndices( $indices, $orders );	//  ...
 
 		$icons			= array(
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
 		);
 		foreach( $missions as $mission ){
 			$icon		= $icons[$mission->type];
 			$isOpen		= in_array( $mission->status, self::$statusesActive );
 			$status		= '('.$words['states'][$mission->status].')';
-			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
-			$title		= $isOpen ? $mission->title : UI_HTML_Tag::create( 'del', $mission->title );
+			$status		= HtmlTag::create( 'small', $status, array( 'class' => 'muted' ) );
+			$title		= $isOpen ? $mission->title : HtmlTag::create( 'del', $mission->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) array(
 				'id'		=> $data->linkable ? $mission->missionId : NULL,
@@ -178,15 +179,15 @@ class Hook_Work_Mission extends Hook
 
 		$missions		= $modelMission->getAllByIndices( $indices, $orders );	//  ...
 		$icons			= array(
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
 		);
 		foreach( $missions as $mission ){
 			$icon		= $icons[$mission->type];
 			$isOpen		= in_array( $mission->status, self::$statusesActive );
 			$status		= '('.$words['states'][$mission->status].')';
-			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
-			$title		= $isOpen ? $mission->title : UI_HTML_Tag::create( 'del', $mission->title );
+			$status		= HtmlTag::create( 'small', $status, array( 'class' => 'muted' ) );
+			$title		= $isOpen ? $mission->title : HtmlTag::create( 'del', $mission->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) array(
 				'id'		=> $data->linkable ? $mission->missionId : NULL,

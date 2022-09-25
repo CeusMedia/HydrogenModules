@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -161,28 +162,28 @@ return;
 		$body	= '';
 		$list	= [];
 		foreach( $response as $license ){
-			$check	= UI_HTML_Tag::create( 'input', NULL, array(
+			$check	= HtmlTag::create( 'input', NULL, array(
 				'type'	=> 'radio',
 				'name'	=> 'license',
 				'value'	=> $license->productLicenseId,
 			) );
 			$content	= implode( '<br/>', array(
 				$license->title,
-				UI_HTML_Tag::create( 'small', $license->price.' / '.$license->duration ),
+				HtmlTag::create( 'small', $license->price.' / '.$license->duration ),
 				$check,
 			) );
-			$label	= UI_HTML_Tag::create( 'label', $content, array(
+			$label	= HtmlTag::create( 'label', $content, array(
 				'class'	=> 'btn btn-large',
 				'style'	=> 'text-align: center',
 			) );
-			$list[]	= UI_HTML_Tag::create( 'div', $label, array( 'class' => 'span4' ) );
+			$list[]	= HtmlTag::create( 'div', $label, array( 'class' => 'span4' ) );
 			if( count( $list ) % 3 === 0 ){
-				$body	.= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'row-fluid' ) );
+				$body	.= HtmlTag::create( 'div', $list, array( 'class' => 'row-fluid' ) );
 				$list	= [];
 			}
 		}
 		if( count( $list ) )
-			$body	.= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'row-fluid' ) );
-		return UI_HTML_Tag::create( 'div', $body, array( 'id' => 'form-register-extension-accounting' ) );
+			$body	.= HtmlTag::create( 'div', $list, array( 'class' => 'row-fluid' ) );
+		return HtmlTag::create( 'div', $body, array( 'id' => 'form-register-extension-accounting' ) );
 	}
 }

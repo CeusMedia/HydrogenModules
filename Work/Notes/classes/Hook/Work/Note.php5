@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -42,17 +43,17 @@ class Hook_Work_Note extends Hook
 		$orders			= array( 'status' => 'ASC', 'title' => 'ASC' );
 		$notes			= $modelNote->getAllByIndices( $indices, $orders );	//  ...
 /*		$icons			= array(
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o' ) ),
 		);*/
-		$icon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz' ) );
+		$icon		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz' ) );
 		$words		= $language->getWords( 'work/note' );
 		foreach( $notes as $note ){
 			$isOpen		= TRUE;//in_array( $issue->status, $statusesActive );
 //			$status		= '('.$words['states'][$issue->status].')';
-//			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
-			$title		= $isOpen ? $note->title : UI_HTML_Tag::create( 'del', $note->title );
+//			$status		= HtmlTag::create( 'small', $status, array( 'class' => 'muted' ) );
+			$title		= $isOpen ? $note->title : HtmlTag::create( 'del', $note->title );
 			$label		= $icon.'&nbsp;'.$title;//.'&nbsp;'.$status;
 			$list[]		= (object) array(
 				'id'		=> $data->linkable ? $note->noteId : NULL,
@@ -92,13 +93,13 @@ class Hook_Work_Note extends Hook
 		$notes		= $model->getAllByIndex( 'userId', $userId );
 		$language	= $env->getLanguage();
 		$words		= $language->getWords( 'work/note' );
-		$icon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz' ) );
+		$icon		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz' ) );
 		$list		= [];
 		foreach( $notes as $note ){
 			$isOpen		= TRUE;//in_array( $issue->status, $statusesActive );
 //			$status		= '('.$words['states'][$issue->status].')';
-//			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
-			$title		= $isOpen ? $note->title : UI_HTML_Tag::create( 'del', $note->title );
+//			$status		= HtmlTag::create( 'small', $status, array( 'class' => 'muted' ) );
+			$title		= $isOpen ? $note->title : HtmlTag::create( 'del', $note->title );
 			$label		= $icon.'&nbsp;'.$title;//.'&nbsp;'.$status;
 			$list[]		= (object) array(
 				'id'		=> $data->linkable ? $note->noteId : NULL,

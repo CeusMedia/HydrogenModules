@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Work_Mission_DaysBadge extends CMF_Hydrogen_View_Helper_Abstract{
 
 	protected $badgesColored	= TRUE;
@@ -20,9 +22,9 @@ class View_Helper_Work_Mission_DaysBadge extends CMF_Hydrogen_View_Helper_Abstra
 	}
 
 	protected function renderBadgeDays( $days, $class = NULL ){
-		$label	= UI_HTML_Tag::create( 'small', $this->formatDays( $days ) );
+		$label	= HtmlTag::create( 'small', $this->formatDays( $days ) );
 		$class	= 'badge'.( $class ? ' badge-'.$class : '' );
-		return UI_HTML_Tag::create( 'span', $label, array( 'class' => $class ) );
+		return HtmlTag::create( 'span', $label, array( 'class' => $class ) );
 	}
 
 	public function renderBadgeDaysOverdue( $mission ){
@@ -70,7 +72,7 @@ class View_Helper_Work_Mission_DaysBadge extends CMF_Hydrogen_View_Helper_Abstra
 		if( $missionEnd > $todayEnd )
 			return $this->renderBadgeDaysStill( $this->mission );
 
-		$iconToday	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-exclamation' ) );
+		$iconToday	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-exclamation' ) );
 		return $this->renderBadgeDays( $iconToday, 'important' );
 	}
 

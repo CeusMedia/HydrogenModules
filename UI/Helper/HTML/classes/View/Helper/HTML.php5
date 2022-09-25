@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_HTML
 {
 //	public function __construct();
@@ -56,7 +58,7 @@ class HTML/* extends UI_HTML_Elements*/
 	public static function Def( string $term, array $definitions ): string
 	{
 		foreach( $definitions as $nr => $definition )
-			$definitions[$nr]	= UI_HTML_Tag::create( 'dd', $definition );
+			$definitions[$nr]	= HtmlTag::create( 'dd', $definition );
 		return self::Tag( 'dt', $term ).join( $definitions );
 	}
 

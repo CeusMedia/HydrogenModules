@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
 
@@ -14,14 +15,14 @@ function formatUrl( $url ){
 	$parts['host']	.= !empty( $parts['port'] ) ? ":".$parts['port'] : "";
 //	remark( $url );
 //	print_m( $parts );
-	$scheme	= UI_HTML_Tag::create( 'small', strtoupper( $parts['scheme'] ), array( 'class' => 'muted' ) );
-	$host	= UI_HTML_Tag::create( 'strong', "&nbsp;&nbsp;".$parts['host'], array( 'class' => '' ) );
+	$scheme	= HtmlTag::create( 'small', strtoupper( $parts['scheme'] ), array( 'class' => 'muted' ) );
+	$host	= HtmlTag::create( 'strong', "&nbsp;&nbsp;".$parts['host'], array( 'class' => '' ) );
 	$path	= explode( "/", preg_replace( "/^(\/*)(.*)(\/+)$/", "\\2", $parts['path'] ) );
-	$main	= UI_HTML_Tag::create( 'strong', array_pop( $path ), array( 'class' => '' ) );
+	$main	= HtmlTag::create( 'strong', array_pop( $path ), array( 'class' => '' ) );
 	$path	= str_replace( "//", "/", "/".implode( "/", $path )."/" );
-	$path	= UI_HTML_Tag::create( 'small', $path, array( 'class' => 'muted' ) );
+	$path	= HtmlTag::create( 'small', $path, array( 'class' => 'muted' ) );
 	$path	.= "&nbsp;&nbsp;".$main;
-	$path	= UI_HTML_Tag::create( 'span', "&nbsp;&nbsp;".$path, array( 'class' => '' ) );
+	$path	= HtmlTag::create( 'span', "&nbsp;&nbsp;".$path, array( 'class' => '' ) );
 	return $scheme.$host.$path;
 }
 
@@ -32,9 +33,9 @@ foreach( $instances as $instanceId => $instance ){
 	$link			= UI_HTML_Elements::Link( './admin/instance/edit/'.$instanceId, $instance->title, 'instance' );
 	$url			= $instance->protocol.$instance->host.$instance->path;
 	$uriExists		= file_exists( $instance->uri );
-	$linkInstance	= UI_HTML_Tag::create( 'a', formatUrl( $url ), array( 'href' => $url ) );
-	$codeUri		= UI_HTML_Tag::create( 'code', $instance->uri );
-	$codeUri		= UI_HTML_Tag::create( 'small', $codeUri, array( 'class' => 'muted' ) );
+	$linkInstance	= HtmlTag::create( 'a', formatUrl( $url ), array( 'href' => $url ) );
+	$codeUri		= HtmlTag::create( 'code', $instance->uri );
+	$codeUri		= HtmlTag::create( 'small', $codeUri, array( 'class' => 'muted' ) );
 	$titleStatus	= $uriExists ? "Checked and found on file system" : "NOT FOUND on file system (not installed or path invalid)";
 	$titleStatus	= $uriExists ? "Ordner auf dem Server gefunden" : "Ordner NICHT GEFUNDEN (nicht installiert oder ungültiger Pfad)";
 	$indicators		= join( "", array(
@@ -42,10 +43,10 @@ foreach( $instances as $instanceId => $instance ){
 		'<div class="status-http status-box" title="'.$labelsStatusHttp['unchecked'].'"></div>',
 	) );
 	$cells	= array(
-		UI_HTML_Tag::create( 'td', $link, array( 'class' => 'instance-label' ) ),
-		UI_HTML_Tag::create( 'td', $linkInstance/*.'<br/>'.$codeUri*/ ),
-		UI_HTML_Tag::create( 'td', $indicators, array( 'class' => 'status-http' ) ),
-		UI_HTML_Tag::create( 'td', "", array( 'class' => 'status-todos' ) ),
+		HtmlTag::create( 'td', $link, array( 'class' => 'instance-label' ) ),
+		HtmlTag::create( 'td', $linkInstance/*.'<br/>'.$codeUri*/ ),
+		HtmlTag::create( 'td', $indicators, array( 'class' => 'status-http' ) ),
+		HtmlTag::create( 'td', "", array( 'class' => 'status-todos' ) ),
 	);
 	$hasTodoTool	= isset( $instance->checkTodos ) && $instance->checkTodos ? "yes" : "no";
 	$attributes		= array(
@@ -54,7 +55,7 @@ foreach( $instances as $instanceId => $instance ){
 		'data-url'			=> $url,
 		'data-url-todos'	=> $url.'tools/Todos/',
 	);
-	$rows[$instance->title]	= UI_HTML_Tag::create( 'tr', $cells, $attributes );
+	$rows[$instance->title]	= HtmlTag::create( 'tr', $cells, $attributes );
 }
 ksort( $rows );
 
@@ -66,7 +67,7 @@ $panelList	= '
 		'.join( $rows ).'
 	</table>
 	'.UI_HTML_Elements::LinkButton( './admin/instance/add', $w->buttonAdd, 'button add' ).'
-	'.UI_HTML_Tag::create( 'button', 'check', array( 'class' => 'button', 'id' => 'button_check' ) ).'
+	'.HtmlTag::create( 'button', 'check', array( 'class' => 'button', 'id' => 'button_check' ) ).'
 </fieldset>';
 
 return '

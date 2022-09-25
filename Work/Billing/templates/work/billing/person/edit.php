@@ -1,13 +1,15 @@
 <?php
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zur Liste', array(
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', array(
 	'href'	=> './work/billing/person',
 	'class'	=> 'btn btn',
 ) );
 
-$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',

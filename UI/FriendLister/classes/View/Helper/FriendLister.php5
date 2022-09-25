@@ -8,6 +8,7 @@
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -50,18 +51,18 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract
 				if( $item->getAttribute( 'disabled' ) == "yes" )									//
 					continue;																		//
 			$icon	= $this->renderIcon( $item );													//
-			$icon	= UI_HTML_Tag::create( 'span', $icon, array( 'class' => 'user-icon' ) );		//
-			$name	= UI_HTML_Tag::create( 'span', $item->name, array( 'class' => 'user-name' ) );	//
+			$icon	= HtmlTag::create( 'span', $icon, array( 'class' => 'user-icon' ) );		//
+			$name	= HtmlTag::create( 'span', $item->name, array( 'class' => 'user-name' ) );	//
 			$attr	= array(
 				'href'	=> (string) $item->link,
 				'title'	=> addslashes( (string) $item->title ),
 			);
-			$link	= UI_HTML_Tag::create( 'a', $icon.$name, $attr );								//
-			$label	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'user-label' ) );		//
-			$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'user-item' ) );			//
+			$link	= HtmlTag::create( 'a', $icon.$name, $attr );								//
+			$label	= HtmlTag::create( 'span', $link, array( 'class' => 'user-label' ) );		//
+			$list[]	= HtmlTag::create( 'li', $label, array( 'class' => 'user-item' ) );			//
 		}
 		$c->get( 'shuffle' ) ? shuffle( $list ) : NULL;												//
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => $c->get( 'class.list' ) ) );		//
+		return HtmlTag::create( 'ul', $list, array( 'class' => $c->get( 'class.list' ) ) );		//
 	}
 
 	/**
@@ -93,6 +94,6 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract
 		if( !$icon )
 			return '&nbsp;';
 		$attributes	= array( 'src' => $icon, 'alt' => (string) $friend->name );						//
-		return UI_HTML_Tag::create( 'img', NULL, $attributes );										//
+		return HtmlTag::create( 'img', NULL, $attributes );										//
 	}
 }

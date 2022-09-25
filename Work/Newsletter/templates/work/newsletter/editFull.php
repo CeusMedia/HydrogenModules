@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
 
 $value		= htmlentities( $newsletter->html, ENT_QUOTES, 'UTF-8' );
-$editor		= UI_HTML_Tag::create( 'textarea', $value, array(
+$editor		= HtmlTag::create( 'textarea', $value, array(
 	'name'		=> 'html',
 	'id'		=> 'input_html',
 	'rows'		=> '15',
@@ -62,6 +63,6 @@ foreach( explode( ",", $template->styles ) as $style )
 //$page->addStylesheet( './work/newsletter/template/ajaxGetStyle/'.$newsletter->newsletterTemplateId );
 $page->addBody( $body );
 //$page->addBody( $script );
-$page->addBody( UI_HTML_Tag::create( 'style', $template->style ) );
+$page->addBody( HtmlTag::create( 'style', $template->style ) );
 print( $page->build( array( 'class' => 'mail mail-newsletter' ) ) );
 exit;

@@ -1,7 +1,8 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconInstall	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus-circle' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconInstall	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus-circle' ) );
 
 $helper	= new View_Helper_Work_Newsletter_ThemeFacts( $env );
 $helper->setThemeData( $theme );

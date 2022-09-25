@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Navigation_Bootstrap_NavbarMobile extends View_Helper_Navigation_Bootstrap_Navbar
 {
 	protected $hideOnDesktop	= FALSE;
@@ -23,7 +25,7 @@ class View_Helper_Navigation_Bootstrap_NavbarMobile extends View_Helper_Navigati
 		$classes	= array( 'layout-navbar-mobile navbar-fixed-top mm-fixed-top' );
 		if( $this->hideOnDesktop )
 			$classes[]	= 'hidden-desktop';
-		return  UI_HTML_Tag::create( 'div', parent::render(), array(
+		return  HtmlTag::create( 'div', parent::render(), array(
 			'class'	=> join( ' ', $classes ),
 		) );
 	}

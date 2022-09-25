@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Mail_Template extends Controller
@@ -180,9 +181,9 @@ class Controller_Admin_Mail_Template extends Controller
 					$helper	= new View_Helper_Mail_View_Text( $this->env );
 					$helper->setMailObjectInstance( $mail );
 					$text	= $helper->render();
-					print( UI_HTML_Tag::create( 'html', array(
-						UI_HTML_Tag::create( 'body', array(
-							UI_HTML_Tag::create( 'xmp', $text ),
+					print( HtmlTag::create( 'html', array(
+						HtmlTag::create( 'body', array(
+							HtmlTag::create( 'xmp', $text ),
 						) ),
 					) ) );
 					break;

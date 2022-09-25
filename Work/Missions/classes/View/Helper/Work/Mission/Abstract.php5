@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 abstract class View_Helper_Work_Mission_Abstract extends CMF_Hydrogen_View_Helper_Abstract{
 
 	protected $useAvatar	= FALSE;
@@ -38,9 +40,9 @@ abstract class View_Helper_Work_Mission_Abstract extends CMF_Hydrogen_View_Helpe
 			$userLabel	= $helper->render();
 		}
 		else{
-			$iconUser	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
+			$iconUser	= HtmlTag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
 			$fullname	= '('.$user->firstname.' '.$user->surname.')';
-			$fullname	= UI_HTML_Tag::create( 'small', $fullname, array( 'class' => 'muted' ) );
+			$fullname	= HtmlTag::create( 'small', $fullname, array( 'class' => 'muted' ) );
 			$userLabel	= $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname;
 		}
 		return $userLabel;
@@ -76,9 +78,9 @@ abstract class View_Helper_Work_Mission_Abstract extends CMF_Hydrogen_View_Helpe
 			$avatar	= $avatar->render();
 		}
 
-		$workerPic	= UI_HTML_Tag::create( 'div', $avatar, array( 'class' => 'user-avatar' ) );
-		$workerName	= UI_HTML_Tag::create( 'div', $worker->username, array( 'class' => 'user-label autocut', 'style' => 'width: '.$width.'px' ) );
-		return UI_HTML_Tag::create( 'div', $workerPic.$workerName, array(
+		$workerPic	= HtmlTag::create( 'div', $avatar, array( 'class' => 'user-avatar' ) );
+		$workerName	= HtmlTag::create( 'div', $worker->username, array( 'class' => 'user-label autocut', 'style' => 'width: '.$width.'px' ) );
+		return HtmlTag::create( 'div', $workerPic.$workerName, array(
 			'class'	=> 'user not-autocut',
 			'title'	=> $worker->username,
 		) );

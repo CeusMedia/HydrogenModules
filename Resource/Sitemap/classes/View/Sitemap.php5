@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Sitemap extends View
@@ -16,10 +17,10 @@ class View_Sitemap extends View
 				$label	= str_replace( array( 'ae', 'oe', 'ue' ), array( 'ä', 'ö', 'ü' ), $label );
 				$label	= str_replace( array( '/', '-' ), array( ' &gt; ', ' ' ), $label );
 				$label	= ucwords( $label );
-				$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $link->location ) );
-				$list[]	= UI_HTML_Tag::create( 'li', $link );
+				$link	= HtmlTag::create( 'a', $label, array( 'href' => $link->location ) );
+				$list[]	= HtmlTag::create( 'li', $link );
 			}
-			$list	= UI_HTML_Tag::create( 'ul', $list );
+			$list	= HtmlTag::create( 'ul', $list );
 			extract( $this->populateTexts( array( 'top', 'bottom' ), 'html/sitemap/' ) );
 			return $textTop.$list.$textBottom;
 		}

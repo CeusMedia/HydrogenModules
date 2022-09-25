@@ -1,10 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['authorize'];
 
 extract( $view->populateTexts( array( 'authorize.top', 'authorize.bottom' ), 'html/oauth/', array( 'application' => $application ) ) );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'fa fa-fw fa-arrow-left' ) );
-$iconLogin		= UI_HTML_Tag::create( 'i', '', array( 'fa fa-fw fa-sign-in' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'fa fa-fw fa-arrow-left' ) );
+$iconLogin		= HtmlTag::create( 'i', '', array( 'fa fa-fw fa-sign-in' ) );
 
 return $textAuthorizeTop.'
 		<div class="content-panel">

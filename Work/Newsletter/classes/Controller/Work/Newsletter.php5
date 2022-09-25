@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Newsletter extends Controller
@@ -307,7 +308,7 @@ class Controller_Work_Newsletter extends Controller
 				$data['linkView']		= '('.$words->alertDisabledInPreview.')';
 				$mail->setMode( View_Helper_Newsletter_Mail::MODE_PLAIN );
 				$mail->setData( $data );
-				$content	= UI_HTML_Tag::create( 'xmp', $mail->render() );
+				$content	= HtmlTag::create( 'xmp', $mail->render() );
 				break;
 			case 'html':
 				$data['content']		= $newsletter->html;

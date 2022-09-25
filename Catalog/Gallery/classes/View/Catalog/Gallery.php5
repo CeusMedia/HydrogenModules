@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Catalog_Gallery extends View
@@ -53,13 +54,13 @@ class View_Catalog_Gallery extends View
 				$href	= $pathModule.'category/'.$item->galleryCategoryId;									//   @todo	implement auto-path
 				$attr	= array( 'href' => $href, 'class' => 'autocut', 'rel' => 'gallery' );
 				$label	= $badges ? $count.' '.$item->title : $item->title;
-				$link	= UI_HTML_Tag::create( 'a', $label, $attr );
+				$link	= HtmlTag::create( 'a', $label, $attr );
 				$attr	= array( 'class' => $item->galleryCategoryId == $currentId ? 'active' : NULL );
-				$list[]	= UI_HTML_Tag::create( 'li', $link, $attr );
+				$list[]	= HtmlTag::create( 'li', $link, $attr );
 			}
 		}
 		$attr	= array( 'class' => 'nav nav-pills nav-stacked' );
-		return UI_HTML_Tag::create( 'ul', $list, $attr );
+		return HtmlTag::create( 'ul', $list, $attr );
 	}
 
 	protected function renderCategoryMatrix( $categories )
@@ -70,7 +71,7 @@ class View_Catalog_Gallery extends View
 		foreach( $categories as $category ){
 			if( $category->status == 1 ){
 //				$count	= '<span class="badge">'.count( $item->images ).'</span>';
-				$label	= UI_HTML_Tag::create( 'div', $category->title, array( 'class' => "gallery-category-matrix-item-label autocut" ) );
+				$label	= HtmlTag::create( 'div', $category->title, array( 'class' => "gallery-category-matrix-item-label autocut" ) );
 				$url	= $this->logic->pathModule.'category/'.$category->galleryCategoryId;				//   @todo	implement auto-path
 				$attr	= array(
 					'class'		=> "gallery-category-matrix-item",
@@ -82,11 +83,11 @@ class View_Catalog_Gallery extends View
 					$src	= $pathImages.'preview/'.rawurlencode( $category->path ).'/'.$image->filename;
 				}
 				$attr['style']	= 'background-image: url('.$src.');';
-				$list[]	= UI_HTML_Tag::create( 'div', $label, $attr );
+				$list[]	= HtmlTag::create( 'div', $label, $attr );
 			}
 		}
 		$attr	= [];
-		return UI_HTML_Tag::create( 'div', $list, $attr );
+		return HtmlTag::create( 'div', $list, $attr );
 	}
 
 	protected function renderImageMatrix( $category, $images )
@@ -99,7 +100,7 @@ class View_Catalog_Gallery extends View
 			if( $image->status == 1 ){
 //				$count	= '<span class="badge">'.count( $item->images ).'</span>';
 				if( strlen( trim( $image->title ) ) )
-					$label	= UI_HTML_Tag::create( 'div', $image->title.'&nbsp;', array( 'class' => "gallery-image-matrix-item-label autocut" ) );
+					$label	= HtmlTag::create( 'div', $image->title.'&nbsp;', array( 'class' => "gallery-image-matrix-item-label autocut" ) );
 				$url	= $this->logic->pathModule.'image/'.$image->galleryImageId;				//   @todo	implement auto-path
 				$src	= $pathImages."preview/".rawurlencode( $category->path )."/".rawurlencode( $image->filename );
 				$attr	= array(
@@ -107,10 +108,10 @@ class View_Catalog_Gallery extends View
 					'href'		=> $url,
 					'style'		=> 'background-image: url('.$src.');'
 				);
-				$list[]	= UI_HTML_Tag::create( 'a', ''/*$label*/, $attr );
+				$list[]	= HtmlTag::create( 'a', ''/*$label*/, $attr );
 			}
 		}
 		$attr	= [];
-		return UI_HTML_Tag::create( 'div', $list, $attr );
+		return HtmlTag::create( 'div', $list, $attr );
 	}
 }

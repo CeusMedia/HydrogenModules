@@ -1,12 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['view'];
 
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-arrow-left" ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => "icon-arrow-left" ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+	$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 }
 
 $file		= preg_replace( "/^".preg_quote( realpath( $env->uri ), '/' )."/", '.', $exception->file );
@@ -62,10 +63,10 @@ $list	= $helperFacts->render();*/
 
 $list	= [];
 foreach( $facts as $key => $value ){
-	$list[]	= UI_HTML_Tag::create( 'dt', $words['view']['label'.ucfirst( $key)] );
-	$list[]	= UI_HTML_Tag::create( 'dd', $value );
+	$list[]	= HtmlTag::create( 'dt', $words['view']['label'.ucfirst( $key)] );
+	$list[]	= HtmlTag::create( 'dd', $value );
 }
-$listFacts	= UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+$listFacts	= HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 
 //  --  TRACE  --  //
 if( !empty( $exception->traceAsHtml ) )
@@ -88,14 +89,14 @@ if( !empty( $exception->request ) ){
 			$value	= $field->getValue();
 			if( $field->getName() === 'cookie' )
 				$value	= str_replace( '; ', '<br/>', $value );
-			$rows[]	= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'th', $field->getName() ),
-				UI_HTML_Tag::create( 'td', $value ),
+			$rows[]	= HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'th', $field->getName() ),
+				HtmlTag::create( 'td', $value ),
 			) );
 		}
-		$headers		= UI_HTML_Tag::create( 'table', array(
+		$headers		= HtmlTag::create( 'table', array(
 			UI_HTML_Elements::ColumnGroup( '20%', '' ),
-			UI_HTML_Tag::create( 'tbody', $rows ),
+			HtmlTag::create( 'tbody', $rows ),
 		), array( 'class' => 'table table-condensed table-striped' ) );
 		$dumpRequest	= UI_VariableDumper::dump( $request->getAll() );
 	}
@@ -143,11 +144,11 @@ return '
 				'.$topicRequest.'
 				'.$topicSession.'
 				<div class="buttonbar">
-					'.UI_HTML_Tag::create( 'a', $iconList.'&nbsp;'.$w->buttonCancel, array(
+					'.HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonCancel, array(
 						'href'	=> './server/log/exception'.( $page ? '/'.$page : '' ),
 						'class'	=> 'btn',
 					) ).'
-					'.UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+					'.HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
 						'href'	=> './server/log/exception/remove/'.$exception->exceptionId.'/'.$page,
 						'class'	=> 'btn btn-danger',
 					) ).'

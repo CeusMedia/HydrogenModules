@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['login'];
 
@@ -12,15 +13,15 @@ $fieldRemember	= "";
 if( $useRemember )
 	$fieldRemember	= HTML::DivClass( "row-fluid",
 		HTML::DivClass( "span12", array(
-			UI_HTML_Tag::create( 'label', array(
-				UI_HTML_Tag::create( 'input', NULL, array(
+			HtmlTag::create( 'label', array(
+				HtmlTag::create( 'input', NULL, array(
 					'type'		=> "checkbox",
 					'name'		=> "login_remember",
 					'id'		=> "input_login_remember",
 					'value'		=> "1",
 					'checked'	=> $login_remember ? 'checked' : NULL
 				) ),
-				UI_HTML_Tag::create( 'abbr', $w->labelRemember, array(
+				HtmlTag::create( 'abbr', $w->labelRemember, array(
 					'title'		=> $w->labelRemember_title
 				) ),
 			), array( 'class' => "checkbox" ) )
@@ -29,20 +30,20 @@ if( $useRemember )
 		'style'	=> $useRemember ? 'display: none' : NULL
 	) );
 
-$buttonLogin	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
+$buttonLogin	= HtmlTag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
 	'type'		=> "submit",
 	'name'		=> "doLogin",
 	'class'		=> "btn btn-primary",
 ) );
 
-$buttonPassword	= UI_HTML_Tag::create( 'a', $iconPassword.'&nbsp;'.$w->buttonPassword, array(
+$buttonPassword	= HtmlTag::create( 'a', $iconPassword.'&nbsp;'.$w->buttonPassword, array(
 	'href'		=> './auth/password',
 	'class'		=> 'btn btn-small',
 ) );
 
 $buttonRegister	= "";
 if( $useRegister ){
-	$buttonRegister	= UI_HTML_Tag::create( 'a', $iconRegister.'&nbsp;'.$w->buttonRegister, array(
+	$buttonRegister	= HtmlTag::create( 'a', $iconRegister.'&nbsp;'.$w->buttonRegister, array(
 		'href'		=> './auth/register'.( $from ? '?from='.$from : '' ),
 		'class'		=> 'btn btn-small btn-success',
 	) );
@@ -53,15 +54,15 @@ HTML::DivClass( "content-panel content-panel-form", array(
 	HTML::H3( $w->heading ),
 	HTML::DivClass( "content-panel-inner",
 		HTML::DivClass( "auth-login-form",
-			UI_HTML_Tag::create( 'form', array(
+			HtmlTag::create( 'form', array(
 				( $useCsrf ? View_Helper_CSRF::renderStatic( $env, 'auth/oauth/login' ) : '' ),
 				HTML::DivClass( "row-fluid",
 					HTML::DivClass( "span12", array(
-						UI_HTML_Tag::create( 'label', $w->labelUsername, array(
+						HtmlTag::create( 'label', $w->labelUsername, array(
 							'for'	=> "input_login_username",
 							'class'	=> "mandatory"
 						) ),
-						UI_HTML_Tag::create( 'input', NULL, array(
+						HtmlTag::create( 'input', NULL, array(
 							'value'		=> htmlentities( $login_username, ENT_QUOTES, 'UTF-8' ),
 							'class'		=> 'span12 mandatory',
 							'type'		=> 'text',
@@ -73,11 +74,11 @@ HTML::DivClass( "content-panel content-panel-form", array(
 				),
 				HTML::DivClass( "row-fluid",
 					HTML::DivClass( "span12", array(
-						UI_HTML_Tag::create( 'label', $w->labelPassword, array(
+						HtmlTag::create( 'label', $w->labelPassword, array(
 							'for'	=> "input_login_password",
 							'class'	=> "mandatory"
 						) ),
-						UI_HTML_Tag::create( 'input', NULL, array(
+						HtmlTag::create( 'input', NULL, array(
 							'value'		=> NULL,
 							'class'		=> 'span12 mandatory',
 							'type'		=> 'password',

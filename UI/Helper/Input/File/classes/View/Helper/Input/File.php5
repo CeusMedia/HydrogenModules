@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Input_File
@@ -24,7 +25,7 @@ class View_Helper_Input_File
 
 	public function render(): string
 	{
-		$input		= UI_HTML_Tag::create( 'input', NULL, array(
+		$input		= HtmlTag::create( 'input', NULL, array(
 			'type'				=> "file",
 			'name'				=> $this->name,
 			'class'				=> 'bs-input-file',
@@ -32,20 +33,20 @@ class View_Helper_Input_File
 			'multiple'			=> $this->multiple ? 'multiple' : NULL,
 			'webkitdirectory'	=> $this->folder ? '' : NULL,
 		) );
-		$toggle		= UI_HTML_Tag::create( 'a', $this->label, array(
+		$toggle		= HtmlTag::create( 'a', $this->label, array(
 			'class'		=> 'btn '.$this->buttonClass.' bs-input-file-toggle',
 			'href'		=> "javascript:;"
 		) );
-		$info		= UI_HTML_Tag::create( 'input', NULL, array(
+		$info		= HtmlTag::create( 'input', NULL, array(
 			'type'		=> 'text',
 			'class'		=> 'span12 bs-input-file-info',
 			'required'	=> $this->required ? 'required' : NULL
 		) );
-		$upload		= UI_HTML_Tag::create( 'div', $info.$input.$toggle, array(
+		$upload		= HtmlTag::create( 'div', $info.$input.$toggle, array(
 			'class'		=> 'span12 input-append bs-input-file',
 			'style'		=> 'position: relative;'
 		) );
-		$container	= UI_HTML_Tag::create( 'div', $upload, array(
+		$container	= HtmlTag::create( 'div', $upload, array(
 			'class'		=> 'row-fluid'
 		) );
 		return $container;

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index-list'];
 
@@ -21,16 +22,16 @@ $list	= [];
 foreach( $modules as $module ){
 	if( !count( $module->config ) )
 		continue;
-	$link	= UI_HTML_Tag::create( 'a', $module->title.' <small class="muted">('.count( $module->config ).')</small>', array(
+	$link	= HtmlTag::create( 'a', $module->title.' <small class="muted">('.count( $module->config ).')</small>', array(
 		'href'	=> './admin/config/view/'.$module->id
 	) );
-	$list[]	= UI_HTML_Tag::create( 'li', $link );
+	$list[]	= HtmlTag::create( 'li', $link );
 }
 
 return '
 <div class="content-panel content-panel-form content-panel-filter">
 	<h3>'.$w->heading. ' <small class="muted">('.count( $list ).')</small></h3>
 	<div class="content-panel-inner">
-		'.UI_HTML_Tag::create( 'ul', $list ).'
+		'.HtmlTag::create( 'ul', $list ).'
 	</div>
 </div>';

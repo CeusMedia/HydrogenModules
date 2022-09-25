@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Mission_Kanban extends View{
@@ -107,56 +108,56 @@ WorkMissionsKanban.loadCurrentList();
 				$rows	= [];
 				foreach( $missions as $mission ){
 					$missionCount++;
-					$buttonView	= UI_HTML_Tag::create( 'a', '<i class="fa fa-eye"></i>&nbsp;<span class="hidden-tablet">anzeigen</span>', array(
+					$buttonView	= HtmlTag::create( 'a', '<i class="fa fa-eye"></i>&nbsp;<span class="hidden-tablet">anzeigen</span>', array(
 						'href'	=> './work/mission/view/'.$mission->missionId,
 						'class'	=> 'btn btn-small',
 						'alt'	=> 'anzeigen',
 						'title'	=> 'anzeigen',
 					) );
-					$buttonEdit	= UI_HTML_Tag::create( 'a', '<i class="fa fa-pencil"></i>&nbsp;<span class="hidden-tablet">bearbeiten</span>', array(
+					$buttonEdit	= HtmlTag::create( 'a', '<i class="fa fa-pencil"></i>&nbsp;<span class="hidden-tablet">bearbeiten</span>', array(
 						'href'	=> './work/mission/edit/'.$mission->missionId,
 						'class'	=> 'btn btn-small',
 						'alt'	=> 'bearbeiten',
 						'title'	=> 'bearbeiten',
 					) );
 					$cells	= [];
-					$cells[]	= UI_HTML_Tag::create( 'div', $mission->title, array( 'class' => 'mission-title' ) );
+					$cells[]	= HtmlTag::create( 'div', $mission->title, array( 'class' => 'mission-title' ) );
 					$userMap	= $this->getData( 'users' );
 					if( $mission->workerId ){
 						$worker	= '<strike class="muted">entfernt</strike>';
 						if( isset( $userMap[$mission->workerId] ) )
 							$worker	= $userMap[$mission->workerId]->username;
-						$label		= UI_HTML_Tag::create( 'small', 'Bearbeiter: '.$worker );
-						$cells[]	= UI_HTML_Tag::create( 'div', $label );
+						$label		= HtmlTag::create( 'small', 'Bearbeiter: '.$worker );
+						$cells[]	= HtmlTag::create( 'div', $label );
 					}
 					if( $mission->projectId ){
 						$projectLabel	= '<strike class="muted">entfernt</strike>';
 						if( isset( $this->projects[$mission->projectId] ) )
 							$projectLabel	= $this->projects[$mission->projectId]->title;
 						$mission->projectId ?  : $mission->projectId;
-						$label		= UI_HTML_Tag::create( 'small', 'Project: '.$projectLabel );
-						$cells[]	= UI_HTML_Tag::create( 'div', $label );
+						$label		= HtmlTag::create( 'small', 'Project: '.$projectLabel );
+						$cells[]	= HtmlTag::create( 'div', $label );
 					}
-					$cells[]	= UI_HTML_Tag::create( 'div', $buttonView.$buttonEdit, array( 'class' => 'btn-group' ) );
-					$rows[]	= UI_HTML_Tag::create( 'li', $cells, array( 'class' => 'mission-block priority-'.$mission->priority, 'data-id' => $mission->missionId ) );
+					$cells[]	= HtmlTag::create( 'div', $buttonView.$buttonEdit, array( 'class' => 'btn-group' ) );
+					$rows[]	= HtmlTag::create( 'li', $cells, array( 'class' => 'mission-block priority-'.$mission->priority, 'data-id' => $mission->missionId ) );
 				}
-				$columns[]	= UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'h4', $statusLabel, array( 'class' => '' ) ),
-					UI_HTML_Tag::create( 'ul', $rows, array( 'class' => 'sortable unstyled equalize-auto', 'id' => 'sortable-status-'.$status ) ),
+				$columns[]	= HtmlTag::create( 'div', array(
+					HtmlTag::create( 'h4', $statusLabel, array( 'class' => '' ) ),
+					HtmlTag::create( 'ul', $rows, array( 'class' => 'sortable unstyled equalize-auto', 'id' => 'sortable-status-'.$status ) ),
 				), array( 'class' => 'span3' ) );
 			}
 			if( !$missionCount )
 				continue;
 
-			$laneLabel	= UI_HTML_Tag::create( 'h3', '<span class="muted">Projekt:</span>&nbsp;'.$project->title );
-			$columns	= UI_HTML_Tag::create( 'div', $columns, array( 'class' => 'row-fluid' ) );
-			$lanes[]	= UI_HTML_Tag::create( 'div', array( $laneLabel, $columns ), array(
+			$laneLabel	= HtmlTag::create( 'h3', '<span class="muted">Projekt:</span>&nbsp;'.$project->title );
+			$columns	= HtmlTag::create( 'div', $columns, array( 'class' => 'row-fluid' ) );
+			$lanes[]	= HtmlTag::create( 'div', array( $laneLabel, $columns ), array(
 				'class'		=> 'row-fluid work-mission-kanban-lane-item',
 				'id'		=> 'kanban-lane-'.$projectId.'-'.$status,
 			) );
 		}
 
-		return UI_HTML_Tag::create( 'div', $lanes, array( 'class' => 'work-mission-kanban-lane-list' ) );
+		return HtmlTag::create( 'div', $lanes, array( 'class' => 'work-mission-kanban-lane-list' ) );
 	}
 
 	protected function renderSmall( $userId ){
@@ -164,7 +165,7 @@ WorkMissionsKanban.loadCurrentList();
 	}
 
 	protected function renderControls( $year, $month ){
-		$btnExport		= UI_HTML_Tag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', array(
+		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', array(
 			'href'		=> './work/mission/export/ical',
 			'target'	=> '_blank',
 			'class'		=> 'btn not-btn-small btn-warning',
@@ -197,7 +198,7 @@ WorkMissionsKanban.loadCurrentList();
 			$overdue	= '';
 			if( $isPast )
 				$overdue	= $this->renderOverdue( $mission );
-			$list[]	= UI_HTML_Tag::create( 'li', $overdue.$title, array(
+			$list[]	= HtmlTag::create( 'li', $overdue.$title, array(
 				"class"			=> 'priority-'.$mission->priority,
 				"data-id"		=> $mission->missionId,
 				"data-type"		=> $mission->type,
@@ -213,7 +214,7 @@ WorkMissionsKanban.loadCurrentList();
 		$class	= $cellClass ? $cellClass.' '.$class : $class;
 		$list	= '<ul>'.join( $list ).'</ul>';
 		$label	= '<div class="date-label '.$class.'">'.$date->format( "j.n." ).'</div>';
-		return UI_HTML_Tag::create( 'td', $label.$list, array(
+		return HtmlTag::create( 'td', $label.$list, array(
 			"oncontextmenu"	=> "return false",
 			"class"			=> $class,
 			"data-day"		=> $date->format( "j" ),
@@ -243,7 +244,7 @@ WorkMissionsKanban.loadCurrentList();
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
-			return UI_HTML_Tag::create( 'div', $diff->days, array( 'class' => "overdue" ) );		//  render overdue container
+			return HtmlTag::create( 'div', $diff->days, array( 'class' => "overdue" ) );		//  render overdue container
 	}
 }
 ?>

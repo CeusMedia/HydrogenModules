@@ -1,7 +1,9 @@
 <?php
+
 use CeusMedia\Bootstrap\Dropdown\Menu as DropdownMenu;
 use CeusMedia\Bootstrap\Dropdown\Trigger as DropdownTrigger;
 use CeusMedia\Bootstrap\Button\Group as Dropdown;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Navigation_Bootstrap_PlusMenu extends CMF_Hydrogen_View_Helper_Abstract
@@ -63,15 +65,15 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends CMF_Hydrogen_View_Helper
 		$buttonClasses	= array( 'btn', 'dropdown-toggle' );
 		if( $this->buttonClass )
 			$buttonClasses[]	= $this->buttonClass;
-		$iconPlus	= UI_HTML_Tag::create( 'i', '', array( 'class' => $this->buttonIcon ) );
-		$button		= UI_HTML_Tag::create( 'button', $iconPlus, array(
+		$iconPlus	= HtmlTag::create( 'i', '', array( 'class' => $this->buttonIcon ) );
+		$button		= HtmlTag::create( 'button', $iconPlus, array(
 			'class'			=> join( ' ', $buttonClasses ),
 			'data-toggle'	=> 'dropdown',
 		) );
 		$group		= (new Dropdown())->add( $button )->add( $dropdown );
 		if( $this->alignBottom )
 			$group->addClass( 'dropup' );
-		$container	= UI_HTML_Tag::create( 'div', $group, array( 'class' => $this->class ) );
+		$container	= HtmlTag::create( 'div', $group, array( 'class' => $this->class ) );
 		return (string) $container;
 	}
 

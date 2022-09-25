@@ -1,21 +1,22 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconRun		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) );
-$iconStop		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) );
-$iconRefresh	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconRun		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) );
+$iconStop		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) );
+$iconRefresh	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
 
 $list	= [];
 
-$buttonRunDisabled	= UI_HTML_Tag::create( 'button', $iconRun.'&nbsp;starten&nbsp;', array(
+$buttonRunDisabled	= HtmlTag::create( 'button', $iconRun.'&nbsp;starten&nbsp;', array(
 	'type'	=> 'button',
 	'class'	=> 'btn btn-mini btn-success disabled',
 ) );
-$buttonStopDisabled	= UI_HTML_Tag::create( 'a', $iconStop.'&nbsp;stoppen&nbsp;', array(
+$buttonStopDisabled	= HtmlTag::create( 'a', $iconStop.'&nbsp;stoppen&nbsp;', array(
 	'type'	=> 'button',
 	'class'	=> 'btn btn-mini btn-warning disabled',
 ) );
-$buttonCancelDisabled	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;', array(
+$buttonCancelDisabled	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;', array(
 	'type'	=> 'button',
 	'class'	=> 'btn btn-mini btn-danger disabled',
 ) );
@@ -36,15 +37,15 @@ foreach( $queues as $queue ){
 		\CeusMedia\Bootstrap\Progress::BAR_CLASS_DANGER
 	);
 
-	$buttonRun	= UI_HTML_Tag::create( 'a', $iconRun.'&nbsp;starten&nbsp;', array(
+	$buttonRun	= HtmlTag::create( 'a', $iconRun.'&nbsp;starten&nbsp;', array(
 		'href'	=> '#',
 		'class'	=> 'btn btn-mini btn-success',
 	) );
-	$buttonStop	= UI_HTML_Tag::create( 'a', $iconStop.'&nbsp;stoppen&nbsp;', array(
+	$buttonStop	= HtmlTag::create( 'a', $iconStop.'&nbsp;stoppen&nbsp;', array(
 		'href'	=> '#',
 		'class'	=> 'btn btn-mini btn-warning',
 	) );
-	$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;', array(
+	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;', array(
 		'href'	=> '#',
 		'class'	=> 'btn btn-mini btn-danger',
 	) );
@@ -54,30 +55,30 @@ foreach( $queues as $queue ){
 		$buttons	= array( $buttonRun, $buttonStopDisabled, $buttonCancel );
 	if( $queue->status == 1 )
 		$buttons	= array( $buttonRunDisabled, $buttonStop, $buttonCancel );
-	$buttons	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
+	$buttons	= HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
 
 	$creator	= '-';
 	if( $queue->creatorId && $queue->creator ){
-		$creator	= UI_HTML_Tag::create( 'abbr', $queue->creator->username, array(
+		$creator	= HtmlTag::create( 'abbr', $queue->creator->username, array(
 			'title'	=> $queue->creator->firstname.' '.$queue->creator->surname
 		) );
 	}
 
 	$percent	= round( ( $queue->countLettersByStatus[1] + $queue->countLettersByStatus[2] ) / $queue->countLetters * 100, 1 ).'%';
 
-	$list[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $queue->newsletterQueueId, array() ),
-		UI_HTML_Tag::create( 'td', $queue->countLetters, array() ),
-		UI_HTML_Tag::create( 'td', $words->queueStates[$queue->status], array() ),
-		UI_HTML_Tag::create( 'td', $percent, array() ),
-		UI_HTML_Tag::create( 'td', $bar->render(), array() ),
-		UI_HTML_Tag::create( 'td', $creator ),
-		UI_HTML_Tag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $queue->createdAt, TRUE ) ),
-//		UI_HTML_Tag::create( 'td', $buttons, array() ),
+	$list[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', $queue->newsletterQueueId, array() ),
+		HtmlTag::create( 'td', $queue->countLetters, array() ),
+		HtmlTag::create( 'td', $words->queueStates[$queue->status], array() ),
+		HtmlTag::create( 'td', $percent, array() ),
+		HtmlTag::create( 'td', $bar->render(), array() ),
+		HtmlTag::create( 'td', $creator ),
+		HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $queue->createdAt, TRUE ) ),
+//		HtmlTag::create( 'td', $buttons, array() ),
 	) );
 }
 $columnGroup	= UI_HTML_Elements::columnGroup( array( '100px', '100px', '120px', '120px', '', '140px', '140px'/*, '260px'*/ ) );
-$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
 	'Queue',
 	'Empfänger',
 	'Zustand',
@@ -87,8 +88,8 @@ $thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
 	'erstellt vor',
 //	'Fortschritt',
 ) ) );
-$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-$list	= UI_HTML_Tag::create( 'table', $columnGroup.$thead.$tbody, array( 'class' => 'table table-striped tabled-fixed' ) );
+$tbody	= HtmlTag::create( 'tbody', $list );
+$list	= HtmlTag::create( 'table', $columnGroup.$thead.$tbody, array( 'class' => 'table table-striped tabled-fixed' ) );
 
 $panelList	= '
 <div class="content-panel">

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //$categories	= '...[categories]...';
 //$categories	= $view->renderCategoryList( $categories );
@@ -14,23 +15,23 @@ $imageMatrix	= $view->renderImageMatrix( $category, $images );
 foreach( $images as $i ){
 	if( $i->status == 1 ){
 		$title	= $i->title ? $i->title : $i->filename;
-		$label	= UI_HTML_Tag::create( 'p', $title );
-		$image	= UI_HTML_Tag::create( 'img', NULL, array(
+		$label	= HtmlTag::create( 'p', $title );
+		$image	= HtmlTag::create( 'img', NULL, array(
 			'src'	=> $pathThumbs.$i->filename,
 			'alt'	=> $title,
 			'title'	=> $title
 		) );
-		$item	= UI_HTML_Tag::create( 'div', $image, array( 'class' => 'not-span4 thumb' ) );
-		$link	= UI_HTML_Tag::create( 'a', $item, array(
+		$item	= HtmlTag::create( 'div', $image, array( 'class' => 'not-span4 thumb' ) );
+		$link	= HtmlTag::create( 'a', $item, array(
 			'href'	=> $pathModule.'image/'.$i->galleryImageId,
 			'title'	=> $title,
 			'class'	=> ''
 		) );
-		$box	= UI_HTML_Tag::create( 'div', $link, array( 'style' => 'width: 220px; height: 160px; float: left; margin: auto auto; vertical-align: middle; ' ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $box, array( 'class' => 'not-thumb', ) );
+		$box	= HtmlTag::create( 'div', $link, array( 'style' => 'width: 220px; height: 160px; float: left; margin: auto auto; vertical-align: middle; ' ) );
+		$list[]	= HtmlTag::create( 'li', $box, array( 'class' => 'not-thumb', ) );
 	}
 }
-$images	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'not-thumbnails unstyled' ) );
+$images	= HtmlTag::create( 'ul', $list, array( 'class' => 'not-thumbnails unstyled' ) );
 */
 
 $w	= (object) $words['categories'];

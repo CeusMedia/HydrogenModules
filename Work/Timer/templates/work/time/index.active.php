@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['index'];
 $content	= '<div class="alert alert-info"><em class="muted">'.$w->noCurrent.'</em></div>';
 
@@ -13,15 +15,15 @@ if( $timer ){
 	$buttonStop		= '<a href="./work/time/stop/'.$timer->workTimerId.$from.'" class="btn not-btn-large btn-danger"><i class="icon-stop icon-white"></i> abschließen</a>';
 	$buttonEdit		= '<a href="./work/time/edit/'.$timer->workTimerId.$from.'" class="btn"><i class="fa fa-fw fa-pencil"></i> bearbeiten</a>';
 
-	$linkProject	= UI_HTML_Tag::create( 'a', $timer->project->title, array(
+	$linkProject	= HtmlTag::create( 'a', $timer->project->title, array(
 		'href'	=> './manage/project/view/'.$timer->project->projectId,
 		'class'	=> 'autocut',
 	) );
-	$linkRelation	= UI_HTML_Tag::create( 'em', 'Nicht zugeordnet.', array( 'class' => 'muted' ) );
+	$linkRelation	= HtmlTag::create( 'em', 'Nicht zugeordnet.', array( 'class' => 'muted' ) );
 	if( $timer->relationTitle ){
 		$linkRelation	= $timer->relationTitle;
 		if( $timer->relationLink )
-			$linkRelation	= UI_HTML_Tag::create( 'a', $timer->relationTitle, array(
+			$linkRelation	= HtmlTag::create( 'a', $timer->relationTitle, array(
 				'href'	=> $timer->relationLink,
 				'class'	=> 'autocut',
 			) );

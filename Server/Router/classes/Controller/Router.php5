@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -39,7 +40,7 @@ class Controller_Router extends Controller{
 				if( (int) $route->code >= 400 ){
 					Net_HTTP_Status::sendHeader( $route->code );
 					$heading	= $route->code.' '.Net_HTTP_Status::getText( $route->code );
-					print( UI_HTML_Tag::create( 'h1', $heading ) );
+					print( HtmlTag::create( 'h1', $heading ) );
 					exit;
 				}
 				$controller	= new Controller_Router( $env, FALSE );

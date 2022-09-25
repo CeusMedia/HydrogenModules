@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Mangopay_Entity_Card extends View_Helper_Mangopay_Abstract{
 
 	protected $nodeClass	= NULL;
@@ -24,7 +26,7 @@ class View_Helper_Mangopay_Entity_Card extends View_Helper_Mangopay_Abstract{
 			else
  				$attributes['onclick']	= 'document.location.href="'.$url.'";';
 		}
-		return UI_HTML_Tag::create( $this->nodeName, $item, $attributes );
+		return HtmlTag::create( $this->nodeName, $item, $attributes );
 	}
 
 	public function set( $card ){

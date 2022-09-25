@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 /**	@todo	kriss: realize new view button, see implementation @scripts */
 
 $w			= (object) $words['tab-resources'];
@@ -70,7 +72,7 @@ if( $module->files->classes ){
 			$class	= 'missing';
 			$buttonView	= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
 		}
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon class' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon class' ) );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
 	$heads		= UI_HTML_Elements::TableHeads( array( "Datei", "Aktion" ) );
@@ -98,7 +100,7 @@ if( $module->files->templates ){
 			$class	= 'missing';
 			$buttonView	= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
 		}
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon template' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon template' ) );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
 	$heads		= UI_HTML_Elements::TableHeads( array( "Datei", "Aktion" ) );
@@ -131,7 +133,7 @@ if( $module->files->locales ){
 			$class	= 'missing';
 			$buttonView	= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
 		}
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon locale' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon locale' ) );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
 	$heads		= UI_HTML_Elements::TableHeads( array( "Datei", "Aktion" ) );
@@ -171,7 +173,7 @@ if( $module->files->styles ){
 			$class	= 'missing';
 			$buttonView	= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
 		}
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon style' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon style' ) );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$source.'</td><td>'.$load.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
 	$heads		= UI_HTML_Elements::TableHeads( array( "Datei", "Quelle", "Laden", "Aktion" ) );
@@ -203,7 +205,7 @@ if( $module->files->scripts ){
 		$urlView		= './admin/module/editor/viewCode/'.$moduleId.'/script/'.base64_encode( $uri );
 		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/script/'.base64_encode( $item->file ).'?tab=resources';
 #		$buttonView		= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html', NULL, '['.$module->title.'] '.$item->file );
-		$buttonView		= UI_HTML_Tag::create( 'a', $iconView, array(
+		$buttonView		= HtmlTag::create( 'a', $iconView, array(
 			'href'		=> $urlView,
 			'class'		=> 'button tiny layer-html',
 			'title'		=> '['.$module->title.'] '.$item->file
@@ -215,7 +217,7 @@ if( $module->files->scripts ){
 			$class	= 'missing';
 			$buttonView	= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
 		}
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon script' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon script' ) );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$source.'</td><td>'.$load.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
 	$heads		= UI_HTML_Elements::TableHeads( array( "Datei", "Quelle", "Laden", "Aktion" ) );
@@ -253,7 +255,7 @@ if( $module->files->images ){
 			$class	= 'missing';
 			$buttonView	= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-image disabled' );
 		}
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon image' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon image' ) );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$source.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
 	$heads		= UI_HTML_Elements::TableHeads( array( "Datei", "Quelle", "Aktion" ) );
@@ -289,7 +291,7 @@ if( $module->files->files ){
 			$class	= 'missing';
 			$buttonView	= UI_HTML_Elements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
 		}
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon file' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon file' ) );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$source.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
 	$heads		= UI_HTML_Elements::TableHeads( array( "Datei", "Quelle", "Aktion" ) );
@@ -300,7 +302,7 @@ if( $module->files->files ){
 
 
 
-$iconAdd	= UI_HTML_Tag::create( 'img', NULL, array( 'href' => $pathIcons.'add.png' ) );
+$iconAdd	= HtmlTag::create( 'img', NULL, array( 'href' => $pathIcons.'add.png' ) );
 $optType	= UI_HTML_Elements::Options( $words['resource-types'] );
 
 $optSourceScript	= UI_HTML_Elements::Options( $words['sources-script'] );

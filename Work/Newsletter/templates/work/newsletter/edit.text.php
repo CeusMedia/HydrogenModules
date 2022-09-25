@@ -1,21 +1,22 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) ).'&nbsp;';
-$iconPrev		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconNext		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) ).'&nbsp;';
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconPreview	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) ).'&nbsp;';
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) ).'&nbsp;';
+$iconPrev		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconNext		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconPreview	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
 
 
 //  --  PANEL: PREVIEW  --  //
 $urlPreview			= './work/newsletter/preview/text/'.$newsletter->newsletterId;
-$iframeText			= UI_HTML_Tag::create( 'iframe', '', array(
+$iframeText			= HtmlTag::create( 'iframe', '', array(
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
 ) );
-$buttonPreviewText	= UI_HTML_Tag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
+$buttonPreviewText	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
 	'data-toggle'	=> 'modal',
@@ -58,20 +59,20 @@ if( $newsletter->generatePlain ){
 	</div>';
 }
 
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.$words->edit->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, array(
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
 	'disabled'	=> (int) $newsletter->status !== Model_Newsletter::STATUS_NEW ? 'disabled' : NULL,
 ) );
 
-$buttonPreview	= UI_HTML_Tag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
+$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
 	'href'		=> './work/newsletter/preview/text/'.$newsletterId.'/1',
 	'target'	=> 'NewsletterPreview',
 	'class'		=> 'btn btn-info btn-small',
 ) );
 
-$buttonPreview	= UI_HTML_Tag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
+$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
 	'type'			=> "button",
 	'class'			=> "btn btn-info",
 	'data-toggle'	=> "modal",
@@ -79,11 +80,11 @@ $buttonPreview	= UI_HTML_Tag::create( 'a', $iconPreview.$words->edit->buttonPrev
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview(\'./work/newsletter/preview/text/'.$newsletterId.'/1\');'
 ) );
 
-$buttonPrev		= UI_HTML_Tag::Create( 'a', $iconNext.$words->edit->buttonPrev, array(
+$buttonPrev		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonPrev, array(
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/1',
 	'class'	=> 'btn not-btn-small',
 ) );
-$buttonNext		= UI_HTML_Tag::Create( 'a', $iconNext.$words->edit->buttonNext, array(
+$buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, array(
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/3',
 	'class'	=> 'btn not-btn-small',
 ) );
@@ -95,7 +96,7 @@ $panelForm	= '
 		<form action="./work/newsletter/edit/'.$newsletterId.'" method="post">
 			<div class="row-fluid">
 				<label for="input_generatePlain" class="checkbox">
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'		=> "checkbox",
 						'name'		=> "generatePlain",
 						'id'		=> 'input_generatePlain',

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mission_List{
 
 	protected $dayMissions	= [];
@@ -15,22 +17,22 @@ class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mi
 		$max		= max( $numbers );
 		for( $i=0; $i<6; $i++ ){
 			$label		= $this->renderDayButtonLabel( $i, $numbers[$i], $max );
-            $class      = $numbers[$i] ? '' : 'empty-day';
+			$class		= $numbers[$i] ? '' : 'empty-day';
 			$attributes	= array(
 				'href'				=> '#',
 				'data-toggle'		=> 'tab',
 				'onclick'			=> 'WorkMissions.showDayTable('.$i.', true); return false',
-                'id'                => 'work-mission-day-control-small-'.$i,
-                'class'             => 'btn mission-day-control '.$class,
+				'id'				=> 'work-mission-day-control-small-'.$i,
+				'class'				=> 'btn mission-day-control '.$class,
 				'data-day-nr'		=> $i,
 				'data-items'		=> $numbers[$i],
 				'data-items-max'	=> $max,
 			);
-			$link		= UI_HTML_Tag::create( 'a', $label, $attributes );
-			$buttons[]	= UI_HTML_Tag::create( 'li', $link );
+			$link		= HtmlTag::create( 'a', $label, $attributes );
+			$buttons[]	= HtmlTag::create( 'li', $link );
 		}
-		$list		= UI_HTML_Tag::create( 'ul', $buttons, array( 'class' => 'nav nav-tabs' ) );
-		$container	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'container' ) );
+		$list		= HtmlTag::create( 'ul', $buttons, array( 'class' => 'nav nav-tabs' ) );
+		$container	= HtmlTag::create( 'div', $list, array( 'class' => 'container' ) );
 		return $container;
 	}
 
@@ -47,9 +49,9 @@ class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mi
 
 		$dayDate	= date( "j.", $then );
 		$dayDate	.= '<small class="muted">'.date( "n.", $then ).'</small>';
-		$dayDate	= UI_HTML_Tag::create( 'div', $dayDate, array( 'class' => 'dayDate date' ) );
+		$dayDate	= HtmlTag::create( 'div', $dayDate, array( 'class' => 'dayDate date' ) );
 		$dayLabel	= $this->words['days'][date( "w", $then )];
-		$dayLabel	= UI_HTML_Tag::create( 'div', $dayLabel, array( 'class' => 'dayName' ) );
+		$dayLabel	= HtmlTag::create( 'div', $dayLabel, array( 'class' => 'dayName' ) );
 		return sprintf( $template, $dayDate, $dayLabel, $number, $indicator );
 	}
 
@@ -82,8 +84,8 @@ class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mi
 			'class'		=> 'bar '.$color,
 			'style'		=> 'width: '.$width,
 		);
-		$bar	= UI_HTML_Tag::create( 'div', "", $attributes );
-		return UI_HTML_Tag::create( 'div', $bar, array( 'class' => 'progress', 'data-max' => $max ) );
+		$bar	= HtmlTag::create( 'div', "", $attributes );
+		return HtmlTag::create( 'div', $bar, array( 'class' => 'progress', 'data-max' => $max ) );
 	}
 
 	public function setDayMissions( $dayMissions ){

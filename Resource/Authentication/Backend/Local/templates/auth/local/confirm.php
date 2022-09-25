@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w		= (object) $words['confirm'];
 
 extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/local/confirm/' ) );
@@ -6,16 +8,16 @@ extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/loca
 $panelConfirm	= HTML::DivClass( "content-panel content-panel-form", array(
 	HTML::H3( $w->heading ),
 	HTML::DivClass( "content-panel-inner", array(
-		UI_HTML_Tag::create( 'form', array(
+		HtmlTag::create( 'form', array(
 			HTML::DivClass( 'row-fluid', array(
 				HTML::DivClass( 'span12', array(
 					HTML::Label( "confirm_code", $w->labelCode, "mandatory" ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'hidden',
 						'name'		=> 'from',
 						'value'		=> $from
 					) ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'text',
 						'name'		=> 'confirm_code',
 						'id'		=> 'input_confirm_code',
@@ -26,7 +28,7 @@ $panelConfirm	= HTML::DivClass( "content-panel content-panel-form", array(
 				) ),
 			) ),
 			HTML::DivClass( "buttonbar", array(
-				UI_HTML_Tag::create( 'button', '<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSend, array(
+				HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSend, array(
 					'type'	=> "submit",
 					'name'	=> "confirm",
 					'class'	=> "btn btn-primary btn-large"
@@ -53,8 +55,8 @@ if( strlen( trim( strip_tags( $textTop ) ) ) || strlen( trim( strip_tags( $textB
 }
 
 $env->getPage()->addBodyClass( 'auth-centered' );
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'div', $panelConfirm, array( 'class' => 'centered-pane' ) )
+return HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', $panelConfirm, array( 'class' => 'centered-pane' ) )
 ), array( 'class' => 'centered-pane-container' ) );
 
 //return HTML::DivClass( "auth-confirm-text-top", $textTop ).

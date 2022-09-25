@@ -1,19 +1,20 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //  --  PANEL: SOURCE LIST  --  //
 $w				= (object) $words->styles;
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
-$labelEmpty		= UI_HTML_Tag::create( 'em', $w->empty, array( 'class' => 'muted' ) );
-$listStyles		= UI_HTML_Tag::create( 'div', $labelEmpty, array( 'class' => 'alert alert-info' ) );
-$buttonAdd		= UI_HTML_Tag::create( 'button', $iconAdd.$w->buttonAdd, array(
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
+$labelEmpty		= HtmlTag::create( 'em', $w->empty, array( 'class' => 'muted' ) );
+$listStyles		= HtmlTag::create( 'div', $labelEmpty, array( 'class' => 'alert alert-info' ) );
+$buttonAdd		= HtmlTag::create( 'button', $iconAdd.$w->buttonAdd, array(
 	'type'			=> "button",
 	'class'			=> "btn btn-success btn-small",
 	'data-toggle'	=> "modal",
 	'data-target'	=> "#modal-style-add",
 ) );
 if( $isUsed )
-	$buttonAdd		= UI_HTML_Tag::create( 'button', $iconAdd.$w->buttonAdd, array(
+	$buttonAdd		= HtmlTag::create( 'button', $iconAdd.$w->buttonAdd, array(
 		'type'			=> "button",
 		'class'			=> "btn btn-success btn-small",
 		'disabled'		=> 'disabled',
@@ -26,20 +27,20 @@ if( $styles ){
 			'href'		=> './work/newsletter/template/removeStyle/'.$templateId.'/'.$nr,
 			'class'		=> 'btn btn-mini btn-inverse'
 		);
-		$linkRemove			= UI_HTML_Tag::create( 'a', $iconRemove.$w->buttonRemove, $attributes );
+		$linkRemove			= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, $attributes );
 		if( $isUsed )
-			$linkRemove		= UI_HTML_Tag::create( 'button', $iconRemove.$w->buttonRemove, array_merge( $attributes, array( 'disabled' => 'disabled' ) ) );
-		$linkRemove			= UI_HTML_Tag::create( 'div', $linkRemove, array( 'class' => 'pull-right' ) );
-		$styles[$nr]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $label, array( 'class' => '' ) ),
-			UI_HTML_Tag::create( 'td', $linkRemove, array( 'class' => '' ) ),
+			$linkRemove		= HtmlTag::create( 'button', $iconRemove.$w->buttonRemove, array_merge( $attributes, array( 'disabled' => 'disabled' ) ) );
+		$linkRemove			= HtmlTag::create( 'div', $linkRemove, array( 'class' => 'pull-right' ) );
+		$styles[$nr]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $label, array( 'class' => '' ) ),
+			HtmlTag::create( 'td', $linkRemove, array( 'class' => '' ) ),
 		) );
 	}
 	$colgroup		= UI_HTML_Elements::ColumnGroup( "", "120px" );
 	$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Einträge', '' ) );
-	$thead			= UI_HTML_Tag::create( 'thead', $tableHeads );
-	$tbody			= UI_HTML_Tag::create( 'tbody', $styles );
-	$listStyles		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array(
+	$thead			= HtmlTag::create( 'thead', $tableHeads );
+	$tbody			= HtmlTag::create( 'tbody', $styles );
+	$listStyles		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
 		'class'	=> "table table-condensed table-striped table-fixed table-striped"
 	) );
 }
@@ -55,11 +56,11 @@ $panelList	= '
 </div>';
 
 $urlPreview			= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
-$iframeHtml			= UI_HTML_Tag::create( 'iframe', '', array(
+$iframeHtml			= HtmlTag::create( 'iframe', '', array(
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
 ) );
-$buttonPreviewHtml	= UI_HTML_Tag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
+$buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info',
 	'data-toggle'	=> 'modal',

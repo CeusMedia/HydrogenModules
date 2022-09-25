@@ -1,7 +1,9 @@
 <?php
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
-$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-list" ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-list" ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) );
 
 $optStatus	= array(
 	0		=> 'inaktiv',
@@ -65,11 +67,11 @@ $optCode	= array(
 );
 $optCode	= UI_HTML_Elements::Options( $optCode, @$data->code );
 
-$buttonsCancel	= UI_HTML_Tag::create( 'a', $iconList.'&nbsp;zur Liste', array(
+$buttonsCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'href'		=> './admin/route',
 	'class'		=> 'btn',
 ) );
-$buttonsSave	= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;speichern', array(
+$buttonsSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',

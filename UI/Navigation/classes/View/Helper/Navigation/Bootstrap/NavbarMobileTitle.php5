@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Navigation_Bootstrap_NavbarMobileTitle extends View_Helper_Navigation_Bootstrap_Navbar
 {
 	/**
@@ -12,9 +14,9 @@ class View_Helper_Navigation_Bootstrap_NavbarMobileTitle extends View_Helper_Nav
 	public function render(): string
 	{
 		$brand	= $this->renderLogo();
-		$iconBars	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bars' ) );
-		$link		= UI_HTML_Tag::create( 'a', $iconBars, array( 'href' => '#menu' ) );
-		$trigger	= UI_HTML_Tag::create( 'div', $link, array( 'id' => "mmenu-trigger-left", 'class' => "mmenu-trigger" ) );
+		$iconBars	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bars' ) );
+		$link		= HtmlTag::create( 'a', $iconBars, array( 'href' => '#menu' ) );
+		$trigger	= HtmlTag::create( 'div', $link, array( 'id' => "mmenu-trigger-left", 'class' => "mmenu-trigger" ) );
 		return $trigger.$brand;
 	}
 
@@ -24,12 +26,12 @@ class View_Helper_Navigation_Bootstrap_NavbarMobileTitle extends View_Helper_Nav
 			$icon	= "";
 			if( $this->logoIcon ){
 				$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
-				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $icon ) );
+				$icon	= HtmlTag::create( 'i', '', array( 'class' => $icon ) );
 			}
 			$label	= $icon.$this->logoTitle;
 			if( $this->logoLink )
-				$label	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $this->logoLink ) );
-			return UI_HTML_Tag::create( 'div', $label, array( 'class' => "brand" ) );
+				$label	= HtmlTag::create( 'a', $label, array( 'href' => $this->logoLink ) );
+			return HtmlTag::create( 'div', $label, array( 'class' => "brand" ) );
 		}
 		return '';
 	}

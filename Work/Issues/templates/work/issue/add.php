@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $types	= $words['types'];
 $optType	= array( '_selected' => $type );
@@ -87,7 +88,7 @@ $(document).ready(function(){
 			</div>
 			<div class="row-fluid">
 				<label for="content">'.$words['add']['labelContent'].'</label>
-				'.UI_HTML_Tag::create( 'textarea', htmlentities( $content, ENT_QUOTES, 'UTF-8' ), array( 'name' => 'content', 'rows' => 9, 'class' => 'span12 -max' ) ).'
+				'.HtmlTag::create( 'textarea', htmlentities( $content, ENT_QUOTES, 'UTF-8' ), array( 'name' => 'content', 'rows' => 9, 'class' => 'span12 -max' ) ).'
 			</div>
 			<div class="buttonbar">
 				<a class="btn btn-small btn" href="./work/issue"><i class="icon-arrow-left"></i> '.$words['add']['buttonCancel'].'</a>

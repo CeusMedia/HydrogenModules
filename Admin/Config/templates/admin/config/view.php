@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['view'];
 
@@ -25,17 +26,17 @@ $rows	= [];
 foreach( $module->config as $item ){
 	$isNumeric		= in_array( $item->type, array( "integer", "float" ) ) || preg_match( "/^[0-9\.]+$/", $item->value );
 	if( preg_match( '/password/', $item->key ) )
-		$value	= UI_HTML_Tag::create( 'em', 'versteckt', array( 'class' => 'muted') );
+		$value	= HtmlTag::create( 'em', 'versteckt', array( 'class' => 'muted') );
 	else if( $item->type === "boolean" )
 		$value	= $item->value ? 'yes' : 'no';
 	else
 		$value		= htmlentities( $item->value, ENT_QUOTES, 'UTF-8' );
 
-	$protection	= UI_HTML_Tag::create( 'abbr', $iconUnlock, array( 'title' => 'public - öffentlich (bekannt im Browser)' ) );
+	$protection	= HtmlTag::create( 'abbr', $iconUnlock, array( 'title' => 'public - öffentlich (bekannt im Browser)' ) );
 	if( $item->protected === "user" )
-		$protection	= UI_HTML_Tag::create( 'abbr', $iconUser, array( 'title' => 'user - durch Benutzer konfigurierbar' ) );
+		$protection	= HtmlTag::create( 'abbr', $iconUser, array( 'title' => 'user - durch Benutzer konfigurierbar' ) );
 	if( $item->protected === "yes" )
-		$protection	= UI_HTML_Tag::create( 'abbr', $iconLock, array( 'title' => 'protected - nicht öffentlich (nur auf Server bekannt)' ) );
+		$protection	= HtmlTag::create( 'abbr', $iconLock, array( 'title' => 'protected - nicht öffentlich (nur auf Server bekannt)' ) );
 
 	$key	= $item->mandatory ? '<b>'.$item->key.'</b>' : $item->key;
 	$key	= $item->title ? '<abbr title="'.$item->title.'">'.$key.'</abbr>' : $key;
@@ -48,28 +49,28 @@ foreach( $module->config as $item ){
 	) );
 //	ksort( $rows );
 }
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
 	'class'		=> 'btn',
 	'href'		=> './admin/config',
 ) );
-$buttonList		= UI_HTML_Tag::create( 'a', $iconList.'&nbsp;'.$w->buttonList, array(
+$buttonList		= HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonList, array(
 	'class'		=> 'btn',
 	'href'		=> './admin/config',
 ) );
-$buttonEdit		= UI_HTML_Tag::create( 'a', $iconEdit.'&nbsp;'.$w->buttonEdit, array(
+$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp;'.$w->buttonEdit, array(
 	'class'		=> 'btn btn-primary',
 	'href'		=> './admin/config/edit/'.$moduleId
 ) );
 $buttonRestore	= '';
 if( isset( $versions[$moduleId] ) && $versions[$moduleId] ){
-	$buttonRestore	= UI_HTML_Tag::create( 'a', $iconRestore.'&nbsp;'.$w->buttonRestore.'&nbsp;<small>('.$versions[$moduleId].')</small>', array(
+	$buttonRestore	= HtmlTag::create( 'a', $iconRestore.'&nbsp;'.$w->buttonRestore.'&nbsp;<small>('.$versions[$moduleId].')</small>', array(
 		'href'	=> './admin/config/restore/'.$moduleId,
 		'class'	=> 'btn btn-inverse btn-mini'
 	) );
 }
 $cols	= UI_HTML_Elements::ColumnGroup( "24px", "37%", "80px", "" );
-$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-$table	= UI_HTML_Tag::create( 'table', array( $cols, $tbody ), array( 'class' => 'table table-striped table-fixed' ) );
+$tbody	= HtmlTag::create( 'tbody', $rows );
+$table	= HtmlTag::create( 'table', array( $cols, $tbody ), array( 'class' => 'table table-striped table-fixed' ) );
 
 return '
 <div class="content-panel content-panel-form content-panel-filter">
@@ -77,7 +78,7 @@ return '
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span12">
-				'.UI_HTML_Tag::create( 'h4', $module->title ).'
+				'.HtmlTag::create( 'h4', $module->title ).'
 				'.$table.'
 				<div class="buttonbar">
 		<!--			'.$buttonCancel.'-->

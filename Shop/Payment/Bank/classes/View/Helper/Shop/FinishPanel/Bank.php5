@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_FinishPanel_Bank
@@ -77,14 +78,14 @@ class View_Helper_Shop_FinishPanel_Bank
 		$facts->add( 'Methode', 'per Vorkasse' );
 		$facts->add( 'Bank', $bank->get( 'name' ) );
 		$facts->add( 'Inhaber', $bank->get( 'holder' ) );
-		$facts->add( 'IBAN', UI_HTML_Tag::create( 'tt', $bank->get( 'iban' ) ) );
-		$facts->add( 'BIC', UI_HTML_Tag::create( 'tt', $bank->get( 'bic' ) ) );
+		$facts->add( 'IBAN', HtmlTag::create( 'tt', $bank->get( 'iban' ) ) );
+		$facts->add( 'BIC', HtmlTag::create( 'tt', $bank->get( 'bic' ) ) );
 		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
 
 		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
-			return UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'h3', $this->heading ),
+			return HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'h3', $this->heading ),
 					$facts->render( $this->listClass ),
 				), array( 'class' => 'content-panel-inner' ) ),
 			), array( 'class' => 'content-panel' ) );

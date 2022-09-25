@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Member
@@ -29,40 +30,40 @@ class View_Helper_Member
 		switch( $this->mode ){
 			case 'thumbnail':
 				$url		= sprintf( $this->url, $this->user->userId );
-				$link		= UI_HTML_Tag::create( 'div', $this->user->username, array( 'class'	=> 'autocut' ) );
+				$link		= HtmlTag::create( 'div', $this->user->username, array( 'class'	=> 'autocut' ) );
 				$attributes	= array( 'class' => 'thumbnail' );
 				if( $this->url )
 					$attributes['onclick']	= "document.location.href='".$url."'";
-				return UI_HTML_Tag::create( 'div', $image.$link, $attributes );
+				return HtmlTag::create( 'div', $image.$link, $attributes );
 				break;
 			case 'bar':
 				$label		= $this->user->username;
 				if( $this->url ){
 					$url		= sprintf( $this->url, $this->user->userId );
-					$label		= UI_HTML_Tag::create( 'a', $this->user->username, array( 'href' => $url ) );
-					$image		= UI_HTML_Tag::create( 'a', $image, array( 'href' => $url ) );
+					$label		= HtmlTag::create( 'a', $this->user->username, array( 'href' => $url ) );
+					$image		= HtmlTag::create( 'a', $image, array( 'href' => $url ) );
 				}
 				$name	= $this->user->firstname.' '.$this->user->surname;
-				$name	= UI_HTML_Tag::create( 'small', $name, array( 'class' => "muted" ) );
-				$image	= UI_HTML_Tag::create( 'div', $image, array( 'style' => 'float: left' ) );
+				$name	= HtmlTag::create( 'small', $name, array( 'class' => "muted" ) );
+				$image	= HtmlTag::create( 'div', $image, array( 'style' => 'float: left' ) );
 				$label	= '<span><b>'.$label.'</b><br/>'.$name.'</span>';
-				$label	= UI_HTML_Tag::create( 'div', $label, array( 'style' => 'float: left; margin-left: 0.5em' ) );
-				return UI_HTML_Tag::create( 'div', $image.$label, array( 'class' => 'user clearfix' ) );
+				$label	= HtmlTag::create( 'div', $label, array( 'style' => 'float: left; margin-left: 0.5em' ) );
+				return HtmlTag::create( 'div', $image.$label, array( 'class' => 'user clearfix' ) );
 				break;
 			case 'inline':
 			default:
 				$label		= $this->user->username;
 				$fullname	= $this->user->firstname.' '.$this->user->surname;
 				if( strlen( trim( $fullname ) ) && $fullname !== $this->user->username ){
-					$fullname	= UI_HTML_Tag::create( 'small', '('.$fullname.')', array( 'class' => "muted" ) );
+					$fullname	= HtmlTag::create( 'small', '('.$fullname.')', array( 'class' => "muted" ) );
 					$label		= $label.'&nbsp;'.$fullname;
 				}
 				if( $this->url ){
 					$url		= sprintf( $this->url, $this->user->userId );
-					$label		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
-					$image		= UI_HTML_Tag::create( 'a', $image, array( 'href' => $url ) );
+					$label		= HtmlTag::create( 'a', $label, array( 'href' => $url ) );
+					$image		= HtmlTag::create( 'a', $image, array( 'href' => $url ) );
 				}
-				return UI_HTML_Tag::create( 'span', $image.'&nbsp;'.$label, array( 'class' => 'user' ) );
+				return HtmlTag::create( 'span', $image.'&nbsp;'.$label, array( 'class' => 'user' ) );
 				break;
 		}
 	}

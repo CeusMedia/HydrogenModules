@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Mangopay_Entity_CardProviderLogo extends View_Helper_Mangopay_Abstract
@@ -27,10 +28,10 @@ class View_Helper_Mangopay_Entity_CardProviderLogo extends View_Helper_Mangopay_
 	{
 		$path		= 'images/paymentProviderLogo/'.$this->size.'/';
 		$path		.= strtolower( $this->provider ).'-1.png';
-		$image		= UI_HTML_Tag::create( 'img', NULL, array(
+		$image		= HtmlTag::create( 'img', NULL, array(
 			'src'	=> $path,
 		) );
-		return UI_HTML_Tag::create( $this->nodeName, $image, array(
+		return HtmlTag::create( $this->nodeName, $image, array(
 			'class'	=> $this->nodeClass,
 		) );
 	}

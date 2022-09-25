@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 //  --  FILTER  --  //
 function numerizeWords( $words, $numbers = [] ){
 	foreach( $words as $key => $label ){
@@ -67,7 +69,7 @@ $filters[]	= HTML::DivClass( 'row-fluid',
 $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span12',
 		HTML::Label( 'relation', $words['indexFilter']['labelRelation'] ).
-		UI_HTML_Tag::create( 'select', $optRelation, array(
+		HtmlTag::create( 'select', $optRelation, array(
 			'id'		=> 'input_relation',
 			'name'		=> 'relation',
 			'class'		=> 'span12',
@@ -88,7 +90,7 @@ if( !empty( $projects ) ){
 	$filters[]	= HTML::DivClass( 'row-fluid', array(
 		HTML::DivClass( 'span12',
 			HTML::Label( 'projectId', $words['indexFilter']['labelProject'] ).
-			UI_HTML_Tag::create( 'select', $optProject, array(
+			HtmlTag::create( 'select', $optProject, array(
 				'id'		=> 'input_projectId',
 				'name'		=> 'projectId',
 				'class'		=> 'span12',
@@ -101,7 +103,7 @@ $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span12',
 		HTML::Label( 'status', $words['indexFilter']['labelStatus'] ).
 	//	HTML::Select( 'status[]', $optStatus, 'span12 -max rows-8', NULL, 'this.form.submit()' )
-		UI_HTML_Tag::create( 'select', $optStatus, array(
+		HtmlTag::create( 'select', $optStatus, array(
 			'id'		=> 'input_status',
 			'name'		=> 'status[]',
 			'multiple'	=> 'multiple',
@@ -115,7 +117,7 @@ $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span12',
 		HTML::Label( 'type', $words['indexFilter']['labelType'] ).
 	//	HTML::Select( 'type[]', $optType, '-max span12 rows-4', NULL, 'this.form.submit()' )
-		UI_HTML_Tag::create( 'select', $optType, array(
+		HtmlTag::create( 'select', $optType, array(
 			'id'		=> 'input_type',
 			'name'		=> 'type[]',
 			'multiple'	=> 'multiple',
@@ -129,7 +131,7 @@ $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span12',
 		HTML::Label( 'priority', $words['indexFilter']['labelPriority'] ).
 	//	HTML::Select( 'priority[]', $optPriority, '-max span12 rows-7', NULL, 'this.form.submit()' )
-		UI_HTML_Tag::create( 'select', $optPriority, array(
+		HtmlTag::create( 'select', $optPriority, array(
 			'id'		=> 'input_priority',
 			'name'		=> 'priority[]',
 			'multiple'	=> 'multiple',

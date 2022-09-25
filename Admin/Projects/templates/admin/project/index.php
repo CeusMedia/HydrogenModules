@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $buttonAdd 		= UI_HTML_Elements::LinkButton( './admin/project/add', $words['index']['buttonAdd'], 'button add' );
 
@@ -10,7 +11,7 @@ foreach( $projects as $projectId => $project ){
 		'title'		=> $project->description,
 		'href'		=> './admin/project/edit/'.$project->projectId
 	);
-	$link		= UI_HTML_Tag::create( 'a', $project->title, $attributes );
+	$link		= HtmlTag::create( 'a', $project->title, $attributes );
 	$type		= '<span class="project-status status-'.$project->status.'">'.$words['states'][(int) $project->status].'</span>';
 	$class		= 'project available status-'.$project->status;
 	$version	= '-';

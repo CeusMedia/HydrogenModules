@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['register'];
 
 $moduleConfig	= $config->getAll( 'module.resource_users.', TRUE );
 
-$iconRegister	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRegister	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 $optGender		= UI_HTML_Elements::Options( $words['gender'], $user->get( 'gender' ) );
 
 $texts	= array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' );
@@ -46,7 +47,7 @@ if( $tacHtml ){
 	$formTerms		= HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', array(
 		HTML::DivClass( "bs2-span12 bs3-col-md-12 bs4-col-md-12", array(
 			HTML::Label( 'conditions', $w->labelTerms, '' ),
-			UI_HTML_Tag::create( 'div', $tacHtml, array(
+			HtmlTag::create( 'div', $tacHtml, array(
 				'class'	=> 'framed monospace',
 				'id'	=> 'input_conditions',
 			) ),
@@ -62,28 +63,28 @@ $fieldOauth2	= '';
 if( isset( $useOauth2 ) && $useOauth2 ){
 	$helper		= new View_Helper_Oauth_ProviderButtons( $this->env );
 	if( $helper->count() ){
-		$iconUnbind			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+		$iconUnbind			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 		$assignedProvider	= $env->getSession()->get( 'auth_register_oauth_provider' );
 		if( $assignedProvider ){
 			$icon		= '';
 			if( $assignedProvider->icon ){
-				$icon		= UI_HTML_Tag::create( 'div', array(
+				$icon		= HtmlTag::create( 'div', array(
 					'<span class="fa-stack fa-2x" style=""><i class="fa fa-square-o fa-stack-2x"></i><i class="'.$assignedProvider->icon.' fa-stack-1x"></i></span>',
 				), array( 'class' => 'bs2-span4 bs3-col-md-4 bs4-col-md-4', 'style' => 'text-align: center; font-size: 2em; padding-top: 0.75em;' ) );
 
 			}
-			$field		= UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'div', array(
-						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'h5', 'Verknüpfung hergestellt' ),
-							UI_HTML_Tag::create( 'p', join( '<br/>', array(
+			$field		= HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'div', array(
+						HtmlTag::create( 'div', array(
+							HtmlTag::create( 'h5', 'Verknüpfung hergestellt' ),
+							HtmlTag::create( 'p', join( '<br/>', array(
 								'Ihr Benutzerkonto wird mit <strong>'.$assignedProvider->title.'</strong> verknüft sein. Sie können sich dann schneller einloggen.',
 								'Einige Felder der Registrierung wurden nun bereits mit Vorschlägen gefüllt.',
 								'',
 							) ) ),
-							UI_HTML_Tag::create( 'div', array(
-								UI_HTML_Tag::create( 'a', $iconUnbind.'&nbsp;Verknüpfung aufheben', array(
+							HtmlTag::create( 'div', array(
+								HtmlTag::create( 'a', $iconUnbind.'&nbsp;Verknüpfung aufheben', array(
 									'href'	=> './auth/oauth2/unbind',
 									'class'	=> 'btn btn-small not-btn-inverse'
 								) ),
@@ -99,16 +100,16 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 			$helper->setDropdownLabel( 'weitere Anbieter' );
 			$buttons	= $helper->setLinkPath( './auth/oauth2/register/' )->render();
 			$field		=  array(
-				UI_HTML_Tag::create( 'label', 'Registrieren mit' ),
-				UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'div', $buttons, array(
+				HtmlTag::create( 'label', 'Registrieren mit' ),
+				HtmlTag::create( 'div', HtmlTag::create( 'div', $buttons, array(
 					'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12'
 				) ), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) ),
 			);
 		}
-		$fieldOauth2	= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'div', array(
+		$fieldOauth2	= HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', array(
 				$field,
-				UI_HTML_Tag::create( 'hr', NULL ),
+				HtmlTag::create( 'hr', NULL ),
 			), array( 'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12' ) ),
 		), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) );
 	}
@@ -125,7 +126,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 			HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', array(
 				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
 					HTML::Label( "username", $w->labelUsername, "mandatory" ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'username',
 						'id'			=> 'input_username',
@@ -136,10 +137,10 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 					) )
 				) ),
 				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
-					HTML::Label( "password", UI_HTML_Tag::create( 'abbr', $w->labelPassword, array(
+					HTML::Label( "password", HtmlTag::create( 'abbr', $w->labelPassword, array(
 						'title'	=> sprintf( $w->labelPassword_title, $moduleConfig->get( 'password.length.min' ) )
 					) ), "mandatory" ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'password',
 						'name'			=> 'password',
 						'id'			=> 'input_password',
@@ -151,7 +152,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				) ),
 				HTML::DivClass( 'bs2-span6 bs3-col-md-6 bs4-col-md-6', array(
 					HTML::Label( "email", $w->labelEmail, $moduleConfig->get( 'email.mandatory' ) ? 'mandatory' : '' ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'email',
 						'id'			=> 'input_email',
@@ -162,11 +163,11 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 					) )
 				) ),
 			) ).
-			UI_HTML_Tag::create( 'hr' ).
+			HtmlTag::create( 'hr' ).
 			HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', array(
 				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
 					HTML::Label( "gender", $w->labelGender ),
-					UI_HTML_Tag::create( 'select', $optGender, array(
+					HtmlTag::create( 'select', $optGender, array(
 						'name'		=> "gender",
 						'id'		=> "input_gender",
 						'class'		=> "bs2-span12 bs3-col-md-12 bs4-col-md-12"
@@ -174,7 +175,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				) ),
 				HTML::DivClass( 'bs2-span2 bs3-col-md-2 bs4-col-md-2', array(
 					HTML::Label( "salutation", $w->labelSalutation ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'text',
 						'name'		=> 'salutation',
 						'id'		=> 'input_salutation',
@@ -184,7 +185,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				) ),
 				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
 					HTML::Label( "firstname", $w->labelFirstname, $moduleConfig->get( 'firstname.mandatory' ) ? 'mandatory' : '' ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'firstname',
 						'id'			=> 'input_firstname',
@@ -196,7 +197,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				) ),
 				HTML::DivClass( 'bs2-span4 bs3-col-md-4 bs4-col-md-4', array(
 					HTML::Label( "surname", $w->labelSurname, $moduleConfig->get( 'surname.mandatory' ) ? 'mandatory' : '' ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 							'type'		=> 'text',
 						'name'			=> 'surname',
 						'id'			=> 'input_surname',
@@ -210,7 +211,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 			HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', array(
 				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
 					HTML::Label( "country", $w->labelCountry ),
-					UI_HTML_Tag::create( 'select', UI_HTML_Elements::Options( $countries, $user->get( 'country' ) ), array(
+					HtmlTag::create( 'select', UI_HTML_Elements::Options( $countries, $user->get( 'country' ) ), array(
 						'name'			=> 'country',
 						'id'			=> 'input_country',
 						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',
@@ -219,7 +220,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				) ),
 				HTML::DivClass( 'bs2-span2 bs3-col-md-2 bs4-col-md-2', array(
 					HTML::Label( "postcode", $w->labelPostcode ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'postcode',
 						'id'			=> 'input_postcode',
@@ -230,7 +231,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				) ),
 				HTML::DivClass( 'bs2-span3 bs3-col-md-3 bs4-col-md-3', array(
 					HTML::Label( "city", $w->labelCity ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'city',
 						'id'			=> 'input_city',
@@ -241,7 +242,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				) ),
 				HTML::DivClass( 'bs2-span4 bs3-col-md-4 bs4-col-md-4', array(
 					HTML::Label( "street", $w->labelStreet ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'street',
 						'id'			=> 'input_street',
@@ -255,7 +256,7 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 			$formExtensions.
 			$formTerms.
 			HTML::DivClass( 'buttonbar', array(
-				UI_HTML_Tag::create( 'button', $iconRegister.'&nbsp'.$w->buttonSave, array(
+				HtmlTag::create( 'button', $iconRegister.'&nbsp'.$w->buttonSave, array(
 					'type'		=> 'submit',
 					'id'		=> 'button_save',
 					'class'		=> 'btn btn-primary btn-large save',

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*$model	= new Model_Bill( $this->env );
 $year	= date( 'Y' );
@@ -30,8 +31,8 @@ $conditions	= array(
 $orders		= array( 'date' => 'ASC' );
 $bills		= $model->getAll( $conditions, $orders );
 */
-$iconIn		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right', 'title' => 'an andere' ) );
-$iconOut	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left', 'title' => 'von anderen' ) );
+$iconIn		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-right', 'title' => 'an andere' ) );
+$iconOut	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left', 'title' => 'von anderen' ) );
 
 $table		= $view->renderTable( $bills );
 $filter		= $this->loadTemplateFile( 'work/bill/index.filter.php' );

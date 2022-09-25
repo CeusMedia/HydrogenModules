@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 {
 	protected $words;
@@ -129,7 +131,7 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 			return $helper->render();
 		}
 		$link	= UI_HTML_Elements::Link( './member/view/'.$user->userId, $user->username );
-		$user	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'role role'.$user->roleId ) );
+		$user	= HtmlTag::create( 'span', $link, array( 'class' => 'role role'.$user->roleId ) );
 		return $user;
 	}
 }

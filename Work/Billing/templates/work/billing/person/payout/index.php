@@ -1,15 +1,17 @@
 <?php
-//$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neue Auszahlung', array(
+//$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Auszahlung', array(
 	'href'			=> '#modal-add-payout',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
 ) );
-$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' buchen', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' buchen', array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary'
@@ -24,7 +26,7 @@ $helper->setFilterPrefix( $filterSessionPrefix );
 $helper->setButtons( $buttonAdd );
 $panelTransactions	= $helper->render();
 if( 0 && $person->balance <= 0 ){							//  disabled for now
-	$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' buchen', array(
+	$buttonSave	= HtmlTag::create( 'button', $iconSave.' buchen', array(
 		'type'	=> 'button',
 		'disabled'	=> 'disabled',
 		'class'	=> 'btn btn-primary'

@@ -1,12 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index.list'];
 
 $modelUser	= new Model_User( $this->env );
 
-$iconView	= UI_HTML_Tag::create( 'i', '', ['class' => 'fa fa-eye'] );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', ['class' => 'fa fa-remove'] );
-$iconUser	= UI_HTML_Tag::create( 'i', '', ['class' => 'fa fa-user'] );
+$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-eye'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-remove'] );
+$iconUser	= HtmlTag::create( 'i', '', ['class' => 'fa fa-user'] );
 
 $from		= 'admin/log/exception'.($page ? '/'.$page : '' );
 
@@ -16,7 +17,7 @@ if( count( $instances ) > 1 ){
 	foreach( $instances as $instanceKey => $instanceData )
 		$optInstance[$instanceKey]	= $instanceData->title;
 	$optInstance	= UI_HTML_Elements::Options( $optInstance, $currentInstance );
-	$selectInstance	= UI_HTML_Tag::create( 'select', $optInstance, array(
+	$selectInstance	= HtmlTag::create( 'select', $optInstance, array(
 		'oninput'	=> 'document.location.href = "./admin/log/exception/setInstance/" + jQuery(this).val();',
 		'class'		=> '',
 		'style'		=> 'width: 100%',
@@ -34,22 +35,22 @@ if( $exceptions ){
 		$exceptionRequest	= unserialize( $exception->request );
 		$exceptionSession	= new ADT_List_Dictionary( unserialize( $exception->session ) ?: [] );
 
-		$link	= UI_HTML_Tag::create( 'a', $exception->message, array( 'href' => './admin/log/exception/view/'.$exception->exceptionId ) );
+		$link	= HtmlTag::create( 'a', $exception->message, array( 'href' => './admin/log/exception/view/'.$exception->exceptionId ) );
 		$date	= date( 'Y.m.d', $exception->createdAt );
 		$time	= date( 'H:i:s', $exception->createdAt );
 
-		$buttons	= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'a', $iconView, array(
+		$buttons	= HtmlTag::create( 'div', array(
+			HtmlTag::create( 'a', $iconView, array(
 				'class'	=> 'btn not-btn-mini btn-small not-btn-info',
 				'href'	=> './admin/log/exception/view/'.$exception->exceptionId
 			) ),
-			UI_HTML_Tag::create( 'a', $iconRemove, array(
+			HtmlTag::create( 'a', $iconRemove, array(
 				'class'	=> 'btn not-btn-mini btn-small btn-danger',
 				'href'	=> './admin/log/exception/remove/'.$exception->exceptionId
 			) ),
 		), array( 'class' => 'btn-group' ) );
 
-		$checkbox		= UI_HTML_Tag::create( 'input', NULL, [
+		$checkbox		= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'checkbox',
 			'class'		=> 'checkbox-item',
 			'data-id'	=> $exception->exceptionId,
@@ -67,25 +68,25 @@ if( $exceptions ){
 
 		if( $exceptionSession->get( 'auth_user_id' ) ){
 			$user	= $modelUser->get( $exceptionSession->get( 'auth_user_id' ) );
-			$icons['user']	= UI_HTML_Tag::create( 'span', $iconUser, [
+			$icons['user']	= HtmlTag::create( 'span', $iconUser, [
 				'title'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')'
 			] );
 		}
 
-		$list[]			= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $checkbox ),
-			UI_HTML_Tag::create( 'td', $link.'<br/>'.$method.' '.$requestPath, array( 'class' => 'autocut' ) ),
-//			UI_HTML_Tag::create( 'td', $envClass ),
-//			UI_HTML_Tag::create( 'td', '<small class="muted">'.$exceptionClass.'</small>' ),
+		$list[]			= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $checkbox ),
+			HtmlTag::create( 'td', $link.'<br/>'.$method.' '.$requestPath, array( 'class' => 'autocut' ) ),
+//			HtmlTag::create( 'td', $envClass ),
+//			HtmlTag::create( 'td', '<small class="muted">'.$exceptionClass.'</small>' ),
 
-			UI_HTML_Tag::create( 'td', $icons ),
-			UI_HTML_Tag::create( 'td', $typeClass.'<br/>'.$date.'&nbsp;<small class="muted">'.$time.'</small>' ),
-			UI_HTML_Tag::create( 'td', $buttons ),
+			HtmlTag::create( 'td', $icons ),
+			HtmlTag::create( 'td', $typeClass.'<br/>'.$date.'&nbsp;<small class="muted">'.$time.'</small>' ),
+			HtmlTag::create( 'td', $buttons ),
 		) );
 	}
 
 
-	$checkboxAll	= UI_HTML_Tag::create( 'input', NULL, [
+	$checkboxAll	= HtmlTag::create( 'input', NULL, [
 		'type'	=> 'checkbox',
 		'id'	=> 'admin-log-exception-list-all-items-toggle',
 	] );
@@ -98,25 +99,25 @@ if( $exceptions ){
 	] );
 
 	$colgroup	= UI_HTML_Elements::ColumnGroup( '20px', ''/*, '180px'*//*, '180px'*/, '60px', '150px', '100px' );
-	$thead		= UI_HTML_Tag::create( 'thead', $heads );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
-	$table		= UI_HTML_Tag::create( 'table', [$colgroup, $thead, $tbody], [
+	$thead		= HtmlTag::create( 'thead', $heads );
+	$tbody		= HtmlTag::create( 'tbody', $list );
+	$table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], [
 		'class'	=> 'table table-striped table-condensed',
 		'style'	=> 'table-layout: fixed'
 	] );
 
 	if( count( $exceptions ) > 1 ){
-		$dropdownMenu	= UI_HTML_Tag::create( 'ul', [
-			UI_HTML_Tag::create( 'li',
-				UI_HTML_Tag::create( 'a', '<i class="fa fa-trash"></i> '.$w->buttonRemove, ['class' => '#', 'id' => 'action-button-remove'] )
+		$dropdownMenu	= HtmlTag::create( 'ul', [
+			HtmlTag::create( 'li',
+				HtmlTag::create( 'a', '<i class="fa fa-trash"></i> '.$w->buttonRemove, ['class' => '#', 'id' => 'action-button-remove'] )
 			),
 		], ['class' => 'dropdown-menu not-pull-right'] );
 
-		$dropdownToggle	= UI_HTML_Tag::create( 'button', $w->buttonAction.' <span class="caret"></span>', [
+		$dropdownToggle	= HtmlTag::create( 'button', $w->buttonAction.' <span class="caret"></span>', [
 			'type'		=> 'button',
 			'class'		=> 'btn dropdown-toggle',
 		], ['toggle' => 'dropdown'] );
-		$dropdown		= UI_HTML_Tag::create( 'div', [$dropdownToggle, $dropdownMenu], ['class' => 'btn-group dropup'] );
+		$dropdown		= HtmlTag::create( 'div', [$dropdownToggle, $dropdownMenu], ['class' => 'btn-group dropup'] );
 	}
 }
 

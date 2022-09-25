@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Image_Slider
@@ -80,7 +81,7 @@ class View_Helper_Image_Slider
 			'style'			=> 'width: '.$slider->width.'px; height: '.$slider->height.'px',
 			'data-ratio'	=> round( $slider->height / $slider->width, 8 )
 		);
-		return UI_HTML_Tag::create( 'div', $images, $attr );
+		return HtmlTag::create( 'div', $images, $attr );
 	}
 
 	public static function renderStatic( Environment $env, $sliderId ): string
@@ -121,11 +122,11 @@ class View_Helper_Image_Slider
 	{
 		if( !$slider->showButtons || count( $slider->slides ) < 2 )
 			return '';
-		$buttonPrev	= UI_HTML_Tag::create( 'button', '‹', array(
+		$buttonPrev	= HtmlTag::create( 'button', '‹', array(
 			'type'	=> 'button',
 			'class'	=> $this->selectorPrefix.'button-prev'
 		) );
-		$buttonNext	= UI_HTML_Tag::create( 'button', '›', array(
+		$buttonNext	= HtmlTag::create( 'button', '›', array(
 			'type'	=> 'button',
 			'class'	=> $this->selectorPrefix.'button-next'
 		) );
@@ -148,14 +149,14 @@ class View_Helper_Image_Slider
 				$attr['title']	= $slide->title;
 			if( !$number )
 				$attr['class']	= $attr['class'].' active';
-			$dots[]	= UI_HTML_Tag::create( 'div', NULL, $attr );
+			$dots[]	= HtmlTag::create( 'div', NULL, $attr );
 			$number	+= 1;
 		}
 		$attr		= array(
 			'id'	=> $this->selectorPrefix.$slider->sliderId.'-dots',
 			'class'	=> $this->selectorPrefix.'dots',
 		);
-		return UI_HTML_Tag::create( 'div', join( $dots ), $attr );
+		return HtmlTag::create( 'div', join( $dots ), $attr );
 	}
 
 	protected function renderSlides( $slider ): string
@@ -172,13 +173,13 @@ class View_Helper_Image_Slider
 				$attr['alt']		= $slide->title;
 				$attr['data-link']	= $slide->link;
 			}
-			$image	= UI_HTML_Tag::create( 'img', NULL, $attr );
+			$image	= HtmlTag::create( 'img', NULL, $attr );
 			if( $slide->link && strlen( trim( $slide->link ) ) ){
 				$attr	= array(
 					'href'	=> $slide->link,
 					'title'	=> $slide->title
 				);
-				$image	= UI_HTML_Tag::create( 'a', $image, $attr );
+				$image	= HtmlTag::create( 'a', $image, $attr );
 			}
 			$attr	= array(
 				'id'	=> $slider->sliderId.'-slide-'.$number,
@@ -186,10 +187,10 @@ class View_Helper_Image_Slider
 			);
 			$content	= "";
 			if( trim( $slide->content ) )
-				$content	= UI_HTML_Tag::create( 'div', $slide->content, array(
+				$content	= HtmlTag::create( 'div', $slide->content, array(
 					'class'	=> $this->selectorPrefix.'slide-content'
 				) );
-			$item	= UI_HTML_Tag::create( 'div', $image.$content, $attr );
+			$item	= HtmlTag::create( 'div', $image.$content, $attr );
 			$list[]	= $item;
 			$number	+= 1;
 		}
@@ -198,13 +199,13 @@ class View_Helper_Image_Slider
 		if( $slider->showTitle ){
 			$title	= $slider->slides[0]->title;
 			if( $slide->link && strlen( trim( $slide->link ) ) )
-				$title	= UI_HTML_Tag::create( 'a', $title, array( 'href' => $slide->link ) );
+				$title	= HtmlTag::create( 'a', $title, array( 'href' => $slide->link ) );
 			$attr	= array( 'class' => $this->selectorPrefix.'label' );
-			$label	= UI_HTML_Tag::create( 'div', $title, $attr );
+			$label	= HtmlTag::create( 'div', $title, $attr );
 			$attr	= array( 'class' => $this->selectorPrefix.'layer' );
-			$list	.= UI_HTML_Tag::create( 'div', $label, $attr );
+			$list	.= HtmlTag::create( 'div', $label, $attr );
 		}
 		$attr	= array( 'class' => $this->selectorPrefix.'slides' );
-		return UI_HTML_Tag::create( 'div', $list, $attr );
+		return HtmlTag::create( 'div', $list, $attr );
 	}
 }

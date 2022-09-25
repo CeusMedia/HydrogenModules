@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words->index;
 
@@ -24,29 +25,29 @@ if( $total ){
 		$list	= [];
 		foreach( $newsletters as $newsletter ){
 			$attributes		= array( 'href' => './work/newsletter/edit/'.$newsletter->newsletterId );
-			$link			= UI_HTML_Tag::create( 'a', $newsletter->title, $attributes );
-			$iconStatus		= UI_HTML_Tag::create( 'i', "", array( 'class' => 'fa fa-fw fa-'.$statusIcons[$newsletter->status] ) );
-			$cellLink		= UI_HTML_Tag::create( 'td', $link );
-			$cellStatus		= UI_HTML_Tag::create( 'td', $iconStatus.' '.$words->states[$newsletter->status] );
-			$cellCreated	= UI_HTML_Tag::create( 'td', date( 'd.m.Y', $newsletter->createdAt ) );
-			$cellModified	= UI_HTML_Tag::create( 'td', $newsletter->modifiedAt ? date( 'd.m.Y', $newsletter->modifiedAt ) : '-' );
-			$cellSent		= UI_HTML_Tag::create( 'td', $newsletter->sentAt ? date( 'd.m.Y', $newsletter->sentAt ) : '-' );
+			$link			= HtmlTag::create( 'a', $newsletter->title, $attributes );
+			$iconStatus		= HtmlTag::create( 'i', "", array( 'class' => 'fa fa-fw fa-'.$statusIcons[$newsletter->status] ) );
+			$cellLink		= HtmlTag::create( 'td', $link );
+			$cellStatus		= HtmlTag::create( 'td', $iconStatus.' '.$words->states[$newsletter->status] );
+			$cellCreated	= HtmlTag::create( 'td', date( 'd.m.Y', $newsletter->createdAt ) );
+			$cellModified	= HtmlTag::create( 'td', $newsletter->modifiedAt ? date( 'd.m.Y', $newsletter->modifiedAt ) : '-' );
+			$cellSent		= HtmlTag::create( 'td', $newsletter->sentAt ? date( 'd.m.Y', $newsletter->sentAt ) : '-' );
 			$rowColor		= $statusColors[$newsletter->status];
 			$cells			= array( $cellLink, $cellStatus, $cellCreated, $cellModified, $cellSent );
 			$attributes		= array( 'class' => $rowColor );
-			$list[]			= UI_HTML_Tag::create( 'tr', $cells, $attributes );
+			$list[]			= HtmlTag::create( 'tr', $cells, $attributes );
 		}
 		$tableRows		= join( $list );
 		$tableHeads		= UI_HTML_Elements::TableHeads( array( $w->columnTitle, $w->columnStatus, $w->columnCreatedAt, $w->columnModifiedAt, $w->columnSentAt ) );
 		$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '', '140px', '120px', '120px', '120px' ) );
-		$tableHead		= UI_HTML_Tag::create( 'thead', $tableHeads );
-		$tableBody		= UI_HTML_Tag::create( 'tbody', $tableRows );
-		$list			= UI_HTML_Tag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
+		$tableHead		= HtmlTag::create( 'thead', $tableHeads );
+		$tableBody		= HtmlTag::create( 'tbody', $tableRows );
+		$list			= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
 	}
 }
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.$w->link_add, array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, array(
 	'href'	=> './work/newsletter/add',
 	'class'	=> 'btn btn-small btn-success btn-small'
 ) );
@@ -59,7 +60,7 @@ $modalAddTrigger->setAttributes( array( 'class' => 'btn btn-success' ) );
 $buttonAdd	= $modalAddTrigger;
 
 if( $limiter && $limiter->denies( 'Work.Newsletter.Newsletter:maxItems', count( $newsletters ) + 1 ) ){
-	$buttonAdd	= UI_HTML_Tag::create( 'button', $iconAdd.$w->link_add, array(
+	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, array(
 		'class'		=> 'btn btn-small btn-success disabled',
 		'onclick'	=> 'alert("Weitere Kampagnen sind in dieser Demo-Installation nicht möglich.")',
 	) );

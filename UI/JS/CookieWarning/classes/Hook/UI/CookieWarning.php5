@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -15,22 +16,22 @@ class Hook_UI_CookieWarning extends Hook
 				$words		= $env->getLanguage()->getWords( 'cookiewarning' );
 				$text		= $words['warning']['label'];
 				$buttons	= [];
-				$buttons[]	= UI_HTML_Tag::create( 'button', $words['warning']['buttonAccept'], array(
+				$buttons[]	= HtmlTag::create( 'button', $words['warning']['buttonAccept'], array(
 					'class'		=> 'btn btn-mini not-btn-primary',
 					'onclick'	=> 'acceptCookies();',
 				) );
 				if( $options->get( 'readMorePagePath' ) ){
-					$buttons[]	= UI_HTML_Tag::create( 'a', $words['warning']['buttonReadMore'], array(
+					$buttons[]	= HtmlTag::create( 'a', $words['warning']['buttonReadMore'], array(
 						'href'	=> './'.$options->get( 'readMorePagePath' ),
 						'class'	=> 'btn btn-mini btn-info',
 					) );
 				}
 				$buttons	= join( '&nbsp;', $buttons );
-				$buttons	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
-				$content	= UI_HTML_Tag::create( 'div', $text.' &nbsp;&nbsp;'.$buttons, array(
+				$buttons	= HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
+				$content	= HtmlTag::create( 'div', $text.' &nbsp;&nbsp;'.$buttons, array(
 					'id'	=> 'cookie-warning-inner'
 				) );
-				$bar		= UI_HTML_Tag::create( 'div', $content, array(
+				$bar		= HtmlTag::create( 'div', $content, array(
 					'class'	=> $options->get( 'absolute' ) ? 'absolute '.$options->get( 'absolute.position' ) : 'static',
 					'id'	=> 'cookie-warning',
 				) );

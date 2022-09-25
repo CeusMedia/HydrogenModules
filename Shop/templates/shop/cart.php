@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w		= (object) $words['cart'];
 
 $tablePositions	= '<p><em class="muted">'.$w->empty.'</em></p>';
@@ -10,7 +12,7 @@ if( count( $positions = $cart->get( 'positions' ) ) ){
 	$helperCart->setDeliveryAddress( $address );
 	$helperCart->setChangeable( TRUE );
 	$tablePositions	= $helperCart->render();
-	$buttonbar		= UI_HTML_Tag::create( 'div', array(
+	$buttonbar		= HtmlTag::create( 'div', array(
 		new \CeusMedia\Bootstrap\Button\Link( './shop/customer', $w->buttonToCustomer, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', !$positions )
 	), array( 'class' => 'buttonbar well well-small' ) );
 }

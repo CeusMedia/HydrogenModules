@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract
@@ -75,20 +76,20 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract
 		$list	= [];
 		foreach( $this->languages as $entry ){
 			if( isset( $this->labels[$entry] ) ){
-				$icon	= UI_HTML_Tag::create( 'i', '', array(
+				$icon	= HtmlTag::create( 'i', '', array(
 					'class'	=> ( $entry == $this->current ) ? 'icon-ok' : 'icon-empty',
 				) );
-				$link	= UI_HTML_Tag::create( 'a', '<%?OPTIONALICON%>'.$icon.'&nbsp;'.$this->labels[$entry], array(
+				$link	= HtmlTag::create( 'a', '<%?OPTIONALICON%>'.$icon.'&nbsp;'.$this->labels[$entry], array(
 					'href'	=> $this->path.'?switchLanguageTo='.$entry,
 					'class'	=> 'language-selector-link active',
 				) );
 				$eventpayload = (object)( array( "label" => $link, "language" => $entry) );
 				$this->env->getCaptain()->callHook('LanguageSelector', 'queryLanguageDecorator', $this, $eventpayload );
 				$link   = $eventpayload->label;
-				$list[]	= UI_HTML_Tag::create( 'li', $link );
+				$list[]	= HtmlTag::create( 'li', $link );
 			}
 		}
-		$listMenu		= UI_HTML_Tag::create( 'ul', $list, array(
+		$listMenu		= HtmlTag::create( 'ul', $list, array(
 			'class'		=> 'dropdown-menu pull-'.$this->dropdownAlign,
 		) );
 
@@ -98,16 +99,16 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract
 		$label			= $eventpayload->label;
 /* TODO Move to own Module and add support here for themeable icons
 		$flagimgpath		= "themes/common/img/".$this->language->GetLanguage().".png";
-		$flagimg		= UI_HTML_Tag::create( 'img' , '', array( 'src' => $flagimgpath , 'style' =>'height:1em') );
+		$flagimg		= HtmlTag::create( 'img' , '', array( 'src' => $flagimgpath , 'style' =>'height:1em') );
 		$flagimg		.= '&nbsp;'
 */
-		$caret			= UI_HTML_Tag::create( 'span', '', array( 'class' => 'caret' ) );
-		$buttonToggle	= UI_HTML_Tag::create( 'a', $label.'&nbsp;&nbsp;'.$caret, array(
+		$caret			= HtmlTag::create( 'span', '', array( 'class' => 'caret' ) );
+		$buttonToggle	= HtmlTag::create( 'a', $label.'&nbsp;&nbsp;'.$caret, array(
 			'class'			=> "btn btn-small dropdown-toggle language-selector-button",
 			'data-toggle'	=> "dropdown",
 			'href'			=> "#",
 		) );
-		$component		= UI_HTML_Tag::create( 'div', array(
+		$component		= HtmlTag::create( 'div', array(
 			$buttonToggle,
 			$listMenu
 		), array(
@@ -126,7 +127,7 @@ class View_Helper_LanguageSelector extends CMF_Hydrogen_View_Helper_Abstract
 		$options	= UI_HTML_Elements::Options( $options, $this->current );
 
 		$uri	= $this->path.'?switchLanguageTo=';
-		$select	= UI_HTML_Tag::create( 'select', $options, array(
+		$select	= HtmlTag::create( 'select', $options, array(
 			'onchange'	=> "document.location.href='".$uri."'+this.value;",
 			'class'		=> 'span12',
 			'id'		=> 'language-selector-input',

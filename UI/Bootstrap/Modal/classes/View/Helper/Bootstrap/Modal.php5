@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Bootstrap_Modal
@@ -45,7 +46,7 @@ class View_Helper_Bootstrap_Modal
 	 */
 	public function render(): string
 	{
-		$body		= UI_HTML_Tag::create( 'div', $this->body, array(
+		$body		= HtmlTag::create( 'div', $this->body, array(
 			'class'	=> 'modal-body',
 		) );
 		$footer		= $this->renderFooter();
@@ -74,17 +75,17 @@ class View_Helper_Bootstrap_Modal
 		}
 		$content	= array( $header, $body, $footer );
 		if( $this->isBs4 ){
-			$content	= UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', $content, array( 'class' => 'modal-content' ) ),
+			$content	= HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', $content, array( 'class' => 'modal-content' ) ),
 			), array(
 				'class'	=> 'modal-dialog',
 				'role'	=> 'document',
 			) );
 		}
 
-		$modal		= UI_HTML_Tag::create( 'div', $content, $attributes );
+		$modal		= HtmlTag::create( 'div', $content, $attributes );
 		if( $this->formAction ){
-			$modal	= UI_HTML_Tag::create( 'form', $modal, array(
+			$modal	= HtmlTag::create( 'form', $modal, array(
 				'action'	=> $this->formAction,
 				'method'	=> 'POST',
 			) );
@@ -197,17 +198,17 @@ class View_Helper_Bootstrap_Modal
 
 	protected function renderFooter(): string
 	{
-		$buttonClose	= UI_HTML_Tag::create( 'button', $this->labelButtonCancel, array(
+		$buttonClose	= HtmlTag::create( 'button', $this->labelButtonCancel, array(
 			'class'			=> 'btn',
 			'data-dismiss'	=> 'modal',
 			'aria-hidden'	=> 'true',
 		) );
-		$buttonSubmit	= UI_HTML_Tag::create( 'button', $this->labelButtonSubmit, array(
+		$buttonSubmit	= HtmlTag::create( 'button', $this->labelButtonSubmit, array(
 			'class'		=> 'btn btn-primary',
 			'type'		=> 'submit',
 		) );
 		$buttonSubmit	= $this->formAction ? $buttonSubmit : '';
-		$footer		= UI_HTML_Tag::create( 'div', array( $buttonClose, $buttonSubmit ), array(
+		$footer		= HtmlTag::create( 'div', array( $buttonClose, $buttonSubmit ), array(
 			'class'	=> 'modal-footer',
 		) );
 		return $footer;
@@ -215,14 +216,14 @@ class View_Helper_Bootstrap_Modal
 
 	protected function renderHeader(): string
 	{
-		$buttonClose	= UI_HTML_Tag::create( 'button', '×', array(
+		$buttonClose	= HtmlTag::create( 'button', '×', array(
 			'type'			=> "button",
 			'class'			=> "close",
 			'data-dismiss'	=> "modal",
 			'aria-hidden'	=> "true",
 		) );
-		$heading	= UI_HTML_Tag::create( 'h3', $this->heading, array( 'id' => "myModalLabel" ) );
-		$header		= UI_HTML_Tag::create( 'div', array( $buttonClose, $heading ), array(
+		$heading	= HtmlTag::create( 'h3', $this->heading, array( 'id' => "myModalLabel" ) );
+		$header		= HtmlTag::create( 'div', array( $buttonClose, $heading ), array(
 			'class'	=> 'modal-header',
 		) );
 		return $header;

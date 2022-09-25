@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
@@ -21,7 +22,7 @@ class View_Catalog extends View{
 					$url		= $helper->getArticleUri( $articleId, TRUE );
 					$title		= $helper->renderArticleLink( $article );
 					$urlTrimmed	= Alg_Text_Trimmer::trimCentric( $url, 120 );
-					$link		= UI_HTML_Tag::create( 'a', $urlTrimmed, array(
+					$link		= HtmlTag::create( 'a', $urlTrimmed, array(
 						'href'	=> $url,
 						'class'	=> 'search-result-link-path',
 					) );

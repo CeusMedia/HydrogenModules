@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w  = (object) $words['view-content'];
 
@@ -8,12 +9,12 @@ $phraser    = new View_Helper_TimePhraser( $env );
 function renderUserLabel( $user ){
 	if( !$user )
 		return "-";
-	$iconUser	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-user' ) );
+	$iconUser	= HtmlTag::create( 'i', '', array( 'class' => 'icon-user' ) );
 	$spanClass	= 'user role role'.$user->roleId;
 	$fullname	= $user->firstname.' '.$user->surname;
-	$username	= UI_HTML_Tag::create( 'abbr', $user->username, array( 'title' => $fullname ) );
+	$username	= HtmlTag::create( 'abbr', $user->username, array( 'title' => $fullname ) );
 	$label		= $iconUser.'&nbsp;'.$username;
-	return UI_HTML_Tag::create( 'span', $label, array( 'class' => $spanClass ) );
+	return HtmlTag::create( 'span', $label, array( 'class' => $spanClass ) );
 }
 */
 
@@ -24,7 +25,7 @@ if( 1 || $mission->versions ){
 		$date	= date( 'Y-m-d H:i:s', $version->timestamp );
 		$date	= $phraser->convert( $version->timestamp, TRUE );
 		$label	= '#'.$version->version.' <small class="muted">('.$date.') von '.$version->user->username.'</small>';
-		$link	= UI_HTML_Tag::create( 'a', $label, array(
+		$link	= HtmlTag::create( 'a', $label, array(
 			'href'	=> './work/mission/view/'.$mission->missionId.'#version-'.$version->version,
 		) );
 		$list[]	= new UI_HTML_Tag( 'li', $link, array(
@@ -33,7 +34,7 @@ if( 1 || $mission->versions ){
 		) );
 	}
 	$label	= '<strong>aktuell</strong>';
-	$link	= UI_HTML_Tag::create( 'a', $label, array(
+	$link	= HtmlTag::create( 'a', $label, array(
 		'href'		=> './work/mission/view/'.$mission->missionId,
 		'onclick'	=> 'return false'
 	) );

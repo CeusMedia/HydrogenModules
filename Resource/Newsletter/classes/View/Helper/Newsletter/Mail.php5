@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Newsletter_Mail
 {
 	const MODE_PLAIN		= 0;
@@ -140,7 +142,7 @@ class View_Helper_Newsletter_Mail
 			$data['linkView']			= $urlView;
 			$data['linkUnregister']		= $urlOptOut;
 			$data['linkTracking']		= $urlTrack;
-			$data['tracking']			= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlTrack ) );
+			$data['tracking']			= HtmlTag::create( 'img', NULL, array( 'src' => $urlTrack ) );
 		}
 //		print_m( $data ); die();
 /*		else{
@@ -173,8 +175,8 @@ class View_Helper_Newsletter_Mail
 		$data	= $this->prepareData( self::MODE_HTML );
 		$data['imprint']	= $this->renderImprint( TRUE );
 		$page		= new UI_HTML_PageFrame();
-		$page->addHead( UI_HTML_Tag::create( 'meta', NULL, array( 'charset' => 'utf-8' ) ) );
-		$page->addHead( UI_HTML_Tag::create( 'meta', NULL, array( 'name' => 'x-apple-disable-message-reformatting' ) ) );
+		$page->addHead( HtmlTag::create( 'meta', NULL, array( 'charset' => 'utf-8' ) ) );
+		$page->addHead( HtmlTag::create( 'meta', NULL, array( 'name' => 'x-apple-disable-message-reformatting' ) ) );
 		$page->addHead( '<!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->' );
 		$page->addMetaTag( "name", "viewport", "width=device-width" );
 		$page->addMetaTag( "http-equiv", "X-UA-Compatible", "IE=edge" );
@@ -196,7 +198,7 @@ class View_Helper_Newsletter_Mail
 		}
 		$styles		.= trim( $this->template->style );
 		if( ( $styles = trim( File_CSS_Compressor::compressString( $styles ) ) ) )
-			$page->addHead( UI_HTML_Tag::create( 'style', $styles ) );
+			$page->addHead( HtmlTag::create( 'style', $styles ) );
 
 		$page->addHead( "<!--[if mso]><style>* {font-family: sans-serif !important;}</style><![endif]-->" );
 
@@ -213,7 +215,7 @@ class View_Helper_Newsletter_Mail
 		$scripts[]	= trim( $this->template->script );
 		$scripts	= trim( join( "\n", $scripts ) );
 		if( strlen( $scripts ) )
-			$page->addHead( UI_HTML_Tag::create( 'script', $scripts ) );*/
+			$page->addHead( HtmlTag::create( 'script', $scripts ) );*/
 
 		$data['tracking']	= '';
 		$isPreview	= isset( $data['preview'] ) && $data['preview'];
@@ -221,7 +223,7 @@ class View_Helper_Newsletter_Mail
 			$script	= 'document.getElementById("browser-link").remove();';							//  script to remove browser link in browser view
 			$page->addScript( 'window.addEventListener("load", function(){'.$script.'});' );		//  add script to HTML page
 			if( isset( $data['linkTracking'] ) && $data['linkTracking'] ){							//  tracking link is defined
-				$data['tracking']	= UI_HTML_Tag::create( 'img', NULL, array(						//  create tracking pixel image
+				$data['tracking']	= HtmlTag::create( 'img', NULL, array(						//  create tracking pixel image
 					'src' => $data['linkTracking']													//  ... pointing to tracking URL
 				) );
 			}

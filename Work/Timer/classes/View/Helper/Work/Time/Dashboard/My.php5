@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Time_Dashboard_My extends CMF_Hydrogen_View_Helper_Abstract
@@ -17,9 +18,9 @@ class View_Helper_Work_Time_Dashboard_My extends CMF_Hydrogen_View_Helper_Abstra
 			'workerId'	=> $logicAuth->getCurrentUserId(),
 			'status'	=> array( 1, 2 ),
 		) );
-		$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+		$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 		$fromAdd	= 'info/dashboard';
-		$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;jetzt Zeit erfassen', array(
+		$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;jetzt Zeit erfassen', array(
 			'href'	=> './work/time/add?from='.$fromAdd,
 			'class'	=> 'btn btn-block btn-success',
 		) );
@@ -39,47 +40,47 @@ class View_Helper_Work_Time_Dashboard_My extends CMF_Hydrogen_View_Helper_Abstra
 			$from			= 'info/dashboard';
 
 			if( $timer->status == 1 ){
-				$icon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) );
-				$button		= UI_HTML_Tag::create( 'a', $icon, array(
+				$icon		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) );
+				$button		= HtmlTag::create( 'a', $icon, array(
 					'href'	=> './work/time/pause/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-large btn-warning',
 					'title'	=> 'pausieren',
 				) );
-				$button		= UI_HTML_Tag::create( 'a', $icon.'&nbsp;pausieren', array(
+				$button		= HtmlTag::create( 'a', $icon.'&nbsp;pausieren', array(
 					'href'	=> './work/time/pause/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-block btn-warning',
 				) );
 				$secondsNeeded	= $timer->secondsNeeded + ( time() - $timer->modifiedAt );
 				$timeNeeded		= View_Helper_Work_Time::formatSeconds( $secondsNeeded );
-				$timeNeeded		= UI_HTML_Tag::create( 'span', $timeNeeded, array(
+				$timeNeeded		= HtmlTag::create( 'span', $timeNeeded, array(
 					'id'			=>  "dashboard-timer",
 					'data-value'	=>  $secondsNeeded,
 				) );
 			}
 			else{
-				$icon		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) );
-				$button		= UI_HTML_Tag::create( 'a', $icon, array(
+				$icon		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) );
+				$button		= HtmlTag::create( 'a', $icon, array(
 					'href'	=> './work/time/start/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-large btn-success',
 					'title'	=> 'starten',
 				) );
-				$button		= UI_HTML_Tag::create( 'a', $icon.'&nbsp;starten', array(
+				$button		= HtmlTag::create( 'a', $icon.'&nbsp;starten', array(
 					'href'	=> './work/time/start/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-block btn-success',
 				) );
 				$timeNeeded		= View_Helper_Work_Time::formatSeconds( $timer->secondsNeeded );
-				$timeNeeded		= UI_HTML_Tag::create( 'span', $timeNeeded, array(
+				$timeNeeded		= HtmlTag::create( 'span', $timeNeeded, array(
 					'data-value'	=>  $timer->secondsNeeded,
 				) );
 			}
 
-			$linkTimer		= UI_HTML_Tag::create( 'a', $timer->title, array(
+			$linkTimer		= HtmlTag::create( 'a', $timer->title, array(
 				'href'	=> './work/time/edit/'.$timer->workTimerId.'?from='.$from,
 			) );
-			$linkProject	= UI_HTML_Tag::create( 'a', $timer->project->title, array(
+			$linkProject	= HtmlTag::create( 'a', $timer->project->title, array(
 				'href'	=> './manage/project/view/'.$timer->project->projectId.'?from='.$from,
 			) );
-			$linkRelation	= UI_HTML_Tag::create( 'a', $timer->relationTitle, array(
+			$linkRelation	= HtmlTag::create( 'a', $timer->relationTitle, array(
 				'href'	=> join( array(
 					$timer->relationLink,
 					substr_count( $timer->relationLink, '?' ) ? '&' : '?',
@@ -113,9 +114,9 @@ class View_Helper_Work_Time_Dashboard_My extends CMF_Hydrogen_View_Helper_Abstra
 				<script>jQuery(document).ready(function(){WorkTimer.init("#dashboard-timer", "&nbsp;");});</script>';
 		}
 		return $content;
-		$panel	= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'h4', 'aktuelle Aktivität' ),
-			UI_HTML_Tag::create( 'div', $content, array(
+		$panel	= HtmlTag::create( 'div', array(
+			HtmlTag::create( 'h4', 'aktuelle Aktivität' ),
+			HtmlTag::create( 'div', $content, array(
 				'class' => 'content-panel-inner'
 			) )
 		), array(

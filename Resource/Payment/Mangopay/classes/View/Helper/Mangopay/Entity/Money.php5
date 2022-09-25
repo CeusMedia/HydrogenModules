@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Mangopay_Entity_Money extends View_Helper_Mangopay_Abstract{
 
 	const FORMAT_AMOUNT_CURRENCY		= '%1$s%3$s';
@@ -26,7 +28,7 @@ class View_Helper_Mangopay_Entity_Money extends View_Helper_Mangopay_Abstract{
 			$this->numberFormat == self::NUMBER_FORMAT_COMMA ? '.' : '´'
 		);
 		$label	= sprintf( $this->format, $price, $this->separator, $this->currency );
-		return UI_HTML_Tag::create( $this->nodeName, $label, array( 'class' => $this->nodeClass ) );
+		return HtmlTag::create( $this->nodeName, $label, array( 'class' => $this->nodeClass ) );
 	}
 
 	public function set( \MangoPay\Money $money, $accuracy = NULL ){

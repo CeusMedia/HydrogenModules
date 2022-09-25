@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 /*
 		'label'		=> $label,
 		'language'	=> $language,
@@ -86,15 +88,15 @@ if( $module->links ){
 		$actions	.= UI_HTML_Elements::LinkButton( './admin/module/editor/removeLink/'.$moduleId.'/'.$nr, '', 'button icon tiny remove' );
 
 		$row	= array(
-			UI_HTML_Tag::create( 'td', $labelLanguage ),
-			UI_HTML_Tag::create( 'td', $link->label ),
-			UI_HTML_Tag::create( 'td', $link->path ),
-//			UI_HTML_Tag::create( 'td', $link->parent ),
-			UI_HTML_Tag::create( 'td', $access ),
-			UI_HTML_Tag::create( 'td', $link->rank ),
-			UI_HTML_Tag::create( 'td', $actions ),
+			HtmlTag::create( 'td', $labelLanguage ),
+			HtmlTag::create( 'td', $link->label ),
+			HtmlTag::create( 'td', $link->path ),
+//			HtmlTag::create( 'td', $link->parent ),
+			HtmlTag::create( 'td', $access ),
+			HtmlTag::create( 'td', $link->rank ),
+			HtmlTag::create( 'td', $actions ),
 		);
-		$rows[]	= UI_HTML_Tag::create( 'tr', $row );
+		$rows[]	= HtmlTag::create( 'tr', $row );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '5%', '30%', '25%', '20%', '10%', '10%' ) );
 	$heads		= UI_HTML_Elements::TableHeads( array( '', 'Beschriftung', 'Pfad', /*'Parent',*/ 'Zugriff', 'Rank', 'Aktion' ) );

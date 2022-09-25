@@ -1,15 +1,16 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/newsletter/template/html' ) );
 extract( $view->populateTexts( array( 'placeholders' ), 'html/work/newsletter/template/' ) );
 
 //  --  PANEL: PREVIEW  --  //
 $urlPreview			= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
-$iframeHtml			= UI_HTML_Tag::create( 'iframe', '', array(
+$iframeHtml			= HtmlTag::create( 'iframe', '', array(
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
 ) );
-$buttonPreviewHtml	= UI_HTML_Tag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
+$buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
 	'data-toggle'	=> 'modal',
@@ -46,7 +47,7 @@ $content	= $textTop.'
 				</div>
 			</h3>
 			<div class="content-panel-inner">
-				'.UI_HTML_Tag::create( 'textarea', $value, array(
+				'.HtmlTag::create( 'textarea', $value, array(
 					'name'		=> 'html',
 					'id'		=> 'input_html',
 					'class'		=> 'CodeMirror-auto',

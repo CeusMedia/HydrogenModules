@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
@@ -76,7 +77,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 			$this->renderIndexButton(),
 			$this->renderNextButton(),
 		);
-		return UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
+		return HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
 	}
 
 	public function setButtonSize( string $buttonSize ): self
@@ -219,7 +220,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 			$classes[]	= 'btn-'.$this->buttonSize;
 		if( $this->buttonState )
 			$classes[]	= 'btn-'.$this->buttonState;
-		$button		= UI_HTML_Tag::create( 'a', $label, array(
+		$button		= HtmlTag::create( 'a', $label, array(
 			'href'	=> $url,
 			'class'	=> join( ' ', $classes ),
 		) );
@@ -234,7 +235,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 			throw new RuntimeException( 'No index URL set' );
 		$label	= $this->indexLabel ? $this->indexLabel : '';
 		if( $this->useIcons ){
-			$iconIndex	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+			$iconIndex	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 			$label		= strlen( $label ) ? $iconIndex.'&nbsp;'.$label : $iconIndex;
 		}
 		return $this->renderButton( $this->indexUrl, $label );
@@ -248,7 +249,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 		$primaryKey	= $this->modelObject->getPrimaryKey();
 		$label		= $entry->{$this->labelColumn};
 		if( $this->useIcons ){
-			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+			$icon	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
 			$label	= $label.'&nbsp;'.$icon;
 		}
 		$url	= sprintf( $this->urlTemplate, $entry->{$primaryKey} );
@@ -263,7 +264,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 		$primaryKey	= $this->modelObject->getPrimaryKey();
 		$label		= $entry->{$this->labelColumn};
 		if( $this->useIcons ){
-			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+			$icon	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 			$label	= $icon.'&nbsp;'.$label;
 		}
 		$url	= sprintf( $this->urlTemplate, $entry->{$primaryKey} );

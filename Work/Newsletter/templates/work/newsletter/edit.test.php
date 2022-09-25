@@ -1,10 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-
-$iconSelect		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconSend		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) ).'&nbsp;';
-$iconPrev		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconNext		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) ).'&nbsp;';
+$iconSelect		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconSend		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) ).'&nbsp;';
+$iconPrev		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconNext		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) ).'&nbsp;';
 
 $listGroups		= '<div class="alert alert-danger">
 	<strong>Keine verwendbare Testgruppe vorhanden.</strong><br/>
@@ -19,14 +19,14 @@ foreach( $groups as $group ){
 	if( (int) $group->type !== 1 )
 		continue;
 	$disabled	= '';
-	$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
+	$checkbox	= HtmlTag::create( 'input', NULL, array(
 		'type'		=> 'checkbox',
 		'checked'	=> in_array( $group->newsletterGroupId, $groupIds ) ? 'checked' : NULL,
 		'name'		=> 'groupIds[]',
 		'value'		=> $group->newsletterGroupId,
 	) );
 	$title		= $checkbox.'&nbsp;'.$group->title.' ('.count( $group->readers ).')';
-	$label		= UI_HTML_Tag::create( 'label', $title, array( 'class' => 'checkbox' ) );
+	$label		= HtmlTag::create( 'label', $title, array( 'class' => 'checkbox' ) );
 	$list[]		= $label;
 }
 if( $list ){

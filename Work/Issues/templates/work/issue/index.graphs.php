@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 /**
  *	@see		ImageMapster
  *	@link		http://www.outsharked.com/imagemapster/
@@ -48,8 +50,8 @@ $width	= $env->getConfig()->get( 'module.work_issues.graph.all.width' );
 #remark( $width + 20 );
 #die;
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neuer Eintrag', array(
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Eintrag', array(
 	'href'	=> './work/issue/add',
 	'class'	=> 'btn btn-success'
 ) );

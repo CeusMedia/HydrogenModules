@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $rowColors	= array(
 	-1	=> 'error',
 	1	=> 'warning',
@@ -35,7 +37,7 @@ if( $letterHistory ){
 				break;
 		}
 		$rows[]	= '<tr class="'.$rowColor.'"><td>'.implode( '</td><td>', array(
-			UI_HTML_Tag::create( 'a', $readerLetter->reader->firstname.' '.$readerLetter->reader->surname, array( 'href' => $urlReader ) ),
+			HtmlTag::create( 'a', $readerLetter->reader->firstname.' '.$readerLetter->reader->surname, array( 'href' => $urlReader ) ),
 			$readerLetter->reader->email,
 			$words->letterStates[$readerLetter->status],
 			$buttonView.' '.$buttonSend.' '.$buttonRemove

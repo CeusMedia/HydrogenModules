@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
@@ -37,7 +38,7 @@ class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 			$replace		= isset( $this->blocks[$identifier] ) ? $this->blocks[$identifier]->content : '';
 			$pattern		= '/'.preg_quote( '[block_'.$identifier.']' ).'/su';
 			if( $this->mode === 'extended' && strlen( trim( $replace ) ) ){
-				$replace	= UI_HTML_Tag::create( 'div', $replace, array(
+				$replace	= HtmlTag::create( 'div', $replace, array(
 					'class'		=> 'form-view-block',
 					'id'		=> 'form-view-block-'.$this->formId.'-'.$counter,
 				), array(
@@ -59,8 +60,8 @@ class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 			$clientUrl	= $this->env->getConfig()->get( 'app.base.url' );
 			$devMode	= $form->status < Model_Form::STATUS_ACTIVATED ? 'true' : 'false';
 			$scripts	= join( '', array(
-				UI_HTML_Tag::create( 'script', 'jQuery(document).ready(function(){Forms.init("'.$clientUrl.'", '.$devMode.').apply("form-'.$this->formId.'");});' ),
-	//			UI_HTML_Tag::create( 'script', 'FormOptionals.init();' ),
+				HtmlTag::create( 'script', 'jQuery(document).ready(function(){Forms.init("'.$clientUrl.'", '.$devMode.').apply("form-'.$this->formId.'");});' ),
+	//			HtmlTag::create( 'script', 'FormOptionals.init();' ),
 			) );
 			$content	.= $scripts;
 		}
@@ -94,13 +95,13 @@ class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 	protected function renderForm(): string
 	{
 		$form		= $this->modelForm->get( $this->formId );
-		$button		= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'button', 'abschicken', array( 'type' => 'submit', 'name' => 'send', 'class' => 'cmsmasters_button btn btn-primary' ) ),
+		$button		= HtmlTag::create( 'div', array(
+			HtmlTag::create( 'button', 'abschicken', array( 'type' => 'submit', 'name' => 'send', 'class' => 'cmsmasters_button btn btn-primary' ) ),
 		), array( 'class' => 'cmforms-row' ) );
 		if( substr_count( $form->content, '[block_row_button]' ) )
 			$button	= '';
-		return UI_HTML_Tag::create( 'form', array(
-			UI_HTML_Tag::create( 'input', NULL, array(
+		return HtmlTag::create( 'form', array(
+			HtmlTag::create( 'input', NULL, array(
 				'type'		=> 'hidden',
 				'name'		=> 'formId',
 				'id'		=> 'input_formId',
@@ -125,21 +126,21 @@ class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 		$messageSuccess	= '';
 		$blocks			= Dictionary::create( $this->blocks )->getAll( 'message_' );
 		if( $this->returnCode === 2 && isset( $blocks['result_confirmed'] ) )
-			$messageCode	=  UI_HTML_Tag::create( 'div', $blocks['result_confirmed']->content, array(
+			$messageCode	=  HtmlTag::create( 'div', $blocks['result_confirmed']->content, array(
 				'class'	=> 'form-message-code',
 			) );
 		else if( $this->returnCode === 3 && isset( $blocks['result_confirmed_already'] ) )
-			$messageCode	=  UI_HTML_Tag::create( 'div', $blocks['result_confirmed_already']->content, array(
+			$messageCode	=  HtmlTag::create( 'div', $blocks['result_confirmed_already']->content, array(
 				'class'	=> 'form-message-code',
 			) );
 		if( isset( $blocks['error'] ) ){
-			$messageError	= UI_HTML_Tag::create( 'div', $blocks['error']->content, array(
+			$messageError	= HtmlTag::create( 'div', $blocks['error']->content, array(
 				'class'	=> 'form-message-error',
 				'style'	=> 'display: none',
 			) );
 		}
 		if( isset( $blocks['success'] ) ){
-			$messageSuccess	= UI_HTML_Tag::create( 'div', $blocks['success']->content, array(
+			$messageSuccess	= HtmlTag::create( 'div', $blocks['success']->content, array(
 				'class'	=> 'form-message-success',
 				'style'	=> 'display: none',
 			) );
@@ -147,7 +148,7 @@ class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
 		$form		= $this->modelForm->get( $this->formId );
 		if( $form->type == Model_Form::TYPE_CONFIRM ){
 			if( isset( $blocks['success_confirm'] ) ){
-				$messageSuccess	= UI_HTML_Tag::create( 'div', $blocks['success_confirm']->content, array(
+				$messageSuccess	= HtmlTag::create( 'div', $blocks['success_confirm']->content, array(
 					'class'	=> 'form-message-success',
 					'style'	=> 'display: none',
 				) );

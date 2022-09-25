@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Newsletter_ThemeList
@@ -30,7 +31,7 @@ class View_Helper_Work_Newsletter_ThemeList
 		foreach( $this->themes as $theme ){
 			$list[]	= $this->renderItem( $theme );
 		}
-		return \UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'thumbnails' ) );
+		return \HtmlTag::create( 'ul', join( $list ), array( 'class' => 'thumbnails' ) );
 	}
 
 	/**

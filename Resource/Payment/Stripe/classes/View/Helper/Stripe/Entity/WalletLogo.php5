@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Stripe_Entity_WalletLogo extends View_Helper_Stripe_Abstract
@@ -38,8 +39,8 @@ class View_Helper_Stripe_Entity_WalletLogo extends View_Helper_Stripe_Abstract
 				break;
 		}
 		$classes	= array( 'fa fa-fw', $icon, $this->size );
-		$image		= UI_HTML_Tag::create( 'i', '', array( 'class' => join( ' ', $classes ) ) );
-		return UI_HTML_Tag::create( $this->nodeName, $image, array(
+		$image		= HtmlTag::create( 'i', '', array( 'class' => join( ' ', $classes ) ) );
+		return HtmlTag::create( $this->nodeName, $image, array(
 			'class'	=> $this->nodeClass,
 		) );
 	}

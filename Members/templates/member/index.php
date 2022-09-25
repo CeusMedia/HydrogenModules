@@ -1,6 +1,7 @@
 <?php
-$helperGravatar	= new View_Helper_Gravatar( $env );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+$helperGravatar	= new View_Helper_Gravatar( $env );
 
 $panelFilter	= '
 <div class="content-panel content-panel-filter">
@@ -21,10 +22,10 @@ $panelFilter	= '
 	</div>
 </div>';
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 $helperPages	= new \CeusMedia\Bootstrap\PageControl( './member', $page, $pages );
 $pagination		= $helperPages->render();
-$buttonAdd		=UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neuen Kontakt herstellen', array(
+$buttonAdd		=HtmlTag::create( 'a', $iconAdd.'&nbsp;neuen Kontakt herstellen', array(
 	'href'		=> './member/search',
 	'class'		=> 'btn btn-success',
 ) );
@@ -37,9 +38,9 @@ if( $users ){
 	$helperMember->setMode( 'thumbnail' );
 	foreach( $users as $user ){
 		$helperMember->setUser( $user );
-		$list[]	= UI_HTML_Tag::create( 'li', $helperMember->render(), array( 'class' => 'span4' ) );
+		$list[]	= HtmlTag::create( 'li', $helperMember->render(), array( 'class' => 'span4' ) );
 	}
-	$table	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbnails' ) );
+	$table	= HtmlTag::create( 'ul', $list, array( 'class' => 'thumbnails' ) );
 }
 
 $panelList	= '
@@ -64,22 +65,22 @@ if( $incoming || $outgoing ){
 	$list	= [];
 	foreach( $incoming as $relation ){
 		$helperMember->setUser( $relation->user );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $helperMember->render() ),
-			UI_HTML_Tag::create( 'td', '<small>'.date( 'd.m.Y', $relation->createdAt ).'</small>' ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $helperMember->render() ),
+			HtmlTag::create( 'td', '<small>'.date( 'd.m.Y', $relation->createdAt ).'</small>' ),
 		) );
 	}
 	foreach( $outgoing as $relation ){
 		$helperMember->setUser( $relation->user );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $helperMember->render() ),
-			UI_HTML_Tag::create( 'td', '<small>'.date( 'd.m.Y', $relation->createdAt ).'</small>' ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $helperMember->render() ),
+			HtmlTag::create( 'td', '<small>'.date( 'd.m.Y', $relation->createdAt ).'</small>' ),
 		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "80" );
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Mitglied', 'Datum' ) ) );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $list, array( '' ) );
-	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Mitglied', 'Datum' ) ) );
+	$tbody	= HtmlTag::create( 'tbody', $list, array( '' ) );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
 $panelPending	= '

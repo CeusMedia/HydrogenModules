@@ -1,7 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['panel-logo'];
 
-$iconFolder	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
+$iconFolder	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
 $form	= '<form action="./admin/payment/mangopay/client/logo" method="post" enctype="multipart/form-data">
 	<div class="row-fluid">
 		<div class="span12">
@@ -22,9 +24,9 @@ $form	= '<form action="./admin/payment/mangopay/client/logo" method="post" encty
 	</div>
 </form>';
 
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', $w->heading ),
-	UI_HTML_Tag::create( 'div', array(
+return HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', $w->heading ),
+	HtmlTag::create( 'div', array(
 		$form,
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );

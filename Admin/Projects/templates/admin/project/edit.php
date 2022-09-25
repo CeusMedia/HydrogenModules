@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optStatus	= $words['version-states'];
 ksort( $optStatus );
@@ -10,21 +11,21 @@ $panelAddVersion	= '
 			<ul class="input">
 				<li>
 					<div class="column-left-50">
-						'.UI_HTML_Tag::create( 'label', 'Version' ).'<br/>
+						'.HtmlTag::create( 'label', 'Version' ).'<br/>
 						'.UI_HTML_Elements::Input( 'version', NULL, 'max' ).'
 					</div>
 					<div class="column-left-50">
-						'.UI_HTML_Tag::create( 'label', 'Status' ).'<br/>
+						'.HtmlTag::create( 'label', 'Status' ).'<br/>
 						'.UI_HTML_Elements::Select( 'status', $optStatus, 'max' ).'
 					</div>
 					<div class="column-clear"></div>
 				</li>
 				<li>
-					'.UI_HTML_Tag::create( 'label', 'Titel' ).'<br/>
+					'.HtmlTag::create( 'label', 'Titel' ).'<br/>
 					'.UI_HTML_Elements::Input( 'title', NULL ).'
 				</li>
 				<li>
-					'.UI_HTML_Tag::create( 'label', 'Beschreibung' ).'<br/>
+					'.HtmlTag::create( 'label', 'Beschreibung' ).'<br/>
 					'.UI_HTML_Elements::Textarea( 'description', NULL ).'
 				</li>
 			</ul>
@@ -67,15 +68,15 @@ $panelEdit	= '
 			<legend>'.sprintf( $wf->legend, $project->title ).'</legend>
 			<ul class="input">
 				<li class="column-left-66">
-					'.UI_HTML_Tag::create( 'label', $wf->labelTitle, array( 'for' => 'title', 'class' => 'mandatory' ) ).'<br/>
+					'.HtmlTag::create( 'label', $wf->labelTitle, array( 'for' => 'title', 'class' => 'mandatory' ) ).'<br/>
 					'.UI_HTML_Elements::Input( 'title', htmlspecialchars( $project->title, ENT_COMPAT, 'UTF-8' ), 'max mandatory' ).'
 				</li>
 				<li class="column-left-33">
-					'.UI_HTML_Tag::create( 'label', $wf->labelStatus, array( 'for' => 'status' ) ).'<br/>
+					'.HtmlTag::create( 'label', $wf->labelStatus, array( 'for' => 'status' ) ).'<br/>
 					'.UI_HTML_Elements::Select( 'status', $optStatus, 'max' ).'
 				</li>
 				<li>
-					'.UI_HTML_Tag::create( 'description', $wf->labelDescription, array( 'for' => 'description' ) ).'<br/>
+					'.HtmlTag::create( 'description', $wf->labelDescription, array( 'for' => 'description' ) ).'<br/>
 					'.UI_HTML_Elements::TextArea( 'description', htmlspecialchars( $project->description, ENT_COMPAT, 'UTF-8' ), 'max' ).'
 				</li>
 			</ul>

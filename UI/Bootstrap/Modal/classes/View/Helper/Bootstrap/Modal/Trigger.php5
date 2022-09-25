@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Bootstrap_Modal_Trigger
@@ -62,7 +63,7 @@ class View_Helper_Bootstrap_Modal_Trigger
 					$attributes[$key]	= $value;
 			}
 		}
-		return UI_HTML_Tag::create( 'a', $this->label, $attributes );
+		return HtmlTag::create( 'a', $this->label, $attributes );
 	}
 
 	/**

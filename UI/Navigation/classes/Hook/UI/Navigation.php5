@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -30,7 +31,7 @@ class Hook_UI_Navigation extends Hook
 				e.style.height = (window.innerHeight - e.offsetTop) + "px";
 				if(offset > 0) e.scrollTop = offset;
 			};';
-			$env->getPage()->addHead( UI_HTML_Tag::create( 'script', $script ) );
+			$env->getPage()->addHead( HtmlTag::create( 'script', $script ) );
 		}
 	}
 }

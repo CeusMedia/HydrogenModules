@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Mangopay_Entity_CardNumber extends View_Helper_Mangopay_Abstract{
@@ -12,7 +13,7 @@ class View_Helper_Mangopay_Entity_CardNumber extends View_Helper_Mangopay_Abstra
 		$pattern	= '/^([^x]+)(x+)(.+)$/i';
 		$replace	= '\\1<small class="muted">\\2</small>\\3';
 		$number		= preg_replace( $pattern, $replace, $this->number );
-		return UI_HTML_Tag::create( $this->nodeName, $number, array(
+		return HtmlTag::create( $this->nodeName, $number, array(
 			'class'	=> $this->nodeClass,
 		) );
 	}

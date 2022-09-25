@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_Abstract
 {
 	protected $container			= FALSE;
@@ -36,13 +38,13 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 			$links	= $this->helperNavigation->render();
 
 			if( $this->container )
-				$links	= UI_HTML_Tag::create( 'div', $links, array( 'class' => 'container' ) );
+				$links	= HtmlTag::create( 'div', $links, array( 'class' => 'container' ) );
 
-			$inner	= UI_HTML_Tag::create( 'div', $links, array( 'class' => 'navbar-inner' ) );
+			$inner	= HtmlTag::create( 'div', $links, array( 'class' => 'navbar-inner' ) );
 			$class	= "navbar navbar-".$this->position."-top";
 			if( $this->inverse )
 				$class	.= ' navbar-inverse';
-			$links	= UI_HTML_Tag::create( 'div', $inner, array( 'class' => $class ) );
+			$links	= HtmlTag::create( 'div', $inner, array( 'class' => $class ) );
 		}
 		else{
 			$helperNavbar	= new CMF_Hydrogen_View_Helper_Navigation_SingleAutoTabs( $this->env );
@@ -71,7 +73,7 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 		if( $this->hideOnMobileDevice )
 			$classes[]	= 'visible-desktop';
 		if( $classes )
-			$content	= UI_HTML_Tag::create( 'div', $content, array( 'class' => $classes) );
+			$content	= HtmlTag::create( 'div', $content, array( 'class' => $classes) );
 		return $content;
 	}
 
@@ -81,12 +83,12 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 			$icon	= "";
 			if( $this->logoIcon ){
 				$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
-				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $icon ) );
+				$icon	= HtmlTag::create( 'i', '', array( 'class' => $icon ) );
 			}
 			$label	= $icon.$this->logoTitle;
 			if( $this->logoLink )
-				$label	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $this->logoLink ) );
-			return UI_HTML_Tag::create( 'div', $label, array( 'id' => "navbar-logo" ) );
+				$label	= HtmlTag::create( 'a', $label, array( 'href' => $this->logoLink ) );
+			return HtmlTag::create( 'div', $label, array( 'id' => "navbar-logo" ) );
 		}
 		return '';
 	}

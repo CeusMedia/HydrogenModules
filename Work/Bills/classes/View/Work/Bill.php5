@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
@@ -55,8 +56,8 @@ class View_Work_Bill extends View
 		$words		= $this->getWords();
 		$table		= '<div><em class="muted">Keine Einträge vorhanden.</em></div><br/>';
 		if( $bills ){
-			$iconIn	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right', 'title' => 'an andere' ) );
-			$iconOut	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left', 'title' => 'von anderen' ) );
+			$iconIn	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-right', 'title' => 'an andere' ) );
+			$iconOut	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left', 'title' => 'von anderen' ) );
 			$rows		= [];
 			$helper		= new View_Helper_TimePhraser( $this->env );
 			$format		= CMF_Hydrogen_View_Helper_Timestamp::$formatDatetime;
@@ -64,7 +65,7 @@ class View_Work_Bill extends View
 			foreach( $bills as $bill ){
 				$date	= strtotime( substr( $bill->date, 0, 4 ).'-'.substr( $bill->date, 4, 2).'-'.substr( $bill->date, 6, 2 ) );
 				$label	= ( $bill->type ? $iconOut : $iconIn ) . '&nbsp;'.$bill->title;
-				$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => './work/bill/edit/'.$bill->billId ) );
+				$link	= HtmlTag::create( 'a', $label, array( 'href' => './work/bill/edit/'.$bill->billId ) );
 				$price	= $this->renderPrice( $bill->price, $bill->type, '&nbsp;&euro;' );
 				$date	= strtotime( $bill->date );
 				$date	= $bill->date < date( "Ymd" ) ? $helper->convert( $date, TRUE, 'vor' ) : date( 'd.m.Y', $date );
@@ -74,7 +75,7 @@ class View_Work_Bill extends View
 					if( $path )
 						$url	.= '?from='.$path;
 					$label	= '<i class="icon-ok icon-white"></i>&nbsp;bezahlt';
-					$action	= UI_HTML_Tag::create( 'a', $label, array(
+					$action	= HtmlTag::create( 'a', $label, array(
 						'class' => 'btn btn-mini btn-success',
 						'href'	=> $url
 					) );
@@ -84,7 +85,7 @@ class View_Work_Bill extends View
 					if( $path )
 						$url	.= '?from='.$path;
 					$label	= '<i class="icon-remove icon-white"></i>&nbsp;storniert';
-					$action	= UI_HTML_Tag::create( 'a', $label, array(
+					$action	= HtmlTag::create( 'a', $label, array(
 						'class' => 'btn btn-mini btn-danger',
 						'href'	=> $url
 					) );
@@ -92,23 +93,23 @@ class View_Work_Bill extends View
 				$class	= 'bill-type-'.$bill->type;
 				if( $colored )
 					$class	.= ' '.( $bill->status ? 'success' : 'warning' );
-				$rows[]	= UI_HTML_Tag::create( 'tr', array(
-					UI_HTML_Tag::create( 'td', $link, array( 'class' => 'title' ) ),
-					UI_HTML_Tag::create( 'td', $price ),
-					UI_HTML_Tag::create( 'td', $words['states'][$bill->status] ),
-					UI_HTML_Tag::create( 'td', $date ),
-					UI_HTML_Tag::create( 'td', $action ),
+				$rows[]	= HtmlTag::create( 'tr', array(
+					HtmlTag::create( 'td', $link, array( 'class' => 'title' ) ),
+					HtmlTag::create( 'td', $price ),
+					HtmlTag::create( 'td', $words['states'][$bill->status] ),
+					HtmlTag::create( 'td', $date ),
+					HtmlTag::create( 'td', $action ),
 				), array( 'class' => $class ) );
 			}
-			$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+			$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
 				'Title',
 				'Betrag',
 				'Zustand',
 				'Fälligkeit',
 			) ) );
 			$colgroup	= UI_HTML_Elements::ColumnGroup( '40', '15%', '15%', '15%', '15%' );
-			$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-			$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
+			$tbody		= HtmlTag::create( 'tbody', $rows );
+			$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
 			CMF_Hydrogen_View_Helper_Timestamp::$formatDatetime	= $format;
 		}
 		return $table;

@@ -1,11 +1,12 @@
 <?php
 use CeusMedia\Bootstrap\Nav\Tabs as BootstrapTabs;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['edit'];
 
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 
-$buttonList	= UI_HTML_Tag::create( 'a', $iconList.'&nbsp;'.$words['edit']['buttonList'], array(
+$buttonList	= HtmlTag::create( 'a', $iconList.'&nbsp;'.$words['edit']['buttonList'], array(
 	'href'	=> './admin/mail/template',
 	'class'	=> 'btn btn-small',
 ) );
@@ -16,7 +17,7 @@ $contentText	= '
 	<div class="content-panel-inner">
 		<textarea name="template_plain" id="input_template_plain" class="span12" data-ace-option-max-lines="25" rows="25">'.htmlentities( $template->plain, ENT_QUOTES, 'UTF-8' ).'</textarea>
 		<br/>
-		'.UI_HTML_Tag::create( 'div', $buttonList, array( 'class' => 'buttonbar' ) ).'
+		'.HtmlTag::create( 'div', $buttonList, array( 'class' => 'buttonbar' ) ).'
 	</div>
 </div>';
 
@@ -26,7 +27,7 @@ $contentHtml	= '
 	<div class="content-panel-inner">
 		<textarea name="template_html" id="input_template_html" class="span12" data-ace-option-max-lines="25" data-ace-mode="html" rows="25" style="line-height: 1em">'.htmlentities( $template->html, ENT_QUOTES, 'UTF-8' ).'</textarea>
 		<br/>
-		'.UI_HTML_Tag::create( 'div', $buttonList, array( 'class' => 'buttonbar' ) ).'
+		'.HtmlTag::create( 'div', $buttonList, array( 'class' => 'buttonbar' ) ).'
 	</div>
 </div>';
 
@@ -36,7 +37,7 @@ $contentCss	= '
 	<div class="content-panel-inner">
 		<textarea name="template_css" id="input_template_css" class="span12" data-ace-option-max-lines="25" data-ace-mode="css" rows="25" style="line-height: 1em">'.htmlentities( $template->css, ENT_QUOTES, 'UTF-8' ).'</textarea>
 		<br/>
-		'.UI_HTML_Tag::create( 'div', $buttonList, array( 'class' => 'buttonbar' ) ).'
+		'.HtmlTag::create( 'div', $buttonList, array( 'class' => 'buttonbar' ) ).'
 	</div>
 </div>';
 
@@ -68,9 +69,9 @@ $helperNav	= View_Helper_Pagination_PrevNext::create( $env )
 	->setIndexUrl( './admin/mail/template' )
 	->setModelClass( 'Model_Mail_Template' )
 	->setOrderColumn( 'mailTemplateId' );
-$navPrevNext	= UI_HTML_Tag::create( 'div', $helperNav->render(), array( 'class' => 'pull-right' ) );
+$navPrevNext	= HtmlTag::create( 'div', $helperNav->render(), array( 'class' => 'pull-right' ) );
 
-$heading3	= UI_HTML_Tag::create( 'h3', vsprintf( $w->heading, array(
+$heading3	= HtmlTag::create( 'h3', vsprintf( $w->heading, array(
 	'./admin/mail/template',
 	htmlentities( $template->title, ENT_QUOTES, 'UTF-8' )
 ) ).$navPrevNext );

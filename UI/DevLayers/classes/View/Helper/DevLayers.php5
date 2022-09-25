@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -33,17 +34,17 @@ class View_Helper_DevLayers
 		$buttons	= [];
 		foreach( self::$layers as $layer ){
 			$attributes	= array( 'class' => 'dev-layer', 'id' => 'dev-layer-'.$layer->id );
-			$layers[]	= UI_HTML_Tag::create( 'div', $layer->content, $attributes );
+			$layers[]	= HtmlTag::create( 'div', $layer->content, $attributes );
 			$attributes	= array(
 				'type'		=> 'button',
 				'class'		=> 'dev-layer-trigger',
 				'id'		=> 'dev-layer-'.$layer->id.'-trigger',
 				'onclick'	=> "UI.DevLayers.show('".$layer->id."');"
 			);
-			$buttons[]	= UI_HTML_Tag::create( 'button', $layer->label, $attributes );
+			$buttons[]	= HtmlTag::create( 'button', $layer->label, $attributes );
 		}
-		$layers		= UI_HTML_Tag::create( 'div', $layers, array( 'id' => 'dev-layers' ) );
-		$buttons	= UI_HTML_Tag::create( 'div', $buttons, array( 'id' => 'dev-layer-buttons' ) );
+		$layers		= HtmlTag::create( 'div', $layers, array( 'id' => 'dev-layers' ) );
+		$buttons	= HtmlTag::create( 'div', $buttons, array( 'id' => 'dev-layer-buttons' ) );
 		return $layers.$buttons;
 	}
 }

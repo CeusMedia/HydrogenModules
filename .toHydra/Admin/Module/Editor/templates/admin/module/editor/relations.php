@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['view'];
 
@@ -37,7 +38,7 @@ if( $relations ){
 		$urlRemove	= './admin/module/editor/removeRelation/'.$moduleId.'/'.$relatedModule->relationType.'/'.$relatedModuleId;
 		$linkRemove	= UI_HTML_Elements::LinkButton( $urlRemove, '', 'button icon tiny remove' );
 		$class	= 'icon module module-status-'.$status;
-		$label	= UI_HTML_Tag::create( 'span', $link, array( 'class' => $class ) );
+		$label	= HtmlTag::create( 'span', $link, array( 'class' => $class ) );
 		$type	= $words['relation-types'][$relatedModule->relationType];
 		$status	= isset( $modules[$relatedModuleId] ) ? $modules[$relatedModuleId]->type : 0;
 		$status	= $words['types'][$status];

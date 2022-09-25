@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
-$iconAccept		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconReject		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconRequest	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconAccept		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconReject		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconRequest	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 
 $isCurrentUser	= $user->userId == $currentUserId;
 $isRelated		= $relation && $relation->status == 2;
@@ -29,7 +30,7 @@ else if( $this->env->getModules()->has( 'UI_Helper_Gravatar' ) ){							//  use 
 
 $image	= '';
 if( $helperAvatar ){
-	$image	= UI_HTML_Tag::create( 'img', NULL, array(
+	$image	= HtmlTag::create( 'img', NULL, array(
 		'src'	=> $helperAvatar->getImageUrl(),
 	//	'class'	=> 'img-polaroid',
 	) );
@@ -45,7 +46,7 @@ $role		= $modelRole->get( $user->roleId );
 
 $data	= print_m( $user, NULL, NULL, TRUE );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
 	'href'		=> $from ? $from : './member/search',
 	'class'		=> 'btn btn-small',
 ) );
@@ -61,17 +62,17 @@ $helperTime		= new View_Helper_TimePhraser( $env );
 if( $user->userId !== $currentUserId ){
 	if( $relation ){
 		if( $relation->status == 1 && $relation->direction == "in" ){
-			$buttonAccept	= UI_HTML_Tag::create( 'a', $iconAccept.'&nbsp;'.$w->buttonAccept, array(
+			$buttonAccept	= HtmlTag::create( 'a', $iconAccept.'&nbsp;'.$w->buttonAccept, array(
 				'href'		=> './member/accept/'.$relation->userRelationId.'?from='.$from,
 				'class'		=> 'btn btn btn-success',
 			) );
-			$buttonReject	= UI_HTML_Tag::create( 'a', $iconReject.'&nbsp;'.$w->buttonReject, array(
+			$buttonReject	= HtmlTag::create( 'a', $iconReject.'&nbsp;'.$w->buttonReject, array(
 				'href'		=> './member/reject/'.$relation->userRelationId.'?from='.$from,
 				'class'		=> 'btn btn btn-danger',
 			) );
 		}
 		if( $relation->status == 2 ){
-			$buttonRevoke	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRevoke, array(
+			$buttonRevoke	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRevoke, array(
 				'href'		=> './member/release/'.$relation->userRelationId.'?from='.$from,
 				'class'		=> 'btn btn-small btn-inverse',
 				'onclick'	=> "if(!confirm('Wirklich?')) return false;",
@@ -79,7 +80,7 @@ if( $user->userId !== $currentUserId ){
 		}
 	}
 	else{
-		$buttonRequest	= UI_HTML_Tag::create( 'a', $iconRequest.'&nbsp;'.$w->buttonRequest, array(
+		$buttonRequest	= HtmlTag::create( 'a', $iconRequest.'&nbsp;'.$w->buttonRequest, array(
 			'href'		=> './member/request/'.$user->userId.'?from='.$from,
 			'class'		=> 'btn btn-small btn-primary',
 		) );

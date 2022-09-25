@@ -1,15 +1,16 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', array(
 	'href'	=> './work/billing/bill',
 	'class'	=> 'btn btn',
 ) );
 
 if( $bill->status == Model_Billing_Bill::STATUS_BOOKED ){
-	$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
+	$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
 		'type'	=> 'submit',
 		'name'	=> 'save',
 		'class'	=> 'btn btn-primary',
@@ -61,7 +62,7 @@ if( $bill->status == Model_Billing_Bill::STATUS_BOOKED ){
 }
 else{
 
-	$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' speichern und aufteilen', array(
+	$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern und aufteilen', array(
 		'type'	=> 'submit',
 		'name'	=> 'save',
 		'class'	=> 'btn btn-primary',

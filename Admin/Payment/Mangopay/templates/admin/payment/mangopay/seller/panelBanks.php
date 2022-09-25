@@ -1,18 +1,19 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 if( !$sellerUser->Id || empty( $sellerUser->HeadquartersAddress ) )
 	return;
 
 $w	= (object) $words['panel-banks'];
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconWallet	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-briefcase' ) );
-$iconBank	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bank' ) );
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconWallet	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-briefcase' ) );
+$iconBank	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bank' ) );
 
-$list		= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'p', 'Noch kein Bankkonten vorhanden.' ),
+$list		= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'p', 'Noch kein Bankkonten vorhanden.' ),
 ), array( 'class' => 'alert alert-info' ) );
 
 
@@ -22,31 +23,31 @@ $helperBic	= new View_Helper_Mangopay_Entity_BIC( $env );
 if( $sellerBanks ){
 	$list	= [];
 	foreach( $sellerBanks as $bankAccount ){
-		$buttonPayOut	= UI_HTML_Tag::create( 'button', $iconBank.'&nbsp;auszahlen', array(
+		$buttonPayOut	= HtmlTag::create( 'button', $iconBank.'&nbsp;auszahlen', array(
 			'type'		=> 'button',
 			'class'		=> 'btn btn-mini',
 		) );
 //		$wallet->Description	= $wallet->Id;
-		$id			= UI_HTML_Tag::create( 'small' , $bankAccount->Id );
-		$title		= UI_HTML_Tag::create( 'div', $bankAccount->OwnerName, array( 'class' => 'autocut' ) );
-		$iban		= UI_HTML_Tag::create( 'small', $helperIban->set( $bankAccount->Details->IBAN ) );
-		$bic		= UI_HTML_Tag::create( 'small', $helperBic->set( $bankAccount->Details->BIC) );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-//			UI_HTML_Tag::create( 'td', $id ),
-			UI_HTML_Tag::create( 'td', $title ),
-			UI_HTML_Tag::create( 'td', $iban.'<br/>'.$bic, array() ),
-			UI_HTML_Tag::create( 'td', $buttonPayOut ),
+		$id			= HtmlTag::create( 'small' , $bankAccount->Id );
+		$title		= HtmlTag::create( 'div', $bankAccount->OwnerName, array( 'class' => 'autocut' ) );
+		$iban		= HtmlTag::create( 'small', $helperIban->set( $bankAccount->Details->IBAN ) );
+		$bic		= HtmlTag::create( 'small', $helperBic->set( $bankAccount->Details->BIC) );
+		$list[]	= HtmlTag::create( 'tr', array(
+//			HtmlTag::create( 'td', $id ),
+			HtmlTag::create( 'td', $title ),
+			HtmlTag::create( 'td', $iban.'<br/>'.$bic, array() ),
+			HtmlTag::create( 'td', $buttonPayOut ),
 		) );
 	}
 	$cols	= UI_HTML_Elements::ColumnGroup( array( /*'60', */'', '240', '100' ) );
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
-//		UI_HTML_Tag::create( 'th', $w->headId ),
-		UI_HTML_Tag::create( 'th', $w->headTitle ),
-		UI_HTML_Tag::create( 'th', $w->headDetails ),
-		UI_HTML_Tag::create( 'th', $w->headActions ),
+	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+//		HtmlTag::create( 'th', $w->headId ),
+		HtmlTag::create( 'th', $w->headTitle ),
+		HtmlTag::create( 'th', $w->headDetails ),
+		HtmlTag::create( 'th', $w->headActions ),
 	) ) );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-	$list	= UI_HTML_Tag::create( 'table', $cols.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+	$tbody	= HtmlTag::create( 'tbody', $list );
+	$list	= HtmlTag::create( 'table', $cols.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }
 
 $modalWords		= (object) $words['modal-bank-add'];
@@ -107,11 +108,11 @@ $trigger->setModalId( 'modal-admin-payment-mangopay-seller-bank-add' );
 $trigger->setLabel( $iconAdd.'&nbsp;'.$w->buttonAdd );
 $trigger->setAttributes( array( 'class' => 'btn btn-success' ) );
 
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', $iconBank.'&nbsp;Bankkonten' ),
-	UI_HTML_Tag::create( 'div', array(
+return HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', $iconBank.'&nbsp;Bankkonten' ),
+	HtmlTag::create( 'div', array(
 		$list,
-		UI_HTML_Tag::create( 'div', array(
+		HtmlTag::create( 'div', array(
 			$trigger
 		), array( 'class' => 'buttonbar' ) ),
 	), array( 'class' => 'content-panel-inner' ) ),

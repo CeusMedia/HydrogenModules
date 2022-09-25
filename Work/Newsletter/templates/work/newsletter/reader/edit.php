@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
 $statusIcons	= array(
@@ -17,32 +19,32 @@ foreach( $groups as $group )
 $hideGroupAdd	= count( $optGroup ) ? '' : 'style="display: none"';
 $optGroup	= UI_HTML_Elements::Options( $optGroup, array_keys( $readerGroups ) );
 
-$listGroups	= UI_HTML_Tag::create( 'div', 'Keine Gruppen zugewiesen.', array( 'class' => 'alert alert-info' ) );
+$listGroups	= HtmlTag::create( 'div', 'Keine Gruppen zugewiesen.', array( 'class' => 'alert alert-info' ) );
 if( $readerGroups ){
 	$listGroups	= [];
 	foreach( $readerGroups as $readerGroup ){
 		$label			= $readerGroup->title;
 		$urlRemove		= './work/newsletter/reader/removeGroup/'.$reader->newsletterReaderId.'/'.$readerGroup->newsletterGroupId;
-		$iconStatus		= UI_HTML_Tag::create( 'i', "", array( 'class' => 'icon-'.$statusIcons[$readerGroup->status] ) );
+		$iconStatus		= HtmlTag::create( 'i', "", array( 'class' => 'icon-'.$statusIcons[$readerGroup->status] ) );
 		$attributes		= array(
 			'href'		=> $urlRemove,
 			'class'		=> 'btn btn-mini btn-inverse',
 		);
-		$linkRemove		= UI_HTML_Tag::create( 'a', '<i class="fa fa-remove"></i>', $attributes );
-		$linkRemove		= UI_HTML_Tag::create( 'div', $linkRemove, array( 'class' => 'pull-right' ) );
+		$linkRemove		= HtmlTag::create( 'a', '<i class="fa fa-remove"></i>', $attributes );
+		$linkRemove		= HtmlTag::create( 'div', $linkRemove, array( 'class' => 'pull-right' ) );
 		$urlGroup		= './work/newsletter/group/edit/'.$readerGroup->newsletterGroupId;
-		$linkGroup		= UI_HTML_Tag::create( 'a', /*$iconStatus.' '.*/$label, array( 'href' => $urlGroup ) );
+		$linkGroup		= HtmlTag::create( 'a', /*$iconStatus.' '.*/$label, array( 'href' => $urlGroup ) );
 
-		$listGroups[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $linkGroup, array( 'class' => '' ) ),
-			UI_HTML_Tag::create( 'td', $linkRemove, array( 'class' => '' ) ),
+		$listGroups[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $linkGroup, array( 'class' => '' ) ),
+			HtmlTag::create( 'td', $linkRemove, array( 'class' => '' ) ),
 		) );
 	}
 	$colgroup		= UI_HTML_Elements::ColumnGroup( "", "35px" );
 	$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Zugewiesene Gruppen', '' ) );
-	$thead			= UI_HTML_Tag::create( 'thead', $tableHeads );
-	$tbody			= UI_HTML_Tag::create( 'tbody', $listGroups );
-	$listGroups		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array(
+	$thead			= HtmlTag::create( 'thead', $tableHeads );
+	$tbody			= HtmlTag::create( 'tbody', $listGroups );
+	$listGroups		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
 		'class'	=> "table table-condensed table-striped table-fixed"
 	) );
 }
@@ -72,28 +74,28 @@ if( $readerLetters ){
 		if( $stats->sent > 0 )
 			$stats->ratio	= round( $stats->opened / $stats->sent * 100, 1 );
 
-		$indicator		= UI_HTML_Tag::create( 'span', '&nbsp;&nbsp;&nbsp;', array( 'class' => $class ) );
-		$link			= UI_HTML_Tag::create( 'a', $letter->newsletter->title, $attributes );
-		$listLetters[]	= UI_HTML_Tag::create( 'li', $indicator.'&nbsp;'.$link, array( 'class' => 'autocut' ) );
+		$indicator		= HtmlTag::create( 'span', '&nbsp;&nbsp;&nbsp;', array( 'class' => $class ) );
+		$link			= HtmlTag::create( 'a', $letter->newsletter->title, $attributes );
+		$listLetters[]	= HtmlTag::create( 'li', $indicator.'&nbsp;'.$link, array( 'class' => 'autocut' ) );
 	}
-	$listLetters	= UI_HTML_Tag::create( 'ul', $listLetters, array( 'class' => 'unstyled' ) );
+	$listLetters	= HtmlTag::create( 'ul', $listLetters, array( 'class' => 'unstyled' ) );
 	if( $stats->sent > 0 ){
 		$list	= [];
-		$list[]	= UI_HTML_Tag::create( 'dt', 'Zugestellt' );
-		$list[]	= UI_HTML_Tag::create( 'dd', $stats->sent );
-		$list[]	= UI_HTML_Tag::create( 'dt', 'Geöffnet' );
-		$list[]	= UI_HTML_Tag::create( 'dd', $stats->opened );
-		$list[]	= UI_HTML_Tag::create( 'dt', 'Rate' );
-		$list[]	= UI_HTML_Tag::create( 'dd', $stats->ratio.'%' );
-		$listLetters	.= '<hr/>'.UI_HTML_Tag::create( 'dl', $list, array( 'class' => "dl-horizontal" ) );
+		$list[]	= HtmlTag::create( 'dt', 'Zugestellt' );
+		$list[]	= HtmlTag::create( 'dd', $stats->sent );
+		$list[]	= HtmlTag::create( 'dt', 'Geöffnet' );
+		$list[]	= HtmlTag::create( 'dd', $stats->opened );
+		$list[]	= HtmlTag::create( 'dt', 'Rate' );
+		$list[]	= HtmlTag::create( 'dd', $stats->ratio.'%' );
+		$listLetters	.= '<hr/>'.HtmlTag::create( 'dl', $list, array( 'class' => "dl-horizontal" ) );
 	}
 }
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconConfirm	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope-o' ) ).'&nbsp;';
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconConfirm	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope-o' ) ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
 
 $urlCancel			= './work/newsletter/reader';
 $urlConfirm			= './work/newsletter/reader/sendConfirmation/'.$reader->newsletterReaderId;

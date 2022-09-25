@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helper	= new View_Helper_Catalog( $env );
 $words	= (object) $words['search'];
@@ -21,7 +22,7 @@ if( $searchTerm || $searchAuthorId ){
 		$list	= [];
 		foreach( $articles as $article )
 			$list[]	= $helper->renderArticleListItem( $article );
-		$list	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'articleList' ) );
+		$list	= HtmlTag::create( 'div', $list, array( 'class' => 'articleList' ) );
 		$pages	= new \CeusMedia\Bootstrap\Nav\PageControl( './catalog/search', $page, ceil( $total / $limit ) );
 	}
 }

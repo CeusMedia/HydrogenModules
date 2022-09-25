@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Navigation_Bootstrap_Sidebar
@@ -40,14 +41,14 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 				if( !$page->items )
 					continue;
 				$title		= $this->renderLabelWithIcon( $page );
-				$list[]		= UI_HTML_Tag::create( 'li', $title, array( 'class' => 'bs4-nav-link nav-header'	) );
+				$list[]		= HtmlTag::create( 'li', $title, array( 'class' => 'bs4-nav-link nav-header'	) );
 
 				foreach( $page->items as $subpage ){
 					$class		= 'bs4-nav-item nav-list-sub-item '.( $subpage->active ? 'active' : NULL );
 					$href		= './'.$subpage->link;
-//					$link		= UI_HTML_Tag::create( 'a', $subpage->label, array( 'href' => $href ) );
-					$link		= UI_HTML_Tag::create( 'a', $this->renderLabelWithIcon( $subpage ), array( 'href' => $href, 'class' => 'bs4-nav-link' ) );
-					$list[]		= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+//					$link		= HtmlTag::create( 'a', $subpage->label, array( 'href' => $href ) );
+					$link		= HtmlTag::create( 'a', $this->renderLabelWithIcon( $subpage ), array( 'href' => $href, 'class' => 'bs4-nav-link' ) );
+					$list[]		= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 				}
 			}
 			else{
@@ -55,9 +56,9 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 					continue;
 				$class	= 'bs4-nav-item '.( $page->active ? 'active' : NULL );
 				$href	= $page->path == "index" ? './' : './'.$page->link;
-//				$link	= UI_HTML_Tag::create( 'a', $page->label, array( 'href' => $href ) );
-				$link	= UI_HTML_Tag::create( 'a', self::renderLabelWithIcon( $page ), array( 'href' => $href, 'class' => 'bs4-nav-link' ) );
-				$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+//				$link	= HtmlTag::create( 'a', $page->label, array( 'href' => $href ) );
+				$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), array( 'href' => $href, 'class' => 'bs4-nav-link' ) );
+				$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 			}
 		}
 		$logo	= $this->renderLogo();
@@ -68,8 +69,8 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 			$account	= $this->helperAccountMenu->render();
 		}
 
-		$list	= UI_HTML_Tag::create( 'ul', $list, array( "class" => 'nav nav-list bs4-nav-pills bs4-flex-column' ) );
-		$list	= UI_HTML_Tag::create( 'div', $list, array( 'id' => 'nav-sidebar-list' ) );
+		$list	= HtmlTag::create( 'ul', $list, array( "class" => 'nav nav-list bs4-nav-pills bs4-flex-column' ) );
+		$list	= HtmlTag::create( 'div', $list, array( 'id' => 'nav-sidebar-list' ) );
 		$this->env->getPage()->js->addScriptOnReady('jQuery(".dropdown-toggle").dropdown();');
 		return $logo.$account.$list;
 	}
@@ -82,19 +83,19 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 		$label	= $this->logoTitle;
 		if( $this->logoIcon ){
 			$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
-			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $icon ) );
+			$icon	= HtmlTag::create( 'i', '', array( 'class' => $icon ) );
 			$label	= $icon.'&nbsp;'.$this->logoTitle;
 		}
 		if( !$this->logoLink )
-			return UI_HTML_Tag::create( 'div', $label, array(
+			return HtmlTag::create( 'div', $label, array(
 //				'id'	=> "logo",
 				'class'	=> 'brand'
 			) );
-		$link	= UI_HTML_Tag::create( 'a', $label, array(
+		$link	= HtmlTag::create( 'a', $label, array(
 			'href'	=> $this->logoLink,
 //			'class'	=> 'brand'
 		) );
-		return UI_HTML_Tag::create( 'div', $link, array( 'class' => 'brand' ) );
+		return HtmlTag::create( 'div', $link, array( 'class' => 'brand' ) );
 	}
 
 	public function setInverse( bool $boolean = NULL ): self
@@ -148,7 +149,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 		$class	= $entry->icon;
 		if( !preg_match( "/^fa/", trim( $entry->icon ) ) )
 			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
-		$icon   = UI_HTML_Tag::create( 'i', '', array( 'class' => $class ) );
+		$icon   = HtmlTag::create( 'i', '', array( 'class' => $class ) );
 		if( strlen( $entry->label ) )
 			return $icon.'&nbsp;'.$entry->label;
 		return $icon;

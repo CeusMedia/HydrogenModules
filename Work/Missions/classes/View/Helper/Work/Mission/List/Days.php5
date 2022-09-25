@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
 
 	protected $icons		= [];
@@ -15,10 +17,10 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
 	public function __construct( $env ){
 		parent::__construct( $env );
 /*		$this->icons	= array(
-			'left'		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) ),
-			'right'		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) ),
-			'edit'		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) ),
-			'view'		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open' ) ),
+			'left'		=> HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) ),
+			'right'		=> HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) ),
+			'edit'		=> HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) ),
+			'view'		=> HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open' ) ),
 		);*/
 	}
 

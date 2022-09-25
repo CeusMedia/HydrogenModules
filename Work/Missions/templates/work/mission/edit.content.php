@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 /*  THIS TEMPLATE IS USED FOR MARKDOWN - NOT FOR HTML  */
 if( strtoupper( $format ) === "HTML" )
 	return '';
@@ -9,11 +11,11 @@ $mode	= "tabbed";
 $w	= (object) $words['edit-content'];
 
 if( $mode === "tabbed" ){
-	$linkMarkdown	= UI_HTML_Tag::create( 'a', $w->hintMarkdownLabel, array(
+	$linkMarkdown	= HtmlTag::create( 'a', $w->hintMarkdownLabel, array(
 		'href'		=> $w->hintMarkdownLink,
 		'target'	=> '_blank',
 	) );
-	$hintMarkdown	= UI_HTML_Tag::create( 'small', sprintf( $w->hintMarkdown, $linkMarkdown ), array( 'class' => 'muted' ) );
+	$hintMarkdown	= HtmlTag::create( 'small', sprintf( $w->hintMarkdown, $linkMarkdown ), array( 'class' => 'muted' ) );
 	$panelContentTabbed	= '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
@@ -26,7 +28,7 @@ if( $mode === "tabbed" ){
 		<div class="tab-content">
 			<div class="tab-pane active" id="tab1">
 				<div id="mirror-container">
-					'.UI_HTML_Tag::create( 'textarea', htmlentities( $mission->content, ENT_QUOTES, 'UTF-8' ), array(
+					'.HtmlTag::create( 'textarea', htmlentities( $mission->content, ENT_QUOTES, 'UTF-8' ), array(
 						'id'		=> "input_content",
 						'name'		=> "content",
 						'rows'		=> "22",

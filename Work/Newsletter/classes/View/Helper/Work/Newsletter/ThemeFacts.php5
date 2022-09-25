@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Newsletter_ThemeFacts
@@ -22,34 +23,34 @@ class View_Helper_Work_Newsletter_ThemeFacts
 		if( $this->data->license ){
 			$license	= $this->data->license;
 			if( $this->data->licenseUrl )
-				$license	= \UI_HTML_Tag::create( 'a', $license, array( 'href' => $this->data->licenseUrl ) );
-			$list[]	= \UI_HTML_Tag::create( 'dt', 'Lizenz' );
-			$list[]	= \UI_HTML_Tag::create( 'dd', $license );
+				$license	= \HtmlTag::create( 'a', $license, array( 'href' => $this->data->licenseUrl ) );
+			$list[]	= \HtmlTag::create( 'dt', 'Lizenz' );
+			$list[]	= \HtmlTag::create( 'dd', $license );
 		}
 		if( $this->data->version ){
 			$date	= '';
 			if( $this->data->modified ){
 				$date	= date( 'Y-m-d', strtotime( $this->data->modified ) );
-				$date	= \UI_HTML_Tag::create( 'small', '('.$date.')', array( 'class' => 'muted' ) );
+				$date	= \HtmlTag::create( 'small', '('.$date.')', array( 'class' => 'muted' ) );
 			}
-			$list[]	= \UI_HTML_Tag::create( 'dt', 'Version' );
-			$list[]	= \UI_HTML_Tag::create( 'dd', $this->data->version.'&nbsp;'.$date );
+			$list[]	= \HtmlTag::create( 'dt', 'Version' );
+			$list[]	= \HtmlTag::create( 'dd', $this->data->version.'&nbsp;'.$date );
 		}
 		if( isset( $this->data->author->name ) ){
 			$author	= $this->data->author->name;
 			if( $this->data->author->email )
-				$author	= \UI_HTML_Tag::create( 'a', $author, array( 'href' => 'mailto:'.$this->data->author->email ) );
-			$list[]	= \UI_HTML_Tag::create( 'dt', 'Autor' );
+				$author	= \HtmlTag::create( 'a', $author, array( 'href' => 'mailto:'.$this->data->author->email ) );
+			$list[]	= \HtmlTag::create( 'dt', 'Autor' );
 			$list[]	= $author;
 		}
 		if( $this->data->author->company ){
 			$company	= $this->data->author->company;
 			if( $this->data->author->url )
-				$company	= \UI_HTML_Tag::create( 'a', $company, array( 'href' => $this->data->author->url ) );
-			$list[]	= \UI_HTML_Tag::create( 'dt', 'Unternehmen' );
+				$company	= \HtmlTag::create( 'a', $company, array( 'href' => $this->data->author->url ) );
+			$list[]	= \HtmlTag::create( 'dt', 'Unternehmen' );
 			$list[]	= $company;
 		}
-		return \UI_HTML_Tag::create( 'dl', $list, $this->attributes );
+		return \HtmlTag::create( 'dl', $list, $this->attributes );
 	}
 
 	public function setListAttributes( array $attributes ): self

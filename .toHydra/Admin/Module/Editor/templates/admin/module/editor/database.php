@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['tab-database'];
 $wf			= (object) $words['tab-database-add'];
@@ -11,16 +12,16 @@ if( $module->sql ){
 		if( !strlen( trim( $sql->sql ) ) )
 			continue;
 		$count++;
-		$code		= UI_HTML_Tag::create( 'xmp', trim( $sql->sql ) );
+		$code		= HtmlTag::create( 'xmp', trim( $sql->sql ) );
 		$url		= './admin/module/editor/removeSql/'.$moduleId;
 
 		$version	= $sql->event === 'update' ? '<br/>Version: '.$sql->version: '';
 		$remove		= UI_HTML_Elements::LinkButton( $url, 'entfernen', 'button icon remove', 'Wirklich?' );
 		$label		= ucFirst( $sql->event ).$version.'<br/>DBMS: '.$sql->type.'<br/>'.$remove;
-		$list[]		= UI_HTML_Tag::create( 'dt', $label );
-		$list[]		= UI_HTML_Tag::create( 'dd', $code, array( 'class' => 'sql' ) );
+		$list[]		= HtmlTag::create( 'dt', $label );
+		$list[]		= HtmlTag::create( 'dd', $code, array( 'class' => 'sql' ) );
 	}
-	$list	= UI_HTML_Tag::create( 'dl', join( $list ), array( 'class' => 'database' ) );
+	$list	= HtmlTag::create( 'dl', join( $list ), array( 'class' => 'database' ) );
 }
 
 $types	= array( '*' => $words['tab-database']['allTypes'] ) + $words['database-types'];

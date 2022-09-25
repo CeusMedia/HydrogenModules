@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class Mail_Stripe_Event_Payin extends Mail_Abstract
 {
 	protected function generate(): self
@@ -11,12 +13,12 @@ class Mail_Stripe_Event_Payin extends Mail_Abstract
 
 	protected function renderHtml(): string
 	{
-		return UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'h4', 'PayIn' ),
+		return HtmlTag::create( 'div', array(
+			HtmlTag::create( 'h4', 'PayIn' ),
 			print_m( $this->data['payin'], NULL, NULL, TRUE, 'html' ),
-			UI_HTML_Tag::create( 'h4', 'User' ),
+			HtmlTag::create( 'h4', 'User' ),
 			print_m( $this->data['user'], NULL, NULL, TRUE, 'html' ),
-			UI_HTML_Tag::create( 'h4', 'Model Payin Data' ),
+			HtmlTag::create( 'h4', 'Model Payin Data' ),
 			print_m( $this->data['data'], NULL, NULL, TRUE, 'html' ),
 		) );
 	}

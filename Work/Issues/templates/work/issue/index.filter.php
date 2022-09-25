@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 //  --  FILTER  --  //
 
 $session	= $this->env->getSession();
@@ -67,7 +69,7 @@ if( $mode == 1 ){
 				<tr>
 					<td>
 						<label for="status">'.$words['indexFilter']['labelStatus'].'</label><br/>
-						'.UI_HTML_Tag::create( 'select', $optStatus, array(
+						'.HtmlTag::create( 'select', $optStatus, array(
 							'name'		=> 'status[]',
 							'id'		=> 'input_status',
 							'multiple'	=> 'multiples',

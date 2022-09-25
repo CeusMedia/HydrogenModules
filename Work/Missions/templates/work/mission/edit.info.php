@@ -1,13 +1,14 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 
 function renderUserLabel( $user ){
-	$iconUser	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-user' ) );
+	$iconUser	= HtmlTag::create( 'i', '', array( 'class' => 'icon-user' ) );
 	$spanClass	= 'user role role'.$user->roleId;
 	$fullname	= $user->firstname.' '.$user->surname;
-	$username	= UI_HTML_Tag::create( 'abbr', $user->username, array( 'title' => $fullname ) );
+	$username	= HtmlTag::create( 'abbr', $user->username, array( 'title' => $fullname ) );
 	$label		= $iconUser.'&nbsp;'.$username;
-	return UI_HTML_Tag::create( 'span', $label, array( 'class' => $spanClass ) );
+	return HtmlTag::create( 'span', $label, array( 'class' => $spanClass ) );
 }
 
 $phraser	= new View_Helper_TimePhraser( $env );
@@ -21,8 +22,8 @@ if( isset( $mission->creator ) )
 	);
 
 $typeIcons	= array(
-	0 => UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
-	1 => UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
+	0 => HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
+	1 => HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
 );
 $infos['type']	= array(
 	'label'	=> 'Missionstyp',
@@ -30,8 +31,8 @@ $infos['type']	= array(
 );
 
 $typeIcons	= array(
-	0 => UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
-	1 => UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
+	0 => HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
+	1 => HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
 );
 $infos['type']	= array(
 	'label'	=> 'Typ',
@@ -74,7 +75,7 @@ if( isset( $mission->projectId ) ){
 	$value		= $projects[$mission->projectId]->title;
 	if( $env->getAcl()->has( 'manage/project', 'view' ) ){
 		$url	= './manage/project/view/'.$mission->projectId;
-		$value	= UI_HTML_Tag::create( 'a', $value, array( 'href' => $url ) );
+		$value	= HtmlTag::create( 'a', $value, array( 'href' => $url ) );
 	}
 	$infos['project']	= array(
 		'label'	=> 'Projekt',
@@ -84,7 +85,7 @@ if( isset( $mission->projectId ) ){
 
 if( count( $missionUsers ) > 1 ){
 	$list	= [];
-	$iconUser	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-user' ) );
+	$iconUser	= HtmlTag::create( 'i', '', array( 'class' => 'icon-user' ) );
 	foreach( $missionUsers as $user ){
 		$list[$user->username]	= renderUserLabel( $user );
 	}
@@ -153,11 +154,11 @@ foreach( $facts as $fact ){
 			$class	= 'max-y';
 		$fact->value	= join( "<br/>", $fact->value );
 	}
-	$term	= UI_HTML_Tag::create( 'dt', $fact->label );
-	$def	= UI_HTML_Tag::create( 'dd', $fact->value, array( 'class' => $class ) );
+	$term	= HtmlTag::create( 'dt', $fact->label );
+	$def	= HtmlTag::create( 'dd', $fact->value, array( 'class' => $class ) );
 	$list[]	= $term.$def;
 }
-$list		= UI_HTML_Tag::create( 'dl', join( $list ), array( 'class' => 'dl-horizontal' ) );
+$list		= HtmlTag::create( 'dl', join( $list ), array( 'class' => 'dl-horizontal' ) );
 
 return '
 <div class="content-panel content-panel-info">

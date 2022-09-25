@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Issue extends View{
@@ -13,28 +14,28 @@ class View_Work_Issue extends View{
 		$modelIssue		= new Model_Issue( $this->env );
 		$userProjects	= $logicProject->getUserProjects( $currentUserId, TRUE );
 		if( !$userProjects )
-			return UI_HTML_Tag::create( 'div', 'Keine Projekte vorhanden.', array( 'class' => 'alert alert-info' ) );
+			return HtmlTag::create( 'div', 'Keine Projekte vorhanden.', array( 'class' => 'alert alert-info' ) );
 		$issues	= $modelIssue->getAll( array(
 			'status'	=> array( 0, 1, 2, 3 ),
 		 	'projectId'	=> array_keys( $userProjects ),
 		), array( 'type' => 'ASC', 'priority' => 'ASC' )/*, array( 0, 20 )*/ );
 		$rows	= [];
 		$icons			= array(
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee' ) ),
 		);
 		foreach( $issues as $issue ) {
 			$icon	= $icons[$issue->type];
-			$link	= UI_HTML_Tag::create( 'a', $icon.'&nbsp;'.$issue->title, array(
+			$link	= HtmlTag::create( 'a', $icon.'&nbsp;'.$issue->title, array(
 				'href'	=> './work/issue/edit/'.$issue->issueId
 			) );
-			$rows[]	= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', $link, array( 'class' => 'autocut' ) ),
+			$rows[]	= HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', $link, array( 'class' => 'autocut' ) ),
 			) );
 		}
-		$table	= UI_HTML_Tag::create( 'table', $rows, array( 'class' => 'table table-condensed table-fixed' ) );
-		return UI_HTML_Tag::create( 'div', $table );
+		$table	= HtmlTag::create( 'table', $rows, array( 'class' => 'table table-condensed table-fixed' ) );
+		return HtmlTag::create( 'div', $table );
 	}
 
 	public function edit(){
@@ -56,7 +57,7 @@ class View_Work_Issue extends View{
 				'class'		=> strlen( $key ) ? sprintf( $class, $key ) : '',
 				'selected'	=>  $selected ? 'selected' : NULL,
 			);
-			$list[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
+			$list[]	= HtmlTag::create( 'option', $value, $attributes );
 		}
 		return join( $list );
 	}

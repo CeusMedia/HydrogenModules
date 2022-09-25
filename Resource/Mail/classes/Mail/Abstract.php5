@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
@@ -412,7 +413,7 @@ abstract class Mail_Abstract
 		if( !file_exists( $filePath ) )
 			return FALSE;
 		$script	= FS_File_Reader::load( $filePath );
-		$tag	= UI_HTML_Tag::create( 'script', $script, ['type' => 'text/javascript'] );
+		$tag	= HtmlTag::create( 'script', $script, ['type' => 'text/javascript'] );
 		$this->page->addHead( $tag );
 		return TRUE;
 	}
@@ -437,7 +438,7 @@ abstract class Mail_Abstract
 		$style	= str_replace( '(../../../', '('.$this->env->url.dirname( dirname( dirname( $path ) ) ).'/', $style );
 		$style	= str_replace( '(../../', '('.$this->env->url.dirname( dirname( $path ) ).'/', $style );
 		$style	= str_replace( '(../', '('.$this->env->url.dirname( $path ).'/', $style );
-		$tag	= UI_HTML_Tag::create( 'style', $style, ['type' => 'text/css'] );
+		$tag	= HtmlTag::create( 'style', $style, ['type' => 'text/css'] );
 		$this->page->addHead( $tag );
 		$this->addedStyles[]	= $filePath;
 		return TRUE;
@@ -520,12 +521,12 @@ abstract class Mail_Abstract
 					$content	= FS_File_Reader::load( $this->env->uri.$style );
 				}
 	//			$content	= preg_replace( '/\/\*.*\*\//su', '', $content );
-				$styleTag	= UI_HTML_Tag::create( 'style', $content, ['type' => 'text/css'] );
+				$styleTag	= HtmlTag::create( 'style', $content, ['type' => 'text/css'] );
 				$this->page->addHead( $styleTag );
 			}
 		}
 		if( $template->css ){
-			$styleTag	= UI_HTML_Tag::create( 'style', $template->css, ['type' => 'text/css'] );
+			$styleTag	= HtmlTag::create( 'style', $template->css, ['type' => 'text/css'] );
 			$this->page->addHead( $styleTag );
 		}
 		return $contentFull;

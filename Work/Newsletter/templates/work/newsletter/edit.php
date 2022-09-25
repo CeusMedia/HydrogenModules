@@ -1,7 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
 
 $pathDefaults	= 'html/work/newsletter/';
 
@@ -74,7 +76,7 @@ switch( $currentTab ){
 		break;
 }
 */
-$tabsContent	.= UI_HTML_Tag::create( 'div', $content, array( 'tab-content' ) );
+$tabsContent	.= HtmlTag::create( 'div', $content, array( 'tab-content' ) );
 
 $modalPreview	= '
 <div id="modal-preview" class="modal hide -fade preview">
@@ -97,7 +99,7 @@ $helperNav	= View_Helper_Pagination_PrevNext::create( $env )
 	->setCurrentId( $newsletter->newsletterId )
 	->setUrlTemplate( './work/newsletter/edit/%d' )
 	->useIndex()->setIndexUrl( './work/newsletter' );
-$navPrevNext	= UI_HTML_Tag::create( 'div', $helperNav->render(), array( 'class' => 'pull-right' ) );
+$navPrevNext	= HtmlTag::create( 'div', $helperNav->render(), array( 'class' => 'pull-right' ) );
 
 extract( $view->populateTexts(
 	array( 'above', 'bottom', 'top' ),

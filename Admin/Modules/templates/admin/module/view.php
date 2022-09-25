@@ -1,5 +1,5 @@
 <?php
-
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $classes	= '-';
 if( $module->files->classes ){
@@ -56,16 +56,16 @@ $config	= '-';
 if( $module->config ){
 	$config	= [];
 	foreach( $module->config as $key => $value )
-		$config[]	= UI_HTML_Tag::create( 'dt', $key ).UI_HTML_Tag::create( 'dd', $value );
-	$config	= UI_HTML_Tag::create( 'dl', join( $config ) );
+		$config[]	= HtmlTag::create( 'dt', $key ).HtmlTag::create( 'dd', $value );
+	$config	= HtmlTag::create( 'dl', join( $config ) );
 }
 
 $sql	= '-';
 if( $module->sql ){
 	$sql	= [];
 	foreach( $module->sql as $type => $content )
-		$sql[]	= UI_HTML_Tag::create( 'dt', $type ).UI_HTML_Tag::create( 'dd', UI_HTML_Tag::create( 'xmp', trim( $content ) ) );
-	$sql	= UI_HTML_Tag::create( 'dl', join( $sql ) );
+		$sql[]	= HtmlTag::create( 'dt', $type ).HtmlTag::create( 'dd', HtmlTag::create( 'xmp', trim( $content ) ) );
+	$sql	= HtmlTag::create( 'dl', join( $sql ) );
 }
 
 $disabled			= $module->type == 4 ? '' : 'disabled';

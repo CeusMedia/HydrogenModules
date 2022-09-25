@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Admin_Config extends View
@@ -33,20 +34,20 @@ class View_Admin_Config extends View
 			) );
 		}
 		else if( $item->type === "boolean" ){
-			$inputYes	= UI_HTML_Tag::create( 'input', NULL, array(
+			$inputYes	= HtmlTag::create( 'input', NULL, array(
 				'name'		=> $moduleId.'|'.$item->key,
 				'type'		=> 'radio',
 				'value'		=> 'yes',
 				'checked'	=> !!$item->value ? 'checked' : NULL,
 			) ).'&nbsp;yes';
-			$inputNo	= UI_HTML_Tag::create( 'input', NULL, array(
+			$inputNo	= HtmlTag::create( 'input', NULL, array(
 				'name'		=> $moduleId.'|'.$item->key,
 				'type'		=> 'radio',
 				'value'		=> 'no',
 				'checked'	=> !$item->value ? 'checked' : NULL,
 			) ).'&nbsp;no';
-			$inputYes		= UI_HTML_Tag::create( 'label', $inputYes, array( 'class' => 'checkbox inline' ) );
-			$inputNo		= UI_HTML_Tag::create( 'label', $inputNo, array( 'class' => 'checkbox inline' ) );
+			$inputYes		= HtmlTag::create( 'label', $inputYes, array( 'class' => 'checkbox inline' ) );
+			$inputNo		= HtmlTag::create( 'label', $inputNo, array( 'class' => 'checkbox inline' ) );
 			$input			= $inputYes.$inputNo;
 		}
 		else{

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Newsletter extends View
@@ -40,11 +41,11 @@ class View_Work_Newsletter extends View
 		$list		= [];
 		foreach( $tabs as $key => $value ){
 			$attributes	= array( 'href'	=> './'.$key );
-			$link		= UI_HTML_Tag::create( 'a', $value, $attributes );
+			$link		= HtmlTag::create( 'a', $value, $attributes );
 			$attributes	= array( 'class'	=> $key === $current ? 'active' : NULL );
-			$list[]	= UI_HTML_Tag::create( 'li', $link, $attributes );
+			$list[]	= HtmlTag::create( 'li', $link, $attributes );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => "nav nav-tabs" ) );
+		return HtmlTag::create( 'ul', $list, array( 'class' => "nav nav-tabs" ) );
 	}
 
 	protected function renderTabs( $tabs, $baseUrl, $current, $disabled = [] )
@@ -54,16 +55,16 @@ class View_Work_Newsletter extends View
 		foreach( $tabs as $key => $value ){
 			$number++;
 			$attributes	= array( 'href'	=> './work/newsletter/'.$baseUrl.$key );
-			$link		= UI_HTML_Tag::create( 'a', $value, $attributes );
+			$link		= HtmlTag::create( 'a', $value, $attributes );
 			$attributes	= array(
 				'class'	=> (int) $key === $current ? 'active' : NULL
 			);
 			if( in_array( $number, $disabled ) ){
-				$link	= UI_HTML_Tag::create( 'a', $value );
+				$link	= HtmlTag::create( 'a', $value );
 				$attributes['class']	.= ' disabled';
 			}
-			$list[]	= UI_HTML_Tag::create( 'li', $link, $attributes );
+			$list[]	= HtmlTag::create( 'li', $link, $attributes );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => "nav nav-tabs" ) );
+		return HtmlTag::create( 'ul', $list, array( 'class' => "nav nav-tabs" ) );
 	}
 }

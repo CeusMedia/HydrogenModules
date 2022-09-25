@@ -4,6 +4,7 @@
  *	@version		$Id$
  */
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 /**
@@ -123,9 +124,9 @@ class View_Work_Mission extends View{
 		if( !strlen( $time ) )
 			return '-';
 		list( $hours, $minutes ) = explode( ':', $time );
-		return UI_HTML_Tag::create( 'span', array(
-			UI_HTML_Tag::create( 'big', str_pad( $hours, 2, 0, STR_PAD_LEFT ) ),
-			UI_HTML_Tag::create( 'sup', str_pad( $minutes, 2, 0, STR_PAD_LEFT ) ),
+		return HtmlTag::create( 'span', array(
+			HtmlTag::create( 'big', str_pad( $hours, 2, 0, STR_PAD_LEFT ) ),
+			HtmlTag::create( 'sup', str_pad( $minutes, 2, 0, STR_PAD_LEFT ) ),
 		), array( 'class' => 'time-nice' ) );
 	}
 

@@ -1,13 +1,15 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $helper		= new View_Helper_TimePhraser( $this->env );
 
 $panelLinks	= '';
 if( count( $note->links ) ){
 	$rows	= [];
 	foreach( $note->links as $item ){
-		$link	= UI_HTML_Tag::create( 'div',
-			UI_HTML_Tag::create( 'small',
-				UI_HTML_Tag::create( 'a', htmlentities( $item->url, ENT_QUOTES, 'UTF-8' ), array(
+		$link	= HtmlTag::create( 'div',
+			HtmlTag::create( 'small',
+				HtmlTag::create( 'a', htmlentities( $item->url, ENT_QUOTES, 'UTF-8' ), array(
 					'href'		=> $item->url,
 					'target'	=> '_blank',
 				) )
@@ -15,16 +17,16 @@ if( count( $note->links ) ){
 			array( 'class' => 'autocut' )
 		);
 
-		$label	= UI_HTML_Tag::create( 'div',
-			UI_HTML_Tag::create( 'big', htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ), array(
+		$label	= HtmlTag::create( 'div',
+			HtmlTag::create( 'big', htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ), array(
 				'class'	=> 'muted',
 			) ),
 			array( 'class' => 'autocut' )
 		);
 		if( $item->title ){
-			$label	= UI_HTML_Tag::create( 'div',
-				UI_HTML_Tag::create( 'big',
-					UI_HTML_Tag::create( 'a', htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ), array(
+			$label	= HtmlTag::create( 'div',
+				HtmlTag::create( 'big',
+					HtmlTag::create( 'a', htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ), array(
 						'href'		=> $item->url,
 						'target'	=> '_blank',
 					) )
@@ -32,15 +34,15 @@ if( count( $note->links ) ){
 				array( 'class' => 'autocut' )
 			);
 		}
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $label.$link, array( 'class' => 'autocut' ) )
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $label.$link, array( 'class' => 'autocut' ) )
 		) );
 	}
-	$thead	= UI_HTML_Tag::create( 'thead', $rows, array() );
-	$table	= UI_HTML_Tag::create( 'table', array( $thead ), array( 'class' => 'table table-striped table-condensed table-fixed' ) );
-	$panelLinks	= UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'h3', 'Links' ),
-		UI_HTML_Tag::create( 'div', $table, array(
+	$thead	= HtmlTag::create( 'thead', $rows, array() );
+	$table	= HtmlTag::create( 'table', array( $thead ), array( 'class' => 'table table-striped table-condensed table-fixed' ) );
+	$panelLinks	= HtmlTag::create( 'div', array(
+		HtmlTag::create( 'h3', 'Links' ),
+		HtmlTag::create( 'div', $table, array(
 			'class'	=> 'content-panel-inner'
 		) ),
 	), array( 'class' => 'content-panel content-panel-table' ) );
@@ -84,7 +86,7 @@ if( count( $note->tags ) ){
 #$converter	= new View_Helper_ContentConverter();
 switch( $note->format ){
 	case 'markdown':
-		$content	= UI_HTML_Tag::create( 'div', $note->content, array( 'id' => 'content-format-markdown', 'style' => "display: none" ) );
+		$content	= HtmlTag::create( 'div', $note->content, array( 'id' => 'content-format-markdown', 'style' => "display: none" ) );
 		break;
 	case 'plaintext':
 		$content	= nl2br( $note->content );

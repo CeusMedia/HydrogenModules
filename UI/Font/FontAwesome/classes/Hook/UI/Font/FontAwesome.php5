@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -67,7 +68,7 @@ class Hook_UI_Font_FontAwesome extends Hook
 		$urlTemplateCss	= 'https://%s.fontawesome.com/releases/v%s/css/%s.css';
 		$urlTemplateJs	= 'https://%s.fontawesome.com/releases/v%s/js/%s.js';
 		if( $config->get( 'v5.mode' ) === 'css+font' ){
-			$env->getPage()->addHead( UI_HTML_Tag::create( 'link', NULL, array(
+			$env->getPage()->addHead( HtmlTag::create( 'link', NULL, array(
 				'href'			=> vsprintf( $urlTemplateCss, array(
 					$config->get( 'v5.license' ) === 'pro' ? 'pro' : 'use',
 					$config->get( 'version' ),
@@ -78,7 +79,7 @@ class Hook_UI_Font_FontAwesome extends Hook
 			) ) );
 		}
 		if( $config->get( 'v5.mode' ) === 'js+svg' ){
-			$env->getPage()->addHead( UI_HTML_Tag::create( 'script', '', array(
+			$env->getPage()->addHead( HtmlTag::create( 'script', '', array(
 				'src'			=> vsprintf( $urlTemplateJs, array(
 					$config->get( 'v5.license' ) === 'pro' ? 'pro' : 'use',
 					$config->get( 'version' ),

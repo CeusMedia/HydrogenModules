@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
 
@@ -12,8 +13,8 @@ $helperCart->setDeliveryAddress( $address );
 $helperCart->setChangeable( TRUE );
 $helperCart->setForwardPath( 'shop/checkout' );
 //$helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML_LIST );
-$tablePositionsDesktop	= UI_HTML_Tag::create( 'div', $helperCart->render(), array( 'class' => 'hidden-phone' ) );
-$tablePositionsPhone	= UI_HTML_Tag::create( 'div', $helperCart->render(), array( 'class' => 'visible-phone' ) );
+$tablePositionsDesktop	= HtmlTag::create( 'div', $helperCart->render(), array( 'class' => 'hidden-phone' ) );
+$tablePositionsPhone	= HtmlTag::create( 'div', $helperCart->render(), array( 'class' => 'visible-phone' ) );
 $tablePositions			= $tablePositionsDesktop.$tablePositionsPhone;
 
 extract( $view->populateTexts( array( 'top', 'bottom', 'checkout.top', 'checkout.bottom' ), 'html/shop/' ) );
@@ -26,23 +27,23 @@ $buttonNext	= new SubmitButton( 'save', $w->buttonNext, 'btn-success not-pull-ri
 if( !$paymentBackends || $cartTotal == 0 )
 	$buttonNext	= new SubmitButton( 'save', $w->buttonNextPriceless, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
 
-$tabContent	= UI_HTML_Tag::create( 'div', array(
+$tabContent	= HtmlTag::create( 'div', array(
 	$textCheckoutTop,
-	UI_HTML_Tag::create( 'form', array(
-		UI_HTML_Tag::create( 'h4', $words['panel-cart']['heading'] ),
+	HtmlTag::create( 'form', array(
+		HtmlTag::create( 'h4', $words['panel-cart']['heading'] ),
 		$tablePositions,
-		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'h4', $words['panel-customer']['heading'] ),
+		HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'h4', $words['panel-customer']['heading'] ),
 				$helperAddress->setAddress( $customer->addressDelivery ),
 			), array( 'class' => 'span6' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'h4', $words['panel-billing']['heading'] ),
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'h4', $words['panel-billing']['heading'] ),
 				$helperAddress->setAddress( $customer->addressBilling ),
 			), array( 'class' => 'span6' ) ),
 		), array( 'class' => 'row-fluid' ) ),
 		$textCheckoutBottom,
-		UI_HTML_Tag::create( 'div', array(
+		HtmlTag::create( 'div', array(
 			$buttonPrev, ' ',
 			$buttonNext,
 		), array( 'class' => 'buttonbar well well-small' ) ),

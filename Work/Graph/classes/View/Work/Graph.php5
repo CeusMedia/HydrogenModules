@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Graph extends View{
@@ -15,7 +16,7 @@ class View_Work_Graph extends View{
 				$fact[2]	= NULL;
 			list( $label, $value, $default )	= $fact;
 			if( !( $default === NULL || strlen( $default ) === 0 ) )
-				$default	= UI_HTML_Tag::create( 'small', '('.$default.')', array( 'class' => 'muted' ) );
+				$default	= HtmlTag::create( 'small', '('.$default.')', array( 'class' => 'muted' ) );
 
 			if( !strlen( $value ) ){
 				if( !$default )
@@ -26,12 +27,12 @@ class View_Work_Graph extends View{
 				if( $default )
 					$value	= $value.' '.$default;
 			}
-			$list[]	= UI_HTML_Tag::create( 'dt', $label );
-			$list[]	= UI_HTML_Tag::create( 'dd', $value );
+			$list[]	= HtmlTag::create( 'dt', $label );
+			$list[]	= HtmlTag::create( 'dd', $value );
 		}
 		if( !$list )
 			return;
-		return UI_HTML_Tag::create( 'dl', $list, array(
+		return HtmlTag::create( 'dl', $list, array(
 			'class'	=> 'dl-horizontal',
 		) );
 	}

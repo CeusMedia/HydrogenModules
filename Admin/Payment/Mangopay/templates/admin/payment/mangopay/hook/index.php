@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //return print_m( $hooks, NULL, NULL, TRUE );
 
@@ -31,37 +32,37 @@ foreach( $eventTypes as $topic => $types ){
 		$hook	= $hookedEventTypes[$type];
 		$labelType	= substr( $type, strlen( $topic ) );
 		$labelType	= ucwords( strtolower( str_replace( '_', ' ', $labelType ) ) );
-		$labelTag	= UI_HTML_Tag::create( 'small', $hook->Tag ? '('.$hook->Tag.')' : '', array( 'class' => 'muted' ) );
-		$link		= UI_HTML_Tag::create( 'a', $labelType.' '.$labelTag, array( 'href' => './admin/payment/mangopay/hook/view/'.$hook->Id ) );
+		$labelTag	= HtmlTag::create( 'small', $hook->Tag ? '('.$hook->Tag.')' : '', array( 'class' => 'muted' ) );
+		$link		= HtmlTag::create( 'a', $labelType.' '.$labelTag, array( 'href' => './admin/payment/mangopay/hook/view/'.$hook->Id ) );
 
-		$labelUrl	= UI_HTML_Tag::create( 'small', $hook->Url, array( 'class' => 'not-muted' ) );
-		$sublist[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', $labelUrl ),
-			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'label', $hook->Status, array( 'class' => 'label '.$colors[$hook->Status] ) ) ),
-			UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'label', $hook->Validity, array( 'class' => 'label '.$colors[$hook->Validity] ) ) ),
+		$labelUrl	= HtmlTag::create( 'small', $hook->Url, array( 'class' => 'not-muted' ) );
+		$sublist[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $link ),
+			HtmlTag::create( 'td', $labelUrl ),
+			HtmlTag::create( 'td', HtmlTag::create( 'label', $hook->Status, array( 'class' => 'label '.$colors[$hook->Status] ) ) ),
+			HtmlTag::create( 'td', HtmlTag::create( 'label', $hook->Validity, array( 'class' => 'label '.$colors[$hook->Validity] ) ) ),
 		) );
 	}
 	if( $sublist ){
-		$topic	= UI_HTML_Tag::create( 'h4', $topic );
-		$list[]	= UI_HTML_Tag::create( 'tr', UI_HTML_Tag::create( 'td', $topic, array( 'colspan' => 4 ) ) );
+		$topic	= HtmlTag::create( 'h4', $topic );
+		$list[]	= HtmlTag::create( 'tr', HtmlTag::create( 'td', $topic, array( 'colspan' => 4 ) ) );
 		$list[]	= $sublist;
 	}
 }
-$tbody	= UI_HTML_Tag::create( 'tbody', $list );
+$tbody	= HtmlTag::create( 'tbody', $list );
 $colgroup	= UI_HTML_Elements::ColumnGroup( array( '30%', '', '90', '80' ) );
-$list	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
+$list	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
 
 $tabs	= View_Admin_Payment_Mangopay::renderTabs( $env, 'hook' );
 
-return $tabs.UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Hooks' ),
-	UI_HTML_Tag::create( 'div', array(
+return $tabs.HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', 'Hooks' ),
+	HtmlTag::create( 'div', array(
 		$list,
-		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'a', '<i class="fa fa-fw fa-plus"></i> neuer Hook', array( 'disabled' => 'disabled', 'href' => './admin/payment/mangopay/hook/add', 'class' => 'btn btn-success btn-small' ) ),
+		HtmlTag::create( 'div', array(
+			HtmlTag::create( 'a', '<i class="fa fa-fw fa-plus"></i> neuer Hook', array( 'disabled' => 'disabled', 'href' => './admin/payment/mangopay/hook/add', 'class' => 'btn btn-success btn-small' ) ),
 			' ',
-			UI_HTML_Tag::create( 'a', '<i class="fa fa-fw fa-cogs"></i> URL für Hooks setzen', array( 'href' => './admin/payment/mangopay/hook/apply', 'class' => 'btn btn-small' ) ),
+			HtmlTag::create( 'a', '<i class="fa fa-fw fa-cogs"></i> URL für Hooks setzen', array( 'href' => './admin/payment/mangopay/hook/apply', 'class' => 'btn btn-small' ) ),
 
 		), array( 'class' => 'buttonbar' ) )
 	), array( 'class' => 'content-panel-inner' ) )

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $changers	= [];
 foreach( $issue->notes as $note )
@@ -9,23 +10,23 @@ foreach( $issue->notes as $note )
 
 foreach( $changers as $userId => $changer ){
 	if( $changer ){
-		$link	= UI_HTML_Tag::create( 'a', $changer->username, array( 'href' => './manage/user/edit/'.$userId ) );
-		$roled	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'role role'.$changer->roleId ) );
-		$changers[$userId]	= UI_HTML_Tag::create( 'li', $roled );
+		$link	= HtmlTag::create( 'a', $changer->username, array( 'href' => './manage/user/edit/'.$userId ) );
+		$roled	= HtmlTag::create( 'span', $link, array( 'class' => 'role role'.$changer->roleId ) );
+		$changers[$userId]	= HtmlTag::create( 'li', $roled );
 	}
 }
-$changers	= $changers ? UI_HTML_Tag::create( 'ul', join( $changers ), array( 'class' => 'list' ) ) : "-";
+$changers	= $changers ? HtmlTag::create( 'ul', join( $changers ), array( 'class' => 'list' ) ) : "-";
 
 $reporter	= '-';
 if( $issue->reporter ){
 	$reporter	= UI_HTML_Elements::Link( './manage/user/edit/'.$issue->reporter->userId, $issue->reporter->username );
-	$reporter	= UI_HTML_Tag::create( 'span', $reporter, array( 'class' => 'role role'.$issue->reporter->roleId ) );
+	$reporter	= HtmlTag::create( 'span', $reporter, array( 'class' => 'role role'.$issue->reporter->roleId ) );
 }
 
 $manager	= '-';
 if( $issue->managerId ){
 	$manager	= UI_HTML_Elements::Link( './maange/user/edit/'.$issue->manager->userId, $issue->manager->username );
-	$manager	= UI_HTML_Tag::create( 'span', $manager, array( 'class' => 'role role'.$issue->manager->roleId ) );
+	$manager	= HtmlTag::create( 'span', $manager, array( 'class' => 'role role'.$issue->manager->roleId ) );
 }
 
 if( empty( $issue->project ) ){

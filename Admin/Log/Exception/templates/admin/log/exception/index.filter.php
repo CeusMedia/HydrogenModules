@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['index.filter'];
 
-$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-search' ) );
-$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-trash' ) );
+$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-search' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-trash' ) );
 
 $from		= 'admin/log/exception'.($page ? '/'.$page : '' );
 
@@ -13,7 +14,7 @@ if( count( $instances ) > 1 ){
 	foreach( $instances as $instanceKey => $instanceData )
 		$optInstance[$instanceKey]	= $instanceData->title;
 	$optInstance	= UI_HTML_Elements::Options( $optInstance, $currentInstance );
-	$selectInstance	= UI_HTML_Tag::create( 'select', $optInstance, array(
+	$selectInstance	= HtmlTag::create( 'select', $optInstance, array(
 		'oninput'	=> 'document.location.href = "./admin/log/exception/setInstance/" + jQuery(this).val();',
 		'class'		=> '',
 		'style'		=> 'width: 100%',
@@ -29,8 +30,8 @@ if( $exceptionTypes ){
 	$optType	= UI_HTML_Elements::Options( $optType, $filterType );
 }
 
-$buttonFilter   = UI_HTML_Tag::create( 'button', $iconFilter.' '.$w->buttonFilter, ['type' => 'submit', 'class' => 'btn btn-primary'] );
-$buttonReset    = UI_HTML_Tag::create( 'a', $iconReset.' '.$w->buttonReset, ['class' => 'btn btn-small', 'href' => './admin/log/exception/filter/true'] );
+$buttonFilter   = HtmlTag::create( 'button', $iconFilter.' '.$w->buttonFilter, ['type' => 'submit', 'class' => 'btn btn-primary'] );
+$buttonReset    = HtmlTag::create( 'a', $iconReset.' '.$w->buttonReset, ['class' => 'btn btn-small', 'href' => './admin/log/exception/filter/true'] );
 
 return '
 <div class="content-panel">

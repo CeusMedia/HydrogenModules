@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abstract
@@ -59,13 +60,13 @@ class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abs
 			}
 			$link['class']	.= ' nav-link';
 			$item['class']	.= ' nav-item';
-			$link		= UI_HTML_Tag::create( 'a', $tab->label, $link );							//  render tab link
+			$link		= HtmlTag::create( 'a', $tab->label, $link );							//  render tab link
 			$key		= (float) $tab->priority.'.'.str_pad( $nr, 2, '0', STR_PAD_LEFT );			//  generate order key
-			$list[$key]	= UI_HTML_Tag::create( 'li', $link, $item );								//  enlist tab
+			$list[$key]	= HtmlTag::create( 'li', $link, $item );								//  enlist tab
 		}
 		ksort( $list );
 		if( count( $list ) > 1 )																	//  more than 1 tab
-			return UI_HTML_Tag::create( 'ul', $list, array(											//  return rendered tab list
+			return HtmlTag::create( 'ul', $list, array(											//  return rendered tab list
 				'class'			=> $this->classList,
 				'data-toggle'	=> $tab->url[0] == '#' ? 'tab' : NULL,
 			) );

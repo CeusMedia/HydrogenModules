@@ -1,21 +1,22 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*
 $list		= '<div><em><small class="muted">Noch keine vorhanden.</small></em></div>';
 if( $users ){
 	$list	= [];
 	foreach( $users as $user ){
-		$link	= UI_HTML_Tag::create( 'a', $user->username, array(
+		$link	= HtmlTag::create( 'a', $user->username, array(
 			'href'	=> './member/view/'.$user->userId,
 		) );
 		$relation	= $user->relation ? 'yes' : 'no';
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', $relation ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $link ),
+			HtmlTag::create( 'td', $relation ),
 		) );
 	}
-	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-	$list	= UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-striped' ) );
+	$tbody	= HtmlTag::create( 'tbody', $list );
+	$list	= HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-striped' ) );
 }
 */
 
@@ -44,9 +45,9 @@ if( $username ){
 		$helperMember->setMode( 'thumbnail' );
 		foreach( $users as $user ){
 			$helperMember->setUser( $user );
-			$list[]	= UI_HTML_Tag::create( 'li', $helperMember->render(), array( 'class' => 'span4' ) );
+			$list[]	= HtmlTag::create( 'li', $helperMember->render(), array( 'class' => 'span4' ) );
 		}
-		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbnails' ) );
+		$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'thumbnails' ) );
 	}
 
 	$panelList	= '

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 /**
  *	@todo		Code Doc
  */
@@ -77,7 +79,7 @@ class Controller_Work_Issue extends Controller
 
 	public function ajaxRenderDashboardPanel( $panelId )
 	{
-		return UI_HTML_Tag::create( 'div', '...' );
+		return HtmlTag::create( 'div', '...' );
 	}
 
 	public function edit( $issueId )

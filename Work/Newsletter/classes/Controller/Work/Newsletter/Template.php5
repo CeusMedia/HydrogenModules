@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\View;
 
@@ -236,7 +237,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			switch( strtolower( $format ) ){
 				case 'text':
 					$mail->setMode( View_Helper_Newsletter_Mail::MODE_PLAIN );
-					$content	= UI_HTML_Tag::create( 'pre', $mail->render() );
+					$content	= HtmlTag::create( 'pre', $mail->render() );
 					break;
 				case 'html':
 					$mail->setMode( View_Helper_Newsletter_Mail::MODE_HTML );
@@ -278,7 +279,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			$page	= new \UI_HTML_PageFrame();
 			foreach( $theme->style as $style )
 				$page->addStylesheet( (string) $style );
-			$page->addHead( UI_HTML_Tag::create( 'style', $css ) );
+			$page->addHead( HtmlTag::create( 'style', $css ) );
 			$page->addBody( $html );
 
 			print( $page->build( array( 'class' => 'mail' ) ) );

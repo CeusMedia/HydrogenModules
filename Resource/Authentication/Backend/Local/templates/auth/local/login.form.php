@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['login'];
 
@@ -7,25 +8,25 @@ $iconRegister	= HTML::Icon( 'plus', TRUE );
 $iconPassword	= HTML::Icon( 'envelope' );
 
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconLogin		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
-	$iconRegister	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user-plus' ) );
-	$iconPassword	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
+	$iconLogin		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
+	$iconRegister	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user-plus' ) );
+	$iconPassword	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
 }
 
 $fieldOauth2	= '';
 if( $useOauth2 ){
-	$iconUnbind			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+	$iconUnbind			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 	$helper				= new View_Helper_Oauth_ProviderButtons( $this->env );
 	if( $helper->count() ){
 		$helper->setDropdownLabel( 'weitere' );
 		$helper->setLinkPath( './auth/oauth2/login/' );
-		$fieldOauth2	= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'label', 'Anmelden mit' ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'div', $helper->render(), array( 'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12' ) ),
+		$fieldOauth2	= HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'label', 'Anmelden mit' ),
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'div', $helper->render(), array( 'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12' ) ),
 				), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) ),
-				UI_HTML_Tag::create( 'hr', NULL ),
+				HtmlTag::create( 'hr', NULL ),
 			), array( 'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12' ) ),
 		), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) );
 	}
@@ -35,8 +36,8 @@ $fieldRemember	= '';
 if( $useRemember )
 	$fieldRemember	= HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row',
 		HTML::DivClass( 'bs2-span12 bs3-col-md-12 bs4-col-md-12', array(
-			UI_HTML_Tag::create( 'label', array(
-				UI_HTML_Tag::create( 'input', NULL, array(
+			HtmlTag::create( 'label', array(
+				HtmlTag::create( 'input', NULL, array(
 					'type'		=> 'checkbox',
 					'name'		=> 'login_remember',
 					'id'		=> 'input_login_remember',
@@ -44,7 +45,7 @@ if( $useRemember )
 					'checked'	=> $login_remember ? 'checked' : NULL,
 					'class'		=> 'bs4-form-check-input',
 				) ),
-				UI_HTML_Tag::create( 'abbr', $w->labelRemember, array(
+				HtmlTag::create( 'abbr', $w->labelRemember, array(
 					'title'		=> $w->labelRemember_title,
 					'class'		=> 'bs4-form-check-label',
 				) ),
@@ -54,30 +55,30 @@ if( $useRemember )
 		'style'	=> $useRemember ? 'display: none' : NULL
 	) );
 
-$linkPassword	= UI_HTML_Tag::create( 'a', $w->linkPassword, array(
+$linkPassword	= HtmlTag::create( 'a', $w->linkPassword, array(
 	'href'		=> './auth/local/password',
 	'tabindex'	=> -1,
 ) );
-$linkRegister	= UI_HTML_Tag::create( 'a', $w->linkRegister, array(
+$linkRegister	= HtmlTag::create( 'a', $w->linkRegister, array(
 	'href'		=> './auth/local/register'.( $from ? '?from='.$from : '?from=auth/login' ),
 	'tabindex'	=> -1,
 ) );
-$buttonLogin	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
+$buttonLogin	= HtmlTag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
 	'type'		=> 'submit',
 	'name'		=> 'doLogin',
 	'class'		=> 'btn btn-primary btn-large btn-block',
 ) );
 
-/*$buttonLoginBlock	= UI_HTML_Tag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
+/*$buttonLoginBlock	= HtmlTag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
 	'type'		=> 'submit',
 	'name'		=> 'doLogin',
 	'class'		=> 'btn btn-primary btn-block',
 ) );
-$buttonPasswordBlock	= UI_HTML_Tag::create( 'a', $iconPassword.'&nbsp;'.$w->buttonPassword, array(
+$buttonPasswordBlock	= HtmlTag::create( 'a', $iconPassword.'&nbsp;'.$w->buttonPassword, array(
 	'href'		=> './auth/local/password',
 	'class'		=> 'btn btn-block bs3-btn-default bs4-btn-light',
 ) );
-$buttonRegisterBlock	= UI_HTML_Tag::create( 'a', $iconRegister.'&nbsp;'.$w->buttonRegister, array(
+$buttonRegisterBlock	= HtmlTag::create( 'a', $iconRegister.'&nbsp;'.$w->buttonRegister, array(
 	'href'		=> './auth/local/register'.( $from ? '?from='.$from : '' ),
 	'class'		=> 'btn btn-block btn-success',
 ) );*/
@@ -96,14 +97,14 @@ HTML::DivClass( 'content-panel content-panel-form', array(
 	HTML::DivClass( 'content-panel-inner',
 		HTML::DivClass( 'auth-login-form', array(
 			$fieldOauth2,
-			UI_HTML_Tag::create( 'form', array(
+			HtmlTag::create( 'form', array(
 				( $useCsrf ? View_Helper_CSRF::renderStatic( $env, 'auth/login' ) : '' ),
 				HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row',
 					HTML::DivClass( 'bs2-span12 bs3-col-md12 bs3-form-group bs4-col-md-12 bs4-form-group', array(
-						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'label', array(
+						HtmlTag::create( 'div', array(
+							HtmlTag::create( 'label', array(
 								$w->labelUsername,
-								UI_HTML_Tag::create( 'small', $linkRegister, array(
+								HtmlTag::create( 'small', $linkRegister, array(
 									'class' => 'pull-right float-right',
 								) ),
 							), array(
@@ -111,7 +112,7 @@ HTML::DivClass( 'content-panel content-panel-form', array(
 								'class'	=> 'mandatory not-pull-left'
 							) ),
 						) ),
-						UI_HTML_Tag::create( 'input', NULL, array(
+						HtmlTag::create( 'input', NULL, array(
 							'value'		=> htmlentities( $login_username, ENT_QUOTES, 'UTF-8' ),
 							'class'		=> 'bs2-span12 bs3-form-control bs4-form-control mandatory',
 							'type'		=> 'text',
@@ -123,10 +124,10 @@ HTML::DivClass( 'content-panel content-panel-form', array(
 				),
 				HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row',
 					HTML::DivClass( 'bs2-span12 bs3-col-md12 bs3-form-group bs4-col-md-12 bs4-form-group', array(
-						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'label', array(
+						HtmlTag::create( 'div', array(
+							HtmlTag::create( 'label', array(
 								$w->labelPassword,
-								UI_HTML_Tag::create( 'small', $linkPassword, array(
+								HtmlTag::create( 'small', $linkPassword, array(
 									'class' => 'pull-right',
 								) ),
 							), array(
@@ -134,7 +135,7 @@ HTML::DivClass( 'content-panel content-panel-form', array(
 								'class'	=> 'mandatory not-pull-left'
 							) ),
 						) ),
-						UI_HTML_Tag::create( 'input', NULL, array(
+						HtmlTag::create( 'input', NULL, array(
 							'value'		=> NULL,
 							'class'		=> 'bs2-span12 bs3-form-control bs4-form-control mandatory',
 							'type'		=> 'password',

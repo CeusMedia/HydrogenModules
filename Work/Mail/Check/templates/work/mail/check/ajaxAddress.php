@@ -1,12 +1,14 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 function renderFacts( array $facts ): string
 {
 	$list	= [];
 	foreach( $facts as $term => $definition ){
-		$list[]	= UI_HTML_Tag::create( 'dt', $term );
-		$list[]	= UI_HTML_Tag::create( 'dd', $definition );
+		$list[]	= HtmlTag::create( 'dt', $term );
+		$list[]	= HtmlTag::create( 'dd', $definition );
 	}
-	return UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+	return HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 }
 
 
@@ -34,10 +36,10 @@ function renderCodeBadge( $check, string $label = NULL ): string
 			break;
 	}
 	$label	= strlen( trim( $label ) ) ? trim( $label ) : $code;
-	return UI_HTML_Tag::create( 'span', $label, array( 'class' => 'label '.$labelCode ) );
+	return HtmlTag::create( 'span', $label, array( 'class' => 'label '.$labelCode ) );
 }
 
-$checks		= UI_HTML_Tag::create( 'div', 'Keine Prüfungen bisher.', array( 'class' => 'text text-info' ) );
+$checks		= HtmlTag::create( 'div', 'Keine Prüfungen bisher.', array( 'class' => 'text text-info' ) );
 if( $address->checks ){
 	$rows	= [];
 	foreach( $address->checks as $check ){
@@ -54,11 +56,11 @@ if( $address->checks ){
 			'Datum / Uhrzeit'	=> date( 'Y-m-d', $check->createdAt ).' <small class="muted">'.date( 'H:i:s', $check->createdAt ).'</small>',
 		) );
 
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $facts ),
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $facts ),
 		) );
 	}
-	$checks	= UI_HTML_Tag::create( 'table', $rows, array( 'class' => 'table table-striped' ) );
+	$checks	= HtmlTag::create( 'table', $rows, array( 'class' => 'table table-striped' ) );
 }
 
 return '

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['edit'];
 
 $optStatus	= $words['states'];
@@ -19,14 +21,14 @@ foreach( $projectUsers as $projectUser )
 	$optWorker[$projectUser->userId]	= $projectUser->username;
 $optWorker	= UI_HTML_Elements::Options( $optWorker, $timer->workerId );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
 	'href'	=> './'.( $from ? $from : 'work/time' ),
 	'class'	=> "btn btn-small"
 ) );
 
-$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
 	'type'		=> "submit",
 	'name'		=> "save",
 	'class'		=> "btn btn-primary"
@@ -45,7 +47,7 @@ return $textEditTop.'
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_title">'.$w->labelTitle.'</label>
-							'.UI_HTML_Tag::create( 'input', NULL, array(
+							'.HtmlTag::create( 'input', NULL, array(
 								'type'		=> 'text',
 								'name'		=> 'title',
 								'id'		=> 'input_title',
@@ -57,7 +59,7 @@ return $textEditTop.'
 					<div class="row-fluid">
 						<div class="span4">
 							<label for="input_workerId">'.$w->labelWorkerId.'</label>
-							'.UI_HTML_Tag::create( 'select', $optWorker, array(
+							'.HtmlTag::create( 'select', $optWorker, array(
 								'name'		=> 'workerId',
 								'id'		=> 'input_workerId',
 								'class'		=> 'span12',
@@ -65,7 +67,7 @@ return $textEditTop.'
 						</div>
 						<div class="span8">
 							<label for="input_projectId">'.$w->labelProjectId.'</label>
-							'.UI_HTML_Tag::create( 'select', $optProject, array(
+							'.HtmlTag::create( 'select', $optProject, array(
 								'name'		=> 'projectId',
 								'id'		=> 'input_projectId',
 								'class'		=> 'span12',
@@ -77,7 +79,7 @@ return $textEditTop.'
 					<div class="row-fluid">
 						<div class="span4">
 							<label for="input_time_planned">'.$w->labelTimePlanned.'</label>
-							'.UI_HTML_Tag::create( 'input', NULL, array(
+							'.HtmlTag::create( 'input', NULL, array(
 								'type'		=> 'text',
 								'name'		=> 'time_planned',
 								'id'		=> 'input_time_planned',
@@ -87,7 +89,7 @@ return $textEditTop.'
 						</div>
 						<div class="span4">
 							<label for="input_time_needed">'.$w->labelTimeNeeded.'</label>
-							'.UI_HTML_Tag::create( 'input', NULL, array(
+							'.HtmlTag::create( 'input', NULL, array(
 								'type'		=> 'text',
 								'name'		=> 'time_needed',
 								'id'		=> 'input_time_needed',
@@ -99,7 +101,7 @@ return $textEditTop.'
 						</div>
 						<div class="span4">
 							<label for="input_status">'.$w->labelStatus.'</label>
-							'.UI_HTML_Tag::create( 'select', $optStatus, array(
+							'.HtmlTag::create( 'select', $optStatus, array(
 								'name'		=> 'status',
 								'id'		=> 'input_status',
 								'class'		=> 'span12',

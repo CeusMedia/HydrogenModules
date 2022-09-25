@@ -1,5 +1,7 @@
 <?php
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
 $helper	= new View_Work_Billing_Helper_Transactions( $env );
 $helper->setTransactions( $corporationTransactions );

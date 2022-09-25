@@ -1,19 +1,20 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCart		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'shopping-cart' ) );
-$iconProduct	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'arrow-right' ) );
+$iconCart		= HtmlTag::create( 'i', '', array( 'class' => 'shopping-cart' ) );
+$iconProduct	= HtmlTag::create( 'i', '', array( 'class' => 'arrow-right' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconCart		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
-	$iconLicense	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cube' ) );
-	$iconProducts	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cubes' ) );
+	$iconCart		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
+	$iconLicense	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cube' ) );
+	$iconProducts	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cubes' ) );
 }
 
-$details	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', $product->title.' Lizenzen' ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'h4', $license->title ),
-		UI_HTML_Tag::create( 'p', $license->description ),
-		UI_HTML_Tag::create( 'a', $iconCart.'&nbsp;in den Warenkorb', array(
+$details	= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', $product->title.' Lizenzen' ),
+	HtmlTag::create( 'div', array(
+		HtmlTag::create( 'h4', $license->title ),
+		HtmlTag::create( 'p', $license->description ),
+		HtmlTag::create( 'a', $iconCart.'&nbsp;in den Warenkorb', array(
 			'href'		=> './shop/addArticle/1/'.$license->productLicenseId,
 		 	'class'		=> 'btn btn-large',
 		) ),
@@ -22,16 +23,16 @@ $details	= UI_HTML_Tag::create( 'div', array(
 
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'catalog/provision/product/license/' ) );
 if( !$textTop )
-	$textTop	= UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'h2', array(
- 			UI_HTML_Tag::create( 'a', $iconProducts.'&nbsp;Produkt: ', array(
+	$textTop	= HtmlTag::create( 'div', array(
+		HtmlTag::create( 'h2', array(
+ 			HtmlTag::create( 'a', $iconProducts.'&nbsp;Produkt: ', array(
 				'href'		=> "catalog/provision/product",
 				'class'		=> "muted",
 			) ),
 			$product->title,
 		) ),
-		UI_HTML_Tag::create( 'h3', array(
-			UI_HTML_Tag::create( 'a', $iconLicense.'&nbsp;Lizenz: ', array(
+		HtmlTag::create( 'h3', array(
+			HtmlTag::create( 'a', $iconLicense.'&nbsp;Lizenz: ', array(
 				'href'	=> 'catalog/provision/product/'.$product->productId,
 				'class'	=>	"muted",
 			) ),

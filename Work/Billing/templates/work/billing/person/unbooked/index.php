@@ -1,24 +1,25 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
+$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
 if( $unpayedBillShares ){
 	$list	= [];
 	foreach( $unpayedBillShares as $unpayedBillShare ){
-		$link		= UI_HTML_Tag::create( 'a', $unpayedBillShare->bill->number, array(
+		$link		= HtmlTag::create( 'a', $unpayedBillShare->bill->number, array(
 			'href'	=> './work/billing/bill/edit/'.$unpayedBillShare->bill->billId
 		) );
 		$billTitle	= $unpayedBillShare->bill->title;
 		$amount		= number_format( $unpayedBillShare->amount, 2, ',', '.' ).'&nbsp;&euro;';
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', $billTitle ),
-			UI_HTML_Tag::create( 'td', $amount ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $link ),
+			HtmlTag::create( 'td', $billTitle ),
+			HtmlTag::create( 'td', $amount ),
 		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '60', '', '80' ) );
-	$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'RNr', 'Rechnung', 'Betrag' ) ) );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
-	$list		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'RNr', 'Rechnung', 'Betrag' ) ) );
+	$tbody		= HtmlTag::create( 'tbody', $list );
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }
 
 $tabs		= View_Work_Billing_Person::renderTabs( $env, $person->personId, 5 );

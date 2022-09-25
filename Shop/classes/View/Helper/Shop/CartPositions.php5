@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_CartPositions
@@ -131,18 +132,18 @@ class View_Helper_Shop_CartPositions
 			$totalPrice		+= $position->article->price->all;
 			$totalTax		+= $position->article->tax->all;
 			$title			= $position->article->title; //htmlspecialchars( $position->article->title, ENT_QUOTES, 'UTF-8' );
-			$titleLinked	= UI_HTML_Tag::create( 'a', $title, array( 'href' => $position->article->link ) );
-			$titleCut		= UI_HTML_Tag::create( 'div', $titleLinked, array( 'class' => 'autocut article-title' ) );
+			$titleLinked	= HtmlTag::create( 'a', $title, array( 'href' => $position->article->link ) );
+			$titleCut		= HtmlTag::create( 'div', $titleLinked, array( 'class' => 'autocut article-title' ) );
 			$description	= $position->article->description;
-			$description	= UI_HTML_Tag::create( 'div', $description, array( 'class' => 'autocut article-description' ) );
-			$image			= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $position->article->picture->absolute ) );
-			$imageLinked	= UI_HTML_Tag::create( 'a', $image, array( 'href' => $position->article->link ) );
+			$description	= HtmlTag::create( 'div', $description, array( 'class' => 'autocut article-description' ) );
+			$image			= HtmlTag::create( 'img', NULL, array( 'src' => $position->article->picture->absolute ) );
+			$imageLinked	= HtmlTag::create( 'a', $image, array( 'href' => $position->article->link ) );
 
-			$priceCalc		= UI_HTML_Tag::create( 'small', $position->quantity.' x '.$price1, array( 'class'=> "muted" ) );
-			$priceTotal		= UI_HTML_Tag::create( 'big', UI_HTML_Tag::create( 'strong', $priceX ) );
+			$priceCalc		= HtmlTag::create( 'small', $position->quantity.' x '.$price1, array( 'class'=> "muted" ) );
+			$priceTotal		= HtmlTag::create( 'big', HtmlTag::create( 'strong', $priceX ) );
 			$cellPrice		= $position->quantity > 1 ? $priceTotal.'<br/>'.$priceCalc : $priceTotal;
 
-			$quantity		= UI_HTML_Tag::create( 'big', $position->quantity );
+			$quantity		= HtmlTag::create( 'big', $position->quantity );
 			$cellQuantity	= $isSingle ? '' : $quantity;
 			if( $this->changeable ){
 				$buttons		= $this->renderPositionQuantityButtons( $position );
@@ -150,19 +151,19 @@ class View_Helper_Shop_CartPositions
 			}
 
 			$cells			= array(
-				UI_HTML_Tag::create( 'td', $imageLinked, array( 'class' => 'column-cart-picture position-image position-thumbnail' ) ),
-				UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'div', $titleCut.$description ),
-					UI_HTML_Tag::create( 'div', array(
-						UI_HTML_Tag::create( 'div', $wordsCart->headQuantity.': '.$cellQuantity, array( 'style' => 'float: left; width: 50%; text-align: left' ) ),
-						UI_HTML_Tag::create( 'div', '<span class="hidden-phone">'.$wordsCart->headPrice.':</span> '.$cellPrice.'<br/><small class="muted">zzgl. MwSt 19%</small>', array( 'style' => 'float: left; width: 50%; text-align: right' ) ),
+				HtmlTag::create( 'td', $imageLinked, array( 'class' => 'column-cart-picture position-image position-thumbnail' ) ),
+				HtmlTag::create( 'td', HtmlTag::create( 'div', array(
+					HtmlTag::create( 'div', $titleCut.$description ),
+					HtmlTag::create( 'div', array(
+						HtmlTag::create( 'div', $wordsCart->headQuantity.': '.$cellQuantity, array( 'style' => 'float: left; width: 50%; text-align: left' ) ),
+						HtmlTag::create( 'div', '<span class="hidden-phone">'.$wordsCart->headPrice.':</span> '.$cellPrice.'<br/><small class="muted">zzgl. MwSt 19%</small>', array( 'style' => 'float: left; width: 50%; text-align: right' ) ),
 					), array( 'class' => 'row-fluid', 'style' => 'border-top: 1px solid rgba(127, 127, 127, 0.25)' ) ),
 				) ), array( 'colspan' => 2 ) ),
 			);
-			$rows[]	= UI_HTML_Tag::create( 'tr', $cells );
+			$rows[]	= HtmlTag::create( 'tr', $cells );
 		}
 		$colgroup		= UI_HTML_Elements::ColumnGroup( '25%', '40%', '35%' );
-		$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
+		$tbody			= HtmlTag::create( 'tbody', $rows );
 
 		//  @todo add shipping
 		$priceShipping	= 0;
@@ -173,11 +174,11 @@ class View_Helper_Shop_CartPositions
 					$this->deliveryAddress->country,
 					$totalWeight
 				);
-				$rows[]	= UI_HTML_Tag::create( 'tr', array(
-					UI_HTML_Tag::create( 'td', '&nbsp;' ),
-					UI_HTML_Tag::create( 'td', $words->labelShipping, array( 'class' => 'autocut' ) ),
-					UI_HTML_Tag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
-					UI_HTML_Tag::create( 'td', $this->formatPrice( $priceShipping ), array( 'class' => 'price' ) )
+				$rows[]	= HtmlTag::create( 'tr', array(
+					HtmlTag::create( 'td', '&nbsp;' ),
+					HtmlTag::create( 'td', $words->labelShipping, array( 'class' => 'autocut' ) ),
+					HtmlTag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
+					HtmlTag::create( 'td', $this->formatPrice( $priceShipping ), array( 'class' => 'price' ) )
 				) );
 			}
 		}
@@ -188,19 +189,19 @@ class View_Helper_Shop_CartPositions
 		$rows	= [];
 		foreach( $taxes as $rate => $amount ){
 			$amount	= $this->formatPrice( $amount );
-			$rows[]	= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', sprintf( $taxMode.' '.$words->labelTax.' %s%%', $rate ), array( 'class' => 'autocut', 'colspan' => 2 ) ),
-				UI_HTML_Tag::create( 'td', $amount, array( 'class' => 'price' ) )
+			$rows[]	= HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', sprintf( $taxMode.' '.$words->labelTax.' %s%%', $rate ), array( 'class' => 'autocut', 'colspan' => 2 ) ),
+				HtmlTag::create( 'td', $amount, array( 'class' => 'price' ) )
 			), array( 'class' => 'tax' ) );
 		}
 
 		$priceTotal		= $totalPrice + $priceShipping;
 		$priceTotal		+= ( $this->config->get( 'tax.included' ) ? 0 : $totalTax );
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $words->labelTotal, array( 'class' => 'autocut', 'colspan' => 2 ) ),
-			UI_HTML_Tag::create( 'td', $this->formatPrice( $priceTotal ), array( 'class' => 'price' ) )
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $words->labelTotal, array( 'class' => 'autocut', 'colspan' => 2 ) ),
+			HtmlTag::create( 'td', $this->formatPrice( $priceTotal ), array( 'class' => 'price' ) )
 		), array( 'class' => 'total' ) );
-		$tfoot			= UI_HTML_Tag::create( 'tfoot', $rows );
+		$tfoot			= HtmlTag::create( 'tfoot', $rows );
 
 		$tableAttr		= array( 'class' => 'table not-table-hover not-table-striped table-fixed articleList table-borderless' );
 		if( $allSingle ){
@@ -210,7 +211,7 @@ class View_Helper_Shop_CartPositions
 		if( !$allSingle || $this->display === self::DISPLAY_MAIL )
 			$tableAttr['class']	.= ' table-bordered';
 
-		$tablePositions	= UI_HTML_Tag::create( 'table', $colgroup.$tbody.$tfoot, $tableAttr );
+		$tablePositions	= HtmlTag::create( 'table', $colgroup.$tbody.$tfoot, $tableAttr );
 		return $tablePositions;
 
 	}
@@ -238,18 +239,18 @@ class View_Helper_Shop_CartPositions
 			$totalTax		+= $position->article->tax->all;
 			$totalWeight	+= $position->article->weight->all;
 			$title			= $position->article->title; //htmlspecialchars( $position->article->title, ENT_QUOTES, 'UTF-8' );
-			$titleLinked	= UI_HTML_Tag::create( 'a', $title, array( 'href' => $position->article->link ) );
-			$titleCut		= UI_HTML_Tag::create( 'div', $titleLinked, array( 'class' => 'autocut article-title' ) );
+			$titleLinked	= HtmlTag::create( 'a', $title, array( 'href' => $position->article->link ) );
+			$titleCut		= HtmlTag::create( 'div', $titleLinked, array( 'class' => 'autocut article-title' ) );
 			$description	= $position->article->description;
-			$description	= UI_HTML_Tag::create( 'div', $description, array( 'class' => 'autocut article-description' ) );
-			$image			= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $position->article->picture->absolute ) );
-			$imageLinked	= UI_HTML_Tag::create( 'a', $image, array( 'href' => $position->article->link ) );
+			$description	= HtmlTag::create( 'div', $description, array( 'class' => 'autocut article-description' ) );
+			$image			= HtmlTag::create( 'img', NULL, array( 'src' => $position->article->picture->absolute ) );
+			$imageLinked	= HtmlTag::create( 'a', $image, array( 'href' => $position->article->link ) );
 
-			$priceCalc		= UI_HTML_Tag::create( 'small', $position->quantity.' x '.$price1, array( 'class'=> "muted" ) );
-			$priceTotal		= UI_HTML_Tag::create( 'big', UI_HTML_Tag::create( 'strong', $priceX ) );
+			$priceCalc		= HtmlTag::create( 'small', $position->quantity.' x '.$price1, array( 'class'=> "muted" ) );
+			$priceTotal		= HtmlTag::create( 'big', HtmlTag::create( 'strong', $priceX ) );
 			$cellPrice		= $position->quantity > 1 ? $priceTotal.'<br/>'.$priceCalc : $priceTotal;
 
-			$quantity		= UI_HTML_Tag::create( 'big', $position->quantity );
+			$quantity		= HtmlTag::create( 'big', $position->quantity );
 			$cellQuantity	= $isSingle ? '' : $quantity;
 			if( $this->changeable ){
 				$buttons		= $this->renderPositionQuantityButtons( $position );
@@ -257,21 +258,21 @@ class View_Helper_Shop_CartPositions
 			}
 
 			$cells			= array(
-				UI_HTML_Tag::create( 'td', $imageLinked, array( 'class' => 'column-cart-picture position-image position-thumbnail' ) ),
-				UI_HTML_Tag::create( 'td', $titleCut.$description ),
-				UI_HTML_Tag::create( 'td', $cellQuantity, array( 'class' => 'column-cart-quantity' ) ),
-				UI_HTML_Tag::create( 'td', $cellPrice, array( 'class' => 'column-cart-price' ) ),
+				HtmlTag::create( 'td', $imageLinked, array( 'class' => 'column-cart-picture position-image position-thumbnail' ) ),
+				HtmlTag::create( 'td', $titleCut.$description ),
+				HtmlTag::create( 'td', $cellQuantity, array( 'class' => 'column-cart-quantity' ) ),
+				HtmlTag::create( 'td', $cellPrice, array( 'class' => 'column-cart-price' ) ),
 			);
-			$rows[]	= UI_HTML_Tag::create( 'tr', $cells );
+			$rows[]	= HtmlTag::create( 'tr', $cells );
 		}
 		$colgroup		= UI_HTML_Elements::ColumnGroup( '7%', '', '140', '140' );
-		$thead			= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'th', $wordsCart->headPicture, array( 'class' => 'column-cart-picture th-center' ) ),
-				UI_HTML_Tag::create( 'th', $wordsCart->headLabel, array( 'class' => 'column-cart-label' ) ),
-				UI_HTML_Tag::create( 'th', $wordsCart->headQuantity, array( 'class' => 'column-cart-quantity th-center' ) ),
-				UI_HTML_Tag::create( 'th', $wordsCart->headPrice, array( 'class' => 'column-cart-price th-right' ) ),
+		$thead			= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'th', $wordsCart->headPicture, array( 'class' => 'column-cart-picture th-center' ) ),
+				HtmlTag::create( 'th', $wordsCart->headLabel, array( 'class' => 'column-cart-label' ) ),
+				HtmlTag::create( 'th', $wordsCart->headQuantity, array( 'class' => 'column-cart-quantity th-center' ) ),
+				HtmlTag::create( 'th', $wordsCart->headPrice, array( 'class' => 'column-cart-price th-right' ) ),
 		) ) );
-		$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
+		$tbody			= HtmlTag::create( 'tbody', $rows );
 
 		$priceShipping	= 0;
 		$priceTax		= $this->formatPrice( $totalTax );
@@ -279,11 +280,11 @@ class View_Helper_Shop_CartPositions
 		$rows	= [];
 		foreach( $taxes as $rate => $amount ){
 			$amount	= $this->formatPrice( $amount );
-			$rows[]	= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', '&nbsp;' ),
-				UI_HTML_Tag::create( 'td', sprintf( $taxMode.' '.$words->labelTax.' %s%%', $rate ), array( 'class' => 'autocut' ) ),
-				UI_HTML_Tag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
-				UI_HTML_Tag::create( 'td', $amount, array( 'class' => 'price' ) )
+			$rows[]	= HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', '&nbsp;' ),
+				HtmlTag::create( 'td', sprintf( $taxMode.' '.$words->labelTax.' %s%%', $rate ), array( 'class' => 'autocut' ) ),
+				HtmlTag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
+				HtmlTag::create( 'td', $amount, array( 'class' => 'price' ) )
 			), array( 'class' => 'tax' ) );
 		}
 		$priceShipping	= 0;
@@ -294,24 +295,24 @@ class View_Helper_Shop_CartPositions
 					$this->deliveryAddress->country,
 					$totalWeight
 				);
-				$rows[]	= UI_HTML_Tag::create( 'tr', array(
-					UI_HTML_Tag::create( 'td', '&nbsp;' ),
-					UI_HTML_Tag::create( 'td', $words->labelShipping, array( 'class' => 'autocut' ) ),
-					UI_HTML_Tag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
-					UI_HTML_Tag::create( 'td', $this->formatPrice( $priceShipping ), array( 'class' => 'price' ) )
+				$rows[]	= HtmlTag::create( 'tr', array(
+					HtmlTag::create( 'td', '&nbsp;' ),
+					HtmlTag::create( 'td', $words->labelShipping, array( 'class' => 'autocut' ) ),
+					HtmlTag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
+					HtmlTag::create( 'td', $this->formatPrice( $priceShipping ), array( 'class' => 'price' ) )
 				) );
 			}
 		}
 		$priceTotal		= $totalPrice + $priceShipping;
 		$priceTotal		+= ( $this->config->get( 'tax.included' ) ? 0 : $totalTax );
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', '&nbsp;' ),
-			UI_HTML_Tag::create( 'td', $words->labelTotal, array( 'class' => 'autocut' ) ),
-			UI_HTML_Tag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
-			UI_HTML_Tag::create( 'td', $this->formatPrice( $priceTotal ), array( 'class' => 'price' ) )
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', '&nbsp;' ),
+			HtmlTag::create( 'td', $words->labelTotal, array( 'class' => 'autocut' ) ),
+			HtmlTag::create( 'td', '&nbsp;', array( 'class' => 'column-cart-quantity' ) ),
+			HtmlTag::create( 'td', $this->formatPrice( $priceTotal ), array( 'class' => 'price' ) )
 		), array( 'class' => 'total' ) );
 
-		$tfoot			= UI_HTML_Tag::create( 'tfoot', $rows );
+		$tfoot			= HtmlTag::create( 'tfoot', $rows );
 		$tableAttr		= array( 'class' => 'table table-hover table-striped table-fixed articleList' );
 		if( 0 && $allSingle ){
 //			$colgroup		= UI_HTML_Elements::ColumnGroup( '7%', '', '140' );
@@ -320,7 +321,7 @@ class View_Helper_Shop_CartPositions
 		if( !$allSingle || $this->display === self::DISPLAY_MAIL )
 			$tableAttr['class']	.= ' table-bordered';
 
-		$tablePositions	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody.$tfoot, $tableAttr );
+		$tablePositions	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, $tableAttr );
 		return $tablePositions;
 	}
 
@@ -403,9 +404,9 @@ class View_Helper_Shop_CartPositions
 		$iconMinus		= "&minus;";
 		$iconRemove		= "&times;";
 		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-			$iconPlus		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-			$iconMinus		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-minus' ) );
-			$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-times' ) );
+			$iconPlus		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+			$iconMinus		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-minus' ) );
+			$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-times' ) );
 		}
 
 		$urlIncrease	= './shop/changePositionQuantity/'.$position->bridgeId.'/'.$position->articleId.'/1/plus';
@@ -418,19 +419,19 @@ class View_Helper_Shop_CartPositions
 			$urlRemove		.= '?forwardTo='.urlencode( $this->forwardPath );
 		}
 
-		$buttonPlus		= UI_HTML_Tag::create( 'a', $iconPlus, array(
+		$buttonPlus		= HtmlTag::create( 'a', $iconPlus, array(
 			'href'		=> $urlIncrease,
 			'class'		=> 'btn btn-mini btn-success',
 			'id'		=> 'btn-shop-cart-plus',
 			'title'		=> $w->altIncrease,
 		) );
-		$buttonMinus	= UI_HTML_Tag::create( 'a', $iconMinus, array(
+		$buttonMinus	= HtmlTag::create( 'a', $iconMinus, array(
 			'href'		=> $urlDecrease,
 			'class'		=> 'btn btn-mini btn-warning',
 			'id'		=> 'btn-shop-cart-minus',
 			'title'		=> $w->altDecrease,
 		) );
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
 			'href'		=> $urlRemove,
 			'class'		=> 'btn btn-mini btn-danger',
 			'id'		=> 'btn-shop-cart-remove',

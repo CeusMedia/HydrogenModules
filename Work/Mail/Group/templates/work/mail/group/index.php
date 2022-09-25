@@ -1,7 +1,9 @@
 <?php
-$iconAdd			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconCancel			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconUsers			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-users' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconAdd			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconCancel			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconUsers			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-users' ) );
 
 $helperTimestamp	= new View_Helper_TimePhraser( $env );
 
@@ -15,38 +17,38 @@ $statusClasses	= array(
 	3	=> 'label-success',
 );
 
-$list	= UI_HTML_Tag::create( 'div', 'Keine gefunden.', array( 'class' => 'alert alert-info' ) );
+$list	= HtmlTag::create( 'div', 'Keine gefunden.', array( 'class' => 'alert alert-info' ) );
 if( count( $groups ) ){
 	$list	= [];
 	foreach( $groups as $group ){
-		$label	= UI_HTML_Tag::create( 'a', $group->title, array( 'href' => './work/mail/group/edit/'.$group->mailGroupId ) );
-		$status	= UI_HTML_Tag::create( 'span', $words['group-statuses'][$group->status], array( 'class' => 'label '.$statusClasses[$group->status] ) );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $label ),
-			UI_HTML_Tag::create( 'td', $group->address ),
-			UI_HTML_Tag::create( 'td', $status ),
-			UI_HTML_Tag::create( 'td', count( $group->members ) ),
-			UI_HTML_Tag::create( 'td', $helperTimestamp->convert( $group->createdAt, TRUE, 'vor' ) ),
+		$label	= HtmlTag::create( 'a', $group->title, array( 'href' => './work/mail/group/edit/'.$group->mailGroupId ) );
+		$status	= HtmlTag::create( 'span', $words['group-statuses'][$group->status], array( 'class' => 'label '.$statusClasses[$group->status] ) );
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $label ),
+			HtmlTag::create( 'td', $group->address ),
+			HtmlTag::create( 'td', $status ),
+			HtmlTag::create( 'td', count( $group->members ) ),
+			HtmlTag::create( 'td', $helperTimestamp->convert( $group->createdAt, TRUE, 'vor' ) ),
 		) );
 	}
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
 		'Titel',
 		'Adresse',
 		'Zustand',
 		$iconUsers,
 		'erstellt',
 	) ) );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-	$list	= UI_HTML_Tag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-fixed' ) );
+	$tbody	= HtmlTag::create( 'tbody', $list );
+	$list	= HtmlTag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-fixed' ) );
 }
 
-$panelGroups	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Heading' ),
-	UI_HTML_Tag::create( 'div', array(
+$panelGroups	= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', 'Heading' ),
+	HtmlTag::create( 'div', array(
 		$list,
-		UI_HTML_Tag::create( 'div', array(
-/*			UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;...', array( 'href' => './work/mail/group', 'class' => 'btn' ) ),*/
-			UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array( 'href' => './work/mail/group/add', 'class' => 'btn btn-primary' ) ),
+		HtmlTag::create( 'div', array(
+/*			HtmlTag::create( 'a', $iconCancel.'&nbsp;...', array( 'href' => './work/mail/group', 'class' => 'btn' ) ),*/
+			HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array( 'href' => './work/mail/group/add', 'class' => 'btn btn-primary' ) ),
 		), array( 'class' => 'buttonbar' ) )
 	), array( 'class' => 'content-panel-inner' ) )
 ), array( 'class' => 'content-panel' ) );

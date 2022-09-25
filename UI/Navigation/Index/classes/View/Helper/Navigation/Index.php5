@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Navigation_Index
 {
 	protected $env;
@@ -44,7 +46,7 @@ class View_Helper_Navigation_Index
 			else
 				$list[]		= $this->renderItem( $page );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled nav-index' ) );
+		return HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled nav-index' ) );
 	}
 
 	/**
@@ -89,12 +91,12 @@ class View_Helper_Navigation_Index
 //		if( $page->type !== '...' )
 //			return;
 		$href		= $page->path == "index" ? './' : './'.$page->link;
-		$icon		= $page->icon ? UI_HTML_Tag::create( 'i', '', array( 'class' => $page->icon ) ).'&nbsp;' : '';
-		$link		= UI_HTML_Tag::create( 'a', $icon.$page->label, array(
+		$icon		= $page->icon ? HtmlTag::create( 'i', '', array( 'class' => $page->icon ) ).'&nbsp;' : '';
+		$link		= HtmlTag::create( 'a', $icon.$page->label, array(
 			'href'	=> $href,
 			'class'	=> 'btn btn-large btn-block nav-index-topic-item-link'
 		) );
-		return UI_HTML_Tag::create( 'li', $link, array( 'class' => 'nav-index-topic-item' ) );
+		return HtmlTag::create( 'li', $link, array( 'class' => 'nav-index-topic-item' ) );
 	}
 
 	/**
@@ -108,8 +110,8 @@ class View_Helper_Navigation_Index
 	{
 //		if( $page->type !== 'menu' )
 //			return;
-		$icon		= $page->icon ? UI_HTML_Tag::create( 'i', '', array( 'class' => $page->icon ) ).'&nbsp;' : '';
-		$heading	= UI_HTML_Tag::create( 'div', $icon.$page->label, array( 'class' => 'nav-index-topic-heading' ) );
-		return UI_HTML_Tag::create( 'li', $heading, array( 'class' => 'nav-index-topic' ) );
+		$icon		= $page->icon ? HtmlTag::create( 'i', '', array( 'class' => $page->icon ) ).'&nbsp;' : '';
+		$heading	= HtmlTag::create( 'div', $icon.$page->label, array( 'class' => 'nav-index-topic-heading' ) );
+		return HtmlTag::create( 'li', $heading, array( 'class' => 'nav-index-topic' ) );
 	}
 }

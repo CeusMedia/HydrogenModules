@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Mangopay_Input_Amount extends View_Helper_Mangopay_Abstract{
 
 	protected $amount;
@@ -12,7 +14,7 @@ class View_Helper_Mangopay_Input_Amount extends View_Helper_Mangopay_Abstract{
 	protected $required			= 'required';
 
 	public function render(){
-		return UI_HTML_Tag::create( 'input', NULL, array(
+		return HtmlTag::create( 'input', NULL, array(
 			'type'		=> 'number',
 			'step'		=> $this->step,
 			'min'		=> $this->min,

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -98,9 +99,9 @@ class Hook_Work_Issue extends Hook
 			$indices['status']	= $statusesActive;
 		$orders			= array( 'type' => 'ASC', 'title' => 'ASC' );
 		$icons			= array(
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee' ) ),
 		);
 		$words			= $env->getLanguage()->getWords( 'work/issue' );
 		$reportedIssues	= $modelIssue->getAll( $indices, $orders );
@@ -108,8 +109,8 @@ class Hook_Work_Issue extends Hook
 			$icon		= $icons[$issue->type];
 			$isOpen		= in_array( $issue->status, $statusesActive );
 			$status		= '('.$words['states'][$issue->status].')';
-			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
-			$title		= $isOpen ? $issue->title : UI_HTML_Tag::create( 'del', $issue->title );
+			$status		= HtmlTag::create( 'small', $status, array( 'class' => 'muted' ) );
+			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) array(
 				'id'		=> $payload->linkable ? $issue->issueId : NULL,
@@ -152,17 +153,17 @@ class Hook_Work_Issue extends Hook
 		$orders			= array( 'type' => 'ASC', 'title' => 'ASC' );
 		$issues			= $modelIssue->getAllByIndices( $indices, $orders );	//  ...
 		$icons			= array(
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe' ) ),
-			UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe' ) ),
+			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee' ) ),
 		);
 		$words		= $language->getWords( 'work/issue' );
 		foreach( $issues as $issue ){
 			$icon		= $icons[$issue->type];
 			$isOpen		= in_array( $issue->status, $statusesActive );
 			$status		= '('.$words['states'][$issue->status].')';
-			$status		= UI_HTML_Tag::create( 'small', $status, array( 'class' => 'muted' ) );
-			$title		= $isOpen ? $issue->title : UI_HTML_Tag::create( 'del', $issue->title );
+			$status		= HtmlTag::create( 'small', $status, array( 'class' => 'muted' ) );
+			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) array(
 				'id'		=> $payload->linkable ? $issue->issueId : NULL,

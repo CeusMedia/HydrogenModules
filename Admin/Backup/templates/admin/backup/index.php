@@ -1,17 +1,18 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $list	= '<div class="alert alert-info">Keine Backups vorhanden.</div>';
 if( $backups ){
 	$rows	= [];
 	foreach( $backups as $backup ){
 		$rows[]	= U_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $backup->backupId ),
-			UI_HTML_Tag::create( 'td', $backup->createdAt ),
+			HtmlTag::create( 'td', $backup->backupId ),
+			HtmlTag::create( 'td', $backup->createdAt ),
 		) );
 	}
-	$thead	= UI_HTML_Tag::create( 'thead', '' );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-	$list	= UI_HTML_Tag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-striped' ) );
+	$thead	= HtmlTag::create( 'thead', '' );
+	$tbody	= HtmlTag::create( 'tbody', $rows );
+	$list	= HtmlTag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-striped' ) );
 }
 
 $panelList	= '

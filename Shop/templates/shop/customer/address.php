@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['customer-delivery'];
 if( $address->type == 2 )
@@ -9,7 +10,7 @@ $helper->setAddress( $address );
 $helper->setHeading( $w->heading );
 $helper->setType( $address->type );
 if( strlen( trim( $w->textTop ) ) )
-	$helper->setTextTop( UI_HTML_Tag::create( 'p', $w->textTop ) );
+	$helper->setTextTop( HtmlTag::create( 'p', $w->textTop ) );
 $tabContent	= $helper->render();
 
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );

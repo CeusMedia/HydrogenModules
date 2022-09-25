@@ -1,20 +1,22 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w				= (object) $words['checkout'];
 
-$iconSubmit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconSubmit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
 $buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 if( count( $paymentBackends ) > 1 )
 	$buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/payment', $w->buttonToPayment, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 
 if( $w->linkCreditCard )
-	$w->labelCreditCard	= UI_HTML_Tag::create( 'a', $w->labelCreditCard, array( 'href' => $w->linkCreditCard, 'target' => '_blank' ) );
+	$w->labelCreditCard	= HtmlTag::create( 'a', $w->labelCreditCard, array( 'href' => $w->linkCreditCard, 'target' => '_blank' ) );
 if( $w->linkDebitCard )
-	$w->labelDebitCard	= UI_HTML_Tag::create( 'a', $w->labelDebitCard, array( 'href' => $w->linkDebitCard, 'target' => '_blank' ) );
+	$w->labelDebitCard	= HtmlTag::create( 'a', $w->labelDebitCard, array( 'href' => $w->linkDebitCard, 'target' => '_blank' ) );
 $labelCard	= sprintf( $w->labelCard, $w->labelCreditCard, $w->labelDebitCard );
 
 $taxMode	= $configShop->get( 'tax.included' ) ? $w->taxInclusive : $w->taxExclusive;
-$taxLabel	= UI_HTML_Tag::create( 'small', '('.$taxMode.' '.$w->labelTax.')', array( 'class' => 'muted' ) );
+$taxLabel	= HtmlTag::create( 'small', '('.$taxMode.' '.$w->labelTax.')', array( 'class' => 'muted' ) );
 $alert		= $w->alertNotice ? '<div class="alert alert-notice">'.$w->alertNotice.'</div>' : NULL;
 $form		= '
 <form action="./shop/payment/stripe/perCreditCard" method="post" id="payment-form">
@@ -39,9 +41,9 @@ $form		= '
 $script	= 'ShopPaymentStripe.apply("#card-element" ,"payment-form", "card-errors", "card-submit");';
 $env->page->js->addScriptOnReady( $script );
 
-$panel	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', $w->heading ),
-	UI_HTML_Tag::create( 'div', array(
+$panel	= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', $w->heading ),
+	HtmlTag::create( 'div', array(
 		$form,
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );

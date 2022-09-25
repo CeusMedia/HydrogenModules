@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['tab-config'];
 
@@ -34,40 +35,40 @@ if( count( $module->config ) ){
 			case 'boolean':
 				$strValue	= $value->value === TRUE ? 'yes' : 'no';
 				$options	= UI_HTML_Elements::Options( $words['boolean-values'], $strValue );
-				$inputLabel	= UI_HTML_Tag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $words['boolean-values'][$strValue], 'class' => 'label s active-'.$strValue, 'readonly' => TRUE, 'title' => $inputTitle ) );
-				$input		= UI_HTML_Tag::create( 'select', $options, array( 'class' => 's'.$class.' active-'.$strValue, 'name' => $name, 'id' => $inputId, 'title' => $inputTitle ) );
+				$inputLabel	= HtmlTag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $words['boolean-values'][$strValue], 'class' => 'label s active-'.$strValue, 'readonly' => TRUE, 'title' => $inputTitle ) );
+				$input		= HtmlTag::create( 'select', $options, array( 'class' => 's'.$class.' active-'.$strValue, 'name' => $name, 'id' => $inputId, 'title' => $inputTitle ) );
 				break;
 			case 'int':
 			case 'integer':
-				$inputLabel	= UI_HTML_Tag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $inputValue, 'class' => 'label max', 'readonly' => TRUE, 'title' => $inputTitle ) );
-				$input		= UI_HTML_Tag::create( 'input', NULL, array( 'id' => $inputId, 'name' => $inputName, 'value' => $inputValue, 'class' => 's'.$class ) );
+				$inputLabel	= HtmlTag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $inputValue, 'class' => 'label max', 'readonly' => TRUE, 'title' => $inputTitle ) );
+				$input		= HtmlTag::create( 'input', NULL, array( 'id' => $inputId, 'name' => $inputName, 'value' => $inputValue, 'class' => 's'.$class ) );
 				break;
 			default:
-				$inputLabel	= UI_HTML_Tag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $inputValue, 'class' => 'label max', 'readonly' => TRUE, 'title' => $inputTitle ) );
+				$inputLabel	= HtmlTag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $inputValue, 'class' => 'label max', 'readonly' => TRUE, 'title' => $inputTitle ) );
 				if( count( $value->values ) ){
 					$options	= array_combine( $value->values, $value->values );
 					$options	= UI_HTML_Elements::Options( $options, $value->value );
-					$input		= UI_HTML_Tag::create( 'select', $options, array( 'name' => $inputName, 'id' => $inputId, 'class' => 'm'.$class, 'title' => $inputTitle ) );
+					$input		= HtmlTag::create( 'select', $options, array( 'name' => $inputName, 'id' => $inputId, 'class' => 'm'.$class, 'title' => $inputTitle ) );
 				}
 				else{
 					$attr	= array( 'id' => $inputId, 'name' => $inputName, 'value' => $inputValue, 'class' => 'max'.$class, 'title' => $inputTitle );
-					$input	= UI_HTML_Tag::create( 'input', NULL, $attr );
+					$input	= HtmlTag::create( 'input', NULL, $attr );
 				}
 				break;
 		}
 		$label  = $key;
 		if( strlen( $inputTitle ) )
-			$label  = UI_HTML_Tag::create( 'acronym', $key, array( 'title' => $inputTitle ) );
+			$label  = HtmlTag::create( 'acronym', $key, array( 'title' => $inputTitle ) );
 
-		$label	= UI_HTML_Tag::create( 'label', $label, array( 'class' => $class, 'for' => $inputId ) );
+		$label	= HtmlTag::create( 'label', $label, array( 'class' => $class, 'for' => $inputId ) );
 		$id		= str_replace( '.', '_', $key );
 		$cells	= array(
-			UI_HTML_Tag::create( 'td', $label, array( 'class' => 'cell-config-key' ) ),
-			UI_HTML_Tag::create( 'td', $words['config-types'][$value->type], array( 'class' => "cell-config-type" ) ),
-			UI_HTML_Tag::create( 'td', $inputLabel.$input, array( 'class' => 'cell-config-value' ) ),
-			UI_HTML_Tag::create( 'td', $linkRemove, array() ),
+			HtmlTag::create( 'td', $label, array( 'class' => 'cell-config-key' ) ),
+			HtmlTag::create( 'td', $words['config-types'][$value->type], array( 'class' => "cell-config-type" ) ),
+			HtmlTag::create( 'td', $inputLabel.$input, array( 'class' => 'cell-config-value' ) ),
+			HtmlTag::create( 'td', $linkRemove, array() ),
 		);
-		$rows[$key]	= UI_HTML_Tag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
+		$rows[$key]	= HtmlTag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
 	}
 #	natcasesort( $rows );
 	$heads			= array( $w->headKey, $w->headType, $w->headValue, $w->headAction );

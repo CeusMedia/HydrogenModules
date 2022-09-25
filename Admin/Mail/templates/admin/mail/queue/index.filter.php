@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w		= (object) $words['index'];
 $wl		= (object) $words['index-list'];
 $wf		= (object) $words['index-filter'];
@@ -37,11 +39,11 @@ foreach( $mailClasses as $mailClass )
 $optMailClass	= UI_HTML_Elements::Options( $optMailClass, $filters->get( 'mailClass' ) );
 
 
-$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
-$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove-circle' ) );
+$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove-circle' ) );
 
-$buttonFilter	= UI_HTML_Tag::create( 'button', $iconFilter.' '.$wf->buttonFilter, array( 'type' => 'submit', 'class' => 'btn btn-primary' ) );
-$buttonReset	= UI_HTML_Tag::create( 'a', $iconReset.' '.$wf->buttonReset, array( 'class' => 'btn btn-small', 'href' => './admin/mail/queue/filter/true' ) );
+$buttonFilter	= HtmlTag::create( 'button', $iconFilter.' '.$wf->buttonFilter, array( 'type' => 'submit', 'class' => 'btn btn-primary' ) );
+$buttonReset	= HtmlTag::create( 'a', $iconReset.' '.$wf->buttonReset, array( 'class' => 'btn btn-small', 'href' => './admin/mail/queue/filter/true' ) );
 
 
 return '

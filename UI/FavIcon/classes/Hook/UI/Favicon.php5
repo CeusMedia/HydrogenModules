@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -28,7 +29,7 @@ class Hook_UI_Favicon extends Hook
 			else if( $ext === "gif" )
 				$type	= "image/gif";
 			$attributes	= array( 'rel' => "icon", 'type' => $type, 'href' => $url );
-			$link		= UI_HTML_Tag::create( 'link', NULL, $attributes );
+			$link		= HtmlTag::create( 'link', NULL, $attributes );
 			$context->addHead( $link );
 		}
 
@@ -36,7 +37,7 @@ class Hook_UI_Favicon extends Hook
 			$path		= $configTouch->get( 'fromTheme' ) ? $pathTheme : $pathImages;
 			$url		= $path.$configTouch->get( 'name' );
 			$attributes	= array( 'rel' => 'apple-touch-icon', 'href' => $url );
-			$link		= UI_HTML_Tag::create( 'link', NULL, $attributes );
+			$link		= HtmlTag::create( 'link', NULL, $attributes );
 			$context->addHead( $link );
 		}
 	}

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -49,12 +50,12 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 				if( !in_array( $ext, $extensions ) )
 					continue;
 				$key		= strtolower( $relativePath );
-				$sublist[$key]	= UI_HTML_Tag::create( 'li', array(
+				$sublist[$key]	= HtmlTag::create( 'li', array(
 					self::renderThumbnail( $env, $mode, $path, $relativePath ),
-					UI_HTML_Tag::create( 'div', array(
-						UI_HTML_Tag::create( 'span', $fileName ),
+					HtmlTag::create( 'div', array(
+						HtmlTag::create( 'span', $fileName ),
 						'<br/>',
-						UI_HTML_Tag::create( 'small', $filePath, array( 'class' => 'muted' ) ),
+						HtmlTag::create( 'small', $filePath, array( 'class' => 'muted' ) ),
 					), array(
 						'class' => 'source-list-label',
 					) )
@@ -70,13 +71,13 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 			if( !$sublist )
 				continue;
 			ksort( $sublist );
-			$sublist	= UI_HTML_Tag::create( 'ul', $sublist, array( 'class' => 'unstyled' ) );
-			$labelPath	= UI_HTML_Tag::create( 'div', 'Pfad: <strong>'.$path.'</strong>' );
-			$list[]		= UI_HTML_Tag::create( 'li', $labelPath.$sublist, array( 'class' => 'source-list-path' ) );
+			$sublist	= HtmlTag::create( 'ul', $sublist, array( 'class' => 'unstyled' ) );
+			$labelPath	= HtmlTag::create( 'div', 'Pfad: <strong>'.$path.'</strong>' );
+			$list[]		= HtmlTag::create( 'li', $labelPath.$sublist, array( 'class' => 'source-list-path' ) );
 		}
-		$html	= UI_HTML_Tag::create( 'div', 'Nichts gefunden.', array( 'class' => 'alert alert-info' ) );
+		$html	= HtmlTag::create( 'div', 'Nichts gefunden.', array( 'class' => 'alert alert-info' ) );
 		if( count( $list ) )
-			$html	= UI_HTML_Tag::create( 'ul', $list, array( 'id' => '', 'class' => 'unstyled modal-source-list' ) );
+			$html	= HtmlTag::create( 'ul', $list, array( 'id' => '', 'class' => 'unstyled modal-source-list' ) );
 		$this->respondData( array( 'html' => $html ) );
 	}
 
@@ -84,7 +85,7 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 	{
 		switch( $mode ){
 			case 'image':
-				$div	= UI_HTML_Tag::create( 'div', '&nbsp;', array(
+				$div	= HtmlTag::create( 'div', '&nbsp;', array(
 					'class'	=> 'source-list-image',
 					'style'	=> 'background-image: url('.$env->getBaseUrl().$path.$relativePath.');',
 				) );
@@ -92,8 +93,8 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 					if( class_exists( 'View_Helper_Thumbnailer' ) ){
 						$helper	= new View_Helper_Thumbnailer( $env, 36, 36 );
 						$image	= $helper->get( $env->uri.$path.$relativePath );
-						$image	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $image ) );
-						$div	= UI_HTML_Tag::create( 'div', $image, array(
+						$image	= HtmlTag::create( 'img', NULL, array( 'src' => $image ) );
+						$div	= HtmlTag::create( 'div', $image, array(
 							'class'	=> 'source-list-image',
 						) );
 					}
@@ -103,8 +104,8 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 				return $div;
 			case 'style':
 			default:
-				return UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-2x fa-file-code-o' ) )
+				return HtmlTag::create( 'div', array(
+					HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-2x fa-file-code-o' ) )
 				), array(
 					'class'	=> 'source-list-image',
 				) );

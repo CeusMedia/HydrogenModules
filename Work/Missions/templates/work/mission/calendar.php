@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*
 	@deprecated		seems to be unused
@@ -10,11 +11,11 @@ return "----";
 /*
 $toolbar	= new View_Helper_MultiButtonGroupMultiToolbar();
 
-$iconAddEvent   = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-time' ) );
-$iconAddTask    = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-wrench' ) );
+$iconAddEvent   = HtmlTag::create( 'i', '', array( 'class' => 'icon-time' ) );
+$iconAddTask    = HtmlTag::create( 'i', '', array( 'class' => 'icon-wrench' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-    $iconAddEvent   = UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) );
-    $iconAddTask    = UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
+    $iconAddEvent   = HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) );
+    $iconAddTask    = HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
 }
 
 $toolbar->addButtonGroup( 'tb_0', 'add', array(

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -48,7 +49,7 @@ class Hook_Resource_Mail extends Hook
 		$modelMail		= new Model_Mail( $env );
 		$orders			= array( 'mailId' => 'DESC' );
 		$fields			= array( 'mailId', 'status', 'subject', 'enqueuedAt' );
-		$icon			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope-o', 'title' => 'E-Mail' ) );
+		$icon			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope-o', 'title' => 'E-Mail' ) );
 		$statusesActive	= array(
 			Model_Mail::STATUS_SENT,
 			Model_Mail::STATUS_RECEIVED,

@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconOpen		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-folder-open" ) );
-$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-eye" ) );
-$iconExists		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-check" ) );
-$iconMissing	= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-warning" ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
+$iconOpen		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-folder-open" ) );
+$iconView		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-eye" ) );
+$iconExists		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-check" ) );
+$iconMissing	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-warning" ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
 
 $modalStyle		= new View_Helper_Input_Resource( $env );
 $modalStyle->setModalId( 'modal-admin-mail-template-select-style' );
@@ -20,7 +21,7 @@ if( $template->styles ){
 	$list	= [];
 	foreach( json_decode( $template->styles, TRUE ) as $item ){
 		$rowClass	= 'error';
-		$buttonOpen	= UI_HTML_Tag::create( 'button', $iconView, array(
+		$buttonOpen	= HtmlTag::create( 'button', $iconView, array(
 			'type'		=> 'button',
 			'class'		=> 'btn btn-info disabled',
 			'title'		=> 'Style-Datei existiert nicht im angegebenen Pfad (in Frontend-Applikation).',
@@ -28,38 +29,38 @@ if( $template->styles ){
 		) );
 		if( file_exists( $appPath.$item ) ){
 			$rowClass	= 'not-success';
-			$buttonOpen	= UI_HTML_Tag::create( 'a', $iconView, array(
+			$buttonOpen	= HtmlTag::create( 'a', $iconView, array(
 				'href'		=> $appUrl.$item,
 				'class'		=> 'btn btn-info',
 				'target'	=> '_blank',
 			) );
 		}
-		$itemFile		= UI_HTML_Tag::create( 'big', pathinfo( $item, PATHINFO_BASENAME ) );
-		$itemPath		= UI_HTML_Tag::create( 'small', pathinfo( $item, PATHINFO_DIRNAME ), array( 'class' => 'muted' ) );
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$itemFile		= HtmlTag::create( 'big', pathinfo( $item, PATHINFO_BASENAME ) );
+		$itemPath		= HtmlTag::create( 'small', pathinfo( $item, PATHINFO_DIRNAME ), array( 'class' => 'muted' ) );
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
 			'class'	=> 'btn btn-inverse pull-right',
 			'href'	=> './admin/mail/template/removeStyle/'.$template->mailTemplateId.'/'.base64_encode( $item ),
 			'title'	=> 'Style-Verweis entfernen',
 		) );
-		$buttons	= UI_HTML_Tag::create( 'div', array(
+		$buttons	= HtmlTag::create( 'div', array(
 			$buttonOpen,
 			$buttonRemove,
 		), array( 'class' => 'btn-group' ) );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $itemFile.'<br/>'.$itemPath ),
-			UI_HTML_Tag::create( 'td', $buttons, array( 'style' => 'text-align: right' ) ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $itemFile.'<br/>'.$itemPath ),
+			HtmlTag::create( 'td', $buttons, array( 'style' => 'text-align: right' ) ),
 		), array( 'class' => $rowClass ) );
 	}
-	$listStyles	= UI_HTML_Tag::create( 'table', array(
+	$listStyles	= HtmlTag::create( 'table', array(
 		UI_HTML_Elements::ColumnGroup( array(
 			'',
 			'120px'
 		) ),
-		UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+		HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
 			$words['edit-image-list']['headPath'],
 			$words['edit-image-list']['headActions'],
 		) ) ),
-		UI_HTML_Tag::create( 'tbody', $list ),
+		HtmlTag::create( 'tbody', $list ),
 	), array(
 		'class'	=> 'table table-fixed table-striped',
 	) );
@@ -73,7 +74,7 @@ return '
 			<h4>'.$words['edit-style-list']['heading'].'</h4>
 			<div class="content-panel-inner">
 				'.$listStyles.'
-				'.UI_HTML_Tag::create( 'div', $buttonList, array( 'class' => 'buttonbar' ) ).'
+				'.HtmlTag::create( 'div', $buttonList, array( 'class' => 'buttonbar' ) ).'
 			</div>
 		</div>
 	</div>

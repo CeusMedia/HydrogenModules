@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -76,11 +77,11 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 			return '';
 		View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
 
-		$linkProject	= UI_HTML_Tag::create( 'a', $timer->project->title, array(
+		$linkProject	= HtmlTag::create( 'a', $timer->project->title, array(
 			'href'	=> './manage/project/view/'.$timer->project->projectId,
 			'class'	=> 'autocut',
 		) );
-		$linkModule		= UI_HTML_Tag::create( 'a', $timer->relationTitle, array(
+		$linkModule		= HtmlTag::create( 'a', $timer->relationTitle, array(
 			'href'	=> $timer->relationLink,
 			'class'	=> 'autocut',
 		) );

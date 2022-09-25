@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Modal{
 
 	protected $attributes	= [];
@@ -23,7 +25,7 @@ class View_Helper_Modal{
 	 *	@return		string
 	 */
 	public function render(){
-		$body		= UI_HTML_Tag::create( 'div', $this->body, array(
+		$body		= HtmlTag::create( 'div', $this->body, array(
 			'class'	=> 'modal-body',
 		) );
 		$footer		= $this->renderFooter();
@@ -50,9 +52,9 @@ class View_Helper_Modal{
 					$attributes[$key]	= $value;
 			}
 		}
-		$modal		= UI_HTML_Tag::create( 'div', array( $header, $body, $footer ), $attributes );
+		$modal		= HtmlTag::create( 'div', array( $header, $body, $footer ), $attributes );
 		if( $this->formAction ){
-			$modal	= UI_HTML_Tag::create( 'form', $modal, array(
+			$modal	= HtmlTag::create( 'form', $modal, array(
 				'action'	=> $this->formAction,
 				'method'	=> 'POST',
 			) );
@@ -61,31 +63,31 @@ class View_Helper_Modal{
 	}
 
 	protected function renderFooter(){
-		$buttonClose	= UI_HTML_Tag::create( 'button', 'Schließen', array(
+		$buttonClose	= HtmlTag::create( 'button', 'Schließen', array(
 			'class'			=> 'btn',
 			'data-dismiss'	=> 'modal',
 			'aria-hidden'	=> 'true',
 		) );
-		$buttonSubmit	= UI_HTML_Tag::create( 'button', 'Weiter', array(
+		$buttonSubmit	= HtmlTag::create( 'button', 'Weiter', array(
 			'class'		=> 'btn btn-primary',
 			'type'		=> 'submit',
 		) );
 		$buttonSubmit	= $this->formAction ? $buttonSubmit : '';
-		$footer		= UI_HTML_Tag::create( 'div', array( $buttonClose, $buttonSubmit ), array(
+		$footer		= HtmlTag::create( 'div', array( $buttonClose, $buttonSubmit ), array(
 			'class'	=> 'modal-footer',
 		) );
 		return $footer;
 	}
 
 	protected function renderHeader(){
-		$buttonClose	= UI_HTML_Tag::create( 'button', '×', array(
+		$buttonClose	= HtmlTag::create( 'button', '×', array(
 			'type'			=> "button",
 			'class'			=> "close",
 			'data-dismiss'	=> "modal",
 			'aria-hidden'	=> "true",
 		) );
-		$heading	= UI_HTML_Tag::create( 'h3', $this->heading, array( 'id' => "myModalLabel" ) );
-		$header		= UI_HTML_Tag::create( 'div', array( $buttonClose, $heading ), array(
+		$heading	= HtmlTag::create( 'h3', $this->heading, array( 'id' => "myModalLabel" ) );
+		$header		= HtmlTag::create( 'div', array( $buttonClose, $heading ), array(
 			'class'	=> 'modal-header',
 		) );
 		return $header;

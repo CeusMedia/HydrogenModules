@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -73,7 +74,7 @@ class View_Helper_Newsletter
 			'registeredAt'		=> date( $w->formatRegisteredAt, $reader->registeredAt ),
 			'registerDate'		=> date( $w->formatRegisterDate, $reader->registeredAt ),
 			'registerTime'		=> date( $w->formatRegisterTime, $reader->registeredAt ),
-			'tracking'			=> UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlTrack ) ),
+			'tracking'			=> HtmlTag::create( 'img', NULL, array( 'src' => $urlTrack ) ),
 			'linkConfirm'		=> $urlConfirm,
 			'linkUnregister'	=> $urlOptOut,
 			'linkView'			=> $urlView,
@@ -119,7 +120,7 @@ class View_Helper_Newsletter
 			'registeredAt'		=> date( $w->formatRegisteredAt, $reader->registeredAt ),
 			'registerDate'		=> date( $w->formatRegisterDate, $reader->registeredAt ),
 			'registerTime'		=> date( $w->formatRegisterTime, $reader->registeredAt ),
-			'tracking'			=> UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlTrack ) ),
+			'tracking'			=> HtmlTag::create( 'img', NULL, array( 'src' => $urlTrack ) ),
 			'linkUnregister'	=> $urlOptOut,
 			'linkView'			=> $urlView,
 		);
@@ -249,7 +250,7 @@ class View_Helper_Newsletter
 		}
 		$styles		.= trim( $this->template->style );
 		if( ( $styles = trim( File_CSS_Compressor::compressString( $styles ) ) ) )
-			$page->addHead( UI_HTML_Tag::create( 'style', $styles ) );
+			$page->addHead( HtmlTag::create( 'style', $styles ) );
 
 		if( $this->preview ){
 			$data['linkView']		= "javascript: alert('Disabled in preview.'); void(0);";

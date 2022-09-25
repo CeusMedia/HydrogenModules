@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_CSRF
@@ -23,12 +24,12 @@ class View_Helper_CSRF
 //		$token	= $this->env->getLogic()->get( 'CSRF' )->getToken( $formName );
 		$logic	= Logic_CSRF::getInstance( $this->env );
 		$token	= $logic->getToken( $formName );
-		$input1	= UI_HTML_Tag::create( 'input', NULL, array(
+		$input1	= HtmlTag::create( 'input', NULL, array(
 			'type'	=> 'hidden',
 			'name'	=> 'csrf_token',
 			'value'	=> $token
 		) );
-		$input2	= UI_HTML_Tag::create( 'input', NULL, array(
+		$input2	= HtmlTag::create( 'input', NULL, array(
 			'type'	=> 'hidden',
 			'name'	=> 'csrf_form_name',
 			'value'	=> $formName

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -26,7 +27,7 @@ class Hook_UI_Shortcode_Example extends Hook
 //						$helper->setType( $attr['type'] );
 //						$replacement	= $helper->render();										//  get replacement content
 
-						$replacement	= UI_HTML_Tag::create( 'div', array(
+						$replacement	= HtmlTag::create( 'div', array(
 							'This is an example.',
 						), array( 'class' => 'example-type-'.$attr['type'] ) );
 						$processor->replaceNext( $shortCode, $replacement );

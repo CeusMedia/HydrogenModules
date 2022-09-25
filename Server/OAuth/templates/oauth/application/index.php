@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 /*
 $list	= '<div class="muted"><em><small>Keine Applikationen angemeldet.</small></em></div><br/>';
 if( $applications ){
@@ -6,18 +8,18 @@ if( $applications ){
 	$list		= [];
 	foreach( $applications as $application ){
 		$urlEdit	= './oauth/application/view/'.$application->oauthApplicationId;
-		$label		= UI_HTML_Tag::create( 'big', $application->title );
-		$link		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $urlEdit ) );
-		$clientId	= UI_HTML_Tag::create( 'small', 'Client-ID: '.$application->clientId, array( 'class'=> 'muted' ) );
+		$label		= HtmlTag::create( 'big', $application->title );
+		$link		= HtmlTag::create( 'a', $label, array( 'href' => $urlEdit ) );
+		$clientId	= HtmlTag::create( 'small', 'Client-ID: '.$application->clientId, array( 'class'=> 'muted' ) );
 		$createdAt	= date( 'd.m.Y H:i', $application->createdAt );
 		$modifiedAt	= $application->modifiedAt ? date( 'd.m.Y H:i', $application->modifiedAt ) : '-';
 		$type		= $words['types'][$application->type];
 		$status		= $words['states'][$application->status];
 		$trClass	= 
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link.'<br/>'.$clientId ),
-			UI_HTML_Tag::create( 'td', $type.'<br/>'.$status ),
-			UI_HTML_Tag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $link.'<br/>'.$clientId ),
+			HtmlTag::create( 'td', $type.'<br/>'.$status ),
+			HtmlTag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
 		), array( 'class' => $trClasses[(int) $application->status]) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( "30%", "40%", "15%", "15%" );
@@ -27,24 +29,24 @@ if( $applications ){
 		"Zustand",
 		"erstellt / verändert"
 	) );
-	$thead		= UI_HTML_Tag::create( 'thead', $theads );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
-	$list		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array(
+	$thead		= HtmlTag::create( 'thead', $theads );
+	$tbody		= HtmlTag::create( 'tbody', $list );
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
 		'class'	=> 'table table-striped'
 	) );
 }
 */
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
 $iconsStatus	= array(
-	-1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fw-trash' ) ),
-	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
-	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) )
+	-1	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fw-trash' ) ),
+	0	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
+	1	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) )
 );
 $iconsType	= array(
-	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-world' ) ),
-	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lock' ) )
+	0	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-world' ) ),
+	1	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lock' ) )
 );
 
 $list	= '<div class="muted"><em><small>Keine Applikationen angemeldet.</small></em></div><br/>';
@@ -52,8 +54,8 @@ if( $applications ){
 	$list		= [];
 	foreach( $applications as $application ){
 		$urlEdit	= './oauth/application/view/'.$application->oauthApplicationId;
-		$label		= UI_HTML_Tag::create( 'big', $application->title );
-		$link		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $urlEdit ) );
+		$label		= HtmlTag::create( 'big', $application->title );
+		$link		= HtmlTag::create( 'a', $label, array( 'href' => $urlEdit ) );
 		$createdAt	= date( 'd.m.Y H:i', $application->createdAt );
 		$modifiedAt	= $application->modifiedAt ? date( 'd.m.Y H:i', $application->modifiedAt ) : '-';
 
@@ -62,11 +64,11 @@ if( $applications ){
 
 		$statusLabel	= $words['states'][$application->status];
 		$statusIcon		= $iconsStatus[$application->status];
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link.'<br/><small class="muted">'.$application->url.'</small>' ),
-			UI_HTML_Tag::create( 'td', $typeIcon.' '.$typeLabel ),
-			UI_HTML_Tag::create( 'td', $statusIcon.' '.$statusLabel ),
-			UI_HTML_Tag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $link.'<br/><small class="muted">'.$application->url.'</small>' ),
+			HtmlTag::create( 'td', $typeIcon.' '.$typeLabel ),
+			HtmlTag::create( 'td', $statusIcon.' '.$statusLabel ),
+			HtmlTag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
 		), array( 'class' => NULL ) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( '50%', '15%', '15%', '20%' );
@@ -76,15 +78,15 @@ if( $applications ){
 		'Zustand',
 		'erstellt / verändert',
 	) );
-	$thead		= UI_HTML_Tag::create( 'thead', $theads );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
-	$list		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array(
+	$thead		= HtmlTag::create( 'thead', $theads );
+	$tbody		= HtmlTag::create( 'tbody', $list );
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
 		'class'	=> 'table table-striped'
 	) );
 }
 
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' hinzufügen', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' hinzufügen', array(
 	'class'	=> 'btn btn-primary btn-small',
 	'href'	=> './oauth/application/add',
 ) );

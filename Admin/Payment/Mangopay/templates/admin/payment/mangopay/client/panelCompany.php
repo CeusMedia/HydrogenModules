@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['panel-company'];
 
 $form	= '<form action="./admin/payment/mangopay/client/edit" method="post">
@@ -39,9 +41,9 @@ $form	= '<form action="./admin/payment/mangopay/client/edit" method="post">
 	</div>
 </form>';
 
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', $w->heading ),
-	UI_HTML_Tag::create( 'div', array(
+return HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', $w->heading ),
+	HtmlTag::create( 'div', array(
 		$form,
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Messenger_Bootstrap
@@ -35,15 +36,15 @@ class View_Helper_Messenger_Bootstrap
 				);
 
 			$class	= $this->classes[$message->type].' messenger-message-'.$nr;
-			$message	= UI_HTML_Tag::create( 'div', (string) $message->message, array( 'class' => 'messenger-message' ) );
+			$message	= HtmlTag::create( 'div', (string) $message->message, array( 'class' => 'messenger-message' ) );
 			if( $timeFormat && !empty( $message->timestamp ) ){
 				$time		= Alg_Time_Converter::convertToHuman( $message->timestamp, $timeFormat );
-				$time		= UI_HTML_Tag::create( 'span',  '['.$time.'] ', array( 'class' => 'time' ) );
+				$time		= HtmlTag::create( 'span',  '['.$time.'] ', array( 'class' => 'time' ) );
 				$message	= $time.$message;
 			}
 			$buttonDismiss	= '';
 			if( $this->env->getModules()->has( 'UI_JS_Messenger' ) ){
-				$buttonClose	= UI_HTML_Tag::create( 'button', "&times;", array(
+				$buttonClose	= HtmlTag::create( 'button', "&times;", array(
 					'type'		=> 'button',
 					'onclick'	=> 'UI.Messenger.discardMessage($(this).parent());',
 					'class'		=> 'close',
@@ -51,17 +52,17 @@ class View_Helper_Messenger_Bootstrap
 				$message		= $buttonClose.$message;
 			}
 			else{
-				$buttonClose	= UI_HTML_Tag::create( 'button', "&times;", array(
+				$buttonClose	= HtmlTag::create( 'button', "&times;", array(
 					'type'		=> 'button',
 					'onclick'	=> '$(this).parent().slideUp();',
 					'class'		=> 'close',
 				) );
 				$message		= $buttonClose.$message;
 			}
-			$list[] 	= UI_HTML_Tag::create( 'div', $message, array( 'class' => $class ) );
+			$list[] 	= HtmlTag::create( 'div', $message, array( 'class' => $class ) );
 		}
 		$this->env->getMessenger()->clear();
-		return UI_HTML_Tag::create( 'div', $list, array( 'class' => 'messenger-messages messenger-bootstrap' ) );
+		return HtmlTag::create( 'div', $list, array( 'class' => 'messenger-messages messenger-bootstrap' ) );
 	}
 
 	public static function renderStatic( Environment $env, string $timeFormat = NULL, bool $linkResources = FALSE ): string

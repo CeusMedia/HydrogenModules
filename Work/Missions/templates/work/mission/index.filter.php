@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 if( empty( $wordsFilter ) )
 	$wordsFilter	= $words;
 
@@ -7,13 +9,13 @@ $toolbar2		= new View_Helper_MultiButtonGroupMultiToolbar();
 
 $helperFilter	= new View_Helper_Work_Mission_Filter( $env, $defaultFilterValues, $wordsFilter );
 
-$iconAddEvent	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-time' ) );
-$iconAddTask	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-wrench' ) );
+$iconAddEvent	= HtmlTag::create( 'i', '', array( 'class' => 'icon-time' ) );
+$iconAddTask	= HtmlTag::create( 'i', '', array( 'class' => 'icon-wrench' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconAddEvent	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) );
-	$iconAddTask	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
+	$iconAddEvent	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) );
+	$iconAddTask	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
 }
-$toolbar1->addButton( 'toolbar-views', 'view-type', UI_HTML_Tag::create( 'div', array(
+$toolbar1->addButton( 'toolbar-views', 'view-type', HtmlTag::create( 'div', array(
 	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" title="Neuer Eintrag"><i class="fa fa-fw fa-plus"></i></button>
 	<ul class="dropdown-menu">
 		<li><a href="./work/mission/add?type=1">'.$iconAddEvent.'&nbsp;Termin</a></li>
@@ -42,7 +44,7 @@ $toolbar2->addButton( 'toolbar-filters', 'priorities', $helperFilter->renderPrio
 if( $filterMode !== "kanban" )
 	$toolbar2->addButton( 'toolbar-filters', 'states', $helperFilter->renderStateFilter( $filterStates ) );
 $toolbar2->addButton( 'toolbar-filters', 'types', $helperFilter->renderTypeFilter( $filterTypes ) );
-$toolbar2->addButton( 'toolbar-filters', 'search', UI_HTML_Tag::create( 'div', array(
+$toolbar2->addButton( 'toolbar-filters', 'search', HtmlTag::create( 'div', array(
 		$helperFilter->renderSearch( $filterQuery ),
 		$helperFilter->renderReset()
 	), array( 'class' => 'input-append' ) )

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Mission_Calendar extends View
@@ -110,9 +111,9 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		}
 		$colgroup	= UI_HTML_Elements::ColumnGroup( "3.75%", "13.75%", "13.75%", "13.75%", "13.75%", "13.75%", "13.75%", "13.75%" );
 		$heads		= UI_HTML_Elements::TableHeads( array( "KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ) );
-		$thead		= UI_HTML_Tag::create( 'thead', $heads );
-		$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-		$tableLarge	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
+		$thead		= HtmlTag::create( 'thead', $heads );
+		$tbody		= HtmlTag::create( 'tbody', $rows );
+		$tableLarge	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
 		return $tableLarge;
 	}
 
@@ -172,28 +173,28 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		}
 		$colgroup	= UI_HTML_Elements::ColumnGroup( /*"5%", "95%"*/"100%" );
 		$heads		= UI_HTML_Elements::TableHeads( array( "KW", "..." ) );
-		$thead		= UI_HTML_Tag::create( 'thead', ""/*$heads*/ );
-		$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-		$tableSmall	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-small" ) );
+		$thead		= HtmlTag::create( 'thead', ""/*$heads*/ );
+		$tbody		= HtmlTag::create( 'tbody', $rows );
+		$tableSmall	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-small" ) );
 		return $tableSmall;
 	}
 
 	protected function renderControls( $year, $month )
 	{
 		$isNow		= $year	=== date( "Y" ) && $month === date( "m" );
-		$btnControlPrev	= UI_HTML_Tag::create( 'button', '&laquo;',  array(
+		$btnControlPrev	= HtmlTag::create( 'button', '&laquo;',  array(
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large',
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(-1)',
 			'title'		=> '1 Monat vor',
 		) );
-		$btnControlNext	= UI_HTML_Tag::create( 'button', '&raquo;',  array(
+		$btnControlNext	= HtmlTag::create( 'button', '&raquo;',  array(
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large',
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(1)',
 			'title'		=> '1 Monat weiter',
 		) );
-		$btnControlNow	= UI_HTML_Tag::create( 'button', '&Omicron;',  array(
+		$btnControlNow	= HtmlTag::create( 'button', '&Omicron;',  array(
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large '.( $isNow ? 'disabled' : NULL ),
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(0)',
@@ -203,30 +204,30 @@ WorkMissionsList.loadCurrentListAndDayControls();
 
 		$label			= $this->renderLabel( $year, $month );
 
-		$btnExport		= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'a', 'Export <span class="caret"></span>', array( 'href' => '#', 'class' => 'btn dropdown-toggle', 'data-toggle' => 'dropdown' ) ),
-			UI_HTML_Tag::create( 'ul', array(
-				UI_HTML_Tag::create( 'li', array(
-					UI_HTML_Tag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im iCal-Format', array(
+		$btnExport		= HtmlTag::create( 'div', array(
+			HtmlTag::create( 'a', 'Export <span class="caret"></span>', array( 'href' => '#', 'class' => 'btn dropdown-toggle', 'data-toggle' => 'dropdown' ) ),
+			HtmlTag::create( 'ul', array(
+				HtmlTag::create( 'li', array(
+					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im iCal-Format', array(
 						'href'		=> './work/mission/export/ical',
 						'target'	=> '_blank',
 					) ),
 				), array( 'style' => 'text-align: left' ) ),
-				UI_HTML_Tag::create( 'li', array(
-					UI_HTML_Tag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im CSV-Format', array(
+				HtmlTag::create( 'li', array(
+					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im CSV-Format', array(
 						'href'		=> './work/mission/export/csv',
 						'target'	=> '_blank',
 					) ),
 				), array( 'style' => 'text-align: left' ) ),
-				UI_HTML_Tag::create( 'li', array(
-					UI_HTML_Tag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im XML-Format', array(
+				HtmlTag::create( 'li', array(
+					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im XML-Format', array(
 						'href'		=> './work/mission/export/xml',
 						'target'	=> '_blank',
 					) ),
 				), array( 'style' => 'text-align: left' ) ),
-				UI_HTML_Tag::create( 'li', '', array( 'class' => 'divider' ) ),
-				UI_HTML_Tag::create( 'li', array(
-					UI_HTML_Tag::create( 'a', '<i class="fa fa-question-sign"></i>&nbsp;Anleitung', array(
+				HtmlTag::create( 'li', '', array( 'class' => 'divider' ) ),
+				HtmlTag::create( 'li', array(
+					HtmlTag::create( 'a', '<i class="fa fa-question-sign"></i>&nbsp;Anleitung', array(
 						'href'		=> './work/mission/export/help',
 						'target'	=> '_blank',
 					) )
@@ -272,7 +273,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 			$overdue	= '';
 			if( 0 && $isPast )
 				$overdue	= $this->renderOverdue( $mission );
-			$list[]	= UI_HTML_Tag::create( 'li', $overdue.$title, array(
+			$list[]	= HtmlTag::create( 'li', $overdue.$title, array(
 				"class"			=> 'priority-'.$mission->priority,
 				"data-id"		=> $mission->missionId,
 				"data-type"		=> $mission->type,
@@ -288,7 +289,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$class	= $cellClass ? $cellClass.' '.$class : $class;
 		$list	= '<ul>'.join( $list ).'</ul>';
 		$label	= '<div class="date-label '.$class.'">'.$date->format( "j.n." ).'</div>';
-		return UI_HTML_Tag::create( 'td', $label.$list, array(
+		return HtmlTag::create( 'td', $label.$list, array(
 			"oncontextmenu"	=> "return false",
 			"class"			=> $class,
 			"data-day"		=> $date->format( "j" ),
@@ -320,6 +321,6 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
-			return UI_HTML_Tag::create( 'div', $diff->days, array( 'class' => "overdue" ) );		//  render overdue container
+			return HtmlTag::create( 'div', $diff->days, array( 'class' => "overdue" ) );		//  render overdue container
 	}
 }

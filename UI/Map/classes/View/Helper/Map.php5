@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Map
@@ -28,7 +29,7 @@ class View_Helper_Map
 	public function renderHtml( $latitude, $longitude, $title = NULL, $class = NULL, $zoom = NULL ): string
 	{
 		$id		= self::getMapId( $latitude, $longitude, $title, $zoom );
-		$map	= UI_HTML_Tag::create( 'div', '', array(
+		$map	= HtmlTag::create( 'div', '', array(
 			'id'				=> $id,
 			'class'				=> $class,
 			'data-latitude'		=> (float) $latitude,

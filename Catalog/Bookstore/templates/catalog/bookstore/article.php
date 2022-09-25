@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 /**
  *	Template for Univerlag Frontend.
  *	@package		Univerlag.templates.article
@@ -12,7 +14,7 @@ $w			= (object) $words['article'];
 $w->isn		= $a->series ? $w->issn : $w->isbn;
 $helper		= new View_Helper_Catalog_Bookstore( $env );
 
-$iconBack		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconBack		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 
 $a->volume		= $category->volume ? $w->volume."&nbsp;".$category->volume : "";
 $position		= $helper->renderPositionFromArticle( $article );
@@ -23,7 +25,7 @@ $panelRelations	= $this->loadTemplateFile( 'catalog/bookstore/article/relations.
 
 $linkBack		= '';
 if( isset( $from ) && strlen( $from ) )
-	$linkBack		= UI_HTML_Tag::create( 'a', $iconBack.' zurück', array(
+	$linkBack		= HtmlTag::create( 'a', $iconBack.' zurück', array(
 		'href'	=> './'.$from,
 		'class'	=> 'btn btn-small',
 	) );

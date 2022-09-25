@@ -1,5 +1,5 @@
 <?php
-
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*  --  MODULE TABLE  --  */
 $list	= [];
@@ -9,7 +9,7 @@ foreach( $modules as $moduleId => $module ){
 		'title'		=> $module->description,
 		'href'		=> './admin/module/view/'.$moduleId
 	);
-	$link		= UI_HTML_Tag::create( 'a', $module->title, $attributes );
+	$link		= HtmlTag::create( 'a', $module->title, $attributes );
 	$type		= '<span class="module-type type-'.$module->type.'">'.$words['types'][(int) $module->type].'</span>';
 	$class		= 'module available type-'.$module->type;
 	$version	= $module->version;
@@ -35,7 +35,7 @@ foreach( $modulesAvailable as $moduleId => $module ){
 		'title'		=> $module->description,
 		'href'		=> './admin/module/view/'.$moduleId
 	);
-	$link	= UI_HTML_Tag::create( 'a', $module->title, $attributes );
+	$link	= HtmlTag::create( 'a', $module->title, $attributes );
 	$list[]	= '<li class="module available">'.$link.'</li>';
 }
 $listAvailable	= '<ul class="modules available">'.join( $list ).'</ul>';
@@ -49,7 +49,7 @@ foreach( $modulesInstalled as $moduleId => $module ){
 		'title'		=> $module->description,
 		'href'		=> './admin/module/view/'.$moduleId
 	);
-	$link	= UI_HTML_Tag::create( 'a', $module->title, $attributes );
+	$link	= HtmlTag::create( 'a', $module->title, $attributes );
 	$list[]	= '<li class="module installed">'.$link.'</li>';
 }
 $listInstalled	= '<ul class="modules installed">'.join( $list ).'</ul>';
@@ -63,7 +63,7 @@ foreach( $modulesNotInstalled as $moduleId => $module ){
 		'title'		=> $module->description,
 		'href'		=> './admin/module/view/'.$moduleId
 	);
-	$link	= UI_HTML_Tag::create( 'a', $module->title, $attributes );
+	$link	= HtmlTag::create( 'a', $module->title, $attributes );
 	$list[]	= '<li class="module">'.$link.'</li>';
 }
 $listNotInstalled	= '<ul class="modules">'.join( $list ).'</ul>';

@@ -1,11 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
-$iconExport		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) ).'&nbsp;';
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
+$iconExport		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) ).'&nbsp;';
 
 //  --  PANEL: READERS  --  //
 $w			= (object) $words['edit_readers'];
@@ -16,14 +18,14 @@ $statusIcons	= array(
 	1		=> 'check',
 );
 
-$labelEmpty		= UI_HTML_Tag::create( 'em', $w->empty, array( 'class' => 'muted' ) );
-$listReaders	= UI_HTML_Tag::create( 'div', $labelEmpty, array( 'class' => 'alert alert-info' ) );
+$labelEmpty		= HtmlTag::create( 'em', $w->empty, array( 'class' => 'muted' ) );
+$listReaders	= HtmlTag::create( 'div', $labelEmpty, array( 'class' => 'alert alert-info' ) );
 
 if( $groupReaders ){
 	$listReaders	= [];
 	foreach( $groupReaders as $reader ){
-		$iconStatus		= UI_HTML_Tag::create( 'i', "", array( 'class' => 'fa fa-fw fa-'.$statusIcons[$reader->status] ) );
-		$name			= UI_HTML_Tag::create( 'small', $reader->firstname.' '.$reader->surname );
+		$iconStatus		= HtmlTag::create( 'i', "", array( 'class' => 'fa fa-fw fa-'.$statusIcons[$reader->status] ) );
+		$name			= HtmlTag::create( 'small', $reader->firstname.' '.$reader->surname );
 
 		$label			= $iconStatus.'&nbsp;&lt;'.$reader->email.'&gt;';
 		$urlReader		= './work/newsletter/reader/edit/'.$reader->newsletterReaderId;
@@ -32,19 +34,19 @@ if( $groupReaders ){
 			'href'		=> $urlRemove,
 			'class'		=> 'btn btn-mini btn-inverse',
 		);
-		$linkRemove		= UI_HTML_Tag::create( 'a', $iconRemove.$w->buttonRemove, $attributes );
-		$linkRemove		= UI_HTML_Tag::create( 'div', $linkRemove, array( 'class' => 'pull-right' ) );
-		$linkReader		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $urlReader ) );
-		$listReaders[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $linkReader.' '.$name, array( 'class' => '' ) ),
-			UI_HTML_Tag::create( 'td', $linkRemove, array( 'class' => '' ) ),
+		$linkRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, $attributes );
+		$linkRemove		= HtmlTag::create( 'div', $linkRemove, array( 'class' => 'pull-right' ) );
+		$linkReader		= HtmlTag::create( 'a', $label, array( 'href' => $urlReader ) );
+		$listReaders[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $linkReader.' '.$name, array( 'class' => '' ) ),
+			HtmlTag::create( 'td', $linkRemove, array( 'class' => '' ) ),
 		) );
 	}
 	$colgroup		= UI_HTML_Elements::ColumnGroup( '', '120px' );
 	$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Zugeordnete Leser' ) );
-	$thead			= UI_HTML_Tag::create( 'thead', $tableHeads );
-	$tbody			= UI_HTML_Tag::create( 'tbody', $listReaders );
-	$listReaders	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array(
+	$thead			= HtmlTag::create( 'thead', $tableHeads );
+	$tbody			= HtmlTag::create( 'tbody', $listReaders );
+	$listReaders	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
 		'class'	=> 'table table-condensed table-striped table-fixed'
 	) );
 }
@@ -62,40 +64,40 @@ $w			= (object) $words['edit'];
 $optStatus	= UI_HTML_Elements::Options( $words['states'], $group->status );
 $optType	= UI_HTML_Elements::Options( $words['types'], $group->type );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.$w->buttonCancel, array(
 	'href'		=> './work/newsletter/group',
 	'class'		=> 'btn btn-small',
 ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.$w->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.$w->buttonSave, array(
 	'type'		=> 'submit',
 	'class'		=> 'btn btn-primary',
 	'name'		=> 'save',
 ) );
-$buttonExport	= UI_HTML_Tag::create( 'a', $iconExport.$w->buttonExport, array(
+$buttonExport	= HtmlTag::create( 'a', $iconExport.$w->buttonExport, array(
 	'href'		=> './work/newsletter/group/export/'.$groupId,
 	'class'		=> 'btn btn-small not-btn-info',
 ) );
 
 if( $limiter && $limiter->denies( 'Work.Newsletter.Group:allowExport' ) )
-	$buttonExport	= UI_HTML_Tag::create( 'button', $iconExport.$w->buttonExport, array(
+	$buttonExport	= HtmlTag::create( 'button', $iconExport.$w->buttonExport, array(
 		'type'		=> 'button',
 		'class'		=> 'btn btn-small not-btn-info disabled',
 		'onclick'	=> 'alert("Exportieren von Kategorien ist in dieser Demo-Installation nicht möglich.")',
 	) );
 
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.$w->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, array(
 	'href'		=> './work/newsletter/group/remove/'.$groupId,
 	'class'		=> 'btn btn-danger btn-small',
 	'onclick'	=> "if(!confirm('Wirklich?')) return false;",
 ) );
 if( !$groupReaders )
-	$buttonRemove		= UI_HTML_Tag::create( 'a', $iconRemove.$w->buttonRemove, array(
+	$buttonRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, array(
 		'href'		=> './work/newsletter/group/remove/'.$groupId,
 		'class'		=> 'btn btn-danger btn-small',
 		'onclick'	=> "return false;",
 		'disabled'	=> 'disabled',
 	) );
-$buttonReader	= UI_HTML_Tag::create( 'a', $iconAdd.$w->buttonReader, array(
+$buttonReader	= HtmlTag::create( 'a', $iconAdd.$w->buttonReader, array(
 	'href'		=> './work/newsletter/reader/add/?groups[]='.$groupId,
 	'class'		=> 'btn btn-success btn-small',
 ) );

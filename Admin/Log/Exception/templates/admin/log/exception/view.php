@@ -1,9 +1,10 @@
 <?php
 
 use CeusMedia\Common\CLI\ArgumentParser;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 // already done in controller
 //$exceptionEnv		= unserialize( $exception->env );
@@ -22,11 +23,11 @@ $sections	= [
 	'user'		=> renderUserSection( $env, $exception, $user ),
 ];
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zur Liste', array(
 	'href'		=> './admin/log/exception'.( $page ? '/'.$page : '' ),
 	'class'		=> 'btn btn-small',
 ) );
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 	'href'		=> './admin/log/exception/remove/'.$exception->exceptionId,
 	'class'		=> 'btn btn-small btn-danger',
 ) );
@@ -68,8 +69,8 @@ function renderFactsSection( $env, $exception, $exceptionEnv, $exceptionRequest 
 
 	$list	= [];
 	foreach( $facts as $key => $value )
-		$list[]	= UI_HTML_Tag::create( 'dt', $key ).UI_HTML_Tag::create( 'dd', $value );
-	return UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+		$list[]	= HtmlTag::create( 'dt', $key ).HtmlTag::create( 'dd', $value );
+	return HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 }
 
 function renderFileSection( $env, $exception ): ?string
@@ -83,17 +84,17 @@ function renderFileSection( $env, $exception ): ?string
 	$fileLines	= array_slice( $fileLines, $firstLine, 11 );
 	$lines		= [];
 	foreach( $fileLines as $nr => $line ){
-		$lines[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'th', $firstLine + $nr + 1 ),
-			UI_HTML_Tag::create( 'td', '<tt>'.str_replace( "\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $line ).'</tt>' ),
+		$lines[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'th', $firstLine + $nr + 1 ),
+			HtmlTag::create( 'td', '<tt>'.str_replace( "\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $line ).'</tt>' ),
 		), ['class' => $nr === 5 ? 'warning' : ''] );
 	}
-	$tbody		= UI_HTML_Tag::create( 'tbody', $lines );
-	$lines		= UI_HTML_Tag::create( 'table', $tbody, array(
+	$tbody		= HtmlTag::create( 'tbody', $lines );
+	$lines		= HtmlTag::create( 'table', $tbody, array(
 		'class' => 'table table-striped table-condensed',
 		'style'	=> 'border: 1px solid rgba(127, 127, 127, 0.5)',
 	) );
-	return UI_HTML_Tag::create( 'h4', 'File' ).$lines;
+	return HtmlTag::create( 'h4', 'File' ).$lines;
 }
 
 function renderMapTable( $map, $sort = TRUE ){
@@ -101,26 +102,26 @@ function renderMapTable( $map, $sort = TRUE ){
 	if( $sort )
 		ksort( $map );
 	foreach( $map as $key => $value ){
-		$key	= UI_HTML_Tag::create( 'div', $key, array( 'style' => 'font-family: monospace; font-size: 0.85em; letter-spacing: -0.5px' ) );
+		$key	= HtmlTag::create( 'div', $key, array( 'style' => 'font-family: monospace; font-size: 0.85em; letter-spacing: -0.5px' ) );
 		$type	= ucfirst( gettype( $value ) );
-		$type	= UI_HTML_Tag::create( 'small', $type, array( 'class' => 'muted' ) );
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', count( $rows ) + 1, array( 'style' => 'text-align: right' ) ),
-			UI_HTML_Tag::create( 'td', $key ),
-			UI_HTML_Tag::create( 'td', $type, array( 'style' => 'text-align: right' ) ),
-//			UI_HTML_Tag::create( 'td', json_encode( $value ) ),
-			UI_HTML_Tag::create( 'td', htmlentities( stripslashes( trim( json_encode( $value ), '"' ) ), ENT_QUOTES, 'utf-8' ) ),
+		$type	= HtmlTag::create( 'small', $type, array( 'class' => 'muted' ) );
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', count( $rows ) + 1, array( 'style' => 'text-align: right' ) ),
+			HtmlTag::create( 'td', $key ),
+			HtmlTag::create( 'td', $type, array( 'style' => 'text-align: right' ) ),
+//			HtmlTag::create( 'td', json_encode( $value ) ),
+			HtmlTag::create( 'td', htmlentities( stripslashes( trim( json_encode( $value ), '"' ) ), ENT_QUOTES, 'utf-8' ) ),
 		) );
 	}
 	$colgroup		= UI_HTML_Elements::ColumnGroup( '40px', '35%', '7%', '' );
-	$thead			= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'th', '#', array( 'style' => 'text-align: right' ) ),
-		UI_HTML_Tag::create( 'th', 'Key' ),
-		UI_HTML_Tag::create( 'th', 'Type', array( 'style' => 'text-align: right' ) ),
-		UI_HTML_Tag::create( 'th', 'Value' )
+	$thead			= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'th', '#', array( 'style' => 'text-align: right' ) ),
+		HtmlTag::create( 'th', 'Key' ),
+		HtmlTag::create( 'th', 'Type', array( 'style' => 'text-align: right' ) ),
+		HtmlTag::create( 'th', 'Value' )
 	) ) );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-	$table	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array(
+	$tbody	= HtmlTag::create( 'tbody', $rows );
+	$table	= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array(
 		'class'	=> 'table table-striped table-condensed',
 		'style'	=> 'border: 1px solid rgba(127, 127, 127, 0.5)',
 	) );
@@ -138,10 +139,10 @@ function renderRequestSection( $env, $exception, $exceptionRequest ): ?string
 	if( get_class( $exceptionRequest ) !== 'CLI_ArgumentParser' ){
 		$methodLine				= 'Method: '.$exceptionRequest->getMethod()->get().PHP_EOL;
 		$lines					= $exceptionRequest->getHeaders()->render();
-		$requestHeaders			= UI_HTML_Tag::create( 'xmp', $methodLine.$lines, array( 'style' => $xmpStyle ) );
-		$sectionRequestHeaders	= UI_HTML_Tag::create( 'h4', 'Request Headers' ).$requestHeaders;
+		$requestHeaders			= HtmlTag::create( 'xmp', $methodLine.$lines, array( 'style' => $xmpStyle ) );
+		$sectionRequestHeaders	= HtmlTag::create( 'h4', 'Request Headers' ).$requestHeaders;
 	}
-	$sectionRequestData			= UI_HTML_Tag::create( 'h4', 'Request Data' ).renderMapTable( $exceptionRequest->getAll() );
+	$sectionRequestData			= HtmlTag::create( 'h4', 'Request Data' ).renderMapTable( $exceptionRequest->getAll() );
 	return $sectionRequestHeaders.'<hr/>'.$sectionRequestData;
 }
 
@@ -151,7 +152,7 @@ function renderSessionSection( $env, $exception, $exceptionSession ): ?string
 		return NULL;
 
 	$sessionData	= renderMapTable( $exceptionSession->getAll() );
-	return UI_HTML_Tag::create( 'h4', 'Session Data' ).$sessionData;
+	return HtmlTag::create( 'h4', 'Session Data' ).$sessionData;
 }
 
 function renderTraceSection( $env, $exception ): string
@@ -172,7 +173,7 @@ function renderTraceSection( $env, $exception ): string
 		$trace	= preg_replace( "/ ".preg_quote( $env->uri, '/' )."/s", ' ./', $trace );
 		$trace	= '<xmp style="'.$xmpStyle.'">'.$trace.'</xmp>';
 	}
-	return UI_HTML_Tag::create( 'h4', 'Stack Trace' ).$trace;
+	return HtmlTag::create( 'h4', 'Stack Trace' ).$trace;
 }
 
 function renderUserSection( $env, $exception, $user ): ?string
@@ -186,5 +187,5 @@ function renderUserSection( $env, $exception, $user ): ?string
 //		'status'		=> ...,
 //		'role'			=> ...,
 	] );
-	return UI_HTML_Tag::create( 'h4', 'User' ).$data;
+	return HtmlTag::create( 'h4', 'User' ).$data;
 }

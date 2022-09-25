@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Work_Mission_List_Pagination extends CMF_Hydrogen_View_Helper_Abstract{
 
 	public function render( $total, $limit = NULL, $page = 0, $reverse = FALSE ){
@@ -20,13 +22,13 @@ class View_Helper_Work_Mission_List_Pagination extends CMF_Hydrogen_View_Helper_
 			$attrBtnNext['onclick']	= 'WorkMissionsList.setPage('.$nextPage.')';
 			$attrBtnNext['class']	= 'btn';
 		}
-		$buttonPrev	= UI_HTML_Tag::create( 'button', '<', $attrBtnPrev );
-		$buttonNext	= UI_HTML_Tag::create( 'button', '>', $attrBtnNext );
-		$buttonPos	= UI_HTML_Tag::create( 'button', 'Seite '.( $page + 1 ).' / '. $pages, array(
+		$buttonPrev	= HtmlTag::create( 'button', '<', $attrBtnPrev );
+		$buttonNext	= HtmlTag::create( 'button', '>', $attrBtnNext );
+		$buttonPos	= HtmlTag::create( 'button', 'Seite '.( $page + 1 ).' / '. $pages, array(
 			'type'	=> 'button',
 			'class'	=> 'btn disabled'
 		) );
-		$buttons	= UI_HTML_Tag::create( 'div', $buttonPrev.$buttonNext.$buttonPos, array( 'class' => 'btn-group' ) );
+		$buttons	= HtmlTag::create( 'div', $buttonPrev.$buttonNext.$buttonPos, array( 'class' => 'btn-group' ) );
 		return $buttons;
 	}
 }

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 if( !$env->getRequest()->has( 'testing123' ) )
 	return '';
 
@@ -13,22 +15,22 @@ $helper				= new View_Helper_Catalog( $env );
 $list	= [];
 $tagList	= [];
 foreach( $tags as $tag ){
-	$tagList[]	= UI_HTML_Tag::create( 'a', $tag->tag, array(
+	$tagList[]	= HtmlTag::create( 'a', $tag->tag, array(
 		'href'	=> $helper->getTagUri( $tag ),
 		'class' => 'link-tag',
 	) );
 }
-$tagList	= UI_HTML_Tag::create( 'span', join( ", ", $tagList ), array( 'class' => 'tag-list' ) );
+$tagList	= HtmlTag::create( 'span', join( ", ", $tagList ), array( 'class' => 'tag-list' ) );
 
 foreach( $relatedArticles as $relation ){
 	$title		= $relation->article->title;//Alg_Text_Trimmer::trim( $relation->article->title, 60 );
 	$subtitle	= $relation->article->subtitle;//Alg_Text_Trimmer::trim( $relation->article->subtitle, 60 );
 	$url		= $helper->getArticleUri( $relation->article->articleId, !TRUE );
-	$image		= UI_HTML_Tag::create( 'a', $helper->renderArticleImage( $relation->article, "" ), array( 'href' => $url ) );
-	$image		= UI_HTML_Tag::create( 'div', $image, array( 'class' => 'related-articles-image-container' ) );
-	$title		= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'a', $title, array( 'href' => $url ) ) );
-	$sub		= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'small', $subtitle.'&nbsp;('.$relation->matches.')', array( 'class' => '' ) ) );
-	$list[]		= UI_HTML_Tag::create( 'div', array( $image, $title, $sub ), array(
+	$image		= HtmlTag::create( 'a', $helper->renderArticleImage( $relation->article, "" ), array( 'href' => $url ) );
+	$image		= HtmlTag::create( 'div', $image, array( 'class' => 'related-articles-image-container' ) );
+	$title		= HtmlTag::create( 'div', HtmlTag::create( 'a', $title, array( 'href' => $url ) ) );
+	$sub		= HtmlTag::create( 'div', HtmlTag::create( 'small', $subtitle.'&nbsp;('.$relation->matches.')', array( 'class' => '' ) ) );
+	$list[]		= HtmlTag::create( 'div', array( $image, $title, $sub ), array(
 		'class'		=> 'related-articles-list-item',
 	) );
 }

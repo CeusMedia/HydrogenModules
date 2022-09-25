@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_DevProfiler
@@ -39,7 +40,7 @@ class View_Helper_DevProfiler
 			$current	= $task->totalMicro;
 		}
 		$total		= '<tr class="total"><td>Total</td><td colspan="2" class="task-measure">'.self::formatTime( $timeTotal ).'s</td><td></td></tr>';
-		$list[]		= UI_HTML_Tag::create( 'tfoot', $total );
+		$list[]		= HtmlTag::create( 'tfoot', $total );
 		$colgroup	= UI_HTML_Elements::ColumnGroup( "400", "50", "75", "" );
 		$heads		= array(
 			'<th>'.$words['layer']['headTask'].'</th>',
@@ -47,10 +48,10 @@ class View_Helper_DevProfiler
 			'<th class="task-measure">'.$words['layer']['headTime'].'</th>',
 			'<th>'.$words['layer']['headProportion'].'</th>'
 		);
-		$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', join( $heads ) ) );
-		$tbody		= UI_HTML_Tag::create( 'tbody', join( $list ) );
+		$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', join( $heads ) ) );
+		$tbody		= HtmlTag::create( 'tbody', join( $list ) );
 		$content	= $colgroup.$thead.$tbody;
-		return UI_HTML_Tag::create( 'table', $content, array( 'class' => 'profiler' ) );
+		return HtmlTag::create( 'table', $content, array( 'class' => 'profiler' ) );
 	}
 
 	protected static function formatTime( $microseconds ): string

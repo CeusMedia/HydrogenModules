@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $tools	= [];
 foreach( $list as $item ){
 	$description	= isset( $labels[$item]['description'] ) ? "<br/>".$labels[$item]['description'] : "";
@@ -10,12 +12,12 @@ foreach( $list as $item ){
 		$tags	= implode( ", ", $tagList );
 		$tags	= '<br/><span class="tags">Tags: '.$tags.'</span>';
 	}
-	$link	= UI_HTML_Tag::create( "a", $item, array( 'href' => "./tools/".$item."/" ) );
-	$tools[$item]	= UI_HTML_Tag::create( "li", $link.$description.$tags );
+	$link	= HtmlTag::create( "a", $item, array( 'href' => "./tools/".$item."/" ) );
+	$tools[$item]	= HtmlTag::create( "li", $link.$description.$tags );
 }
 
 
-$list	= UI_HTML_Tag::create( "ul", $tools );
+$list	= HtmlTag::create( "ul", $tools );
 
 return '
 	<script src="javascripts/tool.index.js"></script>

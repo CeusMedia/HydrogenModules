@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $panelLogin	= $view->loadTemplateFile( 'auth/local/login.form.php' );
 
@@ -24,7 +25,7 @@ if( $tabs ){
 }
 
 $env->getPage()->addBodyClass( 'auth-centered' );
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'div', $panelLogin, array( 'class' => 'centered-pane' ) )
+return HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', $panelLogin, array( 'class' => 'centered-pane' ) )
 ), array( 'class' => 'centered-pane-container' ) );
 ?>

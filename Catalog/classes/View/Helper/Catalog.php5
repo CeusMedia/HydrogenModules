@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Catalog{
@@ -34,7 +35,7 @@ class View_Helper_Catalog{
 				$author		= $logic->getAuthor( (int) $matches[1] );
 				$matches[2]	= $author->firstname ? $author->firstname." ".$author->lastname : $author->lastname;
 			}
-			$link		= UI_HTML_Tag::create( 'a', $matches[2], array( 'href' => $url ) );
+			$link		= HtmlTag::create( 'a', $matches[2], array( 'href' => $url ) );
 			$content	= preg_replace( $patternAuthor, $link, $content, 1 );
 		}
 		$patternArticle	= "/\[article:([0-9]+)\|?([^\]]+)?\]/";
@@ -44,7 +45,7 @@ class View_Helper_Catalog{
 			$url		= $logic->getArticleUri( (int) $matches[1] );
 			if( !isset( $matches[2] ) )
 				$matches[2]	= $logic->getArticle( (int) $matches[1] )->title;
-			$link		= UI_HTML_Tag::create( 'a', $matches[2], array( 'href' => $url ) );
+			$link		= HtmlTag::create( 'a', $matches[2], array( 'href' => $url ) );
 			$content	= preg_replace( $patternArticle, $link, $content, 1 );
 		}
 		$patternCategory	= "/\[category:([0-9]+)\|?([^\]]+)?\]/";
@@ -54,7 +55,7 @@ class View_Helper_Catalog{
 			$url		= $logic->getCategoryUri( (int) $matches[1] );
 			if( !isset( $matches[2] ) )
 				$matches[2]	= $logic->getCategory( (int) $matches[1] )->label_de;
-			$link		= UI_HTML_Tag::create( 'a', $matches[2], array( 'href' => $url ) );
+			$link		= HtmlTag::create( 'a', $matches[2], array( 'href' => $url ) );
 			$content	= preg_replace( $patternCategory, $link, $content, 1 );
 		}
 	//	$item->content	= $content;
@@ -155,7 +156,7 @@ class View_Helper_Catalog{
 	public function renderArticleLink( $article ){
 		$title		= View_Helper_Text::applyFormat( $article->title );
 		$url		= $this->logic->getArticleUri( (int) $article->articleId, $article );
-		return UI_HTML_Tag::create( 'a', $title, array( 'href' => $url ) );
+		return HtmlTag::create( 'a', $title, array( 'href' => $url ) );
 	}
 
 	public function renderArticleListItem( $article ){
@@ -185,15 +186,15 @@ class View_Helper_Catalog{
 			$name		.= ' '.$words['editors'][$language];
 		}
 		$url	= $this->logic->getAuthorUri( $author );
-		return UI_HTML_Tag::create( 'a', $name, array( 'href' => $url ) );
+		return HtmlTag::create( 'a', $name, array( 'href' => $url ) );
 	}
 
 	public function renderCategory( $category, $heading = NULL ){
 		if( is_string( $heading ) )
-			$heading	= UI_HTML_Tag::create( 'h3', $heading );
+			$heading	= HtmlTag::create( 'h3', $heading );
 		else if( $heading ){
 			$labelKey	= 'label_'.$this->language->getLanguage();
-			$heading	= UI_HTML_Tag::create( 'h3', $category->$labelKey );
+			$heading	= HtmlTag::create( 'h3', $category->$labelKey );
 		}
 #		if($data['label_former'])
 #			$content = '<small>'.$words['aka'].'</small>&nbsp;'.$data['label_former'].'<br/><br/>'.$content;
@@ -204,8 +205,8 @@ class View_Helper_Catalog{
 			$descriptions[]	= 'ISSN: '.$category->issn;
 		$descriptions	= join( '<br/>', $descriptions );
 		if( $descriptions )
-			$descriptions	= UI_HTML_Tag::create( 'div', $descriptions, array( 'class' => 'well' ) );
-		$articles	= UI_HTML_Tag::create( 'div', $this->renderCategoryArticleList( $category ), array( 'class' => 'catalog-article-list' ) );
+			$descriptions	= HtmlTag::create( 'div', $descriptions, array( 'class' => 'well' ) );
+		$articles	= HtmlTag::create( 'div', $this->renderCategoryArticleList( $category ), array( 'class' => 'catalog-article-list' ) );
 		return $heading.$descriptions.$articles;
 	}
 
@@ -226,7 +227,7 @@ class View_Helper_Catalog{
 		$labelKey	= 'label_'.$language;
 		$title		= View_Helper_Text::applyFormat( $category->$labelKey );
 		$url		= $this->logic->getCategoryUri( $category, $language );
-		return UI_HTML_Tag::create( 'a', $title, array( 'href' => $url ) );
+		return HtmlTag::create( 'a', $title, array( 'href' => $url ) );
 	}
 
 	public function renderCategoryList( $data, $language = "de" ){
@@ -254,7 +255,7 @@ class View_Helper_Catalog{
 		$path		= $config->get( 'path.contents' ).'articles/documents/';
 		$url		= $path.$id.'_'.$document->url;
 		$attributes	= array( 'href' => $url, 'class' => 'document', 'target' => '_blank' );
-		$link		= UI_HTML_Tag::create( 'a', $document->title, $attributes );
+		$link		= HtmlTag::create( 'a', $document->title, $attributes );
 		return $link;
 	}
 

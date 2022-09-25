@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 {
 	protected $baseUrl;
@@ -16,10 +18,10 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 				$class	= $this->changedFactClassPos;
 			else if( $class === FALSE )
 				$class	= $this->changedFactClassNeg;
-			$value	= UI_HTML_Tag::create( 'span', $value, array( 'class' => $class ) );
+			$value	= HtmlTag::create( 'span', $value, array( 'class' => $class ) );
 		}
-		$term		= UI_HTML_Tag::create( 'dt', $this->labels->$labelKey );
-		$definition	= UI_HTML_Tag::create( 'dd', $value );
+		$term		= HtmlTag::create( 'dt', $this->labels->$labelKey );
+		$definition	= HtmlTag::create( 'dd', $value );
 		$this->facts[$key]   =   $term.$definition;
 	}
 
@@ -43,9 +45,9 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 			$userLabel	= $helper->render();
 		}
 		else{
-			$iconUser	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
+			$iconUser	= HtmlTag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
 			$fullname	= '('.$user->firstname.' '.$user->surname.')';
-			$fullname	= UI_HTML_Tag::create( 'small', $fullname, array( 'class' => 'muted' ) );
+			$fullname	= HtmlTag::create( 'small', $fullname, array( 'class' => 'muted' ) );
 			$userLabel	= $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname;
 		}
 		return $userLabel;
@@ -69,7 +71,7 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 
 	protected function renderLinkedTitle( $mission )
 	{
-		return UI_HTML_Tag::create( 'a', $mission->title, array(
+		return HtmlTag::create( 'a', $mission->title, array(
 			'href'	=> './work/mission/view/'.$mission->missionId
 		) );
 	}

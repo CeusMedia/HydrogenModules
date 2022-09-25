@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 $indicator	= new UI_HTML_Indicator( array(
@@ -22,30 +23,30 @@ function renderTimers( Environment $env, $timers ){
 
 		$linkRelation	= '';
 		if( $timer->moduleId ){
-			$linkRelation	= UI_HTML_Tag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), array(
+			$linkRelation	= HtmlTag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), array(
 				'href'		=> $timer->relationLink,
 				'class'		=> 'title autocut',
 			) );
 			$linkRelation	= '<small><span class="muted">'.$timer->type.':</span> '.$linkRelation.'</small>';
-			$linkRelation	= UI_HTML_Tag::create( 'div', $linkRelation, array( 'class' => 'autocut' ) );
+			$linkRelation	= HtmlTag::create( 'div', $linkRelation, array( 'class' => 'autocut' ) );
 		}
-		$time	= UI_HTML_Tag::create( 'small', '('.renderTime( $timer->secondsNeeded ).')', array( 'class' => 'muted' ) );
+		$time	= HtmlTag::create( 'small', '('.renderTime( $timer->secondsNeeded ).')', array( 'class' => 'muted' ) );
 		$title	= strlen( trim( $timer->title ) ) ? htmlentities( $timer->title, ENT_QUOTES, 'UTF-8' ) : '<em class="muted">unbenannt</em>';
 		$title	= $title.'&nbsp;'.$time;
-		$title	= UI_HTML_Tag::create( 'a', $title, array( 'href' => './work/time/edit/'.$timer->workTimerId.'?from=work/time/analysis' ) );
-		$title	= UI_HTML_Tag::create( 'div', $title, array( 'class' => 'autocut' ) );
+		$title	= HtmlTag::create( 'a', $title, array( 'href' => './work/time/edit/'.$timer->workTimerId.'?from=work/time/analysis' ) );
+		$title	= HtmlTag::create( 'div', $title, array( 'class' => 'autocut' ) );
 
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $title.$linkRelation ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $title.$linkRelation ),
 		) );
 	}
-	return UI_HTML_Tag::create( 'table', $list, array( 'class' => 'table table-striped table-condensed' ) );
+	return HtmlTag::create( 'table', $list, array( 'class' => 'table table-striped table-condensed' ) );
 }
 
 if( !$data )
 	return;
 
-//$table	= UI_HTML_Tag::create( 'div', '...', array( 'class' => 'alert alert-info' ) );
+//$table	= HtmlTag::create( 'div', '...', array( 'class' => 'alert alert-info' ) );
 
 if( $filterMode === "users" ){
 	$rows	= [];
@@ -55,25 +56,25 @@ if( $filterMode === "users" ){
 		if( !$entry->secondsPlanned )
 			continue;
 		$timers	= renderTimers( $env, $entry->timers );
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $allProjects[$projectId]->title.$timers ),
-			UI_HTML_Tag::create( 'td', renderTime( $entry->secondsPlanned ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsPlanned, $data['@total']->secondsPlanned, 100 ), array( 'style' => 'text-align: right' ) ),
-			UI_HTML_Tag::create( 'td', renderTime( $entry->secondsNeeded ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsNeeded, $data['@total']->secondsNeeded, 100 ), array( 'style' => 'text-align: right' ) ),
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $allProjects[$projectId]->title.$timers ),
+			HtmlTag::create( 'td', renderTime( $entry->secondsPlanned ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsPlanned, $data['@total']->secondsPlanned, 100 ), array( 'style' => 'text-align: right' ) ),
+			HtmlTag::create( 'td', renderTime( $entry->secondsNeeded ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsNeeded, $data['@total']->secondsNeeded, 100 ), array( 'style' => 'text-align: right' ) ),
 		) );
 	}
-	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'big', 'Gesamt' ) ),
-		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'big', renderTime( $data['@total']->secondsPlanned ) ).'&nbsp;&nbsp;', array( 'style' => 'text-align: right' ) ),
-		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'big', renderTime( $data['@total']->secondsNeeded ) ).'&nbsp;&nbsp;', array( 'style' => 'text-align: right' ) ),
+	$rows[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', HtmlTag::create( 'big', 'Gesamt' ) ),
+		HtmlTag::create( 'td', HtmlTag::create( 'big', renderTime( $data['@total']->secondsPlanned ) ).'&nbsp;&nbsp;', array( 'style' => 'text-align: right' ) ),
+		HtmlTag::create( 'td', HtmlTag::create( 'big', renderTime( $data['@total']->secondsNeeded ) ).'&nbsp;&nbsp;', array( 'style' => 'text-align: right' ) ),
 	) );
-	$thead	= UI_HTML_Tag::create( 'thead', array(
-		UI_HTML_Tag::create( 'th', 'Projekt' ),
-		UI_HTML_Tag::create( 'th', 'geplant', array( 'style' => 'text-align: right' ) ),
-		UI_HTML_Tag::create( 'th', 'erfasst', array( 'style' => 'text-align: right' ) ),
+	$thead	= HtmlTag::create( 'thead', array(
+		HtmlTag::create( 'th', 'Projekt' ),
+		HtmlTag::create( 'th', 'geplant', array( 'style' => 'text-align: right' ) ),
+		HtmlTag::create( 'th', 'erfasst', array( 'style' => 'text-align: right' ) ),
 	) );
 	$colgroup	= UI_HTML_Elements::ColumnGroup( '', '120', '120' );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
+	$tbody		= HtmlTag::create( 'tbody', $rows );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
 }
 else {
 	$rows	= [];
@@ -83,26 +84,26 @@ else {
 		if( !$entry->secondsPlanned )
 			continue;
 		$timers	= renderTimers( $env, $entry->timers );
-		$username	= UI_HTML_Tag::create( 'small', '('.$allUsers[$userId]->firstname.' '.$allUsers[$userId]->surname.')', array( 'class' => 'muted' ) );
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $allUsers[$userId]->username.'&nbsp;'.$username.$timers ),
-			UI_HTML_Tag::create( 'td', renderTime( $entry->secondsPlanned ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsPlanned, $data['@total']->secondsPlanned, 100 ), array( 'style' => 'text-align: right' ) ),
-			UI_HTML_Tag::create( 'td', renderTime( $entry->secondsNeeded ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsNeeded, $data['@total']->secondsNeeded, 100 ), array( 'style' => 'text-align: right' ) ),
+		$username	= HtmlTag::create( 'small', '('.$allUsers[$userId]->firstname.' '.$allUsers[$userId]->surname.')', array( 'class' => 'muted' ) );
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $allUsers[$userId]->username.'&nbsp;'.$username.$timers ),
+			HtmlTag::create( 'td', renderTime( $entry->secondsPlanned ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsPlanned, $data['@total']->secondsPlanned, 100 ), array( 'style' => 'text-align: right' ) ),
+			HtmlTag::create( 'td', renderTime( $entry->secondsNeeded ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsNeeded, $data['@total']->secondsNeeded, 100 ), array( 'style' => 'text-align: right' ) ),
 		) );
 	}
-	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'big', 'Gesamt' ) ),
-		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'big', renderTime( $data['@total']->secondsPlanned ) ).'&nbsp;&nbsp;', array( 'style' => 'text-align: right' ) ),
-		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'big', renderTime( $data['@total']->secondsNeeded ) ).'&nbsp;&nbsp;', array( 'style' => 'text-align: right' ) ),
+	$rows[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', HtmlTag::create( 'big', 'Gesamt' ) ),
+		HtmlTag::create( 'td', HtmlTag::create( 'big', renderTime( $data['@total']->secondsPlanned ) ).'&nbsp;&nbsp;', array( 'style' => 'text-align: right' ) ),
+		HtmlTag::create( 'td', HtmlTag::create( 'big', renderTime( $data['@total']->secondsNeeded ) ).'&nbsp;&nbsp;', array( 'style' => 'text-align: right' ) ),
 	) );
-	$thead	= UI_HTML_Tag::create( 'thead', array(
-		UI_HTML_Tag::create( 'th', 'Bearbeiter' ),
-		UI_HTML_Tag::create( 'th', 'geplant', array( 'style' => 'text-align: right' ) ),
-		UI_HTML_Tag::create( 'th', 'erfasst', array( 'style' => 'text-align: right' ) ),
+	$thead	= HtmlTag::create( 'thead', array(
+		HtmlTag::create( 'th', 'Bearbeiter' ),
+		HtmlTag::create( 'th', 'geplant', array( 'style' => 'text-align: right' ) ),
+		HtmlTag::create( 'th', 'erfasst', array( 'style' => 'text-align: right' ) ),
 	) );
 	$colgroup	= UI_HTML_Elements::ColumnGroup( '', '120', '120' );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-	$table	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
+	$tbody	= HtmlTag::create( 'tbody', $rows );
+	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
 }
 
 //print_m( $data );

@@ -1,35 +1,36 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconPerson		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user-o' ) );
-$iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building-o' ) );
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconPerson		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user-o' ) );
+$iconCompany	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building-o' ) );
 
-$list	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
+$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
 
 if( $corporations ){
 	$list	= [];
 	foreach( $corporations as $corporation ){
-		$link	= UI_HTML_Tag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
+		$link	= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
 			'href' => './work/billing/corporation/edit/'.$corporation->corporationId
 		) );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link, array( 'class' => 'autocut' ) ),
-			UI_HTML_Tag::create( 'td', number_format( $corporation->balance, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $link, array( 'class' => 'autocut' ) ),
+			HtmlTag::create( 'td', number_format( $corporation->balance, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
 		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
 		'',
 		'100',
 	) );
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'th', 'Bezeichnung' ),
-		UI_HTML_Tag::create( 'th', 'Balance', array( 'class' => 'cell-number' ) )
+	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'th', 'Bezeichnung' ),
+		HtmlTag::create( 'th', 'Balance', array( 'class' => 'cell-number' ) )
 	) ) );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+	$tbody	= HtmlTag::create( 'tbody', $list );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neues Unternehmen', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neues Unternehmen', array(
 	'href'	=> './work/billing/corporation/add',
 	'class'	=> 'btn btn-success',
 ) );

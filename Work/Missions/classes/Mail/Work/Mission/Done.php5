@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class Mail_Work_Mission_Done extends Mail_Work_Mission_Change
 {
 	protected function generate(): self
@@ -37,8 +39,8 @@ class Mail_Work_Mission_Done extends Mail_Work_Mission_Change
 			$rows		= $helper->renderDayList( 1, 0, TRUE, TRUE );
 			$colgroup	= UI_HTML_Elements::ColumnGroup( "80", "100", "", "100" );
 			$attributes	= array( 'class' => 'table-mail table-mail-tasks' );
-			$table		= UI_HTML_Tag::create( 'table', $colgroup.$rows, $attributes );
-			$heading	= $w->headingTasks ? UI_HTML_Tag::create( 'h4', $w->headingTasks ) : "";
+			$table		= HtmlTag::create( 'table', $colgroup.$rows, $attributes );
+			$heading	= $w->headingTasks ? HtmlTag::create( 'h4', $w->headingTasks ) : "";
 			$tasks		= $heading.$table;
 		}
 
@@ -52,17 +54,17 @@ class Mail_Work_Mission_Done extends Mail_Work_Mission_Change
 			$rows		= $helper->renderDayList( 1, 0, TRUE, TRUE );
 			$colgroup	= UI_HTML_Elements::ColumnGroup( "125", "" );
 			$attributes	= array( 'class' => 'table-mail table-mail-events' );
-			$table		= UI_HTML_Tag::create( 'table', $colgroup.$rows, $attributes );
-			$heading	= $w->headingEvents ? UI_HTML_Tag::create( 'h4', $w->headingEvents ) : "";
+			$table		= HtmlTag::create( 'table', $colgroup.$rows, $attributes );
+			$heading	= $w->headingEvents ? HtmlTag::create( 'h4', $w->headingEvents ) : "";
 			$events		= $heading.$table;
 		}
 
-		$heading	= $w->heading ? UI_HTML_Tag::create( 'h3', $w->heading ) : "";
+		$heading	= $w->heading ? HtmlTag::create( 'h3', $w->heading ) : "";
 		$username	= $data['user']->username;
-		$username	= UI_HTML_Tag::create( 'span', $username, array( 'class' => 'text-username' ) );
+		$username	= HtmlTag::create( 'span', $username, array( 'class' => 'text-username' ) );
 		$dateFull	= $weekdays[date( 'w' )].', der '.date( "j" ).'.&nbsp;'.$monthNames[date( 'n' )];
-		$dateFull	= UI_HTML_Tag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) );
-		$dateShort	= UI_HTML_Tag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) );
+		$dateFull	= HtmlTag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) );
+		$dateShort	= HtmlTag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) );
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
 		$body	= '
 '.$heading.'

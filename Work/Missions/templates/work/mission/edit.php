@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $panelInfo		= $view->loadTemplateFile( 'work/mission/edit.info.php' );
 $panelClose		= $view->loadTemplateFile( 'work/mission/edit.close.php' );
@@ -47,21 +48,21 @@ $minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 
 $hoursRequired		= floor( $mission->minutesRequired / 60 );
 $minutesRequired	= str_pad( $mission->minutesRequired - $hoursRequired * 60, 2, "0", STR_PAD_LEFT );
 
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
-$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconCopy	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus-sign not-icon-white' ) );
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
+$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconCopy	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus-sign not-icon-white' ) );
 
 $checkInform	= '';
 if( count( $missionUsers ) > 1 ){
-	$checkInform	= UI_HTML_Tag::create( 'input', NULL, array(
+	$checkInform	= HtmlTag::create( 'input', NULL, array(
 		'type'		=> 'checkbox',
 		'name'		=> 'inform',
 		'value'		=> 1,
 		'checked'	=> 'checked',
 	) );
-	$checkInform	= UI_HTML_Tag::create( 'label', $checkInform.'&nbsp;'.$w->labelInform, array( 'class' => 'checkbox' ) );
+	$checkInform	= HtmlTag::create( 'label', $checkInform.'&nbsp;'.$w->labelInform, array( 'class' => 'checkbox' ) );
 }
 
 $buttonCancel	= UI_HTML_Elements::LinkButton( './work/mission', $iconList.' '.$w->buttonList, 'btn btn-small' );
@@ -173,7 +174,7 @@ $panelEdit	= '
 				'.$checkInform.'
 				'.$buttonCancel.'
 				'.$buttonView.'
-<!--				'.UI_HTML_Tag::create( 'div', array(
+<!--				'.HtmlTag::create( 'div', array(
 					), array( 'class' => 'btn-group' ) ).'-->
 				'.$buttonSave.'
 	<!--			&nbsp;|&nbsp;
@@ -191,7 +192,7 @@ $panelEdit	= '
 $states	= $words['states'];
 unset( $states[0] );
 foreach( $states as $status => $label )
-	$states[$status]	= UI_HTML_Tag::create( 'button', $label, array(
+	$states[$status]	= HtmlTag::create( 'button', $label, array(
 		'type'		=> 'button',
 		'onclick'	=> 'document.location.href=\'./work/mission/setStatus/'.$mission->missionId.'/'.urlencode( $status ).'\';',
 		'disabled'	=> $mission->status == $status ? 'disabled' : NULL,
@@ -203,7 +204,7 @@ $states	= join( $states );
 $priorities		= $words['priorities'];
 unset( $priorities[0] );
 foreach( $priorities as $priority => $label )
-	$priorities[$priority]	= UI_HTML_Tag::create( 'button', $label, array(
+	$priorities[$priority]	= HtmlTag::create( 'button', $label, array(
 		'type'		=> 'button',
 		'onclick'	=> 'document.location.href=\'./work/mission/setPriority/'.$mission->missionId.'/'.$priority.'\';',
 		'disabled'	=> $mission->priority == $priority ? 'disabled' : NULL,

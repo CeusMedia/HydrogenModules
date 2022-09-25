@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -20,7 +21,7 @@ class Hook_UI_Layout_Footer extends Hook
 			if( $env->getModules()->has( 'Server_System_Load' ) )
 				$footer[]	= array( 'id' => 'system-load', 'title' => 'System Load' );
 			foreach( $links as $path => $label )
-				$footer[]	= array( 'label' => UI_HTML_Tag::create( 'a', $label, array( 'href' => $path ) ) );
+				$footer[]	= array( 'label' => HtmlTag::create( 'a', $label, array( 'href' => $path ) ) );
 
 			$list	= [];
 			foreach( $footer as $entry ){
@@ -29,11 +30,11 @@ class Hook_UI_Layout_Footer extends Hook
 					$label	= $entry['label'];
 					unset( $entry['label'] );
 				}
-				$list[]	= UI_HTML_Tag::create( 'li', $label, $entry );
+				$list[]	= HtmlTag::create( 'li', $label, $entry );
 			}
-			$footer		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
-			$footer		= UI_HTML_Tag::create( 'div', $footer, array( 'class' => 'container' ) );
-			$content	= UI_HTML_Tag::create( 'div', $footer, array( 'id' => 'layout-footer' ) );
+			$footer		= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+			$footer		= HtmlTag::create( 'div', $footer, array( 'class' => 'container' ) );
+			$content	= HtmlTag::create( 'div', $footer, array( 'id' => 'layout-footer' ) );
 			$payload->content  = preg_replace( $pattern, "\\1".$content."\\4", $payload->content );
 		}
 	}

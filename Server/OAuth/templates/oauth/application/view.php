@@ -1,17 +1,18 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
 
 $iconsStatus	= array(
-	-1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) ),
-	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
-	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) )
+	-1	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) ),
+	0	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
+	1	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) )
 );
 $iconsType	= array(
-	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-world' ) ),
-	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lock' ) )
+	0	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-world' ) ),
+	1	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lock' ) )
 );
 
 $data	= print_m( $application, NULL, NULL, TRUE );
@@ -20,37 +21,37 @@ $listAccessTokens	= '<div class="muted"><em><small>Keine Access-Tokens aktiv.</s
 if( !empty( $accessTokens ) ){
 	$listAccessTokens	= [];
 	foreach( $accessTokens as $token ){
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' revoke', array( 'href' => './oauth/application/remove/'.$token->oauthApplicationId.'/access/'.$token->oauthAccessTokenId, 'class' => 'btn btn-mini btn-danger' ) );
-		$listAccessTokens[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $token->token ),
-			UI_HTML_Tag::create( 'td', $buttonRemove ),
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' revoke', array( 'href' => './oauth/application/remove/'.$token->oauthApplicationId.'/access/'.$token->oauthAccessTokenId, 'class' => 'btn btn-mini btn-danger' ) );
+		$listAccessTokens[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $token->token ),
+			HtmlTag::create( 'td', $buttonRemove ),
 		) );
 	}
-	$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( ) ) );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $listAccessTokens );
-	$listAccessTokens	= UI_HTML_Tag::create( 'table', $thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
+	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( ) ) );
+	$tbody		= HtmlTag::create( 'tbody', $listAccessTokens );
+	$listAccessTokens	= HtmlTag::create( 'table', $thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
 }
 
 $listRefreshTokens	= '<div class="muted"><em><small>Keine Refresh-Tokens aktiv.</small></em></div>';
 if( !empty( $refreshTokens ) ){
 	$listRefreshTokens	= [];
 	foreach( $refreshTokens as $token ){
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' revoke', array(
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' revoke', array(
 			'href'		=> './oauth/application/remove/'.$token->oauthApplicationId.'/refresh/'.$token->oauthRefreshTokenId,
 			'class'		=> 'btn btn-mini btn-danger'
 		) );
-		$listRefreshTokens[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $token->token ),
-/*			UI_HTML_Tag::create( 'td', $buttonRemove ),*/
+		$listRefreshTokens[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $token->token ),
+/*			HtmlTag::create( 'td', $buttonRemove ),*/
 		) );
 	}
-	$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( ) ) );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $listRefreshTokens );
-	$listRefreshTokens	= UI_HTML_Tag::create( 'table', $thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
+	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( ) ) );
+	$tbody		= HtmlTag::create( 'tbody', $listRefreshTokens );
+	$listRefreshTokens	= HtmlTag::create( 'table', $thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
 }
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array( 'href' => './oauth/application', 'class' => 'btn btn-small' ) );
-$buttonEdit		= UI_HTML_Tag::create( 'a', $iconEdit.' bearbeiten', array( 'href' => './oauth/application/edit/'.$application->oauthApplicationId, 'class' => 'btn btn-small btn-primary' ) );
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array( 'href' => './oauth/application', 'class' => 'btn btn-small' ) );
+$buttonEdit		= HtmlTag::create( 'a', $iconEdit.' bearbeiten', array( 'href' => './oauth/application/edit/'.$application->oauthApplicationId, 'class' => 'btn btn-small btn-primary' ) );
 
 $description	= strlen( trim( $application->description ) ) ? nl2br( $application->description ) : "-";
 
@@ -74,7 +75,7 @@ return '
 						</big>
 						<dl class="dl-horizontal">
 							<dt>Client-URL</dt>
-							<dd>'.UI_HTML_Tag::create( 'a', $application->url, array( 'href' => $application->url, 'target' => '_blank', 'class' => 'external' ) ).'</dd>
+							<dd>'.HtmlTag::create( 'a', $application->url, array( 'href' => $application->url, 'target' => '_blank', 'class' => 'external' ) ).'</dd>
 							<dt>Client-ID</dt>
 							<dd>'.$application->clientId.'</dd>
 							<dt>Client-Secret</dt>

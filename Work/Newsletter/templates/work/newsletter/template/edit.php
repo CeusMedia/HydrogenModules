@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
 $isUsed	= FALSE;
@@ -6,26 +8,26 @@ $currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.template.co
 $tabs			= $words->tabs;
 $tabsContent	= $this->renderTabs( $tabs, 'template/setContentTab/'.$templateId.'/', $currentTab );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconPreview	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) ).'&nbsp;';
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
-$iconCopy		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clone' ) ).'&nbsp;';
-$iconRefresh	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) ).'&nbsp;';
-$iconExport		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconPreview	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
+$iconCopy		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clone' ) ).'&nbsp;';
+$iconRefresh	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) ).'&nbsp;';
+$iconExport		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) ).'&nbsp;';
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.$words->edit->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.$words->edit->buttonCancel, array(
 	'class'		=> "btn btn-small",
 	'href'		=> "./work/newsletter/template/index",
 ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.$words->edit->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, array(
 	'type'			=> "submit",
 	'class'			=> "btn btn-primary".( $isUsed ? ' disabled' : '' ),
 	'name'			=> "save",
 	'readonly'		=> $isUsed ? 'readonly' : NULL,
 	'onmousedown'	=> $isUsed ? "alert('".$words->edit->buttonSaveDisabled."');" : NULL,
 ) );
-$buttonPreview	= UI_HTML_Tag::create( 'button', $iconPreview.$words->edit->buttonPreview, array(
+$buttonPreview	= HtmlTag::create( 'button', $iconPreview.$words->edit->buttonPreview, array(
 	'type'			=> "button",
 	'class'			=> "btn btn-info",
 	'data-toggle'	=> "modal",
@@ -33,27 +35,27 @@ $buttonPreview	= UI_HTML_Tag::create( 'button', $iconPreview.$words->edit->butto
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview("./work/newsletter/template/preview/'.$format.'/'.$templateId.'");'
 ) );
 /*
-$buttonPreview	= UI_HTML_Tag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
+$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
 	'class'		=> "btn btn-info",
 	'href'		=> './work/newsletter/template/preview/'.$format.'/'.$templateId.'/1',
 	'target'	=> "NewsletterTemplatePreview",
 ) );*/
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.$words->edit->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, array(
 	'class'		=> "btn btn-danger",
 	'href'		=> $isUsed ? '#' : "./work/newsletter/template/remove/".$templateId,
 	'disabled'	=> $isUsed ? 'disabled' : NULL,
 	'onclick'	=> $isUsed ? "alert('".$words->edit->buttonRemoveDisabled."'); return false;" : NULL,
 ) );
-$buttonCopy		= UI_HTML_Tag::create( 'a', $iconCopy.$words->edit->buttonCopy, array(
+$buttonCopy		= HtmlTag::create( 'a', $iconCopy.$words->edit->buttonCopy, array(
 	'class'		=> "btn btn-success btn-small",
 	'href'		=> "./work/newsletter/template/add?templateId=".$templateId
 ) );
-$buttonExport	= UI_HTML_Tag::create( 'a', $iconExport.$words->edit->buttonExport, array(
+$buttonExport	= HtmlTag::create( 'a', $iconExport.$words->edit->buttonExport, array(
 	'class'		=> "btn",
 	'href'		=> "./work/newsletter/template/export/".$templateId
 ) );
 
-$buttons		= UI_HTML_Tag::create( 'div', join( ' ', array(
+$buttons		= HtmlTag::create( 'div', join( ' ', array(
 	$buttonCancel,
 	$buttonSave,
 	$buttonPreview,
@@ -81,7 +83,7 @@ switch( $currentTab ){
 	default:
 		throw new InvalidArgumentException( 'Invalid tab: '.$currentTab );
 }
-$tabsContent	.= UI_HTML_Tag::create( 'div', $content, array( 'tab-content' ) );
+$tabsContent	.= HtmlTag::create( 'div', $content, array( 'tab-content' ) );
 
 $modalPreview	= '
 <div id="modal-preview" class="modal hide -fade preview">

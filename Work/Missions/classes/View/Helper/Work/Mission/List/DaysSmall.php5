@@ -1,16 +1,18 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_List_Days{
 /*
 	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ){
 		$this->missions	= $this->list[$day];
 
-		return UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'div', $link, array( 'class' => 'cell-title' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'span', $worker, array( 'class' => 'cell-workerId' ) ),
-				UI_HTML_Tag::create( 'span', $worker, array( 'class' => 'cell-project' ) ),
-				UI_HTML_Tag::create( 'span', $worker, array( 'class' => 'cell-priority' ) ),
-				UI_HTML_Tag::create( 'span', $worker, array( 'class' => 'cell-actions' ) ),
+		return HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', $link, array( 'class' => 'cell-title' ) ),
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'span', $worker, array( 'class' => 'cell-workerId' ) ),
+				HtmlTag::create( 'span', $worker, array( 'class' => 'cell-project' ) ),
+				HtmlTag::create( 'span', $worker, array( 'class' => 'cell-priority' ) ),
+				HtmlTag::create( 'span', $worker, array( 'class' => 'cell-actions' ) ),
 			) )
 		) );
 
@@ -18,13 +20,13 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$tableHeads		= [];
 
 		$colgroup		= UI_HTML_Elements::ColumnGroup( $colgroup );
-		$tableHeads		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) );
+		$tableHeads		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) );
 		$list0			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
 		$list1			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
 
-		$tableBody		= UI_HTML_Tag::create( 'tbody', $list1.$list0 );
-		$table			= UI_HTML_Tag::create( 'table', $colgroup.$tableHeads.$tableBody, array( 'class' => 'table table-striped work-mission-list' ) );
-		return UI_HTML_Tag::create( 'div', $table, array( 'class' => "table-day", 'id' => 'table-'.$day ) );
+		$tableBody		= HtmlTag::create( 'tbody', $list1.$list0 );
+		$table			= HtmlTag::create( 'table', $colgroup.$tableHeads.$tableBody, array( 'class' => 'table table-striped work-mission-list' ) );
+		return HtmlTag::create( 'div', $table, array( 'class' => "table-day", 'id' => 'table-'.$day ) );
 	}
 */
 
@@ -55,8 +57,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 	}
 
 	protected function renderBadgeDays( $days, $class ){
-		$label	= UI_HTML_Tag::create( 'small', $this->formatDays( $days ) );
-		return UI_HTML_Tag::create( 'span', $label, array( 'class' => 'badge badge-'.$class ) );
+		$label	= HtmlTag::create( 'small', $this->formatDays( $days ) );
+		return HtmlTag::create( 'span', $label, array( 'class' => 'badge badge-'.$class ) );
 	}
 
 	public function renderBadgeDaysOverdue( $mission ){
@@ -97,54 +99,54 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		if( !strlen( $list0.$list1 ) )
 			return "";
 		if( $list0 ){
-			$tableBody		= UI_HTML_Tag::create( 'tbody', $list0 );
-			$list0			= UI_HTML_Tag::create( 'table', $tableBody, array( 'class' => 'table table-striped work-mission-list' ) );
+			$tableBody		= HtmlTag::create( 'tbody', $list0 );
+			$list0			= HtmlTag::create( 'table', $tableBody, array( 'class' => 'table table-striped work-mission-list' ) );
 		}
 		if( $list1 ){
-			$tableBody		= UI_HTML_Tag::create( 'tbody', $list1 );
-			$list1			= UI_HTML_Tag::create( 'table', $tableBody, array( 'class' => 'table table-striped work-mission-list' ) );
+			$tableBody		= HtmlTag::create( 'tbody', $list1 );
+			$list1			= HtmlTag::create( 'table', $tableBody, array( 'class' => 'table table-striped work-mission-list' ) );
 		}
-		return UI_HTML_Tag::create( 'div', $list1.$list0, array( 'class' => "table-day-small", 'id' => 'table-small-'.$day ) );
+		return HtmlTag::create( 'div', $list1.$list0, array( 'class' => "table-day-small", 'id' => 'table-small-'.$day ) );
 	}
 
 	public function renderRowButtons( $mission, $days ){
 		$buttons	= [];
 		$baseUrl	= './work/mission/changeDay/'.$mission->missionId;
 
-		$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open' ) );
-		$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-		$iconLeft	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-		$iconRight	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) );
+		$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open' ) );
+		$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
+		$iconLeft	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+		$iconRight	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) );
 
 		$list		= [];
 		if( $this->isViewer ){
-			$linkView	= UI_HTML_Tag::create( 'a', $iconView.' anzeigen', array(
+			$linkView	= HtmlTag::create( 'a', $iconView.' anzeigen', array(
 				'href'	=> './work/mission/view/'.$mission->missionId
 			) );
-			$list[]		= UI_HTML_Tag::create( 'li', $linkView );
+			$list[]		= HtmlTag::create( 'li', $linkView );
 		}
 		if( $this->isEditor ){
-			$linkEdit	= UI_HTML_Tag::create( 'a', $iconEdit.' bearbeiten', array(
+			$linkEdit	= HtmlTag::create( 'a', $iconEdit.' bearbeiten', array(
 				'href'	=> './work/mission/edit/'.$mission->missionId
 			) );
-			$list[]		= UI_HTML_Tag::create( 'li', $linkEdit );
+			$list[]		= HtmlTag::create( 'li', $linkEdit );
 		}
 		if( $days ){
-			$linkLeft	= UI_HTML_Tag::create( 'a', $iconLeft.' '.$this->words['list-actions']['moveLeft'], array(
+			$linkLeft	= HtmlTag::create( 'a', $iconLeft.' '.$this->words['list-actions']['moveLeft'], array(
 				'href'		=> '#',
 				'onclick'	=> "WorkMissions.moveMissionStartDate(".$mission->missionId.",'-1'); return false;",
 			) );
-			$list[]		= UI_HTML_Tag::create( 'li', $linkLeft );
+			$list[]		= HtmlTag::create( 'li', $linkLeft );
 		}
-		$linkRight	= UI_HTML_Tag::create( 'a', $iconRight.' '.$this->words['list-actions']['moveRight'], array(
+		$linkRight	= HtmlTag::create( 'a', $iconRight.' '.$this->words['list-actions']['moveRight'], array(
 			'href'		=> '#',
 			'onclick'	=> "WorkMissions.moveMissionStartDate(".$mission->missionId.",'+1'); return false;",
 		) );
-		$list[]		= UI_HTML_Tag::create( 'li', $linkRight );
-		$list		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'dropdown-menu pull-right' ) );
-		$caret		= UI_HTML_Tag::create( 'span', '', array( 'class' => 'caret' ) );
-		$button		= UI_HTML_Tag::create( 'button', $caret, array( 'class' => 'btn btn-large dropdown-toggle', 'data-toggle' => 'dropdown' ) );
-		$buttons	= UI_HTML_Tag::create( 'div', $button.$list, array( 'class' => 'btn-group' ) );
+		$list[]		= HtmlTag::create( 'li', $linkRight );
+		$list		= HtmlTag::create( 'ul', $list, array( 'class' => 'dropdown-menu pull-right' ) );
+		$caret		= HtmlTag::create( 'span', '', array( 'class' => 'caret' ) );
+		$button		= HtmlTag::create( 'button', $caret, array( 'class' => 'btn btn-large dropdown-toggle', 'data-toggle' => 'dropdown' ) );
+		$buttons	= HtmlTag::create( 'div', $button.$list, array( 'class' => 'btn-group' ) );
 		return $buttons;
 
 		if( $days ){
@@ -154,7 +156,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 				'class'		=> 'btn btn-large',
 				'title'		=> $this->words['list-actions']['moveLeft'],
 			);
-			$buttons[]  = UI_HTML_Tag::create( 'button', $this->icons['left'], $attributes );
+			$buttons[]  = HtmlTag::create( 'button', $this->icons['left'], $attributes );
 		}
 		$attributes	= array(
 			'type'		=> 'button',
@@ -162,7 +164,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 			'class'		=> 'btn btn-large',
 			'title'		=> $this->words['list-actions']['moveRight'],
 		);
-		$buttons[]  = UI_HTML_Tag::create( 'button', $this->icons['right'], $attributes );
+		$buttons[]  = HtmlTag::create( 'button', $this->icons['right'], $attributes );
 		return '<div class="btn-group">'.join( '', $buttons ).'</div>';
 	}
 
@@ -178,7 +180,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$icon		= '<i class="icon-large icon-'.( $mission->type ? 'time' : 'wrench' ).'"></i>';
 		if( $showIcon )
 			$label		= $icon."&nbsp;".$label;
-		return UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => $class, 'style' => 'font-size: 1.25em' ) );
+		return HtmlTag::create( 'a', $label, array( 'href' => $url, 'class' => $class, 'style' => 'font-size: 1.25em' ) );
 	}
 
 	public function renderRowOfEvent( $event, $days, $showStatus, $showPriority, $showDate, $showActions ){
@@ -188,13 +190,13 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$badgeU		= $this->renderBadgeDaysUntil( $event );
 		$badge		= $badgeO.$badgeS.$badgeU;
 		$graph		= $this->indicator->build( $event->status, 4, 50 );
-		$graph		= UI_HTML_Tag::create( 'div', $graph, array( 'class' => 'cell-graph' ) );
+		$graph		= HtmlTag::create( 'div', $graph, array( 'class' => 'cell-graph' ) );
 		$worker		= $this->renderUserWithAvatar( $event->workerId, 90 );
 		$project	= $event->projectId ? $this->projects[$event->projectId]->title : '-';
 		$timeStart	= $this->renderTime( strtotime( $event->timeStart ) );
 		$timeEnd	= $this->renderTime( strtotime( $event->timeEnd ) );
 		$times		= $timeStart.' - '.$timeEnd;
-//		$times		= UI_HTML_Tag::create( 'div', $times, array( 'class' => 'cell-time' ) );
+//		$times		= HtmlTag::create( 'div', $times, array( 'class' => 'cell-time' ) );
 
 		$modelUser	= new Model_User( $this->env );
 		$username	= $event->workerId && $modelUser->has( $event->workerId ) ? $modelUser->get( $event->workerId )->username : "UNKNOWN";
@@ -203,42 +205,42 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$times		= '<i class="icon-time"></i> <span>'.$times.'</span>';
 
 //		if( $showStatus )
-//			$cells[]	= UI_HTML_Tag::create( 'td', $times, array( 'class' => 'cell-time' ) );
+//			$cells[]	= HtmlTag::create( 'td', $times, array( 'class' => 'cell-time' ) );
 //		if( $showDate ){
 //			$date		= date( "d.m", strtotime( $event->dayStart ) );
-//			$year		= UI_HTML_Tag::create( 'small', date( ".Y", strtotime( $event->dayStart ) ), array( 'class' => 'muted' ) );
-//			$cells[]	= UI_HTML_Tag::create( 'div', $date.$year, array( 'class' => 'cell-date' ) );
+//			$year		= HtmlTag::create( 'small', date( ".Y", strtotime( $event->dayStart ) ), array( 'class' => 'muted' ) );
+//			$cells[]	= HtmlTag::create( 'div', $date.$year, array( 'class' => 'cell-date' ) );
 //		}
 //		if( $showPriority ){
 //			$priority	= $this->words['priorities'][$event->priority];
-//			$cells[]	= UI_HTML_Tag::create( 'div', $priority, array( 'class' => 'cell-priority' ) );
+//			$cells[]	= HtmlTag::create( 'div', $priority, array( 'class' => 'cell-priority' ) );
 //		}
 //		if( $showActions ){
 			$buttons	= $this->renderRowButtons( $event, $days );
-//			$cells[]	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'cell-actions' ) );
+//			$cells[]	= HtmlTag::create( 'div', $buttons, array( 'class' => 'cell-actions' ) );
 //		}
 		$attributes	= array(
 			'class'		=> 'mission-row-small row-priority priority-'.$event->priority,
 			'style'		=> 'width: 100%; border-top: 1px solid rgba(0, 0, 0, 0.25)'
 		);
 		$colgroup		= UI_HTML_Elements::ColumnGroup( "", "53px" );
-		$tbody			= UI_HTML_Tag::create( 'tbody', array(
-			UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', $link, array( 'class' => 'not-cell-title autocut' ) ),
-				UI_HTML_Tag::create( 'td', $badge, array( 'class' => 'cell-badge', 'style' => 'text-align: center' ) ),
+		$tbody			= HtmlTag::create( 'tbody', array(
+			HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', $link, array( 'class' => 'not-cell-title autocut' ) ),
+				HtmlTag::create( 'td', $badge, array( 'class' => 'cell-badge', 'style' => 'text-align: center' ) ),
 			), array( 'class' => 'cell-priority' ) ),
-			UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', $times, array( 'class' => 'cell-time' ) ),
-				UI_HTML_Tag::create( 'td', $buttons, array( 'class' => 'not-cell-actions', 'style' => 'width: 45px', 'rowspan' => '3' ) ),
+			HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', $times, array( 'class' => 'cell-time' ) ),
+				HtmlTag::create( 'td', $buttons, array( 'class' => 'not-cell-actions', 'style' => 'width: 45px', 'rowspan' => '3' ) ),
 			), array( 'class' => 'cell-priority' ) ),
-			UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', $project, array( 'class' => 'cell-project' ) ),
+			HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', $project, array( 'class' => 'cell-project' ) ),
 			), array( 'class' => 'cell-priority' ) ),
-			UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) ),
+			HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) ),
 			), array( 'class' => 'cell-priority' ) )
 		) );
-		return UI_HTML_Tag::create( 'table', $colgroup.$tbody, $attributes );
+		return HtmlTag::create( 'table', $colgroup.$tbody, $attributes );
 /*
 		$modelUser	= new Model_User( $this->env );
 		$link		= $this->renderRowLabel( $event );
@@ -251,31 +253,31 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$timeStart	= $this->renderTime( strtotime( $event->timeStart ) );
 		$timeEnd	= $this->renderTime( strtotime( $event->timeEnd ) );
 		$times		= $timeStart.' - '.$timeEnds;
-		$times		= UI_HTML_Tag::create( 'div', $times.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-time' ) );
+		$times		= HtmlTag::create( 'div', $times.$badgeO.$badgeS.$badgeU, array( 'class' => 'cell-time' ) );
 		$worker		= $this->renderUserWithAvatar( $event->workerId );
 		$project	= $event->projectId ? $this->projects[$event->projectId]->title : '-';
 
 		$cells		= [];
 		if( $showStatus )
-			$cells[]	= UI_HTML_Tag::create( 'td', $times, array( 'class' => 'cell-time' ) );
+			$cells[]	= HtmlTag::create( 'td', $times, array( 'class' => 'cell-time' ) );
 		if( $showDate ){
 			$date		= date( "d.m", strtotime( $event->dayStart ) );
-			$year		= UI_HTML_Tag::create( 'small', date( ".Y", strtotime( $event->dayStart ) ), array( 'class' => 'muted' ) );
-			$cells[]	= UI_HTML_Tag::create( 'td', $date.$year, array( 'class' => 'cell-date' ) );
+			$year		= HtmlTag::create( 'small', date( ".Y", strtotime( $event->dayStart ) ), array( 'class' => 'muted' ) );
+			$cells[]	= HtmlTag::create( 'td', $date.$year, array( 'class' => 'cell-date' ) );
 		}
-		$cells[]	= UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $project, array( 'class' => 'cell-project' ) );
+		$cells[]	= HtmlTag::create( 'td', $link, array( 'class' => 'cell-title' ) );
+		$cells[]	= HtmlTag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) );
+		$cells[]	= HtmlTag::create( 'td', $project, array( 'class' => 'cell-project' ) );
 		if( $showPriority ){
 			$priority	= $this->words['priorities'][$event->priority];
-			$cells[]	= UI_HTML_Tag::create( 'td', $priority, array( 'class' => 'cell-priority' ) );
+			$cells[]	= HtmlTag::create( 'td', $priority, array( 'class' => 'cell-priority' ) );
 		}
 		if( $showActions ){
 			$buttons	= $this->renderRowButtons( $event, $days );
-			$cells[]	= UI_HTML_Tag::create( 'td', $buttons, array( 'class' => 'cell-actions' ) );
+			$cells[]	= HtmlTag::create( 'td', $buttons, array( 'class' => 'cell-actions' ) );
 		}
 		$attributes	= array( 'class' => 'mission-row row-priority priority-'.$event->priority );
-		return UI_HTML_Tag::create( 'tr', join( $cells ), $attributes );*/
+		return HtmlTag::create( 'tr', join( $cells ), $attributes );*/
 	}
 
 	public function renderRowOfTask( $task, $days, $showStatus, $showPriority, $showDate, $showActions ){
@@ -285,7 +287,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$badgeU		= $this->renderBadgeDaysUntil( $task );
 		$badge		= $badgeO.$badgeS.$badgeU;
 		$graph		= $this->indicator->build( $task->status, 4, 50 );
-		$graph		= UI_HTML_Tag::create( 'div', $graph, array( 'class' => 'cell-graph' ) );
+		$graph		= HtmlTag::create( 'div', $graph, array( 'class' => 'cell-graph' ) );
 		$worker		= $this->renderUserWithAvatar( $task->workerId, 90 );
 		$project	= $task->projectId ? $this->projects[$task->projectId]->title : '-';
 
@@ -296,43 +298,43 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 
 //		$cells		= [];
 //		if( $showStatus )
-//			$cells[]	= UI_HTML_Tag::create( 'td', $graph, array( 'class' => 'cell-graph' ) );
+//			$cells[]	= HtmlTag::create( 'td', $graph, array( 'class' => 'cell-graph' ) );
 //		if( $showDate ){
 //			$date		= date( "d.m", strtotime( $task->dayStart ) );
-//			$year		= UI_HTML_Tag::create( 'small', date( ".Y", strtotime( $task->dayStart ) ), array( 'class' => 'muted' ) );
-//			$cells[]	= UI_HTML_Tag::create( 'div', $date.$year, array( 'class' => 'cell-date' ) );
+//			$year		= HtmlTag::create( 'small', date( ".Y", strtotime( $task->dayStart ) ), array( 'class' => 'muted' ) );
+//			$cells[]	= HtmlTag::create( 'div', $date.$year, array( 'class' => 'cell-date' ) );
 //		}
-//		$cells[]	= UI_HTML_Tag::create( 'div', $link, array( 'class' => 'cell-title' ) );
-//		$cells[]	= UI_HTML_Tag::create( 'div', $worker, array( 'class' => 'cell-workerId' ) );
-//		$cells[]	= UI_HTML_Tag::create( 'div', $project, array( 'class' => 'cell-project' ) );
+//		$cells[]	= HtmlTag::create( 'div', $link, array( 'class' => 'cell-title' ) );
+//		$cells[]	= HtmlTag::create( 'div', $worker, array( 'class' => 'cell-workerId' ) );
+//		$cells[]	= HtmlTag::create( 'div', $project, array( 'class' => 'cell-project' ) );
 //		if( $showPriority ){
 //			$priority	= $this->words['priorities'][$task->priority];
-//			$cells[]	= UI_HTML_Tag::create( 'div', $priority, array( 'class' => 'cell-priority' ) );
+//			$cells[]	= HtmlTag::create( 'div', $priority, array( 'class' => 'cell-priority' ) );
 //		}
 		$buttons	= '';
 		if( $showActions ){
 			$buttons	= $this->renderRowButtons( $task, $days );
-//			$cells[]	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'cell-actions' ) );
+//			$cells[]	= HtmlTag::create( 'div', $buttons, array( 'class' => 'cell-actions' ) );
 		}
 		$attributes	= array(
 			'class'		=> 'mission-row-small row-priority priority-'.$task->priority,
 			'style'		=> 'width: 100%; border-top: 1px solid rgba(0, 0, 0, 0.25)'
 		);
 		$colgroup		= UI_HTML_Elements::ColumnGroup( "", "53px" );
-		$tbody			= UI_HTML_Tag::create( 'tbody', array(
-			UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', $link, array( 'class' => 'not-cell-title autocut' ) ),
-				UI_HTML_Tag::create( 'td', $badge, array( 'class' => 'cell-project', 'style' => 'text-align: center' ) ),
+		$tbody			= HtmlTag::create( 'tbody', array(
+			HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', $link, array( 'class' => 'not-cell-title autocut' ) ),
+				HtmlTag::create( 'td', $badge, array( 'class' => 'cell-project', 'style' => 'text-align: center' ) ),
 			), array( 'class' => 'cell-priority' ) ),
-			UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', $project, array( 'class' => 'cell-project' ) ),
-				UI_HTML_Tag::create( 'td', $buttons, array( 'class' => 'not-cell-actions', 'rowspan' => 3 ) ),
+			HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', $project, array( 'class' => 'cell-project' ) ),
+				HtmlTag::create( 'td', $buttons, array( 'class' => 'not-cell-actions', 'rowspan' => 3 ) ),
 			), array( 'class' => 'cell-priority' ) ),
-			UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) ),
+			HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', $worker, array( 'class' => 'cell-workerId' ) ),
 			), array( 'class' => 'cell-priority' ) )
 		) );
-		return UI_HTML_Tag::create( 'table', $colgroup.$tbody, $attributes );
+		return HtmlTag::create( 'table', $colgroup.$tbody, $attributes );
 	}
 
 	public function renderRows( $day, $showStatus, $showPriority, $showDate, $showActions, $typeOnly = NULL ){
@@ -341,19 +343,19 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		$list	= [];
 		foreach( $this->missions as $mission ){
 			if( ( is_null( $typeOnly ) || $typeOnly == $mission->type ) && $mission->type == 0 )
-				$list[]	= UI_HTML_Tag::create( 'tr',
-					UI_HTML_Tag::create( 'td', $this->renderRowOfTask( $mission, $day, $showPriority, $showStatus, $showDate, $showActions ), array(
+				$list[]	= HtmlTag::create( 'tr',
+					HtmlTag::create( 'td', $this->renderRowOfTask( $mission, $day, $showPriority, $showStatus, $showDate, $showActions ), array(
 						'style' => 'padding: 0; margin: 0'
 					) )
 				);
 			else if( ( is_null( $typeOnly ) || $typeOnly == $mission->type ) && $mission->type == 1 )
-				$list[]	= UI_HTML_Tag::create( 'tr',
-					UI_HTML_Tag::create( 'td', $this->renderRowOfEvent( $mission, $day, $showPriority, $showStatus, $showDate, $showActions ), array(
+				$list[]	= HtmlTag::create( 'tr',
+					HtmlTag::create( 'td', $this->renderRowOfEvent( $mission, $day, $showPriority, $showStatus, $showDate, $showActions ), array(
 						'style' => 'padding: 0; margin: 0'
 					) )
 				);
 		}
-		return UI_HTML_Tag::create( 'table', $list, array( 'class' => 'not-table not-table-striped' ) );
+		return HtmlTag::create( 'table', $list, array( 'class' => 'not-table not-table-striped' ) );
 	}
 }
 ?>

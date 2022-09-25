@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Navigation_Bootstrap_DropdownList
 {
 	protected static $matches	= [];
@@ -21,7 +23,7 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 					break;
 			}
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array(
+		return HtmlTag::create( 'ul', $list, array(
 			'class'		=> 'nav',
 			'role'		=> 'navigation'
 		) );
@@ -43,8 +45,8 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 	protected static function renderDivider( $entry, bool $vertical = FALSE ): string
 	{
 		if( $vertical )
-			return UI_HTML_Tag::create( 'li', '', array( 'class' => 'divider-vertical' ) );
-		return UI_HTML_Tag::create( 'li', '', array( 'class' => 'divider' ) );
+			return HtmlTag::create( 'li', '', array( 'class' => 'divider-vertical' ) );
+		return HtmlTag::create( 'li', '', array( 'class' => 'divider' ) );
 	}
 
 	protected static function renderDropdownItem( $map, $current, $nr ): string
@@ -64,20 +66,20 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 					break;
 			}
 		}
-		$caret		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'caret' ) );
-		$toggle		= UI_HTML_Tag::create( 'a', $caret.'&nbsp;&nbsp;'.$map->label, array(
+		$caret		= HtmlTag::create( 'b', '', array( 'class' => 'caret' ) );
+		$toggle		= HtmlTag::create( 'a', $caret.'&nbsp;&nbsp;'.$map->label, array(
 			'class'			=> 'dropdown-toggle',
 			'data-toggle'	=> 'dropdown',
 			'role'			=> 'button',
 			'href'			=> '#',
 			'id'			=> 'drop-'.$nr,
 		) );
-		$menu	= UI_HTML_Tag::create( 'ul', $list, array(
+		$menu	= HtmlTag::create( 'ul', $list, array(
 			'class'				=> 'dropdown-menu',
 			'role'				=> 'menu',
 			'aria-labelledby'	=> 'drop-'.$nr
 		) );
-		return UI_HTML_Tag::create( 'li', $toggle.$menu, array(
+		return HtmlTag::create( 'li', $toggle.$menu, array(
 			'class'		=> $active ? 'dropdown active' : 'dropdown'
 		) );
 	}
@@ -87,9 +89,9 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 		if( !isset( $entry->icon ) )
 			return $entry->label;
 		if( preg_match( '/^fa /', $entry->icon ) )
-			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $entry->icon ) );
+			$icon	= HtmlTag::create( 'i', '', array( 'class' => $entry->icon ) );
 		else
-			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-'.$entry->icon ) );
+			$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-'.$entry->icon ) );
 		return $icon.'&nbsp;'.$entry->label;
 	}
 
@@ -101,11 +103,11 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 			$class	= 'active';
 		}
 		$label		= self::renderLabelWithIcon( $entry );
-		$link		= UI_HTML_Tag::create( 'a', $label, array(
+		$link		= HtmlTag::create( 'a', $label, array(
 			'href'	=> $entry->path,
 			'title'	=> !empty( $entry->desc ) ? $entry->desc : NULL,
 		) );
-		return UI_HTML_Tag::create( 'li', $link, array(
+		return HtmlTag::create( 'li', $link, array(
 			'class'	=> $class,
 			'role'	=> 'presentation'
 		) );

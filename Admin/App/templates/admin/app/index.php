@@ -1,8 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconFile	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconFile	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $panelTitle	= '<div class="content-panel">
 	<h3>Titel</h3>
@@ -45,21 +46,21 @@ $helperUploadLogo->setName( 'logo' );
 $helperUploadLogo->setLabel( $iconFile );
 
 $currentLogo	= '<em class="muted">Derzeit:<br/>Standard-Logo</em>';
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;speichern', array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
 	'class'		=> 'btn btn-primary',
 	'type'		=> 'submit',
 ) );
-$buttonRemove	= UI_HTML_Tag::create( 'button', $iconRemove.'&nbsp;entfernen', array(
+$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;entfernen', array(
 	'class'		=> 'btn btn-mini btn-inverse',
 	'disabled'	=> 'disabled',
 	'type'		=> 'button',
 ) );
 if( $appLogo ){
-	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 		'href'	=> './admin/app/removeLogo',
 		'class'	=> 'btn btn-small btn-inverse',
 	) );
-	$currentLogo	= UI_HTML_Tag::create( 'img', NULL, array(
+	$currentLogo	= HtmlTag::create( 'img', NULL, array(
 		'src'		=> $appLogo,
 		'class'		=> 'thumbnail',
 	) );
@@ -93,21 +94,21 @@ $helperUploadIcon->setName( 'icon' );
 $helperUploadIcon->setLabel( $iconFile );
 
 $currentIcon	= '<em class="muted">Derzeit:<br/>Standard-Icon</em>';
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;speichern', array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
 	'class'		=> 'btn btn-primary',
 	'type'		=> 'submit',
 ) );
-$buttonRemove	= UI_HTML_Tag::create( 'button', $iconRemove.'&nbsp;entfernen', array(
+$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;entfernen', array(
 	'class'		=> 'btn btn-mini btn-inverse',
 	'disabled'	=> 'disabled',
 	'type'		=> 'button',
 ) );
 if( $appIcon ){
-	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 		'href'	=> './admin/app/removeIcon',
 		'class'	=> 'btn btn-small btn-inverse',
 	) );
-	$currentIcon	= UI_HTML_Tag::create( 'img', NULL, array(
+	$currentIcon	= HtmlTag::create( 'img', NULL, array(
 		'src'		=> $appIcon,
 		'class'		=> 'thumbnail',
 	) );

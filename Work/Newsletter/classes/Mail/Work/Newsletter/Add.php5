@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class Mail_Work_Newsletter_Add extends Mail_Abstract
 {
 	protected function generate(): self
@@ -22,13 +24,13 @@ class Mail_Work_Newsletter_Add extends Mail_Abstract
 
 		$groups	= [];
 		foreach( $data['groups'] as $item )
-			$groups[]	= UI_HTML_Tag::create( 'li', $item->title );
+			$groups[]	= HtmlTag::create( 'li', $item->title );
 
 		$words				= $this->getWords( 'work/newsletter/reader' );
 		$data['salutation']	= $words['salutations'][$data['reader']->gender];
 		$data['key']		= substr( md5( 'InfoNewsletterSalt:'.$data['readerId'] ), 10, 10 );
 		$data['baseUrl']	= $baseUrl;
-		$data['groups']		= UI_HTML_Tag::create( 'ul', $groups );
+		$data['groups']		= HtmlTag::create( 'ul', $groups );
 		$data['emailHash']	= base64_encode( $data['reader']->email );
 
 		return $this->view->loadContentFile( 'mail/work/newsletter/add.html', $data );

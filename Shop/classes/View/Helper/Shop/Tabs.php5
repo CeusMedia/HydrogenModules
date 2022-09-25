@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_Tabs
@@ -50,16 +51,16 @@ class View_Helper_Shop_Tabs
 
 		$tabLabels			= (object) $this->words['tabs'];
 
-		$iconCart			= UI_HTML_Tag::create( 'i', '', array( 'title' => $tabLabels->cart, 'class' => 'fa fa-fw fa-shopping-cart' ) );
-		$iconCustomer		= UI_HTML_Tag::create( 'i', '', array( 'title' => $tabLabels->customer, 'class' => 'fa fa-fw fa-user-o' ) );
-		$iconConditions		= UI_HTML_Tag::create( 'i', '', array( 'title' => $tabLabels->conditions, 'class' => 'fa fa-fw fa-check-square-o' ) );
-		$iconPayment		= UI_HTML_Tag::create( 'i', '', array( 'title' => $tabLabels->payment, 'class' => 'fa fa-fw fa-money' ) );
-		$iconCheckout		= UI_HTML_Tag::create( 'i', '', array( 'title' => $tabLabels->checkout, 'class' => 'fa fa-fw fa-check' ) );
-		$iconService		= UI_HTML_Tag::create( 'i', '', array( 'title' => $tabLabels->service, 'class' => 'fa fa-fw fa-star' ) );
+		$iconCart			= HtmlTag::create( 'i', '', array( 'title' => $tabLabels->cart, 'class' => 'fa fa-fw fa-shopping-cart' ) );
+		$iconCustomer		= HtmlTag::create( 'i', '', array( 'title' => $tabLabels->customer, 'class' => 'fa fa-fw fa-user-o' ) );
+		$iconConditions		= HtmlTag::create( 'i', '', array( 'title' => $tabLabels->conditions, 'class' => 'fa fa-fw fa-check-square-o' ) );
+		$iconPayment		= HtmlTag::create( 'i', '', array( 'title' => $tabLabels->payment, 'class' => 'fa fa-fw fa-money' ) );
+		$iconCheckout		= HtmlTag::create( 'i', '', array( 'title' => $tabLabels->checkout, 'class' => 'fa fa-fw fa-check' ) );
+		$iconService		= HtmlTag::create( 'i', '', array( 'title' => $tabLabels->service, 'class' => 'fa fa-fw fa-star' ) );
 
 		$tabLabels			= (object) $this->words['tabs'];
 		foreach( $tabLabels as $key => $value )
-			$tabLabels->$key	= UI_HTML_Tag::create( 'span', '&nbsp;'.$value.'&nbsp;', array( 'class' => 'hidden-phone' ) );
+			$tabLabels->$key	= HtmlTag::create( 'span', '&nbsp;'.$value.'&nbsp;', array( 'class' => 'hidden-phone' ) );
 
 		$tabs->add(
 			'shop-cart',

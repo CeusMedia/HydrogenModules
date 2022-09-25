@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Panel
@@ -100,10 +101,10 @@ class View_Helper_Panel
 		$attributes['class']	= isset( $attributes['class'] ) ? $attributes['class'] : '';
 		$attributes['class']	= trim( $this->class.' '.$attributes['class'] );
 		$attributes['class']	= $attributes['class'].' panel-theme-'.$this->theme;
-		return UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'div', $this->head, array( 'class' => $this->classHead ) ),
-			UI_HTML_Tag::create( 'div', $this->body, array( 'class' => $this->classBody ) ),
-			UI_HTML_Tag::create( 'div', $this->foot, array( 'class' => $this->classFoot ) ),
+		return HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', $this->head, array( 'class' => $this->classHead ) ),
+			HtmlTag::create( 'div', $this->body, array( 'class' => $this->classBody ) ),
+			HtmlTag::create( 'div', $this->foot, array( 'class' => $this->classFoot ) ),
 		), $attributes );
 	}
 

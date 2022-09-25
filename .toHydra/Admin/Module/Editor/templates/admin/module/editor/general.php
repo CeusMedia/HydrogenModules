@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['view'];
 
 $attributes			= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
-$buttonBack			= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
+$buttonBack			= HtmlTag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
 $buttonList			= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
 $buttonCancel		= UI_HTML_Elements::LinkButton( './admin/module/viewer/index/'.$module->id, $w->buttonCancel, 'button cancel' );
 $buttonSave			= UI_HTML_Elements::Button( 'save', $w->buttonSave, 'button save' );

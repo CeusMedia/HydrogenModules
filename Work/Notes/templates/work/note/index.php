@@ -1,8 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w		= (object) $words['index'];
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$iconTag	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-tag' ) );
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconTag	= HtmlTag::create( 'i', '', array( 'class' => 'icon-tag' ) );
 
 
 $tags	= $env->session->get( 'filter_notes_tags' );
@@ -25,11 +27,11 @@ foreach( $notes['list'] as $note ){
 	$listTags	= [];
 	foreach( $note->tags as $tag ){
 		if( !in_array( $tag, $tags ) ){
-/*			$listTags[$tag->content]	= UI_HTML_Tag::create( 'a', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), array(
+/*			$listTags[$tag->content]	= HtmlTag::create( 'a', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), array(
 				'href'	=> './work/note/addSearchTag/'.$tag->tagId.'/'.$page,
 				'class'	=> 'list-item-tag-link',
 			) );*/
-			$listTags[$tag->content]	= UI_HTML_Tag::create( 'span', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), array(
+			$listTags[$tag->content]	= HtmlTag::create( 'span', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), array(
 				'class'	=> 'list-item-tag',
 			) );
 		}
@@ -61,7 +63,7 @@ $pagination	= $pagination->render();
 //  --  FILTER  --  //
 $panelFilter	= $view->loadTemplateFile( 'work/note/index.filter.php' );
 
-$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.' neue Notiz', array( 'href' => './work/note/add', 'class' => 'btn not-btn-small btn-primary' ) );
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' neue Notiz', array( 'href' => './work/note/add', 'class' => 'btn not-btn-small btn-primary' ) );
 
 
 return '

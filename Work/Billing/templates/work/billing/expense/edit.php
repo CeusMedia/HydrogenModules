@@ -1,20 +1,22 @@
 <?php
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash-o' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+ 
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash-o' ) );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', array(
 	'href'	=> './work/billing/expense',
 	'class'	=> 'btn btn',
 ) );
 
-$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
 ) );
 
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', array(
 	'href'	=> './work/billing/expense/remove/'.$expense->expenseId,
 	'class'	=> 'btn btn-danger',
 ) );
