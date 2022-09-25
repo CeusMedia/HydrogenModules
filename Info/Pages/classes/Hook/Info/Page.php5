@@ -197,31 +197,31 @@ class Hook_Info_Page extends Hook
 	 *	@todo		localize error messages
 	 *	@todo		remove old code
 	 */
-	public static function onRenderContent( Environment $env, $context, $module, $payload )
+	public static function onRenderContent( Environment $env, object $context, $module, array & $payload )
 	{
 
 		//  OLD CODE
 		$pattern	= "/^(.*)(\[page:(.+)\])(.*)$/sU";
 		$logic		= $env->getLogic()->get( 'page' );
 		$matches	= [];
-		while( preg_match( $pattern, $payload->content, $matches ) ){
+		while( preg_match( $pattern, $payload['content'], $matches ) ){
 			CMF_Hydrogen_Deprecation::getInstance()
 				->setVersion( $env->getModules()->get( 'Info_Pages' )->version )
 				->setErrorVersion( '0.7.7' )
 				->setExceptionVersion( '0.9' )
 				->message( 'Page inclusion should use shortcode with id or nr attribute (having: page:'.$matches[3].')' );
 
-			$path	= trim( preg_replace( $pattern, "\\3", $payload->content ) );
+			$path	= trim( preg_replace( $pattern, "\\3", $payload['content'] ) );
 			$page	= $logic->getPageFromPath( $path, TRUE );
 			if( !$page ){
-				$payload->content	= preg_replace( $pattern, "", $payload->content );
+				$payload['content']	= preg_replace( $pattern, "", $payload['content'] );
 				$env->getMessenger()->noteFailure( 'Die eingebundene Seite "'.$path.'" existiert nicht.' );
 			}
 			else{
 				$subcontent		= $page->content;													//  load nested page content
 				$subcontent		= preg_replace( "/<h(1|2)>.*<\/h(1|2)>/", "", $subcontent );		//  remove headings above level 3
 				$replacement	= "\\1".$subcontent."\\4";											//  insert content of nested page...
-				$payload->content	= preg_replace( $pattern, $replacement, $payload->content );		//  ...into page content
+				$payload['content']	= preg_replace( $pattern, $replacement, $payload['content'] );		//  ...into page content
 			}
 		}
 
@@ -229,7 +229,7 @@ class Hook_Info_Page extends Hook
 		if( !$env->getModules()->has( 'UI_Shortcode' ) )
 			return;
 		$processor		= new Logic_Shortcode( $env );
-		$processor->setContent( $payload->content );
+		$processor->setContent( $payload['content'] );
 		$shortCodes		= array(
 			'page'		=> array(
 				'nr'		=> 0,
@@ -301,7 +301,7 @@ class Hook_Info_Page extends Hook
 				}
 			}
 		}
-		$payload->content	= $processor->getContent();
+		$payload['content']	= $processor->getContent();
 	}
 
 	public static function onRenderSearchResults( Environment $env, $context, $module, $payload )

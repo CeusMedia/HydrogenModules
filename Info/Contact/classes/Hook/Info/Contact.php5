@@ -6,7 +6,7 @@ use CeusMedia\HydrogenFramework\View;
 
 class Hook_Info_Contact extends Hook
 {
-	static public function onRenderContent( Environment $env, $context, $module, $data = [] )
+	static public function onRenderContent( Environment $env, object $context, $module, array & $payload = [] )
 	{
 		if( !$env->getModules()->has( 'UI_Shortcode' ) )
 			return;
@@ -28,7 +28,7 @@ class Hook_Info_Contact extends Hook
 				'subject'		=> '',
 			)
 		);
-		$processor->setContent( $data->content );
+		$processor->setContent( $payload['content'] );
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;
@@ -76,6 +76,6 @@ class Hook_Info_Contact extends Hook
 				}
 			}
 		}
-		$data->content	= $processor->getContent();
+		$payload['content']	= $processor->getContent();
 	}
 }

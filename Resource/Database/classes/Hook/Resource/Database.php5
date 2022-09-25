@@ -15,8 +15,8 @@ class Hook_Resource_Database extends Hook
 	 *	@param		object			$payload	Data object of payload data
 	 *	@return		void
 	 */
-	static public function onEnvInitDatabase( Environment $env, $module, $context, $payload )
+	static public function onEnvInitDatabase( Environment $env, object $context, $module, array & $payload )
 	{
-		$payload->managers['Module_Resource_Database']	= new Resource_Database( $env );
+		$payload['managers']['Module_Resource_Database']	= new Resource_Database( $env );
 	}
 }

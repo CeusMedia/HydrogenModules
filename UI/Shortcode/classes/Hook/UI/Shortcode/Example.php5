@@ -5,10 +5,10 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_Shortcode_Example extends Hook
 {
-	static public function onViewRenderContent( Environment $env, $context, $module, $payload )
+	static public function onViewRenderContent( Environment $env, $context, $module, array & $payload )
 	{
 		$processor		= new Logic_Shortcode( $env );
-		$processor->setContent( $payload->content );
+		$processor->setContent( $payload['content'] );
 //		$words			= $env->getLanguage()->getWords( '...module/id...' );
 		$shortCodes		= array(
 			'example'	=> array(
@@ -39,6 +39,6 @@ class Hook_UI_Shortcode_Example extends Hook
 				}
 			}
 		}
-		$payload->content	= $processor->getContent();
+		$payload['content']	= $processor->getContent();
 	}
 }

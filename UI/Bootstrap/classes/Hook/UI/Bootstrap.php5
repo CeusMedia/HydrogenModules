@@ -2,6 +2,7 @@
 
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Captain;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_Bootstrap extends Hook
@@ -94,11 +95,11 @@ class Hook_UI_Bootstrap extends Hook
 
 		if( $options->get( 'cdn' ) ){
 			//  CSS
-			$context->addThemeStyle( $pathCdn.$script, 'top', array( 'crossorigin' => 'anonymous' ) );
+			$context->addThemeStyle( $pathCdn.$script, Captain::LEVEL_TOP, array( 'crossorigin' => 'anonymous' ) );
 			if( $majorVersion === 3 || $majorVersion === 4 ){
 				if( $options->get( 'map' ) ){
 					$script	= 'css/bootstrap'.$suffix.'.css.map';
-					$context->addThemeStyle( $pathCdn.$script, 'top', array( 'crossorigin' => 'anonymous' ) );
+					$context->addThemeStyle( $pathCdn.$script, Captain::LEVEL_TOP, array( 'crossorigin' => 'anonymous' ) );
 				}
 			}
 			//  JS
@@ -108,17 +109,17 @@ class Hook_UI_Bootstrap extends Hook
 		}
 		else if( $options->get( 'local' ) ){
 			//  CSS
-			$context->addCommonStyle( $pathLocal.$script, 'top' );
+			$context->addCommonStyle( $pathLocal.$script, Captain::LEVEL_TOP );
 			if( $majorVersion === 2 ){
 				if( $options->get( 'responsive' ) ){
 					$script	= 'css/bootstrap-responsive'.$suffix.'.css';
-					$context->addCommonStyle( $pathLocal.$script, 'top' );
+					$context->addCommonStyle( $pathLocal.$script, Captain::LEVEL_TOP );
 				}
 			}
 			else if( $majorVersion === 3 || $majorVersion === 4 ){
 				if( $loadMap ){
 					$script	= 'css/bootstrap'.$suffix.'.css.map';
-					$context->addCommonStyle( $pathLocal.$script, 'bottom' );
+					$context->addCommonStyle( $pathLocal.$script, Captain::LEVEL_END );
 				}
 			}
 			//  JS
@@ -129,9 +130,9 @@ class Hook_UI_Bootstrap extends Hook
 		}
 		if( $options->get( 'local.theme' ) ){
 			$script	= 'css/bootstrap-'.$options->get( 'local.theme' ).$suffix.'.css';
-			$context->addCommonStyle( $pathLocal.$script, 'top' );
+			$context->addCommonStyle( $pathLocal.$script, Captain::LEVEL_TOP );
 		}
-//		$context->addCommonStyle( 'bootstrap.print.css', 'top' );
+//		$context->addCommonStyle( 'bootstrap.print.css', Captain::LEVEL_TOP );
 		$context->addBodyClass( 'uses-bootstrap bootstrap'.$majorVersion );
 	}
 

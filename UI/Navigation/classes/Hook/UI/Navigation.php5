@@ -15,7 +15,7 @@ class Hook_UI_Navigation extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function setupSidebar( Environment $env, $context, $module, $payload )
+	public static function setupSidebar( Environment $env, $context, $module, array &  $payload )
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_navigation.', TRUE );
 		$desktopRendererClass = $moduleConfig->get( 'render.desktop.class' );

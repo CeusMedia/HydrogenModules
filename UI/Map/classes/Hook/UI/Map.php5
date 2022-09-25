@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_Map extends Hook
 {
-	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
+	public static function onPageApplyModules( Environment $env, $context, $module, array & $payload )
 	{
 		$key	= $env->getConfig()->get( 'module.ui_map.apiKey' );
 		if( $key ){

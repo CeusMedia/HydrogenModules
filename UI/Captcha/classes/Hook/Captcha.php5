@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Captcha extends Hook
 {
-	public static function onViewRenderContent( Environment $env, $context, $module, $payload )
+	public static function onViewRenderContent( Environment $env, $context, $module, array & $payload )
 	{
 		$config	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
 
@@ -16,7 +16,7 @@ class Hook_Captcha extends Hook
 		$height		= $default->get( 'height' ) > 0 ? $default->get( 'height' ) : 40;
 
 		$processor		= new Logic_Shortcode( $env );
-		$processor->setContent( $payload->content );
+		$processor->setContent( $payload['content'] );
 		$shortCodes		= array(
 			'captcha'	=> array(
 				'mode'		=> $config->get( 'mode' ),
@@ -49,6 +49,6 @@ class Hook_Captcha extends Hook
 				}
 			}
 		}
-		$payload->content	= $processor->getContent();
+		$payload['content']	= $processor->getContent();
 	}
 }

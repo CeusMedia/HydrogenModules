@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_CookieWarning extends Hook
 {
-	public static function onPageBuild( Environment $env, $context, $module, $payload )
+	public static function onPageBuild( Environment $env, $context, $module, array & $payload )
 	{
 		$config		= $env->getConfig();
 		$options	= $config->getAll( 'module.ui_js_cookiewarning.', TRUE );
@@ -36,7 +36,7 @@ class Hook_UI_CookieWarning extends Hook
 				) );
 				$script		= 'function acceptCookies(){Cookies.set("acceptCookies",true); $("#cookie-warning").slideUp()};';
 				$env->getPage()->js->addScript( $script );
-				$payload->content	= $bar.$payload->content;
+				$payload['content']	= $bar.$payload['content'];
 			}
 			else{
 				if( $env->getRequest()->has( 'removeAcceptCookies' ) )

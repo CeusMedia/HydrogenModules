@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
@@ -13,15 +14,14 @@ class View_Info_Blog extends View
 	{
 	}
 
-	public static function onViewRenderContent( Environment $env, $context, $module, $payload = [] )
+	public static function onViewRenderContent( Environment $env, object $context, $module, array & $payload = [] )
 	{
-		$data		= (object) $payload;
 		$pattern	= "/^(.*)(\[blog:(.+)\])(.*)$/sU";
-		while( preg_match( $pattern, $data->content ) ){
-			$id				= trim( preg_replace( $pattern, "\\3", $data->content ) );
+		while( preg_match( $pattern, $payload['content'] ) ){
+			$id				= trim( preg_replace( $pattern, "\\3", $payload['content'] ) );
 			$content		= View_Info_Blog::renderPostAbstractPanelStatic( $env, $id );
 			$replacement	= "\\1".$content."\\4";													//  insert content of nested page...
-			$data->content	= preg_replace( $pattern, $replacement, $data->content );				//  ...into page content
+			$payload['content']	= preg_replace( $pattern, $replacement, $payload['content'] );				//  ...into page content
 		}
 	}
 
@@ -31,7 +31,7 @@ class View_Info_Blog extends View
 			'Datum: '	=> date( 'd.m.Y H:i', $comment->createdAt ),
 		);
 		$facts		= self::renderFactsStatic( $env, $facts, 'dl-inline' );
-		return UI_HTML_Tag::create( 'div', $facts, array( 'class' => 'infobar blog-comment-info' ) );
+		return HtmlTag::create( 'div', $facts, array( 'class' => 'infobar blog-comment-info' ) );
 	}
 
 	public function renderComment( $comment ){
@@ -40,8 +40,8 @@ class View_Info_Blog extends View
 
 	public static function renderCommentStatic( Environment $env, $comment ){
 		$infobar	= self::renderCommentInfoBarStatic( $env, $comment );
-		$content	= UI_HTML_Tag::create( 'blockquote', nl2br( trim( $comment->content ) ) );
-		$html		= UI_HTML_Tag::create( 'div', $infobar.$content, array(
+		$content	= HtmlTag::create( 'blockquote', nl2br( trim( $comment->content ) ) );
+		$html		= HtmlTag::create( 'div', $infobar.$content, array(
 			'class'		=> 'list-comments-item'
 		) );
 		return $html;
@@ -71,40 +71,40 @@ class View_Info_Blog extends View
 		if( !$post )
 			return;
 		$content		= self::renderPostAbstractStatic( $env, $post, FALSE );				//  load nested page content
-		$heading		= UI_HTML_Tag::create( 'h3', $title );
-		$panelInner		= UI_HTML_Tag::create( 'div', $content, array(
+		$heading		= HtmlTag::create( 'h3', $title );
+		$panelInner		= HtmlTag::create( 'div', $content, array(
 			'class'		=> 'content-panel-inner moduleInfoBlog'
 		) );
-		return UI_HTML_Tag::create( 'div', $heading.$panelInner, array(
+		return HtmlTag::create( 'div', $heading.$panelInner, array(
 			'class'		=> 'content-panel content-panel-info'
 		) );
 	}
 
 	public static function renderPostAbstractStatic( Environment $env, $post, $showInfoBar = TRUE )
 	{
-		$title		= UI_HTML_Tag::create( 'h4', $post->title );
+		$title		= HtmlTag::create( 'h4', $post->title );
 		$url		= View_Info_Blog::renderPostUrlStatic( $env, $post );
-		$title		= UI_HTML_Tag::create( 'a', $title, array( 'href' => $url ) );
-		$payload	= (object) array(
+		$title		= HtmlTag::create( 'a', $title, array( 'href' => $url ) );
+		$payload	= [
 			'content'	=> $post->abstract,
 			'type'		=> 'html',
-		);
+		];
 		$view		= new View( $env );
 		$words		= $view->getWords( 'index', 'info/blog' );
 		$env->getCaptain()->callHook( 'View', 'onRenderContent', $view, $payload );
-		$abstract	= $payload->content;
-		$linkView	= UI_HTML_Tag::create( 'a', $words->linkMore, array(
+		$abstract	= $payload['content'];
+		$linkView	= HtmlTag::create( 'a', $words->linkMore, array(
 			'href'	=> './info/blog/post/'.$post->postId,
 		) );
-		$clearfloat	= UI_HTML_Tag::create( 'div', '', array( 'class' => 'clearfix' ) );
-		$linkView	= UI_HTML_Tag::create( 'small', $linkView );
+		$clearfloat	= HtmlTag::create( 'div', '', array( 'class' => 'clearfix' ) );
+		$linkView	= HtmlTag::create( 'small', $linkView );
 		$infobar	= View_Info_Blog::renderPostInfoBarStatic( $env, $post );
 		$content	= array(
 			$title,
 			$abstract.'&nbsp;'.$linkView.$clearfloat,
 			$showInfoBar ? $infobar : '',
 		);
-		return UI_HTML_Tag::create( 'div', $content, array( 'class' => 'blog-post' ) );
+		return HtmlTag::create( 'div', $content, array( 'class' => 'blog-post' ) );
 	}
 
 	public static function renderPostInfoBarStatic( Environment $env, $post )
@@ -124,7 +124,7 @@ class View_Info_Blog extends View
 		);
 
 		$facts		= self::renderFactsStatic( $env, $facts, 'dl-inline' );
-		return UI_HTML_Tag::create( 'div', $facts, array( 'class' => 'infobar blog-post-info hidden-phone' ) );
+		return HtmlTag::create( 'div', $facts, array( 'class' => 'infobar blog-post-info hidden-phone' ) );
 	}
 
 	public static function renderPostUrlStatic( Environment $env, $post )
@@ -136,8 +136,8 @@ class View_Info_Blog extends View
 	protected static function renderFactsStatic( Environment $env, $facts, $listClass = 'dl-horizontal' ){
 		$list	= [];
 		foreach( $facts as $label => $value ){
-			$list[]	= UI_HTML_Tag::create( 'dt', $label ).UI_HTML_Tag::create( 'dd', $value );
+			$list[]	= HtmlTag::create( 'dt', $label ).HtmlTag::create( 'dd', $value );
 		}
-		return UI_HTML_Tag::create( 'dl', $list, array( 'class' => $listClass ) );
+		return HtmlTag::create( 'dl', $list, array( 'class' => $listClass ) );
 	}
 }

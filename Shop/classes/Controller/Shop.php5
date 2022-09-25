@@ -367,12 +367,12 @@ class Controller_Shop extends Controller
 		$this->addData( 'order', $this->logic->getOrder( $orderId, TRUE ) );
 
 		$arguments	= array( 'orderId' => $orderId, 'paymentBackends' => $this->backends );
-		$this->env->getModules()->callHook( 'Shop', 'renderServicePanels', $this, $arguments );
+		$this->env->getModules()->callHookWithPayload( 'Shop', 'renderServicePanels', $this, $arguments );
 		$this->addData( 'servicePanels', $this->servicePanels );
 
 		$arguments	= array( 'orderId' => $orderId );
 		$this->addData( 'delivery', NULL );
-		$this->env->getModules()->callHook( 'Shop', 'onPaymentSuccess', $this, $arguments );
+		$this->env->getModules()->callHookWithPayload( 'Shop', 'onPaymentSuccess', $this, $arguments );
 	}
 
 	public function setPaymentBackend( $paymentBackendKey = NULL )

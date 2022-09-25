@@ -5,24 +5,26 @@ use CeusMedia\HydrogenFramework\Environment\Console as ConsoleEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
 
+use Exception;
+use RangeException;
+
 class Hook_System_Exception extends Hook
 {
-	static public function onAppException( Environment $env, $context, $module, $data = [] )
+	static public function onAppException( Environment $env, object $context, $module, array & $payload )
 	{
-		$env->getCaptain()->callHook( 'Env', 'logException', $context, $data );	//  @todo replace $data by (array) payload after migration
+		$env->getCaptain()->callHook( 'Env', 'logException', $context, $payload );
 
-		$payload	= (object) $data;
-		if( !property_exists( $payload, 'exception' ) )
-			throw new \RangeException( 'No exception given' );
-		if( !( $payload->exception instanceof \Exception ) )
-			throw new \RangeException( 'Given exception is not an exception instance' );
+		if( !isset( $payload['exception'] ) )
+			throw new RangeException( 'No exception given' );
+		if( !( $payload['exception'] instanceof Exception ) )
+			throw new RangeException( 'Given exception is not an exception instance' );
 
 		if( $env->getRequest()->get( '__controller' ) === 'system/exception' )
 			return FALSE;
 		if( !$env->getConfig()->get( 'module.server_system_exception.active' ) )
 			return FALSE;
 
-		$e	= $payload->exception;
+		$e	= $payload['exception'];
 		if( $env instanceof WebEnvironment ){
 			$requestUrl	= $env->getRequest()->getUrl();
 			if( $env->getRequest()->isAjax() ){

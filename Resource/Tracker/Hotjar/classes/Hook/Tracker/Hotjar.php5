@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Tracker_Hotjar extends Hook
 {
-	static public function onPageApplyModules( Environment $env, $context, $modules, $data = [] )
+	static public function onPageApplyModules( Environment $env, $context, $modules, array & $payload )
 	{
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_hotjar.', TRUE );				//  get module configuration as array map
 		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )									//  piwik tracking is disabled or ID is not set

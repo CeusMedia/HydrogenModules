@@ -84,8 +84,10 @@ class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
 		}
 		if( !( $this->listImages = $this->cache->get( $cacheKey ) ) ){
 			$this->list	= [];
-			if( ( $modules = $this->env->getModules() ) )											//  get module handler resource if existing
-				$modules->callHook( 'TinyMCE', 'getImageList', $this, array( 'hidePrefix' => FALSE ) );								//  call related module event hooks
+			if( ( $modules = $this->env->getModules() ) ){	 										//  get module handler resource if existing
+				$payload	= array( 'hidePrefix' => FALSE );
+				$modules->callHook( 'TinyMCE', 'getImageList', $this, $payload );								//  call related module event hooks
+			}
 			$this->listImages	= $this->list;
 			usort( $this->listImages, array( $this, "__compare" ) );
 			$this->cache->set( $cacheKey, $this->listImages );

@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_Favicon extends Hook
 {
-	public static function onPageBuild( Environment $env, $context, $module, $payload )
+	public static function onPageBuild( Environment $env, $context, $module, array & $payload )
 	{
 		$config			= $env->getConfig();
 		$configFav		= $config->getAll( 'module.ui_favicon.favorite.', TRUE );

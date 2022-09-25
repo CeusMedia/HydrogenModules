@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info_Blog extends Hook
 {
-	public static function onViewRenderContent( Environment $env, $context, $module, $payload = [] )
+	public static function onViewRenderContent( Environment $env, $context, $module, array & $payload )
 	{
 		$data		= (object) $payload;
 		$pattern	= "/^(.*)(\[blog:(.+)\])(.*)$/sU";

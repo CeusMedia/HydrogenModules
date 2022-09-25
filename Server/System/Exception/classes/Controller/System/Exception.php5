@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\Common\Net\HTTP\Status as HttpStatus;
 
 class Controller_System_Exception extends Controller
 {
@@ -17,8 +18,8 @@ class Controller_System_Exception extends Controller
 				$this->addData( 'exceptionUrl', $session->get( 'exceptionUrl' ) );
 			}
 			if( isset( $exception->code ) ){
-				if( Net_HTTP_Status::isCode( $exception->code ) ){
-					Net_HTTP_Status::sendHeader( $exception->code );					//  send HTTP status code header
+				if( HttpStatus::isCode( $exception->code ) ){
+					HttpStatus::sendHeader( $exception->code );					//  send HTTP status code header
 					$this->env->getResponse()->setStatus( $exception->code );			//  indicate HTTP status 500 - internal server error
 				}
 			}
@@ -56,7 +57,7 @@ class Controller_System_Exception extends Controller
 			catch( Exception $e ){
 				$payload	= array( 'exception' => $e );
 				$this->env->getCaptain()->callHook( 'App', 'onException', $this, $payload );
-				throw new \Exception( $e->getMessage(), $e->getCode(), $e );
+				throw new Exception( $e->getMessage(), $e->getCode(), $e );
 			}
 		}
 		else{

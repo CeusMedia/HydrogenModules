@@ -15,7 +15,7 @@ class Hook_UI_Font_FontAwesome extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( Environment $env, $module, $context, $payload )
+	public static function onPageApplyModules( Environment $env, $module, $context, array & $payload )
 	{
 		$config	= $env->getConfig();
 		$mc		= $config->getAll( 'module.ui_font_fontawesome.', TRUE );

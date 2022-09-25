@@ -5,9 +5,8 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_Image_Slider extends Hook
 {
-	public static function onRenderContent( Environment $env, $context, $modules, $payload = [] )
+	public static function onRenderContent( Environment $env, $context, $modules, array & $payload )
 	{
-		$payload		= (object) $payload;
 		$processor		= $env->getLogic()->get( 'Shortcode' );
 		$shortCodes		= array(
 			'slider'	=> array(
@@ -17,10 +16,10 @@ class Hook_UI_Image_Slider extends Hook
 
 		/** @todo remove this legacy support */
 		$pattern	= "/\[slider:([0-9]+)\]/sU";													//  old syntax
-		if( preg_match( $pattern, $payload->content ) )												//  found instance of old syntax
-			$payload->content	= preg_replace( $pattern, '[slider id="\\1"]', $payload->content );	//  replace by new syntax
+		if( preg_match( $pattern, $payload['content'] ) )												//  found instance of old syntax
+			$payload['content']	= preg_replace( $pattern, '[slider id="\\1"]', $payload['content'] );	//  replace by new syntax
 
-		$processor->setContent( $payload->content );
+		$processor->setContent( $payload['content'] );
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;
@@ -38,6 +37,6 @@ class Hook_UI_Image_Slider extends Hook
 				}
 			}
 		}
-		$payload->content	= $processor->getContent();
+		$payload['content']	= $processor->getContent();
 	}
 }

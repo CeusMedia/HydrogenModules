@@ -29,11 +29,12 @@ class Controller_Info_Mail_Group extends Controller
 			$this->restart( NULL );
 		}
 		try{
-			$result	= $this->env->getModules()->callHook(
+			$payload	= array( 'action' => $action );
+			$result	= $this->env->getModules()->callHookWithPayload(
 				'MailGroupAction',
 				$action->action,
 				$this,
-				array( 'action' => $action )
+				$payload
 			);
 			if( $result )
 				$this->modelAction->edit( $action->mailGroupActionId, array(

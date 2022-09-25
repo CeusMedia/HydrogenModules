@@ -15,7 +15,7 @@ class Hook_UI_Font_OpenSans extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
+	public static function onPageApplyModules( Environment $env, $context, $module, array & $payload )
 	{
 		$config	= $env->getConfig();
 		if( $config->get( 'module.ui_font.active' ) ){

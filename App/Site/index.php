@@ -1,6 +1,9 @@
 <?php
 ( include_once 'vendor/autoload.php' ) or die( 'Install packages using composer, first!' );
 
+require_once 'vendor/ceus-media/common/src/compat8.php';
+
+use CeusMedia\Common\Loader;
 use CeusMedia\Common\UI\HTML\Exception\Page as ExceptionPage;
 use CeusMedia\HydrogenFramework\Application\Web\Site as WebSiteApplication;
 use CeusMedia\HydrogenFramework\Environment\Router\Recursive as RecursiveRouter;

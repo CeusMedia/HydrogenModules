@@ -13,7 +13,7 @@ class Hook_UI_CSS_Panel extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
+	public static function onPageApplyModules( Environment $env, $context, $module, array & $payload )
 	{
 		$options	= $env->getConfig()->getAll( 'module.ui_css_panel.', TRUE );
 		if( $options->get( 'active' ) ){

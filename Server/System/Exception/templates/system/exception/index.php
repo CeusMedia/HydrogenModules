@@ -1,20 +1,22 @@
 <?php
 
-$iconMore	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-info-circle' ) );
-$iconReload	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
-$iconReset	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconMore	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-info-circle' ) );
+$iconReload	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
+$iconReset	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
 $words		= $env->getLanguage()->getWords( 'server/system/exception' );
 
 $buttonTryAgain	= '';
 if( !empty( $exceptionUrl ) ){
-	$buttonTryAgain	= UI_HTML_Tag::create( 'a', $iconReload.' '.$words['index']['buttonRetry'], array(
+	$buttonTryAgain	= HtmlTag::create( 'a', $iconReload.' '.$words['index']['buttonRetry'], array(
 		'href'	=> $exceptionUrl->get( TRUE ),
 		'class'	=> 'btn',
 	) );
 }
 
-$buttonReset	= UI_HTML_Tag::create( 'a', $iconReset.' '.$words['index']['buttonReset'], array(
+$buttonReset	= HtmlTag::create( 'a', $iconReset.' '.$words['index']['buttonReset'], array(
 	'href'	=> './system/exception/reset',
 	'class'	=> 'btn',
 ) );
@@ -33,14 +35,14 @@ if( $showFacts ){
 			if( $key === "trace" )
 				continue;
 			if( $key === "file" )
-				$exception->file	= UI_HTML_Tag::create( 'small', $exception->file );
-	//			$exception->trace	= UI_HTML_Tag::create( 'kbd', nl2br( $exception->trace ) );
-			$facts[]	= UI_HTML_Tag::create( 'dt', $label, array( 'class' => 'fact-'.$key ) );
-			$facts[]	= UI_HTML_Tag::create( 'dd', $exception->{$key}, array( 'class' => 'fact-'.$key ) );
+				$exception->file	= HtmlTag::create( 'small', $exception->file );
+	//			$exception->trace	= HtmlTag::create( 'kbd', nl2br( $exception->trace ) );
+			$facts[]	= HtmlTag::create( 'dt', $label, array( 'class' => 'fact-'.$key ) );
+			$facts[]	= HtmlTag::create( 'dd', $exception->{$key}, array( 'class' => 'fact-'.$key ) );
 		}
 	}
-	$facts	= UI_HTML_Tag::create( 'dl', $facts, array( 'class' => 'dl-horizontal' ) );
-	$buttonMore	= UI_HTML_Tag::create( 'button', $iconMore.' '.$words['index-facts']['buttonShow'], array(
+	$facts	= HtmlTag::create( 'dl', $facts, array( 'class' => 'dl-horizontal' ) );
+	$buttonMore	= HtmlTag::create( 'button', $iconMore.' '.$words['index-facts']['buttonShow'], array(
 		'type'		=> 'button',
 		'id'		=> 'exception-facts-trigger',
 		'onclick'	=> 'showExceptionFacts();',
@@ -52,7 +54,7 @@ if( $showFacts ){
 		<h4>'.$words['index-facts']['heading'].'</h4>
 		'.$facts.'
 		<h4>'.$words['index-facts']['trace'].'</h4>
-		'.UI_HTML_Tag::create( 'kbd', nl2br( $exception->trace ), array( 'style' => 'font-size: 10px; letter-spacing: -0.25px; line-height: 12px;' ) ).'
+		'.HtmlTag::create( 'kbd', nl2br( $exception->trace ), array( 'style' => 'font-size: 10px; letter-spacing: -0.25px; line-height: 12px;' ) ).'
 	</div>
 	'.$buttonMore.'
 	<script>

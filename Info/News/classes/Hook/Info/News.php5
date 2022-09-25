@@ -5,10 +5,10 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info_News extends Hook
 {
-	public static function onViewRenderContent( Environment $env, $context, $module, $payload = [] )
+	public static function onViewRenderContent( Environment $env, object $context, $module, array & $payload = [] )
 	{
 		$processor		= new Logic_Shortcode( $env );
-		$processor->setContent( $payload->content );
+		$processor->setContent( $payload['content'] );
 		$words			= $env->getLanguage()->getWords( 'info/news' );
 		$shortCodes		= array(
 			'news'	=> array(
@@ -52,6 +52,6 @@ class Hook_Info_News extends Hook
 				}
 			}
 		}
-		$payload->content	= $processor->getContent();
+		$payload['content']	= $processor->getContent();
 	}
 }

@@ -40,7 +40,7 @@ class View_Manage_Customer extends View
 	{
 		$view	= new View_Manage_Customer( $env );													//  prepare view
 		$data	= array( 'customerId' => $customerId );												//  prepare hook data
-		$env->getModules()->callHook( "CustomerManager", "registerTabs", $view, $data );			//  call tabs to be registered
+		$env->getModules()->callHookWithPayload( "CustomerManager", "registerTabs", $view, $data );			//  call tabs to be registered
 		$list	= [];																			//  prepare empty list
 		foreach( self::$tabs as $nr => $tab ){														//  iterate registered tabs
 			$attributes	= array( 'href'	=> './manage/customer/'.$tab->url );						//  collect tab link attributes

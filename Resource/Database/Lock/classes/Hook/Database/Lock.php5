@@ -33,12 +33,13 @@ class Hook_Database_Lock extends Hook
 		if( $request->isAjax() )
 			return FALSE;
 //		error_log( time().": ".json_encode( $request->getAll() )."\n", 3, "unlock.log" );
-		return $env->getModules()->callHook( 'Database_Lock', 'checkRelease', $context, array(
+		$payload	= array(
 			'userId'		=> $env->getSession()->get( 'auth_user_id' ),
 			'request'		=> $request,
 			'controller'	=> $request->get( '__controller' ),
 			'action'		=> $request->get( '__action' ),
 			'uri'			=> getEnv( 'REQUEST_URI' ),
-		) );
+		);
+		return $env->getModules()->callHookWithPayload( 'Database_Lock', 'checkRelease', $context, $payload );
 	}
 }

@@ -12,26 +12,26 @@ class Hook_App_Site extends Hook
 	 *	@param		Environment		$env		Environment object
 	 *	@param		object			$context	Object scope to apply hook within
 	 *	@param		???				$module		???
-	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@param		array			$payload		Data array or object for hook event handler
 	 *	@return		boolean|NULL	...
 	 */
-	static public function onFrameworkDeprecation( Environment $env, $context, $module, $data = [] )
+	static public function onFrameworkDeprecation( Environment $env, $context, $module, array & $payload )
 	{
 		$entity		= 'UNKNOWN';
 		$version	= '';
 		$hint		= '';
 		$note		= '';
-		if( isset( $data['entity'] ) && strlen( trim( $data['entity'] ) ) )
-			$entity		= trim( $data['entity'] );
-		if( isset( $data['version'] ) && strlen( trim( $data['version'] ) ) )
-		 	$version	= sprintf( ' (since version %s)', trim( $data['version'] ) );
-		if( isset( $data['instead'] ) && strlen( trim( $data['instead'] ) ) )
-			$hint		= sprintf( ' Please use "%s" instead!', trim( $data['instead'] ) );
-		if( isset( $data['instead'] ) && strlen( trim( $data['instead'] ) ) )
-			$hint		= sprintf( ' Please use "%s" instead!', trim( $data['instead'] ) );
-		if( isset( $data['message'] ) && strlen( trim( $data['message'] ) ) )
-			$note		= sprintf( ' Note: %s', trim( $data['message'] ) );
-		switch( $data['type'] ){
+		if( isset( $payload['entity'] ) && strlen( trim( $payload['entity'] ) ) )
+			$entity		= trim( $payload['entity'] );
+		if( isset( $payload['version'] ) && strlen( trim( $payload['version'] ) ) )
+			$version	= sprintf( ' (since version %s)', trim( $payload['version'] ) );
+		if( isset( $payload['instead'] ) && strlen( trim( $payload['instead'] ) ) )
+			$hint		= sprintf( ' Please use "%s" instead!', trim( $payload['instead'] ) );
+		if( isset( $payload['instead'] ) && strlen( trim( $payload['instead'] ) ) )
+			$hint		= sprintf( ' Please use "%s" instead!', trim( $payload['instead'] ) );
+		if( isset( $payload['message'] ) && strlen( trim( $payload['message'] ) ) )
+			$note		= sprintf( ' Note: %s', trim( $payload['message'] ) );
+		switch( $payload['type'] ){
 			case 'class':
 				$msg	= 'Class "%s" is deprecated';
 				break;
@@ -60,10 +60,10 @@ class Hook_App_Site extends Hook
 	 *	@param		Environment		$env		Environment object
 	 *	@param		object			$context	Object scope to apply hook within
 	 *	@param		???				$module		???
-	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@param		array			$payload		Data array or object for hook event handler
 	 *	@return		boolean|NULL	...
 	 */
-	static public function onEnvConstructEnd( Environment $env, $context, $module, $data = [] )
+	static public function onEnvConstructEnd( Environment $env, $context, $module, array & $payload )
 	{
 		if( !$env->getModules()->has( 'Resource_Authentication' ) )
 			return;
@@ -116,10 +116,10 @@ class Hook_App_Site extends Hook
 	 *	@param		Environment		$env		Environment object
 	 *	@param		object			$context	Object scope to apply hook within
 	 *	@param		???				$module		???
-	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@param		array			$payload		Data array or object for hook event handler
 	 *	@return		boolean|NULL	...
 	 */
-	static public function onPageApplyModules( Environment $env, $context, $module, $data = [] )
+	static public function onPageApplyModules( Environment $env, $context, $module, array & $payload )
 	{
 		$messenger	= $context->env->getMessenger();									//  shortcut messenger
 		if( !file_exists( '.htaccess' ) ){												//  .htaccess file is not existing
@@ -147,10 +147,10 @@ class Hook_App_Site extends Hook
 	 *	@param		Environment		$env		Environment object
 	 *	@param		object			$context	Object scope to apply hook within
 	 *	@param		???				$module		???
-	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@param		array			$payload		Data array or object for hook event handler
 	 *	@return		boolean|NULL	...
 	 */
-	static public function onPageInit( Environment $env, $context, $module, $data = [] )
+	static public function onPageInit( Environment $env, $context, $module, array & $payload )
 	{
 		$config = $env->getConfig();														//  shortcut configuration
 		if( !$config->get( 'app.revision' ) ){												//  no revision set in base app configuration
@@ -170,10 +170,10 @@ class Hook_App_Site extends Hook
 	 *	@param		Environment		$env		Environment object
 	 *	@param		object			$context	Object scope to apply hook within
 	 *	@param		???				$module		???
-	 *	@param		array|object	$data		Data array or object for hook event handler
+	 *	@param		array			$payload		Data array or object for hook event handler
 	 *	@return		boolean|NULL	...
 	 */
-	static public function onTinyMCEGetImageList( Environment $env, $context, $module, $data = [] )
+	static public function onTinyMCEGetImageList( Environment $env, $context, $module, array & $payload )
 	{
 		$moduleConfig		= $env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
 		$frontend			= Logic_Frontend::getInstance( $env );
@@ -225,70 +225,75 @@ class Hook_App_Site extends Hook
 	/**
 	 *	@deprecated		use Hook_App_Site::onEnvConstructEnd instead
 	 */
-	static public function ___onEnvConstructEnd( Environment $env, $context, $module, $data = [] )
+	static public function ___onEnvConstructEnd( Environment $env, $context, $module, array & $payload )
 	{
-		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
+		$data	= array(
 			'type'		=> 'hook',
 			'entity'	=> 'Hook_App_Site::___onEnvConstructEnd',
 			'message'	=> 'Hook method "___onEnvConstructEnd" has been renamed to "onEnvConstructEnd"',
 			'instead'	=> 'Hook_App_Site::onEnvConstructEnd',
-		) );
-		return self::onEnvConstructEnd( $env, $context, $module, $data );
+		);
+		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, $data );
+		return self::onEnvConstructEnd( $env, $context, $module, $payload );
 	}
 
 	/**
 	 *	@deprecated		use Hook_App_Site::onPageApplyModules instead
 	 */
-	static public function ___onPageApplyModules( Environment $env, $context, $module, $data = [] )
+	static public function ___onPageApplyModules( Environment $env, $context, $module, array & $payload )
 	{
-		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
+		$data	= array(
 			'type'		=> 'hook',
 			'entity'	=> 'Hook_App_Site::___onPageApplyModules',
 			'message'	=> 'Hook method "___onPageApplyModules" has been renamed to "onPageApplyModules"',
 			'instead'	=> 'Hook_App_Site::onPageApplyModules',
-		) );
-		return self::onPageApplyModules( $env, $context, $module, $data );
+		);
+		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, $data );
+		return self::onPageApplyModules( $env, $context, $module, $payload );
 	}
 
 	/**
 	 *	@deprecated		use Hook_App_Site::onPageInit instead
 	 */
-	static public function ___onPageInit( Environment $env, $context, $module, $data = [] )
+	static public function ___onPageInit( Environment $env, $context, $module, array & $payload )
 	{
-		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
+		$data	= array(
 			'type'		=> 'hook',
 			'entity'	=> 'Hook_App_Site::___onPageInit',
 			'message'	=> 'Hook method "___onPageInit" has been renamed to "onPageInit"',
 			'instead'	=> 'Hook_App_Site::onPageInit',
-		) );
-		return self::onPageInit( $env, $context, $module, $data );
+		);
+		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, $data );
+		return self::onPageInit( $env, $context, $module, $payload );
 	}
 
 	/**
 	 *	@deprecated		use Hook_App_Site::onTinyMCEGetImageList instead
 	 */
-	static public function ___onTinyMCE_getImageList( Environment $env, $context, $module, $data = [] )
+	static public function ___onTinyMCE_getImageList( Environment $env, $context, $module, array & $payload )
 	{
-		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
+		$data	= array(
 			'type'		=> 'hook',
 			'entity'	=> 'Hook_App_Site::___onTinyMCE_getImageList',
 			'message'	=> 'Hook method "___onTinyMCE_getImageList" has been renamed to "onTinyMCEGetImageList"',
 			'instead'	=> 'Hook_App_Site::onTinyMCEGetImageList',
-		) );
-		return self::onTinyMCEGetImageList( $env, $context, $module, $data );
+		);
+		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, $data );
+		return self::onTinyMCEGetImageList( $env, $context, $module, $payload );
 	}
 
 	/**
 	 *	@deprecated		use Hook_App_Site::onFrameworkDeprecation instead
 	 */
-	static public function ___onFrameworkDeprecation( Environment $env, $context, $module, $data = [] )
+	static public function ___onFrameworkDeprecation( Environment $env, $context, $module, array & $payload )
 	{
-		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, array(
+		$data	= array(
 			'type'		=> 'hook',
 			'entity'	=> 'Hook_App_Site::___onFrameworkDeprecation',
 			'message'	=> 'Hook method "___onFrameworkDeprecation" has been renamed to "onFrameworkDeprecation"',
 			'instead'	=> 'Hook_App_Site::onFrameworkDeprecation',
-		) );
-		return self::onFrameworkDeprecation( $env, $context, $module, $data );
+		);
+		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, $data );
+		return self::onFrameworkDeprecation( $env, $context, $module, $payload );
 	}
 }

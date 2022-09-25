@@ -10,10 +10,9 @@ class Hook_UI_MetaTags extends Hook
 	 *	@static
 	 *	@param		object			$context	Caller object
 	 *	@param		object			$module		Module config data object
-	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
+	public static function onPageApplyModules( Environment $env, object $context, $module )
 	{
 		$helper	= new View_Helper_MetaTags( $env );
 		$helper->apply();

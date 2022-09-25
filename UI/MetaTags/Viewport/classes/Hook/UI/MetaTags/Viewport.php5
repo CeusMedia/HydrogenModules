@@ -13,7 +13,7 @@ class Hook_UI_MetaTags_Viewport extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
+	public static function onPageApplyModules( Environment $env, $context, $module, array & $payload )
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_metatags_viewport.', TRUE );
 		if( !$moduleConfig->get( 'active' ) )
