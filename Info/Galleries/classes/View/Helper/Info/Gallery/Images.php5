@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 {
 	public function render(): string
@@ -6,12 +8,12 @@ class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 		$list	= [];
 		$images	= $this->getGalleryImages( $this->galleryId );
 		foreach( $images as $image ){
-			$thumb	= UI_HTML_Tag::create( 'img', NULL, array(
+			$thumb	= HtmlTag::create( 'img', NULL, array(
 				'src'	=> $this->baseFilePath.$this->gallery->path.'/thumbs/'.rawurlencode( $image->filename ),
 				'class'	=> $this->moduleConfig->get( 'gallery.thumb.class'),
 				'alt'	=> htmlspecialchars( $image->title, ENT_QUOTES, 'UTF-8' ),
 			) );
-			$link	= UI_HTML_Tag::create( 'a', $thumb, array(
+			$link	= HtmlTag::create( 'a', $thumb, array(
 				'href'			=> $this->baseFilePath.$this->gallery->path.'/'.rawurlencode( $image->filename ),
 				'class'			=> $this->getThumbnailLinkClass( View_Helper_Info_Gallery::SCOPE_IMAGE ),
 				'rel'			=> 'gallery-'.$this->galleryId,
@@ -20,9 +22,9 @@ class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 				'data-type'		=> 'image',
 				'data-caption'	=> htmlspecialchars( $image->title, ENT_QUOTES, 'UTF-8' ),
 			) );
-			$list[]	= UI_HTML_Tag::create( 'li', $link );
+			$list[]	= HtmlTag::create( 'li', $link );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbnails equalize-auto' ) );
+		return HtmlTag::create( 'ul', $list, array( 'class' => 'thumbnails equalize-auto' ) );
 	}
 
 	public function setGallery( $galleryId ): self

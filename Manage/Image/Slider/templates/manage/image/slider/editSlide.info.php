@@ -1,17 +1,18 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['editSlide.info'];
 
 $slideFilePath	= $basePath.$slider->path.$slide->source;
 $slideImage		= new UI_Image( $slideFilePath );
 
-$slideThumb		= UI_HTML_Tag::create( 'img', NULL, array(
+$slideThumb		= HtmlTag::create( 'img', NULL, array(
 	'class'	=> 'img-polaroid',
 	'src'	=> $slideFilePath,
 	'alt'	=> htmlentities( $slide->title, ENT_QUOTES, 'UTF-8' ),
 ) );
 if( $env->getModules()->has( 'UI_JS_fancyBox' ) )
-	$slideThumb		= UI_HTML_Tag::create( 'a', $slideThumb, array(
+	$slideThumb		= HtmlTag::create( 'a', $slideThumb, array(
 		'class'	=> 'fancybox-auto',
 		'href'	=> $slideFilePath,
 		'title'	=> htmlentities( $slide->title, ENT_QUOTES, 'UTF-8' ),

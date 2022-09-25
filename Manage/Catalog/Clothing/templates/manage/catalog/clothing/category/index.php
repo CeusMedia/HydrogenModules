@@ -1,6 +1,7 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
 
 $panelFilter	= '
 <div class="content-panel">
@@ -18,17 +19,17 @@ $panelFilter	= '
 
 $rows	= [];
 foreach( $categories as $category ){
-	$link	= UI_HTML_Tag::create( 'a', $category->title, array(
+	$link	= HtmlTag::create( 'a', $category->title, array(
 		'href'	=> './manage/catalog/clothing/category/edit/'.$category->categoryId,
 	) );
-	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-category-title' ) ),
+	$rows[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', $link, array( 'class' => 'cell-category-title' ) ),
 	) );
 }
-$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-$table	= UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-fixed' ) );
+$tbody	= HtmlTag::create( 'tbody', $rows );
+$table	= HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-fixed' ) );
 
-$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.'neue Kategorie', array(
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'neue Kategorie', array(
 	'href'	=> './manage/catalog/clothing/category/add',
 	'class'	=> 'btn btn-success',
 ) );

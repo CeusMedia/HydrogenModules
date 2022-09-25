@@ -1,19 +1,20 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconBack		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconBack		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 
 $facts	= [];
-$facts[]	= UI_HTML_Tag::create( 'dt', 'Datum' );
-$facts[]	= UI_HTML_Tag::create( 'dd', date( 'j.n.Y', strtotime( $event->dateStart ) ) );
-$facts[]	= UI_HTML_Tag::create( 'dt', 'Zeit' );
-$facts[]	= UI_HTML_Tag::create( 'dd', date( 'H:i', strtotime( $event->dateStart.' '.$event->timeStart ) ).' &minus; '.date( 'H:i', strtotime( $event->dateStart.' '.$event->timeEnd ) ).' Uhr' );
+$facts[]	= HtmlTag::create( 'dt', 'Datum' );
+$facts[]	= HtmlTag::create( 'dd', date( 'j.n.Y', strtotime( $event->dateStart ) ) );
+$facts[]	= HtmlTag::create( 'dt', 'Zeit' );
+$facts[]	= HtmlTag::create( 'dd', date( 'H:i', strtotime( $event->dateStart.' '.$event->timeStart ) ).' &minus; '.date( 'H:i', strtotime( $event->dateStart.' '.$event->timeEnd ) ).' Uhr' );
 
-$facts[]	= UI_HTML_Tag::create( 'dt', 'Ort' );
-$facts[]	= UI_HTML_Tag::create( 'dd', $event->address->title );
-$facts[]	= UI_HTML_Tag::create( 'dt', 'Adresse' );
-$facts[]	= UI_HTML_Tag::create( 'dd', $event->address->street.' '.$event->address->number.'<br/>'.$event->address->postcode.' '.$event->address->city );
+$facts[]	= HtmlTag::create( 'dt', 'Ort' );
+$facts[]	= HtmlTag::create( 'dd', $event->address->title );
+$facts[]	= HtmlTag::create( 'dt', 'Adresse' );
+$facts[]	= HtmlTag::create( 'dd', $event->address->street.' '.$event->address->number.'<br/>'.$event->address->postcode.' '.$event->address->city );
 
-$facts		= UI_HTML_Tag::create( 'dl', $facts, array( 'class' => 'not-dl-horizontal' ) );
+$facts		= HtmlTag::create( 'dl', $facts, array( 'class' => 'not-dl-horizontal' ) );
 
 $urlBack	= $from ? './'.$from : './event';
 

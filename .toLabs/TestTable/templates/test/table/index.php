@@ -1,18 +1,19 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $list		= [];
 foreach( $tests as $entry )
 {
 	$format	= $config->get( 'layout.format.timestamp' );
 	$time	= date( $format, (float) $entry['timestamp'] );
-	$time	= UI_HTML_Tag::create( 'em', UI_HTML_Tag::create( 'small', '['.$time.']' ) );
+	$time	= HtmlTag::create( 'em', HtmlTag::create( 'small', '['.$time.']' ) );
 	$url	= './test/table/edit/'.$entry['testId'];
 	$link	= UI_HTML_Elements::Link( $url, $entry['title'] );
 	$label	= $time.'&nbsp;&nbsp;'.$link;
 	$list[]	= UI_HTML_Elements::ListItem( $label );	
 }
 $list		= $list ? UI_HTML_Elements::unorderedList( $list, 0, array( '' => '' ) ) : '';
-$heading	= UI_HTML_Tag::create( 'h2', $words['index']['heading'] );
+$heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
 $add 		= UI_HTML_Elements::LinkButton( './test/table/add', 'add entry', 'button add' );
 
 $rows		= [];

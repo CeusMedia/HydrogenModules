@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*  --  MODULE TABLE  --  */
@@ -23,7 +24,7 @@ foreach( $modules as $moduleId => $module ){
 	$list[]		= '<tr class="'.$class.'"><td>'.$link.'</td><td>'.$type.'</td><td>'.$version.'</td></tr>';
 }
 $heads		= array( $words['index']['headTitle'], $words['index']['headType'], $words['index']['headVersion'] );
-$heads		= UI_HTML_Elements::TableHeads( $heads );
+$heads		= HtmlElements::TableHeads( $heads );
 $listAll	= '<table class="modules all">'.$heads.join( $list ).'</table>';
 
 

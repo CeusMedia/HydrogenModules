@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class Mail_Syslog extends Mail_Abstract
 {
 	protected function generate(): self
@@ -27,9 +29,9 @@ class Mail_Syslog extends Mail_Abstract
 		$script		= file_exists( $fileScript ) ? FS_File_Reader::load( $fileScript ): '';
 
 		$page	= new UI_HTML_PageFrame();
-		$page->addHead( UI_HTML_Tag::create( 'style', $style ) );
+		$page->addHead( HtmlTag::create( 'style', $style ) );
 		$page->addBody( $body );
-		$page->addBody( UI_HTML_Tag::create( 'script', $script ) );
+		$page->addBody( HtmlTag::create( 'script', $script ) );
 
 		$body->setContentEncoding( 'base64' );
 		$this->mail->setSubject( $data['prefix']." Syslog Mail: ".$data['subject'] );

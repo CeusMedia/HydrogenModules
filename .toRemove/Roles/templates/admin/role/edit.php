@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $optAccess	= [];
 foreach( $words['type-access'] as $key => $label ){
 	$selected		= $key == $role->access;
@@ -27,7 +29,7 @@ $panelEdit	= '
 				<li>
 				<label for="description">'.$words['edit']['labelDescription'].'</label><br/>
 		<!--		'.UI_HTML_Elements::Textarea( 'description', $role->description, 'xl-l' ).'-->
-				'.UI_HTML_Tag::create( 'textarea', $role->description, array( 'name' => 'description', 'rows' => 4 ) ).'
+				'.HtmlTag::create( 'textarea', $role->description, array( 'name' => 'description', 'rows' => 4 ) ).'
 				</li>
 				<li>
 					<label for="access">'.$words['edit']['labelAccess'].'</label><br/>

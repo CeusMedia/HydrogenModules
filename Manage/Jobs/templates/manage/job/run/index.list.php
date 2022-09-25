@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
 
@@ -7,12 +8,12 @@ $helperTime->setTemplate( $words['index']['timestampTemplate'] );
 $helperTime->setMode( View_Helper_TimePhraser::MODE_BREAK );
 //$helperTime->setMode( View_Helper_TimePhraser::MODE_HINT );
 
-$iconArchive	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) );
-$iconAbort		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconTerminate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
+$iconArchive	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) );
+$iconAbort		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconTerminate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
 
-$table		= UI_HTML_Tag::create( 'div', 'Keine Ausführungen gefunden.', array( 'class' => 'alert alert-warning' ) );
+$table		= HtmlTag::create( 'div', 'Keine Ausführungen gefunden.', array( 'class' => 'alert alert-warning' ) );
 if( $runs ){
 	$rows	= [];
 	foreach( $runs as $item ){
@@ -46,7 +47,7 @@ if( $runs ){
 
 		$title	= $definition->identifier;
 		if( $item->title )
-			$title	= UI_HTML_Tag::create( 'abbr', $item->title, array( 'title' => $title ) );
+			$title	= HtmlTag::create( 'abbr', $item->title, array( 'title' => $title ) );
 		$duration	= '-';
 		if( $item->finishedAt ){
 			$duration	= $item->finishedAt - $item->ranAt;
@@ -55,7 +56,7 @@ if( $runs ){
 
 		$buttonArchive	= '';
 		if( in_array( (int) $item->status, Model_Job_Run::STATUSES_ARCHIVABLE ) && !$item->archived ){
-			$buttonArchive	= UI_HTML_Tag::create( 'a', $iconArchive, array(
+			$buttonArchive	= HtmlTag::create( 'a', $iconArchive, array(
 				'href'	=> './manage/job/run/archive/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-inverse',
 				'title'	=> 'archivieren',
@@ -63,7 +64,7 @@ if( $runs ){
 		}
 		$buttonAbort	= '';
 		if( (int) $item->status === Model_Job_Run::STATUS_PREPARED ){
-			$buttonAbort	= UI_HTML_Tag::create( 'a', $iconAbort, array(
+			$buttonAbort	= HtmlTag::create( 'a', $iconAbort, array(
 				'href'	=> './manage/job/run/abort/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-danger',
 				'title'	=> 'verhindern',
@@ -71,7 +72,7 @@ if( $runs ){
 		}
 		$buttonTerminate	= '';
 		if( (int) $item->status === Model_Job_Run::STATUS_RUNNING ){
-			$buttonTerminate	= UI_HTML_Tag::create( 'a', $iconTerminate, array(
+			$buttonTerminate	= HtmlTag::create( 'a', $iconTerminate, array(
 				'href'	=> './manage/job/run/terminate/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-danger',
 				'title'	=> 'abbrechen',
@@ -79,7 +80,7 @@ if( $runs ){
 		}
 		$buttonRemove	= '';
 		if( in_array( (int) $item->status, Model_Job_Run::STATUSES_ARCHIVABLE ) ){
-			$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+			$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
 				'href'	=> './manage/job/run/remove/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-danger',
 				'title'	=> 'entfernen',
@@ -87,21 +88,21 @@ if( $runs ){
 		}
 
 
-		$link		= UI_HTML_Tag::create( 'a', $title, array(
+		$link		= HtmlTag::create( 'a', $title, array(
 			'href'	=> './manage/job/run/view/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' )
 		) );
-		$buttons	= UI_HTML_Tag::create( 'div', array( $buttonAbort, $buttonTerminate, $buttonArchive, $buttonRemove ), array( 'class' => 'btn-group' ) );
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', '<small class="muted">'.$item->jobRunId.'</small>' ),
-//			UI_HTML_Tag::create( 'td', '<a href="./manage/job/definition/view/'.$definition->jobDefinitionId.'">'.$title.'</a>' ),
-			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_RUN_TYPE )->render() ),
-			UI_HTML_Tag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_RUN_STATUS )->render() ),
-//			UI_HTML_Tag::create( 'td', $output ),
-			UI_HTML_Tag::create( 'td', $item->ranAt ? $helperTime->setTimestamp( $item->ranAt )->render() : '-' ),
-//			UI_HTML_Tag::create( 'td', $item->finishedAt ? $helperTime->setTimestamp( $item->finishedAt )->render() : '-' ),
-			UI_HTML_Tag::create( 'td', $duration ),
-			UI_HTML_Tag::create( 'td', $buttons ),
+		$buttons	= HtmlTag::create( 'div', array( $buttonAbort, $buttonTerminate, $buttonArchive, $buttonRemove ), array( 'class' => 'btn-group' ) );
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', '<small class="muted">'.$item->jobRunId.'</small>' ),
+//			HtmlTag::create( 'td', '<a href="./manage/job/definition/view/'.$definition->jobDefinitionId.'">'.$title.'</a>' ),
+			HtmlTag::create( 'td', $link ),
+			HtmlTag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_RUN_TYPE )->render() ),
+			HtmlTag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_RUN_STATUS )->render() ),
+//			HtmlTag::create( 'td', $output ),
+			HtmlTag::create( 'td', $item->ranAt ? $helperTime->setTimestamp( $item->ranAt )->render() : '-' ),
+//			HtmlTag::create( 'td', $item->finishedAt ? $helperTime->setTimestamp( $item->finishedAt )->render() : '-' ),
+			HtmlTag::create( 'td', $duration ),
+			HtmlTag::create( 'td', $buttons ),
 		) );
 	}
 
@@ -119,17 +120,17 @@ if( $runs ){
 
 	$cols	= UI_HTML_Elements::ColumnGroup( array_values( $columns ) );
 
-	$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array_keys( $columns ) ) );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-	$table		= UI_HTML_Tag::create( 'table', array( $cols, $thead, $tbody ), array( 'class' => 'table table-striped table-condensed' ) );
+	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array_keys( $columns ) ) );
+	$tbody		= HtmlTag::create( 'tbody', $rows );
+	$table		= HtmlTag::create( 'table', array( $cols, $thead, $tbody ), array( 'class' => 'table table-striped table-condensed' ) );
 
 	/*  --  PAGINATION  --  */
 	$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/job/run', $page, ceil( $total / $filterLimit ) );
-	$table		.= UI_HTML_Tag::create( 'div', $pagination, array( 'class' => 'buttunbar' ) );
+	$table		.= HtmlTag::create( 'div', $pagination, array( 'class' => 'buttunbar' ) );
 }
-$panelList	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', $words['index']['heading'] ),
-	UI_HTML_Tag::create( 'div', array(
+$panelList	= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', $words['index']['heading'] ),
+	HtmlTag::create( 'div', array(
 		$table,
 	), array( 'class' => 'content-panel-inner' ) )
 ), array( 'class' => 'content-panel' ) );

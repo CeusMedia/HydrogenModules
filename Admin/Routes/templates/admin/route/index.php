@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
@@ -30,8 +31,8 @@ if( $routes ){
 			HtmlTag::create( 'td', $buttons, array( 'class' => 'cell-route-actions' ) ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "8%", "7%", "", "", "8%" );
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Aktiv', 'Code', 'Quelle', 'Ziel', '' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( "8%", "7%", "", "", "8%" );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Aktiv', 'Code', 'Quelle', 'Ziel', '' ) ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
 }

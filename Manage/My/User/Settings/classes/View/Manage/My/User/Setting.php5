@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_My_User_Setting extends View{
@@ -66,14 +67,14 @@ class View_Manage_My_User_Setting extends View{
 			case 'integer':
 				if( $config->values ){
 					$options	= UI_HTML_Elements::Options( array_combine( $config->values, $config->values ), $config->value );
-					$input		= UI_HTML_Tag::create( 'select', $options, array(
+					$input		= HtmlTag::create( 'select', $options, array(
 						'name'	=> $inputKey,
 						'id'	=> 'input_'.$inputKey,
 						'class'	=> "span3 numeric",
 					) );
 				}
 				else{
-					$input	= UI_HTML_Tag::create( 'input', NULL, array(
+					$input	= HtmlTag::create( 'input', NULL, array(
 						'type'	=> "text",
 						'name'	=> $inputKey,
 						'id'	=> 'input_'.$inputKey,
@@ -93,7 +94,7 @@ class View_Manage_My_User_Setting extends View{
 						}
 					}
 					$options	= UI_HTML_Elements::Options( $labels, $config->value );
-					$input		= UI_HTML_Tag::create( 'select', $options, array(
+					$input		= HtmlTag::create( 'select', $options, array(
 						'name'	=> $inputKey,
 						'class'	=> 'span6',
 						'id'	=> 'input_'.$inputKey
@@ -102,7 +103,7 @@ class View_Manage_My_User_Setting extends View{
 				else{
 					$isPassword	= preg_match( "/password$/i", $config->key."|".$config->type );			//  setting is a password or key ends with 'password'
 					if( $isPassword ){
-						$input	= UI_HTML_Tag::create( 'input', NULL, array(
+						$input	= HtmlTag::create( 'input', NULL, array(
 							'type'	=> "password",
 							'name'	=> $inputKey,
 							'id'	=> 'input_'.$inputKey,
@@ -112,7 +113,7 @@ class View_Manage_My_User_Setting extends View{
 					else if( substr_count( $config->value, "," ) ){										//  contains several values
 						$content	= htmlentities( $config->value, ENT_QUOTES, 'UTF-8' );
 						$content	= str_replace( ",", "\n", $content );
-						$input	= UI_HTML_Tag::create( 'textarea', $content, array(
+						$input	= HtmlTag::create( 'textarea', $content, array(
 							'name'	=> $inputKey,
 							'id'	=> 'input_'.$inputKey,
 							'class'	=> "span12",
@@ -120,7 +121,7 @@ class View_Manage_My_User_Setting extends View{
 						) );
 					}
 					else{
-						$input	= UI_HTML_Tag::create( 'input', NULL, array(
+						$input	= HtmlTag::create( 'input', NULL, array(
 							'type'	=> 'text',
 							'name'	=> $inputKey,
 							'id'	=> 'input_'.$inputKey,
@@ -137,7 +138,7 @@ class View_Manage_My_User_Setting extends View{
 	protected function renderModuleSettings( $module, $settings, $moduleWords, $from = NULL ){
 		$words		= $this->env->getLanguage()->getWords( 'manage/my/user/setting' );
 		$words		= (object) $words['index'];
-		$iconReset	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+		$iconReset	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 		$rows	= [];
 		$list	= [];
 
@@ -200,7 +201,7 @@ class View_Manage_My_User_Setting extends View{
 					$url	= './manage/my/user/setting/reset/'.$module->id.'/'.$key;
 					if( $from )
 						$url	.= '?from='.$from;
-					$button	= UI_HTML_Tag::create( 'a', $iconReset, array( 'href' => $url, 'class' => 'btn btn-inverse btn-mini', 'title' => $words->buttonResetAlt ) );
+					$button	= HtmlTag::create( 'a', $iconReset, array( 'href' => $url, 'class' => 'btn btn-inverse btn-mini', 'title' => $words->buttonResetAlt ) );
 					$button	= '<span class="button-reset">'.$button.'</span>';
 				}
 				if( $suffix )

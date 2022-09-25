@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index.files'];
@@ -44,7 +45,7 @@ if( $files ){
 			HtmlTag::create( 'td', $buttons ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "60px" );
+	$colgroup	= HtmlElements::ColumnGroup( "", "60px" );
 	$thead	= HtmlTag::create( 'thead', '' );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );

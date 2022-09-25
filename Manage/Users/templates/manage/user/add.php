@@ -1,13 +1,15 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w				= (object) $words['add'];
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-list' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconList		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconCancel		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconList		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconSave		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
 }
 
 $roleMap	= [];

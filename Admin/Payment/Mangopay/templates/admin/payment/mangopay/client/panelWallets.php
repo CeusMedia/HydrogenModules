@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconWallet	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-briefcase' ) );
@@ -17,7 +18,7 @@ foreach( $clientWallets as $wallet ){
 		HtmlTag::create( 'td', $balance, array( 'style' => 'text-align: right' ) ),
 	) );
 }
-$cols	= UI_HTML_Elements::ColumnGroup( array( '', '120' ) );
+$cols	= HtmlElements::ColumnGroup( array( '', '120' ) );
 $tbody	= HtmlTag::create( 'tbody', $list );
 $list	= HtmlTag::create( 'table', $cols.$tbody, array( 'class' => 'table table-fixed' ) );
 

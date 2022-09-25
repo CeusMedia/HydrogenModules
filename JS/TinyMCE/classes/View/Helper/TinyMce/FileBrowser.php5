@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_TinyMce_FileBrowser
 {
 	protected $thumbnailer;
@@ -39,10 +41,10 @@ class View_Helper_TinyMce_FileBrowser
 			die;
 		}
 		$messages		= $buffer->get( TRUE );
-		$html			= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'div', $listTopics, array( 'id' => 'tinymce-file-browser-sidebar' ) ),
-			UI_HTML_Tag::create( 'div', $topbar, array( 'id' => 'tinymce-file-browser-topbar' ) ),
-			UI_HTML_Tag::create( 'div', $messages.$content, array( 'id' => 'tinymce-file-browser-content' ) ),
+		$html			= HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', $listTopics, array( 'id' => 'tinymce-file-browser-sidebar' ) ),
+			HtmlTag::create( 'div', $topbar, array( 'id' => 'tinymce-file-browser-topbar' ) ),
+			HtmlTag::create( 'div', $messages.$content, array( 'id' => 'tinymce-file-browser-content' ) ),
 		), array( 'id' => 'container-tinymce-file-browser' ) );
 
 		$page	= $this->env->getPage();
@@ -139,15 +141,15 @@ class View_Helper_TinyMce_FileBrowser
 		if( is_int( $count ) && $count > 0 ){
 			$facts[]	= sprintf( $count > 1 ? '%d Einträge' : '%d Eintrag', $count );
 		}
-		$facts	= UI_HTML_Tag::create( 'small', join( '&nbsp;|&nbsp;', $facts ), array( 'class' => 'muted' ) );
+		$facts	= HtmlTag::create( 'small', join( '&nbsp;|&nbsp;', $facts ), array( 'class' => 'muted' ) );
 
 		$path		= base64_encode( $path );
-		$image	= UI_HTML_Tag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
-		$label	= UI_HTML_Tag::create( 'div', $label.'<br/>'.$facts, array(
+		$image	= HtmlTag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
+		$label	= HtmlTag::create( 'div', $label.'<br/>'.$facts, array(
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
 		) );
 		$mode	= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
-		return UI_HTML_Tag::create( 'li', $image.$label, array(
+		return HtmlTag::create( 'li', $image.$label, array(
 			'class' 		=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-folder trigger-folder',
 			'data-url'		=> './manage/tinyMce/setPath/'.$mode.'/'.$this->topicId.'/'.$path,
 			'data-label'	=> $label,
@@ -156,7 +158,7 @@ class View_Helper_TinyMce_FileBrowser
 
 	protected function renderItemException( $itemUri, $itemLabel, $exception )
 	{
-		return UI_HTML_Tag::create( 'li', $exception->getMessage(), array(
+		return HtmlTag::create( 'li', $exception->getMessage(), array(
 			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-file',
 			'data-url'	=> '',
 		) );
@@ -167,8 +169,8 @@ class View_Helper_TinyMce_FileBrowser
 		$labelParts	= explode( "/", $filePath );
 		$label	= $labelParts[count( $labelParts ) - 1];
 //		if( is_string( $size ) )
-//			$size	= UI_HTML_Tag::create( 'small', '('.$size.')', array( 'class' => 'muted' ) );
-//		$image	= UI_HTML_Tag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
+//			$size	= HtmlTag::create( 'small', '('.$size.')', array( 'class' => 'muted' ) );
+//		$image	= HtmlTag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
 
 		$remoteFilePath = Logic_Frontend::getInstance( $this->env )->getPath().$path;
 		if( preg_match( '/^file\//', $path ) ){
@@ -182,7 +184,7 @@ class View_Helper_TinyMce_FileBrowser
 
 		try{
 			$image		= new UI_Image( $remoteFilePath );
-			$facts		= UI_HTML_Tag::create( 'dl', array(
+			$facts		= HtmlTag::create( 'dl', array(
 				sprintf( '<dt>Größe</dt><dd>%s</dd>', Alg_UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
 				sprintf( '<dt>Auflösung</dt><dd>%s&times;%s px</dd>', $image->getWidth(), $image->getHeight() ),
 				sprintf( '<dt>Qualität</dt><dd class="fact-quality">%s %%</dd>', $image->getQuality() ),
@@ -191,16 +193,16 @@ class View_Helper_TinyMce_FileBrowser
 			), array( 'class' => 'dl-inline' ) );
 		}
 		catch( Exception $e ){
-			$facts		= UI_HTML_Tag::create( 'dl', array(
+			$facts		= HtmlTag::create( 'dl', array(
 				sprintf( '<dt>Größe</dt><dd>%s</dd>', Alg_UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
 				sprintf( '<dt>Alter</dt><dd>'.$this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ).'</dd>' ),
 			), array( 'class' => 'dl-inline' ) );
 		}
-		$facts		= UI_HTML_Tag::create( 'small', $facts, array( 'class' => 'muted' ) );
+		$facts		= HtmlTag::create( 'small', $facts, array( 'class' => 'muted' ) );
 
 		try{
 			$data		= $this->thumbnailer->get( $remoteFilePath, 128, 128 );
-			$thumbnail	= UI_HTML_Tag::create( 'div', NULL, array(
+			$thumbnail	= HtmlTag::create( 'div', NULL, array(
 				'class'			=> $this->cssClassPrefix.'-item-icon trigger-submit',
 				'style'			=> 'background-image: url('.$data.')',
 				'data-url'		=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
@@ -209,7 +211,7 @@ class View_Helper_TinyMce_FileBrowser
 			) );
 		}
 		catch( Exception $e ){
-			$thumbnail			= UI_HTML_Tag::create( 'div', NULL, array(
+			$thumbnail			= HtmlTag::create( 'div', NULL, array(
 				'class'			=> $this->cssClassPrefix.'-item-icon trigger-submit',
 				'data-url'		=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
 				'data-type'		=> 'image',
@@ -217,10 +219,10 @@ class View_Helper_TinyMce_FileBrowser
 			) );
 		}
 
-		$label	= UI_HTML_Tag::create( 'div', $labelParts[count( $labelParts ) - 1].'<br/>'.$facts, array(
+		$label	= HtmlTag::create( 'div', $labelParts[count( $labelParts ) - 1].'<br/>'.$facts, array(
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
 		) );
-		return UI_HTML_Tag::create( 'li', $thumbnail.$label, array(
+		return HtmlTag::create( 'li', $thumbnail.$label, array(
 			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-file',
 			'data-url'	=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
 		) );
@@ -239,7 +241,7 @@ class View_Helper_TinyMce_FileBrowser
 			$parts		= explode( '/', $this->path );
 			$pathBack	= implode( '/', array_slice( $parts, 0, -1 ) );
 			$title		= 'zurück';
-			$desc		= UI_HTML_Tag::create( 'small', 'zum Überordner', array( 'class' => 'muted' ) );
+			$desc		= HtmlTag::create( 'small', 'zum Überordner', array( 'class' => 'muted' ) );
 			$list[]		= $this->renderFolderItem( $pathBack, $title.'<br/>'.$desc, NULL, 'arrow-left' );
 		}
 
@@ -257,10 +259,10 @@ class View_Helper_TinyMce_FileBrowser
 //				$this->env->getMessenger()->noteFailure( $e->getMessage() );
 			}
 		}
-		$listItems		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => $this->cssClassPrefix.' unstyled' ) );
-		$listItems		= UI_HTML_Tag::create( 'div', array(
-//			UI_HTML_Tag::create( 'h4', '-' ),//$pathLabel ),
-			UI_HTML_Tag::create( 'div', $listItems, array( 'id' => 'container-list-items' ) )
+		$listItems		= HtmlTag::create( 'ul', $list, array( 'class' => $this->cssClassPrefix.' unstyled' ) );
+		$listItems		= HtmlTag::create( 'div', array(
+//			HtmlTag::create( 'h4', '-' ),//$pathLabel ),
+			HtmlTag::create( 'div', $listItems, array( 'id' => 'container-list-items' ) )
 		) );
 		return $listItems;
 	}
@@ -272,15 +274,15 @@ class View_Helper_TinyMce_FileBrowser
 			$fullpath	= $this->baseUrl.$fullpath;
 		$labelParts	= explode( "/", $filePath );
 		$label		= $labelParts[count( $labelParts ) - 1];
-		$image	= UI_HTML_Tag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
+		$image	= HtmlTag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
 		$url	= preg_replace( '/^\.\//', '', $path );
-		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-external-link' ) );
-//		$icon	= UI_HTML_Tag::create( 'a', $icon, array( 'href' => $fullpath, 'target' => '_blank' ) );
-		$url	= UI_HTML_Tag::create( 'small', $url.'&nbsp;'.$icon, array( 'class' => 'muted' ) );
-		$label	= UI_HTML_Tag::create( 'div', $label.'<br/>'.$url, array(
+		$icon	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-external-link' ) );
+//		$icon	= HtmlTag::create( 'a', $icon, array( 'href' => $fullpath, 'target' => '_blank' ) );
+		$url	= HtmlTag::create( 'small', $url.'&nbsp;'.$icon, array( 'class' => 'muted' ) );
+		$label	= HtmlTag::create( 'div', $label.'<br/>'.$url, array(
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
 		) );
-		return UI_HTML_Tag::create( 'li', $image.$label, array(
+		return HtmlTag::create( 'li', $image.$label, array(
 			'class' 		=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-link trigger-submit',
 			'data-url'		=> $fullpath,
 			'data-path'		=> $path,
@@ -327,10 +329,10 @@ class View_Helper_TinyMce_FileBrowser
 			}
 		}
 
-		$listItems		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => $this->cssClassPrefix.' unstyled' ) );
-		$listItems		= UI_HTML_Tag::create( 'div', array(
-//			UI_HTML_Tag::create( 'h4', '-' ),//$pathLabel ),
-			UI_HTML_Tag::create( 'div', $listItems, array( 'id' => 'container-list-items' ) )
+		$listItems		= HtmlTag::create( 'ul', $list, array( 'class' => $this->cssClassPrefix.' unstyled' ) );
+		$listItems		= HtmlTag::create( 'div', array(
+//			HtmlTag::create( 'h4', '-' ),//$pathLabel ),
+			HtmlTag::create( 'div', $listItems, array( 'id' => 'container-list-items' ) )
 		) );
 
 		return $listItems;
@@ -339,8 +341,8 @@ class View_Helper_TinyMce_FileBrowser
 	protected function renderTopBar()
 	{
 		$mode		= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
-		$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-		$iconGrid	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
+		$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+		$iconGrid	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
 
 		$parts		= explode( '/', $this->path );
 		$pathLabel	= [];
@@ -349,7 +351,7 @@ class View_Helper_TinyMce_FileBrowser
 			if( $nr == count( $parts ) - 1 )
 				break;
 			$way[]	= $part;
-			$pathLabel[]	= UI_HTML_Tag::create( 'a', $part, array(
+			$pathLabel[]	= HtmlTag::create( 'a', $part, array(
 				'class'		=> 'trigger-folder',
 				'data-url'	=> './manage/tinyMce/setPath/image/'.$this->topicId.'/'.base64_encode( join( '/', $way ) ),
 			) );
@@ -361,14 +363,14 @@ class View_Helper_TinyMce_FileBrowser
 		$modeLabel		= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'Bild-Quelle' : 'Link-Quelle';
 		$mode			= '<b><small>Modus:</small></b> '.$modeLabel;
 
-		return UI_HTML_Tag::create( 'div', $mode.'&nbsp;&nbsp;|&nbsp;&nbsp;'.$position, array( 'class' => 'position autocut' ) ).
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'a', $iconList.'&nbsp;Liste', array(
+		return HtmlTag::create( 'div', $mode.'&nbsp;&nbsp;|&nbsp;&nbsp;'.$position, array( 'class' => 'position autocut' ) ).
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'a', $iconList.'&nbsp;Liste', array(
 						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/'.self::DISPLAY_MODE_LIST,
 						'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_LIST ? 'disabled' : NULL ),
 					) ),
-					UI_HTML_Tag::create( 'a', $iconGrid.'&nbsp;Kacheln', array(
+					HtmlTag::create( 'a', $iconGrid.'&nbsp;Kacheln', array(
 						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/'.self::DISPLAY_MODE_GRID,
 						'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_GRID ? 'disabled' : NULL ),
 					) ),
@@ -381,16 +383,16 @@ class View_Helper_TinyMce_FileBrowser
 		$list	= [];
 		$mode	= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
 		foreach( $this->topics as $topicId => $topic ){
-			$count	= UI_HTML_Tag::create( 'small', '('.count( $topic->menu ).')', array( 'class' => 'muted' ) );
+			$count	= HtmlTag::create( 'small', '('.count( $topic->menu ).')', array( 'class' => 'muted' ) );
 			$title	= rtrim( trim( $topic->title ), ":" );
-			$link	= UI_HTML_Tag::create( 'a', $title.'&nbsp;'.$count, array(
+			$link	= HtmlTag::create( 'a', $title.'&nbsp;'.$count, array(
 				'href'	=> './manage/tinyMce/setTopic/'.$mode.'/'.$topicId,
 			) );
-			$list[]	= UI_HTML_Tag::create( 'li', $link, array(
+			$list[]	= HtmlTag::create( 'li', $link, array(
 				'class'		=> $topicId == $this->topicId ? 'active' : NULL,
 			) );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array(
+		return HtmlTag::create( 'ul', $list, array(
 			'class'	=> 'nav nav-pills nav-stacked'
 		) );
 	}

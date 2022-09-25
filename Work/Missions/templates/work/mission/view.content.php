@@ -28,7 +28,7 @@ if( 1 || $mission->versions ){
 		$link	= HtmlTag::create( 'a', $label, array(
 			'href'	=> './work/mission/view/'.$mission->missionId.'#version-'.$version->version,
 		) );
-		$list[]	= new UI_HTML_Tag( 'li', $link, array(
+		$list[]	= HtmlTag::create( 'li', $link, array(
 			'class'				=> 'version-list-item',
 			'data-version'		=> $version->version,
 		) );
@@ -38,12 +38,12 @@ if( 1 || $mission->versions ){
 		'href'		=> './work/mission/view/'.$mission->missionId,
 		'onclick'	=> 'return false'
 	) );
-	$list[]	= new UI_HTML_Tag( 'li', $link, array(
+	$list[]	= HtmlTag::create( 'li', $link, array(
 		'class'				=> 'version-list-item active',
 //		'data-version'		=> 'current',
 	) );
 	$list	= array_reverse( $list );
-	$list	= new UI_HTML_Tag( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+	$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
 	$panelVersions		= '
 		<div class="content-panel">
 			<h4>'.$w->headingVersions.'</h4>

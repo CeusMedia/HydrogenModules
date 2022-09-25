@@ -1,14 +1,15 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 
-$buttonSubmit	= UI_HTML_Tag::create( 'button', $iconFilter.' filtern', array(
+$buttonSubmit	= HtmlTag::create( 'button', $iconFilter.' filtern', array(
 	'type'	=> 'submit',
 	'name'	=> 'filter',
 	'class'	=> 'btn btn-small btn-info'
 ) );
-$buttonReset	= UI_HTML_Tag::create( 'a', $iconReset.'&nbsp;leeren', array(
+$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', array(
 	'href'	=> './manage/form/mail/filter/reset',
 	'class'	=> 'btn btn-small btn-inverse'
 ) );

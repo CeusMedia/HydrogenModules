@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['index.filter'];
@@ -13,7 +14,7 @@ if( count( $instances ) > 1 ){
 	$optInstance	= [];
 	foreach( $instances as $instanceKey => $instanceData )
 		$optInstance[$instanceKey]	= $instanceData->title;
-	$optInstance	= UI_HTML_Elements::Options( $optInstance, $currentInstance );
+	$optInstance	= HtmlElements::Options( $optInstance, $currentInstance );
 	$selectInstance	= HtmlTag::create( 'select', $optInstance, array(
 		'oninput'	=> 'document.location.href = "./admin/log/exception/setInstance/" + jQuery(this).val();',
 		'class'		=> '',
@@ -27,7 +28,7 @@ if( $exceptionTypes ){
 	$optType	= ['' => '- alle-'];
 	foreach( $exceptionTypes as $type )
 		$optType[$type]	= $type;
-	$optType	= UI_HTML_Elements::Options( $optType, $filterType );
+	$optType	= HtmlElements::Options( $optType, $filterType );
 }
 
 $buttonFilter   = HtmlTag::create( 'button', $iconFilter.' '.$w->buttonFilter, ['type' => 'submit', 'class' => 'btn btn-primary'] );

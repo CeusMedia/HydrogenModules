@@ -1,23 +1,25 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 /**
  *	@deprecated		shown in view tab
  *	@todo			remove with references in module config
 */
 
 $blocksWithin		= $this->getData( 'blocksWithin', array() );
-$iconBlock			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
-$listBlocksWithin	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
+$iconBlock			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
+$listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 
 if( $blocksWithin ){
 	$list	= [];
 	foreach( $blocksWithin as $identifier => $item ){
-		$link	= UI_HTML_Tag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
+		$link	= HtmlTag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
 			'href'	=> './manage/form/block/edit/'.$item->blockId,
 		) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
+		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	if( $list )
-		$listBlocksWithin	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+		$listBlocksWithin	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
 }
 
 return '

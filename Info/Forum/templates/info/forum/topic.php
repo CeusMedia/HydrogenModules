@@ -4,18 +4,20 @@ use CeusMedia\Bootstrap\Button as BootstrapButton;
 use CeusMedia\Bootstrap\Button\Group as BootstrapButtonGroup;
 use CeusMedia\Bootstrap\Button\Link as BootstrapLinkButton;
 use CeusMedia\Bootstrap\Icon as BootstrapIcon;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 extract( $view->populateTexts( array( 'index.top', 'index.bottom', 'topic.top', 'topic.bottom' ), 'html/info/forum/' ) );
 $textTop	= $textTopicTop	? $textTopicTop: $textIndexTop;
 $textBottom	= $textTopicBottom ? $textTopicBottom : $textIndexBottom;
 
 $helper		= new View_Helper_TimePhraser( $env );
-$iconSticky	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-exclamation-sign not-icon-white' ) );
-$iconSticky	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
+$iconSticky	= HtmlTag::create( 'i', '', array( 'class' => 'icon-exclamation-sign not-icon-white' ) );
+$iconSticky	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
 
-$iconRename	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconStar	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconRename	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconStar	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $userCanStar	= in_array( 'ajaxStarThread', $rights );
 $userCanEdit	= in_array( 'ajaxRenameThread', $rights );
@@ -30,21 +32,21 @@ if( $threads ){
 		$userIsAuthor	= $thread->authorId == $userId;
 		$userCanChange	= $userIsManager || $userIsAuthor;
 		if( $userCanEdit && $userCanChange ){
-			$buttons[]	= UI_HTML_Tag::create( 'button', $iconRename, array(
+			$buttons[]	= HtmlTag::create( 'button', $iconRename, array(
 				'onclick'	=> 'InfoForum.changeThreadName('.$thread->threadId.', '.$thread->topicId.', \''.htmlentities( $thread->title, ENT_QUOTES, 'UTF-8' ).'\')',
 				'class'	=> 'btn not-btn-small',
 				'title'	=> $words['topic']['buttonRename'],
 			) );
 		}
 		if( $userCanStar && $userCanChange ){
-			$buttons[]	= UI_HTML_Tag::create( 'button', $iconStar, array(
+			$buttons[]	= HtmlTag::create( 'button', $iconStar, array(
 				'onclick'	=> 'InfoForum.changeThreadType('.$thread->threadId.', '.$thread->topicId.', \''.$thread->type.'\')',
 				'class'	=> 'btn not-btn-small',
 				'title'	=> $words['topic']['buttonStar'],
 			) );
 		}
 		if( $userCanRemove && $userCanChange ){
-			$buttons[]	= UI_HTML_Tag::create( 'button', $iconRemove, array(
+			$buttons[]	= HtmlTag::create( 'button', $iconRemove, array(
 				'onclick'	=> 'if(confirm(\'Wirklich ?\')) document.location.href = \'./info/forum/removeThread/'.$thread->threadId.'\';',
 				'class'	=> 'btn not-btn-small btn-danger',
 				'title'	=> $words['topic']['buttonRemove']
@@ -53,7 +55,7 @@ if( $threads ){
 
 		$class		= '';
 		$url		= './info/forum/thread/'.$thread->threadId;
-		$link		= UI_HTML_Tag::create( 'a', $thread->title, array( 'href' => $url ) );
+		$link		= HtmlTag::create( 'a', $thread->title, array( 'href' => $url ) );
 		if( $thread->type ){
 			$class	= 'type-important info';
 			$link	= $iconSticky.' '.$link;
@@ -61,21 +63,21 @@ if( $threads ){
 		$modifiedAt	= $helper->convert( $thread->createdAt, TRUE );
 		$underline	= 'Einträge: '.$thread->posts.', Latest: vor '.$modifiedAt;
 		$label		= $link.'<br/><small class="muted">'.$underline.'</small>';
-		$buttons	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
+		$buttons	= HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
 		$cells		= array(
-			UI_HTML_Tag::create( 'td', $label, array( 'class' => 'thread-label autocut' ) ),
-			UI_HTML_Tag::create( 'td', $buttons ),
+			HtmlTag::create( 'td', $label, array( 'class' => 'thread-label autocut' ) ),
+			HtmlTag::create( 'td', $buttons ),
 		);
-		$rows[]	= UI_HTML_Tag::create( 'tr', $cells, array( 'class' => $class ) );
+		$rows[]	= HtmlTag::create( 'tr', $cells, array( 'class' => $class ) );
 	}
-	$heads	= UI_HTML_Elements::TableHeads( array(
+	$heads	= HtmlElements::TableHeads( array(
 		$words['topic']['headTitle'],
 		$words['topic']['headActions'],
 	) );
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '85%', '15%' );
-	$thead		= UI_HTML_Tag::create( 'thead', $heads );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed' ) );
+	$colgroup	= HtmlElements::ColumnGroup( '85%', '15%' );
+	$thead		= HtmlTag::create( 'thead', $heads );
+	$tbody		= HtmlTag::create( 'tbody', $rows );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed' ) );
 }
 $panelList	= '
 <div class="content-panel">

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 //  --  FILTER  --  //
 $w			= (object) $words['indexFilter'];
 $session	= $env->getSession();
@@ -40,11 +42,11 @@ $script	= '
 ';
 $env->page->js->addScript( $script );
 
-$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-zoom-in icon-white' ) );
-$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-zoom-out icon-white' ) );
+$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'icon-zoom-in icon-white' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'icon-zoom-out icon-white' ) );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconFilter		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa far fa-fw fa-search' ) );
-	$iconReset		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa far fa-fw fa-search-minus' ) );
+	$iconFilter		= HtmlTag::create( 'b', '', array( 'class' => 'fa far fa-fw fa-search' ) );
+	$iconReset		= HtmlTag::create( 'b', '', array( 'class' => 'fa far fa-fw fa-search-minus' ) );
 }
 
 return '
@@ -87,14 +89,14 @@ return '
 				</div>
 			</div>
 			<div class="buttonbar">
-				'.UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'button', $iconFilter.' '.$w->buttonFilter, array(
+				'.HtmlTag::create( 'div', array(
+					HtmlTag::create( 'button', $iconFilter.' '.$w->buttonFilter, array(
 						'type'		=> 'submit',
 						'name'		=> 'filter',
 						'title'		=> $w->buttonFilter,
 						'class'		=> 'btn not-btn-sm btn-info'
 					) ),
-					UI_HTML_Tag::create( 'a', $iconReset, array(
+					HtmlTag::create( 'a', $iconReset, array(
 						'href'		=> './manage/user/filter/reset',
 						'title'		=> $w->buttonReset,
 						'class'		=> 'btn not-btn-sm bs2-btn-inverse bs3-btn-default bs4-btn-dark'

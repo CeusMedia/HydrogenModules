@@ -1,11 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $filter	= $view->loadTemplateFile( 'admin/user/index.filter.php' );
 $list	= $view->loadTemplateFile( 'admin/user/index.list.php' );
 
 $heading	= '';
 if( !empty( $words['index']['heading'] ) )
-	$heading	= UI_HTML_Tag::create( 'h2', $words['index']['heading'] );
+	$heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
 
 return '
 <div>

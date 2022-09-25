@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['editInfo'];
 
 $helperAge	= new View_Helper_TimePhraser( $env );
@@ -32,12 +34,12 @@ if( !empty( $projects ) ){
 	foreach( $projects as $project ){
 		$label	= $project->title;
 		if( !in_array( (int) $project->status, array( 0, 1, 2, 3 ) ) )
-			$label	= UI_HTML_Tag::create( 'del', $label );
+			$label	= HtmlTag::create( 'del', $label );
 		$url	= './manage/project/edit/'.$project->projectId;
-		$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'project project-list-item' ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
+		$link	= HtmlTag::create( 'a', $label, array( 'href' => $url, 'class' => 'project project-list-item' ) );
+		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$projects	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'projects project-list' ) );
+	$projects	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'projects project-list' ) );
 	$facts[]	= array(
 		'label'	=> 'Projekte',
 		'value'	=> $projects,
@@ -49,14 +51,14 @@ if( !empty( $projects ) ){
 foreach( $facts as $nr => $fact ){
 	$fact['class']	= !empty( $fact['class'] ) ? $fact['class'] : NULL;
 	$fact['style']	= !empty( $fact['style'] ) ? $fact['style'] : NULL;
-	$term			= UI_HTML_Tag::create( 'dt', $fact['label'] );
-	$definition		= UI_HTML_Tag::create( 'dd', $fact['value'], array(
+	$term			= HtmlTag::create( 'dt', $fact['label'] );
+	$definition		= HtmlTag::create( 'dd', $fact['value'], array(
 		'class'		=> $fact['class'],
 		'style'		=> $fact['style']
 	) );
 	$facts[$nr]		= $term.$definition;
 }
-$facts	= UI_HTML_Tag::create( 'dl', join( $facts ) );
+$facts	= HtmlTag::create( 'dl', join( $facts ) );
 
 return '
 <div class="content-panel content-panel-info">

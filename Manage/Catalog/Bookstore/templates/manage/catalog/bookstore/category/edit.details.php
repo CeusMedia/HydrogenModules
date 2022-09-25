@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optParent	= array( 0 => '' );
 foreach( $categories as $item )
@@ -11,19 +12,19 @@ $optVisible	= $words['visible'];
 $optVisible	= UI_HTML_Elements::Options( $optVisible, (int) $category->visible );
 
 $disableParent	= $category->parentId == 0 ? 'disabled="disabled"' : "";
-$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
+$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
 	'href'	=> "./manage/catalog/bookstore/category",
 	'class'	=> 'btn btn-small'
 ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary'
 ) );
-$buttonRemove	= UI_HTML_Tag::create( 'button', $iconRemove.' '.$w->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'button', $iconRemove.' '.$w->buttonRemove, array(
 	'disabled'	=> $nrArticles ? 'disabled' : NULL,
 	'type'		=> 'button',
 	'class'		=> "btn btn-small btn-danger",

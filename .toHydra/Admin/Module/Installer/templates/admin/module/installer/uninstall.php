@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helperDetails  = new View_Helper_Module_Details( $env );
 $panelDetails   = $helperDetails->render( $module, $modules, $view );
@@ -14,11 +15,11 @@ $w			= (object) $words['uninstall'];
 
 /*  --  BUTTONS  --  */
 $attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
-$buttonBack		= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
+$buttonBack		= HtmlTag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
 $buttonSubmit	= UI_HTML_Elements::Button( 'doUninstall', $w->buttonUninstall, 'button add' );
 
-$labelDetails   = UI_HTML_Tag::create( 'span', 'Details' );
-$buttonDetails  = UI_HTML_Tag::create( 'button', $labelDetails, array( 'class' => 'button info more', 'onclick' => "$('#panel-details').toggle()" ) );
+$labelDetails   = HtmlTag::create( 'span', 'Details' );
+$buttonDetails  = HtmlTag::create( 'button', $labelDetails, array( 'class' => 'button info more', 'onclick' => "$('#panel-details').toggle()" ) );
 
 
 /*  --  PANEL: INFO  --  */
@@ -51,9 +52,9 @@ $panelInfo  = '
 function renderPositions( $positions ){
 	$list	= [];
 	foreach( $positions as $label => $url )
-		$list[]	= '&laquo;&nbsp;'.UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
+		$list[]	= '&laquo;&nbsp;'.HtmlTag::create( 'a', $label, array( 'href' => $url ) );
 	$positions	= join( '&nbsp;&nbsp;|&nbsp;&nbsp;', $list );
-	$positions	= UI_HTML_Tag::create( 'div', $positions, array( 'class' => 'nav-position', 'style' => 'margin-bottom: 0.8em') );
+	$positions	= HtmlTag::create( 'div', $positions, array( 'class' => 'nav-position', 'style' => 'margin-bottom: 0.8em') );
 	return $positions;
 }
 $positions  = array(

@@ -1,6 +1,7 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-arrow-left' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-arrow-left' ) );
 
 $helperCardLogo	= new View_Helper_Mangopay_Entity_CardProviderLogo( $env );
 $helperCardLogo->setSize( View_Helper_Mangopay_Entity_CardProviderLogo::SIZE_SMALL );
@@ -41,14 +42,14 @@ foreach( $cardTypes as $cardTypeKey => $cardTypeItem ){
 	$helperUrl->setBackwardTo( TRUE );
 	$helperUrl->setForwardTo( TRUE );
 	$helperUrl->setFrom( TRUE );
-	$link	= UI_HTML_Tag::create( 'a', $logo.'&nbsp;'.$cardTypeItem->provider, array(
+	$link	= HtmlTag::create( 'a', $logo.'&nbsp;'.$cardTypeItem->provider, array(
 		'href'	=> $helperUrl->render(),
 	) );
-	$list[]	= UI_HTML_Tag::create( 'li', $link, array(
+	$list[]	= HtmlTag::create( 'li', $link, array(
 		'class'	=> $cardProvider == $cardTypeKey ? 'active' : NULL,
 	) );
 }
-$inputCardType	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+$inputCardType	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
 
 $part1		= '
 <h4>Schritt 1</h4>
@@ -62,7 +63,7 @@ $part2	= '
 	<div class="row-fluid">
 		<div class="span6">
 			<label for="input_cardNumber">Kartennummer<!--Card Number--></label>
-			'.UI_HTML_Tag::create( 'input', NULL, array(
+			'.HtmlTag::create( 'input', NULL, array(
 				'type'			=> 'text',
 				'name'			=> 'cardNumber',
 				'id'			=> 'input_cardNumber',
@@ -107,8 +108,8 @@ if( $cardType ){
 	$helperUrl->setBackwardTo( $backwardTo ? $backwardTo : NULL );
 	$helperUrl->setForwardTo( $forwardTo ? $forwardTo : NULL );
 	$helperUrl->setFrom( isset( $from ) ? $from : NULL );
-	$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array( 'href' => $helperUrl->render(), 'class' => 'btn' ) );
-	$buttonSave		= UI_HTML_Tag::create( 'button', '<b class="fa fa-check"></b> registrieren', array(
+	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array( 'href' => $helperUrl->render(), 'class' => 'btn' ) );
+	$buttonSave		= HtmlTag::create( 'button', '<b class="fa fa-check"></b> registrieren', array(
 		'type'		=> "submit",
 		'name'		=> "save",
 		'value'		=> "register",
@@ -140,7 +141,7 @@ else{
 	$helperUrl->setBackwardTo( $backwardTo ? $backwardTo : NULL );
 	$helperUrl->setForwardTo( $forwardTo ? $forwardTo : NULL );
 	$helperUrl->setFrom( isset( $from ) ? $from : NULL );
-	$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array( 'href' => $helperUrl->render(), 'class' => 'btn' ) );
+	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array( 'href' => $helperUrl->render(), 'class' => 'btn' ) );
 	$form	= '
 		<form action="./manage/my/mangopay/card/registration" method="post">
 			<input type="hidden" name="backwardTo" value="'.$backwardTo.'"/>

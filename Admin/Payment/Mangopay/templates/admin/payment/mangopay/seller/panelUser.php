@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $words['legaluser-types']	= array(
@@ -6,7 +7,7 @@ $words['legaluser-types']	= array(
 	'ORGANIZATION'	=> 'Verein / Organisation',
 	'BUSINESS'		=> 'Unternehmen',
 );
-$optType	= UI_HTML_Elements::Options( $words['legaluser-types'], $sellerUser->LegalPersonType );
+$optType	= HtmlElements::Options( $words['legaluser-types'], $sellerUser->LegalPersonType );
 
 $w	= (object) $words['panel-user'];
 

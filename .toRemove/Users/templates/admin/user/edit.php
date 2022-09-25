@@ -1,4 +1,5 @@
- <?php
+<?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
 $env->page->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
@@ -106,10 +107,10 @@ if( !empty( $projects ) ){
 	$list	= [];
 	foreach( $projects as $project ){
 		$url	= './manage/project/edit/'.$project->projectId;
-		$link	= UI_HTML_Tag::create( 'a', $project->title, array( 'href' => $url, 'class' => 'project' ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
+		$link	= HtmlTag::create( 'a', $project->title, array( 'href' => $url, 'class' => 'project' ) );
+		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$projects	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'projects' ) );
+	$projects	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'projects' ) );
 	$facts[]	= array(
 		'label'	=> 'Projekte',
 		'value'	=> $projects
@@ -117,8 +118,8 @@ if( !empty( $projects ) ){
 }
 
 foreach( $facts as $nr => $fact )
-	$facts[$nr]	= UI_HTML_Tag::create( 'dt', $fact['label'] ).UI_HTML_Tag::create( 'dd', $fact['value'] );
-$facts	= UI_HTML_Tag::create( 'dl', join( $facts ) );
+	$facts[$nr]	= HtmlTag::create( 'dt', $fact['label'] ).HtmlTag::create( 'dd', $fact['value'] );
+$facts	= HtmlTag::create( 'dl', join( $facts ) );
 
 $panelInfo	= '
 <fieldset>

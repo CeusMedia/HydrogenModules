@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Bug extends View
@@ -35,7 +36,7 @@ class View_Bug extends View
 				'class'		=> strlen( $key ) ? sprintf( $class, $key ) : '',
 				'selected'	=>  $selected ? 'selected' : NULL,
 			);
-			$list[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
+			$list[]	= HtmlTag::create( 'option', $value, $attributes );
 		}
 		return join( $list );
 	}

@@ -1,8 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['add'];
 
 return HTML::DivClass( 'column-left-50',
-//	UI_HTML_Tag::create( 'h2', $w->heading ).
+//	HtmlTag::create( 'h2', $w->heading ).
 	HTML::Form( './manage/company/add', 'company_add',
 		HTML::Fields(
 			HTML::Legend( $w->legend, 'company add' ).

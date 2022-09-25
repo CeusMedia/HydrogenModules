@@ -1,18 +1,20 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w				= (object) $words['edit'];
 //$helperAge		= new View_Helper_TimePhraser( $env );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-list' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconGroup		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconGroup		= HtmlTag::create( 'i', '', array( 'class' => 'icon-search' ) );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconList		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-	$iconGroup		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-users' ) );
+	$iconCancel		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconList		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconSave		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+	$iconGroup		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-users' ) );
 }
 
 /*
@@ -77,7 +79,7 @@ if( $env->getAcl()->has( 'manage/user', 'remove' ) ){
 
 $buttonRole	= '';
 if( $env->getAcl()->has( 'manage/role', 'edit' ) ){
-	$buttonRole	= UI_HTML_Tag::create( 'a', $iconGroup.'&nbsp;'.$w->buttonRole, array(
+	$buttonRole	= HtmlTag::create( 'a', $iconGroup.'&nbsp;'.$w->buttonRole, array(
 		'class'	=> 'btn btn-small btn-info',
 		'href'	=> './manage/role/edit/'.$user->roleId
 	) );
@@ -102,7 +104,7 @@ $panelEdit	= '
 <!--				<div class="bs2-span4 bs3-col-md-4 bs3-form-group bs4-col-md-4 bs4-form-group">-->
 				<div class="bs2-span6 bs3-col-md-6 bs3-form-group bs4-col-md-6 bs4-form-group">
 					<label for="input_email" class="'.( $needsEmail ? 'mandatory' : '' ).'">'.$w->labelEmail.'</label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'		=> "text",
 						'name'		=> "email",
 						'id'		=> "input_email",
@@ -132,7 +134,7 @@ $panelEdit	= '
 				</div>
 				<div class="bs2-span4 bs3-col-md-4 bs3-form-group bs4-col-md-4 bs4-form-group">
 					<label for="input_firstname" class="'.( $needsFirstname ? 'mandatory' : '' ).'">'.$w->labelFirstname.'</label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'		=> "text",
 						'name'		=> "firstname",
 						'id'		=> "input_firstname",
@@ -143,7 +145,7 @@ $panelEdit	= '
 				</div>
 				<div class="bs2-span4 bs3-col-md-4 bs3-form-group bs4-col-md-4 bs4-form-group">
 					<label for="input_surname" class="'.( $needsSurname ? 'mandatory' : '' ).'">'.$w->labelSurname.'</label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'		=> "text",
 						'name'		=> "surname",
 						'id'		=> "input_surname",

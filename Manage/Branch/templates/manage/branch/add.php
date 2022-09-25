@@ -1,10 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['add'];
 
 $optCompany	= HTML::Options( $companies, $request->get( 'companyId' ), array( 'companyId', 'title' ) ); 
 
 return HTML::DivClass( 'column-left-50',
-#	UI_HTML_Tag::create( 'h2', $w->heading ).
+#	HtmlTag::create( 'h2', $w->heading ).
 	HTML::Form( './manage/branch/add', 'branch_add',
 		HTML::Fields(
 			HTML::Legend( $w->legend, 'branch add' ).

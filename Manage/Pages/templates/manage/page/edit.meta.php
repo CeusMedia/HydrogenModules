@@ -1,13 +1,15 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w				= (object) $words['edit'];
 $wMeta			= (object) $words['edit-meta'];
 
 if( !$appHasMetaModule )
 	return '<div class="alert alert-info"><em>'.$wMeta->no_meta_module.'</em></div>';
 
-$iconCopy		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSuggest	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-magic' ) );
-$iconExclude	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-ban' ) );
+$iconCopy		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSuggest	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-magic' ) );
+$iconExclude	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-ban' ) );
 
 $metaPageTypes	= array(
 	Model_Page::TYPE_CONTENT,
@@ -22,7 +24,7 @@ $optPriority	= UI_HTML_Elements::Options( $words['priorities'], $page->priority 
 $buttonSuggest		= '';
 $buttonBlacklist	= '';
 if( $page->type == 0 ){
-	$buttonSuggest	= UI_HTML_Tag::create( 'button', $iconSuggest.'&nbsp;'.$wMeta->buttonSuggest, array(
+	$buttonSuggest	= HtmlTag::create( 'button', $iconSuggest.'&nbsp;'.$wMeta->buttonSuggest, array(
 		'type'			=> "button",
 		'class'			=> "btn btn-mini",
 		'id'			=> 'btn-meta-suggest',
@@ -30,7 +32,7 @@ if( $page->type == 0 ){
 		'data-target'	=> '#input_page_keywords',
 		'data-question'	=> 'Wörter ausschließen, getrennt mit Leerzeichen',
 	) );
-	$buttonBlacklist	= UI_HTML_Tag::create( 'button', $iconExclude.'&nbsp;'.$wMeta->buttonBlacklist, array(
+	$buttonBlacklist	= HtmlTag::create( 'button', $iconExclude.'&nbsp;'.$wMeta->buttonBlacklist, array(
 		'type'			=> "button",
 		'class'			=> "btn btn-mini",
 		'id'			=> 'btn-meta-blacklist',

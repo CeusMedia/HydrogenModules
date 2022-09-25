@@ -1,12 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconBack	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconBack	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
 
 $helper		= new View_Helper_Image_Slider( $env );
 $helper->setBasePath( $basePath );
 $display	= $helper->render( $sliderId );
 
-$buttonBack	= UI_HTML_Tag::create( 'a', $iconBack.'&nbsp;'.$words['demo']['buttonBack'], array(
+$buttonBack	= HtmlTag::create( 'a', $iconBack.'&nbsp;'.$words['demo']['buttonBack'], array(
 	'href'	=> './manage/image/slider/edit/'.$sliderId,
 	'class'	=> 'btn btn-small',
 ) );

@@ -1,11 +1,13 @@
 <?php
-$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-list' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+	$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 }
 
 return '

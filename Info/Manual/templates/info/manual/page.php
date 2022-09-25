@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helperCategory	= new View_Helper_Info_Manual_CategorySelector( $env );
 $helperCategory->setCategories( $categories );
@@ -16,15 +17,15 @@ $buttonAdd		= "";
 $buttonEdit		= "";
 $buttonReload	= "";
 if( $moduleConfig->get( 'editor' ) ){
-	$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-	$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-	$iconReload		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
+	$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+	$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
+	$iconReload		= HtmlTag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
 	if( in_array( 'add', $rights ) )
-		$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-info" ) );
+		$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-info" ) );
 	if( in_array( 'edit', $rights ) )
-		$buttonEdit		= UI_HTML_Tag::create( 'a', $iconEdit.' '.$words['view']['buttonEdit'], array( 'href' => './info/manual/edit/'.$page->manualPageId.'-'.$view->urlencode( $page->title ), 'class' => "btn btn-small" ) );
+		$buttonEdit		= HtmlTag::create( 'a', $iconEdit.' '.$words['view']['buttonEdit'], array( 'href' => './info/manual/edit/'.$page->manualPageId.'-'.$view->urlencode( $page->title ), 'class' => "btn btn-small" ) );
 	if( in_array( 'reload', $rights ) )
-		$buttonReload	= UI_HTML_Tag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
+		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
 }
 
 $attributes	= array(
@@ -40,8 +41,8 @@ switch( $renderer ){
 	default:
 		break;
 }
-//$contentContainer	= UI_HTML_Tag::create( 'div', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), $attributes );
-$contentContainer	= UI_HTML_Tag::create( 'div', $content, $attributes );
+//$contentContainer	= HtmlTag::create( 'div', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), $attributes );
+$contentContainer	= HtmlTag::create( 'div', $content, $attributes );
 
 return '
 <div class="bs2-row-fluid bs4-row">

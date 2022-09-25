@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Mangopay_List_Wallets_Big extends View_Helper_Mangopay_Abstract{
 
 	protected $allowAdd;
@@ -24,16 +26,16 @@ class View_Helper_Mangopay_List_Wallets_Big extends View_Helper_Mangopay_Abstrac
 		//	print_m( $card );die;
 			$logo		= $helperWalletLogo->setWallet( $wallet->Balance )->render();
 			$balance	= $helperMoney->set( $wallet->Balance )->render();
-			$title		= UI_HTML_Tag::create( 'div', $wallet->Description, array( 'class' => 'card-title' ) );
+			$title		= HtmlTag::create( 'div', $wallet->Description, array( 'class' => 'card-title' ) );
 			$item		= $logo.$title.$balance;
 			$url	= sprintf( $this->link, $wallet->Id );
 			$url	.= strlen( trim( $this->from ) ) ? '?from='.$this->from : '';
-			$list[]	= UI_HTML_Tag::create( 'div', $item, array(
+			$list[]	= HtmlTag::create( 'div', $item, array(
 				'class'		=> 'card-list-item-large',
 				'onclick'	=> 'document.location.href="./'.$url.'";',
 			) );
 		}
-		$list	= UI_HTML_Tag::create( 'div', $list );
+		$list	= HtmlTag::create( 'div', $list );
 		return $list;
 	}
 

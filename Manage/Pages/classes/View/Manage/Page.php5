@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Page extends View
@@ -43,14 +44,14 @@ class View_Manage_Page extends View
 						$subitem->title	= '<strike>'.$subitem->title.'</strike>';
 					$url	= './manage/page/edit/'.$subitem->pageId;
 					$label	= $this->getPageIcon( $subitem ).' <small>'.$subitem->title.'</small>';
-					$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'autocut' ) );
-					$sublist[]	= UI_HTML_Tag::create( 'li', $link, array(
+					$link	= HtmlTag::create( 'a', $label, array( 'href' => $url, 'class' => 'autocut' ) );
+					$sublist[]	= HtmlTag::create( 'li', $link, array(
 						'class'			=> join( ' ', $classes ),
 						'data-page-id'	=> $subitem->pageId,
 					) );
 				}
 				if( $sublist )
-					$sublist	= UI_HTML_Tag::create( 'ul', $sublist, array( 'class' => 'nav nav-pills nav-stacked' ) );
+					$sublist	= HtmlTag::create( 'ul', $sublist, array( 'class' => 'nav nav-pills nav-stacked' ) );
 				else
 					$sublist	= '';
 			}
@@ -63,14 +64,14 @@ class View_Manage_Page extends View
 				$item->title	= '<strike>'.$item->title.'</strike>';
 			$url	= './manage/page/edit/'.$item->pageId;
 			$label	= $this->getPageIcon( $item ).' '.$item->title;
-			$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
-			$list[]	= UI_HTML_Tag::create( 'li', $link.$sublist, array(
+			$link	= HtmlTag::create( 'a', $label, array( 'href' => $url ) );
+			$list[]	= HtmlTag::create( 'li', $link.$sublist, array(
 				'class'			=> join( ' ', $classes ),
 				'data-page-id'	=> $item->pageId,
 			) );
 		}
 		if( $list )
-			return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+			return HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
 		$words	= (object) $this->env->getLanguage()->getWords( 'manage/page' )['tree'];
 		return '<div class="muted"><small><em>'.$words->no_entries.'</em></small></div><br/>';
 	}
@@ -123,19 +124,19 @@ class View_Manage_Page extends View
 					$disabled	= !$meta;
 					break;
 			}
-			$link			= UI_HTML_Tag::create( 'a', $label, $attributes );
+			$link			= HtmlTag::create( 'a', $label, $attributes );
 			$isActive		= $tabKey == $current;
 			$class			= $isActive ? "active" : '';
 			$class			.= $disabled ? ' disabled' : '';
 			$attributes		= array( 'id' => 'page-editor-tab-'.$tabKey, 'class' => $class );
-			$listTabs[]		= UI_HTML_Tag::create( 'li', $link, $attributes );
+			$listTabs[]		= HtmlTag::create( 'li', $link, $attributes );
 			$paneContent	= $this->loadTemplateFile( 'manage/page/'.$templates[$tabKey], array(), FALSE );
 			$attributes		= array( 'id' => 'tab-'.$tabKey, 'class' => $isActive ? 'tab-pane active' : 'tab-pane' );
-			$listPanes[]	= UI_HTML_Tag::create( 'div', $paneContent, $attributes );
+			$listPanes[]	= HtmlTag::create( 'div', $paneContent, $attributes );
 		}
-		$listTabs	= UI_HTML_Tag::create( 'ul', $listTabs, array( 'class' => "nav nav-tabs" ) );
-		$listPanes	= UI_HTML_Tag::create( 'div', $listPanes, array( 'class' => 'tab-content' ) );
+		$listTabs	= HtmlTag::create( 'ul', $listTabs, array( 'class' => "nav nav-tabs" ) );
+		$listPanes	= HtmlTag::create( 'div', $listPanes, array( 'class' => 'tab-content' ) );
 		$attributes	= array( 'class' => 'tabbable', 'id' => 'tabs-page-editor' );
-		return UI_HTML_Tag::create( 'div', $listTabs.$listPanes, $attributes );
+		return HtmlTag::create( 'div', $listTabs.$listPanes, $attributes );
 	}
 }

@@ -1,16 +1,18 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['index-filter'];
 
-$iconFilter	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconFilter	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconReset	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 
-$buttonFilter	= UI_HTML_Tag::create( 'button', $iconFilter.'&nbsp;'.$w->buttonFilter, array(
+$buttonFilter	= HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$w->buttonFilter, array(
 	'type'	=> 'submit',
 	'name'	=> 'filter',
 	'class'	=> 'btn btn-info',
 ) );
 
-$buttonReset	= UI_HTML_Tag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, array(
+$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, array(
 	'href'	=> './manage/relocation/filter/reset',
 	'class'	=> 'btn btn-small btn-inverse',
 ) );

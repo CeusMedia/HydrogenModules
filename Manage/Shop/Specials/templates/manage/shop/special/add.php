@@ -1,5 +1,7 @@
 <?php
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
 $bridgeMap	= [];
 foreach( $catalogs as $bridge )
@@ -42,32 +44,32 @@ jQuery(document).ready(function(){
 
 ';
 
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Neue Spezialität' ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'form', array(
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Katalog', array( 'for' => 'input_bridgeId' ) ),
-					UI_HTML_Tag::create( 'select', $optBridge, array(
+return HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', 'Neue Spezialität' ),
+	HtmlTag::create( 'div', array(
+		HtmlTag::create( 'form', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'Katalog', array( 'for' => 'input_bridgeId' ) ),
+					HtmlTag::create( 'select', $optBridge, array(
 						'name'	=> 'bridgeId',
 						'id'	=> 'input_bridgeId',
 						'class'	=> 'span12',
 					) ),
 				), array( 'class' => 'span3' ) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Artikel', array( 'for' => 'input_articleId' ) ),
-					UI_HTML_Tag::create( 'select', '', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'Artikel', array( 'for' => 'input_articleId' ) ),
+					HtmlTag::create( 'select', '', array(
 						'name'	=> 'articleId',
 						'id'	=> 'input_articleId',
 						'class'	=> 'span12',
 					) ),
 				), array( 'class' => 'span9' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Titel', array( 'for' => 'input_title' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'Titel', array( 'for' => 'input_title' ) ),
+					HtmlTag::create( 'input', NULL, array(
 						'type'	=> 'text',
 						'name'	=> 'title',
 						'id'	=> 'input_title',
@@ -75,8 +77,8 @@ return UI_HTML_Tag::create( 'div', array(
 					) ),
 				), array( 'class' => 'span6' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;speichern', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary',

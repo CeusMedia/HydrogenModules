@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
@@ -38,10 +39,10 @@ class View_Manage_My_Provision_License extends View
 			return '';
 		$list	= [];
 		foreach( $data as $key => $value ){
-			$list[]	= UI_HTML_Tag::create( 'dt', $key );
-			$list[]	= UI_HTML_Tag::create( 'dd', $value );
+			$list[]	= HtmlTag::create( 'dt', $key );
+			$list[]	= HtmlTag::create( 'dd', $value );
 		}
-		return UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+		return HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 	}
 
 	public function renderLicenseFacts( $productLicense, $columns = [] )
@@ -76,12 +77,12 @@ class View_Manage_My_Provision_License extends View
 			}
 			$list[$words['add']["label".ucFirst( $fact )]]	= $value;
 
-//			$list[]	= UI_HTML_Tag::create( 'dt', $words['add']["label".ucFirst( $fact )] );
-//			$list[]	= UI_HTML_Tag::create( 'dd', $value );
+//			$list[]	= HtmlTag::create( 'dt', $words['add']["label".ucFirst( $fact )] );
+//			$list[]	= HtmlTag::create( 'dd', $value );
 		}
 		if( $list )
 			return self::renderDefinitionList( $list );
-//			return UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+//			return HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 	}
 
 	public static function renderTabs( Environment $env, $current = 0 )
@@ -90,11 +91,11 @@ class View_Manage_My_Provision_License extends View
 
 //		$tabs->setBasePath( './manage/my/user/' );
 //		$env->getModules()->callHook( "MyUser", "registerTabs", $tabs/*, $data*/ );		//  call tabs to be registered
-//		return UI_HTML_Tag::create( 'div', $tabs->renderTabs( $current ), array( 'id' => 'tabs-manage-my-user' ) );
+//		return HtmlTag::create( 'div', $tabs->renderTabs( $current ), array( 'id' => 'tabs-manage-my-user' ) );
 
 		$tabs->setBasePath( './manage/my/provision/' );
 		$env->getModules()->callHook( "ManageMyProvision", "registerTabs", $tabs/*, $data*/ );		//  call tabs to be registered
-		return UI_HTML_Tag::create( 'div', $tabs->renderTabs( $current ), array( 'id' => 'tabs-manage-my-provision' ) );
+		return HtmlTag::create( 'div', $tabs->renderTabs( $current ), array( 'id' => 'tabs-manage-my-provision' ) );
 	}
 
 	protected function __onInit()
@@ -109,7 +110,7 @@ class View_Manage_My_Provision_License extends View
 		if( $count )
 			$label	.= '&nbsp;&nbsp;<span class="badge badge-info">'.$count.'</span>&nbsp;';
 		if( $icon ){
-			$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-'.$icon ) );
+			$icon	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-'.$icon ) );
 			$label	= $icon.'&nbsp;'.$label;
 		}
 		return $label;

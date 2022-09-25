@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //  --  VERSIONS  --  //
@@ -14,7 +15,7 @@ foreach( $serverProjects as $relation ){
 			$version	.= ':&nbsp;<small>('.$wordsProjectVersionStates[$relation->projectVersion->status].')</small>';
 	}
 	$status		= $words['states-project'][$relation->status];
-	$remove	= UI_HTML_Elements::LinkButton( './admin/project/removeServer/'.$relation->serverProjectId, '', 'button icon tiny remove' );
+	$remove	= HtmlElements::LinkButton( './admin/project/removeServer/'.$relation->serverProjectId, '', 'button icon tiny remove' );
 	$label	= HtmlTag::create( 'a', $label, array( 'href' => './admin/project/edit/'.$relation->projectId ) );
 	if( $relation->title )
 		$label	.= ': '.$relation->title;

@@ -1,23 +1,25 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w		= (object) $words['index'];
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
-	$iconAdd	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+	$iconAdd	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
 $list	= '<div class=alert">'.$w->empty.'</div>';
 if( $categories ){
 	$list	= [];
 	foreach( $categories as $item ){
-		$link	= UI_HTML_Tag::create( 'a', $item->title, array( 'href' => './manage/blog/category/edit/'.$item->categoryId ) );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link ),
+		$link	= HtmlTag::create( 'a', $item->title, array( 'href' => './manage/blog/category/edit/'.$item->categoryId ) );
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $link ),
 		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( "100%" );
-	$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( $w->headTitle ) ) );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
-	$list		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( $w->headTitle ) ) );
+	$tbody		= HtmlTag::create( 'tbody', $list );
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
 $tabs	= $view->renderTabs( '/category' );

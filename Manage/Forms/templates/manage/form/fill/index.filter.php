@@ -1,6 +1,8 @@
 <?php
-$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 
 $optForm		= array( '' => '- alle -' );
 foreach( $forms as $item )
@@ -16,14 +18,14 @@ $optStatus		= array(
 );
 $optStatus		= UI_HTML_Elements::Options( $optStatus, $filterStatus );
 
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Filter' ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'form', array(
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'ID', array( 'for' => 'input_fillId' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+return HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', 'Filter' ),
+	HtmlTag::create( 'div', array(
+		HtmlTag::create( 'form', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'ID', array( 'for' => 'input_fillId' ) ),
+					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'text',
 						'name'		=> 'fillId',
 						'id'		=> 'input_fillId',
@@ -32,10 +34,10 @@ return UI_HTML_Tag::create( 'div', array(
 					) ),
 				), array( 'class' => 'span4' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'E-Mail <small class="muted">(ungefähr)</small>', array( 'for' => 'input_email' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'E-Mail <small class="muted">(ungefähr)</small>', array( 'for' => 'input_email' ) ),
+					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'text',
 						'name'		=> 'email',
 						'id'		=> 'input_email',
@@ -44,20 +46,20 @@ return UI_HTML_Tag::create( 'div', array(
 					) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Zustand', array( 'for' => 'input_status' ) ),
-					UI_HTML_Tag::create( 'select', $optStatus, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'Zustand', array( 'for' => 'input_status' ) ),
+					HtmlTag::create( 'select', $optStatus, array(
 						'name'		=> 'status',
 						'id'		=> 'input_status',
 						'class'		=> 'span12',
 					) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Formulare', array( 'for' => 'input_formId' ) ),
-					UI_HTML_Tag::create( 'select', $optForm, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'Formulare', array( 'for' => 'input_formId' ) ),
+					HtmlTag::create( 'select', $optForm, array(
 						'name'		=> 'formId[]',
 						'id'		=> 'input_formId',
 						'class'		=> 'span12',
@@ -66,14 +68,14 @@ return UI_HTML_Tag::create( 'div', array(
 					) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'button', $iconFilter.'&nbsp;filtern', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'button', $iconFilter.'&nbsp;filtern', array(
 						'type'	=> 'submit',
 						'name'	=> 'filter',
 						'class'	=> 'btn btn-small btn-info',
 					) ),
-					UI_HTML_Tag::create( 'a', $iconReset.'&nbsp;leeren', array(
+					HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', array(
 						'href'	=> './manage/form/fill/filter/reset',
 						'class'	=> 'btn btn-small btn-inverse',
 					) ),

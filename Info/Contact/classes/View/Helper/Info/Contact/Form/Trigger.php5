@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Info_Contact_Form_Trigger
 {
 	protected $class		= 'btn';
@@ -17,7 +19,7 @@ class View_Helper_Info_Contact_Form_Trigger
 
 		$label		= $this->label;
 		if( $this->icon ){
-			$icon	= $this->icon ? UI_HTML_Tag::create( 'i', '', array( 'class' => $this->icon ) ) : '';
+			$icon	= $this->icon ? HtmlTag::create( 'i', '', array( 'class' => $this->icon ) ) : '';
 			$label	= $icon.'&nbsp;'.$this->label;
 			if( $this->iconPosition === 'right' )
 				$label	= $this->label.'&nbsp;'.$icon;

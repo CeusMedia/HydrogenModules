@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $count	= (object) array(
 	'sources'	=> 0,
 	'total'		=> 0,
@@ -43,7 +45,7 @@ foreach( $data as $source ){
 $panelList	= '
 <fieldset>
 	<legend>Todos</legend>
-	'.UI_HTML_Tag::create( 'div', join( $rows ) ).'
+	'.HtmlTag::create( 'div', join( $rows ) ).'
 </fieldset>';
 return $panelFacts.$panelList;
 return 'Dev:Todo:Index';

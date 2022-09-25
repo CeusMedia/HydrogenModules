@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $modelForm	= new Model_Form( $env );
 $modelBlock	= new Model_Form_Block( $env );
 
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
 $statuses	= array(
 	-1		=> 'deaktiviert',

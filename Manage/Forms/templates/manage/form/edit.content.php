@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconPrev	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconNext	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconPrev	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconNext	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
 
 return '
 <div class="content-panel">
@@ -19,7 +20,7 @@ return '
 				'.$navButtons['list'].'
 <!--				'./*$navButtons['prevBlocks'].*/'-->
 				'.$navButtons['prevView'].'
-				'.UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;speichern', array(
+				'.HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
 					'type'		=> 'submit',
 					'name'		=> 'save',
 					'class'		=> 'btn btn-primary',

@@ -1,25 +1,26 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['view'];
 
-$iconCancel		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconList		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-list' ) );
-$iconLock		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-lock' ) );
-$iconUnlock		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-unlock' ) );
-$iconUser		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-user' ) );
-$iconSave		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconEdit		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
-$iconRestore	= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-repeat icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );
+$iconLock		= HtmlTag::create( 'i', '', array( 'class' => 'icon-lock' ) );
+$iconUnlock		= HtmlTag::create( 'i', '', array( 'class' => 'icon-unlock' ) );
+$iconUser		= HtmlTag::create( 'i', '', array( 'class' => 'icon-user' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
+$iconRestore	= HtmlTag::create( 'i', '', array( 'class' => 'icon-repeat icon-white' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconList		= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconLock		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-lock' ) );
-	$iconUnlock		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
-	$iconUser		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-user' ) );
-	$iconSave		= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-save' ) );
-	$iconEdit		= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-	$iconRestore	= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-backward' ) );
+	$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconLock		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-lock' ) );
+	$iconUnlock		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
+	$iconUser		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-user' ) );
+	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-save' ) );
+	$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+	$iconRestore	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-backward' ) );
 }
 
 $rows	= [];
@@ -41,11 +42,11 @@ foreach( $module->config as $item ){
 	$key	= $item->mandatory ? '<b>'.$item->key.'</b>' : $item->key;
 	$key	= $item->title ? '<abbr title="'.$item->title.'">'.$key.'</abbr>' : $key;
 	$type	= '<small class="muted">'.$item->type.'</small>';
-	$rows[$moduleId.'|'.$item->key]	= new UI_HTML_Tag( 'tr', array(
-		new UI_HTML_Tag( 'td', $protection, array( 'class' => 'cell-protection' ) ),
-		new UI_HTML_Tag( 'td', $key, array( 'class' => 'cell-key autocut' ) ),
-		new UI_HTML_Tag( 'td', $type, array( 'class' => 'cell-type' ) ),
-		new UI_HTML_Tag( 'td', $value, array( 'class' => 'cell-value autocut' ) ),
+	$rows[$moduleId.'|'.$item->key]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', $protection, array( 'class' => 'cell-protection' ) ),
+		HtmlTag::create( 'td', $key, array( 'class' => 'cell-key autocut' ) ),
+		HtmlTag::create( 'td', $type, array( 'class' => 'cell-type' ) ),
+		HtmlTag::create( 'td', $value, array( 'class' => 'cell-value autocut' ) ),
 	) );
 //	ksort( $rows );
 }
@@ -68,7 +69,7 @@ if( isset( $versions[$moduleId] ) && $versions[$moduleId] ){
 		'class'	=> 'btn btn-inverse btn-mini'
 	) );
 }
-$cols	= UI_HTML_Elements::ColumnGroup( "24px", "37%", "80px", "" );
+$cols	= HtmlElements::ColumnGroup( "24px", "37%", "80px", "" );
 $tbody	= HtmlTag::create( 'tbody', $rows );
 $table	= HtmlTag::create( 'table', array( $cols, $tbody ), array( 'class' => 'table table-striped table-fixed' ) );
 

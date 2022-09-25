@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $listTags	= "";
 $panelTags	= '<div class="alert alert-error">Noch kein Schlagwort vergeben.</div>';
@@ -10,17 +11,17 @@ if( $articleTags ){
 	$listTags	= [];
 	foreach( $articleTags as $item ){
 		$urlRemove	= './manage/catalog/bookstore/article/removeTag/'.$article->articleId.'/'.$item->articleTagId;
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
 			'href'		=> $urlRemove,
 			'class'		=> 'btn btn-mini btn-danger',
 		) );
-		$listTags[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $item->tag ),
-			UI_HTML_Tag::create( 'td', '<div class="pull-right">'.$buttonRemove.'</div>' )
+		$listTags[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $item->tag ),
+			HtmlTag::create( 'td', '<div class="pull-right">'.$buttonRemove.'</div>' )
 		) );
 	}
 /*
-	$inputFile	= UI_HTML_Tag::create( 'input', NULL, array(
+	$inputFile	= HtmlTag::create( 'input', NULL, array(
 		'type'	=> 'text',
 		'class'	=> 'span12',
 		'name'	=> 'tag',
@@ -28,20 +29,20 @@ if( $articleTags ){
 		'placeholder'	=> 'neues Schlagwort',
 	) );
 
-	$buttonSave	= UI_HTML_Tag::create( 'button', $iconPlus.' hinzufügen', array(
+	$buttonSave	= HtmlTag::create( 'button', $iconPlus.' hinzufügen', array(
 		'class'		=> 'btn btn-primary',
 		'type'		=> 'submit',
 		'name'		=> 'save',
 	) );
 
-	$listTags[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $inputFile ),
-		UI_HTML_Tag::create( 'td', '<div class="pull-right">'.$buttonSave.'</div>' )
+	$listTags[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', $inputFile ),
+		HtmlTag::create( 'td', '<div class="pull-right">'.$buttonSave.'</div>' )
 	) );*/
 
 	$colgroup	= UI_HTML_Elements::ColumnGroup( '', '140px' );
-	$tbody		= UI_HTML_Tag::create( 'tbody', join( $listTags ) );
-	$listTags	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array( 'class' => "table table-condensed" ) );
+	$tbody		= HtmlTag::create( 'tbody', join( $listTags ) );
+	$listTags	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => "table table-condensed" ) );
 
 	$panelTags	= '
 		<div class="content-panel">

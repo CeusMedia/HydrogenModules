@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['panel-search'];
 
@@ -39,8 +40,8 @@ $panelSearch	= '
 </div>
 ';
 
-$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $panelSearch2	= '
 <div class="content-panel">

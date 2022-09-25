@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -24,7 +25,7 @@ foreach( $providersIndex as $indexItem ){
 			continue 2;
 	$optProvider[$key]	= $indexItem->title;
 }
-$optProvider	= UI_HTML_Elements::Options( $optProvider );
+$optProvider	= HtmlElements::Options( $optProvider );
 
 $form			= HtmlTag::create( 'form', array(
 	HtmlTag::create( 'div', array(

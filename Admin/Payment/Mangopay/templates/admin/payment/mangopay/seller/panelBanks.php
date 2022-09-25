@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 if( !$sellerUser->Id || empty( $sellerUser->HeadquartersAddress ) )
@@ -39,7 +40,7 @@ if( $sellerBanks ){
 			HtmlTag::create( 'td', $buttonPayOut ),
 		) );
 	}
-	$cols	= UI_HTML_Elements::ColumnGroup( array( /*'60', */'', '240', '100' ) );
+	$cols	= HtmlElements::ColumnGroup( array( /*'60', */'', '240', '100' ) );
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 //		HtmlTag::create( 'th', $w->headId ),
 		HtmlTag::create( 'th', $w->headTitle ),

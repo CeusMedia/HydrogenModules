@@ -1,9 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 if( !in_array( 'upload', $rights ) )
 	return '';
 
-$iconFile	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
+$iconFile	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
 
 $helper		= new View_Helper_Input_File( $env );
 $helper->setName( 'upload' );

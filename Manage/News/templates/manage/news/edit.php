@@ -1,22 +1,24 @@
 <?php
-$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $w			= (object) $words['edit'];
 
 $optStatus	= UI_HTML_Elements::Options( $words['states'], $news->status );
 
-$buttonAdd		= UI_HTML_Tag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
+$buttonAdd		= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
 	'href'	=> './manage/news',
 	'class'	=> 'btn btn-small',
 ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
 ) );
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' '.$w->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' '.$w->buttonRemove, array(
 	'href'		=> './manage/news/remove/'.$newsId,
 	'class'		=> 'btn btn-small btn-danger',
 	'onclick'	=> "return confirm('Wirklich?');",
@@ -54,7 +56,7 @@ return '
 			</div>
 			<!--/noShortcode-->
 			<br/>
-			'.UI_HTML_Tag::create( 'div', join( '&nbsp;', array(
+			'.HtmlTag::create( 'div', join( '&nbsp;', array(
 				$buttonAdd,
 				$buttonSave,
 				$buttonRemove,

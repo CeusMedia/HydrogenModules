@@ -1,27 +1,29 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['edit-info'];
 
 $links		= [];
 
-$linkTarget		= UI_HTML_Tag::create( 'a', $w->labelLinkTarget, array(
+$linkTarget		= HtmlTag::create( 'a', $w->labelLinkTarget, array(
 	'href'		=> $relocation->url,
 	'target'	=> '_blank',
 ) );
-$links[]	= UI_HTML_Tag::create( 'dd', $linkTarget );
+$links[]	= HtmlTag::create( 'dd', $linkTarget );
 
-$linkService	= UI_HTML_Tag::create( 'a', $w->labelLinkService, array(
+$linkService	= HtmlTag::create( 'a', $w->labelLinkService, array(
 	'href'		=> $this->env->url.'info/relocation/'.$relocation->relocationId,
 	'target'	=> '_blank',
 ) );
-$links[]	= UI_HTML_Tag::create( 'dd', $linkService );
+$links[]	= HtmlTag::create( 'dd', $linkService );
 
 
 if( $shortcut ){
-	$linkServiceShort	= UI_HTML_Tag::create( 'a', $w->labelLinkShortcut, array(
+	$linkServiceShort	= HtmlTag::create( 'a', $w->labelLinkShortcut, array(
 		'href'		=> $this->env->url.$shortcut.'/'.$relocation->relocationId,
 		'target'	=> '_blank',
 	) );
-	$links[]	= UI_HTML_Tag::create( 'dd', $linkServiceShort );
+	$links[]	= HtmlTag::create( 'dd', $linkServiceShort );
 }
 
 $links		= join( "\n", $links );

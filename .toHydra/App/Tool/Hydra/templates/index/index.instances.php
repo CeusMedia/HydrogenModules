@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $list		= [];
 $nrUpdates	= 0;
 foreach( $instances as $id => $entry ){
@@ -23,19 +25,19 @@ foreach( $instances as $id => $entry ){
 		'class'				=> 'instance',
 		'data-instance-id'	=> $id,
 	);
-	$link		= UI_HTML_Tag::create( 'a', $entry->title, $attributes ).$badge;
+	$link		= HtmlTag::create( 'a', $entry->title, $attributes ).$badge;
 	$attributes	= array(
 		'class'		=> join( ' ', $class ),
 		'data-url'	=> $entry->protocol.$entry->host.$entry->path
 	);
-	$item		= UI_HTML_Tag::create( 'li', $link, $attributes );
+	$item		= HtmlTag::create( 'li', $link, $attributes );
 	$list[$entry->title]	= $item;
 }
 ksort( $list );
 
-$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'instances' ) );
+$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'instances' ) );
 
-$badgeNrUpdates	= $nrUpdates ? UI_HTML_Tag::create( 'span', $nrUpdates, array( 'class' => 'badge badge-update' ) ) : '';
+$badgeNrUpdates	= $nrUpdates ? HtmlTag::create( 'span', $nrUpdates, array( 'class' => 'badge badge-update' ) ) : '';
 $panel	= '
 <style>
 .badge{

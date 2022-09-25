@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Module extends CMF_Hydrogen_View_Helper_Abstract{
 
 	public function __construct( $env ){
@@ -16,8 +18,8 @@ class View_Helper_Module extends CMF_Hydrogen_View_Helper_Abstract{
 			$title	= htmlspecialchars( $module->title, ENT_QUOTES, 'UTF-8' );
 		}
 		$url		= './admin/module/viewer/'.$moduleId;
-		$link		= UI_HTML_Tag::create( 'a', $title, array( 'href' => $url ) );
-		$span		= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'icon module module-status-'.$status ) );
+		$link		= HtmlTag::create( 'a', $title, array( 'href' => $url ) );
+		$span		= HtmlTag::create( 'span', $link, array( 'class' => 'icon module module-status-'.$status ) );
 		return $span;
 	}
 
@@ -48,14 +50,14 @@ class View_Helper_Module extends CMF_Hydrogen_View_Helper_Abstract{
 					'id'		=> 'input_'.$name,
 					'readonly'	=> $readonly ? 'readonly' : NULL
 				);
-				$input		= UI_HTML_Tag::create( 'select', $options, $attributes );
+				$input		= HtmlTag::create( 'select', $options, $attributes );
 				break;
 			case 'int':
 			case 'integer':
 			case 'float':
 			case 'double':
 			case 'real':
-				$input	= UI_HTML_Tag::create( 'input', NULL, array(
+				$input	= HtmlTag::create( 'input', NULL, array(
 					'type'		=> 'text',
 					'name'		=> 'config['.$item->key.']',
 					'id'		=> 'config['.$item->key.']',
@@ -66,7 +68,7 @@ class View_Helper_Module extends CMF_Hydrogen_View_Helper_Abstract{
 				) );
 				break;
 			default:
-				$input	= UI_HTML_Tag::create( 'input', NULL, array(
+				$input	= HtmlTag::create( 'input', NULL, array(
 					'type'		=> 'text',
 					'name'		=> 'config['.$item->key.']',
 					'id'		=> 'config['.$item->key.']',
@@ -78,7 +80,7 @@ class View_Helper_Module extends CMF_Hydrogen_View_Helper_Abstract{
 				if( count( $item->values ) ){
 					$options	= array_combine( $item->values, $item->values );
 					$options	= UI_HTML_Elements::Options( $options, $item->value );
-					$input	= UI_HTML_Tag::create( 'select', $options, array(
+					$input	= HtmlTag::create( 'select', $options, array(
 						'name'		=> 'config['.$item->key.']',
 						'id'		=> 'config['.$item->key.']',
 						'data-init'	=> addslashes( $item->value ),
@@ -109,9 +111,9 @@ class View_Helper_Module extends CMF_Hydrogen_View_Helper_Abstract{
 		}
 		$label		= $item->key;
 		if( strlen( trim( $title = htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ) ) ) )
-			$label	= UI_HTML_Tag::create( 'acronym', $item->key, array( 'title' => $title ) );
+			$label	= HtmlTag::create( 'acronym', $item->key, array( 'title' => $title ) );
 		$attributes	= array( 'class' => $class, 'for' => 'input_'.$name );
-		$label		= UI_HTML_Tag::create( 'label', $label, $attributes );
+		$label		= HtmlTag::create( 'label', $label, $attributes );
 		return $label;
 	}
 }

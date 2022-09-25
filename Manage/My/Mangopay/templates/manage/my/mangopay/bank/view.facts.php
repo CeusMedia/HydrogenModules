@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconPayin		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
-$iconPayout		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-out' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconPayin		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
+$iconPayout		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-out' ) );
 
 $buttonPayIn	= '<a href="./manage/my/mangopay/bank/payin/'.$bankAccountId.'" class="btn">'.$iconPayin.' Einzahlung</a>';
 $buttonPayOut	= '<a href="./manage/my/mangopay/bank/payOut/'.$bankAccountId.'" class="btn">'.$iconPayout.' Auszahlung</a>';

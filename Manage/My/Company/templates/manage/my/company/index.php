@@ -1,19 +1,21 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['index'];
 
 if( $companies ){
 	$timeHelper	= new View_Helper_TimePhraser( $env );
 	$rows		= [];
 	foreach( $companies as $company ){
-		$link	= UI_HTML_Tag::create( 'a', $company->title, array(
+		$link	= HtmlTag::create( 'a', $company->title, array(
 			'href' => './manage/my/company/edit/'.$company->companyId
 		) );
 		$createdAt	= $timeHelper->convert( $company->createdAt, TRUE );
 		$modifiedAt	= $company->modifiedAt ? $timeHelper->convert( $company->modifiedAt ) : "-";
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', $createdAt ),
-			UI_HTML_Tag::create( 'td', $modifiedAt ),
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $link ),
+			HtmlTag::create( 'td', $createdAt ),
+			HtmlTag::create( 'td', $modifiedAt ),
 		) );
 	}
 	$heads	= array(
@@ -25,9 +27,9 @@ if( $companies ){
 	);
 	$heads		= UI_HTML_Elements::TableHeads( $heads );
 	$colgroup	= UI_HTML_Elements::ColumnGroup( '57%', '15%', '15%' );
-	$thead		= UI_HTML_Tag::create( 'thead', $heads );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
+	$thead		= HtmlTag::create( 'thead', $heads );
+	$tbody		= HtmlTag::create( 'tbody', $rows );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
 }
 
 return '

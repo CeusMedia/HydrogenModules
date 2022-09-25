@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['index'];
@@ -100,7 +101,7 @@ if( $mails ){
 		'id'		=> 'admin-mail-queue-list-all-items-toggle',
 	) );
 
-	$heads	= UI_HTML_Elements::TableHeads( array(
+	$heads	= HtmlElements::TableHeads( array(
 		$checkboxAll,
 		'',
 		'Sender und Betreff',
@@ -109,7 +110,7 @@ if( $mails ){
 		'',
 	) );
 
-	$colgroup		= UI_HTML_Elements::ColumnGroup( array( '30px', '25px', '', '30%', '120px', '80px' ) );
+	$colgroup		= HtmlElements::ColumnGroup( array( '30px', '25px', '', '30%', '120px', '80px' ) );
 	$thead			= HtmlTag::create( 'thead', $heads );
 	$tbody			= HtmlTag::create( 'tbody', $rows );
 	$table			= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );

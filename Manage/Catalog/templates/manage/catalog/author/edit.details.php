@@ -1,10 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['edit'];
 
 $tabs		= $this->renderMainTabs();
 $list		= $this->renderList( $authors, $author->authorId );
 
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 
 $optGender	= array( /*$words['gender']*/ );
 $optGender	= UI_HTML_Elements::Options( $optGender/*, $author->gender*/ );
@@ -14,7 +16,7 @@ if( $author->image ){
 	$id		= str_pad( $author->authorId, 5, "0", STR_PAD_LEFT );
 	$image	= $pathAuthors.$id.'_'.$author->image;
 }
-$image	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $image, 'class' => 'img-polaroid' ) );
+$image	= HtmlTag::create( 'img', NULL, array( 'src' => $image, 'class' => 'img-polaroid' ) );
 
 $buttonRemoveImage	= "";
 if( $author->image ){
@@ -25,10 +27,10 @@ if( $author->image ){
 		'class'		=> "btn btn-danger",
 		'onclick'	=> "document.location.href='".$urlRemoveImage."';"
 	);
-	$buttonRemoveImage	= UI_HTML_Tag::create( 'button', $iconRemove, $attributes );
+	$buttonRemoveImage	= HtmlTag::create( 'button', $iconRemove, $attributes );
 }
 
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
 	'href'		=> './manage/catalog/author/remove/'.$author->authorId,
 	'disabled'	=> $articles ? 'disabled' : NULL,
 	'class'		=> "btn btn-small btn-danger",

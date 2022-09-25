@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $wf		= (object) $words['index'];
@@ -19,9 +20,9 @@ foreach( $list as $item ){
 	$rows[]	= HtmlTag::create( 'tr', $cells, array( "data-key" => $item->key ) );
 }
 
-$columns	= UI_HTML_Elements::ColumnGroup( array( '20%', '5%', '65%', '10%' ) );
+$columns	= HtmlElements::ColumnGroup( array( '20%', '5%', '65%', '10%' ) );
 $heads		= array( $wf->headKey, $wf->headType, $wf->headValue, $wf->headAction );
-$heads		= UI_HTML_Elements::TableHeads( $heads );
+$heads		= HtmlElements::TableHeads( $heads );
 $table		= HtmlTag::create( 'table', $columns.$heads.implode( $rows ), array( 'class' => "table table-condensed table-striped" ) );
 
 $panelEdit	= '
@@ -29,7 +30,7 @@ $panelEdit	= '
 	'.$table;
 
 $wf			= (object) $words['add'];
-$optType	= UI_HTML_Elements::Options( $words['types'] );
+$optType	= HtmlElements::Options( $words['types'] );
 $panelAdd	= '
 <h3>'.$wf->legend.'</h3>
 <form action="./admin/cache/add" method="post">

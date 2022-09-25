@@ -1,6 +1,7 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
-use UI_HTML_Tag as Html;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as Html;
 
 class View_Helper_Info_Contact_Form_Modal
 {
@@ -234,7 +235,7 @@ class View_Helper_Info_Contact_Form_Modal
 				unset( $optType[$optTypeKey] );
 
 		//  TYPE OPTIONS: Render with default type
-		$optType	= UI_HTML_Elements::Options( $optType, $defaultType );
+		$optType	= HtmlElements::Options( $optType, $defaultType );
 		return $optType;
 	}
 }

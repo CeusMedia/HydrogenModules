@@ -1,11 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $panelProjectList		= $this->loadTemplateFile( 'admin/server/edit.project.list.php' );
 $panelProjectAdd		= $this->loadTemplateFile( 'admin/server/edit.project.add.php' );
 
 $wf		= (object) $words['edit'];
 
-$optStatus	= UI_HTML_Elements::Options( $words['states'], $server->status );
+$optStatus	= HtmlElements::Options( $words['states'], $server->status );
 
 return '
 <div class="column-left-66">
@@ -27,9 +28,9 @@ return '
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './admin/server', $wf->buttonCancel, 'button cancel' ).'
-				'.UI_HTML_Elements::Button( 'edit', $wf->buttonSave, 'button save' ).'
-				'.UI_HTML_Elements::LinkButton( './admin/server/remove/'.$server->serverId, $wf->buttonRemove, 'button remove', $wf->buttonRemoveConfirm ).'
+				'.HtmlElements::LinkButton( './admin/server', $wf->buttonCancel, 'button cancel' ).'
+				'.HtmlElements::Button( 'edit', $wf->buttonSave, 'button save' ).'
+				'.HtmlElements::LinkButton( './admin/server/remove/'.$server->serverId, $wf->buttonRemove, 'button remove', $wf->buttonRemoveConfirm ).'
 			</div>
 		</fieldset>
 	</form>

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
@@ -42,7 +43,7 @@ return '
 								'autocomplete'	=> 'current-password',
 								'placeholder'	=> $w->labelPasswordCurrent,
 							) ).
-							UI_HTML_Elements::Button( 'save', '<i class="fa fa-fw fa-download"></i> '.$w->buttonDownload, 'btn btn-primary' )
+							HtmlElements::Button( 'save', '<i class="fa fa-fw fa-download"></i> '.$w->buttonDownload, 'btn btn-primary' )
 						)
 					) )
 				)

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_UserAvatar{
@@ -60,7 +61,7 @@ class View_Helper_UserAvatar{
 	public function render(){
 		$avatar	= $this->get();
 		if( $avatar ){
-			return UI_HTML_Tag::create( 'img', NULL, array(
+			return HtmlTag::create( 'img', NULL, array(
 				'src'		=> $this->getImageUrl(),
 				'class'		=> 'avatar',
 				'width'		=> $this->size,

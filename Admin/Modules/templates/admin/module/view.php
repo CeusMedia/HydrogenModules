@@ -1,12 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $classes	= '-';
 if( $module->files->classes ){
 	$classes	= [];
 	foreach( $module->files->classes as $item )
-		$classes[]	= UI_HTML_Elements::ListItem( $item, 1 );
-	$classes	= UI_HTML_Elements::unorderedList( $classes, 1, array( 'class' => 'classes' ) );
+		$classes[]	= HtmlElements::ListItem( $item, 1 );
+	$classes	= HtmlElements::unorderedList( $classes, 1, array( 'class' => 'classes' ) );
 }
 
 //$classes	= xmp( CMF_Hydrogen_View_Helper_Diff::htmlDiff( file_get_contents( 'config.ini.inc' ), file_get_contents( 'config.ini.inc.dist' ) ) );
@@ -16,40 +17,40 @@ $locales	= '-';
 if( $module->files->locales ){
 	$locales	= [];
 	foreach( $module->files->locales as $item )
-		$locales[]	= UI_HTML_Elements::ListItem( $item, 1 );
-	$locales		= UI_HTML_Elements::unorderedList( $locales, 1, array( 'class' => 'locales' ) );
+		$locales[]	= HtmlElements::ListItem( $item, 1 );
+	$locales		= HtmlElements::unorderedList( $locales, 1, array( 'class' => 'locales' ) );
 }
 
 $templates	= '-';
 if( $module->files->templates ){
 	$templates	= [];
 	foreach( $module->files->templates as $item )
-		$templates[]	= UI_HTML_Elements::ListItem( $item, 1 );
-	$templates	= UI_HTML_Elements::unorderedList( $templates, 1, array( 'class' => 'templates' ) );
+		$templates[]	= HtmlElements::ListItem( $item, 1 );
+	$templates	= HtmlElements::unorderedList( $templates, 1, array( 'class' => 'templates' ) );
 }
 
 $styles	= '-';
 if( $module->files->styles ){
 	$styles	= [];
 	foreach( $module->files->styles as $item )
-		$styles[]	= UI_HTML_Elements::ListItem( $item, 1 );
-	$styles		= UI_HTML_Elements::unorderedList( $styles, 1, array( 'class' => 'styles' ) );
+		$styles[]	= HtmlElements::ListItem( $item, 1 );
+	$styles		= HtmlElements::unorderedList( $styles, 1, array( 'class' => 'styles' ) );
 }
 
 $scripts	= '-';
 if( $module->files->scripts ){
 	$scripts	= [];
 	foreach( $module->files->scripts as $item )
-		$scripts[]	= UI_HTML_Elements::ListItem( $item, 1 );
-	$scripts		= UI_HTML_Elements::unorderedList( $scripts, 1, array( 'class' => 'scripts' ) );
+		$scripts[]	= HtmlElements::ListItem( $item, 1 );
+	$scripts		= HtmlElements::unorderedList( $scripts, 1, array( 'class' => 'scripts' ) );
 }
 
 $images	= '-';
 if( $module->files->images ){
 	$images	= [];
 	foreach( $module->files->images as $item )
-		$images[]	= UI_HTML_Elements::ListItem( $item, 1 );
-	$images		= UI_HTML_Elements::unorderedList( $images, 1, array( 'class' => 'images' ) );
+		$images[]	= HtmlElements::ListItem( $item, 1 );
+	$images		= HtmlElements::unorderedList( $images, 1, array( 'class' => 'images' ) );
 }
 
 $config	= '-';
@@ -69,11 +70,11 @@ if( $module->sql ){
 }
 
 $disabled			= $module->type == 4 ? '' : 'disabled';
-$buttonCancel		= UI_HTML_Elements::LinkButton( './admin/module/', $words['view']['buttonCancel'], 'button cancel' );
-$buttonInstall		= UI_HTML_Elements::LinkButton( './admin/module/link/'.$module->id, $words['view']['buttonLink'], 'button add', 'Das Modul wird referenziert. Änderungen sind bedingt möglich. Fortfahren?', $disabled );
-$buttonCopy			= UI_HTML_Elements::LinkButton( './admin/module/copy/'.$module->id, $words['view']['buttonCopy'], 'button add', 'Das Modul wird kopiert und damit von der Quelle entkoppelt. Wirklich?', $disabled );
+$buttonCancel		= HtmlElements::LinkButton( './admin/module/', $words['view']['buttonCancel'], 'button cancel' );
+$buttonInstall		= HtmlElements::LinkButton( './admin/module/link/'.$module->id, $words['view']['buttonLink'], 'button add', 'Das Modul wird referenziert. Änderungen sind bedingt möglich. Fortfahren?', $disabled );
+$buttonCopy			= HtmlElements::LinkButton( './admin/module/copy/'.$module->id, $words['view']['buttonCopy'], 'button add', 'Das Modul wird kopiert und damit von der Quelle entkoppelt. Wirklich?', $disabled );
 $disabled			= $module->type == 4 ? 'disabled' : '';
-$buttonUninstall	= UI_HTML_Elements::LinkButton( './admin/module/uninstall/'.$module->id, $words['view']['buttonRemove'], 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
+$buttonUninstall	= HtmlElements::LinkButton( './admin/module/uninstall/'.$module->id, $words['view']['buttonRemove'], 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
 
 UI_HTML_Tabs::$version	= 3;
 $tabs	= new UI_HTML_Tabs();

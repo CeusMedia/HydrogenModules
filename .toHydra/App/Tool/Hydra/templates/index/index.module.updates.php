@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 if( empty( $modulesUpdate ) )
 	return "";
 
@@ -12,12 +14,12 @@ foreach( $modulesUpdate as $module ){
 	$label		= '<span class="module">'.$label.'</span>';
 
 	$attributes	= array( 'href' => './admin/module/viewer/index/'.$module->id );
-	$link		= UI_HTML_Tag::create( 'a', $module->title, $attributes );
+	$link		= HtmlTag::create( 'a', $module->title, $attributes );
 
 	$versions	= '<span class="muted" style="float: right">'.$module->versionInstalled.'&nbsp;&rArr;&nbsp;'.$module->versionAvailable.'</span>';
 
 	$listMessenger[]	= $link;
-	$listModulesUpdatable[$module->title]	= UI_HTML_Tag::create( 'li', $link.'&nbsp;'.$versions );
+	$listModulesUpdatable[$module->title]	= HtmlTag::create( 'li', $link.'&nbsp;'.$versions );
 }
 ksort( $listModulesUpdatable );
 if( $listMessenger )

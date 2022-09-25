@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['editImage'];
 
@@ -6,7 +7,7 @@ $helperTime	 = new View_Helper_TimePhraser( $env );
 
 $panelCategories	= $view->loadTemplateFile( 'manage/catalog/gallery/index.categories.php' );
 
-$preview	= UI_HTML_Tag::create( 'a', UI_HTML_Tag::create( 'img', NULL, array(
+$preview	= HtmlTag::create( 'a', HtmlTag::create( 'img', NULL, array(
 		'src'   => $pathPreview.rawurlencode( $category->path ).'/'.$image->filename,
 		'class' => 'img-polaroid',
 	) ),

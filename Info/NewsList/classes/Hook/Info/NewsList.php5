@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -33,13 +34,13 @@ class Hook_Info_NewsList extends Hook
 					if( $attr['panel'] ){
 						$heading	= '';
 						if( strlen( trim( $attr['panel-heading'] ) ) )
-							$heading	= UI_HTML_Tag::create(
+							$heading	= HtmlTag::create(
 								'h'.$attr['panel-heading-level'],
 								$attr['panel-heading']
 							);
-						$replacement	= UI_HTML_Tag::create( 'div', array(
+						$replacement	= HtmlTag::create( 'div', array(
 							$heading,
-							UI_HTML_Tag::create( 'div', $replacement, array( 'class' => 'content-panel-inner' ) ),
+							HtmlTag::create( 'div', $replacement, array( 'class' => 'content-panel-inner' ) ),
 						), array( 'class' => 'content-panel' ) );
 					}
 					$processor->replaceNext(

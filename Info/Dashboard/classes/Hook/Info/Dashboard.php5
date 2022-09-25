@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -20,7 +21,7 @@ class Hook_Info_Dashboard extends Hook
 		$activeOnly		= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
 		$linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
 		$list			= [];
-		$icon			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th', 'title' => 'Dashboard' ) );
+		$icon			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th', 'title' => 'Dashboard' ) );
 		$words			= $env->getLanguage()->getWords( 'info/dashboard' );
 
 		foreach( $dashboards as $dashboard ){

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helperCategory	= new View_Helper_Info_Manual_CategorySelector( $env );
 $helperCategory->setCategories( $categories );
@@ -12,36 +14,36 @@ $helperNav	= new View_Helper_Info_Manual_PageTree( $env );
 $helperNav->setCategoryId( $categoryId );
 $helperNav->setActivePageId( $pageId );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-arrow-left" ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-ok icon-white" ) );
-$iconPreview	= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-eye-open" ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-remove icon-white" ) );
-$iconUp			= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-arrow-up" ) );
-$iconDown		= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-arrow-down" ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => "icon-arrow-left" ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => "icon-ok icon-white" ) );
+$iconPreview	= HtmlTag::create( 'i', '', array( 'class' => "icon-eye-open" ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => "icon-remove icon-white" ) );
+$iconUp			= HtmlTag::create( 'i', '', array( 'class' => "icon-arrow-up" ) );
+$iconDown		= HtmlTag::create( 'i', '', array( 'class' => "icon-arrow-down" ) );
 
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
-	$iconPreview	= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-eye" ) );
-	$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) );
-	$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
-	$iconUp			= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-chevron-up" ) );
-	$iconDown		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-chevron-down" ) );
+	$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
+	$iconPreview	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-eye" ) );
+	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) );
+	$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
+	$iconUp			= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-chevron-up" ) );
+	$iconDown		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-chevron-down" ) );
 }
 
 $optParentId	= array( '' => '- ohne -' );
 foreach( $folders as $folder )
 	$optParentId[$folder->manualPageId]	= $folder->title;
-$optParentId	= UI_HTML_Elements::Options( $optParentId, $page->parentId );
+$optParentId	= HtmlElements::Options( $optParentId, $page->parentId );
 
 $buttonAdd	= "";
 $buttonReload	= "";
 if( $moduleConfig->get( 'editor' ) ){
-	$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-	$iconReload		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
+	$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+	$iconReload		= HtmlTag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
 	if( in_array( 'add', $rights ) )
-		$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-primary" ) );
+		$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-primary" ) );
 	if( in_array( 'reload', $rights ) )
-		$buttonReload	= UI_HTML_Tag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
+		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
 }
 
 $panelEdit	= '
@@ -53,7 +55,7 @@ $panelEdit	= '
 						<div class="span12">
 							<label for="input_content">'.$words['edit']['labelContent'].'</label>
 							<!--noShortcode-->
-							'.UI_HTML_Tag::create( 'textarea', $content, array(
+							'.HtmlTag::create( 'textarea', $content, array(
 								'class'		=> "span12 CodeMirror-auto ace-auto",
 								'name'		=> "content",
 								'id'		=> "input_content",

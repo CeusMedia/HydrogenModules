@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $files	= $this->getData( 'files' );
 $path	= $this->getData( 'pathLocale' );
 
@@ -21,16 +23,16 @@ foreach( $files as $file ){
 	}
 
 	$url	= './manage/locale/edit/'.base64_encode( $pathName );									//
-	$link	= UI_HTML_Tag::create( 'a', $pathName, array( 'href' => $url ) );						//
+	$link	= HtmlTag::create( 'a', $pathName, array( 'href' => $url ) );						//
 	if( !is_writeable( $file->getPathname() ) ){													//  file ist not writable
 		$classes[]	= "not-writeable error danger";													//
-		$link		= UI_HTML_Tag::create( 'span', $label );										//
+		$link		= HtmlTag::create( 'span', $label );										//
 	}
 	$attributes			= array( 'class' => join( " ", $classes ) );
-	$list[$pathName]	= UI_HTML_Tag::create( 'li', $link, $attributes );
+	$list[$pathName]	= HtmlTag::create( 'li', $link, $attributes );
 }
 ksort( $list );
-$list	= UI_HTML_Tag::create( 'ul', implode( $list ), array( 'class' => 'list-locale nav nav-pills nav-stacked' ) );
+$list	= HtmlTag::create( 'ul', implode( $list ), array( 'class' => 'list-locale nav nav-pills nav-stacked' ) );
 
 #return $list;
 

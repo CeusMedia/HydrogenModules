@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Image_Slider extends View
@@ -40,12 +41,12 @@ class View_Manage_Image_Slider extends View
 			return;
 		$label		= str_replace( " ", "&nbsp;", $words->$keyLabel );
 		if( isset( $words->$keyTitle ) && strlen( trim( $words->$keyTitle ) ) )
-			$label	= '&nbsp;'.new UI_HTML_Tag( 'abbr', $label, array(
+			$label	= '&nbsp;'.HtmlTag::create( 'abbr', $label, array(
 				'title'		=> trim( $words->$keyTitle ),
 				'class'		=> $options['titleClass'],
 			) );
 		if( isset( $words->$keySuffix ) && strlen( trim( $words->$keySuffix) ) )
-			$label	.= '&nbsp;'.new UI_HTML_Tag( 'small', trim( $words->$keySuffix ), array(
+			$label	.= '&nbsp;'.HtmlTag::create( 'small', trim( $words->$keySuffix ), array(
 				'class'		=> $options['suffixClass'],
 			) );
 		return $label;

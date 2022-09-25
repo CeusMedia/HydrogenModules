@@ -1,7 +1,8 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 
 
 $optStatus	= array( '' => $wordsGeneral['list']['optAll'] );
@@ -28,14 +29,14 @@ $optClassName	= UI_HTML_Elements::Options( $optClassName, $filterClassName );
 $optArchived	= array( 0 => 'no', 1 => 'yes' );
 $optArchived	= UI_HTML_Elements::Options( $optArchived, $filterArchived );
 
-$panelFilter	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', $words['filter']['heading'] ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'form', array(
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['filter']['labelJobId'], array( 'for' => 'input_jobId' ) ),
-					UI_HTML_Tag::create( 'select', $optJobId, array(
+$panelFilter	= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', $words['filter']['heading'] ),
+	HtmlTag::create( 'div', array(
+		HtmlTag::create( 'form', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', $words['filter']['labelJobId'], array( 'for' => 'input_jobId' ) ),
+					HtmlTag::create( 'select', $optJobId, array(
 						'name' 		=> 'jobId',
 						'id'		=> 'input_jobId',
 						'class' 	=> 'span12',
@@ -43,10 +44,10 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 					) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['filter']['labelClassName'], array( 'for' => 'input_className' ) ),
-					UI_HTML_Tag::create( 'select', $optClassName, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', $words['filter']['labelClassName'], array( 'for' => 'input_className' ) ),
+					HtmlTag::create( 'select', $optClassName, array(
 						'name' 		=> 'className',
 						'id'		=> 'input_className',
 						'class' 	=> 'span12',
@@ -54,10 +55,10 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 					) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['filter']['labelStatus'], array( 'for' => 'input_status' ) ),
-					UI_HTML_Tag::create( 'select', $optStatus, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', $words['filter']['labelStatus'], array( 'for' => 'input_status' ) ),
+					HtmlTag::create( 'select', $optStatus, array(
 						'name' 		=> 'status[]',
 						'id'		=> 'input_status',
 						'class' 	=> 'span12',
@@ -68,19 +69,19 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 					) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['filter']['labelType'], array( 'for' => 'input_type' ) ),
-					UI_HTML_Tag::create( 'select', $optType, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', $words['filter']['labelType'], array( 'for' => 'input_type' ) ),
+					HtmlTag::create( 'select', $optType, array(
 						'name' 		=> 'type',
 						'id'		=> 'input_type',
 						'class' 	=> 'span12',
 //						'oninput'	=> 'this.form.submit();',
 					) ),
 				), array( 'class' => 'span8' ) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['filter']['labelArchived'], array( 'for' => 'input_archived' ) ),
-					UI_HTML_Tag::create( 'select', $optArchived, array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', $words['filter']['labelArchived'], array( 'for' => 'input_archived' ) ),
+					HtmlTag::create( 'select', $optArchived, array(
 						'name' 		=> 'archived',
 						'id'		=> 'input_archived',
 						'class' 	=> 'span12',
@@ -88,10 +89,10 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 					) ),
 				), array( 'class' => 'span4' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['filter']['labelStartFrom'], array( 'for' => 'input_startFrom' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', $words['filter']['labelStartFrom'], array( 'for' => 'input_startFrom' ) ),
+					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'date',
 						'name' 		=> 'startFrom',
 						'id'		=> 'input_startFrom',
@@ -101,10 +102,10 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 					) ),
 				), array( 'class' => 'not-span12 span6' ) ),
 //			), array( 'class' => 'row-fluid' ) ),
-//			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['filter']['labelStartTo'], array( 'for' => 'input_startTo' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+//			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', $words['filter']['labelStartTo'], array( 'for' => 'input_startTo' ) ),
+					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'date',
 						'name' 		=> 'startTo',
 						'id'		=> 'input_startTo',
@@ -114,15 +115,15 @@ $panelFilter	= UI_HTML_Tag::create( 'div', array(
 					) ),
 				), array( 'class' => 'not-span12 span6' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'button', $iconFilter.'&nbsp;'.$words['filter']['buttonFilter'], array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$words['filter']['buttonFilter'], array(
 						'type'	=> 'submit',
 						'name'	=> 'filter',
 						'class'	=> 'btn not-btn-small btn-info not-btn-primary',
 					) ),
-//					UI_HTML_Tag::create( 'a', $iconReset.'&nbsp;'.$words['filter']['buttonReset'], array(
-					UI_HTML_Tag::create( 'a', $iconReset, array(
+//					HtmlTag::create( 'a', $iconReset.'&nbsp;'.$words['filter']['buttonReset'], array(
+					HtmlTag::create( 'a', $iconReset, array(
 						'href'	=> './manage/job/run/filter/reset',
 						'class'	=> 'btn not-btn-small btn-inverse',
 					) ),

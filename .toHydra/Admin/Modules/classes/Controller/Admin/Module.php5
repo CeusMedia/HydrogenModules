@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Module extends Controller{
@@ -114,7 +115,7 @@ class Controller_Admin_Module extends Controller{
 		if( !file_exists( $pathModule.$pathFile.$fileName ) )
 			die( 'Invalid file: '.$pathModule.$pathFile.$fileName );
 		$content	= FS_File_Reader::load( $pathModule.$pathFile.$fileName );
-		$code		= UI_HTML_Tag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
+		$code		= HtmlTag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
 		$body		= '<h2>'.$moduleId.' - '.$fileName.'</h2>'.$code;
 		$page		= new UI_HTML_PageFrame();
 		$page->addStylesheet( 'css/reset.css' );

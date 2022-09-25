@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Blog_Compact extends Hook
@@ -8,7 +9,7 @@ class Hook_Blog_Compact extends Hook
 	{
 		$env->getLanguage()->load( 'blog' );														//  load blog language file
 		$words		= $env->getLanguage()->getWords( 'blog' );										//  get blog feed words
-		$context->addHead( UI_HTML_Tag::create( 'link', NULL, array(								//  create link with attributes
+		$context->addHead( HtmlTag::create( 'link', NULL, array(								//  create link with attributes
 			'rel'	=> "alternate",																	//
 			'type'	=> "application/rss+xml",														//  MIME type of RSS
 			'href'	=> $env->getConfig()->get( 'app.base.url' )."blog/feed",						//  URL to RSS feed

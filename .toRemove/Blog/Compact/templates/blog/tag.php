@@ -1,20 +1,22 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $articleList	= [];
 $list			= [];
 foreach( $articles as $article ){
 	$url	= './blog/article/'.$article->articleId.'/'.rawurlencode( $article->title );
-	$link	= UI_HTML_Tag::create( 'a', $article->title, array( 'href' => $url ) );
-	$list[]	= UI_HTML_Tag::create( 'li', $link );
+	$link	= HtmlTag::create( 'a', $article->title, array( 'href' => $url ) );
+	$list[]	= HtmlTag::create( 'li', $link );
 }
-$articleList	= UI_HTML_Tag::create( 'ul', join( $list ) );
+$articleList	= HtmlTag::create( 'ul', join( $list ) );
 $articleList	= $this->renderArticleAbstractList( $articles, FALSE, FALSE, FALSE );
 
 $list	= [];
 foreach( $friends as $friend ){
 	$link	= View_Helper_Blog::renderTagLink( $env, $friend->title );
-	$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-article-tag-list-item' ) );
+	$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'blog-article-tag-list-item' ) );
 }
-$tagList	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'blog-article-tag-list' ) );
+$tagList	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'blog-article-tag-list' ) );
 
 return '
 <div id="blog">

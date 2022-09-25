@@ -1,28 +1,30 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $modelForm	= new Model_Form( $env );
 $modelMail	= new Model_Form_Mail( $env );
 
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconMail	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
-$iconForm	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconMail	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
+$iconForm	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
 
 $withinForms		= array_merge(
 	$modelForm->getAllByIndex( 'customerMailId', $mail->mailId ),
 	$modelForm->getAllByIndex( 'managerMailId', $mail->mailId )
 );
-$listWithinForms	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
+$listWithinForms	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinForms ){
 	$list	= [];
 	foreach( $withinForms as $item ){
-		$link	= UI_HTML_Tag::create( 'a', $iconForm.'&nbsp;'.$item->title, array(
+		$link	= HtmlTag::create( 'a', $iconForm.'&nbsp;'.$item->title, array(
 			'href'	=> './manage/form/edit/'.$item->formId,
 		) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
+		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$listWithinForms	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+	$listWithinForms	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
 }
 
 $optRoleType	= array(
@@ -86,7 +88,7 @@ return '
 				<a href="./manage/form/mail" class="btn">'.$iconList.' zur Liste</a>
 				<a href="./manage/form/mail/view/'.$mail->mailId.'" class="btn btn-info">'.$iconView.' anzeigen</a>
 				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' speichern</button>
-				'.UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 					'href'		=> './manage/form/mail/remove/'.$mail->mailId,
 					'class'		=> 'btn btn-danger',
 					'onclick'	=> 'return confirm("Wirklich ?");',

@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;zurück', array( 'class' => 'btn btn-small', 'href' => './manage/form/target' ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;speichern', array( 'type' => 'submit', 'class' => 'btn btn-primary' ) );
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', array( 'class' => 'btn btn-small', 'href' => './manage/form/target' ) );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array( 'type' => 'submit', 'class' => 'btn btn-primary' ) );
 
 $optStatus		= [
 	0	=> 'inaktiv',
@@ -17,29 +18,29 @@ if( count( $fails ) ){
 	$rows	= [];
 	foreach( $fails as $nr => $fail )
 	{
-		$link	= UI_HTML_Tag::create( 'a', $fail->fillId, ['href' => './manage/form/fill/view/'.$fail->fillId] );
-		$rows[]	= UI_HTML_Tag::create( 'tr', [
-			UI_HTML_Tag::create( 'td', $nr + 1 ),
-			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', '<tt>'.$fail->fillTransferMessage.'</tt>' ),
-			UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i:s', $fail->createdAt ) ),
-			UI_HTML_Tag::create( 'td', date( 'd.m.Y H:i:s', $fail->failedAt ) ),
+		$link	= HtmlTag::create( 'a', $fail->fillId, ['href' => './manage/form/fill/view/'.$fail->fillId] );
+		$rows[]	= HtmlTag::create( 'tr', [
+			HtmlTag::create( 'td', $nr + 1 ),
+			HtmlTag::create( 'td', $link ),
+			HtmlTag::create( 'td', '<tt>'.$fail->fillTransferMessage.'</tt>' ),
+			HtmlTag::create( 'td', date( 'd.m.Y H:i:s', $fail->createdAt ) ),
+			HtmlTag::create( 'td', date( 'd.m.Y H:i:s', $fail->failedAt ) ),
 		] );
 	}
-	$thead	= UI_HTML_Tag::create( 'tr', [
-		UI_HTML_Tag::create( 'th', '#' ),
-		UI_HTML_Tag::create( 'th', 'Eintrag' ),
-		UI_HTML_Tag::create( 'th', 'Fehlermeldung' ),
-		UI_HTML_Tag::create( 'th', 'eingegangen' ),
-		UI_HTML_Tag::create( 'th', 'gescheitert' ),
+	$thead	= HtmlTag::create( 'tr', [
+		HtmlTag::create( 'th', '#' ),
+		HtmlTag::create( 'th', 'Eintrag' ),
+		HtmlTag::create( 'th', 'Fehlermeldung' ),
+		HtmlTag::create( 'th', 'eingegangen' ),
+		HtmlTag::create( 'th', 'gescheitert' ),
 	] );
 	$colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '60px', '*', '120px', '120px' );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-	$table	= UI_HTML_Tag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped'] );
+	$tbody	= HtmlTag::create( 'tbody', $rows );
+	$table	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped'] );
 
-	$table	= UI_HTML_Tag::create( 'div', [
-		UI_HTML_Tag::create( 'h3', 'Gescheiterte Transfers <small class="muted">(der letzten 4 Wochen)</small>' ),
-		UI_HTML_Tag::create( 'div', $table, ['class' => 'content-panel-inner'] ),
+	$table	= HtmlTag::create( 'div', [
+		HtmlTag::create( 'h3', 'Gescheiterte Transfers <small class="muted">(der letzten 4 Wochen)</small>' ),
+		HtmlTag::create( 'div', $table, ['class' => 'content-panel-inner'] ),
 	], ['class' => 'content-panel'] );
 
 }

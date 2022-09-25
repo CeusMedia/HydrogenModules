@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class Mail_Forum_Daily extends Mail_Forum_Abstract
 {
 	protected function renderHtmlBody(): string
@@ -27,21 +29,21 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract
 			}
 			$rows	= [];
 			foreach( $list as $thread ){
-				$posts		= UI_HTML_Tag::create( 'b', count( $thread->posts ).' '.( count( $thread->posts ) === 1 ? 'Beitrag' : 'Beiträge' ) );
-				$linkTopic	= UI_HTML_Tag::create( 'a', $thread->topic->title, array(
+				$posts		= HtmlTag::create( 'b', count( $thread->posts ).' '.( count( $thread->posts ) === 1 ? 'Beitrag' : 'Beiträge' ) );
+				$linkTopic	= HtmlTag::create( 'a', $thread->topic->title, array(
 					'href'		=> $this->env->url.'info/forum/topic/'.$thread->topic->topicId,
 					'class'		=> 'link-topic'
 				) );
-				$linkThread	= UI_HTML_Tag::create( 'a', $thread->thread->title, array(
+				$linkThread	= HtmlTag::create( 'a', $thread->thread->title, array(
 					'href'		=> $this->env->url.'info/forum/thread/'.$thread->thread->threadId,
 					'class'		=> 'link-thread'
 				) );
 				$line		= '%1$s > %2$s: %3$s';
 				$line		= '%3$s in Kategorie %1$s in Thema %2$s';
 				$line		= sprintf( $line, $linkTopic, $linkThread, $posts );
-				$rows[]		= UI_HTML_Tag::create( 'li', $line );
+				$rows[]		= HtmlTag::create( 'li', $line );
 			}
-			$list	= UI_HTML_Tag::create( 'ul', $rows, array( 'class' => '' ) );
+			$list	= HtmlTag::create( 'ul', $rows, array( 'class' => '' ) );
 		}
 		$body	= '
 <div class="moduleInfoForum jobInfoForum info-forum-mail info-forum-mail-answer">

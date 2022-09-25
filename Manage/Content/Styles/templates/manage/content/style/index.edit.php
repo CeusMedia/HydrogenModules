@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['index.edit'];
 
 if( $file ){
-	$textarea	= UI_HTML_Tag::create( 'textarea', $content, array(
+	$textarea	= HtmlTag::create( 'textarea', $content, array(
 			'name'	=> 'content',
 			'id'	=> 'input_content',
 			'class'	=> 'ace-auto CodeMirror-auto span12',
@@ -17,7 +18,7 @@ if( $file ){
 			'codemirror-callback-change'	=> 'ModuleManageStyle.onCodeMirrorChange',
 			'codemirror-callback-save'		=> 'ModuleManageStyle.onCodeMirrorSave',
 	) );
-	$buttonSave	= UI_HTML_Tag::create( 'button', '<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSave, array(
+	$buttonSave	= HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSave, array(
 		'type'		=> 'submit',
 		'name'		=> 'save',
 		'class'		=> 'btn btn-primary',

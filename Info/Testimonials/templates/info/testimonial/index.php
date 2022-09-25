@@ -1,22 +1,23 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
 if( $testimonials ){
 	$list	= [];
 	foreach( $testimonials as $entry ){
 		$author	= $entry->username.',&nbsp;'.date( 'd.m.Y', $entry->timestamp );
-		$quote	= UI_HTML_Tag::create( 'blockquote', array(
-			UI_HTML_Tag::create( 'a', "&bdquo;".$entry->abstract."&ldquo;", array(
+		$quote	= HtmlTag::create( 'blockquote', array(
+			HtmlTag::create( 'a', "&bdquo;".$entry->abstract."&ldquo;", array(
 				'class' 		=> 'testimonial-abstract',
 				'href'			=> '#modal-comment-view',
 				'role'			=> "button",
 				'data-toggle'	=> "modal",
 				'onclick'		=> 'showComment('.$entry->testimonialId.')'
 			) ),
-			UI_HTML_Tag::create( 'small', $author, array( 'class' => 'testimonial-author' ) ),
+			HtmlTag::create( 'small', $author, array( 'class' => 'testimonial-author' ) ),
 		), array( 'class' => 'course-comment' ) );
-		$comment	= UI_HTML_Tag::create( 'div', $quote, array( 'class' => 'testimonial' ) );
-		$list[]	= UI_HTML_Tag::create( 'div', $comment, array(
+		$comment	= HtmlTag::create( 'div', $quote, array( 'class' => 'testimonial' ) );
+		$list[]	= HtmlTag::create( 'div', $comment, array(
 			'class'			=> 'row-fluid course-item',
 			'id'			=> 'testimonial-'.$entry->testimonialId,
 			'data-author'	=> addslashes( $entry->username ),
@@ -24,14 +25,14 @@ if( $testimonials ){
 			'data-content'	=> addslashes( nl2br( $entry->description ) ),
 		) );
 	}
-	$list	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'testimonial-list' ) );
+	$list	= HtmlTag::create( 'div', $list, array( 'class' => 'testimonial-list' ) );
 }
 
 extract( $view->populateTexts( array( 'top', 'bottom', 'list.top', 'list.bottom', 'form.top', 'form.bottom', 'form.info' ), 'html/info/testimonial/' ) );
 
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 
-$button 	= UI_HTML_Tag::create( 'a', 'Kommentar abgeben', array(
+$button 	= HtmlTag::create( 'a', 'Kommentar abgeben', array(
 	'href'			=> '#modal-comment-add',
 	'class'			=> 'btn',
 	'onclick'		=> 'selectCourse(0);',

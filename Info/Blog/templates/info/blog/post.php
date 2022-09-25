@@ -1,35 +1,37 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['post'];
 
 $data		= '<pre>'.print_m( $post, NULL, NULL, TRUE ).'</pre>';
-$title		= UI_HTML_Tag::create( 'h3', $post->title );
+$title		= HtmlTag::create( 'h3', $post->title );
 if( strlen( $post->content ) === strlen( strip_tags( $post->content ) ) )
 	$post->content  	= nl2br( $post->content );
 $content	= $view->renderContent( $post->content, 'HTML' );
 $infobar	= View_Info_Blog::renderPostInfoBarStatic( $env, $post );
 
-$blogPost	= UI_HTML_Tag::create( 'div', $title.$infobar.$content, array(
+$blogPost	= HtmlTag::create( 'div', $title.$infobar.$content, array(
 	'class'		=> 'blog-post'
 ) );
 
-$iconIndex	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconIndex	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 
 $linkNext	= '';
 $linkPrev	= '';
-$linkIndex	= UI_HTML_Tag::create( 'a', $iconIndex.'&nbsp;'.$w->linkIndex, array(
+$linkIndex	= HtmlTag::create( 'a', $iconIndex.'&nbsp;'.$w->linkIndex, array(
 	'href'	=> './info/blog',
 	'class'	=> 'btn'
 ) );
 
 if( $prevPost ){
-	$label		= UI_HTML_Tag::create( 'span', $w->linkPrev, array( 'class' => 'muted' ) );
-	$linkPrev	= $label.UI_HTML_Tag::create( 'a', $prevPost->title, array(
+	$label		= HtmlTag::create( 'span', $w->linkPrev, array( 'class' => 'muted' ) );
+	$linkPrev	= $label.HtmlTag::create( 'a', $prevPost->title, array(
 		'href'	=> View_Info_Blog::renderPostUrlStatic( $env, $prevPost ),
 	) );
 }
 if( $nextPost ){
-	$label		= UI_HTML_Tag::create( 'span', $w->linkNext, array( 'class' => 'muted' ) );
-	$linkNext	= $label.UI_HTML_Tag::create( 'a', $nextPost->title, array(
+	$label		= HtmlTag::create( 'span', $w->linkNext, array( 'class' => 'muted' ) );
+	$linkNext	= $label.HtmlTag::create( 'a', $nextPost->title, array(
 		'href'	=> View_Info_Blog::renderPostUrlStatic( $env, $nextPost ),
 	) );
 }
@@ -42,7 +44,7 @@ if( $moduleConfig->get( 'comments' ) ){
 		$panelComment	= $view->loadTemplateFile( 'info/blog/comment.php' );
 //	}
 //	else{
-//		$panelComments	= UI_HTML_Tag::create( 'div', 'Die Kommentarfunktion ist für diesen Eintrag nicht aktiviert.', array( 'class' => 'muted' ) ).'<br/>';
+//		$panelComments	= HtmlTag::create( 'div', 'Die Kommentarfunktion ist für diesen Eintrag nicht aktiviert.', array( 'class' => 'muted' ) ).'<br/>';
 //	}
 }
 

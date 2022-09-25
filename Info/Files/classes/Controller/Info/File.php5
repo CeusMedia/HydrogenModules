@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Info_File extends Controller
@@ -310,19 +311,19 @@ class Controller_Info_File extends Controller
 			if( $addedSomething ){
 				$list	= [];
 				foreach( $statsImport->files as $file ){
-					$path	= UI_HTML_Tag::create( 'small', $file->path, ['class' => "muted"] );
-					$list[]	= UI_HTML_Tag::create( 'li', $path.$file->title );
+					$path	= HtmlTag::create( 'small', $file->path, ['class' => "muted"] );
+					$list[]	= HtmlTag::create( 'li', $path.$file->title );
 				}
-				$list	= UI_HTML_Tag::create( 'ul', $list );
+				$list	= HtmlTag::create( 'ul', $list );
 				$this->messenger->noteNotice( $this->messages->infoScanFoundSomething, count( $statsImport->folders ), count( $statsImport->files ), $list );
 			}
 			if( $removedSomething ){
 				$list	= [];
 				foreach( $statsClean->files as $file ){
-					$path	= UI_HTML_Tag::create( 'small', $file->path, ['class' => "muted"] );
-					$list[]	= UI_HTML_Tag::create( 'li', $path.$file->title );
+					$path	= HtmlTag::create( 'small', $file->path, ['class' => "muted"] );
+					$list[]	= HtmlTag::create( 'li', $path.$file->title );
 				}
-				$list	= UI_HTML_Tag::create( 'ul', $list );
+				$list	= HtmlTag::create( 'ul', $list );
 				$this->messenger->noteNotice( $this->messages->infoScanRemovedSomething, count( $statsClean->folders ), count( $statsClean->files ), $list );
 			}
 		}

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Panel{
 
 	public function __construct( $client ){
@@ -15,13 +17,13 @@ class View_Helper_Panel{
 
 	public function renderPanel( $header, $content, $footer = NULL, $type = NULL ){
 		$contents	= array(
-			UI_HTML_Tag::create( 'div', $header, array( 'class' => 'panel-head' ) ),
-			UI_HTML_Tag::create( 'div', $content, array( 'class' => 'panel-body' ) )
+			HtmlTag::create( 'div', $header, array( 'class' => 'panel-head' ) ),
+			HtmlTag::create( 'div', $content, array( 'class' => 'panel-body' ) )
 		);
 		if( $footer )
-			$contents[]	= UI_HTML_Tag::create( 'div', $footer, array( 'class' => 'panel-foot' ) );
+			$contents[]	= HtmlTag::create( 'div', $footer, array( 'class' => 'panel-foot' ) );
 		$class		= 'panel'.( $type ? ' panel-'.$type : '' );
-		return UI_HTML_Tag::create( 'div', $contents, array( 'class' => $class ) );
+		return HtmlTag::create( 'div', $contents, array( 'class' => $class ) );
 	}
 
 	public function renderObject( $title, $data ){

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Manual_PageTree
@@ -49,7 +50,7 @@ class View_Helper_Info_Manual_PageTree
 
 		$tree		= $this->renderPageTree( $tree );
 //print_m($tree);die;
-		$container	= UI_HTML_Tag::create( 'div', '', array( 'id' => 'page-tree' ) );
+		$container	= HtmlTag::create( 'div', '', array( 'id' => 'page-tree' ) );
 		$script		= '
 jQuery("#page-tree").treeview({
 	data: '.json_encode( $tree ).',
@@ -68,18 +69,18 @@ InfoManual.UI.Tree.init("#page-tree");';
 
 /*
 		$html		= $this->renderPageTree( $tree );
-//		$container	= UI_HTML_Tag::create( 'div', $html, array( 'id' => 'page-tree' );
+//		$container	= HtmlTag::create( 'div', $html, array( 'id' => 'page-tree' );
 //		$this->env->getPage()->js->addScriptOnReady( 'jQuery("#page-tree").')
 		return $container;
 		print_m( $tree );die;
 
 		$list	= [];
 		foreach( $this->pages as $entry ){
-			$link	= UI_HTML_Tag::create( 'a', $entry->title, array( 'href' => './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title ) ) );
+			$link	= HtmlTag::create( 'a', $entry->title, array( 'href' => './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title ) ) );
 			$class	= 'autocut '.( $this->activePageId == $entry->manualPageId ? 'active' : '' );
-			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );*/
+		return HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );*/
 	}
 
 
@@ -179,13 +180,13 @@ die;*/
 			$sublist	= '';
 			if( $entry->children )
 				$sublist	= $this->renderPageTree( $entry->children );
-			$link	= UI_HTML_Tag::create( 'a', $entry->title, array(
+			$link	= HtmlTag::create( 'a', $entry->title, array(
 				'href'	=> './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title )
 			) );
 			$class	= 'autocut '.( $this->activePageId == $entry->manualPageId ? 'active' : '' );
-			$list[]	= UI_HTML_Tag::create( 'li', $link.$sublist, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link.$sublist, array( 'class' => $class ) );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'not-nav not-nav-pills not-nav-stacked' ) );*/
+		return HtmlTag::create( 'ul', $list, array( 'class' => 'not-nav not-nav-pills not-nav-stacked' ) );*/
 	}
 
 	protected function urlencode( string $pageTitle ): string

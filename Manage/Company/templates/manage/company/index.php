@@ -1,5 +1,7 @@
 <?php
-$heading	= UI_HTML_Tag::create( 'h2', $words['index']['heading'] );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
 $add 		= UI_HTML_Elements::LinkButton( './manage/company/add', $words['index']['buttonAdd'], 'button add' );
 
 $helperTime	= new View_Helper_TimePhraser( $env );
@@ -54,8 +56,8 @@ return '
 	<legend class="list">'.$words['index']['legend'].'</legend>
 	<table class="table">
 		'.$colgroup.'
-		'.UI_HTML_Tag::create( 'thead', $heads ).'
-		'.UI_HTML_Tag::create( 'tbody', $rows ).'
+		'.HtmlTag::create( 'thead', $heads ).'
+		'.HtmlTag::create( 'tbody', $rows ).'
 	</table>
 	<div class="buttonbar">
 		'.$add.'

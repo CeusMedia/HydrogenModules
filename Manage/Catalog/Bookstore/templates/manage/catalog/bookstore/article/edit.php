@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['edit'];
 
 #$articles	= array_slice( $articles, 0, 50 );
@@ -26,25 +28,25 @@ foreach( $words['tabs'] as $key => $label ){
 	);
 	$count	= '';
 	if( $key === "tags" && $articleTags )
-		$count	= '&nbsp;'.UI_HTML_Tag::create( 'span', count( $articleTags ), array( 'class' => 'badge badge-info' ) );
+		$count	= '&nbsp;'.HtmlTag::create( 'span', count( $articleTags ), array( 'class' => 'badge badge-info' ) );
 	if( $key === "categories" && $articleCategories )
-		$count	= '&nbsp;'.UI_HTML_Tag::create( 'span', count( $articleCategories ), array( 'class' => 'badge badge-info' ) );
+		$count	= '&nbsp;'.HtmlTag::create( 'span', count( $articleCategories ), array( 'class' => 'badge badge-info' ) );
 	if( $key === "authors" && $articleAuthors )
-		$count	= '&nbsp;'.UI_HTML_Tag::create( 'span', count( $articleAuthors ), array( 'class' => 'badge badge-info' ) );
+		$count	= '&nbsp;'.HtmlTag::create( 'span', count( $articleAuthors ), array( 'class' => 'badge badge-info' ) );
 	if( $key === "documents" && $articleDocuments )
-		$count	= '&nbsp;'.UI_HTML_Tag::create( 'span', count( $articleDocuments ), array( 'class' => 'badge badge-info' ) );
+		$count	= '&nbsp;'.HtmlTag::create( 'span', count( $articleDocuments ), array( 'class' => 'badge badge-info' ) );
 
-	$link	= UI_HTML_Tag::create( 'a', $label.$count, $attributes );
+	$link	= HtmlTag::create( 'a', $label.$count, $attributes );
 	$class	= $current == $key ? "active" : NULL;
-	$tabs[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+	$tabs[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 	$attributes		= array(
 		'class'		=> "tab-pane".( $current == $key ? " active" : "" ),
 		'id'		=> 'tab-'.$key
 	);
-	$panes[$key]	= UI_HTML_Tag::create( 'div', $panes[$key], $attributes );
+	$panes[$key]	= HtmlTag::create( 'div', $panes[$key], $attributes );
 }
-$tabs	= UI_HTML_Tag::create( 'ul', $tabs, array( 'class' => 'nav nav-tabs' ) );
-$panes	= UI_HTML_Tag::create( 'div', $panes, array( 'class' => 'tab-content' ) );
+$tabs	= HtmlTag::create( 'ul', $tabs, array( 'class' => 'nav nav-tabs' ) );
+$panes	= HtmlTag::create( 'div', $panes, array( 'class' => 'tab-content' ) );
 
 $panelFilter	= $view->loadTemplateFile( 'manage/catalog/bookstore/article/filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/catalog/bookstore/article/list.php' );

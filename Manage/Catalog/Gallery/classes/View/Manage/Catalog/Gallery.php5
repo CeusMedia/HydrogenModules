@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
@@ -143,7 +144,7 @@ class View_Manage_Catalog_Gallery extends View
 		}
 		if( $urlAdd )
 			$list[]	= $this->renderMatrixItem( $urlAdd, 1, '', NULL, 'add' );
-		return UI_HTML_Tag::create( 'div', $list, array( 'class' => 'gallery-matrix' ) );
+		return HtmlTag::create( 'div', $list, array( 'class' => 'gallery-matrix' ) );
 	}
 
 	public function renderImageMatrix( $category, $urlAdd = NULL )
@@ -159,21 +160,21 @@ class View_Manage_Catalog_Gallery extends View
 		}
 		if( $urlAdd )
 			$list[]	= $this->renderMatrixItem( $urlAdd, 1, '', NULL, 'add' );
-		return UI_HTML_Tag::create( 'div', $list, array( 'class' => 'gallery-matrix' ) );
+		return HtmlTag::create( 'div', $list, array( 'class' => 'gallery-matrix' ) );
 	}
 
 	protected function renderMatrixItem( $url, $status, $label, $imageUrl = NULL, $class = NULL )
 	{
-		$image	= UI_HTML_Tag::create( 'div', '', array(
+		$image	= HtmlTag::create( 'div', '', array(
 			'class'		=> "gallery-matrix-image",
 			'style'		=> $imageUrl ? 'background-image: url('.$imageUrl.');' : NULL,
 		) );
 		$label	= strlen( trim( $label ) ) ? trim( $label ) : '&nbsp;';
-		$label	= UI_HTML_Tag::create( 'span', $label, array(
+		$label	= HtmlTag::create( 'span', $label, array(
 /*			'href'	=> $url,*/
 			'class'	=> "gallery-matrix-item-label autocut"
 		) );
-		return UI_HTML_Tag::create( 'div', $image.$label, array(
+		return HtmlTag::create( 'div', $image.$label, array(
 			'class'		=> "gallery-matrix-item img-polaroid status".$status.' '.$class,
 			'onclick'	=> 'document.location.href="'.$url.'"',
 		) );

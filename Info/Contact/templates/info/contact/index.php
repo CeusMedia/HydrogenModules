@@ -1,9 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w		= (object) $words['index'];
 
 $iconSave	= '<i class="icon-envelope icon-white"></i>';
 if( $env->hasModule( 'UI_Font_FontAwesome' ) )
-	$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
+	$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
 
 extract( $this->populateTexts( array( 'before', 'after', 'top', 'right', 'bottom', 'privacy' ), 'html/info/contact/' ) );
 
@@ -13,19 +15,19 @@ if( $useNewsletter ){
 	if( isset( $newsletterTopics ) && count( $newsletterTopics ) ){
 		$list	= [];
 		foreach( $newsletterTopics as $topic ){
-			$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
+			$checkbox	= HtmlTag::create( 'input', NULL, array(
 				'type'		=> 'checkbox',
 				'name'		=> 'topics[]',
 				'value'		=> $topic->newsletterGroupId,
 				'checked'	=> $topic->type == Model_Newsletter_Group::TYPE_AUTOMATIC ? 'checked' : NULL,
 				'disabled'	=> $topic->type == Model_Newsletter_Group::TYPE_AUTOMATIC ? 'disabled' : NULL,
 			) );
-			$label		= UI_HTML_Tag::create( 'label', $checkbox.'&nbsp;'.$topic->title, array( 'class' => 'checkbox' ) );
-			$list[]		= UI_HTML_Tag::create( 'li', $label );
+			$label		= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$topic->title, array( 'class' => 'checkbox' ) );
+			$list[]		= HtmlTag::create( 'li', $label );
 		}
-		$listTopics		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
-		$inputTopics	= UI_HTML_Tag::create( 'blockquote', array(
-			UI_HTML_Tag::create( 'label', $w->labelNewsletterTopics ),
+		$listTopics		= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+		$inputTopics	= HtmlTag::create( 'blockquote', array(
+			HtmlTag::create( 'label', $w->labelNewsletterTopics ),
 			$listTopics,
 		), array( 'class' => 'optional newsletter newsletter-true' ) );
 	}
@@ -33,7 +35,7 @@ if( $useNewsletter ){
 		<div class="row-fluid">
 			<div class="span12">
 				<label for="input_newsletter" class="checkbox">
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'				=> 'checkbox',
 						'name'				=> 'newsletter',
 						'id'				=> 'input_newsletter',
@@ -57,7 +59,7 @@ if( $useCaptcha ){
 	<div class="row-fluid">
 		<div class="span6">
 			<label for="input_captcha">'.$w->labelCaptcha.'&nbsp;<small class="muted">('.$w->labelCaptcha_suffix.')</small></label>
-			'.UI_HTML_Tag::create( 'input', NULL, array(
+			'.HtmlTag::create( 'input', NULL, array(
 				'type'			=> 'text',
 				'name'			=> 'captcha',
 				'id'			=> 'input_captcha',
@@ -97,7 +99,7 @@ $content	= $textTop.'
 			<div class="row-fluid">
 				<div class="span5">
 					<label for="input_fullname" class="mandatory required">'.$w->labelFullName.'</label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'fullname',
 						'id'			=> 'input_fullname',
@@ -109,7 +111,7 @@ $content	= $textTop.'
 				</div>
 				<div class="span7">
 					<label for="input_email" class="mandatory required">'.$w->labelEmail.'</label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'email',
 						'id'			=> 'input_email',
@@ -123,7 +125,7 @@ $content	= $textTop.'
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_subject" class="mandatory required">'.$w->labelSubject.'</label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'subject',
 						'id'			=> 'input_subject',
@@ -137,7 +139,7 @@ $content	= $textTop.'
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_message" class="mandatory required">'.$w->labelMessage.'</label>
-					'.UI_HTML_Tag::create( 'textarea', htmlentities( $message, ENT_QUOTES, 'UTF-8' ), array(
+					'.HtmlTag::create( 'textarea', htmlentities( $message, ENT_QUOTES, 'UTF-8' ), array(
 						'name'			=> 'message',
 						'id'			=> 'input_message',
 						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',

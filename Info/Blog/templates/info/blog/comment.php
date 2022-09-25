@@ -1,14 +1,15 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['comment'];
 
 $iconSave	= '';
 if( $env->getModules()->has( 'UI_Bootstrap' ) )
-	$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) ).'&nbsp;';
+	$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) ).'&nbsp;';
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
-	$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+	$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
 
-$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.$w->buttonSave, array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.$w->buttonSave, array(
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'value'		=> '1',
@@ -16,7 +17,7 @@ $buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.$w->buttonSave, array(
 ) );
 
 if( $moduleConfig->get( 'comments.ajax' ) )
-	$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.$w->buttonSave, array(
+	$buttonSave	= HtmlTag::create( 'button', $iconSave.$w->buttonSave, array(
 		'type'		=> 'button',
 		'onclick'	=> 'Blog.comment()',
 		'class'		=> 'btn btn-primary',

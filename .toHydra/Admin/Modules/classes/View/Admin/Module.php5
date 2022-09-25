@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Admin_Module extends View{
@@ -27,13 +28,13 @@ class View_Admin_Module extends View{
 		$image		= '';
 		if( !empty( $module->icon ) )
 			$image	= UI_HTML_Elements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
-		$icon	= UI_HTML_Tag::create( 'div', $image, array( 'class' => 'module-icon' ) );
-		$title	= UI_HTML_Tag::create( 'div', self::formatLabel( $module->title ), array( 'class' => 'module-title' ) );
+		$icon	= HtmlTag::create( 'div', $image, array( 'class' => 'module-icon' ) );
+		$title	= HtmlTag::create( 'div', self::formatLabel( $module->title ), array( 'class' => 'module-title' ) );
 		$desc	= explode( '<br />', nl2br( $module->description ) );
 		$desc	= array_shift( $desc );
-		$desc	= UI_HTML_Tag::create( 'div', $desc, array( 'class' => 'module-desc' ) );
+		$desc	= HtmlTag::create( 'div', $desc, array( 'class' => 'module-desc' ) );
 		$click	= 'document.location.href=\''.$url.$module->id.'\';';
-		return UI_HTML_Tag::create( 'div', $icon.$title.$desc, array( 'class' => $class, 'onclick' => $click ) );
+		return HtmlTag::create( 'div', $icon.$title.$desc, array( 'class' => $class, 'onclick' => $click ) );
 	}
 
 	/**
@@ -81,14 +82,14 @@ class View_Admin_Module extends View{
 				$relatedModule	= $allModules[$relatedModuleId];
 				$desc	= explode( '<br />', nl2br( $relatedModule->description ) );
 				$attr	= array( 'title' => htmlentities( array_shift( $desc ), ENT_QUOTES, 'UTF-8' ) );
-				$label	= UI_HTML_Tag::create( 'acronym', $relatedModule->title, $attr );
+				$label	= HtmlTag::create( 'acronym', $relatedModule->title, $attr );
 				if( $url ){
 					$attr['href']	= $url.$relatedModuleId;
-					$label	= UI_HTML_Tag::create( 'a', $relatedModule->title, $attr );
+					$label	= HtmlTag::create( 'a', $relatedModule->title, $attr );
 				}
 			}
 			$class	= 'icon module module-status-'.$status;
-			$label	= UI_HTML_Tag::create( 'span', $label, array( 'class' => $class, 'title' => $alt ) );
+			$label	= HtmlTag::create( 'span', $label, array( 'class' => $class, 'title' => $alt ) );
 			$list[]	= UI_HTML_Elements::ListItem( $label, 1 );
 		}
 		return UI_HTML_Elements::unorderedList( $list, 1, array( 'class' => $listClass ) );

@@ -258,7 +258,7 @@ class HTML/* extends UI_HTML_Elements*/
 
 	public static function Tag( string $nodeName, $content = NULL, array $attributes = [], array $data = [] ): string
 	{
-		return new UI_HTML_Tag( $nodeName, $content, $attributes );
+		return HtmlTag::create( $nodeName, $content, $attributes );
 	}
 
 	public static function Text( string $name, $content, string $class = NULL, int $numberRows = NULL, bool $readonly = NULL ): string

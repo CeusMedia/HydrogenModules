@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //return print_m( $hooks, NULL, NULL, TRUE );
@@ -36,7 +37,7 @@ foreach( $events as $item ){
 	) );
 }
 $tbody	= HtmlTag::create( 'tbody', $list );
-$colgroup	= UI_HTML_Elements::ColumnGroup( array( '', '80', '140' ) );
+$colgroup	= HtmlElements::ColumnGroup( array( '', '80', '140' ) );
 $list	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
 
 $iconRefresh	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );

@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $folderPath	= dirname( $source ).'/';
 $imageName	= basename( $source );
@@ -54,53 +55,53 @@ $useExif		= $options->get( 'exif' );
 $modes		= [];
 $hints		= [];
 if( $useFullscreen ){
-	$label		= UI_HTML_Tag::create( 'span', "Vollbild" );
-	$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-arrows-alt fa-fw' ) ).'&nbsp;';
+	$label		= HtmlTag::create( 'span', "Vollbild" );
+	$icon		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-arrows-alt fa-fw' ) ).'&nbsp;';
 	$attr		= array( 'type' => "button", 'class' => "btn btn-small", 'id' => "button-fullscreen" );
-	$modes['fullscreen']	= UI_HTML_Tag::create( 'button', $icon.$label, $attr );
+	$modes['fullscreen']	= HtmlTag::create( 'button', $icon.$label, $attr );
 	$hints['fullscreen']	= 'Klicke auf das Bild für die Vollbildanzeige. <b>Tipp:</b> Drücke vorher <kbd>F11</kbd>';
 }
 if( $useMagnifier ){
-	$label		= UI_HTML_Tag::create( 'span', "Lupe" );
-	$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-search fa-fw' ) ).'&nbsp;';
+	$label		= HtmlTag::create( 'span', "Lupe" );
+	$icon		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-search fa-fw' ) ).'&nbsp;';
 	$attr		= array( 'type' => "button", 'class' => "btn btn-small", 'id' => "button-magnifier" );
-	$modes['magnifier']		= UI_HTML_Tag::create( 'button', $icon.$label, $attr );
+	$modes['magnifier']		= HtmlTag::create( 'button', $icon.$label, $attr );
 	$hints['magnifier']		= '<b>Tipp:</b> Die Lupe ist aktiviert. Fahre mit der Maus über das Bild!';
 }
 $viewMode	= '';
 if( $modes ){
-	$group		= UI_HTML_Tag::create( 'div', $modes, array( 'class' => 'btn-group' ) );
-	$viewMode	= UI_HTML_Tag::create( 'div', 'Modus: '.$group, array( 'class' => 'gallery-image-view-modes' ) ).'<br/>';
+	$group		= HtmlTag::create( 'div', $modes, array( 'class' => 'btn-group' ) );
+	$viewMode	= HtmlTag::create( 'div', 'Modus: '.$group, array( 'class' => 'gallery-image-view-modes' ) ).'<br/>';
 }
 foreach( $hints as $key => $value )
-	$hints[$key]	= UI_HTML_Tag::create( 'div', $value, array( 'id' => 'hint-'.$key, 'class' => 'alert alert-info alert-center' ) );
-$hints	= UI_HTML_Tag::create( 'div', $hints, array( 'class' => 'gallery-image-view-mode-hints' ) );
+	$hints[$key]	= HtmlTag::create( 'div', $value, array( 'id' => 'hint-'.$key, 'class' => 'alert alert-info alert-center' ) );
+$hints	= HtmlTag::create( 'div', $hints, array( 'class' => 'gallery-image-view-mode-hints' ) );
 
 
 //  --  ACTION CONTROLS  --  //
 $buttons	= [];
 if( 1 ){
-	$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-arrow-left fa-fw' ) ).'&nbsp;';
-	$label	= UI_HTML_Tag::create( 'span', $icon.'zur Galerieansicht' );
+	$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-arrow-left fa-fw' ) ).'&nbsp;';
+	$label	= HtmlTag::create( 'span', $icon.'zur Galerieansicht' );
 	$attr	= array( 'type' => "button", 'class' => "not-button not-cancel btn btn-small", 'id' => "button-gallery" );
 	$buttons[$label]	= $attr;
 }
 if( $useDownload ){
-	$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-download fa-fw' ) ).'&nbsp;';
-	$label	= UI_HTML_Tag::create( 'span', $icon.'Download der Bilddatei' );
+	$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-download fa-fw' ) ).'&nbsp;';
+	$label	= HtmlTag::create( 'span', $icon.'Download der Bilddatei' );
 	$attr	= array( 'type' => "button", 'class' => "not-button not-save not-download btn btn-small", 'id' => "button-download" );
 	$buttons[$label]	= $attr;
 }
 if( $useWallpaper ){
-	$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-heart fa-fw' ) ).'&nbsp;';
-	$label	= UI_HTML_Tag::create( 'span', $icon."als Wallpaper verwenden" );
+	$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-heart fa-fw' ) ).'&nbsp;';
+	$label	= HtmlTag::create( 'span', $icon."als Wallpaper verwenden" );
 	$attr	= array( 'type' => "button", 'class' => "not-button not-save btn btn-small", 'id' => "button-wallpaper" );
 	$buttons[$label]	= $attr;
 }
 $list	= [];
 foreach( $buttons as $label => $attributes )
-	$list[]	= UI_HTML_Tag::create( 'div', UI_HTML_Tag::create( 'button', $label, $attributes ) );
-$buttons	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'buttons list-actions' ) );
+	$list[]	= HtmlTag::create( 'div', HtmlTag::create( 'button', $label, $attributes ) );
+$buttons	= HtmlTag::create( 'div', $list, array( 'class' => 'buttons list-actions' ) );
 
 //  --  IMAGE DATA / EXIF  --  //
 $listExif	= '';
@@ -147,7 +148,7 @@ if( $useMagnifier )
 	$class[]	= 'zoomable';
 if( $useFullscreen )
 	$class[]	= 'fullscreenable';
-$image	= UI_HTML_Tag::create( 'img', NULL, array(
+$image	= HtmlTag::create( 'img', NULL, array(
 	'class'			=> $class,
 	'src'			=> $path.preg_replace( '/(\.\w+)$/', '.medium\\1', $source ),
 	'data-original'	=> $path.$source,
@@ -174,7 +175,7 @@ $(document).ready(function(){
 			<div class="row-fluid">
 				<div style="width: 90%" class="image">
 					'.$image.'
-					'.( $title ? UI_HTML_Tag::create( 'div',$title, array( 'class' => 'image-title' ) ) : '' ).'
+					'.( $title ? HtmlTag::create( 'div',$title, array( 'class' => 'image-title' ) ) : '' ).'
 				</div>
 			</div>
 			<div class="row-fluid">

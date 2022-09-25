@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 if( !$sellerUser->Id || empty( $sellerUser->HeadquartersAddress ) )
@@ -46,7 +47,7 @@ if( $sellerWallets ){
 			HtmlTag::create( 'td', $buttonPayOut ),
 		) );
 	}
-	$cols	= UI_HTML_Elements::ColumnGroup( array( /*'60', */'', '70', '100', '100' ) );
+	$cols	= HtmlElements::ColumnGroup( array( /*'60', */'', '70', '100', '100' ) );
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 //		HtmlTag::create( 'th', $w->headId ),
 		HtmlTag::create( 'th', $w->headTitle ),
@@ -64,7 +65,7 @@ foreach( $gotCurrencies as $key )
 	unset( $optCurrency[$key] );
 foreach( $optCurrency as $key => $value )
 	$optCurrency[$key]	= $key.' - '.$value;
-$optCurrency	= UI_HTML_Elements::Options( $optCurrency );
+$optCurrency	= HtmlElements::Options( $optCurrency );
 $body	= '
 	<div class="row-fluid">
 		<div class="span6">

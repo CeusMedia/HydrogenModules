@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Bookmark extends View
@@ -23,10 +24,10 @@ class View_Manage_Bookmark extends View
 			$list	= [];
 			foreach( $bookmarks as $entry ){
 				$class	= $entry->bookmarkId == $bookmarkId ? 'active' : NULL;
-				$link	= UI_HTML_Tag::create( 'a', $entry->title, array( 'href' => './manage/bookmark/edit/'.$entry->bookmarkId ) );
-				$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+				$link	= HtmlTag::create( 'a', $entry->title, array( 'href' => './manage/bookmark/edit/'.$entry->bookmarkId ) );
+				$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 			}
-			$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+			$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
 		}
 		return $list;
 	}

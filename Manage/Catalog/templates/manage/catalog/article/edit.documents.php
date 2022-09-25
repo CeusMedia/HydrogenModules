@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $panelDocuments	= '<div class="alert alert-error">Noch keine Dokumente gespeichert.</div>';
 
@@ -10,7 +11,7 @@ if( $articleDocuments ){
 		$idPrefix		= str_pad( $article->articleId, 5, "0", STR_PAD_LEFT ).'_';
 		$urlRemove		= './manage/catalog/article/removeDocument/'.$article->articleId.'/'.$item->articleDocumentId;
 		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'" title="Dokument entfernen">'.$iconRemove.'</a>';
-		$link			= UI_HTML_Tag::create( 'a', $item->title, array(
+		$link			= HtmlTag::create( 'a', $item->title, array(
 			'href'		=> $pathDocuments.$idPrefix.$item->url,
 			'target'	=> '_blank'
 		) );

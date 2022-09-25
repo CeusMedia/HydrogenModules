@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $panelRelations		= '';
 $helperRelations	= new View_Helper_ItemRelationLister( $env );
 $helperRelations->setHook( 'User', 'listRelations', array( 'userId' => $currentUserId, 'linkable' => TRUE ) );
@@ -12,7 +14,7 @@ $helperRelations->setHintTextForEntities( '' );
 $helperRelations->setHintTextForRelations( '' );
 if( $helperRelations->hasRelations() ){
 	$panelRelations	= HTML::DivClass( 'content-panel content-panel-form', array(
-		UI_HTML_Tag::create( 'h4', 'Zugehörige Daten' ),
+		HtmlTag::create( 'h4', 'Zugehörige Daten' ),
 		HTML::DivClass( 'content-panel-inner', array(
 			$helperRelations->render()
 		) ),

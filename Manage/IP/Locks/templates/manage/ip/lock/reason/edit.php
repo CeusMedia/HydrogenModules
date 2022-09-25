@@ -1,32 +1,33 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconActivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
-$iconDeactivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
+$iconDeactivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
 	'href'	=> './manage/ip/lock/reason',
 	'class'	=> 'btn btn-small',
 ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
 ) );
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', array(
 	'href'	=> './manage/ip/lock/reason/remove/'.$reason->ipLockReasonId,
 	'class'	=> 'btn btn-danger btn-small',
 ) );
 
-$buttonStatus	= UI_HTML_Tag::create( 'a', $iconActivate.' aktivieren', array(
+$buttonStatus	= HtmlTag::create( 'a', $iconActivate.' aktivieren', array(
 	'href'		=> './manage/ip/lock/reason/activate/'.$reason->ipLockReasonId,
 	'class'		=> 'btn btn-success btn-small',
 	'title'		=> 'activate',
 ) );
 if( $reason->status ){
-	$buttonStatus	= UI_HTML_Tag::create( 'a', $iconDeactivate.' deaktivieren', array(
+	$buttonStatus	= HtmlTag::create( 'a', $iconDeactivate.' deaktivieren', array(
 		'href'	=> './manage/ip/lock/reason/deactivate/'.$reason->ipLockReasonId,
 		'class'	=> 'btn btn-inverse btn-small',
 		'title'	=> 'deactivate',
@@ -43,12 +44,12 @@ $list	= '<div><em><small>Keine Filter vorhanden.</small></em></div>';
 if( $reason->filters ){
 	$list	= [];
 	foreach( $reason->filters as $filter ){
-		$link	= UI_HTML_Tag::create( 'a', $filter->title, array(
+		$link	= HtmlTag::create( 'a', $filter->title, array(
 			'href'	=> './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId
 		) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link, array() );
+		$list[]	= HtmlTag::create( 'li', $link, array() );
 	}
-	$list	= UI_HTML_Tag::create( 'ul', $list );
+	$list	= HtmlTag::create( 'ul', $list );
 }
 $panelFilters	= '
 <div class="content-panel">

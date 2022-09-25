@@ -1,6 +1,8 @@
 <?php
-$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
 $w			= (object) $words['add'];
 
@@ -8,11 +10,11 @@ $optStatus	= UI_HTML_Elements::Options( $words['states'], $news->status );
 
 $env->getPage()->js->addScriptOnReady( 'ModuleNewsEditor.init();' );
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
+$buttonAdd	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
 	'href'	=> './manage/news',
 	'class'	=> 'btn btn-small',
 ) );
-$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
@@ -48,7 +50,7 @@ return '
 				<textarea name="content" id="input_content" class="span12 '.$editorClass.'" data-tinymce-mode="minimal" rows="12">'.htmlentities( $news->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
 			</div>
 			<br/>
-			'.UI_HTML_Tag::create( 'div', join( '&nbsp;', array(
+			'.HtmlTag::create( 'div', join( '&nbsp;', array(
 				$buttonAdd,
 				$buttonSave,
 			) ), array( 'class' => 'buttonbar' ) ).'

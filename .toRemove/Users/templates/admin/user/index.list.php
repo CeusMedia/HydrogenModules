@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*  --  PAGINATION  --  */
 $pagination	= "";
@@ -46,7 +47,7 @@ if( count( $total ) ){
 		$url	= './admin/user/edit/'.$user->userId;
 		$alt	= sprintf( $words['indexList']['alt-user'], $user->username );
 		$attr	= array( 'href' => $url, 'class' => $classes, 'alt' => $alt, 'title' => $alt );
-		$link	= UI_HTML_Tag::create( 'a', $label, $attr );
+		$link	= HtmlTag::create( 'a', $label, $attr );
 		$line	= sprintf(
 			$line,
 			$link,

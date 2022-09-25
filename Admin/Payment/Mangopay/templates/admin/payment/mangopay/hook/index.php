@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //return print_m( $hooks, NULL, NULL, TRUE );
@@ -50,7 +51,7 @@ foreach( $eventTypes as $topic => $types ){
 	}
 }
 $tbody	= HtmlTag::create( 'tbody', $list );
-$colgroup	= UI_HTML_Elements::ColumnGroup( array( '30%', '', '90', '80' ) );
+$colgroup	= HtmlElements::ColumnGroup( array( '30%', '', '90', '80' ) );
 $list	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
 
 $tabs	= View_Admin_Payment_Mangopay::renderTabs( $env, 'hook' );

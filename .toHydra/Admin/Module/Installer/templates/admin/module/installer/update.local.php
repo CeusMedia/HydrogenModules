@@ -1,26 +1,27 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*  --  VERSION  --  */
-$version	= UI_HTML_Tag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
+$version	= HtmlTag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
 if( $moduleLocal->versionInstalled ){
 	$version	= $moduleLocal->versionInstalled;
 }
 
 /*  --  SOURCE  --  */
-$source	= UI_HTML_Tag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
+$source	= HtmlTag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
 if( $moduleLocal->source ){
 	$source	= $moduleLocal->source;
 }
 
 /*  --  TYPE  --  */
 $types	= $words['install-types'];
-$type	= UI_HTML_Tag::create( 'small', $types[-1], array( 'class' => 'muted' ) );
+$type	= HtmlTag::create( 'small', $types[-1], array( 'class' => 'muted' ) );
 if( $moduleLocal->installType !== NULL ){
 	$type	= $types[(int) $moduleLocal->installType];
 }
 
 /*  --  DATE  --  */
-$date	= UI_HTML_Tag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
+$date	= HtmlTag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
 if( $moduleLocal->installDate ){
 	$date	= date( 'd.m.Y H:i', $moduleLocal->installDate );
 	if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){

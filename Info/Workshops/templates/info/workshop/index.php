@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $imageAlignH	= array(
 	Model_Workshop::IMAGE_ALIGN_H_AUTO		=> 'auto',
@@ -17,9 +18,9 @@ $list	= '<em>Momentan werden keine Workshops angeboten.</em>';
 if( $workshops ){
 	$list	= [];
 	foreach( $workshops as $workshop ){
-		$list[]	= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', '&nbsp;', array(
+		$list[]	= HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', '&nbsp;', array(
 					'class'	=> 'workshop-item-image',
 				), array(
 					'url'		=> $pathImages.$workshop->image,
@@ -27,10 +28,10 @@ if( $workshops ){
 					'alignV'	=> $imageAlignV[$workshop->imageAlignV],
 				) ),
 			), array( 'class' => 'workshop-item-image-container' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'div', $workshop->title, array( 'class' => 'workshop-item-title' ) ),
-					UI_HTML_Tag::create( 'div', $workshop->abstract, array( 'class' => 'workshop-item-abstract' ) ),
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'div', $workshop->title, array( 'class' => 'workshop-item-title' ) ),
+					HtmlTag::create( 'div', $workshop->abstract, array( 'class' => 'workshop-item-abstract' ) ),
 				) ),
 			), array( 'class' => 'workshop-item-facts-container' ) ),
 		), array(
@@ -39,8 +40,8 @@ if( $workshops ){
 			'url'		=> './info/workshop/view/'.$workshop->workshopId,
 		) );
 	}
-	$list	= join( UI_HTML_Tag::create( 'hr' ), $list );
-	$list	= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'workshop-list' ) );
+	$list	= join( HtmlTag::create( 'hr' ), $list );
+	$list	= HtmlTag::create( 'div', $list, array( 'class' => 'workshop-list' ) );
 }
 $panel	= $list;
 

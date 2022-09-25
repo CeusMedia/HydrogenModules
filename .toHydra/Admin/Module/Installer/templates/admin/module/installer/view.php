@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['view'];
 
 $graph		= "";
@@ -9,7 +11,7 @@ unset( $needs[$moduleId] );
 $isInstallable	= $mainModuleId || !count( $needs );
 
 $attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
-$buttonBack		= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
+$buttonBack		= HtmlTag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
 $buttonList		= UI_HTML_Elements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
 $buttonView		= UI_HTML_Elements::LinkButton( './admin/module/viewer/index/'.$moduleId, $w->buttonView, 'button view' );
 $buttonIndex	= UI_HTML_Elements::LinkButton( './admin/module/installer', $w->buttonIndex, 'button cancel' );
@@ -52,7 +54,7 @@ if( count( $needs ) ){
 			$listCritical[]	= $id;
 		$class	= 'icon module module-status-'.$status;
 		$link	= UI_HTML_Elements::Link( './admin/module/viewer/index/'.$id, $label );
-		$label	= UI_HTML_Tag::create( 'span', $link, array( 'class' => $class ) );
+		$label	= HtmlTag::create( 'span', $link, array( 'class' => $class ) );
 		$neededModules[]	= UI_HTML_Elements::ListItem( $label, 1 );
 	}
 	$neededModules	= UI_HTML_Elements::unorderedList( $neededModules, 1, array( 'class' => 'relations relations-needed' ) );
@@ -83,19 +85,19 @@ if( $mainModuleId ){
 	foreach( $mainModule->neededModules as $id => $status ){
 		if( $id == $moduleId || $id == $mainModule->id || !$status )
 			continue;
-		$label	= UI_HTML_Tag::create( 'span', $moduleMap[$id]->title, array( 'class' => 'icon module' ) );
+		$label	= HtmlTag::create( 'span', $moduleMap[$id]->title, array( 'class' => 'icon module' ) );
 		$list[]	= UI_HTML_Elements::ListItem( $label, 1 );
 	}
-	$current	= UI_HTML_Tag::create( 'span', $module->title, array( 'class' => 'icon module disabled' ) );
+	$current	= HtmlTag::create( 'span', $module->title, array( 'class' => 'icon module disabled' ) );
 	$list[]		= UI_HTML_Elements::ListItem( $current, 1, array( 'class' => 'current' ) );
 	foreach( $mainModule->neededModules as $id => $status ){
 		if( $id == $moduleId || $id == $mainModule->id || $status )
 			continue;
-		$label	= UI_HTML_Tag::create( 'span', $moduleMap[$id]->title, array( 'class' => 'icon module disabled' ) );
+		$label	= HtmlTag::create( 'span', $moduleMap[$id]->title, array( 'class' => 'icon module disabled' ) );
 		$list[]	= UI_HTML_Elements::ListItem( $label, 1 );
 	}
 	if( $module->id != $mainModule->id ){
-		$main		= UI_HTML_Tag::create( 'span', $mainModule->title, array( 'class' => 'icon module disabled' ) );
+		$main		= HtmlTag::create( 'span', $mainModule->title, array( 'class' => 'icon module disabled' ) );
 		$list[]		= UI_HTML_Elements::ListItem( $main, 1 );
 	}
 
@@ -139,17 +141,17 @@ if( $isInstallable ){
 			$label	= View_Helper_Module::renderModuleConfigLabel( $module, $item );
 			$id		= str_replace( '.', '_', $item->key );
 			$cells	= array(
-				UI_HTML_Tag::create( 'td', $label, array() ),
-				UI_HTML_Tag::create( 'td', $words['config-types'][$item->type], array( 'class' => "cell-config-type" ) ),
-				UI_HTML_Tag::create( 'td', $input, array( 'class' => 'cell-config-value' ) ),
+				HtmlTag::create( 'td', $label, array() ),
+				HtmlTag::create( 'td', $words['config-types'][$item->type], array( 'class' => "cell-config-type" ) ),
+				HtmlTag::create( 'td', $input, array( 'class' => 'cell-config-value' ) ),
 			);
-			$rows[$item->key]	= UI_HTML_Tag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
+			$rows[$item->key]	= HtmlTag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
 		#	natcasesort( $rows );
 		}
 		$tableHeads		= UI_HTML_Elements::TableHeads( array( 'Schlüssel', 'Typ', 'Wert' ) );
 		$tableColumns	= UI_HTML_Elements::ColumnGroup( array( '25%', '10%', '65%' ) );
 		$tableConfig	= '<table>'.$tableColumns.$tableHeads.join( $rows ).'</table>';
-		$tableConfig	= UI_HTML_Tag::create( 'h4', 'Konfiguration' ).$tableConfig.'<br/>';
+		$tableConfig	= HtmlTag::create( 'h4', 'Konfiguration' ).$tableConfig.'<br/>';
 	}
 
 	$a	= '
@@ -193,9 +195,9 @@ if( $files ){
 function renderPositions( $positions ){
 	$list	= [];
 	foreach( $positions as $label => $url )
-		$list[]	= '&laquo;&nbsp;'.UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
+		$list[]	= '&laquo;&nbsp;'.HtmlTag::create( 'a', $label, array( 'href' => $url ) );
 	$positions	= join( '&nbsp;&nbsp;|&nbsp;&nbsp;', $list );
-	$positions	= UI_HTML_Tag::create( 'div', $positions, array( 'class' => 'nav-position', 'style' => 'margin-bottom: 0.8em') );
+	$positions	= HtmlTag::create( 'div', $positions, array( 'class' => 'nav-position', 'style' => 'margin-bottom: 0.8em') );
 	return $positions;
 }
 

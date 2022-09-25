@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index.list'];
 
@@ -10,10 +11,10 @@ $states	= 	array(
 );
 
 $iconsStatus	= array(
-	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove' ) ),
-	1	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pause' ) ),
-	2	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-play' ) ),
-	3	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-stop' ) ),
+	0	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-remove' ) ),
+	1	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-pause' ) ),
+	2	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-play' ) ),
+	3	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-stop' ) ),
 );
 
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
@@ -47,30 +48,30 @@ if( $userLicenseKeys ){
 		}
 		if( $userLicenseKey->status == 0 ){
 		}
-		$link	= UI_HTML_Tag::create( 'a', $userLicenseKey->userLicenseKeyId, array(
+		$link	= HtmlTag::create( 'a', $userLicenseKey->userLicenseKeyId, array(
 			'href'	=> './manage/my/provision/license/view/'.$userLicenseKey->userLicenseKeyId,
 		) );
-		$userName	= '---';//UI_HTML_Tag::create( 'small', $userLicense->user->firstname.' '.$userLicense->user->firstname, array( 'class' => 'muted' ) );
+		$userName	= '---';//HtmlTag::create( 'small', $userLicense->user->firstname.' '.$userLicense->user->firstname, array( 'class' => 'muted' ) );
 		$product	= $userLicenseKey->product->title;
 		if( $userLicenseKey->product->url )
-			$product	= UI_HTML_Tag::create( 'a', $product, array(
+			$product	= HtmlTag::create( 'a', $product, array(
 				'href'		=> $userLicenseKey->product->url,
 				'target'	=> '_blank',
 			) );
 		$rank++;
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link.'<br/>Nummer: '.$rank ),
-			UI_HTML_Tag::create( 'td', $status.'<br/>'.$duration ),
-			UI_HTML_Tag::create( 'td', $product.'<br/>Lizenz: '.$userLicenseKey->productLicense->title.'<br/>Besitzer: '.$userName ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $link.'<br/>Nummer: '.$rank ),
+			HtmlTag::create( 'td', $status.'<br/>'.$duration ),
+			HtmlTag::create( 'td', $product.'<br/>Lizenz: '.$userLicenseKey->productLicense->title.'<br/>Besitzer: '.$userName ),
 		), array( 'class' => $rowColors[$userLicenseKey->status] ) );
 	}
 }
-$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Lizenzschlüssel', 'Zustand', 'Lizenz' ) ) );
-$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-$list	= UI_HTML_Tag::create( 'table', $thead.$tbody, array( 'class' => 'table' ) );
+$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Lizenzschlüssel', 'Zustand', 'Lizenz' ) ) );
+$tbody	= HtmlTag::create( 'tbody', $list );
+$list	= HtmlTag::create( 'table', $thead.$tbody, array( 'class' => 'table' ) );
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', array(
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', array(
 	'href'	=> './manage/my/provision/license/add',
 	'class'	=> 'btn btn-success',
 ) );

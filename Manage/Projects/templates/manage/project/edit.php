@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //print_m( $project );die;
 
@@ -10,7 +11,7 @@ foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 		'class'		=> 'project status'.$key,
 		'selected'	=> ( $key == $project->status ? 'selected' : NULL )
 	);
-	$optStatus[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
+	$optStatus[]	= HtmlTag::create( 'option', $value, $attributes );
 }
 $optStatus		= join( '', $optStatus );
 
@@ -22,7 +23,7 @@ foreach( $words['priorities'] as $key => $value ){
 		'class'		=> 'project priority'.$key,
 		'selected'	=> ( $key == $project->priority ? 'selected' : NULL )
 	);
-	$optPriority[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
+	$optPriority[]	= HtmlTag::create( 'option', $value, $attributes );
 }
 $optPriority		= join( '', $optPriority );
 
@@ -41,41 +42,41 @@ $optCreatorId	= UI_HTML_Elements::Options( $optCreatorId, $project->creatorId );
 
 $w			= (object) $words['edit'];
 
-$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
-$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
-$iconDefault	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-star' ) );
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
+$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconDefault	= HtmlTag::create( 'i', '', array( 'class' => 'icon-star' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-	$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
-	$iconDefault	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
+	$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
+	$iconDefault	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
 }
 
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconList.' '.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconList.' '.$w->buttonCancel, array(
 	'href'		=> './manage/project',
 	'class'		=> 'btn btn-small'
 ) );
-$buttonView		= UI_HTML_Tag::create( 'a', $iconView.' '.$w->buttonView, array(
+$buttonView		= HtmlTag::create( 'a', $iconView.' '.$w->buttonView, array(
 	'href'		=> './manage/project/view/'.$project->projectId,
 	'class'		=> 'btn btn-small btn-info'
 ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn not-btn-success btn-primary',
 	'disabled'	=> !$canEdit ? 'disabled' : NULL,
  ) );
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
 	'href'		=> './manage/project/remove/'.$project->projectId,
 	'class'		=> 'btn btn-small btn-danger',
 	'disabled'	=> !$canRemove ? 'disabled' : NULL,
 ) );
 
-$buttonDefault	= UI_HTML_Tag::create( 'a', $iconDefault.'&nbsp;'.$w->buttonDefault, array(
+$buttonDefault	= HtmlTag::create( 'a', $iconDefault.'&nbsp;'.$w->buttonDefault, array(
 	'href'		=> './manage/project/setDefault/'.$project->projectId,
 	'class'		=> 'btn btn-small',
 	'disabled'	=> $isDefault ? 'disabled' : NULL,

@@ -1,8 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd	= HTML::Icon( 'plus', TRUE );
 
-$heading	= UI_HTML_Tag::create( 'h2', $words['index']['heading'] );
+$heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
 $add 		= UI_HTML_Elements::LinkButton( './manage/my/company/branch/add', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], 'btn btn-small btn-primary' );
 
 

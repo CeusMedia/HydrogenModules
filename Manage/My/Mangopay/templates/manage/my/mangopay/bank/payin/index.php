@@ -1,11 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $currencyFirst = FALSE;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconPrint		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-print' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconPrint		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-print' ) );
 
 $wordsCurrencies	= array(
 	'EUR'		=> 'EUR',
@@ -22,7 +23,7 @@ foreach( $currencies as $key => $label )
 	$optCurrency[$key]	= $label;
 $optCurrency	= UI_HTML_Elements::Options( $optCurrency, isset( $currency ) ? $currency : NULL );
 
-$inputCurrency	= UI_HTML_Tag::create( 'select', $optCurrency, array(
+$inputCurrency	= HtmlTag::create( 'select', $optCurrency, array(
 	'id'		=> 'input_currency',
 	'name'		=> 'currency',
 	'class'		=> 'span12',
@@ -34,7 +35,7 @@ $optWallet		= [];
 foreach( $wallets as $item )
 	$optWallet[$item->Id]	= $item->Description.' ('.$view->formatMoney( $item->Balance, ' ', 0 ).')';
 $optWallet		= UI_HTML_Elements::Options( $optWallet );
-$inputWallet	= UI_HTML_Tag::create( 'select', $optWallet, array(
+$inputWallet	= HtmlTag::create( 'select', $optWallet, array(
 	'id'		=> 'input_walletId',
 	'name'		=> 'walletId',
 	'class'		=> 'span12',
@@ -47,22 +48,22 @@ $helperAmount->set( $amount );
 if( $currencyFirst )
 	$fieldMoney	= '<div class="row-fluid">
 		<div class="span4">
-			'.UI_HTML_Tag::create( 'label', 'in Währung', array( 'for' => 'input_currency' ) ).'
+			'.HtmlTag::create( 'label', 'in Währung', array( 'for' => 'input_currency' ) ).'
 			'.$inputCurrency.'
 		</div>
 		<div class="span8">
-			'.UI_HTML_Tag::create( 'label', 'Geldbetrag', array( 'for' => 'input_amount' ) ).'
+			'.HtmlTag::create( 'label', 'Geldbetrag', array( 'for' => 'input_amount' ) ).'
 			'.$helperAmount.'
 		</div>
 	</div>';
 else
 	$fieldMoney	= '<div class="row-fluid">
 		<div class="span8">
-			'.UI_HTML_Tag::create( 'label', 'Geldbetrag', array( 'for' => 'input_amount' ) ).'
+			'.HtmlTag::create( 'label', 'Geldbetrag', array( 'for' => 'input_amount' ) ).'
 			'.$helperAmount.'
 		</div>
 		<div class="span4">
-			'.UI_HTML_Tag::create( 'label', 'in Währung', array( 'for' => 'input_currency' ) ).'
+			'.HtmlTag::create( 'label', 'in Währung', array( 'for' => 'input_currency' ) ).'
 			'.$inputCurrency.'
 		</div>
 	</div>';
@@ -80,11 +81,11 @@ $helperUrl->set( ( isset( $from ) && $from ) ? $from :  'manage/my/mangopay/bank
 $helperUrl->setBackwardTo( TRUE );
 $helperUrl->setForwardTo( TRUE );
 $helperUrl->setFrom( TRUE );
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
 	'href'	=> $helperUrl->render(),
 	'class'	=> 'btn',
 ) );
-$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' Überweisung anmelden', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' Überweisung anmelden', array(
 	'type'	=> 'submit',
 	'name'	=> "save",
 /*	'value'	=> "payin",*/

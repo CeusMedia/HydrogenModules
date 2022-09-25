@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 //  --  PANEL: MAP  --  //
 $w				= (object) $words['map'];
 $panelMap		= '';
@@ -142,7 +144,7 @@ $panelAddImage	= 	HTML::Form( './manage/my/branch/addImage/'.$branch->branchId, 
 );
 
 return HTML::DivClass( 'column-left-60',
-#	UI_HTML_Tag::create( 'h2', $w->heading ).
+#	HtmlTag::create( 'h2', $w->heading ).
 	$panelEdit.
 	$panelAddImage.
 	$panelImages

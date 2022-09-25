@@ -1,24 +1,26 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w	= (object) $words['filter'];
 
 ksort( $files );
 $optFile	= array( '' => $w->optAll );
 foreach( $files as $file )
 	$optFile[$file->filePath]	= $file->filePath;
-$optFile	= UI_HTML_Elements::Options( $optFile, $filterFile );
+$optFile	= HtmlElements::Options( $optFile, $filterFile );
 
 $optClass	= array( '' => $w->optAll );
 foreach( $classes as $class )
 	$optClass[$class]	= $class;
-$optClass	= UI_HTML_Elements::Options( $optClass, $filterClass );
+$optClass	= HtmlElements::Options( $optClass, $filterClass );
 
 $optLanguage	= array( '' => $w->optAll );
 foreach( $languages as $language )
 	$optLanguage[$language]	= $language;
-$optLanguage	= UI_HTML_Elements::Options( $optLanguage, $filterLanguage );
+$optLanguage	= HtmlElements::Options( $optLanguage, $filterLanguage );
 
 $optStatus	= array( '' => $w->optAll ) + $words['states'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
+$optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 return '
 <!-- templates/admin/mail/attachment/index.filter.php -->

@@ -1,19 +1,20 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
 	'href'	=> './manage/ip/lock/filter',
 	'class'	=> 'btn btn-small',
 ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' speichern', array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
 ) );
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', array(
 	'href'	=> './manage/ip/lock/filter/remove/'.$filter->ipLockFilterId,
 	'class'	=> 'btn btn-danger btn-small',
 ) );

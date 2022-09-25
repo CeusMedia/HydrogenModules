@@ -1,9 +1,10 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Manage_Project Hook
+class Hook_Manage_Project extends Hook
 {
 	static public function onGetRelatedUsers( Environment $env, $context, $module, $data )
 	{
@@ -97,7 +98,7 @@ class Hook_Manage_Project Hook
 		$logic			= Logic_Project::getInstance( $env );
 		$words			= $env->getLanguage()->getWords( 'manage/project' );
 		$projects		= $logic->getUserProjects( $data->userId, FALSE );
-		$icon			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cube' ) );
+		$icon			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cube' ) );
 
 		$lists	= (object) array( 'entities' => array(), 'relations'	=> array() );
 		foreach( $projects as $project ){
@@ -163,7 +164,7 @@ class Hook_Manage_Project Hook
 		$projectUsers	= $logic->getProjectUsers( $data->projectId, $conditions, array( 'username' => 'ASC' ) );
 
 		$list				= [];
-		$iconUser			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
+		$iconUser			= HtmlTag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
 		foreach( $projectUsers as $user ){
 			if( $env->getModules()->has( 'Members' ) ){
 				$helper	= new View_Helper_Member( $env );
@@ -174,8 +175,8 @@ class Hook_Manage_Project Hook
 			}
 			else{
 				$fullname	= '('.$user->firstname.' '.$user->surname.')';
-				$fullname	= UI_HTML_Tag::create( 'small', $fullname, array( 'class' => 'muted' ) );
-				$link		= UI_HTML_Tag::create( 'a', $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname, array(
+				$fullname	= HtmlTag::create( 'small', $fullname, array( 'class' => 'muted' ) );
+				$link		= HtmlTag::create( 'a', $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname, array(
 					'href'	=> 'member/view/'.$user->userId,
 				) );
 			}

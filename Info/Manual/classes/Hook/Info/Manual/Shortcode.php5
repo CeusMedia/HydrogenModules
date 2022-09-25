@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -31,7 +32,7 @@ class Hook_Info_Manual_Shortcode extends Hook
 						$category		= $modelCategory->get( (int) $attr['id'] );
 						if( $category ){
 							$helperUrl->setCategory( $category );
-							$replacement	= UI_HTML_Tag::create( 'a', $category->title, array(
+							$replacement	= HtmlTag::create( 'a', $category->title, array(
 								'href' 		=> $helperUrl->render(),
 								'class'		=> 'link-manual-category',
 							) );
@@ -41,7 +42,7 @@ class Hook_Info_Manual_Shortcode extends Hook
 						$page		= $modelPage->get( (int) $attr['id'] );
 						if( $page ){
 							$helperUrl->setPage( $page );
-							$replacement	= UI_HTML_Tag::create( 'a', $page->title, array(
+							$replacement	= HtmlTag::create( 'a', $page->title, array(
 								'href' 		=> $helperUrl->render(),
 								'class'		=> 'link-manual-page',
 							) );

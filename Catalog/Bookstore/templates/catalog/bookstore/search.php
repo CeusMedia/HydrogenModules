@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helper	= new View_Helper_Catalog_Bookstore( $env );
@@ -7,12 +8,12 @@ $words	= (object) $words['search'];
 $optAuthor	= array( '' => 'alle' );
 foreach( $authors as $author )
 	$optAuthor[$author->authorId]	= $author->lastname.', '.$author->firstname;
-$optAuthor	= UI_HTML_Elements::Options( $optAuthor, $searchAuthorId );
+$optAuthor	= HtmlElements::Options( $optAuthor, $searchAuthorId );
 
 $optCategory	= array( '' => 'alle' );
 foreach( $categories as $category )
 	$optCategory[$category->categoryId]	= $category->label_de;
-$optCategory	= UI_HTML_Elements::Options( $optCategory, $searchCategoryId );
+$optCategory	= HtmlElements::Options( $optCategory, $searchCategoryId );
 
 $list	= '';
 $pages	= '';

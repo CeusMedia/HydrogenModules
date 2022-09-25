@@ -3,6 +3,7 @@
  *	Singleton of module logic.
  */
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Logic;
@@ -572,7 +573,7 @@ class Logic_Module extends Logic
 				}
 				$label	= '"'.$sourceId.'"';
 				if( $this->env->getAcl()->has( 'admin/source', 'edit' ) )
-					$label	= UI_HTML_Tag::create( 'a', $sourceId, array( 'href' => './admin/module/source/edit/'.$sourceId ) );
+					$label	= HtmlTag::create( 'a', $sourceId, array( 'href' => './admin/module/source/edit/'.$sourceId ) );
 				$this->messenger->noteError( 'Die Quelle '.$label.' ist nicht verfügbar oder falsch konfiguriert.' );
 			}
 		}

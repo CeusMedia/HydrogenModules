@@ -1,7 +1,9 @@
 <?php
-$heading	= UI_HTML_Tag::create( 'h2', $words['index']['heading'] );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
+
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 
 $buttonAdd 	= UI_HTML_Elements::LinkButton( './manage/company/add', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], 'btn btn-primary' );
 
@@ -26,15 +28,15 @@ foreach( $companies as $entry ){
 	$buttonEdit			= UI_HTML_Elements::LinkButton( $uriEdit, '<i class="icon-pencil"></i>', 'btn btn-mini' );
 	$buttonActivate		= UI_HTML_Elements::LinkButton( $uriActivate, '<i class="icon-check icon-white"></i>', 'btn btn-mini btn-success', NULL, $entry->status == 1 );
 	$buttonDeactivate	= UI_HTML_Elements::LinkButton( $uriDeactivate, '<i class="icon-remove icon-white"></i>', 'btn btn-mini btn-danger', NULL, $entry->status == -1 );
-	$buttons			= UI_HTML_Tag::create( 'div', $buttonEdit/*.$buttonActivate.$buttonDeactivate*/, array( 'class' => 'btn-group' ) );
+	$buttons			= HtmlTag::create( 'div', $buttonEdit/*.$buttonActivate.$buttonDeactivate*/, array( 'class' => 'btn-group' ) );
 	$check		= UI_HTML_Elements::Checkbox( 'companyId', $entry->companyId );
-	$rows[]		= UI_HTML_Tag::create( 'tr', array(
-//		UI_HTML_Tag::create( 'td', $check, array( 'class' => 'cell-check' ),
-		UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-title' ) ),
-		UI_HTML_Tag::create( 'td', $entry->city, array( 'class' => 'cell-city' ) ),
-		UI_HTML_Tag::create( 'td', $createdAt, array( 'class' => 'cell-created' ) ),
-		UI_HTML_Tag::create( 'td', $modifiedAt, array( 'class' => 'cell-modified' ) ),
-		UI_HTML_Tag::create( 'td', $buttons, array( 'class' => 'cell-action' ) ),
+	$rows[]		= HtmlTag::create( 'tr', array(
+//		HtmlTag::create( 'td', $check, array( 'class' => 'cell-check' ),
+		HtmlTag::create( 'td', $link, array( 'class' => 'cell-title' ) ),
+		HtmlTag::create( 'td', $entry->city, array( 'class' => 'cell-city' ) ),
+		HtmlTag::create( 'td', $createdAt, array( 'class' => 'cell-created' ) ),
+		HtmlTag::create( 'td', $modifiedAt, array( 'class' => 'cell-modified' ) ),
+		HtmlTag::create( 'td', $buttons, array( 'class' => 'cell-action' ) ),
 	), array( 'class' => $class ) );
 	$number		++;
 }
@@ -50,9 +52,9 @@ $heads	= array(
 );
 $heads		= UI_HTML_Elements::TableHeads( $heads );
 $colgroup	= UI_HTML_Elements::ColumnGroup( '42%', '20%', '15%', '15%', '5%' );
-$thead		= UI_HTML_Tag::create( 'thead', $heads );
-$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
+$thead		= HtmlTag::create( 'thead', $heads );
+$tbody		= HtmlTag::create( 'tbody', $rows );
+$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
 
 $panelList	= '<div class="content-panel">
 	<h3>'.$words['index']['legend'].'</h3>

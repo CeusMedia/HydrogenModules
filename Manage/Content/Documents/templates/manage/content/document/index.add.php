@@ -1,12 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['add'];
 
-$iconUpload     = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconUpload     = HtmlTag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconUpload		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
-	$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconUpload		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
+	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 }
 
 $fieldFilename	= '';

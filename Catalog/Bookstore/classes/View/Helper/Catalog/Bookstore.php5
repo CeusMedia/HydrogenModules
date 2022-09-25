@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -160,11 +161,11 @@ class View_Helper_Catalog_Bookstore{
 				if( $fileLarge ){
 				}
 				$uri	= './file/bookstore/article/m/'.$article->cover;
-				return UI_HTML_Elements::Image( $uri, $title, 'dropshadow' );
+				return HtmlElements::Image( $uri, $title, 'dropshadow' );
 			}
 		}
 		$pathImages	= $this->env->getConfig()->get( 'path.images' );
-		return UI_HTML_Elements::Image( $pathImages."bookstore/no_picture.png", $labelNoPicture );
+		return HtmlElements::Image( $pathImages."bookstore/no_picture.png", $labelNoPicture );
 	}
 
 	public function renderArticleLink( $article ){
@@ -186,11 +187,11 @@ class View_Helper_Catalog_Bookstore{
 			if( $fileSmall ){
 				$title	= htmlentities( strip_tags( View_Helper_Text::applyFormat( $article->title ) ) );
 				$uri	= './file/bookstore/article/s/'.$article->cover;
-				return UI_HTML_Elements::Image( $uri, $title, 'dropshadow' );
+				return HtmlElements::Image( $uri, $title, 'dropshadow' );
 			}
 		}
 		$pathImages	= $this->env->getConfig()->get( 'path.images' );
-		return UI_HTML_Elements::Image( $pathImages."bookstore/no_picture.png", $labelNoPicture );
+		return HtmlElements::Image( $pathImages."bookstore/no_picture.png", $labelNoPicture );
 	}
 
 	public function renderAuthorLink( $author ){
@@ -254,17 +255,17 @@ class View_Helper_Catalog_Bookstore{
 			$sub	= [];
 			foreach( $category->categories as $subcategory ){
 				$link	= $this->renderCategoryLink( $subcategory, $language );
-				$sub[]	= UI_HTML_Elements::ListItem( $link, 1, array( 'class' => 'topic' ) );
+				$sub[]	= HtmlElements::ListItem( $link, 1, array( 'class' => 'topic' ) );
 			}
-			$sub	= $sub ? UI_HTML_Elements::unorderedList( $sub, 1, array( 'class' => 'topics' ) ) : '';
+			$sub	= $sub ? HtmlElements::unorderedList( $sub, 1, array( 'class' => 'topics' ) ) : '';
 			$area	= '<span class="hitarea '.( $sub ? 'closed' : 'empty' ).'"></span>';
 
 			$link	= $this->renderCategoryLink( $category, $language );
 			if( !empty( $category->label_former ) )
 				$link	.= '<br/><small>vormals <em>'.$category->label_former.'</em></small>';
-			$list[]	= UI_HTML_Elements::ListItem( $area.$link.$sub, 0, array( 'class' => 'branch' ) );
+			$list[]	= HtmlElements::ListItem( $area.$link.$sub, 0, array( 'class' => 'branch' ) );
 		}
-		return UI_HTML_Elements::unorderedList( $list, 0, array( 'class' => 'branches' ) );
+		return HtmlElements::unorderedList( $list, 0, array( 'class' => 'branches' ) );
 	}
 
 	public function renderDocumentLink( $document ){

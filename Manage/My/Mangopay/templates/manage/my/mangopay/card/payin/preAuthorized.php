@@ -1,8 +1,10 @@
 <?php
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconPayin		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
-$iconCard		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-credit-card' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconPayin		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
+$iconCard		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-credit-card' ) );
 
 $helperCard	= new View_Helper_Mangopay_Entity_Card( $env );
 $helperCard->set( $card )->setNodeName( 'div' );

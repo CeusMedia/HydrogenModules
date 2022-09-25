@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['edit'];
 
 $tabsMain	= $this->renderMainTabs();
@@ -20,18 +22,18 @@ foreach( $words['tabs'] as $key => $label ){
 	);
 	$count	= '';
 	if( $key === "articles" && $articles )
-		$count	= '&nbsp;'.UI_HTML_Tag::create( 'span', count( $articles ), array( 'class' => 'badge badge-info' ) );
-	$link	= UI_HTML_Tag::create( 'a', $label.$count, $attributes );
+		$count	= '&nbsp;'.HtmlTag::create( 'span', count( $articles ), array( 'class' => 'badge badge-info' ) );
+	$link	= HtmlTag::create( 'a', $label.$count, $attributes );
 	$class	= $current == $key ? "active" : NULL;
-	$tabs[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+	$tabs[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 	$attributes		= array(
 		'class'		=> "tab-pane".( $current == $key ? " active" : "" ),
 		'id'		=> 'tab-'.$key
 	);
-	$panes[$key]    = UI_HTML_Tag::create( 'div', $panes[$key], $attributes );
+	$panes[$key]    = HtmlTag::create( 'div', $panes[$key], $attributes );
 }
-$tabs   = UI_HTML_Tag::create( 'ul', $tabs, array( 'class' => 'nav nav-tabs' ) );
-$panes  = UI_HTML_Tag::create( 'div', $panes, array( 'class' => 'tab-content' ) );
+$tabs   = HtmlTag::create( 'ul', $tabs, array( 'class' => 'nav nav-tabs' ) );
+$panes  = HtmlTag::create( 'div', $panes, array( 'class' => 'tab-content' ) );
 
 $panelList	= $view->loadTemplateFile( 'manage/catalog/bookstore/author/list.php' );
 

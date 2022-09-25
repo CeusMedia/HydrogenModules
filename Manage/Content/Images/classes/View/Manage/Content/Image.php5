@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Content_Image extends View
@@ -42,15 +43,15 @@ class View_Manage_Content_Image extends View
 				continue;
 			$imagePath	= substr( $entry->getPathname(), strlen( $this->path ) );
 			$thumb		= $thumbnailer->get( $entry->getPathname(), $maxWidth, $maxHeight );
-			$image		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $thumb ) );
-			$label		= UI_HTML_Tag::create( 'div', $entry->getFilename() );
-			$thumbnail	= UI_HTML_Tag::create( 'div', $image.$label );
+			$image		= HtmlTag::create( 'img', NULL, array( 'src' => $thumb ) );
+			$label		= HtmlTag::create( 'div', $entry->getFilename() );
+			$thumbnail	= HtmlTag::create( 'div', $image.$label );
 			$key		= $entry->getFilename();
-			$list[$key]	= UI_HTML_Tag::create( 'li', $thumbnail, array( 'data-image-hash' => addslashes( base64_encode( $imagePath ) ) ) );
+			$list[$key]	= HtmlTag::create( 'li', $thumbnail, array( 'data-image-hash' => addslashes( base64_encode( $imagePath ) ) ) );
 		}
 		natcasesort( $list );
 		if( $list )
-			return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbs' ) );
+			return HtmlTag::create( 'ul', $list, array( 'class' => 'thumbs' ) );
 	}
 
 	protected function __onInit()
@@ -85,24 +86,24 @@ class View_Manage_Content_Image extends View
 			$name		= $name == "." ? '<small class="muted"><em>'.$words->labelRoot.'</em></small>' : $name;
 
 			$number		= $this->countFilesInFolder( $this->path.$folder );
-			$badge		= UI_HTML_Tag::create( 'span', $number, array( 'class' => 'badge badge-file-number' ) );
-			$badge		= UI_HTML_Tag::create( 'small', '('.$number.')', array( 'class' => 'muted' ) );
+			$badge		= HtmlTag::create( 'span', $number, array( 'class' => 'badge badge-file-number' ) );
+			$badge		= HtmlTag::create( 'small', '('.$number.')', array( 'class' => 'muted' ) );
 
-			$label		= UI_HTML_Tag::create( 'span', $name.' '.$badge, array( 'class' => 'item-label autocut' ) );
+			$label		= HtmlTag::create( 'span', $name.' '.$badge, array( 'class' => 'item-label autocut' ) );
 			if( strlen( $folder ) > 45 )
-				$label		= UI_HTML_Tag::create( 'small', $name.' '.$badge, array( 'class' => 'autocut' ) );
-			$link		= UI_HTML_Tag::create( 'a', $label, array(
+				$label		= HtmlTag::create( 'small', $name.' '.$badge, array( 'class' => 'autocut' ) );
+			$link		= HtmlTag::create( 'a', $label, array(
 				'href'	=> './manage/content/image/'.base64_encode( $folder ),
 //				'class'	=> 'autocut',
 			) );
-			$list[$folder]	= UI_HTML_Tag::create( 'li', $link, array(
+			$list[$folder]	= HtmlTag::create( 'li', $link, array(
 				'class'	=> 'not-autocut '.( $folder == $currentPath ? "active" : NULL ),
 				'title'	=> $folder,
 			) );
 		}
 		$time	= '<div class="label">'.round( ( microtime( TRUE ) - $start ) * 1000, 1 ).'ms</div>';
 		if( $list )
-			return UI_HTML_Tag::create( 'ul', $list, array(
+			return HtmlTag::create( 'ul', $list, array(
 				'class'	=> 'nav nav-pills nav-stacked not-nav-bordered nav-resizing',
 				'id'	=> 'list-folders',
 		) );

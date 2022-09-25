@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $status	= $words['reader-states'][$reader->status];
 
@@ -27,16 +28,16 @@ foreach( $subscriptions as $subscription )
 
 $list	= [];
 foreach( $groups as $group ){
-	$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
+	$checkbox	= HtmlTag::create( 'input', NULL, array(
 		'type'		=> 'checkbox',
 		'name'		=> 'groups[]',
 		'value'		=> $group->newsletterGroupId,
 		'checked'	=> in_array( $group->newsletterGroupId, $readerGroups ) ? 'checked' : NULL
 	) );
-	$label	= UI_HTML_Tag::create( 'label', $checkbox.'&nbsp;'.$group->title, array( 'class' => 'checkbox' ) );
-	$list[]	= UI_HTML_Tag::create( 'li', $label );
+	$label	= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$group->title, array( 'class' => 'checkbox' ) );
+	$list[]	= HtmlTag::create( 'li', $label );
 }
-$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
 
 $panelGroups	= '<h4>Ihre Themen</h4>
 '.$list;

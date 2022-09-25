@@ -1,12 +1,14 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['index'];
 $tabs		= View_Manage_My_User::renderTabs( $env, 'setting' );
 
 $panelSettings	= '<div class="muted">'.$w->noSettings.'</div>';
 if( isset( $modules ) && count( $modules ) ){
 	$formUri 	= './manage/my/user/setting/update'.( $from ? '?from='.$from : '' );
-	$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => "icon-ok icon-white" ) );
-	$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+	$iconSave	= HtmlTag::create( 'i', '', array( 'class' => "icon-ok icon-white" ) );
+	$buttonSave	= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
 		'type'		=> 'submit',
 		'name'		=> 'save',
 		'class'		=> 'btn btn-primary',

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $labelsCustomer	= $this->getWords( 'customer', 'manage/shop' );
 
@@ -116,7 +117,7 @@ foreach( $states as $status ){
 		}
 	}
 }
-$buttons[]	= UI_HTML_Tag::create( 'a', '<i class="icon-question-sign icon-white"></i>', array(
+$buttons[]	= HtmlTag::create( 'a', '<i class="icon-question-sign icon-white"></i>', array(
 	'class'		=> 'btn btn-info btn-small fancybox-auto',
 	'href'		=> $env->getConfig()->get( 'path.images' ).'states.png',
 	'target'	=> '_blank',
@@ -129,12 +130,12 @@ function renderDataList( $keys, $data, $labels ){
 	$list	= [];
 	foreach( $keys as $key ){
 		if( isset( $data->$key ) && strlen( trim( $data->$key ) ) ){
-			$list[]	= UI_HTML_Tag::create( 'dt', $labels->$key );
-			$list[]	= UI_HTML_Tag::create( 'dd', $data->$key );
+			$list[]	= HtmlTag::create( 'dt', $labels->$key );
+			$list[]	= HtmlTag::create( 'dd', $data->$key );
 		}
 	}
 	if( $list )
-		return UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+		return HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 }
 
 $optStatus	= $words['states'];
@@ -185,12 +186,12 @@ foreach( $order->positions as $position ){
 	$url	= './'.$position->bridge->data->backendUriPath.'edit/'.$position->articleId;
 	if( substr_count( $position->bridge->data->backendUriPath, "%s" ) )
 		$url	= './'.sprintf( $position->bridge->data->backendUriPath, (string)$position->articleId );
-	$link	= UI_HTML_Tag::create( 'a', $position->article->title, array( 'href' => $url ) );
+	$link	= HtmlTag::create( 'a', $position->article->title, array( 'href' => $url ) );
 
-	$cellBridge		= new UI_HTML_Tag( 'td', $position->bridge->data->title, array( 'class' => 'cell-position-bridge' ) );
-	$cellTitle		= new UI_HTML_Tag( 'td', $link, array( 'class' => 'cell-position-title' ) );
-	$cellQuantity	= new UI_HTML_Tag( 'td', $position->quantity, array( 'class' => 'cell-position-quantity' ) );
-	$cellStatus		= new UI_HTML_Tag( 'td', new \CeusMedia\Bootstrap\ButtonGroup( array(
+	$cellBridge		= HtmlTag::create( 'td', $position->bridge->data->title, array( 'class' => 'cell-position-bridge' ) );
+	$cellTitle		= HtmlTag::create( 'td', $link, array( 'class' => 'cell-position-title' ) );
+	$cellQuantity	= HtmlTag::create( 'td', $position->quantity, array( 'class' => 'cell-position-quantity' ) );
+	$cellStatus		= HtmlTag::create( 'td', new \CeusMedia\Bootstrap\ButtonGroup( array(
 		new \CeusMedia\Bootstrap\LinkButton(
 			'./manage/shop/order/setPositionStatus/'.$position->positionId.'/1',
 			'bestellt',
@@ -210,7 +211,7 @@ foreach( $order->positions as $position ){
 	$rowColor		= $position->status == 1 ? 'warning' : ( $position->status == 2 ? 'success' : 'error' );
 	$cells			= array( $cellQuantity, $cellTitle, $cellBridge, $cellStatus );
 	$attributes		= array( 'class' => $rowColor );
-	$rows[]			= UI_HTML_Tag::create( 'tr', $cells, $attributes );
+	$rows[]			= HtmlTag::create( 'tr', $cells, $attributes );
 }
 
 $tableHeads		= UI_HTML_Elements::TableHeads( array(
@@ -220,9 +221,9 @@ $tableHeads		= UI_HTML_Elements::TableHeads( array(
 	$w->head_status,
 ) );
 $tableColumns	= UI_HTML_Elements::ColumnGroup( array( '60', '', '220', '180' ) );
-$tableHead		= UI_HTML_Tag::create( 'thead', $tableHeads );
-$tableBody		= UI_HTML_Tag::create( 'tbody', $rows );
-$tableArticles	= UI_HTML_Tag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
+$tableHead		= HtmlTag::create( 'thead', $tableHeads );
+$tableBody		= HtmlTag::create( 'tbody', $rows );
+$tableArticles	= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
 
 $linkBack	= '<a href="./manage/shop/order">&laquo;&nbsp;zurück</a>';
 #$linkBack	= new \CeusMedia\Bootstrap\LinkButton( './manage/shop/order', 'zurück', 'btn-small', 'arrow-left' );

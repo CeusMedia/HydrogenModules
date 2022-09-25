@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Manage_Catalog_Bookstore_Article extends View_Manage_Catalog_Bookstore
 {
 	public function add()
@@ -19,12 +21,12 @@ class View_Manage_Catalog_Bookstore_Article extends View_Manage_Catalog_Bookstor
 		foreach( $articles as $article ){
 			$url	= './manage/catalog/bookstore/article/edit/'.$article->articleId;
 			$label	= $article->title;
-			$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
+			$link	= HtmlTag::create( 'a', $label, array( 'href' => $url ) );
 			$class	= $articleId == $article->articleId ? "active" : "";
-			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 		}
 //		ksort( $list );
-		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked boxed' ) );
+		$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked boxed' ) );
 		return $list;
 	}
 }

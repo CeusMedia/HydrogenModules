@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Dashboard extends CMF_Hydrogen_View_Helper_Abstract
@@ -23,31 +24,31 @@ class View_Helper_Info_Dashboard extends CMF_Hydrogen_View_Helper_Abstract
 				continue;
 			$panel	= $this->panels[$panelId];
 
-			$iconMove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrows' ) );
-			$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+			$iconMove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrows' ) );
+			$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 			$icon		= '';
 			if( $panel->icon )
-				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $panel->icon ) ).'&nbsp;';
-			$handle		= UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'a', $iconRemove, array(
+				$icon	= HtmlTag::create( 'i', '', array( 'class' => $panel->icon ) ).'&nbsp;';
+			$handle		= HtmlTag::create( 'div', array(
+				HtmlTag::create( 'a', $iconRemove, array(
 					'class'		=> 'btn btn-mini btn-inverse handle-icon',
 					'href'		=> './info/dashboard/removePanel/'.$panel->id,
 					'onclick'	=> 'if(!confirm(\''.$w->buttonRemove_confirm.'\')) return false;',
 					'title'		=> $w->buttonRemove,
 				) ),
-/*				UI_HTML_Tag::create( 'a', $iconMove, array(
+/*				HtmlTag::create( 'a', $iconMove, array(
 					'class'		=> 'btn btn-mini handle-icon handle-button-move',
 				) ),*/
-				UI_HTML_Tag::create( 'h4', $icon.$panel->heading ),
+				HtmlTag::create( 'h4', $icon.$panel->heading ),
 			), array( 'class' => 'dashboard-panel-handle' ) );
-			$container	= UI_HTML_Tag::create( 'div', '', array(
+			$container	= HtmlTag::create( 'div', '', array(
 				'class'	=> 'dashboard-panel-container',
 				'id'	=> NULL,
 			) );
 
-			$list[]	= UI_HTML_Tag::create( 'li', array(
-				UI_HTML_Tag::create( 'div', $handle.$container, array(
+			$list[]	= HtmlTag::create( 'li', array(
+				HtmlTag::create( 'div', $handle.$container, array(
 					'class'		=> 'thumbnail',
 				) )
 			), array(
@@ -62,9 +63,9 @@ class View_Helper_Info_Dashboard extends CMF_Hydrogen_View_Helper_Abstract
 				$this->env->getPage()->js->addScriptOnReady( $script );
 			}
 		}
-		$desc	= $this->dashboard->description ? UI_HTML_Tag::create( 'p', nl2br( $this->dashboard->description ) ) : '';
-		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'thumbnails sortable' ) );
-		return UI_HTML_Tag::create( 'div', $desc.$list, array( 'id' => 'dashboard-board' ) );
+		$desc	= $this->dashboard->description ? HtmlTag::create( 'p', nl2br( $this->dashboard->description ) ) : '';
+		$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'thumbnails sortable' ) );
+		return HtmlTag::create( 'div', $desc.$list, array( 'id' => 'dashboard-board' ) );
 	}
 
 	public function setColumns( int $columns ): self

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['view'];
 $count	= 0;
@@ -10,8 +11,8 @@ if( $module->files->classes ){
 		$count++;
 		$class	= NULL;
 		$url		= './admin/module/viewer/viewCode/'.$moduleId.'/class/'.base64_encode( $item->file );
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon class' ) );
-		$link		= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'layer-html', 'title' => 'TEST' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon class' ) );
+		$link		= HtmlTag::create( 'a', $label, array( 'href' => $url, 'class' => 'layer-html', 'title' => 'TEST' ) );
 		$classes[]	= UI_HTML_Elements::ListItem( $link, 1, array( 'class' => $class ) );
 	}
 	$classes	= UI_HTML_Elements::unorderedList( $classes, 1, array( 'class' => 'classes' ) );
@@ -29,7 +30,7 @@ if( $module->files->locales ){
 		$count++;
 		$class	= NULL;
 		$url		= './admin/module/viewer/viewCode/'.$moduleId.'/locale/'.base64_encode( $item->file );
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon locale' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon locale' ) );
 		$link		= UI_HTML_Elements::Link( $url, $label, 'layer-html' );
 		$locales[]	= UI_HTML_Elements::ListItem( $link, 1, array( 'class' => $class ) );
 	}
@@ -45,7 +46,7 @@ if( $module->files->templates ){
 		$count++;
 		$class	= NULL;
 		$url		= './admin/module/viewer/viewCode/'.$moduleId.'/template/'.base64_encode( $item->file );
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon template' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon template' ) );
 		$link		= UI_HTML_Elements::Link( $url, $label, 'layer-html' );
 		$templates[]	= UI_HTML_Elements::ListItem( $link, 1, array( 'class' => $class ) );
 	}
@@ -61,7 +62,7 @@ if( $module->files->styles ){
 		$count++;
 		$class	= NULL;
 		$url		= './admin/module/viewer/viewCode/'.$moduleId.'/style/'.base64_encode( $item->file );
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon style' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon style' ) );
 		$link		= UI_HTML_Elements::Link( $url, $label, 'layer-html' );
 		$styles[]	= UI_HTML_Elements::ListItem( $link, 1, array( 'class' => $class ) );
 	}
@@ -77,7 +78,7 @@ if( $module->files->scripts ){
 		$count++;
 		$class	= NULL;
 		$url		= './admin/module/viewer/viewCode/'.$moduleId.'/script/'.base64_encode( $item->file );
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon script' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon script' ) );
 		$link		= UI_HTML_Elements::Link( $url, $label, 'layer-html', array( 'title' => 'TEST' ) );
 		$scripts[]	= UI_HTML_Elements::ListItem( $link, 1, array( 'class' => $class )  );
 	}
@@ -92,7 +93,7 @@ if( $module->files->images ){
 	foreach( $module->files->images as $item ){
 		$count++;
 		$class	= NULL;
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon image' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon image' ) );
 		$images[]	= UI_HTML_Elements::ListItem( $label, 1, array( 'class' => $class ) );
 	}
 	$images		= UI_HTML_Elements::unorderedList( $images, 1, array( 'class' => 'images' ) );
@@ -105,7 +106,7 @@ if( $module->files->files ){
 	foreach( $module->files->files as $item ){
 		$count++;
 		$class	= NULL;
-		$label		= UI_HTML_Tag::create( 'span', $item->file, array( 'class' => 'icon file' ) );
+		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon file' ) );
 		$files[]	= UI_HTML_Elements::ListItem( $label, 1, array( 'class' => $class ) );
 	}
 	$files		= UI_HTML_Elements::unorderedList( $files, 1, array( 'class' => 'files' ) );

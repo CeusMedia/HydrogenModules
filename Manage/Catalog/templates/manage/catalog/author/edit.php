@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['edit'];
 
 $tabsMain	= $this->renderMainTabs();
@@ -18,17 +20,17 @@ foreach( $words['tabs'] as $key => $label ){
 		'data-toggle'	=> 'tab',
 		'onclick'		=> "ModuleManageCatalog.setAuthorTab('".$key."');",
 	);
-	$link	= UI_HTML_Tag::create( 'a', $label, $attributes );
+	$link	= HtmlTag::create( 'a', $label, $attributes );
 	$class	= $current == $key ? "active" : NULL;
-	$tabs[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+	$tabs[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 	$attributes		= array(
 		'class'		=> "tab-pane".( $current == $key ? " active" : "" ),
 		'id'		=> 'tab-'.$key
 	);
-	$panes[$key]    = UI_HTML_Tag::create( 'div', $panes[$key], $attributes );
+	$panes[$key]    = HtmlTag::create( 'div', $panes[$key], $attributes );
 }
-$tabs   = UI_HTML_Tag::create( 'ul', $tabs, array( 'class' => 'nav nav-tabs' ) );
-$panes  = UI_HTML_Tag::create( 'div', $panes, array( 'class' => 'tab-content' ) );
+$tabs   = HtmlTag::create( 'ul', $tabs, array( 'class' => 'nav nav-tabs' ) );
+$panes  = HtmlTag::create( 'div', $panes, array( 'class' => 'tab-content' ) );
 
 $panelList	= $view->loadTemplateFile( 'manage/catalog/author/list.php' );
 

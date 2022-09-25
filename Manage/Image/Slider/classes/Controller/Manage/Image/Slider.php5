@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Image_Slider extends Controller
@@ -193,7 +194,7 @@ class Controller_Manage_Image_Slider extends Controller
 			) );
 			try{
 				$this->scaleImage( $sliderId, $slideId );
-				$list[]	= UI_HTML_Tag::create( 'li', $entry->getFilename() );
+				$list[]	= HtmlTag::create( 'li', $entry->getFilename() );
 			}
 			catch( Exception $e ){
 				$this->modelSlide->remove( $slideId );
@@ -201,7 +202,7 @@ class Controller_Manage_Image_Slider extends Controller
 			}
 		}
 		if( $list ){
-			$this->messenger->noteSuccess( count( $list).' image imported: '.UI_HTML_Tag::create( 'ul', $list ) );
+			$this->messenger->noteSuccess( count( $list).' image imported: '.HtmlTag::create( 'ul', $list ) );
 		}
 		$this->restart( 'edit/'.$sliderId, TRUE );
 	}

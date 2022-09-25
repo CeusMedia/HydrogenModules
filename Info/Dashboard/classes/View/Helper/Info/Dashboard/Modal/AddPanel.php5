@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Dashboard_Modal_AddPanel extends CMF_Hydrogen_View_Helper_Abstract
@@ -16,27 +17,27 @@ class View_Helper_Info_Dashboard_Modal_AddPanel extends CMF_Hydrogen_View_Helper
 	{
 		$w				= (object) $this->getWords( 'add-panel', 'info/dashboard' );
 
-		$fieldPanels	= UI_HTML_Tag::create( 'div', $w->emptyPanels, array( 'class' => 'alert alert-info' ) );
+		$fieldPanels	= HtmlTag::create( 'div', $w->emptyPanels, array( 'class' => 'alert alert-info' ) );
 		$panelsInBoard	= explode( ',', $this->dashboard->panels );
 		if( $this->panels ){
-			$fieldPanels	= UI_HTML_Tag::create( 'div', $w->noMorePanels, array( 'class' => 'alert alert-info' ) );
+			$fieldPanels	= HtmlTag::create( 'div', $w->noMorePanels, array( 'class' => 'alert alert-info' ) );
 			$list	= [];
 			foreach( $this->panels as $panelId => $panel ){
 				if( in_array( $panelId, $panelsInBoard ) )
 					continue;
-				$input	= UI_HTML_Tag::create( 'input', NULL, array(
+				$input	= HtmlTag::create( 'input', NULL, array(
 					'type'	=> 'checkbox',
 					'name'	=> 'panels[]',
 					'value'	=> $panelId,
 				) );
 				$key	= str_pad( $panel->rank, 3, 0, STR_PAD_LEFT ).'.'.uniqid();
-				$list[$key]	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$panel->title, array(
+				$list[$key]	= HtmlTag::create( 'label', $input.'&nbsp;'.$panel->title, array(
 					'class'	=> 'checkbox',
 				) );
 			}
 			ksort( $list );
 			if( $list ){
-				$heading	= UI_HTML_Tag::create( 'h4', $w->labelPanels );
+				$heading	= HtmlTag::create( 'h4', $w->labelPanels );
 				$fieldPanels	= '
 				<div class="row-fluid">
 					<div class="span12">
@@ -49,8 +50,8 @@ class View_Helper_Info_Dashboard_Modal_AddPanel extends CMF_Hydrogen_View_Helper
 			}
 		}
 
-		$iconAddBoard	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
-		$iconAddPanel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
+		$iconAddBoard	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
+		$iconAddPanel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
 
 		return '
 <form action="./info/dashboard/addPanels" method="post">

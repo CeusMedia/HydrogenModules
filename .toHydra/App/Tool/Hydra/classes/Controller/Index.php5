@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
@@ -70,8 +71,8 @@ class Controller_Index extends Controller{
 
 				foreach( $listModulesMissing as $module ){
 					$url	= './admin/module/installer/index/'.$module;
-					$link	= UI_HTML_Tag::create( 'a', $module, array( 'href' => $url ) );
-					$span	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'icon module module-status-4' ) );
+					$link	= HtmlTag::create( 'a', $module, array( 'href' => $url ) );
+					$span	= HtmlTag::create( 'span', $link, array( 'class' => 'icon module module-status-4' ) );
 					$this->env->getMessenger()->noteFailure( 'Modul '.$span.' ist nicht vollständig installiert.' );
 				}
 				$this->addData( 'remote', $remote );

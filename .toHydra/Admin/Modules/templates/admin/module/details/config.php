@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['tab-config'];
 
@@ -15,16 +16,16 @@ if( $module->config ){
 //		else if( $item->protected === "yes" )
 //			$item->value	= '<em class="muted">protected</em>';
 		$label	= View_Helper_Module::renderModuleConfigLabel( $module, $item );
-		$key		= UI_HTML_Tag::create( 'td', $label );
-		$value		= UI_HTML_Tag::create( 'td', $item->value, array( 'class' => 'config-type-'.$item->type ) );
+		$key		= HtmlTag::create( 'td', $label );
+		$value		= HtmlTag::create( 'td', $item->value, array( 'class' => 'config-type-'.$item->type ) );
 		$rows[strtolower( $item->key )]	= '<tr>'.$key.$value.'</tr>';
 	}
 	ksort( $rows );
-	$tbody		= UI_HTML_Tag::create( 'tbody', join( $rows ) );
+	$tbody		= HtmlTag::create( 'tbody', join( $rows ) );
 	$heads		= UI_HTML_Elements::TableHeads( array( $w->headKey, $w->headValue ) );
-	$thead		= UI_HTML_Tag::create( 'thead', $heads );
+	$thead		= HtmlTag::create( 'thead', $heads );
 	$colgroup	= UI_HTML_Elements::ColumnGroup( '25%', '75%' );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'striped' ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'striped' ) );
 }
 return $table;
 ?>

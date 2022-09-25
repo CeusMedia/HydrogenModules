@@ -1,8 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['index'];
 $tabs		= View_Manage_My_User::renderTabs( $env, 'avatar' );
 
-$iconFile	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
+$iconFile	= HtmlTag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
 
 $helperUpload	= new View_Helper_Input_File( $env );
 $helperUpload->setName( 'upload' );
@@ -13,13 +15,13 @@ $maxSize	= Alg_UnitParser::parse( $moduleConfig->get( 'image.upload.maxFileSize'
 $maxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $maxSize ) );
 $maxSize	= Alg_UnitFormater::formatBytes( $maxSize );
 
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
 $imageAvatar	= '';
 $buttonRemove	= '';
 if( $avatar ){
 	$imageAvatar	= View_Helper_UserAvatar::renderStatic( $env, $user, 256 );
 	$imageAvatar	= '<div class="thumbnail" style="max-width: 256px">'.$imageAvatar.'</div>';
-	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
 		'href'	=> './manage/my/user/avatar/remove',
 		'class'	=> 'btn btn-inverse btn-small'
 	) );

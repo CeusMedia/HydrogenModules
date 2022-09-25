@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconEnabled	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/accept.png', $words['states'][1] );
 $iconDisabled	= UI_HTML_Elements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/delete.png', $words['states'][0] );
@@ -11,7 +12,7 @@ foreach( $sources as $sourceId => $source ){
 		$state		= $iconEnabled;
 		$urlRefresh	= './admin/module/source/refresh/'.$sourceId."?from=admin/module/source";
 		$button		= UI_HTML_Elements::LinkButton( $urlRefresh, $iconRefresh, 'button tiny' );
-		$button		= UI_HTML_Tag::create( 'a', $iconRefresh, array(
+		$button		= HtmlTag::create( 'a', $iconRefresh, array(
 			'href'		=> $urlRefresh,
 			'class'		=> 'button tiny locklayer-auto',
 			'title'		=> 'Quelle neu einlesen',
@@ -22,11 +23,11 @@ foreach( $sources as $sourceId => $source ){
 	$label	= $source->title;
 	$link	= UI_HTML_Elements::Link( './admin/module/source/edit/'.$sourceId, $sourceId );
 	$type	= $words['types'][$source->type].'  <em><small class="counter-modules"></small></em>';
-	$cellId		= UI_HTML_Tag::create( 'td', $link );
-	$cellLabel	= UI_HTML_Tag::create( 'td', $label );
-	$cellType	= UI_HTML_Tag::create( 'td', $type );
-	$cellActive	= UI_HTML_Tag::create( 'td', $state );
-	$rows[$sourceId]		= UI_HTML_Tag::create( 'tr',
+	$cellId		= HtmlTag::create( 'td', $link );
+	$cellLabel	= HtmlTag::create( 'td', $label );
+	$cellType	= HtmlTag::create( 'td', $type );
+	$cellActive	= HtmlTag::create( 'td', $state );
+	$rows[$sourceId]		= HtmlTag::create( 'tr',
 		$cellId.$cellLabel.$cellType.$cellActive,
 		array( 'class' => 'source', 'data-id' => $sourceId )
 	);
@@ -35,7 +36,7 @@ ksort( $rows );
 
 $w			= (object) $words['index'];
 
-$buttonAdd	= UI_HTML_Tag::create( 'button', '<span>'.$w->buttonAdd.'</span>', array(
+$buttonAdd	= HtmlTag::create( 'button', '<span>'.$w->buttonAdd.'</span>', array(
 	'type'					=> 'button',
 	'class'					=> 'button add locklayer-auto',
 	'onclick'				=> 'document.location.href = \'./admin/module/source/add\';',

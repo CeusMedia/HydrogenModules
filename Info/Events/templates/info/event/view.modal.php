@@ -1,13 +1,14 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconDetails		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconParticipate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconNotice			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
-$iconClose			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'';
+$iconDetails		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconParticipate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconNotice			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
+$iconClose			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'';
 
 $factLabelDate		= date( 'j.n.Y', strtotime( $event->dateStart ) );
 $factLabelTime		= date( 'H:i', strtotime( $event->dateStart.' '.$event->timeStart ) ).' &minus; '.date( 'H:i', strtotime( $event->dateStart.' '.$event->timeEnd ) );
-$factLabelPlace		= UI_HTML_Tag::create( 'strong', $event->address->title );
+$factLabelPlace		= HtmlTag::create( 'strong', $event->address->title );
 $factLabelAddress	= $event->address->street.' '.$event->address->number.'<br/>'.$event->address->postcode.' '.$event->address->city;
 
 return	'

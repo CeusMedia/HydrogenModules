@@ -1,7 +1,8 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 
 $authorRelationsByAuthorId	= [];
 foreach( $articleAuthors as $item )
@@ -82,7 +83,7 @@ $panelAdd	= '
 				</div>
 			</div>
 			<div class="buttonbar">
-				'.UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+				'.HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary',

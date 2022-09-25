@@ -1,40 +1,41 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $modelForm	= new Model_Form( $env );
 $modelBlock	= new Model_Form_Block( $env );
 
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconBlock	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
-$iconForm	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconBlock	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
+$iconForm	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
 
-$listWithinForms	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
+$listWithinForms	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinForms ){
 	$list	= [];
 	foreach( $withinForms as $item ){
-		$link	= UI_HTML_Tag::create( 'a', $iconForm.'&nbsp;'.$item->title, array(
+		$link	= HtmlTag::create( 'a', $iconForm.'&nbsp;'.$item->title, array(
 			'href'	=> './manage/form/edit/'.$item->formId,
 		) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
+		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$listWithinForms	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+	$listWithinForms	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
 }
 
-$listWithinBlocks	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
+$listWithinBlocks	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinBlocks ){
 	$list	= [];
 	foreach( $withinBlocks as $item ){
-		$link	= UI_HTML_Tag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
+		$link	= HtmlTag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
 			'href'	=> './manage/form/block/edit/'.$item->blockId,
 		) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
+		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$listWithinBlocks	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+	$listWithinBlocks	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
 }
 
-$listBlocksWithin	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
+$listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 $matches		= [];
 preg_match_all( '/\[block_(\S+)\]/', $block->content, $matches );
 if( isset( $matches[0] ) && count( $matches[0] ) ){
@@ -43,13 +44,13 @@ if( isset( $matches[0] ) && count( $matches[0] ) ){
 		$item	= $modelBlock->getByIndex( 'identifier', $matches[1][$nr] );
 		if( !$item )
 			continue;
-		$link	= UI_HTML_Tag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
+		$link	= HtmlTag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
 			'href'	=> './manage/form/block/edit/'.$item->blockId,
 		) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
+		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	if( $list )
-		$listBlocksWithin	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+		$listBlocksWithin	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
 }
 return '
 <h2><span class="muted">Block:</span> '.$block->title.'</h2>
@@ -76,7 +77,7 @@ return '
 				<a href="./manage/form/block" class="btn">'.$iconList.' zur Liste</a>
 				<a href="./manage/form/block/view/'.$block->blockId.'" class="btn btn-info">'.$iconView.' anzeigen</a>
 				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' speichern</button>
-				'.UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 					'href'		=> ( $withinForms || $withinBlocks ) ? NULL : './manage/form/block/remove/'.$block->blockId,
 					'class'		=> 'btn btn-danger',
 					'disabled'	=> ( $withinForms || $withinBlocks ) ? 'disabled' : NULL,

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -72,7 +73,7 @@ class View_Helper_Module_CodeViewer extends CMF_Hydrogen_View_Helper_Abstract {
 		$pathJsLib		= $config->get( 'path.scripts.lib' );
 
 		$content	= FS_File_Reader::load( $pathFile.$fileName );
-#		$code		= UI_HTML_Tag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
+#		$code		= HtmlTag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
 		$body		= '
 <style>
 div.CodeMirror,

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 #print_m( $projects );
 #die;
@@ -12,37 +13,37 @@ if( $relations ){
 //print_m( $relation );
 //die;
 		$url	= './manage/project/'.$relation->projectId;
-		$link	= UI_HTML_Tag::create( 'a', $relation->project->title, array( 'href' => $url ) );
+		$link	= HtmlTag::create( 'a', $relation->project->title, array( 'href' => $url ) );
 		$urlRemove		= './manage/customer/project/remove/'.$relation->customerId.'/'.$relation->projectId;
 		$iconRemove		= '<i class="icon-remove icon-white"></i>';
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
 			'class'		=> 'btn btn-small btn-danger',
 			'href'		=> $urlRemove,
 			'title'		=> 'entfernen',
 		) );
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', $buttonRemove )
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $link ),
+			HtmlTag::create( 'td', $buttonRemove )
 		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( "100%" );
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
 		'Titel'
 	) ) );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-	$table	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$tbody	= HtmlTag::create( 'tbody', $rows );
+	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', '<i class="icon-plus icon-white"></i> hinzufügen', array( 'href' => './manage/customer/project/add', 'class' => 'btn btn-success' ) );
+$buttonAdd	= HtmlTag::create( 'a', '<i class="icon-plus icon-white"></i> hinzufügen', array( 'href' => './manage/customer/project/add', 'class' => 'btn btn-success' ) );
 
 
 /*
 $list	= [];
 foreach( $projects as $project ){
 	
-	$list[]	= UI_HTML_Tag::create( 'li', $project->title, array( 'class' => 'autocut' ) );
+	$list[]	= HtmlTag::create( 'li', $project->title, array( 'class' => 'autocut' ) );
 }
-$list	= UI_HTML_Tag::create( 'ul', $list );
+$list	= HtmlTag::create( 'ul', $list );
 */
 
 $optProject	= array( '' => '' );

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconOpen		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-folder-open" ) );
@@ -52,11 +53,11 @@ if( $template->styles ){
 		), array( 'class' => $rowClass ) );
 	}
 	$listStyles	= HtmlTag::create( 'table', array(
-		UI_HTML_Elements::ColumnGroup( array(
+		HtmlElements::ColumnGroup( array(
 			'',
 			'120px'
 		) ),
-		HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+		HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 			$words['edit-image-list']['headPath'],
 			$words['edit-image-list']['headActions'],
 		) ) ),

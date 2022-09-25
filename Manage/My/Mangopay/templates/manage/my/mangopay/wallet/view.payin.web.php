@@ -1,7 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $optCardType	= UI_HTML_Elements::Options( $wordsCards );
-$iconBack		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-arrow-left" ) );
-$iconNext		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-arrow-right" ) );
+$iconBack		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-arrow-left" ) );
+$iconNext		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-arrow-right" ) );
 
 $linkBack	= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/wallet' );
 $buttonCancel	= '<a href="'.$linkBack.'" class="btn">'.$iconBack.' zurück</a>';

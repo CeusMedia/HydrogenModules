@@ -1,14 +1,15 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconDetails		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconParticipate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconNotice			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
-$iconClose			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'';
+$iconDetails		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconParticipate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconNotice			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
+$iconClose			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'';
 
-$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-info-circle' ) );
-$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconMarker		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-map-marker' ) );
-$iconNote		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
+$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-info-circle' ) );
+$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconMarker		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-map-marker' ) );
+$iconNote		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
 
 $panelSearch	= $view->loadTemplateFile( 'info/event/panel.search.php', array( 'from' => 'info/event/map' ) );
 
@@ -19,23 +20,23 @@ if( $center ){
 	if( $branches ){
 		$list	= [];
 		foreach( $branches as $branch ){
-			$link	= UI_HTML_Tag::create( 'a', $branch->title, array(
+			$link	= HtmlTag::create( 'a', $branch->title, array(
 				'href'		=> './index/view/'.$branch->branchId,
 				'onclick'	=> "clickItem($(this).parent(), true); return false;",
 			) );
-			$list[]	= UI_HTML_Tag::create( 'li', $link, array(
+			$list[]	= HtmlTag::create( 'li', $link, array(
 				'data-longitude'	=> $branch->longitude,
 				'data-latitude'		=> $branch->latitude,
 			) );
 		}
 	}
-	$list		= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'list-branches nav nav-pills nav-stacked' ) );
+	$list		= HtmlTag::create( 'ul', $list, array( 'class' => 'list-branches nav nav-pills nav-stacked' ) );
 */
 	$list	= '<div><em class="muted">Nichts gefunden.</em></div>';
 	if( $events ){
 		$list	= [];
 		foreach( $events as $nr => $event ){
-			$link	= UI_HTML_Tag::create( 'a', $iconMarker.'&nbsp;'.$event->title, array(
+			$link	= HtmlTag::create( 'a', $iconMarker.'&nbsp;'.$event->title, array(
 			//	'href'				=> './index/view/'.$branch->branchId,
 				'href'				=> '#accordion-collapse-'.$event->eventId,
 				'onclick'			=> "clickItem($(this), true);",
@@ -48,27 +49,27 @@ if( $center ){
 			) );
 			$logo	= '';
 /*			if( $branch->company->logo ){
-				$logo	= UI_HTML_Tag::create( 'img', NULL, array(
+				$logo	= HtmlTag::create( 'img', NULL, array(
 					'src'		=> 'images/companies/'.$branch->company->logo,
 					'width'		=> '64px',
 					'height'	=> '64px',
 				) );
 			}*/
-			$heading	= UI_HTML_Tag::create( 'div', $link, array(
+			$heading	= HtmlTag::create( 'div', $link, array(
 				'class'		=> 'accordion-heading'
 			) );
-			$buttonView	= UI_HTML_Tag::create( 'a', $iconView.'&nbsp;anzeigen', array(
+			$buttonView	= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', array(
 				'class'	=> 'btn btn-info',
 				'href'	=> './index/view/'.$event->eventId
 			) );
-			$buttonView		= UI_HTML_Tag::create( 'a', $iconView.'&nbsp;anzeigen', array(
+			$buttonView		= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', array(
 				'href'			=> './ajax/info/event/modalView/'.$event->eventId,
 				'data-toggle'	=> 'modal',
 				'data-target'	=> "#modal-event-view",
 				'class'			=> 'btn btn-info',
 			) );
 
-			$buttonNote	= UI_HTML_Tag::create( 'a', $iconNote.'&nbsp;merken', array(
+			$buttonNote	= HtmlTag::create( 'a', $iconNote.'&nbsp;merken', array(
 				'class'	=> 'btn btn-small',
 				'href'	=> './index/note/'.$event->eventId
 			) );
@@ -90,19 +91,19 @@ if( $center ){
 	</div>
 </div>';
 
-			$content	= UI_HTML_Tag::create( 'div', $info, array(
+			$content	= HtmlTag::create( 'div', $info, array(
 				'class'		=> 'accordion-inner',
 			) );
-			$body		= UI_HTML_Tag::create( 'div', $content, array(
+			$body		= HtmlTag::create( 'div', $content, array(
 				'id'		=> 'accordion-collapse-'.$event->eventId,
 				'class'		=> 'accordion-body collapse',
 			) );
-			$list[]	= UI_HTML_Tag::create( 'div', $heading.$body, array(
+			$list[]	= HtmlTag::create( 'div', $heading.$body, array(
 				'class'				=> 'accordion-group',
 			) );
 		}
 	}
-	$list		= UI_HTML_Tag::create( 'div', $list, array(
+	$list		= HtmlTag::create( 'div', $list, array(
 		'class'		=> 'list-branches accordion',
 		'id'		=> 'accordion1',
 	) );

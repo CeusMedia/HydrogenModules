@@ -1,17 +1,19 @@
 <?php
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-check' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-check' ) );
 
 $helperUrl	= new \View_Helper_Mangopay_URL( $env );
 $helperUrl->set( ( isset( $backwardTo ) && $backwardTo ) ? $backwardTo :  'manage/my/mangopay/bank' );
 $helperUrl->setForwardTo( TRUE );
 //$helperUrl->setBackwardTo( TRUE );
 $helperUrl->setFrom( TRUE );
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
 	'href'	=> $helperUrl->render(),
 	'class'	=> 'btn',
 ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' weiter', array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' weiter', array(
 	'type'	=> "submit",
  	'name'	=> "save",
 	'value'	=> "select",

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helperCategory	= new View_Helper_Info_Manual_CategorySelector( $env );
 $helperCategory->setCategories( $categories );
@@ -14,12 +15,12 @@ $helperNav->setCategoryId( $categoryId );
 $buttonAdd	= "";
 $buttonReload	= "";
 if( $moduleConfig->get( 'editor' ) ){
-	$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-	$iconReload		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
+	$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+	$iconReload		= HtmlTag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
 	if( array_key_exists( 'add', $rights ) )
-		$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-primary" ) );
+		$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-primary" ) );
 	if( array_key_exists( 'edit', $rights ) )
-		$buttonReload	= UI_HTML_Tag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
+		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
 }
 
 return '

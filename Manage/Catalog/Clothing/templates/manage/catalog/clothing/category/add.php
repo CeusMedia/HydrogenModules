@@ -1,7 +1,8 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
 
 $optStatus		= array(
 	-2		=> 'deaktiviert',
@@ -19,7 +20,7 @@ $panelAdd		= '
 			<div class="row-fluid">
 				<div class="span10">
 					<label for="input_title">Titel</label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'		=> "text",
 						'id'		=> "input_title",
 						'name'		=> "title",

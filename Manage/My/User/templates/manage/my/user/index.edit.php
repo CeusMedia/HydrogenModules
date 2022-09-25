@@ -1,10 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w		= (object) $words['edit'];
 
 $optGender	= HTML::Options( $words['gender'], $user->gender );
 
 return HTML::DivClass( 'content-panel content-panel-form', array(
-	UI_HTML_Tag::create( 'h4', $w->heading ),
+	HtmlTag::create( 'h4', $w->heading ),
 	HTML::DivClass( 'content-panel-inner', array(
 		HTML::Form( './manage/my/user/edit', 'my_user_edit', array(
 			HTML::DivClass( 'row-fluid',
@@ -14,7 +16,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				).
 				HTML::DivClass( 'span2',
 					HTML::Label( 'salutation', $w->labelSalutation, '', $w->labelSalutation_title ).
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'name'			=> 'salutation',
 						'id'			=> 'input_salutation',
 						'value'			=> htmlentities( $user->salutation, ENT_QUOTES, 'UTF-8' ),
@@ -26,7 +28,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				HTML::DivClass( 'span3',
 					HTML::Label( 'firstname', $w->labelFirstname, $mandatoryFirstname ? 'mandatory' : '' ).
 		//				HTML::Input( 'firstname', $user->firstname, 'span12' )
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'name'			=> 'firstname',
 						'id'			=> 'input_firstname',
 						'value'			=> htmlentities( $user->firstname, ENT_QUOTES, 'UTF-8' ),
@@ -39,7 +41,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				HTML::DivClass( 'span4',
 					HTML::Label( 'surname', $w->labelSurname, $mandatorySurname ? 'mandatory' : '' ).
 		//				HTML::Input( 'surname', $user->surname, 'span12' )
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'surname',
 						'id'			=> 'input_surname',
@@ -54,14 +56,14 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span3',
 					HTML::Label( 'number', $w->labelCountry, $mandatoryAddress ? 'mandatory' : '' ).
-					UI_HTML_Tag::create( 'select', UI_HTML_Elements::Options( $countries, $user->country ), array(
+					HtmlTag::create( 'select', UI_HTML_Elements::Options( $countries, $user->country ), array(
 						'name'			=> 'country',
 						'id'			=> 'input_country',
 						'class'			=> 'span12',
 						'required'		=> $mandatoryAddress ? 'required' : NULL,
 						'autocomplete'	=> 'country'
 					) )
-/*					UI_HTML_Tag::create( 'input', NULL, array(
+/*					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'country',
 						'id'			=> 'input_country',
@@ -73,7 +75,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				).
 				HTML::DivClass( 'span2',
 					HTML::Label( 'postcode', $w->labelPostcode, $mandatoryAddress ? 'mandatory' : '', $w->labelPostcode_title ).
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'postcode',
 						'id'			=> 'input_postcode',
@@ -85,7 +87,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				).
 				HTML::DivClass( 'span3',
 					HTML::Label( 'city', $w->labelCity, $mandatoryAddress ? 'mandatory' : '' ).
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'city',
 						'id'			=> 'input_city',
@@ -97,7 +99,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				).
 				HTML::DivClass( 'span4',
 					HTML::Label( 'street', $w->labelStreet, $mandatoryAddress ? 'mandatory' : '' ).
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'street',
 						'id'			=> 'input_street',
@@ -120,12 +122,12 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				)
 			),
 			HTML::Buttons( array(
-				UI_HTML_Tag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
+				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
 				HTML::DivClass( 'row-fluid',
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
 							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
-							UI_HTML_Tag::create( 'input', '', array(
+							HtmlTag::create( 'input', '', array(
 								'type'			=> 'password',
 								'name'			=> 'password',
 								'id'			=> 'input_password',

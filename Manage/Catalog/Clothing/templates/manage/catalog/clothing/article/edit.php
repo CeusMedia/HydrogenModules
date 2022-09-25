@@ -1,8 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
 
 $optCategoryId	= [];
 foreach( $categoryMap as $item )
@@ -20,7 +21,7 @@ $panelFacts	= '
 			<div class="row-fluid">
 				<div class="span8">
 					<label for="input_title">Titel</label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'		=> "text",
 						'id'		=> "input_title",
 						'name'		=> "title",
@@ -37,7 +38,7 @@ $panelFacts	= '
 			<div class="row-fluid">
 				<div class="span3">
 					<label for="input_form">Ausführung</label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'		=> "text",
 						'id'		=> "input_form",
 						'name'		=> "form",
@@ -48,7 +49,7 @@ $panelFacts	= '
 				</div>
 				<div class="span3">
 					<label for="input_size">Größe</label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'		=> "text",
 						'id'		=> "input_size",
 						'name'		=> "size",
@@ -59,7 +60,7 @@ $panelFacts	= '
 				</div>
 				<div class="span3">
 					<label for="input_color">Farbe</label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'		=> "text",
 						'id'		=> "input_color",
 						'name'		=> "color",
@@ -72,7 +73,7 @@ $panelFacts	= '
 			<div class="row-fluid">
 				<div class="span3">
 					<label for="input_price">Preis <small class="muted">(€€.¢¢)</small></label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'		=> "number",
 						'step'		=> '0.01',
 						'min'		=> '0',
@@ -86,7 +87,7 @@ $panelFacts	= '
 				</div>
 				<div class="span3">
 					<label for="input_price">Währung</label>
-					'.UI_HTML_Tag::create( 'select', $optCurrency, array(
+					'.HtmlTag::create( 'select', $optCurrency, array(
 						'id'		=> "input_currency",
 						'name'		=> "currency",
 						'class'		=> "span12",
@@ -95,7 +96,7 @@ $panelFacts	= '
 				</div>
 				<div class="span3">
 					<label for="input_price">Lagerbestand</label>
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'		=> "number",
 						'step'		=> '1',
 						'min'		=> '0',
@@ -121,23 +122,23 @@ $panelFacts	= '
 	</div>
 </div>';
 
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconUpload		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconUpload		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
 
 $image			= '';
-$buttonRemove	= UI_HTML_Tag::create( 'button', $iconRemove.'&nbsp;entfernen', array(
+$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;entfernen', array(
 	'type'		=> 'button',
 	'disabled'	=> 'disabled',
 	'class'		=> 'btn btn-inverse'
 ) );
 
 if( $article->image ){
-	$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 		'href'	=> './manage/catalog/clothing/article/setImage/'.$article->articleId.'/remove',
 		'class'	=> 'btn btn-inverse'
 	) );
-	$image	= UI_HTML_Tag::create( 'img', NULL, array(
+	$image	= HtmlTag::create( 'img', NULL, array(
 		'src'	=> $path.$article->image,
 		'class'	=> 'img-polaroid',
 	) ).'<hr/>';
@@ -145,7 +146,7 @@ if( $article->image ){
 $upload		= new View_Helper_Input_File( $env );
 $upload->setLabel( $iconUpload );
 
-$buttonSave	= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;hochladen', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;hochladen', array(
 	'type'	=> "submit",
 	'name'	=> "save",
  	'class'	=> "btn btn-primary",

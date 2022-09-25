@@ -1,10 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $listImages	= '<div><em><small class="muted">'.$words['editImages']['noImages'].'</small></em></div>';
 if( $images ){
 	$list	= [];
 	foreach( $images as $image ){
 		$thumb		= $this->renderThumbnail( $image, TRUE, $gallery->path );
-		$thumb		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $baseUri.$gallery->path.'/'.$image->filename ) );
+		$thumb		= HtmlTag::create( 'img', NULL, array( 'src' => $baseUri.$gallery->path.'/'.$image->filename ) );
 		$urlRemove	= './manage/gallery/removeImage/'.$image->galleryImageId;
 		$source		= new UI_Image( $baseUri.$gallery->path.'/'.$image->filename );
 		$size		= $source->getWidth().'x'.$source->getHeight();
@@ -53,9 +55,9 @@ if( $images ){
 		</form>
 	</div>
 </div>';
-		$list[]	= UI_HTML_Tag::create( 'li', $item, array( 'class' => 'gallery-image' ) );
+		$list[]	= HtmlTag::create( 'li', $item, array( 'class' => 'gallery-image' ) );
 	}
-	$listImages	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'gallery-images' ) );
+	$listImages	= HtmlTag::create( 'ul', $list, array( 'class' => 'gallery-images' ) );
 }
 
 return '

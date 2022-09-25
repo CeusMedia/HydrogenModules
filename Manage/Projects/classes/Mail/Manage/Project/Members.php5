@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class Mail_Manage_Project_Members extends Mail_Manage_Project_Abstract
 {
 	protected function generate(): self
@@ -24,7 +26,7 @@ class Mail_Manage_Project_Members extends Mail_Manage_Project_Abstract
 		//$helperRelations->setTableClass( 'limited' );
 		if( $helperRelations->hasRelations() ){
 			$relations	= $helperRelations->render();
-			$relations	= UI_HTML_Tag::create( 'h4', $w->headingRelations ).$relations;
+			$relations	= HtmlTag::create( 'h4', $w->headingRelations ).$relations;
 		}
 
 		//  --  FORMAT: PLAIN TEXT  --  //

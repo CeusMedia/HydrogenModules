@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $logic	= new Logic_Bug( $this->env );
 $states	= [];
@@ -53,7 +54,7 @@ return '
 			<ul class="input">
 				<li>
 					<label for="content">'.$words['edit']['labelContent'].'</label><br/>
-					'.UI_HTML_Tag::create( 'textarea', '', array( 'name' => 'note', 'rows' => 13 ) ).'
+					'.HtmlTag::create( 'textarea', '', array( 'name' => 'note', 'rows' => 13 ) ).'
 				</li>
 			</ul>
 		</div>

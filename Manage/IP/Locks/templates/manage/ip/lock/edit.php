@@ -1,34 +1,35 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $data	= print_m( $lock, NULL, NULL, TRUE );
 
-$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-$iconLock	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconUnlock	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
+$iconLock	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconUnlock	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
 
 $helperTime = FALSE;
 if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){
 	$helperTime	= new View_Helper_TimePhraser( $env );
 }
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
 	'href'		=> './manage/ip/lock/',
 	'class'		=> 'btn btn-small',
 ) );
 
-$buttonStatus	= UI_HTML_Tag::create( 'a', $iconLock.' aktivieren', array(
+$buttonStatus	= HtmlTag::create( 'a', $iconLock.' aktivieren', array(
 	'href'		=> './manage/ip/lock/lock/'.$lock->ipLockId,
 	'class'		=> 'btn btn-small btn-success',
 ) );
 if( $lock->status > 0 ){
-	$buttonStatus	= UI_HTML_Tag::create( 'a', $iconUnlock.' deaktivieren', array(
+	$buttonStatus	= HtmlTag::create( 'a', $iconUnlock.' deaktivieren', array(
 		'href'		=> './manage/ip/lock/unlock/'.$lock->ipLockId,
 		'class'		=> 'btn btn-small btn-inverse',
 	) );
 }
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' entfernen', array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', array(
 	'href'		=> './manage/ip/lock/cancel/'.$lock->ipLockId,
 	'class'		=> 'btn btn-small btn-danger',
 ) );

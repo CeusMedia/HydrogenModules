@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Module_Source extends Controller{
@@ -226,12 +227,12 @@ class Controller_Admin_Module_Source extends Controller{
 			if( $linkToViewer ){
 				$url	= './admin/module/viewer/view/'.$module->id;
 				$class	= 'icon module module-status0';
-				$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url ) );
-				$label	= UI_HTML_Tag::create( 'span', $link, array( 'class' => $class ) );
+				$link	= HtmlTag::create( 'a', $label, array( 'href' => $url ) );
+				$label	= HtmlTag::create( 'span', $link, array( 'class' => $class ) );
 			}
-			$list[]	= UI_HTML_Tag::create( 'li', $label );
+			$list[]	= HtmlTag::create( 'li', $label );
 		}
-		return UI_HTML_Tag::create( 'ul', $list );
+		return HtmlTag::create( 'ul', $list );
 	}
 
 	public function refresh( $sourceId, $toList = TRUE ){
@@ -271,7 +272,7 @@ class Controller_Admin_Module_Source extends Controller{
 			}
 		}
 
-		$sourceLabel	= UI_HTML_Tag::create( 'acronym', $sourceId, array( 'title' => $source->title ) );
+		$sourceLabel	= HtmlTag::create( 'acronym', $sourceId, array( 'title' => $source->title ) );
 		if( $modulesAdded || $modulesRemoved || $modulesUpdated ){
 			$this->messenger->noteSuccess( $words->successRefresh, $sourceLabel, count( $modulesAdded ), count( $modulesRemoved ), count( $modulesUpdated ) );
 			if( $modulesAdded ){
@@ -287,7 +288,7 @@ class Controller_Admin_Module_Source extends Controller{
 			if( $modulesUpdated ){
 				foreach( $modulesUpdated as $module ){
 					$versions			= $module->version.' &rArr; '.$module->versionNew;
-					$module->title		.= '&nbsp;'.UI_HTML_Tag::create( 'small', '('.$versions.')' );
+					$module->title		.= '&nbsp;'.HtmlTag::create( 'small', '('.$versions.')' );
 				}
 				$list	= $this->renderModuleLinkList( $modulesUpdated, TRUE );
 				$this->messenger->noteNotice( $words->noticeRefreshModulesUpdated, $list );

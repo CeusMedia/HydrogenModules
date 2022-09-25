@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helperTime		= new View_Helper_TimePhraser( $env );
 $helperTime->setTemplate( $words['index']['timestampTemplate'] );
@@ -6,9 +7,9 @@ $helperTime->setMode( View_Helper_TimePhraser::MODE_BREAK );
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconArchive	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconArchive	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $runReportChannelLabels	= $wordsGeneral['job-run-report-channels'];
 
@@ -41,8 +42,8 @@ if( $run->reportMode ){
 	$reportReceivers	= [];
 	if( $run->reportReceivers ){
 		foreach( preg_split( '/\s*,\s*/', $run->reportReceivers ) as $receiver )
-		$reportReceivers	= UI_HTML_Tag::create( 'li', $receiver );
-		$reportReceivers	= UI_HTML_Tag::create( 'ul', $reportReceivers );
+		$reportReceivers	= HtmlTag::create( 'li', $receiver );
+		$reportReceivers	= HtmlTag::create( 'ul', $reportReceivers );
 		$facts['Report Receivers']	= $reportReceivers;
 	}
 }
@@ -55,31 +56,31 @@ if( in_array( $run->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::
 
 $list	= [];
 foreach( $facts as $factKey => $factValue ){
-	$list[]	= UI_HTML_Tag::create( 'dt', $factKey );
-	$list[]	= UI_HTML_Tag::create( 'dd', $factValue );
+	$list[]	= HtmlTag::create( 'dt', $factKey );
+	$list[]	= HtmlTag::create( 'dd', $factValue );
 }
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', array(
 	'href'	=> './manage/job/run',
 	'class'	=> 'btn btn-small',
 ) );
 
-$buttonArchive	= UI_HTML_Tag::create( 'a', $iconArchive.'&nbsp;archivieren', array(
+$buttonArchive	= HtmlTag::create( 'a', $iconArchive.'&nbsp;archivieren', array(
 	'href'	=> './manage/job/run/archive/'.$run->jobRunId,
 	'class'	=> 'btn btn-inverse',
 ) );
 
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 	'href'	=> './manage/job/run/remove/'.$run->jobRunId,
 	'class'	=> 'btn btn-danger',
 ) );
 
 
-$panelFactsJob	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h4', 'Job Run Facts' ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) ),
-		UI_HTML_Tag::create( 'div', join( ' ', array(
+$panelFactsJob	= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h4', 'Job Run Facts' ),
+	HtmlTag::create( 'div', array(
+		HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) ),
+		HtmlTag::create( 'div', join( ' ', array(
 			$buttonCancel,
 			$buttonArchive,
 			$buttonRemove,
@@ -101,14 +102,14 @@ function formatNumber( $number ): string
 //  --  PANEL FACTS: DEFINITION  -- //
 $helperAttribute->setObject( $definition );
 $facts	= [];
-$facts['Identifier']	= UI_HTML_Tag::create( 'a', $definition->identifier, array( 'href' => './manage/job/definition/view/'.$definition->jobDefinitionId ) );
-$facts['Job-ID']		= UI_HTML_Tag::create( 'a', $definition->jobDefinitionId, array( 'href' => './manage/job/definition/view/'.$definition->jobDefinitionId ) );
+$facts['Identifier']	= HtmlTag::create( 'a', $definition->identifier, array( 'href' => './manage/job/definition/view/'.$definition->jobDefinitionId ) );
+$facts['Job-ID']		= HtmlTag::create( 'a', $definition->jobDefinitionId, array( 'href' => './manage/job/definition/view/'.$definition->jobDefinitionId ) );
 $facts['Mode']			= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_MODE )->render();
 $facts['Status']		= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_STATUS )->render();
 $facts['Class Method']	= $definition->className.' :: '.$definition->methodName;
-$facts['Runs']			= UI_HTML_Tag::create( 'span', formatNumber( $definition->runs ), array( 'class' => 'badge' ) );
-$facts['Success']		= UI_HTML_Tag::create( 'span', formatNumber( $definition->runs - $definition->fails ), array( 'class' => 'badge badge-success' ) ).( $definition->runs ? ' <small class="muted">('.round( ( $definition->runs - $definition->fails ) / $definition->runs * 100 ).'%)</small>' : '' );
-$facts['Fails']			= UI_HTML_Tag::create( 'span', formatNumber( $definition->fails ), array( 'class' => 'badge badge-important' ) ).( $definition->runs ? ' <small class="muted">('.round( $definition->fails / $definition->runs * 100 ).'%)</small>' : '' );
+$facts['Runs']			= HtmlTag::create( 'span', formatNumber( $definition->runs ), array( 'class' => 'badge' ) );
+$facts['Success']		= HtmlTag::create( 'span', formatNumber( $definition->runs - $definition->fails ), array( 'class' => 'badge badge-success' ) ).( $definition->runs ? ' <small class="muted">('.round( ( $definition->runs - $definition->fails ) / $definition->runs * 100 ).'%)</small>' : '' );
+$facts['Fails']			= HtmlTag::create( 'span', formatNumber( $definition->fails ), array( 'class' => 'badge badge-important' ) ).( $definition->runs ? ' <small class="muted">('.round( $definition->fails / $definition->runs * 100 ).'%)</small>' : '' );
 $facts['Created At']	= date( 'd.m.Y H:i:s', $definition->createdAt );
 if( $definition->modifiedAt )
 	$facts['Modified At']	= date( 'd.m.Y H:i:s', $definition->modifiedAt );
@@ -117,13 +118,13 @@ if( $definition->lastRunAt )
 
 $list	= [];
 foreach( $facts as $factKey => $factValue ){
-	$list[]	= UI_HTML_Tag::create( 'dt', $factKey );
-	$list[]	= UI_HTML_Tag::create( 'dd', $factValue );
+	$list[]	= HtmlTag::create( 'dt', $factKey );
+	$list[]	= HtmlTag::create( 'dd', $factValue );
 }
-$panelFactsDefinition	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h4', 'Job Definition Facts' ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) ),
+$panelFactsDefinition	= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h4', 'Job Definition Facts' ),
+	HtmlTag::create( 'div', array(
+		HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) ),
 	), array( 'class' => 'content-panel-inner' ) )
 ), array( 'class' => 'content-panel' ) );
 
@@ -152,9 +153,9 @@ if( in_array( $run->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::
 				</div>';
 				break;
 		}
-		$panelMessage	= UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'h4', 'Job Run' ),
-			UI_HTML_Tag::create( 'div', array(
+		$panelMessage	= HtmlTag::create( 'div', array(
+			HtmlTag::create( 'h4', 'Job Run' ),
+			HtmlTag::create( 'div', array(
 				$output
 			), array( 'class' => 'content-panel-inner' ) )
 		), array( 'class' => 'content-panel' ) );
@@ -162,16 +163,16 @@ if( in_array( $run->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::
 }
 
 
-return $tabs.UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'div', array(
+return $tabs.HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', array(
 		$panelFactsJob,
 	), array( 'class' => 'span6' ) ),
-	UI_HTML_Tag::create( 'div', array(
+	HtmlTag::create( 'div', array(
 		$panelFactsDefinition
 	), array( 'class' => 'span6' ) ),
 ), array( 'class' => 'row-fluid' ) ).
-UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'div', array(
+HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', array(
 		$panelMessage
 	), array( 'class' => 'span12' ) ),
 ), array( 'class' => 'row-fluid' ) ).'<style>

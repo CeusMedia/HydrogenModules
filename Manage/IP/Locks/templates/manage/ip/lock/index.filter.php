@@ -1,13 +1,14 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
-$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-zoom-out icon-white' ) );
-$buttonFilter	= UI_HTML_Tag::create( 'button', $iconFilter.' filtern', array(
+$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'icon-zoom-out icon-white' ) );
+$buttonFilter	= HtmlTag::create( 'button', $iconFilter.' filtern', array(
 	'type'	=> 'submit',
 	'name'	=> 'filter',
 	'class'	=> 'btn btn-info',
 ) );
-$buttonReset	= UI_HTML_Tag::create( 'a', $iconReset.' zurücksetzen', array(
+$buttonReset	= HtmlTag::create( 'a', $iconReset.' zurücksetzen', array(
 	'href'	=> './manage/ip/lock/order/reset',
 	'class'	=> 'btn btn-small btn-inverse',
 ) );
@@ -36,31 +37,31 @@ $optOrder	= array(
 $optOrder	= UI_HTML_Elements::Options( $optOrder, $filterOrder );
 
 $panelFilter	= HTML::DivClass( 'content-panel',
-	UI_HTML_Tag::create( 'h3', 'Filter' ).
+	HtmlTag::create( 'h3', 'Filter' ).
 	HTML::DivClass( 'content-panel-inner',
-		UI_HTML_Tag::create( 'form', array(
+		HtmlTag::create( 'form', array(
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12', array(
-					UI_HTML_Tag::create( 'label', 'IP-Adresse', array( 'for' => 'input_ip' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'text', 'name' => 'ip', 'id' => 'input_id', 'class' => 'span12', 'value' => htmlentities( $filterIp, ENT_QUOTES, 'UTF-8' ) ) ),
+					HtmlTag::create( 'label', 'IP-Adresse', array( 'for' => 'input_ip' ) ),
+					HtmlTag::create( 'input', NULL, array( 'type' => 'text', 'name' => 'ip', 'id' => 'input_id', 'class' => 'span12', 'value' => htmlentities( $filterIp, ENT_QUOTES, 'UTF-8' ) ) ),
 				) )
 			),
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12', array(
-					UI_HTML_Tag::create( 'label', 'Status', array( 'for' => 'input_status' ) ),
-					UI_HTML_Tag::create( 'select', $optStatus, array( 'name' => 'status', 'id' => 'input_status', 'class' => 'span12' ) ),
+					HtmlTag::create( 'label', 'Status', array( 'for' => 'input_status' ) ),
+					HtmlTag::create( 'select', $optStatus, array( 'name' => 'status', 'id' => 'input_status', 'class' => 'span12' ) ),
 				) )
 			),
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12', array(
-					UI_HTML_Tag::create( 'label', 'Sortierung', array( 'for' => 'input_sort' ) ),
-					UI_HTML_Tag::create( 'select', $optSort, array( 'name' => 'sort', 'id' => 'input_sort', 'class' => 'span12' ) ),
+					HtmlTag::create( 'label', 'Sortierung', array( 'for' => 'input_sort' ) ),
+					HtmlTag::create( 'select', $optSort, array( 'name' => 'sort', 'id' => 'input_sort', 'class' => 'span12' ) ),
 				) )
 			),
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12', array(
-					UI_HTML_Tag::create( 'label', 'Richtung', array( 'for' => 'input_order' ) ),
-					UI_HTML_Tag::create( 'select', $optOrder, array( 'name' => 'order', 'id' => 'input_order', 'class' => 'span12' ) ),
+					HtmlTag::create( 'label', 'Richtung', array( 'for' => 'input_order' ) ),
+					HtmlTag::create( 'select', $optOrder, array( 'name' => 'order', 'id' => 'input_order', 'class' => 'span12' ) ),
 				) )
 			),
 			HTML::DivClass( 'buttonbar',

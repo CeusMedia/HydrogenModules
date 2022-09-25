@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*
 $helperCategory	= new View_Helper_Info_Manual_CategorySelector( $env );
@@ -28,30 +30,30 @@ if( $files ){
 	$list	= [];
 	foreach( $order as $entry ){
 		$entry	= preg_replace( "/\.md$/", "", $entry );
-		$link	= UI_HTML_Tag::create( 'a', $entry, array( 'href' => './info/manual/view/'.$view->urlencode( $entry ) ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
+		$link	= HtmlTag::create( 'a', $entry, array( 'href' => './info/manual/view/'.$view->urlencode( $entry ) ) );
+		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+	$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
 }
 */
 $optParentId    = array( '' => '- ohne -' );
 foreach( $folders as $folder )
     $optParentId[$folder->manualPageId] = $folder->title;
-$optParentId    = UI_HTML_Elements::Options( $optParentId );
+$optParentId    = HtmlElements::Options( $optParentId );
 
 $buttonAdd		= "";
 $buttonReload	= "";
 if( $moduleConfig->get( 'editor' ) ){
-	$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-	$iconReload		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
+	$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+	$iconReload		= HtmlTag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
 	if( in_array( 'add', $rights ) )
-		$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-info" ) );
+		$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-info" ) );
 	if( in_array( 'reload', $rights ) )
-		$buttonReload	= UI_HTML_Tag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
+		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
 }
 
 $optFormat	= $words['formats'];
-$optFormat	= UI_HTML_Elements::Options( $optFormat, Model_Manual_Page::FORMAT_MARKDOWN );
+$optFormat	= HtmlElements::Options( $optFormat, Model_Manual_Page::FORMAT_MARKDOWN );
 
 return '
 <div class="row-fluid">

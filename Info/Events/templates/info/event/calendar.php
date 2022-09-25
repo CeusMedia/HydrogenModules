@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconDetails		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconParticipate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconNotice			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
-$iconClose			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'';
+$iconDetails		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconParticipate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconNotice			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
+$iconClose			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'';
 
 $helper	= new View_Helper_Info_Event_Calendar( $this->env );
 $helper->setEvents( $this->getData( 'events' ) );

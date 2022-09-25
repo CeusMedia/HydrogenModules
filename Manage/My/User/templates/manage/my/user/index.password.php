@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
 $env->page->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
@@ -35,7 +36,7 @@ extract( $view->populateTexts( array(
 ), 'html/manage/my/user/', array( 'pwdMinLength' => $pwdMinLength ) ) );
 
 return HTML::DivClass( 'content-panel content-panel-form', array(
-	UI_HTML_Tag::create( 'h4', $w->legend ),
+	HtmlTag::create( 'h4', $w->legend ),
 	HTML::DivClass( 'content-panel-inner',
 		HTML::Form( './manage/my/user/password', 'my_user_password', array(
 			$textPanelPasswordAbove ? HTML::DivClass( 'row-fluid', HTML::DivClass( 'span12', $textPanelPasswordAbove ) ) : '',
@@ -44,7 +45,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					HTML::DivClass( 'row-fluid',
 						HTML::DivClass( 'span12', array(
 							HTML::Label( 'passwordNew', $w->labelPasswordNew, 'mandatory', sprintf( $w->labelPasswordNew_title, $pwdMinLength ) ),
-							UI_HTML_Tag::create( 'input', NULL, array(
+							HtmlTag::create( 'input', NULL, array(
 								'type'			=> "password",
 								'name'			=> "passwordNew",
 								'id'			=> "input_passwordNew",
@@ -58,7 +59,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					HTML::DivClass( 'row-fluid',
 						HTML::DivClass( 'span12', array(
 							HTML::Label( 'passwordConfirm', $w->labelPasswordConfirm, 'mandatory', $w->labelPasswordConfirm_title ),
-							UI_HTML_Tag::create( 'input', NULL, array(
+							HtmlTag::create( 'input', NULL, array(
 								'type'			=> "password",
 								'name'			=> "passwordConfirm",
 								'id'			=> "input_passwordConfirm",
@@ -74,12 +75,12 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				$textPanelPasswordBelow ? HTML::DivClass( 'row-fluid', HTML::DivClass( 'span12', $textPanelPasswordBelow ) ) : '',
 			) ),
 			HTML::Buttons( array(
-				UI_HTML_Tag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
+				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
 				HTML::DivClass( 'row-fluid',
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
 							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
-							UI_HTML_Tag::create( 'input', '', array(
+							HtmlTag::create( 'input', '', array(
 								'type'			=> 'password',
 								'name'			=> 'passwordOld',
 								'id'			=> 'input_passwordOld',

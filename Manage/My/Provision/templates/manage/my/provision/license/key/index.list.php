@@ -1,12 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index.list'];
 
 $iconsStatus	= array(
-//	Model_Provision_User_License_Key::STATUS_	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove' ) ),
-	Model_Provision_User_License_Key::STATUS_NEW		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pause' ) ),
-	Model_Provision_User_License_Key::STATUS_ASSIGNED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-play' ) ),
-	Model_Provision_User_License_Key::STATUS_EXPIRED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-stop' ) ),
+//	Model_Provision_User_License_Key::STATUS_	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-remove' ) ),
+	Model_Provision_User_License_Key::STATUS_NEW		=> HtmlTag::create( 'i', '', array( 'class' => 'icon-pause' ) ),
+	Model_Provision_User_License_Key::STATUS_ASSIGNED	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-play' ) ),
+	Model_Provision_User_License_Key::STATUS_EXPIRED	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-stop' ) ),
 );
 
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
@@ -43,37 +44,37 @@ if( $userLicenseKeys ){
 		}
 		if( $userLicenseKey->status == 0 ){
 		}
-		$link	= UI_HTML_Tag::create( 'a', $userLicenseKey->userLicenseId, array(
+		$link	= HtmlTag::create( 'a', $userLicenseKey->userLicenseId, array(
 			'href'	=> './manage/my/provision/license/view/'.$userLicenseKey->userLicenseId,
 		) );
 	$helper->setUser( $userLicenseKey->userLicense->userId );
 //	$helper->setMode( 'inline' );
 	$userName	= $helper->render();
-//		$userName	= UI_HTML_Tag::create( 'small', $userLicense->user->firstname.' '.$userLicense->user->firstname, array( 'class' => 'muted' ) );
+//		$userName	= HtmlTag::create( 'small', $userLicense->user->firstname.' '.$userLicense->user->firstname, array( 'class' => 'muted' ) );
 		$product	= $userLicenseKey->product->title;
 /*		if( $userLicenseKey->product->url )
-			$product	= UI_HTML_Tag::create( 'a', $product, array(
+			$product	= HtmlTag::create( 'a', $product, array(
 				'href'		=> $userLicenseKey->product->url,
 				'target'	=> '_blank',
 			) );*/
 
-		$licenseUid	= UI_HTML_Tag::create( 'a', $userLicenseKey->userLicense->uid, array(
+		$licenseUid	= HtmlTag::create( 'a', $userLicenseKey->userLicense->uid, array(
 			'href'	=> './manage/my/provision/license/view/'.$userLicenseKey->userLicenseId
 		) );
 
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', 'Lizenznummer: '.$licenseUid.'<br/>Lizenz: '.$userLicenseKey->productLicense->title.'<br/>Produkt: '.$product.'<br/>Besitzer: '.$userName ),
-			UI_HTML_Tag::create( 'td', $status.'<br/>'.$duration ),
-			UI_HTML_Tag::create( 'td', 'Schlüssernummer: '.$userLicenseKey->uid ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', 'Lizenznummer: '.$licenseUid.'<br/>Lizenz: '.$userLicenseKey->productLicense->title.'<br/>Produkt: '.$product.'<br/>Besitzer: '.$userName ),
+			HtmlTag::create( 'td', $status.'<br/>'.$duration ),
+			HtmlTag::create( 'td', 'Schlüssernummer: '.$userLicenseKey->uid ),
 		), array( 'class' => $rowColors[$userLicenseKey->status] ) );
 	}
 }
-$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Lizenz', 'Zustand', 'Lizenzschlüssel' ) ) );
-$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-$list	= UI_HTML_Tag::create( 'table', $thead.$tbody, array( 'class' => 'table' ) );
+$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Lizenz', 'Zustand', 'Lizenzschlüssel' ) ) );
+$tbody	= HtmlTag::create( 'tbody', $list );
+$list	= HtmlTag::create( 'table', $thead.$tbody, array( 'class' => 'table' ) );
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', array(
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', array(
 	'href'	=> './manage/my/provision/license/add',
 	'class'	=> 'btn btn-success',
 ) );

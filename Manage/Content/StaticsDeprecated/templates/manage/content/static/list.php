@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $files	= $view->getData( 'files' );
 $path	= $view->getData( 'pathContent' );
 
@@ -19,15 +21,15 @@ foreach( $files as $file ){
 	}
 
 	$url	= './manage/content/static/edit/'.base64_encode( $filePath );				//
-	$link	= UI_HTML_Tag::create( 'a', $filePath, array( 'href' => $url ) );	//
+	$link	= HtmlTag::create( 'a', $filePath, array( 'href' => $url ) );	//
 	if( !is_writeable( $file->getPathname() ) ){								//  file ist not writable
 		$class	= "not-writeable";												//
-		$link	= UI_HTML_Tag::create( 'span', $label );						//
+		$link	= HtmlTag::create( 'span', $label );						//
 	}
-	$list[$filePath]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+	$list[$filePath]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 }
 ksort( $list );
-$list	= UI_HTML_Tag::create( 'ul', implode( $list ), array( 'class' => 'list-html' ) );
+$list	= HtmlTag::create( 'ul', implode( $list ), array( 'class' => 'list-html' ) );
 
 #return $list;
 

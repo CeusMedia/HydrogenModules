@@ -1,11 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['index-list'];
 
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/relocation', $page, ceil( $count / $limit ) );
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconGo		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconGo		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
 
 $table	= '<div class="muted"><em><small class="muted">'.$w->noEntries.'</small></em></div>';
 
@@ -20,25 +22,25 @@ if( $relocations ){
 			$class	= "error";
 		$uri	= "./manage/relocation/edit/".$relocation->relocationId;
 		$uri	= "./manage/relocation/edit/".$relocation->relocationId;
-		$link	= UI_HTML_Tag::create( 'a', $relocation->title, array( 'href' => $uri ) );
+		$link	= HtmlTag::create( 'a', $relocation->title, array( 'href' => $uri ) );
 		$usedAt		= $helper->convert( $relocation->usedAt, TRUE, $w->prefixTimePhraser, $w->suffixTimePhraser );
-		$buttonEdit	= UI_HTML_Tag::create( 'a', $iconEdit, array(
+		$buttonEdit	= HtmlTag::create( 'a', $iconEdit, array(
 			'href'	=> $uri,
 			'class'	=> 'btn btn-small',
 			'title'	=> $w->buttonEdit,
 		) );
-		$buttonGo	= UI_HTML_Tag::create( 'a', $iconGo, array(
+		$buttonGo	= HtmlTag::create( 'a', $iconGo, array(
 			'href'	=> $relocation->url,
 			'class'	=> 'btn btn-small',
 			'title'	=> $w->buttonGo,
 		) );
-		$buttons	= UI_HTML_Tag::create( 'div', array( $buttonEdit, $buttonGo ), array( 'class' => 'btn-group' ) );
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $relocation->relocationId ),
-			UI_HTML_Tag::create( 'td', $link.'<br/><small>'.$relocation->url.'</small>', array( 'class' => 'autocut' ) ),
-			UI_HTML_Tag::create( 'td', $relocation->views ),
-			UI_HTML_Tag::create( 'td', $usedAt ),
-			UI_HTML_Tag::create( 'td', $buttons ),
+		$buttons	= HtmlTag::create( 'div', array( $buttonEdit, $buttonGo ), array( 'class' => 'btn-group' ) );
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $relocation->relocationId ),
+			HtmlTag::create( 'td', $link.'<br/><small>'.$relocation->url.'</small>', array( 'class' => 'autocut' ) ),
+			HtmlTag::create( 'td', $relocation->views ),
+			HtmlTag::create( 'td', $usedAt ),
+			HtmlTag::create( 'td', $buttons ),
 		), array(
 			'data-status'	=> $relocation->status,
 			'data-url'		=> $relocation->url,
@@ -47,18 +49,18 @@ if( $relocations ){
 	}
 	$columns	= UI_HTML_Elements::ColumnGroup( "50px", "", "80px", "120px", "100px" );
 	$heads	= UI_HTML_Elements::TableHeads( array( $w->headId, $w->headTitle, $w->headViews, $w->headUsedAt, $w->headActions ) );
-	$thead	= UI_HTML_Tag::create( 'thead', $heads );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-	$table	= UI_HTML_Tag::create( 'table', $columns.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+	$thead	= HtmlTag::create( 'thead', $heads );
+	$tbody	= HtmlTag::create( 'tbody', $rows );
+	$table	= HtmlTag::create( 'table', $columns.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array(
 	'href'	=> './manage/relocation/add',
 	'class'	=> 'btn btn-success'
 ) );
 
-$abbrCount	= UI_HTML_Tag::create( 'abbr', $count, array( 'title' => $w->titleCount ) );
-$abbrTotal	= UI_HTML_Tag::create( 'abbr', $total, array( 'title' => $w->titleTotal ) );
+$abbrCount	= HtmlTag::create( 'abbr', $count, array( 'title' => $w->titleCount ) );
+$abbrTotal	= HtmlTag::create( 'abbr', $total, array( 'title' => $w->titleTotal ) );
 
 return '
 		<div class="content-panel">

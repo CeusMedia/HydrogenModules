@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $galleries	= $this->renderList( $gallery->galleryId );
 
 $optStatus	= $words['states'];
@@ -14,11 +16,11 @@ $currentTab		= $this->env->getSession()->get( 'module.manage_galleries.tab' );
 $listTabs		= [];
 foreach( $tabs as $nr => $tab ){
 	$attributes	= array( 'href' => '#tab'.++$nr, 'data-toggle' => 'tab' );
-	$link		= UI_HTML_Tag::create( 'a', $tab, $attributes );
+	$link		= HtmlTag::create( 'a', $tab, $attributes );
 	$attributes	= array( 'id' => 'gallery-editor-tab-'.$nr, 'class' => $nr == $currentTab ? "active" : NULL );
-	$listTabs[]	= UI_HTML_Tag::create( 'li', $link, $attributes );
+	$listTabs[]	= HtmlTag::create( 'li', $link, $attributes );
 }
-$listTabs	= UI_HTML_Tag::create( 'ul', $listTabs, array( 'class' => "nav nav-tabs" ) );
+$listTabs	= HtmlTag::create( 'ul', $listTabs, array( 'class' => "nav nav-tabs" ) );
 
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/gallery' ) );
 

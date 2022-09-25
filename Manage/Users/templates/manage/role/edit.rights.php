@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['editRights'];
 
@@ -16,7 +17,7 @@ foreach( $usedModules as $usedModule ){
 	$list[] = $result->list;
 }
 
-$tableRights	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+$tableRights	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
 
 return '
 <div class="content-panel content-panel-form">
@@ -24,7 +25,7 @@ return '
 		<div class="pull-right">
 		<button type="button" class="btn btn-mini btn-info" id="button-toggle">
 			<label class="checkbox">
-				'.UI_HTML_Tag::create( 'input', NULL, array(
+				'.HtmlTag::create( 'input', NULL, array(
 					'type'		=> "checkbox",
 					'id'		=> "input-toggle-rights-all",
 					'checked'	=> $showAll ? 'checked' : NULL,
@@ -43,8 +44,8 @@ function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, 
 	$list		= [];
 	$rows		= [];
 	$changable	= FALSE;
-	$iconModule		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) ).'&nbsp;';
-	$iconController	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cog' ) ).'&nbsp;';
+	$iconModule		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) ).'&nbsp;';
+	$iconController	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cog' ) ).'&nbsp;';
 	foreach( $controllerActions as $controller ){
 		if( $controller->module && $controller->module->id != $moduleId )
 			continue;
@@ -59,31 +60,31 @@ function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, 
 				$module	= $controller->moduleWords['title'];
 			if( $controller->module->description ){
 				$description	= array_slice( explode( "\n", $controller->module->description ), 0, 1 );
-				$module			= UI_HTML_Tag::create( 'abbr', $module, array( 'title' => $description ) );
+				$module			= HtmlTag::create( 'abbr', $module, array( 'title' => $description ) );
 			}
 		}
-		$actions	= UI_HTML_Tag::create( 'ul', join( $actionToggles->list ), array() );
+		$actions	= HtmlTag::create( 'ul', join( $actionToggles->list ), array() );
 		$path		= strtolower( str_replace( '_', '/', $controller->name ) )/*.'/'*/;
-		$path		= UI_HTML_Tag::create( 'abbr', $path, array( 'title' => 'Controller: '.$controller->name ) );
-		$path		= UI_HTML_Tag::create( 'small', '&nbsp;'.$iconController.$path, array( 'class' => 'not-muted' ) );
+		$path		= HtmlTag::create( 'abbr', $path, array( 'title' => 'Controller: '.$controller->name ) );
+		$path		= HtmlTag::create( 'small', '&nbsp;'.$iconController.$path, array( 'class' => 'not-muted' ) );
 
 		$label		= $path;
 
-		$labelPath			= UI_HTML_Tag::create( 'span', $label, array( 'class' => 'label-path' ) );
-		$labelModule		= UI_HTML_Tag::create( 'small', '<br/>Modul: '.$module, array( 'class' => 'muted label-module', 'style' => 0/*$showAll*/ ? NULL : 'display: none' ) );
-		$labelController	= UI_HTML_Tag::create( 'small', '<br/>Controller: '.$controller->name, array( 'class' => 'muted label-controller', 'style' => 0/*$showAll*/ ? NULL : 'display: none' ) );
+		$labelPath			= HtmlTag::create( 'span', $label, array( 'class' => 'label-path' ) );
+		$labelModule		= HtmlTag::create( 'small', '<br/>Modul: '.$module, array( 'class' => 'muted label-module', 'style' => 0/*$showAll*/ ? NULL : 'display: none' ) );
+		$labelController	= HtmlTag::create( 'small', '<br/>Controller: '.$controller->name, array( 'class' => 'muted label-controller', 'style' => 0/*$showAll*/ ? NULL : 'display: none' ) );
 
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $labelPath/*.$labelController/*.$labelModule*/, array( 'class' => 'column-controller autocut' ) ),
-			UI_HTML_Tag::create( 'td', $actions, array( 'class' => 'column-actions' ) ),
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $labelPath/*.$labelController/*.$labelModule*/, array( 'class' => 'column-controller autocut' ) ),
+			HtmlTag::create( 'td', $actions, array( 'class' => 'column-actions' ) ),
 		), array( 'style' => $actionToggles->changable || 0/*$showAll*/ ? NULL : 'display: none' ) );
 	}
 	if( $rows ){
-		$rows	= UI_HTML_Tag::create( 'table', array(
+		$rows	= HtmlTag::create( 'table', array(
 			UI_HTML_Elements::ColumnGroup( '300px', '' ),
-			UI_HTML_Tag::create( 'tbody', $rows ),
+			HtmlTag::create( 'tbody', $rows ),
 		), array( 'class' => 'table table-fixed table-condensed' ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $iconModule.$module.$rows,  array(
+		$list[]	= HtmlTag::create( 'li', $iconModule.$module.$rows,  array(
 			'class'	=> 'acl-module '.( $changable ? 'changable' : '' ),
 			'style' => $changable || 0/*$showAll*/ ? NULL : 'display: none'
 		) );
@@ -124,8 +125,8 @@ function renderControllerActions( $acl, $roleId, $controller, $words ){
 				$class	= "red";
 				break;
 		}
-		$label	= UI_HTML_Tag::create( 'span', $method->name, array() );
-		$list[]	= UI_HTML_Tag::create( 'li', $check.$label, array(
+		$label	= HtmlTag::create( 'span', $method->name, array() );
+		$list[]	= HtmlTag::create( 'li', $check.$label, array(
 			'class'	=> 'action '.$class,
 			'id'	=> $changable ? $id : NULL,
 			'title'	=> $title,

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['edit'];
 
@@ -18,11 +19,11 @@ foreach( $users as $user )
 	$optAuthor[$user->userId]		= $user->username;
 $optAuthor		= UI_HTML_Elements::Options( $optAuthor, $post->authorId );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-arrow-left' ) );
-	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-check' ) );
+	$iconCancel		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-arrow-left' ) );
+	$iconSave		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-check' ) );
 }
 
 $tabs	= $view->renderTabs();

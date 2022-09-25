@@ -1,9 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $optStatus	= $words['states-thread'];
-$optStatus	= UI_HTML_Elements::Options( $optStatus, (int) $request->get( 'status' ) );
+$optStatus	= HtmlElements::Options( $optStatus, (int) $request->get( 'status' ) );
 
 $optType	= $words['types'];
-$optType	= UI_HTML_Elements::Options( $optType, (int) $request->get( 'type' ) );
+$optType	= HtmlElements::Options( $optType, (int) $request->get( 'type' ) );
 
 if( !in_array( 'addTopic', $rights ) )
 	return '';

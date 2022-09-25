@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 if( empty( $remoteConfig ) )
 	return "";
 $name		= '<cite>'.$remoteConfig->get( 'app.name' ).'</cite>';
@@ -17,8 +19,8 @@ if( $instance->host === "localhost" ){
 $instanceUrl		= $instance->protocol.$instance->host.$instance->path;
 $instanceBase		= $remoteConfig->get( 'app.base.url' ) ? $remoteConfig->get( 'app.base.url' ) : "";
 
-$linkInstanceUrl	= UI_HTML_Tag::create( 'a', $instanceUrl, array( 'href' => $instanceUrl ) );
-$linkInstanceBase	= $instanceBase	? UI_HTML_Tag::create( 'a', $instanceBase, array( 'href' => $instanceBase ) ) : "<em>autodetect</em>";
+$linkInstanceUrl	= HtmlTag::create( 'a', $instanceUrl, array( 'href' => $instanceUrl ) );
+$linkInstanceBase	= $instanceBase	? HtmlTag::create( 'a', $instanceBase, array( 'href' => $instanceBase ) ) : "<em>autodetect</em>";
 
 $panel	= '
 <fieldset style="position: relative">

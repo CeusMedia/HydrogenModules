@@ -1,6 +1,7 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
 
 $optCategory	= array( '' => '- alle -' );
 foreach( $categories as $category )
@@ -25,7 +26,7 @@ if( count( $languages ) > 1 ){
 		</div>';
 }
 else
-	$filterLanguage		= UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
+	$filterLanguage		= HtmlTag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
 
 
 $panelFilter	= '
@@ -62,43 +63,43 @@ $panelFilter	= '
 
 $rows	= [];
 foreach( $articles as $article ){
-	$link	= UI_HTML_Tag::create( 'a', $article->title, array(
+	$link	= HtmlTag::create( 'a', $article->title, array(
 		'href'	=> './manage/catalog/clothing/article/edit/'.$article->articleId,
 	) );
 	$image	= '';
 	if( $article->image ){
-		$image	= UI_HTML_Tag::create( 'div', NULL, array(
+		$image	= HtmlTag::create( 'div', NULL, array(
 			'style'		=> 'background-image: url('.$path.$article->image.')',
 			'class'		=> 'catalog-clothing-thumbnail'
 		) );
 	}
 
-	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $image, array( 'class' => 'cell-article-image' ) ),
-		UI_HTML_Tag::create( 'td', $link, array( 'class' => 'cell-article-title' ) ),
-		UI_HTML_Tag::create( 'td', $categoryMap[$article->categoryId]->title, array( 'class' => 'cell-article-category' ) ),
-		UI_HTML_Tag::create( 'td', $article->form, array( 'class' => 'cell-article-form' ) ),
-		UI_HTML_Tag::create( 'td', $article->color, array( 'class' => 'cell-article-color' ) ),
-		UI_HTML_Tag::create( 'td', $article->size, array( 'class' => 'cell-article-size' ) ),
-		UI_HTML_Tag::create( 'td', $article->quantity, array( 'class' => 'cell-article-quantity' ) ),
-		UI_HTML_Tag::create( 'td', $article->price.'&euro;', array( 'class' => 'cell-article-price', 'style' => 'text-align: right' ) ),
+	$rows[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', $image, array( 'class' => 'cell-article-image' ) ),
+		HtmlTag::create( 'td', $link, array( 'class' => 'cell-article-title' ) ),
+		HtmlTag::create( 'td', $categoryMap[$article->categoryId]->title, array( 'class' => 'cell-article-category' ) ),
+		HtmlTag::create( 'td', $article->form, array( 'class' => 'cell-article-form' ) ),
+		HtmlTag::create( 'td', $article->color, array( 'class' => 'cell-article-color' ) ),
+		HtmlTag::create( 'td', $article->size, array( 'class' => 'cell-article-size' ) ),
+		HtmlTag::create( 'td', $article->quantity, array( 'class' => 'cell-article-quantity' ) ),
+		HtmlTag::create( 'td', $article->price.'&euro;', array( 'class' => 'cell-article-price', 'style' => 'text-align: right' ) ),
 	) );
 }
 $colgroup	= UI_HTML_Elements::ColumnGroup( array( '40', '', '15%', '10%', '10%', '10%', '5%', '10%' ) );
-$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
-	UI_HTML_Tag::create( 'th', '' ),
-	UI_HTML_Tag::create( 'th', 'Bezeichnung' ),
-	UI_HTML_Tag::create( 'th', 'Kategorie' ),
-	UI_HTML_Tag::create( 'th', '...' ),
-	UI_HTML_Tag::create( 'th', 'Farbe' ),
-	UI_HTML_Tag::create( 'th', 'Größe' ),
-	UI_HTML_Tag::create( 'th', 'Lager' ),
-	UI_HTML_Tag::create( 'th', 'Preis', array( 'style' => 'text-align: right' ) ),
+$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+	HtmlTag::create( 'th', '' ),
+	HtmlTag::create( 'th', 'Bezeichnung' ),
+	HtmlTag::create( 'th', 'Kategorie' ),
+	HtmlTag::create( 'th', '...' ),
+	HtmlTag::create( 'th', 'Farbe' ),
+	HtmlTag::create( 'th', 'Größe' ),
+	HtmlTag::create( 'th', 'Lager' ),
+	HtmlTag::create( 'th', 'Preis', array( 'style' => 'text-align: right' ) ),
 ) ) );
-$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-$table	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+$tbody	= HtmlTag::create( 'tbody', $rows );
+$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 
-$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.'neues Produkt', array(
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'neues Produkt', array(
 	'href'	=> './manage/catalog/clothing/article/add',
 	'class'	=> 'btn btn-success',
 ) );

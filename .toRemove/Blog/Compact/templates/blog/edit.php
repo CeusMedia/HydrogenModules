@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 //print_m( $article );
 //die;
 
@@ -28,7 +30,7 @@ if( $tags ){
 		$linkTag	= View_Helper_Blog::renderTagLink( $env, $tag->title );
 		$list[]		= UI_HTML_Elements::ListItem( $linkRemove.$linkTag );
 	}
-	$listTags	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
+	$listTags	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
 }
 
 $list	= [];
@@ -40,7 +42,7 @@ if( $authors ){
 		$linkRemove	= UI_HTML_Elements::LinkButton( $urlRemove, '', 'button tiny remove' );
 		$list[]	= UI_HTML_Elements::ListItem( $linkRemove.$linkUser );
 	}
-	$listAuthors	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
+	$listAuthors	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
 }
 
 $list	= [];
@@ -56,7 +58,7 @@ if( $article->versions ){
 		$link	= UI_HTML_Elements::Link( $url, $label, 'version' );
 		$list[]	= UI_HTML_Elements::ListItem( $link, 0, array( 'class' => $class ) );
 	}
-	$listVersions	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'not-editor-list versions' ) );
+	$listVersions	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'not-editor-list versions' ) );
 }
 
 $isHistory			= $version <= count( $article->versions );

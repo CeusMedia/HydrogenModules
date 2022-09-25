@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['edit-logo'];
 
 $iconSave	= HTML::Icon( 'ok', TRUE );
@@ -6,7 +8,7 @@ $iconOpen	= HTML::Icon( 'folder-open', TRUE );
 
 $logo	= '<div><em><small class="muted">Kein Logo vorhanden.</small></em></div>';
 if( $company->logo ){
-	$logo	= UI_HTML_Tag::create( 'img', NULL, array(
+	$logo	= HtmlTag::create( 'img', NULL, array(
 		'src'	=> $frontend->getPath().'images/companies/'.$company->logo,
 		'class'	=> 'thumbnail',
 	) );

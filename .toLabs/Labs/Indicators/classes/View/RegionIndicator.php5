@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 /**
  *	@category		MV2.Tools
  *	@package		SeleniumTester.View
@@ -55,10 +57,10 @@ class View_RegionIndicator{
 				'class'	=> 'region-content',
 				'style'	=> 'left: '.$width.'px'
 			);
-			$pin		= UI_HTML_Tag::create( 'div', '', array( 'class' => 'region-content-pin' ) );
+			$pin		= HtmlTag::create( 'div', '', array( 'class' => 'region-content-pin' ) );
 			$content	= $this->regions[$nr]->content.$pin;
-			$content	= UI_HTML_Tag::create( 'div', $content, array( 'class' => 'region-content-inner' ) );
-			$content	= UI_HTML_Tag::create( 'div', $content, $a );
+			$content	= HtmlTag::create( 'div', $content, array( 'class' => 'region-content-inner' ) );
+			$content	= HtmlTag::create( 'div', $content, $a );
 
 			$a	= array(
 				'class'		=> 'region-bar',
@@ -69,7 +71,7 @@ class View_RegionIndicator{
 				) )
 			);
 
-			$list[]	= UI_HTML_Tag::create( 'div', $content, $a );
+			$list[]	= HtmlTag::create( 'div', $content, $a );
 		}
 		$list	= '<div class="region-container" style="height: '.$height.'px;">'.join( $list ).'</div>';
 		return $list;

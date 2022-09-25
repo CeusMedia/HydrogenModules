@@ -1,7 +1,8 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$buttonAdd 		= UI_HTML_Elements::LinkButton( './admin/project/add', $words['index']['buttonAdd'], 'button add' );
+$buttonAdd 		= HtmlElements::LinkButton( './admin/project/add', $words['index']['buttonAdd'], 'button add' );
 
 /*  --  PROJECT TABLE  --  */
 $list	= [];
@@ -18,13 +19,13 @@ foreach( $projects as $projectId => $project ){
 	if( $project->version ){
 		$label	= $project->version->version;
 		if( $project->version->title )
-			$label	= UI_HTML_Elements::Acronym( $label, $project->version->title );
+			$label	= HtmlElements::Acronym( $label, $project->version->title );
 		$version	= '<span class="project-version">'.$label.'</span>';
 	}
 	$list[]		= '<tr class="'.$class.'"><td>'.$link.'</td><td>'.$type.'</td><td>'.$version.'</td></tr>';
 }
 $heads		= array( $words['index']['headTitle'], $words['index']['headStatus'], $words['index']['headVersion'] );
-$heads		= UI_HTML_Elements::TableHeads( $heads );
+$heads		= HtmlElements::TableHeads( $heads );
 $rows		= join( $list );
 
 return '

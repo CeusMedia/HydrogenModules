@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Accordion{
 
@@ -40,20 +41,20 @@ class View_Helper_Accordion{
 		$groups		= [];
 		foreach( $this->parts as $part ){
 			$class		= 'accordion-toggle '.( $part->class ? $part->class : '' );
-			$link		= UI_HTML_Tag::create( 'a', $part->title, array(
+			$link		= HtmlTag::create( 'a', $part->title, array(
 				'href'			=> $_SERVER['REQUEST_URI'].'#'.$part->id,
 				'class'			=> $class,
 				'data-toggle'	=> 'collapse',
 				'data-parent'	=> $this->singleOpen ? '#'.$this->id : NULL,
 				'data-target'	=> '#'.$part->id
 			) );
-			$content	= UI_HTML_Tag::create( 'div', $part->content, array( 'class' => 'accordion-inner' ) );
+			$content	= HtmlTag::create( 'div', $part->content, array( 'class' => 'accordion-inner' ) );
 			$isOpen		= in_array( $part->id, $this->open );
-			$heading	= UI_HTML_Tag::create( 'div', $link, array( 'class' => 'accordion-heading' ) );
-			$body		= UI_HTML_Tag::create( 'div', $content, array( 'class' => 'accordion-body collapse'.( $isOpen ? ' in' : '' ), 'id' => $part->id ) );
-			$groups[]	= UI_HTML_Tag::create( 'div', $heading.$body, array( 'class' => 'accordion-group' ) );
+			$heading	= HtmlTag::create( 'div', $link, array( 'class' => 'accordion-heading' ) );
+			$body		= HtmlTag::create( 'div', $content, array( 'class' => 'accordion-body collapse'.( $isOpen ? ' in' : '' ), 'id' => $part->id ) );
+			$groups[]	= HtmlTag::create( 'div', $heading.$body, array( 'class' => 'accordion-group' ) );
 		}
-		return UI_HTML_Tag::create( 'div', $groups, array(
+		return HtmlTag::create( 'div', $groups, array(
 			'class'		=> 'accordion',
 			'id'		=> $this->id,
 		) );

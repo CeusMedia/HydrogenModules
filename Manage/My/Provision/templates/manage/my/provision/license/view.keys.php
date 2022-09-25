@@ -1,13 +1,14 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
-$iconRevoke		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
+$iconRevoke		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $iconsStatus	= array(
-	0	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
-	Model_Provision_User_License_Key::STATUS_NEW		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) ),
-	Model_Provision_User_License_Key::STATUS_ASSIGNED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
-	Model_Provision_User_License_Key::STATUS_EXPIRED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
+	0	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
+	Model_Provision_User_License_Key::STATUS_NEW		=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) ),
+	Model_Provision_User_License_Key::STATUS_ASSIGNED	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
+	Model_Provision_User_License_Key::STATUS_EXPIRED	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
 );
 
 $list	= [];
@@ -27,13 +28,13 @@ foreach( $userLicense->keys as $key ){
 		$user	= $helper->render();
 	}
 	if( $key->status == Model_Provision_User_License_Key::STATUS_NEW ){
-		$buttonAssign	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;vergeben', array(
+		$buttonAssign	= HtmlTag::create( 'a', $iconAdd.'&nbsp;vergeben', array(
 			'href'	=> './manage/my/provision/license/assign/'.$key->userLicenseKeyId,
 			'class'	=> 'btn btn-success btn-small'
 		) );
 	}
 	if( $key->status == Model_Provision_User_License_Key::STATUS_ASSIGNED ){
-		$buttonAssign	= UI_HTML_Tag::create( 'a', $iconRevoke.'&nbsp;entziehen', array(
+		$buttonAssign	= HtmlTag::create( 'a', $iconRevoke.'&nbsp;entziehen', array(
 			'href'	=> './manage/my/provision/license/revoke/'.$key->userLicenseKeyId,
 			'class'	=> 'btn btn-inverse btn-small'
 		) );
@@ -44,22 +45,22 @@ foreach( $userLicense->keys as $key ){
 
 	$link	= $key->uid;
 	if( 1 ){
-		$link	= UI_HTML_Tag::create( 'a', $link, array(
+		$link	= HtmlTag::create( 'a', $link, array(
 			'href'	=> './manage/my/provision/license/key/view/'.$key->userLicenseKeyId,
 		) );
 	}
-	$list[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $link ),
-		UI_HTML_Tag::create( 'td', $status ),
-		UI_HTML_Tag::create( 'td', $user ),
-		UI_HTML_Tag::create( 'td', $buttonAssign ),
+	$list[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', $link ),
+		HtmlTag::create( 'td', $status ),
+		HtmlTag::create( 'td', $user ),
+		HtmlTag::create( 'td', $buttonAssign ),
 	) );
 }
 $colgroup	= UI_HTML_Elements::ColumnGroup( array( "15%", "25%", "30%") );
 $heads	= UI_HTML_Elements::TableHeads( array( 'Schlüssel', 'Zustand', 'Besitzer' ) );
-$thead	= UI_HTML_Tag::create( 'thead', $heads );
-$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
+$thead	= HtmlTag::create( 'thead', $heads );
+$tbody	= HtmlTag::create( 'tbody', $list );
+$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
 
 return '
 <style>

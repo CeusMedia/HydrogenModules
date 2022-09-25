@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helper		= new View_Helper_TimePhraser( $env );
 
@@ -29,8 +30,8 @@ $mapInfo[$w->labelLogin]		= $helper->convert( $user->loggedAt, TRUE, $w->timePhr
 
 $listInfo	= [];
 foreach( $mapInfo as $term => $definition )
-	$listInfo[]	= UI_HTML_Tag::create( 'dt', $term ).UI_HTML_Tag::create( 'dd', $definition );
-$listInfo	= UI_HTML_Tag::create( 'dl', join( $listInfo ), array( 'class' => 'dl-horizontal' ) );
+	$listInfo[]	= HtmlTag::create( 'dt', $term ).HtmlTag::create( 'dd', $definition );
+$listInfo	= HtmlTag::create( 'dl', join( $listInfo ), array( 'class' => 'dl-horizontal' ) );
 
 //  --  PANEL: INFO  --  //
 return '

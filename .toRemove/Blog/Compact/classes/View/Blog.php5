@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
@@ -11,19 +12,19 @@ class View_Blog extends View
 		$infoList	= [];
 		$attrItem	= array( 'class' => 'blog-article-info-list-item' );
 		if( $date && $article->createdAt ){
-			$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-calendar-o fa-fw' ) ).'&nbsp;';
+			$icon		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-calendar-o fa-fw' ) ).'&nbsp;';
 			$date		= date( 'd.m.Y', $article->createdAt );
-			$label		= UI_HTML_Tag::create( 'span', $icon.$date, array( 'class' => 'blog-article-date' ) );
-			$infoList[]	= UI_HTML_Tag::create( 'li', $label, $attrItem );
+			$label		= HtmlTag::create( 'span', $icon.$date, array( 'class' => 'blog-article-date' ) );
+			$infoList[]	= HtmlTag::create( 'li', $label, $attrItem );
 		}
 		if( $time && $article->createdAt ){
-			$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-time fa-fw' ) ).'&nbsp;';
+			$icon		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-time fa-fw' ) ).'&nbsp;';
 			$time		= date( 'H:i', $article->createdAt );
-			$label		= UI_HTML_Tag::create( 'span', $icon.$time, array( 'class' => 'blog-article-time' ) );
-			$infoList[]	= UI_HTML_Tag::create( 'li', $label, $attrItem );
+			$label		= HtmlTag::create( 'span', $icon.$time, array( 'class' => 'blog-article-time' ) );
+			$infoList[]	= HtmlTag::create( 'li', $label, $attrItem );
 		}
 		$attrList	= array( 'class' => 'blog-article-info-list' );
-		return UI_HTML_Tag::create( 'ul', join( $infoList ), $attrList );
+		return HtmlTag::create( 'ul', join( $infoList ), $attrList );
 	}
 
 	public static function renderAuthorList( Environment $env, $authors, $linked = FALSE )
@@ -31,37 +32,37 @@ class View_Blog extends View
 		$authorList	= [];
 		if( !$authors )
 			return '';
-		$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-user fa-fw' ) ).'&nbsp;';
+		$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-user fa-fw' ) ).'&nbsp;';
 		foreach( $authors as $author ){
 			$url		= './blog/author/'.rawurlencode( $author->username );
-			$label		= UI_HTML_Tag::create( 'span', $icon.$author->username, array( 'class' => 'not-link-author' ) );
+			$label		= HtmlTag::create( 'span', $icon.$author->username, array( 'class' => 'not-link-author' ) );
 			if( $linked )
-				$label		= UI_HTML_Tag::create( 'a', $icon.$author->username, array( 'href' => $url, 'class' => 'not-link-author' ) );
-			$authorList[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'blog-article-author-list-item' ) );
+				$label		= HtmlTag::create( 'a', $icon.$author->username, array( 'href' => $url, 'class' => 'not-link-author' ) );
+			$authorList[]	= HtmlTag::create( 'li', $label, array( 'class' => 'blog-article-author-list-item' ) );
 		}
-		return UI_HTML_Tag::create( 'ul', join( $authorList ), array( 'class' => 'blog-article-author-list' ) );
+		return HtmlTag::create( 'ul', join( $authorList ), array( 'class' => 'blog-article-author-list' ) );
 	}
 
 	public static function renderTagList( Environment $env, $tags )
 	{
 		$tagList	= [];
-		$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-tags fa-fw' ) ).'&nbsp;';
+		$icon		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-tags fa-fw' ) ).'&nbsp;';
 		if( $tags ){
 			foreach( $tags as $tag ){
 				$url	= './blog/tag/'.rawurlencode( str_replace( '&', '%26', $tag->title ) );
-				$tagList[]	= UI_HTML_Tag::create( 'a', $tag->title, array( 'href' => $url ) );
+				$tagList[]	= HtmlTag::create( 'a', $tag->title, array( 'href' => $url ) );
 			}
-			$span	= UI_HTML_Tag::create( 'span', join( ' ', $tagList ), array( 'class' => 'not-icon-label not-link-tag' ) );
-			return UI_HTML_Tag::create( 'span', $icon.$span, array( 'class' => 'blog-article-tag-list' ) );
+			$span	= HtmlTag::create( 'span', join( ' ', $tagList ), array( 'class' => 'not-icon-label not-link-tag' ) );
+			return HtmlTag::create( 'span', $icon.$span, array( 'class' => 'blog-article-tag-list' ) );
 		}
 		return '';
 
 		$tagList	= [];
 		foreach( $tags as $tag ){
 			$link		= View_Helper_Blog::renderTagLink( $env, $tag->title );
-			$tagList[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-article-tag-list-item' ) );
+			$tagList[]	= HtmlTag::create( 'li', $link, array( 'class' => 'blog-article-tag-list-item' ) );
 		}
-		return UI_HTML_Tag::create( 'ul', join( $tagList ), array( 'class' => 'blog-article-tag-list' ) );
+		return HtmlTag::create( 'ul', join( $tagList ), array( 'class' => 'blog-article-tag-list' ) );
 	}
 
 	public function add()
@@ -81,19 +82,19 @@ class View_Blog extends View
 		if( ( $content = $this->getData( 'content' ) ) ){
 			$content	= View_Helper_ContentConverter::render( $this->env, $content );
 			$attributes	= array( 'class' => 'blog-article blog-article-content' );
-			$content	= UI_HTML_Tag::create( 'div', $content, $attributes );
+			$content	= HtmlTag::create( 'div', $content, $attributes );
 		}
 		else if( ( $files = $this->getData( 'files' ) ) ){
 			$list	= [];
 			arsort( $files );
 			foreach( $files as $fileName => $timestamp ){
 				$url	= './blog/dev/'.$fileName;
-				$link	= UI_HTML_Tag::create( 'a', $fileName, array( 'href' => $url ) );
-				$date	= UI_HTML_Tag::create( 'span', date( 'y-m-d', $timestamp ) );
-				$list[]	= UI_HTML_Tag::create( 'li', ' <small><em>'.$date.'</em></small> '.$link );
+				$link	= HtmlTag::create( 'a', $fileName, array( 'href' => $url ) );
+				$date	= HtmlTag::create( 'span', date( 'y-m-d', $timestamp ) );
+				$list[]	= HtmlTag::create( 'li', ' <small><em>'.$date.'</em></small> '.$link );
 			}
-			$heading	= UI_HTML_Tag::create( 'h4', 'Artikel in Vorbereitung' );
-			$content	= $heading.UI_HTML_Tag::create( 'ul', join( $list ) );
+			$heading	= HtmlTag::create( 'h4', 'Artikel in Vorbereitung' );
+			$content	= $heading.HtmlTag::create( 'ul', join( $list ) );
 		}
 		return $content;
 	}
@@ -231,7 +232,7 @@ class View_Blog extends View
 	{
 		$list		= [];
 		$config		= $this->env->getConfig();
-		$icon		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-comment fa-fw fa-lg' ) ).'&nbsp';
+		$icon		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-comment fa-fw fa-lg' ) ).'&nbsp';
 		foreach( $articles as $article ){
 			$url		= './blog/article/'.$article->articleId;
 			if( $config->get( 'module.blog_compact.niceURLs' ) )
@@ -242,21 +243,21 @@ class View_Blog extends View
 			$abstract	= preg_split( "/\n/", $article->content );
 			$abstract	= array_shift( $abstract );
 			$abstract	= View_Helper_ContentConverter::render( $this->env, $abstract );
-			$abstract	= UI_HTML_Tag::create( 'div', $abstract, array( 'class' => 'blog-article-content' ) );
+			$abstract	= HtmlTag::create( 'div', $abstract, array( 'class' => 'blog-article-content' ) );
 
 			$infoList	= View_Blog::renderInfoList( $article, $date, $time );
 			$authorList	= $authors ? View_Blog::renderAuthorList( $this->env, $article->authors, $linkAuthors ) : '';
 			$tagList	= View_Blog::renderTagList( $this->env, $article->tags );
-			$info		= UI_HTML_Tag::create( 'div', $infoList.$authorList.$tagList, array( 'class' => "blog-article-info" ) );
+			$info		= HtmlTag::create( 'div', $infoList.$authorList.$tagList, array( 'class' => "blog-article-info" ) );
 
 			$content	= $link . $info. $abstract;
 			$attributes	= array( 'class' => 'blog-article-list-item  blog-article-abstract' );
-			$item		= UI_HTML_Tag::create( 'li', $content, $attributes );
+			$item		= HtmlTag::create( 'li', $content, $attributes );
 			$list[$article->title]	= $item;
 		}
 		if( !$list )
 			return NULL;
-		return UI_HTML_Tag::create( 'ul', join( $list ), array( 'class' => 'blog-article-list' ) );
+		return HtmlTag::create( 'ul', join( $list ), array( 'class' => 'blog-article-list' ) );
 	}
 
 	protected function __onInit()

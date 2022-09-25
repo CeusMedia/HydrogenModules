@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Manual_CategorySelector
@@ -35,8 +37,8 @@ class View_Helper_Info_Manual_CategorySelector
 		foreach( $this->categories as $category ){
 			$options[$category->manualCategoryId]	= $category->title;
 		}
-		$options	= UI_HTML_Elements::Options( $options, $categoryId );
-		$select		= UI_HTML_Tag::create( 'select', $options, array(
+		$options	= HtmlElements::Options( $options, $categoryId );
+		$select		= HtmlTag::create( 'select', $options, array(
 			'id'		=> 'select_category',
 			'class'		=> 'span12',
 //			'onchange'	=> 'document.location.href=\'./info/manual/category/'.$category->manualCategoryId.'\';',

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 //  --  PANEL: BRANCHES  --  //
 $w				= (object) $words['branches'];
 $listBranches	= [];
@@ -94,7 +96,7 @@ $panelEdit	= HTML::Form( './manage/company/edit/'.$company->companyId, 'company_
 	)
 );
 
-return //	UI_HTML_Tag::create( 'h2', $w->heading ).
+return //	HtmlTag::create( 'h2', $w->heading ).
 HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span8',
 		$panelEdit

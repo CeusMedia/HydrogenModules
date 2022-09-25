@@ -1,5 +1,5 @@
 <?php
-
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $urlBase	= $frontend->getUri().$frontend->getConfigValue( 'path.contents' ).$moduleConfig->get( 'path.covers' );
 
@@ -14,8 +14,8 @@ if( $article->cover ){
 	$urlFull	= $urlBase.$id.'_'.$article->cover;
 	$urlThumb	= $urlBase.$id.'__'.$article->cover;
 
-	$imageFull	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $uriFull, 'class' => $class ) );
-	$imageThumb	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $uriThumb, 'class' => $class ) );
+	$imageFull	= HtmlTag::create( 'img', NULL, array( 'src' => $uriFull, 'class' => $class ) );
+	$imageThumb	= HtmlTag::create( 'img', NULL, array( 'src' => $uriThumb, 'class' => $class ) );
 
 	$panelCover	= '
 <div class="content-panel">

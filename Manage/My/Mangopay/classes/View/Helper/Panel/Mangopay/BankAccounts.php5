@@ -1,16 +1,18 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Panel_Mangopay_BankAccounts extends View_Helper_Panel_Mangopay{
 
 	public function render(){
 		$list	= [];
 		foreach( $this->data as $bankAccount ){
-			$link	= UI_HTML_Tag::create( 'a', $bankAccount->Id, array( 'href' => './manage/my/mangopay/bank/view/'.$bankAccount->Id ) );
-			$list[]	= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', $link ),
+			$link	= HtmlTag::create( 'a', $bankAccount->Id, array( 'href' => './manage/my/mangopay/bank/view/'.$bankAccount->Id ) );
+			$list[]	= HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', $link ),
 			) );
 		}
-		$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-		$table	= UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-striped' ) );
+		$tbody	= HtmlTag::create( 'tbody', $list );
+		$table	= HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-striped' ) );
 		return '
 		<div class="content-panel">
 			<h3>Bank Accounts</h3>

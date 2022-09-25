@@ -1,11 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconPrev	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconNext	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconPrev	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconNext	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
 
 $statuses	= array(
 	-1		=> 'deaktiviert',
@@ -47,8 +48,8 @@ if( !empty( $references ) ){
 		if( strlen( $url->getQuery() ) > 0 ){
 			$title	.= '<small class="muted">?'.$url->getQuery().'</small>';
 		}
-		$domains[$domain][] = UI_HTML_Tag::create( 'li', [
-			UI_HTML_Tag::create( 'a', $title, [
+		$domains[$domain][] = HtmlTag::create( 'li', [
+			HtmlTag::create( 'a', $title, [
 				'href'		=> $reference,
 				'target'	=> '_blank',
 			])
@@ -56,10 +57,10 @@ if( !empty( $references ) ){
 	}
 	$lists = [];
 	foreach( $domains as $domain => $domainReferences ){
-		$list		= UI_HTML_Tag::create( 'ul', $domainReferences, ['class' => 'unstyled'] );
-		$lists[]	= UI_HTML_Tag::create( 'h5', $domain ).$list;
+		$list		= HtmlTag::create( 'ul', $domainReferences, ['class' => 'unstyled'] );
+		$lists[]	= HtmlTag::create( 'h5', $domain ).$list;
 	}
-    $listReferences = UI_HTML_Tag::create( 'div', $lists );
+    $listReferences = HtmlTag::create( 'div', $lists );
 }
 
 
@@ -104,13 +105,13 @@ return '
 			</div>
 			<div class="buttonbar">
 				'.$navButtons['list'].'
-				'.UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;speichern', array(
+				'.HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
 					'type'		=> 'submit',
 					'name'		=> 'save',
 					'class'		=> 'btn btn-primary',
 				) ).'
 				'.$navButtons['nextView'].'
-				'.UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 					'href'		=> './manage/form/remove/'.$form->formId,
 					'class'		=> 'btn btn-danger',
 					'disabled'	=> $hasFills ? 'disabled' : NULL,

@@ -1,8 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $optStatus	= $words['states'];
 $optStatus	= UI_HTML_Elements::Options( $optStatus, $gallery->status );
 
-$iconOpen	= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
+$iconOpen	= HtmlTag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
 
 $helperUpload	= new View_Helper_Input_File( $env );
 $helperUpload->setName( 'file' );

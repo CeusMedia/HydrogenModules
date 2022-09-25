@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['edit'];
 
@@ -27,7 +28,7 @@ $panelEdit	= '
 			</li>
 			<li class="column-clear">
 				<label for="input_active">
-					'.UI_HTML_Tag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, array(
 						'type'		=> "checkbox",
 						'name'		=> "active",
 						'id'		=> "input_active",

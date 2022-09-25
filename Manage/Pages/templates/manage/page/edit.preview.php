@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $noPreview	= FALSE;
 $controllerActions	= array(
@@ -26,20 +27,20 @@ if( $noPreview ){
 </div>';
 }
 
-$divIFrame	= UI_HTML_Tag::create( 'div', "", array( 'id' => "page-preview-iframe-container" ) );
-$divMask	= UI_HTML_Tag::create( 'div', "", array( 'id' => "page-preview-mask" ) );
+$divIFrame	= HtmlTag::create( 'div', "", array( 'id' => "page-preview-iframe-container" ) );
+$divMask	= HtmlTag::create( 'div', "", array( 'id' => "page-preview-mask" ) );
 
 if( 1 /*config:useMask*/ )
-	$divContainer	= UI_HTML_Tag::create( 'div', $divIFrame.$divMask, array( 'id' => "page-preview-container" ) );
+	$divContainer	= HtmlTag::create( 'div', $divIFrame.$divMask, array( 'id' => "page-preview-container" ) );
 else
-	$divContainer	= UI_HTML_Tag::create( 'div', $divIFrame, array( 'id' => "page-preview-container" ) );
+	$divContainer	= HtmlTag::create( 'div', $divIFrame, array( 'id' => "page-preview-container" ) );
 
-$divPreview		= UI_HTML_Tag::create( 'div', $divContainer, array(
+$divPreview		= HtmlTag::create( 'div', $divContainer, array(
 	'id'		=> "page-preview",
 	'data-url'	=> $pagePreviewUrl,
 ) );
 
-$linkPage		= UI_HTML_Tag::create( 'a', $pageUrl, array( 'href' => $pageUrl ) );
+$linkPage		= HtmlTag::create( 'a', $pageUrl, array( 'href' => $pageUrl ) );
 
 return $linkPage.$divPreview;
 

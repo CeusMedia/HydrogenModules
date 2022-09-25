@@ -1,18 +1,20 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $w			= (object) $words['add'];
 
 ksort( $files );
 $optFile	= array( '' => '' );
 foreach( $files as $file )
 	$optFile[$file->filePath]	= $file->filePath;
-$optFile	= UI_HTML_Elements::Options( $optFile );
+$optFile	= HtmlElements::Options( $optFile );
 
 $optClass	= array( '' => '' );
 foreach( $classes as $class )
 	$optClass[$class]	= $class;
-$optClass	= UI_HTML_Elements::Options( $optClass );
+$optClass	= HtmlElements::Options( $optClass );
 
-$optStatus	= UI_HTML_Elements::Options( $words['states'], 1 );
+$optStatus	= HtmlElements::Options( $words['states'], 1 );
 
 $panelAdd	= '
 <div class="content-panel content-panel-form">

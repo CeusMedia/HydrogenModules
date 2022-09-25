@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Bootstrap\Icon;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconEnable		= new Icon( 'toggle-on' );
@@ -48,8 +49,8 @@ if( count( $attachments ) ){
 			HtmlTag::create( 'td', HtmlTag::create( 'div', array( $buttonStatus, $buttonRemove ), array( 'class' => 'btn-group' )) ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "", "", "140px", "80px" );
-	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$colgroup	= HtmlElements::ColumnGroup( "", "", "140px", "80px" );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		$w->headFile,
 		$w->headClass,
 		$w->headCreatedAt,

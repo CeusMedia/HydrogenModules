@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_HtmlDiff
@@ -30,7 +31,7 @@ class View_Helper_HtmlDiff
 			throw new RuntimeException( "No contents set" );
 		$diff	= new HtmlDiff( $this->html1, $this->html2 );
 		$diff->build();
-		return new UI_HTML_Tag( 'div', $diff->getDifference(), array( 'class' => 'htmldiff' ) );
+		return HtmlTag::create( 'div', $diff->getDifference(), array( 'class' => 'htmldiff' ) );
 	}
 
 	static public function renderStatic( Environment $env, string $html1, string $html2 )

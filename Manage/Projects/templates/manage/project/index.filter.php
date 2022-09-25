@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['filter'];
 
@@ -12,7 +13,7 @@ foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 		'class'		=> 'project status'.$key,
 		'selected'	=> in_array( $key, $filterStatus ) ? 'selected' : NULL
 	);
-	$optStatus[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
+	$optStatus[]	= HtmlTag::create( 'option', $value, $attributes );
 }
 $optStatus	= join( '', $optStatus );
 
@@ -24,7 +25,7 @@ foreach( $words['priorities'] as $key => $value ){
 		'class'		=> 'project priority'.$key,
 		'selected'	=> in_array( $key, $filterPriority ) ? 'selected' : NULL
 	);
-	$optPriority[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
+	$optPriority[]	= HtmlTag::create( 'option', $value, $attributes );
 }
 $optPriority	= join( '', $optPriority );
 
@@ -36,28 +37,28 @@ foreach( $users as $user ){
 		'class'		=> 'user user-status status'.$user->status,
 		'selected'	=> in_array( $user->userId, $filterUser ) ? 'selected' : NULL
 	);
-	$optUser[]		= UI_HTML_Tag::create( 'option', $user->username, $attributes );
+	$optUser[]		= HtmlTag::create( 'option', $user->username, $attributes );
 }
 $optUser	= join( '', $optUser );
 
 $optOrder	= UI_HTML_Elements::Options( $words['filter-orders'], $filterOrder );
 
-$iconOrderAsc	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-up' ) );
-$iconOrderDesc	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-down' ) );
-$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
-$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-zoom-out icon-white' ) );
+$iconOrderAsc	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-up' ) );
+$iconOrderDesc	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-down' ) );
+$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'icon-zoom-out icon-white' ) );
 
-$iconOrderAsc	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-up' ) );
-$iconOrderDesc	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-down' ) );
-$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconOrderAsc	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-up' ) );
+$iconOrderDesc	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-down' ) );
+$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 
 $disabled   	= $filterDirection == 'ASC';
 $buttonUp		= UI_HTML_Elements::LinkButton( './manage/project/filter/?direction=ASC', $iconOrderAsc, 'btn not-btn-small', NULL, $disabled );
 $buttonDown		= UI_HTML_Elements::LinkButton( './manage/project/filter/?direction=DESC', $iconOrderDesc, 'btn not-btn-small', NULL, !$disabled );
 
 $buttonFilter	= UI_HTML_Elements::Button( 'filter', $iconFilter.'&nbsp;'.$w->buttonFilter, 'btn not-btn-small btn-info' );
-$buttonReset	= UI_HTML_Tag::create( 'a', $iconReset/*.'&nbsp;'.$w->buttonReset*/, array(
+$buttonReset	= HtmlTag::create( 'a', $iconReset/*.'&nbsp;'.$w->buttonReset*/, array(
 	'href'		=> './manage/project/filter/reset',
 	'title'		=> $w->buttonReset,
 	'class'		=> 'btn not-btn-small '.( $isFiltered ? 'btn-inverse' : '' )

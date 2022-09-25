@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optProduct	= [];
 foreach( $products as $item )
@@ -11,9 +12,9 @@ $optStatus		= UI_HTML_Elements::Options( $optStatus, $license->status );
 $optDuration	= $words['durations'];
 $optDuration	= UI_HTML_Elements::Options( $optDuration, $license->duration );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
 
 $w	= (object) $words['edit'];
 

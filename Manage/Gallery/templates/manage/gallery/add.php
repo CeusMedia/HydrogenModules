@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $buttonCancel	= UI_HTML_Elements::LinkButton( './gallery/'.$folder, 'zurück', 'button cancel' );
 $buttonAdd	= UI_HTML_Elements::Button( 'add', 'hinzufügen', 'button add' );
@@ -36,10 +37,10 @@ asort( $list );
 if( $list ){
 	foreach( $list as $nr => $entry ){
 		$url		= './gallery/add/?folder='.$entry.'&title='.basename( $entry );
-		$link		= UI_HTML_Tag::create( 'a', $entry, array( 'href' => $url ) );
-		$list[$nr]	= UI_HTML_Tag::create( 'li', $link );
+		$link		= HtmlTag::create( 'a', $entry, array( 'href' => $url ) );
+		$list[$nr]	= HtmlTag::create( 'li', $link );
 	}
-	$list	= UI_HTML_Tag::create( 'ul', join( $list ) );
+	$list	= HtmlTag::create( 'ul', join( $list ) );
 	$panelImport	= '
 <fieldset>
 	<legend class="icon import">Import</legend>

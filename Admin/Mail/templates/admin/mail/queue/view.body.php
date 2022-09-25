@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Bootstrap\Icon;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //$iconDownload		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
@@ -170,7 +171,7 @@ else{
 				HtmlTag::create( 'th', 'letzte Änderung' ),
 				HtmlTag::create( 'th', '' ),
 			), array( 'style' => 'background-color: rgba(255, 255, 255, 0.75);' ) );
-			$colgroup	= UI_HTML_Elements::ColumnGroup( '', '15%', '10%', '20%', '15%' );
+			$colgroup	= HtmlElements::ColumnGroup( '', '15%', '10%', '20%', '15%' );
 			$thead	= HtmlTag::create( 'thead', $heads );
 			$tbody	= HtmlTag::create( 'tbody', $list );
 			$displayAttachments	= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table not-table-condensed table-striped' ) );
@@ -203,7 +204,7 @@ else{
 				HtmlTag::create( 'th', 'letzte Änderung' ),
 				HtmlTag::create( 'th', '' ),
 			), array( 'style' => 'background-color: rgba(255, 255, 255, 0.75);' ) );
-			$colgroup	= UI_HTML_Elements::ColumnGroup( '', '15%', '10%', '20%', '15%' );
+			$colgroup	= HtmlElements::ColumnGroup( '', '15%', '10%', '20%', '15%' );
 			$thead	= HtmlTag::create( 'thead', $heads );
 			$tbody	= HtmlTag::create( 'tbody', $list );
 			$displayImages	= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table not-table-condensed table-striped' ) );

@@ -1,7 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
 $wf		= (object) $words['add'];
 
-$optStatus	= UI_HTML_Elements::Options( $words['states'], max( 0, $server->status ) );
+$optStatus	= HtmlElements::Options( $words['states'], max( 0, $server->status ) );
 
 return '
 <div class="column-left-66">
@@ -23,8 +25,8 @@ return '
 				</li>
  			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './admin/server', $wf->buttonCancel, 'button cancel' ).'
-				'.UI_HTML_Elements::Button( 'add', $wf->buttonAdd, 'button add' ).'
+				'.HtmlElements::LinkButton( './admin/server', $wf->buttonCancel, 'button cancel' ).'
+				'.HtmlElements::Button( 'add', $wf->buttonAdd, 'button add' ).'
 			</div>
 		</fieldset>
 	</form>

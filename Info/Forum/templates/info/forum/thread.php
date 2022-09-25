@@ -4,15 +4,17 @@ use CeusMedia\Bootstrap\Button as BootstrapButton;
 use CeusMedia\Bootstrap\Button\Group as BootstrapButtonGroup;
 use CeusMedia\Bootstrap\Button\Link as BootstrapLinkButton;
 use CeusMedia\Bootstrap\Icon as BootstrapIcon;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 extract( $view->populateTexts( array( 'index.top', 'index.bottom', 'thread.top', 'thread.bottom' ), 'html/info/forum/' ) );
 $textTop	= $textThreadTop	? $textThreadTop: $textIndexTop;
 $textBottom	= $textThreadBottom ? $textThreadBottom : $textIndexBottom;
 
 $helper			= new View_Helper_TimePhraser( $env );
-$iconApprove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconApprove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $table	= '<em><small class="muted">Keine.</small></em>';
 $userCanApprove	= in_array( 'approvePost', $rights );
@@ -32,21 +34,21 @@ if( $posts ){
 
 		if( (int) $post->status === 0 ){
 			if( $userCanApprove )
-				$buttons[]	= UI_HTML_Tag::create( 'a', $iconApprove, array(
+				$buttons[]	= HtmlTag::create( 'a', $iconApprove, array(
 					'href'	=> './info/forum/approvePost/'.$post->postId,
 					'class'	=> 'btn not-btn-small btn-success',
 					'title'	=> $words['thread']['buttonApprove']
 				) );
 		}
 		if( $userCanEdit && $userCanChange && !$post->type ){
-			$buttons[]	= UI_HTML_Tag::create( 'button', $iconEdit, array(
+			$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
 				'onclick'	=> 'InfoForum.preparePostEditor('.$post->postId.')',
 				'class'		=> 'btn not-btn-small',
 				'title'		=> $words['thread']['buttonEdit']
 			) );
 		}
 		if( $userCanRemove && $userCanChange ){
-			$buttons[]	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+			$buttons[]	= HtmlTag::create( 'a', $iconRemove, array(
 				'onclick'	=> 'if(!confirm(\'Wirklich ?\')) return false;',
 				'href'		=> './info/forum/removePost/'.$post->postId,
 				'class'		=> 'btn not-btn-small btn-danger',
@@ -56,44 +58,44 @@ if( $posts ){
 		$user	= '-';
 		if( $post->author ){
 			$gravatar	= 'http://www.gravatar.com/avatar/'.md5( strtolower( trim( $post->author->email ) ) ).'?s=32&d=mm&r=g';
-			$gravatar	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $gravatar, 'class' => 'avatar' ) );
-			$nrPosts	= UI_HTML_Tag::create( 'small', ' ('.$userPosts[$post->author->userId].')', array( 'class' => 'muted' ) );
-			$datetime	= UI_HTML_Tag::create( 'small', date( "d.m.Y H:i", $post->createdAt ), array( 'class' => 'muted' ) );
-			$username	= UI_HTML_Tag::create( 'div', $post->author->username.$nrPosts, array( 'class' => 'username' ) );
+			$gravatar	= HtmlTag::create( 'img', NULL, array( 'src' => $gravatar, 'class' => 'avatar' ) );
+			$nrPosts	= HtmlTag::create( 'small', ' ('.$userPosts[$post->author->userId].')', array( 'class' => 'muted' ) );
+			$datetime	= HtmlTag::create( 'small', date( "d.m.Y H:i", $post->createdAt ), array( 'class' => 'muted' ) );
+			$username	= HtmlTag::create( 'div', $post->author->username.$nrPosts, array( 'class' => 'username' ) );
 			$user		= $gravatar.$username.$datetime;
 		}
-		$buttons		= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
+		$buttons		= HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
 		$content		= nl2br( $post->content, TRUE );
 		if( $post->type == 1 ){
 			$parts		= explode( "\n", $post->content );
 			$title		= $parts[1] ? Alg_Text_Trimmer::trim( $parts[1], 100 ) : '';
-			$caption	= $title ? UI_HTML_Tag::create( 'figcaption', htmlentities( $parts[1], ENT_QUOTES, 'UTF-8') ) : '';
-			$image		= UI_HTML_Tag::create( 'img', NULL, array(
+			$caption	= $title ? HtmlTag::create( 'figcaption', htmlentities( $parts[1], ENT_QUOTES, 'UTF-8') ) : '';
+			$image		= HtmlTag::create( 'img', NULL, array(
 				'src'	=> 'contents/forum/'.$parts[0],
 				'title'	=> htmlentities( $title, ENT_QUOTES, 'UTF-8')
 			) );
-			$content	= UI_HTML_Tag::create( 'figure', $image.$caption );
+			$content	= HtmlTag::create( 'figure', $image.$caption );
 		}
 		if( $post->modifiedAt ){
 			$modifiedAt		= sprintf( $words['thread']['modifiedAt'], date( "d.m.Y H:i", $post->createdAt ) );
-			$content		.= UI_HTML_Tag::create( 'div', $modifiedAt, array( 'class' => 'modified muted' ) );
+			$content		.= HtmlTag::create( 'div', $modifiedAt, array( 'class' => 'modified muted' ) );
 		}
 		$cells	= array(
-			UI_HTML_Tag::create( 'td', $user ),
-			UI_HTML_Tag::create( 'td', $content, array( 'class' => 'content' ) ),
-			UI_HTML_Tag::create( 'td', $buttons ),
+			HtmlTag::create( 'td', $user ),
+			HtmlTag::create( 'td', $content, array( 'class' => 'content' ) ),
+			HtmlTag::create( 'td', $buttons ),
 		);
-		$rows[]	= UI_HTML_Tag::create( 'tr', $cells, array(
+		$rows[]	= HtmlTag::create( 'tr', $cells, array(
 			'id'	=> 'post-'.$post->postId,
 			'class'	=> 'post-type-'.$post->type
 		) );
 		$lastPostId	= $post->postId;
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '20%', '65%', '15%' );
-	$heads		= UI_HTML_Elements::TableHeads( array() );
-	$thead		= UI_HTML_Tag::create( 'thead', $heads );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$colgroup	= HtmlElements::ColumnGroup( '20%', '65%', '15%' );
+	$heads		= HtmlElements::TableHeads( array() );
+	$thead		= HtmlTag::create( 'thead', $heads );
+	$tbody		= HtmlTag::create( 'tbody', $rows );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 $panelList	= '
 <div class="content-panel">

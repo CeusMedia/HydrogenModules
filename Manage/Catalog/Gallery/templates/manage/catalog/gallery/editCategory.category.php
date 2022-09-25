@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['editCategory'];
 
 $optStatus	= UI_HTML_Elements::Options( $words['states'], $category->status );
@@ -7,7 +9,7 @@ $iconUpload	= '<i class="icon-folder-open icon-white"></i>';
 
 $thumb		= "";
 if( $category->image )
-	$thumb	= new UI_HTML_Tag( 'img', NULL, array(
+	$thumb	= HtmlTag::create( 'img', NULL, array(
 		'src'		=> $pathImages.$category->image,
 		'class'		=> 'img-polaroid',
 		'width'		=> "100%",

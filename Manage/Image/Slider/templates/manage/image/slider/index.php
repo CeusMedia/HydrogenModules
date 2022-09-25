@@ -1,11 +1,13 @@
 <?php
-$iconDurationShow		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconDurationTransition	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrows-h' ) );
-$iconSlides				= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-image' ) );
-$iconFormatLandscape	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-file-o fa-rotate-90' ) );
-$iconFormatPortrait		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-file-o' ) );
-$iconViews				= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconAge				= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconDurationShow		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconDurationTransition	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrows-h' ) );
+$iconSlides				= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-image' ) );
+$iconFormatLandscape	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-file-o fa-rotate-90' ) );
+$iconFormatPortrait		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-file-o' ) );
+$iconViews				= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconAge				= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) );
 
 $helperDuration	= new View_Helper_Image_Slider_Duration();
 $helperDuration->setPrecisionBySliders( $sliders );
@@ -16,8 +18,8 @@ if( $sliders ){
 	foreach( $sliders as $slider ){
 		$cover	= '';
 		if( $slider->slides )
-			$cover	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $basePath.$slider->path.$slider->slides[0]->source, 'style' => 'max-width: 96px; max-height: 64px' ) );
-		$link	= UI_HTML_Tag::create( 'a', $slider->title, array( 'href' => './manage/image/slider/edit/'.$slider->sliderId ) );
+			$cover	= HtmlTag::create( 'img', NULL, array( 'src' => $basePath.$slider->path.$slider->slides[0]->source, 'style' => 'max-width: 96px; max-height: 64px' ) );
+		$link	= HtmlTag::create( 'a', $slider->title, array( 'href' => './manage/image/slider/edit/'.$slider->sliderId ) );
 		$createdAt	= date( 'd.m.Y', $slider->createdAt ).' <small>'.date( 'H:i:s', $slider->createdAt ).'</small>';
 		if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) )
 			$createdAt	= View_Helper_TimePhraser::convertStatic( $env, $slider->createdAt, TRUE );
@@ -35,18 +37,18 @@ if( $sliders ){
 		) );
 		$durations	= join( '<br/>', array(
 			$iconDurationShow.' '.$helperDuration->formatDuration( $slider->durationShow ).'s',
-			UI_HTML_Tag::create( 'acronym', $iconDurationTransition.' '.$helperDuration->formatDuration( $slider->durationSlide ).'s', array( 'title' => $transition ) ),
+			HtmlTag::create( 'acronym', $iconDurationTransition.' '.$helperDuration->formatDuration( $slider->durationSlide ).'s', array( 'title' => $transition ) ),
 		) );
 		$views		= join( '<br/>', array(
 			$iconViews.' '.$slider->views,
 			$iconAge.' '.$createdAt,
 		) );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $cover, array( 'class' => 'image-slider-cover', 'style' => 'text-align: center' ) ),
-			UI_HTML_Tag::create( 'td', $link.'<br/><small class="muted">'.$slider->path.'</small>', array( 'class' => 'image-slider-title' ) ),
-			UI_HTML_Tag::create( 'td', $dimensions, array( 'class' => 'image-slider-dimensions' ) ),
-			UI_HTML_Tag::create( 'td', $durations, array( 'class' => 'image-slider-times' ) ),
-			UI_HTML_Tag::create( 'td', $views, array( 'class' => 'image-slider-views-since' ) ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $cover, array( 'class' => 'image-slider-cover', 'style' => 'text-align: center' ) ),
+			HtmlTag::create( 'td', $link.'<br/><small class="muted">'.$slider->path.'</small>', array( 'class' => 'image-slider-title' ) ),
+			HtmlTag::create( 'td', $dimensions, array( 'class' => 'image-slider-dimensions' ) ),
+			HtmlTag::create( 'td', $durations, array( 'class' => 'image-slider-times' ) ),
+			HtmlTag::create( 'td', $views, array( 'class' => 'image-slider-views-since' ) ),
 		), array( 'class' => $rowClass, 'style' => 'height: 70px' ) );
 	}
 	$heads	= array(
@@ -57,18 +59,18 @@ if( $sliders ){
 		'Views since',
 	);
 	$colgroup	= UI_HTML_Elements::ColumnGroup( "84px", "", "130px", "120px", "135px" );
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( $heads ) );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-	$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
+	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( $heads ) );
+	$tbody	= HtmlTag::create( 'tbody', $list );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
 }
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
 
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconAdd	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-plus fa-inverse' ) );
+	$iconAdd	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-plus fa-inverse' ) );
 }
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
 	'href'		=> './manage/image/slider/add',
 	'class'		=> 'btn btn-small not-btn-info btn-success',
 ) );

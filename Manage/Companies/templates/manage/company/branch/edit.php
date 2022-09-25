@@ -1,14 +1,16 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['edit'];
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconCompany	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-home' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconCompany	= HtmlTag::create( 'i', '', array( 'class' => 'icon-home' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
 
-$iconActivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
-$iconReject		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconDeactivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
+$iconReject		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconDeactivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 
 
 $optStatus	= HTML::Options( $words['states'], $branch->status );
@@ -24,7 +26,7 @@ if( $branch->longitude ){
 
 	$panelMap	= HTML::H3( 'Geoinformationen' ).'
 	<div style="border: 1px solid black; width: 100%; height: 500px">
-		'.UI_HTML_Tag::create( 'div', '', array(
+		'.HtmlTag::create( 'div', '', array(
 			'id'	=> "map_canvas",
 			'style'	=> "width:100%; height:100%",
 			'data-longitude'	=> $branch->longitude,
@@ -50,28 +52,28 @@ if( $branch->longitude ){
 
 $buttonActivate	= '';
 if( in_array( $branch->status, array( 0, 1 ) ) ){
-	$buttonActivate		= UI_HTML_Tag::create( 'a', $iconActivate.'&nbsp;'.$w->buttonActivate, array(
+	$buttonActivate		= HtmlTag::create( 'a', $iconActivate.'&nbsp;'.$w->buttonActivate, array(
 		'href'	=> './manage/company/branch/activate/'.$branch->branchId,
 		'class'	=> 'btn btn-small btn-success',
 	) );
 }
 $buttonReject	= '';
 if( in_array( $branch->status, array( 0, 1 ) ) ){
-	$buttonReject	= UI_HTML_Tag::create( 'a', $iconReject.'&nbsp;'.$w->buttonReject, array(
+	$buttonReject	= HtmlTag::create( 'a', $iconReject.'&nbsp;'.$w->buttonReject, array(
 		'href'	=> './manage/company/branch/reject/'.$branch->branchId,
 		'class'	=> 'btn btn-small btn-inverse',
 	) );
 }
 $buttonDeactivate	= '';
 /*if( in_array( $branch->status, array( 0, 1 ) ) ){
-	$buttonDeactivate	= UI_HTML_Tag::create( 'a', $iconDeactivate.'&nbsp;'.$w->buttonDeactivate, array(
+	$buttonDeactivate	= HtmlTag::create( 'a', $iconDeactivate.'&nbsp;'.$w->buttonDeactivate, array(
 		'href'	=> './manage/company/branch/deactivate/'.$branch->branchId,
 		'class'	=> 'btn btn-small btn-inverse',
 	) );
 }*/
 
 $panelEdit	= HTML::DivClass( 'content-panel',
-	UI_HTML_Tag::create( 'h3', '<a class="muted" href="./manage/company/branch/">'.$w->legend.'</a> '.$branch->title ).
+	HtmlTag::create( 'h3', '<a class="muted" href="./manage/company/branch/">'.$w->legend.'</a> '.$branch->title ).
 	HTML::DivClass( 'content-panel-inner',
 		HTML::Form( './manage/company/branch/edit/'.$branch->branchId, 'branch_edit',
 			HTML::DivClass( 'row-fluid',
@@ -125,7 +127,7 @@ $panelEdit	= HTML::DivClass( 'content-panel',
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12',
 					HTML::Label( 'url', $w->labelDescription ).
-					UI_HTML_Tag::create( 'textarea', $branch->description, array(
+					HtmlTag::create( 'textarea', $branch->description, array(
 						'name'	=> 'description',
 						'id'	=> 'input_description',
 						'class' => 'span12',
@@ -152,7 +154,7 @@ $panelImages	= $view->loadTemplateFile( 'manage/company/branch/edit.images.php' 
 $panelTags		= $view->loadTemplateFile( 'manage/company/branch/edit.tags.php' );
 
 return HTML::DivClass( 'row-fluid',
-#	UI_HTML_Tag::create( 'h2', $w->heading ).
+#	HtmlTag::create( 'h2', $w->heading ).
 	HTML::DivClass( 'span8',
 		$panelEdit
 	).

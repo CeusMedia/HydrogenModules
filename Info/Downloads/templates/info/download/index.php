@@ -1,14 +1,16 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helper			= new View_Helper_TimePhraser( $env );
-$iconOpenFolder	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconDownload	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
-$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconUp			= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-up' ) );
-$iconDown		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-down' ) );
+$iconOpenFolder	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconDownload	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconUp			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-up' ) );
+$iconDown		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-down' ) );
 $rows			= array( 'folders' => array(), 'files' => array() );
 
 foreach( $files as $file ){
@@ -19,38 +21,38 @@ foreach( $files as $file ){
 	$urlRemove		= './info/download/remove/'.$file->downloadFileId;
 	$class			= 'type type-'.pathinfo( $file->title, PATHINFO_EXTENSION );
 	$underline		= $size.', '.$timePhrase.', '.$file->nrDownloads.' Downloads';
-	$underline		= UI_HTML_Tag::create( 'small', $underline, array( 'class' => "muted" ) );
+	$underline		= HtmlTag::create( 'small', $underline, array( 'class' => "muted" ) );
 	$label			= $file->title;
 	$label			= preg_replace( '/\.[a-z]+$/', '<small class="muted">\\0</small>', $label );
 	$label			= $label.'<br/>'.$underline;
 
 	$url			= in_array( 'view', $rights ) ? $urlView : $urlDownload;
-	$label			= UI_HTML_Tag::create( 'a', $label, array( 'href' => $url, 'class' => 'name' ) );
+	$label			= HtmlTag::create( 'a', $label, array( 'href' => $url, 'class' => 'name' ) );
 	$buttonView	= "";
 	$buttonDownload	= "";
 	$buttonRemove	= "";
 	if( in_array( 'download', $rights ) ){
-		$buttonDownload	= UI_HTML_Tag::create( 'a', $iconDownload, array(
+		$buttonDownload	= HtmlTag::create( 'a', $iconDownload, array(
 			'href'	=> $urlDownload,
 			'class'	=> 'btn not-btn-small btn-primary',
 			'title'	=> $words['index']['buttonDownload']
 		) );
 	}
 	if( in_array( 'remove', $rights ) ){
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
 			'href'	=> $urlRemove,
 			'class'	=> 'btn not-btn-small btn-danger',
 			'title'	=> $words['index']['buttonRemove']
 		) );
 	}
 	$buttons		= $buttonDownload.'&nbsp;'.$buttonRemove;
-	$actions		= UI_HTML_Tag::create( 'div', $buttonView.$buttonDownload.$buttonRemove, array( 'class' => 'btn-group pull-right' ) );
-//	$actions		= UI_HTML_Tag::create( 'div', $buttonDownload.'&nbsp;'.$buttonRemove, array( 'class' => 'pull-right' ) );
+	$actions		= HtmlTag::create( 'div', $buttonView.$buttonDownload.$buttonRemove, array( 'class' => 'btn-group pull-right' ) );
+//	$actions		= HtmlTag::create( 'div', $buttonDownload.'&nbsp;'.$buttonRemove, array( 'class' => 'pull-right' ) );
 	$cells			= array(
-		UI_HTML_Tag::create( 'td', $label/*$link*/, array( 'class' => 'file' ) ),
-		UI_HTML_Tag::create( 'td', $actions ),
+		HtmlTag::create( 'td', $label/*$link*/, array( 'class' => 'file' ) ),
+		HtmlTag::create( 'td', $actions ),
 	);
-	$row			= UI_HTML_Tag::create( 'tr', $cells, array( 'class' => $class ) );
+	$row			= HtmlTag::create( 'tr', $cells, array( 'class' => $class ) );
 	$rows['files'][$file->title]		= $row;
 }
 ksort( $rows['files'] );
@@ -58,48 +60,48 @@ ksort( $rows['files'] );
 foreach( $folders as $folder ){
 	$url	= './info/download/index/'.$folder->downloadFolderId;
 	$label	= $folder->title.'<br/>';
-	$info	= UI_HTML_Tag::create( 'small', $folder->nrFiles.' Dateien und '.$folder->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
-	$label	= UI_HTML_Tag::create( 'a', $label.$info, array( 'class' => 'name', 'href' => $url ) );
+	$info	= HtmlTag::create( 'small', $folder->nrFiles.' Dateien und '.$folder->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
+	$label	= HtmlTag::create( 'a', $label.$info, array( 'class' => 'name', 'href' => $url ) );
 
 	$buttons	= [];
-	$buttons[]	= UI_HTML_Tag::create( 'a', $iconOpenFolder, array(
+	$buttons[]	= HtmlTag::create( 'a', $iconOpenFolder, array(
 		'href'	=> $url,
 		'class'	=> 'btn not-btn-small btn-info',
 		'title'	=> $words['index']['buttonOpenFolder']
 	) );
 	if( in_array( 'ajaxRenameFolder', $rights ) ){
-		$buttons[]	= UI_HTML_Tag::create( 'button', $iconEdit, array(
+		$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
 			'onclick'	=> 'ModuleInfoDownloads.changeFolderName('.$folder->downloadFolderId.', \''.$folder->title.'\')',
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $words['index']['buttonRename'],
 		) );
 	}
 	if( in_array( 'rankTopic', $rights ) && count( $folders ) > 1 ){
-		$buttons[]	= UI_HTML_Tag::create( 'a', $iconUp, array(
+		$buttons[]	= HtmlTag::create( 'a', $iconUp, array(
 			'href'	=> './info/download/rankFolder/'.$folder->downloadFolderId,
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $words['index']['buttonUp'],
 		) );
-		$buttons[]	= UI_HTML_Tag::create( 'a', $iconDown, array(
+		$buttons[]	= HtmlTag::create( 'a', $iconDown, array(
 			'href'	=> './info/download/rankFolder/'.$folder->downloadFolderId.'/down',
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $words['index']['buttonUp'],
 		) );
 	}
 	if( in_array( 'removeFolder', $rights ) && !$folder->nrFiles && !$folder->nrFolders ){
-		$buttons[]	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$buttons[]	= HtmlTag::create( 'a', $iconRemove, array(
 			'href'	=> './info/download/removeFolder/'.$folder->downloadFolderId,
 			'class'	=> 'btn not-btn-small btn-danger',
 			'title'	=> $words['index']['buttonRemove']
 		) );
 	}
-	$actions	= UI_HTML_Tag::create( 'div', join( $buttons ), array( 'class' => 'btn-group pull-right' ) );
-//	$actions	= UI_HTML_Tag::create( 'div', $buttonOpen.'&nbsp'.$buttonRemove, array( 'class' => 'pull-right' ) );
+	$actions	= HtmlTag::create( 'div', join( $buttons ), array( 'class' => 'btn-group pull-right' ) );
+//	$actions	= HtmlTag::create( 'div', $buttonOpen.'&nbsp'.$buttonRemove, array( 'class' => 'pull-right' ) );
 	$cells		= array(
-		UI_HTML_Tag::create( 'td', $label, array( 'class' => 'folder' ) ),
-		UI_HTML_Tag::create( 'td', $actions ),
+		HtmlTag::create( 'td', $label, array( 'class' => 'folder' ) ),
+		HtmlTag::create( 'td', $actions ),
 	);
-	$row	= UI_HTML_Tag::create( 'tr', $cells, array( 'class' => 'info folder' ) );
+	$row	= HtmlTag::create( 'tr', $cells, array( 'class' => 'info folder' ) );
 	$rows['folders'][$folder->title]	= $row;
 }
 //ksort( $rows['folders'] );
@@ -108,14 +110,14 @@ $rows	= $rows['folders'] + $rows['files'];
 $table	= '<br/><p><em><small class="muted">'.$words['index']['empty'].'</small></em></p>';
 
 if( $rows ){
-	$colgroup	= UI_HTML_Elements::ColumnGroup( "85%", "15%" );
-	$heads		= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'th', $words['index']['headFile'] ),
-		UI_HTML_Tag::create( 'th', $words['index']['headActions'], array( 'class' => 'pull-right' ) ),
+	$colgroup	= HtmlElements::ColumnGroup( "85%", "15%" );
+	$heads		= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'th', $words['index']['headFile'] ),
+		HtmlTag::create( 'th', $words['index']['headActions'], array( 'class' => 'pull-right' ) ),
 	) );
-	$thead		= UI_HTML_Tag::create( 'thead', $heads );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed' ) );
+	$thead		= HtmlTag::create( 'thead', $heads );
+	$tbody		= HtmlTag::create( 'tbody', $rows );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed' ) );
 }
 $panelList	= '
 <div class="content-panel">

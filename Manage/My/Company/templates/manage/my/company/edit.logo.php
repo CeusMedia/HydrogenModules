@@ -1,11 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconSave	= HTML::Icon( 'ok', TRUE );
 $iconOpen	= HTML::Icon( 'folder-open', TRUE );
 
 $logo	= '<div><em><small class="muted">Kein Logo vorhanden.</small></em></div>';
 if( $company->logo ){
-	$logo	= UI_HTML_Tag::create( 'img', NULL, array(
+	$logo	= HtmlTag::create( 'img', NULL, array(
 		'src'	=> 'images/companies/'.$company->logo,
 		'class'	=> 'thumbnail',
 	) );

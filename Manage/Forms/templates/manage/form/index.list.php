@@ -1,26 +1,27 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //print_m( $transferTargets );die;
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 
-$iconMail		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope-o' ) );
-$iconReceiver	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-at' ) );
-$iconTransfer	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
-$iconImport		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
-$iconExchange	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exchange' ) );
+$iconMail		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope-o' ) );
+$iconReceiver	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-at' ) );
+$iconTransfer	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
+$iconImport		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+$iconExchange	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exchange' ) );
 
 $iconsType	= array(
-	Model_Form::TYPE_NORMAL		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) ),
-	Model_Form::TYPE_CONFIRM	=> UI_HTML_Tag::create( 'i', '', array( 'class' =>'fa fa-fw fa-check' ) ),
+	Model_Form::TYPE_NORMAL		=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) ),
+	Model_Form::TYPE_CONFIRM	=> HtmlTag::create( 'i', '', array( 'class' =>'fa fa-fw fa-check' ) ),
 );
 
 $iconsStatus	= array(
-	Model_Form::STATUS_DISABLED		=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
-	Model_Form::STATUS_NEW			=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) ),
-	Model_Form::STATUS_ACTIVATED	=> UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
+	Model_Form::STATUS_DISABLED		=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
+	Model_Form::STATUS_NEW			=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) ),
+	Model_Form::STATUS_ACTIVATED	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
 );
 
 $statuses	= array(
@@ -34,14 +35,14 @@ $types		= array(
 );
 
 $listLabelsStatus	= array(
-	Model_Form::STATUS_DISABLED		=> UI_HTML_Tag::create( 'label', $iconsStatus[Model_Form::STATUS_DISABLED].' '.$statuses[Model_Form::STATUS_DISABLED], array( 'class' => 'label label-inverse' ) ),
-	Model_Form::STATUS_NEW			=> UI_HTML_Tag::create( 'label', $iconsStatus[Model_Form::STATUS_NEW].' '.$statuses[Model_Form::STATUS_NEW], array( 'class' => 'label label-warning' ) ),
-	Model_Form::STATUS_ACTIVATED	=> UI_HTML_Tag::create( 'label', $iconsStatus[Model_Form::STATUS_ACTIVATED].' '.$statuses[Model_Form::STATUS_ACTIVATED], array( 'class' => 'label label-success' ) ),
+	Model_Form::STATUS_DISABLED		=> HtmlTag::create( 'label', $iconsStatus[Model_Form::STATUS_DISABLED].' '.$statuses[Model_Form::STATUS_DISABLED], array( 'class' => 'label label-inverse' ) ),
+	Model_Form::STATUS_NEW			=> HtmlTag::create( 'label', $iconsStatus[Model_Form::STATUS_NEW].' '.$statuses[Model_Form::STATUS_NEW], array( 'class' => 'label label-warning' ) ),
+	Model_Form::STATUS_ACTIVATED	=> HtmlTag::create( 'label', $iconsStatus[Model_Form::STATUS_ACTIVATED].' '.$statuses[Model_Form::STATUS_ACTIVATED], array( 'class' => 'label label-success' ) ),
 );
 
 $listLabelsType		= array(
-	Model_Form::TYPE_NORMAL		=> UI_HTML_Tag::create( 'label', $iconsType[Model_Form::TYPE_NORMAL].' '.$types[Model_Form::TYPE_NORMAL], array( 'class' => 'label' ) ),
-	Model_Form::TYPE_CONFIRM	=> UI_HTML_Tag::create( 'label', $iconsType[Model_Form::TYPE_CONFIRM].' '.$types[Model_Form::TYPE_CONFIRM], array( 'class' => 'label' ) ),
+	Model_Form::TYPE_NORMAL		=> HtmlTag::create( 'label', $iconsType[Model_Form::TYPE_NORMAL].' '.$types[Model_Form::TYPE_NORMAL], array( 'class' => 'label' ) ),
+	Model_Form::TYPE_CONFIRM	=> HtmlTag::create( 'label', $iconsType[Model_Form::TYPE_CONFIRM].' '.$types[Model_Form::TYPE_CONFIRM], array( 'class' => 'label' ) ),
 );
 
 $modelForm	= new Model_Form( $env );
@@ -49,23 +50,23 @@ $modelMail	= new Model_Form_Mail( $env );
 
 $rows		= [];
 foreach( $forms as $form ){
-	$customerMail	= UI_HTML_Tag::create( 'small', '- keine Empfänger-E-Mail zugewiesen -', array( 'class' => "muted" ) );
+	$customerMail	= HtmlTag::create( 'small', '- keine Empfänger-E-Mail zugewiesen -', array( 'class' => "muted" ) );
 	if( $form->customerMailId > 0 ){
 		$mail			= $modelMail->get( $form->customerMailId );
-		$customerMail	= UI_HTML_Tag::create( 'small', array(
-			UI_HTML_Tag::create( 'a', $iconMail.'&nbsp;'.$mail->title, array( 'href' => './manage/form/mail/edit/'.$form->customerMailId.'?from=manage/form'.( $page ? '/'.$page : '' ) ) ),
+		$customerMail	= HtmlTag::create( 'small', array(
+			HtmlTag::create( 'a', $iconMail.'&nbsp;'.$mail->title, array( 'href' => './manage/form/mail/edit/'.$form->customerMailId.'?from=manage/form'.( $page ? '/'.$page : '' ) ) ),
 		) );
 	}
 
-	$managerMail	= UI_HTML_Tag::create( 'em', '- keine -', array( 'class' => "muted" ) );
+	$managerMail	= HtmlTag::create( 'em', '- keine -', array( 'class' => "muted" ) );
 	if( $form->managerMailId > 0 ){
 		$mail			= $modelMail->get( $form->managerMailId );
-		$managerMail	= UI_HTML_Tag::create( 'small', array(
-			UI_HTML_Tag::create( 'a', $iconMail.'&nbsp;'.$mail->title, array( 'href' => './manage/form/mail/edit/'.$form->managerMailId.'?from=manage/form'.( $page ? '/'.$page : '' ) ) ),
+		$managerMail	= HtmlTag::create( 'small', array(
+			HtmlTag::create( 'a', $iconMail.'&nbsp;'.$mail->title, array( 'href' => './manage/form/mail/edit/'.$form->managerMailId.'?from=manage/form'.( $page ? '/'.$page : '' ) ) ),
 		) );
 	}
 
-	$linkEdit	= UI_HTML_Tag::create( 'a', $form->title, array( 'href' => './manage/form/edit/'.$form->formId ) );
+	$linkEdit	= HtmlTag::create( 'a', $form->title, array( 'href' => './manage/form/edit/'.$form->formId ) );
 	$receivers	= [];
 	if( strlen( trim( $form->receivers ) ) ){
 		foreach( preg_split( '/\s*,\s*/', $form->receivers ) as $receiver )
@@ -73,7 +74,7 @@ foreach( $forms as $form ){
 				$receivers[]	= preg_replace( '/^(\S+)@\S+$/', '\\1', $receiver );
 	}
 	$receivers	= $receivers ? $iconReceiver.'&nbsp;'.join( ', ', $receivers ) : '-';
-	$receivers	= UI_HTML_Tag::create( 'small', $receivers );
+	$receivers	= HtmlTag::create( 'small', $receivers );
 
 	$transfers	= '';
 	if( count( $form->transfers ) ){
@@ -83,7 +84,7 @@ foreach( $forms as $form ){
 		}
 		$list		= 'Transfers:'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
 		$label		= count( $form->transfers );
-		$transfers	= UI_HTML_Tag::create( 'span', $iconTransfer.'&nbsp;'.$label, ['class' => 'label label-info', 'title' => $list] );
+		$transfers	= HtmlTag::create( 'span', $iconTransfer.'&nbsp;'.$label, ['class' => 'label label-info', 'title' => $list] );
 	}
 
 	$importers	= '';
@@ -94,30 +95,30 @@ foreach( $forms as $form ){
 		}
 		$list		= 'Imports:'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
 		$label		= count( $form->imports );
-		$importers	= UI_HTML_Tag::create( 'span', $iconImport.'&nbsp;'.$label, ['class' => 'label label-info', 'title' => $list] );
+		$importers	= HtmlTag::create( 'span', $iconImport.'&nbsp;'.$label, ['class' => 'label label-info', 'title' => $list] );
 	}
 
-	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'small', $form->formId ), array( 'style' => 'text-align: right' ) ),
-		UI_HTML_Tag::create( 'td', $linkEdit.'<br/>'.$customerMail, array( 'data-class' => 'data-autocut' ) ),
-		UI_HTML_Tag::create( 'td', $listLabelsStatus[$form->status].'<br/>'.$listLabelsType[$form->type] ),
-		UI_HTML_Tag::create( 'td', $receivers.'<br/>'.$managerMail, array( 'data-class' => 'autocut' ) ),
-		UI_HTML_Tag::create( 'td', $importers.'<br/>'.$transfers ),
+	$rows[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', HtmlTag::create( 'small', $form->formId ), array( 'style' => 'text-align: right' ) ),
+		HtmlTag::create( 'td', $linkEdit.'<br/>'.$customerMail, array( 'data-class' => 'data-autocut' ) ),
+		HtmlTag::create( 'td', $listLabelsStatus[$form->status].'<br/>'.$listLabelsType[$form->type] ),
+		HtmlTag::create( 'td', $receivers.'<br/>'.$managerMail, array( 'data-class' => 'autocut' ) ),
+		HtmlTag::create( 'td', $importers.'<br/>'.$transfers ),
 	) );
 }
 $colgroup	= UI_HTML_Elements::ColumnGroup( '40px', '', '160px', '260px', '40px' );
-$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
-	UI_HTML_Tag::create( 'th', 'ID', array( 'style' => 'text-align: right' ) ),
-	UI_HTML_Tag::create( 'th', 'Titel / E-Mail an Absender' ),
-	UI_HTML_Tag::create( 'th', 'Typ / Zustand' ),
-	UI_HTML_Tag::create( 'th', 'Empfänger und -E-Mail' ),
-	UI_HTML_Tag::create( 'th', UI_HTML_Tag::create( 'acronym', $iconExchange, ['title' => 'Datenübertragung'] ) ),
+$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+	HtmlTag::create( 'th', 'ID', array( 'style' => 'text-align: right' ) ),
+	HtmlTag::create( 'th', 'Titel / E-Mail an Absender' ),
+	HtmlTag::create( 'th', 'Typ / Zustand' ),
+	HtmlTag::create( 'th', 'Empfänger und -E-Mail' ),
+	HtmlTag::create( 'th', HtmlTag::create( 'acronym', $iconExchange, ['title' => 'Datenübertragung'] ) ),
 ) ) );
-$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-$table		= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped table-condensed' ) );
+$tbody		= HtmlTag::create( 'tbody', $rows );
+$table		= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped table-condensed' ) );
 
-$heading	= UI_HTML_Tag::create( 'h2', 'Formulare' );
-$linkAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neues Formular', array(
+$heading	= HtmlTag::create( 'h2', 'Formulare' );
+$linkAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neues Formular', array(
 	'href'	=> './manage/form/add',
 	'class'	=> 'btn btn-success',
 ) );
@@ -128,12 +129,12 @@ if( $pages > 1 ){
 	$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/form/', $page, $pages );
 	$pagination->patternUrl	= '%s';
 }
-$buttonbar	= UI_HTML_Tag::create( 'div', join( '&nbsp;', array( $linkAdd, $pagination ) ), array( 'class' => 'buttonbar' ) );
+$buttonbar	= HtmlTag::create( 'div', join( '&nbsp;', array( $linkAdd, $pagination ) ), array( 'class' => 'buttonbar' ) );
 
 
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Formulare' ),
-	UI_HTML_Tag::create( 'div', array(
+return HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', 'Formulare' ),
+	HtmlTag::create( 'div', array(
 		$table,
 		$buttonbar,
 	), array( 'class' => 'content-panel-inner' ) ),

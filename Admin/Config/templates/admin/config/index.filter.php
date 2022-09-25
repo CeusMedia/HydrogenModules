@@ -1,18 +1,20 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index-filter'];
 
-$iconSearch		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-zoom-in' ) );
-$iconReset		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-toom-out' ) );
+$iconSearch		= HtmlTag::create( 'i', '', array( 'class' => 'icon-zoom-in' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'icon-toom-out' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconSearch		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-search' ) );
-	$iconReset		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+	$iconSearch		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-search' ) );
+	$iconReset		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 }
 
 $optCategory	= array( '' => '- alle -' );
 foreach( $categories as $category => $nrModules )
 	$optCategory[$category]	= $category.' ('.$nrModules.')';
-$optCategory	= UI_HTML_Elements::Options( $optCategory, $filterCategory );
+$optCategory	= HtmlElements::Options( $optCategory, $filterCategory );
 
 return '
 <div class="content-panel content-panel-form content-panel-filter">

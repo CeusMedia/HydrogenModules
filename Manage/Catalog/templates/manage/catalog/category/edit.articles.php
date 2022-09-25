@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*  --  ARTICLES IN CATEGORY  --  */
 $listArticles	= '<em class="muted">Keine vorhanden.</em>';
@@ -6,18 +7,18 @@ if( $articles ){
 	$rows	= [];
 	foreach( $articles as $article ){
 		$url	= './manage/catalog/article/edit/'.$article->articleId;
-		$link	= UI_HTML_Tag::create( 'a', $article->title, array( 'href' => $url, 'title' => $article->volume ) );
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', $article->volume, array( 'style' => 'text-align: right' ) ),
+		$link	= HtmlTag::create( 'a', $article->title, array( 'href' => $url, 'title' => $article->volume ) );
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $link ),
+			HtmlTag::create( 'td', $article->volume, array( 'style' => 'text-align: right' ) ),
 		) );
 	}
-	$heads		= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'th', 'Veröffentlichung' ),
-		UI_HTML_Tag::create( 'th', 'Band', array( 'style' => 'text-align: right' ) ),
+	$heads		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'th', 'Veröffentlichung' ),
+		HtmlTag::create( 'th', 'Band', array( 'style' => 'text-align: right' ) ),
 	) ) );
-	$tbody			= UI_HTML_Tag::create( 'tbody', $rows );
-	$listArticles	= UI_HTML_Tag::create( 'table', $heads.$tbody, array( 'class' => 'table table-striped table-small' ) );
+	$tbody			= HtmlTag::create( 'tbody', $rows );
+	$listArticles	= HtmlTag::create( 'table', $heads.$tbody, array( 'class' => 'table table-striped table-small' ) );
 }
 
 return '

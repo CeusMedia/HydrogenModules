@@ -1,13 +1,14 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
+$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' '.$words['add']['buttonCancel'], array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$words['add']['buttonCancel'], array(
 	'href'	=> './manage/image/slider',
 	'class'	=> 'btn btn-small',
 ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' '.$words['add']['buttonSave'], array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$words['add']['buttonSave'], array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',

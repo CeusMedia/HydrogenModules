@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
@@ -26,9 +27,9 @@ class View_Admin_Config extends View
 		$isNumeric		= in_array( $item->type, array( "integer", "float" ) ) || preg_match( "/^[0-9\.]+$/", $item->value );
 		if( $item->values ){
 			$values		= array_combine( $item->values, $item->values );
-			$options	= UI_HTML_Elements::Options( $values, $item->value );
+			$options	= HtmlElements::Options( $values, $item->value );
 			$class		= $isNumeric ? "span3" : "span6";
-			$input		= new UI_HTML_Tag( 'select', $options, array(
+			$input		= HtmlTag::create( 'select', $options, array(
 				'name'	=> $moduleId.'|'.$item->key,
 				'class'	=> $class,
 			) );
@@ -55,7 +56,7 @@ class View_Admin_Config extends View
 			$item->value	= preg_match( '/password/', $item->key ) ? '' : $item->value;
 			if( preg_match( "/,/", $item->value ) ){
 				$value		= str_replace( ",", "\n", htmlentities( $item->value, ENT_QUOTES, 'UTF-8' ) );
-				$input		= new UI_HTML_Tag( 'textarea', $value, array(
+				$input		= HtmlTag::create( 'textarea', $value, array(
 					'name'			=> $moduleId.'|'.$item->key,
 					'multiple'		=> 'multiple',
 					'class'			=> $class,
@@ -63,7 +64,7 @@ class View_Admin_Config extends View
 				) );
 			}
 			else{
-				$input		= new UI_HTML_Tag( 'input', NULL, array(
+				$input		= HtmlTag::create( 'input', NULL, array(
 					'type'			=> 'text',
 					'name'			=> $moduleId.'|'.$item->key,
 					'class'			=> $class,

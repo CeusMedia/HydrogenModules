@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -365,7 +366,7 @@ class Controller_Manage_Content_Image extends Controller
 			$content	= base64_encode( file_get_contents( $this->basePath.$imagePath ) );
 			$source		= "data:".$mimetype.";base64,".$content;
 			$page		= new UI_HTML_PageFrame();
-			$page->addBody( UI_HTML_Tag::create( 'img', NULL, array( 'src' => $source ) ) );
+			$page->addBody( HtmlTag::create( 'img', NULL, array( 'src' => $source ) ) );
 			print( $page->build() );
 			exit;
 		}

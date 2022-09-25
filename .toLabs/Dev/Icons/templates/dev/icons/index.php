@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $baseUri	= 'http://localhost/';
 $basePath	= '/var/www/';
@@ -20,10 +21,10 @@ $projects	= array(
 $list	= [];
 foreach( $projects as $path => $label ){
 	$class	= $path == $selected ? 'active' : NULL;
-	$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => './dev/icons/?project='.urlencode( $path ) ) );
-	$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+	$link	= HtmlTag::create( 'a', $label, array( 'href' => './dev/icons/?project='.urlencode( $path ) ) );
+	$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 }
-$list	= UI_HTML_Tag::create( 'ul', $list );
+$list	= HtmlTag::create( 'ul', $list );
 
 $panelFilter	= '
 <fieldset>
@@ -50,9 +51,9 @@ function listFolder( $path, $uri, $skip = [] ){
 	foreach( new FS_File_RegexFilter( $path, "/(png|gif|ico|svg)$/i" ) as $file ){
 		$url		= $uri.$file->getFilename();
 		$label		= $file->getFilename();
-		$icon		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $url, 'title' => $label, 'alt' => $label ) );
-#		$label		= UI_HTML_Tag::create( 'div', $file->getFilename(), array( 'class' => 'label' ) );
-		$list[$label]	= UI_HTML_Tag::create( 'div', $icon, array( 'class' => 'item' ) );
+		$icon		= HtmlTag::create( 'img', NULL, array( 'src' => $url, 'title' => $label, 'alt' => $label ) );
+#		$label		= HtmlTag::create( 'div', $file->getFilename(), array( 'class' => 'label' ) );
+		$list[$label]	= HtmlTag::create( 'div', $icon, array( 'class' => 'item' ) );
 	}
 	ksort( $list );
 	return join( $list );

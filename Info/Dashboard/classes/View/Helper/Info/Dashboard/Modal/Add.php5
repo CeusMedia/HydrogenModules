@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abstract
@@ -16,7 +17,7 @@ class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abst
 	{
 		$w			= (object) $this->getWords( 'add', 'info/dashboard' );
 
-		$list		= UI_HTML_Tag::create( 'div', $w->emptyPanels, array( 'class' => 'alert alert-warning' ) );
+		$list		= HtmlTag::create( 'div', $w->emptyPanels, array( 'class' => 'alert alert-warning' ) );
 
 		$moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
 		$defaultPanels	= explode( ',', $moduleConfig->get( 'panels' ) );
@@ -24,19 +25,19 @@ class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abst
 		if( $this->panels ){
 			$list	= [];
 			foreach( $this->panels as $panelId => $panel ){
-				$input	= UI_HTML_Tag::create( 'input', NULL, array(
+				$input	= HtmlTag::create( 'input', NULL, array(
 					'type'		=> 'checkbox',
 					'name'		=> 'panels[]',
 					'value'		=> $panelId,
 					'checked'	=> in_array( $panelId, $defaultPanels ) ? "checked" : NULL,
 				) );
 				$key	= str_pad( $panel->rank, 3, 0, STR_PAD_LEFT ).'.'.uniqid();
-				$list[$key]	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$panel->title, array(
+				$list[$key]	= HtmlTag::create( 'label', $input.'&nbsp;'.$panel->title, array(
 					'class'	=> 'checkbox',
 				) );
 			}
 			ksort( $list );
-			$list	= UI_HTML_Tag::create( 'div', $list, array( 'style' => "padding: 0 0.5em 1em 0.5em;" ) );
+			$list	= HtmlTag::create( 'div', $list, array( 'style' => "padding: 0 0.5em 1em 0.5em;" ) );
 		}
 
 		$fieldSelect	= '';
@@ -76,7 +77,7 @@ class View_Helper_Info_Dashboard_Modal_Add extends CMF_Hydrogen_View_Helper_Abst
 			'.$fieldSelect.'
 			<div class="row-fluid">
 				<div class="span12">
-					'.UI_HTML_Tag::create( 'h5', $w->labelPanels ).'
+					'.HtmlTag::create( 'h5', $w->labelPanels ).'
 					'.$list.'
 				</div>
 			</div>

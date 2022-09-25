@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['edit'];
 
 $optStatus	= HTML::Options( $words['states'], $branch->status );
@@ -15,7 +17,7 @@ if( $branch->longitude ){
 	$tags		= (object) $geocoder->getGeoTags( $query );
 	$panelMap	= HTML::DivClass( 'column-clear', '
 	<div style="border: 1px solid black; float: right; width: 100%; height: 520px">
-		'.UI_HTML_Tag::create( 'div', '', array(
+		'.HtmlTag::create( 'div', '', array(
 			'id'	=> "map_canvas",
 			'style'	=> "width:100%; height:100%",
 			'data-longitude'	=> $branch->longitude,
@@ -52,7 +54,7 @@ foreach( $images as $image ){
 $imageList	= HTML::UlClass( 'images', join( $list ) );
 
 return HTML::DivClass( 'column-left-50',
-#	UI_HTML_Tag::create( 'h2', $w->heading ).
+#	HtmlTag::create( 'h2', $w->heading ).
 	HTML::Form( './manage/branch/edit/'.$branch->branchId, 'branch_edit',
 		HTML::Fields(
 			HTML::Legend( $w->legend, 'icon branch edit' ).

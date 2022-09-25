@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['view'];
 
@@ -9,25 +10,25 @@ $list		= $helper->render();
 
 $description	= '';;
 if( strlen( trim( $gallery->description ) ) )
-	$description	= UI_HTML_Tag::create( 'p', $view->renderContent( $gallery->description ) );
+	$description	= HtmlTag::create( 'p', $view->renderContent( $gallery->description ) );
 
 $linkNext	= '';
 $linkPrev	= '';
 
-$linkIndex	= UI_HTML_Tag::create( 'a', $w->buttonIndex, array(
+$linkIndex	= HtmlTag::create( 'a', $w->buttonIndex, array(
 	'href'	=> !empty( $referer ) ? $referer->get() : $baseUriPath,
 	'class'	=> 'btn',
 ) );
 
 if( $prevGallery ){
-	$label		= UI_HTML_Tag::create( 'span', $w->buttonPrev, array( 'class' => 'muted' ) );
-	$linkPrev	= $label.UI_HTML_Tag::create( 'a', $prevGallery->title, array(
+	$label		= HtmlTag::create( 'span', $w->buttonPrev, array( 'class' => 'muted' ) );
+	$linkPrev	= $label.HtmlTag::create( 'a', $prevGallery->title, array(
 		'href'	=> View_Helper_Info_Gallery::getGalleryUrl( $prevGallery, $baseUriPath )
 	) );
 }
 if( $nextGallery ){
-	$label		= UI_HTML_Tag::create( 'span', $w->buttonNext, array( 'class' => 'muted' ) );
-	$linkNext	= $label.UI_HTML_Tag::create( 'a', $nextGallery->title, array(
+	$label		= HtmlTag::create( 'span', $w->buttonNext, array( 'class' => 'muted' ) );
+	$linkNext	= $label.HtmlTag::create( 'a', $nextGallery->title, array(
 		'href'	=> View_Helper_Info_Gallery::getGalleryUrl( $nextGallery, $baseUriPath )
 	) );
 }

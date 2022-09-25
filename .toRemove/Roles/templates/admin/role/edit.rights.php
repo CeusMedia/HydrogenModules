@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $rows	= [];
 foreach( $actions as $controller => $class ){
 	$list	= [];
@@ -23,10 +25,10 @@ foreach( $actions as $controller => $class ){
 				$id	= NULL;
 				break;
 		}
-		$label	= UI_HTML_Tag::create( 'label', $method->name, array() );
-		$list[]	= UI_HTML_Tag::create( 'li', $check.$label, array( 'class' => $class, 'id' => $id ) );
+		$label	= HtmlTag::create( 'label', $method->name, array() );
+		$list[]	= HtmlTag::create( 'li', $check.$label, array( 'class' => $class, 'id' => $id ) );
 	}
-	$list	= UI_HTML_Tag::create( 'ul', join( $list ), array() );
+	$list	= HtmlTag::create( 'ul', join( $list ), array() );
 	$rows[]	= '<tr><td>'.$controller.'</td><td>'.$list.'</td></tr>';
 }
 $tableRights	= '<table><tr><th>Controller</th><th>Aktionen</th><th>Status</th></tr>'.join( $rows ).'</table>';

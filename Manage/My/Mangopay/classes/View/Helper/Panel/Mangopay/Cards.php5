@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Panel_Mangopay_Cards extends View_Helper_Panel_Mangopay{
 
 	protected $words;
@@ -18,22 +20,22 @@ class View_Helper_Panel_Mangopay_Cards extends View_Helper_Panel_Mangopay{
 		foreach( $this->data as $item ){
 		//	if( !$item->Active )
 		//		continue;
-			$link		= UI_HTML_Tag::create( 'a', $item->Id, array( 'href' => sprintf( $this->options->get( 'linkItem' ), $item->Id ) ) );
-			$status		= UI_HTML_Tag::create( 'span', $item->Active ? 'aktiv' : 'deaktiviert', array( 'class' => 'label label-'.( $item->Active ? 'success' : 'important' ) ) );
+			$link		= HtmlTag::create( 'a', $item->Id, array( 'href' => sprintf( $this->options->get( 'linkItem' ), $item->Id ) ) );
+			$status		= HtmlTag::create( 'span', $item->Active ? 'aktiv' : 'deaktiviert', array( 'class' => 'label label-'.( $item->Active ? 'success' : 'important' ) ) );
 			$number		= View_Helper_Panel_Mangopay::renderCardNumber( $item->Alias );
 			$provider	= $this->words['cardTypes'][$item->CardType].'<br/><small class="muted">'.$this->words['cardProviders'][$item->CardProvider].'</small>';
-			$rows[]		= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create(' td', $link, array( 'class' => 'cell-card-id' ) ),
-				UI_HTML_Tag::create(' td', $provider, array( 'class' => 'cell-card-provider' ) ),
-				UI_HTML_Tag::create(' td', $number, array( 'class' => 'cell-card-title' ) ),
-				UI_HTML_Tag::create(' td', $item->Currency, array( 'class' => 'cell-card-currency' ) ),
-				UI_HTML_Tag::create(' td', $status, array( 'class' => 'cell-card-status' ) ),
+			$rows[]		= HtmlTag::create( 'tr', array(
+				HtmlTag::create(' td', $link, array( 'class' => 'cell-card-id' ) ),
+				HtmlTag::create(' td', $provider, array( 'class' => 'cell-card-provider' ) ),
+				HtmlTag::create(' td', $number, array( 'class' => 'cell-card-title' ) ),
+				HtmlTag::create(' td', $item->Currency, array( 'class' => 'cell-card-currency' ) ),
+				HtmlTag::create(' td', $status, array( 'class' => 'cell-card-status' ) ),
 			) );
 		}
 		$colgroup	= UI_HTML_Elements::ColumnGroup( "100", "160", "", "90", "100" );
-		$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Typ/Anbieter', 'Card Number <small class="muted">(anonymisiert)</small>', 'Currency', 'Status' ) ) );
-		$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-		$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
+		$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Typ/Anbieter', 'Card Number <small class="muted">(anonymisiert)</small>', 'Currency', 'Status' ) ) );
+		$tbody		= HtmlTag::create( 'tbody', $rows );
+		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
 		return '
 		<div class="content-panel">
 			<h3>Credit Cards <small class="muted"></small></h3>

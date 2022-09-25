@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
@@ -64,14 +65,14 @@ class View_Admin_Mail_Queue extends View
 			$rows[]	= HtmlTag::create( 'tr', array_reverse( $row ) );
 		}
 		$table2	= HtmlTag::create( 'table', array(
-			UI_HTML_Elements::ColumnGroup( '', '15%', '15%', '15%', '15%' ),
-			HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( $tableHeads ) ),
+			HtmlElements::ColumnGroup( '', '15%', '15%', '15%', '15%' ),
+			HtmlTag::create( 'thead', HtmlElements::TableHeads( $tableHeads ) ),
 			HtmlTag::create( 'tbody', $rows ),
 		), array(
 			'class'		=> 'table table-condensed table-fixed',
 		) );
 		$table1	= HtmlTag::create( 'table', array(
-			UI_HTML_Elements::ColumnGroup( '20%', '80%' ),
+			HtmlElements::ColumnGroup( '20%', '80%' ),
 			HtmlTag::create( 'tbody', HtmlTag::create( 'tr', array(
 				HtmlTag::create( 'td', '<span style="font-size: 3em">'.$model->count( array( 'status' => 0 ) ).'</span>', array( 'style' => 'text-align: right; vertical-align: bottom' ) ),
 				HtmlTag::create( 'td', '<span>Mails in der<br/>Warteschlange</span>', array( 'style' => 'vertical-align: bottom' ) ),

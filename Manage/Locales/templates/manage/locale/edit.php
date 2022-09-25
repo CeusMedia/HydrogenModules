@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $panelFilter	= $this->loadTemplate( 'manage/locale', 'filter' );
 $panelList		= $this->loadTemplate( 'manage/locale', 'list' );
@@ -21,9 +22,9 @@ $optPath	= array_merge( array( '' ), $paths );
 $optPath	= array_combine( $optPath, $optPath );
 $optPath	= UI_HTML_Elements::Options( $optPath, $pathName );
 
-//$textarea		= UI_HTML_Tag::create( 'textarea', utf8_encode( htmlentities( utf8_decode( $content ) ) ), $attributesTextarea );
-$textarea		= UI_HTML_Tag::create( 'textarea', $content, $attributesTextarea );
-$buttonSave		= UI_HTML_Tag::create( 'button', '<i class="icon-ok icon-white"></i> '.$w->buttonSave.'</span>', $attributesButton );
+//$textarea		= HtmlTag::create( 'textarea', utf8_encode( htmlentities( utf8_decode( $content ) ) ), $attributesTextarea );
+$textarea		= HtmlTag::create( 'textarea', $content, $attributesTextarea );
+$buttonSave		= HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i> '.$w->buttonSave.'</span>', $attributesButton );
 $buttonCancel	= UI_HTML_Elements::LinkButton( './manage/locale', '<i class="icon-arrow-left"></i> '.$w->buttonCancel, 'button cancel btn' );
 $buttonRemove	= UI_HTML_Elements::LinkButton( './manage/locale/remove/'.$fileHash, '<i class="icon-remove icon-white"></i> '.$w->buttonRemove, 'button remove btn btn-danger', $w->buttonRemoveConfirm );
 

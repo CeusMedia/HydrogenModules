@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
 
 //  --  PANEL: BRANCHES  --  //
 $w				= (object) $words['branches'];
@@ -101,7 +102,7 @@ $panelEdit	= HTML::Form( './manage/company/edit/'.$company->companyId, 'company_
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12',
 					HTML::Label( 'description', $w->labelDescription ).
-					UI_HTML_Tag::create( 'textarea', $company->description, array(
+					HtmlTag::create( 'textarea', $company->description, array(
 						'name'	=> 'description',
 						'id'	=> 'input_description',
 						'class' => 'span12',
@@ -122,7 +123,7 @@ $panelEdit	= HTML::Form( './manage/company/edit/'.$company->companyId, 'company_
 
 $panelLogo	= $view->loadTemplateFile( 'manage/company/edit.logo.php' );
 
-return //	UI_HTML_Tag::create( 'h2', $w->heading ).
+return //	HtmlTag::create( 'h2', $w->heading ).
 HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span8',
 		$panelEdit

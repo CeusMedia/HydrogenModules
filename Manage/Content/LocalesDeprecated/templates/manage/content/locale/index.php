@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $panelEdit		= '';
 $panelAddFolder	= '';
@@ -18,8 +19,8 @@ if( $fileId && isset( $content ) ){
 		'id'	=> 'input_content',
 		'class'	=> 'button save btn btn-primary',
 	);
-	$textarea	= UI_HTML_Tag::create( 'textarea', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), $attributesTextarea );
-	$buttonSave	= UI_HTML_Tag::create( 'button', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], $attributesButton );
+	$textarea	= HtmlTag::create( 'textarea', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), $attributesTextarea );
+	$buttonSave	= HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], $attributesButton );
 
 	$panelEdit	= '
 <div class="content-panel">
@@ -52,7 +53,7 @@ if( count( $languages ) > 1 ){
 		</div>';
 }
 else
-	$filterLanguage		= UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
+	$filterLanguage		= HtmlTag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
 
 $optType	= UI_HTML_Elements::Options( $words['types'], $type );
 

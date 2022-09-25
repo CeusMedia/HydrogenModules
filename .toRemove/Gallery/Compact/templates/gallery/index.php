@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $feedUrl	= View_Helper_Gallery::getFeedUrl( $env );
 function isMobile(){
 	$userAgent	= getEnv( 'HTTP_USER_AGENT' );
@@ -57,7 +59,7 @@ if( $list ){
 	}
 	foreach( $lists as $list ){
 		$list		= UI_HTML_Elements::unorderedList( $list, 0, array( 'class' => 'folders' ) );
-		$folders	.= UI_HTML_Tag::create( 'div', $list, array( 'class' => 'span'.$width ) );
+		$folders	.= HtmlTag::create( 'div', $list, array( 'class' => 'span'.$width ) );
 	}
 }
 
@@ -75,7 +77,7 @@ foreach( $files as $file ){
 		'title'		=> htmlentities( utf8_decode( strip_tags( $title ) ) ),
 		'class'		=> 'not-thumbnail',
 	);
-	$image		= UI_HTML_Tag::create( 'image', NULL, $attributes );
+	$image		= HtmlTag::create( 'image', NULL, $attributes );
 	if( $mobile )
 		$attributes	= array(
 			'href'	=> './gallery/info/'.$source.$data['filename'].'.'.$data['extension'],
@@ -92,13 +94,13 @@ foreach( $files as $file ){
 			'data-original'	=> $source.$data['filename'].'.'.$data['extension'],
 		);
 	
-	$image		= UI_HTML_Tag::create( 'a', $image, $attributes );
-	$list[$fileName]		= UI_HTML_Tag::create( 'div', $image, array( 'class' => 'thumbnail' ) );
+	$image		= HtmlTag::create( 'a', $image, $attributes );
+	$list[$fileName]		= HtmlTag::create( 'div', $image, array( 'class' => 'thumbnail' ) );
 }
 ksort( $list );
 $files		= $list ? implode( "", $list ) : NULL;
 		
-$title		= !empty( $info['title'] ) ? UI_HTML_Tag::create( "h3", $info['title'] ) : NULL;
+$title		= !empty( $info['title'] ) ? HtmlTag::create( "h3", $info['title'] ) : NULL;
 $desc		= !empty( $info['title'] ) ? View_Helper_ContentConverter::render( $env, $info['description'] ) : NULL;
 $navigation	= View_Helper_Gallery::renderStepNavigation( $env, $source );
 

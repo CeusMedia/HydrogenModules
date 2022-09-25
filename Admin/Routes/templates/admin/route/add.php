@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
@@ -9,13 +10,13 @@ $optStatus	= array(
 	0		=> 'inaktiv',
 	1		=> 'aktiv',
 );
-$optStatus	= UI_HTML_Elements::Options( $optStatus, @$data->status );
+$optStatus	= HtmlElements::Options( $optStatus, @$data->status );
 
 $optRegex	= array(
 	0		=> 'nein',
 	1		=> 'ja',
 );
-$optRegex	= UI_HTML_Elements::Options( $optRegex, @$data->regex );
+$optRegex	= HtmlElements::Options( $optRegex, @$data->regex );
 
 $optCode	= array(
 	200 => "200 OK",
@@ -65,7 +66,7 @@ $optCode	= array(
 	508 => "508 Loop Detected",
 //	511 => "511 Network Authentication Required",
 );
-$optCode	= UI_HTML_Elements::Options( $optCode, @$data->code );
+$optCode	= HtmlElements::Options( $optCode, @$data->code );
 
 $buttonsCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'href'		=> './admin/route',

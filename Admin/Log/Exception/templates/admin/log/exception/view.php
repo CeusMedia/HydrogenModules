@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\CLI\ArgumentParser;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -113,7 +114,7 @@ function renderMapTable( $map, $sort = TRUE ){
 			HtmlTag::create( 'td', htmlentities( stripslashes( trim( json_encode( $value ), '"' ) ), ENT_QUOTES, 'utf-8' ) ),
 		) );
 	}
-	$colgroup		= UI_HTML_Elements::ColumnGroup( '40px', '35%', '7%', '' );
+	$colgroup		= HtmlElements::ColumnGroup( '40px', '35%', '7%', '' );
 	$thead			= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'th', '#', array( 'style' => 'text-align: right' ) ),
 		HtmlTag::create( 'th', 'Key' ),

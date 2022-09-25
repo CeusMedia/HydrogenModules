@@ -1,7 +1,8 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconFilter		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 
 $optStatus	= array( '' => $wordsGeneral['list']['optAll'] );
 foreach( $wordsGeneral['job-definition-statuses'] as $key => $value )
@@ -23,59 +24,59 @@ foreach( $methodNames as $key => $value )
 	$optMethod[$value]	= $value;
 $optMethod	= UI_HTML_Elements::Options( $optMethod, $filterMethod );
 
-$panelFilter	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', $words['filter']['heading'] ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'form', array(
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['filter']['labelStatus'], array( 'for' => 'input_status' ) ),
-					UI_HTML_Tag::create( 'select', $optStatus, array(
+$panelFilter	= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', $words['filter']['heading'] ),
+	HtmlTag::create( 'div', array(
+		HtmlTag::create( 'form', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', $words['filter']['labelStatus'], array( 'for' => 'input_status' ) ),
+					HtmlTag::create( 'select', $optStatus, array(
 						'name' 		=> 'status',
 						'id'		=> 'input_status',
 						'class' 	=> 'span12',
 					) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['filter']['labelMode'], array( 'for' => 'input_mode' ) ),
-					UI_HTML_Tag::create( 'select', $optMode, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', $words['filter']['labelMode'], array( 'for' => 'input_mode' ) ),
+					HtmlTag::create( 'select', $optMode, array(
 						'name' 		=> 'mode',
 						'id'		=> 'input_mode',
 						'class' 	=> 'span12',
 					) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['filter']['labelClass'], array( 'for' => 'input_class' ) ),
-					UI_HTML_Tag::create( 'select', $optClass, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', $words['filter']['labelClass'], array( 'for' => 'input_class' ) ),
+					HtmlTag::create( 'select', $optClass, array(
 						'name' 		=> 'class',
 						'id'		=> 'input_class',
 						'class' 	=> 'span12',
 					) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', $words['filter']['labelMethod'], array( 'for' => 'input_method' ) ),
-					UI_HTML_Tag::create( 'select', $optMethod, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', $words['filter']['labelMethod'], array( 'for' => 'input_method' ) ),
+					HtmlTag::create( 'select', $optMethod, array(
 						'name' 		=> 'method',
 						'id'		=> 'input_method',
 						'class' 	=> 'span12',
 					) ),
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'button', $iconFilter.'&nbsp;'.$words['filter']['buttonFilter'], array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$words['filter']['buttonFilter'], array(
 						'type'	=> 'submit',
 						'name'	=> 'filter',
 						'class'	=> 'btn not-btn-small not-btn-primary btn-info',
 					) ),
-//					UI_HTML_Tag::create( 'a', $iconReset.'&nbsp;'.$words['filter']['buttonReset'], array(
-					UI_HTML_Tag::create( 'a', $iconReset, array(
+//					HtmlTag::create( 'a', $iconReset.'&nbsp;'.$words['filter']['buttonReset'], array(
+					HtmlTag::create( 'a', $iconReset, array(
 						'href'	=> './manage/job/definition/filter/reset',
 						'class'	=> 'btn not-btn-small btn-inverse',
 					) ),

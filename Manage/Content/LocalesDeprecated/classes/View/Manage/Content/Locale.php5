@@ -6,6 +6,7 @@
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 /**
@@ -58,16 +59,16 @@ LocaleEditor.setupCodeMirror();';
 				$classes	= array( 'autocut', 'file' );
 				if( $extension )
 					$classes[]	= 'file-ext-'.$extension;
-				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-file' ) );
+				$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-file' ) );
 				if( $current == $path.$fileName ){
 					$classes[]	= 'active';
-					$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-file icon-white' ) );
+					$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-file icon-white' ) );
 				}
 				$url	= $baseUrl.base64_encode( $path.$fileName );
-				$ext	= UI_HTML_Tag::create( 'small',  '.'.$extension, array( 'class' => "muted" ) );
+				$ext	= HtmlTag::create( 'small',  '.'.$extension, array( 'class' => "muted" ) );
 				$name	= pathinfo( $fileName, PATHINFO_FILENAME );
-				$link	= UI_HTML_Tag::create( 'a', $icon.'&nbsp;'.$name.$ext, array( 'href' => $url ) );
-				$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => join( ' ', $classes ) ) );
+				$link	= HtmlTag::create( 'a', $icon.'&nbsp;'.$name.$ext, array( 'href' => $url ) );
+				$list[]	= HtmlTag::create( 'li', $link, array( 'class' => join( ' ', $classes ) ) );
 			}
 		}
 
@@ -76,12 +77,12 @@ LocaleEditor.setupCodeMirror();';
 
 		if( !$list )
 			return '';
-		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => '' ) );
+		$list	= HtmlTag::create( 'ul', $list, array( 'class' => '' ) );
 		if( !$level )
 			return $list;
 		$folder	= preg_replace( "/^.*\//", "", rtrim( $path, '/' ) );
-		$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-folder-open' ) );
-		return UI_HTML_Tag::create( 'li', $icon.'&nbsp;'.$folder.$list, array( 'class' => 'folder' ) );
+		$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-folder-open' ) );
+		return HtmlTag::create( 'li', $icon.'&nbsp;'.$folder.$list, array( 'class' => 'folder' ) );
 	}
 
 	protected function getFolders( $files )

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $wf		= (object) $words['index'];
 
 $heads	= array(
@@ -32,9 +34,9 @@ foreach( $roles as $nr => $role )
 		$url	= './admin/role/edit/'.$role->roleId;
 		$alt	= "";#sprintf( $wf->alt-user'], $user->username );
 		$attr	= array( 'href' => $url, 'alt' => $alt, 'title' => $alt );
-		$label	= UI_HTML_Tag::create( 'a', $label, $attr );
+		$label	= HtmlTag::create( 'a', $label, $attr );
 	}
-	$label	= UI_HTML_Tag::create( 'span', $label, array( 'class' => $classes ) );
+	$label	= HtmlTag::create( 'span', $label, array( 'class' => $classes ) );
 	$line	= sprintf(
 		$line,
 		$label,

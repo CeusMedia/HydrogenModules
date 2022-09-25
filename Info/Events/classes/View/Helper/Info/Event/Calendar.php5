@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Event_Calendar
@@ -64,11 +66,11 @@ class View_Helper_Info_Event_Calendar
 			array_unshift( $row, '<th class="week-number"><span>'.$weekNr.'</span></th>' );
 			$rows[]	= '<tr>'.join( $row ).'</tr>';
 		}
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "2%", "14%", "14%", "14%", "14%", "14%", "14%", "14%" );
-		$heads		= UI_HTML_Elements::TableHeads( array( "KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ) );
-		$thead		= UI_HTML_Tag::create( 'thead', $heads );
-		$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-		$tableLarge	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
+		$colgroup	= HtmlElements::ColumnGroup( "2%", "14%", "14%", "14%", "14%", "14%", "14%", "14%" );
+		$heads		= HtmlElements::TableHeads( array( "KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ) );
+		$thead		= HtmlTag::create( 'thead', $heads );
+		$tbody		= HtmlTag::create( 'tbody', $rows );
+		$tableLarge	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
 
 
 		$rows			= [];
@@ -106,11 +108,11 @@ class View_Helper_Info_Event_Calendar
 //			array_unshift( $row, '<th class="week-number"><span>'.$weekNr.'</span></th>' );
 			$rows[]	= join( $row );
 		}
-		$colgroup	= UI_HTML_Elements::ColumnGroup( /*"5%", "95%"*/"100%" );
-		$heads		= UI_HTML_Elements::TableHeads( array( "KW", "..." ) );
-		$thead		= UI_HTML_Tag::create( 'thead', ""/*$heads*/ );
-		$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-		$tableSmall	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-small" ) );
+		$colgroup	= HtmlElements::ColumnGroup( /*"5%", "95%"*/"100%" );
+		$heads		= HtmlElements::TableHeads( array( "KW", "..." ) );
+		$thead		= HtmlTag::create( 'thead', ""/*$heads*/ );
+		$tbody		= HtmlTag::create( 'tbody', $rows );
+		$tableSmall	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-small" ) );
 
 //		$tableSmall = '<div class="muted"><em><small>Noch nicht implementiert.</small></em></div>';
 
@@ -155,17 +157,17 @@ $(document).ready(function(){
 		}
 
 
-		$btnControlPrev	= UI_HTML_Tag::create( 'a', '&laquo;',  array(
+		$btnControlPrev	= HtmlTag::create( 'a', '&laquo;',  array(
 			'href'		=> './info/event/setMonth/'.$prevYear.'/'.$prevMonth,
 			'class'		=> 'btn btn-large',
 			'title'		=> '1 Monat vor',
 		) );
-		$btnControlNext	= UI_HTML_Tag::create( 'a', '&raquo;',  array(
+		$btnControlNext	= HtmlTag::create( 'a', '&raquo;',  array(
 			'href'		=> './info/event/setMonth/'.$nextYear.'/'.$nextMonth,
 			'class'		=> 'btn btn-large',
 			'title'		=> '1 Monat weiter',
 		) );
-		$btnControlNow	= UI_HTML_Tag::create( 'a', '&Omicron;',  array(
+		$btnControlNow	= HtmlTag::create( 'a', '&Omicron;',  array(
 			'href'		=> './info/event/setMonth/'.date( 'Y' ).'/'.date( 'm' ),
 			'class'		=> 'btn btn-large '.( $isNow ? 'disabled' : NULL ),
 			'title'		=> 'aktueller Monat',
@@ -174,7 +176,7 @@ $(document).ready(function(){
 
 		$label      = $this->renderLabel( $this->year, $this->month );
 
-		$btnExport		= UI_HTML_Tag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', array(
+		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', array(
 			'href'		=> './info/event/export/ical',
 			'target'	=> '_blank',
 			'class'		=> 'btn not-btn-small btn-warning',
@@ -208,12 +210,12 @@ $(document).ready(function(){
 			if( $eventDate->diff( $date )->days !== 0 )
 				continue;
 			$title		= htmlentities( $event->title, ENT_QUOTES, 'UTF-8' );
-			$title		= UI_HTML_Tag::create( 'a', $title, array(
+			$title		= HtmlTag::create( 'a', $title, array(
 				'href'			=> './ajax/info/event/modalView/'.$event->eventId,
 				'data-toggle'	=> 'modal',
 				'data-target'	=> "#modal-event-view",
 			) );
-			$list[]		= UI_HTML_Tag::create( 'li', $title, array(
+			$list[]		= HtmlTag::create( 'li', $title, array(
 				"data-id"		=> $event->eventId,
 				"data-status"	=> $event->status,
 				"data-title"	=> htmlentities( $event->title, ENT_QUOTES, 'UTF-8' ),
@@ -223,9 +225,9 @@ $(document).ready(function(){
 		}
 		$class	= $isToday ? 'active today' : ( $isPast ? 'past' : 'active future' );
 		$class	= $cellClass ? $cellClass.' '.$class : $class;
-		return UI_HTML_Tag::create( 'td', array(
-				$label	= UI_HTML_Tag::create( 'div', $date->format( "j" ), array( 'class' => 'date-label '.$class ) ),
-				$list	= UI_HTML_Tag::create( 'ul', $list ),
+		return HtmlTag::create( 'td', array(
+				$label	= HtmlTag::create( 'div', $date->format( "j" ), array( 'class' => 'date-label '.$class ) ),
+				$list	= HtmlTag::create( 'ul', $list ),
 			), array(
 			"class"			=> $class,
 			"data-day"		=> $date->format( "j" ),
@@ -240,9 +242,9 @@ $(document).ready(function(){
 		$month	= (int) $month;
 		if( $month < 1 || $month > 12 )
 			throw new InvalidArgumentException( 'Invalid month' );
-		return UI_HTML_Tag::create( 'span', array(
-			UI_HTML_Tag::create( 'span', $this->words['months'][(int) $month], array( 'class' => "month-label" ) ),
-			UI_HTML_Tag::create( 'span', $year, array( 'class' => "year-label" ) ),
+		return HtmlTag::create( 'span', array(
+			HtmlTag::create( 'span', $this->words['months'][(int) $month], array( 'class' => "month-label" ) ),
+			HtmlTag::create( 'span', $year, array( 'class' => "year-label" ) ),
 		), array( 'id' => 'mission-calendar-control-label' ) );
 	}
 

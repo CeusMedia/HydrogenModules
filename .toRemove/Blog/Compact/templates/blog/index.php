@@ -1,22 +1,23 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $roleId			= $this->env->getSession()->get( 'roleId');
 $canAdd			= $roleId && $this->env->getAcl()->hasRight( $roleId, 'blog', 'add' );
 $url			= './blog/add';
 
-$icon			= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-plus fa-fw' ) );
-$linkAdd		= $canAdd ? '&nbsp;'.UI_HTML_Tag::create( 'a', $icon, array(
+$icon			= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-plus fa-fw' ) );
+$linkAdd		= $canAdd ? '&nbsp;'.HtmlTag::create( 'a', $icon, array(
 	'href'		=> $url,
 	'class'		=> 'btn btn-mini',
 	'title'		=> 'neuer Eintrag',
 ) ) : '';
 
-$articleList	= UI_HTML_Tag::create( 'em', 'Keine Artikel gefunden.' );
+$articleList	= HtmlTag::create( 'em', 'Keine Artikel gefunden.' );
 if( $articles )
 	$articleList	= $this->renderArticleAbstractList( $articles, !FALSE, FALSE, !FALSE, FALSE );
 
 #$heading		= UI_HTML_Elements::Heading( 'Artikel', 3 );
-$heading		= UI_HTML_Tag::create( 'h3', 'Blog-Einträge'.$linkAdd );
+$heading		= HtmlTag::create( 'h3', 'Blog-Einträge'.$linkAdd );
 
 $helper			= new View_Helper_Pagination();
 $pageList		= $helper->render( './blog/index', $number, $limit, $page );
@@ -26,9 +27,9 @@ $flopTags		= View_Helper_Blog::renderFlopTags( $env, 5, 0, $states );
 $listTopTags	= $topTags ? '<h4>Häufige Schlüsselwörter</h4>'.$topTags : '';
 $listFlopTags	= $flopTags ? '<h4>Seltenste Schlüsselwörter</h4>'.$flopTags : '';
 
-$iconPublic		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-check fa-fw' ) ).'&nbsp;';
-$iconWork		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-pencil fa-fw' ) ).'&nbsp;';
-$iconTrash		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-trash fa-fw' ) ).'&nbsp;';
+$iconPublic		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-check fa-fw' ) ).'&nbsp;';
+$iconWork		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-pencil fa-fw' ) ).'&nbsp;';
+$iconTrash		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-trash fa-fw' ) ).'&nbsp;';
 
 $listStates		= '
 	<h4>Artikel-Zustände</h4>

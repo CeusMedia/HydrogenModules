@@ -1,4 +1,5 @@
- <?php
+<?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['editStatus'];
 
@@ -7,13 +8,13 @@ foreach( array_reverse( $words['status'], TRUE ) as $key => $label )
 	$optStatus[]	= UI_HTML_Elements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
 $optStatus	= join( $optStatus );
 
-$iconAccept		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconBan		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-lock icon-white' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconAccept		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconBan		= HtmlTag::create( 'i', '', array( 'class' => 'icon-lock icon-white' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconAccept		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconBan		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-lock' ) );
-	$iconRemove		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+	$iconAccept		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconBan		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-lock' ) );
+	$iconRemove		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 }
 
 $buttons	= [];
@@ -41,7 +42,7 @@ if( $user->status != -2 ){
 		$w->buttonDisableConfirm
 	);
 }
-$buttons	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => "btn-group" ) );
+$buttons	= HtmlTag::create( 'div', $buttons, array( 'class' => "btn-group" ) );
 
 return '
 <div class="content-panel">

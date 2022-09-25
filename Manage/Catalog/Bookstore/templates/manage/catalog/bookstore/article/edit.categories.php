@@ -1,8 +1,9 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconUp		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-up' ) );
-$iconDown	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-down' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconUp		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-up' ) );
+$iconDown	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-down' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 $panelCategories	= '<div class="alert alert-error">Noch keine Kategorie zugewiesen.</div>';
 
@@ -33,7 +34,7 @@ if( $articleCategories ){
 			<div style="font-size: 0.9em; font-weight: lighter"><span class="muted">Band:</span> '.$labelVolume.' | <span class="muted">Rang:</span> '.$item->rank.'</div>
 			';
 		}
-		$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
 			'href'		=> './manage/catalog/bookstore/article/removeCategory/'.$article->articleId.'/'.$item->categoryId,
 			'class'		=> 'btn btn-mini btn-danger',
 			'onclick'	=> 'if(!confirm(\'Wirklich ?\'))return false;',

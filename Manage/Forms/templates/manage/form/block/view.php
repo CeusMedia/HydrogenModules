@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $modelBlock	= new Model_Form_Block( $env );
 
@@ -10,35 +11,35 @@ foreach( $blocks as $item ){
 	}
 }
 
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconList.'&nbsp;zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'href'	=> './manage/form/block',
 	'class'	=> 'btn',
 ) );
-$buttonEdit	= UI_HTML_Tag::create( 'a', $iconEdit.'&nbsp;bearbeiten', array(
+$buttonEdit	= HtmlTag::create( 'a', $iconEdit.'&nbsp;bearbeiten', array(
 	'href'	=> './manage/form/block/edit/'.$block->blockId,
 	'class'	=> 'btn btn-primary',
 ) );
 
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'h2', '<span class="muted">Block:</span> '.$block->title ),
-		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'span', 'Shortcode: ' ),
-			UI_HTML_Tag::create( 'tt', '[block_'.$block->identifier.']' ),
+return HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', array(
+		HtmlTag::create( 'h2', '<span class="muted">Block:</span> '.$block->title ),
+		HtmlTag::create( 'div', array(
+			HtmlTag::create( 'span', 'Shortcode: ' ),
+			HtmlTag::create( 'tt', '[block_'.$block->identifier.']' ),
 		) ),
 	), array() ),
-	UI_HTML_Tag::create( 'br' ),
-	UI_HTML_Tag::create( 'form', $block->content, array(
+	HtmlTag::create( 'br' ),
+	HtmlTag::create( 'form', $block->content, array(
 		'class'	=> 'cmforms',
 		'style' => 'border: 2px solid gray; padding: 2em;'
 	) ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'hr' ),
+	HtmlTag::create( 'div', array(
+		HtmlTag::create( 'hr' ),
 		join( ' ', array( $buttonCancel, $buttonEdit ) ),
 	), array() ),
 ), array() );

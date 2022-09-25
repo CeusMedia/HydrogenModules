@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $words['edit'];
 
 $list		= '<div><em class="muted">Keine Veröffentlichungen vorhanden.</em></div>';
@@ -8,14 +10,14 @@ if( $articles ){
 	foreach( $articles as $article ){
 		$url	= './manage/catalog/bookstore/article/edit/'.$article->articleId;
 		$label	= htmlentities( $article->title, ENT_QUOTES, 'UTF-8' );
-		$link	= UI_HTML_Tag::create( 'a', $article->title, array( 'href' => $url ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
-//		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-//			UI_HTML_Tag::create( 'td', $link, array( 'class' => '' ) ),
+		$link	= HtmlTag::create( 'a', $article->title, array( 'href' => $url ) );
+		$list[]	= HtmlTag::create( 'li', $link );
+//		$rows[]	= HtmlTag::create( 'tr', array(
+//			HtmlTag::create( 'td', $link, array( 'class' => '' ) ),
 //		) );
 	}
-	$list	= UI_HTML_Tag::create( 'ul', $list );
-//	$list	= UI_HTML_Tag::create( 'table', $rows, array( 'class' => 'table table-striped' ) );
+	$list	= HtmlTag::create( 'ul', $list );
+//	$list	= HtmlTag::create( 'table', $rows, array( 'class' => 'table table-striped' ) );
 }
 
 return '

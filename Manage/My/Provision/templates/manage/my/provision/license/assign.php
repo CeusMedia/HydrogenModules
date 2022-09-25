@@ -1,22 +1,23 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconOrder		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
-$iconSearch		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconUser		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
+$iconSearch		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconUser		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
 
-$buttonSearch	= UI_HTML_Tag::create( 'a', $iconSearch.' suchen', array(
+$buttonSearch	= HtmlTag::create( 'a', $iconSearch.' suchen', array(
 	'href'			=> '#modalSelectUser',
 	'role'			=> 'button',
 	'class'			=> 'btn btn-success btn-small',
 	'data-toggle'	=> 'modal',
 ) );
-$buttonAssignSelf	= UI_HTML_Tag::create( 'a', $iconUser.' selbst verwenden', array(
+$buttonAssignSelf	= HtmlTag::create( 'a', $iconUser.' selbst verwenden', array(
 	'href'		=> './manage/my/provision/license/assign/'.$userLicense->userLicenseId.'/?userId='.$currentUserId.'&save',
 	'class'		=> 'btn btn-small',
 ) );
-$buttonRemove		= '';/*UI_HTML_Tag::create( 'a', 'entziehen', array(
+$buttonRemove		= '';/*HtmlTag::create( 'a', 'entziehen', array(
 	'href'		=> './manage/my/provision/license/unassign/'.$userLicense->userLicenseId.'/'.$currentUserId,
 	'class'		=> 'btn btn-small btn-remove',
 ) );*/

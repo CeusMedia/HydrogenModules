@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Blog{
@@ -20,7 +21,7 @@ class View_Helper_Blog{
 					$uri	.= '/'.self::getArticleTitleUrlLabel( $article );
 			}
 			else
-				$title	= UI_HTML_Tag::create( 'strike', $title );
+				$title	= HtmlTag::create( 'strike', $title );
 			$link		= UI_HTML_Elements::Link( $uri, $title, 'icon-label link-blog', '_blank' );
 			$content	= str_replace( $matches[0][$i], $link, $content );
 		}
@@ -61,9 +62,9 @@ class View_Helper_Blog{
 					'title'	=> $title,
 					'rel'	=> 'blog-article-gallery',
 				);
-				$image		= UI_HTML_Tag::create( 'a', $image, $attributes );
+				$image		= HtmlTag::create( 'a', $image, $attributes );
 			}
-			$container	= UI_HTML_Tag::create( 'div', $image, array( 'class'=>'image' ) );
+			$container	= HtmlTag::create( 'div', $image, array( 'class'=>'image' ) );
 			$content	= str_replace( $matches[0][$i], $container, $content );
 		}
 		return $content;
@@ -83,7 +84,7 @@ class View_Helper_Blog{
 				'marginheight'	=> 0,
 				'marginwidth'	=> 0,
 			);
-			$frame		= UI_HTML_Tag::create( 'iframe', '', $attributes );
+			$frame		= HtmlTag::create( 'iframe', '', $attributes );
 			$content	= str_replace( $matches[0][$i], $frame, $content );
 		}
 		return $content;
@@ -110,8 +111,8 @@ class View_Helper_Blog{
 			'class'	=> 'not-icon-label not-link-blog',
 			'href'	=> 'blog/article/'.$article->articleId.'/'.$version.'/'.$keywords,
 		);
-		$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-comment fa-fw' ) ).'&nbsp;';
-		return UI_HTML_Tag::create( 'a', $icon.$label, $attributes );
+		$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-comment fa-fw' ) ).'&nbsp;';
+		return HtmlTag::create( 'a', $icon.$label, $attributes );
 	}
 
 	static public function renderLatestArticles( Environment $env, $limit, $offset = 0 ){
@@ -121,9 +122,9 @@ class View_Helper_Blog{
 		$latest		= $model->getAll( $conditions, array( 'createdAt' => 'DESC' ), array( $offset, $limit ) );
 		foreach( $latest as $article ){
 			$link	= self::renderArticleLink( $env, $article );
-			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'blog-item autocut' ) );
+			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'blog-item autocut' ) );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'list-latest-articles' ) );
+		return HtmlTag::create( 'ul', $list, array( 'class' => 'list-latest-articles' ) );
 	}
 
 	static public function renderTagLink( Environment $env, $tagName ){
@@ -131,8 +132,8 @@ class View_Helper_Blog{
 			'href'	=> './blog/tag/'.rawurlencode( str_replace( '&', '%26', $tagName ) ),
 			'class'	=> 'not-icon-label not-link-tag'
 		);
-		$icon	= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-tag fa-fw' ) ).'&nbsp;';
-		return UI_HTML_Tag::create( 'a', $icon.$tagName, $attributes );
+		$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-tag fa-fw' ) ).'&nbsp;';
+		return HtmlTag::create( 'a', $icon.$tagName, $attributes );
 	}
 
 	static public function renderTopTags( Environment $env, $limit, $offset = 0, $states = array( 1 ) ){
@@ -157,13 +158,13 @@ class View_Helper_Blog{
 		$tags	= $env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
 		$list	= [];
 		foreach( $tags as $relation ){
-			$nr		= UI_HTML_Tag::create( 'span', $relation->nr, array( 'class' => 'badge badge-info pull-right not-number-indicator' ) );
+			$nr		= HtmlTag::create( 'span', $relation->nr, array( 'class' => 'badge badge-info pull-right not-number-indicator' ) );
 			$link	= self::renderTagLink( $env, $relation->title );
-			$list[]	= UI_HTML_Tag::create( 'li', $nr.$link );
+			$list[]	= HtmlTag::create( 'li', $nr.$link );
 		}
 		if( !$list )
 			return NULL;
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'top-tags' ) );
+		return HtmlTag::create( 'ul', $list, array( 'class' => 'top-tags' ) );
 	}
 
 	static public function renderFlopTags( Environment $env, $limit, $offset = 0, $states = array( 1 ) ){
@@ -188,13 +189,13 @@ class View_Helper_Blog{
 		$tags	= $env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
 		$list	= [];
 		foreach( $tags as $relation ){
-			$nr		= UI_HTML_Tag::create( 'span', $relation->nr, array( 'class' => 'badge badge-info pull-right not-number-indicator' ) );
+			$nr		= HtmlTag::create( 'span', $relation->nr, array( 'class' => 'badge badge-info pull-right not-number-indicator' ) );
 			$link	= self::renderTagLink( $env, $relation->title );
-			$list[]	= UI_HTML_Tag::create( 'li', $nr.$link );
+			$list[]	= HtmlTag::create( 'li', $nr.$link );
 		}
 		if( !$list )
 			return NULL;
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'top-tags' ) );
+		return HtmlTag::create( 'ul', $list, array( 'class' => 'top-tags' ) );
 	}
 }
 ?>

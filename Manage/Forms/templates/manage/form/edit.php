@@ -1,17 +1,18 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 function renderNavButton( $formId, $tabId, $label, $dir ){
 	$iconClass	= 'fa fa-fw fa-arrow-'.( $dir === 'prev' ? 'left' : 'right' );
-	$icon		= UI_HTML_Tag::create( 'i', '', array( 'class' => $iconClass ) );
-	return UI_HTML_Tag::create( 'a', $icon.'&nbsp;'.$label, array(
+	$icon		= HtmlTag::create( 'i', '', array( 'class' => $iconClass ) );
+	return HtmlTag::create( 'a', $icon.'&nbsp;'.$label, array(
 		'href'		=> './manage/form/setTab/'.$formId.'/'.$tabId,
 		'class'		=> 'btn',
 	) );
 }
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 
 $navButtons	= array(
-	'list'			=> UI_HTML_Tag::create( 'a', $iconList.'&nbsp;zur Liste', array(
+	'list'			=> HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 		'href'		=> './manage/form',
 		'class'		=> 'btn',
 	) ),

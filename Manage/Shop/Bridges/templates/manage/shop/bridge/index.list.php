@@ -1,17 +1,18 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //print_m( $bridges );die;
 
 $list	= [];
 foreach( $bridges as $bridge ){
 	$label	= $bridge->title ? $bridge->title : $bridge->class;
-	$link	= new UI_HTML_Tag( 'a', $label, array(
+	$link	= HtmlTag::create( 'a', $label, array(
 		'href'	=> './manage/shop/bridge/edit/'.$bridge->bridgeId,
 	) );
 	$class	= ( isset( $bridgeId) && $bridgeId === $bridge->bridgeId ) ? 'active' : NULL;
-	$list[]	= new UI_HTML_Tag( 'li', $link, array( 'class' => $class ) );
+	$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 }
-$table	= new UI_HTML_Tag( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+$table	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
 
 return '
 <div class="content-panel">

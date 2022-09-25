@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Bookstore
 {
 	public function add()
@@ -35,17 +37,17 @@ class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Booksto
 				$link		= './manage/catalog/bookstore/category/edit/'.$entry->categoryId;
 				$attributes	= array( 'href' => $link, 'class' => 'title' );
 				$number		= $logic->countArticlesInCategory( $entry->categoryId, TRUE );
-				$number		= '&nbsp;'.UI_HTML_Tag::create( 'small', '('.$number.')', array( 'class' => 'muted' ) );
+				$number		= '&nbsp;'.HtmlTag::create( 'small', '('.$number.')', array( 'class' => 'muted' ) );
 				$label		= $rank.$entry->label_de.$number;
-				$link		= UI_HTML_Tag::create( 'a', $label, $attributes );
+				$link		= HtmlTag::create( 'a', $label, $attributes );
 				$class		= $categoryId == $entry->categoryId ? "active" : NULL;
-				$item		= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+				$item		= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 				$key		= str_pad( $entry->rank, 3, '0', STR_PAD_LEFT ).'_'.uniqid();
 				$listSub[$key]	= $item;
 			}
 			ksort( $listSub );
 			if( $listSub )
-				$listSub	= UI_HTML_Tag::create( 'ul', $listSub, array( 'class' => 'nav nav-pills nav-stacked' ) );
+				$listSub	= HtmlTag::create( 'ul', $listSub, array( 'class' => 'nav nav-pills nav-stacked' ) );
 			else
 				$listSub	= "";
 			$rank		= '<small class="muted">'.$category->rank.'.</small> ';
@@ -54,13 +56,13 @@ class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Booksto
 			$number		= ' <small class="muted">('.$number.')</small> ';
 			$label		= $rank.$category->label_de.$number;
 			$attributes	= array( 'href' => $link, 'class' => 'title' );
-			$link		= UI_HTML_Tag::create( 'a', $label, $attributes );
+			$link		= HtmlTag::create( 'a', $label, $attributes );
 			$class		= $categoryId == $category->categoryId ? "active" : NULL;
-			$listMain[$category->rank]	= UI_HTML_Tag::create( 'li', $link.$listSub, array( 'class' => $class ) );
+			$listMain[$category->rank]	= HtmlTag::create( 'li', $link.$listSub, array( 'class' => $class ) );
 //			$this->env->getRuntime()->reach( 'View_Catalog_Bookstore_Category::renderTree run '.$nr );
 		}
 		ksort( $listMain );
-		$listMain	= UI_HTML_Tag::create( 'ul', $listMain, array( 'class' => 'nav nav-pills nav-stacked main boxed', 'style' => 'display: none' ) );
+		$listMain	= HtmlTag::create( 'ul', $listMain, array( 'class' => 'nav nav-pills nav-stacked main boxed', 'style' => 'display: none' ) );
 		$this->env->getRuntime()->reach( 'View_Catalog_Bookstore_Category::renderTree done' );
 //		$cache->set( 'admin.categories.list.html', $listMain );
 		return $listMain;

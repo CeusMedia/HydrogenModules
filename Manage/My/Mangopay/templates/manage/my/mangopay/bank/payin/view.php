@@ -1,8 +1,10 @@
 <?php
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconList		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconPrint		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-print' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconPrint		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-print' ) );
 
 $helperMoney	= new View_Helper_Mangopay_Entity_Money( $env );
 $helperMoney->setFormat( View_Helper_Mangopay_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
@@ -17,12 +19,12 @@ $helperUrl->set( ( isset( $from ) && $from ) ? $from :  'manage/my/mangopay/bank
 $helperUrl->setBackwardTo( TRUE );
 $helperUrl->setForwardTo( TRUE );
 $helperUrl->setFrom( TRUE );
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
 	'href'	=> $helperUrl->render(),
 	'class'	=> 'btn',
 ) );
 
-$buttonPrint	= UI_HTML_Tag::create( 'a', $iconPrint.' drucken', array(
+$buttonPrint	= HtmlTag::create( 'a', $iconPrint.' drucken', array(
 	'type'		=> 'button',
 	'class'		=> 'btn btn-info',
 	'onclick'	=> 'window.print()',

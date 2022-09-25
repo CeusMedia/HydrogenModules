@@ -1,12 +1,14 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w				= (object) $words['index'];
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$iconEdit		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-$iconActivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
-$iconDeactivate	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
+$iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
+$iconDeactivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
 
-$heading	= UI_HTML_Tag::create( 'h2', $w->heading );
+$heading	= HtmlTag::create( 'h2', $w->heading );
 $buttonAdd 	= UI_HTML_Elements::LinkButton( './manage/company/branch/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-primary' );
 
 $rows		= [];
@@ -33,7 +35,7 @@ foreach( $branches as $entry ){
 		<td>'.$company.'</td>
 		<td>'.$createdAt.'</td>
 		<td>'.$modifiedAt.'</td>
-		<td>'.UI_HTML_Tag::create( 'div', $buttonEdit/*.$buttonActivate.$buttonDeactivate*/, array( 'class' => 'btn-group' ) ).'</td>
+		<td>'.HtmlTag::create( 'div', $buttonEdit/*.$buttonActivate.$buttonDeactivate*/, array( 'class' => 'btn-group' ) ).'</td>
 	</tr>';
 	$number		++;
 }
@@ -50,9 +52,9 @@ $heads	= array(
 $heads		= UI_HTML_Elements::TableHeads( $heads );
 $colgroup	= UI_HTML_Elements::ColumnGroup( '', '', '120px', '120px', '100px' );
 
-$thead		= UI_HTML_Tag::create( 'thead', $heads );
-$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
+$thead		= HtmlTag::create( 'thead', $heads );
+$tbody		= HtmlTag::create( 'tbody', $rows );
+$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
 
 $panelList	= '<div class="content-panel">
 	<h3>'.$words['index']['legend'].'</h3>

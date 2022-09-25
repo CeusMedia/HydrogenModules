@@ -1,17 +1,18 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 $helperIndicator	= new UI_HTML_Indicator();
 $helperTime			= new View_Helper_TimePhraser( $env );
 
-$iconList		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-list' ) );
-$iconEdit		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
-$iconDefault	= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-star' ) );
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );
+$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
+$iconDefault	= HtmlTag::create( 'i', '', array( 'class' => 'icon-star' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconList		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconDefault	= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-star' ) );
-	$iconEdit		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+	$iconList		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconDefault	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-star' ) );
+	$iconEdit		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 }
 
 function renderUserBlock( Environment $env, $user ){
@@ -24,8 +25,8 @@ function renderUserBlock( Environment $env, $user ){
 	}
 	$label	= $user->username;
 	$sub	= '<br/><small class="muted">'.$user->firstname.'&nbsp;'.$user->surname.'</small>';
-	$link	= UI_HTML_Tag::create( 'a', $label, array( 'href' => './user/edit/'.$user->userId ) );
-	return UI_HTML_Tag::create( 'div', $link.$sub );
+	$link	= HtmlTag::create( 'a', $label, array( 'href' => './user/edit/'.$user->userId ) );
+	return HtmlTag::create( 'div', $link.$sub );
 }
 
 function renderUserInline( Environment $env, $user ){
@@ -36,12 +37,12 @@ function renderUserInline( Environment $env, $user ){
 		$helper->setLinkUrl( 'member/view/%d' );
 		return $helper->render();
 	}
-	$icon	= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-user' ) );
+	$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-user' ) );
 	$label	= $user->username;
 	$sub	= '<small class="muted">('.$user->firstname.'&nbsp;'.$user->surname.')</small>';
-	$link	= UI_HTML_Tag::create( 'a', $icon.'&nbsp;'.$label.'&nbsp;'.$sub, array( 'href' => './user/edit/'.$user->userId ) );
+	$link	= HtmlTag::create( 'a', $icon.'&nbsp;'.$label.'&nbsp;'.$sub, array( 'href' => './user/edit/'.$user->userId ) );
 	return $link;
-	$span	= UI_HTML_Tag::create( 'span', $icon.'&nbsp;'.$link.'&nbsp;'.$sub );
+	$span	= HtmlTag::create( 'span', $icon.'&nbsp;'.$link.'&nbsp;'.$sub );
 	return $span;
 }
 
@@ -50,11 +51,11 @@ $list	= '<div class="muted"><em>'.$words['view.coworkers']['noEntries'].'</em><b
 if( $project->users ){
 	$list	= [];
 	foreach( $project->users as $worker ){
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', renderUserBlock( $env, $worker ) ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', renderUserBlock( $env, $worker ) ),
 		) );
 	}
-	$list	= new UI_HTML_Tag( 'table', $list, array( 'class' => 'table table-condensed table-striped' ) );
+	$list	= HtmlTag::create( 'table', $list, array( 'class' => 'table table-condensed table-striped' ) );
 }
 $panelWorkers	= '
 <div class="content-panel">
@@ -66,12 +67,12 @@ $panelWorkers	= '
 
 /*  --  FACTS  --  */
 
-$buttonList		= new UI_HTML_Tag( 'a', $iconList.'&nbsp'.$words['view']['buttonList'], array(
+$buttonList		= HtmlTag::create( 'a', $iconList.'&nbsp'.$words['view']['buttonList'], array(
 	'href'		=> './manage/project',
 	'class'		=> 'btn not-btn-small',
 ) );
 
-$buttonEdit		= new UI_HTML_Tag( 'a', $iconEdit.'&nbsp'.$words['view']['buttonEdit'], array(
+$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp'.$words['view']['buttonEdit'], array(
 	'href'		=> '#',
 	'class'		=> 'btn btn-primary',
 	'disabled'	=> 'disabled',
@@ -79,7 +80,7 @@ $buttonEdit		= new UI_HTML_Tag( 'a', $iconEdit.'&nbsp'.$words['view']['buttonEdi
 
 
 if( 1 || $canEdit ){
-	$buttonEdit		= new UI_HTML_Tag( 'a', $iconEdit.'&nbsp'.$words['view']['buttonEdit'], array(
+	$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp'.$words['view']['buttonEdit'], array(
 		'href'		=> './manage/project/edit/'.$project->projectId,
 		'class'		=> 'btn btn-primary',
 	) );
@@ -90,7 +91,7 @@ $status		= htmlentities( $words['states'][$project->status], ENT_QUOTES, 'UTF-8'
 $priority	= htmlentities( $words['priorities'][$project->priority], ENT_QUOTES, 'UTF-8' );
 $dateChange	= max( $project->createdAt, $project->modifiedAt );
 
-$factUrl	= $project->url ? new UI_HTML_Tag( 'a', htmlentities( $project->url, ENT_QUOTES, 'UTF-8' ), array(
+$factUrl	= $project->url ? HtmlTag::create( 'a', htmlentities( $project->url, ENT_QUOTES, 'UTF-8' ), array(
 	'href'		=> $project->url,
 	'target'	=> "_blank",
 	'class'		=> "external",

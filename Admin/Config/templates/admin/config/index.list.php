@@ -3,19 +3,19 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index-list'];
 
-$iconLock		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-lock' ) );
-$iconUnlock		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-unlock' ) );
-$iconUser		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-user' ) );
-$iconSave		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconEdit		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
-$iconRestore	= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-repeat icon-white' ) );
+$iconLock		= HtmlTag::create( 'i', '', array( 'class' => 'icon-lock' ) );
+$iconUnlock		= HtmlTag::create( 'i', '', array( 'class' => 'icon-unlock' ) );
+$iconUser		= HtmlTag::create( 'i', '', array( 'class' => 'icon-user' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
+$iconRestore	= HtmlTag::create( 'i', '', array( 'class' => 'icon-repeat icon-white' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconLock		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-lock' ) );
-	$iconUnlock		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
-	$iconUser		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-user' ) );
-	$iconSave		= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-save' ) );
-	$iconEdit		= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-	$iconRestore	= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-backward' ) );
+	$iconLock		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-lock' ) );
+	$iconUnlock		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
+	$iconUser		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-user' ) );
+	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-save' ) );
+	$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+	$iconRestore	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-backward' ) );
 }
 
 $list	= [];

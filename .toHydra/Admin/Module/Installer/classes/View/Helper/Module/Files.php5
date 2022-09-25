@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Module_Files{
 
 	protected $env;
@@ -29,7 +31,7 @@ class View_Helper_Module_Files{
 		$list	= [];
 		foreach( $files as $file ){
 			$actions	= [];
-			$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
+			$checkbox	= HtmlTag::create( 'input', NULL, array(
 				'type'		=> 'checkbox',
 				'name'		=> 'files[]',
 				'value'		=> base64_encode( json_encode( $file ) ),
@@ -40,7 +42,7 @@ class View_Helper_Module_Files{
 				$checkbox	= '';
 			else if( $file->status === 2 ){
 				$url		= './admin/module/installer/diff/'.base64_encode( $file->pathLocal ).'/'.base64_encode( $file->pathSource );
-				$actions[]	= UI_HTML_Tag::create( 'a', 'diff', array( 'href' => $url, 'class' => 'layer-html' ) );
+				$actions[]	= HtmlTag::create( 'a', 'diff', array( 'href' => $url, 'class' => 'layer-html' ) );
 			}
 			else if( !file_exists( $file->pathSource ) )
 				$file->status	= -3;
@@ -51,23 +53,23 @@ class View_Helper_Module_Files{
 
 			$statusLabel	= $words['update-file-states'][$file->status];
 			$statusDesc		= $words['update-file-state-description'][$file->status];
-			$status	= UI_HTML_Tag::create( 'acronym', $statusLabel, array( 'title' => $statusDesc ) );
+			$status	= HtmlTag::create( 'acronym', $statusLabel, array( 'title' => $statusDesc ) );
 			$cells	= [];
 			if( $options['useCheckboxes'] )
-				$cells[]	= UI_HTML_Tag::create( 'td', $checkbox, array( 'class' => 'cell-check' ) );
-			$cells[]    = UI_HTML_Tag::create( 'td', $words['file-types'][$file->typeKey], array( 'class' => 'cell-type' ) );
-			$cells[]    = UI_HTML_Tag::create( 'td', $status, array( 'class' => 'cell-state' ) );
-			$cells[]    = UI_HTML_Tag::create( 'td', $file->name, array( 'class' => 'cell-name' ) );
+				$cells[]	= HtmlTag::create( 'td', $checkbox, array( 'class' => 'cell-check' ) );
+			$cells[]    = HtmlTag::create( 'td', $words['file-types'][$file->typeKey], array( 'class' => 'cell-type' ) );
+			$cells[]    = HtmlTag::create( 'td', $status, array( 'class' => 'cell-state' ) );
+			$cells[]    = HtmlTag::create( 'td', $file->name, array( 'class' => 'cell-name' ) );
 			if( $options['useActions'] )
-				$cells[]    = UI_HTML_Tag::create( 'td', join( " ", $actions ), array( 'class' => 'cell-actions' ) );
+				$cells[]    = HtmlTag::create( 'td', join( " ", $actions ), array( 'class' => 'cell-actions' ) );
 
-			$list[]	= UI_HTML_Tag::create( 'tr', $cells, array(
+			$list[]	= HtmlTag::create( 'tr', $cells, array(
 				'class'	=> 'status-'.$this->states[$file->status],
 				'data-file-source'	=> $file->pathSource,
 				'data-file-local'	=> $file->pathLocal
 			) );
 		}
-		$checkAll	= UI_HTML_Tag::create( 'input', NULL, array(
+		$checkAll	= HtmlTag::create( 'input', NULL, array(
 			'type'			=> 'checkbox',
 			'onchange'		=> 'AdminModuleUpdater.switchAllFiles()',
 			'id'			=> 'btn_switch_files',
@@ -97,9 +99,9 @@ class View_Helper_Module_Files{
 		}
 		$colgroup	= UI_HTML_Elements::ColumnGroup( $colgroup );
 		$heads		= UI_HTML_Elements::TableHeads( $heads ) ;
-		$thead		= UI_HTML_Tag::create( 'thead', $heads );
-		$tbody		= UI_HTML_Tag::create( 'tbody', $list, array( 'id' => 'file-rows' ) );
-		$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table module-update-files' ) );
+		$thead		= HtmlTag::create( 'thead', $heads );
+		$tbody		= HtmlTag::create( 'tbody', $list, array( 'id' => 'file-rows' ) );
+		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table module-update-files' ) );
 		return $table;
 	}
 

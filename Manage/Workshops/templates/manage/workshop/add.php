@@ -1,12 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) );
-$iconOpen		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-folder-open" ) );
-$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-eye" ) );
-$iconExists		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-check" ) );
-$iconMissing	= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-warning" ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) );
+$iconOpen		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-folder-open" ) );
+$iconView		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-eye" ) );
+$iconExists		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-check" ) );
+$iconMissing	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-warning" ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
 
 $modalImage		= new View_Helper_Input_Resource( $env );
 $modalImage->setModalId( 'modal-manage-workshop-select-image' );
@@ -31,15 +32,15 @@ $optImageAlignH	= UI_HTML_Elements::Options( $optImageAlignH, $workshop->imageAl
 $optImageAlignV	= array_diff_key( $words['image-align-v'], array( 0 ) );
 $optImageAlignV	= UI_HTML_Elements::Options( $optImageAlignV, $workshop->imageAlignV );
 
-$panelEdit	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'neuer Workshop' ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'form', array(
+$panelEdit	= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', 'neuer Workshop' ),
+	HtmlTag::create( 'div', array(
+		HtmlTag::create( 'form', array(
 
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Titel', array( 'for' => 'input_title' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'Titel', array( 'for' => 'input_title' ) ),
+					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'text',
 						'name'		=> 'title',
 						'id'		=> 'input_title',
@@ -47,17 +48,17 @@ $panelEdit	= UI_HTML_Tag::create( 'div', array(
 						'class'		=> 'span12',
 					) ),
 				), array( 'class' => 'span7' ) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Zustand', array( 'for' => 'input_status' ) ),
-					UI_HTML_Tag::create( 'select', $optStatus, array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'Zustand', array( 'for' => 'input_status' ) ),
+					HtmlTag::create( 'select', $optStatus, array(
 						'name'		=> 'status',
 						'id'		=> 'input_status',
 						'class'		=> 'span12',
 					) ),
 				), array( 'class' => 'span3' ) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Rang', array( 'for' => 'input_rank' ) ),
-					UI_HTML_Tag::create( 'select', $optRank, array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'Rang', array( 'for' => 'input_rank' ) ),
+					HtmlTag::create( 'select', $optRank, array(
 						'name'		=> 'rank',
 						'id'		=> 'input_rank',
 						'class'		=> 'span12',
@@ -65,10 +66,10 @@ $panelEdit	= UI_HTML_Tag::create( 'div', array(
 				), array( 'class' => 'span2' ) ),
 			), array( 'class' => 'row-fluid' ) ),
 
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', '<acronym title="Inhalt der Detailansicht">Inhalt</acronym>', array( 'for' => 'input_description' ) ),
-					UI_HTML_Tag::create( 'textarea', $workshop->description, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', '<acronym title="Inhalt der Detailansicht">Inhalt</acronym>', array( 'for' => 'input_description' ) ),
+					HtmlTag::create( 'textarea', $workshop->description, array(
 						'name'		=> 'description',
 						'id'		=> 'input_description',
 						'class'		=> 'span12 '.$tinyMceAutoClass,
@@ -79,10 +80,10 @@ $panelEdit	= UI_HTML_Tag::create( 'div', array(
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
 
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', '<acronym title="Kurzbeschreibung für Darstellung in der Übersicht, wird in Detailansicht nicht verwendet">Abstrakt</acronym>', array( 'for' => 'input_abstract' ) ),
-					UI_HTML_Tag::create( 'textarea', $workshop->abstract, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', '<acronym title="Kurzbeschreibung für Darstellung in der Übersicht, wird in Detailansicht nicht verwendet">Abstrakt</acronym>', array( 'for' => 'input_abstract' ) ),
+					HtmlTag::create( 'textarea', $workshop->abstract, array(
 						'name'		=> 'abstract',
 						'id'		=> 'input_abstract',
 						'class'		=> 'span12 '.$tinyMceAutoClass,
@@ -93,10 +94,10 @@ $panelEdit	= UI_HTML_Tag::create( 'div', array(
 				), array( 'class' => 'span12' ) ),
 			), array( 'class' => 'row-fluid' ) ),
 
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Bild', array( 'for' => 'input_image' ) ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'Bild', array( 'for' => 'input_image' ) ),
+					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'text',
 						'name'		=> 'image',
 						'id'		=> 'input_image',
@@ -104,21 +105,21 @@ $panelEdit	= UI_HTML_Tag::create( 'div', array(
 						'class'		=> 'span12',
 					) ),
 				), array( 'class' => 'span7' ) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', '&nbsp;' ),
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', '&nbsp;' ),
 					$trigger
 				), array( 'class' => 'span1' ) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Horizontal', array( 'for' => 'input_imageAlignH' ) ),
-					UI_HTML_Tag::create( 'select', $optImageAlignH, array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'Horizontal', array( 'for' => 'input_imageAlignH' ) ),
+					HtmlTag::create( 'select', $optImageAlignH, array(
 						'name'		=> 'imageAlignH',
 						'id'		=> 'input_imageAlignH',
 						'class'		=> 'span12',
 					) ),
 				), array( 'class' => 'span2' ) ),
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Vertikal', array( 'for' => 'input_imageAlignV' ) ),
-					UI_HTML_Tag::create( 'select', $optImageAlignV, array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'Vertikal', array( 'for' => 'input_imageAlignV' ) ),
+					HtmlTag::create( 'select', $optImageAlignV, array(
 						'name'		=> 'imageAlignV',
 						'id'		=> 'input_imageAlignV',
 						'class'		=> 'span12',
@@ -128,9 +129,9 @@ $panelEdit	= UI_HTML_Tag::create( 'div', array(
 
 
 
-			UI_HTML_Tag::create( 'div', join( ' ', array(
-				UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;zurück', array( 'href' => './manage/workshop', 'class' => 'btn' ) ),
-				UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;speichern', array( 'type' => 'submit', 'name' => 'save', 'class' => 'btn btn-primary' ) ),
+			HtmlTag::create( 'div', join( ' ', array(
+				HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', array( 'href' => './manage/workshop', 'class' => 'btn' ) ),
+				HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array( 'type' => 'submit', 'name' => 'save', 'class' => 'btn btn-primary' ) ),
 			) ), array( 'class' => 'buttonbar' ) ),
 
 		), array( 'method' => 'post', 'action' => './manage/workshop/add' ) ),

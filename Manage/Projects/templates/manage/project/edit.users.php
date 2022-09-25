@@ -1,9 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['edit-panel-users'];
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
 
 $canEditUsers	= $env->getAcl()->has( 'manage/user', 'edit' );
 
@@ -27,22 +28,22 @@ foreach( $projectUsers as $user ){
 		$label	= $helperMember->render();
 	}
 	else{
-		$label	= UI_HTML_Tag::create( 'span', $user->username, array( 'class' => $class ) );
+		$label	= HtmlTag::create( 'span', $user->username, array( 'class' => $class ) );
 		if( $canEditUsers ){
 			$url	= './admin/user/edit/'.$user->userId.$from;
-			$label	= UI_HTML_Tag::create( 'a', $user->username, array( 'href' => $url, 'class' => $class ) );
+			$label	= HtmlTag::create( 'a', $user->username, array( 'href' => $url, 'class' => $class ) );
 		}
 	}
 	$url	= './manage/project/removeUser/'.$project->projectId.'/'.$user->userId;
-	$remove	= UI_HTML_Tag::create( 'button', $iconRemove, array( 'type' => 'button', 'class' => 'btn btn-mini btn-inverse pull-right disabled' ) );
+	$remove	= HtmlTag::create( 'button', $iconRemove, array( 'type' => 'button', 'class' => 'btn btn-mini btn-inverse pull-right disabled' ) );
 	if( ( $project->creatorId && $user->userId !== $project->creatorId ) || ( !$project->creatorId && $user->userId !== $currentUserId ) )
-		$remove	= UI_HTML_Tag::create( 'a', $iconRemove, array( 'href' => $url, 'class' => 'btn btn-mini btn-inverse pull-right' ) );
+		$remove	= HtmlTag::create( 'a', $iconRemove, array( 'href' => $url, 'class' => 'btn btn-mini btn-inverse pull-right' ) );
 	if( count( $projectUsers ) === 1 )
 		$remove	= '';
-	$list[$user->username]	= UI_HTML_Tag::create( 'li', $remove.$label, array( 'class' => 'autocut' ) );
+	$list[$user->username]	= HtmlTag::create( 'li', $remove.$label, array( 'class' => 'autocut' ) );
 }
 ksort( $list );
-$list	= UI_HTML_Tag::create( 'ul', $list );
+$list	= HtmlTag::create( 'ul', $list );
 
 $optUser	= array( '' => '');
 foreach( $users as $user )
@@ -53,7 +54,7 @@ $optUser	= UI_HTML_Elements::Options( $optUser );
 
 $buttonAdd	= UI_HTML_Elements::Button( 'addUser', $iconAdd.' hinzufügen', 'btn btn-small btn-primary' );
 if( !$canEdit )
-	$buttonAdd	= UI_HTML_Tag::Button( 'addUser', $iconAdd.' hinzufügen', 'btn btn-small btn-primary disabled', NULL, TRUE );
+	$buttonAdd	= HtmlTag::Button( 'addUser', $iconAdd.' hinzufügen', 'btn btn-small btn-primary disabled', NULL, TRUE );
 
 return '
 <div class="content-panel content-panel-form">

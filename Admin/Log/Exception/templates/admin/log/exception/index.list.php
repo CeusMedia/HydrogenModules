@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index.list'];
@@ -16,7 +17,7 @@ if( count( $instances ) > 1 ){
 	$optInstance	= [];
 	foreach( $instances as $instanceKey => $instanceData )
 		$optInstance[$instanceKey]	= $instanceData->title;
-	$optInstance	= UI_HTML_Elements::Options( $optInstance, $currentInstance );
+	$optInstance	= HtmlElements::Options( $optInstance, $currentInstance );
 	$selectInstance	= HtmlTag::create( 'select', $optInstance, array(
 		'oninput'	=> 'document.location.href = "./admin/log/exception/setInstance/" + jQuery(this).val();',
 		'class'		=> '',
@@ -91,14 +92,14 @@ if( $exceptions ){
 		'id'	=> 'admin-log-exception-list-all-items-toggle',
 	] );
 
-	$heads	= UI_HTML_Elements::TableHeads( [
+	$heads	= HtmlElements::TableHeads( [
 		$checkboxAll,
 //		'',
 		'',
 		'',
 	] );
 
-	$colgroup	= UI_HTML_Elements::ColumnGroup( '20px', ''/*, '180px'*//*, '180px'*/, '60px', '150px', '100px' );
+	$colgroup	= HtmlElements::ColumnGroup( '20px', ''/*, '180px'*//*, '180px'*/, '60px', '150px', '100px' );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], [

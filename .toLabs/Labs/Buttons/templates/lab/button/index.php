@@ -1,7 +1,8 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 function IconButtonLink( $url, $title, $class = NULL, $confirm = NULL, $disabled = NULL ){
-	$label		= UI_HTML_Tag::create( 'span', '&nbsp;' );
+	$label		= HtmlTag::create( 'span', '&nbsp;' );
 	$attributes	= array( 'href' => $url, 'class' => $class, 'title' => $title );
 	if( $disabled ){
 		if( is_string( $disabled ) )
@@ -12,11 +13,11 @@ function IconButtonLink( $url, $title, $class = NULL, $confirm = NULL, $disabled
 	}
 	else if( $confirm )
 		$attributes['onclick']	= "return confirm('".$confirm."');";
-	return UI_HTML_Tag::create( 'a', $label, $attributes );
+	return HtmlTag::create( 'a', $label, $attributes );
 }
 
 function ButtonLink( $url, $label, $class = NULL, $confirm = NULL, $disabled = NULL ){
-	$label		= UI_HTML_Tag::create( 'span', $label );
+	$label		= HtmlTag::create( 'span', $label );
 	$attributes	= array( 'href' => $url, 'class' => $class );
 	if( $disabled ){
 		if( is_string( $disabled ) )
@@ -27,7 +28,7 @@ function ButtonLink( $url, $label, $class = NULL, $confirm = NULL, $disabled = N
 	}
 	else if( $confirm )
 		$attributes['onclick']	= "return confirm('".$confirm."');";
-	return UI_HTML_Tag::create( 'a', $label, $attributes );
+	return HtmlTag::create( 'a', $label, $attributes );
 }
 
 $types	= array(

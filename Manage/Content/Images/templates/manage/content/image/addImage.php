@@ -1,6 +1,7 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconUpload     = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
+$iconUpload     = HtmlTag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
 
 $optFolder	= [];
 foreach( $folders as $folder )

@@ -1,8 +1,10 @@
 <?php
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconPayin		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
-$iconCard		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-credit-card' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconPayin		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
+$iconCard		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-credit-card' ) );
 
 $wordsCurrencies	= array(
 	'EUR'		=> 'EUR',
@@ -22,7 +24,7 @@ foreach( $currencies as $key => $label )
 	$optCurrency[$key]	= $label;
 $optCurrency	= UI_HTML_Elements::Options( $optCurrency );
 
-$inputCurrency	= UI_HTML_Tag::create( 'select', $optCurrency, array(
+$inputCurrency	= HtmlTag::create( 'select', $optCurrency, array(
 	'id'		=> 'input_currency',
 	'name'		=> 'currency',
 	'class'		=> 'span12',
@@ -55,7 +57,7 @@ $from		= isset( $from ) ? $from : '';
 $linkBack	= '';
 if( $backwardTo/* || count( $cards ) > 1*/ ){
 	$linkBack	= $backwardTo ? $backwardTo : './manage/my/mangopay/card';
-	$linkBack	= UI_HTML_Tag::create( 'a', $iconCancel.' abbrechen', array( 'href' => $linkBack, 'class' => "btn" ) );
+	$linkBack	= HtmlTag::create( 'a', $iconCancel.' abbrechen', array( 'href' => $linkBack, 'class' => "btn" ) );
 }
 
 $helperCard	= new View_Helper_Mangopay_Entity_Card( $env );

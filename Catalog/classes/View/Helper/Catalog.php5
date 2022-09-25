@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -148,9 +149,9 @@ class View_Helper_Catalog{
 	public function renderArticleImage( $article, $labelNoPicture = "" ){
 		$title	= htmlentities( strip_tags( View_Helper_Text::applyFormat( $article->title ) ) );
 		if( strlen( $uri = $this->logic->getArticleCoverUrl( $article, FALSE/*, TRUE*/ ) ) )
-			return UI_HTML_Elements::Image( $uri, $title, 'thumb dropshadow' );
+			return HtmlElements::Image( $uri, $title, 'thumb dropshadow' );
 		$pathImages	= $this->env->getConfig()->get( 'path.images' );
-		return UI_HTML_Elements::Image( $pathImages."no_picture.png", $labelNoPicture );
+		return HtmlElements::Image( $pathImages."no_picture.png", $labelNoPicture );
 	}
 
 	public function renderArticleLink( $article ){
@@ -169,11 +170,11 @@ class View_Helper_Catalog{
 		if( strlen( $uri = $this->logic->getArticleCoverUrl( $article, TRUE/*, TRUE*/ ) ) ){
 			$url	= $this->logic->getArticleUri( $article );
 			$title	= htmlentities( strip_tags( View_Helper_Text::applyFormat( $article->title ) ) );
-			$image	= UI_HTML_Elements::Image( $uri, $title, 'thumb dropshadow' );
-			return UI_HTML_Elements::Link( $url, $image, 'image' );
+			$image	= HtmlElements::Image( $uri, $title, 'thumb dropshadow' );
+			return HtmlElements::Link( $url, $image, 'image' );
 		}
 		$pathImages	= $this->env->getConfig()->get( 'path.images' );
-		return UI_HTML_Elements::Image( $pathImages."no_picture.png", $labelNoPicture );
+		return HtmlElements::Image( $pathImages."no_picture.png", $labelNoPicture );
 	}
 
 	public function renderAuthorLink( $author ){
@@ -236,17 +237,17 @@ class View_Helper_Catalog{
 			$sub	= [];
 			foreach( $category->categories as $subcategory ){
 				$link	= $this->renderCategoryLink( $subcategory, $language );
-				$sub[]	= UI_HTML_Elements::ListItem( $link, 1, array( 'class' => 'topic' ) );
+				$sub[]	= HtmlElements::ListItem( $link, 1, array( 'class' => 'topic' ) );
 			}
-			$sub	= $sub ? UI_HTML_Elements::unorderedList( $sub, 1, array( 'class' => 'topics' ) ) : '';
+			$sub	= $sub ? HtmlElements::unorderedList( $sub, 1, array( 'class' => 'topics' ) ) : '';
 			$area	= '<span class="hitarea '.( $sub ? 'closed' : 'empty' ).'"></span>';
 
 			$link	= $this->renderCategoryLink( $category, $language );
 			if( !empty( $category->label_former ) )
 				$link	.= '<br/><small>vormals <em>'.$category->label_former.'</em></small>';
-			$list[]	= UI_HTML_Elements::ListItem( $area.$link.$sub, 0, array( 'class' => 'branch' ) );
+			$list[]	= HtmlElements::ListItem( $area.$link.$sub, 0, array( 'class' => 'branch' ) );
 		}
-		return UI_HTML_Elements::unorderedList( $list, 0, array( 'class' => 'branches' ) );
+		return HtmlElements::unorderedList( $list, 0, array( 'class' => 'branches' ) );
 	}
 
 	public function renderDocumentLink( $document ){

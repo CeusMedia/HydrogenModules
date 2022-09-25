@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $classAutoEditor	= $editor;
 $options			= [];
@@ -43,7 +44,7 @@ else if( $editor === "TinyMCE" ){
 	$options			= array( 'tinymce-mode' => 'extended' );
 }
 
-$textarea	= UI_HTML_Tag::create( 'textarea', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), array(
+$textarea	= HtmlTag::create( 'textarea', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), array(
 	'name'		=> 'content',
 	'id'		=> 'input_content',
 	'class'		=> 'span12 '.$classAutoEditor,
@@ -53,7 +54,7 @@ $textarea	= UI_HTML_Tag::create( 'textarea', htmlentities( $content, ENT_COMPAT,
 	'style'		=> join( "; ", $style ),
 ), $options );
 
-$buttonSave	= UI_HTML_Tag::create( 'button', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], array(
+$buttonSave	= HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], array(
 	'type'	=> 'submit',
 	'name'	=> 'do',
 	'value'	=> 'save',
@@ -63,7 +64,7 @@ $buttonSave	= UI_HTML_Tag::create( 'button', '<i class="icon-ok icon-white"></i>
 
 $buttonbar	= '';
 if( $editor !== "Ace" )
-	$buttonbar	= UI_HTML_Tag::create( 'div', $buttonSave, array( 'class' => 'buttonbar' ) );
+	$buttonbar	= HtmlTag::create( 'div', $buttonSave, array( 'class' => 'buttonbar' ) );
 
 $optEditor	= array( 'Plain' => $words['editors']['Plain'] );
 foreach( $editors as $key )

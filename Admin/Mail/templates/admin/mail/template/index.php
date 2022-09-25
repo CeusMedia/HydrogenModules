@@ -1,7 +1,8 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
-use UI_HTML_Tag as Html;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as Html;
 
 $modelMail		= new Model_Mail( $env );
 
@@ -44,7 +45,7 @@ foreach( $templates as $template ){
 		Html::create( 'td', date( 'd.m.Y H:i', $template->modifiedAt ) ),
 	), array( 'class' => $rowClass ) );
 }
-$tableHeads	= UI_HTML_Elements::tableHeads( array(
+$tableHeads	= HtmlElements::tableHeads( array(
 	$words['index']['headTitle'],
 	$words['index']['headStatus'],
 	$words['index']['headUsed'],
@@ -53,7 +54,7 @@ $tableHeads	= UI_HTML_Elements::tableHeads( array(
 ) );
 
 $table	= Html::create( 'table', array(
-	UI_HTML_Elements::ColumnGroup( array( '', '120', '120', '140', '140' ) ),
+	HtmlElements::ColumnGroup( array( '', '120', '120', '140', '140' ) ),
 	Html::create( 'thead', $tableHeads ),
 	Html::create( 'tbody', $rows ),
 ), array( 'class' => 'table table-fixed' ) );

@@ -1,5 +1,5 @@
 <?php
-
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $urlBase	= $frontend->getUri().$frontend->getConfigValue( 'path.contents' ).$moduleConfig->get( 'path.covers' );
 
@@ -21,8 +21,8 @@ if( $article->cover ){
 	$urlSmall	= 'file/bookstore/article/s/'.$article->cover;
 
 
-	$imageMedium	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlMedium, 'class' => $class ) );
-	$imageSmall		= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlSmall, 'class' => $class ) );
+	$imageMedium	= HtmlTag::create( 'img', NULL, array( 'src' => $urlMedium, 'class' => $class ) );
+	$imageSmall		= HtmlTag::create( 'img', NULL, array( 'src' => $urlSmall, 'class' => $class ) );
 
 	$panelCover	= '
 <div class="content-panel">

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
@@ -45,8 +46,8 @@ if( $backups ){
 			HtmlTag::create( 'td', $creationDate ),
 		), array( 'class' => $rowClass ) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '33%', '15%', '', '100px', '150px' ) );
-	$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Datei', 'Status', 'Kommentar', 'Größe', 'Erstellungsdatum' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( array( '33%', '15%', '', '100px', '150px' ) );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Datei', 'Status', 'Kommentar', 'Größe', 'Erstellungsdatum' ) ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
 }

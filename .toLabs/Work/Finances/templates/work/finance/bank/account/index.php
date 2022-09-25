@@ -1,13 +1,14 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['index'];
 
 $list	= [];
 foreach( $accounts as $account ){
-	$link	= UI_HTML_Tag::create( 'a', $account->title, array( 'href' => './work/finance/bank/account/edit/'.$account->bankAccountId ) );
-	$list[]	= UI_HTML_Tag::create( 'li', $link );
+	$link	= HtmlTag::create( 'a', $account->title, array( 'href' => './work/finance/bank/account/edit/'.$account->bankAccountId ) );
+	$list[]	= HtmlTag::create( 'li', $link );
 }
-$list	= UI_HTML_Tag::create( 'ul', $list );
+$list	= HtmlTag::create( 'ul', $list );
 
 return '
 <fieldset>

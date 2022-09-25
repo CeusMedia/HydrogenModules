@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel	= HTML::Icon( 'arrow-left' );
 $iconSave	= HTML::Icon( 'ok', TRUE );
@@ -92,7 +93,7 @@ $panelEdit	= HTML::DivClass( 'content-panel',
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12',
 					HTML::Label( 'url', 'Beschreibung' ).
-					UI_HTML_Tag::create( 'textarea', $branch->description, array(
+					HtmlTag::create( 'textarea', $branch->description, array(
 						'name'	=> 'description',
 						'id'	=> 'input_description',
 						'class' => 'span12',

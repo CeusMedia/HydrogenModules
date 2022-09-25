@@ -1,13 +1,15 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 extract( $view->populateTexts( array( 'unregister.top', 'unregister.bottom', 'unregister.info' ), 'html/info/newsletter' ) );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconNext		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconNext		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 if( $env->hasModule( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconNext		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
-	$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconNext		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 }
 
 $w	= (object) $words['unregister'];
@@ -36,12 +38,12 @@ if( !$reader ){
 </div>'.$textUnregisterBottom;
 }
 
-$listGroups	= UI_HTML_Tag::create( 'em', 'Keine Bereiche mehr abonniert.', array( 'class' => 'muted' ) );
+$listGroups	= HtmlTag::create( 'em', 'Keine Bereiche mehr abonniert.', array( 'class' => 'muted' ) );
 if( $groups ){
 	$list	= [];
 	foreach( $groups as $group ){
 		$isRegisteredGroup	= array_key_exists( $group->newsletterGroupId, $reader->groups );
-		$checkbox	= UI_HTML_Tag::create( 'input', NULL, array(
+		$checkbox	= HtmlTag::create( 'input', NULL, array(
 			'type'		=> 'checkbox',
 			'value'		=> $group->newsletterGroupId,
 			'name'		=> 'groupIds[]',
@@ -49,10 +51,10 @@ if( $groups ){
 			'checked'	=> $isRegisteredGroup ? "checked" : NULL,
 			'class'		=> 'bs4-form-check-input',
 		) );
-		$label	= UI_HTML_Tag::create( 'label', $checkbox.'&nbsp;<span class="bs4-form-check-label">'.$group->title.'</span>', array( 'class' => 'checkbox' ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $label, array( 'class' => 'bs4-form-check' ) );
+		$label	= HtmlTag::create( 'label', $checkbox.'&nbsp;<span class="bs4-form-check-label">'.$group->title.'</span>', array( 'class' => 'checkbox' ) );
+		$list[]	= HtmlTag::create( 'li', $label, array( 'class' => 'bs4-form-check' ) );
 	}
-	$listGroups	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'bs2-unstyled bs3-unstyled bs4-list-unstyled' ) );
+	$listGroups	= HtmlTag::create( 'ul', $list, array( 'class' => 'bs2-unstyled bs3-unstyled bs4-list-unstyled' ) );
 }
 
 return $textUnregisterTop.'

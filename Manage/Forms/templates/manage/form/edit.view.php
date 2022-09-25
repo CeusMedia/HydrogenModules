@@ -1,23 +1,24 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconPrev	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconNext	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
-$iconBlock	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconPrev	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconNext	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+$iconBlock	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
 
-$listBlocksWithin	= UI_HTML_Tag::create( 'p', '<em class="muted">Keine.</em>' );
+$listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $blocksWithin = $this->getData( 'blocksWithin', array() ) ){
 	$list	= [];
 	foreach( $blocksWithin as $identifier => $item ){
-		$link	= UI_HTML_Tag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
+		$link	= HtmlTag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
 			'href'	=> './manage/form/block/edit/'.$item->blockId,
 		), array(
 			'identifier'	=> $item->identifier,
 		) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link );
+		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	if( $list )
-		$listBlocksWithin	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+		$listBlocksWithin	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
 }
 
 return '

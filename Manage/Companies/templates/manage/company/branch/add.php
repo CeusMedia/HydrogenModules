@@ -1,8 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['add'];
 
-$iconCancel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 
 $optCompany	= HTML::Options( $companies, $branch->companyId, array( 'companyId', 'title' ) );
 
@@ -13,7 +15,7 @@ $panelAdd	= HTML::DivClass( 'content-panel',
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span6',
 					HTML::Label( 'title', $w->labelTitle, 'mandatory' ).
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'text',
 						'name'		=> 'title',
 						'id'		=> 'input_title',
@@ -62,7 +64,7 @@ $panelAdd	= HTML::DivClass( 'content-panel',
 			HTML::DivClass( 'buttonbar',
 				HTML::DivClass( 'btn-toolbar',
 					HTML::LinkButton( './manage/company/branch', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' ).
-					UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+					HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
 						'type'	=> 'submit',
 						'name'	=> 'save',
 						'class'	=> 'btn btn-primary'

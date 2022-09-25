@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_NewsList implements Countable
@@ -62,24 +64,24 @@ class View_Helper_NewsList implements Countable
 			$key		= $item->timestamp.'.'.microtime( TRUE );
 			$icon		= '';
 			if( isset( $item->icon ) && strlen( $item->icon ) )
-				$icon	= UI_HTML_Tag::create( 'i', '', array( 'class' => $item->icon ) ).'&nbsp;';
-			$link		= UI_HTML_Tag::create( 'a', $icon.$item->title, array( 'href' => $item->url ) );
+				$icon	= HtmlTag::create( 'i', '', array( 'class' => $item->icon ) ).'&nbsp;';
+			$link		= HtmlTag::create( 'a', $icon.$item->title, array( 'href' => $item->url ) );
 			$date		= $helper->convert( $item->timestamp, TRUE );
-			$type		= UI_HTML_Tag::create( 'small', $item->typeLabel, array( 'class' => "muted" ) );
-			$list[$key]	= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create( 'td', $type.'<br/>'.$link, array( 'class' => 'autocut' ) ),
-				UI_HTML_Tag::create( 'td', $date, array( 'style' => 'text-align: right' ) ),
+			$type		= HtmlTag::create( 'small', $item->typeLabel, array( 'class' => "muted" ) );
+			$list[$key]	= HtmlTag::create( 'tr', array(
+				HtmlTag::create( 'td', $type.'<br/>'.$link, array( 'class' => 'autocut' ) ),
+				HtmlTag::create( 'td', $date, array( 'style' => 'text-align: right' ) ),
 			) );
 			krsort( $list );
 		}
 		$list	= array_slice( $list, 0, $this->limit );
-		$colgroup	= UI_HTML_Elements::ColumnGroup( "", "100" );
-		$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'th', $this->words['panel']['headerTitle'] ),
-			UI_HTML_Tag::create( 'th', $this->words['panel']['headerAge'], array( 'style' => 'text-align: right' ) ),
+		$colgroup	= HtmlElements::ColumnGroup( "", "100" );
+		$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'th', $this->words['panel']['headerTitle'] ),
+			HtmlTag::create( 'th', $this->words['panel']['headerAge'], array( 'style' => 'text-align: right' ) ),
 		) ) );
-		$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-		$list	= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array(
+		$tbody	= HtmlTag::create( 'tbody', $list );
+		$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
 			'class'		=> 'table table-striped table-fixed',
 		) );
 		return $list;

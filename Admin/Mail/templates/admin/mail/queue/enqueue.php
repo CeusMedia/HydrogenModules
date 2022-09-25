@@ -1,6 +1,7 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$optClass	= UI_HTML_Elements::Options( array_combine( $classes, $classes ), $class );
+$optClass	= HtmlElements::Options( array_combine( $classes, $classes ), $class );
 //$optClass['_selected']	= $class;
 
 return '

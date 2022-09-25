@@ -1,8 +1,10 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $panelMap	= '';
 
 if( $customer->latitude || $customer->longitude  ){
-	$map	= UI_HTML_Tag::create( 'div', '', array(
+	$map	= HtmlTag::create( 'div', '', array(
 		'id'				=> 'map-customer',
 		'class'				=> 'border',
 		'data-latitude'		=> $customer->latitude,

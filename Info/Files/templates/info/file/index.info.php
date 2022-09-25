@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['info'];
 
 $helper			= new View_Helper_TimePhraser( $env );
@@ -22,8 +24,8 @@ if( $lastUpload )
 if( $lastDownload )
 	$facts[]	= sprintf( $w->lastDownload, $helper->convert( $lastDownload, TRUE ) );
 foreach( $facts as $nr => $fact )
-	$facts[$nr]	= UI_HTML_Tag::create( 'li', $fact );
-$facts	= UI_HTML_Tag::create( 'ul', $facts );
+	$facts[$nr]	= HtmlTag::create( 'li', $fact );
+$facts	= HtmlTag::create( 'ul', $facts );
 
 return '
 <div class="content-panel">

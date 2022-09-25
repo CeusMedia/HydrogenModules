@@ -1,19 +1,21 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $rows		= [];
 foreach( $cards as $item ){
 	if( !$item->Active )
 		continue;
-	$button	= UI_HTML_Tag::create( 'a', 'use this!', array( 'class' => 'btn btn-small btn-primary', 'href' => './manage/my/mangopay/wallet/payIn/'.$walletId.'/card?cardId='.$item->Id ) );
-	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create(' td', $item->CardProvider, array( 'class' => 'cell-card-provider' ) ),
-		UI_HTML_Tag::create(' td', $item->Alias, array( 'class' => 'cell-card-title' ) ),
-		UI_HTML_Tag::create(' td', $button, array( 'class' => 'cell-actions' ) ),
+	$button	= HtmlTag::create( 'a', 'use this!', array( 'class' => 'btn btn-small btn-primary', 'href' => './manage/my/mangopay/wallet/payIn/'.$walletId.'/card?cardId='.$item->Id ) );
+	$rows[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create(' td', $item->CardProvider, array( 'class' => 'cell-card-provider' ) ),
+		HtmlTag::create(' td', $item->Alias, array( 'class' => 'cell-card-title' ) ),
+		HtmlTag::create(' td', $button, array( 'class' => 'cell-actions' ) ),
 	) );
 }
 $colgroup	= UI_HTML_Elements::ColumnGroup( "60", "", "90", "120" );
-$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Provider', 'Card Number <small class="muted">(anonymisiert)</small>', 'Aktion' ) ) );
-$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'Provider', 'Card Number <small class="muted">(anonymisiert)</small>', 'Aktion' ) ) );
+$tbody		= HtmlTag::create( 'tbody', $rows );
+$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 
 $panelCards	= '
 <div class="content-panel">

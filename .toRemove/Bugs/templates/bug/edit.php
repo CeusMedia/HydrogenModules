@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $types	= $words['types'];
 krsort( $types );
@@ -57,7 +58,7 @@ $main	= '
 				</li>
 				<li>
 					<label for="content">'.$words['edit']['labelContent'].'</label><br/>
-					'.UI_HTML_Tag::create( 'textarea', $bug->content, array( 'name' => 'content', 'rows' => 9 ) ).'
+					'.HtmlTag::create( 'textarea', $bug->content, array( 'name' => 'content', 'rows' => 9 ) ).'
 				</li>
 			</ul>
 			<div class="buttonbar">

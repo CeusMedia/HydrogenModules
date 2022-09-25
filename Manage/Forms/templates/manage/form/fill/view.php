@@ -1,22 +1,23 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $page		= (int) $env->getRequest()->get( 'page' );
 
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconView	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconCheck	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconResend	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-reload' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconForm	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
-$iconExport	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
-$iconInfo	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-info' ) );
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconCheck	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconResend	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-reload' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconForm	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
+$iconExport	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+$iconInfo	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-info' ) );
 
 $statuses	= array(
-	Model_Form_Fill::STATUS_NEW			=> UI_HTML_Tag::create( 'label', 'unbestätigt', array( 'class' => 'label' ) ),
-	Model_Form_Fill::STATUS_CONFIRMED	=> UI_HTML_Tag::create( 'label', 'gültig', array( 'class' => 'label label-success' ) ),
-	Model_Form_Fill::STATUS_HANDLED		=> UI_HTML_Tag::create( 'label', 'behandelt', array( 'class' => 'label label-info' ) ),
+	Model_Form_Fill::STATUS_NEW			=> HtmlTag::create( 'label', 'unbestätigt', array( 'class' => 'label' ) ),
+	Model_Form_Fill::STATUS_CONFIRMED	=> HtmlTag::create( 'label', 'gültig', array( 'class' => 'label label-success' ) ),
+	Model_Form_Fill::STATUS_HANDLED		=> HtmlTag::create( 'label', 'behandelt', array( 'class' => 'label label-info' ) ),
 );
 
 $helperPerson	= new View_Helper_Form_Fill_Person( $env );
@@ -30,18 +31,18 @@ $helperData->setMode(View_Helper_Form_Fill_Data::MODE_EXTENDED);
 
 
 //  --  PANEL: FACTS  --  //
-$datetime	= UI_HTML_Tag::create( 'div', 'Zeitpunkt: '.date( 'd.m.Y H:i:s', $fill->createdAt ) );
-$status		= UI_HTML_Tag::create( 'div', 'Zustand: '.$statuses[$fill->status] );
+$datetime	= HtmlTag::create( 'div', 'Zeitpunkt: '.date( 'd.m.Y H:i:s', $fill->createdAt ) );
+$status		= HtmlTag::create( 'div', 'Zustand: '.$statuses[$fill->status] );
 $referer	= '';
 if( $fill->referer ){
-	$referer	= UI_HTML_Tag::create( 'a', 'ausgefülltes Formular', array( 'href' => $fill->referer, 'target' => '_blank' ) );
-	$referer	= UI_HTML_Tag::create( 'div', 'Webseite: '.$referer );
+	$referer	= HtmlTag::create( 'a', 'ausgefülltes Formular', array( 'href' => $fill->referer, 'target' => '_blank' ) );
+	$referer	= HtmlTag::create( 'div', 'Webseite: '.$referer );
 }
-$formLink	= UI_HTML_Tag::create( 'a', $iconForm.'&nbsp;'.$form->title, array( 'href' => './manage/form/edit/'.$form->formId ) );
-$formLink	= UI_HTML_Tag::create( 'div', 'Formular: '.$formLink );
-$panelFacts	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Fakten' ),
-	UI_HTML_Tag::create( 'div', array(
+$formLink	= HtmlTag::create( 'a', $iconForm.'&nbsp;'.$form->title, array( 'href' => './manage/form/edit/'.$form->formId ) );
+$formLink	= HtmlTag::create( 'div', 'Formular: '.$formLink );
+$panelFacts	= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', 'Fakten' ),
+	HtmlTag::create( 'div', array(
 		$datetime,
 		$referer,
 		$formLink,
@@ -62,7 +63,7 @@ if( $fillTransfers ){
 		$targetTitle	= $transferTargetMap[$fillTransfer->formTransferTargetId]->title;
 		$status			= $iconCheck.'&nbsp;erfolgreich';
 		if( (int) $fillTransfer->status !== Model_Form_Fill_Transfer::STATUS_SUCCESS )
-			$status	= UI_HTML_Tag::create( 'abbr', $iconRemove.'&nbsp;gescheitert', array( 'title' => $fillTransfer->message ) );
+			$status	= HtmlTag::create( 'abbr', $iconRemove.'&nbsp;gescheitert', array( 'title' => $fillTransfer->message ) );
 
 		$button			= '';
 		if( $fillTransfer->data ){
@@ -78,17 +79,17 @@ if( $fillTransfers ){
 			}
 
 			$modalBody	= array(
-				UI_HTML_Tag::create( 'h4', 'Formulardaten' ),
+				HtmlTag::create( 'h4', 'Formulardaten' ),
 				arrayToTable( $formData ),
-				UI_HTML_Tag::create( 'h4', 'Transferdaten' ),
+				HtmlTag::create( 'h4', 'Transferdaten' ),
 				arrayToTable( $transferData ),
 			);
 			if( in_array( (int) $fillTransfer->status, array( Model_Form_Fill_Transfer::STATUS_ERROR, Model_Form_Fill_Transfer::STATUS_EXCEPTION ) ) ){
-				$modalBody[]	= UI_HTML_Tag::create( 'h4', 'Fehlermeldung' );
-				$modalBody[]    = UI_HTML_Tag::create( 'pre', str_replace( $this->env->uri, '', $fillTransfer->message ), array( 'style' => 'font-size: 10px' ) );
+				$modalBody[]	= HtmlTag::create( 'h4', 'Fehlermeldung' );
+				$modalBody[]    = HtmlTag::create( 'pre', str_replace( $this->env->uri, '', $fillTransfer->message ), array( 'style' => 'font-size: 10px' ) );
 				if( !empty( $fillTransfer->trace ) ){
-					$modalBody[]	= UI_HTML_Tag::create( 'h4', 'Aufrufstapel' );
-					$modalBody[]    = UI_HTML_Tag::create( 'pre', str_replace( $this->env->uri, '', $fillTransfer->trace ), array( 'style' => 'font-size: 10px' ) );
+					$modalBody[]	= HtmlTag::create( 'h4', 'Aufrufstapel' );
+					$modalBody[]    = HtmlTag::create( 'pre', str_replace( $this->env->uri, '', $fillTransfer->trace ), array( 'style' => 'font-size: 10px' ) );
 				}
 			}
 
@@ -102,18 +103,18 @@ if( $fillTransfers ){
 			$button		= new CeusMedia\Bootstrap\Modal\Trigger( $modalId );
 			$button->setLabel( $iconInfo )->setClass( 'btn-info btn-mini' );
 		}
-		$rows[]			= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $targetTitle ),
-			UI_HTML_Tag::create( 'td', $status ),
-			UI_HTML_Tag::create( 'td', $button ),
+		$rows[]			= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $targetTitle ),
+			HtmlTag::create( 'td', $status ),
+			HtmlTag::create( 'td', $button ),
 		) );
 	}
-	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-	$panelTransfers	= UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'h3', 'Datenweitergabe' ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-condensed' ) ),
+	$tbody	= HtmlTag::create( 'tbody', $rows );
+	$panelTransfers	= HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', array(
+			HtmlTag::create( 'h3', 'Datenweitergabe' ),
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-condensed' ) ),
 			) ),
 		), array( 'class' => 'content-panel-inner' ) ),
 	), array( 'class' => 'content-panel' ) ).join( $modals );;
@@ -121,51 +122,51 @@ if( $fillTransfers ){
 
 
 //  --  BUTTONS  --  //
-$buttonList	= UI_HTML_Tag::create( 'a', $iconList.'&nbsp;zur Liste', array(
+$buttonList	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'href'	=> './manage/form/fill'.( $page ? '/'.$page : '' ),
 	'class'	=> 'btn',
 ) );
-$buttonConfirm	= UI_HTML_Tag::create( 'a', $iconCheck.'&nbsp;als bestätigt markieren', array(
+$buttonConfirm	= HtmlTag::create( 'a', $iconCheck.'&nbsp;als bestätigt markieren', array(
 	'href'	=> './manage/form/fill/markAsConfirmed/'.$fill->fillId.( $page ? '&page='.$page : '' ),
 	'class'	=> 'btn btn-success',
 ) );
 if( $fill->status != Model_Form_Fill::STATUS_NEW )
 	$buttonConfirm	= '';
 
-$buttonHandled	= UI_HTML_Tag::create( 'a', $iconCheck.'&nbsp;als behandelt markieren', array(
+$buttonHandled	= HtmlTag::create( 'a', $iconCheck.'&nbsp;als behandelt markieren', array(
 	'href'	=> './manage/form/fill/markAsHandled/'.$fill->fillId.( $page ? '&page='.$page : '' ),
 	'class'	=> 'btn btn-info',
 ) );
 if( $fill->status != Model_Form_Fill::STATUS_CONFIRMED )
 	$buttonHandled	= '';
 
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 	'href'		=> './manage/form/fill/remove/'.$fill->fillId.( $page ? '&page='.$page : '' ),
 	'class'		=> 'btn btn-danger',
 	'onclick'	=> "if(!confirm('Wirklich ?'))return false;"
 ) );
 
-$buttonExport	= UI_HTML_Tag::create( 'a', $iconExport.'&nbsp;exportieren', array(
+$buttonExport	= HtmlTag::create( 'a', $iconExport.'&nbsp;exportieren', array(
 	'href'		=> './manage/form/fill/export/csv/fill/'.$fill->fillId,
 	'class'		=> 'btn',
 ) );
 
 $buttons	= join( ' ', array( $buttonList, $buttonExport, $buttonConfirm, $buttonHandled, $buttonRemove ) );
-$buttonbar	= UI_HTML_Tag::create( 'div', $buttons, array( 'class' => 'buttonbar' ) );
+$buttonbar	= HtmlTag::create( 'div', $buttons, array( 'class' => 'buttonbar' ) );
 
 
-$heading	= UI_HTML_Tag::create( 'h2', array(
-	UI_HTML_Tag::create( 'span', 'Eintrag: ', array( 'class' => 'muted' ) ),
+$heading	= HtmlTag::create( 'h2', array(
+	HtmlTag::create( 'span', 'Eintrag: ', array( 'class' => 'muted' ) ),
 	$form->title,
 ) );
 
-return UI_HTML_Tag::create( 'div', array(
+return HtmlTag::create( 'div', array(
 	$heading,
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'div', array(
+	HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', array(
 			$helperPerson->render(),
 		), array( 'class' => 'span8' ) ),
-		UI_HTML_Tag::create( 'div', array(
+		HtmlTag::create( 'div', array(
 			$panelFacts,
 			$panelTransfers,
 		), array( 'class' => 'span4' ) ),
@@ -178,11 +179,11 @@ return UI_HTML_Tag::create( 'div', array(
 function arrayToTable( $data ){
 	$list	= [];
 	foreach( $data as $key => $value ){
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'th', $key ),
-			UI_HTML_Tag::create( 'td', $value ),
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'th', $key ),
+			HtmlTag::create( 'td', $value ),
 		) );
 	}
-	$tbody	= UI_HTML_Tag::create( 'tbody', $list );
-	return UI_HTML_Tag::create( 'table', $tbody, array( 'class' => 'table table-condensed table-bordered' ) );
+	$tbody	= HtmlTag::create( 'tbody', $list );
+	return HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-condensed table-bordered' ) );
 }

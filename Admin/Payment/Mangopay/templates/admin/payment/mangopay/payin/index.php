@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $colors		= array(
@@ -38,8 +39,8 @@ if( $payins ){
 			HtmlTag::create( 'td', HtmlTag::create( 'small', date( 'Y-m-d H:i:s', $item->modifiedAt ) ) ),
 		) );
 	}
-	$colgroup	= UI_HTML_Elements::ColumnGroup( array( '50', '', '', '100px', '100px', '140px' ) );
-	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$colgroup	= HtmlElements::ColumnGroup( array( '50', '', '', '100px', '100px', '140px' ) );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		'#',
 		'Person',
 		'Einordnung',

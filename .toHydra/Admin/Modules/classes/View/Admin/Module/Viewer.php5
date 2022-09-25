@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Admin_Module_Viewer extends View_Admin_Module {
 
 	protected function __onInit(){
@@ -35,7 +37,7 @@ class View_Admin_Module_Viewer extends View_Admin_Module {
 				$xmpClass	= 'php';
 				break;
 		}
-		$code		= UI_HTML_Tag::create( 'pre', htmlentities( $content ), array( 'class' => 'code '.$xmpClass ) );
+		$code		= HtmlTag::create( 'pre', htmlentities( $content ), array( 'class' => 'code '.$xmpClass ) );
 		$body		= '<h2>'.$moduleId.' - '.$fileName.'</h2>'.$code;
 /*		$page		= new UI_HTML_PageFrame();
 		$page->addStylesheet( 'css/reset.css' );

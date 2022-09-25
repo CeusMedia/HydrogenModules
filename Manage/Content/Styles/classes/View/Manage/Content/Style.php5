@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Content_Style extends View{
@@ -28,14 +29,14 @@ class View_Manage_Content_Style extends View{
 			$ext	= pathinfo( $file, PATHINFO_EXTENSION );
 			$label	= $name.'<small class="muted">.'.$ext.'</small>';
 			$class	= $file == $currentFile ? 'active' : NULL;
-			$link	= UI_HTML_Tag::create( 'a', $label, array(
+			$link	= HtmlTag::create( 'a', $label, array(
 				'href'	=> './manage/content/style/'.$file,
 				'class'	=> 'autocut',
 				'title'	=> htmlentities( $file, ENT_QUOTES, 'UTF-8' ),
 			) );
-			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array(
+		return HtmlTag::create( 'ul', $list, array(
 			'class'	=> 'nav nav-pills nav-stacked'
 		) );
 	}

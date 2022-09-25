@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $file		= preg_replace( "/^".preg_quote( realpath( $env->uri ), '/' )."/", '.', $exception->file );
 $date		= date( 'Y.m.d', $exception->timestamp );
@@ -20,8 +21,8 @@ $facts['Date (Time)']	= $date.' <small class="muted">('.$time.')</small>';
 
 $list	= [];
 foreach( $facts as $key => $value )
-	$list[]	= UI_HTML_Tag::create( 'dt', $key ).UI_HTML_Tag::create( 'dd', $value );
-$list	= UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+	$list[]	= HtmlTag::create( 'dt', $key ).HtmlTag::create( 'dd', $value );
+$list	= HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 
 return '
 <div class="row-fluid">

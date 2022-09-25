@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -17,7 +18,7 @@ class Hook_JS_Backbone extends Hook
 	{
 		$env->getLanguage()->load( 'gallery' );														//  load gallery language file
 		$words		= $env->getLanguage()->getWords( 'gallery' );									//  get gallery feed words
-		$context->addHead( UI_HTML_Tag::create( 'link', NULL, array(								//  create link with attributes
+		$context->addHead( HtmlTag::create( 'link', NULL, array(								//  create link with attributes
 			'rel'	=> "alternate",																	//
 			'type'	=> "application/rss+xml",														//  MIME type of RSS
 			'href'	=> $env->getConfig()->get( 'app.base.url' )."gallery/feed",						//  URL to RSS feed

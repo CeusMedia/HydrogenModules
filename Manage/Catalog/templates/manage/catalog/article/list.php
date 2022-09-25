@@ -1,11 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w			= (object) $view->getWords( 'index.list', 'manage/catalog/article' );
 
 $list		= $this->renderList( $articles, isset( $article ) ? $article->articleId : NULL );
 
 $heading	= $w->heading;
 if( !empty( $w->heading_title ) )
-	$heading	= UI_HTML_Tag::create( 'abbr', $heading, array( 'title' => $w->heading_title ) );
+	$heading	= HtmlTag::create( 'abbr', $heading, array( 'title' => $w->heading_title ) );
 
 return '
 <div class="content-panel">

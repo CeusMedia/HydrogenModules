@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Gallery extends CMF_Hydrogen_View_Helper_Abstract
@@ -34,7 +35,7 @@ class View_Helper_Info_Gallery extends CMF_Hydrogen_View_Helper_Abstract
 		if( trim( $gallery->description ) ){
 			$content	= trim( $gallery->description );
 			$content	= View_Info_Gallery::renderContentStatic( $env, $view, $content );
-			$content	= UI_HTML_Tag::create( 'p', $content );
+			$content	= HtmlTag::create( 'p', $content );
 		}
 		return $content;
 	}

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/info/dashboard/' ) );
 
@@ -21,34 +23,34 @@ try{
 			return $textTop.$content.$textBottom.$modalAdd;
 		}
 
-		$iconAddBoard	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
-		$iconAddPanel	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
-		$iconEditTitle	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-		$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+		$iconAddBoard	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
+		$iconAddPanel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
+		$iconEditTitle	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+		$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 		$countUserBoards	= count( $dashboards );
 		$countUserPanels	= count( explode( ',', $dashboard->panels ) );
 		$maxUserBoards		= $moduleConfig->get( 'perUser.maxBoards' );
 		$maxUserPanels		= $moduleConfig->get( 'perUser.maxPanels' );
-		$buttonAddBoard		= UI_HTML_Tag::create( 'button', $iconAddBoard, array(
+		$buttonAddBoard		= HtmlTag::create( 'button', $iconAddBoard, array(
 			'type'		=> 'button',
 			'class'		=> 'btn not-btn-small btn-success trigger-myModalInfoDashboardAdd',
 			'title'		=> $countUserBoards >= $maxUserBoards ? 'Maximum erreicht' : 'neues Dashboard',
 			'disabled'	=> $countUserBoards >= $maxUserBoards ? 'disabled' : NULL,
 		) );
-		$buttonAddPanel		= UI_HTML_Tag::create( 'button', $iconAddPanel, array(
+		$buttonAddPanel		= HtmlTag::create( 'button', $iconAddPanel, array(
 			'type'		=> 'button',
 			'class'		=> 'btn not-btn-small btn-success trigger-myModalInfoDashboardAddPanel',
 			'title'		=> $countUserPanels >= $maxUserPanels ? 'Maximum erreicht' : 'neues Panel im Dashboard',
 			'disabled'	=> $countUserPanels >= $maxUserPanels ? 'disabled' : NULL,
 		) );
-		$buttonEditTitle	= UI_HTML_Tag::create( 'button', $iconEditTitle, array(
+		$buttonEditTitle	= HtmlTag::create( 'button', $iconEditTitle, array(
 			'type'				=> 'button',
 			'class'				=> 'btn btn-small button-rename-board',
 			'data-dashboard-id'	=> $dashboard->dashboardId,
 			'data-title'		=> htmlentities( $dashboard->title, ENT_QUOTES, 'UTF-8' ),
 			) );
-		$buttonRemoveBoard	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$buttonRemoveBoard	= HtmlTag::create( 'a', $iconRemove, array(
 			'href'		=> './info/dashboard/remove/'.$dashboard->dashboardId,
 			'class'		=> 'btn btn-small btn-inverse',
 			'title'		=> 'aktuelles Dashboard verwerfen',
@@ -58,7 +60,7 @@ try{
 		$optDashboardId	= [];
 		foreach( $dashboards as $entry )
 			$optDashboardId[$entry->dashboardId]	= $entry->title;
-		$optDashboardId	= UI_HTML_Elements::Options( $optDashboardId, $dashboard->dashboardId );
+		$optDashboardId	= HtmlElements::Options( $optDashboardId, $dashboard->dashboardId );
 
 		$helperAddPanel	= new View_Helper_Info_Dashboard_Modal_AddPanel( $env );
 		$helperAddPanel->setDashboard( $dashboard );
@@ -97,7 +99,7 @@ try{
 		</div>
 		'.$textBottom.$modalAdd.$modalAddPanel;
 	}
-	$heading	= UI_HTML_Tag::create( 'h3', 'Dashboard' );
+	$heading	= HtmlTag::create( 'h3', 'Dashboard' );
 	return $textTop.$heading.$helper->render().$textBottom;
 }
 catch( Exception $e ){

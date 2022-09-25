@@ -1,26 +1,27 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['add'];
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-//$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconOrder		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+//$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
 
 if( !$productId ){
 	$list	= 'Keine Produkte vorhanden.';
 	if( $products ){
 		$list	= [];
 		foreach( $products as $itemProduct ){
-			$link		= UI_HTML_Tag::create( 'a', array(
-				UI_HTML_Tag::create( 'h5', $itemProduct->title ),
-				UI_HTML_Tag::create( 'div', $itemProduct->description ),
+			$link		= HtmlTag::create( 'a', array(
+				HtmlTag::create( 'h5', $itemProduct->title ),
+				HtmlTag::create( 'div', $itemProduct->description ),
 			), array(
 				'href'	=> './manage/my/provision/license/add/'.$itemProduct->productId,
 				'class'	=> 'btn btn-large'
 			) );
-			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'list-products-item' ) );
+			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'list-products-item' ) );
 		}
-		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled list-products' ) );
+		$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled list-products' ) );
 	}
 
 	$position	= '
@@ -45,18 +46,18 @@ else if( !$productLicenseId ){
 	foreach( $productLicenses as $itemProductLicense ){
 		if( $itemProductLicense->productId != $productId )
 			continue;
-		$link		= UI_HTML_Tag::create( 'a', array(
-			UI_HTML_Tag::create( 'h5', $itemProductLicense->title ),
-			UI_HTML_Tag::create( 'div', $itemProductLicense->description ),
+		$link		= HtmlTag::create( 'a', array(
+			HtmlTag::create( 'h5', $itemProductLicense->title ),
+			HtmlTag::create( 'div', $itemProductLicense->description ),
 			$view->renderLicenseFacts( $itemProductLicense, array( 'users', 'duration', 'price' ) ),
 		), array(
 			'href'	=> './manage/my/provision/license/add/'.$productId.'/'.$itemProductLicense->productLicenseId,
 			'class'	=> 'btn btn-large'
 		) );
-		$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => 'list-licenses-item' ) );
+		$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'list-licenses-item' ) );
 	}
 	if( $list )
-		$list	= UI_HTML_Tag::create( 'ul', $list, array( 'class' => 'unstyled list-licenses' ) );
+		$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled list-licenses' ) );
 	else
 		$list	= 'Keine Lizenzen für dieses Produkt vorhanden.';
 
@@ -95,7 +96,7 @@ else{
 
 	$optPayment	= UI_HTML_Elements::Options( $words['paymentTypes'] );
 
-	$buttonOrder	= UI_HTML_Tag::create( 'button', $iconOrder.'&nbsp;'.$w->buttonOrder, array(
+	$buttonOrder	= HtmlTag::create( 'button', $iconOrder.'&nbsp;'.$w->buttonOrder, array(
 		'type'		=> "submit",
 		'name'		=> "save",
 		'class'		=> "btn btn-primary not-btn-large",

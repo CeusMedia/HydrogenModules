@@ -1,20 +1,22 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w		= (object) $words['edit'];
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonBack, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonBack, array(
 	'href'		=> './manage/relocation',
 	'class'		=> 'btn btn-small',
 ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-success',
 ) );
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
 	'href'		=> './manage/relocation/remove/'.$relocation->relocationId,
 	'class'		=> 'btn btn-small btn-danger',
 	'onclick'	=> htmlentities( 'return confirm("'.$w->buttonRemove_confirm.'")', ENT_QUOTES, 'UTF-8' ),

@@ -1,57 +1,58 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconUpload		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fw fa-upload' ) );
+$iconUpload		= HtmlTag::create( 'i', '', array( 'class' => 'fa fw fa-upload' ) );
 
 $upload	= new View_Helper_Input_File( $env );
 $upload->setLabel( 'Datei' );
 $upload->setName( 'upload' );
 
-$panelImport	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Import' ),
-	UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'form', array(
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'label', 'Datei aus vorherigem Export', array( 'for' => 'input_upload' ) ),
+$panelImport	= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', 'Import' ),
+	HtmlTag::create( 'div', array(
+		HtmlTag::create( 'form', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'label', 'Datei aus vorherigem Export', array( 'for' => 'input_upload' ) ),
 					$upload->render()
 				) ),
 			) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'h4', 'Typ der Installation' ),
-					UI_HTML_Tag::create( 'label', array(
-						UI_HTML_Tag::create( 'input', NULL, array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'h4', 'Typ der Installation' ),
+					HtmlTag::create( 'label', array(
+						HtmlTag::create( 'input', NULL, array(
 							'type'		=> 'radio',
 							'name'		=> 'type',
 							'value'		=> 'merge',
 							'id'		=> 'input_type-merge',
 							'checked'	=> 'checked',
 						) ),
-						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'strong', 'Aktuellen Bestand erweitern' ),
-							UI_HTML_Tag::create( 'br' ),
-							UI_HTML_Tag::create( 'small', 'Bestehende Regeln und Sperren bleiben erhalten und neue Regeln werden hinzugefügt.', array( 'class' => 'muted' ) ),
+						HtmlTag::create( 'div', array(
+							HtmlTag::create( 'strong', 'Aktuellen Bestand erweitern' ),
+							HtmlTag::create( 'br' ),
+							HtmlTag::create( 'small', 'Bestehende Regeln und Sperren bleiben erhalten und neue Regeln werden hinzugefügt.', array( 'class' => 'muted' ) ),
 						) ),
 					), array( 'class' => 'radio' ) ),
-					UI_HTML_Tag::create( 'label', array(
-						UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'label', array(
+						HtmlTag::create( 'input', NULL, array(
 							'type'		=> 'radio',
 							'name'		=> 'type',
 							'value'		=> 'fresh',
 							'id'		=> 'input_type-fresh',
 						) ),
-						UI_HTML_Tag::create( 'div', array(
-							UI_HTML_Tag::create( 'strong', 'Frische Installation' ),
-							UI_HTML_Tag::create( 'br' ),
-							UI_HTML_Tag::create( 'small', 'Bestehende Regeln und Sperren werden vor der Installation entfernt.', array( 'class' => 'muted' ) ),
+						HtmlTag::create( 'div', array(
+							HtmlTag::create( 'strong', 'Frische Installation' ),
+							HtmlTag::create( 'br' ),
+							HtmlTag::create( 'small', 'Bestehende Regeln und Sperren werden vor der Installation entfernt.', array( 'class' => 'muted' ) ),
 						) ),
 					), array( 'class' => 'radio' ) ),
 
 
 				) ),
 			) ),
-			UI_HTML_Tag::create( 'div', array(
-				UI_HTML_Tag::create( 'button', $iconUpload.'&nbsp;importieren', array(
+			HtmlTag::create( 'div', array(
+				HtmlTag::create( 'button', $iconUpload.'&nbsp;importieren', array(
 					'name'	=> 'save',
 					'type'	=> 'submit',
 					'class'	=> 'btn btn-primary'

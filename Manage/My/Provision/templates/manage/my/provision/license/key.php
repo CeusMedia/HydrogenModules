@@ -1,5 +1,5 @@
 <?php
-
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 if(0){
 print_m( $userLicense );
@@ -13,10 +13,10 @@ function renderDefinitionList( $data ){
 		return '';
 	$list	= [];
 	foreach( $data as $key => $value ){
-		$list[]	= UI_HTML_Tag::create( 'dt', $key );
-		$list[]	= UI_HTML_Tag::create( 'dd', $value );
+		$list[]	= HtmlTag::create( 'dt', $key );
+		$list[]	= HtmlTag::create( 'dd', $value );
 	}
-	return UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+	return HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
 }
 
 /*		if( $userLicenseKey->status == 2 ){

@@ -1,7 +1,8 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconFilter	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconFilter	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconReset	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
 
 $w			= (object) $words['filter'];
 
@@ -11,13 +12,13 @@ foreach( $words['states'] as $key => $value )
 $optStatus	= UI_HTML_Elements::Options( $optStatus, $filterStatus );
 
 
-$buttonFilter	= UI_HTML_Tag::create( 'button', $iconFilter.'&nbsp;'.$w->buttonFilter, array(
+$buttonFilter	= HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$w->buttonFilter, array(
 	'type'	=> 'submit',
 	'name'	=> 'filter',
 	'class'	=> 'btn btn-info',
 ) );
 
-$buttonReset	= UI_HTML_Tag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, array(
+$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, array(
 	'href'	=> './manage/news/filter/reset',
 	'class'	=> 'btn btn-inverse btn-small',
 ) );
@@ -40,7 +41,7 @@ return '
 					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
 				</div>
 			</div>
-			'.UI_HTML_Tag::create( 'div', join( '&nbsp;', array(
+			'.HtmlTag::create( 'div', join( '&nbsp;', array(
 				$buttonFilter,
 				$buttonReset,
 			) ), array( 'class' => 'buttonbar' ) ).'

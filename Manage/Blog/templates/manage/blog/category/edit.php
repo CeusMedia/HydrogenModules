@@ -1,12 +1,13 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['edit'];
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-arrow-left' ) );
-	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-check' ) );
+	$iconCancel		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-arrow-left' ) );
+	$iconSave		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-check' ) );
 }
 
 $languages		= $env->getLanguage()->getLanguages();
@@ -16,11 +17,11 @@ $optLanguage	= UI_HTML_Elements::Options( array_combine( $languages, $languages 
 $optStatus		= UI_HTML_Elements::Options( $words['states'], $category->status );
 
 
-$buttonCancel		= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+$buttonCancel		= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
 	'href'		=> "./manage/blog",
 	'class'		=> "btn btn-small",
 ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
 	'type'		=> "submit",
 	'name'		=> "save",
 	'value'		=> "1",

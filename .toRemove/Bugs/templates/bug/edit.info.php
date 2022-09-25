@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $modelBugChange	= new Model_Bug_Change( $this->env );
 $changers	= [];
@@ -10,22 +11,22 @@ foreach( $changes as $change ){
 }
 
 foreach( $changers as $userId => $changer ){
-	$link	= UI_HTML_Tag::create( 'a', $changer->username, array( 'href' => './user/edit/'.$userId ) );
-	$roled	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'role role'.$changer->roleId ) );
-	$changers[$userId]	= UI_HTML_Tag::create( 'li', $roled );
+	$link	= HtmlTag::create( 'a', $changer->username, array( 'href' => './user/edit/'.$userId ) );
+	$roled	= HtmlTag::create( 'span', $link, array( 'class' => 'role role'.$changer->roleId ) );
+	$changers[$userId]	= HtmlTag::create( 'li', $roled );
 }
-$changers	= $changers ? UI_HTML_Tag::create( 'ul', join( $changers ), array( 'class' => 'list' ) ) : "-";
+$changers	= $changers ? HtmlTag::create( 'ul', join( $changers ), array( 'class' => 'list' ) ) : "-";
 
 $reporter	= '-';
 if( $bug->reporterId ){
 	$reporter	= UI_HTML_Elements::Link( './user/edit/'.$bug->reporter->userId, $bug->reporter->username );
-	$reporter	= UI_HTML_Tag::create( 'span', $reporter, array( 'class' => 'role role'.$bug->reporter->roleId ) );
+	$reporter	= HtmlTag::create( 'span', $reporter, array( 'class' => 'role role'.$bug->reporter->roleId ) );
 }
 
 $manager	= '-';
 if( $bug->managerId ){
 	$manager	= UI_HTML_Elements::Link( './user/edit/'.$bug->manager->userId, $bug->manager->username );
-	$manager	= UI_HTML_Tag::create( 'span', $manager, array( 'class' => 'role role'.$bug->manager->roleId ) );
+	$manager	= HtmlTag::create( 'span', $manager, array( 'class' => 'role role'.$bug->manager->roleId ) );
 }
 
 return '

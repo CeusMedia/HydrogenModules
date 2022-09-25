@@ -1,6 +1,8 @@
 <?php
-$iconList	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 
 $optRoleType	= array(
 	Model_Form_Mail::ROLE_TYPE_NONE				=> 'keinen',

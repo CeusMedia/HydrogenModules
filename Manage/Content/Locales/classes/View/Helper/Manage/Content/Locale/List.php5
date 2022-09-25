@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Manage_Content_Locale_List{
 
 	protected $current;
@@ -22,8 +24,8 @@ class View_Helper_Manage_Content_Locale_List{
 		$showEmpty	= $this->env->getSession()->get( $filterPrefix.'empty' );
 		$list		= [];
 		$lastPath	= NULL;
-		$iconFolder	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-chevron-down' ) );
-		$iconFile	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-file' ) );
+		$iconFolder	= HtmlTag::create( 'i', '', array( 'class' => 'icon-chevron-down' ) );
+		$iconFile	= HtmlTag::create( 'i', '', array( 'class' => 'icon-file' ) );
 		foreach( $this->files as $filePath => $file ){
 			if( !$showEmpty && !$file->size )
 				continue;
@@ -31,21 +33,21 @@ class View_Helper_Manage_Content_Locale_List{
 			$pathName	= dirname( $file->pathName );
 			if( $pathName !== $lastPath ){
 				$path	= $iconFolder.' '.$pathName;
-				$list[]	= UI_HTML_Tag::create( 'li', $path, array( 'class' => 'folder' ) );
+				$list[]	= HtmlTag::create( 'li', $path, array( 'class' => 'folder' ) );
 				$lastPath	= $pathName;
 			}
 			$class		= $file->size ? NULL : 'empty';
-			$fileExt	= UI_HTML_Tag::create( 'small', '.'.$file->extension, array( 'class' => 'muted' ) );
+			$fileExt	= HtmlTag::create( 'small', '.'.$file->extension, array( 'class' => 'muted' ) );
 			$fileBase	= $file->baseName;
-			$link	= UI_HTML_Tag::create( 'a', $fileBase.$fileExt, array(
+			$link	= HtmlTag::create( 'a', $fileBase.$fileExt, array(
 				'href'	=> $url,
 				'class'	=> $class
 			) );
 			$class	= $this->current == $file->pathName ? "active" : "";
-			$list[]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
 		}
 		$attributes	= array( 'class' => 'nav nav-pills nav-stacked boxed', 'id' => 'list-files', 'style' => 'display: none' );
-		$list	= UI_HTML_Tag::create( 'ul', $list, $attributes );
+		$list	= HtmlTag::create( 'ul', $list, $attributes );
 		return $list;
 	}
 

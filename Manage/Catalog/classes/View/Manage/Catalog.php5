@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Catalog extends View{
@@ -13,11 +14,11 @@ class View_Manage_Catalog extends View{
 		$list			= [];
 		foreach( $tabs as $key => $value ){
 			$attributes	= array( 'href' => './'.$key );
-			$link		= UI_HTML_Tag::create( 'a', $value, $attributes );
+			$link		= HtmlTag::create( 'a', $value, $attributes );
 			$attributes	= array( 'class'    => $key === $current ? 'active' : NULL );
-			$list[]		= UI_HTML_Tag::create( 'li', $link, $attributes );
+			$list[]		= HtmlTag::create( 'li', $link, $attributes );
 		}
-		return UI_HTML_Tag::create( 'ul', $list, array( 'class' => "nav nav-tabs" ) );
+		return HtmlTag::create( 'ul', $list, array( 'class' => "nav nav-tabs" ) );
 	}
 }
 ?>

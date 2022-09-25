@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $rows	= [];
 foreach( $bugs as $bug ){
@@ -6,22 +7,22 @@ foreach( $bugs as $bug ){
 	$reporter	= '';
 	$manager	= '';
 	if( $bug->reporterId ){
-		$link		= UI_HTML_Tag::create( 'a', $users[$bug->reporterId]->username, array( 'href' => './user/edit/'.$bug->reporterId ) );
-		$reporter	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'role role'.$users[$bug->reporterId]->roleId ) );
+		$link		= HtmlTag::create( 'a', $users[$bug->reporterId]->username, array( 'href' => './user/edit/'.$bug->reporterId ) );
+		$reporter	= HtmlTag::create( 'span', $link, array( 'class' => 'role role'.$users[$bug->reporterId]->roleId ) );
 	}
 	if( $bug->managerId ){
-		$link		= UI_HTML_Tag::create( 'a', $users[$bug->managerId]->username, array( 'href' => './user/edit/'.$bug->managerId ) );
-		$manager	= UI_HTML_Tag::create( 'span', $link, array( 'class' => 'role role'.$users[$bug->managerId]->roleId ) );
+		$link		= HtmlTag::create( 'a', $users[$bug->managerId]->username, array( 'href' => './user/edit/'.$bug->managerId ) );
+		$manager	= HtmlTag::create( 'span', $link, array( 'class' => 'role role'.$users[$bug->managerId]->roleId ) );
 	}
 	$notes		= count( $bug->notes );
 	$changes	= count( $bug->changes );
 	$changes	= ( $notes || $changes ) ? ' mit '.$changes.' Veränderung(en) und '.$notes.' Notiz(en)' : '';
 	$link		= UI_HTML_Elements::Link( './bug/edit/'.$bug->bugId, $bug->title, 'bug-title' );
-	$type		= UI_HTML_Tag::create( 'span', $words['types'][$bug->type], array( 'class' => 'bug-type type-'.$bug->type ) );
-	$severity	= UI_HTML_Tag::create( 'span', $words['severities'][$bug->severity], array( 'class' => 'bug-severity severity-'.$bug->severity ) );
-	$priority	= UI_HTML_Tag::create( 'span', $words['priorities'][$bug->priority], array( 'class' => 'bug-priority priority-'.$bug->priority ) );
-	$status		= UI_HTML_Tag::create( 'span', $words['states'][$bug->status], array( 'class' => 'bug-status status-'.$bug->status ) );
-	$progress	= $bug->progress ? UI_HTML_Tag::create( 'span', $bug->progress.'%', array( 'class' => 'bug-progress progress-'.( floor( $bug->progress / 25 ) * 25 ) ) ) : "-"; 
+	$type		= HtmlTag::create( 'span', $words['types'][$bug->type], array( 'class' => 'bug-type type-'.$bug->type ) );
+	$severity	= HtmlTag::create( 'span', $words['severities'][$bug->severity], array( 'class' => 'bug-severity severity-'.$bug->severity ) );
+	$priority	= HtmlTag::create( 'span', $words['priorities'][$bug->priority], array( 'class' => 'bug-priority priority-'.$bug->priority ) );
+	$status		= HtmlTag::create( 'span', $words['states'][$bug->status], array( 'class' => 'bug-status status-'.$bug->status ) );
+	$progress	= $bug->progress ? HtmlTag::create( 'span', $bug->progress.'%', array( 'class' => 'bug-progress progress-'.( floor( $bug->progress / 25 ) * 25 ) ) ) : "-"; 
 	$createdAt	= date( 'd.m.Y H:i:s', $bug->createdAt );
 	$modifiedAt	= $bug->modifiedAt ? date( 'd.m.Y H:i:s', $bug->modifiedAt ) : "-";
 	$rows[]	= '

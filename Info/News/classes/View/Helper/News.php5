@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_News
@@ -42,7 +43,7 @@ class View_Helper_News
 </div>';
 		}
 		if( $list )
-			return UI_HTML_Tag::create( 'div', join( $list ), array( 'class' => 'news-list' ) );
+			return HtmlTag::create( 'div', join( $list ), array( 'class' => 'news-list' ) );
 //		if( $showOnEmpty ){
 //			return '<em><small class="muted">'.$words['index']['empty'].'</small></em>';
 //		}

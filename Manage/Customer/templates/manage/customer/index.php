@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['index'];
 
@@ -16,11 +17,11 @@ if( $customers ){
 			$index	= number_format( $customer->rating->index, 1 );
 		}
 		$url	= './manage/customer/edit/'.$customer->customerId;
-		$link	= UI_HTML_Tag::create( 'a', $customer->title, array( 'href' => $url ) );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $link ),
-			UI_HTML_Tag::create( 'td', $index ),
-			UI_HTML_Tag::create( 'td', $graph ),
+		$link	= HtmlTag::create( 'a', $customer->title, array( 'href' => $url ) );
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $link ),
+			HtmlTag::create( 'td', $index ),
+			HtmlTag::create( 'td', $graph ),
 		) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( '60%', '10%', '30%' );
@@ -29,12 +30,12 @@ if( $customers ){
 		'Index',
 		'Graph',
 	) );
-	$thead		= UI_HTML_Tag::create( 'thead', $heads );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $list );
-	$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$thead		= HtmlTag::create( 'thead', $heads );
+	$tbody		= HtmlTag::create( 'tbody', $list );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 $iconAdd	= '<i class="icon-plus icon-white"></i>';
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.' neuer Kunde', array( 'href' => './manage/customer/add', 'class' => 'btn not-btn-small btn-primary' ) );
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neuer Kunde', array( 'href' => './manage/customer/add', 'class' => 'btn not-btn-small btn-primary' ) );
 
 return '
 <h3>'.$w->heading.'</h3>

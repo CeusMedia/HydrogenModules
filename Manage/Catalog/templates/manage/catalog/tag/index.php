@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['index.filter'];
 
@@ -9,16 +10,16 @@ $rows	= [];
 foreach( $tags as $tag ){
 	$articleList	= [];
 	foreach( $tag->articleIds as $articleId ){
-		$link	= UI_HTML_Tag::create( 'a', $articles[$articleId]->title, array( 'href' => './manage/catalog/article/edit/'.$articleId ) );
-		$articleList[]	= UI_HTML_Tag::create( 'li', $link );
+		$link	= HtmlTag::create( 'a', $articles[$articleId]->title, array( 'href' => './manage/catalog/article/edit/'.$articleId ) );
+		$articleList[]	= HtmlTag::create( 'li', $link );
 	}
-	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $tag->tag ),
-		UI_HTML_Tag::create( 'td', UI_HTML_Tag::create( 'ul', $articleList ) )
+	$rows[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', $tag->tag ),
+		HtmlTag::create( 'td', HtmlTag::create( 'ul', $articleList ) )
 	) );
 }
-$list	= UI_HTML_Tag::create( 'table', array(
-	UI_HTML_Tag::create( 'tbody', $rows ),
+$list	= HtmlTag::create( 'table', array(
+	HtmlTag::create( 'tbody', $rows ),
 ), array( 'class' => 'table table-striped' ) );
 
 

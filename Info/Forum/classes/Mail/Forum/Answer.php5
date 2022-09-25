@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class Mail_Forum_Answer extends Mail_Forum_Abstract
 {
 	protected function renderHtmlBody(): string
@@ -14,12 +16,12 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract
 		if( $post->type == 1 ){
 			$parts		= explode( "\n", $post->content );
 			$title		= $parts[1] ? Alg_Text_Trimmer::trim( $parts[1], 100 ) : '';
-			$caption	= $title ? UI_HTML_Tag::create( 'figcaption', htmlentities( $parts[1], ENT_QUOTES, 'UTF-8') ) : '';
-			$image		= UI_HTML_Tag::create( 'img', NULL, array(
+			$caption	= $title ? HtmlTag::create( 'figcaption', htmlentities( $parts[1], ENT_QUOTES, 'UTF-8') ) : '';
+			$image		= HtmlTag::create( 'img', NULL, array(
 				'src'	=> 'contents/forum/'.$parts[0],
 				'title'	=> htmlentities( $title, ENT_QUOTES, 'UTF-8')
 			) );
-			$content	= UI_HTML_Tag::create( 'figure', $image.$caption );
+			$content	= HtmlTag::create( 'figure', $image.$caption );
 		}
 		else{
 			$matches	= [];

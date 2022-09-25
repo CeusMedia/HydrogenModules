@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
 $env->page->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
@@ -57,12 +58,12 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 		$dateCreated	= date( 'd.m.Y', $password->createdAt ).'&nbsp;<span class="muted">'.date( 'H:i', $password->createdAt ).'</small>';
 		$dateUsed		= $password->usedAt ? date( 'd.m.Y', $password->usedAt ).'&nbsp;<span class="muted">'.date( 'H:i', $password->usedAt ).'</small>' : '-';
 		$labelStatus	= $words['password-statuses'][$password->status];
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', '<small class="not-muted">'.$dateCreated.'</small>' ),
-			UI_HTML_Tag::create( 'td', '<small class="not-muted">'.$dateUsed.'</small>' ),
-			UI_HTML_Tag::create( 'td', $labelStatus ),
-//			UI_HTML_Tag::create( 'td', preg_replace( '/^PASSWORD_/', '', $passwordCryptTypes[$password->algo] ) ),
-//			UI_HTML_Tag::create( 'td', $password->failsTotal ),
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', '<small class="not-muted">'.$dateCreated.'</small>' ),
+			HtmlTag::create( 'td', '<small class="not-muted">'.$dateUsed.'</small>' ),
+			HtmlTag::create( 'td', $labelStatus ),
+//			HtmlTag::create( 'td', preg_replace( '/^PASSWORD_/', '', $passwordCryptTypes[$password->algo] ) ),
+//			HtmlTag::create( 'td', $password->failsTotal ),
 		), array( 'class' => $rowClass ) );
 	}
 	$heads	= UI_HTML_Elements::tableHeads( array(
@@ -73,7 +74,7 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 //		'gescheiterte Login',
 	) );
 
-	$table	= UI_HTML_Tag::create( 'table', array(
+	$table	= HtmlTag::create( 'table', array(
 		UI_HTML_Elements::ColumnGroup( array(
 			'120px',
 			'120px',
@@ -81,23 +82,23 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 //					'',
 //					'',
 		) ),
-		UI_HTML_Tag::create( 'thead', $heads ),
-		UI_HTML_Tag::create( 'tbody', $rows )
+		HtmlTag::create( 'thead', $heads ),
+		HtmlTag::create( 'tbody', $rows )
 	), array( 'class' => 'table table-condensed table-fixed table-bordered' ) );
 	$history	= HTML::DivClass( 'collapsable-block', array(
-//		UI_HTML_Tag::create( 'h4', 'Historie', array( 'class' => 'collapsable-block-trigger' ) ),
+//		HtmlTag::create( 'h4', 'Historie', array( 'class' => 'collapsable-block-trigger' ) ),
 		HTML::DivClass( 'collapsable-block-content', $table ),
 	) );
 }
 
 $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', array(
-	UI_HTML_Tag::create( 'h3', $w->heading ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HTML::DivClass( 'content-panel-inner',
 		HTML::Form( './manage/user/password/'.$userId, 'manage_user_password', array(
 			HTML::DivClass( 'row-fluid', array(
 				HTML::DivClass( 'span6', array(
 					HTML::Label( 'passwordNew', $w->labelPasswordNew, 'mandatory', sprintf( $w->labelPasswordNew_title, $pwdMinLength ) ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> "password",
 						'name'			=> "passwordNew",
 						'id'			=> "input_passwordNew",
@@ -110,7 +111,7 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', array(
 				) ),
 				HTML::DivClass( 'span6', array(
 					HTML::Label( 'passwordConfirm', $w->labelPasswordConfirm, 'mandatory', $w->labelPasswordConfirm_title ),
-					UI_HTML_Tag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, array(
 						'type'			=> "password",
 						'name'			=> "passwordConfirm",
 						'id'			=> "input_passwordConfirm",
@@ -153,18 +154,18 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 		$dateCreated	= date( 'd.m.Y', $password->createdAt ).'&nbsp;<span class="muted">'.date( 'H:i', $password->createdAt ).'</small>';
 		$dateUsed		= $password->usedAt ? date( 'd.m.Y', $password->usedAt ).'&nbsp;<span class="muted">'.date( 'H:i', $password->usedAt ).'</small>' : '-';
 		$labelStatus	= $words['password-statuses'][$password->status];
-		$rows[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', '<small class="not-muted">'.$dateCreated.'</small>' ),
-			UI_HTML_Tag::create( 'td', '<small class="not-muted">'.$dateUsed.'</small>' ),
-			UI_HTML_Tag::create( 'td', $labelStatus ),
-//			UI_HTML_Tag::create( 'td', preg_replace( '/^PASSWORD_/', '', $passwordCryptTypes[(int) $password->algo] ) ),
-//			UI_HTML_Tag::create( 'td', $password->failsTotal ),
+		$rows[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', '<small class="not-muted">'.$dateCreated.'</small>' ),
+			HtmlTag::create( 'td', '<small class="not-muted">'.$dateUsed.'</small>' ),
+			HtmlTag::create( 'td', $labelStatus ),
+//			HtmlTag::create( 'td', preg_replace( '/^PASSWORD_/', '', $passwordCryptTypes[(int) $password->algo] ) ),
+//			HtmlTag::create( 'td', $password->failsTotal ),
 		), array( 'class' => $rowClass ) );
 	}
 	$panelPasswords	= HTML::DivClass( 'content-panel content-panel-form', array(
-		UI_HTML_Tag::create( 'h4', 'Passwörter' ),
+		HtmlTag::create( 'h4', 'Passwörter' ),
 		HTML::DivClass( 'content-panel-inner', array(
-			UI_HTML_Tag::create( 'table', array(
+			HtmlTag::create( 'table', array(
 				UI_HTML_Elements::ColumnGroup( array(
 					'120px',
 					'120px',
@@ -172,14 +173,14 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 //					'',
 //					'',
 				) ),
-				UI_HTML_Tag::create( 'thead', UI_HTML_Elements::tableHeads( array(
+				HtmlTag::create( 'thead', UI_HTML_Elements::tableHeads( array(
 					'erstellt',
 					'zuletzt genutzt',
 					'Zustand',
 //					'Kryptografie',
 //					'gescheiterte Login',
 				) ) ),
-				UI_HTML_Tag::create( 'tbody', $rows )
+				HtmlTag::create( 'tbody', $rows )
 			), array( 'class' => 'table table-condensed table-fixed' ) )
 		) ),
 	) );

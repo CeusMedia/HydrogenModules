@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Helper_Panel_Mangopay_Wallets extends View_Helper_Panel_Mangopay{
 
 	public function __construct( $env ){
@@ -13,17 +15,17 @@ class View_Helper_Panel_Mangopay_Wallets extends View_Helper_Panel_Mangopay{
 	public function render(){
 		$rows		= [];
 		foreach( $this->data as $wallet ){
-			$link	= UI_HTML_Tag::create( 'a', $wallet->Id, array( 'href' => sprintf( $this->options->get( 'linkItem' ), $wallet->Id ) ) );
-			$rows[]	= UI_HTML_Tag::create( 'tr', array(
-				UI_HTML_Tag::create(' td', $link, array( 'class' => 'cell-wallet-id' ) ),
-				UI_HTML_Tag::create(' td', $wallet->Description, array( 'class' => 'cell-wallet-title' ) ),
-				UI_HTML_Tag::create(' td', self::formatMoney( $wallet->Balance ), array( 'class' => 'cell-wallet-balance' ) ),
+			$link	= HtmlTag::create( 'a', $wallet->Id, array( 'href' => sprintf( $this->options->get( 'linkItem' ), $wallet->Id ) ) );
+			$rows[]	= HtmlTag::create( 'tr', array(
+				HtmlTag::create(' td', $link, array( 'class' => 'cell-wallet-id' ) ),
+				HtmlTag::create(' td', $wallet->Description, array( 'class' => 'cell-wallet-title' ) ),
+				HtmlTag::create(' td', self::formatMoney( $wallet->Balance ), array( 'class' => 'cell-wallet-balance' ) ),
 			) );
 		}
 		$colgroup	= UI_HTML_Elements::ColumnGroup( "120", "", "120" );
-		$thead		= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Wallet Name', 'Betrag' ) ) );
-		$tbody		= UI_HTML_Tag::create( 'tbody', $rows );
-		$table		= UI_HTML_Tag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+		$thead		= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array( 'ID', 'Wallet Name', 'Betrag' ) ) );
+		$tbody		= HtmlTag::create( 'tbody', $rows );
+		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 		return '
 		<div class="content-panel">
 			<h3>Wallets</h3>

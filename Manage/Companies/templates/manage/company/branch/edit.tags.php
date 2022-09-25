@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w	= (object) $words['edit-tags'];
 
 $iconSave	= HTML::Icon( 'ok', TRUE );
@@ -9,17 +11,17 @@ if( $branch->tags ){
 	$list	= [];
 	foreach( $branch->tags as $tag ){
 		$label	= $tag->label;
-		$button	= UI_HTML_Tag::create( 'a', $iconRemove, array(
+		$button	= HtmlTag::create( 'a', $iconRemove, array(
 			'href'	=> './manage/company/branch/removeTag/'.$tag->branchTagId,
 			'class'	=> 'btn btn-mini not-btn-inverse btn-danger'
 		) );
-		$button 	= UI_HTML_Tag::create( 'span', $button, array( 'class' => 'pull-right' ) );
-		$list[]	= UI_HTML_Tag::create( 'tr', array(
-			UI_HTML_Tag::create( 'td', $tag->label, array( 'class' => 'cell-tag-label' ) ),
-			UI_HTML_Tag::create( 'td', $button, array( 'class' => 'cell-tag-remove' ) ),
+		$button 	= HtmlTag::create( 'span', $button, array( 'class' => 'pull-right' ) );
+		$list[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $tag->label, array( 'class' => 'cell-tag-label' ) ),
+			HtmlTag::create( 'td', $button, array( 'class' => 'cell-tag-remove' ) ),
 		) );
 	}
-	$list	= UI_HTML_Tag::create( 'table', $list, array( 'class' => 'table table-striped not-table-condensed' ) );
+	$list	= HtmlTag::create( 'table', $list, array( 'class' => 'table table-striped not-table-condensed' ) );
 }
 
 return '

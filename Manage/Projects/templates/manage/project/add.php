@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['add'];
 
@@ -10,7 +11,7 @@ foreach( array_reverse( $words['states'], TRUE ) as $key => $value ){
 		'class'		=> 'project status'.$key,
 		'selected'	=> ( $key == 0 ? 'selected' : NULL )
 	);
-	$optStatus[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
+	$optStatus[]	= HtmlTag::create( 'option', $value, $attributes );
 }
 $optStatus		= join( '', $optStatus );
 
@@ -22,21 +23,21 @@ foreach( $words['priorities'] as $key => $value ){
 		'class'		=> 'project priority'.$key,
 		'selected'	=> ( $key == 0 ? 'selected' : NULL )
 	);
-	$optPriority[]	= UI_HTML_Tag::create( 'option', $value, $attributes );
+	$optPriority[]	= HtmlTag::create( 'option', $value, $attributes );
 }
 $optPriority		= join( '', $optPriority );
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
 	'href'	=> './'.( $from ? $from : 'manage/project' ),
 	'class'	=> 'btn btn-small',
 ) );
 if( $from && preg_match( '/add$/', $from ) )
 	$buttonCancel	= "";
 
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary'

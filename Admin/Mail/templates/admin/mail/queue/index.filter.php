@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['index'];
@@ -17,7 +18,7 @@ $statusClasses	= array(
 $optStatus		= array( '' => '- alle -' );
 foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $key.': '.$value;
-$optStatus		= UI_HTML_Elements::Options( $optStatus, $filters->get( 'status' ) );
+$optStatus		= HtmlElements::Options( $optStatus, $filters->get( 'status' ) );
 
 $optOrder		= array(
 	''				=> '- egal -',
@@ -25,18 +26,18 @@ $optOrder		= array(
 	'enqueuedAt'	=> 'Eingangsdatum',
 	'sentAt'		=> 'Ausgangsdatum',
 );
-$optOrder		= UI_HTML_Elements::Options( $optOrder, $filters->get( 'order' ) );
+$optOrder		= HtmlElements::Options( $optOrder, $filters->get( 'order' ) );
 
 $optDirection	= array(
 	'ASC'		=> 'aufsteigend',
 	'DESC'		=> 'absteigend',
 );
-$optDirection	= UI_HTML_Elements::Options( $optDirection, $filters->get( 'direction' ) );
+$optDirection	= HtmlElements::Options( $optDirection, $filters->get( 'direction' ) );
 
 $optMailClass	= array( '' => '- alle -' );
 foreach( $mailClasses as $mailClass )
 	$optMailClass[$mailClass]	= preg_replace( '/_/', ':', preg_replace( '/^Mail_/', '', $mailClass ) );
-$optMailClass	= UI_HTML_Elements::Options( $optMailClass, $filters->get( 'mailClass' ) );
+$optMailClass	= HtmlElements::Options( $optMailClass, $filters->get( 'mailClass' ) );
 
 
 $iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );

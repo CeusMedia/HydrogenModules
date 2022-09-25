@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconCancel	= HTML::Icon( 'arrow-left' );
 $iconSave	= HTML::Icon( 'ok', TRUE );
@@ -13,23 +14,23 @@ if( $branch->images ){
 		$urlRemove		= './manage/my/company/branch/removeImage/'.$branch->branchId.'/'.$image->branchImageId;
 		$img			= new UI_Image( $urlImage );
 		$title			= $image->title ? $image->title : '<small class="muted"><em>Kein Titel.</em></small>';
-		$listImages[]	= UI_HTML_Tag::create( 'tr',
-			UI_HTML_Tag::create( 'td',
-				UI_HTML_Tag::create( 'a', HTML::Image( $urlImage, $image->title, 'medium thumbnail' ), array(
+		$listImages[]	= HtmlTag::create( 'tr',
+			HtmlTag::create( 'td',
+				HtmlTag::create( 'a', HTML::Image( $urlImage, $image->title, 'medium thumbnail' ), array(
  					'class'	=> 'fancybox-auto',
 					'href'	=> $urlImage,
 					'rel'	=> 'gallery',
 					'title'	=> $image->title,
 				) )
 			).
-			UI_HTML_Tag::create( 'td',
+			HtmlTag::create( 'td',
 				HTML::DivClass( 'image-item',
-					UI_HTML_Tag::create( 'big', $title, array( 'class' => 'autocut' ) ).
+					HtmlTag::create( 'big', $title, array( 'class' => 'autocut' ) ).
 					HTML::UlClass( 'not-image-info unstyled',
 						HTML::Li( 'Datum: '.date( 'd.m.Y H:i', $image->uploadedAt ) ).
 						HTML::Li( 'Größe: '.$img->getWidth().' x '.$img->getHeight() )
 					).
-					UI_HTML_Tag::create( 'a', $iconRemove, array(
+					HtmlTag::create( 'a', $iconRemove, array(
 						'href'	=> $urlRemove,
 						'title'	=> $words['images']['buttonRemove'],
 						'class'	=> 'btn btn-mini btn-inverse'
@@ -39,8 +40,8 @@ if( $branch->images ){
 		);
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( "30%", "70%" );
-	$tbody		= UI_HTML_Tag::create( 'tbody', $listImages );
-	$listImages	= UI_HTML_Tag::create( 'table', $colgroup.$tbody, array( 'class' => 'table', 'style' => 'table-layout: fixed' ) );
+	$tbody		= HtmlTag::create( 'tbody', $listImages );
+	$listImages	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table', 'style' => 'table-layout: fixed' ) );
 }
 $panelImages	= HTML::DivClass( 'content-panel',
 	HTML::H3( $words['images']['legend'] ).

@@ -1,8 +1,8 @@
 <?php
-
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $urlIcons	= 'https://cdn.ceusmedia.de/img/';
-$imgEdit	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => $urlIcons.'famfamfam/silk/pencil.png', 'verändern' ) );
+$imgEdit	= HtmlTag::create( 'img', NULL, array( 'src' => $urlIcons.'famfamfam/silk/pencil.png', 'verändern' ) );
 $total	= 0;
 $number	= 0;
 $rows	= [];
@@ -13,18 +13,18 @@ foreach( $banks as $bank ){
 			$value	= $fund->pieces * $fund->price->price;
 			$total	+= $value;
 			$number	++;
-			$linkEdit	= UI_HTML_Tag::create( 'a', $fund->title, array( 'href' => './work/finance/fund/edit/'.$fund->fundId ) );
+			$linkEdit	= HtmlTag::create( 'a', $fund->title, array( 'href' => './work/finance/fund/edit/'.$fund->fundId ) );
 			$scope	= $fund->scope ? $words['scopes'][$fund->scope] : '';
 			$rows[]	= '<tr><td class="account-title">'.$linkEdit.'</td><td>'.$scope.'</td><td class="currency">'.number_format( $value, 2, ',', '.' ).'&nbsp;&euro;</td></tr>';
 		}
 	}
 	else{
-		$linkEdit	= UI_HTML_Tag::create( 'a', $bank->title, array( 'href' => './work/finance/bank/edit/'.$bank->bankId ) );
+		$linkEdit	= HtmlTag::create( 'a', $bank->title, array( 'href' => './work/finance/bank/edit/'.$bank->bankId ) );
 		$rows[]	= '<tr><th>'.$linkEdit.'</th><th></th><th></th></tr>';
 		foreach( $bank->accounts as $account ){
 			$total	+= $account->value;
 			$number	++;
-			$linkEdit	= UI_HTML_Tag::create( 'a', $account->title, array( 'href' => './work/finance/bank/account/edit/'.$account->bankAccountId ) );
+			$linkEdit	= HtmlTag::create( 'a', $account->title, array( 'href' => './work/finance/bank/account/edit/'.$account->bankAccountId ) );
 			$scope	= $account->scope ? $words['scopes'][$account->scope] : '';
 			$rows[]	= '<tr><td class="account-title">'.$linkEdit.'</td><td>'.$scope.'</td><td class="currency">'.number_format( $account->value, 2, ',', '.' ).'&nbsp;&euro;</td></tr>';
 		}

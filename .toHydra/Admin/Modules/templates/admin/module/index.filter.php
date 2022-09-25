@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $filterQuery		= $session->get( 'filter-modules-query' );
 $filterTypes		= $session->get( 'filter-modules-types' );
@@ -30,11 +31,11 @@ foreach( $typeMap as $typeKey => $typeLabel ){
 		'id'		=> 'filter_type_'.$typeKey,
 		'checked'	=> in_array( $typeKey, $filterTypes ) ? 'checked' : NULL,
 	);
-	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
-	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$typeLabel, array( 'for' => 'filter_type_'.$typeKey, 'class' => 'checkbox' ) );
-	$list[]	= UI_HTML_Tag::create( 'li', $label );
+	$input	= HtmlTag::create( 'input', NULL, $attributes );
+	$label	= HtmlTag::create( 'label', $input.'&nbsp;'.$typeLabel, array( 'for' => 'filter_type_'.$typeKey, 'class' => 'checkbox' ) );
+	$list[]	= HtmlTag::create( 'li', $label );
 }
-$typeList	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;' ) );
+$typeList	= HtmlTag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;' ) );
 
 if( !$filterCategories )
 	$filterCategories	= array_keys( $categories );
@@ -51,11 +52,11 @@ foreach( $categories as $nr => $category ){
 	);
 	if( !strlen( $category ) )
 		$category	= '<em>(keine Kategorie)</em>';
-	$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
-	$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$category, array( 'for' => 'filter_category_'.$nr, 'class' => 'checkbox' ) );
-	$list[]	= UI_HTML_Tag::create( 'li', $label );
+	$input	= HtmlTag::create( 'input', NULL, $attributes );
+	$label	= HtmlTag::create( 'label', $input.'&nbsp;'.$category, array( 'for' => 'filter_category_'.$nr, 'class' => 'checkbox' ) );
+	$list[]	= HtmlTag::create( 'li', $label );
 }
-$categoryList	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;' ) );
+$categoryList	= HtmlTag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;' ) );
 
 $filterItemSources		= "";
 if( count( $sources ) > 1 ){
@@ -71,12 +72,12 @@ if( count( $sources ) > 1 ){
 			'id'		=> 'filter_source_'.$sourceId,
 			'checked'	=> in_array( $sourceId, $filterSources ) ? 'checked' : NULL,
 		);
-		$input	= UI_HTML_Tag::create( 'input', NULL, $attributes );
-		$title	= UI_HTML_Tag::create( 'acronym', $sourceId, array( 'title' => $source->title ) );
-		$label	= UI_HTML_Tag::create( 'label', $input.'&nbsp;'.$title, array( 'for' => 'filter_source_'.$sourceId, 'class' => 'checkbox' ) );
-		$list[]	= UI_HTML_Tag::create( 'li', $label );
+		$input	= HtmlTag::create( 'input', NULL, $attributes );
+		$title	= HtmlTag::create( 'acronym', $sourceId, array( 'title' => $source->title ) );
+		$label	= HtmlTag::create( 'label', $input.'&nbsp;'.$title, array( 'for' => 'filter_source_'.$sourceId, 'class' => 'checkbox' ) );
+		$list[]	= HtmlTag::create( 'li', $label );
 	}
-	$sourceList	= UI_HTML_Tag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;' ) );
+	$sourceList	= HtmlTag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;' ) );
 	$filterItemSources	= '
 		<div class="row-fluid">
 			<div class="span12">

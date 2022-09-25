@@ -1,36 +1,37 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optStatus	= $words['version-states'];
 ksort( $optStatus );
 
 $panelAddVersion	= '
-	'.UI_HTML_Elements::Form( 'add_version', './admin/project/addVersion/'.$projectId ).'
+	'.HtmlElements::Form( 'add_version', './admin/project/addVersion/'.$projectId ).'
 		<fieldset>
 			<legend>Version hinzufügen</legend>
 			<ul class="input">
 				<li>
 					<div class="column-left-50">
 						'.HtmlTag::create( 'label', 'Version' ).'<br/>
-						'.UI_HTML_Elements::Input( 'version', NULL, 'max' ).'
+						'.HtmlElements::Input( 'version', NULL, 'max' ).'
 					</div>
 					<div class="column-left-50">
 						'.HtmlTag::create( 'label', 'Status' ).'<br/>
-						'.UI_HTML_Elements::Select( 'status', $optStatus, 'max' ).'
+						'.HtmlElements::Select( 'status', $optStatus, 'max' ).'
 					</div>
 					<div class="column-clear"></div>
 				</li>
 				<li>
 					'.HtmlTag::create( 'label', 'Titel' ).'<br/>
-					'.UI_HTML_Elements::Input( 'title', NULL ).'
+					'.HtmlElements::Input( 'title', NULL ).'
 				</li>
 				<li>
 					'.HtmlTag::create( 'label', 'Beschreibung' ).'<br/>
-					'.UI_HTML_Elements::Textarea( 'description', NULL ).'
+					'.HtmlElements::Textarea( 'description', NULL ).'
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::Button( 'add', 'hinzufügen', 'button add' ).'
+				'.HtmlElements::Button( 'add', 'hinzufügen', 'button add' ).'
 			</div>
 		</fieldset>
 	</form>	
@@ -41,7 +42,7 @@ $list	= [];
 foreach( $versions as $version ){
 	$label	= $version->version;
 	$status	= $words['version-states'][$version->status];
-	$remove	= UI_HTML_Elements::Link( './admin/project/removeVersion/'.$version->projectVersionId, 'X' );
+	$remove	= HtmlElements::Link( './admin/project/removeVersion/'.$version->projectVersionId, 'X' );
 	if( $version->title )
 		$label	.= ': '.$version->title;
 	$list[]	= '<li>['.$remove.'] '.$label.' ('.$status.')</li>';
@@ -63,28 +64,28 @@ $optStatus['_selected']	= $project->status;
 $wf		= (object) $words['edit'];
 
 $panelEdit	= '
-	'.UI_HTML_Elements::Form( 'edit', './admin/project/edit/'.$projectId ).'
+	'.HtmlElements::Form( 'edit', './admin/project/edit/'.$projectId ).'
 		<fieldset>
 			<legend>'.sprintf( $wf->legend, $project->title ).'</legend>
 			<ul class="input">
 				<li class="column-left-66">
 					'.HtmlTag::create( 'label', $wf->labelTitle, array( 'for' => 'title', 'class' => 'mandatory' ) ).'<br/>
-					'.UI_HTML_Elements::Input( 'title', htmlspecialchars( $project->title, ENT_COMPAT, 'UTF-8' ), 'max mandatory' ).'
+					'.HtmlElements::Input( 'title', htmlspecialchars( $project->title, ENT_COMPAT, 'UTF-8' ), 'max mandatory' ).'
 				</li>
 				<li class="column-left-33">
 					'.HtmlTag::create( 'label', $wf->labelStatus, array( 'for' => 'status' ) ).'<br/>
-					'.UI_HTML_Elements::Select( 'status', $optStatus, 'max' ).'
+					'.HtmlElements::Select( 'status', $optStatus, 'max' ).'
 				</li>
 				<li>
 					'.HtmlTag::create( 'description', $wf->labelDescription, array( 'for' => 'description' ) ).'<br/>
-					'.UI_HTML_Elements::TextArea( 'description', htmlspecialchars( $project->description, ENT_COMPAT, 'UTF-8' ), 'max' ).'
+					'.HtmlElements::TextArea( 'description', htmlspecialchars( $project->description, ENT_COMPAT, 'UTF-8' ), 'max' ).'
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::LinkButton( './admin/project', $wf->buttonCancel, 'button cancel' ).'
-				'.UI_HTML_Elements::Button( 'doEdit', $wf->buttonSave, 'button save' ).'
+				'.HtmlElements::LinkButton( './admin/project', $wf->buttonCancel, 'button cancel' ).'
+				'.HtmlElements::Button( 'doEdit', $wf->buttonSave, 'button save' ).'
 				&nbsp;|&nbsp;
-				'.UI_HTML_Elements::LinkButton( './admin/project/remove/'.$projectId, $wf->buttonRemove, 'button remove', $wf->buttonRemoveConfirm ).'
+				'.HtmlElements::LinkButton( './admin/project/remove/'.$projectId, $wf->buttonRemove, 'button remove', $wf->buttonRemoveConfirm ).'
 				<div class="clearfloat"></div>
 			</div>
 		</fieldset>

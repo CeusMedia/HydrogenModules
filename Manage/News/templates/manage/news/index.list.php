@@ -1,6 +1,7 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
 $colors	= array(
 	Model_News::STATUS_HIDDEN	=> 'info',
@@ -8,12 +9,12 @@ $colors	= array(
 	Model_News::STATUS_PUBLIC	=> 'success'
 );
 
-$table	= UI_HTML_Tag::create( 'div', $words['index']['empty'], array( 'class' => 'alert alert-info' ) );
+$table	= HtmlTag::create( 'div', $words['index']['empty'], array( 'class' => 'alert alert-info' ) );
 if( $news ){
 	$rows	= [];
 	foreach( $news as $item ){
 		$url		= './manage/news/edit/'.$item->newsId;
-		$link		= UI_HTML_Tag::create( 'a', $item->title, array( 'href' => $url ) );
+		$link		= HtmlTag::create( 'a', $item->title, array( 'href' => $url ) );
 		$starts		= $item->startsAt ? date( "d.m.Y", $item->startsAt ) : "";
 		$ends		= $item->endsAt ? date( "d.m.Y", $item->endsAt ) : "";
 		$duration	= '';
@@ -25,26 +26,26 @@ if( $news ){
 	 		$duration	= 'bis '.$ends;
 
 		$cells		= array(
-			UI_HTML_Tag::create( 'td', $link, array( 'class' => 'autocut' ) ),
-			UI_HTML_Tag::create( 'td', $duration ),
-	//		UI_HTML_Tag::create( 'td', date( 'd.m.Y', $item->createdAt ).' '.date( 'H:i', $item->createdAt ) ),
+			HtmlTag::create( 'td', $link, array( 'class' => 'autocut' ) ),
+			HtmlTag::create( 'td', $duration ),
+	//		HtmlTag::create( 'td', date( 'd.m.Y', $item->createdAt ).' '.date( 'H:i', $item->createdAt ) ),
 		);
-		$rows[]	= UI_HTML_Tag::create( 'tr', $cells, array( 'class' => $colors[$item->status] ) );
+		$rows[]	= HtmlTag::create( 'tr', $cells, array( 'class' => $colors[$item->status] ) );
 	}
 	$colgroup	= UI_HTML_Elements::ColumnGroup( array(
 		'*',
 		'30%',
 	) );
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Elements::TableHeads( array(
+	$thead	= HtmlTag::create( 'thead', UI_HTML_Elements::TableHeads( array(
 		$words['index']['headTitle'],
 		$words['index']['headRange'],
 	) ) );
-	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-	$table	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed' ) );
+	$tbody	= HtmlTag::create( 'tbody', $rows );
+	$table	= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed' ) );
 }
 
 
-$buttonAdd		= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
 	'href'	=> './manage/news/add',
 	'class'	=> 'btn btn-small btn-success',
 ) );
@@ -56,7 +57,7 @@ return '
 	<h3>'.$words['index']['heading'].'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
-		'.UI_HTML_Tag::create( 'div', join( '&nbsp;', array(
+		'.HtmlTag::create( 'div', join( '&nbsp;', array(
 			$pagination,
 			$buttonAdd,
 		) ), array( 'class' => 'buttonbar' ) ).'

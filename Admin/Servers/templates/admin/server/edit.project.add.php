@@ -1,10 +1,11 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $optProject		= [];
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
-$optProject	= UI_HTML_Elements::Options( $optProject );
+$optProject	= HtmlElements::Options( $optProject );
 
 $optVersion		= [];
 /*foreach( $versions as $version ){
@@ -13,42 +14,42 @@ $optVersion		= [];
 		$label	.= ' ('.$version->title.')';
 	$optVersion[$version->projectVersionId]	= $label;
 }
-*/$optVersion	= UI_HTML_Elements::Options( $optVersion );
+*/$optVersion	= HtmlElements::Options( $optVersion );
 
 $optStatus	= $words['states-project'];
 ksort( $optStatus );
-$optStatus	= UI_HTML_Elements::Options( $optStatus, 0 );
+$optStatus	= HtmlElements::Options( $optStatus, 0 );
 
 $wf			= (object) $words['addProject'];
 
 $panelAddProject	= '
-	'.UI_HTML_Elements::Form( 'add_server', './admin/server/addProject/'.$server->serverId ).'
+	'.HtmlElements::Form( 'add_server', './admin/server/addProject/'.$server->serverId ).'
 		<fieldset>
 			<legend>'.$wf->legend.'</legend>
 			<ul class="input">
 				<li class="column-left-50">
 					'.HtmlTag::create( 'label', 'Project' ).'<br/>
-					'.UI_HTML_Elements::Select( 'projectId', $optProject, 'max' ).'
+					'.HtmlElements::Select( 'projectId', $optProject, 'max' ).'
 				</li>
 				<li class="column-left-50">
 					'.HtmlTag::create( 'label', 'Version' ).'<br/>
-					'.UI_HTML_Elements::Select( 'projectVersionId', $optVersion, 'max' ).'
+					'.HtmlElements::Select( 'projectVersionId', $optVersion, 'max' ).'
 				</li>
 				<li class="column-left-50">
 					'.HtmlTag::create( 'label', 'Status' ).'<br/>
-					'.UI_HTML_Elements::Select( 'status', $optStatus, 'max' ).'
+					'.HtmlElements::Select( 'status', $optStatus, 'max' ).'
 				</li>
 				<li>
 					'.HtmlTag::create( 'label', 'Titel' ).'<br/>
-					'.UI_HTML_Elements::Input( 'title', NULL ).'
+					'.HtmlElements::Input( 'title', NULL ).'
 				</li>
 				<li class="column-clear">
 					'.HtmlTag::create( 'label', 'Beschreibung' ).'<br/>
-					'.UI_HTML_Elements::Textarea( 'description', NULL ).'
+					'.HtmlElements::Textarea( 'description', NULL ).'
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.UI_HTML_Elements::Button( 'add', 'hinzufügen', 'button add' ).'
+				'.HtmlElements::Button( 'add', 'hinzufügen', 'button add' ).'
 			</div>
 		</fieldset>
 	</form>

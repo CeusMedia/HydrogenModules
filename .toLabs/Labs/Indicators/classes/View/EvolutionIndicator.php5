@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 /**
  *	@category		MV2.Tools
  *	@package		SeleniumTester.View
@@ -45,7 +47,7 @@ class View_EvolutionIndicator{
 					'background-color: '.$color
 				) )
 			);
-			$bars[]	= UI_HTML_Tag::create( 'div', '', $attributes );
+			$bars[]	= HtmlTag::create( 'div', '', $attributes );
 		}
 		$attributes	= array(
 			'class'		=> 'indicator-evolution container',
@@ -55,7 +57,7 @@ class View_EvolutionIndicator{
 				'height: '.$options['height'].'px'
 			) )
 		);
-		return UI_HTML_Tag::create( 'div', join( $bars ), $attributes );
+		return HtmlTag::create( 'div', join( $bars ), $attributes );
 	}
 }
 ?>

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 if( empty( $remoteConfig ) )
 	return "";
 $listModules	= [];
@@ -27,11 +29,11 @@ foreach( $modulesInstalled as $module ){
 	if( $list ){
 		$url		= './admin/module/editor/index/'.$module->id;
 		$button		= UI_HTML_Elements::LinkButton( $url, '', 'button tiny edit' );
-		$button		= UI_HTML_Tag::create( 'div', $button, array( 'style' => "position: absolute; right: 3px; top: 1px;" ) );
-		$list		= UI_HTML_Tag::create( 'dl', $list, array( 'class' => 'index-config' ) );
+		$button		= HtmlTag::create( 'div', $button, array( 'style' => "position: absolute; right: 3px; top: 1px;" ) );
+		$list		= HtmlTag::create( 'dl', $list, array( 'class' => 'index-config' ) );
 		$url		= './admin/module/viewer/index/'.$module->id;
-		$link		= UI_HTML_Tag::create( 'a', $module->title, array( 'href' => $url, 'class' => 'module' ) );
-		$heading	= UI_HTML_Tag::create( 'h4', $link/*.$button*/, array( 'class' => 'index-config-module' ) );
+		$link		= HtmlTag::create( 'a', $module->title, array( 'href' => $url, 'class' => 'module' ) );
+		$heading	= HtmlTag::create( 'h4', $link/*.$button*/, array( 'class' => 'index-config-module' ) );
 		$listModules[]	= $heading.$list;
 	}
 }

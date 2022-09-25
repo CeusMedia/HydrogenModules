@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $modelUser	= new Model_User( $env );
 $userId		= $session->get( 'auth_user_id' );
 $user		= $modelUser->get( $userId );
@@ -9,25 +11,25 @@ $listInvites	= '<em><small>Noch keine Einladungen verschickt.</em></small><br/>'
 if( $invites->all ){
 	$listInvites	= [];
 	foreach( $invites->all as $invite ){
-		$email		= UI_HTML_Tag::create( 'span', $invite->email );
+		$email		= HtmlTag::create( 'span', $invite->email );
 		$date		= date( 'd.m.Y H:i', $invite->createdAt );
-		$status		= UI_HTML_Tag::create( 'span', $words['states'][$invite->status] );
+		$status		= HtmlTag::create( 'span', $words['states'][$invite->status] );
 		$buttons	= [];
 		if( $invite->type == 1 ){
 			if( $invite->status == 1 ){
 				$expire	= date( 'd.m.Y', $invite->createdAt + $daysValid * 24 * 60 * 60 );
 				$expire	= sprintf( 'verfällt am %s', $expire );
-				$image	= UI_HTML_Tag::create( 'img', NULL, array( 'src' => 'https://cdn.ceusmedia.de/img/famfamfam/silk/error.png' ) );
-				$date	.= '&nbsp;'.UI_HTML_Tag::create( 'span', $image, array( 'title' => $expire ) );
+				$image	= HtmlTag::create( 'img', NULL, array( 'src' => 'https://cdn.ceusmedia.de/img/famfamfam/silk/error.png' ) );
+				$date	.= '&nbsp;'.HtmlTag::create( 'span', $image, array( 'title' => $expire ) );
 				$buttons[]	= UI_HTML_Elements::LinkButton( './manage/my/user/invite/cancel/'.$invite->userInviteId, '', 'button tiny remove', NULL, NULL, 'abbrechen' );
 			}
 		}
 		$cells		= [];
-		$cells[]	= UI_HTML_Tag::create( 'td', $date, array( 'class' => 'invite-date' ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $status, array( 'class' => 'invite-status' ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', $email, array( 'class' => 'invite-email' ) );
-		$cells[]	= UI_HTML_Tag::create( 'td', join( $buttons ), array( 'class' => 'invite-actions' ) );
-		$listInvites[]	= UI_HTML_Tag::create( 'tr', join( $cells ), array( 'class' => 'invite-status status'.$invite->status ) );
+		$cells[]	= HtmlTag::create( 'td', $date, array( 'class' => 'invite-date' ) );
+		$cells[]	= HtmlTag::create( 'td', $status, array( 'class' => 'invite-status' ) );
+		$cells[]	= HtmlTag::create( 'td', $email, array( 'class' => 'invite-email' ) );
+		$cells[]	= HtmlTag::create( 'td', join( $buttons ), array( 'class' => 'invite-actions' ) );
+		$listInvites[]	= HtmlTag::create( 'tr', join( $cells ), array( 'class' => 'invite-status status'.$invite->status ) );
 	}
 	$listInvites	= join( $listInvites );
 	$colgroup		= UI_HTML_Elements::ColumnGroup( '140px', '120px', '', '50px' );
@@ -118,10 +120,10 @@ if( $invites->open ){
 	$listInvitesOpen	= [];
 	foreach( $invites->open as $invite ){
 		$url	= './manage/my/user/invite/invite/?code='.$invite->userInviteId;
-		$link	= UI_HTML_Tag::create( 'a', $invite->email, array( 'href' => $url ) );
-		$listInvitesOpen[]	= UI_HTML_Tag::create( 'li', $link );
+		$link	= HtmlTag::create( 'a', $invite->email, array( 'href' => $url ) );
+		$listInvitesOpen[]	= HtmlTag::create( 'li', $link );
 	}
-	$listInvitesOpen	= UI_HTML_Tag::create( 'ul', join( $listInvitesOpen ) );
+	$listInvitesOpen	= HtmlTag::create( 'ul', join( $listInvitesOpen ) );
 }
 
 $listInvitesDone	= '<em><small>Keine.</em></small>';
@@ -129,10 +131,10 @@ if( $invites->done ){
 	$listInvitesDone	= [];
 	foreach( $invites->done as $invite ){
 		$url	= './manage/my/user/invite/invite/?code='.$invite->userInviteId;
-		$link	= UI_HTML_Tag::create( 'a', $invite->email, array( 'href' => $url ) );
-		$listInvitesDone[]	= UI_HTML_Tag::create( 'li', $link );
+		$link	= HtmlTag::create( 'a', $invite->email, array( 'href' => $url ) );
+		$listInvitesDone[]	= HtmlTag::create( 'li', $link );
 	}
-	$listInvitesDone	= UI_HTML_Tag::create( 'ul', join( $listInvitesDone ) );
+	$listInvitesDone	= HtmlTag::create( 'ul', join( $listInvitesDone ) );
 }
 
 return '

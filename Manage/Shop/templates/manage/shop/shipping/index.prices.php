@@ -1,22 +1,24 @@
 <?php
-$iconSave	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconRemove	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
 
 /*  --  PANEL: PRICES  --  */
 $panelPrices	= '';
 if( $zones || $grades ){
 	$rows	= [];
-	$thead	= array( UI_HTML_Tag::create( 'th', 'Zonen \ Gewichtsklassen' ) );
+	$thead	= array( HtmlTag::create( 'th', 'Zonen \ Gewichtsklassen' ) );
 	foreach( $grades as $grade )
-		$thead[]	= UI_HTML_Tag::create( 'th', $grade->title, array( 'class' => 'cell-price' ) );
-	$thead	= UI_HTML_Tag::create( 'thead', UI_HTML_Tag::create( 'tr', $thead ) );
+		$thead[]	= HtmlTag::create( 'th', $grade->title, array( 'class' => 'cell-price' ) );
+	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', $thead ) );
 	foreach( $zones as $zone ){
-		$row	= array( UI_HTML_Tag::create( 'th', $zone->title ) );
+		$row	= array( HtmlTag::create( 'th', $zone->title ) );
 		foreach( $grades as $grade ){
 			$price	= $priceMatrix[$zone->zoneId][$grade->gradeId];
 		//	$price	= number_format( $price, 2, ',', '.' );
-			$input	= UI_HTML_Tag::create( 'input', NULL, array(
+			$input	= HtmlTag::create( 'input', NULL, array(
 				'type'	=> 'number',
 				'step'	=> '0.01',
 				'min'	=> '0',
@@ -26,19 +28,19 @@ if( $zones || $grades ){
 				'value'	=> $price,
 				'style'	=> 'text-align: right;',
 			) )/*.'&nbsp;€'*/;
-			$row[]	= UI_HTML_Tag::create( 'td', $input, array( 'class' => 'cell-price' ) );
+			$row[]	= HtmlTag::create( 'td', $input, array( 'class' => 'cell-price' ) );
 		}
-		$rows[]	= UI_HTML_Tag::create( 'tr', $row );
+		$rows[]	= HtmlTag::create( 'tr', $row );
 	}
-	$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-	$table	= UI_HTML_Tag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table' ) );
-	$panelPrices	= UI_HTML_Tag::create( 'div', array(
-		UI_HTML_Tag::create( 'h3', 'Versandkosten' ),
-		UI_HTML_Tag::create( 'div', array(
-			UI_HTML_Tag::create( 'form', array(
+	$tbody	= HtmlTag::create( 'tbody', $rows );
+	$table	= HtmlTag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table' ) );
+	$panelPrices	= HtmlTag::create( 'div', array(
+		HtmlTag::create( 'h3', 'Versandkosten' ),
+		HtmlTag::create( 'div', array(
+			HtmlTag::create( 'form', array(
 				$table,
-				UI_HTML_Tag::create( 'div', array(
-					UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;speichern', array(
+				HtmlTag::create( 'div', array(
+					HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
 						'type'	=> 'submit',
 						'name'	=> 'save',
 						'class'	=> 'btn btn-primary',

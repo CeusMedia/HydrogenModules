@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
@@ -44,15 +45,15 @@ class View_Manage_Customer extends View
 		$list	= [];																			//  prepare empty list
 		foreach( self::$tabs as $nr => $tab ){														//  iterate registered tabs
 			$attributes	= array( 'href'	=> './manage/customer/'.$tab->url );						//  collect tab link attributes
-			$link		= UI_HTML_Tag::create( 'a', $tab->label, $attributes );						//  render tab link
+			$link		= HtmlTag::create( 'a', $tab->label, $attributes );						//  render tab link
 			$isActive	= $nr === $current || ( $tab->url === $current ) || !$nr && !$current;		//  is tab active ?
 			$class		= $tab->disabled ? 'disabled' : ( $isActive ? 'active' : NULL );			//  get tab class
 			if( $tab->disabled )																	//  if tab is disabled
-				$link	= UI_HTML_Tag::create( 'a', $tab->label );									//  create blind link
+				$link	= HtmlTag::create( 'a', $tab->label );									//  create blind link
 			$key		= (float) $tab->priority.'.'.str_pad( $nr, 2, '0', STR_PAD_LEFT );			//  generate order key
-			$list[$key]	= UI_HTML_Tag::create( 'li', $link, array( 'class' => $class ) );			//  enlist tab
+			$list[$key]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );			//  enlist tab
 		}
 		if( count( $list ) > 1 )																	//  more than 1 tab
-			return UI_HTML_Tag::create( 'ul', $list, array( 'class' => "nav nav-tabs" ) );			//  return rendered tab list
+			return HtmlTag::create( 'ul', $list, array( 'class' => "nav nav-tabs" ) );			//  return rendered tab list
 	}
 }

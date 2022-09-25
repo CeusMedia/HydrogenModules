@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //  --  PANEL: PASSWORD  --  //
 $w	= (object) $words['email'];
@@ -11,7 +12,7 @@ extract( $view->populateTexts( array( 'panel.email.above', 'panel.email.below', 
 $hasInfo	= strlen( trim( strip_tags( $textPanelEmailInfo ) ) );
 
 return HTML::DivClass( 'content-panel content-panel-form', array(
-	UI_HTML_Tag::create( 'h4', $w->heading ),
+	HtmlTag::create( 'h4', $w->heading ),
 	HTML::DivClass( 'content-panel-inner',
 		HTML::Form( './manage/my/user/email', 'my_user_email', array(
 			HTML::DivClass( 'row-fluid', array(
@@ -19,7 +20,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					HTML::DivClass( 'row-fluid',
 						HTML::DivClass( 'span12', array(
 							HTML::Label( 'email', $w->labelEmailOld ),
-							UI_HTML_Tag::create( 'input', NULL, array(
+							HtmlTag::create( 'input', NULL, array(
 								'type'			=> "text",
 								'class'			=> "span11",
 								'disabled'		=> 'disabled',
@@ -31,7 +32,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					HTML::DivClass( 'row-fluid',
 						HTML::DivClass( 'span12', array(
 							HTML::Label( 'email', $w->labelEmailNew, 'mandatory', $w->labelEmailNew_title ),
-							UI_HTML_Tag::create( 'input', NULL, array(
+							HtmlTag::create( 'input', NULL, array(
 								'type'			=> "text",
 								'name'			=> "email",
 								'id'			=> "input_email",
@@ -46,12 +47,12 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				$hasInfo ? HTML::DivClass( 'span6', $textPanelEmailInfo ) : '',
 			) ),
 			HTML::Buttons( array(
-				UI_HTML_Tag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
+				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
 				HTML::DivClass( 'row-fluid',
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
 							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
-							UI_HTML_Tag::create( 'input', '', array(
+							HtmlTag::create( 'input', '', array(
 								'type'			=> 'password',
 								'name'			=> 'password',
 								'id'			=> 'input_password',

@@ -1,32 +1,34 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 $w				= (object) $words['edit'];
 
-$iconCancel		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
-$iconRemove		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconView		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
+$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
 
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconSave		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconRemove		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-trash' ) );
-	$iconView		= UI_HTML_Tag::create( 'b', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+	$iconCancel		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconSave		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconRemove		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-trash' ) );
+	$iconView		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-eye' ) );
 }
 
-$buttonCancel	= UI_HTML_Tag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
 	'href'	=> './manage/image/slider',
 	'class'	=> 'btn btn-small',
 ) );
-$buttonSave		= UI_HTML_Tag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
 ) );
-$buttonRemove	= UI_HTML_Tag::create( 'a', $iconRemove.' '.$w->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' '.$w->buttonRemove, array(
 	'href'	=> './manage/image/slider/remove/'.$slider->sliderId,
 	'class'	=> 'btn btn-danger btn-small',
 ) );
-$buttonView		= UI_HTML_Tag::create( 'a', $iconView.' '.$w->buttonView, array(
+$buttonView		= HtmlTag::create( 'a', $iconView.' '.$w->buttonView, array(
 	'href'	=> './manage/image/slider/demo/'.$slider->sliderId,
 	'class'	=> 'btn btn-info btn-small',
 ) );

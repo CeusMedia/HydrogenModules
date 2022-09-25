@@ -1,5 +1,7 @@
 <?php
-$heading	= UI_HTML_Tag::create( 'h2', $words['index']['heading'] );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
 $add 		= UI_HTML_Elements::LinkButton( './manage/branch/add', $words['index']['buttonAdd'], 'button add' );
 
 $rows		= [];

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['remove'];
 
@@ -23,29 +24,29 @@ $helperRelations->setTableClass( 'limited' );
 if( $helperRelations->hasRelations() )
 	$relations	= $helperRelations->render();
 
-$iconCancel = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave   = UI_HTML_Tag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel = HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconSave   = HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconCancel = UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconSave   = UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconCancel = HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconSave   = HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
 }
 
 return HTML::DivClass( 'row-fluid', array(
 	HTML::DivClass( 'span8', array(
 		HTML::DivClass( 'content-panel', array(
-			UI_HTML_Tag::create( 'h3', UI_HTML_Tag::create( 'span', 'Benutzer: ', array( 'class' => 'muted' ) ).$user->username ),
+			HtmlTag::create( 'h3', HtmlTag::create( 'span', 'Benutzer: ', array( 'class' => 'muted' ) ).$user->username ),
 			HTML::DivClass( 'content-panel-inner', array(
 				HTML::Form( './manage/my/user/remove/confirmed', 'removeUser', array(
 					HTML::H4( $w->heading ),
 					$textRemoveTop,
 					$relations,
-					UI_HTML_Tag::create( 'hr' ),
+					HtmlTag::create( 'hr' ),
 					HTML::DivClass( 'row-fluid', array(
 						HTML::DivClass( 'span6', array(
 							HTML::DivClass( 'row-fluid', array(
 								HTML::DivClass( 'span12', array(
 									HTML::Label( 'username', $w->labelPassword, 'mandatory', $w->labelPassword_title ),
-									UI_HTML_Tag::create( 'input', NULL, array(
+									HtmlTag::create( 'input', NULL, array(
 										'type'			=> "password",
 										'name'			=> "password",
 										'id'			=> "input_password_username",
@@ -62,11 +63,11 @@ return HTML::DivClass( 'row-fluid', array(
 					) ),
 					HTML::DivClass( 'buttonbar', array(
 						HTML::DivClass( 'btn-toolbar', array(
-							UI_HTML_Tag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+							HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
 								'href'  => './manage/my/user',
 								'class' => 'btn btn-small',
 							) ),
-							UI_HTML_Tag::create( 'button', $iconSave.'&nbsp;'.$w->buttonRemove, array(
+							HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonRemove, array(
 								'type'  => 'submit',
 								'name'  => 'remove',
 								'class' => 'btn btn-danger',

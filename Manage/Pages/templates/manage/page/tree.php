@@ -1,7 +1,8 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconSortable	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrows-v' ) );
+$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconSortable	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrows-v' ) );
 
 $filterApp		= '';
 if( count( $apps ) > 1 ){
@@ -45,7 +46,7 @@ if( count( $languages ) > 1 ){
 		</div>';
 }
 else
-	$filterLanguage		= UI_HTML_Tag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
+	$filterLanguage		= HtmlTag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
 
 
 $optScope	= [];
@@ -67,12 +68,12 @@ if( !empty( $pageId ) && isset( $page ) )
 else if( !empty( $parentId ) && isset( $page ) )
 	$urlAdd	.= "/".$parentId;
 
-$buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Seite', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Seite', array(
 	'href'		=> $urlAdd,
 	'class'		=> 'btn btn-small btn-success',
 ) );
 
-$buttonSortable	= UI_HTML_Tag::create( 'button', $iconSortable, array(
+$buttonSortable	= HtmlTag::create( 'button', $iconSortable, array(
 	'type'		=> 'button',
 	'id'		=> 'toggle-sortable',
 	'onclick'	=> 'ModuleManagePages.PageEditor.toggleSortable()',

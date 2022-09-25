@@ -1,23 +1,24 @@
 <?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/config/edit/' ) );
 
-$iconCancel		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconList		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-list' ) );
-$iconLock		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-lock' ) );
-$iconUnlock		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-unlock' ) );
-$iconUser		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-user' ) );
-$iconSave		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconCancel		= new UI_HTML_Tag( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );
+$iconLock		= HtmlTag::create( 'i', '', array( 'class' => 'icon-lock' ) );
+$iconUnlock		= HtmlTag::create( 'i', '', array( 'class' => 'icon-unlock' ) );
+$iconUser		= HtmlTag::create( 'i', '', array( 'class' => 'icon-user' ) );
+$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconList		= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconLock		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-lock' ) );
-	$iconUnlock		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
-	$iconUser		= new UI_HTML_Tag( 'b', '', array( 'class' => 'fa fa-fw fa-user' ) );
-	$iconSave		= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconCancel		= new UI_HTML_Tag( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+	$iconLock		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-lock' ) );
+	$iconUnlock		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
+	$iconUser		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-user' ) );
+	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 }
 
 $rows	= [];
@@ -33,16 +34,16 @@ foreach( $module->config as $item ){
 	$key	= $item->mandatory ? '<b>'.$item->key.'</b>' : $item->key;
 	$key	= $item->title ? '<abbr title="'.$item->title.'">'.$key.'</abbr>' : $key;
 	$type	= '<small class="muted">'.$item->type.'</small>';
-	$rows[$item->key]	= new UI_HTML_Tag( 'tr', array(
-		new UI_HTML_Tag( 'td', $protection, array( 'class' => 'cell-protection' ) ),
-		new UI_HTML_Tag( 'td', $key, array( 'class' => 'cell-key autocut' ) ),
-		new UI_HTML_Tag( 'td', $type, array( 'class' => 'cell-type' ) ),
-		new UI_HTML_Tag( 'td', $input, array( 'class' => 'cell-value' ) ),
+	$rows[$item->key]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', $protection, array( 'class' => 'cell-protection' ) ),
+		HtmlTag::create( 'td', $key, array( 'class' => 'cell-key autocut' ) ),
+		HtmlTag::create( 'td', $type, array( 'class' => 'cell-type' ) ),
+		HtmlTag::create( 'td', $input, array( 'class' => 'cell-value' ) ),
 	) );
 //	ksort( $rows );
 }
 
-$cols	= UI_HTML_Elements::ColumnGroup( "24px", "37%", "80px", "" );
+$cols	= HtmlElements::ColumnGroup( "24px", "37%", "80px", "" );
 $tbody	= HtmlTag::create( 'tbody', $rows );
 $table	= HtmlTag::create( 'table', array( $cols, $tbody ), array( 'class' => 'table table-striped table-fixed' ) );
 

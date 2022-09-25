@@ -1,5 +1,7 @@
 <?php
-$iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
 $bridgeMap	= [];
 foreach( $catalogs as $bridge )
@@ -7,29 +9,29 @@ foreach( $catalogs as $bridge )
 
 $rows	= [];
 foreach( $specials as $special ){
-	$link	= UI_HTML_Tag::create( 'a', $special->title, array(
+	$link	= HtmlTag::create( 'a', $special->title, array(
 		'href'	=> './manage/shop/special/edit/'.$special->shopSpecialId,
 	) );
-	$rows[]	= UI_HTML_Tag::create( 'tr', array(
-		UI_HTML_Tag::create( 'td', $bridgeMap[$special->bridgeId] ),
-		UI_HTML_Tag::create( 'td', $link ),
+	$rows[]	= HtmlTag::create( 'tr', array(
+		HtmlTag::create( 'td', $bridgeMap[$special->bridgeId] ),
+		HtmlTag::create( 'td', $link ),
 	) );
 }
-$buttonbar	= UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;neue Spezialität', array(
+$buttonbar	= HtmlTag::create( 'div', array(
+	HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Spezialität', array(
 		'href'	=> './manage/shop/special/add',
 		'class'	=> 'btn btn-primary',
 	) )
 ), array( 'class' => 'buttonbar' ) );
 $colgroup	= UI_HTML_Elements::ColumnGroup( '30%', '70%' );
 $tableHeads	= UI_HTML_Elements::TableHeads( array( 'Katalog', 'Artikel' ) );
-$thead	= UI_HTML_Tag::create( 'thead', $tableHeads );
-$tbody	= UI_HTML_Tag::create( 'tbody', $rows );
-$table	= UI_HTML_Tag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table' ) );
+$thead	= HtmlTag::create( 'thead', $tableHeads );
+$tbody	= HtmlTag::create( 'tbody', $rows );
+$table	= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table' ) );
 
-return UI_HTML_Tag::create( 'div', array(
-	UI_HTML_Tag::create( 'h3', 'Spezialitäten' ),
-	UI_HTML_Tag::create( 'div', array(
+return HtmlTag::create( 'div', array(
+	HtmlTag::create( 'h3', 'Spezialitäten' ),
+	HtmlTag::create( 'div', array(
 		$table,
 		$buttonbar,
 	), array( 'class' => 'content-panel-inner' ) ),

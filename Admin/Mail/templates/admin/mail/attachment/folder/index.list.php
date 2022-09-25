@@ -2,6 +2,7 @@
 use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Modal\Dialog as ModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as ModalTrigger;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 use UI_HTML_Tag as Html;
 
@@ -24,7 +25,7 @@ $baseLinkPath	= './admin/mail/attachment/folder';
 $optPath	= ['' => ''];
 foreach( $paths as $path )
 	$optPath[$path]	= $path;
-$optPath	= UI_HTML_Elements::Options( $optPath, rtrim( $selectedPath, '/' ) );
+$optPath	= HtmlElements::Options( $optPath, rtrim( $selectedPath, '/' ) );
 
 $modalBodyFileAdd	= '
 <div class="row-fluid">
@@ -166,7 +167,7 @@ else{
 		Html::create( 'td', Html::create( 'div', $w->noEntries, ['class' => 'alert alert-warn'] ), ['colspan' => 2] ),
 	] );
 }
-$colgroup	= UI_HTML_Elements::ColumnGroup( "", "60px" );
+$colgroup	= HtmlElements::ColumnGroup( "", "60px" );
 $thead		= Html::create( 'thead', '' );
 $tbody		= Html::create( 'tbody', $list );
 $table		= Html::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );

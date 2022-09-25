@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $types	= $words['types'];
 $optType	= array( '' => '- alle -' );
@@ -53,7 +54,7 @@ $main	= '
 			</li>
 			<li>
 				<label for="content">'.$words['add']['labelContent'].'</label><br/>
-				'.UI_HTML_Tag::create( 'textarea', $this->env->getRequest()->get( 'content' ), array( 'name' => 'content', 'rows' => 9 ) ).'
+				'.HtmlTag::create( 'textarea', $this->env->getRequest()->get( 'content' ), array( 'name' => 'content', 'rows' => 9 ) ).'
 			</li>
 		</ul>
 		<div class="buttonbar">
