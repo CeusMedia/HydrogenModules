@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\HydrogenFramework\Logic as Logic;
 
 class Logic_IP_Lock_Transport extends Logic
@@ -132,7 +133,7 @@ class Logic_IP_Lock_Transport extends Logic
 	 */
 	public function importFromJsonFile( string $jsonFile, bool $resetAllBefore = FALSE )
 	{
-		$json	= FS_File_Reader::load( $jsonFile );
+		$json	= FileReader::load( $jsonFile );
 		return $this->importFromJson( $json, $resetAllBefore );
 	}
 

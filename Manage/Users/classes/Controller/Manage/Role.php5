@@ -8,6 +8,7 @@
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\FS\File\INI\Reader as IniFileReader;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -191,7 +192,7 @@ class Controller_Manage_Role extends Controller
 		foreach( $module->files->locales as $locale ){
 			if( $localeFile == $locale->file ){
 				if( file_exists( $path.$locale->file ) ){
-					$reader	= new FS_File_INI_Reader( $path.$locale->file, TRUE );
+					$reader	= new IniFileReader( $path.$locale->file, TRUE );
 					if( $reader->usesSections() && $reader->hasSection( 'module' ) )
 						return $reader->getProperties( TRUE, 'module' );
 				}
@@ -199,7 +200,7 @@ class Controller_Manage_Role extends Controller
 		}
 		foreach( $module->files->locales as $locale ){
 			if( file_exists( $path.$locale->file ) ){
-				$reader	= new FS_File_INI_Reader( $path.$locale->file, TRUE );
+				$reader	= new IniFileReader( $path.$locale->file, TRUE );
 				if( $reader->usesSections() && $reader->hasSection( 'module' ) )
 					return $reader->getProperties( TRUE, 'module' );
 			}

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Menu
@@ -154,7 +155,7 @@ class Model_Menu
 			$message	= 'Page configuration file "%s" is not existing';
 			throw new RuntimeException( sprintf( $message, $pagesFile ) );
 		}
-		$scopes			= FS_File_JSON_Reader::load( $pagesFile );
+		$scopes			= JsonFileReader::load( $pagesFile );
 		if( !is_object( $scopes ) ){
 			$message	= 'Pages config file "%s" is outdated (not containing scopes)';
 			throw new RuntimeException( sprintf( $message, $pagesFile ) );

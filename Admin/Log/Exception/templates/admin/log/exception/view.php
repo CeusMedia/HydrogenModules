@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\CLI\ArgumentParser;
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -79,7 +80,7 @@ function renderFileSection( $env, $exception ): ?string
 	if( !file_exists( $exception->file ) )
 		return NULL;
 
-	$fileLines	= FS_File_Reader::loadArray( $exception->file );
+	$fileLines	= FileReader::loadArray( $exception->file );
 	$fileLines	= file( $exception->file );
 	$firstLine	= max( 0, $exception->line - 5 );
 	$fileLines	= array_slice( $fileLines, $firstLine, 11 );

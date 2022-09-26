@@ -1,4 +1,7 @@
 <?php
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+
 class Logic_Module_Creator extends Logic_Module{
 	
 	public function createLocalModule( $moduleId, $title, $description = NULL, $version = NULL, $route = NULL ){
@@ -9,7 +12,7 @@ class Logic_Module_Creator extends Logic_Module{
 			'route'			=> $route
 		);
 		$xml	= UI_Template::render( 'templates/admin/module/creator/module.xml.tmpl', $data );
-		return (bool) FS_File_Writer::save( $path.$moduleId.'.xml', $xml );
+		return (bool) FileWriter::save( $path.$moduleId.'.xml', $xml );
 	}
 
 	public function scafoldLocalModule( $moduleId, $route ){
@@ -28,15 +31,15 @@ class Logic_Module_Creator extends Logic_Module{
 			$path	= "";
 			foreach( $folders as $folder ){
 				$path	.= ucfirst( $folder )."/";
-				FS_Folder_Editor::createFolder( $this->env->pathApp.'classes/Controller/'.$path, 0770 );
-				FS_Folder_Editor::createFolder( $this->env->pathApp.'classes/View/'.$path, 0770 );
-				FS_Folder_Editor::createFolder( $this->env->pathApp.'templates/'.strtolower( $path ), 0770 );
-				FS_Folder_Editor::createFolder( $this->env->pathApp.'locales/'.$language.strtolower( $path ), 0770 );
+				FolderEditor::createFolder( $this->env->pathApp.'classes/Controller/'.$path, 0770 );
+				FolderEditor::createFolder( $this->env->pathApp.'classes/View/'.$path, 0770 );
+				FolderEditor::createFolder( $this->env->pathApp.'templates/'.strtolower( $path ), 0770 );
+				FolderEditor::createFolder( $this->env->pathApp.'locales/'.$language.strtolower( $path ), 0770 );
 			}
 		}
-		FS_Folder_Editor::createFolder( $this->env->pathApp.'templates/'.strtolower( $path ).strtolower( $className ), 0770 );
+		FolderEditor::createFolder( $this->env->pathApp.'templates/'.strtolower( $path ).strtolower( $className ), 0770 );
 		if( !file_exists( $this->env->pathApp.'classes/Logic' ) )
-			FS_Folder_Editor::createFolder( $this->env->pathApp.'classes/Logic', 0770 );
+			FolderEditor::createFolder( $this->env->pathApp.'classes/Logic', 0770 );
 		$classPath	= $path.$className;
 		$tmplFile	= strtolower( $classPath ).'/index.php';
 		$localFile	= strtolower( $path ).strtolower( $className ).'.ini';
@@ -70,12 +73,12 @@ class Logic_Module_Creator extends Logic_Module{
 		$this->model->registerLocalFile( $moduleId, 'template', $tmplFile );
 		$this->model->registerLocalFile( $moduleId, 'locale', $language.strtolower( $classPath).'.ini' );
 
-		FS_File_Writer::save( $fileLogic, $codeLogic );
-		FS_File_Writer::save( $fileModel, $codeModel );
-		FS_File_Writer::save( $fileController, $codeController );
-		FS_File_Writer::save( $fileView, $codeView );
-		FS_File_Writer::save( $fileTemplate, $codeTemplate );
-		FS_File_Writer::save( $fileLocale, $codeLocal );
+		FileWriter::save( $fileLogic, $codeLogic );
+		FileWriter::save( $fileModel, $codeModel );
+		FileWriter::save( $fileController, $codeController );
+		FileWriter::save( $fileView, $codeView );
+		FileWriter::save( $fileTemplate, $codeTemplate );
+		FileWriter::save( $fileLocale, $codeLocal );
 	}
 }
 ?>

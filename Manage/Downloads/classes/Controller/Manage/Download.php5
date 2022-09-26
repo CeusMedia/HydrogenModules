@@ -1,6 +1,8 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -38,7 +40,7 @@ class Controller_Manage_Download extends Controller
 			$this->restart( $folderId.'?input_folder='.rawurlencode( $folder ), TRUE );
 		}
 		else{
-			FS_Folder_Editor::createFolder( $this->path.$path.$folder );
+			FolderEditor::createFolder( $this->path.$path.$folder );
 			$this->messenger->noteSuccess( 'Ordner <b>"%s"</b> hinzugefügt.', $folder );
 			$newId	= $this->modelFolder->add( array(
 				'parentId'	=> (int) $folderId,
@@ -329,7 +331,7 @@ class Controller_Manage_Download extends Controller
 		$files		= 0;
 		$folders	= 0;
 		if( $recursive ){
-			$index		= FS_Folder_RecursiveLister::getMixedList( $this->path.$path );
+			$index		= RecursiveFolderLister::getMixedList( $this->path.$path );
 			foreach( $index as $entry )
 //				if( !$entry->isDot() )
 					$entry->isDir() ? $folders++ : $files++;

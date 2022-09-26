@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Info_Download extends Controller
@@ -138,7 +139,7 @@ class Controller_Info_Download extends Controller
 		$files		= 0;
 		$folders	= 0;
 		if( $recursive ){
-			$index		= FS_Folder_RecursiveLister::getMixedList( $this->path.$path );
+			$index		= RecursiveFolderLister::getMixedList( $this->path.$path );
 			foreach( $index as $entry )
 //				if( !$entry->isDot() )
 					$entry->isDir() ? $folders++ : $files++;

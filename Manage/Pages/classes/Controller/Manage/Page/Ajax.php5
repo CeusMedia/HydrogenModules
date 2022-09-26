@@ -1,5 +1,8 @@
 <?php
 
+use CeusMedia\Common\Alg\Text\Filter as TextFilter;
+use CeusMedia\Common\FS\File\Collection\Reader as ListFileReader;
+use CeusMedia\Common\FS\File\Collection\Editor as ListFileEditor;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Manage_Page_Ajax extends AjaxController
@@ -39,14 +42,14 @@ class Controller_Manage_Page_Ajax extends AjaxController
 			$wordsAdded		= [];											//  prepare empty list of words added to blacklist
 			if( count( $wordsGiven ) ){											//  atleast one word is given
 				if( !file_exists( $blacklistFile ) )							//  blacklist file is not existing, yet
-					touch( $blacklist );										//  create empty list file
-				$editor	= new \FS_File_List_Editor( $blacklistFile );			//  start list editor
+					touch( $blacklistFile );										//  create empty list file
+				$editor	= new ListFileEditor( $blacklistFile );			//  start list editor
 				foreach( $wordsGiven as $wordToAdd ){							//  iterate trimmed words
 					if( !$editor->hasItem( $wordToAdd ) )						//  word is not in list
 						$editor->add( trim( $wordToAdd ) );						//  add word to list and save
 				}
 			}
-			$blacklist	= \FS_File_List_Reader::read( $blacklistFile );			//  read list of words in blacklist
+			$blacklist	= ListFileReader::read( $blacklistFile );			//  read list of words in blacklist
 
 			$pages	= $this->model->getAll();
 			foreach( $pages as $page ){
@@ -132,11 +135,11 @@ class Controller_Manage_Page_Ajax extends AjaxController
 	public function suggestKeywords(){
 		$pageId	= $this->request->get( 'pageId' );
 		$page	= $this->checkPageId( $pageId );
-		$html	= Alg_Text_Filter::stripComments( $page->content );
-		$html	= Alg_Text_Filter::stripScripts( $html );
-		$html	= Alg_Text_Filter::stripStyles( $html );
-		$html	= Alg_Text_Filter::stripEventAttributes( $html );
-//		$html	= Alg_Text_Filter::stripTags( $html );
+		$html	= TextFilter::stripComments( $page->content );
+		$html	= TextFilter::stripScripts( $html );
+		$html	= TextFilter::stripStyles( $html );
+		$html	= TextFilter::stripEventAttributes( $html );
+//		$html	= TextFilter::stripTags( $html );
 //		$html	= htmlspecialchars_decode( $html );
 		$html	= preg_replace( "@<[\/\!]*?[^<>]*?>@si", " ", $html );
 		$html	= str_replace( "&nbsp;", " ", $html );

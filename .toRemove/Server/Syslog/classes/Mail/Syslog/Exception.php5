@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Syslog_Exception extends Mail_Abstract
@@ -21,10 +22,10 @@ class Mail_Syslog_Exception extends Mail_Abstract
 <h3>'.$appName.' Exception</h3>
 '.UI_HTML_Exception_View::render( $exception ).'
 ';
-		$fileStyle	= FS_File_Reader::load( $config->get( 'path.themes' ).'css/mail.min.css' );
-		$fileScript	= FS_File_Reader::load( $config->get( 'path.scripts' ).'mail.min.js' );
-		$style	= file_exists( $fileStyle ) ? FS_File_Reader::load( $fileStyle ): '';
-		$script	= file_exists( $fileScript ) ? FS_File_Reader::load( $fileScript ): '';
+		$fileStyle	= FileReader::load( $config->get( 'path.themes' ).'css/mail.min.css' );
+		$fileScript	= FileReader::load( $config->get( 'path.scripts' ).'mail.min.js' );
+		$style	= file_exists( $fileStyle ) ? FileReader::load( $fileStyle ): '';
+		$script	= file_exists( $fileScript ) ? FileReader::load( $fileScript ): '';
 
 		$page	= new UI_HTML_PageFrame();
 		$page->addHead( HtmlTag::create( 'style', $style ) );

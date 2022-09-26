@@ -7,6 +7,12 @@
  *	@copyright		2011 Ceus Media
  */
 
+use CeusMedia\Common\FS\File\Editor as FileEditor;
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -41,7 +47,7 @@ class Controller_Manage_Locale extends Controller
 					$messenger->noteError( $words->msgFileExisting, $filePath );
 				else{
 					try{
-						FS_File_Writer::save( $fileUri, '' );
+						FileWriter::save( $fileUri, '' );
 						$messenger->noteSuccess( $words->msgSuccess, $filePath );
 						$this->restart( './manage/locale/edit/'.$fileHash );
 					}
@@ -72,7 +78,7 @@ class Controller_Manage_Locale extends Controller
 				$messenger->noteError( $words->msgFolderExisting, $folderPath.$folderName );
 			else{
 				try{
-					FS_Folder_Editor::createFolder( $folderUri );
+					FolderEditor::createFolder( $folderUri );
 					$messenger->noteSuccess( $words->msgSuccess, $folderPath.$folderName );
 				}
 				catch( Exception $e ){
@@ -101,7 +107,7 @@ class Controller_Manage_Locale extends Controller
 			$this->restart( './manage/locale' );
 		}
 
-		$content	= FS_File_Reader::load( $fileUri );
+		$content	= FileReader::load( $fileUri );
 
 		$newName	= $request->get( 'name' );
 		$newPath	= $request->get( 'path' );
@@ -115,7 +121,7 @@ class Controller_Manage_Locale extends Controller
 			$newPath	= trim( $newPath ) ? $newPath.'/' : '';
 			$newFileUri	= $this->path.$newPath.$newName;
 			if( !$messenger->gotError() ){
-				$editor	= new FS_File_Editor( $fileUri );
+				$editor	= new FileEditor( $fileUri );
 				if( $content != $newContent ){
 					try{
 						$editor->writeString( $newContent);						//  @todo	kriss: security !!!
@@ -200,10 +206,10 @@ class Controller_Manage_Locale extends Controller
 		$language	= $this->env->language->getLanguage();
 		$this->path	= $locales.$language.'/';
 		if( !file_exists( $this->path ) )
-			FS_Folder_Editor::createFolder( $this->path );
+			FolderEditor::createFolder( $this->path );
 
 		$paths	= [];
-		$index	= FS_Folder_RecursiveLister::getFolderList( $this->path );
+		$index	= RecursiveFolderLister::getFolderList( $this->path );
 		foreach( $index as $item ){
 			$path	= substr( $item->getPathname(), strlen( $this->path ) );
 			if( substr( $path, 0, 4 ) != 'html' )
@@ -217,7 +223,7 @@ class Controller_Manage_Locale extends Controller
 
 	protected function loadFileTree()
 	{
-		$files	= new FS_File_RecursiveRegexFilter( $this->path, '/^(?!html).+\.ini$/' );
+		$files	= new RecursiveRegexFileIndex( $this->path, '/^(?!html).+\.ini$/' );
 		$this->addData( 'files', $files );
 	}
 }

@@ -3,6 +3,8 @@
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  */
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\HydrogenFramework\Logic;
 
 /**
@@ -574,9 +576,9 @@ class Logic_Mail extends Logic
 		}
 		$regexExt		= "/\.php5?$/";																//  define regular expression of acceptable mail class file extensions
 		$regexClass		= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";								//  define regular expression of acceptable mail class implementations
-		$index			= new FS_File_RecursiveRegexFilter( $pathClasses, "/\.php5$/", $regexClass );	//  get recursive list of acceptable files
+		$index			= new RecursiveRegexFileIndex( $pathClasses, "/\.php5$/", $regexClass );	//  get recursive list of acceptable files
 		foreach( $index as $file ){																	//  iterate recursive list
-			$content	= FS_File_Reader::load( $file->getPathname() );								//  get content of class file
+			$content	= FileReader::load( $file->getPathname() );								//  get content of class file
 			preg_match_all( $regexClass, $content, $matches );										//  apply regular expression of mail class to content
 			if( count( $matches[0] ) && count( $matches[1] ) ){										//  if valid mail class name found
 				$path			= substr( $file->getPathname(), strlen( $pathClasses ) );			//  get filename of class file as list key

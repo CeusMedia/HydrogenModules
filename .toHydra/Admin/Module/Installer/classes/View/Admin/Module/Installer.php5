@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\FS\File\Reader as FileReader;
+
 class View_Admin_Module_Installer extends View_Admin_Module {
 
 	protected function __onInit(){
@@ -10,8 +12,8 @@ class View_Admin_Module_Installer extends View_Admin_Module {
 		$fileLocal	= $this->getData( 'fileLocal' );
 		$fileSource	= $this->getData( 'fileSource' );
 
-		$file1	= FS_File_Reader::loadArray( $fileLocal );
-		$file2	= FS_File_Reader::loadArray( $fileSource );
+		$file1	= FileReader::loadArray( $fileLocal );
+		$file2	= FileReader::loadArray( $fileSource );
 
 		$options = array(
 			'ignoreWhitespace'	=> true,

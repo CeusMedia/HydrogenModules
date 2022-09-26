@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Config_Page
@@ -126,7 +127,7 @@ class Model_Config_Page
 
 	protected function loadPages()
 	{
-		$this->fileData	= FS_File_JSON_Reader::load( $this->filePath, TRUE );
+		$this->fileData	= JsonFileReader::load( $this->filePath, TRUE );
 		$this->scopes	= array_keys( (array) $this->fileData );
 		$this->pages	= [];
 		$pageId			= 0;

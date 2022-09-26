@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\CSV\Reader as CsvFileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -297,7 +298,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 				try{
 					$upload->setUpload( $this->request->get( 'upload' ) );
 					$upload->saveTo( $fileName );
-					$reader	= new FS_File_CSV_Reader( $fileName, TRUE );
+					$reader	= new CsvFileReader( $fileName, TRUE );
 					$csv	= $reader->toAssocArray();
 					foreach( $csv as $entry ){
 						$conditions	= array( 'email' => strtolower( $entry['email'] ) );

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -96,7 +97,7 @@ class View_Helper_Gallery{
 
 		$list		= [];
 		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
-		$index		= FS_Folder_RecursiveLister::getFolderList( $path, $pattern );
+		$index		= RecursiveFolderLister::getFolderList( $path, $pattern );
 		foreach( $index as $folder )
 			$list[$folder->getFilename()]	= substr( $folder->getPathname(), strlen( $path ) );
 		natcasesort( $list );

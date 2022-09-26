@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\CLI\Question;
+use CeusMedia\Common\FS\File\JSON\Writer as JsonFileWriter;
 
 class Job_Job extends Job_Abstract
 {
@@ -46,7 +47,7 @@ class Job_Job extends Job_Abstract
 			$moduleJobs->moduleId	= $moduleId;
 			$targetFile	= $this->pathJobs.$moduleId.'.json';
 			$this->out( 'Writing job JSON: '.$targetFile );
-			FS_File_JSON_Writer::save( $targetFile, $moduleJobs, TRUE );
+			JsonFileWriter::save( $targetFile, $moduleJobs, TRUE );
 		}
 	}
 

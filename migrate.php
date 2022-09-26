@@ -2,6 +2,7 @@
 <?php
 
 use CeusMedia\Common\CLI\Output\Progress as ProgressOutput;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 
 require_once 'vendor/autoload.php';
 
@@ -129,14 +130,14 @@ class Tool_OldStructure
 
 	public static function copyToNewStructure()
 	{
-		FS_Folder_Editor::createFolder( self::$pathNew );
+		FolderEditor::createFolder( self::$pathNew );
 		$folders	= new FS_Folder_RegexFilter( '.', '@^[A-Z]@', FALSE, TRUE, FALSE );
 		foreach( $folders as $folder ){
 			if( !file_exists( self::$pathNew.$folder->getFilename() ) ){
 				if( $verbose )
 					echo "- copy folder: ".$folder->getFilename().' ... ';
 				try {
-					FS_Folder_Editor::copyFolder( $folder->getPathname(), self::$pathNew.$folder->getFilename() );
+					FolderEditor::copyFolder( $folder->getPathname(), self::$pathNew.$folder->getFilename() );
 					if( $verbose )
 						echo "done".PHP_EOL;
 				}
@@ -178,10 +179,10 @@ class Tool_NewStructure
 		$folders	= new FS_Folder_RegexFilter( '.', '@^[A-Z]@', FALSE, TRUE, FALSE );
 		foreach( $folders as $folder ){
 			$folderName	= $folder->getFilename();
-			if( $verbose )
+			if( $verbose ?? FALSE )
 				echo "- link files in folder: ".$folderName.':'.PHP_EOL;
 			if( !self::$dry )
-				FS_Folder_Editor::createFolder( self::$pathOld.$folderName );
+				FolderEditor::createFolder( self::$pathOld.$folderName );
 			$files = Tool_Utilities::scanFolder( self::$pathNew.$folderName );
 			$nr = 0;
 			foreach( $files as $filePathAbsolute => $filePathShort ){
@@ -189,7 +190,7 @@ class Tool_NewStructure
 				$wayBack	= '../';
 				if( $path ){
 					if( !self::$dry )
-						FS_Folder_Editor::createFolder( self::$pathOld.$folderName.'/'.$path );
+						FolderEditor::createFolder( self::$pathOld.$folderName.'/'.$path );
 					$pathParts	= explode( '/', rtrim( $path, '/' ) );
 					$wayBack	= str_repeat( '../', count( $pathParts ) + 1 );
 				}

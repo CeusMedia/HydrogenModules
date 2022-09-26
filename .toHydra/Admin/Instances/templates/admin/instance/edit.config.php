@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\FS\File\INI\Reader as IniFileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 if( !$instance->configPath )
@@ -8,7 +9,7 @@ if( !$instance->configFile )
 
 $fileConfig	= $instance->uri.$instance->configPath.$instance->configFile;
 if( file_exists( $fileConfig ) ){
-	$config	= new FS_File_INI_Reader( $fileConfig, FALSE );
+	$config	= new IniFileReader( $fileConfig, FALSE );
 	foreach( $config->getProperties() as $key => $value ){
 		$comment	= $config->getComment( $key );
 		$cellKey	= HtmlTag::create( 'td', $key );

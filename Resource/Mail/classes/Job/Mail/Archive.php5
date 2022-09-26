@@ -1,4 +1,9 @@
 <?php
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+
 class Job_Mail_Archive extends Job_Abstract
 {
 	protected $model;
@@ -310,10 +315,10 @@ class Job_Mail_Archive extends Job_Abstract
 		$path		= 'contents/mails/';
 		$indexFile	= $path.'index.json';
 		if( !file_exists( $path ) )
-			FS_Folder_Editor::createFolder( $path );
+			FolderEditor::createFolder( $path );
 		if( !file_exists( $indexFile ) )
-			FS_File_Writer::save( $indexFile, '[]' );
-		$index		= json_decode( FS_File_Reader::load( $indexFile ), TRUE );
+			FileWriter::save( $indexFile, '[]' );
+		$index		= json_decode( FileReader::load( $indexFile ), TRUE );
 
 		$conditions	= array( 'status' => $this->statusesHandledMails );
 		$orders		= array( 'mailId' => 'ASC' );
@@ -344,9 +349,9 @@ class Job_Mail_Archive extends Job_Abstract
 			$shard		= $uuid[0].'/'.$uuid[1].'/'.$uuid[2].'/';
 			if( !empty( $mail->raw ) ){
 				if( !file_exists( $path.$shard ) )
-					FS_Folder_Editor::createFolder( $path.$shard );
-				FS_File_Writer::save( $path.$shard.$uuid.'.raw', $mail->raw );
-				FS_File_Writer::save( $path.$shard.$uuid.'.raw.bz2', bzcompress( $mail->raw ) );
+					FolderEditor::createFolder( $path.$shard );
+				FileWriter::save( $path.$shard.$uuid.'.raw', $mail->raw );
+				FileWriter::save( $path.$shard.$uuid.'.raw.bz2', bzcompress( $mail->raw ) );
 				$index[$mailId]	= array( 'uuid' => $uuid, 'shard' => $shard, 'format' => 'bzip' );
 				$this->showProgress( $count, count( $mailIds ), '+' );
 			}
@@ -370,9 +375,9 @@ class Job_Mail_Archive extends Job_Abstract
 						$raw		= CeusMedia\Mail\Message\Renderer::render( $object->mail );
 					}
 					if( !file_exists( $path.$shard ) )
-						FS_Folder_Editor::createFolder( $path.$shard );
-					FS_File_Writer::save( $path.$shard.$uuid.'.raw', $raw );
-					FS_File_Writer::save( $path.$shard.$uuid.'.raw.bz2', bzcompress( $raw ) );
+						FolderEditor::createFolder( $path.$shard );
+					FileWriter::save( $path.$shard.$uuid.'.raw', $raw );
+					FileWriter::save( $path.$shard.$uuid.'.raw.bz2', bzcompress( $raw ) );
 					$index[$mailId]	= array( 'uuid' => $uuid, 'shard' => $shard, 'format' => 'bzip' );
 					$this->showProgress( $count, count( $mailIds ), '+' );
 				}
@@ -383,7 +388,7 @@ class Job_Mail_Archive extends Job_Abstract
 				}
 			}
 		}
-		FS_File_Writer::save( $indexFile, json_encode( $index ) );
+		FileWriter::save( $indexFile, json_encode( $index ) );
 		$this->out();
 		$this->showErrors( 'shard', $fails );
 	}
@@ -415,8 +420,8 @@ class Job_Mail_Archive extends Job_Abstract
 			if( !is_dir( $mailClassPath ) )
 				continue;
 			$path	= rtrim( trim( $mailClassPath ), '/' ).'/classes/Mail/';
-			foreach( new FS_File_RecursiveRegexFilter( $path, '/\.php5?/' ) as $entry ){
-				$content	= FS_File_Reader::load( $entry->getPathname() );
+			foreach( new RecursiveRegexFileIndex( $path, '/\.php5?/' ) as $entry ){
+				$content	= FileReader::load( $entry->getPathname() );
 				$className	= preg_replace( '/^.*class ([A-Z][A-Za-z0-9_]+).*$/s', '\\1', $content, 1 );
 				if( $className && !in_array( $className, $loadedClasses ) ){
 					include_once( $entry->getPathname() );

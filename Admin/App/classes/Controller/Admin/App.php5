@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\FS\File\INI\Editor as IniFileEditor;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_App extends Controller
@@ -89,7 +91,7 @@ class Controller_Admin_App extends Controller
 		if( $this->config->get( $key ) == $value )
 			return NULL;
 		$fileName	= 'config/config.ini';
-		$editor		= new FS_File_INI_Editor( $fileName );
+		$editor		= new IniFileEditor( $fileName );
 		$editor->setProperty( $key, $value );
 		return TRUE;
 	}
@@ -98,7 +100,7 @@ class Controller_Admin_App extends Controller
 	{
 		$language	= $this->language->getLanguage();
 		$fileName	= $this->config['path.locales'].$language.'/main.ini';
-		$editor		= new FS_File_INI_Editor( $fileName );
+		$editor		= new IniFileEditor( $fileName );
 		if( $value === $editor->getProperty( $key, 'main' ) )
 			return FALSE;
 		$editor->setProperty( $key, $value, 'main' );
@@ -116,7 +118,7 @@ class Controller_Admin_App extends Controller
 			$logicUpload->setUpload( $upload );
 			$pathImages		= $this->config->get( 'path.images' ).'/logo/';
 			$fileName		= $pathImages.Alg_ID::uuid().'.'.$logicUpload->getExtension();
-			FS_Folder_Editor::createFolder( $pathImages );
+			FolderEditor::createFolder( $pathImages );
 			$logicUpload->saveTo( $fileName );
 			return $fileName;
 		}

@@ -1,6 +1,9 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Info_Manual extends Controller
@@ -170,7 +173,7 @@ class Controller_Info_Manual extends Controller
 			foreach( $files as $fileHash ){
 				$fileName	= base64_decode( $fileHash );
 				if( file_exists( $this->path.$fileName ) ){
-					$content	= FS_File_Reader::load( $this->path.$fileName );
+					$content	= FileReader::load( $this->path.$fileName );
 					$category	= $this->checkCategoryId( $categoryId );
 					$nextRank	= $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1;
 					$newPages[]	= $this->modelPage->add( array(
@@ -198,7 +201,7 @@ class Controller_Info_Manual extends Controller
 		if( $fileHash ){
 			$fileName	= base64_decode( $fileHash );
 			if( file_exists( $this->path.$fileName ) ){
-				$content	= FS_File_Reader::load( $this->path.$fileName );
+				$content	= FileReader::load( $this->path.$fileName );
 				$categoryId	= $this->session->get( 'filter_info_manual_categoryId' );
 				$nextRank	= $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1;
 				$this->modelPage->add( array(
@@ -309,13 +312,13 @@ class Controller_Info_Manual extends Controller
 
 /*	protected function saveOrder(){
 		$orderFile	= $this->path.'order.list';
-		FS_File_Writer::save( $orderFile, implode( "\n", $this->order->getAll() ) );
+		FileWriter::save( $orderFile, implode( "\n", $this->order->getAll() ) );
 	}*/
 
 	public function scanFiles()
 	{
 		$this->files	= [];
-		$index	= new FS_File_RecursiveRegexFilter( $this->path, "/\\".$this->ext."$/" );
+		$index	= new RecursiveRegexFileIndex( $this->path, "/\\".$this->ext."$/" );
 		foreach( $index as $entry ){
 			$pathName	= substr( $entry->getPathname(), strlen( $this->path ) );
 			$this->files[]	= $pathName;
@@ -380,7 +383,7 @@ class Controller_Info_Manual extends Controller
 		$this->scanFiles();
 		$orderFile	= $this->path.'order.list';
 		if( file_exists( $this->path.'order.list' ) ){
-			$order			= trim( FS_File_Reader::load( $orderFile ) );
+			$order			= trim( FileReader::load( $orderFile ) );
 			$this->order	= new Dictionary( explode( "\n", $order ) );
 		}
 		else if( count( $this->files ) ){
@@ -465,11 +468,11 @@ class Controller_Info_Manual extends Controller
 		$this->scanFiles();
 		foreach( $this->files as $entry ){
 			$filePath	= $this->path.$entry;
-			$content	= FS_File_Reader::load( $filePath );
+			$content	= FileReader::load( $filePath );
 			$relinked	= str_replace( "](".$oldName.")", "](".$newName.")", $content );
 			$relinked	= str_replace( "]: ".$oldName."\r\n", "]: ".$newName."\r\n", $relinked );
 			if( $relinked !== $content ){
-				FS_File_Writer::save( $filePath, $relinked );
+				FileWriter::save( $filePath, $relinked );
 				$list[]	= $entry;
 			}
 		}

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Logic;
 
@@ -31,7 +32,7 @@ class Logic_FileBucket extends Logic
 			$basePath	= Logic_Frontend::getInstance( $this->env )->getPath( 'contents' );
 		$this->filePath	= $basePath.$this->moduleConfig->get( 'path' );
 		if( !file_exists( $this->filePath ) )
-			\FS_Folder_Editor::createFolder( $this->filePath );
+			FolderEditor::createFolder( $this->filePath );
 		if( !file_exists( $this->filePath.'.htaccess' ) )
 			file_put_contents( $this->filePath.'.htaccess', 'Deny from all'.PHP_EOL );
 	}

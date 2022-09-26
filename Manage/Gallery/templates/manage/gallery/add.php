@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -23,7 +24,7 @@ foreach( $galleries as $gallery ){
 }
 
 
-$index	= FS_Folder_RecursiveLister::getFolderList( $path );
+$index	= RecursiveFolderLister::getFolderList( $path );
 $list	= [];
 foreach( $index as $entry ){
 	$key	= substr( $entry->getPathname(), strlen( $path ) );

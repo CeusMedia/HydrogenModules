@@ -1,8 +1,7 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
-
-use FS_Folder_RecursiveLister as RecursiveFolderIndex;
 
 class Controller_Manage_Form extends Controller
 {
@@ -10,7 +9,7 @@ class Controller_Manage_Form extends Controller
 	protected $modelFill;
 	protected $modelRule;
 	protected $modelMail;
-	protected $modelTranserTarget;
+	protected $modelTransferTarget;
 	protected $modelTransferRule;
 	protected $modelImportRule;
 	protected $modelImportConnector;
@@ -438,7 +437,7 @@ class Controller_Manage_Form extends Controller
 	{
 		$list	= [];
 		$basePathRegex	= '@^'.preg_quote( $this->basePath, '@' ).'@';
-		foreach( RecursiveFolderIndex::getFileList( $this->basePath ) as $item ){
+		foreach( RecursiveFolderLister::getFileList( $this->basePath ) as $item ){
 			$filePath	= preg_replace( $basePathRegex, '', $item->getPathName() );
 			$list[$filePath]	= (object) [
 				'fileName'		=> $item->getFilename(),

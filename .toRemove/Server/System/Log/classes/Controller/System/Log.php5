@@ -7,6 +7,8 @@
  *	@copyright		2010 Ceus Media
  */
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -113,12 +115,12 @@ class Controller_System_Log extends Controller
 	{
 		$fileName	= $this->moduleConfig->get( 'file.name' );
 		if( file_exists( $fileName ) ){
-			$content	= trim( FS_File_Reader::load( $fileName ) );
+			$content	= trim( FileReader::load( $fileName ) );
 			$lines		= explode( "\n", $content );
 			if( count( $lines ) > $id ){
 				unset( $lines[$id] );
 				$lines	= join( "\n", $lines )."\n";
-				FS_File_Writer::save( $fileName, $lines );
+				FileWriter::save( $fileName, $lines );
 			}
 		}
 		$page	= $this->env->getSession()->get( 'filter_server_system_page' );
@@ -132,7 +134,7 @@ class Controller_System_Log extends Controller
 			$this->env->getMessenger()->noteError( 'No exception log found.' );
 			$this->restart( NULL, TRUE );
 		}
-		$content	= trim( FS_File_Reader::load( $fileName ) );
+		$content	= trim( FileReader::load( $fileName ) );
 		$lines		= explode( "\n", $content );
 		if( count( $lines ) <= $id ){
 			$this->env->getMessenger()->noteError( 'Invalid exception number.' );
@@ -155,7 +157,7 @@ class Controller_System_Log extends Controller
 		if( !file_exists( $fileName ) )
 			return 0;
 #			throw new RuntimeException( 'Log not existing' );
-		$content	= trim( FS_File_Reader::load( $fileName ) );
+		$content	= trim( FileReader::load( $fileName ) );
 		$lines		= explode( "\n", $content );
 		return count( $lines );
 	}
@@ -186,7 +188,7 @@ class Controller_System_Log extends Controller
 		if( !file_exists( $fileName ) )
 			return array();
 #			throw new RuntimeException( 'Log not existing' );
-		$content	= trim( FS_File_Reader::load( $fileName ) );
+		$content	= trim( FileReader::load( $fileName ) );
 		$lines		= explode( "\n", $content );
 		$total		= count( $lines );
 		if( $descending )

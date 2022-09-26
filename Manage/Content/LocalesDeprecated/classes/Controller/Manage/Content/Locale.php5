@@ -5,6 +5,8 @@
  *	@copyright		2011-2014 Ceus Media
  */
 
+use CeusMedia\Common\FS\File\Editor as FileEditor;
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -40,7 +42,7 @@ class Controller_Manage_Content_Locale extends Controller
 			$pathName	= $this->basePath.$language.'/'.$fileId;
 			try{
 				$content	= $request->get( 'content' );
-				$editor		= new FS_File_Editor( $pathName );
+				$editor		= new FileEditor( $pathName );
 				$editor->writeString( $content );
 				$this->handleJsonResponse( 'data', TRUE );
 			}
@@ -62,7 +64,7 @@ class Controller_Manage_Content_Locale extends Controller
 			case 'save':
 				try{
 					$content	= $request->get( 'content' );
-					$editor		= new FS_File_Editor( $pathName );
+					$editor		= new FileEditor( $pathName );
 					$editor->writeString( $content );
 					$this->env->getMessenger()->noteSuccess( $words->successFileSaved, $fileName );
 				}
@@ -115,7 +117,7 @@ class Controller_Manage_Content_Locale extends Controller
 		$list		= [];
 		$path		= $this->basePath.$language.'/';
 		if( file_exists( $path.$folder ) ){
-			$index	= FS_Folder_RecursiveLister::getFileList( $path.$folder );
+			$index	= RecursiveFolderLister::getFileList( $path.$folder );
 			foreach( $index as $item ){
 				$extension	= pathinfo( $item->getFilename(), PATHINFO_EXTENSION );
 				if( $extensions && !in_array( $extension, $extensions ) )

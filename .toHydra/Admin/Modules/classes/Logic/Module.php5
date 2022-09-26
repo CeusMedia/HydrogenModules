@@ -3,6 +3,12 @@
  *	Singleton of module logic.
  */
 
+use CeusMedia\Common\FS\File\Backup as FileBackup;
+use CeusMedia\Common\FS\File\Editor as FileEditor;
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\FS\Folder\Reader as FolderReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
@@ -37,7 +43,7 @@ class Logic_Module extends Logic
 	public function configureLocalModule( string $moduleId, $pairs, /*int*/$installType = NULL, string $sourceId = NULL )
 	{
 		$fileName	= $this->env->pathApp.'config/modules/'.$moduleId.'.xml';
-		$xml	= FS_File_Reader::load( $fileName );
+		$xml	= FileReader::load( $fileName );
 		$xml	= new XML_Element( $xml );
 		foreach( $xml->config as $nr => $node ){
 			$name	= $node->getAttribute( 'name' );
@@ -49,7 +55,7 @@ class Logic_Module extends Logic
 			$xml->version->setAttribute( 'install-source', $sourceId );
 			$xml->version->setAttribute( 'install-date', date( "c" ) );
 		};
-		return FS_File_Writer::save( $fileName, $xml->asXml() );
+		return FileWriter::save( $fileName, $xml->asXml() );
 	}
 
 	public function getCategories(): array
@@ -339,18 +345,18 @@ class Logic_Module extends Logic
 		if( !$messenger->gotError() ){
 			try{
 				foreach( $list as $source => $target ){
-					$result	= self::saveFile( $target, FS_File_Reader::load( $source ) );
+					$result	= self::saveFile( $target, FileReader::load( $source ) );
 					if( $result	&& $move )
 						unlink( $source );
 	#				$messenger->noteNotice( 'Copy: '.$source.' => '.$target );
 				}
-				$xml	= FS_File_Reader::load( $path1.'config/modules/'.$moduleId.'.xml' );
+				$xml	= FileReader::load( $path1.'config/modules/'.$moduleId.'.xml' );
 				$result	= self::saveFile( $path2.'module.xml', $xml );
 				if( $result	&& $move )
 					unlink( $source );
 
 				if( file_exists( $path1.'config/modules/'.$moduleId.'.png' ) ){
-					$icon	= FS_File_Reader::load( $path1.'config/modules/'.$moduleId.'.png' );
+					$icon	= FileReader::load( $path1.'config/modules/'.$moduleId.'.png' );
 					$result	= self::saveFile( $path2.'icon.png', $icon );
 					if( $result	&& $move )
 						unlink( $source );
@@ -735,8 +741,8 @@ class Logic_Module extends Logic
 
 	protected static function saveFile( string $filePath, string $content, $mode = 0777 )
 	{
-		FS_Folder_Editor::createFolder( dirname( $filePath ), $mode );
-		$e	= new FS_File_Editor( $filePath );
+		FolderEditor::createFolder( dirname( $filePath ), $mode );
+		$e	= new FileEditor( $filePath );
 		$e->writeString( $content );
 		$e->setPermissions( 0777 );
 	}
@@ -777,10 +783,10 @@ class Logic_Module extends Logic
 			if( file_exists( dirname( $path ) ) ){
 				do{
 					$path	= dirname( $path );
-					$folder	= new FS_Folder_Reader( $path );
+					$folder	= new FolderReader( $path );
 					if( !( $count = $folder->getNestedCount() ) ){
 						if( !in_array( basename( $path ).'/', $baseAppPaths ) ){
-							FS_Folder_Editor::removeFolder( $path );
+							FolderEditor::removeFolder( $path );
 							$folders[]	= substr( $path, strlen( $pathApp ) );
 						}
 					}
@@ -839,7 +845,7 @@ class Logic_Module extends Logic
 				$listDone[]	= $fileOut;
 				try{
 					if( file_exists( $pathApp.$fileOut ) ){
-						$backup	= new FS_File_Backup( $pathApp.$fileOut );
+						$backup	= new FileBackup( $pathApp.$fileOut );
 						$backup->store();
 					}
 					if( $type == 'link' )														//  @todo: OS check -> no links in windows <7
@@ -855,7 +861,7 @@ class Logic_Module extends Logic
 		if( count( $exceptions ) ){																	//  there have been severe problems
 			foreach( $listDone as $fileName ){														//  iterate list of updated files
 				if( file_exists( $pathApp.$fileName ) ){											//  target file exists
-					$backup	= new FS_File_Backup( $pathApp.$fileName );								//  to target file under backup perspective
+					$backup	= new FileBackup( $pathApp.$fileName );								//  to target file under backup perspective
 					if( $backup->getVersion() !== NULL )											//  there is atleast 1 backup of target file
 						$backup->restore( -1, TRUE );												//  restore backup file
 					else																			//  otherwise ...

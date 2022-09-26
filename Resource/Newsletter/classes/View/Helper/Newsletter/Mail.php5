@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Newsletter_Mail
@@ -19,7 +20,7 @@ class View_Helper_Newsletter_Mail
 		$this->env		= $env;
 		$this->logic	= new Logic_Newsletter( $env );
 		if( !file_exists( $this->cachePath ) )
-			FS_Folder_Editor::createFolder( $this->cachePath );
+			FolderEditor::createFolder( $this->cachePath );
 	}
 
 	public function render()

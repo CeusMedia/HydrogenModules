@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\FS\File\CSV\Reader as CsvFileReader;
+use CeusMedia\Common\FS\File\CSV\Writer as CsvFileWriter;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Mail_Check extends Controller
@@ -229,7 +231,7 @@ class Controller_Work_Mail_Check extends Controller
 				default:
 					$extension	= '.csv';
 					$fileName	= tempnam( sys_get_temp_dir(), 'export' );
-					$writer		= new FS_File_CSV_Writer( $fileName, ';' );
+					$writer		= new CsvFileWriter( $fileName, ';' );
 					$writer->write( $data, $columns, TRUE );
 			}
 			$date	= date( 'Y-m-d' );
@@ -290,7 +292,7 @@ class Controller_Work_Mail_Check extends Controller
 			$logic->setUpload( $file );
 			switch( $logic->getMimeType() ){
 				case 'text/csv':
-					$reader		= new FS_File_CSV_Reader( $file->tmp_name, TRUE );
+					$reader		= new CsvFileReader( $file->tmp_name, TRUE );
 					$this->session->set( 'addressesToImport', (object) array(
 						'type'		=> 'CSV',
 						'mimeType'	=> $file->type,

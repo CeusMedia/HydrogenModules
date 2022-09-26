@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\View;
@@ -196,9 +197,9 @@ class Controller_Work_Newsletter_Template extends Controller
 			'imprint'		=> $imprint,
 			'createdAt'		=> strtotime( $theme->created ),
 			'modifiedAt'	=> strtotime( $theme->modified ),
-			'html'			=> \FS_File_Reader::load( 'contents/themes/'.$theme->folder.'/template.html' ),
-			'plain'			=> \FS_File_Reader::load( 'contents/themes/'.$theme->folder.'/template.txt' ),
-			'style'			=> \FS_File_Reader::load( 'contents/themes/'.$theme->folder.'/template.css' ),
+			'html'			=> FileReader::load( 'contents/themes/'.$theme->folder.'/template.html' ),
+			'plain'			=> FileReader::load( 'contents/themes/'.$theme->folder.'/template.txt' ),
+			'style'			=> FileReader::load( 'contents/themes/'.$theme->folder.'/template.css' ),
 		);
 		$templateId	= $this->logic->addTemplate( $data );
 		if( isset( $theme->styles ) && is_array( $theme->styles ) )
@@ -262,8 +263,8 @@ class Controller_Work_Newsletter_Template extends Controller
 			$model	= new Model_Newsletter_Theme( $this->env, $path );
 			$theme	= $model->get( $theme );
 
-			$css	= \FS_File_Reader::load( $path.$theme->id.'/template.css' );
-			$html	= \FS_File_Reader::load( $path.$theme->id.'/template.html' );
+			$css	= FileReader::load( $path.$theme->id.'/template.css' );
+			$html	= FileReader::load( $path.$theme->id.'/template.html' );
 
 			$view		= new View( $this->env );
 			$imprint	= $view->loadContentFile( 'html/work/newsletter/template/imprint.txt' );

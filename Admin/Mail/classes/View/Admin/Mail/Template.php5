@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Admin_Mail_Template extends View
@@ -16,7 +17,7 @@ class View_Admin_Mail_Template extends View
 		foreach( $defaults as $key => $value ){
 			if( empty( $template->{$key} ) ){
 				$templateFile	= $this->getTemplateUriFromFile( $defaultsPath.$value );
-				$template->{$key}	= FS_File_Reader::load( $templateFile );
+				$template->{$key}	= FileReader::load( $templateFile );
 			}
 		}
 	}

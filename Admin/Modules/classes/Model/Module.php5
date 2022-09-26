@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\FS\File\RecursiveNameFilter as RecursiveFileFinder;
+use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Module
@@ -80,7 +82,7 @@ class Model_Module
 	public function getInstalled(): array
 	{
 		$list	= [];
-		$index	= new FS_File_RecursiveRegexFilter( $this->pathConfig, '/^\w+.xml$/' );
+		$index	= new RecursiveRegexFileIndex( $this->pathConfig, '/^\w+.xml$/' );
 		foreach( $index as $entry )
 		{
 			$id	= preg_replace( '/\.xml$/i', '', $entry->getFilename() );
@@ -107,7 +109,7 @@ class Model_Module
 		if( $this->cache )
 			return $this->cache;
 		$list	= [];
-		$index	= new FS_File_RecursiveNameFilter( $this->pathRepos, 'module.xml' );
+		$index	= new RecursiveFileFinder( $this->pathRepos, 'module.xml' );
 		foreach( $index as $entry ){
 			$id		= preg_replace( '@^'.$this->pathRepos.'@', '', $entry->getPath() );
 			$id		= str_replace( '/', '_', $id );

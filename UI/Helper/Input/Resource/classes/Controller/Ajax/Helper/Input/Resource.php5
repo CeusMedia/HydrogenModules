@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\RecursiveIterator as RecursiveFileIterator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 use CeusMedia\HydrogenFramework\Environment;
@@ -39,7 +40,7 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 			if( !file_exists( $realpath.$path ) )
 				continue;
 			$sublist	= [];
-			$index		= new \FS_File_RecursiveIterator( $realpath.$path );
+			$index		= new RecursiveFileIterator( $realpath.$path );
 			foreach( $index as $entry ){
 				if( $entry->isDir() )
 					continue;

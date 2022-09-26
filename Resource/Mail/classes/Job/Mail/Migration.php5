@@ -1,4 +1,7 @@
 <?php
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
+
 class Job_Mail_Migration extends Job_Abstract
 {
 	protected $model;
@@ -191,8 +194,8 @@ class Job_Mail_Migration extends Job_Abstract
 			if( !is_dir( $mailClassPath ) )
 				continue;
 			$path	= rtrim( trim( $mailClassPath ), '/' ).'/classes/Mail/';
-			foreach( new FS_File_RecursiveRegexFilter( $path, '/\.php5?/' ) as $entry ){
-				$content	= FS_File_Reader::load( $entry->getPathname() );
+			foreach( new RecursiveRegexFileIndex( $path, '/\.php5?/' ) as $entry ){
+				$content	= FileReader::load( $entry->getPathname() );
 				$className	= preg_replace( '/^.*class ([A-Z][A-Za-z0-9_]+).*$/s', '\\1', $content, 1 );
 				if( $className && !in_array( $className, $loadedClasses ) ){
 					include_once( $entry->getPathname() );

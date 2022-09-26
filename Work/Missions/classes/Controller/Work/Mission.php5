@@ -5,6 +5,7 @@
  *	@package		Work.Missions
  */
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -13,6 +14,7 @@ use CeusMedia\HydrogenFramework\Controller;
  *	@package		Work.Missions
  *	@todo			implement
  *	@todo			code documentation
+ *	@todo			1200 lines of code !?
  */
 class Controller_Work_Mission extends Controller
 {
@@ -876,7 +878,7 @@ class Controller_Work_Mission extends Controller
 			$this->messenger->noteError( 'Upload-Fehler: '.$handler->getErrorMessage( $file['error'] ) );
 		}
 		else{
-			$gz			= FS_File_Reader::load( $file['tmp_name'] );
+			$gz			= FileReader::load( $file['tmp_name'] );
 			$serial		= @gzinflate( substr( $gz, 10, -8 ) );
 			$missions	= @unserialize( $serial );
 			if( !$serial )

@@ -7,6 +7,7 @@
  *	@copyright		2010 Ceus Media
  */
 
+use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Application\Web\Site as WebSite;
 
@@ -35,7 +36,7 @@ class Server extends WebSite
 			$responseTime,														//  in microseconds
 			getEnv( 'REDIRECT_URL' )											//  requested URL
 		);
-		$writer	= new FS_File_Writer( 'logs/request.log' );
+		$writer	= new FileWriter( 'logs/request.log' );
 		$writer->appendString( $message );
 	}
 

@@ -1,4 +1,7 @@
 <?php
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+
 class Model_Finance_Bank_Account_Reader_DeutscheBank
 {
 	protected $account;
@@ -20,10 +23,10 @@ class Model_Finance_Bank_Account_Reader_DeutscheBank
 		if( !file_exists( $this->account->cacheFile ) ){
 			$html	= $this->fetchAccountUsingCurl();
 #			$html	= $this->fetchAccountUsingWget();
-			FS_File_Writer::save( $this->account->cacheFile, $html );
+			FileWriter::save( $this->account->cacheFile, $html );
 		}
 		else
-			$html	= FS_File_Reader::load( $this->account->cacheFile );
+			$html	= FileReader::load( $this->account->cacheFile );
 		return $this->parseAccount( $html );
 	}
 
@@ -59,7 +62,7 @@ class Model_Finance_Bank_Account_Reader_DeutscheBank
 		exec( $command, $a, $b );
 		if( $b )
 			throw new RuntimeException( 'Request failed with code '.$b );
-		$html	= FS_File_Reader::load( $cacheFile );
+		$html	= FileReader::load( $cacheFile );
 		unlink( $cacheFile );
 #		@unlink( 'cookies.txt' );
 #		Net_Reader::readUrl( $this->urlLogout );

@@ -1,5 +1,9 @@
 <?php
 
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
+use CeusMedia\Common\FS\File\JSON\Writer as JsonFileWriter;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Database_Backup extends Logic
@@ -121,7 +125,7 @@ class Logic_Database_Backup extends Logic
 		@unlink( $dump->pathname );
 		if( array_key_exists( $id, $this->comments ) ){
 			unset( $this->comments[$id] );
-			\FS_File_JSON_Writer::save( $this->commentsFile, $this->comments );
+			\JsonFileWriter::save( $this->commentsFile, $this->comments );
 		}
 	}
 
@@ -138,7 +142,7 @@ class Logic_Database_Backup extends Logic
 			else
 				$this->comments[$id][$key]	= $value;
 		}
-		\FS_File_Writer::save( $this->commentsFile, json_encode( $this->comments, JSON_PRETTY_PRINT ) );
+		FileWriter::save( $this->commentsFile, json_encode( $this->comments, JSON_PRETTY_PRINT ) );
 	}
 
 	//  --  PROTECTED METHODS  --  //
@@ -156,10 +160,10 @@ class Logic_Database_Backup extends Logic
 		$this->path			= $basePath.$moduleConfig->get( 'path' );
 		$this->commentsFile	= $this->path.'comments.json';
 		if( !file_exists( $this->path ) )
-			\FS_Folder_Editor::createFolder( $this->path );
+			FolderEditor::createFolder( $this->path );
 		if( !file_exists( $this->commentsFile ) )
 			file_put_contents( $this->commentsFile, '[]' );
-		$this->comments	= \FS_File_JSON_Reader::load( $this->commentsFile, TRUE );
+		$this->comments	= JsonFileReader::load( $this->commentsFile, TRUE );
 		$this->dumps	= $this->readIndex();
 	}
 

@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\FS\File\CSV\Reader as CsvFileReader;
 use CeusMedia\Mail\Mailbox;
 use CeusMedia\Mail\Mailbox\Mail;
 use CeusMedia\Mail\Mailbox\Search;
@@ -25,7 +26,7 @@ class Logic_Import_Connector_MailAttachmentCsv extends Logic_Import_Connector_Ma
 					$tempFile	= tempnam( sys_get_temp_dir(), 'import' );
 					file_put_contents( $tempFile, $part->getContent() );
 					$useHeaders	= isset( $this->options->headers ) && $this->options->headers;
-					$reader		= new FS_File_CSV_Reader( $tempFile, $useHeaders, ';' );
+					$reader		= new CsvFileReader( $tempFile, $useHeaders, ';' );
 					$item->data[$fileName]	= $reader->toArray();
 
 					if( isset( $this->options->encoding ) && $this->options->encoding !== 'UTF-8' ){

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+
 class Model_Job_Code
 {
 	protected $classes	= [];
@@ -44,7 +46,7 @@ class Model_Job_Code
 	{
 		if( !( file_exists( $path ) && is_dir( $path ) ) )
 			throw new DomainException( 'Path is not existing' );
-		$lister	= new FS_Folder_RecursiveLister( $path );
+		$lister	= new RecursiveFolderLister( $path );
 		$lister->setExtensions( array( 'php', 'php5' ) );
 		$lister->showFolders( FALSE );
 		foreach( $lister->getList() as $entry ){

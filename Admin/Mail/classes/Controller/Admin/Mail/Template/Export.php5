@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -90,7 +91,7 @@ class Controller_Admin_Mail_Template_Export extends Controller
 				}
 				$files[$topic][]	= array(
 					'filePath'	=> $item,
-					'content'	=> base64_encode( FS_File_Reader::load( $item ) ),
+					'content'	=> base64_encode( FileReader::load( $item ) ),
 				);
 			}
 		}

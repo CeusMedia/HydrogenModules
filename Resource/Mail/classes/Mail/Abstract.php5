@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
@@ -412,7 +413,7 @@ abstract class Mail_Abstract
 		$filePath	= $this->env->getConfig()->get( 'path.scripts' ).$fileName;
 		if( !file_exists( $filePath ) )
 			return FALSE;
-		$script	= FS_File_Reader::load( $filePath );
+		$script	= FileReader::load( $filePath );
 		$tag	= HtmlTag::create( 'script', $script, ['type' => 'text/javascript'] );
 		$this->page->addHead( $tag );
 		return TRUE;
@@ -431,7 +432,7 @@ abstract class Mail_Abstract
 			return FALSE;
 		if( in_array( $filePath, $this->addedStyles ) )
 			return FALSE;
-		$style	= FS_File_Reader::load( $filePath );
+		$style	= FileReader::load( $filePath );
 //		$style	= str_replace( '(/lib/', '(http://'.getEnv( 'HTTP_HOST' ).'/lib/', $style );
 
 		$path	= dirname( $filePath );
@@ -518,7 +519,7 @@ abstract class Mail_Abstract
 						$messenger->noteError( 'Loading mail style from "'.$this->env->uri.$style.'" failed.' );
 						continue;
 					}
-					$content	= FS_File_Reader::load( $this->env->uri.$style );
+					$content	= FileReader::load( $this->env->uri.$style );
 				}
 	//			$content	= preg_replace( '/\/\*.*\*\//su', '', $content );
 				$styleTag	= HtmlTag::create( 'style', $content, ['type' => 'text/css'] );

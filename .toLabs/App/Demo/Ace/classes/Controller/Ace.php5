@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\Editor as FileEditor;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ace extends AjaxController{
@@ -10,7 +11,7 @@ class Controller_Ace extends AjaxController{
 		$pathLocales	= $this->env->getConfig()->get( 'path.locales' );
 		$filePath		= $pathLocales.$language.'/html/index/content.html';
 		try{
-			$result		= \FS_File_Editor::save( $filePath, $request->get( 'content' ) );
+			$result		= FileEditor::save( $filePath, $request->get( 'content' ) );
 			$this->respondData( $result );
 		}
 		catch( Exception $e ){

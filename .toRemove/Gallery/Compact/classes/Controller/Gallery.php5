@@ -1,6 +1,9 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\FS\File\INI\Reader as IniFileReader;
+use CeusMedia\Common\FS\Folder\Lister as FolderLister;
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Gallery extends Controller
@@ -33,7 +36,7 @@ class Controller_Gallery extends Controller
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );
 		$pattern	= $config->get( 'module.gallery_compact.latest.regex' );
-		$index		= FS_Folder_RecursiveLister::getFolderList( $path, $pattern );
+		$index		= RecursiveFolderLister::getFolderList( $path, $pattern );
 		foreach( $index as $folder ){
 			$timestamp	= filemtime( $folder->getPathname() );
 			$data		= array(
@@ -44,7 +47,7 @@ class Controller_Gallery extends Controller
 			);
 			$fileInfo	= $folder->getPathname().'/info.ini';
 			if( file_exists( $fileInfo ) ){
-				$info	= FS_File_INI_Reader::load( $fileInfo );
+				$info	= IniFileReader::load( $fileInfo );
 				if( isset( $info['title'] ) )
 					$data['label']	= $info['title'];
 				if( isset( $info['description'] ) )
@@ -76,8 +79,8 @@ class Controller_Gallery extends Controller
 				'path'			=> $this->path,
 				'source'		=> $source ? $source.'/' : '',
 				'info'			=> $info,
-				'folders'		=> FS_Folder_Lister::getFolderList( $path ),
-				'files'			=> FS_Folder_Lister::getFileList( $path, '/\.(jpg|jpeg|jpe|png|gif)$/i' ),
+				'folders'		=> FolderLister::getFolderList( $path ),
+				'files'			=> FolderLister::getFileList( $path, '/\.(jpg|jpeg|jpe|png|gif)$/i' ),
 				'textBottom'	=> '',
 			)
 		);
@@ -101,7 +104,7 @@ class Controller_Gallery extends Controller
 				'path'		=> $this->path,
 				'source'	=> $source,
 				'title'		=> $title,
-				'files'		=> FS_Folder_Lister::getFileList( dirname( $uri ), '/\.(jpg|jpeg|jpe|png|gif)$/i' ),
+				'files'		=> FolderLister::getFileList( dirname( $uri ), '/\.(jpg|jpeg|jpe|png|gif)$/i' ),
 				'exif'		=> new Dictionary( $exif->getAll() ),
 			)
 		);
@@ -124,7 +127,7 @@ class Controller_Gallery extends Controller
 		$uri	= $this->path.$source.'/info.ini';
 		if( !file_exists( $uri ) )
 			return array();
-		$reader	= new FS_File_INI_Reader( $uri, TRUE );
+		$reader	= new IniFileReader( $uri, TRUE );
 		return $reader->toArray( TRUE );
 	}
 }

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
@@ -14,7 +15,7 @@ class Hook_System_Load extends Hook
 		$loads			= sys_getloadavg();															//  get system load values
 		$load			= array_shift( $loads ) / $cores;											//  get load of last minute relative to number of cores
 		if( $max > 0 && $load > $max ){																//  a maximum load is set and load is higher than that
-			if( $env instanceof RemoteEnvironment ) )												//  if application is accessed remotely
+			if( $env instanceof RemoteEnvironment )													//  if application is accessed remotely
 				throw new RuntimeException( 'Service not available: server load too high', 503 );	//  throw exception instead of HTTP response
 			header( 'HTTP/1.1 503 Service Unavailable' );											//  send HTTP 503 code
 			header( 'Content-type: text/html; charset=utf-8' );										//  send MIME type header for UTF-8 HTML error page
@@ -25,7 +26,7 @@ class Hook_System_Load extends Hook
 			$pathLocale	= $env->getConfig()->get( 'path.locales' ).$language.'/';					//  get path of locales
 			$fileName	= $pathLocale.'html/error/503.html';										//  error page file name
 			if( file_exists( $fileName ) )															//  error page file exists
-				$message	= FS_File_Reader::load( $fileName );									//  load error page content
+				$message	= FileReader::load( $fileName );									//  load error page content
 			print( $message );																		//  display error message
 			exit;																					//  and quit application
 		}

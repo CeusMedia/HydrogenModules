@@ -1,4 +1,7 @@
 <?php
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+
 class Model_Instance{
 
 	protected $fileName;
@@ -9,10 +12,10 @@ class Model_Instance{
 		$this->data		= [];
 		$this->fileName	= 'config/instances.json';
 		if( !file_exists( $this->fileName ) ){
-			FS_File_Writer::save( $this->fileName, '[]' );
+			FileWriter::save( $this->fileName, '[]' );
 			chmod( $this->fileName, 0770 );
 		}
-		$json		= FS_File_Reader::load( $this->fileName );
+		$json		= FileReader::load( $this->fileName );
 		foreach( json_decode( $json ) as $instanceId => $instance )
 			$this->data[$instanceId]	= $instance;
 	}
@@ -81,7 +84,7 @@ class Model_Instance{
 
 	protected function save(){
 		$json	= ADT_JSON_Formater::format( json_encode( $this->data ) );
-		return FS_File_Writer::save( $this->fileName, $json );
+		return FileWriter::save( $this->fileName, $json );
 	}
 }
 ?>

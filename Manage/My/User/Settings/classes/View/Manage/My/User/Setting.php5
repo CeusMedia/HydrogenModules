@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\INI\Reader as IniFileReader;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
@@ -15,7 +16,7 @@ class View_Manage_My_User_Setting extends View{
 		foreach( $module->files->locales as $locale ){
 			if( $localeFile == $locale->file ){
 				if( file_exists( $path.$locale->file ) ){
-					$reader	= new FS_File_INI_Reader( $path.$locale->file, TRUE );
+					$reader	= new IniFileReader( $path.$locale->file, TRUE );
 					if( $reader->usesSections() && $reader->hasSection( 'module' ) )
 						return $reader->getProperties( TRUE, 'module' );
 				}
@@ -23,7 +24,7 @@ class View_Manage_My_User_Setting extends View{
 		}
 		foreach( $module->files->locales as $locale ){
 			if( file_exists( $path.$locale->file ) ){
-				$reader	= new FS_File_INI_Reader( $path.$locale->file, TRUE );
+				$reader	= new IniFileReader( $path.$locale->file, TRUE );
 				if( $reader->usesSections() && $reader->hasSection( 'module' ) )
 					return $reader->getProperties( TRUE, 'module' );
 			}

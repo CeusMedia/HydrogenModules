@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -21,7 +22,7 @@ function reduceContentFile( $view, $fileName ){
 	$contentFile	= $view->getContentUri( $fileName );
 	if( !file_exists( $contentFile ) )
 		return '';
-	$content	= FS_File_Reader::load( $contentFile );
+	$content	= FileReader::load( $contentFile );
 	$content	= preg_replace( "/<!--(.|\s)*?-->/", "", $content );
 	return $content;
 }

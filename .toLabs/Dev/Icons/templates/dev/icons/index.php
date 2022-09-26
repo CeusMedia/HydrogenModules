@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\FS\Folder\Lister as FolderLister;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $baseUri	= 'http://localhost/';
@@ -37,7 +38,7 @@ $panelFilter	= '
 
 
 function listFolder( $path, $uri, $skip = [] ){
-	$folders	= FS_Folder_Lister::getFolderList( $path );
+	$folders	= FolderLister::getFolderList( $path );
 	$list		= [];
 	foreach( $folders as $folder ){
 		if( in_array( $folder->getFilename(), $skip ) )

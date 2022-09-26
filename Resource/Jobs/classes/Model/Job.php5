@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Job
@@ -115,7 +116,7 @@ class Model_Job
 	public function readJobsFromJsonFile( string $pathName, $modes = [] ): array
 	{
 		$jobs			= [];
-		$json	= \FS_File_JSON_Reader::load( $pathName, FALSE );
+		$json	= JsonFileReader::load( $pathName, FALSE );
 		foreach( $json as $jobId => $job ){
 			$job->id		= $jobId;
 			$job->source	= 'json';

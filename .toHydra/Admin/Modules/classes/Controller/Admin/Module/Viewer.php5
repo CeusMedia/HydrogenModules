@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Editor as FileEditor;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Module_Viewer extends Controller{								//  @todo	1) inherit from View_Admin_Module after cleanup
@@ -27,7 +29,7 @@ class Controller_Admin_Module_Viewer extends Controller{								//  @todo	1) inh
 		foreach( $module->config as $pair )
 			if( $pair->getAttribute( 'name' ) == $key )
 				$pair->{0}	= $value;
-		return FS_File_Editor::save( $fileName, $module->asXML() );
+		return FileEditor::save( $fileName, $module->asXML() );
 	}
 
 	public function index( $moduleId = NULL ){
@@ -130,7 +132,7 @@ class Controller_Admin_Module_Viewer extends Controller{								//  @todo	1) inh
 		$this->addData( 'filePath', $pathModule.$pathFile.$fileName );
 		$this->addData( 'pathFile', $pathFile );
 		$this->addData( 'pathModule', $pathModule );
-		$this->addData( 'content', FS_File_Reader::load( $pathModule.$pathFile.$fileName ) );
+		$this->addData( 'content', FileReader::load( $pathModule.$pathFile.$fileName ) );
 	}
 }
 ?>

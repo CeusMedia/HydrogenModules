@@ -1,4 +1,8 @@
 <?php
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
+
 class Model_Oauth_ProviderDefault
 {
 	protected $filePath		= 'config/oauth2_providers.json';
@@ -8,7 +12,7 @@ class Model_Oauth_ProviderDefault
 	public function __construct()
 	{
 		if( !file_exists( $this->filePath ) )
-			FS_File_Reader::save( $this->filePath, '[]' );
+			FileReader::save( $this->filePath, '[]' );
 		$this->read();
 	}
 
@@ -44,14 +48,14 @@ class Model_Oauth_ProviderDefault
 		if( $currentValues === $newValues )
 			return 0;
 		$this->providers[$providerKey]	= (object) $values;
-		FS_File_Writer::save( $this->filePath, $this->providers );
+		FileWriter::save( $this->filePath, $this->providers );
 	}
 
 	/*  --  PROTECTED  --  */
 
 	protected function read()
 	{
-		$reader				= new FS_File_JSON_Reader( $this->filePath );
+		$reader				= new JsonFileReader( $this->filePath );
 		$this->providers	= [];
 		foreach( $reader->read( FALSE ) as $provider ){
 			$key	= strtolower( $provider->title );

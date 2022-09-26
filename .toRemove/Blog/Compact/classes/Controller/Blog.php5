@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -166,7 +167,7 @@ class Controller_Blog extends Controller{
 		if( $topic ){
 			$fileName	= 'contents/dev/'.$topic.'.txt';
 			if( file_exists( $fileName ) )
-				$this->addData( 'content', FS_File_Reader::load( $fileName ) );
+				$this->addData( 'content', FileReader::load( $fileName ) );
 		}
 	}
 

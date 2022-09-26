@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Logic;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
@@ -114,7 +115,7 @@ class Logic_Frontend extends Logic
 			//  downsides:   - maybe unstable (using regexp)
 			//               - must handle empty nodes
 			//               - not OOP
-			$lines	= explode( "\n", FS_File_Reader::load( $fileName ) );
+			$lines	= explode( "\n", FileReader::load( $fileName ) );
 			foreach( $lines as $nr => $line ){
 				if( preg_match( '@<config @', $line ) ){
 					$key	= preg_replace( '@^.+name="(.+)".+$@U', '\\1', $line );

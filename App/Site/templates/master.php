@@ -1,5 +1,9 @@
 <?php
+use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
 
 $page	= $env->getPage();
 
@@ -26,9 +30,9 @@ if( $env->getModules()->has( 'UI_Navigation' ) ){
 	$navFooter	= $helper->render( 'footer' );
 }
 else if( class_exists( 'View_Helper_Navigation' ) ){							//  fallback: outdated local renderer
-	$path		= $this->env->getRequest()->get( '__path' );
+	$path		= $env->getRequest()->get( '__path' );
 	$helperNav	= new View_Helper_Navigation();
-	$helperNav->setEnv( $this->env );
+	$helperNav->setEnv( $env );
 	$helperNav->setCurrent( $path ? $path : 'index' );
 	$navMain	= $helperNav->render();
 }
@@ -41,7 +45,7 @@ else{
 			$isAuthenticated	= $auth->isAuthenticated();
 		}
 		try{
-			$scopes	= FS_File_JSON_Reader::load( 'config/pages.json' );
+			$scopes	= JsonFileReader::load( 'config/pages.json' );
 			foreach( $scopes->main as $mainPageId => $mainPage ){
 				if( isset( $mainPage->disabled ) && $mainPage->disabled !== "no" )
 					continue;
@@ -64,7 +68,7 @@ else{
 	else if( isset( $words['links'] ) && $words['links'] ){						//  fallback: links from main words section, all public
 		$links	= $words['links'];
 	}
-	$controller	= $this->env->getRequest()->get( '__controller' );
+	$controller	= $env->getRequest()->get( '__controller' );
 	$current	= CMF_Hydrogen_View_Helper_Navigation_SingleList::getCurrentKey( $links, $controller );
 
 	$list	= [];

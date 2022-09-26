@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_My_Company extends Controller
@@ -71,7 +72,7 @@ class Controller_Manage_My_Company extends Controller
 		$image		= $this->request->get( 'image' );
 		try{
 			$imagePath	= 'images/companies/';									//  @todo to configuration
-			FS_Folder_Editor::createFolder( $imagePath, 0777 );
+			FolderEditor::createFolder( $imagePath, 0777 );
 			$upload		= new Logic_Upload( $this->env );
 			$upload->setUpload( $image );										//  @todo handle upload errors before
 			if( !$upload->checkIsImage() )

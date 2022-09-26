@@ -3,6 +3,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\CLI\RequestReceiver;
+use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
 use CeusMedia\HydrogenFramework\Environment\Console as ConsoleEnvironment;
 
 /*  --  CONFIG  --  */
@@ -136,7 +137,7 @@ class JobScriptHelper
 		if( !$this->mode ){
 			$file	= '.hymn';
 			if( file_exists( $file ) ){
-				$hymn = FS_File_JSON_Reader::load( $file );
+				$hymn = JsonFileReader::load( $file );
 				$mode = $hymn->application->installMode ?? 'dev';
 				if( in_array( $mode, $this->modes ) )
 					$this->mode = $mode;

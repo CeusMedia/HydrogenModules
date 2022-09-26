@@ -1,4 +1,7 @@
 <?php
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+
 class Model_Finance_Bank_Account_Reader_DWS
 {
 	protected $account;
@@ -19,10 +22,10 @@ class Model_Finance_Bank_Account_Reader_DWS
 	{
 		if( !file_exists( $this->account->cacheFile ) ){
 			$html	= $this->fetchAccountUsingCurl();
-			FS_File_Writer::save( $this->account->cacheFile, $html );
+			FileWriter::save( $this->account->cacheFile, $html );
 		}
 		else
-			$html	= FS_File_Reader::load( $this->account->cacheFile );
+			$html	= FileReader::load( $this->account->cacheFile );
 		return $this->parseAccount( $html );
 	}
 

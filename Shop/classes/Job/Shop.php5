@@ -1,4 +1,7 @@
 <?php
+use CeusMedia\Common\FS\File\CSV\Writer as CsvFileWriter;
+use CeusMedia\Common\FS\File\INI\Reader as IniFileReader;
+
 class Job_Shop extends Job_Abstract
 {
 	protected $versionShop;
@@ -207,7 +210,7 @@ class Job_Shop extends Job_Abstract
 		$this->out( 'Imported '.count( $migrants ).' customers as migrants' );
 		if( $migrants ){
 			$headers	= array_keys( $migrants[0] );
-			$csv	= new FS_File_CSV_Writer( 'migrants.csv' );
+			$csv	= new CsvFileWriter( 'migrants.csv' );
 			$csv->write( $migrants, $headers );
 			$this->out( 'Saved migrants for marketing uses in migrants.csv' );
 		}
@@ -224,7 +227,7 @@ class Job_Shop extends Job_Abstract
 		$conditions	= [];
 		$orders		= array( 'customerId' => 'ASC' );
 		$limit		= array( 0, 1000 );
-		$countries	= FS_File_INI_Reader::load( $pathLocales.'de/countries.ini' );
+		$countries	= IniFileReader::load( $pathLocales.'de/countries.ini' );
 		$customers	= $modelCustomerOld->getAll( $conditions, $orders/*, $limit*/ );
 		if( !$customers ){
 			$this->out( 'Migration already done' );
@@ -288,7 +291,7 @@ class Job_Shop extends Job_Abstract
 			$this->out( 'No country sanitation configuration found in '.$this->configFileOldCustomers );
 			return;
 		}
-		$mapCountries	= FS_File_INI_Reader::load( 'contents/locales/de/countries.ini' );
+		$mapCountries	= IniFileReader::load( 'contents/locales/de/countries.ini' );
 		$transCountries	= $this->data->countries->sanitizeMap;
 		$modelCustomer	= new Model_Shop_Customer( $this->env );
 		if( version_compare( $this->versionShop, '0.8', '>=' ) )

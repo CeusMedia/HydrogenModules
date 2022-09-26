@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\RecursiveIterator as RecursiveFileIterator;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -196,7 +197,7 @@ class Hook_App_Site extends Hook
 			if( !strlen( trim( $theme ) ) || !is_dir( $path ) )
 				continue;
 			$list	= [];
-			$index	= new FS_File_RecursiveIterator( $path );
+			$index	= new RecursiveFileIterator( $path );
 			foreach( $index as $item ){
 				$extension	= pathinfo( $item->getFilename(), PATHINFO_EXTENSION );
 				if( !in_array( strtolower( $extension ), $extensions ) )

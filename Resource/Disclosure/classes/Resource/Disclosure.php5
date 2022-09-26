@@ -8,6 +8,9 @@
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@link			https://github.com/CeusMedia/HydrogenFramework
  */
+
+use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
+
 /**
  *	...
  *	@category		Library
@@ -73,7 +76,7 @@ class Resource_Disclosure
 
 		$classes	= [];
 		$path		= realpath( $path );
-		$index		= new FS_File_RecursiveRegexFilter( $path, '/^[^_].+\.'.$options['fileExtension'].'$/' );
+		$index		= new RecursiveRegexFileIndex( $path, '/^[^_].+\.'.$options['fileExtension'].'$/' );
 		foreach( $index as $entry ){
 			$fileName	= preg_replace( '@^'.$path.'/@', '', $entry->getPathname() );
 			$fileBase	= preg_replace( '@\.'.$options['fileExtension'].'$@', '', $fileName );

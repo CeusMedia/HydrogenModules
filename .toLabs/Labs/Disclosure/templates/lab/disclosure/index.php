@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $script	= '
@@ -14,7 +15,7 @@ $path		= realpath( $path );
 $regexClass	= '/^[A-Z][A-Za-z0-9]+\.'.$ext.'$/U';
 
 $classes	= [];
-$index		= new FS_File_RecursiveRegexFilter( $path, $regexClass );
+$index		= new RecursiveRegexFileIndex( $path, $regexClass );
 foreach( $index as $entry ){
 	$fileName	= preg_replace( '@^'.$path.'/(.+)\.'.$ext.'$@', '\\1', $entry->getPathname() );
 	$className	= 'Controller_'.str_replace( '/', '_', $fileName );

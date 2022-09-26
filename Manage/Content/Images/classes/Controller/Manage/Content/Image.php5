@@ -1,5 +1,9 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
@@ -69,7 +73,7 @@ class Controller_Manage_Content_Image extends Controller
 			else{
 				$target		= $this->basePath.$folder.$name;
 				try{
-					FS_Folder_Editor::createFolder( $target, 0775 );
+					FolderEditor::createFolder( $target, 0775 );
 					$this->env->getCache()->remove( 'ManageContentImages.list.static' );
 					$this->messenger->noteSuccess( $words->successFolderCreated, $folder.$name );
 					$this->restart( base64_encode( $folder.$name ), TRUE );
@@ -287,7 +291,7 @@ class Controller_Manage_Content_Image extends Controller
 		foreach( $index as $entry )
 			if( !$entry->isDot() )
 				$contains++;
-		if( !FS_Folder_Editor::removeFolder( $this->basePath.$folderPath, TRUE ) ){
+		if( !FolderEditor::removeFolder( $this->basePath.$folderPath, TRUE ) ){
 			$this->messenger->noteFailure( $words->errorRemovingFolderFailed, $folderPath );
 		}
 		else{
@@ -371,7 +375,7 @@ class Controller_Manage_Content_Image extends Controller
 			exit;
 		}
 		header( 'Content-Type: '.$mimetype );
-		print( FS_File_Reader::load( $this->basePath.$imagePath ) );
+		print( FileReader::load( $this->basePath.$imagePath ) );
 		exit;
 	}
 
@@ -388,7 +392,7 @@ class Controller_Manage_Content_Image extends Controller
 		$list			= [];
 
 		$regexExt	= "/\.(".join( "|", $extensions ).")$/i";
-		$index		= new FS_File_RecursiveRegexFilter( $pathImages, $regexExt );
+		$index		= new RecursiveRegexFileIndex( $pathImages, $regexExt );
 		foreach( $index as $item ){
 			$path	= substr( $item->getPathname(), strlen( $pathImages ) );
 			if( $pathIgnore && preg_match( $pathIgnore, $path ) )
@@ -433,7 +437,7 @@ class Controller_Manage_Content_Image extends Controller
 		}
 		if( file_exists( $this->basePath ) ){
 			$this->folders	= array( '' => '.' );
-			foreach( FS_Folder_RecursiveLister::getFolderList( $this->basePath ) as $entry ){
+			foreach( RecursiveFolderLister::getFolderList( $this->basePath ) as $entry ){
 				$path	= substr( $entry->getPathname(), strlen( $this->basePath ) );
 				if( !( $pathIgnore && preg_match( $pathIgnore, $path ) ) )
 					$this->folders[]	= './'.$path;

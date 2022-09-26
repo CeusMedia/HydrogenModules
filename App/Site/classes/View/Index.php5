@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Index extends View
@@ -8,6 +9,6 @@ class View_Index extends View
 	{
 		$path	= $this->getData( 'path', FALSE );
 		if( !empty( $path ) && file_exists( $path ) )
-			return FS_File_Reader::load( $path );
+			return FileReader::load( $path );
 	}
 }

@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Editor as FileEditor;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -44,7 +46,7 @@ class Controller_Admin_Module extends Controller{
 		foreach( $module->config as $pair )
 			if( $pair->getAttribute( 'name' ) == $key )
 				$pair->{0}	= $value;
-		return FS_File_Editor::save( $fileName, $module->asXML() );
+		return FileEditor::save( $fileName, $module->asXML() );
 	}
 
 	public function ajaxAddConfig( $moduleId, $key, $value ){
@@ -114,7 +116,7 @@ class Controller_Admin_Module extends Controller{
 		}
 		if( !file_exists( $pathModule.$pathFile.$fileName ) )
 			die( 'Invalid file: '.$pathModule.$pathFile.$fileName );
-		$content	= FS_File_Reader::load( $pathModule.$pathFile.$fileName );
+		$content	= FileReader::load( $pathModule.$pathFile.$fileName );
 		$code		= HtmlTag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
 		$body		= '<h2>'.$moduleId.' - '.$fileName.'</h2>'.$code;
 		$page		= new UI_HTML_PageFrame();

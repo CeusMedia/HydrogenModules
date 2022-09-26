@@ -1,22 +1,22 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\Lister as FolderLister;
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Tool_Index extends Controller{
-
+class Controller_Tool_Index extends Controller
+{
 	/**
-	*      Constructor.
-	*      @access         public
-	*      @param          string          $predicateClassName             Class Name of Predicate Class
-	*      @return         void
+	*	Constructor.
+	*	@access		public
+	*	@param		string		$predicateClassName		Class Name of Predicate Class
+	*	@return		void
 	*/
-	public function index( $predicateClassName = "Alg_Validation_Predicates" )
+	public function index( string $predicateClassName = "Alg_Validation_Predicates" )
 	{
 		$labels		= parse_ini_file( "config.ini", TRUE );
-		$index		= FS_Folder_Lister::getMixedList( "./tools/" );
+		$index		= FolderLister::getMixedList( "./tools/" );
 		$list		= [];
-		foreach( $index as $entry )
-		{
+		foreach( $index as $entry ){
 			$fileName		= $entry->getFilename();
 			if( $fileName == "index.php5" )
 				continue;
@@ -28,4 +28,3 @@ class Controller_Tool_Index extends Controller{
 		$this->addData( 'list', $list );
 	}
 }
-?>

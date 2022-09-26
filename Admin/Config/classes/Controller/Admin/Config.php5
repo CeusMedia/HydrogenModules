@@ -1,5 +1,8 @@
 <?php
 
+use CeusMedia\Common\FS\File\Backup as FileBackup;
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Config extends Controller
@@ -13,7 +16,7 @@ class Controller_Admin_Config extends Controller
 		$versions	= [];
 		foreach( array_keys( $modules ) as $moduleId ){
 			$fileName	= "config/modules/".$moduleId.".xml";
-			$file		= new FS_File_Backup( $fileName );
+			$file		= new FileBackup( $fileName );
 			$version	= $file->getVersion();
 			$version	= is_int( $version ) ? $version + 1 : 0;
 			$versions[$moduleId]	= $version;
@@ -121,7 +124,7 @@ class Controller_Admin_Config extends Controller
 
 			$versions	= [];
 			$fileName	= "config/modules/".$moduleId.".xml";
-			$file		= new FS_File_Backup( $fileName );
+			$file		= new FileBackup( $fileName );
 			$version	= $file->getVersion();
 			$version	= is_int( $version ) ? $version + 1 : 0;
 			$versions	= $version;
@@ -134,7 +137,7 @@ class Controller_Admin_Config extends Controller
 	public function restore( $moduleId ){
 		$fileName	= $this->env->uri.'config/modules/'.$moduleId.'.xml';
 		if( file_exists( $fileName ) ){
-			$file	= new FS_File_Backup( $fileName );
+			$file	= new FileBackup( $fileName );
 			$fileVersion	= $file->getVersion();
 			if( $fileVersion === NULL ){
 				$this->env->getMessenger()->noteError( 'No backup available for module "'.$moduleId0.'"' );
@@ -162,7 +165,7 @@ class Controller_Admin_Config extends Controller
 
 		$versions	= [];
 		$fileName	= "config/modules/".$moduleId.".xml";
-		$file		= new FS_File_Backup( $fileName );
+		$file		= new FileBackup( $fileName );
 		$version	= $file->getVersion();
 		$version	= is_int( $version ) ? $version + 1 : 0;
 		$versions	= $version;
@@ -179,7 +182,7 @@ class Controller_Admin_Config extends Controller
 		$versions	= [];
 		foreach( array_keys( $modules ) as $moduleId ){
 			$fileName	= "config/modules/".$moduleId.".xml";
-			$file		= new FS_File_Backup( $fileName );
+			$file		= new FileBackup( $fileName );
 			$version	= $file->getVersion();
 			$version	= is_int( $version ) ? $version + 1 : 0;
 			$versions[$moduleId]	= $version;
@@ -193,7 +196,7 @@ class Controller_Admin_Config extends Controller
 		$fileName	= $this->env->uri.'config/modules/'.$moduleId.'.xml';
 		if( !is_writable( $fileName ) )
 			throw new RuntimeException( 'Config file of module "'.$moduleId.'" is not writable' );
-		$xml		= FS_File_Reader::load( $fileName );
+		$xml		= FileReader::load( $fileName );
 		$tree		= new XML_Element( $xml );
 		try{
 			foreach( $tree->config as $nr => $node ){
@@ -218,11 +221,11 @@ class Controller_Admin_Config extends Controller
 			}
 			if( $original === ( $xmlNew = $tree->asXml() ) )
 				return 0;
-			$file	= new FS_File_Backup( $fileName );
+			$file	= new FileBackup( $fileName );
 			$file->store();
 
 			@unlink( "config/modules.cache.serial" );
-			return FS_File_Writer::save( $fileName, $xmlNew );
+			return FileWriter::save( $fileName, $xmlNew );
 		}
 		catch( Exception $e ){
 			$this->env->getMessenger()->noteError( $e->getMessage() );

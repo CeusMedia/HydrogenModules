@@ -1,5 +1,9 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
+use CeusMedia\Common\FS\File\Collection\Reader as ListFileReader;
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Page extends Controller{
@@ -403,7 +407,7 @@ ModuleManagePages.PageEditor.init();
 			if( trim( $configMetaTags['keywords'] ) ){
 				$possibleKeywordsFile	= $this->envManaged->uri.$configMetaTags['keywords'];
 				if( file_exists( $possibleKeywordsFile ) ){
-					$list	= preg_split( '/\r?\n/', trim( FS_File_Reader::load( $possibleKeywordsFile ) ) );
+					$list	= preg_split( '/\r?\n/', trim( FileReader::load( $possibleKeywordsFile ) ) );
 					foreach( $list as $nr => $item )
 						$list[$nr]	= trim( $item );
 					natcasesort( $list );
@@ -418,7 +422,7 @@ ModuleManagePages.PageEditor.init();
 		$blacklist		= [];																	//  prepare empty blacklist
 		$blacklistFile	= 'config/terms.blacklist.txt';												//  @todo make configurable
 		if( file_exists( $blacklistFile ) )															//  blacklist file is existing
-			$blacklist	= \FS_File_List_Reader::read( $blacklistFile );								//  read blacklist
+			$blacklist	= ListFileReader::read( $blacklistFile );								//  read blacklist
 		natcasesort( $blacklist );
 		$this->addData( 'metaBlacklist', $blacklist );
 	}
@@ -443,7 +447,7 @@ ModuleManagePages.PageEditor.init();
 	public function getJsImageList(){
 		$pathFront	= $this->frontend->getPath();
 		$pathImages	= $this->frontend->getPath( 'images' );
-		$index	= new FS_File_RecursiveRegexFilter( $pathFront.$pathImages, "/\.jpg$/i" );
+		$index	= new RecursiveRegexFileIndex( $pathFront.$pathImages, "/\.jpg$/i" );
 		foreach( $index as $item ){
 			$parts	= explode( "/", $item->getPathname() );
 			$file	= array_pop( $parts );
@@ -550,7 +554,7 @@ ModuleManagePages.PageEditor.init();
 		$pathTemplates			= $this->envManaged->getConfig()->get( 'path.templates' );
 		$pathMasterTemplates	= $pathTemplates.'info/page/masters/';
 		if( is_dir( $pathMasterTemplates ) ){
-			$list	= FS_Folder_RecursiveLister::getFileList( $pathMasterTemplates, '/\.php$/' );
+			$list	= RecursiveFolderLister::getFileList( $pathMasterTemplates, '/\.php$/' );
 			foreach( $list as $item ){
 				$path	= substr( $item->getPathname(), strlen( $pathMasterTemplates ) );
 				$masterTemplates[$path]	= 'Page Master: '.$path;

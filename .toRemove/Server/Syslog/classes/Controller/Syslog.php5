@@ -7,6 +7,8 @@
  *	@copyright		2010 Ceus Media
  */
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -101,7 +103,7 @@ class Controller_Syslog extends Controller_Abstract
 		if( isset( $lines[$nr] ) ){
 			unset( $lines[$nr] );
 			$fileName	= $this->env->getConfig()->get( 'log.exception' );
-			FS_File_Writer::saveArray( $fileName, $lines );
+			FileWriter::saveArray( $fileName, $lines );
 			return 1;
 		}
 		return -1;
@@ -167,6 +169,6 @@ class Controller_Syslog extends Controller_Abstract
 		if( !file_exists( $fileName ) )
 			return array();
 #			throw new RuntimeException( 'Log not existing' );
-		return FS_File_Reader::loadArray( $fileName );
+		return FileReader::loadArray( $fileName );
 	}
 }

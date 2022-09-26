@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\FS\File\INI\Editor as IniFileEditor;
+
 class Tool_Hydrogen_Setup_App extends CMF_Hydrogen_Application_Web_Site{
 
 	public function __construct( $env = NULL ){
@@ -11,7 +13,7 @@ class Tool_Hydrogen_Setup_App extends CMF_Hydrogen_Application_Web_Site{
 		$instances	= dirname( dirname( __FILE__ ) )."/config/instances.ini";
 //		if( !file_exists( $instances ) )
 //			die( "Missing config/instances.ini" );
-/*		$file	= new FS_File_INI_Editor( $instances, TRUE );
+/*		$file	= new IniFileEditor( $instances, TRUE );
 		if( $file->getProperty( 'uri', 'Setup' ) !== $this->uri ){
 			$file->setProperty( 'uri', $this->uri, 'Setup' );
 			$file->setProperty( 'url', $this->url, 'Setup' );

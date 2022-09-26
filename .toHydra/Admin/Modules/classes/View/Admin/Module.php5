@@ -1,5 +1,6 @@
 <?php
-
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
@@ -103,7 +104,7 @@ class View_Admin_Module extends View{
 			@exec( "dot -V", $results, $code );
 			if( $code == 127 )
 				throw new RuntimeException( 'Missing graphViz' );
-			FS_File_Writer::save( $tempFile, $graph );
+			FileWriter::save( $tempFile, $graph );
 			exec( 'dot -O -Tpng '.$tempFile );
 			unlink( $tempFile );
 		}
@@ -112,7 +113,7 @@ class View_Admin_Module extends View{
 			exit;
 		}
 		$tempFile	.= '.png';
-		$image		= FS_File_Reader::load( $tempFile );
+		$image		= FileReader::load( $tempFile );
 		@unlink( $tempFile );
 		header( 'Content-type: image/png' );
 		print( $image );

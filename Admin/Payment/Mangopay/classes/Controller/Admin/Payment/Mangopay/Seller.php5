@@ -1,4 +1,8 @@
 <?php
+use CeusMedia\Common\FS\File\Backup as FileBackup;
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+
 class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_Mangopay
 {
 	public function index()
@@ -104,7 +108,7 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 		$fileName	= $this->env->uri.'config/modules/'.$moduleId.'.xml';
 		if( !is_writable( $fileName ) )
 			throw new RuntimeException( 'Config file of module "'.$moduleId.'" is not writable' );
-		$xml		= FS_File_Reader::load( $fileName );
+		$xml		= FileReader::load( $fileName );
 		$tree		= new XML_Element( $xml );
 		try{
 			foreach( $tree->config as $nr => $node ){
@@ -129,11 +133,11 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 			}
 			if( $original === ( $xmlNew = $tree->asXml() ) )
 				return 0;
-			$file	= new FS_File_Backup( $fileName );
+			$file	= new FileBackup( $fileName );
 			$file->store();
 
 			@unlink( "config/modules.cache.serial" );
-			return FS_File_Writer::save( $fileName, $xmlNew );
+			return FileWriter::save( $fileName, $xmlNew );
 		}
 		catch( Exception $e ){
 			$this->env->getMessenger()->noteError( $e->getMessage() );

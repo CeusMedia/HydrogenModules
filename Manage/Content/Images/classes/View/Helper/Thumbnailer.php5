@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 
@@ -63,7 +64,7 @@ class View_Helper_Thumbnailer
 	{
 		return;
 		$ids	= $this->cache->index();
-		foreach( FS_Folder_RecursiveLister::getFileList( $pathImages ) as $entry ){
+		foreach( RecursiveFolderLister::getFileList( $pathImages ) as $entry ){
 			foreach( $ids as $nr => $id ){
 				if( strpos( $id, $entry->getPathname() ) !== FALSE )
 					unset( $ids[$nr] );

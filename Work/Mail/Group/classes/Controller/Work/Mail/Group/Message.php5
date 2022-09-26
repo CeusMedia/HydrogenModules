@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -39,7 +40,7 @@ class Controller_Work_Mail_Group_Message extends Controller
 				$version	= $modules->get( 'UI_Bootstrap' )->config['version']->value;
 				$pathThemes	= $this->env->getConfig()->get( 'path.themes' );
 				$styleFile	= $pathThemes.'common/css/bootstrap/'.$version.'/css/bootstrap.min.css';
-				$style		= FS_File_Reader::load( $styleFile );
+				$style		= FileReader::load( $styleFile );
 				$style		= HtmlTag::create( 'style', $style );
 				$content	= str_replace( '<head>', '<head>'.$style, $content );
 			}

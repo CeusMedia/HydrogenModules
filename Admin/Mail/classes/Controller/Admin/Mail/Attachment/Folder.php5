@@ -1,9 +1,9 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\FS\Folder\Lister as FolderIndex;
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderIndex;
 use CeusMedia\HydrogenFramework\Controller;
-
-use FS_Folder_Lister as FolderIndex;
-use FS_Folder_RecursiveLister as RecursiveFolderIndex;
 
 class Controller_Admin_Mail_Attachment_Folder extends Controller
 {
@@ -81,7 +81,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 		}
 		if( is_dir( $this->basePath.$filePath ) ){
 			try{
-				FS_Folder_Editor::removeFolder( $this->basePath.$filePath );
+				FolderEditor::removeFolder( $this->basePath.$filePath );
 			}
 			catch( Exception $e ){
 				$this->messenger->noteFailure(

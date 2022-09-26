@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Branch extends Controller
@@ -50,7 +51,7 @@ class Controller_Manage_Branch extends Controller
 
 		$imageName	= $branchId.'_'.md5( time() ).'.'.pathinfo( $image['name'], PATHINFO_EXTENSION );
 		$imagePath	= './images/branches/';
-		FS_Folder_Editor::createFolder( $imagePath, 0777 );
+		FolderEditor::createFolder( $imagePath, 0777 );
 		if( !@move_uploaded_file( $image['tmp_name'], $imagePath.$imageName ) )
 			throw new RuntimeException( 'Bilddatei konnte nicht im Pfad "'.$imagePath.'" gespeichert werden.' );
 		$data	= array(

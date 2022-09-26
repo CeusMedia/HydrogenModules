@@ -7,6 +7,8 @@
  *	@copyright		2010 Ceus Media
  */
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\HydrogenFramework\Application\Console as ConsoleApplication;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -102,8 +104,8 @@ class Scheduler extends ConsoleApplication
 		do {
 			$fileName	= 'config/scheduler.last';
 			if( !file_exists( $fileName ) )
-				\FS_File_Writer::save( $fileName, (string) time() );
-			$last	= \FS_File_Reader::load( $fileName );
+				FileWriter::save( $fileName, (string) time() );
+			$last	= FileReader::load( $fileName );
 
 			$a	= $this->getChanges( $last, time() );
 			foreach( $a as $type => $changed ){
@@ -113,7 +115,7 @@ class Scheduler extends ConsoleApplication
 					}
 				}
 			}
-			\FS_File_Writer::save( $fileName, (string) time() );
+			FileWriter::save( $fileName, (string) time() );
 			if( $loop && $sleep )
 				sleep( $sleep );
 		}

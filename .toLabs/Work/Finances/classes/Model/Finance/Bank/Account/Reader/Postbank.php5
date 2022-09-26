@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\FS\File\Reader as FileReader;
+
 class Model_Finance_Bank_Account_Reader_Postbank
 {
 	protected $bank;
@@ -23,7 +25,7 @@ class Model_Finance_Bank_Account_Reader_Postbank
 #			FS_File_Writer::save( $this->bank->cacheFile, $html );
 #		}
 #		else
-#			$html	= FS_File_Reader::load( $this->bank->cacheFile );
+#			$html	= FileReader::load( $this->bank->cacheFile );
 		return $this->parseAccounts( $html );
 	}
 
@@ -68,7 +70,7 @@ class Model_Finance_Bank_Account_Reader_Postbank
 		exec( $command, $a, $b );
 		if( $b )
 			throw new RuntimeException( 'Request failed with code '.$b );
-		$html	= FS_File_Reader::load( $cacheFile );
+		$html	= FileReader::load( $cacheFile );
 		unlink( $cacheFile );
 #		Net_Reader::readUrl( $this->urlLogout );
 		return $html;

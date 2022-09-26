@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Mail_Attachment extends Controller
@@ -195,7 +196,7 @@ class Controller_Admin_Mail_Attachment extends Controller
 	protected function listFiles()
 	{
 		$list	= [];
-		foreach( FS_Folder_RecursiveLister::getFileList( $this->path ) as $entry ){
+		foreach( RecursiveFolderLister::getFileList( $this->path ) as $entry ){
 			$pathName	= preg_replace( '@^'.preg_quote( $this->path, '@' ).'@', '', $entry->getPathName() );
 			$list[$pathName]	= (object) [
 				'fileName'		=> $entry->getFilename(),

@@ -1,4 +1,7 @@
 <?php
+use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
+use CeusMedia\Common\FS\File\JSON\Writer as JsonFileWriter;
+
 class Model_ModuleSource
 {
 	const STATUS_NONE			= 0;
@@ -21,7 +24,7 @@ class Model_ModuleSource
 		$this->fileName	= $env->uri.'.hymn';
 
 		if( file_exists( $this->fileName ) ){
-			$this->hymn	= FS_File_JSON_Reader::load( $this->fileName );
+			$this->hymn	= JsonFileReader::load( $this->fileName );
 			$this->status	= self::STATUS_OKAY;
 			if( property_exists( $this->hymn, 'sources' ) ){
 				foreach( $this->hymn->sources as $sourceId => $sourceData ){
@@ -139,6 +142,6 @@ class Model_ModuleSource
 	{
 		$this->checkSupport();
 		$this->hymn->sources	= $this->data;
-		return FS_File_JSON_Writer::save( $this->fileName, $this->hymn, TRUE );
+		return JsonFileWriter::save( $this->fileName, $this->hymn, TRUE );
 	}
 }

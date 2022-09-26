@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_My_User_Avatar extends Controller{
@@ -13,7 +14,7 @@ class Controller_Manage_My_User_Avatar extends Controller{
 		$this->pathImages	= $this->moduleConfig->get( 'path.images' );
 
 		if( !file_exists( $this->pathImages ) )
-			FS_Folder_Editor::createFolder( $this->pathImages );
+			FolderEditor::createFolder( $this->pathImages );
 	}
 
 	public function index(){

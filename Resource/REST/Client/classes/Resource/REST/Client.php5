@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -43,13 +44,13 @@ class Resource_REST_Client{
 		if( $options->get( 'requests' ) ){
 			$filePath	= $pathLogs.$options->get( 'requests' );
 			if( !file_exists( dirname( $filePath ) ) )
-				\FS_Folder_Editor::createFolder( $filePath );
+				FolderEditor::createFolder( $filePath );
 			$this->client->setLogRequests( $filePath );
 		}
 		if( $options->get( 'errors' ) ){
 			$filePath	= $pathLogs.$options->get( 'errors' );
 			if( !file_exists( dirname( $filePath ) ) )
-				\FS_Folder_Editor::createFolder( $filePath );
+				FolderEditor::createFolder( $filePath );
 			$this->client->setLogErrors( $filePath );
 		}
 	}

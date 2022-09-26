@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\FS\File\RecursiveNameFilter as RecursiveFileFinder;
+
 ( include_once __DIR__.'/vendor/autoload.php' ) or die( 'Install packages using composer, first!' );
 
 error_reporting( E_ALL );
@@ -87,7 +89,7 @@ class Modules
 	protected function getModuleList( bool $full = FALSE ): array
 	{
 		$list	= [];
-		$index	= new FS_File_RecursiveNameFilter( './', 'module.xml' );
+		$index	= new RecursiveFileFinder( './', 'module.xml' );
 		foreach( $index as $entry ){
 			$id		= preg_replace( '@^./@', '', $entry->getPath() );
 			if( !preg_match( '@^[A-Z]@', $id ) )

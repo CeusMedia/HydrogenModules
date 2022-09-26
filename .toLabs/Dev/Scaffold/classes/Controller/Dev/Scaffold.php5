@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\FS\File\Editor as FileEditor;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Dev_Scaffold extends Controller{
@@ -142,8 +144,8 @@ class Controller_Dev_Scaffold extends Controller{
 	}
 
 	protected function saveFile( $filePath, $content, $mode = 0777 ){
-		FS_Folder_Editor::createFolder( dirname( $filePath ), $mode );
-		$e	= new FS_File_Editor( $filePath );
+		FolderEditor::createFolder( dirname( $filePath ), $mode );
+		$e	= new FileEditor( $filePath );
 		$e->writeString( $content );
 		$e->setPermissions( 0777 );
 	}

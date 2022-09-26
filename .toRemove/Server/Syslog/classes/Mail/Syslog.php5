@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Syslog extends Mail_Abstract
@@ -25,8 +26,8 @@ class Mail_Syslog extends Mail_Abstract
 
 		$fileStyle	= $config->get( 'path.themes' ).'css/mail.min.css';
 		$fileScript	= $config->get( 'path.scripts' ).'mail.min.js';
-		$style		= file_exists( $fileStyle ) ? FS_File_Reader::load( $fileStyle ): '';
-		$script		= file_exists( $fileScript ) ? FS_File_Reader::load( $fileScript ): '';
+		$style		= file_exists( $fileStyle ) ? FileReader::load( $fileStyle ): '';
+		$script		= file_exists( $fileScript ) ? FileReader::load( $fileScript ): '';
 
 		$page	= new UI_HTML_PageFrame();
 		$page->addHead( HtmlTag::create( 'style', $style ) );

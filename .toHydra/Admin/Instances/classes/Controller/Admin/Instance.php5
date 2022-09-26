@@ -1,5 +1,8 @@
- <?php
+<?php
 
+use CeusMedia\Common\FS\File\INI\Editor as IniFileEditor;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Instance extends Controller{
@@ -110,8 +113,8 @@ class Controller_Admin_Instance extends Controller{
 		);
 
 		try{
-			FS_File_Writer::save( $fileName, '', 0777 );												//  @todo use file owner from Setup Tool config
-			$editor	= new FS_File_INI_Editor( $fileName, FALSE );
+			FileWriter::save( $fileName, '', 0777 );												//  @todo use file owner from Setup Tool config
+			$editor	= new IniFileEditor( $fileName, FALSE );
 			foreach( $data as $key => $value )
 				$editor->addProperty( $key, $value );
 			$this->messenger->noteSuccess( 'Die Konfigurationsdatei "'.$fileName.'" wurde erstellt.' );
@@ -148,7 +151,7 @@ class Controller_Admin_Instance extends Controller{
 		);
 
 		try{
-			$editor	= new FS_File_INI_Editor( $fileName, FALSE );
+			$editor	= new IniFileEditor( $fileName, FALSE );
 			foreach( $data as $key => $value ){
 				if( !strlen( $data['database.driver'] ) )
 					$value	= $key == 'database' ? 'no' : '';
@@ -172,7 +175,7 @@ class Controller_Admin_Instance extends Controller{
 #		if( !preg_match( '/^\//', $instance->path ) )
 #			$instance->path	= getEnv( 'DOCUMENT_ROOT' ).'/'.$instance->path;
 		$path	= $instance->uri.$path;
-		if( FS_Folder_Editor::createFolder( $path, 0777 ) )											//  @todo set folder owner by Setup "Module Config Pair"
+		if( FolderEditor::createFolder( $path, 0777 ) )											//  @todo set folder owner by Setup "Module Config Pair"
 			$this->messenger->noteSuccess( 'Der Pfad "'.$path.'" wurde erzeugt.' );
 		else
 			$this->messenger->noteError( 'Der Pfad "'.$path.'" konnte nicht erzeugt werden.' );

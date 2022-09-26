@@ -1,4 +1,9 @@
 <?php
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+
 class Model_Module{
 
 	const TYPE_UNKNOWN	= 0;
@@ -27,7 +32,7 @@ class Model_Module{
 
 		if( !file_exists( $this->pathConfig ) ){
 			try{
-				FS_Folder_Editor::createFolder( $this->pathConfig, 0770 );
+				FolderEditor::createFolder( $this->pathConfig, 0770 );
 			}
 			catch( Exception $e ){
 				throw new RuntimeException( 'Modules configuration folder missing in "'.$this->pathConfig.'" and cannot be created', 2 );
@@ -241,7 +246,7 @@ class Model_Module{
 			throw new InvalidArgumentException( 'Module "'.$moduleId.'" is not installed' );
 		if( $parse )
 			return XML_ElementReader::readFile( $moduleFile );
-		return FS_File_Reader::load( $moduleFile );
+		return FileReader::load( $moduleFile );
 	}
 
 	public function getNeededModulesWithStatus( $moduleId ){										//  @todo	refactor to getNeededModuleIdsWithStatus
@@ -358,7 +363,7 @@ class Model_Module{
 	 */
 	public function isInstalled( $moduleId ){
 		$list	= [];
-		$index	= new FS_File_RecursiveRegexFilter( $this->pathConfig."/", '/^\w+.xml$/' );
+		$index	= new RecursiveRegexFileIndex( $this->pathConfig."/", '/^\w+.xml$/' );
 		foreach( $index as $entry ){
 			$id	= preg_replace( '/\.xml$/i', '', $entry->getFilename() );
 			if( $id == $moduleId )
@@ -412,7 +417,7 @@ class Model_Module{
 		$moduleFile	= $this->pathConfig."/".$moduleId.'.xml';
 		if( !file_exists( $moduleFile ) )
 			throw new InvalidArgumentException( 'Module "'.$moduleId.'" is not installed' );
-		return FS_File_Writer::save( $moduleFile, $content );
+		return FileWriter::save( $moduleFile, $content );
 	}
 }
 ?>
