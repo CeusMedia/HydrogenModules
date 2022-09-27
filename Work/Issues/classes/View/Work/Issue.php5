@@ -1,6 +1,8 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Issue extends View{
@@ -146,8 +148,8 @@ class View_Work_Issue extends View{
 				}
 				$map	= str_replace( $match, join( ',', $coords ), $map );
 			}
-			$file	= new UI_Image( $uri );
-			$proc	= new UI_Image_Processing( $file );
+			$file	= new Image( $uri );
+			$proc	= new ImageProcessing( $file );
 			$width	= (int) $graphConfig['width'] - 2 * $offsetX;
 			$height	= (int) $graphConfig['height'] - 2 * $offsetY;
 			$proc->crop( $offsetX, $offsetY, $width, $height );

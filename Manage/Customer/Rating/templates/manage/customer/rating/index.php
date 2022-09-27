@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Indicator;
 
 $url			= './manage/customer/rating/add/'.$customer->customerId;
 $iconAdd		= '<i class="icon-plus icon-white"></i>';
@@ -11,8 +12,8 @@ $panelInfo		= '
 $panelRatings	= '';
 
 if( $customer->ratings ){
-	$indicator1	= new UI_HTML_Indicator();
-	$indicator2	= new UI_HTML_Indicator( array( 'invertColor' => TRUE ) );
+	$indicator1	= new Indicator();
+	$indicator2	= new Indicator( array( 'invertColor' => TRUE ) );
 
 	$averages	= array( 0, 0, 0, 0, 0, 0, 0 );
 

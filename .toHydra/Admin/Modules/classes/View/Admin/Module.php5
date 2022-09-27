@@ -3,6 +3,7 @@ use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image\Error as ErrorImage;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Admin_Module extends View{
@@ -109,7 +110,7 @@ class View_Admin_Module extends View{
 			unlink( $tempFile );
 		}
 		catch( Exception $e ){
-			new UI_Image_Error( $e->getMessage() );
+			new ErrorImage( $e->getMessage() );
 			exit;
 		}
 		$tempFile	.= '.png';

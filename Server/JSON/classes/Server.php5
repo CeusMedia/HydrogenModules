@@ -8,7 +8,9 @@
  */
 
 use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\OutputBuffer;
 use CeusMedia\HydrogenFramework\Application\Web\Site as WebSite;
 
 /**
@@ -68,7 +70,7 @@ class Server extends WebSite
 
 		#if( getEnv( 'HTTP_REFERER' ) )
 
-		$buffer		= new UI_OutputBuffer( TRUE );
+		$buffer		= new OutputBuffer( TRUE );
 		$dispatcher	= new Dispatcher( $this->env );
 		try {
 			$data	= $dispatcher->dispatch();
@@ -170,7 +172,7 @@ class Server extends WebSite
 		$this->env->getResponse()->setStatus( '401 Unauthorized' );
 		$heading	= HtmlTag::create( 'h1', '401 Unauthorized' );
 		$paragraph	= HtmlTag::create( 'p', 'You need to send a token, which you get by posting the shared secret to /auth/getToken.' );
-		$page	= new UI_HTML_PageFrame();
+		$page	= new HtmlPage();
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
 		$page->addBody( $heading.$paragraph );
@@ -186,7 +188,7 @@ class Server extends WebSite
 		$this->env->getResponse()->setStatus( '403 Forbidden' );
 		$heading	= HtmlTag::create( 'h1', '403 Forbidden' );
 		$paragraph	= HtmlTag::create( 'p', 'This service can not be accessed by your IP address.' );
-		$page	= new UI_HTML_PageFrame();
+		$page	= new HtmlPage();
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
 		$page->addBody( $heading.$paragraph );
@@ -202,7 +204,7 @@ class Server extends WebSite
 		$this->env->getResponse()->setStatus( '404 Not Found' );
 		$heading	= HtmlTag::create( 'h1', '404 Not Found' );
 		$paragraph	= HtmlTag::create( 'p', 'The resource you have requested is not existing on this server.' );
-		$page	= new UI_HTML_PageFrame();
+		$page	= new HtmlPage();
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
 		$page->addBody( $heading.$paragraph );
@@ -218,7 +220,7 @@ class Server extends WebSite
 		$this->env->getResponse()->setStatus( '500 Internal Server Error' );
 		$heading	= HtmlTag::create( 'h1', '500 Internal Server Error' );
 		$paragraph	= HtmlTag::create( 'p', 'An exception occured while executing your request. Please restart the service.' );
-		$page	= new UI_HTML_PageFrame();
+		$page	= new HtmlPage();
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
 		$page->addBody( $heading.$paragraph );

@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
+
 abstract class Mail_Work_Mission_Abstract extends Mail_Abstract
 {
 	protected $indicator;
@@ -20,7 +23,7 @@ abstract class Mail_Work_Mission_Abstract extends Mail_Abstract
 		$this->addBodyClass( 'jobWorkMission' );
 //		$this->addThemeStyle( 'layout.panels.css' );
 
-		$this->indicator		= new UI_HTML_Indicator();
+		$this->indicator		= new HtmlIndicator();
 		$this->modelUser		= new Model_User( $this->env );
 
 		$this->labelsMonthNames	= (array) $this->getWords( 'work/mission', 'months' );

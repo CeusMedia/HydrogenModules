@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\Net\CURL as NetCurl;
+
 class Resource_Uberlog{
 
 	protected $url;
@@ -32,7 +35,7 @@ class Resource_Uberlog{
 			$data['host']	= $this->host;
 		if( !array_key_exists( 'userAgent', $data ) && $this->userAgent )
 			$data['userAgent']	= $this->userAgent;
-		$curl	= new Net_CURL( $this->url.'/record' );
+		$curl	= new NetCurl( $this->url.'/record' );
 		$curl->setOption( CURLOPT_RETURNTRANSFER, TRUE );
 		$curl->setOption( CURLOPT_POST, TRUE );
 		$curl->setOption( CURLOPT_POSTFIELDS, $data );

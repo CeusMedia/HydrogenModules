@@ -5,6 +5,7 @@
  *	@copyright	Ceus Media 2015
  */
 
+use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
@@ -113,7 +114,7 @@ class View_System_Load extends View{
 		$load		= $this->getData( 'load' );														//  get load registered by controller
 		$cpuCores	= $this->getData( 'cpuCores' );													//  get number of cpu cores from module config
 		$load		= 1 / ( 1 + $load / $cores );													//  calculate load relative to number of cores
-		$indicator	= new UI_HTML_Indicator();														//  create instance of indicator renderer
+		$indicator	= new HtmlIndicator();														//  create instance of indicator renderer
 		print( $indicator->build( $load, 1 ) );														//  render and print indicator
 		exit;																						//  and quit application
 	}

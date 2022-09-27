@@ -1,12 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Indicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['index'];
 
 $table		= '<div class="muted"><em><small>'.$w->empty.'</small></em></div><br/>';
 
-$indicator	= new UI_HTML_Indicator();
+$indicator	= new Indicator();
 
 if( $customers ){
 	$list	= [];

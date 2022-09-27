@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
+use CeusMedia\Common\UI\Image\Exif as ImageExif;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Gallery extends Controller
@@ -78,7 +79,7 @@ class Controller_Manage_Gallery extends Controller
 						$title		= trim( $this->request->get( 'title' ) );
 						if( !strlen( $title )  ){
 							$upload->saveTo( '_test_' );
-							$exif		= new UI_Image_Exif( '_test_' );
+							$exif		= new ImageExif( '_test_' );
 							if( strlen( trim( $exif->get( 'ImageDescription' ) ) ) )
 								$title	= $exif->get( 'ImageDescription' );
 						}

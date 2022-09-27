@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\Net\CURL as NetCurl;
+
 /**
  *	@todo		apply module config main switch
  */
@@ -26,7 +29,7 @@ class Resource_Oauth{
 			throw new InvalidArgumentException( 'Missing resource path to request' );
 		$resourcePath	= ltrim( $resourcePath, '/' );
 
-		$handle	= new Net_CURL();
+		$handle	= new NetCurl();
 		$handle->setUrl( $this->serverUri.'/'.$resourcePath );
 		$handle->setOption( CURLOPT_POST, TRUE );
 //		$handle->setOption( CURLOPT_POSTFIELDS, $postData );
@@ -50,7 +53,7 @@ class Resource_Oauth{
 			throw new InvalidArgumentException( 'Missing resource path to request' );
 		$resourcePath	= ltrim( $resourcePath, '/' );
 		$postData		= http_build_query( $postData );
-		$handle	= new Net_CURL();
+		$handle	= new NetCurl();
 		$handle->setUrl( $this->serverUri.'/'.$resourcePath );
 		$handle->setOption( CURLOPT_POST, TRUE );
 		$handle->setOption( CURLOPT_POSTFIELDS, $postData );

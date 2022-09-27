@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Cache\SimpleCacheInterface;
+use CeusMedia\Common\UI\Image\ThumbnailCreator as ImageThumbnailCreator;
 use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
 
 /**
@@ -79,7 +80,7 @@ class Logic_Catalog extends Logic
 		$imageWidth		= $this->moduleConfig->get( 'article.image.maxWidth' );
 		$imageHeight	= $this->moduleConfig->get( 'article.image.maxHeight' );
 		$imageQuality	= $this->moduleConfig->get( 'article.image.quality' );
-		$creator		= new UI_Image_ThumbnailCreator( $uriSource, $uriSource );
+		$creator		= new ImageThumbnailCreator( $uriSource, $uriSource );
 		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
 
 		/*  --  CREATE THUMBNAIL IMAGE  --  */
@@ -87,7 +88,7 @@ class Logic_Catalog extends Logic
 		$thumbWidth		= $this->moduleConfig->get( 'article.image.thumb.maxWidth' );
 		$thumbHeight	= $this->moduleConfig->get( 'article.image.thumb.maxHeight' );
 		$thumbQuality	= $this->moduleConfig->get( 'article.image.thumb.quality' );
-		$creator		= new UI_Image_ThumbnailCreator( $uriSource, $uriThumb );
+		$creator		= new ImageThumbnailCreator( $uriSource, $uriThumb );
 		$creator->thumbizeByLimit( $thumbWidth, $thumbHeight, $thumbQuality );
 
 		$this->editArticle( $articleId, array( 'cover' => $imagename ) );
@@ -176,7 +177,7 @@ class Logic_Catalog extends Logic
 		$imageWidth		= $this->moduleConfig->get( 'author.image.maxWidth' );
 		$imageHeight	= $this->moduleConfig->get( 'author.image.maxHeight' );
 		$imageQuality	= $this->moduleConfig->get( 'author.image.quality' );
-		$creator		= new UI_Image_ThumbnailCreator( $uriSource, $uriSource );
+		$creator		= new ImageThumbnailCreator( $uriSource, $uriSource );
 		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
 		$this->clearCacheForAuthor( $authorId );
 		$this->editAuthor( $authorId, array( 'image' => $imagename ) );

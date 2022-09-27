@@ -1,6 +1,9 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image\Error as ErrorImage;
+use CeusMedia\Common\UI\Image\Graphviz\Graph as GraphvizGraph;
+use CeusMedia\Common\UI\Image\Graphviz\Renderer as GraphvizRenderer;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
@@ -144,7 +147,7 @@ class Controller_Index extends Controller{
 			$edgeOptions1	= array( 'arrowsize' => 0.5, 'fontsize' => 8, 'fontcolor' => 'gray50', 'color' => 'gray40' );
 			$edgeOptions2	= array( 'arrowsize' => 0.5, 'fontsize' => 8, 'fontcolor' => 'gray75', 'color' => 'gray50', 'style' => 'dashed' );
 
-			$graph		= new UI_Image_Graphviz_Graph( $instanceId, array( 'rankdir' => 'LR' ) );
+			$graph		= new GraphvizGraph( $instanceId, array( 'rankdir' => 'LR' ) );
 			foreach( $modules as $module )
 				$graph->addNode( $module->id, array( 'label' => $module->title ) + $nodeOptions );
 			foreach( $modules as $module ){
@@ -154,13 +157,13 @@ class Controller_Index extends Controller{
 					if( array_key_exists( $related, $modules ) )
 						$graph->addEdge( $module->id, $related, array( 'label' => 'supports' ) + $edgeOptions2 );
 			}
-			$renderer	= new UI_Image_Graphviz_Renderer( $graph );
+			$renderer	= new GraphvizRenderer( $graph );
 			$renderer->printGraph( "svg" );
 		}
 		catch( Exception $e ){
 			if( $showExceptions )
 				UI_HTML_Exception_Page::display( $e );
-			new UI_Image_Error( $e->getMessage() );
+			new ErrorImage( $e->getMessage() );
 		}
 		exit;
 	}

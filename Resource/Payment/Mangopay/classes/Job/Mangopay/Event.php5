@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\Common\Alg\Text\CamelCase as CamelCase;
+use CeusMedia\Common\UI\OutputBuffer;
+
 class Job_Mangopay_Event extends Job_Abstract{
 
 	protected $modelEvent;
@@ -39,8 +43,8 @@ class Job_Mangopay_Event extends Job_Abstract{
 			$output		= 'No handler available: '.$className;
 		}
 		else {
-			$buffer		= new UI_OutputBuffer();
-			$logicKey	= Alg_Text_CamelCase::convert( 'Payment Mangopay Event '.$key, TRUE, TRUE );
+			$buffer		= new OutputBuffer();
+			$logicKey	= CamelCase::convert( 'Payment Mangopay Event '.$key, TRUE, TRUE );
 //			try{
 				$logicEvent	= $this->env->logic->get( $logicKey );
 				$logicEvent->setEvent( $event )->handle();

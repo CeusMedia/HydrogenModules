@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /**
@@ -42,7 +44,7 @@ $graphStatus	= $view->buildGraph( $data, $words, 'status' );
 $graphPriority	= $view->buildGraph( $data, $words, 'priority' );
 $graphType		= $view->buildGraph( $data, $words, 'type' );
 
-$indicator	= new UI_HTML_Indicator();
+$indicator	= new HtmlIndicator();
 $ind1		= $indicator->build( 5, 10 );
 
 #print_m( $env->getConfig()->getAll( 'module.work_issues.graph.all.' ) );

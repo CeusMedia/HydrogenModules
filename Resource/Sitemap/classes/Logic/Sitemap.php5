@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\CURL as NetCurl;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Logic_Sitemap{
@@ -73,9 +74,9 @@ class Logic_Sitemap{
 //print_m( $this->env->getConfig()->getAll() );
 //xmp( $url );die;
 			try{
-				$curl   = new Net_CURL( $url );
+				$curl   = new NetCurl( $url );
 				$curl->exec();
-				if( (int) $curl->getInfo( Net_CURL::INFO_HTTP_CODE ) === 200 ){
+				if( (int) $curl->getInfo( NetCurl::INFO_HTTP_CODE ) === 200 ){
 					$result[$key]	= "OK";
 				}
 			}

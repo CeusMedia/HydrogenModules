@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tabs as HtmlTabs;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Module_Details extends CMF_Hydrogen_View_Helper_Abstract{
@@ -32,8 +33,8 @@ class View_Helper_Module_Details extends CMF_Hydrogen_View_Helper_Abstract{
 //		print_m( $words );
 //		die;
 
-		UI_HTML_Tabs::$version	= 4;
-		$tabs	= new UI_HTML_Tabs();
+		HtmlTabs::$version	= 4;
+		$tabs	= new HtmlTabs();
 		$activeTab	= 0;
 
 		$mapTabs	= array(

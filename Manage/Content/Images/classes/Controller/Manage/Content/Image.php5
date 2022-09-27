@@ -5,7 +5,11 @@ use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
+use CeusMedia\Common\UI\Image\ThumbnailCreator as ImageThumbnailCreator;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -104,7 +108,7 @@ class Controller_Manage_Content_Image extends Controller
 			}
 			else{
 				try{
-					$image	= new UI_Image( $file['tmp_name'] );
+					$image	= new Image( $file['tmp_name'] );
 					$type	= $image->getType();
 					if( !in_array( $type, $types ) ){
 						$this->messenger->noteError( $words->errorTypeNotSupported, $type );
@@ -210,7 +214,7 @@ class Controller_Manage_Content_Image extends Controller
 			}
 		}
 
-		$image	= new UI_Image( $this->basePath.$imagePath );
+		$image	= new Image( $this->basePath.$imagePath );
 		$megapixels = $image->getWidth() * $image->getHeight() / 1024 / 1024;
 
 		$this->addData( 'frontend', $this->frontend );
@@ -260,8 +264,8 @@ class Controller_Manage_Content_Image extends Controller
 		if( $this->request->has( 'save' ) ){
 //			$image	= new \CeusMedia\Image\Image( $imagePath );
 //			$processor	= new \CeusMedia\Image\Processor( $image );
-			$image	= new UI_Image( $this->basePath.$imagePath );
-			$processor	= new UI_Image_Processing( $image );
+			$image	= new Image( $this->basePath.$imagePath );
+			$processor	= new ImageProcessing( $image );
 			switch( $this->request->get( 'process' ) ){
 				case 'turn':
 					$degree			= (int) $this->request->get( 'turnDegree' );
@@ -332,7 +336,7 @@ class Controller_Manage_Content_Image extends Controller
 			$this->messenger->noteError( $words->errorImageDimensionsInvalid );
 			$this->restart( 'editImage/'.base64_encode( $imagePath ), TRUE );
 		}
-		$image		= new UI_Image( $this->basePath.$imagePath );
+		$image		= new Image( $this->basePath.$imagePath );
 		if( $image->getWidth() === $width && $image->getHeight() ){
 			$this->messenger->noteNotice( $words->noticeNoChanges );
 			$this->restart( 'editImage/'.base64_encode( $imagePath ), TRUE );
@@ -350,7 +354,7 @@ class Controller_Manage_Content_Image extends Controller
 		}
 		$source			= $this->basePath.$imagePath;
 		$target			= $this->basePath.$targetPath;
-		$thumbnailer	= new UI_Image_ThumbnailCreator( $source, $target, $quality );
+		$thumbnailer	= new ImageThumbnailCreator( $source, $target, $quality );
 		$thumbnailer->thumbize( $width, $height );
 		$this->env->getCache()->remove( 'ManageContentImages.list.static' );
 		$this->messenger->noteSuccess( $words->successImageScaled, $targetName );
@@ -370,7 +374,7 @@ class Controller_Manage_Content_Image extends Controller
 		if( $embededInHtml ){
 			$content	= base64_encode( file_get_contents( $this->basePath.$imagePath ) );
 			$source		= "data:".$mimetype.";base64,".$content;
-			$page		= new UI_HTML_PageFrame();
+			$page		= new HtmlPage();
 			$page->addBody( HtmlTag::create( 'img', NULL, array( 'src' => $source ) ) );
 			print( $page->build() );
 			exit;

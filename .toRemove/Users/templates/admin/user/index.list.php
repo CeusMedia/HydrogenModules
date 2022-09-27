@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Pagination as HtmlPagination;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*  --  PAGINATION  --  */
@@ -13,14 +14,14 @@ if( $limit && $total > $limit )
 		'keyOffset'		=> '',
 		'keyAssign'		=> '',
 	);
-	$pagination	= new UI_HTML_Pagination( $options );
+	$pagination	= new HtmlPagination( $options );
 	$pagination	= $pagination->build( $total, $limit, $offset );
 }
 
 $heads	= HtmlElements::TableHeads( $words['indexListHeads'] );
 $number	= 0;
 
-if( count( $total ) ){
+if( count( $users ) ){
 
 	$rows	= [];
 	foreach( $users as $nr => $user ){

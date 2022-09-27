@@ -1,6 +1,8 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Info_Forum extends Controller
@@ -54,8 +56,8 @@ class Controller_Info_Forum extends Controller
 			$fileName	= uniqid().".".pathinfo( $file->name, PATHINFO_EXTENSION );
 			try{
 				move_uploaded_file( $file->tmp_name, $path.$fileName );
-				$image		= new UI_Image( $path.$fileName );
-				$processor	= new UI_Image_Processing( $image );
+				$image		= new Image( $path.$fileName );
+				$processor	= new ImageProcessing( $image );
 				$processor->scaleDownToLimit( $config->get( 'max.x' ), $config->get( 'max.y' ) );
 				$image->save();
 			}

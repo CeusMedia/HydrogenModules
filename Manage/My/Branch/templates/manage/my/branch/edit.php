@@ -1,6 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image;
 
 //  --  PANEL: MAP  --  //
 $w				= (object) $words['map'];
@@ -38,7 +39,7 @@ $listImages	= [];
 foreach( $branch->images as $image ){
 	$urlImage		= 'images/branches/'.$image->filename;
 	$urlRemove		= './manage/my/branch/removeImage/'.$branch->branchId.'/'.$image->imageId;
-	$img			= new UI_Image( $urlImage );
+	$img			= new Image( $urlImage );
 	$listImages[]	= HTML::Li(
 		HTML::DivClass( 'column-left-40',
 			HTML::Image( $urlImage, $image->title, 'medium' )

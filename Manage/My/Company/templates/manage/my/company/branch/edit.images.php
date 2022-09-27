@@ -1,6 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image;
 
 $iconCancel	= HTML::Icon( 'arrow-left' );
 $iconSave	= HTML::Icon( 'ok', TRUE );
@@ -13,7 +14,7 @@ if( $branch->images ){
 	foreach( $branch->images as $image ){
 		$urlImage		= 'images/branches/'.$image->filename;
 		$urlRemove		= './manage/my/company/branch/removeImage/'.$branch->branchId.'/'.$image->branchImageId;
-		$img			= new UI_Image( $urlImage );
+		$img			= new Image( $urlImage );
 		$title			= $image->title ? $image->title : '<small class="muted"><em>Kein Titel.</em></small>';
 		$listImages[]	= HtmlTag::create( 'tr',
 			HtmlTag::create( 'td',

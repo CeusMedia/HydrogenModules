@@ -1,9 +1,10 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
-$helperIndicator	= new UI_HTML_Indicator();
+$helperIndicator	= new HtmlIndicator();
 $helperTime			= new View_Helper_TimePhraser( $env );
 
 $iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );

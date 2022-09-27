@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['index'];
@@ -11,7 +12,7 @@ $tags	= $env->session->get( 'filter_notes_tags' );
 if( !is_array( $tags ) )
 	$tags	= [];
 
-$indicator	= new UI_HTML_Indicator();
+$indicator	= new HtmlIndicator();
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './work/note', $page, ceil( $notes['number'] / $filterLimit ) );
 $helper		= new View_Helper_TimePhraser( $this->env );
 $list	= [];

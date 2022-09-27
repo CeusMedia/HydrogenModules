@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 
 class View_Admin_Module_Installer extends View_Admin_Module {
 
@@ -30,7 +31,7 @@ class View_Admin_Module_Installer extends View_Admin_Module {
 				<hr/>
 			</div>';
 
-		$page	= new UI_HTML_PageFrame();
+		$page	= new HtmlPage();
 		$page->setBaseHref( $this->env->url );
 		$page->addBody( $body );
 		$page->addStylesheet( "//cdn.ceusmedia.de/css/bootstrap.min.css" );

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\OutputBuffer;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Job extends Logic
@@ -379,7 +380,7 @@ class Logic_Job extends Logic
 		$output			= '';
 		try{																						//  try to ...
 
-			$outputBuffer	= new UI_OutputBuffer( FALSE );
+			$outputBuffer	= new OutputBuffer( FALSE );
 			if( $jobRun->type == Model_Job_Run::TYPE_SCHEDULED )
 				$outputBuffer->open();
 			$factory	= new \Alg_Object_MethodFactory( $jobObject );								//  create a factory for this job

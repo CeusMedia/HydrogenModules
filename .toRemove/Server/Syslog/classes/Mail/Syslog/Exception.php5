@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Syslog_Exception extends Mail_Abstract
@@ -27,7 +28,7 @@ class Mail_Syslog_Exception extends Mail_Abstract
 		$style	= file_exists( $fileStyle ) ? FileReader::load( $fileStyle ): '';
 		$script	= file_exists( $fileScript ) ? FileReader::load( $fileScript ): '';
 
-		$page	= new UI_HTML_PageFrame();
+		$page	= new HtmlPage();
 		$page->addHead( HtmlTag::create( 'style', $style ) );
 		$page->addBody( $body );
 		$page->addBody( HtmlTag::create( 'script', $script ) );

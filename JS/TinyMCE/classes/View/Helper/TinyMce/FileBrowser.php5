@@ -1,5 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\OutputBuffer;
 
 class View_Helper_TinyMce_FileBrowser
 {
@@ -22,7 +24,7 @@ class View_Helper_TinyMce_FileBrowser
 
 	public function render()
 	{
-		$buffer		= new UI_OutputBuffer();
+		$buffer		= new OutputBuffer();
 		$helper		= new View_Helper_TinyMce( $this->env );
 		try{
 			if( $this->sourceMode === self::SOURCE_MODE_IMAGE )
@@ -183,7 +185,7 @@ class View_Helper_TinyMce_FileBrowser
 		}
 
 		try{
-			$image		= new UI_Image( $remoteFilePath );
+			$image		= new Image( $remoteFilePath );
 			$facts		= HtmlTag::create( 'dl', array(
 				sprintf( '<dt>Größe</dt><dd>%s</dd>', Alg_UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
 				sprintf( '<dt>Auflösung</dt><dd>%s&times;%s px</dd>', $image->getWidth(), $image->getHeight() ),

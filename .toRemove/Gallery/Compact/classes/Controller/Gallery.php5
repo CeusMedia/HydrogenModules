@@ -4,6 +4,7 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\INI\Reader as IniFileReader;
 use CeusMedia\Common\FS\Folder\Lister as FolderLister;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\Common\UI\Image\Exif as ImageExif;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Gallery extends Controller
@@ -94,7 +95,7 @@ class Controller_Gallery extends Controller
 			$this->env->getMessenger()->noteNotice( 'Fehlerhafte Bildadresse. Weiterleitung zur Übersicht.' );
 			$this->restart( './gallery' );
 		}
-		$exif	= new UI_Image_Exif( $uri );
+		$exif	= new ImageExif( $uri );
 		$info	= $this->readGalleryInfo( dirname( $source ) );
 		$key	= pathinfo( $source, PATHINFO_FILENAME );
 		$title	= isset( $info[$key] ) ? $info[$key] : NULL;

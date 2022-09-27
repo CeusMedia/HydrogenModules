@@ -1,5 +1,7 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['edit'];
@@ -48,7 +50,7 @@ foreach( $roles as $role )
 	$roleMap[$role->roleId] = $role;
 
 /* TO BE USED LATER FOR STATUS INFO
-$indicator	= new UI_HTML_Indicator();
+$indicator	= new HtmlIndicator();
 $indicator->setIndicatorClass( 'indicator-small' );
 $ind1		= $indicator->build( 75, 100 );
 */

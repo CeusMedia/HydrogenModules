@@ -1,9 +1,11 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tabs as HtmlTabs;
+
 $w	= (object) $words['view'];
 
 UI_HTML_Tabs::$version	= 4;
-$tabs	= new UI_HTML_Tabs();
+$tabs	= new HtmlTabs();
 
 $tab	= $request->get( 'tab' );
 $mapTabs	= array(

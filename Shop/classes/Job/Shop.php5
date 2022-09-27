@@ -1,6 +1,7 @@
 <?php
 use CeusMedia\Common\FS\File\CSV\Writer as CsvFileWriter;
 use CeusMedia\Common\FS\File\INI\Reader as IniFileReader;
+use CeusMedia\Common\UI\Image\Captcha as ImageCaptcha;
 
 class Job_Shop extends Job_Abstract
 {
@@ -170,7 +171,7 @@ class Job_Shop extends Job_Abstract
 				'order'		=> $order,
 			);
 		}
-		$captcha	= new UI_Image_Captcha();
+		$captcha	= new ImageCaptcha();
 		$captcha->length		= $this->data->migrants->captcha->length;
 		$captcha->useDigits		= $this->data->migrants->captcha->useDigits;
 		$captcha->useSymbols	= $this->data->migrants->captcha->useSymbols;

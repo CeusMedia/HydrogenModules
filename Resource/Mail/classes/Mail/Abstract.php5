@@ -3,6 +3,7 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\Net\Reader as NetReader;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
@@ -88,7 +89,7 @@ abstract class Mail_Abstract
 		$this->modelTemplate	= new Model_Mail_Template( $env );
 		$this->mail				= new \CeusMedia\Mail\Message();
 		$this->view				= new View( $env );
-		$this->page				= new UI_HTML_PageFrame();
+		$this->page				= new HtmlPage();
 		$this->logicMail		= $this->env->getLogic()->get( 'Mail' );
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 		$this->config			= $this->env->getConfig();

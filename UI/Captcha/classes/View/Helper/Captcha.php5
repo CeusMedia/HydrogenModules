@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\Net\Post as HttpPost;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image\Captcha as ImageCaptcha;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
@@ -26,7 +27,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 		$this->env			= $env;
 		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
-		$this->captcha		= new UI_Image_Captcha();
+		$this->captcha		= new ImageCaptcha();
 		$this->captcha->useUnique	= TRUE;
 	}
 

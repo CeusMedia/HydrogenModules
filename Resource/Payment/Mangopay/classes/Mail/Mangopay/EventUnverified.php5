@@ -2,13 +2,14 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\OutputBuffer;
 
-class Mail_Mangopay_EventUnverfied extends Mail_Abstract
+class Mail_Mangopay_EventUnverified extends Mail_Abstract
 {
 	protected function generate(): self
 	{
 		$data		= new Dictionary( $this->data );
-		$buffer		= new UI_OutputBuffer();
+		$buffer		= new OutputBuffer();
 
 		$event		= $data->get( 'event' );
 		$entity		= $data->get( 'entity' );

@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Newsletter_Mail
@@ -175,7 +176,7 @@ class View_Helper_Newsletter_Mail
 	{
 		$data	= $this->prepareData( self::MODE_HTML );
 		$data['imprint']	= $this->renderImprint( TRUE );
-		$page		= new UI_HTML_PageFrame();
+		$page		= new HtmlPage();
 		$page->addHead( HtmlTag::create( 'meta', NULL, array( 'charset' => 'utf-8' ) ) );
 		$page->addHead( HtmlTag::create( 'meta', NULL, array( 'name' => 'x-apple-disable-message-reformatting' ) ) );
 		$page->addHead( '<!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->' );

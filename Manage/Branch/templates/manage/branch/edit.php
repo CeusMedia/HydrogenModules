@@ -2,6 +2,7 @@
 use CeusMedia\Common\Net\API\Google\Maps\Geocoder as GoogleMapsGeocoder;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image;
 
 $w	= (object) $words['edit'];
 
@@ -35,7 +36,7 @@ $list	= [];
 foreach( $images as $image ){
 	$urlImage	= 'images/branches/'.$image->filename;
 	$urlRemove	= './manage/branch/removeImage/'.$branch->branchId.'/'.$image->imageId;
-	$img		= new UI_Image( $urlImage );
+	$img		= new Image( $urlImage );
 	$list[]	= HTML::Li(
 		HTML::DivClass( 'column-left-50',
 			HTML::Image( $urlImage, $image->title )

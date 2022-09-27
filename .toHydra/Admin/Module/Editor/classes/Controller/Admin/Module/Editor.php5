@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Module_Editor extends Controller								//  @todo	1) inherit from View_Admin_Module after cleanup
@@ -319,7 +320,7 @@ class Controller_Admin_Module_Editor extends Controller								//  @todo	1) inhe
 			$this->messenger->noteError( 'Es werden nur PNG-Bilddateien unterstützt.' );
 		}
 		else{
-			$img		= new UI_Image( $image['tmp_name'] );
+			$img		= new Image( $image['tmp_name'] );
 			if( $img->getWidth() > 128 )
 				$this->messenger->noteError( 'Das Bild ist zu breit <small><em>(max. 128 Pixel)</em></small>.' );
 			if( $img->getHeight() > 128 )

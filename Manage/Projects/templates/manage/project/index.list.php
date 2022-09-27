@@ -1,9 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['index'];
-$indicator		= new UI_HTML_Indicator();
+$indicator		= new HtmlIndicator();
 $helperTime		= new View_Helper_TimePhraser( $env );
 
 //$iconDefault	= HtmlTag::create( 'i', '', array( 'class' => 'icon-star' ) );

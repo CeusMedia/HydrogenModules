@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image;
 
 $iconCategory	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
 $iconPrev		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
@@ -86,7 +87,7 @@ if( $pos < count( $images ) - 1 ){
 }
 
 
-$source	= new UI_Image( $pathOriginal.$image->filename );
+$source	= new Image( $pathOriginal.$image->filename );
 
 extract( $this->populateTexts( array( 'top', 'content', 'bottom' ), 'html/catalog/gallery/image/' ) );
 

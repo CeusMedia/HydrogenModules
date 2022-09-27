@@ -4,6 +4,7 @@ use CeusMedia\Common\FS\File\INI\Editor as IniFileEditor;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Router\Recursive as RecursiveRouter;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -297,7 +298,7 @@ class Tool_Hydrogen_Setup_Environment extends WebEnvironment
 		if( !getEnv( 'HTTP_HOST' ) )
 			die( "Restart is not implemented for console applications by now. Sorry." );
 		if( !is_null( $output ) && strlen( $output ) ){
-			$page	= new UI_HTML_PageFrame();
+			$page	= new HtmlPage();
 			$page->addBody( $output );
 			$page->addMetaTag( 'http-equiv', 'refresh', 0 );
 			print( $page->build() );

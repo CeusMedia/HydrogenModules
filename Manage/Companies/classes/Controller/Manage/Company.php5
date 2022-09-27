@@ -1,6 +1,8 @@
 <?php
 
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Company extends Controller
@@ -158,8 +160,8 @@ class Controller_Manage_Company extends Controller
 				$extension	= pathinfo( $image['name'], PATHINFO_EXTENSION );
 				$imageName	= $companyId.'_'.md5( time() ).'.'.$extension;
 				$upload->saveTo( $imagePath.$imageName );
-				$image		= new UI_Image( $imagePath.$imageName );
-				$processor	= new UI_Image_Processing( $image );
+				$image		= new Image( $imagePath.$imageName );
+				$processor	= new ImageProcessing( $image );
 				$size		= min( $image->getWidth(), $image->getHeight() );
 				$offsetX	= (int) floor( ( $image->getWidth() - $size ) / 2 );
 				$offsetY	= (int) floor( ( $image->getHeight() - $size ) / 2 );

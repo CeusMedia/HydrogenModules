@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\CURL as NetCurl;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Authentication_Backend_Oauth extends Logic
@@ -27,7 +28,7 @@ class Logic_Authentication_Backend_Oauth extends Logic
 			'password'		=> $request->get( 'password' ),
 			'scope'			=> $request->get( 'scope' ),
 		) );
-		$handle	= new Net_CURL();
+		$handle	= new NetCurl();
 		$handle->setUrl( $this->providerUri.'/token' );
 		$handle->setOption( CURLOPT_POST, TRUE );
 		$handle->setOption( CURLOPT_POSTFIELDS, $postData );

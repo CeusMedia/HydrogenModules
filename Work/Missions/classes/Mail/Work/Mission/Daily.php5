@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract
@@ -21,7 +22,7 @@ class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract
 		$weekdays		= (array) $this->getWords( 'work/mission', 'days' );
 		$salutes		= (array) $this->getWords( 'work/mission', 'mail-salutes' );
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
-		$indicator		= new UI_HTML_Indicator();
+		$indicator		= new HtmlIndicator();
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
 
 		$words			= $this->getWords( 'work/mission' );

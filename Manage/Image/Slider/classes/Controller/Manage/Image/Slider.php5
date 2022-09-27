@@ -2,6 +2,8 @@
 
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Image_Slider extends Controller
@@ -54,7 +56,7 @@ class Controller_Manage_Image_Slider extends Controller
 			$handler->handleErrorFromUpload( $image );
 			$target		= $this->basePath.$slider->path.$image['name'];
 
-			$imageObject	= new UI_Image( $image['tmp_name'] );
+			$imageObject	= new Image( $image['tmp_name'] );
 			$minWidth		= $slider->width / 2;
 			$minHeight		= $slider->height / 2;
 			$imageWidth		= $imageObject->getWidth();
@@ -333,7 +335,7 @@ class Controller_Manage_Image_Slider extends Controller
 
 		$slideWidth		= (int) $slider->width;
 		$slideHeight	= (int) $slider->height;
-		$image			= new UI_Image( $path.$slider->path.$slide->source );
+		$image			= new Image( $path.$slider->path.$slide->source );
 		if( $image->getWidth() === $slideWidth && $image->getHeight() === $slideHeight )			//  no need to scale or crop
 			return FALSE;																			//  indicate to have done nothing
 
@@ -342,7 +344,7 @@ class Controller_Manage_Image_Slider extends Controller
 		if( !@copy( $path.$slider->path.$slide->source, $path.'source/'.$slide->source ) )			//  try to backup original image
 			throw new RuntimeException( 'Slider image backup to path "'.$path.'source/" failed' );
 
-		$processor	= new UI_Image_Processing( $image );											//  start image processor
+		$processor	= new ImageProcessing( $image );											//  start image processor
 		if( $slideWidth / $slideHeight > $image->getWidth() / $image->getHeight() )					//  slide is broader than image
 			$processor->scaleToRange( $slideWidth, $slideHeight, $slideWidth, $slideHeight * 5 );	//  scale image to match in width
 		else																						//  otherwise

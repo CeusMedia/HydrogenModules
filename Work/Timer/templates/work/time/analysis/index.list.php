@@ -1,10 +1,11 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
-$indicator	= new UI_HTML_Indicator( array(
+$indicator	= new HtmlIndicator( array(
 	'useColor'	=> FALSE,
 ) );
 

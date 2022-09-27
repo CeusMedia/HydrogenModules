@@ -2,13 +2,14 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\OutputBuffer;
 
 class Mail_Mangopay_EventFailed extends Mail_Abstract
 {
 	protected function generate(): self
 	{
 		$data		= new Dictionary( $this->data );
-		$buffer		= new UI_OutputBuffer();
+		$buffer		= new OutputBuffer();
 		print HtmlTag::create( 'h2', 'Error on handling event' );
 		if( $data->get( 'eventId' ) ){
 			$model		= new Model_Mangopay_Event( $this->env );

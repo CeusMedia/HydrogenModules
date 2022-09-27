@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image;
 
 $listImages	= '<div><em><small class="muted">'.$words['editImages']['noImages'].'</small></em></div>';
 if( $images ){
@@ -8,7 +9,7 @@ if( $images ){
 		$thumb		= $this->renderThumbnail( $image, TRUE, $gallery->path );
 		$thumb		= HtmlTag::create( 'img', NULL, array( 'src' => $baseUri.$gallery->path.'/'.$image->filename ) );
 		$urlRemove	= './manage/gallery/removeImage/'.$image->galleryImageId;
-		$source		= new UI_Image( $baseUri.$gallery->path.'/'.$image->filename );
+		$source		= new Image( $baseUri.$gallery->path.'/'.$image->filename );
 		$size		= $source->getWidth().'x'.$source->getHeight();
 		$item		= '
 <div class="row-fluid">

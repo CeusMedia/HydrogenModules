@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -90,7 +91,7 @@ div.CodeMirror-scroll {
 var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("code"));
 </script>
 ';
-		$page		= new UI_HTML_PageFrame();
+		$page		= new HtmlPage();
 		$page->addStylesheet( 'css/reset.css' );
 		$page->addStylesheet( 'css/typography.css' );
 #		$page->addStylesheet( 'css/xmp.formats.css' );

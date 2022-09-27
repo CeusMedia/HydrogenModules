@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\UI\OutputBuffer;
+
 class Job_Stripe_Event extends Job_Abstract{
 
 	protected $modelEvent;
@@ -39,7 +42,7 @@ class Job_Stripe_Event extends Job_Abstract{
 			$output		= 'No handler available: '.$className;
 		}
 		else {
-			$buffer		= new UI_OutputBuffer();
+			$buffer		= new OutputBuffer();
 			$logicKey	= Alg_Text_CamelCase::convert( 'Payment Stripe Event '.$key, TRUE, TRUE );
 //			try{
 				$logicEvent	= $this->env->logic->get( $logicKey );

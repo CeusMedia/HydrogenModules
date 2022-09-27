@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Editor as FileEditor;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -119,7 +120,7 @@ class Controller_Admin_Module extends Controller{
 		$content	= FileReader::load( $pathModule.$pathFile.$fileName );
 		$code		= HtmlTag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
 		$body		= '<h2>'.$moduleId.' - '.$fileName.'</h2>'.$code;
-		$page		= new UI_HTML_PageFrame();
+		$page		= new HtmlPage();
 		$page->addStylesheet( 'css/reset.css' );
 		$page->addStylesheet( 'css/typography.css' );
 		$page->addStylesheet( 'css/xmp.formats.css' );

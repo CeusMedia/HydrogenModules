@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\Image\Captcha as ImageCaptcha;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Share extends Controller{
@@ -29,7 +30,7 @@ class Controller_Share extends Controller{
 			}
 			$this->restart( 'file/'.$share->path );
 		}
-		$captcha	= new UI_Image_Captcha();
+		$captcha	= new ImageCaptcha();
 		$captcha->useUnique		= TRUE;
 		$captcha->useDigits		= TRUE;
 		$captcha->useLarges		= FALSE;

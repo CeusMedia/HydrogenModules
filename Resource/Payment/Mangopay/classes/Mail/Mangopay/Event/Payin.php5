@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\OutputBuffer;
 
 class Mail_Mangopay_Event_Payin extends Mail_Abstract
 {
@@ -25,7 +26,7 @@ class Mail_Mangopay_Event_Payin extends Mail_Abstract
 
 	protected function renderText(): string
 	{
-		$buffer	= new UI_OutputBuffer();
+		$buffer	= new OutputBuffer();
 		print( View_Helper_Mail_Text::underscore( $this->data['event']->type, '=' ) );
 		print( PHP_EOL.View_Helper_Mail_Text::underscore( 'Payin' ) );
 		print_m( $this->data['payin'], NULL, NULL, FALSE, 'console' );

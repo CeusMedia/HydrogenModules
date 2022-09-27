@@ -1,6 +1,8 @@
 <?php
 
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Logic;
 
@@ -142,10 +144,10 @@ class Logic_FileBucket extends Logic
 		$file		= $this->get( $fileId );
 		if( !in_array( $file->mimeType, array( 'image/png', 'image/gif', 'image/jpeg' ) ) )
 			throw new Exception( 'File is not an image' );
-		$image		= new UI_Image( $this->getPath().$file->hash );
+		$image		= new Image( $this->getPath().$file->hash );
 		if( $image->getWidth() <= $maxWidth && $image->getHeight() <= $maxHeight )
 			return FALSE;
-		$processor	= new UI_Image_Processing( $image );
+		$processor	= new ImageProcessing( $image );
 		$processor->scaleDownToLimit( $maxWidth, $maxHeight, $quality );
 		$image->save();
 		$this->model->edit( $fileId, array(

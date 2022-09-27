@@ -1,5 +1,7 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Work_Mission_Mail_Daily extends CMF_Hydrogen_View_Helper_Abstract{
@@ -12,7 +14,7 @@ class View_Helper_Work_Mission_Mail_Daily extends CMF_Hydrogen_View_Helper_Abstr
 		$weekdays		= (array) $words['days'];
 		$salutes		= (array) $words['mail-salutes'];
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
-		$indicator		= new UI_HTML_Indicator();
+		$indicator		= new HtmlIndicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
 

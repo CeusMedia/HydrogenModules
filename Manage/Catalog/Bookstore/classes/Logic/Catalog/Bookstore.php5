@@ -1,6 +1,8 @@
 <?php
 
 use CeusMedia\Cache\SimpleCacheInterface;
+use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
 
 /**
@@ -114,8 +116,8 @@ class Logic_Catalog_Bookstore extends Logic
 		if( !is_readable( $sourceFile ) )
 			throw new RuntimeException( 'File is not readable' );
 
-		$image			= new UI_Image( $sourceFile );
-		$processor		= new UI_Image_Processing( $image );
+		$image			= new Image( $sourceFile );
+		$processor		= new ImageProcessing( $image );
 		$logicBucket	= new Logic_FileBucket( $this->env );
 		$logicBucket->setHashFunction( Logic_FileBucket::HASH_UUID );
 		$options		= $this->moduleConfig->getAll( 'author.image.', TRUE );
@@ -833,8 +835,8 @@ class Logic_Catalog_Bookstore extends Logic
 		if( !is_readable( $sourceFile ) )
 			throw new RuntimeException( 'File is not readable' );
 
-		$image			= new UI_Image( $sourceFile );
-		$processor		= new UI_Image_Processing( $image );
+		$image			= new Image( $sourceFile );
+		$processor		= new ImageProcessing( $image );
 		$logicBucket	= new Logic_FileBucket( $this->env );
 		$logicBucket->setHashFunction( Logic_FileBucket::HASH_UUID );
 		$width			= $image->getWidth();

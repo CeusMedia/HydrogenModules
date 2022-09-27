@@ -1,5 +1,8 @@
 <?php
 
+use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\Image\Exif as ImageExif;
+use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Catalog_Gallery extends Controller
@@ -130,8 +133,8 @@ class Controller_Manage_Catalog_Gallery extends Controller
 				else if( $upload->checkIsImage() ){
 					$imagePath		= $this->pathImages.$categoryId.'.'.$upload->getExtension( true );
 					$upload->saveTo( $imagePath );
-					$image		= new UI_Image( $imagePath );
-					$processor	= new UI_Image_Processing( $image );
+					$image		= new Image( $imagePath );
+					$processor	= new ImageProcessing( $image );
 					$size		= (int) min( $image->getWidth(), $image->getHeight() );
 					$marginLeft	= (int) floor( ( $image->getWidth() - $size ) / 2 );
 					$marginTop	= (int) floor( ( $image->getHeight() - $size ) / 2 );
@@ -211,7 +214,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->addData( 'categoryId', $category->galleryCategoryId );
 		$this->addData( 'image', $this->modelImage->get( $imageId ) );
 		$this->addData( 'imageId', $imageId );
-		$this->addData( 'imageObject', new UI_Image( $pathOriginal ) );
+		$this->addData( 'imageObject', new Image( $pathOriginal ) );
 	}
 
 	public function index( $categoryId = 0 )
@@ -225,7 +228,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$image			= $this->checkImageId( $imageId );
 		$category		= $this->checkCategoryId( $image->galleryCategoryId );
 		$uri			= $this->pathImagesOriginal.$category->path.'/'.$image->filename;
-		$imageObject	= new UI_Image( $uri );
+		$imageObject	= new Image( $uri );
 		$mimeType		= $imageObject->getMimeType();
 		header( 'Content-Type: '.$imageObject->getMimeType() );
 		print File_Reader::load( $uri );
@@ -389,7 +392,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
 			);
-			$exif		= new UI_Image_Exif( $this->pathImagesOriginal.$imagePath );
+			$exif		= new ImageExif( $this->pathImagesOriginal.$imagePath );
 			if( $exif->has( 'DateTime' ) )
 				$data['takenAt']	= strtotime( $exif->get( 'DateTime' ) );
 			else

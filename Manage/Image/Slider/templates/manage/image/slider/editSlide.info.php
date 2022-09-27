@@ -1,10 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Image;
 
 $w	= (object) $words['editSlide.info'];
 
 $slideFilePath	= $basePath.$slider->path.$slide->source;
-$slideImage		= new UI_Image( $slideFilePath );
+$slideImage		= new Image( $slideFilePath );
 
 $slideThumb		= HtmlTag::create( 'img', NULL, array(
 	'class'	=> 'img-polaroid',

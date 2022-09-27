@@ -1,7 +1,9 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\Image\Exif as ImageExif;
 use CeusMedia\Common\UI\Image\Rotator as ImageRotator;
+use CeusMedia\Common\UI\Image\ThumbnailCreator as ImageThumbnailCreator;
 use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
 use CeusMedia\HydrogenFramework\View;
 
@@ -111,7 +113,7 @@ class View_Gallery extends View
 			if( !file_exists( $fileSmall ) ){
 				$angle	= 0;
 				try{
-					$exif	= new UI_Image_Exif( $fileName );
+					$exif	= new ImageExif( $fileName );
 					switch( $exif->get( 'Orientation' ) ){
 						case 1:
 							break;
@@ -134,13 +136,13 @@ class View_Gallery extends View
 						ImageRotator::rotateImage( $fileSmall, $angle );
 
 					if( $fileInfo[0] > $config['thumb.width'] || $fileInfo[1] > $config['thumb.height'] ){
-						$creator	= new UI_Image_ThumbnailCreator( $fileSmall, $fileSmall, $config['thumb.quality'] );
+						$creator	= new ImageThumbnailCreator( $fileSmall, $fileSmall, $config['thumb.quality'] );
 						$creator->thumbizeByLimit( $config['thumb.width'], $config['thumb.height'] );
 						if( $fileInfo[0] > $config['image.width'] || $fileInfo[1] > $config['image.height'] ){
 							copy( $fileName, $fileMedium );
 							if( $angle )
 								ImageRotator::rotateImage( $fileMedium, $angle );
-							$creator	= new UI_Image_ThumbnailCreator( $fileMedium, $fileMedium, $config['image.quality'] );
+							$creator	= new ImageThumbnailCreator( $fileMedium, $fileMedium, $config['image.quality'] );
 							$creator->thumbizeByLimit( $config['image.width'], $config['image.height'] );
 						}
 					}

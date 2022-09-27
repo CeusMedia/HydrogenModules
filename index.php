@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\FS\File\RecursiveNameFilter as RecursiveFileFinder;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 
 ( include_once __DIR__.'/vendor/autoload.php' ) or die( 'Install packages using composer, first!' );
 
@@ -79,7 +80,7 @@ class Modules
 			$list[]	= UI_HTML_Elements::ListItem( $label );
 		}
 		$list		= UI_HTML_Elements::unorderedList( $list );
-		$page		= new UI_HTML_PageFrame();
+		$page		= new HtmlPage();
 		$page->addStylesheet( 'https://cdn.ceusmedia.de/css/bootstrap.min.css' );
 		$page->addStylesheet( 'html.css' );
 		$page->addBody( '<div class="container"><div class="hero-unit"><h2>Hydrogen Modules</h2>Collection of open modules for <a href="https://github.com/CeusMedia/HydrogenFramework">Hydrogen Framework</a></h2></div>'.$list.'</div>' );

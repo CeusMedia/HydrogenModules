@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
@@ -187,7 +189,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 	public function renderHtml(): string
 	{
 		$data			= $this->data;
-		$indicator		= new UI_HTML_Indicator();
+		$indicator		= new HtmlIndicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
 

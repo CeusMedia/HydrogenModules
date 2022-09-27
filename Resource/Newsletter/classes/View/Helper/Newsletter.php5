@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -222,7 +223,7 @@ class View_Helper_Newsletter
 
 	public function renderHtml( $data, $strict = TRUE )
 	{
-		$page		= new UI_HTML_PageFrame();
+		$page		= new HtmlPage();
 		$cache		= $this->env->getCache();
 //		$page->setBaseHref( $this->env->url );
 

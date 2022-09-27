@@ -1,4 +1,8 @@
 <?php
+
+use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
+
 class Logic_Upload{
 
 	/**	@var		$upload			Upload data object from request */
@@ -294,8 +298,8 @@ class Logic_Upload{
 		if( !$this->checkIsImage() )
 			return FALSE;
 		$this->saveTo( $targetFile );
-		$image		= new UI_Image( $targetFile );
-		$processor	= new UI_Image_Processing( $image );
+		$image		= new Image( $targetFile );
+		$processor	= new ImageProcessing( $image );
 		$processor->scaleDownToLimit( $maxWidth, $maxHeight, $quality );
 		$image->save();
 		return TRUE;

@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
@@ -22,7 +23,7 @@ $list	= array(
 	6 => array(),
 	7 => array(),
 );
-$indicator	= new UI_HTML_Indicator();
+$indicator	= new HtmlIndicator();
 $disabled	= [];
 $today		= strtotime( date( 'Y-m-d', time() ) );
 foreach( $missions as $mission ){

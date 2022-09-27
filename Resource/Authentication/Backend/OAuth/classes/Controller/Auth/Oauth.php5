@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\CURL as NetCurl;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
@@ -51,7 +52,7 @@ class Controller_Auth_Oauth extends Controller
 					'code'			=> $this->request->get( 'code' ),
 					'state'			=> microtime( TRUE ),
 				) );
-				$handle	= new Net_CURL();
+				$handle	= new NetCurl();
 				$handle->setUrl( $this->providerUri.'/token' );
 				$handle->setOption( CURLOPT_POST, TRUE );
 				$handle->setOption( CURLOPT_POSTFIELDS, $postData );
@@ -144,7 +145,7 @@ class Controller_Auth_Oauth extends Controller
 				'password'		=> $this->request->get( 'login_password' ),
 				'scope'			=> $this->request->get( 'scope' ),
 			) );
-			$handle	= new Net_CURL();
+			$handle	= new NetCurl();
 			$handle->setUrl( $this->providerUri.'/token' );
 			$handle->setOption( CURLOPT_POST, TRUE );
 			$handle->setOption( CURLOPT_POSTFIELDS, $postData );
@@ -270,7 +271,7 @@ class Controller_Auth_Oauth extends Controller
 	 *	Dispatch next route after login, by these rules:
 	 *	1. Given controller and action
 	 *	2. Forced forward path of this auth module
-	 *	3. Request paramter 'from'
+	 *	3. Request parameter 'from'
 	 *	4. Forward path of this auth module
 	 *	5. Redirect to base auth module index for further dispatching
 	 *	ATM this is the same method for each auth module.
@@ -300,7 +301,7 @@ class Controller_Auth_Oauth extends Controller
 	 *	Dispatch next route after logout, by these rules:
 	 *	1. Given controller and action
 	 *	2. Forced forward path of this auth module
-	 *	3. Request paramter 'from'
+	 *	3. Request parameter 'from'
 	 *	4. Forward path of this auth module
 	 *	5. Go to index (empty path)
 	 *	ATM this is the same method for each auth module.
@@ -336,7 +337,7 @@ class Controller_Auth_Oauth extends Controller
 						'grant_type'	=> 'refresh_token',
 						'refresh_token'	=> $this->session->get( 'oauth_refresh_token' ),
 					) );
-					$handle	= new Net_CURL();
+					$handle	= new NetCurl();
 					$handle->setUrl( $this->providerUri.'/token' );
 					$handle->setOption( CURLOPT_POST, TRUE );
 					$handle->setOption( CURLOPT_POSTFIELDS, $postData );

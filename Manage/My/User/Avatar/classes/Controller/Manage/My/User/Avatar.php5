@@ -1,6 +1,8 @@
 <?php
 
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_My_User_Avatar extends Controller{
@@ -54,8 +56,8 @@ class Controller_Manage_My_User_Avatar extends Controller{
 			$logic->saveTo( $this->pathImages.$this->userId.'_'.$fileName );									//  save originally uploaded image
 			try{
 				/*  --  PROCESS AND SAVE NEW AVATAR IMAGES  -- */
-				$image		= new UI_Image( $this->pathImages.$this->userId.'_'.$fileName );
-				$processor	= new UI_Image_Processing( $image );
+				$image		= new Image( $this->pathImages.$this->userId.'_'.$fileName );
+				$processor	= new ImageProcessing( $image );
 				$width		= (int) $image->getWidth();
 				$height		= (int) $image->getHeight();
 				$size		= min( $width, $height );

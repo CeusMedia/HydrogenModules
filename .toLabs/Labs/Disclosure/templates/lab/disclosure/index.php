@@ -1,6 +1,8 @@
 <?php
+
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Ladder as HtmlLadder;
 
 $script	= '
 $(document).ready(function(){
@@ -23,7 +25,7 @@ foreach( $index as $entry ){
 }
 ksort( $classes );
 
-$ladder	= new UI_HTML_Ladder( 'controllers' );
+$ladder	= new HtmlLadder( 'controllers' );
 foreach( $classes as $className => $classReflection ){
 	$methods	= [];
 	foreach( $classReflection->getMethods( ReflectionMethod::IS_PUBLIC ) as $methodReflection ){

@@ -1,6 +1,8 @@
 <?php
 
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 
@@ -45,8 +47,8 @@ class View_Helper_Thumbnailer
 		$mime		= image_type_to_mime_type( exif_imagetype( $imagePath ) );
 //		print_m( $mime );die;
 		$tmpName	= tempnam( sys_get_temp_dir(), 'img_' );
-		$image		= new UI_Image( $imagePath );
-		$processor	= new UI_Image_Processing( $image );
+		$image		= new Image( $imagePath );
+		$processor	= new ImageProcessing( $image );
 		$processor->scaleDownToLimit( (int) $maxWidth, (int) $maxHeight );
 		$image->save( $tmpName );
 		$content	= 'data:'.$mime.';base64,'.base64_encode( file_get_contents( $tmpName ) );

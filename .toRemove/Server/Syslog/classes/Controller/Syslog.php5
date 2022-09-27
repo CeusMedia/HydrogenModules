@@ -9,6 +9,7 @@
 
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -69,7 +70,7 @@ class Controller_Syslog extends Controller_Abstract
 	{
 		try{
 			$view	= $this->getExceptionView( $nr );												//  get rendered exception view
-			$page	= new UI_HTML_Exception_Page();													//  create new HTML page
+			$page	= new HtmlExceptionPage();													//  create new HTML page
 			$html	= $page->wrapExceptionView( $view );											//  wrap HTML page around exception view
 			return $html;																			//  return HTML page
 		}

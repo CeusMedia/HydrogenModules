@@ -5,6 +5,7 @@ use CeusMedia\Common\Net\HTTP\Response as HttpResponse;
 use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\Image;
+use CeusMedia\Common\UI\Image\ThumbnailCreator as ImageThumbnailCreator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
 use CeusMedia\HydrogenFramework\Environment;
@@ -224,7 +225,7 @@ class View_Blog extends View
 			if( !function_exists( 'imagecreatetruecolor' ) )
 				$response->setBody( file_get_contents( $url ) );
 			else{
-				$a	= new UI_Image_ThumbnailCreator( $url, $thumb, 100 );
+				$a	= new ImageThumbnailCreator( $url, $thumb, 100 );
 				$a->thumbizeByLimit( 240, 180 );
 			}
 		}
