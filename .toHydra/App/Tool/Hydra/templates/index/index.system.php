@@ -1,10 +1,12 @@
 <?php
+use CeusMedia\Common\UI\HTML\Indicator;
+use CeusMedia\Common\XML\DOM\Parser as XmlParser;
 
 function getRevision( $path = '' ){
 	exec( 'svn info --xml '.$path, $a );
 	$xml	= implode( "\n", $a );
 	try {
-		$parser	= new XML_DOM_Parser();
+		$parser	= new XmlParser();
 		$tree	= $parser->parse( $xml );
 		$rev	= $tree->getChild( 'entry' )->getChild( 'commit' )->getAttribute( 'revision' );
 		return (int) $rev;
@@ -26,7 +28,7 @@ $diskRatio	= round( $diskFree / $diskTotal * 100, 1 );
 #$diskTotal	= 10;
 #$diskFree	= 1.9;
 $space		= min( 2, $diskFree / $diskTotal * 10 ) / 2;
-$indicator	= new UI_HTML_Indicator();
+$indicator	= new Indicator();
 $space		= $indicator->build( $space, 1 );
 
 $configCMC	= parse_ini_file( CMC_PATH.'../cmClasses.ini', TRUE );
@@ -36,7 +38,7 @@ $cores		= countCores();
 $loads		= sys_getloadavg();
 $load1		= array_shift( $loads );
 $load1Relative	= 1 / ( 1 + $load1 / $cores );
-$indicator	= new UI_HTML_Indicator();
+$indicator	= new Indicator();
 $loadGraph	= $indicator->build( $load1Relative, 1 );
 
 $panel	= '

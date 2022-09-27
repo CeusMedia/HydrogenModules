@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\XML\DOM\Node as XmlNode;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Route extends Controller
@@ -170,11 +171,11 @@ class Controller_Admin_Route extends Controller
 
 	protected function saveRoutes()
 	{
-		$root	= new XML_DOM_Node( 'routes' );
+		$root	= new XmlNode( 'routes' );
 		foreach( $this->routes as $route ){
-			$child	= new XML_DOM_Node( 'route' );
-			$child->addChild( new XML_DOM_Node( 'source', $route->source ) );
-			$child->addChild( new XML_DOM_Node( 'target', $route->target ) );
+			$child	= new XmlNode( 'route' );
+			$child->addChild( new XmlNode( 'source', $route->source ) );
+			$child->addChild( new XmlNode( 'target', $route->target ) );
 			$child->setAttribute( 'status', (int) $route->status );
 			$child->setAttribute( 'regex', (int) $route->regex );
 			$child->setAttribute( 'code', (int) $route->code );

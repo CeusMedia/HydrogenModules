@@ -1,8 +1,12 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Response as HttpResponse;
+use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
@@ -144,7 +148,7 @@ class View_Blog extends View
 				$channel['imageHeight']	= $module->get( 'feed.image.height' );
 		}
 
-		$feed		= new XML_RSS_Builder();
+		$feed		= new RssBuilder();
 		$feed->setChannelData( $channel );
 		foreach( $articles as $article ){
 			$uri	= $baseUrl.'blog/article/'.$article->articleId;
@@ -210,8 +214,8 @@ class View_Blog extends View
 		$thumb		= $path.'/'.$data['filename'].'.thumb.'.$data['extension'];
 		$url		= $path.$file;
 
-		$image		= new UI_Image( $thumb );
-		$response	= new Net_HTTP_Response();
+		$image		= new Image( $thumb );
+		$response	= new HttpResponse();
 		$response->addHeaderPair( 'Content-type', $image->getMimeType() );
 		$response->addHeaderPair( 'Last-modified', date( 'r', filemtime( $url ) ) );
 		$response->addHeaderPair( 'Cache-control', 'max-age: '.( 24*60*60 ) );
@@ -225,7 +229,7 @@ class View_Blog extends View
 			}
 		}
 		$response->setBody( file_get_contents( $thumb ) );
-		Net_HTTP_Response_Sender::sendResponse( $response );
+		HttpResponseSender::sendResponse( $response );
 		exit;
 	}
 

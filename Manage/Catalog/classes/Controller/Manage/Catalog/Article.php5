@@ -1,11 +1,12 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Controller_Manage_Catalog_Article extends Controller
 {
-	protected $fontend;
+	protected $frontend;
 	protected $logic;
 	protected $messenger;
 	protected $request;
@@ -153,7 +154,7 @@ class Controller_Manage_Catalog_Article extends Controller
 				$title	= $file['name'];
 //				$this->messenger->noteError( $words->msgErrorTitleMissing );
 			if( $file['error']	!= 0 ){
-				$handler	= new Net_HTTP_UploadErrorHandler();
+				$handler	= new UploadErrorHandler();
 				$handler->setMessages( $this->getWords( 'uploadErrors' ) );
 				$this->messenger->noteError( $file['error'].': '.$handler->getErrorMessage( $file['error'] ) );
 			}
@@ -332,7 +333,7 @@ class Controller_Manage_Catalog_Article extends Controller
 		$words		= (object) $this->getWords( 'upload' );
 		if( isset( $file['name'] ) && !empty( $file['name'] ) ){
 			if( $file['error']	!= 0 ){
-				$handler	= new Net_HTTP_UploadErrorHandler();
+				$handler	= new UploadErrorHandler();
 				$handler->setMessages( $this->getWords( 'uploadErrors' ) );
 				$this->messenger->noteError( $file['error'].': '.$handler->getErrorMessage( $file['error'] ) );
 			}

@@ -3,6 +3,7 @@
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\Lister as FolderIndex;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderIndex;
+use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Mail_Attachment_Folder extends Controller
@@ -130,7 +131,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 				$this->messenger->noteError( $words->errorFileTooLarge, Alg_UnitFormater::formatBytes( $maxSize ) );
 			}
 			else if( $file->error ){
-				$handler    = new Net_HTTP_UploadErrorHandler();
+				$handler    = new UploadErrorHandler();
 				$handler->setMessages( $this->getWords( 'msgErrorUpload' ) );
 				$this->messenger->noteError( $handler->getErrorMessage( $file->error ) );
 			}

@@ -1,4 +1,6 @@
 <?php
+use CeusMedia\Common\Net\API\Premailer;
+
 class Logic_Newsletter_Editor extends Logic_Newsletter
 {
 	public function addGroup( array $data )
@@ -33,7 +35,7 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	public function convertHtmlToText( string $html, int $wrap = 65 )
 	{
 		if( $this->env->getConfig()->get( 'module.resource_newsletter.premailer.plain' ) ){
-			$premailer	= new Net_API_Premailer();
+			$premailer	= new Premailer();
 			$premailer->convertFromHtml( $html, array( 'line_length' => $wrap ) );
 			return $premailer->getPlainText();
 		}

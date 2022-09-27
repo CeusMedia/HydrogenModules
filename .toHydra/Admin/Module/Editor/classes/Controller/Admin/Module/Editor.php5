@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -205,7 +206,7 @@ class Controller_Admin_Module_Editor extends Controller								//  @todo	1) inhe
 	public function index( string $moduleId = NULL )
 	{
 		if( $moduleId )
-			return $this->restart( 'view/'.$moduleId, TRUE );
+			$this->restart( 'view/'.$moduleId, TRUE );
 		$this->addData( 'sources', $this->logic->listSources() );
 		$this->addData( 'categories', $this->logic->getCategories() );
 		$this->addData( 'modules', $this->logic->model->getAll() );
@@ -310,7 +311,7 @@ class Controller_Admin_Module_Editor extends Controller								//  @todo	1) inhe
 	{
 		$image		= $this->request->get( 'image' );
 		if( !empty( $image['error'] ) ){
-			$handler	= new Net_HTTP_UploadErrorHandler();
+			$handler	= new UploadErrorHandler();
 			$message	= $handler->getErrorMessage( $image['error'] );
 			$this->messenger->noteError( 'Upload gescheitert: '.$message );
 		}

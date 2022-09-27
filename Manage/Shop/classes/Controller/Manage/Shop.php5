@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\API\Google\Maps\Geocoder as GoogleMapsGeocoder;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Shop extends Controller
@@ -30,7 +31,7 @@ class Controller_Manage_Shop extends Controller
 			$customers	= $this->logicShop->getCustomers( array( 'customerId' => $customerIds ), array( 'customerId' => 'DESC' ), array( 10 ) );
 
 		//  ALTER TABLE `shop_customers` ADD `longitude` FLOAT NULL AFTER `password`, ADD `latitude` FLOAT NULL AFTER `longitude`;
-/*		$geocoder	= new Net_API_Google_Maps_Geocoder( "" );
+/*		$geocoder	= new GoogleMapsGeocoder( "" );
 		$geocoder->setCachePath( 'cache/' );
 		$modelCustomer	= new Model_Shop_Customer( $this->env );
 		$markers	= [];

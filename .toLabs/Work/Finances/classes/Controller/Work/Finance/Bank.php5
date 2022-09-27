@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Time\Clock;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Finance_Bank extends Controller
@@ -91,7 +92,7 @@ class Controller_Work_Finance_Bank extends Controller
 		$banks			= $this->getBanksWithAccounts();
 		$modelAccount	= new Model_Finance_Bank_Account( $this->env );
 		try{
-			$clock	= new Alg_Time_Clock();
+			$clock	= new Clock();
 			foreach( $banks as $bankId => $bank ){
 				$reader	= NULL;
 				switch( $bank->type ){

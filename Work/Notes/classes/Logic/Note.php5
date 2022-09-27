@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Time\Clock;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Note extends Logic
@@ -291,7 +292,7 @@ class Logic_Note extends Logic
 
 	public function getTopNotes( $conditions = [], $orders = [], $limits = [] )
 	{
-		$clock		= new Alg_Time_Clock();
+		$clock		= new Clock();
 		if( !$orders )
 			$orders		= array(
 				'modifiedAt'	=> 'DESC',
@@ -485,7 +486,7 @@ ORDER BY
 	touchedAt DESC
 ';
 //xmp( $query );die;
-		$clock		= new Alg_Time_Clock();
+		$clock		= new Clock();
 		$result		= $this->env->getDatabase()->query( $query );
 		$notes	= $result->fetchAll( PDO::FETCH_OBJ );
 		$number		= count( $notes );

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\Post as HttpPost;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -33,7 +34,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
 		if( $moduleConfig->get( 'mode' ) === 'recaptcha' ){
-			$request	= new Net_HTTP_Post();
+			$request	= new HttpPost();
 			$url		= 'https://www.google.com/recaptcha/api/siteverify';
 			$response	= json_decode( $request->send( $url, array(
 				'response'	=> $env->getRequest()->get( 'g-recaptcha-response' ),

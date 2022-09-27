@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\XML\Element as XmlElement;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Finance_Fund extends Controller
@@ -163,7 +164,7 @@ class Controller_Work_Finance_Fund extends Controller
 			$html		= preg_replace( '/&/', '&amp;', $html );
 			$markets	= array( 'BER', 'HAM' );													//  preferred markets
 			try{
-				$xml	= new XML_Element( $html );
+				$xml	= new XmlElement( $html );
 				$price	= 0;
 				$prices	= [];
 				foreach( $xml->tr as $row ){														//  iterate table rows

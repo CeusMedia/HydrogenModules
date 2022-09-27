@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\Net\Reader as NetReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
@@ -74,7 +75,7 @@ abstract class Mail_Abstract
 	protected $encodingText		= 'quoted-printable';
 
 	/**
-	 *	Contructor.
+	 *	Constructor.
 	 *	@access		public
 	 *	@param		Environment		$env			Environment object
 	 *	@param		array			$data			Map of template mail data
@@ -136,9 +137,6 @@ abstract class Mail_Abstract
 			throw new RuntimeException( 'Mail was created by a mail library which is not supported' );
 
 		switch( $library ){
-			case Logic_Mail::LIBRARY_COMMON:
-				$this->mail->addAttachmentFile( $filePath, $mimeType );
-				break;
 			case Logic_Mail::LIBRARY_MAIL_V1:
 				$this->mail->addFile( $filePath, $mimeType, $encoding, $fileName );
 				break;
@@ -160,10 +158,6 @@ abstract class Mail_Abstract
 
 		foreach( $this->mail->getParts() as $part ){
 			switch( $library ){
-				case Logic_Mail::LIBRARY_COMMON:
-					if( $part instanceof Net_Mail_Attachment )
-						$list[]	= $part;
-					break;
 				case Logic_Mail::LIBRARY_MAIL_V1:
 					if( $part instanceof CeusMedia\Mail\Part\Attachment )
 						$list[]	= $part;
@@ -228,13 +222,6 @@ abstract class Mail_Abstract
 						$options->get( 'username' ),
 						$options->get( 'password' )
 					);
-				}
-				else if( $libraries & Logic_Mail::LIBRARY_COMMON ){
-					$hostname	= $options->get( 'hostname' );
-					$port		= $options->get( 'port' );
-					$this->transport	= new Net_Mail_Transport_SMTP( $hostname, $port );
-					$this->transport->setAuthUsername( $options->get( 'username' ) );
-					$this->transport->setAuthPassword( $options->get( 'password' ) );
 				}
 				else
 					throw new RuntimeException( 'No supported mail library available' );
@@ -507,7 +494,7 @@ abstract class Mail_Abstract
 			foreach( json_decode( $template->styles, TRUE ) as $style ){
 				if( preg_match( '/^http/', $style ) ){
 					try{
-						$content = Net_Reader::readUrl( $style );
+						$content = NetReader::readUrl( $style );
 					}
 					catch( Exception $e ){
 						$messenger->noteError( 'Loading mail style from "'.$style.'" failed.' );

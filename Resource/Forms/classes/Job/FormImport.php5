@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Time\Clock;
 use CeusMedia\Mail\Mailbox;
 use CeusMedia\Mail\Mailbox\Mail;
 use CeusMedia\Mail\Mailbox\Search;
@@ -30,7 +31,7 @@ class Job_FormImport extends Job_Abstract
 			$connectionInstance	= $this->logicImport->getConnectionInstanceFromId( $importRule->importConnectionId );
 			$connectionInstance->setOptions( $this->jsonParser->parse( $importRule->options, FALSE ) );
 			$searchCriteria		= explode( PHP_EOL, $importRule->searchCriteria );
-			$clock				= new Alg_Time_Clock();
+			$clock				= new Clock();
 			$results			= $connectionInstance->find( $searchCriteria, [], [0, 10] );
 
 			if( $verbose ){
@@ -75,7 +76,7 @@ class Job_FormImport extends Job_Abstract
 			$connectionInstance->setOptions( $this->jsonParser->parse( $importRule->options, FALSE ) );
 
 			$searchCriteria		= explode( PHP_EOL, $importRule->searchCriteria );
-			$clock				= new Alg_Time_Clock();
+			$clock				= new Clock();
 			$results			= $connectionInstance->find( $searchCriteria, [], [0, 10] );
 			echo "The current read timeout is " . imap_timeout(IMAP_READTIMEOUT) . "\n";
 //			$connectionInstance->disconnect();

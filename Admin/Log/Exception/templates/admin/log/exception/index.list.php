@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -34,7 +36,7 @@ if( $exceptions ){
 //print_m($exception);die;
 		$exceptionEnv		= unserialize( $exception->env );
 		$exceptionRequest	= unserialize( $exception->request );
-		$exceptionSession	= new ADT_List_Dictionary( unserialize( $exception->session ) ?: [] );
+		$exceptionSession	= new Dictionary( unserialize( $exception->session ) ?: [] );
 
 		$link	= HtmlTag::create( 'a', $exception->message, array( 'href' => './admin/log/exception/view/'.$exception->exceptionId ) );
 		$date	= date( 'Y.m.d', $exception->createdAt );

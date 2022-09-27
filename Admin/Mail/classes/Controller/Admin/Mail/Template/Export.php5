@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\String_;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
@@ -33,7 +34,7 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	public function index( string $templateId, string $output = 'download' )
 	{
 		$template	= $this->checkTemplate( $templateId );
-		$title		= new ADT_String( $template->title );
+		$title		= new String_( $template->title );
 		$titleKey	= $title->hyphenate();										//  preserve whitespace in title as hyphen
 		$json		= $this->generateJson( $templateId );
 		$fileName	= vsprintf( '%s%s%s%s', array(
@@ -96,7 +97,7 @@ class Controller_Admin_Mail_Template_Export extends Controller
 			}
 		}
 
-		$title		= new ADT_String( $template->title );
+		$title		= new String_( $template->title );
 		$titleKey	= $title->hyphenate();											//  preserve whitespace in title as hyphen
 
 		$data	= array(

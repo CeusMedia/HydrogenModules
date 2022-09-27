@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Auth_Rest extends Controller
@@ -82,7 +83,7 @@ class Controller_Auth_Rest extends Controller
 	{
 		if( $this->session->has( 'auth_user_id' ) ){
 			if( $this->request->has( 'from' ) )
-				$this->restart( $from );
+				$this->restart( $this->request->get( 'from' ) );
 			$this->restart( NULL, TRUE );
 		}
 
@@ -199,8 +200,8 @@ class Controller_Auth_Rest extends Controller
 				$this->session->set( 'registered_account_id', $result['accountId'] );
 				$this->restart( 'auth/rest/login' );
 			}
-			if( !preg_match( '/^[a-z]+:-[0-9]+/$i', $result ) )
-				throw new InvalidArgumentException( 'Invalid reponse code' );
+			if( !preg_match( '/^[a-z]+:-[0-9]+$/i', $result ) )
+				throw new InvalidArgumentException( 'Invalid response code' );
 			list( $level, $code )	= explode( ':', $result, 2 );
 			$message	= 'error-'.$level.$code;
 			$message	= isset( $words[$message] ) ? $words[$message] : $message;
@@ -251,8 +252,8 @@ class Controller_Auth_Rest extends Controller
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
-//		$this->cookie		= new Net_HTTP_PartitionCookie( "hydrogen", "/" );
-		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+//		$this->cookie		= new HttpPartitionCookie( "hydrogen", "/" );
+		$this->cookie		= new HttpCookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 		if( isset( $this->env->version ) )
 			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
 				$this->cookie	= $this->env->getCookie();

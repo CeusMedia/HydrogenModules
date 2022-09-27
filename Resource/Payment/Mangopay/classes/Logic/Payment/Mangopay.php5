@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\MethodFactory;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Payment_Mangopay extends Logic
@@ -481,7 +482,7 @@ print_m( $items );
 			throw new BadMethodCallException( 'Method "'.$method.'" is not existing' );
 		if( $force )
 			$this->skipCacheOnNextRequest( TRUE );
-		$factory	= new Alg_Object_MethodFactory();
+		$factory	= new MethodFactory();
 		return $factory->call( $this, $method, array( $resourceId ) );
 	}
 

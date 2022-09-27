@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -39,7 +41,7 @@ $listReferences = '<em class="muted">Keine.</em>';
 if( !empty( $references ) ){
 	$domains	= [];
 	foreach( $references as $reference ){
-		$url	= new ADT_URL( $reference );
+		$url	= new Url( $reference );
 		$domain	= $url->getHost();
 		if( strlen( $url->getPath().$url->getQuery() ) < 2 )
 			continue;

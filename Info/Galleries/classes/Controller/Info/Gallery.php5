@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Info_Gallery extends Controller
@@ -9,7 +10,7 @@ class Controller_Info_Gallery extends Controller
 
 	public function index( $galleryId = NULL )
 	{
-		$this->env->getSession()->set( 'gallery_referer', new ADT_URL( getEnv( 'HTTP_REFERER' ) ) );
+		$this->env->getSession()->set( 'gallery_referer', new Url( getEnv( 'HTTP_REFERER' ) ) );
 		if( $galleryId )
 			$this->restart( 'view/'.$galleryId, TRUE );
 	}

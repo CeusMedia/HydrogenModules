@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\UI\HTML\Indicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $count	= (object) array(
@@ -16,7 +17,7 @@ foreach( $data as $source ){
 	$count->todos += $source['data']['todos'];
 }
 
-$indicator	= new UI_HTML_Indicator();
+$indicator	= new Indicator();
 
 $panelFacts	= '
 <fieldset>

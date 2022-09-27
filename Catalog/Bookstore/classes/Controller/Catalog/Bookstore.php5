@@ -1,6 +1,13 @@
 <?php
 
+use CeusMedia\Common\ADT\URL as Url;
+use CeusMedia\Common\ADT\URL\Compare as UrlCompare;
+use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
+use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
+use CeusMedia\Common\XML\RSS\GoogleBaseBuilder as RssGoogleBaseBuilder;
 use CeusMedia\HydrogenFramework\Controller;
+
+Use PDO;
 
 class Controller_Catalog_Bookstore extends Controller
 {
@@ -13,7 +20,7 @@ class Controller_Catalog_Bookstore extends Controller
 	/**	@var	Logic_Catalog_Bookstore		$logic */
 	protected $logic;
 
-	public function article( $articleId )
+	public function article( string $articleId )
 	{
 		$articleId	= (int) $articleId;
 		$article	= $this->logic->getArticle( $articleId );
@@ -37,14 +44,14 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->addData( 'uriCoverLarge', $fileImageLarge );
 
 		if( getEnv( 'HTTP_REFERER' ) ){
-			$urlFrom	=  new ADT_URL( getEnv( 'HTTP_REFERER' ), new ADT_URL( $this->env->url ) );
-			if( ADT_URL_Compare::sameBaseStatic( $urlFrom, $this->env->url ) ){
+			$urlFrom	=  new Url( getEnv( 'HTTP_REFERER' ), new Url( $this->env->url ) );
+			if( UrlCompare::sameBaseStatic( $urlFrom, $this->env->url ) ){
 				$this->addData( 'from', $urlFrom->getRelative() );
 			}
 		}
 		if( $this->request->get( 'from' ) ){
-			$urlFrom	=  new ADT_URL( $this->request->get( 'from' ), new ADT_URL( $this->env->url ) );
-			if( ADT_URL_Compare::sameBaseStatic( $urlFrom, $this->env->url ) ){
+			$urlFrom	=  new Url( $this->request->get( 'from' ), new Url( $this->env->url ) );
+			if( UrlCompare::sameBaseStatic( $urlFrom, $this->env->url ) ){
 				$this->addData( 'from', $urlFrom->getRelative() );
 			}
 		}
@@ -133,11 +140,11 @@ class Controller_Catalog_Bookstore extends Controller
 		$words		= (object) $this->getWords( 'rss' );
 		$helper		= new View_Helper_Catalog_Bookstore( $this->env );
 
-		$builder	= new XML_RSS_GoogleBaseBuilder();
+		$builder	= new RssGoogleBaseBuilder();
 		$builder->setChannelData( array(
-			'title'			=> Alg_Text_Trimmer::trim( $this->env->title, 150 ),
+			'title'			=> TextTrimmer::trim( $this->env->title, 150 ),
 			'link'			=> $this->env->url,
-			'description'	=> Alg_Text_Trimmer::trim( $words->description, 5000 ),
+			'description'	=> TextTrimmer::trim( $words->description, 5000 ),
 			'pubDate'		=> date( 'r' ),
 			'lastBuildDate'	=> date( 'r' ),
 			'language'		=> $language,
@@ -166,8 +173,8 @@ class Controller_Catalog_Bookstore extends Controller
 				$categories[]	= $category->{"label_".$language};
 			$price	= (float) str_replace( ",", ".", $article->price );
 			$item	= array(
-				"title"				=> Alg_Text_Trimmer::trim( $article->title, 150 ),
-				"description"		=> Alg_Text_Trimmer::trim( $article->description, 5000 ),
+				"title"				=> TextTrimmer::trim( $article->title, 150 ),
+				"description"		=> TextTrimmer::trim( $article->description, 5000 ),
 				"link"				=> $helper->getArticleUri( $article->articleId, TRUE ),
 				"category"			=> join( ', ', $categories ),
 				"pubDate"			=> date( 'r', $pubDate ? $pubDate : $article->createdAt ),
@@ -222,7 +229,7 @@ class Controller_Catalog_Bookstore extends Controller
 		$categoryId	= (int) $categoryId;
 		$words		= (object) $this->getWords( 'rss' );
 		$helper		= new View_Helper_Catalog_Bookstore( $this->env );
-		$rss		= new XML_RSS_Builder();
+		$rss		= new RssBuilder();
 		$data		= array(
 			'title'			=> $this->env->title,
 			'link'			=> $this->env->url,

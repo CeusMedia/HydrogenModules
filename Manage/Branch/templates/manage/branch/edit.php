@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\Net\API\Google\Maps\Geocoder as GoogleMapsGeocoder;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -11,7 +12,7 @@ $optCompany	= HTML::Options( $companies, $branch->companyId, array( 'companyId',
 
 $panelMap	= '';
 if( $branch->longitude ){
-	$geocoder	= new Net_API_Google_Maps_Geocoder( "" );
+	$geocoder	= new GoogleMapsGeocoder( "" );
 	$geocoder->setCachePath( 'log/geocodes/' );
 	$query		= $branch->street.' '.$branch->number.', '.$branch->postcode.' '.$branch->city.', Deutschland';
 	#$addr		= $geocoder->getAddress( $query );

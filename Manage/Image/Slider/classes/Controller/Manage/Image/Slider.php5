@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -49,7 +50,7 @@ class Controller_Manage_Image_Slider extends Controller
 				$this->restart( './edit/'.$sliderId, TRUE );
 			}
 
-			$handler	= new Net_HTTP_UploadErrorHandler();
+			$handler	= new UploadErrorHandler();
 			$handler->handleErrorFromUpload( $image );
 			$target		= $this->basePath.$slider->path.$image['name'];
 

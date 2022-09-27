@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Form_Fill extends Logic
@@ -70,7 +71,7 @@ class Logic_Form_Fill extends Logic
 				$transfer->status		= 'applied';
 
 				$targetId				= $transfer->target->formTransferTargetId;
-				$factory				= new Alg_Object_Factory( [$this->env] );
+				$factory				= new ObjectFactory( [$this->env] );
 				$transferInstance		= $factory->create( $transfer->target->className );
 				$transfer->result		= $transferInstance->transfer( $targetId, $transfer );
 				$reportData['status']	= (int) $transfer->result->status;

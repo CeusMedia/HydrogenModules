@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Randomizer;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Auth extends Controller
@@ -138,7 +139,7 @@ class Controller_Auth extends Controller
 				$modelUser	= new Model_User( $this->env );
 				$user		= $modelUser->getByIndex( 'email', $email );
 				if( $user ){
-					$randomizer	= new Alg_Randomizer();
+					$randomizer	= new Randomizer();
 					$randomizer->configure( TRUE, TRUE, TRUE, FALSE, 0 );
 					$password	= $randomizer->get( 8 );
 					$modelUser->edit( $user->userId, array( 'password' => md5( $password ) ) );

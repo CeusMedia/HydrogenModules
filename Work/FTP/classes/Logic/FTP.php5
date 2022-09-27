@@ -1,22 +1,26 @@
 <?php
+
+use CeusMedia\Common\FS\File\Cache as FileCache;
+use CeusMedia\Common\Net\FTP\Client as FtpClient;
+
 class Logic_FTP
 {
-	/**	@var	File_Cache	$cache */
+	/**	@var	FileCache	$cache */
 	protected $cache;
 
-	/**	@var	Net_FTP_Client	$client */
+	/**	@var	FtpClient	$client */
 	protected $client;
 
 	protected $cachePrefix;
 
 	public function __construct( string $pathCache = 'contents/cache/' )
 	{
-		$this->cache	= new FS_File_Cache( $pathCache );
+		$this->cache	= new FileCache( $pathCache );
 	}
 
 	public function connect( string $host, $port, string $username, string $password, string $path )
 	{
-		$this->client	= new Net_FTP_Client( $host, $port, $path, $username, $password );
+		$this->client	= new FtpClient( $host, $port, $path, $username, $password );
 		$this->cachePrefix	= 'ftp_'.$host.$path.'_';
 	}
 

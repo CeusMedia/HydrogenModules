@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Form_Import extends Controller
@@ -87,7 +88,7 @@ class Controller_Manage_Form_Import extends Controller
 		$connection	= $this->modelConnection->get( $rule->importConnectionId );
 		$connector	= $this->modelConnector->get( $connection->importConnectorId );
 
-		$factory	= new Alg_Object_Factory();
+		$factory	= new ObjectFactory();
 		$remoteResource	= $factory->create( $connector->className, array( $this->env ) );
 		$remoteResource->setConnection( $connection )->connect();
 		$folders	= $remoteResource->getFolders( TRUE );

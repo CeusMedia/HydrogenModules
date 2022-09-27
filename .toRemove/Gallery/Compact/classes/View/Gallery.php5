@@ -1,6 +1,8 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\Image\Rotator as ImageRotator;
+use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Gallery extends View
@@ -46,7 +48,7 @@ class View_Gallery extends View
 				$channel['imageHeight']	= $module->get( 'feed.image.height' );
 		}
 
-		$feed		= new XML_RSS_Builder();
+		$feed		= new RssBuilder();
 		$feed->setChannelData( $channel );
 		foreach( $galleries as $gallery ){
 			$uri	= $baseUrl.'gallery/index/'.str_replace( '%2F', '/', rawurlencode( $gallery->pathname ) );
@@ -129,7 +131,7 @@ class View_Gallery extends View
 				try{
 					copy( $fileName, $fileSmall );
 					if( $angle )
-						UI_Image_Rotator::rotateImage( $fileSmall, $angle );
+						ImageRotator::rotateImage( $fileSmall, $angle );
 
 					if( $fileInfo[0] > $config['thumb.width'] || $fileInfo[1] > $config['thumb.height'] ){
 						$creator	= new UI_Image_ThumbnailCreator( $fileSmall, $fileSmall, $config['thumb.quality'] );
@@ -137,7 +139,7 @@ class View_Gallery extends View
 						if( $fileInfo[0] > $config['image.width'] || $fileInfo[1] > $config['image.height'] ){
 							copy( $fileName, $fileMedium );
 							if( $angle )
-								UI_Image_Rotator::rotateImage( $fileMedium, $angle );
+								ImageRotator::rotateImage( $fileMedium, $angle );
 							$creator	= new UI_Image_ThumbnailCreator( $fileMedium, $fileMedium, $config['image.quality'] );
 							$creator->thumbizeByLimit( $config['image.width'], $config['image.height'] );
 						}

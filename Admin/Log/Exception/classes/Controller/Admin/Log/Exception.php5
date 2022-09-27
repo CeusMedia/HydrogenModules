@@ -7,6 +7,7 @@
  *	@copyright		2010 Ceus Media
  */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -156,7 +157,7 @@ class Controller_Admin_Log_Exception extends Controller
 
 		$exceptionEnv		= unserialize( $exception->env );
 		$exceptionRequest	= unserialize( $exception->request );
-		$exceptionSession	= new ADT_List_Dictionary( unserialize( $exception->session ) ?: [] );
+		$exceptionSession	= new Dictionary( unserialize( $exception->session ) ?: [] );
 
 		$user	= NULL;
 		if( $exceptionSession->get( 'auth_user_id' ) ){

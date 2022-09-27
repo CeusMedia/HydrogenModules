@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\XML\Element as XmlElement;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -21,7 +22,7 @@ class Hook_Catalog_Bookstore extends Hook
 			$code		= preg_replace( '/( ){2,}/', " ", $code );
 			$code		= trim( $code );
 			try{
-				$node		= new XML_Element( '<'.substr( $code, 1, -1 ).'/>' );
+				$node		= new XmlElement( '<'.substr( $code, 1, -1 ).'/>' );
 				$attr		= array_merge( $defaultAttr, $node->getAttributes() );
 				if( $attr['articleId'] )
 					$helper->setArticleId( $attr['articleId'] );

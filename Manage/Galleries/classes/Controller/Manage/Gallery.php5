@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Gallery extends Controller
@@ -46,7 +47,7 @@ class Controller_Manage_Gallery extends Controller
 		$sizes		= $this->moduleConfig->getAll( 'image.size.', TRUE );
 		$upload		= new Logic_Upload( $this->env );
 		if( $file && $file['error'] != 0 ){
-			$handler	= new Net_HTTP_UploadErrorHandler();
+			$handler	= new UploadErrorHandler();
 			$handler->setMessages( $words['msgErrorUpload'] );
 			$handler->handleErrorCode( $file['error'] );
 		}

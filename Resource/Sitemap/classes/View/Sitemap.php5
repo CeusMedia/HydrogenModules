@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\XML\DOM\Node as XmlNode;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Sitemap extends View
@@ -32,17 +33,17 @@ class View_Sitemap extends View
 
 	protected function renderXml( array $links, $options )
 	{
-		$root	= new XML_DOM_Node( 'urlset' );
+		$root	= new XmlNode( 'urlset' );
 		$root->setAttribute( 'xmlns', "http://www.sitemaps.org/schemas/sitemap/0.9" );
 		foreach( $links as $link ){
-			$child	= new XML_DOM_Node( 'url' );
-			$child->addChild( new XML_DOM_Node( 'loc', $link->location ) );
+			$child	= new XmlNode( 'url' );
+			$child->addChild( new XmlNode( 'loc', $link->location ) );
 			if( $link->datetime )
-				$child->addChild( new XML_DOM_Node( 'lastmod', $link->datetime ) );
+				$child->addChild( new XmlNode( 'lastmod', $link->datetime ) );
 			if( $link->frequency )
-				$child->addChild( new XML_DOM_Node( 'changefreq', $link->frequency ) );
+				$child->addChild( new XmlNode( 'changefreq', $link->frequency ) );
 			if( $link->priority )
-				$child->addChild( new XML_DOM_Node( 'priority', $link->priority ) );
+				$child->addChild( new XmlNode( 'priority', $link->priority ) );
 			$root->addChild( $child );
 		}
 

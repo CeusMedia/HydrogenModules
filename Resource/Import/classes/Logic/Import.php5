@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Import extends Logic
@@ -18,7 +19,7 @@ class Logic_Import extends Logic
 			if( (int) $connector->status !== Model_Import_Connector::STATUS_ENABLED )
 				throw new RuntimeException( 'Connector "'.$connector->title.'" is not enabled' );
 
-			$factory	= new Alg_Object_Factory();
+			$factory	= new ObjectFactory();
 			$instance	= $factory->create( $connector->className, array( $this->env ) );
 			$instance->setConnection( $connection );
 			$this->connections[$connectionId]	= $instance->connect();

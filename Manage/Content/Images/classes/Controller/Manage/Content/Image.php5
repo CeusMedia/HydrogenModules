@@ -4,6 +4,7 @@ use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
@@ -98,7 +99,7 @@ class Controller_Manage_Content_Image extends Controller
 
 		if( $this->request->has( 'save' ) ){
 			if( $file['error'] ){
-				$handler	= new Net_HTTP_UploadErrorHandler();
+				$handler	= new UploadErrorHandler();
 				$this->messenger->noteError( $handler->getErrorMessage( $file['error'] ) );
 			}
 			else{

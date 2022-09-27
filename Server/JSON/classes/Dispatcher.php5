@@ -24,6 +24,7 @@
  *	@since			0.1
  */
 
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Dispatcher\General as GeneralDispatcher;
 
 /**
@@ -93,7 +94,7 @@ class Dispatcher extends GeneralDispatcher
 		$className	= self::getControllerClassFromPath( $controller );								// get controller class name from requested controller path
 		$this->checkClass( $className );															//  ensure controller class
 
-		$factory	= new Alg_Object_Factory();														//  raise object factory
+		$factory	= new ObjectFactory();															//  raise object factory
 		$instance	= $factory->createObject( $className, array( &$this->env ) );					//  build controller instance
 		$this->checkClassAction( $className, $instance, $action );									//  ensure action method
 		if( $this->checkClassActionArguments )														//  action method arguments are to be checked

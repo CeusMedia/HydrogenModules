@@ -2,6 +2,7 @@
 use CeusMedia\Common\FS\File\Backup as FileBackup;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\XML\Element as XmlElement;
 
 class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_Mangopay
 {
@@ -109,7 +110,7 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 		if( !is_writable( $fileName ) )
 			throw new RuntimeException( 'Config file of module "'.$moduleId.'" is not writable' );
 		$xml		= FileReader::load( $fileName );
-		$tree		= new XML_Element( $xml );
+		$tree		= new XmlElement( $xml );
 		try{
 			foreach( $tree->config as $nr => $node ){
 				$type	= $node->getAttribute( 'type' );

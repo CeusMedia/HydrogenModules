@@ -7,7 +7,9 @@
  *	@copyright		2013 Ceus Media
  */
 
+use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Environment;
+
 
 /**
  *	...
@@ -30,7 +32,7 @@ class Model_Document
 		if( !is_array( $upload ) )
 			throw new InvalidArgumentException( 'No valid upload array given' );
 		if( $upload['error'] ){
-			$handler	= new Net_HTTP_UploadErrorHandler();
+			$handler	= new UploadErrorHandler();
 			$handler->handleErrorFromUpload( $upload );
 		}
 		if( substr( $upload['name'], 0, 1 ) === '.' )

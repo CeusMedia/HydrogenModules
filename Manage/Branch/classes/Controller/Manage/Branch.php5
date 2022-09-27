@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Branch extends Controller
@@ -43,7 +44,7 @@ class Controller_Manage_Branch extends Controller
 				UPLOAD_ERR_CANT_WRITE	=> $words['upload-errors']['UPLOAD_ERR_CANT_WRITE'],
 				UPLOAD_ERR_EXTENSION	=> $words['upload-errors']['UPLOAD_ERR_EXTENSION'],
 			);
-			$handler		= new Net_HTTP_UploadErrorHandler();
+			$handler		= new UploadErrorHandler();
 			$handler->setMessages( $messages );
 			$handler->handleErrorFromUpload( $image );
 		}

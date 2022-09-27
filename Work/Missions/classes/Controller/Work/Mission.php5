@@ -6,6 +6,7 @@
  */
 
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -874,7 +875,7 @@ class Controller_Work_Mission extends Controller
 		$this->checkIsEditor();
 		$file	= $this->env->getRequest()->get( 'serial' );
 		if( $file['error'] != 0 ){
-			$handler	= new Net_HTTP_UploadErrorHandler();
+			$handler	= new UploadErrorHandler();
 			$this->messenger->noteError( 'Upload-Fehler: '.$handler->getErrorMessage( $file['error'] ) );
 		}
 		else{

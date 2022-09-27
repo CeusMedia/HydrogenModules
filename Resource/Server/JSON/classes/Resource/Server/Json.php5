@@ -25,6 +25,7 @@
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Reader as HttpReader;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -158,7 +159,7 @@ class Resource_Server_Json
 
 	public function getDataFromUrl( $url, $curlOptions = [] )
 	{
-		$reader		= new Net_HTTP_Reader();
+		$reader		= new HttpReader();
 		$headers	= array( 'Accept-Encoding: gzip, deflate' );
 		$options	= $this->curlOptions['ALL'] + $this->curlOptions['GET'] + $curlOptions;
 		$response	= $reader->get( $url, $headers, $options );
@@ -197,7 +198,7 @@ class Resource_Server_Json
 			if( is_string( $value ) && substr( $value, 0, 1 ) == "@" )								//  leading @ in field values
 				$data[$key]	= "\\".$value;															//  need to be escaped
 
-		$reader		= new Net_HTTP_Reader();
+		$reader		= new HttpReader();
 		$headers	= array( 'Accept-Encoding: gzip, deflate' );
 		$headers	= array( 'Accept: text/json' );
 		$curlOptions[CURLOPT_POST]	= TRUE;
@@ -254,7 +255,7 @@ class Resource_Server_Json
 	 *	@param		string		$controller		Controller name
 	 *	@param		string		$action			Action name
 	 *	@param		array		$arguments		List of URI arguments
-	 *	@return		strring		URL on server
+	 *	@return		string		URL on server
 	 */
 	protected function buildServerPostUrl( $controller, $action = NULL, $arguments = [] )
 	{

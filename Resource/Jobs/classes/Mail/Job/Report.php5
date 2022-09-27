@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\Alg\Time\Duration as TimeDuration;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Job_Report extends Mail_Abstract
@@ -118,7 +119,7 @@ class Mail_Job_Report extends Mail_Abstract
 			Model_Job_Run::STATUS_RUNNING		=> 'label-info',
 			Model_Job_Run::STATUS_DONE			=> 'label-success',
 		);
-		$durationHelper	= new Alg_Time_Duration();
+		$durationHelper	= new TimeDuration();
 		$typeWord		= $data['words']['job-run-types'][$data['run']->type];
 		$typeLabel		= $typeWord;
 		$status			= $data['run']->status;

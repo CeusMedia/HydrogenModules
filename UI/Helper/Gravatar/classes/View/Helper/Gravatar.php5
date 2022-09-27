@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\API\Gravatar;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -27,7 +28,7 @@ class View_Helper_Gravatar
 	{
 		if( !$this->user )
 			throw new RuntimeException( "No user set" );
-		$gravatar	= new Net_API_Gravatar( $this->size, $this->rating, $this->default );
+		$gravatar	= new Gravatar( $this->size, $this->rating, $this->default );
 		return $gravatar->getUrl( $this->user->email );
 	}
 

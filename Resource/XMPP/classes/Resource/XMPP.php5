@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\Net\XMPP\JID as XmppJid;
+use CeusMedia\Common\Net\XMPP\MessageSender as XmppMessageSender;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Resource_XMPP{
@@ -34,10 +36,10 @@ class Resource_XMPP{
 			$senderPassword	= $this->options->get( 'sender.password' );
 		}
 		try{
-			$sender	= new Net_XMPP_MessageSender();
+			$sender	= new XmppMessageSender();
 			$sender->setEncryption( (bool) $this->options->get( 'encryption' ) );
-			$sender->connect( new Net_XMPP_JID( $senderJid ), $senderPassword );
-			$sender->setReceiver( new Net_XMPP_JID( $receiverJid ) );
+			$sender->connect( new XmppJid( $senderJid ), $senderPassword );
+			$sender->setReceiver( new XmppJid( $receiverJid ) );
 			$sender->sendMessage( $message );
 		}
 		catch( Exception $e ){

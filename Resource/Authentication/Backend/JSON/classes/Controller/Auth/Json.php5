@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Auth_Json extends Controller
@@ -148,8 +149,8 @@ class Controller_Auth_Json extends Controller
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
-//		$this->cookie		= new Net_HTTP_PartitionCookie( "hydrogen", "/" );
-		$this->cookie		= new Net_HTTP_Cookie( parse_url( $this->env->url, PHP_URL_PATH ) );
+//		$this->cookie		= new HttpPartitionCookie( "hydrogen", "/" );
+		$this->cookie		= new HttpCookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 		if( isset( $this->env->version ) )
 			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
 				$this->cookie	= $this->env->getCookie();

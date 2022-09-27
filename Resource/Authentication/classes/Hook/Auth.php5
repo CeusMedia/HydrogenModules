@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -37,7 +38,7 @@ class Hook_Auth extends Hook
 		$session	= $env->getSession();
 		$userId		= (int) $session->get( 'auth_user_id' );										//  get ID of current user (or zero)
 		if( $userId ){
-			$cookie		= new Net_HTTP_Cookie( parse_url( $env->url, PHP_URL_PATH ) );
+			$cookie		= new HttpCookie( parse_url( $env->url, PHP_URL_PATH ) );
 			$remember	= (bool) $cookie->get( 'auth_remember' );
 			$session->set( 'isRemembered', $remember );
 			$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';					//  initialize Auth class with user ID

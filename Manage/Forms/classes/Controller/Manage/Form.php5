@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -147,7 +148,7 @@ class Controller_Manage_Form extends Controller
 			if( preg_match( '@&preview=true@', $reference ) )
 				continue;
 
-			$url = new ADT_URL( $reference );
+			$url = new Url( $reference );
 			parse_str( $url->getQuery(), $parameters );
 			foreach( $parameters as $key => $value ){
 				if( in_array( $key, $parameterBlacklist ) )

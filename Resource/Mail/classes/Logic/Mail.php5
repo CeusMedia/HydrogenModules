@@ -293,13 +293,11 @@ class Logic_Mail extends Logic
 	/**
 	 *	...
 	 *	@access		public
-	 *	@return		integer			Flags of available mail library contants
+	 *	@return		integer			Flags of available mail library constants
 	 */
 	public function detectAvailableMailLibraries(): int
 	{
 		$libraries	= static::LIBRARY_UNKNOWN;
-		if( class_exists( 'Net_Mail_Body' ) )
-			$libraries	|= static::LIBRARY_COMMON;
 		if( class_exists( 'CeusMedia\Mail\Part\HTML' ) )
 			$libraries	|= static::LIBRARY_MAIL_V1;
 		if( class_exists( 'CeusMedia\Mail\Message\Part\HTML' ) )

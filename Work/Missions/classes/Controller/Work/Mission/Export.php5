@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\XML\DOM\Node as XmlNode;
+
 class Controller_Work_Mission_Export extends Controller_Work_Mission
 {
 	protected $pathLogs;
@@ -103,29 +106,29 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			4		=> 'CONFIRMED',
 		);
 
-		$root		= new XML_DOM_Node( 'event');
-		$calendar	= new XML_DOM_Node( 'VCALENDAR' );
-		$calendar->addChild( new XML_DOM_Node( 'VERSION', '2.0' ) );
+		$root		= new XmlNode( 'event');
+		$calendar	= new XmlNode( 'VCALENDAR' );
+		$calendar->addChild( new XmlNode( 'VERSION', '2.0' ) );
 		foreach( $missions as $mission ){
 			switch( $mission->type ){
 				case 0:
 					$date	= date( "Ymd", strtotime( $mission->dayStart ) + 24 * 60 * 60 -1 );
-					$node	= new XML_DOM_Node( 'VTODO' );
-					$node->addChild( new XML_DOM_Node( 'UID', md5( $mission->missionId ).'@'.$this->env->host ) );
-					$node->addChild( new XML_DOM_Node( 'DUE', $date, array( 'VALUE' => 'DATE' ) ) );
-					$node->addChild( new XML_DOM_Node( 'STATUS', $statesTask[$mission->status] ) );
+					$node	= new XmlNode( 'VTODO' );
+					$node->addChild( new XmlNode( 'UID', md5( $mission->missionId ).'@'.$this->env->host ) );
+					$node->addChild( new XmlNode( 'DUE', $date, array( 'VALUE' => 'DATE' ) ) );
+					$node->addChild( new XmlNode( 'STATUS', $statesTask[$mission->status] ) );
 					break;
 				case 1:
-					$node	= new XML_DOM_Node( 'VEVENT' );
-					$node->addChild( new XML_DOM_Node( 'UID', md5( $mission->missionId ).'@'.$this->env->host ) );
+					$node	= new XmlNode( 'VEVENT' );
+					$node->addChild( new XmlNode( 'UID', md5( $mission->missionId ).'@'.$this->env->host ) );
 					if( $mission->dayStart ){
 						$day	= $mission->dayStart;
 						if( strlen( $mission->timeStart ) )
 							$day	.= ' '.$mission->timeStart;
 						$datetime	= date( "Ymd\THis", strtotime( $day ) );
-						$node->addChild( new XML_DOM_Node( 'DTSTART', $datetime ) );
+						$node->addChild( new XmlNode( 'DTSTART', $datetime ) );
 					}
-					$node->addChild( new XML_DOM_Node( 'STATUS', $statesEvent[$mission->status] ) );
+					$node->addChild( new XmlNode( 'STATUS', $statesEvent[$mission->status] ) );
 					if( !$mission->dayEnd && $mission->dayStart )
 						$mission->dayEnd	= $mission->dayStart;
 					if( $mission->dayEnd ){
@@ -137,21 +140,21 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 							$day	.= ' '.str_pad( ++$parts[0], 2, 0, STR_PAD_LEFT ).':'.$parts[1];
 						}
 						$datetime	= date( "Ymd\THis", strtotime( $day ) );
-						$node->addChild( new XML_DOM_Node( 'DTEND', $datetime ) );
+						$node->addChild( new XmlNode( 'DTEND', $datetime ) );
 					}
 					break;
 			}
 			$modelProject	= new Model_Project( $this->env );
-			$node->addChild( new XML_DOM_Node( 'SUMMARY', $mission->title ) );
-			$node->addChild( new XML_DOM_Node( 'CREATED', date( "Ymd\THis", $mission->createdAt ) ) );
+			$node->addChild( new XmlNode( 'SUMMARY', $mission->title ) );
+			$node->addChild( new XmlNode( 'CREATED', date( "Ymd\THis", $mission->createdAt ) ) );
 			if( $mission->modifiedAt )
-				$node->addChild( new XML_DOM_Node( 'LAST-MODIFIED', date( "Ymd\THis", $mission->modifiedAt ) ) );
+				$node->addChild( new XmlNode( 'LAST-MODIFIED', date( "Ymd\THis", $mission->modifiedAt ) ) );
 			if( $mission->location )
-				$node->addChild( new XML_DOM_Node( 'LOCATION', $mission->location ) );
+				$node->addChild( new XmlNode( 'LOCATION', $mission->location ) );
 			if( $mission->priority )
-				$node->addChild( new XML_DOM_Node( 'PRIORITY', round( $mission->priority * 2 - 1 ) ) );
+				$node->addChild( new XmlNode( 'PRIORITY', round( $mission->priority * 2 - 1 ) ) );
 			if( $mission->projectId )
-				$node->addChild( new XML_DOM_Node( 'CATEGORIES', $modelProject->get( $mission->projectId )->title ) );
+				$node->addChild( new XmlNode( 'CATEGORIES', $modelProject->get( $mission->projectId )->title ) );
 			$calendar->addChild( $node );
 		}
 		$root->addChild( $calendar );

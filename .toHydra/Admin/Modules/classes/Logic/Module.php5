@@ -10,6 +10,7 @@ use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\Reader as FolderReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\XML\Element as XmlElement;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Logic;
@@ -44,7 +45,7 @@ class Logic_Module extends Logic
 	{
 		$fileName	= $this->env->pathApp.'config/modules/'.$moduleId.'.xml';
 		$xml	= FileReader::load( $fileName );
-		$xml	= new XML_Element( $xml );
+		$xml	= new XmlElement( $xml );
 		foreach( $xml->config as $nr => $node ){
 			$name	= $node->getAttribute( 'name' );
 			if( array_key_exists( $name, $pairs ) )

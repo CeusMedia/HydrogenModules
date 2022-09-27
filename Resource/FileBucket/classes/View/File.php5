@@ -1,5 +1,9 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\Status as HttpStatus;
+use CeusMedia\Common\XML\DOM\Builder as XmlBuilder;
+use CeusMedia\Common\XML\DOM\Node as XmlNode;
 use CeusMedia\HydrogenFramework\View;
 
 class View_File extends View{
@@ -36,14 +40,14 @@ class View_File extends View{
 
 		if( $headerSince = $this->env->getRequest()->getHeader( 'If-Modified-Since', FALSE ) ){
 			if( strtotime( $headerSince->getValue() ) === $file->modifiedAt ){
-				Net_HTTP_Status::sendHeader( 304 );
+				HttpStatus::sendHeader( 304 );
 				exit;
 			}
 		}
 		while( ob_get_level() > 1 ) ob_end_clean();
 
 		if( $this->getData( 'download', FALSE ) ){
-			Net_HTTP_Download::sendFile( $sourceFilePath, $file->fileName, TRUE );
+			HttpDownload::sendFile( $sourceFilePath, $file->fileName, TRUE );
 		}
 		header( 'Content-Type: '.$file->mimeType );
 		header( 'Content-Length: '.$file->fileSize );
@@ -72,11 +76,11 @@ class View_File extends View{
 					$response->setBody( 'Error 404: Not found' );
 					$response->send( NULL, TRUE, TRUE );
 				case 'application/xml':
-					$node	= new XML_DOM_Node( 'response', 'Not found', array(
+					$node	= new XmlNode( 'response', 'Not found', array(
 						'type'	=> 'error',
 						'code'	=> 404,
 					) );
-					$response->setBody( XML_DOM_Builder::build( $node ) );
+					$response->setBody( XmlBuilder::build( $node ) );
 					$response->send( NULL, TRUE, TRUE );
 				case 'application/json':
 				case 'text/json':

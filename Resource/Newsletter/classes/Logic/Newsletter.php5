@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection;
+
 /**
  *	@todo	extend CMF_Hydrogen_Logic instead
  *	@todo	code doc
@@ -366,7 +369,7 @@ class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
 
 		if( !empty( $template->$columnKey ) && strlen( trim( $template->$columnKey ) ) ){
 			$list	= substr( $template->$columnKey, 1, -1 );
-			$list	= new ADT_List( explode( "|", $list ) );
+			$list	= new Collection( explode( "|", $list ) );
 			$list	= $list->getValues();
 		}
 		return $list;

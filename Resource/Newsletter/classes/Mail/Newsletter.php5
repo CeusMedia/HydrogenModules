@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\Net\API\Premailer as Premailer;
+
 class Mail_Newsletter extends Mail_Abstract
 {
 	protected function generate(): self
@@ -41,7 +44,7 @@ class Mail_Newsletter extends Mail_Abstract
 		$helper->setMode( View_Helper_Newsletter_Mail::MODE_HTML );
 		$html	= $helper->render();
 		if( $this->env->getConfig()->get( 'module.resource_newsletter.premailer.html' ) ){
-			$premailer	= new Net_API_Premailer();
+			$premailer	= new Premailer();
 			try{
 				$response	= $premailer->convertFromHtml( $html, array(
 					'preserve_styles'	=> FALSE,

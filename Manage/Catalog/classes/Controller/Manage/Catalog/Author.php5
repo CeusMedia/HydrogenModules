@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -156,7 +157,7 @@ class Controller_Manage_Catalog_Author extends Controller
 		if( !isset( $file['name'] ) || empty( $file['name'] ) )
 			return;
 		if( $file['error']	!= 0 ){
-			$handler	= new Net_HTTP_UploadErrorHandler();
+			$handler	= new UploadErrorHandler();
 			$handler->setMessages( $this->getWords( 'uploadErrors' ) );
 			$this->messenger->noteError( $handler->getErrorMessage( $file['error'] ) );
 			return FALSE;

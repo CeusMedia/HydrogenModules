@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\API\Google\Maps\Geocoder as GoogleMapsGeocoder;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -129,7 +130,7 @@ class Controller_Manage_Customer extends Controller
 		}
 		try{
 			$address	= $customer->city.', '.$customer->street.' '.$customer->nr;
-			$geocoder	= new Net_API_Google_Maps_Geocoder();
+			$geocoder	= new GoogleMapsGeocoder();
 			$tags		= $geocoder->getGeoTags( $address );
 			$this->modelCustomer->edit( $customerId, $tags );
 		}

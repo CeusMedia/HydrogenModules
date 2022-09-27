@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\XML\RSS\GoogleBaseBuilder as RssGoogleBaseBuilder;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -129,7 +130,7 @@ class Controller_Catalog extends Controller
 		$words		= (object) $this->getWords( 'rss' );
 		$helper		= new View_Helper_Catalog( $this->env );
 
-		$builder	= new XML_RSS_GoogleBaseBuilder();
+		$builder	= new RssGoogleBaseBuilder();
 		$builder->setChannelData( array(
 			'title'			=> $this->env->title,
 			'link'			=> $this->env->url,
@@ -214,7 +215,7 @@ class Controller_Catalog extends Controller
 		$categoryId	= (int) $categoryId;
 		$words		= (object) $this->getWords( 'rss' );
 		$helper		= new View_Helper_Catalog( $this->env );
-		$rss		= new XML_RSS_Builder();
+		$rss		= new RssBuilder();
 		$data		= array(
 			'title'			=> $this->env->title,
 			'link'			=> $this->env->url,

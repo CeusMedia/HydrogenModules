@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\Net\API\Google\Maps\Geocoder as GoogleMapsGeocoder;
+
 /**
  *	@todo		code doc
  *	@todo		allow different cache backends
@@ -25,7 +28,7 @@ class Logic_Geocoder{
 	}
 
 	public function geocodeAddress( $street, $number, $postcode, $city, $country ){
-		$geocoder	= new Net_API_Google_Maps_Geocoder( "" );
+		$geocoder	= new GoogleMapsGeocoder( "" );
 		$geocoder->setCachePath( 'cache/geo/' );
 		$query		= $street.' '.$number.', '.$postcode.' '.$city.', '.$country;
 #		remark( $query );

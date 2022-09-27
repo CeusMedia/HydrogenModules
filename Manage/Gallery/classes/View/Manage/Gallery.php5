@@ -1,6 +1,7 @@
 <?php
 
 //use CeusMedia\Common\ADT\Collection\Dictionary;
+//use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Gallery extends View
@@ -50,7 +51,7 @@ class View_Manage_Gallery extends View
 				$channel['imageHeight']	= $module->get( 'feed.image.height' );
 		}
 
-		$feed		= new XML_RSS_Builder();
+		$feed		= new RssBuilder();
 		$feed->setChannelData( $channel );
 		foreach( $galleries as $gallery ){
 			$uri	= $baseUrl.'gallery/index/'.str_replace( '%2F', '/', rawurlencode( $gallery->pathname ) );

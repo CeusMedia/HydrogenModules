@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\Net\HTTP\Reader as HttpReader;
+
 /**
  *	@todo		apply module config main switch
  */
@@ -40,7 +43,7 @@ class Resource_Provision_Client{
 			$url		= $server->get( 'url' ).$url;
 		$username		= $server->get( 'username' );
 		$password		= $server->get( 'password' );
-		$serverRequest	= new Net_HTTP_Reader();
+		$serverRequest	= new HttpReader();
 		if( $username && $password )
 			$serverRequest->setBasicAuth( $username, $password );
 		if( is_array( $postData ) )
