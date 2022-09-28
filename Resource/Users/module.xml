@@ -43,7 +43,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
-	<config protected="yes" type="string" name="acl">CMF_Hydrogen_Environment_Resource_Acl_Database</config>
+	<config protected="yes" type="string" name="acl">\\CeusMedia\\HydrogenFramework\\Environment\\Resource\\Acl\\Database</config>
 	<config protected="yes" type="integer" name="status.register" title="user status to be set on register, set to 1 for 'auto active'">0</config>
 	<config protected="no" type="integer" name="name.length.min" title="lowest number of name characters">3</config>
 	<config protected="no" type="integer" name="name.length.max" title="highest number of name characters">17</config>

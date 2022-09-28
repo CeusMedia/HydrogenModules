@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Shop extends Logic
@@ -22,7 +23,7 @@ class Logic_Shop extends Logic
 	/**	@var	Model_Shop_Order_Position	$modelOrderPosition */
 	protected $modelOrderPosition;
 
-	/** @var	Alg_List_Dictionary			$moduleConfig */
+	/** @var	Dictionary					$moduleConfig */
 	protected $moduleConfig;
 
 	/**	@var	Logic_Shop_Shipping|NULL	$shipping			Instance of shipping logic if module is installed */
@@ -401,8 +402,8 @@ class Logic_Shop extends Logic
 			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
 			->setExceptionVersion( '0.8.3' )
 			->message( 'setShipping is deprecated' );
-		if( !( $logic instanceof CMF_Hydrogen_Logic ) )
-			throw new RuntimeException( 'Invalid logic object (must extend CMF_Hydrogen_Logic)' );
+		if( !( $logic instanceof Logic) )
+			throw new RuntimeException( 'Invalid logic object (must extend Logic)' );
 		$this->logicShipping		= $logic;
 	}
 

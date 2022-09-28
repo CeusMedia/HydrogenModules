@@ -3,6 +3,7 @@
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 use CeusMedia\HydrogenFramework\View;
 
 class Controller_Work_Newsletter_Template extends Controller
@@ -10,13 +11,13 @@ class Controller_Work_Newsletter_Template extends Controller
 	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
 	protected $logic;
 
-	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger */
+	/**	@var	Messenger					$messenger */
 	protected $messenger;
 
-	/**	@var	object											$request */
+	/**	@var	object						$request */
 	protected $request;
 
-	/**	@var	object											$session */
+	/**	@var	object						$session */
 	protected $session;
 
 	protected $moduleConfig;

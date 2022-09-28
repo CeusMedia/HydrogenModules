@@ -10,13 +10,13 @@ class Controller_Piwik extends Controller{
 	 *	Loads connector to local Piwik installation for PHP side tracking, if enabled and available.
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
-	 *	@param		object						$context	Hook context object
-	 *	@param		object						$module		Module object
-	 *	@param		public						$arguments	Map of hook arguments
+	 *	@param		Environment		$env		Environment instance
+	 *	@param		object			$context	Hook context object
+	 *	@param		object			$module		Module object
+	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function ___onEnvInit( Environment $env, $context, $module, $arguments = [] ){
+	static public function ___onEnvInit( Environment $env, object $context, $module, array & $payload ){
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );				//  get module configuration as dictionary
 		if( !$config->get( 'active' ) || !( $id = $config->get( 'ID' ) ) )							//  piwik tracking is disabled or ID is not set
 			return;
@@ -36,15 +36,15 @@ class Controller_Piwik extends Controller{
 	 *	Loads connector to remove Piwik installation for client side tracking, if enabled and available.
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
-	 *	@param		object						$context	Hook context object
-	 *	@param		object						$module		Module object
-	 *	@param		public						$arguments	Map of hook arguments
+	 *	@param		Environment		$env		Environment instance
+	 *	@param		object			$context	Hook context object
+	 *	@param		object			$module		Module object
+	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function ___onPageApplyModules( Environment $env, $context, $module, $arguments = [] ){
+	static public function ___onPageApplyModules( Environment $env, object $context, $module, array & $payload ){
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );				//  get module configuration as array map
-		CMF_Hydrogen_Deprecation::getInstance()
+		\CeusMedia\HydrogenFramework\Deprecation::getInstance()
 			->setVersion( $env->getModules()->get( 'Resource_Tracker_Piwik' )->version )
 			->setErrorVersion( '0.4.2' )
 			->setExceptionVersion( '0.4.2' )
@@ -73,13 +73,13 @@ initPiwik('.json_encode( $config->getAll() ).');';
 	 *	Extends response page by tracking pixel for clients having JavaScript disabled.
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
-	 *	@param		object						$context	Hook context object
-	 *	@param		object						$module		Module object
-	 *	@param		public						$arguments	Map of hook arguments
+	 *	@param		Environment		$env		Environment instance
+	 *	@param		object			$context	Hook context object
+	 *	@param		object			$module		Module object
+	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function ___onPageBuild( Environment $env, $context, $module, $arguments = [] ){
+	static public function ___onPageBuild( Environment $env, object $context, $module, array & $payload ){
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );				//  get module configuration as dictionary
 		if( !$config->get( 'active' ) || !( $id = $config->get( 'ID' ) ) )							//  piwik tracking is disabled or ID is not set
 			return;

@@ -1,7 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
+use CeusMedia\HydrogenFramework\View\Helper\Navigation\SingleAutoTabs;
 
-class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_Abstract
+class View_Helper_Navigation_Bootstrap_Navbar extends Abstraction
 {
 	protected $container			= FALSE;
 	protected $inverse				= FALSE;
@@ -47,7 +49,7 @@ class View_Helper_Navigation_Bootstrap_Navbar extends CMF_Hydrogen_View_Helper_A
 			$links	= HtmlTag::create( 'div', $inner, array( 'class' => $class ) );
 		}
 		else{
-			$helperNavbar	= new CMF_Hydrogen_View_Helper_Navigation_SingleAutoTabs( $this->env );
+			$helperNavbar	= new SingleAutoTabs( $this->env );
 			$helperNavbar->classContainer	= "navbar navbar-".$this->position."-top";
 			$helperNavbar->classWidget		= "navbar-inner";
 			$helperNavbar->classHelper		= "nav";

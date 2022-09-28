@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\Folder;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\Lister as FolderIndex;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderIndex;
@@ -23,7 +24,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 			$path	= strlen( trim( $path ) ) ? $path.'/' : '';
 			$folder	= $this->request->get( 'folder' );
 			$folder	= str_replace( [' '], ['_'], $folder );
-			new FS_Folder( $this->basePath.$path.$folder, TRUE );
+			new Folder( $this->basePath.$path.$folder, TRUE );
 			if( $path )
 				$this->restart( 'index/'.base64_encode( $path ), TRUE );
 		}

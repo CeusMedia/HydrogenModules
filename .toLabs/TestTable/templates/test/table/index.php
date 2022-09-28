@@ -1,6 +1,13 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View\Helper\Timestamp;
+
+/** @var object[] $tests */
+/** @var Dictionary $config */
+/** @var array<array<string,string>> $words */
 
 $list		= [];
 foreach( $tests as $entry )
@@ -23,7 +30,7 @@ foreach( $tests as $entry )
 {
 	$class		= ( $number % 2 ) ? 'even' : 'odd';
 	$format		= $config->get( 'layout.format.timestamp' );
-	$timeHelper	= new CMF_Hydrogen_View_Helper_Timestamp( $entry['timestamp'] );
+	$timeHelper	= new Timestamp( $entry['timestamp'] );
 	$timestamp	= $timeHelper->toPhrase( $this->env, TRUE );
 	$url		= './test/table/edit/'.$entry['testId'];
 	$link		= HtmlElements::Link( $url, $entry['title'] );

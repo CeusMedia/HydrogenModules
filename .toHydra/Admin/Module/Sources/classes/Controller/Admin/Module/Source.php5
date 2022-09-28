@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Library\Source as ModuleLibrarySource;
 
 class Controller_Admin_Module_Source extends Controller{
 
@@ -53,7 +54,7 @@ class Controller_Admin_Module_Source extends Controller{
 					}
 					else{
 						try{
-							$lib		= new CMF_Hydrogen_Environment_Resource_Module_Library_Source( $this->env, $source );
+							$lib		= new ModuleLibrarySource( $this->env, $source );
 							$modules	= (array) $lib->getAll();
 
 							$result['code']			= 1;
@@ -87,7 +88,7 @@ class Controller_Admin_Module_Source extends Controller{
 						$result['error']	= 'Path not existing';
 					}
 					else{
-						$lib		= new CMF_Hydrogen_Environment_Resource_Module_Library_Source( $this->env, $source );
+						$lib		= new ModuleLibrarySource( $this->env, $source );
 						$modules	= $lib->getAll();
 						$result['modules']		= array_values( $modules );
 						$result['code']			= 1;
@@ -240,7 +241,7 @@ class Controller_Admin_Module_Source extends Controller{
 
 		$source		= $this->model->get( $sourceId );
 		$source->id	= $sourceId;
-		$libOld		= new CMF_Hydrogen_Environment_Resource_Module_Library_Source( $this->env, $source );
+		$libOld		= new ModuleLibrarySource( $this->env, $source );
 		$modulesOld	= (array) $libOld->getAll();
 
 		$this->env->getCache()->setContext( 'Modules/'.$sourceId.'/' );
@@ -257,7 +258,7 @@ class Controller_Admin_Module_Source extends Controller{
 			$this->env->getMessenger()->noteNotice( 'Removed local module cache file <small><code>'.$fileCache.'</code></small>.' );
 		}
 */
-		$libNew		= new CMF_Hydrogen_Environment_Resource_Module_Library_Source( $this->env, $source );
+		$libNew		= new ModuleLibrarySource( $this->env, $source );
 		$modulesNew	= (array) $libNew->getAll();
 
 		$modulesRemoved		= array_diff_key( $modulesOld, $modulesNew );

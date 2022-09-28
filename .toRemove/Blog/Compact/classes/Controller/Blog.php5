@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\RegexFilter as RegexFileFilter;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -155,7 +156,7 @@ class Controller_Blog extends Controller{
 	public function dev( $topic = NULL ){
 		$topic		= strlen( $topic ) ? $topic : NULL;
 
-		$index	= new FS_File_RegexFilter( 'contents/dev/', "/\.txt$/" );
+		$index	= new RegexFileFilter( 'contents/dev/', "/\.txt$/" );
 		$list	= [];
 		foreach( $index as $file ){
 			$fileName	= pathinfo( $file->getFilename(), PATHINFO_FILENAME );

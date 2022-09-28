@@ -2,6 +2,8 @@
 
 //use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Library\Local as LocalModuleLibrary;
+
 class Logic_Instance
 {
 	protected $env;
@@ -32,7 +34,7 @@ class Logic_Instance
 			$list['missing']	= [];
 			$list['updatable']	= [];
 			$list['supported']	= [];
-			if( $env->getModules() instanceof CMF_Hydrogen_Environment_Resource_Module_Library_Local ){
+			if( $env->getModules() instanceof LocalModuleLibrary){
 				$logic		= Logic_Module::getInstance( $this->env );
 				$modulesAll	= $logic->model->getAll();
 				$modules	= $env->getModules()->getAll();

@@ -2,8 +2,9 @@
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_Work_Time_Modal_Assign extends CMF_Hydrogen_View_Helper_Abstract
+class View_Helper_Work_Time_Modal_Assign extends Abstraction
 {
 	protected $from;
 	protected $module;

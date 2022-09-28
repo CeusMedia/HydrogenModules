@@ -49,7 +49,7 @@ class Hook_Auth extends Hook
 	public static function onEnvInitAcl( Environment $env, $context, $module, $payload )
 	{
 		$payload	= (object) $payload;
-//		$payload->className	= 'CMF_Hydrogen_Environment_Resource_Acl_Database';
+//		$payload->className	= '\\CeusMedia\\HydrogenFramework\\Environment\\Resource\\Acl\\Database';
 		$payload->className	= 'Resource_Acl_Authentication';
 		return TRUE;
 	}

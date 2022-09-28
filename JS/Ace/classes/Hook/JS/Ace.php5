@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Captain as CaptainResource;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_JS_Ace extends Hook{
@@ -61,7 +62,7 @@ class Hook_JS_Ace extends Hook{
 		) );
 
 		$level	= $configAuto->get( 'level' );
-		$level	= CMF_Hydrogen_Environment_Resource_Captain::interpretLoadLevel( $level );		//  sanitize level supporting old string values
+		$level	= CaptainResource::interpretLoadLevel( $level );		//  sanitize level supporting old string values
 		$page->js->addScriptOnReady( $script, max( 2, min( 8, $level ) ) );						// append script call on document ready
 	}
 

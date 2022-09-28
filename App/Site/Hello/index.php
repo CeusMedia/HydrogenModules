@@ -4,6 +4,12 @@
 
 //$pathLibraries	= "";											//  path to libraries
 
+use CeusMedia\Common\Loader;
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
+use CeusMedia\HydrogenFramework\Application\Web\Site as WebSiteApp;
+use CeusMedia\HydrogenFramework\Environment\Router\Recursive as RecursiveRouter;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
 $versionCMC			= 'trunk';										//  branch path of cmClasses
 $versionCMF			= 'trunk';										//  branch path of cmFrameworks
 $versionCMM			= 'trunk';										//  branch path of cmModules
@@ -12,7 +18,7 @@ $versionCMM			= 'trunk';										//  branch path of cmModules
 //$classExt			= "php,php5";									//  set an alternative project class extension
 //$classPrefix		= "My_";										//  set an alternative project class prefix
 $configFile			= "config/config.ini";							//  set an alternative config file
-$classRouter		= "CMF_Hydrogen_Environment_Router_Recursive";	//  set an alternative router class 
+$classRouter		= RecursiveRouter::class;						//  set an alternative router class
 
 
 //  -------------------------------  //
@@ -35,20 +41,19 @@ require_once $path.'cmFrameworks/'.$versionCMF.'/autoload.php5';	//  load cmFram
 require_once $path.'cmModules/'.$versionCMM.'/autoload.php5';		//  load cmModules
 
 if( !empty( $configFile ) )											//  an alternative config file has been set
-	CMF_Hydrogen_Environment_Web::$configFile	= $configFile;		//  set alternative config file in environment
+	WebEnvironment::$configFile	= $configFile;						//  set alternative config file in environment
 if( !empty( $classRouter ) )										//  an alternative router class has been set
-	CMF_Hydrogen_Environment_Web::$classRouter	= $classRouter;		//  set alternative router class in environment
+	WebEnvironment::$classRouter	= $classRouter;					//  set alternative router class in environment
 
 try{
-	CMC_Loader::registerNew(										//  register autoloader for project classes
+	Loader::registerNew(										//  register autoloader for project classes
 		isset( $classExt ) ? $classExt : "php,php5",						//  realize project class extension
 		isset( $classPrefix ) ? $classPrefix : NULL,				//  realize project class prefix
 		isset( $classPath ) ? $classPath : "classes/"				//  realize project class path
 	);
-	$app	= new CMF_Hydrogen_Application_Web_Site();				//  create default web site application instance
+	$app	= new WebSiteApp();				//  create default website application instance
 	$app->run();													//  and run it
 }
-catch( Exception $e ){												//  an uncatched exception happend
-    UI_HTML_Exception_Page::display( $e );							//  display report page with call stack
+catch( Exception $e ){												//  an uncaught exception happened
+	HtmlExceptionPage::display( $e );							//  display report page with call stack
 }
-?>

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\ICal\Builder as IcalFileBuilder;
 use CeusMedia\Common\XML\DOM\Node as XmlNode;
 use CeusMedia\HydrogenFramework\View;
 
@@ -56,7 +57,7 @@ class View_Work_Mission_Export extends View{
 			$calendar->addChild( $node );
 		}
 		$root->addChild( $calendar );
-		$ical	= new FS_File_ICal_Builder();
+		$ical	= new IcalFileBuilder();
 		$ical	= trim( $ical->build( $root ) );
 		error_log( date( 'Y-m-d H:i:s' ).' | '.getEnv( 'REMOTE_ADDR' ).': '.getEnv( 'HTTP_USER_AGENT' )."\n", 3, 'ua.log' );
 		return $ical;

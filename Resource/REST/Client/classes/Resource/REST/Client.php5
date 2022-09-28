@@ -15,7 +15,7 @@ class Resource_REST_Client{
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment		$env		Environment instance
+	 *	@param		Environment		$env		Environment instance
 	 *	@return		void
 	 */
 	public function __construct( Environment $env ){

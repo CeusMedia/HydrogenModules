@@ -2,8 +2,9 @@
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_Info_Dashboard extends CMF_Hydrogen_View_Helper_Abstract
+class View_Helper_Info_Dashboard extends Abstraction
 {
 	protected $columns		= 3;
 	protected $dashboard;

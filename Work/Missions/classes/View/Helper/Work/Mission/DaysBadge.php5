@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_Work_Mission_DaysBadge extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_Work_Mission_DaysBadge extends Abstraction
+{
 	protected $badgesColored	= TRUE;
 
 	public function __construct( $env ){

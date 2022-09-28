@@ -1,13 +1,14 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Admin_Config extends CMF_Hydrogen_View_Hook
+class Hook_Admin_Config extends Hook
 {
 	/**
 	 * @todo finish impl
 	 */
-	public static function onAdminConfigRegisterTab( Environment $env, $context, $module, $payload )
+	public static function onAdminConfigRegisterTab( Environment $env, object $context, $module, array & $payload )
 	{
 		$words	= (object) $env->getLanguage()->getWords( 'admin/config' );						//  load words
 		$context->registerTab( '', $words->tabs['index'], 0 );									//  register index tab

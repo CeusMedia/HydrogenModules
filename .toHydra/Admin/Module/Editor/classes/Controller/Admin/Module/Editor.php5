@@ -4,19 +4,21 @@ use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Editor as ModuleEditor;
 
 class Controller_Admin_Module_Editor extends Controller								//  @todo	1) inherit from View_Admin_Module after cleanup
 {
-	/** @var	CMF_Hydrogen_Environment_Resource_Module_Editor	$editor		Module XML editor instance */
+	/** @var	ModuleEditor $editor							Module XML editor instance */
 	protected $editor;
 
-	/** @var	View_Helper_Module								$helper		Modile View helper instance */
+	/** @var	View_Helper_Module								$helper		Module View helper instance */
 	protected $helper;
 
 	/**	@var	Logic_Module									$logic		Module logic instance */
 	protected $logic;
 
-	/** @var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	Messenger Object */
+	/** @var	Messenger										$messenger	Messenger Object */
 	protected $messenger;
 
 	/**	@var	Net_HTTP_Request								$request	HTTP Request Object */
@@ -433,7 +435,7 @@ class Controller_Admin_Module_Editor extends Controller								//  @todo	1) inhe
 
 //print_m( $this->frontend->getEnv()->path );die;
 
-		$this->editor		= new CMF_Hydrogen_Environment_Resource_Module_Editor( $this->frontendEnv );
+		$this->editor		= new ModuleEditor( $this->frontendEnv );
 		$this->helper		= new View_Helper_Module( $this->env );
 
 		$this->env->getPage()->addThemeStyle( 'site.admin.module.css' );

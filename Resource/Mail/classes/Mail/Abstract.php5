@@ -5,7 +5,10 @@ use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\Net\Reader as NetReader;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Template;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
 /**
@@ -31,13 +34,13 @@ abstract class Mail_Abstract
 	/** @var		Logic_Mail				$logicMail		Mail logic object */
 	protected $logicMail;
 
-	/** @var		UI_HTML_PageFrame		$page			Empty page oject for HTML mails */
+	/** @var		HtmlPage $page			Empty page object for HTML mails */
 	protected $page;
 
 	/** @var		object					$transport		Mail transport object, build on construction */
 	protected $transport;
 
-	/** @var		CMF_Hydrogen_View		$view			General view instance */
+	/** @var		View $view			General view instance */
 	protected $view;
 
 	/** @var		Model_Mail_Template		$modelTemplate	Mail template model object */
@@ -313,15 +316,15 @@ abstract class Mail_Abstract
 			$subject	= trim( $prefix ).' '.$subject;
 
 		$host	= '';
-		if( $this->env instanceof CMF_Hydrogen_Environment_Remote ){
+		if( $this->env instanceof RemoteEnvironment){
 			$logic	= Logic_Frontend::getInstance( $this->env );
 			$host	= parse_url( $logic->getUrl(), PHP_URL_HOST );
 		}
-		else if( $this->env instanceof CMF_Hydrogen_Environment_Web ){
+		else if( $this->env instanceof WebEnvironment){
 			$host	= $this->env->host ?? parse_url( $this->baseUrl, PHP_URL_HOST );
 		}
 
-		$subject	= UI_Template::renderString( $subject, ['app' => [
+		$subject	= Template::renderString( $subject, ['app' => [
 			'title'	=> $this->env->getConfig()->get( 'app.name' ),
 			'host'	=> $host,
 		]] );
@@ -362,7 +365,7 @@ abstract class Mail_Abstract
 	 */
 	protected function addHtmlBody( $html )
 	{
-		CMF_Hydrogen_Deprecation::getInstance()
+		\CeusMedia\HydrogenFramework\Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Resource_Mail' )->version )
 			->setErrorVersion( '0.8.9' )
 			->setExceptionVersion( '0.9' )
@@ -380,7 +383,7 @@ abstract class Mail_Abstract
 	 */
 	protected function addTextBody( string $text ): self
 	{
-		CMF_Hydrogen_Deprecation::getInstance()
+		\CeusMedia\HydrogenFramework\Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Resource_Mail' )->version )
 			->setErrorVersion( '0.8.9' )
 			->setExceptionVersion( '0.9' )
@@ -585,7 +588,7 @@ abstract class Mail_Abstract
 	 *	Having a template ID set, this template will be forced.
 	 *	Needed for preview and testing.
 	 *
-	 *	Otherwise detects best template to use by looking for:
+	 *	Otherwise, detects the best template to use by looking for:
 	 *	- given template ID, realizing mail settings of mail class of a module
 	 *	- active mail template ID within database
 	 *	- default mail template ID of mail resource module of frontend application (if considered)

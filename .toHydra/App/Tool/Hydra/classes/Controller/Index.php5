@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\RecursiveTodoLister as RecursiveTodoFileLister;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image\Error as ErrorImage;
 use CeusMedia\Common\UI\Image\Graphviz\Graph as GraphvizGraph;
@@ -94,7 +95,7 @@ class Controller_Index extends Controller{
 	}
 
 	public function showTodos(){
-		$index	= new FS_File_RecursiveTodoLister( array( 'php', 'js' ) );
+		$index	= new RecursiveTodoFileLister( array( 'php', 'js' ) );
 		$index->scan( $this->env->getRemote()->path );
 		$this->addData( 'path', $this->env->getRemote()->path );
 		$this->addData( 'todos', $index->getList( TRUE ) );

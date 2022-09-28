@@ -11,7 +11,7 @@ class View_Helper_Navigation_Index
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	Environment instance
+	 *	@param		Environment			$env		Environment instance
 	 *	@throws		RuntimeException	if module UI_Navigation is not installed
 	 */
 	public function __construct( $env )

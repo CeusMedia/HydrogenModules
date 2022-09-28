@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-abstract class View_Helper_Work_Mission_Abstract extends CMF_Hydrogen_View_Helper_Abstract{
-
+abstract class View_Helper_Work_Mission_Abstract extends Abstraction
+{
 	protected $useAvatar	= FALSE;
 	protected $users		= [];
 	protected $modules;

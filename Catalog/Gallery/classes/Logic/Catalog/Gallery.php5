@@ -1,9 +1,13 @@
 <?php
-class Logic_Catalog_Gallery{
 
+use CeusMedia\HydrogenFramework\Environment;
+
+class Logic_Catalog_Gallery
+{
 	/**	@var	string							$pathImages */
 	public $cache;
 
+	/**	@var	Environment						$env */
 	protected $env;
 
 	/**	@var	Model_Catalog_Gallery_Category	$modelCategory */
@@ -23,10 +27,11 @@ class Logic_Catalog_Gallery{
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env
+	 *	@param		Environment		$env
 	 *	@return		void
 	 */
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env				= $env;
 		$this->cache			= $this->env->getCache();
 		$this->modelCategory	= new Model_Catalog_Gallery_Category( $this->env );
@@ -56,7 +61,8 @@ class Logic_Catalog_Gallery{
 	 *	@return		integer						Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function changeQuantity( $articleId, $change ){
+	public function changeQuantity( $articleId, $change )
+	{
 		return 1;
 		$change		= (int) $change;
 		$article	= $this->modelArticle->get( $articleId );
@@ -70,11 +76,13 @@ class Logic_Catalog_Gallery{
 		return $article->quantity + $change;
 	}
 
-	public function countCategoryImages( $categoryId ){
+	public function countCategoryImages( $categoryId )
+	{
 		return count( $this->getCategoryImages( $categoryId ) );
 	}
 
-	public function getCategory( $categoryId ){
+	public function getCategory( $categoryId )
+	{
 		$categoryId	= (int) $categoryId;
 		$cacheKey	= 'catalog.gallery.category.'.$categoryId;
 		$category	= $this->cache->get( $cacheKey );
@@ -86,7 +94,8 @@ class Logic_Catalog_Gallery{
 		return $category;
 	}
 
-	public function getCategoryImages( $categoryId ){
+	public function getCategoryImages( $categoryId )
+	{
 		$cacheKey	= 'catalog.gallery.category.'.$categoryId.'.images';
 		$images		= $this->cache->get( $cacheKey );
 		if( !$images ){
@@ -99,7 +108,8 @@ class Logic_Catalog_Gallery{
 		return $images;
 	}
 
-	public function getCategories(){
+	public function getCategories()
+	{
 		$cacheKey	= 'catalog.gallery.categories';
 		$categories	= $this->cache->get( $cacheKey );
 		if( !$categories ){
@@ -111,7 +121,8 @@ class Logic_Catalog_Gallery{
 		return $categories;
 	}
 
-	public function getImage( $imageId ){
+	public function getImage( $imageId )
+	{
 		$imageId	= (int) $imageId;
 		$cacheKey	= 'catalog.gallery.image.'.$imageId;
 		$image		= $this->cache->get( $cacheKey );
@@ -123,11 +134,12 @@ class Logic_Catalog_Gallery{
 		return $image;
 	}
 
-	public function getImageUri( $imageOrId, $absolute = FALSE ){
+	public function getImageUri( $imageOrId, $absolute = FALSE )
+	{
 		$image		= $imageOrId;
 		if( is_int( $imageOrId ) )
 			$image	= $this->getImage( $imageOrId );
-		if( !is_object( $productLicense ) )
+		if( !is_object( $image ) )
 			throw new InvalidArgumentException( 'Given article data is invalid' );
 		$uri	= vsprintf( $this->articleUriTemplate, array(
 			$image->galleryCategoryId,
@@ -140,15 +152,16 @@ class Logic_Catalog_Gallery{
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getUriPart( $label, $delimiter = "_" ){
+	public function getUriPart( $label, $delimiter = "_" )
+	{
 		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
 		$label	= preg_replace( "/ +/", $delimiter, $label );
 		return $label;
 	}
 
-	public function setArticleUri( $articleUriTemplate ){
+	public function setArticleUri( $articleUriTemplate )
+	{
 		$this->articleUriTemplate	= $articleUriTemplate;
 	}
 }
-?>

@@ -1,7 +1,9 @@
 <?php
 
+use CeusMedia\Common\FS\File;
+use CeusMedia\Common\FS\Folder;
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class Controller_Admin_Mail_Template_Import extends Controller
 {
@@ -12,10 +14,10 @@ class Controller_Admin_Mail_Template_Import extends Controller
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env			Application Environment Object
+	 *	@param		WebEnvironment		$env			Application Environment Object
 	 *	@return		void
 	 */
-    public function __construct( Environment $env )
+	public function __construct( WebEnvironment $env )
 	{
 		parent::__construct( $env, FALSE );
 		$this->messenger			= $this->env->getMessenger();
@@ -56,7 +58,7 @@ class Controller_Admin_Mail_Template_Import extends Controller
 					$this->restart( 'admin/mail/template' );
 				}
 				$templateId	= $this->modelTemplate->add( $data, FALSE );
-				$this->messenger->noteSuccess( 'Template imported as '.$title );
+//				$this->messenger->noteSuccess( 'Template imported as '.$title );
 				$this->restart( 'admin/mail/template/edit/'.$templateId );
 			}
 			catch( Exception $e ){
@@ -102,8 +104,8 @@ class Controller_Admin_Mail_Template_Import extends Controller
 		foreach( array_keys( $files ) as $topic ){
 			foreach( $entity->files->$topic as $item ){
 				if( !file_exists( $item->filePath )){
-					new FS_Folder( dirname( $item->filePath ), TRUE );
-					$file	= new FS_File( $item->filePath, TRUE );
+					new Folder( dirname( $item->filePath ), TRUE );
+					$file	= new File( $item->filePath, TRUE );
 					$file->setContent( base64_decode( $item->content ) );
 				}
 				$files[$topic][]	= $item->filePath;

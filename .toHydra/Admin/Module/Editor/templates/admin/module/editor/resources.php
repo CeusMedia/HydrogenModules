@@ -112,7 +112,7 @@ if( $module->files->templates ){
 
 
 
-//$classes	= xmp( CMF_Hydrogen_View_Helper_Diff::htmlDiff( file_get_contents( 'config.ini.inc' ), file_get_contents( 'config.ini.inc.dist' ) ) );
+//$classes	= xmp( \CeusMedia\HydrogenFramework\View\Helper\Diff::htmlDiff( file_get_contents( 'config.ini.inc' ), file_get_contents( 'config.ini.inc.dist' ) ) );
 //die( $classes );
 
 //  --  TABLE: LOCALES  --  //

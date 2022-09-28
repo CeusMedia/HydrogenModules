@@ -1,10 +1,13 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_Module extends CMF_Hydrogen_View_Helper_Abstract{
-
-	public function __construct( $env ){
+class View_Helper_Module extends Abstraction
+{
+	public function __construct( Web $env ){
 		$this->setEnv( $env );
 		$this->logic	= Logic_Module::getInstance( $env );
 		$this->modules	= [];

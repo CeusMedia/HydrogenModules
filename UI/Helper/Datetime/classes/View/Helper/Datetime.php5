@@ -25,9 +25,11 @@
  *	@link			http://code.google.com/p/cmframeworks/
  */
 
+use CeusMedia\Common\Alg\Time\DurationPhraser as TimeDurationPhraser;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 /**
  *	View helper for converting and displaying timestamps.
@@ -39,7 +41,7 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@link			http://code.google.com/p/cmframeworks/
  */
-class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract
+class View_Helper_Datetime extends Abstraction
 {
 	public $stringEmpty			= "";
 	public $formatDatetime		= 'Y-m-d H:i:s';
@@ -54,7 +56,7 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env	Environment object
+	 *	@param		Environment		$env	Environment object
 	 *	@return		void
 	 */
 	public function __construct( Environment $env )
@@ -129,7 +131,7 @@ class View_Helper_Datetime extends CMF_Hydrogen_View_Helper_Abstract
 		$words		= $this->env->language->getWords( $fileKey );
 		if( !isset( $words[$section] ) )
 			throw new InvalidArgumentException( 'Invalid language section "'.$section.'" in topic "'.$topic.'"' );
-		$this->phraser	= new Alg_Time_DurationPhraser( $words[$section] );
+		$this->phraser	= new TimeDurationPhraser( $words[$section] );
 		return $this;
 	}
 }

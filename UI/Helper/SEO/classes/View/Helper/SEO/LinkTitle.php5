@@ -8,6 +8,7 @@
  */
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 /**
  *	Helper to convert strings to be valid for URLs.
@@ -17,7 +18,7 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  *	@todo		finish code doc
  */
-class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
+class View_Helper_SEO_LinkTitle extends Abstraction
 {
 	const MODE_TITLE		= 1;
 	const MODE_OBJECT		= 2;
@@ -41,7 +42,7 @@ class View_Helper_SEO_LinkTitle extends CMF_Hydrogen_View_Helper_Abstract
 	 *	Constructor.
 	 *	Sets case sensitivity by module configuration.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
+	 *	@param		Environment		$env		Environment instance
 	 */
 	public function __construct( Environment $env )
 	{

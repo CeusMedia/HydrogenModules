@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_Navigation_Bootstrap_Tabs extends CMF_Hydrogen_View_Helper_Abstract
+class View_Helper_Navigation_Bootstrap_Tabs extends Abstraction
 {
 	public $classList			= 'nav nav-tabs';
 	public $classItem			= '';

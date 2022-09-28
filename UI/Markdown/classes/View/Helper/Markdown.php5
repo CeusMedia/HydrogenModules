@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Constant as ObjectConstant;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 use CeusMedia\Markdown\Renderer\Html as MarkdownToHtmlRenderer;
@@ -14,7 +15,7 @@ class View_Helper_Markdown extends View
 		$module		= $this->env->getModules()->get( 'UI_Markdown' );
 		if( array_key_exists( 'renderer', $module->config ) ){
 			$constant	= 'RENDERER_'.strtoupper( $module->config['renderer']->value );
-			$constants	= new Alg_Object_Constant( MarkdownToHtmlRenderer::class );
+			$constants	= new ObjectConstant( MarkdownToHtmlRenderer::class );
 			if( $constants->hasValue( $constant ) )
 				$this->renderer	= $constants->getValue( $constant );
 		}

@@ -2,17 +2,18 @@
 
 use CeusMedia\Common\UI\HTML\Tabs as HtmlTabs;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_Module_Details extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_Module_Details extends Abstraction
+{
 	/** @var		Logic_Module		$logic			Module logic instance */
 	protected $logic;
 
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment		$env		Environment object
-	 *	@param		Logic_Module					$logic		Module logic instance
+	 *	@param		Environment			$env		Environment object
+	 *	@param		Logic_Module		$logic		Module logic instance
 	 *	@return		void
 	 */
 	public function __construct( Environment $env/*, Logic_Module $logic*/ ){

@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info_Page extends Hook
 {
-	public static function onAppDispatch( Environment $env, $context, $module, $payload )
+	public static function onAppDispatch( Environment $env, object $context, $module, array & $payload )
 	{
 		if( $env->getModules()->has( 'Resource_Frontend' ) )										//  frontend resource exists
 			if( $env->getConfig()->get( 'module.resource_frontend.path' ) !== './' )				//  this app is a backend
@@ -205,7 +205,7 @@ class Hook_Info_Page extends Hook
 		$logic		= $env->getLogic()->get( 'page' );
 		$matches	= [];
 		while( preg_match( $pattern, $payload['content'], $matches ) ){
-			CMF_Hydrogen_Deprecation::getInstance()
+			\CeusMedia\HydrogenFramework\Deprecation::getInstance()
 				->setVersion( $env->getModules()->get( 'Info_Pages' )->version )
 				->setErrorVersion( '0.7.7' )
 				->setExceptionVersion( '0.9' )

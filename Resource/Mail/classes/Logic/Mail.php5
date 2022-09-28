@@ -627,13 +627,6 @@ class Logic_Mail extends Logic
 			throw new Exception( 'Mail object is not extending Mail_Abstract, but '.get_class( $mail->object->instance ) );
 		if( $mail->object->instance->mail instanceof \CeusMedia\Mail\Message )							//  modern mail message with parsed body parts
 			return $mail->object->instance->mail->getParts( TRUE );
-		else if( $mail->object->instance->mail instanceof Net_Mail ){										//  outdated mail message using cmClasses implementation
-			if( method_exists( $mail->object->instance->mail, 'getParts' ) )
-				return $mail->object->instance->mail->getParts();
-			if( !class_exists( 'CMM_Mail_Parser' ) )											//  Net_Mail needs Parser from cmModules
-				throw new RuntimeException( 'Mail parser "CMM_Mail_Parser" is not available.' );
-			return CMM_Mail_Parser::parseBody( $mail->object->instance->mail->getBody() );
-		}
 		throw new RuntimeException( 'No mail parser available.' );							//  ... which is not available
 	}
 

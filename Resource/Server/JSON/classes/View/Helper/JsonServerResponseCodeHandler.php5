@@ -1,9 +1,10 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_JsonServerResponseCodeHandler extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_JsonServerResponseCodeHandler extends Abstraction
+{
 	public static $labelUnknownIdentifier	= 'unknown';
 
 	public function __construct( Environment $env ){

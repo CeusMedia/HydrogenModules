@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Constant as ObjectConstant;
 use CeusMedia\Common\CLI\Question;
 use CeusMedia\Common\FS\File\JSON\Writer as JsonFileWriter;
 
@@ -91,7 +92,7 @@ class Job_Job extends Job_Abstract
 			}
 			if( count( $jobIdentifiers ) !== 1 )
 				$this->out( 'Job: '.$jobIdentifier );
-			$constants	= new Alg_Object_Constant( 'Model_Job_Definition' );
+			$constants	= new ObjectConstant( 'Model_Job_Definition' );
 			$data	= array(
 				'Method'		=> 'Job_'.$job->className.' >> '.$job->methodName,
 				'Mode'			=> strtolower( $constants->getKeyByValue( (int) $job->mode, 'MODE_' ) ),

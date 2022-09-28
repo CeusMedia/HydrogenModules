@@ -1,8 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-abstract class View_Helper_Work_Time extends CMF_Hydrogen_View_Helper_Abstract
+abstract class View_Helper_Work_Time extends Abstraction
 {
 	protected $session;
 	protected $userId;

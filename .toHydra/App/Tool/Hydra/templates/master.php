@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\View\Helper\Navigation\SingleList;
 
 //	if( $env->getRequest()->isAjax() )								// this is an AJAX request
 //		return $content;													// deliver content only
@@ -13,13 +14,13 @@ $action		= $env->request->get( '__action' );
 if( $controller == "admin/module/source" )
 	$sublinks	= [];
 
-$naviMain	= new CMF_Hydrogen_View_Helper_Navigation_SingleList( $links, NULL, 'layout-navigation-main-inner' );
+$naviMain	= new SingleList( $links, NULL, 'layout-navigation-main-inner' );
 $naviMain	= $naviMain->render( $controller.'/'.$action, TRUE );
 
 $naviSub	= "";
 foreach( $sublinks as $path => $links ){
 	if( substr( $controller.'/', 0, strlen( $path ) ) == $path ){
-		$naviSub	= new CMF_Hydrogen_View_Helper_Navigation_SingleList( $links, NULL, 'layout-navigation-sub-inner' );
+		$naviSub	= new SingleList( $links, NULL, 'layout-navigation-sub-inner' );
 		$naviSub	= $naviSub->render( $controller, TRUE );
 	}
 }

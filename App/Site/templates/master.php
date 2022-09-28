@@ -2,6 +2,7 @@
 use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View\Helper\Navigation\SingleList;
 
 /** @var WebEnvironment $env */
 
@@ -22,6 +23,7 @@ if( $env->getModules()->has( 'UI_LanguageSelector' ) ){
 }
 
 /*  --  NAVIGATION  --  */
+/** @todo refactor this to using an event, module UI_Navigation should attach with a hook, remove all code here */
 if( $env->getModules()->has( 'UI_Navigation' ) ){
 	$helper		= new View_Helper_Navigation( $env );
 	$navMain	= $helper->render();
@@ -69,7 +71,7 @@ else{
 		$links	= $words['links'];
 	}
 	$controller	= $env->getRequest()->get( '__controller' );
-	$current	= CMF_Hydrogen_View_Helper_Navigation_SingleList::getCurrentKey( $links, $controller );
+	$current	= SingleList::getCurrentKey( $links, $controller );
 
 	$list	= [];
 	foreach( $links as $key => $value ){

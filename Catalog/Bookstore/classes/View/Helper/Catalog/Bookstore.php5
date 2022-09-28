@@ -3,14 +3,15 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Language;
 
-class View_Helper_Catalog_Bookstore{
-
-	/**	@var	CMF_Hydrogen_Environment					$env */
+class View_Helper_Catalog_Bookstore
+{
+	/**	@var	Environment					$env */
 	protected $env;
-	/**	@var	CMF_Hydrogen_Environment_Resource_Language	$language */
+	/**	@var	Language					$language */
 	protected $language;
-	/**	@var	Logic_Catalog_Bookstore						$logic */
+	/**	@var	Logic_Catalog_Bookstore		$logic */
 	protected $logic;
 
 	public function __construct( Environment $env ){

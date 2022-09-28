@@ -18,7 +18,7 @@ class View_Helper_Image_Slider
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment		$env			Environment object
+	 *	@param		Environment		$env			Environment object
 	 */
 	public function __construct( Environment $env )
 	{

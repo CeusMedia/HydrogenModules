@@ -1,7 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
+use CeusMedia\HydrogenFramework\View\Helper\Navigation\SingleList;
 
-class View_Helper_Navigation_Bootstrap_DropdownPillBar extends CMF_Hydrogen_View_Helper_Abstract
+class View_Helper_Navigation_Bootstrap_DropdownPillBar extends Abstraction
 {
 	protected $current	= "";
 
@@ -17,7 +19,7 @@ class View_Helper_Navigation_Bootstrap_DropdownPillBar extends CMF_Hydrogen_View
 				$linkMap[strtolower( str_replace( '_', '/', $page->module ) )]	= $page->identifier;
 			else
 				$linkMap[$page->identifier]	= $page->identifier;
-		$current	= CMF_Hydrogen_View_Helper_Navigation_SingleList::getCurrentKey( $linkMap, $this->current );
+		$current	= SingleList::getCurrentKey( $linkMap, $this->current );
 		if( array_key_exists( $current, $linkMap ) )
 			$current	= $linkMap[$current];
 

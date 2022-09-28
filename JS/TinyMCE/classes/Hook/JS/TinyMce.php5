@@ -13,7 +13,7 @@ class Hook_JS_TinyMce extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( Environment $env, $context, $module, $data = [])
+	static public function onPageApplyModules( Environment $env, object $context, $module, array & $payload)
 	{
 		View_Helper_TinyMce::load( $env );
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
@@ -155,22 +155,23 @@ class Hook_JS_TinyMce extends Hook
 
 	/**
 	 *	@static
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
-	 *	@param		object						$context	Caller object
-	 *	@param		object						$module		Module config data object
-	 *	@param		array						$payload	Map of payload data
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Caller object
+	 *	@param		object			$module		Module config data object
+	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onGetAvailableContentEditor( Environment $env, $context, $module, $payload = [] ){
-		if( !empty( $payload->type ) && !in_array( $payload->type, array( 'wys' ) ) )
+	static public function onGetAvailableContentEditor( Environment $env, object $context, $module, array & $payload )
+	{
+		if( !empty( $payload['type'] ) && !in_array( $payload['type'], array( 'wys' ) ) )
 			return;
-		if( !empty( $payload->format ) && !in_array( $payload->format, array( 'html' ) ) )
+		if( !empty( $payload['format'] ) && !in_array( $payload['format'], array( 'html' ) ) )
 			return;
 		$editor	= (object) array(
 			'key'		=> 'tinymce',
 			'label'		=> 'TinyMCE',
 			'type'		=> 'wys',
-			'format'	=> $payload->format,
+			'format'	=> $payload['format'],
 			'score'		=> 5,
 		);
 		$criteria	= array(
@@ -179,11 +180,11 @@ class Hook_JS_TinyMce extends Hook
 			'force'			=> 10,
 		);
 		foreach( $criteria as $key => $value )
-			if( !empty( $payload->$key ) && strtolower( $payload->$key ) === $editor->key )
+			if( !empty( $payload[$key] ) && strtolower( $payload[$key] ) === $editor->key )
 				$editor->score	+= $value;
 
-//		if( !empty( $payload->format ) ){}
+//		if( !empty( $payload['format'] ) ){}
 		$key	= str_pad( $editor->score * 1000, 8, '0', STR_PAD_LEFT ).'_'.$editor->key;
-		$payload->list[$key]	= $editor;
+		$payload['list'][$key]	= $editor;
 	}
 }

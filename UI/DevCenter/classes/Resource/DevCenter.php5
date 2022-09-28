@@ -7,7 +7,7 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class Resource_DevCenter
 {
-	/**	@var	CMF_Hydrogen_Environment		$env		*/
+	/**	@var	Environment		$env		*/
 	protected $env;
 
 	protected static $instance	= NULL;

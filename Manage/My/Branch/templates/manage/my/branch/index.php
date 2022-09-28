@@ -1,6 +1,15 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View\Helper\Timestamp;
+
+/** @var object[] $branches */
+/** @var Dictionary $config */
+/** @var Web $env */
+/** @var array<array<string,string>> $words */
 
 $heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
 $add 		= HtmlElements::LinkButton( './manage/my/branch/add', $words['index']['buttonAdd'], 'button add' );
@@ -11,9 +20,9 @@ foreach( $branches as $entry )
 {
 	$class		= ( $number % 2 ) ? 'even' : 'odd';
 	$format		= $config->get( 'layout.format.timestamp' );
-	$timeHelper	= new CMF_Hydrogen_View_Helper_Timestamp( $entry->createdAt );
+	$timeHelper	= new Timestamp( $entry->createdAt );
 	$createdAt	= $timeHelper->toPhrase( $env, TRUE );
-	$timeHelper	= new CMF_Hydrogen_View_Helper_Timestamp( $entry->modifiedAt );
+	$timeHelper	= new Timestamp( $entry->modifiedAt );
 	$modifiedAt	= $entry->modifiedAt ? $timeHelper->toPhrase( $env, TRUE ) : '';
 	$url			= './manage/my/branch/edit/'.$entry->branchId;
 	$uriEdit		= './manage/my/branch/edit/'.$entry->branchId;

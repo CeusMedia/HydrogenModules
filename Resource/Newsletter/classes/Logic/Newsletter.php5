@@ -1,12 +1,13 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection;
+use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
 
 /**
- *	@todo	extend CMF_Hydrogen_Logic instead
+ *	@todo	extend \CeusMedia\HydrogenFramework\Logic instead
  *	@todo	code doc
  */
-class Logic_Newsletter extends CMF_Hydrogen_Environment_Resource_Logic
+class Logic_Newsletter extends Logic
 {
 	/**	@var		Model_Newsletter_Group			$modelGroup */
 	protected $modelGroup;

@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Environment;
 /**
  *	Logic of user password handling.
  *	This is a singleton.
- *	@todo		extend from frameworks single logic once it exists: CMF_Hydrogen_Logic_Singleton
+ *	@todo		extend from frameworks single logic once it exists: CeusMedia\HydrogenFramework\Logic\Singleton
  */
 class Logic_UserPassword
 {
@@ -250,7 +250,7 @@ class Logic_UserPassword
 	/**
 	 *	Protected constructor - this is a singleton.
 	 *	@access		protected
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 *	@param		Environment		$env		Environment object
 	 */
 	protected function __construct( Environment $env )
 	{

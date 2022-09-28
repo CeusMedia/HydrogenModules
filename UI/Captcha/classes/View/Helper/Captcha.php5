@@ -1,6 +1,6 @@
 <?php
 
-use CeusMedia\Common\Net\Post as HttpPost;
+use CeusMedia\Common\Net\HTTP\Post as HttpPost;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image\Captcha as ImageCaptcha;
 use CeusMedia\HydrogenFramework\Environment;

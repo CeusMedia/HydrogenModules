@@ -7,6 +7,7 @@
  *	@copyright		2010 Ceus Media
  */
 
+use CeusMedia\Common\FS\File\RegexFilter as RegexFileFilter;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -124,7 +125,7 @@ class Controller_Test extends Controller
 	protected function listFilesInFolder( $path, $extension = "php" )
 	{
 		$list	= [];																			//  create empty list
-		$index	= new FS_File_RegexFilter( $path, '/\.'.$extension.'$/' );								//  list all classes in folder
+		$index	= new RegexFileFilter( $path, '/\.'.$extension.'$/' );								//  list all classes in folder
 		foreach( $index as $file ) {																//  iterate index
 			$name			= pathinfo( $file->getFilename(), PATHINFO_FILENAME );					//  get file name
 			$list[$name]	= $file->getPathname();

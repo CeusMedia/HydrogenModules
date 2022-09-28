@@ -6,6 +6,7 @@
  *	@version		$Id$
  */
 
+use CeusMedia\Common\FS\File\RegexFilter as RegexFileFilter;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -27,7 +28,7 @@ class Controller_Lab_Button extends Controller{
 		$style		= $session->get( 'style' );
 
 		$path		= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/css/';
-		$index		= new FS_File_RegexFilter( $path, "/^site\.lab\.button.+\.css$/i" );
+		$index		= new RegexFileFilter( $path, "/^site\.lab\.button.+\.css$/i" );
 		$styles		= [];
 		foreach( $index as $entry )
 			$styles[]	= $entry->getFilename();

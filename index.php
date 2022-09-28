@@ -1,6 +1,7 @@
 <?php
 use CeusMedia\Common\FS\File\RecursiveNameFilter as RecursiveFileFinder;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader;
 
 ( include_once __DIR__.'/vendor/autoload.php' ) or die( 'Install packages using composer, first!' );
 
@@ -97,7 +98,7 @@ class Modules
 				continue;
 			$id		= str_replace( '/', '_', $id );
 			try{
-				$module	= CMF_Hydrogen_Environment_Resource_Module_Reader::load( $entry->getPathname(), $id );
+				$module	= Reader::load( $entry->getPathname(), $id );
 				if( !$full )
 					$module	= (object) array(
 						'title'			=> $module->title,

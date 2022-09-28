@@ -1,6 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View\Helper\Timestamp;
 
 $pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
 $env->page->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
@@ -85,20 +86,20 @@ $panelStatus	= '
 
 $facts	= [];
 
-$createdAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->createdAt );
+$createdAt	= new Timestamp( $user->createdAt );
 $facts[]	= array(
 	'label'	=> 'registriert',
 	'value'	=> $createdAt->toPhrase( $env, TRUE )
 );
 if( $user->loggedAt ){
-	$loggedAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->loggedAt );
+	$loggedAt	= new Timestamp( $user->loggedAt );
 	$facts[]	= array(
 		'label'	=> 'zuletzt eingeloggt',
 		'value'	=> $loggedAt->toPhrase( $env, TRUE )
 	);
 }
 if( $user->activeAt ){
-	$activeAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->activeAt );
+	$activeAt	= new Timestamp( $user->activeAt );
 	$facts[]	= array(
 		'label'	=> 'zuletzt aktiv',
 		'value'	=> $activeAt->toPhrase( $env, TRUE )

@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_Work_Mission_List_Pagination extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_Work_Mission_List_Pagination extends Abstraction
+{
 	public function render( $total, $limit = NULL, $page = 0, $reverse = FALSE ){
 		if( !$total )
 			return "";

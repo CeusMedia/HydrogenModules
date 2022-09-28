@@ -5,8 +5,9 @@ use CeusMedia\Bootstrap\Dropdown\Trigger as DropdownTrigger;
 use CeusMedia\Bootstrap\Button\Group as Dropdown;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_Navigation_Bootstrap_PlusMenu extends CMF_Hydrogen_View_Helper_Abstract
+class View_Helper_Navigation_Bootstrap_PlusMenu extends Abstraction
 {
 	protected $class		= 'plus-menu';
 	protected $buttonClass	= '';

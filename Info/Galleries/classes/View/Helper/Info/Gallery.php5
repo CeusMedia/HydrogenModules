@@ -2,8 +2,9 @@
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_Info_Gallery extends CMF_Hydrogen_View_Helper_Abstract
+class View_Helper_Info_Gallery extends Abstraction
 {
 	const SCOPE_GALLERY		= 0;
 	const SCOPE_IMAGE		= 1;

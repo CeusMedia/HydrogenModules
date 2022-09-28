@@ -3,8 +3,9 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_Form extends CMF_Hydrogen_View_Helper_Abstract
+class View_Helper_Form extends Abstraction
 {
 	protected $env;
 	protected $blocks				= [];

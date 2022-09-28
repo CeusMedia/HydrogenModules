@@ -2,10 +2,11 @@
 
 use CeusMedia\Common\XML\Element as XmlElement;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Work_Finance_Fund extends Controller
 {
-	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger		Shortcut to messenger object */
+	/**	@var	Messenger		$messenger		Shortcut to messenger object */
 	protected $messenger;
 
 	public function add()

@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Timestamp;
 
 class View_Helper_TimePhraser
 {
@@ -30,7 +31,7 @@ class View_Helper_TimePhraser
 
 	public function convert( $timestamp, bool $asHtml = FALSE, ?string $prefix = NULL, ?string $suffix = NULL ): string
 	{
-		$helper	= new CMF_Hydrogen_View_Helper_Timestamp( $timestamp );
+		$helper	= new Timestamp( $timestamp );
 
 		switch( $this->mode ){
 			case self::MODE_BREAK:

@@ -10,6 +10,7 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 /**
  *	Renders list of linked friend sites.
@@ -18,12 +19,12 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@copyright		2012-2021 Ceus Media <https://ceusmedia.de/>
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
-class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract
+class View_Helper_FriendLister extends Abstraction
 {
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 *	@param		Environment		$env		Environment object
 	 *	@return		void
 	 */
 	public function __construct( Environment $env )
@@ -68,7 +69,7 @@ class View_Helper_FriendLister extends CMF_Hydrogen_View_Helper_Abstract
 	/**
 	 *	Renders and returns list for given XML file statically.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 *	@param		Environment		$env		Environment object
 	 *	@return		string
 	 */
 	public static function render( Environment $env ): string

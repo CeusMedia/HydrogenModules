@@ -3,6 +3,7 @@
 
 use CeusMedia\Common\CLI\Output\Progress as ProgressOutput;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\FS\Folder\RegexFilter as RegexFolderFilter;
 
 require_once 'vendor/autoload.php';
 
@@ -40,7 +41,7 @@ class Tool
 		self::dispatch( $action );
 	}
 
-	protected static function dispatch( $action )
+	protected static function dispatch( string $action )
 	{
 		switch( $action ){
 			case 'OldStructure::testSyntax':
@@ -131,18 +132,18 @@ class Tool_OldStructure
 	public static function copyToNewStructure()
 	{
 		FolderEditor::createFolder( self::$pathNew );
-		$folders	= new FS_Folder_RegexFilter( '.', '@^[A-Z]@', FALSE, TRUE, FALSE );
+		$folders	= new RegexFolderFilter( '.', '@^[A-Z]@', FALSE, TRUE, FALSE );
 		foreach( $folders as $folder ){
 			if( !file_exists( self::$pathNew.$folder->getFilename() ) ){
-				if( $verbose )
+				if( self::$verbose )
 					echo "- copy folder: ".$folder->getFilename().' ... ';
 				try {
 					FolderEditor::copyFolder( $folder->getPathname(), self::$pathNew.$folder->getFilename() );
-					if( $verbose )
+					if( self::$verbose )
 						echo "done".PHP_EOL;
 				}
 				catch( Throwable $t ){
-					if( $verbose )
+					if( self::$verbose )
 						echo "skipped: ".$t->getMessage().PHP_EOL;
 				}
 			}
@@ -174,9 +175,9 @@ class Tool_NewStructure
 		echo "renamed ".count( $list )." file".PHP_EOL;
 	}
 
-	public static function createLinksToOldStructure()
+	public static function createLinksToOldStructure( bool $verbose = FALSE )
 	{
-		$folders	= new FS_Folder_RegexFilter( '.', '@^[A-Z]@', FALSE, TRUE, FALSE );
+		$folders	= new RegexFolderFilter( '.', '@^[A-Z]@', FALSE, TRUE, FALSE );
 		foreach( $folders as $folder ){
 			$folderName	= $folder->getFilename();
 			if( $verbose ?? FALSE )

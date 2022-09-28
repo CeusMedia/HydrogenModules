@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\FS\File\RegexFilter as RegexFileFilter;
 use CeusMedia\Common\FS\Folder\Lister as FolderLister;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -49,7 +51,7 @@ function listFolder( $path, $uri, $skip = [] ){
 	}
 	ksort( $list );
 	$list	= array_values( $list );
-	foreach( new FS_File_RegexFilter( $path, "/(png|gif|ico|svg)$/i" ) as $file ){
+	foreach( new RegexFileFilter( $path, "/(png|gif|ico|svg)$/i" ) as $file ){
 		$url		= $uri.$file->getFilename();
 		$label		= $file->getFilename();
 		$icon		= HtmlTag::create( 'img', NULL, array( 'src' => $url, 'title' => $label, 'alt' => $label ) );

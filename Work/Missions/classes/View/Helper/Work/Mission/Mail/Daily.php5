@@ -3,9 +3,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_Work_Mission_Mail_Daily extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_Work_Mission_Mail_Daily extends Abstraction
+{
 	public function render( $data ){
 		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$words			= $this->env->getLanguage()->getWords( 'work/mission' );

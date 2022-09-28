@@ -2,6 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Pagination as HtmlPagination;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View\Helper\Timestamp;
 
 /*  --  PAGINATION  --  */
 $pagination	= "";
@@ -34,9 +35,9 @@ if( count( $users ) ){
 			$rows[]	= $heads;
 		$classes[]	= ( ++$number % 2 ) ? "even" : "odd";
 		$classes	= implode( ' ', $classes );
-		$createdAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->createdAt );
-		$loggedAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->loggedAt );
-		$activeAt	= new CMF_Hydrogen_View_Helper_Timestamp( $user->activeAt );
+		$createdAt	= new Timestamp( $user->createdAt );
+		$loggedAt	= new Timestamp( $user->loggedAt );
+		$activeAt	= new Timestamp( $user->activeAt );
 		$line		= '
 		<tr>
 			<td class="user-role role'.$user->roleId.'">%1$s</td>

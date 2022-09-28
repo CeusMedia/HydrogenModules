@@ -63,7 +63,7 @@ if( $exceptions ){
 		$method			= 'CLI';
 		if( preg_match( '/Web/', $exceptionEnv['class'] ) )
 			$method		= $exceptionRequest->getMethod()->get();
-		$envClass		= preg_replace( '/^(CMF_Hydrogen_Environment_)/', '<small class="muted">\\1</small>', $exceptionEnv['class'] );
+		$envClass		= preg_replace( '/^(\\\\CeusMedia\\\\HydrogenFramework\\\\Environment\\\\)/', '<small class="muted">\\1</small>', $exceptionEnv['class'] );
 		$exceptionClass	= preg_replace( '/Exception$/', '', $exception->type );
 		$typeClass		= '<small class="muted">'.$exceptionClass.'</small>';
 

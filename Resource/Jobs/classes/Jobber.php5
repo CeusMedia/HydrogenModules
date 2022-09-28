@@ -7,6 +7,7 @@
  *	@copyright		2010-2020 Ceus Media (https://ceusmedia.de/)
  */
 
+use CeusMedia\Common\Alg\Obj\Constant as ObjectConstant;
 use CeusMedia\HydrogenFramework\Application\Console as ConsoleApplication;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -140,7 +141,7 @@ class Jobber extends ConsoleApplication
 	{
 		$commands			= $this->env->getRequest()->get( 'commands' );
 		$parameters			= $this->env->getRequest()->get( 'parameters' );
-		$jobRunConstants	= new Alg_Object_Constant( Model_Job_Run::class );
+		$jobRunConstants	= new ObjectConstant( Model_Job_Run::class );
 		$reportMode			= NULL;
 		$reportChannel		= Model_Job_Run::REPORT_CHANNEL_NONE;
 		$reportReceivers	= '';

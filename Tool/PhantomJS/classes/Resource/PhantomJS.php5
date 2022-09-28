@@ -19,7 +19,7 @@ class Resource_PhantomJS{
 	 *	Constructor.
 	 *
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
+	 *	@param		Environment		$env		Environment instance
 	 *	@return		void
 	 */
 	public function __construct( $env ){

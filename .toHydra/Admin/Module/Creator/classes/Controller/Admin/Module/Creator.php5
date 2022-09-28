@@ -1,12 +1,13 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Admin_Module_Creator extends Controller{								//  @todo	1) inherit from View_Admin_Module after cleanup
 
 	/**	@var	Logic_Module									$logic		Module logic instance */
 	protected $logic;
-	/** @var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	Messenger Object */
+	/** @var	Messenger		$messenger	Messenger Object */
 	protected $messenger;
 	/**	@var	Net_HTTP_Request_Receiver						$request	HTTP Request Object */
 	protected $request;

@@ -10,6 +10,7 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\INI\Reader as IniFileReader;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Disclosure;
 
 /**
  *	Role Controller.
@@ -89,7 +90,7 @@ class Controller_Manage_Role extends Controller
 		$this->addData( 'role', $role );
 		$this->addData( 'words', $words );
 		$this->addData( 'userCount', $this->modelUser->countByIndex( 'roleId', $roleId ) );
-		$disclosure	= new CMF_Hydrogen_Environment_Resource_Disclosure();
+		$disclosure	= new Disclosure();
 		$options	= array( 'classPrefix' => 'Controller_', 'readParameters' => FALSE );
 
 		$list		= [];

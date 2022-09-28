@@ -1,7 +1,7 @@
 <?php
 class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 {
-	/**	@var	Logic_Catalog_Gallery				$logic			Gallery logic instanc */
+	/**	@var	Logic_Catalog_Gallery				$logic			Gallery logic instance */
 	protected $logic;
 
 	/**	@var	Model_Catalog_Gallery_Category		$modelCategory	Category model instance */
@@ -32,7 +32,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	}
 
 	/**
-	 *	Checks existance of article and returns data object if found.
+	 *	Checks existence of article and returns data object if found.
 	 *	@access		public
 	 *	@param		integer		$articleId		ID of article
 	 *	@return		object						Bridged article data object if found
@@ -178,7 +178,6 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment		$env
 	 *	@return		void
 	 */
 	protected function __onInit()

@@ -1,5 +1,8 @@
 <?php
-class Logic_Shop_Payment_Stripe extends CMF_Hydrogen_Environment_Resource_Logic
+
+use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
+
+class Logic_Shop_Payment_Stripe extends Logic
 {
 	protected $logicStripe;
 	protected $logicShop;

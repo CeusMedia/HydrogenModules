@@ -10,13 +10,13 @@ class Hook_Tracker_Google_TagManager extends Controller{
 	 *	Extends response page by Google Tag Manager invocation.
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
-	 *	@param		object						$context	Hook context object
-	 *	@param		object						$module		Module object
-	 *	@param		public						$payload	Map of hook arguments
+	 *	@param		Environment		$env		Environment instance
+	 *	@param		object			$context	Hook context object
+	 *	@param		object			$module		Module object
+	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] ){
+	static public function onPageApplyModules( Environment $env, object $context, $module, array & $payload ){
 		$configKey	= 'module.resource_tracker_google_tagmanager.';
 		$config		= $env->getConfig()->getAll( $configKey, TRUE );								//  get module configuration as dictionary
 		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )									//  module is disabled or ID is not set

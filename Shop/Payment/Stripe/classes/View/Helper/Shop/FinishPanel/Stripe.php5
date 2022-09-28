@@ -14,7 +14,7 @@ class View_Helper_Shop_FinishPanel_Stripe
 	];
 
 	/**
-	 * @var		CMF_Hydrogen_Environment		$env
+	 * @var		Environment		$env
 	 */
 	protected $env;
 

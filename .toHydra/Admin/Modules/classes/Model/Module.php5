@@ -3,6 +3,7 @@ use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Library\Source;
 
 class Model_Module{
 
@@ -380,7 +381,7 @@ class Model_Module{
 				$results[$sourceId]	= 0;
 				if( $source->active ){
 					$source->id	= $sourceId;
-					$library	= new CMF_Hydrogen_Environment_Resource_Module_Library_Source( $this->env, $source );
+					$library	= new Source( $this->env, $source );
 					$results[$sourceId]	= 1;
 					foreach( $library->getAll() as $module ){
 						$module->source			= $sourceId;

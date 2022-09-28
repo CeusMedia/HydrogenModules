@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Disclosure;
 use CeusMedia\HydrogenFramework\View;
 
 /**
@@ -27,7 +28,7 @@ class Browser
 		if( !$controller )
 			$controller	= 'index';
 
-		$disclosure		= new CMF_Hydrogen_Environment_Resource_Disclosure();
+		$disclosure		= new Disclosure();
 		$options		= array( 'classPrefix' => 'Controller_', 'readMethods' => FALSE );
 		$controllers	= [];
 		foreach( array_keys( $disclosure->reflect( 'classes/Controller/', $options ) ) as $item ){

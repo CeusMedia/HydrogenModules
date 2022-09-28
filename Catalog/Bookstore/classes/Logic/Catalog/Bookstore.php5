@@ -1,10 +1,13 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
+
 /**
  *	@todo			remove LUV context, replace by methods of module "Resource::Frontend"
  */
-class Logic_Catalog_Bookstore extends CMF_Hydrogen_Environment_Resource_Logic{
-
-	/**	@var	CMM_SEA_Adapter_Abstract					$cache */
+class Logic_Catalog_Bookstore extends Logic
+{
+	/**	@var	\CeusMedia\Cache\AbstractAdapter			$cache */
 	protected $cache;
 
 	/**	@var	Model_Bookstore_Catalog_Article				$modelArticle */

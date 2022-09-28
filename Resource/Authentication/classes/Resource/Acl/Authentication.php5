@@ -22,6 +22,9 @@
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@link			https://github.com/CeusMedia/HydrogenModules
  */
+
+use CeusMedia\HydrogenFramework\Environment\Resource\Acl\Abstraction;
+
 /**
  *	Setup for access control list using a Database.
  *
@@ -30,7 +33,7 @@
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  *	@link			https://github.com/CeusMedia/HydrogenModules
  */
-class Resource_Acl_Authentication extends CMF_Hydrogen_Environment_Resource_Acl_Abstract
+class Resource_Acl_Authentication extends Abstraction
 {
 	public function index( string $controller = NULL, $roleId = NULL ): array
 	{
@@ -61,7 +64,7 @@ class Resource_Acl_Authentication extends CMF_Hydrogen_Environment_Resource_Acl_
 	}
 
 	/**
-	 *	Allowes access to a controller action for a role.
+	 *	Allows access to a controller action for a role.
 	 *	@access		public
 	 *	@param		integer		$roleId			Role ID
 	 *	@param		string		$controller		Name of Controller

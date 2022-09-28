@@ -16,14 +16,14 @@ class Controller_Info_Newsletter extends Controller
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment instance
-	 *	@param		object						$context	Hook context object
-	 *	@param		object						$module		Module object
-	 *	@param		public						$arguments	Map of hook arguments
+	 *	@param		Environment		$env		Environment instance
+	 *	@param		object			$context	Hook context object
+	 *	@param		object			$module		Module object
+	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
 	 *	@todo		finish implementation, extract to hook class and register in module config
 	 */
-	public static function __onRenderServicePanels( Environment $env, $context, $module, $payload = [] )
+	public static function __onRenderServicePanels( Environment $env, object $context, $module, array & $payload = [] )
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;

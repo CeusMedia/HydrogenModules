@@ -3,10 +3,11 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Info_Download extends Controller
 {
-	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	*/
+	/**	@var	Messenger										$messenger	*/
 	protected $messenger;
 
 	/**	@var	Model_Download_File								$modelFile			Database model of files */

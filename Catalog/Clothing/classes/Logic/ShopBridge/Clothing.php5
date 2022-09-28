@@ -171,7 +171,7 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment		$env
+	 *	@param		Environment		$env
 	 *	@return		void
 	 */
 	protected function __onInit()

@@ -1,6 +1,9 @@
 <?php
-class View_Helper_ModalRegistry extends CMF_Hydrogen_View_Helper_Abstract{
 
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
+
+class View_Helper_ModalRegistry extends Abstraction
+{
 	protected $modals	= [];
 
 	public function __construct( $env ){

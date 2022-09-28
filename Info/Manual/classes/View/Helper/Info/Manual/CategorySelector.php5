@@ -6,14 +6,14 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Manual_CategorySelector
 {
-	protected $env;									// CMF_Hydrogen_Environment
+	protected $env;									// \CeusMedia\HydrogenFramework\Environment
 	protected $categories		 = [];
 	protected $categoryId;
 
 	/**
 	 *	Constructor.
 	 *	@access		protected
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 *	@param		Environment		$env		Environment object
 	 *	@return		void
 	 */
 	public function __construct( Environment $env )

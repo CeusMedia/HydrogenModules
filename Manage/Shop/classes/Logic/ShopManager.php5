@@ -191,10 +191,10 @@ class Logic_ShopManager extends Logic
 	/**
 	 *	Set shipping logic instance.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Logic		$logic		Logic instance to set
+	 *	@param		Logic		$logic		Logic instance to set
 	 *	@return		self
 	 */
-	public function setShipping( CMF_Hydrogen_Logic $logic ): self
+	public function setShipping(Logic $logic ): self
 	{
 		$this->shipping	= $logic;
 		return $this;

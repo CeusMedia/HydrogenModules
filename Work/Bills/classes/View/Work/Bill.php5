@@ -4,6 +4,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
+use CeusMedia\HydrogenFramework\View\Helper\Timestamp;
 
 class View_Work_Bill extends View
 {
@@ -61,8 +62,8 @@ class View_Work_Bill extends View
 			$iconOut	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left', 'title' => 'von anderen' ) );
 			$rows		= [];
 			$helper		= new View_Helper_TimePhraser( $this->env );
-			$format		= CMF_Hydrogen_View_Helper_Timestamp::$formatDatetime;
-			CMF_Hydrogen_View_Helper_Timestamp::$formatDatetime = "d.m.Y";
+			$format		= Timestamp::$formatDatetime;
+			Timestamp::$formatDatetime = "d.m.Y";
 			foreach( $bills as $bill ){
 				$date	= strtotime( substr( $bill->date, 0, 4 ).'-'.substr( $bill->date, 4, 2).'-'.substr( $bill->date, 6, 2 ) );
 				$label	= ( $bill->type ? $iconOut : $iconIn ) . '&nbsp;'.$bill->title;
@@ -111,7 +112,7 @@ class View_Work_Bill extends View
 			$colgroup	= HtmlElements::ColumnGroup( '40', '15%', '15%', '15%', '15%' );
 			$tbody		= HtmlTag::create( 'tbody', $rows );
 			$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
-			CMF_Hydrogen_View_Helper_Timestamp::$formatDatetime	= $format;
+			Timestamp::$formatDatetime	= $format;
 		}
 		return $table;
 	}

@@ -5,10 +5,11 @@ use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Manage_Download extends Controller
 {
-	/**	@var	CMF_Hydrogen_Environment_Resource_Messenger		$messenger	*/
+	/**	@var	Messenger										$messenger	*/
 	protected $messenger;
 
 	/**	@var	Model_Download_File								$modelFile			Database model of files */

@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\FS\File\INI\Editor as IniFileEditor;
+use CeusMedia\HydrogenFramework\Application\Web\Site as WebSiteApp;
 
-class Tool_Hydrogen_Setup_App extends CMF_Hydrogen_Application_Web_Site{
-
+class Tool_Hydrogen_Setup_App extends WebSiteApp
+{
 	public function __construct( $env = NULL ){
 		$this->host	= getEnv( 'HTTP_HOST' );
 		$this->root	= getEnv( 'DOCUMENT_ROOT' );

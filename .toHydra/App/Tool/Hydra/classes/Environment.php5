@@ -5,6 +5,7 @@ use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
+use CeusMedia\HydrogenFramework\Environment\Dummy;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Router\Recursive as RecursiveRouter;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -285,7 +286,7 @@ class Tool_Hydrogen_Setup_Environment extends WebEnvironment
 					default:
 						$this->getMessenger()->noteError( $e->getMessage() );
 				}
-				$this->remote		= new CMF_Hydrogen_Environment_Dummy( $options );
+				$this->remote		= new Dummy( $options );
 			}
 			$this->pathApp		= $pathApp;
 			$this->pathConfig	= $pathApp.$pathConfig;

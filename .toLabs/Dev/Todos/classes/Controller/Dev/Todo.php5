@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\FS\File\RecursiveTodoLister as RecursiveTodoFileLister;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Dev_Todo extends Controller{
@@ -33,7 +34,7 @@ class Controller_Dev_Todo extends Controller{
 	protected function check( $path, $extensions = [] ){
 		$list	= [];
 		$keys	= array( "//TODO", "@deprecated", "@todo" );
-		$lister	= new FS_File_RecursiveTodoLister( $extensions, $keys );
+		$lister	= new RecursiveTodoFileLister( $extensions, $keys );
 		$lister->scan( $path );
 		$data	= array(
 			'total'	=> $lister->getNumberScanned(),

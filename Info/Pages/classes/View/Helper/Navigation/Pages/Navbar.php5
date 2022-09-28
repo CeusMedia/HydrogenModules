@@ -1,10 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 /**
  *	@todo		check if needed. seems to be no used yet or anymore. UI_Navigation has same function, but this is usable stand-alone.
  */
-class View_Helper_Navigation_Pages_Navbar extends CMF_Hydrogen_View_Helper_Abstract
+class View_Helper_Navigation_Pages_Navbar extends Abstraction
 {
 	protected $current;
 	protected $scopeId		= 0;

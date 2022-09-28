@@ -169,7 +169,7 @@ class Logic_Frontend extends Logic
 		throw new OutOfBoundsException( 'Invalid path key: '.$key );
 	}
 
-	static public function getRemoteEnv( CMF_Hydrogen_Environment $parentEnv, array $options = [] ): RemoteEnvironment
+	static public function getRemoteEnv(Environment $parentEnv, array $options = [] ): RemoteEnvironment
 	{
 		$path		= $parentEnv->getConfig()->get( 'module.resource_frontend.path' );
 		$env		= new RemoteEnvironment( array(

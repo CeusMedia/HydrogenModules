@@ -12,7 +12,7 @@ class View_Helper_Mail_Exception_Facts{
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		CMF_Hydrogen_Environment	$env		Environment object
+	 *	@param		Environment		$env		Environment object
 	 *	@return		void
 	 */
 	public function __construct( Environment $env ){
@@ -22,7 +22,7 @@ class View_Helper_Mail_Exception_Facts{
 	/**
 	 *	Sets exception to render.
 	 *	@access		public
-	 *	@param		Exception	$exception		Exception
+	 *	@param		Exception		$exception		Exception
 	 *	@return		self
 	 */
 	public function setException( Exception $exception ){

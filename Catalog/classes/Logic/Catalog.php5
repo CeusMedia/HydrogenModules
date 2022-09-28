@@ -1,7 +1,10 @@
 <?php
-class Logic_Catalog extends CMF_Hydrogen_Environment_Resource_Logic{
 
-	/**	@var	CMM_SEA_Adapter_Abstract			$cache */
+use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
+
+class Logic_Catalog extends Logic
+{
+	/**	@var	\CeusMedia\Cache\AbstractAdapter	$cache */
 	protected $cache;
 
 	/**	@var	Model_Catalog_Article				$modelArticle */

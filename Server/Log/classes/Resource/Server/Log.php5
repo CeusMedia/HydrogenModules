@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Constant as ObjectConstant;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Resource_Server_Log{
@@ -15,7 +16,7 @@ class Resource_Server_Log{
 		if( !$options->get( 'active' ) )
 			return NULL;
 
-		$logClass	= new Alg_Object_Constant( 'Model_Log_Message' );
+		$logClass	= new ObjectConstant( 'Model_Log_Message' );
 		$types		= $logClass->getAll( 'TYPE' );
 		$formats	= $logClass->getAll( 'FORMAT' );
 

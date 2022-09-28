@@ -3,9 +3,10 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
-class View_Helper_TinyMce extends CMF_Hydrogen_View_Helper_Abstract{
-
+class View_Helper_TinyMce extends Abstraction
+{
 	public $list		= [];
 	public $listImages	= [];
 	public $listLinks	= [];
