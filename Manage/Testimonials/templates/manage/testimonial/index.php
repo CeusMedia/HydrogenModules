@@ -28,12 +28,12 @@ if( $testimonials ){
 			HtmlTag::create( 'td', date( 'd.m.Y H:i', $testimonial->timestamp ) ),
 		) );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array( '', '20%', '15%', '20%' ) );
+	$colgroup	= HtmlElements::ColumnGroup( ['', '20%', '15%', '20%'] );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		'Überschrift', 'Autor', 'Zustand', 'Zeitpunkt'
 	) ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 
 $panelList	= '

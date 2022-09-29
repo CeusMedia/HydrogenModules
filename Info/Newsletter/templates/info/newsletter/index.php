@@ -2,13 +2,13 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 if( $env->hasModule( 'UI_Font_FontAwesome' ) )
-	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $w		= (object) $words['index'];
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/newsletter' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/newsletter' ) );
 
 $optGender	= $words['genders'];
 $optGender	= HtmlElements::Options( $optGender, $data->get( 'gender' ) );
@@ -25,11 +25,11 @@ if( $groups ){
 			'disabled'	=> $group->type == 2 ? 'disabled' : NULL,
 			'class'		=> 'bs4-form-check-input',
 		) );
-		$label  = HtmlTag::create( 'label', $checkbox.'&nbsp;<span class="bs4-form-check-label">'.$group->title.'</span>', array( 'class' => 'bs2-checkbox bs4-form-check' ) );
+		$label  = HtmlTag::create( 'label', $checkbox.'&nbsp;<span class="bs4-form-check-label">'.$group->title.'</span>', ['class' => 'bs2-checkbox bs4-form-check'] );
 		$list[] = HtmlTag::create( 'li', $label );
 	}
 	if( count( $list ) >= 2 ){
-		$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'bs2-unstyled bs3-list-unstyled bs4-list-unstyled newsletter-topic-list' ) );
+		$list	= HtmlTag::create( 'ul', $list, ['class' => 'bs2-unstyled bs3-list-unstyled bs4-list-unstyled newsletter-topic-list'] );
 		$topics	= '<div class="bs2-row-fluid bs3-row bs4-row">
 			<div class="bs2-span12 bs3-col-md-12 bs4-col-md-12">
 				<label>'.$w->labelTopics.'</label>

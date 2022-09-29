@@ -41,9 +41,9 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 			$userLabel	= $helper->render();
 		}
 		else{
-			$iconUser	= HtmlTag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
+			$iconUser	= HtmlTag::create( 'i', '', ['class' => 'not_icon-user fa fa-fw fa-user'] );
 			$fullname	= '('.$user->firstname.' '.$user->surname.')';
-			$fullname	= HtmlTag::create( 'small', $fullname, array( 'class' => 'muted' ) );
+			$fullname	= HtmlTag::create( 'small', $fullname, ['class' => 'muted'] );
 			$userLabel	= $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname;
 		}
 		return $userLabel;
@@ -79,8 +79,8 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 			$avatar	= $avatar->render();
 		}
 
-		$workerPic	= HtmlTag::create( 'div', $avatar, array( 'class' => 'user-avatar' ) );
-		$workerName	= HtmlTag::create( 'div', $worker->username, array( 'class' => 'user-label autocut', 'style' => 'width: '.$width.'px' ) );
+		$workerPic	= HtmlTag::create( 'div', $avatar, ['class' => 'user-avatar'] );
+		$workerName	= HtmlTag::create( 'div', $worker->username, ['class' => 'user-label autocut', 'style' => 'width: '.$width.'px'] );
 		return HtmlTag::create( 'div', $workerPic.$workerName, array(
 			'class'	=> 'user not-autocut',
 			'title'	=> $worker->username,

@@ -42,9 +42,9 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 
 		$dayDate	= date( "j.", $then );
 		$dayDate	.= '<small class="muted">'.date( "n.", $then ).'</small>';
-		$dayDate	= HtmlTag::create( 'div', $dayDate, array( 'class' => 'dayDate date' ) );
+		$dayDate	= HtmlTag::create( 'div', $dayDate, ['class' => 'dayDate date'] );
 		$dayLabel	= $this->words['days'][date( "w", $then )];
-		$dayLabel	= HtmlTag::create( 'div', $dayLabel, array( 'class' => 'dayName' ) );
+		$dayLabel	= HtmlTag::create( 'div', $dayLabel, ['class' => 'dayName'] );
 		return sprintf( $template, $dayDate, $dayLabel, $number, $indicator );
 	}
 
@@ -78,7 +78,7 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 			'style'		=> 'width: '.$width,
 		);
 		$bar	= HtmlTag::create( 'div', "", $attributes );
-		return HtmlTag::create( 'div', $bar, array( 'class' => 'progress', 'data-max' => $max ) );
+		return HtmlTag::create( 'div', $bar, ['class' => 'progress', 'data-max' => $max] );
 	}
 
 	public function setDayMissions( $dayMissions ){
@@ -111,10 +111,10 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 			$link		= HtmlTag::create( 'a', $label, $attributes );
 			$buttons[]	= HtmlTag::create( 'li', $link );
 		}
-		$list		= HtmlTag::create( 'ul', $buttons, array( 'class' => 'nav' ) );
-		$container	= HtmlTag::create( 'div', $list, array( 'class' => 'container' ) );
-		$inner		= HtmlTag::create( 'div', $container, array( 'class' => 'navbar-inner' ) );
-		return HtmlTag::create( 'div', $inner, array( 'class' => 'navbar' ) );
+		$list		= HtmlTag::create( 'ul', $buttons, ['class' => 'nav'] );
+		$container	= HtmlTag::create( 'div', $list, ['class' => 'container'] );
+		$inner		= HtmlTag::create( 'div', $container, ['class' => 'navbar-inner'] );
+		return HtmlTag::create( 'div', $inner, ['class' => 'navbar'] );
 	}
 
 	public function renderDayButtonLabel( $day, $number, $max, $template = '%1$s%2$s%3$s%4$s' ){
@@ -124,9 +124,9 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 
 		$dayDate	= date( "j.", $then );
 		$dayDate	.= '<small class="muted">'.date( "n.", $then ).'</small>';
-		$dayDate	= HtmlTag::create( 'div', $dayDate, array( 'class' => 'dayDate date' ) );
+		$dayDate	= HtmlTag::create( 'div', $dayDate, ['class' => 'dayDate date'] );
 		$dayLabel	= $this->words['days'][date( "w", $then )];
-		$dayLabel	= HtmlTag::create( 'div', $dayLabel, array( 'class' => 'dayName' ) );
+		$dayLabel	= HtmlTag::create( 'div', $dayLabel, ['class' => 'dayName'] );
 		return sprintf( $template, $dayDate, $dayLabel, $number, $indicator );
 	}
 
@@ -160,7 +160,7 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 			'style'		=> 'width: '.$width,
 		);
 		$bar	= HtmlTag::create( 'div', "", $attributes );
-		return HtmlTag::create( 'div', $bar, array( 'class' => 'progress', 'data-max' => $max ) );
+		return HtmlTag::create( 'div', $bar, ['class' => 'progress', 'data-max' => $max] );
 	}
 
 	public function setDayMissions( $dayMissions ){

@@ -67,7 +67,7 @@ class Logic_Share extends Logic
 	{
 		$share	= $this->get( $moduleId, $relationId );
 		if( $share )
-			$this->modelShare->edit( $share->shareId, array( 'path' => $path ) );
+			$this->modelShare->edit( $share->shareId, ['path' => $path] );
 	}
 
 	public function remove( $moduleId, $relationId )

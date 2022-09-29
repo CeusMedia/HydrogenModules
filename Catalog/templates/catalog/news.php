@@ -1,7 +1,7 @@
 <?php
 $env->getRuntime()->reach( 'Template: Catalog/News: start' );
 
-extract( $view->populateTexts( array( 'news.top', 'news.bottom' ), 'html/catalog/' ) );
+extract( $view->populateTexts( ['news.top', 'news.bottom'], 'html/catalog/' ) );
 $helper	= new View_Helper_Catalog( $env );
 
 $list	= [];

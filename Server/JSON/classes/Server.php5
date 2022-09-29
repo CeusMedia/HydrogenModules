@@ -131,7 +131,7 @@ class Server extends WebSite
 
 	protected function negotiateContentType()
 	{
-		$supported	= array( 'text/json', 'text/html' );
+		$supported	= ['text/json', 'text/html'];
 		$request	= $this->env->getRequest();
 
 //		var_dump( $request->getHeaders() );
@@ -176,7 +176,7 @@ class Server extends WebSite
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
 		$page->addBody( $heading.$paragraph );
-		$page	= $page->build( array( 'style' => 'margin: 2em' ) );
+		$page	= $page->build( ['style' => 'margin: 2em'] );
 		$this->respond( $page );
 		$this->logOnComplete();
 		$this->env->close();
@@ -192,7 +192,7 @@ class Server extends WebSite
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
 		$page->addBody( $heading.$paragraph );
-		$page	= $page->build( array( 'style' => 'margin: 2em' ) );
+		$page	= $page->build( ['style' => 'margin: 2em'] );
 		$this->respond( $page );
 		$this->logOnComplete();
 		$this->env->close();
@@ -208,7 +208,7 @@ class Server extends WebSite
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
 		$page->addBody( $heading.$paragraph );
-		$page	= $page->build( array( 'style' => 'margin: 2em' ) );
+		$page	= $page->build( ['style' => 'margin: 2em'] );
 		$this->respond( $page );
 		$this->logOnComplete();
 		$this->env->close();
@@ -224,7 +224,7 @@ class Server extends WebSite
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
 		$page->addBody( $heading.$paragraph );
-		$page	= $page->build( array( 'style' => 'margin: 2em' ) );
+		$page	= $page->build( ['style' => 'margin: 2em'] );
 		$this->respond( $page );
 		$this->logOnComplete();
 		$this->env->close();

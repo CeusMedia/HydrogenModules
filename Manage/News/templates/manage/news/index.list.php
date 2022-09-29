@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $colors	= array(
 	Model_News::STATUS_HIDDEN	=> 'info',
@@ -10,12 +10,12 @@ $colors	= array(
 	Model_News::STATUS_PUBLIC	=> 'success'
 );
 
-$table	= HtmlTag::create( 'div', $words['index']['empty'], array( 'class' => 'alert alert-info' ) );
+$table	= HtmlTag::create( 'div', $words['index']['empty'], ['class' => 'alert alert-info'] );
 if( $news ){
 	$rows	= [];
 	foreach( $news as $item ){
 		$url		= './manage/news/edit/'.$item->newsId;
-		$link		= HtmlTag::create( 'a', $item->title, array( 'href' => $url ) );
+		$link		= HtmlTag::create( 'a', $item->title, ['href' => $url] );
 		$starts		= $item->startsAt ? date( "d.m.Y", $item->startsAt ) : "";
 		$ends		= $item->endsAt ? date( "d.m.Y", $item->endsAt ) : "";
 		$duration	= '';
@@ -27,11 +27,11 @@ if( $news ){
 	 		$duration	= 'bis '.$ends;
 
 		$cells		= array(
-			HtmlTag::create( 'td', $link, array( 'class' => 'autocut' ) ),
+			HtmlTag::create( 'td', $link, ['class' => 'autocut'] ),
 			HtmlTag::create( 'td', $duration ),
 	//		HtmlTag::create( 'td', date( 'd.m.Y', $item->createdAt ).' '.date( 'H:i', $item->createdAt ) ),
 		);
-		$rows[]	= HtmlTag::create( 'tr', $cells, array( 'class' => $colors[$item->status] ) );
+		$rows[]	= HtmlTag::create( 'tr', $cells, ['class' => $colors[$item->status]] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( array(
 		'*',
@@ -42,7 +42,7 @@ if( $news ){
 		$words['index']['headRange'],
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
-	$table	= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed' ) );
+	$table	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed'] );
 }
 
 
@@ -61,7 +61,7 @@ return '
 		'.HtmlTag::create( 'div', join( '&nbsp;', array(
 			$pagination,
 			$buttonAdd,
-		) ), array( 'class' => 'buttonbar' ) ).'
+		) ), ['class' => 'buttonbar'] ).'
 		</div>
 	</div>
 </div>';

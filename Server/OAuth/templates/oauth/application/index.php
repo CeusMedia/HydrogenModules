@@ -5,13 +5,13 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /*
 $list	= '<div class="muted"><em><small>Keine Applikationen angemeldet.</small></em></div><br/>';
 if( $applications ){
-	$trClasses	= array( -2 => 'error', -1 => 'error', 0 => 'warning', 1 => 'success', 2 => 'info' );
+	$trClasses	= [-2 => 'error', -1 => 'error', 0 => 'warning', 1 => 'success', 2 => 'info'];
 	$list		= [];
 	foreach( $applications as $application ){
 		$urlEdit	= './oauth/application/view/'.$application->oauthApplicationId;
 		$label		= HtmlTag::create( 'big', $application->title );
-		$link		= HtmlTag::create( 'a', $label, array( 'href' => $urlEdit ) );
-		$clientId	= HtmlTag::create( 'small', 'Client-ID: '.$application->clientId, array( 'class'=> 'muted' ) );
+		$link		= HtmlTag::create( 'a', $label, ['href' => $urlEdit] );
+		$clientId	= HtmlTag::create( 'small', 'Client-ID: '.$application->clientId, ['class'=> 'muted'] );
 		$createdAt	= date( 'd.m.Y H:i', $application->createdAt );
 		$modifiedAt	= $application->modifiedAt ? date( 'd.m.Y H:i', $application->modifiedAt ) : '-';
 		$type		= $words['types'][$application->type];
@@ -38,16 +38,16 @@ if( $applications ){
 }
 */
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $iconsStatus	= array(
-	-1	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fw-trash' ) ),
-	0	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
-	1	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) )
+	-1	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fw-trash'] ),
+	0	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] ),
+	1	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] )
 );
 $iconsType	= array(
-	0	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-world' ) ),
-	1	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lock' ) )
+	0	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-world'] ),
+	1	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lock'] )
 );
 
 $list	= '<div class="muted"><em><small>Keine Applikationen angemeldet.</small></em></div><br/>';
@@ -56,7 +56,7 @@ if( $applications ){
 	foreach( $applications as $application ){
 		$urlEdit	= './oauth/application/view/'.$application->oauthApplicationId;
 		$label		= HtmlTag::create( 'big', $application->title );
-		$link		= HtmlTag::create( 'a', $label, array( 'href' => $urlEdit ) );
+		$link		= HtmlTag::create( 'a', $label, ['href' => $urlEdit] );
 		$createdAt	= date( 'd.m.Y H:i', $application->createdAt );
 		$modifiedAt	= $application->modifiedAt ? date( 'd.m.Y H:i', $application->modifiedAt ) : '-';
 
@@ -70,7 +70,7 @@ if( $applications ){
 			HtmlTag::create( 'td', $typeIcon.' '.$typeLabel ),
 			HtmlTag::create( 'td', $statusIcon.' '.$statusLabel ),
 			HtmlTag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
-		), array( 'class' => NULL ) );
+		), ['class' => NULL] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '50%', '15%', '15%', '20%' );
 	$theads		= HtmlElements::TableHeads( array(

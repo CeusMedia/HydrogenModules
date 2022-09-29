@@ -37,7 +37,7 @@ class View_Admin_Module_Viewer extends View_Admin_Module {
 				$xmpClass	= 'php';
 				break;
 		}
-		$code		= HtmlTag::create( 'pre', htmlentities( $content ), array( 'class' => 'code '.$xmpClass ) );
+		$code		= HtmlTag::create( 'pre', htmlentities( $content ), ['class' => 'code '.$xmpClass] );
 		$body		= '<h2>'.$moduleId.' - '.$fileName.'</h2>'.$code;
 /*		$page		= new UI_HTML_PageFrame();
 		$page->addStylesheet( 'css/reset.css' );
@@ -45,7 +45,7 @@ class View_Admin_Module_Viewer extends View_Admin_Module {
 		$page->addStylesheet( 'css/xmp.formats.css' );*/
 		$page		= $this->env->getPage();
 		$page->setBody( $body );
-		print( $page->build( array( 'style' => 'margin: 1em' ) ) );
+		print( $page->build( ['style' => 'margin: 1em'] ) );
 		exit;
 	}
 }

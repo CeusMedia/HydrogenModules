@@ -15,7 +15,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 
 	public function getAll( $conditions = [], $orders = [], $limits = [] )
 	{
-		return array();
+		return [];
 	}
 
 	/**

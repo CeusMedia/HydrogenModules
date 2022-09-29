@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconBack	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconBack	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 
 $helper		= new View_Helper_Image_Slider( $env );
 $helper->setBasePath( $basePath );
@@ -17,7 +17,7 @@ $code	= join( "\n", array(
 	'$slider	= $helper->render( '.$sliderId.' );',
 ) );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/image/slider' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/image/slider' ) );
 
 return $textTop.'
 <h3>'.$words['demo']['heading'].'</h3>

@@ -11,23 +11,23 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $module */
 /** @var string $moduleId */
 
-[$textTop, $textBottom] = $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/config/edit/' );
+[$textTop, $textBottom] = $view->populateTexts( ['top', 'bottom'], 'html/admin/config/edit/' );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );
-$iconLock		= HtmlTag::create( 'i', '', array( 'class' => 'icon-lock' ) );
-$iconUnlock		= HtmlTag::create( 'i', '', array( 'class' => 'icon-unlock' ) );
-$iconUser		= HtmlTag::create( 'i', '', array( 'class' => 'icon-user' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
+$iconLock		= HtmlTag::create( 'i', '', ['class' => 'icon-lock'] );
+$iconUnlock		= HtmlTag::create( 'i', '', ['class' => 'icon-unlock'] );
+$iconUser		= HtmlTag::create( 'i', '', ['class' => 'icon-user'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconLock		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-lock' ) );
-	$iconUnlock		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
-	$iconUser		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-user' ) );
-	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+	$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+	$iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+	$iconLock		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-lock'] );
+	$iconUnlock		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-unlock'] );
+	$iconUser		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-user'] );
+	$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+	$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 }
 
 $rows	= [];
@@ -36,7 +36,7 @@ foreach( $module->config as $item ){
 
 	$protection	= HtmlTag::create( 'abbr', $iconUnlock, array( 'title' => 'public - öffentlich (bekannt im Browser)' ) );
 	if( $item->protected === "user" )
-		$protection	= HtmlTag::create( 'abbr', $iconUser, array( 'title' => 'user - durch Benutzer konfigurierbar' ) );
+		$protection	= HtmlTag::create( 'abbr', $iconUser, ['title' => 'user - durch Benutzer konfigurierbar'] );
 	if( $item->protected === "yes" )
 		$protection	= HtmlTag::create( 'abbr', $iconLock, array( 'title' => 'protected - nicht öffentlich (nur auf Server bekannt)' ) );
 
@@ -44,19 +44,19 @@ foreach( $module->config as $item ){
 	$key	= $item->title ? '<abbr title="'.$item->title.'">'.$key.'</abbr>' : $key;
 	$type	= '<small class="muted">'.$item->type.'</small>';
 	$rows[$item->key]	= HtmlTag::create( 'tr', array(
-		HtmlTag::create( 'td', $protection, array( 'class' => 'cell-protection' ) ),
-		HtmlTag::create( 'td', $key, array( 'class' => 'cell-key autocut' ) ),
-		HtmlTag::create( 'td', $type, array( 'class' => 'cell-type' ) ),
-		HtmlTag::create( 'td', $input, array( 'class' => 'cell-value' ) ),
+		HtmlTag::create( 'td', $protection, ['class' => 'cell-protection'] ),
+		HtmlTag::create( 'td', $key, ['class' => 'cell-key autocut'] ),
+		HtmlTag::create( 'td', $type, ['class' => 'cell-type'] ),
+		HtmlTag::create( 'td', $input, ['class' => 'cell-value'] ),
 	) );
 //	ksort( $rows );
 }
 
 $cols	= HtmlElements::ColumnGroup( "24px", "37%", "80px", "" );
 $tbody	= HtmlTag::create( 'tbody', $rows );
-$table	= HtmlTag::create( 'table', array( $cols, $tbody ), array( 'class' => 'table table-striped table-fixed' ) );
+$table	= HtmlTag::create( 'table', [$cols, $tbody], ['class' => 'table table-striped table-fixed'] );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/config/edit/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/admin/config/edit/' ) );
 
 $w	= (object) $words['edit'];
 

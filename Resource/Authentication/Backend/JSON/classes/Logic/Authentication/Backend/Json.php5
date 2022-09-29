@@ -31,7 +31,7 @@ class Logic_Authentication_Backend_Json extends Logic
 	{
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
-			$role	= $this->env->getServer()->postData( 'role', 'get', array( $roleId ) );
+			$role	= $this->env->getServer()->postData( 'role', 'get', [$roleId] );
 			if( $role )
 				return $role;
 			if( $strict )
@@ -54,10 +54,10 @@ class Logic_Authentication_Backend_Json extends Logic
 	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
-			$user	= $this->env->getServer()->postData( 'user', 'get', array( $userId ) );
+			$user	= $this->env->getServer()->postData( 'user', 'get', [$userId] );
 			if( $user ){
 				if( $withRole )
-					$user->role	= $this->env->getServer()->postData( 'role', 'get', array( $user->roleId ) );
+					$user->role	= $this->env->getServer()->postData( 'role', 'get', [$user->roleId] );
 				return $user;
 			}
 		}

@@ -13,12 +13,12 @@ class Controller_Catalog_Provision_Product extends Controller
 		if( !is_null( $productId ) && strlen( trim( $productId ) ) )
 			$this->restart( 'view/'.$productId );
 		$conditions	= [];
-		$orders		= array( 'rank' => 'ASC' );
+		$orders		= ['rank' => 'ASC'];
 		$products	= $this->modelProduct->getAll( $conditions, $orders );
 		foreach( $products as $nr => $product ){
 			$licenses	= $this->modelLicense->getAllByIndices( array(
 				'productId'	=> $product->productId,
-			), array( 'rank' => 'ASC' ) );
+			), ['rank' => 'ASC'] );
 			if( !$licenses )
 				unset( $products[$nr] );
 		}
@@ -32,7 +32,7 @@ class Controller_Catalog_Provision_Product extends Controller
 		$product		= $this->modelProduct->get( $license->productId );
 		$this->addData( 'license', $license );
 		$this->addData( 'product', $product );
-		$this->addData( 'licenses', $this->modelLicense->getAllByIndex( 'productId', $product->productId, array( 'rank' => 'ASC' ) ) );
+		$this->addData( 'licenses', $this->modelLicense->getAllByIndex( 'productId', $product->productId, ['rank' => 'ASC'] ) );
 		$this->addData( 'licenseId', $licenseId );
 	}
 
@@ -40,7 +40,7 @@ class Controller_Catalog_Provision_Product extends Controller
 	{
 		$productId		= (int) $productId;
 		$this->addData( 'product', $this->modelProduct->get( $productId ) );
-		$this->addData( 'licenses', $this->modelLicense->getAllByIndex( 'productId', $productId, array( 'rank' => 'ASC' ) ) );
+		$this->addData( 'licenses', $this->modelLicense->getAllByIndex( 'productId', $productId, ['rank' => 'ASC'] ) );
 		$this->addData( 'productId', $productId );
 	}
 

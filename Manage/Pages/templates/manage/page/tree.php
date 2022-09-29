@@ -2,8 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconSortable	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrows-v' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconSortable	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrows-v'] );
 
 $filterApp		= '';
 if( count( $apps ) > 1 ){
@@ -47,7 +47,7 @@ if( count( $languages ) > 1 ){
 		</div>';
 }
 else
-	$filterLanguage		= HtmlTag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
+	$filterLanguage		= HtmlTag::create( 'input', NULL, ['type' => 'hidden', 'name' => 'language', 'value' => $language] );
 
 
 $optScope	= [];

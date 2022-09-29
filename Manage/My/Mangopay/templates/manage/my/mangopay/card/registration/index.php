@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-arrow-left' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-arrow-left'] );
 
 $helperCardLogo	= new View_Helper_Mangopay_Entity_CardProviderLogo( $env );
 $helperCardLogo->setSize( View_Helper_Mangopay_Entity_CardProviderLogo::SIZE_SMALL );
@@ -49,7 +49,7 @@ foreach( $cardTypes as $cardTypeKey => $cardTypeItem ){
 		'class'	=> $cardProvider == $cardTypeKey ? 'active' : NULL,
 	) );
 }
-$inputCardType	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+$inputCardType	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );
 
 $part1		= '
 <h4>Schritt 1</h4>

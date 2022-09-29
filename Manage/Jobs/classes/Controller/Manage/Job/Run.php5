@@ -68,7 +68,7 @@ die;*/
 	public function index( $page = 0 )
 	{
 		$definitionMap	= [];
-		$definitions	= $this->modelDefinition->getAll( array(), array( 'identifier' => 'ASC' ) );
+		$definitions	= $this->modelDefinition->getAll( [], ['identifier' => 'ASC'] );
 		foreach( $definitions as $definition )
 			$definitionMap[$definition->jobDefinitionId]	= $definition;
 
@@ -94,9 +94,9 @@ die;*/
 
 		$definitionIds	= [];
 		if( $filterJobId )
-			$definitionIds	= array( $filterJobId );
+			$definitionIds	= [$filterJobId];
 		if( $filterClassName )
-			$definitionIds	= $this->modelDefinition->getAllByIndex( 'className', $filterClassName, array(), array(), array( 'jobDefinitionId' ) );
+			$definitionIds	= $this->modelDefinition->getAllByIndex( 'className', $filterClassName, [], [], ['jobDefinitionId'] );
 		if( $definitionIds )
 			$conditions['jobDefinitionId']		= $definitionIds;
 
@@ -117,8 +117,8 @@ die;*/
 		while( ceil( $total / $filterLimit ) <= $page )
 			$page--;
 
-		$orders	= array( 'createdAt' => 'DESC', 'jobRunId' => 'DESC' );
-		$limits	= array( $page * $filterLimit, $filterLimit );
+		$orders	= ['createdAt' => 'DESC', 'jobRunId' => 'DESC'];
+		$limits	= [$page * $filterLimit, $filterLimit];
 		$runs	= $this->modelRun->getAll( $conditions, $orders, $limits );
 
 		$this->addData( 'definitions', $definitionMap );

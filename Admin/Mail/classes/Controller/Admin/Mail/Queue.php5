@@ -204,7 +204,7 @@ class Controller_Admin_Mail_Queue extends Controller
 	public function index( $page = 0 )
 	{
 //		if( !$this->session->get( $this->filterPrefix.'status' ) )
-//			$this->session->set( $this->filterPrefix.'status', array( 0 ) );
+//			$this->session->set( $this->filterPrefix.'status', [0] );
 		if( !$this->session->get( $this->filterPrefix.'limit' ) )
 			$this->session->set( $this->filterPrefix.'limit', 10 );
 		if( !$this->session->get( $this->filterPrefix.'order' ) )
@@ -239,8 +239,8 @@ class Controller_Admin_Mail_Queue extends Controller
 			$page	= $maxPage;
 		$offset		= $page * $filters->get( 'limit' );
 
-		$orders		= array( $filters->get( 'order' ) => $filters->get( 'direction' ) );
-		$limits		= array( $offset, $filters->get( 'limit' ) );
+		$orders		= [$filters->get( 'order' ) => $filters->get( 'direction' )];
+		$limits		= [$offset, $filters->get( 'limit' )];
 		$mails		= $this->logic->getQueuedMails( $conditions, $orders, $limits );
 		$total		= $this->logic->countQueue( $conditions );
 		$this->addData( 'mails', $mails );
@@ -284,11 +284,11 @@ class Controller_Admin_Mail_Queue extends Controller
 
 	public function send()
 	{
-		$count	= $this->logic->countQueue( array( 'status' => '< '.Model_Mail::STATUS_SENT ) );
+		$count	= $this->logic->countQueue( ['status' => '< '.Model_Mail::STATUS_SENT] );
 		if( $count ){
 			$this->messenger->noteNotice( "Mails in Queue: ".$this->logic->countQueue() );
-			if( $this->logic->countQueue( array( 'status' => '< '.Model_Mail::STATUS_SENT ) ) ){
-				foreach( $this->logic->getQueuedMails( array( 'status' => '< '.Model_Mail::STATUS_SENT ) ) as $mail ){
+			if( $this->logic->countQueue( ['status' => '< '.Model_Mail::STATUS_SENT] ) ){
+				foreach( $this->logic->getQueuedMails( ['status' => '< '.Model_Mail::STATUS_SENT] ) as $mail ){
 					try{
 						$this->logic->sendQueuedMail( $mail->mailId );
 						$this->messenger->noteSuccess( "Mail #".$mail->mailId." sent ;-)" );
@@ -337,7 +337,7 @@ class Controller_Admin_Mail_Queue extends Controller
 			\CeusMedia\Common\Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
 		}
 		if( !is_array( $this->session->get( $this->filterPrefix.'status' ) ) )
-			$this->session->set( $this->filterPrefix.'status', array());
+			$this->session->set( $this->filterPrefix.'status', []);
 	}
 
 	protected function bulkAbort( $mailIds ): int
@@ -350,12 +350,12 @@ class Controller_Admin_Mail_Queue extends Controller
 				Model_Mail::STATUS_FAILED,
 				Model_Mail::STATUS_RETRY,
 				Model_Mail::STATUS_NEW,
-			) ), array(), array(), array( 'mailId' ) );
+			) ), [], [], ['mailId'] );
 		$data	= array(
 			'status'		=> Model_Mail::STATUS_ABORTED,
 			'modifiedAt'	=> time(),
 		);
-		return $this->model->editByIndices( array( 'mailId' => $mailIds ), $data );
+		return $this->model->editByIndices( ['mailId' => $mailIds], $data );
 	}
 
 	protected function bulkRetry( $mailIds ): int
@@ -367,18 +367,18 @@ class Controller_Admin_Mail_Queue extends Controller
 			'status'	=> array(
 				Model_Mail::STATUS_ABORTED,
 				Model_Mail::STATUS_FAILED,
-			) ), array(), array(), array( 'mailId' ) );
+			) ), [], [], ['mailId'] );
 		$data	= array(
 			'status'		=> Model_Mail::STATUS_RETRY,
 			'modifiedAt'	=> time(),
 		);
-		return $this->model->editByIndices( array( 'mailId' => $mailIds ), $data );
+		return $this->model->editByIndices( ['mailId' => $mailIds], $data );
 	}
 
 	protected function bulkRemove( $mailIds ): int
 	{
 		if( !count( $mailIds ) )
 			return 0;
-		return $this->model->removeByIndices( array( 'mailId' => $mailIds ) );
+		return $this->model->removeByIndices( ['mailId' => $mailIds] );
 	}
 }

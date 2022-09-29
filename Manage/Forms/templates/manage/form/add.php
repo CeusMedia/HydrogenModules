@@ -5,8 +5,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $modelForm	= new Model_Form( $env );
 $modelBlock	= new Model_Form_Block( $env );
 
-$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $statuses	= array(
 	-1		=> 'deaktiviert',
@@ -21,7 +21,7 @@ $types		= array(
 );
 $optType	= HtmlElements::Options( $types );
 
-$optDelivery	= array( '' => '- keine -' );
+$optDelivery	= ['' => '- keine -'];
 foreach( $mails as $item )
 	$optDelivery[$item->identifier] = $item->title;
 		$optDelivery	= HtmlElements::Options( $optDelivery );

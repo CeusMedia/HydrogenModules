@@ -96,7 +96,7 @@ class Controller_Auth_Oauth extends Controller
 							$response	= $client->read( 'me' );
 							$data		= $response->user;
 							$data->accountId	= $data->userId;
-							$data->roleId		= $modelRole->getByIndex( 'register', 128, array(), 'roleId' );
+							$data->roleId		= $modelRole->getByIndex( 'register', 128, [], 'roleId' );
 							unset( $data->userId );
 							$userId				= $modelUser->add( (array) $data );
 							$this->session->set( 'auth_user_id', $userId );

@@ -3,15 +3,15 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helper			= new View_Helper_TimePhraser( $env );
-$iconOpenFolder	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconDownload	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
-$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconUp			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-up' ) );
-$iconDown		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-down' ) );
-$rows			= array( 'folders' => array(), 'files' => array() );
+$iconOpenFolder	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
+$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconUp			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-up'] );
+$iconDown		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-down'] );
+$rows			= ['folders' => [], 'files' => []];
 
 $w		= (object) $words['index'];
 
@@ -24,13 +24,13 @@ foreach( $files as $item ){
 	$class			= 'type type-'.pathinfo( $item->title, PATHINFO_EXTENSION );
 	$downloads		= $item->nrDownloads > 2 ? ', '.$item->nrDownloads.' Downloads' : '';
 	$underline		= $size.', '.$timePhrase/*.$downloads*/;
-	$underline		= HtmlTag::create( 'small', $underline, array( 'class' => "muted" ) );
+	$underline		= HtmlTag::create( 'small', $underline, ['class' => "muted"] );
 	$label			= $item->title;
 	$label			= preg_replace( '/\.[a-z]+$/', '<small class="muted">\\0</small>', $label );
 	$label			= $label.'<br/>'.$underline;
 
 	$url			= in_array( 'view', $rights ) ? $urlView : $urlDownload;
-	$label			= HtmlTag::create( 'a', $label, array( 'href' => $url, 'class' => 'name' ) );
+	$label			= HtmlTag::create( 'a', $label, ['href' => $url, 'class' => 'name'] );
 	$buttons		= [];
 	if( in_array( 'download', $rights ) ){
 		$buttons[]	= HtmlTag::create( 'a', $iconDownload, array(
@@ -53,13 +53,13 @@ foreach( $files as $item ){
 			'title'	=> $w->buttonRemove
 		) );
 	}
-	$actions		= HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
-//	$actions		= HtmlTag::create( 'div', $buttonDownload.'&nbsp;'.$buttonRemove, array( 'class' => 'pull-right' ) );
+	$actions		= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
+//	$actions		= HtmlTag::create( 'div', $buttonDownload.'&nbsp;'.$buttonRemove, ['class' => 'pull-right'] );
 	$cells			= array(
-		HtmlTag::create( 'td', $label/*$link*/, array( 'class' => 'file' ) ),
+		HtmlTag::create( 'td', $label/*$link*/, ['class' => 'file'] ),
 		HtmlTag::create( 'td', $actions ),
 	);
-	$row			= HtmlTag::create( 'tr', $cells, array( 'class' => $class ) );
+	$row			= HtmlTag::create( 'tr', $cells, ['class' => $class] );
 	$rows['files'][$item->title]		= $row;
 }
 ksort( $rows['files'] );
@@ -68,14 +68,14 @@ foreach( $folders as $item ){
 	$url	= './info/file/index/'.$item->downloadFolderId;
 	$label	= $item->title.'<br/>';
 	if( $item->nrFiles && $item->nrFolders )
-		$info	= HtmlTag::create( 'small', $item->nrFiles.' Dateien und '.$item->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
+		$info	= HtmlTag::create( 'small', $item->nrFiles.' Dateien und '.$item->nrFolders.' Unterordner', ['class' => 'muted'] );
 	else if( $item->nrFiles )
-		$info	= HtmlTag::create( 'small', $item->nrFiles.' Dateien', array( 'class' => 'muted' ) );
+		$info	= HtmlTag::create( 'small', $item->nrFiles.' Dateien', ['class' => 'muted'] );
 	else if( $item->nrFolders )
-		$info	= HtmlTag::create( 'small', $item->nrFolders.' Unterordner', array( 'class' => 'muted' ) );
+		$info	= HtmlTag::create( 'small', $item->nrFolders.' Unterordner', ['class' => 'muted'] );
 	else
 		$info	= '<small class="muted">leer</small>';
-	$label	= HtmlTag::create( 'a', $label.$info, array( 'class' => 'name', 'href' => $url ) );
+	$label	= HtmlTag::create( 'a', $label.$info, ['class' => 'name', 'href' => $url] );
 
 	$buttons	= [];
 	$buttons[]	= HtmlTag::create( 'a', $iconOpenFolder, array(
@@ -116,13 +116,13 @@ foreach( $folders as $item ){
 			'title'	=> $w->buttonRemove
 		) );
 	}
-	$actions	= HtmlTag::create( 'div', join( $buttons ), array( 'class' => 'btn-group pull-right' ) );
-//	$actions	= HtmlTag::create( 'div', $buttonOpen.'&nbsp'.$buttonRemove, array( 'class' => 'pull-right' ) );
+	$actions	= HtmlTag::create( 'div', join( $buttons ), ['class' => 'btn-group pull-right'] );
+//	$actions	= HtmlTag::create( 'div', $buttonOpen.'&nbsp'.$buttonRemove, ['class' => 'pull-right'] );
 	$cells		= array(
-		HtmlTag::create( 'td', $label, array( 'class' => 'folder' ) ),
+		HtmlTag::create( 'td', $label, ['class' => 'folder'] ),
 		HtmlTag::create( 'td', $actions ),
 	);
-	$row	= HtmlTag::create( 'tr', $cells, array( 'class' => 'info folder' ) );
+	$row	= HtmlTag::create( 'tr', $cells, ['class' => 'info folder'] );
 	$rows['folders'][$item->title]	= $row;
 }
 //ksort( $rows['folders'] );
@@ -134,11 +134,11 @@ if( $rows ){
 	$colgroup	= HtmlElements::ColumnGroup( "85%", "15%" );
 	$heads		= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'th', $search ? $w->headFiles : $w->headFilesAndFolders ),
-		HtmlTag::create( 'th', $w->headActions, array( 'class' => 'pull-right' ) ),
+		HtmlTag::create( 'th', $w->headActions, ['class' => 'pull-right'] ),
 	) );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
-	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed' ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped not-table-condensed'] );
 }
 
 $panelList	= '
@@ -168,7 +168,7 @@ if( in_array( 'addFolder', $rights ) )
 if( in_array( 'scan', $rights ) )
 	$panels[]	= $view->loadTemplateFile( 'info/file/index.scan.php' );
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/file/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/file/' ) );
 
 return $textIndexTop.'
 <!--<h3>Dateien</h3>-->

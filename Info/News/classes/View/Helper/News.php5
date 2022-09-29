@@ -43,7 +43,7 @@ class View_Helper_News
 </div>';
 		}
 		if( $list )
-			return HtmlTag::create( 'div', join( $list ), array( 'class' => 'news-list' ) );
+			return HtmlTag::create( 'div', join( $list ), ['class' => 'news-list'] );
 //		if( $showOnEmpty ){
 //			return '<em><small class="muted">'.$words['index']['empty'].'</small></em>';
 //		}

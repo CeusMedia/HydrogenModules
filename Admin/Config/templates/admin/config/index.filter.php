@@ -13,14 +13,14 @@ use CeusMedia\HydrogenFramework\View;
 
 $w	= (object) $words['index-filter'];
 
-$iconSearch		= HtmlTag::create( 'i', '', array( 'class' => 'icon-zoom-in' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'icon-zoom-out' ) );
+$iconSearch		= HtmlTag::create( 'i', '', ['class' => 'icon-zoom-in'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'icon-zoom-out'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconSearch		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-search' ) );
-	$iconReset		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+	$iconSearch		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-search'] );
+	$iconReset		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-search-minus'] );
 }
 
-$optCategory	= array( '' => '- alle -' );
+$optCategory	= ['' => '- alle -'];
 foreach( $categories as $category => $nrModules )
 	$optCategory[$category]	= $category.' ('.$nrModules.')';
 $optCategory	= HtmlElements::Options( $optCategory, $filterCategory );

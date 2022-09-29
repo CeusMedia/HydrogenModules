@@ -36,7 +36,7 @@ class Job_Shop extends Job_Abstract
 		$modelCustomer	= new Model_Shop_Customer( $this->env );
 		if( version_compare( $this->versionShop, '0.8', '>=' ) )
 			$modelCustomer	= new Model_Shop_CustomerOld( $this->env );
-		$customers		= $modelCustomer->getAll( array( 'email' => array_keys( $transEmail ) ) );
+		$customers		= $modelCustomer->getAll( ['email' => array_keys( $transEmail )] );
 		foreach( $customers as $nr => $customer ){
 			$data		= $transEmail[$customer->email];
 			if( $customer->institution === $data['institution'] && $customer->firstname === $data['firstname'] )
@@ -150,8 +150,8 @@ class Job_Shop extends Job_Abstract
 		$blocked		= $this->data->migrants->skipEmails;
 		$countryMap		= array_flip( $this->env->getLanguage()->getWords( 'countries' ) );
 		$emails			= [];
-		$conditions		= array( 'customerId' => '> 0', 'status' => '>= '.Model_Shop_Order::STATUS_ORDERED );
-		$orders			= array( 'orderId' => 'ASC' );
+		$conditions		= ['customerId' => '> 0', 'status' => '>= '.Model_Shop_Order::STATUS_ORDERED];
+		$orders			= ['orderId' => 'ASC'];
 		$shopOrders		= $modelOrder->getAll( $conditions, $orders );
 		foreach( $shopOrders as $order ){
 			$this->out( '- Order: '.$order->orderId );
@@ -226,8 +226,8 @@ class Job_Shop extends Job_Abstract
 		$pathLocales		= $this->env->getConfig()->get( 'path.locales' );
 //		$modelOrders->getAll()
 		$conditions	= [];
-		$orders		= array( 'customerId' => 'ASC' );
-		$limit		= array( 0, 1000 );
+		$orders		= ['customerId' => 'ASC'];
+		$limit		= [0, 1000];
 		$countries	= IniFileReader::load( $pathLocales.'de/countries.ini' );
 		$customers	= $modelCustomerOld->getAll( $conditions, $orders/*, $limit*/ );
 		if( !$customers ){
@@ -277,7 +277,7 @@ class Job_Shop extends Job_Abstract
 						'modifiedAt'	=> $order->createdAt,
 					) );
 				}
-				$modelCustomerNew->add( array( 'customerId' => $customer->customerId ) );
+				$modelCustomerNew->add( ['customerId' => $customer->customerId] );
 				$modelCustomerOld->remove( $customer->customerId );
 			}
 			$this->showProgress( ++$count, count( $customers ) );
@@ -314,7 +314,7 @@ class Job_Shop extends Job_Abstract
 				foreach( $transCountries as $target => $sources ){
 					if( in_array( $customer->country, $sources ) ){
 						$this->showProgress( ++$count, $total );
-						$modelCustomer->edit( $customer->customerId, array( 'country' => $target ) );
+						$modelCustomer->edit( $customer->customerId, ['country' => $target] );
 						$found	= TRUE;
 						break;
 					}

@@ -1,14 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) ).'&nbsp;';
-$iconPrev		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconNext		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) ).'&nbsp;';
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconPreview	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) ).'&nbsp;';
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
-$iconExternal	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-external-link' ) ).'&nbsp;';
+$iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] ).'&nbsp;';
+$iconPrev		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
+$iconNext		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
+$iconPreview	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
+$iconExternal	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-external-link'] ).'&nbsp;';
 
 //  --  PANEL: PREVIEW  --  //
 $iframeHtml			= HtmlTag::create( 'iframe', '', array(
@@ -55,7 +55,7 @@ if( $styles ){
 		) );
 		$styles[$nr]	= HtmlTag::create( 'li', $link );
 	}
-	$listStyles		= HtmlTag::create( 'ul', $styles, array( 'class' => "unstyled" ) );
+	$listStyles		= HtmlTag::create( 'ul', $styles, ['class' => "unstyled"] );
 	$panelStyles	= '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
@@ -103,7 +103,7 @@ $w				= (object) $words->edit_html;
 $value			= htmlentities( $newsletter->html, ENT_QUOTES, 'UTF-8' );
 //$value		= strlen( $value ) ? $value : $view->loadContentFile( $pathDefaults.'default.html');
 $urlFull		= './work/newsletter/editFull/'.$newsletter->newsletterId;
-$buttonFull		= '';//HtmlTag::create( 'a', $w->buttonFullscreen, array( 'class' => 'btn btn-mini', 'href' => $urlFull ) );
+$buttonFull		= '';//HtmlTag::create( 'a', $w->buttonFullscreen, ['class' => 'btn btn-mini', 'href' => $urlFull] );
 $disabled		= (int) $newsletter->status !== Model_Newsletter::STATUS_NEW ? 'disabled="disabled"' : "";
 $panelForm		= '
 <div class="content-panel content-panel-form">

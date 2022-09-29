@@ -5,10 +5,10 @@ $categories['']	= $words['index']['categoryNone'];
 
 switch( (int) $filterModuleScope ){
 	case 2:
-		$filters	= array( 'type' => array( Model_Module::TYPE_CUSTOM, Model_Module::TYPE_COPY, Model_Module::TYPE_LINK ) );
+		$filters	= ['type' => [Model_Module::TYPE_CUSTOM, Model_Module::TYPE_COPY, Model_Module::TYPE_LINK]];
 		break;
 	case 1:
-		$filters	= array( 'type' => array( Model_Module::TYPE_SOURCE ) );
+		$filters	= ['type' => [Model_Module::TYPE_SOURCE]];
 		break;
 	case 0;
 	default:

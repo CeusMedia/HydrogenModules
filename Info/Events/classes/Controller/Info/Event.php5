@@ -26,7 +26,7 @@ class Controller_Info_Event extends Controller
 
 	public function filter( $reset = NULL )
 	{
-		$filters	= array( 'query', 'location', 'range' );
+		$filters	= ['query', 'location', 'range'];
 		if( $reset ){
 			foreach( $filters as $filter ){
 				$this->session->remove( 'filter_info_event_'.$filter );

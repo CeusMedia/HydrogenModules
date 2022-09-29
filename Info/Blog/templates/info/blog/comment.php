@@ -5,9 +5,9 @@ $w		= (object) $words['comment'];
 
 $iconSave	= '';
 if( $env->getModules()->has( 'UI_Bootstrap' ) )
-	$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) ).'&nbsp;';
+	$iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] ).'&nbsp;';
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
-	$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+	$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 
 $buttonSave	= HtmlTag::create( 'button', $iconSave.$w->buttonSave, array(
 	'type'		=> 'submit',

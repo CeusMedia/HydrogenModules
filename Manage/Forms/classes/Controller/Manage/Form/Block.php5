@@ -81,8 +81,8 @@ class Controller_Manage_Form_Block extends Controller
 		if( strlen( trim( $filters->get( 'identifier' ) ) ) )
 		 	$conditions['identifier']	= '%'.$filters->get( 'identifier' ).'%';
 
-		$orders		= array( 'title' => 'ASC' );
-		$limits		= array( $page * $limit, $limit );
+		$orders		= ['title' => 'ASC'];
+		$limits		= [$page * $limit, $limit];
 		$total		= $this->modelBlock->count();
 		$count		= $this->modelBlock->count( $conditions );
 		$blocks		= $this->modelBlock->getAll( $conditions, $orders, $limits );

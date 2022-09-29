@@ -68,18 +68,18 @@ class View_Helper_Navigation_Bootstrap_Position extends Abstraction
 		foreach( $itemList as $entry ){
 			$label	= $entry->label;
 			if( isset( $entry->link ) )
-				$label	= HtmlTag::create( 'a', $label, array( 'href' => $entry->link ) );
+				$label	= HtmlTag::create( 'a', $label, ['href' => $entry->link] );
 			$barList[]	= HtmlTag::create( 'span', $label, array(
 				'class'	=> 'position-bar-path-list-item',
 			'href'	=> '#',
 			) );
 		}
-		$divider	= HtmlTag::create( 'span', $this->divider, array( 'class' => 'position-bar-path-divider' ) );
+		$divider	= HtmlTag::create( 'span', $this->divider, ['class' => 'position-bar-path-divider'] );
 		$barList	= implode( $divider, $barList );
-		$bar		= HtmlTag::create( 'span', $barList, array( 'class' => 'position-bar-path-list' ) );
-		$label		= HtmlTag::create( 'span', 'Position', array( 'class' => 'position-bar-label' ) );
+		$bar		= HtmlTag::create( 'span', $barList, ['class' => 'position-bar-path-list'] );
+		$label		= HtmlTag::create( 'span', 'Position', ['class' => 'position-bar-label'] );
 
-		$content	= HtmlTag::create( 'div', $label.$bar, array( 'class' => 'position-bar' ) );
+		$content	= HtmlTag::create( 'div', $label.$bar, ['class' => 'position-bar'] );
 		return $content;
 	}
 

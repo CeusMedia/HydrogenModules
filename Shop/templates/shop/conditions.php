@@ -4,7 +4,7 @@ use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
 
 $w			= (object) $words['conditions'];
-extract( $view->populateTexts( array( 'conditions' ), 'html/shop/' ) );
+extract( $view->populateTexts( ['conditions'], 'html/shop/' ) );
 
 $tabContent	= '
 <form action="./shop/conditions" method="post">
@@ -30,7 +30,7 @@ $tabContent	= '
 	</div>
 </form>';
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/shop/' ) );
 
 $helperTabs		= new View_Helper_Shop_Tabs( $env );
 $helperTabs->setCurrent( 'shop-conditions' );

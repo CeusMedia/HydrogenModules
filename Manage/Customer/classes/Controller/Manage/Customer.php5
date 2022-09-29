@@ -67,8 +67,8 @@ class Controller_Manage_Customer extends Controller
 		$customers		=  $this->modelCustomer->getAll();
 		if( $this->modelRating )
 			foreach( $customers as $nr => $customer ){
-				$order		= array( 'timestamp' => 'DESC' );
-				$limit		= array( 0, 1 );
+				$order		= ['timestamp' => 'DESC'];
+				$limit		= [0, 1];
 				$rating		= $this->modelRating->getAllByIndex( 'customerId', $customer->customerId, $order, $limit );
 				if( $rating ){
 					$rating	= array_pop( $rating );

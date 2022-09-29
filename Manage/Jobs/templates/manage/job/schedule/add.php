@@ -2,8 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$words['add']['buttonCancel'], array(
 	'href'	=> './manage/job/schedule',
@@ -33,19 +33,19 @@ $optFormat			= array(
 );
 $optFormat			= HtmlElements::Options( $optFormat );
 
-$optMinuteOfHour	= array_merge( $words['options-minuteOfHour'], array( 'value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:' ) );
+$optMinuteOfHour	= array_merge( $words['options-minuteOfHour'], ['value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:'] );
 $optMinuteOfHour	= HtmlElements::Options( $optMinuteOfHour );
 
-$optHourOfDay		= array_merge( $words['options-hourOfDay'], array( 'value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:' ) );
+$optHourOfDay		= array_merge( $words['options-hourOfDay'], ['value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:'] );
 $optHourOfDay		= HtmlElements::Options( $optHourOfDay );
 
-$optDayOfWeek		= array_merge( $words['options-dayOfWeek'], array( 'value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:' ) );
+$optDayOfWeek		= array_merge( $words['options-dayOfWeek'], ['value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:'] );
 $optDayOfWeek		= HtmlElements::Options( $optDayOfWeek );
 
-$optDayOfMonth		= array_merge( $words['options-dayOfMonth'], array( 'value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:' ) );
+$optDayOfMonth		= array_merge( $words['options-dayOfMonth'], ['value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:'] );
 $optDayOfMonth		= HtmlElements::Options( $optDayOfMonth );
 
-$optMonthOfYear		= array_merge( $words['options-monthOfYear'], array( 'value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:' ) );
+$optMonthOfYear		= array_merge( $words['options-monthOfYear'], ['value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:'] );
 $optMonthOfYear		= HtmlElements::Options( $optMonthOfYear );
 
 $optMinutes	= [];
@@ -119,54 +119,54 @@ jQuery(document).ready(function(){
 $form		= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', $words['add']['labelJobDefinitionId'], array( 'for' => 'input_jobDefinitionId' ) ),
+			HtmlTag::create( 'label', $words['add']['labelJobDefinitionId'], ['for' => 'input_jobDefinitionId'] ),
 			HtmlTag::create( 'select', $optDefinition, array(
 				'id'		=> 'input_jobDefinitionId',
 				'name'		=> 'jobDefinitionId',
 				'class'		=> 'span12',
 			) ),
-		), array( 'class' => 'span4' ) ),
+		), ['class' => 'span4'] ),
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', $words['add']['labelArguments'], array( 'for' => 'input_arguments' ) ),
+			HtmlTag::create( 'label', $words['add']['labelArguments'], ['for' => 'input_arguments'] ),
 			HtmlTag::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'id'		=> 'input_arguments',
 				'name'		=> 'arguments',
 				'class'		=> 'span12',
 			) ),
-		), array( 'class' => 'span8' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+		), ['class' => 'span8'] ),
+	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', $words['add']['labelTitle'], array( 'for' => 'input_title' ) ),
+			HtmlTag::create( 'label', $words['add']['labelTitle'], ['for' => 'input_title'] ),
 			HtmlTag::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'id'		=> 'input_title',
 				'name'		=> 'title',
 				'class'		=> 'span12',
 			) ),
-		), array( 'class' => 'span7' ) ),
+		), ['class' => 'span7'] ),
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Eingabeformat', array( 'for' => 'input_format' ) ),
+			HtmlTag::create( 'label', 'Eingabeformat', ['for' => 'input_format'] ),
 			HtmlTag::create( 'select', $optFormat, array(
 				'name'	=> 'format',
 				'id'	=> 'input_format',
 				'class'	=> 'span12 has-optionals modifiesCronExpression',
 			) ),
-		), array( 'class' => 'span3' ) ),
+		), ['class' => 'span3'] ),
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', $words['add']['labelStatus'], array( 'for' => 'input_status' ) ),
+			HtmlTag::create( 'label', $words['add']['labelStatus'], ['for' => 'input_status'] ),
 			HtmlTag::create( 'select', $optStatus, array(
 				'id'		=> 'input_status',
 				'name'		=> 'status',
 				'class'		=> 'span12',
 			) ),
-		), array( 'class' => 'span2' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+		), ['class' => 'span2'] ),
+	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array( '<hr/>',
-		), array( 'class' => 'span12' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+		), ['class' => 'span12'] ),
+	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
 			HtmlTag::create( 'div', array(
@@ -176,39 +176,39 @@ $form		= HtmlTag::create( 'div', array(
 							HtmlTag::create( 'div', array(
 								HtmlTag::create( 'h4', 'Zeit' ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', $words['add']['labelHourOfDay'], array( 'for' => 'input_hourOfDay' ) ),
+									HtmlTag::create( 'label', $words['add']['labelHourOfDay'], ['for' => 'input_hourOfDay'] ),
 									HtmlTag::create( 'select', $optHourOfDay, array(
 										'id'		=> 'input_hourOfDay',
 										'name'		=> 'hourOfDay',
 										'class'		=> 'span12 canHaveValue canHaveRange canHaveValues modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span6' ) ),
+								), ['class' => 'span6'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'Wert', array( 'for' => 'input_hourOfDay_value' ) ),
+									HtmlTag::create( 'label', 'Wert', ['for' => 'input_hourOfDay_value'] ),
 									HtmlTag::create( 'select', $optHour, array(
 										'id'		=> 'input_hourOfDay_value',
 										'name'		=> 'hourOfDayValue',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span6 span_input_value' ) ),
+								), ['class' => 'span6 span_input_value'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'von', array( 'for' => 'input_hourOfDay_rangeFrom' ) ),
+									HtmlTag::create( 'label', 'von', ['for' => 'input_hourOfDay_rangeFrom'] ),
 									HtmlTag::create( 'select', $optHour, array(
 										'id'		=> 'input_hourOfDay_rangeFrom',
 										'name'		=> 'hourOfDayRangeFrom',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span3 span_input_range' ) ),
+								), ['class' => 'span3 span_input_range'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'bis', array( 'for' => 'input_hourOfDay_rangeTo' ) ),
+									HtmlTag::create( 'label', 'bis', ['for' => 'input_hourOfDay_rangeTo'] ),
 									HtmlTag::create( 'select', $optHour, array(
 										'id'		=> 'input_hourOfDay_rangeTo',
 										'name'		=> 'hourOfDayRangeTo',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span3 span_input_range' ) ),
+								), ['class' => 'span3 span_input_range'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'Werte <small class="muted">(kommagetrennt)</small>', array( 'for' => 'input_hourOfDay_values' ) ),
+									HtmlTag::create( 'label', 'Werte <small class="muted">(kommagetrennt)</small>', ['for' => 'input_hourOfDay_values'] ),
 									HtmlTag::create( 'input', '', array(
 										'type'		=> 'text',
 										'id'		=> 'input_hourOfDay_values',
@@ -216,46 +216,46 @@ $form		= HtmlTag::create( 'div', array(
 										'class'		=> 'span12 modifiesCronExpression',
 										'value'		=> '0',
 									) ),
-								), array( 'class' => 'span6 span_input_values' ) ),
-							), array( 'class' => 'row-fluid' ) ),
-						), array( 'class' => 'span5' ) ),
+								), ['class' => 'span6 span_input_values'] ),
+							), ['class' => 'row-fluid'] ),
+						), ['class' => 'span5'] ),
 						HtmlTag::create( 'div', array(
 							HtmlTag::create( 'h4', 'Datum' ),
 							HtmlTag::create( 'div', array(
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', $words['add']['labelMonthOfYear'], array( 'for' => 'input_monthOfYear' ) ),
+									HtmlTag::create( 'label', $words['add']['labelMonthOfYear'], ['for' => 'input_monthOfYear'] ),
 									HtmlTag::create( 'select', $optMonthOfYear, array(
 										'id'		=> 'input_monthOfYear',
 										'name'		=> 'monthOfYear',
 										'class'		=> 'span12 canHaveValue canHaveRange canHaveValues modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span6' ) ),
+								), ['class' => 'span6'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'Wert', array( 'for' => 'input_monthOfYear_value' ) ),
+									HtmlTag::create( 'label', 'Wert', ['for' => 'input_monthOfYear_value'] ),
 									HtmlTag::create( 'select', $optMonth, array(
 										'id'		=> 'input_monthOfYear_value',
 										'name'		=> 'monthOfYearValue',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span6 span_input_value' ) ),
+								), ['class' => 'span6 span_input_value'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'von', array( 'for' => 'input_monthOfYear_rangeFrom' ) ),
+									HtmlTag::create( 'label', 'von', ['for' => 'input_monthOfYear_rangeFrom'] ),
 									HtmlTag::create( 'select', $optMonth, array(
 										'id'		=> 'input_monthOfYear_rangeFrom',
 										'name'		=> 'monthOfYearRangeFrom',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span3 span_input_range' ) ),
+								), ['class' => 'span3 span_input_range'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'bis', array( 'for' => 'input_monthOfYear_rangeTo' ) ),
+									HtmlTag::create( 'label', 'bis', ['for' => 'input_monthOfYear_rangeTo'] ),
 									HtmlTag::create( 'select', $optMonth, array(
 										'id'		=> 'input_monthOfYear_rangeTo',
 										'name'		=> 'monthOfYearRangeTo',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span3 span_input_range' ) ),
+								), ['class' => 'span3 span_input_range'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'Werte <small class="muted">(kommagetrennt)</small>', array( 'for' => 'input_monthOfYear_values' ) ),
+									HtmlTag::create( 'label', 'Werte <small class="muted">(kommagetrennt)</small>', ['for' => 'input_monthOfYear_values'] ),
 									HtmlTag::create( 'input', '', array(
 										'type'		=> 'text',
 										'id'		=> 'input_monthOfYear_values',
@@ -263,47 +263,47 @@ $form		= HtmlTag::create( 'div', array(
 										'class'		=> 'span12 modifiesCronExpression',
 										'value'		=> '0',
 									) ),
-								), array( 'class' => 'span6 span_input_values' ) ),
-							), array( 'class' => 'row-fluid' ) ),
-						), array( 'class' => 'span5 offset1' ) ),
-					), array( 'class' => 'row-fluid' ) ),
+								), ['class' => 'span6 span_input_values'] ),
+							), ['class' => 'row-fluid'] ),
+						), ['class' => 'span5 offset1'] ),
+					), ['class' => 'row-fluid'] ),
 					HtmlTag::create( 'div', array(
 						HtmlTag::create( 'div', array(
 							HtmlTag::create( 'div', array(
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', $words['add']['labelMinuteOfHour'], array( 'for' => 'input_minuteOfHour' ) ),
+									HtmlTag::create( 'label', $words['add']['labelMinuteOfHour'], ['for' => 'input_minuteOfHour'] ),
 									HtmlTag::create( 'select', $optMinuteOfHour, array(
 										'id'		=> 'input_minuteOfHour',
 										'name'		=> 'minuteOfHour',
 										'class'		=> 'span12 canHaveValue canHaveRange canHaveValues modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span6' ) ),
+								), ['class' => 'span6'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'Wert', array( 'for' => 'input_minuteOfHour_value' ) ),
+									HtmlTag::create( 'label', 'Wert', ['for' => 'input_minuteOfHour_value'] ),
 									HtmlTag::create( 'select', $optMinutes, array(
 										'id'		=> 'input_minuteOfHour_value',
 										'name'		=> 'minuteOfHourValue',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span6 span_input_value' ) ),
+								), ['class' => 'span6 span_input_value'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'von', array( 'for' => 'input_minuteOfHour_rangeFrom' ) ),
+									HtmlTag::create( 'label', 'von', ['for' => 'input_minuteOfHour_rangeFrom'] ),
 									HtmlTag::create( 'select', $optMinutes, array(
 										'id'		=> 'input_minuteOfHour_rangeFrom',
 										'name'		=> 'minuteOfHourRangeFrom',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span3 span_input_range' ) ),
+								), ['class' => 'span3 span_input_range'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'bis', array( 'for' => 'input_minuteOfHour_rangeTo' ) ),
+									HtmlTag::create( 'label', 'bis', ['for' => 'input_minuteOfHour_rangeTo'] ),
 									HtmlTag::create( 'select', $optMinutes, array(
 										'id'		=> 'input_minuteOfHour_rangeTo',
 										'name'		=> 'minuteOfHourRangeTo',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span3 span_input_range' ) ),
+								), ['class' => 'span3 span_input_range'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'Werte <small class="muted">(kommagetrennt)</small>', array( 'for' => 'input_minuteOfHour_values' ) ),
+									HtmlTag::create( 'label', 'Werte <small class="muted">(kommagetrennt)</small>', ['for' => 'input_minuteOfHour_values'] ),
 									HtmlTag::create( 'input', '', array(
 										'type'		=> 'text',
 										'id'		=> 'input_minuteOfHour_values',
@@ -311,45 +311,45 @@ $form		= HtmlTag::create( 'div', array(
 										'class'		=> 'span12 modifiesCronExpression',
 										'value'		=> '0',
 									) ),
-								), array( 'class' => 'span6 span_input_values' ) ),
-							), array( 'class' => 'row-fluid' ) ),
-						), array( 'class' => 'span5' ) ),
+								), ['class' => 'span6 span_input_values'] ),
+							), ['class' => 'row-fluid'] ),
+						), ['class' => 'span5'] ),
 						HtmlTag::create( 'div', array(
 							HtmlTag::create( 'div', array(
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', $words['add']['labelDayOfWeek'], array( 'for' => 'input_dayOfWeek' ) ),
+									HtmlTag::create( 'label', $words['add']['labelDayOfWeek'], ['for' => 'input_dayOfWeek'] ),
 									HtmlTag::create( 'select', $optDayOfWeek, array(
 										'id'		=> 'input_dayOfWeek',
 										'name'		=> 'dayOfWeek',
 										'class'		=> 'span12 canHaveValue canHaveRange canHaveValues modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span6' ) ),
+								), ['class' => 'span6'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'Wert', array( 'for' => 'input_dayOfWeek_value' ) ),
+									HtmlTag::create( 'label', 'Wert', ['for' => 'input_dayOfWeek_value'] ),
 									HtmlTag::create( 'select', $optWeekday, array(
 										'id'		=> 'input_dayOfWeek_value',
 										'name'		=> 'dayOfWeekValue',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span6 span_input_value' ) ),
+								), ['class' => 'span6 span_input_value'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'von', array( 'for' => 'input_dayOfWeek_rangeFrom' ) ),
+									HtmlTag::create( 'label', 'von', ['for' => 'input_dayOfWeek_rangeFrom'] ),
 									HtmlTag::create( 'select', $optWeekday, array(
 										'id'		=> 'input_dayOfWeek_rangeFrom',
 										'name'		=> 'dayOfWeekRangeFrom',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span3 span_input_range' ) ),
+								), ['class' => 'span3 span_input_range'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'bis', array( 'for' => 'input_dayOfWeek_rangeTo' ) ),
+									HtmlTag::create( 'label', 'bis', ['for' => 'input_dayOfWeek_rangeTo'] ),
 									HtmlTag::create( 'select', $optWeekday, array(
 										'id'		=> 'input_dayOfWeek_rangeTo',
 										'name'		=> 'dayOfWeekRangeTo',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span3 span_input_range' ) ),
+								), ['class' => 'span3 span_input_range'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'Werte <small class="muted">(kommagetrennt)</small>', array( 'for' => 'input_dayOfWeek_value' ) ),
+									HtmlTag::create( 'label', 'Werte <small class="muted">(kommagetrennt)</small>', ['for' => 'input_dayOfWeek_value'] ),
 									HtmlTag::create( 'input', '', array(
 										'type'		=> 'text',
 										'id'		=> 'input_dayOfWeek_values',
@@ -357,45 +357,45 @@ $form		= HtmlTag::create( 'div', array(
 										'class'		=> 'span12 modifiesCronExpression',
 										'value'		=> '0',
 									) ),
-								), array( 'class' => 'span6 span_input_values' ) ),
-							), array( 'class' => 'row-fluid' ) ),
-						), array( 'class' => 'span5 offset1 optional format format-cron-week' ) ),
+								), ['class' => 'span6 span_input_values'] ),
+							), ['class' => 'row-fluid'] ),
+						), ['class' => 'span5 offset1 optional format format-cron-week'] ),
 						HtmlTag::create( 'div', array(
 							HtmlTag::create( 'div', array(
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', $words['add']['labelDayOfMonth'], array( 'for' => 'input_dayOfMonth' ) ),
+									HtmlTag::create( 'label', $words['add']['labelDayOfMonth'], ['for' => 'input_dayOfMonth'] ),
 									HtmlTag::create( 'select', $optDayOfMonth, array(
 										'id'		=> 'input_dayOfMonth',
 										'name'		=> 'dayOfMonth',
 										'class'		=> 'span12 canHaveValue canHaveRange canHaveValues modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span6' ) ),
+								), ['class' => 'span6'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'Wert', array( 'for' => 'input_dayOfMonth_value' ) ),
+									HtmlTag::create( 'label', 'Wert', ['for' => 'input_dayOfMonth_value'] ),
 									HtmlTag::create( 'select', $optDay, array(
 										'id'		=> 'input_dayOfMonth_value',
 										'name'		=> 'dayOfMonthValue',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span3 span_input_value' ) ),
+								), ['class' => 'span3 span_input_value'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'von', array( 'for' => 'input_dayOfMonth_rangeFrom' ) ),
+									HtmlTag::create( 'label', 'von', ['for' => 'input_dayOfMonth_rangeFrom'] ),
 									HtmlTag::create( 'select', $optDay, array(
 										'id'		=> 'input_dayOfMonth_rangeFrom',
 										'name'		=> 'dayOfMonthRangeFrom',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span3 span_input_range' ) ),
+								), ['class' => 'span3 span_input_range'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'bis', array( 'for' => 'input_dayOfMonth_rangeTo' ) ),
+									HtmlTag::create( 'label', 'bis', ['for' => 'input_dayOfMonth_rangeTo'] ),
 									HtmlTag::create( 'select', $optDay, array(
 										'id'		=> 'input_dayOfMonth_rangeTo',
 										'name'		=> 'dayOfMonthRangeTo',
 										'class'		=> 'span12 modifiesCronExpression',
 									) ),
-								), array( 'class' => 'span3 span_input_range' ) ),
+								), ['class' => 'span3 span_input_range'] ),
 								HtmlTag::create( 'div', array(
-									HtmlTag::create( 'label', 'Werte <small class="muted">(kommagetrennt)</small>', array( 'for' => 'input_dayOfMonth_values' ) ),
+									HtmlTag::create( 'label', 'Werte <small class="muted">(kommagetrennt)</small>', ['for' => 'input_dayOfMonth_values'] ),
 									HtmlTag::create( 'input', '', array(
 										'type'		=> 'text',
 										'id'		=> 'input_dayOfMonth_values',
@@ -403,21 +403,21 @@ $form		= HtmlTag::create( 'div', array(
 										'class'		=> 'span12 modifiesCronExpression',
 										'value'		=> '0',
 									) ),
-								), array( 'class' => 'span6 span_input_values' ) ),
-							), array( 'class' => 'row-fluid' ) ),
-						), array( 'class' => 'span5 offset1 optional format format-cron-month' ) ),
-					), array( 'class' => 'row-fluid' ) ),
-				), array( 'class' => 'span8' ) ),
+								), ['class' => 'span6 span_input_values'] ),
+							), ['class' => 'row-fluid'] ),
+						), ['class' => 'span5 offset1 optional format format-cron-month'] ),
+					), ['class' => 'row-fluid'] ),
+				), ['class' => 'span8'] ),
 				HtmlTag::create( 'div', array(
 					'<blockquote>
 						<label>Wert</label>
 						<div id="container_expression_cron" class="label_dateCode"><em class="muted">wird berechnet</em></div>
 						<br/>
 					</blockquote>',
-				), array( 'class' => 'span4' ) ),
-			), array( 'class' => 'row-fluid' ) ),
-		), array( 'class' => 'span12' ) ),
-	), array( 'class' => 'row-fluid optional format format-cron-month format format-cron-week' ) ),
+				), ['class' => 'span4'] ),
+			), ['class' => 'row-fluid'] ),
+		), ['class' => 'span12'] ),
+	), ['class' => 'row-fluid optional format format-cron-month format format-cron-week'] ),
 
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
@@ -425,7 +425,7 @@ $form		= HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'div', array(
 						HtmlTag::create( 'div', array(
-							HtmlTag::create( 'label', $words['add']['labelYears'], array( 'for' => 'input_years' ) ),
+							HtmlTag::create( 'label', $words['add']['labelYears'], ['for' => 'input_years'] ),
 							HtmlTag::create( 'input', NULL, array(
 								'type'		=> 'number',
 								'id'		=> 'input_years',
@@ -436,9 +436,9 @@ $form		= HtmlTag::create( 'div', array(
 								'max'		=> 10,
 								'step'		=> 1,
 							) ),
-						), array( 'class' => 'span2' ) ),
+						), ['class' => 'span2'] ),
 						HtmlTag::create( 'div', array(
-							HtmlTag::create( 'label', $words['add']['labelMonths'], array( 'for' => 'input_months' ) ),
+							HtmlTag::create( 'label', $words['add']['labelMonths'], ['for' => 'input_months'] ),
 							HtmlTag::create( 'input', NULL, array(
 								'type'		=> 'number',
 								'id'		=> 'input_months',
@@ -449,9 +449,9 @@ $form		= HtmlTag::create( 'div', array(
 								'max'		=> 12,
 								'step'		=> 1,
 							) ),
-						), array( 'class' => 'span2' ) ),
+						), ['class' => 'span2'] ),
 						HtmlTag::create( 'div', array(
-							HtmlTag::create( 'label', $words['add']['labelDays'], array( 'for' => 'input_days' ) ),
+							HtmlTag::create( 'label', $words['add']['labelDays'], ['for' => 'input_days'] ),
 							HtmlTag::create( 'input', NULL, array(
 								'type'		=> 'number',
 								'id'		=> 'input_days',
@@ -462,9 +462,9 @@ $form		= HtmlTag::create( 'div', array(
 								'max'		=> 30,
 								'step'		=> 1,
 							) ),
-						), array( 'class' => 'span2' ) ),
+						), ['class' => 'span2'] ),
 						HtmlTag::create( 'div', array(
-							HtmlTag::create( 'label', $words['add']['labelHours'], array( 'for' => 'input_hours' ) ),
+							HtmlTag::create( 'label', $words['add']['labelHours'], ['for' => 'input_hours'] ),
 							HtmlTag::create( 'input', NULL, array(
 								'type'		=> 'number',
 								'id'		=> 'input_hours',
@@ -475,9 +475,9 @@ $form		= HtmlTag::create( 'div', array(
 								'max'		=> 23,
 								'step'		=> 1,
 							) ),
-						), array( 'class' => 'span2' ) ),
+						), ['class' => 'span2'] ),
 						HtmlTag::create( 'div', array(
-							HtmlTag::create( 'label', $words['add']['labelMinutes'], array( 'for' => 'input_minutes' ) ),
+							HtmlTag::create( 'label', $words['add']['labelMinutes'], ['for' => 'input_minutes'] ),
 							HtmlTag::create( 'input', NULL, array(
 								'type'		=> 'number',
 								'id'		=> 'input_minutes',
@@ -488,85 +488,85 @@ $form		= HtmlTag::create( 'div', array(
 								'max'		=> 59,
 								'step'		=> 1,
 							) ),
-						), array( 'class' => 'span2' ) ),
-					), array( 'class' => 'row-fluid' ) ),
-				), array( 'class' => 'span8' ) ),
+						), ['class' => 'span2'] ),
+					), ['class' => 'row-fluid'] ),
+				), ['class' => 'span8'] ),
 				HtmlTag::create( 'div', array(
 					'<blockquote>
 						<label>Wert</label>
 						<div id="container_expression_interval" class="label_dateCode"><em class="muted">wird berechnet</em></div>
 						<br/>
 					</blockquote>',
-				), array( 'class' => 'span4' ) ),
-			), array( 'class' => 'row-fluid' ) ),
-		), array( 'class' => 'span12' ) ),
-	), array( 'class' => 'row-fluid optional format format-interval' ) ),
+				), ['class' => 'span4'] ),
+			), ['class' => 'row-fluid'] ),
+		), ['class' => 'span12'] ),
+	), ['class' => 'row-fluid optional format format-interval'] ),
 
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['add']['labelDate'], array( 'for' => 'input_date' ) ),
+					HtmlTag::create( 'label', $words['add']['labelDate'], ['for' => 'input_date'] ),
 					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'date',
 						'id'		=> 'input_date',
 						'name'		=> 'date',
 						'class'		=> 'span12 modifiesDatetimeExpression',
 					) ),
-				), array( 'class' => 'span3' ) ),
+				), ['class' => 'span3'] ),
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['add']['labelTime'], array( 'for' => 'input_time' ) ),
+					HtmlTag::create( 'label', $words['add']['labelTime'], ['for' => 'input_time'] ),
 					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'time',
 						'id'		=> 'input_time',
 						'name'		=> 'time',
 						'class'		=> 'span12 modifiesDatetimeExpression',
 					) ),
-				), array( 'class' => 'span3' ) ),
+				), ['class' => 'span3'] ),
 				HtmlTag::create( 'div', array(
 					'<blockquote>
 						<label>Wert</label>
 						<div id="container_expression_datetime" class="label_dateCode"><em class="muted">wird berechnet</em></div>
 						<br/>
 					</blockquote>',
-				), array( 'class' => 'span4 offset2' ) ),
-			), array( 'class' => 'row-fluid' ) ),
-		), array( 'class' => 'span12' ) ),
-	), array( 'class' => 'row-fluid optional format format-datetime' ) ),
+				), ['class' => 'span4 offset2'] ),
+			), ['class' => 'row-fluid'] ),
+		), ['class' => 'span12'] ),
+	), ['class' => 'row-fluid optional format format-datetime'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array( '<hr/>',
-		), array( 'class' => 'span12' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+		), ['class' => 'span12'] ),
+	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Report-Modus', array( 'for' => 'input_reportMode' ) ),
+			HtmlTag::create( 'label', 'Report-Modus', ['for' => 'input_reportMode'] ),
 			HtmlTag::create( 'select', $optReportMode, array(
 				'id'		=> 'input_reportMode',
 				'name'		=> 'reportMode',
 				'class'		=> 'span12 has-optionals',
 			) ),
-		), array( 'class' => 'span3' ) ),
+		), ['class' => 'span3'] ),
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Report-Kanal', array( 'for' => 'input_reportChannel' ) ),
+			HtmlTag::create( 'label', 'Report-Kanal', ['for' => 'input_reportChannel'] ),
 			HtmlTag::create( 'select', $optReportChannel, array(
 				'id'		=> 'input_reportChannel',
 				'name'		=> 'reportChannel',
 				'class'		=> 'span12 has-optionals',
 			) ),
-		), array( 'class' => 'span2 optional reportMode reportMode-1 reportMode-2 reportMode-3 reportMode-4 reportMode-5' ) ),
+		), ['class' => 'span2 optional reportMode reportMode-1 reportMode-2 reportMode-3 reportMode-4 reportMode-5'] ),
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Report-Empfänger <small class="muted">(kommagetrennt)</small>', array( 'for' => 'input_reportReceivers' ) ),
+			HtmlTag::create( 'label', 'Report-Empfänger <small class="muted">(kommagetrennt)</small>', ['for' => 'input_reportReceivers'] ),
 			HtmlTag::create( 'input', NULL, array(
 				'type'		=> 'text',
 				'id'		=> 'input_reportReceivers',
 				'name'		=> 'reportReceivers',
 				'class'		=> 'span12',
 			) ),
-		), array( 'class' => 'span7 optional reportChannel reportChannel-1 reportChannel-2' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+		), ['class' => 'span7 optional reportChannel reportChannel-1 reportChannel-2'] ),
+	), ['class' => 'row-fluid'] ),
 ) );
 
-$buttons	= HtmlTag::create( 'div', $buttonCancel.' '.$buttonAdd, array() );
+$buttons	= HtmlTag::create( 'div', $buttonCancel.' '.$buttonAdd, [] );
 
 $tabs		= View_Manage_Job::renderTabs( $env, 'schedule' );
 
@@ -597,7 +597,7 @@ return $tabs.HtmlTag::create( 'div', array(
 			$form,
 			HtmlTag::create( 'div', array(
 				$buttons,
-			), array( 'class' => 'buttonbar' ) ),
-		), array( 'action' => './manage/job/schedule/add', 'method' => 'post', 'id' => 'formManageJobScheduleAdd' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+			), ['class' => 'buttonbar'] ),
+		), ['action' => './manage/job/schedule/add', 'method' => 'post', 'id' => 'formManageJobScheduleAdd'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );

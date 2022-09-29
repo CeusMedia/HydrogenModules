@@ -55,7 +55,7 @@ class Controller_System_Exception extends Controller
 				throw new Exception( 'This is a test' );
 			}
 			catch( Exception $e ){
-				$payload	= array( 'exception' => $e );
+				$payload	= ['exception' => $e];
 				$this->env->getCaptain()->callHook( 'App', 'onException', $this, $payload );
 				throw new Exception( $e->getMessage(), $e->getCode(), $e );
 			}

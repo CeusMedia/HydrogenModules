@@ -4,25 +4,25 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $types	= $words['types'];
 krsort( $types );
-$optType	= array( '' => '- alle -' );
+$optType	= ['' => '- alle -'];
 foreach( $types as $key => $value )
 	$optType[$key]	= $value;
 $optType['_selected']	= $issue->type;
 
 $severities	= $words['severities'];
 krsort( $severities );
-$optSeverity	= array( '' => '- alle -' );
+$optSeverity	= ['' => '- alle -'];
 foreach( $severities as $key => $value )
 	$optSeverity[$key]	= $value;
 $optSeverity['_selected']	= $issue->severity;
 
-$optStatus	= array( '' => '- alle -' );
+$optStatus	= ['' => '- alle -'];
 foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $value;
 $optStatus['_selected']	= $issue->status;
 
 
-$optProject	= array( '_selected' => $issue->projectId );
+$optProject	= ['_selected' => $issue->projectId];
 if( !empty( $projects ) ){
 	foreach( $projects as $project )
 		$optProject[$project->projectId]	= $project->title;
@@ -77,7 +77,7 @@ $main	= '
 				</div>
 				<div class="row-fluid">
 					<label for="content">'.$words['edit']['labelContent'].'</label>
-					'.HtmlTag::create( 'textarea', $issue->content, array( 'class' => 'span12 CodeMirror-auto', 'name' => 'content', 'rows' => 9 ) ).'
+					'.HtmlTag::create( 'textarea', $issue->content, ['class' => 'span12 CodeMirror-auto', 'name' => 'content', 'rows' => 9] ).'
 				</div>
 				<div class="buttonbar">
 					<a href="./work/issue" class="btn btn-small"><i class="icon-arrow-left"></i> '.$words['edit']['buttonCancel'].'</a>

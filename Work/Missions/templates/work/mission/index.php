@@ -26,7 +26,7 @@ switch( $filterMode ){
 $panelContent	.= '<div class="clearfix"></div>';
 
 /*	$panelExport	= '';
-	if( 0 && $filterStates != array( 4 ) ){
+	if( 0 && $filterStates != [4] ){
 		$panelExport	= '<fieldset>
 			<legend class="icon export">Export / Import</legend>
 			<b>Export als:</b>&nbsp;<br/>

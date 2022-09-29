@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 
 $panelFilter	= '
 <div class="content-panel">
@@ -23,11 +23,11 @@ foreach( $categories as $category ){
 		'href'	=> './manage/catalog/clothing/category/edit/'.$category->categoryId,
 	) );
 	$rows[]	= HtmlTag::create( 'tr', array(
-		HtmlTag::create( 'td', $link, array( 'class' => 'cell-category-title' ) ),
+		HtmlTag::create( 'td', $link, ['class' => 'cell-category-title'] ),
 	) );
 }
 $tbody	= HtmlTag::create( 'tbody', $rows );
-$table	= HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-fixed' ) );
+$table	= HtmlTag::create( 'table', $tbody, ['class' => 'table table-fixed'] );
 
 $buttonAdd		= HtmlTag::create( 'a', $iconAdd.'neue Kategorie', array(
 	'href'	=> './manage/catalog/clothing/category/add',

@@ -79,15 +79,15 @@ $panelEdit	= '
 			<legend>'.sprintf( $wf->legend, $project->title ).'</legend>
 			<ul class="input">
 				<li class="column-left-66">
-					'.HtmlTag::create( 'label', $wf->labelTitle, array( 'for' => 'title', 'class' => 'mandatory' ) ).'<br/>
+					'.HtmlTag::create( 'label', $wf->labelTitle, ['for' => 'title', 'class' => 'mandatory'] ).'<br/>
 					'.HtmlElements::Input( 'title', htmlspecialchars( $project->title, ENT_COMPAT, 'UTF-8' ), 'max mandatory' ).'
 				</li>
 				<li class="column-left-33">
-					'.HtmlTag::create( 'label', $wf->labelStatus, array( 'for' => 'status' ) ).'<br/>
+					'.HtmlTag::create( 'label', $wf->labelStatus, ['for' => 'status'] ).'<br/>
 					'.HtmlElements::Select( 'status', $optStatus, 'max' ).'
 				</li>
 				<li>
-					'.HtmlTag::create( 'description', $wf->labelDescription, array( 'for' => 'description' ) ).'<br/>
+					'.HtmlTag::create( 'description', $wf->labelDescription, ['for' => 'description'] ).'<br/>
 					'.HtmlElements::TextArea( 'description', htmlspecialchars( $project->description, ENT_COMPAT, 'UTF-8' ), 'max' ).'
 				</li>
 			</ul>

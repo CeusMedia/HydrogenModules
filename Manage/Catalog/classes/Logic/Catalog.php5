@@ -91,7 +91,7 @@ class Logic_Catalog extends Logic
 		$creator		= new ImageThumbnailCreator( $uriSource, $uriThumb );
 		$creator->thumbizeByLimit( $thumbWidth, $thumbHeight, $thumbQuality );
 
-		$this->editArticle( $articleId, array( 'cover' => $imagename ) );
+		$this->editArticle( $articleId, ['cover' => $imagename] );
 		$this->cache->remove( 'catalog.tinymce.images.articles' );
 	}
 
@@ -180,7 +180,7 @@ class Logic_Catalog extends Logic
 		$creator		= new ImageThumbnailCreator( $uriSource, $uriSource );
 		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
 		$this->clearCacheForAuthor( $authorId );
-		$this->editAuthor( $authorId, array( 'image' => $imagename ) );
+		$this->editAuthor( $authorId, ['image' => $imagename] );
 	}
 
 	/**
@@ -284,7 +284,7 @@ class Logic_Catalog extends Logic
 			return $this->countArticlesInCategories[$categoryId];
 		$number		= count( $this->modelArticleCategory->getAllByIndex( 'categoryId', $categoryId ) );
 		if( $recursive ){
-			$categories	= $this->getCategories( array( 'parentId' => $categoryId ) );
+			$categories	= $this->getCategories( ['parentId' => $categoryId] );
 			foreach( $categories as $category )
 				$number += $this->countArticlesInCategory( $category->categoryId );
 		}
@@ -347,7 +347,7 @@ class Logic_Catalog extends Logic
 	 */
 	public function getArticles( $conditions = [], $orders = [], $limits = [] )
 	{
-#		$cacheKey	= md5( json_encode( array( $conditions, $orders, $limits ) ) );
+#		$cacheKey	= md5( json_encode( [$conditions, $orders, $limits] ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.articles.'.$cacheKey ) ) )
 #			return $data;
 		$list	= [];
@@ -367,8 +367,8 @@ class Logic_Catalog extends Logic
 		foreach( $articles as $article )
 			$articleIds[]	= $article->articleId;
 		if( !$articles )
-			return array();
-		$conditions	= array( 'articleId' => $articleIds );
+			return [];
+		$conditions	= ['articleId' => $articleIds];
 		$articles	= $this->getArticles( $conditions, $orders, $limits );
 		return $articles;
 	}
@@ -379,7 +379,7 @@ class Logic_Catalog extends Logic
 	public function getArticlesFromAuthorIds( $authorIds, $returnIds = FALSE )
 	{
 		$model		= new Model_Catalog_Article_Author( $this->env );
-		$articles	= $model->getAll( array( 'authorId' => array_values( $authorIds ) ) );
+		$articles	= $model->getAll( ['authorId' => array_values( $authorIds )] );
 		if( !$returnIds )
 			return $articles;
 		$ids	= [];
@@ -477,7 +477,7 @@ class Logic_Catalog extends Logic
 	 */
 	public function getCategories( $conditions = [], $orders = [] )
 	{
-#		$cacheKey	= md5( json_encode( array( $conditions, $orders ) ) );
+#		$cacheKey	= md5( json_encode( [$conditions, $orders] ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.categories.'.$cacheKey ) ) )
 #			return $data;
 
@@ -527,10 +527,10 @@ class Logic_Catalog extends Logic
 	 */
 	public function getCategoryArticles( $category, $orders = [], $limits = [] )
 	{
-#		$cacheKey	= md5( json_encode( array( $category->categoryId, $orders, $limits ) ) );
+#		$cacheKey	= md5( json_encode( [$category->categoryId, $orders, $limits] ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.category.articles.'.$cacheKey ) ) )
 #			return $data;
-		$conditions	= array( 'categoryId' => $category->categoryId );
+		$conditions	= ['categoryId' => $category->categoryId];
 		$relations	= $this->modelArticleCategory->getAll( $conditions, $orders, $limits );
 		$articles	= [];
 		$volumes	= [];
@@ -595,7 +595,7 @@ class Logic_Catalog extends Logic
 	 */
 	public function getUriPart( $label, $delimiter = "_" )
 	{
-		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
 		$label	= preg_replace( "/ +/", $delimiter, $label );
 		return $label;
@@ -634,7 +634,7 @@ class Logic_Catalog extends Logic
 			@unlink( $this->pathArticleCovers.$id."__".$article->cover );
 			@unlink( $this->pathArticleCovers.$id."_".$article->cover );
 			$this->clearCacheForArticle( $articleId );
-			$this->editArticle( $articleId, array( 'cover' => NULL ) );
+			$this->editArticle( $articleId, ['cover' => NULL] );
 		}
 	}
 
@@ -689,7 +689,7 @@ class Logic_Catalog extends Logic
 	public function removeAuthor( $authorId )
 	{
 		$this->checkAuthorId( $authorId );
-		$articles	= $this->getArticlesFromAuthorIds( array( $authorId ) );
+		$articles	= $this->getArticlesFromAuthorIds( [$authorId] );
 		foreach( $articles as $article )
 			$this->removeAuthorFromArticle( $article->articleId, $authorId );
 		$this->modelAuthor->remove( $authorId );
@@ -725,7 +725,7 @@ class Logic_Catalog extends Logic
 		if( $author->image ){
 			@unlink( $this->pathAuthorImages.$id."__".$author->image );
 			@unlink( $this->pathAuthorImages.$id."_".$author->image );
-			$this->editAuthor( $authorId, array( 'image' => NULL ) );
+			$this->editAuthor( $authorId, ['image' => NULL] );
 		}
 		$this->clearCacheForAuthor( $authorId );													//
 	}
@@ -767,7 +767,7 @@ class Logic_Catalog extends Logic
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
-		$indices	= array( 'articleId' => $articleId, 'authorId' => $authorId );
+		$indices	= ['articleId' => $articleId, 'authorId' => $authorId];
 		$relation	= $this->modelArticleAuthor->getByIndices( $indices );
 		if( $relation ){
 			$this->modelArticleAuthor->edit( $relation->articleAuthorId, array( 'editor' => (int) $role ) );

@@ -84,12 +84,12 @@ class Job_Job_Schedule extends Job_Abstract
 			$conditions['status']	= $statuses;
 		}
 
-		$orders		= array( 'jobRunId' => 'ASC' );
+		$orders		= ['jobRunId' => 'ASC'];
 		$limits		= array(
 			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
 			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
 		);
-		$runIds	= $modelRun->getAll( $conditions, $orders, $limits, array( 'jobRunId' ) );
+		$runIds	= $modelRun->getAll( $conditions, $orders, $limits, ['jobRunId'] );
 		$nrJobs	= count( $runIds );
 		if( $nrJobs ){
 			$this->showProgress( $counter = 0, $nrJobs );
@@ -102,7 +102,7 @@ class Job_Job_Schedule extends Job_Abstract
 			}
 			$database->commit();
 		}
-		$this->results	= array( 'count' => $nrJobs );
+		$this->results	= ['count' => $nrJobs];
 		$this->out( sprintf( 'Archived %d job runs.', $nrJobs ) );
 		return $nrJobs ? 2 : 1;
 	}
@@ -180,12 +180,12 @@ class Job_Job_Schedule extends Job_Abstract
 			$conditions['status']	= $statuses;
 		}
 
-		$orders		= array( 'jobRunId' => 'ASC' );
+		$orders		= ['jobRunId' => 'ASC'];
 		$limits		= array(
 			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
 			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
 		);
-		$runIds	= $modelRun->getAll( $conditions, $orders, $limits, array( 'jobRunId' ) );
+		$runIds	= $modelRun->getAll( $conditions, $orders, $limits, ['jobRunId'] );
 		$nrJobs	= count( $runIds );
 		if( $nrJobs ){
 			$this->showProgress( $counter = 0, $nrJobs );
@@ -198,7 +198,7 @@ class Job_Job_Schedule extends Job_Abstract
 			}
 			$database->commit();
 		}
-		$this->results	= array( 'count' => $nrJobs );
+		$this->results	= ['count' => $nrJobs];
 		$this->out( sprintf( 'Removed %d job runs.', $nrJobs ) );
 		return $nrJobs ? 2 : 1;
 	}

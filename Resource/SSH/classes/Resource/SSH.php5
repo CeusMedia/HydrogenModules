@@ -65,7 +65,7 @@ class Resource_SSH
 		$command	= sprintf( 'ls %s %s', $options, $this->path.$path );				//  render shell command
 		$list		= explode( PHP_EOL, trim( $this->_exec( $command ) ) );				//  execute command and split resulting lines
 		foreach( $list as $nr => $item )												//  iterate resulting lines
-			if( in_array( $item, array( '.', '..' ) ) )									//  if line is current or parent folder
+			if( in_array( $item, ['.', '..'] ) )									//  if line is current or parent folder
 				unset( $list[$nr] );													//  remove from resulting lines
 		$list	= array_values( $list );												//  re-index resulting lines
 		if( $pattern ){

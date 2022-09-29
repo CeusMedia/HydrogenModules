@@ -15,7 +15,7 @@ if( isset( $dev ) && $dev )
 $w			= (object) $words['uninstall'];
 
 /*  --  BUTTONS  --  */
-$attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
+$attributes		= ['type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled'];
 $buttonBack		= HtmlTag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
 $buttonSubmit	= HtmlElements::Button( 'doUninstall', $w->buttonUninstall, 'button add' );
 
@@ -53,7 +53,7 @@ $panelInfo  = '
 function renderPositions( $positions ){
 	$list	= [];
 	foreach( $positions as $label => $url )
-		$list[]	= '&laquo;&nbsp;'.HtmlTag::create( 'a', $label, array( 'href' => $url ) );
+		$list[]	= '&laquo;&nbsp;'.HtmlTag::create( 'a', $label, ['href' => $url] );
 	$positions	= join( '&nbsp;&nbsp;|&nbsp;&nbsp;', $list );
 	$positions	= HtmlTag::create( 'div', $positions, array( 'class' => 'nav-position', 'style' => 'margin-bottom: 0.8em') );
 	return $positions;

@@ -3,12 +3,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $modelMail	= new Model_Form_Mail( $env );
 
-$mails		= $modelMail->getAll( array(), array( 'title' => 'ASC' ) );
+$mails		= $modelMail->getAll( [], ['title' => 'ASC'] );
 
-$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'href'	=> './manage/form/mail',
@@ -24,13 +24,13 @@ if( $mail->format == Model_Form_Mail::FORMAT_TEXT )
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'h2', '<span class="muted">Mail:</span> '.$mail->title ),
-	), array() ),
+	), [] ),
 	HtmlTag::create( 'br' ),
 	HtmlTag::create( 'div', $mail->content, array(
 		'style' => 'border: 2px solid gray; padding: 2em;'
 	) ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'hr' ),
-		join( ' ', array( $buttonCancel, $buttonEdit ) ),
-	), array() ),
-), array() );
+		join( ' ', [$buttonCancel, $buttonEdit] ),
+	), [] ),
+), [] );

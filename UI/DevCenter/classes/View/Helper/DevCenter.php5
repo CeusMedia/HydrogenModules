@@ -36,8 +36,8 @@ class View_Helper_DevCenter
 		}
 		$current	= $this->session->get( 'DevCenterTab' );
 		$tabs		= $tabs->render( $current, $label, $url );
-		$content	= HtmlTag::create( 'div', $tabs, array( 'id' => "DevCenterContent" ) );		//
-		$handleTop	= HtmlTag::create( 'div', "====", array( 'id' => 'DevCenterHandleTop' ) );	//
+		$content	= HtmlTag::create( 'div', $tabs, ['id' => "DevCenterContent"] );		//
+		$handleTop	= HtmlTag::create( 'div', "====", ['id' => 'DevCenterHandleTop'] );	//
 
 		$style		= [];
 		if( is_int( $height = $this->height ) || is_string( $this->height ) )
@@ -45,7 +45,7 @@ class View_Helper_DevCenter
 		if( !$this->open )
 			$style['display']	= "none";
 
-		$attributes	= array( 'id' => "DevCenter" );
+		$attributes	= ['id' => "DevCenter"];
 		if( $style ){
 			$attributes['style']	= [];
 			foreach( $style as $key => $value )

@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['confirm'];
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/local/confirm/' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/local/confirm/' ) );
 
 $panelConfirm	= HTML::DivClass( "content-panel content-panel-form", array(
 	HTML::H3( $w->heading ),
@@ -56,8 +56,8 @@ if( strlen( trim( strip_tags( $textTop ) ) ) || strlen( trim( strip_tags( $textB
 
 $env->getPage()->addBodyClass( 'auth-centered' );
 return HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', $panelConfirm, array( 'class' => 'centered-pane' ) )
-), array( 'class' => 'centered-pane-container' ) );
+	HtmlTag::create( 'div', $panelConfirm, ['class' => 'centered-pane'] )
+), ['class' => 'centered-pane-container'] );
 
 //return HTML::DivClass( "auth-confirm-text-top", $textTop ).
 //HTML::DivClass( "bs2-row-fluid bs3-row bs4-row", array(

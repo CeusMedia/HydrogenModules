@@ -2,25 +2,25 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
 
-$optStatus	= array( '' => $wordsGeneral['list']['optAll'] );
+$optStatus	= ['' => $wordsGeneral['list']['optAll']];
 foreach( $wordsGeneral['job-definition-statuses'] as $key => $value )
 	$optStatus[$key]	= $value;
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
-$optMode	= array( '' => $wordsGeneral['list']['optAll'] );
+$optMode	= ['' => $wordsGeneral['list']['optAll']];
 foreach( $wordsGeneral['job-definition-modes'] as $key => $value )
 	$optMode[$key]	= $value;
 $optMode	= HtmlElements::Options( $optMode, $filterMode );
 
-$optClass	= array( '' => $wordsGeneral['list']['optAll'] );
+$optClass	= ['' => $wordsGeneral['list']['optAll']];
 foreach( $classNames as $key => $value )
 	$optClass[$value]	= $value;
 $optClass	= HtmlElements::Options( $optClass, $filterClass );
 
-$optMethod	= array( '' => $wordsGeneral['list']['optAll'] );
+$optMethod	= ['' => $wordsGeneral['list']['optAll']];
 foreach( $methodNames as $key => $value )
 	$optMethod[$value]	= $value;
 $optMethod	= HtmlElements::Options( $optMethod, $filterMethod );
@@ -31,44 +31,44 @@ $panelFilter	= HtmlTag::create( 'div', array(
 		HtmlTag::create( 'form', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['filter']['labelStatus'], array( 'for' => 'input_status' ) ),
+					HtmlTag::create( 'label', $words['filter']['labelStatus'], ['for' => 'input_status'] ),
 					HtmlTag::create( 'select', $optStatus, array(
 						'name' 		=> 'status',
 						'id'		=> 'input_status',
 						'class' 	=> 'span12',
 					) ),
-				), array( 'class' => 'span12' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span12'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['filter']['labelMode'], array( 'for' => 'input_mode' ) ),
+					HtmlTag::create( 'label', $words['filter']['labelMode'], ['for' => 'input_mode'] ),
 					HtmlTag::create( 'select', $optMode, array(
 						'name' 		=> 'mode',
 						'id'		=> 'input_mode',
 						'class' 	=> 'span12',
 					) ),
-				), array( 'class' => 'span12' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span12'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['filter']['labelClass'], array( 'for' => 'input_class' ) ),
+					HtmlTag::create( 'label', $words['filter']['labelClass'], ['for' => 'input_class'] ),
 					HtmlTag::create( 'select', $optClass, array(
 						'name' 		=> 'class',
 						'id'		=> 'input_class',
 						'class' 	=> 'span12',
 					) ),
-				), array( 'class' => 'span12' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span12'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['filter']['labelMethod'], array( 'for' => 'input_method' ) ),
+					HtmlTag::create( 'label', $words['filter']['labelMethod'], ['for' => 'input_method'] ),
 					HtmlTag::create( 'select', $optMethod, array(
 						'name' 		=> 'method',
 						'id'		=> 'input_method',
 						'class' 	=> 'span12',
 					) ),
-				), array( 'class' => 'span12' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span12'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$words['filter']['buttonFilter'], array(
@@ -81,10 +81,10 @@ $panelFilter	= HtmlTag::create( 'div', array(
 						'href'	=> './manage/job/definition/filter/reset',
 						'class'	=> 'btn not-btn-small btn-inverse',
 					) ),
-				), array( 'class' => 'btn-group' ) ),
-			), array( 'class' => 'buttonbar' ) ),
-		), array( 'action' => './manage/job/definition/filter', 'method' => 'POST' ) ),
-	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );
+				), ['class' => 'btn-group'] ),
+			), ['class' => 'buttonbar'] ),
+		), ['action' => './manage/job/definition/filter', 'method' => 'POST'] ),
+	), ['class' => 'content-panel-inner'] )
+), ['class' => 'content-panel'] );
 
 return $panelFilter;

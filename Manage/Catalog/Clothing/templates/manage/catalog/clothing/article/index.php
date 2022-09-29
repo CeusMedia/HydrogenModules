@@ -2,15 +2,15 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 
-$optCategory	= array( '' => '- alle -' );
+$optCategory	= ['' => '- alle -'];
 foreach( $categories as $category )
 	$optCategory[$category->categoryId]	= $category->title;
 $optCategory	= HtmlElements::Options( $optCategory, $filterCategoryId );
 
-$optSize	= array( '' => '- alle -' );
-foreach( array( 'S', 'M', 'L', 'XL' ) as $size )
+$optSize	= ['' => '- alle -'];
+foreach( ['S', 'M', 'L', 'XL'] as $size )
 	$optSize[$size]	= $size;
 $optSize	= HtmlElements::Options( $optSize, $filterSize );
 
@@ -27,7 +27,7 @@ if( count( $languages ) > 1 ){
 		</div>';
 }
 else
-	$filterLanguage		= HtmlTag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
+	$filterLanguage		= HtmlTag::create( 'input', NULL, ['type' => 'hidden', 'name' => 'language', 'value' => $language] );
 
 
 $panelFilter	= '
@@ -76,17 +76,17 @@ foreach( $articles as $article ){
 	}
 
 	$rows[]	= HtmlTag::create( 'tr', array(
-		HtmlTag::create( 'td', $image, array( 'class' => 'cell-article-image' ) ),
-		HtmlTag::create( 'td', $link, array( 'class' => 'cell-article-title' ) ),
-		HtmlTag::create( 'td', $categoryMap[$article->categoryId]->title, array( 'class' => 'cell-article-category' ) ),
-		HtmlTag::create( 'td', $article->form, array( 'class' => 'cell-article-form' ) ),
-		HtmlTag::create( 'td', $article->color, array( 'class' => 'cell-article-color' ) ),
-		HtmlTag::create( 'td', $article->size, array( 'class' => 'cell-article-size' ) ),
-		HtmlTag::create( 'td', $article->quantity, array( 'class' => 'cell-article-quantity' ) ),
-		HtmlTag::create( 'td', $article->price.'&euro;', array( 'class' => 'cell-article-price', 'style' => 'text-align: right' ) ),
+		HtmlTag::create( 'td', $image, ['class' => 'cell-article-image'] ),
+		HtmlTag::create( 'td', $link, ['class' => 'cell-article-title'] ),
+		HtmlTag::create( 'td', $categoryMap[$article->categoryId]->title, ['class' => 'cell-article-category'] ),
+		HtmlTag::create( 'td', $article->form, ['class' => 'cell-article-form'] ),
+		HtmlTag::create( 'td', $article->color, ['class' => 'cell-article-color'] ),
+		HtmlTag::create( 'td', $article->size, ['class' => 'cell-article-size'] ),
+		HtmlTag::create( 'td', $article->quantity, ['class' => 'cell-article-quantity'] ),
+		HtmlTag::create( 'td', $article->price.'&euro;', ['class' => 'cell-article-price', 'style' => 'text-align: right'] ),
 	) );
 }
-$colgroup	= HtmlElements::ColumnGroup( array( '40', '', '15%', '10%', '10%', '10%', '5%', '10%' ) );
+$colgroup	= HtmlElements::ColumnGroup( ['40', '', '15%', '10%', '10%', '10%', '5%', '10%'] );
 $thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 	HtmlTag::create( 'th', '' ),
 	HtmlTag::create( 'th', 'Bezeichnung' ),
@@ -95,10 +95,10 @@ $thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 	HtmlTag::create( 'th', 'Farbe' ),
 	HtmlTag::create( 'th', 'Größe' ),
 	HtmlTag::create( 'th', 'Lager' ),
-	HtmlTag::create( 'th', 'Preis', array( 'style' => 'text-align: right' ) ),
+	HtmlTag::create( 'th', 'Preis', ['style' => 'text-align: right'] ),
 ) ) );
 $tbody	= HtmlTag::create( 'tbody', $rows );
-$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 
 $buttonAdd		= HtmlTag::create( 'a', $iconAdd.'neues Produkt', array(
 	'href'	=> './manage/catalog/clothing/article/add',

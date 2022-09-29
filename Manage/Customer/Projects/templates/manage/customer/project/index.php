@@ -11,7 +11,7 @@ if( $relations ){
 //print_m( $relation );
 //die;
 		$url	= './manage/project/'.$relation->projectId;
-		$link	= HtmlTag::create( 'a', $relation->project->title, array( 'href' => $url ) );
+		$link	= HtmlTag::create( 'a', $relation->project->title, ['href' => $url] );
 		$urlRemove		= './manage/customer/project/remove/'.$relation->customerId.'/'.$relation->projectId;
 		$iconRemove		= '<i class="icon-remove icon-white"></i>';
 		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
@@ -29,22 +29,22 @@ if( $relations ){
 		'Titel'
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
-	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', '<i class="icon-plus icon-white"></i> hinzufügen', array( 'href' => './manage/customer/project/add', 'class' => 'btn btn-success' ) );
+$buttonAdd	= HtmlTag::create( 'a', '<i class="icon-plus icon-white"></i> hinzufügen', ['href' => './manage/customer/project/add', 'class' => 'btn btn-success'] );
 
 
 /*
 $list	= [];
 foreach( $projects as $project ){
 	
-	$list[]	= HtmlTag::create( 'li', $project->title, array( 'class' => 'autocut' ) );
+	$list[]	= HtmlTag::create( 'li', $project->title, ['class' => 'autocut'] );
 }
 $list	= HtmlTag::create( 'ul', $list );
 */
 
-$optProject	= array( '' => '' );
+$optProject	= ['' => ''];
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject	= HtmlElements::Options( $optProject );

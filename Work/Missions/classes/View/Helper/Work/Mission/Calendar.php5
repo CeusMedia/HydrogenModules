@@ -26,7 +26,7 @@ class View_Helper_Work_Mission_Calendar{
 		$offsetStart	= date( "w", strtotime( $showScope ) ) - 1;
 		$offsetStart	= $offsetStart >= 0 ? $offsetStart : 6;
 		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
-		$orders			= array( 'priority' => 'ASC' );
+		$orders			= ['priority' => 'ASC'];
 
 		$rows			= [];
 		for( $i=0; $i<$weeks; $i++ ){
@@ -62,10 +62,10 @@ class View_Helper_Work_Mission_Calendar{
 			$rows[]	= '<tr>'.join( $row ).'</tr>';
 		}
 		$colgroup	= HtmlElements::ColumnGroup( "2%", "14%", "14%", "14%", "14%", "14%", "14%", "14%" );
-		$heads		= HtmlElements::TableHeads( array( "KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ) );
+		$heads		= HtmlElements::TableHeads( ["KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"] );
 		$thead		= HtmlTag::create( 'thead', $heads );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
-		$tableLarge	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
+		$tableLarge	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['id' => "mission-calendar-large"] );
 
 
 		$rows			= [];
@@ -104,10 +104,10 @@ class View_Helper_Work_Mission_Calendar{
 			$rows[]	= join( $row );
 		}
 		$colgroup	= HtmlElements::ColumnGroup( /*"5%", "95%"*/"100%" );
-		$heads		= HtmlElements::TableHeads( array( "KW", "..." ) );
+		$heads		= HtmlElements::TableHeads( ["KW", "..."] );
 		$thead		= HtmlTag::create( 'thead', ""/*$heads*/ );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
-		$tableSmall	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-small" ) );
+		$tableSmall	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['id' => "mission-calendar-small"] );
 
 //		$tableSmall = '<div class="muted"><em><small>Noch nicht implementiert.</small></em></div>';
 
@@ -196,7 +196,7 @@ $(document).ready(function(){
 		$diff		= $this->today->diff( $date );
 		$isPast		= $diff->invert;
 		$isToday	= $diff->days == 0;
-		$conditions	= array( 'dayStart' => $date->format( "Y-m-d" ), 'status' => array( 0, 1, 2, 3 ) );
+		$conditions	= ['dayStart' => $date->format( "Y-m-d" ), 'status' => [0, 1, 2, 3]];
 		$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
 		$list		= [];
 		foreach( $missions as $mission ){
@@ -255,7 +255,7 @@ $(document).ready(function(){
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
-			return HtmlTag::create( 'div', $diff->days, array( 'class' => "overdue" ) );		//  render overdue container
+			return HtmlTag::create( 'div', $diff->days, ['class' => "overdue"] );		//  render overdue container
 	}
 }
 ?>

@@ -30,12 +30,12 @@ class View_Info_File extends View
 		$steps		= self::getStepsFromFolderId( $env, $folderId );
 		$folderPath	= self::getPathFromFolderId( $env, $folderId );
 		$way		= '';
-		$parts		= $folderPath ? explode( "/", '/'.trim( $folderPath, " /\t" ) ) : array( '' );
+		$parts		= $folderPath ? explode( "/", '/'.trim( $folderPath, " /\t" ) ) : [''];
 		$iconHome	= new BootstrapIcon( 'fa fa-fw fa-home', !$folderPath );
 		$buttonHome	= new BootstrapLinkButton( './info/file/index', $iconHome );
 		if( !$folderPath && !$search )
 			$buttonHome	= new BootstrapButton( $iconHome, 'btn-inverse', NULL, TRUE );
-		$buttons	= array( $buttonHome );
+		$buttons	= [$buttonHome];
 		foreach( $steps as $nr => $stepFolder ){
 			$way		.= strlen( $stepFolder->title ) ? $stepFolder->title.'/' : '';
 			$isCurrent	= $folderId === (int) $stepFolder->downloadFolderId;

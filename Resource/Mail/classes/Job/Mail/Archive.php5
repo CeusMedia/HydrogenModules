@@ -72,8 +72,8 @@ class Job_Mail_Archive extends Job_Abstract
 			'mailClass'		=> $class,
 			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
 		);
-		$orders		= array( 'mailId' => 'ASC' );
-		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
+		$orders		= ['mailId' => 'ASC'];
+		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, ['mailId'] );
 		$nrMails	= count( $mailIds );
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );
@@ -120,7 +120,7 @@ class Job_Mail_Archive extends Job_Abstract
 
 		/*  --  REPLACE PREFIX  --  */
 		$regExp		= "@(EXISTS|FROM|INTO|TABLE|TABLES|for table)( `)(".$prefix.")(.+)(`)@U";		//  build regular expression
-		$callback	= array( $this, '_callbackReplacePrefix' );										//  create replace callback
+		$callback	= [$this, '_callbackReplacePrefix'];										//  create replace callback
 		rename( $pathname, $pathname."_" );															//  move dump file to source file
 		$fpIn		= fopen( $pathname."_", "r" );													//  open source file
 		$fpOut		= fopen( $pathname, "a" );														//  prepare empty target file
@@ -152,15 +152,15 @@ class Job_Mail_Archive extends Job_Abstract
 	 */
 	public function regenerate()
 	{
-		$conditions	= array( 'status' > $this->statusesHandledMails );
-		$orders		= array( 'mailId' => 'ASC' );
+		$conditions	= ['status' > $this->statusesHandledMails];
+		$orders		= ['mailId' => 'ASC'];
 		$limits		= array(
 			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
 			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
 		);
 		$count		= 0;
 		$fails		= [];
-		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
+		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, ['mailId'] );
 		foreach( $mailIds as $mailId ){
 			$mail		= $this->model->get( $mailId );
 			$mailClone	= clone( $mail );
@@ -225,7 +225,7 @@ class Job_Mail_Archive extends Job_Abstract
 			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
 		);
 
-		$orders		= array( 'mailId' => 'DESC' );
+		$orders		= ['mailId' => 'DESC'];
 		$fails		= [];
 		$results	= (object) array(
 			'mails'			=> 0,
@@ -237,7 +237,7 @@ class Job_Mail_Archive extends Job_Abstract
 		if( $this->dryMode )
 			$this->out( 'DRY RUN - no changes will be made.' );
 
-		$mailIds	= $this->model->getAllByIndices( $conditions, $orders, array(), array( 'mailId' ) );
+		$mailIds	= $this->model->getAllByIndices( $conditions, $orders, [], ['mailId'] );
 		foreach( $mailIds as $mailId ){
 			try{
 				$mail			= $this->model->get( $mailId );
@@ -320,15 +320,15 @@ class Job_Mail_Archive extends Job_Abstract
 			FileWriter::save( $indexFile, '[]' );
 		$index		= json_decode( FileReader::load( $indexFile ), TRUE );
 
-		$conditions	= array( 'status' => $this->statusesHandledMails );
-		$orders		= array( 'mailId' => 'ASC' );
+		$conditions	= ['status' => $this->statusesHandledMails];
+		$orders		= ['mailId' => 'ASC'];
 		$limits		= array(
 			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
 			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
 		);
 		$count		= 0;
 		$fails		= [];
-		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
+		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, ['mailId'] );
 		foreach( $mailIds as $mailId ){
 			$count++;
 			$mailId		= (string) $mailId;
@@ -352,7 +352,7 @@ class Job_Mail_Archive extends Job_Abstract
 					FolderEditor::createFolder( $path.$shard );
 				FileWriter::save( $path.$shard.$uuid.'.raw', $mail->raw );
 				FileWriter::save( $path.$shard.$uuid.'.raw.bz2', bzcompress( $mail->raw ) );
-				$index[$mailId]	= array( 'uuid' => $uuid, 'shard' => $shard, 'format' => 'bzip' );
+				$index[$mailId]	= ['uuid' => $uuid, 'shard' => $shard, 'format' => 'bzip'];
 				$this->showProgress( $count, count( $mailIds ), '+' );
 			}
 			else{
@@ -378,7 +378,7 @@ class Job_Mail_Archive extends Job_Abstract
 						FolderEditor::createFolder( $path.$shard );
 					FileWriter::save( $path.$shard.$uuid.'.raw', $raw );
 					FileWriter::save( $path.$shard.$uuid.'.raw.bz2', bzcompress( $raw ) );
-					$index[$mailId]	= array( 'uuid' => $uuid, 'shard' => $shard, 'format' => 'bzip' );
+					$index[$mailId]	= ['uuid' => $uuid, 'shard' => $shard, 'format' => 'bzip'];
 					$this->showProgress( $count, count( $mailIds ), '+' );
 				}
 				catch( Exception $e ){
@@ -413,7 +413,7 @@ class Job_Mail_Archive extends Job_Abstract
 	protected function _loadMailClasses()
 	{
 		$loadedClasses	= [];
-		$mailClassPaths	= array( './', 'admin/' );
+		$mailClassPaths	= ['./', 'admin/'];
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$mailClassPaths[]	= Logic_Frontend::getInstance( $this->env )->getPath();
 		foreach( array_unique( $mailClassPaths ) as $mailClassPath ){

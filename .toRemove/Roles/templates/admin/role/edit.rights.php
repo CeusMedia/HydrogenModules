@@ -25,10 +25,10 @@ foreach( $actions as $controller => $class ){
 				$id	= NULL;
 				break;
 		}
-		$label	= HtmlTag::create( 'label', $method->name, array() );
+		$label	= HtmlTag::create( 'label', $method->name, [] );
 		$list[]	= HtmlTag::create( 'li', $check.$label, array( 'class' => $class, 'id' => $id ) );
 	}
-	$list	= HtmlTag::create( 'ul', join( $list ), array() );
+	$list	= HtmlTag::create( 'ul', join( $list ), [] );
 	$rows[]	= '<tr><td>'.$controller.'</td><td>'.$list.'</td></tr>';
 }
 $tableRights	= '<table><tr><th>Controller</th><th>Aktionen</th><th>Status</th></tr>'.join( $rows ).'</table>';

@@ -12,7 +12,7 @@ class View_File extends View{
 		$file	= $this->getData( 'file' );
 		$path	= $this->getData( 'sourcePath' );
 
-		$mimeTypes		= array( '*'.'/'.'*' => 1 );												//  default if no Accept header is set
+		$mimeTypes		= ['*'.'/'.'*' => 1];												//  default if no Accept header is set
 		if( $acceptField = $this->env->getRequest()->getHeader( 'Accept', FALSE ) )					//  Accept header for content negotiation found
 			$mimeTypes	= $acceptField->decodeQualifiedValues( $acceptField->getValue() );			//  decode qualified MIME types
 

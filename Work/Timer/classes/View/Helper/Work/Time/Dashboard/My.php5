@@ -17,9 +17,9 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 		$modelTimer		= new Model_Work_Timer( $this->env );
 		$hasTimers		= $modelTimer->count( array(
 			'workerId'	=> $logicAuth->getCurrentUserId(),
-			'status'	=> array( 1, 2 ),
+			'status'	=> [1, 2],
 		) );
-		$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+		$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 		$fromAdd	= 'info/dashboard';
 		$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;jetzt Zeit erfassen', array(
 			'href'	=> './work/time/add?from='.$fromAdd,
@@ -31,17 +31,17 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 		else{
 			$timer		= $modelTimer->getAllByIndices( array(
 				'workerId'	=> $logicAuth->getCurrentUserId(),
-				'status'	=> array( 1, 2 ),
+				'status'	=> [1, 2],
 			), array(
 				'status'		=> 'ASC',
 				'modifiedAt'	=> 'DESC',
-			), array( 1, 0 ) )[0];
+			), [1, 0] )[0];
 			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
 			$timePlanned	= View_Helper_Work_Time::formatSeconds( $timer->secondsPlanned );
 			$from			= 'info/dashboard';
 
 			if( $timer->status == 1 ){
-				$icon		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) );
+				$icon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pause'] );
 				$button		= HtmlTag::create( 'a', $icon, array(
 					'href'	=> './work/time/pause/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-large btn-warning',
@@ -59,7 +59,7 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 				) );
 			}
 			else{
-				$icon		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) );
+				$icon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] );
 				$button		= HtmlTag::create( 'a', $icon, array(
 					'href'	=> './work/time/start/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-large btn-success',

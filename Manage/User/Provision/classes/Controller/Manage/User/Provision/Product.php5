@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Manage_User_Provision_Product extends Controller{
 
 	protected $prefixSession		= 'filter_manage_user_provision_product_';
-	protected $filters				= array( 'productId', 'productLicenseId', 'status' );
+	protected $filters				= ['productId', 'productLicenseId', 'status'];
 
 	protected function __onInit(){
 		$this->request				= $this->env->getRequest();
@@ -89,7 +89,7 @@ class Controller_Manage_User_Provision_Product extends Controller{
 
 		$limit		= 2;
 		$orders		= [];
-		$limits		= array( $limit, floor( $page / $limit ) );
+		$limits		= [$limit, floor( $page / $limit )];
 		$licenses	= $this->modelLicense->getAll( $indices, $orders );
 		$total		= $this->modelLicense->count( $indices );
 		foreach( $licenses as $license ){

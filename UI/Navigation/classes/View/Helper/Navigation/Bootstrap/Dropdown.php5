@@ -47,39 +47,39 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 				foreach( $page->items as $subpage ){
 					$class		= $subpage->active ? 'active' : NULL;
 					$href		= './'.$subpage->link;
-//					$link		= HtmlTag::create( 'a', $subpage->label, array( 'href' => $href ) );
-					$link		= HtmlTag::create( 'a', $this->renderLabelWithIcon( $subpage ), array( 'href' => $href ) );
+//					$link		= HtmlTag::create( 'a', $subpage->label, ['href' => $href] );
+					$link		= HtmlTag::create( 'a', $this->renderLabelWithIcon( $subpage ), ['href' => $href] );
 					if( strlen( trim( $subpage->chapter ) ) > 0 && $subpage->chapter !== $lastChapter ){
 						if( count( $sublist ) > 0)
 							$sublist[]	= HtmlTag::create( 'li', '', ['class' => 'divider'] );
 						$lastChapter = $subpage->chapter;
 					}
-					$sublist[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+					$sublist[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 				}
 				if( !$sublist )
 					continue;
 				$class		= $page->active ? 'dropdown active' : 'dropdown';
-				$sublist	= HtmlTag::create( 'ul', $sublist, array( 'class' => 'dropdown-menu' ) );
+				$sublist	= HtmlTag::create( 'ul', $sublist, ['class' => 'dropdown-menu'] );
 				$title		= $this->renderLabelWithIcon( $page ).' <b class="caret"></b>';
 				$link	= HtmlTag::create( 'a', $title, array(
 					'href'			=> '#',
 					'class' 		=> 'dropdown-toggle',
 					'data-toggle'	=> 'dropdown'
 				) );
-				$list[]	= HtmlTag::create( 'li', $link.$sublist, array( 'class' => $class ) );
+				$list[]	= HtmlTag::create( 'li', $link.$sublist, ['class' => $class] );
 			}
 			else{
 				if( in_array( $page->path, $this->linksToSkip ) )
 					continue;
 				$class	= $page->active ? 'active' : NULL;
 				$href	= $page->path == "index" ? './' : './'.$page->link;
-//				$link	= HtmlTag::create( 'a', $page->label, array( 'href' => $href ) );
-				$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), array( 'href' => $href ) );
-				$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+//				$link	= HtmlTag::create( 'a', $page->label, ['href' => $href] );
+				$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), ['href' => $href] );
+				$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 			}
 		}
 		$logo	= $this->renderLogo();
-		return $logo.HtmlTag::create( 'ul', $list, array( "class" => $listClass ) );
+		return $logo.HtmlTag::create( 'ul', $list, ["class" => $listClass] );
 	}
 
 	public function renderLogo(): string
@@ -89,7 +89,7 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 		$icon	= "";
 		if( $this->logoIcon ){
 			$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
-			$icon	= HtmlTag::create( 'i', '', array( 'class' => $icon ) );
+			$icon	= HtmlTag::create( 'i', '', ['class' => $icon] );
 		}
 		$label	= $icon.'&nbsp;'.$this->logoTitle;
 		if( !$this->logoLink )
@@ -149,7 +149,7 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 		$class	= $entry->icon;
 		if( !preg_match( "/^fa/", $entry->icon ) )
 			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
-		$icon   = HtmlTag::create( 'i', '', array( 'class' => $class ) );
+		$icon   = HtmlTag::create( 'i', '', ['class' => $class] );
 		if( strlen( $entry->label ) )
 			return $icon.'&nbsp;'.$entry->label;
 		return $icon;

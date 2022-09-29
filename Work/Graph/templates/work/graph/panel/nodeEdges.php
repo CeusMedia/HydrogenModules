@@ -9,8 +9,8 @@ $listEdgesIn	= '<small class="muted"><em>None.</em></small>';
 if( $edgesIn ){
 	$listEdgesIn	= [];
 	foreach( $edgesIn as $edge ){
-		$nodeFrom		= HtmlTag::create( 'small', $nodeIndex[$edge->fromNodeId].' -> ', array( 'class' => 'muted' ) );
-		$nodeTo			= HtmlTag::create( 'small', ' -> '.$nodeIndex[$edge->toNodeId], array( 'class' => 'muted' ) );
+		$nodeFrom		= HtmlTag::create( 'small', $nodeIndex[$edge->fromNodeId].' -> ', ['class' => 'muted'] );
+		$nodeTo			= HtmlTag::create( 'small', ' -> '.$nodeIndex[$edge->toNodeId], ['class' => 'muted'] );
 		$label			= $nodeFrom.$edge->label.$nodeTo;
 		$link			= HtmlTag::create( 'a', $label, array(
 			'href'	=> './work/graph/edge/'.$edge->edgeId.'/'.$nodeId,
@@ -19,15 +19,15 @@ if( $edgesIn ){
 		$listEdgesIn[$key]	= HtmlTag::create( 'li', $link );
 	}
 	ksort( $listEdgesIn );
-	$listEdgesIn	= HtmlTag::create( 'ul', $listEdgesIn, array( 'class' => 'not-unstyled nav nav-pills nav-stacked' ) );
+	$listEdgesIn	= HtmlTag::create( 'ul', $listEdgesIn, ['class' => 'not-unstyled nav nav-pills nav-stacked'] );
 }
 
 $listEdgesOut	= '<small class="muted"><em>None.</em></small>';
 if( $edgesOut ){
 	$listEdgesOut	= [];
 	foreach( $edgesOut as $edge ){
-		$nodeFrom		= HtmlTag::create( 'small', $nodeIndex[$edge->fromNodeId].' -> ', array( 'class' => 'muted' ) );
-		$nodeTo			= HtmlTag::create( 'small', ' -> '.$nodeIndex[$edge->toNodeId], array( 'class' => 'muted' ) );
+		$nodeFrom		= HtmlTag::create( 'small', $nodeIndex[$edge->fromNodeId].' -> ', ['class' => 'muted'] );
+		$nodeTo			= HtmlTag::create( 'small', ' -> '.$nodeIndex[$edge->toNodeId], ['class' => 'muted'] );
 		$label			= $nodeFrom.$edge->label.$nodeTo;
 		$link			= HtmlTag::create( 'a', $label, array(
 			'href'	=> './work/graph/edge/'.$edge->edgeId.'/'.$nodeId,
@@ -36,7 +36,7 @@ if( $edgesOut ){
 		$listEdgesOut[$key]	= HtmlTag::create( 'li', $link );
 	}
 	ksort( $listEdgesOut );
-	$listEdgesOut	= HtmlTag::create( 'ul', $listEdgesOut, array( 'class' => 'not-unstyled nav nav-pills nav-stacked' ) );
+	$listEdgesOut	= HtmlTag::create( 'ul', $listEdgesOut, ['class' => 'not-unstyled nav nav-pills nav-stacked'] );
 }
 
 return '

@@ -3,10 +3,10 @@ $w	= (object) $words['index-done'];
 
 $helperShortList	= new View_Helper_Work_Time_ShortList( $env );
 $helperShortList->setWorkerId( $userId );
-$helperShortList->setStatus( array( 3 ) );
-$helperShortList->setOrders( array( 'modifiedAt' => 'DESC' ) );
+$helperShortList->setStatus( [3] );
+$helperShortList->setOrders( ['modifiedAt' => 'DESC'] );
 $helperShortList->setLimits( 10 );
-$helperShortList->setButtons( array( 'start', 'stop', 'edit' ) );
+$helperShortList->setButtons( ['start', 'stop', 'edit'] );
 
 $listDone	= $helperShortList->render();
 if( !$listDone )

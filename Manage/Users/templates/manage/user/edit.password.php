@@ -65,7 +65,7 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 			HtmlTag::create( 'td', $labelStatus ),
 //			HtmlTag::create( 'td', preg_replace( '/^PASSWORD_/', '', $passwordCryptTypes[$password->algo] ) ),
 //			HtmlTag::create( 'td', $password->failsTotal ),
-		), array( 'class' => $rowClass ) );
+		), ['class' => $rowClass] );
 	}
 	$heads	= HtmlElements::tableHeads( array(
 		'erstellt',
@@ -85,9 +85,9 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 		) ),
 		HtmlTag::create( 'thead', $heads ),
 		HtmlTag::create( 'tbody', $rows )
-	), array( 'class' => 'table table-condensed table-fixed table-bordered' ) );
+	), ['class' => 'table table-condensed table-fixed table-bordered'] );
 	$history	= HTML::DivClass( 'collapsable-block', array(
-//		HtmlTag::create( 'h4', 'Historie', array( 'class' => 'collapsable-block-trigger' ) ),
+//		HtmlTag::create( 'h4', 'Historie', ['class' => 'collapsable-block-trigger'] ),
 		HTML::DivClass( 'collapsable-block-content', $table ),
 	) );
 }
@@ -135,7 +135,7 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', array(
 			HTML::DivClass( 'buttonbar', array(
 				HtmlElements::Button( 'savePassword', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
 			) ),
-		), array( 'autocomplete' => 'off' ) )
+		), ['autocomplete' => 'off'] )
 	) )
 );
 
@@ -161,7 +161,7 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 			HtmlTag::create( 'td', $labelStatus ),
 //			HtmlTag::create( 'td', preg_replace( '/^PASSWORD_/', '', $passwordCryptTypes[(int) $password->algo] ) ),
 //			HtmlTag::create( 'td', $password->failsTotal ),
-		), array( 'class' => $rowClass ) );
+		), ['class' => $rowClass] );
 	}
 	$panelPasswords	= HTML::DivClass( 'content-panel content-panel-form', array(
 		HtmlTag::create( 'h4', 'Passwörter' ),
@@ -182,7 +182,7 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 //					'gescheiterte Login',
 				) ) ),
 				HtmlTag::create( 'tbody', $rows )
-			), array( 'class' => 'table table-condensed table-fixed' ) )
+			), ['class' => 'table table-condensed table-fixed'] )
 		) ),
 	) );
 }*/

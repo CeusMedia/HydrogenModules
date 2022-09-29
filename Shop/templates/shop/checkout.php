@@ -13,11 +13,11 @@ $helperCart->setDeliveryAddress( $address );
 $helperCart->setChangeable( TRUE );
 $helperCart->setForwardPath( 'shop/checkout' );
 //$helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML_LIST );
-$tablePositionsDesktop	= HtmlTag::create( 'div', $helperCart->render(), array( 'class' => 'hidden-phone' ) );
-$tablePositionsPhone	= HtmlTag::create( 'div', $helperCart->render(), array( 'class' => 'visible-phone' ) );
+$tablePositionsDesktop	= HtmlTag::create( 'div', $helperCart->render(), ['class' => 'hidden-phone'] );
+$tablePositionsPhone	= HtmlTag::create( 'div', $helperCart->render(), ['class' => 'visible-phone'] );
 $tablePositions			= $tablePositionsDesktop.$tablePositionsPhone;
 
-extract( $view->populateTexts( array( 'top', 'bottom', 'checkout.top', 'checkout.bottom' ), 'html/shop/' ) );
+extract( $view->populateTexts( ['top', 'bottom', 'checkout.top', 'checkout.bottom'], 'html/shop/' ) );
 
 $buttonPrev	= new LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 if( count( $paymentBackends ) > 1 && $cartTotal > 0 )
@@ -36,18 +36,18 @@ $tabContent	= HtmlTag::create( 'div', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'h4', $words['panel-customer']['heading'] ),
 				$helperAddress->setAddress( $customer->addressDelivery ),
-			), array( 'class' => 'span6' ) ),
+			), ['class' => 'span6'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'h4', $words['panel-billing']['heading'] ),
 				$helperAddress->setAddress( $customer->addressBilling ),
-			), array( 'class' => 'span6' ) ),
-		), array( 'class' => 'row-fluid' ) ),
+			), ['class' => 'span6'] ),
+		), ['class' => 'row-fluid'] ),
 		$textCheckoutBottom,
 		HtmlTag::create( 'div', array(
 			$buttonPrev, ' ',
 			$buttonNext,
-		), array( 'class' => 'buttonbar well well-small' ) ),
-	), array( 'method' => 'post', 'action' => './shop/checkout', 'id' => 'form-shop-checkout' ) ),
+		), ['class' => 'buttonbar well well-small'] ),
+	), ['method' => 'post', 'action' => './shop/checkout', 'id' => 'form-shop-checkout'] ),
 ) );
 
 $w				= (object) $words['modal-loading-payment'];
@@ -72,7 +72,7 @@ jQuery(document).ready(function(){
 });
 </script>';
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/shop/' ) );
 
 $helperTabs		= new View_Helper_Shop_Tabs( $env );
 $helperTabs->setCurrent( 'shop-checkout' );

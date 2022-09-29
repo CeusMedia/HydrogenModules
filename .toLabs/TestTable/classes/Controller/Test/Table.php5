@@ -16,7 +16,7 @@ class Controller_Test_Table extends Controller
 				$messenger->noteError( 'Title is missing.' );
 			else
 			{
-				if( $model->getAll( array( 'title' => $title ) ) )
+				if( $model->getAll( ['title' => $title] ) )
 					$messenger->noteError( 'Already exists: '.$label );
 				else
 				{
@@ -30,7 +30,7 @@ class Controller_Test_Table extends Controller
 				}
 			}
 		}
-		$this->view->setData( array( 'title' => $title ) );
+		$this->view->setData( ['title' => $title] );
 	}
 
 	public function delete( $testId )
@@ -62,7 +62,7 @@ class Controller_Test_Table extends Controller
 				$messenger->noteError( 'Title is missing.' );
 			else
 			{
-				if( $model->getAll( array( 'title' => $title, 'testId' => '!= '.$testId ) ) )
+				if( $model->getAll( ['title' => $title, 'testId' => '!= '.$testId] ) )
 					$messenger->noteError( 'Already exists: '.$title );
 				else
 				{

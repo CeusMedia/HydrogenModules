@@ -49,7 +49,7 @@ $graph	= $solver->renderRelatingGraph( 'Resource_Database', 'supports', FALSE );
 try{
 	$fileName	= 'test.png';
 	Graph_Renderer::convertGraphToImage( $graph, $fileName );
-	print( HtmlTag::create( 'img', NULL, array( 'src' => '/sandbox/Setup/'.$fileName ) ) );
+	print( HtmlTag::create( 'img', NULL, ['src' => '/sandbox/Setup/'.$fileName] ) );
 }
 catch( Exception $e ){
 	UI_HTML_Exception_Page::display( $e );

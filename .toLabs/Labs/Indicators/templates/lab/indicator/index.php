@@ -1,14 +1,14 @@
 <?php
 
-$data	= array( 0.15, 0.5, 0.75, 1 );
-$graph	= View_EvolutionIndicator::render( $data, array( 'width' => 150, 'height' => 10 ) );
+$data	= [0.15, 0.5, 0.75, 1];
+$graph	= View_EvolutionIndicator::render( $data, ['width' => 150, 'height' => 10] );
 
 
 $list	= [];
 $number	= rand( 5, 1000 );
 for( $i=0; $i<$number; $i++ )
 	$list[]	= round( rand( 25, 100 ) / 100, 2 );
-$graph2	= View_EvolutionIndicator::render( $list, array( 'width' => 150, 'height' => 10 ) );
+$graph2	= View_EvolutionIndicator::render( $list, ['width' => 150, 'height' => 10] );
 
 
 
@@ -31,8 +31,8 @@ In this example we got 4 values. Imagine these values to be results of tests or 
 Each test result value is a number between 0 and 1, representing the floating point number if a percentage value, like 75%.
 While 75% is represented as 0.75, other values are also added to a list (<cite>$data</cite>).<br/>
 <br/>
-<xmp class="php">$data	= array( 0.15, 0.5, 0.75, 1 );
-$conf	= array( "width" => 150, "height" => 10 );
+<xmp class="php">$data	= [0.15, 0.5, 0.75, 1];
+$conf	= ["width" => 150, "height" => 10];
 $graph	= View_EvolutionIndicator::render( $data, $conf );
 </xmp>
 Together with some output settings (<cite>$conf</cite>) the list of values is rendered by the <cite>Evolution Indicator View</cite>, which will return HTML markup.<br/>

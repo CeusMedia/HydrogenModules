@@ -132,7 +132,7 @@ class Controller_Work_Time_Analysis extends Controller
 				foreach( $usersProjects as $projectId => $project ){
 					if( !array_key_exists( $projectId, $this->projectMap ) )
 						continue;
-					if( !in_array( $project->status, array( 0, 1, 2 ) ) )
+					if( !in_array( $project->status, [0, 1, 2] ) )
 						continue;
 
 					$conditions	= array(

@@ -10,10 +10,10 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var object $route */
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
-$iconList		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-list" ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] );
+$iconList		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-list"] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-remove"] );
 
 //print_m( $route );die;
 

@@ -31,7 +31,7 @@ class View_Info_Blog extends View
 			'Datum: '	=> date( 'd.m.Y H:i', $comment->createdAt ),
 		);
 		$facts		= self::renderFactsStatic( $env, $facts, 'dl-inline' );
-		return HtmlTag::create( 'div', $facts, array( 'class' => 'infobar blog-comment-info' ) );
+		return HtmlTag::create( 'div', $facts, ['class' => 'infobar blog-comment-info'] );
 	}
 
 	public function renderComment( $comment ){
@@ -54,14 +54,14 @@ class View_Info_Blog extends View
 		if( $modeOrId === "random" ){
 			$number	= $model->countByIndex( 'status', 1 );
 			$index	= rand( 1, $number ) - 1;
-			$orders	= array( 'postId' => 'DESC' );
-			$limits	= array( 1, $index );
-			$posts	= $model->getAll( array( 'status' => 1 ), $orders, $limits );
+			$orders	= ['postId' => 'DESC'];
+			$limits	= [1, $index];
+			$posts	= $model->getAll( ['status' => 1], $orders, $limits );
 			$post	= $posts[0];
 			$title	= $words['panelTitles']['typeRandom'];
 		}
-		else if( in_array( $modeOrId, array( "latest", "0" ) ) ){
-			$post	= $model->getByIndex( 'status', 1, array(), array(), array( 'postId' => 'DESC' ) );
+		else if( in_array( $modeOrId, ["latest", "0"] ) ){
+			$post	= $model->getByIndex( 'status', 1, [], [], ['postId' => 'DESC'] );
 			$title	= $words['panelTitles']['typeLatest'];
 		}
 		else if( $modeOrId ){
@@ -84,7 +84,7 @@ class View_Info_Blog extends View
 	{
 		$title		= HtmlTag::create( 'h4', $post->title );
 		$url		= View_Info_Blog::renderPostUrlStatic( $env, $post );
-		$title		= HtmlTag::create( 'a', $title, array( 'href' => $url ) );
+		$title		= HtmlTag::create( 'a', $title, ['href' => $url] );
 		$payload	= [
 			'content'	=> $post->abstract,
 			'type'		=> 'html',
@@ -96,7 +96,7 @@ class View_Info_Blog extends View
 		$linkView	= HtmlTag::create( 'a', $words->linkMore, array(
 			'href'	=> './info/blog/post/'.$post->postId,
 		) );
-		$clearfloat	= HtmlTag::create( 'div', '', array( 'class' => 'clearfix' ) );
+		$clearfloat	= HtmlTag::create( 'div', '', ['class' => 'clearfix'] );
 		$linkView	= HtmlTag::create( 'small', $linkView );
 		$infobar	= View_Info_Blog::renderPostInfoBarStatic( $env, $post );
 		$content	= array(
@@ -104,7 +104,7 @@ class View_Info_Blog extends View
 			$abstract.'&nbsp;'.$linkView.$clearfloat,
 			$showInfoBar ? $infobar : '',
 		);
-		return HtmlTag::create( 'div', $content, array( 'class' => 'blog-post' ) );
+		return HtmlTag::create( 'div', $content, ['class' => 'blog-post'] );
 	}
 
 	public static function renderPostInfoBarStatic( Environment $env, $post )
@@ -124,7 +124,7 @@ class View_Info_Blog extends View
 		);
 
 		$facts		= self::renderFactsStatic( $env, $facts, 'dl-inline' );
-		return HtmlTag::create( 'div', $facts, array( 'class' => 'infobar blog-post-info hidden-phone' ) );
+		return HtmlTag::create( 'div', $facts, ['class' => 'infobar blog-post-info hidden-phone'] );
 	}
 
 	public static function renderPostUrlStatic( Environment $env, $post )
@@ -138,6 +138,6 @@ class View_Info_Blog extends View
 		foreach( $facts as $label => $value ){
 			$list[]	= HtmlTag::create( 'dt', $label ).HtmlTag::create( 'dd', $value );
 		}
-		return HtmlTag::create( 'dl', $list, array( 'class' => $listClass ) );
+		return HtmlTag::create( 'dl', $list, ['class' => $listClass] );
 	}
 }

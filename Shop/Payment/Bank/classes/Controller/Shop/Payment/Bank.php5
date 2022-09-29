@@ -66,7 +66,7 @@ class Controller_Shop_Payment_Bank extends Controller
 		$this->logicShop		= new Logic_Shop( $this->env );
 
 		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
 		$this->addData( 'paymentBackends', $this->backends );
 		$this->addData( 'configShop', $this->configShop );
 

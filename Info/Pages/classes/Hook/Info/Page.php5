@@ -31,7 +31,7 @@ class Hook_Info_Page extends Hook
 				break;
 			case Model_Page::TYPE_CONTENT:
 				$request->set( '__redirected', TRUE );												//  note redirection for access check
-				return static::redirect( $env, 'info/page', 'index', array( $pagePath ) );			//  redirect to page controller and quit hook
+				return static::redirect( $env, 'info/page', 'index', [$pagePath] );			//  redirect to page controller and quit hook
 				break;
 			case Model_Page::TYPE_BRANCH:
 				if( !( $children = $logic->getChildren( $page->pageId ) ) )							//  identified branch page has children
@@ -46,7 +46,7 @@ class Hook_Info_Page extends Hook
 				$controllerName	= strtolower( str_replace( "_", "/", $page->controller ) );			//  get module controller path
 				if( substr( $pagePath, 0, strlen( $controllerName ) ) === $controllerName )			//  module has been addressed by page link
 					return TRUE;																	//  let the general dispatcher do the job
-				$page->arguments	= isset( $page->arguments ) ? $page->arguments : array();
+				$page->arguments	= isset( $page->arguments ) ? $page->arguments : [];
 				$action	= $page->action ? $page->action : 'index';									//  default action is 'index'
 				if( count( $page->arguments ) > 1 && count( $page->arguments ) !== 1 ){												//  but there are path arguments
 					$classMethods	= get_class_methods( 'Controller_'.$page->controller );			//  get methods of module controller class
@@ -69,7 +69,7 @@ class Hook_Info_Page extends Hook
 			while( $page->template === 'inherit' && $parents )
 				$page	= array_shift( $parents );
 			$template		= (string) $page->template;
-			$valuesToSkip	= array( '', 'default', 'inherit', 'theme' );
+			$valuesToSkip	= ['', 'default', 'inherit', 'theme'];
 			if( !in_array( $template, $valuesToSkip, TRUE ) )
 				return 'info/page/masters/'.$template;
 		}
@@ -80,7 +80,7 @@ class Hook_Info_Page extends Hook
 	{
 		$modelPage			= new Model_Page( $env );
 		$controllerPages	= $modelPage->getAllByIndices( array(
-			'status'		=> array( Model_Page::STATUS_HIDDEN, Model_Page::STATUS_VISIBLE ),		//  hidden or visible, only (not disabled)
+			'status'		=> [Model_Page::STATUS_HIDDEN, Model_Page::STATUS_VISIBLE],		//  hidden or visible, only (not disabled)
 			'type'			=> Model_Page::TYPE_MODULE,												//  type 'module', only
 			'controller'	=> $payload['controllerName'],
 		) );
@@ -111,11 +111,11 @@ class Hook_Info_Page extends Hook
 		$acl	= $env->getAcl();
 		$model	= new Model_Page( $env );
 		$paths	= array(
-			'public'	=> array( 'info_page_index' ),
-			'inside'	=> array(),
-			'outside'	=> array()
+			'public'	=> ['info_page_index'],
+			'inside'	=> [],
+			'outside'	=> []
 		);
-		$pages	= $model->getAll( array( 'type' => Model_Page::TYPE_MODULE ) );						//  get all module based pages
+		$pages	= $model->getAll( ['type' => Model_Page::TYPE_MODULE] );						//  get all module based pages
 		foreach( $pages as $page ){																	//  iterate pages
 			$className	= 'Controller_'.$page->controller;											//  page delivers unprefixed controller class name
 			if( !class_exists( $className ) )														//  controller class is not existing
@@ -144,22 +144,22 @@ class Hook_Info_Page extends Hook
 			$moduleConfig	= $env->getConfig()->getAll( 'module.info_pages.', TRUE );				//  get configuration of module
 			if( $moduleConfig->get( 'sitemap' ) ){													//  sitemap is enabled
 				$urls		= [];
-				$orders		= array( 'scope' => 'ASC', 'rank' => 'ASC', 'modifiedAt' => 'DESC' );	//  collect latest changed pages first
+				$orders		= ['scope' => 'ASC', 'rank' => 'ASC', 'modifiedAt' => 'DESC'];	//  collect latest changed pages first
 				for( $scopeId = 0; $scopeId < 10; $scopeId++ ){
 					$model		= new Model_Page( $env );											//  get model of pages
 					$indices	= array(															//  focus on ...
 						'status'	=> Model_Page::STATUS_VISIBLE,									//  ... visible pages ...
 						'parentId'	=> 0,															//  ... in top level ...
 						'scope'		=> $scopeId,													//  ... of scoped navigation
-						'access'	=> array( 'public', 'outside' ),								//  ... accessible by everyone
+						'access'	=> ['public', 'outside'],								//  ... accessible by everyone
 					);
 					$pages		= $model->getAllByIndices( $indices, $orders );						//  get all active top level pages
 					foreach( $pages as $page ){														//  iterate found pages
 						if( (int) $page->type === Model_Page::TYPE_BRANCH ){						//  page is a branch only (without content)
 							$indices	= array(													//  focus on ...
-								'status'	=> array( Model_Page::STATUS_VISIBLE ),					//  ... visible pages ...
+								'status'	=> [Model_Page::STATUS_VISIBLE],					//  ... visible pages ...
 								'parentId'	=> $page->pageId,										//  ... on sub level
-								'access'	=> array( 'public', 'outside' ),						//  ... accessible by everyone
+								'access'	=> ['public', 'outside'],						//  ... accessible by everyone
 							);
 							$subpages	= $model->getAllByIndices( $indices, $orders );				//  get all active sub level pages of top level page
 							foreach( $subpages as $subpage ){										//  iterate found pages

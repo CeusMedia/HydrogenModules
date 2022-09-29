@@ -6,7 +6,7 @@ $configKeys		= array_keys( $moduleSource->config ) + array_keys( $moduleLocal->c
 if( $hasUpdate && count( $configKeys ) ){
 	$rows	= [];
 	foreach( $configKeys as $key ){
-		$item	= (object) array();
+		$item	= (object) [];
 		$itemNew	= isset( $moduleSource->config[$key] ) ? $moduleSource->config[$key] : NULL;
 		$itemOld	= isset( $moduleLocal->config[$key] ) ? $moduleLocal->config[$key] : NULL;
 		$item		= $itemNew ? $itemNew : $itemOld;
@@ -24,8 +24,8 @@ if( $hasUpdate && count( $configKeys ) ){
 					$status		= 1;
 			}
 		}
-		$buttonCopy	= HtmlTag::create( 'button', '<img src="//cdn.ceusmedia.de/img/famfamfam/silk/arrow_down.png"/>', array( 'type' => 'button', 'class' => "button tiny copy" ) );
-		$buttonInit	= HtmlTag::create( 'button', '<img src="//cdn.ceusmedia.de/img/famfamfam/silk/arrow_refresh.png"/>', array( 'type' => 'button', 'class' => "button tiny reset" ) );
+		$buttonCopy	= HtmlTag::create( 'button', '<img src="//cdn.ceusmedia.de/img/famfamfam/silk/arrow_down.png"/>', ['type' => 'button', 'class' => "button tiny copy"] );
+		$buttonInit	= HtmlTag::create( 'button', '<img src="//cdn.ceusmedia.de/img/famfamfam/silk/arrow_refresh.png"/>', ['type' => 'button', 'class' => "button tiny reset"] );
 		$inputOld	= View_Helper_Module::renderModuleConfigInput( $itemOld, $words['boolean-values'], TRUE );
 		$inputNew	= View_Helper_Module::renderModuleConfigInput( $itemNew, $words['boolean-values'] );
 		$input		= $inputNew;
@@ -36,20 +36,20 @@ if( $hasUpdate && count( $configKeys ) ){
 
 		$name	= 'config['.$item->key.']';
 		$class	= ( $item->mandatory && $item->mandatory === "yes" ) ? " mandatory" : "";
-		$label	= $itemNew->title ? HtmlTag::create( 'abbr', $key, array( 'title' => $itemNew->title ) ) : $key;
-		$label	= HtmlTag::create( 'label', $label, array( 'class' => $class, 'for' => 'input_'.$name ) );
+		$label	= $itemNew->title ? HtmlTag::create( 'abbr', $key, ['title' => $itemNew->title] ) : $key;
+		$label	= HtmlTag::create( 'label', $label, ['class' => $class, 'for' => 'input_'.$name] );
 		$id		= str_replace( '.', '_', $key );
 		$cells	= array(
-			HtmlTag::create( 'td', $label, array() ),
-			HtmlTag::create( 'td', $words['config-types'][$item->type], array( 'class' => "cell-config-type" ) ),
-			HtmlTag::create( 'td', $words['config-update-status'][$status], array() ),
-			HtmlTag::create( 'td', $input, array( 'class' => 'cell-config-value' ) ),
+			HtmlTag::create( 'td', $label, [] ),
+			HtmlTag::create( 'td', $words['config-types'][$item->type], ['class' => "cell-config-type"] ),
+			HtmlTag::create( 'td', $words['config-update-status'][$status], [] ),
+			HtmlTag::create( 'td', $input, ['class' => 'cell-config-value'] ),
 		);
-		$rows[$key]	= HtmlTag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
+		$rows[$key]	= HtmlTag::create( 'tr', $cells, ['id' => "config_".$id] );
 	#	natcasesort( $rows );
 	}
-	$tableHeads		= HtmlElements::TableHeads( array( 'Schlüssel', 'Typ', 'Änderung', 'Wert' ) );
-	$tableColumns	= HtmlElements::ColumnGroup( array( '25%', '10%', '15%', '50%' ) );
+	$tableHeads		= HtmlElements::TableHeads( ['Schlüssel', 'Typ', 'Änderung', 'Wert'] );
+	$tableColumns	= HtmlElements::ColumnGroup( ['25%', '10%', '15%', '50%'] );
 	$tableConfig	= '<table>'.$tableColumns.$tableHeads.join( $rows ).'</table>';
 	$tableConfig	= HtmlTag::create( 'h4', 'Konfiguration' ).$tableConfig.'<br/>';
 	return '

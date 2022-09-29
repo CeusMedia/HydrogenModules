@@ -79,7 +79,7 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 			$this->messenger->notError( 'Invalid filter ID.' );
 			$this->restart( NULL, FALSE );
 		}
-		$locks		= $this->logic->getAll( array( 'filterId' => $filterId ) );
+		$locks		= $this->logic->getAll( ['filterId' => $filterId] );
 		foreach( $locks as $lock )
 			$this->logic->remove( $lock->ipLockId );
 		$this->model->remove( $filterId );

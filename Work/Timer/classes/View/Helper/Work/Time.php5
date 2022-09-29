@@ -97,7 +97,7 @@ abstract class View_Helper_Work_Time extends Abstraction
 		return $this;
 	}
 
-	static public function sumTimersOfModuleId( Environment $env, string $moduleKey, $moduleId, array $statuses = array( 3 ), bool $formatAsTime = FALSE )
+	static public function sumTimersOfModuleId( Environment $env, string $moduleKey, $moduleId, array $statuses = [3], bool $formatAsTime = FALSE )
 	{
 		$logic		= Logic_Work_Timer::getInstance( $env );
 		$seconds	= $logic->sumTimersOfModuleId( $moduleKey, $moduleId, $statuses );

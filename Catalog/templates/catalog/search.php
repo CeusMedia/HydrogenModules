@@ -5,12 +5,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $helper	= new View_Helper_Catalog( $env );
 $words	= (object) $words['search'];
 
-$optAuthor	= array( '' => 'alle' );
+$optAuthor	= ['' => 'alle'];
 foreach( $authors as $author )
 	$optAuthor[$author->authorId]	= $author->lastname.', '.$author->firstname;
 $optAuthor	= HtmlElements::Options( $optAuthor, $searchAuthorId );
 
-$optCategory	= array( '' => 'alle' );
+$optCategory	= ['' => 'alle'];
 foreach( $categories as $category )
 	$optCategory[$category->categoryId]	= $category->label_de;
 $optCategory	= HtmlElements::Options( $optCategory, $searchCategoryId );
@@ -23,12 +23,12 @@ if( $searchTerm || $searchAuthorId ){
 		$list	= [];
 		foreach( $articles as $article )
 			$list[]	= $helper->renderArticleListItem( $article );
-		$list	= HtmlTag::create( 'div', $list, array( 'class' => 'articleList' ) );
+		$list	= HtmlTag::create( 'div', $list, ['class' => 'articleList'] );
 		$pages	= new \CeusMedia\Bootstrap\Nav\PageControl( './catalog/search', $page, ceil( $total / $limit ) );
 	}
 }
 
-extract( $view->populateTexts( array( 'search.top', 'search.bottom' ), 'html/catalog/' ) );
+extract( $view->populateTexts( ['search.top', 'search.bottom'], 'html/catalog/' ) );
 
 return $textSearchTop.'
 <h2>'.$words->heading.'</h2>

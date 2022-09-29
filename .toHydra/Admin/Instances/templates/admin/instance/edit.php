@@ -23,7 +23,7 @@ if( $moduleConfig->get( 'lock' ) ){
 	}
 }
 
-$optProtocol	= array( '' => '' );
+$optProtocol	= ['' => ''];
 foreach( $words['protocols'] as $key => $value )
 	$optProtocol[$key.'://']	= $value;
 $optProtocol	= HtmlElements::Options( $optProtocol, $instance->protocol );

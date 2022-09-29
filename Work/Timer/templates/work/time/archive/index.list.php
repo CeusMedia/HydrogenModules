@@ -4,12 +4,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
 
-$iconStart		= HtmlTag::create( 'i', '', array( 'class' => 'icon-play icon-white' ) );
-$iconPause		= HtmlTag::create( 'i', '', array( 'class' => 'icon-pause icon-white' ) );
-$iconClose		= HtmlTag::create( 'i', '', array( 'class' => 'icon-stop icon-white' ) );
+$iconStart		= HtmlTag::create( 'i', '', ['class' => 'icon-play icon-white'] );
+$iconPause		= HtmlTag::create( 'i', '', ['class' => 'icon-pause icon-white'] );
+$iconClose		= HtmlTag::create( 'i', '', ['class' => 'icon-stop icon-white'] );
 
-$iconAdd    = HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$buttonAdd  = HtmlTag::create( 'a', $iconAdd.' '.$w->buttonAdd, array( 'href' => './work/time/add', 'class' => 'btn btn-small btn-success' ) );
+$iconAdd    = HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+$buttonAdd  = HtmlTag::create( 'a', $iconAdd.' '.$w->buttonAdd, ['href' => './work/time/add', 'class' => 'btn btn-small btn-success'] );
 
 $list		= '<div><em><small class="muted">'.$w->empty.'</small></em></div><br/>';
 if( !$timers )
@@ -41,7 +41,7 @@ foreach( $timers as $timer ){
 		'class'		=> 'btn btn-small btn-danger',
 		'disabled'	=> $timer->status == 3 ? 'disabled' : NULL,
 	) );
-	$buttons		= HtmlTag::create( 'div', $buttonStart.$buttonPause.$buttonStop, array( 'class' => 'btn-group pull-right' ) );
+	$buttons		= HtmlTag::create( 'div', $buttonStart.$buttonPause.$buttonStop, ['class' => 'btn-group pull-right'] );
 */
 	$secondsNeeded	= $timer->status == 1 ? $timer->secondsNeeded + ( time() - $timer->modifiedAt ) : $timer->secondsNeeded;
 	$link			= HtmlTag::create( 'a', $timer->title, array(
@@ -59,13 +59,13 @@ foreach( $timers as $timer ){
 		) );
 
 	$rows[]		= HtmlTag::create( 'tr', array(
-		HtmlTag::create( 'td', $link, array( 'class' => 'title' ) ),
+		HtmlTag::create( 'td', $link, ['class' => 'title'] ),
 		HtmlTag::create( 'td', $timer->type ),
 		HtmlTag::create( 'td', $linkRelation ),
 		HtmlTag::create( 'td', $timer->project->title ),
-		HtmlTag::create( 'td', HtmlTag::create( 'span', View_Helper_Work_Time::formatSeconds( $secondsNeeded ), array( 'class' => 'pull-right' ) ) ),
+		HtmlTag::create( 'td', HtmlTag::create( 'span', View_Helper_Work_Time::formatSeconds( $secondsNeeded ), ['class' => 'pull-right'] ) ),
 /*		HtmlTag::create( 'td', $buttons ),*/
-	), array( 'class' => $rowClasses[$timer->status] ) );
+	), ['class' => $rowClasses[$timer->status]] );
 
 	$colgroup	= HtmlElements::ColumnGroup( "", "10%", "20%", "25%", "120" );
 	$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
@@ -73,10 +73,10 @@ foreach( $timers as $timer ){
 		HtmlTag::create( 'th', 'Typ <small class="muted">(Modul)</small>' ),
 		HtmlTag::create( 'th', 'Aufgabe' ),
 		HtmlTag::create( 'th', 'Projekt' ),
-		HtmlTag::create( 'th', 'Zeit', array( 'class' => 'pull-right' ) ),
+		HtmlTag::create( 'th', 'Zeit', ['class' => 'pull-right'] ),
 	) ) );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
-	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 	$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './work/time/archive/'.$limit, $page, ceil( $total / $limit ) );
 }
 return '

@@ -57,7 +57,7 @@ if( file_exists( $fileConfig ) ){
 
 	}
 
-	$drivers	= array( '' => '- keiner -' );
+	$drivers	= ['' => '- keiner -'];
 	foreach( PDO::getAvailableDrivers() as $driver )
 		$drivers[$driver]	= $words['database-drivers'][$driver];
 	$optDriver	= HtmlElements::Options( $drivers, $config->get( 'database.driver' ) );

@@ -9,12 +9,12 @@ $phraser    = new View_Helper_TimePhraser( $env );
 function renderUserLabel( $user ){
 	if( !$user )
 		return "-";
-	$iconUser	= HtmlTag::create( 'i', '', array( 'class' => 'icon-user' ) );
+	$iconUser	= HtmlTag::create( 'i', '', ['class' => 'icon-user'] );
 	$spanClass	= 'user role role'.$user->roleId;
 	$fullname	= $user->firstname.' '.$user->surname;
-	$username	= HtmlTag::create( 'abbr', $user->username, array( 'title' => $fullname ) );
+	$username	= HtmlTag::create( 'abbr', $user->username, ['title' => $fullname] );
 	$label		= $iconUser.'&nbsp;'.$username;
-	return HtmlTag::create( 'span', $label, array( 'class' => $spanClass ) );
+	return HtmlTag::create( 'span', $label, ['class' => $spanClass] );
 }
 */
 
@@ -43,7 +43,7 @@ if( 1 || $mission->versions ){
 //		'data-version'		=> 'current',
 	) );
 	$list	= array_reverse( $list );
-	$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+	$list	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );
 	$panelVersions		= '
 		<div class="content-panel">
 			<h4>'.$w->headingVersions.'</h4>

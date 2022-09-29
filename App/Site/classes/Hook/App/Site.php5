@@ -84,12 +84,12 @@ class Hook_App_Site extends Hook
 							$path	= isset( $subpage->link ) ? $subpage->link : $subpage->path;
 							$path	= str_replace( '/', '_', $path );
 							if( $subpage->access == "public" ){
-								$acl->setPublicLinks( array( $path ), 'append' );
-								$acl->setPublicLinks( array( $path.'_index' ), 'append' );
+								$acl->setPublicLinks( [$path], 'append' );
+								$acl->setPublicLinks( [$path.'_index'], 'append' );
 							}
 							else if( $subpage->access == "outside" ){
-								$acl->setPublicOutsideLinks( array( $path ), 'append' );
-								$acl->setPublicOutsideLinks( array( $path.'_index' ), 'append' );
+								$acl->setPublicOutsideLinks( [$path], 'append' );
+								$acl->setPublicOutsideLinks( [$path.'_index'], 'append' );
 							}
 						}
 					}
@@ -98,12 +98,12 @@ class Hook_App_Site extends Hook
 					$path	= isset( $page->link ) ? $page->link : $page->path;
 					$path	= str_replace( '/', '_', $path );
 					if( $page->access == "public" ){
-						$acl->setPublicLinks( array( $path ), 'append' );
-						$acl->setPublicLinks( array( $path.'_index' ), 'append' );
+						$acl->setPublicLinks( [$path], 'append' );
+						$acl->setPublicLinks( [$path.'_index'], 'append' );
 					}
 					else if( $page->access == "outside" ){
-						$acl->setPublicOutsideLinks( array( $path ), 'append' );
-						$acl->setPublicOutsideLinks( array( $path.'_index' ), 'append' );
+						$acl->setPublicOutsideLinks( [$path], 'append' );
+						$acl->setPublicOutsideLinks( [$path.'_index'], 'append' );
 					}
 				}
 			}
@@ -184,14 +184,14 @@ class Hook_App_Site extends Hook
 		$prefixes			= (object) $words['link-prefixes'];
 		$list				= [];
 
-		$extensions			= array( 'png', 'jpg', 'jpeg', 'jpe', 'svg' );
+		$extensions			= ['png', 'jpg', 'jpeg', 'jpe', 'svg'];
 		if( 0 && $env->getModules()->has( 'Manage_Content_Images' ) ){
 			$configKey	= 'module.manage_content_images.extensions';
 			$extensions	= explode( ',', $env->getConfig()->get( $configKey ) );
 		}
 
 		$customTheme	= $frontend->getConfigValue( 'layout.theme' );
-		$themes			= array( 'common', $customTheme );
+		$themes			= ['common', $customTheme];
 		foreach( $themes as $theme ){
 			$path	= $remotePathThemes.$theme.'/img/';
 			if( !strlen( trim( $theme ) ) || !is_dir( $path ) )

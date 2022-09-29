@@ -15,14 +15,14 @@ class View_Sitemap extends View
 			$list	= [];
 			foreach( $links as $link ){
 				$label	= substr( $link->location, strlen( $this->env->url ) );
-				$label	= str_replace( array( 'ae', 'oe', 'ue' ), array( 'ä', 'ö', 'ü' ), $label );
-				$label	= str_replace( array( '/', '-' ), array( ' &gt; ', ' ' ), $label );
+				$label	= str_replace( ['ae', 'oe', 'ue'], ['ä', 'ö', 'ü'], $label );
+				$label	= str_replace( ['/', '-'], [' &gt; ', ' '], $label );
 				$label	= ucwords( $label );
-				$link	= HtmlTag::create( 'a', $label, array( 'href' => $link->location ) );
+				$link	= HtmlTag::create( 'a', $label, ['href' => $link->location] );
 				$list[]	= HtmlTag::create( 'li', $link );
 			}
 			$list	= HtmlTag::create( 'ul', $list );
-			extract( $this->populateTexts( array( 'top', 'bottom' ), 'html/sitemap/' ) );
+			extract( $this->populateTexts( ['top', 'bottom'], 'html/sitemap/' ) );
 			return $textTop.$list.$textBottom;
 		}
 		$sitemap	= $this->renderXml( $links, $options );

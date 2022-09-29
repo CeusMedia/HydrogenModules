@@ -21,9 +21,9 @@ class View_Helper_Work_Mission_Filter_Project{
 	public function render(){
 		if( empty( $this->values ) )
 			return;
-		$iconEye			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-		$iconWarning		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-warning' ) );
-		$iconCheck			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check-square-o' ) );
+		$iconEye			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+		$iconWarning		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-warning'] );
+		$iconCheck			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check-square-o'] );
 		$changedProjects	= array_diff( array_keys( $this->values ), $this->selected );
 		$list				= [];
 		foreach( $this->values as $project ){
@@ -34,8 +34,8 @@ class View_Helper_Work_Mission_Filter_Project{
 				'value'		=> $project->projectId,
 				'checked'	=> in_array( $project->projectId, $this->selected ) ? "checked" : NULL
 			) );
-			$label		= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$project->title, array( 'class' => 'checkbox' ) );
-			$label		= HtmlTag::create( 'div', $label, array( 'class' => 'autocut' ) );
+			$label		= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$project->title, ['class' => 'checkbox'] );
+			$label		= HtmlTag::create( 'div', $label, ['class' => 'autocut'] );
 			$buttons	= HtmlTag::create( 'div', array(
 				HtmlTag::create( 'button', 'nur dieses', array(
 					'class'		=> 'btn btn-mini trigger-select-this',
@@ -46,7 +46,7 @@ class View_Helper_Work_Mission_Filter_Project{
 					'class'	=> 'btn btn-small btn-info',
 					'href'	=> './manage/project/view/'.$project->projectId,
 				) ),
-			), array( 'class' => 'pull-right' ) );
+			), ['class' => 'pull-right'] );
 
 			$list[]	= HtmlTag::create( 'tr', array(
 				HtmlTag::create( 'td', $project->priority, array(
@@ -67,7 +67,7 @@ class View_Helper_Work_Mission_Filter_Project{
 			'href'	=> '#',
 		) );
 		$colgroup	= HtmlElements::ColumnGroup( "30px", "", "140px" );
-		$tableHeads	= HtmlElements::tableHeads( array( $iconWarning, $buttonAll."&nbsp;&nbsp;Projekt", "" ) );
+		$tableHeads	= HtmlElements::tableHeads( [$iconWarning, $buttonAll."&nbsp;&nbsp;Projekt", ""] );
 		$thead		= HtmlTag::create( 'thead', $tableHeads );
 		$tbody		= HtmlTag::create( 'tbody', $list );
 		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
@@ -84,8 +84,8 @@ class View_Helper_Work_Mission_Filter_Project{
 
 		$buttonIcon		= '';
 		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
-			$buttonIcon		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cube' ) ).'&nbsp;';
-		$labelFilter	= HtmlTag::create( 'span', $this->words['filters']['project'], array( 'class' => 'hidden-phone' ) );
+			$buttonIcon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cube'] ).'&nbsp;';
+		$labelFilter	= HtmlTag::create( 'span', $this->words['filters']['project'], ['class' => 'hidden-phone'] );
 		$buttonLabel	= $labelFilter.'&nbsp;<span class="caret"></span>';
 		$buttonAttr		= array(
 			'class'	=> 'btn '.( count( $changedProjects ) ? "btn-info" : "" ),

@@ -14,7 +14,7 @@ class Hook_Info_Forum extends Hook
 			'modifiedAt'	=> 'DESC',
 			'createdAt'		=> 'DESC',
 		);
-		$threads		= $model->getAll( $conditions, $orders, array( 0, 3 ) );
+		$threads		= $model->getAll( $conditions, $orders, [0, 3] );
 		foreach( $threads as $thread ){
 			$context->news[]	= (object) array_merge( View_Helper_NewsList::$defaultAttributes, array(
 				'title'		=> $thread->title,
@@ -38,7 +38,7 @@ class Hook_Info_Forum extends Hook
 
 			if( $config->get( 'sitemap.topics' ) ){
 				$modelTopic		= new Model_Forum_Topic( $env );
-				$topics			= $modelTopic->getAll( array(), array( 'modifiedAt' => 'DESC' ) );
+				$topics			= $modelTopic->getAll( [], ['modifiedAt' => 'DESC'] );
 				foreach( $topics as $topic ){
 					$url		= $baseUrl.'topic/'.$topic->topicId;
 					$context->addLink( $url, max( $topic->createdAt, $topic->modifiedAt ) );
@@ -46,7 +46,7 @@ class Hook_Info_Forum extends Hook
 			}
 			if( $config->get( 'sitemap.threads' ) ){
 				$modelThread	= new Model_Forum_Thread( $env );
-				$threads		= $modelThread->getAll( array( 'status' => '>= 0' ), array( 'modifiedAt' => 'DESC' ) );
+				$threads		= $modelThread->getAll( ['status' => '>= 0'], ['modifiedAt' => 'DESC'] );
 				foreach( $threads as $thread ){
 					$url		= $baseUrl.'thread/'.$thread->threadId;
 					$context->addLink( $url, max( $thread->createdAt, $thread->modifiedAt ) );

@@ -22,11 +22,11 @@ class Controller_Work_Mail_Check extends Controller
 			$groupId	= $this->request->get( 'groupId' );
 			$group		= $this->checkGroupId( $groupId, FALSE, 'group' );
 			if( !is_array( $addresses ) )
-				$addresses	= array( $addresses );
+				$addresses	= [$addresses];
 			foreach( $addresses as $address ){
 				if( !strlen( trim( $address ) ) )
 					continue;
-				$indices	= array( 'mailGroupId' => $groupId, 'address' => $address );
+				$indices	= ['mailGroupId' => $groupId, 'address' => $address];
 				if( $this->modelAddress->getByIndices( $indices ) ){
 					$this->messenger->noteError( 'Address &quot;%s&quot; is already existing in group &quot;%s&quot;.', $address, $group->title );
 					$this->restart( NULL, TRUE );
@@ -74,7 +74,7 @@ class Controller_Work_Mail_Check extends Controller
 	{
 		$address	= $this->modelAddress->get( $addressId );
 		if( $address ){
-			$address->checks	= $this->modelCheck->getAllByIndex( 'mailAddressId', $addressId, array( 'createdAt' => 'DESC' ) );
+			$address->checks	= $this->modelCheck->getAllByIndex( 'mailAddressId', $addressId, ['createdAt' => 'DESC'] );
 			$this->addData( 'addressId', $addressId );
 			$this->addData( 'address', $address );
 		}
@@ -101,7 +101,7 @@ class Controller_Work_Mail_Check extends Controller
 	{
 		$addressIds	= $this->request->get( 'addressId' );
 		if( !is_array( $addressIds ) )
-			$addressIds	= array( $addressIds );
+			$addressIds	= [$addressIds];
 
 		$sender		= new \CeusMedia\Mail\Participant( $this->moduleOptions->get( 'sender' ) );
 		$checker	= new \CeusMedia\Mail\Check\Recipient( $sender, TRUE );
@@ -113,7 +113,7 @@ class Controller_Work_Mail_Check extends Controller
 				$this->messenger->noteError( 'Invalid address ID.' );
 				$this->restart( NULL, TRUE );
 			}
-			$this->modelAddress->edit( $addressId, array( 'status' => 1 ) );
+			$this->modelAddress->edit( $addressId, ['status' => 1] );
 
 			try{
 				$result		= $checker->test( new \CeusMedia\Mail\Participant( $address->address ) );
@@ -173,7 +173,7 @@ class Controller_Work_Mail_Check extends Controller
 		if( $filterQuery && strlen( $filterQuery ) )
 			$conditions['address']		= '%'.str_replace( '*', '%', $filterQuery ).'%';
 
-		$this->modelAddress->editByIndices( $conditions, array( 'status' => 1 ) );
+		$this->modelAddress->editByIndices( $conditions, ['status' => 1] );
 		$this->restart( 'status/'.$filterGroupId, TRUE );
 /*		if( $this->request->get( 'from' ) )
 			$this->restart( $this->request->get( 'from' ) );
@@ -197,7 +197,7 @@ class Controller_Work_Mail_Check extends Controller
 				'status'		=> $this->request->get( 'status' ),
 				'mailGroupId'	=> $groupId,
 			);
-			$addresses	= $this->modelAddress->getAll( $conditions, array( 'address' => 'ASC' ), array( 10, 0 ) );
+			$addresses	= $this->modelAddress->getAll( $conditions, ['address' => 'ASC'], [10, 0] );
 			$data		= [];
 
 			$columns	= array_merge( json_decode( $group->columns ), array(
@@ -238,7 +238,7 @@ class Controller_Work_Mail_Check extends Controller
 			$date	= date( 'Y-m-d' );
 			HttpDownload::sendFile( $fileName, $group->title.'_'.$date.$extension, TRUE );
 		}
-		$this->addData( 'groups', $this->modelGroup->getAll( array(), array( 'title' => 'ASC' ) ) );
+		$this->addData( 'groups', $this->modelGroup->getAll( [], ['title' => 'ASC'] ) );
 	}
 
 	public function filter( $reset = NULL )
@@ -258,9 +258,9 @@ class Controller_Work_Mail_Check extends Controller
 
 	public function group()
 	{
-		$groups	= $this->modelGroup->getAll( array(), array( 'title' => 'ASC' ) );
+		$groups	= $this->modelGroup->getAll( [], ['title' => 'ASC'] );
 		foreach( $groups as $group ){
-			$addresses	= $this->modelAddress->getAll( array( 'mailGroupId' => $group->mailGroupId ) );
+			$addresses	= $this->modelAddress->getAll( ['mailGroupId' => $group->mailGroupId] );
 			$group->numbers	= (object) array(
 				'total'		=> count( $addresses ),
 				'negative'	=> 0,
@@ -269,9 +269,9 @@ class Controller_Work_Mail_Check extends Controller
 				'tested'	=> 0,
 			);
 			foreach( $addresses as $address ){
-				if( in_array( $address->status, array( -2, -1 ) ) )
+				if( in_array( $address->status, [-2, -1] ) )
 					$group->numbers->negative++;
-				else if( in_array( $address->status, array( 0, 1 ) ) )
+				else if( in_array( $address->status, [0, 1] ) )
 					$group->numbers->untested++;
 				else if( $address->status == 2 )
 					$group->numbers->positive++;
@@ -342,7 +342,7 @@ class Controller_Work_Mail_Check extends Controller
 			$this->addData( 'size', $data->size );
 			$this->addData( 'count', $data->count );
 			$this->addData( 'columns', $data->columns );
-			$this->addData( 'groups', $this->modelGroup->getAll( array(), array( 'title' => 'ASC' ) ) );
+			$this->addData( 'groups', $this->modelGroup->getAll( [], ['title' => 'ASC'] ) );
 		}
 	}
 
@@ -352,7 +352,7 @@ class Controller_Work_Mail_Check extends Controller
 		if( !$this->session->get( 'work_mail_check_filter_limit' ) )
 			$this->session->set( 'work_mail_check_filter_limit', $limit );
 
-		$groups	= $this->modelGroup->getAll( array(), array( 'title' => 'ASC' ) );
+		$groups	= $this->modelGroup->getAll( [], ['title' => 'ASC'] );
 		if( !$this->session->get( 'work_mail_check_filter_groupId' ) && count( $groups ) )
 			$this->session->set( 'work_mail_check_filter_groupId', $groups[0]->mailGroupId );
 
@@ -361,18 +361,18 @@ class Controller_Work_Mail_Check extends Controller
 		$filterQuery	= $this->session->get( 'work_mail_check_filter_query' );
 		$filterLimit	= $this->session->get( 'work_mail_check_filter_limit' );
 
-		$conditions		= array( 'mailGroupId' => $filterGroupId );
+		$conditions		= ['mailGroupId' => $filterGroupId];
 		if( $filterStatus && $filterStatus[0] !== '' )
 			$conditions['status']		= $filterStatus;
 		if( $filterQuery && strlen( $filterQuery ) )
 			$conditions['address']		= '%'.str_replace( '*', '%', $filterQuery ).'%';
 
-		$orders			= array( 'address' => 'ASC' );
-		$limits			= array( $page * $filterLimit, $filterLimit );
+		$orders			= ['address' => 'ASC'];
+		$limits			= [$page * $filterLimit, $filterLimit];
 		$total			= $this->modelAddress->count( $conditions );
 		$addresses		= $this->modelAddress->getAll( $conditions, $orders, $limits );
 		foreach( $addresses as $address ){
-			if( !in_array( $address->status, array( 0, 1 ) ) ){											//  @todo	kriss: why exclude status 1 aswell? a retesting address has a history eventually
+			if( !in_array( $address->status, [0, 1] ) ){											//  @todo	kriss: why exclude status 1 aswell? a retesting address has a history eventually
 				$address->check	= $this->modelCheck->getByIndices(
 					array( 'mailAddressId' => $address->mailAddressId ),
 					array( 'mailAddressCheckId' => 'DESC' )
@@ -385,11 +385,11 @@ class Controller_Work_Mail_Check extends Controller
 		if( $filterGroupId )
 			$indices['mailGroupId']	= $filterGroupId;
 		$countByStatus	= array(
-			-2	=> $this->modelAddress->countByIndices( array_merge( $indices, array( 'status' => -2 ) ) ),
-			-1	=> $this->modelAddress->countByIndices( array_merge( $indices, array( 'status' => -1 ) ) ),
-			0	=> $this->modelAddress->countByIndices( array_merge( $indices, array( 'status' => 0 ) ) ),
-			1	=> $this->modelAddress->countByIndices( array_merge( $indices, array( 'status' => 1 ) ) ),
-			2	=> $this->modelAddress->countByIndices( array_merge( $indices, array( 'status' => 2 ) ) ),
+			-2	=> $this->modelAddress->countByIndices( array_merge( $indices, ['status' => -2] ) ),
+			-1	=> $this->modelAddress->countByIndices( array_merge( $indices, ['status' => -1] ) ),
+			0	=> $this->modelAddress->countByIndices( array_merge( $indices, ['status' => 0] ) ),
+			1	=> $this->modelAddress->countByIndices( array_merge( $indices, ['status' => 1] ) ),
+			2	=> $this->modelAddress->countByIndices( array_merge( $indices, ['status' => 2] ) ),
 		);
 
 		$countByGroup	= [];
@@ -412,7 +412,7 @@ class Controller_Work_Mail_Check extends Controller
 	{
 		$addressIds	= $this->request->get( 'addressId' );
 		if( !is_array( $addressIds ) )
-			$addressIds	= array( $addressIds );
+			$addressIds	= [$addressIds];
 
 		foreach( $addressIds as $addressId ){
 			$this->modelCheck->removeByIndex( 'mailAddressId', $addressId );
@@ -433,14 +433,14 @@ class Controller_Work_Mail_Check extends Controller
 
 	public function status( $groupId ){
 		$group		= $this->checkGroupId( $groupId );
-		$indices	= array( 'mailGroupId' => $groupId );
+		$indices	= ['mailGroupId' => $groupId];
 		$this->setData( array(
 			'total'		=> $this->modelAddress->countByIndices( $indices ),
 			'open'		=> $this->modelAddress->countByIndices( array_merge( $indices, array(
 				'status'	=> 1,
 			) ) ),
 			'negative'	=> $this->modelAddress->countByIndices( array_merge( $indices, array(
-				'status'	=> array( -2, -1 ),
+				'status'	=> [-2, -1],
 			) ) ),
 			'positive'	=> $this->modelAddress->countByIndices( array_merge( $indices, array(
 				'status'	=> 2,

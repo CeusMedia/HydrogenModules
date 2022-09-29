@@ -20,7 +20,7 @@ class Controller_Admin_Route extends Controller
 	{
 		switch( $this->source ){
 			case 'Database':
-				$this->model->edit( $id, array( 'status' => 1 ) );
+				$this->model->edit( $id, ['status' => 1] );
 				break;
 			case 'XML':
 			default:
@@ -67,7 +67,7 @@ class Controller_Admin_Route extends Controller
 	{
 		switch( $this->source ){
 			case 'Database':
-				$this->model->edit( $id, array( 'status' => 0 ) );
+				$this->model->edit( $id, ['status' => 0] );
 				break;
 			case 'XML':
 			default:

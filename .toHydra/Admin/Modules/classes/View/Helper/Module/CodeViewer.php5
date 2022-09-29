@@ -41,32 +41,32 @@ class View_Helper_Module_CodeViewer extends Abstraction
 				case 'class':
 					$pathFile	= $pathApp.'classes/';
 					$xmpClass	= 'php';
-					$modes		= array( 'css', 'xml', 'javascript', 'clike', 'php' );
+					$modes		= ['css', 'xml', 'javascript', 'clike', 'php'];
 					break;
 				case 'locale':
 					$pathFile	= $pathApp.$config->get( 'path.locales');
 					$xmpClass	= 'ini';
-					$modes		= array( 'properties' );
+					$modes		= ['properties'];
 					break;
 				case 'script':
 					$pathFile	= '';
 					$xmpClass	= 'js';
-					$modes		= array( 'javascript' );
+					$modes		= ['javascript'];
 					break;
 				case 'style':
 					$pathFile	= '';
 					$xmpClass	= 'css';
-					$modes		= array( 'css' );
+					$modes		= ['css'];
 					break;
 				case 'template':
 					$pathFile	= $pathApp.$config->get( 'path.templates');
 					$xmpClass	= 'php';
-					$modes		= array( 'css', 'xml', 'javascript', 'clike', 'php' );
+					$modes		= ['css', 'xml', 'javascript', 'clike', 'php'];
 					break;
 				case 'file':
 					$pathFile	= '';
 					$xmpClass	= 'code';
-					$modes		= array( 'css', 'xml', 'javascript', 'clike', 'php' );
+					$modes		= ['css', 'xml', 'javascript', 'clike', 'php'];
 					break;
 			}
 			if( !file_exists( $pathFile.$fileName ) )
@@ -76,7 +76,7 @@ class View_Helper_Module_CodeViewer extends Abstraction
 		$pathJsLib		= $config->get( 'path.scripts.lib' );
 
 		$content	= FileReader::load( $pathFile.$fileName );
-#		$code		= HtmlTag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
+#		$code		= HtmlTag::create( 'xmp', $content, ['class' => 'code '.$xmpClass] );
 		$body		= '
 <style>
 div.CodeMirror,
@@ -101,7 +101,7 @@ var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("code"));
 		foreach( $modes as $mode )
 			$page->addJavaScript( $pathJsLib.'CodeMirror/2.25/mode/'.$mode.'/'.$mode.'.js' );
 		$page->addBody( $body );
-		return $page->build( array( 'style' => 'margin: 1em' ) );
+		return $page->build( ['style' => 'margin: 1em'] );
 	}
 }
 ?>

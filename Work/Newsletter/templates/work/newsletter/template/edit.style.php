@@ -55,7 +55,7 @@ $panelPreview	= '
 	</div>
 </div>';
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/newsletter/template/style/' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/work/newsletter/template/style/' ) );
 
 return $textTop.'
 <div class="row-fluid">

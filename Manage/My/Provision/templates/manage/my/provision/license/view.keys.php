@@ -2,14 +2,14 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
-$iconRevoke		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user'] );
+$iconRevoke		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $iconsStatus	= array(
-	0	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
-	Model_Provision_User_License_Key::STATUS_NEW		=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) ),
-	Model_Provision_User_License_Key::STATUS_ASSIGNED	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
-	Model_Provision_User_License_Key::STATUS_EXPIRED	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
+	0	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ),
+	Model_Provision_User_License_Key::STATUS_NEW		=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pause'] ),
+	Model_Provision_User_License_Key::STATUS_ASSIGNED	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] ),
+	Model_Provision_User_License_Key::STATUS_EXPIRED	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] ),
 );
 
 $list	= [];
@@ -58,10 +58,10 @@ foreach( $userLicense->keys as $key ){
 	) );
 }
 $colgroup	= HtmlElements::ColumnGroup( array( "15%", "25%", "30%") );
-$heads	= HtmlElements::TableHeads( array( 'Schlüssel', 'Zustand', 'Besitzer' ) );
+$heads	= HtmlElements::TableHeads( ['Schlüssel', 'Zustand', 'Besitzer'] );
 $thead	= HtmlTag::create( 'thead', $heads );
 $tbody	= HtmlTag::create( 'tbody', $list );
-$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
+$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table'] );
 
 return '
 <style>

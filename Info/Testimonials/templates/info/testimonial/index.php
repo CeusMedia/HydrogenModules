@@ -14,9 +14,9 @@ if( $testimonials ){
 				'data-toggle'	=> "modal",
 				'onclick'		=> 'showComment('.$entry->testimonialId.')'
 			) ),
-			HtmlTag::create( 'small', $author, array( 'class' => 'testimonial-author' ) ),
-		), array( 'class' => 'course-comment' ) );
-		$comment	= HtmlTag::create( 'div', $quote, array( 'class' => 'testimonial' ) );
+			HtmlTag::create( 'small', $author, ['class' => 'testimonial-author'] ),
+		), ['class' => 'course-comment'] );
+		$comment	= HtmlTag::create( 'div', $quote, ['class' => 'testimonial'] );
 		$list[]	= HtmlTag::create( 'div', $comment, array(
 			'class'			=> 'row-fluid course-item',
 			'id'			=> 'testimonial-'.$entry->testimonialId,
@@ -25,12 +25,12 @@ if( $testimonials ){
 			'data-content'	=> addslashes( nl2br( $entry->description ) ),
 		) );
 	}
-	$list	= HtmlTag::create( 'div', $list, array( 'class' => 'testimonial-list' ) );
+	$list	= HtmlTag::create( 'div', $list, ['class' => 'testimonial-list'] );
 }
 
-extract( $view->populateTexts( array( 'top', 'bottom', 'list.top', 'list.bottom', 'form.top', 'form.bottom', 'form.info' ), 'html/info/testimonial/' ) );
+extract( $view->populateTexts( ['top', 'bottom', 'list.top', 'list.bottom', 'form.top', 'form.bottom', 'form.info'], 'html/info/testimonial/' ) );
 
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 
 $button 	= HtmlTag::create( 'a', 'Kommentar abgeben', array(
 	'href'			=> '#modal-comment-add',

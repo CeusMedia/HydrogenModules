@@ -21,19 +21,19 @@ $linkIndex	= HtmlTag::create( 'a', $w->buttonIndex, array(
 ) );
 
 if( $prevGallery ){
-	$label		= HtmlTag::create( 'span', $w->buttonPrev, array( 'class' => 'muted' ) );
+	$label		= HtmlTag::create( 'span', $w->buttonPrev, ['class' => 'muted'] );
 	$linkPrev	= $label.HtmlTag::create( 'a', $prevGallery->title, array(
 		'href'	=> View_Helper_Info_Gallery::getGalleryUrl( $prevGallery, $baseUriPath )
 	) );
 }
 if( $nextGallery ){
-	$label		= HtmlTag::create( 'span', $w->buttonNext, array( 'class' => 'muted' ) );
+	$label		= HtmlTag::create( 'span', $w->buttonNext, ['class' => 'muted'] );
 	$linkNext	= $label.HtmlTag::create( 'a', $nextGallery->title, array(
 		'href'	=> View_Helper_Info_Gallery::getGalleryUrl( $nextGallery, $baseUriPath )
 	) );
 }
 
-extract( $view->populateTexts( array( 'view.top', 'view.bottom' ), 'html/info/gallery/' ) );
+extract( $view->populateTexts( ['view.top', 'view.bottom'], 'html/info/gallery/' ) );
 
 return $textViewTop.'
 <div>

@@ -25,7 +25,7 @@ class Job_Newsletter extends Job_Abstract
 			'mailClass'		=> 'Mail_Newsletter',
 			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
 		);
-		$orders		= array( 'mailId' => 'ASC' );
+		$orders		= ['mailId' => 'ASC'];
 		$limits		= [];
 		$mails		= $modelMail->getAll( $conditions, $orders, $limits );
 		if( $this->dryMode ){
@@ -58,7 +58,7 @@ class Job_Newsletter extends Job_Abstract
 		$queues		= $this->logic->getQueues( $conditions );
 		foreach( $queues as $queue ){
 			$conditions	= array(
-				'status'			=> array( Model_Newsletter_Reader_Letter::STATUS_ENQUEUED ),
+				'status'			=> [Model_Newsletter_Reader_Letter::STATUS_ENQUEUED],
 				'newsletterQueueId'	=> $queue->newsletterQueueId,
 			);
 			$letters	= $this->logic->getReaderLetters( $conditions );							//  get letters to send
@@ -113,12 +113,12 @@ class Job_Newsletter extends Job_Abstract
 		if( !$queueIds )
 			return;
 		$conditions	= array(
-			'status'			=> array( Model_Newsletter_Reader_Letter::STATUS_ENQUEUED ),
+			'status'			=> [Model_Newsletter_Reader_Letter::STATUS_ENQUEUED],
 			'newsletterQueueId'	=> $queueIds,
 		);
 		$number		= 0;																		//  prepare counter for round limit
 		$orders		= [];																	//  no order
-		$limits		= array( 0, $max );															//  limit letters
+		$limits		= [0, $max];															//  limit letters
 		$letters	= $this->logic->getReaderLetters( $conditions, $orders, $limits );			//  get letters to send
 		$start		= microtime( TRUE );
 		if( $letters ){
@@ -150,7 +150,7 @@ class Job_Newsletter extends Job_Abstract
 		$this->log( sprintf( 'sent %d mails in %d ms', $number, $time ) );
 		foreach( $queues as $queue ){
 			$conditions	= array(
-				'status'			=> array( Model_Newsletter_Reader_Letter::STATUS_ENQUEUED ),
+				'status'			=> [Model_Newsletter_Reader_Letter::STATUS_ENQUEUED],
 				'newsletterQueueId'	=> $queue->newsletterQueueId,
 			);
 			if( !count( $this->logic->getReaderLetters( $conditions ) ) ){
@@ -186,8 +186,8 @@ class Job_Newsletter extends Job_Abstract
 		$countRecovered	= 0;
 		$readers		= [];
 		$entries		= [];
-		$conditions		= array( 'status' => Model_Newsletter::STATUS_SENT );
-		$orders			= array( 'newsletterId' => 'ASC' );
+		$conditions		= ['status' => Model_Newsletter::STATUS_SENT];
+		$orders			= ['newsletterId' => 'ASC'];
 		$newsletters	= $this->logic->getNewsletters( $conditions, $orders );
 		foreach( $newsletters as $newsletter ){
 			$letters	= $this->logic->getReaderLetters( array(
@@ -198,7 +198,7 @@ class Job_Newsletter extends Job_Abstract
 				continue;
 			$entries[$newsletter->newsletterId]	= (object) array(
 				'newsletter'	=> $newsletter,
-				'readerLetters'	=> array(),
+				'readerLetters'	=> [],
 			);
 			$countLetters	+= count( $letters );
 			foreach( $letters as $letter ){
@@ -216,7 +216,7 @@ class Job_Newsletter extends Job_Abstract
 					'mailClass'			=> 'Mail_Newsletter',
 					'receiverAddress'	=> $readers[$letter->newsletterReaderId]->email,
 					'subject'			=> $entry->newsletter->subject,
-				), array(), array( 'mailId' ) );
+				), [], ['mailId'] );
 				if( $mailId ){
 					$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
 					$countRecovered	+= 1;
@@ -241,8 +241,8 @@ class Job_Newsletter extends Job_Abstract
 		$modelQueue		= new Model_Newsletter_Queue( $this->env );
 		$modelLetter	= new Model_Newsletter_Reader_Letter( $this->env );
 
-		$conditions	= array( 'newsletterQueueId' => 0 );
-		$orders		= array( 'newsletterId'	=> 'ASC', 'newsletterReaderLetterId' => 'ASC' );
+		$conditions	= ['newsletterQueueId' => 0];
+		$orders		= ['newsletterId'	=> 'ASC', 'newsletterReaderLetterId' => 'ASC'];
 		$letters	= $modelLetter->getAll( $conditions, $orders );
 		$newsletterIds	= [];
 		foreach( $letters as $letter ){

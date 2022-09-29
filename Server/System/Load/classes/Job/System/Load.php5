@@ -18,9 +18,9 @@ class Job_System_Load extends Job_Abstract
 		}
 		$loads	= sys_getloadavg();
 		$store	= new RRDUpdater( $fileStore );
-		$store->update( array( "load" => $loads[0] * 100 ), time() );
-		$store->update( array( "load" => $loads[1] * 100 ), time() );
-		$store->update( array( "load" => $loads[2] * 100 ), time() );
+		$store->update( ["load" => $loads[0] * 100], time() );
+		$store->update( ["load" => $loads[1] * 100], time() );
+		$store->update( ["load" => $loads[2] * 100], time() );
 
 		$renderer = new RRDGraph( $fileImage );
 		$renderer->setOptions(

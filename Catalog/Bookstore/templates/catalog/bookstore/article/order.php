@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-if( !in_array( $article->status, array( -1, 0, 1 ) ) )
+if( !in_array( $article->status, [-1, 0, 1] ) )
 	return '';
 
 $w				= (object) $words['article'];
@@ -13,16 +13,16 @@ $labelHeading		= '';
 $labelButtonOrder	= 'bestellen';
 $labelButtonCart	= 'zum Warenkorb';
 
-$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus' ) );
-$iconCart		= HtmlTag::create( 'i', '', array( 'class' => 'icon-shopping-cart icon-white' ) );
+$iconOrder		= HtmlTag::create( 'i', '', ['class' => 'icon-plus'] );
+$iconCart		= HtmlTag::create( 'i', '', ['class' => 'icon-shopping-cart icon-white'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$labelButtonOrder	= 'in den Warenkorb';
 	$labelButtonCart	= 'weiter zur Kasse';
-	$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-	$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconCart		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
-//	$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
-//	$iconCart		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-money' ) );
+	$iconOrder		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+	$iconOrder		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+	$iconCart		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-shopping-cart'] );
+//	$iconOrder		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-shopping-cart'] );
+//	$iconCart		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-money'] );
 }
 
 $inputQuantity	= HtmlTag::create( 'input', NULL, array(

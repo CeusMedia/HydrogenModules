@@ -14,7 +14,7 @@ if( $module->sql ){
 		$list[]		= HtmlTag::create( 'dt', $label );
 		$list[]		= HtmlTag::create( 'dd', HtmlTag::create( 'xmp', trim( $sql->sql ) ) );
 	}
-	$list	= HtmlTag::create( 'dl', join( $list ), array( 'class' => 'database' ) );
+	$list	= HtmlTag::create( 'dl', join( $list ), ['class' => 'database'] );
 }
 return $list.'<div class="clearfix"></div>';
 ?>

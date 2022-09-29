@@ -7,7 +7,7 @@ class Hook_Server_Log_Exception extends Hook
 	static public function onEnvLogException( $env, $context, $module, $data = [] )
 	{
 		if( is_object( $data ) && $data instanceof Exception )
-			$data	= array( 'exception' => $data );
+			$data	= ['exception' => $data];
 		if( !isset( $data['exception'] ) )
 			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
 		if( !is_object( $data['exception'] ) )

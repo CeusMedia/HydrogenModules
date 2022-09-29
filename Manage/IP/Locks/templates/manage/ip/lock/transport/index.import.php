@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconUpload		= HtmlTag::create( 'i', '', array( 'class' => 'fa fw fa-upload' ) );
+$iconUpload		= HtmlTag::create( 'i', '', ['class' => 'fa fw fa-upload'] );
 
 $upload	= new View_Helper_Input_File( $env );
 $upload->setLabel( 'Datei' );
@@ -13,7 +13,7 @@ $panelImport	= HtmlTag::create( 'div', array(
 		HtmlTag::create( 'form', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'Datei aus vorherigem Export', array( 'for' => 'input_upload' ) ),
+					HtmlTag::create( 'label', 'Datei aus vorherigem Export', ['for' => 'input_upload'] ),
 					$upload->render()
 				) ),
 			) ),
@@ -31,9 +31,9 @@ $panelImport	= HtmlTag::create( 'div', array(
 						HtmlTag::create( 'div', array(
 							HtmlTag::create( 'strong', 'Aktuellen Bestand erweitern' ),
 							HtmlTag::create( 'br' ),
-							HtmlTag::create( 'small', 'Bestehende Regeln und Sperren bleiben erhalten und neue Regeln werden hinzugefügt.', array( 'class' => 'muted' ) ),
+							HtmlTag::create( 'small', 'Bestehende Regeln und Sperren bleiben erhalten und neue Regeln werden hinzugefügt.', ['class' => 'muted'] ),
 						) ),
-					), array( 'class' => 'radio' ) ),
+					), ['class' => 'radio'] ),
 					HtmlTag::create( 'label', array(
 						HtmlTag::create( 'input', NULL, array(
 							'type'		=> 'radio',
@@ -44,9 +44,9 @@ $panelImport	= HtmlTag::create( 'div', array(
 						HtmlTag::create( 'div', array(
 							HtmlTag::create( 'strong', 'Frische Installation' ),
 							HtmlTag::create( 'br' ),
-							HtmlTag::create( 'small', 'Bestehende Regeln und Sperren werden vor der Installation entfernt.', array( 'class' => 'muted' ) ),
+							HtmlTag::create( 'small', 'Bestehende Regeln und Sperren werden vor der Installation entfernt.', ['class' => 'muted'] ),
 						) ),
-					), array( 'class' => 'radio' ) ),
+					), ['class' => 'radio'] ),
 
 
 				) ),
@@ -57,13 +57,13 @@ $panelImport	= HtmlTag::create( 'div', array(
 					'type'	=> 'submit',
 					'class'	=> 'btn btn-primary'
 				) ),
-			), array( 'class' => 'buttonbar' ) ),
+			), ['class' => 'buttonbar'] ),
 		), array(
 			'action'	=> './manage/ip/lock/transport/import',
 			'method'	=> 'post',
 			'enctype'	=> 'multipart/form-data'
 		) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 return $panelImport;

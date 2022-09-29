@@ -1,10 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconSelect		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconSend		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) ).'&nbsp;';
-$iconPrev		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconNext		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) ).'&nbsp;';
+$iconSelect		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
+$iconSend		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] ).'&nbsp;';
+$iconPrev		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
+$iconNext		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] ).'&nbsp;';
 
 $listGroups		= '<div class="alert alert-danger">
 	<strong>Keine verwendbare Testgruppe vorhanden.</strong><br/>
@@ -26,7 +26,7 @@ foreach( $groups as $group ){
 		'value'		=> $group->newsletterGroupId,
 	) );
 	$title		= $checkbox.'&nbsp;'.$group->title.' ('.count( $group->readers ).')';
-	$label		= HtmlTag::create( 'label', $title, array( 'class' => 'checkbox' ) );
+	$label		= HtmlTag::create( 'label', $title, ['class' => 'checkbox'] );
 	$list[]		= $label;
 }
 if( $list ){

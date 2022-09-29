@@ -22,8 +22,8 @@ class View_Helper_Module extends Abstraction
 			$title	= htmlspecialchars( $module->title, ENT_QUOTES, 'UTF-8' );
 		}
 		$url		= './admin/module/viewer/'.$moduleId;
-		$link		= HtmlTag::create( 'a', $title, array( 'href' => $url ) );
-		$span		= HtmlTag::create( 'span', $link, array( 'class' => 'icon module module-status-'.$status ) );
+		$link		= HtmlTag::create( 'a', $title, ['href' => $url] );
+		$span		= HtmlTag::create( 'span', $link, ['class' => 'icon module module-status-'.$status] );
 		return $span;
 	}
 
@@ -115,8 +115,8 @@ class View_Helper_Module extends Abstraction
 		}
 		$label		= $item->key;
 		if( strlen( trim( $title = htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ) ) ) )
-			$label	= HtmlTag::create( 'acronym', $item->key, array( 'title' => $title ) );
-		$attributes	= array( 'class' => $class, 'for' => 'input_'.$name );
+			$label	= HtmlTag::create( 'acronym', $item->key, ['title' => $title] );
+		$attributes	= ['class' => $class, 'for' => 'input_'.$name];
 		$label		= HtmlTag::create( 'label', $label, $attributes );
 		return $label;
 	}

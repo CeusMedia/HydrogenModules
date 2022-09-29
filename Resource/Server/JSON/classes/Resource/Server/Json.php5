@@ -41,9 +41,9 @@ class Resource_Server_Json
 	protected $env;
 	protected $serverUri;
 	protected $curlOptions		= array(
-		'ALL'	=> array(),
-		'GET'	=> array(),
-		'POST'	=> array()
+		'ALL'	=> [],
+		'GET'	=> [],
+		'POST'	=> []
 	);
 	protected $userAgent		= 'CMF:Hydrogen/1.0';
 
@@ -160,7 +160,7 @@ class Resource_Server_Json
 	public function getDataFromUrl( $url, $curlOptions = [] )
 	{
 		$reader		= new HttpReader();
-		$headers	= array( 'Accept-Encoding: gzip, deflate' );
+		$headers	= ['Accept-Encoding: gzip, deflate'];
 		$options	= $this->curlOptions['ALL'] + $this->curlOptions['GET'] + $curlOptions;
 		$response	= $reader->get( $url, $headers, $options );
 		$json		= $response->getBody();
@@ -199,8 +199,8 @@ class Resource_Server_Json
 				$data[$key]	= "\\".$value;															//  need to be escaped
 
 		$reader		= new HttpReader();
-		$headers	= array( 'Accept-Encoding: gzip, deflate' );
-		$headers	= array( 'Accept: text/json' );
+		$headers	= ['Accept-Encoding: gzip, deflate'];
+		$headers	= ['Accept: text/json'];
 		$curlOptions[CURLOPT_POST]	= TRUE;
 		$curlOptions[CURLOPT_POSTFIELDS] = http_build_query( $data );
 		$options	= $this->curlOptions['ALL'] + $this->curlOptions['POST'] + $curlOptions;
@@ -268,7 +268,7 @@ class Resource_Server_Json
 		if( is_string( $action ) && !empty( $action ) )
 			$action		= preg_replace( '/([^\/]+)\/?/', '\\1', $action ).'/';
 		if( !is_array( $arguments ) )
-			$arguments	= $arguments ? array( $arguments ) : array();
+			$arguments	= $arguments ? [$arguments] : [];
 		foreach( $arguments as $nr => $argument )
 			$arguments[$nr]	= urlencode( $argument );
 		$arguments	= implode( '/', $arguments );

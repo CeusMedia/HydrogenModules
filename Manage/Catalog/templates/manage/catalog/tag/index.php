@@ -10,7 +10,7 @@ $rows	= [];
 foreach( $tags as $tag ){
 	$articleList	= [];
 	foreach( $tag->articleIds as $articleId ){
-		$link	= HtmlTag::create( 'a', $articles[$articleId]->title, array( 'href' => './manage/catalog/article/edit/'.$articleId ) );
+		$link	= HtmlTag::create( 'a', $articles[$articleId]->title, ['href' => './manage/catalog/article/edit/'.$articleId] );
 		$articleList[]	= HtmlTag::create( 'li', $link );
 	}
 	$rows[]	= HtmlTag::create( 'tr', array(
@@ -20,7 +20,7 @@ foreach( $tags as $tag ){
 }
 $list	= HtmlTag::create( 'table', array(
 	HtmlTag::create( 'tbody', $rows ),
-), array( 'class' => 'table table-striped' ) );
+), ['class' => 'table table-striped'] );
 
 
 $panelFilter	= '
@@ -53,7 +53,7 @@ $panelList	= '
 
 $tabs		= $this->renderMainTabs();
 
-extract( $view->populateTexts( array( 'top', 'bottom', 'index' ), 'html/manage/catalog/tag/' ) );
+extract( $view->populateTexts( ['top', 'bottom', 'index'], 'html/manage/catalog/tag/' ) );
 
 return $tabs.'
 <!--<h2>Schlagwörter</h2>-->

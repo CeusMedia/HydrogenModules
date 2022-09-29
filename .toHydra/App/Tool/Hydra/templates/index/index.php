@@ -1,5 +1,5 @@
 <?php
-extract( $view->populateTexts( array( 'home' ), 'html/index/' ) );
+extract( $view->populateTexts( ['home'], 'html/index/' ) );
 
 $panelList		= $view->loadTemplate( 'index', 'index.instances' );
 $panelSystem	= $view->loadTemplate( 'index', 'index.system' );

@@ -14,7 +14,7 @@ $blogPost	= HtmlTag::create( 'div', $title.$infobar.$content, array(
 	'class'		=> 'blog-post'
 ) );
 
-$iconIndex	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconIndex	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 
 $linkNext	= '';
 $linkPrev	= '';
@@ -24,13 +24,13 @@ $linkIndex	= HtmlTag::create( 'a', $iconIndex.'&nbsp;'.$w->linkIndex, array(
 ) );
 
 if( $prevPost ){
-	$label		= HtmlTag::create( 'span', $w->linkPrev, array( 'class' => 'muted' ) );
+	$label		= HtmlTag::create( 'span', $w->linkPrev, ['class' => 'muted'] );
 	$linkPrev	= $label.HtmlTag::create( 'a', $prevPost->title, array(
 		'href'	=> View_Info_Blog::renderPostUrlStatic( $env, $prevPost ),
 	) );
 }
 if( $nextPost ){
-	$label		= HtmlTag::create( 'span', $w->linkNext, array( 'class' => 'muted' ) );
+	$label		= HtmlTag::create( 'span', $w->linkNext, ['class' => 'muted'] );
 	$linkNext	= $label.HtmlTag::create( 'a', $nextPost->title, array(
 		'href'	=> View_Info_Blog::renderPostUrlStatic( $env, $nextPost ),
 	) );
@@ -44,11 +44,11 @@ if( $moduleConfig->get( 'comments' ) ){
 		$panelComment	= $view->loadTemplateFile( 'info/blog/comment.php' );
 //	}
 //	else{
-//		$panelComments	= HtmlTag::create( 'div', 'Die Kommentarfunktion ist für diesen Eintrag nicht aktiviert.', array( 'class' => 'muted' ) ).'<br/>';
+//		$panelComments	= HtmlTag::create( 'div', 'Die Kommentarfunktion ist für diesen Eintrag nicht aktiviert.', ['class' => 'muted'] ).'<br/>';
 //	}
 }
 
-extract( $view->populateTexts( array( 'post.top', 'post.bottom' ), 'html/info/blog/' ) );
+extract( $view->populateTexts( ['post.top', 'post.bottom'], 'html/info/blog/' ) );
 
 return $textPostTop.'
 	<small><a href="./info/blog">'.$iconIndex.'&nbsp;'.$w->linkIndex.'</a></small>

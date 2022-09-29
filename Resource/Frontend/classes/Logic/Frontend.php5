@@ -8,7 +8,7 @@ use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader as HydrogenModuleReader;
 
 /**
- *	@todo		remove singleton to have serveral frontend logics for different environments
+ *	@todo		remove singleton to have several frontend logics for different environments
  */
 class Logic_Frontend extends Logic
 {
@@ -34,14 +34,14 @@ class Logic_Frontend extends Logic
 
 	public function getAppConfigValue( string $key )
 	{
-		$values	= $this->getAppConfigValues( array( $key ) );
+		$values	= $this->getAppConfigValues( [$key] );
 		return array_pop( $values );
 	}
 
 	public function getAppConfigValues( array $keys = [] ): array
 	{
 		if( is_string( $keys ) && strlen( trim( $keys ) ) )
-			$keys	= array( $keys );
+			$keys	= [$keys];
 		$list	= [];
 		foreach( $this->config->getAll( 'app.' ) as $key => $value ){
 			if( !$keys || in_array( $key, $keys ) )
@@ -80,7 +80,7 @@ class Logic_Frontend extends Logic
 	public function getLanguages(): array
 	{
 		$data		= $this->config->getAll( 'locale.', TRUE );
-		$list		= array( trim( $data->get( 'default' ) ) );
+		$list		= [trim( $data->get( 'default' ) )];
 		foreach( explode( ',', $data->get( 'allowed' ) ) as $locale ){
 			if( !in_array( $locale, $list ) ){
 				$list[]	= trim( $locale );
@@ -91,7 +91,7 @@ class Logic_Frontend extends Logic
 
 	public function getModuleConfigValue( string $moduleId, string $key, bool $strict = FALSE )
 	{
-		$values	= $this->getModuleConfigValues( $moduleId, array( $key ), TRUE, $strict );
+		$values	= $this->getModuleConfigValues( $moduleId, [$key], TRUE, $strict );
 		return array_pop( $values );
 	}
 

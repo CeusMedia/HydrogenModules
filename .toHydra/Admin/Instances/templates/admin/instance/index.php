@@ -16,14 +16,14 @@ function formatUrl( $url ){
 	$parts['host']	.= !empty( $parts['port'] ) ? ":".$parts['port'] : "";
 //	remark( $url );
 //	print_m( $parts );
-	$scheme	= HtmlTag::create( 'small', strtoupper( $parts['scheme'] ), array( 'class' => 'muted' ) );
-	$host	= HtmlTag::create( 'strong', "&nbsp;&nbsp;".$parts['host'], array( 'class' => '' ) );
+	$scheme	= HtmlTag::create( 'small', strtoupper( $parts['scheme'] ), ['class' => 'muted'] );
+	$host	= HtmlTag::create( 'strong', "&nbsp;&nbsp;".$parts['host'], ['class' => ''] );
 	$path	= explode( "/", preg_replace( "/^(\/*)(.*)(\/+)$/", "\\2", $parts['path'] ) );
-	$main	= HtmlTag::create( 'strong', array_pop( $path ), array( 'class' => '' ) );
+	$main	= HtmlTag::create( 'strong', array_pop( $path ), ['class' => ''] );
 	$path	= str_replace( "//", "/", "/".implode( "/", $path )."/" );
-	$path	= HtmlTag::create( 'small', $path, array( 'class' => 'muted' ) );
+	$path	= HtmlTag::create( 'small', $path, ['class' => 'muted'] );
 	$path	.= "&nbsp;&nbsp;".$main;
-	$path	= HtmlTag::create( 'span', "&nbsp;&nbsp;".$path, array( 'class' => '' ) );
+	$path	= HtmlTag::create( 'span', "&nbsp;&nbsp;".$path, ['class' => ''] );
 	return $scheme.$host.$path;
 }
 
@@ -34,9 +34,9 @@ foreach( $instances as $instanceId => $instance ){
 	$link			= HtmlElements::Link( './admin/instance/edit/'.$instanceId, $instance->title, 'instance' );
 	$url			= $instance->protocol.$instance->host.$instance->path;
 	$uriExists		= file_exists( $instance->uri );
-	$linkInstance	= HtmlTag::create( 'a', formatUrl( $url ), array( 'href' => $url ) );
+	$linkInstance	= HtmlTag::create( 'a', formatUrl( $url ), ['href' => $url] );
 	$codeUri		= HtmlTag::create( 'code', $instance->uri );
-	$codeUri		= HtmlTag::create( 'small', $codeUri, array( 'class' => 'muted' ) );
+	$codeUri		= HtmlTag::create( 'small', $codeUri, ['class' => 'muted'] );
 	$titleStatus	= $uriExists ? "Checked and found on file system" : "NOT FOUND on file system (not installed or path invalid)";
 	$titleStatus	= $uriExists ? "Ordner auf dem Server gefunden" : "Ordner NICHT GEFUNDEN (nicht installiert oder ungültiger Pfad)";
 	$indicators		= join( "", array(
@@ -44,10 +44,10 @@ foreach( $instances as $instanceId => $instance ){
 		'<div class="status-http status-box" title="'.$labelsStatusHttp['unchecked'].'"></div>',
 	) );
 	$cells	= array(
-		HtmlTag::create( 'td', $link, array( 'class' => 'instance-label' ) ),
+		HtmlTag::create( 'td', $link, ['class' => 'instance-label'] ),
 		HtmlTag::create( 'td', $linkInstance/*.'<br/>'.$codeUri*/ ),
-		HtmlTag::create( 'td', $indicators, array( 'class' => 'status-http' ) ),
-		HtmlTag::create( 'td', "", array( 'class' => 'status-todos' ) ),
+		HtmlTag::create( 'td', $indicators, ['class' => 'status-http'] ),
+		HtmlTag::create( 'td', "", ['class' => 'status-todos'] ),
 	);
 	$hasTodoTool	= isset( $instance->checkTodos ) && $instance->checkTodos ? "yes" : "no";
 	$attributes		= array(
@@ -68,7 +68,7 @@ $panelList	= '
 		'.join( $rows ).'
 	</table>
 	'.HtmlElements::LinkButton( './admin/instance/add', $w->buttonAdd, 'button add' ).'
-	'.HtmlTag::create( 'button', 'check', array( 'class' => 'button', 'id' => 'button_check' ) ).'
+	'.HtmlTag::create( 'button', 'check', ['class' => 'button', 'id' => 'button_check'] ).'
 </fieldset>';
 
 return '

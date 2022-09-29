@@ -8,14 +8,14 @@ $iconRegister	= HTML::Icon( 'plus', TRUE );
 $iconPassword	= HTML::Icon( 'envelope' );
 
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconLogin		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
-	$iconRegister	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user-plus' ) );
-	$iconPassword	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
+	$iconLogin		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sign-in'] );
+	$iconRegister	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user-plus'] );
+	$iconPassword	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-unlock'] );
 }
 
 $fieldOauth2	= '';
 if( $useOauth2 ){
-	$iconUnbind			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+	$iconUnbind			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 	$helper				= new View_Helper_Oauth_ProviderButtons( $this->env );
 	if( $helper->count() ){
 		$helper->setDropdownLabel( 'weitere' );
@@ -24,11 +24,11 @@ if( $useOauth2 ){
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'label', 'Anmelden mit' ),
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'div', $helper->render(), array( 'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12' ) ),
-				), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) ),
+					HtmlTag::create( 'div', $helper->render(), ['class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12'] ),
+				), ['class' => 'bs2-row-fluid bs3-row bs4-row'] ),
 				HtmlTag::create( 'hr', NULL ),
-			), array( 'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12' ) ),
-		), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) );
+			), ['class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12'] ),
+		), ['class' => 'bs2-row-fluid bs3-row bs4-row'] );
 	}
 }
 
@@ -49,7 +49,7 @@ if( $useRemember )
 					'title'		=> $w->labelRemember_title,
 					'class'		=> 'bs4-form-check-label',
 				) ),
-			), array( 'class' => 'bs2-checkbox bs4-form-check' ) )
+			), ['class' => 'bs2-checkbox bs4-form-check'] )
 		)
 	), array(
 		'style'	=> $useRemember ? 'display: none' : NULL

@@ -74,7 +74,7 @@ class Controller_Info_Manual extends Controller
 		$this->addData( 'content', $content );
 
         $folders    = [];
-        $allPages   = $this->modelPage->getAll( array(), array( 'title' => 'ASC' ) );
+        $allPages   = $this->modelPage->getAll( [], ['title' => 'ASC'] );
         foreach( $allPages as $folder )
             $folders[]  = $folder;
         $this->addData( 'folders', $folders );
@@ -89,7 +89,7 @@ class Controller_Info_Manual extends Controller
 			'manualCategoryId'	=> $category->manualCategoryId,
 			'status'			=> '>= '.Model_Manual_Category::STATUS_NEW,
 		);
-		$orders		= array( 'rank' => 'ASC' );
+		$orders		= ['rank' => 'ASC'];
 		$pages		= $this->modelPage->getAll( $conditions, $orders );
 		if( !$pages ){
 //			throw new RuntimeException( 'No page found in category' );
@@ -153,7 +153,7 @@ class Controller_Info_Manual extends Controller
 		$this->addData( 'pageId', $page->manualPageId );
 
 		$folders	= [];
-		$allPages	= $this->modelPage->getAll( array(), array( 'title' => 'ASC' ) );
+		$allPages	= $this->modelPage->getAll( [], ['title' => 'ASC'] );
 		foreach( $allPages as $folder ){
 			if( $folder->manualPageId == $page->manualPageId )
 				continue;
@@ -244,7 +244,7 @@ class Controller_Info_Manual extends Controller
 			}
 		}
 
-		$conditions	= array( 'status' => '>= '.Model_Manual_Page::STATUS_NEW );
+		$conditions	= ['status' => '>= '.Model_Manual_Page::STATUS_NEW];
 		$orders		= [];
 		$pages	= $this->modelPage->getAll( $conditions, $orders );
 		$this->addData( 'pages', $pages );
@@ -338,7 +338,7 @@ class Controller_Info_Manual extends Controller
 			$page->content	= str_replace( "](".$entry.")", "](".$urlPage.")", $page->content );
 			$page->content	= str_replace( "]: ".$entry."\r\n", "]: ".$urlPages."\r\n", $page->content );
 		}
-		$page->content	= preg_replace_callback( "@(\[.+\])\((.+)\)@Us", array( $this, '__callbackEncode' ), $page->content );
+		$page->content	= preg_replace_callback( "@(\[.+\])\((.+)\)@Us", [$this, '__callbackEncode'], $page->content );
 */
 		/*  --  EVALUATE RENDERER  --  */
 		$renderer			= $this->moduleConfig->get( 'renderer' );
@@ -398,8 +398,8 @@ class Controller_Info_Manual extends Controller
 		$this->addData( 'rights', $this->rights );
 
 		$this->categories	= [];
-		$conditions			= array( 'status' => '>= '.Model_Manual_Category::STATUS_NEW );
-		$orders				= array( 'rank' => 'ASC' );
+		$conditions			= ['status' => '>= '.Model_Manual_Category::STATUS_NEW];
+		$orders				= ['rank' => 'ASC'];
 		foreach( $this->modelCategory->getAll( $conditions, $orders ) as $category )
 			$this->categories[$category->manualCategoryId]	= $category;
 		if( !$this->categories ){

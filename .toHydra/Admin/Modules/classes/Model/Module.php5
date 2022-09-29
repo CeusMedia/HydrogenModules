@@ -112,7 +112,7 @@ class Model_Module{
 							$type		= preg_replace( "/^(.+):(.+)$/", "\\2", $filterKey );
 							$moduleIds	= $filterValue;
 							if( !is_array( $moduleIds ) && strlen( trim( $moduleIds ) ) )
-								$moduleIds	= array( $moduleIds );
+								$moduleIds	= [$moduleIds];
 							$common	= array_intersect( $moduleIds, $module->relations->$type );
 							if( $common !== $moduleIds )
 								unset( $modulesAll[$moduleId] );
@@ -274,7 +274,7 @@ class Model_Module{
 			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
 		$list		= [];
 		$modules	= $this->getAll();
-		$found		= $this->getAll( array( 'relation:needs' => $moduleId ) );
+		$found		= $this->getAll( ['relation:needs' => $moduleId] );
 		foreach( array_keys( $found ) as $relatedModuleId ){
 			$status	= Model_Module::TYPE_UNKNOWN;
 			if( array_key_exists( $relatedModuleId, $modules ) )
@@ -346,7 +346,7 @@ class Model_Module{
 			throw new RuntimeException( 'Module "'.$moduleId.'" is not available' );
 		$list		= [];
 		$modules	= $this->getAll();
-		$found		= $this->getAll( array( 'relation:supports' => $moduleId ) );
+		$found		= $this->getAll( ['relation:supports' => $moduleId] );
 		foreach( array_keys( $found ) as $relatedModuleId ){
 			$status	= Model_Module::TYPE_UNKNOWN;
 			if( array_key_exists( $relatedModuleId, $modules ) )

@@ -14,7 +14,7 @@ class Model_Tag extends Model
 
 	protected $primaryKey	= 'tagId';
 
-	protected $indices		= array( 'content' );
+	protected $indices		= ['content'];
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

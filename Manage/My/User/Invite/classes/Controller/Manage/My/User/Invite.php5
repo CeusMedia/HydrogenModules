@@ -20,14 +20,14 @@ class Controller_Manage_My_User_Invite extends Controller
 	{
 		$config		= $this->env->getConfig();
 		$invites	= (object) array(
-			'codes'	=> $this->model->getAllByIndices( array( 'type' => 1, 'status' => 0 ) ),
-			'open'	=> $this->model->getAllByIndices( array( 'type' => 1, 'status' => 1 ) ),
-			'done'	=> $this->model->getAllByIndices( array( 'type' => 1, 'status' => 2 ) ),
-			'all'	=> $this->model->getAllByIndices( array( 'type' => 1 ) ),
+			'codes'	=> $this->model->getAllByIndices( ['type' => 1, 'status' => 0] ),
+			'open'	=> $this->model->getAllByIndices( ['type' => 1, 'status' => 1] ),
+			'done'	=> $this->model->getAllByIndices( ['type' => 1, 'status' => 2] ),
+			'all'	=> $this->model->getAllByIndices( ['type' => 1] ),
 		);
 		$promotes	= (object) array(
-			'open'	=> $this->model->getAllByIndices( array( 'type' => 0, 'status' => 1 ) ),
-			'done'	=> $this->model->getAllByIndices( array( 'type' => 0, 'status' => 2 ) ),
+			'open'	=> $this->model->getAllByIndices( ['type' => 0, 'status' => 1] ),
+			'done'	=> $this->model->getAllByIndices( ['type' => 0, 'status' => 2] ),
 		);
 		$this->addData( 'daysValid', $config->get( 'module.manage_my_user_invite.days.valid' ) );
 		$this->addData( 'invites', $invites );

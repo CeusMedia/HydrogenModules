@@ -1,5 +1,13 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var bool $isInside */
+
 //  TRY LOADING STATIC HTML CONTENT FILES ...
 
 //  ... BY REQUESTED PATH

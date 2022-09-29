@@ -23,16 +23,16 @@ foreach( $files as $file ){
 	}
 
 	$url	= './manage/locale/edit/'.base64_encode( $pathName );									//
-	$link	= HtmlTag::create( 'a', $pathName, array( 'href' => $url ) );						//
+	$link	= HtmlTag::create( 'a', $pathName, ['href' => $url] );						//
 	if( !is_writeable( $file->getPathname() ) ){													//  file ist not writable
 		$classes[]	= "not-writeable error danger";													//
 		$link		= HtmlTag::create( 'span', $label );										//
 	}
-	$attributes			= array( 'class' => join( " ", $classes ) );
+	$attributes			= ['class' => join( " ", $classes )];
 	$list[$pathName]	= HtmlTag::create( 'li', $link, $attributes );
 }
 ksort( $list );
-$list	= HtmlTag::create( 'ul', implode( $list ), array( 'class' => 'list-locale nav nav-pills nav-stacked' ) );
+$list	= HtmlTag::create( 'ul', implode( $list ), ['class' => 'list-locale nav nav-pills nav-stacked'] );
 
 #return $list;
 

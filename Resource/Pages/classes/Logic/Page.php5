@@ -75,10 +75,10 @@ class Logic_Page extends Logic
 		$page	= $this->getPageModel()->get( $pageId );
 		if( !$page )
 			throw new InvalidArgumentException( 'Invalid page ID given: '.$pageId );
-		$indices	= array( 'parentId'	=> $pageId );
+		$indices	= ['parentId'	=> $pageId];
 		if( $activeOnly )
 			$indices['status']	= Model_Page::STATUS_VISIBLE;
-		return $this->getPageModel()->getAllByIndices( $indices, array( 'rank' => 'ASC' ) );
+		return $this->getPageModel()->getAllByIndices( $indices, ['rank' => 'ASC'] );
 	}
 
 	/**
@@ -118,7 +118,7 @@ class Logic_Page extends Logic
 				throw new RangeException( 'Given page is not an ID' );
 			return NULL;
 		}
-/*		$way	= array( $page->identifier );
+/*		$way	= [$page->identifier];
 		$current	= $page;
 		$parents	= [];
 		while( $current->parentId !== 0 ){
@@ -257,7 +257,7 @@ class Logic_Page extends Logic
 	public function hasPages( bool $visible = TRUE ): bool
 	{
 		$minimumStatus	= $visible ? Model_Page::STATUS_VISIBLE : Model_Page::STATUS_HIDDEN;
-		$indices		= array( 'status' => '>= '.$minimumStatus );
+		$indices		= ['status' => '>= '.$minimumStatus];
 		return $this->getPageModel()->count( $indices );
 	}
 
@@ -305,7 +305,7 @@ class Logic_Page extends Logic
 					$parent	= $model->get( $page->parentId );
 					$way	.= $parent->identifier.'/';
 				}
-				$model->edit( $page->pageId, array( 'fullpath' => $way.$page->identifier ) );
+				$model->edit( $page->pageId, ['fullpath' => $way.$page->identifier] );
 			}
 		}
 	}
@@ -328,8 +328,8 @@ class Logic_Page extends Logic
 		$model	= $this->getPageModel();
 		$parts	= preg_split( '/\//', $path );
 		$indices	= array(																		//  basic indices to find page
-			'type'		=> array( Model_Page::TYPE_CONTENT, Model_Page::TYPE_MODULE ),				//  ... being of page type content or module
-			'status'	=> array( Model_Page::STATUS_HIDDEN, Model_Page::STATUS_VISIBLE ),			//  ... being visible or hidden, but not disabled
+			'type'		=> [Model_Page::TYPE_CONTENT, Model_Page::TYPE_MODULE],				//  ... being of page type content or module
+			'status'	=> [Model_Page::STATUS_HIDDEN, Model_Page::STATUS_VISIBLE],			//  ... being visible or hidden, but not disabled
 		);
 		$dispatcher	= array(
 			'type'		=> 'module',

@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 $panelFilter	= $view->loadTemplate( 'manage/content/static', 'filter' );
 $panelList		= $view->loadTemplate( 'manage/content/static', 'list' );
 
-$optPath	= array_merge( array( '' ), $paths );
+$optPath	= array_merge( [''], $paths );
 $optPath	= array_combine( $optPath, $optPath );
 $optPath	= HtmlElements::Options( $optPath );
 

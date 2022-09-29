@@ -43,17 +43,17 @@ $optCreatorId	= HtmlElements::Options( $optCreatorId, $project->creatorId );
 
 $w			= (object) $words['edit'];
 
-$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
-$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
-$iconDefault	= HtmlTag::create( 'i', '', array( 'class' => 'icon-star' ) );
+$iconList		= HtmlTag::create( 'i', '', ['class' => 'not-icon-arrow-left icon-list'] );
+$iconView		= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open icon-white'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
+$iconDefault	= HtmlTag::create( 'i', '', ['class' => 'icon-star'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
-	$iconDefault	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
+	$iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+	$iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+	$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+	$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash'] );
+	$iconDefault	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-star'] );
 }
 
 

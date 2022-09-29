@@ -30,8 +30,8 @@ class View_Helper_Member
 		switch( $this->mode ){
 			case 'thumbnail':
 				$url		= sprintf( $this->url, $this->user->userId );
-				$link		= HtmlTag::create( 'div', $this->user->username, array( 'class'	=> 'autocut' ) );
-				$attributes	= array( 'class' => 'thumbnail' );
+				$link		= HtmlTag::create( 'div', $this->user->username, ['class'	=> 'autocut'] );
+				$attributes	= ['class' => 'thumbnail'];
 				if( $this->url )
 					$attributes['onclick']	= "document.location.href='".$url."'";
 				return HtmlTag::create( 'div', $image.$link, $attributes );
@@ -40,30 +40,30 @@ class View_Helper_Member
 				$label		= $this->user->username;
 				if( $this->url ){
 					$url		= sprintf( $this->url, $this->user->userId );
-					$label		= HtmlTag::create( 'a', $this->user->username, array( 'href' => $url ) );
-					$image		= HtmlTag::create( 'a', $image, array( 'href' => $url ) );
+					$label		= HtmlTag::create( 'a', $this->user->username, ['href' => $url] );
+					$image		= HtmlTag::create( 'a', $image, ['href' => $url] );
 				}
 				$name	= $this->user->firstname.' '.$this->user->surname;
-				$name	= HtmlTag::create( 'small', $name, array( 'class' => "muted" ) );
-				$image	= HtmlTag::create( 'div', $image, array( 'style' => 'float: left' ) );
+				$name	= HtmlTag::create( 'small', $name, ['class' => "muted"] );
+				$image	= HtmlTag::create( 'div', $image, ['style' => 'float: left'] );
 				$label	= '<span><b>'.$label.'</b><br/>'.$name.'</span>';
-				$label	= HtmlTag::create( 'div', $label, array( 'style' => 'float: left; margin-left: 0.5em' ) );
-				return HtmlTag::create( 'div', $image.$label, array( 'class' => 'user clearfix' ) );
+				$label	= HtmlTag::create( 'div', $label, ['style' => 'float: left; margin-left: 0.5em'] );
+				return HtmlTag::create( 'div', $image.$label, ['class' => 'user clearfix'] );
 				break;
 			case 'inline':
 			default:
 				$label		= $this->user->username;
 				$fullname	= $this->user->firstname.' '.$this->user->surname;
 				if( strlen( trim( $fullname ) ) && $fullname !== $this->user->username ){
-					$fullname	= HtmlTag::create( 'small', '('.$fullname.')', array( 'class' => "muted" ) );
+					$fullname	= HtmlTag::create( 'small', '('.$fullname.')', ['class' => "muted"] );
 					$label		= $label.'&nbsp;'.$fullname;
 				}
 				if( $this->url ){
 					$url		= sprintf( $this->url, $this->user->userId );
-					$label		= HtmlTag::create( 'a', $label, array( 'href' => $url ) );
-					$image		= HtmlTag::create( 'a', $image, array( 'href' => $url ) );
+					$label		= HtmlTag::create( 'a', $label, ['href' => $url] );
+					$image		= HtmlTag::create( 'a', $image, ['href' => $url] );
 				}
-				return HtmlTag::create( 'span', $image.'&nbsp;'.$label, array( 'class' => 'user' ) );
+				return HtmlTag::create( 'span', $image.'&nbsp;'.$label, ['class' => 'user'] );
 				break;
 		}
 	}

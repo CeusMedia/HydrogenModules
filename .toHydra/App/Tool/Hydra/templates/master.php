@@ -6,7 +6,7 @@ use CeusMedia\HydrogenFramework\View\Helper\Navigation\SingleList;
 //		return $content;													// deliver content only
 
 $links		= $words['links'];
-$sublinks	= array( 'admin/module' => $words['links_admin_module'] );
+$sublinks	= ['admin/module' => $words['links_admin_module']];
 
 $controller	= $env->request->get( '__controller' );
 $action		= $env->request->get( '__action' );
@@ -138,5 +138,5 @@ $page->addThemeStyle( 'table.css' );
 $page->addThemeStyle( 'style.css' );
 $page->addThemeStyle( 'font.css' );
 $page->addBody( $body );
-return $page->build( array( 'class' => 'colored' ) );
+return $page->build( ['class' => 'colored'] );
 ?>

@@ -209,7 +209,7 @@ class Logic_Form_Fill extends Logic
 		$mail->setSubject( $formMail->subject );
 		$mail->setSender( $sender );
 		$language	= $this->env->getLanguage()->getLanguage();
-		$receiver	= (object) array( 'email' => $fill->email );
+		$receiver	= (object) ['email' => $fill->email];
 		return $this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
@@ -290,7 +290,7 @@ class Logic_Form_Fill extends Logic
 		$mail->setSubject( $subject );
 		$mail->setSender( $sender );
 		$language	= $this->env->getLanguage()->getLanguage();
-		$receiver	= (object) array( 'email' => $fill->email );
+		$receiver	= (object) ['email' => $fill->email];
 		return $this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
@@ -311,7 +311,7 @@ class Logic_Form_Fill extends Logic
 		$mail->setSubject( $subject );
 		$mail->setSender( $sender );
 		$language	= $this->env->getLanguage()->getLanguage();
-		$receiver	= (object) array( 'email' => $configResource->get( 'sender.address' ) );
+		$receiver	= (object) ['email' => $configResource->get( 'sender.address' )];
 		$this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
@@ -372,7 +372,7 @@ class Logic_Form_Fill extends Logic
 		$mail->setSender( $sender );
 		$language	= $this->env->getLanguage()->getLanguage();
 		foreach( $receivers as $receiver ){
-			$receiver	= (object) array( 'email'	=> $receiver );
+			$receiver	= (object) ['email'	=> $receiver];
 			$this->logicMail->handleMail( $mail, $receiver, $language );
 		}
 		return count( $receivers );

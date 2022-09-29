@@ -30,28 +30,28 @@ if( $documents ){
 			'class'	=> 'btn btn-small btn-inverse',
 			'title'	=> 'entfernen',
 		) );
-		$buttons		= HtmlTag::create( 'div', array( /*$buttonView.*/$buttonDownload.$buttonRemove ), array( 'class' => 'btn-group' ) );
+		$buttons		= HtmlTag::create( 'div', [/*$buttonView.*/$buttonDownload.$buttonRemove], ['class' => 'btn-group'] );
 		$label			= HtmlTag::create( 'a', $document->filename, array(
 			'href'		=> './work/mission/viewDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 			'target'	=> '_blank',
 			'class'		=> NULL,
 		) );
 		$rows[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $label, array( 'class' => 'cell-document-title' ) ),
-			HtmlTag::create( 'td', $modifiedAt, array( 'class' => 'cell-document-createdAt' ) ),
-			HtmlTag::create( 'td', $buttons, array( 'class' => 'cell-document-actions' ) ),
+			HtmlTag::create( 'td', $label, ['class' => 'cell-document-title'] ),
+			HtmlTag::create( 'td', $modifiedAt, ['class' => 'cell-document-createdAt'] ),
+			HtmlTag::create( 'td', $buttons, ['class' => 'cell-document-actions'] ),
 		) );
 	}
 
 	$colgroup	= HtmlElements::ColumnGroup( '*', '140px', '100px' );
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( $w->headTitle, 'Speicherung', '' ) ) );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headTitle, 'Speicherung', ''] ) );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
-	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 
 $formUpload		= '';
 if( $env->getAcl()->has( 'work/mission', 'addDocument' ) ){
-	$iconFile		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder' ) );
+	$iconFile		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-folder'] );
 	$helperUpload	= new View_Helper_Input_File( $env );
 	$helperUpload->setName( 'document' );
 	$helperUpload->setLabel( $iconFile );

@@ -128,12 +128,12 @@ if( !$sellerUser->Id ){
 		HtmlTag::create( 'h3', $w->heading ),
 		HtmlTag::create( 'div', array(
 			$form
-		), array( 'class' => 'content-panel-inner' ) ),
-	), array( 'class' => 'content-panel' ) );
+		), ['class' => 'content-panel-inner'] ),
+	), ['class' => 'content-panel'] );
 }
 else {
 
-	$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+	$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 
 
 	$body		= '<div class="row-fluid">
@@ -167,7 +167,7 @@ else {
 	$trigger	= new View_Helper_Bootstrap_Modal_Trigger( $env );
 	$trigger->setModalId( 'modal-admin-payment-mangopay-seller-user-edit' );
 	$trigger->setLabel( $iconEdit.'&nbsp;ändern' );
-	$trigger->setAttributes( array( 'class' => 'btn btn-mini' ) );
+	$trigger->setAttributes( ['class' => 'btn btn-mini'] );
 
 	$content	= '
 		<dl class="dl-horizontal">
@@ -187,8 +187,8 @@ else {
 		HtmlTag::create( 'div', array(
 			$content,
 			$modal
-		), array( 'class' => 'content-panel-inner' ) ),
-	), array( 'class' => 'content-panel' ) );
+		), ['class' => 'content-panel-inner'] ),
+	), ['class' => 'content-panel'] );
 
 
 	$body	= '
@@ -245,7 +245,7 @@ else {
 	$trigger	= new View_Helper_Bootstrap_Modal_Trigger( $env );
 	$trigger->setModalId( 'modal-admin-payment-mangopay-seller-person-edit' );
 	$trigger->setLabel( $iconEdit.'&nbsp;ändern' );
-	$trigger->setAttributes( array( 'class' => 'btn btn-mini' ) );
+	$trigger->setAttributes( ['class' => 'btn btn-mini'] );
 
 	$content	= '
 		<dl class="dl-horizontal">
@@ -270,8 +270,8 @@ else {
 		HtmlTag::create( 'div', array(
 			$content,
 			$modal
-		), array( 'class' => 'content-panel-inner' ) ),
-	), array( 'class' => 'content-panel' ) );
+		), ['class' => 'content-panel-inner'] ),
+	), ['class' => 'content-panel'] );
 
 
 	$body		= '<div class="row-fluid">
@@ -311,7 +311,7 @@ else {
 	$trigger	= new View_Helper_Bootstrap_Modal_Trigger( $env );
 	$trigger->setModalId( 'modal-admin-payment-mangopay-seller-address-edit' );
 	$trigger->setLabel( $iconEdit.'&nbsp;ändern' );
-	$trigger->setAttributes( array( 'class' => 'btn btn-mini' ) );
+	$trigger->setAttributes( ['class' => 'btn btn-mini'] );
 
 	$content	= '
 		<dl class="dl-horizontal">
@@ -331,8 +331,8 @@ else {
 		HtmlTag::create( 'div', array(
 			$content,
 			$modal
-		), array( 'class' => 'content-panel-inner' ) ),
-	), array( 'class' => 'content-panel' ) );
+		), ['class' => 'content-panel-inner'] ),
+	), ['class' => 'content-panel'] );
 
 	return $panelCompany.$panelRepresentative.$panelHeadquarters.'<style>
 	.input-value {

@@ -30,11 +30,11 @@ foreach( $modulesInstalled as $module ){
 	if( $list ){
 		$url		= './admin/module/editor/index/'.$module->id;
 		$button		= HtmlElements::LinkButton( $url, '', 'button tiny edit' );
-		$button		= HtmlTag::create( 'div', $button, array( 'style' => "position: absolute; right: 3px; top: 1px;" ) );
-		$list		= HtmlTag::create( 'dl', $list, array( 'class' => 'index-config' ) );
+		$button		= HtmlTag::create( 'div', $button, ['style' => "position: absolute; right: 3px; top: 1px;"] );
+		$list		= HtmlTag::create( 'dl', $list, ['class' => 'index-config'] );
 		$url		= './admin/module/viewer/index/'.$module->id;
-		$link		= HtmlTag::create( 'a', $module->title, array( 'href' => $url, 'class' => 'module' ) );
-		$heading	= HtmlTag::create( 'h4', $link/*.$button*/, array( 'class' => 'index-config-module' ) );
+		$link		= HtmlTag::create( 'a', $module->title, ['href' => $url, 'class' => 'module'] );
+		$heading	= HtmlTag::create( 'h4', $link/*.$button*/, ['class' => 'index-config-module'] );
 		$listModules[]	= $heading.$list;
 	}
 }

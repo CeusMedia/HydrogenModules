@@ -40,9 +40,9 @@ class View_Helper_Shop_FinishPanel_CatalogClothing{
 		$helperCart			= new View_Helper_Shop_CartPositions( $this->env );
 		$helperCart->setPositions( $this->logicShop->getOrderPositions( $this->orderId ) );
 		$helperCart->setChangeable( FALSE );
-		$cartDesktop	= HtmlTag::create( 'div', $helperCart->render(), array( 'class' => 'hidden-phone' ) );
+		$cartDesktop	= HtmlTag::create( 'div', $helperCart->render(), ['class' => 'hidden-phone'] );
 		$helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML_LIST );
-		$cartPhone		= HtmlTag::create( 'div', $helperCart->render(), array( 'class' => 'visible-phone' ) );
+		$cartPhone		= HtmlTag::create( 'div', $helperCart->render(), ['class' => 'visible-phone'] );
 		$data['cart']	= $cartDesktop.$cartPhone;
 
 		return $view->loadContentFile( 'html/catalog/clothing/finished.html', $data );

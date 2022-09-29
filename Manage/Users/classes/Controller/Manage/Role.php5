@@ -83,7 +83,7 @@ class Controller_Manage_Role extends Controller
 			$this->modelRole->edit( $roleId, $data );
 			$this->restart( NULL, TRUE );
 		}
-		$orders		= array( 'controller' => 'ASC', 'action' => 'ASC' );
+		$orders		= ['controller' => 'ASC', 'action' => 'ASC'];
 		$this->addData( 'rights', $this->modelRoleRight->getAllByIndex( 'roleId', $roleId, $orders ) );
 
 		$this->addData( 'roleId', $roleId );
@@ -91,7 +91,7 @@ class Controller_Manage_Role extends Controller
 		$this->addData( 'words', $words );
 		$this->addData( 'userCount', $this->modelUser->countByIndex( 'roleId', $roleId ) );
 		$disclosure	= new Disclosure();
-		$options	= array( 'classPrefix' => 'Controller_', 'readParameters' => FALSE );
+		$options	= ['classPrefix' => 'Controller_', 'readParameters' => FALSE];
 
 		$list		= [];
 		$actions	= $disclosure->reflect( 'classes/Controller/', $options );
@@ -206,7 +206,7 @@ class Controller_Manage_Role extends Controller
 					return $reader->getProperties( TRUE, 'module' );
 			}
 		}
-		return array();
+		return [];
 	}
 
 	protected function getSingular( string $string ): string

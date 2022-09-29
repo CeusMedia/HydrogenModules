@@ -104,7 +104,7 @@ WorkMissionsKanban.loadCurrentList();
 				$conditions['status']		= $status;
 				$conditions['projectId']	= $projectId;
 
-				$missions	= $this->logic->getUserMissions( $userId, $conditions, array( 'priority' => 'ASC' ) );
+				$missions	= $this->logic->getUserMissions( $userId, $conditions, ['priority' => 'ASC'] );
 				$rows	= [];
 				foreach( $missions as $mission ){
 					$missionCount++;
@@ -121,7 +121,7 @@ WorkMissionsKanban.loadCurrentList();
 						'title'	=> 'bearbeiten',
 					) );
 					$cells	= [];
-					$cells[]	= HtmlTag::create( 'div', $mission->title, array( 'class' => 'mission-title' ) );
+					$cells[]	= HtmlTag::create( 'div', $mission->title, ['class' => 'mission-title'] );
 					$userMap	= $this->getData( 'users' );
 					if( $mission->workerId ){
 						$worker	= '<strike class="muted">entfernt</strike>';
@@ -138,26 +138,26 @@ WorkMissionsKanban.loadCurrentList();
 						$label		= HtmlTag::create( 'small', 'Project: '.$projectLabel );
 						$cells[]	= HtmlTag::create( 'div', $label );
 					}
-					$cells[]	= HtmlTag::create( 'div', $buttonView.$buttonEdit, array( 'class' => 'btn-group' ) );
-					$rows[]	= HtmlTag::create( 'li', $cells, array( 'class' => 'mission-block priority-'.$mission->priority, 'data-id' => $mission->missionId ) );
+					$cells[]	= HtmlTag::create( 'div', $buttonView.$buttonEdit, ['class' => 'btn-group'] );
+					$rows[]	= HtmlTag::create( 'li', $cells, ['class' => 'mission-block priority-'.$mission->priority, 'data-id' => $mission->missionId] );
 				}
 				$columns[]	= HtmlTag::create( 'div', array(
-					HtmlTag::create( 'h4', $statusLabel, array( 'class' => '' ) ),
-					HtmlTag::create( 'ul', $rows, array( 'class' => 'sortable unstyled equalize-auto', 'id' => 'sortable-status-'.$status ) ),
-				), array( 'class' => 'span3' ) );
+					HtmlTag::create( 'h4', $statusLabel, ['class' => ''] ),
+					HtmlTag::create( 'ul', $rows, ['class' => 'sortable unstyled equalize-auto', 'id' => 'sortable-status-'.$status] ),
+				), ['class' => 'span3'] );
 			}
 			if( !$missionCount )
 				continue;
 
 			$laneLabel	= HtmlTag::create( 'h3', '<span class="muted">Projekt:</span>&nbsp;'.$project->title );
-			$columns	= HtmlTag::create( 'div', $columns, array( 'class' => 'row-fluid' ) );
-			$lanes[]	= HtmlTag::create( 'div', array( $laneLabel, $columns ), array(
+			$columns	= HtmlTag::create( 'div', $columns, ['class' => 'row-fluid'] );
+			$lanes[]	= HtmlTag::create( 'div', [$laneLabel, $columns], array(
 				'class'		=> 'row-fluid work-mission-kanban-lane-item',
 				'id'		=> 'kanban-lane-'.$projectId.'-'.$status,
 			) );
 		}
 
-		return HtmlTag::create( 'div', $lanes, array( 'class' => 'work-mission-kanban-lane-list' ) );
+		return HtmlTag::create( 'div', $lanes, ['class' => 'work-mission-kanban-lane-list'] );
 	}
 
 	protected function renderSmall( $userId ){
@@ -244,7 +244,7 @@ WorkMissionsKanban.loadCurrentList();
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
-			return HtmlTag::create( 'div', $diff->days, array( 'class' => "overdue" ) );		//  render overdue container
+			return HtmlTag::create( 'div', $diff->days, ['class' => "overdue"] );		//  render overdue container
 	}
 }
 ?>

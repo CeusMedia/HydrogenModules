@@ -16,11 +16,11 @@ class View_Manage_Catalog_Bookstore extends View
 		$current		= strtolower( $this->env->getRequest()->get( '__controller' ) );
 		$list			= [];
 		foreach( $tabs as $key => $value ){
-			$attributes	= array( 'href' => './'.$key );
+			$attributes	= ['href' => './'.$key];
 			$link		= HtmlTag::create( 'a', $value, $attributes );
-			$attributes	= array( 'class' => $key === $current ? 'active' : NULL );
+			$attributes	= ['class' => $key === $current ? 'active' : NULL];
 			$list[]		= HtmlTag::create( 'li', $link, $attributes );
 		}
-		return HtmlTag::create( 'ul', $list, array( 'class' => "nav nav-tabs" ) );
+		return HtmlTag::create( 'ul', $list, ['class' => "nav nav-tabs"] );
 	}
 }

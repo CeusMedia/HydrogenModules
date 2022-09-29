@@ -10,7 +10,7 @@ class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery
 		foreach( $this->getGalleries() as $gallery ){
 			$urlGallery		= self::getGalleryUrl( $gallery, $this->baseUriPath );
 			$heading		= $gallery->title ? HtmlTag::create( 'h4', $gallery->title ) : "";
-			$heading		= HtmlTag::create( 'a', $heading, array( 'href' => $urlGallery ) );
+			$heading		= HtmlTag::create( 'a', $heading, ['href' => $urlGallery] );
 			$description	= self::renderGalleryDescription( $this->env, $this, $gallery );
 			$image			= $this->renderGalleryImage( $gallery->galleryId );
 			$button			= HtmlTag::create( 'a', $words['index']['buttonGallery'], array(

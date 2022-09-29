@@ -2,7 +2,7 @@
 
 $panelLogin	= $view->loadTemplateFile( 'auth/json/login.form.php' );
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/json/login/', array( 'from' => $from ) ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/json/login/', ['from' => $from] ) );
 
 $tabs	= View_Auth::renderTabs( $env, 'auth/json/login' );
 

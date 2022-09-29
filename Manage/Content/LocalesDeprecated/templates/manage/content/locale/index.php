@@ -54,7 +54,7 @@ if( count( $languages ) > 1 ){
 		</div>';
 }
 else
-	$filterLanguage		= HtmlTag::create( 'input', NULL, array( 'type' => 'hidden', 'name' => 'language', 'value' => $language ) );
+	$filterLanguage		= HtmlTag::create( 'input', NULL, ['type' => 'hidden', 'name' => 'language', 'value' => $language] );
 
 $optType	= HtmlElements::Options( $words['types'], $type );
 
@@ -75,7 +75,7 @@ $panelFilter	= '
 	</div>
 </div>';
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/content' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/content' ) );
 
 return $textIndexTop.'
 <div class="row-fluid">

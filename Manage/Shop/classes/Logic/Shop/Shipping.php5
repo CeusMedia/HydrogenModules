@@ -43,7 +43,7 @@ class Logic_Shop_Shipping extends Logic
 	public function getPrice( $shippingzone_id, $shippinggrade_id )
 	{
 		$model		= new Model_Shop_Shipping_Price();
-		$conditions	= array( 'shippingzone_id' => $shippingZoneId, 'shippinggrade_id' => $shippingGradeId );
+		$conditions	= ['shippingzone_id' => $shippingZoneId, 'shippinggrade_id' => $shippingGradeId];
 		$data		= $model->getByIndices( $conditions );
 		if( $data )
 			return $data->price;

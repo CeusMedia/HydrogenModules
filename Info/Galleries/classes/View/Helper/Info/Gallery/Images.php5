@@ -24,7 +24,7 @@ class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 			) );
 			$list[]	= HtmlTag::create( 'li', $link );
 		}
-		return HtmlTag::create( 'ul', $list, array( 'class' => 'thumbnails equalize-auto' ) );
+		return HtmlTag::create( 'ul', $list, ['class' => 'thumbnails equalize-auto'] );
 	}
 
 	public function setGallery( $galleryId ): self

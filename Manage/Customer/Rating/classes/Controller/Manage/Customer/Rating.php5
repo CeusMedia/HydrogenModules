@@ -44,8 +44,8 @@ class Controller_Manage_Customer_Rating extends Controller
 		$modelRating	= new Model_Customer_Rating( $this->env );
 		$customers		=  $modelCustomer->getAll();
 		foreach( $customers as $nr => $customer ){
-			$order		= array( 'timestamp' => 'DESC' );
-			$limit		= array( 0, 1 );
+			$order		= ['timestamp' => 'DESC'];
+			$limit		= [0, 1];
 			$rating		= $modelRating->getAllByIndex( 'customerId', $customer->customerId, $order, $limit );
 			if( $rating ){
 				$rating	= array_pop( $rating );
@@ -62,8 +62,8 @@ class Controller_Manage_Customer_Rating extends Controller
 		$modelRating	= new Model_Customer_Rating( $this->env );
 
 		$customer	= $modelCustomer->get( $customerId );
-		$order		= array( 'timestamp' => 'DESC' );
-		$limit		= array( 0, 10 );
+		$order		= ['timestamp' => 'DESC'];
+		$limit		= [0, 10];
 		$ratings	= $this->modelRating->getAllByIndex( 'customerId', $customerId, $order, $limit );
 		$ratings	= array_reverse( $ratings );
 		$lastIndex	= 3;

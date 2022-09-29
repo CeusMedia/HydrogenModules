@@ -6,7 +6,7 @@ if( count( $languages ) > 1 ){
 	$optFolder		= '';
 	$optLanguage	= HtmlElements::Options( array_combine( $languages, $languages ), $language );
 	if( $language && isset( $folders )){
-		$optFolder	= array( '' );
+		$optFolder	= [''];
 		foreach( $folders as $folderKey => $folderPath )
 			$optFolder[$folderKey]	= $folderKey;
 		$optFolder		= HtmlElements::Options( $optFolder, $folder );

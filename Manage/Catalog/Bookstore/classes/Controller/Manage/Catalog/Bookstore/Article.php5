@@ -33,9 +33,9 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 			$pathCovers	= $frontend->getPath( 'contents' ).$config->get( 'path.covers' );			//  get path to cover images
 			$pathCovers	= substr( $pathCovers, strlen( $frontend->getPath() ) );					//  strip frontend base path
 			$list       = [];
-			$conditions	= array( 'cover' => '> 0' );
-			$orders		= array( 'title' => 'ASC' );
-			foreach( $logic->getArticles( $conditions, $orders, array( 0, 200 ) ) as $item ){
+			$conditions	= ['cover' => '> 0'];
+			$orders		= ['title' => 'ASC'];
+			foreach( $logic->getArticles( $conditions, $orders, [0, 200] ) as $item ){
 				$id		= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
 				$list[] = (object) array(
 					'title'	=> Alg_Text_Trimmer::trimCentric( $item->title, 60 ),
@@ -69,9 +69,9 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
 
 		if( !( $articles = $cache->get( 'catalog.tinymce.links.catalog.bookstore.articles' ) ) ){
-			$orders		= array( 'articleId' => 'DESC' );
+			$orders		= ['articleId' => 'DESC'];
 			$limits		= [];//array( 0, 200 );
-			$articles	= $logic->getArticles( array(), $orders, $limits );
+			$articles	= $logic->getArticles( [], $orders, $limits );
 			foreach( $articles as $nr => $item ){
 /*				$category	= $logic->getCategoryOfArticle( $article->articleId );
 				if( $category->volume )
@@ -92,8 +92,8 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		if( 1 ||  !( $documents = $cache->get( 'catalog.tinymce.links.catalog.bookstore.documents' ) ) ){
 			$pathDocs	= $frontend->getPath( 'contents' ).$config->get( 'path.documents' );
 			$limits		= [];//array( 0, 200 );
-			$orders		= array( 'articleDocumentId' => 'DESC' );
-			$documents	= $logic->getDocuments( array(), $orders, $limits );
+			$orders		= ['articleDocumentId' => 'DESC'];
+			$documents	= $logic->getDocuments( [], $orders, $limits );
 			foreach( $documents as $nr => $item ){
 				$id				= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
 				$article		= $logic->getArticle( $item->articleId, FALSE );
@@ -196,9 +196,9 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 	public function ajaxGetTags()
 	{
 		$startsWith	= $this->request->get( 'query' );
-		$conditions	= array( 'tag' => $startsWith.'%' );
-		$orders		= array( 'tag' => 'ASC' );
-		$limits		= array( 0, 10 );
+		$conditions	= ['tag' => $startsWith.'%'];
+		$orders		= ['tag' => 'ASC'];
+		$limits		= [0, 10];
 		$tags		= $this->logic->getTags( $conditions, $orders, $limits );
 		$list		= [];
 		foreach( $tags as $tag )
@@ -214,9 +214,9 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 	public function ajaxGetIsns()
 	{
 		$startsWith	= $this->request->get( 'query' );
-		$conditions	= array( 'isn' => $startsWith.'%' );
-		$orders		= array( 'isn' => 'ASC' );
-		$limits		= array( 0, 10 );
+		$conditions	= ['isn' => $startsWith.'%'];
+		$orders		= ['isn' => 'ASC'];
+		$limits		= [0, 10];
 		$articles	= $this->logic->getArticles( $conditions, $orders, $limits );
 		$list		= [];
 		foreach( $articles as $article )
@@ -254,7 +254,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		$this->addData( 'articleDocuments', $this->logic->getDocumentsOfArticle( $articleId ) );
 		$this->addData( 'articleCategories', $this->logic->getCategoriesOfArticle( $articleId ) );
 		$this->addData( 'articles', $this->getFilteredArticles() );
-		$this->addData( 'authors', $this->logic->getAuthors( array(), array( 'lastname' => 'ASC' ) ) );
+		$this->addData( 'authors', $this->logic->getAuthors( [], ['lastname' => 'ASC'] ) );
 		$this->addData( 'categories', $this->logic->getCategories() );
 		$this->addData( 'filters', $this->session->getAll( $this->sessionPrefix ) );
 	}
@@ -422,7 +422,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 					break;
 				case 'tag':
 					if( strlen( trim( $filterValue ) ) ){
-						$find	= array( 'tag' => $filterValue );
+						$find	= ['tag' => $filterValue];
 						$tags	= $this->logic->getTags( $find );
 						if( $tags ){
 							$list	= [];
@@ -436,7 +436,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 					break;
 				case 'isn':
 					if( strlen( $filterValue ) )
-						$conditions[$filterKey]	= str_replace( array( '*', ' ', ), "%", $filterValue );
+						$conditions[$filterKey]	= str_replace( ['*', ' ',], "%", $filterValue );
 					break;
 				case 'new':
 				case 'status':
@@ -449,7 +449,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 					break;
 				case 'id':
 					if( strlen( $filterValue ) )
-						$articleIds	= array( $filterValue );
+						$articleIds	= [$filterValue];
 					break;
 				case 'term':
 					if( strlen( $filterValue ) )
@@ -464,7 +464,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		if( $articleIds )
 			$conditions['articleId']	= $articleIds;
 		$offset		= isset( $filter['offset'] ) ? $filter['offset'] : 0;
-		$articles	= $this->logic->getArticles( $conditions, $orders, array( $offset, 50 ) );
+		$articles	= $this->logic->getArticles( $conditions, $orders, [$offset, 50] );
 		return $articles;
 	}
 }

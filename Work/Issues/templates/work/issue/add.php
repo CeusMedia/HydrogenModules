@@ -3,13 +3,13 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $types	= $words['types'];
-$optType	= array( '_selected' => $type );
+$optType	= ['_selected' => $type];
 foreach( $types as $key => $value )
 	$optType[$key]	= $value;
 
 $priorities	= $words['priorities'];
 krsort( $priorities);
-$optPriority	= array( '_selected' => $priority );
+$optPriority	= ['_selected' => $priority];
 foreach( $priorities as $key => $value )
 	$optPriority[$key]	= $value;
 
@@ -21,12 +21,12 @@ foreach( $severities as $key => $value )
 //$optSeverity['_selected']	= $severity;
 
 /*
-$optStatus	= array( '' => '- alle -', '_selected' => $status );
+$optStatus	= ['' => '- alle -', '_selected' => $status];
 foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $value;
  */
 
-$optProject	= array( '_selected' => $projectId );
+$optProject	= ['_selected' => $projectId];
 if( !empty( $projects ) ){
 	foreach( $projects as $project )
 		$optProject[$project->projectId]	= $project->title;
@@ -89,7 +89,7 @@ $(document).ready(function(){
 			</div>
 			<div class="row-fluid">
 				<label for="content">'.$words['add']['labelContent'].'</label>
-				'.HtmlTag::create( 'textarea', htmlentities( $content, ENT_QUOTES, 'UTF-8' ), array( 'name' => 'content', 'rows' => 9, 'class' => 'span12 -max' ) ).'
+				'.HtmlTag::create( 'textarea', htmlentities( $content, ENT_QUOTES, 'UTF-8' ), ['name' => 'content', 'rows' => 9, 'class' => 'span12 -max'] ).'
 			</div>
 			<div class="buttonbar">
 				<a class="btn btn-small btn" href="./work/issue"><i class="icon-arrow-left"></i> '.$words['add']['buttonCancel'].'</a>

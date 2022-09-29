@@ -2,18 +2,18 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconTest	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cogs' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconTest	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', array( 'class' => 'btn btn-small', 'href' => './manage/form/import' ) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array( 'type' => 'submit', 'class' => 'btn btn-primary' ) );
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', ['class' => 'btn btn-small', 'href' => './manage/form/import'] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', ['type' => 'submit', 'class' => 'btn btn-primary'] );
 
 $buttonTest	= HtmlTag::create( 'button', $iconTest, array(
 	'type'	=> 'button',
 	'id'	=> 'button-test-'.$rule->formImportRuleId,
 	'class'	=> 'btn not-btn-info not-btn-small btn-mini button-test-rules',
-), array( 'rule-id' => $rule->formImportRuleId ) );
+), ['rule-id' => $rule->formImportRuleId] );
 
 
 $statuses	= [

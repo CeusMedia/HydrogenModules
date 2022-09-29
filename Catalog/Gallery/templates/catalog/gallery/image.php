@@ -2,9 +2,9 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
 
-$iconCategory	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
-$iconPrev		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconNext		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+$iconCategory	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
+$iconPrev		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconNext		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
 
 
 $pos	= -1;
@@ -27,7 +27,7 @@ $preview	= HtmlTag::create( 'img', NULL, array(
 	'title'	=> $title,
 	'class'	=> 'thumb',
 ) );
-//$item	= HtmlTag::create( 'div', $preview, array( 'class' => 'not-span4 thumb' ) );
+//$item	= HtmlTag::create( 'div', $preview, ['class' => 'not-span4 thumb'] );
 /*$link	= HtmlTag::create( 'a', $preview, array(
 	'href'	=> './catalog/gallery/image/'.$image->galleryImageId,
 	'title'	=> $title,
@@ -89,7 +89,7 @@ if( $pos < count( $images ) - 1 ){
 
 $source	= new Image( $pathOriginal.$image->filename );
 
-extract( $this->populateTexts( array( 'top', 'content', 'bottom' ), 'html/catalog/gallery/image/' ) );
+extract( $this->populateTexts( ['top', 'content', 'bottom'], 'html/catalog/gallery/image/' ) );
 
 return '
 '.$textTop.'

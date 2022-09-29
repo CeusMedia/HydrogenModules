@@ -24,7 +24,7 @@ class View_Admin_Config extends View
 
 	public function renderConfigInput( string $moduleId, object $item ): string
 	{
-		$isNumeric		= in_array( $item->type, array( "integer", "float" ) ) || preg_match( "/^[0-9\.]+$/", $item->value );
+		$isNumeric		= in_array( $item->type, ["integer", "float"] ) || preg_match( "/^[0-9\.]+$/", $item->value );
 		if( $item->values ){
 			$values		= array_combine( $item->values, $item->values );
 			$options	= HtmlElements::Options( $values, $item->value );
@@ -47,8 +47,8 @@ class View_Admin_Config extends View
 				'value'		=> 'no',
 				'checked'	=> !$item->value ? 'checked' : NULL,
 			) ).'&nbsp;no';
-			$inputYes		= HtmlTag::create( 'label', $inputYes, array( 'class' => 'checkbox inline' ) );
-			$inputNo		= HtmlTag::create( 'label', $inputNo, array( 'class' => 'checkbox inline' ) );
+			$inputYes		= HtmlTag::create( 'label', $inputYes, ['class' => 'checkbox inline'] );
+			$inputNo		= HtmlTag::create( 'label', $inputNo, ['class' => 'checkbox inline'] );
 			$input			= $inputYes.$inputNo;
 		}
 		else{

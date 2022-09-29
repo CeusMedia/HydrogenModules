@@ -15,8 +15,8 @@ $w	= (object) $words['index.files'];
 
 use CeusMedia\Bootstrap\Icon;
 
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconDownload	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-down' ) );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
+$iconDownload	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-down'] );
 
 $iconRemove		= new Icon( 'remove' );
 $iconDownload	= new Icon( 'download' );
@@ -44,10 +44,10 @@ if( $files ){
 
 		$mimeType	= HtmlTag::create( 'span', $w->labelMimeType.': '.$file->mimeType );
 		$fileSize	= HtmlTag::create( 'span', $w->labelFileSize.': '.UnitFormater::formatBytes( filesize( $path.$file->fileName ) ) );
-		$info		= HtmlTag::create( 'small', $fileSize.' | '.$mimeType, array( 'class' => 'muted' ) );
+		$info		= HtmlTag::create( 'small', $fileSize.' | '.$mimeType, ['class' => 'muted'] );
 
-		$buttons	= array( $buttonDownload, $buttonRemove );
-		$buttons	= HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
+		$buttons	= [$buttonDownload, $buttonRemove];
+		$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $label.'<br/>'.$info ),
 			HtmlTag::create( 'td', $buttons ),
@@ -56,7 +56,7 @@ if( $files ){
 	$colgroup	= HtmlElements::ColumnGroup( "", "60px" );
 	$thead	= HtmlTag::create( 'thead', '' );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 
 	$list	= '
 <div class="content-panel">

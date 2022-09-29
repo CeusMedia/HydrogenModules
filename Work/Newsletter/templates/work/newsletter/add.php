@@ -2,15 +2,15 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) ).'&nbsp;';
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) ).'&nbsp;';
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
+$iconSave	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] ).'&nbsp;';
 
 $optTemplate	= [];
 foreach( $templates as $entry )
 	$optTemplate[$entry->newsletterTemplateId]	= $entry->title;
 $optTemplate	= HtmlElements::Options( $optTemplate, $newsletter->newsletterTemplateId );
 
-$optNewsletter	= array( '0' => '- keine Kopie -' );
+$optNewsletter	= ['0' => '- keine Kopie -'];
 krsort( $newsletters );
 foreach( $newsletters as $item )
 	$optNewsletter[$item->newsletterId]	= $item->title;
@@ -63,7 +63,7 @@ $formAdd	= '
 
 $tabsMain	= $tabbedLinks ? $this->renderMainTabs() : '';
 
-extract( $view->populateTexts( array( 'above', 'bottom', 'top' ), 'html/work/newsletter/add/' ) );
+extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/add/' ) );
 
 return $textTop.'
 <div class="newsletter-content">

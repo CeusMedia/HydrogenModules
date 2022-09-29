@@ -2,18 +2,18 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash'] );
 
 $iconsStatus	= array(
-	-1	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) ),
-	0	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
-	1	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) )
+	-1	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash'] ),
+	0	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] ),
+	1	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] )
 );
 $iconsType	= array(
-	0	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-world' ) ),
-	1	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lock' ) )
+	0	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-world'] ),
+	1	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lock'] )
 );
 
 $data	= print_m( $application, NULL, NULL, TRUE );
@@ -22,7 +22,7 @@ $listAccessTokens	= '<div class="muted"><em><small>Keine Access-Tokens aktiv.</s
 if( !empty( $accessTokens ) ){
 	$listAccessTokens	= [];
 	foreach( $accessTokens as $token ){
-		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' revoke', array( 'href' => './oauth/application/remove/'.$token->oauthApplicationId.'/access/'.$token->oauthAccessTokenId, 'class' => 'btn btn-mini btn-danger' ) );
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' revoke', ['href' => './oauth/application/remove/'.$token->oauthApplicationId.'/access/'.$token->oauthAccessTokenId, 'class' => 'btn btn-mini btn-danger'] );
 		$listAccessTokens[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $token->token ),
 			HtmlTag::create( 'td', $buttonRemove ),
@@ -30,7 +30,7 @@ if( !empty( $accessTokens ) ){
 	}
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( ) ) );
 	$tbody		= HtmlTag::create( 'tbody', $listAccessTokens );
-	$listAccessTokens	= HtmlTag::create( 'table', $thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
+	$listAccessTokens	= HtmlTag::create( 'table', $thead.$tbody, ['class' => 'table table-striped table-condensed'] );
 }
 
 $listRefreshTokens	= '<div class="muted"><em><small>Keine Refresh-Tokens aktiv.</small></em></div>';
@@ -48,11 +48,11 @@ if( !empty( $refreshTokens ) ){
 	}
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( ) ) );
 	$tbody		= HtmlTag::create( 'tbody', $listRefreshTokens );
-	$listRefreshTokens	= HtmlTag::create( 'table', $thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
+	$listRefreshTokens	= HtmlTag::create( 'table', $thead.$tbody, ['class' => 'table table-striped table-condensed'] );
 }
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array( 'href' => './oauth/application', 'class' => 'btn btn-small' ) );
-$buttonEdit		= HtmlTag::create( 'a', $iconEdit.' bearbeiten', array( 'href' => './oauth/application/edit/'.$application->oauthApplicationId, 'class' => 'btn btn-small btn-primary' ) );
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', ['href' => './oauth/application', 'class' => 'btn btn-small'] );
+$buttonEdit		= HtmlTag::create( 'a', $iconEdit.' bearbeiten', ['href' => './oauth/application/edit/'.$application->oauthApplicationId, 'class' => 'btn btn-small btn-primary'] );
 
 $description	= strlen( trim( $application->description ) ) ? nl2br( $application->description ) : "-";
 
@@ -76,7 +76,7 @@ return '
 						</big>
 						<dl class="dl-horizontal">
 							<dt>Client-URL</dt>
-							<dd>'.HtmlTag::create( 'a', $application->url, array( 'href' => $application->url, 'target' => '_blank', 'class' => 'external' ) ).'</dd>
+							<dd>'.HtmlTag::create( 'a', $application->url, ['href' => $application->url, 'target' => '_blank', 'class' => 'external'] ).'</dd>
 							<dt>Client-ID</dt>
 							<dd>'.$application->clientId.'</dd>
 							<dt>Client-Secret</dt>

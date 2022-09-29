@@ -3,8 +3,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['export'];
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconExport		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconExport		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
 
 return '
 <div class="content-panel">

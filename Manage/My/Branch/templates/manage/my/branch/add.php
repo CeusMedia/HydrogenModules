@@ -1,7 +1,7 @@
 <?php
 $w		= (object) $words['add'];
 
-$text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/manage/my/branch.add.' );
+$text	= $view->populateTexts( ['top', 'info', 'bottom'], 'html/manage/my/branch.add.' );
 
 $panelAdd	= '
 <div class="content-panel">

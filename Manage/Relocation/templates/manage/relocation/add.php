@@ -4,8 +4,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['add'];
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonBack, array(
 	'href'		=> './manage/relocation',
@@ -50,7 +50,7 @@ $panelAdd	= '
 		</div>
 ';
 
-extract( $view->populateTexts( array( 'add.top', 'add.bottom', 'add.right' ), 'html/manage/relocation/' ) );
+extract( $view->populateTexts( ['add.top', 'add.bottom', 'add.right'], 'html/manage/relocation/' ) );
 
 return $textAddTop.'
 <div class="row-fluid">

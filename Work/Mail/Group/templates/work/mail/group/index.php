@@ -2,9 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconCancel			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconUsers			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-users' ) );
+$iconAdd			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconCancel			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconUsers			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-users'] );
 
 $helperTimestamp	= new View_Helper_TimePhraser( $env );
 
@@ -18,12 +18,12 @@ $statusClasses	= array(
 	3	=> 'label-success',
 );
 
-$list	= HtmlTag::create( 'div', 'Keine gefunden.', array( 'class' => 'alert alert-info' ) );
+$list	= HtmlTag::create( 'div', 'Keine gefunden.', ['class' => 'alert alert-info'] );
 if( count( $groups ) ){
 	$list	= [];
 	foreach( $groups as $group ){
-		$label	= HtmlTag::create( 'a', $group->title, array( 'href' => './work/mail/group/edit/'.$group->mailGroupId ) );
-		$status	= HtmlTag::create( 'span', $words['group-statuses'][$group->status], array( 'class' => 'label '.$statusClasses[$group->status] ) );
+		$label	= HtmlTag::create( 'a', $group->title, ['href' => './work/mail/group/edit/'.$group->mailGroupId] );
+		$status	= HtmlTag::create( 'span', $words['group-statuses'][$group->status], ['class' => 'label '.$statusClasses[$group->status]] );
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $label ),
 			HtmlTag::create( 'td', $group->address ),
@@ -40,7 +40,7 @@ if( count( $groups ) ){
 		'erstellt',
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-fixed' ) );
+	$list	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table table-fixed'] );
 }
 
 $panelGroups	= HtmlTag::create( 'div', array(
@@ -48,11 +48,11 @@ $panelGroups	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		$list,
 		HtmlTag::create( 'div', array(
-/*			HtmlTag::create( 'a', $iconCancel.'&nbsp;...', array( 'href' => './work/mail/group', 'class' => 'btn' ) ),*/
-			HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array( 'href' => './work/mail/group/add', 'class' => 'btn btn-primary' ) ),
-		), array( 'class' => 'buttonbar' ) )
-	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );
+/*			HtmlTag::create( 'a', $iconCancel.'&nbsp;...', ['href' => './work/mail/group', 'class' => 'btn'] ),*/
+			HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', ['href' => './work/mail/group/add', 'class' => 'btn btn-primary'] ),
+		), ['class' => 'buttonbar'] )
+	), ['class' => 'content-panel-inner'] )
+), ['class' => 'content-panel'] );
 
 $tabs	= $view->renderTabs( $env );
 

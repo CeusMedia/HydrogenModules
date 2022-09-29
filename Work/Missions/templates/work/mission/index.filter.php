@@ -9,11 +9,11 @@ $toolbar2		= new View_Helper_MultiButtonGroupMultiToolbar();
 
 $helperFilter	= new View_Helper_Work_Mission_Filter( $env, $defaultFilterValues, $wordsFilter );
 
-$iconAddEvent	= HtmlTag::create( 'i', '', array( 'class' => 'icon-time' ) );
-$iconAddTask	= HtmlTag::create( 'i', '', array( 'class' => 'icon-wrench' ) );
+$iconAddEvent	= HtmlTag::create( 'i', '', ['class' => 'icon-time'] );
+$iconAddTask	= HtmlTag::create( 'i', '', ['class' => 'icon-wrench'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconAddEvent	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) );
-	$iconAddTask	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
+	$iconAddEvent	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-clock-o'] );
+	$iconAddTask	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-thumb-tack'] );
 }
 $toolbar1->addButton( 'toolbar-views', 'view-type', HtmlTag::create( 'div', array(
 	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" title="Neuer Eintrag"><i class="fa fa-fw fa-plus"></i></button>
@@ -21,7 +21,7 @@ $toolbar1->addButton( 'toolbar-views', 'view-type', HtmlTag::create( 'div', arra
 		<li><a href="./work/mission/add?type=1">'.$iconAddEvent.'&nbsp;Termin</a></li>
 		<li><a href="./work/mission/add?type=0">'.$iconAddTask.'&nbsp;Aufgabe</a></li>
 	</ul>'
-), array( 'class' => 'btn-group' ) ) );
+), ['class' => 'btn-group'] ) );
 
 //  --  FILTER BUTTONS  --  //
 $toolbar1->addButton( 'toolbar-views', 'view-type', $helperFilter->renderViewTypeSwitch( $filterMode ) );
@@ -47,7 +47,7 @@ $toolbar2->addButton( 'toolbar-filters', 'types', $helperFilter->renderTypeFilte
 $toolbar2->addButton( 'toolbar-filters', 'search', HtmlTag::create( 'div', array(
 		$helperFilter->renderSearch( $filterQuery ),
 		$helperFilter->renderReset()
-	), array( 'class' => 'input-append' ) )
+	), ['class' => 'input-append'] )
 );
 
 //$toolbar1->sort();

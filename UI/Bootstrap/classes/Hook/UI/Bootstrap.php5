@@ -26,7 +26,7 @@ class Hook_UI_Bootstrap extends Hook
 				case 'throw':
 				default:
 					$exception	= new RuntimeException( 'Bootstrap library (ceus-media/bootstrap) is not installed - please use composer to install' );
-//					$env->getCaptain()->callHook( 'App', 'onException', $context, array( 'exception' => $exception ) );
+//					$env->getCaptain()->callHook( 'App', 'onException', $context, ['exception' => $exception] );
 					throw $exception;
 			}
 		}
@@ -40,7 +40,7 @@ class Hook_UI_Bootstrap extends Hook
 				case 'throw':
 				default:
 					$exception	= new RuntimeException( 'Module "UI:Font:FontAwesome" is not installed - please use hymn to install' );
-					$env->getCaptain()->callHook( 'App', 'onException', $context, array( 'exception' => $exception ) );
+					$env->getCaptain()->callHook( 'App', 'onException', $context, ['exception' => $exception] );
 //					throw $exception;
 			}
 		}
@@ -69,7 +69,7 @@ class Hook_UI_Bootstrap extends Hook
 			if( property_exists( '\CeusMedia\Bootstrap\Icon', 'defaultSet' ) ){
 				\CeusMedia\Bootstrap\Icon::$defaultSet	= 'fontawesome'.$versionAwesomeMajor;
 				if( $configBootstrap->get( 'icon.fixedWidth' ) )
-					\CeusMedia\Bootstrap\Icon::$defaultSize	= array( 'fixed' );
+					\CeusMedia\Bootstrap\Icon::$defaultSize	= ['fixed'];
 				if( $versionAwesomeMajor === 5 && $configAwesome->get( 'v5.style' ) )
 					\CeusMedia\Bootstrap\Icon::$defaultStyle	= $configAwesome->get( 'v5.style' );
 			}
@@ -95,11 +95,11 @@ class Hook_UI_Bootstrap extends Hook
 
 		if( $options->get( 'cdn' ) ){
 			//  CSS
-			$context->addThemeStyle( $pathCdn.$script, Captain::LEVEL_TOP, array( 'crossorigin' => 'anonymous' ) );
+			$context->addThemeStyle( $pathCdn.$script, Captain::LEVEL_TOP, ['crossorigin' => 'anonymous'] );
 			if( $majorVersion === 3 || $majorVersion === 4 ){
 				if( $options->get( 'map' ) ){
 					$script	= 'css/bootstrap'.$suffix.'.css.map';
-					$context->addThemeStyle( $pathCdn.$script, Captain::LEVEL_TOP, array( 'crossorigin' => 'anonymous' ) );
+					$context->addThemeStyle( $pathCdn.$script, Captain::LEVEL_TOP, ['crossorigin' => 'anonymous'] );
 				}
 			}
 			//  JS
@@ -150,7 +150,7 @@ class Hook_UI_Bootstrap extends Hook
 			$pattern		= '/(class=")([^"]*)?('.$cssPrefix.')([^ "]+)([^"]*)(")/';
 			$data->content	= preg_replace( $pattern, '\\1\\2\\4\\5\\6', $data->content );
 		}
-		$otherVersions	= array_diff( array( 2, 3, 4 ), array( $majorVersion ) );
+		$otherVersions	= array_diff( [2, 3, 4], [$majorVersion] );
 		foreach( $otherVersions as $version ){
 			$pattern		= '/(class=")([^"]*)(bs'.$version.'-[^ "]+)([^"]*)(")/';
 			$data->content	= preg_replace( $pattern, '\\1\\2\\4\\5', $data->content );

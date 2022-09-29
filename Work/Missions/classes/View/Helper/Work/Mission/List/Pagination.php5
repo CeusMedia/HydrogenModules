@@ -9,8 +9,8 @@ class View_Helper_Work_Mission_List_Pagination extends Abstraction
 			return "";
 		$limit			= abs( (int) $limit ) >= 10 ? abs( $limit ) : 10;
 		$offset			= abs( (int) $page ) * $limit;
-		$attrBtnPrev	= array( 'type' => 'button', 'class' => 'btn disabled' );
-		$attrBtnNext	= array( 'type' => 'button', 'class' => 'btn disabled' );
+		$attrBtnPrev	= ['type' => 'button', 'class' => 'btn disabled'];
+		$attrBtnNext	= ['type' => 'button', 'class' => 'btn disabled'];
 		$pages			= ceil( $total / $limit );
 		$page		= $reverse ? $pages - $page - 1 : $page;
 		if( $page ){
@@ -29,7 +29,7 @@ class View_Helper_Work_Mission_List_Pagination extends Abstraction
 			'type'	=> 'button',
 			'class'	=> 'btn disabled'
 		) );
-		$buttons	= HtmlTag::create( 'div', $buttonPrev.$buttonNext.$buttonPos, array( 'class' => 'btn-group' ) );
+		$buttons	= HtmlTag::create( 'div', $buttonPrev.$buttonNext.$buttonPos, ['class' => 'btn-group'] );
 		return $buttons;
 	}
 }

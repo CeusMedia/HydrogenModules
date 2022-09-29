@@ -6,7 +6,7 @@ $w		= (object) $words['index'];
 
 $list	= [];
 foreach( $accounts as $account ){
-	$link	= HtmlTag::create( 'a', $account->title, array( 'href' => './work/finance/bank/account/edit/'.$account->bankAccountId ) );
+	$link	= HtmlTag::create( 'a', $account->title, ['href' => './work/finance/bank/account/edit/'.$account->bankAccountId] );
 	$list[]	= HtmlTag::create( 'li', $link );
 }
 $list	= HtmlTag::create( 'ul', $list );

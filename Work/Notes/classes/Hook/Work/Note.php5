@@ -34,25 +34,25 @@ class Hook_Work_Note extends Hook
 		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
 		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
 		$language		= $env->getLanguage();
-//		$statusesActive	= array( 0, 1, 2, 3, 4, 5 );
+//		$statusesActive	= [0, 1, 2, 3, 4, 5];
 		$list			= [];
 		$modelNote		= new Model_Note( $env );
-		$indices		= array( 'projectId' => $data->projectId );
+		$indices		= ['projectId' => $data->projectId];
 //		if( $data->activeOnly )
 //			$indices['status']	= $statusesActive;
-		$orders			= array( 'status' => 'ASC', 'title' => 'ASC' );
+		$orders			= ['status' => 'ASC', 'title' => 'ASC'];
 		$notes			= $modelNote->getAllByIndices( $indices, $orders );	//  ...
 /*		$icons			= array(
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation' ) ),
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench' ) ),
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o' ) ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o'] ),
 		);*/
-		$icon		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz' ) );
+		$icon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz'] );
 		$words		= $language->getWords( 'work/note' );
 		foreach( $notes as $note ){
 			$isOpen		= TRUE;//in_array( $issue->status, $statusesActive );
 //			$status		= '('.$words['states'][$issue->status].')';
-//			$status		= HtmlTag::create( 'small', $status, array( 'class' => 'muted' ) );
+//			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $note->title : HtmlTag::create( 'del', $note->title );
 			$label		= $icon.'&nbsp;'.$title;//.'&nbsp;'.$status;
 			$list[]		= (object) array(
@@ -81,7 +81,7 @@ class Hook_Work_Note extends Hook
 		foreach( $notes as $note )
 			$logic->removeNote( $note->noteId );
 		if( isset( $data->counts ) )
-			$data->counts['Work_Notes']	= (object) array( 'entities' => count( $notes ) );
+			$data->counts['Work_Notes']	= (object) ['entities' => count( $notes )];
 	}
 
 	public static function onListUserRelations( Environment $env, $context, $module, $payload )
@@ -93,12 +93,12 @@ class Hook_Work_Note extends Hook
 		$notes		= $model->getAllByIndex( 'userId', $userId );
 		$language	= $env->getLanguage();
 		$words		= $language->getWords( 'work/note' );
-		$icon		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz' ) );
+		$icon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sticky-note-o', 'title' => 'Notiz'] );
 		$list		= [];
 		foreach( $notes as $note ){
 			$isOpen		= TRUE;//in_array( $issue->status, $statusesActive );
 //			$status		= '('.$words['states'][$issue->status].')';
-//			$status		= HtmlTag::create( 'small', $status, array( 'class' => 'muted' ) );
+//			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $note->title : HtmlTag::create( 'del', $note->title );
 			$label		= $icon.'&nbsp;'.$title;//.'&nbsp;'.$status;
 			$list[]		= (object) array(

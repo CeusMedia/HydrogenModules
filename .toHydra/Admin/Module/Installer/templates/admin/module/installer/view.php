@@ -11,7 +11,7 @@ unset( $needs[$moduleId] );
 
 $isInstallable	= $mainModuleId || !count( $needs );
 
-$attributes		= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
+$attributes		= ['type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled'];
 $buttonBack		= HtmlTag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
 $buttonList		= HtmlElements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
 $buttonView		= HtmlElements::LinkButton( './admin/module/viewer/index/'.$moduleId, $w->buttonView, 'button view' );
@@ -55,10 +55,10 @@ if( count( $needs ) ){
 			$listCritical[]	= $id;
 		$class	= 'icon module module-status-'.$status;
 		$link	= HtmlElements::Link( './admin/module/viewer/index/'.$id, $label );
-		$label	= HtmlTag::create( 'span', $link, array( 'class' => $class ) );
+		$label	= HtmlTag::create( 'span', $link, ['class' => $class] );
 		$neededModules[]	= HtmlElements::ListItem( $label, 1 );
 	}
-	$neededModules	= HtmlElements::unorderedList( $neededModules, 1, array( 'class' => 'relations relations-needed' ) );
+	$neededModules	= HtmlElements::unorderedList( $neededModules, 1, ['class' => 'relations relations-needed'] );
 	$buttonInstall	= HtmlElements::Button( 'doInstall', $w->buttonInstall, 'button add', NULL, TRUE );
 
 	$a		= 'Es müssen erst folgende Module installiert werden:'.$neededModules.'<div class="column-clear"></div>';
@@ -86,23 +86,23 @@ if( $mainModuleId ){
 	foreach( $mainModule->neededModules as $id => $status ){
 		if( $id == $moduleId || $id == $mainModule->id || !$status )
 			continue;
-		$label	= HtmlTag::create( 'span', $moduleMap[$id]->title, array( 'class' => 'icon module' ) );
+		$label	= HtmlTag::create( 'span', $moduleMap[$id]->title, ['class' => 'icon module'] );
 		$list[]	= HtmlElements::ListItem( $label, 1 );
 	}
-	$current	= HtmlTag::create( 'span', $module->title, array( 'class' => 'icon module disabled' ) );
-	$list[]		= HtmlElements::ListItem( $current, 1, array( 'class' => 'current' ) );
+	$current	= HtmlTag::create( 'span', $module->title, ['class' => 'icon module disabled'] );
+	$list[]		= HtmlElements::ListItem( $current, 1, ['class' => 'current'] );
 	foreach( $mainModule->neededModules as $id => $status ){
 		if( $id == $moduleId || $id == $mainModule->id || $status )
 			continue;
-		$label	= HtmlTag::create( 'span', $moduleMap[$id]->title, array( 'class' => 'icon module disabled' ) );
+		$label	= HtmlTag::create( 'span', $moduleMap[$id]->title, ['class' => 'icon module disabled'] );
 		$list[]	= HtmlElements::ListItem( $label, 1 );
 	}
 	if( $module->id != $mainModule->id ){
-		$main		= HtmlTag::create( 'span', $mainModule->title, array( 'class' => 'icon module disabled' ) );
+		$main		= HtmlTag::create( 'span', $mainModule->title, ['class' => 'icon module disabled'] );
 		$list[]		= HtmlElements::ListItem( $main, 1 );
 	}
 
-	$list	= HtmlElements::unorderedList( $list, 1, array( 'class' => 'relations relations-needed' ) );
+	$list	= HtmlElements::unorderedList( $list, 1, ['class' => 'relations relations-needed'] );
 	$panelProgress	= '
 <fieldset>
 	<legend>Fortschritt</legend>
@@ -142,15 +142,15 @@ if( $isInstallable ){
 			$label	= View_Helper_Module::renderModuleConfigLabel( $module, $item );
 			$id		= str_replace( '.', '_', $item->key );
 			$cells	= array(
-				HtmlTag::create( 'td', $label, array() ),
-				HtmlTag::create( 'td', $words['config-types'][$item->type], array( 'class' => "cell-config-type" ) ),
-				HtmlTag::create( 'td', $input, array( 'class' => 'cell-config-value' ) ),
+				HtmlTag::create( 'td', $label, [] ),
+				HtmlTag::create( 'td', $words['config-types'][$item->type], ['class' => "cell-config-type"] ),
+				HtmlTag::create( 'td', $input, ['class' => 'cell-config-value'] ),
 			);
-			$rows[$item->key]	= HtmlTag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
+			$rows[$item->key]	= HtmlTag::create( 'tr', $cells, ['id' => "config_".$id] );
 		#	natcasesort( $rows );
 		}
-		$tableHeads		= HtmlElements::TableHeads( array( 'Schlüssel', 'Typ', 'Wert' ) );
-		$tableColumns	= HtmlElements::ColumnGroup( array( '25%', '10%', '65%' ) );
+		$tableHeads		= HtmlElements::TableHeads( ['Schlüssel', 'Typ', 'Wert'] );
+		$tableColumns	= HtmlElements::ColumnGroup( ['25%', '10%', '65%'] );
 		$tableConfig	= '<table>'.$tableColumns.$tableHeads.join( $rows ).'</table>';
 		$tableConfig	= HtmlTag::create( 'h4', 'Konfiguration' ).$tableConfig.'<br/>';
 	}
@@ -196,7 +196,7 @@ if( $files ){
 function renderPositions( $positions ){
 	$list	= [];
 	foreach( $positions as $label => $url )
-		$list[]	= '&laquo;&nbsp;'.HtmlTag::create( 'a', $label, array( 'href' => $url ) );
+		$list[]	= '&laquo;&nbsp;'.HtmlTag::create( 'a', $label, ['href' => $url] );
 	$positions	= join( '&nbsp;&nbsp;|&nbsp;&nbsp;', $list );
 	$positions	= HtmlTag::create( 'div', $positions, array( 'class' => 'nav-position', 'style' => 'margin-bottom: 0.8em') );
 	return $positions;

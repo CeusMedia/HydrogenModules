@@ -13,12 +13,12 @@ use CeusMedia\HydrogenFramework\View;
 $w			= (object) $words['add'];
 
 ksort( $files );
-$optFile	= array( '' => '' );
+$optFile	= ['' => ''];
 foreach( $files as $file )
 	$optFile[$file->filePath]	= $file->filePath;
 $optFile	= HtmlElements::Options( $optFile );
 
-$optClass	= array( '' => '' );
+$optClass	= ['' => ''];
 foreach( $classes as $class )
 	$optClass[$class]	= $class;
 $optClass	= HtmlElements::Options( $optClass );
@@ -59,7 +59,7 @@ $panelAdd	= '
 	</div>
 </div>';
 
-[$textTop, $textBottom] = $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/attachment/' );
+[$textTop, $textBottom] = $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/attachment/' );
 
 $tabs	= View_Admin_Mail_Attachment::renderTabs( $env, 'add' );
 

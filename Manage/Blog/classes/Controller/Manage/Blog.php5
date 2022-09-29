@@ -23,8 +23,8 @@ class Controller_Manage_Blog extends Controller
 		$words		= $env->getLanguage()->getWords( 'manage/blog' );
 		$model		= new Model_Blog_Post( $env );
 		$list		= [];
-		$conditions	= array( 'status' => 1 );
-		$orders		= array( 'createdAt' => 'DESC' );
+		$conditions	= ['status' => 1];
+		$orders		= ['createdAt' => 'DESC'];
 		foreach( $model->getAll( $conditions, $orders ) as $nr => $post ){
 			$list[$post->postId]	= (object) array(
 				'title'	=> str_replace( '/', '-', $post->title ),
@@ -44,7 +44,7 @@ class Controller_Manage_Blog extends Controller
 
 	public static function getUriPart( $label, $delimiter = "_" )
 	{
-		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
 		$label	= preg_replace( "/ +/", $delimiter, $label );
 		return $label;
@@ -89,8 +89,8 @@ class Controller_Manage_Blog extends Controller
 			$data['language']	= $language->getLanguage();
 		$data['status']		= 0;
 
-		$categories			= $this->modelCategory->getAllByIndices( array( 'status' => '>= 0' ) );		//
-		$users				= $this->modelUser->getAll( array( 'status' => '> 0' ) );
+		$categories			= $this->modelCategory->getAllByIndices( ['status' => '>= 0'] );		//
+		$users				= $this->modelUser->getAll( ['status' => '> 0'] );
 		$this->addData( 'post', (object) $data );
 		$this->addData( 'users', $users );
 		$this->addData( 'categories', $categories );
@@ -150,8 +150,8 @@ class Controller_Manage_Blog extends Controller
 			'postId'	=> $post->postId,															//  ... related to this post
 			'status'	=> '>= 0'																	//  ... and visible
 		) );
-		$categories		= $this->modelCategory->getAllByIndices( array( 'status' => '>= 0' ) );		//
-		$users			= $this->modelUser->getAll( array( 'status' => '> 0' ) );
+		$categories		= $this->modelCategory->getAllByIndices( ['status' => '>= 0'] );		//
+		$users			= $this->modelUser->getAll( ['status' => '> 0'] );
 
 		$this->addData( 'post', $post );															//  assign post data to template
 		$this->addData( 'categories', $categories );
@@ -176,13 +176,13 @@ class Controller_Manage_Blog extends Controller
 
 		$limit		= 15;
 		$offset		= (int) $page * $limit;
-		$orders		= array( 'createdAt' => 'DESC' );
+		$orders		= ['createdAt' => 'DESC'];
 		$conditions	= [];
 		if( strlen( $filterStatus ) )
 			$conditions['status']	= $filterStatus;
 		if( strlen( $filterCategoryId ) )
 			$conditions['categoryId']	= $filterCategoryId;
-		$limits		= array( $offset, $limit );
+		$limits		= [$offset, $limit];
 		$total		= $this->modelPost->count( $conditions );
 		$posts		= $this->modelPost->getAll( $conditions, $orders, $limits );
 		foreach( $posts as $post ){
@@ -246,7 +246,7 @@ class Controller_Manage_Blog extends Controller
 		$logic->handleMail( $mail, $postAuthor, $language->getLanguage() );							//  enqueue mail
 
 		$addresses	= [];
-		$indices	= array( 'postId' => $post->postId, 'status' => '>= 0' );						//  get all visible post comments
+		$indices	= ['postId' => $post->postId, 'status' => '>= 0'];						//  get all visible post comments
 		foreach( $this->modelComment->getAllByIndices( $indices ) as $item ){						//  find former comment authors
 			if( empty( $item->email ) )																//  comment without email address
 				continue;																			//  cannot inform
@@ -266,7 +266,7 @@ class Controller_Manage_Blog extends Controller
 			$addresses[]	= $item->email;															//  note used email address
 			$data['myComment']	= $item;															//  decorate mail data by own former comment
 			$mail		= new Mail_Info_Blog_FollowUp( $this->env, $data );							//  generate mail
-			$receiver	= array( 'username' => $item->username, 'email' => $item->email );			//  receiver is former comment author
+			$receiver	= ['username' => $item->username, 'email' => $item->email];			//  receiver is former comment author
 			$logic->handleMail( $mail, $receiver, $language->getLanguage() );						//  enqueue mail
 		}
 	}*/

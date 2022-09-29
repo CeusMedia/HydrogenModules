@@ -13,7 +13,7 @@ if( strlen( trim( $w->textTop ) ) )
 	$helper->setTextTop( HtmlTag::create( 'p', $w->textTop ) );
 $tabContent	= $helper->render();
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/shop/' ) );
 
 $helper		= new View_Helper_Shop_Tabs( $env );
 $helper->setCurrent( 'shop-customer' );

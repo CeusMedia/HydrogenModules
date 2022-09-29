@@ -4,8 +4,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['index'];
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$iconTag	= HtmlTag::create( 'i', '', array( 'class' => 'icon-tag' ) );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+$iconTag	= HtmlTag::create( 'i', '', ['class' => 'icon-tag'] );
 
 
 $tags	= $env->session->get( 'filter_notes_tags' );
@@ -64,7 +64,7 @@ $pagination	= $pagination->render();
 //  --  FILTER  --  //
 $panelFilter	= $view->loadTemplateFile( 'work/note/index.filter.php' );
 
-$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' neue Notiz', array( 'href' => './work/note/add', 'class' => 'btn not-btn-small btn-primary' ) );
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' neue Notiz', ['href' => './work/note/add', 'class' => 'btn not-btn-small btn-primary'] );
 
 
 return '

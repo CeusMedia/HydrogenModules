@@ -30,9 +30,9 @@ if( $module->authors ){
 	foreach( $module->authors as $author){
 		$label	= $author->name;
 		if( $author->email )
-			$label	= HtmlTag::create( 'a', $label, array( 'href' => 'mailto:'.$author->email ) );
+			$label	= HtmlTag::create( 'a', $label, ['href' => 'mailto:'.$author->email] );
 		else if( $author->site )
-			$label	= HtmlTag::create( 'a', $label, array( 'href' => $author->site ) );
+			$label	= HtmlTag::create( 'a', $label, ['href' => $author->site] );
 		$authors[]	= HtmlTag::create( 'dd', $label );
 	}
 	$label	= count( $authors ) > 1 ? $w->labelAuthors : $w->labelAuthor;
@@ -43,7 +43,7 @@ if( $module->companies ){
 	foreach( $module->companies as $company){
 		$label	= $company->name;
 		if( $company->site )
-			$label	= HtmlTag::create( 'a', $label, array( 'href' => $company->site ) );
+			$label	= HtmlTag::create( 'a', $label, ['href' => $company->site] );
 		$companies[]	= $label;
 	}
 	$label	= count( $companies ) > 1 ? $w->labelCompanies : $w->labelCompany;
@@ -56,20 +56,20 @@ if( $module->licenses ){
 	foreach( $module->licenses as $license ){
 		$label	= $license->label;
 		if( $license->source )
-			$label	= HtmlTag::create( 'a', $label, array( 'href' => $license->source ) );
+			$label	= HtmlTag::create( 'a', $label, ['href' => $license->source] );
 		$licenses[]	= $label;
 	}
 	$label	= count( $licenses ) > 1 ? $w->labelLicenses : $w->labelLicense;
 	$facts[0][]	= HtmlTag::create( 'dt', $label ).HtmlTag::create( 'dd', join( ' / ', $licenses ) );
 }
 $facts[1][]	= HtmlTag::create( 'dt', $w->labelStatus );
-$facts[1][]	= HtmlTag::create( 'dd', HtmlTag::create( 'span', $words['types'][$module->type], array( 'class' => 'module-type type-'.$module->type ) ) );
+$facts[1][]	= HtmlTag::create( 'dd', HtmlTag::create( 'span', $words['types'][$module->type], ['class' => 'module-type type-'.$module->type] ) );
 
 /* --  MODULE SOURCE  --  */
 $source	= 'local';
 if( isset( $sources[$module->source] ) ){
 	$source	= $sources[$module->source];
-	$source	= HtmlTag::create( 'acronym', $module->source, array( 'title' => htmlentities( $source->title ) ) );
+	$source	= HtmlTag::create( 'acronym', $module->source, ['title' => htmlentities( $source->title )] );
 }
 $facts[0][]	= HtmlTag::create( 'dt', $w->labelSource ).HtmlTag::create( 'dd', $source );
 //$facts[2][]	= HtmlTag::create( 'dt', $w->labelSource ).HtmlTag::create( 'dd', $source );
@@ -92,20 +92,20 @@ if( $module->versionAvailable || $module->versionInstalled ){
 //	$isUpdatable	= $module->versionAvailable !== $module->versionInstalled;
 }
 
-$facts0	= HtmlTag::create( 'dl', join( $facts[0] ), array( 'class' => 'general' ) );
-$facts1	= HtmlTag::create( 'dl', join( $facts[1] ), array( 'class' => 'general' ) );
-$facts2	= HtmlTag::create( 'dl', join( $facts[2] ), array( 'class' => 'general' ) );
+$facts0	= HtmlTag::create( 'dl', join( $facts[0] ), ['class' => 'general'] );
+$facts1	= HtmlTag::create( 'dl', join( $facts[1] ), ['class' => 'general'] );
+$facts2	= HtmlTag::create( 'dl', join( $facts[2] ), ['class' => 'general'] );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconInstall	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) );
-$iconUpdate		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-forward' ) );
-$iconReload		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
-$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconInstall	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] );
+$iconUpdate		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-forward'] );
+$iconReload		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash'] );
+$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 
 
 $labelInstall	= "Das Modul ist <b>nicht installiert</b>.";
-$attributes		= array( 'type' => 'button', 'class' => 'btn auto-back former-button former-cancel', 'readonly' => 'readonly', 'disabled' => 'disabled' );
+$attributes		= ['type' => 'button', 'class' => 'btn auto-back former-button former-cancel', 'readonly' => 'readonly', 'disabled' => 'disabled'];
 $buttonBack		= HtmlTag::create( 'button', $iconCancel.'&nbsp;'.$w->buttonBack, $attributes );
 $buttonList		= HtmlElements::LinkButton( './admin/module', $w->buttonList, 'btn btn-small button cancel' );
 $buttonCancel	= HtmlElements::LinkButton( './admin/module', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn' );

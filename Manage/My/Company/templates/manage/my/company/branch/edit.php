@@ -38,7 +38,7 @@ if( $env->getModules()->has( 'Manage_Coupon' ) ){
 
 
 $w	= (object) $words['edit'];
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/manage/my/branch/edit/' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/manage/my/branch/edit/' ) );
 
 $optStatus	= HTML::Options( $words['states'], $branch->status );
 $optCompany	= [];

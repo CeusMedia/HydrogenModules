@@ -14,14 +14,14 @@ $iconRemove	= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/
 
 //  --  LIST  --  //
 $list	= array(
-	0 => array(),
-	1 => array(),
-	2 => array(),
-	3 => array(),
-	4 => array(),
-	5 => array(),
-	6 => array(),
-	7 => array(),
+	0 => [],
+	1 => [],
+	2 => [],
+	3 => [],
+	4 => [],
+	5 => [],
+	6 => [],
+	7 => [],
 );
 $indicator	= new HtmlIndicator();
 $disabled	= [];
@@ -30,7 +30,7 @@ foreach( $missions as $mission ){
 	$label		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );
 	$url		= './work/mission/edit/'.$mission->missionId;
 	$class		= 'icon-label mission-type-'.$mission->type;
-	$link		= HtmlElements::Link( $url, $label, array( 'class' => $class ) );
+	$link		= HtmlElements::Link( $url, $label, ['class' => $class] );
 	$days		= ( strtotime( $mission->dayStart ) - $today ) / ( 24 * 60 * 60 );
 	$daysBound	= max( min( $days , 6 ), 0 );
 	$graph		= $indicator->build( $mission->status, 4 );
@@ -48,7 +48,7 @@ foreach( $missions as $mission ){
 	$daysOverdue	= '';
 	$days	= ( strtotime( max( $mission->dayStart, $mission->dayEnd ) ) - $today ) / ( 24 * 60 * 60);
 	if( $days < 0 )
-		$daysOverdue	= HtmlTag::create( 'div', abs( $days ), array( 'class' => "overdue" ) );
+		$daysOverdue	= HtmlTag::create( 'div', abs( $days ), ['class' => "overdue"] );
 
 	$cells	= array(
 		'<td><div style="padding: 4px 2px 2px 2px;">'.$graph.$daysOverdue.'</div></td>',
@@ -56,7 +56,7 @@ foreach( $missions as $mission ){
 		'<td><small>'.$priority.'</small></td>',
 		'<td class="actions">'.$buttonEdit.' | '.$buttonLeft.$buttonRight.'</td>',
 	);
-	$list[$daysBound][]	= HtmlTag::create( 'tr', join( $cells ), array( 'class' => $class ) );
+	$list[$daysBound][]	= HtmlTag::create( 'tr', join( $cells ), ['class' => $class] );
 }
 
 function getFutureDate( $daysInFuture = 0, $words = NULL ){
@@ -75,10 +75,10 @@ function getCount( $list, $days ){
 
 $colgroup	= HtmlElements::ColumnGroup( "120px", "", "90px", "115px" );
 $tableHeads	= HtmlElements::TableHeads( array(
-	HtmlTag::create( 'div', 'Zustand', array( 'class' => 'sortable', 'data-column' => 'status' ) ),
-	HtmlTag::create( 'div', 'Aufgabe', array( 'class' => 'sortable', 'data-column' => 'title' ) ),
-	HtmlTag::create( 'div', 'Priorität', array( 'class' => 'sortable', 'data-column' => 'priority' ) ),
-	HtmlTag::create( 'div', 'Aktion', array( 'class' => 'sortable', 'data-column' => NULL ) )
+	HtmlTag::create( 'div', 'Zustand', ['class' => 'sortable', 'data-column' => 'status'] ),
+	HtmlTag::create( 'div', 'Aufgabe', ['class' => 'sortable', 'data-column' => 'title'] ),
+	HtmlTag::create( 'div', 'Priorität', ['class' => 'sortable', 'data-column' => 'priority'] ),
+	HtmlTag::create( 'div', 'Aktion', ['class' => 'sortable', 'data-column' => NULL] )
 ) );
 
 $folders	= [];

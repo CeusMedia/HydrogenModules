@@ -25,14 +25,14 @@ class View_Helper_Form_Fill_Data
 		$inputs		= json_decode( $this->fill->data, TRUE );
 
 		foreach( $inputs as $name => $input ){
-			if( in_array( trim( $name ), array( 'gender', 'firstname', 'surname', 'email', 'phone', 'street', 'city', 'postcode', 'country' ) ) ){
+			if( in_array( trim( $name ), ['gender', 'firstname', 'surname', 'email', 'phone', 'street', 'city', 'postcode', 'country'] ) ){
 				if( $input['label'] ){
 					unset( $inputs[$name] );
 				}
 			}
 		}
 
-		$checkValues	= array( 'true', 'ja', 'yes' );
+		$checkValues	= ['true', 'ja', 'yes'];
 		$listInfo		= [];
 //print_m( $inputs );die;
 		foreach( $inputs as $name => $input ){
@@ -43,7 +43,7 @@ class View_Helper_Form_Fill_Data
 				$value	= date( 'd.m.Y', strtotime( $value ) );
 			else if( $input['type'] == 'check' )
 				$value	= in_array( $input['value'], $checkValues ) ? "ja" : "nein";
-			else if( in_array( $input['type'], array( 'select', 'choice' ) ) ){
+			else if( in_array( $input['type'], ['select', 'choice'] ) ){
 				$value	= $input['valueLabel'];
 				if( $this->mode === self::MODE_EXTENDED && $input['valueLabel'] !== $input['value'] )
 					$value .= ' <small><tt>('.$input['value'].')</tt></small>';
@@ -59,7 +59,7 @@ class View_Helper_Form_Fill_Data
 			else if( preg_match( '/iban/i', $name ) )
 				$value = join( ' ', str_split( $value, 4 ) );
 
-			$listInfo[]	= (object) array( 'label' => $input['label'], 'value' => $value, 'text' => $text );
+			$listInfo[]	= (object) ['label' => $input['label'], 'value' => $value, 'text' => $text];
 			unset( $inputs[$name] );
 		}
 
@@ -78,16 +78,16 @@ class View_Helper_Form_Fill_Data
 		foreach( $rows as $row ){
 			$text	= '';
 			if( !empty( $row->text ) )
-				$text	= '<br/>'.HtmlTag::create( 'small', $row->text, array( 'class' => 'muted' ) );
+				$text	= '<br/>'.HtmlTag::create( 'small', $row->text, ['class' => 'muted'] );
 			$list[]	= HtmlTag::create( 'tr', array(
 				HtmlTag::create( 'th', $row->label.$text ),
 				HtmlTag::create( 'td', $row->value ),
 			) );
 		}
 		return HtmlTag::create( 'table', array(
-			HtmlElements::ColumnGroup( array( '50%', '50%' ) ),
+			HtmlElements::ColumnGroup( ['50%', '50%'] ),
 			HtmlTag::create( 'tbody', $list ),
-		), array( 'class' => 'table table-striped table-fixed table-bordered table-condensed' ) );
+		), ['class' => 'table table-striped table-fixed table-bordered table-condensed'] );
 	}
 
 	public function setFill( $fill ){

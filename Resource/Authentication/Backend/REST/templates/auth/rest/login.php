@@ -2,7 +2,7 @@
 
 $panelLogin	= $view->loadTemplateFile( 'auth/rest/login.form.php' );
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/rest/login/', array( 'from' => $from ) ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/rest/login/', ['from' => $from] ) );
 
 $tabs	= View_Auth::renderTabs( $env, 'auth/rest/login' );
 

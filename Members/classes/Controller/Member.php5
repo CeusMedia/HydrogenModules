@@ -20,7 +20,7 @@ class Controller_Member extends Controller
 		$userIds	= Logic_Member::getInstance( $env )->getRelatedUserIds( $payload->userId, 2 );
 		$list		= [];
 		if( $userIds ){
-			$relatedUsers	= $modelUser->getAll( array( 'userId' => $userIds ), array( 'username' => 'ASC' ) );
+			$relatedUsers	= $modelUser->getAll( ['userId' => $userIds], ['username' => 'ASC'] );
 			foreach( $relatedUsers as $relatedUser )
 				$list[$relatedUser->userId]	= $relatedUser;
 		}

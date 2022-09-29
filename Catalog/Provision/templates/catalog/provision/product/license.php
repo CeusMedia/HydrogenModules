@@ -1,12 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCart		= HtmlTag::create( 'i', '', array( 'class' => 'shopping-cart' ) );
-$iconProduct	= HtmlTag::create( 'i', '', array( 'class' => 'arrow-right' ) );
+$iconCart		= HtmlTag::create( 'i', '', ['class' => 'shopping-cart'] );
+$iconProduct	= HtmlTag::create( 'i', '', ['class' => 'arrow-right'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconCart		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
-	$iconLicense	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cube' ) );
-	$iconProducts	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cubes' ) );
+	$iconCart		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-shopping-cart'] );
+	$iconLicense	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cube'] );
+	$iconProducts	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cubes'] );
 }
 
 $details	= HtmlTag::create( 'div', array(
@@ -18,10 +18,10 @@ $details	= HtmlTag::create( 'div', array(
 			'href'		=> './shop/addArticle/1/'.$license->productLicenseId,
 		 	'class'		=> 'btn btn-large',
 		) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'catalog/provision/product/license/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'catalog/provision/product/license/' ) );
 if( !$textTop )
 	$textTop	= HtmlTag::create( 'div', array(
 		HtmlTag::create( 'h2', array(

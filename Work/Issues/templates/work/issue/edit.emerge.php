@@ -8,7 +8,7 @@ $optPriority	= $view->renderOptions( $words['priorities'], 'priority', $issue->p
 $optStatus		= $view->renderOptions( $words['states'], 'status', $issue->status, 'issue-status status-%1$d');
 
 //  --  PROJECT RELATION  --  //
-$optProject = array( '_selected' => $issue->projectId );
+$optProject = ['_selected' => $issue->projectId];
 if( !empty( $projects ) )
 	foreach( $projects as $project )
 		$optProject[$project->projectId]	= $project->title;
@@ -16,14 +16,14 @@ if( !empty( $projects ) )
 //  --  USER RELATIONS  --  //
 /*
 $modelUser	= new Model_User( $env );
-$conditions	= array( 'status' => '>0' );
-$orders		= array( 'username' => 'ASC' );
-$users		= $modelUser->getAll( $conditions, $orders, array( 100 ) );
+$conditions	= ['status' => '>0'];
+$orders		= ['username' => 'ASC'];
+$users		= $modelUser->getAll( $conditions, $orders, [100] );
 */
 
 $optReporter	= [];
-$optManager	= array( '' => '-' );
-$optWorker	= array( '' => '-' );
+$optManager	= ['' => '-'];
+$optWorker	= ['' => '-'];
 
 foreach( $users as $user ){
 	$optReporter[$user->userId]	= $user->username;
@@ -35,7 +35,7 @@ $optManager		= HtmlElements::Options( $optManager, $issue->managerId );
 $optWorker		= HtmlElements::Options( $optWorker, $issue->managerId );
 
 /*
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 $buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
 	'type'	=> 'submit',
 	'name'	=> 'save',
@@ -137,7 +137,7 @@ $(document).ready(function(){
 			</div>
 			<div class="row-fluid">
 				<label for="content">'.$words['edit']['labelContent'].'</label>
-				'.HtmlTag::create( 'textarea', '', array( 'name' => 'note', 'class' => 'span12 -max CodeMirror-auto', 'rows' => 8 ) ).'
+				'.HtmlTag::create( 'textarea', '', ['name' => 'note', 'class' => 'span12 -max CodeMirror-auto', 'rows' => 8] ).'
 			</div>
 			<div class="buttonbar">
 				<button type="submit" name="save" class="btn btn-small btn-info"><i class="icon-ok icon-white"></i> aktualisieren</button>

@@ -33,7 +33,7 @@ class View_Helper_DevLayers
 		$layers		= [];
 		$buttons	= [];
 		foreach( self::$layers as $layer ){
-			$attributes	= array( 'class' => 'dev-layer', 'id' => 'dev-layer-'.$layer->id );
+			$attributes	= ['class' => 'dev-layer', 'id' => 'dev-layer-'.$layer->id];
 			$layers[]	= HtmlTag::create( 'div', $layer->content, $attributes );
 			$attributes	= array(
 				'type'		=> 'button',
@@ -43,8 +43,8 @@ class View_Helper_DevLayers
 			);
 			$buttons[]	= HtmlTag::create( 'button', $layer->label, $attributes );
 		}
-		$layers		= HtmlTag::create( 'div', $layers, array( 'id' => 'dev-layers' ) );
-		$buttons	= HtmlTag::create( 'div', $buttons, array( 'id' => 'dev-layer-buttons' ) );
+		$layers		= HtmlTag::create( 'div', $layers, ['id' => 'dev-layers'] );
+		$buttons	= HtmlTag::create( 'div', $buttons, ['id' => 'dev-layer-buttons'] );
 		return $layers.$buttons;
 	}
 }

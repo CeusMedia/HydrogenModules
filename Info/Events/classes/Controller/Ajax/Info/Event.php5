@@ -22,7 +22,7 @@ class Controller_Ajax_Info_Event extends Controller
 				$list[]	= $city->zip.' '.$city->city;
 			}
 		}
-		$this->respondData( array( 'options' => $list ) );
+		$this->respondData( ['options' => $list] );
 	}
 
 	public function modalView( $eventId )
@@ -32,7 +32,7 @@ class Controller_Ajax_Info_Event extends Controller
 			$this->respondError( 0, 'No event found.' );
 		$event->address	= $this->modelAddress->get( $event->addressId );
 		$view	= new View( $this->env );
-		$html	= $view->loadTemplateFile( 'info/event/view.modal.php', array( 'event' => $event ) );
+		$html	= $view->loadTemplateFile( 'info/event/view.modal.php', ['event' => $event] );
 		$this->respondData( $html );
 	}
 }

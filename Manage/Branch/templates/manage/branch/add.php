@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['add'];
 
-$optCompany	= HTML::Options( $companies, $request->get( 'companyId' ), array( 'companyId', 'title' ) ); 
+$optCompany	= HTML::Options( $companies, $request->get( 'companyId' ), ['companyId', 'title'] ); 
 
 return HTML::DivClass( 'column-left-50',
 #	HtmlTag::create( 'h2', $w->heading ).

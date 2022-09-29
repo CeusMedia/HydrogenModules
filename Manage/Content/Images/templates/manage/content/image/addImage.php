@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconUpload     = HtmlTag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
+$iconUpload     = HtmlTag::create( 'i', '', ['class' => 'icon-folder-open icon-white'] );
 
 $optFolder	= [];
 foreach( $folders as $folder )
@@ -12,7 +12,7 @@ $optFolder	= HtmlElements::Options( $optFolder, $path );
 $panelFolders   = $view->loadTemplateFile( 'manage/content/image/folders.php' );
 $w				= (object) $words['addImage'];
 
-extract( $view->populateTexts( array( 'top', 'bottom', 'add.image.right' ), 'html/manage/content/image/' ) );
+extract( $view->populateTexts( ['top', 'bottom', 'add.image.right'], 'html/manage/content/image/' ) );
 
 $helperUpload	= new View_Helper_Input_File( $env );
 $helperUpload->setName( 'file' );

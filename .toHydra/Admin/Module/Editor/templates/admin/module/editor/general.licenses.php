@@ -4,8 +4,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $wf		= (object) $words['tab-general-licenses'];
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconLicense	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-gavel' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconLicense	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-gavel'] );
 
 $list	= '<div class="alert alert-info former-hint">'.$wf->listNone.'</div>';
 if( $module->licenses ){
@@ -13,7 +13,7 @@ if( $module->licenses ){
 	foreach( $module->licenses as $license ){
 		$label	= $license->label;
 		if( $license->source )
-			$label	= HtmlTag::create( 'a', $label, array( 'href' => 'mailto:'.$license->source ) );
+			$label	= HtmlTag::create( 'a', $label, ['href' => 'mailto:'.$license->source] );
 		$url	= './admin/module/editor/removeLicense/'.$moduleId.'/'.base64_encode( $license->label );
 		$button	= HtmlElements::LinkButton( $url, '', 'button icon tiny remove', $wf->buttonRemoveConfirm );
 		$list[]	= '<li class="author">'.$label.'<div style="float: right">'.$button.'</div></li>';

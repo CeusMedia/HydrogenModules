@@ -8,12 +8,12 @@ $w			= (object) $words['add'];
 
 $optType	= HtmlElements::Options( $words['types'], $group->type );
 
-extract( $view->populateTexts( array( 'above', 'bottom', 'info', 'top' ), 'html/work/newsletter/group/add/', array( 'words' => $words ) ) );
+extract( $view->populateTexts( ['above', 'bottom', 'info', 'top'], 'html/work/newsletter/group/add/', ['words' => $words] ) );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 
-$optGroup	= array( '' => 'keine' );
+$optGroup	= ['' => 'keine'];
 foreach( $groups as $item )
 	$optGroup[$item->newsletterGroupId]	= $item->title.' ('.$item->count.')';
 $optGroup	= HtmlElements::Options( $optGroup );

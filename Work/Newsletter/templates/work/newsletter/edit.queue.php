@@ -2,10 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconRun		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) );
-$iconStop		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) );
-$iconRefresh	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconRun		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] );
+$iconStop		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] );
+$iconRefresh	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
 
 $list	= [];
 
@@ -51,12 +51,12 @@ foreach( $queues as $queue ){
 		'class'	=> 'btn btn-mini btn-danger',
 	) );
 
-	$buttons	= array( $buttonRunDisabled, $buttonStopDisabled, $buttonCancelDisabled );
+	$buttons	= [$buttonRunDisabled, $buttonStopDisabled, $buttonCancelDisabled];
 	if( $queue->status == 0 )
-		$buttons	= array( $buttonRun, $buttonStopDisabled, $buttonCancel );
+		$buttons	= [$buttonRun, $buttonStopDisabled, $buttonCancel];
 	if( $queue->status == 1 )
-		$buttons	= array( $buttonRunDisabled, $buttonStop, $buttonCancel );
-	$buttons	= HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
+		$buttons	= [$buttonRunDisabled, $buttonStop, $buttonCancel];
+	$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group'] );
 
 	$creator	= '-';
 	if( $queue->creatorId && $queue->creator ){
@@ -68,17 +68,17 @@ foreach( $queues as $queue ){
 	$percent	= round( ( $queue->countLettersByStatus[1] + $queue->countLettersByStatus[2] ) / $queue->countLetters * 100, 1 ).'%';
 
 	$list[]	= HtmlTag::create( 'tr', array(
-		HtmlTag::create( 'td', $queue->newsletterQueueId, array() ),
-		HtmlTag::create( 'td', $queue->countLetters, array() ),
-		HtmlTag::create( 'td', $words->queueStates[$queue->status], array() ),
-		HtmlTag::create( 'td', $percent, array() ),
-		HtmlTag::create( 'td', $bar->render(), array() ),
+		HtmlTag::create( 'td', $queue->newsletterQueueId, [] ),
+		HtmlTag::create( 'td', $queue->countLetters, [] ),
+		HtmlTag::create( 'td', $words->queueStates[$queue->status], [] ),
+		HtmlTag::create( 'td', $percent, [] ),
+		HtmlTag::create( 'td', $bar->render(), [] ),
 		HtmlTag::create( 'td', $creator ),
 		HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $queue->createdAt, TRUE ) ),
-//		HtmlTag::create( 'td', $buttons, array() ),
+//		HtmlTag::create( 'td', $buttons, [] ),
 	) );
 }
-$columnGroup	= HtmlElements::columnGroup( array( '100px', '100px', '120px', '120px', '', '140px', '140px'/*, '260px'*/ ) );
+$columnGroup	= HtmlElements::columnGroup( ['100px', '100px', '120px', '120px', '', '140px', '140px'/*, '260px'*/] );
 $thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 	'Queue',
 	'Empfänger',
@@ -90,7 +90,7 @@ $thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 //	'Fortschritt',
 ) ) );
 $tbody	= HtmlTag::create( 'tbody', $list );
-$list	= HtmlTag::create( 'table', $columnGroup.$thead.$tbody, array( 'class' => 'table table-striped tabled-fixed' ) );
+$list	= HtmlTag::create( 'table', $columnGroup.$thead.$tbody, ['class' => 'table table-striped tabled-fixed'] );
 
 $panelList	= '
 <div class="content-panel">

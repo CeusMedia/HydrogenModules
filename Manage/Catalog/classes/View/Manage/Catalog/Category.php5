@@ -25,17 +25,17 @@ class View_Manage_Catalog_Category extends View_Manage_Catalog{
 					continue;
 				$rank		= '<small class="muted">'.$entry->rank.'.</small> ';
 				$link		= './manage/catalog/category/edit/'.$entry->categoryId;
-				$attributes	= array( 'href' => $link, 'class' => 'title' );
+				$attributes	= ['href' => $link, 'class' => 'title'];
 				$number		= $logic->countArticlesInCategory( $entry->categoryId, TRUE );
 				$number		= ' <small class="muted">('.$number.')</small> ';
 				$label		= $rank.$entry->label_de.$number;
 				$link		= HtmlTag::create( 'a', $label, $attributes );
 				$class		= $categoryId == $entry->categoryId ? "active" : NULL;
-				$listSub[$entry->rank]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+				$listSub[$entry->rank]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 			}
 			ksort( $listSub );
 			if( $listSub )
-				$listSub	= HtmlTag::create( 'ul', $listSub, array( 'class' => 'nav nav-pills nav-stacked' ) );
+				$listSub	= HtmlTag::create( 'ul', $listSub, ['class' => 'nav nav-pills nav-stacked'] );
 			else
 				$listSub	= "";
 			$rank		= '<small class="muted">'.$category->rank.'.</small> ';
@@ -43,14 +43,14 @@ class View_Manage_Catalog_Category extends View_Manage_Catalog{
 			$number		= $logic->countArticlesInCategory( $category->categoryId, TRUE );
 			$number		= ' <small class="muted">('.$number.')</small> ';
 			$label		= $rank.$category->label_de.$number;
-			$attributes	= array( 'href' => $link, 'class' => 'title' );
+			$attributes	= ['href' => $link, 'class' => 'title'];
 			$link		= HtmlTag::create( 'a', $label, $attributes );
 			$class		= $categoryId == $category->categoryId ? "active" : NULL;
-			$listMain[$category->rank]	= HtmlTag::create( 'li', $link.$listSub, array( 'class' => $class ) );
+			$listMain[$category->rank]	= HtmlTag::create( 'li', $link.$listSub, ['class' => $class] );
 //			$this->env->getRuntime()->reach( 'View_Catalog_Category::renderTree run '.$nr );
 		}
 		ksort( $listMain );
-		$listMain	= HtmlTag::create( 'ul', $listMain, array( 'class' => 'nav nav-pills nav-stacked main boxed', 'style' => 'display: none' ) );
+		$listMain	= HtmlTag::create( 'ul', $listMain, ['class' => 'nav nav-pills nav-stacked main boxed', 'style' => 'display: none'] );
 		$this->env->getRuntime()->reach( 'View_Catalog_Category::renderTree done' );
 		return $listMain;
 	}

@@ -1,7 +1,7 @@
 <?php
 extract( $fromSession );
 
-extract( $this->populateTexts( array( 'login.top', 'login.bottom', 'login.info' ), 'html/work/ftp/' ) );
+extract( $this->populateTexts( ['login.top', 'login.bottom', 'login.info'], 'html/work/ftp/' ) );
 $port	= strlen( trim( $port ) ) ? $port : 21;
 
 return $textLoginTop.'

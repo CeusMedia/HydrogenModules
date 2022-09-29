@@ -31,12 +31,12 @@ class View_Manage_Shop_Order extends View_Manage_Shop
 		foreach( $articles as $article ){
 			$url	= './manage/catalog/article/edit/'.$article->article_id;
 			$label	= $article->title;
-			$link	= HtmlTag::create( 'a', $label, array( 'href' => $url ) );
+			$link	= HtmlTag::create( 'a', $label, ['href' => $url] );
 			$class	= $articleId == $article->article_id ? "active" : "";
-			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
 //		ksort( $list );
-		$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked boxed' ) );
+		$list	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked boxed'] );
 		return $list;
 	}
 }

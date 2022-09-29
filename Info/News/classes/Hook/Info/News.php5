@@ -37,8 +37,8 @@ class Hook_Info_News extends Hook
 								);
 							$replacement	= HtmlTag::create( 'div', array(
 								$heading,
-								HtmlTag::create( 'div', $replacement, array( 'class' => 'content-panel-inner' ) ),
-							), array( 'class' => 'content-panel' ) );
+								HtmlTag::create( 'div', $replacement, ['class' => 'content-panel-inner'] ),
+							), ['class' => 'content-panel'] );
 						}
 					}
 					$processor->replaceNext(

@@ -39,7 +39,7 @@ class Resource_Acl_Authentication extends Abstraction
 	{
 		if( $roleId === NULL ){
 			if( !$this->env->has( 'session' ) )
-				return array();
+				return [];
 			$roleId	= $this->env->getSession()->get( 'auth_role_id' );
 		}
 		if( $this->hasFullAccess( $roleId ) ){
@@ -50,7 +50,7 @@ class Resource_Acl_Authentication extends Abstraction
 			$controller	= strtolower( str_replace( '/', '_', $controller ) );
 			if( isset( $this->controllerActions[$controller] ) )
 				return $this->controllerActions[$controller];
-			return array();
+			return [];
 		}
 		else{
 			$rights	= $this->getRights( $roleId );
@@ -59,7 +59,7 @@ class Resource_Acl_Authentication extends Abstraction
 			$controller	= strtolower( str_replace( '/', '_', $controller ) );
 			if( isset( $rights[$controller] ) )
 				return $rights[$controller];
-			return array();
+			return [];
 		}
 	}
 
@@ -99,9 +99,9 @@ class Resource_Acl_Authentication extends Abstraction
 	protected function getRights( $roleId ): array
 	{
 		if( $this->hasFullAccess( $roleId ) )
-			return array();
+			return [];
 		if( $this->hasNoAccess( $roleId ) )
-			return array();
+			return [];
 		if( !isset( $this->rights[$roleId] ) ){
 			$model	= new Model_Role_Right( $this->env );
 			$this->rights[$roleId]	= [];
@@ -124,7 +124,7 @@ class Resource_Acl_Authentication extends Abstraction
 	protected function getRole( $roleId )
 	{
 		if( !$roleId )
-			return array();
+			return [];
 		if( !$this->roles ){
 			$model	= new Model_Role( $this->env );
 			foreach( $model->getAll() as $role )
@@ -148,7 +148,7 @@ class Resource_Acl_Authentication extends Abstraction
 	{
 		$model	= new Model_Role_Right( $this->env );
 		$list	= [];
-		foreach( $model->getAll( array(), array( 'controller' => 'ASC' ) ) as $controller )
+		foreach( $model->getAll( [], ['controller' => 'ASC'] ) as $controller )
 			if( !in_array( $controller, $list ) )
 				$list[]	= $controller;
 		return $list;

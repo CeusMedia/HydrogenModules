@@ -2,19 +2,19 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$optStatus		= array( '' => '- alle -' );
+$optStatus		= ['' => '- alle -'];
 foreach( $words->states as $key => $value )
 	$optStatus[$key]	= $value;
 $optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
 
-$optGroup		= array( '' => '- alle -' );
+$optGroup		= ['' => '- alle -'];
 foreach( $groups as $group )
 	$optGroup[$group->newsletterGroupId]	= $group->title;
 $optGroup		= HtmlElements::Options( $optGroup, $filterGroupId );
 
 
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) ).'&nbsp;';
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) ).'&nbsp;';
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] ).'&nbsp;';
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] ).'&nbsp;';
 
 return '
 <div class="content-panel">

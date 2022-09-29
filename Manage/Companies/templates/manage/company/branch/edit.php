@@ -6,18 +6,18 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['edit'];
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconCompany	= HtmlTag::create( 'i', '', array( 'class' => 'icon-home' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconCompany	= HtmlTag::create( 'i', '', ['class' => 'icon-home'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
 
-$iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
-$iconReject		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconDeactivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconActivate	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
+$iconReject		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
+$iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
 
 
 $optStatus	= HTML::Options( $words['states'], $branch->status );
-$optCompany	= HTML::Options( $companies, $branch->companyId, array( 'companyId', 'title' ) );
+$optCompany	= HTML::Options( $companies, $branch->companyId, ['companyId', 'title'] );
 
 $panelMap	= '';
 if( $branch->longitude ){
@@ -54,21 +54,21 @@ if( $branch->longitude ){
 }
 
 $buttonActivate	= '';
-if( in_array( $branch->status, array( 0, 1 ) ) ){
+if( in_array( $branch->status, [0, 1] ) ){
 	$buttonActivate		= HtmlTag::create( 'a', $iconActivate.'&nbsp;'.$w->buttonActivate, array(
 		'href'	=> './manage/company/branch/activate/'.$branch->branchId,
 		'class'	=> 'btn btn-small btn-success',
 	) );
 }
 $buttonReject	= '';
-if( in_array( $branch->status, array( 0, 1 ) ) ){
+if( in_array( $branch->status, [0, 1] ) ){
 	$buttonReject	= HtmlTag::create( 'a', $iconReject.'&nbsp;'.$w->buttonReject, array(
 		'href'	=> './manage/company/branch/reject/'.$branch->branchId,
 		'class'	=> 'btn btn-small btn-inverse',
 	) );
 }
 $buttonDeactivate	= '';
-/*if( in_array( $branch->status, array( 0, 1 ) ) ){
+/*if( in_array( $branch->status, [0, 1] ) ){
 	$buttonDeactivate	= HtmlTag::create( 'a', $iconDeactivate.'&nbsp;'.$w->buttonDeactivate, array(
 		'href'	=> './manage/company/branch/deactivate/'.$branch->branchId,
 		'class'	=> 'btn btn-small btn-inverse',

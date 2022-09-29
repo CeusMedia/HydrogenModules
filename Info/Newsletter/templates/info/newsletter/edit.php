@@ -34,10 +34,10 @@ foreach( $groups as $group ){
 		'value'		=> $group->newsletterGroupId,
 		'checked'	=> in_array( $group->newsletterGroupId, $readerGroups ) ? 'checked' : NULL
 	) );
-	$label	= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$group->title, array( 'class' => 'checkbox' ) );
+	$label	= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$group->title, ['class' => 'checkbox'] );
 	$list[]	= HtmlTag::create( 'li', $label );
 }
-$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+$list	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 
 $panelGroups	= '<h4>Ihre Themen</h4>
 '.$list;

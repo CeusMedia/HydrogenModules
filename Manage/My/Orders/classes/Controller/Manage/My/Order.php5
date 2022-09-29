@@ -13,7 +13,7 @@ class Controller_Manage_My_Order extends Controller{
 		$this->logicAuth	= $this->env->getLogic()->authentication;
 
 		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
 		$backends	= [];
 		foreach( $this->backends as $backend )
 			$backends[$backend->key]	= $backend;
@@ -23,8 +23,8 @@ class Controller_Manage_My_Order extends Controller{
 	public function index( $page = 0 ){
 		$limit		= 10;
 		$conditions	= array( 'userId' => $this->logicAuth->getCurrentUserId() );
-		$orders		= array( 'orderId' => 'DESC' );
-		$limits		= array( $page * $limit, $limit );
+		$orders		= ['orderId' => 'DESC'];
+		$limits		= [$page * $limit, $limit];
 		$total		= count( $this->logicShop->getOrders( $conditions ) );
 		$orders		= $this->logicShop->getOrders( $conditions, $orders, $limits );
 		$this->addData( 'page', $page );

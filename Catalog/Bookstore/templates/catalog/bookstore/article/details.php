@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var object $article */
+
 $a			= clone( $article );
 $w			= (object) $words['article'];
 $w->isn		= $a->series ? $w->issn : $w->isbn;
@@ -21,7 +23,7 @@ $a->subtitle		= View_Helper_Text::applyFormat( $a->subtitle );
 $a->description		= View_Helper_Text::applyExpandable( $a->description, 200, '...<br/><span class="btn btn-mini">mehr</span>', '<br/><span class="btn btn-mini">weniger</span>' );
 $a->recension		= View_Helper_Text::applyExpandable( $a->recension, 200, '<span class="btn btn-mini">mehr</span>', '<span class="btn btn-mini">weniger</span>' );
 $a->volume			= $category->volume ? $w->volume."&nbsp;".$category->volume : "";
-$a->status			= HtmlTag::create( 'span', $words['status'][$article->status], array( 'class' => 'status_'.$article->status ) );
+$a->status			= HtmlTag::create( 'span', $words['status'][$article->status], ['class' => 'status_'.$article->status] );
 
 $list		= [];
 foreach( $authors as $author )
@@ -45,7 +47,7 @@ if( $documents ){
 		$link	= $helper->renderDocumentLink( $document );
 		$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'document') );
 	}
-	$a->documents	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled documents documentList' ) );
+	$a->documents	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled documents documentList'] );
 }
 
 //  --  LIST: FACTS (next to image)  --  //
@@ -54,10 +56,10 @@ if( $tags ){
 	$list	= [];
 	foreach( $tags as $tag ){
 		$label	= $tag->tag;
-		$link	= HtmlTag::create( 'a', $label, array( 'href' => $helper->getTagUri( $tag ), 'class' => 'link-article-tag' ) );
-		$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'article-tag-list-item' ) );
+		$link	= HtmlTag::create( 'a', $label, ['href' => $helper->getTagUri( $tag ), 'class' => 'link-article-tag'] );
+		$list[]	= HtmlTag::create( 'li', $link, ['class' => 'article-tag-list-item'] );
 	}
-	$a->tags	= HtmlTag::create( 'ul', $list, array( 'class' => 'article-tag-list' ) );
+	$a->tags	= HtmlTag::create( 'ul', $list, ['class' => 'article-tag-list'] );
 }
 
 

@@ -63,9 +63,9 @@ class Controller_Manage_My_User_Setting extends Controller
 				else{
 					if( substr_count( $value, "\n" ) )												//  multiple lines from textarea
 						$value	= str_replace( "\n", ",", $value );									//  combine to comma separated
-					if( in_array( $config->type, array( 'bool', 'boolean' ) ) )						//  type of config value is boolean
+					if( in_array( $config->type, ['bool', 'boolean'] ) )						//  type of config value is boolean
 						$value	= (int) $value;														//  convert to integer for database
-					if( in_array( $config->type, array( 'integer', 'float' ) ) && $config->values ){	//  type of  config value is a number
+					if( in_array( $config->type, ['integer', 'float'] ) && $config->values ){	//  type of  config value is a number
 						if( preg_match( "/^([0-9]+)-([0-9]+)$/", trim( $config->values[0] ) ) ){	//  first (and hopefully only) value is a range (min-max)
 							$min	= (float) array_shift( explode( "-", $config->values[0] ) );
 							$max	= (float) array_pop( explode( "-", $config->values[0] ) );

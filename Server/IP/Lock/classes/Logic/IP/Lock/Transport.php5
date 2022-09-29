@@ -24,7 +24,7 @@ class Logic_IP_Lock_Transport extends Logic
 			$filters	= $this->modelFilter->getAll();
 		}
 		else{
-			$reasons	= $this->modelReason->getAll( array( 'ipLockReasonId' => $reasonIds ) );
+			$reasons	= $this->modelReason->getAll( ['ipLockReasonId' => $reasonIds] );
 			if( !$filterIds ){
 				$filters	= $this->modelFilter->getAllByIndex( 'reasonId', $reasonIds );
 			}
@@ -166,7 +166,7 @@ class Logic_IP_Lock_Transport extends Logic
 			$filterIdMap[$importId]	= $filter;
 		}
 		foreach( $reasonIdMap as $reasonImportId => $reason ){
-			$existingReason	= $this->modelReason->getByIndices( array( 'title' => $reason->title ) );
+			$existingReason	= $this->modelReason->getByIndices( ['title' => $reason->title] );
 			if( $existingReason )
 				$reasonIdMap[$reasonImportId]	= $existingReason;
 			else{

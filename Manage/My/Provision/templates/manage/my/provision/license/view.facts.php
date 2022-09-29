@@ -1,21 +1,21 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 
 $duration		= '<em>noch nicht aktiviert</em>';
-if( in_array( $userLicense->status, array( Model_Provision_User_License::STATUS_ACTIVE, Model_Provision_User_License::STATUS_EXPIRED ) ) ){
+if( in_array( $userLicense->status, [Model_Provision_User_License::STATUS_ACTIVE, Model_Provision_User_License::STATUS_EXPIRED] ) ){
 	$dateStart	= date( 'd.m.Y', $userLicense->startsAt );
 	$dateEnd 	= date( 'd.m.Y', $userLicense->endsAt );
 	$duration	= $dateStart.' - '.$dateEnd;
 }
 
 $iconsStatus	= array(
-	Model_Provision_User_License::STATUS_DEACTIVATED	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
-	Model_Provision_User_License::STATUS_REVOKED		=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
-	Model_Provision_User_License::STATUS_NEW			=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) ),
-	Model_Provision_User_License::STATUS_ACTIVE			=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
- 	Model_Provision_User_License::STATUS_EXPIRED		=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
+	Model_Provision_User_License::STATUS_DEACTIVATED	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ),
+	Model_Provision_User_License::STATUS_REVOKED		=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ),
+	Model_Provision_User_License::STATUS_NEW			=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pause'] ),
+	Model_Provision_User_License::STATUS_ACTIVE			=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] ),
+ 	Model_Provision_User_License::STATUS_EXPIRED		=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] ),
 );
 
 $avatar	= View_Helper_Member::renderStatic( $env, $userLicense->userId );

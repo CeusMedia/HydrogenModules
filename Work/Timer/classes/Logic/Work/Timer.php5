@@ -68,10 +68,10 @@ class Logic_Work_Timer
 		) );
 	}
 
-	public function sumTimersOfModuleId( string $moduleKey, $moduleId, array $statuses = array( 2, 3 ) ): int
+	public function sumTimersOfModuleId( string $moduleKey, $moduleId, array $statuses = [2, 3] ): int
 	{
 		$modelTimer	= new Model_Work_Timer( $this->env );
-		$indices	= array( 'module' => $moduleKey, 'moduleId' => $moduleId, 'status' => $statuses );
+		$indices	= ['module' => $moduleKey, 'moduleId' => $moduleId, 'status' => $statuses];
 		$timers		= $this->modelTimer->getAllByIndices( $indices );
 		$seconds	= 0;
 		foreach( $timers as $timer )

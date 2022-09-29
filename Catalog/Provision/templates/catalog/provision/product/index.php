@@ -2,13 +2,13 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconProducts	= '';
-$iconLicense	= HtmlTag::create( 'i', '', array( 'class' => 'arrow-right' ) );
+$iconLicense	= HtmlTag::create( 'i', '', ['class' => 'arrow-right'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconProducts	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cubes' ) );
-	$iconLicense	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+	$iconProducts	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cubes'] );
+	$iconLicense	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
 }
 
-$list	= HtmlTag::create( 'div', 'Keine Produkte vorhanden.', array( 'class' => 'alert alert-notice' ) );
+$list	= HtmlTag::create( 'div', 'Keine Produkte vorhanden.', ['class' => 'alert alert-notice'] );
 if( $products ){
 	$list	= [];
 	foreach( $products as $product ){
@@ -23,13 +23,13 @@ if( $products ){
 					 	'class'		=> 'btn btn-large',
 					) ),
 				) ),
-			), array( 'class' => 'catalog-provision-product-list-container' ) ),
-		), array( 'class' => 'catalog-provision-product-list-item' ) );
+			), ['class' => 'catalog-provision-product-list-container'] ),
+		), ['class' => 'catalog-provision-product-list-item'] );
 	}
-	$list	= HtmlTag::create( 'div', $list, array( 'class' => 'catalog-provision-product-list' ) );
+	$list	= HtmlTag::create( 'div', $list, ['class' => 'catalog-provision-product-list'] );
 }
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'catalog/provision/product/index' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'catalog/provision/product/index' ) );
 $textTop	= $textTop ? $textTop : '<h2>'.$iconProducts.'&nbsp;Produkte</h2>';
 
 return $textTop.$list.$textBottom;

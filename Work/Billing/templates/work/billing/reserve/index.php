@@ -2,15 +2,15 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconCompany	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building-o' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconCompany	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-building-o'] );
 
-$list	= HtmlTag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) );
+$list	= HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] );
 
 if( $reserves ){
 	$list	= [];
 	foreach( $reserves as $reserve ){
-		$link	= HtmlTag::create( 'a', $reserve->title, array( 'href' => './work/billing/reserve/edit/'.$reserve->reserveId ) );
+		$link	= HtmlTag::create( 'a', $reserve->title, ['href' => './work/billing/reserve/edit/'.$reserve->reserveId] );
 		$corporation	= '<em class="muted">Person per Anteil</em>';
 		if( $reserve->corporationId ){
 			$corporation	= $corporations[$reserve->corporationId];
@@ -22,10 +22,10 @@ if( $reserves ){
 		$amount		= (float) $reserve->amount ? number_format( $reserve->amount, 2, ',', '.' ).'&nbsp;&euro;' : '-';
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link ),
-			HtmlTag::create( 'td', $corporation, array( 'class' => 'autocut' ) ),
-			HtmlTag::create( 'td', $reserve->personalize ? 'ja' : 'nein', array( 'class' => 'cell-feature' ) ),
-			HtmlTag::create( 'td', $percent, array( 'class' => 'cell-number' ) ),
-			HtmlTag::create( 'td', $amount, array( 'class' => 'cell-number' ) ),
+			HtmlTag::create( 'td', $corporation, ['class' => 'autocut'] ),
+			HtmlTag::create( 'td', $reserve->personalize ? 'ja' : 'nein', ['class' => 'cell-feature'] ),
+			HtmlTag::create( 'td', $percent, ['class' => 'cell-number'] ),
+			HtmlTag::create( 'td', $amount, ['class' => 'cell-number'] ),
 		) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( array(
@@ -38,12 +38,12 @@ if( $reserves ){
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'th', 'Bezeichnung' ),
 		HtmlTag::create( 'th', 'Zielkonto' ),
-		HtmlTag::create( 'th', '<small>personalisiert</small>', array( 'class' => 'cell-feature' ) ),
-		HtmlTag::create( 'th', 'Prozent', array( 'class' => 'cell-number' ) ),
-		HtmlTag::create( 'th', 'Betrag', array( 'class' => 'cell-number' ) ),
+		HtmlTag::create( 'th', '<small>personalisiert</small>', ['class' => 'cell-feature'] ),
+		HtmlTag::create( 'th', 'Prozent', ['class' => 'cell-number'] ),
+		HtmlTag::create( 'th', 'Betrag', ['class' => 'cell-number'] ),
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Rücklage', array(

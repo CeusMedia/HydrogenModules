@@ -5,8 +5,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $w		= (object) $words['index'];
 
 //$table		= '<div class="info empty"><em><small>'.$w->noEntries.'</small></em></div>';
-$table		= HtmlTag::create( 'div', $w->noEntries, array( 'class' => 'alert alert-info' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$table		= HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-info'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
 
 if( count( $locks ) > 0 ){
 	$list	= [];
@@ -17,11 +17,11 @@ if( count( $locks ) > 0 ){
 		) );
 		$moduleTitle	= $lock->module ? $lock->module : '<em><small class="muted">'.$w->moduleUnknown.'</small></em>';
 		$list[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $lock->user->username, array( 'class' => 'lock-user' ) ),
-			HtmlTag::create( 'td', $moduleTitle, array( 'class' => 'lock-module' ) ),
-			HtmlTag::create( 'td', $lock->title, array( 'class' => 'lock-title' ) ),
-			HtmlTag::create( 'td', date( 'Y-m-d H:i:s', $lock->timestamp ), array( 'class' => 'lock-date' ) ),
-			HtmlTag::create( 'td', $buttonRemove, array( 'class' => 'lock-actions' ) ),
+			HtmlTag::create( 'td', $lock->user->username, ['class' => 'lock-user'] ),
+			HtmlTag::create( 'td', $moduleTitle, ['class' => 'lock-module'] ),
+			HtmlTag::create( 'td', $lock->title, ['class' => 'lock-title'] ),
+			HtmlTag::create( 'td', date( 'Y-m-d H:i:s', $lock->timestamp ), ['class' => 'lock-date'] ),
+			HtmlTag::create( 'td', $buttonRemove, ['class' => 'lock-actions'] ),
 		) );
 	}
 	$tbody		= HtmlTag::create( 'tbody', $list );
@@ -33,7 +33,7 @@ if( count( $locks ) > 0 ){
 		$w->headActions
 	) ) );
 	$colgroup	= HtmlElements::ColumnGroup( '150px', '180px', '', '160px', '120px' );
-	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-not-condensed' ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-not-condensed'] );
 }
 
 return '

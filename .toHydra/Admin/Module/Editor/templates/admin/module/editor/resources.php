@@ -73,11 +73,11 @@ if( $module->files->classes ){
 			$class	= 'missing';
 			$buttonView	= HtmlElements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
 		}
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon class' ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon class'] );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
-	$heads		= HtmlElements::TableHeads( array( "Datei", "Aktion" ) );
-	$colgroup	= HtmlElements::ColumnGroup( array( "85%", "15%" ) );
+	$heads		= HtmlElements::TableHeads( ["Datei", "Aktion"] );
+	$colgroup	= HtmlElements::ColumnGroup( ["85%", "15%"] );
 	$table		= '<table>'.$colgroup.$heads.'</tr>'.join( $rows ).'</table>';
 	$classes	= '<h4>'.$w->resourceClasses.'</h4>'.$table.'<br/>';
 }
@@ -101,11 +101,11 @@ if( $module->files->templates ){
 			$class	= 'missing';
 			$buttonView	= HtmlElements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
 		}
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon template' ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon template'] );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
-	$heads		= HtmlElements::TableHeads( array( "Datei", "Aktion" ) );
-	$colgroup	= HtmlElements::ColumnGroup( array( "85%", "15%" ) );
+	$heads		= HtmlElements::TableHeads( ["Datei", "Aktion"] );
+	$colgroup	= HtmlElements::ColumnGroup( ["85%", "15%"] );
 	$table		= '<table>'.$colgroup.$heads.'</tr>'.join( $rows ).'</table>';
 	$templates	= '<h4>'.$w->resourceTemplates.'</h4>'.$table.'<br/>';
 }
@@ -134,11 +134,11 @@ if( $module->files->locales ){
 			$class	= 'missing';
 			$buttonView	= HtmlElements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
 		}
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon locale' ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon locale'] );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
-	$heads		= HtmlElements::TableHeads( array( "Datei", "Aktion" ) );
-	$colgroup	= HtmlElements::ColumnGroup( array( "85%", "15%" ) );
+	$heads		= HtmlElements::TableHeads( ["Datei", "Aktion"] );
+	$colgroup	= HtmlElements::ColumnGroup( ["85%", "15%"] );
 	$table		= '<table>'.$colgroup.$heads.'</tr>'.join( $rows ).'</table>';
 	$locales	= '<h4>'.$w->resourceLocales.'</h4>'.$table.'<br/>';
 }
@@ -174,11 +174,11 @@ if( $module->files->styles ){
 			$class	= 'missing';
 			$buttonView	= HtmlElements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
 		}
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon style' ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon style'] );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$source.'</td><td>'.$load.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
-	$heads		= HtmlElements::TableHeads( array( "Datei", "Quelle", "Laden", "Aktion" ) );
-	$colgroup	= HtmlElements::ColumnGroup( array( "60%", "15%", "10%", "15%" ) );
+	$heads		= HtmlElements::TableHeads( ["Datei", "Quelle", "Laden", "Aktion"] );
+	$colgroup	= HtmlElements::ColumnGroup( ["60%", "15%", "10%", "15%"] );
 	$table		= '<table>'.$colgroup.$heads.'</tr>'.join( $rows ).'</table>';
 	$styles		= '<h4>'.$w->resourceStyles.'</h4>'.$table.'<br/>';
 }
@@ -218,11 +218,11 @@ if( $module->files->scripts ){
 			$class	= 'missing';
 			$buttonView	= HtmlElements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
 		}
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon script' ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon script'] );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$source.'</td><td>'.$load.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
-	$heads		= HtmlElements::TableHeads( array( "Datei", "Quelle", "Laden", "Aktion" ) );
-	$colgroup	= HtmlElements::ColumnGroup( array( "60%", "15%", "10%", "15%" ) );
+	$heads		= HtmlElements::TableHeads( ["Datei", "Quelle", "Laden", "Aktion"] );
+	$colgroup	= HtmlElements::ColumnGroup( ["60%", "15%", "10%", "15%"] );
 	$table		= '<table>'.$colgroup.$heads.'</tr>'.join( $rows ).'</table>';
 	$scripts	= '<h4>'.$w->resourceScripts.'</h4>'.$table.'<br/>';
 }
@@ -256,11 +256,11 @@ if( $module->files->images ){
 			$class	= 'missing';
 			$buttonView	= HtmlElements::Link( $urlView, $iconView, 'button tiny layer-image disabled' );
 		}
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon image' ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon image'] );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$source.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
-	$heads		= HtmlElements::TableHeads( array( "Datei", "Quelle", "Aktion" ) );
-	$colgroup	= HtmlElements::ColumnGroup( array( "75%", "10%", "15%" ) );
+	$heads		= HtmlElements::TableHeads( ["Datei", "Quelle", "Aktion"] );
+	$colgroup	= HtmlElements::ColumnGroup( ["75%", "10%", "15%"] );
 	$table		= '<table>'.$colgroup.$heads.'</tr>'.join( $rows ).'</table>';
 	$images	= '<h4>'.$w->resourceImages.'</h4>'.$table.'<br/>';
 }
@@ -292,25 +292,25 @@ if( $module->files->files ){
 			$class	= 'missing';
 			$buttonView	= HtmlElements::Link( $urlView, $iconView, 'button tiny layer-html disabled' );
 		}
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon file' ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon file'] );
 		$rows[]		= '<tr class="'.$class.'"><td>'.$label.'</td><td>'.$source.'</td><td>'.$buttonView.$buttonUnlink.'</td></tr>';
 	}
-	$heads		= HtmlElements::TableHeads( array( "Datei", "Quelle", "Aktion" ) );
-	$colgroup	= HtmlElements::ColumnGroup( array( "75%", "10%", "15%" ) );
+	$heads		= HtmlElements::TableHeads( ["Datei", "Quelle", "Aktion"] );
+	$colgroup	= HtmlElements::ColumnGroup( ["75%", "10%", "15%"] );
 	$table		= '<table>'.$colgroup.$heads.'</tr>'.join( $rows ).'</table>';
 	$files		= '<h4>'.$w->resourceFiles.'</h4>'.$table.'<br/>';
 }
 
 
 
-$iconAdd	= HtmlTag::create( 'img', NULL, array( 'href' => $pathIcons.'add.png' ) );
+$iconAdd	= HtmlTag::create( 'img', NULL, ['href' => $pathIcons.'add.png'] );
 $optType	= HtmlElements::Options( $words['resource-types'] );
 
 $optSourceScript	= HtmlElements::Options( $words['sources-script'] );
 $optSourceStyle		= HtmlElements::Options( $words['sources-style'] );
 $optSourceImage		= HtmlElements::Options( $words['sources-image'] );
 $optSourceFile		= HtmlElements::Options( $words['sources-file'] );
-$optLoad			= HtmlElements::Options( array( '' => 'durch Modul', 'auto' => 'automatisch' ) );
+$optLoad			= HtmlElements::Options( ['' => 'durch Modul', 'auto' => 'automatisch'] );
 
 $panelAdd	= '
 	<form id="form_admin_module_resource_add" action="./admin/module/editor/addFile/'.$moduleId.'?tab=resources" method="post">

@@ -76,7 +76,7 @@ class Controller_Manage_Company_Branch extends Controller
 			$data	= $this->request->getAllFromSource( 'POST' );
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->errorNoTitle );
-			else if( $this->modelBranch->getAll( array( 'title' => $data['title'] ) ) )
+			else if( $this->modelBranch->getAll( ['title' => $data['title']] ) )
 				$this->messenger->noteError( $words->errorTitleExisting, $data['title'] );
 			if( empty( $data['companyId'] ) )
 				$this->messenger->noteError( $words->errorNoCompany );
@@ -206,7 +206,7 @@ class Controller_Manage_Company_Branch extends Controller
 			$data	= $this->request->getAllFromSource( 'POST' );
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->errorNoTitle );
-			else if( $this->modelBranch->getAll( array( 'title' => $data['title'], 'branchId' => '!= '.$branchId ) ) )
+			else if( $this->modelBranch->getAll( ['title' => $data['title'], 'branchId' => '!= '.$branchId] ) )
 				$this->messenger->noteError( $words->errorTitleExisting, $data['title'] );
 			if( empty( $data['companyId'] ) )
 				$this->messenger->noteError( $words->errorNoCompany );
@@ -234,10 +234,10 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->view->setData(
 			array(
 				'branch'	=> $branch,
-				'companies' => $this->modelCompany->getAll( NULL, array( 'title' => 'ASC' ) )
+				'companies' => $this->modelCompany->getAll( NULL, ['title' => 'ASC'] )
 			)
 		);
-		$this->view->addData( 'images', array() );//$modelImage->getAllByIndex( 'branchId', $branchId ) );
+		$this->view->addData( 'images', [] );//$modelImage->getAllByIndex( 'branchId', $branchId ) );
 		$this->view->addData( 'companies', $this->modelCompany->getAll() );				//  @todo deliver only user related companies!!!
 		$this->addData( 'frontend', $this->frontend );
 	}

@@ -2,8 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
 
 $statuses	= array(
 	-1		=> 'deaktiviert',
@@ -30,12 +30,12 @@ $optStatus	= array(
 );
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
-$optCustomerMail	= array( '' => '- alle -', 0 => '- keine Zuweisung -' );
+$optCustomerMail	= ['' => '- alle -', 0 => '- keine Zuweisung -'];
 foreach( $mailsCustomer as $mail )
 	$optCustomerMail[$mail->mailId]	= $mail->title;
 $optCustomerMail	= HtmlElements::Options( $optCustomerMail, $filterCustomerMailId );
 
-$optManagerMail	= array( '' => '- alle -', 0 => '- keine Zuweisung -' );
+$optManagerMail	= ['' => '- alle -', 0 => '- keine Zuweisung -'];
 foreach( $mailsManager as $mail )
 	$optManagerMail[$mail->mailId] = $mail->title;
 $optManagerMail	= HtmlElements::Options( $optManagerMail, $filterManagerMailId );

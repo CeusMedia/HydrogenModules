@@ -15,13 +15,13 @@ class Hook_UI_Layout_Footer extends Hook
 				foreach( $scopes->footer as $pageId => $page )
 					$links[$page->path]	= $page->label;
 
-			$footer	= array( array( 'id' => 'timestamp', 'label' => 'Date & Time: <b>'.date( "d.m.Y H:i:s" ).'</b>' ) );
+			$footer	= [['id' => 'timestamp', 'label' => 'Date & Time: <b>'.date( "d.m.Y H:i:s" ).'</b>']];
 			if( $env->getDatabase() )
-				$footer[]	= array( 'id' => 'database', 'label' => 'Database Queries: <b>'.$env->getDatabase()->numberStatements.'</b>' );
+				$footer[]	= ['id' => 'database', 'label' => 'Database Queries: <b>'.$env->getDatabase()->numberStatements.'</b>'];
 			if( $env->getModules()->has( 'Server_System_Load' ) )
-				$footer[]	= array( 'id' => 'system-load', 'title' => 'System Load' );
+				$footer[]	= ['id' => 'system-load', 'title' => 'System Load'];
 			foreach( $links as $path => $label )
-				$footer[]	= array( 'label' => HtmlTag::create( 'a', $label, array( 'href' => $path ) ) );
+				$footer[]	= ['label' => HtmlTag::create( 'a', $label, ['href' => $path] )];
 
 			$list	= [];
 			foreach( $footer as $entry ){
@@ -32,9 +32,9 @@ class Hook_UI_Layout_Footer extends Hook
 				}
 				$list[]	= HtmlTag::create( 'li', $label, $entry );
 			}
-			$footer		= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
-			$footer		= HtmlTag::create( 'div', $footer, array( 'class' => 'container' ) );
-			$content	= HtmlTag::create( 'div', $footer, array( 'id' => 'layout-footer' ) );
+			$footer		= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
+			$footer		= HtmlTag::create( 'div', $footer, ['class' => 'container'] );
+			$content	= HtmlTag::create( 'div', $footer, ['id' => 'layout-footer'] );
 			$payload['content']  = preg_replace( $pattern, "\\1".$content."\\4", $payload['content'] );
 		}
 	}

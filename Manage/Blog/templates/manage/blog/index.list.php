@@ -4,9 +4,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['index'];
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
-	$iconAdd	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+	$iconAdd	= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $list	= '<div class=alert">'.$w->empty.'</div>';
 
@@ -15,7 +15,7 @@ $list	= '<div class=alert">'.$w->empty.'</div>';
 if( $posts ){
 	$list	= [];
 	foreach( $posts as $post ){
-		$link	= HtmlTag::create( 'a', $post->title, array( 'href' => './manage/blog/edit/'.$post->postId ) );
+		$link	= HtmlTag::create( 'a', $post->title, ['href' => './manage/blog/edit/'.$post->postId] );
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $words['states'][$post->status] ),
@@ -23,9 +23,9 @@ if( $posts ){
 		) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "", "15%", "20%" );
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( $w->headTitle, $w->headStatus, $w->headCategory ) ) );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headTitle, $w->headStatus, $w->headCategory] ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
-	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 
 \CeusMedia\Bootstrap\Icon::$defaultSet	= 'FontAwesome';

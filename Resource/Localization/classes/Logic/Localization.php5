@@ -27,13 +27,13 @@ class Logic_Localization extends Logic
 	public function translate( $id, $content, $translated = NULL )
 	{
 		$this->env->getLog()->log("debug", "trying to translate $id to $this->language", $this);
-		$indices		= array( 'language' => $this->language, 'id' => $id );
+		$indices		= ['language' => $this->language, 'id' => $id];
 		$translation	= $this->model->getByIndices( $indices );
 
 		if( $translated !== NULL && strlen( trim( $translated ) ) ){
 			if( $this->language === $this->default )
 				return 0;
-			$data	= array_merge( $indices, array( 'content' => $translated ) );
+			$data	= array_merge( $indices, ['content' => $translated] );
 			if( !$translation )
 				return $this->model->add( $data, FALSE );
 			return $this->model->edit( $translation->localizationId, $data, FALSE );

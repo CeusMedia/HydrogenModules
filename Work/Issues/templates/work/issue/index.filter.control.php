@@ -29,7 +29,7 @@ $order		= $session->get( 'filter-issue-order' );
 $direction	= 'DESC';#$session->get( 'filter-issue-direction' );
 
 
-$optOrder	= array( '' => '-' );
+$optOrder	= ['' => '-'];
 foreach( $words['indexFilterOrders'] as $column => $label )
 	$optOrder[$column]	= $label;
 $optOrder['_selected']	= $order;
@@ -42,17 +42,17 @@ foreach( $words['indexFilterDirections'] as $key => $label ){
 }
 $optDirection	= join( $optDirection );
 
-$words['types']			= numerizeWords( array( '' => '- alle -' ) + $words['types'], $numberTypes );
-$words['severities']	= numerizeWords( array( '' => '- alle -' ) + $words['severities'], array() );
-$words['priorities']	= numerizeWords( array( '' => '- alle -' ) + $words['priorities'], $numberPriorities );
-$words['states']		= numerizeWords( array( '' => '- alle -' ) + $words['states'], $numberStates );
+$words['types']			= numerizeWords( ['' => '- alle -'] + $words['types'], $numberTypes );
+$words['severities']	= numerizeWords( ['' => '- alle -'] + $words['severities'], [] );
+$words['priorities']	= numerizeWords( ['' => '- alle -'] + $words['priorities'], $numberPriorities );
+$words['states']		= numerizeWords( ['' => '- alle -'] + $words['states'], $numberStates );
 
 $optType		= $view->renderOptions( $words['types'], 'type', $session->get( 'filter-issue-type' ), 'issue-type type-%1$d');
 $optSeverity	= $view->renderOptions( $words['severities'], 'severity', $session->get( 'filter-issue-severity' ), 'issue-severity severity-%1$d');
 $optPriority	= $view->renderOptions( $words['priorities'], 'priority', $session->get( 'filter-issue-priority' ), 'issue-priority priority-%1$d');
 $optStatus		= $view->renderOptions( $words['states'], 'status', $session->get( 'filter-issue-status' ), 'issue-status status-%1$d');
 
-$optRelation	= array( '' => 'in einem meiner Projekte', '1' => 'von mir berichtet', '2' => 'mir zugewiesen' );
+$optRelation	= ['' => 'in einem meiner Projekte', '1' => 'von mir berichtet', '2' => 'mir zugewiesen'];
 $optRelation	= HtmlElements::Options( $optRelation, $session->get( 'filter-issue-relation' ) );
 
 $filters		= [];
@@ -85,7 +85,7 @@ if( !empty( $projects ) ){
 //		if( $numberProjects[$project->projectId] > 0 )
 			$optProject[$project->projectId]	= $project->title;
 
-	$optProject		= numerizeWords( array( '' => '- alle -' ) + $optProject, $numberProjects );
+	$optProject		= numerizeWords( ['' => '- alle -'] + $optProject, $numberProjects );
 	$optProject		= $view->renderOptions( $optProject, 'projectId', $session->get( 'filter-issue-projectId' ), 'issue-project');
 
 	$filters[]	= HTML::DivClass( 'row-fluid', array(

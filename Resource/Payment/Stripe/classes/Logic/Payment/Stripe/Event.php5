@@ -33,7 +33,7 @@ abstract class Logic_Payment_Stripe_Event extends Logic
 		if( !class_exists( $className ) )
 			throw new RuntimeException( 'Mail class "'.$className.'" is not existing' );
 
-		$arguments	= array( $this->env, $data );
+		$arguments	= [$this->env, $data];
 		$mail		= Alg_Object_Factory::createObject( $className, $arguments );
 		$this->env->logic->mail->sendMail( $mail, $receiver, $language );
 	}

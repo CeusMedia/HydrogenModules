@@ -5,7 +5,7 @@ use CeusMedia\Common\UI\HTML\Exception\View as ExceptionView;
 if( !( isset( $response->exception ) && $response->exception ) )
 	return '';
 
-$exception	= (object) array( 'message' => NULL, 'code' => NULL, 'view' => NULL );
+$exception	= (object) ['message' => NULL, 'code' => NULL, 'view' => NULL];
 $exception->message = $response->exception;
 if( 1 || $response->data <= -100 ){
 	if( isset( $response->serial ) ){
@@ -24,14 +24,14 @@ if( 1 || $response->data <= -100 ){
 		case -105:
 			$data	= 'Error: '.$exception->message.'.';
 			unset( $response->exception );
-			$exception	= (object) array( 'message' => NULL, 'code' => NULL, 'view' => NULL );
+			$exception	= (object) ['message' => NULL, 'code' => NULL, 'view' => NULL];
 			break;
 	}
 */
 	if( preg_match( '/Access denied:/', $exception->message ) ){
 		$content	= 'Error: '.$exception->message.'.';
 		unset( $response->exception );
-		$exception	= (object) array( 'message' => NULL, 'code' => NULL, 'view' => NULL );
+		$exception	= (object) ['message' => NULL, 'code' => NULL, 'view' => NULL];
 	}
 }
 if( $exception->view )

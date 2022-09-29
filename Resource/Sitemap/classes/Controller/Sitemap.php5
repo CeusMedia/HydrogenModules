@@ -14,12 +14,12 @@ class Controller_Sitemap extends Controller{
 
 		$format		= 'XML';
 		if( $options->get( 'html.enabled' ) ){
-			if( in_array( strtoupper( $forceFormat ), array( 'XML', 'HTML' ) ) )
+			if( in_array( strtoupper( $forceFormat ), ['XML', 'HTML'] ) )
 				$format	= strtoupper( $forceFormat );
 			else{
 				$acceptHeader		= getEnv( 'HTTP_ACCEPT' );
-				$contentTypesHtml	= array( 'application/xhtml+xml', 'text/html' );
-				$contentTypesXml	= array( 'application/xml', 'text/xml' );
+				$contentTypesHtml	= ['application/xhtml+xml', 'text/html'];
+				$contentTypesXml	= ['application/xml', 'text/xml'];
 				$contentTypes		= array_merge( $contentTypesHtml, $contentTypesXml );
 				$negotiated			= $this->negotiateContentType( $acceptHeader, $contentTypes );
 				$format				= in_array( $negotiated, $contentTypesHtml ) ? 'HTML' : 'XML';

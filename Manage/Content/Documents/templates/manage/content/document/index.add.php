@@ -4,16 +4,16 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['add'];
 
-$iconUpload     = HtmlTag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconUpload     = HtmlTag::create( 'i', '', ['class' => 'icon-folder-open icon-white'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconUpload		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
-	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconUpload		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-folder-open'] );
+	$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 }
 
 $fieldFilename	= '';
 if( count( $documents ) ){
-	$optFilename	= array( '' => '' );
+	$optFilename	= ['' => ''];
 	foreach( $documents as $entry )
 		$optFilename[$entry]	= $entry;
 	$optFilename	= HtmlElements::Options( $optFilename );

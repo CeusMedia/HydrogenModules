@@ -232,7 +232,7 @@ class Controller_Info_File extends Controller
 				$this->addData( 'folder', $folder );
 			}
 			$files		= $this->modelFile->getAll( ['downloadFolderId' => $folderId], $orders );
-			$orders		= array( 'title' => 'ASC' );
+			$orders		= ['title' => 'ASC'];
 			$folders	= $this->modelFolder->getAll( ['parentId' => $folderId], $orders );
 		}
 

@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$optParent	= array( 0 => '' );
+$optParent	= [0 => ''];
 foreach( $categories as $item )
 	if( $item->parentId == 0 )
 		$optParent[$item->categoryId]	= $item->label_de;
@@ -13,9 +13,9 @@ $optVisible	= $words['visible'];
 $optVisible	= HtmlElements::Options( $optVisible, (int) $category->visible );
 
 $disableParent	= $category->parentId == 0 ? 'disabled="disabled"' : "";
-$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
 	'href'	=> "./manage/catalog/category",
 	'class'	=> 'btn btn-small'

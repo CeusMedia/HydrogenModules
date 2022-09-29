@@ -21,7 +21,7 @@ class Hook_Info_Dashboard extends Hook
 		$activeOnly		= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
 		$linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
 		$list			= [];
-		$icon			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th', 'title' => 'Dashboard' ) );
+		$icon			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th', 'title' => 'Dashboard'] );
 		$words			= $env->getLanguage()->getWords( 'info/dashboard' );
 
 		foreach( $dashboards as $dashboard ){
@@ -55,6 +55,6 @@ class Hook_Info_Dashboard extends Hook
 		foreach( $dashboards as $dashboard )
 			$model->remove( $dashboard->dashboardId );
 		if( isset( $data->counts ) )
-			$data->counts['Info_Dashboard']	= (object) array( 'entities' => count( $dashboards ) );
+			$data->counts['Info_Dashboard']	= (object) ['entities' => count( $dashboards )];
 	}
 }

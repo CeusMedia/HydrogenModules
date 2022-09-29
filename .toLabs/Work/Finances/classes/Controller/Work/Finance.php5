@@ -32,10 +32,10 @@ class Controller_Work_Finance extends Controller
 		$modelFund		= new Model_Finance_Fund( $this->env );
 		$modelPrice		= new Model_Finance_FundPrice( $this->env );
 
-		$conditions		= array( 'userId' => $userId );
+		$conditions		= ['userId' => $userId];
 		$banks			= $modelBank->getAll( $conditions );
 		foreach( $banks as $nr => $bank ){
-			$conditions		= array( 'bankId' => $bank->bankId );
+			$conditions		= ['bankId' => $bank->bankId];
 			if( (int) $session->get( 'filter_finance_type' ) )
 				$conditions['type']		= $session->get( 'filter_finance_type' );
 			if( (int) $session->get( 'filter_finance_scope' ) )
@@ -52,9 +52,9 @@ class Controller_Work_Finance extends Controller
 				$conditions['scope']	= $session->get( 'filter_finance_scope' );
 			$funds	= $modelFund->getAll( $conditions );
 			if( $funds ){
-				$bank	= (object) array( 'title' => 'Fonds' );
+				$bank	= (object) ['title' => 'Fonds'];
 				foreach( $funds as $nr => $fund ){
-					$empty	= (object) array( 'fundId' => $fund->fundId, 'price' => 0, 'timestamp' => 0 );
+					$empty	= (object) ['fundId' => $fund->fundId, 'price' => 0, 'timestamp' => 0];
 					$price	= $modelPrice->getAll(
 						array( 'fundId' => $fund->fundId ),
 						array( 'timestamp' => 'DESC' ),

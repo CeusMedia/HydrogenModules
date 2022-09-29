@@ -27,15 +27,15 @@ return '
 			<legend>'.$words['add']['legend'].'</legend>
 			<ul class="input">
 				<li>
-					'.HtmlTag::create( 'label', $words['add']['labelTitle'], array( 'for' => 'title' ) ).'<br/>
+					'.HtmlTag::create( 'label', $words['add']['labelTitle'], ['for' => 'title'] ).'<br/>
 					'.HtmlElements::Input( 'title', htmlspecialchars( $title, ENT_COMPAT, 'UTF-8' ), 'l' ).'
 				</li>
 				<li>
-					'.HtmlTag::create( 'description', $words['add']['labelDescription'], array( 'for' => 'description' ) ).'<br/>
+					'.HtmlTag::create( 'description', $words['add']['labelDescription'], ['for' => 'description'] ).'<br/>
 					'.HtmlElements::TextArea( 'description', htmlspecialchars( $description, ENT_COMPAT, 'UTF-8' ), 'xl-m' ).'
 				</li>
 				<li>
-					'.HtmlTag::create( 'label', $words['add']['labelStatus'], array( 'for' => 'status' ) ).'<br/>
+					'.HtmlTag::create( 'label', $words['add']['labelStatus'], ['for' => 'status'] ).'<br/>
 					'.HtmlElements::Select( 'status', $optStatus, 'm' ).'
 				</li>
 			</ul>

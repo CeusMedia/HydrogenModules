@@ -36,45 +36,45 @@ if( count( $module->config ) ){
 			case 'boolean':
 				$strValue	= $value->value === TRUE ? 'yes' : 'no';
 				$options	= HtmlElements::Options( $words['boolean-values'], $strValue );
-				$inputLabel	= HtmlTag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $words['boolean-values'][$strValue], 'class' => 'label s active-'.$strValue, 'readonly' => TRUE, 'title' => $inputTitle ) );
-				$input		= HtmlTag::create( 'select', $options, array( 'class' => 's'.$class.' active-'.$strValue, 'name' => $name, 'id' => $inputId, 'title' => $inputTitle ) );
+				$inputLabel	= HtmlTag::create( 'input', NULL, ['id' => 'label_'.$inputId, 'value' => $words['boolean-values'][$strValue], 'class' => 'label s active-'.$strValue, 'readonly' => TRUE, 'title' => $inputTitle] );
+				$input		= HtmlTag::create( 'select', $options, ['class' => 's'.$class.' active-'.$strValue, 'name' => $name, 'id' => $inputId, 'title' => $inputTitle] );
 				break;
 			case 'int':
 			case 'integer':
-				$inputLabel	= HtmlTag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $inputValue, 'class' => 'label max', 'readonly' => TRUE, 'title' => $inputTitle ) );
-				$input		= HtmlTag::create( 'input', NULL, array( 'id' => $inputId, 'name' => $inputName, 'value' => $inputValue, 'class' => 's'.$class ) );
+				$inputLabel	= HtmlTag::create( 'input', NULL, ['id' => 'label_'.$inputId, 'value' => $inputValue, 'class' => 'label max', 'readonly' => TRUE, 'title' => $inputTitle] );
+				$input		= HtmlTag::create( 'input', NULL, ['id' => $inputId, 'name' => $inputName, 'value' => $inputValue, 'class' => 's'.$class] );
 				break;
 			default:
-				$inputLabel	= HtmlTag::create( 'input', NULL, array( 'id' => 'label_'.$inputId, 'value' => $inputValue, 'class' => 'label max', 'readonly' => TRUE, 'title' => $inputTitle ) );
+				$inputLabel	= HtmlTag::create( 'input', NULL, ['id' => 'label_'.$inputId, 'value' => $inputValue, 'class' => 'label max', 'readonly' => TRUE, 'title' => $inputTitle] );
 				if( count( $value->values ) ){
 					$options	= array_combine( $value->values, $value->values );
 					$options	= HtmlElements::Options( $options, $value->value );
-					$input		= HtmlTag::create( 'select', $options, array( 'name' => $inputName, 'id' => $inputId, 'class' => 'm'.$class, 'title' => $inputTitle ) );
+					$input		= HtmlTag::create( 'select', $options, ['name' => $inputName, 'id' => $inputId, 'class' => 'm'.$class, 'title' => $inputTitle] );
 				}
 				else{
-					$attr	= array( 'id' => $inputId, 'name' => $inputName, 'value' => $inputValue, 'class' => 'max'.$class, 'title' => $inputTitle );
+					$attr	= ['id' => $inputId, 'name' => $inputName, 'value' => $inputValue, 'class' => 'max'.$class, 'title' => $inputTitle];
 					$input	= HtmlTag::create( 'input', NULL, $attr );
 				}
 				break;
 		}
 		$label  = $key;
 		if( strlen( $inputTitle ) )
-			$label  = HtmlTag::create( 'acronym', $key, array( 'title' => $inputTitle ) );
+			$label  = HtmlTag::create( 'acronym', $key, ['title' => $inputTitle] );
 
-		$label	= HtmlTag::create( 'label', $label, array( 'class' => $class, 'for' => $inputId ) );
+		$label	= HtmlTag::create( 'label', $label, ['class' => $class, 'for' => $inputId] );
 		$id		= str_replace( '.', '_', $key );
 		$cells	= array(
-			HtmlTag::create( 'td', $label, array( 'class' => 'cell-config-key' ) ),
-			HtmlTag::create( 'td', $words['config-types'][$value->type], array( 'class' => "cell-config-type" ) ),
-			HtmlTag::create( 'td', $inputLabel.$input, array( 'class' => 'cell-config-value' ) ),
-			HtmlTag::create( 'td', $linkRemove, array() ),
+			HtmlTag::create( 'td', $label, ['class' => 'cell-config-key'] ),
+			HtmlTag::create( 'td', $words['config-types'][$value->type], ['class' => "cell-config-type"] ),
+			HtmlTag::create( 'td', $inputLabel.$input, ['class' => 'cell-config-value'] ),
+			HtmlTag::create( 'td', $linkRemove, [] ),
 		);
-		$rows[$key]	= HtmlTag::create( 'tr', $cells, array( 'id' => "config_".$id ) );
+		$rows[$key]	= HtmlTag::create( 'tr', $cells, ['id' => "config_".$id] );
 	}
 #	natcasesort( $rows );
-	$heads			= array( $w->headKey, $w->headType, $w->headValue, $w->headAction );
+	$heads			= [$w->headKey, $w->headType, $w->headValue, $w->headAction];
 	$tableHeads		= HtmlElements::TableHeads( $heads );
-	$tableColumns	= HtmlElements::ColumnGroup( array( '25%', '15%', '50%', '10%' ) );
+	$tableColumns	= HtmlElements::ColumnGroup( ['25%', '15%', '50%', '10%'] );
 	$tableConfig	= '<table>'.$tableColumns.$tableHeads.join( $rows ).'</table>';
 	$tableConfig	.= HtmlElements::Button( 'save', $w->buttonSave, 'button save' );
 }

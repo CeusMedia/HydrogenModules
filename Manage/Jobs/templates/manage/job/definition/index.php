@@ -9,10 +9,10 @@ $tabs	= View_Manage_Job::renderTabs( $env, 'definition' );
 return $tabs.HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		$panelFilter,
-	), array( 'class' => 'span3' ) ),
+	), ['class' => 'span3'] ),
 	HtmlTag::create( 'div', array(
 		$panelList,
-	), array( 'class' => 'span9' ) ),
-), array( 'class' => 'row-fluid' ) );
+	), ['class' => 'span9'] ),
+), ['class' => 'row-fluid'] );
 
 //return print_m( $schedule, NULL, NULL, TRUE );

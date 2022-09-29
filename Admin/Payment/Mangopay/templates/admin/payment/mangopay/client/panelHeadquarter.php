@@ -46,5 +46,5 @@ return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', array(
 		$form,
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );

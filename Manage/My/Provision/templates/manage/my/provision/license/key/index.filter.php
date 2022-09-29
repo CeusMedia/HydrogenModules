@@ -2,18 +2,18 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-plus' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-times-circle' ) );
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-plus'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-times-circle'] );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-//$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+//$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconOrder		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-shopping-cart'] );
 
 $w	= (object) $words['index.filter'];
 
-$optProduct	= array( '' => ' - alle - ' );
+$optProduct	= ['' => ' - alle - '];
 foreach( $products as $item )
 	$optProduct[$item->productId]	= $item->title;
 $optProduct	= HtmlElements::Options( $optProduct, $filterProductId );

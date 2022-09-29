@@ -2,7 +2,7 @@
 
 $categories		= array_combine( $categories, $categories );
 $categories['']	= $words['index']['categoryNone'];
-$filters		= array( 'type' => array( Model_Module::TYPE_SOURCE ) );
+$filters		= ['type' => [Model_Module::TYPE_SOURCE]];
 
 $listSections	= $this->renderModuleSections( $modules, $categories, $filters );
 

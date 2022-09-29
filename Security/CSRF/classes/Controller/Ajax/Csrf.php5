@@ -13,7 +13,7 @@ class Controller_Ajax_Csrf extends AjaxController
 			if( !$formName )
 				throw new InvalidArgumentException( 'Form name is missing' );
 			$token	= $this->logic->getToken( $formName );
-			$this->respondData( array( 'token' => $token ) );
+			$this->respondData( ['token' => $token] );
 		}
 		catch( Exception $e ){
 			$this->respondException( $e );

@@ -41,7 +41,7 @@ class Logic_Newsletter extends Logic
 	{
 		$this->checkReaderId( $readerId, $strict );
 		$this->checkGroupId( $groupId, $strict );
-		$has	= $this->getGroupsOfReader( $readerId, array( 'newsletterGroupId' => $groupId ) );
+		$has	= $this->getGroupsOfReader( $readerId, ['newsletterGroupId' => $groupId] );
 		if( $has )
 			return $has[0]->newsletterReaderGroupId;
 		$data	= array(
@@ -203,7 +203,7 @@ class Logic_Newsletter extends Logic
 		foreach( $relations as $relation )
 			$groupIds[]	= $relation->newsletterGroupId;
 		if( $groupIds ){
-			$conditions	= array( 'newsletterGroupId' => $groupIds );
+			$conditions	= ['newsletterGroupId' => $groupIds];
 			foreach( $this->modelGroup->getAll( $conditions, $orders ) as $group )
 				$list[$group->newsletterGroupId]	= $group;
 		}
@@ -237,12 +237,12 @@ class Logic_Newsletter extends Logic
 	{
 		$queue	= $this->modelQueue->get( $queueId );
 		if( $extended ){
-			$indices	= array( 'newsletterQueueId' => $queueId );
+			$indices	= ['newsletterQueueId' => $queueId];
 			$queue->countLetters	= $this->modelReaderLetter->count( $indices );
 			$queue->countLettersByStatus	= [];
 			for( $i=-3; $i<3; $i++ ){
 				$queue->countLettersByStatus[$i]	= $this->modelReaderLetter->count(
-					array_merge( $indices, array( 'status' => $i ) )
+					array_merge( $indices, ['status' => $i] )
 				);
 			}
 			$letters	= $this->modelReaderLetter->getAllByIndices( $indices );
@@ -263,7 +263,7 @@ class Logic_Newsletter extends Logic
 	{
 		$queues	= $this->modelQueue->getAllByIndex( 'newsletterId', $newsletterId );
 		foreach( $queues as $queue ){
-			$indices	= array( 'newsletterQueueId' => $queue->newsletterQueueId );
+			$indices	= ['newsletterQueueId' => $queue->newsletterQueueId];
 			$queue->countLetters	= $this->modelReaderLetter->count( $indices );
 			if( $queue->creatorId ){
 				$modelUser		= new Model_User( $this->env );
@@ -272,7 +272,7 @@ class Logic_Newsletter extends Logic
 			$queue->countLettersByStatus	= [];
 			for( $i=-3; $i<3; $i++ ){
 				$queue->countLettersByStatus[$i]	= $this->modelReaderLetter->count(
-					array_merge( $indices, array( 'status' => $i ) )
+					array_merge( $indices, ['status' => $i] )
 				);
 			}
 /*			$letters	= $this->modelReaderLetter->getAllByIndex( 'newsletterQueueId', $queueId );
@@ -315,7 +315,7 @@ class Logic_Newsletter extends Logic
 
 	public function getReadersOfGroup( $groupId, $conditions = [], $orders = [] )
 	{
-		return $this->getReadersOfGroups( array( $groupId ), $conditions, $orders );
+		return $this->getReadersOfGroups( [$groupId], $conditions, $orders );
 	}
 
 	public function getReadersOfGroups( $groupIds, $conditions = [], $orders = [] )

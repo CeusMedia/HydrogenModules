@@ -37,7 +37,7 @@ class View_Helper_Catalog_Bookstore
 				$author		= $logic->getAuthor( (int) $matches[1] );
 				$matches[2]	= $author->firstname ? $author->firstname." ".$author->lastname : $author->lastname;
 			}
-			$link		= HtmlTag::create( 'a', $matches[2], array( 'href' => $url ) );
+			$link		= HtmlTag::create( 'a', $matches[2], ['href' => $url] );
 			$content	= preg_replace( $patternAuthor, $link, $content, 1 );
 		}
 		$patternArticle	= "/\[article:([0-9]+)\|?([^\]]+)?\]/";
@@ -47,7 +47,7 @@ class View_Helper_Catalog_Bookstore
 			$url		= $logic->getArticleUri( (int) $matches[1] );
 			if( !isset( $matches[2] ) )
 				$matches[2]	= $logic->getArticle( (int) $matches[1] )->title;
-			$link		= HtmlTag::create( 'a', $matches[2], array( 'href' => $url ) );
+			$link		= HtmlTag::create( 'a', $matches[2], ['href' => $url] );
 			$content	= preg_replace( $patternArticle, $link, $content, 1 );
 		}
 		$patternCategory	= "/\[category:([0-9]+)\|?([^\]]+)?\]/";
@@ -57,7 +57,7 @@ class View_Helper_Catalog_Bookstore
 			$url		= $logic->getCategoryUri( (int) $matches[1] );
 			if( !isset( $matches[2] ) )
 				$matches[2]	= $logic->getCategory( (int) $matches[1] )->label_de;
-			$link		= HtmlTag::create( 'a', $matches[2], array( 'href' => $url ) );
+			$link		= HtmlTag::create( 'a', $matches[2], ['href' => $url] );
 			$content	= preg_replace( $patternCategory, $link, $content, 1 );
 		}
 	//	$item->content	= $content;
@@ -172,7 +172,7 @@ class View_Helper_Catalog_Bookstore
 	public function renderArticleLink( $article ){
 		$title		= View_Helper_Text::applyFormat( $article->title );
 		$url		= $this->logic->getArticleUri( (int) $article->articleId, $article );
-		return HtmlTag::create( 'a', $title, array( 'href' => $url ) );
+		return HtmlTag::create( 'a', $title, ['href' => $url] );
 	}
 
 	public function renderArticleListItem( $article ){
@@ -206,7 +206,7 @@ class View_Helper_Catalog_Bookstore
 			$name		.= $words['roles'][$author->editor];
 		}
 		$url	= $this->logic->getAuthorUri( $author );
-		return HtmlTag::create( 'a', $name, array( 'href' => $url ) );
+		return HtmlTag::create( 'a', $name, ['href' => $url] );
 	}
 
 	public function renderCategory( $category, $heading = NULL ){
@@ -225,15 +225,15 @@ class View_Helper_Catalog_Bookstore
 			$descriptions[]	= 'ISSN: '.$category->issn;
 		$descriptions	= join( '<br/>', $descriptions );
 		if( $descriptions )
-			$descriptions	= HtmlTag::create( 'div', $descriptions, array( 'class' => 'well' ) );
-		$articles	= HtmlTag::create( 'div', $this->renderCategoryArticleList( $category ), array( 'class' => 'catalog-article-list' ) );
+			$descriptions	= HtmlTag::create( 'div', $descriptions, ['class' => 'well'] );
+		$articles	= HtmlTag::create( 'div', $this->renderCategoryArticleList( $category ), ['class' => 'catalog-article-list'] );
 		return $heading.$descriptions.$articles;
 	}
 
 	public function renderCategoryArticleList( $category ){
 		$cacheKey	= 'catalog.bookstore.html.categoryArticleList.'.$category->categoryId;
 		if( NULL === ( $list = $this->cache->get( $cacheKey ) ) ){
-			$orders		= array( 'articleCategoryId' => 'DESC', 'articleId' => 'DESC' );
+			$orders		= ['articleCategoryId' => 'DESC', 'articleId' => 'DESC'];
 			$articles	= $this->logic->getCategoryArticles( $category, $orders );
 			$list	= [];
 			foreach( $articles as $article )
@@ -247,7 +247,7 @@ class View_Helper_Catalog_Bookstore
 		$labelKey	= 'label_'.$language;
 		$title		= View_Helper_Text::applyFormat( $category->$labelKey );
 		$url		= $this->logic->getCategoryUri( $category, $language );
-		return HtmlTag::create( 'a', $title, array( 'href' => $url ) );
+		return HtmlTag::create( 'a', $title, ['href' => $url] );
 	}
 
 	public function renderCategoryList( $data, $language = "de" ){
@@ -256,17 +256,17 @@ class View_Helper_Catalog_Bookstore
 			$sub	= [];
 			foreach( $category->categories as $subcategory ){
 				$link	= $this->renderCategoryLink( $subcategory, $language );
-				$sub[]	= HtmlElements::ListItem( $link, 1, array( 'class' => 'topic' ) );
+				$sub[]	= HtmlElements::ListItem( $link, 1, ['class' => 'topic'] );
 			}
-			$sub	= $sub ? HtmlElements::unorderedList( $sub, 1, array( 'class' => 'topics' ) ) : '';
+			$sub	= $sub ? HtmlElements::unorderedList( $sub, 1, ['class' => 'topics'] ) : '';
 			$area	= '<span class="hitarea '.( $sub ? 'closed' : 'empty' ).'"></span>';
 
 			$link	= $this->renderCategoryLink( $category, $language );
 			if( !empty( $category->label_former ) )
 				$link	.= '<br/><small>vormals <em>'.$category->label_former.'</em></small>';
-			$list[]	= HtmlElements::ListItem( $area.$link.$sub, 0, array( 'class' => 'branch' ) );
+			$list[]	= HtmlElements::ListItem( $area.$link.$sub, 0, ['class' => 'branch'] );
 		}
-		return HtmlElements::unorderedList( $list, 0, array( 'class' => 'branches' ) );
+		return HtmlElements::unorderedList( $list, 0, ['class' => 'branches'] );
 	}
 
 	public function renderDocumentLink( $document ){

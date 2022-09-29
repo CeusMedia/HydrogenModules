@@ -31,7 +31,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		if( $this->request->has( 'save' ) ){
 			$data		= $this->request->getAll();
 			$groupIds	= $this->request->get( 'groupIds' );
-			$groupIds	= is_array( $groupIds ) ? $groupIds : array();
+			$groupIds	= is_array( $groupIds ) ? $groupIds : [];
 			if( !strlen( trim( $data['email'] ) ) )
 				$this->messenger->noteError( $words->msgErrorMailMissing );
 			else if( !strlen( trim( $data['firstname'] ) ) )
@@ -95,7 +95,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		if( !is_array( $selectedGroups ) )
 			$selectedGroups	= [];
 
-		$groups		= $this->logic->getGroups( array(), array( 'title' => 'ASC' ) );
+		$groups		= $this->logic->getGroups( [], ['title' => 'ASC'] );
 		if( !$groups ){
 			$this->messenger->noteNotice( 'Es ist noch keine Gruppe vorhanden. Weiterleitung zu den Gruppen.' );
 			$this->restart( 'work/newsletter/group' );
@@ -141,9 +141,9 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->addData( 'readerId', $readerId );
 		$this->addData( 'reader', $this->logic->getReader( $readerId ) );
 
-		$this->addData( 'groups', $this->logic->getGroups( array(), array( 'title' => 'ASC' ) ) );
-		$this->addData( 'readerGroups', $this->logic->getGroupsOfReader( $readerId,  array(), array( 'title' => 'ASC' ) ) );
-		$this->addData( 'readerLetters', $this->logic->getLettersOfReader( $readerId,  array( 'status' => '>= 1' ), array( 'title' => 'ASC' ) ) );
+		$this->addData( 'groups', $this->logic->getGroups( [], ['title' => 'ASC'] ) );
+		$this->addData( 'readerGroups', $this->logic->getGroupsOfReader( $readerId,  [], ['title' => 'ASC'] ) );
+		$this->addData( 'readerLetters', $this->logic->getLettersOfReader( $readerId,  ['status' => '>= 1'], ['title' => 'ASC'] ) );
 	}
 
 	public function export( $mode = 'csv' )
@@ -168,12 +168,12 @@ class Controller_Work_Newsletter_Reader extends Controller
 		if( strlen( $filterSurname ) )
 			$conditions['surname']	= '%'.$filterSurname.'%';
 		if( strlen( $filterGroupId ) ){
-			$readers	= array( 0 );
+			$readers	= [0];
 			foreach( $this->logic->getReadersOfGroup( $filterGroupId ) as $reader )
 				$readers[]	= $reader->newsletterReaderId;
 			$conditions['newsletterReaderId']	= $readers;
 		}
-		$filterOrder	= array( 'email' => 'ASC' );
+		$filterOrder	= ['email' => 'ASC'];
 
 		$statuses		= array(
 			-2	=> 'deactivated',
@@ -212,7 +212,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 					'groups'		=> TRUE,
 					'registeredAt'	=> TRUE,
 				);
-				$data	= array( join( ';', array_keys( $headers ) ) );
+				$data	= [join( ';', array_keys( $headers ) )];
 				foreach( array_values( $readers ) as $nr => $reader ){
 					$row	= [];
 					foreach( $headers as $header => $toBeQuoted ){
@@ -274,7 +274,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 				$parser		= new \CeusMedia\Mail\Parser\AddressList();
 				$list		= $parser->parse( $this->request->get( 'addresses' ) );
 				foreach( $list as $entry ){
-					$conditions	= array( 'email' => strtolower( $entry['address'] ) );
+					$conditions	= ['email' => strtolower( $entry['address'] )];
 					$existing	= $this->logic->getReaders( $conditions );
 					if( $existing )
 						$readerId	= $existing[0]->newsletterReaderId;
@@ -302,7 +302,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 					$reader	= new CsvFileReader( $fileName, TRUE );
 					$csv	= $reader->toAssocArray();
 					foreach( $csv as $entry ){
-						$conditions	= array( 'email' => strtolower( $entry['email'] ) );
+						$conditions	= ['email' => strtolower( $entry['email'] )];
 						$existing	= $this->logic->getReaders( $conditions );						//  get others by address
 						if( $existing )																//  address is already existing
 							$readerId	= $existing[0]->newsletterReaderId;							//  get ID of existing reader
@@ -328,7 +328,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 //				$page	= $this->session->get( $this->filterPrefix.'page' );
 		}
 
-		$readers	= $this->logic->getReaders( array() );
+		$readers	= $this->logic->getReaders( [] );
 		$this->addData( 'total', count( $readers ) );
 
 		$this->session->set( $this->filterPrefix.'page', $page );
@@ -338,7 +338,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$filterSurname		= $this->session->get( $this->filterPrefix.'surname' );
 		$filterGroupId		= $this->session->get( $this->filterPrefix.'groupId' );
 		$filterLimit		= $this->session->get( $this->filterPrefix.'limit' );
-		$groups		= $this->logic->getGroups( array(), array( 'title' => 'ASC' ) );
+		$groups		= $this->logic->getGroups( [], ['title' => 'ASC'] );
 		$conditions	= [];
 		if( strlen( $filterStatus ) )
 			$conditions['status']	= $filterStatus;
@@ -349,21 +349,21 @@ class Controller_Work_Newsletter_Reader extends Controller
 		if( strlen( $filterSurname ) )
 			$conditions['surname']	= '%'.$filterSurname.'%';
 		if( strlen( $filterGroupId ) ){
-			$readers	= array( 0 );
+			$readers	= [0];
 			foreach( $this->logic->getReadersOfGroup( $filterGroupId ) as $reader )
 				$readers[]	= $reader->newsletterReaderId;
 			$conditions['newsletterReaderId']	= $readers;
 		}
 
-		$filterOrder		= array( 'firstname' => 'ASC', 'surname' => 'ASC' );
-		$filterOrder		= array( 'registeredAt' => 'DESC' );
+		$filterOrder		= ['firstname' => 'ASC', 'surname' => 'ASC'];
+		$filterOrder		= ['registeredAt' => 'DESC'];
 
-		$limits		= array( $page * $filterLimit, $filterLimit );
+		$limits		= [$page * $filterLimit, $filterLimit];
 		$total		= count( $this->logic->getReaders( $conditions ) );
 		$readers	= $this->logic->getReaders( $conditions, $filterOrder, $limits );
 		$model		= new Model_Newsletter_Reader_Group( $this->env );
 		foreach( $readers as $nr => $reader ){
-			$conditions	= array( 'newsletterReaderId' => $reader->newsletterReaderId );
+			$conditions	= ['newsletterReaderId' => $reader->newsletterReaderId];
 			$list		= [];
 			foreach( $relations	= $model->getAll( $conditions ) as $relation )
 				$list[]	= $groups[$relation->newsletterGroupId];
@@ -390,7 +390,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 	{
 		$words		= (object) $this->getWords( 'remove' );
 
-/*		$readerLetters	= $this->logic->getLettersOfReader( $readerId,  array( 'status' => '>= 1' ) );
+/*		$readerLetters	= $this->logic->getLettersOfReader( $readerId,  ['status' => '>= 1'] );
 		if( $readerLetters ){
 			$this->messenger->noteError( $words->msgErrorReaderHasLetters );
 			$this->restart( 'edit/'.$readerId, TRUE );

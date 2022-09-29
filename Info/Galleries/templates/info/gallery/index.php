@@ -9,7 +9,7 @@ else{
 }
 $list		= $helper->render();
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/gallery/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/gallery/' ) );
 
 return $textIndexTop.'
 <div id="galleries-index" class="galleries-index-'.$indexMode.'">

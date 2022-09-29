@@ -45,13 +45,13 @@ if( $articleDocuments ){
 }
 
 $documentMaxSize	= $moduleConfig->get( 'article.document.maxSize' );
-$limits				= array( 'document' => Alg_UnitParser::parse( $documentMaxSize, "M" ) );
+$limits				= ['document' => Alg_UnitParser::parse( $documentMaxSize, "M" )];
 $documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
 
 $list				= [];
 $documentExtensions	= $moduleConfig->get( 'article.document.extensions' );
 foreach( explode( ",", $documentExtensions ) as $nr => $type )
-	if( !in_array( trim( $type ), array( "jpe", "jpeg" ) ) )
+	if( !in_array( trim( $type ), ["jpe", "jpeg"] ) )
 		$list[$nr]	= strtoupper( trim( $type ) );
 $documentExtensions	= join( ", ", $list );
 

@@ -10,10 +10,10 @@ if( $articles ){
 	$list	= [];
 	foreach( $articles as $article )
 		$list[]	= $helper->renderArticleListItem( $article->article );
-	$list	= HtmlTag::create( 'div', $list, array( 'class' => 'articleList' ) );
+	$list	= HtmlTag::create( 'div', $list, ['class' => 'articleList'] );
 }
 
-extract( $view->populateTexts( array( 'tag.top', 'tag.bottom' ), 'html/catalog/' ) );
+extract( $view->populateTexts( ['tag.top', 'tag.bottom'], 'html/catalog/' ) );
 
 $heading	= sprintf( $words->heading, htmlentities( $tag->tag, ENT_QUOTES, 'UTF-8' ) );
 

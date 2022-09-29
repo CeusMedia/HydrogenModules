@@ -7,6 +7,6 @@ $panelList		= $view->loadTemplateFile( 'manage/job/run/index.list.php' );
 $panelFilter	= $view->loadTemplateFile( 'manage/job/run/index.filter.php' );
 
 return $tabs.HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', $panelFilter, array( 'class' => 'span3' ) ),
-	HtmlTag::create( 'div', $panelList, array( 'class' => 'span9' ) ),
-), array( 'class' => 'row-fluid' ) );
+	HtmlTag::create( 'div', $panelFilter, ['class' => 'span3'] ),
+	HtmlTag::create( 'div', $panelList, ['class' => 'span9'] ),
+), ['class' => 'row-fluid'] );

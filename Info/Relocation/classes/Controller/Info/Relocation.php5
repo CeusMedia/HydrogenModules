@@ -43,7 +43,7 @@ class Controller_Info_Relocation extends Controller
 				'usedAt'	=> time(),											//  and latest use time
 			) );
 			if( $relocation->status == 1 )										//  status is "activated"
-				$this->model->edit( $id, array( 'status' => 2 ) );				//  set new status "used"
+				$this->model->edit( $id, ['status' => 2] );				//  set new status "used"
 		}
 
 		$status		= $this->moduleConfig->get( 'status' );						//  get HTTP status for redirection

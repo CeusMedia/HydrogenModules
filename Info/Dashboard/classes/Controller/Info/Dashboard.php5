@@ -46,7 +46,7 @@ class Controller_Info_Dashboard extends Controller
 			}
 			$panels		= $this->request->get( 'panels' );
 			$positions	= $this->request->get( 'positions' );
-			$panels		= is_array( $panels ) ? $panels : array();
+			$panels		= is_array( $panels ) ? $panels : [];
 			if( strlen( trim( $dashboard->panels ) ) )
 				$dashboard->panels	= explode( ',', $dashboard->panels );
 			else
@@ -104,7 +104,7 @@ class Controller_Info_Dashboard extends Controller
 					'panels'		=> $this->moduleConfig->get( 'panels' ),
 					'isCurrent'		=> TRUE,
 				) );
-				$this->addData( 'dashboards', array() );
+				$this->addData( 'dashboards', [] );
 			}
 		}
 		catch( Exception $e ){
@@ -141,7 +141,7 @@ class Controller_Info_Dashboard extends Controller
 			$this->model->remove( $dashboardId );
 			$dashboard	= $this->model->getByIndices( array(
 				'userId'		=> $this->userId,
-			), array( 'modifiedAt' => 'DESC' ) );
+			), ['modifiedAt' => 'DESC'] );
 			if( $dashboard )
 				$this->logic->setUserDashboard( $this->userId, $dashboard->dashboardId );
 			$this->messenger->noteSuccess( $this->messages->successDashboardRemoved, $dashboard->title );
@@ -161,7 +161,7 @@ class Controller_Info_Dashboard extends Controller
 				$this->messenger->noteError( $this->messages->errorInvalidUserDashboard );
 				$this->restart( NULL, TRUE );
 			}
-			$panels		= strlen( $dashboard->panels ) ? explode( ',', $dashboard->panels ) : array();
+			$panels		= strlen( $dashboard->panels ) ? explode( ',', $dashboard->panels ) : [];
 			if( !array_key_exists( $panelId, $this->panels ) ){
 				$this->messenger->noteError( $this->messages->errorPanelDiscontinued, $panelId );
 				$this->restart( NULL, TRUE );

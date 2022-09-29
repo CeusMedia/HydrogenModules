@@ -2,11 +2,11 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconPerson		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user-o' ) );
-$iconCompany	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building-o' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconPerson		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user-o'] );
+$iconCompany	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-building-o'] );
 
-$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
+$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] ), ['class' => 'alert alert-info'] );
 
 $frequencies	= array(
 	0		=> '- keine Wiederholung -',
@@ -27,7 +27,7 @@ if( $expenses ){
 			$title	= preg_replace( '/\[date.m\]/', '<em class="muted">Monat</em>', $title );
 		if( preg_match( '/\[date.d\]/', $title ) )
 			$title	= preg_replace( '/\[date.d\]/', '<em class="muted">Tag</em>', $title );
-		$link	= HtmlTag::create( 'a', $title, array( 'href' => './work/billing/expense/edit/'.$expense->expenseId ) );
+		$link	= HtmlTag::create( 'a', $title, ['href' => './work/billing/expense/edit/'.$expense->expenseId] );
 		if( $expense->fromCorporationId ){
 			$corporation	= $corporations[$expense->fromCorporationId];
 			$from			= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
@@ -57,10 +57,10 @@ if( $expenses ){
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $frequencies[$expense->frequency] ),
-			HtmlTag::create( 'td', $from, array( 'class' => 'autocut' ) ),
-			HtmlTag::create( 'td', $to, array( 'class' => 'autocut' ) ),
-			HtmlTag::create( 'td', $amount, array( 'class' => 'cell-number' ) ),
-		), array( 'class' => $expense->status ? 'success' : 'warning' ) );
+			HtmlTag::create( 'td', $from, ['class' => 'autocut'] ),
+			HtmlTag::create( 'td', $to, ['class' => 'autocut'] ),
+			HtmlTag::create( 'td', $amount, ['class' => 'cell-number'] ),
+		), ['class' => $expense->status ? 'success' : 'warning'] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( array(
 		'',
@@ -77,7 +77,7 @@ if( $expenses ){
 		'Betrag'
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Ausgabe', array(

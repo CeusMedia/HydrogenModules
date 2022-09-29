@@ -11,7 +11,7 @@ foreach( $projectMap as $projectId => $project )
 	$optProject[$projectId]	= $project->title;
 $optProject	= HtmlElements::Options( $optProject, $defaultProjectId );
 
-extract( $view->populateTexts( array( 'add.top', 'add.bottom', 'add.info' ), 'html/work/time/' ) );
+extract( $view->populateTexts( ['add.top', 'add.bottom', 'add.info'], 'html/work/time/' ) );
 
 //$panelFilter	= $view->loadTemplateFile( 'work/time/index.filter.php' );
 

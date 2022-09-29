@@ -10,7 +10,7 @@ use CeusMedia\HydrogenFramework\View;
 
 $w	= (object) $words['index'];
 
-[$textTop, $textBottom] = $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/config/index/' );
+[$textTop, $textBottom] = $view->populateTexts( ['top', 'bottom'], 'html/admin/config/index/' );
 
 $panelFilter	= $view->loadTemplateFile( 'admin/config/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'admin/config/index.list.php' );

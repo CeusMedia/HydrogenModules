@@ -23,7 +23,7 @@ class View_Work_FTP extends View
 	protected function renderPosition( string $pathCurrent, string $pathDeepest, string $labelHome = "Home", string $labelPosition = "Position: " ): string
 	{
 		$way	= "";
-		$levels	= array( ''	=> $labelHome );
+		$levels	= [''	=> $labelHome];
 		foreach( explode( "/", $pathDeepest ) as $part ){
 			if( strlen( trim( $part ) ) ){
 				$way .= $way ? '/'.$part : $part;
@@ -32,19 +32,19 @@ class View_Work_FTP extends View
 		}
 		foreach( $levels as $path => $label ){
 			$divider	= "";
-			$attrItem	= array( 'class' => 'active' );
+			$attrItem	= ['class' => 'active'];
 			if( $path !== $pathDeepest )
-				$divider	= HtmlTag::create( 'span', '/', array( 'class' => 'divider' ) );
+				$divider	= HtmlTag::create( 'span', '/', ['class' => 'divider'] );
 			if( $pathCurrent !== $path ){
 				$url	= './work/FTP'.( $path ? "?path=".$path : "" );
-				$label	= HtmlTag::create( 'a', $label, array( 'href' => $url ) );
+				$label	= HtmlTag::create( 'a', $label, ['href' => $url] );
 				$attrItem['class']	= NULL;
 			}
 			$list[]	= HtmlTag::create( 'li', $label.' '.$divider, $attrItem );
 		}
 		if( $labelPosition )
 			array_unshift( $list, HtmlTag::create( 'li', $labelPosition ) );
-		return HtmlTag::create( 'ul', $list, array( 'class' => 'breadcrumb' ) );
+		return HtmlTag::create( 'ul', $list, ['class' => 'breadcrumb'] );
 	}
 
 	protected function renderFileTable( string $path, array $entries ): string
@@ -61,7 +61,7 @@ class View_Work_FTP extends View
 
 			if( $entry->isdir ){
 				$pathNew	= $path ? $path.'/'.$entry->name : $entry->name;
-				$link		= HtmlTag::create( 'a', $label, array( 'href' => './work/FTP?path='.$pathNew ) );
+				$link		= HtmlTag::create( 'a', $label, ['href' => './work/FTP?path='.$pathNew] );
 				$size		= $entry->folders.' <i class="icon-folder-close"></i> / '.$entry->files.' <i class="icon-file"></i>';
 			}
 			else{
@@ -86,10 +86,10 @@ class View_Work_FTP extends View
 		ksort( $folders );
 		ksort( $files );
 		$list	= $folders + $files;
-		$colgroup	= HtmlElements::ColumnGroup( array( "50%", "15%", "15%", "15%" ) );
-		$heads		= HtmlElements::TableHeads( array( 'Name', 'Size', 'Date', 'Permissions' ) );
+		$colgroup	= HtmlElements::ColumnGroup( ["50%", "15%", "15%", "15%"] );
+		$heads		= HtmlElements::TableHeads( ['Name', 'Size', 'Date', 'Permissions'] );
 		$thead	= HtmlTag::create( 'thead', $heads );
 		$tbody	= HtmlTag::create( 'tbody', HtmlTag::create( 'tr', $list ) );
-		return HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed table-striped' ) );
+		return HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-condensed table-striped'] );
 	}
 }

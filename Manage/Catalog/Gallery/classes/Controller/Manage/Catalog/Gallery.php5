@@ -40,7 +40,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$data	= [];
 		foreach( $this->modelCategory->getColumns() as $column )
 			$data[$column]	= $this->request->get( $column );
-		$lastRank	= $this->modelCategory->getAll( array(), array( 'rank' => 'DESC' ), array( 0, 1 ) );
+		$lastRank	= $this->modelCategory->getAll( [], ['rank' => 'DESC'], [0, 1] );
 		$lastRank	= $lastRank ? $lastRank[0]->rank : 0;
 		$data['rank']	= max( 1, $lastRank, (int) $this->request->get( 'rank' ) );
 		$this->addData( 'category', (object) $data );
@@ -88,7 +88,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 			}
 			$this->restart( 'editCategory/'.$categoryId, TRUE );
 		}
-		$lastRank	= (int) $this->modelImage->getByIndex( 'galleryCategoryId', $categoryId, 'rank', array( 'rank' => 'DESC' ) );
+		$lastRank	= (int) $this->modelImage->getByIndex( 'galleryCategoryId', $categoryId, 'rank', ['rank' => 'DESC'] );
 		$data	= [];
 		$number		= $this->modelImage->countByIndex( 'galleryCategoryId', $categoryId );
 		foreach( $this->modelImage->getColumns() as $column )
@@ -126,9 +126,9 @@ class Controller_Manage_Catalog_Gallery extends Controller
 			if( $image && $image['error'] == 0 ){
 				$upload	= new Logic_Upload( $this->env );
 				$upload->setUpload( $image );
-				if( !$upload->checkExtension( array( 'jpg', 'jpe', 'jpeg', 'gif' ) ) )
+				if( !$upload->checkExtension( ['jpg', 'jpe', 'jpeg', 'gif'] ) )
 					$this->messenger->noteError( $words->errorUnsupportedFileType );
-				else if( !$upload->checkMimeType( array( 'image/jpeg' ) ) )
+				else if( !$upload->checkMimeType( ['image/jpeg'] ) )
 					$this->messenger->noteError( $words->errorUnsupportedFileType );
 				else if( $upload->checkIsImage() ){
 					$imagePath		= $this->pathImages.$categoryId.'.'.$upload->getExtension( true );
@@ -152,7 +152,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$category	= $this->modelCategory->get( $categoryId );
 		$category->images	= $this->modelImage->getAll( array(
 			'galleryCategoryId'	=> $categoryId,
-		), array( 'rank' => 'ASC', 'galleryImageId' => 'ASC' ) );
+		), ['rank' => 'ASC', 'galleryImageId' => 'ASC'] );
 		$this->addData( 'categoryId', (int) $categoryId );
 		$this->addData( 'category', $category );
 	}
@@ -306,11 +306,11 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		if( !file_exists( $this->pathImagesOriginal.'.htaccess' ) )
 			File_Writer::save( $this->pathImagesOriginal.'.htaccess', 'Deny from all' );
 
-		$categories	= $this->modelCategory->getAll( array(), array( 'rank' => 'ASC', 'galleryCategoryId' => 'ASC' ));
+		$categories	= $this->modelCategory->getAll( [], ['rank' => 'ASC', 'galleryCategoryId' => 'ASC']);
 		foreach( $categories as $nr => $category ){
 			$category->images	= $this->modelImage->getAll( array(
 				'galleryCategoryId'	=> (int) $category->galleryCategoryId
-			), array( 'rank' => 'ASC', 'galleryImageId' => 'ASC' ) );
+			), ['rank' => 'ASC', 'galleryImageId' => 'ASC'] );
 		}
 		$this->addData( 'categories', $categories );
 		$this->addData( 'frontend', $this->frontend );
@@ -344,22 +344,22 @@ class Controller_Manage_Catalog_Gallery extends Controller
 	protected function rerankCategories( $start = 1 )
 	{
 		$rank		= max( 1, (int) $start );
-		$conditions	= $start ? array( 'rank' => '>= '.(int) $rank ) : array();
-		$categories	= $this->modelCategory->getAll( $conditions, array( 'rank' => 'ASC', 'modifiedAt' => 'DESC' ) );
+		$conditions	= $start ? array( 'rank' => '>= '.(int) $rank ) : [];
+		$categories	= $this->modelCategory->getAll( $conditions, ['rank' => 'ASC', 'modifiedAt' => 'DESC'] );
 		foreach( $categories as $category ){
-			$this->modelCategory->edit( $category->galleryCategoryId, array( 'rank'	=> $rank ) );
+			$this->modelCategory->edit( $category->galleryCategoryId, ['rank'	=> $rank] );
 			$rank	+= 1;
 		}
 	}
 
 	protected function rerankImages( $categoryId, $start = 1 )
 	{
-		$conditions	= array( 'galleryCategoryId' => $categoryId );
+		$conditions	= ['galleryCategoryId' => $categoryId];
 		if( ( $rank = max( 1, (int) $start ) ) > 1 )
 			$conditions['rank']	= '>= '.(int) $rank;
-		$images		= $this->modelImage->getAll( $conditions, array( 'rank' => 'ASC', 'modifiedAt' => 'DESC' ) );
+		$images		= $this->modelImage->getAll( $conditions, ['rank' => 'ASC', 'modifiedAt' => 'DESC'] );
 		foreach( $images as $image ){
-			$this->modelImage->edit( $image->galleryImageId, array( 'rank'	=> $rank ) );
+			$this->modelImage->edit( $image->galleryImageId, ['rank'	=> $rank] );
 			$rank	+= 1;
 		}
 	}
@@ -371,9 +371,9 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$words		= (object) $this->getWords( 'msg' );
 		$upload		= new Logic_Upload( $this->env );
 		$upload->setUpload( $uploadData );
-		if( !$upload->checkExtension( array( 'jpg', 'jpe', 'jpeg', 'gif', 'png' ) ) )
+		if( !$upload->checkExtension( ['jpg', 'jpe', 'jpeg', 'gif', 'png'] ) )
 			$this->messenger->noteError( $words->errorUnsupportedFileType );
-		else if( !$upload->checkMimeType( array( 'image/jpeg', 'image/png' ) ) )
+		else if( !$upload->checkMimeType( ['image/jpeg', 'image/png'] ) )
 			$this->messenger->noteError( $words->errorUnsupportedFileType );
 		else{
 			$imagePath	= $category->path.'/'.$upload->getFileName();

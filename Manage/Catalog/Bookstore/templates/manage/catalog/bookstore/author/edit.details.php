@@ -7,16 +7,16 @@ $w			= (object) $words['edit'];
 $tabs		= $this->renderMainTabs();
 $list		= $this->renderList( $authors, $author->authorId );
 
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
 
-$optGender	= array( /*$words['gender']*/ );
+$optGender	= [/*$words['gender']*/];
 $optGender	= HtmlElements::Options( $optGender/*, $author->gender*/ );
 
 $image		= "images/no_author.png";
 if( $author->image ){
 	$image	= 'file/bookstore/author/'.$author->image;
 }
-$image	= HtmlTag::create( 'img', NULL, array( 'src' => $image, 'class' => 'img-polaroid' ) );
+$image	= HtmlTag::create( 'img', NULL, ['src' => $image, 'class' => 'img-polaroid'] );
 
 $buttonRemoveImage	= "";
 if( $author->image ){

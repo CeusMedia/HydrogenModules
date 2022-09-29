@@ -101,7 +101,7 @@ class View_Helper_Mail_Facts
 			$definition	= HtmlTag::create( 'dd', $value.'&nbsp;' );
 			$list[]		= $term.$definition;
 		}
-		return HtmlTag::create( 'dl', $list, array( 'class' => $this->listClass ) );
+		return HtmlTag::create( 'dl', $list, ['class' => $this->listClass] );
 	}
 
 	protected function renderAsText(): string

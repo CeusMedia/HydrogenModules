@@ -50,12 +50,12 @@
 
 		//  --  GET ACTIVE TEMPLATE ENGINES  --  //
 		$engines	= [];													//  prepare empty engine map
-		$parameters	= array( 'loadFile', 'loadPath', 'loadExtension' );			//  list of possible engine parameters
+		$parameters	= ['loadFile', 'loadPath', 'loadExtension'];			//  list of possible engine parameters
 		foreach( $config as $pair ){											//  iterate module configuration pairs
 			$pattern	= "/^engine\.([a-z0-9]+)$/i";							//  regular expression for finding engines
 			if( preg_match( $pattern, $pair->key ) && $pair->value ){			//  active engine found
 				$engine	= preg_replace( $pattern, '\\1', $pair->key );			//  extract engine key
-				$engines[$engine]	= array( 'active' => TRUE );				//  register engine as active
+				$engines[$engine]	= ['active' => TRUE];				//  register engine as active
 			}
 		}
 

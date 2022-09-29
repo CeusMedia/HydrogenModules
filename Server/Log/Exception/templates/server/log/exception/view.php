@@ -4,11 +4,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['view'];
 
-$iconList	= HtmlTag::create( 'i', '', array( 'class' => "icon-arrow-left" ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconList	= HtmlTag::create( 'i', '', ['class' => "icon-arrow-left"] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+	$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+	$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 }
 
 $file		= preg_replace( "/^".preg_quote( realpath( $env->uri ), '/' )."/", '.', $exception->file );
@@ -23,7 +23,7 @@ $facts['file']		= $file.' ('.$exception->line.')';
 $facts['date']		= $date.' <small class="muted">('.$time.')</small>';
 $facts['class']		= $exception->type;
 
-$classes	= array( $exception->type );
+$classes	= [$exception->type];
 if( in_array( 'Exception_SQL', $classes ) ){
 	if( isset( $exception->sqlCode ) ){
 		$meaning	= getMeaningOfSQLSTATE( $env, $exception->sqlCode );
@@ -67,7 +67,7 @@ foreach( $facts as $key => $value ){
 	$list[]	= HtmlTag::create( 'dt', $words['view']['label'.ucfirst( $key)] );
 	$list[]	= HtmlTag::create( 'dd', $value );
 }
-$listFacts	= HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+$listFacts	= HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 
 //  --  TRACE  --  //
 if( !empty( $exception->traceAsHtml ) )
@@ -98,7 +98,7 @@ if( !empty( $exception->request ) ){
 		$headers		= HtmlTag::create( 'table', array(
 			HtmlElements::ColumnGroup( '20%', '' ),
 			HtmlTag::create( 'tbody', $rows ),
-		), array( 'class' => 'table table-condensed table-striped' ) );
+		), ['class' => 'table table-condensed table-striped'] );
 		$dumpRequest	= UI_VariableDumper::dump( $request->getAll() );
 	}
 	else {

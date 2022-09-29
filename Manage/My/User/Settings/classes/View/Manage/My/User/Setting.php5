@@ -140,7 +140,7 @@ class View_Manage_My_User_Setting extends View{
 	protected function renderModuleSettings( $module, $settings, $moduleWords, $from = NULL ){
 		$words		= $this->env->getLanguage()->getWords( 'manage/my/user/setting' );
 		$words		= (object) $words['index'];
-		$iconReset	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+		$iconReset	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
 		$rows	= [];
 		$list	= [];
 
@@ -203,7 +203,7 @@ class View_Manage_My_User_Setting extends View{
 					$url	= './manage/my/user/setting/reset/'.$module->id.'/'.$key;
 					if( $from )
 						$url	.= '?from='.$from;
-					$button	= HtmlTag::create( 'a', $iconReset, array( 'href' => $url, 'class' => 'btn btn-inverse btn-mini', 'title' => $words->buttonResetAlt ) );
+					$button	= HtmlTag::create( 'a', $iconReset, ['href' => $url, 'class' => 'btn btn-inverse btn-mini', 'title' => $words->buttonResetAlt] );
 					$button	= '<span class="button-reset">'.$button.'</span>';
 				}
 				if( $suffix )

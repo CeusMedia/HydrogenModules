@@ -16,8 +16,8 @@ $fieldText	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'h4', 'Plain Text' ),
 		xmp( $message->text, TRUE ),
-	), array( 'class' => 'span12' ) ),
-), array( 'class' => 'row-fluid' ) );
+	), ['class' => 'span12'] ),
+), ['class' => 'row-fluid'] );
 
 $fieldHtml	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
@@ -27,21 +27,21 @@ $fieldHtml	= HtmlTag::create( 'div', array(
 			'style'			=> 'width: 100%; height: 600px; border: 1px solid gray;',
 			'frameborder'	=> 0,
 		) ),
-	), array( 'class' => 'span12' ) ),
-), array( 'class' => 'row-fluid' ) );
+	), ['class' => 'span12'] ),
+), ['class' => 'row-fluid'] );
 
 if( !$message->text )
 	$fieldText	= '';
 if( !$message->html )
 	$fieldHtml	= '';
 
-$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 $buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'href'	=> './work/mail/group/message',
 	'class'	=> 'btn',
 ) );
 
-$iconParse		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
+$iconParse		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
 $buttonParse	= '';
 if( $message->status == Model_Mail_Group_Message::STATUS_NEW ){
 	$buttonParse	= HtmlTag::create( 'a', $iconParse.'&nbsp;noch einmal einlesen', array(
@@ -58,6 +58,6 @@ return $tabs.HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', join( ' ', array(
 			$buttonCancel,
 			$buttonParse
-		) ), array( 'class' => 'buttonbar' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+		) ), ['class' => 'buttonbar'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );

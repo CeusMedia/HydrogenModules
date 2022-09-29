@@ -36,7 +36,7 @@ class Controller_Share extends Controller{
 		$captcha->useLarges		= FALSE;
 		$captcha->useSmalls		= TRUE;
 		$captcha->length		= 6;
-		$captcha->background	= array( 247, 247, 247 );
+		$captcha->background	= [247, 247, 247];
 		$captcha->width			= 160;
 		$captcha->height		= 60;
 		$captcha->fontSize		= 16;

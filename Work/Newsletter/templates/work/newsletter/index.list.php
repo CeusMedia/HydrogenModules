@@ -17,7 +17,7 @@ $statusColors	= array(
 	2		=> "info",
 );
 
-extract( $view->populateTexts( array( 'noneExisting', 'noneFound' ), 'html/work/newsletter/index/list/' ) );
+extract( $view->populateTexts( ['noneExisting', 'noneFound'], 'html/work/newsletter/index/list/' ) );
 
 $list		= $textNoneExisting;
 if( $total ){
@@ -25,28 +25,28 @@ if( $total ){
 	if( $newsletters ){
 		$list	= [];
 		foreach( $newsletters as $newsletter ){
-			$attributes		= array( 'href' => './work/newsletter/edit/'.$newsletter->newsletterId );
+			$attributes		= ['href' => './work/newsletter/edit/'.$newsletter->newsletterId];
 			$link			= HtmlTag::create( 'a', $newsletter->title, $attributes );
-			$iconStatus		= HtmlTag::create( 'i', "", array( 'class' => 'fa fa-fw fa-'.$statusIcons[$newsletter->status] ) );
+			$iconStatus		= HtmlTag::create( 'i', "", ['class' => 'fa fa-fw fa-'.$statusIcons[$newsletter->status]] );
 			$cellLink		= HtmlTag::create( 'td', $link );
 			$cellStatus		= HtmlTag::create( 'td', $iconStatus.' '.$words->states[$newsletter->status] );
 			$cellCreated	= HtmlTag::create( 'td', date( 'd.m.Y', $newsletter->createdAt ) );
 			$cellModified	= HtmlTag::create( 'td', $newsletter->modifiedAt ? date( 'd.m.Y', $newsletter->modifiedAt ) : '-' );
 			$cellSent		= HtmlTag::create( 'td', $newsletter->sentAt ? date( 'd.m.Y', $newsletter->sentAt ) : '-' );
 			$rowColor		= $statusColors[$newsletter->status];
-			$cells			= array( $cellLink, $cellStatus, $cellCreated, $cellModified, $cellSent );
-			$attributes		= array( 'class' => $rowColor );
+			$cells			= [$cellLink, $cellStatus, $cellCreated, $cellModified, $cellSent];
+			$attributes		= ['class' => $rowColor];
 			$list[]			= HtmlTag::create( 'tr', $cells, $attributes );
 		}
 		$tableRows		= join( $list );
-		$tableHeads		= HtmlElements::TableHeads( array( $w->columnTitle, $w->columnStatus, $w->columnCreatedAt, $w->columnModifiedAt, $w->columnSentAt ) );
-		$tableColumns	= HtmlElements::ColumnGroup( array( '', '140px', '120px', '120px', '120px' ) );
+		$tableHeads		= HtmlElements::TableHeads( [$w->columnTitle, $w->columnStatus, $w->columnCreatedAt, $w->columnModifiedAt, $w->columnSentAt] );
+		$tableColumns	= HtmlElements::ColumnGroup( ['', '140px', '120px', '120px', '120px'] );
 		$tableHead		= HtmlTag::create( 'thead', $tableHeads );
 		$tableBody		= HtmlTag::create( 'tbody', $tableRows );
-		$list			= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
+		$list			= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, ['class' => 'table table-condensed table-hover table-striped'] );
 	}
 }
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, array(
 	'href'	=> './work/newsletter/add',
@@ -56,7 +56,7 @@ $buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, array(
 $modalAddTrigger	= new \CeusMedia\Bootstrap\Modal\Trigger( 'modal-add-trigger' );
 $modalAddTrigger->setModalId( 'modal-add' );
 $modalAddTrigger->setLabel( $iconAdd.$w->link_add );
-$modalAddTrigger->setAttributes( array( 'class' => 'btn btn-success' ) );
+$modalAddTrigger->setAttributes( ['class' => 'btn btn-success'] );
 
 $buttonAdd	= $modalAddTrigger;
 
@@ -69,7 +69,7 @@ if( $limiter && $limiter->denies( 'Work.Newsletter.Newsletter:maxItems', count( 
 
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './work/newsletter', $page, $pages );
 
-$panelFilter	= $view->loadTemplateFile( 'work/newsletter/index.filter.php', array( 'inlineFilter' => TRUE ) );
+$panelFilter	= $view->loadTemplateFile( 'work/newsletter/index.filter.php', ['inlineFilter' => TRUE] );
 
 return '
 <div class="content-panel">

@@ -36,17 +36,17 @@ if( count( $note->links ) ){
 			);
 		}
 		$rows[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $label.$link, array( 'class' => 'autocut' ) )
+			HtmlTag::create( 'td', $label.$link, ['class' => 'autocut'] )
 		) );
 	}
-	$thead	= HtmlTag::create( 'thead', $rows, array() );
-	$table	= HtmlTag::create( 'table', array( $thead ), array( 'class' => 'table table-striped table-condensed table-fixed' ) );
+	$thead	= HtmlTag::create( 'thead', $rows, [] );
+	$table	= HtmlTag::create( 'table', [$thead], ['class' => 'table table-striped table-condensed table-fixed'] );
 	$panelLinks	= HtmlTag::create( 'div', array(
 		HtmlTag::create( 'h3', 'Links' ),
 		HtmlTag::create( 'div', $table, array(
 			'class'	=> 'content-panel-inner'
 		) ),
-	), array( 'class' => 'content-panel content-panel-table' ) );
+	), ['class' => 'content-panel content-panel-table'] );
 
 /*	$list	= [];
 	foreach( $note->links as $item ){
@@ -87,7 +87,7 @@ if( count( $note->tags ) ){
 #$converter	= new View_Helper_ContentConverter();
 switch( $note->format ){
 	case 'markdown':
-		$content	= HtmlTag::create( 'div', $note->content, array( 'id' => 'content-format-markdown', 'style' => "display: none" ) );
+		$content	= HtmlTag::create( 'div', $note->content, ['id' => 'content-format-markdown', 'style' => "display: none"] );
 		break;
 	case 'plaintext':
 		$content	= nl2br( $note->content );

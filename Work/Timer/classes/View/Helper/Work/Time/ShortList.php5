@@ -9,9 +9,9 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	protected $projectId	= NULL;
 	protected $module		= NULL;
 	protected $moduleId		= NULL;
-	protected $buttons		= array( 'start', 'pause', 'stop' );
-	protected $limits		= array( 0, 20 );
-	protected $orders		= array( 'createdAt' => 'ASC' );
+	protected $buttons		= ['start', 'pause', 'stop'];
+	protected $limits		= [0, 20];
+	protected $orders		= ['createdAt' => 'ASC'];
 
 	public function render(): string
 	{
@@ -44,9 +44,9 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 			$buttonGroup	= $this->renderButtons( $timer );
 
 			$buttons		= HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', $buttonGroup, array( 'class' => 'span4' )  ),
-				HtmlTag::create( 'div', $time , array( 'class' => 'span8', 'style' => 'text-align: right' ) ),
-			), array( 'class' => 'row-fluid' ) );
+				HtmlTag::create( 'div', $buttonGroup, ['class' => 'span4']  ),
+				HtmlTag::create( 'div', $time , ['class' => 'span8', 'style' => 'text-align: right'] ),
+			), ['class' => 'row-fluid'] );
 
 			$rowClass		= $timer->status == 1 ? 'success' : ( $timer->status == 2 ? 'notice' : '' );
 			$rows[]			= HtmlTag::create( 'tr', array(
@@ -56,7 +56,7 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 					$linkRelation,
 					$buttons
 				) ),
-			), array( 'class' => $rowClass ) );
+			), ['class' => $rowClass] );
 		}
 		$tableHeads	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'th', 'Aktivität' ),
@@ -83,7 +83,7 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	{
 		$limit			= min( 100, max( 1, $limit ) );
 		$offset			= max( 0, $offset );
-		$this->limits	= array( $offset, $limit );
+		$this->limits	= [$offset, $limit];
 		return $this;
 	}
 
@@ -156,8 +156,8 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 			'href'		=> $timer->relationLink,
 			'class'		=> 'title autocut',
 		) );
-		$linkRelation	= HtmlTag::create( 'small', array( $labelType, $linkRelation ) );
-		return HtmlTag::create( 'div', $linkRelation, array( 'class' => 'autocut' ) );
+		$linkRelation	= HtmlTag::create( 'small', [$labelType, $linkRelation] );
+		return HtmlTag::create( 'div', $linkRelation, ['class' => 'autocut'] );
 	}
 
 	protected function renderTimes( $timer ): string
@@ -182,8 +182,8 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	protected function renderTitleLink( $timer ): string
 	{
 		$title	= strlen( trim( $timer->title ) ) ? htmlentities( $timer->title, ENT_QUOTES, 'UTF-8' ) : '<em class="muted">unbenannt</em>';
-		$title	= HtmlTag::create( 'a', $title, array( 'href' => './work/time/edit/'.$timer->workTimerId.'?from='.$this->from ) );
-		$title	= HtmlTag::create( 'div', $title, array( 'class' => 'autocut' ) );
+		$title	= HtmlTag::create( 'a', $title, ['href' => './work/time/edit/'.$timer->workTimerId.'?from='.$this->from] );
+		$title	= HtmlTag::create( 'div', $title, ['class' => 'autocut'] );
 		return $title;
 	}
 
@@ -194,7 +194,7 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 		$helper	= new View_Helper_Member( $this->env );
 		$helper->setUser( $timer->workerId );
 		$helper->setMode( 'inline' );
-		$label	= HtmlTag::create( 'span', 'Bearbeiter: ', array( 'class' => 'muted' ) );
-		return HtmlTag::create( 'div', $label.$helper->render(), array( 'class' => 'autocut' ) );
+		$label	= HtmlTag::create( 'span', 'Bearbeiter: ', ['class' => 'muted'] );
+		return HtmlTag::create( 'div', $label.$helper->render(), ['class' => 'autocut'] );
 	}
 }

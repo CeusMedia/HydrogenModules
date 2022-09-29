@@ -32,7 +32,7 @@ class Controller_Manage_Catalog_Bookstore_Tag extends Controller
 		if( $this->session->get( 'filter_manage_catalog_bookstore_tag_search' ) )
 			$conditions['tag']	= '%'.$this->session->get( 'filter_manage_catalog_bookstore_tag_search' ).'%';
 
-		$list			= $modelTag->getAll( $conditions, array( 'tag' => 'ASC' ) );
+		$list			= $modelTag->getAll( $conditions, ['tag' => 'ASC'] );
 		$tags			= [];
 		$articleIds		= [];
 //print_m( $list[0] );die;
@@ -40,7 +40,7 @@ class Controller_Manage_Catalog_Bookstore_Tag extends Controller
 			if( !array_key_exists( $item->tag, $tags ) ){
 				$tags[$item->tag]	= (object) array(
 					'tag'			=> $item->tag,
-					'articleIds'	=> array(),
+					'articleIds'	=> [],
 				);
 			}
 			$tags[$item->tag]->articleIds[]	= $item->articleId;
@@ -52,7 +52,7 @@ class Controller_Manage_Catalog_Bookstore_Tag extends Controller
 		}
 		$articles	= [];
 		if( $articleIds ){
-			$list		= $modelArticle->getAll( array( 'articleId' => array_keys( $articleIds ) ) );
+			$list		= $modelArticle->getAll( ['articleId' => array_keys( $articleIds )] );
 			foreach( $list as $item ){
 				$articles[$item->articleId]	= $item;
 			}

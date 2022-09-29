@@ -161,7 +161,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 			if( empty( $parameters->index ) )
 				throw new RuntimeException( 'DB: No index defined for target field "'.$fieldName.'"' );
 
-			$indices	= array( 1 );
+			$indices	= [1];
 			foreach( $parameters->index as $indexColumn => $indexSource ){
 				$indexValue	= $this->resolveValue( $indexSource, $input );
 				if( $indexValue === NULL ){

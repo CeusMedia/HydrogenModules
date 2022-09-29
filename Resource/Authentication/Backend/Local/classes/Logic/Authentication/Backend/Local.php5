@@ -23,7 +23,7 @@ class Logic_Authentication_Backend_Local extends Logic
 				else{																				//  @todo  remove whole block if old user password support decays
 					$salt		= $this->env->getConfig()->get( 'module.resource_users.password.salt' );
 					$crypt		= md5( $salt.$password );
-					$conditions	= array( 'userId' => $userId, 'password' => $crypt );
+					$conditions	= ['userId' => $userId, 'password' => $crypt];
 					if( $this->modelUser->count( $conditions ) === 1 ){
 						$logic->migrateOldUserPassword( $userId, $password );
 						return TRUE;
@@ -33,7 +33,7 @@ class Logic_Authentication_Backend_Local extends Logic
 			else{																					//  @todo  remove whole block if old user password support decays
 				$salt		= $this->env->getConfig()->get( 'module.resource_users.password.salt' );
 				$crypt		= md5( $salt.$password );
-				$conditions	= array( 'userId' => $userId, 'password' => $crypt );
+				$conditions	= ['userId' => $userId, 'password' => $crypt];
 				return $this->modelUser->count( $conditions ) === 1;
 			}
 		}

@@ -163,9 +163,9 @@ class Hook_JS_TinyMce extends Hook
 	 */
 	static public function onGetAvailableContentEditor( Environment $env, object $context, $module, array & $payload )
 	{
-		if( !empty( $payload['type'] ) && !in_array( $payload['type'], array( 'wys' ) ) )
+		if( !empty( $payload['type'] ) && !in_array( $payload['type'], ['wys'] ) )
 			return;
-		if( !empty( $payload['format'] ) && !in_array( $payload['format'], array( 'html' ) ) )
+		if( !empty( $payload['format'] ) && !in_array( $payload['format'], ['html'] ) )
 			return;
 		$editor	= (object) array(
 			'key'		=> 'tinymce',

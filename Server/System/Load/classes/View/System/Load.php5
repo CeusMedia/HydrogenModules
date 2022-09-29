@@ -63,7 +63,7 @@ class View_System_Load extends View{
 				$contentGraph	= HtmlTag::create( 'div', HtmlTag::create( 'div', '', array(
 						'class'	=> 'bar',
 						'style'	=> 'width: '.round( $barValue, 2 ).'%;',
-					) ), array( 'class' => 'progress progress-'.$barStyle ) );
+					) ), ['class' => 'progress progress-'.$barStyle] );
 
 				$contentTrends	= '
 				<table class="table table-condensed table-fixed" style="margin: 0;" data-style="border: 1px solid rgba(127, 127, 127, 0.25)">
@@ -127,6 +127,6 @@ class View_System_Load extends View{
 		$prefix		= $number < 0 ? '&minus;' : '&plus;';
 		$factor		= $inverse ? -1 : 1;
 		$style		= ( $number * $factor < 0 ) ? 'error' : 'success';
-		return HtmlTag::create( 'span', $prefix.$value.$unit, array( 'class' => 'text text-'.$style ) );
+		return HtmlTag::create( 'span', $prefix.$value.$unit, ['class' => 'text text-'.$style] );
 	}
 }

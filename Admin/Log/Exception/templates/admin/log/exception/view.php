@@ -12,8 +12,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var object $server */
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 // already done in controller
 //$exceptionEnv		= unserialize( $exception->env );
@@ -79,7 +79,7 @@ function renderFactsSection( $env, $exception, $exceptionEnv, $exceptionRequest 
 	$list	= [];
 	foreach( $facts as $key => $value )
 		$list[]	= HtmlTag::create( 'dt', $key ).HtmlTag::create( 'dd', $value );
-	return HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+	return HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 }
 
 function renderFileSection( $env, $exception ): ?string
@@ -111,26 +111,26 @@ function renderMapTable( $map, $sort = TRUE ){
 	if( $sort )
 		ksort( $map );
 	foreach( $map as $key => $value ){
-		$key	= HtmlTag::create( 'div', $key, array( 'style' => 'font-family: monospace; font-size: 0.85em; letter-spacing: -0.5px' ) );
+		$key	= HtmlTag::create( 'div', $key, ['style' => 'font-family: monospace; font-size: 0.85em; letter-spacing: -0.5px'] );
 		$type	= ucfirst( gettype( $value ) );
-		$type	= HtmlTag::create( 'small', $type, array( 'class' => 'muted' ) );
+		$type	= HtmlTag::create( 'small', $type, ['class' => 'muted'] );
 		$rows[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', count( $rows ) + 1, array( 'style' => 'text-align: right' ) ),
+			HtmlTag::create( 'td', count( $rows ) + 1, ['style' => 'text-align: right'] ),
 			HtmlTag::create( 'td', $key ),
-			HtmlTag::create( 'td', $type, array( 'style' => 'text-align: right' ) ),
+			HtmlTag::create( 'td', $type, ['style' => 'text-align: right'] ),
 //			HtmlTag::create( 'td', json_encode( $value ) ),
 			HtmlTag::create( 'td', htmlentities( stripslashes( trim( json_encode( $value ), '"' ) ), ENT_QUOTES, 'utf-8' ) ),
 		) );
 	}
 	$colgroup		= HtmlElements::ColumnGroup( '40px', '35%', '7%', '' );
 	$thead			= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
-		HtmlTag::create( 'th', '#', array( 'style' => 'text-align: right' ) ),
+		HtmlTag::create( 'th', '#', ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'th', 'Key' ),
-		HtmlTag::create( 'th', 'Type', array( 'style' => 'text-align: right' ) ),
+		HtmlTag::create( 'th', 'Type', ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'th', 'Value' )
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
-	$table	= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array(
+	$table	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], array(
 		'class'	=> 'table table-striped table-condensed',
 		'style'	=> 'border: 1px solid rgba(127, 127, 127, 0.5)',
 	) );
@@ -148,7 +148,7 @@ function renderRequestSection( $env, $exception, $exceptionRequest ): ?string
 	if( get_class( $exceptionRequest ) !== ArgumentParser::class ){
 		$methodLine				= 'Method: '.$exceptionRequest->getMethod()->get().PHP_EOL;
 		$lines					= $exceptionRequest->getHeaders()->render();
-		$requestHeaders			= HtmlTag::create( 'xmp', $methodLine.$lines, array( 'style' => $xmpStyle ) );
+		$requestHeaders			= HtmlTag::create( 'xmp', $methodLine.$lines, ['style' => $xmpStyle] );
 		$sectionRequestHeaders	= HtmlTag::create( 'h4', 'Request Headers' ).$requestHeaders;
 	}
 	$sectionRequestData			= HtmlTag::create( 'h4', 'Request Data' ).renderMapTable( $exceptionRequest->getAll() );

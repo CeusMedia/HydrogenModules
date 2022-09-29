@@ -4,10 +4,10 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //  --  PANEL: SOURCE LIST  --  //
 $w				= (object) $words->styles;
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
-$labelEmpty		= HtmlTag::create( 'em', $w->empty, array( 'class' => 'muted' ) );
-$listStyles		= HtmlTag::create( 'div', $labelEmpty, array( 'class' => 'alert alert-info' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
+$labelEmpty		= HtmlTag::create( 'em', $w->empty, ['class' => 'muted'] );
+$listStyles		= HtmlTag::create( 'div', $labelEmpty, ['class' => 'alert alert-info'] );
 $buttonAdd		= HtmlTag::create( 'button', $iconAdd.$w->buttonAdd, array(
 	'type'			=> "button",
 	'class'			=> "btn btn-success btn-small",
@@ -30,15 +30,15 @@ if( $styles ){
 		);
 		$linkRemove			= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, $attributes );
 		if( $isUsed )
-			$linkRemove		= HtmlTag::create( 'button', $iconRemove.$w->buttonRemove, array_merge( $attributes, array( 'disabled' => 'disabled' ) ) );
-		$linkRemove			= HtmlTag::create( 'div', $linkRemove, array( 'class' => 'pull-right' ) );
+			$linkRemove		= HtmlTag::create( 'button', $iconRemove.$w->buttonRemove, array_merge( $attributes, ['disabled' => 'disabled'] ) );
+		$linkRemove			= HtmlTag::create( 'div', $linkRemove, ['class' => 'pull-right'] );
 		$styles[$nr]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $label, array( 'class' => '' ) ),
-			HtmlTag::create( 'td', $linkRemove, array( 'class' => '' ) ),
+			HtmlTag::create( 'td', $label, ['class' => ''] ),
+			HtmlTag::create( 'td', $linkRemove, ['class' => ''] ),
 		) );
 	}
 	$colgroup		= HtmlElements::ColumnGroup( "", "120px" );
-	$tableHeads		= HtmlElements::TableHeads( array( 'Einträge', '' ) );
+	$tableHeads		= HtmlElements::TableHeads( ['Einträge', ''] );
 	$thead			= HtmlTag::create( 'thead', $tableHeads );
 	$tbody			= HtmlTag::create( 'tbody', $styles );
 	$listStyles		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
@@ -87,7 +87,7 @@ $panelPreview	= '
 	</div>
 </div>';
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/newsletter/template/styles/' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/work/newsletter/template/styles/' ) );
 
 return $textTop.'
 <div class="row-fluid">

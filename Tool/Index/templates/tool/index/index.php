@@ -12,7 +12,7 @@ foreach( $list as $item ){
 		$tags	= implode( ", ", $tagList );
 		$tags	= '<br/><span class="tags">Tags: '.$tags.'</span>';
 	}
-	$link	= HtmlTag::create( "a", $item, array( 'href' => "./tools/".$item."/" ) );
+	$link	= HtmlTag::create( "a", $item, ['href' => "./tools/".$item."/"] );
 	$tools[$item]	= HtmlTag::create( "li", $link.$description.$tags );
 }
 

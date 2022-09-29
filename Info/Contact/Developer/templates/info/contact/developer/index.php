@@ -1,6 +1,6 @@
 <?php
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/info/contact/developer/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/info/contact/developer/' ) );
 
 return $textTop.'
 <div class="content-panel">

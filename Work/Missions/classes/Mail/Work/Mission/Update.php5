@@ -22,7 +22,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 	protected function renderLabel( $content, $class = NULL )
 	{
 		$class	= 'label'.( $class ? ' label-'.$class : '' );
-		return HtmlTag::create( 'span', $content, array( 'class' => $class ) );
+		return HtmlTag::create( 'span', $content, ['class' => $class] );
 	}
 
 	protected function prepareFacts( $data )
@@ -46,12 +46,12 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 			$logicProject	= Logic_Project::getInstance( $this->env );
 			$projectOld		= $old->projectId ? $logicProject->getProject( $old->projectId ) : '-';
 			if( $projectOld ){
-				$linkProjectOld	= HtmlTag::create( 'a', $projectOld->title, array( 'href' => './manage/project/view/'.$projectOld->projectId ) );
+				$linkProjectOld	= HtmlTag::create( 'a', $projectOld->title, ['href' => './manage/project/view/'.$projectOld->projectId] );
 				$projectHtml	= $linkProjectOld;
 				$projectText	= $projectOld->title;
 				if( $new->projectId && $old->projectId !== $new->projectId ){
 					$projectNew		= $logicProject->getProject( $new->projectId );
-					$linkProjectNew	= HtmlTag::create( 'a', $projectNew->title, array( 'href' => './manage/project/view/'.$projectNew->projectId ) );
+					$linkProjectNew	= HtmlTag::create( 'a', $projectNew->title, ['href' => './manage/project/view/'.$projectNew->projectId] );
 					$projectHtml	.= '<br/>&rarr; '.$linkProjectNew;
 					$projectText	= $projectText.PHP_EOL.'-> '.$projectNew->title;
 				}
@@ -200,7 +200,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 		$nowMonth		= $this->labelsMonthNames[date( 'n' )];
 		$dateFull		= $nowWeekday.', der '.date( "j" ).'.&nbsp;'.$nowMonth;
 
-		$content		= HtmlTag::create( 'em', $this->words->emptyContent, array( 'class' => 'muted' ) );
+		$content		= HtmlTag::create( 'em', $this->words->emptyContent, ['class' => 'muted'] );
 		if( strlen( trim( $new->content ) ) )
 		 	$content	= View_Helper_Markdown::transformStatic( $this->env, $new->content );
 
@@ -211,10 +211,10 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 				'type'		=> $this->labelsTypes[$old->type],
 				'modifier'	=> $this->renderUser( $this->modelUser->get( $new->modifierId ) ),
 				'url'		=> $url,
-				'link'		=> HtmlTag::create( 'a', $old->title, array( 'href' => $url ) ),
+				'link'		=> HtmlTag::create( 'a', $old->title, ['href' => $url] ),
 				'today'		=> array(
-					'long'	=> HtmlTag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) ),
-					'short'	=> HtmlTag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) ),
+					'long'	=> HtmlTag::create( 'span', $dateFull, ['class' => 'text-date-full'] ),
+					'short'	=> HtmlTag::create( 'span', date( $formatDate ), ['class' => 'text-date-short'] ),
 				),
 				'content'	=> $content,
 			),

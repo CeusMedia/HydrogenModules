@@ -16,7 +16,7 @@ class Controller_Admin_Module_Source extends Controller{
 	}
 
 	public function ajaxReadSource( $sourceId = NULL ){
-		$source		= (object) array( 'id' => NULL, 'path' => NULL, 'type' => NULL );
+		$source		= (object) ['id' => NULL, 'path' => NULL, 'type' => NULL];
 		if( $sourceId ){
 			$source		= $this->model->get( $sourceId );
 			$source->id	= $sourceId;
@@ -228,8 +228,8 @@ class Controller_Admin_Module_Source extends Controller{
 			if( $linkToViewer ){
 				$url	= './admin/module/viewer/view/'.$module->id;
 				$class	= 'icon module module-status0';
-				$link	= HtmlTag::create( 'a', $label, array( 'href' => $url ) );
-				$label	= HtmlTag::create( 'span', $link, array( 'class' => $class ) );
+				$link	= HtmlTag::create( 'a', $label, ['href' => $url] );
+				$label	= HtmlTag::create( 'span', $link, ['class' => $class] );
 			}
 			$list[]	= HtmlTag::create( 'li', $label );
 		}
@@ -273,7 +273,7 @@ class Controller_Admin_Module_Source extends Controller{
 			}
 		}
 
-		$sourceLabel	= HtmlTag::create( 'acronym', $sourceId, array( 'title' => $source->title ) );
+		$sourceLabel	= HtmlTag::create( 'acronym', $sourceId, ['title' => $source->title] );
 		if( $modulesAdded || $modulesRemoved || $modulesUpdated ){
 			$this->messenger->noteSuccess( $words->successRefresh, $sourceLabel, count( $modulesAdded ), count( $modulesRemoved ), count( $modulesUpdated ) );
 			if( $modulesAdded ){

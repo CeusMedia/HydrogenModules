@@ -44,7 +44,7 @@ class Controller_Work_Billing_Person_Payout extends Controller
 			else if( $filterMonth )
 				$conditions['dateBooked']	= '%-'.$filterMonth.'-%';
 		}
-		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
+		$orders		= ['dateBooked' => 'ASC', 'transactionId' => 'ASC'];
 		$limits		= [];
 		$payouts	= $this->logic->getPersonPayouts( $personId, $conditions, $orders, $limits );
 		$this->addData( 'person', $this->logic->getPerson( $personId ) );

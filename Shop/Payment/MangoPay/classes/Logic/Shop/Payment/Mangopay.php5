@@ -103,7 +103,7 @@ class Logic_Shop_Payment_Mangopay extends Logic
 	{
 		$wallets		= $this->logicMangopay->getUserWalletsByCurrency( $mangopayUserId, $orderCurrency );
 		if( !$wallets )
-			$wallets	= array( $this->logicMangopay->createUserWallet( $mangopayUserId, $orderCurrency ) );
+			$wallets	= [$this->logicMangopay->createUserWallet( $mangopayUserId, $orderCurrency )];
 		$wallet	= $wallets[0];
 	}
 }

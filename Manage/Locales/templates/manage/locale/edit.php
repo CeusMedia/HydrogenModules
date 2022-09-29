@@ -19,7 +19,7 @@ $attributesButton	= array(
 	'class'	=> 'button save btn btn-success',
 );
 
-$optPath	= array_merge( array( '' ), $paths );
+$optPath	= array_merge( [''], $paths );
 $optPath	= array_combine( $optPath, $optPath );
 $optPath	= HtmlElements::Options( $optPath, $pathName );
 

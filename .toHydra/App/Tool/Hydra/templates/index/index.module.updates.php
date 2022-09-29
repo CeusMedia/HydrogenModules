@@ -13,7 +13,7 @@ foreach( $modulesUpdate as $module ){
 	$label		= $desc ? '<acronym title="'.$desc.'">'.$module->title.'</acronym>' : $module->title;
 	$label		= '<span class="module">'.$label.'</span>';
 
-	$attributes	= array( 'href' => './admin/module/viewer/index/'.$module->id );
+	$attributes	= ['href' => './admin/module/viewer/index/'.$module->id];
 	$link		= HtmlTag::create( 'a', $module->title, $attributes );
 
 	$versions	= '<span class="muted" style="float: right">'.$module->versionInstalled.'&nbsp;&rArr;&nbsp;'.$module->versionAvailable.'</span>';

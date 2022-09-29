@@ -5,12 +5,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $labelsCustomer	= $this->getWords( 'customer', 'manage/shop' );
 
 $baseUrl	= './manage/shop/order/setStatus/'.$order->orderId.'/';
-$buttons	= array( new \CeusMedia\Bootstrap\LinkButton( './manage/shop/order', '', 'btn-small', 'arrow-left' ) );
+$buttons	= [new \CeusMedia\Bootstrap\LinkButton( './manage/shop/order', '', 'btn-small', 'arrow-left' )];
 
 $states	= array(
 	(object) array(
 		'enabled'	=> TRUE,
-		'from'		=> array( -5, -4, 3 ),
+		'from'		=> [-5, -4, 3],
 		'to'		=> -6,
 		'label'		=> 'erstattet',
 		'class'		=> 'btn-danger',
@@ -18,7 +18,7 @@ $states	= array(
 	),
 	(object) array(
 		'enabled'	=> TRUE,
-		'from'		=> array( 4, 5, 6 ),
+		'from'		=> [4, 5, 6],
 		'to'		=> -5,
 		'label'		=> 'reklamiert',
 		'class'		=> 'btn-warning',
@@ -26,7 +26,7 @@ $states	= array(
 	),
 	(object) array(
 		'enabled'	=> FALSE,
-		'from'		=> array( 3 ),
+		'from'		=> [3],
 		'to'		=> -4,
 		'label'		=> 'nicht zugestellt',
 		'class'		=> 'btn-danger',
@@ -34,7 +34,7 @@ $states	= array(
 	),
 	(object) array(
 		'enabled'	=> TRUE,
-		'from'		=> array( 2 ),
+		'from'		=> [2],
 		'to'		=> -3,
 		'label'		=> 'nicht bezahlt',
 		'class'		=> 'btn-danger',
@@ -42,7 +42,7 @@ $states	= array(
 	),
 	(object) array(
 		'enabled'	=> TRUE,
-		'from'		=> array( 2 ),
+		'from'		=> [2],
 		'to'		=> -2,
 		'label'		=> 'storniert',
 		'class'		=> 'btn-danger',
@@ -50,7 +50,7 @@ $states	= array(
 	),
 	(object) array(
 		'enabled'	=> FALSE,
-		'from'		=> array( 0 ),
+		'from'		=> [0],
 		'to'		=> -1,
 		'label'		=> 'abbrechen',
 		'class'		=> 'btn-danger',
@@ -58,7 +58,7 @@ $states	= array(
 	),
 	(object) array(
 		'enabled'	=> FALSE,
-		'from'		=> array( 2 ),
+		'from'		=> [2],
 		'to'		=> 1,
 		'label'		=> 'nicht bezahlt',
 		'class'		=> 'btn-danger',
@@ -66,7 +66,7 @@ $states	= array(
 	),
 	(object) array(
 		'enabled'	=> FALSE,
-		'from'		=> array(  -6, -2 ),
+		'from'		=> [ -6, -2],
 		'to'		=> 2,
 		'label'		=> 'bestellt',
 		'class'		=> 'btn-warning',
@@ -74,7 +74,7 @@ $states	= array(
 	),
 	(object) array(
 		'enabled'	=> TRUE,
-		'from'		=> array( -3, 2 ),
+		'from'		=> [-3, 2],
 		'to'		=> 3,
 		'label'		=> 'bezahlt',
 		'class'		=> 'btn-warning',
@@ -82,7 +82,7 @@ $states	= array(
 	),
 	(object) array(
 		'enabled'	=> FALSE,
-		'from'		=> array( -4, 3 ),
+		'from'		=> [-4, 3],
 		'to'		=> 4,
 		'label'		=> 'teilweise',
 		'class'		=> 'btn-warning',
@@ -90,7 +90,7 @@ $states	= array(
 	),
 	(object) array(
 		'enabled'	=> TRUE,
-		'from'		=> array( 3, 4 ),
+		'from'		=> [3, 4],
 		'to'		=> 5,
 		'label'		=> 'zugestellt',
 		'class'		=> 'btn-warning',
@@ -98,7 +98,7 @@ $states	= array(
 	),
 	(object) array(
 		'enabled'	=> TRUE,
-		'from'		=> array( 5 ),
+		'from'		=> [5],
 		'to'		=> 6,
 		'label'		=> 'fertig!',
 		'class'		=> 'btn-success',
@@ -124,7 +124,7 @@ $buttons[]	= HtmlTag::create( 'a', '<i class="icon-question-sign icon-white"></i
 	'target'	=> '_blank',
 ) );
 
-$buttons	= new \CeusMedia\Bootstrap\Button\Toolbar( array( new \CeusMedia\Bootstrap\ButtonGroup( $buttons ) ) );
+$buttons	= new \CeusMedia\Bootstrap\Button\Toolbar( [new \CeusMedia\Bootstrap\ButtonGroup( $buttons )] );
 
 
 function renderDataList( $keys, $data, $labels ){
@@ -136,7 +136,7 @@ function renderDataList( $keys, $data, $labels ){
 		}
 	}
 	if( $list )
-		return HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+		return HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 }
 
 $optStatus	= $words['states'];
@@ -166,7 +166,7 @@ if( $order->customer )
 		<div class="content-panel">
 			<h4>Lieferanschrift</h4>
 			<div class="content-panel-inner">
-				'.renderDataList( array( 'institution', 'firstname', 'surname', 'country', 'region', 'city', 'postcode', 'street', 'email', 'phone' ), $order->customer->addressDelivery, $labelsCustomer ).'
+				'.renderDataList( ['institution', 'firstname', 'surname', 'country', 'region', 'city', 'postcode', 'street', 'email', 'phone'], $order->customer->addressDelivery, $labelsCustomer ).'
 			</div>
 		</div>
 	</div>';
@@ -176,7 +176,7 @@ if( $order->customer && $order->customer->addressBilling )
 		<div class="content-panel">
 			<h4>Rechnungsanschrift</h4>
 			<div class="content-panel-inner">
-				'.renderDataList( array( 'institution', 'firstname', 'surname', 'country', 'region', 'city', 'postcode', 'street', 'email', 'phone' ), $order->customer->addressBilling, $labelsCustomer ).'
+				'.renderDataList( ['institution', 'firstname', 'surname', 'country', 'region', 'city', 'postcode', 'street', 'email', 'phone'], $order->customer->addressBilling, $labelsCustomer ).'
 			</div>
 		</div>
 	</div>';
@@ -187,11 +187,11 @@ foreach( $order->positions as $position ){
 	$url	= './'.$position->bridge->data->backendUriPath.'edit/'.$position->articleId;
 	if( substr_count( $position->bridge->data->backendUriPath, "%s" ) )
 		$url	= './'.sprintf( $position->bridge->data->backendUriPath, (string)$position->articleId );
-	$link	= HtmlTag::create( 'a', $position->article->title, array( 'href' => $url ) );
+	$link	= HtmlTag::create( 'a', $position->article->title, ['href' => $url] );
 
-	$cellBridge		= HtmlTag::create( 'td', $position->bridge->data->title, array( 'class' => 'cell-position-bridge' ) );
-	$cellTitle		= HtmlTag::create( 'td', $link, array( 'class' => 'cell-position-title' ) );
-	$cellQuantity	= HtmlTag::create( 'td', $position->quantity, array( 'class' => 'cell-position-quantity' ) );
+	$cellBridge		= HtmlTag::create( 'td', $position->bridge->data->title, ['class' => 'cell-position-bridge'] );
+	$cellTitle		= HtmlTag::create( 'td', $link, ['class' => 'cell-position-title'] );
+	$cellQuantity	= HtmlTag::create( 'td', $position->quantity, ['class' => 'cell-position-quantity'] );
 	$cellStatus		= HtmlTag::create( 'td', new \CeusMedia\Bootstrap\ButtonGroup( array(
 		new \CeusMedia\Bootstrap\LinkButton(
 			'./manage/shop/order/setPositionStatus/'.$position->positionId.'/1',
@@ -207,11 +207,11 @@ foreach( $order->positions as $position ){
 			'ok',
 			$order->status < 1 || $position->status == 2
 		),
-	) ), array( 'class' => 'cell-position-actions' ) );
+	) ), ['class' => 'cell-position-actions'] );
 
 	$rowColor		= $position->status == 1 ? 'warning' : ( $position->status == 2 ? 'success' : 'error' );
-	$cells			= array( $cellQuantity, $cellTitle, $cellBridge, $cellStatus );
-	$attributes		= array( 'class' => $rowColor );
+	$cells			= [$cellQuantity, $cellTitle, $cellBridge, $cellStatus];
+	$attributes		= ['class' => $rowColor];
 	$rows[]			= HtmlTag::create( 'tr', $cells, $attributes );
 }
 
@@ -221,10 +221,10 @@ $tableHeads		= HtmlElements::TableHeads( array(
 	$w->head_bridge,
 	$w->head_status,
 ) );
-$tableColumns	= HtmlElements::ColumnGroup( array( '60', '', '220', '180' ) );
+$tableColumns	= HtmlElements::ColumnGroup( ['60', '', '220', '180'] );
 $tableHead		= HtmlTag::create( 'thead', $tableHeads );
 $tableBody		= HtmlTag::create( 'tbody', $rows );
-$tableArticles	= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
+$tableArticles	= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, ['class' => 'table table-condensed table-hover table-striped'] );
 
 $linkBack	= '<a href="./manage/shop/order">&laquo;&nbsp;zurück</a>';
 #$linkBack	= new \CeusMedia\Bootstrap\LinkButton( './manage/shop/order', 'zurück', 'btn-small', 'arrow-left' );

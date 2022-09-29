@@ -8,7 +8,7 @@ $w	= (object) $words['email'];
 if( !$env->getConfig()->get( 'module.manage_my_user.email.changeable' ) )
 	return '';
 
-extract( $view->populateTexts( array( 'panel.email.above', 'panel.email.below', 'panel.email.info' ), 'html/manage/my/user/' ) );
+extract( $view->populateTexts( ['panel.email.above', 'panel.email.below', 'panel.email.info'], 'html/manage/my/user/' ) );
 
 $hasInfo	= strlen( trim( strip_tags( $textPanelEmailInfo ) ) );
 
@@ -48,7 +48,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				$hasInfo ? HTML::DivClass( 'span6', $textPanelEmailInfo ) : '',
 			) ),
 			HTML::Buttons( array(
-				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
+				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, ['class' => 'not-muted'] ),
 				HTML::DivClass( 'row-fluid',
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
@@ -67,7 +67,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					) )
 				)
 			) )
-		), array( 'autocomplete' => 'off' ) )
+		), ['autocomplete' => 'off'] )
 	) )
 );
 ?>

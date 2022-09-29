@@ -11,7 +11,7 @@ class Job_Stripe_Event extends Job_Abstract{
 	}
 
 	public function handle(){
-		$orders	= array( 'eventId' => 'ASC' );
+		$orders	= ['eventId' => 'ASC'];
 		$events	= $this->modelEvent->getAllByIndex( 'status', Model_Stripe_Event::STATUS_RECEIVED, $orders );
 		foreach( $events as $event ){
 			print( 'Handling event '.$event->eventId.' ('.$event->type.') ... ' );

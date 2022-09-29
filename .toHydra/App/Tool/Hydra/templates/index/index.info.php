@@ -20,8 +20,8 @@ if( $instance->host === "localhost" ){
 $instanceUrl		= $instance->protocol.$instance->host.$instance->path;
 $instanceBase		= $remoteConfig->get( 'app.base.url' ) ? $remoteConfig->get( 'app.base.url' ) : "";
 
-$linkInstanceUrl	= HtmlTag::create( 'a', $instanceUrl, array( 'href' => $instanceUrl ) );
-$linkInstanceBase	= $instanceBase	? HtmlTag::create( 'a', $instanceBase, array( 'href' => $instanceBase ) ) : "<em>autodetect</em>";
+$linkInstanceUrl	= HtmlTag::create( 'a', $instanceUrl, ['href' => $instanceUrl] );
+$linkInstanceBase	= $instanceBase	? HtmlTag::create( 'a', $instanceBase, ['href' => $instanceBase] ) : "<em>autodetect</em>";
 
 $panel	= '
 <fieldset style="position: relative">

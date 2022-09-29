@@ -10,8 +10,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var object[] $clientWallets */
 
-$iconWallet	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-briefcase' ) );
-$iconBank	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bank' ) );
+$iconWallet	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-briefcase'] );
+$iconBank	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-bank'] );
 
 $helperMoney		= new View_Helper_Mangopay_Entity_Money( $env );
 $helperMoney->setFormat( View_Helper_Mangopay_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
@@ -23,16 +23,16 @@ foreach( $clientWallets as $wallet ){
 	$balance	= HtmlTag::create( 'strong', $helperMoney->set( $wallet->Balance ) );
 	$list[]	= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'td', $wallet->Id ),
-		HtmlTag::create( 'td', $balance, array( 'style' => 'text-align: right' ) ),
+		HtmlTag::create( 'td', $balance, ['style' => 'text-align: right'] ),
 	) );
 }
-$cols	= HtmlElements::ColumnGroup( array( '', '120' ) );
+$cols	= HtmlElements::ColumnGroup( ['', '120'] );
 $tbody	= HtmlTag::create( 'tbody', $list );
-$list	= HtmlTag::create( 'table', $cols.$tbody, array( 'class' => 'table table-fixed' ) );
+$list	= HtmlTag::create( 'table', $cols.$tbody, ['class' => 'table table-fixed'] );
 
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $iconWallet.'&nbsp;Client Wallets' ),
 	HtmlTag::create( 'div', array(
 		$list
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );

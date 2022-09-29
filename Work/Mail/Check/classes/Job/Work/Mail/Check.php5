@@ -12,9 +12,9 @@ class Job_Work_Mail_Check extends Job_Abstract
 		$checker		= new \CeusMedia\Mail\Check\Recipient( $sender, TRUE );
 		$checker->setVerbose( !TRUE );
 
-		$conditions	= array( 'status' => 1 );
-		$orders		= array( 'address' => 'ASC' );
-		$limits		= array( 0, $this->options->get( 'job.limit' ) );
+		$conditions	= ['status' => 1];
+		$orders		= ['address' => 'ASC'];
+		$limits		= [0, $this->options->get( 'job.limit' )];
 		$addresses	= $modelAddress->getAll( $conditions, $orders, $limits );
 		foreach( $addresses as $address ){
 			$this->out( "Checking: ".$address->address );

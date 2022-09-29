@@ -2,12 +2,12 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 unset( $folders[$folder->downloadFolderId] );
-$folders	= array_merge( array( 0	=> '' ), $folders );
+$folders	= array_merge( [0	=> ''], $folders );
 $optFolder	= HtmlElements::Options( $folders, $folder->parentId );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
@@ -32,7 +32,7 @@ $panelEdit	= HtmlTag::create( 'div', array(
 		HtmlTag::create( 'form', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'Ordnername', array( 'for' => 'input_title' ) ),
+					HtmlTag::create( 'label', 'Ordnername', ['for' => 'input_title'] ),
 					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'text',
 						'name'		=> 'title',
@@ -41,9 +41,9 @@ $panelEdit	= HtmlTag::create( 'div', array(
 						'value'		=> htmlentities( $folder->title, ENT_QUOTES, 'UTF-8' ),
 						'required'	=> 'required',
 					) ),
-				), array( 'class' => 'span6' ) ),
+				), ['class' => 'span6'] ),
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'In Ordner', array( 'for' => 'input_parentId' ) ),
+					HtmlTag::create( 'label', 'In Ordner', ['for' => 'input_parentId'] ),
 					HtmlTag::create( 'select', $optFolder, array(
 						'type'		=> 'text',
 						'name'		=> 'parentId',
@@ -51,23 +51,23 @@ $panelEdit	= HtmlTag::create( 'div', array(
 						'class'		=> 'span12',
 				 //		'required'	=> 'required',
 					) ),
-				), array( 'class' => 'span6' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span6'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', join( ' ', array(
 				$buttonCancel,
 				$buttonSave,
 				$buttonRemove
-			) ), array( 'class' => 'buttonbar' ) ),
-		), array( 'action' => './info/file/editFolder/'.$folder->downloadFolderId, 'method' => 'post' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+			) ), ['class' => 'buttonbar'] ),
+		), ['action' => './info/file/editFolder/'.$folder->downloadFolderId, 'method' => 'post'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/file/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/file/' ) );
 
 return $textIndexTop.'
 <div>'.View_Info_File::renderPosition( $env, $folder->downloadFolderId, NULL ).'</div><br/>'
 .HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		$panelEdit,
-	), array( 'class' => 'span9' ) ),
-), array( 'class' => 'row-fluid' ) );
+	), ['class' => 'span9'] ),
+), ['class' => 'row-fluid'] );

@@ -13,9 +13,9 @@ $optStatus		= HtmlElements::Options( $optStatus, $license->status );
 $optDuration	= $words['durations'];
 $optDuration	= HtmlElements::Options( $optDuration, $license->duration );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconView		= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open icon-white'] );
 
 $w	= (object) $words['edit'];
 

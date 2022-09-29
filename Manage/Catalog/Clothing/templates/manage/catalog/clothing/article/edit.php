@@ -2,16 +2,16 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
 
 $optCategoryId	= [];
 foreach( $categoryMap as $item )
 	$optCategoryId[$item->categoryId]	= $item->title;
 $optCategoryId	= HtmlElements::Options( $optCategoryId, $article->categoryId );
 
-$optCurrency	= array( 'EUR' => 'EURO' );
+$optCurrency	= ['EUR' => 'EURO'];
 $optCurrency	= HtmlElements::Options( $optCurrency, $article->currency );
 
 $panelFacts	= '
@@ -123,9 +123,9 @@ $panelFacts	= '
 	</div>
 </div>';
 
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconUpload		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconUpload		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-folder-open'] );
 
 $image			= '';
 $buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;entfernen', array(

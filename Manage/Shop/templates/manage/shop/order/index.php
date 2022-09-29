@@ -24,27 +24,27 @@ $statusIcons		= array(
 
 $listOrders	= [];
 foreach( $orders as $order ){
-	$attributes		= array( 'href' => './manage/shop/order/edit/'.$order->orderId );
-	$iconStatus		= HtmlTag::create( 'i', "", array( 'class' => 'icon-'.$statusIcons[$order->status] ) );
+	$attributes		= ['href' => './manage/shop/order/edit/'.$order->orderId];
+	$iconStatus		= HtmlTag::create( 'i', "", ['class' => 'icon-'.$statusIcons[$order->status]] );
 	$link	= HtmlTag::create( 'a', "#".$order->orderId, $attributes );
 	$customer	= $order->customer ? $order->customer->addressDelivery->surname.', '.$order->customer->addressDelivery->firstname : "-";
-	$customer	= HtmlTag::create( 'div', $customer, array( 'class' => 'autocut' ) );
+	$customer	= HtmlTag::create( 'div', $customer, ['class' => 'autocut'] );
 	$customer	= HtmlTag::create( 'a', $customer, $attributes );
-	$link		= HtmlTag::create( 'small', "#".$order->orderId, array( 'class' => 'muted' ) );
+	$link		= HtmlTag::create( 'small', "#".$order->orderId, ['class' => 'muted'] );
 	$cellLink		= HtmlTag::create( 'td', $link );
 	$cellCustomer	= HtmlTag::create( 'td', $customer );
 	$cellStatus		= HtmlTag::create( 'td', '<small>'./*$iconStatus.' '.*/$words->states[$order->status].'</small>' );
 	$cellCreated	= HtmlTag::create( 'td', '<small>'.( $order->createdAt ? date( 'd.m.Y', $order->createdAt ) : "-" ).'</small>' );
 	$cellModified	= HtmlTag::create( 'td', '<small>'.( $order->modifiedAt ? date( 'd.m.Y', $order->modifiedAt ) : '-' ).'</small>' );
 	$rowColor		= "info";
-	if( in_array( $order->status, array( 6 ) ) )
+	if( in_array( $order->status, [6] ) )
 		$rowColor	= 'success';
-	else if( in_array( $order->status, array( -5, 2, 3, 4, 5 ) ) )
+	else if( in_array( $order->status, [-5, 2, 3, 4, 5] ) )
 		$rowColor	= 'warning';
-	else if( in_array( $order->status, array( -6, -4, -3, -2, -1 ) ) )
+	else if( in_array( $order->status, [-6, -4, -3, -2, -1] ) )
 		$rowColor	= 'error';
-	$cells			= array( $cellLink, $cellCustomer, $cellStatus, $cellCreated, $cellModified );
-	$attributes		= array( 'class' => $rowColor );
+	$cells			= [$cellLink, $cellCustomer, $cellStatus, $cellCreated, $cellModified];
+	$attributes		= ['class' => $rowColor];
 	$listOrders[]	= HtmlTag::create( 'tr', $cells, $attributes );
 }
 $tableRows		= join( $listOrders );
@@ -55,10 +55,10 @@ $tableHeads		= HtmlElements::TableHeads( array(
 	$w->columnCreated,
 	$w->columnModified,
 ) );
-$tableColumns	= HtmlElements::ColumnGroup( array( '5%', '46%', '15%', '12%', '12%' ) );
+$tableColumns	= HtmlElements::ColumnGroup( ['5%', '46%', '15%', '12%', '12%'] );
 $tableHead		= HtmlTag::create( 'thead', $tableHeads );
 $tableBody		= HtmlTag::create( 'tbody', $tableRows );
-$listOrders		= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped' ) );
+$listOrders		= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, ['class' => 'table table-condensed table-hover table-striped'] );
 
 $pagination		= new \CeusMedia\Bootstrap\PageControl( './manage/shop/order', $pageNr, ceil( $total / 20 ) );
 $tabs			= View_Manage_Shop::renderTabs( $env, 'order' );

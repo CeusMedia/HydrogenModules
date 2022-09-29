@@ -118,35 +118,35 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 				$avatar	= $helper->render();														//  render avatar
 			}
 			else if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-				$avatar	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user fa-3x' ) );
+				$avatar	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user fa-3x'] );
 			}
-			$avatar	= HtmlTag::create( 'div', $avatar, array( 'class' => 'avatar' ) );			//  embed avatar in container
+			$avatar	= HtmlTag::create( 'div', $avatar, ['class' => 'avatar'] );			//  embed avatar in container
 		}
 
 		$labels	= [];
 		if( $this->showUsername )
-			$labels[]	= HtmlTag::create( 'div', $username, array( 'class' => 'username' ) );
+			$labels[]	= HtmlTag::create( 'div', $username, ['class' => 'username'] );
 		if( $this->showFullname )
-			$labels[]	= HtmlTag::create( 'div', $fullname, array( 'class' => 'fullname' ) );
+			$labels[]	= HtmlTag::create( 'div', $fullname, ['class' => 'fullname'] );
 		if( $this->showEmail )
-			$labels[]	= HtmlTag::create( 'div', $email, array( 'class' => 'email' ) );
+			$labels[]	= HtmlTag::create( 'div', $email, ['class' => 'email'] );
 
 		if( $labels )
-			$labels		= HtmlTag::create( 'div', $labels, array( 'class' => 'labels' ) );
+			$labels		= HtmlTag::create( 'div', $labels, ['class' => 'labels'] );
 		else
 			$labels		= "";
 
 		$trigger		= HtmlTag::create( 'div', array(
 			$avatar,
 			$labels,
-			HtmlTag::create( 'div', '', array( 'class' => 'clearfix' ) ),
+			HtmlTag::create( 'div', '', ['class' => 'clearfix'] ),
 		), array(
 			'id' 			=> 'drop-account',
 			'role'			=> 'button',
 			'class'			=> 'dropdown-toggle',
 			'data-toggle'	=> 'dropdown',
 		) );
-		return HtmlTag::create( 'div', array( $trigger, $links ), array(
+		return HtmlTag::create( 'div', [$trigger, $links], array(
 			'id' => 'account-menu',
 			'class' => 'dropdown '.$classMenu
 		) );
@@ -166,7 +166,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 				'tabindex'	=> "-1",
 				'href'		=> $page->link,
 			) );
-			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
 		return HtmlTag::create( 'ul', $list, array(
 			'class'				=> "dropdown-menu pull-right",
@@ -181,14 +181,14 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 			if( is_object( $link ) ){
 				$icon	= "";
 				if( $link->icon )
-					$icon	= HtmlTag::create( 'i', "", array( 'class' => $link->icon ) ).'&nbsp;';
+					$icon	= HtmlTag::create( 'i', "", ['class' => $link->icon] ).'&nbsp;';
 				$attributes	= array(
 					'role'		=> "menuitem",
 					'tabindex'	=> "-1",
 					'href'		=> $link->link,
 				);
 				$link	= HtmlTag::create( 'a', $icon.$link->label, $attributes );
-				$list[]	= HtmlTag::create( 'li', $link , array( 'role' => 'presentation' ) );
+				$list[]	= HtmlTag::create( 'li', $link , ['role' => 'presentation'] );
 			}
 			else{
 				$attributes	= array(
@@ -274,7 +274,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 		$class	= $entry->icon;
 		if( !preg_match( "/^fa/", $entry->icon ) )
 			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
-		$icon	= HtmlTag::create( 'i', '', array( 'class' => $class ) );
+		$icon	= HtmlTag::create( 'i', '', ['class' => $class] );
 		return $icon.'&nbsp;'.$entry->label;
     }
 }

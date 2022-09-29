@@ -8,7 +8,7 @@ $wordsShop	= $env->getLanguage()->getWords( 'shop' );
 
 /*  --  PANEL: FACTS  --  */
 $status	= $wordsShop['statuses-order'][$order->status];
-$status	= HtmlTag::create( 'acronym', $status, array( 'title' => $wordsShop['statuses-order-title'][$order->status] ) );
+$status	= HtmlTag::create( 'acronym', $status, ['title' => $wordsShop['statuses-order-title'][$order->status]] );
 $method	= $order->paymentMethod;
 if( isset( $paymentBackends[$order->paymentMethod] ) )
 	$method	= $paymentBackends[$order->paymentMethod]->title;
@@ -21,12 +21,12 @@ $panelFacts	= HtmlTag::create( 'div', array(
 			HtmlTag::create( 'li', 'Preis: '.$order->priceTaxed.' '.$order->currency ),
 			HtmlTag::create( 'li', 'Zustand: '.$status ),
 			HtmlTag::create( 'li', 'Bezahlung: '.$method ),
-		), array( 'style' => 'font-size: 1.1em' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+		), ['style' => 'font-size: 1.1em'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 /*  --  PANEL: POSITIONS  --  */
-$positions	= HtmlTag::create( 'div', 'Keine Produkte in der Bestellung', array( 'class' => 'alert alert-info' ) );
+$positions	= HtmlTag::create( 'div', 'Keine Produkte in der Bestellung', ['class' => 'alert alert-info'] );
 if( $order->positions ){
 	$helper	= new View_Helper_Shop_CartPositions( $env );
 	$helper->setPositions( $order->positions );
@@ -34,23 +34,23 @@ if( $order->positions ){
 }
 $panelPositions	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Bestellter Warenkorb' ),
-	HtmlTag::create( 'div', $positions, array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	HtmlTag::create( 'div', $positions, ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 /*  --  PANEL: BILLING ADDRESS  --  */
 $helper	= new View_Helper_Shop_AddressView( $env );
 $helper->setAddress( $order->customer->addressBilling );
 $panelBilling	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Rechnungsadresse' ),
-	HtmlTag::create( 'div', $helper->render(), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	HtmlTag::create( 'div', $helper->render(), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 /*  --  PANEL: DELIVERY  --  */
 $helper->setAddress( $order->customer->addressDelivery );
 $panelDelivery	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Lieferadresse' ),
-	HtmlTag::create( 'div', $helper->render(), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	HtmlTag::create( 'div', $helper->render(), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 /*  --  PANEL: DATA  --  */
 $panelData	= HtmlTag::create( 'div', array(
@@ -58,31 +58,31 @@ $panelData	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
 			print_m( $order, NULL, NULL, TRUE ),
-		), array( 'style' => 'height: 500px; overflow-y: auto' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+		), ['style' => 'height: 500px; overflow-y: auto'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 /*  --  GRID  --  */
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
 			$panelFacts,
-		), array( 'class' => 'span4' ) ),
+		), ['class' => 'span4'] ),
 		HtmlTag::create( 'div', array(
 			$panelDelivery,
-		), array( 'class' => 'span4' ) ),
+		), ['class' => 'span4'] ),
 		HtmlTag::create( 'div', array(
 			$panelBilling,
-		), array( 'class' => 'span4' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+		), ['class' => 'span4'] ),
+	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
 			$panelPositions,
-		), array( 'class' => 'span12' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+		), ['class' => 'span12'] ),
+	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'a', '<i class="fa fa-fw fa-list"></i> zur Liste', array( 'href' => './manage/my/order', 'class' => 'btn' ) ),
-		), array( 'class' => 'span12' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+			HtmlTag::create( 'a', '<i class="fa fa-fw fa-list"></i> zur Liste', ['href' => './manage/my/order', 'class' => 'btn'] ),
+		), ['class' => 'span12'] ),
+	), ['class' => 'row-fluid'] ),
 ) );

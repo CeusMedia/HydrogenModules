@@ -22,7 +22,7 @@ $panelDefault = '
 	</div>
 </div>';
 
-extract( $view->populateTexts( array( 'setDefault.info' ), 'html/manage/project/' ) );
+extract( $view->populateTexts( ['setDefault.info'], 'html/manage/project/' ) );
 
 return '<div class="row-fluid">
 	<div class="span6">

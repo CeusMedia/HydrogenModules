@@ -33,18 +33,18 @@ class View_Helper_Work_Time_Modal_Assign extends Abstraction
 			$conditions	= array( 'moduleId' => 0);
 			if( $this->userId )
 				$conditions['userId']	= $this->userId;
-			$orders		= array( 'title' => 'ASC' );
+			$orders		= ['title' => 'ASC'];
 			$timers		= $modelTimer->getAll( $conditions, $orders );
 		}
 
 
 		$listTimers		= [];
 		foreach( $timers as $timer ){
-			$checkbox		= HtmlTag::create( 'input', NULL, array( 'type' => 'checkbox', 'name' => 'timerIds[]', 'value' => $timer->workTimerId ) );
-			$label			= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$timer->title, array( 'class' => 'checkbox' ) );
+			$checkbox		= HtmlTag::create( 'input', NULL, ['type' => 'checkbox', 'name' => 'timerIds[]', 'value' => $timer->workTimerId] );
+			$label			= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$timer->title, ['class' => 'checkbox'] );
 			$listTimers[]	= HtmlTag::create( 'li', $label );
 		}
-		$listTimers		= HtmlTag::create( 'ul', $listTimers, array( 'class' => 'unstyled' ) );
+		$listTimers		= HtmlTag::create( 'ul', $listTimers, ['class' => 'unstyled'] );
 
 		return '
 <form action="./work/time/assign" method="post">

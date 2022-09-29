@@ -4,7 +4,7 @@ $w		= (object) $words['index'];
 $panelList	= $view->loadTemplateFile( 'manage/content/document/index.list.php' );
 $panelAdd	= $view->loadTemplateFile( 'manage/content/document/index.add.php' );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/content/document/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/content/document/' ) );
 
 return $textTop.'
 <div class="row-fluid">

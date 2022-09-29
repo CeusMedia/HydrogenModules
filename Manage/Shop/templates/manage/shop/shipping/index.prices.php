@@ -1,20 +1,20 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 /*  --  PANEL: PRICES  --  */
 $panelPrices	= '';
 if( $zones || $grades ){
 	$rows	= [];
-	$thead	= array( HtmlTag::create( 'th', 'Zonen \ Gewichtsklassen' ) );
+	$thead	= [HtmlTag::create( 'th', 'Zonen \ Gewichtsklassen' )];
 	foreach( $grades as $grade )
-		$thead[]	= HtmlTag::create( 'th', $grade->title, array( 'class' => 'cell-price' ) );
+		$thead[]	= HtmlTag::create( 'th', $grade->title, ['class' => 'cell-price'] );
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', $thead ) );
 	foreach( $zones as $zone ){
-		$row	= array( HtmlTag::create( 'th', $zone->title ) );
+		$row	= [HtmlTag::create( 'th', $zone->title )];
 		foreach( $grades as $grade ){
 			$price	= $priceMatrix[$zone->zoneId][$grade->gradeId];
 		//	$price	= number_format( $price, 2, ',', '.' );
@@ -28,12 +28,12 @@ if( $zones || $grades ){
 				'value'	=> $price,
 				'style'	=> 'text-align: right;',
 			) )/*.'&nbsp;€'*/;
-			$row[]	= HtmlTag::create( 'td', $input, array( 'class' => 'cell-price' ) );
+			$row[]	= HtmlTag::create( 'td', $input, ['class' => 'cell-price'] );
 		}
 		$rows[]	= HtmlTag::create( 'tr', $row );
 	}
 	$tbody	= HtmlTag::create( 'tbody', $rows );
-	$table	= HtmlTag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table' ) );
+	$table	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table'] );
 	$panelPrices	= HtmlTag::create( 'div', array(
 		HtmlTag::create( 'h3', 'Versandkosten' ),
 		HtmlTag::create( 'div', array(
@@ -45,13 +45,13 @@ if( $zones || $grades ){
 						'name'	=> 'save',
 						'class'	=> 'btn btn-primary',
 					) ),
-				), array( 'class' => 'buttonbar' ) ),
+				), ['class' => 'buttonbar'] ),
 			), array(
 				'action'	=> './manage/shop/shipping/setPrices',
 				'method'	=> 'POST',
 			) ),
-		), array( 'class' => 'content-panel-inner' ) ),
-	), array( 'class' => 'content-panel' ) );
+		), ['class' => 'content-panel-inner'] ),
+	), ['class' => 'content-panel'] );
 }
 
 return $panelPrices;

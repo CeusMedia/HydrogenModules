@@ -32,7 +32,7 @@ class Controller_Admin_Database_Connection extends Controller
 		catch( Exception $e ){
 			$error	= $e->getMessage();
 		}
-		print( json_encode( array( 'status' => $status, 'error' => $error ) ) );
+		print( json_encode( ['status' => $status, 'error' => $error] ) );
 		exit;
 	}
 

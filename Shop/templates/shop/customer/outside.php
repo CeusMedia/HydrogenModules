@@ -9,7 +9,7 @@ $fieldOauth2	= '';
 if( isset( $useOauth2 ) && $useOauth2 ){
 	$helper				= new View_Helper_Oauth_ProviderButtons( $this->env );
 	if( $helper->count() ){
-		$iconUnbind		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+		$iconUnbind		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 		$helper->setDropdownLabel( 'weitere' );
 		$helper->setLinkPath( './auth/oauth2/login/' );
 		$helper->setFrom( 'shop/customer' );
@@ -17,11 +17,11 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'label', 'Anmelden mit' ),
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'div', $helper->render(), array( 'class' => 'span12' ) ),
-				), array( 'class' => 'row-fluid' ) ),
+					HtmlTag::create( 'div', $helper->render(), ['class' => 'span12'] ),
+				), ['class' => 'row-fluid'] ),
 				HtmlTag::create( 'hr', NULL ),
-			), array( 'class' => 'span12' ) ),
-		), array( 'class' => 'row-fluid' ) );
+			), ['class' => 'span12'] ),
+		), ['class' => 'row-fluid'] );
 	}
 }
 

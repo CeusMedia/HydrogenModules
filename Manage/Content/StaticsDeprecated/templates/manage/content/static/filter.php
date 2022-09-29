@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 return '';
 
-$optPath	= array_merge( array( '' ), $paths );
+$optPath	= array_merge( [''], $paths );
 $optPath	= array_combine( $optPath, $optPath );
 $optPath	= HtmlElements::Options( $optPath, $pathName );
 

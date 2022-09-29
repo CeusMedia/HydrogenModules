@@ -50,7 +50,7 @@ class Hook_Provision extends Hook
 
 /*						$env->getRequest()->set( '__controller', 'provision' );
 						$env->getRequest()->set( '__action', 'status' );
-						$env->getRequest()->set( '__arguments', array( $userId ) );*/
+						$env->getRequest()->set( '__arguments', [$userId] );*/
 					}
 					if( $hasCache )
 						$cache->set( 'userId-'.$userId, TRUE, 'Provision.userLicenseKey' );
@@ -176,14 +176,14 @@ return;
 				'class'	=> 'btn btn-large',
 				'style'	=> 'text-align: center',
 			) );
-			$list[]	= HtmlTag::create( 'div', $label, array( 'class' => 'span4' ) );
+			$list[]	= HtmlTag::create( 'div', $label, ['class' => 'span4'] );
 			if( count( $list ) % 3 === 0 ){
-				$body	.= HtmlTag::create( 'div', $list, array( 'class' => 'row-fluid' ) );
+				$body	.= HtmlTag::create( 'div', $list, ['class' => 'row-fluid'] );
 				$list	= [];
 			}
 		}
 		if( count( $list ) )
-			$body	.= HtmlTag::create( 'div', $list, array( 'class' => 'row-fluid' ) );
-		return HtmlTag::create( 'div', $body, array( 'id' => 'form-register-extension-accounting' ) );
+			$body	.= HtmlTag::create( 'div', $list, ['class' => 'row-fluid'] );
+		return HtmlTag::create( 'div', $body, ['id' => 'form-register-extension-accounting'] );
 	}
 }

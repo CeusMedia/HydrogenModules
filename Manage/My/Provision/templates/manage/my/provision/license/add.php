@@ -4,9 +4,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['add'];
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-//$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+//$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconOrder		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-shopping-cart'] );
 
 if( !$productId ){
 	$list	= 'Keine Produkte vorhanden.';
@@ -20,9 +20,9 @@ if( !$productId ){
 				'href'	=> './manage/my/provision/license/add/'.$itemProduct->productId,
 				'class'	=> 'btn btn-large'
 			) );
-			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'list-products-item' ) );
+			$list[]	= HtmlTag::create( 'li', $link, ['class' => 'list-products-item'] );
 		}
-		$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled list-products' ) );
+		$list	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled list-products'] );
 	}
 
 	$position	= '
@@ -50,15 +50,15 @@ else if( !$productLicenseId ){
 		$link		= HtmlTag::create( 'a', array(
 			HtmlTag::create( 'h5', $itemProductLicense->title ),
 			HtmlTag::create( 'div', $itemProductLicense->description ),
-			$view->renderLicenseFacts( $itemProductLicense, array( 'users', 'duration', 'price' ) ),
+			$view->renderLicenseFacts( $itemProductLicense, ['users', 'duration', 'price'] ),
 		), array(
 			'href'	=> './manage/my/provision/license/add/'.$productId.'/'.$itemProductLicense->productLicenseId,
 			'class'	=> 'btn btn-large'
 		) );
-		$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'list-licenses-item' ) );
+		$list[]	= HtmlTag::create( 'li', $link, ['class' => 'list-licenses-item'] );
 	}
 	if( $list )
-		$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled list-licenses' ) );
+		$list	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled list-licenses'] );
 	else
 		$list	= 'Keine Lizenzen für dieses Produkt vorhanden.';
 
@@ -85,12 +85,12 @@ else if( !$productLicenseId ){
 </div>';
 }
 else{
-	$optProduct	= array( '' => $w->optionEmpty );
+	$optProduct	= ['' => $w->optionEmpty];
 	foreach( $products as $item )
 		$optProduct[$item->productId]	= $item->title;
 	$optProduct	= HtmlElements::Options( $optProduct, $productId );
 
-	$optLicense	= array( '' => $w->optionEmpty );
+	$optLicense	= ['' => $w->optionEmpty];
 	foreach( $productLicenses as $item )
 		$optLicense[$item->productLicenseId]	= $item->title;
 	$optLicense	= HtmlElements::Options( $optLicense, $productLicenseId );
@@ -186,7 +186,7 @@ function selectProductLicense(elem){
 
 $panelFilter	= $view->loadTemplateFile( 'manage/my/provision/license/index.filter.php' );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/my/provision/license/add/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/my/provision/license/add/' ) );
 
 $tabs	= View_Manage_My_Provision_License::renderTabs( $env, 'add' );
 

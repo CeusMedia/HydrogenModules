@@ -41,7 +41,7 @@ $panelEdit	= '
 				<div class="span12">
 					<label for="description">'.$words['edit']['labelDescription'].'</label>
 			<!--		'.HtmlElements::Textarea( 'description', $role->description, 'xl-l' ).'-->
-					'.HtmlTag::create( 'textarea', $role->description, array( 'class' => 'span12', 'name' => 'description', 'rows' => 4 ) ).'
+					'.HtmlTag::create( 'textarea', $role->description, ['class' => 'span12', 'name' => 'description', 'rows' => 4] ).'
 				</div>
 			</div>
 			<div class="buttonbar">
@@ -82,7 +82,7 @@ $panelInfo		= '
 	</div>
 </div>';
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/role/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/role/' ) );
 
 return $textIndexTop.'
 <!--<h2><span class="muted">Rolle</span> '.$role->title.'</h2>-->

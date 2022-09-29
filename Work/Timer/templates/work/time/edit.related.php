@@ -6,17 +6,17 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['edit-related'];
 
-$listRelated	= HtmlTag::create( 'div', $w->noRelatedModule, array( 'class' => 'alert alert-notice' ) );
+$listRelated	= HtmlTag::create( 'div', $w->noRelatedModule, ['class' => 'alert alert-notice'] );
 if( $timer->module && $timer->moduleId ){
 	$helperShortList    = new View_Helper_Work_Time_ShortList( $env );
-	//$helperShortList->setStatus( array( 2 ) );
+	//$helperShortList->setStatus( [2] );
 	$helperShortList->setModule( $timer->module );
 	$helperShortList->setModuleId( $timer->moduleId );
 	//$helperShortList->setRelationId( $timer->moduleId );
-	$helperShortList->setButtons( array( 'view'/*, 'edit'*/ ) );
+	$helperShortList->setButtons( ['view'/*, 'edit'*/] );
 	$listRelated	= $helperShortList->render();
 	if( !$listRelated )
-		$listRelated	= HtmlTag::create( 'div', $w->noRelations, array( 'class' => 'alert alert-notice' ) );
+		$listRelated	= HtmlTag::create( 'div', $w->noRelations, ['class' => 'alert alert-notice'] );
 
 	$heading	= sprintf( $w->heading, $timer->relationTitle );
 }

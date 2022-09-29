@@ -111,7 +111,7 @@ $panelLinks	= '
 	</form>
 </div>';
 
-$optProject	= array( '0' => '- ohne Projektbezug -' );
+$optProject	= ['0' => '- ohne Projektbezug -'];
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject	= HtmlElements::Options( $optProject, $note->projectId );
@@ -165,7 +165,7 @@ $panelEdit	= '
 	</div>
 </div>';
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note/edit.' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/work/note/edit.' ) );
 
 return $textTop.'
 <div class="row-fluid">

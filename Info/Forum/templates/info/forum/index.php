@@ -6,15 +6,15 @@ use CeusMedia\Bootstrap\Icon as BootstrapIcon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/forum/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/forum/' ) );
 $textTop	= $textIndexTop	? $textIndexTop : '';
 $textBottom	= $textIndexBottom	? $textIndexBottom : '';
 
 $helper		= new View_Helper_TimePhraser( $env );
-$iconUp		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-up' ) );
-$iconDown	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-down' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+$iconUp		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-up'] );
+$iconDown	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-down'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 
 $rows	= [];
 foreach( $topics as $topic ){
@@ -45,9 +45,9 @@ foreach( $topics as $topic ){
 			'title'	=> $words['index']['buttonRemove'],
 		) );
 	}
-	$buttons	= HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
+	$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
 	$url		= './info/forum/topic/'.$topic->topicId;
-	$link		= HtmlTag::create( 'a', $topic->title, array( 'href' => $url ) );
+	$link		= HtmlTag::create( 'a', $topic->title, ['href' => $url] );
 	$modifiedAt	= $helper->convert( $topic->createdAt, TRUE );
 	$underline	= 'Themen: '.$topic->threads.' | Beiträge: '.$topic->posts.' | Letzter Beitrag: vor '.$modifiedAt;
 	$label		= $link.'<br/><small class="muted">'.$underline.'</small>';
@@ -64,7 +64,7 @@ $heads	= HtmlElements::TableHeads( array(
 $colgroup	= HtmlElements::ColumnGroup( '90%', '20%' );
 $thead		= HtmlTag::create( 'thead', $heads );
 $tbody		= HtmlTag::create( 'tbody', $rows );
-$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped not-table-condensed table-fixed' ) );
+$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped not-table-condensed table-fixed'] );
 $panelList	= '
 <div class="content-panel">
 	<div class="content-panel-inner">
@@ -75,7 +75,7 @@ $panelList	= '
 $panelAdd	= $view->loadTemplateFile( 'info/forum/index.add.php' );
 
 $iconHome	= new BootstrapIcon( 'home', TRUE );
-$buttons	= array( new BootstrapButton( $iconHome, 'btn-inverse', NULL, TRUE ) );
+$buttons	= [new BootstrapButton( $iconHome, 'btn-inverse', NULL, TRUE )];
 $position	= new BootstrapButtonGroup( $buttons );
 $position->setClass( 'position-bar' );
 

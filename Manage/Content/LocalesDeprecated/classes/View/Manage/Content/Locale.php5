@@ -56,19 +56,19 @@ LocaleEditor.setupCodeMirror();';
 		foreach( $sub as $filePath => $fileName ){
 			if( !preg_match( "/\//", $filePath ) ){
 				$extension	= pathinfo( $fileName, PATHINFO_EXTENSION );
-				$classes	= array( 'autocut', 'file' );
+				$classes	= ['autocut', 'file'];
 				if( $extension )
 					$classes[]	= 'file-ext-'.$extension;
-				$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-file' ) );
+				$icon	= HtmlTag::create( 'i', '', ['class' => 'icon-file'] );
 				if( $current == $path.$fileName ){
 					$classes[]	= 'active';
-					$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-file icon-white' ) );
+					$icon	= HtmlTag::create( 'i', '', ['class' => 'icon-file icon-white'] );
 				}
 				$url	= $baseUrl.base64_encode( $path.$fileName );
-				$ext	= HtmlTag::create( 'small',  '.'.$extension, array( 'class' => "muted" ) );
+				$ext	= HtmlTag::create( 'small',  '.'.$extension, ['class' => "muted"] );
 				$name	= pathinfo( $fileName, PATHINFO_FILENAME );
-				$link	= HtmlTag::create( 'a', $icon.'&nbsp;'.$name.$ext, array( 'href' => $url ) );
-				$list[]	= HtmlTag::create( 'li', $link, array( 'class' => join( ' ', $classes ) ) );
+				$link	= HtmlTag::create( 'a', $icon.'&nbsp;'.$name.$ext, ['href' => $url] );
+				$list[]	= HtmlTag::create( 'li', $link, ['class' => join( ' ', $classes )] );
 			}
 		}
 
@@ -77,12 +77,12 @@ LocaleEditor.setupCodeMirror();';
 
 		if( !$list )
 			return '';
-		$list	= HtmlTag::create( 'ul', $list, array( 'class' => '' ) );
+		$list	= HtmlTag::create( 'ul', $list, ['class' => ''] );
 		if( !$level )
 			return $list;
 		$folder	= preg_replace( "/^.*\//", "", rtrim( $path, '/' ) );
-		$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-folder-open' ) );
-		return HtmlTag::create( 'li', $icon.'&nbsp;'.$folder.$list, array( 'class' => 'folder' ) );
+		$icon	= HtmlTag::create( 'i', '', ['class' => 'icon-folder-open'] );
+		return HtmlTag::create( 'li', $icon.'&nbsp;'.$folder.$list, ['class' => 'folder'] );
 	}
 
 	protected function getFolders( $files )

@@ -8,7 +8,7 @@ $w	= (object) $words['edit'];
 
 $optStatus	= HTML::Options( $words['states'], $branch->status );
 
-$optCompany	= HTML::Options( $companies, $branch->companyId, array( 'companyId', 'title' ) ); 
+$optCompany	= HTML::Options( $companies, $branch->companyId, ['companyId', 'title'] );
 
 
 $panelMap	= '';

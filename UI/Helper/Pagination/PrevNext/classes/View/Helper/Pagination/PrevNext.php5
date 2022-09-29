@@ -77,7 +77,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 			$this->renderIndexButton(),
 			$this->renderNextButton(),
 		);
-		return HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
+		return HtmlTag::create( 'div', $buttons, ['class' => 'btn-group'] );
 	}
 
 	public function setButtonSize( string $buttonSize ): self
@@ -179,10 +179,10 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 			$this->modelObject	= new $this->modelClass( $this->env );
 		$primaryKey		= $this->modelObject->getPrimaryKey();
 		$orderColumn	= $this->orderColumn ? $this->orderColumn : $primaryKey;
-		$conditions		= array( $primaryKey => '> '.$this->currentId );
+		$conditions		= [$primaryKey => '> '.$this->currentId];
 		if( $this->orderColumn && $this->orderColumn != $primaryKey ){
 			$current	= $this->modelObject->get( $this->currentId );
-			$conditions	= array( $orderColumn => '> '.$current->{$orderColumn} );
+			$conditions	= [$orderColumn => '> '.$current->{$orderColumn}];
 		}
 		$found	= $this->modelObject->getAll(
 			$conditions,
@@ -200,10 +200,10 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 			$this->modelObject	= new $this->modelClass( $this->env );
 		$primaryKey		= $this->modelObject->getPrimaryKey();
 		$orderColumn	= $this->orderColumn ? $this->orderColumn : $primaryKey;
-		$conditions		= array( $primaryKey => '< '.$this->currentId );
+		$conditions		= [$primaryKey => '< '.$this->currentId];
 		if( $this->orderColumn && $this->orderColumn != $primaryKey ){
 			$current	= $this->modelObject->get( $this->currentId );
-			$conditions	= array( $orderColumn => '< '.$current->{$orderColumn} );
+			$conditions	= [$orderColumn => '< '.$current->{$orderColumn}];
 		}
 		$found	= $this->modelObject->getAll(
 			$conditions,
@@ -215,7 +215,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 
 	protected function renderButton( string $url, string $label ): string
 	{
-		$classes	= array( 'btn' );
+		$classes	= ['btn'];
 		if( $this->buttonSize )
 			$classes[]	= 'btn-'.$this->buttonSize;
 		if( $this->buttonState )
@@ -235,7 +235,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 			throw new RuntimeException( 'No index URL set' );
 		$label	= $this->indexLabel ? $this->indexLabel : '';
 		if( $this->useIcons ){
-			$iconIndex	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+			$iconIndex	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 			$label		= strlen( $label ) ? $iconIndex.'&nbsp;'.$label : $iconIndex;
 		}
 		return $this->renderButton( $this->indexUrl, $label );
@@ -249,7 +249,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 		$primaryKey	= $this->modelObject->getPrimaryKey();
 		$label		= $entry->{$this->labelColumn};
 		if( $this->useIcons ){
-			$icon	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+			$icon	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
 			$label	= $label.'&nbsp;'.$icon;
 		}
 		$url	= sprintf( $this->urlTemplate, $entry->{$primaryKey} );
@@ -264,7 +264,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 		$primaryKey	= $this->modelObject->getPrimaryKey();
 		$label		= $entry->{$this->labelColumn};
 		if( $this->useIcons ){
-			$icon	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+			$icon	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 			$label	= $icon.'&nbsp;'.$label;
 		}
 		$url	= sprintf( $this->urlTemplate, $entry->{$primaryKey} );

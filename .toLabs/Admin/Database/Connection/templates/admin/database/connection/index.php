@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w	= (object) $words['index'];
 
-$optDriver	= array( '' => '- keiner -' );
+$optDriver	= ['' => '- keiner -'];
 foreach( $drivers as $driver )
 	$optDriver[$driver]	= $words['database-drivers'][$driver];
 $optDriver	= HtmlElements::Options( $optDriver, $data->driver );

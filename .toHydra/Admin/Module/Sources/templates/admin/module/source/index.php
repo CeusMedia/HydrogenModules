@@ -46,7 +46,7 @@ $buttonAdd	= HtmlTag::create( 'button', '<span>'.$w->buttonAdd.'</span>', array(
 
 
 
-$heads		= array( $w->headId, $w->headTitle, $w->headType, $w->headActive );
+$heads		= [$w->headId, $w->headTitle, $w->headType, $w->headActive];
 $heads		= HtmlElements::TableHeads( $heads );
 $colgroup	= HtmlElements::ColumnGroup( '20%,55%,15%,10%' );
 $panelList	= '

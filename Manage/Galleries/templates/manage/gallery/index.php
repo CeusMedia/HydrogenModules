@@ -1,7 +1,7 @@
 <?php
 $galleries	= $this->renderList();
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/gallery' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/gallery' ) );
 
 return $textTop.'
 <div class="row-fluid">

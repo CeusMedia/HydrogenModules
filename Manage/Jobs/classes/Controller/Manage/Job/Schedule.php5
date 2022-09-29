@@ -25,15 +25,15 @@ class Controller_Manage_Job_Schedule extends Controller
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
 			);
-			if( in_array( $format, array( 'cron-month', 'cron-week' ) ) ){
+			if( in_array( $format, ['cron-month', 'cron-week'] ) ){
 				$data['type']		= Model_Job_Schedule::TYPE_CRON;
 				$data['expression']	= $this->request->get( 'expressionCron' );
 			}
-			else if( in_array( $format, array( 'interval' ) ) ){
+			else if( in_array( $format, ['interval'] ) ){
 				$data['type']		= Model_Job_Schedule::TYPE_INTERVAL;
 				$data['expression']	= $this->request->get( 'expressionInterval' );
 			}
-			else if( in_array( $format, array( 'datetime' ) ) ){
+			else if( in_array( $format, ['datetime'] ) ){
 				$data['type']		= Model_Job_Schedule::TYPE_DATETIME;
 				$data['expression']	= $this->request->get( 'expressionDatetime' );
 			}
@@ -62,15 +62,15 @@ class Controller_Manage_Job_Schedule extends Controller
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
 			);
-			if( in_array( $format, array( 'cron-month', 'cron-week' ) ) ){
+			if( in_array( $format, ['cron-month', 'cron-week'] ) ){
 				$data['type']		= Model_Job_Schedule::TYPE_CRON;
 				$data['expression']	= $this->request->get( 'expressionCron' );
 			}
-			else if( in_array( $format, array( 'interval' ) ) ){
+			else if( in_array( $format, ['interval'] ) ){
 				$data['type']		= Model_Job_Schedule::TYPE_INTERVAL;
 				$data['expression']	= $this->request->get( 'expressionInterval' );
 			}
-			else if( in_array( $format, array( 'datetime' ) ) ){
+			else if( in_array( $format, ['datetime'] ) ){
 				$data['type']		= Model_Job_Schedule::TYPE_DATETIME;
 				$data['expression']	= $this->request->get( 'expressionDatetime' );
 			}
@@ -83,7 +83,7 @@ class Controller_Manage_Job_Schedule extends Controller
 
 	public function index( $page = 0 )
 	{
-		$schedule		= $this->modelSchedule->getAll( array(), array() );
+		$schedule		= $this->modelSchedule->getAll( [], [] );
 		foreach( $schedule as $item ){
 			$item->definition	= $this->allDefinitions[(int) $item->jobDefinitionId];
 		}
@@ -116,7 +116,7 @@ class Controller_Manage_Job_Schedule extends Controller
 		$this->logic			= $this->env->getLogic()->get( 'Job' );
 
 		$this->allDefinitions	= [];
-		$definitions	= $this->modelDefinition->getAll( array(), array( 'identifier' => 'ASC' ) );
+		$definitions	= $this->modelDefinition->getAll( [], ['identifier' => 'ASC'] );
 		foreach( $definitions as $definition )
 			$this->allDefinitions[(int) $definition->jobDefinitionId] = $definition;
 

@@ -66,7 +66,7 @@ class Logic_Shop_Shipping extends Logic
 	 */
 	public function getGradeFromWeight( $weight )
 	{
-		$grades	= $this->modelGrade->getAll( array( 'fallback' => 0 ), array( 'weight' => 'ASC' ) );
+		$grades	= $this->modelGrade->getAll( ['fallback' => 0], ['weight' => 'ASC'] );
 		foreach( $grades as $grade ){
 			if( (int) $grade->weight > (int) $weight )
 				return $grade;
@@ -88,7 +88,7 @@ class Logic_Shop_Shipping extends Logic
 	 */
 	public function getPrice( $zoneId, $gradeId )
 	{
-		$indices	= array( 'zoneId' => $zoneId, 'gradeId' => $gradeId );
+		$indices	= ['zoneId' => $zoneId, 'gradeId' => $gradeId];
 		$data		= $this->modelPrice->getByIndices( $indices );
 		if( $data )
 			return $data->price;

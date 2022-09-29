@@ -7,17 +7,17 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $w				= (object) $words['edit'];
 //$helperAge		= new View_Helper_TimePhraser( $env );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconGroup		= HtmlTag::create( 'i', '', array( 'class' => 'icon-search' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
+$iconGroup		= HtmlTag::create( 'i', '', ['class' => 'icon-search'] );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconList		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconSave		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-	$iconGroup		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-users' ) );
+	$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+	$iconList		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-list'] );
+	$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
+	$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+	$iconGroup		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-users'] );
 }
 
 /*
@@ -193,7 +193,7 @@ $panelPassword	= $this->loadTemplateFile( 'manage/user/edit.password.php' );
 $panelInfo		= $this->loadTemplateFile( 'manage/user/edit.info.php' );
 $panelRights	= $this->loadTemplateFile( 'manage/user/edit.rights.php' );
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/user/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/user/' ) );
 
 return $textIndexTop.'
 <div class="bs2-row-fluid bs3-row bs4-row">

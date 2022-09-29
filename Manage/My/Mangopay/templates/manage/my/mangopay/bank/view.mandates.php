@@ -9,16 +9,16 @@ $statuses	= array(
 	'FAILED'		=> 'abgebrochen',
 );
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconDownload	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
 
 $countActive	= 0;
 
-$list	= HtmlTag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
+$list	= HtmlTag::create( 'div', 'Keine vorhanden.', ['class' => 'alert alert-info'] );
 if( $mandates ){
 	$list	= [];
 	foreach( $mandates as $mandate ){
-		$status	= HtmlTag::create( 'span', $statuses[$mandate->Status], array( 'class' => 'label' ) );
+		$status	= HtmlTag::create( 'span', $statuses[$mandate->Status], ['class' => 'label'] );
 		$buttonDocument	= HtmlTag::create( 'a', $iconDownload.' Dokument', array(
 			'href'		=> $mandate->DocumentURL,
 			'target'	=> '_blank',
@@ -44,9 +44,9 @@ if( $mandates ){
 		) );
 	}
 
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Zustand', 'existiert seit', 'Aktionen' ) ) );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Zustand', 'existiert seit', 'Aktionen'] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $tbody, array( 'class' => 'tabe table-fixed' ) );
+	$list	= HtmlTag::create( 'table', $tbody, ['class' => 'tabe table-fixed'] );
 }
 
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.' Mandate erstellen', array(

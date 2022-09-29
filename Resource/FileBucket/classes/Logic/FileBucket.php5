@@ -81,18 +81,18 @@ class Logic_FileBucket extends Logic
 	public function getAllByIndices( $indices, $orders = [], $limits = [] )
 	{
 		if( !$orders )
-			$orders		= array( 'filePath' => 'ASC', 'fileName' => 'ASC' );
+			$orders		= ['filePath' => 'ASC', 'fileName' => 'ASC'];
 		return $this->model->getAllByIndices( $indices, $orders, $limits );
 	}
 
 	public function getAllFromModule( $moduleId, $orders = [], $limits = [] )
 	{
-		return $this->getAllByIndices( array( 'moduleId' => $moduleId ), $orders, $limits );
+		return $this->getAllByIndices( ['moduleId' => $moduleId], $orders, $limits );
 	}
 
 	public function getAllFromPath( $filePath, $orders = [], $limits = [] )
 	{
-		return $this->getAllByIndices( array( 'filePath' => $filePath ), $orders, $limits );
+		return $this->getAllByIndices( ['filePath' => $filePath], $orders, $limits );
 	}
 
 	public function getByHash( $hash )
@@ -142,7 +142,7 @@ class Logic_FileBucket extends Logic
 	public function limitImageSize( $fileId, $maxWidth, $maxHeight, $quality = NULL )
 	{
 		$file		= $this->get( $fileId );
-		if( !in_array( $file->mimeType, array( 'image/png', 'image/gif', 'image/jpeg' ) ) )
+		if( !in_array( $file->mimeType, ['image/png', 'image/gif', 'image/jpeg'] ) )
 			throw new Exception( 'File is not an image' );
 		$image		= new Image( $this->getPath().$file->hash );
 		if( $image->getWidth() <= $maxWidth && $image->getHeight() <= $maxHeight )
@@ -182,7 +182,7 @@ class Logic_FileBucket extends Logic
 
 	public function rename( $fileId, $name )
 	{
-		$this->model->edit( $fileId, array( 'fileName' => $name ) );
+		$this->model->edit( $fileId, ['fileName' => $name] );
 	}
 
 	public function remove( $fileId )

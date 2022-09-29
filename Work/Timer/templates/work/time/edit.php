@@ -12,7 +12,7 @@ foreach( $projectMap as $projectId => $project )
 	$optProject[$projectId]	= $project->title;
 $optProject	= HtmlElements::Options( $optProject, $timer->projectId );
 
-extract( $view->populateTexts( array( 'edit.top', 'edit.bottom', 'edit.info' ), 'html/work/time/' ) );
+extract( $view->populateTexts( ['edit.top', 'edit.bottom', 'edit.info'], 'html/work/time/' ) );
 
 $timePlanned	= View_Helper_Work_Time::formatSeconds( $timer->secondsPlanned );
 $timeNeeded		= View_Helper_Work_Time::formatSeconds( $timer->secondsNeeded );
@@ -22,8 +22,8 @@ foreach( $projectUsers as $projectUser )
 	$optWorker[$projectUser->userId]	= $projectUser->username;
 $optWorker	= HtmlElements::Options( $optWorker, $timer->workerId );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
 	'href'	=> './'.( $from ? $from : 'work/time' ),
 	'class'	=> "btn btn-small"

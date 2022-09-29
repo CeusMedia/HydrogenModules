@@ -3,17 +3,17 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $urlIcons	= 'https://cdn.ceusmedia.de/img/';
-$imgEdit	= HtmlTag::create( 'img', NULL, array( 'src' => $urlIcons.'famfamfam/silk/pencil.png', 'verändern' ) );
+$imgEdit	= HtmlTag::create( 'img', NULL, ['src' => $urlIcons.'famfamfam/silk/pencil.png', 'verändern'] );
 	$total	= 0;
 	$number	= 0;
 	$rows	= [];
 	foreach( $banks as $bank ){
-		$linkEdit	= HtmlTag::create( 'a', $bank->title, array( 'href' => './work/finance/bank/edit/'.$bank->bankId ) );
+		$linkEdit	= HtmlTag::create( 'a', $bank->title, ['href' => './work/finance/bank/edit/'.$bank->bankId] );
 		$rows[]	= '<tr><th>'.$linkEdit.'</th><th></th><th></th></tr>';
 		foreach( $bank->accounts as $account ){
 			$total	+= $account->value;
 			$number	++;
-			$linkEdit	= HtmlTag::create( 'a', $account->title, array( 'href' => './work/finance/bank/account/edit/'.$account->bankAccountId ) );
+			$linkEdit	= HtmlTag::create( 'a', $account->title, ['href' => './work/finance/bank/account/edit/'.$account->bankAccountId] );
 			$rows[]	= '<tr><td class="account-title">'.$linkEdit.'</td><td></td><td class="currency">'.number_format( $account->value, 2, ',', '.' ).'&nbsp;&euro;</td></tr>';
 		}
 	}

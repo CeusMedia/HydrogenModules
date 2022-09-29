@@ -12,7 +12,7 @@ if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_GUEST ){
 	$tabContent	= $this->loadTemplateFile( 'shop/customer/inside.php' );
 }
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/shop/' ) );
 
 $helperTabs		= new View_Helper_Shop_Tabs( $env );
 $helperTabs->setCurrent( 'shop-customer' );

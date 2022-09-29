@@ -11,16 +11,16 @@ class Logic_Payment_Mangopay extends Logic
 	protected $baseUrl;
 
 	public static $typeCurrencies	= array(
-		'CB_VISA_MASTERCARD'	=> array(),
-		'MAESTRO'				=> array( 'EUR' ),
-		'DINERS'				=> array( 'EUR' ),
-		'GIROPAY'				=> array( 'EUR' ),
-		'IDEAL'					=> array( 'EUR' ),
-		'PAYLIB'				=> array( 'EUR' ),
-		'SOFORT'				=> array( 'EUR' ),
-		'BCMC'					=> array( 'EUR' ),
-		'P24'					=> array( 'PLN' ),
-		'BANKWIRE'				=> array(),
+		'CB_VISA_MASTERCARD'	=> [],
+		'MAESTRO'				=> ['EUR'],
+		'DINERS'				=> ['EUR'],
+		'GIROPAY'				=> ['EUR'],
+		'IDEAL'					=> ['EUR'],
+		'PAYLIB'				=> ['EUR'],
+		'SOFORT'				=> ['EUR'],
+		'BCMC'					=> ['EUR'],
+		'P24'					=> ['PLN'],
+		'BANKWIRE'				=> [],
 	);
 
 	public function deactivateBankAccount( $userId, $bankAccountId )
@@ -420,7 +420,7 @@ print_m( $items );
 	{
 		$wallet		= new \MangoPay\Wallet();
 		$wallet->Currency		= $currency;
-		$wallet->Owners			= array( $userId );
+		$wallet->Owners			= [$userId];
 		$wallet->Description	= $currency.' Wallet';
 		return $this->provider->Wallets->Create( $wallet );
 	}
@@ -483,7 +483,7 @@ print_m( $items );
 		if( $force )
 			$this->skipCacheOnNextRequest( TRUE );
 		$factory	= new MethodFactory();
-		return $factory->call( $this, $method, array( $resourceId ) );
+		return $factory->call( $this, $method, [$resourceId] );
 	}
 
 	public function getHook( $hookId )

@@ -51,7 +51,7 @@ $dataYearsTable["Trend"]	= array(
 );
 
 $sum	= 0;
-$dataYearsChartOrders	= array( array( "Jahr", "Bestellungen", "Trend" ) );
+$dataYearsChartOrders	= [["Jahr", "Bestellungen", "Trend"]];
 foreach( $ordersPerYear as $nr => $entry ){
 //	if( $entry->year == date( "Y" ) )
 //		$entry->orders	*= $factor;
@@ -64,7 +64,7 @@ foreach( $ordersPerYear as $nr => $entry ){
 }
 
 $sum	= 0;
-$dataYearsChartTurnover	= array( array( "Jahr", "Umsatz", "Trend" ) );
+$dataYearsChartTurnover	= [["Jahr", "Umsatz", "Trend"]];
 foreach( $ordersPerYear as $nr => $entry ){
 //	if( $entry->year == date( "Y" ) )
 //		$entry->turnover	*= $factor;

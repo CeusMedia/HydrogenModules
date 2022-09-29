@@ -17,7 +17,7 @@ class Hook_Work_Mission extends Hook
 	{
 		$model		= new Model_Mission_Document( $env );
 		$conditions	= array( 'modifiedAt' => '> '.( time() - 30 * 24 * 60 * 60 ) );
-		$orders		= array( 'modifiedAt' => 'DESC' );
+		$orders		= ['modifiedAt' => 'DESC'];
 		foreach( $model->getAll( $conditions, $orders ) as $item ){
 			$context->add( (object) array(
 				'module'	=> 'Work_Missions',
@@ -112,21 +112,21 @@ class Hook_Work_Mission extends Hook
 		$words			= $env->getLanguage()->getWords( 'work/mission' );
 
 		$list			= [];
-		$indices		= array( 'projectId' => $data->projectId );
+		$indices		= ['projectId' => $data->projectId];
 		if( $data->activeOnly )
 			$indices['status']	= self::$statusesActive;
-		$orders			= array( 'type' => 'DESC', 'title' => 'ASC' );
+		$orders			= ['type' => 'DESC', 'title' => 'ASC'];
 		$missions		= $modelMission->getAllByIndices( $indices, $orders );	//  ...
 
 		$icons			= array(
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-thumb-tack'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-clock-o'] ),
 		);
 		foreach( $missions as $mission ){
 			$icon		= $icons[$mission->type];
 			$isOpen		= in_array( $mission->status, self::$statusesActive );
 			$status		= '('.$words['states'][$mission->status].')';
-			$status		= HtmlTag::create( 'small', $status, array( 'class' => 'muted' ) );
+			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $mission->title : HtmlTag::create( 'del', $mission->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) array(
@@ -172,21 +172,21 @@ class Hook_Work_Mission extends Hook
 		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
 		$list			= [];
 		$modelMission	= new Model_Mission( $env );
-		$indices		= array( 'projectId' => $projectIds );
+		$indices		= ['projectId' => $projectIds];
 		if( $data->activeOnly )
 			$indices['status']	= self::$statusesActive;
-		$orders			= array( 'type' => 'DESC', 'title' => 'ASC' );
+		$orders			= ['type' => 'DESC', 'title' => 'ASC'];
 
 		$missions		= $modelMission->getAllByIndices( $indices, $orders );	//  ...
 		$icons			= array(
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) ),
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-thumb-tack'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-clock-o'] ),
 		);
 		foreach( $missions as $mission ){
 			$icon		= $icons[$mission->type];
 			$isOpen		= in_array( $mission->status, self::$statusesActive );
 			$status		= '('.$words['states'][$mission->status].')';
-			$status		= HtmlTag::create( 'small', $status, array( 'class' => 'muted' ) );
+			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $mission->title : HtmlTag::create( 'del', $mission->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) array(
@@ -221,7 +221,7 @@ class Hook_Work_Mission extends Hook
 		$modelMission	= new Model_Mission( $env );
 		$modelFilter	= new Model_Mission_Filter( $env );
 		$words			= $env->getLanguage()->getWords( 'work/mission' );
-		$lists			= (object) array( 'entities' => array(), 'relations' => array() );
+		$lists			= (object) array( 'entities' => [], 'relations' => [] );
 
 		$modelFilter->removeByIndex( 'userId', $data->userId );
 
@@ -285,8 +285,8 @@ class Hook_Work_Mission extends Hook
 		if( $timer->module === 'Work_Missions' && $timer->moduleId ){
 			$model		= new Model_Mission( $env );
 			$mission	= $model->get( $timer->moduleId );
-			if( in_array( $mission->status, array( -2, -1, 0, 1, 3, 4 ) ) ){
-				$model->edit( $timer->moduleId, array( 'status' => Model_Mission::STATUS_PROGRESS ) );
+			if( in_array( $mission->status, [-2, -1, 0, 1, 3, 4] ) ){
+				$model->edit( $timer->moduleId, ['status' => Model_Mission::STATUS_PROGRESS] );
 			}
 		}
 	}

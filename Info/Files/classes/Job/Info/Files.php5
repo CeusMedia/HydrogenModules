@@ -30,7 +30,7 @@ class Job_Info_Files extends Job_Abstract
 			if( $file->size == 0 ){
 				if( file_exists( $path.$file->title ) ){
 					$this->out( 'File found and migrated: '.$path.$file->title );
-					$data	= array( 'size' => filesize( $path.$file->title ) );
+					$data	= ['size' => filesize( $path.$file->title )];
 					$count	+= $this->modelFile->edit( $file->downloadFileId, $data );
 				}
 				else

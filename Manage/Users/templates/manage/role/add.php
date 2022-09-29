@@ -18,7 +18,7 @@ foreach( $words['type-register'] as $key => $label ){
 }
 $optRegister	= join( $optRegister );
 
-extract( $view->populateTexts( array( 'add.top', 'add.bottom', 'add.right' ), 'html/manage/role/' ) );
+extract( $view->populateTexts( ['add.top', 'add.bottom', 'add.right'], 'html/manage/role/' ) );
 
 
 $panelAdd	= '
@@ -43,7 +43,7 @@ $panelAdd	= '
 			<div class="row-fluid">
 				<div class="span">
 					<label for="description">'.$words['add']['labelDescription'].'</label>
-					'.HtmlTag::create( 'textarea', $role->get( 'description' ), array( 'class' => 'span12', 'name' => 'description', 'rows' => 4 ) ).'
+					'.HtmlTag::create( 'textarea', $role->get( 'description' ), ['class' => 'span12', 'name' => 'description', 'rows' => 4] ).'
 				</div>
 			</div>
 			<div class="buttonbar">

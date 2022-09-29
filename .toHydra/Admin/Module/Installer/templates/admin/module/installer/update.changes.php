@@ -9,12 +9,12 @@ $changes	= [];
 foreach( $moduleSource->versionLog as $entry ){
 	$isNewer	= version_compare( $entry->version, $moduleLocal->version ) > 0;
 	$class		= $isNewer ? 'new' : 'old';
-	$label		= HtmlTag::create( 'dt', '<small>Version</small> '.$entry->version, array( 'class' => $class ) );
-	$value		= HtmlTag::create( 'dd', $entry->note, array( 'class' => $class ) );
+	$label		= HtmlTag::create( 'dt', '<small>Version</small> '.$entry->version, ['class' => $class] );
+	$value		= HtmlTag::create( 'dd', $entry->note, ['class' => $class] );
 	$changes[]	= $label.$value;
 }
 $changes	= array_reverse( $changes );
-$changes	= HtmlTag::create( 'dl', $changes, array( 'class' => 'general list-changes' ) );
+$changes	= HtmlTag::create( 'dl', $changes, ['class' => 'general list-changes'] );
 
 return '
 <fieldset class="panel-changes">

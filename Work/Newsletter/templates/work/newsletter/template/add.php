@@ -4,13 +4,13 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
-$optTemplate	= array( '' => '-' );
+$optTemplate	= ['' => '-'];
 foreach( $templates as $item )
 	$optTemplate[$item->newsletterTemplateId]	= $item->title;
 $optTemplate	= HtmlElements::Options( $optTemplate, $template->templateId );
 
-$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) ).'&nbsp;';
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) ).'&nbsp;';
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
+$iconSave	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] ).'&nbsp;';
 
 $panelAdd	= '
 <div class="content-panel">
@@ -89,7 +89,7 @@ $panelAdd	= '
 	</div>
 </div>';
 
-extract( $view->populateTexts( array( 'above', 'bottom', 'top' ), 'html/work/newsletter/template/add/', array( 'words' => $words ) ) );
+extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/template/add/', ['words' => $words] ) );
 
 return $textTop.'
 <script>

@@ -16,7 +16,7 @@ class View_Work_Graph extends View{
 				$fact[2]	= NULL;
 			list( $label, $value, $default )	= $fact;
 			if( !( $default === NULL || strlen( $default ) === 0 ) )
-				$default	= HtmlTag::create( 'small', '('.$default.')', array( 'class' => 'muted' ) );
+				$default	= HtmlTag::create( 'small', '('.$default.')', ['class' => 'muted'] );
 
 			if( !strlen( $value ) ){
 				if( !$default )

@@ -5,7 +5,7 @@ $w			= (object) $words['add'];
 
 $tabs		= $this->renderMainTabs();
 
-$optGender	= array( /*$words['gender']*/ );
+$optGender	= [/*$words['gender']*/];
 $optGender	= HtmlElements::Options( $optGender/*, $author->gender*/ );
 
 $panelList	= $view->loadTemplateFile( 'manage/catalog/bookstore/author/list.php' );

@@ -40,13 +40,13 @@ class View_Helper_Navigation_Bootstrap_Navbar extends Abstraction
 			$links	= $this->helperNavigation->render();
 
 			if( $this->container )
-				$links	= HtmlTag::create( 'div', $links, array( 'class' => 'container' ) );
+				$links	= HtmlTag::create( 'div', $links, ['class' => 'container'] );
 
-			$inner	= HtmlTag::create( 'div', $links, array( 'class' => 'navbar-inner' ) );
+			$inner	= HtmlTag::create( 'div', $links, ['class' => 'navbar-inner'] );
 			$class	= "navbar navbar-".$this->position."-top";
 			if( $this->inverse )
 				$class	.= ' navbar-inverse';
-			$links	= HtmlTag::create( 'div', $inner, array( 'class' => $class ) );
+			$links	= HtmlTag::create( 'div', $inner, ['class' => $class] );
 		}
 		else{
 			$helperNavbar	= new SingleAutoTabs( $this->env );
@@ -85,12 +85,12 @@ class View_Helper_Navigation_Bootstrap_Navbar extends Abstraction
 			$icon	= "";
 			if( $this->logoIcon ){
 				$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
-				$icon	= HtmlTag::create( 'i', '', array( 'class' => $icon ) );
+				$icon	= HtmlTag::create( 'i', '', ['class' => $icon] );
 			}
 			$label	= $icon.$this->logoTitle;
 			if( $this->logoLink )
-				$label	= HtmlTag::create( 'a', $label, array( 'href' => $this->logoLink ) );
-			return HtmlTag::create( 'div', $label, array( 'id' => "navbar-logo" ) );
+				$label	= HtmlTag::create( 'a', $label, ['href' => $this->logoLink] );
+			return HtmlTag::create( 'div', $label, ['id' => "navbar-logo"] );
 		}
 		return '';
 	}

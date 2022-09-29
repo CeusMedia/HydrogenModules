@@ -20,17 +20,17 @@ foreach( $tags as $tag ){
 		'class' => 'link-tag',
 	) );
 }
-$tagList	= HtmlTag::create( 'span', join( ", ", $tagList ), array( 'class' => 'tag-list' ) );
+$tagList	= HtmlTag::create( 'span', join( ", ", $tagList ), ['class' => 'tag-list'] );
 
 foreach( $relatedArticles as $relation ){
 	$title		= $relation->article->title;//Alg_Text_Trimmer::trim( $relation->article->title, 60 );
 	$subtitle	= $relation->article->subtitle;//Alg_Text_Trimmer::trim( $relation->article->subtitle, 60 );
 	$url		= $helper->getArticleUri( $relation->article->articleId, !TRUE );
-	$image		= HtmlTag::create( 'a', $helper->renderArticleImage( $relation->article, "" ), array( 'href' => $url ) );
-	$image		= HtmlTag::create( 'div', $image, array( 'class' => 'related-articles-image-container' ) );
-	$title		= HtmlTag::create( 'div', HtmlTag::create( 'a', $title, array( 'href' => $url ) ) );
-	$sub		= HtmlTag::create( 'div', HtmlTag::create( 'small', $subtitle.'&nbsp;('.$relation->matches.')', array( 'class' => '' ) ) );
-	$list[]		= HtmlTag::create( 'div', array( $image, $title, $sub ), array(
+	$image		= HtmlTag::create( 'a', $helper->renderArticleImage( $relation->article, "" ), ['href' => $url] );
+	$image		= HtmlTag::create( 'div', $image, ['class' => 'related-articles-image-container'] );
+	$title		= HtmlTag::create( 'div', HtmlTag::create( 'a', $title, ['href' => $url] ) );
+	$sub		= HtmlTag::create( 'div', HtmlTag::create( 'small', $subtitle.'&nbsp;('.$relation->matches.')', ['class' => ''] ) );
+	$list[]		= HtmlTag::create( 'div', [$image, $title, $sub], array(
 		'class'		=> 'related-articles-list-item',
 	) );
 }

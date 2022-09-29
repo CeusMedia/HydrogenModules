@@ -27,13 +27,13 @@ if( $workshops ){
 					'alignH'	=> $imageAlignH[$workshop->imageAlignH],
 					'alignV'	=> $imageAlignV[$workshop->imageAlignV],
 				) ),
-			), array( 'class' => 'workshop-item-image-container' ) ),
+			), ['class' => 'workshop-item-image-container'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'div', $workshop->title, array( 'class' => 'workshop-item-title' ) ),
-					HtmlTag::create( 'div', $workshop->abstract, array( 'class' => 'workshop-item-abstract' ) ),
+					HtmlTag::create( 'div', $workshop->title, ['class' => 'workshop-item-title'] ),
+					HtmlTag::create( 'div', $workshop->abstract, ['class' => 'workshop-item-abstract'] ),
 				) ),
-			), array( 'class' => 'workshop-item-facts-container' ) ),
+			), ['class' => 'workshop-item-facts-container'] ),
 		), array(
 			'class'	=> 'workshop-item',
 		), array(
@@ -41,10 +41,10 @@ if( $workshops ){
 		) );
 	}
 	$list	= join( HtmlTag::create( 'hr' ), $list );
-	$list	= HtmlTag::create( 'div', $list, array( 'class' => 'workshop-list' ) );
+	$list	= HtmlTag::create( 'div', $list, ['class' => 'workshop-list'] );
 }
 $panel	= $list;
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/info/workshop/index/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/info/workshop/index/' ) );
 
 return $textTop.$panel.$textBottom;

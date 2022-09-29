@@ -22,7 +22,7 @@ class View_Helper_Navigation_Bootstrap_NavbarMobile extends View_Helper_Navigati
 	public function render(): string
 	{
 		$this->hideOnMobileDevice( FALSE );
-		$classes	= array( 'layout-navbar-mobile navbar-fixed-top mm-fixed-top' );
+		$classes	= ['layout-navbar-mobile navbar-fixed-top mm-fixed-top'];
 		if( $this->hideOnDesktop )
 			$classes[]	= 'hidden-desktop';
 		return  HtmlTag::create( 'div', parent::render(), array(

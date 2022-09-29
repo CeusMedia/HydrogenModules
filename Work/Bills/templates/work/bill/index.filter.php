@@ -7,10 +7,10 @@ $optType		= HtmlElements::Options( $optType, $env->getSession()->get( 'filter_wo
 $optStatus		= /*array( '' => '- alle -' ) + */$words['states'];
 $optStatus		= HtmlElements::Options( $optStatus, $env->getSession()->get( 'filter_work_bill_status' ) );
 
-$optOrder		= array( 'date' => 'Fälligkeit', 'status' => 'Status', 'type' => 'Typ' );
+$optOrder		= ['date' => 'Fälligkeit', 'status' => 'Status', 'type' => 'Typ'];
 $optOrder		= HtmlElements::Options( $optOrder, $filters->get( 'order' ) );
 
-$optDirection	= array( 'ASC' => 'aufsteigend', 'DESC' => 'absteigend' );
+$optDirection	= ['ASC' => 'aufsteigend', 'DESC' => 'absteigend'];
 $optDirection	= HtmlElements::Options( $optDirection, $filters->get( 'direction' ) );
 
 $filterStart	= $filters->get( 'start' );

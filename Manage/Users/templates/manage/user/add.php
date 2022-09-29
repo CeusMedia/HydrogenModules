@@ -4,13 +4,13 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['add'];
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconList		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconSave		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+	$iconList		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-list'] );
+	$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
 }
 
 $roleMap	= [];
@@ -126,7 +126,7 @@ $panelAdd	= '
 
 $panelInfo	= '';
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/user/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/user/' ) );
 
 return $textIndexTop.'
 <div class="row-fluid">

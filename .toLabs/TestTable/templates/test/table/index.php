@@ -20,7 +20,7 @@ foreach( $tests as $entry )
 	$label	= $time.'&nbsp;&nbsp;'.$link;
 	$list[]	= HtmlElements::ListItem( $label );	
 }
-$list		= $list ? HtmlElements::unorderedList( $list, 0, array( '' => '' ) ) : '';
+$list		= $list ? HtmlElements::unorderedList( $list, 0, ['' => ''] ) : '';
 $heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
 $add 		= HtmlElements::LinkButton( './test/table/add', 'add entry', 'button add' );
 

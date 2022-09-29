@@ -5,9 +5,9 @@ $w		= (object) $words['index'];
 
 $iconSave	= '<i class="icon-envelope icon-white"></i>';
 if( $env->hasModule( 'UI_Font_FontAwesome' ) )
-	$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
+	$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
 
-extract( $this->populateTexts( array( 'before', 'after', 'top', 'right', 'bottom', 'privacy' ), 'html/info/contact/' ) );
+extract( $this->populateTexts( ['before', 'after', 'top', 'right', 'bottom', 'privacy'], 'html/info/contact/' ) );
 
 $newsletter    = '';
 if( $useNewsletter ){
@@ -22,14 +22,14 @@ if( $useNewsletter ){
 				'checked'	=> $topic->type == Model_Newsletter_Group::TYPE_AUTOMATIC ? 'checked' : NULL,
 				'disabled'	=> $topic->type == Model_Newsletter_Group::TYPE_AUTOMATIC ? 'disabled' : NULL,
 			) );
-			$label		= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$topic->title, array( 'class' => 'checkbox' ) );
+			$label		= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$topic->title, ['class' => 'checkbox'] );
 			$list[]		= HtmlTag::create( 'li', $label );
 		}
-		$listTopics		= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+		$listTopics		= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 		$inputTopics	= HtmlTag::create( 'blockquote', array(
 			HtmlTag::create( 'label', $w->labelNewsletterTopics ),
 			$listTopics,
-		), array( 'class' => 'optional newsletter newsletter-true' ) );
+		), ['class' => 'optional newsletter newsletter-true'] );
 	}
 	$newsletter     = '
 		<div class="row-fluid">

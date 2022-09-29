@@ -30,7 +30,7 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 		$list	= [];
 		$userId		= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
 		$model		= new Model_Novelty( $this->env );
-		$iconAck	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+		$iconAck	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 		foreach( $this->news as $item ){
 			$conditions	= array(
 				'userId'	=> $userId,
@@ -41,7 +41,7 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 			if( $model->count( $conditions ) )
 				continue;
 			$key	= $item->timestamp.'.'.microtime( TRUE );
-			$link	= HtmlTag::create( 'a', $item->title, array( 'href' => $item->url ) );
+			$link	= HtmlTag::create( 'a', $item->title, ['href' => $item->url] );
 			$date	= View_Helper_Work_Time::formatSeconds( time() - $item->timestamp, '&nbsp;', TRUE );
 
 			$badgeUnit	= substr( $date, -1 );
@@ -62,11 +62,11 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 				) ),
 			);
 			$type		= isset( $item->typeLabel ) ? $item->typeLabel : $item->type;
-			$type		= HtmlTag::create( 'small', $type, array( 'class' => 'muted' ) );
+			$type		= HtmlTag::create( 'small', $type, ['class' => 'muted'] );
 			$list[$key]	= HtmlTag::create( 'tr', array(
-				HtmlTag::create( 'td', $date, array( 'style' => 'text-align: right' ) ),
-				HtmlTag::create( 'td', $type.'&nbsp;'.$link, array( 'class' => 'autocut' ) ),
-				HtmlTag::create( 'td', $buttons, array( 'style' => 'text-align: right' ) ),
+				HtmlTag::create( 'td', $date, ['style' => 'text-align: right'] ),
+				HtmlTag::create( 'td', $type.'&nbsp;'.$link, ['class' => 'autocut'] ),
+				HtmlTag::create( 'td', $buttons, ['style' => 'text-align: right'] ),
 			) );
 			krsort( $list );
 		}

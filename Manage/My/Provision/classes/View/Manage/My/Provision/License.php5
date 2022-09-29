@@ -42,14 +42,14 @@ class View_Manage_My_Provision_License extends View
 			$list[]	= HtmlTag::create( 'dt', $key );
 			$list[]	= HtmlTag::create( 'dd', $value );
 		}
-		return HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+		return HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 	}
 
 	public function renderLicenseFacts( $productLicense, $columns = [] )
 	{
 		$words	= $this->getWords();
 		$list = [];
-		$facts	= array( 'productTitle', 'licenseTitle', 'users', 'duration', 'price' );
+		$facts	= ['productTitle', 'licenseTitle', 'users', 'duration', 'price'];
 		foreach( $facts as $fact ){
 			if( $columns && !in_array( $fact, $columns ) )
 				continue;
@@ -82,7 +82,7 @@ class View_Manage_My_Provision_License extends View
 		}
 		if( $list )
 			return self::renderDefinitionList( $list );
-//			return HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+//			return HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 	}
 
 	public static function renderTabs( Environment $env, $current = 0 )
@@ -91,11 +91,11 @@ class View_Manage_My_Provision_License extends View
 
 //		$tabs->setBasePath( './manage/my/user/' );
 //		$env->getModules()->callHook( "MyUser", "registerTabs", $tabs/*, $data*/ );		//  call tabs to be registered
-//		return HtmlTag::create( 'div', $tabs->renderTabs( $current ), array( 'id' => 'tabs-manage-my-user' ) );
+//		return HtmlTag::create( 'div', $tabs->renderTabs( $current ), ['id' => 'tabs-manage-my-user'] );
 
 		$tabs->setBasePath( './manage/my/provision/' );
 		$env->getModules()->callHook( "ManageMyProvision", "registerTabs", $tabs/*, $data*/ );		//  call tabs to be registered
-		return HtmlTag::create( 'div', $tabs->renderTabs( $current ), array( 'id' => 'tabs-manage-my-provision' ) );
+		return HtmlTag::create( 'div', $tabs->renderTabs( $current ), ['id' => 'tabs-manage-my-provision'] );
 	}
 
 	protected function __onInit()
@@ -110,7 +110,7 @@ class View_Manage_My_Provision_License extends View
 		if( $count )
 			$label	.= '&nbsp;&nbsp;<span class="badge badge-info">'.$count.'</span>&nbsp;';
 		if( $icon ){
-			$icon	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-'.$icon ) );
+			$icon	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-'.$icon] );
 			$label	= $icon.'&nbsp;'.$label;
 		}
 		return $label;

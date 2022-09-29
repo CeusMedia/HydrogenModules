@@ -11,7 +11,7 @@ if( $hosts ){
 			HtmlTag::create( 'td', $host->ip ),
 		) );
 	}
-	$table	= HtmlTag::create( 'table', $list, array( 'class' => 'table table-fixed' ) );
+	$table	= HtmlTag::create( 'table', $list, ['class' => 'table table-fixed'] );
 }
 $panelHosts	= '<div class="content-panel">
 	<h3>Hosts</h3>
@@ -60,7 +60,7 @@ if( $syncs ){
 		$statusClass	= '';
 		$statusLabel	= $statusLabels[$sync->status];
 		if( $sync->status == Model_Mail_Sync::STATUS_ERROR )
-			$statusLabel	= HtmlTag::create( 'acronym', $statusLabel, array( 'title' => $sync->run->message ) );
+			$statusLabel	= HtmlTag::create( 'acronym', $statusLabel, ['title' => $sync->run->message] );
 		$status	= HtmlTag::create( 'div', array(
 			HtmlTag::create( 'div', $statusLabel, array(
 				'class'	=> 'bar',
@@ -70,15 +70,15 @@ if( $syncs ){
 			'class'	=> 'progress '.$statusClasses[$sync->status],
 		) );
 
-		$iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-toggle-on' ) );
-		$iconClose		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check-square-o' ) );
-		$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-		$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+		$iconActivate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-toggle-on'] );
+		$iconClose		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check-square-o'] );
+		$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+		$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-		$buttonActivate	= HtmlTag::create( 'a', $iconActivate.'&nbsp;aktivieren', array( 'href' => './work/mail/sync/setSyncStatus/'.$sync->mailSyncId.'/1' ) );
-		$buttonClose	= HtmlTag::create( 'a', $iconClose.'&nbsp;schließen', array( 'href' => './work/mail/sync/setSyncStatus/'.$sync->mailSyncId.'/4' ) );
-		$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp;bearbeiten', array( 'href' => './work/mail/sync/editSync/'.$sync->mailSyncId ) );
-		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array( 'href' => './work/mail/sync/removeSync/'.$sync->mailSyncId ) );
+		$buttonActivate	= HtmlTag::create( 'a', $iconActivate.'&nbsp;aktivieren', ['href' => './work/mail/sync/setSyncStatus/'.$sync->mailSyncId.'/1'] );
+		$buttonClose	= HtmlTag::create( 'a', $iconClose.'&nbsp;schließen', ['href' => './work/mail/sync/setSyncStatus/'.$sync->mailSyncId.'/4'] );
+		$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp;bearbeiten', ['href' => './work/mail/sync/editSync/'.$sync->mailSyncId] );
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', ['href' => './work/mail/sync/removeSync/'.$sync->mailSyncId] );
 
 		$buttons	= [];
 		if( $sync->status == Model_Mail_Sync::STATUS_NEW ){
@@ -102,9 +102,9 @@ if( $syncs ){
 
 		if( $buttons ){
 			$buttons	= HtmlTag::create( 'div', array(
-				HtmlTag::create( 'a', '<i class="fa fa-fw fa-cog"></i>', array( 'class' => 'btn btn-large dropdown-toggle', 'data-toggle' => "dropdown" ) ),
-				HtmlTag::create( 'ul', $buttons, array( 'class' => 'dropdown-menu pull-right' ) )
-			), array( 'class' => 'btn-group' ) );
+				HtmlTag::create( 'a', '<i class="fa fa-fw fa-cog"></i>', ['class' => 'btn btn-large dropdown-toggle', 'data-toggle' => "dropdown"] ),
+				HtmlTag::create( 'ul', $buttons, ['class' => 'dropdown-menu pull-right'] )
+			), ['class' => 'btn-group'] );
 		}
 		else{
 			$buttons	= '';
@@ -122,8 +122,8 @@ if( $syncs ){
 			HtmlTag::create( 'td', $sync->sourceUsername.'<br/><small class="muted">'.$sourceHost.'</small>'  ),
 			HtmlTag::create( 'td', $sync->targetUsername.'<br/><small class="muted">'.$targetHost.'</small>'  ),
 			HtmlTag::create( 'td', $status.'<br/><small class="muted">'.$helperTimestamp->convert( $sync->modifiedAt, TRUE, 'vor' ).'</small>' ),
-			HtmlTag::create( 'td', HtmlTag::create( 'span', count( $sync->runs ), array( 'class' => 'badge '.( count( $sync->runs ) ? 'badge-info' : '' ) ) ) ),
-			HtmlTag::create( 'td', HtmlTag::create( 'span', $messages, array( 'class' => 'badge '.( $messages ? 'badge-success' : '' ) ) ) ),
+			HtmlTag::create( 'td', HtmlTag::create( 'span', count( $sync->runs ), ['class' => 'badge '.( count( $sync->runs ) ? 'badge-info' : '' )] ) ),
+			HtmlTag::create( 'td', HtmlTag::create( 'span', $messages, ['class' => 'badge '.( $messages ? 'badge-success' : '' )] ) ),
 			HtmlTag::create( 'td', $buttons ),
 		) );
 	}
@@ -137,7 +137,7 @@ if( $syncs ){
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$colgroup	= HtmlElements::ColumnGroup( '30%', '30%', '20%', '5%', '5%', '10%' );
-	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 $panelSyncs	= '<div class="content-panel">
 	<h3>Synchronisierungen</h3>

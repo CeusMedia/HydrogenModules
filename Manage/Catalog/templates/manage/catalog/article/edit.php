@@ -9,12 +9,12 @@ $tabsMain	= $this->renderMainTabs();
 
 $tabs		= [];
 $panes		= array(
-	'details'		=> $this->loadTemplateFile( 'manage/catalog/article/edit.details.php', array( 'w' => $w ) ),
-	'authors'		=> $this->loadTemplateFile( 'manage/catalog/article/edit.authors.php', array( 'w' => $w ) ),
-	'categories'	=> $this->loadTemplateFile( 'manage/catalog/article/edit.categories.php', array( 'w' => $w ) ),
-	'cover'			=> $this->loadTemplateFile( 'manage/catalog/article/edit.cover.php', array( 'w' => $w ) ),
-	'documents'		=> $this->loadTemplateFile( 'manage/catalog/article/edit.documents.php', array( 'w' => $w ) ),
-	'tags'			=> $this->loadTemplateFile( 'manage/catalog/article/edit.tags.php', array( 'w' => $w ) ),
+	'details'		=> $this->loadTemplateFile( 'manage/catalog/article/edit.details.php', ['w' => $w] ),
+	'authors'		=> $this->loadTemplateFile( 'manage/catalog/article/edit.authors.php', ['w' => $w] ),
+	'categories'	=> $this->loadTemplateFile( 'manage/catalog/article/edit.categories.php', ['w' => $w] ),
+	'cover'			=> $this->loadTemplateFile( 'manage/catalog/article/edit.cover.php', ['w' => $w] ),
+	'documents'		=> $this->loadTemplateFile( 'manage/catalog/article/edit.documents.php', ['w' => $w] ),
+	'tags'			=> $this->loadTemplateFile( 'manage/catalog/article/edit.tags.php', ['w' => $w] ),
 );
 
 $current	= $this->env->getSession()->get( 'manage.catalog.article.tab' );
@@ -28,15 +28,15 @@ foreach( $words['tabs'] as $key => $label ){
 	);
 	$link	= HtmlTag::create( 'a', $label, $attributes );
 	$class	= $current == $key ? "active" : NULL;
-	$tabs[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+	$tabs[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 	$attributes		= array(
 		'class'		=> "tab-pane".( $current == $key ? " active" : "" ),
 		'id'		=> 'tab-'.$key
 	);
 	$panes[$key]	= HtmlTag::create( 'div', $panes[$key], $attributes );
 }
-$tabs	= HtmlTag::create( 'ul', $tabs, array( 'class' => 'nav nav-tabs' ) );
-$panes	= HtmlTag::create( 'div', $panes, array( 'class' => 'tab-content' ) );
+$tabs	= HtmlTag::create( 'ul', $tabs, ['class' => 'nav nav-tabs'] );
+$panes	= HtmlTag::create( 'div', $panes, ['class' => 'tab-content'] );
 
 $panelFilter	= $view->loadTemplateFile( 'manage/catalog/article/filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/catalog/article/list.php' );

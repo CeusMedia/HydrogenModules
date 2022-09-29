@@ -5,21 +5,21 @@ $words	= $env->getLanguage()->getWords( 'manage/catalog/provision/product' );
 $w		= (object) $words['index'];
 
 $iconsStatus	= array(
-	-1	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-remove' ) ),
-	0	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) ),
-	1	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-ok' ) ),
+	-1	=> HtmlTag::create( 'i', '', ['class' => 'icon-remove'] ),
+	0	=> HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] ),
+	1	=> HtmlTag::create( 'i', '', ['class' => 'icon-ok'] ),
 );
 
 $list	= [];
 foreach( $products as $item ){
 	$class		= isset( $productId ) && $productId == $item->productId ? 'active' : NULL;
 	$label		= $iconsStatus[(int) $item->status].'&nbsp;'.$item->title;
-	$link		= HtmlTag::create( 'a', $label, array( 'href' => './manage/catalog/provision/product/edit/'.$item->productId ) );
-	$list[]		= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+	$link		= HtmlTag::create( 'a', $label, ['href' => './manage/catalog/provision/product/edit/'.$item->productId] );
+	$list[]		= HtmlTag::create( 'li', $link, ['class' => $class] );
 }
-$list	= HtmlTag::create( 'ul', $list, array( 'class' => "nav nav-pills nav-stacked" ) );
+$list	= HtmlTag::create( 'ul', $list, ['class' => "nav nav-pills nav-stacked"] );
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, array(
 	'href'	=> './manage/catalog/provision/product/add',
 	'class'	=> 'btn btn-success',

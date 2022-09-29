@@ -16,12 +16,12 @@ die;
 function renderUserLabel( $user ){
 	if( !$user )
 		return "-";
-	$iconUser	= HtmlTag::create( 'i', '', array( 'class' => 'icon-user' ) );
+	$iconUser	= HtmlTag::create( 'i', '', ['class' => 'icon-user'] );
 	$spanClass	= 'user role role'.$user->roleId;
 	$fullname	= $user->firstname.' '.$user->surname;
-	$username	= HtmlTag::create( 'abbr', $user->username, array( 'title' => $fullname ) );
+	$username	= HtmlTag::create( 'abbr', $user->username, ['title' => $fullname] );
 	$label		= $iconUser.'&nbsp;'.$username;
-	return HtmlTag::create( 'span', $label, array( 'class' => $spanClass ) );
+	return HtmlTag::create( 'span', $label, ['class' => $spanClass] );
 }
 
 $viewers	= [];
@@ -33,15 +33,15 @@ $w	= (object) $words['view-facts'];
 
 $priorities	= $words['priorities'];
 
-$priority		= HtmlTag::create( 'span', $words['priorities'][(string) $mission->priority], array( 'class' => 'mission priority'.$mission->priority ) );
-$status			= HtmlTag::create( 'span', $words['states'][(string) $mission->status], array( 'class' => 'mission status'.$mission->status ) );
+$priority		= HtmlTag::create( 'span', $words['priorities'][(string) $mission->priority], ['class' => 'mission priority'.$mission->priority] );
+$status			= HtmlTag::create( 'span', $words['states'][(string) $mission->status], ['class' => 'mission status'.$mission->status] );
 $creator		= renderUserLabel( $mission->creator );
 $worker			= renderUserLabel( $mission->worker );
 $modifier		= renderUserLabel( $mission->modifier );
 
 $project		= $mission->project->title;
 if( $canEditProject )
-	$project	= HtmlTag::create( 'a', $project, array( 'href' => './manage/project/edit/'.$mission->projectId ) );
+	$project	= HtmlTag::create( 'a', $project, ['href' => './manage/project/edit/'.$mission->projectId] );
 
 $hoursProjected		= floor( $mission->minutesProjected / 60 );
 $minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 2, 0, STR_PAD_LEFT );
@@ -49,10 +49,10 @@ $minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 
 $hoursRequired		= floor( $mission->minutesRequired / 60 );
 $minutesRequired	= str_pad( $mission->minutesRequired - $hoursRequired * 60, 2, 0, STR_PAD_LEFT );
 
-$iconCancel			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconEdit			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconCopy			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clone' ) );
-$iconRevamp			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-recycle' ) );
+$iconCancel			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+$iconEdit			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconCopy			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-clone'] );
+$iconRevamp			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-recycle'] );
 
 /*
 $helper			= new View_Helper_TimePhraser( $env );
@@ -107,10 +107,10 @@ $isOverrunTracked	= $totalMinsProjected && $totalMinsTracked > $totalMinsProject
 
 
 if( $totalMinsProjected )
-	$list[]	= HtmlTag::create( 'dd', 'geplant: '.renderDuration( $totalMinsProjected, $useTimer ), array() );
+	$list[]	= HtmlTag::create( 'dd', 'geplant: '.renderDuration( $totalMinsProjected, $useTimer ), [] );
 if( $totalMinsTracked ){
 	$diff	= View_Work_Mission::formatSeconds( abs( $totalMinsProjected - $totalMinsTracked ) * 60 );
-	$diff	= HtmlTag::create( 'small', '('.$diff.')', array( 'class' => 'muted' ) );
+	$diff	= HtmlTag::create( 'small', '('.$diff.')', ['class' => 'muted'] );
 	$time	= View_Work_Mission::formatSeconds( $totalMinsTracked * 60 );
 	$list[]	= HtmlTag::create( 'dd', 'erfasst: '.$time.' '.$diff, array(
 		'class' => $isOverrunTracked ? 'warning' : NULL,
@@ -118,7 +118,7 @@ if( $totalMinsTracked ){
 }
 if( $totalMinsRequired ){
 	$diff	= View_Work_Mission::formatSeconds( abs( $totalMinsProjected - $totalMinsRequired ) );
-	$diff	= HtmlTag::create( 'small', '('.$diff.')', array( 'class' => 'muted' ) );
+	$diff	= HtmlTag::create( 'small', '('.$diff.')', ['class' => 'muted'] );
 	$time	= View_Work_Mission::formatSeconds( $totalMinsRequired );
 	$list[]	= HtmlTag::create( 'dd', 'benötigt: '.$time.' '.$diff, array(
 		'class' => $isOverrunRequired ? 'warning' : NULL,
@@ -126,12 +126,12 @@ if( $totalMinsRequired ){
 }
 $factHours	= $list ? '<dt>'.$w->labelHours.'</dt>'.join( $list ) : '';
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array( 'href' => './work/mission', 'class' => 'btn btn-small' ) );
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, ['href' => './work/mission', 'class' => 'btn btn-small'] );
 $buttonEdit		= HtmlElements::LinkButton( './work/mission/edit/'.$mission->missionId, $iconEdit.' '.$w->buttonEdit, 'btn btn-primary' );
 $buttonCopy		= HtmlElements::LinkButton( './work/mission/add/'.$mission->missionId, $iconCopy.' '.$w->buttonCopy, 'btn btn-small btn-small' );
 $buttonRevamp	= HtmlElements::LinkButton( './work/mission/setStatus/'.$mission->missionId.'/2/1', $iconRevamp.' '.$w->buttonRevamp, 'btn btn-small' );
 
-if( in_array( $mission->status, array( -1, 0, 1, 2, 3 ) ) )
+if( in_array( $mission->status, [-1, 0, 1, 2, 3] ) )
 	$buttonRevamp	= "";
 else
 	$buttonEdit		= "";

@@ -29,8 +29,8 @@ class Hook_Auth_Local extends Hook
 			return;
 		$modelUser	= new Model_User( $env );
 		$words		= $env->getLanguage()->getWords( 'auth/local' );
-		$conditions	= array( 'status' => '> 0' );
-		$users		= $modelUser->getAll( $conditions, array( 'username' => 'ASC' ) );
+		$conditions	= ['status' => '> 0'];
+		$users		= $modelUser->getAll( $conditions, ['username' => 'ASC'] );
 		$payload->list	= array( (object) array(
 			'module'		=> $module,
 			'label'			=> $words['hook-getRelatedUsers']['label'],

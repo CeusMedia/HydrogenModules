@@ -26,11 +26,11 @@ class View_Helper_Info_Manual_CategoryPageList
 			return '<div><em class="muted">'.$words['list']['empty'].'</em></div><br/>';
 		$list	= [];
 		foreach( $this->pages as $entry ){
-			$link	= HtmlTag::create( 'a', $entry->title, array( 'href' => './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title ) ) );
+			$link	= HtmlTag::create( 'a', $entry->title, ['href' => './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title )] );
 			$class	= 'autocut '.( $this->activePageId == $entry->manualPageId ? 'active' : '' );
-			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
-		return HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+		return HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );
 	}
 
 	public function setActivePageId( $pageId ): self
@@ -46,7 +46,7 @@ class View_Helper_Info_Manual_CategoryPageList
 			'status'			=> '>= '.Model_Manual_Page::STATUS_NEW,
 			'manualCategoryId'	=> $categoryId,
 		);
-		$orders			= array( 'rank' => 'ASC' );
+		$orders			= ['rank' => 'ASC'];
 		$this->pages	= $model->getAll( $conditions, $orders );
 		return $this;
 	}

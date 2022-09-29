@@ -14,7 +14,7 @@ $panelList		= $view->loadTemplateFile( 'admin/mail/attachment/index.list.php' );
 
 $w		= (object) $words['index'];
 
-[$textTop, $textBottom] = $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/attachment/' );
+[$textTop, $textBottom] = $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/attachment/' );
 
 $tabs	= View_Admin_Mail_Attachment::renderTabs( $env, '' );
 

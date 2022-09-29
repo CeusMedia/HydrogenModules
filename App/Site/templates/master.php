@@ -1,10 +1,14 @@
 <?php
+
 use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
-use CeusMedia\HydrogenFramework\View\Helper\Navigation\SingleList;
+use CeusMedia\HydrogenFramework\View;
 
 /** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var string $content */
 
 $page	= $env->getPage();
 
@@ -38,49 +42,6 @@ else if( class_exists( 'View_Helper_Navigation' ) ){							//  fallback: outdate
 	$helperNav->setCurrent( $path ? $path : 'index' );
 	$navMain	= $helperNav->render();
 }
-else{
-	$links	= [];
-	if( file_exists( 'config/pages.json' ) ){									//  fallback: pages but no renderer
-		$isAuthenticated	= (bool) $env->getSession()->get( 'auth_user_id' );
-		if( $env->getModules()->has( 'Resource_Authentication' ) ){
-			$auth				= Logic_Authentication::getInstance( $env );
-			$isAuthenticated	= $auth->isAuthenticated();
-		}
-		try{
-			$scopes	= JsonFileReader::load( 'config/pages.json' );
-			foreach( $scopes->main as $mainPageId => $mainPage ){
-				if( isset( $mainPage->disabled ) && $mainPage->disabled !== "no" )
-					continue;
-				if( isset( $mainPage->pages ) && $mainPage->pages )
-					continue;
-				$free		= !isset( $mainPage->access );
-				$public		= !$free && $mainPage->access == "public";
-				$outside	= !$free && !$isAuthenticated && $mainPage->access == "outside";
-				$inside		= !$free && $isAuthenticated && $mainPage->access == "inside";
-				$acl		= !$free && $mainPage->access == "acl" && $env->getAcl()->has( $mainPage->path );
-				$mainPage->visible	= $free || $public || $outside || $inside || $acl;
-				if( $mainPage->visible )
-					$links[$mainPage->path]	= $mainPage->label;
-			}
-		}
-		catch( Exception $e ){
-			$messenger->noteFailure( 'Config file "pages.json" cannot be parsed: '.$e->getMessage().'.' );
-		}
-	}
-	else if( isset( $words['links'] ) && $words['links'] ){						//  fallback: links from main words section, all public
-		$links	= $words['links'];
-	}
-	$controller	= $env->getRequest()->get( '__controller' );
-	$current	= SingleList::getCurrentKey( $links, $controller );
-
-	$list	= [];
-	foreach( $links as $key => $value ){
-		$link	= HtmlTag::create( 'a', $value, array( 'href' => './'.$key ) );
-		$class	= $key == $current ? "active" : NULL;
-		$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
-	}
-	$navMain	= HtmlTag::create( 'ul', $list, array( "class" => "nav" ) );
-}
 
 /*  --  USER MESSAGES  --  */
 if( $env->getModules()->has( 'UI_Helper_Messenger_Bootstrap' ) )
@@ -97,7 +58,7 @@ $page->setTitle( $brand );
 if( !empty( $words['main']['brand'] ) )
 	$brand	= $words['main']['brand'];
 
-$brand		= HtmlTag::create( 'a', $brand, array( 'href' => './', 'class' => 'brand' ) );
+$brand		= HtmlTag::create( 'a', $brand, ['href' => './', 'class' => 'brand'] );
 if( $view->hasContentFile( 'html/app.brand.html' ) )
 	if( $brandHtml = $view->loadContentFile( 'html/app.brand.html' ) )			//  render brand, words from main.ini are assigned
 		$brand		= $brandHtml;

@@ -4,10 +4,10 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $currencyFirst = FALSE;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconPrint		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-print' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconPrint		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-print'] );
 
 $wordsCurrencies	= array(
 	'EUR'		=> 'EUR',
@@ -49,22 +49,22 @@ $helperAmount->set( $amount );
 if( $currencyFirst )
 	$fieldMoney	= '<div class="row-fluid">
 		<div class="span4">
-			'.HtmlTag::create( 'label', 'in Währung', array( 'for' => 'input_currency' ) ).'
+			'.HtmlTag::create( 'label', 'in Währung', ['for' => 'input_currency'] ).'
 			'.$inputCurrency.'
 		</div>
 		<div class="span8">
-			'.HtmlTag::create( 'label', 'Geldbetrag', array( 'for' => 'input_amount' ) ).'
+			'.HtmlTag::create( 'label', 'Geldbetrag', ['for' => 'input_amount'] ).'
 			'.$helperAmount.'
 		</div>
 	</div>';
 else
 	$fieldMoney	= '<div class="row-fluid">
 		<div class="span8">
-			'.HtmlTag::create( 'label', 'Geldbetrag', array( 'for' => 'input_amount' ) ).'
+			'.HtmlTag::create( 'label', 'Geldbetrag', ['for' => 'input_amount'] ).'
 			'.$helperAmount.'
 		</div>
 		<div class="span4">
-			'.HtmlTag::create( 'label', 'in Währung', array( 'for' => 'input_currency' ) ).'
+			'.HtmlTag::create( 'label', 'in Währung', ['for' => 'input_currency'] ).'
 			'.$inputCurrency.'
 		</div>
 	</div>';

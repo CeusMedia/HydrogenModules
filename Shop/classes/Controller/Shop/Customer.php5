@@ -77,7 +77,7 @@ class Controller_Shop_Customer extends Controller
 				$this->modelAddress->edit( $addressId, $data->getAll() );
 			}
 			else{
-				if( !$type || !in_array( (int) $type, array( Model_Address::TYPE_DELIVERY, Model_Address::TYPE_BILLING ) ) ){
+				if( !$type || !in_array( (int) $type, [Model_Address::TYPE_DELIVERY, Model_Address::TYPE_BILLING] ) ){
 				//	@todo: handle this situation!
 				}
 				$mandatory	= array(
@@ -220,7 +220,7 @@ class Controller_Shop_Customer extends Controller
 		}
 
 		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
 		$this->addData( 'paymentBackends', $this->backends );
 
 		if( $this->modelCart->get( 'positions' ) ){

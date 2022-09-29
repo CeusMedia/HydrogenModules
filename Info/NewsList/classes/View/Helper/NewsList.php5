@@ -64,13 +64,13 @@ class View_Helper_NewsList implements Countable
 			$key		= $item->timestamp.'.'.microtime( TRUE );
 			$icon		= '';
 			if( isset( $item->icon ) && strlen( $item->icon ) )
-				$icon	= HtmlTag::create( 'i', '', array( 'class' => $item->icon ) ).'&nbsp;';
-			$link		= HtmlTag::create( 'a', $icon.$item->title, array( 'href' => $item->url ) );
+				$icon	= HtmlTag::create( 'i', '', ['class' => $item->icon] ).'&nbsp;';
+			$link		= HtmlTag::create( 'a', $icon.$item->title, ['href' => $item->url] );
 			$date		= $helper->convert( $item->timestamp, TRUE );
-			$type		= HtmlTag::create( 'small', $item->typeLabel, array( 'class' => "muted" ) );
+			$type		= HtmlTag::create( 'small', $item->typeLabel, ['class' => "muted"] );
 			$list[$key]	= HtmlTag::create( 'tr', array(
-				HtmlTag::create( 'td', $type.'<br/>'.$link, array( 'class' => 'autocut' ) ),
-				HtmlTag::create( 'td', $date, array( 'style' => 'text-align: right' ) ),
+				HtmlTag::create( 'td', $type.'<br/>'.$link, ['class' => 'autocut'] ),
+				HtmlTag::create( 'td', $date, ['style' => 'text-align: right'] ),
 			) );
 			krsort( $list );
 		}
@@ -78,7 +78,7 @@ class View_Helper_NewsList implements Countable
 		$colgroup	= HtmlElements::ColumnGroup( "", "100" );
 		$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'th', $this->words['panel']['headerTitle'] ),
-			HtmlTag::create( 'th', $this->words['panel']['headerAge'], array( 'style' => 'text-align: right' ) ),
+			HtmlTag::create( 'th', $this->words['panel']['headerAge'], ['style' => 'text-align: right'] ),
 		) ) );
 		$tbody	= HtmlTag::create( 'tbody', $list );
 		$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(

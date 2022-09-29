@@ -61,7 +61,7 @@ class View_Helper_LanguageSelector extends Abstraction
 
 	public function setDropdownAlign( string $align = 'right' ): self
 	{
-		if( !in_array( $align, array( 'left', 'right' ) ) )
+		if( !in_array( $align, ['left', 'right'] ) )
 			throw new InvalidArgumentException( 'Align must be left or right' );
 		$this->dropdownAlign	= $align;
 		return $this;
@@ -104,7 +104,7 @@ class View_Helper_LanguageSelector extends Abstraction
 		$flagimg		= HtmlTag::create( 'img' , '', array( 'src' => $flagimgpath , 'style' =>'height:1em') );
 		$flagimg		.= '&nbsp;'
 */
-		$caret			= HtmlTag::create( 'span', '', array( 'class' => 'caret' ) );
+		$caret			= HtmlTag::create( 'span', '', ['class' => 'caret'] );
 		$buttonToggle	= HtmlTag::create( 'a', $label.'&nbsp;&nbsp;'.$caret, array(
 			'class'			=> "btn btn-small dropdown-toggle language-selector-button",
 			'data-toggle'	=> "dropdown",

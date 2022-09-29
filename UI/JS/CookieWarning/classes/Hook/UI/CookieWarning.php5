@@ -28,7 +28,7 @@ class Hook_UI_CookieWarning extends Hook
 					) );
 				}
 				$buttons	= join( '&nbsp;', $buttons );
-				$buttons	= HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group' ) );
+				$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group'] );
 				$content	= HtmlTag::create( 'div', $text.' &nbsp;&nbsp;'.$buttons, array(
 					'id'	=> 'cookie-warning-inner'
 				) );

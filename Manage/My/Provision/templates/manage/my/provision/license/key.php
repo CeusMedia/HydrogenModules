@@ -16,7 +16,7 @@ function renderDefinitionList( $data ){
 		$list[]	= HtmlTag::create( 'dt', $key );
 		$list[]	= HtmlTag::create( 'dd', $value );
 	}
-	return HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+	return HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 }
 
 /*		if( $userLicenseKey->status == 2 ){

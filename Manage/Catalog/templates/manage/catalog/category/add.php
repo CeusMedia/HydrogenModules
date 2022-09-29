@@ -5,7 +5,7 @@ $w	= (object) $words['add'];
 
 $tabs		= $this->renderMainTabs();
 
-$optParent	= array( 0 => '' );
+$optParent	= [0 => ''];
 foreach( $categories as $item )
 	if( $item->parentId == 0 )
 		$optParent[$item->categoryId]	= $item->label_de;

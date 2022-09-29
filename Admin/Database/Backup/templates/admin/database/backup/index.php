@@ -11,10 +11,10 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var object[] $backups */
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 
-$list	= HtmlTag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
+$list	= HtmlTag::create( 'div', 'Keine vorhanden.', ['class' => 'alert alert-info'] );
 if( $backups ){
 	$list	= [];
 	foreach( $backups as $backup ){
@@ -24,7 +24,7 @@ if( $backups ){
 			);
 		}
 		else if( is_null( $backup->comment ) ){
-			$backup->comment	= array( 'comment' => '' );
+			$backup->comment	= ['comment' => ''];
 		}
 		$rowClass	= '';
 		$status		= '';
@@ -37,28 +37,28 @@ if( $backups ){
 			}
 		}
 
-		$link	= HtmlTag::create( 'a', $backup->filename, array( 'href' => './admin/database/backup/view/'.$backup->id ) );
+		$link	= HtmlTag::create( 'a', $backup->filename, ['href' => './admin/database/backup/view/'.$backup->id] );
 		if( class_exists ( 'View_Helper_TimePhraser' ) ){
 			$helper			= new View_Helper_TimePhraser( $env );
 			$creationDate	= $helper->convert( $backup->timestamp, TRUE, 'vor ' );
 		}
 		else {
-			$date			= HtmlTag::create( 'span', date( 'd.m.Y', $backup->timestamp ), array( 'class' => '' ) );
-			$time			= HtmlTag::create( 'small', date( 'H:i:s', $backup->timestamp ), array( 'class' => 'muted' ) );
+			$date			= HtmlTag::create( 'span', date( 'd.m.Y', $backup->timestamp ), ['class' => ''] );
+			$time			= HtmlTag::create( 'small', date( 'H:i:s', $backup->timestamp ), ['class' => 'muted'] );
 			$creationDate	= $date.' '.$time;
 		}
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $status ),
-			HtmlTag::create( 'td', HtmlTag::create( 'small', $backup->comment['comment'], array( 'class' => 'muted' ) ) ),
+			HtmlTag::create( 'td', HtmlTag::create( 'small', $backup->comment['comment'], ['class' => 'muted'] ) ),
 			HtmlTag::create( 'td', UnitFormater::formatBytes( $backup->filesize ) ),
 			HtmlTag::create( 'td', $creationDate ),
-		), array( 'class' => $rowClass ) );
+		), ['class' => $rowClass] );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array( '33%', '15%', '', '100px', '150px' ) );
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Datei', 'Status', 'Kommentar', 'Größe', 'Erstellungsdatum' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( ['33%', '15%', '', '100px', '150px'] );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Datei', 'Status', 'Kommentar', 'Größe', 'Erstellungsdatum'] ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
-	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Sicherung anlegen', array(

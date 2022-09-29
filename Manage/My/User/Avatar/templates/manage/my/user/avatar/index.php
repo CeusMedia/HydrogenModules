@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $w			= (object) $words['index'];
 $tabs		= View_Manage_My_User::renderTabs( $env, 'avatar' );
 
-$iconFile	= HtmlTag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
+$iconFile	= HtmlTag::create( 'i', '', ['class' => 'icon-folder-open icon-white'] );
 
 $helperUpload	= new View_Helper_Input_File( $env );
 $helperUpload->setName( 'upload' );
@@ -12,10 +12,10 @@ $helperUpload->setLabel( $iconFile );
 $helperUpload->setRequired( TRUE );
 
 $maxSize	= Alg_UnitParser::parse( $moduleConfig->get( 'image.upload.maxFileSize' ), 'M' );
-$maxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $maxSize ) );
+$maxSize	= Logic_Upload::getMaxUploadSize( ['config' => $maxSize] );
 $maxSize	= Alg_UnitFormater::formatBytes( $maxSize );
 
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
 $imageAvatar	= '';
 $buttonRemove	= '';
 if( $avatar ){
@@ -27,7 +27,7 @@ if( $avatar ){
 	) );
 }
 
-extract( $view->populateTexts( array( 'top', 'bottom', 'info.avatar', 'info.gravatar' ), 'html/manage/my/user/avatar/', array(
+extract( $view->populateTexts( ['top', 'bottom', 'info.avatar', 'info.gravatar'], 'html/manage/my/user/avatar/', array(
 	'maxFileSize'	=> $maxSize,
 	'minImageSize'	=> $moduleConfig->get( 'image.upload.minSize' ),
 ) ) );

@@ -2,11 +2,11 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
-$iconDeactivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
+$iconActivate	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
+$iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
 	'href'	=> './manage/ip/lock/reason',
@@ -48,7 +48,7 @@ if( $reason->filters ){
 		$link	= HtmlTag::create( 'a', $filter->title, array(
 			'href'	=> './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId
 		) );
-		$list[]	= HtmlTag::create( 'li', $link, array() );
+		$list[]	= HtmlTag::create( 'li', $link, [] );
 	}
 	$list	= HtmlTag::create( 'ul', $list );
 }

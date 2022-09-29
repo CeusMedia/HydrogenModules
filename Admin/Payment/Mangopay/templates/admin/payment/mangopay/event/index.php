@@ -27,8 +27,8 @@ $colors		= array(
 $list	= [];
 foreach( $events as $item ){
 	$labelType		= ucwords( strtolower( str_replace( '_', ' ', $item->type ) ) );
-	$labelStatus	= HtmlTag::create( 'label', $statuses[$item->status], array( 'class' => 'label '.$colors[$item->status] ) );
-	$link			= HtmlTag::create( 'a', $labelType, array( 'href' => './admin/payment/mangopay/event/view/'.$item->eventId.'?page='.$page ) );
+	$labelStatus	= HtmlTag::create( 'label', $statuses[$item->status], ['class' => 'label '.$colors[$item->status]] );
+	$link			= HtmlTag::create( 'a', $labelType, ['href' => './admin/payment/mangopay/event/view/'.$item->eventId.'?page='.$page] );
 
 	$list[]	= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'td', $link ),
@@ -37,10 +37,10 @@ foreach( $events as $item ){
 	) );
 }
 $tbody	= HtmlTag::create( 'tbody', $list );
-$colgroup	= HtmlElements::ColumnGroup( array( '', '80', '140' ) );
-$list	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
+$colgroup	= HtmlElements::ColumnGroup( ['', '80', '140'] );
+$list	= HtmlTag::create( 'table', $colgroup.$tbody, ['class' => 'table table-fixed table-condensed'] );
 
-$iconRefresh	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
+$iconRefresh	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
 
 $buttonReload	= HtmlTag::create( 'a', $iconRefresh.' aktualisieren', array(
 	'href'		=> './admin/payment/mangopay/event'.( $page ? '/'.$page : '' ).'?'.time(),
@@ -58,7 +58,7 @@ return $tabs.HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
 			$pagination, ' ',
 			$buttonReload, ' ',
-		), array( 'class' => 'buttonbar' ) )
-	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );
+		), ['class' => 'buttonbar'] )
+	), ['class' => 'content-panel-inner'] )
+), ['class' => 'content-panel'] );
 ?>

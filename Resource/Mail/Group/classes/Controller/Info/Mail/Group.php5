@@ -18,7 +18,7 @@ class Controller_Info_Mail_Group extends Controller
 
 	public function completeMemberAction( $actionId, $hash )
 	{
-		$indices	= array( 'mailGroupActionId' => $actionId, 'uuid' => $hash );
+		$indices	= ['mailGroupActionId' => $actionId, 'uuid' => $hash];
 		$action		= $this->modelAction->getByIndices( $indices );
 		if( !$action ){
 			$this->messenger->noteError( 'Invalid action.' );
@@ -29,7 +29,7 @@ class Controller_Info_Mail_Group extends Controller
 			$this->restart( NULL );
 		}
 		try{
-			$payload	= array( 'action' => $action );
+			$payload	= ['action' => $action];
 			$result	= $this->env->getModules()->callHookWithPayload(
 				'MailGroupAction',
 				$action->action,
@@ -82,8 +82,8 @@ class Controller_Info_Mail_Group extends Controller
 		);
 		if( $filterType )
 			$conditions['type']	= $filterType;
-		$orders	= array( 'title' => 'ASC' );
-		$limits	= array( $limit, $page * $limit );
+		$orders	= ['title' => 'ASC'];
+		$limits	= [$limit, $page * $limit];
 		$total	= $this->modelGroup->count( $conditions );
 		$groups	= $this->modelGroup->getAll( $conditions, $orders, $limits );
 		foreach( $groups as $group ){
@@ -154,7 +154,7 @@ class Controller_Info_Mail_Group extends Controller
 					'group'		=> $group,
 					'action'	=> $action,
 				) );
-				$receiver	= (object) array( 'email' => $member->address );
+				$receiver	= (object) ['email' => $member->address];
 				$language	= $this->env->getLanguage()->getLanguage();
 				$this->logicMail->appendRegisteredAttachments( $mail, $language );
 				$this->logicMail->sendMail( $mail, $receiver, $language );

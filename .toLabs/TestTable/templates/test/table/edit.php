@@ -10,7 +10,7 @@ return '
 '.HtmlElements::Form( 'edit', './test/table/edit/'.$testId ).'
 	<fieldset>
 		<legend>edit entry</legend>
-		'.HtmlTag::create( 'label', 'Title', array( 'for' => 'title' ) ).'<br/>
+		'.HtmlTag::create( 'label', 'Title', ['for' => 'title'] ).'<br/>
 		'.HtmlElements::Input( 'title', htmlspecialchars( $test['title'], ENT_COMPAT, 'UTF-8' ) ).'<br/>
 		<div class="buttonbar">
 			<div class="right">

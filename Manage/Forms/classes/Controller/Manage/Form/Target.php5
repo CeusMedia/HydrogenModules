@@ -46,9 +46,9 @@ class Controller_Manage_Form_Target extends Controller
 
 	public function index()
 	{
-		$targets	= $this->modelTarget->getAll( array(), array( 'title' => 'ASC' ) );
+		$targets	= $this->modelTarget->getAll( [], ['title' => 'ASC'] );
 		foreach( $targets as $target ){
-			$target->usedAt		= $this->modelTransfer->getByIndex( 'formTransferTargetId', $target->formTransferTargetId, array(), array( 'createdAt' ) );
+			$target->usedAt		= $this->modelTransfer->getByIndex( 'formTransferTargetId', $target->formTransferTargetId, [], ['createdAt'] );
 			$target->transfers	= $this->modelTransfer->countByIndex( 'formTransferTargetId', $target->formTransferTargetId );
 			$target->fails		= count( $this->getLatestUnhandledFailedTransfers( $target->formTransferTargetId ) );
 		}

@@ -181,11 +181,11 @@ class Controller_Shop_Payment_Mangopay extends Controller
 		}
 		$wallets		= $this->provider->getUserWalletsByCurrency( $this->userId, $this->order->currency );
 		if( !$wallets )
-			$wallets	= array( $this->provider->createUserWallet( $this->userId, $this->order->currency ) );
+			$wallets	= [$this->provider->createUserWallet( $this->userId, $this->order->currency )];
 		$this->wallet	= $wallets[0];
 
 /*		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
 		$this->addData( 'paymentBackends', $this->backends );*/
 	}
 

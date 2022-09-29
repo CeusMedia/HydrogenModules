@@ -25,7 +25,7 @@ $openFutureBills	= $model->getAll( array(
 	'userId'	=> $userId,
 	'date'		=> '>'.date( 'Ymd' ),
 	'status'	=> 0
-), array( 'date' => 'ASC' ) );
+), ['date' => 'ASC'] );
 
 foreach( $openFutureBills as $nr => $bill )
 	if( $bill->date > $dateFuture )
@@ -37,10 +37,10 @@ $listOpenFuture	= $view->renderTable( $openFutureBills, './work/bill/graph', FAL
 $conditions	= array(
 	'userId'	=> $userId,
 );
-$orders		= array( 'date' => 'ASC' );
+$orders		= ['date' => 'ASC'];
 $bills		= $model->getAll( $conditions, $orders );
 
-$dataGraph	= array( array( "Tag", "Stand" ) );
+$dataGraph	= [["Tag", "Stand"]];
 $balance	= $sum;
 $year		= date( 'Y' );
 $month		= date( 'm' );
@@ -51,15 +51,15 @@ for( $i=0; $i<$daysFuture; $i++ ){
 	foreach( $bills as $bill )
 		if( $bill->date == $date )
 			$bill->type ? $balance -= $bill->price : $balance += $bill->price;
-	$dataGraph[]	= array( date( 'j.n.', $time ), $balance );
+	$dataGraph[]	= [date( 'j.n.', $time ), $balance];
 }
 
 
 /*  --  FILTERS  --  */
-$optType	= array( '' => '- alle -' ) + $words['types'];
+$optType	= ['' => '- alle -'] + $words['types'];
 $optType	= HtmlElements::Options( $optType, $env->getSession()->get( 'filter_work_bill_type' ) );
 
-$optStatus	= array( '' => '- alle -' ) +$words['states'];
+$optStatus	= ['' => '- alle -'] +$words['states'];
 $optStatus	= HtmlElements::Options( $optStatus, $env->getSession()->get( 'filter_work_bill_status' ) );
 
 $tabs	= View_Work_Bill::renderTabs( $env, 'graph' );

@@ -25,7 +25,7 @@ class Controller_Ajax_Info_Contact extends AjaxController
 			try{
 				$logic		= Logic_Mail::getInstance( $this->env );
 				$mail		= new Mail_Info_Contact_Form( $this->env, $this->request->getAll() );
-				$receiver	= (object) array( 'email' => $this->moduleConfig->get( 'mail.receiver' ) );
+				$receiver	= (object) ['email' => $this->moduleConfig->get( 'mail.receiver' )];
 				$logic->handleMail( $mail, $receiver, 'de' );
 				$this->respondData( TRUE );
 			}

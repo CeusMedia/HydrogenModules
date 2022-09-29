@@ -55,7 +55,7 @@ $panelMain	= '
 						'modal-admin-mail-template-preview-html',
 						$words['edit']['buttonPreview']
 					)	->setIcon( 'eye' )
-						->setAttributes( array( 'class' => 'btn btn-info' ) ).*/'
+						->setAttributes( ['class' => 'btn btn-info'] ).*/'
 					'.$buttonUsable.'
 					'.$buttonActivate.'
 				</div>
@@ -157,7 +157,7 @@ $buttonPreviewHtml	= BootstrapModalTrigger::create(
 	'modal-admin-mail-template-preview-html',
 	$words['edit']['buttonPreview']
 )	->setIcon( 'eye' )
-	->setAttributes( array( 'class' => 'btn btn-info btn-mini' ) );
+	->setAttributes( ['class' => 'btn btn-info btn-mini'] );
 $iframeHtml		= HtmlTag::create( 'iframe', '', array(
 	'src'			=> './admin/mail/template/preview/'.$template->mailTemplateId.'/html',
 	'frameborder'	=> '0',
@@ -174,7 +174,7 @@ $buttonPreviewText	= BootstrapModalTrigger::create(
 	'modal-admin-mail-template-preview-text',
 	$words['edit']['buttonPreview']
 )	->setIcon( 'eye' )
-	->setAttributes( array( 'class' => 'btn btn-info btn-mini' ) );
+	->setAttributes( ['class' => 'btn btn-info btn-mini'] );
 $iframeText		= HtmlTag::create( 'iframe', '', array(
 	'src'			=> './admin/mail/template/preview/'.$template->mailTemplateId.'/text',
 	'frameborder'	=> '0',

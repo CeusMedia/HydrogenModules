@@ -53,7 +53,7 @@ class View_Helper_Form_Fill_Person{
 //			throw new DomainException( 'No form given' );
 		$inputs		= json_decode( $this->fill->data, TRUE );
 
-		$checkValues	= array( 'true', 'ja', 'yes' );
+		$checkValues	= ['true', 'ja', 'yes'];
 		$listInfo		= [];
 		foreach( $inputs as $name => $input ){
 			if( in_array( trim( $name ), $this->fields ) ){
@@ -62,14 +62,14 @@ class View_Helper_Form_Fill_Person{
 					$value	= date( 'd.m.Y', strtotime( $value ) );
 				else if( $input['type'] == 'check' )
 					$value	= in_array( $input['value'], $checkValues ) ? "ja" : "nein";
-				else if( in_array( $input['type'], array( 'select', 'choice' ) ) )
+				else if( in_array( $input['type'], ['select', 'choice'] ) )
 					$value	= $input['valueLabel'];
 				else if( $input['type'] == 'radio' && strlen( $value ) )
 					$value	= $input['valueLabel'].'<br/><tt>('.$input['value'].')</tt>';
 
 				if( !strlen( $value ) )
 					$value		= '<em class="muted">keine Angabe</em>';
-				$listInfo[]	= (object) array( 'label' => $input['label'], 'value' => $value );
+				$listInfo[]	= (object) ['label' => $input['label'], 'value' => $value];
 				unset( $inputs[$name] );
 			}
 		}
@@ -91,7 +91,7 @@ class View_Helper_Form_Fill_Person{
 			$list[]	= HtmlTag::create( 'dd', $value.'&nbsp;' );
 		}
 		if( $list )
-			return HtmlTag::create( 'dl', $list, array( 'class' => $horizontal ? 'dl-horizontal' : NULL ) );
+			return HtmlTag::create( 'dl', $list, ['class' => $horizontal ? 'dl-horizontal' : NULL] );
 	}
 
 	protected function renderTable( $rows ){
@@ -103,9 +103,9 @@ class View_Helper_Form_Fill_Person{
 			) );
 		}
 		return HtmlTag::create( 'table', array(
-			HtmlElements::ColumnGroup( array( '50%', '50%' ) ),
+			HtmlElements::ColumnGroup( ['50%', '50%'] ),
 			HtmlTag::create( 'tbody', $list ),
-		), array( 'class' => 'table table-striped table-fixed table-bordered table-condensed' ) );
+		), ['class' => 'table table-striped table-fixed table-bordered table-condensed'] );
 	}
 
 	public function setFields( $fields ){

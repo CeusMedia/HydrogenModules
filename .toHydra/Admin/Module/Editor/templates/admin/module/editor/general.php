@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['view'];
 
-$attributes			= array( 'type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled' );
+$attributes			= ['type' => 'button', 'class' => 'button cancel auto-back', 'readonly' => 'readonly', 'disabled' => 'disabled'];
 $buttonBack			= HtmlTag::create( 'button', '<span>'.$w->buttonBack.'</span>', $attributes );
 $buttonList			= HtmlElements::LinkButton( './admin/module', $w->buttonList, 'button cancel' );
 $buttonCancel		= HtmlElements::LinkButton( './admin/module/viewer/index/'.$module->id, $w->buttonCancel, 'button cancel' );
@@ -65,7 +65,7 @@ $panelLicenses	= $this->loadTemplateFile( 'admin/module/editor/general.licenses.
 <div class="clearfix"></div>';
 */
 
-$optSource	= array( '' => '- wählen -' );
+$optSource	= ['' => '- wählen -'];
 foreach( $sources as $sourceId => $source ){
 	if( $source->active )
 		if( strtolower( $source->type ) == "folder" )

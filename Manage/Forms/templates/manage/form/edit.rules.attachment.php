@@ -4,25 +4,25 @@ use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as Html;
 
-$iconAdd	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconEdit	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconSave	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconTest	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-cogs' ) );
-$iconRemove	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconMail	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
+$iconAdd	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconEdit	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconSave	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconTest	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
+$iconRemove	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconMail	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
 
-$listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
+$listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', ['class' => 'alert alert-info'] );
 
 if( $rulesAttachment ){
 	$listRules	= [];
 	foreach( $rulesAttachment as $rule ){
 		$list	= [];
 		foreach( json_decode( $rule->rules ) as $item ){
-			$keyLabel	= Html::create( 'acronym', $item->keyLabel, array( 'title' => 'Interner Schlüssel: '.$item->key ) );
-			$valueLabel	= Html::create( 'acronym', $item->valueLabel, array( 'title' => 'Interner Schlüssel: '.$item->value ) );
+			$keyLabel	= Html::create( 'acronym', $item->keyLabel, ['title' => 'Interner Schlüssel: '.$item->key] );
+			$valueLabel	= Html::create( 'acronym', $item->valueLabel, ['title' => 'Interner Schlüssel: '.$item->value] );
 			$list[]	= Html::create( 'li', $keyLabel.' => '.$valueLabel );
 		}
-		$list	= Html::create( 'ul', $list, array( 'style' => 'margin-bottom: 0' ) );
+		$list	= Html::create( 'ul', $list, ['style' => 'margin-bottom: 0'] );
 
 		$file	= $rule->filePath;
 
@@ -36,10 +36,10 @@ if( $rulesAttachment ){
 			Html::create( 'td', $buttonRemove ),
 		) );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array( '', '30%', '60px' ) );
-	$thead		= Html::create( 'thead', HtmlElements::TableHeads( array( 'Regeln', 'Datei' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( ['', '30%', '60px'] );
+	$thead		= Html::create( 'thead', HtmlElements::TableHeads( ['Regeln', 'Datei'] ) );
 	$tbody		= Html::create( 'tbody', $listRules );
-	$listRules	= Html::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped' ) );
+	$listRules	= Html::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-striped'] );
 }
 
 $optFile	= [];
@@ -100,7 +100,7 @@ $modal->setBody( '
 $modalTrigger	= new BootstrapModalTrigger();
 $modalTrigger->setId( 'rule-attachment-add-trigger' );
 $modalTrigger->setModalId( 'rule-attachment-add' )->setLabel( $iconAdd.'&nbsp;neuer Anhang' );
-$modalTrigger->setAttributes( array( 'class' => 'btn btn-primary' ) );
+$modalTrigger->setAttributes( ['class' => 'btn btn-primary'] );
 
 return '
 <div class="row-fluid">

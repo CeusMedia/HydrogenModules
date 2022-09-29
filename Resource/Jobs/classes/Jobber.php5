@@ -109,7 +109,7 @@ class Jobber extends ConsoleApplication
 		$this->out( 'Usage: ./job.php [job]' );
 		$this->out( '' );
 		$this->out( 'List of available jobs:' );
-		$availableJobs	= $this->logic->getDefinitions( array(), array( 'identifier' => 'ASC' ) );
+		$availableJobs	= $this->logic->getDefinitions( [], ['identifier' => 'ASC'] );
 		foreach( $availableJobs as $availableJob )
 			$this->out(' - '.$availableJob->identifier );
 		return 0;

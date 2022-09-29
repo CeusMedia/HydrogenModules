@@ -13,7 +13,7 @@ foreach( $module->relations->needs as $relatedModuleId ){
 	if( isset( $modules[$relatedModuleId] ) )
 		$item	= $modules[$relatedModuleId];
 	else
-		$item	= (object) array( 'id' => $relatedModuleId, 'title' => $relatedModuleId );
+		$item	= (object) ['id' => $relatedModuleId, 'title' => $relatedModuleId];
 	$item->relationType	= 'needs';
 	$relations[$relatedModuleId]	= $item;
 }
@@ -21,7 +21,7 @@ foreach( $module->relations->supports as $relatedModuleId ){
 	if( isset( $modules[$relatedModuleId] ) )
 		$item	= $modules[$relatedModuleId];
 	else
-		$item	= (object) array( 'id' => $relatedModuleId, 'title' => $relatedModuleId );
+		$item	= (object) ['id' => $relatedModuleId, 'title' => $relatedModuleId];
 	$item->relationType	= 'supports';
 	$relations[$relatedModuleId]	= $item;
 }
@@ -39,7 +39,7 @@ if( $relations ){
 		$urlRemove	= './admin/module/editor/removeRelation/'.$moduleId.'/'.$relatedModule->relationType.'/'.$relatedModuleId;
 		$linkRemove	= HtmlElements::LinkButton( $urlRemove, '', 'button icon tiny remove' );
 		$class	= 'icon module module-status-'.$status;
-		$label	= HtmlTag::create( 'span', $link, array( 'class' => $class ) );
+		$label	= HtmlTag::create( 'span', $link, ['class' => $class] );
 		$type	= $words['relation-types'][$relatedModule->relationType];
 		$status	= isset( $modules[$relatedModuleId] ) ? $modules[$relatedModuleId]->type : 0;
 		$status	= $words['types'][$status];

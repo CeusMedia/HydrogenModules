@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-extract( $view->populateTexts( array( 'top', 'bottom', 'service' ), 'html/shop/' ) );
+extract( $view->populateTexts( ['top', 'bottom', 'service'], 'html/shop/' ) );
 
 $panels	= [];
 foreach( $servicePanels as $servicePanel ){

@@ -50,7 +50,7 @@ class Logic_Job extends Logic
 		//  read jobs definied by XML files, installed by modules
 		$model	= new Model_Job( $this->env );
 		$model->setFormat( Model_Job::FORMAT_XML );
-		$model->load( array( 'live', 'test', 'dev' ) );
+		$model->load( ['live', 'test', 'dev'] );
 		foreach( $model->getAll() as $xmlJobId => $xmlJob ){
 			if( !array_key_exists( $xmlJobId, $discoveredJobs ) ){
 				$discoveredJobs[$xmlJobId]	= (object) array(
@@ -141,7 +141,7 @@ class Logic_Job extends Logic
 	public function getDiscontinuedJobRuns( $conditions = [], $orders = [] ): array
 	{
 		$list			= [];
-		$orders			= $orders ? $orders : array( 'ranAt' => 'ASC' );
+		$orders			= $orders ? $orders : ['ranAt' => 'ASC'];
 		foreach( $this->getRunningJobs( $conditions, $orders ) as $runningJob )
 			if( !$this->isActiveProcessId( (int) $runningJob->processId ) )
 				$list[$runningJob->jobRunId]	= $runningJob;
@@ -182,10 +182,10 @@ class Logic_Job extends Logic
 	 */
 	public function getPreparedJobRuns( $jobDefinitionId = NULL, $extendBy = [] ): array
 	{
-		$indices	= array( 'status' => Model_Job_Run::STATUS_PREPARED );
+		$indices	= ['status' => Model_Job_Run::STATUS_PREPARED];
 		if( $jobDefinitionId )
 			$indices['jobDefinitionId']	= $jobDefinitionId;
-		$preparedJobs	= $this->modelRun->getAllByIndices( $indices, array( 'createdAt' => 'ASC' ) );
+		$preparedJobs	= $this->modelRun->getAllByIndices( $indices, ['createdAt' => 'ASC'] );
 		foreach( $preparedJobs as $preparedJob ){
 			if( in_array( 'definition', $extendBy ) )
 				$preparedJob->definition	= $this->modelDefinition->get( $preparedJob->jobDefinitionId );
@@ -219,7 +219,7 @@ class Logic_Job extends Logic
 		$exclusiveJobsDefinitionIds	= $this->modelDefinition->getAllByIndices( array(
 			'mode'		=> Model_Job_Definition::MODE_EXCLUSIVE,
 			'status'	=> Model_Job_Definition::STATUS_ENABLED,
-		), array(), array(), array( 'jobDefinitionId' ) );
+		), [], [], ['jobDefinitionId'] );
 		if( $exclusiveJobsDefinitionIds ){
 			$exclusiveJobIsRunning	= $this->modelRun->getByIndices( array(
 				'jobDefinitionId'	=> $exclusiveJobsDefinitionIds,
@@ -243,7 +243,7 @@ class Logic_Job extends Logic
 	{
 		if( (int) $jobDefinition->mode !== Model_Job_Definition::MODE_SINGLE )
 			return FALSE;
-		$conditions	= array( 'jobDefinitionId' => $jobDefinition->jobDefinitionId );
+		$conditions	= ['jobDefinitionId' => $jobDefinition->jobDefinitionId];
 		if( !is_null( $runType ) )
 			$conditions['type']	= $runType;
 		return (bool) count( $this->getRunningJobs( $conditions ) );
@@ -253,7 +253,7 @@ class Logic_Job extends Logic
 	{
 //		$message	= $t->getMessage().'@'.$t->getFile().':'.$t->getLine().PHP_EOL.$t->getTraceAsString();
 		$this->env->getLog()->log( "error", $error );
-//		$this->env->getCaptain()->callHook( 'Env', 'logException', $this, array( 'exception' => $t ) );
+//		$this->env->getCaptain()->callHook( 'Env', 'logException', $this, ['exception' => $t] );
 		return $this;
 	}
 
@@ -261,7 +261,7 @@ class Logic_Job extends Logic
 	{
 		$message	= $t->getMessage().'@'.$t->getFile().':'.$t->getLine().PHP_EOL.$t->getTraceAsString();
 		$this->env->getLog()->log( "error", $message );
-		$this->env->getCaptain()->callHook( 'Env', 'logException', $this, array( 'exception' => $t ) );
+		$this->env->getCaptain()->callHook( 'Env', 'logException', $this, ['exception' => $t] );
 		return $this;
 	}
 
@@ -275,7 +275,7 @@ class Logic_Job extends Logic
 			'type'				=> Model_Job_Run::TYPE_MANUALLY,
 			'status'			=> Model_Job_Run::STATUS_PREPARED,
 			'title'				=> '',
-//			'message'			=> json_encode( array() ),
+//			'message'			=> json_encode( [] ),
 			'createdAt'			=> time(),
 			'modifiedAt'		=> time(),
 		), $options );
@@ -299,7 +299,7 @@ class Logic_Job extends Logic
 	 */
 	public function runPreparedJob( int $jobRunId )
 	{
-		$jobRun	= $this->getPreparedJobRun( $jobRunId, array( 'definition' ) );
+		$jobRun	= $this->getPreparedJobRun( $jobRunId, ['definition'] );
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED )
 			throw new \RuntimeException( 'Job run is not in prepared state' );
 		if( $jobRun->definition && !$jobRun->processId ){
@@ -368,8 +368,8 @@ class Logic_Job extends Logic
 
 
 		$className	= 'Job_'.$jobDefinition->className;												//  build job class name
-		$classArgs	= array( $this->env, $this );													//  prepare job class instance arguments
-		$arguments	= array( $commands, $parameters );												//
+		$classArgs	= [$this->env, $this];													//  prepare job class instance arguments
+		$arguments	= [$commands, $parameters];												//
 		$methodName	= $jobDefinition->methodName;													//  shortcut method name
 		$jobObject	= \Alg_Object_Factory::createObject( '\\'.$className, $classArgs );				//  ... create job class instance with arguments
 		$jobObject->noteJob( $jobDefinition->className, $methodName );								//  ... inform job instance about method to be called
@@ -435,7 +435,7 @@ class Logic_Job extends Logic
 	{
 		$list	= [];
 		foreach( $this->getDiscontinuedJobRuns() as $jobRun ){
-			$messageData	= $reason ? array( 'reason' => $reason ) : array();
+			$messageData	= $reason ? ['reason' => $reason] : [];
 			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_TERMINATED, $messageData );
 			$list[(int) $jobRun->jobRunId]	= (object) array(
 				'jobRunId'			=> (int) $jobRun->jobRunId,
@@ -522,7 +522,7 @@ class Logic_Job extends Logic
 					$jobSchedules[]	= $jobSchedule;
 			}
 			catch( Exception $e ){
-				$this->callHook( 'Env', 'logException', $this, array( 'exception' => $e ) );
+				$this->callHook( 'Env', 'logException', $this, ['exception' => $e] );
 			}
 		}
 		return $jobSchedules;
@@ -530,7 +530,7 @@ class Logic_Job extends Logic
 
 	protected function isPreparableJob( object $jobDefinition, ?int $runType = 0 ): bool
 	{
-		$preparableJobStatuses	= array( Model_Job_Definition::STATUS_ENABLED );
+		$preparableJobStatuses	= [Model_Job_Definition::STATUS_ENABLED];
 		if( !in_array( (int) $jobDefinition->status, $preparableJobStatuses, TRUE ) )
 			return FALSE;
 		$this->terminateDiscontinuedJobRuns( 'Cleanup on next job run' );
@@ -584,7 +584,7 @@ class Logic_Job extends Logic
 					'reportMode'		=> $scheduledJob->reportMode,
 					'reportChannel'		=> $scheduledJob->reportChannel,
 					'reportReceivers'	=> $scheduledJob->reportReceivers,
-//					'message'			=> json_encode( array() ),
+//					'message'			=> json_encode( [] ),
 					'createdAt'			=> time(),
 					'modifiedAt'		=> time(),
 				) );

@@ -7,7 +7,7 @@ class Job_Work_Mail_Sync extends Job_Abstract
 
 	public function sync()
 	{
-		$indices	= array( 'status' => Model_Mail_Sync::STATUS_SYNCHING );
+		$indices	= ['status' => Model_Mail_Sync::STATUS_SYNCHING];
 		$running	= $this->logic->getSyncs( $indices );
 		if( $running )
 			return;
@@ -105,7 +105,7 @@ $this->out( 'Code: '.$code );
 				'status'		=> Model_Mail_Sync_Run::STATUS_FAIL,
 				'message'		=> $lastline,
 				'output'		=> json_encode( $results ),
-				'statistics'	=> json_encode( array() ),
+				'statistics'	=> json_encode( [] ),
 			) );
 			$this->logic->editSync( $sync->mailSyncId, array(
 				'status'		=> Model_Mail_Sync::STATUS_ERROR,

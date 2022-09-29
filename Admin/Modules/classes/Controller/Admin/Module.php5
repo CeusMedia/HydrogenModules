@@ -74,7 +74,7 @@ class Controller_Admin_Module extends Controller
 
 		$state		= NULL;
 		$listDone	= [];
-		foreach( array( 'filesLink', 'filesCopy' ) as $type ){
+		foreach( ['filesLink', 'filesCopy'] as $type ){
 			foreach( $$type as $fileIn => $fileOut ){
 				if( $state !== FALSE ){
 					if( $type == 'filesLink' )														//  @todo: OS check -> no links in windows <7
@@ -152,7 +152,7 @@ class Controller_Admin_Module extends Controller
 			if( $state !== FALSE ){
 				//  --  SQL  --  //
 				$driver	= $this->env->dbc->getDriver();
-				$data	= array( 'prefix' => $config->get( 'database.prefix' ) );
+				$data	= ['prefix' => $config->get( 'database.prefix' )];
 				$sql	= "";
 				if( $driver && !empty( $module->sql['uninstall@'.$driver] ) )
 					$sql	= UI_Template::renderString( $module->sql['uninstall@'.$driver], $data );
@@ -243,7 +243,7 @@ class Controller_Admin_Module extends Controller
 			$line = array_shift( $lines );
 			if( !trim( $line ) )
 				continue;
-			$buffer[]	= UI_Template::renderString( trim( $line ), array( 'prefix' => $prefix ) );
+			$buffer[]	= UI_Template::renderString( trim( $line ), ['prefix' => $prefix] );
 			if( preg_match( '/;$/', trim( $line ) ) )
 			{
 				$cmds[]	= join( "\n", $buffer );

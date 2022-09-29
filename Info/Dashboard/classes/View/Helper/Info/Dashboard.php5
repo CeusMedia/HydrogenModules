@@ -25,12 +25,12 @@ class View_Helper_Info_Dashboard extends Abstraction
 				continue;
 			$panel	= $this->panels[$panelId];
 
-			$iconMove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrows' ) );
-			$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+			$iconMove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrows'] );
+			$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 			$icon		= '';
 			if( $panel->icon )
-				$icon	= HtmlTag::create( 'i', '', array( 'class' => $panel->icon ) ).'&nbsp;';
+				$icon	= HtmlTag::create( 'i', '', ['class' => $panel->icon] ).'&nbsp;';
 			$handle		= HtmlTag::create( 'div', array(
 				HtmlTag::create( 'a', $iconRemove, array(
 					'class'		=> 'btn btn-mini btn-inverse handle-icon',
@@ -42,7 +42,7 @@ class View_Helper_Info_Dashboard extends Abstraction
 					'class'		=> 'btn btn-mini handle-icon handle-button-move',
 				) ),*/
 				HtmlTag::create( 'h4', $icon.$panel->heading ),
-			), array( 'class' => 'dashboard-panel-handle' ) );
+			), ['class' => 'dashboard-panel-handle'] );
 			$container	= HtmlTag::create( 'div', '', array(
 				'class'	=> 'dashboard-panel-container',
 				'id'	=> NULL,
@@ -65,13 +65,13 @@ class View_Helper_Info_Dashboard extends Abstraction
 			}
 		}
 		$desc	= $this->dashboard->description ? HtmlTag::create( 'p', nl2br( $this->dashboard->description ) ) : '';
-		$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'thumbnails sortable' ) );
-		return HtmlTag::create( 'div', $desc.$list, array( 'id' => 'dashboard-board' ) );
+		$list	= HtmlTag::create( 'ul', $list, ['class' => 'thumbnails sortable'] );
+		return HtmlTag::create( 'div', $desc.$list, ['id' => 'dashboard-board'] );
 	}
 
 	public function setColumns( int $columns ): self
 	{
-		if( !in_array( $columns, array( 1, 2, 3, 4, 6 ) ) )
+		if( !in_array( $columns, [1, 2, 3, 4, 6] ) )
 			$columns	= 3;
 		$this->columns	= $columns;
 		return $this;

@@ -3,11 +3,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $data	= print_m( $lock, NULL, NULL, TRUE );
 
-$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-$iconLock	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconUnlock	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
+$iconLock	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconUnlock	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
 
 $helperTime = FALSE;
 if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){

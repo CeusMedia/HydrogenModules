@@ -7,19 +7,19 @@ $helperAttribute	= new View_Helper_Job_Attribute( $env );
 $statusLabels	= $wordsGeneral['job-definition-statuses'];
 //print_m($definitions);die;
 
-$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-toggle-on' ) );
-$iconDeactivate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-toggle-off' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconActivate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-toggle-on'] );
+$iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-toggle-off'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $buttonAdd		= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
 	'href'	=> './manage/job/definition/add',
 	'class'	=> 'btn btn-success',
 ) );
 
-$table	= HtmlTag::create( 'div', 'Noch keine Jobs geplant.', array( 'class' => 'alert' ) );
+$table	= HtmlTag::create( 'div', 'Noch keine Jobs geplant.', ['class' => 'alert'] );
 
 if( $definitions ){
 	$helperTime		= new View_Helper_TimePhraser( $env );
@@ -66,18 +66,18 @@ if( $definitions ){
 			$buttonEdit,
 			$buttonStatus,
 			$buttonRemove
-		), array( 'class' => 'btn-group' ) );*/
+		), ['class' => 'btn-group'] );*/
 
 
 		$runs	= $item->runs ? '<div>'.$item->runs.' Runs</div>' : '-';
 		$fails	= $item->fails ? '<div><span class="text-error">'.$item->fails.' Fails</span></div>' : '';
 		$rows[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $link.'<br/><small class="muted">'.$item->className.' >> '.$item->methodName.'</small>', array( 'class' => '' ) ),
-			HtmlTag::create( 'td', $runs.$fails, array( 'class' => '' ) ),
-			HtmlTag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_MODE )->render(), array( 'class' => '' ) ),
-			HtmlTag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_STATUS )->render(), array( 'class' => '' ) ),
-			HtmlTag::create( 'td', $item->lastRunAt ? $helperTime->setTimestamp( $item->lastRunAt )->render() : '-', array( 'class' => '' ) ),
-//			HtmlTag::create( 'td', $buttons, array( 'class' => '' ) ),
+			HtmlTag::create( 'td', $link.'<br/><small class="muted">'.$item->className.' >> '.$item->methodName.'</small>', ['class' => ''] ),
+			HtmlTag::create( 'td', $runs.$fails, ['class' => ''] ),
+			HtmlTag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_MODE )->render(), ['class' => ''] ),
+			HtmlTag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_STATUS )->render(), ['class' => ''] ),
+			HtmlTag::create( 'td', $item->lastRunAt ? $helperTime->setTimestamp( $item->lastRunAt )->render() : '-', ['class' => ''] ),
+//			HtmlTag::create( 'td', $buttons, ['class' => ''] ),
 		) );
 	}
 	$cols	= HtmlElements::ColumnGroup( '', '100px', '120px', '120px', '140px'/*, '140px'*/ );
@@ -91,11 +91,11 @@ if( $definitions ){
 		$words['index']['tableHeadLastRun'],
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
-	$table	= HtmlTag::create( 'table', array( $cols, $thead, $tbody ), array( 'class' => 'table table-striped table-condensed' ) );
+	$table	= HtmlTag::create( 'table', [$cols, $thead, $tbody], ['class' => 'table table-striped table-condensed'] );
 
 	/*  --  PAGINATION  --  */
 	$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/job/definition', $page, ceil( $total / $filterLimit ) );
-	$table		.= HtmlTag::create( 'div', $pagination, array( 'class' => 'buttunbar' ) );
+	$table		.= HtmlTag::create( 'div', $pagination, ['class' => 'buttunbar'] );
 }
 
 return HtmlTag::create( 'div', array(
@@ -104,8 +104,8 @@ return HtmlTag::create( 'div', array(
 		$table,
 		HtmlTag::create( 'div', array(
 			$buttonAdd,
-		), array( 'class' => 'buttonbar' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+		), ['class' => 'buttonbar'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 //return print_m( $schedule, NULL, NULL, TRUE );

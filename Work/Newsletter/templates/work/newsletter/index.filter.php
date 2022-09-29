@@ -4,14 +4,14 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words->index_filter;
 
-$iconFilter	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) ).'&nbsp;';
-$iconReset	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) ).'&nbsp;';
+$iconFilter	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] ).'&nbsp;';
+$iconReset	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] ).'&nbsp;';
 
 
-$optStatus	= array_merge( array( '' => '- egal -' ), $words->states );
+$optStatus	= array_merge( ['' => '- egal -'], $words->states );
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
-$optLimit	= array( 5, 10, 15, 20, 25, 50, 100 );
+$optLimit	= [5, 10, 15, 20, 25, 50, 100];
 $optLimit	= array_combine( $optLimit, $optLimit );
 $optLimit	= HtmlElements::Options( $optLimit, $filterLimit );
 

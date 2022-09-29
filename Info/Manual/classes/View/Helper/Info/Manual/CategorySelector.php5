@@ -29,7 +29,7 @@ class View_Helper_Info_Manual_CategorySelector
 			$model	= new Model_Manual_Category( $this->env );
 			$this->categories	= $model->getAll( array(
 				'status'	=> '>= '.Model_Manual_Category::STATUS_NEW,
-			), array( 'rank' => 'ASC' ) );
+			), ['rank' => 'ASC'] );
 		}
 		if( count( $this->categories ) === 1 )
 			return '';

@@ -87,8 +87,8 @@ class View_Helper_Shop_FinishPanel_Bank
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'h3', $this->heading ),
 					$facts->render( $this->listClass ),
-				), array( 'class' => 'content-panel-inner' ) ),
-			), array( 'class' => 'content-panel' ) );
+				), ['class' => 'content-panel-inner'] ),
+			), ['class' => 'content-panel'] );
 
 		return PHP_EOL.join( PHP_EOL, array(
 			View_Helper_Mail_Text::underscore( $this->heading ),

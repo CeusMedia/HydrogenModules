@@ -8,8 +8,8 @@ use CeusMedia\HydrogenFramework\Environment;
 class Controller_Ajax_Helper_Input_Resource extends AjaxController
 {
 	protected $extensions	= array(
-		'image'	=> array( 'png', 'gif', 'jpg', 'jpeg', 'jpe', 'svg' ),
-		'style'	=> array( 'css', 'scss', 'less' ),
+		'image'	=> ['png', 'gif', 'jpg', 'jpeg', 'jpe', 'svg'],
+		'style'	=> ['css', 'scss', 'less'],
 	);
 
 	public function render()
@@ -56,7 +56,7 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 					HtmlTag::create( 'div', array(
 						HtmlTag::create( 'span', $fileName ),
 						'<br/>',
-						HtmlTag::create( 'small', $filePath, array( 'class' => 'muted' ) ),
+						HtmlTag::create( 'small', $filePath, ['class' => 'muted'] ),
 					), array(
 						'class' => 'source-list-label',
 					) )
@@ -72,14 +72,14 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 			if( !$sublist )
 				continue;
 			ksort( $sublist );
-			$sublist	= HtmlTag::create( 'ul', $sublist, array( 'class' => 'unstyled' ) );
+			$sublist	= HtmlTag::create( 'ul', $sublist, ['class' => 'unstyled'] );
 			$labelPath	= HtmlTag::create( 'div', 'Pfad: <strong>'.$path.'</strong>' );
-			$list[]		= HtmlTag::create( 'li', $labelPath.$sublist, array( 'class' => 'source-list-path' ) );
+			$list[]		= HtmlTag::create( 'li', $labelPath.$sublist, ['class' => 'source-list-path'] );
 		}
-		$html	= HtmlTag::create( 'div', 'Nichts gefunden.', array( 'class' => 'alert alert-info' ) );
+		$html	= HtmlTag::create( 'div', 'Nichts gefunden.', ['class' => 'alert alert-info'] );
 		if( count( $list ) )
-			$html	= HtmlTag::create( 'ul', $list, array( 'id' => '', 'class' => 'unstyled modal-source-list' ) );
-		$this->respondData( array( 'html' => $html ) );
+			$html	= HtmlTag::create( 'ul', $list, ['id' => '', 'class' => 'unstyled modal-source-list'] );
+		$this->respondData( ['html' => $html] );
 	}
 
 	protected static function renderThumbnail( Environment $env, string $mode, string $path, string $relativePath ): string
@@ -94,7 +94,7 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 					if( class_exists( 'View_Helper_Thumbnailer' ) ){
 						$helper	= new View_Helper_Thumbnailer( $env, 36, 36 );
 						$image	= $helper->get( $env->uri.$path.$relativePath );
-						$image	= HtmlTag::create( 'img', NULL, array( 'src' => $image ) );
+						$image	= HtmlTag::create( 'img', NULL, ['src' => $image] );
 						$div	= HtmlTag::create( 'div', $image, array(
 							'class'	=> 'source-list-image',
 						) );
@@ -106,7 +106,7 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 			case 'style':
 			default:
 				return HtmlTag::create( 'div', array(
-					HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-2x fa-file-code-o' ) )
+					HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-2x fa-file-code-o'] )
 				), array(
 					'class'	=> 'source-list-image',
 				) );

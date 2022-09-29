@@ -8,9 +8,9 @@ $iconRegister	= HTML::Icon( 'plus', TRUE );
 $iconPassword	= HTML::Icon( 'envelope' );
 
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconLogin		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
-	$iconRegister	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user-plus' ) );
-	$iconPassword	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
+	$iconLogin		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sign-in'] );
+	$iconRegister	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user-plus'] );
+	$iconPassword	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-unlock'] );
 }
 
 $fieldRemember	= "";
@@ -29,7 +29,7 @@ if( $useRemember )
 				HtmlTag::create( 'abbr', $w->labelRemember, array(
 					'title'		=> $w->labelRemember_title
 				) ),
-			), array( 'class' => "checkbox" ) )
+			), ['class' => "checkbox"] )
 		)
 	), array(
 		'style'	=> $useRemember ? 'display: none' : NULL

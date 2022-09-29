@@ -103,7 +103,7 @@ class Logic_Work_Mission extends Logic
 		if( is_array( $workers ) && count( $workers ) )
 			$conditions['workerId']	= $workers;
 		if( strlen( $query ) )
-			$conditions['title']	= '%'.str_replace( array( '*', '?' ), '%', $query ).'%';
+			$conditions['title']	= '%'.str_replace( ['*', '?'], '%', $query ).'%';
 		if( is_array( $projects ) && count( $projects ) )											//  if filtered by projects
 			$conditions['projectId']	= $projects;												//  apply project conditions
 		foreach( $additionalConditions as $key => $value )
@@ -115,11 +115,11 @@ class Logic_Work_Mission extends Logic
 	{
 		$modelProject	= new Model_Project( $this->env );											//  create projects model
 		if( !$this->hasFullAccess() ){																//  normal access
-			$conditions		= $activeOnly ? array( 'status' => array( 0, 1, 2 ) ) : array();		//  ...
+			$conditions		= $activeOnly ? ['status' => [0, 1, 2]] : [];		//  ...
 			return $modelProject->getUserProjects( $userId, $conditions );							//  return user projects
 		}
 		$userProjects	= [];																	//  otherwise create empty project map
-		foreach( $modelProject->getAll( array(), array( 'title' => 'ASC' ) ) as $project )			//  iterate all projects
+		foreach( $modelProject->getAll( [], ['title' => 'ASC'] ) as $project )			//  iterate all projects
 			$userProjects[$project->projectId]	= $project;											//  add to projects map
 		return $userProjects;																		//  return projects map
 	}
@@ -127,7 +127,7 @@ class Logic_Work_Mission extends Logic
 	public function getUserMissions( $userId, $conditions = [], $orders = [], $limits = [] )
 	{
 		$conditions	= array_merge( $this->generalConditions, $conditions );
-		$orders		= $orders ? $orders : array( 'dayStart' => 'ASC' );
+		$orders		= $orders ? $orders : ['dayStart' => 'ASC'];
 
 		if( $this->hasFullAccess() )																//  user has full access
 			return $this->modelMission->getAll( $conditions, $orders, $limits );					//  return all missions matched by conditions
@@ -154,8 +154,8 @@ class Logic_Work_Mission extends Logic
 		return $this->modelMission->getAll(															//  return missions matched by conditions
 			$conditions,
 			$orders,
-			is_array( $limits ) && $limits ? $limit : array(),
-			array_diff( $this->modelMission->getColumns(), array( 'content' ) ),					//  all columns except content
+			is_array( $limits ) && $limits ? $limit : [],
+			array_diff( $this->modelMission->getColumns(), ['content'] ),					//  all columns except content
 			array( 'missionId' ),																	//  HAVING needs grouping
 			array( join( ' OR ', $havings ) )														//  combine havings with OR
 		);
@@ -171,7 +171,7 @@ class Logic_Work_Mission extends Logic
 
 	public function getVersions( $missionId )
 	{
-		$orders		= array( 'version' => 'ASC' );
+		$orders		= ['version' => 'ASC'];
 		$versions	= $this->modelVersion->getAllByIndex( 'missionId', $missionId, $orders );
 		$modelUser	= new Model_User( $this->env );											//  create projects model
 		foreach( $versions as $version )
@@ -182,7 +182,7 @@ class Logic_Work_Mission extends Logic
 	public function noteChange( $type, $missionId, $data, $currentUserId )
 	{
 		$model	= new Model_Mission_Change( $this->env );
-		if( !$model->count( array( 'missionId' => $missionId ) ) ){
+		if( !$model->count( ['missionId' => $missionId] ) ){
 			$model->add( array(
 				'missionId'		=> $missionId,
 				'userId'		=> $currentUserId,
@@ -205,7 +205,7 @@ class Logic_Work_Mission extends Logic
 	public function noteVersion( $missionId, $userId, $content )
 	{
 		$modelVersion	= new Model_Mission_Version( $this->env );
-		$latest	= $modelVersion->getByIndex( 'missionId', $missionId, array( 'version' => 'DESC' ) );
+		$latest	= $modelVersion->getByIndex( 'missionId', $missionId, ['version' => 'DESC'] );
 		if( $latest && $latest->content === $content )
 			return FALSE;
 		return $modelVersion->add( array(

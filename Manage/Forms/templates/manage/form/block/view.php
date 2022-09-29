@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $modelBlock	= new Model_Form_Block( $env );
 
-$blocks		= $modelBlock->getAll( array(), array( 'title' => 'ASC' ) );
+$blocks		= $modelBlock->getAll( [], ['title' => 'ASC'] );
 
 foreach( $blocks as $item ){
 	if( preg_match( '/\[block_'.$item->identifier.'\]/', $block->content ) ){
@@ -11,10 +11,10 @@ foreach( $blocks as $item ){
 	}
 }
 
-$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 	'href'	=> './manage/form/block',
@@ -32,7 +32,7 @@ return HtmlTag::create( 'div', array(
 			HtmlTag::create( 'span', 'Shortcode: ' ),
 			HtmlTag::create( 'tt', '[block_'.$block->identifier.']' ),
 		) ),
-	), array() ),
+	), [] ),
 	HtmlTag::create( 'br' ),
 	HtmlTag::create( 'form', $block->content, array(
 		'class'	=> 'cmforms',
@@ -40,6 +40,6 @@ return HtmlTag::create( 'div', array(
 	) ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'hr' ),
-		join( ' ', array( $buttonCancel, $buttonEdit ) ),
-	), array() ),
-), array() );
+		join( ' ', [$buttonCancel, $buttonEdit] ),
+	), [] ),
+), [] );

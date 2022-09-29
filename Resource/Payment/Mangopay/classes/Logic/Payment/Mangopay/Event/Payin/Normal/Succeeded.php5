@@ -33,7 +33,7 @@ class Logic_Payment_Mangopay_Event_Payin_Normal_Succeeded extends Logic_Payment_
 			'user'			=> $this->logicMangopay->getUser( $payin->AuthorId ),
 			'event'			=> $this->event,
 		);
-		$receiver	= array( 'email' => 'dev@ceusmedia.de' );
+		$receiver	= ['email' => 'dev@ceusmedia.de'];
 		$this->sendMail( 'Mangopay_Event_Payin', $mailData, $receiver, 'de' );
 		return time();
 	}

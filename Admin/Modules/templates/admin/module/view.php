@@ -16,7 +16,7 @@ if( $module->files->classes ){
 	$classes	= [];
 	foreach( $module->files->classes as $item )
 		$classes[]	= HtmlElements::ListItem( $item, 1 );
-	$classes	= HtmlElements::unorderedList( $classes, 1, array( 'class' => 'classes' ) );
+	$classes	= HtmlElements::unorderedList( $classes, 1, ['class' => 'classes'] );
 }
 
 //$classes	= xmp( \CeusMedia\HydrogenFramework\View\Helper\Diff::htmlDiff( file_get_contents( 'config.ini.inc' ), file_get_contents( 'config.ini.inc.dist' ) ) );
@@ -27,7 +27,7 @@ if( $module->files->locales ){
 	$locales	= [];
 	foreach( $module->files->locales as $item )
 		$locales[]	= HtmlElements::ListItem( $item, 1 );
-	$locales		= HtmlElements::unorderedList( $locales, 1, array( 'class' => 'locales' ) );
+	$locales		= HtmlElements::unorderedList( $locales, 1, ['class' => 'locales'] );
 }
 
 $templates	= '-';
@@ -35,7 +35,7 @@ if( $module->files->templates ){
 	$templates	= [];
 	foreach( $module->files->templates as $item )
 		$templates[]	= HtmlElements::ListItem( $item, 1 );
-	$templates	= HtmlElements::unorderedList( $templates, 1, array( 'class' => 'templates' ) );
+	$templates	= HtmlElements::unorderedList( $templates, 1, ['class' => 'templates'] );
 }
 
 $styles	= '-';
@@ -43,7 +43,7 @@ if( $module->files->styles ){
 	$styles	= [];
 	foreach( $module->files->styles as $item )
 		$styles[]	= HtmlElements::ListItem( $item, 1 );
-	$styles		= HtmlElements::unorderedList( $styles, 1, array( 'class' => 'styles' ) );
+	$styles		= HtmlElements::unorderedList( $styles, 1, ['class' => 'styles'] );
 }
 
 $scripts	= '-';
@@ -51,7 +51,7 @@ if( $module->files->scripts ){
 	$scripts	= [];
 	foreach( $module->files->scripts as $item )
 		$scripts[]	= HtmlElements::ListItem( $item, 1 );
-	$scripts		= HtmlElements::unorderedList( $scripts, 1, array( 'class' => 'scripts' ) );
+	$scripts		= HtmlElements::unorderedList( $scripts, 1, ['class' => 'scripts'] );
 }
 
 $images	= '-';
@@ -59,7 +59,7 @@ if( $module->files->images ){
 	$images	= [];
 	foreach( $module->files->images as $item )
 		$images[]	= HtmlElements::ListItem( $item, 1 );
-	$images		= HtmlElements::unorderedList( $images, 1, array( 'class' => 'images' ) );
+	$images		= HtmlElements::unorderedList( $images, 1, ['class' => 'images'] );
 }
 
 $config	= '-';

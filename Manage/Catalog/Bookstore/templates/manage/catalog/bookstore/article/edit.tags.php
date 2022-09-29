@@ -43,7 +43,7 @@ if( $articleTags ){
 
 	$colgroup	= HtmlElements::ColumnGroup( '', '140px' );
 	$tbody		= HtmlTag::create( 'tbody', join( $listTags ) );
-	$listTags	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => "table table-condensed" ) );
+	$listTags	= HtmlTag::create( 'table', $colgroup.$tbody, ['class' => "table table-condensed"] );
 
 	$panelTags	= '
 		<div class="content-panel">

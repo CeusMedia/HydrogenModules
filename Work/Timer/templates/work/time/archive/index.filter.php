@@ -1,12 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$optProject	= array( '' => '- alle -' );
+$optProject	= ['' => '- alle -'];
 foreach( $projectMap as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject	= HtmlElements::Options( $optProject, $filterProjectId );
 
-$optStatus	= array_merge( array( '' => '- alle -' ), $words['states'] );
+$optStatus	= array_merge( ['' => '- alle -'], $words['states'] );
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 return '

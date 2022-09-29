@@ -9,7 +9,7 @@ foreach( $instances as $id => $entry ){
 	$entry->configFile	= !empty( $entry->configFile ) ? $entry->configFile : 'config.ini';
 
 	$configFile	= $entry->uri.$entry->configPath.$entry->configFile;
-	$class		= $instanceId === $id ? array( 'active' ) : array();
+	$class		= $instanceId === $id ? ['active'] : [];
 	$badge		= '<span class="badge badge-fail">!</span>';
 	if( file_exists( $configFile )  ){
 		if( $entry->modules['updatable'] ){
@@ -36,9 +36,9 @@ foreach( $instances as $id => $entry ){
 }
 ksort( $list );
 
-$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'instances' ) );
+$list	= HtmlTag::create( 'ul', $list, ['class' => 'instances'] );
 
-$badgeNrUpdates	= $nrUpdates ? HtmlTag::create( 'span', $nrUpdates, array( 'class' => 'badge badge-update' ) ) : '';
+$badgeNrUpdates	= $nrUpdates ? HtmlTag::create( 'span', $nrUpdates, ['class' => 'badge badge-update'] ) : '';
 $panel	= '
 <style>
 .badge{

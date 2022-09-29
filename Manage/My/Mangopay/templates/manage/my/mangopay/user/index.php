@@ -62,13 +62,13 @@ $panelView	= '
 
 $list	= [];
 foreach( $bankAccounts as $bankAccount ){
-	$link	= HtmlTag::create( 'a', $bankAccount->Id, array( 'href' => './manage/my/mangopay/bank/view/'.$bankAccount->Id ) );
+	$link	= HtmlTag::create( 'a', $bankAccount->Id, ['href' => './manage/my/mangopay/bank/view/'.$bankAccount->Id] );
 	$list[]	= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'td', $link ),
 	) );
 }
 $tbody	= HtmlTag::create( 'tbody', $list );
-$table	= HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-striped' ) );
+$table	= HtmlTag::create( 'table', $tbody, ['class' => 'table table-striped'] );
 $panelBankAccounts	= '
 <div class="content-panel">
 	<h3>Bank Accounts</h3>
@@ -84,7 +84,7 @@ $panelBankAccounts	= '
 $list	= new View_Helper_Accordion( 'user-transations' );
 $list->setSingleOpen( TRUE );
 foreach( $transactions as $item ){
-	$id			= HtmlTag::create( 'small', $item->Id.':', array( 'class' => 'muted' ) );
+	$id			= HtmlTag::create( 'small', $item->Id.':', ['class' => 'muted'] );
 	$title		= $id.'&nbsp;'.$this->formatMoney( $item->DebitedFunds );
 	$content	= ltrim( print_m( $item, NULL, NULL, TRUE ), '<br/>' );
 	$list->add( 'user-transation-'.$item->Id, $title, $content );
@@ -100,17 +100,17 @@ $panelTransactions	= '
 
 $rows		= [];
 foreach( $wallets as $wallet ){
-	$link	= HtmlTag::create( 'a', $wallet->Id, array( 'href' => './manage/my/mangopay/wallet/view/'.$wallet->Id ) );
+	$link	= HtmlTag::create( 'a', $wallet->Id, ['href' => './manage/my/mangopay/wallet/view/'.$wallet->Id] );
 	$rows[]	= HtmlTag::create( 'tr', array(
-		HtmlTag::create(' td', $link, array( 'class' => 'cell-wallet-id' ) ),
-		HtmlTag::create(' td', $wallet->Description, array( 'class' => 'cell-wallet-title' ) ),
-		HtmlTag::create(' td', $this->formatMoney( $wallet->Balance ), array( 'class' => 'cell-wallet-balance' ) ),
+		HtmlTag::create(' td', $link, ['class' => 'cell-wallet-id'] ),
+		HtmlTag::create(' td', $wallet->Description, ['class' => 'cell-wallet-title'] ),
+		HtmlTag::create(' td', $this->formatMoney( $wallet->Balance ), ['class' => 'cell-wallet-balance'] ),
 	) );
 }
 $colgroup	= HtmlElements::ColumnGroup( "120", "", "120" );
-$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'ID', 'Wallet Name', 'Betrag' ) ) );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['ID', 'Wallet Name', 'Betrag'] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
-$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 $panelWallets	= '
 <div class="content-panel">
 	<h3>Wallets</h3>

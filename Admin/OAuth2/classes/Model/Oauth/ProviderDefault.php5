@@ -60,7 +60,7 @@ class Model_Oauth_ProviderDefault
 		foreach( $reader->read( FALSE ) as $provider ){
 			$key	= strtolower( $provider->title );
 			if( !isset( $provider->options ) )
-				$provider->options	= (object) array();
+				$provider->options	= (object) [];
 			if( !isset( $provider->scopes ) )
 				$provider->scopes	= [];
 			$this->providers[$key]	= $provider;

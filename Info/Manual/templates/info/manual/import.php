@@ -19,10 +19,10 @@ foreach( $files as $fileName ){
 		HtmlTag::create( 'td', $buttonImport ),
 	) );
 }
-$colgroup		= HtmlElements::ColumnGroup( array( '', '' ) );
-$thead			= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( '1', '2' ) ) );
+$colgroup		= HtmlElements::ColumnGroup( ['', ''] );
+$thead			= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['1', '2'] ) );
 $tbody			= HtmlTag::create( 'tbody', $rows );
-$table			= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table' ) );
+$table			= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table'] );
 
 if( $env->php->version->has( 7 ) )																//  @todo remove in v1 using PGP 7
 	$optCategory	= array_column( $categories, 'title', 'manualCategoryId' );
@@ -37,7 +37,7 @@ $optCategory	= HtmlElements::Options( $optCategory, $categoryId );
 $optFormat		= array_flip( Alg_Object_Constant::staticGetAll( 'Model_Manual_Page', 'FORMAT_' ) );
 $optFormat		= HtmlElements::Options( array_reverse( $optFormat, TRUE ) );
 
-$buttonCancel	= HtmlTag::create( 'a', 'zurück', array( 'href' => './info/manual', 'class' => 'btn' ) );
+$buttonCancel	= HtmlTag::create( 'a', 'zurück', ['href' => './info/manual', 'class' => 'btn'] );
 $buttonSave		= HtmlTag::create( 'button', 'importieren', array(
 	'type'		=> 'submit',
 	'name'		=> 'save',
@@ -46,22 +46,22 @@ $buttonSave		= HtmlTag::create( 'button', 'importieren', array(
 
 $preset		= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'label', 'Kategorie', array( 'for' => 'input_categoryId' ) ),
+		HtmlTag::create( 'label', 'Kategorie', ['for' => 'input_categoryId'] ),
 		HtmlTag::create( 'select', $optCategory, array(
 			'name'		=> 'categoryId',
 			'id'		=> 'input_categoryId',
 			'class'		=> 'span12'
 		) ),
-	), array( 'class' => 'span4' ) ),
+	), ['class' => 'span4'] ),
 	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'label', 'Format', array( 'for' => 'input_format' ) ),
+		HtmlTag::create( 'label', 'Format', ['for' => 'input_format'] ),
 		HtmlTag::create( 'select', $optFormat, array(
 			'name'		=> 'format',
 			'id'		=> 'input_format',
 			'class'		=> 'span12'
 		) ),
-	), array( 'class' => 'span4' ) ),
-), array( 'class' => 'row-fluid' ) );
+	), ['class' => 'span4'] ),
+), ['class' => 'row-fluid'] );
 
 $panelList	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Import' ),
@@ -71,9 +71,9 @@ $panelList	= HtmlTag::create( 'div', array(
 			$preset,
 			$buttonCancel,
 			$buttonSave,
-		) ), array( 'class' => 'buttonbar' ) ),
-	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );
+		) ), ['class' => 'buttonbar'] ),
+	), ['class' => 'content-panel-inner'] )
+), ['class' => 'content-panel'] );
 
 return HtmlTag::create( 'form', $panelList, array(
 	'action'	=> './info/manual/import',

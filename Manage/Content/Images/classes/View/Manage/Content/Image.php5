@@ -43,15 +43,15 @@ class View_Manage_Content_Image extends View
 				continue;
 			$imagePath	= substr( $entry->getPathname(), strlen( $this->path ) );
 			$thumb		= $thumbnailer->get( $entry->getPathname(), $maxWidth, $maxHeight );
-			$image		= HtmlTag::create( 'img', NULL, array( 'src' => $thumb ) );
+			$image		= HtmlTag::create( 'img', NULL, ['src' => $thumb] );
 			$label		= HtmlTag::create( 'div', $entry->getFilename() );
 			$thumbnail	= HtmlTag::create( 'div', $image.$label );
 			$key		= $entry->getFilename();
-			$list[$key]	= HtmlTag::create( 'li', $thumbnail, array( 'data-image-hash' => addslashes( base64_encode( $imagePath ) ) ) );
+			$list[$key]	= HtmlTag::create( 'li', $thumbnail, ['data-image-hash' => addslashes( base64_encode( $imagePath ) )] );
 		}
 		natcasesort( $list );
 		if( $list )
-			return HtmlTag::create( 'ul', $list, array( 'class' => 'thumbs' ) );
+			return HtmlTag::create( 'ul', $list, ['class' => 'thumbs'] );
 	}
 
 	protected function __onInit()
@@ -86,12 +86,12 @@ class View_Manage_Content_Image extends View
 			$name		= $name == "." ? '<small class="muted"><em>'.$words->labelRoot.'</em></small>' : $name;
 
 			$number		= $this->countFilesInFolder( $this->path.$folder );
-			$badge		= HtmlTag::create( 'span', $number, array( 'class' => 'badge badge-file-number' ) );
-			$badge		= HtmlTag::create( 'small', '('.$number.')', array( 'class' => 'muted' ) );
+			$badge		= HtmlTag::create( 'span', $number, ['class' => 'badge badge-file-number'] );
+			$badge		= HtmlTag::create( 'small', '('.$number.')', ['class' => 'muted'] );
 
-			$label		= HtmlTag::create( 'span', $name.' '.$badge, array( 'class' => 'item-label autocut' ) );
+			$label		= HtmlTag::create( 'span', $name.' '.$badge, ['class' => 'item-label autocut'] );
 			if( strlen( $folder ) > 45 )
-				$label		= HtmlTag::create( 'small', $name.' '.$badge, array( 'class' => 'autocut' ) );
+				$label		= HtmlTag::create( 'small', $name.' '.$badge, ['class' => 'autocut'] );
 			$link		= HtmlTag::create( 'a', $label, array(
 				'href'	=> './manage/content/image/'.base64_encode( $folder ),
 //				'class'	=> 'autocut',

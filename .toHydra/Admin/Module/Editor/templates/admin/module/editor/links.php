@@ -17,7 +17,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['tab-links'];
 
-$optAccess	= array( '' => $words['tab-links']['optAccessUndefined'] ) + $words['access-types'];
+$optAccess	= ['' => $words['tab-links']['optAccessUndefined']] + $words['access-types'];
 
 $panelEdit	= '';
 if( isset( $linkNr ) && strlen( trim( $linkNr ) ) ){
@@ -99,8 +99,8 @@ if( $module->links ){
 		);
 		$rows[]	= HtmlTag::create( 'tr', $row );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array( '5%', '30%', '25%', '20%', '10%', '10%' ) );
-	$heads		= HtmlElements::TableHeads( array( '', 'Beschriftung', 'Pfad', /*'Parent',*/ 'Zugriff', 'Rank', 'Aktion' ) );
+	$colgroup	= HtmlElements::ColumnGroup( ['5%', '30%', '25%', '20%', '10%', '10%'] );
+	$heads		= HtmlElements::TableHeads( ['', 'Beschriftung', 'Pfad', /*'Parent',*/ 'Zugriff', 'Rank', 'Aktion'] );
 	$panelList	='
 <table>
 	'.$colgroup.'
@@ -110,7 +110,7 @@ if( $module->links ){
 ';
 }
 
-$optAccess	= array( '' => $words['tab-links']['optAccessUndefined'] ) + $words['access-types'];
+$optAccess	= ['' => $words['tab-links']['optAccessUndefined']] + $words['access-types'];
 $optAccess	= HtmlElements::Options( $optAccess );
 
 $panelAdd	= '

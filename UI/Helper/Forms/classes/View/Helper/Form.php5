@@ -87,7 +87,7 @@ class View_Helper_Form extends Abstraction
 
 	public function setMode( string $mode ): self
 	{
-		if( in_array( $mode, array( NULL, '', 'extended' ) ) ){
+		if( in_array( $mode, [NULL, '', 'extended'] ) ){
 			$this->mode	= (string) $mode;
 		}
 		return $this;
@@ -97,8 +97,8 @@ class View_Helper_Form extends Abstraction
 	{
 		$form		= $this->modelForm->get( $this->formId );
 		$button		= HtmlTag::create( 'div', array(
-			HtmlTag::create( 'button', 'abschicken', array( 'type' => 'submit', 'name' => 'send', 'class' => 'cmsmasters_button btn btn-primary' ) ),
-		), array( 'class' => 'cmforms-row' ) );
+			HtmlTag::create( 'button', 'abschicken', ['type' => 'submit', 'name' => 'send', 'class' => 'cmsmasters_button btn btn-primary'] ),
+		), ['class' => 'cmforms-row'] );
 		if( substr_count( $form->content, '[block_row_button]' ) )
 			$button	= '';
 		return HtmlTag::create( 'form', array(

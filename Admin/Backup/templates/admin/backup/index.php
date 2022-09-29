@@ -19,7 +19,7 @@ if( $backups ){
 	}
 	$thead	= HtmlTag::create( 'thead', '' );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
-	$list	= HtmlTag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-striped' ) );
+	$list	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table table-striped'] );
 }
 
 $panelList	= '

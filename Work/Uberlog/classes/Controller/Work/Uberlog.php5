@@ -10,8 +10,8 @@ class Controller_Work_Uberlog extends Controller
 	public function ajaxUpdateIndex()
 	{
 		$lastId	= $this->env->getRequest()->get( 'lastId' );
-		$filters	= array( 'logRecordId' => '> '.$lastId );
-		$orders		= array( 'logRecordId' => 'ASC' );
+		$filters	= ['logRecordId' => '> '.$lastId];
+		$orders		= ['logRecordId' => 'ASC'];
 		print( json_encode( $this->listRecords( $filters, $orders ) ) );
 		exit;
 	}
@@ -147,8 +147,8 @@ class Controller_Work_Uberlog extends Controller
 
 	protected function listRecords( $filters = [], $orders = [] )
 	{
-		$orders				= $orders ? $orders : array( 'logRecordId' => 'DESC' );
-		$records			= $this->model->getAll( $filters, $orders, array( 10 ,0 ) );
+		$orders				= $orders ? $orders : ['logRecordId' => 'DESC'];
+		$records			= $this->model->getAll( $filters, $orders, [10 ,0] );
 		$listCategories		= [];
 		$listClients		= [];
 		$listHosts			= [];
@@ -178,8 +178,8 @@ class Controller_Work_Uberlog extends Controller
 
 		foreach( $records as $record ){
 
-			$record->host		= (object) array( 'title' => NULL );
-			$record->userAgent	= (object) array( 'title' => NULL );
+			$record->host		= (object) ['title' => NULL];
+			$record->userAgent	= (object) ['title' => NULL];
 
 			if( $record->logCategoryId )
 				$record->category	= $listCategories[$record->logCategoryId];

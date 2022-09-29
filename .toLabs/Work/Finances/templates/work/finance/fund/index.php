@@ -16,36 +16,36 @@ foreach( $funds as $fund ){
 	$price	= $fund->price->price ? number_format( $fund->price->price, 2, ',', '.' ) : '-';
 
 
-	$icon1	= HtmlTag::create( 'img',NULL, array( 'src' => './images/fondsweb.de.ico' ) );
-	$link1	= HtmlTag::create( 'a', $icon1, array( 'href' => $urlView1.$fund->ISIN, 'class' => 'image', 'target' => '_blank' ) );
+	$icon1	= HtmlTag::create( 'img',NULL, ['src' => './images/fondsweb.de.ico'] );
+	$link1	= HtmlTag::create( 'a', $icon1, ['href' => $urlView1.$fund->ISIN, 'class' => 'image', 'target' => '_blank'] );
 
-	$icon2	= HtmlTag::create( 'img',NULL, array( 'src' => './images/finanzen.net.ico' ) );
-	$link2	= HtmlTag::create( 'a', $icon2, array( 'href' => $urlView2.$fund->ISIN, 'class' => 'image', 'target' => '_blank' ) );
+	$icon2	= HtmlTag::create( 'img',NULL, ['src' => './images/finanzen.net.ico'] );
+	$link2	= HtmlTag::create( 'a', $icon2, ['href' => $urlView2.$fund->ISIN, 'class' => 'image', 'target' => '_blank'] );
 
-	$label	= HtmlTag::create( 'a', $fund->title, array( 'href' => './work/finance/fund/edit/'.$fund->fundId ) );
+	$label	= HtmlTag::create( 'a', $fund->title, ['href' => './work/finance/fund/edit/'.$fund->fundId] );
 	$row	= array(
 		HtmlTag::create( 'td', $label ),
 		HtmlTag::create( 'td', $fund->kag ),
 		HtmlTag::create( 'td', $fund->ISIN.'&nbsp;'.$link1.'&nbsp;'.$link2 ),
-		HtmlTag::create( 'td', $price.'&nbsp;'.$fund->currency, array( 'class' => 'currency' ) ),
-		HtmlTag::create( 'td', $value.'&nbsp;'.$fund->currency, array( 'class' => 'currency' ) ),
+		HtmlTag::create( 'td', $price.'&nbsp;'.$fund->currency, ['class' => 'currency'] ),
+		HtmlTag::create( 'td', $value.'&nbsp;'.$fund->currency, ['class' => 'currency'] ),
 		HtmlTag::create( 'td', $date ),
 	);
 	$rows[]	= HtmlTag::create( 'tr', $row );
 }
 $total		= number_format( $total, 2, ',', '.' );
 $row	= array(
-	HtmlTag::create( 'td', count( $funds ).' Fonts', array( 'colspan' => 4 ) ),
-	HtmlTag::create( 'td', $total.'&nbsp;EUR', array( 'class' => 'currency' ) ),
+	HtmlTag::create( 'td', count( $funds ).' Fonts', ['colspan' => 4] ),
+	HtmlTag::create( 'td', $total.'&nbsp;EUR', ['class' => 'currency'] ),
 	HtmlTag::create( 'td', '' ),
 );
-$rows[]		= HtmlTag::create( 'tr', $row, array( 'class' => 'total' ) );
+$rows[]		= HtmlTag::create( 'tr', $row, ['class' => 'total'] );
 $heads	= array(
 	HtmlTag::create( 'th', $w->headTitle ),
 	HtmlTag::create( 'th', $w->headKag ),
 	HtmlTag::create( 'th', $w->headISIN ),
-	HtmlTag::create( 'th', $w->headPrice, array( 'class' => 'currency' ) ),
-	HtmlTag::create( 'th', $w->headValue, array( 'class' => 'currency' ) ),
+	HtmlTag::create( 'th', $w->headPrice, ['class' => 'currency'] ),
+	HtmlTag::create( 'th', $w->headValue, ['class' => 'currency'] ),
 	HtmlTag::create( 'th', $w->headTimestamp ),
 );
 $heads		= HtmlTag::create( 'tr', $heads );

@@ -1,8 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 
 $value		= htmlentities( $newsletter->html, ENT_QUOTES, 'UTF-8' );
 $editor		= HtmlTag::create( 'textarea', $value, array(
@@ -64,5 +64,5 @@ foreach( explode( ",", $template->styles ) as $style )
 $page->addBody( $body );
 //$page->addBody( $script );
 $page->addBody( HtmlTag::create( 'style', $template->style ) );
-print( $page->build( array( 'class' => 'mail mail-newsletter' ) ) );
+print( $page->build( ['class' => 'mail mail-newsletter'] ) );
 exit;

@@ -43,7 +43,7 @@ class View_Shop extends View
 				if( $backend->key === $order->paymentMethod ){
 					$className	= 'View_Helper_Shop_Payment_FinishPanel_'.$backend->backend;
 					if( class_exists( $className ) ){
-						$object	= Alg_Object_Factory::createObject( $className, array( $this->env ) );
+						$object	= Alg_Object_Factory::createObject( $className, [$this->env] );
 						$object->setOrderId( $orderId );
 						$object->setOutputFormat( $className::OUTPUT_FORMAT_HTML );
 						$panelPayment	= $object->render();

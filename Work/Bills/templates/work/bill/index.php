@@ -28,11 +28,11 @@ $conditions	= array(
 //	'date'		=> '>'.$yearStart.$monthStart.'00',
 //	'date'		=> '<'.$yearEnd.$monthEnd.'32',
 );
-$orders		= array( 'date' => 'ASC' );
+$orders		= ['date' => 'ASC'];
 $bills		= $model->getAll( $conditions, $orders );
 */
-$iconIn		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-right', 'title' => 'an andere' ) );
-$iconOut	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left', 'title' => 'von anderen' ) );
+$iconIn		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-right', 'title' => 'an andere'] );
+$iconOut	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left', 'title' => 'von anderen'] );
 
 $table		= $view->renderTable( $bills );
 $filter		= $this->loadTemplateFile( 'work/bill/index.filter.php' );

@@ -60,7 +60,7 @@ class Controller_Auth_Oauth2 extends Controller
 			}
 			try{
 				$client	= $this->getProviderObject( $currentProviderId );
-				$token	= $client->getAccessToken( 'authorization_code', array( 'code' => $code ) );
+				$token	= $client->getAccessToken( 'authorization_code', ['code' => $code] );
 				$user	= $client->getResourceOwner( $token );
 				$relation		= $this->modelRelation->getByIndices( array(
 					'oauthProviderId'	=> $currentProviderId,
@@ -86,7 +86,7 @@ class Controller_Auth_Oauth2 extends Controller
 
 						if( !$role->access )
 							$this->messenger->noteError( $msgs->msgRoleLocked, $role->title );
-						else if( $allowedRoles !== array( "*" ) && !in_array( $user->roleId, $allowedRoles ) )
+						else if( $allowedRoles !== ["*"] && !in_array( $user->roleId, $allowedRoles ) )
 							$this->messenger->noteError( $msgs->msgInvalidRole, $role->title );
 						else if( $user->status == 0 )
 							$this->messenger->noteError( $msgs->msgUserUnconfirmed );
@@ -133,7 +133,7 @@ class Controller_Auth_Oauth2 extends Controller
 			}
 			$this->session->set( 'oauth2_providerId', $providerId );
 			$providerObject	= $this->getProviderObject( $providerId );
-			$scopes	= array( $providerObject->getDefaultScopes );
+			$scopes	= [$providerObject->getDefaultScopes];
 			if( trim( $provider->scopes ) )
 				foreach( preg_split( '/\s*,\s/', $provider->scopes ) as $scope )
 					if( strlen( trim( $scope ) ) )
@@ -144,7 +144,7 @@ class Controller_Auth_Oauth2 extends Controller
 			$this->session->set( 'oauth2_from', $this->request->get( 'from' ) );
 			$this->restart( $authUrl, NULL, NULL, TRUE );
 		}
-		$providers	= $this->modelProvider->getAll( array(), array( 'rank' => 'ASC' ) );
+		$providers	= $this->modelProvider->getAll( [], ['rank' => 'ASC'] );
 		$this->addData( 'providers', $providers );
 		return;
 	}
@@ -203,7 +203,7 @@ class Controller_Auth_Oauth2 extends Controller
 			}
 			try{
 				$client		= $this->getProviderObject( $currentProviderId, 'auth/oauth2/register' );
-				$token		= $client->getAccessToken( 'authorization_code', array( 'code' => $code ) );
+				$token		= $client->getAccessToken( 'authorization_code', ['code' => $code] );
 				$user		= $client->getResourceOwner( $token );
 //print_m( $user->toArray() );die;
 				$provider	= $this->getProvider( $currentProviderId );
@@ -250,7 +250,7 @@ class Controller_Auth_Oauth2 extends Controller
 			$this->session->set( 'oauth2_state', $providerObject->getState() );
 			$this->restart( $authUrl, NULL, NULL, TRUE );
 		}
-		$providers	= $this->modelProvider->getAll( array(), array( 'rank' => 'ASC' ) );
+		$providers	= $this->modelProvider->getAll( [], ['rank' => 'ASC'] );
 		$this->addData( 'providers', $providers );
 		return;
 	}
@@ -319,7 +319,7 @@ class Controller_Auth_Oauth2 extends Controller
 		);
 		if( $provider->options )
 			$options	= array_merge( $options, json_decode( $provider->options, TRUE ) );
-		return Alg_Object_Factory::createObject( $provider->className, array( $options ) );
+		return Alg_Object_Factory::createObject( $provider->className, [$options] );
 	}
 
 	/**

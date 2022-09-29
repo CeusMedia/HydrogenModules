@@ -42,7 +42,7 @@ else if( $editor === "Ace" ){
 }
 else if( $editor === "TinyMCE" ){
 	$classAutoEditor	= "TinyMCE";
-	$options			= array( 'tinymce-mode' => 'extended' );
+	$options			= ['tinymce-mode' => 'extended'];
 }
 
 $textarea	= HtmlTag::create( 'textarea', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), array(
@@ -65,9 +65,9 @@ $buttonSave	= HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i> '.$
 
 $buttonbar	= '';
 if( $editor !== "Ace" )
-	$buttonbar	= HtmlTag::create( 'div', $buttonSave, array( 'class' => 'buttonbar' ) );
+	$buttonbar	= HtmlTag::create( 'div', $buttonSave, ['class' => 'buttonbar'] );
 
-$optEditor	= array( 'Plain' => $words['editors']['Plain'] );
+$optEditor	= ['Plain' => $words['editors']['Plain']];
 foreach( $editors as $key )
 	$optEditor[$key]	= $words['editors'][$key];
 $optEditor	= HtmlElements::Options( $optEditor, $editor );
@@ -95,7 +95,7 @@ $panelEdit	= '
 
 $panelFilter	= $view->loadTemplateFile( 'manage/content/locale/filter.php' );
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/content/locale' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/content/locale' ) );
 
 return $textIndexTop.'
 <div class="row-fluid">

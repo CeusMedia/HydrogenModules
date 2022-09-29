@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$optType	= array( 'CSV' => 'CSV' );
+$optType	= ['CSV' => 'CSV'];
 $optType	= HtmlElements::Options( $optType, key( $optType ) );
 
 $optGroup	= [];
@@ -18,7 +18,7 @@ $statuses	= array(
 $optStatus	= [];
 foreach( $statuses as $key => $label )
 	$optStatus[$key]	= $label;
-$optStatus	= HtmlElements::Options( $optStatus, array( 2 ) );
+$optStatus	= HtmlElements::Options( $optStatus, [2] );
 
 
 $tabs	= View_Work_Mail_Check::renderTabs( $env, 'export' );

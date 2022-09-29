@@ -8,7 +8,7 @@ $w			= (object) $words['customer'];
 $wDelivery	= (object) $words['customer-delivery'];
 $wBilling	= (object) $words['customer-billing'];
 
-$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $hint		= HtmlTag::create( 'a', $iconCancel.' zurück zur Auswahl', array(
 	'href'		=> './shop/customer/reset',
 	'class'		=> 'btn btn-small',

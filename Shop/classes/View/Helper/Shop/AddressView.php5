@@ -67,7 +67,7 @@ class View_Helper_Shop_AddressView
 
 	public function setOutput( int $format ): string
 	{
-		if( !in_array( (int) $format, array( self::OUTPUT_HTML, self::OUTPUT_TEXT ) ) )
+		if( !in_array( (int) $format, [self::OUTPUT_HTML, self::OUTPUT_TEXT] ) )
 			throw new InvalidArgumentException( 'Invalid output format' );
 		$this->output		= (int) $format;
 		return $this;
@@ -130,12 +130,12 @@ class View_Helper_Shop_AddressView
 		return HtmlTag::create( 'div', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'small', $label, array( 'class' => 'muted' ) )
+					HtmlTag::create( 'small', $label, ['class' => 'muted'] )
 				) ),
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'big', $content, array( 'class' => NULL ) )
+					HtmlTag::create( 'big', $content, ['class' => NULL] )
 				) ),
-			), array( 'class' => 'span12' ) )
-		), array( 'class' => 'row-fluid' ) );
+			), ['class' => 'span12'] )
+		), ['class' => 'row-fluid'] );
 	}
 }

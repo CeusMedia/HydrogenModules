@@ -3,7 +3,7 @@
 $iconAdd	= HTML::Icon( 'plus', TRUE );
 $iconSave	= HTML::Icon( 'ok', TRUE );
 
-extract( $view->populateTexts( array( 'top', 'bottom', 'right' ), 'html/manage/my/company/edit/' ) );
+extract( $view->populateTexts( ['top', 'bottom', 'right'], 'html/manage/my/company/edit/' ) );
 
 //  --  PANEL: BRANCHES  --  //
 $w				= (object) $words['branches'];

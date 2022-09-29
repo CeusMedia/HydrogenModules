@@ -70,8 +70,8 @@ class Controller_Oauth_Application extends Controller
 	 */
 	public function index( $page = 0, $limit = 10 )
 	{
-		$orders			= array( 'title' => 'ASC' );
-		$limits			= array( abs( $page ) * abs( $limit ), abs( $limit ) );
+		$orders			= ['title' => 'ASC'];
+		$limits			= [abs( $page ) * abs( $limit ), abs( $limit )];
 
 		$conditions		= [];
 //		if( !Logic_Authentication::getInstance( $this->env )->hasFullAccess() )

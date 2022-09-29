@@ -11,23 +11,23 @@ foreach( $issue->notes as $note )
 
 foreach( $changers as $userId => $changer ){
 	if( $changer ){
-		$link	= HtmlTag::create( 'a', $changer->username, array( 'href' => './manage/user/edit/'.$userId ) );
-		$roled	= HtmlTag::create( 'span', $link, array( 'class' => 'role role'.$changer->roleId ) );
+		$link	= HtmlTag::create( 'a', $changer->username, ['href' => './manage/user/edit/'.$userId] );
+		$roled	= HtmlTag::create( 'span', $link, ['class' => 'role role'.$changer->roleId] );
 		$changers[$userId]	= HtmlTag::create( 'li', $roled );
 	}
 }
-$changers	= $changers ? HtmlTag::create( 'ul', join( $changers ), array( 'class' => 'list' ) ) : "-";
+$changers	= $changers ? HtmlTag::create( 'ul', join( $changers ), ['class' => 'list'] ) : "-";
 
 $reporter	= '-';
 if( $issue->reporter ){
 	$reporter	= HtmlElements::Link( './manage/user/edit/'.$issue->reporter->userId, $issue->reporter->username );
-	$reporter	= HtmlTag::create( 'span', $reporter, array( 'class' => 'role role'.$issue->reporter->roleId ) );
+	$reporter	= HtmlTag::create( 'span', $reporter, ['class' => 'role role'.$issue->reporter->roleId] );
 }
 
 $manager	= '-';
 if( $issue->managerId ){
 	$manager	= HtmlElements::Link( './maange/user/edit/'.$issue->manager->userId, $issue->manager->username );
-	$manager	= HtmlTag::create( 'span', $manager, array( 'class' => 'role role'.$issue->manager->roleId ) );
+	$manager	= HtmlTag::create( 'span', $manager, ['class' => 'role role'.$issue->manager->roleId] );
 }
 
 if( empty( $issue->project ) ){

@@ -15,12 +15,12 @@ $helperNav->setCategoryId( $categoryId );
 $buttonAdd	= "";
 $buttonReload	= "";
 if( $moduleConfig->get( 'editor' ) ){
-	$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-	$iconReload		= HtmlTag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
+	$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+	$iconReload		= HtmlTag::create( 'i', '', ['class' => 'icon-refresh'] );
 	if( array_key_exists( 'add', $rights ) )
-		$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-primary" ) );
+		$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], ['href' => './info/manual/add', 'class' => "btn btn-small btn-primary"] );
 	if( array_key_exists( 'edit', $rights ) )
-		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
+		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], ['href' => './info/manual/reload', 'class' => "btn btn-small"] );
 }
 
 return '

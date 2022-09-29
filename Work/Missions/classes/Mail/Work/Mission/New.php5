@@ -29,7 +29,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logicProject	= Logic_Project::getInstance( $this->env );
 			$project		= $logicProject->getProject( $mission->projectId );
-			$link			= HtmlTag::create( 'a', $project->title, array( 'href' => './manage/project/view/'.$project->projectId ) );
+			$link			= HtmlTag::create( 'a', $project->title, ['href' => './manage/project/view/'.$project->projectId] );
 			$this->helperFacts->add( 'projectId', $link, $project->title );
 		}
 		if( (int) $mission->workerId ){
@@ -83,7 +83,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 		$nowMonth		= $this->labelsMonthNames[date( 'n' )];
 		$dateFull		= $nowWeekday.', der '.date( "j" ).'.&nbsp;'.$nowMonth;
 
-		$content		= HtmlTag::create( 'em', $this->words->emptyContent, array( 'class' => 'muted' ) );
+		$content		= HtmlTag::create( 'em', $this->words->emptyContent, ['class' => 'muted'] );
 		if( strlen( trim( $mission->content ) ) )
 		 	$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
 
@@ -94,10 +94,10 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 				'type'		=> $this->labelsTypes[$mission->type],
 				'modifier'	=> $this->renderUser( $this->modelUser->get( $mission->modifierId ) ),
 				'url'		=> $url,
-				'link'		=> HtmlTag::create( 'a', $mission->title, array( 'href' => $url ) ),
+				'link'		=> HtmlTag::create( 'a', $mission->title, ['href' => $url] ),
 				'today'		=> array(
-					'long'	=> HtmlTag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) ),
-					'short'	=> HtmlTag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) ),
+					'long'	=> HtmlTag::create( 'span', $dateFull, ['class' => 'text-date-full'] ),
+					'short'	=> HtmlTag::create( 'span', date( $formatDate ), ['class' => 'text-date-short'] ),
 				),
 				'content'	=> $content,
 			),

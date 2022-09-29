@@ -12,11 +12,11 @@ if( $module->files->classes ){
 		$count++;
 		$class	= NULL;
 		$url		= './admin/module/viewer/viewCode/'.$moduleId.'/class/'.base64_encode( $item->file );
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon class' ) );
-		$link		= HtmlTag::create( 'a', $label, array( 'href' => $url, 'class' => 'layer-html', 'title' => 'TEST' ) );
-		$classes[]	= HtmlElements::ListItem( $link, 1, array( 'class' => $class ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon class'] );
+		$link		= HtmlTag::create( 'a', $label, ['href' => $url, 'class' => 'layer-html', 'title' => 'TEST'] );
+		$classes[]	= HtmlElements::ListItem( $link, 1, ['class' => $class] );
 	}
-	$classes	= HtmlElements::unorderedList( $classes, 1, array( 'class' => 'classes' ) );
+	$classes	= HtmlElements::unorderedList( $classes, 1, ['class' => 'classes'] );
 	$list[]	= '<dt>'.$w->resourceClasses.'</dt>';
 	$list[]	= '<dd>'.$classes.'</dd>';
 }
@@ -31,11 +31,11 @@ if( $module->files->locales ){
 		$count++;
 		$class	= NULL;
 		$url		= './admin/module/viewer/viewCode/'.$moduleId.'/locale/'.base64_encode( $item->file );
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon locale' ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon locale'] );
 		$link		= HtmlElements::Link( $url, $label, 'layer-html' );
-		$locales[]	= HtmlElements::ListItem( $link, 1, array( 'class' => $class ) );
+		$locales[]	= HtmlElements::ListItem( $link, 1, ['class' => $class] );
 	}
-	$locales		= HtmlElements::unorderedList( $locales, 1, array( 'class' => 'locales' ) );
+	$locales		= HtmlElements::unorderedList( $locales, 1, ['class' => 'locales'] );
 	$list[]	= '<dt>'.$w->resourceLocales.'</dt>';
 	$list[]	= '<dd>'.$locales.'</dd>';
 }
@@ -47,11 +47,11 @@ if( $module->files->templates ){
 		$count++;
 		$class	= NULL;
 		$url		= './admin/module/viewer/viewCode/'.$moduleId.'/template/'.base64_encode( $item->file );
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon template' ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon template'] );
 		$link		= HtmlElements::Link( $url, $label, 'layer-html' );
-		$templates[]	= HtmlElements::ListItem( $link, 1, array( 'class' => $class ) );
+		$templates[]	= HtmlElements::ListItem( $link, 1, ['class' => $class] );
 	}
-	$templates	= HtmlElements::unorderedList( $templates, 1, array( 'class' => 'templates' ) );
+	$templates	= HtmlElements::unorderedList( $templates, 1, ['class' => 'templates'] );
 	$list[]	= '<dt>'.$w->resourceTemplates.'</dt>';
 	$list[]	= '<dd>'.$templates.'</dd>';
 }
@@ -63,11 +63,11 @@ if( $module->files->styles ){
 		$count++;
 		$class	= NULL;
 		$url		= './admin/module/viewer/viewCode/'.$moduleId.'/style/'.base64_encode( $item->file );
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon style' ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon style'] );
 		$link		= HtmlElements::Link( $url, $label, 'layer-html' );
-		$styles[]	= HtmlElements::ListItem( $link, 1, array( 'class' => $class ) );
+		$styles[]	= HtmlElements::ListItem( $link, 1, ['class' => $class] );
 	}
-	$styles		= HtmlElements::unorderedList( $styles, 1, array( 'class' => 'styles' ) );
+	$styles		= HtmlElements::unorderedList( $styles, 1, ['class' => 'styles'] );
 	$list[]	= '<dt>'.$w->resourceStyles.'</dt>';
 	$list[]	= '<dd>'.$styles.'</dd>';
 }
@@ -79,11 +79,11 @@ if( $module->files->scripts ){
 		$count++;
 		$class	= NULL;
 		$url		= './admin/module/viewer/viewCode/'.$moduleId.'/script/'.base64_encode( $item->file );
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon script' ) );
-		$link		= HtmlElements::Link( $url, $label, 'layer-html', array( 'title' => 'TEST' ) );
-		$scripts[]	= HtmlElements::ListItem( $link, 1, array( 'class' => $class )  );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon script'] );
+		$link		= HtmlElements::Link( $url, $label, 'layer-html', ['title' => 'TEST'] );
+		$scripts[]	= HtmlElements::ListItem( $link, 1, ['class' => $class]  );
 	}
-	$scripts		= HtmlElements::unorderedList( $scripts, 1, array( 'class' => 'scripts' ) );
+	$scripts		= HtmlElements::unorderedList( $scripts, 1, ['class' => 'scripts'] );
 	$list[]	= '<dt>'.$w->resourceScripts.'</dt>';
 	$list[]	= '<dd>'.$scripts.'</dd>';
 }
@@ -94,10 +94,10 @@ if( $module->files->images ){
 	foreach( $module->files->images as $item ){
 		$count++;
 		$class	= NULL;
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon image' ) );
-		$images[]	= HtmlElements::ListItem( $label, 1, array( 'class' => $class ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon image'] );
+		$images[]	= HtmlElements::ListItem( $label, 1, ['class' => $class] );
 	}
-	$images		= HtmlElements::unorderedList( $images, 1, array( 'class' => 'images' ) );
+	$images		= HtmlElements::unorderedList( $images, 1, ['class' => 'images'] );
 	$list[]	= '<dt>'.$w->resourceImages.'</dt>';
 	$list[]	= '<dd>'.$images.'</dd>';
 }
@@ -107,10 +107,10 @@ if( $module->files->files ){
 	foreach( $module->files->files as $item ){
 		$count++;
 		$class	= NULL;
-		$label		= HtmlTag::create( 'span', $item->file, array( 'class' => 'icon file' ) );
-		$files[]	= HtmlElements::ListItem( $label, 1, array( 'class' => $class ) );
+		$label		= HtmlTag::create( 'span', $item->file, ['class' => 'icon file'] );
+		$files[]	= HtmlElements::ListItem( $label, 1, ['class' => $class] );
 	}
-	$files		= HtmlElements::unorderedList( $files, 1, array( 'class' => 'files' ) );
+	$files		= HtmlElements::unorderedList( $files, 1, ['class' => 'files'] );
 	$list[]	= '<dt>'.$w->resourceFiles.'</dt>';
 	$list[]	= '<dd>'.$files.'</dd>';
 }

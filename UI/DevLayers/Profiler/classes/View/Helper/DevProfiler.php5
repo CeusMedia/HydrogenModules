@@ -30,7 +30,7 @@ class View_Helper_DevProfiler
 			$bar		= '<span class="task-bar" style="'.$style.'"></span>';
 
 			$about		= round( $width / 5 ) * 5;
-			$classes	= array( 'task-line', 'about-'.$about );
+			$classes	= ['task-line', 'about-'.$about];
 			$cells		= array(
 				'<td class="task-title">'.$task->label.'</td>',
 				'<td class="task-measure">'.round( $task->timeMicro / $timeTotal * 100 ).'%</td>',
@@ -52,7 +52,7 @@ class View_Helper_DevProfiler
 		$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', join( $heads ) ) );
 		$tbody		= HtmlTag::create( 'tbody', join( $list ) );
 		$content	= $colgroup.$thead.$tbody;
-		return HtmlTag::create( 'table', $content, array( 'class' => 'profiler' ) );
+		return HtmlTag::create( 'table', $content, ['class' => 'profiler'] );
 	}
 
 	protected static function formatTime( $microseconds ): string

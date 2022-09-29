@@ -4,16 +4,16 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['edit'];
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
+$iconView		= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open icon-white'] );
 
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconSave		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check' ) );
-	$iconRemove		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-trash' ) );
-	$iconView		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-eye' ) );
+	$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+	$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
+	$iconRemove		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-trash'] );
+	$iconView		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-eye'] );
 }
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
@@ -48,7 +48,7 @@ $panelSlides	= $view->loadTemplateFile( 'manage/image/slider/edit.slides.php' );
 
 $wordsSlider	= (object) $words['slider'];
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/image/slider' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/image/slider' ) );
 
 return $textTop.'
 <div class="content-panel">

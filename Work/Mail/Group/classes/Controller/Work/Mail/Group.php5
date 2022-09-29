@@ -49,9 +49,9 @@ class Controller_Work_Mail_Group extends Controller
 			$this->restart( 'edit/'.$groupId, TRUE );
 		}
 		$this->addData( 'servers', $this->modelServer->getAll() );
-		$users		= $this->modelUser->getAll( array( 'status' => '> 0' ), array( 'username' => 'ASC' ) );
+		$users		= $this->modelUser->getAll( ['status' => '> 0'], ['username' => 'ASC'] );
 		$this->addData( 'users', $users );
-		$roles		= $this->modelRole->getAll( array(), array( 'rank' => 'ASC' ) );
+		$roles		= $this->modelRole->getAll( [], ['rank' => 'ASC'] );
 		$this->addData( 'roles', $roles );
 	}
 
@@ -110,11 +110,11 @@ class Controller_Work_Mail_Group extends Controller
 		if( $this->request->has( 'save' ) ){
 			$title		= trim( $this->request->get( 'title' ) );
 			$address	= trim( $this->request->get( 'address' ) );
-			if( $this->modelGroup->getAll( array( 'title' => $title, 'mailGroupId' => '!= '.$groupId ) ) ){
+			if( $this->modelGroup->getAll( ['title' => $title, 'mailGroupId' => '!= '.$groupId] ) ){
 				$this->messenger->noteError( 'Title "%s" is already existing.' );
 				$this->restart( 'edit/'.$groupId, TRUE );
 			}
-			if( $this->modelGroup->getAll( array( 'address' => $address, 'mailGroupId' => '!= '.$groupId ) ) ){
+			if( $this->modelGroup->getAll( ['address' => $address, 'mailGroupId' => '!= '.$groupId] ) ){
 				$this->messenger->noteError( 'Address "%s" is already existing.' );
 				$this->restart( 'edit/'.$groupId, TRUE );
 			}
@@ -139,11 +139,11 @@ class Controller_Work_Mail_Group extends Controller
 		}
 		$this->addData( 'servers', $this->modelServer->getAll() );
 		$this->addData( 'group', $group );
-		$users		= $this->modelUser->getAll( array( 'status' => '> 0' ), array( 'username' => 'ASC' ) );
+		$users		= $this->modelUser->getAll( ['status' => '> 0'], ['username' => 'ASC'] );
 		$this->addData( 'users', $users );
-		$members	= $this->modelMember->getAll( array( 'mailGroupId' => $groupId ), array( 'title' => 'ASC' ) );
+		$members	= $this->modelMember->getAll( ['mailGroupId' => $groupId], ['title' => 'ASC'] );
 		$this->addData( 'members', $members );
-		$roles		= $this->modelRole->getAll( array(), array( 'rank' => 'ASC' ) );
+		$roles		= $this->modelRole->getAll( [], ['rank' => 'ASC'] );
 		$this->addData( 'roles', $roles );
 	}
 
@@ -152,9 +152,9 @@ class Controller_Work_Mail_Group extends Controller
 		$groups		= $this->modelGroup->getAll();
 		foreach( $groups as $group )
 			$group->members		= $this->modelMember->getAll(
-				 array( 'mailGroupId' => $group->mailGroupId ),
-				 array(),
-				 array()
+				 ['mailGroupId' => $group->mailGroupId],
+				 [],
+				 []
 			);
 		$this->addData( 'groups', $groups );
 	}

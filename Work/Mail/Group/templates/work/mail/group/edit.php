@@ -7,8 +7,8 @@ $panelMembers	= $view->loadTemplateFile( 'work/mail/group/edit.members.php' );
 $tabs			= $view->renderTabs( $env );
 
 $layout			= HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', $panelEdit, array( 'class' => 'span6' ) ),
-	HtmlTag::create( 'div', $panelMembers, array( 'class' => 'span6' ) ),
-), array( 'class' => 'row-fluid' ) );
+	HtmlTag::create( 'div', $panelEdit, ['class' => 'span6'] ),
+	HtmlTag::create( 'div', $panelMembers, ['class' => 'span6'] ),
+), ['class' => 'row-fluid'] );
 
 return $tabs.$layout;

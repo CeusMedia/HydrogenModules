@@ -45,7 +45,7 @@ if( $exceptions ){
 		$exceptionRequest	= unserialize( $exception->request );
 		$exceptionSession	= new Dictionary( unserialize( $exception->session ) ?: [] );
 
-		$link	= HtmlTag::create( 'a', $exception->message, array( 'href' => './admin/log/exception/view/'.$exception->exceptionId ) );
+		$link	= HtmlTag::create( 'a', $exception->message, ['href' => './admin/log/exception/view/'.$exception->exceptionId] );
 		$date	= date( 'Y.m.d', $exception->createdAt );
 		$time	= date( 'H:i:s', $exception->createdAt );
 
@@ -58,7 +58,7 @@ if( $exceptions ){
 				'class'	=> 'btn not-btn-mini btn-small btn-danger',
 				'href'	=> './admin/log/exception/remove/'.$exception->exceptionId
 			) ),
-		), array( 'class' => 'btn-group' ) );
+		), ['class' => 'btn-group'] );
 
 		$checkbox		= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'checkbox',
@@ -85,7 +85,7 @@ if( $exceptions ){
 
 		$list[]			= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $checkbox ),
-			HtmlTag::create( 'td', $link.'<br/>'.$method.' '.$requestPath, array( 'class' => 'autocut' ) ),
+			HtmlTag::create( 'td', $link.'<br/>'.$method.' '.$requestPath, ['class' => 'autocut'] ),
 //			HtmlTag::create( 'td', $envClass ),
 //			HtmlTag::create( 'td', '<small class="muted">'.$exceptionClass.'</small>' ),
 

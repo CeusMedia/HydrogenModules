@@ -18,7 +18,7 @@ class Hook_JS_jQuery_Select2 extends Hook
 		$config		= $env->getConfig()->getAll( 'module.js_jquery_select2.', TRUE );
 		$version	= $config->get( 'version' );
 		$baseUrl	= $env->getConfig()->get( 'path.scripts.lib' ).'jquery/select2/'.$version.'/';
-		$files		= (object) array( 'js' => array(), 'css' => array() );
+		$files		= (object) array( 'js' => [], 'css' => [] );
 		$minified	= $config->get( 'load.minified' );
 		$full		= $config->get( 'load.full' );
 		if( $config->get( 'version' ) === '3.5.4' ){

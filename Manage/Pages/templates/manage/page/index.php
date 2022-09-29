@@ -2,7 +2,7 @@
 
 $panelTree	= $view->loadTemplateFile( 'manage/page/tree.php' );
 
-extract( $view->populateTexts( array( 'index' ), 'html/manage/page/' ) );
+extract( $view->populateTexts( ['index'], 'html/manage/page/' ) );
 
 //  --  LAYOUT  --  //
 return '

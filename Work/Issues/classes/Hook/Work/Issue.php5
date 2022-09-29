@@ -92,16 +92,16 @@ class Hook_Work_Issue extends Hook
 
 		$activeOnly		= isset( $payload->activeOnly ) ? $payload->activeOnly : FALSE;
 		$linkable		= isset( $payload->linkable ) ? $payload->linkable : FALSE;
-		$statusesActive	= array( 0, 1, 2, 3, 4, 5 );
+		$statusesActive	= [0, 1, 2, 3, 4, 5];
 		$list			= [];
-		$indices		= array( 'reporterId' => $payload->userId );
+		$indices		= ['reporterId' => $payload->userId];
 		if( $activeOnly )
 			$indices['status']	= $statusesActive;
-		$orders			= array( 'type' => 'ASC', 'title' => 'ASC' );
+		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
 		$icons			= array(
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler' ) ),
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe' ) ),
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee' ) ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
 		);
 		$words			= $env->getLanguage()->getWords( 'work/issue' );
 		$reportedIssues	= $modelIssue->getAll( $indices, $orders );
@@ -109,7 +109,7 @@ class Hook_Work_Issue extends Hook
 			$icon		= $icons[$issue->type];
 			$isOpen		= in_array( $issue->status, $statusesActive );
 			$status		= '('.$words['states'][$issue->status].')';
-			$status		= HtmlTag::create( 'small', $status, array( 'class' => 'muted' ) );
+			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) array(
@@ -144,25 +144,25 @@ class Hook_Work_Issue extends Hook
 		$payload->activeOnly	= isset( $payload->activeOnly ) ? $payload->activeOnly : FALSE;
 		$payload->linkable		= isset( $payload->linkable ) ? $payload->linkable : FALSE;
 		$language		= $env->getLanguage();
-		$statusesActive	= array( 0, 1, 2, 3, 4, 5 );
+		$statusesActive	= [0, 1, 2, 3, 4, 5];
 		$list			= [];
 		$modelIssue		= new Model_Issue( $env );
-		$indices		= array( 'projectId' => $payload->projectId );
+		$indices		= ['projectId' => $payload->projectId];
 		if( $payload->activeOnly )
 			$indices['status']	= $statusesActive;
-		$orders			= array( 'type' => 'ASC', 'title' => 'ASC' );
+		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
 		$issues			= $modelIssue->getAllByIndices( $indices, $orders );	//  ...
 		$icons			= array(
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler' ) ),
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe' ) ),
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee' ) ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
 		);
 		$words		= $language->getWords( 'work/issue' );
 		foreach( $issues as $issue ){
 			$icon		= $icons[$issue->type];
 			$isOpen		= in_array( $issue->status, $statusesActive );
 			$status		= '('.$words['states'][$issue->status].')';
-			$status		= HtmlTag::create( 'small', $status, array( 'class' => 'muted' ) );
+			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) array(

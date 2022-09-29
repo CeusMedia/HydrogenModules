@@ -118,14 +118,14 @@ class Controller_Admin_Module extends Controller{
 		if( !file_exists( $pathModule.$pathFile.$fileName ) )
 			die( 'Invalid file: '.$pathModule.$pathFile.$fileName );
 		$content	= FileReader::load( $pathModule.$pathFile.$fileName );
-		$code		= HtmlTag::create( 'xmp', $content, array( 'class' => 'code '.$xmpClass ) );
+		$code		= HtmlTag::create( 'xmp', $content, ['class' => 'code '.$xmpClass] );
 		$body		= '<h2>'.$moduleId.' - '.$fileName.'</h2>'.$code;
 		$page		= new HtmlPage();
 		$page->addStylesheet( 'css/reset.css' );
 		$page->addStylesheet( 'css/typography.css' );
 		$page->addStylesheet( 'css/xmp.formats.css' );
 		$page->addBody( $body );
-		print( $page->build( array( 'style' => 'margin: 1em' ) ) );
+		print( $page->build( ['style' => 'margin: 1em'] ) );
 		exit;
 	}
 }

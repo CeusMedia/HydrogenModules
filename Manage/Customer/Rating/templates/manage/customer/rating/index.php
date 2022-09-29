@@ -13,9 +13,9 @@ $panelRatings	= '';
 
 if( $customer->ratings ){
 	$indicator1	= new Indicator();
-	$indicator2	= new Indicator( array( 'invertColor' => TRUE ) );
+	$indicator2	= new Indicator( ['invertColor' => TRUE] );
 
-	$averages	= array( 0, 0, 0, 0, 0, 0, 0 );
+	$averages	= [0, 0, 0, 0, 0, 0, 0];
 
 	$rows = [];
 	foreach( $customer->ratings as $rating ){

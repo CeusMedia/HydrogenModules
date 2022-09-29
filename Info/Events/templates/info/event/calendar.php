@@ -1,16 +1,16 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconDetails		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconParticipate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconNotice			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
-$iconClose			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'';
+$iconDetails		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconParticipate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconNotice			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-star'] );
+$iconClose			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'';
 
 $helper	= new View_Helper_Info_Event_Calendar( $this->env );
 $helper->setEvents( $this->getData( 'events' ) );
 $helper->setMonth( $this->getData( 'year' ), $this->getData( 'month' ) );
 
-$panelSearch	= $view->loadTemplateFile( 'info/event/panel.search.php', array( 'from' => 'info/event/calendar' ) );
+$panelSearch	= $view->loadTemplateFile( 'info/event/panel.search.php', ['from' => 'info/event/calendar'] );
 
 return $panelSearch.$helper->render().'
 <form id="form-modal-event" action="./info/event/modal" method="post">

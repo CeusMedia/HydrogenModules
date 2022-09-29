@@ -207,7 +207,7 @@ class Controller_Admin_Config extends Controller
 				$type	= $node->getAttribute( 'type' );
 				$value	= $node->getValue();
 				if( in_array( $type, array ( "bool", "boolean" ) ) ){
-					$value	= in_array( $value, array( '1', 'yes', 'true' ) ) ? "true" : "false";
+					$value	= in_array( $value, ['1', 'yes', 'true'] ) ? "true" : "false";
 				}
 				$node->setValue( $value );
 			}
@@ -217,7 +217,7 @@ class Controller_Admin_Config extends Controller
 				$type	= $node->getAttribute( 'type' );
 				if( array_key_exists( $name, $pairs ) ){
 					if( in_array( $type, array ("bool", "boolean" ) ) ){
-						$pairs[$name]	= in_array( $pairs[$name], array( '1', 'yes', 'true' ) );
+						$pairs[$name]	= in_array( $pairs[$name], ['1', 'yes', 'true'] );
 						$pairs[$name]	= $pairs[$name] ? "true" : "false";
 					}
 					$node->setValue( $pairs[$name] );

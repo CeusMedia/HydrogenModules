@@ -20,7 +20,7 @@ class Mail_Manage_Project_Changed extends Mail_Manage_Project_Abstract
 		//  --  RELATED ITEMS  --  //
 		$relations			= '';
 		$helperRelations	= new View_Helper_ItemRelationLister( $this->env );
-		$helperRelations->setHook( 'Project', 'listRelations', array( 'projectId' => $project->projectId ) );
+		$helperRelations->setHook( 'Project', 'listRelations', ['projectId' => $project->projectId] );
 		$helperRelations->setLinkable( TRUE );
 		$helperRelations->setActiveOnly( TRUE );
 		//$helperRelations->setTableClass( 'limited' );

@@ -116,7 +116,7 @@ class Controller_Router extends Controller{
 							$methods	= preg_split( '/\s*,\s*/', $methodsString );
 					}
 					if( $route->hasAttribute( 'ajax' ) ){
-						$valuesYes	= array( 'yes', 'on', '1' );
+						$valuesYes	= ['yes', 'on', '1'];
 						if( in_array( (string) $route->getAttribute( 'ajax' ), $valuesYes ) )
 							$ajax	= TRUE;
 					}

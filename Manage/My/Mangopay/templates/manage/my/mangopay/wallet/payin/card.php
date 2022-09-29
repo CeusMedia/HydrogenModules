@@ -6,17 +6,17 @@ $rows		= [];
 foreach( $cards as $item ){
 	if( !$item->Active )
 		continue;
-	$button	= HtmlTag::create( 'a', 'use this!', array( 'class' => 'btn btn-small btn-primary', 'href' => './manage/my/mangopay/wallet/payIn/'.$walletId.'/card?cardId='.$item->Id ) );
+	$button	= HtmlTag::create( 'a', 'use this!', ['class' => 'btn btn-small btn-primary', 'href' => './manage/my/mangopay/wallet/payIn/'.$walletId.'/card?cardId='.$item->Id] );
 	$rows[]	= HtmlTag::create( 'tr', array(
-		HtmlTag::create(' td', $item->CardProvider, array( 'class' => 'cell-card-provider' ) ),
-		HtmlTag::create(' td', $item->Alias, array( 'class' => 'cell-card-title' ) ),
-		HtmlTag::create(' td', $button, array( 'class' => 'cell-actions' ) ),
+		HtmlTag::create(' td', $item->CardProvider, ['class' => 'cell-card-provider'] ),
+		HtmlTag::create(' td', $item->Alias, ['class' => 'cell-card-title'] ),
+		HtmlTag::create(' td', $button, ['class' => 'cell-actions'] ),
 	) );
 }
 $colgroup	= HtmlElements::ColumnGroup( "60", "", "90", "120" );
 $thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Provider', 'Card Number <small class="muted">(anonymisiert)</small>', 'Aktion' ) ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
-$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 
 $panelCards	= '
 <div class="content-panel">

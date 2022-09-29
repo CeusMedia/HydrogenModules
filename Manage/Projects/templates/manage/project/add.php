@@ -27,8 +27,8 @@ foreach( $words['priorities'] as $key => $value ){
 }
 $optPriority		= join( '', $optPriority );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'not-icon-arrow-left icon-list'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
 	'href'	=> './'.( $from ? $from : 'manage/project' ),

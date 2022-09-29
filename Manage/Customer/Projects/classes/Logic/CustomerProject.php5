@@ -33,7 +33,7 @@ class Logic_CustomerProject
 	public function getProjects( $customerId )
 	{
 		$list		= [];
-		$relations	= $this->modelRelation->getAll( array( 'customerId' => $customerId ) );
+		$relations	= $this->modelRelation->getAll( ['customerId' => $customerId] );
 		foreach( $relations as $relation ){
 			$relation->project	= $this->modelProject->get( $relation->projectId );
 			$list[$relation->projectId]	= $relation;
@@ -43,7 +43,7 @@ class Logic_CustomerProject
 
 	public function remove( $customerId, $projectId )
 	{
-		$relations	= $this->modelRelation->getAll( array( 'customerId' => $customerId, 'projectId' => $projectId ) );
+		$relations	= $this->modelRelation->getAll( ['customerId' => $customerId, 'projectId' => $projectId] );
 		foreach( $relations as $relation )
 			$this->modelRelation->remove( $relation->customerProjectId );
 		return count( $relations );

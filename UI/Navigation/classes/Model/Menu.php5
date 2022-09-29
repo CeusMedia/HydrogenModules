@@ -62,7 +62,7 @@ class Model_Menu
 			return $this->pages[$scope];
 		if( $strict )
 			throw new OutOfRangeException( 'Invalid scope: '.$scope );
-		return array();
+		return [];
 	}
 
 	/**
@@ -167,7 +167,7 @@ class Model_Menu
 		foreach( $scopes as $scope => $pages ){
 			$this->pages[$scope]	= [];
 			foreach( $pages as $pageId => $page ){
-				if( isset( $page->disabled ) && !in_array( $page->disabled, array( 'no', FALSE ) ) )
+				if( isset( $page->disabled ) && !in_array( $page->disabled, ['no', FALSE] ) )
 					continue;
 				if( isset( $page->{"label@".$this->language} ) )
 					$page->label	= $page->{"label@".$this->language};
@@ -189,7 +189,7 @@ class Model_Menu
 					$item->type		= 'menu';
 					$item->items	= [];
 					foreach( $page->pages as $subpageId => $subpage ){
-						if( isset( $subpage->disabled ) && !in_array( $subpage->disabled, array( 'no', FALSE ) ) )
+						if( isset( $subpage->disabled ) && !in_array( $subpage->disabled, ['no', FALSE] ) )
 							continue;
 						$free		= !isset( $subpage->access );
 						$public		= !$free && $subpage->access == "public";
@@ -267,7 +267,7 @@ class Model_Menu
 				'parentId'	=> 0,
 				'scope'		=> $scopeId,
 				'status'	=> '> 0',
-			), array( 'rank' => 'ASC' ) );
+			), ['rank' => 'ASC'] );
 			foreach( $pages as $page ){
 				$item	= (object) array(
 					'parent'	=> NULL,
@@ -293,7 +293,7 @@ class Model_Menu
 						'parentId'	=> $page->pageId,
 						'scope'		=> 0,
 						'status'	=> '> 0',
-					), array( 'rank' => 'ASC' ) );
+					), ['rank' => 'ASC'] );
 					foreach( $subpages as $subpage ){
 						if( $subpage->status < 1 )
 							continue;
@@ -351,7 +351,7 @@ class Model_Menu
 	 */
 	protected function readUserPagesFromModules()
 	{
-		$scopes			= array( 'main' );
+		$scopes			= ['main'];
 		$this->scopes	= array_keys( $scopes );
 		$this->pages	= [];
 		$this->pageMap	= [];

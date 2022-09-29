@@ -7,17 +7,17 @@ $states	= array(
 	1	=> 'active',
 );
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
-$iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconDeactivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
+$iconActivate	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconAdd		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-plus fa-inverse' ) );
-	$iconEdit		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-	$iconRemove		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-trash fa-inverse' ) );
-	$iconActivate	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-check fa-inverse' ) );
-	$iconDeactivate	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-times fa-inverse' ) );
+	$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus fa-inverse'] );
+	$iconEdit		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-pencil'] );
+	$iconRemove		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-trash fa-inverse'] );
+	$iconActivate	= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check fa-inverse'] );
+	$iconDeactivate	= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-times fa-inverse'] );
 }
 $helperTime	= FALSE;
 if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){
@@ -56,34 +56,34 @@ if( $reasons ){
 		$appliedAt	= $reason->appliedAt ? date( 'd.m.Y H:i:s', $reason->appliedAt ) : '-';
 		if( $reason->appliedAt && $helperTime )
 			$appliedAt	= 'vor '.$helperTime->convert( $reason->appliedAt, TRUE );
-		$httpCode	= HtmlTag::create( 'abbr', $reason->code, array( 'title' => Net_HTTP_Status::getText( $reason->code ) ) );
+		$httpCode	= HtmlTag::create( 'abbr', $reason->code, ['title' => Net_HTTP_Status::getText( $reason->code )] );
 		$duration	= $reason->duration ? $reason->duration : '-';
 		if( $reason->duration && $helperTime )
 			$duration	= 'nach '.$helperTime->convert( time() - $reason->duration, !TRUE );
 
-		$link		= HtmlTag::create( 'a', $reason->title, array( 'href' => './manage/ip/lock/reason/edit/'.$reason->ipLockReasonId ) );
-		$buttons	= HtmlTag::create( 'div', $buttonEdit.$buttonStatus/*.$buttonRemove*/, array( 'class' => 'btn-group' ) );
+		$link		= HtmlTag::create( 'a', $reason->title, ['href' => './manage/ip/lock/reason/edit/'.$reason->ipLockReasonId] );
+		$buttons	= HtmlTag::create( 'div', $buttonEdit.$buttonStatus/*.$buttonRemove*/, ['class' => 'btn-group'] );
 		$list[]		= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $httpCode, array( 'class' => 'lock-reason-code' ) ),
-			HtmlTag::create( 'td', $link, array( 'class' => 'lock-reason-title' ) ),
-			HtmlTag::create( 'td', '<small>'.$duration.'</small>', array( 'class' => 'lock-reason-duration' ) ),
-			HtmlTag::create( 'td', '<small>'.$createdAt.'</small>', array( 'class' => 'lock-reason-created' ) ),
-			HtmlTag::create( 'td', '<small>'.$appliedAt.'</small>', array( 'class' => 'lock-reason-applied' ) ),
-			HtmlTag::create( 'td', $buttons, array( 'class' => 'lock-buttons' ) ),
-		), array( 'class' => $reason->status ? 'success' : 'warning' ) );
+			HtmlTag::create( 'td', $httpCode, ['class' => 'lock-reason-code'] ),
+			HtmlTag::create( 'td', $link, ['class' => 'lock-reason-title'] ),
+			HtmlTag::create( 'td', '<small>'.$duration.'</small>', ['class' => 'lock-reason-duration'] ),
+			HtmlTag::create( 'td', '<small>'.$createdAt.'</small>', ['class' => 'lock-reason-created'] ),
+			HtmlTag::create( 'td', '<small>'.$appliedAt.'</small>', ['class' => 'lock-reason-applied'] ),
+			HtmlTag::create( 'td', $buttons, ['class' => 'lock-buttons'] ),
+		), ['class' => $reason->status ? 'success' : 'warning'] );
 	}
 	$heads	= array(
-		HtmlTag::create( 'abbr', 'Code', array( 'title' => 'HTTP-Status-Code' ) ),
+		HtmlTag::create( 'abbr', 'Code', ['title' => 'HTTP-Status-Code'] ),
 		'Titel',
-		HtmlTag::create( 'abbr', 'Aufhebung', array( 'title' => 'Automatische Aufhebung der Sperre' ) ),
+		HtmlTag::create( 'abbr', 'Aufhebung', ['title' => 'Automatische Aufhebung der Sperre'] ),
 		'Erstellung',
-		HtmlTag::create( 'abbr', 'Anwendung', array( 'title' => 'Letzte Sperrung aus diesem Grund' ) ),
+		HtmlTag::create( 'abbr', 'Anwendung', ['title' => 'Letzte Sperrung aus diesem Grund'] ),
 		'Aktion',
 	);
 	$colgroup	= HtmlElements::ColumnGroup( "50", "", "120", "110", "110", "100" );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-condensed'] );
 }
 
 $buttonAdd		= HtmlTag::create( 'a', $iconAdd.' hinzufügen', array(

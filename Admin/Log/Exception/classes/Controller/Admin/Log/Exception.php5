@@ -38,7 +38,7 @@ class Controller_Admin_Log_Exception extends Controller
 	public static function ___onLogException( Environment $env, $context, $module, $data = [] )
 	{
 		if( is_object( $data ) && $data instanceof Exception )
-			$data	= array( 'exception' => $data );
+			$data	= ['exception' => $data];
 		if( !isset( $data['exception'] ) )
 			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
 		$exception	= $data['exception'];
@@ -119,7 +119,7 @@ class Controller_Admin_Log_Exception extends Controller
 		$offset	= $page * $limit;
 		$this->session->set( $this->filterPrefix.'page', $page );
 		$this->session->set( $this->filterPrefix.'limit', $limit );
-		$limits	= array( $offset, $limit );
+		$limits	= [$offset, $limit];
 		$lines	= $this->model->getAll( $conditions, ['createdAt' => 'DESC'], $limits );
 		$this->addData( 'exceptions', $lines );
 		$this->addData( 'total', $count );
@@ -183,16 +183,16 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->logic			= $this->env->getLogic()->get( 'logException' );
 		$this->model			= new Model_Log_Exception( $this->env );
 
-		$instances	= array( 'this' => (object) array( 'title' => 'Diese Instanz' ) );
+		$instances	= array( 'this' => (object) ['title' => 'Diese Instanz'] );
 		$path		= $this->env->getConfig()->get( 'path.logs' );
 		$fileName	= $this->env->getConfig()->get( 'module.server_log_exception.file.name' );
 
 /*
 		$instanceKey	= $this->session->get( $this->filterPrefix.'instance' );
-		$instanceKey 	= !in_array( $instanceKey, array( 'this', 'remote' ) ) ? 'this' : $instanceKey;
+		$instanceKey 	= !in_array( $instanceKey, ['this', 'remote'] ) ? 'this' : $instanceKey;
 
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
-			$instances['remote']	= (object) array( 'title' => 'entfernte Instanz' );
+			$instances['remote']	= (object) ['title' => 'entfernte Instanz'];
 			if( $instanceKey === 'remote' ){
 				$frontend	= $this->env->getLogic()->get( 'Frontend' );
 				$path		= $frontend->getPath( 'logs' );

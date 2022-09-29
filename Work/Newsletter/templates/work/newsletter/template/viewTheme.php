@@ -1,12 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconInstall	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus-circle' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconInstall	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus-circle'] );
 
 $helper	= new View_Helper_Work_Newsletter_ThemeFacts( $env );
 $helper->setThemeData( $theme );
-//$helper->setListAttributes( array( 'class' => 'dl-horizontal' ) );
+//$helper->setListAttributes( ['class' => 'dl-horizontal'] );
 
 return '
 <div class="content-panel">

@@ -25,11 +25,11 @@ class Hook_Manage_Gallery extends Hook
 
 		$modelGallery		= new Model_Gallery( $env );
 		$modelImage			= new Model_Gallery_Image( $env );
-		$galleryConditions	= array( 'status' => array( -1, 0, 1 ) );
-		$galleryOrders		= array( 'title' => 'ASC' );
-		$imageOrders		= array( 'filename' => 'ASC' );
+		$galleryConditions	= ['status' => [-1, 0, 1]];
+		$galleryOrders		= ['title' => 'ASC'];
+		$imageOrders		= ['filename' => 'ASC'];
 		foreach( $modelGallery->getAll( $galleryConditions, $galleryOrders ) as $gallery ){
-			$imageConditions	= array( 'galleryId' => $gallery->galleryId );
+			$imageConditions	= ['galleryId' => $gallery->galleryId];
 			foreach( $modelImage->getAll( $imageConditions, $imageOrders ) as $image ){
 				$list[]	= (object) array(
 					'title' => $gallery->title.' / '.$image->filename,
@@ -65,7 +65,7 @@ class Hook_Manage_Gallery extends Hook
 		$list			= [];
 
 		$modelGallery	= new Model_Gallery( $env );
-		$galleries	= $modelGallery->getAll( array( 'status' => 1 ), array( 'title' => 'ASC' ) );
+		$galleries	= $modelGallery->getAll( ['status' => 1], ['title' => 'ASC'] );
 		foreach( $galleries as $gallery ){
 			$title 		= View_Manage_Gallery::urlencodeTitle( $gallery->title );
 			$list[]	= (object) array(

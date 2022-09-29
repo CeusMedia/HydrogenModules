@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/info/dashboard/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/info/dashboard/' ) );
 
 try{
 
@@ -19,14 +19,14 @@ try{
 		$modalAdd	= $helperAdd->render();
 
 		if( empty( $dashboard ) ){
-			$content	= $view->loadContentFile( 'html/info/dashboard/empty.html', array( 'user' => $user ) );
+			$content	= $view->loadContentFile( 'html/info/dashboard/empty.html', ['user' => $user] );
 			return $textTop.$content.$textBottom.$modalAdd;
 		}
 
-		$iconAddBoard	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
-		$iconAddPanel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
-		$iconEditTitle	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-		$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+		$iconAddBoard	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
+		$iconAddPanel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-square'] );
+		$iconEditTitle	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+		$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 		$countUserBoards	= count( $dashboards );
 		$countUserPanels	= count( explode( ',', $dashboard->panels ) );

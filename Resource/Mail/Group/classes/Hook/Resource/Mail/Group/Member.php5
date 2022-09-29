@@ -35,7 +35,7 @@ class Hook_Resource_Mail_Group_Member extends Hook
 				continue;
 			if( $item->mailGroupMemberId == $payload->member->mailGroupMemberId )
 				continue;
-			$data		= array_merge( (array) $payload, array( 'user' => $item ) );
+			$data		= array_merge( (array) $payload, ['user' => $item] );
 			$mail		= new Mail_Info_Mail_Group_Members_MemberActivated( $env, $data );
 			$receiver	= (object) array(
 				'username'	=> $item->title,
@@ -78,7 +78,7 @@ class Hook_Resource_Mail_Group_Member extends Hook
 				continue;
 			if( $item->mailGroupMemberId == $payload->member->mailGroupMemberId )
 				continue;
-			$data		= array_merge( (array) $payload, array( 'user' => $item ) );
+			$data		= array_merge( (array) $payload, ['user' => $item] );
 			$mail		= new Mail_Info_Mail_Group_Members_MemberDeactivated( $env, $data );
 			$receiver	= (object) array(
 				'username'	=> $item->title,

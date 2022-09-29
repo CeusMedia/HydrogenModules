@@ -68,7 +68,7 @@ class View_Helper_Mail_View_Source
 
 	public function setMode( $mode ): self
 	{
-		if( !in_array( $mode, array( self::MODE_NORMAL, self::MODE_CONDENSED ) ) )
+		if( !in_array( $mode, [self::MODE_NORMAL, self::MODE_CONDENSED] ) )
 			throw new RangeException( 'Invalid mode' );
 		$this->mode	= $mode;
 		return $this;

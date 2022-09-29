@@ -144,7 +144,7 @@ class View_Helper_Newsletter_Mail
 			$data['linkView']			= $urlView;
 			$data['linkUnregister']		= $urlOptOut;
 			$data['linkTracking']		= $urlTrack;
-			$data['tracking']			= HtmlTag::create( 'img', NULL, array( 'src' => $urlTrack ) );
+			$data['tracking']			= HtmlTag::create( 'img', NULL, ['src' => $urlTrack] );
 		}
 //		print_m( $data ); die();
 /*		else{
@@ -158,7 +158,7 @@ class View_Helper_Newsletter_Mail
 		switch( $mode ){
 			case 0:
 //				$pattern	= "/\+col([0-9])\r?\n(.+)\r?\n-col[0-9]/s";
-//				$content	= preg_replace_callback( $pattern, array( $this, 'callbackReplacePlainColumns' ), $content );
+//				$content	= preg_replace_callback( $pattern, [$this, 'callbackReplacePlainColumns'], $content );
 				break;
 			case 1:
 				$pattern	= "/\+col([0-9])/";
@@ -177,8 +177,8 @@ class View_Helper_Newsletter_Mail
 		$data	= $this->prepareData( self::MODE_HTML );
 		$data['imprint']	= $this->renderImprint( TRUE );
 		$page		= new HtmlPage();
-		$page->addHead( HtmlTag::create( 'meta', NULL, array( 'charset' => 'utf-8' ) ) );
-		$page->addHead( HtmlTag::create( 'meta', NULL, array( 'name' => 'x-apple-disable-message-reformatting' ) ) );
+		$page->addHead( HtmlTag::create( 'meta', NULL, ['charset' => 'utf-8'] ) );
+		$page->addHead( HtmlTag::create( 'meta', NULL, ['name' => 'x-apple-disable-message-reformatting'] ) );
 		$page->addHead( '<!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->' );
 		$page->addMetaTag( "name", "viewport", "width=device-width" );
 		$page->addMetaTag( "http-equiv", "X-UA-Compatible", "IE=edge" );

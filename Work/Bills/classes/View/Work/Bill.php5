@@ -58,8 +58,8 @@ class View_Work_Bill extends View
 		$words		= $this->getWords();
 		$table		= '<div><em class="muted">Keine Einträge vorhanden.</em></div><br/>';
 		if( $bills ){
-			$iconIn	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-right', 'title' => 'an andere' ) );
-			$iconOut	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left', 'title' => 'von anderen' ) );
+			$iconIn	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-right', 'title' => 'an andere'] );
+			$iconOut	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left', 'title' => 'von anderen'] );
 			$rows		= [];
 			$helper		= new View_Helper_TimePhraser( $this->env );
 			$format		= Timestamp::$formatDatetime;
@@ -67,7 +67,7 @@ class View_Work_Bill extends View
 			foreach( $bills as $bill ){
 				$date	= strtotime( substr( $bill->date, 0, 4 ).'-'.substr( $bill->date, 4, 2).'-'.substr( $bill->date, 6, 2 ) );
 				$label	= ( $bill->type ? $iconOut : $iconIn ) . '&nbsp;'.$bill->title;
-				$link	= HtmlTag::create( 'a', $label, array( 'href' => './work/bill/edit/'.$bill->billId ) );
+				$link	= HtmlTag::create( 'a', $label, ['href' => './work/bill/edit/'.$bill->billId] );
 				$price	= $this->renderPrice( $bill->price, $bill->type, '&nbsp;&euro;' );
 				$date	= strtotime( $bill->date );
 				$date	= $bill->date < date( "Ymd" ) ? $helper->convert( $date, TRUE, 'vor' ) : date( 'd.m.Y', $date );
@@ -96,12 +96,12 @@ class View_Work_Bill extends View
 				if( $colored )
 					$class	.= ' '.( $bill->status ? 'success' : 'warning' );
 				$rows[]	= HtmlTag::create( 'tr', array(
-					HtmlTag::create( 'td', $link, array( 'class' => 'title' ) ),
+					HtmlTag::create( 'td', $link, ['class' => 'title'] ),
 					HtmlTag::create( 'td', $price ),
 					HtmlTag::create( 'td', $words['states'][$bill->status] ),
 					HtmlTag::create( 'td', $date ),
 					HtmlTag::create( 'td', $action ),
-				), array( 'class' => $class ) );
+				), ['class' => $class] );
 			}
 			$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 				'Title',
@@ -111,7 +111,7 @@ class View_Work_Bill extends View
 			) ) );
 			$colgroup	= HtmlElements::ColumnGroup( '40', '15%', '15%', '15%', '15%' );
 			$tbody		= HtmlTag::create( 'tbody', $rows );
-			$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-condensed' ) );
+			$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped table-condensed'] );
 			Timestamp::$formatDatetime	= $format;
 		}
 		return $table;

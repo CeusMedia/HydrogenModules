@@ -8,7 +8,7 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 	public function ajaxGetNextRank( $categoryId )
 	{
 		$nextRank			= 0;
-		$categoryArticles	= $this->logic->getCategoryArticles( $categoryId, array( 'rank' => 'DESC' ) );
+		$categoryArticles	= $this->logic->getCategoryArticles( $categoryId, ['rank' => 'DESC'] );
 		if( $categoryArticles )
 			$nextRank	= $categoryArticles[0]->rank + 1;
 		header( 'Content-Type: application/json' );
@@ -21,22 +21,22 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 		$model		= new Model_Catalog_Bookstore_Article_Category( $this->env );
 		$category	= $this->logic->getCategory( $categoryId );
 		$article	= $this->logic->getArticle( $articleId );
-		$articles	= $this->logic->getCategoryArticles( $category, array( 'rank' => 'ASC' ) );
+		$articles	= $this->logic->getCategoryArticles( $category, ['rank' => 'ASC'] );
 		foreach( $articles as $nr => $item ){
 			if( $item->articleId == $article->articleId ){
 				if( $direction === "up" ){
 					if( $nr > 0 ){
 						$other	= $articles[$nr - 1];
-						$model->edit( $other->articleCategoryId, array( 'rank' => $item->rank ) );
-						$model->edit( $item->articleCategoryId, array( 'rank' => $other->rank ) );
+						$model->edit( $other->articleCategoryId, ['rank' => $item->rank] );
+						$model->edit( $item->articleCategoryId, ['rank' => $other->rank] );
 					}
 					break;
 				}
 				else if( $direction === "down" ){
 					if( ( $nr + 1 ) < count( $articles ) ){
 						$other	= $articles[$nr + 1];
-						$model->edit( $other->articleCategoryId, array( 'rank' => $item->rank ) );
-						$model->edit( $item->articleCategoryId, array( 'rank' => $other->rank ) );
+						$model->edit( $other->articleCategoryId, ['rank' => $item->rank] );
+						$model->edit( $item->articleCategoryId, ['rank' => $other->rank] );
 					}
 					break;
 				}
@@ -52,11 +52,11 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 			$logic		= new Logic_Catalog_Bookstore( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
 			$language	= $env->getLanguage()->getLanguage();
-			$conditions	= array( 'visible' => '> 0', 'parentId' => 0 );
-			$categories	= $logic->getCategories( $conditions, array( 'rank' => 'ASC' ) );
+			$conditions	= ['visible' => '> 0', 'parentId' => 0];
+			$categories	= $logic->getCategories( $conditions, ['rank' => 'ASC'] );
 			foreach( $categories as $nr1 => $item ){
-				$conditions	= array( 'visible' => '> 0', 'parentId' => $item->categoryId );
-				$subs		= $logic->getCategories( $conditions, array( 'rank' => 'ASC' ) );
+				$conditions	= ['visible' => '> 0', 'parentId' => $item->categoryId];
+				$subs		= $logic->getCategories( $conditions, ['rank' => 'ASC'] );
 				foreach( $subs as $nr2 => $sub ){
 					$subs[$nr2] = (object) array(
 						'title'	=> $sub->{"label_".$language},
@@ -95,7 +95,7 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 			$category[$column]	= $this->request->get( $column );
 		$category['parentId']	= (int) $parentId;
 		$this->addData( 'category', (object) $category );
-		$this->addData( 'categories', $this->logic->getCategories( array(), array( 'rank' => 'ASC' ) ) );
+		$this->addData( 'categories', $this->logic->getCategories( [], ['rank' => 'ASC'] ) );
 	}
 
 	public function ajaxSetTab( $tabKey )
@@ -122,9 +122,9 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 			}
 		}
 		$this->addData( 'category', $this->logic->getCategory( $categoryId ) );
-		$this->addData( 'categories', $this->logic->getCategories( array(), array( 'rank' => 'ASC' ) ) );
+		$this->addData( 'categories', $this->logic->getCategories( [], ['rank' => 'ASC'] ) );
 		$this->addData( 'nrArticles', $this->logic->countArticlesInCategory( $categoryId, TRUE ) );
-		$this->addData( 'articles', $this->logic->getCategoryArticles( $category, array( 'rank' => 'ASC' ) ) );
+		$this->addData( 'articles', $this->logic->getCategoryArticles( $category, ['rank' => 'ASC'] ) );
 	}
 
 	public function index()

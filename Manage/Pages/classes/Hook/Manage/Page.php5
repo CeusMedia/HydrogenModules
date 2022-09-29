@@ -13,7 +13,7 @@ class Hook_Manage_Page extends Hook
 		$words		= $env->getLanguage()->getWords( 'manage/page' );
 		$model		= new Model_Page( $env );
 		$list		= [];
-		foreach( $model->getAllByIndex( 'status', 1, array( 'rank' => 'ASC' ) ) as $nr => $page ){
+		foreach( $model->getAllByIndex( 'status', 1, ['rank' => 'ASC'] ) as $nr => $page ){
 			$page->level		= 0;
 			if( $page->parentId ){
 				$parent = $model->get( $page->parentId );

@@ -7,7 +7,7 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 {
-	protected $background	= array( 255, 255, 255 );
+	protected $background	= [255, 255, 255];
 	protected $height		= 55;
 	protected $fontSize		= 16;
 	protected $format		= 'image';
@@ -56,7 +56,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 
 	public function setBackgroundColor( int $red, int $green, int $blue ): self
 	{
-		$this->background	= array( $red, $green, $blue );
+		$this->background	= [$red, $green, $blue];
 		return $this;
 	}
 
@@ -80,7 +80,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 
 	public function setMode( string $mode ): self
 	{
-		if( !in_array( $mode, array( 'default', 'recaptcha' ) ) )
+		if( !in_array( $mode, ['default', 'recaptcha'] ) )
 			throw new InvalidArgumentException( 'Invalid mode' );
 		$this->mode	= $mode;
 		return $this;

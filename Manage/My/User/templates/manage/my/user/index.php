@@ -19,7 +19,7 @@ $panelRemove	= $view->loadTemplateFile( 'manage/my/user/index.remove.php' );
 
 $tabs	= View_Manage_My_User::renderTabs( $env );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/my/user/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/my/user/' ) );
 
 return $textTop.$tabs.
 HTML::DivClass( 'row-fluid', array(

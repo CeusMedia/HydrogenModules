@@ -72,7 +72,7 @@ class Controller_Auth_Json extends Controller
 		//				'password'	=> $password,															//  disabled for security
 						'userId'	=> $user ? $user->userId : 0,
 					) );
-					$role	= $this->env->getServer()->postData( 'role', 'get', array( $user->roleId ) );
+					$role	= $this->env->getServer()->postData( 'role', 'get', [$user->roleId] );
 					if( !$role->access )
 						$this->messenger->noteError( $words->msgInvalidRole );
 					else if( $user->status == 0 )

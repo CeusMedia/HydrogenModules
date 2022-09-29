@@ -73,7 +73,7 @@ class Job_Mail extends Job_Abstract
 		if( $testDirectly ){
 //			$mail->initTransport();                                                                     //  override serialized mail transfer
 			try{
-				$mail->sendTo( array( 'email' => $receiver ) );
+				$mail->sendTo( ['email' => $receiver] );
 				$this->out( 'OK: Mail sent.' );
 	//		$mailbox	= new CeusMedia\Mail\Mailbox();
 			}
@@ -87,7 +87,7 @@ class Job_Mail extends Job_Abstract
 			$logicMail	= $this->env->getLogic()->get( 'Mail' );
 			$language	= $this->env->getLanguage()->getLanguage();
 			try{
-				$result		= $logicMail->handleMail( $mail, array( 'email' => $receiver ), $language );
+				$result		= $logicMail->handleMail( $mail, ['email' => $receiver], $language );
 				if( $result ){
 					$this->out( 'OK: Mail enqueued.' );
 				}

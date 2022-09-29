@@ -40,8 +40,8 @@ $panelSearch	= '
 </div>
 ';
 
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $panelSearch2	= '
 <div class="content-panel">

@@ -13,7 +13,7 @@ class Job_Work_Mission extends Job_Abstract
 	{
 		$language		= $this->language;														//  @todo get user language instead of current language
 		$count			= 0;																	//  init mail counter
-		foreach( $this->modelChange->getAll( array(), array(), array( 0, 10 ) ) as $change ){										//  iterate mission changes
+		foreach( $this->modelChange->getAll( [], [], [0, 10] ) as $change ){										//  iterate mission changes
 			$missionNew	= $this->modelMission->get( $change->missionId );						//  get current mission data
 			if( !$missionNew ){																	//  mission is not existing anymore
 				$this->modelChange->remove( $change->missionChangeId );							//  remove change
@@ -72,7 +72,7 @@ class Job_Work_Mission extends Job_Abstract
 	public function mailDaily()
 	{
 		$count			= 0;
-		$activeUsers	= $this->modelUser->getAll( array( 'status' => '> 0' ) );						//  get all active users
+		$activeUsers	= $this->modelUser->getAll( ['status' => '> 0'] );						//  get all active users
 		foreach( $activeUsers as $user ){														//  iterate found users
 			if( $this->sendDailyMailOfUser( $user ) )											//  try to send daily mail
 				$count++;																		//  count on success
@@ -99,7 +99,7 @@ class Job_Work_Mission extends Job_Abstract
 					Model_Mission::STATUS_FINISHED,
 				),
 				'missionId'	=> $missionIds,
-			), array(), array(), array( 'missionId' ) );
+			), [], [], ['missionId'] );
 
 			if( $this->dryMode ){
 				$this->out( 'DRY RUN - no changes will be made.' );
@@ -134,9 +134,9 @@ class Job_Work_Mission extends Job_Abstract
 		if( $missions ){
 			foreach( $missions as $mission ){
 				$missionId		= $mission->missionId;
-				$nrChanges		= $modelMissionChange->count( array( 'missionId' => $missionId ) );
-				$nrVersions		= $modelMissionVersion->count( array( 'missionId' => $missionId ) );
-				$nrDocuments	= $modelMissionDocument->count( array( 'missionId' => $missionId ) );
+				$nrChanges		= $modelMissionChange->count( ['missionId' => $missionId] );
+				$nrVersions		= $modelMissionVersion->count( ['missionId' => $missionId] );
+				$nrDocuments	= $modelMissionDocument->count( ['missionId' => $missionId] );
 				$this->out( 'Mission: '.$missionId.' => ('.$nrChanges.' changes, '.$nrDocuments.' documents, '.$nrVersions.' versions)' );
 				if( !$this->dryMode ){
 					$modelMissionChange->removeByIndex( 'missionId', $missionId );
@@ -241,7 +241,7 @@ class Job_Work_Mission extends Job_Abstract
 		$isSendHour		= (int) $config->get( 'daily.hour' ) === (int) date( "H" );				//  the future is now
 		if( !( $isActiveUser && $isMailReceiver && $isSendHour ) )								//
 			return;
-		$groupings	= array( 'missionId' );														//  group by mission ID to apply HAVING clause
+		$groupings	= ['missionId'];														//  group by mission ID to apply HAVING clause
 		$havings	= array(																	//  apply filters after grouping
 			'creatorId = '.(int) $user->userId,													//
 			'workerId = '.(int) $user->userId,													//
@@ -249,24 +249,24 @@ class Job_Work_Mission extends Job_Abstract
 		$userProjects	= $this->modelProject->getUserProjects( $user->userId );			//  get projects assigned to user
 		if( $userProjects )																	//  projects found
 			$havings[]	= 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';	//  add to HAVING clause
-		$havings	= array( join( ' OR ', $havings ) );										//	render HAVING clause
+		$havings	= [join( ' OR ', $havings )];										//	render HAVING clause
 
 		//  --  TASKS  --  //
 			$filters	= array(																//  task filters
 			'type'		=> 0,																	//  tasks only
-			'status'	=> array( 0, 1, 2, 3 ),													//  states: new, accepted, progressing, ready
+			'status'	=> [0, 1, 2, 3],													//  states: new, accepted, progressing, ready
 			'dayStart'	=> '<= '.date( "Y-m-d", time() ),										//  present and past (overdue)
 		);
-		$order	= array( 'priority' => 'ASC' );
+		$order	= ['priority' => 'ASC'];
 		$tasks	= $this->modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered tasks ordered by priority
 
 		//  --  EVENTS  --  //
 		$filters	= array(																	//  event filters
 			'type'		=> 1,																	//  events only
-			'status'	=> array( 0, 1, 2, 3 ),													//  states: new, accepted, progressing, ready
+			'status'	=> [0, 1, 2, 3],													//  states: new, accepted, progressing, ready
 			'dayStart'	=> '<= '.date( "Y-m-d", time() ),										//  starting today
 		);
-		$order	= array( 'timeStart' => 'ASC' );
+		$order	= ['timeStart' => 'ASC'];
 		$events	= $this->modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered events ordered by start time
 
 		if( !$events && !$tasks )																//  user has neither tasks nor events

@@ -21,7 +21,7 @@ class View_Work_Billing_Person extends View
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/billing/person/' );
-		$data	= array( 'personId' => $personId );
+		$data	= ['personId' => $personId];
 		$env->getModules()->callHookWithPayload( "WorkBilling/Person", "registerTabs", $tabs, $data );
 		return $tabs->renderTabs( $current );
 	}

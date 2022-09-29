@@ -60,7 +60,7 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller{
 
 	protected function checkIsOwnCard( $cardId, $strict = TRUE, $fallback = [] ){
 		if( !is_array( $fallback ) || !count( $fallback ) )
-			$fallback	= array( NULL, TRUE );
+			$fallback	= [NULL, TRUE];
 		$card	= $this->checkCard( $cardId, $fallback );
 	//	@todo check card against user cards
 		return $card;
@@ -80,7 +80,7 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller{
 			$this->messenger->noteError( "Invalid card ID given." );
 		}
 		if( !is_array( $fallback ) || !count( $fallback ) )
-			$fallback	= array( NULL, TRUE );
+			$fallback	= [NULL, TRUE];
 		if( count( $fallback ) == 1 )
 			$fallback[1]	= FALSE;
 		$this->restart( $fallback[0], $fallback[1] );

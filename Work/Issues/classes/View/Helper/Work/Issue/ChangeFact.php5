@@ -58,53 +58,53 @@ class View_Helper_Work_Issue_ChangeFact
 		switch( $this->change->type ){
 			case 1:
 			case 2:
-				$from	= HtmlTag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
-				$to		= HtmlTag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
+				$from	= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
+				$to		= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
 				if( $this->change->from && $this->modelUser->get( $this->change->from ) ){
 					$from	= $this->modelUser->get( $this->change->from )->username;
-					$from	= HtmlTag::create( 'a', $from, array( 'href' => './user/view/'.$this->change->from ) );
-					$from	= HtmlTag::create( 'span', $from, array( 'class' => 'issue-user' ) );
+					$from	= HtmlTag::create( 'a', $from, ['href' => './user/view/'.$this->change->from] );
+					$from	= HtmlTag::create( 'span', $from, ['class' => 'issue-user'] );
 				}
 				if( $this->change->to && $this->modelUser->get( $this->change->to ) ){
 					$to		= $this->modelUser->get( $this->change->to )->username;
-					$to		= HtmlTag::create( 'a', $to, array( 'href' => './user/view/'.$this->change->from ) );
-					$to		= HtmlTag::create( 'span', $to, array( 'class' => 'issue-user' ) );
+					$to		= HtmlTag::create( 'a', $to, ['href' => './user/view/'.$this->change->from] );
+					$to		= HtmlTag::create( 'span', $to, ['class' => 'issue-user'] );
 				}
 				$change	= $from." -> ".$to;
 				break;
 			case 3:
 				$logic	= Logic_Project::getInstance( $this->env );
-				$from	= HtmlTag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
-				$to		= HtmlTag::create( 'small', 'unbekannt', array( 'class' => 'muted' ) );
+				$from	= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
+				$to		= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
 				if( $this->change->from )
-					$from	= HtmlTag::create( 'span', $logic->get( $this->change->from )->title, array( 'class' => '' ) );
+					$from	= HtmlTag::create( 'span', $logic->get( $this->change->from )->title, ['class' => ''] );
 				if( $this->change->to )
-					$to		= HtmlTag::create( 'span', $logic->get( $this->change->to )->title, array( 'class' => '' ) );
+					$to		= HtmlTag::create( 'span', $logic->get( $this->change->to )->title, ['class' => ''] );
 				$change	= $from." -> ".$to;
 				break;
 			case 4:
-				$from	= HtmlTag::create( 'span', $words['types'][$this->change->from], array( 'class' => 'issue-type type-'.$this->change->from ) );
-				$to		= HtmlTag::create( 'span', $words['types'][$this->change->to], array( 'class' => 'issue-type type-'.$this->change->to ) );
+				$from	= HtmlTag::create( 'span', $words['types'][$this->change->from], ['class' => 'issue-type type-'.$this->change->from] );
+				$to		= HtmlTag::create( 'span', $words['types'][$this->change->to], ['class' => 'issue-type type-'.$this->change->to] );
 				$change	= $from." -> ".$to;
 				break;
 			case 5:
-				$from	= HtmlTag::create( 'span', $words['severities'][$this->change->from], array( 'class' => 'issue-severity severity-'.$this->change->from ) );
-				$to		= HtmlTag::create( 'span', $words['severities'][$this->change->to], array( 'class' => 'issue-severity severity-'.$this->change->to ) );
+				$from	= HtmlTag::create( 'span', $words['severities'][$this->change->from], ['class' => 'issue-severity severity-'.$this->change->from] );
+				$to		= HtmlTag::create( 'span', $words['severities'][$this->change->to], ['class' => 'issue-severity severity-'.$this->change->to] );
 				$change	= $from." -> ".$to;
 				break;
 			case 6:
-				$from	= HtmlTag::create( 'span', $words['priorities'][$this->change->from], array( 'class' => 'issue-priority priority-'.$this->change->from ) );
-				$to		= HtmlTag::create( 'span', $words['priorities'][$this->change->to], array( 'class' => 'issue-priority priority-'.$this->change->to ) );
+				$from	= HtmlTag::create( 'span', $words['priorities'][$this->change->from], ['class' => 'issue-priority priority-'.$this->change->from] );
+				$to		= HtmlTag::create( 'span', $words['priorities'][$this->change->to], ['class' => 'issue-priority priority-'.$this->change->to] );
 				$change	= $from." -> ".$to;
 				break;
 			case 7:
-				$from	= HtmlTag::create( 'span', $words['states'][$this->change->from], array( 'class' => 'issue-status status-'.$this->change->from ) );
-				$to		= HtmlTag::create( 'span', $words['states'][$this->change->to], array( 'class' => 'issue-status status-'.$this->change->to ) );
+				$from	= HtmlTag::create( 'span', $words['states'][$this->change->from], ['class' => 'issue-status status-'.$this->change->from] );
+				$to		= HtmlTag::create( 'span', $words['states'][$this->change->to], ['class' => 'issue-status status-'.$this->change->to] );
 				$change	= $from." -> ".$to;
 				break;
 			case 8:
-				$from	= HtmlTag::create( 'span', $this->change->from.'%', array( 'class' => 'issue-progress progress-'.( floor( $this->change->from / 25 ) * 25 ) ) );
-				$to		= HtmlTag::create( 'span', $this->change->to.'%', array( 'class' => 'issue-progress progress-'.( floor( $this->change->to / 25 ) * 25 ) ) );
+				$from	= HtmlTag::create( 'span', $this->change->from.'%', ['class' => 'issue-progress progress-'.( floor( $this->change->from / 25 ) * 25 )] );
+				$to		= HtmlTag::create( 'span', $this->change->to.'%', ['class' => 'issue-progress progress-'.( floor( $this->change->to / 25 ) * 25 )] );
 				$change	= $from." -> ".$to;
 				break;
 			default:

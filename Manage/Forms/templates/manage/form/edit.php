@@ -3,13 +3,13 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 function renderNavButton( $formId, $tabId, $label, $dir ){
 	$iconClass	= 'fa fa-fw fa-arrow-'.( $dir === 'prev' ? 'left' : 'right' );
-	$icon		= HtmlTag::create( 'i', '', array( 'class' => $iconClass ) );
+	$icon		= HtmlTag::create( 'i', '', ['class' => $iconClass] );
 	return HtmlTag::create( 'a', $icon.'&nbsp;'.$label, array(
 		'href'		=> './manage/form/setTab/'.$formId.'/'.$tabId,
 		'class'		=> 'btn',
 	) );
 }
-$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 
 $navButtons	= array(
 	'list'			=> HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
@@ -37,13 +37,13 @@ $navButtons	= array(
 	'nextFills'			=> renderNavButton( $form->formId, 'fills', 'Einträge', 'next' ),
 );
 
-$panelFacts				= $this->loadTemplateFile( 'manage/form/edit.facts.php', array( 'navButtons' => $navButtons ) );
-$panelView				= $this->loadTemplateFile( 'manage/form/edit.view.php', array( 'navButtons' => $navButtons ) );
-$panelContent			= $this->loadTemplateFile( 'manage/form/edit.content.php', array( 'navButtons' => $navButtons ) );
-//$panelBlocksWithin	= $this->loadTemplateFile( 'manage/form/edit.blocks.within.php', array( 'navButtons' => $navButtons ) );
-$panelRulesManager		= $this->loadTemplateFile( 'manage/form/edit.rules.manager.php', array( 'navButtons' => $navButtons ) );
-$panelRulesCustomer		= $this->loadTemplateFile( 'manage/form/edit.rules.customer.php', array( 'navButtons' => $navButtons ) );
-$panelRulesAttachment	= $this->loadTemplateFile( 'manage/form/edit.rules.attachment.php', array( 'navButtons' => $navButtons ) );
+$panelFacts				= $this->loadTemplateFile( 'manage/form/edit.facts.php', ['navButtons' => $navButtons] );
+$panelView				= $this->loadTemplateFile( 'manage/form/edit.view.php', ['navButtons' => $navButtons] );
+$panelContent			= $this->loadTemplateFile( 'manage/form/edit.content.php', ['navButtons' => $navButtons] );
+//$panelBlocksWithin	= $this->loadTemplateFile( 'manage/form/edit.blocks.within.php', ['navButtons' => $navButtons] );
+$panelRulesManager		= $this->loadTemplateFile( 'manage/form/edit.rules.manager.php', ['navButtons' => $navButtons] );
+$panelRulesCustomer		= $this->loadTemplateFile( 'manage/form/edit.rules.customer.php', ['navButtons' => $navButtons] );
+$panelRulesAttachment	= $this->loadTemplateFile( 'manage/form/edit.rules.attachment.php', ['navButtons' => $navButtons] );
 
 $countRulesManager		= count( $rulesManager ) ? ' <small class="muted">('.count( $rulesManager ).')</small>' : '';
 $countRulesCustomer		= count( $rulesCustomer ) ? ' <small class="muted">('.count( $rulesCustomer ).')</small>' : '';
@@ -60,7 +60,7 @@ $tabs->add( 'rulesAttachment', '#', 'Anhänge'.$countRulesAttachment, $panelRule
 
 if( count( $transferTargets ) ){
 //	$panelFormTransfer	= '...';
-	$panelFormTransfer	= $this->loadTemplateFile( 'manage/form/edit.rules.transfer.php', array( 'navButtons' => $navButtons ) );
+	$panelFormTransfer	= $this->loadTemplateFile( 'manage/form/edit.rules.transfer.php', ['navButtons' => $navButtons] );
 	$tabs->add( 'formTransfer', '#', 'Datenweitergabe', $panelFormTransfer );
 }
 

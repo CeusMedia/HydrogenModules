@@ -49,7 +49,7 @@ class View_Helper_Map
 
 	protected static function getMapId( $latitude, $longitude, $title = NULL, $zoom = NULL ): string
 	{
-		$hash	= md5( json_encode( array( $latitude, $longitude, $title, $zoom ) ) );
+		$hash	= md5( json_encode( [$latitude, $longitude, $title, $zoom] ) );
 		return 'map-'.$hash;
 	}
 }

@@ -37,13 +37,13 @@ class View_Helper_Module_Files{
 				'name'		=> 'files[]',
 				'value'		=> base64_encode( json_encode( $file ) ),
 				'class'		=> 'file-check',
-				'checked'	=> in_array( $file->status, array( 0, 1, 2 ) ) ? 'checked' : NULL,
+				'checked'	=> in_array( $file->status, [0, 1, 2] ) ? 'checked' : NULL,
 			) );
-			if( in_array( $file->status, array( 3, 5 ) ) )
+			if( in_array( $file->status, [3, 5] ) )
 				$checkbox	= '';
 			else if( $file->status === 2 ){
 				$url		= './admin/module/installer/diff/'.base64_encode( $file->pathLocal ).'/'.base64_encode( $file->pathSource );
-				$actions[]	= HtmlTag::create( 'a', 'diff', array( 'href' => $url, 'class' => 'layer-html' ) );
+				$actions[]	= HtmlTag::create( 'a', 'diff', ['href' => $url, 'class' => 'layer-html'] );
 			}
 			else if( !file_exists( $file->pathSource ) )
 				$file->status	= -3;
@@ -54,15 +54,15 @@ class View_Helper_Module_Files{
 
 			$statusLabel	= $words['update-file-states'][$file->status];
 			$statusDesc		= $words['update-file-state-description'][$file->status];
-			$status	= HtmlTag::create( 'acronym', $statusLabel, array( 'title' => $statusDesc ) );
+			$status	= HtmlTag::create( 'acronym', $statusLabel, ['title' => $statusDesc] );
 			$cells	= [];
 			if( $options['useCheckboxes'] )
-				$cells[]	= HtmlTag::create( 'td', $checkbox, array( 'class' => 'cell-check' ) );
-			$cells[]    = HtmlTag::create( 'td', $words['file-types'][$file->typeKey], array( 'class' => 'cell-type' ) );
-			$cells[]    = HtmlTag::create( 'td', $status, array( 'class' => 'cell-state' ) );
-			$cells[]    = HtmlTag::create( 'td', $file->name, array( 'class' => 'cell-name' ) );
+				$cells[]	= HtmlTag::create( 'td', $checkbox, ['class' => 'cell-check'] );
+			$cells[]    = HtmlTag::create( 'td', $words['file-types'][$file->typeKey], ['class' => 'cell-type'] );
+			$cells[]    = HtmlTag::create( 'td', $status, ['class' => 'cell-state'] );
+			$cells[]    = HtmlTag::create( 'td', $file->name, ['class' => 'cell-name'] );
 			if( $options['useActions'] )
-				$cells[]    = HtmlTag::create( 'td', join( " ", $actions ), array( 'class' => 'cell-actions' ) );
+				$cells[]    = HtmlTag::create( 'td', join( " ", $actions ), ['class' => 'cell-actions'] );
 
 			$list[]	= HtmlTag::create( 'tr', $cells, array(
 				'class'	=> 'status-'.$this->states[$file->status],
@@ -101,8 +101,8 @@ class View_Helper_Module_Files{
 		$colgroup	= HtmlElements::ColumnGroup( $colgroup );
 		$heads		= HtmlElements::TableHeads( $heads ) ;
 		$thead		= HtmlTag::create( 'thead', $heads );
-		$tbody		= HtmlTag::create( 'tbody', $list, array( 'id' => 'file-rows' ) );
-		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table module-update-files' ) );
+		$tbody		= HtmlTag::create( 'tbody', $list, ['id' => 'file-rows'] );
+		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table module-update-files'] );
 		return $table;
 	}
 

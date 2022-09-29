@@ -8,7 +8,7 @@ $optStatus	= HtmlElements::Options( $optStatus, $slide->status );
 
 $wordsSlide	= (object) $words['editSlide'];
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/image/slider' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/image/slider' ) );
 
 return $textTop.'
 <div class="content-panel">

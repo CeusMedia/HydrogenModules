@@ -30,13 +30,13 @@ if( $files ){
 	$list	= [];
 	foreach( $order as $entry ){
 		$entry	= preg_replace( "/\.md$/", "", $entry );
-		$link	= HtmlTag::create( 'a', $entry, array( 'href' => './info/manual/view/'.$view->urlencode( $entry ) ) );
+		$link	= HtmlTag::create( 'a', $entry, ['href' => './info/manual/view/'.$view->urlencode( $entry] ) );
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+	$list	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );
 }
 */
-$optParentId    = array( '' => '- ohne -' );
+$optParentId    = ['' => '- ohne -'];
 foreach( $folders as $folder )
     $optParentId[$folder->manualPageId] = $folder->title;
 $optParentId    = HtmlElements::Options( $optParentId );
@@ -44,12 +44,12 @@ $optParentId    = HtmlElements::Options( $optParentId );
 $buttonAdd		= "";
 $buttonReload	= "";
 if( $moduleConfig->get( 'editor' ) ){
-	$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-	$iconReload		= HtmlTag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
+	$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+	$iconReload		= HtmlTag::create( 'i', '', ['class' => 'icon-refresh'] );
 	if( in_array( 'add', $rights ) )
-		$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-info" ) );
+		$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], ['href' => './info/manual/add', 'class' => "btn btn-small btn-info"] );
 	if( in_array( 'reload', $rights ) )
-		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
+		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], ['href' => './info/manual/reload', 'class' => "btn btn-small"] );
 }
 
 $optFormat	= $words['formats'];

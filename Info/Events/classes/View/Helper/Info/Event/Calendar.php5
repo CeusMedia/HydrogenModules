@@ -31,7 +31,7 @@ class View_Helper_Info_Event_Calendar
 		$offsetStart	= date( "w", strtotime( $showScope ) ) - 1;
 		$offsetStart	= $offsetStart >= 0 ? $offsetStart : 6;
 		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
-		$orders			= array( 'priority' => 'ASC' );
+		$orders			= ['priority' => 'ASC'];
 
 		$rows			= [];
 		for( $i=0; $i<$weeks; $i++ ){
@@ -67,10 +67,10 @@ class View_Helper_Info_Event_Calendar
 			$rows[]	= '<tr>'.join( $row ).'</tr>';
 		}
 		$colgroup	= HtmlElements::ColumnGroup( "2%", "14%", "14%", "14%", "14%", "14%", "14%", "14%" );
-		$heads		= HtmlElements::TableHeads( array( "KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ) );
+		$heads		= HtmlElements::TableHeads( ["KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"] );
 		$thead		= HtmlTag::create( 'thead', $heads );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
-		$tableLarge	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
+		$tableLarge	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['id' => "mission-calendar-large"] );
 
 
 		$rows			= [];
@@ -109,10 +109,10 @@ class View_Helper_Info_Event_Calendar
 			$rows[]	= join( $row );
 		}
 		$colgroup	= HtmlElements::ColumnGroup( /*"5%", "95%"*/"100%" );
-		$heads		= HtmlElements::TableHeads( array( "KW", "..." ) );
+		$heads		= HtmlElements::TableHeads( ["KW", "..."] );
 		$thead		= HtmlTag::create( 'thead', ""/*$heads*/ );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
-		$tableSmall	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-small" ) );
+		$tableSmall	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['id' => "mission-calendar-small"] );
 
 //		$tableSmall = '<div class="muted"><em><small>Noch nicht implementiert.</small></em></div>';
 
@@ -203,7 +203,7 @@ $(document).ready(function(){
 		$diff		= $this->today->diff( $date );
 		$isPast		= $diff->invert;
 		$isToday	= $diff->days == 0;
-		$conditions	= array( 'dayStart' => $date->format( "Y-m-d" ), 'status' => array( 0, 1, 2, 3 ) );
+		$conditions	= ['dayStart' => $date->format( "Y-m-d" ), 'status' => [0, 1, 2, 3]];
 		$list		= [];
 		foreach( $this->events as $event ){
 			$eventDate	= new DateTime( $event->dateStart );
@@ -226,7 +226,7 @@ $(document).ready(function(){
 		$class	= $isToday ? 'active today' : ( $isPast ? 'past' : 'active future' );
 		$class	= $cellClass ? $cellClass.' '.$class : $class;
 		return HtmlTag::create( 'td', array(
-				$label	= HtmlTag::create( 'div', $date->format( "j" ), array( 'class' => 'date-label '.$class ) ),
+				$label	= HtmlTag::create( 'div', $date->format( "j" ), ['class' => 'date-label '.$class] ),
 				$list	= HtmlTag::create( 'ul', $list ),
 			), array(
 			"class"			=> $class,
@@ -243,9 +243,9 @@ $(document).ready(function(){
 		if( $month < 1 || $month > 12 )
 			throw new InvalidArgumentException( 'Invalid month' );
 		return HtmlTag::create( 'span', array(
-			HtmlTag::create( 'span', $this->words['months'][(int) $month], array( 'class' => "month-label" ) ),
-			HtmlTag::create( 'span', $year, array( 'class' => "year-label" ) ),
-		), array( 'id' => 'mission-calendar-control-label' ) );
+			HtmlTag::create( 'span', $this->words['months'][(int) $month], ['class' => "month-label"] ),
+			HtmlTag::create( 'span', $year, ['class' => "year-label"] ),
+		), ['id' => 'mission-calendar-control-label'] );
 	}
 
 	public function setEvents( array $events ): self

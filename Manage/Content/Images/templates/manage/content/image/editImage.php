@@ -8,7 +8,7 @@ $panelMove		= $view->loadTemplateFile( 'manage/content/image/editImage.move.php'
 $panelScale		= $view->loadTemplateFile( 'manage/content/image/editImage.scale.php' );
 $panelProcess	= $view->loadTemplateFile( 'manage/content/image/editImage.process.php' );
 
-extract( $view->populateTexts( array( 'top', 'bottom', 'edit.image.right' ), 'html/manage/content/image/' ) );
+extract( $view->populateTexts( ['top', 'bottom', 'edit.image.right'], 'html/manage/content/image/' ) );
 
 return $textTop.'
 <div class="row-fluid">

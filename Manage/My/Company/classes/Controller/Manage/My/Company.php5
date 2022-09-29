@@ -24,7 +24,7 @@ class Controller_Manage_My_Company extends Controller
 			$data	= $this->request->getAllFromSource( 'POST' );
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->errorTitleMissing );
-			else if( $this->modelCompany->getAll( array( 'title' => $data['title'], 'companyId' => '!= '.$companyId ) ) )
+			else if( $this->modelCompany->getAll( ['title' => $data['title'], 'companyId' => '!= '.$companyId] ) )
 				$this->messenger->noteError( $words->errorTitleExisting, $data['title'] );
 			if( empty( $data['city'] ) )
 				$this->messenger->noteError( $words->errorCityMissing );
@@ -45,7 +45,7 @@ class Controller_Manage_My_Company extends Controller
 		$modelRole			= new Model_Role( $this->env );
 		$user->role			= $modelRole->get( $user->roleId );
 		$user->company		= $this->modelCompany->get( $companyId );
-		$company->branches	= $this->modelBranch->getAllByIndex( 'companyId', $companyId, array( 'title' => 'ASC' ) );
+		$company->branches	= $this->modelBranch->getAllByIndex( 'companyId', $companyId, ['title' => 'ASC'] );
 		$company->users		= [];
 		$relations	= $this->modelCompanyUser->getAllByIndex( 'companyId', $companyId );
 		foreach( $relations as $relation )
@@ -149,7 +149,7 @@ class Controller_Manage_My_Company extends Controller
 
 	protected function isMyCompany( $companyId )
 	{
-		$indices	= array( 'companyId' => $companyId, 'userId' => $this->userId );
+		$indices	= ['companyId' => $companyId, 'userId' => $this->userId];
 		return $this->modelCompanyUser->countByIndices( $indices );
 	}
 }

@@ -60,7 +60,7 @@ class View_Helper_Mail_Text
 	{
 		$toLength	= (int) $toLength;
 		$text		= self::trim( trim( $text ), $toLength, $trimCentric ? 2 : 0 );
-		if( in_array( (string) $float, array( "2", 'center', 'centric' ) ) )
+		if( in_array( (string) $float, ["2", 'center', 'centric'] ) )
 			return self::extendTextCentric( $text, $toLength );
 		$floatRight	= $float === FALSE || $float === 0 || $float === 'right';
 		return self::extend( $text, $toLength, $floatRight );

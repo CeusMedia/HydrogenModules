@@ -25,7 +25,7 @@ $list		= [];
 foreach( $instances as $instance ){
 	$count			+= 1;
 	$version		= $instance->modules['installed'][$moduleId]->versionInstalled;
-	$version		= HtmlTag::create( 'small', '&nbsp;('.$version.')', array( 'class' => 'muted' ) );
+	$version		= HtmlTag::create( 'small', '&nbsp;('.$version.')', ['class' => 'muted'] );
 	$link			= HtmlTag::create( 'a', $instance->title, array(
 		'href'				=> './admin/instance/select/'.$instance->id,
 		'class'				=> 'instance',
@@ -38,7 +38,7 @@ foreach( $instances as $instance ){
 		'data-url'	=> htmlentities( $instance->url, ENT_QUOTES, 'UTF-8' ),
 	) );
 }
-$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'instances' ) );
+$list	= HtmlTag::create( 'ul', $list, ['class' => 'instances'] );
 
 return '
 <h4>Wird verwendet von:</h4>

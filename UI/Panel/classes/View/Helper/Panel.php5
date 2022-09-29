@@ -102,9 +102,9 @@ class View_Helper_Panel
 		$attributes['class']	= trim( $this->class.' '.$attributes['class'] );
 		$attributes['class']	= $attributes['class'].' panel-theme-'.$this->theme;
 		return HtmlTag::create( 'div', array(
-			HtmlTag::create( 'div', $this->head, array( 'class' => $this->classHead ) ),
-			HtmlTag::create( 'div', $this->body, array( 'class' => $this->classBody ) ),
-			HtmlTag::create( 'div', $this->foot, array( 'class' => $this->classFoot ) ),
+			HtmlTag::create( 'div', $this->head, ['class' => $this->classHead] ),
+			HtmlTag::create( 'div', $this->body, ['class' => $this->classBody] ),
+			HtmlTag::create( 'div', $this->foot, ['class' => $this->classFoot] ),
 		), $attributes );
 	}
 

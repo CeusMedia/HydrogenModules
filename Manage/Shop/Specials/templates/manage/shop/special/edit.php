@@ -1,11 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconSelect	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
-$iconOpen	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconSelect	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-folder-open'] );
+$iconOpen	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 
 $bridge	= $catalogs[$special->bridgeId];
 
@@ -19,12 +19,12 @@ $trigger->setModalId( 'modal-manage-shop-special-select-style' );
 $trigger->setInputId( 'input_styleFile' );
 $trigger->setMode( View_Helper_Input_ResourceTrigger::MODE_STYLE );
 
-$listStyleFiles	= array( HtmlTag::create( 'li', HtmlTag::create( 'em', '- keine -', array( 'class' => 'muted' ) ) ) );
+$listStyleFiles	= [HtmlTag::create( 'li', HtmlTag::create( 'em', '- keine -', ['class' => 'muted'] ) )];
 if( $special->styleFiles ){
 	$listStyleFiles	= [];
 	foreach( $special->styleFiles as $nr => $styleFile ){
 		$itemFile		= HtmlTag::create( 'big', pathinfo( $styleFile, PATHINFO_BASENAME ) );
-		$itemPath		= HtmlTag::create( 'small', pathinfo( $styleFile, PATHINFO_DIRNAME ), array( 'class' => 'muted' ) );
+		$itemPath		= HtmlTag::create( 'small', pathinfo( $styleFile, PATHINFO_DIRNAME ), ['class' => 'muted'] );
 		$listStyleFiles[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $itemFile.'<br/>'.$itemPath ),
 			HtmlTag::create( 'td', array(
@@ -38,12 +38,12 @@ if( $special->styleFiles ){
 						'href'	=> './manage/shop/special/removeStyleFile/'.$special->shopSpecialId.'/'.$nr,
 						'class'	=> 'btn btn-small btn-inverse',
 					) ),
-				), array( 'class' => 'btn-group pull-right' ) ),
+				), ['class' => 'btn-group pull-right'] ),
 			) )
 		) );
 	}
 }
-$listStyleFiles	= HtmlTag::create( 'table', $listStyleFiles, array( 'class' => 'table table-condensed table-striped' ) );
+$listStyleFiles	= HtmlTag::create( 'table', $listStyleFiles, ['class' => 'table table-condensed table-striped'] );
 
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Spezialität bearbeiten' ),
@@ -51,7 +51,7 @@ return HtmlTag::create( 'div', array(
 		HtmlTag::create( 'form', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'Katalog', array( 'for' => 'input_bridgeId' ) ),
+					HtmlTag::create( 'label', 'Katalog', ['for' => 'input_bridgeId'] ),
 					HtmlTag::create( 'input', '', array(
 						'type'		=> 'text',
 						'name'		=> 'bridgeId',
@@ -60,9 +60,9 @@ return HtmlTag::create( 'div', array(
 						'value'		=> $bridge->data->title,
 						'readonly'	=> 'readonly',
 					) ),
-				), array( 'class' => 'span3' ) ),
+				), ['class' => 'span3'] ),
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'Artikel', array( 'for' => 'input_articleId' ) ),
+					HtmlTag::create( 'label', 'Artikel', ['for' => 'input_articleId'] ),
 					HtmlTag::create( 'input', '', array(
 						'type'		=> 'text',
 						'name'		=> 'articleId',
@@ -71,11 +71,11 @@ return HtmlTag::create( 'div', array(
 						'value'		=> $special->article->title,
 						'readonly'	=> 'readonly',
 					) ),
-				), array( 'class' => 'span9' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span9'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'Titel', array( 'for' => 'input_title' ) ),
+					HtmlTag::create( 'label', 'Titel', ['for' => 'input_title'] ),
 					HtmlTag::create( 'input', NULL, array(
 						'type'	=> 'text',
 						'name'	=> 'title',
@@ -83,12 +83,12 @@ return HtmlTag::create( 'div', array(
 						'class'	=> 'span12',
 						'value'	=> $special->title,
 					) ),
-				), array( 'class' => 'span6' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span6'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'hr', NULL ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'Style-Angaben', array( 'for' => 'input_styleRules' ) ),
+					HtmlTag::create( 'label', 'Style-Angaben', ['for' => 'input_styleRules'] ),
 					HtmlTag::create( 'textarea', $special->styleRules, array(
 						'name'			=> 'styleRules',
 						'id'			=> 'input_styleRules',
@@ -96,7 +96,7 @@ return HtmlTag::create( 'div', array(
 						'data-ace-mode'	=> 'css',
 						'rows'			=> '20',
 					) ),
-				), array( 'class' => 'span6' ) ),
+				), ['class' => 'span6'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Style-Dateien' ),
 					$listStyleFiles,
@@ -109,16 +109,16 @@ return HtmlTag::create( 'div', array(
 								'id'		=> 'input_styleFile',
 								'class'		=> 'span12',
 							) ),
-						), array( 'class' => 'span10' ) ),
+						), ['class' => 'span10'] ),
 						HtmlTag::create( 'div', array(
 							HtmlTag::create( 'div', array(
 								HtmlTag::create( 'label', '&nbsp;' ),
 								$trigger
-							), array( 'class' => '' ) ),
-						), array( 'class' => 'span2' ) ),
-					), array( 'class' => 'row-fluid' ) ),
-				), array( 'class' => 'span6' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+							), ['class' => ''] ),
+						), ['class' => 'span2'] ),
+					), ['class' => 'row-fluid'] ),
+				), ['class' => 'span6'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', join( ' ', array(
 				HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
 					'href'	=> './manage/shop/special',
@@ -133,10 +133,10 @@ return HtmlTag::create( 'div', array(
 					'href'	=> './manage/shop/special/remove/'.$special->shopSpecialId,
 					'class'	=> 'btn btn-danger',
 				) ) ,
-			) ), array( 'class' => 'buttonbar' ) ),
+			) ), ['class' => 'buttonbar'] ),
 		), array(
 			'action'	=> './manage/shop/special/edit/'.$special->shopSpecialId,
 			'method'	=> 'POST',
 		) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) ).$script.$modalStyle;
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] ).$script.$modalStyle;

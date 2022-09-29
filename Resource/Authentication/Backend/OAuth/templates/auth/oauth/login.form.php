@@ -24,7 +24,7 @@ if( $useRemember )
 				HtmlTag::create( 'abbr', $w->labelRemember, array(
 					'title'		=> $w->labelRemember_title
 				) ),
-			), array( 'class' => "checkbox" ) )
+			), ['class' => "checkbox"] )
 		)
 	), array(
 		'style'	=> $useRemember ? 'display: none' : NULL

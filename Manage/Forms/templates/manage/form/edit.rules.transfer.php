@@ -4,14 +4,14 @@ use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as Html;
 
-$iconAdd	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconEdit	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconSave	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconTest	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-cogs' ) );
-$iconRemove	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconMail	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
+$iconAdd	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconEdit	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconSave	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconTest	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
+$iconRemove	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconMail	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
 
-$listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
+$listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', ['class' => 'alert alert-info'] );
 if( $transferRules ){
 	$listRules	= [];
 	$modals		= [];
@@ -23,7 +23,7 @@ if( $transferRules ){
 			'type'	=> 'button',
 			'id'	=> 'button-test-'.$ruleId,
 			'class'	=> 'btn not-btn-info not-btn-small btn-mini button-test-rules',
-		), array( 'rule-id' => $ruleId ) );
+		), ['rule-id' => $ruleId] );
 
 		$optTransferTarget	= [];
 		foreach( $transferTargets as $item )
@@ -56,7 +56,7 @@ if( $transferRules ){
 		' );
 		$modalTrigger	= new BootstrapModalTrigger( 'rule-transfer-edit-'.$ruleId.'-trigger' );
 		$modalTrigger->setModalId( 'rule-transfer-edit-'.$ruleId )->setLabel( $iconEdit.'&nbsp;bearbeiten' );
-		$modalTrigger->setAttributes( array( 'class' => 'btn not-btn-primary btn-small' ) );
+		$modalTrigger->setAttributes( ['class' => 'btn not-btn-primary btn-small'] );
 
 
 		$buttonRemove	= Html::create( 'a', $iconRemove.'&nbsp;entfernen', array(
@@ -71,10 +71,10 @@ if( $transferRules ){
 		) );
 		$modals[]		= $modal;
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array( '', '25%', '20%' ) );
-	$thead		= Html::create( 'thead', HtmlElements::TableHeads( array( 'Bezeichnung', 'Transfer-Ziel' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( ['', '25%', '20%'] );
+	$thead		= Html::create( 'thead', HtmlElements::TableHeads( ['Bezeichnung', 'Transfer-Ziel'] ) );
 	$tbody		= Html::create( 'tbody', $listRules );
-	$listRules	= Html::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped' ) ).join( $modals );
+	$listRules	= Html::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-striped'] ).join( $modals );
 }
 
 $optTransferTarget	= [];
@@ -109,7 +109,7 @@ $modal->setBody( '
 $modalTrigger	= new BootstrapModalTrigger();
 $modalTrigger->setId( 'rule-transfer-add-trigger' );
 $modalTrigger->setModalId( 'rule-transfer-add' )->setLabel( $iconAdd.'&nbsp;neuer Transfer' );
-$modalTrigger->setAttributes( array( 'class' => 'btn btn-primary' ) );
+$modalTrigger->setAttributes( ['class' => 'btn btn-primary'] );
 
 $script		= '
 <script>

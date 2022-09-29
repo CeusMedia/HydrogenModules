@@ -20,21 +20,21 @@ if( $invites->all ){
 			if( $invite->status == 1 ){
 				$expire	= date( 'd.m.Y', $invite->createdAt + $daysValid * 24 * 60 * 60 );
 				$expire	= sprintf( 'verfällt am %s', $expire );
-				$image	= HtmlTag::create( 'img', NULL, array( 'src' => 'https://cdn.ceusmedia.de/img/famfamfam/silk/error.png' ) );
-				$date	.= '&nbsp;'.HtmlTag::create( 'span', $image, array( 'title' => $expire ) );
+				$image	= HtmlTag::create( 'img', NULL, ['src' => 'https://cdn.ceusmedia.de/img/famfamfam/silk/error.png'] );
+				$date	.= '&nbsp;'.HtmlTag::create( 'span', $image, ['title' => $expire] );
 				$buttons[]	= HtmlElements::LinkButton( './manage/my/user/invite/cancel/'.$invite->userInviteId, '', 'button tiny remove', NULL, NULL, 'abbrechen' );
 			}
 		}
 		$cells		= [];
-		$cells[]	= HtmlTag::create( 'td', $date, array( 'class' => 'invite-date' ) );
-		$cells[]	= HtmlTag::create( 'td', $status, array( 'class' => 'invite-status' ) );
-		$cells[]	= HtmlTag::create( 'td', $email, array( 'class' => 'invite-email' ) );
-		$cells[]	= HtmlTag::create( 'td', join( $buttons ), array( 'class' => 'invite-actions' ) );
-		$listInvites[]	= HtmlTag::create( 'tr', join( $cells ), array( 'class' => 'invite-status status'.$invite->status ) );
+		$cells[]	= HtmlTag::create( 'td', $date, ['class' => 'invite-date'] );
+		$cells[]	= HtmlTag::create( 'td', $status, ['class' => 'invite-status'] );
+		$cells[]	= HtmlTag::create( 'td', $email, ['class' => 'invite-email'] );
+		$cells[]	= HtmlTag::create( 'td', join( $buttons ), ['class' => 'invite-actions'] );
+		$listInvites[]	= HtmlTag::create( 'tr', join( $cells ), ['class' => 'invite-status status'.$invite->status] );
 	}
 	$listInvites	= join( $listInvites );
 	$colgroup		= HtmlElements::ColumnGroup( '140px', '120px', '', '50px' );
-	$tableHeads		= HtmlElements::TableHeads( array( 'Datum', 'Status', 'E-Mail-Adresse', '' ) );
+	$tableHeads		= HtmlElements::TableHeads( ['Datum', 'Status', 'E-Mail-Adresse', ''] );
 	$listInvites	= '
 <style>
 .invite-status.status-2{
@@ -121,7 +121,7 @@ if( $invites->open ){
 	$listInvitesOpen	= [];
 	foreach( $invites->open as $invite ){
 		$url	= './manage/my/user/invite/invite/?code='.$invite->userInviteId;
-		$link	= HtmlTag::create( 'a', $invite->email, array( 'href' => $url ) );
+		$link	= HtmlTag::create( 'a', $invite->email, ['href' => $url] );
 		$listInvitesOpen[]	= HtmlTag::create( 'li', $link );
 	}
 	$listInvitesOpen	= HtmlTag::create( 'ul', join( $listInvitesOpen ) );
@@ -132,7 +132,7 @@ if( $invites->done ){
 	$listInvitesDone	= [];
 	foreach( $invites->done as $invite ){
 		$url	= './manage/my/user/invite/invite/?code='.$invite->userInviteId;
-		$link	= HtmlTag::create( 'a', $invite->email, array( 'href' => $url ) );
+		$link	= HtmlTag::create( 'a', $invite->email, ['href' => $url] );
 		$listInvitesDone[]	= HtmlTag::create( 'li', $link );
 	}
 	$listInvitesDone	= HtmlTag::create( 'ul', join( $listInvitesDone ) );

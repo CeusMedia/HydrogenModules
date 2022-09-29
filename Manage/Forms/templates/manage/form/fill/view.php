@@ -3,21 +3,21 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $page		= (int) $env->getRequest()->get( 'page' );
 
-$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconCheck	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconResend	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-reload' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconForm	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
-$iconExport	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
-$iconInfo	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-info' ) );
+$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconCheck	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconResend	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-reload'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconForm	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
+$iconExport	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
+$iconInfo	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-info'] );
 
 $statuses	= array(
-	Model_Form_Fill::STATUS_NEW			=> HtmlTag::create( 'label', 'unbestätigt', array( 'class' => 'label' ) ),
-	Model_Form_Fill::STATUS_CONFIRMED	=> HtmlTag::create( 'label', 'gültig', array( 'class' => 'label label-success' ) ),
-	Model_Form_Fill::STATUS_HANDLED		=> HtmlTag::create( 'label', 'behandelt', array( 'class' => 'label label-info' ) ),
+	Model_Form_Fill::STATUS_NEW			=> HtmlTag::create( 'label', 'unbestätigt', ['class' => 'label'] ),
+	Model_Form_Fill::STATUS_CONFIRMED	=> HtmlTag::create( 'label', 'gültig', ['class' => 'label label-success'] ),
+	Model_Form_Fill::STATUS_HANDLED		=> HtmlTag::create( 'label', 'behandelt', ['class' => 'label label-info'] ),
 );
 
 $helperPerson	= new View_Helper_Form_Fill_Person( $env );
@@ -35,10 +35,10 @@ $datetime	= HtmlTag::create( 'div', 'Zeitpunkt: '.date( 'd.m.Y H:i:s', $fill->cr
 $status		= HtmlTag::create( 'div', 'Zustand: '.$statuses[$fill->status] );
 $referer	= '';
 if( $fill->referer ){
-	$referer	= HtmlTag::create( 'a', 'ausgefülltes Formular', array( 'href' => $fill->referer, 'target' => '_blank' ) );
+	$referer	= HtmlTag::create( 'a', 'ausgefülltes Formular', ['href' => $fill->referer, 'target' => '_blank'] );
 	$referer	= HtmlTag::create( 'div', 'Webseite: '.$referer );
 }
-$formLink	= HtmlTag::create( 'a', $iconForm.'&nbsp;'.$form->title, array( 'href' => './manage/form/edit/'.$form->formId ) );
+$formLink	= HtmlTag::create( 'a', $iconForm.'&nbsp;'.$form->title, ['href' => './manage/form/edit/'.$form->formId] );
 $formLink	= HtmlTag::create( 'div', 'Formular: '.$formLink );
 $panelFacts	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Fakten' ),
@@ -47,8 +47,8 @@ $panelFacts	= HtmlTag::create( 'div', array(
 		$referer,
 		$formLink,
 		$status,
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 
 
@@ -63,7 +63,7 @@ if( $fillTransfers ){
 		$targetTitle	= $transferTargetMap[$fillTransfer->formTransferTargetId]->title;
 		$status			= $iconCheck.'&nbsp;erfolgreich';
 		if( (int) $fillTransfer->status !== Model_Form_Fill_Transfer::STATUS_SUCCESS )
-			$status	= HtmlTag::create( 'abbr', $iconRemove.'&nbsp;gescheitert', array( 'title' => $fillTransfer->message ) );
+			$status	= HtmlTag::create( 'abbr', $iconRemove.'&nbsp;gescheitert', ['title' => $fillTransfer->message] );
 
 		$button			= '';
 		if( $fillTransfer->data ){
@@ -84,12 +84,12 @@ if( $fillTransfers ){
 				HtmlTag::create( 'h4', 'Transferdaten' ),
 				arrayToTable( $transferData ),
 			);
-			if( in_array( (int) $fillTransfer->status, array( Model_Form_Fill_Transfer::STATUS_ERROR, Model_Form_Fill_Transfer::STATUS_EXCEPTION ) ) ){
+			if( in_array( (int) $fillTransfer->status, [Model_Form_Fill_Transfer::STATUS_ERROR, Model_Form_Fill_Transfer::STATUS_EXCEPTION] ) ){
 				$modalBody[]	= HtmlTag::create( 'h4', 'Fehlermeldung' );
-				$modalBody[]    = HtmlTag::create( 'pre', str_replace( $this->env->uri, '', $fillTransfer->message ), array( 'style' => 'font-size: 10px' ) );
+				$modalBody[]    = HtmlTag::create( 'pre', str_replace( $this->env->uri, '', $fillTransfer->message ), ['style' => 'font-size: 10px'] );
 				if( !empty( $fillTransfer->trace ) ){
 					$modalBody[]	= HtmlTag::create( 'h4', 'Aufrufstapel' );
-					$modalBody[]    = HtmlTag::create( 'pre', str_replace( $this->env->uri, '', $fillTransfer->trace ), array( 'style' => 'font-size: 10px' ) );
+					$modalBody[]    = HtmlTag::create( 'pre', str_replace( $this->env->uri, '', $fillTransfer->trace ), ['style' => 'font-size: 10px'] );
 				}
 			}
 
@@ -114,10 +114,10 @@ if( $fillTransfers ){
 		HtmlTag::create( 'div', array(
 			HtmlTag::create( 'h3', 'Datenweitergabe' ),
 			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-condensed' ) ),
+				HtmlTag::create( 'table', $tbody, ['class' => 'table table-condensed'] ),
 			) ),
-		), array( 'class' => 'content-panel-inner' ) ),
-	), array( 'class' => 'content-panel' ) ).join( $modals );;
+		), ['class' => 'content-panel-inner'] ),
+	), ['class' => 'content-panel'] ).join( $modals );;
 }
 
 
@@ -151,12 +151,12 @@ $buttonExport	= HtmlTag::create( 'a', $iconExport.'&nbsp;exportieren', array(
 	'class'		=> 'btn',
 ) );
 
-$buttons	= join( ' ', array( $buttonList, $buttonExport, $buttonConfirm, $buttonHandled, $buttonRemove ) );
-$buttonbar	= HtmlTag::create( 'div', $buttons, array( 'class' => 'buttonbar' ) );
+$buttons	= join( ' ', [$buttonList, $buttonExport, $buttonConfirm, $buttonHandled, $buttonRemove] );
+$buttonbar	= HtmlTag::create( 'div', $buttons, ['class' => 'buttonbar'] );
 
 
 $heading	= HtmlTag::create( 'h2', array(
-	HtmlTag::create( 'span', 'Eintrag: ', array( 'class' => 'muted' ) ),
+	HtmlTag::create( 'span', 'Eintrag: ', ['class' => 'muted'] ),
 	$form->title,
 ) );
 
@@ -165,12 +165,12 @@ return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
 			$helperPerson->render(),
-		), array( 'class' => 'span8' ) ),
+		), ['class' => 'span8'] ),
 		HtmlTag::create( 'div', array(
 			$panelFacts,
 			$panelTransfers,
-		), array( 'class' => 'span4' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+		), ['class' => 'span4'] ),
+	), ['class' => 'row-fluid'] ),
 	$helperData->render(),
 	$buttonbar,
 ) );
@@ -185,5 +185,5 @@ function arrayToTable( $data ){
 		) );
 	}
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	return HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-condensed table-bordered' ) );
+	return HtmlTag::create( 'table', $tbody, ['class' => 'table table-condensed table-bordered'] );
 }

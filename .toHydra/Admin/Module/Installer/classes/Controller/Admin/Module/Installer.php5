@@ -203,7 +203,7 @@ die;																								//  @todo handle exception without die
 			$this->restart( 'update/'.$moduleId, TRUE );
 		}
 
-		$this->addData( 'files', $this->compareModuleFiles( $moduleId, array( '/home/kriss/Web/' => '/var/www/' ) ) );
+		$this->addData( 'files', $this->compareModuleFiles( $moduleId, ['/home/kriss/Web/' => '/var/www/'] ) );
 
 		$this->addData( 'moduleLocal', $moduleLocal );
 		$this->addData( 'moduleSource', $moduleSource );
@@ -243,7 +243,7 @@ die;																								//  @todo handle exception without die
 		$this->addData( 'mainModuleId', $mainModuleId );
 		$this->addData( 'mainModule', $mainModule );
 		$this->addData( 'sqlScripts', $this->logic->getDatabaseScripts( $moduleId ) );
-		$this->addData( 'files', $this->compareModuleFiles( $moduleId, array( '/home/kriss/Web/' => '/var/www/' ) ) );
+		$this->addData( 'files', $this->compareModuleFiles( $moduleId, ['/home/kriss/Web/' => '/var/www/'] ) );
 	}
 
 	//  --  PROTECTED  --  //
@@ -295,7 +295,7 @@ die;																								//  @todo handle exception without die
 				$source		= $pathSource.$pathFileSource;
 				$target		= $pathLocal.$pathFileLocal;
 				$fileSource	= isset( $file->source  ) ? strtolower( $file->source ) : NULL;
-				if( in_array( $fileSource, array( "url", "lib", "scripts-lib" ) ) ){
+				if( in_array( $fileSource, ["url", "lib", "scripts-lib"] ) ){
 					$status	= 5;
 				}
 				else if( $pathFileLocal && file_exists( $target ) ){

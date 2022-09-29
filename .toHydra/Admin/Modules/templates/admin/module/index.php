@@ -26,7 +26,7 @@ foreach( $modules as $moduleId => $module ){
 	$icon		= '';
 	if( !empty( $module->icon ) ){
 		$image	= HtmlElements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
-		$icon	= HtmlTag::create( 'a', $image, array( 'class' => 'image' ) );
+		$icon	= HtmlTag::create( 'a', $image, ['class' => 'image'] );
 	}
 	$icon		= '<div style="width: 16px; height: 16px; float: left; display: block">'.$icon.'</div>';
 
@@ -69,11 +69,11 @@ function renderPagesIndicator( $count, $total, $offset, $template = '%1$s - %2$s
 	$nrFrom		= 1 + (int) $offset;
 	$nrTo		= $count + (int) $offset;
 	$nrTotal	= $total;
-	$spanFrom	= HtmlTag::create( 'span', $nrFrom, array( 'class' => 'pages-from' ) );
-	$spanTo		= HtmlTag::create( 'span', $nrTo, array( 'class' => 'pages-to' ) );
-	$spanTotal	= HtmlTag::create( 'span', $nrTotal, array( 'class' => 'pages-total' ) );
+	$spanFrom	= HtmlTag::create( 'span', $nrFrom, ['class' => 'pages-from'] );
+	$spanTo		= HtmlTag::create( 'span', $nrTo, ['class' => 'pages-to'] );
+	$spanTotal	= HtmlTag::create( 'span', $nrTotal, ['class' => 'pages-total'] );
 	$line		= sprintf( $template, $spanFrom, $spanTo, $spanTotal );
-	return HtmlTag::create( 'div', $line, array( 'class' => 'pages-indicator' ) );
+	return HtmlTag::create( 'div', $line, ['class' => 'pages-indicator'] );
 }
 
 $template	= '%1$s bis %2$s von %3$s';

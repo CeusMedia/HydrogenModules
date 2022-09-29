@@ -46,7 +46,7 @@ class Hook_Info_Contact extends Hook
 					$helperModal->setId( $modalId );
 					$helperModal->setHeading( $attr['heading'] );
 					$helperModal->setSubject( trim( $attr['subject'] ) );
-					$helperModal->setTypes( strlen( trim( $attr['types'] ) ) ? preg_split( '/\s*,\s*/', trim( $attr['types'] ) ) : array() );
+					$helperModal->setTypes( strlen( trim( $attr['types'] ) ) ? preg_split( '/\s*,\s*/', trim( $attr['types'] ) ) : [] );
 					$helperModal->setType( strlen( trim( $attr['type'] ) ) ? trim( $attr['type'] ) : NULL );
 		//			$helperModal->setFrom( $env->getRequest()->get( '__path' ) );
 					$helperTrigger->setmodalId( $modalId );

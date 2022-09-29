@@ -145,21 +145,21 @@ class Resource_Database_Base extends \CeusMedia\Database\PDO\Connection
 		foreach( $options as $key => $value ){														//  iterate all database options
 			if( $key == "ATTR_ERRMODE" ){
 				if( !preg_match( '/^PDO/', $value ) ){												//  value is newer style without PDO prefix
-					if( !in_array( $value, array( 'SILENT', 'WARNING', 'EXCEPTION' ) ) )			//  invalid option set
+					if( !in_array( $value, ['SILENT', 'WARNING', 'EXCEPTION'] ) )			//  invalid option set
 						continue;																	//  skip this option
 					$value	= 'PDO::ERRMODE_'.$value;												//  extend value by PDO prefix
 				}
 			}
 			else if( $key == "ATTR_CASE" ){
 				if( !preg_match( '/^PDO/', $value ) ){												//  value is newer style without PDO prefix
-					if( !in_array( $value, array( 'NATURAL', 'LOWER', 'UPPER' ) ) )					//  invalid option set
+					if( !in_array( $value, ['NATURAL', 'LOWER', 'UPPER'] ) )					//  invalid option set
 						continue;																	//  skip this option
 					$value	= 'PDO::CASE_'.$value;													//  extend value by PDO prefix
 				}
 			}
 			else if( $key == "ATTR_DEFAULT_FETCH_MODE" ){
 				if( !preg_match( '/^PDO/', $value ) ){												//  value is newer style without PDO prefix
-					if( !in_array( $value, array( 'ASSOC', 'BOTH', 'NUM', 'OBJ' ) ) )				//  invalid option set
+					if( !in_array( $value, ['ASSOC', 'BOTH', 'NUM', 'OBJ'] ) )				//  invalid option set
 						continue;																	//  skip this option
 					$value	= 'PDO::FETCH_'.$value;													//  extend value by PDO prefix
 				}

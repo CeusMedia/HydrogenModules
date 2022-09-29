@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $panelRelations		= '';
 $helperRelations	= new View_Helper_ItemRelationLister( $env );
-$helperRelations->setHook( 'User', 'listRelations', array( 'userId' => $currentUserId, 'linkable' => TRUE ) );
+$helperRelations->setHook( 'User', 'listRelations', ['userId' => $currentUserId, 'linkable' => TRUE] );
 $helperRelations->setLinkable( TRUE );
 $helperRelations->setActiveOnly( FALSE );
 //$helperRelations->setTableClass( 'limited' );

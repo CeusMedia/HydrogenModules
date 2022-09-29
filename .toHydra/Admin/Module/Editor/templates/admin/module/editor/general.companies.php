@@ -4,8 +4,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $wf		= (object) $words['tab-general-companies'];
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconCompany	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconCompany	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-building'] );
 
 $list	= '<div class="alert alert-info former-hint">'.$wf->listNone.'</div>';
 if( $module->companies ){
@@ -13,7 +13,7 @@ if( $module->companies ){
 	foreach( $module->companies as $company ){
 		$label	= $company->name;
 		if( $company->site )
-			$label	= HtmlTag::create( 'a', $label, array( 'href' => $company->site ) );
+			$label	= HtmlTag::create( 'a', $label, ['href' => $company->site] );
 		$url	= './admin/module/editor/removeCompany/'.$moduleId.'/'.base64_encode( $company->name );
 		$button	= HtmlElements::LinkButton( $url, '', 'button icon tiny remove', $wf->buttonRemoveConfirm );
 		$list[]	= '<li class="company">'.$label.'<div style="float: right">'.$button.'</div></li>';

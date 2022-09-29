@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w				= (object) $words['edit'];
 
-$optController	= array( '' => '-' );
+$optController	= ['' => '-'];
 foreach( $controllers as $item )
 	$optController[$item]	= $item;
 

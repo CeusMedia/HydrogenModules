@@ -72,7 +72,7 @@ class Logic_Module_Relation{
 		);
 		$module	= $this->logic->getModule( $moduleId );
 		if( $module ){
-			$relations	= $this->logic->model->getAll( array( 'relation:'.$type => $moduleId ) );
+			$relations	= $this->logic->model->getAll( ['relation:'.$type => $moduleId] );
 			foreach( array_keys( $relations ) as $neededModuleId ){
 				if( in_array( $neededModuleId, $this->skip ) )
 					continue;

@@ -6,7 +6,7 @@ $panelList		= $view->loadTemplateFile( 'work/time/analysis/index.list.php' );
 
 $tabs	= View_Work_Time::renderTabs( $env, 'analysis' );
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/work/time/analysis/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/work/time/analysis/' ) );
 
 return $tabs.$textIndexTop.'
 <div class="row-fluid">

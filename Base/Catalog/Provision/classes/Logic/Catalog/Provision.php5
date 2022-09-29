@@ -166,10 +166,10 @@ class Logic_Catalog_Provision extends Logic
 
 	public function getProductLicenses( $productId, $status = NULL )
 	{
-		$indices	= array( 'productId' => $productId );
+		$indices	= ['productId' => $productId];
 		if( $status !== NULL )
 			$indices['status']	= $status;
-		$orders		= array( 'rank' => 'ASC', 'title' => 'ASC' );
+		$orders		= ['rank' => 'ASC', 'title' => 'ASC'];
 		$productLicenses	= $this->modelLicense->getAll( $indices, $orders );
 		foreach( $productLicenses as $nr => $productLicense )
 			$productLicense->product	= $this->modelProduct->get( $productLicense->productId );
@@ -207,7 +207,7 @@ class Logic_Catalog_Provision extends Logic
 
 	public function getUserLicensesFromUser( $userId, $productId = NULL )
 	{
-		$indices		= array( 'userId' => $userId );
+		$indices		= ['userId' => $userId];
 		if( $productId )
 			$indices['productId']	= $productId;
 		$userLicenses	= $this->modelUserLicense->getAllByIndices( $indices );
@@ -224,7 +224,7 @@ class Logic_Catalog_Provision extends Logic
 	 */
 	public function getUriPart( $label, $delimiter = "_" )
 	{
-		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
 		$label	= preg_replace( "/ +/", $delimiter, $label );
 		return $label;
@@ -235,7 +235,7 @@ class Logic_Catalog_Provision extends Logic
 		$indices	= [];
 		if( $status !== NULL )
 			$indices['status']	= $status;
-		$orders		= array( 'rank' => 'ASC', 'title' => 'ASC' );
+		$orders		= ['rank' => 'ASC', 'title' => 'ASC'];
 		$products	= $this->modelProduct->getAll( $indices, $orders );
 		return $products;
 	}

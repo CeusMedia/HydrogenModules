@@ -44,7 +44,7 @@ class Controller_Work_Billing_Corporation_Payin extends Controller
 			else if( $filterMonth )
 				$conditions['dateBooked']	= '%-'.$filterMonth.'-%';
 		}
-		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
+		$orders		= ['dateBooked' => 'ASC', 'transactionId' => 'ASC'];
 		$limits		= [];
 		$payins		= $this->logic->getCorporationPayins( $corporationId, $conditions, $orders, $limits );
 		$this->addData( 'payins', $payins );

@@ -107,7 +107,7 @@ class Logic_CSRF
 			return self::CHECK_SESSION_MISMATCH;
 		if( $entry->ip !== $this->ip )
 			return self::CHECK_IP_MISMATCH;
-		$this->model->edit( $entry->tokenId, array( 'status' => self::STATUS_USED ) );
+		$this->model->edit( $entry->tokenId, ['status' => self::STATUS_USED] );
 			return self::CHECK_OK;
 	}
 }

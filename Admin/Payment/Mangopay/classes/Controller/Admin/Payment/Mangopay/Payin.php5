@@ -9,8 +9,8 @@ class Controller_Admin_Payment_Mangopay_Payin extends Controller
 		$limit		= 15;
 		$offset		= $page * $limit;
 		$conditions	= [];
-		$orders		= array( 'modifiedAt' => 'DESC' );
-		$limits		= array( $offset, $limit );
+		$orders		= ['modifiedAt' => 'DESC'];
+		$limits		= [$offset, $limit];
 		$total		= $this->model->count();
 		$count		= $this->model->count( $conditions );
 		$pages		= ceil( $count / $limit );

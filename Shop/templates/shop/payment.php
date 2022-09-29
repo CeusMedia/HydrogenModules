@@ -16,9 +16,9 @@ foreach( $paymentBackends as $paymentBackend ){
 		continue;
 	$path	= $env->getConfig()->get( 'path.images' ).'paymentProviderLogo/medium/';
 	if( $paymentBackend->icon ){
-		$icon	= '&nbsp;&nbsp;&nbsp;'.HtmlTag::create( 'i', '', array( 'class' => $paymentBackend->icon ) ).'&nbsp;&nbsp;&nbsp;';
+		$icon	= '&nbsp;&nbsp;&nbsp;'.HtmlTag::create( 'i', '', ['class' => $paymentBackend->icon] ).'&nbsp;&nbsp;&nbsp;';
 		if( preg_match( '/\.(png|jpe?g?)$/i', $paymentBackend->icon ) )
-			$icon	= HtmlTag::create( 'img', NULL, array( 'src' => $path.$paymentBackend->icon ) );
+			$icon	= HtmlTag::create( 'img', NULL, ['src' => $path.$paymentBackend->icon] );
 	}
 	$link	= HtmlTag::create( 'a', $icon.'&nbsp;&nbsp;'.$paymentBackend->title, array(
 		'href'	=> './shop/setPaymentBackend/'.$paymentBackend->key,
@@ -26,12 +26,12 @@ foreach( $paymentBackends as $paymentBackend ){
 //		'style' => 'display: inline-block; float: left; padding: 0.5em',
 	) );
 	$key	= $paymentBackend->priority.'.'.uniqid();
-	$list[$key]	= HtmlTag::create( 'li', $link, array( 'class' => 'payment-method-list-item' ) );
+	$list[$key]	= HtmlTag::create( 'li', $link, ['class' => 'payment-method-list-item'] );
 }
 ksort( $list );
 $list	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled payment-method-list') );
 
-$iconSubmit	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+$iconSubmit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
 
 
 $buttonPrev	= new LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
@@ -55,7 +55,7 @@ $tabContent	= '
 '.$list.'
 '.$buttonbar.'';
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/shop/' ) );
 
 $w			= (object) $words['payment'];
 

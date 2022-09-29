@@ -23,7 +23,7 @@ $panelFilter	= '
 	</div>
 </div>';
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 $helperPages	= new \CeusMedia\Bootstrap\PageControl( './member', $page, $pages );
 $pagination		= $helperPages->render();
 $buttonAdd		=HtmlTag::create( 'a', $iconAdd.'&nbsp;neuen Kontakt herstellen', array(
@@ -39,9 +39,9 @@ if( $users ){
 	$helperMember->setMode( 'thumbnail' );
 	foreach( $users as $user ){
 		$helperMember->setUser( $user );
-		$list[]	= HtmlTag::create( 'li', $helperMember->render(), array( 'class' => 'span4' ) );
+		$list[]	= HtmlTag::create( 'li', $helperMember->render(), ['class' => 'span4'] );
 	}
-	$table	= HtmlTag::create( 'ul', $list, array( 'class' => 'thumbnails' ) );
+	$table	= HtmlTag::create( 'ul', $list, ['class' => 'thumbnails'] );
 }
 
 $panelList	= '
@@ -79,9 +79,9 @@ if( $incoming || $outgoing ){
 		) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "", "80" );
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Mitglied', 'Datum' ) ) );
-	$tbody	= HtmlTag::create( 'tbody', $list, array( '' ) );
-	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Mitglied', 'Datum'] ) );
+	$tbody	= HtmlTag::create( 'tbody', $list, [''] );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 
 $panelPending	= '
@@ -92,7 +92,7 @@ $panelPending	= '
 	</div>
 </div>';
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/member/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/member/' ) );
 
 $tabs	= View_Member::renderTabs( $env, '' );
 

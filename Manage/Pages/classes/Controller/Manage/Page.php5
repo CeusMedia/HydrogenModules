@@ -131,7 +131,7 @@ class Controller_Manage_Page extends Controller{
 			$data['fullpath']	= '';
 			unset( $data['pageId'] );
 
-			$indices		= array( 'parentId' => $parentId, 'identifier' => $data['identifier'] );
+			$indices		= ['parentId' => $parentId, 'identifier' => $data['identifier']];
 			if( $this->model->getByIndices( $indices ) )
 				$this->messenger->noteError( 'Identifier "'.$data['identifier'].'" already taken' );
 			else{
@@ -349,9 +349,9 @@ ModuleManagePages.PageEditor.init();
 		}
 		if( $this->env->getModules()->has( 'Resource_Versions' ) ){
 			$logic		= Logic_Versions::getInstance( $this->env );
-			$orders		= array( 'version' => 'DESC' );
-			$limits		= array( 0, 10 );
-			$versions	= $logic->getAll( 'Info_Pages', $pageId, array(), $orders, $limits );
+			$orders		= ['version' => 'DESC'];
+			$limits		= [0, 10];
+			$versions	= $logic->getAll( 'Info_Pages', $pageId, [], $orders, $limits );
 			if( !is_null( $version ) ){
 				$entry	= $logic->get( 'Info_Pages', $pageId, $version );
 				if( $entry )
@@ -498,15 +498,15 @@ ModuleManagePages.PageEditor.init();
 			'status'	=> '> -2',
 			'scope'		=> $scope,
 		);
-		$pages		= $this->model->getAllByIndices( $indices, array( 'rank' => "ASC" ) );
+		$pages		= $this->model->getAllByIndices( $indices, ['rank' => "ASC"] );
 		$tree		= [];
-		$parentMap	= array( '0' => '-' );
+		$parentMap	= ['0' => '-'];
 		foreach( $pages as $item ){
 			$item	= $this->translatePage( $item );
 			if( $item->pageId != $currentPageId && $item->type == 1 )
 				$parentMap[$item->pageId]	= $item->title;
-			$indices		= array( 'parentId' => $item->pageId );
-			$item->subpages	= $this->model->getAllByIndices( $indices, array( 'rank' => "ASC" ) );
+			$indices		= ['parentId' => $item->pageId];
+			$item->subpages	= $this->model->getAllByIndices( $indices, ['rank' => "ASC"] );
 			foreach( $item->subpages as $nr => $subitem )
 				$subitem	= $this->translatePage( $subitem );
 			$tree[]		= $item;
@@ -667,7 +667,7 @@ class UI_Helper_ContentEditor
 			'onGetAvailableContentEditor',
 			$this,
 			$payload	= (object) array(
-				'list'		=> array(),
+				'list'		=> [],
 				'type'		=> $this->type,
 				'format'	=> $this->format,
 				'default'	=> $this->defaultEditorKey,

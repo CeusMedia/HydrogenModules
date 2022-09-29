@@ -85,7 +85,7 @@ class Logic_ShopManager extends Logic
 
 	public function getCustomers( $conditions = [], array $orders = [], array $limits = [] ): array
 	{
-		return array();//$this->modelCustomer->getAll( $conditions, $orders, $limits );
+		return [];//$this->modelCustomer->getAll( $conditions, $orders, $limits );
 	}
 
 	public function getOrder( $orderId, bool $extended = FALSE )

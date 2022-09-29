@@ -18,7 +18,7 @@ if( file_exists( $fileConfig ) ){
 		$cellValue	= HtmlTag::create( 'td', $value );
 		$list[]		= HtmlTag::create( 'tr', $cellKey.$cellValue );
 	}
-	$tbody	= HtmlTag::create( 'tbody', $list, array( "style" => "max-height: 200px; overflow: auto" ) );
+	$tbody	= HtmlTag::create( 'tbody', $list, ["style" => "max-height: 200px; overflow: auto"] );
 	$table	= HtmlTag::create( 'table', $tbody );
 	return '
 <fieldset>

@@ -2,9 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconUp		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-up' ) );
-$iconDown	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-down' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconUp		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-up'] );
+$iconDown	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-down'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $panelCategories	= '<div class="alert alert-error">Noch keine Kategorie zugewiesen.</div>';
 

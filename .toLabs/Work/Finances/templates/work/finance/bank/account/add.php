@@ -10,7 +10,7 @@ foreach( $banks as $bank )
 	$optBankId[$bank->bankId]	= $bank->title;
 $optBankId	= HtmlElements::Options( $optBankId, $account->bankId );
 
-$optType	= array( 0 => 'manuell / statisch', 1 => 'automatisch / dynamisch' );
+$optType	= [0 => 'manuell / statisch', 1 => 'automatisch / dynamisch'];
 $optType	= HtmlElements::Options( $optType, $account->type );
 
 return '

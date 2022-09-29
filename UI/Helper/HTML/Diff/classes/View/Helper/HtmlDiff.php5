@@ -31,7 +31,7 @@ class View_Helper_HtmlDiff
 			throw new RuntimeException( "No contents set" );
 		$diff	= new HtmlDiff( $this->html1, $this->html2 );
 		$diff->build();
-		return HtmlTag::create( 'div', $diff->getDifference(), array( 'class' => 'htmldiff' ) );
+		return HtmlTag::create( 'div', $diff->getDifference(), ['class' => 'htmldiff'] );
 	}
 
 	static public function renderStatic( Environment $env, string $html1, string $html2 )
@@ -64,8 +64,8 @@ class HtmlDiff {
 	private $newWords = [];
 	private $wordIndices;
 	private $encoding;
-	private $specialCaseOpeningTags = array( "/<strong[^>]*/i", "/<b[^>]*/i", "/<i[^>]*/i", "/<big[^>]*/i", "/<small[^>]*/i", "/<u[^>]*/i", "/<sub[^>]*/i", "/<sup[^>]*/i", "/<strike[^>]*/i", "/<s[^>]*/i", '/<p[^>]*/i' );
-	private $specialCaseClosingTags = array( "</strong>", "</b>", "</i>", "</big>", "</small>", "</u>", "</sub>", "</sup>", "</strike>", "</s>", '</p>' );
+	private $specialCaseOpeningTags = ["/<strong[^>]*/i", "/<b[^>]*/i", "/<i[^>]*/i", "/<big[^>]*/i", "/<small[^>]*/i", "/<u[^>]*/i", "/<sub[^>]*/i", "/<sup[^>]*/i", "/<strike[^>]*/i", "/<s[^>]*/i", '/<p[^>]*/i'];
+	private $specialCaseClosingTags = ["</strong>", "</b>", "</i>", "</big>", "</small>", "</u>", "</sub>", "</sup>", "</strike>", "</s>", '</p>'];
 
 	public function __construct( $oldText, $newText, $encoding = 'UTF-8' ) {
 		$this->oldText = $this->purifyHtml( trim( $oldText ) );
@@ -100,7 +100,7 @@ class HtmlDiff {
 
 	private function purifyHtml( $html, $tags = null ) {
 		if( class_exists( 'Tidy' ) && false ) {
-			$config = array( 'output-xhtml'   => true, 'indent' => false );
+			$config = ['output-xhtml'   => true, 'indent' => false];
 			$tidy = new tidy;
 			$tidy->parseString( $html, $config, 'utf8' );
 			$html = ( string )$tidy;
@@ -128,7 +128,7 @@ class HtmlDiff {
 			if( isset( $this->wordIndices[ $word ] ) ) {
 				$this->wordIndices[ $word ][] = $i;
 			} else {
-				$this->wordIndices[ $word ] = array( $i );
+				$this->wordIndices[ $word ] = [$i];
 			}
 		}
 	}

@@ -16,8 +16,8 @@ $colors		= array(
 $event	= $this->getData( 'event' );
 $table	= HtmlTag::create( 'table', array(
 	HtmlTag::create( 'colgroup', array(
-		HtmlTag::create( 'col', NULL, array( 'width' => '200px' ) ),
-		HtmlTag::create( 'col', NULL, array( 'width' => '' ) ),
+		HtmlTag::create( 'col', NULL, ['width' => '200px'] ),
+		HtmlTag::create( 'col', NULL, ['width' => ''] ),
 	) ),
 	HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'th', 'Type' ),
@@ -51,7 +51,7 @@ $table	= HtmlTag::create( 'table', array(
 		HtmlTag::create( 'th', 'Handled' ),
 		HtmlTag::create( 'td', date( 'Y-m-d H:i:s', (float) $event->handledAt ) ),
 	) ),
-), array( 'class' => 'table' ) );
+), ['class' => 'table'] );
 
 $buttonReset	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-undo"></i> zurücksetzen', array(
 	'href'	=> './admin/payment/mangopay/event/retry/'.$event->eventId.'?page='.$page,
@@ -82,12 +82,12 @@ return $tabs.HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		$table,
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'a', '<i class="fa fa-fw fa-list"></i> zur Liste', array( 'href' => './admin/payment/mangopay/event/'.$page, 'class' => 'btn' ) ),
+			HtmlTag::create( 'a', '<i class="fa fa-fw fa-list"></i> zur Liste', ['href' => './admin/payment/mangopay/event/'.$page, 'class' => 'btn'] ),
 			' ',
 			$buttonReset,
 			' ',
 			$buttonClose,
-		), array( 'class' => 'buttonbar' ) )
-	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );
+		), ['class' => 'buttonbar'] )
+	), ['class' => 'content-panel-inner'] )
+), ['class' => 'content-panel'] );
 ?>

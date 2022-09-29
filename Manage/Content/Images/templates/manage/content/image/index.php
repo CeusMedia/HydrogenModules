@@ -3,7 +3,7 @@
 $panelList		= $view->loadTemplateFile( 'manage/content/image/folders.php' );
 $panelFolder	= $view->loadTemplateFile( 'manage/content/image/index.folder.php' );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/content/image/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/content/image/' ) );
 
 return $textTop.'
 <div class="row-fluid">

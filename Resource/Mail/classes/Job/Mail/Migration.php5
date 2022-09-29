@@ -34,15 +34,15 @@ class Job_Mail_Migration extends Job_Abstract
 	 */
 	public function migrate()
 	{
-		$conditions	= array( 'status' > $this->statusesHandledMails );
-		$orders		= array( 'mailId' => 'ASC' );
+		$conditions	= ['status' > $this->statusesHandledMails];
+		$orders		= ['mailId' => 'ASC'];
 		$limits		= array(
 			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
 			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
 		);
 		$count		= 0;
 		$fails		= [];
-		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
+		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, ['mailId'] );
 		foreach( $mailIds as $mailId ){
 			$mail		= $this->model->get( $mailId );
 			$mailClone	= clone( $mail );
@@ -119,8 +119,8 @@ class Job_Mail_Migration extends Job_Abstract
 	 */
 	public function regenerate()
 	{
-		$conditions	= array( 'status' > $this->statusesHandledMails );
-		$orders		= array( 'mailId' => 'ASC' );
+		$conditions	= ['status' > $this->statusesHandledMails];
+		$orders		= ['mailId' => 'ASC'];
 		$limits		= array(
 			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
 			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
@@ -130,7 +130,7 @@ class Job_Mail_Migration extends Job_Abstract
 		$logic		= $this->logicMail;
 		$count		= 0;
 		$fails		= [];
-		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, array( 'mailId' ) );
+		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, ['mailId'] );
 		foreach( $mailIds as $mailId ){
 			$mail			= $this->model->get( $mailId );
 			$compression	= $mail->compression;
@@ -187,7 +187,7 @@ class Job_Mail_Migration extends Job_Abstract
 	private function _loadMailClasses()
 	{
 		$loadedClasses	= [];
-		$mailClassPaths	= array( './', 'admin/' );
+		$mailClassPaths	= ['./', 'admin/'];
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$mailClassPaths[]	= Logic_Frontend::getInstance( $this->env )->getPath();
 		foreach( array_unique( $mailClassPaths ) as $mailClassPath ){
@@ -300,18 +300,18 @@ class Job_Mail_Migration extends Job_Abstract
 		foreach( $model->getAll() as $template ){
 			if( strlen( trim( $template->styles ) ) ){
 				if( substr( $template->styles, 0, 2 ) !== '["' ){
-					$list	= array( $template->styles );
+					$list	= [$template->styles];
 					if( strpos( $template->styles, ',' ) )
 						$list	= explode( ',', $template->styles );
-					$model->edit( $template->mailTemplateId, array( 'styles' => json_encode( $list ) ) );
+					$model->edit( $template->mailTemplateId, ['styles' => json_encode( $list )] );
 				}
 			}
 			if( strlen( trim( $template->images ) ) ){
 				if( substr( $template->images, 0, 2 ) !== '["' ){
-					$list	= array( $template->images );
+					$list	= [$template->images];
 					if( strpos( $template->images, ',' ) )
 						$list	= explode( ',', $template->images );
-					$model->edit( $template->mailTemplateId, array( 'images' => json_encode( $list ) ) );
+					$model->edit( $template->mailTemplateId, ['images' => json_encode( $list )] );
 				}
 			}
 		}

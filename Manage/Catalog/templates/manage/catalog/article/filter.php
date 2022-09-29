@@ -13,7 +13,7 @@ $filterOrder	= !empty( $filters['order'] ) ? $filters['order'] : "timestamp:DESC
 
 $filterStatus	= isset( $filters['status'] ) && strlen( $filters['status'] ) ? $filters['status'] : "";
 
-$optStatus	= array( '' => '- alle -' );
+$optStatus	= ['' => '- alle -'];
 foreach( $words['states'] as $key => $value )
 	$optStatus[(string)$key]	= $value;
 $optStatus	= HtmlElements::Options( $optStatus, (string) $filterStatus );

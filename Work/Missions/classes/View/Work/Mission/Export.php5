@@ -16,7 +16,7 @@ class View_Work_Mission_Export extends View{
 				case 0:
 					$date	= date( "Ymd", strtotime( $mission->dayStart ) + 24 * 60 * 60 -1 );
 					$node	= new XmlNode( 'VTODO' );
-					$node->addChild( new XmlNode( 'DUE', $date, array( 'VALUE' => 'DATE' ) ) );
+					$node->addChild( new XmlNode( 'DUE', $date, ['VALUE' => 'DATE'] ) );
 #					$node->addChild( new XmlNode( 'STATUS', 'NEEDS-ACTION' ) );
 					break;
 				case 1:

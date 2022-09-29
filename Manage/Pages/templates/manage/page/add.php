@@ -4,10 +4,10 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['add'];
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$optController		= array( '' => '-' );
+$optController		= ['' => '-'];
 foreach( $controllers as $item )
 	$optController[$item]	= $item;
 

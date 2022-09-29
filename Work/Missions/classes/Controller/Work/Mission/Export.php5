@@ -85,8 +85,8 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 
 	protected function exportAsIcal()
 	{
-		$conditions	= array( 'status' => array( 0, 1, 2, 3 ) );
-		$orders		= array( 'dayStart' => 'ASC' );
+		$conditions	= ['status' => [0, 1, 2, 3]];
+		$orders		= ['dayStart' => 'ASC'];
 		$missions	= $this->getUserMissions( $conditions, $orders );
 
 		$statesTask		= array(
@@ -118,7 +118,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 					$date	= date( "Ymd", strtotime( $mission->dayStart ) + 24 * 60 * 60 -1 );
 					$node	= new XmlNode( 'VTODO' );
 					$node->addChild( new XmlNode( 'UID', md5( $mission->missionId ).'@'.$this->env->host ) );
-					$node->addChild( new XmlNode( 'DUE', $date, array( 'VALUE' => 'DATE' ) ) );
+					$node->addChild( new XmlNode( 'DUE', $date, ['VALUE' => 'DATE'] ) );
 					$node->addChild( new XmlNode( 'STATUS', $statesTask[$mission->status] ) );
 					break;
 				case 1:
@@ -177,7 +177,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 /*		if( !$ical && file_exists( "test.ical" ) )
 			$ical	= file_get_contents( "test.ical" );
 */		$projects	= [];
-		$conditions	= array( 'dayStart' => '> 0' );
+		$conditions	= ['dayStart' => '> 0'];
 		$defaultProjectId	= 0;
 		foreach( $this->logic->getUserProjects( $this->userId, $conditions ) as $project ){
 			if( $project->isDefault )
@@ -185,8 +185,8 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			$projects[$project->title]	= $project->projectId;
 		}
 		$missions	= [];
-		$conditions	= array( 'status' => array( 0, 1, 2, 3 ) );
-		$orders		= array( 'dayStart' => 'ASC' );
+		$conditions	= ['status' => [0, 1, 2, 3]];
+		$orders		= ['dayStart' => 'ASC'];
 		foreach( $this->getUserMissions( $conditions, $orders ) as $mission )
 			$missions[md5( $mission->missionId ).'@'.$this->env->host]	= $mission;
 
@@ -196,7 +196,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			return;
 		$root	= @array_pop( $tree->getChildren() );
 		foreach( $root->getChildren() as $node ){										//  iterate ical nodes
-			if( !in_array( $node->getNodeName(), array( 'vevent', 'vtodo' ) ) )			//  neither a task nor an event
+			if( !in_array( $node->getNodeName(), ['vevent', 'vtodo'] ) )			//  neither a task nor an event
 				continue;																//  go on
 			$item	= [];															//  prepare empty item
 			foreach( $node->getChildren() as $child )									//  iterate node's subnodes

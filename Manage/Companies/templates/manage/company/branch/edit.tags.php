@@ -15,13 +15,13 @@ if( $branch->tags ){
 			'href'	=> './manage/company/branch/removeTag/'.$tag->branchTagId,
 			'class'	=> 'btn btn-mini not-btn-inverse btn-danger'
 		) );
-		$button 	= HtmlTag::create( 'span', $button, array( 'class' => 'pull-right' ) );
+		$button 	= HtmlTag::create( 'span', $button, ['class' => 'pull-right'] );
 		$list[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $tag->label, array( 'class' => 'cell-tag-label' ) ),
-			HtmlTag::create( 'td', $button, array( 'class' => 'cell-tag-remove' ) ),
+			HtmlTag::create( 'td', $tag->label, ['class' => 'cell-tag-label'] ),
+			HtmlTag::create( 'td', $button, ['class' => 'cell-tag-remove'] ),
 		) );
 	}
-	$list	= HtmlTag::create( 'table', $list, array( 'class' => 'table table-striped not-table-condensed' ) );
+	$list	= HtmlTag::create( 'table', $list, ['class' => 'table table-striped not-table-condensed'] );
 }
 
 return '

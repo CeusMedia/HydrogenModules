@@ -5,7 +5,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $facts	= [];
 if( isset( $missions ) && count( $missions ) ){
 	$url	= './work/mission/filter?projects[]='.$project->projectId;
-	$label	= HtmlTag::create( 'a', count( $missions ), array( 'href' => $url ) );
+	$label	= HtmlTag::create( 'a', count( $missions ), ['href' => $url] );
 	$facts[]	= HtmlTag::create( 'dt', 'Aufgaben' ).HtmlTag::create( 'dd', $label );
 }
 

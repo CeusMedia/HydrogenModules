@@ -12,20 +12,20 @@ $modalAdd	= $helperAdd->render();
 
 $helperShortList	= new View_Helper_Work_Time_ShortList( $env );
 $helperShortList->setLimits( 100, 0 );
-$helperShortList->setStatus( array( 0, 1, 2, 3 ) );
-$helperShortList->setButtons( array( 'start', 'pause', 'stop'/*, 'edit'*/, 'message' ) );
+$helperShortList->setStatus( [0, 1, 2, 3] );
+$helperShortList->setButtons( ['start', 'pause', 'stop'/*, 'edit'*/, 'message'] );
 $helperShortList->setModule( 'Work_Missions' );
 $helperShortList->setModuleId( $mission->missionId );
 $helperShortList->setProjectId( $mission->projectId );
 $list				= $helperShortList->render();
 if( !$list )
-	$list	= HtmlTag::create( 'div', 'Noch keine.', array( 'class' => 'alert alert-notice' ) );
+	$list	= HtmlTag::create( 'div', 'Noch keine.', ['class' => 'alert alert-notice'] );
 
 $helperTimer	= new View_Helper_Work_Time_Timer( $env );
 $helperTimer->setModule( 'Work_Missions' );
 $helperTimer->setModuleId( $mission->missionId );
 
-$buttonNew	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;neue Aktivität', array(
+$buttonNew	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;neue Aktivität', array(
 	'type'		=> 'button',
 	'onclick'	=> '$("#myModalWorkTimeAdd").modal("toggle");',
 	'class'		=> 'btn btn-small btn-success',
@@ -41,7 +41,7 @@ if( $unrelatedTimers ){
 	$helperAssign->setFrom( './work/mission/edit/'.$mission->missionId );
 	$modalAssign	= $helperAssign->render();
 
-	$buttonAssign	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-link' ) ).'&nbsp;zuordnen', array(
+	$buttonAssign	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-link'] ).'&nbsp;zuordnen', array(
 		'type'		=> 'button',
 		'onclick'	=> '$("#myModalWorkTimeAssign").modal("toggle");',
 		'class'		=> 'btn btn-small',

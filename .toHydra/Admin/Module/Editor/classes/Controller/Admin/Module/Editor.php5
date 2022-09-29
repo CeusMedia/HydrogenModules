@@ -381,8 +381,8 @@ class Controller_Admin_Module_Editor extends Controller								//  @todo	1) inhe
 						$status					= 0;
 					}
 					$url		= './admin/module/viewer/'.$missingModule->id;
-					$link		= HtmlTag::create( 'a', $missingModule->title, array( 'href' => $url ) );
-					$span		= HtmlTag::create( 'span', $link, array( 'class' => 'icon module module-status-'.$status ) );
+					$link		= HtmlTag::create( 'a', $missingModule->title, ['href' => $url] );
+					$span		= HtmlTag::create( 'span', $link, ['class' => 'icon module module-status-'.$status] );
 					$list[]		= HtmlTag::create( 'li', $span, array() );
 				}
 				$list			= HtmlTag::create( 'ul', join( $list ) );
@@ -467,8 +467,8 @@ class Controller_Admin_Module_Editor extends Controller								//  @todo	1) inhe
 					}
 				}
 				$url		= './admin/module/viewer/'.$moduleId;
-				$link		= HtmlTag::create( 'a', $title, array( 'href' => $url ) );
-				$span		= HtmlTag::create( 'span', $link, array( 'class' => 'icon module module-status-4' ) );
+				$link		= HtmlTag::create( 'a', $title, ['href' => $url] );
+				$span		= HtmlTag::create( 'span', $link, ['class' => 'icon module module-status-4'] );
 				$list[]		= HtmlTag::create( 'li', $span, array() );
 			}
 			$list	= HtmlTag::create( 'ul', $list );

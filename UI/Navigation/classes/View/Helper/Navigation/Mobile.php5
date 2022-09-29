@@ -35,25 +35,25 @@ class View_Helper_Navigation_Mobile
 				foreach( $page->items as $subpage ){
 					$class		= $subpage->active ? 'Selected' : NULL;
 					$href		= './'.$subpage->link;
-					$link		= HtmlTag::create( 'a', $this->renderLabelWithIcon( $subpage ), array( 'href' => $href ) );
-					$sublist[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+					$link		= HtmlTag::create( 'a', $this->renderLabelWithIcon( $subpage ), ['href' => $href] );
+					$sublist[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 				}
 				$class		= $page->active ? 'Selected' : NULL;
-				$sublist	= HtmlTag::create( 'ul', $sublist, array( 'class' => '' ) );
-				$link		= HtmlTag::create( 'span', $this->renderLabelWithIcon( $page )/*, array( 'href' => '#' )*/ );
-				$list[]	= HtmlTag::create( 'li', $link.$sublist, array( 'class' => $class ) );
+				$sublist	= HtmlTag::create( 'ul', $sublist, ['class' => ''] );
+				$link		= HtmlTag::create( 'span', $this->renderLabelWithIcon( $page )/*, ['href' => '#']*/ );
+				$list[]	= HtmlTag::create( 'li', $link.$sublist, ['class' => $class] );
 			}
 			else{
 				if( in_array( $page->path, $this->linksToSkip ) )
 					continue;
 				$class	= $page->active ? 'Selected' : NULL;
 				$href	= $page->path == "index" ? './' : './'.$page->link;
-				$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), array( 'href' => $href ) );
-				$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+				$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), ['href' => $href] );
+				$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 			}
 		}
-		$list	= HtmlTag::create( 'ul', $list, array( "class" => 'mm-listview' ) );
-		return HtmlTag::create( 'div', $list, array( 'id' => "menu", 'class' => "mm-hidden" ) );
+		$list	= HtmlTag::create( 'ul', $list, ["class" => 'mm-listview'] );
+		return HtmlTag::create( 'div', $list, ['id' => "menu", 'class' => "mm-hidden"] );
 	}
 
 	public function setInverse( bool $boolean = NULL ): self
@@ -87,7 +87,7 @@ class View_Helper_Navigation_Mobile
 		$class	= $entry->icon;
 		if( !preg_match( "/^fa/", trim( $entry->icon ) ) )
 			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
-		$icon   = HtmlTag::create( 'i', '', array( 'class' => $class ) );
+		$icon   = HtmlTag::create( 'i', '', ['class' => $class] );
 		return $icon.'&nbsp;'.$entry->label;
 	}
 }

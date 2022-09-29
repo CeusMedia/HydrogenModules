@@ -9,7 +9,7 @@ class Logic_Authentication_Backend_Rest extends Logic
 
 	public function checkEmail( string $email )
 	{
-		$parameters	= array( 'email' => $email );
+		$parameters	= ['email' => $email];
 		return $this->client->post( 'email/check', $parameters )->data;
 	}
 
@@ -25,7 +25,7 @@ class Logic_Authentication_Backend_Rest extends Logic
 
 	public function checkUsername( string $username )
 	{
-		$parameters	= array( 'username' => $username );
+		$parameters	= ['username' => $username];
 		return $this->client->post( 'username/check', $parameters )->data;
 	}
 
@@ -60,7 +60,7 @@ class Logic_Authentication_Backend_Rest extends Logic
 return NULL;
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
-			$role	= $this->client->post( 'role/get', array( $roleId ) );
+			$role	= $this->client->post( 'role/get', [$roleId] );
 			if( $role )
 				return $role;
 			if( $strict )
@@ -84,7 +84,7 @@ return NULL;
 return NULL;
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
-			$user	= $this->client->post( 'user/get', array( $userId ) );
+			$user	= $this->client->post( 'user/get', [$userId] );
 			if( $user ){
 				$user->role	= $withRole ? $this->getCurrentRole() : NULL;
 				return $user;

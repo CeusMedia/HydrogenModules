@@ -112,13 +112,13 @@ class Controller_Info_Forum extends Controller
 			$this->messenger->noteError( $words->errorInvalidPostId, $postId );
 			$this->restart( NULL, TRUE );
 		}
-		$this->modelPost->edit( $postId, array( 'status' => 1 ) );
+		$this->modelPost->edit( $postId, ['status' => 1] );
 		$this->restart( 'thread/'.$post->threadId, TRUE );
 	}
 
 	public function index()
 	{
-		$topics		= $this->modelTopic->getAll( array(), array( 'rank' => 'ASC' ) );
+		$topics		= $this->modelTopic->getAll( [], ['rank' => 'ASC'] );
 //		if( count( $topics ) == 1 )
 //			$this->restart( './info/forum/topic/'.$topics[0]->topicId );
 		foreach( $topics as $nr => $topic ){
@@ -144,8 +144,8 @@ class Controller_Info_Forum extends Controller
 		else{
 			$rank	= $topic->rank + $direction;
 			if( ( $next = $this->modelTopic->getByIndex( 'rank', $rank ) ) ){
-				$this->modelTopic->edit( (int) $topicId, array( 'rank' => $rank ) );
-				$this->modelTopic->edit( $next->topicId, array( 'rank' => $topic->rank ) );
+				$this->modelTopic->edit( (int) $topicId, ['rank' => $rank] );
+				$this->modelTopic->edit( $next->topicId, ['rank' => $topic->rank] );
 			}
 		}
 		$this->restart( NULL, TRUE );
@@ -165,9 +165,9 @@ class Controller_Info_Forum extends Controller
 		$modelUser	= new Model_User( $this->env );
 		$indices	= array(
 			'threadId'	=> $threadId,
-			'status'	=> array( 0, 1 ),
+			'status'	=> [0, 1],
 		);
-		$posts	= $this->modelPost->getAllByIndices( $indices, array( 'createdAt' => 'ASC' ) );
+		$posts	= $this->modelPost->getAllByIndices( $indices, ['createdAt' => 'ASC'] );
 		foreach( $posts as $nr => $post )
 			$posts[$nr]->author	= $modelUser->get( $post->authorId );
 		$topic	= $this->modelTopic->get( $thread->topicId );
@@ -188,13 +188,13 @@ class Controller_Info_Forum extends Controller
 			$this->messenger->noteError( $words->errorInvalidTopicId, $topicId );
 			$this->restart( NULL, TRUE );
 		}
-		$orders		= array( 'type' => 'DESC', 'modifiedAt' => 'DESC', 'createdAt' => 'DESC' );
-		$threads	= $this->modelThread->getAll( array( 'topicId' => $topicId ), $orders );
+		$orders		= ['type' => 'DESC', 'modifiedAt' => 'DESC', 'createdAt' => 'DESC'];
+		$threads	= $this->modelThread->getAll( ['topicId' => $topicId], $orders );
 		foreach( $threads as $nr => $thread ){
-			$conditions	= array( 'threadId' => $thread->threadId, 'status' => array( 0, 1 ) );
+			$conditions	= ['threadId' => $thread->threadId, 'status' => [0, 1]];
 			$thread->posts	= $this->modelPost->count( $conditions );
 		}
-		$topics		= $this->modelTopic->getAll( array(), array( 'rank' => 'ASC' ) );
+		$topics		= $this->modelTopic->getAll( [], ['rank' => 'ASC'] );
 		$this->addData( 'rights', $this->rights );
 		$this->addData( 'userId', $this->userId );
 		$this->addData( 'topics', $topics );
@@ -217,7 +217,7 @@ class Controller_Info_Forum extends Controller
 			$this->messenger->noteError( $words->errorAccessDenied );
 		else{
 			$this->modelPost->remove( $postId );
-			if( !$this->modelPost->count( array( 'threadId' => $post->threadId ) ) ){
+			if( !$this->modelPost->count( ['threadId' => $post->threadId] ) ){
 				$thread	= $this->modelThread->get( $post->threadId );
 				$this->modelPost->removeByIndex( 'threadId', $post->threadId );
 				$this->modelThread->remove( $post->threadId );
@@ -299,7 +299,7 @@ class Controller_Info_Forum extends Controller
 			throw new InvalidArgumentException( 'Invalid post ID' );
 		$authors	= [];
 		$modelUser	= new Model_User( $this->env );
-		$posts		= $this->modelPost->getAllByIndex( 'threadId', $threadId, array( 'postId' => 'ASC' ) );
+		$posts		= $this->modelPost->getAllByIndex( 'threadId', $threadId, ['postId' => 'ASC'] );
 		foreach( $posts as $entry )
 			if( !array_key_exists( $entry->authorId, $authors ) )
 				$authors[$entry->authorId]	= $modelUser->get( $entry->authorId );

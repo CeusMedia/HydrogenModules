@@ -286,12 +286,12 @@ class Controller_Shop extends Controller
 			$this->restart( 'address', TRUE );
 		}
 		$model		= new Model_User( $this->env );
-		$customer	= (object) array();
+		$customer	= (object) [];
 		foreach( $model->getColumns() as $column )
 			$customer->$column	= $this->request->get( $column );
 
 		$model		= new Model_Address( $this->env );
-		$address	= (object) array();
+		$address	= (object) [];
 		foreach( $model->getColumns() as $column )
 			$address->$column	= $this->request->get( $column );
 
@@ -366,11 +366,11 @@ class Controller_Shop extends Controller
 		$this->addData( 'orderId', $orderId );
 		$this->addData( 'order', $this->logic->getOrder( $orderId, TRUE ) );
 
-		$arguments	= array( 'orderId' => $orderId, 'paymentBackends' => $this->backends );
+		$arguments	= ['orderId' => $orderId, 'paymentBackends' => $this->backends];
 		$this->env->getModules()->callHookWithPayload( 'Shop', 'renderServicePanels', $this, $arguments );
 		$this->addData( 'servicePanels', $this->servicePanels );
 
-		$arguments	= array( 'orderId' => $orderId );
+		$arguments	= ['orderId' => $orderId];
 		$this->addData( 'delivery', NULL );
 		$this->env->getModules()->callHookWithPayload( 'Shop', 'onPaymentSuccess', $this, $arguments );
 	}
@@ -398,7 +398,7 @@ class Controller_Shop extends Controller
 
 		$this->addData( 'options', $this->options );
 		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
 		$this->addData( 'paymentBackends', $this->backends );
 		$this->addData( 'cart', $this->modelCart );
 		if( $this->modelCart->get( 'positions' ) )
@@ -458,7 +458,7 @@ class Controller_Shop extends Controller
 			'paymentBackends'	=> $this->backends,
 		) );
 		$logic->appendRegisteredAttachments( $mail, $language );
-		$logic->handleMail( $mail, (object) array( 'email' => $email ), $language );
+		$logic->handleMail( $mail, (object) ['email' => $email], $language );
 	}
 
 	protected function submitOrder()

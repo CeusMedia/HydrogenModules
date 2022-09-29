@@ -4,10 +4,10 @@ use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as Html;
 
-$iconAdd	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconSave	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconMail	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope' ) );
+$iconAdd	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconSave	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconRemove	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconMail	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
 
 $optMailManager	= [];
 //if( count( $mailsManager ) != 1 )
@@ -16,7 +16,7 @@ foreach( $mailsManager as $item )
 	$optMailManager[$item->mailId]	= $item->title;
 $optMailManager	= HtmlElements::Options( $optMailManager, $form->managerMailId );
 
-$listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', array( 'class' => 'alert alert-info' ) );
+$listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', ['class' => 'alert alert-info'] );
 if( $rulesManager ){
 	$listRules	= [];
 	foreach( $rulesManager as $rule ){
@@ -31,11 +31,11 @@ if( $rulesManager ){
 
 		$list	= [];
 		foreach( json_decode( $rule->rules ) as $item ){
-			$keyLabel	= Html::create( 'acronym', $item->keyLabel, array( 'title' => 'Interner Schlüssel: '.$item->key ) );
-			$valueLabel	= Html::create( 'acronym', $item->valueLabel, array( 'title' => 'Interner Schlüssel: '.$item->value ) );
+			$keyLabel	= Html::create( 'acronym', $item->keyLabel, ['title' => 'Interner Schlüssel: '.$item->key] );
+			$valueLabel	= Html::create( 'acronym', $item->valueLabel, ['title' => 'Interner Schlüssel: '.$item->value] );
 			$list[]	= Html::create( 'li', $keyLabel.' => '.$valueLabel );
 		}
-		$list	= Html::create( 'ul', $list, array( 'style' => 'margin-bottom: 0' ) );
+		$list	= Html::create( 'ul', $list, ['style' => 'margin-bottom: 0'] );
 
 		$addresses		= preg_split( '/\s*,\s*/', $rule->mailAddresses );
 		foreach( $addresses as $nr => $address )
@@ -53,10 +53,10 @@ if( $rulesManager ){
 			Html::create( 'td', $buttonRemove ),
 		) );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array( '', '25%', '20%', '60px' ) );
-	$thead		= Html::create( 'thead', HtmlElements::TableHeads( array( 'Regeln', 'E-Mail', 'Empfänger' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( ['', '25%', '20%', '60px'] );
+	$thead		= Html::create( 'thead', HtmlElements::TableHeads( ['Regeln', 'E-Mail', 'Empfänger'] ) );
 	$tbody		= Html::create( 'tbody', $listRules );
-	$listRules	= Html::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-striped' ) );
+	$listRules	= Html::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-striped'] );
 }
 
 $modal	= new BootstrapModalDialog( 'rule-manager-add' );
@@ -118,7 +118,7 @@ $modal->setBody( '
 $modalTrigger	= new BootstrapModalTrigger();
 $modalTrigger->setId( 'rule-manager-add-trigger' );
 $modalTrigger->setModalId( 'rule-manager-add' )->setLabel( $iconAdd.'&nbsp;neue Manager-Regel' );
-$modalTrigger->setAttributes( array( 'class' => 'btn btn-primary' ) );
+$modalTrigger->setAttributes( ['class' => 'btn btn-primary'] );
 
 return '
 <div class="row-fluid">

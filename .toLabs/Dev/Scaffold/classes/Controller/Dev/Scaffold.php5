@@ -20,7 +20,7 @@ class Controller_Dev_Scaffold extends Controller{
 				$messenger->noteError( 'Class key is missing' );
 			else{
 				$template	= $this->pathTemplates.'controller.tmpl';
-				$code		= UI_Template::render( $template, array( 'classKey'	=> $classKey ) );
+				$code		= UI_Template::render( $template, ['classKey'	=> $classKey] );
 				$this->addData( 'code', $code );
 
 				if( $request->get( 'create' ) ){
@@ -47,7 +47,7 @@ class Controller_Dev_Scaffold extends Controller{
 				$messenger->noteError( 'Class key is missing' );
 			else{
 				$template	= $this->pathTemplates.'logic.tmpl';
-				$code		= UI_Template::render( $template, array( 'className'	=> $classKey ) );
+				$code		= UI_Template::render( $template, ['className'	=> $classKey] );
 				$this->addData( 'code', $code );
 
 				if( $request->get( 'create' ) ){
@@ -74,7 +74,7 @@ class Controller_Dev_Scaffold extends Controller{
 				$messenger->noteError( 'Class key is missing' );
 			else{
 				$template	= $this->pathTemplates.'model.tmpl';
-				$code		= UI_Template::render( $template, array( 'className'	=> $classKey ) );
+				$code		= UI_Template::render( $template, ['className'	=> $classKey] );
 				$this->addData( 'code', $code );
 
 				if( $request->get( 'create' ) ){
@@ -101,7 +101,7 @@ class Controller_Dev_Scaffold extends Controller{
 				$messenger->noteError( 'Class key is missing' );
 			else{
 				$template	= $this->pathTemplates.'view.tmpl';
-				$code		= UI_Template::render( $template, array( 'classKey'	=> $classKey ) );
+				$code		= UI_Template::render( $template, ['classKey'	=> $classKey] );
 				$this->addData( 'code', $code );
 
 				if( $request->get( 'create' ) ){
@@ -128,7 +128,7 @@ class Controller_Dev_Scaffold extends Controller{
 				$messenger->noteError( 'File key is missing' );
 			else{
 				$template	= $this->pathTemplates.'template.empty.tmpl';
-				$code		= UI_Template::render( $template, array( 'classKey'	=> $classKey ) );
+				$code		= UI_Template::render( $template, ['classKey'	=> $classKey] );
 				$this->addData( 'code', $code );
 
 				if( $request->get( 'create' ) ){

@@ -89,7 +89,7 @@ class Controller_Manage_Form_Import extends Controller
 		$connector	= $this->modelConnector->get( $connection->importConnectorId );
 
 		$factory	= new ObjectFactory();
-		$remoteResource	= $factory->create( $connector->className, array( $this->env ) );
+		$remoteResource	= $factory->create( $connector->className, [$this->env] );
 		$remoteResource->setConnection( $connection )->connect();
 		$folders	= $remoteResource->getFolders( TRUE );
 

@@ -9,19 +9,19 @@ $helperTime->setTemplate( $words['index']['timestampTemplate'] );
 $helperTime->setMode( View_Helper_TimePhraser::MODE_BREAK );
 //$helperTime->setMode( View_Helper_TimePhraser::MODE_HINT );
 
-$iconArchive	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) );
-$iconAbort		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconTerminate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
+$iconArchive	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-archive'] );
+$iconAbort		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconTerminate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash'] );
 
-$table		= HtmlTag::create( 'div', 'Keine Ausführungen gefunden.', array( 'class' => 'alert alert-warning' ) );
+$table		= HtmlTag::create( 'div', 'Keine Ausführungen gefunden.', ['class' => 'alert alert-warning'] );
 if( $runs ){
 	$rows	= [];
 	foreach( $runs as $item ){
 		$helperAttribute->setObject( $item );
 		$definition	= $definitions[$item->jobDefinitionId];
 		$output		= '';
-		if( in_array( $item->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS_DONE, Model_Job_Run::STATUS_SUCCESS ) ) ){
+		if( in_array( $item->status, [Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS_DONE, Model_Job_Run::STATUS_SUCCESS] ) ){
 			$output		= '';
 			if( $item->message ){
 				$message	= json_decode( $item->message );
@@ -48,7 +48,7 @@ if( $runs ){
 
 		$title	= $definition->identifier;
 		if( $item->title )
-			$title	= HtmlTag::create( 'abbr', $item->title, array( 'title' => $title ) );
+			$title	= HtmlTag::create( 'abbr', $item->title, ['title' => $title] );
 		$duration	= '-';
 		if( $item->finishedAt ){
 			$duration	= $item->finishedAt - $item->ranAt;
@@ -92,7 +92,7 @@ if( $runs ){
 		$link		= HtmlTag::create( 'a', $title, array(
 			'href'	=> './manage/job/run/view/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' )
 		) );
-		$buttons	= HtmlTag::create( 'div', array( $buttonAbort, $buttonTerminate, $buttonArchive, $buttonRemove ), array( 'class' => 'btn-group' ) );
+		$buttons	= HtmlTag::create( 'div', [$buttonAbort, $buttonTerminate, $buttonArchive, $buttonRemove], ['class' => 'btn-group'] );
 		$rows[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', '<small class="muted">'.$item->jobRunId.'</small>' ),
 //			HtmlTag::create( 'td', '<a href="./manage/job/definition/view/'.$definition->jobDefinitionId.'">'.$title.'</a>' ),
@@ -123,17 +123,17 @@ if( $runs ){
 
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array_keys( $columns ) ) );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
-	$table		= HtmlTag::create( 'table', array( $cols, $thead, $tbody ), array( 'class' => 'table table-striped table-condensed' ) );
+	$table		= HtmlTag::create( 'table', [$cols, $thead, $tbody], ['class' => 'table table-striped table-condensed'] );
 
 	/*  --  PAGINATION  --  */
 	$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/job/run', $page, ceil( $total / $filterLimit ) );
-	$table		.= HtmlTag::create( 'div', $pagination, array( 'class' => 'buttunbar' ) );
+	$table		.= HtmlTag::create( 'div', $pagination, ['class' => 'buttunbar'] );
 }
 $panelList	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $words['index']['heading'] ),
 	HtmlTag::create( 'div', array(
 		$table,
-	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] )
+), ['class' => 'content-panel'] );
 
 return $panelList;

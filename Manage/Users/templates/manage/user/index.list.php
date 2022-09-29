@@ -24,19 +24,19 @@ if( $total ){
 			$labelUser	= $user->username;
 			if( $hasRightToEdit ){
 				$url		= './manage/user/edit/'.$user->userId;
-				$labelUser	= HtmlTag::create( 'a', $labelUser, array( 'href' => $url ) );
+				$labelUser	= HtmlTag::create( 'a', $labelUser, ['href' => $url] );
 			}
 			if( $user->firstname && $user->surname )
 				$labelUser	.= '<br/><small class="muted">'.$user->firstname.' '.$user->surname.'</small>';
 		}
-		$labelRole		= HtmlTag::create( 'span', $roles[$user->roleId]->title, array( 'class' => 'role role'.$user->roleId ) );
-		$labelStatus	= HtmlTag::create( 'span', $words['status'][$user->status], array( 'class' => 'user-status status'.$user->status ) );
+		$labelRole		= HtmlTag::create( 'span', $roles[$user->roleId]->title, ['class' => 'role role'.$user->roleId] );
+		$labelStatus	= HtmlTag::create( 'span', $words['status'][$user->status], ['class' => 'user-status status'.$user->status] );
 		$rows[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $labelUser, array( 'class' => 'cell-user' ) ),
-			HtmlTag::create( 'td', $labelRole, array( 'class' => 'cell-role' ) ),
-			HtmlTag::create( 'td', $labelStatus, array( 'class' => 'cell-status' ) ),
-			HtmlTag::create( 'td', $phraser->convert( $user->createdAt, TRUE ), array( 'class' => 'cell-created' ) ),
-			HtmlTag::create( 'td', $phraser->convert( $user->loggedAt, TRUE ), array( 'class' => 'cell-logged' ) ),
+			HtmlTag::create( 'td', $labelUser, ['class' => 'cell-user'] ),
+			HtmlTag::create( 'td', $labelRole, ['class' => 'cell-role'] ),
+			HtmlTag::create( 'td', $labelStatus, ['class' => 'cell-status'] ),
+			HtmlTag::create( 'td', $phraser->convert( $user->createdAt, TRUE ), ['class' => 'cell-created'] ),
+			HtmlTag::create( 'td', $phraser->convert( $user->loggedAt, TRUE ), ['class' => 'cell-logged'] ),
 		), array(
 			'data-user-role'	=> $user->roleId,
 			'data-user-status'	=> $user->status,
@@ -47,7 +47,7 @@ if( $total ){
 		HtmlElements::ColumnGroup( "32%", "17%", "15%", "12%", "12%" ),
 		HtmlTag::create( 'thead', $heads ),
 		HtmlTag::create( 'tbody', $rows ),
-	), array( 'class' => 'table not-table-condensed table-striped', 'id' => "users" ) );
+	), ['class' => 'table not-table-condensed table-striped', 'id' => "users"] );
 }
 else
 	$list	= '<div class="muted"><em>'.$w->noEntries.'</em></div><br/>';
@@ -55,9 +55,9 @@ else
 
 $buttonAdd	= '';
 if( $hasRightToAdd ){
-	$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+	$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 	if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
-		$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+		$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, array(
 		'href'	=> './manage/user/add',
 		'class'	=> 'btn btn-success'

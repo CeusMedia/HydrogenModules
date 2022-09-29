@@ -1,11 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+	$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 }
 
 return '

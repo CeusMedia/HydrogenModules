@@ -97,9 +97,9 @@ class Controller_Work_Bill extends Controller{
 		if( !strlen( $filters->get( 'limit' ) ) )
 			$session->set( 'filter_work_bill_limit', 10 );
 		if( !is_array( $filters->get( 'type' ) ) || !count( $filters->get( 'type' ) ) )
-			$session->set( 'filter_work_bill_type', array( 0, 1 ) );
+			$session->set( 'filter_work_bill_type', [0, 1] );
 		if( !is_array( $filters->get( 'status' ) ) || !count( $filters->get( 'status' ) ) )
-			$session->set( 'filter_work_bill_status', array( 0, 1 ) );
+			$session->set( 'filter_work_bill_status', [0, 1] );
 		$filters	= $session->getAll( 'filter_work_bill_', TRUE );
 
 		$conditions	= array(
@@ -139,8 +139,8 @@ class Controller_Work_Bill extends Controller{
 		$total		= $this->model->count( $conditions );
 		$limit		= max( 10, $session->get( 'filter_work_bill_limit' ) );
 		$offset		= $limit * $page;
-		$orders		= array( 'date' => 'ASC' );
-		$bills		= $this->model->getAll( $conditions, $orders, array( $offset, $limit ) );
+		$orders		= ['date' => 'ASC'];
+		$bills		= $this->model->getAll( $conditions, $orders, [$offset, $limit] );
 		$this->addData( 'bills', $bills );
 		$this->addData( 'total', $total );
 		$this->addData( 'page', (int) $page );
@@ -153,7 +153,7 @@ class Controller_Work_Bill extends Controller{
 
 	public function setStatus( $billId, $status ){
 		$from	= $this->env->getRequest()->get( 'from' );
-		$this->model->edit( $billId, array( 'status' => $status ) );
+		$this->model->edit( $billId, ['status' => $status] );
 		$this->restart( $from ? $from : './work/bill' );
 	}
 

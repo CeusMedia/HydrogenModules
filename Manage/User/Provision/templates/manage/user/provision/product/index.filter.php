@@ -1,12 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$optProduct	= array( '' => ' - alle - ' );
+$optProduct	= ['' => ' - alle - '];
 foreach( $products as $item )
 	$optProduct[$item->productId]	= $item->title;
 $optProduct	= HtmlElements::Options( $optProduct, $filterProductId );
 
-$optProductLicense	= array( '' => '- alle -' );
+$optProductLicense	= ['' => '- alle -'];
 foreach( $productLicenses as $item )
 	$optProductLicense[$item->productLicenseId]	= $item->title;
 $optProductLicense	= HtmlElements::Options( $optProductLicense, $filterProductLicenseId );

@@ -61,8 +61,8 @@ class Controller_Manage_IP_Lock extends Controller
 		$order	= 'DESC';
 		if( $session->get( $this->filterSessionPrefix.'order' ) )
 			$order	= $session->get( $this->filterSessionPrefix.'order' );
-		$orders	= array( $sort => $order );
-		$limits	= array( $page * $limit, $limit );
+		$orders	= [$sort => $order];
+		$limits	= [$page * $limit, $limit];
 		$locks	= $this->logic->getAll( $conditions, $orders, $limits );
 		$total	= $this->logic->count( $conditions );
 

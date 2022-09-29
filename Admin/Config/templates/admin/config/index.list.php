@@ -11,19 +11,19 @@ use CeusMedia\HydrogenFramework\View;
 
 $w	= (object) $words['index-list'];
 
-$iconLock		= HtmlTag::create( 'i', '', array( 'class' => 'icon-lock' ) );
-$iconUnlock		= HtmlTag::create( 'i', '', array( 'class' => 'icon-unlock' ) );
-$iconUser		= HtmlTag::create( 'i', '', array( 'class' => 'icon-user' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
-$iconRestore	= HtmlTag::create( 'i', '', array( 'class' => 'icon-repeat icon-white' ) );
+$iconLock		= HtmlTag::create( 'i', '', ['class' => 'icon-lock'] );
+$iconUnlock		= HtmlTag::create( 'i', '', ['class' => 'icon-unlock'] );
+$iconUser		= HtmlTag::create( 'i', '', ['class' => 'icon-user'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'icon-pencil icon-white'] );
+$iconRestore	= HtmlTag::create( 'i', '', ['class' => 'icon-repeat icon-white'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconLock		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-lock' ) );
-	$iconUnlock		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
-	$iconUser		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-user' ) );
-	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-save' ) );
-	$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-	$iconRestore	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-backward' ) );
+	$iconLock		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-lock'] );
+	$iconUnlock		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-unlock'] );
+	$iconUser		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-user'] );
+	$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-save'] );
+	$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+	$iconRestore	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-backward'] );
 }
 
 $list	= [];

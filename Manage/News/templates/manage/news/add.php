@@ -2,8 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $w			= (object) $words['add'];
 
@@ -54,7 +54,7 @@ return '
 			'.HtmlTag::create( 'div', join( '&nbsp;', array(
 				$buttonAdd,
 				$buttonSave,
-			) ), array( 'class' => 'buttonbar' ) ).'
+			) ), ['class' => 'buttonbar'] ).'
 		</form>
 	</div>
 </div>';

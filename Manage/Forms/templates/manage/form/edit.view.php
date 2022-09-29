@@ -1,13 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconPrev	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconNext	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
-$iconBlock	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
+$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+$iconPrev	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconNext	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
+$iconBlock	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-square'] );
 
 $listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
-if( $blocksWithin = $this->getData( 'blocksWithin', array() ) ){
+if( $blocksWithin = $this->getData( 'blocksWithin', [] ) ){
 	$list	= [];
 	foreach( $blocksWithin as $identifier => $item ){
 		$link	= HtmlTag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
@@ -18,7 +18,7 @@ if( $blocksWithin = $this->getData( 'blocksWithin', array() ) ){
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	if( $list )
-		$listBlocksWithin	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+		$listBlocksWithin	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
 
 return '

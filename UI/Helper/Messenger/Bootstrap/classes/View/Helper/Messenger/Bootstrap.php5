@@ -36,10 +36,10 @@ class View_Helper_Messenger_Bootstrap
 				);
 
 			$class	= $this->classes[$message->type].' messenger-message-'.$nr;
-			$message	= HtmlTag::create( 'div', (string) $message->message, array( 'class' => 'messenger-message' ) );
+			$message	= HtmlTag::create( 'div', (string) $message->message, ['class' => 'messenger-message'] );
 			if( $timeFormat && !empty( $message->timestamp ) ){
 				$time		= Alg_Time_Converter::convertToHuman( $message->timestamp, $timeFormat );
-				$time		= HtmlTag::create( 'span',  '['.$time.'] ', array( 'class' => 'time' ) );
+				$time		= HtmlTag::create( 'span',  '['.$time.'] ', ['class' => 'time'] );
 				$message	= $time.$message;
 			}
 			$buttonDismiss	= '';
@@ -59,10 +59,10 @@ class View_Helper_Messenger_Bootstrap
 				) );
 				$message		= $buttonClose.$message;
 			}
-			$list[] 	= HtmlTag::create( 'div', $message, array( 'class' => $class ) );
+			$list[] 	= HtmlTag::create( 'div', $message, ['class' => $class] );
 		}
 		$this->env->getMessenger()->clear();
-		return HtmlTag::create( 'div', $list, array( 'class' => 'messenger-messages messenger-bootstrap' ) );
+		return HtmlTag::create( 'div', $list, ['class' => 'messenger-messages messenger-bootstrap'] );
 	}
 
 	public static function renderStatic( Environment $env, string $timeFormat = NULL, bool $linkResources = FALSE ): string

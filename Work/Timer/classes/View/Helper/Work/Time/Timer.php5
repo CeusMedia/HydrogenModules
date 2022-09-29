@@ -50,7 +50,7 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 
 	public function registerModule( $module )
 	{
-		$arguments		= array( $this->env );
+		$arguments		= [$this->env];
 		$modelInstance	= Alg_Object_Factory::createObject( $module->modelClass, $arguments );
 		self::$modules[$module->moduleId]	= (object) array(
 			'id'			=> $module->moduleId,

@@ -142,7 +142,7 @@ $panelSlider	= '';
 if( $env->getModules()->has( 'UI_Image_Slider' ) ){
 	$w				= (object) $words['editImage.slider'];
 	$modelSliders	= new Model_Image_Slider( $env );
-	$sliders		= $modelSliders->getAll( array(), array() );
+	$sliders		= $modelSliders->getAll( [], [] );
 	$optSlider		= [];
 	foreach( $sliders as $slider )
 		$optSlider[$slider->sliderId]	= $slider->title;

@@ -11,7 +11,7 @@ class Controller_Manage_Branch extends Controller
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Branch( $this->env );
-		$model->edit( $branchId, array( 'status' => 1 ) );
+		$model->edit( $branchId, ['status' => 1] );
 		$branch			= $model->get( $branchId );
 		$messenger->noteSuccess( 'Filiale "'.$branch->title.'" aktiviert.' );
 		$this->restart( NULL, TRUE );
@@ -22,7 +22,7 @@ class Controller_Manage_Branch extends Controller
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Branch( $this->env );
-		$model->edit( $branchId, array( 'status' => -1 ) );
+		$model->edit( $branchId, ['status' => -1] );
 		$branch			= $model->get( $branchId );
 		$messenger->noteSuccess( 'Filiale "'.$branch->title.'" deaktiviert.' );
 		$this->restart( NULL, TRUE );
@@ -90,7 +90,7 @@ class Controller_Manage_Branch extends Controller
 		if( $request->get( 'doAdd' ) ){
 			if( empty( $data['title'] ) )
 				$messenger->noteError( $words->msgNoTitle );
-			else if( $model->getAll( array( 'title' => $data['title'] ) ) )
+			else if( $model->getAll( ['title' => $data['title']] ) )
 				$messenger->noteError( $words->msgTitleExisting, $data['title'] );
 			if( empty( $data['companyId'] ) )
 				$messenger->noteError( $words->msgNoCompany );
@@ -146,7 +146,7 @@ class Controller_Manage_Branch extends Controller
 		if( $request->get( 'doEdit' ) ){
 			if( empty( $data['title'] ) )
 				$messenger->noteError( $words->msgNoTitle );
-			else if( $modelBranch->getAll( array( 'title' => $data['title'], 'branchId' => '!= '.$branchId ) ) )
+			else if( $modelBranch->getAll( ['title' => $data['title'], 'branchId' => '!= '.$branchId] ) )
 				$messenger->noteError( $words->msgTitleExisting, $data['title'] );
 			if( empty( $data['companyId'] ) )
 				$messenger->noteError( $words->msgNoCompany );
@@ -176,7 +176,7 @@ class Controller_Manage_Branch extends Controller
 		$this->view->setData(
 			array(
 				'branch'	=> $branch,
-				'companies' => $modelCompany->getAll( NULL, array( 'title' => 'ASC' ) )
+				'companies' => $modelCompany->getAll( NULL, ['title' => 'ASC'] )
 			)
 		);
 		$this->view->addData( 'images', $modelImage->getAllByIndex( 'branchId', $branchId ) );

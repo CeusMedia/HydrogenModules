@@ -94,8 +94,8 @@ class Controller_Manage_Form_Mail extends Controller{
 		if( $filters->get( 'roleType' ) )
 		 	$conditions['roleType']		= $filters->get( 'roleType' );
 
-		$orders		= array( 'title' => 'ASC' );
-		$limits		= array( $page * $limit, $limit );
+		$orders		= ['title' => 'ASC'];
+		$limits		= [$page * $limit, $limit];
 		$total		= $this->modelMail->count();
 		$count		= $this->modelMail->count( $conditions );
 		$mails		= $this->modelMail->getAll( $conditions, $orders, $limits );

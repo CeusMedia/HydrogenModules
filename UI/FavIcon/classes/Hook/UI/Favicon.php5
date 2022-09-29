@@ -28,7 +28,7 @@ class Hook_UI_Favicon extends Hook
 				$type	= "image/png";
 			else if( $ext === "gif" )
 				$type	= "image/gif";
-			$attributes	= array( 'rel' => "icon", 'type' => $type, 'href' => $url );
+			$attributes	= ['rel' => "icon", 'type' => $type, 'href' => $url];
 			$link		= HtmlTag::create( 'link', NULL, $attributes );
 			$context->addHead( $link );
 		}
@@ -36,7 +36,7 @@ class Hook_UI_Favicon extends Hook
 		if( $configTouch->get( 'active' ) ){
 			$path		= $configTouch->get( 'fromTheme' ) ? $pathTheme : $pathImages;
 			$url		= $path.$configTouch->get( 'name' );
-			$attributes	= array( 'rel' => 'apple-touch-icon', 'href' => $url );
+			$attributes	= ['rel' => 'apple-touch-icon', 'href' => $url];
 			$link		= HtmlTag::create( 'link', NULL, $attributes );
 			$context->addHead( $link );
 		}

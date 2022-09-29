@@ -169,7 +169,7 @@ class Controller_Work_Issue extends Controller
 		if( !($filters	= $request->get( 'filters' ) ) )
 			$filters	= array(
 				'type'		=> 0,
-				'status'	=> array( 1, 2, 3, 4, 5 ),
+				'status'	=> [1, 2, 3, 4, 5],
 			);
 		if( !($orders	= $request->get( 'orders' ) ) )
 			$orders	= array(
@@ -177,7 +177,7 @@ class Controller_Work_Issue extends Controller
 				'status'	=> 'ASC',
 			);
 		$modelIssue		= new Model_Issue( $this->env );
-		$issues		= $modelIssue->getAll( $filters, $orders, array( $offset, $limit ) );
+		$issues		= $modelIssue->getAll( $filters, $orders, [$offset, $limit] );
 		print( json_encode( $issues ) );
 		exit;
 	}
@@ -217,7 +217,7 @@ class Controller_Work_Issue extends Controller
 		foreach( $setFilters as $key => $value ){
 			if( $key == 'title' )
 				$filters[$key] = '%'.str_replace( ' ', '%', trim( $value ) ).'%';
-			else if( !in_array( $key, array( 'order', 'direction', 'limit', 'relation' ) ) )
+			else if( !in_array( $key, ['order', 'direction', 'limit', 'relation'] ) )
 				$filters[$key] = $value;
 		}
 //		if( !isset( $filters['projectId'] ) || !$filters['projectId'] )
@@ -238,7 +238,7 @@ class Controller_Work_Issue extends Controller
 		$limit	= $session->get( 'filter-issue-limit' );
 		$limit	= $limit > 0 ? $limit : 15;
 		if( $order && $dir )
-			$orders	= array( $order => $dir );
+			$orders	= [$order => $dir];
 
 		$dir	= 'DESC';
 
@@ -248,44 +248,44 @@ class Controller_Work_Issue extends Controller
 		$modelUser		= new Model_User( $this->env );
 
 		$numberTypes	= array(
-			0	=> $modelIssue->count( array_merge( $filters, array( 'type' => 0 ) ) ),
-			1	=> $modelIssue->count( array_merge( $filters, array( 'type' => 1 ) ) ),
-			2	=> $modelIssue->count( array_merge( $filters, array( 'type' => 2 ) ) ),
-			3	=> $modelIssue->count( array_merge( $filters, array( 'type' => 3 ) ) ),
+			0	=> $modelIssue->count( array_merge( $filters, ['type' => 0] ) ),
+			1	=> $modelIssue->count( array_merge( $filters, ['type' => 1] ) ),
+			2	=> $modelIssue->count( array_merge( $filters, ['type' => 2] ) ),
+			3	=> $modelIssue->count( array_merge( $filters, ['type' => 3] ) ),
 		);
 
 		$numberStates	= array(
-			0	=> $modelIssue->count( array_merge( $filters, array( 'status'=> 0 ) ) ),
-			1	=> $modelIssue->count( array_merge( $filters, array( 'status' => 1 ) ) ),
-			2	=> $modelIssue->count( array_merge( $filters, array( 'status' => 2 ) ) ),
-			3	=> $modelIssue->count( array_merge( $filters, array( 'status' => 3 ) ) ),
-			4	=> $modelIssue->count( array_merge( $filters, array( 'status' => 4 ) ) ),
-			5	=> $modelIssue->count( array_merge( $filters, array( 'status' => 5 ) ) ),
-			6	=> $modelIssue->count( array_merge( $filters, array( 'status' => 6 ) ) ),
+			0	=> $modelIssue->count( array_merge( $filters, ['status'=> 0] ) ),
+			1	=> $modelIssue->count( array_merge( $filters, ['status' => 1] ) ),
+			2	=> $modelIssue->count( array_merge( $filters, ['status' => 2] ) ),
+			3	=> $modelIssue->count( array_merge( $filters, ['status' => 3] ) ),
+			4	=> $modelIssue->count( array_merge( $filters, ['status' => 4] ) ),
+			5	=> $modelIssue->count( array_merge( $filters, ['status' => 5] ) ),
+			6	=> $modelIssue->count( array_merge( $filters, ['status' => 6] ) ),
 		);
 
 		$numberPriorities	= array(
-			0	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 0 ) ) ),
-			1	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 1 ) ) ),
-			2	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 2 ) ) ),
-			3	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 3 ) ) ),
-			4	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 4 ) ) ),
-			5	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 5 ) ) ),
-			6	=> $modelIssue->count( array_merge( $filters, array( 'priority' => 6 ) ) ),
+			0	=> $modelIssue->count( array_merge( $filters, ['priority' => 0] ) ),
+			1	=> $modelIssue->count( array_merge( $filters, ['priority' => 1] ) ),
+			2	=> $modelIssue->count( array_merge( $filters, ['priority' => 2] ) ),
+			3	=> $modelIssue->count( array_merge( $filters, ['priority' => 3] ) ),
+			4	=> $modelIssue->count( array_merge( $filters, ['priority' => 4] ) ),
+			5	=> $modelIssue->count( array_merge( $filters, ['priority' => 5] ) ),
+			6	=> $modelIssue->count( array_merge( $filters, ['priority' => 6] ) ),
 		);
 
 		$numberProjects	= [];
 		foreach( $this->userProjects as $project ){
-			$count	= $modelIssue->count( array_merge( $filters, array( 'projectId'	=> $project->projectId ) ) );
+			$count	= $modelIssue->count( array_merge( $filters, ['projectId'	=> $project->projectId] ) );
 			$numberProjects[$project->projectId]	= $count;
 		}
 		$this->addData( 'numberProjects', $numberProjects );
 
 		$userIds	= [];
-		$issues		= $modelIssue->getAll( $filters, $orders, array( $limit * $page, $limit ) );
+		$issues		= $modelIssue->getAll( $filters, $orders, [$limit * $page, $limit] );
 		foreach( $issues as $nr => $issue ){
-			$issues[$nr]->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
-			$issues[$nr]->changes	= $modelChange->getAllByIndex( 'issueId', $issue->issueId, array( 'timestamp' => 'ASC' ) );
+			$issues[$nr]->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, ['timestamp' => 'ASC'] );
+			$issues[$nr]->changes	= $modelChange->getAllByIndex( 'issueId', $issue->issueId, ['timestamp' => 'ASC'] );
 			$userIds[]	= $issue->reporterId;
 			$userIds[]	= $issue->managerId;
 			foreach( $issues[$nr]->notes as $note )
@@ -296,7 +296,7 @@ class Controller_Work_Issue extends Controller
 
 		$projects	= $this->userProjects;
 /*		foreach( $projects as $project ){
-			if( !$modelIssue->count( array( 'projectId' => $project->projectId ) ) )
+			if( !$modelIssue->count( ['projectId' => $project->projectId] ) )
 				unset( $projects[$project->projectId] );
 		}*/
 
@@ -312,7 +312,7 @@ class Controller_Work_Issue extends Controller
 
 		$users	= [];
 		if( $userIds )
-			foreach( $modelUser->getAll( array( 'userId' => array_unique( $userIds ) ) ) as $user )
+			foreach( $modelUser->getAll( ['userId' => array_unique( $userIds )] ) as $user )
 				$users[$user->userId]	= $user;
 
 		$this->addData( 'users', $users );
@@ -326,7 +326,7 @@ class Controller_Work_Issue extends Controller
 		$issues		= [];
 		$ids		= [];
 		foreach( $terms as $term ){
-			$filters	= array( 'title' => '%'.$term.'%' );
+			$filters	= ['title' => '%'.$term.'%'];
 			foreach( $modelIssue->getAll( $filters ) as $issue ){
 				$issues[$issue->issueId]	= $issue;
 				if( empty( $ids[$issue->issueId] ) )

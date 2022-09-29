@@ -18,19 +18,19 @@ class Hook_Helper_Input_Resource extends Hook
 		$pathDownloads	= NULL;
 
 		$pathsDefinedInModules	= array(
-			'pathImages'	=> array( 'Manage_Content_Images', 'path.images' ),
-			'pathDocuments'	=> array( 'Manage_Content_Documents', 'path.documents' ),
-			'pathDownloads'	=> array( 'Info_Downloads', 'path' ),
+			'pathImages'	=> ['Manage_Content_Images', 'path.images'],
+			'pathDocuments'	=> ['Manage_Content_Documents', 'path.documents'],
+			'pathDownloads'	=> ['Info_Downloads', 'path'],
 		);
 		foreach( $pathsDefinedInModules as $path => $definition )
 			if( ( $module	= $modules->get( $definition[0], TRUE, FALSE ) ) )
 				$$path	= $module->config[$definition[1]]->value;
 
 		$modePaths	= array(
-			'image'		=> array( $pathImages, $pathThemes ),
-			'theme'		=> array( $pathThemes ),
-			'document'	=> $pathDocuments ? array( $pathDocuments ) : array(),
-			'download'	=> $pathDownloads ? array( $pathDownloads ) : array(),
+			'image'		=> [$pathImages, $pathThemes],
+			'theme'		=> [$pathThemes],
+			'document'	=> $pathDocuments ? [$pathDocuments] : [],
+			'download'	=> $pathDownloads ? [$pathDownloads] : [],
 		);
 		$scripts	= [];
 		foreach( $modePaths as $key => $paths ){

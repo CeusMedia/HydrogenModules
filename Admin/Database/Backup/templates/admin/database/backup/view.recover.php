@@ -10,10 +10,10 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var object $backup */
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconRestore	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cog' ) );
-$iconDownload	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+$iconRestore	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cog'] );
+$iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $w	= (object) array(
 	'labelPasswordCurrent_title'	=> 'Passwort',
@@ -35,7 +35,7 @@ return '
 				</div>
 			</div>
 			'.HTML::Buttons( array(
-				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
+				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, ['class' => 'not-muted'] ),
 				HTML::DivClass( 'row-fluid',
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',

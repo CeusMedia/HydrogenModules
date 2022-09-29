@@ -29,7 +29,7 @@ class Logic_Mail_Group_Message extends Logic
 		$parentId	= 0;
 		if( $headers->hasField( 'References' ) ){
 			$referenceId	= $headers->getField( 'References' )->getValue();
-			$indices		= array( 'messageId' => '%'.$referenceId );
+			$indices		= ['messageId' => '%'.$referenceId];
 			if( ( $parent = $this->modelMessage->getByIndices( $indices ) ) )
 				$parentId	= $parent->mailGroupMessageId;
 		}
@@ -110,18 +110,18 @@ class Logic_Mail_Group_Message extends Logic
 /*	public function handleNewMails( $groupId = 0 ){
 		trigger_error( "NOT YET IMPLEMENTED.", E_USER_NOTICE );
 		$groupIds	= array_keys( $this->getGroups() );
-		$groupIds	= $groupId > 0 ? array( $groupId ) : $groupIds;
+		$groupIds	= $groupId > 0 ? [$groupId] : $groupIds;
 
 		$results	= (object) array(
-			'mailsImported'	=> array(),
-			'errors'		=> array(),
+			'mailsImported'	=> [],
+			'errors'		=> [],
 		);
 		foreach( $groupIds as $groupId ){
 			$indices	= array(
 				'groupId'	=> $groupId,
 				'status'	=> Model_Mail_Group_Message::STATUS_NEW,
 			);
-			$orders		= array( 'createdAt' => 'ASC' );
+			$orders		= ['createdAt' => 'ASC'];
 			$messages	= $this->modelMessage->getAll( $indices, $orders );
 			foreach( $messages as $message ){
 
@@ -145,15 +145,15 @@ class Logic_Mail_Group_Message extends Logic
 		if( !$group )
 			throw new InvalidArgumentException( 'Invalid group ID' );
 		$results	= (object) array(
-			'rejected'		=> array(),
-			'stalled'		=> array(),
-			'forwarded'		=> array(),
+			'rejected'		=> [],
+			'stalled'		=> [],
+			'forwarded'		=> [],
 		);
 		$indices	= array(
 			'mailGroupId'		=> $groupId,
 			'status'			=> Model_Mail_Group_Message::STATUS_NEW,
 		);
-		$orders		= array( 'createdAt' => 'ASC' );
+		$orders		= ['createdAt' => 'ASC'];
 		$messages	= $this->modelMessage->getAllByIndices( $indices, $orders );
 		foreach( $messages as $message ){
 
@@ -214,14 +214,14 @@ class Logic_Mail_Group_Message extends Logic
 		$group		= $this->logicGroup->checkGroupId( $groupId );
 
 		$results	= (object) array(
-			'forwarded'	=> array(),
-			'rejected'	=> array(),
+			'forwarded'	=> [],
+			'rejected'	=> [],
 		);
 		$indices	= array(
 			'mailGroupId'	=> $groupId,
 			'status'		=> Model_Mail_Group_Message::STATUS_STALLED,
 		);
-		$orders		= array( 'createdAt' => 'ASC' );
+		$orders		= ['createdAt' => 'ASC'];
 		$messages	= $this->modelMessage->getAllByIndices( $indices, $orders );
 		foreach( $messages as $message ){
 			$member	= $this->logicGroup->getGroupMember( $message->mailGroupMemberId );

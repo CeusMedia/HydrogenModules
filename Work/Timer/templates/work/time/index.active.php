@@ -19,7 +19,7 @@ if( $timer ){
 		'href'	=> './manage/project/view/'.$timer->project->projectId,
 		'class'	=> 'autocut',
 	) );
-	$linkRelation	= HtmlTag::create( 'em', 'Nicht zugeordnet.', array( 'class' => 'muted' ) );
+	$linkRelation	= HtmlTag::create( 'em', 'Nicht zugeordnet.', ['class' => 'muted'] );
 	if( $timer->relationTitle ){
 		$linkRelation	= $timer->relationTitle;
 		if( $timer->relationLink )

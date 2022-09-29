@@ -28,11 +28,11 @@ class Controller_Admin_Instance extends Controller{
 			$configPath	= trim( $post->get( 'configPath' ) );
 			$configFile	= trim( $post->get( 'configFile' ) );
 
-			$path		= str_replace( array( " ", "../" ), "", $path );							//  secure path
+			$path		= str_replace( [" ", "../"], "", $path );							//  secure path
 			$path		= preg_replace( '@/*$@', '', $path ).'/';									//  add trailing slash to path
 			$path		= '/'.preg_replace( '@^/*@', '', $path );									//  add leading slash to path
 
-			$uri		= str_replace( array( " ", "../" ), "", $uri );								//  secure URI
+			$uri		= str_replace( [" ", "../"], "", $uri );								//  secure URI
 			$uri		= preg_replace( '@/*$@', '', $uri ).'/';									//  add trailing slash to URI
 			$uri		= '/'.preg_replace( '@^/*@', '', $uri );									//  add leading slash to URI
 
@@ -200,11 +200,11 @@ class Controller_Admin_Instance extends Controller{
 			$configPath	= trim( $post->get( 'configPath' ) );
 			$configFile	= trim( $post->get( 'configFile' ) );
 
-			$path		= str_replace( array( " ", "../" ), "", $path );							//  secure path
+			$path		= str_replace( [" ", "../"], "", $path );							//  secure path
 			$path		= preg_replace( '@/*$@', '', $path ).'/';									//  add trailing slash to path
 			$path		= '/'.preg_replace( '@^/*@', '', $path );									//  add leading slash to path
 
-			$uri		= str_replace( array( " ", "../" ), "", $uri );								//  secure URI
+			$uri		= str_replace( [" ", "../"], "", $uri );								//  secure URI
 			$uri		= preg_replace( '@/*$@', '', $uri ).'/';									//  add trailing slash to URI
 			$uri		= '/'.preg_replace( '@^/*@', '', $uri );									//  add leading slash to URI
 

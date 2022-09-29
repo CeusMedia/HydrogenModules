@@ -17,7 +17,7 @@ class Resource_Database_Undo
 
 	public function getAllChanges( $tableName = NULL, $maxAge = 0 )
 	{
-		$conditions	= array( 'userId'	=> $this->userId );
+		$conditions	= ['userId'	=> $this->userId];
 		if( $tableName )
 			$conditions['tableName']	= $tableName;
 		if( $maxAge > 0 )
@@ -32,11 +32,11 @@ class Resource_Database_Undo
 
 	public function getLatestChangeOfTable( $tableName, $maxAge = 0 )
 	{
-		$conditions	= array( 'userId' => $this->userId, 'tableName' => $tableName );
+		$conditions	= ['userId' => $this->userId, 'tableName' => $tableName];
 		if( $maxAge > 0 )
 			$conditions['timestamp']	= '<= '.( time() - $maxAge );
-		$orders		= array( 'timestamp' => 'DESC' );
-		$limits		= array( 0, 1 );
+		$orders		= ['timestamp' => 'DESC'];
+		$limits		= [0, 1];
 		$actions	= $this->storage->getAll( $conditions, $orders, $limits );
 		if( $actions )
 			return $actions[0];
@@ -55,7 +55,7 @@ class Resource_Database_Undo
 			'mode'			=> $mode,
 			'tableName'		=> $tableWriter->getName(),
 			'primaryKey'	=> $tableWriter->getPrimaryKey(),
-			'values'		=> array(),
+			'values'		=> [],
 			'timestamp'		=> time(),
 		);
 		foreach( $conditions as $key => $value )
@@ -79,7 +79,7 @@ class Resource_Database_Undo
 	public function noteInsert( Model $tableWriter, $id )
 	{
 		$primaryKey	= $tableWriter->getPrimaryKey();
-		$conditions	= array( $primaryKey => $id );
+		$conditions	= [$primaryKey => $id];
 		return $this->note( $tableWriter, $conditions, Model_Undo_Log::MODE_INSERT );
 	}
 
@@ -99,7 +99,7 @@ class Resource_Database_Undo
 	 */
 	public function revert( $changeId )
 	{
-		$indices	= array( 'changeId' => $changeId, 'userId' => $this->userId );
+		$indices	= ['changeId' => $changeId, 'userId' => $this->userId];
 		$action	= $this->storage->getByIndices( $indices );
 		if( !$action )
 			throw new InvalidArgumentException( 'Invalid change ID' );
@@ -124,14 +124,14 @@ class Resource_Database_Undo
 					break;
 				case Model_Undo_Log::MODE_INSERT:
 					$id		= $values[0][$primaryKey];
-					$table->deleteByConditions( array( $primaryKey => $id ) );
+					$table->deleteByConditions( [$primaryKey => $id] );
 					$this->storage->remove( $changeId );
 					break;
 				case Model_Undo_Log::MODE_UPDATE:
 					foreach( $values as $data ){
 						$id	= $data[$primaryKey];
 						unset( $data[$primaryKey] );
-						$table->updateByConditions( $data, array( $primaryKey => $id ) );
+						$table->updateByConditions( $data, [$primaryKey => $id] );
 					}
 					$this->storage->remove( $changeId );
 					break;

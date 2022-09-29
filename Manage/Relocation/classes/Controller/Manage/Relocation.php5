@@ -34,7 +34,7 @@ class Controller_Manage_Relocation extends Controller
 				$this->restart( 'edit/'.$relocationId, TRUE );
 			}
 		}
-		$data		= (object) array();
+		$data		= (object) [];
 		foreach( $this->model->getColumns() as $column )
 			$data->{$column}	= $this->request->get( $column );
 		$this->addData( 'relocation', $data );
@@ -48,10 +48,10 @@ class Controller_Manage_Relocation extends Controller
 		if( $this->request->has( 'save' ) ){
 			$title	= $this->request->get( 'title' );
 			$url	= $this->request->get( 'url' );
-			if( $this->model->getAll( array( 'title' => $title, 'relocationId' => "!= ".$relocationId ) ) ){
+			if( $this->model->getAll( ['title' => $title, 'relocationId' => "!= ".$relocationId] ) ){
 				$this->messenger->noteError( $words->errorTitleAlreadyExists, $title );
 			}
-			else if( $this->model->getAll( array( 'url' => $url, 'relocationId' => "!= ".$relocationId ) ) ){
+			else if( $this->model->getAll( ['url' => $url, 'relocationId' => "!= ".$relocationId] ) ){
 				$this->messenger->noteError( $words->errorUrlAlreadyExists, $url );
 			}
 			else{
@@ -76,7 +76,7 @@ class Controller_Manage_Relocation extends Controller
 
 	public function filter( $reset = NULL )
 	{
-		$filterKeys	= array( 'id', 'status', 'title', 'orderColumn', 'orderDirection' );
+		$filterKeys	= ['id', 'status', 'title', 'orderColumn', 'orderDirection'];
 		foreach( $filterKeys as $key ){
 			if( $reset )
 				$this->session->remove( $this->filterSessionPrefix.$key );
@@ -104,15 +104,15 @@ class Controller_Manage_Relocation extends Controller
 		}
 
 		$orders			= [];
-		$allowedColumns	= array( 'relocationId', 'title', 'views', 'usedAt' );
+		$allowedColumns	= ['relocationId', 'title', 'views', 'usedAt'];
 		if( !in_array( $filterOrderCol, $allowedColumns ) )
 			$filterOrderCol	= 'relocationId';
-		if( !in_array( $filterOrderDir, array( 'asc', 'desc' ) ) )
+		if( !in_array( $filterOrderDir, ['asc', 'desc'] ) )
 			$filterOrderDir	= 'asc';
 		$orders[$filterOrderCol]	= $filterOrderDir;
 
 		$limit	= 10;
-		$limits	= array( $page * $limit, $limit );
+		$limits	= [$page * $limit, $limit];
 
 		$this->addData( 'limit', $limit );
 		$this->addData( 'page', $page );

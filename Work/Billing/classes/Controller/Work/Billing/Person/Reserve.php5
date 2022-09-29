@@ -35,7 +35,7 @@ class Controller_Work_Billing_Person_Reserve extends Controller
 			else if( $filterMonth )
 				$conditions['dateBooked']	= '%-'.$filterMonth.'-%';
 		}
-		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
+		$orders		= ['dateBooked' => 'ASC', 'transactionId' => 'ASC'];
 		$limits		= [];
 		$reserves	= $this->logic->getPersonReserves( $personId, $conditions, $orders, $limits );
 		$this->addData( 'reserves', $reserves );

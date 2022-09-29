@@ -16,7 +16,7 @@ else
 $helperNews	= new View_Helper_News( $env );
 $list		= $helperNews->render( 10 );
 
-extract( $view->populateTexts( array( 'info/news/top', 'info/news/bottom' ), 'html' ) );
+extract( $view->populateTexts( ['info/news/top', 'info/news/bottom'], 'html' ) );
 
 //  @todo push collected content thru View::renderContent for module shortcodes
 return $textInfoNewsTop.$list.$article.$textInfoNewsBottom;

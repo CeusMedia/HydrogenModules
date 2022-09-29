@@ -21,7 +21,7 @@ class Controller_Info_Contact_Developer extends Controller{
 				$logic	= Logic_Mail::getInstance( $this->env );
 				$data	= $request->getAll();
 				$mail	= new Mail_Info_Contact_Developer( $this->env, $data );
-				$receiver	= (object) array( 'email' => $options->get( 'receiver' ) );
+				$receiver	= (object) ['email' => $options->get( 'receiver' )];
 				$logic->handleMail( $mail, $receiver, $this->env->getLanguage()->getLanguage() );
 				$messenger->noteSuccess( "Danke!" );
 				$request->set( 'sender', '' );

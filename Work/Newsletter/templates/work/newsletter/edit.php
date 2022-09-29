@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
 
 $pathDefaults	= 'html/work/newsletter/';
 
@@ -12,19 +12,19 @@ $tabs			= $words->tabs;
 
 $disabled		= "";
 if( (int) $newsletter->status === Model_Newsletter::STATUS_ABORTED ){
-	$disabledTabs	= array( 2, 3, 4, 5, 6, 7, 8 );
+	$disabledTabs	= [2, 3, 4, 5, 6, 7, 8];
 	$disabled		= 'disabled="disabled"';
 }
 else if( (int) $newsletter->status === Model_Newsletter::STATUS_NEW ){
-	$disabledTabs	= array( 5, 6, 7, 8 );
+	$disabledTabs	= [5, 6, 7, 8];
 //	$disabled		= 'disabled="disabled"';
 }
 else if( (int) $newsletter->status === Model_Newsletter::STATUS_READY ){
-	$disabledTabs	= array( /*2, 3, 5,*/ 6, 7, 8 );
+	$disabledTabs	= [/*2, 3, 5,*/ 6, 7, 8];
 //	$disabled		= 'disabled="disabled"';
 }
 else if( (int) $newsletter->status == Model_Newsletter::STATUS_SENT ){
-	$disabledTabs	= array( /*2, 3,*/ 4 );
+	$disabledTabs	= [/*2, 3,*/ 4];
 	$disabled		= 'disabled="disabled"';
 }
 $tabsContent	= $this->renderTabs( $tabs, 'setContentTab/'.$newsletterId.'/', $currentTab, $disabledTabs );
@@ -76,7 +76,7 @@ switch( $currentTab ){
 		break;
 }
 */
-$tabsContent	.= HtmlTag::create( 'div', $content, array( 'tab-content' ) );
+$tabsContent	.= HtmlTag::create( 'div', $content, ['tab-content'] );
 
 $modalPreview	= '
 <div id="modal-preview" class="modal hide -fade preview">
@@ -99,7 +99,7 @@ $helperNav	= View_Helper_Pagination_PrevNext::create( $env )
 	->setCurrentId( $newsletter->newsletterId )
 	->setUrlTemplate( './work/newsletter/edit/%d' )
 	->useIndex()->setIndexUrl( './work/newsletter' );
-$navPrevNext	= HtmlTag::create( 'div', $helperNav->render(), array( 'class' => 'pull-right' ) );
+$navPrevNext	= HtmlTag::create( 'div', $helperNav->render(), ['class' => 'pull-right'] );
 
 extract( $view->populateTexts(
 	array( 'above', 'bottom', 'top' ),

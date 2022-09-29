@@ -18,7 +18,7 @@ class Hook_JS_jQuery_Mmenu extends Hook
 		$config		= $env->getConfig()->getAll( 'module.js_jquery_mmenu.', TRUE );
 		$version	= $config->get( 'version' );
 		$pathJs		= $env->getConfig()->get( 'path.scripts' ).'mmenu/'.$version.'/';
-		$files		= (object) array( 'js' => array(), 'css' => array() );
+		$files		= (object) array( 'js' => [], 'css' => [] );
 		if( $config->get( 'version' ) === '7.0.5' ){
 			if( $config->get( 'load' ) == "all" ){
 				$files->js[]	= 'jquery.mmenu.all.min.js';

@@ -21,22 +21,22 @@ class View_Helper_Panel_Mangopay_Cards extends View_Helper_Panel_Mangopay{
 		foreach( $this->data as $item ){
 		//	if( !$item->Active )
 		//		continue;
-			$link		= HtmlTag::create( 'a', $item->Id, array( 'href' => sprintf( $this->options->get( 'linkItem' ), $item->Id ) ) );
-			$status		= HtmlTag::create( 'span', $item->Active ? 'aktiv' : 'deaktiviert', array( 'class' => 'label label-'.( $item->Active ? 'success' : 'important' ) ) );
+			$link		= HtmlTag::create( 'a', $item->Id, ['href' => sprintf( $this->options->get( 'linkItem' ), $item->Id )] );
+			$status		= HtmlTag::create( 'span', $item->Active ? 'aktiv' : 'deaktiviert', ['class' => 'label label-'.( $item->Active ? 'success' : 'important' )] );
 			$number		= View_Helper_Panel_Mangopay::renderCardNumber( $item->Alias );
 			$provider	= $this->words['cardTypes'][$item->CardType].'<br/><small class="muted">'.$this->words['cardProviders'][$item->CardProvider].'</small>';
 			$rows[]		= HtmlTag::create( 'tr', array(
-				HtmlTag::create(' td', $link, array( 'class' => 'cell-card-id' ) ),
-				HtmlTag::create(' td', $provider, array( 'class' => 'cell-card-provider' ) ),
-				HtmlTag::create(' td', $number, array( 'class' => 'cell-card-title' ) ),
-				HtmlTag::create(' td', $item->Currency, array( 'class' => 'cell-card-currency' ) ),
-				HtmlTag::create(' td', $status, array( 'class' => 'cell-card-status' ) ),
+				HtmlTag::create(' td', $link, ['class' => 'cell-card-id'] ),
+				HtmlTag::create(' td', $provider, ['class' => 'cell-card-provider'] ),
+				HtmlTag::create(' td', $number, ['class' => 'cell-card-title'] ),
+				HtmlTag::create(' td', $item->Currency, ['class' => 'cell-card-currency'] ),
+				HtmlTag::create(' td', $status, ['class' => 'cell-card-status'] ),
 			) );
 		}
 		$colgroup	= HtmlElements::ColumnGroup( "100", "160", "", "90", "100" );
 		$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'ID', 'Typ/Anbieter', 'Card Number <small class="muted">(anonymisiert)</small>', 'Currency', 'Status' ) ) );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
-		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped table-fixed' ) );
+		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped table-fixed'] );
 		return '
 		<div class="content-panel">
 			<h3>Credit Cards <small class="muted"></small></h3>

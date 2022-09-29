@@ -72,14 +72,14 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 			}
 		}
 
-		$orders			= $this->logicShop->getOrders( $conditions, $orders, array( $pageNr * 15, 15 ) );
+		$orders			= $this->logicShop->getOrders( $conditions, $orders, [$pageNr * 15, 15] );
 		$customerIds	= [];
 		foreach( $orders as $nr => $order ){
 			$customerIds[]	= $order->userId;
 			$orders[$nr]->positions	= $this->logicShop->getOrderPositions( $order->orderId );
 			$orders[$nr]->customer	= $this->logicShop->getOrderCustomer( $order->orderId );
 		}
-//		$customers		= $this->modelCustomer->getAll( array( 'userId' => $customerIds ) );
+//		$customers		= $this->modelCustomer->getAll( ['userId' => $customerIds] );
 		$this->addData( 'orders', $orders );
 		$this->addData( 'total', $this->logicShop->countOrders( $conditions ) );
 		$this->addData( 'pageNr', $pageNr );
@@ -110,6 +110,6 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 		if( !$this->session->get( $sessionPrefix.'order' ) )
 				$this->session->set( $sessionPrefix.'order', 'createdAt:DESC' );
 		if( !$this->session->get( $sessionPrefix.'status' ) )
-				$this->session->set( $sessionPrefix.'status', array( -5, 2, 3, 4, 5 ) );
+				$this->session->set( $sessionPrefix.'status', [-5, 2, 3, 4, 5] );
 	}
 }

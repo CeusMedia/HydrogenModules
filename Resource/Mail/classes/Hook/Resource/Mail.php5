@@ -47,9 +47,9 @@ class Hook_Resource_Mail extends Hook
 		}
 
 		$modelMail		= new Model_Mail( $env );
-		$orders			= array( 'mailId' => 'DESC' );
-		$fields			= array( 'mailId', 'status', 'subject', 'enqueuedAt' );
-		$icon			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope-o', 'title' => 'E-Mail' ) );
+		$orders			= ['mailId' => 'DESC'];
+		$fields			= ['mailId', 'status', 'subject', 'enqueuedAt'];
+		$icon			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope-o', 'title' => 'E-Mail'] );
 		$statusesActive	= array(
 			Model_Mail::STATUS_SENT,
 			Model_Mail::STATUS_RECEIVED,
@@ -60,11 +60,11 @@ class Hook_Resource_Mail extends Hook
 		$words			= $env->getLanguage()->getWords( 'mail' );
 
 		//  RECEIVED MAILS
-		$indices	= array( 'receiverId' => $data->userId );
+		$indices	= ['receiverId' => $data->userId];
 		if( $activeOnly )
 			$indices['status']	= $statusesActive;
 		$list		= [];
-		$mails	 	= $modelMail->getAll( $indices, $orders, array(), $fields );
+		$mails	 	= $modelMail->getAll( $indices, $orders, [], $fields );
 		foreach( $mails as $mail )
 			$list[]		= (object) array(
 				'id'		=> $linkable ? $mail->mailId : NULL,
@@ -81,12 +81,12 @@ class Hook_Resource_Mail extends Hook
 		);
 
 		//  SENT MAILS
-		$indices	= array( 'senderId' => $data->userId );
+		$indices	= ['senderId' => $data->userId];
 		if( $activeOnly )
 			$indices['status']	= $statusesActive;
 		$list		= [];
 
-		$mails	 	= $modelMail->getAll( $indices, $orders, array(), $fields );
+		$mails	 	= $modelMail->getAll( $indices, $orders, [], $fields );
 		foreach( $mails as $mail )
 			$list[]		= (object) array(
 				'id'		=> $linkable ? $mail->mailId : NULL,
@@ -121,16 +121,16 @@ class Hook_Resource_Mail extends Hook
 		}
 
 		$modelMail	= new Model_Mail( $env );
-		$orders		= array( 'mailId' => 'ASC' );
-		$fields		= array( 'mailId' );
+		$orders		= ['mailId' => 'ASC'];
+		$fields		= ['mailId'];
 
-		$indices	= array( 'senderId' => $data->userId );
-		$mailsSent	= $modelMail->getAll( $indices, $orders, array(), $fields );
+		$indices	= ['senderId' => $data->userId];
+		$mailsSent	= $modelMail->getAll( $indices, $orders, [], $fields );
 		foreach( $mailsSent as $mailId )
 			$modelMail->remove( $mailId );
 
-		$indices	= array( 'receiverId' => $data->userId );
-		$mailsReceived	= $modelMail->getAll( $indices, $orders, array(), $fields );
+		$indices	= ['receiverId' => $data->userId];
+		$mailsReceived	= $modelMail->getAll( $indices, $orders, [], $fields );
 		foreach( $mailsReceived as $mailId )
 			$modelMail->remove( $mailId );
 		if( isset( $data->counts ) )

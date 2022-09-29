@@ -7,10 +7,10 @@ $w				= (object) $words['register'];
 
 $moduleConfig	= $config->getAll( 'module.resource_users.', TRUE );
 
-$iconRegister	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconRegister	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $optGender		= HtmlElements::Options( $words['gender'], $user->get( 'gender' ) );
 
-$texts	= array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' );
+$texts	= ['top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom'];
 extract( $view->populateTexts( $texts, 'html/auth/local/register/' ) );
 
 $files		= array(
@@ -65,14 +65,14 @@ $fieldOauth2	= '';
 if( isset( $useOauth2 ) && $useOauth2 ){
 	$helper		= new View_Helper_Oauth_ProviderButtons( $this->env );
 	if( $helper->count() ){
-		$iconUnbind			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+		$iconUnbind			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 		$assignedProvider	= $env->getSession()->get( 'auth_register_oauth_provider' );
 		if( $assignedProvider ){
 			$icon		= '';
 			if( $assignedProvider->icon ){
 				$icon		= HtmlTag::create( 'div', array(
 					'<span class="fa-stack fa-2x" style=""><i class="fa fa-square-o fa-stack-2x"></i><i class="'.$assignedProvider->icon.' fa-stack-1x"></i></span>',
-				), array( 'class' => 'bs2-span4 bs3-col-md-4 bs4-col-md-4', 'style' => 'text-align: center; font-size: 2em; padding-top: 0.75em;' ) );
+				), ['class' => 'bs2-span4 bs3-col-md-4 bs4-col-md-4', 'style' => 'text-align: center; font-size: 2em; padding-top: 0.75em;'] );
 
 			}
 			$field		= HtmlTag::create( 'div', array(
@@ -91,11 +91,11 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 									'class'	=> 'btn btn-small not-btn-inverse'
 								) ),
 							) ),
-						), array( 'class' => $icon ? 'bs2-span8 bs3-col-md-8 bs4-col-md-8' : 'bs2-span12 bs3-col-md-12 bs4-col-md-12' ) ),
+						), ['class' => $icon ? 'bs2-span8 bs3-col-md-8 bs4-col-md-8' : 'bs2-span12 bs3-col-md-12 bs4-col-md-12'] ),
 						$icon,
-					), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) ),
+					), ['class' => 'bs2-row-fluid bs3-row bs4-row'] ),
 				) ),
-			), array( 'class' => 'alert alert-success' ) );
+			), ['class' => 'alert alert-success'] );
 		}
 		else{
 			$helper		= new View_Helper_Oauth_ProviderButtons( $this->env );
@@ -105,15 +105,15 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 				HtmlTag::create( 'label', 'Registrieren mit' ),
 				HtmlTag::create( 'div', HtmlTag::create( 'div', $buttons, array(
 					'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12'
-				) ), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) ),
+				) ), ['class' => 'bs2-row-fluid bs3-row bs4-row'] ),
 			);
 		}
 		$fieldOauth2	= HtmlTag::create( 'div', array(
 			HtmlTag::create( 'div', array(
 				$field,
 				HtmlTag::create( 'hr', NULL ),
-			), array( 'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12' ) ),
-		), array( 'class' => 'bs2-row-fluid bs3-row bs4-row' ) );
+			), ['class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12'] ),
+		), ['class' => 'bs2-row-fluid bs3-row bs4-row'] );
 	}
 }
 

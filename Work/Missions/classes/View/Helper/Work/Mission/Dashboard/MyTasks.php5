@@ -19,12 +19,12 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 	public function render(){
 		if( !count( $this->projects ) )
 //			throw new RuntimeException( 'No user projects set or available' );
-			return HtmlTag::create( 'div', 'Keine Projekte vorhanden.', array( 'class' => 'alert alert-info' ) );
+			return HtmlTag::create( 'div', 'Keine Projekte vorhanden.', ['class' => 'alert alert-info'] );
 
 //		$words			= $this->getWords();
 		$showLimit			= 10;
 		$userProjects		= $this->projects;
-		$content			= HtmlTag::create( 'div', 'Keine Termine.', array( 'class' => 'alert alert-info' ) );
+		$content			= HtmlTag::create( 'div', 'Keine Termine.', ['class' => 'alert alert-info'] );
 		$helperDaysBadge	= new View_Helper_Work_Mission_DaysBadge( $this->env );
 		$count				= count( $this->tasks );
 		$tasks				= array_slice( $this->tasks, 0, $showLimit );
@@ -50,12 +50,12 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 				) );
 				$label	= $link/*.'<br/>'.$labelProject*/;
 				$key	= $priority.uniqid();
-				$daysBadge	= HtmlTag::create( 'span', $helperDaysBadge->render(), array( 'class' => 'pull-right' ) );
+				$daysBadge	= HtmlTag::create( 'span', $helperDaysBadge->render(), ['class' => 'pull-right'] );
 				$rows[$key]	= HtmlTag::create( 'tr', array(
-					HtmlTag::create( 'td', $label, array( 'class' => 'autocut' ) ),
+					HtmlTag::create( 'td', $label, ['class' => 'autocut'] ),
 					HtmlTag::create( 'td', $daysBadge ),
 //					HtmlTag::create( 'td', '<small class="muted">'.round( $priority, 2 ).'</small>' );
-				), array( 'class' => $rowStyle ) );
+				), ['class' => $rowStyle] );
 			};
 			krsort( $rows );
 			$colgroup	= HtmlElements::ColumnGroup( array(
@@ -67,7 +67,7 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 				'class'	=> 'table table-condensed table-fixed'
 			) );
 			if( $count > $showLimit ){
-				$content	.= HtmlTag::create( 'div', 'Und '.( $count - $showLimit ).' Weitere.', array( 'class' => 'alert alert-info' ) );
+				$content	.= HtmlTag::create( 'div', 'Und '.( $count - $showLimit ).' Weitere.', ['class' => 'alert alert-info'] );
 			}
 		}
 		$buttonAdd	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-plus"></i>&nbsp;neue Aufgabe', array(

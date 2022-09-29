@@ -132,7 +132,7 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 			return $helper->render();
 		}
 		$link	= HtmlElements::Link( './member/view/'.$user->userId, $user->username );
-		$user	= HtmlTag::create( 'span', $link, array( 'class' => 'role role'.$user->roleId ) );
+		$user	= HtmlTag::create( 'span', $link, ['class' => 'role role'.$user->roleId] );
 		return $user;
 	}
 }

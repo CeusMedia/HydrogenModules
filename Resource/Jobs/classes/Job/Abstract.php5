@@ -71,7 +71,7 @@ class Job_Abstract
 	 */
 	public function noteArguments( array $commands = [], array $parameters = [] ): self
 	{
-		$this->commands		= array_diff( $commands, array( 'dry', 'verbose' ) );
+		$this->commands		= array_diff( $commands, ['dry', 'verbose'] );
 		$this->parameters	= new Dictionary( $parameters );
 		$this->dryMode		= in_array( 'dry', (array) $commands );
 		$this->verbose		= in_array( 'verbose', (array) $commands );

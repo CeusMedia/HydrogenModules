@@ -8,13 +8,13 @@ $currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.template.co
 $tabs			= $words->tabs;
 $tabsContent	= $this->renderTabs( $tabs, 'template/setContentTab/'.$templateId.'/', $currentTab );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconPreview	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) ).'&nbsp;';
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
-$iconCopy		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clone' ) ).'&nbsp;';
-$iconRefresh	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) ).'&nbsp;';
-$iconExport		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
+$iconPreview	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
+$iconCopy		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-clone'] ).'&nbsp;';
+$iconRefresh	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] ).'&nbsp;';
+$iconExport		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] ).'&nbsp;';
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.$words->edit->buttonCancel, array(
 	'class'		=> "btn btn-small",
@@ -62,28 +62,28 @@ $buttons		= HtmlTag::create( 'div', join( ' ', array(
 	$buttonExport,
 //	$buttonRemove,
 //	$buttonCopy,
-) ), array( 'class' => 'buttonbar' ) );
+) ), ['class' => 'buttonbar'] );
 
 switch( $currentTab ){
 	case 0:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.details.php', array( 'buttons' => $buttons ) );
+		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.details.php', ['buttons' => $buttons] );
 		break;
 	case 1:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.html.php', array( 'buttons' => $buttons ) );
+		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.html.php', ['buttons' => $buttons] );
 		break;
 	case 2:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.text.php', array( 'buttons' => $buttons ) );
+		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.text.php', ['buttons' => $buttons] );
 		break;
 	case 3:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.style.php', array( 'buttons' => $buttons ) );
+		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.style.php', ['buttons' => $buttons] );
 		break;
 	case 4:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.styles.php', array( 'buttons' => $buttons ) );
+		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.styles.php', ['buttons' => $buttons] );
 		break;
 	default:
 		throw new InvalidArgumentException( 'Invalid tab: '.$currentTab );
 }
-$tabsContent	.= HtmlTag::create( 'div', $content, array( 'tab-content' ) );
+$tabsContent	.= HtmlTag::create( 'div', $content, ['tab-content'] );
 
 $modalPreview	= '
 <div id="modal-preview" class="modal hide -fade preview">
@@ -123,7 +123,7 @@ $modalStyleAdd	= '
 	</form>
 </div>';
 
-extract( $view->populateTexts( array( 'above', 'bottom', 'top' ), 'html/work/newsletter/template/edit/', array(
+extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/template/edit/', array(
 	'words'		=> $words,
 	'template'	=> $template
 ) ) );

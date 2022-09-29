@@ -75,7 +75,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$offsetStart	= date( "w", strtotime( $showScope ) ) - 1;
 		$offsetStart	= $offsetStart >= 0 ? $offsetStart : 6;
 		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
-		$orders			= array( 'priority' => 'ASC' );
+		$orders			= ['priority' => 'ASC'];
 
 		$rows			= [];
 		for( $i=0; $i<$weeks; $i++ ){
@@ -111,10 +111,10 @@ WorkMissionsList.loadCurrentListAndDayControls();
 			$rows[]	= '<tr>'.join( $row ).'</tr>';
 		}
 		$colgroup	= HtmlElements::ColumnGroup( "3.75%", "13.75%", "13.75%", "13.75%", "13.75%", "13.75%", "13.75%", "13.75%" );
-		$heads		= HtmlElements::TableHeads( array( "KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ) );
+		$heads		= HtmlElements::TableHeads( ["KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"] );
 		$thead		= HtmlTag::create( 'thead', $heads );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
-		$tableLarge	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-large" ) );
+		$tableLarge	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['id' => "mission-calendar-large"] );
 		return $tableLarge;
 	}
 
@@ -135,7 +135,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$offsetStart	= date( "w", strtotime( $showScope ) ) - 1;
 		$offsetStart	= $offsetStart >= 0 ? $offsetStart : 6;
 		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
-		$orders			= array( 'priority' => 'ASC' );
+		$orders			= ['priority' => 'ASC'];
 
 		$rows			= [];
 		for( $i=0; $i<$weeks; $i++ ){
@@ -173,10 +173,10 @@ WorkMissionsList.loadCurrentListAndDayControls();
 			$rows[]	= join( $row );
 		}
 		$colgroup	= HtmlElements::ColumnGroup( /*"5%", "95%"*/"100%" );
-		$heads		= HtmlElements::TableHeads( array( "KW", "..." ) );
+		$heads		= HtmlElements::TableHeads( ["KW", "..."] );
 		$thead		= HtmlTag::create( 'thead', ""/*$heads*/ );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
-		$tableSmall	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'id' => "mission-calendar-small" ) );
+		$tableSmall	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['id' => "mission-calendar-small"] );
 		return $tableSmall;
 	}
 
@@ -206,35 +206,35 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$label			= $this->renderLabel( $year, $month );
 
 		$btnExport		= HtmlTag::create( 'div', array(
-			HtmlTag::create( 'a', 'Export <span class="caret"></span>', array( 'href' => '#', 'class' => 'btn dropdown-toggle', 'data-toggle' => 'dropdown' ) ),
+			HtmlTag::create( 'a', 'Export <span class="caret"></span>', ['href' => '#', 'class' => 'btn dropdown-toggle', 'data-toggle' => 'dropdown'] ),
 			HtmlTag::create( 'ul', array(
 				HtmlTag::create( 'li', array(
 					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im iCal-Format', array(
 						'href'		=> './work/mission/export/ical',
 						'target'	=> '_blank',
 					) ),
-				), array( 'style' => 'text-align: left' ) ),
+				), ['style' => 'text-align: left'] ),
 				HtmlTag::create( 'li', array(
 					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im CSV-Format', array(
 						'href'		=> './work/mission/export/csv',
 						'target'	=> '_blank',
 					) ),
-				), array( 'style' => 'text-align: left' ) ),
+				), ['style' => 'text-align: left'] ),
 				HtmlTag::create( 'li', array(
 					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im XML-Format', array(
 						'href'		=> './work/mission/export/xml',
 						'target'	=> '_blank',
 					) ),
-				), array( 'style' => 'text-align: left' ) ),
-				HtmlTag::create( 'li', '', array( 'class' => 'divider' ) ),
+				), ['style' => 'text-align: left'] ),
+				HtmlTag::create( 'li', '', ['class' => 'divider'] ),
 				HtmlTag::create( 'li', array(
 					HtmlTag::create( 'a', '<i class="fa fa-question-sign"></i>&nbsp;Anleitung', array(
 						'href'		=> './work/mission/export/help',
 						'target'	=> '_blank',
 					) )
-				), array( 'style' => 'text-align: left' ) )
-			), array( 'class' => 'dropdown-menu pull-right' ) )
-		), array( 'class' => 'btn-group' ) );
+				), ['style' => 'text-align: left'] )
+			), ['class' => 'dropdown-menu pull-right'] )
+		), ['class' => 'btn-group'] );
 		return '
 	<div id="mission-calendar-control" class="row-fluid">
 		<div class="span8">
@@ -322,6 +322,6 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
-			return HtmlTag::create( 'div', $diff->days, array( 'class' => "overdue" ) );		//  render overdue container
+			return HtmlTag::create( 'div', $diff->days, ['class' => "overdue"] );		//  render overdue container
 	}
 }

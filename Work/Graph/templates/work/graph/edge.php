@@ -12,8 +12,8 @@ if( $edge->label )
 $description	= strlen( trim( $graph->description ) ) ? trim( $graph->description )."\n\n" : '';
 
 $factsEdge		= array(
-	array( 'Source Node', HtmlTag::create( 'a', $nodeIndex[$edge->fromNodeId], array( 'href' => './work/graph/node/'.$edge->fromNodeId ) ), NULL ),
-	array( 'TargetNode', HtmlTag::create( 'a', $nodeIndex[$edge->toNodeId], array( 'href' => './work/graph/node/'.$edge->toNodeId ) ), NULL ),
+	array( 'Source Node', HtmlTag::create( 'a', $nodeIndex[$edge->fromNodeId], ['href' => './work/graph/node/'.$edge->fromNodeId] ), NULL ),
+	array( 'TargetNode', HtmlTag::create( 'a', $nodeIndex[$edge->toNodeId], ['href' => './work/graph/node/'.$edge->toNodeId] ), NULL ),
 	array( 'Title', $edge->label, NULL ),
 	array( 'Arrow Head', $edge->arrowhead, NULL ),
 	array( 'Arrow Size', $edge->arrowsize, NULL ),

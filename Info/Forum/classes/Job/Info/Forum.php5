@@ -45,7 +45,7 @@ class Job_Info_Forum extends Job_Abstract
 					$receivers[(int) $user->userId]	= $user;
 		}
 
-		$posts		= $modelPost->getAll( array( 'status' => 0 ), array( 'createdAt' => 'DESC' ) );
+		$posts		= $modelPost->getAll( ['status' => 0], ['createdAt' => 'DESC'] );
 
 		if( $posts ){
 			foreach( $receivers as $receiver ){

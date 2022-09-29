@@ -128,9 +128,9 @@ CodeMirror.on(window, "resize", function() {
 	 */
 	public static function onGetAvailableContentEditor( Environment $env, $context, $module, $payload = [] )
 	{
-		if( !empty( $payload->type ) && !in_array( $payload->type, array( 'code' ) ) )
+		if( !empty( $payload->type ) && !in_array( $payload->type, ['code'] ) )
 			return;
-		if( !empty( $payload->format ) && !in_array( $payload->format, array( 'html', 'markdown', 'md'/*, '*'*/ ) ) )
+		if( !empty( $payload->format ) && !in_array( $payload->format, ['html', 'markdown', 'md'/*, '*'*/] ) )
 			return;
 		$editor	= (object) array(
 			'key'		=> 'codemirror',

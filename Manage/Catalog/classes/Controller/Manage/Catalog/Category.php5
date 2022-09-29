@@ -12,11 +12,11 @@ class Controller_Manage_Catalog_Category extends Controller
 			$logic		= new Logic_Catalog( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
 			$language	= $env->getLanguage()->getLanguage();
-			$conditions	= array( 'visible' => '> 0', 'parentId' => 0 );
-			$categories	= $logic->getCategories( $conditions, array( 'rank' => 'ASC' ) );
+			$conditions	= ['visible' => '> 0', 'parentId' => 0];
+			$categories	= $logic->getCategories( $conditions, ['rank' => 'ASC'] );
 			foreach( $categories as $nr1 => $item ){
-				$conditions	= array( 'visible' => '> 0', 'parentId' => $item->categoryId );
-				$subs		= $logic->getCategories( $conditions, array( 'rank' => 'ASC' ) );
+				$conditions	= ['visible' => '> 0', 'parentId' => $item->categoryId];
+				$subs		= $logic->getCategories( $conditions, ['rank' => 'ASC'] );
 				foreach( $subs as $nr2 => $sub ){
 					$subs[$nr2] = (object) array(
 						'title'	=> $sub->{"label_".$language},

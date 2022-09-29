@@ -29,7 +29,7 @@ class Browser
 			$controller	= 'index';
 
 		$disclosure		= new Disclosure();
-		$options		= array( 'classPrefix' => 'Controller_', 'readMethods' => FALSE );
+		$options		= ['classPrefix' => 'Controller_', 'readMethods' => FALSE];
 		$controllers	= [];
 		foreach( array_keys( $disclosure->reflect( 'classes/Controller/', $options ) ) as $item ){
 			if( $item !== "Abstract" ){
@@ -41,7 +41,7 @@ class Browser
 
 		$actions		= array( 'index' => '(index)' );
 		$arguments		= [];
-		$options		= array( 'classPrefix' => 'Controller_', 'readParameters' => TRUE );
+		$options		= ['classPrefix' => 'Controller_', 'readParameters' => TRUE];
 		foreach( $disclosure->reflect( 'classes/Controller/', $options ) as $className => $class ){
 			if( str_replace( '_', '/', strtolower( $className ) ) == $controller ){
 				foreach( $class->methods as $methodName => $method ){

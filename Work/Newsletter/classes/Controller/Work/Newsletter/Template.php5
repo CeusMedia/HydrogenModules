@@ -31,7 +31,7 @@ class Controller_Work_Newsletter_Template extends Controller
 		$copyTemplateId	= (int) $this->request->get( 'templateId' );
 		if( $this->request->has( 'save' ) ){
 			$data			= $this->request->getAll();
-			if( $this->logic->getTemplates( array( 'title' => $data['title'] ) ) ){
+			if( $this->logic->getTemplates( ['title' => $data['title']] ) ){
 				$this->messenger->noteError( $words->msgErrorTitleExists );
 			}
 			else{
@@ -48,7 +48,7 @@ class Controller_Work_Newsletter_Template extends Controller
 				$this->setContentTab( $templateId, 0 );
 			}
 		}
-		$templates		= $this->logic->getTemplates( array(), array( 'title' => 'ASC' ) );
+		$templates		= $this->logic->getTemplates( [], ['title' => 'ASC'] );
 		$template		= (object) array(
 			'title'			=> $this->request->get( 'title' ),
 			'templateId'	=> (int) $this->request->get( 'templateId' ),
@@ -122,10 +122,10 @@ class Controller_Work_Newsletter_Template extends Controller
 			$this->messenger->noteSuccess( $words->msgSuccess );
 			$this->restart( 'edit/'.$templateId, TRUE );
 		}
-		$conditions		= array( 'newsletterTemplateId' => $templateId );
+		$conditions		= ['newsletterTemplateId' => $templateId];
 		$newsletters	= $this->logic->getNewsletters( $conditions );
 
-		$conditions		= array( 'newsletterTemplateId' => $templateId, 'status' => 2 );
+		$conditions		= ['newsletterTemplateId' => $templateId, 'status' => 2];
 		$isUsed			= count( $this->logic->getNewsletters( $conditions ) );
 
 		$tab			= $this->session->get( 'work.newsletter.template.content.tab' );
@@ -158,7 +158,7 @@ class Controller_Work_Newsletter_Template extends Controller
 	public function index()
 	{
 		$conditions		= [];
-		$orders			= array( 'title' => 'ASC' );
+		$orders			= ['title' => 'ASC'];
 		$this->addData( 'templates', $this->logic->getTemplates( $conditions, $orders ) );
 
 		$model	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
@@ -284,7 +284,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			$page->addHead( HtmlTag::create( 'style', $css ) );
 			$page->addBody( $html );
 
-			print( $page->build( array( 'class' => 'mail' ) ) );
+			print( $page->build( ['class' => 'mail'] ) );
 			exit;
 
 		}

@@ -6,12 +6,12 @@ if( $branches ){
 	$list	= [];
 	foreach( $branches as $entry){
 		$label	= $entry->title.' in '.$entry->city;
-		$link	= HtmlTag::create( 'a', $label, array( 'href' => './company/branch/'.$entry->branchId, 'class' => '' ) );
-		$list[]	= HtmlTag::create( 'li', $link, array( 'class' => '' ) );
+		$link	= HtmlTag::create( 'a', $label, ['href' => './company/branch/'.$entry->branchId, 'class' => ''] );
+		$list[]	= HtmlTag::create( 'li', $link, ['class' => ''] );
 	}
 	$listBranches	= '
 		<h4>Branches of Company</h4>
-		'.HtmlTag::create( 'ul', $list, array( 'class' => '' ) ).'
+		'.HtmlTag::create( 'ul', $list, ['class' => ''] ).'
 	';
 }
 

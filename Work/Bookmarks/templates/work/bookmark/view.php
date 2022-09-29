@@ -1,10 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconVisit	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-right icon-white' ) );
-$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil fa fa-pencil' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white fa fa-remove' ) );
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconVisit	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-right icon-white'] );
+$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'icon-pencil fa fa-pencil'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white fa fa-remove'] );
 
 $urlVisit	= './work/bookmark/visit/'.$bookmark->bookmarkId;
 $linkTitle	= HtmlTag::create( 'a', $bookmark->title, array(
@@ -19,15 +19,15 @@ $linkUrl	= HtmlTag::create( 'a', $linkLabel, array(
 ) );
 $title	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'big', $linkTitle )
-), array( 'class' => 'title' ) );
+), ['class' => 'title'] );
 $url	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'small', $linkUrl )
-), array( 'class' => 'title', 'style' => 'color: green'  ) );
+), ['class' => 'title', 'style' => 'color: green' ] );
 $description	= '';
 if( $bookmark->description ){
 	$description	= HtmlTag::create( 'div', array(
 		HtmlTag::create( 'small', $bookmark->description )
-	), array( 'class' => 'title' ) );
+	), ['class' => 'title'] );
 }
 $pageTitle	= '';
 if( $bookmark->pageTitle !== $bookmark->title ){
@@ -57,7 +57,7 @@ $panelView	= HtmlTag::create( 'div', array(
 			$url,
 			$description,
 			$pageDescription,
-		), array( 'class' => NULL ) ),
+		), ['class' => NULL] ),
 		HtmlTag::create( 'div', array(
 			HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', array(
 				'href'		=> './work/bookmark/',
@@ -76,9 +76,9 @@ $panelView	= HtmlTag::create( 'div', array(
 				'href'		=> './work/bookmark/remove/'.$bookmark->bookmarkId,
 				'class'		=> 'btn btn-small btn-danger'
 			) ),
-		), array( 'class' => 'buttonbar' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+		), ['class' => 'buttonbar'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 
 $panelInfo	= HtmlTag::create( 'div', array(
@@ -87,27 +87,27 @@ $panelInfo	= HtmlTag::create( 'div', array(
 		HtmlTag::create( 'dl', array(
 			HtmlTag::create( 'dt', array(
 				'createdAt'
-			), array( 'class' => '' ) ),
+			), ['class' => ''] ),
 			HtmlTag::create( 'dd', array(
 				date( 'd.m.Y H:i:s', $bookmark->createdAt )
-			), array( 'class' => '' ) ),
+			), ['class' => ''] ),
 			HtmlTag::create( 'dt', array(
 				'modifiedAt'
-			), array( 'class' => '' ) ),
+			), ['class' => ''] ),
 			HtmlTag::create( 'dd', array(
 				$bookmark->modifiedAt ? date( 'd.m.Y H:i:s', $bookmark->modifiedAt ) : '-'
-			), array( 'class' => '' ) ),
+			), ['class' => ''] ),
 			HtmlTag::create( 'dt', array(
 				'visits'
-			), array( 'class' => '' ) ),
+			), ['class' => ''] ),
 			HtmlTag::create( 'dd', array(
 				$bookmark->visits
-			), array( 'class' => '' ) ),
-		), array( 'class' => 'not-dl-horizontal' ) ),
+			), ['class' => ''] ),
+		), ['class' => 'not-dl-horizontal'] ),
 /*		HtmlTag::create( 'div', array(
-		), array( 'class' => 'buttonbar' ) ),*/
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+		), ['class' => 'buttonbar'] ),*/
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 $list	= 'keine kommentare';
 if( count( $comments ) ){
@@ -131,19 +131,19 @@ $panelComments	= HtmlTag::create( 'div', array(
 							'name'	=> 'comment',
 							'class'	=> 'span12',
 						) ),
-					), array( 'class' => 'span10' ) ),
+					), ['class' => 'span10'] ),
 					HtmlTag::create( 'div', array(
 						HtmlTag::create( 'button', 'save', array(
 							'type'	=> 'submit',
 							'name'	=> 'save',
 							'class'	=> 'btn btn-primary',
 						) )
-					), array( 'class' => 'span2' ) ),
-				), array( 'class' => 'row-fluid' ) ),
-			), array( 'action' => './work/bookmark/comment/'.$bookmark->bookmarkId, 'method' => 'post' ) ),
-		), array( 'class' => 'buttonbar' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+					), ['class' => 'span2'] ),
+				), ['class' => 'row-fluid'] ),
+			), ['action' => './work/bookmark/comment/'.$bookmark->bookmarkId, 'method' => 'post'] ),
+		), ['class' => 'buttonbar'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 $list	= 'keine kommentare';
 if( count( $tags ) ){
@@ -167,31 +167,31 @@ $panelTags	= HtmlTag::create( 'div', array(
 							'name'	=> 'tag',
 							'class'	=> 'span12',
 						) ),
-					), array( 'class' => 'span8' ) ),
+					), ['class' => 'span8'] ),
 					HtmlTag::create( 'div', array(
 						HtmlTag::create( 'button', 'save', array(
 							'type'	=> 'submit',
 							'name'	=> 'save',
 							'class'	=> 'btn btn-primary',
 						) )
-					), array( 'class' => 'span4' ) ),
-				), array( 'class' => 'row-fluid' ) ),
-			), array( 'action' => './work/bookmark/addTag/'.$bookmark->bookmarkId, 'method' => 'post' ) ),
-		), array( 'class' => 'buttonbar' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+					), ['class' => 'span4'] ),
+				), ['class' => 'row-fluid'] ),
+			), ['action' => './work/bookmark/addTag/'.$bookmark->bookmarkId, 'method' => 'post'] ),
+		), ['class' => 'buttonbar'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		$panelView,
 		$panelComments,
-	), array( 'class' => 'span9' ) ),
+	), ['class' => 'span9'] ),
 	HtmlTag::create( 'div', array(
 		$panelInfo,
 		$panelTags,
-	), array( 'class' => 'span3' ) ),
-), array( 'class' => 'row-fluid' ) ).'
+	), ['class' => 'span3'] ),
+), ['class' => 'row-fluid'] ).'
 <style>
 small>a {
 	color: green;

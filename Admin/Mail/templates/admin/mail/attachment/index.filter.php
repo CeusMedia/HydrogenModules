@@ -13,22 +13,22 @@ use CeusMedia\HydrogenFramework\View;
 $w	= (object) $words['filter'];
 
 ksort( $files );
-$optFile	= array( '' => $w->optAll );
+$optFile	= ['' => $w->optAll];
 foreach( $files as $file )
 	$optFile[$file->filePath]	= $file->filePath;
 $optFile	= HtmlElements::Options( $optFile, $filterFile );
 
-$optClass	= array( '' => $w->optAll );
+$optClass	= ['' => $w->optAll];
 foreach( $classes as $class )
 	$optClass[$class]	= $class;
 $optClass	= HtmlElements::Options( $optClass, $filterClass );
 
-$optLanguage	= array( '' => $w->optAll );
+$optLanguage	= ['' => $w->optAll];
 foreach( $languages as $language )
 	$optLanguage[$language]	= $language;
 $optLanguage	= HtmlElements::Options( $optLanguage, $filterLanguage );
 
-$optStatus	= array( '' => $w->optAll ) + $words['states'];
+$optStatus	= ['' => $w->optAll] + $words['states'];
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 return '

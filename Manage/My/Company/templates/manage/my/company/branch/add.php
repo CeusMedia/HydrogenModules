@@ -4,7 +4,7 @@ $w		= (object) $words['add'];
 $iconCancel	= HTML::Icon( 'arrow-left' );
 $iconSave	= HTML::Icon( 'ok', TRUE );
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/manage/my/branch/add/' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/manage/my/branch/add/' ) );
 
 $optCompany	= [];
 foreach( $companies as $company )

@@ -41,7 +41,7 @@ class View_Helper_Mangopay_Error{
 		$message	= $this->map[$this->code]->label;
 		switch( $this->mode ){
 			case self::MODE_HTML:
-				$code	= HtmlTag::create( 'small', '('.$this->code.')', array( 'class' => 'muted' ) );
+				$code	= HtmlTag::create( 'small', '('.$this->code.')', ['class' => 'muted'] );
 				return $message.' '.$code;
 			case self::MODE_PLAIN:
 			default:

@@ -35,7 +35,7 @@ class Controller_Work_Billing_Corporation_Reserve extends Controller
 			else if( $filterMonth )
 				$conditions['dateBooked']	= '%-'.$filterMonth.'-%';
 		}
-		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
+		$orders		= ['dateBooked' => 'ASC', 'transactionId' => 'ASC'];
 		$limits		= [];
 		$reserves	= $this->logic->getCorporationReserves( $corporationId, $conditions, $orders, $limits );
 		$this->addData( 'reserves', $reserves );

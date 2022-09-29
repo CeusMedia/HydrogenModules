@@ -46,7 +46,7 @@ class Controller_Manage_My_User_Avatar extends Controller{
 
 		$logic		= new Logic_Upload( $this->env );
 		$maxSize	= Alg_UnitParser::parse( $this->moduleConfig->get( 'image.upload.maxFileSize' ), 'M' );
-		$maxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $maxSize ) );
+		$maxSize	= Logic_Upload::getMaxUploadSize( ['config' => $maxSize] );
 		$logic->setUpload( $request->get( 'upload' ) );
 		if( !$logic->checkSize( $maxSize ) ){
 			$messenger->noteError( $words->errorFileTooLarge );

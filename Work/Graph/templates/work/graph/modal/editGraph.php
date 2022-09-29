@@ -6,8 +6,8 @@ foreach( $graphs as $item )
 	$optGraph[$item->graphId]	= $item->title;
 $optGraph	= HtmlElements::Options( $optGraph );
 
-$optType	= array( "static" => "static", "graph" => "graph", "digraph" => "digraph" );
-$optRankdir	= array( "LR" => "LR", "RL" => "RL" );
+$optType	= ["static" => "static", "graph" => "graph", "digraph" => "digraph"];
+$optRankdir	= ["LR" => "LR", "RL" => "RL"];
 
 $optType		= HtmlElements::Options( $optType, $graph->type );
 $optRankdir		= HtmlElements::Options( $optRankdir, $graph->rankdir );

@@ -34,8 +34,8 @@ class Controller_Server_Log_Exception extends Controller
 		$this->env->getSession()->set( $this->filterPrefix.'page', $page );
 		$this->env->getSession()->set( $this->filterPrefix.'limit', $limit );
 
-		$orders		= array( 'createdAt' => 'DESC', 'exceptionId' => 'DESC' );
-		$limits		= array( $page * $limit, $limit );
+		$orders		= ['createdAt' => 'DESC', 'exceptionId' => 'DESC'];
+		$limits		= [$page * $limit, $limit];
 		$exceptions	= $this->model->getAll( $conditions, $orders, $limits );
 
 		$this->addData( 'exceptions', $exceptions );

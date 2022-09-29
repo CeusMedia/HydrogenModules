@@ -38,8 +38,8 @@ class View_Helper_Stripe_Entity_WalletLogo extends View_Helper_Stripe_Abstract
 				$icon	= 'fa-yen';
 				break;
 		}
-		$classes	= array( 'fa fa-fw', $icon, $this->size );
-		$image		= HtmlTag::create( 'i', '', array( 'class' => join( ' ', $classes ) ) );
+		$classes	= ['fa fa-fw', $icon, $this->size];
+		$image		= HtmlTag::create( 'i', '', ['class' => join( ' ', $classes )] );
 		return HtmlTag::create( $this->nodeName, $image, array(
 			'class'	=> $this->nodeClass,
 		) );

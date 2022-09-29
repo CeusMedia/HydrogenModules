@@ -167,15 +167,15 @@ class Controller_Oauth extends Controller
 		$modelRefreshToken	= new Model_Oauth_RefreshToken( $this->env );
 
 		$expired		= time() - $this->lifetimeAuthorizationCode;
-		foreach( $modelCode->getAll( array( 'createdAt' => '< '.$expired ) ) as $entry )
+		foreach( $modelCode->getAll( ['createdAt' => '< '.$expired] ) as $entry )
 			$modelCode->remove( $entry->oauthCodeId );
 
 		$expired		= time() - $this->lifetimeAccessToken;
-		foreach( $modelAccessToken->getAll( array( 'createdAt' => '< '.$expired ) ) as $entry )
+		foreach( $modelAccessToken->getAll( ['createdAt' => '< '.$expired] ) as $entry )
 			$modelAccessToken->remove( $entry->oauthAccessTokenId );
 
 		$expired		= time() - $this->lifetimeRefreshToken;
-		foreach( $modelRefreshToken->getAll( array( 'createdAt' => '< '.$expired ) ) as $entry )
+		foreach( $modelRefreshToken->getAll( ['createdAt' => '< '.$expired] ) as $entry )
 			$modelRefreshToken->remove( $entry->oauthRefreshTokenId );
 	}
 
@@ -191,7 +191,7 @@ class Controller_Oauth extends Controller
 			if( preg_match( "/^Basic /", $headers['Authorization'] ) ){
 				$code	= preg_replace( "/^Basic /", "", $headers['Authorization'] );
 				list( $clientId, $clientSecret ) = explode( ":", base64_decode( $code ) );
-				return (object) array( 'clientId' => $clientId, 'clientSecret' => $clientSecret );
+				return (object) ['clientId' => $clientId, 'clientSecret' => $clientSecret];
 			}
 		}
 		return NULL;
@@ -199,7 +199,7 @@ class Controller_Oauth extends Controller
 
 	protected function errorRedirect( $message, $description = NULL, $uri = NULL, $status = 302 )
 	{
-		$parameters		= array( 'error' => $message );
+		$parameters		= ['error' => $message];
 		if( strlen( trim( $description ) ) )
 			$parameters['error_description']	= utf8_decode( $description );
 		if( strlen( trim( $uri ) ) )
@@ -235,7 +235,7 @@ class Controller_Oauth extends Controller
 	 */
 	protected function errorResponse( $message, $description = NULL, $uri = NULL, $status = 400 )
 	{
-		$parameters	= array( 'error' => $message );
+		$parameters	= ['error' => $message];
 		if( strlen( trim( $description ) ) )
 			$parameters['error_description']	= utf8_decode( $description );
 		if( strlen( trim( $uri ) ) )
@@ -374,12 +374,12 @@ class Controller_Oauth extends Controller
 			$this->errorResponse( 'invalid_client', 'Invalid client ID.', NULL, 401 );				//  respond error
 
 		/*  --  VALIDATION OF CLIENT SECRET  --  */
-		$indices	= array( 'clientId' => $clientId, 'clientSecret' => $clientSecret );			//  indices to find authorized application
+		$indices	= ['clientId' => $clientId, 'clientSecret' => $clientSecret];			//  indices to find authorized application
 		if( !( $application = $modelApplication->getByIndices( $indices ) ) )						//  no application found by client ID and secret
 			$this->errorResponse( 'invalid_client', 'Invalid client secret.', NULL, 401 );			//  respond error
 
 		/*  --  VALIDATION OF REDIRECT URI  --  */
-		$indices	= array( 'oauthApplicationId' => $applicationId, 'code' => $code );
+		$indices	= ['oauthApplicationId' => $applicationId, 'code' => $code];
 		if( !( $authCode = $modelCode->getByIndices( $indices ) ) )
 			$this->errorResponse( 'invalid_request', 'Authorization code invalid or outdated.' );
 		if( $authCode->redirectUri !== $redirectUri )
@@ -415,7 +415,7 @@ class Controller_Oauth extends Controller
 			$this->errorResponse( 'invalid_client', 'Invalid client ID.', NULL, 401 );				//  respond error
 
 		/*  --  VALIDATION OF CLIENT SECRET  --  */
-		$indices	= array( 'clientId' => $clientId, 'clientSecret' => $clientSecret );			//  indices to find authorized application
+		$indices	= ['clientId' => $clientId, 'clientSecret' => $clientSecret];			//  indices to find authorized application
 		if( !( $application = $modelApplication->getByIndices( $indices ) ) )						//  no application found by client ID and secret
 			$this->errorResponse( 'invalid_client', 'Invalid client secret.', NULL, 401 );			//  respond error
 
@@ -454,7 +454,7 @@ class Controller_Oauth extends Controller
 			$this->errorResponse( 'invalid_client', 'Invalid client ID.', NULL, 401 );				//  respond error
 
 		/*  --  VALIDATION OF CLIENT SECRET  --  */
-		$indices	= array( 'clientId' => $clientId, 'clientSecret' => $clientSecret );			//  indices to find authorized application
+		$indices	= ['clientId' => $clientId, 'clientSecret' => $clientSecret];			//  indices to find authorized application
 		if( !( $application = $modelApplication->getByIndices( $indices ) ) )						//  no application found by client ID and secret
 			$this->errorResponse( 'invalid_client', 'Invalid client secret.', NULL, 401 );			//  respond error
 
@@ -507,7 +507,7 @@ class Controller_Oauth extends Controller
 			$this->errorResponse( 'invalid_client', 'Invalid client ID.', NULL, 401 );				//  respond error
 
 		/*  --  VALIDATION OF CLIENT SECRET  --  */
-		$indices	= array( 'clientId' => $clientId, 'clientSecret' => $clientSecret );			//  indices to find authorized application
+		$indices	= ['clientId' => $clientId, 'clientSecret' => $clientSecret];			//  indices to find authorized application
 		if( !( $application = $modelApplication->getByIndices( $indices ) ) )						//  no application found by client ID and secret
 			$this->errorResponse( 'invalid_client', 'Invalid client secret.', NULL, 401 );			//  respond error
 

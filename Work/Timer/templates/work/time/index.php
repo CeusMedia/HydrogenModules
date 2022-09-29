@@ -7,7 +7,7 @@ $panelNew		= $view->loadTemplateFile( 'work/time/index.new.php' );
 $panelPaused	= $view->loadTemplateFile( 'work/time/index.paused.php' );
 $panelDone		= $view->loadTemplateFile( 'work/time/index.done.php' );
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/work/time/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/work/time/' ) );
 
 $tabs	= View_Work_Time::renderTabs( $env );
 

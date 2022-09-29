@@ -154,7 +154,7 @@ class Logic_Catalog_Gallery
 	 */
 	public function getUriPart( $label, $delimiter = "_" )
 	{
-		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
 		$label	= preg_replace( "/ +/", $delimiter, $label );
 		return $label;

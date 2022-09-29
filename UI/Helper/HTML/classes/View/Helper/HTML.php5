@@ -65,12 +65,12 @@ class HTML/* extends UI_HTML_Elements*/
 
 	public static function DivClass( string $class, $content = '', array $attributes = [] ): string
 	{
-		return self::Tag( 'div', $content, array( 'class' => $class ) );
+		return self::Tag( 'div', $content, ['class' => $class] );
 	}
 
 	public static function DivID( string $id, $content, array $attributes = [] ): string
 	{
-		return self::Tag( 'div', $content, array( 'id' => $id ) );
+		return self::Tag( 'div', $content, ['id' => $id] );
 	}
 
 	public static function Dl( array $definitions ): string
@@ -80,7 +80,7 @@ class HTML/* extends UI_HTML_Elements*/
 
 	public static function Fields( $content, string $class = NULL ): string
 	{
-		return self::Tag( 'fieldset', $content, array( 'class' => $class ) );
+		return self::Tag( 'fieldset', $content, ['class' => $class] );
 	}
 
 	public static function File( string $name, string $class = NULL, bool $readonly = NULL ): string
@@ -129,13 +129,13 @@ class HTML/* extends UI_HTML_Elements*/
 
 	public static function Heading( string $level, string $label, string $class = NULL ): string
 	{
-		return self::Tag( 'h'.$level, htmlentities( $label, ENT_COMPAT, 'UTF-8' ), array( 'class' => $class ) );
+		return self::Tag( 'h'.$level, htmlentities( $label, ENT_COMPAT, 'UTF-8' ), ['class' => $class] );
 	}
 
 	public static function Icon( string $key, bool $white = NULL ): string
 	{
 		$class		= "icon-".$key.( $white ? " icon-white" : "" );
-		return self::Tag( 'i', '', array( 'class' => $class ) );
+		return self::Tag( 'i', '', ['class' => $class] );
 	}
 
 	public static function Image( string $source, string $title, string $class = NULL, array $attributes = [] ): string
@@ -164,9 +164,9 @@ class HTML/* extends UI_HTML_Elements*/
 	public static function Label( string $inputName = NULL, $content, string $class = NULL, string $acronym = NULL, string $suffix = NULL ): string
 	{
 		if( $acronym )
-			$content	= self::Tag( 'abbr', $content, array( 'title' => $acronym ) );
+			$content	= self::Tag( 'abbr', $content, ['title' => $acronym] );
 		if( $suffix )
-			$content	.= '&nbsp;'.self::Tag( 'small', '('.$suffix.')', array( 'class' => 'muted' ) );
+			$content	.= '&nbsp;'.self::Tag( 'small', '('.$suffix.')', ['class' => 'muted'] );
 		$attributes	= array(
 			'for'		=> $inputName === NULL ? NULL : self::$prefixIdInput.$inputName,
 			'class'		=> $class,
@@ -176,11 +176,11 @@ class HTML/* extends UI_HTML_Elements*/
 
 	public static function Legend( $content, string $class = NULL ): string
 	{
-		return self::Tag( 'legend', $content, array( 'class' => $class ) );
+		return self::Tag( 'legend', $content, ['class' => $class] );
 	}
 
 	public static function Li( $content, string $class = NULL ){
-		return self::Tag( 'li', $content, array( 'class' => $class ) );
+		return self::Tag( 'li', $content, ['class' => $class] );
 	}
 
 	public static function LiClass( string $class, $content ): string
@@ -254,7 +254,7 @@ class HTML/* extends UI_HTML_Elements*/
 
 	public static function SpanClass( string $class, $content = '', array $attributes = [] ): string
 	{
-		return HTML::Tag( 'span', $content, array( 'class' => $class ) );
+		return HTML::Tag( 'span', $content, ['class' => $class] );
 	}
 
 	public static function Tag( string $nodeName, $content = NULL, array $attributes = [], array $data = [] ): string
@@ -277,6 +277,6 @@ class HTML/* extends UI_HTML_Elements*/
 
 	public static function UlClass( string $class, $content ): string
 	{
-		return HTML::Tag( 'ul', $content, array( 'class' => $class ) );
+		return HTML::Tag( 'ul', $content, ['class' => $class] );
 	}
 }

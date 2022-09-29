@@ -54,7 +54,7 @@ class View_Helper_Pagination
 			$control = new PageControl( $baseUri, $page, ceil( $total / $limit ) );
 			if( !$wrapIntoButtonbar )
 				return $control->render();
-			return HtmlTag::create( 'div', $control->render(), array( 'class' => 'buttonbar' ) );
+			return HtmlTag::create( 'div', $control->render(), ['class' => 'buttonbar'] );
 		}
 		return $this->renderOld( $baseUri, $total, $limit, $page );
 	}
@@ -81,7 +81,7 @@ class View_Helper_Pagination
 			}
 			$label	= $spanRange.' / '.$spanTotal;
 		}
-		return HtmlTag::create( 'small', '('.$label.')', array( 'class' => 'list-numbers muted' ) );
+		return HtmlTag::create( 'small', '('.$label.')', ['class' => 'list-numbers muted'] );
 	}
 
 	protected function renderOld( string $baseUri, $number, $limit, $page ): string
@@ -94,20 +94,20 @@ class View_Helper_Pagination
 			$url	= $baseUri;
 			if( $page != 1 )
 				$url	= $baseUri.'/'.( $page - 1 );
-			$link	= HtmlTag::create( 'a', '&laquo;', array( 'href' => $url ) );
+			$link	= HtmlTag::create( 'a', '&laquo;', ['href' => $url] );
 		}
 		else
 			$link	= HtmlTag::create( 'span', '&laquo;' );
 		$list[]	= HtmlTag::create( 'li', $link );
 		for( $i=0; $i<$pages; $i++ ){
 			if( $page == $i ){
-				$link	= HtmlTag::create( 'span', $i + 1, array( 'class' => 'current' ) );
+				$link	= HtmlTag::create( 'span', $i + 1, ['class' => 'current'] );
 			}
 			else{
 				$url	= $baseUri;
 				if( $i != 0 )
 					$url	= $baseUri.'/'.$i;
-				$link	= HtmlTag::create( 'a', $i + 1, array( 'href' => $url, 'class' => '' ) );
+				$link	= HtmlTag::create( 'a', $i + 1, ['href' => $url, 'class' => ''] );
 			}
 			$list[]	= HtmlTag::create( 'li', $link );
 		}
@@ -115,13 +115,13 @@ class View_Helper_Pagination
 			$link	= HtmlTag::create( 'span', '&raquo;' );
 		else{
 			$url	= $baseUri.'/'.( $page + 1 );
-			$link	= HtmlTag::create( 'a', '&raquo;', array( 'href' => $url ) );
+			$link	= HtmlTag::create( 'a', '&raquo;', ['href' => $url] );
 		}
 		$list[]	= HtmlTag::create( 'li', $link );
 
-		$list	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'pagination' ) );
+		$list	= HtmlTag::create( 'ul', join( $list ), ['class' => 'pagination'] );
 		return $list;
-		return HtmlTag::create( 'div', $list, array( 'class' => 'pagination' ) );
+		return HtmlTag::create( 'div', $list, ['class' => 'pagination'] );
 	}
 
 	protected function renderListNumber( string $type, $value ): string

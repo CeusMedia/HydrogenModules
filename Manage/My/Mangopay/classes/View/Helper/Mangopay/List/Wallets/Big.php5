@@ -26,7 +26,7 @@ class View_Helper_Mangopay_List_Wallets_Big extends View_Helper_Mangopay_Abstrac
 		//	print_m( $card );die;
 			$logo		= $helperWalletLogo->setWallet( $wallet->Balance )->render();
 			$balance	= $helperMoney->set( $wallet->Balance )->render();
-			$title		= HtmlTag::create( 'div', $wallet->Description, array( 'class' => 'card-title' ) );
+			$title		= HtmlTag::create( 'div', $wallet->Description, ['class' => 'card-title'] );
 			$item		= $logo.$title.$balance;
 			$url	= sprintf( $this->link, $wallet->Id );
 			$url	.= strlen( trim( $this->from ) ) ? '?from='.$this->from : '';

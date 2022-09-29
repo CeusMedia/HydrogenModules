@@ -6,8 +6,8 @@ $w			= (object) $words['password'];
 $iconCancel	= HTML::Icon( 'arrow-left' );
 $iconSend	= HTML::Icon( 'envelope', TRUE );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconSend		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+	$iconSend		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 }
 
 $buttonCancel		= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
@@ -31,9 +31,9 @@ $buttonSaveBlock	= HtmlTag::create( 'button', $iconSend.'&nbsp;'.$w->buttonSend,
 
 $labelEmail	= $w->labelEmail;
 if( !empty( $w->labelEmail_info ) )
-	$labelEmail	= HtmlTag::create( 'abbr', $labelEmail, array( 'title' => $w->labelEmail_info ) );
+	$labelEmail	= HtmlTag::create( 'abbr', $labelEmail, ['title' => $w->labelEmail_info] );
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/local/password/' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/local/password/' ) );
 
 $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', array(
 	HTML::H3( $w->heading ),
@@ -82,6 +82,6 @@ if( strlen( trim( strip_tags( $textTop ) ) ) || strlen( trim( strip_tags( $textB
 
 $env->getPage()->addBodyClass( 'auth-centered' );
 return HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', $panelPassword, array( 'class' => 'centered-pane' ) )
-), array( 'class' => 'centered-pane-container' ) );
+	HtmlTag::create( 'div', $panelPassword, ['class' => 'centered-pane'] )
+), ['class' => 'centered-pane-container'] );
 ?>

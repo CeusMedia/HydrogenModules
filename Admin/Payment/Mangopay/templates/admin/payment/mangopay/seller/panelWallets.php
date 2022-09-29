@@ -16,11 +16,11 @@ if( !$sellerUser->Id || empty( $sellerUser->HeadquartersAddress ) )
 
 $w	= (object) $words['panel-wallets'];
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconWallet	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-briefcase' ) );
-$iconBank	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bank' ) );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconWallet	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-briefcase'] );
+$iconBank	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-bank'] );
 
 $helperMoney		= new View_Helper_Mangopay_Entity_Money( $env );
 $helperMoney->setFormat( View_Helper_Mangopay_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
@@ -32,7 +32,7 @@ $list		= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h5', 'Noch kein Portmoney vorhanden.' ),
 	HtmlTag::create( 'p', 'Portmoneys für die verschiedenen Währungen werden automatisch hinzugefügt, wenn eine Zahlung in einer bestimmten Währung eingeht.<br/>Sie müssen hier also nicht unbedingt Portmoneys hinzufügen.' ),
 	HtmlTag::create( 'p', 'Um die Einrichtung vollständig abzuschließen ist es jedoch ratsam, ein Portmoney für die Standardwährung des Shops anzulegen.' ),
-), array( 'class' => 'alert alert-info' ) );
+), ['class' => 'alert alert-info'] );
 
 if( $sellerWallets ){
 	$list	= [];
@@ -45,27 +45,27 @@ if( $sellerWallets ){
 		) );
 //		$wallet->Description	= $wallet->Id;
 		$id			= HtmlTag::create( 'small' , $wallet->Id );
-		$title		= HtmlTag::create( 'div', $wallet->Description, array( 'class' => 'autocut' ) );
+		$title		= HtmlTag::create( 'div', $wallet->Description, ['class' => 'autocut'] );
 		$balance	= HtmlTag::create( 'strong', $helperMoney->set( $wallet->Balance ) );
-		$currency	= HtmlTag::create( 'abbr', $wallet->Currency, array( 'title' => $words['currencies'][$wallet->Currency] ) );
+		$currency	= HtmlTag::create( 'abbr', $wallet->Currency, ['title' => $words['currencies'][$wallet->Currency]] );
 		$list[]	= HtmlTag::create( 'tr', array(
 //			HtmlTag::create( 'td', $id ),
 			HtmlTag::create( 'td', $title ),
-			HtmlTag::create( 'td', $currency, array() ),
-			HtmlTag::create( 'td', $balance, array( 'style' => 'text-align: right' ) ),
+			HtmlTag::create( 'td', $currency, [] ),
+			HtmlTag::create( 'td', $balance, ['style' => 'text-align: right'] ),
 			HtmlTag::create( 'td', $buttonPayOut ),
 		) );
 	}
-	$cols	= HtmlElements::ColumnGroup( array( /*'60', */'', '70', '100', '100' ) );
+	$cols	= HtmlElements::ColumnGroup( [/*'60', */'', '70', '100', '100'] );
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 //		HtmlTag::create( 'th', $w->headId ),
 		HtmlTag::create( 'th', $w->headTitle ),
 		HtmlTag::create( 'th', $w->headCurrency ),
-		HtmlTag::create( 'th', $w->headBalance, array( 'style' => 'text-align: right' ) ),
+		HtmlTag::create( 'th', $w->headBalance, ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'th', $w->headActions ),
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $cols.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+	$list	= HtmlTag::create( 'table', $cols.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
 $modalWords		= (object) $words['modal-wallet-add'];
@@ -94,7 +94,7 @@ $modal->setButtonLabelSubmit( $iconSave.'&nbsp;'.$modalWords->buttonSubmit );
 $trigger	= new View_Helper_Bootstrap_Modal_Trigger( $env );
 $trigger->setModalId( 'modal-admin-payment-mangopay-seller-wallet-add' );
 $trigger->setLabel( $iconAdd.'&nbsp;'.$w->buttonAdd );
-$trigger->setAttributes( array( 'class' => 'btn btn-success' ) );
+$trigger->setAttributes( ['class' => 'btn btn-success'] );
 
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $iconWallet.'&nbsp;Portmoneys' ),
@@ -102,6 +102,6 @@ return HtmlTag::create( 'div', array(
 		$list,
 		HtmlTag::create( 'div', array(
 			$trigger
-		), array( 'class' => 'buttonbar' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) ).$modal;
+		), ['class' => 'buttonbar'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] ).$modal;

@@ -52,7 +52,7 @@ class View_Helper_Modal{
 					$attributes[$key]	= $value;
 			}
 		}
-		$modal		= HtmlTag::create( 'div', array( $header, $body, $footer ), $attributes );
+		$modal		= HtmlTag::create( 'div', [$header, $body, $footer], $attributes );
 		if( $this->formAction ){
 			$modal	= HtmlTag::create( 'form', $modal, array(
 				'action'	=> $this->formAction,
@@ -73,7 +73,7 @@ class View_Helper_Modal{
 			'type'		=> 'submit',
 		) );
 		$buttonSubmit	= $this->formAction ? $buttonSubmit : '';
-		$footer		= HtmlTag::create( 'div', array( $buttonClose, $buttonSubmit ), array(
+		$footer		= HtmlTag::create( 'div', [$buttonClose, $buttonSubmit], array(
 			'class'	=> 'modal-footer',
 		) );
 		return $footer;
@@ -86,8 +86,8 @@ class View_Helper_Modal{
 			'data-dismiss'	=> "modal",
 			'aria-hidden'	=> "true",
 		) );
-		$heading	= HtmlTag::create( 'h3', $this->heading, array( 'id' => "myModalLabel" ) );
-		$header		= HtmlTag::create( 'div', array( $buttonClose, $heading ), array(
+		$heading	= HtmlTag::create( 'h3', $this->heading, ['id' => "myModalLabel"] );
+		$header		= HtmlTag::create( 'div', [$buttonClose, $heading], array(
 			'class'	=> 'modal-header',
 		) );
 		return $header;

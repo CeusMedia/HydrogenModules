@@ -2,7 +2,7 @@
 
 $panelLogin	= $view->loadTemplateFile( 'auth/oauth/login.form.php' );
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/oauth/login/', array( 'from' => $from ) ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/oauth/login/', ['from' => $from] ) );
 
 $tabs	= View_Auth::renderTabs( $env, 'auth/oauth/login' );
 

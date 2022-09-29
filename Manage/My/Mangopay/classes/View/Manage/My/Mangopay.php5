@@ -8,7 +8,7 @@ class View_Manage_My_Mangopay extends View
 	{
 		$price		= number_format( $money->Amount / 100, $accuracy, ',', '.' );
 //		$pattern	= '{Amount}&nbsp;{Currency}';
-//		return str_replace( array( '{Amount}', '{Currency}' ), array( $price, $money->Currency), $pattern );
+//		return str_replace( ['{Amount}', '{Currency}'], array( $price, $money->Currency), $pattern );
 		$pattern	= '%2$s'.$separator.'%1$s';
 		return sprintf( $pattern, $money->Currency, $price );
 	}

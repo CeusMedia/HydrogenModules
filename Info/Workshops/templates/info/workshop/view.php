@@ -15,11 +15,11 @@ $imageAlignV	= array(
 );
 
 $heading		= HtmlTag::create( 'h3', $workshop->title );
-$buttonCancel	= HtmlTag::create( 'a', 'zur Übersicht', array( 'href' => './info/workshop', 'class' => 'btn' ) );
+$buttonCancel	= HtmlTag::create( 'a', 'zur Übersicht', ['href' => './info/workshop', 'class' => 'btn'] );
 
 $image		= '';
 if( $workshop->image ){
-	$image	= HtmlTag::create( 'div', '', array( 'class' => 'workshop-image' ), array(
+	$image	= HtmlTag::create( 'div', '', ['class' => 'workshop-image'], array(
 		'url'		=> $pathImages.$workshop->image,
 		'alignH'	=> $imageAlignH[$workshop->imageAlignH],
 		'alignV'	=> $imageAlignV[$workshop->imageAlignV],
@@ -32,10 +32,10 @@ $panel		= HtmlTag::create( 'div', array(
 	$facts,
 	HtmlTag::create( 'div', array(
 		$buttonCancel
-	), array( 'class' => 'buttonbar' ) ),
-), array( 'class' => 'workshop-view' ) );
+	), ['class' => 'buttonbar'] ),
+), ['class' => 'workshop-view'] );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/info/workshop/view/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/info/workshop/view/' ) );
 
 return $textTop.$panel.$textBottom;
 

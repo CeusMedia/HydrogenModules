@@ -93,7 +93,7 @@ class Controller_Database_Lock extends Controller
 				break;
 		}
 		if( $uri )
-			$title	= HtmlTag::create( 'a', $title, array( 'href' => $uri ) );
+			$title	= HtmlTag::create( 'a', $title, ['href' => $uri] );
 		return $title;
 	}
 }

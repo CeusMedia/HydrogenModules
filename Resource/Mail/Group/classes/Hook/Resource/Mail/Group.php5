@@ -53,7 +53,7 @@ class Hook_Resource_Mail_Group
 			return TRUE;
 		}
 
-		if( in_array( $group->type, array( Model_Mail_Group::TYPE_INVITE, Model_Mail_Group::TYPE_AUTOJOIN ) ) ){
+		if( in_array( $group->type, [Model_Mail_Group::TYPE_INVITE, Model_Mail_Group::TYPE_AUTOJOIN] ) ){
 			$modelMember->edit( $action->mailGroupMemberId, array(
 				'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 				'modifiedAt'	=> time(),
@@ -79,14 +79,14 @@ class Hook_Resource_Mail_Group
 					continue;
 				$logicMail->handleMail(
 					new Mail_Info_Mail_Group_Members_MemberJoined( $env, $mailData ),
-					(object) array( 'email' => $entry->address ),
+					(object) ['email' => $entry->address],
 					$env->getLanguage()->getLanguage()
 				);
 			}
 /*
 			$mail		= new Mail_Info_Mail_Group_Activated( $env, $mailData );
 			$member		= $modelMember->get( $action->mailGroupMemberId );
-			$receiver	= (object) array( 'email' => $member->address );
+			$receiver	= (object) ['email' => $member->address];
 			$language	= $env->getLanguage()->getLanguage();
 			$logicMail->appendRegisteredAttachments( $mail, $language );
 			$logicMail->handleMail( $mail, $receiver, $language );*/
@@ -120,7 +120,7 @@ class Hook_Resource_Mail_Group
 					continue;
 				$logicMail->handleMail(
 					new Mail_Info_Mail_Group_Members_MemberJoined( $env, $mailData ),
-					(object) array( 'email' => $entry->address ),
+					(object) ['email' => $entry->address],
 					$env->getLanguage()->getLanguage()
 				);
 			}
@@ -193,14 +193,14 @@ class Hook_Resource_Mail_Group
 				continue;
 			$logicMail->handleMail(
 				new Mail_Info_Mail_Group_Members_MemberLeft( $env, $mailData ),
-				(object) array( 'email' => $entry->address ),
+				(object) ['email' => $entry->address],
 				$env->getLanguage()->getLanguage()
 			);
 		}
 
 		$member		= $modelMember->get( $action->mailGroupMemberId );
 		$mail		= new Mail_Info_Mail_Group_Member_Left( $env, $mailData );
-		$receiver	= (object) array( 'email' => $member->address );
+		$receiver	= (object) ['email' => $member->address];
 		$language	= $env->getLanguage()->getLanguage();
 		$logicMail->appendRegisteredAttachments( $mail, $language );
 		$logicMail->handleMail( $mail, $receiver, $language );

@@ -24,7 +24,7 @@ class Logic_Info_Dashboard extends Logic
 	public function addUserDashboard( $userId, string $title, string $description, array $panels = [], bool $select = FALSE )
 	{
 		if( is_string( $panels ) )
-			$panels		= strlen( trim( $panels ) ) ? explode( ',', $panels ) : array();
+			$panels		= strlen( trim( $panels ) ) ? explode( ',', $panels ) : [];
 		if( !is_array( $panels ) )
 			throw new InvalidArgumentException( 'Panels list must be array or string' );
 		$dashboardId	= $this->model->add( array(
@@ -53,7 +53,7 @@ class Logic_Info_Dashboard extends Logic
 	public function addPanelToUserDashboard( $userId, $panelId, string $position = 'bottom' ): bool
 	{
 		$dashboard	= $this->getUserDashboard( $userId );
-		$panels		= strlen( $dashboard->panels ) ? explode( ',', $dashboard->panels ) : array();
+		$panels		= strlen( $dashboard->panels ) ? explode( ',', $dashboard->panels ) : [];
 		if( count( $panels ) >= $this->moduleConfig->get( 'perUser.maxPanels' ) )
 			throw new RangeException( 'Maximum panels limit reached.' );
 		switch( $position ){
@@ -121,7 +121,7 @@ class Logic_Info_Dashboard extends Logic
 	 */
 	public function getUserDashboard( $userId, bool $strict = TRUE )
 	{
-		$dashboard	= $this->model->getByIndices( array( 'userId' => $userId, 'isCurrent' => 1 ) );
+		$dashboard	= $this->model->getByIndices( ['userId' => $userId, 'isCurrent' => 1] );
 		if( $dashboard )
 			return $dashboard;
 		if( $strict )
@@ -158,9 +158,9 @@ class Logic_Info_Dashboard extends Logic
 		if( ( $dashboardCurrent = $this->getUserDashboard( $userId, FALSE ) ) ){
 			if( $dashboardId == $dashboardCurrent->dashboardId )
 				return FALSE;
-			$this->model->edit( $dashboardCurrent->dashboardId, array( 'isCurrent' => 0 ) );
+			$this->model->edit( $dashboardCurrent->dashboardId, ['isCurrent' => 0] );
 		}
-		$this->model->edit( $dashboardToSelect->dashboardId, array( 'isCurrent' => 1 ) );
+		$this->model->edit( $dashboardToSelect->dashboardId, ['isCurrent' => 1] );
 		return TRUE;
 	}
 
@@ -177,7 +177,7 @@ class Logic_Info_Dashboard extends Logic
 	{
 		$dashboard	= $this->getUserDashboard( $userId );
 		if( is_string( $panels ) )
-			$panels		= strlen( trim( $panels ) ) ? explode( ',', $panels ) : array();
+			$panels		= strlen( trim( $panels ) ) ? explode( ',', $panels ) : [];
 		if( !is_array( $panels ) )
 			throw new InvalidArgumentException( 'Panels list must be array or string' );
 		$panelsString	= join( ',', $panels );

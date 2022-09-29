@@ -28,7 +28,7 @@ for( $i=0; $i<2; $i++ ){
 	$column	= '<div class="column span6">'.$column.'</div>';
 	$lists[]	= $column;
 }
-$lists	= HtmlTag::create( 'div', $lists, array( 'class' => 'row-fluid' ) );
+$lists	= HtmlTag::create( 'div', $lists, ['class' => 'row-fluid'] );
 
 return '
 	<script>

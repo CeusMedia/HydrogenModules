@@ -5,22 +5,22 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
 
 	protected $icons		= [];
 	protected $list			= array(
-		0 => array(),
-		1 => array(),
-		2 => array(),
-		3 => array(),
-		4 => array(),
-		5 => array(),
-		6 => array(),
+		0 => [],
+		1 => [],
+		2 => [],
+		3 => [],
+		4 => [],
+		5 => [],
+		6 => [],
 	);
 
 	public function __construct( $env ){
 		parent::__construct( $env );
 /*		$this->icons	= array(
-			'left'		=> HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) ),
-			'right'		=> HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) ),
-			'edit'		=> HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) ),
-			'view'		=> HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open' ) ),
+			'left'		=> HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] ),
+			'right'		=> HtmlTag::create( 'i', '', ['class' => 'icon-arrow-right'] ),
+			'edit'		=> HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] ),
+			'view'		=> HtmlTag::create( 'i', '', ['class' => 'icon-eye-open'] ),
 		);*/
 	}
 

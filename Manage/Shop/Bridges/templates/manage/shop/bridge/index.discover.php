@@ -12,7 +12,7 @@ foreach( $discovered as $bridge ){
 	) );
 	$list[]	= HtmlTag::create( 'li', $link );
 }
-$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled not-nav not-nav-pills nav-stacked' ) );
+$list	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled not-nav not-nav-pills nav-stacked'] );
 
 return '
 <div class="content-panel">

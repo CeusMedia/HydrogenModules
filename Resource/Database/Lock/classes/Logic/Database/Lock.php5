@@ -72,7 +72,7 @@ class Logic_Database_Lock extends Logic
 
 	public function isLocked( $subject, $entryId, $userId = NULL )
 	{
-		$indices	= array( 'subject' => $subject );
+		$indices	= ['subject' => $subject];
 		if( $entryId )
 			$indices['entryId']	= (int) $entryId;
 		if( $userId )
@@ -115,7 +115,7 @@ class Logic_Database_Lock extends Logic
 		$userId		= $userId !== NULL ? (int) $userId : $this->userId;				//  insert current userId of none given
 		if( !$this->isLocked( $subject, $entryId, $userId ) )
 			return FALSE;
-		$indices	= array( 'subject' => $subject );
+		$indices	= ['subject' => $subject];
 		if( $entryId )
 			$indices['entryId']	= (int) $entryId;
 		if( $userId )

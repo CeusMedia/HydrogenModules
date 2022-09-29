@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
 
-$runList	= HtmlTag::create( 'div', 'Keine Ausführungen gefunden.', array( 'class' => 'alert alert-info' ) );
+$runList	= HtmlTag::create( 'div', 'Keine Ausführungen gefunden.', ['class' => 'alert alert-info'] );
 
 if( $runs ){
 	$rows	= [];
@@ -27,9 +27,9 @@ if( $runs ){
 			HtmlTag::create( 'td', $item->finishedAt ? date( 'd.m.Y H:i:s', $item->finishedAt ) : '-' ),
 		) );
 	}
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Run-ID', 'Job-ID', 'Zustand', 'vorbereitet', 'gestartet', 'beendet' ) ) );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Run-ID', 'Job-ID', 'Zustand', 'vorbereitet', 'gestartet', 'beendet'] ) );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
-	$runList	= HtmlTag::create( 'table', array( $tbody ), array( 'class' => 'table table-striped table-condensed' ) );
+	$runList	= HtmlTag::create( 'table', [$tbody], ['class' => 'table table-striped table-condensed'] );
 }
 
 $tabs	= View_Manage_Job::renderTabs( $env, 'definition' );
@@ -58,7 +58,7 @@ foreach( $facts as $factKey => $factValue ){
 	$list[]	= HtmlTag::create( 'dt', $factKey );
 	$list[]	= HtmlTag::create( 'dd', $factValue );
 }
-$list	= HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+$list	= HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 
 return $tabs.HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', '<span class="muted">Job:</span> '.$definition->identifier ),
@@ -70,8 +70,8 @@ return $tabs.HtmlTag::create( 'div', array(
 		$runList,
 		HtmlTag::create( 'h4', 'Code' ),
 		HtmlTag::create( 'xmp', join( PHP_EOL, $definitionCode ) ),
-	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] )
+), ['class' => 'content-panel'] );
 
 function removeEnvPath( $env, $string ): string
 {

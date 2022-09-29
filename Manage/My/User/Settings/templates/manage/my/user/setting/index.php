@@ -7,7 +7,7 @@ $tabs		= View_Manage_My_User::renderTabs( $env, 'setting' );
 $panelSettings	= '<div class="muted">'.$w->noSettings.'</div>';
 if( isset( $modules ) && count( $modules ) ){
 	$formUri 	= './manage/my/user/setting/update'.( $from ? '?from='.$from : '' );
-	$iconSave	= HtmlTag::create( 'i', '', array( 'class' => "icon-ok icon-white" ) );
+	$iconSave	= HtmlTag::create( 'i', '', ['class' => "icon-ok icon-white"] );
 	$buttonSave	= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
 		'type'		=> 'submit',
 		'name'		=> 'save',

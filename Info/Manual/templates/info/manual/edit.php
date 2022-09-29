@@ -14,23 +14,23 @@ $helperNav	= new View_Helper_Info_Manual_PageTree( $env );
 $helperNav->setCategoryId( $categoryId );
 $helperNav->setActivePageId( $pageId );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => "icon-arrow-left" ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => "icon-ok icon-white" ) );
-$iconPreview	= HtmlTag::create( 'i', '', array( 'class' => "icon-eye-open" ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => "icon-remove icon-white" ) );
-$iconUp			= HtmlTag::create( 'i', '', array( 'class' => "icon-arrow-up" ) );
-$iconDown		= HtmlTag::create( 'i', '', array( 'class' => "icon-arrow-down" ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => "icon-arrow-left"] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => "icon-ok icon-white"] );
+$iconPreview	= HtmlTag::create( 'i', '', ['class' => "icon-eye-open"] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => "icon-remove icon-white"] );
+$iconUp			= HtmlTag::create( 'i', '', ['class' => "icon-arrow-up"] );
+$iconDown		= HtmlTag::create( 'i', '', ['class' => "icon-arrow-down"] );
 
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
-	$iconPreview	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-eye" ) );
-	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) );
-	$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
-	$iconUp			= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-chevron-up" ) );
-	$iconDown		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-chevron-down" ) );
+	$iconCancel		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] );
+	$iconPreview	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-eye"] );
+	$iconSave		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] );
+	$iconRemove		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-remove"] );
+	$iconUp			= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-chevron-up"] );
+	$iconDown		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-chevron-down"] );
 }
 
-$optParentId	= array( '' => '- ohne -' );
+$optParentId	= ['' => '- ohne -'];
 foreach( $folders as $folder )
 	$optParentId[$folder->manualPageId]	= $folder->title;
 $optParentId	= HtmlElements::Options( $optParentId, $page->parentId );
@@ -38,12 +38,12 @@ $optParentId	= HtmlElements::Options( $optParentId, $page->parentId );
 $buttonAdd	= "";
 $buttonReload	= "";
 if( $moduleConfig->get( 'editor' ) ){
-	$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-	$iconReload		= HtmlTag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
+	$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+	$iconReload		= HtmlTag::create( 'i', '', ['class' => 'icon-refresh'] );
 	if( in_array( 'add', $rights ) )
-		$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-primary" ) );
+		$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], ['href' => './info/manual/add', 'class' => "btn btn-small btn-primary"] );
 	if( in_array( 'reload', $rights ) )
-		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
+		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], ['href' => './info/manual/reload', 'class' => "btn btn-small"] );
 }
 
 $panelEdit	= '

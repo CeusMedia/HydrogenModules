@@ -17,7 +17,7 @@ $page->addStylesheet( '//cdn.ceusmedia.de/css/bootstrap.min.css' );
 $page->addStylesheet( '//cdn.ceusmedia.de/css/bootstrap.min.css' );
 $page->addStylesheet( 'themes/common/css/layout.css' );
 
-$options	= array( 'foldTraces' => TRUE );
+$options	= ['foldTraces' => TRUE];
 $script		= JQuery::buildPluginCall( 'cmExceptionView', 'dl.exception', $options );
 $page->addHead( HtmlTag::create( 'script', $script ) );
 
@@ -40,14 +40,14 @@ $template	= '
 <div id="error-page">
 	'.$header.'
 	<div id="layout-container">
-	    <div class="container" style="margin-top: 20px">
-	        <div id="layout-content">
+		<div class="container" style="margin-top: 20px">
+			<div id="layout-content">
 				'.$template.'
 				<div class="exception-view">
 					'.$view.'
 				</div>
-	        </div>
-	    </div>
+			</div>
+		</div>
 	</div>
 	'.$footer.'
 </div>';

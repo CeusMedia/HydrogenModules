@@ -36,7 +36,7 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	{
 		if( $this->env->getConfig()->get( 'module.resource_newsletter.premailer.plain' ) ){
 			$premailer	= new Premailer();
-			$premailer->convertFromHtml( $html, array( 'line_length' => $wrap ) );
+			$premailer->convertFromHtml( $html, ['line_length' => $wrap] );
 			return $premailer->getPlainText();
 		}
 		if( class_exists( 'View_Helper_HtmlToPlainText' ) ){
@@ -184,7 +184,7 @@ return $html;
 		$mailIds	= $this->modelReaderLetter->getAllByIndices( array(							//  get reader letters
 			'newsletterId'	=> $newsletterId,													//  ... of newsletter
 			'mailId'		=> '> 0',															//  ... having a mail ID
-		), array(), array(), array( 'mailId' ) );												//  ... returning mail IDs, only
+		), [], [], ['mailId'] );												//  ... returning mail IDs, only
 		if( $mailIds )
 			$modelMail->removeByIndex( 'mailId', $mailIds );									//  remove mails by IDs
 		$this->modelReaderLetter->removeByIndex( 'newsletterId', $newsletterId );				//  remove reader letters of newsletter
@@ -195,7 +195,7 @@ return $html;
 	public function removeTemplate( $templateId )
 	{
 		$this->checkTemplateId( $templateId, TRUE );
-		$newsletterConditions	= array( 'newsletterTemplateId' => $templateId, 'status' => 2 );
+		$newsletterConditions	= ['newsletterTemplateId' => $templateId, 'status' => 2];
 		if( $this->getNewsletters( $newsletterConditions ) )
 			throw new RuntimeException( 'Template already used in sent newsletter' );
 		return $this->modelTemplate->remove( $templateId );
@@ -275,6 +275,6 @@ return $html;
 	{
 		$this->checkTemplateId( $templateId, TRUE );
 		$list		= $list ? "|".implode( "|", $list )."|" : "";
-		return $this->modelTemplate->edit( $templateId, array( $columnKey => $list ) );
+		return $this->modelTemplate->edit( $templateId, [$columnKey => $list] );
 	}
 }

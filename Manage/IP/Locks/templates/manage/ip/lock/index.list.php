@@ -11,11 +11,11 @@ $states	= array(
 	2	=> 'unlock requested',
 );
 
-$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open' ) );
-$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-$iconLock	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconUnlock	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconView	= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open'] );
+$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
+$iconLock	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconUnlock	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
 
 $helperTime = FALSE;
 if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){
@@ -38,14 +38,14 @@ if( $locks ){
 			'title'		=> 'bearbeiten',
 		) );
 		$buttonStatus	= "";
-		if( in_array( $lock->status, array( -2, -1, 0 ) ) ){
+		if( in_array( $lock->status, [-2, -1, 0] ) ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconLock, array(
 				'href'		=> './manage/ip/lock/lock/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-success',
 				'title'		=> 'aktivieren',
 			) );
 		}
-		else if( in_array( $lock->status, array( 1, 2 ) ) ){
+		else if( in_array( $lock->status, [1, 2] ) ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconUnlock, array(
 				'href'		=> './manage/ip/lock/unlock/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-inverse',
@@ -53,7 +53,7 @@ if( $locks ){
 			) );
 		}
 		$buttonRemove	= "";
-		if( in_array( $lock->status, array( -2, -10 ) ) ){
+		if( in_array( $lock->status, [-2, -10] ) ){
 			$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
 				'href'		=> './manage/ip/lock/cancel/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-danger',
@@ -84,7 +84,7 @@ if( $locks ){
 		$link	= HtmlTag::create( 'a', '<kbd><small>'.$lock->IP.'</small></kbd>', array(
 			'href'	=> './manage/ip/lock/edit/'.$lock->ipLockId,
 		) );
-		$reason	= HtmlTag::create( 'div', $lock->reason->title, array( 'class' => 'autocut' ) );
+		$reason	= HtmlTag::create( 'div', $lock->reason->title, ['class' => 'autocut'] );
 		$rowClass	= 'success';
 		if( $lock->status < 1 )
 			$rowClass	= 'warning';
@@ -92,13 +92,13 @@ if( $locks ){
 			$rowClass	= 'info';
 
 		$list[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $link, array( 'class' => 'lock-ip' ) ),
-			HtmlTag::create( 'td', $states[$lock->status], array( 'class' => 'lock-status' ) ),
-			HtmlTag::create( 'td', $lockedAt, array( 'class' => 'lock-lockedAt' ) ),
-			HtmlTag::create( 'td', $unlockAt, array( 'class' => 'lock-unlockAt' ) ),
-			HtmlTag::create( 'td', $reason, array( 'class' => 'lock-reason-title' ) ),
-			HtmlTag::create( 'td', $buttons, array( 'class' => 'lock-buttons' ) ),
-		), array( 'class' => $rowClass ) );
+			HtmlTag::create( 'td', $link, ['class' => 'lock-ip'] ),
+			HtmlTag::create( 'td', $states[$lock->status], ['class' => 'lock-status'] ),
+			HtmlTag::create( 'td', $lockedAt, ['class' => 'lock-lockedAt'] ),
+			HtmlTag::create( 'td', $unlockAt, ['class' => 'lock-unlockAt'] ),
+			HtmlTag::create( 'td', $reason, ['class' => 'lock-reason-title'] ),
+			HtmlTag::create( 'td', $buttons, ['class' => 'lock-buttons'] ),
+		), ['class' => $rowClass] );
 	}
 	$heads	= array(
 		'IP-Adresse',
@@ -111,10 +111,10 @@ if( $locks ){
 	$colgroup	= HtmlElements::ColumnGroup( "140px", "10%", "120px", "140px", "", "110px" );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
-	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-condensed'] );
 }
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 $buttonAdd		= HtmlTag::create( 'a', $iconAdd.' hinzufügen', array(
 	'href'	=> './manage/ip/lock/add',
 	'class'	=> 'btn btn-primary',
@@ -134,7 +134,7 @@ function renderListNumbers( $page, $limit, $count, $total ){
 		}
 		$label	= $spanRange.' von '.$spanTotal;
 	}
-	return HtmlTag::create( 'small', '('.$label.')', array( 'class' => 'muted' ) );
+	return HtmlTag::create( 'small', '('.$label.')', ['class' => 'muted'] );
 }
 
 $uri			= './manage/ip/lock/'.$limit;

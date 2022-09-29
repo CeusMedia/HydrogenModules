@@ -18,7 +18,7 @@ foreach( $usedModules as $usedModule ){
 	$list[] = $result->list;
 }
 
-$tableRights	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+$tableRights	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 
 return '
 <div class="content-panel content-panel-form">
@@ -45,8 +45,8 @@ function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, 
 	$list		= [];
 	$rows		= [];
 	$changable	= FALSE;
-	$iconModule		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) ).'&nbsp;';
-	$iconController	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cog' ) ).'&nbsp;';
+	$iconModule		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-archive'] ).'&nbsp;';
+	$iconController	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cog'] ).'&nbsp;';
 	foreach( $controllerActions as $controller ){
 		if( $controller->module && $controller->module->id != $moduleId )
 			continue;
@@ -61,36 +61,36 @@ function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, 
 				$module	= $controller->moduleWords['title'];
 			if( $controller->module->description ){
 				$description	= array_slice( explode( "\n", $controller->module->description ), 0, 1 );
-				$module			= HtmlTag::create( 'abbr', $module, array( 'title' => $description ) );
+				$module			= HtmlTag::create( 'abbr', $module, ['title' => $description] );
 			}
 		}
-		$actions	= HtmlTag::create( 'ul', join( $actionToggles->list ), array() );
+		$actions	= HtmlTag::create( 'ul', join( $actionToggles->list ), [] );
 		$path		= strtolower( str_replace( '_', '/', $controller->name ) )/*.'/'*/;
-		$path		= HtmlTag::create( 'abbr', $path, array( 'title' => 'Controller: '.$controller->name ) );
-		$path		= HtmlTag::create( 'small', '&nbsp;'.$iconController.$path, array( 'class' => 'not-muted' ) );
+		$path		= HtmlTag::create( 'abbr', $path, ['title' => 'Controller: '.$controller->name] );
+		$path		= HtmlTag::create( 'small', '&nbsp;'.$iconController.$path, ['class' => 'not-muted'] );
 
 		$label		= $path;
 
-		$labelPath			= HtmlTag::create( 'span', $label, array( 'class' => 'label-path' ) );
-		$labelModule		= HtmlTag::create( 'small', '<br/>Modul: '.$module, array( 'class' => 'muted label-module', 'style' => 0/*$showAll*/ ? NULL : 'display: none' ) );
-		$labelController	= HtmlTag::create( 'small', '<br/>Controller: '.$controller->name, array( 'class' => 'muted label-controller', 'style' => 0/*$showAll*/ ? NULL : 'display: none' ) );
+		$labelPath			= HtmlTag::create( 'span', $label, ['class' => 'label-path'] );
+		$labelModule		= HtmlTag::create( 'small', '<br/>Modul: '.$module, ['class' => 'muted label-module', 'style' => 0/*$showAll*/ ? NULL : 'display: none'] );
+		$labelController	= HtmlTag::create( 'small', '<br/>Controller: '.$controller->name, ['class' => 'muted label-controller', 'style' => 0/*$showAll*/ ? NULL : 'display: none'] );
 
 		$rows[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $labelPath/*.$labelController/*.$labelModule*/, array( 'class' => 'column-controller autocut' ) ),
-			HtmlTag::create( 'td', $actions, array( 'class' => 'column-actions' ) ),
-		), array( 'style' => $actionToggles->changable || 0/*$showAll*/ ? NULL : 'display: none' ) );
+			HtmlTag::create( 'td', $labelPath/*.$labelController/*.$labelModule*/, ['class' => 'column-controller autocut'] ),
+			HtmlTag::create( 'td', $actions, ['class' => 'column-actions'] ),
+		), ['style' => $actionToggles->changable || 0/*$showAll*/ ? NULL : 'display: none'] );
 	}
 	if( $rows ){
 		$rows	= HtmlTag::create( 'table', array(
 			HtmlElements::ColumnGroup( '300px', '' ),
 			HtmlTag::create( 'tbody', $rows ),
-		), array( 'class' => 'table table-fixed table-condensed' ) );
+		), ['class' => 'table table-fixed table-condensed'] );
 		$list[]	= HtmlTag::create( 'li', $iconModule.$module.$rows,  array(
 			'class'	=> 'acl-module '.( $changable ? 'changable' : '' ),
 			'style' => $changable || 0/*$showAll*/ ? NULL : 'display: none'
 		) );
 	}
-	return (object) array( 'list' => $list, 'changable' => $changable );
+	return (object) ['list' => $list, 'changable' => $changable];
 }
 
 function renderControllerActions( $acl, $roleId, $controller, $words ){
@@ -126,7 +126,7 @@ function renderControllerActions( $acl, $roleId, $controller, $words ){
 				$class	= "red";
 				break;
 		}
-		$label	= HtmlTag::create( 'span', $method->name, array() );
+		$label	= HtmlTag::create( 'span', $method->name, [] );
 		$list[]	= HtmlTag::create( 'li', $check.$label, array(
 			'class'	=> 'action '.$class,
 			'id'	=> $changable ? $id : NULL,
@@ -138,5 +138,5 @@ function renderControllerActions( $acl, $roleId, $controller, $words ){
 		) );
 		$changableAtAll	= $changableAtAll || $changable;
 	}
-	return (object) array( 'list' => $list, 'changable' => $changableAtAll );
+	return (object) ['list' => $list, 'changable' => $changableAtAll];
 }

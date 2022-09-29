@@ -4,9 +4,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['edit'];
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonBack, array(
 	'href'		=> './manage/relocation',
@@ -72,7 +72,7 @@ $panelEdit	= '
 
 $panelInfo	= $this->loadTemplateFile( 'manage/relocation/edit.info.php' );
 
-extract( $view->populateTexts( array( 'edit.top', 'edit.bottom' ), 'html/manage/relocation/' ) );
+extract( $view->populateTexts( ['edit.top', 'edit.bottom'], 'html/manage/relocation/' ) );
 
 return $textEditTop.'
 <div class="row-fluid">

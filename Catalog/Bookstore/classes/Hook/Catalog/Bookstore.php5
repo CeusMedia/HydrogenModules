@@ -117,7 +117,7 @@ class Hook_Catalog_Bookstore extends Hook
 		$language	= $env->getLanguage()->getLanguage();
 
 		$conditions	= [];
-		$orders		= array( 'articleId' => 'DESC' );
+		$orders		= ['articleId' => 'DESC'];
 		foreach( $logic->getArticles( $conditions, $orders ) as $article ){
 			$url	= $logic->getArticleUri( $article, TRUE );
 			$date	= max( $article->createdAt, $article->modifiedAt );
@@ -125,15 +125,15 @@ class Hook_Catalog_Bookstore extends Hook
 		}
 
 		$conditions	= [];
-		$orders		= array( 'authorId' => 'DESC' );
+		$orders		= ['authorId' => 'DESC'];
 		foreach( $logic->getAuthors( $conditions, $orders ) as $author ){
 			$url	= $logic->getAuthorUri( $author, TRUE );
 			$date	= NULL;//max( $author->createdAt, $author->modifiedAt );
 			$context->addLink( $url, $date );
 		}
 
-		$conditions	= array( 'visible' => 1 );
-		$orders		= array( 'categoryId' => 'DESC' );
+		$conditions	= ['visible' => 1];
+		$orders		= ['categoryId' => 'DESC'];
 		foreach( $logic->getCategories( $conditions, $orders ) as $category ){
 			$url	= $logic->getCategoryUri( $category, $language, TRUE );
 			$date	= NULL;//max( $author->createdAt, $author->modifiedAt );

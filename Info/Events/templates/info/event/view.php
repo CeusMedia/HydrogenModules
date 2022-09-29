@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconBack		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconBack		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 
 $facts	= [];
 $facts[]	= HtmlTag::create( 'dt', 'Datum' );
@@ -14,7 +14,7 @@ $facts[]	= HtmlTag::create( 'dd', $event->address->title );
 $facts[]	= HtmlTag::create( 'dt', 'Adresse' );
 $facts[]	= HtmlTag::create( 'dd', $event->address->street.' '.$event->address->number.'<br/>'.$event->address->postcode.' '.$event->address->city );
 
-$facts		= HtmlTag::create( 'dl', $facts, array( 'class' => 'not-dl-horizontal' ) );
+$facts		= HtmlTag::create( 'dl', $facts, ['class' => 'not-dl-horizontal'] );
 
 $urlBack	= $from ? './'.$from : './event';
 

@@ -28,18 +28,18 @@ class View_Helper_Work_Mission_Filter_Priority{
 				'value'		=> $priority,
 				'checked'	=> in_array( $priority, $this->selected ) ? "checked" : NULL
 			) );
-			$label	= HtmlTag::create( 'label', $input.' './*$priority.' - '.*/$this->words['priorities'][$priority], array( 'class' => 'checkbox' ) );
-			$list[]	= HtmlTag::create( 'li', $label, array( 'class' => 'filter-priority priority-'.$priority ) );
+			$label	= HtmlTag::create( 'label', $input.' './*$priority.' - '.*/$this->words['priorities'][$priority], ['class' => 'checkbox'] );
+			$list[]	= HtmlTag::create( 'li', $label, ['class' => 'filter-priority priority-'.$priority] );
 		}
 		$buttonIcon		= '';
 		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
-			$buttonIcon	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation' ) ).'&nbsp;';
-		$labelFilter	= HtmlTag::create( 'span', $this->words['filters']['priority'], array( 'class' => 'hidden-phone' ) );;
+			$buttonIcon	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation'] ).'&nbsp;';
+		$labelFilter	= HtmlTag::create( 'span', $this->words['filters']['priority'], ['class' => 'hidden-phone'] );;
 		$buttonLabel	= $labelFilter.'&nbsp;<span class="caret"></span>';
 		$buttonClass	= 'dropdown-toggle btn '.( $changedPriorities ? "btn-info" : "" );
 		return HtmlTag::create( 'div', array(
-			HtmlTag::create( 'button', $buttonIcon.$buttonLabel, array( 'class'	=> $buttonClass, 'data-toggle' => 'dropdown' ) ),
-			HtmlTag::create( 'ul', $list, array( 'class' => 'dropdown-menu' ) ),
-		), array( 'class' => 'btn-group', 'id' => 'priorities' ) );
+			HtmlTag::create( 'button', $buttonIcon.$buttonLabel, ['class'	=> $buttonClass, 'data-toggle' => 'dropdown'] ),
+			HtmlTag::create( 'ul', $list, ['class' => 'dropdown-menu'] ),
+		), ['class' => 'btn-group', 'id' => 'priorities'] );
 	}
 }

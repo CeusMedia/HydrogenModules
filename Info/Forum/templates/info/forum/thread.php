@@ -7,14 +7,14 @@ use CeusMedia\Bootstrap\Icon as BootstrapIcon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom', 'thread.top', 'thread.bottom' ), 'html/info/forum/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom', 'thread.top', 'thread.bottom'], 'html/info/forum/' ) );
 $textTop	= $textThreadTop	? $textThreadTop: $textIndexTop;
 $textBottom	= $textThreadBottom ? $textThreadBottom : $textIndexBottom;
 
 $helper			= new View_Helper_TimePhraser( $env );
-$iconApprove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconApprove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $table	= '<em><small class="muted">Keine.</small></em>';
 $userCanApprove	= in_array( 'approvePost', $rights );
@@ -58,13 +58,13 @@ if( $posts ){
 		$user	= '-';
 		if( $post->author ){
 			$gravatar	= 'http://www.gravatar.com/avatar/'.md5( strtolower( trim( $post->author->email ) ) ).'?s=32&d=mm&r=g';
-			$gravatar	= HtmlTag::create( 'img', NULL, array( 'src' => $gravatar, 'class' => 'avatar' ) );
-			$nrPosts	= HtmlTag::create( 'small', ' ('.$userPosts[$post->author->userId].')', array( 'class' => 'muted' ) );
-			$datetime	= HtmlTag::create( 'small', date( "d.m.Y H:i", $post->createdAt ), array( 'class' => 'muted' ) );
-			$username	= HtmlTag::create( 'div', $post->author->username.$nrPosts, array( 'class' => 'username' ) );
+			$gravatar	= HtmlTag::create( 'img', NULL, ['src' => $gravatar, 'class' => 'avatar'] );
+			$nrPosts	= HtmlTag::create( 'small', ' ('.$userPosts[$post->author->userId].')', ['class' => 'muted'] );
+			$datetime	= HtmlTag::create( 'small', date( "d.m.Y H:i", $post->createdAt ), ['class' => 'muted'] );
+			$username	= HtmlTag::create( 'div', $post->author->username.$nrPosts, ['class' => 'username'] );
 			$user		= $gravatar.$username.$datetime;
 		}
-		$buttons		= HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );
+		$buttons		= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
 		$content		= nl2br( $post->content, TRUE );
 		if( $post->type == 1 ){
 			$parts		= explode( "\n", $post->content );
@@ -78,11 +78,11 @@ if( $posts ){
 		}
 		if( $post->modifiedAt ){
 			$modifiedAt		= sprintf( $words['thread']['modifiedAt'], date( "d.m.Y H:i", $post->createdAt ) );
-			$content		.= HtmlTag::create( 'div', $modifiedAt, array( 'class' => 'modified muted' ) );
+			$content		.= HtmlTag::create( 'div', $modifiedAt, ['class' => 'modified muted'] );
 		}
 		$cells	= array(
 			HtmlTag::create( 'td', $user ),
-			HtmlTag::create( 'td', $content, array( 'class' => 'content' ) ),
+			HtmlTag::create( 'td', $content, ['class' => 'content'] ),
 			HtmlTag::create( 'td', $buttons ),
 		);
 		$rows[]	= HtmlTag::create( 'tr', $cells, array(
@@ -92,10 +92,10 @@ if( $posts ){
 		$lastPostId	= $post->postId;
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '20%', '65%', '15%' );
-	$heads		= HtmlElements::TableHeads( array() );
+	$heads		= HtmlElements::TableHeads( [] );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
-	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 $panelList	= '
 <div class="content-panel">

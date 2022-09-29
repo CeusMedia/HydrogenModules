@@ -21,7 +21,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 			$pathImages	= $frontend->getPath( 'contents' ).$config->get( 'path.authors' );			//  get path to author images
 			$pathImages	= substr( $pathImages, strlen( $frontend->getPath() ) );					//  strip frontend base path
 			$list		= [];
-			$authors	= $logic->getAuthors( array(), array( 'lastname' => 'ASC', 'firstname' => 'ASC' ) );
+			$authors	= $logic->getAuthors( [], ['lastname' => 'ASC', 'firstname' => 'ASC'] );
 			foreach( $authors as $item ){
 				if( $item->image ){
 					$id		= str_pad( $item->authorId, 5, 0, STR_PAD_LEFT );
@@ -48,11 +48,11 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 		if( !( $authors = $cache->get( 'catalog.tinymce.links.catalog.bookstore.authors' ) ) ){
 			$logic		= new Logic_Catalog_Bookstore( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
-			$authors	= $logic->getAuthors( array(), array( 'lastname' => 'ASC', 'firstname' => 'ASC' ) );
+			$authors	= $logic->getAuthors( [], ['lastname' => 'ASC', 'firstname' => 'ASC'] );
 			foreach( $authors as $nr => $item ){
 				$label		= ( $item->firstname ? $item->firstname.' ' : '' ).$item->lastname;
 				$url		= $logic->getAuthorUri( $item );
-				$authors[$nr] = (object) array( 'title' => $label, 'value' => $url );
+				$authors[$nr] = (object) ['title' => $label, 'value' => $url];
 			}
 			$cache->set( 'catalog.tinymce.links.catalog.bookstore.authors', $authors );
 		}

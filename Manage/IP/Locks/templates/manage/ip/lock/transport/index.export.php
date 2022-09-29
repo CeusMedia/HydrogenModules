@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconDownload	= HtmlTag::create( 'i', '', array( 'class' => 'fa fw fa-download' ) );
+$iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fw fa-download'] );
 
 $listReasons	= [];
 foreach( $reasons as $reason ){
@@ -19,9 +19,9 @@ foreach( $reasons as $reason ){
 			HtmlTag::create( 'div', array(
 				$reason->title,
 				' ',
-				HtmlTag::create( 'small', '('.count( $reason->filters ).')', array( 'class' => 'muted' ) ),
-			), array( 'title' => $reason->description ) ),
-		), array( 'class' => 'checkbox' ) ),
+				HtmlTag::create( 'small', '('.count( $reason->filters ).')', ['class' => 'muted'] ),
+			), ['title' => $reason->description] ),
+		), ['class' => 'checkbox'] ),
 	) );
 }
 $listReasons	= HtmlTag::create( 'ul', $listReasons, array(
@@ -41,8 +41,8 @@ foreach( $filters as $filter ){
 				'checked'	=> 'checked',
 			) ),
 			HtmlTag::create( 'div', $filter->title ),
-		), array( 'class' => 'checkbox' ) ),
-	), array( 'class' => 'optional reasonIds-'.$filter->reasonId.' reasonIds-'.$filter->reasonId.'-true' ) );
+		), ['class' => 'checkbox'] ),
+	), ['class' => 'optional reasonIds-'.$filter->reasonId.' reasonIds-'.$filter->reasonId.'-true'] );
 }
 $listFilters	= HtmlTag::create( 'ul', $listFilters, array(
 	'class'		=> 'unstyled',
@@ -64,7 +64,7 @@ $panelExport	= HtmlTag::create( 'div', array(
 					'Aktuelle Sperren werden dabei nicht exportiert.',
 					'Die JSON-Datei kann zur Archivierung abgelegt oder in einer anderen Applikation importiert werden.'
 				 ) ) ),
-			), array( 'class' => 'alert alert-success' ) ),
+			), ['class' => 'alert alert-success'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'h4', 'Gründe' ),
@@ -79,7 +79,7 @@ $panelExport	= HtmlTag::create( 'div', array(
 							'data-animation'	=> 'slide',
 						) ),
 						HtmlTag::create( 'div', 'alle Gründe' ),
-					), array( 'class' => 'checkbox' ) ),
+					), ['class' => 'checkbox'] ),
 					HtmlTag::create( 'div', array(
 						$listReasons,
 						HtmlTag::create( 'h4', 'Filter' ),
@@ -94,18 +94,18 @@ $panelExport	= HtmlTag::create( 'div', array(
 								'data-animation'	=> 'slide',
 							) ),
 							HtmlTag::create( 'div', 'alle Filter' ),
-						), array( 'class' => 'checkbox' ) ),
+						), ['class' => 'checkbox'] ),
 						HtmlTag::create( 'div', array(
 							$listFilters,
-						), array( 'class' => 'optional filters filters-false', 'style' => 'display: none' ) ),
+						), ['class' => 'optional filters filters-false', 'style' => 'display: none'] ),
 
-					), array( 'class' => 'optional reasons reasons-false', 'style' => 'display: none' ) ),
-				), array( 'class' => 'span12' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+					), ['class' => 'optional reasons reasons-false', 'style' => 'display: none'] ),
+				), ['class' => 'span12'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'br' ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'Dateiname', array( 'for' => 'input_filename' ) ),
+					HtmlTag::create( 'label', 'Dateiname', ['for' => 'input_filename'] ),
 					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'text',
 						'name'		=> 'filename',
@@ -113,20 +113,20 @@ $panelExport	= HtmlTag::create( 'div', array(
 						'value'		=> 'Lock_Filters_'.date( 'Y-m-d' ),
 						'class'		=> 'span12',
 					) ),
-				), array( 'class' => 'span12' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span12'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'button', $iconDownload.'&nbsp;exportieren', array(
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary'
 				) )
-			), array( 'class' => 'buttonbar' ) ),
+			), ['class' => 'buttonbar'] ),
 		), array(
 			'action'	=> './manage/ip/lock/transport/export',
 			'method'	=> 'post',
 		) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 return $panelExport;

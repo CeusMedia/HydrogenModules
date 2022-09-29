@@ -14,7 +14,7 @@ if( count( $positions = $cart->get( 'positions' ) ) ){
 	$tablePositions	= $helperCart->render();
 	$buttonbar		= HtmlTag::create( 'div', array(
 		new \CeusMedia\Bootstrap\Button\Link( './shop/customer', $w->buttonToCustomer, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', !$positions )
-	), array( 'class' => 'buttonbar well well-small' ) );
+	), ['class' => 'buttonbar well well-small'] );
 }
 
 $tabContent	= '
@@ -29,6 +29,6 @@ $helperTabs->setContent( $tabContent );
 $helperTabs->setCartTotal( $cartTotal );
 $helperTabs->setPaymentBackends( $this->getData( 'paymentBackends' ) );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/shop/' ) );
 
 return $textTop.$helperTabs->render().$textBottom;

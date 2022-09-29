@@ -34,7 +34,7 @@ class Logic_Mail extends Logic
 			'attempts'	=> '>= '.$this->options->get( 'retry.attempts' ),
 		) );
 		foreach( $mails as $mail )
-			$model->edit( $mail->mailId, array( 'status' => Model_Mail::STATUS_FAILED ) );
+			$model->edit( $mail->mailId, ['status' => Model_Mail::STATUS_FAILED] );
 		return count( $mails );
 	}
 
@@ -48,7 +48,7 @@ class Logic_Mail extends Logic
 	public function appendRegisteredAttachments( Mail_Abstract $mail, string $language )
 	{
 		$class			= get_class( $mail );
-		$indices		= array( 'className' => $class, 'status' => Model_Mail::STATUS_SENDING, 'language' => $language );
+		$indices		= ['className' => $class, 'status' => Model_Mail::STATUS_SENDING, 'language' => $language];
 		$attachments	= $this->modelAttachment->getAllByIndices( $indices );
 		foreach( $attachments as $attachment ){
 			$fileName	= $this->pathAttachments.$attachment->filename;
@@ -69,7 +69,7 @@ class Logic_Mail extends Logic
 	public function collectConfiguredReceivers( $userIds, $roleIds = [], $listConfigKeysToCheck = [] )
 	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
-			return array();
+			return [];
 		$receivers		= [];
 		if( is_string( $userIds ) )
 			$userIds	= explode( ",", trim( $userIds ) );
@@ -163,7 +163,7 @@ class Logic_Mail extends Logic
 				$env	= $logicFrontend->getRemoteEnv( $this->env );
 			}
 		}
-		return Alg_Object_Factory::createObject( $className, array( $env, $data ) );
+		return Alg_Object_Factory::createObject( $className, [$env, $data] );
 	}
 
 	/**
@@ -381,7 +381,7 @@ class Logic_Mail extends Logic
 			return $this->detectedTemplates[$preferredTemplateId];
 
 		$defaultFromMailModule	= $this->options->get( 'template' );
-		$defaultFromDatabase	= $this->modelTemplate->getByIndex( 'status', Model_Mail_Template::STATUS_ACTIVE, array(), ['mailTemplateId'] );
+		$defaultFromDatabase	= $this->modelTemplate->getByIndex( 'status', Model_Mail_Template::STATUS_ACTIVE, [], ['mailTemplateId'] );
 		$defaultFromFrontend	= 0;
 		if( $considerFrontend && $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			try{
@@ -410,7 +410,7 @@ class Logic_Mail extends Logic
 		$availableTemplateIds	= $this->modelTemplate->getAll( array(
 			'mailTemplateId'	=> $templateIds,
 			'status'			=> '>= '.Model_Mail_Template::STATUS_USABLE,
-		), array(), array(), array( 'mailTemplateId' ) );
+		), [], [], ['mailTemplateId'] );
 		if( !$availableTemplateIds ){
 			if( $strict )
 				throw new RuntimeException( 'No usable mail template available' );
@@ -488,7 +488,7 @@ class Logic_Mail extends Logic
 
 		$incompleteMailDataObject	= (object) array(
 			'compression'	=> $this->getRecommendedCompression(),
-			'object'		=> (object) array( 'instance' => $mail ),
+			'object'		=> (object) ['instance' => $mail],
 			'raw'			=> NULL,
 		);
 
@@ -583,7 +583,7 @@ class Logic_Mail extends Logic
 				$list[$path]	= $matches[1][0];													//  enqueue mail class name by list key
 			}
 		}
-		in_array( $sort, array( 'DESC', -1 ), TRUE ) ? krsort( $list ) : ksort( $list );			//  sort list
+		in_array( $sort, ['DESC', -1], TRUE ) ? krsort( $list ) : ksort( $list );			//  sort list
 		return $list;																				//  return map of found mail classes by their files
 	}
 
@@ -667,13 +667,13 @@ class Logic_Mail extends Logic
 	public function getUsedMailClassNames( array $conditions = [] ): array
 	{
 		$list			= [];
-		$orders			= array( 'mailClass' => 'ASC' );
+		$orders			= ['mailClass' => 'ASC'];
 		if( method_exists( $this->modelQueue, 'getDistinct' ) )
 			$mailClassNames	= $this->modelQueue->getDistinct( 'mailClass', $conditions, $orders );
 		else
 			$mailClassNames	= array_values( $this->getMailClassNames() );
 		foreach( $mailClassNames as $mailClassName )
-			$list[$mailClassName]	= $this->modelQueue->count( array( 'mailClass' => $mailClassName ) );
+			$list[$mailClassName]	= $this->modelQueue->count( ['mailClass' => $mailClassName] );
 		return $list;
 	}
 
@@ -905,16 +905,16 @@ class Logic_Mail extends Logic
 	 */
 	protected function _repair_extendMailsByCompression( int $limit = 10 )
 	{
-		$conditions	= array( 'compression' => '0' );
-		$orders		= array( 'mailId' => 'DESC' );
-		$limits		= array( 0, max( 10, min( 100, $limit ) ) );
+		$conditions	= ['compression' => '0'];
+		$orders		= ['mailId' => 'DESC'];
+		$limits		= [0, max( 10, min( 100, $limit ) )];
 		$mails		= $this->modelQueue->getAll( $conditions, $orders, $limits );
 		foreach( $mails as $mail ){
 			$prefix = substr( $mail->object, 0, 2 );
 			if( $prefix == "BZ" )
-				$this->modelQueue->edit( $mail->mailId, array( 'compression' => Model_Mail::COMPRESSION_BZIP ) );
+				$this->modelQueue->edit( $mail->mailId, ['compression' => Model_Mail::COMPRESSION_BZIP] );
 			else if( !preg_match( '/^[a-z0-9]{20}/i', $mail->object ) )
-				$this->modelQueue->edit( $mail->mailId, array( 'compression' => Model_Mail::COMPRESSION_GZIP ) );
+				$this->modelQueue->edit( $mail->mailId, ['compression' => Model_Mail::COMPRESSION_GZIP] );
 		}
 	}
 
@@ -929,9 +929,9 @@ class Logic_Mail extends Logic
 	 */
 	protected function _repair_extendMailsBySenderAddress( int $limit = 10 )
 	{
-		$conditions	= array( 'senderAddress' => '' );
-		$orders		= array( 'mailId' => 'DESC' );
-		$limits		= array( 0, max( 10, min( 100, $limit ) ) );
+		$conditions	= ['senderAddress' => ''];
+		$orders		= ['mailId' => 'DESC'];
+		$limits		= [0, max( 10, min( 100, $limit ) )];
 		$mails		= $this->modelQueue->getAll( $conditions, $orders, $limits );
 		foreach( $mails as $mail ){
 			$mail	= $this->getMail( $mail->mailId );

@@ -12,7 +12,7 @@ class Controller_Ajax_Auth extends AjaxController
 
 	public function isAuthenticated()
 	{
-		$this->respondData( array( 'result' => $this->session->has( 'auth_user_id' ) ) );
+		$this->respondData( ['result' => $this->session->has( 'auth_user_id' )] );
 	}
 
 	/**

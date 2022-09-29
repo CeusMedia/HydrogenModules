@@ -8,7 +8,7 @@ $heading	= '';
 if( !empty( $words['index']['heading'] ) )
 	$heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/user/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/user/' ) );
 
 return $textIndexTop.'
 <div>

@@ -4,12 +4,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $modelForm	= new Model_Form( $env );
 $modelBlock	= new Model_Form_Block( $env );
 
-$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconBlock	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
-$iconForm	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
+$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconBlock	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-square'] );
+$iconForm	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
 
 $listWithinForms	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinForms ){
@@ -20,7 +20,7 @@ if( $withinForms ){
 		) );
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$listWithinForms	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+	$listWithinForms	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
 
 $listWithinBlocks	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
@@ -32,7 +32,7 @@ if( $withinBlocks ){
 		) );
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$listWithinBlocks	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+	$listWithinBlocks	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
 
 $listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
@@ -50,7 +50,7 @@ if( isset( $matches[0] ) && count( $matches[0] ) ){
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	if( $list )
-		$listBlocksWithin	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+		$listBlocksWithin	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
 return '
 <h2><span class="muted">Block:</span> '.$block->title.'</h2>

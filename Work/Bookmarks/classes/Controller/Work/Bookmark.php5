@@ -109,7 +109,7 @@ class Controller_Work_Bookmark extends Controller
 		);
 		if( $filterQuery )
 			$conditions['fulltext']	= '%'.$filterQuery.'%';
-		$bookmarks		= $this->model->getAll( $conditions, array( 'createdAt' => 'DESC' ) );
+		$bookmarks		= $this->model->getAll( $conditions, ['createdAt' => 'DESC'] );
 		foreach( $bookmarks as $bookmark ){
 			if( !$bookmark->fulltext ){
 				$text	= join( ' ', array(
@@ -118,14 +118,14 @@ class Controller_Work_Bookmark extends Controller
 					$bookmark->url,
 					$bookmark->pageDescription,
 				) );
-				$this->model->edit( $bookmark->bookmarkId, array( 'fulltext' => $text ) );
+				$this->model->edit( $bookmark->bookmarkId, ['fulltext' => $text] );
 			}
 			$bookmark->comments	= $this->modelComment->getAll( array(
 				'bookmarkId'	=> $bookmark->bookmarkId,
-			), array( 'createdAt' => 'ASC' ) );
+			), ['createdAt' => 'ASC'] );
 			$bookmark->tags	= $this->modelTag->getAll( array(
 				'bookmarkId'	=> $bookmark->bookmarkId,
-			), array( 'title' => 'ASC' ) );
+			), ['title' => 'ASC'] );
 		}
 		$this->addData( 'bookmarks', $bookmarks );
 		$this->addData( 'filterQuery', $filterQuery );
@@ -137,10 +137,10 @@ class Controller_Work_Bookmark extends Controller
 		$this->addData( 'bookmark', $this->check( $bookmarkId ) );
 		$this->addData( 'comments', $this->modelComment->getAll( array(
 			'bookmarkId'	=> $bookmarkId,
-		), array( 'createdAt' => 'DESC' ) ) );
+		), ['createdAt' => 'DESC'] ) );
 		$this->addData( 'tags', $this->modelTag->getAll( array(
 			'bookmarkId'	=> $bookmarkId,
-		), array( 'title' => 'ASC' ) ) );
+		), ['title' => 'ASC'] ) );
 	}
 
 	public function visit( $bookmarkId )

@@ -3,7 +3,7 @@ $w			= (object) $words['index'];
 
 $tabs		= $this->renderMainTabs();
 
-extract( $view->populateTexts( array( 'top', 'bottom', 'index' ), 'html/manage/catalog/article/' ) );
+extract( $view->populateTexts( ['top', 'bottom', 'index'], 'html/manage/catalog/article/' ) );
 
 $panelFilter	= $view->loadTemplateFile( 'manage/catalog/article/filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/catalog/article/list.php' );

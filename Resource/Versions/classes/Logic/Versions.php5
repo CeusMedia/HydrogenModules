@@ -23,7 +23,7 @@ class Logic_Versions{
 			'timestamp'	=> time(),
 		);
 		$versionId	= $this->model->add( $data );
-		$data		= array( 'content' => $content );
+		$data		= ['content' => $content];
 		$this->model->edit( $versionId, $data, FALSE );
 	}
 
@@ -49,7 +49,7 @@ class Logic_Versions{
 			'module'	=> $module,
 			'id'		=> $id,
 		);
-		return $this->model->getByIndices( $conditions, array( 'version' => 'DESC' ) );
+		return $this->model->getByIndices( $conditions, ['version' => 'DESC'] );
 	}
 
 	public function getAll( $module, $id, $conditions = [], $orders = [], $limits = [] ){
@@ -58,7 +58,7 @@ class Logic_Versions{
 			'id'		=> $id,
 		);
 		if( $orders )
-			$orders	= array( 'version' => 'ASC' );
+			$orders	= ['version' => 'ASC'];
 		$conditions	= array_merge( $conditions, $indices );
 		return $this->model->getAll( $conditions, $orders, $limits );
 	}
@@ -77,7 +77,7 @@ class Logic_Versions{
 		$latest		= $this->model->getByIndices( array(
 			'module'	=> $module,
 			'id'		=> $id,
-		), array( 'version' => 'DESC' ) );
+		), ['version' => 'DESC'] );
 		if( $latest )
 			return (int) $latest->version + 1;
 		return 0;

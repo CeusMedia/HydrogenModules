@@ -20,29 +20,29 @@ foreach( $groups as $group )
 $hideGroupAdd	= count( $optGroup ) ? '' : 'style="display: none"';
 $optGroup	= HtmlElements::Options( $optGroup, array_keys( $readerGroups ) );
 
-$listGroups	= HtmlTag::create( 'div', 'Keine Gruppen zugewiesen.', array( 'class' => 'alert alert-info' ) );
+$listGroups	= HtmlTag::create( 'div', 'Keine Gruppen zugewiesen.', ['class' => 'alert alert-info'] );
 if( $readerGroups ){
 	$listGroups	= [];
 	foreach( $readerGroups as $readerGroup ){
 		$label			= $readerGroup->title;
 		$urlRemove		= './work/newsletter/reader/removeGroup/'.$reader->newsletterReaderId.'/'.$readerGroup->newsletterGroupId;
-		$iconStatus		= HtmlTag::create( 'i', "", array( 'class' => 'icon-'.$statusIcons[$readerGroup->status] ) );
+		$iconStatus		= HtmlTag::create( 'i', "", ['class' => 'icon-'.$statusIcons[$readerGroup->status]] );
 		$attributes		= array(
 			'href'		=> $urlRemove,
 			'class'		=> 'btn btn-mini btn-inverse',
 		);
 		$linkRemove		= HtmlTag::create( 'a', '<i class="fa fa-remove"></i>', $attributes );
-		$linkRemove		= HtmlTag::create( 'div', $linkRemove, array( 'class' => 'pull-right' ) );
+		$linkRemove		= HtmlTag::create( 'div', $linkRemove, ['class' => 'pull-right'] );
 		$urlGroup		= './work/newsletter/group/edit/'.$readerGroup->newsletterGroupId;
-		$linkGroup		= HtmlTag::create( 'a', /*$iconStatus.' '.*/$label, array( 'href' => $urlGroup ) );
+		$linkGroup		= HtmlTag::create( 'a', /*$iconStatus.' '.*/$label, ['href' => $urlGroup] );
 
 		$listGroups[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $linkGroup, array( 'class' => '' ) ),
-			HtmlTag::create( 'td', $linkRemove, array( 'class' => '' ) ),
+			HtmlTag::create( 'td', $linkGroup, ['class' => ''] ),
+			HtmlTag::create( 'td', $linkRemove, ['class' => ''] ),
 		) );
 	}
 	$colgroup		= HtmlElements::ColumnGroup( "", "35px" );
-	$tableHeads		= HtmlElements::TableHeads( array( 'Zugewiesene Gruppen', '' ) );
+	$tableHeads		= HtmlElements::TableHeads( ['Zugewiesene Gruppen', ''] );
 	$thead			= HtmlTag::create( 'thead', $tableHeads );
 	$tbody			= HtmlTag::create( 'tbody', $listGroups );
 	$listGroups		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
@@ -75,11 +75,11 @@ if( $readerLetters ){
 		if( $stats->sent > 0 )
 			$stats->ratio	= round( $stats->opened / $stats->sent * 100, 1 );
 
-		$indicator		= HtmlTag::create( 'span', '&nbsp;&nbsp;&nbsp;', array( 'class' => $class ) );
+		$indicator		= HtmlTag::create( 'span', '&nbsp;&nbsp;&nbsp;', ['class' => $class] );
 		$link			= HtmlTag::create( 'a', $letter->newsletter->title, $attributes );
-		$listLetters[]	= HtmlTag::create( 'li', $indicator.'&nbsp;'.$link, array( 'class' => 'autocut' ) );
+		$listLetters[]	= HtmlTag::create( 'li', $indicator.'&nbsp;'.$link, ['class' => 'autocut'] );
 	}
-	$listLetters	= HtmlTag::create( 'ul', $listLetters, array( 'class' => 'unstyled' ) );
+	$listLetters	= HtmlTag::create( 'ul', $listLetters, ['class' => 'unstyled'] );
 	if( $stats->sent > 0 ){
 		$list	= [];
 		$list[]	= HtmlTag::create( 'dt', 'Zugestellt' );
@@ -88,15 +88,15 @@ if( $readerLetters ){
 		$list[]	= HtmlTag::create( 'dd', $stats->opened );
 		$list[]	= HtmlTag::create( 'dt', 'Rate' );
 		$list[]	= HtmlTag::create( 'dd', $stats->ratio.'%' );
-		$listLetters	.= '<hr/>'.HtmlTag::create( 'dl', $list, array( 'class' => "dl-horizontal" ) );
+		$listLetters	.= '<hr/>'.HtmlTag::create( 'dl', $list, ['class' => "dl-horizontal"] );
 	}
 }
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconConfirm	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope-o' ) ).'&nbsp;';
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
+$iconConfirm	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope-o'] ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
 
 $urlCancel			= './work/newsletter/reader';
 $urlConfirm			= './work/newsletter/reader/sendConfirmation/'.$reader->newsletterReaderId;
@@ -117,7 +117,7 @@ if( (int) $reader->status !== 0 )
 //	$buttonRemove		= '<button disabled="disabled" type="button" class="btn btn-danger">'.$labelButtonRemove.'</button>';
 
 
-extract( $view->populateTexts( array( 'above', 'bottom', 'top' ), 'html/work/newsletter/reader/edit/', array( 'words' => $words, 'reader' => $reader ) ) );
+extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/reader/edit/', ['words' => $words, 'reader' => $reader] ) );
 
 return $textTop.'
 <div class="newsletter-content">

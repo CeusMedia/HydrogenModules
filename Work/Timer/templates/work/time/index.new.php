@@ -3,13 +3,13 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index-new'];
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' '.$w->buttonAdd, array( 'href' => './work/time/add', 'class' => 'btn btn-small btn-success' ) );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' '.$w->buttonAdd, ['href' => './work/time/add', 'class' => 'btn btn-small btn-success'] );
 
 $helperShortList	= new View_Helper_Work_Time_ShortList( $env );
 $helperShortList->setWorkerId( $userId );
-$helperShortList->setStatus( array( 0 ) );
-$helperShortList->setButtons( array( /*'mission-view'*/'start', 'stop', 'edit' ) );
+$helperShortList->setStatus( [0] );
+$helperShortList->setButtons( [/*'mission-view'*/'start', 'stop', 'edit'] );
 
 $listNew	= $helperShortList->render();
 if( !$listNew )

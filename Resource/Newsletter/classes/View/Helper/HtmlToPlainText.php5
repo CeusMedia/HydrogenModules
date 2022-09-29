@@ -85,11 +85,11 @@ class View_Helper_HtmlToPlainText
 						$prefix	= PHP_EOL;
 					$suffix		= PHP_EOL;
 					$cleared	= TRUE;
-					if( in_array( $nodeName, array( 'h1', 'h2' ) ) ){
+					if( in_array( $nodeName, ['h1', 'h2'] ) ){
 						$prefix		.= PHP_EOL;
 						$suffix		.= self::underline( $node, '=' );
 					}
-					else if( in_array( $nodeName, array( 'h3', 'h4', 'h5' ) ) ){
+					else if( in_array( $nodeName, ['h3', 'h4', 'h5'] ) ){
 						$prefix		.= PHP_EOL;
 						$suffix		.= self::underline( $node, '-' );
 					}
@@ -99,10 +99,10 @@ class View_Helper_HtmlToPlainText
 					else if( $nodeName == "li" ){
 						$prefix		.= '- ';
 					}
-					else if( in_array( $nodeName, array( "p" ) ) ){
+					else if( in_array( $nodeName, ["p"] ) ){
 						$prefix		.= PHP_EOL;
 					}
-					else if( in_array( $nodeName, array( "p", 'ul', 'div' ) ) ){
+					else if( in_array( $nodeName, ["p", 'ul', 'div'] ) ){
 					}
 				}
 				else{
@@ -110,15 +110,15 @@ class View_Helper_HtmlToPlainText
 					if( $nodeName == "a" ){
 						$suffix		= ' ('.$node->getAttribute( 'href' ).')';
 					}
-					else if( in_array( $nodeName, array( "b", "strong" ) ) ){
+					else if( in_array( $nodeName, ["b", "strong"] ) ){
 						$prefix		= '**';
 						$suffix		= '**';
 					}
-					else if( in_array( $nodeName, array( "em" ) ) ){
+					else if( in_array( $nodeName, ["em"] ) ){
 						$prefix		= '*';
 						$suffix		= '*';
 					}
-					else if( in_array( $nodeName, array( "br" ) ) ){
+					else if( in_array( $nodeName, ["br"] ) ){
 						$suffix		= PHP_EOL;
 						$cleared	= TRUE;
 					}

@@ -6,12 +6,12 @@ $list	= [];
 foreach( $paymentBackends as $paymentBackend ){
 	$icon	= '';
 	if( $paymentBackend->icon )
-		$icon	= HtmlTag::create( 'i', '', array( 'class' => $paymentBackend->icon ) ).'&nbsp;';
+		$icon	= HtmlTag::create( 'i', '', ['class' => $paymentBackend->icon] ).'&nbsp;';
 	$link	= HtmlTag::create( 'a', $icon.$paymentBackend->title, array(
 		'href'	=> './shop/pay/'.$paymentBackend->key,
 	) );
 	$key	= $paymentBackend->priority.'.'.uniqid();
-	$list[$key]	= HtmlTag::create( 'li', $link, array( 'class' => 'payment-method-list-item' ) );
+	$list[$key]	= HtmlTag::create( 'li', $link, ['class' => 'payment-method-list-item'] );
 }
 ksort( $list );
 $list	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled payment-method-list') );
@@ -70,6 +70,6 @@ ul.payment-method-list li.payment-method-list-item a i {
 </style>
 ';
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/pay/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/shop/pay/' ) );
 
 return $textTop.$this->renderTabs( $tabContent, 4, $options->get( 'tabs.icons.white' ) ).$textBottom;

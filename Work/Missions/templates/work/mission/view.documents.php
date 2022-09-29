@@ -23,23 +23,23 @@ foreach( $documents as $document ){
 		'class'	=> 'btn btn-small btn-info',
 		'title'	=> 'runterladen',
 	) );
-	$buttons		= HtmlTag::create( 'div', array( /*$buttonView.*/$buttonDownload ), array( 'class' => 'btn-group' ) );
+	$buttons		= HtmlTag::create( 'div', [/*$buttonView.*/$buttonDownload], ['class' => 'btn-group'] );
 	$label			= HtmlTag::create( 'a', $document->filename, array(
 		'href'		=> './work/mission/viewDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 		'target'	=> '_blank',
 		'class'		=> NULL,
 	) );
 	$rows[]	= HtmlTag::create( 'tr', array(
-		HtmlTag::create( 'td', $label, array( 'class' => 'cell-document-title' ) ),
-		HtmlTag::create( 'td', $modifiedAt, array( 'class' => 'cell-document-createdAt' ) ),
-		HtmlTag::create( 'td', $buttons, array( 'class' => 'cell-document-actions' ) ),
+		HtmlTag::create( 'td', $label, ['class' => 'cell-document-title'] ),
+		HtmlTag::create( 'td', $modifiedAt, ['class' => 'cell-document-createdAt'] ),
+		HtmlTag::create( 'td', $buttons, ['class' => 'cell-document-actions'] ),
 	) );
 }
 
 $colgroup	= HtmlElements::ColumnGroup( '*', '150px', '50px' );
-$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( $w->headTitle, 'Speicherung', '' ) ) );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headTitle, 'Speicherung', ''] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
-$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 
 return '
 <div class="row-fluid">

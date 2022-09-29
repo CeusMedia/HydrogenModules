@@ -27,7 +27,7 @@ if( $branch->images ){
 			).
 			HtmlTag::create( 'td',
 				HTML::DivClass( 'image-item',
-					HtmlTag::create( 'big', $title, array( 'class' => 'autocut' ) ).
+					HtmlTag::create( 'big', $title, ['class' => 'autocut'] ).
 					HTML::UlClass( 'not-image-info unstyled',
 						HTML::Li( 'Datum: '.date( 'd.m.Y H:i', $image->uploadedAt ) ).
 						HTML::Li( 'Größe: '.$img->getWidth().' x '.$img->getHeight() )
@@ -43,7 +43,7 @@ if( $branch->images ){
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "30%", "70%" );
 	$tbody		= HtmlTag::create( 'tbody', $listImages );
-	$listImages	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table', 'style' => 'table-layout: fixed' ) );
+	$listImages	= HtmlTag::create( 'table', $colgroup.$tbody, ['class' => 'table', 'style' => 'table-layout: fixed'] );
 }
 $panelImages	= HTML::DivClass( 'content-panel',
 	HTML::H3( $words['images']['legend'] ).

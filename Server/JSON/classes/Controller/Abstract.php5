@@ -32,7 +32,7 @@ class Controller_Abstract extends Controller
 			}
 			catch( Exception $e ){}
 			$user	= array( 'email' => $this->env->getConfig()->get( 'app.email.developer' ) );
-			$mail	= new Mail_Syslog_Exception( $this->env, array( 'exception' => $exception ) );
+			$mail	= new Mail_Syslog_Exception( $this->env, ['exception' => $exception] );
 			$mail->sendTo( (object) $user );
 		}
 	}

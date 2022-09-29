@@ -53,11 +53,11 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		else{
 			$scopes	= [];
 			if( $provider->composerPackage === "adam-paterson/oauth2-slack" )
-				$scopes	= array( 'scope' => ['identity.basic'] );
+				$scopes	= ['scope' => ['identity.basic']];
 			else if( $provider->composerPackage === "stevenmaguire/oauth2-paypal" )
-				$scopes	= array( 'scope' => ['openid', 'profile', 'email', 'phone', 'address'] );
+				$scopes	= ['scope' => ['openid', 'profile', 'email', 'phone', 'address']];
 			else if( $provider->composerPackage === "omines/oauth2-gitlab" )
-				$scopes	= array( 'scope' => ['read_user'] );
+				$scopes	= ['scope' => ['read_user']];
 			$authUrl	= $client->getAuthorizationUrl( $scopes );
 			$session->set( 'oauth2_state', $client->getState() );
 			$this->restart( $authUrl, FALSE, NULL, TRUE );
@@ -132,6 +132,6 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		);
 		if( $provider->options )
 			$options	= array_merge( $options, json_decode( $provider->options, TRUE ) );
-		return Alg_Object_Factory::createObject( $provider->className, array( $options ) );
+		return Alg_Object_Factory::createObject( $provider->className, [$options] );
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 $tabsMain	= $tabbedLinks ? $this->renderMainTabs() : '';
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/work/newsletter/dashboard/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/work/newsletter/dashboard/' ) );
 
 return '
 '.$tabsMain.'

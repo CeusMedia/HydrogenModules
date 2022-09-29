@@ -22,7 +22,7 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 		$optStatus	= HtmlElements::Options( $optStatus, 0 );
 
 		$optWorker	= [];
-		$users	= $logicProject->getProjectUsers( $this->projectId, array(), array( 'username' => 'ASC' ) );
+		$users	= $logicProject->getProjectUsers( $this->projectId, [], ['username' => 'ASC'] );
 		foreach( $users as $user )
 			$optWorker[$user->userId]	= $user->username;
 		$optWorker	= HtmlElements::Options( $optWorker, $currentUserId );

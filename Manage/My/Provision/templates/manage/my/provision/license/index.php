@@ -4,7 +4,7 @@ $panelList		= $view->loadTemplateFile( 'manage/my/provision/license/index.list.p
 $panelKeys		= $view->loadTemplateFile( 'manage/my/provision/license/index.keys.php' );
 $panelFilter	= $view->loadTemplateFile( 'manage/my/provision/license/index.filter.php' );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/my/provision/license/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/my/provision/license/' ) );
 
 $tabs	= View_Manage_My_Provision_License::renderTabs( $env, '' );
 

@@ -34,7 +34,7 @@ class View_Manage_Content_Style extends View{
 				'class'	=> 'autocut',
 				'title'	=> htmlentities( $file, ENT_QUOTES, 'UTF-8' ),
 			) );
-			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
 		return HtmlTag::create( 'ul', $list, array(
 			'class'	=> 'nav nav-pills nav-stacked'

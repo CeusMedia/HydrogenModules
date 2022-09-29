@@ -18,7 +18,7 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 				$class	= $this->changedFactClassPos;
 			else if( $class === FALSE )
 				$class	= $this->changedFactClassNeg;
-			$value	= HtmlTag::create( 'span', $value, array( 'class' => $class ) );
+			$value	= HtmlTag::create( 'span', $value, ['class' => $class] );
 		}
 		$term		= HtmlTag::create( 'dt', $this->labels->$labelKey );
 		$definition	= HtmlTag::create( 'dd', $value );
@@ -45,9 +45,9 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 			$userLabel	= $helper->render();
 		}
 		else{
-			$iconUser	= HtmlTag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
+			$iconUser	= HtmlTag::create( 'i', '', ['class' => 'not_icon-user fa fa-fw fa-user'] );
 			$fullname	= '('.$user->firstname.' '.$user->surname.')';
-			$fullname	= HtmlTag::create( 'small', $fullname, array( 'class' => 'muted' ) );
+			$fullname	= HtmlTag::create( 'small', $fullname, ['class' => 'muted'] );
 			$userLabel	= $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname;
 		}
 		return $userLabel;

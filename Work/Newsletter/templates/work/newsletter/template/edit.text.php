@@ -1,8 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/newsletter/template/text' ) );
-extract( $view->populateTexts( array( 'placeholders' ), 'html/work/newsletter/template/' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/work/newsletter/template/text' ) );
+extract( $view->populateTexts( ['placeholders'], 'html/work/newsletter/template/' ) );
 
 //  --  PANEL: PREVIEW  --  //
 $urlPreview			= './work/newsletter/template/preview/text/'.$template->newsletterTemplateId;

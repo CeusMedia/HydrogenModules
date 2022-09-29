@@ -2,11 +2,11 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $model		= new Model_Newsletter_Reader_Letter( $env );
-$lettersSent	= $model->count( array( 'newsletterId' => $newsletter->newsletterId, 'status' => '>= 1' ) );
-$lettersOpen	= $model->count( array( 'newsletterId' => $newsletter->newsletterId, 'status' => '>= 2' ) );
+$lettersSent	= $model->count( ['newsletterId' => $newsletter->newsletterId, 'status' => '>= 1'] );
+$lettersOpen	= $model->count( ['newsletterId' => $newsletter->newsletterId, 'status' => '>= 2'] );
 
 if( !$lettersSent )
-	return HtmlTag::create( 'div', 'Noch nicht versendet.', array( 'class' => 'alert alert-info' ) );
+	return HtmlTag::create( 'div', 'Noch nicht versendet.', ['class' => 'alert alert-info'] );
 
 $start	= strtotime( date( "Y-m-d", (int) $newsletter->sentAt )." 00:00:00" );
 $end	= strtotime( date( "Y-m-d", time() )." 23:59:59" ) + 1;

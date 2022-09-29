@@ -2,10 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconUndo		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-undo' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconUndo		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-undo'] );
 
 $list	= [];
 $leftAmount	= (float) $bill->amountNetto;
@@ -21,9 +21,9 @@ if( $billExpenses ){
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', '<small>Ausgabe</small>' ),
 			HtmlTag::create( 'td', $expense->title ),
-			HtmlTag::create( 'td', '-', array( 'class' => 'cell-number' ) ),
-			HtmlTag::create( 'td', number_format( $expense->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
-			HtmlTag::create( 'td', $buttonRemove, array( 'class' => 'cell-actions' ) ),
+			HtmlTag::create( 'td', '-', ['class' => 'cell-number'] ),
+			HtmlTag::create( 'td', number_format( $expense->amount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
+			HtmlTag::create( 'td', $buttonRemove, ['class' => 'cell-actions'] ),
 		) );
 		$leftAmount	-= (float) $expense->amount;
 	}
@@ -39,9 +39,9 @@ if( $billReserves ){
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', '<small>Rücklage</small>' ),
 			HtmlTag::create( 'td', $billReserve->reserve->title ),
-			HtmlTag::create( 'td', (float) $billReserve->percent ? number_format( $billReserve->percent, 2, ',', '.' ).'&nbsp;%' : '-', array( 'class' => 'cell-number' ) ),
-			HtmlTag::create( 'td', number_format( $billReserve->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
-			HtmlTag::create( 'td', $buttonRemove, array( 'class' => 'cell-actions' ) ),
+			HtmlTag::create( 'td', (float) $billReserve->percent ? number_format( $billReserve->percent, 2, ',', '.' ).'&nbsp;%' : '-', ['class' => 'cell-number'] ),
+			HtmlTag::create( 'td', number_format( $billReserve->amount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
+			HtmlTag::create( 'td', $buttonRemove, ['class' => 'cell-actions'] ),
 		) );
 		$leftAmount	-= (float) $billReserve->amount;
 	}
@@ -61,9 +61,9 @@ if( $billShares ){
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', '<small>Anteil</small>' ),
 			HtmlTag::create( 'td', $label ),
-			HtmlTag::create( 'td', (float) $billShare->percent ? number_format( $billShare->percent, 2, ',', '.' ).'&nbsp;%' : '-', array( 'class' => 'cell-number' ) ),
-			HtmlTag::create( 'td', number_format( $billShare->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
-			HtmlTag::create( 'td', $buttonRemove, array( 'class' => 'cell-actions' ) ),
+			HtmlTag::create( 'td', (float) $billShare->percent ? number_format( $billShare->percent, 2, ',', '.' ).'&nbsp;%' : '-', ['class' => 'cell-number'] ),
+			HtmlTag::create( 'td', number_format( $billShare->amount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
+			HtmlTag::create( 'td', $buttonRemove, ['class' => 'cell-actions'] ),
 		) );
 		$sharedAmount	+= (float) $billShare->amount;
 	}
@@ -74,31 +74,31 @@ if( $bill->status != Model_Billing_Bill::STATUS_BOOKED ){
 	$missingPercent	= $leftAmount > 0 ? ( $leftAmount - $sharedAmount ) / $leftAmount * 100 : 0;
 
 	if( $missingAmount < 0 ){
-		$labelPercent	= HtmlTag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-error' ) );
-		$labelMissing	= HtmlTag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
+		$labelPercent	= HtmlTag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', ['class' => 'text-error'] );
+		$labelMissing	= HtmlTag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'text-error'] );
 	}
 	else if( $missingAmount > 0 ){
-		$labelPercent	= HtmlTag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-error' ) );
-		$labelMissing	= HtmlTag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-error' ) );
+		$labelPercent	= HtmlTag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', ['class' => 'text-error'] );
+		$labelMissing	= HtmlTag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'text-error'] );
 	}
 	else{
-		$labelPercent	= HtmlTag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', array( 'class' => 'text-success' ) );
-		$labelMissing	= HtmlTag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'text-success' ) );
+		$labelPercent	= HtmlTag::create( 'strong', number_format( $missingPercent, 2, ',', '.' ).'&nbsp;%', ['class' => 'text-success'] );
+		$labelMissing	= HtmlTag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'text-success'] );
 	}
 
 	$list[]	= HtmlTag::create( 'tr', array(
-		HtmlTag::create( 'td', '<strong>Noch zu verteilen</strong>', array( 'colspan' => '2' ) ),
-		HtmlTag::create( 'td', $labelPercent, array( 'class' => 'cell-number' ) ),
-		HtmlTag::create( 'td', $labelMissing, array( 'class' => 'cell-number' ) ),
+		HtmlTag::create( 'td', '<strong>Noch zu verteilen</strong>', ['colspan' => '2'] ),
+		HtmlTag::create( 'td', $labelPercent, ['class' => 'cell-number'] ),
+		HtmlTag::create( 'td', $labelMissing, ['class' => 'cell-number'] ),
 		HtmlTag::create( 'td', '' ),
 	) );
 }
 
 
-$colgroup	= HtmlElements::ColumnGroup( array( '80', '', '80', '100', '80' ) );
-$thead	= HtmlTag::create( 'thread', HtmlElements::TableHeads( array( 'Type', 'Bezug', 'Prozent', 'Betrag', '' ) ) );
+$colgroup	= HtmlElements::ColumnGroup( ['80', '', '80', '100', '80'] );
+$thead	= HtmlTag::create( 'thread', HtmlElements::TableHeads( ['Type', 'Bezug', 'Prozent', 'Betrag', ''] ) );
 $tbody	= HtmlTag::create( 'tbody', $list );
-$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 
 $tabs	= View_Work_Billing_Bill::renderTabs( $env, $bill->billId, 1 );
 

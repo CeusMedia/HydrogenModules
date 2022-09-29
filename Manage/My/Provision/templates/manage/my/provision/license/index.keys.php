@@ -16,11 +16,11 @@ foreach( $userLicensesWithNotAssignedKeys as $userLicense ){
 		HtmlTag::create( 'td', $userLicense->productLicense->users.' vorhanden<br/>'.count( $userLicense->keys ).' nicht vergeben' ),
 	) );
 }
-$colgroup	= HtmlElements::ColumnGroup( array( "", "25%" ) );
-$heads	= HtmlElements::TableHeads( array( 'Lizenz', 'Schlüssel' ) );
+$colgroup	= HtmlElements::ColumnGroup( ["", "25%"] );
+$heads	= HtmlElements::TableHeads( ['Lizenz', 'Schlüssel'] );
 $thead	= HtmlTag::create( 'thead', $heads );
 $tbody	= HtmlTag::create( 'tbody', $list );
-$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
+$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table'] );
 
 return	'
 <div class="content-panel">

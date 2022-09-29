@@ -44,15 +44,15 @@ $optUser	= join( '', $optUser );
 
 $optOrder	= HtmlElements::Options( $words['filter-orders'], $filterOrder );
 
-$iconOrderAsc	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-up' ) );
-$iconOrderDesc	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-down' ) );
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'icon-zoom-out icon-white' ) );
+$iconOrderAsc	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-up'] );
+$iconOrderDesc	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-down'] );
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'icon-search icon-white'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'icon-zoom-out icon-white'] );
 
-$iconOrderAsc	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-up' ) );
-$iconOrderDesc	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-chevron-down' ) );
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconOrderAsc	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-up'] );
+$iconOrderDesc	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-down'] );
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
 
 $disabled   	= $filterDirection == 'ASC';
 $buttonUp		= HtmlElements::LinkButton( './manage/project/filter/?direction=ASC', $iconOrderAsc, 'btn not-btn-small', NULL, $disabled );

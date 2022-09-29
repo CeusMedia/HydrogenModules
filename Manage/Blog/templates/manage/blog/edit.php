@@ -20,11 +20,11 @@ foreach( $users as $user )
 	$optAuthor[$user->userId]		= $user->username;
 $optAuthor		= HtmlElements::Options( $optAuthor, $post->authorId );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-arrow-left' ) );
-	$iconSave		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-check' ) );
+	$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-arrow-left'] );
+	$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-check'] );
 }
 
 $tabs	= $view->renderTabs();

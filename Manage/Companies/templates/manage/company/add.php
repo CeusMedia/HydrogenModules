@@ -4,8 +4,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['add'];
 
-$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 
 $panelAdd	= HTML::DivClass( 'content-panel',
 	HTML::H3( $w->legend ).

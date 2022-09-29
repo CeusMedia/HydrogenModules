@@ -43,7 +43,7 @@ class Controller_Admin_Oauth2 extends Controller
 
 		$provider	= [];
 		foreach( $this->modelProvider->getColumns() as $column )
-			if( !in_array( $column, array( 'oauthProviderId', 'createdAt', 'modifiedAt' ) ) )
+			if( !in_array( $column, ['oauthProviderId', 'createdAt', 'modifiedAt'] ) )
 				$provider[$column]	= $this->request->get( $column );
 		if( ( $providerKey = $this->request->get( 'providerKey' ) ) ){
 			foreach( $this->providersIndex as $item ){
@@ -101,7 +101,7 @@ class Controller_Admin_Oauth2 extends Controller
 	public function index()
 	{
 		$conditions	= [];
-		$orders		= array( 'rank' => 'ASC' );
+		$orders		= ['rank' => 'ASC'];
 		$providers	= $this->modelProvider->getAll( $conditions, $orders );
 		$this->addData( 'providersIndex', array_values( $this->providersIndex ) );
 		$this->addData( 'providersAvailable', $this->providersAvailable );
@@ -130,7 +130,7 @@ class Controller_Admin_Oauth2 extends Controller
 			$this->messenger->noteError( 'Invalid provider ID.' );
 			$this->restart( NULL, TRUE );
 		}
-		$this->modelProvider->edit( $providerId, array( 'status' => $status ) );
+		$this->modelProvider->edit( $providerId, ['status' => $status] );
 		$this->restart( 'edit/'.$providerId, TRUE );
 	}
 

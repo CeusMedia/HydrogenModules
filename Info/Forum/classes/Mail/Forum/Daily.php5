@@ -22,7 +22,7 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract
 					$list[$post->threadId]	= (object) array(
 						'topic'		=> $topic,
 						'thread'	=> $thread,
-						'posts'		=> array()
+						'posts'		=> []
 					);
 				}
 				$list[$post->threadId]->posts[$post->postId]	= $post;
@@ -43,7 +43,7 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract
 				$line		= sprintf( $line, $linkTopic, $linkThread, $posts );
 				$rows[]		= HtmlTag::create( 'li', $line );
 			}
-			$list	= HtmlTag::create( 'ul', $rows, array( 'class' => '' ) );
+			$list	= HtmlTag::create( 'ul', $rows, ['class' => ''] );
 		}
 		$body	= '
 <div class="moduleInfoForum jobInfoForum info-forum-mail info-forum-mail-answer">

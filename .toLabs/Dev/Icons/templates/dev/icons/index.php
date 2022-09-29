@@ -24,8 +24,8 @@ $projects	= array(
 $list	= [];
 foreach( $projects as $path => $label ){
 	$class	= $path == $selected ? 'active' : NULL;
-	$link	= HtmlTag::create( 'a', $label, array( 'href' => './dev/icons/?project='.urlencode( $path ) ) );
-	$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+	$link	= HtmlTag::create( 'a', $label, ['href' => './dev/icons/?project='.urlencode( $path )] );
+	$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 }
 $list	= HtmlTag::create( 'ul', $list );
 
@@ -36,7 +36,7 @@ $panelFilter	= '
 </fieldset>
 ';
 
-	$skip	= array( 'animations' );
+	$skip	= ['animations'];
 
 
 function listFolder( $path, $uri, $skip = [] ){
@@ -54,9 +54,9 @@ function listFolder( $path, $uri, $skip = [] ){
 	foreach( new RegexFileFilter( $path, "/(png|gif|ico|svg)$/i" ) as $file ){
 		$url		= $uri.$file->getFilename();
 		$label		= $file->getFilename();
-		$icon		= HtmlTag::create( 'img', NULL, array( 'src' => $url, 'title' => $label, 'alt' => $label ) );
-#		$label		= HtmlTag::create( 'div', $file->getFilename(), array( 'class' => 'label' ) );
-		$list[$label]	= HtmlTag::create( 'div', $icon, array( 'class' => 'item' ) );
+		$icon		= HtmlTag::create( 'img', NULL, ['src' => $url, 'title' => $label, 'alt' => $label] );
+#		$label		= HtmlTag::create( 'div', $file->getFilename(), ['class' => 'label'] );
+		$list[$label]	= HtmlTag::create( 'div', $icon, ['class' => 'item'] );
 	}
 	ksort( $list );
 	return join( $list );

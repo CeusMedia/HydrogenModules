@@ -57,7 +57,7 @@ class Controller_Work_Mail_Group_Role extends Controller
 	public function index()
 	{
 		$indices	= [];
-		$orders		= array( 'title' => 'ASC' );
+		$orders		= ['title' => 'ASC'];
 		$limits		= [];
 		$roles		= $this->modelRole->getAll( $indices, $orders,$limits );
 		$this->addData( 'roles', $roles );

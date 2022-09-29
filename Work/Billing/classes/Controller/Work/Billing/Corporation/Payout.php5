@@ -44,7 +44,7 @@ class Controller_Work_Billing_Corporation_Payout extends Controller
 			else if( $filterMonth )
 				$conditions['dateBooked']	= '%-'.$filterMonth.'-%';
 		}
-		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
+		$orders		= ['dateBooked' => 'ASC', 'transactionId' => 'ASC'];
 		$limits		= [];
 		$payouts	= $this->logic->getCorporationPayouts( $corporationId, $conditions, $orders, $limits );
 		$this->addData( 'corporation', $this->logic->getCorporation( $corporationId ) );

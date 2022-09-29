@@ -13,7 +13,7 @@ class Hook_Manage_My_User_Invite extends Hook
 			$count	+= $model->removeByIndex( 'inviterId', $payload->userId );
 			$count	+= $model->removeByIndex( 'invitedId', $payload->userId );
 			if( isset( $payload->counts ) )
-				$payload->counts['Manage_My_User_Invite']	= (object) array( 'entities' => $count );
+				$payload->counts['Manage_My_User_Invite']	= (object) ['entities' => $count];
 		}
 	}
 
@@ -24,7 +24,7 @@ class Hook_Manage_My_User_Invite extends Hook
 			$model		= new Model_User_Invite( $env );
 			$count		= $model->removeByIndex( 'projectId', $payload->projectId );
 			if( isset( $payload->counts ) )
-				$payload->counts['Manage_My_User_Invite']	= (object) array( 'entities' => $count );
+				$payload->counts['Manage_My_User_Invite']	= (object) ['entities' => $count];
 		}
     }
 }

@@ -28,7 +28,7 @@ class View_Helper_Mangopay_Entity_Money extends View_Helper_Mangopay_Abstract{
 			$this->numberFormat == self::NUMBER_FORMAT_COMMA ? '.' : '´'
 		);
 		$label	= sprintf( $this->format, $price, $this->separator, $this->currency );
-		return HtmlTag::create( $this->nodeName, $label, array( 'class' => $this->nodeClass ) );
+		return HtmlTag::create( $this->nodeName, $label, ['class' => $this->nodeClass] );
 	}
 
 	public function set( \MangoPay\Money $money, $accuracy = NULL ){

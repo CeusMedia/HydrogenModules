@@ -2,7 +2,7 @@
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
-extract( $view->populateTexts( array( 'above', 'bottom', 'top' ), 'html/work/newsletter/reader/index/', array( 'words' => $words ) ) );
+extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/reader/index/', ['words' => $words] ) );
 
 $modalImportList	= $view->loadTemplateFile( 'work/newsletter/reader/modal.import.list.php' );
 $modalImportCsv		= $view->loadTemplateFile( 'work/newsletter/reader/modal.import.csv.php' );

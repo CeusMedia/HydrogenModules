@@ -21,22 +21,22 @@ foreach( $images as $i ){
 			'alt'	=> $title,
 			'title'	=> $title
 		) );
-		$item	= HtmlTag::create( 'div', $image, array( 'class' => 'not-span4 thumb' ) );
+		$item	= HtmlTag::create( 'div', $image, ['class' => 'not-span4 thumb'] );
 		$link	= HtmlTag::create( 'a', $item, array(
 			'href'	=> $pathModule.'image/'.$i->galleryImageId,
 			'title'	=> $title,
 			'class'	=> ''
 		) );
-		$box	= HtmlTag::create( 'div', $link, array( 'style' => 'width: 220px; height: 160px; float: left; margin: auto auto; vertical-align: middle; ' ) );
-		$list[]	= HtmlTag::create( 'li', $box, array( 'class' => 'not-thumb', ) );
+		$box	= HtmlTag::create( 'div', $link, ['style' => 'width: 220px; height: 160px; float: left; margin: auto auto; vertical-align: middle; '] );
+		$list[]	= HtmlTag::create( 'li', $box, ['class' => 'not-thumb',] );
 	}
 }
-$images	= HtmlTag::create( 'ul', $list, array( 'class' => 'not-thumbnails unstyled' ) );
+$images	= HtmlTag::create( 'ul', $list, ['class' => 'not-thumbnails unstyled'] );
 */
 
 $w	= (object) $words['categories'];
 
-extract( $this->populateTexts( array( 'top', 'content', 'bottom' ), 'html/catalog/gallery/category/' ) );
+extract( $this->populateTexts( ['top', 'content', 'bottom'], 'html/catalog/gallery/category/' ) );
 
 return '
 

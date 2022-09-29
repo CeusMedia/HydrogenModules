@@ -18,7 +18,7 @@ class View_Helper_Info_Dashboard_Modal_Add extends Abstraction
 	{
 		$w			= (object) $this->getWords( 'add', 'info/dashboard' );
 
-		$list		= HtmlTag::create( 'div', $w->emptyPanels, array( 'class' => 'alert alert-warning' ) );
+		$list		= HtmlTag::create( 'div', $w->emptyPanels, ['class' => 'alert alert-warning'] );
 
 		$moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
 		$defaultPanels	= explode( ',', $moduleConfig->get( 'panels' ) );
@@ -38,7 +38,7 @@ class View_Helper_Info_Dashboard_Modal_Add extends Abstraction
 				) );
 			}
 			ksort( $list );
-			$list	= HtmlTag::create( 'div', $list, array( 'style' => "padding: 0 0.5em 1em 0.5em;" ) );
+			$list	= HtmlTag::create( 'div', $list, ['style' => "padding: 0 0.5em 1em 0.5em;"] );
 		}
 
 		$fieldSelect	= '';

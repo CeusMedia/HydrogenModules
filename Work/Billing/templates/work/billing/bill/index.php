@@ -2,9 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
-$list	= HtmlTag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) );
+$list	= HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] );
 
 $statuses	= array(
 	0	=> 'in Arbeit',
@@ -16,22 +16,22 @@ if( $bills ){
 	$totalAmount	= 0;
 	foreach( $bills as $bill ){
 		$totalAmount	+= $bill->amountNetto;
-		$number	= HtmlTag::create( 'a', $bill->number, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
-		$title	= HtmlTag::create( 'a', $bill->title, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
+		$number	= HtmlTag::create( 'a', $bill->number, ['href' => './work/billing/bill/edit/'.$bill->billId] );
+		$title	= HtmlTag::create( 'a', $bill->title, ['href' => './work/billing/bill/edit/'.$bill->billId] );
 		$dateBooked	= '-';
 		if( $bill->dateBooked != "0000-00-00" ){
-			$year		= HtmlTag::create( 'small', date( 'y', strtotime( $bill->dateBooked ) ), array( 'class' => 'muted' ) );
+			$year		= HtmlTag::create( 'small', date( 'y', strtotime( $bill->dateBooked ) ), ['class' => 'muted'] );
 			$dateBooked	= date( 'd.m.', strtotime( $bill->dateBooked ) ).$year;
 		}
 		$status	= HtmlTag::create( 'small', $statuses[$bill->status] );
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $number ),
-			HtmlTag::create( 'td', $title, array( 'class' => 'cell-title autocut' ) ),
-			HtmlTag::create( 'td', number_format( $bill->amountNetto, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
-			HtmlTag::create( 'td', number_format( $bill->taxRate, 2, ',', '.' ).'%', array( 'class' => 'cell-number cell-bill-tax' ) ),
-			HtmlTag::create( 'td', $dateBooked, array( 'class' => 'cell-number' ) ),
+			HtmlTag::create( 'td', $title, ['class' => 'cell-title autocut'] ),
+			HtmlTag::create( 'td', number_format( $bill->amountNetto, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
+			HtmlTag::create( 'td', number_format( $bill->taxRate, 2, ',', '.' ).'%', ['class' => 'cell-number cell-bill-tax'] ),
+			HtmlTag::create( 'td', $dateBooked, ['class' => 'cell-number'] ),
 			HtmlTag::create( 'td', $status ),
-		), array( 'class' => $bill->status > 0 ? 'success' : 'warning' ) );
+		), ['class' => $bill->status > 0 ? 'success' : 'warning'] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( array(
 		'150',
@@ -44,20 +44,20 @@ if( $bills ){
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'th', 'Nr' ),
 		HtmlTag::create( 'th', 'Bezug' ),
-		HtmlTag::create( 'th', 'Betrag', array( 'class' => 'cell-number' ) ),
-		HtmlTag::create( 'th', '<small>MwSt</small>', array( 'class' => 'cell-number' ) ),
-		HtmlTag::create( 'th', '<small>gebucht</small>', array( 'class' => 'cell-number' ) ),
+		HtmlTag::create( 'th', 'Betrag', ['class' => 'cell-number'] ),
+		HtmlTag::create( 'th', '<small>MwSt</small>', ['class' => 'cell-number'] ),
+		HtmlTag::create( 'th', '<small>gebucht</small>', ['class' => 'cell-number'] ),
 		HtmlTag::create( 'th', '<small>Zustand</small>' ),
 	) ) );
 	$tfoot	= HtmlTag::create( 'tfoot', HtmlTag::create( 'tr', array(
-		HtmlTag::create( 'td', 'Gesamt', array( 'colspan' => 2 ) ),
-		HtmlTag::create( 'td', number_format( $totalAmount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
+		HtmlTag::create( 'td', 'Gesamt', ['colspan' => 2] ),
+		HtmlTag::create( 'td', number_format( $totalAmount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 		HtmlTag::create( 'td', '' ),
 		HtmlTag::create( 'td', '' ),
 		HtmlTag::create( 'td', '' ),
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, array( 'class' => 'table table-fixed' ) );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, ['class' => 'table table-fixed'] );
 }
 
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Rechnung', array(
@@ -99,7 +99,7 @@ $optMonth	= HtmlElements::Options( $optMonth, $filterMonth );
 
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './work/billing/bill', $page, $pages );
 
-$iconFilter	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
+$iconFilter	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 
 $buttonFilter	= HtmlTag::create( 'button', $iconFilter, array(
 	'type'	=> 'submit',

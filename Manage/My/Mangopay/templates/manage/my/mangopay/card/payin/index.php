@@ -2,10 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconPayin		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-sign-in' ) );
-$iconCard		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-credit-card' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconPayin		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sign-in'] );
+$iconCard		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-credit-card'] );
 
 $wordsCurrencies	= array(
 	'EUR'		=> 'EUR',
@@ -58,7 +58,7 @@ $from		= isset( $from ) ? $from : '';
 $linkBack	= '';
 if( $backwardTo/* || count( $cards ) > 1*/ ){
 	$linkBack	= $backwardTo ? $backwardTo : './manage/my/mangopay/card';
-	$linkBack	= HtmlTag::create( 'a', $iconCancel.' abbrechen', array( 'href' => $linkBack, 'class' => "btn" ) );
+	$linkBack	= HtmlTag::create( 'a', $iconCancel.' abbrechen', ['href' => $linkBack, 'class' => "btn"] );
 }
 
 $helperCard	= new View_Helper_Mangopay_Entity_Card( $env );

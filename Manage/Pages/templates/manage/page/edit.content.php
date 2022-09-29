@@ -8,7 +8,7 @@ if( $page->type == Model_Page::TYPE_MODULE )
 else if( $page->type == Model_Page::TYPE_BRANCH )
 	$content	= '<div class="alert alert-info"><em>'.$w->no_content.'</em></div>';
 else{
-	$optVersion	= array( '' => '- latest -' );
+	$optVersion	= ['' => '- latest -'];
 	foreach( $versions as $entry )
 		$optVersion[$entry->version]	= $entry->version;
 

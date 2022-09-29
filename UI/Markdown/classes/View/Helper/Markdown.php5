@@ -23,7 +23,7 @@ class View_Helper_Markdown extends View
 
 /*	static public function ___onRenderContent( Environment $env, $context, $module, $data )
 	{
-		if( in_array( strtolower( $data->type ), array( 'markdown', 'md' ) ) )
+		if( in_array( strtolower( $data->type ), ['markdown', 'md'] ) )
 			$data->content	= Markdown::defaultTransform( $data->content );
 	}*/
 

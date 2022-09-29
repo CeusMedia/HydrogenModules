@@ -125,7 +125,7 @@ class Mail_Job_Report extends Mail_Abstract
 		$status			= $data['run']->status;
 		$statusClass	= $statusClasses[$status];
 		$statusWord		= $data['words']['job-run-statuses'][$status];
-		$statusLabel	= HtmlTag::create( 'span', $statusWord, array( 'class' => 'label '.$statusClass ) );
+		$statusLabel	= HtmlTag::create( 'span', $statusWord, ['class' => 'label '.$statusClass] );
 		$seconds		= $data['run']->finishedAt - $data['run']->ranAt;
 		$duration		= $seconds ? $durationHelper->convertSecondsToDuration( $seconds, ' ' ) : '0s';
 		$message		= json_decode( $data['run']->message );

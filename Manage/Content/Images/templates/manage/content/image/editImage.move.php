@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$optFolder	= array( '.' => "" );
+$optFolder	= ['.' => ""];
 foreach( $folders as $folder )
 	$optFolder[$folder]	= preg_replace( "/\.\/?/", "", $folder );
 $optFolder	= HtmlElements::Options( $optFolder, $path );

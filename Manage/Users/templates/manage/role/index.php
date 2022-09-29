@@ -15,14 +15,14 @@ $rows	= [];
 foreach( $roles as $nr => $role ){
 	$labelRole	= $role->title;
 	if( $hasRightToEdit ){
-		$labelRole	= HtmlTag::create( 'a', $labelRole, array( 'href' => './manage/role/edit/'.$role->roleId ) );
+		$labelRole	= HtmlTag::create( 'a', $labelRole, ['href' => './manage/role/edit/'.$role->roleId] );
 	}
-	$labelRole		= HtmlTag::create( 'span', $labelRole, array( 'class' => 'role-'.$role->roleId ) );
+	$labelRole		= HtmlTag::create( 'span', $labelRole, ['class' => 'role-'.$role->roleId] );
 	if( strlen( $role->description ) )
 		$labelRole	.= '<br/><blockquote>'.nl2br( $role->description ).'</blockquote>';
-	$labelCount		= HtmlTag::create( 'span', count( $role->users ), array( 'class' => 'role count' ) );
-	$labelAccess	= HtmlTag::create( 'span', $words['type-access'][$role->access], array( 'class' => 'role-access access'.$role->access ) );
-	$labelRegister	= HtmlTag::create( 'span', $words['type-register'][$role->register], array( 'class' => 'role-register register'.$role->register ) );
+	$labelCount		= HtmlTag::create( 'span', count( $role->users ), ['class' => 'role count'] );
+	$labelAccess	= HtmlTag::create( 'span', $words['type-access'][$role->access], ['class' => 'role-access access'.$role->access] );
+	$labelRegister	= HtmlTag::create( 'span', $words['type-register'][$role->register], ['class' => 'role-register register'.$role->register] );
 
 	$rows[]	= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'td', $labelRole ),
@@ -36,22 +36,22 @@ $table	= HtmlTag::create( 'table', array(
 	HtmlElements::ColumnGroup( "45%", "10%", "25%", "20%" ),
 	HtmlTag::create( 'thead', $heads ),
 	HtmlTag::create( 'tbody', $rows ),
-), array( 'class' => 'table not-table-condensed table-striped', 'id' => 'roles' ) );
+), ['class' => 'table not-table-condensed table-striped', 'id' => 'roles'] );
 
 $panelFilter	= '';
 
 $buttonAdd	= '';
 if( $hasRightToAdd ){
-	$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+	$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 	if( $env->getModules()->get( 'UI_Font_FontAwesome' ) )
-		$iconAdd		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+		$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
 	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$wf->buttonAdd, array(
 		'href'	=> './manage/role/add',
 		'class'	=> 'btn btn-success'
 	) );
 }
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/role/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/role/' ) );
 
 return $textIndexTop.'
 <style>

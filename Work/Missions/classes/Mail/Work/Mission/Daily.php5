@@ -35,7 +35,7 @@ class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract
 			$helper->setWords( $words );
 			$rows		= $helper->renderDayList( 1, 0, TRUE, TRUE );
 			$colgroup	= HtmlElements::ColumnGroup( "80", "100", "", "100" );
-			$attributes	= array( 'class' => 'table-mail table-mail-tasks' );
+			$attributes	= ['class' => 'table-mail table-mail-tasks'];
 			$table		= HtmlTag::create( 'table', $colgroup.$rows, $attributes );
 			$heading	= $w->headingTasks ? HtmlTag::create( 'h4', $w->headingTasks ) : "";
 			$tasks		= $heading.$table;
@@ -50,17 +50,17 @@ class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract
 			$helper->setWords( $words );
 			$rows		= $helper->renderDayList( 1, 0, TRUE, TRUE );
 			$colgroup	= HtmlElements::ColumnGroup( "125", "" );
-			$attributes	= array( 'class' => 'table-mail table-mail-events' );
+			$attributes	= ['class' => 'table-mail table-mail-events'];
 			$table		= HtmlTag::create( 'table', $colgroup.$rows, $attributes );
 			$heading	= $w->headingEvents ? HtmlTag::create( 'h4', $w->headingEvents ) : "";
 			$events		= $heading.$table;
 		}
 
 		$username	= $data['user']->username;
-		$username	= HtmlTag::create( 'span', $username, array( 'class' => 'text-username' ) );
+		$username	= HtmlTag::create( 'span', $username, ['class' => 'text-username'] );
 		$dateFull	= $weekdays[date( 'w' )].', '.date( "j" ).'.&nbsp;'.$monthNames[date( 'n' )];
-		$dateFull	= HtmlTag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) );
-		$dateShort	= HtmlTag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) );
+		$dateFull	= HtmlTag::create( 'span', $dateFull, ['class' => 'text-date-full'] );
+		$dateShort	= HtmlTag::create( 'span', date( $formatDate ), ['class' => 'text-date-short'] );
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
 		$body	= '
 <!--<div class="text-greeting text-info">'.$greeting.'</div>-->

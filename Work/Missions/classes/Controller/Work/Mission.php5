@@ -117,7 +117,7 @@ class Controller_Work_Mission extends Controller
 		if( $this->env->getModules()->has( 'Resource_Database_Lock' ) )
 			$this->lock	= new Logic_Database_Lock( $this->env );
 
-//		$this->env->getModules()->callHook( 'Test', 'test', array() );
+//		$this->env->getModules()->callHook( 'Test', 'test', [] );
 	}
 
 	/**
@@ -142,7 +142,7 @@ class Controller_Work_Mission extends Controller
 
 		if( $copyFromMissionId && $mission = $this->model->get( $copyFromMissionId ) ){
 			foreach( $mission as $key => $value )
-				if( !in_array( $key, array( 'dayStart', 'dayEnd', 'status', 'createdAt', 'modifiedAt' ) ) )
+				if( !in_array( $key, ['dayStart', 'dayEnd', 'status', 'createdAt', 'modifiedAt'] ) )
 					$this->request->set( $key, $value );
 			$this->request->set( 'dayStart', date( 'Y-m-d' ) );
 		}
@@ -228,7 +228,7 @@ class Controller_Work_Mission extends Controller
 		) );
 		$hashname	= $document ? $document->hashname : Alg_ID::uuid();
 		$logic		= new Logic_Upload( $this->env );
-//		$logic->checkMimeType( array() );
+//		$logic->checkMimeType( [] );
 //		$logic->checkSize();
 		$logic->setUpload( $upload );
 		$logic->saveTo( $path.$hashname );
@@ -288,7 +288,7 @@ class Controller_Work_Mission extends Controller
 		switch( $panelId ){
 			case 'work-mission-my-tasks':
 				$conditions		= array(
-					'status'	=> array( 0, 1, 2, 3 ),
+					'status'	=> [0, 1, 2, 3],
 					'type'		=> 0,
 					'dayStart'	=> '<= '.date( 'Y-m-d', time() ),
 //					'dayEnd'	=> '>= '.date( 'Y-m-d', time() ),
@@ -305,10 +305,10 @@ class Controller_Work_Mission extends Controller
 			default:
 				$conditions	= array(
 					'type'			=> 1,
-					'status'		=> array( 0, 1, 2, 3 ),
+					'status'		=> [0, 1, 2, 3],
 					'dayStart'		=> date( 'Y-m-d' ),
 				);
-				$orders	= array( 'timeStart' => 'ASC' );
+				$orders	= ['timeStart' => 'ASC'];
 				$events	= $logic->getUserMissions( $this->userId, $conditions, $orders );
 				$this->addData( 'events', $events );
 				break;
@@ -663,7 +663,7 @@ class Controller_Work_Mission extends Controller
 		$mission		= $this->model->get( $missionId );
 		if( !$mission )
 			$this->messenger->noteError( $words->msgInvalidId );
-		if( !in_array( $mission->status, array( -1, 0, 1, 2, 3 ) ) ){
+		if( !in_array( $mission->status, [-1, 0, 1, 2, 3] ) ){
 			$this->messenger->noteError( $words->msgArchived );
 			$this->restart( 'view/'.$missionId, TRUE );
 		}
@@ -741,7 +741,7 @@ class Controller_Work_Mission extends Controller
 
 		$this->addData( 'mission', $mission );
 		$this->addData( 'users', $this->logicProject->getProjectUsers( $mission->projectId ) );
-		$missionUsers		= array( $mission->creatorId => $mission->creator );
+		$missionUsers		= [$mission->creatorId => $mission->creator];
 		if( $mission->workerId )
 			$missionUsers[$mission->workerId]	= $mission->worker;
 
@@ -762,7 +762,7 @@ class Controller_Work_Mission extends Controller
 			$conditions	= array(
 				'module'	=> 'Work_Missions',
 				'moduleId'	=> $mission->missionId,
-				'status'	=> array( 0, 1, 2 ),
+				'status'	=> [0, 1, 2],
 			);
 			$this->addData( 'openTimers', $logic->countTimers( $conditions ) );
 
@@ -770,11 +770,11 @@ class Controller_Work_Mission extends Controller
 				'moduleId'	=> 0,
 				'userId'	=> $this->userId,
 			);
-			$this->addData( 'unrelatedTimers', $logic->index( $conditions, array( 'title' => 'ASC' ) ) );
+			$this->addData( 'unrelatedTimers', $logic->index( $conditions, ['title' => 'ASC'] ) );
 		}
 
 		$model		= new Model_Mission_Document( $this->env );
-		$orders		= array( 'modifiedAt' => 'DESC', 'createdAt' => 'DESC' );
+		$orders		= ['modifiedAt' => 'DESC', 'createdAt' => 'DESC'];
 		$documents	= $model->getAllByIndex( 'missionId', $missionId, $orders );
 		$this->addData( 'documents', $documents );
 		$this->env->getPage()->setTitle( $mission->title, 'prepend' );
@@ -838,7 +838,7 @@ class Controller_Work_Mission extends Controller
 			$orders['title']	= 'ASC';		//  order by title at last
 		$limits	= [];
 		if( $limit !== NULL && (int) $limit >= 10 ){
-			$limits	= array( abs( $offset ), $limit );
+			$limits	= [abs( $offset ), $limit];
 		}
 		return $this->logic->getUserMissions( $userId, $conditions, $orders, $limits );
 	}
@@ -1001,7 +1001,7 @@ class Controller_Work_Mission extends Controller
 	protected function recoverFilters( $userId )
 	{
 		$model	= new Model_Mission_Filter( $this->env );
-		$serial	= $model->getByIndex( 'userId', $userId, array(), ['serial'], FALSE );
+		$serial	= $model->getByIndex( 'userId', $userId, [], ['serial'], FALSE );
 //	print_m( $serial );
 //	print_m( unserialize( $serial ) );
 //	die;
@@ -1028,7 +1028,7 @@ class Controller_Work_Mission extends Controller
 		$model		= new Model_Mission_Filter( $this->env );
 		$serial		= serialize( $this->session->getAll( $this->filterKeyPrefix ) );
 		$data		= array( 'serial' => $serial, 'timestamp' => time() );
-		$indices	= array( 'userId' => $userId );
+		$indices	= ['userId' => $userId];
 		$filter		= $model->getByIndex( 'userId', $userId );
 		if( $filter )
 			$model->edit( $filter->missionFilterId, $data );
@@ -1046,7 +1046,7 @@ class Controller_Work_Mission extends Controller
 			if( is_null( $value ) )																	//  no value given at all
 				$newValues	= [];																//  resest values, will be set to all by controller
 			else if( $onlyThisOne )																	//  otherwise: only set this value
-				$newValues	= array( $value );														//  replace all by just this value
+				$newValues	= [$value];														//  replace all by just this value
 			else{																					//  otherwise: specific mode
 				if( $set )																			//  new value to be set
 					$newValues[]	= $value;														//  append new value
@@ -1103,7 +1103,7 @@ class Controller_Work_Mission extends Controller
 				$modelMission	= new Model_Mission( $this->env );									//
 				$user			= $modelUser->get( $this->userId );									//
 
-				$groupings	= array( 'missionId' );													//  group by mission ID to apply HAVING clause
+				$groupings	= ['missionId'];													//  group by mission ID to apply HAVING clause
 				$havings	= array(																//  apply filters after grouping
 					'creatorId = '.(int) $user->userId,												//
 					'workerId = '.(int) $user->userId,												//
@@ -1114,24 +1114,24 @@ class Controller_Work_Mission extends Controller
 					if( $userProjects )																//  projects found
 						$havings[]	= 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';//  add to HAVING clause
 				}
-				$havings	= array( join( ' OR ', $havings ) );									//  render HAVING clause
+				$havings	= [join( ' OR ', $havings )];									//  render HAVING clause
 
 				//  --  TASKS  --  //
 				$filters	= array(																//  task filters
 					'type'		=> 0,																//  tasks only
-					'status'	=> array( 0, 1, 2, 3 ),												//  states: new, accepted, progressing, ready
+					'status'	=> [0, 1, 2, 3],												//  states: new, accepted, progressing, ready
 					'dayStart'	=> "<= ".date( "Y-m-d", time() ),									//  present and past (overdue)
 				);
-				$order	= array( 'priority' => 'ASC' );
+				$order	= ['priority' => 'ASC'];
 				$tasks	= $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered tasks ordered by priority
 
 				//  --  EVENTS  --  //
 				$filters	= array(																//  event filters
 					'type'		=> 1,																//  events only
-					'status'	=> array( 0, 1, 2, 3 ),												//  states: new, accepted, progressing, ready
+					'status'	=> [0, 1, 2, 3],												//  states: new, accepted, progressing, ready
 					'dayStart'	=> "<= ".date( "Y-m-d", time() ),									//  starting today
 				);
-				$order	= array( 'timeStart' => 'ASC' );
+				$order	= ['timeStart' => 'ASC'];
 				$events	= $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered events ordered by start time
 
 				if( $events || $tasks ){															//  user has tasks or events
@@ -1157,7 +1157,7 @@ class Controller_Work_Mission extends Controller
 			'user'		=> $this->userMap[$this->userId],
 		);
 		$mail	= new Mail_Work_Mission_New( $this->env, $data );
-		$asText ? xmp( $mail->contents['text'] ) : print( $mail->contents['html'] );
+		$asText ? xmp( $mail->getContent('textRendered' ) ) : print( $mail->getContent( 'htmlRendered' ) );
 		exit;
 	}
 
@@ -1166,30 +1166,30 @@ class Controller_Work_Mission extends Controller
 		$missionOld		= $this->model->get( $missionId );
 		$missionNew		= clone( $missionOld );
 
-		$missionOld->type		= array_rand( array_flip( array( 0, 1 ) ) );
-		$missionOld->status		= array_rand( array_flip( array( -2, -1, 0, 1, 2, 3, 4 ) ) );
-		$missionOld->location	= array_rand( array_flip( array( 'Raum 301', '' ) ) );
-		$missionOld->timeStart	= array_rand( array_flip( array( 10, 12, 14, 16 ) ) ).':'.array_rand( array_flip( array( '00', '30' ) ) );
-		$missionOld->timeEnd	= array_rand( array_flip( array( 10, 12, 14, 16 ) ) ).':'.array_rand( array_flip( array( '00', '30' ) ) );
+		$missionOld->type		= array_rand( array_flip( [0, 1] ) );
+		$missionOld->status		= array_rand( array_flip( [-2, -1, 0, 1, 2, 3, 4] ) );
+		$missionOld->location	= array_rand( array_flip( ['Raum 301', ''] ) );
+		$missionOld->timeStart	= array_rand( array_flip( [10, 12, 14, 16] ) ).':'.array_rand( array_flip( ['00', '30'] ) );
+		$missionOld->timeEnd	= array_rand( array_flip( [10, 12, 14, 16] ) ).':'.array_rand( array_flip( ['00', '30'] ) );
 
-		$missionNew->projectId	= array_rand( array_flip( array( 1, 2, 3 ) ) );
-		$missionNew->workerId	= array_rand( array_flip( array( 1, 2, 4 ) ) );
-		$missionNew->type		= array_rand( array_flip( array( 0, 1 ) ) );
-		$missionNew->status		= array_rand( array_flip( array( -2, -1, 0, 1, 2, 3, 4 ) ) );
-		$missionNew->priority	= array_rand( array_flip( array( 1, 2, 3, 4, 5 ) ) );
-		$missionNew->timeStart	= array_rand( array_flip( array( 10, 12, 14, 16 ) ) ).':'.array_rand( array_flip( array( '00', '30' ) ) );
-		$missionNew->timeEnd	= array_rand( array_flip( array( 10, 12, 14, 16 ) ) ).':'.array_rand( array_flip( array( '00', '30' ) ) );
-		$missionNew->title		= array_rand( array_flip( array( $missionOld->title, 'Heißt jetzt ganz anders' ) ) );
-		$missionNew->location	= array_rand( array_flip( array( $missionOld->location, 'Schulungsraum', '' ) ) );
-		$missionNew->dayStart	= date( "Y-m-d", strtotime( $missionNew->dayStart ) + array_rand( array_flip( array( -1, 0, 1 ) ) ) * 3600 * 24 );
-		$missionNew->dayEnd		= date( "Y-m-d", strtotime( $missionNew->dayEnd ) + array_rand( array_flip( array( -1, 0, 1 ) ) ) * 3600 * 24 );
+		$missionNew->projectId	= array_rand( array_flip( [1, 2, 3] ) );
+		$missionNew->workerId	= array_rand( array_flip( [1, 2, 4] ) );
+		$missionNew->type		= array_rand( array_flip( [0, 1] ) );
+		$missionNew->status		= array_rand( array_flip( [-2, -1, 0, 1, 2, 3, 4] ) );
+		$missionNew->priority	= array_rand( array_flip( [1, 2, 3, 4, 5] ) );
+		$missionNew->timeStart	= array_rand( array_flip( [10, 12, 14, 16] ) ).':'.array_rand( array_flip( ['00', '30'] ) );
+		$missionNew->timeEnd	= array_rand( array_flip( [10, 12, 14, 16] ) ).':'.array_rand( array_flip( ['00', '30'] ) );
+		$missionNew->title		= array_rand( array_flip( [$missionOld->title, 'Heißt jetzt ganz anders'] ) );
+		$missionNew->location	= array_rand( array_flip( [$missionOld->location, 'Schulungsraum', ''] ) );
+		$missionNew->dayStart	= date( "Y-m-d", strtotime( $missionNew->dayStart ) + array_rand( array_flip( [-1, 0, 1] ) ) * 3600 * 24 );
+		$missionNew->dayEnd		= date( "Y-m-d", strtotime( $missionNew->dayEnd ) + array_rand( array_flip( [-1, 0, 1] ) ) * 3600 * 24 );
 		$data		= array(
 			'missionBefore'	=> $missionOld,
 			'missionAfter'	=> $missionNew,
 			'user'			=> $this->userMap[$this->userId],
 		);
 		$mail	= new Mail_Work_Mission_Update( $this->env, $data );
-		$asText ? xmp( $mail->contents['text'] ) : print( $mail->contents['html'] );
+		$asText ? xmp( $mail->getContent( 'textRendered' ) ) : print( $mail->getContent( 'htmlRendered' ) );
 		exit;
 	}
 
@@ -1209,7 +1209,7 @@ class Controller_Work_Mission extends Controller
 
 /*		$mode	= $this->session->get( $this->filterKeyPrefix.'mode' );
 		if( $mission->status < 0 || $mission->status > 3 ){
-			if( in_array( $mode, array( 'now', 'future' ) ) )
+			if( in_array( $mode, ['now', 'future'] ) )
 				$this->session->set( $this->filterKeyPrefix.'mode', 'archive' );
 		}
 		else if( $this->session->get( $this->filterKeyPrefix.'mode' ) == 'archive' ){
@@ -1230,7 +1230,7 @@ class Controller_Work_Mission extends Controller
 		$mission->versions	= $this->logic->getVersions( $missionId );
 		$this->addData( 'mission', $mission );
 		$this->addData( 'users', $this->userMap );
-		$missionUsers		= array( $mission->creatorId => $mission->creator );
+		$missionUsers		= [$mission->creatorId => $mission->creator];
 		if( $mission->workerId )
 			$missionUsers[$mission->workerId]	= $mission->worker;
 
@@ -1247,7 +1247,7 @@ class Controller_Work_Mission extends Controller
 		}
 
 		$model		= new Model_Mission_Document( $this->env );
-		$orders		= array( 'modifiedAt' => 'DESC', 'createdAt' => 'DESC' );
+		$orders		= ['modifiedAt' => 'DESC', 'createdAt' => 'DESC'];
 		$documents	= $model->getAllByIndex( 'missionId', $missionId, $orders );
 		$this->addData( 'documents', $documents );
 		$this->env->getPage()->setTitle( $mission->title, 'prepend' );

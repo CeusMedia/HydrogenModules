@@ -6,9 +6,9 @@ use CeusMedia\Common\UI\HTML\Tag as Html;
 
 $modelMail		= new Model_Mail( $env );
 
-$iconAdd		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconImport		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
-$iconCancel		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconAdd		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconImport		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-upload'] );
+$iconCancel		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 
 $rows	= [];
 foreach( $templates as $template ){
@@ -36,14 +36,14 @@ foreach( $templates as $template ){
 			$badgeClass	= 'badge badge-success';
 			break;
 	}
-	$badgeStatus	= Html::create( 'span', $words['status'][$template->status], array( 'class' => $badgeClass ) );
+	$badgeStatus	= Html::create( 'span', $words['status'][$template->status], ['class' => $badgeClass] );
 	$rows[]	= Html::create( 'tr', array(
 		Html::create( 'td', $title ),
 		Html::create( 'td', $badgeStatus ),
 		Html::create( 'td', sprintf( $words['index']['valueUsedInMail'], $template->used ) ),
 		Html::create( 'td', date( 'd.m.Y H:i', $template->createdAt ) ),
 		Html::create( 'td', date( 'd.m.Y H:i', $template->modifiedAt ) ),
-	), array( 'class' => $rowClass ) );
+	), ['class' => $rowClass] );
 }
 $tableHeads	= HtmlElements::tableHeads( array(
 	$words['index']['headTitle'],
@@ -54,10 +54,10 @@ $tableHeads	= HtmlElements::tableHeads( array(
 ) );
 
 $table	= Html::create( 'table', array(
-	HtmlElements::ColumnGroup( array( '', '120', '120', '140', '140' ) ),
+	HtmlElements::ColumnGroup( ['', '120', '120', '140', '140'] ),
 	Html::create( 'thead', $tableHeads ),
 	Html::create( 'tbody', $rows ),
-), array( 'class' => 'table table-fixed' ) );
+), ['class' => 'table table-fixed'] );
 
 $buttonAdd	= Html::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
 	'href'	=> './admin/mail/template/add',
@@ -68,15 +68,15 @@ $buttonImport	= Html::create( 'a', $iconImport.'&nbsp;'.$words['index']['buttonI
 	'class'	=> 'btn',
 ) );
 
-$iconList		= Html::create( 'b', '', array( 'class' => 'icon-list' ) );
-$iconCancel		= Html::create( 'b', '', array( 'class' => 'icon-arrow-left' ) );
-$iconFile		= Html::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
-$iconSave		= Html::create( 'b', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconList		= Html::create( 'b', '', ['class' => 'icon-list'] );
+$iconCancel		= Html::create( 'b', '', ['class' => 'icon-arrow-left'] );
+$iconFile		= Html::create( 'i', '', ['class' => 'icon-folder-open icon-white'] );
+$iconSave		= Html::create( 'b', '', ['class' => 'icon-ok icon-white'] );
 if( $env->hasModule( 'UI_Font_FontAwesome' ) ){
-	$iconList		= Html::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconCancel		= Html::create( 'b', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconFile		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
-	$iconSave		= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconList		= Html::create( 'b', '', ['class' => 'fa fa-fw fa-list'] );
+	$iconCancel		= Html::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+	$iconFile		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-folder-open'] );
+	$iconSave		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 }
 
 $helperUpload	= new View_Helper_Input_File( $env );
@@ -85,7 +85,7 @@ $helperUpload->setLabel( $iconFile );
 $helperUpload->setName( 'template' );
 $helperUpload->setRequired( TRUE );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/template/import/', array(
+extract( $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/template/import/', array(
 	'labelMaxFileSize'		=> $words['import']['labelMaxFileSize'],
 	'valueMaxFileSize'		=> Alg_UnitFormater::formatBytes( $env->getLogic()->upload->getMaxUploadSize() ),
 ) ) );

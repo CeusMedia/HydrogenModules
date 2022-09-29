@@ -158,7 +158,7 @@ class View_Manage_Gallery extends View
 		}
 		$fileBottom	= 'html/gallery/index.bottom.html';
 		if( !$source )
-			$this->setData( array( 'textBottom' => $this->loadContentFile( $fileBottom ) ) );
+			$this->setData( ['textBottom' => $this->loadContentFile( $fileBottom )] );
 
 		$data		= $this->env->getConfig()->getAll( 'module.gallery_compact.license.' );
 		$this->addData( 'license', $this->loadContentFile( 'html/gallery/license.html', $data ) );
@@ -171,7 +171,7 @@ class View_Manage_Gallery extends View
 	 */
 	public function info()
 	{
-		$keys	= array( 'info.top', 'info.bottom', 'info.info' );
+		$keys	= ['info.top', 'info.bottom', 'info.info'];
 		$path	= 'html/gallery/';
 		$data		= $this->env->getConfig()->getAll( 'module.gallery_compact.license.' );
 		$this->addData( 'text', $this->populateTexts( $keys, $path ) );

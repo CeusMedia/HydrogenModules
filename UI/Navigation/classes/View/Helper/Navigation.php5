@@ -30,7 +30,7 @@ class View_Helper_Navigation
 	{
 		$class		= $class ? $class : $this->moduleConfig->get( 'render.desktop.class' );
 		$style		= $style ? $style : $this->moduleConfig->get( 'render.desktop.style' );
-		$argments	= array( $this->env, $this->menu );
+		$argments	= [$this->env, $this->menu];
 		if( !class_exists( $class ) )
 			throw new RuntimeException( 'Navigation class "'.$class.'" is not existing' );
 		$helper	= Alg_Object_Factory::createObject( $class, $argments );

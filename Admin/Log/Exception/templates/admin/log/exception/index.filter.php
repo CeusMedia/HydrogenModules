@@ -12,8 +12,8 @@ use CeusMedia\HydrogenFramework\View;
 
 $w				= (object) $words['index.filter'];
 
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-search' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-trash' ) );
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-search'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-trash'] );
 
 $from		= 'admin/log/exception'.($page ? '/'.$page : '' );
 

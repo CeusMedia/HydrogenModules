@@ -59,7 +59,7 @@ class Model_Module_Page
 
 	public function getByIndices( array $indices = [], array $orders = [] )
 	{
-		return current( $this->getAllByIndices( $indices, $orders, array( 0, 1 ) ) );
+		return current( $this->getAllByIndices( $indices, $orders, [0, 1] ) );
 	}
 
 	public function getAllByIndices( array $indices = [], array $orders = [], array $limits = [] ): array

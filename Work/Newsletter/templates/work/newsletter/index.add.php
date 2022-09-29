@@ -5,15 +5,15 @@ use CeusMedia\Common\UI\HTML\Tag as Html;
 
 $w	= (object) $words->add;
 
-$iconCancel	= Html::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) ).'&nbsp;';
-$iconSave	= Html::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) ).'&nbsp;';
+$iconCancel	= Html::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
+$iconSave	= Html::create( 'i', '', ['class' => "fa fa-fw fa-check"] ).'&nbsp;';
 
 $optTemplate	= [];
 foreach( $addTemplates as $entry )
 	$optTemplate[$entry->newsletterTemplateId]	= $entry->title;
 $optTemplate	= HtmlElements::Options( $optTemplate, 0 );
 
-$optNewsletter	= array( '0' => '- keine Kopie -' );
+$optNewsletter	= ['0' => '- keine Kopie -'];
 krsort( $addNewsletters );
 foreach( $addNewsletters as $item )
 	$optNewsletter[$item->newsletterId]	= $item->title;

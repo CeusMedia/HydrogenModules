@@ -24,18 +24,18 @@ $panelFilter	= HtmlTag::create( 'div', array(
 					'name'		=> 'save',
 					'class'		=> 'btn btn-primary',
 				) )
-			), array( 'class' => 'buttonbar' ) ),
-		), array( 'action' => './work/mail/group/message/filter', 'method' => 'POST' ) )
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+			), ['class' => 'buttonbar'] ),
+		), ['action' => './work/mail/group/message/filter', 'method' => 'POST'] )
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
-$list	= HtmlTag::create( 'div', 'Keine gefunden.', array( 'class' => 'alert alert-info' ) );
+$list	= HtmlTag::create( 'div', 'Keine gefunden.', ['class' => 'alert alert-info'] );
 if( count( $messages ) ){
 	$list	= [];
 	foreach( $messages as $message ){
 		$sender	=  $message->object->getSender();
 		if( $sender->getName() ){
-//			$address	= HtmlTag::create( 'small', '&lt;'.htmlentities( $sender->getAddress(), ENT_QUOTES, 'UTF-8' ).'&gt;', array( 'class' => 'not-muted' ) );
+//			$address	= HtmlTag::create( 'small', '&lt;'.htmlentities( $sender->getAddress(), ENT_QUOTES, 'UTF-8' ).'&gt;', ['class' => 'not-muted'] );
 			$sender	= $sender->getName();
 		}
 		else{
@@ -71,7 +71,7 @@ if( count( $messages ) ){
 		'Datum',
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-condensed' ) );
+	$list	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-condensed'] );
 }
 
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './work/mail/group/message', $page, $pages );
@@ -80,13 +80,13 @@ $panelList	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Mails' ),
 	HtmlTag::create( 'div', array(
 		$list,
- 		HtmlTag::create( 'div', $pagination, array( 'class' => 'buttonbar' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+ 		HtmlTag::create( 'div', $pagination, ['class' => 'buttonbar'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 $tabs	= $view->renderTabs( $env, 'message' );
 
 return $tabs.HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', $panelFilter, array( 'class' => 'span3' ) ),
-	HtmlTag::create( 'div', $panelList, array( 'class' => 'span9' ) )
-), array( 'class' => 'row-fluid' ) );
+	HtmlTag::create( 'div', $panelFilter, ['class' => 'span3'] ),
+	HtmlTag::create( 'div', $panelList, ['class' => 'span9'] )
+), ['class' => 'row-fluid'] );

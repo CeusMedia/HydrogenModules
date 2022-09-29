@@ -7,7 +7,7 @@ $list		= $this->renderList( $articles, isset( $article ) ? $article->articleId :
 
 $heading	= $w->heading;
 if( !empty( $w->heading_title ) )
-	$heading	= HtmlTag::create( 'abbr', $heading, array( 'title' => $w->heading_title ) );
+	$heading	= HtmlTag::create( 'abbr', $heading, ['title' => $w->heading_title] );
 
 return '
 <div class="content-panel">

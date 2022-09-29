@@ -19,8 +19,8 @@ class Controller_Manage_Shop_Shipping extends Controller
 	public function index()
 	{
 		$countryMap		= $this->getWords( 'countries', 'address' );
-		$grades			= $this->modelGrade->getAll( array(), array( 'fallback' => 'ASC', 'weight' => 'ASC' ) );
-		$prices			= $this->modelPrice->getAll( array(), array( 'zoneId' => 'ASC', 'gradeId' => 'ASC' ) );
+		$grades			= $this->modelGrade->getAll( [], ['fallback' => 'ASC', 'weight' => 'ASC'] );
+		$prices			= $this->modelPrice->getAll( [], ['zoneId' => 'ASC', 'gradeId' => 'ASC'] );
 
 		$priceMatrix	= [];
 		foreach( $prices as $price ){
@@ -29,11 +29,11 @@ class Controller_Manage_Shop_Shipping extends Controller
 			$priceMatrix[$price->zoneId][$price->gradeId]	= $price->price;
 		}
 
-		$zones			= $this->modelZone->getAll( array(), array( 'fallback' => 'ASC', 'zoneId' => 'ASC' ) );
+		$zones			= $this->modelZone->getAll( [], ['fallback' => 'ASC', 'zoneId' => 'ASC'] );
 		foreach( $zones as $zone )
-			$zone->countries	= $this->modelCountry->getAllByIndex( 'zoneId', $zone->zoneId, array(), array(), array( 'countryCode' ) );
+			$zone->countries	= $this->modelCountry->getAllByIndex( 'zoneId', $zone->zoneId, [], [], ['countryCode'] );
 
-		$zoneCountries	= $this->modelCountry->getAll( array(), array(), array(), array( 'countryCode' ) );
+		$zoneCountries	= $this->modelCountry->getAll( [], [], [], ['countryCode'] );
 
 		$this->addData( 'zones', $zones );
 		$this->addData( 'grades', $grades );
@@ -45,7 +45,7 @@ class Controller_Manage_Shop_Shipping extends Controller
 
 	public function addGrade()
 	{
-		$data		= array( 'title' => $this->request->get( 'title' ) );
+		$data		= ['title' => $this->request->get( 'title' )];
 		if( $this->request->get( 'fallback' ) )
 			$data['fallback']	= 1;
 		else
@@ -68,7 +68,7 @@ class Controller_Manage_Shop_Shipping extends Controller
 			'title'	=> $this->request->get( 'title' ),
 		) );
 		if( $this->request->get( 'fallback' ) )
-			$this->modelZone->edit( $zoneId, array( 'fallback' => 1 ) );
+			$this->modelZone->edit( $zoneId, ['fallback' => 1] );
 		else{
 			foreach( $this->request->get( 'country' ) as $countryCode )
 			$this->modelCountry->add( array(

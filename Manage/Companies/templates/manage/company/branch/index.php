@@ -4,10 +4,10 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['index'];
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-$iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
-$iconDeactivate	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
+$iconActivate	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
+$iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
 
 $heading	= HtmlTag::create( 'h2', $w->heading );
 $buttonAdd 	= HtmlElements::LinkButton( './manage/company/branch/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-primary' );
@@ -36,7 +36,7 @@ foreach( $branches as $entry ){
 		<td>'.$company.'</td>
 		<td>'.$createdAt.'</td>
 		<td>'.$modifiedAt.'</td>
-		<td>'.HtmlTag::create( 'div', $buttonEdit/*.$buttonActivate.$buttonDeactivate*/, array( 'class' => 'btn-group' ) ).'</td>
+		<td>'.HtmlTag::create( 'div', $buttonEdit/*.$buttonActivate.$buttonDeactivate*/, ['class' => 'btn-group'] ).'</td>
 	</tr>';
 	$number		++;
 }
@@ -55,7 +55,7 @@ $colgroup	= HtmlElements::ColumnGroup( '', '', '120px', '120px', '100px' );
 
 $thead		= HtmlTag::create( 'thead', $heads );
 $tbody		= HtmlTag::create( 'tbody', $rows );
-$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
+$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-condensed'] );
 
 $panelList	= '<div class="content-panel">
 	<h3>'.$words['index']['legend'].'</h3>

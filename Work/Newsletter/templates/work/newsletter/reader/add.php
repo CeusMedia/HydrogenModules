@@ -4,8 +4,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 
 $optStatus	= $words->states;
 unset( $optStatus[-2] );
@@ -24,7 +24,7 @@ foreach( $groups as $group ){
 		'checked'	=> in_array( $group->newsletterGroupId, $selectedGroups ) ? 'checked' : NULL,
 	) );
 	$label	= $checkbox.'&nbsp;'.$group->title;
-	$listGroups[]	= HtmlTag::create( 'label', $label, array( 'class' => 'checkbox' ) );
+	$listGroups[]	= HtmlTag::create( 'label', $label, ['class' => 'checkbox'] );
 }
 $listGroups	= join( $listGroups );
 
@@ -38,7 +38,7 @@ $nextActions[]	='<label class="radio"><input type="radio" name="nextAction" valu
 $nextActions[]	='<label class="radio"><input type="radio" name="nextAction" value="index">&nbsp;zurück zur Liste</label>';
 $nextActions	= join( $nextActions );
 
-extract( $view->populateTexts( array( 'above', 'bottom', 'top' ), 'html/work/newsletter/reader/add/', array( 'words' => $words ) ) );
+extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/reader/add/', ['words' => $words] ) );
 
 return $textTop.'
 <div class="newsletter-content">

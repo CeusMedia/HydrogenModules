@@ -17,10 +17,10 @@ class View_Manage_Content extends View{
 		$list   = [];
 		foreach( $tabs as $key => $value ){
 			$class	= $key == $current ? 'active' : NULL;
-			$link	= HtmlTag::create( 'a', $value, array( 'href' => $key ) );
-			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+			$link	= HtmlTag::create( 'a', $value, ['href' => $key] );
+			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
-		$tabs	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-tabs' ) );
+		$tabs	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-tabs'] );
 		return $tabs;
 	}
 }

@@ -11,7 +11,7 @@ if( $page->type == 1 ){
 $optChangefreq	= HtmlElements::Options( $words['changefreqs'], $page->changefreq );
 $optPriority	= HtmlElements::Options( $words['priorities'], $page->priority );
 
-extract( $view->populateTexts( array( 'top' ), 'html/manage/page/sitemap' ) );
+extract( $view->populateTexts( ['top'], 'html/manage/page/sitemap' ) );
 
 return '
 <div class="content-panel content-panel-form">

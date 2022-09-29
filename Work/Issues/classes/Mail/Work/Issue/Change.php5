@@ -27,7 +27,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 		$issue	= $data['issue'];
 
 		$this->factsChanges	= new View_Helper_Mail_Facts( $this->env );
-		$this->note	= $this->modelIssueNote->getByIndex( 'issueId', $issue->issueId, array( 'issueNoteId' => 'DESC' ) );
+		$this->note	= $this->modelIssueNote->getByIndex( 'issueId', $issue->issueId, ['issueNoteId' => 'DESC'] );
 		if( $this->note ){
 			$this->note->user	= $this->modelUser->get( $this->note->userId );
 			$this->factsChanges	= new View_Helper_Work_Issue_ChangeFacts( $this->env );
@@ -71,7 +71,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 			$projectLink	= HtmlElements::Link( './manage/project/view/'.$issue->projectId, $issue->project->title );
 			$message[]		= 'Du bekommst diese Mail, da du im Projekt '.$projectLink.' involviert bist.';
 		}
-		$message	= HtmlTag::create( 'div', join( '<br/>', $message ), array( 'class' => 'alert alert-info' ) );
+		$message	= HtmlTag::create( 'div', join( '<br/>', $message ), ['class' => 'alert alert-info'] );
 
 		$body	= '
 <div>

@@ -5,6 +5,6 @@ $panelFilter	= $view->loadTemplateFile( 'manage/form/block/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/form/block/index.list.php' );
 
 return HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', $panelFilter, array( 'class' => 'span3' ) ),
-	HtmlTag::create( 'div', $panelList, array( 'class' => 'span9' ) ),
-), array( 'class' => 'row-fluid' ) );
+	HtmlTag::create( 'div', $panelFilter, ['class' => 'span3'] ),
+	HtmlTag::create( 'div', $panelList, ['class' => 'span9'] ),
+), ['class' => 'row-fluid'] );

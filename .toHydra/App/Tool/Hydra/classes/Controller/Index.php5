@@ -75,8 +75,8 @@ class Controller_Index extends Controller{
 
 				foreach( $listModulesMissing as $module ){
 					$url	= './admin/module/installer/index/'.$module;
-					$link	= HtmlTag::create( 'a', $module, array( 'href' => $url ) );
-					$span	= HtmlTag::create( 'span', $link, array( 'class' => 'icon module module-status-4' ) );
+					$link	= HtmlTag::create( 'a', $module, ['href' => $url] );
+					$span	= HtmlTag::create( 'span', $link, ['class' => 'icon module module-status-4'] );
 					$this->env->getMessenger()->noteFailure( 'Modul '.$span.' ist nicht vollständig installiert.' );
 				}
 				$this->addData( 'remote', $remote );
@@ -95,7 +95,7 @@ class Controller_Index extends Controller{
 	}
 
 	public function showTodos(){
-		$index	= new RecursiveTodoFileLister( array( 'php', 'js' ) );
+		$index	= new RecursiveTodoFileLister( ['php', 'js'] );
 		$index->scan( $this->env->getRemote()->path );
 		$this->addData( 'path', $this->env->getRemote()->path );
 		$this->addData( 'todos', $index->getList( TRUE ) );
@@ -144,19 +144,19 @@ class Controller_Index extends Controller{
 			$modules	= $this->env->remote->getModules()->getAll();
 			ksort( $modules );
 
-			$nodeOptions	= array( 'shape' => 'oval', 'style' => 'filled, rounded', 'fontsize' => 10, 'fillcolor' => 'gray90', 'color' => "gray60" );
-			$edgeOptions1	= array( 'arrowsize' => 0.5, 'fontsize' => 8, 'fontcolor' => 'gray50', 'color' => 'gray40' );
-			$edgeOptions2	= array( 'arrowsize' => 0.5, 'fontsize' => 8, 'fontcolor' => 'gray75', 'color' => 'gray50', 'style' => 'dashed' );
+			$nodeOptions	= ['shape' => 'oval', 'style' => 'filled, rounded', 'fontsize' => 10, 'fillcolor' => 'gray90', 'color' => "gray60"];
+			$edgeOptions1	= ['arrowsize' => 0.5, 'fontsize' => 8, 'fontcolor' => 'gray50', 'color' => 'gray40'];
+			$edgeOptions2	= ['arrowsize' => 0.5, 'fontsize' => 8, 'fontcolor' => 'gray75', 'color' => 'gray50', 'style' => 'dashed'];
 
-			$graph		= new GraphvizGraph( $instanceId, array( 'rankdir' => 'LR' ) );
+			$graph		= new GraphvizGraph( $instanceId, ['rankdir' => 'LR'] );
 			foreach( $modules as $module )
-				$graph->addNode( $module->id, array( 'label' => $module->title ) + $nodeOptions );
+				$graph->addNode( $module->id, ['label' => $module->title] + $nodeOptions );
 			foreach( $modules as $module ){
 				foreach( $module->relations->needs as $related )
-					$graph->addEdge( $module->id, $related, array( 'label' => 'needs' ) + $edgeOptions1 );
+					$graph->addEdge( $module->id, $related, ['label' => 'needs'] + $edgeOptions1 );
 				foreach( $module->relations->supports as $related )
 					if( array_key_exists( $related, $modules ) )
-						$graph->addEdge( $module->id, $related, array( 'label' => 'supports' ) + $edgeOptions2 );
+						$graph->addEdge( $module->id, $related, ['label' => 'supports'] + $edgeOptions2 );
 			}
 			$renderer	= new GraphvizRenderer( $graph );
 			$renderer->printGraph( "svg" );

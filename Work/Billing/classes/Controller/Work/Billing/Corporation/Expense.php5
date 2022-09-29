@@ -44,7 +44,7 @@ class Controller_Work_Billing_Corporation_Expense extends Controller
 			else if( $filterMonth )
 				$conditions['dateBooked']	= '%-'.$filterMonth.'-%';
 		}
-		$orders		= array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' );
+		$orders		= ['dateBooked' => 'ASC', 'transactionId' => 'ASC'];
 		$limits		= [];
 		$expenses	= $this->logic->getCorporationExpenses( $corporationId, $conditions, $orders, $limits );
 		$this->addData( 'corporation', $this->logic->getCorporation( $corporationId ) );

@@ -5,8 +5,8 @@ if( !in_array( 'upload', $rights ) )
 	return '';
 
 $w			= (object) $words['upload'];
-$iconFile	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
+$iconFile	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-folder'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-upload'] );
 
 $helper		= new View_Helper_Input_File( $env );
 $helper->setName( 'upload' );

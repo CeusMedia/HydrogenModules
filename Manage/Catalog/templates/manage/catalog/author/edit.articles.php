@@ -10,14 +10,14 @@ if( $articles ){
 	foreach( $articles as $article ){
 		$url	= './manage/catalog/article/edit/'.$article->articleId;
 		$label	= htmlentities( $article->title, ENT_QUOTES, 'UTF-8' );
-		$link	= HtmlTag::create( 'a', $article->title, array( 'href' => $url ) );
+		$link	= HtmlTag::create( 'a', $article->title, ['href' => $url] );
 		$list[]	= HtmlTag::create( 'li', $link );
 //		$rows[]	= HtmlTag::create( 'tr', array(
-//			HtmlTag::create( 'td', $link, array( 'class' => '' ) ),
+//			HtmlTag::create( 'td', $link, ['class' => ''] ),
 //		) );
 	}
 	$list	= HtmlTag::create( 'ul', $list );
-//	$list	= HtmlTag::create( 'table', $rows, array( 'class' => 'table table-striped' ) );
+//	$list	= HtmlTag::create( 'table', $rows, ['class' => 'table table-striped'] );
 }
 
 return '

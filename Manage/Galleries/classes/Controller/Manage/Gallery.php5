@@ -24,7 +24,7 @@ class Controller_Manage_Gallery extends Controller
 			$this->restart( './manage/gallery/edit/'.$galleryId );
 		}
 		$latestRank	= 0;
-		$latest	= $this->modelGallery->getAll( array(), array( 'rank' => 'DESC' ), array( 0, 1 ) );
+		$latest	= $this->modelGallery->getAll( [], ['rank' => 'DESC'], [0, 1] );
 		if( $latest ){
 			$latest	= array_pop( $latest );
 			$latestRank	= $latest->rank;
@@ -133,13 +133,13 @@ class Controller_Manage_Gallery extends Controller
 
 
 		$lastRank	= 0;
-		$latest	= $this->modelImage->getAllByIndex( 'galleryId', $galleryId, array( 'rank' => 'DESC' ), array( 0, 1 ) );
+		$latest	= $this->modelImage->getAllByIndex( 'galleryId', $galleryId, ['rank' => 'DESC'], [0, 1] );
 		if( $latest ){
 			$latest	= array_pop( $latest );
 			$lastRank	= $latest->rank;
 		}
 
-		$this->addData( 'images', $this->modelImage->getAllByIndex( 'galleryId', $galleryId, array( 'rank' => 'ASC' ) ) );
+		$this->addData( 'images', $this->modelImage->getAllByIndex( 'galleryId', $galleryId, ['rank' => 'ASC'] ) );
 		$this->addData( 'gallery', $gallery );
 		$this->addData( 'galleryId', $galleryId );
 		$this->addData( 'sizes', $this->env->getConfig()->getAll( 'module.manage_galleries.image.size.' ) );
@@ -214,7 +214,7 @@ class Controller_Manage_Gallery extends Controller
 
 		$order		= $this->moduleConfig->get( 'sort.by' );
 		$direction	= $this->moduleConfig->get( 'sort.direction' );
-		$this->addData( 'galleries', $this->modelGallery->getAll( array(), array( $order => $direction ) ) );
+		$this->addData( 'galleries', $this->modelGallery->getAll( [], [$order => $direction] ) );
 
 //		$this->baseUri		= '../images/gallery/';
 	}

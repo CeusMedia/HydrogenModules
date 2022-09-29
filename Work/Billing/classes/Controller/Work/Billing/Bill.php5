@@ -97,7 +97,7 @@ class Controller_Work_Billing_Bill extends Controller
 			$conditions['number']	= '%'.$filterNumber.'%';
 		if( $filterTitle )
 			$conditions['title']	= '%'.$filterTitle.'%';
-		$bills	= $this->logic->getBills( $conditions, array(), array( $page * 15, 15 ) );
+		$bills	= $this->logic->getBills( $conditions, [], [$page * 15, 15] );
 		$total	= $this->logic->countBills( $conditions );
 
 		$this->addData( 'bills', $bills );
@@ -130,7 +130,7 @@ class Controller_Work_Billing_Bill extends Controller
 //				remark( 'Revert share transaction '.$transaction->transactionId );
 				$this->logic->revertTransaction( $transaction->transactionId );
 //			remark( 'Reserve '.$billReserve->billReserveId.': set status from "booked" to "new"' );
-			$modelBillReserve->edit( $billReserve->billReserveId, array( 'status' => Model_Billing_Bill_Reserve::STATUS_NEW ) );
+			$modelBillReserve->edit( $billReserve->billReserveId, ['status' => Model_Billing_Bill_Reserve::STATUS_NEW] );
 		}
 		foreach( $billShares as $billShare ){
 			$transactions	= $this->logic->getTransactions( array(
@@ -143,9 +143,9 @@ class Controller_Work_Billing_Bill extends Controller
 //				remark( 'Revert share transaction '.$transaction->transactionId );
 				$this->logic->revertTransaction( $transaction->transactionId );
 //			remark( 'Share '.$billShare->billShareId.': set status from 1 to 0' );
-			$modelBillShare->edit( $billShare->billShareId, array( 'status' => Model_Billing_Bill_Share::STATUS_NEW ) );
+			$modelBillShare->edit( $billShare->billShareId, ['status' => Model_Billing_Bill_Share::STATUS_NEW] );
 		}
-		$this->modelBill->edit( $billId, array( 'status' => Model_Billing_Bill::STATUS_NEW ) );
+		$this->modelBill->edit( $billId, ['status' => Model_Billing_Bill::STATUS_NEW] );
 //		remark( 'Bill '.$bill->billId.': set status from "booked" to "new"' );
 //		die;
 		$this->restart( './work/billing/bill/breakdown/'.$billId );

@@ -14,8 +14,8 @@ if( $article->cover ){
 	$urlFull	= $urlBase.$id.'_'.$article->cover;
 	$urlThumb	= $urlBase.$id.'__'.$article->cover;
 
-	$imageFull	= HtmlTag::create( 'img', NULL, array( 'src' => $uriFull, 'class' => $class ) );
-	$imageThumb	= HtmlTag::create( 'img', NULL, array( 'src' => $uriThumb, 'class' => $class ) );
+	$imageFull	= HtmlTag::create( 'img', NULL, ['src' => $uriFull, 'class' => $class] );
+	$imageThumb	= HtmlTag::create( 'img', NULL, ['src' => $uriThumb, 'class' => $class] );
 
 	$panelCover	= '
 <div class="content-panel">
@@ -52,13 +52,13 @@ if( $article->cover ){
 }
 
 $documentMaxSize	= $moduleConfig->get( 'article.document.maxSize' );
-$limits				= array( 'document' => Alg_UnitParser::parse( $documentMaxSize, "M" ) );
+$limits				= ['document' => Alg_UnitParser::parse( $documentMaxSize, "M" )];
 $documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
 
 $list				= [];
 $documentExtensions	= $moduleConfig->get( 'article.image.extensions' );
 foreach( explode( ",", $documentExtensions ) as $nr => $type )
-	if( !in_array( trim( $type ), array( "jpe", "jpeg" ) ) )
+	if( !in_array( trim( $type ), ["jpe", "jpeg"] ) )
 		$list[$nr]	= strtoupper( trim( $type ) );
 $documentExtensions	= join( ", ", $list );
 

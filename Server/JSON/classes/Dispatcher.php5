@@ -95,7 +95,7 @@ class Dispatcher extends GeneralDispatcher
 		$this->checkClass( $className );															//  ensure controller class
 
 		$factory	= new ObjectFactory();															//  raise object factory
-		$instance	= $factory->createObject( $className, array( &$this->env ) );					//  build controller instance
+		$instance	= $factory->createObject( $className, [&$this->env] );					//  build controller instance
 		$this->checkClassAction( $className, $instance, $action );									//  ensure action method
 		if( $this->checkClassActionArguments )														//  action method arguments are to be checked
 			$this->checkClassActionArguments( $className, $instance, $action );						//  ensure action method arguments

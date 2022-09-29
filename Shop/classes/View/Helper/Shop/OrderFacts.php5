@@ -85,7 +85,7 @@ class View_Helper_Shop_OrderFacts
 
 	public function setOutput( int $format ): self
 	{
-		$formats	= array( self::OUTPUT_HTML, self::OUTPUT_TEXT );
+		$formats	= [self::OUTPUT_HTML, self::OUTPUT_TEXT];
 		if( !in_array( (int) $format, $formats ) )
 			throw new InvalidArgumentException( 'Invalid output format' );
 		$this->output		= (int) $format;

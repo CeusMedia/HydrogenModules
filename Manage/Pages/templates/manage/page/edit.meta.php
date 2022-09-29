@@ -8,9 +8,9 @@ $wMeta			= (object) $words['edit-meta'];
 if( !$appHasMetaModule )
 	return '<div class="alert alert-info"><em>'.$wMeta->no_meta_module.'</em></div>';
 
-$iconCopy		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSuggest	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-magic' ) );
-$iconExclude	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-ban' ) );
+$iconCopy		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSuggest	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-magic'] );
+$iconExclude	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-ban'] );
 
 $metaPageTypes	= array(
 	Model_Page::TYPE_CONTENT,

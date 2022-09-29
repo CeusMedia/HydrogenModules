@@ -1,15 +1,15 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-extract( $view->populateTexts( array( 'unregister.top', 'unregister.bottom', 'unregister.info' ), 'html/info/newsletter' ) );
+extract( $view->populateTexts( ['unregister.top', 'unregister.bottom', 'unregister.info'], 'html/info/newsletter' ) );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconNext		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconNext		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-right'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 if( $env->hasModule( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-	$iconNext		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
-	$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+	$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+	$iconNext		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
+	$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 }
 
 $w	= (object) $words['unregister'];
@@ -38,7 +38,7 @@ if( !$reader ){
 </div>'.$textUnregisterBottom;
 }
 
-$listGroups	= HtmlTag::create( 'em', 'Keine Bereiche mehr abonniert.', array( 'class' => 'muted' ) );
+$listGroups	= HtmlTag::create( 'em', 'Keine Bereiche mehr abonniert.', ['class' => 'muted'] );
 if( $groups ){
 	$list	= [];
 	foreach( $groups as $group ){
@@ -51,10 +51,10 @@ if( $groups ){
 			'checked'	=> $isRegisteredGroup ? "checked" : NULL,
 			'class'		=> 'bs4-form-check-input',
 		) );
-		$label	= HtmlTag::create( 'label', $checkbox.'&nbsp;<span class="bs4-form-check-label">'.$group->title.'</span>', array( 'class' => 'checkbox' ) );
-		$list[]	= HtmlTag::create( 'li', $label, array( 'class' => 'bs4-form-check' ) );
+		$label	= HtmlTag::create( 'label', $checkbox.'&nbsp;<span class="bs4-form-check-label">'.$group->title.'</span>', ['class' => 'checkbox'] );
+		$list[]	= HtmlTag::create( 'li', $label, ['class' => 'bs4-form-check'] );
 	}
-	$listGroups	= HtmlTag::create( 'ul', $list, array( 'class' => 'bs2-unstyled bs3-unstyled bs4-list-unstyled' ) );
+	$listGroups	= HtmlTag::create( 'ul', $list, ['class' => 'bs2-unstyled bs3-unstyled bs4-list-unstyled'] );
 }
 
 return $textUnregisterTop.'

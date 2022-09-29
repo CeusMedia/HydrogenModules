@@ -23,7 +23,7 @@ class Controller_Ajax_Info_Novelty extends AjaxController
 		$helper		= new View_Helper_Info_Novelty_DashboardPanel( $this->env );
 		$helper->setLimit( 10 );
 //		$helperNews	= new View_Helper_NewsList( $this->env );
-//		$helperNews->collect( 'Page', 'collectNews', array() );
+//		$helperNews->collect( 'Page', 'collectNews', [] );
 		$this->respondData( $helper->render() );
 	}
 }

@@ -48,12 +48,12 @@ class View_Helper_Image_Slider
 		$slider		= $this->modelSlider->get( $sliderId );
 		if( !$slider )
 			throw new InvalidArgumentException( 'Invalid slider ID: '.$sliderId );
-		$this->modelSlider->edit( $sliderId, array( 'views' => $slider->views + 1 ) );
+		$this->modelSlider->edit( $sliderId, ['views' => $slider->views + 1] );
 		$conditions	= array(
 			'sliderId'	=> $sliderId,
 			'status'	=> 1,
 		);
-		$slider->slides	= $this->modelSlide->getAll( $conditions, array( 'rank' => 'ASC' ) );
+		$slider->slides	= $this->modelSlide->getAll( $conditions, ['rank' => 'ASC'] );
 		if( $slider->randomOrder )
 			shuffle( $slider->slides );
 
@@ -167,7 +167,7 @@ class View_Helper_Image_Slider
 		$height		= $slider->height;
 		foreach( $slider->slides as $slide ){
 			$imageFile	= $this->basePath.$slider->path.$slide->source;
-			$attr	= array( 'src' => $imageFile );
+			$attr	= ['src' => $imageFile];
 			if( $slide->title ){
 				$attr['title']		= $slide->title;
 				$attr['alt']		= $slide->title;
@@ -199,13 +199,13 @@ class View_Helper_Image_Slider
 		if( $slider->showTitle ){
 			$title	= $slider->slides[0]->title;
 			if( $slide->link && strlen( trim( $slide->link ) ) )
-				$title	= HtmlTag::create( 'a', $title, array( 'href' => $slide->link ) );
-			$attr	= array( 'class' => $this->selectorPrefix.'label' );
+				$title	= HtmlTag::create( 'a', $title, ['href' => $slide->link] );
+			$attr	= ['class' => $this->selectorPrefix.'label'];
 			$label	= HtmlTag::create( 'div', $title, $attr );
-			$attr	= array( 'class' => $this->selectorPrefix.'layer' );
+			$attr	= ['class' => $this->selectorPrefix.'layer'];
 			$list	.= HtmlTag::create( 'div', $label, $attr );
 		}
-		$attr	= array( 'class' => $this->selectorPrefix.'slides' );
+		$attr	= ['class' => $this->selectorPrefix.'slides'];
 		return HtmlTag::create( 'div', $list, $attr );
 	}
 }

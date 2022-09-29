@@ -4,15 +4,17 @@ use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-//$iconDownload		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+/** @var object $mail */
+
+//$iconDownload		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
 $iconDownload		= new Icon( 'download' );
 $iconView			= new Icon( 'eye' );
 $iconFile			= new Icon( 'file' );
 
 $list	= array(
 	'1-html'		=> '',
-	'2-attachments'	=> array(),
-	'3-images'		=> array(),
+	'2-attachments'	=> [],
+	'3-images'		=> [],
 	'5-text'		=> '',
 	'9-source'		=> '',
 );
@@ -86,32 +88,6 @@ else{
 						);
 				}
 			}
-			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_COMMON ){
-				foreach( $mail->parts as $key => $part ){
-	//				$this->env->getMessenger()->noteNotice( 'LIBRARY_COMMON: '.get_class( $part ) );
-	//				$this->env->getMessenger()->noteNotice( 'TYPE: '.$part->getMimeType() );
-					if( $part instanceof Net_Mail_Body ){
-						if( $part->getMimeType() == 'text/html' ){
-							$html	= TRUE;//$part->getContent();
-						}
-						else if( $part->getMimeType() == 'text/plain' )
-							$text	= $part->getContent();
-							if( $part->getContentEncoding() === "base64" )
-								$text	= base64_decode( $text );
-							if( $part->getContentEncoding() === "quoted-printable" ){
-								$text	= str_replace( Net_Mail::$delimiter, '', $text );
-								$text	= quoted_printable_decode( $text );
-							}
-					}
-					else if( $part instanceof Net_Mail_Attachment ){
-						$attachments[]	= (object) array(
-							'partKey'	=> $key,
-							'fileName'	=> $part->getFileName(),
-							'mimeType'	=> $part->getMimeType(),
-						);
-					}
-				}
-			}
 		}
 
 		$parts	= [];
@@ -146,7 +122,7 @@ else{
 					'href'	=> './admin/mail/queue/attachment/'.$mail->mailId.'/'.$attachment->partKey,
 					'class'	=> 'btn btn-small',
 				) );*/
-				$buttons	= HtmlTag::create( 'div', array( $buttonDownload ), array(
+				$buttons	= HtmlTag::create( 'div', [$buttonDownload], array(
 					'class'	=> 'btn-group',
 				) );
 				$date		= '';
@@ -161,7 +137,7 @@ else{
 					HtmlTag::create( 'td', $attachment->mimeType ),
 					HtmlTag::create( 'td', Alg_UnitFormater::formatBytes( $attachment->fileSize ) ),
 					HtmlTag::create( 'td', $date ),
-					HtmlTag::create( 'td', $buttons, array( 'style' => 'text-align: right' ) ),
+					HtmlTag::create( 'td', $buttons, ['style' => 'text-align: right'] ),
 				) );
 			}
 			$heads	= HtmlTag::create( 'tr', array(
@@ -174,7 +150,7 @@ else{
 			$colgroup	= HtmlElements::ColumnGroup( '', '15%', '10%', '20%', '15%' );
 			$thead	= HtmlTag::create( 'thead', $heads );
 			$tbody	= HtmlTag::create( 'tbody', $list );
-			$displayAttachments	= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table not-table-condensed table-striped' ) );
+			$displayAttachments	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table not-table-condensed table-striped'] );
 			$headingAttachments	= '<h4>Anhänge</h4>';
 			$parts[]	= $headingAttachments.$displayAttachments;
 		}
@@ -194,7 +170,7 @@ else{
 					HtmlTag::create( 'td', $image->mimeType ),
 					HtmlTag::create( 'td', Alg_UnitFormater::formatBytes( $image->fileSize ) ),
 					HtmlTag::create( 'td', $date ),
-					HtmlTag::create( 'td', '', array( 'style' => 'text-align: right' ) ),
+					HtmlTag::create( 'td', '', ['style' => 'text-align: right'] ),
 				) );
 			}
 			$heads	= HtmlTag::create( 'tr', array(
@@ -207,7 +183,7 @@ else{
 			$colgroup	= HtmlElements::ColumnGroup( '', '15%', '10%', '20%', '15%' );
 			$thead	= HtmlTag::create( 'thead', $heads );
 			$tbody	= HtmlTag::create( 'tbody', $list );
-			$displayImages	= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table not-table-condensed table-striped' ) );
+			$displayImages	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table not-table-condensed table-striped'] );
 			$headingImages	= '<h4>Eingebundene Bilder</h4>';
 			$parts[]	= $headingImages.$displayImages;
 		}

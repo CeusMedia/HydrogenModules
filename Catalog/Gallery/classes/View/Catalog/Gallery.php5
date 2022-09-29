@@ -52,14 +52,14 @@ class View_Catalog_Gallery extends View
 				$files	= count( $item->images );
 				$count	= '<span class="badge">'.$files.'</span>';
 				$href	= $pathModule.'category/'.$item->galleryCategoryId;									//   @todo	implement auto-path
-				$attr	= array( 'href' => $href, 'class' => 'autocut', 'rel' => 'gallery' );
+				$attr	= ['href' => $href, 'class' => 'autocut', 'rel' => 'gallery'];
 				$label	= $badges ? $count.' '.$item->title : $item->title;
 				$link	= HtmlTag::create( 'a', $label, $attr );
-				$attr	= array( 'class' => $item->galleryCategoryId == $currentId ? 'active' : NULL );
+				$attr	= ['class' => $item->galleryCategoryId == $currentId ? 'active' : NULL];
 				$list[]	= HtmlTag::create( 'li', $link, $attr );
 			}
 		}
-		$attr	= array( 'class' => 'nav nav-pills nav-stacked' );
+		$attr	= ['class' => 'nav nav-pills nav-stacked'];
 		return HtmlTag::create( 'ul', $list, $attr );
 	}
 
@@ -71,7 +71,7 @@ class View_Catalog_Gallery extends View
 		foreach( $categories as $category ){
 			if( $category->status == 1 ){
 //				$count	= '<span class="badge">'.count( $item->images ).'</span>';
-				$label	= HtmlTag::create( 'div', $category->title, array( 'class' => "gallery-category-matrix-item-label autocut" ) );
+				$label	= HtmlTag::create( 'div', $category->title, ['class' => "gallery-category-matrix-item-label autocut"] );
 				$url	= $this->logic->pathModule.'category/'.$category->galleryCategoryId;				//   @todo	implement auto-path
 				$attr	= array(
 					'class'		=> "gallery-category-matrix-item",
@@ -100,7 +100,7 @@ class View_Catalog_Gallery extends View
 			if( $image->status == 1 ){
 //				$count	= '<span class="badge">'.count( $item->images ).'</span>';
 				if( strlen( trim( $image->title ) ) )
-					$label	= HtmlTag::create( 'div', $image->title.'&nbsp;', array( 'class' => "gallery-image-matrix-item-label autocut" ) );
+					$label	= HtmlTag::create( 'div', $image->title.'&nbsp;', ['class' => "gallery-image-matrix-item-label autocut"] );
 				$url	= $this->logic->pathModule.'image/'.$image->galleryImageId;				//   @todo	implement auto-path
 				$src	= $pathImages."preview/".rawurlencode( $category->path )."/".rawurlencode( $image->filename );
 				$attr	= array(

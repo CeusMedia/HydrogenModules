@@ -15,14 +15,14 @@ class Controller_Work_Newsletter_Dashboard extends Controller
 	public function index()
 	{
 		$this->addData( 'readers', array(
-			-1	=> count( $this->logic->getReaders( array( 'status' => -1 ) ) ),
-			0	=> count( $this->logic->getReaders( array( 'status' => 0 ) ) ),
-			1	=> count( $this->logic->getReaders( array( 'status' => 1 ) ) ),
+			-1	=> count( $this->logic->getReaders( ['status' => -1] ) ),
+			0	=> count( $this->logic->getReaders( ['status' => 0] ) ),
+			1	=> count( $this->logic->getReaders( ['status' => 1] ) ),
 		) );
 		$this->addData( 'groups', array(
-			-1	=> count( $this->logic->getGroups( array( 'status' => -1 ) ) ),
-			0	=> count( $this->logic->getGroups( array( 'status' => 0 ) ) ),
-			1	=> count( $this->logic->getGroups( array( 'status' => 1 ) ) ),
+			-1	=> count( $this->logic->getGroups( ['status' => -1] ) ),
+			0	=> count( $this->logic->getGroups( ['status' => 0] ) ),
+			1	=> count( $this->logic->getGroups( ['status' => 1] ) ),
 		) );
 	}
 

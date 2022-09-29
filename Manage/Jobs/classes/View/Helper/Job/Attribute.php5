@@ -119,9 +119,9 @@ class View_Helper_Job_Attribute
 				$labelText	= $this->words['job-schedule-statuses'][$this->object->status];
 				break;
 		}
-		$icon	= HtmlTag::create( 'i', '', array( 'class' => $iconClass ) );
+		$icon	= HtmlTag::create( 'i', '', ['class' => $iconClass] );
 		$label	= $iconClass ? $icon.'&nbsp;'.$labelText : $labelText;
-		$label	= HtmlTag::create( 'span', $label, array( 'class' => $labelClass ) );
+		$label	= HtmlTag::create( 'span', $label, ['class' => $labelClass] );
 		return $label;
 	}
 

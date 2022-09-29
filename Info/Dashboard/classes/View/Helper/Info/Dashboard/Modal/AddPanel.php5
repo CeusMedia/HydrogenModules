@@ -18,10 +18,10 @@ class View_Helper_Info_Dashboard_Modal_AddPanel extends Abstraction
 	{
 		$w				= (object) $this->getWords( 'add-panel', 'info/dashboard' );
 
-		$fieldPanels	= HtmlTag::create( 'div', $w->emptyPanels, array( 'class' => 'alert alert-info' ) );
+		$fieldPanels	= HtmlTag::create( 'div', $w->emptyPanels, ['class' => 'alert alert-info'] );
 		$panelsInBoard	= explode( ',', $this->dashboard->panels );
 		if( $this->panels ){
-			$fieldPanels	= HtmlTag::create( 'div', $w->noMorePanels, array( 'class' => 'alert alert-info' ) );
+			$fieldPanels	= HtmlTag::create( 'div', $w->noMorePanels, ['class' => 'alert alert-info'] );
 			$list	= [];
 			foreach( $this->panels as $panelId => $panel ){
 				if( in_array( $panelId, $panelsInBoard ) )
@@ -51,8 +51,8 @@ class View_Helper_Info_Dashboard_Modal_AddPanel extends Abstraction
 			}
 		}
 
-		$iconAddBoard	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
-		$iconAddPanel	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
+		$iconAddBoard	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
+		$iconAddPanel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-square'] );
 
 		return '
 <form action="./info/dashboard/addPanels" method="post">

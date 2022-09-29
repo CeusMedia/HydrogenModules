@@ -38,7 +38,7 @@ if( $letterHistory ){
 				break;
 		}
 		$rows[]	= '<tr class="'.$rowColor.'"><td>'.implode( '</td><td>', array(
-			HtmlTag::create( 'a', $readerLetter->reader->firstname.' '.$readerLetter->reader->surname, array( 'href' => $urlReader ) ),
+			HtmlTag::create( 'a', $readerLetter->reader->firstname.' '.$readerLetter->reader->surname, ['href' => $urlReader] ),
 			$readerLetter->reader->email,
 			$words->letterStates[$readerLetter->status],
 			$buttonView.' '.$buttonSend.' '.$buttonRemove

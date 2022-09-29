@@ -5,9 +5,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $w			= (object) $words['index'];
 $helper		= new View_Helper_TimePhraser( $env );
 
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+	$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 }
 
 $list		= '<div><small class="muted"><em>'.$w->noEntries.'</em></small></div>';
@@ -29,10 +29,10 @@ if( $documents ){
 		$size		= Alg_UnitFormater::formatBytes( filesize( $filePath ) );
 		$actions	= in_array( 'remove', $rights ) ? $remove : '';
 		$rows[]		= HtmlTag::create( 'tr',
-			HtmlTag::create( 'td', $link, array( 'class' => 'cell-title autocut' ) ).
-			HtmlTag::create( 'td', $uploadedAt, array( 'class' => 'cell-timestamp' ) ).
-			HtmlTag::create( 'td', $size, array( 'class' => 'cell-size' ) ).
-			HtmlTag::create( 'td', $actions, array( 'class' => 'cell-actions' ) )
+			HtmlTag::create( 'td', $link, ['class' => 'cell-title autocut'] ).
+			HtmlTag::create( 'td', $uploadedAt, ['class' => 'cell-timestamp'] ).
+			HtmlTag::create( 'td', $size, ['class' => 'cell-size'] ).
+			HtmlTag::create( 'td', $actions, ['class' => 'cell-actions'] )
 		);
 	}
 	$thead	= HtmlTag::create( 'thead',

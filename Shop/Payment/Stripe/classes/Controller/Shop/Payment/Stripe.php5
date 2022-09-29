@@ -219,7 +219,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 		$this->modelCart		= new Model_Shop_Cart( $this->env );
 
 		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
 		$this->addData( 'paymentBackends', $this->backends );
 		$this->addData( 'configShop', $this->configShop );
 
@@ -236,11 +236,11 @@ class Controller_Shop_Payment_Stripe extends Controller
 		}
 /*		$wallets		= $this->provider->getUserWalletsByCurrency( $this->userId, $this->order->currency );
 		if( !$wallets )
-			$wallets	= array( $this->provider->createUserWallet( $this->userId, $this->order->currency ) );
+			$wallets	= [$this->provider->createUserWallet( $this->userId, $this->order->currency] );
 		$this->wallet	= $wallets[0];*/
 
 /*		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
 		$this->addData( 'paymentBackends', $this->backends );*/
 	}
 

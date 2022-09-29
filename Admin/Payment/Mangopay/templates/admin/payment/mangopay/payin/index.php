@@ -21,33 +21,33 @@ $helperMoney	= new View_Helper_Mangopay_Entity_Money( $env );
 $helperMoney->setFormat( View_Helper_Mangopay_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
 $helperMoney->setNumberFormat( View_Helper_Mangopay_Entity_Money::NUMBER_FORMAT_COMMA );
 
-$list		= HtmlTag::create( 'div', 'Keine gefunden.', array( 'class' => 'alert alert-info' ) );
+$list		= HtmlTag::create( 'div', 'Keine gefunden.', ['class' => 'alert alert-info'] );
 
 if( $payins ){
 	$list	= [];
 	foreach( $payins as $item ){
 		$resource	= Model_Mangopay_Payin::getLatestResourceFromPayinData( $item->data );
 	//	print_m( $resource );die;
-		$link		= HtmlTag::create( 'a', $item->payinId, array( 'href' => './admin/payment/mangopay/payin/view/'.$item->payinId ) );
+		$link		= HtmlTag::create( 'a', $item->payinId, ['href' => './admin/payment/mangopay/payin/view/'.$item->payinId] );
 		$status		= Model_Mangopay_Payin::getStatusLabel( $item->status );
-		$status		= HtmlTag::create( 'label', $status, array( 'class' => 'label '.$colors[$item->status] ) );
+		$status		= HtmlTag::create( 'label', $status, ['class' => 'label '.$colors[$item->status]] );
 		$fromUser	= HtmlTag::create( 'tt', $item->user->FirstName.' '.$item->user->LastName );
 		$tags		= HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', $resource->Nature, array( 'class' => 'label' ) ).' ',
-			HtmlTag::create( 'label', $resource->ExecutionType, array( 'class' => 'label' ) ).' ',
-			HtmlTag::create( 'label', Model_Mangopay_Payin::getTypeLabel( $item->type ), array( 'class' => 'label' ) ).' ',
+			HtmlTag::create( 'label', $resource->Nature, ['class' => 'label'] ).' ',
+			HtmlTag::create( 'label', $resource->ExecutionType, ['class' => 'label'] ).' ',
+			HtmlTag::create( 'label', Model_Mangopay_Payin::getTypeLabel( $item->type ), ['class' => 'label'] ).' ',
 		) );
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $fromUser ),
 			HtmlTag::create( 'td', $tags ),
-			HtmlTag::create( 'td', $helperMoney->setAmount( $item->amount * 100 )->setCurrency( $item->currency ), array( 'style' => 'text-align: right' ) ),
+			HtmlTag::create( 'td', $helperMoney->setAmount( $item->amount * 100 )->setCurrency( $item->currency ), ['style' => 'text-align: right'] ),
 			HtmlTag::create( 'td', $status ),
 /*			HtmlTag::create( 'td', date( 'Y-m-d H:i:s', $item->createdAt ) ),*/
 			HtmlTag::create( 'td', HtmlTag::create( 'small', date( 'Y-m-d H:i:s', $item->modifiedAt ) ) ),
 		) );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array( '50', '', '', '100px', '100px', '140px' ) );
+	$colgroup	= HtmlElements::ColumnGroup( ['50', '', '', '100px', '100px', '140px'] );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 		'#',
 		'Person',
@@ -57,7 +57,7 @@ if( $payins ){
 		'Datum',
 	) ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed table-condensed' ) );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed table-condensed'] );
 }
 
 $buttonbar	= '';
@@ -65,7 +65,7 @@ $pagination	= new \CeusMedia\Bootstrap\PageControl( 'admin/payment/mangopay/payi
 if( $pages > 1 )
 	$buttonbar	= HtmlTag::create( 'div', array(
 		$pagination,
-	), array( 'class' => 'buttonbar' ) );
+	), ['class' => 'buttonbar'] );
 
 $tabs	= View_Admin_Payment_Mangopay::renderTabs( $env, 'payin' );
 
@@ -74,5 +74,5 @@ return $tabs.HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		$list,
 		$buttonbar,
-	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] )
+), ['class' => 'content-panel'] );

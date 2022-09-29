@@ -16,17 +16,17 @@ class View_Helper_Panel_Mangopay_Wallets extends View_Helper_Panel_Mangopay{
 	public function render(){
 		$rows		= [];
 		foreach( $this->data as $wallet ){
-			$link	= HtmlTag::create( 'a', $wallet->Id, array( 'href' => sprintf( $this->options->get( 'linkItem' ), $wallet->Id ) ) );
+			$link	= HtmlTag::create( 'a', $wallet->Id, ['href' => sprintf( $this->options->get( 'linkItem' ), $wallet->Id )] );
 			$rows[]	= HtmlTag::create( 'tr', array(
-				HtmlTag::create(' td', $link, array( 'class' => 'cell-wallet-id' ) ),
-				HtmlTag::create(' td', $wallet->Description, array( 'class' => 'cell-wallet-title' ) ),
-				HtmlTag::create(' td', self::formatMoney( $wallet->Balance ), array( 'class' => 'cell-wallet-balance' ) ),
+				HtmlTag::create(' td', $link, ['class' => 'cell-wallet-id'] ),
+				HtmlTag::create(' td', $wallet->Description, ['class' => 'cell-wallet-title'] ),
+				HtmlTag::create(' td', self::formatMoney( $wallet->Balance ), ['class' => 'cell-wallet-balance'] ),
 			) );
 		}
 		$colgroup	= HtmlElements::ColumnGroup( "120", "", "120" );
-		$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'ID', 'Wallet Name', 'Betrag' ) ) );
+		$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['ID', 'Wallet Name', 'Betrag'] ) );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
-		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 		return '
 		<div class="content-panel">
 			<h3>Wallets</h3>

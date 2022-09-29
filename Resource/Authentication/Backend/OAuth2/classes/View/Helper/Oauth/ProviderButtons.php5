@@ -16,14 +16,14 @@ class View_Helper_Oauth_ProviderButtons
 
 	public function count()
 	{
-		$conditions	= array( 'status' => Model_Oauth_Provider::STATUS_ACTIVE );
+		$conditions	= ['status' => Model_Oauth_Provider::STATUS_ACTIVE];
 		return $this->modelProvider->count( $conditions );
 	}
 
 	public function render(): string
 	{
-		$conditions	= array( 'status' => Model_Oauth_Provider::STATUS_ACTIVE );
-		$orders		= array( 'rank' => 'ASC' );
+		$conditions	= ['status' => Model_Oauth_Provider::STATUS_ACTIVE];
+		$orders		= ['rank' => 'ASC'];
 		$providers	= $this->modelProvider->getAll( $conditions, $orders );
 		$buttons	= [];
 		$dropdown	= [];
@@ -31,7 +31,7 @@ class View_Helper_Oauth_ProviderButtons
 		foreach( $providers as $provider ){
 			$icon	= '';
 			if( $provider->icon )
-				$icon	= HtmlTag::create( 'i', '', array( 'class' => $provider->icon ) ).'&nbsp;';
+				$icon	= HtmlTag::create( 'i', '', ['class' => $provider->icon] ).'&nbsp;';
 			$label	=  HtmlTag::create( 'a', $icon.$provider->title, array(
 				'href'		=> $this->linkPath.$provider->oauthProviderId.$from,
 				'class'		=> 'btn not-btn-info oauth2-provider',
@@ -56,11 +56,11 @@ class View_Helper_Oauth_ProviderButtons
 					'class'			=> 'btn dropdown-toggle',
 					'data-toggle'	=> 'dropdown'
 				) ),
-				HtmlTag::create( 'ul', $dropdown, array( 'class' => 'dropdown-menu' ) ),
-			), array( 'class' => 'btn-group' ) );
+				HtmlTag::create( 'ul', $dropdown, ['class' => 'dropdown-menu'] ),
+			), ['class' => 'btn-group'] );
 		}
 		$modal		= $this->renderModal();
-		$buttons	= HtmlTag::create( 'div', join( ' ', $buttons ), array( 'class' => 'oauth2-provider-buttons' ) );
+		$buttons	= HtmlTag::create( 'div', join( ' ', $buttons ), ['class' => 'oauth2-provider-buttons'] );
 		return $buttons.$modal;
 	}
 
@@ -86,7 +86,7 @@ class View_Helper_Oauth_ProviderButtons
 	{
 		$words		= $this->env->getLanguage()->getWords( 'auth/oauth2' );
 		$w			= (object) $words['modal-loading-oauth2'];
-		$spinner	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-spin fa-circle-o-notch" ) );
+		$spinner	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-spin fa-circle-o-notch"] );
 		$modal		= '<div id="modalLoadingOauth2" class="modal hide not-fade">
 	<div class="modal-header">
 		'.HtmlTag::create( 'h4', $w->heading ).'
@@ -94,8 +94,8 @@ class View_Helper_Oauth_ProviderButtons
 	<div class="modal-body">
 		<big>'.$spinner.' '.$w->title.'</big><br/>
 		<br/>
-		'.HtmlTag::create( 'p', $w->message, array( 'class' => 'modal-message' ) ).'
-		'.HtmlTag::create( 'p', $w->slogan, array( 'class' => 'modal-slogan' ) ).'
+		'.HtmlTag::create( 'p', $w->message, ['class' => 'modal-message'] ).'
+		'.HtmlTag::create( 'p', $w->slogan, ['class' => 'modal-slogan'] ).'
 		<br/>
 	</div>
 </div>';

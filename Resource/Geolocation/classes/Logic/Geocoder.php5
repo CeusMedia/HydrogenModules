@@ -24,7 +24,7 @@ class Logic_Geocoder{
 		$x		= $this->radiusEarth * cos( $phi ) * cos( $lambda );
 		$y		= $this->radiusEarth * cos( $phi ) * sin( $lambda );
 		$z		= $this->radiusEarth * sin( $phi );
-		return (object) array( 'x' => $x, 'y' => $y, 'z' => $z );
+		return (object) ['x' => $x, 'y' => $y, 'z' => $z];
 	}
 
 	public function geocodeAddress( $street, $number, $postcode, $city, $country ){
@@ -55,7 +55,7 @@ class Logic_Geocoder{
 
 	public function getPointByPostcodeAndCity( $postcode, $city ){
 		$model		= new Model_OpenGeo_Postcode( $this->env );
-		$indices	= array( 'postcode' => $postcode, 'city' => $city );
+		$indices	= ['postcode' => $postcode, 'city' => $city];
 		if( !( $entry = $model->getByIndices( $indices ) ) )
 			throw new OutOfRangeException( 'Invalid postcode ('.$postcode.') or city ('.$city.')' );
 		$coords		= $this->convertRadianToCoords( $entry->longitude, $entry->latitude );

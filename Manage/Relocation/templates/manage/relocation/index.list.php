@@ -6,9 +6,9 @@ $w			= (object) $words['index-list'];
 
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/relocation', $page, ceil( $count / $limit ) );
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconGo		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconGo		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
 
 $table	= '<div class="muted"><em><small class="muted">'.$w->noEntries.'</small></em></div>';
 
@@ -23,7 +23,7 @@ if( $relocations ){
 			$class	= "error";
 		$uri	= "./manage/relocation/edit/".$relocation->relocationId;
 		$uri	= "./manage/relocation/edit/".$relocation->relocationId;
-		$link	= HtmlTag::create( 'a', $relocation->title, array( 'href' => $uri ) );
+		$link	= HtmlTag::create( 'a', $relocation->title, ['href' => $uri] );
 		$usedAt		= $helper->convert( $relocation->usedAt, TRUE, $w->prefixTimePhraser, $w->suffixTimePhraser );
 		$buttonEdit	= HtmlTag::create( 'a', $iconEdit, array(
 			'href'	=> $uri,
@@ -35,10 +35,10 @@ if( $relocations ){
 			'class'	=> 'btn btn-small',
 			'title'	=> $w->buttonGo,
 		) );
-		$buttons	= HtmlTag::create( 'div', array( $buttonEdit, $buttonGo ), array( 'class' => 'btn-group' ) );
+		$buttons	= HtmlTag::create( 'div', [$buttonEdit, $buttonGo], ['class' => 'btn-group'] );
 		$rows[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $relocation->relocationId ),
-			HtmlTag::create( 'td', $link.'<br/><small>'.$relocation->url.'</small>', array( 'class' => 'autocut' ) ),
+			HtmlTag::create( 'td', $link.'<br/><small>'.$relocation->url.'</small>', ['class' => 'autocut'] ),
 			HtmlTag::create( 'td', $relocation->views ),
 			HtmlTag::create( 'td', $usedAt ),
 			HtmlTag::create( 'td', $buttons ),
@@ -49,10 +49,10 @@ if( $relocations ){
 		) );
 	}
 	$columns	= HtmlElements::ColumnGroup( "50px", "", "80px", "120px", "100px" );
-	$heads	= HtmlElements::TableHeads( array( $w->headId, $w->headTitle, $w->headViews, $w->headUsedAt, $w->headActions ) );
+	$heads	= HtmlElements::TableHeads( [$w->headId, $w->headTitle, $w->headViews, $w->headUsedAt, $w->headActions] );
 	$thead	= HtmlTag::create( 'thead', $heads );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
-	$table	= HtmlTag::create( 'table', $columns.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+	$table	= HtmlTag::create( 'table', $columns.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array(
@@ -60,8 +60,8 @@ $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array(
 	'class'	=> 'btn btn-success'
 ) );
 
-$abbrCount	= HtmlTag::create( 'abbr', $count, array( 'title' => $w->titleCount ) );
-$abbrTotal	= HtmlTag::create( 'abbr', $total, array( 'title' => $w->titleTotal ) );
+$abbrCount	= HtmlTag::create( 'abbr', $count, ['title' => $w->titleCount] );
+$abbrTotal	= HtmlTag::create( 'abbr', $total, ['title' => $w->titleTotal] );
 
 return '
 		<div class="content-panel">

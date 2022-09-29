@@ -60,11 +60,11 @@ $minutesProjected	= str_pad( $mission->minutesProjected - $hoursProjected * 60, 
 $hoursRequired		= floor( $mission->minutesRequired / 60 );
 $minutesRequired	= str_pad( $mission->minutesRequired - $hoursRequired * 60, 2, "0", STR_PAD_LEFT );
 
-$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'not-icon-arrow-left icon-list' ) );
-$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open icon-white' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconCopy	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus-sign not-icon-white' ) );
+$iconList	= HtmlTag::create( 'i', '', ['class' => 'not-icon-arrow-left icon-list'] );
+$iconView	= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open icon-white'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
+$iconCopy	= HtmlTag::create( 'i', '', ['class' => 'icon-plus-sign not-icon-white'] );
 
 $checkInform	= '';
 if( count( $missionUsers ) > 1 ){
@@ -74,7 +74,7 @@ if( count( $missionUsers ) > 1 ){
 		'value'		=> 1,
 		'checked'	=> 'checked',
 	) );
-	$checkInform	= HtmlTag::create( 'label', $checkInform.'&nbsp;'.$w->labelInform, array( 'class' => 'checkbox' ) );
+	$checkInform	= HtmlTag::create( 'label', $checkInform.'&nbsp;'.$w->labelInform, ['class' => 'checkbox'] );
 }
 
 $buttonCancel	= HtmlElements::LinkButton( './work/mission', $iconList.' '.$w->buttonList, 'btn btn-small' );
@@ -187,7 +187,7 @@ $panelEdit	= '
 				'.$buttonCancel.'
 				'.$buttonView.'
 <!--				'.HtmlTag::create( 'div', array(
-					), array( 'class' => 'btn-group' ) ).'-->
+					), ['class' => 'btn-group'] ).'-->
 				'.$buttonSave.'
 	<!--			&nbsp;|&nbsp;
 				'.HtmlElements::LinkButton( './work/mission/setStatus/-2', '<i class="icon-remove icon-white"></i> '.$w->buttonCancel, 'btn btn-small btn-danger' ).'

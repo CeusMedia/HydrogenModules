@@ -31,8 +31,8 @@ class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mi
 			$link		= HtmlTag::create( 'a', $label, $attributes );
 			$buttons[]	= HtmlTag::create( 'li', $link );
 		}
-		$list		= HtmlTag::create( 'ul', $buttons, array( 'class' => 'nav nav-tabs' ) );
-		$container	= HtmlTag::create( 'div', $list, array( 'class' => 'container' ) );
+		$list		= HtmlTag::create( 'ul', $buttons, ['class' => 'nav nav-tabs'] );
+		$container	= HtmlTag::create( 'div', $list, ['class' => 'container'] );
 		return $container;
 	}
 
@@ -49,9 +49,9 @@ class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mi
 
 		$dayDate	= date( "j.", $then );
 		$dayDate	.= '<small class="muted">'.date( "n.", $then ).'</small>';
-		$dayDate	= HtmlTag::create( 'div', $dayDate, array( 'class' => 'dayDate date' ) );
+		$dayDate	= HtmlTag::create( 'div', $dayDate, ['class' => 'dayDate date'] );
 		$dayLabel	= $this->words['days'][date( "w", $then )];
-		$dayLabel	= HtmlTag::create( 'div', $dayLabel, array( 'class' => 'dayName' ) );
+		$dayLabel	= HtmlTag::create( 'div', $dayLabel, ['class' => 'dayName'] );
 		return sprintf( $template, $dayDate, $dayLabel, $number, $indicator );
 	}
 
@@ -85,7 +85,7 @@ class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mi
 			'style'		=> 'width: '.$width,
 		);
 		$bar	= HtmlTag::create( 'div', "", $attributes );
-		return HtmlTag::create( 'div', $bar, array( 'class' => 'progress', 'data-max' => $max ) );
+		return HtmlTag::create( 'div', $bar, ['class' => 'progress', 'data-max' => $max] );
 	}
 
 	public function setDayMissions( $dayMissions ){

@@ -12,8 +12,8 @@ class Controller_Manage_Bookmark extends Controller
 
 		$list		= [];
 		$model		= new Model_Bookmark( $env );
-		$orders		= array( 'title' => 'ASC' );
-		foreach( $model->getAll( array(), $orders ) as $nr => $link ){
+		$orders		= ['title' => 'ASC'];
+		foreach( $model->getAll( [], $orders ) as $nr => $link ){
 			$list[]	= (object) array(
 				'title'	=> /*$prefixes->bookmark.*/$link->title,
 				'type'	=> 'link:bookmark',
@@ -94,6 +94,6 @@ class Controller_Manage_Bookmark extends Controller
 	protected function __onInit()
 	{
 		$this->model	= new Model_Bookmark( $this->env );
-		$this->addData( 'bookmarks', $this->model->getAll( array( 'status' => '0' ), array( 'title' => 'ASC' ) ) );
+		$this->addData( 'bookmarks', $this->model->getAll( ['status' => '0'], ['title' => 'ASC'] ) );
 	}
 }

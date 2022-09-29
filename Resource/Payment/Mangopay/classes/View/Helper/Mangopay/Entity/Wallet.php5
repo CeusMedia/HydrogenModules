@@ -12,10 +12,10 @@ class View_Helper_Mangopay_Entity_Wallet extends View_Helper_Mangopay_Abstract{
 		$helper->setFormat( View_Helper_Mangopay_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
 		$helper->setNumberFormat( View_Helper_Mangopay_Entity_Money::NUMBER_FORMAT_COMMA );
 		$helper->set( $this->wallet->Balance );
-		$icon		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-briefcase' ) );
-		$balance	= HtmlTag::create( 'small', '('.$helper.')', array( 'class' => 'muted' ) );
+		$icon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-briefcase'] );
+		$balance	= HtmlTag::create( 'small', '('.$helper.')', ['class' => 'muted'] );
 		$label		= $icon.' '.$this->wallet->Description.' '.$balance;
-		return HtmlTag::create( $this->nodeName, $label, array( 'class' => $this->nodeClass ) );
+		return HtmlTag::create( $this->nodeName, $label, ['class' => $this->nodeClass] );
 	}
 
 	public function set( $wallet ){

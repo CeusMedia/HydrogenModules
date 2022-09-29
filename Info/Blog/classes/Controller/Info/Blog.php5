@@ -12,7 +12,7 @@ class Controller_Info_Blog extends Controller
 
 	public static function getUriPart( $label, $delimiter = "_" )
 	{
-		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
 		$label	= preg_replace( "/ +/", $delimiter, $label );
 		return $label;
@@ -84,9 +84,9 @@ class Controller_Info_Blog extends Controller
 	{
 		$limit		= 5;
 		$offset		= (int) $page * $limit;
-		$orders		= array( 'createdAt' => 'DESC' );
-		$conditions	= array( 'status' => '> 0' );
-		$limits		= array( $limit, $offset );
+		$orders		= ['createdAt' => 'DESC'];
+		$conditions	= ['status' => '> 0'];
+		$limits		= [$limit, $offset];
 		$posts		= $this->modelPost->getAll( $conditions, $orders, $limits );
 		foreach( $posts as $post ){
 			$post->author	= $this->modelUser->get( $post->authorId );
@@ -115,8 +115,8 @@ class Controller_Info_Blog extends Controller
 		) );
 		$this->addData( 'post', $post );															//  assign post data to template
 
-		$indices	= array( 'status' => 1 );
-		$orders		= array( 'createdAt' => 'DESC' );
+		$indices	= ['status' => 1];
+		$orders		= ['createdAt' => 'DESC'];
 		$posts		= $this->modelPost->getAllByIndices( $indices, $orders );
 		$lastPost	= NULL;
 		$nextPost	= NULL;
@@ -182,7 +182,7 @@ class Controller_Info_Blog extends Controller
 		$logic->handleMail( $mail, $postAuthor, $language->getLanguage() );							//  enqueue mail
 
 		$addresses	= [];
-		$indices	= array( 'postId' => $post->postId, 'status' => '>= 0' );						//  get all visible post comments
+		$indices	= ['postId' => $post->postId, 'status' => '>= 0'];						//  get all visible post comments
 		foreach( $this->modelComment->getAllByIndices( $indices ) as $item ){						//  find former comment authors
 			if( empty( $item->email ) )																//  comment without email address
 				continue;																			//  cannot inform
@@ -202,7 +202,7 @@ class Controller_Info_Blog extends Controller
 			$addresses[]	= $item->email;															//  note used email address
 			$data['myComment']	= $item;															//  decorate mail data by own former comment
 			$mail		= new Mail_Info_Blog_FollowUp( $this->env, $data );							//  generate mail
-			$receiver	= array( 'username' => $item->username, 'email' => $item->email );			//  receiver is former comment author
+			$receiver	= ['username' => $item->username, 'email' => $item->email];			//  receiver is former comment author
 			$logic->handleMail( $mail, $receiver, $language->getLanguage() );						//  enqueue mail
 		}
 	}

@@ -65,7 +65,7 @@ class Logic_Authentication extends Logic
 	 */
 	public function getRelatedUsers( $userId, bool $groupByModules = FALSE ): array
 	{
-		$payload	= (object) array( 'userId' => $userId, 'list' => array() );
+		$payload	= (object) array( 'userId' => $userId, 'list' => [] );
 		$this->env->getCaptain()->callHook( 'Resource:Users', 'getRelatedUsers', $this, $payload );
 		if( $groupByModules )
 			return $payload->list;
@@ -138,8 +138,8 @@ class Logic_Authentication extends Logic
 			throw new OutOfRangeException( 'Authentication backend "'.$key.'" is not registered' );
 		$backend		= $this->backends[$key];
 		$factory		= new ReflectionMethod( $backend->classes->logic, 'getInstance' );
-		$this->backend	= $factory->invokeArgs( NULL, array( $this->env ) );
-//		$this->backend	= call_user_func_array( array( $className, 'getInstance' ), array( $this->env ) );
+		$this->backend	= $factory->invokeArgs( NULL, [$this->env] );
+//		$this->backend	= call_user_func_array( [$className, 'getInstance'], [$this->env] );
 //		$this->env->getMessenger()->noteNotice( 'Auth Backend: '.$key );
 		return $this;
 	}

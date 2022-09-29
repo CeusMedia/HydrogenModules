@@ -47,24 +47,24 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
 		//  --  FACTS: DATES & TIMES  --  //
 		$time		= date( 'H:i:s', $project->createdAt );
 		$date		= date( 'd.m.Y', $project->createdAt );
-		$smallTime	= HtmlTag::create( 'small', '('.$time.')', array( 'class' => 'muted' ) );
+		$smallTime	= HtmlTag::create( 'small', '('.$time.')', ['class' => 'muted'] );
 		$helperFacts->add( 'createdAt', $date.' '.$smallTime );
 		if( $project->modifiedAt ){
 			$time		= date( 'H:i:s', $project->modifiedAt );
 			$date		= date( 'd.m.Y', $project->modifiedAt );
-			$smallTime	= HtmlTag::create( 'small', '('.$time.')', array( 'class' => 'muted' ) );
+			$smallTime	= HtmlTag::create( 'small', '('.$time.')', ['class' => 'muted'] );
 			$helperFacts->add( 'modifiedAt', $date.' '.$smallTime );
 		}
 
 		//  --  FACTS: PRIORITY & STATUS  --  //
-		$smallPriority	= HtmlTag::create( 'small', '('.$project->priority.')', array( 'class' => 'muted' ) );
+		$smallPriority	= HtmlTag::create( 'small', '('.$project->priority.')', ['class' => 'muted'] );
 		$labelPriority	= $words['priorities'][$project->priority];
 		$helperFacts->add( 'priority', $labelPriority.' '.$smallPriority );
 
 		$direction		= NULL;
-		$direction		= in_array( $project->status, array( 3 ) ) ? 1 : $direction;
+		$direction		= in_array( $project->status, [3] ) ? 1 : $direction;
 		$direction		= $project->status < 0 ? -1 : $direction;
-		$smallStatus	= HtmlTag::create( 'small', '('.$project->status.')', array( 'class' => 'muted' ) );
+		$smallStatus	= HtmlTag::create( 'small', '('.$project->status.')', ['class' => 'muted'] );
 		$labelStatus	= $words['states'][$project->status];
 		$textStatus		= $labelStatus.' ('.$project->status.')';
 		$helperFacts->add( 'status', $labelStatus.' '.$smallStatus, NULL, $direction );

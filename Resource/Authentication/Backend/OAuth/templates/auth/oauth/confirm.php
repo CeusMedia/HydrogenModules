@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['confirm'];
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/confirm/' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/confirm/' ) );
 
 $panelConfirm	= HTML::DivClass( "content-panel", array(
 	HTML::H3( $w->heading ),

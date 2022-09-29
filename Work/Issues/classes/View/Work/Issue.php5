@@ -16,16 +16,16 @@ class View_Work_Issue extends View{
 		$modelIssue		= new Model_Issue( $this->env );
 		$userProjects	= $logicProject->getUserProjects( $currentUserId, TRUE );
 		if( !$userProjects )
-			return HtmlTag::create( 'div', 'Keine Projekte vorhanden.', array( 'class' => 'alert alert-info' ) );
+			return HtmlTag::create( 'div', 'Keine Projekte vorhanden.', ['class' => 'alert alert-info'] );
 		$issues	= $modelIssue->getAll( array(
-			'status'	=> array( 0, 1, 2, 3 ),
+			'status'	=> [0, 1, 2, 3],
 		 	'projectId'	=> array_keys( $userProjects ),
-		), array( 'type' => 'ASC', 'priority' => 'ASC' )/*, array( 0, 20 )*/ );
+		), ['type' => 'ASC', 'priority' => 'ASC']/*, [0, 20]*/ );
 		$rows	= [];
 		$icons			= array(
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler' ) ),
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe' ) ),
-			HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee' ) ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
 		);
 		foreach( $issues as $issue ) {
 			$icon	= $icons[$issue->type];
@@ -33,10 +33,10 @@ class View_Work_Issue extends View{
 				'href'	=> './work/issue/edit/'.$issue->issueId
 			) );
 			$rows[]	= HtmlTag::create( 'tr', array(
-				HtmlTag::create( 'td', $link, array( 'class' => 'autocut' ) ),
+				HtmlTag::create( 'td', $link, ['class' => 'autocut'] ),
 			) );
 		}
-		$table	= HtmlTag::create( 'table', $rows, array( 'class' => 'table table-condensed table-fixed' ) );
+		$table	= HtmlTag::create( 'table', $rows, ['class' => 'table table-condensed table-fixed'] );
 		return HtmlTag::create( 'div', $table );
 	}
 
@@ -49,7 +49,7 @@ class View_Work_Issue extends View{
 	public function renderOptions( $options, $key, $values, $class = '' ){
 		$list		= [];
 		if( !is_array( $values ) )
-			$values = $values ? array( $values ) : array();
+			$values = $values ? [$values] : [];
 		foreach( $options as $key => $value ){
 			$selected	= !strlen( $key ) && !$values;
 			if( strlen( $key ) )

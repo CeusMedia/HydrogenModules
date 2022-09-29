@@ -63,7 +63,7 @@ class View_Helper_SEO_LinkTitle extends Abstraction
 			return $this->render();
 		}
 		catch( Exception $e ){
-			$payload	= array( 'exception' => $e );
+			$payload	= ['exception' => $e];
 			$this->env->getCaptain()->callHook( 'App', 'onException', $this, $payload );
 			return '';
 		}

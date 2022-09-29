@@ -1,9 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-//$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list-alt' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+//$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Auszahlung', array(
 	'href'			=> '#modal-add-payout',

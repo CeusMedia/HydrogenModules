@@ -135,7 +135,7 @@ class Logic_Catalog_Bookstore extends Logic
 		$logicBucket->add( $sourceFile, 'bookstore/author/'.$title, $mimeType, 'catalog_bookstore' );
 
 		$this->clearCacheForAuthor( $authorId );
-		$this->editAuthor( $authorId, array( 'image' => $title ) );
+		$this->editAuthor( $authorId, ['image' => $title] );
 	}
 
 	/**
@@ -309,7 +309,7 @@ class Logic_Catalog_Bookstore extends Logic
 			return $this->countArticlesInCategories[$categoryId];
 		$number		= count( $this->modelArticleCategory->getAllByIndex( 'categoryId', $categoryId ) );
 		if( $recursive ){
-			$categories	= $this->getCategories( array( 'parentId' => $categoryId ) );
+			$categories	= $this->getCategories( ['parentId' => $categoryId] );
 			foreach( $categories as $category )
 				$number += $this->countArticlesInCategory( $category->categoryId );
 		}
@@ -372,7 +372,7 @@ class Logic_Catalog_Bookstore extends Logic
 	 */
 	public function getArticles( $conditions = [], array $orders = [], array $limits = [] ): array
 	{
-#		$cacheKey	= md5( json_encode( array( $conditions, $orders, $limits ) ) );
+#		$cacheKey	= md5( json_encode( [$conditions, $orders, $limits] ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.articles.'.$cacheKey ) ) )
 #			return $data;
 		$list	= [];
@@ -392,8 +392,8 @@ class Logic_Catalog_Bookstore extends Logic
 		foreach( $articles as $article )
 			$articleIds[]	= $article->articleId;
 		if( !$articles )
-			return array();
-		$conditions	= array( 'articleId' => $articleIds );
+			return [];
+		$conditions	= ['articleId' => $articleIds];
 		$articles	= $this->getArticles( $conditions, $orders, $limits );
 		return $articles;
 	}
@@ -404,7 +404,7 @@ class Logic_Catalog_Bookstore extends Logic
 	public function getArticlesFromAuthorIds( $authorIds, bool $returnIds = FALSE ): array
 	{
 		$model		= new Model_Catalog_Bookstore_Article_Author( $this->env );
-		$articles	= $model->getAll( array( 'authorId' => array_values( $authorIds ) ) );
+		$articles	= $model->getAll( ['authorId' => array_values( $authorIds )] );
 		if( !$returnIds )
 			return $articles;
 		$ids	= [];
@@ -502,7 +502,7 @@ class Logic_Catalog_Bookstore extends Logic
 	 */
 	public function getCategories( $conditions = [], array $orders = [] ): array
 	{
-#		$cacheKey	= md5( json_encode( array( $conditions, $orders ) ) );
+#		$cacheKey	= md5( json_encode( [$conditions, $orders] ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.categories.'.$cacheKey ) ) )
 #			return $data;
 
@@ -564,12 +564,12 @@ class Logic_Catalog_Bookstore extends Logic
 	 */
 	public function getCategoryArticles( $category, array $orders = [], array $limits = [] ): array
 	{
-#		$cacheKey	= md5( json_encode( array( $category->categoryId, $orders, $limits ) ) );
+#		$cacheKey	= md5( json_encode( [$category->categoryId, $orders, $limits] ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.category.articles.'.$cacheKey ) ) )
 #			return $data;
-		$conditions	= array( 'categoryId' => $category );
+		$conditions	= ['categoryId' => $category];
 		if( is_object( $category ) )
-			$conditions	= array( 'categoryId' => $category->categoryId );
+			$conditions	= ['categoryId' => $category->categoryId];
 		$relations	= $this->modelArticleCategory->getAll( $conditions, $orders, $limits );
 		$articles	= [];
 		$volumes	= [];
@@ -636,7 +636,7 @@ class Logic_Catalog_Bookstore extends Logic
 	 */
 	public function getUriPart( $label, string $delimiter = "_" ): string
 	{
-		$label	= str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
 		$label	= preg_replace( "/ +/", $delimiter, $label );
 		return $label;
@@ -680,7 +680,7 @@ class Logic_Catalog_Bookstore extends Logic
 		if( $fileSmall = $logicBucket->getByPath( $prefix.'s/'.$article->cover, $moduleId ) )
 			$logicBucket->remove( $fileSmall->fileId );
 		$this->clearCacheForArticle( $articleId );
-		$this->editArticle( $articleId, array( 'cover' => NULL ) );
+		$this->editArticle( $articleId, ['cover' => NULL] );
 	}
 
 	/**
@@ -737,7 +737,7 @@ class Logic_Catalog_Bookstore extends Logic
 	public function removeAuthor( $authorId )
 	{
 		$this->checkAuthorId( $authorId );
-		$articles	= $this->getArticlesFromAuthorIds( array( $authorId ) );
+		$articles	= $this->getArticlesFromAuthorIds( [$authorId] );
 		foreach( $articles as $article )
 			$this->removeAuthorFromArticle( $article->articleId, $authorId );
 		$this->removeAuthorImage( $authorId );
@@ -775,7 +775,7 @@ class Logic_Catalog_Bookstore extends Logic
 		$moduleId		= 'catalog_bookstore';
 		if( $file = $logicBucket->getByPath( $prefix.$author->image, $moduleId ) )
 			$logicBucket->remove( $file->fileId );
-		$this->editAuthor( $authorId, array( 'image' => NULL ) );
+		$this->editAuthor( $authorId, ['image' => NULL] );
 		$this->clearCacheForAuthor( $authorId );													//
 	}
 
@@ -816,7 +816,7 @@ class Logic_Catalog_Bookstore extends Logic
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
-		$indices	= array( 'articleId' => $articleId, 'authorId' => $authorId );
+		$indices	= ['articleId' => $articleId, 'authorId' => $authorId];
 		$relation	= $this->modelArticleAuthor->getByIndices( $indices );
 		if( $relation ){
 			$this->modelArticleAuthor->edit( $relation->articleAuthorId, array( 'editor' => (int) $role ) );
@@ -871,7 +871,7 @@ class Logic_Catalog_Bookstore extends Logic
 		);
 		$image->save( $sourceFile );
 		$logicBucket->add( $sourceFile, 'bookstore/article/s/'.$title, $mimeType, 'catalog_bookstore' );
-		$this->editArticle( $articleId, array( 'cover' => $title ) );
+		$this->editArticle( $articleId, ['cover' => $title] );
 		$this->cache->remove( 'catalog.bookstore.tinymce.images.articles' );
 	}
 

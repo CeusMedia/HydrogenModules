@@ -32,7 +32,7 @@ class Logic_Payment_Stripe_Event_Payin_Normal_Created extends Logic_Payment_Stri
 			'user'			=> $this->logicStripe->getUser( $payin->AuthorId ),
 			'event'			=> $this->event,
 		);
-		$receiver	= array( 'email' => 'dev@ceusmedia.de' );
+		$receiver	= ['email' => 'dev@ceusmedia.de'];
 		$this->sendMail( 'Stripe_Event_Payin', $mailData, $receiver, 'de' );
 		return time();
 	}

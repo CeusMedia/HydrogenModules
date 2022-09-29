@@ -9,7 +9,7 @@ class View_Work_Billing_Bill extends View
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/billing/bill/' );
-		$data	= array( 'billId' => $billId );
+		$data	= ['billId' => $billId];
 		$env->getModules()->callHookWithPayload( "WorkBilling/Bill", "registerTabs", $tabs, $data );
 		return $tabs->renderTabs( $current );
 	}

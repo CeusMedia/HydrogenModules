@@ -19,7 +19,7 @@ class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 		$coworkers		= $logicProject->getCoworkers( $logicAuth->getCurrentUserId() );
 		$hasTimers		= $modelTimer->count( array(
 			'workerId'	=> array_keys( $coworkers ),
-			'status'	=> array( 1 ),
+			'status'	=> [1],
 		) );
 		if( !$hasTimers ){
 			$content	= '<div class="alert alert-info">Keine laufenden Aktivitäten vorhanden.</div>';
@@ -27,10 +27,10 @@ class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 		else{
 			$timers		= $modelTimer->getAllByIndices( array(
 				'workerId'	=> array_keys( $coworkers ),
-				'status'	=> array( 1 ),
+				'status'	=> [1],
 			), array(
 				'modifiedAt'	=> 'DESC',
-			), array( 10, 0 ) );
+			), [10, 0] );
 			$rows	= [];
 			foreach( $timers as $timer ){
 				View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
@@ -68,7 +68,7 @@ class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 				) );
 			}
 			$tbody	= HtmlTag::create( 'tbody', $rows );
-			$table	= HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-condensed table-fixed' ) );
+			$table	= HtmlTag::create( 'table', $tbody, ['class' => 'table table-condensed table-fixed'] );
 			$content	= $table.'
 			<script>jQuery(document).ready(function(){WorkTimer.init(".dashboard-timer-others", "&nbsp;");});</script>';
 		}

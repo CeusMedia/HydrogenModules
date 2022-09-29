@@ -51,8 +51,8 @@ class Controller_Work_Note extends Controller
 			}
 		}
 
-		$note	= (object) array();
-		$columns	= array_merge( $model->getColumns(), array( 'tags', 'link_url', 'link_title' ) );
+		$note	= (object) [];
+		$columns	= array_merge( $model->getColumns(), ['tags', 'link_url', 'link_title'] );
 		foreach( $columns as $column )
 			$note->$column	= $this->request->get( $column );
 		$this->addData( 'note', $note );
@@ -254,7 +254,7 @@ class Controller_Work_Note extends Controller
 		}
 		$notes		= [];
 		$conditions	= [];
-		$orders		= array( $filterOrder => $filterDirection );
+		$orders		= [$filterOrder => $filterDirection];
 //		if( $filterPublic > 0 )
 //			$conditions['public']		= $filterPublic == 2 ? 0 : 1;
 		if( $filterAuthor > 0 )
@@ -262,11 +262,11 @@ class Controller_Work_Note extends Controller
 		if( strlen( trim( (string) $filterProjectId ) ) )
 			$conditions['projectId']	= $filterProjectId;
 		else if( $this->env->getModules()->has( 'Manage_Projects' ) ){
-			$conditions['projectId']	= array_merge( array( 0 ), array_keys( $projects ) );
+			$conditions['projectId']	= array_merge( [0], array_keys( $projects ) );
 		}
 
 		$offset	= $page * $filterLimit;
-		$limits		= array( $offset, $filterLimit );
+		$limits		= [$offset, $filterLimit];
 		if( $query ){
 			$notes	= $this->logic->searchNotes( $query, $conditions, $orders, $limits );
 		}

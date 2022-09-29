@@ -11,11 +11,11 @@ return "----";
 /*
 $toolbar	= new View_Helper_MultiButtonGroupMultiToolbar();
 
-$iconAddEvent   = HtmlTag::create( 'i', '', array( 'class' => 'icon-time' ) );
-$iconAddTask    = HtmlTag::create( 'i', '', array( 'class' => 'icon-wrench' ) );
+$iconAddEvent   = HtmlTag::create( 'i', '', ['class' => 'icon-time'] );
+$iconAddTask    = HtmlTag::create( 'i', '', ['class' => 'icon-wrench'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-    $iconAddEvent   = HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-clock-o' ) );
-    $iconAddTask    = HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-thumb-tack' ) );
+    $iconAddEvent   = HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-clock-o'] );
+    $iconAddTask    = HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-thumb-tack'] );
 }
 
 $toolbar->addButtonGroup( 'tb_0', 'add', array(

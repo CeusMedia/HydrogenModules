@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Dev_Todo extends Controller{
 	public function index(){
-		$exts		= array( 'php5', 'php', 'js', 'css' );
+		$exts		= ['php5', 'php', 'js', 'css'];
 		$sources	= array(
 			array(
 				'path'	=> './',
@@ -33,7 +33,7 @@ class Controller_Dev_Todo extends Controller{
 
 	protected function check( $path, $extensions = [] ){
 		$list	= [];
-		$keys	= array( "//TODO", "@deprecated", "@todo" );
+		$keys	= ["//TODO", "@deprecated", "@todo"];
 		$lister	= new RecursiveTodoFileLister( $extensions, $keys );
 		$lister->scan( $path );
 		$data	= array(

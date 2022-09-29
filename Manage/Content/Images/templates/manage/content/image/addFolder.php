@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$optFolder	= array( '.' => '' );
+$optFolder	= ['.' => ''];
 foreach( $folders as $folder )
 	$optFolder[$folder]	= preg_replace( "/\.\/?/", "", $folder );
 $optFolder	= HtmlElements::Options( $optFolder, $path );
@@ -10,7 +10,7 @@ $optFolder	= HtmlElements::Options( $optFolder, $path );
 $panelFolders	= $view->loadTemplateFile( 'manage/content/image/folders.php' );
 $w				= (object) $words['addFolder'];
 
-extract( $view->populateTexts( array( 'top', 'bottom', 'add.folder.right' ), 'html/manage/content/image/' ) );
+extract( $view->populateTexts( ['top', 'bottom', 'add.folder.right'], 'html/manage/content/image/' ) );
 
 return $textTop.'
 <div class="row-fluid">

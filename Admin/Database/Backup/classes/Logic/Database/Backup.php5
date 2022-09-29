@@ -61,7 +61,7 @@ class Logic_Database_Backup extends Logic
 
 		/*  --  REPLACE PREFIX  --  */
 		$regExp		= "@(EXISTS|FROM|INTO|TABLE|TABLES|for table)( `)(".$prefix.")(.+)(`)@U";		//  build regular expression
-		$callback	= array( $this, '_callbackReplacePrefix' );										//  create replace callback
+		$callback	= [$this, '_callbackReplacePrefix'];										//  create replace callback
 		rename( $pathname, $pathname."_" );															//  move dump file to source file
 		$fpIn		= fopen( $pathname."_", "r" );													//  open source file
 		$fpOut		= fopen( $pathname, "a" );														//  prepare empty target file
@@ -83,7 +83,7 @@ class Logic_Database_Backup extends Logic
 			'comment'		=> $comment,
 		);
 		if( $comment )
-			$this->storeDataInComment( $id, array( 'comment' => $comment ) );
+			$this->storeDataInComment( $id, ['comment' => $comment] );
 		return $id;
 	}
 
@@ -139,9 +139,9 @@ class Logic_Database_Backup extends Logic
 	{
 		$dump	= $this->check( $id );
 		if( !array_key_exists( $id, $this->comments ) )
-			$this->comments[$id]	= array( 'comment' => '' );
+			$this->comments[$id]	= ['comment' => ''];
 		if( is_string( $this->comments[$id] ) )
-			$this->comments[$id]	= array( 'comment' => $dump->comment );
+			$this->comments[$id]	= ['comment' => $dump->comment];
 		foreach( $data as $key => $value ){
 			if( is_null( $value ) && isset( $this->comments[$id][$key] ) )
 				unset( $this->comments[$id][$key] );

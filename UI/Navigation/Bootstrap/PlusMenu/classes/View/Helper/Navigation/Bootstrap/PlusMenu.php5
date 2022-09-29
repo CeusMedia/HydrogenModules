@@ -63,10 +63,10 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends Abstraction
 			foreach( $this->links as $link )
 				$dropdown->add( $link->url, $link->label, NULL, $link->icon );
 
-		$buttonClasses	= array( 'btn', 'dropdown-toggle' );
+		$buttonClasses	= ['btn', 'dropdown-toggle'];
 		if( $this->buttonClass )
 			$buttonClasses[]	= $this->buttonClass;
-		$iconPlus	= HtmlTag::create( 'i', '', array( 'class' => $this->buttonIcon ) );
+		$iconPlus	= HtmlTag::create( 'i', '', ['class' => $this->buttonIcon] );
 		$button		= HtmlTag::create( 'button', $iconPlus, array(
 			'class'			=> join( ' ', $buttonClasses ),
 			'data-toggle'	=> 'dropdown',
@@ -74,7 +74,7 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends Abstraction
 		$group		= (new Dropdown())->add( $button )->add( $dropdown );
 		if( $this->alignBottom )
 			$group->addClass( 'dropup' );
-		$container	= HtmlTag::create( 'div', $group, array( 'class' => $this->class ) );
+		$container	= HtmlTag::create( 'div', $group, ['class' => $this->class] );
 		return (string) $container;
 	}
 

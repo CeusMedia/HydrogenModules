@@ -31,7 +31,7 @@ return HTML::DivClass( 'content-panel content-panel-info', array(
 						HtmlTag::create( 'div',
 							HtmlTag::create( 'big',
 								HtmlTag::create( 'strong',
-									HtmlTag::create( 'span', $user->role->title, array( 'class' => 'role role'.$user->role->roleId ) )
+									HtmlTag::create( 'span', $user->role->title, ['class' => 'role role'.$user->role->roleId] )
 								)
 							)
 						)

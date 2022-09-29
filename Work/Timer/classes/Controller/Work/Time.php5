@@ -50,8 +50,8 @@ class Controller_Work_Time extends Controller
 			$status		= (int) $this->request->get( 'status' );
 			if( $status === 1 )
 				$this->logicTimer->start( $timerId );
-			else if( !in_array( $status, array( 0, 1 ) ) )
-				$this->modelTimer->edit( $timerId, array( 'status' => $status ) );
+			else if( !in_array( $status, [0, 1] ) )
+				$this->modelTimer->edit( $timerId, ['status' => $status] );
 			if( $this->request->get( 'from' ) )
 				$this->restart( $this->request->get( 'from' ) );
 			$this->restart( NULL, TRUE );
@@ -153,7 +153,7 @@ class Controller_Work_Time extends Controller
 		$projectUsers	= [];
 		if( $timer->projectId ){
 	        $logicProject   = Logic_Project::getInstance( $this->env );
-			$projectUsers	= $logicProject->getProjectUsers( $timer->projectId, array(), array( 'username' => 'ASC' ) );
+			$projectUsers	= $logicProject->getProjectUsers( $timer->projectId, [], ['username' => 'ASC'] );
 			if( !$timer->workerId )
 				$timer->workerId	= $currentUserId;
 		}
@@ -174,9 +174,9 @@ class Controller_Work_Time extends Controller
 		if( !$this->projectMap && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/time' );
 
-		$conditions	= array( 'status' => array( 2 ) );
+		$conditions	= ['status' => [2]];
 		$total		= $this->modelTimer->count( $conditions );
-		$timers		= $this->modelTimer->getAll( $conditions, array( 'modifiedAt' => 'ASC' ), array( $page * $limit, $limit ) );
+		$timers		= $this->modelTimer->getAll( $conditions, ['modifiedAt' => 'ASC'], [$page * $limit, $limit] );
 		foreach( $timers as $timer ){
 			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer, FALSE );
 		}

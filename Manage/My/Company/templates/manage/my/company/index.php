@@ -30,7 +30,7 @@ if( $companies ){
 	$colgroup	= HtmlElements::ColumnGroup( '57%', '15%', '15%' );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
-	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table'] );
 }
 
 return '

@@ -75,7 +75,7 @@ class View_Helper_Newsletter
 			'registeredAt'		=> date( $w->formatRegisteredAt, $reader->registeredAt ),
 			'registerDate'		=> date( $w->formatRegisterDate, $reader->registeredAt ),
 			'registerTime'		=> date( $w->formatRegisterTime, $reader->registeredAt ),
-			'tracking'			=> HtmlTag::create( 'img', NULL, array( 'src' => $urlTrack ) ),
+			'tracking'			=> HtmlTag::create( 'img', NULL, ['src' => $urlTrack] ),
 			'linkConfirm'		=> $urlConfirm,
 			'linkUnregister'	=> $urlOptOut,
 			'linkView'			=> $urlView,
@@ -121,7 +121,7 @@ class View_Helper_Newsletter
 			'registeredAt'		=> date( $w->formatRegisteredAt, $reader->registeredAt ),
 			'registerDate'		=> date( $w->formatRegisterDate, $reader->registeredAt ),
 			'registerTime'		=> date( $w->formatRegisterTime, $reader->registeredAt ),
-			'tracking'			=> HtmlTag::create( 'img', NULL, array( 'src' => $urlTrack ) ),
+			'tracking'			=> HtmlTag::create( 'img', NULL, ['src' => $urlTrack] ),
 			'linkUnregister'	=> $urlOptOut,
 			'linkView'			=> $urlView,
 		);
@@ -149,7 +149,7 @@ class View_Helper_Newsletter
 		switch( $mode ){
 			case 0:
 //				$pattern	= "/\+col([0-9])\r?\n(.+)\r?\n-col[0-9]/s";
-//				$content	= preg_replace_callback( $pattern, array( $this, 'callbackReplacePlainColumns' ), $content );
+//				$content	= preg_replace_callback( $pattern, [$this, 'callbackReplacePlainColumns'], $content );
 				break;
 			case 1:
 				$pattern	= "/\+col([0-9])/";
@@ -270,6 +270,6 @@ class View_Helper_Newsletter
 			$content	= preg_replace( "/\[#.+#\]/U", "", $content );								//  remove not replace placeholders
 //		$content	= $this->realizeColumns( $content, 1 );											//
 		$page->addBody( $content );																	//  set final HTML as page body
-		return $page->build( array( 'class' => 'mail mail-newsletter' ) );							//  return rendered HTML page
+		return $page->build( ['class' => 'mail mail-newsletter'] );							//  return rendered HTML page
 	}
 }

@@ -216,7 +216,7 @@ class JobScriptHelper
 		error_reporting( $this->errorHandling['report'] );
 		ini_set( 'display_errors', $this->errorHandling['display'] );
 		if( $this->errorHandling['catch'] )
-			set_error_handler( array( $this, 'handleError' ) );
+			set_error_handler( [$this, 'handleError'] );
 		return $this;
 	}
 }

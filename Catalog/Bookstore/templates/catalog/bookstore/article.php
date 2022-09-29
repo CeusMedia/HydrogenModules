@@ -14,7 +14,7 @@ $w			= (object) $words['article'];
 $w->isn		= $a->series ? $w->issn : $w->isbn;
 $helper		= new View_Helper_Catalog_Bookstore( $env );
 
-$iconBack		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
+$iconBack		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 
 $a->volume		= $category->volume ? $w->volume."&nbsp;".$category->volume : "";
 $position		= $helper->renderPositionFromArticle( $article );

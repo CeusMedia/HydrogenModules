@@ -10,9 +10,9 @@ foreach( $bridges as $bridge ){
 		'href'	=> './manage/shop/bridge/edit/'.$bridge->bridgeId,
 	) );
 	$class	= ( isset( $bridgeId) && $bridgeId === $bridge->bridgeId ) ? 'active' : NULL;
-	$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+	$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 }
-$table	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+$table	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );
 
 return '
 <div class="content-panel">

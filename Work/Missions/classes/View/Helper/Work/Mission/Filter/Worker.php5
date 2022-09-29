@@ -24,9 +24,9 @@ class View_Helper_Work_Mission_Filter_Worker{
 			return;
 		$helperMember		= new View_Helper_Member( $this->env );
 //		$helperMember->setMode( 'bar' );
-		$iconEye			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-		$iconWarning		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-warning' ) );
-		$iconCheck			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check-square-o' ) );
+		$iconEye			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+		$iconWarning		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-warning'] );
+		$iconCheck			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check-square-o'] );
 		$changedWorkers	= array_diff( array_keys( $this->values ), $this->selected );
 		$list	= [];
 		foreach( $this->values as $worker ){
@@ -37,7 +37,7 @@ class View_Helper_Work_Mission_Filter_Worker{
 				'value'		=> $worker->userId,
 				'checked'	=> in_array( $worker->userId, $this->selected ) ? "checked" : NULL
 			) );
-//			$label		= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$worker->username, array( 'class' => 'checkbox' ) );
+//			$label		= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$worker->username, ['class' => 'checkbox'] );
 
 			$helperMember->setUser( $worker );
 			$label		= $helperMember->render();
@@ -57,7 +57,7 @@ class View_Helper_Work_Mission_Filter_Worker{
 					'class'	=> 'btn btn-small btn-info',
 					'href'	=> './member/view/'.$worker->userId,
 				) ),
-			), array( 'class' => 'pull-right' ) );
+			), ['class' => 'pull-right'] );
 
 			$list[]	= HtmlTag::create( 'tr', array(
 				HtmlTag::create( 'td', $label, array(
@@ -83,7 +83,7 @@ class View_Helper_Work_Mission_Filter_Worker{
 			'class'		=> 'btn btn-small trigger-select-all',
 			'href'		=> '#',
 		) );
-		$buttons	= HtmlTag::create( 'div', array( $buttonUser, $buttonAll ), array( 'class' => 'btn-group' ) );
+		$buttons	= HtmlTag::create( 'div', [$buttonUser, $buttonAll], ['class' => 'btn-group'] );
 		$colgroup	= HtmlElements::ColumnGroup( "", "160px" );
 		$tableHeads	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'th', "Bearbeiter" ),
@@ -105,8 +105,8 @@ class View_Helper_Work_Mission_Filter_Worker{
 
 		$buttonIcon		= '';
 		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
-			$buttonIcon		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) ).'&nbsp;';
-		$labelFilter	= HtmlTag::create( 'span', $this->words['filters']['worker'], array( 'class' => 'hidden-phone' ) );
+			$buttonIcon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user'] ).'&nbsp;';
+		$labelFilter	= HtmlTag::create( 'span', $this->words['filters']['worker'], ['class' => 'hidden-phone'] );
 		$buttonLabel	= $labelFilter.'&nbsp;<span class="caret"></span>';
 		$buttonAttr		= array(
 			'class'	=> 'btn '.( count( $changedWorkers ) ? "btn-info" : "" ),

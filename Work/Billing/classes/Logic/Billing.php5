@@ -329,7 +329,7 @@ class Logic_Billing
 					'status'	=> Model_Billing_Bill_Share::STATUS_BOOKED,
 				) );
 			}
-			$this->modelBill->edit( $billId, array( 'status' => Model_Billing_Bill::STATUS_BOOKED ) );
+			$this->modelBill->edit( $billId, ['status' => Model_Billing_Bill::STATUS_BOOKED] );
 			$this->env->getDatabase()->commit();
 		}
 		catch( Exception $e ){
@@ -385,7 +385,7 @@ class Logic_Billing
 		$conditions	= array_merge( $conditions, array(
 			'toType'	=> Model_Billing_Transaction::TYPE_CORPORATION,
 			'relation'	=> '%|bill:'.$billId.'|%' ) );
-		$orders		= $orders ? $orders : array( 'transactionId' => 'ASC' );
+		$orders		= $orders ? $orders : ['transactionId' => 'ASC'];
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
@@ -407,7 +407,7 @@ class Logic_Billing
 		$conditions	= array_merge( $conditions, array(
 			'toType'	=> Model_Billing_Transaction::TYPE_PERSON,
 			'relation'	=> '%|bill:'.$billId.'|%' ) );
-		$orders		= $orders ? $orders : array( 'transactionId' => 'ASC' );
+		$orders		= $orders ? $orders : ['transactionId' => 'ASC'];
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
@@ -421,8 +421,8 @@ class Logic_Billing
 
 	public function getBillReserves( $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
-		$conditions	= array_merge( array( 'billId' => $billId ), $conditions );
-		$orders		= $orders ? $orders : array( 'billReserveId' => 'ASC' );
+		$conditions	= array_merge( ['billId' => $billId], $conditions );
+		$orders		= $orders ? $orders : ['billReserveId' => 'ASC'];
 		$relations	= $this->modelBillReserve->getAll( $conditions, $orders, $limits );
 		foreach( $relations as $relation )
 			$relation->reserve	= $this->getReserve( $relation->reserveId );
@@ -436,8 +436,8 @@ class Logic_Billing
 
 	public function getBillShares( $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
-		$conditions	= array_merge( array( 'billId' => $billId ), $conditions );
-		$orders		= $orders ? $orders : array( 'billShareId' => 'ASC' );
+		$conditions	= array_merge( ['billId' => $billId], $conditions );
+		$orders		= $orders ? $orders : ['billShareId' => 'ASC'];
 		return $this->modelBillShare->getAll( $conditions, $orders, $limits );
 	}
 
@@ -462,7 +462,7 @@ class Logic_Billing
 			),
 			'relation'	=> '%|expense%'
 		) );
-		$orders		= $orders ? $orders : array( 'transactionId' => 'ASC' );
+		$orders		= $orders ? $orders : ['transactionId' => 'ASC'];
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
@@ -473,7 +473,7 @@ class Logic_Billing
 			'toType'	=> Model_Billing_Transaction::TYPE_CORPORATION,
 			'toId'		=> $corporationId,
 		) );
-		$orders		= $orders ? $orders : array( 'transactionId' => 'ASC' );
+		$orders		= $orders ? $orders : ['transactionId' => 'ASC'];
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
@@ -484,7 +484,7 @@ class Logic_Billing
 			'fromId'	=> $corporationId,
 			'toType'	=> Model_Billing_Transaction::TYPE_PAYOUT,
 		) );
-		$orders		= $orders ? $orders : array( 'transactionId' => 'ASC' );
+		$orders		= $orders ? $orders : ['transactionId' => 'ASC'];
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
@@ -498,7 +498,7 @@ class Logic_Billing
 			'toType'	=> Model_Billing_Transaction::TYPE_CORPORATION,
 			'toId'		=> $corporationId,
 		) );
-		$orders		= $orders ? $orders : array( 'transactionId' => 'ASC' );
+		$orders		= $orders ? $orders : ['transactionId' => 'ASC'];
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
@@ -519,8 +519,8 @@ class Logic_Billing
 
 	public function getPersonBillShares( $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
-		$conditions	= array_merge( array( 'personId' => $personId ), $conditions );
-		$orders		= $orders ? $orders : array( 'billShareId' => 'ASC' );
+		$conditions	= array_merge( ['personId' => $personId], $conditions );
+		$orders		= $orders ? $orders : ['billShareId' => 'ASC'];
 		return $this->modelBillShare->getAll( $conditions, $orders, $limits );
 	}
 
@@ -535,7 +535,7 @@ class Logic_Billing
 			),
 			'relation'	=> '%|expense%'
 		) );
-		$orders		= $orders ? $orders : array( 'transactionId' => 'ASC' );
+		$orders		= $orders ? $orders : ['transactionId' => 'ASC'];
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
@@ -549,7 +549,7 @@ class Logic_Billing
 			'toType'	=> Model_Billing_Transaction::TYPE_PERSON,
 			'toId'		=> $personId,
 		) );
-		$orders		= $orders ? $orders : array( 'transactionId' => 'ASC' );
+		$orders		= $orders ? $orders : ['transactionId' => 'ASC'];
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
@@ -560,7 +560,7 @@ class Logic_Billing
 			'toType'	=> Model_Billing_Transaction::TYPE_PERSON,
 			'toId'	=> $personId,
 		) );
-		$orders		= $orders ? $orders : array( 'transactionId' => 'ASC' );
+		$orders		= $orders ? $orders : ['transactionId' => 'ASC'];
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
@@ -571,7 +571,7 @@ class Logic_Billing
 			'fromId'	=> $personId,
 			'toType'	=> Model_Billing_Transaction::TYPE_PAYOUT,
 		) );
-		$orders		= $orders ? $orders : array( 'transactionId' => 'ASC' );
+		$orders		= $orders ? $orders : ['transactionId' => 'ASC'];
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
@@ -594,7 +594,7 @@ class Logic_Billing
 	{
 		$transactions	= $this->modelTransaction->getAll( array(
 			'status' => Model_Billing_Transaction::STATUS_NEW,
-		), array( 'dateBooked' => 'ASC', 'transactionId' => 'ASC' ) );
+		), ['dateBooked' => 'ASC', 'transactionId' => 'ASC'] );
 		foreach( $transactions as $transaction ){
 			$this->env->getDatabase()->beginTransaction();
 			try{

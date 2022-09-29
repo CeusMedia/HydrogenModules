@@ -46,7 +46,7 @@ class Controller_Info_News extends Controller
 		//   @todo extract this data collection as hook to module Catalog
 		if( $this->env->getModules()->has( 'Catalog' ) ){
 			$logic		= new Logic_Catalog( $this->env );
-			$articles   = $logic->getArticles( array( 'new' => 1 ), array( 'createdAt' => 'DESC' ) );
+			$articles   = $logic->getArticles( ['new' => 1], ['createdAt' => 'DESC'] );
 			$this->addData( 'article', $articles[array_rand( $articles, 1 )] );
 		}
 		$this->addData( 'news', $this->getVisibleNews( $config->get( 'show.max' ) ) );

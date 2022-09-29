@@ -7,7 +7,7 @@ if( $images ){
 	$list	= [];
 	foreach( $images as $image ){
 		$thumb		= $this->renderThumbnail( $image, TRUE, $gallery->path );
-		$thumb		= HtmlTag::create( 'img', NULL, array( 'src' => $baseUri.$gallery->path.'/'.$image->filename ) );
+		$thumb		= HtmlTag::create( 'img', NULL, ['src' => $baseUri.$gallery->path.'/'.$image->filename] );
 		$urlRemove	= './manage/gallery/removeImage/'.$image->galleryImageId;
 		$source		= new Image( $baseUri.$gallery->path.'/'.$image->filename );
 		$size		= $source->getWidth().'x'.$source->getHeight();
@@ -56,9 +56,9 @@ if( $images ){
 		</form>
 	</div>
 </div>';
-		$list[]	= HtmlTag::create( 'li', $item, array( 'class' => 'gallery-image' ) );
+		$list[]	= HtmlTag::create( 'li', $item, ['class' => 'gallery-image'] );
 	}
-	$listImages	= HtmlTag::create( 'ul', $list, array( 'class' => 'gallery-images' ) );
+	$listImages	= HtmlTag::create( 'ul', $list, ['class' => 'gallery-images'] );
 }
 
 return '

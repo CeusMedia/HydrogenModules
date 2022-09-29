@@ -50,7 +50,7 @@ class Hook_Shop_Special extends Hook
 		if( !static::isSpecial() )
 			return;
 		$model		= new Model_Shop_Special( $env );
-		$special	= $model->getByIndices( array( 'articleId' => static::$articleId ) );
+		$special	= $model->getByIndices( ['articleId' => static::$articleId] );
 		if( !$special )
 			return;
 

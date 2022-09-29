@@ -16,7 +16,7 @@ if( $users ){
 		) );
 	}
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-striped' ) );
+	$list	= HtmlTag::create( 'table', $tbody, ['class' => 'table table-striped'] );
 }
 */
 
@@ -45,9 +45,9 @@ if( $username ){
 		$helperMember->setMode( 'thumbnail' );
 		foreach( $users as $user ){
 			$helperMember->setUser( $user );
-			$list[]	= HtmlTag::create( 'li', $helperMember->render(), array( 'class' => 'span4' ) );
+			$list[]	= HtmlTag::create( 'li', $helperMember->render(), ['class' => 'span4'] );
 		}
-		$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'thumbnails' ) );
+		$list	= HtmlTag::create( 'ul', $list, ['class' => 'thumbnails'] );
 	}
 
 	$panelList	= '
@@ -75,7 +75,7 @@ if( isset( $advices ) && $advices ){
 	</div>';
 }
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/member/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/member/' ) );
 
 $tabs	= View_Member::renderTabs( $env, 'search' );
 

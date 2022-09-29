@@ -6,8 +6,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
  *	@todo			remove with references in module config
 */
 
-$blocksWithin		= $this->getData( 'blocksWithin', array() );
-$iconBlock			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
+$blocksWithin		= $this->getData( 'blocksWithin', [] );
+$iconBlock			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-square'] );
 $listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 
 if( $blocksWithin ){
@@ -19,7 +19,7 @@ if( $blocksWithin ){
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	if( $list )
-		$listBlocksWithin	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+		$listBlocksWithin	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
 
 return '

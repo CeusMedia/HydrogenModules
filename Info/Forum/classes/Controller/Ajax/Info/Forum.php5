@@ -8,12 +8,12 @@ class Controller_Ajax_Info_Forum extends AjaxController
 	{
 		$thread		= $this->modelThread->get( $threadId );
 		if( !$thread ){
-			$data	= array( 'status' => 'error', 'error' => 'invalid thread id' );
+			$data	= ['status' => 'error', 'error' => 'invalid thread id'];
 		}
 		else{
-			$data	= array( 'status' => 'data', 'data' => array( 'count' => 0, 'postId' => NULL ) );
-			$conditions		= array( 'threadId' => $threadId, 'postId' => '> '.$lastPostId );
-			$orders			= array( 'postId' => 'ASC' );
+			$data	= ['status' => 'data', 'data' => ['count' => 0, 'postId' => NULL]];
+			$conditions		= ['threadId' => $threadId, 'postId' => '> '.$lastPostId];
+			$orders			= ['postId' => 'ASC'];
 			$posts			= $this->modelPost->getAll( $conditions, $orders );
 			$data['data']['count']	= count( $posts );
 			$post			= array_pop( $posts );
@@ -38,7 +38,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 	{
 		$post		= $this->modelPost->get( $postId );
 		if( !$post )
-			$post	= array( 'content', 'Error: Invalid post ID: '.$postId );
+			$post	= ['content', 'Error: Invalid post ID: '.$postId];
 		$this->respondData( $post );
 	}
 
@@ -47,7 +47,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 		$threadId	= $this->request->get( 'threadId' );
 		$name		= $this->request->get( 'name' );
 		if( $threadId && $name ){
-			$this->modelThread->edit( (int) $threadId, array( 'title' => $name ) );
+			$this->modelThread->edit( (int) $threadId, ['title' => $name] );
 		}
 		exit;
 	}
@@ -57,7 +57,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 		$topicId	= $this->request->get( 'topicId' );
 		$name		= $this->request->get( 'name' );
 		if( $topicId && $name ){
-			$this->modelTopic->edit( (int) $topicId, array( 'title' => $name ) );
+			$this->modelTopic->edit( (int) $topicId, ['title' => $name] );
 		}
 		exit;
 	}
@@ -66,7 +66,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 	{
 		$thread		= $this->modelThread->get( (int) $threadId );
 		if( $thread ){
-			$this->modelThread->edit( (int) $threadId, array( 'type' => $thread->type ? 0 : 1 ) );
+			$this->modelThread->edit( (int) $threadId, ['type' => $thread->type ? 0 : 1] );
 		}
 		exit;
 	}

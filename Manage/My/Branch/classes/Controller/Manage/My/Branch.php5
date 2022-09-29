@@ -10,7 +10,7 @@ class Controller_Manage_My_Branch extends Controller
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Branch( $this->env );
-		$model->edit( $branchId, array( 'status' => 1 ) );
+		$model->edit( $branchId, ['status' => 1] );
 		$branch			= $model->get( $branchId );
 		$messenger->noteSuccess( 'Filiale "'.$branch->title.'" aktiviert.' );
 		$this->restart( './manage/my/branch' );
@@ -33,7 +33,7 @@ class Controller_Manage_My_Branch extends Controller
 		if( $request->get( 'doAdd' ) ){
 			if( empty( $data['title'] ) )
 				$messenger->noteError( $words->msgNoTitle );
-			else if( $model->getAll( array( 'title' => $data['title'] ) ) )
+			else if( $model->getAll( ['title' => $data['title']] ) )
 				$messenger->noteError( $words->msgTitleExisting, $data['title'] );
 			if( empty( $data['companyId'] ) )
 				$messenger->noteError( $words->msgNoCompany );
@@ -126,7 +126,7 @@ class Controller_Manage_My_Branch extends Controller
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Branch( $this->env );
-		$model->edit( $branchId, array( 'status' => -1 ) );
+		$model->edit( $branchId, ['status' => -1] );
 		$branch			= $model->get( $branchId );
 		$messenger->noteSuccess( 'Filiale "'.$branch->title.'" deaktiviert.' );
 		$this->restart( NULL, TRUE );
@@ -145,7 +145,7 @@ class Controller_Manage_My_Branch extends Controller
 		if( $request->get( 'doEdit' ) ){
 			if( empty( $data['title'] ) )
 				$messenger->noteError( $words->msgNoTitle );
-			else if( $modelBranch->getAll( array( 'title' => $data['title'], 'branchId' => '!= '.$branchId ) ) )
+			else if( $modelBranch->getAll( ['title' => $data['title'], 'branchId' => '!= '.$branchId] ) )
 				$messenger->noteError( $words->msgTitleExisting, $data['title'] );
 			if( empty( $data['city'] ) )
 				$messenger->noteError( $words->msgNoCity );
@@ -275,7 +275,7 @@ class Controller_Manage_My_Branch extends Controller
 	{
 		$user		= $this->getCurrentUser();
 		$model		= new Model_Branch( $this->env );
-		$conditions	= array( 'companyId' => $user->companyId, 'branchId' => $branchId );
+		$conditions	= ['companyId' => $user->companyId, 'branchId' => $branchId];
 		return (bool) $model->count( $conditions );
 	}
 
@@ -283,7 +283,7 @@ class Controller_Manage_My_Branch extends Controller
 	{
 		$user		= $this->getCurrentUser();
 		$model		= new Model_Company( $this->env );
-		$conditions	= array( 'companyId' => $user->companyId, 'companyId' => $companyId );
+		$conditions	= ['companyId' => $user->companyId, 'companyId' => $companyId];
 		return (bool) $model->count( $conditions );
 	}
 
@@ -291,7 +291,7 @@ class Controller_Manage_My_Branch extends Controller
 	{
 		$user		= $this->getCurrentUser();
 		$model		= new Model_Coupon( $this->env );
-		$conditions	= array( 'companyId' => $user->companyId, 'couponId' => $couponId );
+		$conditions	= ['companyId' => $user->companyId, 'couponId' => $couponId];
 		return (bool) $model->count( $conditions );
 	}
 }

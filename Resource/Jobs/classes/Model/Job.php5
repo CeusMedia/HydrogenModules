@@ -70,7 +70,7 @@ class Model_Job
 		if( $interval ){
 			if( array_key_exists( $interval, $intervals ) )
 				return $intervals[$interval];
-			return array();
+			return [];
 		}
 		return $intervals;
 	}
@@ -140,7 +140,7 @@ class Model_Job
 			$jobObj				= new \stdClass();
 			$jobObj->id			= $job->getAttribute( 'id' );
 			$jobObj->source		= 'xml';
-			$jobObj->mode		= array( 'dev' );
+			$jobObj->mode		= ['dev'];
 			$jobObj->multiple	= $job->hasAttribute( 'multiple' ) ? TRUE : FALSE;
 			$jobObj->deprecated	= NULL;
 			foreach( $job->children() as $nodeName => $node ){

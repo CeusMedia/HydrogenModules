@@ -60,7 +60,7 @@ class Controller_Work_Time_Archive extends Controller
 			$conditions['status']	= $filterStatus;
 
 		$total		= $this->modelTimer->count( $conditions );
-		$timers		= $this->modelTimer->getAll( $conditions, array( 'modifiedAt' => 'ASC' ), array( $page * $limit, $limit ) );
+		$timers		= $this->modelTimer->getAll( $conditions, ['modifiedAt' => 'ASC'], [$page * $limit, $limit] );
 		$this->addData( 'timers', $timers );
 		$this->addData( 'limit', $limit );
 		$this->addData( 'page', $page );

@@ -22,19 +22,19 @@ use CeusMedia\HydrogenFramework\Environment;
 class Scheduler extends ConsoleApplication
 {
 	protected $intervals	= array(
-		'sec'	=> array(),
-		'min'	=> array(),
-		'min5'	=> array(),
-		'min10'	=> array(),
-		'min15'	=> array(),
-		'min30'	=> array(),
-		'hour'	=> array(),
-		'day'	=> array(),
-		'week'	=> array(),
-		'mon'	=> array(),
-		'mon3'	=> array(),
-		'mon6'	=> array(),
-		'year'	=> array(),
+		'sec'	=> [],
+		'min'	=> [],
+		'min5'	=> [],
+		'min10'	=> [],
+		'min15'	=> [],
+		'min30'	=> [],
+		'hour'	=> [],
+		'day'	=> [],
+		'week'	=> [],
+		'mon'	=> [],
+		'mon3'	=> [],
+		'mon6'	=> [],
+		'year'	=> [],
 	);
 	protected $jobber;
 	protected $jobs		= [];
@@ -82,7 +82,7 @@ class Scheduler extends ConsoleApplication
 	{
 		if( $mode === NULL )
 			$mode	= $this->moduleConfig->get( 'mode' );
-		$map	= self::readJobXmlFile( array( $mode ) );
+		$map	= self::readJobXmlFile( [$mode] );
 		$this->jobs	= $map->jobs;
 //		remark( 'Mode: '.$mode );
 //		print_m( array_keys( $this->jobs ) );
@@ -92,7 +92,7 @@ class Scheduler extends ConsoleApplication
 			if( $interval )
 				$this->intervals[$interval]	= $jobs;
 		$this->jobber	= new \Jobber( $this->env );
-		$this->jobber->loadJobs( array( $mode ) );
+		$this->jobber->loadJobs( [$mode] );
 	}
 
 	public function run( $loop = FALSE, $verbose = FALSE )

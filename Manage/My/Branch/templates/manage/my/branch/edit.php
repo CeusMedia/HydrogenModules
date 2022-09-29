@@ -33,7 +33,7 @@ if( $env->getModules()->has( 'Manage_Coupon' ) ){
 
 
 $w	= (object) $words['edit'];
-$text	= $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/manage/my/branch.edit.' );
+$text	= $view->populateTexts( ['top', 'info', 'bottom'], 'html/manage/my/branch.edit.' );
 
 $listImages	= [];
 foreach( $branch->images as $image ){

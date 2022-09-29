@@ -59,7 +59,7 @@ class View_Helper_Work_Issue_ChangeNote
 			else
 				$noteText	= nl2br( $this->note->note );
 		}
-		$note	= HtmlTag::create( 'tt', $noteText, array( 'class' => 'issue-change-list-note-content' ) );
+		$note	= HtmlTag::create( 'tt', $noteText, ['class' => 'issue-change-list-note-content'] );
 		return $note;
 	}
 

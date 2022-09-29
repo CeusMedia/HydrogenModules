@@ -80,7 +80,7 @@ class View_Helper_Datetime extends Abstraction
 			return $this->stringEmpty;
 		$format	= $format ? $format : $this->formatDate;
 		$date	= date( $format, $timestamp );
-		$attr	= array( 'class' => 'date' );
+		$attr	= ['class' => 'date'];
 		$date	= HtmlTag::create( 'span', $date, $attr );
 		return $date;
 	}
@@ -91,7 +91,7 @@ class View_Helper_Datetime extends Abstraction
 			return $this->stringEmpty;
 		$format	= $format ? $format : $this->formatDatetime;
 		$date	= date( $format, $timestamp );
-		$attr	= array( 'class' => 'datetime' );
+		$attr	= ['class' => 'datetime'];
 		$date	= HtmlTag::create( 'span', $date, $attr );
 		return $date;
 	}
@@ -121,7 +121,7 @@ class View_Helper_Datetime extends Abstraction
 			return $this->stringEmpty;
 		$format	= $format ? $format : $this->formatTime;
 		$time	= date( $format, $timestamp );
-		$attr	= array( 'class' => 'time' );
+		$attr	= ['class' => 'time'];
 		$time	= HtmlTag::create( 'span', $time, $attr );
 		return $time;
 	}

@@ -2,12 +2,12 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconFilter	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconFilter	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
+$iconReset	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
 
 $w			= (object) $words['filter'];
 
-$optStatus	= array( '' => '- alle -' );
+$optStatus	= ['' => '- alle -'];
 foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $value;
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
@@ -45,7 +45,7 @@ return '
 			'.HtmlTag::create( 'div', join( '&nbsp;', array(
 				$buttonFilter,
 				$buttonReset,
-			) ), array( 'class' => 'buttonbar' ) ).'
+			) ), ['class' => 'buttonbar'] ).'
 		</form>
 	</div>
 </div>';

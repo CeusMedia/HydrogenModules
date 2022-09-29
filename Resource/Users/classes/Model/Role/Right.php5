@@ -39,6 +39,6 @@ class Model_Role_Right extends Model
 
 	public static function minifyController( string $controller ): string
 	{
-		return str_replace( array( '-', '/' ), '_', strtolower( $controller ) );
+		return str_replace( ['-', '/'], '_', strtolower( $controller ) );
 	}
 }

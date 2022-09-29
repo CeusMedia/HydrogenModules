@@ -5,12 +5,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $modelForm	= new Model_Form( $env );
 $modelMail	= new Model_Form_Mail( $env );
 
-$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconMail	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-square' ) );
-$iconForm	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
+$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconMail	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-square'] );
+$iconForm	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
 
 $withinForms		= array_merge(
 	$modelForm->getAllByIndex( 'customerMailId', $mail->mailId ),
@@ -25,7 +25,7 @@ if( $withinForms ){
 		) );
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$listWithinForms	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
+	$listWithinForms	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
 
 $optRoleType	= array(

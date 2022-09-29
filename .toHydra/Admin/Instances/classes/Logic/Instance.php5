@@ -65,7 +65,7 @@ class Logic_Instance
 
 /*	public function showTodos()
 	{
-		$index	= new FS_File_RecursiveTodoLister( array( 'php', 'js' ) );
+		$index	= new FS_File_RecursiveTodoLister( ['php', 'js'] );
 		$index->scan( $this->env->getRemote()->path );
 		$this->addData( 'path', $this->env->getRemote()->path );
 		$this->addData( 'todos', $index->getList( TRUE ) );
@@ -115,19 +115,19 @@ class Logic_Instance
 			$modules	= $this->env->remote->getModules()->getAll();
 			ksort( $modules );
 
-			$nodeOptions	= array( 'shape' => 'oval', 'style' => 'filled, rounded', 'fontsize' => 10, 'fillcolor' => 'gray90', 'color' => "gray60" );
-			$edgeOptions1	= array( 'arrowsize' => 0.5, 'fontsize' => 8, 'fontcolor' => 'gray50', 'color' => 'gray40' );
-			$edgeOptions2	= array( 'arrowsize' => 0.5, 'fontsize' => 8, 'fontcolor' => 'gray75', 'color' => 'gray50', 'style' => 'dashed' );
+			$nodeOptions	= ['shape' => 'oval', 'style' => 'filled, rounded', 'fontsize' => 10, 'fillcolor' => 'gray90', 'color' => "gray60"];
+			$edgeOptions1	= ['arrowsize' => 0.5, 'fontsize' => 8, 'fontcolor' => 'gray50', 'color' => 'gray40'];
+			$edgeOptions2	= ['arrowsize' => 0.5, 'fontsize' => 8, 'fontcolor' => 'gray75', 'color' => 'gray50', 'style' => 'dashed'];
 
-			$graph		= new UI_Image_Graphviz_Graph( $instanceId, array( 'rankdir' => 'LR' ) );
+			$graph		= new UI_Image_Graphviz_Graph( $instanceId, ['rankdir' => 'LR'] );
 			foreach( $modules as $module )
-				$graph->addNode( $module->id, array( 'label' => $module->title ) + $nodeOptions );
+				$graph->addNode( $module->id, ['label' => $module->title] + $nodeOptions );
 			foreach( $modules as $module ){
 				foreach( $module->relations->needs as $related )
-					$graph->addEdge( $module->id, $related, array( 'label' => 'needs' ) + $edgeOptions1 );
+					$graph->addEdge( $module->id, $related, ['label' => 'needs'] + $edgeOptions1 );
 				foreach( $module->relations->supports as $related )
 					if( array_key_exists( $related, $modules ) )
-						$graph->addEdge( $module->id, $related, array( 'label' => 'supports' ) + $edgeOptions2 );
+						$graph->addEdge( $module->id, $related, ['label' => 'supports'] + $edgeOptions2 );
 			}
 			$renderer	= new UI_Image_Graphviz_Renderer( $graph );
 			$renderer->printGraph( "svg" );

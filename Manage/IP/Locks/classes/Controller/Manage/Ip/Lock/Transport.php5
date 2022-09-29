@@ -9,8 +9,8 @@ class Controller_Manage_Ip_Lock_Transport extends Controller
 
 	public function index()
 	{
-		$reasons	= $this->modelReason->getAll( array(), array( 'title' => 'ASC' ) );
-		$filters	= $this->modelFilter->getAll( array(), array( 'title' => 'ASC' ) );
+		$reasons	= $this->modelReason->getAll( [], ['title' => 'ASC'] );
+		$filters	= $this->modelFilter->getAll( [], ['title' => 'ASC'] );
 
 		foreach( $reasons as $reason )
 			$reason->filters	= $this->modelFilter->getAllByIndex(
@@ -56,9 +56,9 @@ class Controller_Manage_Ip_Lock_Transport extends Controller
 			$upload->setUpload( $request->get( 'upload' ) );
 			if( !$upload->checkSize( '1MB' ) )
 				throw new RuntimeException( 'Die Datei ist zu groß (max. 1MB)' );
-			if( !$upload->checkExtension( array( 'json' ) ) )
+			if( !$upload->checkExtension( ['json'] ) )
 				throw new RuntimeException( 'Die Datei muss eine JSON-Datei sein (endet auf <tt>.json</tt>)' );
-			if( !$upload->checkMimeType( array( 'application/json' ) ) )
+			if( !$upload->checkMimeType( ['application/json'] ) )
 				throw new RuntimeException( 'Datei muss Daten im JSON-Format beinhalten.' );
 			if( !$upload->getError() ){
 				$data	= json_decode( $upload->getContent(), FALSE );

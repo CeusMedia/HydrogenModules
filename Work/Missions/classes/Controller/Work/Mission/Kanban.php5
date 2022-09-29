@@ -69,7 +69,7 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 		try{
 			if( !$missionId )
 				throw new InvalidArgumentException( 'Mission ID is missing' );
-			if( !in_array( $status, array( 0, 1, 2, 3 ) ) )
+			if( !in_array( $status, [0, 1, 2, 3] ) )
 				throw new InvalidArgumentException( 'Invalid status given' );
 			$mission	= $this->model->get( $missionId );
 			if( !$mission )

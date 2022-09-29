@@ -25,7 +25,7 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 	protected function renderBadgeDays( $days, $class = NULL ){
 		$label	= HtmlTag::create( 'small', $this->formatDays( $days ) );
 		$class	= 'badge'.( $class ? ' badge-'.$class : '' );
-		return HtmlTag::create( 'span', $label, array( 'class' => $class ) );
+		return HtmlTag::create( 'span', $label, ['class' => $class] );
 	}
 
 	public function renderBadgeDaysOverdue( $mission ){
@@ -73,7 +73,7 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 		if( $missionEnd > $todayEnd )
 			return $this->renderBadgeDaysStill( $this->mission );
 
-		$iconToday	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-exclamation' ) );
+		$iconToday	= HtmlTag::create( 'i', '', ['class' => 'fa fa-exclamation'] );
 		return $this->renderBadgeDays( $iconToday, 'important' );
 	}
 

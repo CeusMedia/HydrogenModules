@@ -67,7 +67,7 @@ EOT;
 
 		print($query);
 		$dbc	= $this->env->getDatabase();
-		$result	= dbc->exec( $query );
+		$result	= $dbc->exec( $query );
 		var_export( $result );
 	}
 }

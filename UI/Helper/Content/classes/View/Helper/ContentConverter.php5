@@ -30,7 +30,7 @@ class View_Helper_ContentConverter
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$type		= $matches[2][$i];
 			$code		= trim( $matches[3][$i] );
-			$attributes	= array( 'class' => $type ? $type : 'code' );
+			$attributes	= ['class' => $type ? $type : 'code'];
 			$new		= HtmlTag::create( 'xmp', $code, $attributes );
 			$content	= str_replace( $matches[0][$i], $new, $content );
 		}
@@ -241,7 +241,7 @@ class View_Helper_ContentConverter
 		$key	= $class.'::'.$method;
 		if( array_key_exists( $key, self::$callbacks ) )
 			throw new RuntimeException( 'Converter with key "'.$key.'" is already registered' );
-		self::$callbacks[$key]	= array( $class, $method );
+		self::$callbacks[$key]	= [$class, $method];
 	}
 
 	public static function unregister( string $class, string $method ): bool

@@ -22,7 +22,7 @@ class Controller_Manage_Catalog_Author extends Controller
 			$pathImages	= $frontend->getPath( 'contents' ).$config->get( 'path.authors' );			//  get path to author images
 			$pathImages	= substr( $pathImages, strlen( $frontend->getPath() ) );					//  strip frontend base path
 			$list		= [];
-			$authors	= $logic->getAuthors( array(), array( 'lastname' => 'ASC', 'firstname' => 'ASC' ) );
+			$authors	= $logic->getAuthors( [], ['lastname' => 'ASC', 'firstname' => 'ASC'] );
 			foreach( $authors as $item ){
 				if( $item->image ){
 					$id		= str_pad( $item->authorId, 5, 0, STR_PAD_LEFT );
@@ -48,11 +48,11 @@ class Controller_Manage_Catalog_Author extends Controller
 		if( !( $authors = $cache->get( 'catalog.tinymce.links.authors' ) ) ){
 			$logic		= new Logic_Catalog( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
-			$authors	= $logic->getAuthors( array(), array( 'lastname' => 'ASC', 'firstname' => 'ASC' ) );
+			$authors	= $logic->getAuthors( [], ['lastname' => 'ASC', 'firstname' => 'ASC'] );
 			foreach( $authors as $nr => $item ){
 				$label		= ( $item->firstname ? $item->firstname.' ' : '' ).$item->lastname;
 				$url		= $logic->getAuthorUri( $item );
-				$authors[$nr] = (object) array( 'title' => $label, 'value' => $url );
+				$authors[$nr] = (object) ['title' => $label, 'value' => $url];
 			}
 			$cache->set( 'catalog.tinymce.links.authors', $authors );
 		}
@@ -166,7 +166,7 @@ class Controller_Manage_Catalog_Author extends Controller
 		/*  --  CHECK NEW IMAGE  --  */
 		$info		= pathinfo( $file['name'] );
 		$extension	= $info['extension'];
-		$extensions	= array( 'jpe', 'jpeg', 'jpg', 'png', 'gif' );
+		$extensions	= ['jpe', 'jpeg', 'jpg', 'png', 'gif'];
 		if( !in_array( strtolower( $extension ), $extensions ) ){
 			$this->messenger->noteError( $words->msgErrorExtensionInvalid );
 			return FALSE;

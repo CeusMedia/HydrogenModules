@@ -31,7 +31,7 @@ class Controller_Manage_Company extends Controller
 		if( $this->request->has( 'save' ) ){
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->msgNoTitle );
-			else if( $this->modelCompany->getAll( array( 'title' => $data['title'] ) ) )
+			else if( $this->modelCompany->getAll( ['title' => $data['title']] ) )
 				$this->messenger->noteError( $words->msgTitleExisting, $data['title'] );
 			if( empty( $data['city'] ) )
 				$this->messenger->noteError( $words->msgNoCity );
@@ -75,7 +75,7 @@ class Controller_Manage_Company extends Controller
 		if( $this->request->has( 'save' ) ){
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->msgNoTitle );
-			else if( $this->modelCompany->getAll( array( 'title' => $data['title'], 'companyId' => '!= '.$companyId ) ) )
+			else if( $this->modelCompany->getAll( ['title' => $data['title'], 'companyId' => '!= '.$companyId] ) )
 				$this->messenger->noteError( $words->msgTitleExisting, $data['title'] );
 			if( empty( $data['city'] ) )
 				$this->messenger->noteError( $words->msgNoCity );
@@ -96,7 +96,7 @@ class Controller_Manage_Company extends Controller
 		$company		= $this->modelCompany->get( $companyId );
 		$branches		= [];
 		$modelBranch	= new Model_Branch( $this->env );
-		$branches		= $modelBranch->getAllByIndex( 'companyId', $companyId, array( 'title' => 'ASC' ) );
+		$branches		= $modelBranch->getAllByIndex( 'companyId', $companyId, ['title' => 'ASC'] );
 		$company->branches	= $branches;
 		$users		= [];
 		if( in_array( 'companyId', $modelUser->getColumns() ) )

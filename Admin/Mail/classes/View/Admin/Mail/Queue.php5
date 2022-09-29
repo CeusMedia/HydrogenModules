@@ -33,9 +33,9 @@ class View_Admin_Mail_Queue extends View
 			}
 		}
 
-		$tableHeads		= array( '' );
+		$tableHeads		= [''];
 		foreach( $ranges as $rangeLabel )
-			$tableHeads[]	= HtmlTag::create( 'small', $rangeLabel, array( 'class' => 'pull-right' ) );
+			$tableHeads[]	= HtmlTag::create( 'small', $rangeLabel, ['class' => 'pull-right'] );
 
 		$lengthKeys			= array_keys( $ranges );
 		$lastRangeLength	= @array_pop( $lengthKeys );
@@ -60,7 +60,7 @@ class View_Admin_Mail_Queue extends View
 					$diff		= $change > 0 ? '+'.$change : $change;
 					$label		.= '&nbsp;<small class="muted">'.$diff.'</small>';
 				}
-				$row[]	= HtmlTag::create( 'td', $label, array( 'style' => 'text-align: right' ) );
+				$row[]	= HtmlTag::create( 'td', $label, ['style' => 'text-align: right'] );
 			}
 			$row[]	= HtmlTag::create( 'th', $statusLabel );
 			$rows[]	= HtmlTag::create( 'tr', array_reverse( $row ) );
@@ -75,8 +75,8 @@ class View_Admin_Mail_Queue extends View
 		$table1	= HtmlTag::create( 'table', array(
 			HtmlElements::ColumnGroup( '20%', '80%' ),
 			HtmlTag::create( 'tbody', HtmlTag::create( 'tr', array(
-				HtmlTag::create( 'td', '<span style="font-size: 3em">'.$model->count( array( 'status' => 0 ) ).'</span>', array( 'style' => 'text-align: right; vertical-align: bottom' ) ),
-				HtmlTag::create( 'td', '<span>Mails in der<br/>Warteschlange</span>', array( 'style' => 'vertical-align: bottom' ) ),
+				HtmlTag::create( 'td', '<span style="font-size: 3em">'.$model->count( ['status' => 0] ).'</span>', ['style' => 'text-align: right; vertical-align: bottom'] ),
+				HtmlTag::create( 'td', '<span>Mails in der<br/>Warteschlange</span>', ['style' => 'vertical-align: bottom'] ),
 			) ) ),
 		), array(
 			'class'		=> 'table table-fixed',
@@ -124,7 +124,7 @@ class View_Admin_Mail_Queue extends View
 			$original	= $value;
 			$value	= preg_replace( '/^Mail_/', '', $value );
 			$value	= preg_replace( '/_/', ':', $value );
-			$value	= HtmlTag::create( 'abbr', $value, array( 'title' => $original ) );
+			$value	= HtmlTag::create( 'abbr', $value, ['title' => $original] );
 		}
 		else if( preg_match( '/At$/', $key ) ){
 			if( !( (int) $value ) )
@@ -139,8 +139,8 @@ class View_Admin_Mail_Queue extends View
 				return '';
 		}
 		else if( preg_match( '/Address/', $key ) && strlen( $value ) ){
-			$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-envelope' ) );
-			$link	= HtmlTag::create( 'a', $value, array( 'href' => 'mailto:'.$value ) );
+			$icon	= HtmlTag::create( 'i', '', ['class' => 'icon-envelope'] );
+			$link	= HtmlTag::create( 'a', $value, ['href' => 'mailto:'.$value] );
 			$value	= $icon.'&nbsp;'.$link;
 		}
 		else{

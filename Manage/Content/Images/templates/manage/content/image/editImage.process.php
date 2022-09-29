@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconProcess  = HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconProcess  = HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $optProcess = array(
   'turn'  => 'drehen',

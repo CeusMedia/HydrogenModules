@@ -9,7 +9,7 @@ class Hook_Info_File extends Hook
 	{
 		$model		= new Model_Download_File( $env );
 		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
-		$files		= $model->getAll( $conditions, array( 'uploadedAt' => 'DESC' ) );
+		$files		= $model->getAll( $conditions, ['uploadedAt' => 'DESC'] );
 		foreach( $files as $file ){
 			$context->add( (object) array_merge( View_Helper_NewsList::$defaultAttributes, array(
 				'module'	=> 'Info_Files',
@@ -28,7 +28,7 @@ class Hook_Info_File extends Hook
 	{
 		$model		= new Model_Download_File( $env );
 		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
-		$files		= $model->getAll( $conditions, array( 'uploadedAt' => 'DESC' ) );
+		$files		= $model->getAll( $conditions, ['uploadedAt' => 'DESC'] );
 		foreach( $files as $file ){
 			$context->add( (object) array_merge( View_Helper_NewsList::$defaultAttributes, array(
 				'module'	=> 'Info_Files',

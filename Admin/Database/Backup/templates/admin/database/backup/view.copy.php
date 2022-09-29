@@ -9,8 +9,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var object $backup */
 
-$iconRestore	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cog' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconRestore	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cog'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $buttonCreateCopy	= HtmlTag::create( 'a', $iconRestore.' Kopie installieren', array(
 	'href'	=> './admin/database/backup/copy/create/'.$backup->id,

@@ -101,7 +101,7 @@ class Logic_Shop_Payment_Stripe extends Logic
 	{
 		$wallets		= $this->logicStripe->getUserWalletsByCurrency( $stripeUserId, $orderCurrency );
 		if( !$wallets )
-			$wallets	= array( $this->logicStripe->createUserWallet( $stripeUserId, $orderCurrency ) );
+			$wallets	= [$this->logicStripe->createUserWallet( $stripeUserId, $orderCurrency )];
 		$wallet	= $wallets[0];
 	}
 }

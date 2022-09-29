@@ -44,16 +44,16 @@ class View_Helper_TinyMce_FileBrowser
 		}
 		$messages		= $buffer->get( TRUE );
 		$html			= HtmlTag::create( 'div', array(
-			HtmlTag::create( 'div', $listTopics, array( 'id' => 'tinymce-file-browser-sidebar' ) ),
-			HtmlTag::create( 'div', $topbar, array( 'id' => 'tinymce-file-browser-topbar' ) ),
-			HtmlTag::create( 'div', $messages.$content, array( 'id' => 'tinymce-file-browser-content' ) ),
-		), array( 'id' => 'container-tinymce-file-browser' ) );
+			HtmlTag::create( 'div', $listTopics, ['id' => 'tinymce-file-browser-sidebar'] ),
+			HtmlTag::create( 'div', $topbar, ['id' => 'tinymce-file-browser-topbar'] ),
+			HtmlTag::create( 'div', $messages.$content, ['id' => 'tinymce-file-browser-content'] ),
+		), ['id' => 'container-tinymce-file-browser'] );
 
 		$page	= $this->env->getPage();
 		$page->js->addScriptOnReady( 'tinymce.FileBrowser.initBrowser();' );
 //		$page->js->addScriptOnReady( 'jQuery("#tinymce-file-browser-content").height("100%").css("overflow-y", "auto");' );
 		$page->addBody( $html );
-		print( $page->build( array( 'id' => 'tinymce-file-browser' ) ) );
+		print( $page->build( ['id' => 'tinymce-file-browser'] ) );
 		exit;
 	}
 
@@ -143,10 +143,10 @@ class View_Helper_TinyMce_FileBrowser
 		if( is_int( $count ) && $count > 0 ){
 			$facts[]	= sprintf( $count > 1 ? '%d Einträge' : '%d Eintrag', $count );
 		}
-		$facts	= HtmlTag::create( 'small', join( '&nbsp;|&nbsp;', $facts ), array( 'class' => 'muted' ) );
+		$facts	= HtmlTag::create( 'small', join( '&nbsp;|&nbsp;', $facts ), ['class' => 'muted'] );
 
 		$path		= base64_encode( $path );
-		$image	= HtmlTag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
+		$image	= HtmlTag::create( 'i', '', ['class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon] );
 		$label	= HtmlTag::create( 'div', $label.'<br/>'.$facts, array(
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
 		) );
@@ -171,8 +171,8 @@ class View_Helper_TinyMce_FileBrowser
 		$labelParts	= explode( "/", $filePath );
 		$label	= $labelParts[count( $labelParts ) - 1];
 //		if( is_string( $size ) )
-//			$size	= HtmlTag::create( 'small', '('.$size.')', array( 'class' => 'muted' ) );
-//		$image	= HtmlTag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
+//			$size	= HtmlTag::create( 'small', '('.$size.')', ['class' => 'muted'] );
+//		$image	= HtmlTag::create( 'i', '', ['class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon] );
 
 		$remoteFilePath = Logic_Frontend::getInstance( $this->env )->getPath().$path;
 		if( preg_match( '/^file\//', $path ) ){
@@ -192,15 +192,15 @@ class View_Helper_TinyMce_FileBrowser
 				sprintf( '<dt>Qualität</dt><dd class="fact-quality">%s %%</dd>', $image->getQuality() ),
 				sprintf( '<dt>Typ</dt><dd class="fact-mime">%s</dd>', $image->getMimeType() ),
 				sprintf( '<dt>Alter</dt><dd>'.$this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ).'</dd>' ),
-			), array( 'class' => 'dl-inline' ) );
+			), ['class' => 'dl-inline'] );
 		}
 		catch( Exception $e ){
 			$facts		= HtmlTag::create( 'dl', array(
 				sprintf( '<dt>Größe</dt><dd>%s</dd>', Alg_UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
 				sprintf( '<dt>Alter</dt><dd>'.$this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ).'</dd>' ),
-			), array( 'class' => 'dl-inline' ) );
+			), ['class' => 'dl-inline'] );
 		}
-		$facts		= HtmlTag::create( 'small', $facts, array( 'class' => 'muted' ) );
+		$facts		= HtmlTag::create( 'small', $facts, ['class' => 'muted'] );
 
 		try{
 			$data		= $this->thumbnailer->get( $remoteFilePath, 128, 128 );
@@ -243,7 +243,7 @@ class View_Helper_TinyMce_FileBrowser
 			$parts		= explode( '/', $this->path );
 			$pathBack	= implode( '/', array_slice( $parts, 0, -1 ) );
 			$title		= 'zurück';
-			$desc		= HtmlTag::create( 'small', 'zum Überordner', array( 'class' => 'muted' ) );
+			$desc		= HtmlTag::create( 'small', 'zum Überordner', ['class' => 'muted'] );
 			$list[]		= $this->renderFolderItem( $pathBack, $title.'<br/>'.$desc, NULL, 'arrow-left' );
 		}
 
@@ -261,10 +261,10 @@ class View_Helper_TinyMce_FileBrowser
 //				$this->env->getMessenger()->noteFailure( $e->getMessage() );
 			}
 		}
-		$listItems		= HtmlTag::create( 'ul', $list, array( 'class' => $this->cssClassPrefix.' unstyled' ) );
+		$listItems		= HtmlTag::create( 'ul', $list, ['class' => $this->cssClassPrefix.' unstyled'] );
 		$listItems		= HtmlTag::create( 'div', array(
 //			HtmlTag::create( 'h4', '-' ),//$pathLabel ),
-			HtmlTag::create( 'div', $listItems, array( 'id' => 'container-list-items' ) )
+			HtmlTag::create( 'div', $listItems, ['id' => 'container-list-items'] )
 		) );
 		return $listItems;
 	}
@@ -276,11 +276,11 @@ class View_Helper_TinyMce_FileBrowser
 			$fullpath	= $this->baseUrl.$fullpath;
 		$labelParts	= explode( "/", $filePath );
 		$label		= $labelParts[count( $labelParts ) - 1];
-		$image	= HtmlTag::create( 'i', '', array( 'class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon ) );
+		$image	= HtmlTag::create( 'i', '', ['class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon] );
 		$url	= preg_replace( '/^\.\//', '', $path );
-		$icon	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-external-link' ) );
-//		$icon	= HtmlTag::create( 'a', $icon, array( 'href' => $fullpath, 'target' => '_blank' ) );
-		$url	= HtmlTag::create( 'small', $url.'&nbsp;'.$icon, array( 'class' => 'muted' ) );
+		$icon	= HtmlTag::create( 'i', '', ['class' => 'fa fa-external-link'] );
+//		$icon	= HtmlTag::create( 'a', $icon, ['href' => $fullpath, 'target' => '_blank'] );
+		$url	= HtmlTag::create( 'small', $url.'&nbsp;'.$icon, ['class' => 'muted'] );
 		$label	= HtmlTag::create( 'div', $label.'<br/>'.$url, array(
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
 		) );
@@ -331,10 +331,10 @@ class View_Helper_TinyMce_FileBrowser
 			}
 		}
 
-		$listItems		= HtmlTag::create( 'ul', $list, array( 'class' => $this->cssClassPrefix.' unstyled' ) );
+		$listItems		= HtmlTag::create( 'ul', $list, ['class' => $this->cssClassPrefix.' unstyled'] );
 		$listItems		= HtmlTag::create( 'div', array(
 //			HtmlTag::create( 'h4', '-' ),//$pathLabel ),
-			HtmlTag::create( 'div', $listItems, array( 'id' => 'container-list-items' ) )
+			HtmlTag::create( 'div', $listItems, ['id' => 'container-list-items'] )
 		) );
 
 		return $listItems;
@@ -343,8 +343,8 @@ class View_Helper_TinyMce_FileBrowser
 	protected function renderTopBar()
 	{
 		$mode		= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
-		$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-		$iconGrid	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-th' ) );
+		$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+		$iconGrid	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
 
 		$parts		= explode( '/', $this->path );
 		$pathLabel	= [];
@@ -365,7 +365,7 @@ class View_Helper_TinyMce_FileBrowser
 		$modeLabel		= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'Bild-Quelle' : 'Link-Quelle';
 		$mode			= '<b><small>Modus:</small></b> '.$modeLabel;
 
-		return HtmlTag::create( 'div', $mode.'&nbsp;&nbsp;|&nbsp;&nbsp;'.$position, array( 'class' => 'position autocut' ) ).
+		return HtmlTag::create( 'div', $mode.'&nbsp;&nbsp;|&nbsp;&nbsp;'.$position, ['class' => 'position autocut'] ).
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'a', $iconList.'&nbsp;Liste', array(
@@ -376,8 +376,8 @@ class View_Helper_TinyMce_FileBrowser
 						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/'.self::DISPLAY_MODE_GRID,
 						'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_GRID ? 'disabled' : NULL ),
 					) ),
-				), array( 'class' => 'btn-group' ) )
-			), array( 'class' => 'buttons' ) );
+				), ['class' => 'btn-group'] )
+			), ['class' => 'buttons'] );
 	}
 
 	protected function renderTopicList()
@@ -385,7 +385,7 @@ class View_Helper_TinyMce_FileBrowser
 		$list	= [];
 		$mode	= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
 		foreach( $this->topics as $topicId => $topic ){
-			$count	= HtmlTag::create( 'small', '('.count( $topic->menu ).')', array( 'class' => 'muted' ) );
+			$count	= HtmlTag::create( 'small', '('.count( $topic->menu ).')', ['class' => 'muted'] );
 			$title	= rtrim( trim( $topic->title ), ":" );
 			$link	= HtmlTag::create( 'a', $title.'&nbsp;'.$count, array(
 				'href'	=> './manage/tinyMce/setTopic/'.$mode.'/'.$topicId,

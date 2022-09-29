@@ -39,24 +39,24 @@ if( count( $attachments ) ){
 			'title'	=> $w->buttonUnregister
 		) );
 
-		$language	= HtmlTag::create( 'span', $attachment->language, array( 'class' => 'label' ) );
+		$language	= HtmlTag::create( 'span', $attachment->language, ['class' => 'label'] );
 		$mimeType	= HtmlTag::create( 'span', $w->labelMimeType.' '.$attachment->mimeType );
 		$fileSize	= HtmlTag::create( 'span', $w->labelFileSize.' '.UnitFormater::formatBytes( filesize( $path.$attachment->filename ) ) );
-		$info		= HtmlTag::create( 'small', $fileSize.' | '.$mimeType, array( 'class' => 'muted' ) );
+		$info		= HtmlTag::create( 'small', $fileSize.' | '.$mimeType, ['class' => 'muted'] );
 		$label		= $language.' '.HtmlTag::create( 'big', $attachment->filename ).'<br/>'.$info;
 		$status		= (object) array (
 			'label'		=> $words['states'][(int) $attachment->status],
 			'icon'		=> $attachment->status > 0 ? $iconEnable : $iconDisable,
 			'class'		=> $attachment->status > 0 ? 'label label-success' : 'label label-warning',
 		);
-		$status		= HtmlTag::create( 'span', $status->icon.' '.$status->label,  array( 'class' => $status->class ) );
+		$status		= HtmlTag::create( 'span', $status->icon.' '.$status->label,  ['class' => $status->class] );
 		$date		= date( "d.m.Y", $attachment->createdAt );
 		$time		= date( "H:i", $attachment->createdAt );
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $label ),
 			HtmlTag::create( 'td', $attachment->className.'<br/>'.$status ),
 			HtmlTag::create( 'td', $date.' <small class="muted">'.$time.'</small>' ),
-			HtmlTag::create( 'td', HtmlTag::create( 'div', array( $buttonStatus, $buttonRemove ), array( 'class' => 'btn-group' )) ),
+			HtmlTag::create( 'td', HtmlTag::create( 'div', [$buttonStatus, $buttonRemove], ['class' => 'btn-group']) ),
 		) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "", "", "140px", "80px" );
@@ -67,7 +67,7 @@ if( count( $attachments ) ){
 		$w->headActions
 	) ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
-	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 
 $pagination	= new PageControl( './admin/mail/attachment', $page, ceil( $total / $limit ) );

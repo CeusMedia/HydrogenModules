@@ -6,13 +6,13 @@ class View_Helper_Panel_Mangopay_BankAccounts extends View_Helper_Panel_Mangopay
 	public function render(){
 		$list	= [];
 		foreach( $this->data as $bankAccount ){
-			$link	= HtmlTag::create( 'a', $bankAccount->Id, array( 'href' => './manage/my/mangopay/bank/view/'.$bankAccount->Id ) );
+			$link	= HtmlTag::create( 'a', $bankAccount->Id, ['href' => './manage/my/mangopay/bank/view/'.$bankAccount->Id] );
 			$list[]	= HtmlTag::create( 'tr', array(
 				HtmlTag::create( 'td', $link ),
 			) );
 		}
 		$tbody	= HtmlTag::create( 'tbody', $list );
-		$table	= HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-striped' ) );
+		$table	= HtmlTag::create( 'table', $tbody, ['class' => 'table table-striped'] );
 		return '
 		<div class="content-panel">
 			<h3>Bank Accounts</h3>

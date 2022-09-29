@@ -27,7 +27,7 @@ class Controller_Manage_My_Provision_License_Key extends Controller{
 	}
 
 	public function filter( $reset = NULL ){
-		$filters	= array( 'productId' );
+		$filters	= ['productId'];
 		if( $reset ){
 			foreach( $filters as $filter )
 				$this->session->remove( $this->filterPrefix.$filter );

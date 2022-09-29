@@ -64,7 +64,7 @@ class Controller_Work_Mail_Group_Server extends Controller
 	public function index()
 	{
 		$indices	= [];
-		$orders		= array( 'title' => 'ASC' );
+		$orders		= ['title' => 'ASC'];
 		$limits		= [];
 		$servers	= $this->modelServer->getAll( $indices, $orders,$limits );
 		$this->addData( 'servers', $servers );

@@ -47,7 +47,7 @@ class Controller_Work_Newsletter extends Controller
 			) );
 			if( !strlen( $data['subject'] ) )
 				$data['subject']	= $data['title'];
-			if( $this->logic->getNewsletters( array( 'title' => $data['title'] ) ) ){
+			if( $this->logic->getNewsletters( ['title' => $data['title']] ) ){
 				$this->messenger->noteError( $words->msgErrorTitleExists );
 			}
 			else{
@@ -58,13 +58,13 @@ class Controller_Work_Newsletter extends Controller
 				$this->restart( 'edit/'.$newsletterId, TRUE );
 			}
 		}
-		$templates		= $this->logic->getTemplates( array( 'status' => '> 0' ), array( 'title' => 'ASC' ) );
+		$templates		= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
 		if( !$templates ){
 			$this->messenger->noteNotice( 'Es ist noch keine verwendbare Vorlage vorhanden. Weiterleitung zu den Vorlagen.' );
 			$this->restart( 'work/newsletter/template' );
 		}
 
-		$newsletters	= $this->logic->getNewsletters( array(), array( 'title' => 'ASC' ) );
+		$newsletters	= $this->logic->getNewsletters( [], ['title' => 'ASC'] );
 		$newsletter		= (object) array(
 			'newsletterTemplateId'	=> (int) $this->request->get( 'newsletterTemplateId' ),
 			'newsletterId'			=> (int) $this->request->get( 'newsletterId' ),
@@ -124,9 +124,9 @@ class Controller_Work_Newsletter extends Controller
 		}
 		$newsletter		= $this->logic->getNewsletter( $newsletterId );
 		$template		= $this->logic->getTemplate( $newsletter->newsletterTemplateId );
-		$templates		= $this->logic->getTemplates( array( 'status' => '> 0' ), array( 'title' => 'ASC' ) );
+		$templates		= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
 		$groups			= [];
-		foreach( $this->logic->getGroups( array( 'status' => 1 ), array( 'title' => 'ASC' ) ) as $group ){
+		foreach( $this->logic->getGroups( ['status' => 1], ['title' => 'ASC'] ) as $group ){
 			$group->readers	= $this->logic->getGroupReaders( $group->newsletterGroupId );
 			$groups[$group->newsletterGroupId]	= $group;
 		}
@@ -245,8 +245,8 @@ class Controller_Work_Newsletter extends Controller
 
 	public function index( $page = 0 )
 	{
-		$templates		= $this->logic->getTemplates( array( 'status' => '> 0' ), array( 'title' => 'ASC' ) );
-		$newsletters	= $this->logic->getNewsletters( array(), array( 'title' => 'ASC' ) );
+		$templates		= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
+		$newsletters	= $this->logic->getNewsletters( [], ['title' => 'ASC'] );
 		$this->addData( 'addTemplates', $templates );
 		$this->addData( 'addNewsletters', $newsletters );
 
@@ -261,8 +261,8 @@ class Controller_Work_Newsletter extends Controller
 			$conditions['status']	= $filterStatus;
 
 
-		$orders		= array( 'newsletterId' => 'DESC' );
-		$limits		= array( $page * $filterLimit, $filterLimit );
+		$orders		= ['newsletterId' => 'DESC'];
+		$limits		= [$page * $filterLimit, $filterLimit];
 		$this->addData( 'newsletters', $this->logic->getNewsletters( $conditions, $orders, $limits ) );
 		$this->addData( 'page', $page );
 		$this->addData( 'pages', ceil( $this->logic->countNewsletters( $conditions ) / $filterLimit ) );
@@ -363,7 +363,7 @@ class Controller_Work_Newsletter extends Controller
 			$this->messenger->noteError( $words->msgErrorInvalidId, $newsletterId );
 			$this->restart( './work/newsletter' );
 		}
-		if( !in_array( (int) $status, array( -1, 0, 1, 2 ) ) ){
+		if( !in_array( (int) $status, [-1, 0, 1, 2] ) ){
 			$this->messenger->noteError( 'Invalid status.', $newsletterId );
 			$this->restart( './work/newsletter' );
 		}
@@ -440,7 +440,7 @@ class Controller_Work_Newsletter extends Controller
 			$this->limiter	= Logic_Limiter::getInstance( $this->env );
 		$this->addData( 'limiter', $this->limiter );
 
-		if( !count( $this->logic->getTemplates( array( 'status' => '> 0' ) ) ) ){
+		if( !count( $this->logic->getTemplates( ['status' => '> 0'] ) ) ){
 			$this->messenger->noteNotice( '<b>Keine verwendbare Vorlage vorhanden.</b><br/>Bitte zuerst eine Vorlage erstellen und auf "bereit" stellen!' );
 			$this->restart( 'template', TRUE );
 		}

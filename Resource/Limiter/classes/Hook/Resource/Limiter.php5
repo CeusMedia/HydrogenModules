@@ -33,6 +33,6 @@ class Hook_Resource_Limiter extends Hook
 		if( !$config->get( 'active' ) )
 			return;
 		$logic		= Logic_Limiter::getInstance( $env );
-		$env->getCaptain()->callHook( 'Limiter', 'registerLimits', $logic, array() );
+		$env->getCaptain()->callHook( 'Limiter', 'registerLimits', $logic, [] );
 	}
 }

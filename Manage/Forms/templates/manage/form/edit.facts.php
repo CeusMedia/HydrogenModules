@@ -4,12 +4,12 @@ use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconList	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconPrev	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconNext	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconPrev	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconNext	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
 
 $statuses	= array(
 	-1		=> 'deaktiviert',
@@ -24,12 +24,12 @@ $types		= array(
 );
 $optType	= HtmlElements::Options( $types, $form->type );
 
-$optMailCustomer	= array( '' => '- keine -' );
+$optMailCustomer	= ['' => '- keine -'];
 foreach( $mailsCustomer as $item )
 	$optMailCustomer[$item->mailId]	= $item->title;
 $optMailCustomer	= HtmlElements::Options( $optMailCustomer, $form->customerMailId );
 
-$optMailManager		= array( '' => '- keine -' );
+$optMailManager		= ['' => '- keine -'];
 foreach( $mailsManager as $item )
 	$optMailManager[$item->mailId]	= $item->title;
 $optMailManager		= HtmlElements::Options( $optMailManager, $form->managerMailId );

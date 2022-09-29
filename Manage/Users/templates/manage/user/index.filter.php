@@ -6,7 +6,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $w			= (object) $words['indexFilter'];
 $session	= $env->getSession();
 
-$optRole	= array( HtmlElements::Option( '', '' ) );
+$optRole	= [HtmlElements::Option( '', '' )];
 foreach( array_reverse( $roles ) as $role ){
 	$selected	= $role->roleId == $session->get( 'filter-user-roleId' );
 	$class		= 'role role'.$role->roleId;
@@ -15,7 +15,7 @@ foreach( array_reverse( $roles ) as $role ){
 $optRole	= join( $optRole );
 
 krsort( $states );
-$optStatus	= array( HtmlElements::Option( '', '' ) );
+$optStatus	= [HtmlElements::Option( '', '' )];
 foreach( $states as $status => $label ){
 	$selected	= (string) $status === (string) $session->get( 'filter-user-status' );
 	$class		= 'user-status status'.$status;
@@ -23,12 +23,12 @@ foreach( $states as $status => $label ){
 }
 $optStatus	= join( $optStatus );
 
-$optOrder	= array( '' => '-' );
+$optOrder	= ['' => '-'];
 foreach( $words['indexFilterOrders'] as $column => $label )
 	$optOrder[$column]	= $label;
 $optOrder['_selected']	= $session->get( 'filter-user-order' );
 
-$optDirection	= array( HtmlElements::Option( '', '' ) );
+$optDirection	= [HtmlElements::Option( '', '' )];
 foreach( $words['indexFilterDirections'] as $key => $label ){
 	$selected	= $key == $session->get( 'filter-user-direction' );
 	$class		= 'direction direction'.$key;
@@ -43,11 +43,11 @@ $script	= '
 ';
 $env->page->js->addScript( $script );
 
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'icon-zoom-in icon-white' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'icon-zoom-out icon-white' ) );
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'icon-zoom-in icon-white'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'icon-zoom-out icon-white'] );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconFilter		= HtmlTag::create( 'b', '', array( 'class' => 'fa far fa-fw fa-search' ) );
-	$iconReset		= HtmlTag::create( 'b', '', array( 'class' => 'fa far fa-fw fa-search-minus' ) );
+	$iconFilter		= HtmlTag::create( 'b', '', ['class' => 'fa far fa-fw fa-search'] );
+	$iconReset		= HtmlTag::create( 'b', '', ['class' => 'fa far fa-fw fa-search-minus'] );
 }
 
 return '
@@ -102,7 +102,7 @@ return '
 						'title'		=> $w->buttonReset,
 						'class'		=> 'btn not-btn-sm bs2-btn-inverse bs3-btn-default bs4-btn-dark'
 					) ),
-				), array( 'class' => 'btn-group' ) ).'
+				), ['class' => 'btn-group'] ).'
 			</div>
 		</form>
 	</div>

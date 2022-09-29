@@ -10,9 +10,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var object $data */
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-arrow-left" ) );
-$iconList		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-list" ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-check" ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] );
+$iconList		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-list"] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] );
 
 $optStatus	= array(
 	0		=> 'inaktiv',

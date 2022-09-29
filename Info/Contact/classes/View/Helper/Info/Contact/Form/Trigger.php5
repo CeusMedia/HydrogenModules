@@ -15,11 +15,11 @@ class View_Helper_Info_Contact_Form_Trigger
 			throw new RuntimeException( 'No modal ID set' );
 		$trigger	= new \CeusMedia\Bootstrap\Modal\Trigger();
 		$trigger->setModalId( $this->modalId );
-		$trigger->setAttributes( array( 'class' => $this->class ) );
+		$trigger->setAttributes( ['class' => $this->class] );
 
 		$label		= $this->label;
 		if( $this->icon ){
-			$icon	= $this->icon ? HtmlTag::create( 'i', '', array( 'class' => $this->icon ) ) : '';
+			$icon	= $this->icon ? HtmlTag::create( 'i', '', ['class' => $this->icon] ) : '';
 			$label	= $icon.'&nbsp;'.$this->label;
 			if( $this->iconPosition === 'right' )
 				$label	= $this->label.'&nbsp;'.$icon;

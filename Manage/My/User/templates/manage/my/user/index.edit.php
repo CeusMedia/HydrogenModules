@@ -123,7 +123,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				)
 			),
 			HTML::Buttons( array(
-				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
+				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, ['class' => 'not-muted'] ),
 				HTML::DivClass( 'row-fluid',
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
@@ -142,7 +142,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					) )
 				)
 			) )
-		), array( 'autocomplete' => 'off' ) )
+		), ['autocomplete' => 'off'] )
 	) )
 ) ).'
 <script>

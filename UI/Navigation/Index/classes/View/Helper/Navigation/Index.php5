@@ -46,7 +46,7 @@ class View_Helper_Navigation_Index
 			else
 				$list[]		= $this->renderItem( $page );
 		}
-		return HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled nav-index' ) );
+		return HtmlTag::create( 'ul', $list, ['class' => 'unstyled nav-index'] );
 	}
 
 	/**
@@ -91,12 +91,12 @@ class View_Helper_Navigation_Index
 //		if( $page->type !== '...' )
 //			return;
 		$href		= $page->path == "index" ? './' : './'.$page->link;
-		$icon		= $page->icon ? HtmlTag::create( 'i', '', array( 'class' => $page->icon ) ).'&nbsp;' : '';
+		$icon		= $page->icon ? HtmlTag::create( 'i', '', ['class' => $page->icon] ).'&nbsp;' : '';
 		$link		= HtmlTag::create( 'a', $icon.$page->label, array(
 			'href'	=> $href,
 			'class'	=> 'btn btn-large btn-block nav-index-topic-item-link'
 		) );
-		return HtmlTag::create( 'li', $link, array( 'class' => 'nav-index-topic-item' ) );
+		return HtmlTag::create( 'li', $link, ['class' => 'nav-index-topic-item'] );
 	}
 
 	/**
@@ -110,8 +110,8 @@ class View_Helper_Navigation_Index
 	{
 //		if( $page->type !== 'menu' )
 //			return;
-		$icon		= $page->icon ? HtmlTag::create( 'i', '', array( 'class' => $page->icon ) ).'&nbsp;' : '';
-		$heading	= HtmlTag::create( 'div', $icon.$page->label, array( 'class' => 'nav-index-topic-heading' ) );
-		return HtmlTag::create( 'li', $heading, array( 'class' => 'nav-index-topic' ) );
+		$icon		= $page->icon ? HtmlTag::create( 'i', '', ['class' => $page->icon] ).'&nbsp;' : '';
+		$heading	= HtmlTag::create( 'div', $icon.$page->label, ['class' => 'nav-index-topic-heading'] );
+		return HtmlTag::create( 'li', $heading, ['class' => 'nav-index-topic'] );
 	}
 }

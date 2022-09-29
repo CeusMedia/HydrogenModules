@@ -67,7 +67,7 @@ class Controller_Info_Newsletter extends Controller
 		else if( $key !== substr( md5( 'InfoNewsletterSalt:'.$readerId ), 10, 10 ) )
 			$this->messenger->noteError( $words->msgErrorKeyInvalid );
 		else{
-			$this->logic->editReader( $readerId, array( 'status' => 1 ) );
+			$this->logic->editReader( $readerId, ['status' => 1] );
 			$this->messenger->noteSuccess( $words->msgSuccess, $reader->email );
 		}
 		$this->restart( NULL, TRUE );
@@ -92,7 +92,7 @@ class Controller_Info_Newsletter extends Controller
 
 		}
 		$this->addData( 'reader', $reader );
-		$this->addData( 'groups', $this->logic->getGroups( array( 'type' => array( 0, 2 ), 'status' => '> 0' ) ) );
+		$this->addData( 'groups', $this->logic->getGroups( ['type' => array[0, 2], 'status' => '> 0'] ) );
 		$this->addData( 'subscriptions', $this->logic->getGroupsOfReader( $readerId ) );
 		$this->addData( 'reader', $this->logic->getReader( $readerId ) );
 		$this->addData( 'letters', $this->logic->getLettersOfReader( $readerId ) );
@@ -109,7 +109,7 @@ class Controller_Info_Newsletter extends Controller
 			$language			= $this->env->getLanguage()->getLanguage();
 			$readersFoundByMail	= $this->logic->getReaders( array(
 				'email'		=> trim( $this->request->get( 'email' ) ),
-				'status'	=> array( 0, 1 ),
+				'status'	=> [0, 1],
 			) );
 			if( !strlen( trim( $this->request->get( 'email' ) ) ) )
 				$this->messenger->noteError( $words->msgErrorNoEmail );
@@ -156,20 +156,20 @@ class Controller_Info_Newsletter extends Controller
 		$this->addData( 'data', $this->request->getAll( '', TRUE ) );
 
 		$requestedGroups	= $this->request->get( 'groups' );
-		$requestedGroups	= is_array( $requestedGroups ) ? $requestedGroups : array();
+		$requestedGroups	= is_array( $requestedGroups ) ? $requestedGroups : [];
 		$groups	= $this->logic->getGroups( array(
 			'status'	=> Model_Newsletter_Group::STATUS_USABLE,								//  status: active
 			'type'		=> array(																//  type: default or automatic
 				Model_Newsletter_Group::TYPE_DEFAULT,
 				Model_Newsletter_Group::TYPE_AUTOMATIC,
 			),
-		), array( 'title' => 'ASC' ) );
+		), ['title' => 'ASC'] );
 		foreach( $groups as $group )
 			$group->isChecked	= in_array( $group->newsletterGroupId, $requestedGroups );
 		$this->addData( 'groups', $groups );
 
-		$conditions		= array( 'status' => Model_Newsletter::STATUS_SENT );
-		$orders			= array( 'newsletterId' => 'DESC' );
+		$conditions		= ['status' => Model_Newsletter::STATUS_SENT];
+		$orders			= ['newsletterId' => 'DESC'];
 		$newsletters	= $this->logic->getNewsletters( $conditions, $orders );
 		$latest			= $newsletters ? array_shift( $newsletters ) : NULL;
 		$this->addData( 'canShowLatest', $newsletters );
@@ -179,7 +179,7 @@ class Controller_Info_Newsletter extends Controller
 	public function preview( $newsletterId = NULL )
 	{
 		if( !$newsletterId ){
-			$newsletters	= $this->logic->getNewsletters( array( 'status' => '>= 1' ), array( 'newsletterId' => 'DESC' ) );
+			$newsletters	= $this->logic->getNewsletters( ['status' => '>= 1'], ['newsletterId' => 'DESC'] );
 			if( $newsletters ){
 				$latest			= array_shift( $newsletters );
 				$newsletterId	= $latest->newsletterId;
@@ -213,7 +213,7 @@ class Controller_Info_Newsletter extends Controller
 				$this->messenger->noteError( $words->msgInvalidEmail, $email );
 				$this->restart( 'unregister', TRUE );
 			}
-			$reader->groups	= $this->logic->getGroupsOfReader( $reader->newsletterReaderId, array(), array( 'title' => 'ASC' ) );
+			$reader->groups	= $this->logic->getGroupsOfReader( $reader->newsletterReaderId, [], ['title' => 'ASC'] );
 			if( $this->request->has( 'save' ) ){
 				$mode	= $this->request->get( 'mode' );
 				if( $this->request->has( 'disable' ) )
@@ -239,7 +239,7 @@ class Controller_Info_Newsletter extends Controller
 					}
 				}
 				if( $this->request->has( 'disable' ) ){
-					$this->logic->editReader( $reader->newsletterReaderId, array( 'status' => '-1' ) );
+					$this->logic->editReader( $reader->newsletterReaderId, ['status' => '-1'] );
 					$this->messenger->noteSuccess( $words->msgSuccess, $email );
 					$this->restart( 'unregister', TRUE );
 				}
@@ -248,7 +248,7 @@ class Controller_Info_Newsletter extends Controller
 			$this->addData( 'groups', $reader->groups );
 		}
 		$this->addData( 'readerLetterId', $readerLetterId );
-		$this->addData( 'data', (object) array( 'email' => $email ) );
+		$this->addData( 'data', (object) ['email' => $email] );
 		$this->addData( 'reader', $reader );
 	}
 

@@ -38,12 +38,12 @@ class View_Helper_Work_Issue_Changes
 							'id'	=> 'issue-change-list-note'
 						) ),
 						'<br/>'
-					), array( 'class' => 'issue-note row-fluid' ) )
+					), ['class' => 'issue-note row-fluid'] )
 				)
 			);
 		}
 		$tbody		= HtmlTag::create( 'tbody', $list );
-		$table		= HtmlTag::create( 'table', $tbody, array( 'class' => 'table table-striped table-fixed' ) );
+		$table		= HtmlTag::create( 'table', $tbody, ['class' => 'table table-striped table-fixed'] );
 		return $table;
 	}
 

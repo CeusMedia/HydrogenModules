@@ -11,14 +11,14 @@ class Hook_Manage_Project extends Hook
 		$modelUser			= new Model_User( $env );
 		$modelProjectUser	= new Model_Project_User( $env );
 		$projectIds			= [];
-		$userIds			= array( -1 );
-		$myProjects			= $modelProjectUser->getAll( array( 'userId' => $data->userId ) );
+		$userIds			= [-1];
+		$myProjects			= $modelProjectUser->getAll( ['userId' => $data->userId] );
 		foreach( $myProjects as $relation )
 			$projectIds[]   = $relation->projectId;
 		if( !$projectIds )
 			return;
 		$logic				= Logic_Project::getInstance( $env );
-		$users				= $logic->getProjectsUsers( array_unique( $projectIds ), array( 'status' => '> 0' ) );
+		$users				= $logic->getProjectsUsers( array_unique( $projectIds ), ['status' => '> 0'] );
 //		unset( $users[$data->userId] );
 		$words				= $env->getLanguage()->getWords( 'manage/project' );
 		$data->list[]		= (object) array(
@@ -42,7 +42,7 @@ class Hook_Manage_Project extends Hook
 		$projectId	= $data['projectId'];
 		$modelProject	= new Model_Project( $env );
 		$modelUsers		= new Model_Project_User( $env );
-		$modelUsers->removeByIndices( array( 'projectId' => $projectId ) );
+		$modelUsers->removeByIndices( ['projectId' => $projectId] );
 		$modelProject->remove( $projectId );
 	}
 
@@ -59,7 +59,7 @@ class Hook_Manage_Project extends Hook
 		$modelRelation	= new Model_Project_User( $env );
 		$projects		= $logic->getUserProjects( $data->userId, FALSE );
 
-		$lists	= (object) array( 'entities' => array(), 'relations' => array() );
+		$lists	= (object) array( 'entities' => [], 'relations' => [] );
 		foreach( $projects as $project ){
 			$modelRelation->removeByIndices( array(
 				'projectId'	=> $project->projectId,
@@ -69,7 +69,7 @@ class Hook_Manage_Project extends Hook
 			$users		= $logic->getProjectUsers( $project->projectId );
 			if( count( $users ) === 0 ){
 				$lists->entities[]	= $project;
-				$env->getCaptain()->callHook( 'Project', 'remove', $context, array( 'projectId' => $project->projectId ) );
+				$env->getCaptain()->callHook( 'Project', 'remove', $context, ['projectId' => $project->projectId] );
 				$modelProject	= new Model_Project( $env );
 				$modelRelation	= new Model_Project_User( $env );
 				$modelRelation->removeByIndex( 'projectId', $project->projectId );
@@ -98,9 +98,9 @@ class Hook_Manage_Project extends Hook
 		$logic			= Logic_Project::getInstance( $env );
 		$words			= $env->getLanguage()->getWords( 'manage/project' );
 		$projects		= $logic->getUserProjects( $data->userId, FALSE );
-		$icon			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cube' ) );
+		$icon			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cube'] );
 
-		$lists	= (object) array( 'entities' => array(), 'relations'	=> array() );
+		$lists	= (object) array( 'entities' => [], 'relations'	=> [] );
 		foreach( $projects as $project ){
 			$users		= $logic->getProjectUsers( $project->projectId );
 			$item		= (object) array(
@@ -161,10 +161,10 @@ class Hook_Manage_Project extends Hook
 			$conditions['status']	= 1;
 
 		$logic			= Logic_Project::getInstance( $env );
-		$projectUsers	= $logic->getProjectUsers( $data->projectId, $conditions, array( 'username' => 'ASC' ) );
+		$projectUsers	= $logic->getProjectUsers( $data->projectId, $conditions, ['username' => 'ASC'] );
 
 		$list				= [];
-		$iconUser			= HtmlTag::create( 'i', '', array( 'class' => 'not_icon-user fa fa-fw fa-user' ) );
+		$iconUser			= HtmlTag::create( 'i', '', ['class' => 'not_icon-user fa fa-fw fa-user'] );
 		foreach( $projectUsers as $user ){
 			if( $env->getModules()->has( 'Members' ) ){
 				$helper	= new View_Helper_Member( $env );
@@ -175,7 +175,7 @@ class Hook_Manage_Project extends Hook
 			}
 			else{
 				$fullname	= '('.$user->firstname.' '.$user->surname.')';
-				$fullname	= HtmlTag::create( 'small', $fullname, array( 'class' => 'muted' ) );
+				$fullname	= HtmlTag::create( 'small', $fullname, ['class' => 'muted'] );
 				$link		= HtmlTag::create( 'a', $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname, array(
 					'href'	=> 'member/view/'.$user->userId,
 				) );

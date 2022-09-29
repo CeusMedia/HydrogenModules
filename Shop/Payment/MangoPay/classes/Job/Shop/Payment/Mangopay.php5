@@ -48,13 +48,13 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 		$this->moduleConfig			= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
 
 		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, array() );
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
 	}
 
 	protected function handleFailedBankWirePayIns()
 	{
 		$logic		= Logic_Mail::getInstance( $this->env );
-		$orders		= array( 'paymentId' => 'ASC' );
+		$orders		= ['paymentId' => 'ASC'];
 		$indices	= array(
 			'status'	=> Model_Shop_Payment_Mangopay::STATUS_CREATED,
 		 	'object'	=> '%"BANK_WIRE"%',
@@ -89,7 +89,7 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 				);
 				$logic->handleMail(
 					new Mail_Shop_Manager_NotPayed( $this->env, $data ),
-					(object) array( 'email' => $this->moduleConfig->get( 'mail.manager' ) ),
+					(object) ['email' => $this->moduleConfig->get( 'mail.manager' )],
 					'de'
 				);
 			}
@@ -99,7 +99,7 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 	protected function handleSucceededBankWirePayIns()
 	{
 		$logic		= Logic_Mail::getInstance( $this->env );
-		$orders		= array( 'paymentId' => 'ASC' );
+		$orders		= ['paymentId' => 'ASC'];
 		$indices	= array(
 			'status'	=> Model_Shop_Payment_Mangopay::STATUS_CREATED,
 		 	'object'	=> '%"BANK_WIRE"%',
@@ -139,7 +139,7 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 					);
 					$logic->handleMail(
 						new Mail_Shop_Manager_Payed( $this->env, $data ),
-						(object) array( 'email' => $this->moduleConfig->get( 'mail.manager' ) ),
+						(object) ['email' => $this->moduleConfig->get( 'mail.manager' )],
 						'de'
 					);
 				}

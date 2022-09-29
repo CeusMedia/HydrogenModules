@@ -23,7 +23,7 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 			HtmlTag::create( 'td', $labelStatus ),
 //			HtmlTag::create( 'td', preg_replace( '/^PASSWORD_/', '', $passwordCryptTypes[(int) $password->algo] ) ),
 //			HtmlTag::create( 'td', $password->failsTotal ),
-		), array( 'class' => $rowClass ) );
+		), ['class' => $rowClass] );
 	}
 	$panelPasswords	= HTML::DivClass( 'content-panel content-panel-form', array(
 		HtmlTag::create( 'h4', 'Passwörter' ),
@@ -44,7 +44,7 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 //					'gescheiterte Login',
 				) ) ),
 				HtmlTag::create( 'tbody', $rows )
-			), array( 'class' => 'table table-condensed table-fixed' ) )
+			), ['class' => 'table table-condensed table-fixed'] )
 		) ),
 	) );
 }

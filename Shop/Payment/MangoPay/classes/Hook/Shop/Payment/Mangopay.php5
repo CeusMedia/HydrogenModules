@@ -73,7 +73,7 @@ class Hook_Shop_Payment_Mangopay extends Hook
 			$className	= 'View_Helper_Shop_FinishPanel_'.$backend->backend;
 			if( !class_exists( $className ) )
 				continue;
-			$object	= Alg_Object_Factory::createObject( $className, array( $env ) );
+			$object	= Alg_Object_Factory::createObject( $className, [$env] );
 			$object->setOrderId( $data->orderId );
 			$object->setOutputFormat( $className::OUTPUT_FORMAT_HTML );
 			$panelPayment	= $object->render();

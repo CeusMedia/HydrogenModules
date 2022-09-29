@@ -44,9 +44,9 @@ class Model_Project extends Model
 			$projectIds[]	= $relation->projectId;
 		}
 		if( !$projectIds )
-			return array();
+			return [];
 		$conditions['projectId']	= $projectIds;
-		$orders		= $orders ? $orders : array( 'title' => 'ASC' );
+		$orders		= $orders ? $orders : ['title' => 'ASC'];
 		$projects	= [];
 		foreach( $modelProject->getAll( $conditions, $orders ) as $project ){
 			$project->isDefault = $defaultProject == $project->projectId;
@@ -63,9 +63,9 @@ class Model_Project extends Model
 		foreach( $modelRelation->getAllByIndex( 'projectId', $projectId ) as $relation )
 			$userIds[]	= $relation->userId;
 		if( !$userIds )
-			return array();
+			return [];
 		$conditions['userId']	= $userIds;
-		$orders		= $orders ? $orders : array( /*'roleId' => 'ASC', */'username' => 'ASC' );
+		$orders		= $orders ? $orders : [/*'roleId' => 'ASC', */'username' => 'ASC'];
 		$users		= [];
 		foreach( $modelUser->getAll( $conditions, $orders ) as $user ){
 			unset( $user->password );

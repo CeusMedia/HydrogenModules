@@ -5,17 +5,17 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $modelForm	= new Model_Form( $env );
 $modelFill	= new Model_Form_Fill( $env );
 
-$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
-$iconDownload	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
-$iconTransfer   = HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) );
+$iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
+$iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
+$iconTransfer   = HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-upload'] );
 
 $statuses	= array(
-	Model_Form_Fill::STATUS_NEW			=> HtmlTag::create( 'label', 'unbestätigt', array( 'class' => 'label' ) ),
-	Model_Form_Fill::STATUS_CONFIRMED	=> HtmlTag::create( 'label', 'gültig', array( 'class' => 'label label-success' ) ),
-	Model_Form_Fill::STATUS_HANDLED		=> HtmlTag::create( 'label', 'behandelt', array( 'class' => 'label label-info' ) ),
+	Model_Form_Fill::STATUS_NEW			=> HtmlTag::create( 'label', 'unbestätigt', ['class' => 'label'] ),
+	Model_Form_Fill::STATUS_CONFIRMED	=> HtmlTag::create( 'label', 'gültig', ['class' => 'label label-success'] ),
+	Model_Form_Fill::STATUS_HANDLED		=> HtmlTag::create( 'label', 'behandelt', ['class' => 'label label-info'] ),
 );
 
 $rows		= [];
@@ -32,7 +32,7 @@ foreach( $fills as $fill ){
 		'title'		=> 'entfernen',
 		'onclick'	=> "if(!confirm('Wirklich ?'))return false;"
 		) );
-	$buttons	= HtmlTag::create( 'div', array( $linkView, $linkRemove ), array( 'class' => 'btn-group' ) );
+	$buttons	= HtmlTag::create( 'div', [$linkView, $linkRemove], ['class' => 'btn-group'] );
 	$date		= HtmlTag::create( 'small', date( 'Y-m-d H:i:s', $fill->createdAt ) );
 	$email		= HtmlTag::create( 'small', $fill->email );
 	$name		= '';
@@ -40,9 +40,9 @@ foreach( $fills as $fill ){
 		$name		= $fill->data->firstname->value.' '.$fill->data->surname->value.'<br/>';
 	$linkForm	= './manage/form/edit/'.$fill->formId.( $page ? '?page='.$page : '' );
 	$linkView	= './manage/form/fill/view/'.$fill->fillId.( $page ? '?page='.$page : '' );
-	$title		= HtmlTag::create( 'a', $name.$email, array( 'href' => $linkView ) );
+	$title		= HtmlTag::create( 'a', $name.$email, ['href' => $linkView] );
 	$form		= $modelForm->get( $fill->formId );
-	$form		= HtmlTag::create( 'a', $form->title, array( 'href' => $linkForm ) );
+	$form		= HtmlTag::create( 'a', $form->title, ['href' => $linkForm] );
 
 	$transfers	= '';
 	if( count( $fill->transfers ) ){
@@ -74,9 +74,9 @@ foreach( $fills as $fill ){
 	) );
 }
 $colgroup	= HtmlElements::ColumnGroup( '50px', '', '', '100px', '130px', '80px' );
-$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'ID', 'Name / E-Mail', 'Formular', 'Zustand', 'Datum / Zeit', '' ) ) );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['ID', 'Name / E-Mail', 'Formular', 'Zustand', 'Datum / Zeit', ''] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
-$table		= HtmlTag::create( 'table', array( $colgroup, $thead, $tbody ), array( 'class' => 'table table-fixed table-striped not-table-condensed' ) );
+$table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped not-table-condensed'] );
 
 $buttonExport	= HtmlTag::create( 'button', $iconDownload.'&nbsp;exportieren', array(
 	'type'		=> 'button',
@@ -95,12 +95,12 @@ if( $pages > 1 ){
 	$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/form/fill/', $page, $pages );
 	$pagination->patternUrl	= '%s';
 }
-$buttonbar	= HtmlTag::create( 'div', join( '&nbsp;', array( $buttonExport, $pagination ) ), array( 'class' => 'buttonbar' ) );
+$buttonbar	= HtmlTag::create( 'div', join( '&nbsp;', [$buttonExport, $pagination] ), ['class' => 'buttonbar'] );
 
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Einträge' ),
 	HtmlTag::create( 'div', array(
 		$table,
 		$buttonbar,
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );

@@ -253,7 +253,7 @@ class Logic_User_Provision extends Logic
 		$outdatedUserLicenses	= $this->modelUserLicense->getAllByIndices( array(
 			'status'	=> Model_Provision_User_License::STATUS_ACTIVE,
 			'endsAt'	=> '< '.time(),
-		), array( 'endsAt' => 'ASC' ) );
+		), ['endsAt' => 'ASC'] );
 		foreach( $outdatedUserLicenses as $outdatedUserLicense )
 			$results[]	= $this->handleOutdatedUserLicense( $outdatedUserLicense->userLicenseId );
 		return $results;
@@ -403,10 +403,10 @@ class Logic_User_Provision extends Logic
 
 	public function getProductLicenses( $productId, $status = NULL )
 	{
-		$indices	= array( 'productId' => $productId );
+		$indices	= ['productId' => $productId];
 		if( $status !== NULL )
 			$indices['status']	= $status;
-		$orders		= array( 'rank' => 'ASC', 'title' => 'ASC' );
+		$orders		= ['rank' => 'ASC', 'title' => 'ASC'];
 		$productLicenses	= $this->modelLicense->getAll( $indices, $orders );
 		foreach( $productLicenses as $nr => $productLicense )
 			$productLicense->product	= $this->modelProduct->get( $productLicense->productId );
@@ -418,7 +418,7 @@ class Logic_User_Provision extends Logic
 		$indices	= [];
 		if( $status !== NULL )
 			$indices['status']	= $status;
-		$orders		= array( 'rank' => 'ASC', 'title' => 'ASC' );
+		$orders		= ['rank' => 'ASC', 'title' => 'ASC'];
 		$products	= $this->modelProduct->getAll( $indices, $orders );
 		return $products;
 	}
@@ -476,7 +476,7 @@ class Logic_User_Provision extends Logic
 
 	public function getUserLicensesFromUser( $userId, $productId = NULL )
 	{
-		$indices		= array( 'userId' => $userId );
+		$indices		= ['userId' => $userId];
 		if( $productId )
 			$indices['productId']	= $productId;
 		$userLicenses	= $this->modelUserLicense->getAllByIndices( $indices );
@@ -503,18 +503,18 @@ class Logic_User_Provision extends Logic
 	public function getNotAssignedUserLicenseKeysFromUserLicense( $userLicenseId )
 	{
 		$license	= $this->getUserLicense( $userLicenseId );
-		$indices	= array( 'userLicenseId' => $userLicenseId, 'userId' => 0 );
-		$orders		= array( 'userLicenseId' => 'ASC' ) ;
+		$indices	= ['userLicenseId' => $userLicenseId, 'userId' => 0];
+		$orders		= ['userLicenseId' => 'ASC'] ;
 		$keys		= $this->modelUserKey->getAll( $indices, $orders );
 		return $keys;
 	}
 
 	public function getUserLicenseKeys( $userLicenseId, $assignedOnly = FALSE )
 	{
-		$indices	= array( 'userLicenseId' => $userLicenseId );
+		$indices	= ['userLicenseId' => $userLicenseId];
 		if( $assignedOnly )
 			$indices['status']	= Model_Provision_User_License_Key::STATUS_ASSIGNED;
-		$orders		= array( 'userLicenseKeyId' => 'ASC' ) ;
+		$orders		= ['userLicenseKeyId' => 'ASC'] ;
 		$keys		= $this->modelUserKey->getAll( $indices, $orders );
 		return $keys;
 	}
@@ -532,7 +532,7 @@ class Logic_User_Provision extends Logic
 		if( $productId )
 			$indices['productId']	= $productId;
 
-		$orders		= array( 'userLicenseKeyId' => 'ASC' ) ;
+		$orders		= ['userLicenseKeyId' => 'ASC'] ;
 		$keys		= $this->modelUserKey->getAllByIndices( $indices, $orders );
 		foreach( $keys as $key ){
 			$key->productLicense	= $this->modelLicense->get( $key->productLicenseId );
@@ -652,7 +652,7 @@ class Logic_User_Provision extends Logic
 			'productId'			=> $outdatedUserLicense->productId,									//  ... related to product
 			'productLicenseId'	=> $outdatedUserLicense->productLicenseId,							//  ... related to product license
 			'status'			=> Model_Provision_User_License::STATUS_NEW,									//  ... awaiting activation
-		), array( 'userLicenseId' => 'ASC' ) );														//  ... and order be creation date
+		), ['userLicenseId' => 'ASC'] );														//  ... and order be creation date
 
 		//  --  COLLECT USERS TO INFORM ABOUT REVOKATION  --  //
 		$usersAssigned	= [];																	//  prepare list of users to inform about assignment
@@ -708,7 +708,7 @@ class Logic_User_Provision extends Logic
 
 	protected function sendMailOnUserLicenseChange( $userLicenseId, $change )
 	{
-		$changes	= array( 'Activated', 'Deactivated', 'Expired', 'Replaced', 'Revoked' );
+		$changes	= ['Activated', 'Deactivated', 'Expired', 'Replaced', 'Revoked'];
 		if( !in_array( $change, $changes ) )
 			throw new DomainException( 'Invalid user license customer mail change "'.$change.'"' );
 		$userLicense	= $this->getUserLicense( $userLicenseId );

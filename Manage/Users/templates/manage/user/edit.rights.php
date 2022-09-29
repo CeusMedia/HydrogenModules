@@ -14,7 +14,7 @@ foreach( $matrix as $controller => $actions ){
 		$number++;
 		$width	= round( 100 / $size, 8 ).'%';
 		$row	= [];
-		$row[]	= HtmlTag::create( 'div', $number, array( 'class' => 'counter' ) );
+		$row[]	= HtmlTag::create( 'div', $number, ['class' => 'counter'] );
 		foreach( $actions as $action ){
 			$access		= $acl->hasRight( $user->roleId, $controller, $action );
 			$class		= $access ? 'yes' : 'no';
@@ -31,7 +31,7 @@ foreach( $matrix as $controller => $actions ){
 			);
 			$row[]	= HtmlTag::create( 'div', '', $attr );
 		}
-		$list[]	= HtmlTag::create( 'div', join( $row ), array( 'class' => 'bar' ) );
+		$list[]	= HtmlTag::create( 'div', join( $row ), ['class' => 'bar'] );
 	}
 }
 
@@ -39,7 +39,7 @@ return '
 <div class="content-panel">
 	<h4>'.$words['editRights']['heading'].'</h4>
 	<div class="content-panel-inner">
-		'.HtmlTag::create( 'div', $list, array( 'class' => 'acl-card' ) ).'
+		'.HtmlTag::create( 'div', $list, ['class' => 'acl-card'] ).'
 	</div>
 </div>
 ';

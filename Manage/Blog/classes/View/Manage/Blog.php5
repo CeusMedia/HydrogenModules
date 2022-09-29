@@ -35,11 +35,11 @@ class View_Manage_Blog extends View
 			}
 		}
 		foreach( $tabs as $key => $value ){
-			$attributes	= array( 'href' => './manage/blog'.$key );
+			$attributes	= ['href' => './manage/blog'.$key];
 			$link		= HtmlTag::create( 'a', $value, $attributes );
-			$attributes	= array( 'class' => $key == $current ? 'active' : NULL );
+			$attributes	= ['class' => $key == $current ? 'active' : NULL];
 			$list[]		= HtmlTag::create( 'li', $link, $attributes );
 		}
-		return HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-tabs' ) );
+		return HtmlTag::create( 'ul', $list, ['class' => 'nav nav-tabs'] );
 	}
 }

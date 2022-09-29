@@ -56,7 +56,7 @@ class Hook_Manage_My_User_Setting extends Hook
 			$count	= $model->removeByIndex( 'userId', $payload->userId );
 		}
 		if( isset( $payload->counts ) )
-			$payload->counts['Manage_My_User_Settings']	= (object) array( 'entities' => $count );
+			$payload->counts['Manage_My_User_Settings']	= (object) ['entities' => $count];
 	}
 
 	/**

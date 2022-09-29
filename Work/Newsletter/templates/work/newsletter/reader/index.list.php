@@ -3,9 +3,9 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words->index;
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
-$iconImport	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-upload' ) ).'&nbsp;';
-$iconExport	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) ).'&nbsp;';
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
+$iconImport	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-upload'] ).'&nbsp;';
+$iconExport	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] ).'&nbsp;';
 
 $statusIcons	= array(
 	-1		=> 'remove',
@@ -13,30 +13,30 @@ $statusIcons	= array(
 	1		=> 'check',
 );
 
-$labelEmpty	= HtmlTag::create( 'em', $w->empty, array( 'class' => 'muted' ) );
-$list		= HtmlTag::create( 'div', $labelEmpty, array( 'class' => 'alert alert-info' ) );
+$labelEmpty	= HtmlTag::create( 'em', $w->empty, ['class' => 'muted'] );
+$list		= HtmlTag::create( 'div', $labelEmpty, ['class' => 'alert alert-info'] );
 
 if( $readers ){
 	$list	= [];
 	foreach( $readers as $reader ){
-		$attributes		= array( 'href' => './work/newsletter/reader/edit/'.$reader->newsletterReaderId );
-		$iconStatus		= HtmlTag::create( 'i', "", array( 'class' => 'fa fa-fw fa-'.$statusIcons[$reader->status] ) );
-		$prefix			= HtmlTag::create( 'span', (string) $reader->prefix, array( 'class' => 'muted' ) );
+		$attributes		= ['href' => './work/newsletter/reader/edit/'.$reader->newsletterReaderId];
+		$iconStatus		= HtmlTag::create( 'i', "", ['class' => 'fa fa-fw fa-'.$statusIcons[$reader->status]] );
+		$prefix			= HtmlTag::create( 'span', (string) $reader->prefix, ['class' => 'muted'] );
 		$label			= $reader->email;
 		$fullname		= '<br/><small class="muted">'.trim( $prefix.' '.$reader->firstname.' '.$reader->surname ).'&nbsp;</small>';
 		$link			= HtmlTag::create( 'a', $label, $attributes );
 		$groups			= [];
 		foreach( $reader->groups as $group )
 			$groups[]		= $group->title;
-	//	$groups			= HtmlTag::create( 'span', count( $groups ), array( 'class' => 'badge', 'title' => join( ', ', $groups ) ) );
+	//	$groups			= HtmlTag::create( 'span', count( $groups ), ['class' => 'badge', 'title' => join( ', ', $groups] ) );
 		$groups			= join( ', ', $groups );
-		$cellTitle		= HtmlTag::create( 'td', $link.$fullname, array( 'class' => 'autocut' ) );
+		$cellTitle		= HtmlTag::create( 'td', $link.$fullname, ['class' => 'autocut'] );
 		$cellStatus		= HtmlTag::create( 'td', $iconStatus.' '.$words->states[$reader->status] );
 		$cellGroups		= HtmlTag::create( 'td', $groups );
 		$cellRegistered	= HtmlTag::create( 'td', date( 'd.m.Y', $reader->registeredAt ) );
 		$rowColor		= $reader->status == 1 ? 'success' : ( $reader->status == -1 ? 'error' : 'warning' );
-		$cells			= array( $cellTitle, $cellGroups, $cellStatus, $cellRegistered );
-		$attributes		= array( 'class' => $rowColor );
+		$cells			= [$cellTitle, $cellGroups, $cellStatus, $cellRegistered];
+		$attributes		= ['class' => $rowColor];
 		$list[]			= HtmlTag::create( 'tr', $cells, $attributes );
 	}
 	$tableRows		= join( $list );
@@ -46,10 +46,10 @@ if( $readers ){
 		$words->index->columnStatus,
 		$words->index->columnRegister
 	) );
-	$tableColumns	= HtmlElements::ColumnGroup( array( '', '40%', '100px', '100px' ) );
+	$tableColumns	= HtmlElements::ColumnGroup( ['', '40%', '100px', '100px'] );
 	$tableHead		= HtmlTag::create( 'thead', $tableHeads );
 	$tableBody		= HtmlTag::create( 'tbody', $tableRows );
-	$list	= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped table-fixed' ) );
+	$list	= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, ['class' => 'table table-condensed table-hover table-striped table-fixed'] );
 }
 
 $pagination		= new \CeusMedia\Bootstrap\PageControl( './work/newsletter/reader', $filterPage, ceil( $totalReaders / $filterLimit ) );
@@ -77,8 +77,8 @@ if( $env->getAcl()->has( 'work/newsletter/reader', 'import' ) ){
 					'data-toggle'	=> 'modal',
 				) )
 			) ),
-		), array( 'class' => 'dropdown-menu' ) ),
-	), array( 'class' => 'btn-group' ) );
+		), ['class' => 'dropdown-menu'] ),
+	), ['class' => 'btn-group'] );
 }
 if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:allowImport' ) ){
 	$buttonImport	= HtmlTag::create( 'button', $iconImport.'importieren&nbsp;<span class="caret"></span>', array(
@@ -107,8 +107,8 @@ if( $env->getAcl()->has( 'work/newsletter/reader', 'export' ) ){
 					'href'	=> './work/newsletter/reader/export/csv',
 				) )
 			) ),
-		), array( 'class' => 'dropdown-menu' ) ),
-	), array( 'class' => 'btn-group' ) );
+		), ['class' => 'dropdown-menu'] ),
+	), ['class' => 'btn-group'] );
 }
 if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:allowExport' ) ){
 	$buttonExport	= HtmlTag::create( 'button', $iconExport.'exportieren&nbsp;<span class="caret"></span>', array(

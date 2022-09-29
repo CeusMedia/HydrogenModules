@@ -2,9 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w		= (object) $words['add'];
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/work/note/add.' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/work/note/add.' ) );
 
-$optProject	= array( '0' => '- ohne Projektbezug -' );
+$optProject	= ['0' => '- ohne Projektbezug -'];
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject	= HtmlElements::Options( $optProject, $note->projectId );

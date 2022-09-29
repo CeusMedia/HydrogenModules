@@ -9,7 +9,7 @@ class Controller_Ajax_Auth_Json extends AjaxController
 		$username	= trim( $this->request->get( 'username' ) );
 		$result		= FALSE;
 		if( strlen( $username ) ){
-			$data		= array ( 'filters' => array( 'username' => $username ) );
+			$data		= array ( 'filters' => ['username' => $username] );
 			$result		= $this->env->getServer()->postData( 'user', 'index', NULL, $data );
 			$result		= count( $result ) === 1;
 		}
@@ -21,7 +21,7 @@ class Controller_Ajax_Auth_Json extends AjaxController
 		$email	= trim( $this->request->get( 'email' ) );
 		$result		= FALSE;
 		if( strlen( $email ) ){
-			$data		= array ( 'filters' => array( 'email' => $email ) );
+			$data		= array ( 'filters' => ['email' => $email] );
 			$result		= $this->env->getServer()->postData( 'user', 'index', NULL, $data );
 			$result		= count( $result ) === 1;
 		}

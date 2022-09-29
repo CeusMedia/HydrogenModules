@@ -4,11 +4,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) ).'&nbsp;';
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) ).'&nbsp;';
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'&nbsp;';
-$iconExport		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) ).'&nbsp;';
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
+$iconExport		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] ).'&nbsp;';
 
 //  --  PANEL: READERS  --  //
 $w			= (object) $words['edit_readers'];
@@ -19,13 +19,13 @@ $statusIcons	= array(
 	1		=> 'check',
 );
 
-$labelEmpty		= HtmlTag::create( 'em', $w->empty, array( 'class' => 'muted' ) );
-$listReaders	= HtmlTag::create( 'div', $labelEmpty, array( 'class' => 'alert alert-info' ) );
+$labelEmpty		= HtmlTag::create( 'em', $w->empty, ['class' => 'muted'] );
+$listReaders	= HtmlTag::create( 'div', $labelEmpty, ['class' => 'alert alert-info'] );
 
 if( $groupReaders ){
 	$listReaders	= [];
 	foreach( $groupReaders as $reader ){
-		$iconStatus		= HtmlTag::create( 'i', "", array( 'class' => 'fa fa-fw fa-'.$statusIcons[$reader->status] ) );
+		$iconStatus		= HtmlTag::create( 'i', "", ['class' => 'fa fa-fw fa-'.$statusIcons[$reader->status]] );
 		$name			= HtmlTag::create( 'small', $reader->firstname.' '.$reader->surname );
 
 		$label			= $iconStatus.'&nbsp;&lt;'.$reader->email.'&gt;';
@@ -36,15 +36,15 @@ if( $groupReaders ){
 			'class'		=> 'btn btn-mini btn-inverse',
 		);
 		$linkRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, $attributes );
-		$linkRemove		= HtmlTag::create( 'div', $linkRemove, array( 'class' => 'pull-right' ) );
-		$linkReader		= HtmlTag::create( 'a', $label, array( 'href' => $urlReader ) );
+		$linkRemove		= HtmlTag::create( 'div', $linkRemove, ['class' => 'pull-right'] );
+		$linkReader		= HtmlTag::create( 'a', $label, ['href' => $urlReader] );
 		$listReaders[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $linkReader.' '.$name, array( 'class' => '' ) ),
-			HtmlTag::create( 'td', $linkRemove, array( 'class' => '' ) ),
+			HtmlTag::create( 'td', $linkReader.' '.$name, ['class' => ''] ),
+			HtmlTag::create( 'td', $linkRemove, ['class' => ''] ),
 		) );
 	}
 	$colgroup		= HtmlElements::ColumnGroup( '', '120px' );
-	$tableHeads		= HtmlElements::TableHeads( array( 'Zugeordnete Leser' ) );
+	$tableHeads		= HtmlElements::TableHeads( ['Zugeordnete Leser'] );
 	$thead			= HtmlTag::create( 'thead', $tableHeads );
 	$tbody			= HtmlTag::create( 'tbody', $listReaders );
 	$listReaders	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
@@ -135,7 +135,7 @@ $panelForm	= '
 	</div>
 </div>';
 
-extract( $view->populateTexts( array( 'above', 'bottom', 'top' ), 'html/work/newsletter/group/edit/', array( 'words' => $words, 'group' => $group ) ) );
+extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/group/edit/', ['words' => $words, 'group' => $group] ) );
 
 return $textTop.'
 <div class="newsletter-content">

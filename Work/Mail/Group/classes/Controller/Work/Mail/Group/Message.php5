@@ -61,8 +61,8 @@ class Controller_Work_Mail_Group_Message extends Controller
 		$indices	= [];
 		if( $filterGroupId )
 			$indices['mailGroupId']	= $filterGroupId;
-		$orders		= array( 'createdAt' => 'ASC' );
-		$limits		= array( abs( $page ) * $limit, $limit );
+		$orders		= ['createdAt' => 'ASC'];
+		$limits		= [abs( $page ) * $limit, $limit];
 		$total		= $this->modelMessage->count( $indices );
 		$messages	= $this->modelMessage->getAll( $indices, $orders, $limits );
 		foreach( $messages as $message )
@@ -100,7 +100,7 @@ class Controller_Work_Mail_Group_Message extends Controller
 			$rawMail	= bzdecompress(substr($message->raw,6));
 			$parser		= new \CeusMedia\Mail\Message\Parser();
 			$message->object		= 'BZIP2:'.bzcompress( serialize( $parser->parse( $rawMail ) ) );
-			$this->modelMessage->edit( $messageId, array( 'object' => $message->object ), FALSE );
+			$this->modelMessage->edit( $messageId, ['object' => $message->object], FALSE );
 		}
 		$this->restart( 'view/'.$messageId );
 	}

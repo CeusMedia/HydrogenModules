@@ -14,15 +14,15 @@ class View_Helper_Mangopay_List_BankAccounts_Big extends View_Helper_Mangopay_Ab
 	}
 
 	public function render(){
-		$logoBank	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-bank fa-4x' ) );
-		$logoAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus fa-4x' ) );
+		$logoBank	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-bank fa-4x'] );
+		$logoAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus fa-4x'] );
 
 		$list	= [];
 		foreach( $this->bankAccounts as $item ){
 			if( !$item->Active )
 				continue;
 			$number	= HtmlTag::create( 'tt', $item->Details->BIC );
-			$title	= HtmlTag::create( 'div', $item->OwnerName, array( 'class' => 'bankaccount-title' ) );
+			$title	= HtmlTag::create( 'div', $item->OwnerName, ['class' => 'bankaccount-title'] );
 			$label	= $logoBank.$title.$number;
 
 			$url	= sprintf( $this->link, $item->Id );

@@ -17,7 +17,7 @@ if( $articles ){
 	$list	= [];
 	foreach( $articles as $article )
 		$list[]	= $helper->renderArticleListItem( $article );
-	$list	= HtmlTag::create( 'div', $list, array( 'class' => 'articleList' ) );
+	$list	= HtmlTag::create( 'div', $list, ['class' => 'articleList'] );
 }
 
 $about	= '';
@@ -33,12 +33,12 @@ if( $author->reference ){
 	if( preg_match( "/@/", $author->reference ) ){
 		$label	= $author->reference;
 		$href	= "mailto:".$author->reference;
-		$link	= HtmlTag::create( 'a', $label, array( 'href' => $href ) );
+		$link	= HtmlTag::create( 'a', $label, ['href' => $href] );
 	}
 	else{
 		$label	= preg_replace( "/^http:\/\/(.+)\/$/", "\\1", $author->reference );
 		$href	= $author->reference;
-		$link	= HtmlTag::create( 'a', $label, array( 'href' => $href, 'target' => '_blank' ) );
+		$link	= HtmlTag::create( 'a', $label, ['href' => $href, 'target' => '_blank'] );
 	}
 	$link	= '<b>Adresse: '.$link.'</b>';
 }

@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
+$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] ), ['class' => 'alert alert-info'] );
 if( $unpayedBillShares ){
 	$list	= [];
 	foreach( $unpayedBillShares as $unpayedBillShare ){
@@ -17,10 +17,10 @@ if( $unpayedBillShares ){
 			HtmlTag::create( 'td', $amount ),
 		) );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array( '60', '', '80' ) );
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'RNr', 'Rechnung', 'Betrag' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( ['60', '', '80'] );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['RNr', 'Rechnung', 'Betrag'] ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
-	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-fixed' ) );
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
 $tabs		= View_Work_Billing_Person::renderTabs( $env, $person->personId, 5 );

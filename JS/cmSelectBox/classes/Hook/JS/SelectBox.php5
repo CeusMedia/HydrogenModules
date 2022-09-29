@@ -16,7 +16,7 @@ class Hook_JS_SelectBox extends Hook
 	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
 		$options	= [];
-		$script		= 'jQuery("select.cmSelectBox.above").cmSelectBox('.json_encode( array_merge( $options, array( 'inverted' => TRUE ) ) ).')';
+		$script		= 'jQuery("select.cmSelectBox.above").cmSelectBox('.json_encode( array_merge( $options, ['inverted' => TRUE] ) ).')';
 		$context->js->addScriptOnReady( $script );
 
 		$script		= 'jQuery("select.cmSelectBox").not(".above").cmSelectBox('.json_encode( $options ).')';

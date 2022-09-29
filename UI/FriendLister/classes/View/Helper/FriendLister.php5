@@ -52,18 +52,18 @@ class View_Helper_FriendLister extends Abstraction
 				if( $item->getAttribute( 'disabled' ) == "yes" )									//
 					continue;																		//
 			$icon	= $this->renderIcon( $item );													//
-			$icon	= HtmlTag::create( 'span', $icon, array( 'class' => 'user-icon' ) );		//
-			$name	= HtmlTag::create( 'span', $item->name, array( 'class' => 'user-name' ) );	//
+			$icon	= HtmlTag::create( 'span', $icon, ['class' => 'user-icon'] );		//
+			$name	= HtmlTag::create( 'span', $item->name, ['class' => 'user-name'] );	//
 			$attr	= array(
 				'href'	=> (string) $item->link,
 				'title'	=> addslashes( (string) $item->title ),
 			);
 			$link	= HtmlTag::create( 'a', $icon.$name, $attr );								//
-			$label	= HtmlTag::create( 'span', $link, array( 'class' => 'user-label' ) );		//
-			$list[]	= HtmlTag::create( 'li', $label, array( 'class' => 'user-item' ) );			//
+			$label	= HtmlTag::create( 'span', $link, ['class' => 'user-label'] );		//
+			$list[]	= HtmlTag::create( 'li', $label, ['class' => 'user-item'] );			//
 		}
 		$c->get( 'shuffle' ) ? shuffle( $list ) : NULL;												//
-		return HtmlTag::create( 'ul', $list, array( 'class' => $c->get( 'class.list' ) ) );		//
+		return HtmlTag::create( 'ul', $list, ['class' => $c->get( 'class.list' )] );		//
 	}
 
 	/**

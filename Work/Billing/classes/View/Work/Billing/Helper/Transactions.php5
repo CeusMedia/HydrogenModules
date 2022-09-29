@@ -72,17 +72,17 @@ class View_Work_Billing_Helper_Transactions
 		$modelPerson		= new Model_Billing_Person( $this->env );
 		$modelCorporation	= new Model_Billing_Corporation( $this->env );
 
-		$iconBill		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-file-o' ) );
-		$iconPerson		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user-o' ) );
-		$iconCompany	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-building-o' ) );
+		$iconBill		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-file-o'] );
+		$iconPerson		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user-o'] );
+		$iconCompany	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-building-o'] );
 
-		$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', array( 'class' => 'muted' ) ), array( 'class' => 'alert alert-info' ) );
+		$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] ), ['class' => 'alert alert-info'] );
 		if( $this->transactions ){
 			$sum	= 0;
 			$list	= [];
 			foreach( $this->transactions as $transaction ){
 				$sum	+= (float) $transaction->amount;
-				$from	= HtmlTag::create( 'em', 'extern', array( 'class' => 'muted' ) );
+				$from	= HtmlTag::create( 'em', 'extern', ['class' => 'muted'] );
 				switch( $transaction->fromType ){
 					case Model_Billing_Transaction::TYPE_PERSON:
 						$sender	= $this->logic->getPerson( $transaction->fromId );
@@ -104,7 +104,7 @@ class View_Work_Billing_Helper_Transactions
 						break;
 				}
 
-				$to		= HtmlTag::create( 'em', 'extern', array( 'class' => 'muted' ) );
+				$to		= HtmlTag::create( 'em', 'extern', ['class' => 'muted'] );
 				switch( $transaction->toType ){
 					case Model_Billing_Transaction::TYPE_PERSON:
 						$sender	= $this->logic->getPerson( $transaction->toId );
@@ -123,42 +123,42 @@ class View_Work_Billing_Helper_Transactions
 				$title	= $this->transformRelationToTitle( $transaction );
 				$title	= $title ? $title : $transaction->title;
 
-				$year	= HtmlTag::create( 'small', date( 'y', strtotime( $transaction->dateBooked ) ), array( 'class' => 'muted' ) );
+				$year	= HtmlTag::create( 'small', date( 'y', strtotime( $transaction->dateBooked ) ), ['class' => 'muted'] );
 				$date	= date( 'd.m.', strtotime( $transaction->dateBooked ) ).$year;
 
 				$id		= HtmlTag::create( 'small', $transaction->transactionId );
 				$list[]	= HtmlTag::create( 'tr', array(
-				/*	HtmlTag::create( 'td', $id, array( 'class' => 'cell-number' ) ),*/
+				/*	HtmlTag::create( 'td', $id, ['class' => 'cell-number'] ),*/
 					HtmlTag::create( 'td', $title ),
 					HtmlTag::create( 'td', $from ),
 					HtmlTag::create( 'td', $to ),
-					HtmlTag::create( 'td', $date, array( 'class' => 'cell-number' ) ),
-					HtmlTag::create( 'td', number_format( $transaction->amount, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
-				), array( 'class' => $transaction->amount > 0 ? 'success' : 'error' ) );
+					HtmlTag::create( 'td', $date, ['class' => 'cell-number'] ),
+					HtmlTag::create( 'td', number_format( $transaction->amount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
+				), ['class' => $transaction->amount > 0 ? 'success' : 'error'] );
 			}
 
 			$tfoot	= HtmlTag::create( 'tfoot', HtmlTag::create( 'tr', array(
-			/*	HtmlTag::create( 'td', $id, array( 'class' => 'cell-number' ) ),*/
+			/*	HtmlTag::create( 'td', $id, ['class' => 'cell-number'] ),*/
 				HtmlTag::create( 'td', '<strong>Gesamt</strong>' ),
 				HtmlTag::create( 'td', '' ),
 				HtmlTag::create( 'td', '' ),
 				HtmlTag::create( 'td', '' ),
-				HtmlTag::create( 'td', number_format( $sum, 2, ',', '.' ).'&nbsp;&euro;', array( 'class' => 'cell-number' ) ),
+				HtmlTag::create( 'td', number_format( $sum, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 			) ) );
 			if( count( $this->transactions ) < 2 )
 				$tfoot		= '';
 
-			$colgroup	= HtmlElements::ColumnGroup( array( /*'45', */'', '200', '200', '100', '100' ) );
+			$colgroup	= HtmlElements::ColumnGroup( [/*'45', */'', '200', '200', '100', '100'] );
 			$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
-/*				HtmlTag::create( 'th', 'ID', array( 'class' => 'cell-number' ) ),*/
+/*				HtmlTag::create( 'th', 'ID', ['class' => 'cell-number'] ),*/
 				HtmlTag::create( 'th', 'Vorgang' ),
 				HtmlTag::create( 'th', 'Zu Lasten' ),
 				HtmlTag::create( 'th', 'Zu Gunsten' ),
-				HtmlTag::create( 'th', 'Datum', array( 'class' => 'cell-number' ) ),
-				HtmlTag::create( 'th', 'Betrag', array( 'class' => 'cell-number' ) ),
+				HtmlTag::create( 'th', 'Datum', ['class' => 'cell-number'] ),
+				HtmlTag::create( 'th', 'Betrag', ['class' => 'cell-number'] ),
 			) ) );
 			$tbody	= HtmlTag::create( 'tbody', $list );
-			$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, array( 'class' => 'table table-fixed table-condensed' ) );
+			$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, ['class' => 'table table-fixed table-condensed'] );
 		}
 
 		$buttonbar	= '';
@@ -185,7 +185,7 @@ class View_Work_Billing_Helper_Transactions
 			return '';
 
 		$filter	= new View_Work_Billing_Helper_Filter( $this->env );
-		$filter->setFilters( array( 'year', 'month' ) );
+		$filter->setFilters( ['year', 'month'] );
 		$filter->setSessionPrefix( $this->filterPrefix );
 		$filter->setUrl( $this->filterUrl );
 		return $filter->render();
@@ -211,37 +211,37 @@ class View_Work_Billing_Helper_Transactions
 			$billShareId	= preg_replace( '/\|billShare:([0-9]+)\|/', '\\1', $relation );
 			$billShare		= $this->logic->getBillShare( $billShareId );
 			$bill			= $this->logic->getBill( $billShare->billId );
-			$linkBill		= HtmlTag::create( 'a', $bill->title, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
+			$linkBill		= HtmlTag::create( 'a', $bill->title, ['href' => './work/billing/bill/edit/'.$bill->billId] );
 			$title			= 'Anteil aus Rechnung '.$linkBill;
 		}
 		else if( preg_match( '/\|billReserve:([0-9]+)\|/', $relation ) ){
 			$billReserveId	= preg_replace( '/\|billReserve:([0-9]+)\|/', '\\1', $relation );
 			$billReserve	= $this->logic->getBillReserve( $billReserveId );
 			$bill			= $this->logic->getBill( $billReserve->billId );
-			$linkReserve	= HtmlTag::create( 'a', $billReserve->title, array( 'href' => './work/billing/reserve/edit/'.$billReserve->reserveId ) );
-			$linkBill		= HtmlTag::create( 'a', $bill->title, array( 'href' => './work/billing/bill/edit/'.$bill->billId ) );
-			$prefix			= HtmlTag::create( 'small', 'Rücklage '.$linkReserve.' aus Rechnung: ', array( 'class' => 'muted' ) );
+			$linkReserve	= HtmlTag::create( 'a', $billReserve->title, ['href' => './work/billing/reserve/edit/'.$billReserve->reserveId] );
+			$linkBill		= HtmlTag::create( 'a', $bill->title, ['href' => './work/billing/bill/edit/'.$bill->billId] );
+			$prefix			= HtmlTag::create( 'small', 'Rücklage '.$linkReserve.' aus Rechnung: ', ['class' => 'muted'] );
 			$title			= $prefix.$linkBill;
 		}
 /*		else if( preg_match( '/^bill:([0-9]+)$/', $relation ) ){
 			$id			= preg_replace( '/^bill:([0-9]+)$/', '\\1', $relation );
 			$bill		= $this->modelBill->get( $id );
-			$link		= HtmlTag::create( 'a', 'RNr.'.$bill->number, array( 'href' => './work/billing/bill/edit/'.$id ) );
+			$link		= HtmlTag::create( 'a', 'RNr.'.$bill->number, ['href' => './work/billing/bill/edit/'.$id] );
 			$relation	= $link;
 		}*/
 		else if( preg_match( '/\|expense:([0-9]+)\|/', $relation ) ){
 			$id			= preg_replace( '/\|expense:([0-9]+)\|/', '\\1', $relation );
 			$expense	= $this->modelExpense->get( $id );
-			$prefix		= HtmlTag::create( 'small', 'Ausgabe: ', array( 'class' => 'muted' ) );
-			$link		= HtmlTag::create( 'a', $prefix.$transaction->title, array( 'href' => './work/billing/expense/edit/'.$id ) );
+			$prefix		= HtmlTag::create( 'small', 'Ausgabe: ', ['class' => 'muted'] );
+			$link		= HtmlTag::create( 'a', $prefix.$transaction->title, ['href' => './work/billing/expense/edit/'.$id] );
 			$title		= $link;
 		}
 		else if( preg_match( '/\|payin\|/', $relation ) ){
-			$prefix		= HtmlTag::create( 'small', 'Einzahlung: ', array( 'class' => 'muted' ) );
+			$prefix		= HtmlTag::create( 'small', 'Einzahlung: ', ['class' => 'muted'] );
 			$title		= $prefix.$transaction->title;
 		}
 		else if( preg_match( '/\|payout\|/', $relation ) ){
-			$prefix		= HtmlTag::create( 'small', 'Auszahlung: ', array( 'class' => 'muted' ) );
+			$prefix		= HtmlTag::create( 'small', 'Auszahlung: ', ['class' => 'muted'] );
 			$title		= $prefix.$transaction->title;
 		}
 		return $title;

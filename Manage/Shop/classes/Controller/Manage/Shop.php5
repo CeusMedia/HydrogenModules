@@ -14,21 +14,21 @@ class Controller_Manage_Shop extends Controller
 
 	public function index()
 	{
-		$orders			= array( 'orderId' => 'ASC' );
+		$orders			= ['orderId' => 'ASC'];
 
-		$ordersTotal	= $this->logicShop->getOrders( array( 'status' => '>= 2' ), $orders );
+		$ordersTotal	= $this->logicShop->getOrders( ['status' => '>= 2'], $orders );
 		$customerIds		= [];
 		foreach( $ordersTotal as $order )
 			$customerIds[]	= (int) $order->customerId;
 
-		$this->addData( 'ordersNotFinished', $this->logicShop->getOrders( array( 'status' => array( 2, 3, 4, 5 ) ), $orders ) );
-		$this->addData( 'ordersNotPayed', $this->logicShop->getOrders( array( 'status' => '2' ), $orders ) );
-		$this->addData( 'ordersNotDelievered', $this->logicShop->getOrders( array( 'status' => array( 3, 4 ) ), $orders ) );
+		$this->addData( 'ordersNotFinished', $this->logicShop->getOrders( ['status' => [2, 3, 4, 5]], $orders ) );
+		$this->addData( 'ordersNotPayed', $this->logicShop->getOrders( ['status' => '2'], $orders ) );
+		$this->addData( 'ordersNotDelievered', $this->logicShop->getOrders( ['status' => [3, 4]], $orders ) );
 		$this->addData( 'ordersTotal', $ordersTotal );
 
 		$customers	= [];
 		if( $customerIds )
-			$customers	= $this->logicShop->getCustomers( array( 'customerId' => $customerIds ), array( 'customerId' => 'DESC' ), array( 10 ) );
+			$customers	= $this->logicShop->getCustomers( ['customerId' => $customerIds], ['customerId' => 'DESC'], [10] );
 
 		//  ALTER TABLE `shop_customers` ADD `longitude` FLOAT NULL AFTER `password`, ADD `latitude` FLOAT NULL AFTER `longitude`;
 /*		$geocoder	= new GoogleMapsGeocoder( "" );
@@ -46,11 +46,11 @@ class Controller_Manage_Shop extends Controller
 				catch( Exception $e ){}
 			}
 			if( $customer->longitude )
-				$markers[]	= array( 'lon' => $customer->longitude, 'lat' => $customer->latitude );
+				$markers[]	= ['lon' => $customer->longitude, 'lat' => $customer->latitude];
 		}
 */
 		foreach( $customers as $customer )
-			$markers[]	= array( 'lon' => $customer->longitude, 'lat' => $customer->latitude );
+			$markers[]	= ['lon' => $customer->longitude, 'lat' => $customer->latitude];
 
 		$this->addData( 'markers', $markers );
 

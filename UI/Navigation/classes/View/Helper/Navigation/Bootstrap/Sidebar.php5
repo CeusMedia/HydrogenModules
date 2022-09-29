@@ -46,9 +46,9 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 				foreach( $page->items as $subpage ){
 					$class		= 'bs4-nav-item nav-list-sub-item '.( $subpage->active ? 'active' : NULL );
 					$href		= './'.$subpage->link;
-//					$link		= HtmlTag::create( 'a', $subpage->label, array( 'href' => $href ) );
-					$link		= HtmlTag::create( 'a', $this->renderLabelWithIcon( $subpage ), array( 'href' => $href, 'class' => 'bs4-nav-link' ) );
-					$list[]		= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+//					$link		= HtmlTag::create( 'a', $subpage->label, ['href' => $href] );
+					$link		= HtmlTag::create( 'a', $this->renderLabelWithIcon( $subpage ), ['href' => $href, 'class' => 'bs4-nav-link'] );
+					$list[]		= HtmlTag::create( 'li', $link, ['class' => $class] );
 				}
 			}
 			else{
@@ -56,9 +56,9 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 					continue;
 				$class	= 'bs4-nav-item '.( $page->active ? 'active' : NULL );
 				$href	= $page->path == "index" ? './' : './'.$page->link;
-//				$link	= HtmlTag::create( 'a', $page->label, array( 'href' => $href ) );
-				$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), array( 'href' => $href, 'class' => 'bs4-nav-link' ) );
-				$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+//				$link	= HtmlTag::create( 'a', $page->label, ['href' => $href] );
+				$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), ['href' => $href, 'class' => 'bs4-nav-link'] );
+				$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 			}
 		}
 		$logo	= $this->renderLogo();
@@ -69,8 +69,8 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 			$account	= $this->helperAccountMenu->render();
 		}
 
-		$list	= HtmlTag::create( 'ul', $list, array( "class" => 'nav nav-list bs4-nav-pills bs4-flex-column' ) );
-		$list	= HtmlTag::create( 'div', $list, array( 'id' => 'nav-sidebar-list' ) );
+		$list	= HtmlTag::create( 'ul', $list, ["class" => 'nav nav-list bs4-nav-pills bs4-flex-column'] );
+		$list	= HtmlTag::create( 'div', $list, ['id' => 'nav-sidebar-list'] );
 		$this->env->getPage()->js->addScriptOnReady('jQuery(".dropdown-toggle").dropdown();');
 		return $logo.$account.$list;
 	}
@@ -83,7 +83,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 		$label	= $this->logoTitle;
 		if( $this->logoIcon ){
 			$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
-			$icon	= HtmlTag::create( 'i', '', array( 'class' => $icon ) );
+			$icon	= HtmlTag::create( 'i', '', ['class' => $icon] );
 			$label	= $icon.'&nbsp;'.$this->logoTitle;
 		}
 		if( !$this->logoLink )
@@ -95,7 +95,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 			'href'	=> $this->logoLink,
 //			'class'	=> 'brand'
 		) );
-		return HtmlTag::create( 'div', $link, array( 'class' => 'brand' ) );
+		return HtmlTag::create( 'div', $link, ['class' => 'brand'] );
 	}
 
 	public function setInverse( bool $boolean = NULL ): self
@@ -149,7 +149,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 		$class	= $entry->icon;
 		if( !preg_match( "/^fa/", trim( $entry->icon ) ) )
 			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
-		$icon   = HtmlTag::create( 'i', '', array( 'class' => $class ) );
+		$icon   = HtmlTag::create( 'i', '', ['class' => $class] );
 		if( strlen( $entry->label ) )
 			return $icon.'&nbsp;'.$entry->label;
 		return $icon;

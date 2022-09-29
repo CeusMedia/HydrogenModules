@@ -10,7 +10,7 @@ use CeusMedia\HydrogenFramework\View;
 
 $w	= (object) $words['panel-logo'];
 
-$iconFolder	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
+$iconFolder	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-folder-open'] );
 $form	= '<form action="./admin/payment/mangopay/client/logo" method="post" enctype="multipart/form-data">
 	<div class="row-fluid">
 		<div class="span12">
@@ -35,5 +35,5 @@ return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', array(
 		$form,
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );

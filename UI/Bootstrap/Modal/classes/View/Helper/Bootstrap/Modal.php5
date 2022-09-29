@@ -73,10 +73,10 @@ class View_Helper_Bootstrap_Modal
 					$attributes[$key]	= $value;
 			}
 		}
-		$content	= array( $header, $body, $footer );
+		$content	= [$header, $body, $footer];
 		if( $this->isBs4 ){
 			$content	= HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', $content, array( 'class' => 'modal-content' ) ),
+				HtmlTag::create( 'div', $content, ['class' => 'modal-content'] ),
 			), array(
 				'class'	=> 'modal-dialog',
 				'role'	=> 'document',
@@ -208,7 +208,7 @@ class View_Helper_Bootstrap_Modal
 			'type'		=> 'submit',
 		) );
 		$buttonSubmit	= $this->formAction ? $buttonSubmit : '';
-		$footer		= HtmlTag::create( 'div', array( $buttonClose, $buttonSubmit ), array(
+		$footer		= HtmlTag::create( 'div', [$buttonClose, $buttonSubmit], array(
 			'class'	=> 'modal-footer',
 		) );
 		return $footer;
@@ -222,8 +222,8 @@ class View_Helper_Bootstrap_Modal
 			'data-dismiss'	=> "modal",
 			'aria-hidden'	=> "true",
 		) );
-		$heading	= HtmlTag::create( 'h3', $this->heading, array( 'id' => "myModalLabel" ) );
-		$header		= HtmlTag::create( 'div', array( $buttonClose, $heading ), array(
+		$heading	= HtmlTag::create( 'h3', $this->heading, ['id' => "myModalLabel"] );
+		$header		= HtmlTag::create( 'div', [$buttonClose, $heading], array(
 			'class'	=> 'modal-header',
 		) );
 		return $header;

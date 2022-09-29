@@ -24,7 +24,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 		if( $this->request->get( 'save' ) ){
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->errorTitleMissing );
-			else if( $model->getAll( array( 'title' => $data['title'] ) ) )
+			else if( $model->getAll( ['title' => $data['title']] ) )
 				$this->messenger->noteError( $words->errorTitleExisting, $data['title'] );
 			if( empty( $data['companyId'] ) )
 				$this->messenger->noteError( $words->errorCompanyMissing );
@@ -113,7 +113,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 			$data	= $this->request->getAllFromSource( 'POST' );
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->errorTitleMissing );
-			else if( $this->modelBranch->getAll( array( 'title' => $data['title'], 'branchId' => '!= '.$branchId ) ) )
+			else if( $this->modelBranch->getAll( ['title' => $data['title'], 'branchId' => '!= '.$branchId] ) )
 				$this->messenger->noteError( $words->errorTitleExisting, $data['title'] );
 			if( empty( $data['companyId'] ) )
 				$this->messenger->noteError( $words->errorCompanyMissing );

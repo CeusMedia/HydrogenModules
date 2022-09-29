@@ -8,11 +8,11 @@ class View_Database_Lock extends View{
 
 	public function ajaxRenderDashboardPanel(){
 		$context	= new View_Helper_Work_Time_Timer( $this->env );
-		$this->env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, array() );
+		$this->env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, [] );
 		$modules	= $context->getRegisteredModules();
 
 		$locks		= $this->getData( 'locks' );
-		$content	= HtmlTag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
+		$content	= HtmlTag::create( 'div', 'Keine vorhanden.', ['class' => 'alert alert-info'] );
 		if( $locks ){
 			$rows	= [];
 			foreach( $locks as $lock ){
@@ -32,13 +32,13 @@ class View_Database_Lock extends View{
 				$time		= View_Helper_Work_Time::formatSeconds( $time);
 				$username	= HtmlTag::create( 'small', $lock->user->username );
 				$rows[]	= HtmlTag::create( 'tr', array(
-					HtmlTag::create( 'td', $username.'<br/>'.$link, array( 'class' => 'autocut' ) ),
-					HtmlTag::create( 'td', $time, array( 'style' => 'text-align: right' ) ),
+					HtmlTag::create( 'td', $username.'<br/>'.$link, ['class' => 'autocut'] ),
+					HtmlTag::create( 'td', $time, ['style' => 'text-align: right'] ),
 				) );
 			}
-			$colgroup	= HtmlElements::ColumnGroup( array( "", "100px" ) );
+			$colgroup	= HtmlElements::ColumnGroup( ["", "100px"] );
 			$tbody		= HtmlTag::create( 'tbody', $rows );
-			$content	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-fixed' ) );
+			$content	= HtmlTag::create( 'table', $colgroup.$tbody, ['class' => 'table table-fixed'] );
 		}
 		return $content;
 	}

@@ -24,7 +24,7 @@ class Hook_Resource_User extends Hook
 			$modelPassword->removeByIndex( 'userId', $payload->userId );
 			$modelUser->remove( $payload->userId );
 			if( isset( $payload->counts ) )
-				$payload->counts['Resource_Users']	= (object) array( 'entities' => 1 );
+				$payload->counts['Resource_Users']	= (object) ['entities' => 1];
 		}
 	}
 }

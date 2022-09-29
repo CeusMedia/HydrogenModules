@@ -2,32 +2,32 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
 
 
-$optStatus	= array( '' => $wordsGeneral['list']['optAll'] );
+$optStatus	= ['' => $wordsGeneral['list']['optAll']];
 foreach( $wordsGeneral['job-run-statuses'] as $key => $value )
 	$optStatus[(string) $key]	= $value;
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
-$optType	= array( '' => $wordsGeneral['list']['optAll'] );
+$optType	= ['' => $wordsGeneral['list']['optAll']];
 foreach( $wordsGeneral['job-run-types'] as $key => $value )
 	$optType[$key]	= $value;
 $optType	= HtmlElements::Options( $optType, $filterType );
 
-$optJobId	= array( '' => $wordsGeneral['list']['optAll'] );
+$optJobId	= ['' => $wordsGeneral['list']['optAll']];
 foreach( $definitions as $jobId => $definition )
 	$optJobId[$jobId]	= $definition->identifier;
 $optJobId	= HtmlElements::Options( $optJobId, $filterJobId );
 
-$optClassName	= array( '' => $wordsGeneral['list']['optAll'] );
+$optClassName	= ['' => $wordsGeneral['list']['optAll']];
 foreach( $definitions as $jobId => $definition )
 	$optClassName[$definition->className]	= str_replace( '_', ': ', $definition->className );
 ksort( $optClassName );
 $optClassName	= HtmlElements::Options( $optClassName, $filterClassName );
 
-$optArchived	= array( 0 => 'no', 1 => 'yes' );
+$optArchived	= [0 => 'no', 1 => 'yes'];
 $optArchived	= HtmlElements::Options( $optArchived, $filterArchived );
 
 $panelFilter	= HtmlTag::create( 'div', array(
@@ -36,29 +36,29 @@ $panelFilter	= HtmlTag::create( 'div', array(
 		HtmlTag::create( 'form', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['filter']['labelJobId'], array( 'for' => 'input_jobId' ) ),
+					HtmlTag::create( 'label', $words['filter']['labelJobId'], ['for' => 'input_jobId'] ),
 					HtmlTag::create( 'select', $optJobId, array(
 						'name' 		=> 'jobId',
 						'id'		=> 'input_jobId',
 						'class' 	=> 'span12',
 //						'oninput'	=> 'this.form.submit();',
 					) ),
-				), array( 'class' => 'span12' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span12'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['filter']['labelClassName'], array( 'for' => 'input_className' ) ),
+					HtmlTag::create( 'label', $words['filter']['labelClassName'], ['for' => 'input_className'] ),
 					HtmlTag::create( 'select', $optClassName, array(
 						'name' 		=> 'className',
 						'id'		=> 'input_className',
 						'class' 	=> 'span12',
 //						'oninput'	=> 'this.form.submit();',
 					) ),
-				), array( 'class' => 'span12' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span12'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['filter']['labelStatus'], array( 'for' => 'input_status' ) ),
+					HtmlTag::create( 'label', $words['filter']['labelStatus'], ['for' => 'input_status'] ),
 					HtmlTag::create( 'select', $optStatus, array(
 						'name' 		=> 'status[]',
 						'id'		=> 'input_status',
@@ -68,31 +68,31 @@ $panelFilter	= HtmlTag::create( 'div', array(
 						'size'		=> '8',
 						'style'		=> 'overflow-y: hidden;'
 					) ),
-				), array( 'class' => 'span12' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span12'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['filter']['labelType'], array( 'for' => 'input_type' ) ),
+					HtmlTag::create( 'label', $words['filter']['labelType'], ['for' => 'input_type'] ),
 					HtmlTag::create( 'select', $optType, array(
 						'name' 		=> 'type',
 						'id'		=> 'input_type',
 						'class' 	=> 'span12',
 //						'oninput'	=> 'this.form.submit();',
 					) ),
-				), array( 'class' => 'span8' ) ),
+				), ['class' => 'span8'] ),
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['filter']['labelArchived'], array( 'for' => 'input_archived' ) ),
+					HtmlTag::create( 'label', $words['filter']['labelArchived'], ['for' => 'input_archived'] ),
 					HtmlTag::create( 'select', $optArchived, array(
 						'name' 		=> 'archived',
 						'id'		=> 'input_archived',
 						'class' 	=> 'span12',
 //						'oninput'	=> 'this.form.submit();',
 					) ),
-				), array( 'class' => 'span4' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span4'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['filter']['labelStartFrom'], array( 'for' => 'input_startFrom' ) ),
+					HtmlTag::create( 'label', $words['filter']['labelStartFrom'], ['for' => 'input_startFrom'] ),
 					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'date',
 						'name' 		=> 'startFrom',
@@ -101,11 +101,11 @@ $panelFilter	= HtmlTag::create( 'div', array(
 						'value'		=> $filterStartFrom,
 //						'oninput'	=> 'this.form.submit();',
 					) ),
-				), array( 'class' => 'not-span12 span6' ) ),
-//			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'not-span12 span6'] ),
+//			), ['class' => 'row-fluid'] ),
 //			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', $words['filter']['labelStartTo'], array( 'for' => 'input_startTo' ) ),
+					HtmlTag::create( 'label', $words['filter']['labelStartTo'], ['for' => 'input_startTo'] ),
 					HtmlTag::create( 'input', NULL, array(
 						'type'		=> 'date',
 						'name' 		=> 'startTo',
@@ -114,8 +114,8 @@ $panelFilter	= HtmlTag::create( 'div', array(
 						'value'		=> $filterStartTo,
 //						'oninput'	=> 'this.form.submit();',
 					) ),
-				), array( 'class' => 'not-span12 span6' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'not-span12 span6'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$words['filter']['buttonFilter'], array(
@@ -128,10 +128,10 @@ $panelFilter	= HtmlTag::create( 'div', array(
 						'href'	=> './manage/job/run/filter/reset',
 						'class'	=> 'btn not-btn-small btn-inverse',
 					) ),
-				), array( 'class' => 'btn-group' ) ),
-			), array( 'class' => 'buttonbar' ) ),
-		), array( 'action' => './manage/job/run/filter', 'method' => 'POST' ) ),
-	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );
+				), ['class' => 'btn-group'] ),
+			), ['class' => 'buttonbar'] ),
+		), ['action' => './manage/job/run/filter', 'method' => 'POST'] ),
+	), ['class' => 'content-panel-inner'] )
+), ['class' => 'content-panel'] );
 
 return $panelFilter;

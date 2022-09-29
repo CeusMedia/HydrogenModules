@@ -14,7 +14,7 @@ class Controller_Manage_Testimonial extends Controller{
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_Testimonial( $this->env );
-		$testimonials		= $this->model->getAll( array(), array( 'rank' => 'ASC' ) );
+		$testimonials		= $this->model->getAll( [], ['rank' => 'ASC'] );
 		$this->addData( 'testimonials', $testimonials );
 	}
 

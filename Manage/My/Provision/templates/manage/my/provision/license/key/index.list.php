@@ -5,10 +5,10 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $w	= (object) $words['index.list'];
 
 $iconsStatus	= array(
-//	Model_Provision_User_License_Key::STATUS_	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-remove' ) ),
-	Model_Provision_User_License_Key::STATUS_NEW		=> HtmlTag::create( 'i', '', array( 'class' => 'icon-pause' ) ),
-	Model_Provision_User_License_Key::STATUS_ASSIGNED	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-play' ) ),
-	Model_Provision_User_License_Key::STATUS_EXPIRED	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-stop' ) ),
+//	Model_Provision_User_License_Key::STATUS_	=> HtmlTag::create( 'i', '', ['class' => 'icon-remove'] ),
+	Model_Provision_User_License_Key::STATUS_NEW		=> HtmlTag::create( 'i', '', ['class' => 'icon-pause'] ),
+	Model_Provision_User_License_Key::STATUS_ASSIGNED	=> HtmlTag::create( 'i', '', ['class' => 'icon-play'] ),
+	Model_Provision_User_License_Key::STATUS_EXPIRED	=> HtmlTag::create( 'i', '', ['class' => 'icon-stop'] ),
 );
 
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
@@ -51,7 +51,7 @@ if( $userLicenseKeys ){
 	$helper->setUser( $userLicenseKey->userLicense->userId );
 //	$helper->setMode( 'inline' );
 	$userName	= $helper->render();
-//		$userName	= HtmlTag::create( 'small', $userLicense->user->firstname.' '.$userLicense->user->firstname, array( 'class' => 'muted' ) );
+//		$userName	= HtmlTag::create( 'small', $userLicense->user->firstname.' '.$userLicense->user->firstname, ['class' => 'muted'] );
 		$product	= $userLicenseKey->product->title;
 /*		if( $userLicenseKey->product->url )
 			$product	= HtmlTag::create( 'a', $product, array(
@@ -67,14 +67,14 @@ if( $userLicenseKeys ){
 			HtmlTag::create( 'td', 'Lizenznummer: '.$licenseUid.'<br/>Lizenz: '.$userLicenseKey->productLicense->title.'<br/>Produkt: '.$product.'<br/>Besitzer: '.$userName ),
 			HtmlTag::create( 'td', $status.'<br/>'.$duration ),
 			HtmlTag::create( 'td', 'Schlüssernummer: '.$userLicenseKey->uid ),
-		), array( 'class' => $rowColors[$userLicenseKey->status] ) );
+		), ['class' => $rowColors[$userLicenseKey->status]] );
 	}
 }
-$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Lizenz', 'Zustand', 'Lizenzschlüssel' ) ) );
+$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Lizenz', 'Zustand', 'Lizenzschlüssel'] ) );
 $tbody	= HtmlTag::create( 'tbody', $list );
-$list	= HtmlTag::create( 'table', $thead.$tbody, array( 'class' => 'table' ) );
+$list	= HtmlTag::create( 'table', $thead.$tbody, ['class' => 'table'] );
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', array(
 	'href'	=> './manage/my/provision/license/add',
 	'class'	=> 'btn btn-success',

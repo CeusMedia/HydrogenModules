@@ -138,7 +138,7 @@ class Controller_Catalog_Gallery extends Controller
 //		$this->logic->cache->flush();
 		$this->categories	= $this->logic->cache->get( 'catalog.gallery.categories' );
 		if( !$this->categories ){
-			$this->categories		= $this->modelCategory->getAll( array( 'parentId' => 0 ), array( 'rank' => 'ASC' ) );
+			$this->categories		= $this->modelCategory->getAll( ['parentId' => 0], ['rank' => 'ASC'] );
 			foreach( $this->categories as $nr => $category )
 				$this->categories[$nr]->images	= $this->logic->getCategoryImages( $category->galleryCategoryId );
 			$this->logic->cache->set( 'catalog.gallery.categories', $this->categories );

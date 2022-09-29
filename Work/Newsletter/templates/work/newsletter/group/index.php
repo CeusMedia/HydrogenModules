@@ -1,7 +1,7 @@
 <?php
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
-extract( $view->populateTexts( array( 'above', 'bottom', 'top' ), 'html/work/newsletter/group/index/', array( 'words' => $words ) ) );
+extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/group/index/', ['words' => $words] ) );
 
 $panelFilter	= $view->loadTemplateFile( 'work/newsletter/group/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'work/newsletter/group/index.list.php' );

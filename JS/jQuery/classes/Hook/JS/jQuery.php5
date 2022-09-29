@@ -21,7 +21,7 @@ class Hook_JS_jQuery extends Hook
 		if( $minified ){
 			$context->addJavaScript( $pathJs.'jquery-'.$version.'.min.js' );
 			if( $module->config['load.map']->value ){
-				$versions	= array( '1.10.2', '1.11.1', '3.3.1' );
+				$versions	= ['1.10.2', '1.11.1', '3.3.1'];
 				if( in_array( $version, $versions ) )
 					$context->js->addUrl( $pathJs.'jquery-'.$version.'.min.map', 9 );
 			}

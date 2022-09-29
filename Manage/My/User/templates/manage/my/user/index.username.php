@@ -8,7 +8,7 @@ $w	= (object) $words['username'];
 if( 0 && !$env->getConfig()->get( 'module.manage_my_user.username.changeable' ) )
 	return '';
 
-extract( $view->populateTexts( array( 'panel.username.above', 'panel.username.below', 'panel.username.info' ), 'html/manage/my/user/' ) );
+extract( $view->populateTexts( ['panel.username.above', 'panel.username.below', 'panel.username.info'], 'html/manage/my/user/' ) );
 
 return HTML::DivClass( 'content-panel content-panel-form', array(
 	HtmlTag::create( 'h4', $w->heading ),
@@ -46,7 +46,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				HTML::DivClass( 'span6', $textPanelUsernameInfo ),
 			) ),
 			HTML::Buttons( array(
-				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
+				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, ['class' => 'not-muted'] ),
 				HTML::DivClass( 'row-fluid',
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',

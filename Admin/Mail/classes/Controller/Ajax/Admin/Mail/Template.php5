@@ -9,7 +9,7 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 	public function render( $templateId )
 	{
 		$this->checkTemplate( $templateId );
-		$mail		= new Mail_Test( $this->env, array( 'mailTemplateId' => $templateId ) );
+		$mail		= new Mail_Test( $this->env, ['mailTemplateId' => $templateId] );
 		$helper		= new View_Helper_Mail_View_HTML( $this->env );
 		$helper->setMailObjectInstance( $mail );
 		$this->respondData( array( 'html' => $helper->render() ) );

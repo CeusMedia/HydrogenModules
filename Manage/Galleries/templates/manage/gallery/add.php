@@ -6,7 +6,7 @@ $galleries	= $this->renderList();
 $optStatus	= $words['states'];
 $optStatus	= HtmlElements::Options( $optStatus, $gallery->status );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/gallery' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/gallery' ) );
 
 return $textTop.'
 <div class="row-fluid">

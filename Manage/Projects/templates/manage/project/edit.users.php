@@ -4,8 +4,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['edit-panel-users'];
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
 
 $canEditUsers	= $env->getAcl()->has( 'manage/user', 'edit' );
 
@@ -29,19 +29,19 @@ foreach( $projectUsers as $user ){
 		$label	= $helperMember->render();
 	}
 	else{
-		$label	= HtmlTag::create( 'span', $user->username, array( 'class' => $class ) );
+		$label	= HtmlTag::create( 'span', $user->username, ['class' => $class] );
 		if( $canEditUsers ){
 			$url	= './admin/user/edit/'.$user->userId.$from;
-			$label	= HtmlTag::create( 'a', $user->username, array( 'href' => $url, 'class' => $class ) );
+			$label	= HtmlTag::create( 'a', $user->username, ['href' => $url, 'class' => $class] );
 		}
 	}
 	$url	= './manage/project/removeUser/'.$project->projectId.'/'.$user->userId;
-	$remove	= HtmlTag::create( 'button', $iconRemove, array( 'type' => 'button', 'class' => 'btn btn-mini btn-inverse pull-right disabled' ) );
+	$remove	= HtmlTag::create( 'button', $iconRemove, ['type' => 'button', 'class' => 'btn btn-mini btn-inverse pull-right disabled'] );
 	if( ( $project->creatorId && $user->userId !== $project->creatorId ) || ( !$project->creatorId && $user->userId !== $currentUserId ) )
-		$remove	= HtmlTag::create( 'a', $iconRemove, array( 'href' => $url, 'class' => 'btn btn-mini btn-inverse pull-right' ) );
+		$remove	= HtmlTag::create( 'a', $iconRemove, ['href' => $url, 'class' => 'btn btn-mini btn-inverse pull-right'] );
 	if( count( $projectUsers ) === 1 )
 		$remove	= '';
-	$list[$user->username]	= HtmlTag::create( 'li', $remove.$label, array( 'class' => 'autocut' ) );
+	$list[$user->username]	= HtmlTag::create( 'li', $remove.$label, ['class' => 'autocut'] );
 }
 ksort( $list );
 $list	= HtmlTag::create( 'ul', $list );

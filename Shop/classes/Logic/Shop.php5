@@ -171,7 +171,7 @@ class Logic_Shop extends Logic
 	 */
 	public function getOrderOptions( $orderId )
 	{
-		return (object) array();
+		return (object) [];
 	}
 
 	public function getOrderPosition( $positionId, bool $extended = FALSE )

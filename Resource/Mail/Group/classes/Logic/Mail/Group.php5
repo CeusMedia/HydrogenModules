@@ -182,7 +182,7 @@ class Logic_Mail_Group extends Logic
 
 	public function countGroupMembers( $groupId, bool $activeOnly = FALSE )
 	{
-		$indices	= array( 'mailGroupId' => $groupId );
+		$indices	= ['mailGroupId' => $groupId];
 		if( $activeOnly )
 			$indices['status']	= Model_Mail_Group_Member::STATUS_ACTIVATED;
 		return $this->modelMember->count( $indices );
@@ -190,7 +190,7 @@ class Logic_Mail_Group extends Logic
 
 	public function countGroupMessages( $groupId, bool $forwardedOnly = FALSE )
 	{
-		$indices	= array( 'mailGroupId' => $groupId );
+		$indices	= ['mailGroupId' => $groupId];
 		if( $forwardedOnly )
 			$indices['status']	= Model_Mail_Group_Message::STATUS_FORWARDED;
 		return $this->modelMessage->count( $indices );
@@ -203,7 +203,7 @@ class Logic_Mail_Group extends Logic
 
 	public function getGroup( $groupId, bool $activeOnly = FALSE, bool $strict = TRUE )
 	{
-		$indices	= array( 'mailGroupId' => $groupId );
+		$indices	= ['mailGroupId' => $groupId];
 		if( $activeOnly )
 			$indices['status']	= array(
 				Model_Mail_Group::STATUS_ACTIVATED,
@@ -232,7 +232,7 @@ class Logic_Mail_Group extends Logic
 
 	public function getGroupMember( $memberId, bool $activeOnly = FALSE )
 	{
-		$indices	= array( 'mailGroupMemberId' => $memberId );
+		$indices	= ['mailGroupMemberId' => $memberId];
 		if( $activeOnly )
 			$indices['status']	= Model_Mail_Group_Member::STATUS_ACTIVATED;
 		return $this->modelMember->getByIndices( $indices );
@@ -240,7 +240,7 @@ class Logic_Mail_Group extends Logic
 
 	public function getGroupMembers( $groupId, bool $activeOnly = FALSE ): array
 	{
-		$indices	= array( 'mailGroupId' => $groupId );
+		$indices	= ['mailGroupId' => $groupId];
 		if( $activeOnly )
 			$indices['status']	= Model_Mail_Group_Member::STATUS_ACTIVATED;
 		return $this->modelMember->getAllByIndices( $indices );
@@ -248,7 +248,7 @@ class Logic_Mail_Group extends Logic
 
 	public function getGroupMemberByAddress( $groupId, $address, bool $activeOnly = FALSE, bool $strict = TRUE )
 	{
-		$indices	= array( 'mailGroupId' => $groupId, 'address' => $address );
+		$indices	= ['mailGroupId' => $groupId, 'address' => $address];
 		if( $activeOnly )
 			$indices['status']	= Model_Mail_Group_Member::STATUS_ACTIVATED;
 		if( ( $member = $this->modelMember->getByIndices( $indices ) ) )
@@ -262,7 +262,7 @@ class Logic_Mail_Group extends Logic
 
 	public function getMailGroupFromAddress( $address, bool $activeOnly = FALSE, bool $strict = TRUE )
 	{
-		$indices	= array( 'address' => $address );
+		$indices	= ['address' => $address];
 		if( $activeOnly )
 			$indices['status']	= array(
 				Model_Mail_Group::STATUS_ACTIVATED,
@@ -281,7 +281,7 @@ class Logic_Mail_Group extends Logic
 
 	public function getMemberByAddress( $address, bool $activeOnly = FALSE, bool $strict = TRUE )
 	{
-		$indices	= array( 'address' => $address );
+		$indices	= ['address' => $address];
 		if( $activeOnly )
 			$indices['status']	= Model_Mail_Group_Member::STATUS_ACTIVATED;
 		if( ( $member = $this->modelMember->getByIndices( $indices ) ) )
@@ -301,8 +301,8 @@ class Logic_Mail_Group extends Logic
 	public function importGroupMails( $groupId, bool $dry = FALSE )
 	{
 		$results	= (object) array(
-			'mailsImported'	=> array(),
-			'errors'		=> array(),
+			'mailsImported'	=> [],
+			'errors'		=> [],
 		);
 		$mailbox	= $this->getMailbox( $groupId );
 		$mailIds	= $mailbox->searchMailbox( 'UNSEEN' );
@@ -357,31 +357,31 @@ class Logic_Mail_Group extends Logic
 
 	public function setGroupBounce( $groupId, $bounce )
 	{
-		$data		= array( 'bounce' => $bounce );
+		$data		= ['bounce' => $bounce];
 		$this->updateGroup( $groupId, $data, __METHOD__ );
 	}
 
 	public function setGroupStatus( $groupId, $status )
 	{
-		$data		= array( 'status' => $status );
+		$data		= ['status' => $status];
 		$this->updateGroup( $groupId, $data, __METHOD__ );
 	}
 
 	public function setGroupTitle( $groupId, $title )
 	{
-		$data		= array( 'title' => $title );
+		$data		= ['title' => $title];
 		$this->updateGroup( $groupId, $data, __METHOD__ );
 	}
 
 	public function setGroupType( $groupId, $type )
 	{
-		$data		= array( 'type' => $type );
+		$data		= ['type' => $type];
 		$this->updateGroup( $groupId, $data, __METHOD__ );
 	}
 
 	public function setGroupVisibility( $groupId, $visibility )
 	{
-		$data		= array( 'visibility' => $visibility );
+		$data		= ['visibility' => $visibility];
 		$this->updateGroup( $groupId, $data, __METHOD__ );
 	}
 
@@ -449,7 +449,7 @@ class Logic_Mail_Group extends Logic
 
 	//	@todo: find a way to execute command as root
 		error_log( $command.PHP_EOL, 3, 'commands.log' );
-		$this->modelGroup->edit( $groupId, array( 'status' => Model_Mail_Group::STATUS_EXISTING ) );
+		$this->modelGroup->edit( $groupId, ['status' => Model_Mail_Group::STATUS_EXISTING] );
 	}
 
 	protected function getMailbox( $groupId )
@@ -457,7 +457,7 @@ class Logic_Mail_Group extends Logic
 		$group		= $this->checkGroupId( $groupId );
 		$server		= $this->modelServer->get( $group->mailGroupServerId );
 
-		$flags		= array( 'imap' );
+		$flags		= ['imap'];
 		if( (int) $server->imapPort === 993 )
 			$flags[]	= 'ssl';
 		else if( (int) $server->imapPort === 143 )

@@ -126,7 +126,7 @@ class Controller_Manage_User extends Controller
 			}
 		}
 		$input		= $this->env->getRequest();														//  allow preset data via GET parameters
-		$user		= (object) array();
+		$user		= (object) [];
 		$columns	= $modelUser->getColumns();
 		foreach( $columns as $column )
 			$user->$column	= htmlentities( $input[$column], ENT_COMPAT, 'UTF-8' );
@@ -279,7 +279,7 @@ class Controller_Manage_User extends Controller
 		}
 
 		$modelPassword	= new Model_User_Password( $this->env );
-		$passwords		= $modelPassword->getAll( array( 'userId' => $userId ) );
+		$passwords		= $modelPassword->getAll( ['userId' => $userId] );
 		$this->addData( 'passwords', $passwords );
 	}
 
@@ -387,7 +387,7 @@ class Controller_Manage_User extends Controller
 		foreach( $session->getAll() as $key => $value ){									//  iterate session settings
 			if( preg_match( '/^filter-user-/', $key ) ){									//  if setting is users filter
 				$column	= preg_replace( '/^filter-user-/', '', $key );						//  extract database module column
-				if( !in_array( $column, array( 'order', 'direction', 'limit' ) ) ){			// 	filter is within list of allowed filters
+				if( !in_array( $column, ['order', 'direction', 'limit'] ) ){			// 	filter is within list of allowed filters
 					if( $column === 'username' )											//  filter is username
 						$value = preg_replace( "/\*/", "%", $value );						//  transform for SQL: * -> %
 					$filters[$column] = $value;												//  enlist filter
@@ -398,7 +398,7 @@ class Controller_Manage_User extends Controller
 		$order	= $session->get( 'filter-user-order' );
 		$dir	= $session->get( 'filter-user-direction' );
 		if( $order && $dir )
-			$orders	= array( $order => $dir );
+			$orders	= [$order => $dir];
 		$data	= array(
 			'filters'	=> $filters,
 			'orders'	=> $orders
@@ -412,7 +412,7 @@ class Controller_Manage_User extends Controller
 
 		$all		= $modelUser->count();
 		$total		= $modelUser->count( $filters );
-		$list		= $modelUser->getAll( $filters, $orders, array( $offset, $limit ) );
+		$list		= $modelUser->getAll( $filters, $orders, [$offset, $limit] );
 
 		$this->addData( 'username', $session->get( 'filter-user-username' ) );
 		$this->addData( 'roles', $roleMap );

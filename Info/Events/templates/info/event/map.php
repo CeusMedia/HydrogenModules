@@ -1,17 +1,17 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconDetails		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconParticipate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconNotice			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
-$iconClose			= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ).'';
+$iconDetails		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconParticipate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconNotice			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-star'] );
+$iconClose			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'';
 
-$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-info-circle' ) );
-$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconMarker		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-map-marker' ) );
-$iconNote		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-star' ) );
+$iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-info-circle'] );
+$iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconMarker		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-map-marker'] );
+$iconNote		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-star'] );
 
-$panelSearch	= $view->loadTemplateFile( 'info/event/panel.search.php', array( 'from' => 'info/event/map' ) );
+$panelSearch	= $view->loadTemplateFile( 'info/event/panel.search.php', ['from' => 'info/event/map'] );
 
 $list	= '<div><em class="muted">...</em></div>';
 $map	= '';
@@ -30,7 +30,7 @@ if( $center ){
 			) );
 		}
 	}
-	$list		= HtmlTag::create( 'ul', $list, array( 'class' => 'list-branches nav nav-pills nav-stacked' ) );
+	$list		= HtmlTag::create( 'ul', $list, ['class' => 'list-branches nav nav-pills nav-stacked'] );
 */
 	$list	= '<div><em class="muted">Nichts gefunden.</em></div>';
 	if( $events ){

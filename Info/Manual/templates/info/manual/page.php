@@ -17,15 +17,15 @@ $buttonAdd		= "";
 $buttonEdit		= "";
 $buttonReload	= "";
 if( $moduleConfig->get( 'editor' ) ){
-	$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-	$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) );
-	$iconReload		= HtmlTag::create( 'i', '', array( 'class' => 'icon-refresh' ) );
+	$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+	$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
+	$iconReload		= HtmlTag::create( 'i', '', ['class' => 'icon-refresh'] );
 	if( in_array( 'add', $rights ) )
-		$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], array( 'href' => './info/manual/add', 'class' => "btn btn-small btn-info" ) );
+		$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$words['list']['buttonAdd'], ['href' => './info/manual/add', 'class' => "btn btn-small btn-info"] );
 	if( in_array( 'edit', $rights ) )
-		$buttonEdit		= HtmlTag::create( 'a', $iconEdit.' '.$words['view']['buttonEdit'], array( 'href' => './info/manual/edit/'.$page->manualPageId.'-'.$view->urlencode( $page->title ), 'class' => "btn btn-small" ) );
+		$buttonEdit		= HtmlTag::create( 'a', $iconEdit.' '.$words['view']['buttonEdit'], ['href' => './info/manual/edit/'.$page->manualPageId.'-'.$view->urlencode( $page->title ), 'class' => "btn btn-small"] );
 	if( in_array( 'reload', $rights ) )
-		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], array( 'href' => './info/manual/reload', 'class' => "btn btn-small" ) );
+		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], ['href' => './info/manual/reload', 'class' => "btn btn-small"] );
 }
 
 $attributes	= array(

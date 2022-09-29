@@ -31,7 +31,7 @@ foreach( $modules as $moduleId => $module ){
 	$version	= '<span class="module-version">'.$version.'</span>';
 	$list[]		= '<tr class="'.$class.'"><td>'.$link.'</td><td>'.$type.'</td><td>'.$version.'</td></tr>';
 }
-$heads		= array( $words['index']['headTitle'], $words['index']['headType'], $words['index']['headVersion'] );
+$heads		= [$words['index']['headTitle'], $words['index']['headType'], $words['index']['headVersion']];
 $heads		= HtmlElements::TableHeads( $heads );
 $listAll	= '<table class="modules all">'.$heads.join( $list ).'</table>';
 

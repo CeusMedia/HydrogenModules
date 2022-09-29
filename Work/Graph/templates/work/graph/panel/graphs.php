@@ -13,7 +13,7 @@ foreach( $graphs as $graph ){
 	) );
 }
 ksort( $listGraphs );
-$listGraphs	= HtmlTag::create( 'ul', $listGraphs, array( 'class' => 'not-unstyled nav nav-pills nav-stacked' ) );
+$listGraphs	= HtmlTag::create( 'ul', $listGraphs, ['class' => 'not-unstyled nav nav-pills nav-stacked'] );
 
 return '
 <div class="content-panel">

@@ -24,10 +24,10 @@ class View_Manage_Bookmark extends View
 			$list	= [];
 			foreach( $bookmarks as $entry ){
 				$class	= $entry->bookmarkId == $bookmarkId ? 'active' : NULL;
-				$link	= HtmlTag::create( 'a', $entry->title, array( 'href' => './manage/bookmark/edit/'.$entry->bookmarkId ) );
-				$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+				$link	= HtmlTag::create( 'a', $entry->title, ['href' => './manage/bookmark/edit/'.$entry->bookmarkId] );
+				$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 			}
-			$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+			$list	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );
 		}
 		return $list;
 	}

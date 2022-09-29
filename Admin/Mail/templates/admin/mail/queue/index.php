@@ -4,7 +4,7 @@ $w		= (object) $words['index'];
 $panelFilter	= $view->loadTemplateFile( 'admin/mail/queue/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'admin/mail/queue/index.list.php' );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/queue/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/queue/' ) );
 
 return $textTop.'
 <div class="row-fluid">

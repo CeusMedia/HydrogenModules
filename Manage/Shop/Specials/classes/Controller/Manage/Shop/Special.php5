@@ -7,9 +7,9 @@ class Controller_Manage_Shop_Special extends Controller
 	public function ajaxLoadCatalogArticles( $bridgeId )
 	{
 		$bridge 	= $this->logicBridge->getBridge( $bridgeId );
-		$articles	= $bridge->object->getAll( array(), array( 'title' => 'ASC' ) );
+		$articles	= $bridge->object->getAll( [], ['title' => 'ASC'] );
 
-		$data	=  array();
+		$data	=  [];
 		$column	= $bridge->data->articleIdColumn;
 		foreach( $articles as $article )
 			$data[]	= (object) array(
@@ -71,7 +71,7 @@ class Controller_Manage_Shop_Special extends Controller
 		}
 
 		if( $this->request->getMethod()->isPost() ){
-			$specialId	= $this->modelSpecial->add( array() );
+			$specialId	= $this->modelSpecial->add( [] );
 			$this->messenger->noteSuccess( 'Spezialität hinzugefügt.' );
 			$this->restart( 'edit/'.$specialId, TRUE );
 		}

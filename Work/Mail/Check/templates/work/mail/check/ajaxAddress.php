@@ -8,7 +8,7 @@ function renderFacts( array $facts ): string
 		$list[]	= HtmlTag::create( 'dt', $term );
 		$list[]	= HtmlTag::create( 'dd', $definition );
 	}
-	return HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+	return HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 }
 
 
@@ -36,10 +36,10 @@ function renderCodeBadge( $check, string $label = NULL ): string
 			break;
 	}
 	$label	= strlen( trim( $label ) ) ? trim( $label ) : $code;
-	return HtmlTag::create( 'span', $label, array( 'class' => 'label '.$labelCode ) );
+	return HtmlTag::create( 'span', $label, ['class' => 'label '.$labelCode] );
 }
 
-$checks		= HtmlTag::create( 'div', 'Keine Prüfungen bisher.', array( 'class' => 'text text-info' ) );
+$checks		= HtmlTag::create( 'div', 'Keine Prüfungen bisher.', ['class' => 'text text-info'] );
 if( $address->checks ){
 	$rows	= [];
 	foreach( $address->checks as $check ){
@@ -60,7 +60,7 @@ if( $address->checks ){
 			HtmlTag::create( 'td', $facts ),
 		) );
 	}
-	$checks	= HtmlTag::create( 'table', $rows, array( 'class' => 'table table-striped' ) );
+	$checks	= HtmlTag::create( 'table', $rows, ['class' => 'table table-striped'] );
 }
 
 return '

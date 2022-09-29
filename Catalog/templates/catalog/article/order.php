@@ -4,7 +4,7 @@ $w				= (object) $words['article'];
 $iconCart		= '<i class="icon-shopping-cart icon-white"></i>';
 
 $panelOrder		= '';
-if( in_array( $article->status, array( -1, 0, 1 ) ) ){
+if( in_array( $article->status, [-1, 0, 1] ) ){
 	$buttonCart		= '&nbsp;<a href="./shop/cart" class="btn btn-success btn-small">'.$iconCart.' zum Warenkorb</a>';
 	if( !$cart )
 		$buttonCart		= '';

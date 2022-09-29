@@ -38,7 +38,7 @@ class Controller_Work_Newsletter_Group extends Controller
 			'type'		=> $this->request->get( 'type' ),
 		);
 		$this->addData( 'group', $group );
-		$groups	= $this->logic->getGroups( array( 'type' => array( 0, 2 ) ), array( 'title' => 'ASC' ) );
+		$groups	= $this->logic->getGroups( ['type' => [0, 2]], ['title' => 'ASC'] );
 		foreach( $groups as $group )
 			$group->count	= $this->logic->countGroupReaders( $group->newsletterGroupId );
 		$this->addData( 'groups', $groups );
@@ -67,15 +67,15 @@ class Controller_Work_Newsletter_Group extends Controller
 		$this->addData( 'groupId', $groupId );
 		$this->addData( 'group', $this->logic->getGroup( $groupId ) );
 
-		$orders		= array( 'firstname' => 'ASC', 'surname' => 'ASC' );
-		$readers	= $this->logic->getReadersOfGroup( $groupId, array(), $orders );
+		$orders		= ['firstname' => 'ASC', 'surname' => 'ASC'];
+		$readers	= $this->logic->getReadersOfGroup( $groupId, [], $orders );
 		$this->addData( 'groupReaders', $readers );
 	}
 
 	public function export( $groupId )
 	{
-		$conditions	= array( 'status' => '1' );
-		$orders		= array( 'firstname' => 'ASC', 'surname' => 'ASC' );
+		$conditions	= ['status' => '1'];
+		$orders		= ['firstname' => 'ASC', 'surname' => 'ASC'];
 		$readers	= $this->logic->getReadersOfGroup( $groupId, $conditions, $orders );
 		$list		= [];
 		foreach( $readers as $reader )
@@ -104,7 +104,7 @@ class Controller_Work_Newsletter_Group extends Controller
 
 	public function index()
 	{
-		$orders		= array( 'title' => 'ASC' );
+		$orders		= ['title' => 'ASC'];
 
 		$filterQuery	= $this->session->get( 'filter_work_newsletter_group_query' );
 		$filterStatus	= $this->session->get( 'filter_work_newsletter_group_status' );

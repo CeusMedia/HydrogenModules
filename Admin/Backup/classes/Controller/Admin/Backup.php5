@@ -47,8 +47,8 @@ class Controller_Admin_Backup extends Controller
 		if( $page > 0 && $page > floor( $count / $limit ) )
 			$page	= 0;
 
-		$orders		= array( 'createdAt' => 'DESC' );
-		$limits		= array( $page * $limit, $limit );
+		$orders		= ['createdAt' => 'DESC'];
+		$limits		= [$page * $limit, $limit];
 		$backups	= $this->model->getAll( $conditions, $orders, $limits );
 		$this->addData( 'nrFound', $count );
 		$this->addData( 'filterPage', $page );

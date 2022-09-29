@@ -108,7 +108,7 @@ class Logic_Upload{
 		if( $this->upload->error )
 			return FALSE;
 		$maxSize	= Alg_UnitParser::parse( $maxSize, 'B' );
-		$maxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $maxSize ) );
+		$maxSize	= Logic_Upload::getMaxUploadSize( ['config' => $maxSize] );
 		$this->upload->allowedSize	= $maxSize;
 
 		if( $maxSize <= 0 )
@@ -197,7 +197,7 @@ class Logic_Upload{
 	/**
 	 *	Returns maximum supported file size of uploads in bytes.
 	 *	Gets the minimum of PHP limits 'upload_max_filesize', 'post_max_size' and 'memory_limit'.
-	 *	Take take other given limits into judgement, eg. array( 'myLimit' => '4MB' ).
+	 *	Take take other given limits into judgement, eg. ['myLimit' => '4MB'].
 	 *	Uses Alg_UnitParser to convert limit strings like "4M" to integer.
 	 *	Uses Alg_UnitParser to convert own given limits with units to integer.
 	 *

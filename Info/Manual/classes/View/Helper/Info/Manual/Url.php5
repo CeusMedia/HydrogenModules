@@ -61,7 +61,7 @@ class View_Helper_Info_Manual_Url
 
 	public function setMode( $mode ): self
 	{
-		if( !in_array( $mode, array( self::MODE_CATEGORY, self::MODE_PAGE ) ) )
+		if( !in_array( $mode, [self::MODE_CATEGORY, self::MODE_PAGE] ) )
 			throw new RangeException( 'Invalid mode given' );
 		$this->mode	= $mode;
 		return $this;

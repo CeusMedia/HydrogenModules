@@ -49,19 +49,19 @@ class Logic_Issue extends Logic
 			if( $issue->managerId )
 				$issue->manager	= $this->modelUser->get( $issue->managerId );
 			$issue->project	= $this->logicProject->get( $issue->projectId );
-			$issueNotes		= $this->modelIssueNote->getAll( array( 'issueId' => $issueId ) );		//  get issue notes
+			$issueNotes		= $this->modelIssueNote->getAll( ['issueId' => $issueId] );		//  get issue notes
 			$issue->notes	= [];																//  prepare empty note list
 			foreach( $issueNotes as $note ){														//  iterate issue notes
 				$note->user	= $this->modelUser->get( $note->userId );								//  resolve note user
 				$note->changes	= [];															//  prepare empty change list
-				$issueChanges	= $this->modelIssueChange->getAll( array( 'noteId' => $note->issueNoteId ) );	//  get issue changes
+				$issueChanges	= $this->modelIssueChange->getAll( ['noteId' => $note->issueNoteId] );	//  get issue changes
 				foreach( $issueChanges as $change ){												//  iterate issue changes
 					$note->changes[]	= $change;													//  note issue change
 					$change->user		= $this->modelUser->get( $change->userId );					//  resolve change user
 				}
 				$issue->notes[]	= $note;															//  note issue note
 			}
-//			$issue->changes	= $this->modelIssueChange->getAll( array( 'issueId' => $issueId, 'noteId' => 0 ), array( 'timestamp' => 'ASC' ) );
+//			$issue->changes	= $this->modelIssueChange->getAll( ['issueId' => $issueId, 'noteId' => 0], ['timestamp' => 'ASC'] );
 		}
 		return $issue;																				//  return issue data object
 	}
@@ -86,20 +86,20 @@ class Logic_Issue extends Logic
 			$userIds[]	= (int) $note->userId;														//  note user ID of note author
 			foreach( $note->changes as $change ){													//  iterate issue changes
 				$userIds[]	= (int) $change->userId;												//  note user ID of change author
-				if( in_array( $change->type, array( 1, 2 ) ) ){										//  issue reporter or manager has been changed
+				if( in_array( $change->type, [1, 2] ) ){										//  issue reporter or manager has been changed
 					$userIds[]	= (int) $change->from;												//  note user ID of old reporter or manager
 					$userIds[]	= (int) $change->to;												//  note user ID of new reporter or manager
 				}
 			}
 		}
 
-		$users		= [];																		//  prepare empty result map
-		$conditions	= array( 'userId' => array_unique( $userIds ) );								//  reduce to unique user IDs
-		$orders		= array( 'username' => 'ASC' );													//  order by username
+		$users		= [];																			//  prepare empty result map
+		$conditions	= ['userId' => array_unique( $userIds )];										//  reduce to unique user IDs
+		$orders		= ['username' => 'ASC'];														//  order by username
 		foreach( $this->modelUser->getAll( $conditions, $orders ) as $user ){						//  iterate found users
 			$users[$user->userId]	= $user;														//  note user by its ID
 			$user->isInProject	= FALSE;															//  set project assignment to false default
-			$user->isWorker		= FALSE;															//  set wprker status to false default
+			$user->isWorker		= FALSE;															//  set worker status to false default
 		}
 		foreach( $usersProject as $user )															//  iterate users of issue project
 			$users[$user->userId]->isInProject	= TRUE;												//  mark user as assigned to project

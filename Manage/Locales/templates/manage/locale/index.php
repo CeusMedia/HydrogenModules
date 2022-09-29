@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 $panelFilter	= $this->loadTemplate( 'manage/locale', 'filter' );
 $panelList		= $this->loadTemplate( 'manage/locale', 'list' );
 
-$optPath	= array_merge( array( '' ), $paths );
+$optPath	= array_merge( [''], $paths );
 $optPath	= array_combine( $optPath, $optPath );
 $optPath	= HtmlElements::Options( $optPath );
 

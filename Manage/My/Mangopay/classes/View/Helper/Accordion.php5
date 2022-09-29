@@ -31,7 +31,7 @@ class View_Helper_Accordion{
 
 	public function setOpen( $ids ){
 		if( !is_array( $ids ) )
-			$ids	= array( $ids );
+			$ids	= [$ids];
 		if( $this->singleOpen )
 			$ids	= array_slice( $ids, 0, 1 );
 		$this->open	= $ids;
@@ -48,11 +48,11 @@ class View_Helper_Accordion{
 				'data-parent'	=> $this->singleOpen ? '#'.$this->id : NULL,
 				'data-target'	=> '#'.$part->id
 			) );
-			$content	= HtmlTag::create( 'div', $part->content, array( 'class' => 'accordion-inner' ) );
+			$content	= HtmlTag::create( 'div', $part->content, ['class' => 'accordion-inner'] );
 			$isOpen		= in_array( $part->id, $this->open );
-			$heading	= HtmlTag::create( 'div', $link, array( 'class' => 'accordion-heading' ) );
-			$body		= HtmlTag::create( 'div', $content, array( 'class' => 'accordion-body collapse'.( $isOpen ? ' in' : '' ), 'id' => $part->id ) );
-			$groups[]	= HtmlTag::create( 'div', $heading.$body, array( 'class' => 'accordion-group' ) );
+			$heading	= HtmlTag::create( 'div', $link, ['class' => 'accordion-heading'] );
+			$body		= HtmlTag::create( 'div', $content, ['class' => 'accordion-body collapse'.( $isOpen ? ' in' : '' ), 'id' => $part->id] );
+			$groups[]	= HtmlTag::create( 'div', $heading.$body, ['class' => 'accordion-group'] );
 		}
 		return HtmlTag::create( 'div', $groups, array(
 			'class'		=> 'accordion',

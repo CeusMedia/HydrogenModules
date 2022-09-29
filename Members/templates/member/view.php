@@ -1,11 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
-$iconAccept		= HtmlTag::create( 'i', '', array( 'class' => 'icon-ok icon-white' ) );
-$iconReject		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove icon-white' ) );
-$iconRequest	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
+$iconAccept		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconReject		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
+$iconRequest	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 
 $isCurrentUser	= $user->userId == $currentUserId;
 $isRelated		= $relation && $relation->status == 2;
@@ -95,26 +95,26 @@ function renderFacts( $facts, $class = 'dl-horizontal' ){
 }
 
 $facts	= [];
-$facts[$w->labelUsername]	= array( '<big><strong>'.$user->username.'</strong></big>' );
+$facts[$w->labelUsername]	= ['<big><strong>'.$user->username.'</strong></big>'];
 if( $isRelated || $isCurrentUser ){
-	$facts[$w->labelName]	= array( $user->firstname.' '.$user->surname );
-	$facts[$w->labelRole]	= array( $role->title );
-	$facts[$w->labelEmail]	= array( '<a href="mailto:'.$user->email.'">'.$user->email.'</a>' );
+	$facts[$w->labelName]	= [$user->firstname.' '.$user->surname];
+	$facts[$w->labelRole]	= [$role->title];
+	$facts[$w->labelEmail]	= ['<a href="mailto:'.$user->email.'">'.$user->email.'</a>'];
 	if( $user->phone )
-		$facts[$w->labelPhone]	= array( $user->phone );
+		$facts[$w->labelPhone]	= [$user->phone];
 	if( $user->fax )
-		$facts[$w->labelFax]	= array( $user->fax );
+		$facts[$w->labelFax]	= [$user->fax];
 }
 
-$facts[$w->labelRegisteredAt]	= array( $helperTime->convert( $user->createdAt, TRUE, $w->labelRegisteredAt_prefix, $w->labelRegisteredAt_suffix ) );
+$facts[$w->labelRegisteredAt]	= [$helperTime->convert( $user->createdAt, TRUE, $w->labelRegisteredAt_prefix, $w->labelRegisteredAt_suffix )];
 if( $user->loggedAt )
-	$facts[$w->labelLoggedAt]	= array( $helperTime->convert( $user->loggedAt, TRUE, $w->labelLoggedAt_prefix, $w->labelLoggedAt_suffix ) );
+	$facts[$w->labelLoggedAt]	= [$helperTime->convert( $user->loggedAt, TRUE, $w->labelLoggedAt_prefix, $w->labelLoggedAt_suffix )];
 if( $user->activeAt )
-	$facts[$w->labelActiveAt]	= array( $helperTime->convert( $user->activeAt, TRUE, $w->labelActiveAt_prefix, $w->labelActiveAt_suffix ) );
-$facts[$w->labelStatus]			= array( $words['user-states'][$user->status] );
+	$facts[$w->labelActiveAt]	= [$helperTime->convert( $user->activeAt, TRUE, $w->labelActiveAt_prefix, $w->labelActiveAt_suffix )];
+$facts[$w->labelStatus]			= [$words['user-states'][$user->status]];
 if( !$relation )
-	$relation	= (object) array( 'status' => 0 );
-$facts[$w->labelRelation]	= array( $words['relation-states'][$relation->status] );
+	$relation	= (object) ['status' => 0];
+$facts[$w->labelRelation]	= [$words['relation-states'][$relation->status]];
 
 $helperMember	= new View_Helper_Member( $env );
 $helperMember->setMode( 'thumbnail' );
@@ -143,7 +143,7 @@ $panelInfo	= '
 	</div>
 </div>';
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/member/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/member/' ) );
 
 $tabs	= View_Member::renderTabs( $env, '' );
 

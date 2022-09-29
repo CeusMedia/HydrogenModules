@@ -45,8 +45,8 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 	protected static function renderDivider( $entry, bool $vertical = FALSE ): string
 	{
 		if( $vertical )
-			return HtmlTag::create( 'li', '', array( 'class' => 'divider-vertical' ) );
-		return HtmlTag::create( 'li', '', array( 'class' => 'divider' ) );
+			return HtmlTag::create( 'li', '', ['class' => 'divider-vertical'] );
+		return HtmlTag::create( 'li', '', ['class' => 'divider'] );
 	}
 
 	protected static function renderDropdownItem( $map, $current, $nr ): string
@@ -66,7 +66,7 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 					break;
 			}
 		}
-		$caret		= HtmlTag::create( 'b', '', array( 'class' => 'caret' ) );
+		$caret		= HtmlTag::create( 'b', '', ['class' => 'caret'] );
 		$toggle		= HtmlTag::create( 'a', $caret.'&nbsp;&nbsp;'.$map->label, array(
 			'class'			=> 'dropdown-toggle',
 			'data-toggle'	=> 'dropdown',
@@ -89,9 +89,9 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 		if( !isset( $entry->icon ) )
 			return $entry->label;
 		if( preg_match( '/^fa /', $entry->icon ) )
-			$icon	= HtmlTag::create( 'i', '', array( 'class' => $entry->icon ) );
+			$icon	= HtmlTag::create( 'i', '', ['class' => $entry->icon] );
 		else
-			$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-'.$entry->icon ) );
+			$icon	= HtmlTag::create( 'i', '', ['class' => 'icon-'.$entry->icon] );
 		return $icon.'&nbsp;'.$entry->label;
 	}
 

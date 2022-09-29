@@ -2,9 +2,9 @@
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconMore	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-info-circle' ) );
-$iconReload	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-refresh' ) );
-$iconReset	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconMore	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-info-circle'] );
+$iconReload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
+$iconReset	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $words		= $env->getLanguage()->getWords( 'server/system/exception' );
 
@@ -21,7 +21,7 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.' '.$words['index']['buttonReset
 	'class'	=> 'btn',
 ) );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/system/exception' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/system/exception' ) );
 
 $showFacts	= 1 && !empty( $exception );
 
@@ -37,11 +37,11 @@ if( $showFacts ){
 			if( $key === "file" )
 				$exception->file	= HtmlTag::create( 'small', $exception->file );
 	//			$exception->trace	= HtmlTag::create( 'kbd', nl2br( $exception->trace ) );
-			$facts[]	= HtmlTag::create( 'dt', $label, array( 'class' => 'fact-'.$key ) );
-			$facts[]	= HtmlTag::create( 'dd', $exception->{$key}, array( 'class' => 'fact-'.$key ) );
+			$facts[]	= HtmlTag::create( 'dt', $label, ['class' => 'fact-'.$key] );
+			$facts[]	= HtmlTag::create( 'dd', $exception->{$key}, ['class' => 'fact-'.$key] );
 		}
 	}
-	$facts	= HtmlTag::create( 'dl', $facts, array( 'class' => 'dl-horizontal' ) );
+	$facts	= HtmlTag::create( 'dl', $facts, ['class' => 'dl-horizontal'] );
 	$buttonMore	= HtmlTag::create( 'button', $iconMore.' '.$words['index-facts']['buttonShow'], array(
 		'type'		=> 'button',
 		'id'		=> 'exception-facts-trigger',
@@ -54,7 +54,7 @@ if( $showFacts ){
 		<h4>'.$words['index-facts']['heading'].'</h4>
 		'.$facts.'
 		<h4>'.$words['index-facts']['trace'].'</h4>
-		'.HtmlTag::create( 'kbd', nl2br( $exception->trace ), array( 'style' => 'font-size: 10px; letter-spacing: -0.25px; line-height: 12px;' ) ).'
+		'.HtmlTag::create( 'kbd', nl2br( $exception->trace ), ['style' => 'font-size: 10px; letter-spacing: -0.25px; line-height: 12px;'] ).'
 	</div>
 	'.$buttonMore.'
 	<script>

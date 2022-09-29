@@ -1,6 +1,6 @@
 <?php
 
-extract( $this->populateTexts( array( 'top', 'content', 'bottom' ), 'html/catalog/gallery/index/' ) );
+extract( $this->populateTexts( ['top', 'content', 'bottom'], 'html/catalog/gallery/index/' ) );
 
 $categoryList	= $view->renderCategoryList( $categories, 0, FALSE );
 

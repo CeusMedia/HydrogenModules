@@ -16,14 +16,14 @@ $tabs	= array(
 $currentTab		= $this->env->getSession()->get( 'module.manage_galleries.tab' );
 $listTabs		= [];
 foreach( $tabs as $nr => $tab ){
-	$attributes	= array( 'href' => '#tab'.++$nr, 'data-toggle' => 'tab' );
+	$attributes	= ['href' => '#tab'.++$nr, 'data-toggle' => 'tab'];
 	$link		= HtmlTag::create( 'a', $tab, $attributes );
-	$attributes	= array( 'id' => 'gallery-editor-tab-'.$nr, 'class' => $nr == $currentTab ? "active" : NULL );
+	$attributes	= ['id' => 'gallery-editor-tab-'.$nr, 'class' => $nr == $currentTab ? "active" : NULL];
 	$listTabs[]	= HtmlTag::create( 'li', $link, $attributes );
 }
-$listTabs	= HtmlTag::create( 'ul', $listTabs, array( 'class' => "nav nav-tabs" ) );
+$listTabs	= HtmlTag::create( 'ul', $listTabs, ['class' => "nav nav-tabs"] );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/gallery' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/gallery' ) );
 
 return $textTop.'
 <div class="row-fluid">

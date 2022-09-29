@@ -7,9 +7,9 @@ class Job_Mail_Queue extends Job_Abstract
 
 	public function countQueuedMails()
 	{
-		$conditions		= array( 'status' => array( Model_Mail::STATUS_NEW ) );
+		$conditions		= ['status' => array( Model_Mail::STATUS_NEW )];
 		$countNew		= $this->logic->countQueue( $conditions );
-		$conditions		= array( 'status' => array( Model_Mail::STATUS_RETRY ) );
+		$conditions		= ['status' => array( Model_Mail::STATUS_RETRY )];
 		$countRetry		= $this->logic->countQueue( $conditions );
 		$this->out( sprintf( "%d mails to send, %d mail to retry.", $countNew, $countRetry ) );
 	}
@@ -33,7 +33,7 @@ class Job_Mail_Queue extends Job_Abstract
 			),
 			'attemptedAt'	=> '< '.( time() - $this->options->get( 'retry.delay' ) ),
 		);
-		$orders		= array( 'status' => 'ASC', 'mailId' => 'ASC' );
+		$orders		= ['status' => 'ASC', 'mailId' => 'ASC'];
 		$count		= $this->logic->countQueue( $conditions );
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );
@@ -47,7 +47,7 @@ class Job_Mail_Queue extends Job_Abstract
 		while( $count && $counter < $count && ( !$limit || $counter < $limit ) ){
 			if( $counter > 0 && $sleep > 0 )
 				$sleep >= 1 ? sleep( $sleep ) : usleep( $sleep * 1000 * 1000 );
-			$mails	= $this->logic->getQueuedMails( $conditions, $orders, array( 0, 1 ) );
+			$mails	= $this->logic->getQueuedMails( $conditions, $orders, [0, 1] );
 			if( $mails && $mail = array_pop( $mails ) ){
 				$counter++;
 				try{

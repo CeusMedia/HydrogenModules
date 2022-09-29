@@ -7,9 +7,9 @@ $helperTime->setMode( View_Helper_TimePhraser::MODE_BREAK );
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconArchive	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-archive' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconArchive	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-archive'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $runReportChannelLabels	= $wordsGeneral['job-run-report-channels'];
 
@@ -47,7 +47,7 @@ if( $run->reportMode ){
 		$facts['Report Receivers']	= $reportReceivers;
 	}
 }
-if( in_array( $run->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS_DONE, Model_Job_Run::STATUS_SUCCESS ) ) ){
+if( in_array( $run->status, [Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS_DONE, Model_Job_Run::STATUS_SUCCESS] ) ){
 	if( !$run->archived ){
 		$message			= json_decode( $run->message );
 		$facts['Output']	= $message->type;
@@ -79,14 +79,14 @@ $buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 $panelFactsJob	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h4', 'Job Run Facts' ),
 	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) ),
+		HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] ),
 		HtmlTag::create( 'div', join( ' ', array(
 			$buttonCancel,
 			$buttonArchive,
 			$buttonRemove,
-		) ), array( 'class' => 'buttonbar' ) )
-	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );
+		) ), ['class' => 'buttonbar'] )
+	), ['class' => 'content-panel-inner'] )
+), ['class' => 'content-panel'] );
 
 function formatNumber( $number ): string
 {
@@ -102,14 +102,14 @@ function formatNumber( $number ): string
 //  --  PANEL FACTS: DEFINITION  -- //
 $helperAttribute->setObject( $definition );
 $facts	= [];
-$facts['Identifier']	= HtmlTag::create( 'a', $definition->identifier, array( 'href' => './manage/job/definition/view/'.$definition->jobDefinitionId ) );
-$facts['Job-ID']		= HtmlTag::create( 'a', $definition->jobDefinitionId, array( 'href' => './manage/job/definition/view/'.$definition->jobDefinitionId ) );
+$facts['Identifier']	= HtmlTag::create( 'a', $definition->identifier, ['href' => './manage/job/definition/view/'.$definition->jobDefinitionId] );
+$facts['Job-ID']		= HtmlTag::create( 'a', $definition->jobDefinitionId, ['href' => './manage/job/definition/view/'.$definition->jobDefinitionId] );
 $facts['Mode']			= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_MODE )->render();
 $facts['Status']		= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_STATUS )->render();
 $facts['Class Method']	= $definition->className.' :: '.$definition->methodName;
-$facts['Runs']			= HtmlTag::create( 'span', formatNumber( $definition->runs ), array( 'class' => 'badge' ) );
-$facts['Success']		= HtmlTag::create( 'span', formatNumber( $definition->runs - $definition->fails ), array( 'class' => 'badge badge-success' ) ).( $definition->runs ? ' <small class="muted">('.round( ( $definition->runs - $definition->fails ) / $definition->runs * 100 ).'%)</small>' : '' );
-$facts['Fails']			= HtmlTag::create( 'span', formatNumber( $definition->fails ), array( 'class' => 'badge badge-important' ) ).( $definition->runs ? ' <small class="muted">('.round( $definition->fails / $definition->runs * 100 ).'%)</small>' : '' );
+$facts['Runs']			= HtmlTag::create( 'span', formatNumber( $definition->runs ), ['class' => 'badge'] );
+$facts['Success']		= HtmlTag::create( 'span', formatNumber( $definition->runs - $definition->fails ), ['class' => 'badge badge-success'] ).( $definition->runs ? ' <small class="muted">('.round( ( $definition->runs - $definition->fails ) / $definition->runs * 100 ).'%)</small>' : '' );
+$facts['Fails']			= HtmlTag::create( 'span', formatNumber( $definition->fails ), ['class' => 'badge badge-important'] ).( $definition->runs ? ' <small class="muted">('.round( $definition->fails / $definition->runs * 100 ).'%)</small>' : '' );
 $facts['Created At']	= date( 'd.m.Y H:i:s', $definition->createdAt );
 if( $definition->modifiedAt )
 	$facts['Modified At']	= date( 'd.m.Y H:i:s', $definition->modifiedAt );
@@ -124,15 +124,15 @@ foreach( $facts as $factKey => $factValue ){
 $panelFactsDefinition	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h4', 'Job Definition Facts' ),
 	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) ),
-	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );
+		HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] ),
+	), ['class' => 'content-panel-inner'] )
+), ['class' => 'content-panel'] );
 
 
 $tabs	= View_Manage_Job::renderTabs( $env, 'run' );
 
 $panelMessage	= '';
-if( in_array( $run->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS_DONE, Model_Job_Run::STATUS_SUCCESS ) ) ){
+if( in_array( $run->status, [Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS_DONE, Model_Job_Run::STATUS_SUCCESS] ) ){
 	if( !$run->archived ){
 		$message	= json_decode( $run->message );
 		$output		= '';
@@ -157,8 +157,8 @@ if( in_array( $run->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::
 			HtmlTag::create( 'h4', 'Job Run' ),
 			HtmlTag::create( 'div', array(
 				$output
-			), array( 'class' => 'content-panel-inner' ) )
-		), array( 'class' => 'content-panel' ) );
+			), ['class' => 'content-panel-inner'] )
+		), ['class' => 'content-panel'] );
 	}
 }
 
@@ -166,16 +166,16 @@ if( in_array( $run->status, array( Model_Job_Run::STATUS_FAILED, Model_Job_Run::
 return $tabs.HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		$panelFactsJob,
-	), array( 'class' => 'span6' ) ),
+	), ['class' => 'span6'] ),
 	HtmlTag::create( 'div', array(
 		$panelFactsDefinition
-	), array( 'class' => 'span6' ) ),
-), array( 'class' => 'row-fluid' ) ).
+	), ['class' => 'span6'] ),
+), ['class' => 'row-fluid'] ).
 HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		$panelMessage
-	), array( 'class' => 'span12' ) ),
-), array( 'class' => 'row-fluid' ) ).'<style>
+	), ['class' => 'span12'] ),
+), ['class' => 'row-fluid'] ).'<style>
 .dl-horizontal dt {
 	width: 120px;
 	}

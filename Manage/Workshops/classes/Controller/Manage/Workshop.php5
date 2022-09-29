@@ -28,7 +28,7 @@ class Controller_Manage_Workshop extends Controller{
 		}
 		$data	= [];
 		foreach( $this->model->getColumns() as $column )
-			if( !in_array( $column, array( 'workshopId', 'createdAt', 'modifiedAt' ) ) )
+			if( !in_array( $column, ['workshopId', 'createdAt', 'modifiedAt'] ) )
 				$data[$column]	= NULL;
 		$defaults	= array(
 			'status'		=> 0,
@@ -56,7 +56,7 @@ class Controller_Manage_Workshop extends Controller{
 
 	public function index(){
 		$conditions	= [];
-		$orders		= array( 'status' => 'ASC', 'rank' => 'ASC' );
+		$orders		= ['status' => 'ASC', 'rank' => 'ASC'];
 		$this->addData( 'workshops', $this->model->getAll( $conditions, $orders ) );
 	}
 

@@ -48,8 +48,8 @@ class Controller_Manage_Job_Definition extends Controller
 			$conditions['methodName']	= $filterMethod;
 
 		$total	= $this->modelDefinition->count( $conditions );
-		$orders	= array( 'identifier' => 'ASC' );
-		$limits	= array( $page * $filterLimit, $filterLimit );
+		$orders	= ['identifier' => 'ASC'];
+		$limits	= [$page * $filterLimit, $filterLimit];
 		$definitions	= $this->modelDefinition->getAll( $conditions, $orders, $limits );
 		foreach( $definitions as $item ){
 			$item->scheduled	= $this->modelSchedule->getAllByIndex( 'jobDefinitionId', $item->jobDefinitionId );
@@ -87,7 +87,7 @@ class Controller_Manage_Job_Definition extends Controller
 		}
 		$this->modelCode->readFile( 'classes/Job/'.str_replace( '_', '/', $definition->className ).'.php5' );
 		$definitionCode	= $this->modelCode->getClassMethodSourceCode( 'Job_'.$definition->className, $definition->methodName );
-		$runs	= $this->modelRun->getAllByIndex( 'jobDefinitionId', $jobDefinitionId, array( 'createdAt' => 'DESC' ), array( 0, 10 ) );
+		$runs	= $this->modelRun->getAllByIndex( 'jobDefinitionId', $jobDefinitionId, ['createdAt' => 'DESC'], [0, 10] );
 		$this->addData( 'definition', $definition );
 		$this->addData( 'runs', $runs );
 		$this->addData( 'definitionCode', $definitionCode );

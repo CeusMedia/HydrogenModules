@@ -4,11 +4,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
 
-$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open not-icon-white' ) );
-$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'icon-trash icon-white' ) );
+$iconView	= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open not-icon-white'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-	$iconRemove	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+	$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+	$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 }
 
 $list	= '<div class="muted"><em><small>No exceptions logged.</small></em></div>';
@@ -32,10 +32,10 @@ if( $exceptions ){
 				'href'	=> './server/log/exception/remove/'.$item->exceptionId,
 				'title'	=> $w->buttonRemove,
 			) ),
-		), array( 'class' => 'btn-group' ) );
+		), ['class' => 'btn-group'] );
 
 		$list[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $link, array( 'class' => 'autocut' ) ),
+			HtmlTag::create( 'td', $link, ['class' => 'autocut'] ),
 			HtmlTag::create( 'td', $item->type ),
 			HtmlTag::create( 'td', $date.'&nbsp;<small class="muted">'.$time.'</small>' ),
 			HtmlTag::create( 'td', $buttons ),
@@ -43,7 +43,7 @@ if( $exceptions ){
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '', '180px', '150px', '100px' );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $colgroup.$tbody, array( 'class' => 'table table-striped table-condensed', 'style' => 'table-layout: fixed' ) );
+	$list	= HtmlTag::create( 'table', $colgroup.$tbody, ['class' => 'table table-striped table-condensed', 'style' => 'table-layout: fixed'] );
 }
 
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './server/log/exception', $page, ceil( $total / $limit ) );

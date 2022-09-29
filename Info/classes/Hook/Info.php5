@@ -15,14 +15,14 @@ class Hook_Info extends Hook
 		$view	= new View_Info( $env );
 		if( $view->hasContentFile( 'html/info/'.$path.".html" ) ){
 			$controller	= new Controller_Info( $env, FALSE );
-			$controller->redirect( 'info', 'index', array( $path ) );
+			$controller->redirect( 'info', 'index', [$path] );
 			return TRUE;
 		}
 		else if( $env->getModules()->has( 'UI_Markdown' ) ){
 			$fileKey	= 'html/info/'.$path.".md";
 			if( $view->hasContentFile( $fileKey ) ){
 				$controller	= new Controller_Info( $env, FALSE );
-				$controller->redirect( 'info', 'index', array( $path ) );
+				$controller->redirect( 'info', 'index', [$path] );
 				return TRUE;
 			}
 		}

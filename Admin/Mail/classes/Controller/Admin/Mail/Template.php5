@@ -38,9 +38,9 @@ class Controller_Admin_Mail_Template extends Controller
 				$this->restart( './admin/mail/template/edit/'.$templateId );
 			}
 		}
-		$data	= (object) array();
+		$data	= (object) [];
 		foreach( $this->modelTemplate->getColumns() as $key ){
-			if( !in_array( $key, array( 'mailTemplateId' ) ) ){
+			if( !in_array( $key, ['mailTemplateId'] ) ){
 				$data->$key		= '';
 				if( $this->request->has( 'template_'.$key ) ){
 					$value	= trim( $this->request->get( 'template_'.$key ) );
@@ -116,7 +116,7 @@ class Controller_Admin_Mail_Template extends Controller
 				$template	= $this->modelTemplate->get( $templateId );
 				if( strlen( trim( $template->styles ) ) && preg_match( "/^[a-z0-9]", $template->styles ) )
 					$template->styles	= json_encode( explode( ",", $template->styles ) );
-				$list		= trim( $template->styles ) ? json_decode( $template->styles, TRUE ) : array();
+				$list		= trim( $template->styles ) ? json_decode( $template->styles, TRUE ) : [];
 				$list[]		= trim( $this->request->get( 'template_style' ) );
 				$this->modelTemplate->edit( $templateId, array(
 					'styles'	=> json_encode( $list )
@@ -127,7 +127,7 @@ class Controller_Admin_Mail_Template extends Controller
 				$template	= $this->modelTemplate->get( $templateId );
 				if( strlen( trim( $template->images ) ) && preg_match( "/^[a-z0-9]", $template->images ) )
 					$template->images	= json_encode( explode( ",", $template->images ) );
-				$list		= trim( $template->images ) ? json_decode( $template->images, TRUE ) : array();
+				$list		= trim( $template->images ) ? json_decode( $template->images, TRUE ) : [];
 				$list[]		= trim( $this->request->get( 'template_image' ) );
 				$this->modelTemplate->edit( $templateId, array(
 					'images'	=> json_encode( $list )
@@ -135,7 +135,7 @@ class Controller_Admin_Mail_Template extends Controller
 				$this->restart( './admin/mail/template/edit/'.$templateId );
 			}
 			foreach( $this->modelTemplate->getColumns() as $key ){
-				if( !in_array( $key, array( 'mailTemplateId' ) ) ){
+				if( !in_array( $key, ['mailTemplateId'] ) ){
 					if( $this->request->has( 'template_'.$key ) ){
 						$value	= trim( $this->request->get( 'template_'.$key ) );
 						if( strlen( $value ) )
@@ -169,7 +169,7 @@ class Controller_Admin_Mail_Template extends Controller
 			$env	= $this->env;
 			if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 				$env	= Logic_Frontend::getRemoteEnv( $this->env );
-			$mail		= new Mail_Test( $env, array( 'forceTemplateId' => $templateId ) );
+			$mail		= new Mail_Test( $env, ['forceTemplateId' => $templateId] );
 			switch( strtolower( $mode ) ){
 				case 'html':
 					$helper	= new View_Helper_Mail_View_HTML( $this->env );
@@ -250,7 +250,7 @@ class Controller_Admin_Mail_Template extends Controller
 					$this->modelTemplate->edit( $active->mailTemplateId, array(
 						'status'	=> Model_Mail_Template::STATUS_USABLE
 					) );
-				$this->modelTemplate->edit( $templateId, array( 'status' => $status ) );
+				$this->modelTemplate->edit( $templateId, ['status' => $status] );
 				$this->env->getMessenger()->noteSuccess( sprintf(
 					'Template "%s" aktiviert.',
 					$template->title
@@ -259,7 +259,7 @@ class Controller_Admin_Mail_Template extends Controller
 		}
 		else if( $status == Model_Mail_Template::STATUS_USABLE ){
 			if( $template->status != $status ){
-				$this->modelTemplate->edit( $templateId, array( 'status' => $status ) );
+				$this->modelTemplate->edit( $templateId, ['status' => $status] );
 			}
 		}
 		$this->restart( 'edit/'.$templateId, TRUE );
@@ -273,8 +273,8 @@ class Controller_Admin_Mail_Template extends Controller
 			$this->restart( 'edit/'.$templateId, TRUE );
 		}
 		$logicMail	= Logic_Mail::getInstance( $this->env );
-		$mail		= $logicMail->createMail( 'Test', array( 'mailTemplateId' => $templateId ) );
-		$logicMail->sendMail( $mail, (object) array( 'email' => $email ) );
+		$mail		= $logicMail->createMail( 'Test', ['mailTemplateId' => $templateId] );
+		$logicMail->sendMail( $mail, (object) ['email' => $email] );
 		$this->messenger->noteSuccess( 'E-Mail für Test an "%s" versendet.', htmlentities( $email, ENT_QUOTES, 'UTF-8' ) );
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}

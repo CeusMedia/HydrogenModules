@@ -90,7 +90,7 @@ class Controller_Work_Finance_Fund extends Controller
 		$modelPrice	= new Model_Finance_FundPrice( $this->env );
 		$funds		= $modelFund->getAllByIndex( 'userId', $userId );
 		foreach( $funds as $nr => $fund ){
-			$empty	= (object) array( 'fundId' => $fund->fundId, 'price' => 0, 'timestamp' => 0 );
+			$empty	= (object) ['fundId' => $fund->fundId, 'price' => 0, 'timestamp' => 0];
 			$price	= $modelPrice->getAll(
 				array( 'fundId' => $fund->fundId ),
 				array( 'timestamp' => 'DESC' ),
@@ -163,7 +163,7 @@ class Controller_Work_Finance_Fund extends Controller
 			$html		= substr( $html, 0, strpos( $html, '</tbody>' ) + 8 );
 			$html		= preg_replace( '/\w+=\"[^"]+\"/', '', $html );
 			$html		= preg_replace( '/&/', '&amp;', $html );
-			$markets	= array( 'BER', 'HAM' );													//  preferred markets
+			$markets	= ['BER', 'HAM'];													//  preferred markets
 			try{
 				$xml	= new XmlElement( $html );
 				$price	= 0;

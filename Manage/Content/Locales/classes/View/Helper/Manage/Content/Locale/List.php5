@@ -24,8 +24,8 @@ class View_Helper_Manage_Content_Locale_List{
 		$showEmpty	= $this->env->getSession()->get( $filterPrefix.'empty' );
 		$list		= [];
 		$lastPath	= NULL;
-		$iconFolder	= HtmlTag::create( 'i', '', array( 'class' => 'icon-chevron-down' ) );
-		$iconFile	= HtmlTag::create( 'i', '', array( 'class' => 'icon-file' ) );
+		$iconFolder	= HtmlTag::create( 'i', '', ['class' => 'icon-chevron-down'] );
+		$iconFile	= HtmlTag::create( 'i', '', ['class' => 'icon-file'] );
 		foreach( $this->files as $filePath => $file ){
 			if( !$showEmpty && !$file->size )
 				continue;
@@ -33,20 +33,20 @@ class View_Helper_Manage_Content_Locale_List{
 			$pathName	= dirname( $file->pathName );
 			if( $pathName !== $lastPath ){
 				$path	= $iconFolder.' '.$pathName;
-				$list[]	= HtmlTag::create( 'li', $path, array( 'class' => 'folder' ) );
+				$list[]	= HtmlTag::create( 'li', $path, ['class' => 'folder'] );
 				$lastPath	= $pathName;
 			}
 			$class		= $file->size ? NULL : 'empty';
-			$fileExt	= HtmlTag::create( 'small', '.'.$file->extension, array( 'class' => 'muted' ) );
+			$fileExt	= HtmlTag::create( 'small', '.'.$file->extension, ['class' => 'muted'] );
 			$fileBase	= $file->baseName;
 			$link	= HtmlTag::create( 'a', $fileBase.$fileExt, array(
 				'href'	=> $url,
 				'class'	=> $class
 			) );
 			$class	= $this->current == $file->pathName ? "active" : "";
-			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
-		$attributes	= array( 'class' => 'nav nav-pills nav-stacked boxed', 'id' => 'list-files', 'style' => 'display: none' );
+		$attributes	= ['class' => 'nav nav-pills nav-stacked boxed', 'id' => 'list-files', 'style' => 'display: none'];
 		$list	= HtmlTag::create( 'ul', $list, $attributes );
 		return $list;
 	}

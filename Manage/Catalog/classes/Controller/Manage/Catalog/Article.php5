@@ -34,9 +34,9 @@ class Controller_Manage_Catalog_Article extends Controller
 			$pathCovers	= $frontend->getPath( 'contents' ).$config->get( 'path.covers' );			//  get path to cover images
 			$pathCovers	= substr( $pathCovers, strlen( $frontend->getPath() ) );					//  strip frontend base path
 			$list       = [];
-			$conditions	= array( 'cover' => '> 0' );
-			$orders		= array( 'articleId' => 'DESC' );
-			foreach( $logic->getArticles( $conditions, $orders, array( 0, 200 ) ) as $item ){
+			$conditions	= ['cover' => '> 0'];
+			$orders		= ['articleId' => 'DESC'];
+			foreach( $logic->getArticles( $conditions, $orders, [0, 200] ) as $item ){
 				$id		= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
 				$list[] = (object) array(
 					'title'	=> Alg_Text_Trimmer::trimCentric( $item->title, 60 ),
@@ -70,8 +70,8 @@ class Controller_Manage_Catalog_Article extends Controller
 		$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
 
 		if( !( $articles = $cache->get( 'catalog.tinymce.links.articles' ) ) ){
-			$orders		= array( 'articleId' => 'DESC' );
-			$articles	= $logic->getArticles( array(), $orders, array( 0, 200 ) );
+			$orders		= ['articleId' => 'DESC'];
+			$articles	= $logic->getArticles( [], $orders, [0, 200] );
 			foreach( $articles as $nr => $item ){
 /*				$category	= $logic->getCategoryOfArticle( $article->articleId );
 				if( $category->volume )
@@ -90,7 +90,7 @@ class Controller_Manage_Catalog_Article extends Controller
 
 		if( !( $documents = $cache->get( 'catalog.tinymce.links.documents' ) ) ){
 			$pathDocs	= $frontend->getPath( 'contents' ).$config->get( 'path.documents' );
-			$documents	= $logic->getDocuments( array(), array( 'articleDocumentId' => 'DESC' ), array( 0, 200 ) );
+			$documents	= $logic->getDocuments( [], ['articleDocumentId' => 'DESC'], [0, 200] );
 			foreach( $documents as $nr => $item ){
 				$id				= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
 				$article		= $logic->getArticle( $item->articleId );
@@ -162,7 +162,7 @@ class Controller_Manage_Catalog_Article extends Controller
 				/*  --  CHECK NEW DOCUMENT  --  */
 				$info		= pathinfo( $file['name'] );
 				$extension	= $info['extension'];
-				$extensions	= array( 'jpe', 'jpeg', 'jpg', 'png', 'gif', 'pdf', 'doc', 'doc', 'ppt', 'odt', 'ods' );
+				$extensions	= ['jpe', 'jpeg', 'jpg', 'png', 'gif', 'pdf', 'doc', 'doc', 'ppt', 'odt', 'ods'];
 				if( !in_array( strtolower( $extension ), $extensions ) )
 					$this->messenger->noteError( $words->msgErrorExtensionInvalid );
 				else{
@@ -188,9 +188,9 @@ class Controller_Manage_Catalog_Article extends Controller
 	public function ajaxGetTags()
 	{
 		$startsWith	= $this->request->get( 'query' );
-		$conditions	= array( 'tag' => $startsWith.'%' );
-		$orders		= array( 'tag' => 'ASC' );
-		$limits		= array( 0, 10 );
+		$conditions	= ['tag' => $startsWith.'%'];
+		$orders		= ['tag' => 'ASC'];
+		$limits		= [0, 10];
 		$tags		= $this->logic->getTags( $conditions, $orders, $limits );
 		$list		= [];
 		foreach( $tags as $tag )
@@ -206,9 +206,9 @@ class Controller_Manage_Catalog_Article extends Controller
 	public function ajaxGetIsns()
 	{
 		$startsWith	= $this->request->get( 'query' );
-		$conditions	= array( 'isn' => $startsWith.'%' );
-		$orders		= array( 'isn' => 'ASC' );
-		$limits		= array( 0, 10 );
+		$conditions	= ['isn' => $startsWith.'%'];
+		$orders		= ['isn' => 'ASC'];
+		$limits		= [0, 10];
 		$articles	= $this->logic->getArticles( $conditions, $orders, $limits );
 		$list		= [];
 		foreach( $articles as $article )
@@ -246,7 +246,7 @@ class Controller_Manage_Catalog_Article extends Controller
 		$this->addData( 'articleDocuments', $this->logic->getDocumentsOfArticle( $articleId ) );
 		$this->addData( 'articleCategories', $this->logic->getCategoriesOfArticle( $articleId ) );
 		$this->addData( 'articles', $this->getFilteredArticles() );
-		$this->addData( 'authors', $this->logic->getAuthors( array(), array( 'lastname' => 'ASC' ) ) );
+		$this->addData( 'authors', $this->logic->getAuthors( [], ['lastname' => 'ASC'] ) );
 		$this->addData( 'categories', $this->logic->getCategories() );
 		$this->addData( 'filters', $this->session->getAll( 'module.manage_catalog_article.filter.' ) );
 	}
@@ -341,7 +341,7 @@ class Controller_Manage_Catalog_Article extends Controller
 				/*  --  CHECK NEW IMAGE  --  */
 				$info		= pathinfo( $file['name'] );
 				$extension	= $info['extension'];
-				$extensions	= array( 'jpe', 'jpeg', 'jpg', 'png', 'gif' );
+				$extensions	= ['jpe', 'jpeg', 'jpg', 'png', 'gif'];
 				if( !in_array( strtolower( $extension ), $extensions ) )
 					$this->messenger->noteError( $words->msgErrorExtensionInvalid );
 				else{
@@ -403,7 +403,7 @@ class Controller_Manage_Catalog_Article extends Controller
 					break;
 				case 'tag':
 					if( strlen( trim( $filterValue ) ) ){
-						$find	= array( 'tag' => $filterValue );
+						$find	= ['tag' => $filterValue];
 						$tags	= $this->logic->getTags( $find );
 						if( $tags ){
 							$list	= [];
@@ -417,7 +417,7 @@ class Controller_Manage_Catalog_Article extends Controller
 					break;
 				case 'isn':
 					if( strlen( $filterValue ) )
-						$conditions[$filterKey]	= str_replace( array( '*', ' ', ), "%", $filterValue );
+						$conditions[$filterKey]	= str_replace( ['*', ' ',], "%", $filterValue );
 					break;
 				case 'new':
 				case 'status':
@@ -441,7 +441,7 @@ class Controller_Manage_Catalog_Article extends Controller
 		if( $articleIds )
 			$conditions['articleId']	= $articleIds;
 		$offset		= isset( $filter['offset'] ) ? $filter['offset'] : 0;
-		$articles	= $this->logic->getArticles( $conditions, $orders, array( $offset, 50 ) );
+		$articles	= $this->logic->getArticles( $conditions, $orders, [$offset, 50] );
 		return $articles;
 	}
 }

@@ -139,7 +139,7 @@ class Controller_Manage_Image_Slider extends Controller
 			$this->messenger->noteSuccess( $words->successSliderEdited, $data['title'] );
 			$this->restart( NULL, TRUE );
 		}
-		$slider->slides	= $this->modelSlide->getAll( array( 'sliderId' => $sliderId ), array( 'rank' => 'ASC' ) );
+		$slider->slides	= $this->modelSlide->getAll( ['sliderId' => $sliderId], ['rank' => 'ASC'] );
 		if( !$slider->slides )
 			$this->messenger->noteNotice( $words->noticeNoSlidesYet );
 		$this->addData( 'slider', $slider );
@@ -151,7 +151,7 @@ class Controller_Manage_Image_Slider extends Controller
 		$slider	= $this->checkSliderId( $slide->sliderId );
 		$words	= (object) $this->getWords( 'msg' );
 
-		$orders	= array( 'rank' => 'ASC', 'sliderSlideId' => 'ASC' );
+		$orders	= ['rank' => 'ASC', 'sliderSlideId' => 'ASC'];
 		$slides	= $this->modelSlide->getAllByIndex( 'sliderId', $slide->sliderId, $orders );
 
 		if( $this->request->has( 'save' ) ){
@@ -179,7 +179,7 @@ class Controller_Manage_Image_Slider extends Controller
 	public function importSlides( $sliderId )
 	{
 		$slider	= $this->checkSliderId( $sliderId );
-		$slides	= $this->modelSlide->getAll( array( 'sliderId' => $sliderId ) );
+		$slides	= $this->modelSlide->getAll( ['sliderId' => $sliderId] );
 		$list	= [];
 		$index	= new DirectoryIterator( $this->basePath );
 		foreach( $index as $entry ){
@@ -213,10 +213,10 @@ class Controller_Manage_Image_Slider extends Controller
 	public function index()
 	{
 		$conditions	= [];
-		$orders		= array( 'status' => 'DESC', 'title' => 'ASC' );
+		$orders		= ['status' => 'DESC', 'title' => 'ASC'];
 		$sliders	= $this->modelSlider->getAll( $conditions, $orders );
 		foreach( $sliders as $nr => $slider )
-			$slider->slides	= $this->modelSlide->getAll( array( 'sliderId' => $slider->sliderId ), array( 'rank' => 'ASC' ) );
+			$slider->slides	= $this->modelSlide->getAll( ['sliderId' => $slider->sliderId], ['rank' => 'ASC'] );
 
 		$this->addData( 'sliders', $sliders );
 	}
@@ -312,12 +312,12 @@ class Controller_Manage_Image_Slider extends Controller
 	protected function reorderSlides( $sliderId, $takeNewerFirst = TRUE )
 	{
 		$this->checkSliderId( $sliderId );
-		$orders		= array( 'rank' => 'ASC', 'timestamp' => $takeNewerFirst ? 'DESC' : 'ASC' );
+		$orders		= ['rank' => 'ASC', 'timestamp' => $takeNewerFirst ? 'DESC' : 'ASC'];
 		$slides		= $this->modelSlide->getAllByIndex( 'sliderId', $sliderId, $orders );
 		$changes	= 0;
 		foreach( $slides as $nr => $slide ){
 			if( (int) $slide->rank !== $nr + 1 ){
-				$this->modelSlide->edit( $slide->sliderSlideId, array( 'rank' => $nr + 1 ) );
+				$this->modelSlide->edit( $slide->sliderSlideId, ['rank' => $nr + 1] );
 				$changes++;
 			}
 		}

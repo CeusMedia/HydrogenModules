@@ -109,7 +109,7 @@ class Controller_Manage_Download extends Controller
 	public function index( $folderId = NULL )
 	{
 		$folderId	= (int) $folderId;
-		$orders		= array( 'rank' => 'ASC' );
+		$orders		= ['rank' => 'ASC'];
 		if( $folderId ){
 			$folder		= $this->modelFolder->get( $folderId );
 			if( !$folder ){
@@ -117,8 +117,8 @@ class Controller_Manage_Download extends Controller
 				$this->restart( NULL, TRUE );
 			}
 		}
-		$folders	= $this->modelFolder->getAll( array( 'parentId' => $folderId ), $orders );
-		$files		= $this->modelFile->getAll( array( 'downloadFolderId' => $folderId ), $orders );
+		$folders	= $this->modelFolder->getAll( ['parentId' => $folderId], $orders );
+		$files		= $this->modelFile->getAll( ['downloadFolderId' => $folderId], $orders );
 
 		$this->addData( 'files', $files );
 		$this->addData( 'folders', $folders );
@@ -137,7 +137,7 @@ class Controller_Manage_Download extends Controller
 			$this->messenger->noteError( $words->errorInvalidFolderId, $folderId );
 		else{
 			$rank		= $folder->rank + $direction;
-			$conditions	= array( 'rank' => $rank, 'parentId' => $folder->parentId );
+			$conditions	= ['rank' => $rank, 'parentId' => $folder->parentId];
 			if( ( $next = $this->modelFolder->getByIndices( $conditions ) ) ){
 				$this->modelFolder->edit( (int) $folderId, array( 'rank' => $rank, 'modifiedAt' => time() ) );
 				$this->modelFolder->edit( $next->downloadFolderId, array( 'rank' => $folder->rank, 'modifiedAt' => time() ) );
@@ -172,8 +172,8 @@ class Controller_Manage_Download extends Controller
 				$this->messenger->noteError( sprintf( 'Invalid download folder ID: '.$folderId ) );
 			}
 			else{
-				$hasSubfolders	= $this->modelFile->count( array( 'downloadFolderId' => $folderId ) );
-				$hasSubfiles	= $this->modelFolder->count( array( 'parentId' => $folderId ) );
+				$hasSubfolders	= $this->modelFile->count( ['downloadFolderId' => $folderId] );
+				$hasSubfiles	= $this->modelFolder->count( ['parentId' => $folderId] );
 				if( $hasSubfolders && $hasSubfiles ){
 					$this->messenger->noteError( 'Der Ordner <b>"%s"</b> ist nicht leer und kann daher nicht entfernt werden.', $folder->title );
 				}
@@ -190,8 +190,8 @@ class Controller_Manage_Download extends Controller
 
 	public function scan()
 	{
-		$statsImport	= (object) array( 'folders' => array(), 'files' => array() );
-		$statsClean		= (object) array( 'folders' => array(), 'files' => array() );
+		$statsImport	= (object) array( 'folders' => [], 'files' => [] );
+		$statsClean		= (object) array( 'folders' => [], 'files' => [] );
 		$this->scanRecursive( 0, '', $statsImport );
 		$this->cleanRecursive( 0, '', $statsClean );
 
@@ -201,7 +201,7 @@ class Controller_Manage_Download extends Controller
 			if( $addedSomething ){
 				$list	= [];
 				foreach( $statsImport->files as $file ){
-					$path	= HtmlTag::create( 'small', $file->path, array( 'class' => "muted" ) );
+					$path	= HtmlTag::create( 'small', $file->path, ['class' => "muted"] );
 					$list[]	= HtmlTag::create( 'li', $path.$file->title );
 				}
 				$list	= HtmlTag::create( 'ul', $list );
@@ -210,7 +210,7 @@ class Controller_Manage_Download extends Controller
 			if( $removedSomething ){
 				$list	= [];
 				foreach( $statsClean->files as $file ){
-					$path	= HtmlTag::create( 'small', $file->path, array( 'class' => "muted" ) );
+					$path	= HtmlTag::create( 'small', $file->path, ['class' => "muted"] );
 					$list[]	= HtmlTag::create( 'li', $path.$file->title );
 				}
 				$list	= HtmlTag::create( 'ul', $list );
@@ -236,7 +236,7 @@ class Controller_Manage_Download extends Controller
 //				$logicUpload->checkVirus( TRUE );
 				$targetFile	= $this->getPathFromFolderId( $folderId, TRUE ).$upload->name;
 				$logicUpload->saveTo( $targetFile );
-				$rank	= $this->modelFile->count( array( 'downloadFolderId' => $folderId ) );
+				$rank	= $this->modelFile->count( ['downloadFolderId' => $folderId] );
 				$this->modelFile->add( array(
 					'downloadFolderId'	=> $folderId,
 					'rank'				=> $rank,
@@ -306,26 +306,26 @@ class Controller_Manage_Download extends Controller
 
 	protected function cleanRecursive( $parentId, $path, $stats ){
 		$path		= $this->getPathFromFolderId( $parentId, FALSE );
-		$folders	= $this->modelFolder->getAll( array( 'parentId' => $parentId ) );
-		$files		= $this->modelFile->getAll( array( 'downloadFolderId' => $parentId ) );
+		$folders	= $this->modelFolder->getAll( ['parentId' => $parentId] );
+		$files		= $this->modelFile->getAll( ['downloadFolderId' => $parentId] );
 		foreach( $folders as $folder ){
 			$this->cleanRecursive( $folder->downloadFolderId, $path.$folder->title.'/', $stats );
 			if( !file_exists( $this->path.$path.$folder->title ) ){
 				$this->modelFolder->remove( $folder->downloadFolderId );
-				$stats->folders[]	= (object) array( 'title' => $folder->title, 'path' => $path );
+				$stats->folders[]	= (object) ['title' => $folder->title, 'path' => $path];
 			}
 		}
 		foreach( $files as $file ){
 			if( !file_exists( $this->path.$path.$file->title ) ){
 				$this->modelFile->remove( $file->downloadFileId );
-				$stats->files[]	= (object) array( 'title' => $file->title, 'path' => $path );
+				$stats->files[]	= (object) ['title' => $file->title, 'path' => $path];
 			}
 		}
 	}
 
 	protected function countFolders( $folderId )
 	{
-		return $this->modelFolder->count( array( 'parentId' => $folderId ) );
+		return $this->modelFolder->count( ['parentId' => $folderId] );
 	}
 
 	protected function countIn( $path, $recursive = FALSE )
@@ -341,7 +341,7 @@ class Controller_Manage_Download extends Controller
 		else{
 			die( "no implemented yet" );
 		}
-		return array( 'folders' => $folders, 'files' => $files );
+		return ['folders' => $folders, 'files' => $files];
 	}
 
 	protected function getPathFromFolderId( $folderId, $withBasePath = FALSE )
@@ -377,8 +377,8 @@ class Controller_Manage_Download extends Controller
 		foreach( $index as $entry ){
 			if( $entry->isDot() || substr( $entry->getFilename(), 0, 1 ) === '.' )
 				continue;
-			$nrFolders	= $this->modelFolder->count( array( 'parentId' => $parentId ) );
-			$nrFiles	= $this->modelFile->count( array( 'downloadFolderId' => $parentId ) );
+			$nrFolders	= $this->modelFolder->count( ['parentId' => $parentId] );
+			$nrFiles	= $this->modelFile->count( ['downloadFolderId' => $parentId] );
 			$entryName	= $entry->getFilename();
 			if( $entry->isDir() ){
 				$data	= array(
@@ -393,7 +393,7 @@ class Controller_Manage_Download extends Controller
 					$data['createdAt']	= filemtime( $entry->getPathname() );
 					$folderId			= $this->modelFolder->add( $data );
 					$this->updateNumber( $parentId, 'folder' );
-					$stats->folders[]	= (object) array( 'title' => $entryName, 'path' => $path );
+					$stats->folders[]	= (object) ['title' => $entryName, 'path' => $path];
 				}
 				$this->scanRecursive( $folderId, $path.$entryName.'/',  $stats );
 			}
@@ -407,7 +407,7 @@ class Controller_Manage_Download extends Controller
 					$data['uploadedAt']	= filemtime( $entry->getPathname() );
 					$this->modelFile->add( $data );
 					$this->updateNumber( $parentId, 'file' );
-					$stats->files[]	= (object) array( 'title' => $entryName, 'path' => $path );
+					$stats->files[]	= (object) ['title' => $entryName, 'path' => $path];
 				}
 			}
 		}
@@ -415,7 +415,7 @@ class Controller_Manage_Download extends Controller
 
 	protected function updateNumber( $folderId, $type, $diff = 1 )
 	{
-		if( !in_array( $type, array( 'folder', 'file' ) ) )
+		if( !in_array( $type, ['folder', 'file'] ) )
 			throw new InvalidArgumentException( 'Type must be folder or file' );
 		while( $folderId ){
 			$folder	= $this->modelFolder->get( $folderId );
@@ -423,10 +423,10 @@ class Controller_Manage_Download extends Controller
 				throw new RuntimeException( 'Invalid folder ID: '.$folderId );
 			switch( $type ){
 				case 'folder':
-					$data	= array( 'nrFolders' => $folder->nrFolders + $diff );
+					$data	= ['nrFolders' => $folder->nrFolders + $diff];
 					break;
 				case 'file':
-					$data	= array( 'nrFiles' => $folder->nrFiles + $diff );
+					$data	= ['nrFiles' => $folder->nrFiles + $diff];
 					break;
 			}
 			$data['modifiedAt']	= time();

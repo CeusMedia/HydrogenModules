@@ -34,7 +34,7 @@ extract( $view->populateTexts( array(
 	'panel.password.info',
 	'panel.password.below',
 	'panel.password.bottom',
-), 'html/manage/my/user/', array( 'pwdMinLength' => $pwdMinLength ) ) );
+), 'html/manage/my/user/', ['pwdMinLength' => $pwdMinLength] ) );
 
 return HTML::DivClass( 'content-panel content-panel-form', array(
 	HtmlTag::create( 'h4', $w->legend ),
@@ -76,7 +76,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 				$textPanelPasswordBelow ? HTML::DivClass( 'row-fluid', HTML::DivClass( 'span12', $textPanelPasswordBelow ) ) : '',
 			) ),
 			HTML::Buttons( array(
-				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, array( 'class' => 'not-muted' ) ),
+				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, ['class' => 'not-muted'] ),
 				HTML::DivClass( 'row-fluid',
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
@@ -95,7 +95,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					) )
 				)
 			) )
-		), array( 'autocomplete' => 'off' ) )
+		), ['autocomplete' => 'off'] )
 	) )
 ).'
 <style>

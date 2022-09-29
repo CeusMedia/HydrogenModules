@@ -18,7 +18,7 @@ if( $nodes ){
 		) );
 	}
 	ksort( $listNodes );
-	$listNodes		= HtmlTag::create( 'ul', $listNodes, array( 'class' => 'not-unstyled nav nav-pills nav-stacked' ) );
+	$listNodes		= HtmlTag::create( 'ul', $listNodes, ['class' => 'not-unstyled nav nav-pills nav-stacked'] );
 }
 
 return '

@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['index'];
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) ).'&nbsp;';
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 
 $statusIcons		= array(
 	-1		=> 'remove',
@@ -12,8 +12,8 @@ $statusIcons		= array(
 	1		=> 'check',
 );
 
-$labelEmpty	= HtmlTag::create( 'em', $w->empty, array( 'class' => 'muted' ) );
-$list		= HtmlTag::create( 'div', $labelEmpty, array( 'class' => 'alert alert-info' ) );
+$labelEmpty	= HtmlTag::create( 'em', $w->empty, ['class' => 'muted'] );
+$list		= HtmlTag::create( 'div', $labelEmpty, ['class' => 'alert alert-info'] );
 
 if( $groups ){
 	$list	= [];
@@ -23,23 +23,23 @@ if( $groups ){
 			'title'	=> $group->title,
 		);
 
-		$iconStatus		= HtmlTag::create( 'i', "", array( 'class' => 'fa fa-fw fa-'.$statusIcons[$group->status] ) );
+		$iconStatus		= HtmlTag::create( 'i', "", ['class' => 'fa fa-fw fa-'.$statusIcons[$group->status]] );
 		$link			= HtmlTag::create( 'a', $group->title, $attributes );
 		$label			= $link.'&nbsp;<small class="muted">('.count( $group->readers ).' Leser)</small>';
-	//	$label			= HtmlTag::create( 'span', $label, array( 'class' => '' ) );
+	//	$label			= HtmlTag::create( 'span', $label, ['class' => ''] );
 	#	$groups	= [];
 	#	foreach( $reader->groups as $group )
 	#		$groups[]		= $group->title;
-	#	$groups			= HtmlTag::create( 'span', count( $groups ), array( 'class' => 'badge', 'title' => join( ', ', $groups ) ) );
-		$cellLink		= HtmlTag::create( 'td', $label, array( 'class' => 'autocut cell-group-title' ) );
+	#	$groups			= HtmlTag::create( 'span', count( $groups ), ['class' => 'badge', 'title' => join( ', ', $groups] ) );
+		$cellLink		= HtmlTag::create( 'td', $label, ['class' => 'autocut cell-group-title'] );
 		$cellType		= HtmlTag::create( 'td', $words['types'][$group->type] );
 		$cellStatus		= HtmlTag::create( 'td', $iconStatus.'&nbsp;'.$words['states'][$group->status] );
 	#	$cellGroups		= HtmlTag::create( 'td', $groups );
 		$cellCreated	= HtmlTag::create( 'td', date( 'd.m.Y', $group->createdAt ) );
 		$cellModified	= HtmlTag::create( 'td', $group->modifiedAt ? date( 'd.m.Y', $group->modifiedAt ) : '-' );
 		$rowColor		= $group->status == 1 ? 'success' : ( $group->status == -1 ? 'error' : 'warning' );
-		$cells			= array( $cellLink, $cellType, $cellStatus, $cellCreated, $cellModified );
-		$attributes		= array( 'class' => $rowColor );
+		$cells			= [$cellLink, $cellType, $cellStatus, $cellCreated, $cellModified];
+		$attributes		= ['class' => $rowColor];
 		$list[]	= HtmlTag::create( 'tr', $cells, $attributes );
 	}
 	$tableRows		= join( $list );
@@ -50,10 +50,10 @@ if( $groups ){
 		$words['index']['columnCreated'],
 		$words['index']['columnModified']
 	) );
-	$tableColumns	= HtmlElements::ColumnGroup( array( '', '150px', '120px', '100px', '100px' ) );
+	$tableColumns	= HtmlElements::ColumnGroup( ['', '150px', '120px', '100px', '100px'] );
 	$tableHead		= HtmlTag::create( 'thead', $tableHeads );
 	$tableBody		= HtmlTag::create( 'tbody', $tableRows );
-	$list			= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, array( 'class' => 'table table-condensed table-hover table-striped table-fixed' ) );
+	$list			= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, ['class' => 'table table-condensed table-hover table-striped table-fixed'] );
 }
 
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, array(

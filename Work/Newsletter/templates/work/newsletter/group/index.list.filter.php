@@ -5,13 +5,13 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 if( isset( $groups ) && is_array( $groups ) && count( $groups ) < 3 )
 	return "";
 
-$optStatus		= array( '' => 'alle' );
+$optStatus		= ['' => 'alle'];
 foreach( $words['states'] as $key => $label )
 	$optStatus[$key]	= $label;
 $optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
 
-$iconFilter	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) ).'&nbsp;';
-$iconReset	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search-minus' ) ).'&nbsp;';
+$iconFilter	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] ).'&nbsp;';
+$iconReset	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] ).'&nbsp;';
 
 return '
 <form action="./work/newsletter/group/filter" method="post">

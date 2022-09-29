@@ -15,7 +15,7 @@ list>
 
 You can register custom context help by calling this hook:
 code>
-$env->getCaptain()->callHook( 'ContextHelp', 'register', $this, array( 'path' => 'my/example/contexthelp' ) );
+$env->getCaptain()->callHook( 'ContextHelp', 'register', $this, ['path' => 'my/example/contexthelp'] );
 <code
 The given path must point to a file within locales HTML folder.
 As file extension, .html is appended automatically.
@@ -53,7 +53,7 @@ Please use composer to require <code>"paquettg/php-html-parser": "^1.7"</code>!
 	<hook env="resource" resource="ContextHelp" event="register">View_Helper_ContextHelp::___onRegisterContextHelp</hook>
 	<hook env="resource" resource="Controller" event="onDetectPath">View_Helper_ContextHelp::___onRegisterContextHelp</hook>
 	<hook env="resource" resource="Page" event="applyModules"><![CDATA[
-		$env->getCaptain()->callHook( 'ContextHelp', 'register', $context, array( 'path' => 'app.contexthelp' ) );
+		$env->getCaptain()->callHook( 'ContextHelp', 'register', $context, ['path' => 'app.contexthelp'] );
 		$context->js->addSCriptOnReady('ContextHelp.prepare()');
 ]]></hook>
 </module>

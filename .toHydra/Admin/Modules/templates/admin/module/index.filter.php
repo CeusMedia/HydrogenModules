@@ -33,10 +33,10 @@ foreach( $typeMap as $typeKey => $typeLabel ){
 		'checked'	=> in_array( $typeKey, $filterTypes ) ? 'checked' : NULL,
 	);
 	$input	= HtmlTag::create( 'input', NULL, $attributes );
-	$label	= HtmlTag::create( 'label', $input.'&nbsp;'.$typeLabel, array( 'for' => 'filter_type_'.$typeKey, 'class' => 'checkbox' ) );
+	$label	= HtmlTag::create( 'label', $input.'&nbsp;'.$typeLabel, ['for' => 'filter_type_'.$typeKey, 'class' => 'checkbox'] );
 	$list[]	= HtmlTag::create( 'li', $label );
 }
-$typeList	= HtmlTag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;' ) );
+$typeList	= HtmlTag::create( 'ul', join( $list ), ['style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;'] );
 
 if( !$filterCategories )
 	$filterCategories	= array_keys( $categories );
@@ -54,14 +54,14 @@ foreach( $categories as $nr => $category ){
 	if( !strlen( $category ) )
 		$category	= '<em>(keine Kategorie)</em>';
 	$input	= HtmlTag::create( 'input', NULL, $attributes );
-	$label	= HtmlTag::create( 'label', $input.'&nbsp;'.$category, array( 'for' => 'filter_category_'.$nr, 'class' => 'checkbox' ) );
+	$label	= HtmlTag::create( 'label', $input.'&nbsp;'.$category, ['for' => 'filter_category_'.$nr, 'class' => 'checkbox'] );
 	$list[]	= HtmlTag::create( 'li', $label );
 }
-$categoryList	= HtmlTag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;' ) );
+$categoryList	= HtmlTag::create( 'ul', join( $list ), ['style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;'] );
 
 $filterItemSources		= "";
 if( count( $sources ) > 1 ){
-	$sources['Local']	= (object) array( 'title' => 'Lokal, ohne Quelle' );
+	$sources['Local']	= (object) ['title' => 'Lokal, ohne Quelle'];
 	if( !$filterSources )
 		$filterSources	= array_keys( $sources );
 	$list	= [];
@@ -74,11 +74,11 @@ if( count( $sources ) > 1 ){
 			'checked'	=> in_array( $sourceId, $filterSources ) ? 'checked' : NULL,
 		);
 		$input	= HtmlTag::create( 'input', NULL, $attributes );
-		$title	= HtmlTag::create( 'acronym', $sourceId, array( 'title' => $source->title ) );
-		$label	= HtmlTag::create( 'label', $input.'&nbsp;'.$title, array( 'for' => 'filter_source_'.$sourceId, 'class' => 'checkbox' ) );
+		$title	= HtmlTag::create( 'acronym', $sourceId, ['title' => $source->title] );
+		$label	= HtmlTag::create( 'label', $input.'&nbsp;'.$title, ['for' => 'filter_source_'.$sourceId, 'class' => 'checkbox'] );
 		$list[]	= HtmlTag::create( 'li', $label );
 	}
-	$sourceList	= HtmlTag::create( 'ul', join( $list ), array( 'style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;' ) );
+	$sourceList	= HtmlTag::create( 'ul', join( $list ), ['style' => 'margin: 0px; padding: 0px; list-style: none; max-height: 240px; overflow-y: auto; border: 1px solid lightgray; border-radius: 2px; padding: 0.5em 1em; margin-bottom: 1em;'] );
 	$filterItemSources	= '
 		<div class="row-fluid">
 			<div class="span12">

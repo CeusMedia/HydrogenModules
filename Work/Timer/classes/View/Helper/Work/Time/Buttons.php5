@@ -37,7 +37,7 @@ class View_Helper_Work_Time_Buttons
 		foreach( $this->buttons as $buttonKey ){
 			switch( $buttonKey ){
 				case 'start':
-					$iconStart	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) );
+					$iconStart	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-play'] );
 					$urlStart	= './work/time/start/'.$timer->workTimerId.'?from='.$this->from;
 					if( $timer->status != 1 && ( 0 && $userIsOwner || $userIsWorker ) )
 						$buttons[] 	= Html::create( 'a', $iconStart, array(
@@ -52,7 +52,7 @@ class View_Helper_Work_Time_Buttons
 						) );
 					break;
 				case 'pause':
-					$iconPause	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) );
+					$iconPause	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-pause'] );
 					$urlPause	= './work/time/pause/'.$timer->workTimerId.'?from='.$this->from;
 					if( $timer->status != 2 && ( 0 && $userIsOwner || $userIsWorker ) )
 						$buttons[]	= Html::create( 'a', $iconPause, array(
@@ -67,7 +67,7 @@ class View_Helper_Work_Time_Buttons
 						) );
 					break;
 				case 'stop':
-					$iconStop	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) );
+					$iconStop	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] );
 					$urlStop	= './work/time/stop/'.$timer->workTimerId.'?from='.$this->from;
 					if( $timer->status != 3 && ( 0 && $userIsOwner || $userIsWorker ) )
 						$buttons[] 	= Html::create( 'a', $iconStop, array(
@@ -82,7 +82,7 @@ class View_Helper_Work_Time_Buttons
 						) );
 					break;
 				case 'mission-view':
-					$iconView	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye-open' ) );
+					$iconView	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-eye-open'] );
 					$urlView	= './work/mission/view/'.$timer->missionId;
 					$buttons[] 	= Html::create( 'a', $iconView, array(
 						'href'		=> $urlView,
@@ -90,7 +90,7 @@ class View_Helper_Work_Time_Buttons
 					) );
 					break;
 				case 'edit':
-					$iconEdit	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+					$iconEdit	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 					$urlEdit	= './work/time/edit/'.$timer->workTimerId.'?from='.$this->from;
 					if( $timer->status != 1 && ( $userIsOwner || $userIsWorker ) )
 						$buttons[] 	= Html::create( 'a', $iconEdit, array(
@@ -105,7 +105,7 @@ class View_Helper_Work_Time_Buttons
 					) );
 					break;
 				case 'not-yet-message':
-					$iconMessage	= Html::create( 'i', '', array( 'class' => 'fa fa-fw fa-envelope-o' ) );
+					$iconMessage	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-envelope-o'] );
 					if( $userIsOwner || !$userIsWorker ){
 						$modal		= new BootstrapModalDialog( 'work-time-timer-message-'.$timer->workTimerId );
 						$modal->setHeading( 'Nachricht bezüglicher dieser Aufgabe' );
@@ -114,13 +114,13 @@ class View_Helper_Work_Time_Buttons
 						$modals[]	= $modal;
 						$trigger	= new BootstrapModalTrigger( 'work-time-timer-message-'.$timer->workTimerId );
 						$trigger->setLabel( $iconMessage );
-						$trigger->setAttributes( array( 'class' => 'btn btn-mini btn-info' ) );
+						$trigger->setAttributes( ['class' => 'btn btn-mini btn-info'] );
 						$buttons[]	= $trigger->render();
 					}
 					break;
 			}
 		}
-		return Html::create( 'div', $buttons, array( 'class' => 'btn-group' ) ).join( $modals );
+		return Html::create( 'div', $buttons, ['class' => 'btn-group'] ).join( $modals );
 	}
 
 	static public function renderStatic( Environment $env, $timerId, $userId, $buttons, $size, $from ){

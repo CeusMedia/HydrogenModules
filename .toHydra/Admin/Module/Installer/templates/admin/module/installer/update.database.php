@@ -26,7 +26,7 @@ if( $remote->getModules() && $remote->getModules()->has( 'Resource_Database' ) )
 		$list	= [];
 		foreach( $sql as $key => $step ){
 			$version	= fixVersionBug( $step->version );
-			$facts		= array( 'Version: '.$step->version, 'DBMS: '.$step->type );		//  collect facts
+			$facts		= ['Version: '.$step->version, 'DBMS: '.$step->type];		//  collect facts
 			$facts		= HtmlTag::create( 'b', join( ' | ', $facts ) );				//  render facts
 			$mode		= $step->type === 'mysql' ? 'text/x-mysql' : 'text/x-sql';			//  decide SQL dialect by SQL update type
 			$code		= htmlentities( trim( $step->sql ), ENT_QUOTES, 'UTF-8' );			//  escape SQL content
@@ -41,12 +41,12 @@ if( $remote->getModules() && $remote->getModules()->has( 'Resource_Database' ) )
 			$list[]		= HtmlTag::create( 'tr', $cell );								//  append table row
 		}
 		if( $list )
-			$table		= HtmlTag::create( 'table', join( $list ), array( 'class' => 'database' ) );
+			$table		= HtmlTag::create( 'table', join( $list ), ['class' => 'database'] );
 	}
 
 	if( $table ){
-		$legend		= HtmlTag::create( 'legend', "Datenbank", array( 'class' => 'database' ) );
-		$text		= HtmlTag::create( 'small', $words['update']['textDatabase'], array( 'class' => 'muted' ) );
+		$legend		= HtmlTag::create( 'legend', "Datenbank", ['class' => 'database'] );
+		$text		= HtmlTag::create( 'small', $words['update']['textDatabase'], ['class' => 'muted'] );
 		$fieldset	= HtmlTag::create( 'fieldset', $legend.$text.$table );
 	}
 }

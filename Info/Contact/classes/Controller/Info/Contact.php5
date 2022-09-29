@@ -25,7 +25,7 @@ class Controller_Info_Contact extends Controller
 			try{
 				$logic		= Logic_Mail::getInstance( $this->env );
 				$mail		= new Mail_Info_Contact_Form( $this->env, $this->request->getAll() );
-				$receiver	= (object) array( 'email' => $this->moduleConfig->get( 'mail.receiver' ) );
+				$receiver	= (object) ['email' => $this->moduleConfig->get( 'mail.receiver' )];
 				$logic->handleMail( $mail, $receiver, 'de' );
 				$data		= TRUE;
 			}
@@ -105,7 +105,7 @@ class Controller_Info_Contact extends Controller
 				try{
 					$logic		= Logic_Mail::getInstance( $this->env );
 					$mail		= new Mail_Info_Contact( $this->env, $data );
-					$receiver	= (object) array( 'email' => $this->moduleConfig->get( 'mail.receiver' ) );
+					$receiver	= (object) ['email' => $this->moduleConfig->get( 'mail.receiver' )];
 					$logic->handleMail( $mail, $receiver, 'de' );
 					$this->messenger->noteSuccess( $words->msgSuccess );
 
@@ -171,7 +171,7 @@ class Controller_Info_Contact extends Controller
 						Model_Newsletter_Group::TYPE_DEFAULT,
 						Model_Newsletter_Group::TYPE_AUTOMATIC
 					) );
-				$orders		= array( 'title' => 'ASC' );
+				$orders		= ['title' => 'ASC'];
 				$topics		= $model->getAll( $conditions, $orders );
 			}
 			$this->addData( 'newsletterTopics', $topics );

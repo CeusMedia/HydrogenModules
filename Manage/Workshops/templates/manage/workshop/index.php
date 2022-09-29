@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-plus' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-plus'] );
 
 $list	= '<em>Keine Workshops vorhanden.</em>';
 if( $workshops ){
@@ -19,12 +19,12 @@ if( $workshops ){
 			HtmlTag::create( 'td', $rank ),
 			HtmlTag::create( 'td', date( 'd.m.Y H:i', $item->modifiedAt ) ),
 
-		), array() );
+		), [] );
 	}
-	$heads	= HtmlElements::TableHeads( array( 'Bezeichnung', 'Zustand', 'Anordnung', 'letzte Änderung' ) );
+	$heads	= HtmlElements::TableHeads( ['Bezeichnung', 'Zustand', 'Anordnung', 'letzte Änderung'] );
 	$thead	= HtmlTag::create( 'thead', $heads );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', array( $thead, $tbody ), array( 'class' => 'table table-striped' ) );
+	$list	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table table-striped'] );
 }
 
 $panelList	= HtmlTag::create( 'div', array(
@@ -32,9 +32,9 @@ $panelList	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		$list,
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Workshop', array( 'href' => './manage/workshop/add', 'class' => 'btn btn-success' ) ),
-		), array( 'class' => 'buttonbar' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+			HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Workshop', ['href' => './manage/workshop/add', 'class' => 'btn btn-success'] ),
+		), ['class' => 'buttonbar'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 return $panelList;

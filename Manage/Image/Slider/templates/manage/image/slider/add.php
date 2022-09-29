@@ -2,8 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
-$iconSave	= HtmlTag::create( 'i', '', array( 'class' => 'icon-check icon-white' ) );
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$words['add']['buttonCancel'], array(
 	'href'	=> './manage/image/slider',
@@ -26,7 +26,7 @@ $optRandomOrder	=  HtmlElements::Options( $words['optBoolean'], $data->get( 'ran
 
 $wordsSlider	= (object) $words['slider'];
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/image/slider' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/image/slider' ) );
 
 return $textTop.'
 <div class="content-panel">

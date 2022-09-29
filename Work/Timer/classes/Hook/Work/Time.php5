@@ -12,7 +12,7 @@ class Hook_Work_Time extends Hook
 		if( ( $userId = $data->get( 'userId' ) ) ){
 			$logicTimer	= Logic_Work_Timer::getInstance( $env );
 			$modelTimer	= new Model_Work_Timer( $env );
-			$indices	= array( 'userId' => $userId, 'status' => 1 );
+			$indices	= ['userId' => $userId, 'status' => 1];
 			$active		= $modelTimer->getByIndices( $indices );
 			if( $active ){
 				$logic	= Logic_Work_Timer::getInstance( $env );
@@ -50,7 +50,7 @@ class Hook_Work_Time extends Hook
 	public static function onEnvCallForModules( Environment $env, $context, $module, $payload = [] )
 	{
 		$context	= new View_Helper_Work_Time_Timer( $env );
-		$env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, array() );
+		$env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, [] );
 	}
 
 	public static function onWorkTimeRegisterTab( Environment $env, $context, $module, $payload )

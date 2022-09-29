@@ -29,7 +29,7 @@ class Hook_UI_Shortcode_Example extends Hook
 
 						$replacement	= HtmlTag::create( 'div', array(
 							'This is an example.',
-						), array( 'class' => 'example-type-'.$attr['type'] ) );
+						), ['class' => 'example-type-'.$attr['type']] );
 						$processor->replaceNext( $shortCode, $replacement );
 					}
 				}

@@ -5,13 +5,13 @@ $panelFolders	= $view->loadTemplateFile( 'manage/content/image/folders.php' );
 
 $w				= (object) $words['editFolder'];
 
-$optFolder	= array( '.' => '' );
+$optFolder	= ['.' => ''];
 foreach( $folders as $folder )
 	if( $folder !== $path )
 		$optFolder[$folder]	= preg_replace( "/\.\/?/", "", $folder );
 $optFolder	= HtmlElements::Options( $optFolder, $folderPath );
 
-extract( $view->populateTexts( array( 'top', 'bottom', 'edit.folder.right' ), 'html/manage/content/image/' ) );
+extract( $view->populateTexts( ['top', 'bottom', 'edit.folder.right'], 'html/manage/content/image/' ) );
 
 return $textTop.'
 <div class="row-fluid">

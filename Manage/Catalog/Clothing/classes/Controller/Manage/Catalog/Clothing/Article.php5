@@ -66,10 +66,10 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 		if( $filterSize )
 			$conditions['size']			= $filterSize;
 
-		$limits		= array( $page * $filterLimit, $filterLimit );
+		$limits		= [$page * $filterLimit, $filterLimit];
 
 		$total		= $this->modelArticle->count( $conditions );
-		$articles	= $this->modelArticle->getAll( $conditions, array(), $limits );
+		$articles	= $this->modelArticle->getAll( $conditions, [], $limits );
 		foreach( $articles as $article )
 			$article	= $this->translateArticle( $article );
 
@@ -157,7 +157,7 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 		$this->addData( 'language', $this->session->get( $this->sessionPrefix.'language' ) );
 
 		$this->categoryMap		= [];
-		$categories		= $this->modelCategory->getAll( array(), array( 'title' => 'ASC' ) );
+		$categories		= $this->modelCategory->getAll( [], ['title' => 'ASC'] );
 		foreach( $categories as $item )
 			$this->categoryMap[$item->categoryId]	= $item;
 		$this->addData( 'categoryMap', $this->categoryMap );

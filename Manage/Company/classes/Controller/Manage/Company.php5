@@ -36,7 +36,7 @@ class Controller_Manage_Company extends Controller
 		if( $request->get( 'doAdd' ) ){
 			if( empty( $data['title'] ) )
 				$messenger->noteError( $words->msgNoTitle );
-			else if( $model->getAll( array( 'title' => $data['title'] ) ) )
+			else if( $model->getAll( ['title' => $data['title']] ) )
 				$messenger->noteError( $words->msgTitleExisting, $data['title'] );
 			if( empty( $data['city'] ) )
 				$messenger->noteError( $words->msgNoCity );
@@ -85,7 +85,7 @@ class Controller_Manage_Company extends Controller
 		if( $request->get( 'doEdit' ) ){
 			if( empty( $data['title'] ) )
 				$messenger->noteError( $words->msgNoTitle );
-			else if( $modelCompany->getAll( array( 'title' => $data['title'], 'companyId' => '!= '.$companyId ) ) )
+			else if( $modelCompany->getAll( ['title' => $data['title'], 'companyId' => '!= '.$companyId] ) )
 				$messenger->noteError( $words->msgTitleExisting, $data['title'] );
 			if( empty( $data['city'] ) )
 				$messenger->noteError( $words->msgNoCity );

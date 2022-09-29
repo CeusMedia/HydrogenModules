@@ -113,7 +113,7 @@ class Controller_Manage_Content_Locale extends Controller
 		}
 
 		$folder		= $this->types[$type]['folder'];
-		$extensions	= $this->types[$type]['extensions'] ? explode( ',', $this->types[$type]['extensions'] ) : array();
+		$extensions	= $this->types[$type]['extensions'] ? explode( ',', $this->types[$type]['extensions'] ) : [];
 		$list		= [];
 		$path		= $this->basePath.$language.'/';
 		if( file_exists( $path.$folder ) ){

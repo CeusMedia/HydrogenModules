@@ -28,7 +28,7 @@ class Logic_Shortcode extends Logic
 	public function find( string $shortCode, array $defaultAttributes = [], string $defaultMode = 'allow' )
 	{
 		$mode	= $this->moduleConfig->get( 'mode' );
-		if( !in_array( $mode, array( 'allow', 'deny' ) ) )
+		if( !in_array( $mode, ['allow', 'deny'] ) )
 			$mode	=  $defaultMode;
 		$allow	= preg_split( '/, */', $this->moduleConfig->get( 'allow' ) );
 		$deny	= preg_split( '/, */', $this->moduleConfig->get( 'deny' ) );
@@ -163,7 +163,7 @@ class Logic_Shortcode extends Logic
 				$status = self::PARSE_STATUS_READ_CODE;
 			}
 			else if( $status == self::PARSE_STATUS_READ_CODE ){
-				if( in_array( $char, array( " ", "\n" ) ) ){
+				if( in_array( $char, [" ", "\n"] ) ){
 					$bufferAttrKey	= '';
 					$status	= self::PARSE_STATUS_READ_ATTR_KEY;
 				}
@@ -172,7 +172,7 @@ class Logic_Shortcode extends Logic
 				}
 			}
 			else if( $status == self::PARSE_STATUS_READ_ATTR_KEY ){
-				if( in_array( $char, array( " ", "\n" ) ) ){
+				if( in_array( $char, [" ", "\n"] ) ){
 					if( $bufferAttrKey ){
 						$attributes[$bufferAttrKey] = TRUE;
 						$bufferAttrKey	= '';

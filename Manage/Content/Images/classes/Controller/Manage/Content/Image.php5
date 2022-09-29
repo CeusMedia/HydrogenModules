@@ -30,7 +30,7 @@ class Controller_Manage_Content_Image extends Controller
 
 	public static function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] )
 	{
-		self::___onTinyMCE_getLinkList( $env, $context, $module, array( 'hidePrefix' => TRUE ) );
+		self::___onTinyMCE_getLinkList( $env, $context, $module, ['hidePrefix' => TRUE] );
 	}
 
 	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
@@ -98,7 +98,7 @@ class Controller_Manage_Content_Image extends Controller
 		$file		= $this->request->get( 'file' );
 		$folder		= str_replace( "../", "", $folder );				//  security
 		$folder		= strlen( $folder ) ? $folder.'/' : "";
-		$types		= array( IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF );
+		$types		= [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF];
 		$words		= (object) $this->getWords( 'msg' );
 
 		if( $this->request->has( 'save' ) ){
@@ -375,7 +375,7 @@ class Controller_Manage_Content_Image extends Controller
 			$content	= base64_encode( file_get_contents( $this->basePath.$imagePath ) );
 			$source		= "data:".$mimetype.";base64,".$content;
 			$page		= new HtmlPage();
-			$page->addBody( HtmlTag::create( 'img', NULL, array( 'src' => $source ) ) );
+			$page->addBody( HtmlTag::create( 'img', NULL, ['src' => $source] ) );
 			print( $page->build() );
 			exit;
 		}
@@ -410,7 +410,7 @@ class Controller_Manage_Content_Image extends Controller
 			$label	= $path ? $path.'/'.$file : $file;
 			$uri	= substr( $item->getPathname(), strlen( $frontend->getPath() ) );
 			$key	= str_replace( "/", "_", strtolower( $label ) );
-			$list[$key]	= (object) array( 'label' => $label, 'uri' => $uri );
+			$list[$key]	= (object) ['label' => $label, 'uri' => $uri];
 		}
 		ksort( $list );
 		$env->getCache()->set( 'ManageContentImages.list.static', $list );
@@ -441,7 +441,7 @@ class Controller_Manage_Content_Image extends Controller
 				$this->messenger->noteFailure( $words->errorBasePathInvalid, $this->basePath );
 		}
 		if( file_exists( $this->basePath ) ){
-			$this->folders	= array( '' => '.' );
+			$this->folders	= ['' => '.'];
 			foreach( RecursiveFolderLister::getFolderList( $this->basePath ) as $entry ){
 				$path	= substr( $entry->getPathname(), strlen( $this->basePath ) );
 				if( !( $pathIgnore && preg_match( $pathIgnore, $path ) ) )

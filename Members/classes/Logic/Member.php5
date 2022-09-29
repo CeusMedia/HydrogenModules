@@ -42,7 +42,7 @@ class Logic_Member
 			'status'	=> '>= '.Model_User::STATUS_UNCONFIRMED,
 			'username'	=> '%'.$query.'%'
 		);
-		$byUsername	= $this->modelUser->getAll( $conditions, array( 'username' => 'ASC' ) );
+		$byUsername	= $this->modelUser->getAll( $conditions, ['username' => 'ASC'] );
 		foreach( $byUsername as $user )
 			$userIds[]	= $user->userId;
 
@@ -90,7 +90,7 @@ class Logic_Member
 		if ( $key !== FALSE )
 			unset( $userIds[$key] );
 		if( !$userIds )
-			return array();
+			return [];
 		$users		= $this->modelUser->getAllByIndex( 'userId', $userIds );
 		if( $limit && count( $userIds ) > $limit )
 			$users	= array_slice( $users, $offset, $limit );

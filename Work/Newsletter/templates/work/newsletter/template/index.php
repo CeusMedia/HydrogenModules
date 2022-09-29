@@ -5,7 +5,7 @@ $panelFilter	= $view->loadTemplateFile( 'work/newsletter/template/index.filter.p
 $panelList		= $view->loadTemplateFile( 'work/newsletter/template/index.list.php' );
 $panelThemes	= $view->loadTemplateFile( 'work/newsletter/template/index.themes.php' );
 
-extract( $view->populateTexts( array( 'above', 'bottom', 'top' ), 'html/work/newsletter/template/index/', array( 'words' => $words ) ) );
+extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/template/index/', ['words' => $words] ) );
 
 return 	$textTop.'
 <div class="newsletter-content">

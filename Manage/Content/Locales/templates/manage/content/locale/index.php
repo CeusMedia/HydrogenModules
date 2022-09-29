@@ -2,7 +2,7 @@
 
 $panelFilter	= $view->loadTemplateFile( 'manage/content/locale/filter.php' );
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/manage/content/locale' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/content/locale' ) );
 
 return $textIndexTop.'
 <div class="row-fluid">

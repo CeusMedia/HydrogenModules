@@ -2,11 +2,11 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconOpen		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-folder-open" ) );
-$iconView		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-eye" ) );
-$iconExists		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-check" ) );
-$iconMissing	= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-2x fa-warning" ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-fw fa-remove" ) );
+$iconOpen		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-folder-open"] );
+$iconView		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-eye"] );
+$iconExists		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-2x fa-check"] );
+$iconMissing	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-2x fa-warning"] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-remove"] );
 
 $modalImage		= new View_Helper_Input_Resource( $env );
 $modalImage->setModalId( 'modal-admin-mail-template-select-image' );
@@ -47,7 +47,7 @@ if( $template->images ){
 			) );
 		}
 		$itemFile		= HtmlTag::create( 'big', pathinfo( $item, PATHINFO_BASENAME ) );
-		$itemPath		= HtmlTag::create( 'small', pathinfo( $item, PATHINFO_DIRNAME ), array( 'class' => 'not-muted' ) );
+		$itemPath		= HtmlTag::create( 'small', pathinfo( $item, PATHINFO_DIRNAME ), ['class' => 'not-muted'] );
 		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
 			'class'	=> 'btn btn-inverse pull-right',
 			'href'	=> './admin/mail/template/removeImage/'.$template->mailTemplateId.'/'.base64_encode( $item ),
@@ -56,13 +56,13 @@ if( $template->images ){
 		$buttons	= HtmlTag::create( 'div', array(
 			$buttonOpen,
 			$buttonRemove,
-		), array( 'class' => 'btn-group' ) );
+		), ['class' => 'btn-group'] );
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $image ),
 			HtmlTag::create( 'td', '<strong><kbd>image'.( $nr + 1).'</kbd></strong>' ),
 			HtmlTag::create( 'td', $itemFile.'<br/>'.$itemPath ),
 			HtmlTag::create( 'td', $buttons, array( 'style' => 'text-align: right') ),
-		), array( 'class' => $rowClass ) );
+		), ['class' => $rowClass] );
 	}
 	$listImages	= HtmlTag::create( 'table', array(
 		HtmlElements::ColumnGroup( array(
@@ -90,7 +90,7 @@ return '
 			<h4>'.$words['edit-image-list']['heading'].'</h4>
 			<div class="content-panel-inner">
 				'.$listImages.'
-				'.HtmlTag::create( 'div', $buttonList, array( 'class' => 'buttonbar' ) ).'
+				'.HtmlTag::create( 'div', $buttonList, ['class' => 'buttonbar'] ).'
 			</div>
 		</div>
 	</div>

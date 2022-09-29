@@ -14,7 +14,7 @@ class Logic_IP_Lock extends Logic
 		$method	= getEnv( 'REQUEST_METHOD' );
 		if( $this->isLockedIp( $ip ) )
 			return FALSE;
-		$conditions	= array( 'status' => Model_IP_Lock_Filter::STATUS_ENABLED );
+		$conditions	= ['status' => Model_IP_Lock_Filter::STATUS_ENABLED];
 		$filters	= $this->modelFilter->getAll( $conditions );
 		foreach( $filters as $filter ){
 			$reason		= $this->modelReason->get( $filter->reasonId );
@@ -149,7 +149,7 @@ class Logic_IP_Lock extends Logic
 		}
 		if( $lock ){
 			if( $reasonId )
-				$this->modelLock->edit( $lock->ipLockId, array( 'reasonId' => $reasonId ) );
+				$this->modelLock->edit( $lock->ipLockId, ['reasonId' => $reasonId] );
 			$this->lock( $lock->ipLockId, $reasonId );
 		}
 		return $lock->ipLockId;
@@ -183,7 +183,7 @@ class Logic_IP_Lock extends Logic
 	public function setStatus( $ipLockId, int $status, bool $strict = TRUE ): bool
 	{
 		$lock	= $this->get( $ipLockId, $strict );
-		$data	= array( 'status' => $status );
+		$data	= ['status' => $status];
 		if( $status == Model_IP_Lock::STATUS_UNLOCKED )
 			$data['unlockedAt']	= time();
 		else if( $status == Model_IP_Lock::STATUS_LOCKED ){

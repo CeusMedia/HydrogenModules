@@ -33,7 +33,7 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 			$projectLink	= HtmlElements::Link( './manage/project/view/'.$issue->projectId, $issue->project->title );
 			$message[]		= 'Du bekommst diese Mail, da du im Projekt '.$projectLink.' involviert bist.';
 		}
-		$message	= HtmlTag::create( 'div', join( '<br/>', $message ), array( 'class' => 'alert alert-info' ) );
+		$message	= HtmlTag::create( 'div', join( '<br/>', $message ), ['class' => 'alert alert-info'] );
 
 		$body		= '
 <div>

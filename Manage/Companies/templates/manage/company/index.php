@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $heading	= HtmlTag::create( 'h2', $words['index']['heading'] );
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 
 $buttonAdd 	= HtmlElements::LinkButton( './manage/company/add', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], 'btn btn-primary' );
 
@@ -29,16 +29,16 @@ foreach( $companies as $entry ){
 	$buttonEdit			= HtmlElements::LinkButton( $uriEdit, '<i class="icon-pencil"></i>', 'btn btn-mini' );
 	$buttonActivate		= HtmlElements::LinkButton( $uriActivate, '<i class="icon-check icon-white"></i>', 'btn btn-mini btn-success', NULL, $entry->status == 1 );
 	$buttonDeactivate	= HtmlElements::LinkButton( $uriDeactivate, '<i class="icon-remove icon-white"></i>', 'btn btn-mini btn-danger', NULL, $entry->status == -1 );
-	$buttons			= HtmlTag::create( 'div', $buttonEdit/*.$buttonActivate.$buttonDeactivate*/, array( 'class' => 'btn-group' ) );
+	$buttons			= HtmlTag::create( 'div', $buttonEdit/*.$buttonActivate.$buttonDeactivate*/, ['class' => 'btn-group'] );
 	$check		= HtmlElements::Checkbox( 'companyId', $entry->companyId );
 	$rows[]		= HtmlTag::create( 'tr', array(
-//		HtmlTag::create( 'td', $check, array( 'class' => 'cell-check' ),
-		HtmlTag::create( 'td', $link, array( 'class' => 'cell-title' ) ),
-		HtmlTag::create( 'td', $entry->city, array( 'class' => 'cell-city' ) ),
-		HtmlTag::create( 'td', $createdAt, array( 'class' => 'cell-created' ) ),
-		HtmlTag::create( 'td', $modifiedAt, array( 'class' => 'cell-modified' ) ),
-		HtmlTag::create( 'td', $buttons, array( 'class' => 'cell-action' ) ),
-	), array( 'class' => $class ) );
+//		HtmlTag::create( 'td', $check, ['class' => 'cell-check'],
+		HtmlTag::create( 'td', $link, ['class' => 'cell-title'] ),
+		HtmlTag::create( 'td', $entry->city, ['class' => 'cell-city'] ),
+		HtmlTag::create( 'td', $createdAt, ['class' => 'cell-created'] ),
+		HtmlTag::create( 'td', $modifiedAt, ['class' => 'cell-modified'] ),
+		HtmlTag::create( 'td', $buttons, ['class' => 'cell-action'] ),
+	), ['class' => $class] );
 	$number		++;
 }
 $rows	= implode( "\n", $rows );
@@ -55,7 +55,7 @@ $heads		= HtmlElements::TableHeads( $heads );
 $colgroup	= HtmlElements::ColumnGroup( '42%', '20%', '15%', '15%', '5%' );
 $thead		= HtmlTag::create( 'thead', $heads );
 $tbody		= HtmlTag::create( 'tbody', $rows );
-$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-condensed' ) );
+$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-condensed'] );
 
 $panelList	= '<div class="content-panel">
 	<h3>'.$words['index']['legend'].'</h3>

@@ -13,7 +13,7 @@ class View_Helper_Module_SqlScripts{
 		$list	= [];
 		foreach( $scripts as $key => $step ){
 			$version	= $this->fixVersionBug( $step->version );
-			$facts		= array( 'Version: '.$step->version, 'DBMS: '.$step->type );		//  collect facts
+			$facts		= ['Version: '.$step->version, 'DBMS: '.$step->type];		//  collect facts
 			$facts		= HtmlTag::create( 'b', join( ' | ', $facts ) );				//  render facts
 			$mode		= $step->type === 'mysql' ? 'text/x-mysql' : 'text/x-sql';			//  decide SQL dialect by SQL update type
 			$code		= htmlentities( trim( $step->sql ), ENT_QUOTES, 'UTF-8' );			//  escape SQL content
@@ -27,7 +27,7 @@ class View_Helper_Module_SqlScripts{
 			$cell		= HtmlTag::create( 'td', $facts.$code );						//  render table cell
 			$list[]		= HtmlTag::create( 'tr', $cell );								//  append table row
 		}
-		return HtmlTag::create( 'table', join( $list ), array( 'class' => 'database' ) );
+		return HtmlTag::create( 'table', join( $list ), ['class' => 'database'] );
 	}
 }
 ?>

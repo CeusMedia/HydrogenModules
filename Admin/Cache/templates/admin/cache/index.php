@@ -26,13 +26,13 @@ foreach( $list as $item ){
 		HtmlTag::create( 'td', $value ),
 		HtmlTag::create( 'td', $buttonRemove ),
 	);
-	$rows[]	= HtmlTag::create( 'tr', $cells, array( "data-key" => $item->key ) );
+	$rows[]	= HtmlTag::create( 'tr', $cells, ["data-key" => $item->key] );
 }
 
-$columns	= HtmlElements::ColumnGroup( array( '20%', '5%', '65%', '10%' ) );
-$heads		= array( $wf->headKey, $wf->headType, $wf->headValue, $wf->headAction );
+$columns	= HtmlElements::ColumnGroup( ['20%', '5%', '65%', '10%'] );
+$heads		= [$wf->headKey, $wf->headType, $wf->headValue, $wf->headAction];
 $heads		= HtmlElements::TableHeads( $heads );
-$table		= HtmlTag::create( 'table', $columns.$heads.implode( $rows ), array( 'class' => "table table-condensed table-striped" ) );
+$table		= HtmlTag::create( 'table', $columns.$heads.implode( $rows ), ['class' => "table table-condensed table-striped"] );
 
 $panelEdit	= '
 	<h3>'.$wf->legend.'</h3>

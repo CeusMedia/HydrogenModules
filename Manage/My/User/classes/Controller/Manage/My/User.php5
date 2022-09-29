@@ -101,7 +101,7 @@ class Controller_Manage_My_User extends Controller{
 		}
 
 		$data		= $this->request->getAllFromSource( 'POST' );
-		$deniedKeys	= array( 'username', 'email', 'password', 'createdAt', 'modifiedAt', 'roleId', 'companyId', 'saveUser' );
+		$deniedKeys	= ['username', 'email', 'password', 'createdAt', 'modifiedAt', 'roleId', 'companyId', 'saveUser'];
 		foreach( $deniedKeys as $deniedKey )
 			unset( $data[$deniedKey] );
 
@@ -164,7 +164,7 @@ class Controller_Manage_My_User extends Controller{
 				$this->restart( NULL, TRUE );
 			}
 		}
-		$this->modelUser->edit( $this->userId, array( 'email' => $email ) );
+		$this->modelUser->edit( $this->userId, ['email' => $email] );
 		$this->messenger->noteSuccess( $words->msgSuccess );
 		$this->restart( NULL, TRUE );
 	}
@@ -186,7 +186,7 @@ class Controller_Manage_My_User extends Controller{
 		}
 
 		$modelPassword	= new Model_User_Password( $this->env );
-		$passwords		= $modelPassword->getAll( array( 'userId' => $this->userId ) );
+		$passwords		= $modelPassword->getAll( ['userId' => $this->userId] );
 
 		$this->addData( 'currentUserId', $this->userId );
 		$this->addData( 'user', $user );
@@ -240,7 +240,7 @@ class Controller_Manage_My_User extends Controller{
 				$logic->activatePassword( $userPasswordId );
 			}
 			else{
-				$this->modelUser->edit( $this->userId, array( 'password' => md5( $passwordNew.$passwordPepper ) ) );
+				$this->modelUser->edit( $this->userId, ['password' => md5( $passwordNew.$passwordPepper )] );
 			}
 			$this->messenger->noteSuccess( $words->msgSuccess );
 		}
@@ -300,7 +300,7 @@ class Controller_Manage_My_User extends Controller{
 			$this->messenger->noteError( $words->msgUsernameExisting, $username );
 			$this->restart( NULL, TRUE );
 		}
-		$this->modelUser->edit( $this->userId, array( 'username' => $username ) );
+		$this->modelUser->edit( $this->userId, ['username' => $username] );
 		$this->messenger->noteSuccess( $words->msgSuccess );
 		$this->restart( NULL, TRUE );
 	}

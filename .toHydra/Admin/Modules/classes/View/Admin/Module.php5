@@ -31,13 +31,13 @@ class View_Admin_Module extends View{
 		$image		= '';
 		if( !empty( $module->icon ) )
 			$image	= HtmlElements::Image( $module->icon, htmlentities( $module->title, ENT_QUOTES, 'UTF-8' ) );
-		$icon	= HtmlTag::create( 'div', $image, array( 'class' => 'module-icon' ) );
-		$title	= HtmlTag::create( 'div', self::formatLabel( $module->title ), array( 'class' => 'module-title' ) );
+		$icon	= HtmlTag::create( 'div', $image, ['class' => 'module-icon'] );
+		$title	= HtmlTag::create( 'div', self::formatLabel( $module->title ), ['class' => 'module-title'] );
 		$desc	= explode( '<br />', nl2br( $module->description ) );
 		$desc	= array_shift( $desc );
-		$desc	= HtmlTag::create( 'div', $desc, array( 'class' => 'module-desc' ) );
+		$desc	= HtmlTag::create( 'div', $desc, ['class' => 'module-desc'] );
 		$click	= 'document.location.href=\''.$url.$module->id.'\';';
-		return HtmlTag::create( 'div', $icon.$title.$desc, array( 'class' => $class, 'onclick' => $click ) );
+		return HtmlTag::create( 'div', $icon.$title.$desc, ['class' => $class, 'onclick' => $click] );
 	}
 
 	/**
@@ -46,7 +46,7 @@ class View_Admin_Module extends View{
 	 *	@access		protected
 	 *	@param		array		$modules		Map of all modules
 	 *	@param		array		$categories		Map of all category labels
-	 *	@param		array		$filters		Map of filters to apply on overview, example: array( 'type' => array( Model_Module::TYPE_CUSTOM ) )
+	 *	@param		array		$filters		Map of filters to apply on overview, example: ['type' => array( Model_Module::TYPE_CUSTOM] )
 	 *	@return		string		Rendered HTML of section modules.
 	 */
 	protected function renderModuleSections( $modules, $categories, $filters = [] ){
@@ -84,7 +84,7 @@ class View_Admin_Module extends View{
 			if( isset( $allModules[$relatedModuleId] ) ){
 				$relatedModule	= $allModules[$relatedModuleId];
 				$desc	= explode( '<br />', nl2br( $relatedModule->description ) );
-				$attr	= array( 'title' => htmlentities( array_shift( $desc ), ENT_QUOTES, 'UTF-8' ) );
+				$attr	= ['title' => htmlentities( array_shift( $desc ), ENT_QUOTES, 'UTF-8' )];
 				$label	= HtmlTag::create( 'acronym', $relatedModule->title, $attr );
 				if( $url ){
 					$attr['href']	= $url.$relatedModuleId;
@@ -92,10 +92,10 @@ class View_Admin_Module extends View{
 				}
 			}
 			$class	= 'icon module module-status-'.$status;
-			$label	= HtmlTag::create( 'span', $label, array( 'class' => $class, 'title' => $alt ) );
+			$label	= HtmlTag::create( 'span', $label, ['class' => $class, 'title' => $alt] );
 			$list[]	= HtmlElements::ListItem( $label, 1 );
 		}
-		return HtmlElements::unorderedList( $list, 1, array( 'class' => $listClass ) );
+		return HtmlElements::unorderedList( $list, 1, ['class' => $listClass] );
 	}
 
 	public function showRelationGraph(){

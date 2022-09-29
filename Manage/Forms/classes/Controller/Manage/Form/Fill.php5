@@ -113,10 +113,10 @@ class Controller_Manage_Form_Fill extends Controller
 		$page		= (int) $page;
 		if( $page >= $pages )
 			$page	= 0;
-		$orders		= array( 'fillId' => 'DESC' );
-		$limits		= array( $page * $limit, $limit );
+		$orders		= ['fillId' => 'DESC'];
+		$limits		= [$page * $limit, $limit];
 		$fills		= $this->modelFill->getAll( $conditions, $orders, $limits );
-		$forms		= $this->modelForm->getAll( array(), array( 'title' => 'ASC' ) );
+		$forms		= $this->modelForm->getAll( [], ['title' => 'ASC'] );
 
 		foreach( $fills as $fill ){
 			$fill->transfers	= $this->modelFillTransfer->getAllByIndex( 'fillId', $fill->fillId );
@@ -253,7 +253,7 @@ class Controller_Manage_Form_Fill extends Controller
 			);
 		}
 		header( 'Content-Type: application/json' );
-		print( json_encode( array( 'status' => $status, 'data' => $data ) ) );
+		print( json_encode( ['status' => $status, 'data' => $data] ) );
 		exit;
 	}
 

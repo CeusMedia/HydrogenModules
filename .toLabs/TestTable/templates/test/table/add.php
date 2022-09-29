@@ -12,7 +12,7 @@ return '
 '.HtmlElements::Form( 'add', './test/table/add' ).'
 	<fieldset>
 		<legend>new entry</legend>
-		'.HtmlTag::create( 'label', 'Title', array( 'for' => 'title' ) ).'<br/>
+		'.HtmlTag::create( 'label', 'Title', ['for' => 'title'] ).'<br/>
 		'.HtmlElements::Input( 'title', $title ).'<br/>
 		<div class="buttonbar">
 			<div class="right">

@@ -19,7 +19,7 @@ class View_Helper_Catalog_Position{
 
 	public function renderFromArticle( $article ){
 		$category	= $this->logic->getCategoryOfArticle( $article->articleId );
-		$list	= array( $category );
+		$list	= [$category];
 		while( $category->parentId ){
 			$category	= $this->logic->getCategory( $category->parentId );
 			$list[]	= $category;
@@ -30,8 +30,8 @@ class View_Helper_Catalog_Position{
 
 	public function renderFromCategory( $category = NULL ){
 		if( !is_object( $category ) )
-			return $this->renderList( array(), FALSE );
-		$list	= array( $category );
+			return $this->renderList( [], FALSE );
+		$list	= [$category];
 		while( $category->parentId ){
 			$category	= $this->logic->getCategory( $category->parentId );
 			$list[]	= $category;

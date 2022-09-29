@@ -19,7 +19,7 @@ if( $customers ){
 			$index	= number_format( $customer->rating->index, 1 );
 		}
 		$url	= './manage/customer/edit/'.$customer->customerId;
-		$link	= HtmlTag::create( 'a', $customer->title, array( 'href' => $url ) );
+		$link	= HtmlTag::create( 'a', $customer->title, ['href' => $url] );
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $index ),
@@ -34,10 +34,10 @@ if( $customers ){
 	) );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $list );
-	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 $iconAdd	= '<i class="icon-plus icon-white"></i>';
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neuer Kunde', array( 'href' => './manage/customer/add', 'class' => 'btn not-btn-small btn-primary' ) );
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neuer Kunde', ['href' => './manage/customer/add', 'class' => 'btn not-btn-small btn-primary'] );
 
 return '
 <h3>'.$w->heading.'</h3>

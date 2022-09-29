@@ -63,7 +63,7 @@ class Controller_Info_Download extends Controller
 	public function index( $folderId = NULL )
 	{
 		$folderId	= (int) $folderId;
-		$orders		= array( 'rank' => 'ASC' );
+		$orders		= ['rank' => 'ASC'];
 		if( $folderId ){
 			$folder		= $this->modelFolder->get( $folderId );
 			if( !$folder ){
@@ -71,8 +71,8 @@ class Controller_Info_Download extends Controller
 				$this->restart( NULL, TRUE );
 			}
 		}
-		$folders	= $this->modelFolder->getAll( array( 'parentId' => $folderId ), $orders );
-		$files		= $this->modelFile->getAll( array( 'downloadFolderId' => $folderId ), $orders );
+		$folders	= $this->modelFolder->getAll( ['parentId' => $folderId], $orders );
+		$files		= $this->modelFile->getAll( ['downloadFolderId' => $folderId], $orders );
 
 		$this->addData( 'files', $files );
 		$this->addData( 'folders', $folders );
@@ -133,7 +133,7 @@ class Controller_Info_Download extends Controller
 
 	protected function countFolders( $folderId ): int
 	{
-		return $this->modelFolder->count( array( 'parentId' => $folderId ) );
+		return $this->modelFolder->count( ['parentId' => $folderId] );
 	}
 
 	protected function countIn( string $path, bool $recursive = FALSE ): int
@@ -149,7 +149,7 @@ class Controller_Info_Download extends Controller
 		else{
 			die( "no implemented yet" );
 		}
-		return array( 'folders' => $folders, 'files' => $files );
+		return ['folders' => $folders, 'files' => $files];
 	}
 
 	protected function getPathFromFolderId( $folderId, bool $withBasePath = FALSE ): string
@@ -181,7 +181,7 @@ class Controller_Info_Download extends Controller
 
 	protected function updateNumber( $folderId, $type, $diff = 1 )
 	{
-		if( !in_array( $type, array( 'folder', 'file' ) ) )
+		if( !in_array( $type, ['folder', 'file'] ) )
 			throw new InvalidArgumentException( 'Type must be folder or file' );
 		while( $folderId ){
 			$folder	= $this->modelFolder->get( $folderId );
@@ -189,10 +189,10 @@ class Controller_Info_Download extends Controller
 				throw new RuntimeException( 'Invalid folder ID: '.$folderId );
 			switch( $type ){
 				case 'folder':
-					$data	= array( 'nrFolders' => $folder->nrFolders + $diff );
+					$data	= ['nrFolders' => $folder->nrFolders + $diff];
 					break;
 				case 'file':
-					$data	= array( 'nrFiles' => $folder->nrFiles + $diff );
+					$data	= ['nrFiles' => $folder->nrFiles + $diff];
 					break;
 			}
 			$data['modifiedAt']	= time();

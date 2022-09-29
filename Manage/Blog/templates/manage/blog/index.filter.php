@@ -3,10 +3,10 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w				= (object) $words['index.filter'];
 
-$optStatus		= array( '' => '- alle -' ) + $words['states'];
+$optStatus		= ['' => '- alle -'] + $words['states'];
 $optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
 
-$optCategory	= array( '' => '- alle -' );
+$optCategory	= ['' => '- alle -'];
 foreach( $categories as $item )
 	$optCategory[$item->categoryId]	= $item->title;
 $optCategory	= HtmlElements::Options( $optCategory, $filterCategoryId );

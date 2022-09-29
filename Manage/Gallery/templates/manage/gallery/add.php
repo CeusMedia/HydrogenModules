@@ -39,7 +39,7 @@ asort( $list );
 if( $list ){
 	foreach( $list as $nr => $entry ){
 		$url		= './gallery/add/?folder='.$entry.'&title='.basename( $entry );
-		$link		= HtmlTag::create( 'a', $entry, array( 'href' => $url ) );
+		$link		= HtmlTag::create( 'a', $entry, ['href' => $url] );
 		$list[$nr]	= HtmlTag::create( 'li', $link );
 	}
 	$list	= HtmlTag::create( 'ul', join( $list ) );

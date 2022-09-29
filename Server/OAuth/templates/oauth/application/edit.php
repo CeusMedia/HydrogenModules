@@ -5,14 +5,14 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $optType	= HtmlElements::Options( $words['types'], $application->type );
 $optStatus	= HtmlElements::Options( $words['states'], $application->status );
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-trash' ) );
-$iconEnable		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) );
-$iconDisable	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash'] );
+$iconEnable		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] );
+$iconDisable	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pause'] );
 
-$buttonEnable	= HtmlTag::create( 'a', $iconEnable.' aktivieren', array( 'href' => "#", 'disabled' => 'disabled', 'class' => "btn btn-default btn-small disabled" ) );
-$buttonDisable	= HtmlTag::create( 'a', $iconDisable.' deaktivieren', array( 'href' => "#", 'disabled' => 'disabled', 'class' => "btn not-btn-inverse btn-small disabled" ) );
+$buttonEnable	= HtmlTag::create( 'a', $iconEnable.' aktivieren', ['href' => "#", 'disabled' => 'disabled', 'class' => "btn btn-default btn-small disabled"] );
+$buttonDisable	= HtmlTag::create( 'a', $iconDisable.' deaktivieren', ['href' => "#", 'disabled' => 'disabled', 'class' => "btn not-btn-inverse btn-small disabled"] );
 
 $isEditor		= TRUE;
 

@@ -30,7 +30,7 @@ class Controller_Manage_Customer_Project extends Controller
 
 		$logic		= Logic_Project::getInstance( $this->env );
 		$list		= [];
-		$projects	= $logic->getProjects( array( 'status' => array( 1, 2, 3, 4, 5 ) ) );
+		$projects	= $logic->getProjects( ['status' => [1, 2, 3, 4, 5]] );
 		foreach( $projects as $project ){
 			if( !array_key_exists( $project->projectId, $relations ) )
 				$list[]	= $project;

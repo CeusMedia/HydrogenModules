@@ -43,7 +43,7 @@ class View_Helper_Info_Gallery extends Abstraction
 
 	public static function urlencodeTitle( string $label, string $delimiter = "_" ): string
 	{
-		$label  = str_replace( array( 'ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß' ), array( 'ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss' ), $label );
+		$label  = str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label  = preg_replace( "/[^a-z0-9 ]/i", "", $label );
 		$label  = preg_replace( "/ +/", $delimiter, $label );
 		return $label;
@@ -56,9 +56,9 @@ class View_Helper_Info_Gallery extends Abstraction
 
 	protected function getGalleries(): array
 	{
-		$conditions		= array( 'status' => '> 0' );
+		$conditions		= ['status' => '> 0'];
 		$configSort		= $this->moduleConfig->getAll( 'index.order.', TRUE );
-		$order			= array( $configSort->get( 'by' ) => $configSort->get( 'direction' ) );
+		$order			= [$configSort->get( 'by' ) => $configSort->get( 'direction' )];
 		$galleries		= $this->modelGallery->getAll( $conditions, $order );
 		return $galleries;
 	}
@@ -66,7 +66,7 @@ class View_Helper_Info_Gallery extends Abstraction
 	protected function getGalleryImages( $galleryId ): array
 	{
 		$configSort		= $this->moduleConfig->getAll( 'gallery.order.', TRUE );
-		$order			= array( $configSort->get( 'by' ) => $configSort->get( 'direction' ) );
+		$order			= [$configSort->get( 'by' ) => $configSort->get( 'direction' )];
 		$images			= $this->modelImage->getAllByIndex( 'galleryId', $galleryId, $order );
 		return $images;
 	}

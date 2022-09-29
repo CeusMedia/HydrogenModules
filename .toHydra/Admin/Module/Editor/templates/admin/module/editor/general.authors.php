@@ -4,8 +4,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $wf		= (object) $words['tab-general-authors'];
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
-$iconAuthor		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconAuthor		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user'] );
 
 $list	= '<div class="alert alert-info former-hint">'.$wf->listNone.'</div>';
 if( $module->authors ){
@@ -13,7 +13,7 @@ if( $module->authors ){
 	foreach( $module->authors as $author ){
 		$label	= $author->name;
 		if( $author->email )
-			$label	= HtmlTag::create( 'a', $label, array( 'href' => 'mailto:'.$author->email ) );
+			$label	= HtmlTag::create( 'a', $label, ['href' => 'mailto:'.$author->email] );
 		$url	= './admin/module/editor/removeAuthor/'.$moduleId.'/'.base64_encode( $author->name );
 		$button	= HtmlElements::LinkButton( $url, '', 'button icon tiny remove', $wf->buttonRemoveConfirm );
 		$list[]	= '<li class="author">'.$label.'<div style="float: right">'.$button.'</div></li>';

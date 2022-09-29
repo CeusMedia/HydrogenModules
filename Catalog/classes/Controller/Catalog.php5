@@ -19,13 +19,13 @@ class Controller_Catalog extends Controller
 	{
 		$baseUrl	= $env->url.'catalog/';
 		$logic		= new Logic_Catalog( $env );
-		$articles	= $logic->getArticles( array(), array( 'articleId' => 'DESC' ) );
+		$articles	= $logic->getArticles( [], ['articleId' => 'DESC'] );
 		foreach( $articles as $article ){
 			$url	= $logic->getArticleUri( $article, TRUE );
 			$date	= max( $article->createdAt, $article->modifiedAt );
 			$context->addLink( $url, $date > 0 ? $data : NULL );
 		}
-		$authors	= $logic->getAuthors( array(), array( 'authorId' => 'DESC' ) );
+		$authors	= $logic->getAuthors( [], ['authorId' => 'DESC'] );
 		foreach( $authors as $author ){
 			$url	= $logic->getAuthorUri( $author, TRUE );
 			$date	= NULL;//max( $author->createdAt, $author->modifiedAt );
@@ -54,7 +54,7 @@ class Controller_Catalog extends Controller
 			$tags[]	= $tag->tag;
 		$relatedArticles	= [];
 		if( $tags ){
-			$relatedArticles	= $this->logic->getArticlesFromTags( $tags, array( $article->articleId ) );
+			$relatedArticles	= $this->logic->getArticlesFromTags( $tags, [$article->articleId] );
 			$this->addData( 'relatedArticles', $relatedArticles );
 		}
 	}
@@ -71,24 +71,24 @@ class Controller_Catalog extends Controller
 
 		$this->addData( 'author', $author );
 
-		$articles	= $this->logic->getArticlesFromAuthor( $author, array( 'createdAt' => 'DESC' ) );
+		$articles	= $this->logic->getArticlesFromAuthor( $author, ['createdAt' => 'DESC'] );
 		$this->addData( 'articles', $articles );
 	}
 
 	public function authors()
 	{
-		$this->addData( 'authors', $this->logic->getAuthors( array(), array( 'lastname' => 'ASC' ) ) );
+		$this->addData( 'authors', $this->logic->getAuthors( [], ['lastname' => 'ASC'] ) );
 	}
 
 	public function categories()
 	{
 		$cache	= $this->env->getCache();
 		if( NULL === ( $categories = $cache->get( 'catalog.categories' ) ) ){
-			$orders		= array( 'rank' => 'ASC' );
-			$conditions	= array( 'parentId' => 0, 'visible' => 1 );
+			$orders		= ['rank' => 'ASC'];
+			$conditions	= ['parentId' => 0, 'visible' => 1];
 			$categories	= $this->logic->getCategories( $conditions, $orders );
 			foreach( $categories as $nr => $category ){
-				$conditions	= array( 'parentId' => $category->categoryId, 'visible' => 1 );
+				$conditions	= ['parentId' => $category->categoryId, 'visible' => 1];
 				$categories[$nr]->categories	= $this->logic->getCategories( $conditions, $orders );
 			}
 			$cache->set( 'catalog.categories', $categories );
@@ -102,8 +102,8 @@ class Controller_Catalog extends Controller
 		$category	= $this->logic->getCategory( $categoryId );
 
 		//  --  SUBCATEGORIES  --  //
-		$conditions	= array( 'parentId' => $categoryId );
-		$orders		= array( 'rank' => "ASC", 'label_de' => "ASC" );
+		$conditions	= ['parentId' => $categoryId];
+		$orders		= ['rank' => "ASC", 'label_de' => "ASC"];
 		$category->children	= $this->logic->getCategories( $conditions, $orders );
 
 		$this->addData( 'categoryId', $categoryId );
@@ -154,8 +154,8 @@ class Controller_Catalog extends Controller
 			1		=> "Bestellbar"
 		);
 
-		$conditions		= array( 'price' => '> 0', 'isn' => '> 0'/*, 'status' => array( 0, 1 )*/ );
-		$orders			= array( 'createdAt' => 'DESC' );
+		$conditions		= ['price' => '> 0', 'isn' => '> 0'/*, 'status' => array[0, 1]*/];
+		$orders			= ['createdAt' => 'DESC'];
 		foreach( $this->logic->getArticles( $conditions, $orders ) as $article ){
 			$pubDate	= strtotime( $article->publication );
 			$categories	= [];
@@ -191,7 +191,7 @@ class Controller_Catalog extends Controller
 
 	public function news()
 	{
-		$articles	= $this->logic->getArticles( array( 'new' => 1 ), array( 'createdAt' => 'DESC' ) );
+		$articles	= $this->logic->getArticles( ['new' => 1], ['createdAt' => 'DESC'] );
 		$this->addData( 'articles', $articles );
 	}
 
@@ -238,23 +238,23 @@ class Controller_Catalog extends Controller
 		$rss->setChannelData( $data );
 
 		$conditions		= array(
-			'status'	=> array( 0, 1 ),
+			'status'	=> [0, 1],
 			'new'		=> 1
 		);
 		if( $categoryId ){
-			$categories	= array( $categoryId );
-			$children	= $this->logic->getCategories( array( 'parentId' => $categoryId ) );
+			$categories	= [$categoryId];
+			$children	= $this->logic->getCategories( ['parentId' => $categoryId] );
 			foreach( $children as $category )
 				$categories[]	= $category->categoryId;
 			$model		= new Model_Catalog_Article_Category( $this->env );
 			$articleIds	= [];
-			foreach( $model->getAll( array( 'categoryId' => $categories ) ) as $relation )
+			foreach( $model->getAll( ['categoryId' => $categories] ) as $relation )
 				$articleIds[]	= $relation->articleId;
 			if( $articleIds )
 				$conditions['articleId']	= $articleIds;
 		}
-		$orders			= array( 'createdAt' => 'DESC' );
-		foreach( $this->logic->getArticles( $conditions, $orders, array( 0, 35 ) ) as $article ){
+		$orders			= ['createdAt' => 'DESC'];
+		foreach( $this->logic->getArticles( $conditions, $orders, [0, 35] ) as $article ){
 			$pubDate	= strtotime( $article->publication );
 			$categories	= [];
 			foreach( $this->logic->getCategoriesOfArticle( $article->articleId ) as $category )
@@ -388,7 +388,7 @@ class Controller_Catalog extends Controller
 		}
 		else if( $session->get( 'catalog_search_authorId' ) ){
 			$model	= new Model_Catalog_Article_Author( $this->env );
-			$relations	= $model->getAll( array( 'authorId' => $session->get( 'catalog_search_authorId' ) ) );
+			$relations	= $model->getAll( ['authorId' => $session->get( 'catalog_search_authorId' )] );
 			foreach( $relations as $relation )
 				$articles[]	= $relation->articleId;
 		}
@@ -397,17 +397,17 @@ class Controller_Catalog extends Controller
 			$model		= new Model_Catalog_Article( $this->env );
 			$total		= count( $articles );
 			$offset		= $offset >= $total ? 0 : $offset;
-			$articles	= $model->getAll( array( 'articleId' => $articles ), array( 'articleId' => 'DESC' ), array( $offset, $limit ) );
+			$articles	= $model->getAll( ['articleId' => $articles], ['articleId' => 'DESC'], [$offset, $limit] );
 		}
 
 		if( NULL === ( $authors = $cache->get( 'catalog.search.authors' ) ) ){
-			$authors	= $this->logic->getAuthors( array(), array( 'lastname' => 'ASC', 'firstname' => 'ASC' ) );
+			$authors	= $this->logic->getAuthors( [], ['lastname' => 'ASC', 'firstname' => 'ASC'] );
 			$cache->set( 'catalog.search.authors', $authors );
 		}
 
 		if( NULL === ( $categories = $cache->get( 'catalog.search.categories' ) ) ){
-			$conditions	= array( 'parentId' => 0, 'visible' => 1 );
-			$categories	= $this->logic->getCategories( $conditions, array( 'label_de' => 'ASC' ) );
+			$conditions	= ['parentId' => 0, 'visible' => 1];
+			$categories	= $this->logic->getCategories( $conditions, ['label_de' => 'ASC'] );
 			$cache->set( 'catalog.search.categories', $categories );
 		}
 
@@ -424,7 +424,7 @@ class Controller_Catalog extends Controller
 		if( !$tagId || !( $tag = $this->logic->getArticleTag( $tagId ) ) )
 			$this->restart( NULL, TRUE );
 
-		$articles	= $this->logic->getArticlesFromTags( array( $tag->tag ) );
+		$articles	= $this->logic->getArticlesFromTags( [$tag->tag] );
 
 		$this->addData( 'tag', $tag );
 		$this->addData( 'tagId', $tagId );

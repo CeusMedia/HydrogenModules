@@ -1,8 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-remove" ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => "fa fa-trash" ) );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => "fa fa-remove"] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => "fa fa-trash"] );
 $buttonRemove	= HtmlTag::create( 'button', $iconRemove.' entfernen', array(
 	'type'		=> 'submit',
 	'name'		=> 'save',

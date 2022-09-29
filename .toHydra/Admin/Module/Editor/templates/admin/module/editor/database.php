@@ -20,12 +20,12 @@ if( $module->sql ){
 		$remove		= HtmlElements::LinkButton( $url, 'entfernen', 'button icon remove', 'Wirklich?' );
 		$label		= ucFirst( $sql->event ).$version.'<br/>DBMS: '.$sql->type.'<br/>'.$remove;
 		$list[]		= HtmlTag::create( 'dt', $label );
-		$list[]		= HtmlTag::create( 'dd', $code, array( 'class' => 'sql' ) );
+		$list[]		= HtmlTag::create( 'dd', $code, ['class' => 'sql'] );
 	}
-	$list	= HtmlTag::create( 'dl', join( $list ), array( 'class' => 'database' ) );
+	$list	= HtmlTag::create( 'dl', join( $list ), ['class' => 'database'] );
 }
 
-$types	= array( '*' => $words['tab-database']['allTypes'] ) + $words['database-types'];
+$types	= ['*' => $words['tab-database']['allTypes']] + $words['database-types'];
 
 $optEvent	= HtmlElements::Options( $words['database-events'] );
 $optType	= HtmlElements::Options( $types );

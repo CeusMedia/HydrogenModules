@@ -43,7 +43,7 @@ class Resource_Oauth{
 		if( $httpCode < 200 || $httpCode >= 300 )
 			throw new RuntimeException( 'Request to resource "'.$resourcePath.'" failed with HTTP code '.$httpCode );
 		$response	= json_decode( $response );
-		if( in_array( $response->status, array( "error", "exception" ) ) )
+		if( in_array( $response->status, ["error", "exception"] ) )
 			throw new RuntimeException( 'Request to resource "'.$resourcePath.'" failed: '.$response->data );
 		return $response->data;
 	}
@@ -67,7 +67,7 @@ class Resource_Oauth{
 		if( $httpCode < 200 || $httpCode >= 300 )
 			throw new RuntimeException( 'Request to resource "'.$resourcePath.'" failed with HTTP code '.$httpCode );
 		$response	= json_decode( $response );
-		if( in_array( $response->status, array( "error", "exception" ) ) )
+		if( in_array( $response->status, ["error", "exception"] ) )
 			throw new RuntimeException( 'Request to resource "'.$resourcePath.'" failed: '.$response->data );
 		return $response->data;
 	}

@@ -1,16 +1,16 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconBack		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
+$iconBack		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $buttons		= [];
 $buttons[]	= HtmlTag::create( 'a', $iconBack.'&nbsp;zurück', array(
 	'href'	=> './admin/mail/queue/',
 	'class'	=> 'btn btn-small'
 ) );
-if( in_array( $mail->status, array( Model_Mail::STATUS_NEW, Model_Mail::STATUS_RETRY ) ) ){
+if( in_array( $mail->status, [Model_Mail::STATUS_NEW, Model_Mail::STATUS_RETRY] ) ){
 	$buttons[]	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen', array(
 		'href'	=> './admin/mail/queue/cancel/'.$mail->mailId,
 		'class'	=> 'btn btn-inverse btn-small'
@@ -44,7 +44,7 @@ foreach( $listKeys as $key )
 	if( $fact = $view->renderFact( $key, $mail->{$key} ) )
 		$list[]	= $fact;
 
-$listLeft	= HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+$listLeft	= HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 
 $listKeys	= array(
 	'status',
@@ -57,7 +57,7 @@ $list	= [];
 foreach( $listKeys as $key )
 	if( $fact = $view->renderFact( $key, $mail->{$key} ) )
 		$list[]	= $fact;
-$listRight	= HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+$listRight	= HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 
 return '
 <div class="content-panel">

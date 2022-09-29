@@ -20,7 +20,7 @@ class Logic_Import extends Logic
 				throw new RuntimeException( 'Connector "'.$connector->title.'" is not enabled' );
 
 			$factory	= new ObjectFactory();
-			$instance	= $factory->create( $connector->className, array( $this->env ) );
+			$instance	= $factory->create( $connector->className, [$this->env] );
 			$instance->setConnection( $connection );
 			$this->connections[$connectionId]	= $instance->connect();
 		}

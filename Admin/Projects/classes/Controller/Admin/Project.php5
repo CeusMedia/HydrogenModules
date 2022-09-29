@@ -20,7 +20,7 @@ class Controller_Admin_Project extends Controller
 				$messenger->noteError( $words['add']['msgErrorTitleEmpty'] );
 			else
 			{
-				if( $model->getAll( array( 'title' => $title ) ) )
+				if( $model->getAll( ['title' => $title] ) )
 					$messenger->noteError( $words['add']['msgErrorTitleNotUnique'], $title );
 				else
 				{
@@ -86,7 +86,7 @@ class Controller_Admin_Project extends Controller
 				$messenger->noteError( $words->msgErrorTitleEmpty );
 			else
 			{
-				if( $model->getAll( array( 'title' => $title, 'projectId' => '!= '.$projectId ) ) )
+				if( $model->getAll( ['title' => $title, 'projectId' => '!= '.$projectId] ) )
 					$messenger->noteError( $words->msgErrorTitleNotUnique, $title );
 				else
 				{
@@ -123,7 +123,7 @@ class Controller_Admin_Project extends Controller
 		$modelVersion	= new Model_Project_Version( $this->env );
 		$projects	= $modelProject->getAll();
 		foreach( $projects as $project ){
-			$indices	= array( 'projectId' => $project->projectId, 'status' => 1 );
+			$indices	= ['projectId' => $project->projectId, 'status' => 1];
 			$project->version	= $modelVersion->getByIndices( $indices );
 		}
 		$this->view->addData( 'projects', $projects );

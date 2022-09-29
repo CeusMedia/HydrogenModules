@@ -37,7 +37,7 @@ if( count( $connections ) > 0 ){
 	$thead	= HtmlElements::TableHeads( ['ID', 'Titel', 'Zustand', 'Authentifikation', 'Server', 'Connector', 'Erstellung', 'Veränderung'] );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 
-	$table	= HtmlTag::create( 'table', [$thead, $tbody], array( 'class' => 'table' ) );
+	$table	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table'] );
 	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', ['href' => 'manage/import/add', 'class' => 'btn btn-success'] );
 }
 

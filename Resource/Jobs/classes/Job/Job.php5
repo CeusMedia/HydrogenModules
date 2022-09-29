@@ -23,7 +23,7 @@ class Job_Job extends Job_Abstract
 			$moduleJobs		= (object) array(
 				'moduleId'	=> NULL,
 				'version'	=> NULL,
-				'jobs'		=> array(),
+				'jobs'		=> [],
 			);
 			$fileJobs	= $model->readJobsFromXmlFile( $file->getPathname(), $modes );
 			foreach( $fileJobs as $jobId => $jobSource ){
@@ -65,7 +65,7 @@ class Job_Job extends Job_Abstract
 //		if( $mode )
 //			$conditions['mode']	= $mode;
 //		$this->out( 'List of available jobs:' );
-		$availableJobs	= $this->logic->getDefinitions( $conditions, array( 'identifier' => 'ASC' ) );
+		$availableJobs	= $this->logic->getDefinitions( $conditions, ['identifier' => 'ASC'] );
 		foreach( $availableJobs as $availableJob )
 			$this->results[$availableJob->jobDefinitionId]	= $availableJob->identifier;
 		$this->out( join( PHP_EOL, $this->results ) );

@@ -86,11 +86,11 @@ class View_Helper_TinyMce extends Abstraction
 		if( !( $this->listImages = $this->cache->get( $cacheKey ) ) ){
 			$this->list	= [];
 			if( ( $modules = $this->env->getModules() ) ){	 										//  get module handler resource if existing
-				$payload	= array( 'hidePrefix' => FALSE );
+				$payload	= ['hidePrefix' => FALSE];
 				$modules->callHook( 'TinyMCE', 'getImageList', $this, $payload );								//  call related module event hooks
 			}
 			$this->listImages	= $this->list;
-			usort( $this->listImages, array( $this, "__compare" ) );
+			usort( $this->listImages, [$this, "__compare"] );
 			$this->cache->set( $cacheKey, $this->listImages );
 		}
 		return $this->listImages;
@@ -112,7 +112,7 @@ class View_Helper_TinyMce extends Abstraction
 			if( ( $modules = $this->env->getModules() ) )											//  get module handler resource if existing
 				$modules->callHook( 'TinyMCE', 'getLinkList', $this );								//  call related module event hooks
 			$this->listLinks	= $this->list;
-			usort( $this->listLinks, array( $this, "__compare" ) );
+			usort( $this->listLinks, [$this, "__compare"] );
 			$this->cache->set( $cacheKey, $this->listLinks );
 		}
 		return $this->listLinks;

@@ -29,7 +29,7 @@ foreach( $mapTabs as $tabKey => $tabLabel ){
 	$tabs->addTab( $label, $content );
 	$nr++;
 }
-$options	= array( 'selected' => $selected );
+$options	= ['selected' => $selected];
 $this->env->page->js->addScript( '$(document).ready(function(){'.$tabs->buildScript( '#tabs-module', $options ).'});' );
 
 

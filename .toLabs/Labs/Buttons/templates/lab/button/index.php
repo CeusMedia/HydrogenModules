@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 function IconButtonLink( $url, $title, $class = NULL, $confirm = NULL, $disabled = NULL ){
 	$label		= HtmlTag::create( 'span', '&nbsp;' );
-	$attributes	= array( 'href' => $url, 'class' => $class, 'title' => $title );
+	$attributes	= ['href' => $url, 'class' => $class, 'title' => $title];
 	if( $disabled ){
 		if( is_string( $disabled ) )
 			$attributes['alt']	= $attributes['title']	= $disabled;
@@ -19,7 +19,7 @@ function IconButtonLink( $url, $title, $class = NULL, $confirm = NULL, $disabled
 
 function ButtonLink( $url, $label, $class = NULL, $confirm = NULL, $disabled = NULL ){
 	$label		= HtmlTag::create( 'span', $label );
-	$attributes	= array( 'href' => $url, 'class' => $class );
+	$attributes	= ['href' => $url, 'class' => $class];
 	if( $disabled ){
 		if( is_string( $disabled ) )
 			$attributes['alt']	= $attributes['title']	= $disabled;

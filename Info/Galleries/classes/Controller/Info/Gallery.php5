@@ -27,9 +27,9 @@ class Controller_Info_Gallery extends Controller
 		}
 		$this->addData( 'gallery', $gallery );
 
-		$indices		= array( 'status' => 1 );
+		$indices		= ['status' => 1];
 		$configSort		= $this->moduleConfig->getAll( 'index.order.', TRUE );
-		$order			= array( $configSort->get( 'by' ) => $configSort->get( 'direction' ) );
+		$order			= [$configSort->get( 'by' ) => $configSort->get( 'direction' )];
 		$galleries		= $modelGallery->getAllByIndices( $indices, $order );
 
 		$nextGallery	= NULL;

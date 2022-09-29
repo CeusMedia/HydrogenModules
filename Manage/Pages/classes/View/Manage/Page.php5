@@ -44,18 +44,18 @@ class View_Manage_Page extends View
 						$subitem->title	= '<strike>'.$subitem->title.'</strike>';
 					$url	= './manage/page/edit/'.$subitem->pageId;
 					$label	= $this->getPageIcon( $subitem ).' <small>'.$subitem->title.'</small>';
-					$link	= HtmlTag::create( 'a', $label, array( 'href' => $url, 'class' => 'autocut' ) );
+					$link	= HtmlTag::create( 'a', $label, ['href' => $url, 'class' => 'autocut'] );
 					$sublist[]	= HtmlTag::create( 'li', $link, array(
 						'class'			=> join( ' ', $classes ),
 						'data-page-id'	=> $subitem->pageId,
 					) );
 				}
 				if( $sublist )
-					$sublist	= HtmlTag::create( 'ul', $sublist, array( 'class' => 'nav nav-pills nav-stacked' ) );
+					$sublist	= HtmlTag::create( 'ul', $sublist, ['class' => 'nav nav-pills nav-stacked'] );
 				else
 					$sublist	= '';
 			}
-			$classes	= array( 'autocut' );
+			$classes	= ['autocut'];
 			if( $currentPageId && $currentPageId == $item->pageId )
 				$classes[]	= 'active';
 			if( $item->status < Model_Page::STATUS_VISIBLE )
@@ -64,14 +64,14 @@ class View_Manage_Page extends View
 				$item->title	= '<strike>'.$item->title.'</strike>';
 			$url	= './manage/page/edit/'.$item->pageId;
 			$label	= $this->getPageIcon( $item ).' '.$item->title;
-			$link	= HtmlTag::create( 'a', $label, array( 'href' => $url ) );
+			$link	= HtmlTag::create( 'a', $label, ['href' => $url] );
 			$list[]	= HtmlTag::create( 'li', $link.$sublist, array(
 				'class'			=> join( ' ', $classes ),
 				'data-page-id'	=> $item->pageId,
 			) );
 		}
 		if( $list )
-			return HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );
+			return HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );
 		$words	= (object) $this->env->getLanguage()->getWords( 'manage/page' )['tree'];
 		return '<div class="muted"><small><em>'.$words->no_entries.'</em></small></div><br/>';
 	}
@@ -115,7 +115,7 @@ class View_Manage_Page extends View
 			$isBranch	= (int) $page->type === Model_Page::TYPE_BRANCH;
 			$isModule	= (int) $page->type === Model_Page::TYPE_MODULE;
 			$disabled	= FALSE;
-			$attributes		= array( 'href' => '#tab-'.$tabKey, 'data-toggle' => 'tab' );
+			$attributes		= ['href' => '#tab-'.$tabKey, 'data-toggle' => 'tab'];
 			switch( $tabKey ){
 				case 'content':
 					$disabled	= $isBranch || $isModule || $isFromConfig;
@@ -128,15 +128,15 @@ class View_Manage_Page extends View
 			$isActive		= $tabKey == $current;
 			$class			= $isActive ? "active" : '';
 			$class			.= $disabled ? ' disabled' : '';
-			$attributes		= array( 'id' => 'page-editor-tab-'.$tabKey, 'class' => $class );
+			$attributes		= ['id' => 'page-editor-tab-'.$tabKey, 'class' => $class];
 			$listTabs[]		= HtmlTag::create( 'li', $link, $attributes );
-			$paneContent	= $this->loadTemplateFile( 'manage/page/'.$templates[$tabKey], array(), FALSE );
-			$attributes		= array( 'id' => 'tab-'.$tabKey, 'class' => $isActive ? 'tab-pane active' : 'tab-pane' );
+			$paneContent	= $this->loadTemplateFile( 'manage/page/'.$templates[$tabKey], [], FALSE );
+			$attributes		= ['id' => 'tab-'.$tabKey, 'class' => $isActive ? 'tab-pane active' : 'tab-pane'];
 			$listPanes[]	= HtmlTag::create( 'div', $paneContent, $attributes );
 		}
-		$listTabs	= HtmlTag::create( 'ul', $listTabs, array( 'class' => "nav nav-tabs" ) );
-		$listPanes	= HtmlTag::create( 'div', $listPanes, array( 'class' => 'tab-content' ) );
-		$attributes	= array( 'class' => 'tabbable', 'id' => 'tabs-page-editor' );
+		$listTabs	= HtmlTag::create( 'ul', $listTabs, ['class' => "nav nav-tabs"] );
+		$listPanes	= HtmlTag::create( 'div', $listPanes, ['class' => 'tab-content'] );
+		$attributes	= ['class' => 'tabbable', 'id' => 'tabs-page-editor'];
 		return HtmlTag::create( 'div', $listTabs.$listPanes, $attributes );
 	}
 }

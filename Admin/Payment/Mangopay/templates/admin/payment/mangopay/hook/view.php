@@ -14,7 +14,7 @@ return $tabs.HtmlTag::create( 'div', array(
 				'href'	=> './admin/payment/mangopay/hook',
 				'class'	=> 'btn',
 			) ),
-		), array( 'class' => 'buttonbar' ) )
-	), array( 'class' => 'content-panel-inner' ) )
-), array( 'class' => 'content-panel' ) );
+		), ['class' => 'buttonbar'] )
+	), ['class' => 'content-panel-inner'] )
+), ['class' => 'content-panel'] );
 ?>

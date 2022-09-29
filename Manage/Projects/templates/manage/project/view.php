@@ -7,13 +7,13 @@ use CeusMedia\HydrogenFramework\Environment;
 $helperIndicator	= new HtmlIndicator();
 $helperTime			= new View_Helper_TimePhraser( $env );
 
-$iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );
-$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil icon-white' ) );
-$iconDefault	= HtmlTag::create( 'i', '', array( 'class' => 'icon-star' ) );
+$iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
+$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'icon-pencil icon-white'] );
+$iconDefault	= HtmlTag::create( 'i', '', ['class' => 'icon-star'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconList		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-list' ) );
-	$iconDefault	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-star' ) );
-	$iconEdit		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
+	$iconList		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-list'] );
+	$iconDefault	= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-star'] );
+	$iconEdit		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-pencil'] );
 }
 
 function renderUserBlock( Environment $env, $user ){
@@ -26,7 +26,7 @@ function renderUserBlock( Environment $env, $user ){
 	}
 	$label	= $user->username;
 	$sub	= '<br/><small class="muted">'.$user->firstname.'&nbsp;'.$user->surname.'</small>';
-	$link	= HtmlTag::create( 'a', $label, array( 'href' => './user/edit/'.$user->userId ) );
+	$link	= HtmlTag::create( 'a', $label, ['href' => './user/edit/'.$user->userId] );
 	return HtmlTag::create( 'div', $link.$sub );
 }
 
@@ -38,10 +38,10 @@ function renderUserInline( Environment $env, $user ){
 		$helper->setLinkUrl( 'member/view/%d' );
 		return $helper->render();
 	}
-	$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-user' ) );
+	$icon	= HtmlTag::create( 'i', '', ['class' => 'icon-user'] );
 	$label	= $user->username;
 	$sub	= '<small class="muted">('.$user->firstname.'&nbsp;'.$user->surname.')</small>';
-	$link	= HtmlTag::create( 'a', $icon.'&nbsp;'.$label.'&nbsp;'.$sub, array( 'href' => './user/edit/'.$user->userId ) );
+	$link	= HtmlTag::create( 'a', $icon.'&nbsp;'.$label.'&nbsp;'.$sub, ['href' => './user/edit/'.$user->userId] );
 	return $link;
 	$span	= HtmlTag::create( 'span', $icon.'&nbsp;'.$link.'&nbsp;'.$sub );
 	return $span;
@@ -56,7 +56,7 @@ if( $project->users ){
 			HtmlTag::create( 'td', renderUserBlock( $env, $worker ) ),
 		) );
 	}
-	$list	= HtmlTag::create( 'table', $list, array( 'class' => 'table table-condensed table-striped' ) );
+	$list	= HtmlTag::create( 'table', $list, ['class' => 'table table-condensed table-striped'] );
 }
 $panelWorkers	= '
 <div class="content-panel">
@@ -132,7 +132,7 @@ $panelFacts		= '
 //  --  RELATED ITEMS  --  //
 $panelRelations		= '';
 $helperRelations	= new View_Helper_ItemRelationLister( $this->env );
-$helperRelations->setHook( 'Project', 'listRelations', array( 'projectId' => $project->projectId ) );
+$helperRelations->setHook( 'Project', 'listRelations', ['projectId' => $project->projectId] );
 $helperRelations->setLinkable( TRUE );
 $helperRelations->setActiveOnly( TRUE );
 //$helperRelations->setTableClass( 'limited' );

@@ -5,19 +5,19 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $w	= (object) $words['index.list'];
 
 $iconsStatus	= array(
-	Model_Provision_User_License::STATUS_DEACTIVATED	=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
-	Model_Provision_User_License::STATUS_REVOKED		=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) ),
-	Model_Provision_User_License::STATUS_NEW			=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pause' ) ),
-	Model_Provision_User_License::STATUS_ACTIVE			=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-play' ) ),
- 	Model_Provision_User_License::STATUS_EXPIRED		=> HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-stop' ) ),
+	Model_Provision_User_License::STATUS_DEACTIVATED	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ),
+	Model_Provision_User_License::STATUS_REVOKED		=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ),
+	Model_Provision_User_License::STATUS_NEW			=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pause'] ),
+	Model_Provision_User_License::STATUS_ACTIVE			=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] ),
+ 	Model_Provision_User_License::STATUS_EXPIRED		=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] ),
 );
 
-$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconCart		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-times' ) );
-$iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-unlock' ) );
-$iconDeactivate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-lock' ) );
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconCart		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-shopping-cart'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-times'] );
+$iconActivate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-unlock'] );
+$iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lock'] );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
 
@@ -95,12 +95,12 @@ if( $userLicenses ){
 			HtmlTag::create( 'td', $iconsStatus[$userLicense->status].'&nbsp;'.$words['licenseStates'][$userLicense->status] ),
 			HtmlTag::create( 'td', $duration ),
 			HtmlTag::create( 'td', $buttons ),
-		), array( 'class' => $rowColor ) );
+		), ['class' => $rowColor] );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array( /*"15%", */"20%", "", "15%", "25%", '15%' ) );
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( /*'Lizenznummer', */'Produkt', 'Lizenz', 'Zustand', 'Zeitraum', '' ) ) );
+	$colgroup	= HtmlElements::ColumnGroup( [/*"15%", */"20%", "", "15%", "25%", '15%'] );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [/*'Lizenznummer', */'Produkt', 'Lizenz', 'Zustand', 'Zeitraum', ''] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table' ) );
+	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table'] );
 }
 
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', array(

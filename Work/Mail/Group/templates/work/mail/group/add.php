@@ -2,8 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $optManagerId	= [];
 foreach( $users as $user )
@@ -50,7 +50,7 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'required'	=> 'required',
 						'value'		=> htmlentities( @$data->title, ENT_QUOTES, 'UTF-8' ),
 					) ),
-				), array( 'class' => 'span7' ) ),
+				), ['class' => 'span7'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Server', array(
 						'for'	=> 'input_mailGroupServerId',
@@ -60,8 +60,8 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_mailGroupServerId',
 						'class'		=> 'span12',
 					) ),
-				), array( 'class' => 'span5' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span5'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'E-Mail-Adresse', array(
@@ -76,7 +76,7 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'required'	=> 'required',
 						'value'		=> htmlentities( @$data->address, ENT_QUOTES, 'UTF-8' ),
 					) ),
-				), array( 'class' => 'span5' ) ),
+				), ['class' => 'span5'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Passwort', array(
 						'for'	=> 'input_password',
@@ -88,7 +88,7 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_password',
 						'class'		=> 'span12',
 					) ),
-				), array( 'class' => 'span3' ) ),
+				), ['class' => 'span3'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Zustand', array(
 						'for'	=> 'input_status',
@@ -98,8 +98,8 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_status',
 						'class'		=> 'span12',
 					) ),
-				), array( 'class' => 'span4' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span4'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Administrator', array(
@@ -111,7 +111,7 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_managerId',
 						'class'		=> 'span12',
 					) ),
-				), array( 'class' => 'span6' ) ),
+				), ['class' => 'span6'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Standard-Rolle', array(
 						'for'	=> 'input_roleId',
@@ -122,8 +122,8 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_roleId',
 						'class'		=> 'span12',
 					) ),
-				), array( 'class' => 'span6' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span6'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Beitritt', array(
@@ -135,7 +135,7 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_type',
 						'class'		=> 'span12',
 					) ),
-				), array( 'class' => 'span7' ) ),
+				), ['class' => 'span7'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Sichtbarkeit', array(
 						'for'	=> 'input_visibility',
@@ -146,8 +146,8 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_visibility',
 						'class'		=> 'span12',
 					) ),
-				), array( 'class' => 'span5' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span5'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Beschreibung der Gruppe', array(
@@ -159,8 +159,8 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'rows'	=> 6,
 						'class'	=> 'span12',
 					) ),
-				), array( 'class' => 'span12' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span12'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', join( ' ', array(
 				HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', array(
 					'href'	=> './work/mail/group',
@@ -171,17 +171,17 @@ $panelAdd	= HtmlTag::create( 'div', array(
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary',
 				) ) ),
-			), array( 'class' => 'buttonbar' ) ),
+			), ['class' => 'buttonbar'] ),
 		), array(
 			'action'	=> './work/mail/group/add',
 			'method'	=> 'post'
 		) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 $tabs	= $view->renderTabs( $env );
 $layout	= HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', $panelAdd, array( 'class' => 'span6' ) ),
-), array( 'class' => 'row-fluid' ) );
+	HtmlTag::create( 'div', $panelAdd, ['class' => 'span6'] ),
+), ['class' => 'row-fluid'] );
 
 return $tabs.$layout;

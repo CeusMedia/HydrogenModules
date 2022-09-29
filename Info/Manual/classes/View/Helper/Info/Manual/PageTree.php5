@@ -32,7 +32,7 @@ class View_Helper_Info_Manual_PageTree
 				'parentId'			=> 0,
 				'manualCategoryId'	=> $this->categoryId,
 			);
-			$orders		= array( 'rank' => 'ASC' );
+			$orders		= ['rank' => 'ASC'];
 			$pages		= $this->modelPage->getAll( $conditions, $orders );
 		}
 		else if( $this->parentPageId ){
@@ -40,7 +40,7 @@ class View_Helper_Info_Manual_PageTree
 				'status'		=> '>= '.Model_Manual_Page::STATUS_NEW,
 				'parentId'		=> $this->parentPageId,
 			);
-			$orders		= array( 'rank' => 'ASC' );
+			$orders		= ['rank' => 'ASC'];
 			$pages		= $this->modelPage->getAll( $conditions, $orders );
 		}
 		else
@@ -50,7 +50,7 @@ class View_Helper_Info_Manual_PageTree
 
 		$tree		= $this->renderPageTree( $tree );
 //print_m($tree);die;
-		$container	= HtmlTag::create( 'div', '', array( 'id' => 'page-tree' ) );
+		$container	= HtmlTag::create( 'div', '', ['id' => 'page-tree'] );
 		$script		= '
 jQuery("#page-tree").treeview({
 	data: '.json_encode( $tree ).',
@@ -69,18 +69,18 @@ InfoManual.UI.Tree.init("#page-tree");';
 
 /*
 		$html		= $this->renderPageTree( $tree );
-//		$container	= HtmlTag::create( 'div', $html, array( 'id' => 'page-tree' );
+//		$container	= HtmlTag::create( 'div', $html, ['id' => 'page-tree'];
 //		$this->env->getPage()->js->addScriptOnReady( 'jQuery("#page-tree").')
 		return $container;
 		print_m( $tree );die;
 
 		$list	= [];
 		foreach( $this->pages as $entry ){
-			$link	= HtmlTag::create( 'a', $entry->title, array( 'href' => './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title ) ) );
+			$link	= HtmlTag::create( 'a', $entry->title, ['href' => './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title] ) );
 			$class	= 'autocut '.( $this->activePageId == $entry->manualPageId ? 'active' : '' );
-			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
-		return HtmlTag::create( 'ul', $list, array( 'class' => 'nav nav-pills nav-stacked' ) );*/
+		return HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );*/
 	}
 
 
@@ -125,7 +125,7 @@ InfoManual.UI.Tree.init("#page-tree");';
 				'status'		=> '>= '.Model_Manual_Page::STATUS_NEW,
 				'parentId'		=> $page->manualPageId,
 			);
-			$orders		= array( 'rank' => 'ASC' );
+			$orders		= ['rank' => 'ASC'];
 			$children	= $this->modelPage->getAll( $conditions, $orders );
 			$page->children	= $this->getPageTree( $children );
 			$tree[]	= $page;
@@ -168,8 +168,8 @@ die;*/
 					'selected'	=> $this->activePageId == $entry->manualPageId,
 				),
 				'color'			=> '!inherit',
-//				'data'			=> array( 'pageId' => $entry->manualPageId ),				//  not working with this version of bootstrap-treeview
-//				'tags'			=> array( 'pageId:'.$entry->manualPageId ),					//  not working with this version of bootstrap-treeview
+//				'data'			=> ['pageId' => $entry->manualPageId],				//  not working with this version of bootstrap-treeview
+//				'tags'			=> ['pageId:'.$entry->manualPageId],					//  not working with this version of bootstrap-treeview
 				'nodes'			=> $children ? $children : NULL,
 			);
 		}
@@ -184,9 +184,9 @@ die;*/
 				'href'	=> './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title )
 			) );
 			$class	= 'autocut '.( $this->activePageId == $entry->manualPageId ? 'active' : '' );
-			$list[]	= HtmlTag::create( 'li', $link.$sublist, array( 'class' => $class ) );
+			$list[]	= HtmlTag::create( 'li', $link.$sublist, ['class' => $class] );
 		}
-		return HtmlTag::create( 'ul', $list, array( 'class' => 'not-nav not-nav-pills not-nav-stacked' ) );*/
+		return HtmlTag::create( 'ul', $list, ['class' => 'not-nav not-nav-pills not-nav-stacked'] );*/
 	}
 
 	protected function urlencode( string $pageTitle ): string

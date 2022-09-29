@@ -27,7 +27,7 @@ class View_Helper_Work_Mission_Mail_Daily extends Abstraction
 			$helper		= new View_Helper_Work_Mission_List( $this->env, $data['tasks'], $words );
 			$rows		= $helper->renderRows( 0 );
 			$colgroup	= HtmlElements::ColumnGroup( "125", "" );
-			$attributes	= array( 'class' => 'table-mail table-mail-tasks' );
+			$attributes	= ['class' => 'table-mail table-mail-tasks'];
 			$table		= HtmlTag::create( 'table', $colgroup.$rows, $attributes );
 			$heading	= $w->headingTasks ? HtmlTag::create( 'h4', $w->headingTasks ) : "";
 			$tasks		= $heading.$table;
@@ -40,7 +40,7 @@ class View_Helper_Work_Mission_Mail_Daily extends Abstraction
 			$helper		= new View_Helper_Work_Mission_List( $this->env, $data['events'], $words );
 			$rows		= $helper->renderRows( 0 );
 			$colgroup	= HtmlElements::ColumnGroup( "125", "" );
-			$attributes	= array( 'class' => 'table-mail table-mail-events' );
+			$attributes	= ['class' => 'table-mail table-mail-events'];
 			$table		= HtmlTag::create( 'table', $colgroup.$rows, $attributes );
 			$heading	= $w->headingEvents ? HtmlTag::create( 'h4', $w->headingEvents ) : "";
 			$events		= $heading.$table;
@@ -48,10 +48,10 @@ class View_Helper_Work_Mission_Mail_Daily extends Abstraction
 
 		$heading	= $w->heading ? HtmlTag::create( 'h3', $w->heading ) : "";
 		$username	= $data['user']->username;
-		$username	= HtmlTag::create( 'span', $username, array( 'class' => 'text-username' ) );
+		$username	= HtmlTag::create( 'span', $username, ['class' => 'text-username'] );
 		$dateFull	= $weekdays[date( 'w' )].', der '.date( "j" ).'.&nbsp;'.$monthNames[date( 'n' )];
-		$dateFull	= HtmlTag::create( 'span', $dateFull, array( 'class' => 'text-date-full' ) );
-		$dateShort	= HtmlTag::create( 'span', date( $formatDate ), array( 'class' => 'text-date-short' ) );
+		$dateFull	= HtmlTag::create( 'span', $dateFull, ['class' => 'text-date-full'] );
+		$dateShort	= HtmlTag::create( 'span', date( $formatDate ), ['class' => 'text-date-short'] );
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
 		$body	= '
 '.$heading.'
@@ -69,7 +69,7 @@ class View_Helper_Work_Mission_Mail_Daily extends Abstraction
 
 		$this->page->addBody( $body );
 		$class	= 'moduleWorkMission jobWorkMission job-work-mission-mail-daily';
-		return $this->page->build( array( 'class' => $class ) );
+		return $this->page->build( ['class' => $class] );
 	}
 }
 ?>

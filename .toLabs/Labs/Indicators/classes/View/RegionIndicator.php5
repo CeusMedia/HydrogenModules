@@ -57,9 +57,9 @@ class View_RegionIndicator{
 				'class'	=> 'region-content',
 				'style'	=> 'left: '.$width.'px'
 			);
-			$pin		= HtmlTag::create( 'div', '', array( 'class' => 'region-content-pin' ) );
+			$pin		= HtmlTag::create( 'div', '', ['class' => 'region-content-pin'] );
 			$content	= $this->regions[$nr]->content.$pin;
-			$content	= HtmlTag::create( 'div', $content, array( 'class' => 'region-content-inner' ) );
+			$content	= HtmlTag::create( 'div', $content, ['class' => 'region-content-inner'] );
 			$content	= HtmlTag::create( 'div', $content, $a );
 
 			$a	= array(

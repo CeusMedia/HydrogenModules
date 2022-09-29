@@ -23,7 +23,7 @@ class Model_Customer_Rating extends Model
 
 	protected $primaryKey	= 'customerRatingId';
 
-	protected $indices		= array( 'customerId', 'userId' );
+	protected $indices		= ['customerId', 'userId'];
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 

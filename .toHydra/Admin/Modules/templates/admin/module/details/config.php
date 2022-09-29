@@ -18,15 +18,15 @@ if( $module->config ){
 //			$item->value	= '<em class="muted">protected</em>';
 		$label	= View_Helper_Module::renderModuleConfigLabel( $module, $item );
 		$key		= HtmlTag::create( 'td', $label );
-		$value		= HtmlTag::create( 'td', $item->value, array( 'class' => 'config-type-'.$item->type ) );
+		$value		= HtmlTag::create( 'td', $item->value, ['class' => 'config-type-'.$item->type] );
 		$rows[strtolower( $item->key )]	= '<tr>'.$key.$value.'</tr>';
 	}
 	ksort( $rows );
 	$tbody		= HtmlTag::create( 'tbody', join( $rows ) );
-	$heads		= HtmlElements::TableHeads( array( $w->headKey, $w->headValue ) );
+	$heads		= HtmlElements::TableHeads( [$w->headKey, $w->headValue] );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$colgroup	= HtmlElements::ColumnGroup( '25%', '75%' );
-	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'striped' ) );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'striped'] );
 }
 return $table;
 ?>

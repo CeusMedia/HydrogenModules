@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $panelLogin	= $view->loadTemplateFile( 'auth/local/login.form.php' );
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/local/login/', array( 'from' => $from ) ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/local/login/', ['from' => $from] ) );
 
 $tabs	= View_Auth::renderTabs( $env, 'auth/local/login' );
 
@@ -26,6 +26,6 @@ if( $tabs ){
 
 $env->getPage()->addBodyClass( 'auth-centered' );
 return HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', $panelLogin, array( 'class' => 'centered-pane' ) )
-), array( 'class' => 'centered-pane-container' ) );
+	HtmlTag::create( 'div', $panelLogin, ['class' => 'centered-pane'] )
+), ['class' => 'centered-pane-container'] );
 ?>

@@ -14,8 +14,8 @@ class Job_User_Provision extends Job_Abstract{
 		$bridgeId		= $logicBridge->getBridgeId( 'Provision' );
 
 		$this->out( 'Provision Bridge ID: '.$bridgeId );
-		$conditions	= array( 'status' => Model_Shop_Order::STATUS_PAYED );
-		$orders		= array( 'orderId' => 'ASC' );
+		$conditions	= ['status' => Model_Shop_Order::STATUS_PAYED];
+		$orders		= ['orderId' => 'ASC'];
 		foreach( $logicShop->getOrders( $conditions, $orders ) as $order ){
 			$positions		= $logicShop->getOrderPositions( $order->orderId );
 			$nrAllPositions	= count( $positions );

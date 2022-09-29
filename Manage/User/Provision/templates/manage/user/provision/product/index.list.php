@@ -3,10 +3,10 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconsStatus = array(
-	-1	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-remove' ) ),
-	0	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil' ) ),
-	1	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-close' ) ),
-	2	=> HtmlTag::create( 'i', '', array( 'class' => 'icon-ok' ) ),
+	-1	=> HtmlTag::create( 'i', '', ['class' => 'icon-remove'] ),
+	0	=> HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] ),
+	1	=> HtmlTag::create( 'i', '', ['class' => 'icon-eye-close'] ),
+	2	=> HtmlTag::create( 'i', '', ['class' => 'icon-ok'] ),
 );
 
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
@@ -26,14 +26,14 @@ if( $licenses ){
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', '-' ),
 			HtmlTag::create( 'td', '--' ),
-		), array( 'class' => $class ) );
+		), ['class' => $class] );
 	}
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'a', 'b', 'c' ) ) );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['a', 'b', 'c'] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
-	$list	= HtmlTag::create( 'table', $thead.$tbody, array( 'class' => "table table-striped" ) );
+	$list	= HtmlTag::create( 'table', $thead.$tbody, ['class' => "table table-striped"] );
 }
 
-$iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array(
 //	'href'	=> '#modal-license-add',
 	'href'	=> './manage/catalog/provision/license/add/'.(int) $filterProductId.'/'.(int) $filterProductLicenseId,

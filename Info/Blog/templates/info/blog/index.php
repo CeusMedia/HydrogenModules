@@ -5,9 +5,9 @@ $list	= [];
 foreach( $posts as $post ){
 	$list[]		= View_Info_Blog::renderPostAbstractStatic( $this->env, $post );
 }
-$list	= HtmlTag::create( 'div', $list, array( 'class' => 'blog-post-list' ) );
+$list	= HtmlTag::create( 'div', $list, ['class' => 'blog-post-list'] );
 
-extract( $view->populateTexts( array( 'index.top', 'index.bottom' ), 'html/info/blog/' ) );
+extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/blog/' ) );
 
 return $textIndexTop.'
 <div class="content-panel content-panel-list">

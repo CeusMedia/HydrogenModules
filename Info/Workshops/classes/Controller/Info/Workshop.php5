@@ -8,8 +8,8 @@ class Controller_Info_Workshop extends Controller
 
 	public function index()
 	{
-		$conditions	= array( 'status' => array( 1, 2 ) );
-		$orders		= array( 'status' => 'ASC', 'rank' => 'ASC' );
+		$conditions	= ['status' => [1, 2] ];
+		$orders		= ['status' => 'ASC', 'rank' => 'ASC'];
 		$this->addData( 'workshops', $this->model->getAll( $conditions, $orders ) );
 	}
 

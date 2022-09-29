@@ -127,7 +127,7 @@ class View_Work_Mission extends View{
 		return HtmlTag::create( 'span', array(
 			HtmlTag::create( 'big', str_pad( $hours, 2, 0, STR_PAD_LEFT ) ),
 			HtmlTag::create( 'sup', str_pad( $minutes, 2, 0, STR_PAD_LEFT ) ),
-		), array( 'class' => 'time-nice' ) );
+		), ['class' => 'time-nice'] );
 	}
 
 	public function view(){

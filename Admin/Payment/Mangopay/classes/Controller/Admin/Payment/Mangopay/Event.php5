@@ -21,8 +21,8 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 	{
 		$limit		= 10;
 		$conditions = [];
-		$orders		= array( 'eventId' => 'DESC' );
-		$limits		= array( $page * $limit, $limit );
+		$orders		= ['eventId' => 'DESC'];
+		$limits		= [$page * $limit, $limit];
 
 		$total		= $this->model->count( $conditions );
 		$events		= $this->model->getAll( $conditions, $orders, $limits );
@@ -46,9 +46,9 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 			if( !strlen( $date = $this->request->get( 'Date' ) ) )
 				throw new InvalidArgumentException( 'Event date is missing' );
 
-			$indices	= array( 'type' => $eventType, 'id' => $resourceId );
+			$indices	= ['type' => $eventType, 'id' => $resourceId];
 			if( $event = $this->model->getByIndices( $indices ) ){
-				$this->sendMail( 'EventAgain', array( 'event' => $event ) );
+				$this->sendMail( 'EventAgain', ['event' => $event] );
 				throw new InvalidArgumentException( 'Event has been received before' );
 			}
 			if( !$this->verify( $eventType, $resourceId ) )
@@ -66,12 +66,12 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 			$response->setBody( '<h1>OK</h1><p>Event has been received and handled.</p>' );
 		}
 		catch( InvalidArgumentException $e ){
-			$this->sendMail( 'EventFailed', array( 'eventId' => $eventId, 'exception' => $e ) );
+			$this->sendMail( 'EventFailed', ['eventId' => $eventId, 'exception' => $e] );
 			$response->setStatus( 400 );
 			$response->setBody( '<h1>Bad Request</h1><p>Insufficient data given. Event has not been handled.</p><p>Reason: '.$e->getMessage().'.</p>' );
 		}
 		catch( Exception $e ){
-			$this->sendMail( 'EventFailed', array( 'eventId' => $eventId, 'exception' => $e ) );
+			$this->sendMail( 'EventFailed', ['eventId' => $eventId, 'exception' => $e] );
 			$response->setStatus( 500 );
 			$response->setBody( '<h1>Internal Server Error</h1><p>An error occured. Event has not been handled.</p><p>'.$e->getMessage().'.</p>' );
 		}
@@ -82,7 +82,7 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 	public function retry( $eventId )
 	{
 		$event	= $this->checkEvent( $eventId );
-		$statuses	= array( Model_Mangopay_Event::STATUS_FAILED, Model_Mangopay_Event::STATUS_HANDLED );
+		$statuses	= [Model_Mangopay_Event::STATUS_FAILED, Model_Mangopay_Event::STATUS_HANDLED];
 		if( !in_array( (int) $event->status, $statuses ) ){
 			$this->messenger->noteError( 'Only failed or unsuccessful events can be reactivated.' );
 			$this->restart( 'view/'.$eventId, TRUE );
@@ -98,9 +98,9 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 		if( !$this->moduleConfig->get( 'mail.hook' ) )
 			return;
 		$className	= 'Mail_Mangopay_'.$type;
-		$arguments	= array( $this->env, $data );
+		$arguments	= [$this->env, $data];
 		$mail		= Alg_Object_Factory::createObject( $className, $arguments );
-		$receiver	= array( 'email' => $this->moduleConfig->get( 'mail.hook' ) );
+		$receiver	= ['email' => $this->moduleConfig->get( 'mail.hook' )];
 		$language	= $this->env->getLanguage()->getLanguage();
 		return $this->env->logic->mail->sendMail( $mail, $receiver, $language );
 	}

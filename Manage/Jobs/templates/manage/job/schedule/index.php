@@ -2,12 +2,12 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconView		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-eye' ) );
-$iconEdit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
-$iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-toggle-on' ) );
-$iconDeactivate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-toggle-off' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
+$iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconActivate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-toggle-on'] );
+$iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-toggle-off'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $buttonAdd		= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
 	'href'	=> './manage/job/schedule/add',
@@ -16,7 +16,7 @@ $buttonAdd		= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd
 
 //return print_m( $allDefinedJobs, NULL, NULL, TRUE );
 
-$table	= HtmlTag::create( 'div', 'Noch keine Jobs geplant.', array( 'class' => 'alert' ) );
+$table	= HtmlTag::create( 'div', 'Noch keine Jobs geplant.', ['class' => 'alert'] );
 
 if( $scheduledJobs ){
 	$rows	= [];
@@ -54,31 +54,31 @@ if( $scheduledJobs ){
 			$buttonEdit,
 			$buttonStatus,
 			$buttonRemove
-		), array( 'class' => 'btn-group' ) );
-		$status	= HtmlTag::create( 'span', 'aktiv', array( 'class' => 'badge badge-success' ) );
+		), ['class' => 'btn-group'] );
+		$status	= HtmlTag::create( 'span', 'aktiv', ['class' => 'badge badge-success'] );
 		if( $item->status == Model_Job_Schedule::STATUS_DISABLED )
-			$status	= HtmlTag::create( 'span', 'deaktiviert', array( 'class' => 'badge badge-warning' ) );
+			$status	= HtmlTag::create( 'span', 'deaktiviert', ['class' => 'badge badge-warning'] );
 
 		$type	= $words['types'][$item->type];
 
 		$expression	= $item->expression;
 		if( (int) $item->type === Model_Job_Schedule::TYPE_CRON )
-			$expression	= HtmlTag::create( 'abbr', $expression, array( 'title' => \Lorisleiva\CronTranslator\CronTranslator::translate( $expression ) ) );
+			$expression	= HtmlTag::create( 'abbr', $expression, ['title' => \Lorisleiva\CronTranslator\CronTranslator::translate( $expression )] );
 
 
 		$rows[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $item->definition->identifier, array( 'class' => '' ) ),
-			HtmlTag::create( 'td', $type, array( 'class' => '' ) ),
-			HtmlTag::create( 'td', HtmlTag::create( 'tt', $expression ), array( 'class' => '' ) ),
-			HtmlTag::create( 'td', $item->lastRunAt ? date( 'd.m.Y H:i', $item->lastRunAt ) : '-', array( 'class' => '' ) ),
-			HtmlTag::create( 'td', $status, array( 'class' => '' ) ),
-			HtmlTag::create( 'td', $buttons, array( 'class' => '' ) ),
+			HtmlTag::create( 'td', $item->definition->identifier, ['class' => ''] ),
+			HtmlTag::create( 'td', $type, ['class' => ''] ),
+			HtmlTag::create( 'td', HtmlTag::create( 'tt', $expression ), ['class' => ''] ),
+			HtmlTag::create( 'td', $item->lastRunAt ? date( 'd.m.Y H:i', $item->lastRunAt ) : '-', ['class' => ''] ),
+			HtmlTag::create( 'td', $status, ['class' => ''] ),
+			HtmlTag::create( 'td', $buttons, ['class' => ''] ),
 		) );
 	}
 	$cols	= HtmlElements::ColumnGroup( '', '180px', '140px', '140px', '140px', '140px' );
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( 'Job ID / Title', 'Typ/Format', 'Ausführung', 'letzter Lauf', 'Zustand', '' ) ) );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Job ID / Title', 'Typ/Format', 'Ausführung', 'letzter Lauf', 'Zustand', ''] ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
-	$table	= HtmlTag::create( 'table', array( $cols, $thead, $tbody ), array( 'class' => 'table' ) );
+	$table	= HtmlTag::create( 'table', [$cols, $thead, $tbody], ['class' => 'table'] );
 }
 
 $tabs	= View_Manage_Job::renderTabs( $env, 'schedule' );
@@ -89,8 +89,8 @@ return $tabs.HtmlTag::create( 'div', array(
 		$table,
 		HtmlTag::create( 'div', array(
 			$buttonAdd,
-		), array( 'class' => 'buttonbar' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+		), ['class' => 'buttonbar'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 //return print_m( $schedule, NULL, NULL, TRUE );

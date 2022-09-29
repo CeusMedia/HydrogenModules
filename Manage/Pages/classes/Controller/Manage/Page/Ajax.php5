@@ -81,14 +81,14 @@ class Controller_Manage_Page_Ajax extends AjaxController
 	public function orderPages(){
 		$pageIds	= $this->request->get( 'pageIds' );
 		foreach( $pageIds as $nr => $pageId )
-			$this->model->edit( $pageId, array( 'rank' => $nr + 1 ) );
+			$this->model->edit( $pageId, ['rank' => $nr + 1] );
 		$this->respondData( TRUE );												//  respond to client
 	}
 
 	public function saveContent(){
 		$content	= $this->request->get( 'content' );
 		$pageId		= $this->request->get( 'pageId' );
-		$result		= array( 'status' => FALSE );
+		$result		= ['status' => FALSE];
 		try{
 			/*	@todo remove this old string-based solution soon */
 			if( preg_match( '/[a-z]/', $pageId ) ){
@@ -97,8 +97,8 @@ class Controller_Manage_Page_Ajax extends AjaxController
 						'content'		=> $content,
 						'modifiedAt'	=> time(),
 					), FALSE );
-					$result	= array( 'pageId' => $pageId, 'content' => $content );
-					$result	= array( 'status' => TRUE );
+					$result	= ['pageId' => $pageId, 'content' => $content];
+					$result	= ['status' => TRUE];
 				}
 			}
 			else if( $pageId ){
@@ -107,7 +107,7 @@ class Controller_Manage_Page_Ajax extends AjaxController
 						'content'		=> $content,
 						'modifiedAt'	=> time(),
 					), FALSE );
-					$result	= array( 'status' => TRUE );
+					$result	= ['status' => TRUE];
 				}
 			}
 			$this->respondData( TRUE );											//  respond to client

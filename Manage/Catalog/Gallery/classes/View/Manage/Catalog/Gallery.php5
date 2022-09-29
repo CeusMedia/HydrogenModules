@@ -38,7 +38,7 @@ class View_Manage_Catalog_Gallery extends View
 			$images		= $modelImage->getAllByIndices( array(
 				'status'			=> '1',
 				'galleryCategoryId'	=> $category->galleryCategoryId
-			), array( 'rank' => 'ASC', 'galleryImageId' => 'ASC' ) );
+			), ['rank' => 'ASC', 'galleryImageId' => 'ASC'] );
 			foreach( $images as $nr => $image ){
 				$label	= !empty( $image->title ) ? $image->title : $image->filename;
 				$images[$nr]	= (object) array(
@@ -85,7 +85,7 @@ class View_Manage_Catalog_Gallery extends View
 			$images		= $modelImage->getAllByIndices( array(
 				'status'			=> '1',
 				'galleryCategoryId'	=> $category->galleryCategoryId
-			), array( 'rank' => 'ASC', 'galleryImageId' => 'ASC' ) );
+			), ['rank' => 'ASC', 'galleryImageId' => 'ASC'] );
 			foreach( $images as $nr => $image ){
 				$label	= !empty( $image->title ) ? $image->title : $image->filename;
 				$images[$nr]	= (object) array(
@@ -135,7 +135,7 @@ class View_Manage_Catalog_Gallery extends View
 			$urlImage	= $pathImages.$category->image;
 			if( !$category->image ){
 				$model		= new Model_Catalog_Gallery_Image( $this->env );
-				$orders		= array( 'status' => 'DESC', 'rank' => 'ASC' );
+				$orders		= ['status' => 'DESC', 'rank' => 'ASC'];
 				$image		= $model->getByIndex( 'galleryCategoryId', $category->galleryCategoryId, $orders );
 				if( $image )
 					$urlImage	= $this->getData( 'pathPreview' ).rawurlencode( $category->path ).'/'.$image->filename;
@@ -144,7 +144,7 @@ class View_Manage_Catalog_Gallery extends View
 		}
 		if( $urlAdd )
 			$list[]	= $this->renderMatrixItem( $urlAdd, 1, '', NULL, 'add' );
-		return HtmlTag::create( 'div', $list, array( 'class' => 'gallery-matrix' ) );
+		return HtmlTag::create( 'div', $list, ['class' => 'gallery-matrix'] );
 	}
 
 	public function renderImageMatrix( $category, $urlAdd = NULL )
@@ -160,7 +160,7 @@ class View_Manage_Catalog_Gallery extends View
 		}
 		if( $urlAdd )
 			$list[]	= $this->renderMatrixItem( $urlAdd, 1, '', NULL, 'add' );
-		return HtmlTag::create( 'div', $list, array( 'class' => 'gallery-matrix' ) );
+		return HtmlTag::create( 'div', $list, ['class' => 'gallery-matrix'] );
 	}
 
 	protected function renderMatrixItem( $url, $status, $label, $imageUrl = NULL, $class = NULL )

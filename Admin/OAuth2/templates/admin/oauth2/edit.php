@@ -9,11 +9,11 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var object $provider */
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
-$iconActivate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-toggle-on' ) );
-$iconDeactivate	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-toggle-off' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconActivate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-toggle-on'] );
+$iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-toggle-off'] );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
 	'href'		=> './admin/oauth2',
@@ -59,7 +59,7 @@ if( $provider->status != Model_Oauth_Provider::STATUS_ACTIVE )
 $form	= HtmlTag::create( 'form', array(
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Titel', array( 'for' => 'input_title', 'class' => 'required mandatory' ) ),
+			HtmlTag::create( 'label', 'Titel', ['for' => 'input_title', 'class' => 'required mandatory'] ),
 			HtmlTag::create( 'input', NULL, array(
 				'type'			=> 'text',
 				'name'			=> 'title',
@@ -69,9 +69,9 @@ $form	= HtmlTag::create( 'form', array(
 				'required'		=> 'required',
 				'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
 			) ),
-		), array( 'class' => 'span7' ) ),
+		), ['class' => 'span7'] ),
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Icon', array( 'for' => 'input_icon' ) ),
+			HtmlTag::create( 'label', 'Icon', ['for' => 'input_icon'] ),
 			HtmlTag::create( 'input', NULL, array(
 				'type'			=> 'text',
 				'name'			=> 'icon',
@@ -81,9 +81,9 @@ $form	= HtmlTag::create( 'form', array(
 				'value'			=> htmlentities( $provider->icon, ENT_QUOTES, 'UTF-8' ),
 				'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
 			) ),
-		), array( 'class' => 'span4' ) ),
+		), ['class' => 'span4'] ),
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Rang', array( 'for' => 'input_rank' ) ),
+			HtmlTag::create( 'label', 'Rang', ['for' => 'input_rank'] ),
 			HtmlTag::create( 'input', NULL, array(
 				'type'			=> 'text',
 				'name'			=> 'rank',
@@ -91,11 +91,11 @@ $form	= HtmlTag::create( 'form', array(
 				'class'			=> 'span12',
 				'value'			=> htmlentities( $provider->rank, ENT_QUOTES, 'UTF-8' ),
 			) ),
-		), array( 'class' => 'span1' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+		), ['class' => 'span1'] ),
+	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Client-ID', array( 'for' => 'input_clientId', 'class' => 'required mandatory' ) ),
+			HtmlTag::create( 'label', 'Client-ID', ['for' => 'input_clientId', 'class' => 'required mandatory'] ),
 			HtmlTag::create( 'input', NULL, array(
 				'type'			=> 'text',
 				'name'			=> 'clientId',
@@ -104,9 +104,9 @@ $form	= HtmlTag::create( 'form', array(
 				'value'			=> htmlentities( $provider->clientId, ENT_QUOTES, 'UTF-8' ),
 				'required'		=> 'required',
 			) ),
-		), array( 'class' => 'span5' ) ),
+		), ['class' => 'span5'] ),
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Client-Secret', array( 'for' => 'input_clientSecret', 'class' => 'required mandatory' ) ),
+			HtmlTag::create( 'label', 'Client-Secret', ['for' => 'input_clientSecret', 'class' => 'required mandatory'] ),
 			HtmlTag::create( 'input', NULL, array(
 				'type'			=> 'text',
 				'name'			=> 'clientSecret',
@@ -115,11 +115,11 @@ $form	= HtmlTag::create( 'form', array(
 				'value'			=> htmlentities( $provider->clientSecret, ENT_QUOTES, 'UTF-8' ),
 				'required'		=> 'required',
 			) ),
-		), array( 'class' => 'span7' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+		), ['class' => 'span7'] ),
+	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Provider-Klasse', array( 'for' => 'input_className', 'class' => 'required mandatory' ) ),
+			HtmlTag::create( 'label', 'Provider-Klasse', ['for' => 'input_className', 'class' => 'required mandatory'] ),
 			HtmlTag::create( 'input', NULL, array(
 				'type'			=> 'text',
 				'name'			=> 'className',
@@ -130,9 +130,9 @@ $form	= HtmlTag::create( 'form', array(
 				'required'		=> 'required',
 				'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
 			) ),
-		), array( 'class' => 'span7' ) ),
+		), ['class' => 'span7'] ),
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Composer-Paket', array( 'for' => 'input_composerPackage' ) ),
+			HtmlTag::create( 'label', 'Composer-Paket', ['for' => 'input_composerPackage'] ),
 			HtmlTag::create( 'input', NULL, array(
 				'type'			=> 'text',
 				'name'			=> 'composerPackage',
@@ -142,11 +142,11 @@ $form	= HtmlTag::create( 'form', array(
 				'placeholder'	=> 'league/oauth2-...',
 				'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
 			) ),
-		), array( 'class' => 'span5' ) ),
-	), array( 'class' => 'row-fluid' ) ),
+		), ['class' => 'span5'] ),
+	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Provider-Optionen <small class="muted">(als JSON)</small>', array( 'for' => 'input_options', 'class' => '', 'title' => 'JSON-Objekt, wie {"key":"value"}' ) ),
+			HtmlTag::create( 'label', 'Provider-Optionen <small class="muted">(als JSON)</small>', ['for' => 'input_options', 'class' => '', 'title' => 'JSON-Objekt, wie {"key":"value"}'] ),
 			HtmlTag::create( 'input', NULL, array(
 				'type'			=> 'text',
 				'name'			=> 'options',
@@ -155,9 +155,9 @@ $form	= HtmlTag::create( 'form', array(
 				'value'			=> htmlentities( $provider->options, ENT_QUOTES, 'UTF-8' ),
 			//	'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
 			) ),
-		), array( 'class' => 'span5' ) ),
+		), ['class' => 'span5'] ),
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'label', 'Privilegien <small class="muted">(kommagetrennt)</small>', array( 'for' => 'input_scopes' ) ),
+			HtmlTag::create( 'label', 'Privilegien <small class="muted">(kommagetrennt)</small>', ['for' => 'input_scopes'] ),
 			HtmlTag::create( 'input', NULL, array(
 				'type'			=> 'text',
 				'name'			=> 'scopes',
@@ -166,24 +166,24 @@ $form	= HtmlTag::create( 'form', array(
 				'value'			=> htmlentities( $provider->scopes, ENT_QUOTES, 'UTF-8' ),
 			//	'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
 			) ),
-		), array( 'class' => 'span7' ) ),
-	), array( 'class' => 'row-fluid optional providerKey providerKey-' ) ),
+		), ['class' => 'span7'] ),
+	), ['class' => 'row-fluid optional providerKey providerKey-'] ),
 	HtmlTag::create( 'div', join( ' ', array(
 		$buttonCancel,
 		$buttonSave,
 		$provider->status > 0 ? $buttonDeactivate : $buttonActivate,
 		$buttonRemove,
-	) ), array( 'class' => 'buttonbar' ) ),
+	) ), ['class' => 'buttonbar'] ),
 ), array(
 	'action'	=> './admin/oauth2/edit/'.$providerId,
 	'method'	=> 'post',
 ) );
 
 
-$hint	= HtmlTag::create( 'div', 'Anbieter-Bibliothek (Composer-Paket "'.$provider->composerPackage.'") ist installiert.', array( 'class' => 'alert alert-success' ) );
+$hint	= HtmlTag::create( 'div', 'Anbieter-Bibliothek (Composer-Paket "'.$provider->composerPackage.'") ist installiert.', ['class' => 'alert alert-success'] );
 $hint	= '';
 if( !$exists )
-	$hint	= HtmlTag::create( 'div', 'Anbieter-Bibliothek existiert nicht. Bitte Composer-Paket <strong><tt>'.$provider->composerPackage.'</tt></strong> installieren!', array( 'class' => 'alert alert-important' ) );
+	$hint	= HtmlTag::create( 'div', 'Anbieter-Bibliothek existiert nicht. Bitte Composer-Paket <strong><tt>'.$provider->composerPackage.'</tt></strong> installieren!', ['class' => 'alert alert-important'] );
 
 $env->getPage()->runScript( 'ModuleAdminOAuth2.init()' );
 
@@ -192,16 +192,16 @@ $panelForm	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		$hint,
 		$form,
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
-[$textTop, $textInfo, $textBottom] = $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/admin/oauth2/edit/' );
+[$textTop, $textInfo, $textBottom] = $view->populateTexts( ['top', 'info', 'bottom'], 'html/admin/oauth2/edit/' );
 
 return $textTop.HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		$panelForm,
-	), array( 'class' => 'span8' ) ),
+	), ['class' => 'span8'] ),
 	HtmlTag::create( 'div', array(
 		$textInfo,
-	), array( 'class' => 'span4' ) ),
-), array( 'class' => 'row-fluid' ) ).$textBottom;
+	), ['class' => 'span4'] ),
+), ['class' => 'row-fluid'] ).$textBottom;

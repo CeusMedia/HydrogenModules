@@ -52,7 +52,7 @@ class Hook_Shop_Payment_Paypal extends Hook
 			if( $backend->key === $order->paymentMethod ){
 				$className	= 'View_Helper_Shop_FinishPanel_'.$backend->backend;
 				if( class_exists( $className ) ){
-					$object	= Alg_Object_Factory::createObject( $className, array( $env ) );
+					$object	= Alg_Object_Factory::createObject( $className, [$env] );
 					$object->setOrderId( $payload['orderId'] );
 					$object->setOutputFormat( $className::OUTPUT_FORMAT_HTML );
 					$panelPayment	= $object->render();

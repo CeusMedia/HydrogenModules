@@ -272,7 +272,7 @@ class Logic_Module extends Logic
 
 		$types	= array(
 			(object) array(
-				'resources'		=> array( "module.xml" => (object) array( 'file' => $moduleId.'.xml' ) ),
+				'resources'		=> array( "module.xml" => (object) ['file' => $moduleId.'.xml'] ),
 				'pathSource'	=> 'config/modules/',
 				'pathTarget'	=> '',
 			),
@@ -390,7 +390,7 @@ class Logic_Module extends Logic
 			}
 		}
 		catch( Exception $e ){
-			$exceptions	= array( $e );
+			$exceptions	= [$e];
 			throw new Exception_Logic( 'Module installation failed', $exceptions, 2 );
 		}
 		return FALSE;
@@ -580,7 +580,7 @@ class Logic_Module extends Logic
 				}
 				$label	= '"'.$sourceId.'"';
 				if( $this->env->getAcl()->has( 'admin/source', 'edit' ) )
-					$label	= HtmlTag::create( 'a', $sourceId, array( 'href' => './admin/module/source/edit/'.$sourceId ) );
+					$label	= HtmlTag::create( 'a', $sourceId, ['href' => './admin/module/source/edit/'.$sourceId] );
 				$this->messenger->noteError( 'Die Quelle '.$label.' ist nicht verfügbar oder falsch konfiguriert.' );
 			}
 		}
@@ -609,7 +609,7 @@ class Logic_Module extends Logic
 			@unlink( $fileOut );
 		}
 		if( !copy( $pathNameIn, $fileOut ) )
-			throw new Exception_IO( 'Link failed', 50, array( $fileIn, $fileOut ) );
+			throw new Exception_IO( 'Link failed', 50, [$fileIn, $fileOut] );
 		chmod( $fileOut, 0770 );
 		return TRUE;
 	}
@@ -654,7 +654,7 @@ class Logic_Module extends Logic
 			$line = array_shift( $lines );
 			if( !trim( $line ) )
 				continue;
-			$buffer[]	= UI_Template::renderString( trim( $line ), array( 'prefix' => $prefix ) );
+			$buffer[]	= UI_Template::renderString( trim( $line ), ['prefix' => $prefix] );
 			if( preg_match( '/;$/', trim( $line ) ) ){
 				$statements[]	= join( "\n", $buffer );
 				$buffer			= [];
@@ -680,7 +680,7 @@ class Logic_Module extends Logic
 		$pathModule	= $this->model->getPath( $moduleId );
 		$pathApp	= $this->env/*->getRemote()*/->path;
 
-		if( !in_array( $installType, array( self::INSTALL_TYPE_LINK, self::INSTALL_TYPE_COPY ) ) )	//  unsupported install type
+		if( !in_array( $installType, [self::INSTALL_TYPE_LINK, self::INSTALL_TYPE_COPY] ) )	//  unsupported install type
 			throw new InvalidArgumentException( 'Unknown installation type', 10 );
 
 		$files		= array( 'link' => array(), 'copy' => array() );
@@ -736,7 +736,7 @@ class Logic_Module extends Logic
 			@unlink( $fileOut );
 		}
 		if( !symlink( $pathNameIn, $fileOut ) )
-			throw new Exception_IO( 'Link failed', 50, array( $fileIn, $fileOut ) );
+			throw new Exception_IO( 'Link failed', 50, [$fileIn, $fileOut] );
 		return TRUE;
 	}
 
@@ -805,7 +805,7 @@ class Logic_Module extends Logic
 				$this->messenger->noteNotice( 'Removed folders: '.$folders );
 			}
 		}
-		return array( $files, $folders );
+		return [$files, $folders];
 	}
 
 	protected function updateModuleDatabase( string $moduleId, bool $verbose = TRUE )
@@ -820,7 +820,7 @@ class Logic_Module extends Logic
 		$module		= $this->model->getFromSource( $moduleId );
 		$pathApp	= $this->env/*->getRemote()*/->path;
 
-		if( !in_array( $installType, array( self::INSTALL_TYPE_LINK, self::INSTALL_TYPE_COPY ) ) )	//  unsupported install type
+		if( !in_array( $installType, [self::INSTALL_TYPE_LINK, self::INSTALL_TYPE_COPY] ) )	//  unsupported install type
 			throw new InvalidArgumentException( 'Unknown installation type', 10 );
 
 		$list	= [];																			//  prepare new module file list

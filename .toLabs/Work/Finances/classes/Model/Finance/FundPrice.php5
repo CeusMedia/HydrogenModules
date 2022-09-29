@@ -16,7 +16,7 @@ class Model_Finance_FundPrice extends Model
 
 	protected $primaryKey	= 'fundPriceId';
 
-	protected $indices		= array( 'fundId' );
+	protected $indices		= ['fundId'];
 
 	protected $fetchMode	= PDO::FETCH_OBJ;
 }

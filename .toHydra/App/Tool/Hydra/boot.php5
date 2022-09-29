@@ -19,7 +19,7 @@ require_once CML_PATH.'cmModules/'._cmRealize( 'CMM_VERSION', 'versionCMM', 'tru
 /*  --  LOAD CLASS PATHS  --  */
 if( isset( $autoloadPaths ) && is_array( $autoloadPaths ) )
 	foreach( $autoloadPaths as $library )
-		if( $library = (object) array_merge( array( 'path' => NULL, 'exts' => NULL, 'prefix' => NULL ), $library ) )	//  
+		if( $library = (object) array_merge( ['path' => NULL, 'exts' => NULL, 'prefix' => NULL], $library ) )	//  
 			CMC_Loader::registerNew( NULL, $library->prefix, $library->path );
 
 ?>

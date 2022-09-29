@@ -2,11 +2,11 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'icon-plus icon-white' ) );
-$iconUpload		= HtmlTag::create( 'i', '', array( 'class' => 'icon-folder-open icon-white' ) );
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+$iconUpload		= HtmlTag::create( 'i', '', ['class' => 'icon-folder-open icon-white'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$iconAdd		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-upload' ) );
-	$iconUpload		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-folder-open' ) );
+	$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-upload'] );
+	$iconUpload		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-folder-open'] );
 }
 
 $rank		= count( $slider->slides ) + 1;

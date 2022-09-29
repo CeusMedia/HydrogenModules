@@ -21,15 +21,15 @@ foreach( $files as $file ){
 	}
 
 	$url	= './manage/content/static/edit/'.base64_encode( $filePath );				//
-	$link	= HtmlTag::create( 'a', $filePath, array( 'href' => $url ) );	//
+	$link	= HtmlTag::create( 'a', $filePath, ['href' => $url] );	//
 	if( !is_writeable( $file->getPathname() ) ){								//  file ist not writable
 		$class	= "not-writeable";												//
 		$link	= HtmlTag::create( 'span', $label );						//
 	}
-	$list[$filePath]	= HtmlTag::create( 'li', $link, array( 'class' => $class ) );
+	$list[$filePath]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 }
 ksort( $list );
-$list	= HtmlTag::create( 'ul', implode( $list ), array( 'class' => 'list-html' ) );
+$list	= HtmlTag::create( 'ul', implode( $list ), ['class' => 'list-html'] );
 
 #return $list;
 

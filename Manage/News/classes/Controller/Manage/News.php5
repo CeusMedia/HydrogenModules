@@ -92,8 +92,8 @@ class Controller_Manage_News extends Controller{
 		if( strlen( $filterStatus ) )
 			$conditions['status']	= $filterStatus;
 
-		$orders		= array( 'newsId' => 'DESC' );
-		$limits		= array( $pageNr * $limit, $limit );
+		$orders		= ['newsId' => 'DESC'];
+		$limits		= [$pageNr * $limit, $limit];
 		$this->addData( 'pageNr', $pageNr );
 		$this->addData( 'limit', $limit );
 		$this->addData( 'total', $this->model->count( $conditions ) );

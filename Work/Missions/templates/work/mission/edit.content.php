@@ -15,7 +15,7 @@ if( $mode === "tabbed" ){
 		'href'		=> $w->hintMarkdownLink,
 		'target'	=> '_blank',
 	) );
-	$hintMarkdown	= HtmlTag::create( 'small', sprintf( $w->hintMarkdown, $linkMarkdown ), array( 'class' => 'muted' ) );
+	$hintMarkdown	= HtmlTag::create( 'small', sprintf( $w->hintMarkdown, $linkMarkdown ), ['class' => 'muted'] );
 	$panelContentTabbed	= '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>

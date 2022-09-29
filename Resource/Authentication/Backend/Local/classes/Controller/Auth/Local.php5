@@ -72,7 +72,7 @@ class Controller_Auth_Local extends Controller
 			foreach( $users as $user ){
 				$pak	= md5( 'pak:'.$user->userId.'/'.$user->username.'&'.$passwordSalt );
 				if( $pak === $code ){
-					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
+					$modelUser->edit( $user->userId, ['status' => 1] );
 					$this->messenger->noteSuccess( $words->msgSuccess );
 					$result	= $this->callHook( 'Auth', 'afterConfirm', $this, array(
 						'userId'	=> $user->userId,
@@ -242,7 +242,7 @@ class Controller_Auth_Local extends Controller
 					}
 					else{																			//  @todo  remove whole block if old user password support decays
 						$crypt		= md5( $password.$passwordPepper );
-						$modelUser->edit( $user->userId, array( 'password' => $crypt ) );
+						$modelUser->edit( $user->userId, ['password' => $crypt] );
 
 					}
 					$this->env->getDatabase()->commit();
@@ -252,7 +252,7 @@ class Controller_Auth_Local extends Controller
 				}
 				catch( Exception $e ){
 					$this->messenger->noteFailure( $words->msgSendingMailFailed );
-					$this->callHook( 'Env', 'logException', $this, array( 'exception' => $e ) );
+					$this->callHook( 'Env', 'logException', $this, ['exception' => $e] );
 				}
 				$this->env->getDatabase()->rollBack();
 			}
@@ -273,7 +273,7 @@ class Controller_Auth_Local extends Controller
 
 		$roleDefault	= $modelRole->getByIndex( 'register', 128 );
 		$rolesAllowed	= [];
-		foreach( $modelRole->getAllByIndex( 'register', array( 64, 128 ) ) as $role )
+		foreach( $modelRole->getAllByIndex( 'register', [64, 128] ) as $role )
 			$rolesAllowed[]	= $role->roleId;
 
 		$input			= $this->request->getAllFromSource( 'POST', TRUE );
@@ -405,13 +405,13 @@ class Controller_Auth_Local extends Controller
 				catch( Exception $e ){
 //					$this->messenger->noteFailure( $words->msgSendingMailFailed );
 					$this->messenger->noteFailure( 'Fehler aufgetreten: '.$e->getMessage() );
-					$this->callHook( 'Env', 'logException', $this, array( 'exception' => $e ) );
+					$this->callHook( 'Env', 'logException', $this, ['exception' => $e] );
 				}
 				$this->env->getDatabase()->rollBack();
 			}
 		}
 		if( $this->session->get( 'auth_register_oauth_user_id' ) ){
-			$fields	= array( 'username', 'email', 'gender', 'firstname', 'surname', 'street', 'postcode', 'city', 'phone' );
+			$fields	= ['username', 'email', 'gender', 'firstname', 'surname', 'street', 'postcode', 'city', 'phone'];
 			foreach( $fields as $field )
 				if( !isset( $input[$field] ) || !strlen( trim( $input[$field] ) ) )
 					$input[$field]	= $this->session->get( 'auth_register_oauth_'.$field );
@@ -473,7 +473,7 @@ class Controller_Auth_Local extends Controller
 		}
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
-		foreach( array( 'username', 'email' ) as $column ){
+		foreach( ['username', 'email'] as $column ){
 			if( ( $user = $modelUser->getByIndex( $column, $username ) ) )
 				break;
 		}
@@ -502,7 +502,7 @@ class Controller_Auth_Local extends Controller
 		// @todo		remove
 		$allowedRoles	= $this->moduleConfig->get( 'login.roles' );
 		$allowedRoles	= explode( ',', $allowedRoles ? $allowedRoles : "*" );
-		if( $allowedRoles !== array( "*" ) && !in_array( $user->roleId, $allowedRoles ) ){
+		if( $allowedRoles !== ["*"] && !in_array( $user->roleId, $allowedRoles ) ){
 			$this->messenger->noteError( $words->msgInvalidRole, $role->title );
 			return 0;
 		}*/

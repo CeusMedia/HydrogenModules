@@ -3,9 +3,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $table	= '<div class="alert alert-warning">No entries found.</div>';
 if( $bookmarks ){
-	$iconVisit	= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-right' ) );
-	$iconView	= HtmlTag::create( 'i', '', array( 'class' => 'icon-eye-open fa fa-eye' ) );
-	$iconEdit	= HtmlTag::create( 'i', '', array( 'class' => 'icon-pencil fa fa-pencil' ) );
+	$iconVisit	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-right'] );
+	$iconView	= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open fa fa-eye'] );
+	$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'icon-pencil fa fa-pencil'] );
 	$rows	= [];
 	foreach( $bookmarks as $bookmark ){
 		$urlVisit	= './work/bookmark/visit/'.$bookmark->bookmarkId;
@@ -22,15 +22,15 @@ if( $bookmarks ){
 		) );
 		$title	= HtmlTag::create( 'div', array(
 			HtmlTag::create( 'big', $linkTitle )
-		), array( 'class' => 'title' ) );
+		), ['class' => 'title'] );
 		$url	= HtmlTag::create( 'div', array(
 			HtmlTag::create( 'small', $linkUrl )
-		), array( 'class' => 'title', 'style' => 'color: green'  ) );
+		), ['class' => 'title', 'style' => 'color: green' ] );
 		$description	= '';
 		if( $bookmark->description ){
 			$description	= HtmlTag::create( 'div', array(
 				HtmlTag::create( 'small', $bookmark->description )
-			), array( 'class' => 'title' ) );
+			), ['class' => 'title'] );
 		}
 		$pageTitle	= '';
 		if( $bookmark->pageTitle !== $bookmark->title ){
@@ -43,9 +43,9 @@ if( $bookmarks ){
 
 		$tags	= [];
 		foreach( $bookmark->tags as $tag ){
-			$tags[]	= HtmlTag::create( 'span', $tag->title, array( 'class' => 'label label-info' ) );
+			$tags[]	= HtmlTag::create( 'span', $tag->title, ['class' => 'label label-info'] );
 		}
-		$tags	= HtmlTag::create( 'ul', $tags, array( 'class' => 'inline list-inline' ) );
+		$tags	= HtmlTag::create( 'ul', $tags, ['class' => 'inline list-inline'] );
 
 		$rows[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', array(
@@ -54,7 +54,7 @@ if( $bookmarks ){
 				$url,
 				$description,
 				$tags,
-			), array( 'class' => NULL ) ),
+			), ['class' => NULL] ),
 			HtmlTag::create( 'td', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'a', $iconVisit, array(
@@ -75,27 +75,27 @@ if( $bookmarks ){
 						'class'		=> 'btn btn-mini',
 						'title'		=> 'edit',
 					) ),
-				), array( 'class' => 'not-btn-group pull-right' ) ),
-			), array( 'class' => NULL ) ),
-		), array() );
+				), ['class' => 'not-btn-group pull-right'] ),
+			), ['class' => NULL] ),
+		), [] );
 	}
-	$table	= HtmlTag::create( 'table', $rows, array( 'class' => 'table table-striped' ) );
+	$table	= HtmlTag::create( 'table', $rows, ['class' => 'table table-striped'] );
 }
 
 $panelList	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Table' ),
 	HtmlTag::create( 'div', array(
 		$table
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel content-panel-list content-panel-table' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel content-panel-list content-panel-table'] );
 
 
 $form	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Table' ),
 	HtmlTag::create( 'div', array(
 		$table
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel content-panel-list content-panel-table' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel content-panel-list content-panel-table'] );
 
 
 $panelAdd	= HtmlTag::create( 'div', array(
@@ -118,8 +118,8 @@ $panelAdd	= HtmlTag::create( 'div', array(
 				<button type="submit" name="save" class="btn btn-primary">save</button>
 			</div>
 		</form>
-	', array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel content-panel-form' ) );
+	', ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel content-panel-form'] );
 
 
 $panelFilter	= HtmlTag::create( 'div', array(
@@ -134,10 +134,10 @@ $panelFilter	= HtmlTag::create( 'div', array(
 						'class'	=> 'span12',
 						'value'	=> htmlentities( $filterQuery, ENT_QUOTES, 'UTF-8' ),
 					) ),
-				), array( 'class' => 'span8' ) ),
+				), ['class' => 'span8'] ),
 				HtmlTag::create( 'div', array(
-				), array( 'class' => 'span4' ) ),
-			), array( 'class' => 'row-fluid' ) ),
+				), ['class' => 'span4'] ),
+			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'button', 'filter', array(
 					'type'	=> 'submit',
@@ -148,22 +148,22 @@ $panelFilter	= HtmlTag::create( 'div', array(
 					'href'	=> './work/bookmark/filter/reset',
 					'class'	=> 'btn btn-small btn-inverse',
 				) ),
-			), array( 'class' => 'buttonbar' ) ),
-		), array( 'action' => './work/bookmark/filter', 'method' => 'post' ) ),
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel content-panel-form' ) );
+			), ['class' => 'buttonbar'] ),
+		), ['action' => './work/bookmark/filter', 'method' => 'post'] ),
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel content-panel-form'] );
 
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		$panelFilter,
-	), array( 'class' => 'span3' ) ),
+	), ['class' => 'span3'] ),
 	HtmlTag::create( 'div', array(
 		$panelList,
-	), array( 'class' => 'span6' ) ),
+	), ['class' => 'span6'] ),
 	HtmlTag::create( 'div', array(
 		$panelAdd,
-	), array( 'class' => 'span3' ) ),
-), array( 'class' => 'row-fluid' ) ).'
+	), ['class' => 'span3'] ),
+), ['class' => 'row-fluid'] ).'
 <style>
 small>a {
 	color: green;

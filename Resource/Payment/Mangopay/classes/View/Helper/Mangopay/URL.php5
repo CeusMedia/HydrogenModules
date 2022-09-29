@@ -24,7 +24,7 @@ class View_Helper_Mangopay_URL extends View_Helper_Mangopay_Abstract
 	{
 		$param		= [];
 		foreach( $this->parameters as $key => $value )
-			if( !in_array( $value, array( FALSE, NULL ) ) )
+			if( !in_array( $value, [FALSE, NULL] ) )
 				if( strlen( trim( $value ) ) )
 					$param[$key]	= (string) $value;
 

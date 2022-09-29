@@ -45,7 +45,7 @@ class Model_Shop_Cart
 			$this->loadOrder();
 
 		if( !is_array( $this->data->get( 'positions' ) ) )
-			$this->set( 'positions', array() );
+			$this->set( 'positions', [] );
 
 	}
 
@@ -141,8 +141,8 @@ class Model_Shop_Cart
 			'paymentMethod'		=> NULL,
 			'paymentId'			=> NULL,
 			'currency'			=> $this->defaultCurrency,
-			'positions'			=> array(),
-			'customer'			=> array(),
+			'positions'			=> [],
+			'customer'			=> [],
 			'customerMode'		=> Model_Shop_CART::CUSTOMER_MODE_UNKNOWN,
 		) );
 		$this->session->set( 'shop_cart', $this->data->getAll() );

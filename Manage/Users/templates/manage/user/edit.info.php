@@ -33,13 +33,13 @@ if( !empty( $projects ) ){
 	$list	= [];
 	foreach( $projects as $project ){
 		$label	= $project->title;
-		if( !in_array( (int) $project->status, array( 0, 1, 2, 3 ) ) )
+		if( !in_array( (int) $project->status, [0, 1, 2, 3] ) )
 			$label	= HtmlTag::create( 'del', $label );
 		$url	= './manage/project/edit/'.$project->projectId;
-		$link	= HtmlTag::create( 'a', $label, array( 'href' => $url, 'class' => 'project project-list-item' ) );
+		$link	= HtmlTag::create( 'a', $label, ['href' => $url, 'class' => 'project project-list-item'] );
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$projects	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'projects project-list' ) );
+	$projects	= HtmlTag::create( 'ul', join( $list ), ['class' => 'projects project-list'] );
 	$facts[]	= array(
 		'label'	=> 'Projekte',
 		'value'	=> $projects,

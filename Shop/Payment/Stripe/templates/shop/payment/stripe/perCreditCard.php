@@ -3,20 +3,20 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w				= (object) $words['checkout'];
 
-$iconSubmit		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
+$iconSubmit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 if( count( $paymentBackends ) > 1 )
 	$buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/payment', $w->buttonToPayment, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 
 if( $w->linkCreditCard )
-	$w->labelCreditCard	= HtmlTag::create( 'a', $w->labelCreditCard, array( 'href' => $w->linkCreditCard, 'target' => '_blank' ) );
+	$w->labelCreditCard	= HtmlTag::create( 'a', $w->labelCreditCard, ['href' => $w->linkCreditCard, 'target' => '_blank'] );
 if( $w->linkDebitCard )
-	$w->labelDebitCard	= HtmlTag::create( 'a', $w->labelDebitCard, array( 'href' => $w->linkDebitCard, 'target' => '_blank' ) );
+	$w->labelDebitCard	= HtmlTag::create( 'a', $w->labelDebitCard, ['href' => $w->linkDebitCard, 'target' => '_blank'] );
 $labelCard	= sprintf( $w->labelCard, $w->labelCreditCard, $w->labelDebitCard );
 
 $taxMode	= $configShop->get( 'tax.included' ) ? $w->taxInclusive : $w->taxExclusive;
-$taxLabel	= HtmlTag::create( 'small', '('.$taxMode.' '.$w->labelTax.')', array( 'class' => 'muted' ) );
+$taxLabel	= HtmlTag::create( 'small', '('.$taxMode.' '.$w->labelTax.')', ['class' => 'muted'] );
 $alert		= $w->alertNotice ? '<div class="alert alert-notice">'.$w->alertNotice.'</div>' : NULL;
 $form		= '
 <form action="./shop/payment/stripe/perCreditCard" method="post" id="payment-form">
@@ -45,8 +45,8 @@ $panel	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', array(
 		$form,
-	), array( 'class' => 'content-panel-inner' ) ),
-), array( 'class' => 'content-panel' ) );
+	), ['class' => 'content-panel-inner'] ),
+), ['class' => 'content-panel'] );
 
 $w				= (object) $words['modal-loading'];
 $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
@@ -75,6 +75,6 @@ $helperTabs->setCurrent( 'shop-checkout' );
 $helperTabs->setContent( $panel );
 $helperTabs->setPaymentBackends( $this->getData( 'paymentBackends' ) );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/shop/payment/stripe/perCreditCard' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/shop/payment/stripe/perCreditCard' ) );
 
 return $textTop.$helperTabs->render().$textBottom.$modalLoading;

@@ -21,8 +21,8 @@ if( $article->cover ){
 	$urlSmall	= 'file/bookstore/article/s/'.$article->cover;
 
 
-	$imageMedium	= HtmlTag::create( 'img', NULL, array( 'src' => $urlMedium, 'class' => $class ) );
-	$imageSmall		= HtmlTag::create( 'img', NULL, array( 'src' => $urlSmall, 'class' => $class ) );
+	$imageMedium	= HtmlTag::create( 'img', NULL, ['src' => $urlMedium, 'class' => $class] );
+	$imageSmall		= HtmlTag::create( 'img', NULL, ['src' => $urlSmall, 'class' => $class] );
 
 	$panelCover	= '
 <div class="content-panel">
@@ -63,13 +63,13 @@ if( $article->cover ){
 }
 
 $imageMaxSize	= Alg_UnitParser::parse( $moduleConfig->get( 'article.image.size' ), "M" );
-$imageMaxSize	= Logic_Upload::getMaxUploadSize( array( 'config' => $imageMaxSize ) );
+$imageMaxSize	= Logic_Upload::getMaxUploadSize( ['config' => $imageMaxSize] );
 $imageMaxSize	= Alg_UnitFormater::formatBytes( $imageMaxSize );
 
 $list				= [];
 $imageExtensions	= $moduleConfig->get( 'article.image.extensions' );
 foreach( explode( ",", $imageExtensions ) as $nr => $type )
-	if( !in_array( trim( $type ), array( "jpe", "jpeg" ) ) )
+	if( !in_array( trim( $type ), ["jpe", "jpeg"] ) )
 		$list[$nr]	= strtoupper( trim( $type ) );
 $imageExtensions	= join( ", ", $list );
 

@@ -15,7 +15,7 @@ $statusClasses	= array(
 	2	=> 'success',
 );
 
-$optStatus		= array( '' => '- alle -' );
+$optStatus		= ['' => '- alle -'];
 foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $key.': '.$value;
 $optStatus		= HtmlElements::Options( $optStatus, $filters->get( 'status' ) );
@@ -34,17 +34,17 @@ $optDirection	= array(
 );
 $optDirection	= HtmlElements::Options( $optDirection, $filters->get( 'direction' ) );
 
-$optMailClass	= array( '' => '- alle -' );
+$optMailClass	= ['' => '- alle -'];
 foreach( $mailClasses as $mailClass )
 	$optMailClass[$mailClass]	= preg_replace( '/_/', ':', preg_replace( '/^Mail_/', '', $mailClass ) );
 $optMailClass	= HtmlElements::Options( $optMailClass, $filters->get( 'mailClass' ) );
 
 
-$iconFilter		= HtmlTag::create( 'i', '', array( 'class' => 'icon-search icon-white' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'icon-remove-circle' ) );
+$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'icon-search icon-white'] );
+$iconReset		= HtmlTag::create( 'i', '', ['class' => 'icon-remove-circle'] );
 
-$buttonFilter	= HtmlTag::create( 'button', $iconFilter.' '.$wf->buttonFilter, array( 'type' => 'submit', 'class' => 'btn btn-primary' ) );
-$buttonReset	= HtmlTag::create( 'a', $iconReset.' '.$wf->buttonReset, array( 'class' => 'btn btn-small', 'href' => './admin/mail/queue/filter/true' ) );
+$buttonFilter	= HtmlTag::create( 'button', $iconFilter.' '.$wf->buttonFilter, ['type' => 'submit', 'class' => 'btn btn-primary'] );
+$buttonReset	= HtmlTag::create( 'a', $iconReset.' '.$wf->buttonReset, ['class' => 'btn btn-small', 'href' => './admin/mail/queue/filter/true'] );
 
 
 return '

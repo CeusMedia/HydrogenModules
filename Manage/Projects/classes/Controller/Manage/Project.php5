@@ -46,7 +46,7 @@ class Controller_Manage_Project extends Controller
 			$title		= $this->request->get( 'title' );
 			if( !strlen( $title ) )
 				$this->messenger->noteError( $words->msgTitleMissing );
-			if( $this->modelProject->count( array( 'title' => $title, 'creatorId' => $this->userId ) ) )
+			if( $this->modelProject->count( ['title' => $title, 'creatorId' => $this->userId] ) )
 				$this->messenger->noteError( $words->msgTitleExisting, $title );
 			if( !$this->messenger->gotError() ){
 				$isFirstUserProject	= !$this->modelProject->countByIndex( 'creatorId', $this->userId );
@@ -108,7 +108,7 @@ class Controller_Manage_Project extends Controller
 				foreach( $this->logic->getProjectUsers( $projectId ) as $member ){
 					if( $member->userId !== $this->userId ){
 						$user	= $this->modelUser->get( $member->userId );
-						$data	= array( 'project' => $project, 'user' => $user );
+						$data	= ['project' => $project, 'user' => $user];
 						$mail	= new Mail_Manage_Project_Members( $this->env, $data, FALSE );
 						$this->logicMail->handleMail( $mail, $user, $language->getLanguage() );
 					}
@@ -181,7 +181,7 @@ class Controller_Manage_Project extends Controller
 			foreach( $projectUsers as $user ){														//  iterate project users
 				if( $user->userId == $this->userId )												//  project user is current user
 					continue;																		//  skip
-				$data	= array( 'project' => $project, 'user' => $user );
+				$data	= ['project' => $project, 'user' => $user];
 				$mail	= new Mail_Manage_Project_Changed( $this->env, $data, FALSE );
 				$this->logicMail->handleMail( $mail, $user, $language->getLanguage() );
 			}
@@ -208,12 +208,12 @@ class Controller_Manage_Project extends Controller
 			$modelCompany			= new Model_Company( $this->env );
 			$modelProjectCompany	= new Model_Project_Company( $this->env );
 			$this->addData( 'companies', $modelCompanies->getAll() );				//   @todo: order!
-			$conditions		= array( 'projectId' => $project->projectId );
+			$conditions		= ['projectId' => $project->projectId];
 			$this->addData( 'projectCompanies', $modelProjectCompanies->get( $conditions ) );	//   @todo: order!
 		}
 		if( $this->useCustomers ){
 			$modelCustomer	= new Model_Customer( $this->env );
-			$modelCustomer->getAll( array( 'userId' => $this->userId ), array( 'title' => 'ASC' ) );
+			$modelCustomer->getAll( ['userId' => $this->userId], ['title' => 'ASC'] );
 		}
 //		$this->addData( 'filterStatus', $this->session->get( 'filter_manage_project_status' ) );
 //		$this->addData( 'filterOrder', $this->session->get( 'filter_manage_project_order' ) );
@@ -253,7 +253,7 @@ class Controller_Manage_Project extends Controller
 	public function index( $page = 0 )
 	{
 		$this->checkDefault();
-//		$this->env->getCaptain()->callHook( 'Project', 'update', $this, array( 'projectId' => '43' ) );
+//		$this->env->getCaptain()->callHook( 'Project', 'update', $this, ['projectId' => '43'] );
 		if( $this->useMissions )
 			$modelMission	= new Model_Mission( $this->env );
 
@@ -281,7 +281,7 @@ class Controller_Manage_Project extends Controller
 		}
 
 		if( (int) $filterId > 0 )
-			$conditions['projectId']	= array( $filterId );
+			$conditions['projectId']	= [$filterId];
 		else{
 			if( strlen( trim( $filterQuery ) ) ){
 				$projectIds		= [];
@@ -299,7 +299,7 @@ class Controller_Manage_Project extends Controller
 			}
 			if( $filterUser ){
 				$projectIds	= [];
-				foreach( $this->modelProjectUser->getAll( array( 'userId' => $filterUser ) ) as $relation )
+				foreach( $this->modelProjectUser->getAll( ['userId' => $filterUser] ) as $relation )
 					$projectIds[]	= $relation->projectId;
 				if( isset( $conditions['projectId'] ) )
 					$conditions['projectId']	= array_intersect( $conditions['projectId'], $projectIds );
@@ -312,7 +312,7 @@ class Controller_Manage_Project extends Controller
 		if( $filterPriority )
 			$conditions['priority']	= $filterPriority;
 		if( isset( $conditions['projectId'] ) && !$conditions['projectId'] )
-			$conditions['projectId'] = array( 0 );
+			$conditions['projectId'] = [0];
 
 		$orders	= [];
 		if( !( $filterOrder && $filterDirection ) ){
@@ -326,7 +326,7 @@ class Controller_Manage_Project extends Controller
 			$this->restart( '0', TRUE );
 //		$page	= max( 0, min( floor( $total / $filterLimit ), $page ) );
 		$limit	= $this->session->get( 'filter_manage_project_limit' );
-		$limits	= array( $page * $filterLimit, $filterLimit );
+		$limits	= [$page * $filterLimit, $filterLimit];
 
 		$projects	= [];
 		foreach( $this->modelProject->getAll( $conditions, $orders, $limits ) as $project ){
@@ -375,19 +375,19 @@ class Controller_Manage_Project extends Controller
 				foreach( $this->logic->getProjectUsers( $projectId ) as $member ){
 					if( $member->userId !== $this->userId ){
 						$user	= $this->modelUser->get( $member->userId );
-						$data	= array( 'project' => $project, 'user' => $user );
+						$data	= ['project' => $project, 'user' => $user];
 						$mail	= new Mail_Manage_Project_Removed( $this->env, $data, FALSE );
 						$this->logicMail->handleMail( $mail, $user, $language->getLanguage() );
 					}
 				}
-				$this->env->getCaptain()->callHook( 'Project', 'remove', $this, array( 'projectId' => $projectId ) );
+				$this->env->getCaptain()->callHook( 'Project', 'remove', $this, ['projectId' => $projectId] );
 				$dbc->commit();
 				$this->messenger->noteSuccess( $words->msgSuccessRemoved, $project->title );
 				$this->restart( NULL, TRUE );
 			}
 			catch( Exception $e ){
 				$dbc->rollBack();
-				$this->env->getCaptain()->callHook( 'Env', 'logException', $this, array( 'exception' => $e ) );
+				$this->env->getCaptain()->callHook( 'Env', 'logException', $this, ['exception' => $e] );
 				$this->messenger->noteFailure( $words->msgFailureException, $e->getMessage() );
 				$this->restart( 'edit/'.$projectId, TRUE );
 			}

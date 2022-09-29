@@ -1,11 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
-$iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
-$iconOrder		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-shopping-cart' ) );
-$iconSearch		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-search' ) );
-$iconUser		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-user' ) );
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconOrder		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-shopping-cart'] );
+$iconSearch		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
+$iconUser		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user'] );
 
 $buttonSearch	= HtmlTag::create( 'a', $iconSearch.' suchen', array(
 	'href'			=> '#modalSelectUser',
@@ -139,7 +139,7 @@ $panelAssign	= '
 
 $panelFilter	= $view->loadTemplateFile( 'manage/my/provision/license/index.filter.php' );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/manage/my/provision/license/assign/' ) );
+extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/my/provision/license/assign/' ) );
 
 $tabs	= View_Manage_My_Provision_License::renderTabs( $env, '' );
 
