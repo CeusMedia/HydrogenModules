@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -87,7 +88,7 @@ class Controller_Catalog_Gallery extends Controller
 			}
 		}
 		$archive->close();
-		Net_HTTP_Download::sendFile( $archiveFileName, 'Bestellung_'.$orderId.'.zip', FALSE );
+		HttpDownload::sendFile( $archiveFileName, 'Bestellung_'.$orderId.'.zip', FALSE );
 		unlink( $archiveFileName );
 		$logic->setOrderStatus( $orderId, Model_Shop_Order::STATUS_DELIVERED );				//  set order status to 'delivered'
 		exit;

@@ -1,9 +1,9 @@
-var ModuleAdminCache = {
+let ModuleAdminCache = {
 	init: function(){
 		$("button.btn-cache-remove").on("click", ModuleAdminCache.remove);
 	},
 	remove: function(){
-		var row = $(this).parent().parent();
+		let row = $(this).parent().parent();
 		$.ajax({
 			url: "./ajax/admin/cache/remove",
 			data: {key: row.data("key")},

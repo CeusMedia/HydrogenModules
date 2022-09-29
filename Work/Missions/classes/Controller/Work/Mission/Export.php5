@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\FS\File\ICal\Builder as IcalFileBuilder;
 use CeusMedia\Common\FS\File\ICal\Parser as IcalFileParser;
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\Common\XML\DOM\Node as XmlNode;
 
 class Controller_Work_Mission_Export extends Controller_Work_Mission
@@ -30,7 +31,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 					$ical		= $this->exportAsIcal();
 					if( $this->request->has( 'download' ) ){
 						$fileName	= 'ical_'.date( 'Ymd' ).'.ics';
-						Net_HTTP_Download::sendString( $ical , $fileName );					//  deliver downloadable file
+						HttpDownload::sendString( $ical , $fileName );					//  deliver downloadable file
 					}
 					else{
 						$mimeType	= "text/calendar";

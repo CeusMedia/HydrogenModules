@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class Controller_Admin_Cache extends Controller
 {
@@ -8,7 +9,6 @@ class Controller_Admin_Cache extends Controller
 	{
 		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$cache	= $this->getCache();
-		$result	= NULL;
 		if( $cache ){
 			$words	= (object) $this->getWords( 'add' );
 			$key	= $post->get( 'key' );
@@ -24,7 +24,7 @@ class Controller_Admin_Cache extends Controller
 			if( !strlen( trim( $key ) ) )
 				$this->env->getMessenger()->noteError( $words->errorKeyMissing );
 			else
-				$result	= $cache->set( $key, $value );
+				$cache->set( $key, $value );
 		}
 		$this->restart( NULL, TRUE );
 	}
@@ -48,9 +48,12 @@ class Controller_Admin_Cache extends Controller
 		$this->addData( 'list', $list );
 	}
 
-	protected function getCache()
+	/**
+	 *	@return		SimpleCacheInterface|NULL
+	 */
+	protected function getCache(): ?SimpleCacheInterface
 	{
-		$env	= $this->env->has( 'remote' ) ? $this->env->getRemote() : $this->env;
+		$env	= $this->env->has( 'remote' ) ? $this->env->get( 'remote' ) : $this->env;
 		if( $env->has( 'cache' ) )
 			return $env->getCache();
 		return NULL;

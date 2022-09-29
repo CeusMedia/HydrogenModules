@@ -1,11 +1,20 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object[] $categories */
+/** @var string|NULL $filterCategory */
 
 $w	= (object) $words['index-filter'];
 
 $iconSearch		= HtmlTag::create( 'i', '', array( 'class' => 'icon-zoom-in' ) );
-$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'icon-toom-out' ) );
+$iconReset		= HtmlTag::create( 'i', '', array( 'class' => 'icon-zoom-out' ) );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconSearch		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-search' ) );
 	$iconReset		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-fw fa-search-minus' ) );

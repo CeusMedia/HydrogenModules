@@ -4,6 +4,7 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\INI\Reader as IniFileReader;
 use CeusMedia\Common\FS\Folder\Lister as FolderLister;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\Common\UI\Image\Exif as ImageExif;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -20,7 +21,7 @@ class Controller_Gallery extends Controller
 		$uri	= $this->path.$source;
 		if( !file_exists( $uri ) )
 			throw new RuntimeException( 'File is not existing.' );
-		Net_HTTP_Download::sendFile( $uri );
+		HttpDownload::sendFile( $uri );
 	}
 
 	/**

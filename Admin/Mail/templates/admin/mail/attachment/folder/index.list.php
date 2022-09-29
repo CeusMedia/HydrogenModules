@@ -1,10 +1,18 @@
 <?php
+
 use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Modal\Dialog as ModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as ModalTrigger;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as Html;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
 
-use UI_HTML_Tag as Html;
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var string[] $folders */
+/** @var string[] $files */
 
 $iconRemove		= new Icon( 'remove' );
 $iconUpload		= new Icon( 'folder-open' );

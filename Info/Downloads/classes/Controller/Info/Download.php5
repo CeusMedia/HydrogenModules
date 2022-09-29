@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
@@ -55,7 +56,7 @@ class Controller_Info_Download extends Controller
 			'nrDownloads'	=> $file->nrDownloads++,
 			'downloadedAt'	=> time(),
 		) );
-		Net_HTTP_Download::sendFile( $path.$file->title );
+		HttpDownload::sendFile( $path.$file->title );
 		exit;
 	}
 

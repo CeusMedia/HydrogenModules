@@ -2,9 +2,10 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Admin_Server extends Controller{
-
-	public function add(){
+class Controller_Admin_Server extends Controller
+{
+	public function add()
+	{
 		$model	= new Model_Server( $this->env );
 		$words	= (object) $this->getWords( 'add' );
 		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
@@ -18,7 +19,7 @@ class Controller_Admin_Server extends Controller{
 					'description'	=> $post->get( 'description' ),
 					'createdAt'		=> time(),
 				);
-				$serverId	= $model->add( $data );
+				$model->add( $data );
 				$this->env->getMessenger()->noteSuccess( $words->msgSuccess );
 				$this->restart( NULL, TRUE );
 			}
@@ -29,7 +30,8 @@ class Controller_Admin_Server extends Controller{
 		$this->addData( 'server', (object) $server );
 	}
 
-	public function addProject( $serverId ){
+	public function addProject( string $serverId )
+	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'addProject' );
@@ -48,7 +50,8 @@ class Controller_Admin_Server extends Controller{
 		$this->restart( './admin/server/edit/'.$serverId );
 	}
 
-	public function edit( $serverId ){
+	public function edit( string $serverId )
+	{
 		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$words	= (object) $this->getWords( 'edit' );
 		$model	= new Model_Server( $this->env );
@@ -85,16 +88,20 @@ class Controller_Admin_Server extends Controller{
 		$this->addData( 'serverProjects', $relations );
 	}
 
-	public function filter(){}
+	public function filter()
+	{
+	}
 
-	public function index(){
-		$session	= $this->env->getSession();
+	public function index()
+	{
+//		$session	= $this->env->getSession();
 		$model		= new Model_Server( $this->env );
 		$conditions	= [];
 		$this->addData( 'servers', $model->getAll( $conditions ) );
 	}
 
-	public function view( $serverId ){
+	public function view( string $serverId )
+	{
 		$model	= new Model_Server( $this->env );
 		$server	= $model->get( $serverId );
 		$words	= (object) $this->getWords( 'view' );
@@ -103,14 +110,22 @@ class Controller_Admin_Server extends Controller{
 		$this->addData( 'server', $server );
 	}
 
-	public function remove( $serverId ){
+	public function remove( string $serverId )
+	{
 		$model	= new Model_Server( $this->env );
+		$server	= $model->get( $serverId );
+		if( $server ){
+			$modelRelation	= new Model_Server_Project( $this->env );
+			$modelRelation->removeByIndex( 'serverId', $serverId );
+			$model->remove( $serverId );
+		}
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeProject( $serverProjectId ){
+	public function removeProject( string $serverProjectId )
+	{
 		$model	= new Model_Server_Project( $this->env );
+		$model->remove( $serverProjectId );
 		$this->restart( NULL, TRUE );
 	}
 }
-?>

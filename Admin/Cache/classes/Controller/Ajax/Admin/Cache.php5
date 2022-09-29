@@ -7,10 +7,14 @@ class Controller_Ajax_Admin_Cache extends AjaxController
 	public function remove()
 	{
 		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
-		$cache	= $this->getCache();
+		$cache	= $this->env->getCache();
 		$result	= NULL;
-		if( $cache )
-			$result	= $cache->remove( $post->get( 'key' ) );
+		$key	= $post->get( 'key' );
+		try{
+			$result	= $cache->delete( $key );
+		}
+		catch( \Psr\SimpleCache\InvalidArgumentException $e ){
+		}
 		$this->respondData( $result );
 	}
 }

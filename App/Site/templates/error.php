@@ -1,10 +1,10 @@
 <?php
 
-use UI_HTML_Exception_View as ExceptionView;
-use UI_HTML_PageFrame as HtmlPage;
-use UI_HTML_JQuery as JQuery;
-use UI_HTML_Tag as HtmlTag;
-use UI_Template as Template;
+use CeusMedia\Common\UI\HTML\Exception\View as ExceptionView;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
+use CeusMedia\Common\UI\HTML\JQuery as JQuery;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\Template as Template;
 
 //  --  Basic HTML Page Setup  --  //
 

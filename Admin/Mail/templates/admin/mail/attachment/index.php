@@ -1,12 +1,20 @@
 <?php
-//$panelAdd		= $this->loadTemplateFile( 'admin/mail/attachment/add.php' );
-//$panelUpload	= $this->loadTemplateFile( 'admin/mail/attachment/upload.php' );
-$panelFilter	= $this->loadTemplateFile( 'admin/mail/attachment/index.filter.php' );
-$panelList		= $this->loadTemplateFile( 'admin/mail/attachment/index.list.php' );
 
-$w			= (object) $words['index'];
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/attachment/' ) );
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+
+//$panelAdd		= $view->loadTemplateFile( 'admin/mail/attachment/add.php' );
+//$panelUpload	= $view->loadTemplateFile( 'admin/mail/attachment/upload.php' );
+$panelFilter	= $view->loadTemplateFile( 'admin/mail/attachment/index.filter.php' );
+$panelList		= $view->loadTemplateFile( 'admin/mail/attachment/index.list.php' );
+
+$w		= (object) $words['index'];
+
+[$textTop, $textBottom] = $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/attachment/' );
 
 $tabs	= View_Admin_Mail_Attachment::renderTabs( $env, '' );
 

@@ -1,6 +1,16 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object $project */
+/** @var string $projectId */
+/** @var object[] $versions */
 
 $optStatus	= $words['version-states'];
 ksort( $optStatus );
@@ -23,11 +33,11 @@ $panelAddVersion	= '
 				</li>
 				<li>
 					'.HtmlTag::create( 'label', 'Titel' ).'<br/>
-					'.HtmlElements::Input( 'title', NULL ).'
+					'.HtmlElements::Input( 'title' ).'
 				</li>
 				<li>
 					'.HtmlTag::create( 'label', 'Beschreibung' ).'<br/>
-					'.HtmlElements::Textarea( 'description', NULL ).'
+					'.HtmlElements::Textarea( 'description' ).'
 				</li>
 			</ul>
 			<div class="buttonbar">
@@ -101,4 +111,3 @@ return '
 	'.$panelEdit.'
 </div>
 <div class="column-clear"></div>';
-?>

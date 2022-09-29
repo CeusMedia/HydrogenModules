@@ -1,11 +1,16 @@
 <?php
 
+use CeusMedia\Common\FS\Folder;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Backup extends Controller
 {
+	protected $request;
+	protected $session;
+	protected $messenger;
+	protected $model;
 	protected $moduleConfig;
-	protected $path;
+	protected $pathFiles;
 	protected $filterPrefix				= 'filter_admin_backup_';
 	protected $defaultLimit				= 10;
 	protected $defaultOrderColumn		= 'createdAt';
@@ -15,22 +20,22 @@ class Controller_Admin_Backup extends Controller
 	public function filter( $reset = NULL )
 	{
 		if( $reset ){
-			foreach( $filters as $filterKey )
+			foreach( $this->filters as $filterKey )
 				$this->session->remove( $this->filterPrefix.$filterKey );
 			$this->session->remove( $this->filterPrefix.'page' );
 			$this->session->remove( $this->filterPrefix.'limit' );
 		}
-		foreach( $filters as $filterKey ){
+		foreach( $this->filters as $filterKey ){
 			if( $this->request->has( $filterKey ) ){
 				$filterValue = $this->request->get( $filterKey );
 				$this->session->set( $this->filterPrefix.$filterKey, $filterValue );
 			}
 		}
-		$this->session->set( $this->filterPrefix.'page', $page = 0);
+		$this->session->set( $this->filterPrefix.'page', 0);
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0, $limit = 0 )
+	public function index( $page = 0 )
 	{
 		$conditions	= [];
 		$filters	= $this->session->getAll( $this->filterPrefix, TRUE );
@@ -57,13 +62,25 @@ class Controller_Admin_Backup extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function restore( $backupId )
+	/**
+	 *	...
+	 *	@param		string		$backupId
+	 *	@return		void
+	 *	@todo		implement
+	 */
+	public function restore( string $backupId )
 	{
 		$this->messenger->noteFailure( 'Not implemented, yet' );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function remove( $backupId )
+	/**
+	 *	...
+	 *	@param		string		$backupId
+	 *	@return		void
+	 *	@todo		implement
+	 */
+	public function remove( string $backupId )
 	{
 		$this->messenger->noteFailure( 'Not implemented, yet' );
 		$this->restart( NULL, TRUE );
@@ -71,11 +88,11 @@ class Controller_Admin_Backup extends Controller
 
 	protected function __onInit()
 	{
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.admin_backup.', TRUE );
-		$this->pathFiles	= $this->moduleConfig->get( 'path' );
-		$this->model		= new Model_Backup( $this->env );
-		if( !file_exists( $this->pathFiles ) )
-			FS_Folder::createFolder( $this->pathFiles );
+		$this->moduleConfig = $this->env->getConfig()->getAll('module.admin_backup.', TRUE);
+		$this->pathFiles = $this->moduleConfig->get('path');
+		$this->model = new Model_Backup($this->env);
+		if (!file_exists($this->pathFiles))
+			new Folder( $this->pathFiles, TRUE );
 		if( !$this->session->has( $this->filterPrefix.'limit' ) )
 			$this->session->set( $this->filterPrefix.'limit', $this->defaultLimit );
 		if( !$this->session->has( $this->filterPrefix.'orderColumn' ) ){

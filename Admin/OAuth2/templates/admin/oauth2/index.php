@@ -1,6 +1,14 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object[] $providers */
 
 $iconAdd		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
@@ -9,7 +17,7 @@ $helperTime		= new View_Helper_TimePhraser( $env );
 $words	= array( 'statuses' => array(
 	-1		=> 'deaktiviert',
 	0		=> 'in Arbeit',
-	1		=> 'aktivert',
+	1		=> 'aktiviert',
 ) );
 
 $table	= HtmlTag::create( 'div', 'Keine vorhanden.', array( 'class' => 'alert alert-info' ) );
@@ -20,7 +28,7 @@ if( $providers ){
 		if( $provider->icon )
 			$icon	= HtmlTag::create( 'i', '', array( 'class' => $provider->icon ) ).'&nbsp;';
 		$label	= $icon.$provider->title;
-		if( $this->env->getAcl()->has( 'admin/oauth2', 'edit' ) )
+		if( $env->getAcl()->has( 'admin/oauth2', 'edit' ) )
 			$label	= HtmlTag::create( 'a', $label, array(
 				'href'	=> './admin/oauth2/edit/'.$provider->oauthProviderId,
 			) );
@@ -53,13 +61,13 @@ if( $providers ){
 }
 
 $buttonAdd	= '';
-if( $this->env->getAcl()->has( 'admin/oauth2', 'add' ) )
+if( $env->getAcl()->has( 'admin/oauth2', 'add' ) )
 	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neuer Anbieter', array(
 		'href'	=> './admin/oauth2/add',
 		'class' => 'btn btn-success',
 	) );
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/oauth2/' ) );
+[$textTop, $textBottom] = $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/oauth2/' );
 
 return $textTop.HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Providers' ),

@@ -2,10 +2,14 @@
 use CeusMedia\Common\FS\File\Backup as FileBackup;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\UI\HTML\Exception\View as HtmlExceptionView;
 use CeusMedia\Common\XML\Element as XmlElement;
 
 class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_Mangopay
 {
+	protected $mangopay;
+	protected $request;
+
 	public function index()
 	{
 		$sellerUserId = $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
@@ -142,7 +146,7 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 		}
 		catch( Exception $e ){
 			$this->env->getMessenger()->noteError( $e->getMessage() );
-			$this->env->getMessenger()->noteNotice( UI_HTML_Exception_View::render( $e ) );
+			$this->env->getMessenger()->noteNotice( HtmlExceptionView::render( $e ) );
 		}
 	}
 }

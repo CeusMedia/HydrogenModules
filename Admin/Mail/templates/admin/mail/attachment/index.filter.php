@@ -1,5 +1,14 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var string[] $files */
+/** @var string[] $classes */
 
 $w	= (object) $words['filter'];
 
@@ -60,4 +69,3 @@ return '
 	</div>
 </div>
 ';
-?>

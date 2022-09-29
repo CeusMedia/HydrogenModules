@@ -1,4 +1,11 @@
 <?php
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object $server */
 
 return '
 <div class="content-panel"

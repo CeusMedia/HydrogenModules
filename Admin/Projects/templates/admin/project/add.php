@@ -1,6 +1,13 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
 
 $title		= empty( $title ) ? '' : $title;
 $description	= empty( $description ) ? '' : $description;
@@ -41,6 +48,5 @@ return '
 		</fieldset>
 	</form>
 </div>
-
 ';
-?>
+

@@ -1,10 +1,12 @@
 <?php
 
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Mail_Attachment extends Controller
 {
+	protected $request;
 	protected $model;
 	protected $path;
 	protected $messenger;
@@ -43,16 +45,16 @@ class Controller_Admin_Mail_Attachment extends Controller
 			if( !$this->messenger->gotError() ){
 				$languages	= explode( ",", $language );
 				foreach( $languages as $language ){
-					if( strlen( trim( $language ) ) ){
-						$data	= array(
-							'status'	=> (int) (bool) $this->request->get( 'status' ),
-							'language'	=> $language,
-							'className'	=> $class,
-							'filename'	=> $file,
-							'mimeType'	=> $files[$file]->mimeType,
-							'createdAt'	=> time(),
-						);
-					}
+					if( 0 === strlen( trim( $language ) ) )
+						continue;
+					$data	= array(
+						'status'	=> (int) (bool) $this->request->get( 'status' ),
+						'language'	=> $language,
+						'className'	=> $class,
+						'filename'	=> $file,
+						'mimeType'	=> $files[$file]->mimeType,
+						'createdAt'	=> time(),
+					);
 					$this->model->add( $data );
 				}
 				$this->messenger->noteSuccess(
@@ -68,7 +70,7 @@ class Controller_Admin_Mail_Attachment extends Controller
 	public function download( $fileName )
 	{
 		$fileName	= urldecode( $fileName );
-		Net_HTTP_Download::sendFile( $this->path.$fileName, $fileName );
+		HttpDownload::sendFile( $this->path.$fileName, $fileName );
 	}
 
 	public function filter( $reset = NULL )
@@ -127,6 +129,8 @@ class Controller_Admin_Mail_Attachment extends Controller
 			$conditions['language']		= $filterLanguage;
 
 		$orders	= [];
+		if( $filterOrder && $filterDirection )
+			$orders	= [$filterOrder, $filterDirection];
 		$limit	= max( (int) $filterLimit, 10 );
 		$limits	= array( (int) $page * $limit, $limit );
 
@@ -193,7 +197,7 @@ class Controller_Admin_Mail_Attachment extends Controller
 		$this->addData( 'languages', $this->languages );
 	}
 
-	protected function listFiles()
+	protected function listFiles(): array
 	{
 		$list	= [];
 		foreach( RecursiveFolderLister::getFileList( $this->path ) as $entry ){

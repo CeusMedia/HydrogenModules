@@ -1,6 +1,15 @@
 <?php
+
+use CeusMedia\Common\Net\HTTP\Status as HttpStatus;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object[] $routes */
 
 $iconAdd	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 
@@ -9,7 +18,7 @@ if( $routes ){
 	$rows	= [];
 	foreach( $routes as $id => $route ){
 		$regex	= $route->regex ? 'ja' : 'nein';
-		$code	= $route->code ? HtmlTag::create( 'abbr', $route->code, array( 'title' => Net_HTTP_Status::getText( $route->code ) ) ) : '-';
+		$code	= $route->code ? HtmlTag::create( 'abbr', $route->code, array( 'title' => HttpStatus::getText( $route->code ) ) ) : '-';
 		$status	= $route->status ? 'aktiv' : 'inaktiv';
 		$status	= HtmlTag::create( 'span', $status, array( 'class' => 'label '.( $route->status ? 'label-success' : 'label-important' ) ) );
 
@@ -18,7 +27,7 @@ if( $routes ){
 			$buttons[]	= HtmlTag::create( 'a', '<i class="icon-eye-open"></i>', array( 'href' => $route->source, 'target' => '_blank', 'class' => 'btn btn-small' ) );
 		$buttons[]	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-pencil"></i>', array( 'href' => './admin/route/edit/'.$id, 'class' => 'btn btn-small' ) );
 //		if( !$route->status )
-//			$buttons[]	= HtmlTag::create( 'a', '<i class="icon-ok icon-white"></i>', array( 'href' => './admin/route/activate/'.$id, 'class' => 'btn btn-small btn-success', 'title' => 'activieren' ) );
+//			$buttons[]	= HtmlTag::create( 'a', '<i class="icon-ok icon-white"></i>', array( 'href' => './admin/route/activate/'.$id, 'class' => 'btn btn-small btn-success', 'title' => 'aktivieren' ) );
 //		else
 //			$buttons[]	= HtmlTag::create( 'a', '<i class="icon-remove icon-white"></i>', array( 'href' => './admin/route/deactivate/'.$id, 'class' => 'btn btn-small btn-inverse', 'title' => 'deaktivieren' ) );
 		$buttons	= HtmlTag::create( 'div', $buttons, array( 'class' => 'btn-group pull-right' ) );

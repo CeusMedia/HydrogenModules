@@ -4,11 +4,13 @@ use CeusMedia\Common\FS\Folder;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\Lister as FolderIndex;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderIndex;
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Mail_Attachment_Folder extends Controller
 {
+	protected $request;
 	protected $model;
 	protected $basePath;
 	protected $messenger;
@@ -39,7 +41,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		$fileName	= basename( $filePath );
-		Net_HTTP_Download::sendFile( $this->basePath.$filePath, $fileName );
+		HttpDownload::sendFile( $this->basePath.$filePath, $fileName );
 	}
 
 	public function index( ?string $pathEncoded = NULL )

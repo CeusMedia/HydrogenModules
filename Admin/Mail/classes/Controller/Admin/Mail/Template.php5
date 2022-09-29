@@ -189,9 +189,9 @@ class Controller_Admin_Mail_Template extends Controller
 					break;
 				default:
 					if( strlen( trim( $template->html ) ) )
-						return $this->preview( $templateId, 'html' );
+						$this->preview( $templateId, 'html' );
 					else
-						return $this->preview( $templateId, 'text' );
+						$this->preview( $templateId, 'text' );
 			}
 		}
 		catch( Exception $e ){
@@ -289,7 +289,7 @@ class Controller_Admin_Mail_Template extends Controller
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$frontend	= Logic_Frontend::getInstance( $this->env );
 			$this->appPath	= $frontend->getPath();
-			$this->appUrl	= $frontend->getUri();
+			$this->appUrl	= $frontend->getUrl();
 		}
 		else{
 			$this->appPath	= $this->env->uri;
@@ -300,7 +300,12 @@ class Controller_Admin_Mail_Template extends Controller
 		$logicMail	= Logic_Mail::getInstance( $this->env );
 	}
 
-	protected function checkTemplate( $templateId, bool $strict = TRUE )
+	/**
+	 *	@param		string		$templateId
+	 *	@param		bool		$strict
+	 *	@return		object|false
+	 */
+	protected function checkTemplate( string $templateId, bool $strict = TRUE )
 	{
 		$template	= $this->modelTemplate->get( $templateId );
 		if( $template )

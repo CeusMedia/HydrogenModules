@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var array<array<string,string>> $words */
+/** @var object $server $server */
+
 $wf		= (object) $words['add'];
 
 $optStatus	= HtmlElements::Options( $words['states'], max( 0, $server->status ) );
@@ -35,4 +38,3 @@ return '
 </div>
 <div class="column-clear"></div>
 ';
-?>

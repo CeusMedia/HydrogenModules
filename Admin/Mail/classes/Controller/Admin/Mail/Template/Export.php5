@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\String_;
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -46,28 +47,33 @@ class Controller_Admin_Mail_Template_Export extends Controller
 		switch( $output ){
 			case 'print':
 			case 'dev':
-				remark( 'Ttile: '.$template->title );
+				remark( 'Title: '.$template->title );
 				remark( 'File: '.$fileName );
 				remark( 'JSON:' );
 				xmp( $json );
 				die;
 			case 'download':
 			default:
-				Net_HTTP_Download::sendString( $json, $fileName, TRUE );
+				HttpDownload::sendString( $json, $fileName );
 		}
 	}
 
 	//  --  PROTECTED  --  //
 
-	protected function checkTemplate( $templateId, bool $strict = TRUE )
+	/**
+	 *	@param		string		$templateId
+	 *	@param		bool		$strict
+	 *	@return		object|FALSE
+	 */
+	protected function checkTemplate( string $templateId, bool $strict = TRUE )
 	{
-		$template   = $this->modelTemplate->get( $templateId );
+		$template	= $this->modelTemplate->get( $templateId );
 		if( $template )
 			return $template;
 		if( $strict )
 			throw new RangeException( 'Invalid template ID' );
 		return FALSE;
-    }
+	}
 
 	/**
 	 *	Generate JSON representing mail template.
@@ -107,7 +113,7 @@ class Controller_Admin_Mail_Template_Export extends Controller
 				'title'		=> $template->title,
 				'key'		=> $titleKey,
 				'version'	=> '0',
-				'language'	=> $template->language ? $template->language : '*',
+				'language'	=> $template->language ?: '*',
 				'contents'	=> array(
 					'text'		=> $template->plain,
 					'html'		=> $template->html,

@@ -1,6 +1,15 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object[] $projects */
+/** @var object $server */
 
 $optProject		= [];
 foreach( $projects as $project )
@@ -41,11 +50,11 @@ $panelAddProject	= '
 				</li>
 				<li>
 					'.HtmlTag::create( 'label', 'Titel' ).'<br/>
-					'.HtmlElements::Input( 'title', NULL ).'
+					'.HtmlElements::Input( 'title' ).'
 				</li>
 				<li class="column-clear">
 					'.HtmlTag::create( 'label', 'Beschreibung' ).'<br/>
-					'.HtmlElements::Textarea( 'description', NULL ).'
+					'.HtmlElements::Textarea( 'description' ).'
 				</li>
 			</ul>
 			<div class="buttonbar">
@@ -60,10 +69,10 @@ $(document).ready(function(){
 			url: "./admin/project/ajaxGetVersions/"+$("#projectId").val(),
 			dataType: "json",
 			success: function(data){
-				var select = $("#projectVersionId");
+				let select = $("#projectVersionId");
 				select.html("");
-				var option;
-				for(i in data){
+				let option;
+				for(let i in data){
 					option = $("<option></option>");
 					option.attr("value",data[i].projectVersionId);
 					option.html(data[i].version+" "+data[i].title);
@@ -78,4 +87,3 @@ $(document).ready(function(){
 ';
 
 return $panelAddProject;
-?>

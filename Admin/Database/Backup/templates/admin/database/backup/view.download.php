@@ -1,6 +1,14 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object $backup */
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-list' ) );
 $iconRestore	= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-cog' ) );
@@ -21,7 +29,7 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<p>
-						Die Datei kann als SQL-Script herunter geladen werden.<br/>
+						Die Datei kann als SQL-Script heruntergeladen werden.<br/>
 					</p>
 					<div class="alert alert-notice">
 						Diese Datei dient ausschließlich der manuellen Datensicherung und ist nicht für den Import von Daten vorgesehen.

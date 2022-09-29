@@ -1,11 +1,18 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object[] $backups */
 
 $list	= '<div class="alert alert-info">Keine Backups vorhanden.</div>';
 if( $backups ){
 	$rows	= [];
 	foreach( $backups as $backup ){
-		$rows[]	= U_HTML_Tag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $backup->backupId ),
 			HtmlTag::create( 'td', $backup->createdAt ),
 		) );

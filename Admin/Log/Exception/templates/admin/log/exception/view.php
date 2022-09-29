@@ -4,6 +4,13 @@ use CeusMedia\Common\CLI\ArgumentParser;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object $server */
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconRemove		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-remove' ) );
@@ -138,7 +145,7 @@ function renderRequestSection( $env, $exception, $exceptionRequest ): ?string
 	$xmpStyle	= 'overflow: auto; border: 1px solid gray; background-color: #EFEFEF; padding: 1em 2em';
 
 	$sectionRequestHeaders	= '';
-	if( get_class( $exceptionRequest ) !== 'CLI_ArgumentParser' ){
+	if( get_class( $exceptionRequest ) !== ArgumentParser::class ){
 		$methodLine				= 'Method: '.$exceptionRequest->getMethod()->get().PHP_EOL;
 		$lines					= $exceptionRequest->getHeaders()->render();
 		$requestHeaders			= HtmlTag::create( 'xmp', $methodLine.$lines, array( 'style' => $xmpStyle ) );

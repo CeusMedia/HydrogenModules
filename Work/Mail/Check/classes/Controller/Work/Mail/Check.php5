@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\FS\File\CSV\Reader as CsvFileReader;
 use CeusMedia\Common\FS\File\CSV\Writer as CsvFileWriter;
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Mail_Check extends Controller
@@ -235,7 +236,7 @@ class Controller_Work_Mail_Check extends Controller
 					$writer->write( $data, $columns, TRUE );
 			}
 			$date	= date( 'Y-m-d' );
-			Net_HTTP_Download::sendFile( $fileName, $group->title.'_'.$date.$extension, TRUE );
+			HttpDownload::sendFile( $fileName, $group->title.'_'.$date.$extension, TRUE );
 		}
 		$this->addData( 'groups', $this->modelGroup->getAll( array(), array( 'title' => 'ASC' ) ) );
 	}

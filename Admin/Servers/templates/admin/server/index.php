@@ -1,5 +1,13 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object[] $servers */
 
 $wf		= (object) $words['index'];
 
@@ -23,4 +31,3 @@ return '
 		'.HtmlElements::LinkButton( './admin/server/add', $wf->buttonAdd, 'button add' ).'
 	</div>
 </fieldset>';
-?>

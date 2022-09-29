@@ -1,5 +1,12 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+
 $panelFacts		= $view->loadTemplateFile( 'admin/database/backup/view.facts.php' );
 $panelCopy		= $view->loadTemplateFile( 'admin/database/backup/view.copy.php' );
 $panelDownload	= $view->loadTemplateFile( 'admin/database/backup/view.download.php' );

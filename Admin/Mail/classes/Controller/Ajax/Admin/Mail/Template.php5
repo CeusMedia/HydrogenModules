@@ -8,7 +8,7 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 
 	public function render( $templateId )
 	{
-		$template	= $this->checkTemplate( $templateId );
+		$this->checkTemplate( $templateId );
 		$mail		= new Mail_Test( $this->env, array( 'mailTemplateId' => $templateId ) );
 		$helper		= new View_Helper_Mail_View_HTML( $this->env );
 		$helper->setMailObjectInstance( $mail );
@@ -55,5 +55,20 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 	protected function __onInit()
 	{
 		$this->modelTemplate	= new Model_Mail_Template( $this->env );
+	}
+
+	/**
+	 *	@param		string		$templateId
+	 *	@param		bool		$strict
+	 *	@return		object|FALSE
+	 */
+	protected function checkTemplate( string $templateId, bool $strict = TRUE )
+	{
+		$template	= $this->modelTemplate->get( $templateId );
+		if( $template )
+			return $template;
+		if( $strict )
+			throw new RangeException( 'Invalid template ID' );
+		return FALSE;
 	}
 }

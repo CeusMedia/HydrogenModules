@@ -13,7 +13,7 @@ class Hook_Admin_Mail_Queue extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onRegisterDashboardPanels( Environment $env, $context, $module, $payload = [] )
+	static public function onRegisterDashboardPanels( Environment $env, object $context, object $module, array & $payload )
 	{
 		if( !$env->getAcl()->has( 'admin/mail/queue', 'ajaxRenderDashboardPanel' ) )
 			return;

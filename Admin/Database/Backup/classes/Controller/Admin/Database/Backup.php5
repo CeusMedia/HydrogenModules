@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Database_Backup extends Controller
@@ -43,7 +44,7 @@ class Controller_Admin_Database_Backup extends Controller
 			$this->restart( 'view/'.$id, TRUE );
 		}
 		$backup	= $this->check( $id );
-		\Net_HTTP_Download::sendFile( $backup->pathname, $backup->filename, TRUE );
+		HttpDownload::sendFile( $backup->pathname, $backup->filename );
 	}
 
 	public function remove( $id )
@@ -97,11 +98,12 @@ class Controller_Admin_Database_Backup extends Controller
 		}
 	}
 
-	protected function check( $id )
+	protected function check( string $id ): ?object
 	{
 		if( ( $backup = $this->logicBackup->check( $id, FALSE ) ) )
 			return $backup;
 		$this->messenger->noteError( 'Ungültige Sicherungs-ID.' );
 		$this->restart( NULL, TRUE );
+		return NULL;
 	}
 }

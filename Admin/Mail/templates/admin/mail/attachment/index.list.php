@@ -1,7 +1,17 @@
 <?php
+
 use CeusMedia\Bootstrap\Icon;
+use CeusMedia\Bootstrap\Nav\PageControl;
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object[] $attachments */
 
 $iconEnable		= new Icon( 'toggle-on' );
 $iconDisable	= new Icon( 'toggle-off' );
@@ -31,7 +41,7 @@ if( count( $attachments ) ){
 
 		$language	= HtmlTag::create( 'span', $attachment->language, array( 'class' => 'label' ) );
 		$mimeType	= HtmlTag::create( 'span', $w->labelMimeType.' '.$attachment->mimeType );
-		$fileSize	= HtmlTag::create( 'span', $w->labelFileSize.' '.Alg_UnitFormater::formatBytes( filesize( $path.$attachment->filename ) ) );
+		$fileSize	= HtmlTag::create( 'span', $w->labelFileSize.' '.UnitFormater::formatBytes( filesize( $path.$attachment->filename ) ) );
 		$info		= HtmlTag::create( 'small', $fileSize.' | '.$mimeType, array( 'class' => 'muted' ) );
 		$label		= $language.' '.HtmlTag::create( 'big', $attachment->filename ).'<br/>'.$info;
 		$status		= (object) array (
@@ -60,7 +70,7 @@ if( count( $attachments ) ){
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array( 'class' => 'table table-striped' ) );
 }
 
-$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './admin/mail/attachment', $page, ceil( $total / $limit ) );
+$pagination	= new PageControl( './admin/mail/attachment', $page, ceil( $total / $limit ) );
 
 return '
 <!-- templates/admin/mail/attachment/index.list.php -->
@@ -71,4 +81,4 @@ return '
 		'.$pagination.'
 	</div>
 </div>';
-?>
+

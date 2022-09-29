@@ -22,7 +22,7 @@ class View_Admin_Config extends View
 	{
 	}
 
-	public function renderConfigInput( $moduleId, $item )
+	public function renderConfigInput( string $moduleId, object $item ): string
 	{
 		$isNumeric		= in_array( $item->type, array( "integer", "float" ) ) || preg_match( "/^[0-9\.]+$/", $item->value );
 		if( $item->values ){

@@ -28,7 +28,7 @@ class Controller_Admin_Mail_Template_Import extends Controller
 	public function index()
 	{
 		if( $this->request->getMethod()->isPost() ){
-			$upload	= $this->env->getLogic()->upload;
+			$upload	= $this->env->getLogic()->get( 'upload' );
 			try{
 				$upload->setUpload( $this->request->get( 'template' ) );
 			}
@@ -74,10 +74,10 @@ class Controller_Admin_Mail_Template_Import extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function getDataFromExportV1( $template )
+	protected function getDataFromExportV1( object $template ): array
 	{
 		$title		= $this->getNextTitle( $template->title );
-		$data	= array(
+		return [
 			'status'		=> Model_Mail_Template::STATUS_IMPORTED,
 			'title'			=> $title,
 			'version'		=> $template->version,
@@ -89,11 +89,10 @@ class Controller_Admin_Mail_Template_Import extends Controller
 			'images'		=> $template->links->image ? json_encode( $template->links->image ) : NULL,
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
-		);
-		return $data;
+		];
 	}
 
-	protected function getDataFromExportV2( $template )
+	protected function getDataFromExportV2( object $template ): array
 	{
 		$entity		= $template->entity;
 		$title		= $this->getNextTitle( $entity->title );
@@ -111,7 +110,7 @@ class Controller_Admin_Mail_Template_Import extends Controller
 				$files[$topic][]	= $item->filePath;
 			}
 		}
-		$data	= array(
+		return [
 			'status'		=> Model_Mail_Template::STATUS_IMPORTED,
 			'title'			=> $title,
 			'version'		=> $entity->version,
@@ -123,8 +122,7 @@ class Controller_Admin_Mail_Template_Import extends Controller
 			'images'		=> json_encode( $files['images'] ),
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
-		);
-		return $data;
+		];
 	}
 
 	protected function getNextTitle( string $title ): string

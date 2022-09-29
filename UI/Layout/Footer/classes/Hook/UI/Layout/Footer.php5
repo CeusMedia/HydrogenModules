@@ -6,10 +6,10 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_Layout_Footer extends Hook
 {
-	public static function onPageBuild( Environment $env, $context, $module, $payload )
+	public static function onPageBuild( Environment $env, object $context, $module, array & $payload )
 	{
 		$pattern	= "/^(.*)(\[footer\])(.*)$/sU";
-		if( preg_match( $pattern, $payload->content ) ){
+		if( preg_match( $pattern, $payload['content'] ) ){
 			$links	= [];
 			if( isset( $scopes->footer ) )
 				foreach( $scopes->footer as $pageId => $page )
@@ -35,7 +35,7 @@ class Hook_UI_Layout_Footer extends Hook
 			$footer		= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled' ) );
 			$footer		= HtmlTag::create( 'div', $footer, array( 'class' => 'container' ) );
 			$content	= HtmlTag::create( 'div', $footer, array( 'id' => 'layout-footer' ) );
-			$payload->content  = preg_replace( $pattern, "\\1".$content."\\4", $payload->content );
+			$payload['content']  = preg_replace( $pattern, "\\1".$content."\\4", $payload['content'] );
 		}
 	}
 }

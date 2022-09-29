@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\FS\File\CSV\Reader as CsvFileReader;
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -241,7 +242,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 					$data[]	= join( ';', $row );
 				}
 				$csv	= join( PHP_EOL, $data ).PHP_EOL;
-				Net_HTTP_Download::sendString( $csv, "export_".date( "Y-m-d_H:i:s" ).".csv", TRUE );
+				HttpDownload::sendString( $csv, "export_".date( "Y-m-d_H:i:s" ).".csv", TRUE );
 		}
 	}
 

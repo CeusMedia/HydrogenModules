@@ -13,7 +13,7 @@ class Hook_Admin_Mail_Attachment extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onRegisterTab( Environment $env, $context, $module, $payload = [] )
+	static public function onRegisterTab( Environment $env, object $context, object $module, array & $payload )
 	{
 		$words	= (object) $env->getLanguage()->getWords( 'admin/mail/attachment' );				//  load words
 		$context->registerTab( '', $words->tabs['index'], 0 );										//  register main tab

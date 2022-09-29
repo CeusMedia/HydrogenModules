@@ -1,5 +1,14 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var string[] $files */
+/** @var string[] $classes */
 
 $w			= (object) $words['add'];
 
@@ -20,7 +29,7 @@ $panelAdd	= '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
-		<form action="./admin/mail/attachment/add" metod="post">
+		<form action="./admin/mail/attachment/add" method="post">
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_file" class="mandatory required">'.$w->labelFile.'</label>
@@ -50,7 +59,7 @@ $panelAdd	= '
 	</div>
 </div>';
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/attachment/' ) );
+[$textTop, $textBottom] = $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/mail/attachment/' );
 
 $tabs	= View_Admin_Mail_Attachment::renderTabs( $env, 'add' );
 
@@ -62,4 +71,3 @@ return $tabs.$textTop.'
 	</div>
 </div>
 '.$textBottom;
-?>

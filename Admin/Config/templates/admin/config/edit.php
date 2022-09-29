@@ -1,8 +1,17 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
 
-extract( $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/config/edit/' ) );
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object $module */
+/** @var string $moduleId */
+
+[$textTop, $textBottom] = $view->populateTexts( array( 'top', 'bottom' ), 'html/admin/config/edit/' );
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'icon-arrow-left' ) );
 $iconList		= HtmlTag::create( 'i', '', array( 'class' => 'icon-list' ) );

@@ -1,6 +1,15 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object[] $providers */
+/** @var object $provider */
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
@@ -160,9 +169,9 @@ $panelForm	= HtmlTag::create( 'div', array(
 $script	= '
 	ModuleAdminOAuth2.setProviders('.json_encode( $providerMap ).');
 	ModuleAdminOAuth2.init();';
-$view->env->getPage()->runScript( $script );
+$env->getPage()->runScript( $script );
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/admin/oauth2/add/' ) );
+[$textTop, $textInfo, $textBottom] = $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/admin/oauth2/add/' );
 
 return $textTop.HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(

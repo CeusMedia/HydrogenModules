@@ -3,12 +3,16 @@
 use CeusMedia\Common\FS\File\Backup as FileBackup;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\UI\HTML\Exception\View as HtmlExceptionView;
 use CeusMedia\Common\XML\Element as XmlElement;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Config extends Controller
 {
-/*	public function direct()
+	protected $request;
+	protected $session;
+
+	/*	public function direct()
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$request	= $this->env->getRequest();
@@ -141,7 +145,7 @@ class Controller_Admin_Config extends Controller
 			$file	= new FileBackup( $fileName );
 			$fileVersion	= $file->getVersion();
 			if( $fileVersion === NULL ){
-				$this->env->getMessenger()->noteError( 'No backup available for module "'.$moduleId0.'"' );
+				$this->env->getMessenger()->noteError( 'No backup available for module "'.$moduleId.'"' );
 				$this->restart( 'module/'.$moduleId, TRUE );
 			}
 			$file->restore( -1, TRUE );
@@ -156,7 +160,6 @@ class Controller_Admin_Config extends Controller
 	public function view( $moduleId )
 	{
 		$words		= (object) $this->getWords( 'msg' );
-		$request	= $this->env->getRequest();
 		$modules	= $this->env->getModules()->getAll();
 		if( !array_key_exists( $moduleId, $modules ) ){
 			$this->env->getMessenger()->noteError( 'Invalid module ID.' );
@@ -200,7 +203,7 @@ class Controller_Admin_Config extends Controller
 		$xml		= FileReader::load( $fileName );
 		$tree		= new XmlElement( $xml );
 		try{
-			foreach( $tree->config as $nr => $node ){
+			foreach( $tree->config as $node ){
 				$type	= $node->getAttribute( 'type' );
 				$value	= $node->getValue();
 				if( in_array( $type, array ( "bool", "boolean" ) ) ){
@@ -209,7 +212,7 @@ class Controller_Admin_Config extends Controller
 				$node->setValue( $value );
 			}
 			$original	= $tree->asXml();
-			foreach( $tree->config as $nr => $node ){
+			foreach( $tree->config as $node ){
 				$name	= $node->getAttribute( 'name' );
 				$type	= $node->getAttribute( 'type' );
 				if( array_key_exists( $name, $pairs ) ){
@@ -230,7 +233,8 @@ class Controller_Admin_Config extends Controller
 		}
 		catch( Exception $e ){
 			$this->env->getMessenger()->noteError( $e->getMessage() );
-			$this->env->getMessenger()->noteNotice( UI_HTML_Exception_View::render( $e ) );
+			$this->env->getMessenger()->noteNotice( HtmlExceptionView::render( $e ) );
+			return 0;
 		}
 	}
 }

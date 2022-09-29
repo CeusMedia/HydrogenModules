@@ -6,7 +6,7 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Admin_Mail_Queue extends View
 {
-	public function ajaxRenderDashboardPanel()
+	public function ajaxRenderDashboardPanel(): string
 	{
 		$model			= new Model_Mail( $this->env );
 
@@ -37,7 +37,8 @@ class View_Admin_Mail_Queue extends View
 		foreach( $ranges as $rangeLabel )
 			$tableHeads[]	= HtmlTag::create( 'small', $rangeLabel, array( 'class' => 'pull-right' ) );
 
-		$lastRangeLength	= @array_pop( array_keys( $ranges ) );
+		$lengthKeys			= array_keys( $ranges );
+		$lastRangeLength	= @array_pop( $lengthKeys );
 
 		$rows	= [];
 		foreach( $statuses as $statusKey => $statusLabel ){
@@ -55,7 +56,7 @@ class View_Admin_Mail_Queue extends View
 				if( $rangeKey !== $lastRange->key && $data[$statusKey][$lastRange->key] > 10 ){
 					$average	= $lastRange->value ? $data[$statusKey][$lastRange->key] / $lastRange->key : 0;
 					$capacity	= $data[$statusKey][$rangeKey] / $rangeKey;
-					$change		= $average ? round( ( ( $capacity / $average ) - 1 ) * 100, 0 ) : 0;
+					$change		= $average ? round( ( ( $capacity / $average ) - 1 ) * 100 ) : 0;
 					$diff		= $change > 0 ? '+'.$change : $change;
 					$label		.= '&nbsp;<small class="muted">'.$diff.'</small>';
 				}
@@ -111,11 +112,11 @@ class View_Admin_Mail_Queue extends View
 	{
 	}
 
-	public function renderFact( $key, $value )
+	public function renderFact( $key, $value ): string
 	{
 		$words	= $this->env->getLanguage()->getWords( 'admin/mail/queue' );
-		if( in_array( $key, array( 'object' ) ) )
-			return;
+		if($key === 'object')
+			return '';
 		if( $key === 'status' ){
 			$value = $words['states'][$value].' <small class="muted">('.$value.')</small>';
 		}
@@ -127,7 +128,7 @@ class View_Admin_Mail_Queue extends View
 		}
 		else if( preg_match( '/At$/', $key ) ){
 			if( !( (int) $value ) )
-				return;
+				return '';
 			$helper	= new View_Helper_TimePhraser( $this->env );
 			$date	= date( 'Y-m-d H:i:s', $value );
 			$phrase	= $helper->convert( $value, TRUE, 'vor ' );
@@ -135,19 +136,16 @@ class View_Admin_Mail_Queue extends View
 		}
 		else if( preg_match( '/Id$/', $key ) ){
 			if( (int) $value === 0 )
-				return;
+				return '';
 		}
 		else if( preg_match( '/Address/', $key ) && strlen( $value ) ){
 			$icon	= HtmlTag::create( 'i', '', array( 'class' => 'icon-envelope' ) );
 			$link	= HtmlTag::create( 'a', $value, array( 'href' => 'mailto:'.$value ) );
 			$value	= $icon.'&nbsp;'.$link;
 		}
-		else if( $key === "status" ){
-			$value = $words['states'][$value].' <small class="muted">('.$value.')</small>';
-		}
 		else{
 			if( !strlen( $value ) )
-				return;
+				return '';
 		}
 		$label	= $words['view-facts']['label'.ucfirst( $key )];
 		$term	= HtmlTag::create( 'dt', $label );

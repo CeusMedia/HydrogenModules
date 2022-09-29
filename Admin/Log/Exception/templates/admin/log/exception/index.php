@@ -1,7 +1,15 @@
 <?php
 
-$panelList		= $this->loadTemplateFile( 'admin/log/exception/index.list.php' );
-$panelFilter	= $this->loadTemplateFile( 'admin/log/exception/index.filter.php' );
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object $server */
+
+$panelList		= $view->loadTemplateFile( 'admin/log/exception/index.list.php' );
+$panelFilter	= $view->loadTemplateFile( 'admin/log/exception/index.filter.php' );
 
 return '
 <div class="row-fluid">

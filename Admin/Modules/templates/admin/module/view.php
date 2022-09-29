@@ -3,6 +3,13 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tabs as HtmlTabs;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object $module */
 
 $classes	= '-';
 if( $module->files->classes ){
@@ -78,9 +85,9 @@ $buttonCopy			= HtmlElements::LinkButton( './admin/module/copy/'.$module->id, $w
 $disabled			= $module->type == 4 ? 'disabled' : '';
 $buttonUninstall	= HtmlElements::LinkButton( './admin/module/uninstall/'.$module->id, $words['view']['buttonRemove'], 'button remove', 'Die Modulkopie oder -referenz wird gelöscht. Wirklich?', $disabled );
 
-UI_HTML_Tabs::$version	= 3;
+HtmlTabs::$version	= 3;
 $tabs	= new HtmlTabs();
-$this->env->page->js->addScript( '$(document).ready(function(){'.$tabs->buildScript( '#tabs-module' ).'});' );
+$env->getPage()->js->addScript( '$(document).ready(function(){'.$tabs->buildScript( '#tabs-module' ).'});' );
 /*$this->env->page->js->addUrl( 'http://js.ceusmedia.com/jquery/ui/1.8.4/min.js' );
 $this->env->page->css->theme->addUrl( 'http://js.ceusmedia.com/jquery/ui/1.8.4/css/smoothness.css' );
 */
@@ -137,4 +144,3 @@ return '
 <h2>Module "'.$module->title.'"</em></h2>
 '.$tabs->buildTabs( 'tabs-module' ).'
 ';
-?>

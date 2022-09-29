@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Form_Fill extends Controller
@@ -62,7 +63,7 @@ class Controller_Manage_Form_Fill extends Controller
 			$csv		= $this->logicFill->renderToCsv( $type, $ids );
 
 		$fileName	= 'Export_'.date( 'Y-m-d_H:i:s' ).'.csv';
-		Net_HTTP_Download::sendString( $csv, $fileName, TRUE );
+		HttpDownload::sendString( $csv, $fileName, TRUE );
 //		xmp( $csv );
 //		die;
 	}
@@ -313,7 +314,7 @@ class Controller_Manage_Form_Fill extends Controller
 
 	protected function checkIsAjax( bool $strict = TRUE )
 	{
-		if( $request->isAjax() )
+		if( $this->env->getRequest()->isAjax() )
 			return TRUE;
 		if( $strict )
 			throw new RuntimeException( 'AJAX requests allowed only' );

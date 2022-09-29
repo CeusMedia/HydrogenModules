@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Exception\View as ExceptionView;
+
 if( !( isset( $response->exception ) && $response->exception ) )
 	return '';
 
@@ -11,7 +13,7 @@ if( 1 || $response->data <= -100 ){
 		if( 1 || ( $instance->getCode() >= 200 && $instance->getCode() < 300 ) ){
 			$exception->message	= $instance->getMessage();
 			$exception->code	= $instance->getCode();
-			$exception->view	= UI_HTML_Exception_View::render( $instance );
+			$exception->view	= ExceptionView::render( $instance );
 		}
 		unset( $response->serial );
 	}

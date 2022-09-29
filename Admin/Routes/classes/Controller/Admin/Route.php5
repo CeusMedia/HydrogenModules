@@ -1,10 +1,14 @@
 <?php
 
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\XML\DOM\Builder as XmlBuilder;
 use CeusMedia\Common\XML\DOM\Node as XmlNode;
+use CeusMedia\Common\XML\ElementReader as XmlReader;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Route extends Controller
 {
+	protected $request;
 	protected $frontend;
 	protected $fileName;
 	protected $model;
@@ -12,7 +16,7 @@ class Controller_Admin_Route extends Controller
 	protected $routes			= [];
 	protected $routeMapBySource	= [];
 
-	public function activate( $id )
+	public function activate( string $id )
 	{
 		switch( $this->source ){
 			case 'Database':
@@ -33,7 +37,7 @@ class Controller_Admin_Route extends Controller
 		if( $this->request->has( 'save' ) ){
 			switch( $this->source ){
 				case 'Database':
-					$route	= $this->model->add( array(
+					$this->model->add( array(
 						'status'	=> $this->request->get( 'status' ),
 						'regex'		=> $this->request->get( 'regex' ),
 						'code'		=> $this->request->get( 'code' ),
@@ -145,7 +149,7 @@ class Controller_Admin_Route extends Controller
 			default:
 				$this->fileName	= $this->frontend->getPath()."config/routes.xml";
 				if( file_exists( $this->fileName ) ){
-					$xml	= XML_ElementReader::readFile( $this->fileName );
+					$xml	= XmlReader::readFile( $this->fileName );
 					foreach( $xml as $route ){
 						$id	= md5( (string) $route->source );
 						$this->routes[$id]	= (object) array(
@@ -169,7 +173,10 @@ class Controller_Admin_Route extends Controller
 		$this->addData( 'routesBySource', $this->routeMapBySource );
 	}
 
-	protected function saveRoutes()
+	/**
+	 *	@return		int
+	 */
+	protected function saveRoutes(): int
 	{
 		$root	= new XmlNode( 'routes' );
 		foreach( $this->routes as $route ){
@@ -181,7 +188,13 @@ class Controller_Admin_Route extends Controller
 			$child->setAttribute( 'code', (int) $route->code );
 			$root->addChild( $child );
 		}
-		$xml	= XML_DOM_Builder::build( $root );
-		return File_Writer::save( $this->fileName, $xml );
+		try{
+			$xml	= XmlBuilder::build( $root );
+			return FileWriter::save( $this->fileName, $xml );
+		}
+		catch( DOMException $e ){
+			$this->env->getMessenger()->noteError( 'Generating routes XML failed: '.$e->getMessage() );
+			return 0;
+		}
 	}
 }

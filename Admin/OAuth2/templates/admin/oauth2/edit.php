@@ -1,5 +1,13 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object $provider */
 
 $iconCancel		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-left' ) );
 $iconSave		= HtmlTag::create( 'i', '', array( 'class' => 'fa fa-fw fa-check' ) );
@@ -177,7 +185,7 @@ $hint	= '';
 if( !$exists )
 	$hint	= HtmlTag::create( 'div', 'Anbieter-Bibliothek existiert nicht. Bitte Composer-Paket <strong><tt>'.$provider->composerPackage.'</tt></strong> installieren!', array( 'class' => 'alert alert-important' ) );
 
-$view->env->getPage()->runScript( 'ModuleAdminOAuth2.init()' );
+$env->getPage()->runScript( 'ModuleAdminOAuth2.init()' );
 
 $panelForm	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Provider' ),
@@ -187,7 +195,7 @@ $panelForm	= HtmlTag::create( 'div', array(
 	), array( 'class' => 'content-panel-inner' ) ),
 ), array( 'class' => 'content-panel' ) );
 
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/admin/oauth2/edit/' ) );
+[$textTop, $textInfo, $textBottom] = $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/admin/oauth2/edit/' );
 
 return $textTop.HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(

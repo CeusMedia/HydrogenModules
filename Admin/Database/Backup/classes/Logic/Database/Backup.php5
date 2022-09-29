@@ -8,11 +8,18 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Database_Backup extends Logic
 {
-	protected $dumps;
-
+	protected $comments				= [];
+	protected $dumps				= [];
+	protected $commentsFile;
+	protected $path;
 	protected $prefixPlaceholder	= '<%?prefix%>';
 
-	public function check( $id, bool $strict = TRUE )
+	/**
+	 *	@param		string		$id
+	 *	@param		bool		$strict
+	 *	@return		object|false
+	 */
+	public function check( string $id, bool $strict = TRUE )
 	{
 		if( array_key_exists( $id, $this->dumps ) )
 			return $this->dumps[$id];
@@ -21,7 +28,7 @@ class Logic_Database_Backup extends Logic
 		return FALSE;
 	}
 
-	public function dump( string $comment = NULL )
+	public function dump( string $comment = NULL ): string
 	{
 		$filename	= "dump_".date( "Y-m-d_H:i:s" ).".sql";
 		$pathname	= $this->path.$filename;
@@ -85,16 +92,15 @@ class Logic_Database_Backup extends Logic
 		return $this->dumps;
 	}
 
-	public function load( $id, string $dbName, string $prefix = NULL )
+	public function load( string $id, string $dbName, string $prefix = NULL ): void
 	{
 		$dump	= $this->check( $id );
 		if( !is_readable( $dump->pathname ) )
 			throw new RuntimeException( 'Missing read access to SQL script' );
 
-		$dbc		= $this->env->getDatabase();
 		$dba		= $this->config->getAll( 'module.resource_database.access.', TRUE );
-		$dbName		= $dbName ? $dbName : $dba->get( 'name' );
-		$prefix		= $prefix ? $prefix : $dba->get( 'prefix' );
+		$dbName		= $dbName ?: $dba->get( 'name' );
+		$prefix		= $prefix ?: $dba->get( 'prefix' );
 
 		$tempName	= $dump->pathname.".tmp";
 		$fpIn		= fopen( $dump->pathname, "r" );									//  open source file
@@ -111,7 +117,7 @@ class Logic_Database_Backup extends Logic
 			escapeshellarg( $dba->get( 'host' ) ),										//  configured host as escaped shell arg
 			escapeshellarg( $dba->get( 'port' ) ? $dba->get( 'port' ) : 3306 ),			//  configured port as escaped shell arg
 			escapeshellarg( $dba->get( 'username' ) ),									//  configured username as escaped shell arg
-			escapeshellarg( $dba->get( 'password' ) ),									//  configured pasword as escaped shell arg
+			escapeshellarg( $dba->get( 'password' ) ),									//  configured password as escaped shell arg
 			escapeshellarg( $dbName ),													//  configured database name as escaped shell arg
 			escapeshellarg( $tempName ),												//  temp file name as escaped shell arg
 		) );
@@ -119,13 +125,13 @@ class Logic_Database_Backup extends Logic
 		unlink( $tempName );
 	}
 
-	public function remove( $id )
+	public function remove( string $id ): void
 	{
 		$dump	= $this->check( $id );
 		@unlink( $dump->pathname );
 		if( array_key_exists( $id, $this->comments ) ){
 			unset( $this->comments[$id] );
-			\JsonFileWriter::save( $this->commentsFile, $this->comments );
+			JsonFileWriter::save( $this->commentsFile, $this->comments );
 		}
 	}
 

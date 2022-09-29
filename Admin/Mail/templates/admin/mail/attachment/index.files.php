@@ -1,7 +1,15 @@
 <?php
 
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var string[] $files */
 
 $w	= (object) $words['index.files'];
 
@@ -35,7 +43,7 @@ if( $files ){
 		) );
 
 		$mimeType	= HtmlTag::create( 'span', $w->labelMimeType.': '.$file->mimeType );
-		$fileSize	= HtmlTag::create( 'span', $w->labelFileSize.': '.Alg_UnitFormater::formatBytes( filesize( $path.$file->fileName ) ) );
+		$fileSize	= HtmlTag::create( 'span', $w->labelFileSize.': '.UnitFormater::formatBytes( filesize( $path.$file->fileName ) ) );
 		$info		= HtmlTag::create( 'small', $fileSize.' | '.$mimeType, array( 'class' => 'muted' ) );
 
 		$buttons	= array( $buttonDownload, $buttonRemove );

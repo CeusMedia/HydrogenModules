@@ -1,9 +1,12 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Ip_Lock_Transport extends Controller
 {
+	protected $request;
+
 	public function index()
 	{
 		$reasons	= $this->modelReason->getAll( array(), array( 'title' => 'ASC' ) );
@@ -40,7 +43,7 @@ class Controller_Manage_Ip_Lock_Transport extends Controller
 		if( !preg_match( '/\.\S+$/', $fileName ) )
 			$fileName	.= '.json';
 
-		Net_HTTP_Download::sendString( $json, $fileName, TRUE );
+		HttpDownload::sendString( $json, $fileName, TRUE );
 	}
 
 	public function import()

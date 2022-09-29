@@ -1,17 +1,22 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Mail_Queue extends Controller
 {
+	/** @var Dictionary $request */
 	protected $request;
+
 	protected $session;
 	protected $messenger;
 	protected $logic;
 	protected $model;
 	protected $filterPrefix	= 'filter_admin_mail_queue_';
 
-	public function ajaxRenderDashboardPanel( $panelId )
+	public function ajaxRenderDashboardPanel( string $panelId )
 	{
 		return $this->view->ajaxRenderDashboardPanel();
 	}
@@ -22,11 +27,11 @@ class Controller_Admin_Mail_Queue extends Controller
 	 *	Set delivery mode to 'download' to force download.
 	 *	Exits after delivery.
 	 *	@access		public
-	 *	@param		integer		$mailId			ID of mail of attachment
+	 *	@param		string		$mailId			ID of mail of attachment
 	 *	@param		integer		$attachmentNr	Index key attachment within mail
 	 *	@todo		export locales
 	 */
-	public function attachment( $mailId, $attachmentNr, $deliveryMode = NULL )
+	public function attachment( string $mailId, int $attachmentNr, $deliveryMode = NULL )
 	{
 		$libraries			= $this->logic->detectAvailableMailLibraries();
 		$deliveryMode		= $deliveryMode == 'download' ? 'download' : 'view';
@@ -52,10 +57,6 @@ class Controller_Admin_Mail_Queue extends Controller
 				if( $isAttachment || $isInlineImage )
 					$attachments[$key]	= $part;
 			}
-			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_COMMON ){
-				if( $part instanceof Net_Mail_Attachment )
-					$attachments[$key]	= $part;
-			}
 		}
 
 		if( !array_key_exists( $attachmentNr, $attachments ) ){
@@ -65,7 +66,7 @@ class Controller_Admin_Mail_Queue extends Controller
 		}
 		$item	= $attachments[$attachmentNr];
 		if( $deliveryMode === 'download' ){
-			Net_HTTP_Download::sendString( $item->getContent(), $item->getFileName() );
+			HttpDownload::sendString( $item->getContent(), $item->getFileName() );
 		}
 		else{
 			$response	= $this->env->getResponse();
@@ -79,7 +80,7 @@ class Controller_Admin_Mail_Queue extends Controller
 			foreach( $headers as $key => $value )
 				$response->addHeaderPair( $key, $value );
 			$response->setBody( $item->getContent() );
-			Net_HTTP_Response_Sender::sendResponse( $response );
+			HttpResponseSender::sendResponse( $response );
 		}
 		exit;
 	}
@@ -90,13 +91,13 @@ class Controller_Admin_Mail_Queue extends Controller
 		$ids	= preg_split( '/\s*,\s*/', $this->request->get( 'ids' ) );
 		switch( $type ){
 			case 'abort':
-				$count	= $this->bulkAbort( $ids );
+				$this->bulkAbort( $ids );
 				break;
 			case 'retry':
-				$count	= $this->bulkRetry( $ids );
+				$this->bulkRetry( $ids );
 				break;
 			case 'remove':
-				$count	= $this->bulkRemove( $ids );
+				$this->bulkRemove( $ids );
 				break;
 		}
 		$this->restart( NULL, TRUE );
@@ -107,11 +108,11 @@ class Controller_Admin_Mail_Queue extends Controller
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
 		if( !$mail ){
-			$this->env->getMessenger->noteError( 'Invalid mail ID' );
+			$this->env->getMessenger()->noteError( 'Invalid mail ID' );
 			$this->restart( NULL, TRUE );
 		}
 		if( $mail->status > 1 ){
-			$this->env->getMessenger->noteError( 'Mail already sent' );
+			$this->env->getMessenger()->noteError( 'Mail already sent' );
 			$this->restart( NULL, TRUE );
 		}
 		$model->edit( $mailId, array(
@@ -125,18 +126,18 @@ class Controller_Admin_Mail_Queue extends Controller
 		$language	= $this->env->getLanguage()->getLanguage();
 		if( $this->request->has( 'add' ) ){
 			if( !strlen( $class	= trim( $this->request->get( 'class' ) ) ) )
-				$messenger->noteError( 'Mail class is missing.' );
+				$this->messenger->noteError( 'Mail class is missing.' );
 			if( !strlen( $sender	= trim( $this->request->get( 'sender' ) ) ) )
-				$messenger->noteError( 'Sender address is missing.' );
+				$this->messenger->noteError( 'Sender address is missing.' );
 			if( !strlen( $receiver	= trim( $this->request->get( 'receiver' ) ) ) )
-				$messenger->noteError( 'Receiver address is missing.' );
+				$this->messenger->noteError( 'Receiver address is missing.' );
 			if( !strlen( $subject	= trim( $this->request->get( 'subject' ) ) ) )
-				$messenger->noteError( 'Mail subject is missing.' );
+				$this->messenger->noteError( 'Mail subject is missing.' );
 			if( !strlen( $body		= trim( $this->request->get( 'body' ) ) ) )
-				$messenger->noteError( 'Mail body is missing.' );
-			if( !$messenger->gotError() ){
+				$this->messenger->noteError( 'Mail body is missing.' );
+			if( !$this->messenger->gotError() ){
 				try{
-					$receiver	= array( 'email' => $receiver );
+					$receiver	= (object) ['email' => $receiver];
 					$mail	= new Mail_Test( $this->env, $this->request->getAll() );
 					$mail->setSubject( $subject );
 					$mail->setSender( $sender );
@@ -145,10 +146,10 @@ class Controller_Admin_Mail_Queue extends Controller
 						$mail->sendTo( $receiver );
 					else
 						$this->logic->handleMail( $mail, $receiver, $language );
-					$messenger->noteSuccess( "Mail sent ;-)" );
+					$this->messenger->noteSuccess( "Mail sent ;-)" );
 				}
 				catch( Exception $e ){
-					$messenger->noteFailure( $e->getMessage() );
+					$this->messenger->noteFailure( $e->getMessage() );
 				}
 			}
 			$this->restart( 'enqueue', TRUE );
@@ -157,8 +158,8 @@ class Controller_Admin_Mail_Queue extends Controller
 		$this->addData( 'class', $this->request->get( 'class' ) );
 		$this->addData( 'subject', $this->request->get( 'subject' ) );
 		$this->addData( 'body', $this->request->get( 'body' ) );
-		$this->addData( 'sender', $this->request->get( 'sender' ) ? $this->request->get( 'sender' ) : "kriss@localhost" );
-		$this->addData( 'receiver', $this->request->get( 'receiver' ) ? $this->request->get( 'receiver' ) : "dev@ceusmedia.de" );
+		$this->addData( 'sender', $this->request->get( 'sender' ) );
+		$this->addData( 'receiver', $this->request->get( 'receiver' ) );
 	}
 
 	public function filter( $reset = NULL )
@@ -333,13 +334,13 @@ class Controller_Admin_Mail_Queue extends Controller
 		$path				= '';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$path	= Logic_Frontend::getInstance( $this->env )->getPath();
-			CMC_Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
+			\CeusMedia\Common\Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
 		}
 		if( !is_array( $this->session->get( $this->filterPrefix.'status' ) ) )
 			$this->session->set( $this->filterPrefix.'status', array());
 	}
 
-	protected function bulkAbort( $mailIds )
+	protected function bulkAbort( $mailIds ): int
 	{
 		if( !count( $mailIds ) )
 			return 0;
@@ -354,13 +355,10 @@ class Controller_Admin_Mail_Queue extends Controller
 			'status'		=> Model_Mail::STATUS_ABORTED,
 			'modifiedAt'	=> time(),
 		);
-	print_m( $mailIds );
-	print_m( $data );
-	die;
-//		return $this->model->editByIndices( array( 'mailId' => $mailIds ), $data );
+		return $this->model->editByIndices( array( 'mailId' => $mailIds ), $data );
 	}
 
-	protected function bulkRetry( $mailIds )
+	protected function bulkRetry( $mailIds ): int
 	{
 		if( !count( $mailIds ) )
 			return 0;
@@ -374,16 +372,13 @@ class Controller_Admin_Mail_Queue extends Controller
 			'status'		=> Model_Mail::STATUS_RETRY,
 			'modifiedAt'	=> time(),
 		);
-	print_m( $mailIds );
-	print_m( $data );
-	die;
-//		return $this->model->editByIndices( array( 'mailId' => $mailIds ), $data );
+		return $this->model->editByIndices( array( 'mailId' => $mailIds ), $data );
 	}
 
-	protected function bulkRemove( $mailIds )
+	protected function bulkRemove( $mailIds ): int
 	{
 		if( !count( $mailIds ) )
 			return 0;
-		$this->model->removeByIndices( array( 'mailId' => $mailIds ) );
+		return $this->model->removeByIndices( array( 'mailId' => $mailIds ) );
 	}
 }
