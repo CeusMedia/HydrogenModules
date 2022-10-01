@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Oauth_RefreshToken extends Model
 {
-	protected $name		= 'oauth_refresh_tokens';
+	protected string $name		= 'oauth_refresh_tokens';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'oauthRefreshTokenId',
 		'oauthApplicationId',
 		'token',
@@ -28,14 +28,14 @@ class Model_Oauth_RefreshToken extends Model
 		'createdAt',
 	);
 
-	protected $primaryKey	= 'oauthRefreshTokenId';
+	protected string $primaryKey	= 'oauthRefreshTokenId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'oauthApplicationId',
 		'token',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	/**
 	 *	Returnes generated unique token.

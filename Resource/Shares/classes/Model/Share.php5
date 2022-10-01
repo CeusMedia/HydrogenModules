@@ -8,9 +8,9 @@ class Model_Share extends Model
 	const ACCESS_CAPTCHA		= 1;
 	const ACCESS_LOGIN			= 2;
 
-	protected $name				= 'shares';
+	protected string $name				= 'shares';
 
-	protected $columns			= array(
+	protected array $columns			= array(
 		'shareId',
 		'status',
 		'access',
@@ -23,7 +23,7 @@ class Model_Share extends Model
 		'accessedAt',
 	);
 
-	protected $indices			= array(
+	protected array $indices			= array(
 		'status',
 		'access',
 		'validity',
@@ -33,7 +33,7 @@ class Model_Share extends Model
 		'uuid',
 	);
 
-	protected $primaryKey		= 'shareId';
+	protected string $primaryKey		= 'shareId';
 
-	protected $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

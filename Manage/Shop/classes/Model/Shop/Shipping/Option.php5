@@ -16,15 +16,15 @@ use CeusMedia\HydrogenFramework\Model;
  */
 final class Model_Shop_Shipping_Option extends Model
 {
-	protected $name		= 'shop_shipping_options';
+	protected string $name		= 'shop_shipping_options';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'optionId',
 		'title',
 		'price',
 	);
 
-	protected $primaryKey	= 'optionId';
+	protected string $primaryKey	= 'optionId';
 
 	protected array $indices		= array(
 		'price',

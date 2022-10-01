@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Catalog_Bookstore_Article_Document extends Model
 {
-	protected $name		= 'catalog_bookstore_article_documents';
+	protected string $name		= 'catalog_bookstore_article_documents';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'articleDocumentId',
 		'articleId',
 		'status',
@@ -27,9 +27,9 @@ class Model_Catalog_Bookstore_Article_Document extends Model
 		'title',
 	);
 
-	protected $primaryKey	= 'articleDocumentId';
+	protected string $primaryKey	= 'articleDocumentId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"articleId",
 		"status",
 		"type",
@@ -37,5 +37,5 @@ class Model_Catalog_Bookstore_Article_Document extends Model
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

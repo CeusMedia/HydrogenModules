@@ -32,9 +32,9 @@ class Model_Newsletter_Template extends Model
 		self::STATUS_USED,
 	);
 
-	protected $name		= 'newsletter_templates';
+	protected string $name		= 'newsletter_templates';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'newsletterTemplateId',
 		'creatorId',
 		'themeId',
@@ -59,13 +59,13 @@ class Model_Newsletter_Template extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'newsletterTemplateId';
+	protected string $primaryKey	= 'newsletterTemplateId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'creatorId',
 		'status',
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

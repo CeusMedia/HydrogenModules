@@ -16,21 +16,21 @@ use CeusMedia\HydrogenFramework\Model;
  */
 final class Model_Shop_Shipping_Price extends Model
 {
-	protected $name		= 'shop_shipping_prices';
+	protected string $name		= 'shop_shipping_prices';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'priceId',
 		'zoneId',
 		'gradeId',
 		'price',
 	);
 
-	protected $primaryKey	= 'priceId';
+	protected string $primaryKey	= 'priceId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'zoneId',
 		'gradeId',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

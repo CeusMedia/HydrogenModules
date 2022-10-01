@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Bug_Change extends Model
 {
-	protected $name			= 'bug_changes';
+	protected string $name			= 'bug_changes';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'bugChangeId',
 		'bugId',
 		'userId',
@@ -31,14 +31,14 @@ class Model_Bug_Change extends Model
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'bugChangeId';
+	protected string $primaryKey	= 'bugChangeId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'bugId',
 		'userId',
 		'noteId',
 		'type',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

@@ -31,7 +31,7 @@ class Model_User_Setting extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'userSettingId';
+	protected string $primaryKey	= 'userSettingId';
 
 	protected array $indices		= array(
 		'moduleId',

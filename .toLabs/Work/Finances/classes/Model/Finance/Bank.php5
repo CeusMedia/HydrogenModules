@@ -3,9 +3,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Finance_Bank extends Model
 {
-	protected $name		= 'finance_banks';
+	protected string $name		= 'finance_banks';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'bankId',
 		'userId',
 		'type',
@@ -17,12 +17,12 @@ class Model_Finance_Bank extends Model
 		'updatedAt',
 	);
 
-	protected $primaryKey	= 'bankId';
+	protected string $primaryKey	= 'bankId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'type',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

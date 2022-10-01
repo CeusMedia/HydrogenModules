@@ -14,7 +14,7 @@ class Model_Form_Transfer_Rule extends Model
 		self::STATUS_HANDLED,
 	];
 
-	protected $columns		= [
+	protected array $columns		= [
 		'formTransferRuleId',
 		'formTransferTargetId',
 		'formId',
@@ -24,14 +24,14 @@ class Model_Form_Transfer_Rule extends Model
 		'modifiedAt',
 	];
 
-	protected $indices		= [
+	protected array $indices		= [
 		'formTransferTargetId',
 		'formId',
 	];
 
-	protected $primaryKey	= 'formTransferRuleId';
+	protected string $primaryKey	= 'formTransferRuleId';
 
-	protected $name			= 'form_transfer_rules';
+	protected string $name			= 'form_transfer_rules';
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

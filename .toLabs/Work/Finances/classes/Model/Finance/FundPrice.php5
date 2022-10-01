@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Finance_FundPrice extends Model
 {
-	protected $name		= 'finance_fund_prices';
+	protected string $name		= 'finance_fund_prices';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'fundPriceId',
 		'fundId',
 		'pieces',
@@ -14,9 +14,9 @@ class Model_Finance_FundPrice extends Model
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'fundPriceId';
+	protected string $primaryKey	= 'fundPriceId';
 
-	protected $indices		= ['fundId'];
+	protected array $indices		= ['fundId'];
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

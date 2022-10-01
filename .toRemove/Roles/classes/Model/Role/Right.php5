@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Role_Right extends Model
 {
-	protected $name		= 'role_rights';
+	protected string $name		= 'role_rights';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'roleRightId',
 		'roleId',
 		'controller',
@@ -28,15 +28,15 @@ class Model_Role_Right extends Model
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'roleRightId';
+	protected string $primaryKey	= 'roleRightId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'roleId',
 		'controller',
 		'action',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public static function maxifyController( $controller )
 	{

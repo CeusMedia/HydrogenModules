@@ -20,9 +20,9 @@ class Model_Shop_Order_Position extends Model
 	const STATUS_ORDERED	= 1;
 	const STATUS_DELIVERED	= 2;
 
-	protected $name		= 'shop_order_positions';
+	protected string $name		= 'shop_order_positions';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"positionId",
 		"orderId",
 		"userId",
@@ -36,9 +36,9 @@ class Model_Shop_Order_Position extends Model
 		"modifiedAt",
 	);
 
-	protected $primaryKey	= 'positionId';
+	protected string $primaryKey	= 'positionId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"orderId",
 		"userId",
 		"bridgeId",
@@ -46,5 +46,5 @@ class Model_Shop_Order_Position extends Model
 		"status"
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

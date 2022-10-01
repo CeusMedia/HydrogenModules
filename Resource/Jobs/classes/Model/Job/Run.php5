@@ -113,9 +113,9 @@ class Model_Job_Run extends Model
 		self::TYPE_SCHEDULED,
 	);
 
-	protected $name			= 'job_runs';
+	protected string $name			= 'job_runs';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'jobRunId',
 		'jobDefinitionId',
 		'jobScheduleId',
@@ -135,9 +135,9 @@ class Model_Job_Run extends Model
 		'finishedAt',
 	);
 
-	protected $primaryKey	= 'jobRunId';
+	protected string $primaryKey	= 'jobRunId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'jobDefinitionId',
 		'jobScheduleId',
 		'processId',
@@ -150,5 +150,5 @@ class Model_Job_Run extends Model
 		'modifiedAt',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

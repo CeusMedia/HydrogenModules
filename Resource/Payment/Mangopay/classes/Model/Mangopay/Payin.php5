@@ -17,9 +17,9 @@ class Model_Mangopay_Payin extends Model
 	const TYPE_DIRECT_DEBIT_DIRECT	= 5;
 	const TYPE_PAYPAL				= 6;
 
-	protected $name		= 'mangopay_payins';
+	protected string $name		= 'mangopay_payins';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"payinId",
 		"userId",
 		"status",
@@ -32,16 +32,16 @@ class Model_Mangopay_Payin extends Model
 		"modifiedAt"
 	);
 
-	protected $primaryKey	= 'payinId';
+	protected string $primaryKey	= 'payinId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"userId",
 		"status",
 		"id",
 		"type",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public static function getLatestResourceFromPayinData( $payinData )
 	{

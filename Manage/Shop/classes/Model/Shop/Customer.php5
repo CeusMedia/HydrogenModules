@@ -18,7 +18,7 @@ class Model_Shop_Customer extends Model
 {
 	protected string $name		= 'shop_customers';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"customerId",
 	);
 

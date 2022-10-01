@@ -18,9 +18,9 @@ class Model_IP_Lock extends Model
 		self::STATUS_REQUEST_UNLOCK,
 	];
 
-	protected $name		= 'ip_locks';
+	protected string $name		= 'ip_locks';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'ipLockId',
 		'filterId',
 		'reasonId',
@@ -33,14 +33,14 @@ class Model_IP_Lock extends Model
 		'unlockedAt',
 	);
 
-	protected $primaryKey	= 'ipLockId';
+	protected string $primaryKey	= 'ipLockId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'reasonId',
 		'status',
 		'IP',
 		'lockedAt',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

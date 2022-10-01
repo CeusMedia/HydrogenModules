@@ -24,9 +24,9 @@ class Model_Mail_Template extends Model
 		self::STATUS_ACTIVE,
 	);
 
-	protected $name		= 'mail_templates';
+	protected string $name		= 'mail_templates';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"mailTemplateId",
 		"status",
 		"language",
@@ -40,13 +40,13 @@ class Model_Mail_Template extends Model
 		"modifiedAt",
 	);
 
-	protected $primaryKey	= 'mailTemplateId';
+	protected string $primaryKey	= 'mailTemplateId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"status",
 		"language",
 		"title",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

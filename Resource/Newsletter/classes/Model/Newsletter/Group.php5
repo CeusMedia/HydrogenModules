@@ -40,9 +40,9 @@ class Model_Newsletter_Group extends Model
 		self::TYPE_HIDDEN,
 	);
 
-	protected $name		= 'newsletter_groups';
+	protected string $name		= 'newsletter_groups';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'newsletterGroupId',
 		'creatorId',
 		'status',
@@ -52,14 +52,14 @@ class Model_Newsletter_Group extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'newsletterGroupId';
+	protected string $primaryKey	= 'newsletterGroupId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'creatorId',
 		'status',
 		'type',
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

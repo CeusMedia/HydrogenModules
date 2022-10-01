@@ -25,9 +25,9 @@ class Model_Job_Definition extends Model
 	const MODE_MULTIPLE		= 2;
 	const MODE_EXCLUSIVE	= 3;
 
-	protected $name			= 'job_definitions';
+	protected string $name			= 'job_definitions';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'jobDefinitionId',
 		'mode',
 		'status',
@@ -42,9 +42,9 @@ class Model_Job_Definition extends Model
 		'lastRunAt',
 	);
 
-	protected $primaryKey	= 'jobDefinitionId';
+	protected string $primaryKey	= 'jobDefinitionId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'mode',
 		'status',
 		'identifier',
@@ -54,5 +54,5 @@ class Model_Job_Definition extends Model
 		'modifiedAt',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

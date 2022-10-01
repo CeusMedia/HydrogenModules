@@ -36,7 +36,7 @@ class Model_Blog_Comment extends Model
 		'repliedAt',
 	);
 
-	protected $primaryKey	= 'commentId';
+	protected string $primaryKey	= 'commentId';
 
 	protected array $indices		= array(
 		'parentId',

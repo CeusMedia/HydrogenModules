@@ -14,7 +14,7 @@ class Model_Form_Fill extends Model
 		self::STATUS_HANDLED,
 	];
 
-	protected $columns		= [
+	protected array $columns		= [
 		'fillId',
 		'formId',
 		'status',
@@ -26,15 +26,15 @@ class Model_Form_Fill extends Model
 		'modifiedAt',
 	];
 
-	protected $indices		= [
+	protected array $indices		= [
 		'formId',
 		'status',
 		'email',
 	];
 
-	protected $primaryKey	= 'fillId';
+	protected string $primaryKey	= 'fillId';
 
-	protected $name			= 'form_fills';
+	protected string $name			= 'form_fills';
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

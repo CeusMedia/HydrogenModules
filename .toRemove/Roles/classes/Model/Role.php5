@@ -27,9 +27,9 @@ class Model_Role extends Model
 	const REGISTER_VISIBLE	= 64;
 	const REGISTER_DEFAULT	= 128;
 
-	protected $name		= 'roles';
+	protected string $name		= 'roles';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'roleId',
 		'access',
 		'register',
@@ -39,13 +39,13 @@ class Model_Role extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'roleId';
+	protected string $primaryKey	= 'roleId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'access',
 		'register',
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

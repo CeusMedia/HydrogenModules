@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Catalog_Bookstore_Category extends Model
 {
-	protected $name		= 'catalog_bookstore_categories';
+	protected string $name		= 'catalog_bookstore_categories';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'categoryId',
 		'parentId',
 		'visible',
@@ -31,13 +31,13 @@ class Model_Catalog_Bookstore_Category extends Model
 		'label_former'
 	);
 
-	protected $primaryKey	= 'categoryId';
+	protected string $primaryKey	= 'categoryId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"parentId",
 		"visible",
 		"issn",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

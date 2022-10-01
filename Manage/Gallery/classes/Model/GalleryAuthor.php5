@@ -4,20 +4,20 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_GalleryAuthor extends Model
 {
-	protected $name		= 'gallery_authors';
+	protected string $name		= 'gallery_authors';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'galleryAuthorId',
 		'galleryId',
 		'userId'
 	);
 
-	protected $primaryKey	= 'galleryAuthorId';
+	protected string $primaryKey	= 'galleryAuthorId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'galleryId',
 		'userId'
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

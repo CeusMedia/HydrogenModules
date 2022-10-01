@@ -38,7 +38,7 @@ class Model_Form_Mail extends Model
 		self::FORMAT_HTML,
 	];
 
-	protected $columns		= [
+	protected array $columns		= [
 		'mailId',
 		'roleType',
 		'identifier',
@@ -48,15 +48,15 @@ class Model_Form_Mail extends Model
 		'content',
 	];
 
-	protected $indices		= [
+	protected array $indices		= [
 		'roleType',
 		'identifier',
 		'format',
 	];
 
-	protected $primaryKey	= 'mailId';
+	protected string $primaryKey	= 'mailId';
 
-	protected $name			= 'form_mails';
+	protected string $name			= 'form_mails';
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

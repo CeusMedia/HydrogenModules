@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Catalog_Clothing_Category extends Model
 {
-	protected $name		= 'catalog_clothing_categories';
+	protected string $name		= 'catalog_clothing_categories';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"categoryId",
 		"status",
 		"title",
@@ -27,11 +27,11 @@ class Model_Catalog_Clothing_Category extends Model
 		"modifiedAt",
 	);
 
-	protected $primaryKey	= 'categoryId';
+	protected string $primaryKey	= 'categoryId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"status",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

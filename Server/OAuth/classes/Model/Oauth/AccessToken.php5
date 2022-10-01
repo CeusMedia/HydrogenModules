@@ -33,9 +33,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_access_tokens` (
  */
 class Model_Oauth_AccessToken extends Model
 {
-	protected $name		= 'oauth_access_tokens';
+	protected string $name		= 'oauth_access_tokens';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'oauthAccessTokenId',
 		'oauthApplicationId',
 		'token',
@@ -44,15 +44,15 @@ class Model_Oauth_AccessToken extends Model
 		'createdAt',
 	);
 
-	protected $primaryKey	= 'oauthAccessTokenId';
+	protected string $primaryKey	= 'oauthAccessTokenId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'oauthApplicationId',
 		'userId',
 		'token',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	/**
 	 *	Returnes generated unique token.

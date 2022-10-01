@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Article extends Model
 {
-	protected $name		= 'articles';
+	protected string $name		= 'articles';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'articleId',
 //		'authorId',
 		'status',
@@ -16,14 +16,14 @@ class Model_Article extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'articleId';
+	protected string $primaryKey	= 'articleId';
 
-	protected $indices	= array(
+	protected array $indices	= array(
 //		'authorId',
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public function getArticleAuthors( $articleId )
 	{

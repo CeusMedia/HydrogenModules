@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Postcode extends Model
 {
-	protected $name			= 'postcodes';
+	protected string $name			= 'postcodes';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'postcodeId',
 		'postcode',
 		'city',
@@ -14,12 +14,12 @@ class Model_Postcode extends Model
 		'longitude',
 	);
 
-	protected $primaryKey	= 'postcodeId';
+	protected string $primaryKey	= 'postcodeId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'postcode',
 		'city',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

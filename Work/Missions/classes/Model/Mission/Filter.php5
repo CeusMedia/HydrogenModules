@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\Model;
 class Model_Mission_Filter extends Model
 {
 	/**	@var	$name		string		Table name without prefix of database connection */
-	protected $name			= "mission_filters";
+	protected string $name			= "mission_filters";
 
 	/**	@var	$name		string		List of columns within table */
 	protected array $columns		= array(

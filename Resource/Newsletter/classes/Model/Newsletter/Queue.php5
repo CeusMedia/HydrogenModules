@@ -32,9 +32,9 @@ class Model_Newsletter_Queue extends Model
 		self::STATUS_DONE,
 	);
 
-	protected $name		= 'newsletter_queues';
+	protected string $name		= 'newsletter_queues';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'newsletterQueueId',
 		'newsletterId',
 		'creatorId',
@@ -43,13 +43,13 @@ class Model_Newsletter_Queue extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'newsletterQueueId';
+	protected string $primaryKey	= 'newsletterQueueId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'newsletterId',
 		'creatorId',
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

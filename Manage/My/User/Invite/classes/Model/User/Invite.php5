@@ -42,7 +42,7 @@ class Model_User_Invite extends Model
 		'email',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public function generateInviteCode( $inviterId, $mode = 0, $length = 10, $split = 5 )
 	{

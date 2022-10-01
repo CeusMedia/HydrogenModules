@@ -16,7 +16,7 @@ class Model_Form_Fill_Transfer extends Model
 		self::STATUS_EXCEPTION,
 	];
 
-	protected $columns		= [
+	protected array $columns		= [
 		'formFillTransferId',
 		'formId',
 		'formTransferRuleId',
@@ -29,7 +29,7 @@ class Model_Form_Fill_Transfer extends Model
 		'createdAt',
 	];
 
-	protected $indices		= [
+	protected array $indices		= [
 		'formId',
 		'formTransferRuleId',
 		'formTransferTargetId',
@@ -37,9 +37,9 @@ class Model_Form_Fill_Transfer extends Model
 		'status',
 	];
 
-	protected $primaryKey	= 'formFillTransferId';
+	protected string $primaryKey	= 'formFillTransferId';
 
-	protected $name			= 'form_fill_transfers';
+	protected string $name			= 'form_fill_transfers';
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

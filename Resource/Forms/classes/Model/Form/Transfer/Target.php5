@@ -12,7 +12,7 @@ class Model_Form_Transfer_Target extends Model
 		self::STATUS_ENABLED,
 	];
 
-	protected $columns		= [
+	protected array $columns		= [
 		'formTransferTargetId',
 		'status',
 		'title',
@@ -23,14 +23,14 @@ class Model_Form_Transfer_Target extends Model
 		'modifiedAt',
 	];
 
-	protected $indices		= [
+	protected array $indices		= [
 		'status',
 		'className',
 	];
 
-	protected $primaryKey	= 'formTransferTargetId';
+	protected string $primaryKey	= 'formTransferTargetId';
 
-	protected $name			= 'form_transfer_targets';
+	protected string $name			= 'form_transfer_targets';
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

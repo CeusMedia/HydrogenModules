@@ -56,9 +56,9 @@ class Model_Role extends Model
 		self::REGISTER_DEFAULT,
 	);
 
-	protected $name		= 'roles';
+	protected string $name		= 'roles';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'roleId',
 		'access',
 		'register',
@@ -68,13 +68,13 @@ class Model_Role extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'roleId';
+	protected string $primaryKey	= 'roleId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'access',
 		'register',
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

@@ -4,21 +4,21 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Branch_Tag extends Model
 {
-	protected $name			= 'branch_tags';
+	protected string $name			= 'branch_tags';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'branchTagId',
 		'branchId',
 		'label',
 		'createdAt',
 	);
 
-	protected $primaryKey	= 'branchTagId';
+	protected string $primaryKey	= 'branchTagId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'branchId',
 		'label',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

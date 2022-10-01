@@ -5,6 +5,9 @@
  *	@package		LUV.Model
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
  */
+
+use CeusMedia\HydrogenFramework\Model;
+
 /**
  *	Data Model of Shop Specials.
  *	@category		cmProjects
@@ -18,9 +21,9 @@ class Model_Shop_Special extends Model
 	const STATUS_NEW				= 0;
 	const STATUS_ACTIVE				= 1;
 
-	protected $name		= 'shop_specials';
+	protected string $name		= 'shop_specials';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"shopSpecialId",
 		"creatorId",
 		"bridgeId",
@@ -32,13 +35,13 @@ class Model_Shop_Special extends Model
 		"modifiedAt",
 	);
 
-	protected $primaryKey	= 'shopSpecialId';
+	protected string $primaryKey	= 'shopSpecialId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"creatorId",
 		"bridgeId",
 		"articleId",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

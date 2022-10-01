@@ -52,9 +52,9 @@ class Model_Mail_Group extends Model
 		self::VISIBILITY_HIDDEN,
 	];
 
-	protected $name		= 'mail_groups';
+	protected string $name		= 'mail_groups';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"mailGroupId",
 		"mailGroupServerId",
 		"defaultRoleId",
@@ -72,9 +72,9 @@ class Model_Mail_Group extends Model
 		"modifiedAt",
 	);
 
-	protected $primaryKey	= 'mailGroupId';
+	protected string $primaryKey	= 'mailGroupId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"mailGroupServerId",
 		"defaultRoleId",
 		"managerId",
@@ -85,5 +85,5 @@ class Model_Mail_Group extends Model
 		"address",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

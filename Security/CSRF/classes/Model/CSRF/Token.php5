@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_CSRF_Token extends Model
 {
-	protected $name		= 'csrf_tokens';
+	protected string $name		= 'csrf_tokens';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"tokenId",
 		"status",
 		"token",
@@ -28,9 +28,9 @@ class Model_CSRF_Token extends Model
 		"timestamp",
 	);
 
-	protected $primaryKey	= 'tokenId';
+	protected string $primaryKey	= 'tokenId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"status",
 		"token",
 		"sessionId",
@@ -39,5 +39,5 @@ class Model_CSRF_Token extends Model
 		"timestamp",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

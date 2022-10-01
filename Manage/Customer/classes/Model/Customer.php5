@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Customer extends Model
 {
-	protected $name			= 'customers';
+	protected string $name			= 'customers';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'customerId',
 		'creatorId',
 		'size',
@@ -29,9 +29,9 @@ class Model_Customer extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'customerId';
+	protected string $primaryKey	= 'customerId';
 
 	protected $indizes		= [];
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

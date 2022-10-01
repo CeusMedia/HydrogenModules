@@ -28,9 +28,9 @@ class Model_Oauth_Provider extends Model
 		self::STATUS_ACTIVE,
 	];
 
-	protected $name		= 'oauth_providers';
+	protected string $name		= 'oauth_providers';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'oauthProviderId',
 		'status',
 		'rank',
@@ -46,9 +46,9 @@ class Model_Oauth_Provider extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'oauthProviderId';
+	protected string $primaryKey	= 'oauthProviderId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'status',
 		'clientId',
 		'clientSecret',
@@ -57,5 +57,5 @@ class Model_Oauth_Provider extends Model
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Finance_Fund extends Model
 {
-	protected $name		= 'finance_funds';
+	protected string $name		= 'finance_funds';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'fundId',
 		'userId',
 		'type',
@@ -20,9 +20,9 @@ class Model_Finance_Fund extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'fundId';
+	protected string $primaryKey	= 'fundId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'type',
 		'scope',
@@ -30,5 +30,5 @@ class Model_Finance_Fund extends Model
 		'currency',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

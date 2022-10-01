@@ -16,20 +16,20 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Catalog_Bookstore_Status extends Model
 {
-	protected $name		= 'catalog_bookstore_states';
+	protected string $name		= 'catalog_bookstore_states';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'statusId',
 		'title',
 		'available',
 		'rank',
 	);
 
-	protected $primaryKey	= 'statusId';
+	protected string $primaryKey	= 'statusId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"available",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

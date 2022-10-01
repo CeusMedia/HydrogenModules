@@ -9,7 +9,7 @@ class View_Helper_Mangopay_Input_Amount extends View_Helper_Mangopay_Abstract{
 	protected $step				= '0.01';
 
 	protected $id				= 'input_amount';
-	protected $name				= 'amount';
+	protected string $name				= 'amount';
 	protected $class			= 'span12';
 	protected $required			= 'required';
 

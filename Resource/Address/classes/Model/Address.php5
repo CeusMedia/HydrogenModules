@@ -21,9 +21,9 @@ class Model_Address extends Model
 	const TYPE_BILLING		= 2;
 	const TYPE_DELIVERY		= 4;
 
-	protected $name		= 'addresses';
+	protected string $name		= 'addresses';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'addressId',
 		'relationId',
 		'relationType',
@@ -45,9 +45,9 @@ class Model_Address extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'addressId';
+	protected string $primaryKey	= 'addressId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'relationId',
 		'relationType',
 		'type',
@@ -55,5 +55,5 @@ class Model_Address extends Model
 		'longitude',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

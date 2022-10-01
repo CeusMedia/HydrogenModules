@@ -14,7 +14,7 @@ class Model_Form_Rule extends Model
 		self::TYPE_ATTACHMENT,
 	];
 
-	protected $columns		= [
+	protected array $columns		= [
 		'formRuleId',
 		'formId',
 		'type',
@@ -24,7 +24,7 @@ class Model_Form_Rule extends Model
 		'filePath',
 	];
 
-	protected $indices		= [
+	protected array $indices		= [
 		'formId',
 		'type',
 		'rules',
@@ -32,9 +32,9 @@ class Model_Form_Rule extends Model
 		'filePath',
 	];
 
-	protected $primaryKey	= 'formRuleId';
+	protected string $primaryKey	= 'formRuleId';
 
-	protected $name			= 'form_rules';
+	protected string $name			= 'form_rules';
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

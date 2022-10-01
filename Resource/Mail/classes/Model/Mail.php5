@@ -80,9 +80,9 @@ class Model_Mail extends Model
 		),
 	);
 
-	protected $name		= 'mails';
+	protected string $name		= 'mails';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'mailId',
 		'senderId',
 		'receiverId',
@@ -102,9 +102,9 @@ class Model_Mail extends Model
 		'attemptedAt',
 		'sentAt',
 	);
-	protected $primaryKey	= 'mailId';
+	protected string $primaryKey	= 'mailId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'senderId',
 		'receiverId',
 		'templateId',
@@ -122,5 +122,5 @@ class Model_Mail extends Model
 		'sentAt',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

@@ -4,20 +4,20 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_GalleryTag extends Model
 {
-	protected $name		= 'gallery_tags';
+	protected string $name		= 'gallery_tags';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'galleryTagId',
 		'galleryId',
 		'tagId'
 	);
 
-	protected $primaryKey	= 'galleryTagId';
+	protected string $primaryKey	= 'galleryTagId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'galleryId',
 		'tagId'
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

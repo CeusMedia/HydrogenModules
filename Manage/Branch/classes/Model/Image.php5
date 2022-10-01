@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Image extends Model
 {
-	protected $name			= 'images';
+	protected string $name			= 'images';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'imageId',
 		'companyId',
 		'branchId',
@@ -16,9 +16,9 @@ class Model_Image extends Model
 //		'timestamp',
 	);
 
-	protected $primaryKey	= 'imageId';
+	protected string $primaryKey	= 'imageId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'companyId',
 		'branchId',
 		'creditId',

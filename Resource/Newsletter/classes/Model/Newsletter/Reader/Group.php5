@@ -30,9 +30,9 @@ class Model_Newsletter_Reader_Group extends Model
 		self::STATUS_REJOINED,
 	);
 
-	protected $name		= 'newsletter_reader_groups';
+	protected string $name		= 'newsletter_reader_groups';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'newsletterReaderGroupId',
 		'newsletterReaderId',
 		'newsletterGroupId',
@@ -40,13 +40,13 @@ class Model_Newsletter_Reader_Group extends Model
 		'createdAt',
 	);
 
-	protected $primaryKey	= 'newsletterReaderGroupId';
+	protected string $primaryKey	= 'newsletterReaderGroupId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'newsletterReaderId',
 		'newsletterGroupId',
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

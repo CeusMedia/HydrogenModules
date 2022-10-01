@@ -12,9 +12,9 @@ class Model_Branch extends Model
 
 	protected $radiusEarth  = 6371;
 
-	protected $name			= 'branches';
+	protected string $name			= 'branches';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'branchId',
 		'companyId',
 		'status',
@@ -37,14 +37,14 @@ class Model_Branch extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'branchId';
+	protected string $primaryKey	= 'branchId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'companyId',
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public function extendWithGeocodes( $branchId )
 	{

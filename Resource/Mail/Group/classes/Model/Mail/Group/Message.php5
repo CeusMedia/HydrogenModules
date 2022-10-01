@@ -24,9 +24,9 @@ class Model_Mail_Group_Message extends Model
 		self::STATUS_FORWARDED,
 	];
 
-	protected $name		= 'mail_group_messages';
+	protected string $name		= 'mail_group_messages';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"mailGroupMessageId",
 		"mailGroupId",
 		"mailGroupMemberId",
@@ -39,9 +39,9 @@ class Model_Mail_Group_Message extends Model
 		"modifiedAt",
 	);
 
-	protected $primaryKey	= 'mailGroupMessageId';
+	protected string $primaryKey	= 'mailGroupMessageId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"mailGroupId",
 		"mailGroupMemberId",
 		"status",
@@ -49,5 +49,5 @@ class Model_Mail_Group_Message extends Model
 		"messageId",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

@@ -47,7 +47,7 @@ class Model_Event extends Model
 	];
 
 	/** @var	array		$columns */
-	protected $columns		= array(
+	protected array $columns		= array(
 		'eventId',
 		'creatorId',
 		'status',
@@ -62,10 +62,10 @@ class Model_Event extends Model
 	);
 
 	/** @var	integer		$fetchMode */
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	/** @var	array		$indices */
-	protected $indices		= array(
+	protected array $indices		= array(
 		'creatorId',
 		'status',
 		'scope',
@@ -75,8 +75,8 @@ class Model_Event extends Model
 	);
 
 	/** @var	string		$name */
-	protected $name			= 'events';
+	protected string $name			= 'events';
 
 	/** @var	string		$primaryKey */
-	protected $primaryKey	= 'eventId';
+	protected string $primaryKey	= 'eventId';
 }

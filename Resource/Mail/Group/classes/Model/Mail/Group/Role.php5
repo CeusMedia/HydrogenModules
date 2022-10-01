@@ -12,9 +12,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Mail_Group_Role extends Model
 {
-	protected $name		= 'mail_group_roles';
+	protected string $name		= 'mail_group_roles';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"mailGroupRoleId",
 		"status",
 		"rank",
@@ -25,9 +25,9 @@ class Model_Mail_Group_Role extends Model
 		"modifiedAt",
 	);
 
-	protected $primaryKey	= 'mailGroupRoleId';
+	protected string $primaryKey	= 'mailGroupRoleId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"status",
 		"rank",
 		"title",
@@ -35,5 +35,5 @@ class Model_Mail_Group_Role extends Model
 		"write",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

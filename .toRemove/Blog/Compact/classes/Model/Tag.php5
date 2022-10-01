@@ -4,21 +4,21 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Tag extends Model
 {
-	protected $name		= 'tags';
+	protected string $name		= 'tags';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'tagId',
 		'title',
 		'number'
 	);
 
-	protected $primaryKey	= 'tagId';
+	protected string $primaryKey	= 'tagId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'title'
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public function getRelatedTags( $tagId )
 	{

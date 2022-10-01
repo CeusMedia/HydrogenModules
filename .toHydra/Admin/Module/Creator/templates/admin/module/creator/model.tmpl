@@ -13,18 +13,18 @@ use CeusMedia\HydrogenFramework\Model;
 class Model_<%className%> extends Model
 {
 	/**	@var	$name		string		Table name without prefix of database connection */
-	protected $name			= '';
+	protected string $name			= '';
 
 	/**	@var	$name		string		List of columns within table */
-	protected $columns		= [];
+	protected array $columns		= [];
 
 	/**	@var	$name		string		Name of column with primary key */
-	protected $primaryKey	= '';
+	protected string $primaryKey	= '';
 
 	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
-	protected $indices		= []
+	protected array $indices		= []
 
 	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }
 ?>

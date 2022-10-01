@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_User extends Model
 {
-	protected $name		= 'users';
+	protected string $name		= 'users';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'userId',
 		'roleId',
 		'roomId',
@@ -45,9 +45,9 @@ class Model_User extends Model
 		'activeAt',
 	);
 
-	protected $primaryKey	= 'userId';
+	protected string $primaryKey	= 'userId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'roleId',
 		'roomId',
 		'companyId',
@@ -56,5 +56,5 @@ class Model_User extends Model
 		'email',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

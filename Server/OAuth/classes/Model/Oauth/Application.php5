@@ -36,9 +36,9 @@ class Model_Oauth_Application extends Model
 		self::TYPE_CONFIDENTIAL,
 	);
 
-	protected $name		= 'oauth_applications';
+	protected string $name		= 'oauth_applications';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'oauthApplicationId',
 		'userId',
 		'type',
@@ -52,9 +52,9 @@ class Model_Oauth_Application extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'oauthApplicationId';
+	protected string $primaryKey	= 'oauthApplicationId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'type',
 		'status',
@@ -63,7 +63,7 @@ class Model_Oauth_Application extends Model
 		'url',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public function getNewClientId( $salt = NULL, $pepper = NULL ): string
 	{

@@ -9,9 +9,9 @@ class Model_Stripe_Event extends Model
 	const STATUS_HANDLED		= 2;
 	const STATUS_CLOSED			= 3;
 
-	protected $name		= 'stripe_events';
+	protected string $name		= 'stripe_events';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"eventId",
 		"status",
 		"id",
@@ -22,15 +22,15 @@ class Model_Stripe_Event extends Model
 		"handledAt",
 	);
 
-	protected $primaryKey	= 'eventId';
+	protected string $primaryKey	= 'eventId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"status",
 		"id",
 		"type",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public $types			= array(
 		'PAYIN_NORMAL'				=> ['PAYIN_NORMAL_CREATED', 'PAYIN_NORMAL_SUCCEEDED', 'PAYIN_NORMAL_FAILED'],

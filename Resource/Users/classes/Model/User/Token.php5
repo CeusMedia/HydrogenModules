@@ -24,9 +24,9 @@ class Model_User_Token extends Model
 		self::STATUS_ACTIVE,
 	);
 
-	protected $name			= 'user_tokens';
+	protected string $name			= 'user_tokens';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'userTokenId',
 		'userId',
 		'status',
@@ -37,14 +37,14 @@ class Model_User_Token extends Model
 		'revokedAt',
 	);
 
-	protected $primaryKey	= 'userTokenId';
+	protected string $primaryKey	= 'userTokenId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'status',
 		'scope',
 		'token',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

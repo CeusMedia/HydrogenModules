@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Finance_Bank_Account extends Model
 {
-	protected $name		= 'finance_bank_accounts';
+	protected string $name		= 'finance_bank_accounts';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'bankAccountId',
 		'bankId',
 		'type',
@@ -20,11 +20,11 @@ class Model_Finance_Bank_Account extends Model
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'bankAccountId';
+	protected string $primaryKey	= 'bankAccountId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'bankId',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

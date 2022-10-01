@@ -58,9 +58,9 @@ class Model_User extends Model
 		),
 	);
 
-	protected $name		= 'users';
+	protected string $name		= 'users';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'userId',
 		'accountId',
 		'roleId',
@@ -86,9 +86,9 @@ class Model_User extends Model
 		'loggedAt',
 		'activeAt',
 	);
-	protected $primaryKey	= 'userId';
+	protected string $primaryKey	= 'userId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'accountId',
 		'roleId',
 		'roomId',
@@ -100,7 +100,7 @@ class Model_User extends Model
 		'country',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public function migrate()
 	{

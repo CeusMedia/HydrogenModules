@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Oauth_User extends Model
 {
-	protected $name		= 'oauth_users';
+	protected string $name		= 'oauth_users';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'oauthUserId',
 		'oauthProviderId',
 		'oauthId',
@@ -28,13 +28,13 @@ class Model_Oauth_User extends Model
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'oauthUserId';
+	protected string $primaryKey	= 'oauthUserId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'oauthProviderId',
 		'oauthId',
 		'localUserId',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

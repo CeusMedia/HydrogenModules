@@ -18,21 +18,21 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Localization extends Model
 {
-	protected $name		= 'localizations';
+	protected string $name		= 'localizations';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'localizationId',
 		'language',
 		'id',
 		'content',
 	);
 
-	protected $primaryKey	= 'localizationId';
+	protected string $primaryKey	= 'localizationId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'language',
 		'id',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

@@ -15,9 +15,9 @@
  */
 class Model_Download_File extends Model
 {
-	protected $name		= 'download_files';
+	protected string $name		= 'download_files';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'downloadFileId',
 		'downloadFolderId',
 		'rank',
@@ -29,14 +29,14 @@ class Model_Download_File extends Model
 		'downloadedAt'
 	);
 
-	protected $primaryKey	= 'downloadFileId';
+	protected string $primaryKey	= 'downloadFileId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'downloadFolderId',
 		'rank',
 		'size',
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

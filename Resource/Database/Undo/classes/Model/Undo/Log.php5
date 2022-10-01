@@ -23,9 +23,9 @@ class Model_Undo_Log extends Model
 	const MODE_UPDATE	= 2;
 	const MODE_DELETE	= 3;
 
-	protected $name		= 'undo_log';
+	protected string $name		= 'undo_log';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'changeId',
 		'userId',
 		'mode',
@@ -35,14 +35,14 @@ class Model_Undo_Log extends Model
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'changeId';
+	protected string $primaryKey	= 'changeId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'mode',
 		'tableName',
 		'primaryKey',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

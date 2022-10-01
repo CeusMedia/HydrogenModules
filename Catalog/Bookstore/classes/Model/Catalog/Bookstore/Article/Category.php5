@@ -16,21 +16,21 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Catalog_Bookstore_Article_Category extends Model
 {
-	protected $name		= 'catalog_bookstore_article_categories';
+	protected string $name		= 'catalog_bookstore_article_categories';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"articleCategoryId",
 		"articleId",
 		"categoryId",
 		"volume",
 	);
 
-	protected $primaryKey	= 'articleCategoryId';
+	protected string $primaryKey	= 'articleCategoryId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"articleId",
 		"categoryId"
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

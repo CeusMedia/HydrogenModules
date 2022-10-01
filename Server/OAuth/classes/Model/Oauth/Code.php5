@@ -35,9 +35,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_codes` (
  */
 class Model_Oauth_Code extends Model
 {
-	protected $name		= 'oauth_codes';
+	protected string $name		= 'oauth_codes';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'oauthCodeId',
 		'oauthApplicationId',
 		'userId',
@@ -47,16 +47,16 @@ class Model_Oauth_Code extends Model
 		'createdAt',
 	);
 
-	protected $primaryKey	= 'oauthCodeId';
+	protected string $primaryKey	= 'oauthCodeId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'oauthApplicationId',
 		'userId',
 		'redirectUri',
 		'code',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	/**
 	 *	Returnes generated unique token.

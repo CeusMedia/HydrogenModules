@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Image_Thumbnail extends Model
 {
-	protected $name		= 'image_thumbnails';
+	protected string $name		= 'image_thumbnails';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'imageThumbnailId',
 		'imageId',
 		'maxWidth',
@@ -17,9 +17,9 @@ class Model_Image_Thumbnail extends Model
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'imageThumbnailId';
+	protected string $primaryKey	= 'imageThumbnailId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'imageId',
 		'maxWidth',
 		'maxHeight',
@@ -27,5 +27,5 @@ class Model_Image_Thumbnail extends Model
 		'realHeight',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

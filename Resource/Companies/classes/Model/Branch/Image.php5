@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Branch_Image extends Model
 {
-	protected $name			= 'branch_images';
+	protected string $name			= 'branch_images';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'branchImageId',
 		'branchId',
 		'type',
@@ -15,12 +15,12 @@ class Model_Branch_Image extends Model
 		'uploadedAt',
 	);
 
-	protected $primaryKey	= 'branchImageId';
+	protected string $primaryKey	= 'branchImageId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'branchId',
 		'type',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

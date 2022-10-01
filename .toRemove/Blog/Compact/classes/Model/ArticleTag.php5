@@ -4,20 +4,20 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_ArticleTag extends Model
 {
-	protected $name		= 'article_tags';
+	protected string $name		= 'article_tags';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'articleTagId',
 		'articleId',
 		'tagId'
 	);
 
-	protected $primaryKey	= 'articleTagId';
+	protected string $primaryKey	= 'articleTagId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'articleId',
 		'tagId'
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

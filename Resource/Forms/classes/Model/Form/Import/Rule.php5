@@ -48,7 +48,7 @@ class Model_Form_Import_Rule extends Model
 		],
 	];
 
-	protected $columns		= [
+	protected array $columns		= [
 		'formImportRuleId',
 		'importConnectionId',
 		'formId',
@@ -63,15 +63,15 @@ class Model_Form_Import_Rule extends Model
 		'modifiedAt',
 	];
 
-	protected $indices		= [
+	protected array $indices		= [
 		'importConnectionId',
 		'formId',
 		'status',
 	];
 
-	protected $primaryKey	= 'formImportRuleId';
+	protected string $primaryKey	= 'formImportRuleId';
 
-	protected $name			= 'form_import_rules';
+	protected string $name			= 'form_import_rules';
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

@@ -4,15 +4,15 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Test_Table extends Model
 {
-	protected $name			= 'test_table';
+	protected string $name			= 'test_table';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'testId',
 		'title',
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'testId';
+	protected string $primaryKey	= 'testId';
 
-	protected $indices		= [];
+	protected array $indices		= [];
 }

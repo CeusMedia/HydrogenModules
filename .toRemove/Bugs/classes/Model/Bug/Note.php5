@@ -15,9 +15,9 @@
  */
 class Model_Bug_Note extends Model
 {
-	protected $name			= 'bug_notes';
+	protected string $name			= 'bug_notes';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'bugNoteId',
 		'bugId',
 		'userId',
@@ -25,12 +25,12 @@ class Model_Bug_Note extends Model
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'bugNoteId';
+	protected string $primaryKey	= 'bugNoteId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'bugId',
 		'userId',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

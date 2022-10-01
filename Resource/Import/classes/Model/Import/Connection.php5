@@ -21,9 +21,9 @@ class Model_Import_Connection extends Model
 	const STATUS_DISABLED	= 0;
 	const STATUS_ENABLED	= 1;
 
-	protected $name		= 'import_connections';
+	protected string $name		= 'import_connections';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'importConnectionId',
 		'importConnectorId',
 		'creatorId',
@@ -41,9 +41,9 @@ class Model_Import_Connection extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'importConnectionId';
+	protected string $primaryKey	= 'importConnectionId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'importConnectorId',
 		'creatorId',
 		'status',
@@ -52,5 +52,5 @@ class Model_Import_Connection extends Model
 		'authType',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

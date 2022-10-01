@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Company_User extends Model
 {
-	protected $name			= 'company_users';
+	protected string $name			= 'company_users';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'companyUserId',
 		'companyId',
 		'userId',
@@ -16,14 +16,14 @@ class Model_Company_User extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'companyUserId';
+	protected string $primaryKey	= 'companyUserId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'companyId',
 		'userId',
 //		'status',
 //		'role',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

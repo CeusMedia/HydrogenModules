@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Model_Customer_Rating extends Model
 {
-	protected $name			= 'customer_ratings';
+	protected string $name			= 'customer_ratings';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'customerRatingId',
 		'customerId',
 		'userId',
@@ -21,11 +21,11 @@ class Model_Customer_Rating extends Model
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'customerRatingId';
+	protected string $primaryKey	= 'customerRatingId';
 
-	protected $indices		= ['customerId', 'userId'];
+	protected array $indices		= ['customerId', 'userId'];
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public function calculateCustomerIndex( $rating )
 	{

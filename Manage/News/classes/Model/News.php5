@@ -20,7 +20,7 @@ class Model_News extends Model
 {
 	protected string $name		= 'news';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'newsId',
 		'status',
 		'title',

@@ -20,9 +20,9 @@ class Model_Mail_Attachment extends Model
 		self::STATUS_ACTIVE,
 	);
 
-	protected $name		= 'mail_attachments';
+	protected string $name		= 'mail_attachments';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"mailAttachmentId",
 		"status",
 		"language",
@@ -33,9 +33,9 @@ class Model_Mail_Attachment extends Model
 		"createdAt",
 	);
 
-	protected $primaryKey	= 'mailAttachmentId';
+	protected string $primaryKey	= 'mailAttachmentId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"status",
 		"language",
 		"className",
@@ -43,5 +43,5 @@ class Model_Mail_Attachment extends Model
 		"mimeType",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

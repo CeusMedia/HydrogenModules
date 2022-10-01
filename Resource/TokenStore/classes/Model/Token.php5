@@ -18,21 +18,21 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Token extends Model
 {
-	protected $name			= 'tokens';
+	protected string $name			= 'tokens';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'tokenId',
 		'token',
 		'ip',
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'tokenId';
+	protected string $primaryKey	= 'tokenId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'token',
 		'ip'
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

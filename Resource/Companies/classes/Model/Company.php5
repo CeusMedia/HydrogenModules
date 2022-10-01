@@ -10,9 +10,9 @@ class Model_Company extends Model
 	const STATUS_CHANGED	= 1;
 	const STATUS_ACTIVE		= 2;
 
-	protected $name			= 'companies';
+	protected string $name			= 'companies';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'companyId',
 		'status',
 		'title',
@@ -30,12 +30,12 @@ class Model_Company extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'companyId';
+	protected string $primaryKey	= 'companyId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'status',
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

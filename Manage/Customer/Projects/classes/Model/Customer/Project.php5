@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Customer_Project extends Model
 {
-	protected $name			= 'customer_projects';
+	protected string $name			= 'customer_projects';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'customerProjectId',
 		'customerId',
 		'projectId',
@@ -16,14 +16,14 @@ class Model_Customer_Project extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'customerProjectId';
+	protected string $primaryKey	= 'customerProjectId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'customerId',
 		'projectId',
 		'userId',
 		'status'
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

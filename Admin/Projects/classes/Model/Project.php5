@@ -31,7 +31,7 @@ class Model_Project extends Model
 
 	protected string $primaryKey	= 'projectId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'status',
 	);
 

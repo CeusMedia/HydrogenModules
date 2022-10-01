@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_ArticleVersion extends Model
 {
-	protected $name		= 'article_versions';
+	protected string $name		= 'article_versions';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'articleVersionId',
 		'articleId',
 		'title',
@@ -15,11 +15,11 @@ class Model_ArticleVersion extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'articleVersionId';
+	protected string $primaryKey	= 'articleVersionId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'articleId',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

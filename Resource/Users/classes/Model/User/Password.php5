@@ -24,9 +24,9 @@ class Model_User_Password extends Model
 		self::STATUS_ACTIVE,
 	);
 
-	protected $name			= 'user_passwords';
+	protected string $name			= 'user_passwords';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'userPasswordId',
 		'userId',
 		'algo',
@@ -41,14 +41,14 @@ class Model_User_Password extends Model
 		'revokedAt',
 	);
 
-	protected $primaryKey	= 'userPasswordId';
+	protected string $primaryKey	= 'userPasswordId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'status',
 		'salt',
 		'hash',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

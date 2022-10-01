@@ -6,9 +6,9 @@ class Model_Project extends Model
 {
 //	const STATES_ACTIVE		= [];
 
-	protected $name			= 'projects';
+	protected string $name			= 'projects';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'projectId',
 		'creatorId',
 		'parentId',
@@ -21,9 +21,9 @@ class Model_Project extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'projectId';
+	protected string $primaryKey	= 'projectId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'creatorId',
 		'parentId',
 		'status',
@@ -31,7 +31,7 @@ class Model_Project extends Model
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public function getUserProjects( $userId, $conditions = [], $orders = [] )
 	{

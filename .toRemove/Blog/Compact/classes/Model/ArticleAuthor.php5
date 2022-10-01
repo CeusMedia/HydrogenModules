@@ -4,20 +4,20 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_ArticleAuthor extends Model
 {
-	protected $name		= 'article_authors';
+	protected string $name		= 'article_authors';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'articleAuthorId',
 		'articleId',
 		'userId'
 	);
 
-	protected $primaryKey	= 'articleAuthorId';
+	protected string $primaryKey	= 'articleAuthorId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'articleId',
 		'userId'
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

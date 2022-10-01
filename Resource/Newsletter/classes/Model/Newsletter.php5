@@ -30,9 +30,9 @@ class Model_Newsletter extends Model
 		self::STATUS_SENT,
 	);
 
-	protected $name		= 'newsletters';
+	protected string $name		= 'newsletters';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'newsletterId',
 		'newsletterTemplateId',
 		'creatorId',
@@ -52,9 +52,9 @@ class Model_Newsletter extends Model
 		'sentAt',
 	);
 
-	protected $primaryKey	= 'newsletterId';
+	protected string $primaryKey	= 'newsletterId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'newsletterTemplateId',
 		'creatorId',
 		'status',
@@ -62,5 +62,5 @@ class Model_Newsletter extends Model
 		'subject',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

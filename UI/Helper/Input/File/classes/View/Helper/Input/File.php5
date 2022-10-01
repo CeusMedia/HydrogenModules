@@ -8,7 +8,7 @@ class View_Helper_Input_File
 	protected $env;
 	protected $buttonClass		= 'btn-primary';
 	protected $label			= 'durchsuchen';
-	protected $name				= 'upload';
+	protected string $name				= 'upload';
 	protected $multiple			= FALSE;
 	protected $folder			= FALSE;
 	protected $required			= FALSE;

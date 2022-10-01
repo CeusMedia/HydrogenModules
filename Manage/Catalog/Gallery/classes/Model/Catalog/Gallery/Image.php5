@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Catalog_Gallery_Image extends Model
 {
-	protected $name		= 'catalog_gallery_images';
+	protected string $name		= 'catalog_gallery_images';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'galleryImageId',
 		'galleryCategoryId',
 		'status',
@@ -34,9 +34,9 @@ class Model_Catalog_Gallery_Image extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'galleryImageId';
+	protected string $primaryKey	= 'galleryImageId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'galleryCategoryId',
 		'status',
 		'type',
@@ -46,5 +46,5 @@ class Model_Catalog_Gallery_Image extends Model
 		'modifiedAt',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

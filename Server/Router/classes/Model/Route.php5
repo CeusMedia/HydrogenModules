@@ -20,9 +20,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Route extends Model
 {
-	protected $name		= 'routes';
+	protected string $name		= 'routes';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'routeId',
 		'status',
 		'methods',
@@ -35,9 +35,9 @@ class Model_Route extends Model
 		'createdAt',
 	);
 
-	protected $primaryKey	= 'routeId';
+	protected string $primaryKey	= 'routeId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'status',
 		'regex',
 		'ajax',
@@ -46,5 +46,5 @@ class Model_Route extends Model
 		'target',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

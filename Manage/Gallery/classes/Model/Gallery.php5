@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Gallery extends Model
 {
-	protected $name		= 'galleries';
+	protected string $name		= 'galleries';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'galleryId',
 		'parentId',
 		'status',
@@ -17,14 +17,14 @@ class Model_Gallery extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'galleryId';
+	protected string $primaryKey	= 'galleryId';
 
-	protected $indices	= array(
+	protected array $indices	= array(
 		'status',
 		'folder',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public function getGalleryAuthors( $galleryId )
 	{

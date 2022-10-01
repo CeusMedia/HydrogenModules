@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_File extends Model
 {
-	protected $name		= 'files';
+	protected string $name		= 'files';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"fileId",
 		"creatorId",
 		"moduleId",
@@ -33,9 +33,9 @@ class Model_File extends Model
 		"viewCount",
 	);
 
-	protected $primaryKey	= 'fileId';
+	protected string $primaryKey	= 'fileId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"creatorId",
 		"moduleId",
 		"hash",
@@ -45,5 +45,5 @@ class Model_File extends Model
 		"fileName",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

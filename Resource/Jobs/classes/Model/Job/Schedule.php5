@@ -63,9 +63,9 @@ class Model_Job_Schedule extends Model
 		self::TYPE_DATETIME,
 	);
 
-	protected $name			= 'job_schedule';
+	protected string $name			= 'job_schedule';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'jobScheduleId',
 		'jobDefinitionId',
 		'type',
@@ -81,9 +81,9 @@ class Model_Job_Schedule extends Model
 		'lastRunAt',
 	);
 
-	protected $primaryKey	= 'jobScheduleId';
+	protected string $primaryKey	= 'jobScheduleId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'jobDefinitionId',
 		'type',
 		'status',
@@ -94,5 +94,5 @@ class Model_Job_Schedule extends Model
 		'lastRunAt',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

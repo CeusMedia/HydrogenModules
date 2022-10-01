@@ -30,9 +30,9 @@ class Model_Newsletter_Reader extends Model
 		self::STATUS_CONFIRMED,
 	);
 
-	protected $name		= 'newsletter_readers';
+	protected string $name		= 'newsletter_readers';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'newsletterReaderId',
 		'status',
 		'email',
@@ -44,14 +44,14 @@ class Model_Newsletter_Reader extends Model
 		'registeredAt',
 	);
 
-	protected $primaryKey	= 'newsletterReaderId';
+	protected string $primaryKey	= 'newsletterReaderId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'status',
 		'email',
 		'firstname',
 		'surname',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

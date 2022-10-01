@@ -34,9 +34,9 @@ class Model_Newsletter_Reader_Letter extends Model
 		self::STATUS_OPENED,
 	);
 
-	protected $name		= 'newsletter_reader_letters';
+	protected string $name		= 'newsletter_reader_letters';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'newsletterReaderLetterId',
 		'newsletterReaderId',
 		'newsletterQueueId',
@@ -48,9 +48,9 @@ class Model_Newsletter_Reader_Letter extends Model
 		'openedAt',
 	);
 
-	protected $primaryKey	= 'newsletterReaderLetterId';
+	protected string $primaryKey	= 'newsletterReaderLetterId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'newsletterReaderId',
 		'newsletterQueueId',
 		'newsletterId',
@@ -58,5 +58,5 @@ class Model_Newsletter_Reader_Letter extends Model
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }
