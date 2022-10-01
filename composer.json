@@ -56,7 +56,7 @@
         ],
         "dev:phpstan-clear": [
             "@dev:install",
-            "vendor/bin/phpstan clear-cache --verbose"
+            "vendor/bin/phpstan clear-result-cache --verbose"
         ],
         "dev:phpstan-save": [
             "@dev:install",

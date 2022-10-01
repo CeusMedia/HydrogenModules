@@ -1,6 +1,6 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Controller\Ajax;
+use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ajax_Info_Contact extends AjaxController
 {
