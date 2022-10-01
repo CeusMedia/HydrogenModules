@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Backup extends Model
 {
-	protected $name		= 'backups';
+	protected string $name		= 'backups';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'backupId',
 		'creatorId',
 		'status',
@@ -29,12 +29,12 @@ class Model_Backup extends Model
 		'modifiedAt'
 	);
 
-	protected $primaryKey	= 'backupId';
+	protected string $primaryKey	= 'backupId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'creatorId',
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

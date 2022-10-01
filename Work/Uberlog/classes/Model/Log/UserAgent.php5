@@ -18,20 +18,20 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Log_UserAgent extends Model
 {
-	protected $name			= 'log_useragents';
+	protected string $name			= 'log_useragents';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'logUserAgentId',
 		'title',
 		'createdAt',
 		'loggedAt',
 	);
 
-	protected $primaryKey	= 'logUserAgentId';
+	protected string $primaryKey	= 'logUserAgentId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

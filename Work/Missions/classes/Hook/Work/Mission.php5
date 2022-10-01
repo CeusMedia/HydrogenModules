@@ -221,7 +221,7 @@ class Hook_Work_Mission extends Hook
 		$modelMission	= new Model_Mission( $env );
 		$modelFilter	= new Model_Mission_Filter( $env );
 		$words			= $env->getLanguage()->getWords( 'work/mission' );
-		$lists			= (object) array( 'entities' => [], 'relations' => [] );
+		$lists			= (object) ['entities' => [], 'relations' => []];
 
 		$modelFilter->removeByIndex( 'userId', $data->userId );
 

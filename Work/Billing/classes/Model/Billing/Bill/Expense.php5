@@ -12,9 +12,9 @@ class Model_Billing_Bill_Expense extends Model
 		self::STATUS_BOOKED,
 	];
 
-	protected $name		= "billing_bill_expenses";
+	protected string $name		= "billing_bill_expenses";
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'billExpenseId',
 		'billId',
 		'status',
@@ -22,12 +22,12 @@ class Model_Billing_Bill_Expense extends Model
 		'title',
 	);
 
-	protected $primaryKey	= 'billExpenseId';
+	protected string $primaryKey	= 'billExpenseId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'billId',
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

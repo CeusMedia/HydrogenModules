@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Relocation extends Model
 {
-	protected $name		= 'relocations';
+	protected string $name		= 'relocations';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"relocationId",
 		"creatorId",
 		"status",
@@ -17,14 +17,14 @@ class Model_Relocation extends Model
 		"usedAt",
 	);
 
-	protected $primaryKey	= 'relocationId';
+	protected string $primaryKey	= 'relocationId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"status",
 		"url",
 		"createdAt",
 		"usedAt",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

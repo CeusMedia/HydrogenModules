@@ -12,9 +12,9 @@ class Model_Billing_Bill_Reserve extends Model
 		self::STATUS_BOOKED,
 	];
 
-	protected $name		= "billing_bill_reserves";
+	protected string $name		= "billing_bill_reserves";
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'billReserveId',
 		'billId',
 		'reserveId',
@@ -26,9 +26,9 @@ class Model_Billing_Bill_Reserve extends Model
 		'title',
 	);
 
-	protected $primaryKey	= 'billReserveId';
+	protected string $primaryKey	= 'billReserveId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'billId',
 		'reserveId',
 		'corporationId',
@@ -36,5 +36,5 @@ class Model_Billing_Bill_Reserve extends Model
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

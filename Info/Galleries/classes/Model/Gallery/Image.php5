@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Gallery_Image extends Model
 {
-	protected $name		= 'gallery_images';
+	protected string $name		= 'gallery_images';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'galleryImageId',
 		'galleryId',
 		'rank',
@@ -30,13 +30,13 @@ class Model_Gallery_Image extends Model
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'galleryImageId';
+	protected string $primaryKey	= 'galleryImageId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'galleryId',
 		'rank',
 		'filename',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

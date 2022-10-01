@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Shop_Bridge extends Model
 {
-	protected $name		= 'shop_bridges';
+	protected string $name		= 'shop_bridges';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'bridgeId',
 		'title',
 		'class',
@@ -31,13 +31,13 @@ class Model_Shop_Bridge extends Model
 		'createdAt',
 	);
 
-	protected $primaryKey	= 'bridgeId';
+	protected string $primaryKey	= 'bridgeId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'class',
 		'frontendController',
 		'frontendUriPath',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

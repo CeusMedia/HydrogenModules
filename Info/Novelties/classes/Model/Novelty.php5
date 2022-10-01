@@ -13,10 +13,10 @@ use CeusMedia\HydrogenFramework\Model;
 class Model_Novelty extends Model
 {
 	/**	@var	$name		string		Table name without prefix of database connection */
-	protected $name			= "novelties";
+	protected string $name			= "novelties";
 
 	/**	@var	$name		string		List of columns within table */
-	protected $columns		= array(
+	protected array $columns		= array(
 		'noveltyId',
 		'userId',
 		'entryId',
@@ -25,10 +25,10 @@ class Model_Novelty extends Model
 	);
 
 	/**	@var	$name		string		Name of column with primary key */
-	protected $primaryKey	= "noveltyId";
+	protected string $primaryKey	= "noveltyId";
 
 	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'entryId',
 		'type',
@@ -36,5 +36,5 @@ class Model_Novelty extends Model
 	);
 
 	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

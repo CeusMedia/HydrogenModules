@@ -8,9 +8,9 @@ class Model_Provision_User_License_Key extends Model
 	const STATUS_ASSIGNED	= 1;																	//  @de: ergeben / zugewiesen
 	const STATUS_EXPIRED	= 2;																	//  @de: ergeben / zugewiesen
 
-	protected $name			= 'user_provision_license_keys';
+	protected string $name			= 'user_provision_license_keys';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'userLicenseKeyId',
 		'userLicenseId',
 		'userId',
@@ -22,9 +22,9 @@ class Model_Provision_User_License_Key extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'userLicenseKeyId';
+	protected string $primaryKey	= 'userLicenseKeyId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userLicenseId',
 		'userId',
 		'productLicenseId',
@@ -33,6 +33,6 @@ class Model_Provision_User_License_Key extends Model
 		'uid',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }
 ?>

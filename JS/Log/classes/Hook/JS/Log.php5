@@ -20,13 +20,13 @@ class Hook_JS_Log extends Hook
 			return;
 
 		$context->js->addModuleFile( 'Log.js' );
-		$availableLogLevels		= array(
+		$availableLogLevels		= [
 			1	=> 'error',
 			2	=> 'warn',
 			4	=> 'info',
 			8	=> 'log',
 			16	=> 'debug'
-		);
+		];
 		$logLevel	= 0;
 		foreach( $availableLogLevels as $levelInt => $levelKey ){
 			if( !$config->get( 'level.'.$levelKey.'.enabled' ) )

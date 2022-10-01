@@ -12,10 +12,10 @@ use CeusMedia\HydrogenFramework\Model;
 class Model_Mission_Change extends Model
 {
 	/**	@var	$name		string		Table name without prefix of database connection */
-	protected $name			= "mission_changes";
+	protected string $name			= "mission_changes";
 
 	/**	@var	$name		string		List of columns within table */
-	protected $columns		= array(
+	protected array $columns		= array(
 		'missionChangeId',
 		'missionId',
 		'userId',
@@ -25,15 +25,15 @@ class Model_Mission_Change extends Model
 	);
 
 	/**	@var	$name		string		Name of column with primary key */
-	protected $primaryKey	= "missionChangeId";
+	protected string $primaryKey	= "missionChangeId";
 
 	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
-	protected $indices		= array(
+	protected array $indices		= array(
 		'missionId',
 		'userId',
 		'type',
 	);
 
 	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

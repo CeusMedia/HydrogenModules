@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_User_Setting extends Model
 {
-	protected $name			= 'user_settings';
+	protected string $name			= 'user_settings';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'userSettingId',
 		'moduleId',
 		'managerId',
@@ -33,14 +33,14 @@ class Model_User_Setting extends Model
 
 	protected $primaryKey	= 'userSettingId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'moduleId',
 		'managerId',
 		'userId',
 		'key',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public function applyConfig( $userId = NULL, $hidePasswords = TRUE )
 	{

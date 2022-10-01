@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_User_Invite extends Model
 {
-	protected $name			= 'user_invites';
+	protected string $name			= 'user_invites';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'userInviteId',
 		'inviterId',
 		'invitedId',
@@ -31,9 +31,9 @@ class Model_User_Invite extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'userInviteId';
+	protected string $primaryKey	= 'userInviteId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'inviterId',
 		'invitedId',
 		'projectId',

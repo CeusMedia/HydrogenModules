@@ -14,9 +14,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Project_Server extends Model
 {
-	protected $name		= 'project_servers';
+	protected string $name		= 'project_servers';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'projectServerId',
 		'projectId',
 		'serverId',
@@ -28,13 +28,13 @@ class Model_Project_Server extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'projectServerId';
+	protected string $primaryKey	= 'projectServerId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'projectId',
 		'serverId',
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

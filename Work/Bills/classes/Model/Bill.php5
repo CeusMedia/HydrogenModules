@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Bill extends Model
 {
-	protected $name			= 'bills';
+	protected string $name			= 'bills';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'billId',
 		'userId',
 		'customerId',
@@ -19,9 +19,9 @@ class Model_Bill extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'billId';
+	protected string $primaryKey	= 'billId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'customerId',
 		'type',
@@ -29,5 +29,5 @@ class Model_Bill extends Model
 		'date',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

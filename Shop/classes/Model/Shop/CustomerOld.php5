@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Shop_CustomerOld extends Model
 {
-	protected $name		= 'shop_customers_old';
+	protected string $name		= 'shop_customers_old';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"customerId",
 		"firstname",
 		"lastname",
@@ -46,13 +46,13 @@ class Model_Shop_CustomerOld extends Model
 		"billing_email",
 	);
 
-	protected $primaryKey	= 'customerId';
+	protected string $primaryKey	= 'customerId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"lastname",
 		"country",
 		"email",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

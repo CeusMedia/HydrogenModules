@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Shop_Payment_Paypal extends Model
 {
-	protected $name		= 'shop_payments_paypal';
+	protected string $name		= 'shop_payments_paypal';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'paymentId',
 		'orderId',
 		'token',
@@ -23,14 +23,14 @@ class Model_Shop_Payment_Paypal extends Model
 		'timestamp',
 	);
 
-	protected $primaryKey	= 'paymentId';
+	protected string $primaryKey	= 'paymentId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'orderId',
 		'token',
 		'payerId',
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

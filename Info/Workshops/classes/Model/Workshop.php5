@@ -38,9 +38,9 @@ class Model_Workshop extends Model
 	const STATUS_OUTDATED		= 2;
 	const STATUS_CLOSED			= 3;
 
-	protected $name		= 'workshops';
+	protected string $name		= 'workshops';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'workshopId',
 		'status',
 		'rank',
@@ -54,14 +54,14 @@ class Model_Workshop extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'workshopId';
+	protected string $primaryKey	= 'workshopId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'status',
 		'rank',
 		'createdAt',
 		'modifiedAt',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

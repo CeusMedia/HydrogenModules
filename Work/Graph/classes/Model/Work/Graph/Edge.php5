@@ -13,9 +13,9 @@
  */
 class Model_Work_Graph_Edge extends Model
 {
-	protected $name		= 'graph_edges';
+	protected string $name		= 'graph_edges';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"edgeId",
 		"graphId",
 		"fromNodeId",
@@ -28,13 +28,13 @@ class Model_Work_Graph_Edge extends Model
 		"fontsize",
 	);
 
-	protected $primaryKey	= 'edgeId';
+	protected string $primaryKey	= 'edgeId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"graphId",
 		"fromNodeId",
 		"toNodeId",
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

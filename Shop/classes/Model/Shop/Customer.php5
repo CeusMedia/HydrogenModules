@@ -18,15 +18,15 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Shop_Customer extends Model
 {
-	protected $name		= 'shop_customers';
+	protected string $name		= 'shop_customers';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"customerId",
 	);
 
-	protected $primaryKey	= 'customerId';
+	protected string $primaryKey	= 'customerId';
 
-	protected $indices		= [];
+	protected array $indices		= [];
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

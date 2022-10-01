@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Provision_Product_License extends Model
 {
-	protected $name			= 'provision_product_licenses';
+	protected string $name			= 'provision_product_licenses';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'productLicenseId',
 		'productId',
 		'status',
@@ -21,14 +21,14 @@ class Model_Provision_Product_License extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'productLicenseId';
+	protected string $primaryKey	= 'productLicenseId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'productId',
 		'status',
 		'rank',
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

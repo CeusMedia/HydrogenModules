@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Work_Activity extends Model
 {
-	protected $name			= 'work_activities';
+	protected string $name			= 'work_activities';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'workActivityId',
 		'userId',
 		'title',
@@ -14,11 +14,11 @@ class Model_Work_Activity extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'workActivityId';
+	protected string $primaryKey	= 'workActivityId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

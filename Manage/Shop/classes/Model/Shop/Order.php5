@@ -48,7 +48,7 @@ class Model_Shop_Order extends Model
 		"modifiedAt",
 	);
 
-	protected $primaryKey	= 'orderId';
+	protected string $primaryKey	= 'orderId';
 
 	protected $indices		= array(
 		"customerId",

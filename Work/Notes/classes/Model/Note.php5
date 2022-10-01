@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Note extends Model
 {
-	protected $name		= 'notes';
+	protected string $name		= 'notes';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'noteId',
 		'userId',
 		'projectId',
@@ -20,9 +20,9 @@ class Model_Note extends Model
 		'modifiedAt'
 	);
 
-	protected $primaryKey	= 'noteId';
+	protected string $primaryKey	= 'noteId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'projectId',
 		'status',
@@ -30,5 +30,5 @@ class Model_Note extends Model
 		'format',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

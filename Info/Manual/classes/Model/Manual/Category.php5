@@ -30,9 +30,9 @@ class Model_Manual_Category extends Model
 		self::STATUS_LOCKED,
 	];
 
-	protected $name			= 'manual_categories';
+	protected string $name			= 'manual_categories';
 
-	protected $columns		= [
+	protected array $columns		= [
 		'manualCategoryId',
 		'creatorId',
 		'status',
@@ -45,14 +45,14 @@ class Model_Manual_Category extends Model
 		'modifiedAt',
 	];
 
-	protected $primaryKey	= 'manualCategoryId';
+	protected string $primaryKey	= 'manualCategoryId';
 
-	protected $indices		= [
+	protected array $indices		= [
 		'creatorId',
 		'status',
 		'format',
 		'title',
 	];
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

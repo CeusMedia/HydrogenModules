@@ -14,9 +14,9 @@ class Model_Shop_Payment_Stripe extends Model
 		self::STATUS_SUCCEEDED,
 	];
 
-	protected $name		= 'shop_payments_stripe';
+	protected string $name		= 'shop_payments_stripe';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'paymentId',
 		'orderId',
 		'userId',
@@ -27,14 +27,14 @@ class Model_Shop_Payment_Stripe extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'paymentId';
+	protected string $primaryKey	= 'paymentId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'orderId',
 		'userId',
 		'payInId',
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

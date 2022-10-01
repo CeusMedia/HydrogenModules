@@ -12,9 +12,9 @@ class Model_Note_Tag extends Model
 		self::STATUS_NORMAL,
 	];
 
-	protected $name		= 'note_tags';
+	protected string $name		= 'note_tags';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'noteTagId',
 		'noteId',
 		'status',
@@ -23,9 +23,9 @@ class Model_Note_Tag extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'noteTagId';
+	protected string $primaryKey	= 'noteTagId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'noteId',
 		'tagId',
 		'status',
@@ -33,5 +33,5 @@ class Model_Note_Tag extends Model
 		'modifiedAt',
 	 );
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

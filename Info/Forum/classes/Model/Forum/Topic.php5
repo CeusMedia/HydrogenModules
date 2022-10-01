@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Forum_Topic extends Model
 {
-	protected $name		= 'forum_topics';
+	protected string $name		= 'forum_topics';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'topicId',
 		'parentId',
 		'type',
@@ -31,13 +31,13 @@ class Model_Forum_Topic extends Model
 		'modifiedAt'
 	);
 
-	protected $primaryKey	= 'topicId';
+	protected string $primaryKey	= 'topicId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'parentId',
 		'type',
 		'rank',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

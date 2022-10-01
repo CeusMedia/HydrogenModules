@@ -27,9 +27,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Log_Record extends Model
 {
-	protected $name			= 'log_records';
+	protected string $name			= 'log_records';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'recordId',
 		'logCategoryId',
 		'logClientId',
@@ -45,9 +45,9 @@ class Model_Log_Record extends Model
 		'timestamp'
 	);
 
-	protected $primaryKey	= 'recordId';
+	protected string $primaryKey	= 'recordId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'logCategoryId',
 		'logClientId',
 		'logHostId',
@@ -57,5 +57,5 @@ class Model_Log_Record extends Model
 		'client',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

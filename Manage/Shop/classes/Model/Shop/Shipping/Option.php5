@@ -26,9 +26,9 @@ final class Model_Shop_Shipping_Option extends Model
 
 	protected $primaryKey	= 'optionId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'price',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

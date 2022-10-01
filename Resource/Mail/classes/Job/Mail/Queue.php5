@@ -7,9 +7,9 @@ class Job_Mail_Queue extends Job_Abstract
 
 	public function countQueuedMails()
 	{
-		$conditions		= ['status' => array( Model_Mail::STATUS_NEW )];
+		$conditions		= ['status' => [Model_Mail::STATUS_NEW]];
 		$countNew		= $this->logic->countQueue( $conditions );
-		$conditions		= ['status' => array( Model_Mail::STATUS_RETRY )];
+		$conditions		= ['status' => [Model_Mail::STATUS_RETRY]];
 		$countRetry		= $this->logic->countQueue( $conditions );
 		$this->out( sprintf( "%d mails to send, %d mail to retry.", $countNew, $countRetry ) );
 	}

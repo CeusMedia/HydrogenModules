@@ -19,22 +19,70 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.3 | ^8",
+        "php": ">=7.4 | ^8",
         "ext-bz2": "*",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-zlib": "*",
         "ceus-media/common": "^0.9 | ^0.9@dev | ^0.8 | dev-master",
-        "ceus-media/hydrogen-framework": "^0.9 | ^0.8 | 0.9.x | 0.8.x | dev-master"
+        "ceus-media/hydrogen-framework": "^0.9 | ^0.8 | 0.9.x | 0.8.x | dev-master",
+        "ext-dom": "*",
+        "ext-pdo": "*",
+        "ext-fileinfo": "*"
     },
     "require-dev": {
         "ceus-media/bootstrap": "*",
-        "ceus-media/markdown": "*",
         "ceus-media/hydrogen-source-indexer": "* | dev-main",
+        "ceus-media/mail": "^2 | dev-master",
+        "ceus-media/markdown": "*",
+        "ceus-media/open-graph": "*",
         "phpunit/phpunit": "^9.5",
         "phpstan/phpstan": "*",
         "phpstan/phpstan-strict-rules": "*",
         "squizlabs/php_codesniffer": "^3.0@dev",
-        "php-parallel-lint/php-parallel-lint": "^1.3 | dev-master"
+        "php-parallel-lint/php-parallel-lint": "^1.3 | dev-master",
+        "rector/rector": "*"
+    },
+    "scripts": {
+        "dev:install": "composer install --dev --quiet",
+        "dev:update": "composer install --dev",
+        "incomplete:dev:create-docs": [
+            "@dev:install",
+            "php vendor/ceus-media/doc-creator/doc-creator.php --config-file=doc-creator.xml"
+        ],
+        "dev:phpstan": [
+            "@dev:install",
+            "vendor/bin/phpstan analyse --configuration phpstan.neon --xdebug"
+        ],
+        "dev:phpstan-clear": [
+            "@dev:install",
+            "vendor/bin/phpstan clear-cache --verbose"
+        ],
+        "dev:phpstan-save": [
+            "@dev:install",
+            "vendor/bin/phpstan analyse --configuration phpstan.neon --generate-baseline phpstan-baseline.neon"
+        ],
+        "dev:rector": [
+            "@dev:install",
+            "vendor/bin/rector process --config=rector.php --dry-run"
+        ],
+        "dev:rector-fix": [
+            "@dev:install",
+            "vendor/bin/rector process --config=rector.php"
+        ],
+        "dev:test-syntax": [
+            "@dev:install",
+            "vendor/bin/parallel-lint . -j 10 --colors --exclude vendor"
+        ]
+    },
+    "scripts-descriptions": {
+        "dev:install": "Installs project dependencies for Development stage",
+        "dev:update": "Updates project dependencies for Development stage",
+        "dev:phpstan": "Validate codebase with PHPStan",
+        "dev:phpstan-clear": "Clear PHPStan cache",
+        "dev:phpstan-save": "Store current results in ignore list",
+        "dev:rector": "Shows suggestions of configured Rector rules",
+        "dev:rector-fix": "Apply currently configured Rector rules to codebase",
+        "dev:test-syntax": "Validate code base syntax using PHP linter"
     }
 }

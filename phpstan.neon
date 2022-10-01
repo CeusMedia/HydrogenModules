@@ -3,9 +3,10 @@ includes:
 #	- phpstan-baseline.neon
 	
 parameters:
+	phpVersion: 70400
 	level: 1
 	paths:
-#		- Admin
+		- Admin
 #		- App
 #		- Base
 #		- Catalog
@@ -18,7 +19,7 @@ parameters:
 #		- Server
 #		- Shop
 #		- Tool
-		- UI
+#		- UI
 #		- Work
 	fileExtensions:
 		- php5

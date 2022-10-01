@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Link extends Model
 {
-	protected $name		= 'links';
+	protected string $name		= 'links';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'linkId',
 		'url',
 		'createdAt',
@@ -14,11 +14,11 @@ class Model_Link extends Model
 		'lastSearchAt',
 	);
 
-	protected $primaryKey	= 'linkId';
+	protected string $primaryKey	= 'linkId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'url'
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

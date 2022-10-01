@@ -18,20 +18,20 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Log_Host extends Model
 {
-	protected $name			= 'log_hosts';
+	protected string $name			= 'log_hosts';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'logHostId',
 		'title',
 		'createdAt',
 		'loggedAt',
 	);
 
-	protected $primaryKey	= 'logHostId';
+	protected string $primaryKey	= 'logHostId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

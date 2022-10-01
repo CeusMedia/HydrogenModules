@@ -9,9 +9,9 @@ class Model_Provision_Product extends Model
 	const STATUS_ACTIVE			= 1;
 	const STATUS_EXPIRED		= 2;
 
-	protected $name			= 'provision_products';
+	protected string $name			= 'provision_products';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'productId',
 		'status',
 		'rank',
@@ -22,13 +22,13 @@ class Model_Provision_Product extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'productId';
+	protected string $primaryKey	= 'productId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'status',
 		'rank',
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

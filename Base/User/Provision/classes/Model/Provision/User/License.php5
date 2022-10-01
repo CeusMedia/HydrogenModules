@@ -10,9 +10,9 @@ class Model_Provision_User_License extends Model
 	const STATUS_ACTIVE			= 1;
 	const STATUS_EXPIRED		= 2;
 
-	protected $name			= 'user_provision_licenses';
+	protected string $name			= 'user_provision_licenses';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'userLicenseId',
 		'userId',
 		'productLicenseId',
@@ -29,9 +29,9 @@ class Model_Provision_User_License extends Model
 		'endsAt',
 	);
 
-	protected $primaryKey	= 'userLicenseId';
+	protected string $primaryKey	= 'userLicenseId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'productLicenseId',
 		'productId',
@@ -41,5 +41,5 @@ class Model_Provision_User_License extends Model
 		'endsAt',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

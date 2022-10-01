@@ -13,10 +13,10 @@ use CeusMedia\HydrogenFramework\Model;
 class Model_Mission_Document extends Model
 {
 	/**	@var	$name		string		Table name without prefix of database connection */
-	protected $name			= "mission_documents";
+	protected string $name			= "mission_documents";
 
 	/**	@var	$name		string		List of columns within table */
-	protected $columns		= array(
+	protected array $columns		= array(
 		'missionDocumentId',
 		'missionId',
 		'userId',
@@ -30,10 +30,10 @@ class Model_Mission_Document extends Model
 	);
 
 	/**	@var	$name		string		Name of column with primary key */
-	protected $primaryKey	= "missionDocumentId";
+	protected string $primaryKey	= "missionDocumentId";
 
 	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
-	protected $indices		= array(
+	protected array $indices		= array(
 		'missionId',
 		'userId',
 		'mimeType',
@@ -41,5 +41,5 @@ class Model_Mission_Document extends Model
 	);
 
 	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

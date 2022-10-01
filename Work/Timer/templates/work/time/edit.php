@@ -25,7 +25,7 @@ $optWorker	= HtmlElements::Options( $optWorker, $timer->workerId );
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
-	'href'	=> './'.( $from ? $from : 'work/time' ),
+	'href'	=> './'.( $from ?: 'work/time' ),
 	'class'	=> "btn btn-small"
 ) );
 

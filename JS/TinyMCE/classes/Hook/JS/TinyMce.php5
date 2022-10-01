@@ -26,10 +26,10 @@ class Hook_JS_TinyMce extends Hook
 				$baseUrl	= Logic_Frontend::getInstance( $env )->getUri();
 
 			/* @todo extract to language file after rethinking this solution */
-			$labels	= array(
+			$labels	= [
 				'de'	=> 'Deutsch',
 				'en'	=> 'Englisch',
-			);
+			];
 
 			/* @todo	WHY? please implement self::getLanguages similar to self::getLanguage */
 			$languages	= [];
@@ -97,12 +97,12 @@ class Hook_JS_TinyMce extends Hook
 								array(
 									'title'		=> 'links',
 									'selector'	=> 'img',
-									'styles'	=> array( 'float' => 'left', 'margin' => '0 20px 10px 0px'),
+									'styles'	=> ['float' => 'left', 'margin' => '0 20px 10px 0px'],
 								),
 								array(
 									'title'		=> 'rechts',
 									'selector'	=> 'img',
-									'styles'	=> array( 'float' => 'right', 'margin' => '0 0 10px 20px'),
+									'styles'	=> ['float' => 'right', 'margin' => '0 0 10px 20px'],
 								),
 							)
 						),
@@ -167,18 +167,18 @@ class Hook_JS_TinyMce extends Hook
 			return;
 		if( !empty( $payload['format'] ) && !in_array( $payload['format'], ['html'] ) )
 			return;
-		$editor	= (object) array(
+		$editor	= (object) [
 			'key'		=> 'tinymce',
 			'label'		=> 'TinyMCE',
 			'type'		=> 'wys',
 			'format'	=> $payload['format'],
 			'score'		=> 5,
-		);
-		$criteria	= array(
+		];
+		$criteria	= [
 			'default'		=> 1,
 			'current'		=> 2,
 			'force'			=> 10,
-		);
+		];
 		foreach( $criteria as $key => $value )
 			if( !empty( $payload[$key] ) && strtolower( $payload[$key] ) === $editor->key )
 				$editor->score	+= $value;

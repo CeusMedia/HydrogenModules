@@ -20,9 +20,9 @@ class Model_Address extends Model
 
 	protected $radiusEarth  = 6371;
 
-	protected $name			= 'addresses';
+	protected string $name			= 'addresses';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'addressId',
 		'status',
 		'title',
@@ -40,13 +40,13 @@ class Model_Address extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'addressId';
+	protected string $primaryKey	= 'addressId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public function extendWithGeocodes( $addressId ): bool
 	{

@@ -15,7 +15,7 @@ class Model_Mission_Filter extends Model
 	protected $name			= "mission_filters";
 
 	/**	@var	$name		string		List of columns within table */
-	protected $columns		= array(
+	protected array $columns		= array(
 		'missionFilterId',
 		'userId',
 		'serial',
@@ -23,13 +23,13 @@ class Model_Mission_Filter extends Model
 	);
 
 	/**	@var	$name		string		Name of column with primary key */
-	protected $primaryKey	= "missionFilterId";
+	protected string $primaryKey	= "missionFilterId";
 
 	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 	);
 
 	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

@@ -30,9 +30,9 @@ class Model_Manual_Page extends Model
 		self::STATUS_LOCKED,
 	];
 
-	protected $name			= 'manual_pages';
+	protected string $name			= 'manual_pages';
 
-	protected $columns		= [
+	protected array $columns		= [
 		'manualPageId',
 		'manualCategoryId',
 		'creatorId',
@@ -47,9 +47,9 @@ class Model_Manual_Page extends Model
 		'modifiedAt',
 	];
 
-	protected $primaryKey	= 'manualPageId';
+	protected string $primaryKey	= 'manualPageId';
 
-	protected $indices		= [
+	protected array $indices		= [
 		'manualCategoryId',
 		'creatorId',
 		'parentId',
@@ -58,5 +58,5 @@ class Model_Manual_Page extends Model
 		'title',
 	];
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

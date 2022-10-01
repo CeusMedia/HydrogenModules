@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Work_Timer extends Model
 {
-	protected $name			= 'work_timers';
+	protected string $name			= 'work_timers';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'workTimerId',
 		'userId',
 		'projectId',
@@ -22,9 +22,9 @@ class Model_Work_Timer extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'workTimerId';
+	protected string $primaryKey	= 'workTimerId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'projectId',
 		'workerId',
@@ -34,5 +34,5 @@ class Model_Work_Timer extends Model
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

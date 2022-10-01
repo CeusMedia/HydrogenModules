@@ -28,9 +28,9 @@ class Model_News extends Model
 		self::STATUS_PUBLIC,
 	];
 
-	protected $name		= 'news';
+	protected string $name		= 'news';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'newsId',
 		'status',
 		'type',
@@ -42,9 +42,9 @@ class Model_News extends Model
 		'createdAt',
 	);
 
-	protected $primaryKey	= 'newsId';
+	protected string $primaryKey	= 'newsId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'status',
 		'type',
 		'title',
@@ -53,5 +53,5 @@ class Model_News extends Model
 		'createdAt',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

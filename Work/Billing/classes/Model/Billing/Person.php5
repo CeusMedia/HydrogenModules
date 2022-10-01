@@ -12,9 +12,9 @@ class Model_Billing_Person extends Model
 		self::STATUS_ACTIVE,
 	];
 
-	protected $name		= "billing_persons";
+	protected string $name		= "billing_persons";
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'personId',
 		'status',
 		'email',
@@ -23,12 +23,12 @@ class Model_Billing_Person extends Model
 		'balance',
 	);
 
-	protected $primaryKey	= 'personId';
+	protected string $primaryKey	= 'personId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'status',
 		'email',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

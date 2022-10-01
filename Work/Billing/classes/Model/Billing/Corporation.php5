@@ -12,9 +12,9 @@ class Model_Billing_Corporation extends Model
 		self::STATUS_ACTIVE,
 	];
 
-	protected $name		= "billing_corporations";
+	protected string $name		= "billing_corporations";
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'corporationId',
 		'status',
 		'title',
@@ -23,11 +23,11 @@ class Model_Billing_Corporation extends Model
 		'bic',
 	);
 
-	protected $primaryKey	= 'corporationId';
+	protected string $primaryKey	= 'corporationId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

@@ -12,9 +12,9 @@ class Model_Billing_Bill_Share extends Model
 		self::STATUS_BOOKED,
 	];
 
-	protected $name		= "billing_bill_shares";
+	protected string $name		= "billing_bill_shares";
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'billShareId',
 		'billId',
 		'personId',
@@ -24,13 +24,13 @@ class Model_Billing_Bill_Share extends Model
 		'amount',
 	);
 
-	protected $primaryKey	= 'billShareId';
+	protected string $primaryKey	= 'billShareId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'billId',
 		'personId',
 		'corporationId',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

@@ -12,9 +12,9 @@ class Model_Event extends Model
 
 	protected $radiusEarth  = 6371;
 
-	protected $name			= 'events';
+	protected string $name			= 'events';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'eventId',
 		'addressId',
 		'status',
@@ -28,16 +28,16 @@ class Model_Event extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'eventId';
+	protected string $primaryKey	= 'eventId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'addressId',
 		'status',
 		'dateStart',
 		'dateEnd',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 
 	public function getAllWithinTimeAndSpaceRanges( SpaceRange $spaceRange, TimeRange $timeRange ): array
 	{

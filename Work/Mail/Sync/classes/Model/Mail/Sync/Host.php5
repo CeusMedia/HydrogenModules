@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Mail_Sync_Host extends Model
 {
-	protected $name		= 'mail_sync_hosts';
+	protected string $name		= 'mail_sync_hosts';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'mailSyncHostId',
 		'ip',
 		'host',
@@ -17,9 +17,9 @@ class Model_Mail_Sync_Host extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'mailSyncHostId';
+	protected string $primaryKey	= 'mailSyncHostId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'ip',
 		'host',
 		'port',
@@ -27,5 +27,5 @@ class Model_Mail_Sync_Host extends Model
 		'auth',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

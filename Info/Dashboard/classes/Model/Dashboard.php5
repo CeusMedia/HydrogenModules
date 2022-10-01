@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Dashboard extends Model
 {
-	protected $name		= 'dashboards';
+	protected string $name		= 'dashboards';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'dashboardId',
 		'userId',
 		'isCurrent',
@@ -17,13 +17,13 @@ class Model_Dashboard extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'dashboardId';
+	protected string $primaryKey	= 'dashboardId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'isCurrent',
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

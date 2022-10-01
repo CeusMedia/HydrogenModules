@@ -21,9 +21,9 @@ class Model_Billing_Transaction extends Model
 	const TYPE_PAYIN		= 6;
 	const TYPE_PAYOUT		= 7;
 
-	protected $name		= "billing_transactions";
+	protected string $name		= "billing_transactions";
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'transactionId',
 		'fromType',
 		'fromId',
@@ -36,9 +36,9 @@ class Model_Billing_Transaction extends Model
 		'dateBooked',
 	);
 
-	protected $primaryKey	= 'transactionId';
+	protected string $primaryKey	= 'transactionId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'fromType',
 		'fromId',
 		'toType',
@@ -47,5 +47,5 @@ class Model_Billing_Transaction extends Model
 		'relation',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

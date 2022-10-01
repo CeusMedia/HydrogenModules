@@ -54,10 +54,10 @@ class Model_Mission extends Model
 	);
 
 	/**	@var	$name		string		Table name without prefix of database connection */
-	protected $name			= "missions";
+	protected string $name			= "missions";
 
 	/**	@var	$name		string		List of columns within table */
-	protected $columns		= array(
+	protected array $columns		= array(
 		'missionId',
 		'creatorId',
 		'modifierId',
@@ -82,10 +82,10 @@ class Model_Mission extends Model
 	);
 
 	/**	@var	$name		string		Name of column with primary key */
-	protected $primaryKey	= "missionId";
+	protected string $primaryKey	= "missionId";
 
 	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
-	protected $indices		= array(
+	protected array $indices		= array(
 		'creatorId',
 		'modifierId',
 		'workerId',
@@ -98,5 +98,5 @@ class Model_Mission extends Model
 	);
 
 	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

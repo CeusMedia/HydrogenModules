@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Blog_Post extends Model
 {
-	protected $name		= 'blog_posts';
+	protected string $name		= 'blog_posts';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'postId',
 		'parentId',
 		'authorId',
@@ -39,9 +39,9 @@ class Model_Blog_Post extends Model
 		'commentedAt',
 	);
 
-	protected $primaryKey	= 'postId';
+	protected string $primaryKey	= 'postId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'parentId',
 		'authorId',
 		'categoryId',
@@ -49,5 +49,5 @@ class Model_Blog_Post extends Model
 		'language',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

@@ -16,21 +16,21 @@ use CeusMedia\HydrogenFramework\Model;
  */
 final class Model_Shop_Shipping_Grade extends Model
 {
-	protected $name		= 'shop_shipping_grades';
+	protected string $name		= 'shop_shipping_grades';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'gradeId',
 		'title',
 		'weight',
 		'fallback',
 	);
 
-	protected $primaryKey	= 'gradeId';
+	protected string $primaryKey	= 'gradeId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'weight',
 		'fallback',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

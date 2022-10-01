@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_User_Avatar extends Model
 {
-	protected $name			= 'user_avatars';
+	protected string $name			= 'user_avatars';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'userAvatarId',
 		'userId',
 		'status',
@@ -15,12 +15,12 @@ class Model_User_Avatar extends Model
 		'modifiedAt',
 	);
 
-	protected $primaryKey	= 'userAvatarId';
+	protected string $primaryKey	= 'userAvatarId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'userId',
 		'status',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

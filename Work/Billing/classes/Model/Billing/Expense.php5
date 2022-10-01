@@ -26,9 +26,9 @@ class Model_Billing_Expense extends Model
 		self::STATUS_ACTIVE,
 	];
 
-	protected $name		= "billing_expenses";
+	protected string $name		= "billing_expenses";
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		'expenseId',
 		'fromCorporationId',
 		'fromPersonId',
@@ -41,9 +41,9 @@ class Model_Billing_Expense extends Model
 		'title',
 	);
 
-	protected $primaryKey	= 'expenseId';
+	protected string $primaryKey	= 'expenseId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'fromCorporationId',
 		'fromPersonId',
 		'toCorporationId',
@@ -52,5 +52,5 @@ class Model_Billing_Expense extends Model
 		'frequency',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

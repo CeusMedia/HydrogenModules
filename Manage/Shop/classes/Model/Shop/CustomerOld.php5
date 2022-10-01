@@ -18,7 +18,7 @@ class Model_Shop_Customer extends Model
 {
 	protected $name		= 'shop_customers';
 
-	protected $columns	= array(
+	protected array $columns	= array(
 		"customerId",
 		"firstname",
 		"lastname",
@@ -45,9 +45,9 @@ class Model_Shop_Customer extends Model
 		"billing_email",
 	);
 
-	protected $primaryKey	= 'customerId';
+	protected string $primaryKey	= 'customerId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		"lastname",
 		"country",
 		"email",

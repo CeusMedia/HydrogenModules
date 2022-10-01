@@ -12,9 +12,9 @@ class Model_Manual_Version extends Model
 		self::TYPE_CATEGORY,
 	];
 
-	protected $name			= 'manual_versions';
+	protected string $name			= 'manual_versions';
 
-	protected $columns		= [
+	protected array $columns		= [
 		'manualVersionId',
 		'userId',
 		'objectId',
@@ -24,14 +24,14 @@ class Model_Manual_Version extends Model
 		'timestamp',
 	];
 
-	protected $primaryKey	= 'manualVersionId';
+	protected string $primaryKey	= 'manualVersionId';
 
-	protected $indices		= [
+	protected array $indices		= [
 		'userId',
 		'objectId',
 		'type',
 		'version',
 	];
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

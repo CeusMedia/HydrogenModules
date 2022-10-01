@@ -18,20 +18,20 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Log_Category extends Model
 {
-	protected $name			= 'log_categories';
+	protected string $name			= 'log_categories';
 
-	protected $columns		= array(
+	protected array $columns		= array(
 		'logCategoryId',
 		'title',
 		'createdAt',
 		'loggedAt',
 	);
 
-	protected $primaryKey	= 'logCategoryId';
+	protected string $primaryKey	= 'logCategoryId';
 
-	protected $indices		= array(
+	protected array $indices		= array(
 		'title',
 	);
 
-	protected $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode	= PDO::FETCH_OBJ;
 }
