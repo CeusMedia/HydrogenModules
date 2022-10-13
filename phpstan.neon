@@ -4,29 +4,36 @@ includes:
 	
 parameters:
 	phpVersion: 70400
-	level: 1
+	level: 0
 	paths:
 		- Admin
-#		- App
-#		- Base
-#		- Catalog
-#		- Info
-#		- JS
-#		- Manage
-#		- Members
-#		- Resource
-#		- Security
-#		- Server
-#		- Shop
-#		- Tool
-#		- UI
-#		- Work
+		- App
+		- Base
+		- Catalog
+		- Info
+		- JS
+		- Manage
+		- Members
+		- Resource
+		- Security
+		- Server
+		- Shop
+		- Tool
+		- UI
+		- Work
 	fileExtensions:
 		- php5
 	excludePaths:
-		- */templates
+		analyse:
+			- */templates/*
+		analyseAndScan:
+			- vendor/ceus-media/common/src/compat8.php
+			- vendor/ceus-media/common/src/compat9.php
+			- vendor/ceus-media/common/src/Exception/Abstraction.php
+			- vendor/ceus-media/common/src/Exception/Interface_.php
 	scanDirectories:
-		- Resource
+		- vendor/ceus-media/common
+		- vendor/ceus-media/hydrogen-framework
 	checkMissingIterableValueType: false
 	treatPhpDocTypesAsCertain: false
 							
