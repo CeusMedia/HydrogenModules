@@ -14,7 +14,7 @@ It is built on the top of the popular JavaScript framework jQuery and is both ea
 	<author email="janis@fancyapps.com">Jānis Skarnelis</author>
 	<license source="http://opensource.org/licenses/gpl-3.0.html">GPL v3</license>
 	<files>
-		<class>Hook/UI/JS/FancyBox.php5</class>
+		<class>Hook/UI/JS/FancyBox.php</class>
 		<script>jquery.fancybox-3.3.5.min.js</script>
 		<style source="common">jquery.fancybox-3.3.5.min.css</style>
 	</files>

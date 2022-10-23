@@ -15,7 +15,7 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/JS/Layer.php5</class>
+		<class>Hook/JS/Layer.php</class>
 		<script load="auto" source="local">UI.Layer.js</script>
 		<style load="auto" source="theme">layer.css</style>
 		<image source="theme">spinner.gif</image>

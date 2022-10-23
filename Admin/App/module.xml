@@ -8,8 +8,8 @@
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve code style.</log>
 	<files>
-		<class>Controller/Admin/App.php5</class>
-		<class>View/Admin/App.php5</class>
+		<class>Controller/Admin/App.php</class>
+		<class>View/Admin/App.php</class>
 		<template>admin/app/index.php</template>
 	</files>
 	<relations>

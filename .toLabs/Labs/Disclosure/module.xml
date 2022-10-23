@@ -10,8 +10,8 @@
 	<requires>
 	</requires>
 	<files>
-		<class>Controller/Lab/Disclosure.php5</class>
-		<class>View/Lab/Disclosure.php5</class>
+		<class>Controller/Lab/Disclosure.php</class>
+		<class>View/Lab/Disclosure.php</class>
 		<template>lab/disclosure/index.php</template>
 		<style>site.lab.disclosure.css</style>
 	</files>

@@ -46,24 +46,24 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Ajax/Work/Time.php5</class>
-		<class>Controller/Work/Time.php5</class>
-		<class>Controller/Work/Time/Analysis.php5</class>
-		<class>Controller/Work/Time/Archive.php5</class>
-		<class>Hook/Work/Time.php5</class>
-		<class>Logic/Work/Timer.php5</class>
-		<class>Model/Work/Timer.php5</class>
-		<class>View/Helper/Work/Time.php5</class>
-		<class>View/Helper/Work/Time/Dashboard/My.php5</class>
-		<class>View/Helper/Work/Time/Dashboard/Others.php5</class>
-		<class>View/Helper/Work/Time/Buttons.php5</class>
-		<class>View/Helper/Work/Time/ShortList.php5</class>
-		<class>View/Helper/Work/Time/Timer.php5</class>
-		<class>View/Helper/Work/Time/Modal/Add.php5</class>
-		<class>View/Helper/Work/Time/Modal/Assign.php5</class>
-		<class>View/Work/Time.php5</class>
-		<class>View/Work/Time/Analysis.php5</class>
-		<class>View/Work/Time/Archive.php5</class>
+		<class>Controller/Ajax/Work/Time.php</class>
+		<class>Controller/Work/Time.php</class>
+		<class>Controller/Work/Time/Analysis.php</class>
+		<class>Controller/Work/Time/Archive.php</class>
+		<class>Hook/Work/Time.php</class>
+		<class>Logic/Work/Timer.php</class>
+		<class>Model/Work/Timer.php</class>
+		<class>View/Helper/Work/Time.php</class>
+		<class>View/Helper/Work/Time/Dashboard/My.php</class>
+		<class>View/Helper/Work/Time/Dashboard/Others.php</class>
+		<class>View/Helper/Work/Time/Buttons.php</class>
+		<class>View/Helper/Work/Time/ShortList.php</class>
+		<class>View/Helper/Work/Time/Timer.php</class>
+		<class>View/Helper/Work/Time/Modal/Add.php</class>
+		<class>View/Helper/Work/Time/Modal/Assign.php</class>
+		<class>View/Work/Time.php</class>
+		<class>View/Work/Time/Analysis.php</class>
+		<class>View/Work/Time/Archive.php</class>
 		<locale>de/work/time.ini</locale>
 		<locale>de/work/time/analysis.ini</locale>
 		<locale>de/work/time/archive.ini</locale>

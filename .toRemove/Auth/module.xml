@@ -11,10 +11,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Auth.php5</class>
-		<class>Mail/Auth/Register.php5</class>
-<!--		<class>Mail/Auth/Password.php5</class>-->
-		<class>View/Auth.php5</class>
+		<class>Controller/Auth.php</class>
+		<class>Mail/Auth/Register.php</class>
+<!--		<class>Mail/Auth/Password.php</class>-->
+		<class>View/Auth.php</class>
 		<template>auth/confirm.php</template>
 		<template>auth/login.php</template>
 		<template>auth/password.php</template>

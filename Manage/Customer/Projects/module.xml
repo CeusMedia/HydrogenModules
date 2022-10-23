@@ -8,10 +8,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Customer/Project.php5</class>
-		<class>Logic/CustomerProject.php5</class>
-		<class>View/Manage/Customer/Project.php5</class>
-		<class>Model/Customer/Project.php5</class>
+		<class>Controller/Manage/Customer/Project.php</class>
+		<class>Logic/CustomerProject.php</class>
+		<class>View/Manage/Customer/Project.php</class>
+		<class>Model/Customer/Project.php</class>
 		<template>manage/customer/project/index.php</template>
 	</files>
 	<relations>

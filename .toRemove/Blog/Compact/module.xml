@@ -20,15 +20,15 @@
 	<log version="0.4.2">Fix bugs after migration to newer library versions.</log>
 	<log version="0.4.3">Extract hook to own class.</log>
 	<files>
-		<class>Controller/Blog.php5</class>
-		<class>Hook/Blog/Compact.php5</class>
-		<class>Model/Article.php5</class>
-		<class>Model/ArticleAuthor.php5</class>
-		<class>Model/ArticleTag.php5</class>
-		<class>Model/ArticleVersion.php5</class>
-		<class>Model/Tag.php5</class>
-		<class>View/Blog.php5</class>
-		<class>View/Helper/Blog.php5</class>
+		<class>Controller/Blog.php</class>
+		<class>Hook/Blog/Compact.php</class>
+		<class>Model/Article.php</class>
+		<class>Model/ArticleAuthor.php</class>
+		<class>Model/ArticleTag.php</class>
+		<class>Model/ArticleVersion.php</class>
+		<class>Model/Tag.php</class>
+		<class>View/Blog.php</class>
+		<class>View/Helper/Blog.php</class>
 		<template>blog/add.php</template>
 		<template>blog/article.php</template>
 		<template>blog/author.php</template>

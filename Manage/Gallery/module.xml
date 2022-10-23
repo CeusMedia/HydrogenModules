@@ -8,11 +8,11 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Gallery.php5</class>
-		<class>Model/Gallery.php5</class>
-		<class>Model/GalleryAuthor.php5</class>
-		<class>Model/GalleryTag.php5</class>
-		<class>View/Manage/Gallery.php5</class>
+		<class>Controller/Manage/Gallery.php</class>
+		<class>Model/Gallery.php</class>
+		<class>Model/GalleryAuthor.php</class>
+		<class>Model/GalleryTag.php</class>
+		<class>View/Manage/Gallery.php</class>
 		<locale>de/manage/gallery.ini</locale>
 		<template>manage/gallery/add.php</template>
 		<template>manage/gallery/edit.php</template>

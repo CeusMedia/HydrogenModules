@@ -9,8 +9,8 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Manage/My/Order.php5</class>
-		<class>View/Manage/My/Order.php5</class>
+		<class>Controller/Manage/My/Order.php</class>
+		<class>View/Manage/My/Order.php</class>
 		<template>manage/my/order/index.php</template>
 		<template>manage/my/order/view.php</template>
 	</files>

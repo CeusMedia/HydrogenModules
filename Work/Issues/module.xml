@@ -32,20 +32,20 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Work/Issue.php5</class>
-		<class>Hook/Work/Issue.php5</class>
-		<class>Mail/Work/Issue/Abstract.php5</class>
-		<class>Mail/Work/Issue/Change.php5</class>
-		<class>Mail/Work/Issue/New.php5</class>
-		<class>Model/Issue.php5</class>
-		<class>Model/Issue/Note.php5</class>
-		<class>Model/Issue/Change.php5</class>
-		<class>Logic/Issue.php5</class>
-		<class>View/Work/Issue.php5</class>
-		<class>View/Helper/Work/Issue/ChangeFact.php5</class>
-		<class>View/Helper/Work/Issue/ChangeFacts.php5</class>
-		<class>View/Helper/Work/Issue/ChangeNote.php5</class>
-		<class>View/Helper/Work/Issue/Changes.php5</class>
+		<class>Controller/Work/Issue.php</class>
+		<class>Hook/Work/Issue.php</class>
+		<class>Mail/Work/Issue/Abstract.php</class>
+		<class>Mail/Work/Issue/Change.php</class>
+		<class>Mail/Work/Issue/New.php</class>
+		<class>Model/Issue.php</class>
+		<class>Model/Issue/Note.php</class>
+		<class>Model/Issue/Change.php</class>
+		<class>Logic/Issue.php</class>
+		<class>View/Work/Issue.php</class>
+		<class>View/Helper/Work/Issue/ChangeFact.php</class>
+		<class>View/Helper/Work/Issue/ChangeFacts.php</class>
+		<class>View/Helper/Work/Issue/ChangeNote.php</class>
+		<class>View/Helper/Work/Issue/Changes.php</class>
 		<locale>de/work/issue.ini</locale>
 		<template>work/issue/add.php</template>
 		<template>work/issue/edit.php</template>

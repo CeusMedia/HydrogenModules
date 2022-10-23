@@ -21,7 +21,7 @@ Can be used to cover long loading requests.
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/UI/LockLayer.php5</class>
+		<class>Hook/UI/LockLayer.php</class>
 		<script load="auto">UI.LockLayer.js</script>
 		<style source="theme" load="auto">module.ui.locklayer.css</style>
 		<image source="theme">locklayer_loader.gif</image>

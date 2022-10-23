@@ -23,10 +23,10 @@ Uses [link:http://www.crockford.com/javascript/jsmin.html|JSMin] by [link:http:/
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>JSMin.php5</class>
-		<class>Controller/UI/Compressor.php5</class>
-		<class>Hook/UI/Compressor.php5</class>
-		<class>View/UI/Compressor.php5</class>
+		<class>JSMin.php</class>
+		<class>Controller/UI/Compressor.php</class>
+		<class>Hook/UI/Compressor.php</class>
+		<class>View/UI/Compressor.php</class>
 	</files>
 	<config protected="yes" type="string" name="jsCachePath"></config>
 	<config protected="yes" type="boolean" name="jsMinify" mandatory="yes">yes</config>

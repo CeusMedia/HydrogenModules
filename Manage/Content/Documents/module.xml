@@ -25,10 +25,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Content/Document.php5</class>
-		<class>Hook/Manage/Content/Document.php5</class>
-		<class>Model/Document.php5</class>
-		<class>View/Manage/Content/Document.php5</class>
+		<class>Controller/Manage/Content/Document.php</class>
+		<class>Hook/Manage/Content/Document.php</class>
+		<class>Model/Document.php</class>
+		<class>View/Manage/Content/Document.php</class>
 		<locale>de/manage/content/document.ini</locale>
 		<locale>de/html/manage/content/document/bottom.html</locale>
 		<locale>de/html/manage/content/document/top.html</locale>

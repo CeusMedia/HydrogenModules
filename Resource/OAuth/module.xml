@@ -16,7 +16,7 @@ The configured server URI is related to the OAuth resource server, not to the OA
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Resource/Oauth.php5</class>
+		<class>Resource/Oauth.php</class>
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config protected="yes" type="string" name="server.URI"></config>

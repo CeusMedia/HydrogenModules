@@ -12,21 +12,21 @@
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<category>Tools</category>
 	<files>
-		<class>Controller/Tool/Calculator.php5</class>
-		<class>Hook/Tool/Calculator.php5</class>
-		<class>Model/Calculator/Addition.php5</class>
-		<class>Model/Calculator/Division.php5</class>
-		<class>Model/Calculator/Math.php5</class>
-		<class>Model/Calculator/Multiplication.php5</class>
-		<class>Model/Calculator/Number.php5</class>
-		<class>Model/Calculator/Operator.php5</class>
-		<class>Model/Calculator/Parenthesis.php5</class>
-		<class>Model/Calculator/Power.php5</class>
-		<class>Model/Calculator/Stack.php5</class>
-		<class>Model/Calculator/Subtraction.php5</class>
-		<class>Model/Calculator/TerminalExpression.php5</class>
-		<class>View/Helper/Tool/Calculator.php5</class>
-		<class>View/Tool/Calculator.php5</class>
+		<class>Controller/Tool/Calculator.php</class>
+		<class>Hook/Tool/Calculator.php</class>
+		<class>Model/Calculator/Addition.php</class>
+		<class>Model/Calculator/Division.php</class>
+		<class>Model/Calculator/Math.php</class>
+		<class>Model/Calculator/Multiplication.php</class>
+		<class>Model/Calculator/Number.php</class>
+		<class>Model/Calculator/Operator.php</class>
+		<class>Model/Calculator/Parenthesis.php</class>
+		<class>Model/Calculator/Power.php</class>
+		<class>Model/Calculator/Stack.php</class>
+		<class>Model/Calculator/Subtraction.php</class>
+		<class>Model/Calculator/TerminalExpression.php</class>
+		<class>View/Helper/Tool/Calculator.php</class>
+		<class>View/Tool/Calculator.php</class>
 		<template>tool/calculator/index.php</template>
 		<script load="auto">module.tool.calculator.js</script>
 		<style load="auto">module.tool.calculator.css</style>

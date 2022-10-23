@@ -57,30 +57,30 @@ For payment you need to install a payment module.]]></description>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Shop.php5</class>
-		<class>Controller/Shop/Customer.php5</class>
-		<class>Hook/Shop/FinishPanel.php5</class>
-		<class>Job/Shop.php5</class>
-		<class>Logic/Shop.php5</class>
-		<class>Mail/Shop/Customer/NotPayed.php5</class>
-		<class>Mail/Shop/Customer/Ordered.php5</class>
-		<class>Mail/Shop/Customer/Payed.php5</class>
-		<class>Mail/Shop/Manager/NotPayed.php5</class>
-		<class>Mail/Shop/Manager/Ordered.php5</class>
-		<class>Mail/Shop/Manager/Payed.php5</class>
-		<class>Model/Shop/Cart.php5</class>
-		<class>Model/Shop/Customer.php5</class>
-		<class>Model/Shop/CustomerOld.php5</class>
-		<class>Model/Shop/Order.php5</class>
-		<class>Model/Shop/Order/Position.php5</class>
-		<class>View/Shop.php5</class>
-		<class>View/Shop/Customer.php5</class>
-		<class>View/Helper/Shop.php5</class>
-		<class>View/Helper/Shop/AddressForm.php5</class>
-		<class>View/Helper/Shop/AddressView.php5</class>
-		<class>View/Helper/Shop/CartPositions.php5</class>
-		<class>View/Helper/Shop/OrderFacts.php5</class>
-		<class>View/Helper/Shop/Tabs.php5</class>
+		<class>Controller/Shop.php</class>
+		<class>Controller/Shop/Customer.php</class>
+		<class>Hook/Shop/FinishPanel.php</class>
+		<class>Job/Shop.php</class>
+		<class>Logic/Shop.php</class>
+		<class>Mail/Shop/Customer/NotPayed.php</class>
+		<class>Mail/Shop/Customer/Ordered.php</class>
+		<class>Mail/Shop/Customer/Payed.php</class>
+		<class>Mail/Shop/Manager/NotPayed.php</class>
+		<class>Mail/Shop/Manager/Ordered.php</class>
+		<class>Mail/Shop/Manager/Payed.php</class>
+		<class>Model/Shop/Cart.php</class>
+		<class>Model/Shop/Customer.php</class>
+		<class>Model/Shop/CustomerOld.php</class>
+		<class>Model/Shop/Order.php</class>
+		<class>Model/Shop/Order/Position.php</class>
+		<class>View/Shop.php</class>
+		<class>View/Shop/Customer.php</class>
+		<class>View/Helper/Shop.php</class>
+		<class>View/Helper/Shop/AddressForm.php</class>
+		<class>View/Helper/Shop/AddressView.php</class>
+		<class>View/Helper/Shop/CartPositions.php</class>
+		<class>View/Helper/Shop/OrderFacts.php</class>
+		<class>View/Helper/Shop/Tabs.php</class>
 		<locale>de/shop.ini</locale>
 		<locale>de/shop/customer.ini</locale>
 		<locale>de/html/shop/bottom.html</locale>

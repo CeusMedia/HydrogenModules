@@ -25,7 +25,7 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/JS/Form/Changes.php5</class>
+		<class>Hook/JS/Form/Changes.php</class>
 		<script load="auto">UI.Form.Changes.js</script>
 		<style load="auto">UI.Form.Changes.css</style>
 	</files>

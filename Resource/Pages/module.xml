@@ -35,10 +35,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Logic/Page.php5</class>
-		<class>Model/Page.php5</class>
-		<class>Model/Config/Page.php5</class>
-		<class>Model/Module/Page.php5</class>
+		<class>Logic/Page.php</class>
+		<class>Model/Page.php</class>
+		<class>Model/Config/Page.php</class>
+		<class>Model/Module/Page.php</class>
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>

@@ -59,11 +59,11 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Page.php5</class>
-		<class>Controller/Manage/Page/Ajax.php5</class>
-<!--		<class>Logic/PageManager.php5</class>-->
-		<class>View/Manage/Page.php5</class>
-		<class>Hook/Manage/Page.php5</class>
+		<class>Controller/Manage/Page.php</class>
+		<class>Controller/Manage/Page/Ajax.php</class>
+<!--		<class>Logic/PageManager.php</class>-->
+		<class>View/Manage/Page.php</class>
+		<class>Hook/Manage/Page.php</class>
 		<template>manage/page/add.php</template>
 		<template>manage/page/edit.php</template>
 		<template>manage/page/edit.content.php</template>

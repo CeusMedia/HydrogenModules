@@ -7,6 +7,6 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Test.php5</class>
+		<class>Controller/Test.php</class>
 	</files>
 </module>

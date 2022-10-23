@@ -34,7 +34,7 @@ list>
 	<license source="http://www.fontsquirrel.com/license/roboto">Apache License v2</license>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<files>
-		<class>Hook/UI/Font/Roboto.php5</class>
+		<class>Hook/UI/Font/Roboto.php</class>
 	</files>
 	<relations>
 		<needs type="module">UI_Font</needs>

@@ -9,8 +9,8 @@
 	<log version="0.2.1">Replace CDN resource.</log>
 	<log version="0.2.2">Extract hook to own class.</log>
 	<files>
-		<class>Hook/UI/Helper/Content.php5</class>
-		<class>View/Helper/ContentConverter.php5</class>
+		<class>Hook/UI/Helper/Content.php</class>
+		<class>View/Helper/ContentConverter.php</class>
 		<style source="theme" load="auto">links.css</style>
 		<image source="theme">icons/wikipedia.png</image>
 		<image source="theme">icons/youtube.png</image>

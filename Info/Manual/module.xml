@@ -50,18 +50,18 @@ This module can be localized.
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Ajax/Info/Manual.php5</class>
-		<class>Controller/Info/Manual.php5</class>
-		<class>Hook/Info/Manual/Shortcode.php5</class>
-		<class>Model/Manual/Category.php5</class>
-		<class>Model/Manual/Page.php5</class>
-		<class>Model/Manual/Version.php5</class>
-		<class>View/Helper/Info/Manual/CategoryPageList.php5</class>
-		<class>View/Helper/Info/Manual/CategorySelector.php5</class>
-		<class>View/Helper/Info/Manual/PageTree.php5</class>
-		<class>View/Helper/Info/Manual/Url.php5</class>
-		<class>View/Helper/Info/Manual/ViewerBar.php5</class>
-		<class>View/Info/Manual.php5</class>
+		<class>Controller/Ajax/Info/Manual.php</class>
+		<class>Controller/Info/Manual.php</class>
+		<class>Hook/Info/Manual/Shortcode.php</class>
+		<class>Model/Manual/Category.php</class>
+		<class>Model/Manual/Page.php</class>
+		<class>Model/Manual/Version.php</class>
+		<class>View/Helper/Info/Manual/CategoryPageList.php</class>
+		<class>View/Helper/Info/Manual/CategorySelector.php</class>
+		<class>View/Helper/Info/Manual/PageTree.php</class>
+		<class>View/Helper/Info/Manual/Url.php</class>
+		<class>View/Helper/Info/Manual/ViewerBar.php</class>
+		<class>View/Info/Manual.php</class>
 		<template>info/manual/add.php</template>
 		<template>info/manual/edit.php</template>
 		<template>info/manual/import.php</template>

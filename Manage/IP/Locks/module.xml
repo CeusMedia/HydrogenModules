@@ -27,17 +27,17 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Manage/Ip/Lock.php5</class>
-		<class>Controller/Manage/Ip/Lock/Filter.php5</class>
-		<class>Controller/Manage/Ip/Lock/Reason.php5</class>
-		<class>Controller/Manage/Ip/Lock/Transport.php5</class>
-<!--		<class>Controller/Manage/Ip/Lock/Whitelist.php5</class>-->
-		<class>Hook/Manage/Ip/Lock.php5</class>
-		<class>View/Manage/Ip/Lock.php5</class>
-		<class>View/Manage/Ip/Lock/Filter.php5</class>
-		<class>View/Manage/Ip/Lock/Reason.php5</class>
-		<class>View/Manage/Ip/Lock/Transport.php5</class>
-<!--		<class>View/Manage/Ip/Lock/Whitelist.php5</class>-->
+		<class>Controller/Manage/Ip/Lock.php</class>
+		<class>Controller/Manage/Ip/Lock/Filter.php</class>
+		<class>Controller/Manage/Ip/Lock/Reason.php</class>
+		<class>Controller/Manage/Ip/Lock/Transport.php</class>
+<!--		<class>Controller/Manage/Ip/Lock/Whitelist.php</class>-->
+		<class>Hook/Manage/Ip/Lock.php</class>
+		<class>View/Manage/Ip/Lock.php</class>
+		<class>View/Manage/Ip/Lock/Filter.php</class>
+		<class>View/Manage/Ip/Lock/Reason.php</class>
+		<class>View/Manage/Ip/Lock/Transport.php</class>
+<!--		<class>View/Manage/Ip/Lock/Whitelist.php</class>-->
 		<locale>de/manage/ip/lock.ini</locale>
 		<locale>en/manage/ip/lock.ini</locale>
 		<template>manage/ip/lock/add.php</template>

@@ -27,11 +27,11 @@ code>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Provision.php5</class>
-		<class>Hook/Provision.php5</class>
-		<class>Job/Provision.php5</class>
-		<class>Resource/Provision/Client.php5</class>
-		<class>View/Provision.php5</class>
+		<class>Controller/Provision.php</class>
+		<class>Hook/Provision.php</class>
+		<class>Job/Provision.php</class>
+		<class>Resource/Provision/Client.php</class>
+		<class>View/Provision.php</class>
 		<template>provision/index.php</template>
 		<template>provision/status.php</template>
 		<locale>de/provision.ini</locale>

@@ -19,10 +19,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/My/User/Setting.php5</class>
-		<class>Hook/Manage/My/User/Setting.php5</class>
-		<class>Model/User/Setting.php5</class>
-		<class>View/Manage/My/User/Setting.php5</class>
+		<class>Controller/Manage/My/User/Setting.php</class>
+		<class>Hook/Manage/My/User/Setting.php</class>
+		<class>Model/User/Setting.php</class>
+		<class>View/Manage/My/User/Setting.php</class>
 		<template>manage/my/user/setting/index.php</template>
 		<style load="auto">module.manage.my.user.setting.css</style>
 		<locale>de/manage/my/user/setting.ini</locale>

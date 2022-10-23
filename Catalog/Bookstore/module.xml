@@ -35,23 +35,23 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Catalog/Bookstore.php5</class>
-		<class>Hook/Catalog/Bookstore.php5</class>
-		<class>Logic/Catalog/Bookstore.php5</class>
-		<class>Logic/ShopBridge/Bookstore.php5</class>
-		<class>Model/Catalog/Bookstore/Article.php5</class>
-		<class>Model/Catalog/Bookstore/Article/Author.php5</class>
-		<class>Model/Catalog/Bookstore/Article/Category.php5</class>
-		<class>Model/Catalog/Bookstore/Article/Document.php5</class>
-		<class>Model/Catalog/Bookstore/Article/Tag.php5</class>
-		<class>Model/Catalog/Bookstore/Author.php5</class>
-		<class>Model/Catalog/Bookstore/Category.php5</class>
-		<class>Model/Catalog/Bookstore/Status.php5</class>
-		<class>View/Catalog/Bookstore.php5</class>
-		<class>View/Helper/Catalog/Bookstore.php5</class>
-		<class>View/Helper/Catalog/Bookstore/Position.php5</class>
-		<class>View/Helper/Catalog/Bookstore/Relations.php5</class>
-		<class>View/Helper/Text.php5</class>
+		<class>Controller/Catalog/Bookstore.php</class>
+		<class>Hook/Catalog/Bookstore.php</class>
+		<class>Logic/Catalog/Bookstore.php</class>
+		<class>Logic/ShopBridge/Bookstore.php</class>
+		<class>Model/Catalog/Bookstore/Article.php</class>
+		<class>Model/Catalog/Bookstore/Article/Author.php</class>
+		<class>Model/Catalog/Bookstore/Article/Category.php</class>
+		<class>Model/Catalog/Bookstore/Article/Document.php</class>
+		<class>Model/Catalog/Bookstore/Article/Tag.php</class>
+		<class>Model/Catalog/Bookstore/Author.php</class>
+		<class>Model/Catalog/Bookstore/Category.php</class>
+		<class>Model/Catalog/Bookstore/Status.php</class>
+		<class>View/Catalog/Bookstore.php</class>
+		<class>View/Helper/Catalog/Bookstore.php</class>
+		<class>View/Helper/Catalog/Bookstore/Position.php</class>
+		<class>View/Helper/Catalog/Bookstore/Relations.php</class>
+		<class>View/Helper/Text.php</class>
 		<template>catalog/bookstore/article.php</template>
 		<template>catalog/bookstore/article/item.php</template>
 		<template>catalog/bookstore/article/details.php</template>

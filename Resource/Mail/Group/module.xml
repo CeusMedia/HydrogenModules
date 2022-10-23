@@ -28,40 +28,40 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Info/Mail/Group.php5</class>
-		<class>Job/Mail/Group.php5</class>
-		<class>Hook/Resource/Mail/Group.php5</class>
-		<class>Hook/Resource/Mail/Group/Member.php5</class>
-		<class>Logic/Mail/Group.php5</class>
-		<class>Logic/Mail/Group/Message.php5</class>
-		<class>Mail/Info/Mail/Group/Manager/GroupActivated.php5</class>
-		<class>Mail/Info/Mail/Group/Manager/GroupDeactivated.php5</class>
-		<class>Mail/Info/Mail/Group/Manager/MemberJoined.php5</class>
-		<class>Mail/Info/Mail/Group/Manager/MemberLeft.php5</class>
-		<class>Mail/Info/Mail/Group/Manager/MemberRegistered.php5</class>
-		<class>Mail/Info/Mail/Group/Manager/MemberRejected.php5</class>
-		<class>Mail/Info/Mail/Group/Member/Activated.php5</class>
-		<class>Mail/Info/Mail/Group/Member/Added.php5</class>
-		<class>Mail/Info/Mail/Group/Member/Autojoined.php5</class>
-		<class>Mail/Info/Mail/Group/Member/Deactivated.php5</class>
-		<class>Mail/Info/Mail/Group/Member/Invited.php5</class>
-		<class>Mail/Info/Mail/Group/Member/Joined.php5</class>
-		<class>Mail/Info/Mail/Group/Member/Joining.php5</class>
-		<class>Mail/Info/Mail/Group/Member/Leaving.php5</class>
-		<class>Mail/Info/Mail/Group/Member/Left.php5</class>
-		<class>Mail/Info/Mail/Group/Member/Registered.php5</class>
-		<class>Mail/Info/Mail/Group/Member/Rejected.php5</class>
-		<class>Mail/Info/Mail/Group/Members/MemberActivated.php5</class>
-		<class>Mail/Info/Mail/Group/Members/MemberDeactivated.php5</class>
-		<class>Mail/Info/Mail/Group/Members/MemberJoined.php5</class>
-		<class>Mail/Info/Mail/Group/Members/MemberLeft.php5</class>
-		<class>Model/Mail/Group.php5</class>
-		<class>Model/Mail/Group/Action.php5</class>
-		<class>Model/Mail/Group/Member.php5</class>
-		<class>Model/Mail/Group/Message.php5</class>
-		<class>Model/Mail/Group/Role.php5</class>
-		<class>Model/Mail/Group/Server.php5</class>
-		<class>View/Info/Mail/Group.php5</class>
+		<class>Controller/Info/Mail/Group.php</class>
+		<class>Job/Mail/Group.php</class>
+		<class>Hook/Resource/Mail/Group.php</class>
+		<class>Hook/Resource/Mail/Group/Member.php</class>
+		<class>Logic/Mail/Group.php</class>
+		<class>Logic/Mail/Group/Message.php</class>
+		<class>Mail/Info/Mail/Group/Manager/GroupActivated.php</class>
+		<class>Mail/Info/Mail/Group/Manager/GroupDeactivated.php</class>
+		<class>Mail/Info/Mail/Group/Manager/MemberJoined.php</class>
+		<class>Mail/Info/Mail/Group/Manager/MemberLeft.php</class>
+		<class>Mail/Info/Mail/Group/Manager/MemberRegistered.php</class>
+		<class>Mail/Info/Mail/Group/Manager/MemberRejected.php</class>
+		<class>Mail/Info/Mail/Group/Member/Activated.php</class>
+		<class>Mail/Info/Mail/Group/Member/Added.php</class>
+		<class>Mail/Info/Mail/Group/Member/Autojoined.php</class>
+		<class>Mail/Info/Mail/Group/Member/Deactivated.php</class>
+		<class>Mail/Info/Mail/Group/Member/Invited.php</class>
+		<class>Mail/Info/Mail/Group/Member/Joined.php</class>
+		<class>Mail/Info/Mail/Group/Member/Joining.php</class>
+		<class>Mail/Info/Mail/Group/Member/Leaving.php</class>
+		<class>Mail/Info/Mail/Group/Member/Left.php</class>
+		<class>Mail/Info/Mail/Group/Member/Registered.php</class>
+		<class>Mail/Info/Mail/Group/Member/Rejected.php</class>
+		<class>Mail/Info/Mail/Group/Members/MemberActivated.php</class>
+		<class>Mail/Info/Mail/Group/Members/MemberDeactivated.php</class>
+		<class>Mail/Info/Mail/Group/Members/MemberJoined.php</class>
+		<class>Mail/Info/Mail/Group/Members/MemberLeft.php</class>
+		<class>Model/Mail/Group.php</class>
+		<class>Model/Mail/Group/Action.php</class>
+		<class>Model/Mail/Group/Member.php</class>
+		<class>Model/Mail/Group/Message.php</class>
+		<class>Model/Mail/Group/Role.php</class>
+		<class>Model/Mail/Group/Server.php</class>
+		<class>View/Info/Mail/Group.php</class>
 		<locale>de/html/info/mail/group/privacyNotice.html</locale>
 		<locale>de/html/info/mail/group/termsOfUse.html</locale>
 		<locale>de/info/mail/group.ini</locale>

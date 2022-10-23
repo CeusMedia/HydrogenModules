@@ -18,11 +18,11 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Model/Branch.php5</class>
-		<class>Model/Branch/Image.php5</class>
-		<class>Model/Branch/Tag.php5</class>
-		<class>Model/Company.php5</class>
-		<class>Model/Company/User.php5</class>
+		<class>Model/Branch.php</class>
+		<class>Model/Branch/Image.php</class>
+		<class>Model/Branch/Tag.php</class>
+		<class>Model/Company.php</class>
+		<class>Model/Company/User.php</class>
 	</files>
 	<relations>
 		<needs type="module">Resource_Users</needs>

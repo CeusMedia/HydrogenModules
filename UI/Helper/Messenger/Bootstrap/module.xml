@@ -14,7 +14,7 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>View/Helper/Messenger/Bootstrap.php5</class>
+		<class>View/Helper/Messenger/Bootstrap.php</class>
 		<script source="local" load="auto">UI.Messenger.js</script>
 		<style source="theme" load="auto">messenger.bootstrap.css</style>
 	</files>

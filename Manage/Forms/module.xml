@@ -44,19 +44,19 @@ The form action will save the entered data and send mails according to rules.
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Form.php5</class>
-		<class>Controller/Manage/Form/Block.php5</class>
-		<class>Controller/Manage/Form/Fill.php5</class>
-		<class>Controller/Manage/Form/Import.php5</class>
-		<class>Controller/Manage/Form/Mail.php5</class>
-		<class>Controller/Manage/Form/Target.php5</class>
-		<class>Logic/Form/Fill.php5</class>
-		<class>View/Manage/Form.php5</class>
-		<class>View/Manage/Form/Block.php5</class>
-		<class>View/Manage/Form/Fill.php5</class>
-		<class>View/Manage/Form/Import.php5</class>
-		<class>View/Manage/Form/Mail.php5</class>
-		<class>View/Manage/Form/Target.php5</class>
+		<class>Controller/Manage/Form.php</class>
+		<class>Controller/Manage/Form/Block.php</class>
+		<class>Controller/Manage/Form/Fill.php</class>
+		<class>Controller/Manage/Form/Import.php</class>
+		<class>Controller/Manage/Form/Mail.php</class>
+		<class>Controller/Manage/Form/Target.php</class>
+		<class>Logic/Form/Fill.php</class>
+		<class>View/Manage/Form.php</class>
+		<class>View/Manage/Form/Block.php</class>
+		<class>View/Manage/Form/Fill.php</class>
+		<class>View/Manage/Form/Import.php</class>
+		<class>View/Manage/Form/Mail.php</class>
+		<class>View/Manage/Form/Target.php</class>
 		<template>manage/form/add.php</template>
 		<template>manage/form/edit.php</template>
 		<template>manage/form/edit.blocks.within.php</template>

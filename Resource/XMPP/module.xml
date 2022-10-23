@@ -13,7 +13,7 @@ This module enables other modules to communicate via XMPP (Jabber).
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Resource/XMPP.php5</class>
+		<class>Resource/XMPP.php</class>
 	</files>
 	<config protected="yes" type="boolean" mandatory="no" name="active" title="Enable support to send XMPP messages"></config>
 	<config protected="yes" type="string" mandatory="yes" name="sender.domain" title="Hostname or IP of XMPP server"></config>

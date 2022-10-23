@@ -13,7 +13,7 @@
 	<license source="https://www.mozilla.org/en-US/foundation/licensing/website-content/">Creative Commons Attribution Share-Alike 3.0 Unported</license>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<files>
-		<class>Hook/UI/Font/Fira.php5</class>
+		<class>Hook/UI/Font/Fira.php</class>
 	</files>
 	<relations>
 		<needs type="module">UI_Font</needs>

@@ -23,11 +23,11 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/My/User/Avatar.php5</class>
-		<class>Hook/Manage/My/User/Avatar.php5</class>
-		<class>Model/User/Avatar.php5</class>
-		<class>View/Manage/My/User/Avatar.php5</class>
-		<class>View/Helper/UserAvatar.php5</class>
+		<class>Controller/Manage/My/User/Avatar.php</class>
+		<class>Hook/Manage/My/User/Avatar.php</class>
+		<class>Model/User/Avatar.php</class>
+		<class>View/Manage/My/User/Avatar.php</class>
+		<class>View/Helper/UserAvatar.php</class>
 		<template>manage/my/user/avatar/index.php</template>
 		<locale>de/manage/my/user/avatar.ini</locale>
 		<locale>de/html/manage/my/user/avatar/info.avatar.html</locale>

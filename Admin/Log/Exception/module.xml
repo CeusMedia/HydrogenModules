@@ -20,8 +20,8 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Admin/Log/Exception.php5</class>
-		<class>View/Admin/Log/Exception.php5</class>
+		<class>Controller/Admin/Log/Exception.php</class>
+		<class>View/Admin/Log/Exception.php</class>
 		<template>admin/log/exception/index.php</template>
 		<template>admin/log/exception/index.filter.php</template>
 		<template>admin/log/exception/index.list.php</template>

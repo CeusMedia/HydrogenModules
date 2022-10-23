@@ -23,11 +23,11 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Auth/Oauth.php5</class>
-		<class>Mail/Auth/OAuth/Password.php5</class>
-		<class>View/Auth/Oauth.php5</class>
-		<class>Logic/Authentication/Backend/Oauth.php5</class>
-		<class>Hook/Auth/Oauth.php5</class>
+		<class>Controller/Auth/Oauth.php</class>
+		<class>Mail/Auth/OAuth/Password.php</class>
+		<class>View/Auth/Oauth.php</class>
+		<class>Logic/Authentication/Backend/Oauth.php</class>
+		<class>Hook/Auth/Oauth.php</class>
 		<template>auth/oauth/login.php</template>
 		<template>auth/oauth/login.form.php</template>
 		<template>auth/oauth/password.php</template>

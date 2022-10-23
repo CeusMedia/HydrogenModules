@@ -42,35 +42,35 @@ Cronjobs:
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Mangopay/Event.php5</class>
-		<class>Job/Mangopay/Event.php5</class>
-		<class>Mail/Mangopay/EventFailed.php5</class>
-		<class>Mail/Mangopay/EventAgain.php5</class>
-		<class>Mail/Mangopay/EventUnverfied.php5</class>
-		<class>Mail/Mangopay/Event/Payin.php5</class>
-		<class>Model/Mangopay/Event.php5</class>
-		<class>Model/Mangopay/Payin.php5</class>
-		<class>Logic/Payment/Mangopay.php5</class>
-		<class>Logic/Payment/Mangopay/Event.php5</class>
-		<class>Logic/Payment/Mangopay/Event/Payin.php5</class>
-		<class>Logic/Payment/Mangopay/Event/Payin/Normal.php5</class>
-		<class>Logic/Payment/Mangopay/Event/Payin/Normal/Created.php5</class>
-		<class>Logic/Payment/Mangopay/Event/Payin/Normal/Failed.php5</class>
-		<class>Logic/Payment/Mangopay/Event/Payin/Normal/Succeeded.php5</class>
-		<class>Resource/Mangopay.php5</class>
-		<class>View/Helper/Mangopay/Abstract.php5</class>
-		<class>View/Helper/Mangopay/Error.php5</class>
-		<class>View/Helper/Mangopay/URL.php5</class>
-		<class>View/Helper/Mangopay/Entity/BIC.php5</class>
-		<class>View/Helper/Mangopay/Entity/Card.php5</class>
-		<class>View/Helper/Mangopay/Entity/CardNumber.php5</class>
-		<class>View/Helper/Mangopay/Entity/CardProviderLogo.php5</class>
-		<class>View/Helper/Mangopay/Entity/IBAN.php5</class>
-		<class>View/Helper/Mangopay/Entity/Money.php5</class>
-		<class>View/Helper/Mangopay/Entity/Wallet.php5</class>
-		<class>View/Helper/Mangopay/Entity/WalletLogo.php5</class>
-		<class>View/Helper/Mangopay/Input/Amount.php5</class>
-		<class>View/Mangopay/Event.php5</class>
+		<class>Controller/Mangopay/Event.php</class>
+		<class>Job/Mangopay/Event.php</class>
+		<class>Mail/Mangopay/EventFailed.php</class>
+		<class>Mail/Mangopay/EventAgain.php</class>
+		<class>Mail/Mangopay/EventUnverfied.php</class>
+		<class>Mail/Mangopay/Event/Payin.php</class>
+		<class>Model/Mangopay/Event.php</class>
+		<class>Model/Mangopay/Payin.php</class>
+		<class>Logic/Payment/Mangopay.php</class>
+		<class>Logic/Payment/Mangopay/Event.php</class>
+		<class>Logic/Payment/Mangopay/Event/Payin.php</class>
+		<class>Logic/Payment/Mangopay/Event/Payin/Normal.php</class>
+		<class>Logic/Payment/Mangopay/Event/Payin/Normal/Created.php</class>
+		<class>Logic/Payment/Mangopay/Event/Payin/Normal/Failed.php</class>
+		<class>Logic/Payment/Mangopay/Event/Payin/Normal/Succeeded.php</class>
+		<class>Resource/Mangopay.php</class>
+		<class>View/Helper/Mangopay/Abstract.php</class>
+		<class>View/Helper/Mangopay/Error.php</class>
+		<class>View/Helper/Mangopay/URL.php</class>
+		<class>View/Helper/Mangopay/Entity/BIC.php</class>
+		<class>View/Helper/Mangopay/Entity/Card.php</class>
+		<class>View/Helper/Mangopay/Entity/CardNumber.php</class>
+		<class>View/Helper/Mangopay/Entity/CardProviderLogo.php</class>
+		<class>View/Helper/Mangopay/Entity/IBAN.php</class>
+		<class>View/Helper/Mangopay/Entity/Money.php</class>
+		<class>View/Helper/Mangopay/Entity/Wallet.php</class>
+		<class>View/Helper/Mangopay/Entity/WalletLogo.php</class>
+		<class>View/Helper/Mangopay/Input/Amount.php</class>
+		<class>View/Mangopay/Event.php</class>
 		<locale>de/resource/payment/mangopay/error.ini</locale>
 	</files>
 	<link access="public" path="mangopay/event/receive"/>

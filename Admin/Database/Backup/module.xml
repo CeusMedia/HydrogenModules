@@ -25,13 +25,13 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Admin/Database/Backup.php5</class>
-		<class>Controller/Admin/Database/Backup/Copy.php5</class>
-		<class>Logic/Database/Backup.php5</class>
-		<class>Logic/Database/Backup/Copy.php5</class>
-		<class>View/Admin/Database/Backup.php5</class>
-		<class>View/Admin/Database/Backup/Copy.php5</class>
-		<class>Hook/Admin/Database/Backup/Copy.php5</class>
+		<class>Controller/Admin/Database/Backup.php</class>
+		<class>Controller/Admin/Database/Backup/Copy.php</class>
+		<class>Logic/Database/Backup.php</class>
+		<class>Logic/Database/Backup/Copy.php</class>
+		<class>View/Admin/Database/Backup.php</class>
+		<class>View/Admin/Database/Backup/Copy.php</class>
+		<class>Hook/Admin/Database/Backup/Copy.php</class>
 		<template>admin/database/backup/backup.php</template>
 		<template>admin/database/backup/index.php</template>
 		<template>admin/database/backup/view.php</template>

@@ -20,7 +20,7 @@ To append entities, you need to implement Hook::listRelations.
 	<log version="0.4.1">Support chainability on view helper class.</log>
 	<log version="0.4.2">Improve localization.</log>
 	<files>
-		<class>View/Helper/ItemRelationLister.php5</class>
+		<class>View/Helper/ItemRelationLister.php</class>
 		<locale>de/helper/relation.ini</locale>
 		<locale>en/helper/relation.ini</locale>
 		<style source="common" load="auto">module.ui.helper.relations.css</style>

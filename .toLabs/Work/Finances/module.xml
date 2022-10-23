@@ -11,22 +11,22 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Work/Finance.php5</class>
-		<class>Controller/Work/Finance/Bank.php5</class>
-		<class>Controller/Work/Finance/Bank/Account.php5</class>
-		<class>Controller/Work/Finance/Fund.php5</class>
-		<class>Model/Finance/Bank.php5</class>
-		<class>Model/Finance/Bank/Account.php5</class>
-		<class>Model/Finance/Bank/Account/Reader/Postbank.php5</class>
-		<class>Model/Finance/Bank/Account/Reader/DKB.php5</class>
-		<class>Model/Finance/Bank/Account/Reader/DeutscheBank.php5</class>
-		<class>Model/Finance/Bank/Account/Reader/DWS.php5</class>
-		<class>Model/Finance/Fund.php5</class>
-		<class>Model/Finance/FundPrice.php5</class>
-		<class>View/Work/Finance.php5</class>
-		<class>View/Work/Finance/Bank.php5</class>
-		<class>View/Work/Finance/Bank/Account.php5</class>
-		<class>View/Work/Finance/Fund.php5</class>
+		<class>Controller/Work/Finance.php</class>
+		<class>Controller/Work/Finance/Bank.php</class>
+		<class>Controller/Work/Finance/Bank/Account.php</class>
+		<class>Controller/Work/Finance/Fund.php</class>
+		<class>Model/Finance/Bank.php</class>
+		<class>Model/Finance/Bank/Account.php</class>
+		<class>Model/Finance/Bank/Account/Reader/Postbank.php</class>
+		<class>Model/Finance/Bank/Account/Reader/DKB.php</class>
+		<class>Model/Finance/Bank/Account/Reader/DeutscheBank.php</class>
+		<class>Model/Finance/Bank/Account/Reader/DWS.php</class>
+		<class>Model/Finance/Fund.php</class>
+		<class>Model/Finance/FundPrice.php</class>
+		<class>View/Work/Finance.php</class>
+		<class>View/Work/Finance/Bank.php</class>
+		<class>View/Work/Finance/Bank/Account.php</class>
+		<class>View/Work/Finance/Fund.php</class>
 		<template>work/finance/index.php</template>
 		<template>work/finance/bank/add.php</template>
 		<template>work/finance/bank/edit.php</template>

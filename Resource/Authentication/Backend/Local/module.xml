@@ -66,14 +66,14 @@ list>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Auth/Local.php5</class>
-		<class>Controller/Ajax/Auth/Local.php5</class>
-		<class>Hook/Auth/Local.php5</class>
-		<class>Logic/Authentication/Backend/Local.php5</class>
-		<class>Mail/Auth/Local/Register.php5</class>
-		<class>Mail/Auth/Local/Password.php5</class>
-		<class>View/Auth/Local.php5</class>
-		<class>View/Helper/Auth/Local/Panel/Login.php5</class>
+		<class>Controller/Auth/Local.php</class>
+		<class>Controller/Ajax/Auth/Local.php</class>
+		<class>Hook/Auth/Local.php</class>
+		<class>Logic/Authentication/Backend/Local.php</class>
+		<class>Mail/Auth/Local/Register.php</class>
+		<class>Mail/Auth/Local/Password.php</class>
+		<class>View/Auth/Local.php</class>
+		<class>View/Helper/Auth/Local/Panel/Login.php</class>
 		<template>auth/local/confirm.php</template>
 		<template>auth/local/login.php</template>
 		<template>auth/local/login.form.php</template>

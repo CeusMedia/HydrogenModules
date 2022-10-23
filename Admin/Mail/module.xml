@@ -70,19 +70,19 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Admin/Mail/Attachment.php5</class>
-		<class>Controller/Admin/Mail/Attachment/Folder.php5</class>
-		<class>Controller/Admin/Mail/Queue.php5</class>
-		<class>Controller/Admin/Mail/Template.php5</class>
-		<class>Controller/Admin/Mail/Template/Export.php5</class>
-		<class>Controller/Admin/Mail/Template/Import.php5</class>
-		<class>Controller/Ajax/Admin/Mail/Template.php5</class>
-		<class>Hook/Admin/Mail/Attachment.php5</class>
-		<class>Hook/Admin/Mail/Queue.php5</class>
-		<class>View/Admin/Mail/Attachment.php5</class>
-		<class>View/Admin/Mail/Attachment/Folder.php5</class>
-		<class>View/Admin/Mail/Queue.php5</class>
-		<class>View/Admin/Mail/Template.php5</class>
+		<class>Controller/Admin/Mail/Attachment.php</class>
+		<class>Controller/Admin/Mail/Attachment/Folder.php</class>
+		<class>Controller/Admin/Mail/Queue.php</class>
+		<class>Controller/Admin/Mail/Template.php</class>
+		<class>Controller/Admin/Mail/Template/Export.php</class>
+		<class>Controller/Admin/Mail/Template/Import.php</class>
+		<class>Controller/Ajax/Admin/Mail/Template.php</class>
+		<class>Hook/Admin/Mail/Attachment.php</class>
+		<class>Hook/Admin/Mail/Queue.php</class>
+		<class>View/Admin/Mail/Attachment.php</class>
+		<class>View/Admin/Mail/Attachment/Folder.php</class>
+		<class>View/Admin/Mail/Queue.php</class>
+		<class>View/Admin/Mail/Template.php</class>
 		<template>admin/mail/attachment/add.php</template>
 		<template>admin/mail/attachment/index.php</template>
 		<template>admin/mail/attachment/index.files.php</template>

@@ -9,7 +9,7 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Hook/Server/Log/Sentry.php5</class>
+		<class>Hook/Server/Log/Sentry.php</class>
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Module main switch">yes</config>
 	<config protected="yes" type="string" name="dsn" title="Sentry project DSN"></config>

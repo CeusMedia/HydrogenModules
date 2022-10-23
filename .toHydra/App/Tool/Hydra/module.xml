@@ -24,10 +24,10 @@ Use this tool to update your application installations.
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>App.php5</class>
-		<class>Environment.php5</class>
-		<class>Controller/Index.php5</class>
-		<class>View/Index.php5</class>
+		<class>App.php</class>
+		<class>Environment.php</class>
+		<class>Controller/Index.php</class>
+		<class>View/Index.php</class>
 		<locale>de/main.ini</locale>
 		<locale>de/html/env.installing.html</locale>
 		<locale>de/html/index/home.html</locale>
@@ -66,7 +66,7 @@ Use this tool to update your application installations.
 		<font source="theme">OpenSans/OpenSans-Regular.ttf</font>
 		<font source="theme">OpenSans/OpenSans-Semibold.ttf</font>
 		<font source="theme">OpenSans/OpenSans-SemiboldItalic.ttf</font>
-		<file>boot.php5</file>
+		<file>boot.php</file>
 		<file>index.php</file>
 		<file>.htaccess</file>
 		<file>.htpasswd</file>

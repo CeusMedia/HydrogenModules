@@ -20,10 +20,10 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Manage/My/Provision/License.php5</class>
-		<class>Controller/Manage/My/Provision/License/Key.php5</class>
-		<class>View/Manage/My/Provision/License.php5</class>
-		<class>View/Manage/My/Provision/License/Key.php5</class>
+		<class>Controller/Manage/My/Provision/License.php</class>
+		<class>Controller/Manage/My/Provision/License/Key.php</class>
+		<class>View/Manage/My/Provision/License.php</class>
+		<class>View/Manage/My/Provision/License/Key.php</class>
 		<template>manage/my/provision/license/add.php</template>
 		<template>manage/my/provision/license/assign.php</template>
 		<template>manage/my/provision/license/index.php</template>

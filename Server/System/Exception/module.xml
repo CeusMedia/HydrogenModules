@@ -27,9 +27,9 @@ Suggested for any web application if you do not have your own exception handling
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/System/Exception.php5</class>
-		<class>Hook/System/Exception.php5</class>
-		<class>View/System/Exception.php5</class>
+		<class>Controller/System/Exception.php</class>
+		<class>Hook/System/Exception.php</class>
+		<class>View/System/Exception.php</class>
 		<template>system/exception/index.php</template>
 		<locale>de/html/system/exception/bottom.html</locale>
 		<locale>de/html/system/exception/top.html</locale>

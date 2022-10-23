@@ -14,9 +14,9 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Customer.php5</class>
-		<class>View/Manage/Customer.php5</class>
-		<class>Model/Customer.php5</class>
+		<class>Controller/Manage/Customer.php</class>
+		<class>View/Manage/Customer.php</class>
+		<class>Model/Customer.php</class>
 		<template>manage/customer/add.php</template>
 		<template>manage/customer/edit.php</template>
 		<template>manage/customer/index.php</template>

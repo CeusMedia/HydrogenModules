@@ -39,9 +39,9 @@ list>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Matomo.php5</class>
-		<class>Hook/Tracker/Matomo.php5</class>
-		<class>View/Matomo.php5</class>
+		<class>Controller/Matomo.php</class>
+		<class>Hook/Tracker/Matomo.php</class>
+		<class>View/Matomo.php</class>
 		<template>matomo/index.php</template>
 		<locale>de/html/matomo/index.html</locale>
 		<script>module.tracker.matomo.js</script>

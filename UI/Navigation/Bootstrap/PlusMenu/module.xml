@@ -12,7 +12,7 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>View/Helper/Navigation/Bootstrap/PlusMenu.php5</class>
+		<class>View/Helper/Navigation/Bootstrap/PlusMenu.php</class>
 		<style load="auto">module.ui.helper.navigation.bootstrap.plusmenu.css</style>
 	</files>
 	<config type="boolean" name="active" title="Module main switch">yes</config>

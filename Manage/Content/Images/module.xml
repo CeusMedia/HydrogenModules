@@ -39,10 +39,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Content/Image.php5</class>
-		<class>Model/Image/Thumbnail.php5</class>
-		<class>View/Manage/Content/Image.php5</class>
-		<class>View/Helper/Thumbnailer.php5</class>
+		<class>Controller/Manage/Content/Image.php</class>
+		<class>Model/Image/Thumbnail.php</class>
+		<class>View/Manage/Content/Image.php</class>
+		<class>View/Helper/Thumbnailer.php</class>
 		<locale>de/manage/content/image.ini</locale>
 		<locale>de/html/manage/content/image/bottom.html</locale>
 		<locale>de/html/manage/content/image/top.html</locale>

@@ -10,9 +10,9 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Manage/Testimonial.php5</class>
-		<class>Model/Testimonial.php5</class>
-		<class>View/Manage/Testimonial.php5</class>
+		<class>Controller/Manage/Testimonial.php</class>
+		<class>Model/Testimonial.php</class>
+		<class>View/Manage/Testimonial.php</class>
 		<locale>de/manage/testimonial.ini</locale>
 		<locale>en/manage/testimonial.ini</locale>
 		<template>manage/testimonial/add.php</template>

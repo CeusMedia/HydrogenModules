@@ -23,13 +23,13 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Shop/Payment/Mangopay.php5</class>
-		<class>Hook/Shop/Payment/Mangopay.php5</class>
-		<class>Job/Shop/Payment/Mangopay.php5</class>
-		<class>Logic/Shop/Payment/Mangopay.php5</class>
-		<class>Model/Shop/Payment/Mangopay.php5</class>
-		<class>View/Helper/Shop/FinishPanel/Mangopay.php5</class>
-		<class>View/Shop/Payment/Mangopay.php5</class>
+		<class>Controller/Shop/Payment/Mangopay.php</class>
+		<class>Hook/Shop/Payment/Mangopay.php</class>
+		<class>Job/Shop/Payment/Mangopay.php</class>
+		<class>Logic/Shop/Payment/Mangopay.php</class>
+		<class>Model/Shop/Payment/Mangopay.php</class>
+		<class>View/Helper/Shop/FinishPanel/Mangopay.php</class>
+		<class>View/Shop/Payment/Mangopay.php</class>
 		<locale>de/shop/payment/mangopay.ini</locale>
 	</files>
 	<config protected="yes" type="integer" name="method.BankWire" title="priority: 0-disabled, 1-highest, ..., 9-lowest">8</config>

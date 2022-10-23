@@ -37,17 +37,17 @@ This module needs other modules to be installed:
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Admin/Module.php5</class>
-		<class>Controller/Admin/Module/Viewer.php5</class>
-		<class>Model/Module.php5</class>
-		<class>View/Admin/Module.php5</class>
-		<class>View/Admin/Module/Viewer.php5</class>
-		<class>View/Helper/InstanceSelector.php5</class>
-		<class>View/Helper/Module.php5</class>
-		<class>View/Helper/Module/CodeViewer.php5</class>
-		<class>View/Helper/Module/Details.php5</class>
-		<class>Logic/Module.php5</class>
-		<class>Logic/Module/Relation.php5</class>
+		<class>Controller/Admin/Module.php</class>
+		<class>Controller/Admin/Module/Viewer.php</class>
+		<class>Model/Module.php</class>
+		<class>View/Admin/Module.php</class>
+		<class>View/Admin/Module/Viewer.php</class>
+		<class>View/Helper/InstanceSelector.php</class>
+		<class>View/Helper/Module.php</class>
+		<class>View/Helper/Module/CodeViewer.php</class>
+		<class>View/Helper/Module/Details.php</class>
+		<class>Logic/Module.php</class>
+		<class>Logic/Module/Relation.php</class>
 		<locale>de/admin/module.ini</locale>
 		<locale>de/admin/module/viewer.ini</locale>
 		<locale>en/admin/module.ini</locale>

@@ -13,7 +13,7 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/JS/SelectBox.php5</class>
+		<class>Hook/JS/SelectBox.php</class>
 		<script source="local" load="auto">cmSelectBox-0.1.js</script>
 		<style source="common" load="auto">cmSelectBox-0.1.css</style>
 		<image source="theme">bg_select_arrow.png</image>

@@ -61,14 +61,14 @@ Please think about using the hook instead.
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Server/Log/Exception.php5</class>
-		<class>Hook/Server/Log/Exception.php5</class>
-		<class>Job/Server/Log/Exception.php5</class>
-		<class>Logic/Log/Exception.php5</class>
-		<class>Mail/Log/Exception.php5</class>
-		<class>Model/Log/Exception.php5</class>
-		<class>View/Helper/Mail/Exception/Facts.php5</class>
-		<class>View/Server/Log/Exception.php5</class>
+		<class>Controller/Server/Log/Exception.php</class>
+		<class>Hook/Server/Log/Exception.php</class>
+		<class>Job/Server/Log/Exception.php</class>
+		<class>Logic/Log/Exception.php</class>
+		<class>Mail/Log/Exception.php</class>
+		<class>Model/Log/Exception.php</class>
+		<class>View/Helper/Mail/Exception/Facts.php</class>
+		<class>View/Server/Log/Exception.php</class>
 		<template>server/log/exception/index.php</template>
 		<template>server/log/exception/view.php</template>
 		<locale>de/server/log/exception.ini</locale>

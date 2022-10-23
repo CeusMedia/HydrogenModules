@@ -7,10 +7,10 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian Würker</author>
 	<files>
-		<class>Controller/Work/Fund.php5</class>
-		<class>Model/Fund.php5</class>
-		<class>Model/FundPrice.php5</class>
-		<class>View/Work/Fund.php5</class>
+		<class>Controller/Work/Fund.php</class>
+		<class>Model/Fund.php</class>
+		<class>Model/FundPrice.php</class>
+		<class>View/Work/Fund.php</class>
 		<template>work/fund/add.php</template>
 		<template>work/fund/edit.php</template>
 		<template>work/fund/index.php</template>

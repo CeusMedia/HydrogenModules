@@ -8,8 +8,8 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Lab.php5</class>
-		<class>View/Lab.php5</class>
+		<class>Controller/Lab.php</class>
+		<class>View/Lab.php</class>
 		<locale>de/lab.ini</locale>
 		<template>lab/index.php</template>
 		<style>site.lab.css</style>

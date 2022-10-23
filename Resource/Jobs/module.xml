@@ -76,19 +76,19 @@ code:shell>./job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Jobber.php5</class>
-		<class>Job/Abstract.php5</class>
-		<class>Job/Job.php5</class>
-		<class>Job/Job/Lock.php5</class>
-		<class>Job/Job/Schedule.php5</class>
-		<class>Job/Job/Test.php5</class>
-		<class>Job/Job/Util.php5</class>
-		<class>Logic/Job.php5</class>
-		<class>Mail/Job/Report.php5</class>
-		<class>Model/Job.php5</class>
-		<class>Model/Job/Definition.php5</class>
-		<class>Model/Job/Run.php5</class>
-		<class>Model/Job/Schedule.php5</class>
+		<class>Jobber.php</class>
+		<class>Job/Abstract.php</class>
+		<class>Job/Job.php</class>
+		<class>Job/Job/Lock.php</class>
+		<class>Job/Job/Schedule.php</class>
+		<class>Job/Job/Test.php</class>
+		<class>Job/Job/Util.php</class>
+		<class>Logic/Job.php</class>
+		<class>Mail/Job/Report.php</class>
+		<class>Model/Job.php</class>
+		<class>Model/Job/Definition.php</class>
+		<class>Model/Job/Run.php</class>
+		<class>Model/Job/Schedule.php</class>
 		<style source="common">module.resource.jobs-mail.css</style>
 		<file>job.php</file>
 	</files>

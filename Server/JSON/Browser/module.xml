@@ -21,7 +21,7 @@ Imagine you have installed a Hydrogen instance with a pure server application wh
 	<todo>implement modes: view | control</todo>
 	<todo>implement IP access filter (define IPs in config which are allowed, block all others)</todo>
 	<files>
-		<class>Browser.php5</class>
+		<class>Browser.php</class>
 		<template>browser/index.php</template>
 		<template>browser/panel.debug.php</template>
 		<template>browser/panel.error.php</template>

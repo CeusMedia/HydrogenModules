@@ -40,14 +40,14 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Ajax/Info/Contact.php5</class>
-		<class>Controller/Info/Contact.php5</class>
-		<class>Hook/Info/Contact.php5</class>
-		<class>Mail/Info/Contact.php5</class>
-		<class>Mail/Info/Contact/Form.php5</class>
-		<class>View/Helper/Info/Contact/Form/Modal.php5</class>
-		<class>View/Helper/Info/Contact/Form/Trigger.php5</class>
-		<class>View/Info/Contact.php5</class>
+		<class>Controller/Ajax/Info/Contact.php</class>
+		<class>Controller/Info/Contact.php</class>
+		<class>Hook/Info/Contact.php</class>
+		<class>Mail/Info/Contact.php</class>
+		<class>Mail/Info/Contact/Form.php</class>
+		<class>View/Helper/Info/Contact/Form/Modal.php</class>
+		<class>View/Helper/Info/Contact/Form/Trigger.php</class>
+		<class>View/Info/Contact.php</class>
 		<template>info/contact/index.php</template>
 		<locale>de/html/info/contact/bottom.html</locale>
 		<locale>de/html/info/contact/privacy.html</locale>

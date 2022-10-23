@@ -20,10 +20,10 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Info/Download.php5</class>
-		<class>View/Info/Download.php5</class>
-		<class>Model/Download/File.php5</class>
-		<class>Model/Download/Folder.php5</class>
+		<class>Controller/Info/Download.php</class>
+		<class>View/Info/Download.php</class>
+		<class>Model/Download/File.php</class>
+		<class>Model/Download/Folder.php</class>
 		<locale>de/info/download.ini</locale>
 		<locale>de/html/info/download/index.bottom.html</locale>
 		<locale>de/html/info/download/index.top.html</locale>

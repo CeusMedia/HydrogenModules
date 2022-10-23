@@ -22,7 +22,7 @@
 	<company site="https://ace.c9.io/">ace.c9.io</company>
 	<license source="https://raw.githubusercontent.com/ajaxorg/ace/master/LICENSE">BSD</license>
 	<files>
-		<class>Hook/JS/Ace.php5</class>
+		<class>Hook/JS/Ace.php</class>
 		<locale>de/ace.ini</locale>
 		<locale>en/ace.ini</locale>
 		<style source="common">module.js.ace.css</style>

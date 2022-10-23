@@ -27,15 +27,15 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Work/Mail/Group.php5</class>
-		<class>Controller/Work/Mail/Group/Message.php5</class>
-		<class>Controller/Work/Mail/Group/Role.php5</class>
-		<class>Controller/Work/Mail/Group/Server.php5</class>
-		<class>Hook/Work/Mail/Group.php5</class>
-		<class>View/Work/Mail/Group.php5</class>
-		<class>View/Work/Mail/Group/Message.php5</class>
-		<class>View/Work/Mail/Group/Role.php5</class>
-		<class>View/Work/Mail/Group/Server.php5</class>
+		<class>Controller/Work/Mail/Group.php</class>
+		<class>Controller/Work/Mail/Group/Message.php</class>
+		<class>Controller/Work/Mail/Group/Role.php</class>
+		<class>Controller/Work/Mail/Group/Server.php</class>
+		<class>Hook/Work/Mail/Group.php</class>
+		<class>View/Work/Mail/Group.php</class>
+		<class>View/Work/Mail/Group/Message.php</class>
+		<class>View/Work/Mail/Group/Role.php</class>
+		<class>View/Work/Mail/Group/Server.php</class>
 		<locale>de/work/mail/group.ini</locale>
 		<locale>de/work/mail/group/message.ini</locale>
 		<template>work/mail/group/add.php</template>

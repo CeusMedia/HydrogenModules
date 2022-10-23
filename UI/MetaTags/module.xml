@@ -14,8 +14,8 @@
 	<author email="christian.wuerker@ceusmedia.de"><![CDATA[Christian Würker]]></author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/UI/MetaTags.php5</class>
-		<class>View/Helper/MetaTags.php5</class>
+		<class>Hook/UI/MetaTags.php</class>
+		<class>View/Helper/MetaTags.php</class>
 	</files>
 	<config protected="yes" type="boolean" name="enable">yes</config>
 	<config protected="yes" type="boolean" name="enable.DublinCore">yes</config>

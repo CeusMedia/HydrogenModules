@@ -16,11 +16,11 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Info/News.php5</class>
-		<class>Hook/Info/News.php5</class>
-		<class>Model/News.php5</class>
-		<class>View/Info/News.php5</class>
-		<class>View/Helper/News.php5</class>
+		<class>Controller/Info/News.php</class>
+		<class>Hook/Info/News.php</class>
+		<class>Model/News.php</class>
+		<class>View/Info/News.php</class>
+		<class>View/Helper/News.php</class>
 		<locale>de/info/news.ini</locale>
 		<locale>de/html/info/news/bottom.html</locale>
 		<locale>de/html/info/news/top.html</locale>

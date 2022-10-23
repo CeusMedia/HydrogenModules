@@ -19,10 +19,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Auth/Rest.php5</class>
-		<class>View/Auth/Rest.php5</class>
-		<class>Logic/Authentication/Backend/Rest.php5</class>
-		<class>Hook/Auth/Rest.php5</class>
+		<class>Controller/Auth/Rest.php</class>
+		<class>View/Auth/Rest.php</class>
+		<class>Logic/Authentication/Backend/Rest.php</class>
+		<class>Hook/Auth/Rest.php</class>
 		<template>auth/rest/login.php</template>
 		<template>auth/rest/login.form.php</template>
 		<template>auth/rest/register.form.php</template>

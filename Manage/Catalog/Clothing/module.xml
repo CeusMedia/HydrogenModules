@@ -12,13 +12,13 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Manage/Catalog/Clothing/Article.php5</class>
-		<class>Controller/Manage/Catalog/Clothing/Category.php5</class>
-		<class>Logic/ShopBridge/Clothing.php5</class>
-		<class>Model/Catalog/Clothing/Article.php5</class>
-		<class>Model/Catalog/Clothing/Category.php5</class>
-		<class>View/Manage/Catalog/Clothing/Article.php5</class>
-		<class>View/Manage/Catalog/Clothing/Category.php5</class>
+		<class>Controller/Manage/Catalog/Clothing/Article.php</class>
+		<class>Controller/Manage/Catalog/Clothing/Category.php</class>
+		<class>Logic/ShopBridge/Clothing.php</class>
+		<class>Model/Catalog/Clothing/Article.php</class>
+		<class>Model/Catalog/Clothing/Category.php</class>
+		<class>View/Manage/Catalog/Clothing/Article.php</class>
+		<class>View/Manage/Catalog/Clothing/Category.php</class>
 		<template>manage/catalog/clothing/article/add.php</template>
 		<template>manage/catalog/clothing/article/edit.php</template>
 		<template>manage/catalog/clothing/article/index.php</template>

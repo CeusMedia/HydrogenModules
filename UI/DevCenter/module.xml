@@ -18,10 +18,10 @@ Press F9 to open DevCenter.
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Ajax/DevCenter.php5</class>
-		<class>Hook/UI/DevCenter.php5</class>
-		<class>Resource/DevCenter.php5</class>
-		<class>View/Helper/DevCenter.php5</class>
+		<class>Controller/Ajax/DevCenter.php</class>
+		<class>Hook/UI/DevCenter.php</class>
+		<class>Resource/DevCenter.php</class>
+		<class>View/Helper/DevCenter.php</class>
 		<script load="auto">UI.DevCenter.js</script>
 		<style load="auto" source="lib">cmVarTree/0.1.css</style>
 		<style load="auto" source="theme">ui.dev.center.css</style>

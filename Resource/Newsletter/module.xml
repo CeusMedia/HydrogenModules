@@ -30,19 +30,19 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Logic/Newsletter.php5</class>
-		<class>Mail/Newsletter.php5</class>
-		<class>Model/Newsletter.php5</class>
-		<class>Model/Newsletter/Group.php5</class>
-		<class>Model/Newsletter/Queue.php5</class>
-		<class>Model/Newsletter/Reader.php5</class>
-		<class>Model/Newsletter/Reader/Group.php5</class>
-		<class>Model/Newsletter/Reader/Letter.php5</class>
-		<class>Model/Newsletter/Template.php5</class>
-		<class>Model/Newsletter/Theme.php5</class>
-		<class>View/Helper/Newsletter.php5</class>
-		<class>View/Helper/Newsletter/Mail.php5</class>
-		<class>View/Helper/HtmlToPlainText.php5</class>
+		<class>Logic/Newsletter.php</class>
+		<class>Mail/Newsletter.php</class>
+		<class>Model/Newsletter.php</class>
+		<class>Model/Newsletter/Group.php</class>
+		<class>Model/Newsletter/Queue.php</class>
+		<class>Model/Newsletter/Reader.php</class>
+		<class>Model/Newsletter/Reader/Group.php</class>
+		<class>Model/Newsletter/Reader/Letter.php</class>
+		<class>Model/Newsletter/Template.php</class>
+		<class>Model/Newsletter/Theme.php</class>
+		<class>View/Helper/Newsletter.php</class>
+		<class>View/Helper/Newsletter/Mail.php</class>
+		<class>View/Helper/HtmlToPlainText.php</class>
 		<locale>de/resource/newsletter.ini</locale>
 	</files>
 	<config access="protected" type="boolean" name="premailer.html" title="Use Premailer API to work on mail HTML content">no</config>

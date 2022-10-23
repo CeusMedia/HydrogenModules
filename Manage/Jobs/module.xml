@@ -23,16 +23,16 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Job.php5</class>
-		<class>Controller/Manage/Job/Definition.php5</class>
-		<class>Controller/Manage/Job/Run.php5</class>
-		<class>Controller/Manage/Job/Schedule.php5</class>
-		<class>Model/Job/Code.php5</class>
-		<class>View/Manage/Job.php5</class>
-		<class>View/Manage/Job/Definition.php5</class>
-		<class>View/Manage/Job/Run.php5</class>
-		<class>View/Manage/Job/Schedule.php5</class>
-		<class>View/Helper/Job/Attribute.php5</class>
+		<class>Controller/Manage/Job.php</class>
+		<class>Controller/Manage/Job/Definition.php</class>
+		<class>Controller/Manage/Job/Run.php</class>
+		<class>Controller/Manage/Job/Schedule.php</class>
+		<class>Model/Job/Code.php</class>
+		<class>View/Manage/Job.php</class>
+		<class>View/Manage/Job/Definition.php</class>
+		<class>View/Manage/Job/Run.php</class>
+		<class>View/Manage/Job/Schedule.php</class>
+		<class>View/Helper/Job/Attribute.php</class>
 		<template>manage/job/index.php</template>
 		<template>manage/job/definition/index.php</template>
 		<template>manage/job/definition/index.filter.php</template>

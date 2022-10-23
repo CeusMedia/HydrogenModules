@@ -25,8 +25,8 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Manage/News.php5</class>
-		<class>View/Manage/News.php5</class>
+		<class>Controller/Manage/News.php</class>
+		<class>View/Manage/News.php</class>
 		<locale>de/manage/news.ini</locale>
 		<template>manage/news/add.php</template>
 		<template>manage/news/edit.php</template>

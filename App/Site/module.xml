@@ -35,9 +35,9 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Index.php5</class>
-		<class>View/Index.php5</class>
-		<class>Hook/App/Site.php5</class>
+		<class>Controller/Index.php</class>
+		<class>View/Index.php</class>
+		<class>Hook/App/Site.php</class>
 		<class>.htaccess</class>
 		<locale>de/main.ini</locale>
 		<locale>de/html/app.brand.html</locale>

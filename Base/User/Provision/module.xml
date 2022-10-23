@@ -11,20 +11,20 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Provision/Rest.php5</class>
-		<class>Job/User/Provision.php5</class>
-		<class>Logic/User/Provision.php5</class>
-		<class>Mail/Provision/Customer/Key/Assigned.php5</class>
-		<class>Mail/Provision/Customer/Key/Continued.php5</class>
-		<class>Mail/Provision/Customer/Key/Expired.php5</class>
-		<class>Mail/Provision/Customer/Key/Revoked.php5</class>
-		<class>Mail/Provision/Customer/License/Activated.php5</class>
-		<class>Mail/Provision/Customer/License/Deactivated.php5</class>
-		<class>Mail/Provision/Customer/License/Expired.php5</class>
-		<class>Mail/Provision/Customer/License/Replaced.php5</class>
-		<class>Mail/Provision/Customer/License/Revoked.php5</class>
-		<class>Model/Provision/User/License.php5</class>
-		<class>Model/Provision/User/License/Key.php5</class>
+		<class>Controller/Provision/Rest.php</class>
+		<class>Job/User/Provision.php</class>
+		<class>Logic/User/Provision.php</class>
+		<class>Mail/Provision/Customer/Key/Assigned.php</class>
+		<class>Mail/Provision/Customer/Key/Continued.php</class>
+		<class>Mail/Provision/Customer/Key/Expired.php</class>
+		<class>Mail/Provision/Customer/Key/Revoked.php</class>
+		<class>Mail/Provision/Customer/License/Activated.php</class>
+		<class>Mail/Provision/Customer/License/Deactivated.php</class>
+		<class>Mail/Provision/Customer/License/Expired.php</class>
+		<class>Mail/Provision/Customer/License/Replaced.php</class>
+		<class>Mail/Provision/Customer/License/Revoked.php</class>
+		<class>Model/Provision/User/License.php</class>
+		<class>Model/Provision/User/License/Key.php</class>
 		<locale>de/mail/provision/customer/key/assigned.html</locale>
 		<locale>de/mail/provision/customer/key/assigned.txt</locale>
 		<locale>de/mail/provision/customer/key/continued.html</locale>

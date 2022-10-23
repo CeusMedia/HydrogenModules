@@ -86,13 +86,13 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Auth.php5</class>
-		<class>Controller/Ajax/Auth.php5</class>
-		<class>Hook/Auth.php5</class>
-		<class>View/Auth.php5</class>
-		<class>BasicAuthentication.php5</class>
-		<class>Logic/Authentication.php5</class>
-		<class>Resource/Acl/Authentication.php5</class>
+		<class>Controller/Auth.php</class>
+		<class>Controller/Ajax/Auth.php</class>
+		<class>Hook/Auth.php</class>
+		<class>View/Auth.php</class>
+		<class>BasicAuthentication.php</class>
+		<class>Logic/Authentication.php</class>
+		<class>Resource/Acl/Authentication.php</class>
 		<locale>de/auth.ini</locale>
 		<locale>en/auth.ini</locale>
 		<script load="auto">module.resource.auth.js</script>

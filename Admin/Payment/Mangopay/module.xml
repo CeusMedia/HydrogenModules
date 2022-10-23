@@ -20,18 +20,18 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Admin/Payment/Mangopay.php5</class>
-		<class>Controller/Admin/Payment/Mangopay/Client.php5</class>
-		<class>Controller/Admin/Payment/Mangopay/Event.php5</class>
-		<class>Controller/Admin/Payment/Mangopay/Hook.php5</class>
-		<class>Controller/Admin/Payment/Mangopay/Payin.php5</class>
-		<class>Controller/Admin/Payment/Mangopay/Seller.php5</class>
-		<class>View/Admin/Payment/Mangopay.php5</class>
-		<class>View/Admin/Payment/Mangopay/Client.php5</class>
-		<class>View/Admin/Payment/Mangopay/Event.php5</class>
-		<class>View/Admin/Payment/Mangopay/Hook.php5</class>
-		<class>View/Admin/Payment/Mangopay/Payin.php5</class>
-		<class>View/Admin/Payment/Mangopay/Seller.php5</class>
+		<class>Controller/Admin/Payment/Mangopay.php</class>
+		<class>Controller/Admin/Payment/Mangopay/Client.php</class>
+		<class>Controller/Admin/Payment/Mangopay/Event.php</class>
+		<class>Controller/Admin/Payment/Mangopay/Hook.php</class>
+		<class>Controller/Admin/Payment/Mangopay/Payin.php</class>
+		<class>Controller/Admin/Payment/Mangopay/Seller.php</class>
+		<class>View/Admin/Payment/Mangopay.php</class>
+		<class>View/Admin/Payment/Mangopay/Client.php</class>
+		<class>View/Admin/Payment/Mangopay/Event.php</class>
+		<class>View/Admin/Payment/Mangopay/Hook.php</class>
+		<class>View/Admin/Payment/Mangopay/Payin.php</class>
+		<class>View/Admin/Payment/Mangopay/Seller.php</class>
 		<template>admin/payment/mangopay/client/index.php</template>
 		<template>admin/payment/mangopay/client/panelCompany.php</template>
 		<template>admin/payment/mangopay/client/panelColor.php</template>

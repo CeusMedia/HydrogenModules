@@ -20,7 +20,7 @@ code:html><span class="encrypted-mail" data-name="john" data-host="example.net">
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/UI/MailEncryption.php5</class>
+		<class>Hook/UI/MailEncryption.php</class>
 		<script load="auto">UI.MailEncryption.js</script>
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>

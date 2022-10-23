@@ -9,8 +9,8 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Content.php5</class>
-		<class>View/Manage/Content.php5</class>
+		<class>Controller/Manage/Content.php</class>
+		<class>View/Manage/Content.php</class>
 <!--		<locale>de/manage/content/document.ini</locale>-->
 		<locale>de/html/manage/content/index.html</locale>
 		<template>manage/content/index.php</template>

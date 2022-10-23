@@ -63,22 +63,22 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Work/Newsletter.php5</class>
-		<class>Controller/Work/Newsletter/Dashboard.php5</class>
-		<class>Controller/Work/Newsletter/Group.php5</class>
-		<class>Controller/Work/Newsletter/Reader.php5</class>
-		<class>Controller/Work/Newsletter/Template.php5</class>
-		<class>Hook/Work/Newsletter.php5</class>
-		<class>Logic/Newsletter/Editor.php5</class>
-		<class>Mail/Work/Newsletter/Add.php5</class>
-		<class>Mail/Work/Newsletter/Invite.php5</class>
-		<class>View/Work/Newsletter.php5</class>
-		<class>View/Work/Newsletter/Dashboard.php5</class>
-		<class>View/Work/Newsletter/Group.php5</class>
-		<class>View/Work/Newsletter/Reader.php5</class>
-		<class>View/Work/Newsletter/Template.php5</class>
-		<class>View/Helper/Work/Newsletter/ThemeFacts.php5</class>
-		<class>View/Helper/Work/Newsletter/ThemeList.php5</class>
+		<class>Controller/Work/Newsletter.php</class>
+		<class>Controller/Work/Newsletter/Dashboard.php</class>
+		<class>Controller/Work/Newsletter/Group.php</class>
+		<class>Controller/Work/Newsletter/Reader.php</class>
+		<class>Controller/Work/Newsletter/Template.php</class>
+		<class>Hook/Work/Newsletter.php</class>
+		<class>Logic/Newsletter/Editor.php</class>
+		<class>Mail/Work/Newsletter/Add.php</class>
+		<class>Mail/Work/Newsletter/Invite.php</class>
+		<class>View/Work/Newsletter.php</class>
+		<class>View/Work/Newsletter/Dashboard.php</class>
+		<class>View/Work/Newsletter/Group.php</class>
+		<class>View/Work/Newsletter/Reader.php</class>
+		<class>View/Work/Newsletter/Template.php</class>
+		<class>View/Helper/Work/Newsletter/ThemeFacts.php</class>
+		<class>View/Helper/Work/Newsletter/ThemeList.php</class>
 		<locale>de/work/newsletter.ini</locale>
 		<locale>en/work/newsletter/dashboard.ini</locale>
 		<locale>de/work/newsletter/group.ini</locale>

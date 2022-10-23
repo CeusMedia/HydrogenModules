@@ -52,17 +52,17 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Project.php5</class>
-		<class>Hook/Manage/Project.php5</class>
-		<class>Logic/Project.php5</class>
-		<class>Mail/Manage/Project/Abstract.php5</class>
-		<class>Mail/Manage/Project/Changed.php5</class>
-		<class>Mail/Manage/Project/Invited.php5</class>
-		<class>Mail/Manage/Project/Members.php5</class>
-		<class>Mail/Manage/Project/Removed.php5</class>
-		<class>Model/Project.php5</class>
-		<class>Model/Project/User.php5</class>
-		<class>View/Manage/Project.php5</class>
+		<class>Controller/Manage/Project.php</class>
+		<class>Hook/Manage/Project.php</class>
+		<class>Logic/Project.php</class>
+		<class>Mail/Manage/Project/Abstract.php</class>
+		<class>Mail/Manage/Project/Changed.php</class>
+		<class>Mail/Manage/Project/Invited.php</class>
+		<class>Mail/Manage/Project/Members.php</class>
+		<class>Mail/Manage/Project/Removed.php</class>
+		<class>Model/Project.php</class>
+		<class>Model/Project/User.php</class>
+		<class>View/Manage/Project.php</class>
 		<template>manage/project/add.php</template>
 		<template>manage/project/edit.php</template>
 		<template>manage/project/edit.info.php</template>

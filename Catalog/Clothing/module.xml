@@ -21,12 +21,12 @@ since it has been developed for and used by a private module.
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Catalog/Clothing.php5</class>
-		<class>Logic/ShopBridge/Clothing.php5</class>
-		<class>Model/Catalog/Clothing/Article.php5</class>
-		<class>Model/Catalog/Clothing/Category.php5</class>
-		<class>View/Catalog/Clothing.php5</class>
-		<class>View/Helper/Shop/FinishPanel/CatalogClothing.php5</class>
+		<class>Controller/Catalog/Clothing.php</class>
+		<class>Logic/ShopBridge/Clothing.php</class>
+		<class>Model/Catalog/Clothing/Article.php</class>
+		<class>Model/Catalog/Clothing/Category.php</class>
+		<class>View/Catalog/Clothing.php</class>
+		<class>View/Helper/Shop/FinishPanel/CatalogClothing.php</class>
 		<locale>de/catalog/clothing.ini</locale>
 		<locale>de/html/catalog/clothing/bottom.html</locale>
 		<locale>de/html/catalog/clothing/finished.html</locale>

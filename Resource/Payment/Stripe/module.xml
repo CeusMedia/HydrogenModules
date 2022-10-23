@@ -42,35 +42,35 @@ Cronjobs:
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Stripe/Event.php5</class>
-		<class>Job/Stripe/Event.php5</class>
-		<class>Mail/Stripe/EventFailed.php5</class>
-		<class>Mail/Stripe/EventAgain.php5</class>
-		<class>Mail/Stripe/EventUnverfied.php5</class>
-		<class>Mail/Stripe/Event/Payin.php5</class>
-		<class>Model/Stripe/Event.php5</class>
-		<class>Model/Stripe/Payin.php5</class>
-		<class>Logic/Payment/Stripe.php5</class>
-		<class>Logic/Payment/Stripe/Event.php5</class>
-		<class>Logic/Payment/Stripe/Event/Payin.php5</class>
-		<class>Logic/Payment/Stripe/Event/Payin/Normal.php5</class>
-		<class>Logic/Payment/Stripe/Event/Payin/Normal/Created.php5</class>
-		<class>Logic/Payment/Stripe/Event/Payin/Normal/Failed.php5</class>
-		<class>Logic/Payment/Stripe/Event/Payin/Normal/Succeeded.php5</class>
-		<class>Resource/Stripe.php5</class>
-		<class>View/Helper/Stripe/Abstract.php5</class>
-		<class>View/Helper/Stripe/Error.php5</class>
-		<class>View/Helper/Stripe/URL.php5</class>
-		<class>View/Helper/Stripe/Entity/BIC.php5</class>
-		<class>View/Helper/Stripe/Entity/Card.php5</class>
-		<class>View/Helper/Stripe/Entity/CardNumber.php5</class>
-		<class>View/Helper/Stripe/Entity/CardProviderLogo.php5</class>
-		<class>View/Helper/Stripe/Entity/IBAN.php5</class>
-		<class>View/Helper/Stripe/Entity/Money.php5</class>
-		<class>View/Helper/Stripe/Entity/Wallet.php5</class>
-		<class>View/Helper/Stripe/Entity/WalletLogo.php5</class>
-		<class>View/Helper/Stripe/Input/Amount.php5</class>
-		<class>View/Stripe/Event.php5</class>
+		<class>Controller/Stripe/Event.php</class>
+		<class>Job/Stripe/Event.php</class>
+		<class>Mail/Stripe/EventFailed.php</class>
+		<class>Mail/Stripe/EventAgain.php</class>
+		<class>Mail/Stripe/EventUnverfied.php</class>
+		<class>Mail/Stripe/Event/Payin.php</class>
+		<class>Model/Stripe/Event.php</class>
+		<class>Model/Stripe/Payin.php</class>
+		<class>Logic/Payment/Stripe.php</class>
+		<class>Logic/Payment/Stripe/Event.php</class>
+		<class>Logic/Payment/Stripe/Event/Payin.php</class>
+		<class>Logic/Payment/Stripe/Event/Payin/Normal.php</class>
+		<class>Logic/Payment/Stripe/Event/Payin/Normal/Created.php</class>
+		<class>Logic/Payment/Stripe/Event/Payin/Normal/Failed.php</class>
+		<class>Logic/Payment/Stripe/Event/Payin/Normal/Succeeded.php</class>
+		<class>Resource/Stripe.php</class>
+		<class>View/Helper/Stripe/Abstract.php</class>
+		<class>View/Helper/Stripe/Error.php</class>
+		<class>View/Helper/Stripe/URL.php</class>
+		<class>View/Helper/Stripe/Entity/BIC.php</class>
+		<class>View/Helper/Stripe/Entity/Card.php</class>
+		<class>View/Helper/Stripe/Entity/CardNumber.php</class>
+		<class>View/Helper/Stripe/Entity/CardProviderLogo.php</class>
+		<class>View/Helper/Stripe/Entity/IBAN.php</class>
+		<class>View/Helper/Stripe/Entity/Money.php</class>
+		<class>View/Helper/Stripe/Entity/Wallet.php</class>
+		<class>View/Helper/Stripe/Entity/WalletLogo.php</class>
+		<class>View/Helper/Stripe/Input/Amount.php</class>
+		<class>View/Stripe/Event.php</class>
 		<locale>de/resource/payment/stripe/error.ini</locale>
 	</files>
 	<link access="public" path="stripe/event/receive"/>

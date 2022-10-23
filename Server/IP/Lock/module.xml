@@ -23,13 +23,13 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Hook/IP/Lock.php5</class>
-		<class>Logic/IP/Lock.php5</class>
-		<class>Logic/IP/Lock/Transport.php5</class>
-		<class>Model/IP/Lock.php5</class>
-		<class>Model/IP/Lock/Filter.php5</class>
-		<class>Model/IP/Lock/Reason.php5</class>
-<!--		<class>Model/IP/Lock/Whitelist.php5</class>-->
+		<class>Hook/IP/Lock.php</class>
+		<class>Logic/IP/Lock.php</class>
+		<class>Logic/IP/Lock/Transport.php</class>
+		<class>Model/IP/Lock.php</class>
+		<class>Model/IP/Lock/Filter.php</class>
+		<class>Model/IP/Lock/Reason.php</class>
+<!--		<class>Model/IP/Lock/Whitelist.php</class>-->
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>

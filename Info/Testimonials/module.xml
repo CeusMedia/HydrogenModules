@@ -13,10 +13,10 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Info/Testimonial.php5</class>
-		<class>Mail/Info/Testimonial/New.php5</class>
-		<class>Model/Testimonial.php5</class>
-		<class>View/Info/Testimonial.php5</class>
+		<class>Controller/Info/Testimonial.php</class>
+		<class>Mail/Info/Testimonial/New.php</class>
+		<class>Model/Testimonial.php</class>
+		<class>View/Info/Testimonial.php</class>
 		<locale>de/info/testimonial.ini</locale>
 		<locale>de/html/info/testimonial/bottom.html</locale>
 		<locale>de/html/info/testimonial/top.html</locale>

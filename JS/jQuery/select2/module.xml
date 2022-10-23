@@ -9,7 +9,7 @@
 	<url>https://select2.org/</url>
 	<license source="https://github.com/select2/select2/blob/master/LICENSE.md">MIT</license>
 	<files>
-		<class>Hook/JS/jQuery/Select2.php5</class>
+		<class>Hook/JS/jQuery/Select2.php</class>
 	</files>
 	<config protected="yes" type="string" name="version" values="3.5.4,4.0.12">4.0.12</config>
 	<config protected="yes" type="boolean" name="load.minified">yes</config>

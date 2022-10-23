@@ -33,8 +33,8 @@ This may apply mostly to content editors.
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/UI/Shortcode/Example.php5</class>
-		<class>Logic/Shortcode.php5</class>
+		<class>Hook/UI/Shortcode/Example.php</class>
+		<class>Logic/Shortcode.php</class>
 	</files>
 	<config type="string" name="mode" values="allow,deny">allow</config>
 	<config type="string" name="deny" title="comma separated shortcode to avoid, if mode is allow"></config>

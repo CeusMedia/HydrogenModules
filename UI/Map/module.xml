@@ -16,8 +16,8 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/UI/Map.php5</class>
-		<class>View/Helper/Map.php5</class>
+		<class>Hook/UI/Map.php</class>
+		<class>View/Helper/Map.php</class>
 		<script source="url">https://maps.google.com/maps/api/js</script>
 		<script source="local" load="auto">module.ui.map.js</script>
 		<style load="auto">module.ui.map.css</style>

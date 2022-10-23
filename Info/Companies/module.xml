@@ -12,10 +12,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Company.php5</class>
-		<class>Controller/Company/Branch.php5</class>
-		<class>View/Company.php5</class>
-		<class>View/Company/Branch.php5</class>
+		<class>Controller/Company.php</class>
+		<class>Controller/Company/Branch.php</class>
+		<class>View/Company.php</class>
+		<class>View/Company/Branch.php</class>
 		<template>company/index.php</template>
 		<template>company/view.php</template>
 		<template>company/branch/index.php</template>

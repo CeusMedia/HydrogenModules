@@ -16,9 +16,9 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Ajax/Helper/Input/Resource.php5</class>
-		<class>Hook/Helper/Input/Resource.php5</class>
-		<class>View/Helper/Input/Resource.php5</class>
+		<class>Controller/Ajax/Helper/Input/Resource.php</class>
+		<class>Hook/Helper/Input/Resource.php</class>
+		<class>View/Helper/Input/Resource.php</class>
 		<script load="auto">module.ui.helper.input.resource.js</script>
 		<style source="common" load="auto">module.ui.helper.input.resource.css</style>
 	</files>

@@ -24,10 +24,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/User/Provision/Product.php5</class>
-		<class>Controller/Provision/Rest.php5</class>
-		<class>Hook/Manage/User/Provision.php5</class>
-		<class>View/Manage/User/Provision/Product.php5</class>
+		<class>Controller/Manage/User/Provision/Product.php</class>
+		<class>Controller/Provision/Rest.php</class>
+		<class>Hook/Manage/User/Provision.php</class>
+		<class>View/Manage/User/Provision/Product.php</class>
 		<template>manage/user/provision/product/add.php</template>
 		<template>manage/user/provision/product/edit.php</template>
 		<template>manage/user/provision/product/index.php</template>

@@ -21,8 +21,8 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Logic/Upload.php5</class>
-		<class>View/Helper/UploadError.php5</class>
+		<class>Logic/Upload.php</class>
+		<class>View/Helper/UploadError.php</class>
 		<locale>de/resource/upload.ini</locale>
 	</files>
 	<relations>

@@ -15,8 +15,8 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Resource/Server/Json.php5</class>
-		<class>View/Helper/JsonServerResponseCodeHandler.php5</class>
+		<class>Resource/Server/Json.php</class>
+		<class>View/Helper/JsonServerResponseCodeHandler.php</class>
 	</files>
 	<config protected="no" mandatory="yes" type="string" name="userAgent">CeusMedia::CMF::Resource:Server:JSON</config>
 	<config protected="no" mandatory="no" type="string" name="auth.username" title="Username for HTTP Basic Auth"></config>

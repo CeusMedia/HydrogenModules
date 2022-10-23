@@ -23,15 +23,15 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Member.php5</class>
-		<class>Model/User/Relation.php5</class>
-		<class>Logic/Member.php5</class>
-		<class>View/Member.php5</class>
-		<class>View/Helper/Member.php5</class>
-		<class>Mail/Member/Accept.php5</class>
-		<class>Mail/Member/Reject.php5</class>
-		<class>Mail/Member/Request.php5</class>
-		<class>Mail/Member/Revoke.php5</class>
+		<class>Controller/Member.php</class>
+		<class>Model/User/Relation.php</class>
+		<class>Logic/Member.php</class>
+		<class>View/Member.php</class>
+		<class>View/Helper/Member.php</class>
+		<class>Mail/Member/Accept.php</class>
+		<class>Mail/Member/Reject.php</class>
+		<class>Mail/Member/Request.php</class>
+		<class>Mail/Member/Revoke.php</class>
 		<locale>de/member.ini</locale>
 		<locale>de/mail/member/accept.txt</locale>
 		<locale>de/mail/member/reject.txt</locale>

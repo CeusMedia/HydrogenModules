@@ -25,11 +25,11 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Manage/Gallery.php5</class>
-		<class>Hook/Manage/Gallery.php5</class>
-		<class>Model/Gallery.php5</class>
-		<class>Model/Gallery/Image.php5</class>
-		<class>View/Manage/Gallery.php5</class>
+		<class>Controller/Manage/Gallery.php</class>
+		<class>Hook/Manage/Gallery.php</class>
+		<class>Model/Gallery.php</class>
+		<class>Model/Gallery/Image.php</class>
+		<class>View/Manage/Gallery.php</class>
 		<locale>de/manage/gallery.ini</locale>
 		<locale>de/html/manage/gallery/top.html</locale>
 		<locale>de/html/manage/gallery/bottom.html</locale>

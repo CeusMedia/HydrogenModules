@@ -14,12 +14,12 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Ajax/Info/Event.php5</class>
-		<class>Controller/Info/Event.php5</class>
-		<class>Model/Address.php5</class>
-		<class>Model/Event.php5</class>
-		<class>View/Info/Event.php5</class>
-		<class>View/Helper/Info/Event/Calendar.php5</class>
+		<class>Controller/Ajax/Info/Event.php</class>
+		<class>Controller/Info/Event.php</class>
+		<class>Model/Address.php</class>
+		<class>Model/Event.php</class>
+		<class>View/Info/Event.php</class>
+		<class>View/Helper/Info/Event/Calendar.php</class>
 		<locale>de/info/event.ini</locale>
 		<locale>en/info/event.ini</locale>
 		<template>info/event/calendar.php</template>

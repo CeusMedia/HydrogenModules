@@ -5,8 +5,8 @@
 	<version>0.1</version>
 	<category>Development</category>
 	<files>
-		<class>Controller/Dev/Icons.php5</class>
-		<class>View/Dev/Icons.php5</class>
+		<class>Controller/Dev/Icons.php</class>
+		<class>View/Dev/Icons.php</class>
 		<template>dev/icons/index.php</template>
 	</files>
 	<relations/>

@@ -10,10 +10,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Logic/Catalog/Provision.php5</class>
-		<class>Logic/ShopBridge/Provision.php5</class>
-		<class>Model/Provision/Product.php5</class>
-		<class>Model/Provision/Product/License.php5</class>
+		<class>Logic/Catalog/Provision.php</class>
+		<class>Logic/ShopBridge/Provision.php</class>
+		<class>Model/Provision/Product.php</class>
+		<class>Model/Provision/Product/License.php</class>
 	</files>
 	<config protected="yes" type="boolean" name="tax.included">1</config>
 	<config protected="yes" type="float" name="tax.rate">19</config>

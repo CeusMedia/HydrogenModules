@@ -42,15 +42,15 @@ To register galleries and images, use module Manage_Content_Images within a back
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Info/Gallery.php5</class>
-		<class>Hook/Info/Gallery.php5</class>
-		<class>Model/Gallery.php5</class>
-		<class>Model/Gallery/Image.php5</class>
-		<class>View/Info/Gallery.php5</class>
-		<class>View/Helper/Info/Gallery.php5</class>
-		<class>View/Helper/Info/Gallery/Images.php5</class>
-		<class>View/Helper/Info/Gallery/List.php5</class>
-		<class>View/Helper/Info/Gallery/Matrix.php5</class>
+		<class>Controller/Info/Gallery.php</class>
+		<class>Hook/Info/Gallery.php</class>
+		<class>Model/Gallery.php</class>
+		<class>Model/Gallery/Image.php</class>
+		<class>View/Info/Gallery.php</class>
+		<class>View/Helper/Info/Gallery.php</class>
+		<class>View/Helper/Info/Gallery/Images.php</class>
+		<class>View/Helper/Info/Gallery/List.php</class>
+		<class>View/Helper/Info/Gallery/Matrix.php</class>
 		<locale>de/info/gallery.ini</locale>
 		<locale>de/html/info/gallery/index.bottom.html</locale>
 		<locale>de/html/info/gallery/index.top.html</locale>

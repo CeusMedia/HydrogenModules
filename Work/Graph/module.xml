@@ -14,11 +14,11 @@ Editor for graph structure, stored in database.
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Work/Graph.php5</class>
-		<class>Model/Work/Graph.php5</class>
-		<class>Model/Work/Graph/Edge.php5</class>
-		<class>Model/Work/Graph/Node.php5</class>
-		<class>View/Work/Graph.php5</class>
+		<class>Controller/Work/Graph.php</class>
+		<class>Model/Work/Graph.php</class>
+		<class>Model/Work/Graph/Edge.php</class>
+		<class>Model/Work/Graph/Node.php</class>
+		<class>View/Work/Graph.php</class>
 		<locale>de/work/graph.ini</locale>
 		<locale>en/work/graph.ini</locale>
 		<template>work/graph/edge.php</template>

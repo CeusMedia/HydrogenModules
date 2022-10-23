@@ -30,15 +30,15 @@ Calls hook Dashboard::registerPanels.
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Ajax/Info/Dashboard.php5</class>
-		<class>Controller/Info/Dashboard.php5</class>
-		<class>Hook/Info/Dashboard.php5</class>
-		<class>Logic/Info/Dashboard.php5</class>
-		<class>Model/Dashboard.php5</class>
-		<class>View/Info/Dashboard.php5</class>
-		<class>View/Helper/Info/Dashboard.php5</class>
-		<class>View/Helper/Info/Dashboard/Modal/Add.php5</class>
-		<class>View/Helper/Info/Dashboard/Modal/AddPanel.php5</class>
+		<class>Controller/Ajax/Info/Dashboard.php</class>
+		<class>Controller/Info/Dashboard.php</class>
+		<class>Hook/Info/Dashboard.php</class>
+		<class>Logic/Info/Dashboard.php</class>
+		<class>Model/Dashboard.php</class>
+		<class>View/Info/Dashboard.php</class>
+		<class>View/Helper/Info/Dashboard.php</class>
+		<class>View/Helper/Info/Dashboard/Modal/Add.php</class>
+		<class>View/Helper/Info/Dashboard/Modal/AddPanel.php</class>
 		<locale>de/info/dashboard.ini</locale>
 		<locale>de/html/info/dashboard/bottom.html</locale>
 		<locale>de/html/info/dashboard/empty.html</locale>

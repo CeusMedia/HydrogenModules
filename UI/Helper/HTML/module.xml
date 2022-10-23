@@ -15,8 +15,8 @@
 	<log version="0.3.5">Extract hook to own hook class.</log>
 	<log version="0.3.6">Support PHP 8 (Match is reserved now).</log>
 	<files>
-		<class>Hook/UI/Helper/HTML.php5</class>
-		<class>View/Helper/HTML.php5</class>
+		<class>Hook/UI/Helper/HTML.php</class>
+		<class>View/Helper/HTML.php</class>
 	</files>
 	<relations/>
 	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Helper_HTML::onPageApplyModules</hook>

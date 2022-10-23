@@ -56,13 +56,13 @@ list>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Auth/Oauth2.php5</class>
-		<class>Hook/Auth/Oauth2.php5</class>
-		<class>Logic/Authentication/Backend/Oauth2.php5</class>
-		<class>Model/Oauth/Provider.php5</class>
-		<class>Model/Oauth/User.php5</class>
-		<class>View/Auth/Oauth2.php5</class>
-		<class>View/Helper/Oauth/ProviderButtons.php5</class>
+		<class>Controller/Auth/Oauth2.php</class>
+		<class>Hook/Auth/Oauth2.php</class>
+		<class>Logic/Authentication/Backend/Oauth2.php</class>
+		<class>Model/Oauth/Provider.php</class>
+		<class>Model/Oauth/User.php</class>
+		<class>View/Auth/Oauth2.php</class>
+		<class>View/Helper/Oauth/ProviderButtons.php</class>
 		<template>auth/oauth2/login.php</template>
 		<locale>de/auth/oauth2.ini</locale>
 	</files>

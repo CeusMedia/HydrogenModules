@@ -12,9 +12,9 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Manage/Workshop.php5</class>
-		<class>Model/Workshop.php5</class>
-		<class>View/Manage/Workshop.php5</class>
+		<class>Controller/Manage/Workshop.php</class>
+		<class>Model/Workshop.php</class>
+		<class>View/Manage/Workshop.php</class>
 		<locale>de/manage/workshop.ini</locale>
 		<locale>en/manage/workshop.ini</locale>
 		<template>manage/workshop/add.php</template>

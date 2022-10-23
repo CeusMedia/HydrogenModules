@@ -11,7 +11,7 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Model/User/Payment/Account.php5</class>
+		<class>Model/User/Payment/Account.php</class>
 		<image>paymentProviderLogo/xlarge/amazon-1.png</image>
 		<image>paymentProviderLogo/xlarge/amazon-2.png</image>
 		<image>paymentProviderLogo/xlarge/amex-1.png</image>

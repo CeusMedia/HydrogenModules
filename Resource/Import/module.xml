@@ -15,14 +15,14 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Logic/Import.php5</class>
-		<class>Logic/Import/Connector/Abstract.php5</class>
-		<class>Logic/Import/Connector/Interface.php5</class>
-<!--		<class>Logic/Import/Connector/Mailbox.php5</class>-->
-		<class>Logic/Import/Connector/MailAbstract.php5</class>
-		<class>Logic/Import/Connector/MailAttachmentCsv.php5</class>
-		<class>Model/Import/Connection.php5</class>
-		<class>Model/Import/Connector.php5</class>
+		<class>Logic/Import.php</class>
+		<class>Logic/Import/Connector/Abstract.php</class>
+		<class>Logic/Import/Connector/Interface.php</class>
+<!--		<class>Logic/Import/Connector/Mailbox.php</class>-->
+		<class>Logic/Import/Connector/MailAbstract.php</class>
+		<class>Logic/Import/Connector/MailAttachmentCsv.php</class>
+		<class>Model/Import/Connection.php</class>
+		<class>Model/Import/Connector.php</class>
 	</files>
 	<relations/>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[

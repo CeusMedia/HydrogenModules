@@ -30,10 +30,10 @@ Otherwise please install the geo database dump fitting to your needs on your own
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Model/OpenGeo.php5</class>
-		<class>Model/OpenGeo/Postcode.php5</class>
-		<class>Model/Postcode.php5</class>
-		<class>Logic/Geocoder.php5</class>
+		<class>Model/OpenGeo.php</class>
+		<class>Model/OpenGeo/Postcode.php</class>
+		<class>Model/Postcode.php</class>
+		<class>Logic/Geocoder.php</class>
 		<sql>geodb.sql.gz</sql>
 		<sql>postcodes.sql.gz</sql>
 	</files>

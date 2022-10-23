@@ -17,8 +17,8 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Manage/Content/Locale.php5</class>
-		<class>View/Manage/Content/Locale.php5</class>
+		<class>Controller/Manage/Content/Locale.php</class>
+		<class>View/Manage/Content/Locale.php</class>
 		<template>manage/content/locale/index.php</template>
 		<locale>de/manage/content/locale.ini</locale>
 		<locale>de/html/manage/content/locale/index.top.html</locale>

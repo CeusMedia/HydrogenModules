@@ -13,9 +13,9 @@
 <!--	<log version="0.3.x">Replace linked icons by FontAwesome.</log>-->
 <!--	<log version="0.3.x">Apply Bootstrap styling.</log>-->
 	<files>
-		<class>Controller/Admin/Module.php5</class>
-		<class>Model/Module.php5</class>
-		<class>View/Admin/Module.php5</class>
+		<class>Controller/Admin/Module.php</class>
+		<class>Model/Module.php</class>
+		<class>View/Admin/Module.php</class>
 		<locale>de/admin/module.ini</locale>
 		<css>module.admin.modules.css</css>
 		<template>admin/module/index.php</template>

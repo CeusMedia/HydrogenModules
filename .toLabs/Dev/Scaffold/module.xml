@@ -5,8 +5,8 @@
 	<version>0.1</version>
 	<category>Development</category>
 	<files>
-		<class>Controller/Dev/Scaffold.php5</class>
-		<class>View/Dev/Scaffold.php5</class>
+		<class>Controller/Dev/Scaffold.php</class>
+		<class>View/Dev/Scaffold.php</class>
 		<locale>de/dev/scaffold.ini</locale>
 		<template>dev/scaffold/index.php</template>
 		<template>dev/scaffold/controller.php</template>

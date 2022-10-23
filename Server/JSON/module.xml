@@ -23,11 +23,11 @@ This module installs the main classes needed to run a server application which i
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Dispatcher.php5</class>
-		<class>Environment.php5</class>
-		<class>Server.php5</class>
-		<class>Controller/Abstract.php5</class>
-		<class>Controller/Index.php5</class>
+		<class>Dispatcher.php</class>
+		<class>Environment.php</class>
+		<class>Server.php</class>
+		<class>Controller/Abstract.php</class>
+		<class>Controller/Index.php</class>
 		<locale>de/main.ini</locale>
 		<locale>en/main.ini</locale>
 		<file>.htaccess</file>

@@ -11,8 +11,8 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Hook/UI/DevLayers/Profiler.php5</class>
-		<class>View/Helper/DevProfiler.php5</class>
+		<class>Hook/UI/DevLayers/Profiler.php</class>
+		<class>View/Helper/DevProfiler.php</class>
 		<style source="theme">module.ui.dev.layer.profiler.css</style>
 		<locale>de/ui.dev.layer.profiler.ini</locale>
 		<locale>en/ui.dev.layer.profiler.ini</locale>

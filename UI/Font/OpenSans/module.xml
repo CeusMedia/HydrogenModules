@@ -13,7 +13,7 @@
 	<license source="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License version 2.0</license>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<files>
-		<class>Hook/UI/Font/OpenSans.php5</class>
+		<class>Hook/UI/Font/OpenSans.php</class>
 	</files>
 	<relations>
 		<needs type="module">UI_Font</needs>

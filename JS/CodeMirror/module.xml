@@ -8,7 +8,7 @@
 	<author email="marijnh@gmail.com">marijnh@gmail.com</author>
 	<license source="http://codemirror.net/LICENSE">MIT-style</license>
 	<files>
-		<class>Hook/JS/CodeMirror.php5</class>
+		<class>Hook/JS/CodeMirror.php</class>
 		<script>module.js.codemirror.js</script>
 		<style source="common">module.js.codemirror.css</style>
 		<image source="common">bg_code_tab.png</image>

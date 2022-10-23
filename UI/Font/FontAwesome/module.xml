@@ -11,7 +11,7 @@
 	<author twitter="@davegandy">Dave Gandy</author>
 	<license source="http://fontawesome.com/license">Font Awesome Free / Font Awesome Pro</license>
 	<files>
-		<class>Hook/UI/Font/FontAwesome.php5</class>
+		<class>Hook/UI/Font/FontAwesome.php</class>
 		<style source="common">FontAwesome/4.7.0/font-awesome.css</style>
 		<style source="common">FontAwesome/4.7.0/font-awesome.min.css</style>
 		<style source="common">FontAwesome/4.7.0/fonts/fontawesome-webfont.eot</style>

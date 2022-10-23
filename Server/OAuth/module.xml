@@ -27,16 +27,16 @@ RFC 6749 (http://tools.ietf.org/html/rfc6749).
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Oauth.php5</class>
-		<class>Controller/Resource.php5</class>
-		<class>Controller/Oauth/Application.php5</class>
-		<class>Controller/Oauth/Resource.php5</class>
-		<class>Model/Oauth/AccessToken.php5</class>
-		<class>Model/Oauth/Application.php5</class>
-		<class>Model/Oauth/Code.php5</class>
-		<class>Model/Oauth/RefreshToken.php5</class>
-		<class>View/Oauth.php5</class>
-		<class>View/Oauth/Application.php5</class>
+		<class>Controller/Oauth.php</class>
+		<class>Controller/Resource.php</class>
+		<class>Controller/Oauth/Application.php</class>
+		<class>Controller/Oauth/Resource.php</class>
+		<class>Model/Oauth/AccessToken.php</class>
+		<class>Model/Oauth/Application.php</class>
+		<class>Model/Oauth/Code.php</class>
+		<class>Model/Oauth/RefreshToken.php</class>
+		<class>View/Oauth.php</class>
+		<class>View/Oauth/Application.php</class>
 		<locale>de/oauth.ini</locale>
 		<locale>de/oauth/application.ini</locale>
 		<locale>de/html/oauth/authorize.bottom.html</locale>

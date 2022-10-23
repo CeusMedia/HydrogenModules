@@ -14,7 +14,7 @@ https://github.com/rashid2538/php-htmldiff
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add helper class to wrap original code.</log>
 	<files>
-		<class>View/Helper/HtmlDiff.php5</class>
+		<class>View/Helper/HtmlDiff.php</class>
 		<style load="auto">module.ui.helper.html.diff.css</style>
 	</files>
 	<relations/>

@@ -27,9 +27,9 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Catalog/Provision/Product.php5</class>
-		<class>Hook/Catalog/Provision.php5</class>
-		<class>View/Catalog/Provision/Product.php5</class>
+		<class>Controller/Catalog/Provision/Product.php</class>
+		<class>Hook/Catalog/Provision.php</class>
+		<class>View/Catalog/Provision/Product.php</class>
 		<template>catalog/provision/product/index.php</template>
 		<template>catalog/provision/product/license.php</template>
 		<template>catalog/provision/product/view.php</template>

@@ -34,12 +34,12 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Ajax/Manage/Role.php5</class>
-		<class>Controller/Ajax/Manage/User.php5</class>
-		<class>Controller/Manage/Role.php5</class>
-		<class>Controller/Manage/User.php5</class>
-		<class>View/Manage/Role.php5</class>
-		<class>View/Manage/User.php5</class>
+		<class>Controller/Ajax/Manage/Role.php</class>
+		<class>Controller/Ajax/Manage/User.php</class>
+		<class>Controller/Manage/Role.php</class>
+		<class>Controller/Manage/User.php</class>
+		<class>View/Manage/Role.php</class>
+		<class>View/Manage/User.php</class>
 		<locale>de/manage/role.ini</locale>
 		<locale>de/manage/user.ini</locale>
 		<locale>de/html/manage/role/index.bottom.html</locale>

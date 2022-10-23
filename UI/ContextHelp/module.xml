@@ -42,7 +42,7 @@ Please use composer to require <code>"paquettg/php-html-parser": "^1.7"</code>!
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>View/Helper/ContextHelp.php5</class>
+		<class>View/Helper/ContextHelp.php</class>
 		<script source="local" load="auto">module.ui.contexthelp.js</script>
 		<style source="theme" load="auto">module.ui.contexthelp.css</style>
 		<locale>de/html/app.contexthelp.html</locale>

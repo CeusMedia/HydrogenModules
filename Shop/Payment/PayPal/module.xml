@@ -37,11 +37,11 @@ merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Shop/Payment/Paypal.php5</class>
-		<class>Hook/Shop/Payment/Paypal.php5</class>
-		<class>Logic/Payment/Paypal.php5</class>
-		<class>Model/Shop/Payment/Paypal.php5</class>
-		<class>View/Shop/Payment/Paypal.php5</class>
+		<class>Controller/Shop/Payment/Paypal.php</class>
+		<class>Hook/Shop/Payment/Paypal.php</class>
+		<class>Logic/Payment/Paypal.php</class>
+		<class>Model/Shop/Payment/Paypal.php</class>
+		<class>View/Shop/Payment/Paypal.php</class>
 		<locale>de/shop/payment/paypal.ini</locale>
 		<locale>en/shop/payment/paypal.ini</locale>
 	</files>

@@ -14,11 +14,11 @@ Needs composer package "paquettg/php-html-parser": "^1.7".
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Work/Bookmark.php5</class>
-		<class>Model/Bookmark.php5</class>
-		<class>Model/Bookmark/Comment.php5</class>
-		<class>Model/Bookmark/Tag.php5</class>
-		<class>View/Work/Bookmark.php5</class>
+		<class>Controller/Work/Bookmark.php</class>
+		<class>Model/Bookmark.php</class>
+		<class>Model/Bookmark/Comment.php</class>
+		<class>Model/Bookmark/Tag.php</class>
+		<class>View/Work/Bookmark.php</class>
 		<template>work/bookmark/index.php</template>
 		<template>work/bookmark/view.php</template>
 		<locale>de/work/bookmark.ini</locale>

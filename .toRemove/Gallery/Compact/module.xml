@@ -18,10 +18,10 @@
 	<log version="0.4.3">Extract hook to own hook class.</log>
 	<log version="0.4.4">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
 	<files>
-		<class>Controller/Gallery.php5</class>
-		<class>Hook/Gallery/Compact.php5</class>
-		<class>View/Gallery.php5</class>
-		<class>View/Helper/Gallery.php5</class>
+		<class>Controller/Gallery.php</class>
+		<class>Hook/Gallery/Compact.php</class>
+		<class>View/Gallery.php</class>
+		<class>View/Helper/Gallery.php</class>
 		<template>gallery/index.php</template>
 		<template>gallery/info.php</template>
 		<script>Gallery.js</script>

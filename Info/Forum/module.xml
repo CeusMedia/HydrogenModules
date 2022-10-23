@@ -31,17 +31,17 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Ajax/Info/Forum.php5</class>
-		<class>Controller/Info/Forum.php5</class>
-		<class>Model/Forum/Post.php5</class>
-		<class>Model/Forum/Thread.php5</class>
-		<class>Model/Forum/Topic.php5</class>
-		<class>Mail/Forum/Abstract.php5</class>
-		<class>Mail/Forum/Answer.php5</class>
-		<class>Mail/Forum/Daily.php5</class>
-		<class>View/Info/Forum.php5</class>
-		<class>Job/Info/Forum.php5</class>
-		<class>Hook/Info/Forum.php5</class>
+		<class>Controller/Ajax/Info/Forum.php</class>
+		<class>Controller/Info/Forum.php</class>
+		<class>Model/Forum/Post.php</class>
+		<class>Model/Forum/Thread.php</class>
+		<class>Model/Forum/Topic.php</class>
+		<class>Mail/Forum/Abstract.php</class>
+		<class>Mail/Forum/Answer.php</class>
+		<class>Mail/Forum/Daily.php</class>
+		<class>View/Info/Forum.php</class>
+		<class>Job/Info/Forum.php</class>
+		<class>Hook/Info/Forum.php</class>
 		<template>info/forum/index.php</template>
 		<template>info/forum/index.add.php</template>
 		<template>info/forum/thread.php</template>

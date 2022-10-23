@@ -12,8 +12,8 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>View/Helper/Bootstrap/Modal.php5</class>
-		<class>View/Helper/Bootstrap/Modal/Trigger.php5</class>
+		<class>View/Helper/Bootstrap/Modal.php</class>
+		<class>View/Helper/Bootstrap/Modal/Trigger.php</class>
 	</files>
 	<relations>
 		<needs type="module">UI_Bootstrap</needs>

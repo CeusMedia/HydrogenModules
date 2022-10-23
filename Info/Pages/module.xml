@@ -46,10 +46,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Info/Page.php5</class>
-		<class>Hook/Info/Page.php5</class>
-		<class>View/Info/Page.php5</class>
-		<class>View/Helper/Navigation/Pages/Navbar.php5</class>
+		<class>Controller/Info/Page.php</class>
+		<class>Hook/Info/Page.php</class>
+		<class>View/Info/Page.php</class>
+		<class>View/Helper/Navigation/Pages/Navbar.php</class>
 		<locale>de/info/pages.ini</locale>
 		<locale>de/html/info/page/empty.html</locale>
 		<locale>en/info/pages.ini</locale>

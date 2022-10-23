@@ -19,13 +19,13 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Shop/Payment/Stripe.php5</class>
-		<class>Hook/Shop/Payment/Stripe.php5</class>
-		<class>Job/Shop/Payment/Stripe.php5</class>
-		<class>Logic/Shop/Payment/Stripe.php5</class>
-		<class>Model/Shop/Payment/Stripe.php5</class>
-		<class>View/Helper/Shop/FinishPanel/Stripe.php5</class>
-		<class>View/Shop/Payment/Stripe.php5</class>
+		<class>Controller/Shop/Payment/Stripe.php</class>
+		<class>Hook/Shop/Payment/Stripe.php</class>
+		<class>Job/Shop/Payment/Stripe.php</class>
+		<class>Logic/Shop/Payment/Stripe.php</class>
+		<class>Model/Shop/Payment/Stripe.php</class>
+		<class>View/Helper/Shop/FinishPanel/Stripe.php</class>
+		<class>View/Shop/Payment/Stripe.php</class>
 		<template>shop/payment/stripe/perCreditCard.php</template>
 		<script>Module.Shop.Payment.Stripe.js</script>
 		<style source="common">module.shop.payment.stripe.css</style>

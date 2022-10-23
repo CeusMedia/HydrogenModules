@@ -10,10 +10,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/System/Maintenance.php5</class>
-		<class>Controller/System/Maintenance.php5</class>
-<!--		<class>Job/System/Load.php5</class>-->
-		<class>View/System/Maintenance.php5</class>
+		<class>Hook/System/Maintenance.php</class>
+		<class>Controller/System/Maintenance.php</class>
+<!--		<class>Job/System/Load.php</class>-->
+		<class>View/System/Maintenance.php</class>
 		<template>system/maintenance/index.php</template>
 		<locale>de/html/maintenance.html</locale>
 		<locale>en/html/maintenance.html</locale>

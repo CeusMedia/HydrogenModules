@@ -52,11 +52,11 @@ For sending mails you need to setup a cron job:
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Info/Newsletter.php5</class>
-<!--		<class>Hook/Info/Newsletter.php5</class>-->
-		<class>Job/Newsletter.php5</class>
-		<class>Mail/Info/Newsletter/Register.php5</class>
-		<class>View/Info/Newsletter.php5</class>
+		<class>Controller/Info/Newsletter.php</class>
+<!--		<class>Hook/Info/Newsletter.php</class>-->
+		<class>Job/Newsletter.php</class>
+		<class>Mail/Info/Newsletter/Register.php</class>
+		<class>View/Info/Newsletter.php</class>
 		<locale>de/info/newsletter.ini</locale>
 		<locale>de/html/info/newsletter/finishPanel.html</locale>
 		<locale>de/mail/info/newsletter/register.txt</locale>

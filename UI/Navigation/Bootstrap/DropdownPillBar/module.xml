@@ -11,7 +11,7 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>View/Helper/Navigation/Bootstrap/DropdownPillBar.php5</class>
+		<class>View/Helper/Navigation/Bootstrap/DropdownPillBar.php</class>
 <!--		<style load="auto">module.ui.helper.bootstrap.dropdownpillbar.css</style>-->
 	</files>
 	<relations>

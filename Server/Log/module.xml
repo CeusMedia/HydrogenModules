@@ -66,10 +66,10 @@ Each log level can be enabled/disabled and filtered by IPs.
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Server/Log.php5</class>
-		<class>Hook/Server/Log.php5</class>
-		<class>Model/Log/Message.php5</class>
-		<class>Resource/Server/Log.php5</class>
+		<class>Controller/Server/Log.php</class>
+		<class>Hook/Server/Log.php</class>
+		<class>Model/Log/Message.php</class>
+		<class>Resource/Server/Log.php</class>
 	</files>
 	<relations/>
 	<config protected="yes" type="boolean" name="active">yes</config>

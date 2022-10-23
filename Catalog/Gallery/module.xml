@@ -26,13 +26,13 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Catalog/Gallery.php5</class>
-		<class>Logic/Catalog/Gallery.php5</class>
-		<class>Logic/ShopBridge/CatalogGallery.php5</class>
-		<class>Model/Catalog/Gallery/Category.php5</class>
-		<class>Model/Catalog/Gallery/Image.php5</class>
-		<class>View/Catalog/Gallery.php5</class>
-		<class>View/Helper/Shop/FinishPanel/CatalogGallery.php5</class>
+		<class>Controller/Catalog/Gallery.php</class>
+		<class>Logic/Catalog/Gallery.php</class>
+		<class>Logic/ShopBridge/CatalogGallery.php</class>
+		<class>Model/Catalog/Gallery/Category.php</class>
+		<class>Model/Catalog/Gallery/Image.php</class>
+		<class>View/Catalog/Gallery.php</class>
+		<class>View/Helper/Shop/FinishPanel/CatalogGallery.php</class>
 		<locale>de/catalog/gallery.ini</locale>
 		<locale>de/html/catalog/gallery/category/bottom.html</locale>
 		<locale>de/html/catalog/gallery/category/top.html</locale>

@@ -15,12 +15,12 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Model/Shop/Shipping/Country.php5</class>
-		<class>Model/Shop/Shipping/Grade.php5</class>
-		<class>Model/Shop/Shipping/Option.php5</class>
-		<class>Model/Shop/Shipping/Price.php5</class>
-		<class>Model/Shop/Shipping/Zone.php5</class>
-		<class>Logic/Shop/Shipping.php5</class>
+		<class>Model/Shop/Shipping/Country.php</class>
+		<class>Model/Shop/Shipping/Grade.php</class>
+		<class>Model/Shop/Shipping/Option.php</class>
+		<class>Model/Shop/Shipping/Price.php</class>
+		<class>Model/Shop/Shipping/Zone.php</class>
+		<class>Logic/Shop/Shipping.php</class>
 	</files>
 	<relations>
 		<needs type="module">Shop</needs>

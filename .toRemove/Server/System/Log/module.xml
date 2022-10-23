@@ -60,11 +60,11 @@ Please think about using the hook instead.
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/System/Log.php5</class>
-		<class>View/System/Log.php5</class>
-		<class>View/Helper/Mail/Exception/Facts.php5</class>
-		<class>Mail/System/Log.php5</class>
-		<class>Mail/System/Log/Exception.php5</class>
+		<class>Controller/System/Log.php</class>
+		<class>View/System/Log.php</class>
+		<class>View/Helper/Mail/Exception/Facts.php</class>
+		<class>Mail/System/Log.php</class>
+		<class>Mail/System/Log/Exception.php</class>
 		<template>system/log/index.php</template>
 		<template>system/log/view.php</template>
 	</files>

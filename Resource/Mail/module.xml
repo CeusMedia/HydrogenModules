@@ -111,23 +111,23 @@ code>* * * * * cd /path/to/project && php job.php5 Mail.Archive.clean --age=3M</
 		<language complete="100%">en</language>
 	</languages>
 	<files>
-		<class>Hook/Resource/Mail.php5</class>
-		<class>Mail/Abstract.php5</class>
-		<class>Mail/Example.php5</class>
-		<class>Mail/Test.php5</class>
-		<class>Model/Mail.php5</class>
-		<class>Model/Mail/Attachment.php5</class>
-		<class>Model/Mail/Template.php5</class>
-		<class>Logic/Mail.php5</class>
-		<class>Job/Mail.php5</class>
-		<class>Job/Mail/Archive.php5</class>
-		<class>Job/Mail/Migration.php5</class>
-		<class>Job/Mail/Queue.php5</class>
-		<class>View/Helper/Mail/Facts.php5</class>
-		<class>View/Helper/Mail/Text.php5</class>
-		<class>View/Helper/Mail/View/HTML.php5</class>
-		<class>View/Helper/Mail/View/Source.php5</class>
-		<class>View/Helper/Mail/View/Text.php5</class>
+		<class>Hook/Resource/Mail.php</class>
+		<class>Mail/Abstract.php</class>
+		<class>Mail/Example.php</class>
+		<class>Mail/Test.php</class>
+		<class>Model/Mail.php</class>
+		<class>Model/Mail/Attachment.php</class>
+		<class>Model/Mail/Template.php</class>
+		<class>Logic/Mail.php</class>
+		<class>Job/Mail.php</class>
+		<class>Job/Mail/Archive.php</class>
+		<class>Job/Mail/Migration.php</class>
+		<class>Job/Mail/Queue.php</class>
+		<class>View/Helper/Mail/Facts.php</class>
+		<class>View/Helper/Mail/Text.php</class>
+		<class>View/Helper/Mail/View/HTML.php</class>
+		<class>View/Helper/Mail/View/Source.php</class>
+		<class>View/Helper/Mail/View/Text.php</class>
 		<style source="common">bootstrap.email.min.css</style>
 		<style source="common">mail.min.css</style>
 		<script>mail.min.js</script>

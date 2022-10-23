@@ -11,8 +11,8 @@
 	<log version="0.2.3">Adjust to new shortcode handling.</log>
 	<log version="0.2.4">Improve code style.</log>
 	<files>
-		<class>Hook/Info/NewsList.php5</class>
-		<class>View/Helper/NewsList.php5</class>
+		<class>Hook/Info/NewsList.php</class>
+		<class>View/Helper/NewsList.php</class>
 		<locale>de/info/newslist.ini</locale>
 	</files>
 	<relations>

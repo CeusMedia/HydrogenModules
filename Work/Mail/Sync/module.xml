@@ -16,13 +16,13 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Work/Mail/Sync.php5</class>
-		<class>Logic/Mail/Sync.php5</class>
-		<class>View/Work/Mail/Sync.php5</class>
-		<class>Model/Mail/Sync.php5</class>
-		<class>Model/Mail/Sync/Host.php5</class>
-		<class>Model/Mail/Sync/Run.php5</class>
-		<class>Job/Work/Mail/Sync.php5</class>
+		<class>Controller/Work/Mail/Sync.php</class>
+		<class>Logic/Mail/Sync.php</class>
+		<class>View/Work/Mail/Sync.php</class>
+		<class>Model/Mail/Sync.php</class>
+		<class>Model/Mail/Sync/Host.php</class>
+		<class>Model/Mail/Sync/Run.php</class>
+		<class>Job/Work/Mail/Sync.php</class>
 		<template>work/mail/sync/index.php</template>
 		<template>work/mail/sync/addHost.php</template>
 		<template>work/mail/sync/addSync.php</template>

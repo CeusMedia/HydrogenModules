@@ -20,10 +20,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Admin/Oauth2.php5</class>
-		<class>Job/Admin/Oauth2.php5</class>
-		<class>Model/Oauth/ProviderDefault.php5</class>
-		<class>View/Admin/Oauth2.php5</class>
+		<class>Controller/Admin/Oauth2.php</class>
+		<class>Job/Admin/Oauth2.php</class>
+		<class>Model/Oauth/ProviderDefault.php</class>
+		<class>View/Admin/Oauth2.php</class>
 		<template>admin/oauth2/add.php</template>
 		<template>admin/oauth2/edit.php</template>
 		<template>admin/oauth2/index.php</template>

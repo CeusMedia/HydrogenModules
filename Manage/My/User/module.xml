@@ -31,8 +31,8 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/My/User.php5</class>
-		<class>View/Manage/My/User.php5</class>
+		<class>Controller/Manage/My/User.php</class>
+		<class>View/Manage/My/User.php</class>
 		<template>manage/my/user/index.php</template>
 		<template>manage/my/user/index.account.php</template>
 		<template>manage/my/user/index.edit.php</template>

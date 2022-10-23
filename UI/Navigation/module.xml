@@ -44,15 +44,15 @@ This module combines several navigation types to provide a standard navigation c
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/UI/Navigation.php5</class>
-		<class>Model/Menu.php5</class>
-		<class>View/Helper/Navigation.php5</class>
-		<class>View/Helper/Navigation/Bootstrap/Dropdown.php5</class>
-		<class>View/Helper/Navigation/Bootstrap/NavbarMobile.php5</class>
-		<class>View/Helper/Navigation/Bootstrap/NavbarMobileTitle.php5</class>
-		<class>View/Helper/Navigation/Bootstrap/Sidebar.php5</class>
-		<class>View/Helper/Navigation/BootstrapResponsive.php5</class>
-		<class>View/Helper/Navigation/Mobile.php5</class>
+		<class>Hook/UI/Navigation.php</class>
+		<class>Model/Menu.php</class>
+		<class>View/Helper/Navigation.php</class>
+		<class>View/Helper/Navigation/Bootstrap/Dropdown.php</class>
+		<class>View/Helper/Navigation/Bootstrap/NavbarMobile.php</class>
+		<class>View/Helper/Navigation/Bootstrap/NavbarMobileTitle.php</class>
+		<class>View/Helper/Navigation/Bootstrap/Sidebar.php</class>
+		<class>View/Helper/Navigation/BootstrapResponsive.php</class>
+		<class>View/Helper/Navigation/Mobile.php</class>
 		<style source="common" load="auto">module.ui.navigation.css</style>
 		<script>module.ui.navigation.sidebar.js</script>
 	</files>

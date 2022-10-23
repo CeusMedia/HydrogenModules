@@ -27,14 +27,14 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Info/Blog.php5</class>
-		<class>Model/Blog/Category.php5</class>
-		<class>Model/Blog/Comment.php5</class>
-		<class>Model/Blog/Post.php5</class>
-		<class>Mail/Info/Blog/Comment.php5</class>
-		<class>Mail/Info/Blog/FollowUp.php5</class>
-		<class>View/Info/Blog.php5</class>
-		<class>Hook/Info/Blog.php5</class>
+		<class>Controller/Info/Blog.php</class>
+		<class>Model/Blog/Category.php</class>
+		<class>Model/Blog/Comment.php</class>
+		<class>Model/Blog/Post.php</class>
+		<class>Mail/Info/Blog/Comment.php</class>
+		<class>Mail/Info/Blog/FollowUp.php</class>
+		<class>View/Info/Blog.php</class>
+		<class>Hook/Info/Blog.php</class>
 		<template>info/blog/comment.php</template>
 		<template>info/blog/comments.php</template>
 		<template>info/blog/index.php</template>

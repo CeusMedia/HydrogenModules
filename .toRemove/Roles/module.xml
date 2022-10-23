@@ -101,10 +101,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Admin/Role.php5</class>
-		<class>Model/Role.php5</class>
-		<class>Model/Role/Right.php5</class>
-		<class>View/Admin/Role.php5</class>
+		<class>Controller/Admin/Role.php</class>
+		<class>Model/Role.php</class>
+		<class>Model/Role/Right.php</class>
+		<class>View/Admin/Role.php</class>
 		<locale>de/admin/role.ini</locale>
 		<template>admin/role/add.php</template>
 		<template>admin/role/edit.php</template>

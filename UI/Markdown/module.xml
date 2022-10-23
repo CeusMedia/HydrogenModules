@@ -24,9 +24,9 @@
     <author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
     <license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Ajax/Helper/Markdown.php5</class>
-		<class>Hook/UI/Markdown.php5</class>
-		<class>View/Helper/Markdown.php5</class>
+		<class>Controller/Ajax/Helper/Markdown.php</class>
+		<class>Hook/UI/Markdown.php</class>
+		<class>View/Helper/Markdown.php</class>
 	</files>
 	<config protected="no" type="boolean" name="active" title="Main switch of module">yes</config>
 	<config protected="yes" type="string" name="renderer" title="Default Markdown renderer library" values="CommonMark,Parsedown,MichelF,MichelF_Extra,Cebe,Cebe_Extra,Cebe_GitHub,Ciconia,Ciconia_GitHub,Markdown_Extended">Ciconia</config>

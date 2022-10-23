@@ -18,7 +18,7 @@ Having this module activated, a pinned Web App can opened in a new browser insta
 	<author email="christian.wuerker@ceusmedia.de"><![CDATA[Christian Würker]]></author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/UI/MetaTags/MobileWebApp.php5</class>
+		<class>Hook/UI/MetaTags/MobileWebApp.php</class>
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<hook type="resource" resource="Page" event="applyModules">Hook_UI_MetaTags_MobileWebApp::onPageApplyModules</hook>

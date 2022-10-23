@@ -29,14 +29,14 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/Resource/User.php5</class>
-		<class>Model/Role.php5</class>
-		<class>Model/Role/Right.php5</class>
-		<class>Model/User.php5</class>
-		<class>Model/User/Password.php5</class>
-		<class>Model/User/Token.php5</class>
-		<class>Logic/UserPassword.php5</class>
-		<class>Logic/UserToken.php5</class>
+		<class>Hook/Resource/User.php</class>
+		<class>Model/Role.php</class>
+		<class>Model/Role/Right.php</class>
+		<class>Model/User.php</class>
+		<class>Model/User/Password.php</class>
+		<class>Model/User/Token.php</class>
+		<class>Logic/UserPassword.php</class>
+		<class>Logic/UserToken.php</class>
 		<locale>de/countries.ini</locale>
 		<locale>en/countries.ini</locale>
 	</files>

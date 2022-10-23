@@ -25,21 +25,21 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Catalog.php5</class>
-		<class>Logic/Catalog.php5</class>
-		<class>Logic/ShopBridge/CatalogArticle.php5</class>
-		<class>Model/Catalog/Article.php5</class>
-		<class>Model/Catalog/Article/Author.php5</class>
-		<class>Model/Catalog/Article/Category.php5</class>
-		<class>Model/Catalog/Article/Document.php5</class>
-		<class>Model/Catalog/Article/Tag.php5</class>
-		<class>Model/Catalog/Author.php5</class>
-		<class>Model/Catalog/Category.php5</class>
-		<class>Model/Catalog/Status.php5</class>
-		<class>View/Catalog.php5</class>
-		<class>View/Helper/Catalog.php5</class>
-		<class>View/Helper/Catalog/Position.php5</class>
-		<class>View/Helper/Text.php5</class>
+		<class>Controller/Catalog.php</class>
+		<class>Logic/Catalog.php</class>
+		<class>Logic/ShopBridge/CatalogArticle.php</class>
+		<class>Model/Catalog/Article.php</class>
+		<class>Model/Catalog/Article/Author.php</class>
+		<class>Model/Catalog/Article/Category.php</class>
+		<class>Model/Catalog/Article/Document.php</class>
+		<class>Model/Catalog/Article/Tag.php</class>
+		<class>Model/Catalog/Author.php</class>
+		<class>Model/Catalog/Category.php</class>
+		<class>Model/Catalog/Status.php</class>
+		<class>View/Catalog.php</class>
+		<class>View/Helper/Catalog.php</class>
+		<class>View/Helper/Catalog/Position.php</class>
+		<class>View/Helper/Text.php</class>
 		<template>catalog/article.php</template>
 		<template>catalog/article/item.php</template>
 		<template>catalog/article/details.php</template>

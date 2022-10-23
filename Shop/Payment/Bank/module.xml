@@ -20,10 +20,10 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Shop/Payment/Bank.php5</class>
-		<class>Hook/Shop/Payment/Bank.php5</class>
-		<class>View/Shop/Payment/Bank.php5</class>
-		<class>View/Helper/Shop/FinishPanel/Bank.php5</class>
+		<class>Controller/Shop/Payment/Bank.php</class>
+		<class>Hook/Shop/Payment/Bank.php</class>
+		<class>View/Shop/Payment/Bank.php</class>
+		<class>View/Helper/Shop/FinishPanel/Bank.php</class>
 		<locale>de/mail/shop/customer/ordered/bank/perTransfer.html</locale>
 		<locale>de/mail/shop/customer/ordered/bank/perTransfer.txt</locale>
 		<locale>de/shop/payment/bank.ini</locale>
@@ -32,9 +32,9 @@
 		<image>paymentProviderLogo/medium/bank-1.png</image>
 		<image>paymentProviderLogo/small/bank-1.png</image>
 		<image>paymentProviderLogo/bank-1.xcf</image>
-<!--		<class>Job/Shop/Payment/Bank.php5</class>-->
-<!--		<class>Logic/Shop/Payment/Bank.php5</class>-->
-<!--		<class>Model/Shop/Payment/Bank.php5</class>-->
+<!--		<class>Job/Shop/Payment/Bank.php</class>-->
+<!--		<class>Logic/Shop/Payment/Bank.php</class>-->
+<!--		<class>Model/Shop/Payment/Bank.php</class>-->
 <!--		<template>shop/payment/bank/transfer.php</template>-->
 <!--		<script>Module.Shop.Payment.Bank.js</script>-->
 <!--		<style>module.shop.payment.bank.css</style>-->

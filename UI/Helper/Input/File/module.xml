@@ -20,8 +20,8 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/UI/Helper/Input/File.php5</class>
-		<class>View/Helper/Input/File.php5</class>
+		<class>Hook/UI/Helper/Input/File.php</class>
+		<class>View/Helper/Input/File.php</class>
 		<script load="auto">module.ui.helper.input.fileupload.js</script>
 		<style load="auto">module.ui.helper.input.fileupload.css</style>
 	</files>

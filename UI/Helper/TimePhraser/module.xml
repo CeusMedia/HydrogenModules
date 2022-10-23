@@ -10,7 +10,7 @@
 	<log version="0.2.2">Add static access.</log>
 	<log version="0.3.0">Adjust to new style and add render mode.</log>
 	<files>
-		<class>View/Helper/TimePhraser.php5</class>
+		<class>View/Helper/TimePhraser.php</class>
 		<locale>de/timephraser.ini</locale>
 		<locale>en/timephraser.ini</locale>
 	</files>

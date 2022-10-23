@@ -12,7 +12,7 @@
 	<license source="http://www.fontsquirrel.com/license/work-sans">SIL Open Font License v1.10</license>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<files>
-		<class>Hook/UI/Font/WorkSans.php5</class>
+		<class>Hook/UI/Font/WorkSans.php</class>
 	</files>
 	<relations>
 		<needs type="module">UI_Font</needs>

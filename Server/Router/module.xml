@@ -15,8 +15,8 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Router.php5</class>
-		<class>Model/Route.php5</class>
+		<class>Controller/Router.php</class>
+		<class>Model/Route.php</class>
 		<file>config/routes.xml.dist</file>
 	</files>
 	<config protected="yes" type="string" name="source" values="XML,Database">Database</config>

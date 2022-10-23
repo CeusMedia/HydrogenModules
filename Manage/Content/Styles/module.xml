@@ -14,8 +14,8 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Manage/Content/Style.php5</class>
-		<class>View/Manage/Content/Style.php5</class>
+		<class>Controller/Manage/Content/Style.php</class>
+		<class>View/Manage/Content/Style.php</class>
 		<template>manage/content/style/index.php</template>
 		<template>manage/content/style/index.edit.php</template>
 		<template>manage/content/style/index.filter.php</template>

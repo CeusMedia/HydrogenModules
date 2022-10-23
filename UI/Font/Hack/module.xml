@@ -19,7 +19,7 @@
 	<config protected="yes" type="boolean" name="source" values="Library,CDN">Library</config>
 	<config protected="yes" type="boolean" name="URI.CDN">//cdn.jsdelivr.net/font-hack/2.018/css/</config>
 	<files>
-		<class>Hook/UI/Font/Hack.php5</class>
+		<class>Hook/UI/Font/Hack.php</class>
 	</files>
 	<relations>
 		<needs type="module">UI_Font</needs>

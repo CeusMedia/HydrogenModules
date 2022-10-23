@@ -16,7 +16,7 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Hook/UI/CookieWarning.php5</class>
+		<class>Hook/UI/CookieWarning.php</class>
 		<locale>de/cookiewarning.ini</locale>
 		<locale>en/cookiewarning.ini</locale>
 		<style>module.ui.js.cookiewarning.css</style>

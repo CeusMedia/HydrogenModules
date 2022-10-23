@@ -9,13 +9,13 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Work/Uberlog.php5</class>
-		<class>Model/Log/Category.php5</class>
-		<class>Model/Log/Client.php5</class>
-		<class>Model/Log/Host.php5</class>
-		<class>Model/Log/Record.php5</class>
-		<class>Model/Log/UserAgent.php5</class>
-		<class>View/Work/Uberlog.php5</class>
+		<class>Controller/Work/Uberlog.php</class>
+		<class>Model/Log/Category.php</class>
+		<class>Model/Log/Client.php</class>
+		<class>Model/Log/Host.php</class>
+		<class>Model/Log/Record.php</class>
+		<class>Model/Log/UserAgent.php</class>
+		<class>View/Work/Uberlog.php</class>
 		<template>work/uberlog/index.php</template>
 		<template>work/uberlog/view.php</template>
 		<locale>de/work/uberlog.ini</locale>

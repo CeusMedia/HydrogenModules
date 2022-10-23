@@ -13,11 +13,11 @@ DEPRECATED: Use module Work:Issues instead.
 	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Work/Issues">End of life: Use module Work:Issues instead!</deprecation>
 	<version>0.1</version>
 	<files>
-		<class>Controller/Bug.php5</class>
-		<class>Model/Bug.php5</class>
-		<class>Model/Bug/Note.php5</class>
-		<class>Model/Bug/Change.php5</class>
-		<class>View/Bug.php5</class>
+		<class>Controller/Bug.php</class>
+		<class>Model/Bug.php</class>
+		<class>Model/Bug/Note.php</class>
+		<class>Model/Bug/Change.php</class>
+		<class>View/Bug.php</class>
 		<locale>de/bug.ini</locale>
 		<template>bug/add.php</template>
 		<template>bug/edit.php</template>

@@ -46,25 +46,25 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Controller/Manage/Catalog/Bookstore.php5</class>
-		<class>Controller/Manage/Catalog/Bookstore/Article.php5</class>
-		<class>Controller/Manage/Catalog/Bookstore/Author.php5</class>
-		<class>Controller/Manage/Catalog/Bookstore/Category.php5</class>
-		<class>Controller/Manage/Catalog/Bookstore/Tag.php5</class>
-		<class>Model/Catalog/Bookstore/Article.php5</class>
-		<class>Model/Catalog/Bookstore/Author.php5</class>
-		<class>Model/Catalog/Bookstore/Category.php5</class>
-		<class>Model/Catalog/Bookstore/Article/Author.php5</class>
-		<class>Model/Catalog/Bookstore/Article/Category.php5</class>
-		<class>Model/Catalog/Bookstore/Article/Document.php5</class>
-		<class>Model/Catalog/Bookstore/Article/Tag.php5</class>
-		<class>Logic/Catalog/Bookstore.php5</class>
-		<class>Logic/ShopBridge/Bookstore.php5</class>
-		<class>View/Manage/Catalog/Bookstore.php5</class>
-		<class>View/Manage/Catalog/Bookstore/Article.php5</class>
-		<class>View/Manage/Catalog/Bookstore/Author.php5</class>
-		<class>View/Manage/Catalog/Bookstore/Category.php5</class>
-		<class>View/Manage/Catalog/Bookstore/Tag.php5</class>
+		<class>Controller/Manage/Catalog/Bookstore.php</class>
+		<class>Controller/Manage/Catalog/Bookstore/Article.php</class>
+		<class>Controller/Manage/Catalog/Bookstore/Author.php</class>
+		<class>Controller/Manage/Catalog/Bookstore/Category.php</class>
+		<class>Controller/Manage/Catalog/Bookstore/Tag.php</class>
+		<class>Model/Catalog/Bookstore/Article.php</class>
+		<class>Model/Catalog/Bookstore/Author.php</class>
+		<class>Model/Catalog/Bookstore/Category.php</class>
+		<class>Model/Catalog/Bookstore/Article/Author.php</class>
+		<class>Model/Catalog/Bookstore/Article/Category.php</class>
+		<class>Model/Catalog/Bookstore/Article/Document.php</class>
+		<class>Model/Catalog/Bookstore/Article/Tag.php</class>
+		<class>Logic/Catalog/Bookstore.php</class>
+		<class>Logic/ShopBridge/Bookstore.php</class>
+		<class>View/Manage/Catalog/Bookstore.php</class>
+		<class>View/Manage/Catalog/Bookstore/Article.php</class>
+		<class>View/Manage/Catalog/Bookstore/Author.php</class>
+		<class>View/Manage/Catalog/Bookstore/Category.php</class>
+		<class>View/Manage/Catalog/Bookstore/Tag.php</class>
 		<locale>de/catalog.ini</locale>
 		<locale>de/html/manage/catalog/bookstore/article/index.html</locale>
 		<locale>de/manage/catalog/bookstore.ini</locale>

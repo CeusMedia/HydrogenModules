@@ -21,11 +21,11 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Csrf.php5</class>
-		<class>Controller/Ajax/Csrf.php5</class>
-		<class>Logic/CSRF.php5</class>
-		<class>Model/CSRF/Token.php5</class>
-		<class>View/Helper/CSRF.php5</class>
+		<class>Controller/Csrf.php</class>
+		<class>Controller/Ajax/Csrf.php</class>
+		<class>Logic/CSRF.php</class>
+		<class>Model/CSRF/Token.php</class>
+		<class>View/Helper/CSRF.php</class>
 		<locale>de/csrf.ini</locale>
 		<locale>en/csrf.ini</locale>
 	</files>

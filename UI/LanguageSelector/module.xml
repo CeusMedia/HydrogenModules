@@ -18,7 +18,7 @@
 	<author email="software@mettke.eu" site="https://karsten.mettke.eu">Karsten Mettke</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>View/Helper/LanguageSelector.php5</class>
+		<class>View/Helper/LanguageSelector.php</class>
 		<locale>de/language.ini</locale>
 		<locale>en/language.ini</locale>
 		<!--<image source='common'>de.png</image>-->
