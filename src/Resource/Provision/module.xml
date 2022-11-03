@@ -7,7 +7,7 @@ This module needs an provisioning server to work with.
 
 To clear cached provision information regularly, you need to install this cron job:
 code>
-0 * * * * cd [PATH] && php job.php5 Provision.Cache.clear
+0 * * * * cd [PATH] && ./job.php Provision.Cache.clear
 </code
 
 ]]></description>

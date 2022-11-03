@@ -19,6 +19,6 @@ As root:
 As user:
 
 1. Run mail job.
-	0 8 * * * cd {PATH}; php job.php5 work-mission-mail-daily > logs/job.log
+	0 8 * * * cd {PATH}; ./job.php work-mission-mail-daily > logs/job.log
 
 

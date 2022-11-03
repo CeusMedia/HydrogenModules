@@ -17,10 +17,10 @@ Jobs are defined like this:
 code:xml><job id="MODULE.JOBCLASS.METHOD">JOBCLASS::METHOD</job><code
 
 Call your job like this:
-code:shell>php job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
+code:shell>./job.php JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 
 Having set execution permissions to job.php, you can run the job like this:
-code:shell>./job.php5 JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
+code:shell>./job.php JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 
 <b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
 ]]></description>

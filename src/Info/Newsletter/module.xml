@@ -8,7 +8,7 @@ Sends newsletters prepared in backend using module Work:Newsletter.
 
 For sending mails you need to setup a cron job:
 
-* * * * *   cd /your/app/root/path/; php job.php5 Newsletter.send
+* * * * *   cd /your/app/root/path/; ./job.php Newsletter.send
 
 ]]></description>
 	<category>Info</category>

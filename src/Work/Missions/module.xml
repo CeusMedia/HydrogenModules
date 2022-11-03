@@ -4,8 +4,8 @@
 	<description><![CDATA[Compact task and event management.
 To use the mail functions, please install module &quot;Resource_Jobs&quot; and the following cronjobs:
 code>
-  0 * * * * cd /path/to/office && php job.php5 work-mission-mail-daily
-*/5 * * * * cd /path/to/office && php job.php5 work-mission-mail-changes
+  0 * * * * cd /path/to/office && ./job.php work-mission-mail-daily
+*/5 * * * * cd /path/to/office && ./job.php work-mission-mail-changes
 <code
 ]]></description>
 	<version>0.9.66</version>

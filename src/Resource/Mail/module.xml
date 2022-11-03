@@ -18,7 +18,7 @@ list>
 Modules can send mails on (user) request or use the mail queue.
 Using the queue, provided by mail logic, will result in better web request performance.
 To enable queued mails you need to set a cron job:
-code>* * * * * cd /path/to/project && php job.php5 sendQueuedMails<code
+code>* * * * * cd /path/to/project && ./job.php sendQueuedMails<code
 
 All mails are stored within database, which also is an archive of sent mails.
 Since all mails are stored completely with all MIME parts, the database table will grow in size.
@@ -28,7 +28,7 @@ code>php job.php Mail.Archive.clean --age=3M</code
 
 or add a cron job:
 
-code>* * * * * cd /path/to/project && php job.php5 Mail.Archive.clean --age=3M</code
+code>* * * * * cd /path/to/project && ./job.php Mail.Archive.clean --age=3M</code
 
 ]]></description>
 	<category>Resource</category>
