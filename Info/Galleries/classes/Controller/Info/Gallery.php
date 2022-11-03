@@ -51,7 +51,7 @@ class Controller_Info_Gallery extends Controller
 		$this->env->getSession()->remove( 'gallery_referer' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_galleries.', TRUE );
 		$config			= $this->env->getConfig();

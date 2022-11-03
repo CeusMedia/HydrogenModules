@@ -20,7 +20,7 @@ class Controller_Ajax_Csrf extends AjaxController
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic	= $this->env->getLogic()->get( 'CSRF' );
 	}

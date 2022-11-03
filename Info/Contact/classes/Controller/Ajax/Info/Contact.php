@@ -36,7 +36,7 @@ class Controller_Ajax_Info_Contact extends AjaxController
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->moduleConfig		= $this->env->getConfig()->getAll( "module.info_contact.", TRUE );
 
