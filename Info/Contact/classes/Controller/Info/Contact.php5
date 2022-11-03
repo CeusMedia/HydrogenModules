@@ -6,12 +6,11 @@ class Controller_Info_Contact extends Controller
 {
 	protected $request;
 	protected $messenger;
-	protected $moduleConfig;
 
-	protected $useCaptcha;
-	protected $useCsrf;
-	protected $useHoneypot;
-	protected $useNewsletter;
+	protected bool $useCaptcha;
+	protected bool $useCsrf;
+	protected bool $useHoneypot;
+	protected bool $useNewsletter;
 
 	public function ajaxForm()
 	{
@@ -188,11 +187,10 @@ class Controller_Info_Contact extends Controller
 		$this->addData( 'message', $this->request->get( 'message' ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();
-		$this->moduleConfig		= $this->env->getConfig()->getAll( "module.info_contact.", TRUE );
 		$this->useCaptcha		= NULL;
 		$this->useCsrf			= FALSE;
 

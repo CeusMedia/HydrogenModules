@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection;
 use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
@@ -10,51 +10,51 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
 class Logic_Newsletter extends Logic
 {
 	/**	@var		Model_Newsletter_Group			$modelGroup */
-	protected $modelGroup;
+	protected Model_Newsletter_Group $modelGroup;
 
 	/**	@var		Model_Newsletter				$modelNewsletter */
-	protected $modelNewsletter;
+	protected Model_Newsletter $modelNewsletter;
 
 	/**	@var		Model_Newsletter_Queue			$modelQueue */
-	protected $modelQueue;
+	protected Model_Newsletter_Queue $modelQueue;
 
 	/**	@var		Model_Newsletter_Reader			$modelReader */
-	protected $modelReader;
+	protected Model_Newsletter_Reader $modelReader;
 
 	/**	@var		Model_Newsletter_Reader_Group	$modelReaderGroup */
-	protected $modelReaderGroup;
+	protected Model_Newsletter_Reader_Group $modelReaderGroup;
 
 	/**	@var		Model_Newsletter_Reader_Letter	$modelReaderLetter */
-	protected $modelReaderLetter;
+	protected Model_Newsletter_Reader_Letter $modelReaderLetter;
 
 	/**	@var		Model_Newsletter_Template		$modelTemplate */
-	protected $modelTemplate;
+	protected Model_Newsletter_Template $modelTemplate;
 
-	public function addReader( $data )
+	public function addReader( array $data ): string
 	{
 		if( !isset( $data['registeredAt'] ) )
 			$data['registeredAt']	= time();
 		return $this->modelReader->add( $data );
 	}
 
-	public function addReaderToGroup( $readerId, $groupId, $strict = TRUE )
+	public function addReaderToGroup( string $readerId, string $groupId, bool $strict = TRUE ): string
 	{
 		$this->checkReaderId( $readerId, $strict );
 		$this->checkGroupId( $groupId, $strict );
 		$has	= $this->getGroupsOfReader( $readerId, ['newsletterGroupId' => $groupId] );
 		if( $has )
 			return $has[0]->newsletterReaderGroupId;
-		$data	= array(
+		$data	= [
 			'newsletterReaderId'	=> $readerId,
 			'newsletterGroupId'		=> $groupId,
 			'createdAt'				=> time(),
-		);
+		];
 		return $this->modelReaderGroup->add( $data );
 	}
 
-	public function checkGroupId( $groupId, $throwException = FALSE )
+	public function checkGroupId( string $groupId, bool $throwException = FALSE ): bool
 	{
-		if( $this->modelGroup->has( (int) $groupId ) )
+		if( $this->modelGroup->has( $groupId ) )
 			return TRUE;
 		if( $throwException )
 			throw new InvalidArgumentException( 'Invalid newsletter group ID '.$groupId );
@@ -64,14 +64,14 @@ class Logic_Newsletter extends Logic
 	/**
 	 *	Indicates whether a given newsletter ID is valid.
 	 *	@access		public
-	 *	@param		integer		$newsletterId		ID of newsletter to check
+	 *	@param		string		$newsletterId		ID of newsletter to check
 	 *	@param		boolean		$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException		if newsletter is not exising and $throwException is TRUE
 	 */
-	public function checkNewsletterId( $newsletterId, $throwException = FALSE )
+	public function checkNewsletterId( string $newsletterId, bool $throwException = FALSE ): bool
 	{
-		if( $this->modelNewsletter->has( (int) $newsletterId ) )
+		if( $this->modelNewsletter->has( $newsletterId ) )
 			return TRUE;
 		if( $throwException )
 			throw new InvalidArgumentException( 'Invalid newsletter ID '.$newsletterId );
@@ -81,14 +81,14 @@ class Logic_Newsletter extends Logic
 	/**
 	 *	Indicates whether a given newsletter reader letter ID is valid.
 	 *	@access		public
-	 *	@param		integer		$readerLetterId		ID of newsletter reader letter to check
+	 *	@param		string		$readerLetterId		ID of newsletter reader letter to check
 	 *	@param		boolean		$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException		if newsletter reader letter is not exising and $throwException is TRUE
 	 */
-	public function checkReaderLetterId( $readerLetterId, $throwException = FALSE )
+	public function checkReaderLetterId( string $readerLetterId, bool $throwException = FALSE ): bool
 	{
-		if( $this->modelReaderLetter->has( (int) $readerLetterId ) )
+		if( $this->modelReaderLetter->has( $readerLetterId ) )
 			return TRUE;
 		if( $throwException )
 			throw new InvalidArgumentException( 'Invalid newsletter reader letter ID '.$readerLetterId );
@@ -98,14 +98,14 @@ class Logic_Newsletter extends Logic
 	/**
 	 *	Indicates whether a given newsletter reader ID is valid.
 	 *	@access		public
-	 *	@param		integer		$readerId			ID of newsletter reader to check
+	 *	@param		string		$readerId			ID of newsletter reader to check
 	 *	@param		boolean		$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException		if newsletter reader is not exising and $throwException is TRUE
 	 */
-	public function checkReaderId( $readerId, $throwException = FALSE )
+	public function checkReaderId( string $readerId, bool $throwException = FALSE ): bool
 	{
-		if( $this->modelReader->has( (int) $readerId ) )
+		if( $this->modelReader->has( $readerId ) )
 			return TRUE;
 		if( $throwException )
 			throw new InvalidArgumentException( 'Invalid newsletter reader ID '.$readerId );
@@ -115,46 +115,46 @@ class Logic_Newsletter extends Logic
 	/**
 	 *	Indicates whether a given newsletter template ID is valid.
 	 *	@access		public
-	 *	@param		integer		$templateId			ID of newsletter template to check
+	 *	@param		string		$templateId			ID of newsletter template to check
 	 *	@param		boolean		$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException		if newsletter template is not exising and $throwException is TRUE
 	 */
-	public function checkTemplateId( $templateId, $throwException = FALSE )
+	public function checkTemplateId( string $templateId, bool $throwException = FALSE ): bool
 	{
-		if( $this->modelTemplate->has( (int) $templateId ) )
+		if( $this->modelTemplate->has( $templateId ) )
 			return TRUE;
 		if( $throwException )
 			throw new InvalidArgumentException( 'Invalid newsletter template ID '.$templateId );
 		return FALSE;
 	}
 
-	public function countGroupReaders( $groupId )
+	public function countGroupReaders( string $groupId ): int
 	{
 		return $this->modelReaderGroup->countByIndex( 'newsletterGroupId', $groupId );
 	}
 
-	public function countNewsletters( $conditions = [] )
+	public function countNewsletters( array $conditions = [] ): int
 	{
 		return $this->modelNewsletter->count( $conditions );
 	}
 
-	public function editNewsletter( $newsletterId, $data )
+	public function editNewsletter( string $newsletterId, array $data ): int
 	{
 		$this->checkNewsletterId( $newsletterId, TRUE );
 		$data['modifiedAt']	= time();
-		$this->modelNewsletter->edit( $newsletterId, $data, FALSE );
+		return $this->modelNewsletter->edit( $newsletterId, $data, FALSE );
 	}
 
-	public function editReader( $readerId, $data, $strict = TRUE )
+	public function editReader( string $readerId, array $data, bool $strict = TRUE ): int
 	{
 		$this->checkReaderId( $readerId, $strict );
-		$this->modelReader->edit( $readerId, $data );
+		return $this->modelReader->edit( $readerId, $data );
 	}
 
-	public function getActiveReaderFromEmail( $email, $activeOnly = TRUE, $strict = TRUE )
+	public function getActiveReaderFromEmail( string $email, bool $activeOnly = TRUE, bool $strict = TRUE )
 	{
-		$conditions	= array( 'email' => $email);
+		$conditions	= ['email' => $email];
 		if( $activeOnly )
 			$conditions['status']	= '> 0';
 		$readers	= $this->getReaders( $conditions );
@@ -166,13 +166,13 @@ class Logic_Newsletter extends Logic
 		return array_shift( $readers );
 	}
 
-	public function getGroup( $groupId, $strict = TRUE )
+	public function getGroup( string $groupId, bool $strict = TRUE ): object
 	{
 		$this->checkGroupId( $groupId, $strict );
 		return $this->modelGroup->get( $groupId );
 	}
 
-	public function getGroupReaders( $groupId )
+	public function getGroupReaders( string $groupId ): array
 	{
 		$list		= [];
 		$readers	= [];
@@ -185,7 +185,7 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
-	public function getGroups( $conditions = [], $orders = [] )
+	public function getGroups( array $conditions = [], array $orders = [] ): array
 	{
 		$list	= [];
 		foreach( $this->modelGroup->getAll( $conditions, $orders ) as $group )
@@ -193,7 +193,7 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
-	public function getGroupsOfReader( $readerId, $conditions = [], $orders = [] )
+	public function getGroupsOfReader( string $readerId, array $conditions = [], array $orders = [] ): array
 	{
 		$this->checkReaderId( $readerId, TRUE );
 		$list		= [];
@@ -210,7 +210,7 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
-	public function getLettersOfReader( $readerId, $conditions = [], $orders = [] )
+	public function getLettersOfReader( string $readerId, array $conditions = [], array $orders = [] ): array
 	{
 		$this->checkReaderId( $readerId, TRUE );
 		$letters	= $this->modelReaderLetter->getAllByIndex( 'newsletterReaderId', $readerId );
@@ -219,21 +219,13 @@ class Logic_Newsletter extends Logic
 		return $letters;
 	}
 
-	public function getNewsletter( $newsletterId, $strict = TRUE )
+	public function getNewsletter( string $newsletterId, bool $strict = TRUE ): object
 	{
 		$this->checkNewsletterId( $newsletterId, $strict );
 		return $this->modelNewsletter->get( $newsletterId );
 	}
 
-	public function getNewsletters( $conditions = [], $orders = [], $limits = [] )
-	{
-		$list	= [];
-		foreach( $this->modelNewsletter->getAll( $conditions, $orders, $limits ) as $newsletter )
-			$list[$newsletter->newsletterId]	= $newsletter;
-		return $list;
-	}
-
-	public function getQueue( $queueId, $extended = FALSE )
+    public function getQueue( $queueId, $extended = FALSE )
 	{
 		$queue	= $this->modelQueue->get( $queueId );
 		if( $extended ){
@@ -246,7 +238,7 @@ class Logic_Newsletter extends Logic
 				);
 			}
 			$letters	= $this->modelReaderLetter->getAllByIndices( $indices );
-			$queue->letters	= $letter;
+			$queue->letters	= $letters;
 /*			foreach( $letters as $letter ){
 				$letter->reader	= $this->modelReader->getByIndex( $letter->newsletterReaderId );
 			}*/
@@ -254,12 +246,20 @@ class Logic_Newsletter extends Logic
 		return $queue;
 	}
 
-	public function getQueues( $conditions = [], $orders = [], $limits = [] )
+	public function getNewsletters( array $conditions = [], array $orders = [], array $limits = [] ): array
+	{
+		$list	= [];
+		foreach( $this->modelNewsletter->getAll( $conditions, $orders, $limits ) as $newsletter )
+			$list[$newsletter->newsletterId]	= $newsletter;
+		return $list;
+	}
+
+	public function getQueues( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelQueue->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getQueuesOfNewsletter( $newsletterId, $extended = FALSE )
+	public function getQueuesOfNewsletter( string $newsletterId, bool $extended = FALSE ): array
 	{
 		$queues	= $this->modelQueue->getAllByIndex( 'newsletterId', $newsletterId );
 		foreach( $queues as $queue ){
@@ -284,18 +284,18 @@ class Logic_Newsletter extends Logic
 		return $queues;
 	}
 
-	public function getReader( $readerId, $strict = TRUE )
+	public function getReader( string $readerId, bool $strict = TRUE ): object
 	{
 		$this->checkReaderId( $readerId, $strict );
 		return $this->modelReader->get( $readerId );
 	}
 
-	public function getReaderLetter( $readerLetterId )
+	public function getReaderLetter( string $readerLetterId ): object
 	{
 		return $this->modelReaderLetter->get( $readerLetterId );
 	}
 
-	public function getReaderLetters( $conditions = [], $orders = [], $limits = [] )
+	public function getReaderLetters( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$list	= [];
 		foreach( $this->modelReaderLetter->getAll( $conditions, $orders, $limits ) as $letter ){
@@ -305,7 +305,7 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
-	public function getReaders( $conditions = [], $orders = [], $limits = [] )
+	public function getReaders( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$list	= [];
 		foreach( $this->modelReader->getAll( $conditions, $orders, $limits ) as $reader )
@@ -313,12 +313,12 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
-	public function getReadersOfGroup( $groupId, $conditions = [], $orders = [] )
+	public function getReadersOfGroup( string $groupId, array $conditions = [], array $orders = [] ): array
 	{
 		return $this->getReadersOfGroups( [$groupId], $conditions, $orders );
 	}
 
-	public function getReadersOfGroups( $groupIds, $conditions = [], $orders = [] )
+	public function getReadersOfGroups( array $groupIds, array $conditions = [], array $orders = [] ): array
 	{
 		$list		= [];
 		$readerIds	= [];
@@ -339,18 +339,18 @@ class Logic_Newsletter extends Logic
 	/**
 	 *	Returns template data object for template ID.
 	 *	@access		public
-	 *	@param		integer		$templateId		ID of template to get data object for
+	 *	@param		string		$templateId		ID of template to get data object for
 	 *	@param		boolean		$strict			Strict mode: throw exception if checks fail
 	 *	@return		object						Data object of template
 	 *	@throws		InvalidArgumentException	if template ID is invalid
 	 */
-	public function getTemplate( $templateId, $strict = TRUE )
+	public function getTemplate( string $templateId, bool $strict = TRUE ): object
 	{
 		$this->checkTemplateId( $templateId, $strict );
 		return $this->modelTemplate->get( $templateId );
 	}
 
-	public function getTemplates( $conditions = [], $orders = [] )
+	public function getTemplates( array $conditions = [], array $orders = [] ): array
 	{
 		$list		= [];
 		$modelTheme	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
@@ -362,7 +362,7 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
-	public function getTemplateAttributeList( $templateId, $columnKey, $strict = TRUE )
+	public function getTemplateAttributeList( string $templateId, string $columnKey, bool $strict = TRUE ): array
 	{
 		$this->checkTemplateId( $templateId, $strict );
 		$template	= $this->modelTemplate->get( $templateId );
@@ -376,34 +376,34 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
-	public function removeReaderFromGroup( $readerId, $groupId, $strict = TRUE )
+	public function removeReaderFromGroup( string $readerId, string $groupId, bool $strict = TRUE ): int
 	{
 		$this->checkReaderId( $readerId, $strict );
 		$this->checkGroupId( $groupId, $strict );
-		$indices	= array(
+		$indices	= [
 			'newsletterReaderId'	=> $readerId,
 			'newsletterGroupId'		=> $groupId,
-		);
+		];
 		return $this->modelReaderGroup->removeByIndices( $indices );
 	}
 
-	public function setQueueStatus( $queueId, $status )
+	public function setQueueStatus( string $queueId, int $status ): int
 	{
-		return $this->modelQueue->edit( $queueId, array(
+		return $this->modelQueue->edit( $queueId, [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 	}
 
-	public function setReaderLetterStatus( $readerLetterId, $status )
+	public function setReaderLetterStatus( string $readerLetterId, int $status ): int
 	{
 		$readerLetter	= $this->modelReaderLetter->get( $readerLetterId );
 		if( !$readerLetter || $readerLetter->status >= $status )
-			return;
-		$data	= array(
+			return 0;
+		$data	= [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
-		);
+		];
 		if( $status == Model_Newsletter_Reader_Letter::STATUS_SENT )
 			$data['sentAt']	= time();
 		if( $status == Model_Newsletter_Reader_Letter::STATUS_OPENED )
@@ -411,14 +411,12 @@ class Logic_Newsletter extends Logic
 		return $this->modelReaderLetter->edit( $readerLetterId, $data );
 	}
 
-	public function setReaderLetterMailId( $readerLetterId, $mailId )
+	public function setReaderLetterMailId( string $readerLetterId, string $mailId ): int
 	{
-		return $this->modelReaderLetter->edit( $readerLetterId, array(
-			'mailId'	=> $mailId,
-		) );
+		return $this->modelReaderLetter->edit( $readerLetterId, ['mailId' => $mailId] );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelGroup			= new Model_Newsletter_Group( $this->env );
 		$this->modelNewsletter		= new Model_Newsletter( $this->env );

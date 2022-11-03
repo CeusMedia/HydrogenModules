@@ -12,6 +12,7 @@ class Hook_Info_Page extends Hook
 				return FALSE;																		//  no (frontend) pages for backend
 
 		$request	= $env->getRequest();
+		/** @var \Logic_Page $logic */
 		$logic		= $env->getLogic()->get( 'page' );												//  get page logic instance
 
 		$path		= trim( $request->get( '__path' ), '/' );										//  get requested path

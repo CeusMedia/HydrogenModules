@@ -295,7 +295,7 @@ class Controller_Info_Newsletter extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Newsletter( $this->env );
 		$this->session		= $this->env->getSession();
