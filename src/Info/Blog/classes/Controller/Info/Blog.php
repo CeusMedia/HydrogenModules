@@ -133,7 +133,7 @@ class Controller_Info_Blog extends Controller
 
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelCategory	= new Model_Blog_Category( $this->env );
 		$this->modelComment		= new Model_Blog_Comment( $this->env );

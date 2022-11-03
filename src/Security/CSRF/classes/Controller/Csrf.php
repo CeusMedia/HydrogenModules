@@ -59,7 +59,7 @@ class Controller_Csrf extends Controller
 		return TRUE;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= $this->env->getLogic()->get( 'CSRF' );
 		$this->messenger	= $this->env->getMessenger();

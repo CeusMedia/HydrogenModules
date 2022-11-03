@@ -281,7 +281,7 @@ else{
 		 *	@param		integer		$fetchMode		... (default: 2)
 		 *	@return		PDOStatement				PDO statement containing fetchable results
 		 */
-		public function query( $statement, $fetchMode = 2 ){
+		public function query( string $statement, int $fetchMode = 2, $arg3 = NULL, array $ctorargs = [] ){
 			if( $this->status == self::STATUS_UNKNOWN )
 				$this->tryToConnect();
 			return parent::query( $statement, $fetchMode );
