@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 
 class View_Helper_Navigation
 {
@@ -33,7 +34,7 @@ class View_Helper_Navigation
 		$argments	= [$this->env, $this->menu];
 		if( !class_exists( $class ) )
 			throw new RuntimeException( 'Navigation class "'.$class.'" is not existing' );
-		$helper	= Alg_Object_Factory::createObject( $class, $argments );
+		$helper	= ObjectFactory::createObject( $class, $argments );
 		$helper->setInverse( $this->inverse );
 		$helper->setLinksToSkip( $this->linksToSkip );
 		if( $this->logoTitle )

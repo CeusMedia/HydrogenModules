@@ -7,7 +7,7 @@ class Controller_Info_Contact extends Controller
 	protected $request;
 	protected $messenger;
 
-	protected bool $useCaptcha;
+	protected ?string $useCaptcha	= NULL;
 	protected bool $useCsrf;
 	protected bool $useHoneypot;
 	protected bool $useNewsletter;
@@ -215,8 +215,8 @@ class Controller_Info_Contact extends Controller
 			else
 				$this->useCsrf	= TRUE;
 		}
-		$this->useNewsletter	= $this->moduleConfig->get( 'newsletter.enable' );
-		$this->useHoneypot		= $this->moduleConfig->get( 'honeypot.enable' );
+		$this->useNewsletter	= (bool) $this->moduleConfig->get( 'newsletter.enable' );
+		$this->useHoneypot		= (bool) $this->moduleConfig->get( 'honeypot.enable' );
 
 		$this->addData( 'useCaptcha', $this->useCaptcha );
 		$this->addData( 'useCsrf', $this->useCsrf );
