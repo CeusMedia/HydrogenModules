@@ -7,7 +7,6 @@ class Controller_Info_Dashboard extends Controller
 	protected $logic;
 	protected $messenger;
 	protected $model;
-	protected $moduleConfig;
 	protected $panels			= [];
 	protected $request;
 	protected $session;
@@ -199,7 +198,7 @@ class Controller_Info_Dashboard extends Controller
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		/*  --  ENV RESOURCES  --  */
 		$this->request		= $this->env->getRequest();
@@ -209,7 +208,6 @@ class Controller_Info_Dashboard extends Controller
 		/*  --  MODULE RESOURCES  --  */
 		$this->logic		= Logic_Info_Dashboard::getInstance( $this->env );
 		$this->model		= new Model_Dashboard( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->messages		= (object) $this->getWords( 'msg', 'info/dashboard' );
 

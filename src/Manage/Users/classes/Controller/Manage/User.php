@@ -18,11 +18,11 @@ use CeusMedia\HydrogenFramework\Controller;
  */
 class Controller_Manage_User extends Controller
 {
-	public static $moduleId		= 'Manage_Users';
+	public static string $moduleId		= 'Manage_Users';
 
-	protected $countries;
+	protected array $countries;
 
-	protected $filters	= array(
+	protected $filters	= [
 		'username',
 		'roomId',
 		'roleId',
@@ -32,7 +32,7 @@ class Controller_Manage_User extends Controller
 		'order',
 		'direction',
 		'limit'
-	);
+	];
 
 	public function accept( $userId )
 	{
@@ -449,29 +449,11 @@ class Controller_Manage_User extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function setStatus( int $userId, int $status )
-	{
-		$model		= new Model_User( $this->env );
-		$user		= $model->get( $userId );
-		if( !$user )
-			throw new DomainException( 'Invalid user ID' );
-		if( !in_array( (int) $status, Model_User::STATUSES, TRUE ) )
-			throw new RangeException( 'Invalid status' );
-		if( !in_array( (int) $status, Model_User::STATUS_TRANSITIONS[(int) $user->status], TRUE ) )
-			throw new RangeException( 'Invalid status transition' );
-		$model->edit( $userId, array( 'status' => $status, 'modifiedAt' => time() ) );
-/*		$server		= $this->env->getServer();
-		$user		= $server->getData( 'user', 'get', array( (int) $userId ) );
-		$code		= $server->postData( 'user', 'setStatus', array( (int) $userId, $status ) );
-		$this->handleErrorCode( $code, $user->username );
-*/		$this->restart( 'edit/'.(int) $userId, TRUE );
-	}
-
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$options			= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$this->countries	= $this->env->getLanguage()->getWords( 'countries' );
-		$this->setData( array(
+		$this->setData( [
 			'nameMinLength'		=> $options->get( 'name.length.min' ),
 			'nameMaxLength'		=> $options->get( 'name.length.max' ),
 			'pwdMinLength'		=> $options->get( 'password.length.min' ),
@@ -481,6 +463,24 @@ class Controller_Manage_User extends Controller
 			'needsSurname'		=> $options->get( 'surname.mandatory' ),
 			'needsTac'			=> $options->get( 'tac.mandatory' ),
 			'countries'			=> $this->countries,
-		) );
+		] );
+	}
+
+	protected function setStatus( string $userId, int $status )
+	{
+		$model		= new Model_User( $this->env );
+		$user		= $model->get( $userId );
+		if( !$user )
+			throw new DomainException( 'Invalid user ID' );
+		if( !in_array( $status, Model_User::STATUSES, TRUE ) )
+			throw new RangeException( 'Invalid status' );
+		if( !in_array( $status, Model_User::STATUS_TRANSITIONS[(int) $user->status], TRUE ) )
+			throw new RangeException( 'Invalid status transition' );
+		$model->edit( $userId, ['status' => $status, 'modifiedAt' => time()] );
+/*		$server		= $this->env->getServer();
+		$user		= $server->getData( 'user', 'get', array( (int) $userId ) );
+		$code		= $server->postData( 'user', 'setStatus', array( (int) $userId, $status ) );
+		$this->handleErrorCode( $code, $user->username );
+*/		$this->restart( 'edit/'.$userId, TRUE );
 	}
 }

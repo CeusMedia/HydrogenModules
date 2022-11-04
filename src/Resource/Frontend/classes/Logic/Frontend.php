@@ -12,14 +12,14 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader as HydrogenMo
  */
 class Logic_Frontend extends Logic
 {
-	static protected $instance;
+	protected static $instance;
 
-	protected $config;
-	protected $env;
-	protected $installedModules	= [];
+	protected Dictionary $config;
+	protected Environment $env;
+	protected array $installedModules	= [];
 	protected $path;
-	protected $paths			= [];
-	protected $defaultPaths		= array(
+	protected array $paths				= [];
+	protected array $defaultPaths		= array(
 		'config'	=> 'config/',
 		'modules'	=> 'config/modules/',
 		'contents'	=> 'contents/',

@@ -24,9 +24,11 @@ foreach( $states as $status => $label ){
 $optStatus	= join( $optStatus );
 
 $optOrder	= ['' => '-'];
-foreach( $words['indexFilterOrders'] as $column => $label )
-	$optOrder[$column]	= $label;
-$optOrder['_selected']	= $session->get( 'filter-user-order' );
+foreach( $words['indexFilterOrders'] as $column => $label ){
+	$selected	= $column == $session->get( 'filter-user-order' );
+	$optOrder[]	= HtmlElements::Option( $column, $label, $selected );
+}
+$optOrder   = join( $optOrder );
 
 $optDirection	= [HtmlElements::Option( '', '' )];
 foreach( $words['indexFilterDirections'] as $key => $label ){

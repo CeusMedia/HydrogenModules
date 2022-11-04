@@ -1,9 +1,9 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
-use CeusMedia\HydrogenFramework\View;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_UI_Markdown extends View
+class Hook_UI_Markdown extends Hook
 {
 	/**
 	 *	@static
@@ -38,11 +38,10 @@ class Hook_UI_Markdown extends View
 		$config	= $env->getConfig()->getAll( 'module.ui_markdown.', TRUE );			//  get module configuration
 		if( !$config->get( 'active' ) )												//  module is not active
 			return FALSE;															//  skip this hook
-		$payload	= (object) $payload;											//  convert given data to object
-		$type		= strtolower( $payload->type );									//  convert given content type to lowercase
-		if( in_array( $type, ['markdown', 'md'], TRUE ) ){					//  content is Markdown
+		$type		= strtolower( $payload['type'] );								//  convert given content type to lowercase
+		if( in_array( $type, ['markdown', 'md'], TRUE ) ){							//  content is Markdown
 			$renderer			= new CeusMedia\Markdown\Renderer\Html();			//  create renderer
-			$payload->content	= $renderer->convert( $payload->content );			//  convert to HTML
+			$payload['content']	= $renderer->convert( $payload['content'] );		//  convert to HTML
 			return TRUE;															//  break hook handling chain
 		}
 		return FALSE;

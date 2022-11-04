@@ -13,7 +13,7 @@ class Hook_JS_TinyMce extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( Environment $env, object $context, $module, array & $payload)
+	public static function onPageApplyModules( Environment $env, object $context, object $module, array & $payload )
 	{
 		View_Helper_TinyMce::load( $env );
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
@@ -161,7 +161,7 @@ class Hook_JS_TinyMce extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	static public function onGetAvailableContentEditor( Environment $env, object $context, $module, array & $payload )
+	public static function onGetAvailableContentEditor( Environment $env, object $context, object $module, array & $payload )
 	{
 		if( !empty( $payload['type'] ) && !in_array( $payload['type'], ['wys'] ) )
 			return;

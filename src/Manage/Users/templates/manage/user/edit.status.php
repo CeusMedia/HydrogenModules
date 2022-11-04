@@ -6,7 +6,7 @@ $w	= (object) $words['editStatus'];
 
 $optStatus	= [];
 foreach( array_reverse( $words['status'], TRUE ) as $key => $label )
-	$optStatus[]	= HtmlElements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
+	$optStatus[]	= HtmlElements::Option( (string) $key, $label, $key == $user->status, FALSE, 'user-status status'.$key );
 $optStatus	= join( $optStatus );
 
 $iconAccept		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );

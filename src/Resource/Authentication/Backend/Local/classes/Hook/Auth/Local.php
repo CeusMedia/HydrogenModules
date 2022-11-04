@@ -6,9 +6,9 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Auth_Local extends Hook
 {
-	static protected $configPrefix	= 'module.resource_authentication_backend_local.';
+	protected static $configPrefix	= 'module.resource_authentication_backend_local.';
 
-	public static function onAuthRegisterBackend( Environment $env, $context, $module, $payload = [] )
+	public static function onAuthRegisterBackend( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
@@ -16,7 +16,8 @@ class Hook_Auth_Local extends Hook
 		$context->registerBackend( 'Local', 'local', $words['backend']['title'] );
 	}
 
-	static public function onAuthRegisterLoginTab( Environment $env, $context, $module, $payload = [] ){
+	public static function onAuthRegisterLoginTab( Environment $env, object $context, object $module, array & $payload ): void
+	{
 		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
 		$words		= (object) $env->getLanguage()->getWords( 'auth/local' );					//  load words
@@ -24,23 +25,24 @@ class Hook_Auth_Local extends Hook
 		$context->registerTab( 'auth/local/login', $words->login['tab'], $rank );				//  register main tab
 	}
 
-	static public function onGetRelatedUsers( Environment $env, $context, $module, $payload ){
+	public static function onGetRelatedUsers( Environment $env, object $context, object $module, array & $payload ): bool
+	{
 		if( !$env->getConfig()->get( self::$configPrefix.'relateToAllUsers' ) )
-			return;
+			return FALSE;
 		$modelUser	= new Model_User( $env );
 		$words		= $env->getLanguage()->getWords( 'auth/local' );
 		$conditions	= ['status' => '> 0'];
 		$users		= $modelUser->getAll( $conditions, ['username' => 'ASC'] );
-		$payload->list	= array( (object) array(
+		$payload['list']	= [(object) [
 			'module'		=> $module,
 			'label'			=> $words['hook-getRelatedUsers']['label'],
 			'count'			=> count( $users ),
 			'list'			=> $users,
-		) );
+		]];
 		return TRUE;
 	}
 
-/*	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
+/*	public static function onPageApplyModules( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$userId		= (int) $env->getSession()->get( 'auth_user_id' );							//  get ID of current user (or zero)
 		$cookie		= new HttpCookie( parse_url( $env->url, PHP_URL_PATH ) );
@@ -50,18 +52,18 @@ class Hook_Auth_Local extends Hook
 		$env->getPage()->js->addScriptOnReady( $script, 1 );									//  enlist script to be run on ready
 	}*/
 
-	public static function onViewRenderContent( Environment $env, $context, $module, $payload = [] )
+	public static function onViewRenderContent( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$config		= $env->getConfig()->getAll( 'module.resource_auth.', TRUE );
 		$processor	= new Logic_Shortcode( $env );
-		$shortCodes	= array(
-			'auth:local:panel:login'	=> array(
+		$shortCodes	= [
+			'auth:local:panel:login'	=> [
 				'oauth'		=> TRUE,
 				'remember'	=> TRUE,
 				'register'	=> TRUE,
-			)
-		);
-		$processor->setContent( $payload->content );
+			]
+		];
+		$processor->setContent( $payload['content'] );
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;
@@ -86,6 +88,6 @@ class Hook_Auth_Local extends Hook
 				}
 			}
 		}
-		$payload->content	= $processor->getContent();
+		$payload['content']	= $processor->getContent();
 	}
 }

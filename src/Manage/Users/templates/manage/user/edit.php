@@ -57,12 +57,12 @@ $ind1		= $indicator->build( 75, 100 );
 
 $optRole	= [];
 foreach( array_reverse( $roles, TRUE ) as $role )
-	$optRole[]	= HtmlElements::Option( $role->roleId, $role->title, $role->roleId == $user->roleId, NULL, 'role role'.$role->roleId );
+	$optRole[]	= HtmlElements::Option( $role->roleId, $role->title, $role->roleId == $user->roleId, FALSE, 'role role'.$role->roleId );
 $optRole	= join( $optRole );
 
 $optStatus  = [];
 foreach( array_reverse( $words['status'], TRUE ) as $key => $label )
-	$optStatus[]    = HtmlElements::Option( (string) $key, $label, $key == $user->status, NULL, 'user-status status'.$key );
+	$optStatus[]    = HtmlElements::Option( (string) $key, $label, $key == $user->status, FALSE, 'user-status status'.$key );
 $optStatus  = join( $optStatus );
 
 $optGender	= HtmlElements::Options( $words['gender'], $user->gender );

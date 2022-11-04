@@ -3,7 +3,7 @@
 	<title>Server: Router</title>
 	<description/>
 	<category>Server</category>
-	<version>0.2.6</version>
+	<version>0.2.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Support XML as data source.</log>
@@ -12,10 +12,11 @@
 	<log version="0.2.4">Added missing database model class.</log>
 	<log version="0.2.5">Added route status.</log>
 	<log version="0.2.6">Extend routes by access restrictions.</log>
+	<log version="0.2.7">Moved controller to hook.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Controller/Router.php</class>
+		<class>Hook/Server/Router.php</class>
 		<class>Model/Route.php</class>
 		<file>config/routes.xml.dist</file>
 	</files>
@@ -23,7 +24,7 @@
 	<relations>
 		<supports type="module">Resource_Database</supports>
 	</relations>
-	<hook type="resource" resource="App" event="onControl">Controller_Router::___onAppDispatch</hook>
+	<hook type="resource" resource="App" event="onControl">Hook_Server_Router::onAppDispatch</hook>
 	<sql on="install" type="mysql" version="0.2.5"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>routes`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>routes` (

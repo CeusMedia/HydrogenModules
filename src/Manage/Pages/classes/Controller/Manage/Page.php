@@ -6,8 +6,8 @@ use CeusMedia\Common\FS\File\Collection\Reader as ListFileReader;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Manage_Page extends Controller{
-
+class Controller_Manage_Page extends Controller
+{
 	protected $model;
 	protected $request;
 	protected $messenger;
@@ -16,7 +16,6 @@ class Controller_Manage_Page extends Controller{
 	protected $frontend;
 	protected $patternIdentifier	= '@[^a-z0-9_/-]@';
 	protected $sessionPrefix		= 'filter_manage_pages_';
-	protected $moduleConfig;
 
 	protected $appFocus;
 	protected $appSession;
@@ -24,98 +23,8 @@ class Controller_Manage_Page extends Controller{
 	protected $envManaged;
 	protected $defaultLanguage;
 
-	protected function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->messenger		= $this->env->getMessenger();
-		$this->words			= $this->getWords();
-		$this->session			= $this->env->getSession();
-		$this->frontend			= Logic_Frontend::getInstance( $this->env );
-		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_pages.', TRUE );
-
-		$this->appFocus			= 'self';
-		$this->appSession		= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
-		$this->envManaged		= $this->env;
-		$this->appLanguages		= $this->env->getLanguage()->getLanguages();
-//		$this->env->getLog()->log("debug","found languages in env:".print_r($this->env->getLanguage()->getLanguages(),true),$this);
-		$this->defaultLanguage	= current( array_values( $this->env->getLanguage()->getLanguages() ) );
-
-		$apps	= [];
-
-		if( realpath( $this->frontend->getPath() ) !== realpath( $this->env->uri ) ){				//  frontend is different from self
-			$apps			= array(
-				'self'		=> 'Administration',
-				'frontend'	=> 'Webseite',
-			);
-			$this->appFocus	= $this->session->get( $this->sessionPrefix.'app' );
-			if( !array_key_exists( $this->appFocus, $apps ) )
-				$this->appFocus	= current( array_keys( $apps ) );
-//			if( $this->appFocus !== $this->session->get( $this->sessionPrefix.'app' ) )
-//				$this->session->remove( $this->sessionPrefix.'language' );
-
-			if( $this->appFocus === 'frontend' ){
-				if( !$this->envManaged->hasModule( 'Resource_Pages' ) ){
-					$this->messenger->noteFailure( 'No support for pages available in frontend environment. Access denied.' );
-					$this->session->set( $this->sessionPrefix.'app', 'self' );
-					$this->restart();
-				}
-				$this->envManaged	= $this->frontend->getEnv();
-				$this->appSession	= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
-				$this->appLanguages	= $this->frontend->getLanguages();
-	//			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
-	//			$source	= $this->frontend->getModuleConfigValue( 'UI_Navigation', 'menu.source' );
-				$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
-			}
-		}
-		if( $this->session->get( $this->sessionPrefix.'app' ) !== $this->appFocus )
-			$this->session->set( $this->sessionPrefix.'app', $this->appFocus );
-
-		$managesModules	= $this->envManaged->getModules( TRUE );
-		if( $managesModules->has( 'UI_Navigation' ) ){
-			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
-		}
-		else if( $this->appSession->has( 'source' ) ){
-			$source	= $this->appSession->get( 'source' );
-		}
-		else{
-			if( $managesModules->has( 'Resource_Pages' ) )
-				$source			= 'Database';
-			else if( file_exists( 'config/pages.json' ) )
-				$source			= 'Config';
-			else
-				$source			= 'Modules';
-		}
-		//  persist the source decission
-		if( !$this->appSession->get( 'source' ) )
-			$this->appSession->set( 'source', $source );
-
-		//  connect to model of source
-		switch( $source ){
-			case 'Database':
-				$this->model	= new Model_Page( $this->envManaged );
-				break;
-			case 'Config':
-				$this->model	= new Model_Config_Page( $this->envManaged );
-				break;
-			case 'Modules':
-				$this->model	= new Model_Module_Page( $this->envManaged );
-				break;
-		}
-
-//		$this->env->getLog()->log("debug","default language during init: ".print_r($this->defaultLanguage,true),$this);
-		if( $this->defaultLanguage )
-			if( !$this->appSession->get( 'language' ) )
-				$this->setLanguage( $this->defaultLanguage );
-
-		$this->addData( 'apps', $apps );
-		$this->addData( 'app', $this->appFocus );
-		$this->addData( 'source', $source );
-		$this->addData( 'frontend', $this->frontend );
-		$this->addData( 'languages', $this->appLanguages );
-		$this->addData( 'language', $this->appSession->get( 'language' ) );
-		$this->addData( 'useAuth', $this->envManaged->hasModule( 'Resource_Authentication' ) );
-	}
-
-	public function add( $parentId = 0 ){
+	public function add( $parentId = 0 )
+	{
 		$parent	= $parentId ? $this->checkPageId( $parentId ) : NULL;
 		if( $this->request->has( 'save' ) ){
 			$data	= [];
@@ -186,24 +95,8 @@ ModuleManagePages.PageEditor.init();
 		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
-	protected function checkPageId( $pageId, $strict = FALSE ){
-		if( !$pageId ){
-			if( $strict )
-				throw new OutOfRangeException( 'No page ID given' );
-			$this->messenger->noteError( $this->getWords( 'msg' )['errorMissingPageId'] );
-			$this->restart( NULL, TRUE );
-		}
-		$page	= $this->model->get( $pageId );
-		if( !$page ){
-			if( $strict )
-				throw new OutOfRangeException( 'Invalid page ID given' );
-			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidPageId'] );
-			$this->restart( NULL, TRUE );
-		}
-		return $this->translatePage( $page );
-	}
-
-	public function copy( $pageId ){
+	public function copy( $pageId )
+	{
 		if( !$pageId )
 			throw new OutOfRangeException( 'No page ID given' );
 		$page	= $this->model->get( $pageId );
@@ -214,7 +107,8 @@ ModuleManagePages.PageEditor.init();
 		$this->redirect( 'manage/page', 'add' );
 	}
 
-	public function edit( $pageId, $version = NULL ){
+	public function edit( $pageId, $version = NULL )
+	{
 		$source			= $this->getData( 'source' );
 		$isFromConfig	= $source == 'Config';
 		$isFromDatabase	= $source == 'Database';
@@ -427,24 +321,8 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'metaBlacklist', $blacklist );
 	}
 
-	protected function getFrontendControllers(){
-		$controllers	= [];
-		$pathConfig		= $this->envManaged->getConfig()->get( 'path.config' );
-		$pathModules	= $this->envManaged->getConfig()->get( 'path.modules' );
-		$pathModules	= $pathModules ? $pathModules : $pathConfig.'modules/';
-		foreach( $this->envManaged->getModules()->getAll() as $moduleId => $module ){
-			if( empty( $module->files->classes ) )
-				continue;
-			foreach( $module->files->classes as $moduleFile )
-				if( preg_match( "/^Controller/", $moduleFile->file ) ){
-					$name	= preg_replace( "/^Controller\/(.+)\.php.?$/", "$1", $moduleFile->file );
-					$controllers[]	= str_replace( "/", "_", $name );
-				}
-		}
-		return array_unique( $controllers );
-	}
-
-	public function getJsImageList(){
+	public function getJsImageList()
+	{
 		$pathFront	= $this->frontend->getPath();
 		$pathImages	= $this->frontend->getPath( 'images' );
 		$index	= new RecursiveRegexFileIndex( $pathFront.$pathImages, "/\.jpg$/i" );
@@ -463,7 +341,8 @@ ModuleManagePages.PageEditor.init();
 		exit;
 	}
 
-	public function index(){
+	public function index()
+	{
 //$this->messenger->noteNotice( 'App: '.$this->appFocus.' - Filter: '.json_encode( $this->appSession->getAll() ) );
 		$this->preparePageTree();
 		$this->addData( 'scope', $this->appSession->get( 'scope' ) );
@@ -472,26 +351,190 @@ ModuleManagePages.PageEditor.init();
 		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
-	protected function translatePage( $page ){
-		if( !class_exists( 'Logic_Localization' ) )							//  localization module is not installed
-			return $page;
-//		$this->env->getLog()->log("debug","env dump: ".print_r($this->env,true),$this);
-		$localization	= new Logic_Localization( $this->env );
-/*		$this->env->getLog()->log("debug","trying to set language from appSession to localization object during translatePage: ".print_r($this->appSession,true),$this);
-		$this->env->getLog()->log("debug","trying to set language from appSession to localization object during translatePage: ".print_r($this->appSession->get( 'language' ),true),$this);
-		$this->env->getLog()->log("debug",print_r($this->session->getall(),true));
-*/
-		$localization->setLanguage( $this->appSession->get( 'language' ) );
-//		remark( $localization->getLanguage() );
-		$id	= 'page.'.$page->identifier.'-title';
-//		remark( $id );
-		$page->title	= $localization->translate( $id, $page->title );
-		$id	= 'page.'.$page->identifier.'-content';
-		$page->content	= $localization->translate( $id, $page->content );
-		return $page;
+	public function remove( $pageId )
+	{
+		$page		= $this->checkPageId( $pageId );
+		$this->model->remove( $pageId );
+		$this->messenger->noteSuccess( $this->getWords( 'msg' )['successRemoved'], $page->title );
+		$this->restart( NULL, TRUE );
 	}
 
-	protected function preparePageTree( $currentPageId = NULL ){
+
+	public function setApp( $app )
+	{
+		$currentApp	= $this->session->get( $this->sessionPrefix.'app' );
+		if( $app !== $currentApp )
+			$this->session->set( $this->sessionPrefix.'app', (string) $app );
+		$this->restart( NULL, TRUE );
+	}
+
+	public function setLanguage( $language )
+	{
+		$this->session->set( $this->sessionPrefix.$this->appFocus.'.language', (string) $language );
+		$this->restart( NULL, TRUE );
+	}
+
+	public function setScope( $scope )
+	{
+		$this->session->set( $this->sessionPrefix.$this->appFocus.'.scope', (int) $scope );
+		$this->restart( NULL, TRUE );
+	}
+
+	public function setSource( $source )
+	{
+		$currentSource	= $this->session->get( $this->sessionPrefix.'source' );
+		if( $source !== $currentSource )
+			$this->session->set( $this->sessionPrefix.$this->appFocus.'.source', (string) $source );
+		$this->restart( NULL, TRUE );
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function __onInit(): void
+	{
+		$this->request			= $this->env->getRequest();
+		$this->messenger		= $this->env->getMessenger();
+		$this->words			= $this->getWords();
+		$this->session			= $this->env->getSession();
+		$this->frontend			= Logic_Frontend::getInstance( $this->env );
+
+		$this->appFocus			= 'self';
+		$this->appSession		= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
+		$this->envManaged		= $this->env;
+		$this->appLanguages		= $this->env->getLanguage()->getLanguages();
+//		$this->env->getLog()->log("debug","found languages in env:".print_r($this->env->getLanguage()->getLanguages(),true),$this);
+		$this->defaultLanguage	= current( array_values( $this->env->getLanguage()->getLanguages() ) );
+
+		$apps	= [];
+
+		if( realpath( $this->frontend->getPath() ) !== realpath( $this->env->uri ) ){				//  frontend is different from self
+			$apps			= array(
+				'self'		=> 'Administration',
+				'frontend'	=> 'Webseite',
+			);
+			$this->appFocus	= $this->session->get( $this->sessionPrefix.'app' );
+			if( !array_key_exists( $this->appFocus, $apps ) )
+				$this->appFocus	= current( array_keys( $apps ) );
+//			if( $this->appFocus !== $this->session->get( $this->sessionPrefix.'app' ) )
+//				$this->session->remove( $this->sessionPrefix.'language' );
+
+			if( $this->appFocus === 'frontend' ){
+				if( !$this->envManaged->hasModule( 'Resource_Pages' ) ){
+					$this->messenger->noteFailure( 'No support for pages available in frontend environment. Access denied.' );
+					$this->session->set( $this->sessionPrefix.'app', 'self' );
+					$this->restart();
+				}
+				$this->envManaged	= $this->frontend->getEnv();
+				$this->appSession	= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
+				$this->appLanguages	= $this->frontend->getLanguages();
+	//			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+	//			$source	= $this->frontend->getModuleConfigValue( 'UI_Navigation', 'menu.source' );
+				$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
+			}
+		}
+		if( $this->session->get( $this->sessionPrefix.'app' ) !== $this->appFocus )
+			$this->session->set( $this->sessionPrefix.'app', $this->appFocus );
+
+		$managesModules	= $this->envManaged->getModules( TRUE );
+		if( $managesModules->has( 'UI_Navigation' ) ){
+			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+		}
+		else if( $this->appSession->has( 'source' ) ){
+			$source	= $this->appSession->get( 'source' );
+		}
+		else{
+			if( $managesModules->has( 'Resource_Pages' ) )
+				$source			= 'Database';
+			else if( file_exists( 'config/pages.json' ) )
+				$source			= 'Config';
+			else
+				$source			= 'Modules';
+		}
+		//  persist the source decission
+		if( !$this->appSession->get( 'source' ) )
+			$this->appSession->set( 'source', $source );
+
+		//  connect to model of source
+		switch( $source ){
+			case 'Database':
+				$this->model	= new Model_Page( $this->envManaged );
+				break;
+			case 'Config':
+				$this->model	= new Model_Config_Page( $this->envManaged );
+				break;
+			case 'Modules':
+				$this->model	= new Model_Module_Page( $this->envManaged );
+				break;
+		}
+
+//		$this->env->getLog()->log("debug","default language during init: ".print_r($this->defaultLanguage,true),$this);
+		if( $this->defaultLanguage )
+			if( !$this->appSession->get( 'language' ) )
+				$this->setLanguage( $this->defaultLanguage );
+
+		$this->addData( 'apps', $apps );
+		$this->addData( 'app', $this->appFocus );
+		$this->addData( 'source', $source );
+		$this->addData( 'frontend', $this->frontend );
+		$this->addData( 'languages', $this->appLanguages );
+		$this->addData( 'language', $this->appSession->get( 'language' ) );
+		$this->addData( 'useAuth', $this->envManaged->hasModule( 'Resource_Authentication' ) );
+	}
+
+	protected function checkPageId( string $pageId, bool $strict = FALSE ): object
+	{
+		if( !$pageId ){
+			if( $strict )
+				throw new OutOfRangeException( 'No page ID given' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorMissingPageId'] );
+			$this->restart( NULL, TRUE );
+		}
+		$page	= $this->model->get( $pageId );
+		if( !$page ){
+			if( $strict )
+				throw new OutOfRangeException( 'Invalid page ID given' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidPageId'] );
+			$this->restart( NULL, TRUE );
+		}
+		return $this->translatePage( $page );
+	}
+
+	protected function collectMasterTemplates(): array
+	{
+		$masterTemplates		= $this->getWords( 'templates' );
+		$pathTemplates			= $this->envManaged->getConfig()->get( 'path.templates' );
+		$pathMasterTemplates	= $pathTemplates.'info/page/masters/';
+		if( is_dir( $pathMasterTemplates ) ){
+			$list	= RecursiveFolderLister::getFileList( $pathMasterTemplates, '/\.php$/' );
+			foreach( $list as $item ){
+				$path	= substr( $item->getPathname(), strlen( $pathMasterTemplates ) );
+				$masterTemplates[$path]	= 'Page Master: '.$path;
+			}
+		}
+		$this->addData( 'masterTemplates', $masterTemplates );
+		return $masterTemplates;
+	}
+
+	protected function getFrontendControllers(): array
+	{
+		$controllers	= [];
+		$pathConfig		= $this->envManaged->getConfig()->get( 'path.config' );
+		$pathModules	= $this->envManaged->getConfig()->get( 'path.modules' );
+		$pathModules	= $pathModules ? $pathModules : $pathConfig.'modules/';
+		foreach( $this->envManaged->getModules()->getAll() as $moduleId => $module ){
+			if( empty( $module->files->classes ) )
+				continue;
+			foreach( $module->files->classes as $moduleFile )
+				if( preg_match( "/^Controller/", $moduleFile->file ) ){
+					$name	= preg_replace( "/^Controller\/(.+)\.php.?$/", "$1", $moduleFile->file );
+					$controllers[]	= str_replace( "/", "_", $name );
+				}
+		}
+		return array_unique( $controllers );
+	}
+
+	protected function preparePageTree( ?string $currentPageId = NULL ): void
+	{
 		$scope		= (int) $this->appSession->get( 'scope' );
 		$indices	= array(
 			'parentId'	=> 0,
@@ -515,55 +558,25 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'parentMap', $parentMap );
 	}
 
-	public function remove( $pageId ){
-		$page		= $this->checkPageId( $pageId );
-		$this->model->remove( $pageId );
-		$this->messenger->noteSuccess( $this->getWords( 'msg' )['successRemoved'], $page->title );
-		$this->restart( NULL, TRUE );
+	protected function translatePage( $page ): object
+	{
+		if( !class_exists( 'Logic_Localization' ) )							//  localization module is not installed
+			return $page;
+//		$this->env->getLog()->log("debug","env dump: ".print_r($this->env,true),$this);
+		$localization	= new Logic_Localization( $this->env );
+/*		$this->env->getLog()->log("debug","trying to set language from appSession to localization object during translatePage: ".print_r($this->appSession,true),$this);
+		$this->env->getLog()->log("debug","trying to set language from appSession to localization object during translatePage: ".print_r($this->appSession->get( 'language' ),true),$this);
+		$this->env->getLog()->log("debug",print_r($this->session->getall(),true));
+*/
+		$localization->setLanguage( $this->appSession->get( 'language' ) );
+//		remark( $localization->getLanguage() );
+		$id	= 'page.'.$page->identifier.'-title';
+//		remark( $id );
+		$page->title	= $localization->translate( $id, $page->title );
+		$id	= 'page.'.$page->identifier.'-content';
+		$page->content	= $localization->translate( $id, $page->content );
+		return $page;
 	}
-
-
-	public function setApp( $app ){
-		$currentApp	= $this->session->get( $this->sessionPrefix.'app' );
-		if( $app !== $currentApp )
-			$this->session->set( $this->sessionPrefix.'app', (string) $app );
-		$this->restart( NULL, TRUE );
-	}
-
-	public function setLanguage( $language ){
-		$this->session->set( $this->sessionPrefix.$this->appFocus.'.language', (string) $language );
-		$this->restart( NULL, TRUE );
-	}
-
-	public function setScope( $scope ){
-		$this->session->set( $this->sessionPrefix.$this->appFocus.'.scope', (int) $scope );
-		$this->restart( NULL, TRUE );
-	}
-
-	public function setSource( $source ){
-		$currentSource	= $this->session->get( $this->sessionPrefix.'source' );
-		if( $source !== $currentSource )
-			$this->session->set( $this->sessionPrefix.$this->appFocus.'.source', (string) $source );
-		$this->restart( NULL, TRUE );
-	}
-
-	//  --  PROTECTED  --  //
-
-	protected function collectMasterTemplates(){
-		$masterTemplates		= $this->getWords( 'templates' );
-		$pathTemplates			= $this->envManaged->getConfig()->get( 'path.templates' );
-		$pathMasterTemplates	= $pathTemplates.'info/page/masters/';
-		if( is_dir( $pathMasterTemplates ) ){
-			$list	= RecursiveFolderLister::getFileList( $pathMasterTemplates, '/\.php$/' );
-			foreach( $list as $item ){
-				$path	= substr( $item->getPathname(), strlen( $pathMasterTemplates ) );
-				$masterTemplates[$path]	= 'Page Master: '.$path;
-			}
-		}
-		$this->addData( 'masterTemplates', $masterTemplates );
-		return $masterTemplates;
-	}
-
 }
 
 
@@ -598,21 +611,11 @@ class UI_Helper_ContentEditor
 		return $this->collectEditors()->editors;
 	}
 
-	public function render(){
-
-	}
-
-	public function setFormat( $format ): self
+	public function render(): string
 	{
-		$format	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $format ) );
-		if( $this->format !== $format ){
-			$this->format	= $format;
-			$this->status	= static::STATUS_CONFIGURED;
-		}
-		return $this;
 	}
 
-	public function setCurrentEditor( $key ): self
+	public function setCurrentEditor( string $key ): self
 	{
 		$key	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $key ) );
 		if( $this->currentEditorKey !== $key ){
@@ -622,7 +625,7 @@ class UI_Helper_ContentEditor
 		return $this;
 	}
 
-	public function setDefaultEditor( $key ): self
+	public function setDefaultEditor( string $key ): self
 	{
 		$key	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $key ) );
 		if( $this->defaultEditorKey !== $key ){
@@ -632,7 +635,7 @@ class UI_Helper_ContentEditor
 		return $this;
 	}
 
-	public function setForcedEditor( $key ): self
+	public function setForcedEditor( string $key ): self
 	{
 		$key	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $key ) );
 		if( $this->forcedEditorKey !== $key ){
@@ -642,11 +645,11 @@ class UI_Helper_ContentEditor
 		return $this;
 	}
 
-	public function setType( $type ): self
+	public function setFormat( string $format ): self
 	{
-		$type	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $type ) );
-		if( $this->type !== $type ){
-			$this->type	= $type;
+		$format	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $format ) );
+		if( $this->format !== $format ){
+			$this->format	= $format;
 			$this->status	= static::STATUS_CONFIGURED;
 		}
 		return $this;
@@ -658,27 +661,38 @@ class UI_Helper_ContentEditor
 		return $this;
 	}
 
+	public function setType( string $type ): self
+	{
+		$type	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $type ) );
+		if( $this->type !== $type ){
+			$this->type	= $type;
+			$this->status	= static::STATUS_CONFIGURED;
+		}
+		return $this;
+	}
+
 	protected function collectEditors(): self
 	{
 		if( $this->status === static::STATUS_COLLECTED )
 			return $this;
+		$payload	= [
+			'list'		=> [],
+			'type'		=> $this->type,
+			'format'	=> $this->format,
+			'default'	=> $this->defaultEditorKey,
+			'current'	=> $this->currentEditorKey,
+		];
 		$this->env->getCaptain()->callHook(
 			'Module',
 			'onGetAvailableContentEditor',
 			$this,
-			$payload	= (object) array(
-				'list'		=> [],
-				'type'		=> $this->type,
-				'format'	=> $this->format,
-				'default'	=> $this->defaultEditorKey,
-				'current'	=> $this->currentEditorKey,
-			)
+			$payload
 		);
 		$this->status		= static::STATUS_COLLECTED;
-		krsort( $payload->list );
+		krsort( $payload['list'] );
 		$this->editors	= [];
-		$this->bestEditorKey = $payload->list ? current( $payload->list )->key : '';
-		foreach( $payload->list as $editor ){
+		$this->bestEditorKey = $payload['list'] ? current( $payload['list'] )->key : '';
+		foreach( $payload['list'] as $editor ){
 			if( $this->labelTemplate )
 				$editor->label	= sprintf( $this->labelTemplate, $editor->label );
 			$this->editors[$editor->key]	= $editor->label;
@@ -686,5 +700,3 @@ class UI_Helper_ContentEditor
 		return $this;
 	}
 }
-
-?>

@@ -1,12 +1,12 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
-use CeusMedia\HydrogenFramework\Environment\Resource\Captain as CaptainResource;
+use CeusMedia\HydrogenFramework\Environment\Resource\Page as PageResource;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_JS_CodeMirror extends Hook
 {
-	public static function onPageApplyModules( Environment $env, $context, $module, $data = [] )
+	public static function onPageApplyModules( Environment $env, object $context, object $module, array & $payload )
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.js_codemirror.', TRUE );
 		if( !$moduleConfig->get( 'active' ) )
@@ -114,7 +114,7 @@ CodeMirror.on(window, "resize", function() {
 });';
 
 		$level	= $configAuto->get( 'level' );
-		$level	= CaptainResource::interpretLoadLevel( $level );		//  sanitize level supporting old string values
+		$level	= PageResource::interpretLoadLevel( $level );		//  sanitize level supporting old string values
 		$page->js->addScriptOnReady( $script, max( 2, min( 8, $level ) ) );						//  append script call on document ready
 	}
 
@@ -126,30 +126,30 @@ CodeMirror.on(window, "resize", function() {
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onGetAvailableContentEditor( Environment $env, $context, $module, $payload = [] )
+	public static function onGetAvailableContentEditor( Environment $env, object $context, object $module, array & $payload )
 	{
-		if( !empty( $payload->type ) && !in_array( $payload->type, ['code'] ) )
+		if( !empty( $payload['type'] ) && !in_array( $payload['type'], ['code'] ) )
 			return;
-		if( !empty( $payload->format ) && !in_array( $payload->format, ['html', 'markdown', 'md'/*, '*'*/] ) )
+		if( !empty( $payload['format'] ) && !in_array( $payload['format'], ['html', 'markdown', 'md'/*, '*'*/] ) )
 			return;
-		$editor	= (object) array(
+		$editor	= (object) [
 			'key'		=> 'codemirror',
 			'label'		=> 'Code Mirror',
 			'type'		=> 'code',
-			'format'	=> $payload->format,
+			'format'	=> $payload['format'],
 			'score'		=> 5,
-		);
-		$criteria	= array(
+		];
+		$criteria	= [
 			'default'		=> 1,
 			'current'		=> 2,
 			'force'			=> 10,
-		);
+		];
 		foreach( $criteria as $key => $value )
-			if( !empty( $payload->$key ) && strtolower( $payload->$key ) === $editor->key )
+			if( !empty( $payload[$key] ) && strtolower( $payload[$key] ) === $editor->key )
 				$editor->score	+= $value;
 
-//		if( !empty( $payload->format ) ){}
+//		if( !empty( $payload['format'] ) ){}
 		$key	= str_pad( $editor->score * 1000, 8, '0', STR_PAD_LEFT ).'_'.$editor->key;
-		$payload->list[$key]	= $editor;
+		$payload['list'][$key]	= $editor;
 	}
 }

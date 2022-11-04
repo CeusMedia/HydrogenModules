@@ -1,18 +1,19 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Status as HttpStatus;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\Common\XML\ElementReader as XmlReader;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Controller_Router extends Controller{
-
-	static protected function getRouteXmlFilePath(){
-		return 'config/routes.xml';												//  @todo get config path from app base config (config.ini)
-	}
-
-	static public function ___onAppDispatch( Environment $env, $context, $module, $data = [] ){
+class Hook_Server_Router extends Hook
+{
+	public static function onAppDispatch( Environment $env, object $context, object $module, array & $payload )
+	{
 		$request		= $env->getRequest();
 		$moduleConfig	= $env->getConfig()->getAll( 'module.server_router.', TRUE );
+
+		//  @todo	use H_REQUEST_PATH_KEY, possible set in .htaccess or webserver vhost env
 		$path			= $request->get( '__path' );
 		$requestMethod	= $request->getMethod();
 		$requestIsAjax	= $request->isAjax();
@@ -38,23 +39,29 @@ class Controller_Router extends Controller{
 				if( $requestIsAjax && !$route->ajax)
 					return;
 				if( (int) $route->code >= 400 ){
-					Net_HTTP_Status::sendHeader( $route->code );
-					$heading	= $route->code.' '.Net_HTTP_Status::getText( $route->code );
+					HttpStatus::sendHeader( $route->code );
+					$heading	= $route->code.' '.HttpStatus::getText( $route->code );
 					print( HtmlTag::create( 'h1', $heading ) );
 					exit;
 				}
-				$controller	= new Controller_Router( $env, FALSE );
 				if( (int) $route->code >= 300 )
-					$controller->restart( $env->url.$route->target, FALSE, $route->code );
+					self::restart( $env, $env->url.$route->target, FALSE, $route->code );
 				else{
 					$request->set( '__path', $route->target );
-					$controller->redirect( $route->target, 'index' );
+					self::redirect( $env, $route->target, 'index' );
 				}
 			}
 		}
 	}
 
-	static protected function readRoutes( $env ){
+
+	protected static function getRouteXmlFilePath(): string
+	{
+		return 'config/routes.xml';												//  @todo get config path from app base config (config.ini)
+	}
+
+	protected static function readRoutes( Environment $env ): array
+	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.server_router.', TRUE );
 		$requestIsAjax	= $env->getRequest()->isAjax();
 		$list			= [];
@@ -73,7 +80,8 @@ class Controller_Router extends Controller{
 		return $list;
 	}
 
-	static protected function readRoutesFromDatabase( $env ){
+	protected static function readRoutesFromDatabase( Environment $env ): array
+	{
 		$model			= new Model_Route( $env );
 		$list			= [];
 		$indices		= array(
@@ -92,14 +100,15 @@ class Controller_Router extends Controller{
 		return $list;
 	}
 
-	static protected function readRoutesFromXml( $env ){
+	protected static function readRoutesFromXml( Environment $env ): array
+	{
 		$list		= [];
 		$fileName	= self::getRouteXmlFilePath( $env );
 		if( !file_exists( $fileName ) )
 			return $list;
 
 		try{
-			$routes	= @XML_ElementReader::readFile( $fileName );
+			$routes	= @XmlReader::readFile( $fileName );
 		}
 		catch( Exception $e ){
 			$message	= 'Route definition file "%s" is not valid XML.';
@@ -134,4 +143,3 @@ class Controller_Router extends Controller{
 		return $list;
 	}
 }
-?>

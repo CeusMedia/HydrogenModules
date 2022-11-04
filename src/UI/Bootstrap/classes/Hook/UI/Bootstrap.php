@@ -7,7 +7,7 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_Bootstrap extends Hook
 {
-	public static function onEnvInit( Environment $env, $context, $module, $payload )
+	public static function onEnvInit( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		if( get_class( $env ) === RemoteEnvironment::class )
 			return;
@@ -80,7 +80,7 @@ class Hook_UI_Bootstrap extends Hook
 		}
 	}
 
-	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
+	public static function onPageApplyModules( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		if( !$env->getConfig()->get( 'module.ui_bootstrap.active' ) )
 			return;
@@ -136,30 +136,29 @@ class Hook_UI_Bootstrap extends Hook
 		$context->addBodyClass( 'uses-bootstrap bootstrap'.$majorVersion );
 	}
 
-	public static function onPageBuild( Environment $env, $context, $module, $payload )
+	public static function onPageBuild( Environment $env, object $context, object $module, array & $payload ): void
 	{
-		$data	= (object) $payload;
 		if( !$env->getConfig()->get( 'module.ui_bootstrap.active' ) )
 			return;
 		$options		= $env->getConfig()->getAll( 'module.ui_bootstrap.', TRUE );
 		$majorVersion	= self::getMajorVersion( $options->get( 'version' ) );
 		$cssPrefix		= 'bs'.$majorVersion.'-';
-		if( !substr_count( $data->content, $cssPrefix ) )
+		if( !substr_count( $payload['content'], $cssPrefix ) )
 			return;
-		while( preg_match( '/ class="[^"]*'.$cssPrefix.'/', $data->content ) ){
+		while( preg_match( '/ class="[^"]*'.$cssPrefix.'/', $payload['content'] ) ){
 			$pattern		= '/(class=")([^"]*)?('.$cssPrefix.')([^ "]+)([^"]*)(")/';
-			$data->content	= preg_replace( $pattern, '\\1\\2\\4\\5\\6', $data->content );
+			$payload['content']	= preg_replace( $pattern, '\\1\\2\\4\\5\\6', $payload['content'] );
 		}
 		$otherVersions	= array_diff( [2, 3, 4], [$majorVersion] );
 		foreach( $otherVersions as $version ){
 			$pattern		= '/(class=")([^"]*)(bs'.$version.'-[^ "]+)([^"]*)(")/';
-			$data->content	= preg_replace( $pattern, '\\1\\2\\4\\5', $data->content );
+			$payload['content']	= preg_replace( $pattern, '\\1\\2\\4\\5', $payload['content'] );
 		}
-		$data->content	= preg_replace( '/(class=")\s*([^ ]*)\s*(")/', '\\1\\2\\3', $data->content );
-		$data->content	= preg_replace( '/ class=""/', '', $data->content );
+		$payload['content']	= preg_replace( '/(class=")\s*([^ ]*)\s*(")/', '\\1\\2\\3', $payload['content'] );
+		$payload['content']	= preg_replace( '/ class=""/', '', $payload['content'] );
 	}
 
-	protected static function getMajorVersion( string $version )
+	protected static function getMajorVersion( string $version ): int
 	{
 		$versionParts	= explode( '.', $version );
 		return (int) array_shift( $versionParts );
