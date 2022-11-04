@@ -9,10 +9,11 @@ use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader;
 
-( include_once __DIR__.'/vendor/autoload.php' ) or die( 'Install packages using composer, first!' );
-
 error_reporting( E_ALL );
 ini_set( 'display_errors', 'On' );
+
+( include_once __DIR__.'/vendor/autoload.php' ) or die( 'Install packages using composer, first!' );
+
 new Modules();
 
 class Modules
@@ -97,9 +98,9 @@ class Modules
 	protected function getModuleList( bool $full = FALSE ): array
 	{
 		$list	= [];
-		$index	= new RecursiveFileFinder( './', 'module.xml' );
+		$index	= new RecursiveFileFinder( './src/', 'module.xml' );
 		foreach( $index as $entry ){
-			$id		= preg_replace( '@^./@', '', $entry->getPath() );
+			$id		= preg_replace( '@^./src/@', '', $entry->getPath() );
 			if( !preg_match( '@^[A-Z]@', $id ) )
 				continue;
 			$id		= str_replace( '/', '_', $id );
