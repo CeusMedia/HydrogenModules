@@ -1,6 +1,8 @@
 <?php
 
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
@@ -9,7 +11,7 @@ use CeusMedia\HydrogenFramework\View;
 class Controller_Work_Newsletter_Template extends Controller
 {
 	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
-	protected $logic;
+	protected Logic_Newsletter_Editor $logic;
 
 	/**	@var	Messenger					$messenger */
 	protected $messenger;
@@ -20,9 +22,7 @@ class Controller_Work_Newsletter_Template extends Controller
 	/**	@var	object						$session */
 	protected $session;
 
-	protected $moduleConfig;
-
-	protected $limiter;
+	protected ?Logic_Limiter $limiter		= NULL;
 
 	public function add()
 	{
@@ -105,7 +105,7 @@ class Controller_Work_Newsletter_Template extends Controller
 		print $template->style;
 		if( $inEditor ){
 			$pathThemeStyle	= $this->env->getPage()->getThemePath().'css/';
-			print File_Reader::load( $pathThemeStyle.'module.work.newsletter.css' );
+			print FileReader::load( $pathThemeStyle.'module.work.newsletter.css' );
 		}
 		exit;
 	}
@@ -252,7 +252,7 @@ class Controller_Work_Newsletter_Template extends Controller
 		}
 		catch( Exception $e ){
 //			print( "There has been an error." );
-			UI_HTML_Exception_Page::display( $e );
+			HtmlExceptionPage::display( $e );
 		}
 		exit;
 	}
@@ -278,7 +278,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			foreach( $words as $key => $value )
 				$html	= str_replace( "[#".$key."#]", $value, $html );
 			$html	= preg_replace( "/\[#.+#\]/", '', $html );
-			$page	= new \UI_HTML_PageFrame();
+			$page	= new HtmlPage();
 			foreach( $theme->style as $style )
 				$page->addStylesheet( (string) $style );
 			$page->addHead( HtmlTag::create( 'style', $css ) );

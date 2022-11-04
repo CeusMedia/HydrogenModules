@@ -2,7 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_List_Days{
+class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_List_Days
+{
+	protected array $missions		= [];
 /*
 	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ){
 		$this->missions	= $this->list[$day];
@@ -92,7 +94,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return $this->renderBadgeDays( $this->today->diff( $start)->days, "success" );
 	}
 */
-	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ){
+	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE )
+	{
 		$this->missions	= $this->list[$day];
 		$list0			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
 		$list1			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
@@ -110,7 +113,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return HtmlTag::create( 'div', $list1.$list0, ['class' => "table-day-small", 'id' => 'table-small-'.$day] );
 	}
 
-	public function renderRowButtons( $mission, $days ){
+	public function renderRowButtons( $mission, $days )
+	{
 		$buttons	= [];
 		$baseUrl	= './work/mission/changeDay/'.$mission->missionId;
 
@@ -169,7 +173,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return '<div class="btn-group">'.join( '', $buttons ).'</div>';
 	}
 
-	public function renderRowLabel( $mission, $edit = TRUE, $showIcon = TRUE ){
+	public function renderRowLabel( $mission, $edit = TRUE, $showIcon = TRUE )
+	{
 		$label		= Alg_Text_Trimmer::trimCentric( $mission->title, $this->titleLength, '...' );
 		$label		= htmlentities( $label, ENT_QUOTES, 'UTF-8' );
 		$label		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $label );
@@ -184,7 +189,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return HtmlTag::create( 'a', $label, ['href' => $url, 'class' => $class, 'style' => 'font-size: 1.25em'] );
 	}
 
-	public function renderRowOfEvent( $event, $days, $showStatus, $showPriority, $showDate, $showActions ){
+	public function renderRowOfEvent( $event, $days, $showStatus, $showPriority, $showDate, $showActions )
+	{
 		$link		= $this->renderRowLabel( $event, TRUE, FALSE );
 		$badgeO		= $this->renderBadgeDaysOverdue( $event );
 		$badgeS		= $this->renderBadgeDaysStill( $event );
@@ -281,7 +287,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return HtmlTag::create( 'tr', join( $cells ), $attributes );*/
 	}
 
-	public function renderRowOfTask( $task, $days, $showStatus, $showPriority, $showDate, $showActions ){
+	public function renderRowOfTask( $task, $days, $showStatus, $showPriority, $showDate, $showActions )
+	{
 		$link		= $this->renderRowLabel( $task, TRUE, FALSE );
 		$badgeO		= $this->renderBadgeDaysOverdue( $task );
 		$badgeS		= $this->renderBadgeDaysStill( $task );
@@ -338,7 +345,8 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return HtmlTag::create( 'table', $colgroup.$tbody, $attributes );
 	}
 
-	public function renderRows( $day, $showStatus, $showPriority, $showDate, $showActions, $typeOnly = NULL ){
+	public function renderRows( $day, $showStatus, $showPriority, $showDate, $showActions, $typeOnly = NULL )
+	{
 		if( !count( $this->missions ) )
 			return "";
 		$list	= [];
@@ -359,4 +367,3 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return HtmlTag::create( 'table', $list, ['class' => 'not-table not-table-striped'] );
 	}
 }
-?>

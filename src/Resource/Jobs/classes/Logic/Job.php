@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\UI\OutputBuffer;
 use CeusMedia\HydrogenFramework\Logic;
 
@@ -371,7 +372,7 @@ class Logic_Job extends Logic
 		$classArgs	= [$this->env, $this];													//  prepare job class instance arguments
 		$arguments	= [$commands, $parameters];												//
 		$methodName	= $jobDefinition->methodName;													//  shortcut method name
-		$jobObject	= \Alg_Object_Factory::createObject( '\\'.$className, $classArgs );				//  ... create job class instance with arguments
+		$jobObject	= ObjectFactory::createObject( '\\'.$className, $classArgs );				//  ... create job class instance with arguments
 		$jobObject->noteJob( $jobDefinition->className, $methodName );								//  ... inform job instance about method to be called
 		$jobObject->noteArguments( $commands, $parameters );										//  ... inform job instance about request arguments
 

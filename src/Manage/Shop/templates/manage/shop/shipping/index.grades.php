@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
-use UI_HTML_Tag as Html;
+use CeusMedia\Common\UI\HTML\Tag as Html;
 
 $iconRemove	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 

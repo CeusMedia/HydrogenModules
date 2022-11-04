@@ -31,7 +31,7 @@ class View_Helper_Work_Newsletter_ThemeList
 		foreach( $this->themes as $theme ){
 			$list[]	= $this->renderItem( $theme );
 		}
-		return \HtmlTag::create( 'ul', join( $list ), ['class' => 'thumbnails'] );
+		return HtmlTag::create( 'ul', join( $list ), ['class' => 'thumbnails'] );
 	}
 
 	/**

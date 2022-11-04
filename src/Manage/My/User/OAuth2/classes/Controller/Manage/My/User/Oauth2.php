@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_My_User_Oauth2 extends Controller
@@ -132,6 +133,6 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		);
 		if( $provider->options )
 			$options	= array_merge( $options, json_decode( $provider->options, TRUE ) );
-		return Alg_Object_Factory::createObject( $provider->className, [$options] );
+		return ObjectFactory::createObject( $provider->className, [$options] );
 	}
 }

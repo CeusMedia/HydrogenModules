@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Stripe_Event extends Controller
@@ -68,7 +69,7 @@ class Controller_Stripe_Event extends Controller
 			return;
 		$className	= 'Mail_Stripe_'.$type;
 		$arguments	= [$this->env, $data];
-		$mail		= Alg_Object_Factory::createObject( $className, $arguments );
+		$mail		= ObjectFactory::createObject( $className, $arguments );
 		$receiver	= ['email' => $this->moduleConfig->get( 'mail.hook' )];
 		$language	= $this->env->getLanguage()->getLanguage();
 		return $this->env->logic->mail->sendMail( $mail, $receiver, $language );

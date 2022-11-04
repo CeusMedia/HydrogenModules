@@ -3,6 +3,7 @@
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  */
 
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\HydrogenFramework\Logic;
@@ -163,7 +164,7 @@ class Logic_Mail extends Logic
 				$env	= $logicFrontend->getRemoteEnv( $this->env );
 			}
 		}
-		return Alg_Object_Factory::createObject( $className, [$env, $data] );
+		return ObjectFactory::createObject( $className, [$env, $data] );
 	}
 
 	/**

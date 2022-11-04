@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -319,7 +320,7 @@ class Controller_Auth_Oauth2 extends Controller
 		);
 		if( $provider->options )
 			$options	= array_merge( $options, json_decode( $provider->options, TRUE ) );
-		return Alg_Object_Factory::createObject( $provider->className, [$options] );
+		return ObjectFactory::createObject( $provider->className, [$options] );
 	}
 
 	/**

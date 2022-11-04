@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Logic;
 
 abstract class Logic_Payment_Stripe_Event extends Logic
@@ -34,7 +35,7 @@ abstract class Logic_Payment_Stripe_Event extends Logic
 			throw new RuntimeException( 'Mail class "'.$className.'" is not existing' );
 
 		$arguments	= [$this->env, $data];
-		$mail		= Alg_Object_Factory::createObject( $className, $arguments );
+		$mail		= ObjectFactory::createObject( $className, $arguments );
 		$this->env->logic->mail->sendMail( $mail, $receiver, $language );
 	}
 

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -73,7 +74,7 @@ class Hook_Shop_Payment_Mangopay extends Hook
 			$className	= 'View_Helper_Shop_FinishPanel_'.$backend->backend;
 			if( !class_exists( $className ) )
 				continue;
-			$object	= Alg_Object_Factory::createObject( $className, [$env] );
+			$object	= ObjectFactory::createObject( $className, [$env] );
 			$object->setOrderId( $data->orderId );
 			$object->setOutputFormat( $className::OUTPUT_FORMAT_HTML );
 			$panelPayment	= $object->render();

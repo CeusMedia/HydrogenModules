@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 
@@ -138,7 +140,7 @@ class Job_Mail_Migration extends Job_Abstract
 				$objectString	= $logic->decompressString( $mail->object, $compression );
 				$messageRaw		= $logic->decompressString( $mail->raw, $compression );
 				$mailClass		= preg_replace( $regex, '\\1', substr( $objectString, 0, 60 ) );
-				$object			= Alg_Object_Factory::createObject( $mailClass, NULL, FALSE );
+				$object			= ObjectFactory::createObject( $mailClass, NULL, FALSE );
 				$object->mail	= $parser->parse( $messageRaw );
 				$mail->object	= $logic->compressString( serialize( $object ), $compression );
 				if( !$this->dryMode )
