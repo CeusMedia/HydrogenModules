@@ -15,20 +15,22 @@ use Rector\Set\ValueObject\LevelSetList;
 
 return static function (RectorConfig $rectorConfig): void {
 	$rectorConfig->paths([
-		__DIR__ . '/Admin',
-		__DIR__ . '/Base',
-		__DIR__ . '/Catalog',
-		__DIR__ . '/Info',
-		__DIR__ . '/JS',
-		__DIR__ . '/Manage',
-		__DIR__ . '/Members',
-		__DIR__ . '/Resource',
-		__DIR__ . '/Security',
-		__DIR__ . '/Server',
-		__DIR__ . '/Shop',
-		__DIR__ . '/Tool',
-		__DIR__ . '/UI',
-		__DIR__ . '/Work',
+		__DIR__ . '/src',
+//		__DIR__ . '/src/Admin',
+//		__DIR__ . '/src/App',
+//		__DIR__ . '/src/Base',
+//		__DIR__ . '/src/Catalog',
+//		__DIR__ . '/src/Info',
+//		__DIR__ . '/src/JS',
+//		__DIR__ . '/src/Manage',
+//		__DIR__ . '/src/Members',
+//		__DIR__ . '/src/Resource',
+//		__DIR__ . '/src/Security',
+//		__DIR__ . '/src/Server',
+//		__DIR__ . '/src/Shop',
+//		__DIR__ . '/src/Tool',
+//		__DIR__ . '/src/UI',
+//		__DIR__ . '/src/Work',
 	]);
 
 	// register a single rule

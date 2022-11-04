@@ -1,5 +1,11 @@
 <?php
 use CeusMedia\Common\FS\File\RecursiveNameFilter as RecursiveFileFinder;
+use CeusMedia\Common\Net\HTTP\Header\Field as HttpHeaderField;
+use CeusMedia\Common\Net\HTTP\Request\Receiver as HttpRequestReceiver;
+use CeusMedia\Common\Net\HTTP\Response as HttpResponse;
+use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader;
 
@@ -11,33 +17,33 @@ new Modules();
 
 class Modules
 {
-	/**	@var	Net_HTTP_Request_Receiver	$request		HTTP request object */
-	protected $request;
+	/**	@var	HttpRequestReceiver		$request		HTTP request object */
+	protected HttpRequestReceiver $request;
 
-	/**	@var	Net_HTTP_Response			$response		HTTP response object */
-	protected $response;
+	/**	@var	HttpResponse			$response		HTTP response object */
+	protected HttpResponse $response;
 
 	public function __construct()
 	{
 		error_reporting( E_ALL );
-		$this->request	= new Net_HTTP_Request_Receiver();
-		$this->response	= new Net_HTTP_Response();
+		$this->request	= new HttpRequestReceiver();
+		$this->response	= new HttpResponse();
 		try{
 			if( !$this->dispatch() )
 				throw new InvalidArgumentException( 'No valid content type requested' );
-			$sender	= new Net_HTTP_Response_Sender( $this->response );
+			$sender	= new HttpResponseSender( $this->response );
 			$sender->send();
 		}
 		catch( Exception $e ){
-			die( UI_HTML_Exception_Page::render( $e ) );
+			die( HtmlExceptionPage::render( $e ) );
 		}
 	}
 
 	protected function dispatch(): bool
 	{
-		$accepts	= array( new Net_HTTP_Header_Field( 'accept', 'text/html;q=1' ) );
+		$accepts	= array( new HttpHeaderField( 'accept', 'text/html;q=1' ) );
 		if( $this->request->has( 'json' ) )
-			$accepts	= array( new Net_HTTP_Header_Field( 'accept', 'application/json' ) );
+			$accepts	= array( new HttpHeaderField( 'accept', 'application/json' ) );
 		else if( $this->request->hasHeader( 'accept' ) )
 			$accepts	= $this->request->getHeadersByName( 'accept' );
 
@@ -77,10 +83,10 @@ class Modules
 		foreach( $modules as $moduleName => $moduleData ){
 			$label	= $moduleData->title." ".$moduleData->version;
 			if( !empty( $moduleData->description ) )
-				$label	= UI_HTML_Elements::Acronym( $label, htmlentities( $moduleData->description, ENT_QUOTES, 'UTF-8' ) );
-			$list[]	= UI_HTML_Elements::ListItem( $label );
+				$label	= HtmlElements::Acronym( $label, htmlentities( $moduleData->description, ENT_QUOTES, 'UTF-8' ) );
+			$list[]	= HtmlElements::ListItem( $label );
 		}
-		$list		= UI_HTML_Elements::unorderedList( $list );
+		$list		= HtmlElements::unorderedList( $list );
 		$page		= new HtmlPage();
 		$page->addStylesheet( 'https://cdn.ceusmedia.de/css/bootstrap.min.css' );
 		$page->addStylesheet( 'html.css' );
