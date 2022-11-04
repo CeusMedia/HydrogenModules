@@ -53,7 +53,7 @@ class Controller_Manage_My_Mangopay_User extends Controller_Manage_My_Mangopay_A
 
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->user	= $this->logic->getUser( $this->userId );

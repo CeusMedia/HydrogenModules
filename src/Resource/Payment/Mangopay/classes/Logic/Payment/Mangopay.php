@@ -837,7 +837,7 @@ print_m( $items );
 		return preg_match( $pattern, $number );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
 //		print_m( $this->moduleConfig->getAll() );die;

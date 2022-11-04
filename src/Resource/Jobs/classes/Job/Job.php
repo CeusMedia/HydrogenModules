@@ -141,7 +141,7 @@ class Job_Job extends Job_Abstract
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_cache.', TRUE );
 		$this->logic	= $this->env->getLogic()->get( 'Job' );

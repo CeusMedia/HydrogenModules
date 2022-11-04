@@ -16,6 +16,7 @@ abstract class View_Helper_Stripe_Abstract
 
 	abstract public function render();
 
-	protected function __onInit(){
+	protected function __onInit(): void
+	{
 	}
 }

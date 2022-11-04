@@ -247,7 +247,7 @@ class Controller_Auth_Rest extends Controller
 		return "YESSSSS!";
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();

@@ -15,7 +15,7 @@ class View_Admin_Log_Exception extends View
 
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->addCommonStyle( 'module.admin.log.exception.css' );
 		$this->env->getPage()->js->addModuleFile( 'module.admin.log.exception.js' );

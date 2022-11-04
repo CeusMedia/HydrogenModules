@@ -88,7 +88,7 @@ class View_Helper_TinyMce_FileBrowser
 		return $this;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->thumbnailer	= new View_Helper_Thumbnailer( $this->env, 128, 128 );
 		$this->baseUrl	= $this->env->url;

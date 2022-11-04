@@ -4,19 +4,10 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Testimonial extends Controller{
 
-	protected $model;
 	protected $messenger;
 	protected $request;
 	protected $session;
-
-	protected function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->model		= new Model_Testimonial( $this->env );
-		$testimonials		= $this->model->getAll( [], ['rank' => 'ASC'] );
-		$this->addData( 'testimonials', $testimonials );
-	}
+	protected Model_Testimonial $model;
 
 	public function add(){
 		$words	= (object) $this->getWords( 'msg' );
@@ -63,5 +54,14 @@ class Controller_Manage_Testimonial extends Controller{
 		$this->model->remove( $testimonialId );
 		$this->restart( NULL, TRUE );
 	}
+
+	protected function __onInit(): void
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->model		= new Model_Testimonial( $this->env );
+		$testimonials		= $this->model->getAll( [], ['rank' => 'ASC'] );
+		$this->addData( 'testimonials', $testimonials );
+	}
 }
-?>

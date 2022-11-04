@@ -32,7 +32,7 @@ class View_Manage_Role extends View
 		$this->env->getPage()->runScript( 'ModuleManageUsers.setRoleId('.$roleId.').init()' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()
 			->addThemeStyle( 'module.manage.users.css' )

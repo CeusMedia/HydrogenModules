@@ -13,7 +13,7 @@ abstract class Mail_Work_Mission_Abstract extends Mail_Abstract
 	protected $modelUser;
 	protected $salute;
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->addThemeStyle( 'module.work.missions.css' );

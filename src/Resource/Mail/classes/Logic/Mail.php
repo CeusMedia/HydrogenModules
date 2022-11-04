@@ -829,7 +829,7 @@ class Logic_Mail extends Logic
 		return $this->decompressMailObject( $mail, $unserialize, $force );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 		$this->libraries		= $this->detectAvailableMailLibraries();

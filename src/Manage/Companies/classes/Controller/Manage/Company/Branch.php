@@ -299,7 +299,7 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->restart( 'manage/company/branch/edit/'.$tag->branchId );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelBranch		= new Model_Branch( $this->env );
 		$this->modelCompany		= new Model_Company( $this->env );

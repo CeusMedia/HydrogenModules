@@ -2,11 +2,10 @@
 
 use CeusMedia\HydrogenFramework\View;
 
-class View_Work_Mission_Future extends View{
-
-	protected function __onInit(){}
-
-	public function ajaxRenderIndex(){
+class View_Work_Mission_Future extends View
+{
+	public function ajaxRenderIndex()
+	{
 		$words		= $this->env->getLanguage()->getWords( 'work/mission' );
 		extract( $this->getData() );
 
@@ -38,7 +37,8 @@ class View_Work_Mission_Future extends View{
 		exit;
 	}
 
-	public function index(){
+	public function index()
+	{
 		$page			= $this->env->getPage();
 //		$monthsLong		= $this->env->getLanguage()->getWords( 'work/mission', 'months' );
 //		$monthsShort	= $this->env->getLanguage()->getWords( 'work/mission', 'months-short' );
@@ -92,5 +92,8 @@ if(0){
 </script>
 ';
 	}
+
+	protected function __onInit(): void
+	{
+	}
 }
-?>

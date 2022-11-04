@@ -24,7 +24,7 @@ class Controller_Info_Workshop extends Controller
 		$this->addData( 'workshop', $this->model->get( $id ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model	= new Model_Workshop( $this->env );
 		$this->addData( 'pathImages', '' );

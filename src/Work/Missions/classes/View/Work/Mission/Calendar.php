@@ -118,7 +118,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		return $tableLarge;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic	= Logic_Work_Mission::getInstance( $this->env );
 		$this->words	= $this->env->getLanguage()->load( 'work/mission' );

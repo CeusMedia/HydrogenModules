@@ -206,7 +206,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 		);
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->session			= $this->env->getSession();
 		$this->request			= $this->env->getRequest();

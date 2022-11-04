@@ -40,7 +40,7 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 		'direction'		=> 'ASC',
 	);
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 

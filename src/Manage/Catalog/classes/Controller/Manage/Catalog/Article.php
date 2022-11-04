@@ -358,7 +358,7 @@ class Controller_Manage_Catalog_Article extends Controller
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Article::init start' );

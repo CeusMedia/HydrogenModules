@@ -17,7 +17,7 @@ class Controller_Work_Billing_Person_Unbooked extends Controller
 		$this->addData( 'person', $this->logic->getPerson( $personId ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic	= new Logic_Billing( $this->env );
 	}

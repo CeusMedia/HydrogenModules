@@ -67,7 +67,7 @@ class Controller_Work_Mission extends Controller
 		'direction'		=> 'ASC',
 	);
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();

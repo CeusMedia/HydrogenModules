@@ -81,7 +81,7 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();

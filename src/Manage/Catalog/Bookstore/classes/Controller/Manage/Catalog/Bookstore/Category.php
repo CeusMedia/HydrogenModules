@@ -149,7 +149,7 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 		$this->restart( ( $category->parentId ? 'edit/'.$category->parentId : NULL ), TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Category::init start' );
 		$this->logic		= new Logic_Catalog_Bookstore( $this->env );

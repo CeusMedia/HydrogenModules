@@ -391,7 +391,7 @@ class Controller_Info_File extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();

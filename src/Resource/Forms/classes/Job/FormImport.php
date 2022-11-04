@@ -86,7 +86,7 @@ class Job_FormImport extends Job_Abstract
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logicImport			= new Logic_Import( $this->env );
 		$this->logicFill			= new Logic_Form_Fill( $this->env );

@@ -135,7 +135,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 		$this->restart( 'manage/catalog/bookstore/author/edit/'.$authorId );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Author::init start' );
 		$this->messenger	= $this->env->getMessenger();

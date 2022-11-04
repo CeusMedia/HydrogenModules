@@ -145,7 +145,7 @@ class Logic_Authentication_Backend_Oauth extends Logic
 		return $this;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
 		$this->session		= $this->env->getSession();

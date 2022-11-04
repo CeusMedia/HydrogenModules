@@ -77,7 +77,7 @@ class View_Helper_Mangopay_URL extends View_Helper_Mangopay_Abstract
 		return $this;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request	= $this->env->getRequest();
 	}

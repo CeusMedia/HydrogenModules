@@ -39,7 +39,7 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 		);
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logicStripe			= new Logic_Shop_Payment_Stripe( $this->env );
 		$this->logicShop			= new Logic_Shop( $this->env );

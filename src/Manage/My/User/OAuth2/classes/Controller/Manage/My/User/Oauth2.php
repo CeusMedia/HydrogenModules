@@ -103,7 +103,7 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelProvider	= new Model_Oauth_Provider( $this->env );

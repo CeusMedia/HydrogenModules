@@ -140,7 +140,7 @@ class Controller_Manage_Customer extends Controller
 		return TRUE;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelCustomer	= new Model_Customer( $this->env );

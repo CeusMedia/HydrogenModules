@@ -67,7 +67,7 @@ class Job_Info_Forum extends Job_Abstract
 //		$this->unlock( 'info.forum.send' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();												//  get app config
 		$this->language		= $this->env->getLanguage();											//  get language support

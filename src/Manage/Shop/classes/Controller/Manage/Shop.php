@@ -62,7 +62,7 @@ class Controller_Manage_Shop extends Controller
 #		$this->restart( './work/newsletter/edit/'.$newsletterId );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();

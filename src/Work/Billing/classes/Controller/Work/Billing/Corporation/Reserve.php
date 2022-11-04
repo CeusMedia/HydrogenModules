@@ -45,7 +45,7 @@ class Controller_Work_Billing_Corporation_Reserve extends Controller
 		$this->addData( 'filterMonth', $filterMonth );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();

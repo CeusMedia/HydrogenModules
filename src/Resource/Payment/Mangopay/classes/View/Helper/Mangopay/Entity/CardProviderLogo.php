@@ -59,7 +59,7 @@ class View_Helper_Mangopay_Entity_CardProviderLogo extends View_Helper_Mangopay_
 		return $this;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->setSize( self::SIZE_MEDIUM );
 	}

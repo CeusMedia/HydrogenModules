@@ -428,7 +428,7 @@ class Controller_Auth_Local extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();

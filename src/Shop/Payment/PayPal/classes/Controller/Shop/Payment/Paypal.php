@@ -96,7 +96,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 		$this->restart( './shop/finish' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig()->getAll( 'module.shop_payment_paypal.', TRUE );
 		$this->session		= $this->env->getSession();

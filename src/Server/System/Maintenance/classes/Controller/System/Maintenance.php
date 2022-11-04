@@ -2,12 +2,13 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_System_Maintenance extends Controller{
-
-	protected function __onInit(){
+class Controller_System_Maintenance extends Controller
+{
+	public function index()
+	{
 	}
 
-	public function index(){
-
+	protected function __onInit(): void
+	{
 	}
 }

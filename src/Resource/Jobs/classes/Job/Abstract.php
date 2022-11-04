@@ -112,7 +112,7 @@ class Job_Abstract
 	 *	Initialization, called at the end of construction.
 	 *	@access		protected
 	 */
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 	}
 

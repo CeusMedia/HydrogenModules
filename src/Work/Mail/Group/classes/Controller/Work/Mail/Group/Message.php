@@ -113,7 +113,7 @@ class Controller_Work_Mail_Group_Message extends Controller
 		$this->addData( 'message', $message );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();

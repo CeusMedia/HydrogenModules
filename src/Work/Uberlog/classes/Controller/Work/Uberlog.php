@@ -72,7 +72,7 @@ class Controller_Work_Uberlog extends Controller
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model	= new Model_Log_Record( $this->env );
 	}

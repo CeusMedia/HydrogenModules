@@ -174,7 +174,7 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	 *	@param		Environment		$env
 	 *	@return		void
 	 */
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 //		$this->logic			= new Logic_Catalog_Gallery( $this->env );
 		$this->modelArticle		= new Model_Catalog_Clothing_Article( $this->env );

@@ -8,13 +8,7 @@ class Controller_Share extends Controller{
 	protected $request;
 	protected $session;
 	protected $messenger;
-
-	protected function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= Logic_Share::getInstance( $this->env );
-	}
+	protected Logic_Share $logic;
 
 	public function index( $uuid ){
 		if( $this->request->getMethod()->isPost() ){
@@ -50,6 +44,12 @@ class Controller_Share extends Controller{
 		$this->addData( 'captchaImage', $image );
 		$this->addData( 'show', FALSE );
 		$this->addData( 'uuid', $uuid );
+	}
 
+	protected function __onInit(): void
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logic		= Logic_Share::getInstance( $this->env );
 	}
 }

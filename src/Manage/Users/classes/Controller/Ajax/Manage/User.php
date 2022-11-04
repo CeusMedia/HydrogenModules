@@ -20,7 +20,7 @@ class Controller_Ajax_Manage_User extends AjaxController
 {
 	public static $moduleId		= 'Manage_Users';
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 	}
 }

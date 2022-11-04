@@ -215,7 +215,7 @@ return NULL;
 		return $this;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->client		= $this->env->get( 'restClient' );
 		$this->session		= $this->env->getSession();

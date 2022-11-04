@@ -53,7 +53,7 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelConnection	= new Model_Import_Connection( $this->env );
 	}

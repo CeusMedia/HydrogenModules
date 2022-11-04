@@ -27,7 +27,7 @@ class Logic_Import extends Logic
 		return $this->connections[$connectionId];
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelConnection	= new Model_Import_Connection( $this->env );
 		$this->modelConnector	= new Model_Import_Connector( $this->env );

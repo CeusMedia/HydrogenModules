@@ -1,34 +1,35 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 
 class Controller_Provision_Rest extends Controller{
 
-	protected $logic;
+	protected Logic_User_Provision $logic;
 
-	public function __construct( Environment $env, $setupView = TRUE ){
+	public function __construct( Environment $env, $setupView = TRUE )
+	{
 		parent::__construct( $env, FALSE );
 	}
 
-	protected function __onInit(){
-		$this->logic	= Logic_User_Provision::getInstance( $this->env );
-	}
-
-	public function getLicense( $productLicenseId ){
+	public function getLicense( $productLicenseId )
+	{
 		$this->handleJsonResponse( 'data', $this->logic->getProductLicense( $productLicenseId ) );
 	}
 
-	public function getLicenses( $productId ){
+	public function getLicenses( $productId )
+	{
 		$this->handleJsonResponse( 'data', $this->logic->getProductLicenses( $productId, 2 ) );
 	}
 
-	public function getProducts(){
+	public function getProducts()
+	{
 		$products	= $this->logic->getProducts( 1 );
 		$this->handleJsonErrorResponse( $products );							//  return with error
 	}
 
-	public function handleJsonErrorResponse( $message, $code = 0 ){
+	public function handleJsonErrorResponse( $message, $code = 0 ): void
+	{
 		$this->handleJsonResponse( 'error', array(
 			'message'	=> $message,
 			'code'		=> $code,
@@ -38,7 +39,8 @@ class Controller_Provision_Rest extends Controller{
 	/**
 	 *	@todo 		kriss: finish implementation (exception log)
 	 */
-	public function handleJsonExceptionResponse( $exception ){
+	public function handleJsonExceptionResponse( $exception )
+	{
 		$this->handleJsonResponse( 'exception', array(
 			'message'	=> $exception->getMessage(),
 			'code'		=> $exception->getCode(),
@@ -47,7 +49,8 @@ class Controller_Provision_Rest extends Controller{
 		) );
 	}
 
-	public function hasActiveKey( $showExceptions = FALSE ){
+	public function hasActiveKey( $showExceptions = FALSE )
+	{
 //		$productId	= $this->env->getRequest()->get( 'productId' );
 //		$userId		= $this->env->getRequest()->get( 'userId' );
 		$productId	= $this->env->getRequest()->getFromSource( 'productId', 'POST' );				//  get product ID from POST request, only
@@ -89,8 +92,8 @@ class Controller_Provision_Rest extends Controller{
 
 	/**
 	 *	Allows to order free single user licenses for new users.
-	 *	ATTENTION: Commercial or group licenses are not orderable using this interface.
-	 *	ATTENTION: Free single user licenses are orderable only once for one user.
+	 *	ATTENTION: Commercial or group licenses are not order-able using this interface.
+	 *	ATTENTION: Free single user licenses are order-able only once for one user.
 	 */
 	public function orderLicense(){
 		$request			= $this->env->getRequest();
@@ -151,5 +154,10 @@ class Controller_Provision_Rest extends Controller{
 			'licenses' => $this->getLicenses( 1 ),
 		);
 		$this->handleJsonResponse( 'data', $data );
+	}
+
+	protected function __onInit(): void
+	{
+		$this->logic	= Logic_User_Provision::getInstance( $this->env );
 	}
 }

@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\View;
 
 class Controller_Ajax_Info_Event extends Controller
 {
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelAddress	= new Model_Address( $this->env );
 		$this->modelEvent	= new Model_Event( $this->env );

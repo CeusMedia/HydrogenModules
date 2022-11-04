@@ -37,7 +37,7 @@ class Controller_File extends Controller
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_FileBucket( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_file.', TRUE );

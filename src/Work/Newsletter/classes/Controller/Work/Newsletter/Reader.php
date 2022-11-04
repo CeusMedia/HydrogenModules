@@ -407,7 +407,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->restart( 'edit/'.$readerId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Newsletter_Editor( $this->env );
 		$this->session		= $this->env->getSession();

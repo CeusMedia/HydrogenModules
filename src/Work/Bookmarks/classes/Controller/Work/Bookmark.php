@@ -169,7 +169,7 @@ class Controller_Work_Bookmark extends Controller
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();

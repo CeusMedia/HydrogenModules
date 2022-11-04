@@ -26,7 +26,7 @@ class View_Manage_Content_Locale extends View
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );
 		$page	= $this->env->getPage();

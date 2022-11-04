@@ -69,7 +69,7 @@ class View_Helper_Mangopay_Entity_WalletLogo extends View_Helper_Mangopay_Abstra
 		return $this;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->setSize( self::SIZE_MEDIUM );
 	}

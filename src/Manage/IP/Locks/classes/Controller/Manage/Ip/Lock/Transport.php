@@ -81,7 +81,7 @@ class Controller_Manage_Ip_Lock_Transport extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->modelFilter		= new Model_IP_Lock_Filter( $this->env );

@@ -18,7 +18,7 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 	 *	@access		protected
 	 *	@return		void
 	 */
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 //		$this->addThemeStyle( 'layout.css' );

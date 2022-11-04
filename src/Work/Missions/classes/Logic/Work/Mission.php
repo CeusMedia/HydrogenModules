@@ -244,7 +244,7 @@ class Logic_Work_Mission extends Logic
 	 *	@access		protected
 	 *	@return		void
 	 */
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelMission		= new Model_Mission( $this->env );
 		$this->modelVersion		= new Model_Mission_Version( $this->env );

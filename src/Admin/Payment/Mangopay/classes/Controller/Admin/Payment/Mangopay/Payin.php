@@ -37,7 +37,7 @@ class Controller_Admin_Payment_Mangopay_Payin extends Controller
 //		$this->addData( 'page', $this->request->get( 'page' ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();

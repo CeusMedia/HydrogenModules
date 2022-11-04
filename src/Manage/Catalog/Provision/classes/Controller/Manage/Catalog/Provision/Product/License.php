@@ -64,7 +64,7 @@ class Controller_Manage_Catalog_Provision_Product_License extends Controller
 		$this->addData( 'product', $this->modelProduct->get( $productId ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request				= $this->env->getRequest();
 		$this->messenger			= $this->env->getMessenger();

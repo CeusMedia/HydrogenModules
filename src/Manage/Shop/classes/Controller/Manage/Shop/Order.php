@@ -100,7 +100,7 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 		$this->restart( 'edit/'.$orderId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->logicShop	= new Logic_ShopManager( $this->env );

@@ -178,7 +178,7 @@ class View_Manage_Gallery extends View
 		$this->addData( 'license', $this->loadContentFile( $path.'license.html', $data ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$converters	= array(
 			"formatText",

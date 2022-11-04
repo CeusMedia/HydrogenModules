@@ -197,7 +197,7 @@ class Controller_Manage_Locale extends Controller
 		$this->restart( './manage/locale/edit/'.$fileHash );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$config		= $this->env->getConfig();

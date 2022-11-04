@@ -77,7 +77,7 @@ class View_Helper_Stripe_URL extends View_Helper_Stripe_Abstract
 		return $this;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request	= $this->env->getRequest();
 	}

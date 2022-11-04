@@ -45,7 +45,7 @@ class Job_Job_Lock extends Job_Abstract
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic	= $this->env->getLogic()->get( 'Job' );
 		$this->skipJobs	= array(

@@ -111,7 +111,7 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/card' );

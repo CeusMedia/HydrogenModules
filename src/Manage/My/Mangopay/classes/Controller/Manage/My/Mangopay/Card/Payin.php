@@ -136,7 +136,7 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 //		throw new RuntimeException( 'Not implemented yet' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/card' );

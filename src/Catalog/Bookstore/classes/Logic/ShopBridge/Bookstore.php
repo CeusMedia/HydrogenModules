@@ -176,7 +176,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 		return $this->check( $articleId )->weight * $amount;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.catalog_bookstore.', TRUE );

@@ -77,7 +77,7 @@ class View_Helper_Mail_Facts
 
 	//  --  PROTECTED  --  //
 
-/*	protected function __onInit()
+/*	protected function __onInit(): void
 	{
 		$this->helperText	= new View_Helper_Mail_Text( $this->env );
 	}*/

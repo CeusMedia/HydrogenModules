@@ -76,7 +76,7 @@ class View_Manage_Page extends View
 		return '<div class="muted"><small><em>'.$words->no_entries.'</em></small></div><br/>';
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 //		$page	= $this->env->getPage();
 	}

@@ -236,7 +236,7 @@ class Logic_Mail_Group_Message extends Logic
 
 	//  --  PROTECTED METHODS  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logicGroup	= Logic_Mail_Group::getInstance( $this->env );
 		$this->modelMember	= new Model_Mail_Group_Member( $this->env );

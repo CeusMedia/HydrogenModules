@@ -86,7 +86,7 @@ class Controller_Admin_Backup extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->moduleConfig = $this->env->getConfig()->getAll('module.admin_backup.', TRUE);
 		$this->pathFiles = $this->moduleConfig->get('path');

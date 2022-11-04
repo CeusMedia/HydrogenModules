@@ -34,7 +34,7 @@ class Controller_Manage_Gallery extends Controller
 
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$config		= $this->env->getConfig();
 #		$this->path	= $config->get( 'path.images' ).$config->get( 'module.gallery_compact.path' );

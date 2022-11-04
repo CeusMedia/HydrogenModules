@@ -61,7 +61,7 @@ class Job_Billing extends Job_Abstract
 			$this->out( 'Booked '.$total.' expenses.' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic	= new Logic_Billing( $this->env );
 	}

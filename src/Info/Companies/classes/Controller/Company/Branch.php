@@ -40,7 +40,7 @@ class Controller_Company_Branch extends Controller
 		$this->addData( 'branchId', $branchId );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->messenger	= $this->env->getMessenger();
 		$this->modelBranch	= new Model_Branch( $this->env );

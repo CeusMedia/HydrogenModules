@@ -328,7 +328,7 @@ class Controller_Work_Newsletter_Template extends Controller
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->session		= $this->env->getSession();
 		$this->request		= $this->env->getRequest();

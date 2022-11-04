@@ -53,7 +53,7 @@ class Controller_Manage_My_Mangopay_Bank_Payin extends Controller_Manage_My_Mang
 		$this->addData( 'amount', $amount );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 //		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/bank/payin' );

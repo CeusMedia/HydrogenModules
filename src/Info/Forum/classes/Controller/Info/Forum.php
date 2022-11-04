@@ -265,7 +265,7 @@ class Controller_Info_Forum extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->modelPost	= new Model_Forum_Post( $this->env );

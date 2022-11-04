@@ -196,7 +196,7 @@ class Logic_Project extends Logic
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelProject		= new Model_Project( $this->env );								//  create projects model
 		$this->modelProjectUser	= new Model_Project_User( $this->env );

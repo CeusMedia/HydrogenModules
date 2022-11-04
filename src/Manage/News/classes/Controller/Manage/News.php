@@ -2,14 +2,12 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Manage_News extends Controller{
-
-	protected function __onInit(){
-		$this->model		= new Model_News( $this->env );
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-	}
+class Controller_Manage_News extends Controller
+{
+	protected $request;
+	protected $session;
+	protected $messenger;
+	protected Model_News $model;
 
 	public function add(){
 		$words	= $this->getWords();
@@ -112,5 +110,12 @@ class Controller_Manage_News extends Controller{
 		}
 		$this->restart( NULL, TRUE );
 	}
+
+	protected function __onInit(): void
+	{
+		$this->model		= new Model_News( $this->env );
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+	}
 }
-?>

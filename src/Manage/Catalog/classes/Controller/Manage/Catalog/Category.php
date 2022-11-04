@@ -108,7 +108,7 @@ class Controller_Manage_Catalog_Category extends Controller
 		$this->restart( ( $category->parentId ? 'edit/'.$category->parentId : NULL ), TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init start' );
 		$this->logic		= new Logic_Catalog( $this->env );

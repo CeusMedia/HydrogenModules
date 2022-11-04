@@ -270,7 +270,7 @@ class Controller_Manage_Image_Slider extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->modelSlider	= new Model_Image_Slider( $this->env );

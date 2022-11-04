@@ -441,7 +441,7 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->addData( 'articles', $articles );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
 		$this->bridge		= new Logic_ShopBridge( $this->env );

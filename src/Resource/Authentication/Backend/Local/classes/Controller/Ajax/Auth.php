@@ -24,7 +24,7 @@ class Controller_Ajax_Auth extends AjaxController
 		$this->ajaxIsAuthenticated();
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 //		$this->config		= $this->env->getConfig();
 //		$this->request		= $this->env->getRequest();

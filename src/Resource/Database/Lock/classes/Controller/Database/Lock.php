@@ -72,7 +72,7 @@ class Controller_Database_Lock extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model	= new Model_Lock( $this->env );
 	}

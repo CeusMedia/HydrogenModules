@@ -18,7 +18,7 @@ class View_Shop_Payment_Stripe extends View
 		$this->env->getPage()->css->common->addUrl( 'module.shop.payment.stripe.css' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->js->addUrl( 'https://js.stripe.com/v3/' );
 	}

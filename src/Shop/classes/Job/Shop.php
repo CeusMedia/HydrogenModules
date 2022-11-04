@@ -335,7 +335,7 @@ class Job_Shop extends Job_Abstract
 
 	/*  --  PROTECTED  --  */
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->versionShop	= $this->env->getModules()->get( 'Shop' )->versionInstalled;
 		$this->configFileOldCustomers	= 'config/job.shop.oldCustomers.json';

@@ -57,7 +57,7 @@ class Controller_Mangopay_Event extends Controller
 		exit;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();

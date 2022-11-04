@@ -109,7 +109,7 @@ class Controller_Manage_My_Company extends Controller
 		$this->restart( 'edit/'.$companyId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();

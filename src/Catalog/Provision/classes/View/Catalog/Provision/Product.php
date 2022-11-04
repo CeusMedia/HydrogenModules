@@ -16,7 +16,7 @@ class View_Catalog_Provision_Product extends View
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->addCommonStyle( 'module.catalog.provision.css' );
 	}

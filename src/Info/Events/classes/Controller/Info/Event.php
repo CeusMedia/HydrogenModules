@@ -116,7 +116,7 @@ class Controller_Info_Event extends Controller
 		$this->addData( 'event', $event );
 	}
 
-	protected function __onInit(){
+	protected function __onInit(): void{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();

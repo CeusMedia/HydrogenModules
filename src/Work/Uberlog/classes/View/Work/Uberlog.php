@@ -12,7 +12,7 @@ class View_Work_Uberlog extends View
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->loadLocalScript( 'WorkUberlogView.js' );
 		$this->env->getPage()->runScript( 'WorkUberlogView.init();' );

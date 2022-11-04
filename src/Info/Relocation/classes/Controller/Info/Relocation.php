@@ -50,7 +50,7 @@ class Controller_Info_Relocation extends Controller
 		$this->relocate( $relocation->url, $status );							//  relocate to target
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_Relocation( $this->env );

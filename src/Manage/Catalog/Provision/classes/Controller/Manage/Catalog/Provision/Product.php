@@ -42,7 +42,7 @@ class Controller_Manage_Catalog_Provision_Product extends Controller
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logicProvision		= Logic_Catalog_Provision::getInstance( $this->env );
 		$this->request				= $this->env->getRequest();

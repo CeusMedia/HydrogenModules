@@ -281,7 +281,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->restart( $image->galleryCategoryId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();

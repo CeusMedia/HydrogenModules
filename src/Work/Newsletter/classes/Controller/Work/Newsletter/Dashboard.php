@@ -26,7 +26,7 @@ class Controller_Work_Newsletter_Dashboard extends Controller
 		) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Newsletter_Editor( $this->env );
 		$this->session		= $this->env->getSession();

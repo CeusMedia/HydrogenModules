@@ -174,7 +174,7 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->addData( 'page', $this->session->get( $this->filterPrefix.'page' ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();

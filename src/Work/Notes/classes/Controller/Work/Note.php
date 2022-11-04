@@ -339,7 +339,7 @@ class Controller_Work_Note extends Controller
 		$this->addData( 'note', $note );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();

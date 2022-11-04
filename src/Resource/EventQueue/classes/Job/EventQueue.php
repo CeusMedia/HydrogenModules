@@ -80,7 +80,7 @@ class Job_EventQueue extends Job_Abstract
 		$this->results	= $results;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_eventqueue.', TRUE );
 		$this->logic	= $this->env->getLogic()->get( 'Job' );

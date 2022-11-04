@@ -135,7 +135,7 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 		$this->restart( 'edit/'.$articleId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();

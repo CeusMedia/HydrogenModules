@@ -106,7 +106,7 @@ class Controller_Manage_My_User_Setting extends Controller
 		$this->restart( NULL, TRUE );																//  @todo: make another redirect possible
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->model	= new Model_User_Setting( $this->env );

@@ -6,32 +6,11 @@ class Controller_Manage_Content_Style extends Controller{
 
 	protected $request;
 	protected $messenger;
-	protected $frontend;
-	protected $basePath;
-	protected $pathCss;
-	protected $theme;
-	protected $files		= [];
-
-	protected function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-
-		$this->frontend		= Logic_Frontend::getInstance( $this->env );
-		$this->basePath		= $this->frontend->getPath( 'themes' );
-		$this->theme		= $this->frontend->getConfigValue( 'layout.theme' );
-		$this->pathCss		= $this->basePath.$this->theme.'/css/';
-
-		if( file_exists( $this->pathCss ) ){
-			$index	= new DirectoryIterator( $this->pathCss );
-			foreach( $index as $file ){
-				if( $file->isDir() || $file->isDot() )
-					continue;
-				$this->files[]	= $file->getFilename();
-			}
-		}
-		natcasesort( $this->files );
-		$this->addData( 'files', $this->files );
-	}
+	protected Logic_Frontend $frontend;
+	protected string $basePath;
+	protected string $pathCss;
+	protected string $theme;
+	protected array $files		= [];
 
 	public function index( $file = NULL ){
 		if( strlen( trim( $file ) ) ){
@@ -82,5 +61,27 @@ class Controller_Manage_Content_Style extends Controller{
 		$response->addHeaderPair( 'Content-Type', 'application/json' );
 		$response->setBody( json_encode( $result ) );
 		$response->send();
+	}
+
+	protected function __onInit(): void
+	{
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+
+		$this->frontend		= Logic_Frontend::getInstance( $this->env );
+		$this->basePath		= $this->frontend->getPath( 'themes' );
+		$this->theme		= $this->frontend->getConfigValue( 'layout.theme' );
+		$this->pathCss		= $this->basePath.$this->theme.'/css/';
+
+		if( file_exists( $this->pathCss ) ){
+			$index	= new DirectoryIterator( $this->pathCss );
+			foreach( $index as $file ){
+				if( $file->isDir() || $file->isDot() )
+					continue;
+				$this->files[]	= $file->getFilename();
+			}
+		}
+		natcasesort( $this->files );
+		$this->addData( 'files', $this->files );
 	}
 }

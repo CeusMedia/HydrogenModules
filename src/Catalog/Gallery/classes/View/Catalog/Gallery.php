@@ -34,7 +34,7 @@ class View_Catalog_Gallery extends View
 		$this->addData( 'categoryList', $this->renderCategoryList( $categories, $category, FALSE ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Catalog_Gallery( $this->env );
 	}

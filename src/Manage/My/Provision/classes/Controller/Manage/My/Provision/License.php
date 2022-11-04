@@ -2,36 +2,18 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Manage_My_Provision_License extends Controller{
-
-	protected $filterPrefix		= 'filter_manage_my_license_';
+class Controller_Manage_My_Provision_License extends Controller
+{
+	protected string $filterPrefix		= 'filter_manage_my_license_';
 	protected $request;
 	protected $session;
 	protected $messenger;
-
-	protected function __onInit(){
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-		$this->messenger		= $this->env->getMessenger();
-		$this->logicProvision	= Logic_User_Provision::getInstance( $this->env );
-		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
-		$this->logicMember		= Logic_Member::getInstance( $this->env );
-		$this->logicMail		= Logic_Mail::getInstance( $this->env );
-
-		if( !$this->logicAuth->isAuthenticated() )
-			$this->restart( './?from='.$this->request->get( '__path' ) );
-
-		$this->userId			= $this->logicAuth->getCurrentUserId();
-
-		$this->products	= $this->logicProvision->getProducts( 1 );
-		if( count( $this->products ) == 1 ){
-			$productId	= $this->products[0]->productId;
-			$this->session->set( $this->filterPrefix.'productId', $productId );
-		}
-		$this->addData( 'currentUserId', $this->userId );
-		$this->addData( 'products', $this->products );
-		$this->addData( 'filterProductId', $this->session->get( $this->filterPrefix.'productId' ) );
-	}
+	protected Logic_User_Provision $logicProvision;
+	protected Logic_Authentication $logicAuth;
+	protected Logic_Member $logicMember;
+	protected Logic_Mail $logicMail;
+	protected ?string $userId		= NULL;
+	protected array $products		= [];
 
 	public function add( $productId = NULL, $productLicenseId = NULL, $stage = 0 ){
 		$words	= (object) $this->getWords( 'msg' );
@@ -263,5 +245,30 @@ class Controller_Manage_My_Provision_License extends Controller{
 		$this->addData( 'userLicense', $userLicense );
 //		$this->addData( 'unassignedKeys')
 
+	}
+
+	protected function __onInit(): void
+	{
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+		$this->messenger		= $this->env->getMessenger();
+		$this->logicProvision	= Logic_User_Provision::getInstance( $this->env );
+		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
+		$this->logicMember		= Logic_Member::getInstance( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
+
+		if( !$this->logicAuth->isAuthenticated() )
+			$this->restart( './?from='.$this->request->get( '__path' ) );
+
+		$this->userId			= $this->logicAuth->getCurrentUserId();
+
+		$this->products	= $this->logicProvision->getProducts( 1 );
+		if( count( $this->products ) == 1 ){
+			$productId	= $this->products[0]->productId;
+			$this->session->set( $this->filterPrefix.'productId', $productId );
+		}
+		$this->addData( 'currentUserId', $this->userId );
+		$this->addData( 'products', $this->products );
+		$this->addData( 'filterProductId', $this->session->get( $this->filterPrefix.'productId' ) );
 	}
 }

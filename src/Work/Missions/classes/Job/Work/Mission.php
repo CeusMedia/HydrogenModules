@@ -177,7 +177,7 @@ class Job_Work_Mission extends Job_Abstract
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 		$this->language		= $this->env->getLanguage()->getLanguage();							//  @deprecated if each mail is sent in user language

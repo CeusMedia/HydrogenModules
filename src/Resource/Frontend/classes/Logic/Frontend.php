@@ -206,7 +206,7 @@ class Logic_Frontend extends Logic
 
 	protected function __clone(){}
 
-	protected  function __onInit()
+	protected function __onInit(): void
 	{
 		$moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_frontend.', TRUE );
 		$this->setPath( $moduleConfig->get( 'path' ) );

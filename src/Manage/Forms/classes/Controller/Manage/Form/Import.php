@@ -13,7 +13,7 @@ class Controller_Manage_Form_Import extends Controller
 	protected $connectionMap	= [];
 	protected $formMap			= [];
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();

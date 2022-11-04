@@ -102,7 +102,7 @@ class Controller_Manage_Shop_Special extends Controller
 		$this->restart( 'edit/'.$specialId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();

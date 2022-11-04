@@ -33,7 +33,7 @@ class View_Info extends View
 		return $this->loadContentFile( 'html/info/404.html' );										//  load content from file
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->page->addThemeStyle( 'module.info.css' );
 	}

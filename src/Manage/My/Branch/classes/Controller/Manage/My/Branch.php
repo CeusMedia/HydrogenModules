@@ -258,7 +258,7 @@ class Controller_Manage_My_Branch extends Controller
 		$this->restart( 'edit/'.$branchId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->page->js->addUrl( "https://maps.google.com/maps/api/js?sensor=false" );
 	}

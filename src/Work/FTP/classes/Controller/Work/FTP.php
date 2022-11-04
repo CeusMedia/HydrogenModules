@@ -77,7 +77,7 @@ class Controller_Work_FTP extends Controller
 		$this->addData( 'time', $clock->stop( 3, 3 ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config			= $this->env->getConfig();
 		$this->session	= $this->env->getSession();

@@ -205,7 +205,7 @@ class Controller_Shop_Customer extends Controller
 		);
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();

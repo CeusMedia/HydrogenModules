@@ -461,7 +461,7 @@ class Logic_Job extends Logic
 
 	/*  --  PROTECTED  --  */
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelDefinition	= new Model_Job_Definition( $this->env );
 		$this->modelSchedule	= new Model_Job_Schedule( $this->env );

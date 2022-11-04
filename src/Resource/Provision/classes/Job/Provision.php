@@ -10,7 +10,7 @@ class Job_Provision extends Job_Abstract
 			$this->cache->flush( 'Provision.userLicenseKey' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modules	= $this->env->getModules();
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_provision.', TRUE );

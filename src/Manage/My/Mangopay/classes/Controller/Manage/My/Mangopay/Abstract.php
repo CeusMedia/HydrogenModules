@@ -2,17 +2,20 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 
-abstract class Controller_Manage_My_Mangopay_Abstract extends Controller{
-
+abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
+{
 	protected $request;
-	protected $mangopay;
 	protected $messenger;
 	protected $session;
+	protected Logic_Payment_Mangopay $logic;
+	protected Resource_Mangopay $mangopay;
+	protected string $userId;
 
-	protected $currency		= "EUR";
-	protected $factorFees	= 0.1;
+	protected string $currency		= "EUR";
+	protected float $factorFees	= 0.1;
 
-	protected function __onInit(){
+	protected function __onInit(): void
+	{
 		parent::__onInit();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();

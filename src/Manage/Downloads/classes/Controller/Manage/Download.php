@@ -274,7 +274,7 @@ class Controller_Manage_Download extends Controller
 		$this->addData( 'mimeType', mime_content_type( $path.$file->title ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->messenger	= $this->env->getMessenger();
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );

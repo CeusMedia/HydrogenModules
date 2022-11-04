@@ -25,7 +25,7 @@ class Controller_Ajax_Info_Manual extends AjaxController
 		) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request	= $this->env->getRequest();
 		$this->session	= $this->env->getSession();

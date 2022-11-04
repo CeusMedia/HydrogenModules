@@ -24,7 +24,7 @@ class Job_Cache extends Job_Abstract
 		$this->out( 'All cache objects removed.' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->cache	= $this->env->getCache();
 	}

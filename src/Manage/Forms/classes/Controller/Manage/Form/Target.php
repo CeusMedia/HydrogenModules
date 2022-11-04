@@ -61,7 +61,7 @@ class Controller_Manage_Form_Target extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelTarget		= new Model_Form_Transfer_Target( $this->env );
 		$this->modelTransfer	= new Model_Form_Fill_Transfer( $this->env );

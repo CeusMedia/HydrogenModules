@@ -148,7 +148,7 @@ class Controller_Oauth_Application extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model		= new Model_Oauth_Application( $this->env );
 		$this->request		= $this->env->getRequest();

@@ -5,34 +5,16 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Form_Mail extends Controller{
 
-	protected $modelForm;
-	protected $modelMail;
-	protected $filterPrefix		= 'filter_manage_form_mail_';
-	protected $filters			= array(
+	protected Model_Form $modelForm;
+	protected Model_Form $modelMail;
+	protected string $filterPrefix		= 'filter_manage_form_mail_';
+	protected array $filters			= array(
 		'mailId',
 		'roleType',
 		'identifier',
 		'format',
 		'title',
 	);
-
-	protected function __onInit(){
-		$this->modelForm	= new Model_Form( $this->env );
-		$this->modelMail	= new Model_Form_Mail( $this->env );
-	}
-
-	protected function checkId( $mailId ){
-		if( !$mailId )
-			throw new RuntimeException( 'No mail ID given' );
-		if( !( $mail = $this->modelMail->get( $mailId ) ) )
-			throw new DomainException( 'Invalid mail ID given' );
-		return $mail;
-	}
-
-	protected function checkIsPost(){
-		if( !$this->env->getRequest()->isMethod( 'POST' ) )
-			throw new RuntimeException( 'Access denied: POST requests, only' );
-	}
 
 	public function add(){
 		if( $this->env->getRequest()->has( 'save' ) ){
@@ -134,5 +116,26 @@ class Controller_Manage_Form_Mail extends Controller{
 	public function view( $mailId ){
 		$mail	= $this->checkId( $mailId );
 		$this->addData( 'mail', $mail );
+	}
+
+	protected function __onInit(): void
+	{
+		$this->modelForm	= new Model_Form( $this->env );
+		$this->modelMail	= new Model_Form( $this->env );
+	}
+
+	protected function checkId( string $mailId ): object
+	{
+		if( !$mailId )
+			throw new RuntimeException( 'No mail ID given' );
+		if( !( $mail = $this->modelMail->get( $mailId ) ) )
+			throw new DomainException( 'Invalid mail ID given' );
+		return $mail;
+	}
+
+	protected function checkIsPost()
+	{
+		if( !$this->env->getRequest()->getMethod()->isPost() )
+			throw new RuntimeException( 'Access denied: POST requests, only' );
 	}
 }

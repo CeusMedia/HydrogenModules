@@ -1,21 +1,19 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 
-class Controller_Provision_Rest extends Controller{
+class Controller_Provision_Rest extends Controller
+{
+	protected Logic_User_Provision $logic;
 
-	protected $logic;
-
-	public function __construct( Environment $env, $setupView = TRUE ){
+	public function __construct( Environment $env, $setupView = TRUE )
+	{
 		parent::__construct( $env, FALSE );
 	}
 
-	protected function __onInit(){
-		$this->logic	= Logic_User_Provision::getInstance( $this->env );
-	}
-
-	public function getLicense( $productLicenseId ){
+	public function getLicense( $productLicenseId )
+	{
 		$this->handleJsonResponse( 'data', $this->logic->getProductLicense( $productLicenseId ) );
 	}
 
@@ -28,7 +26,8 @@ class Controller_Provision_Rest extends Controller{
 		$this->handleJsonErrorResponse( $products );							//  return with error
 	}
 
-	public function handleJsonErrorResponse( $message, $code = 0 ){
+	public function handleJsonErrorResponse( $message, $code = 0 ): void
+	{
 		$this->handleJsonResponse( 'error', array(
 			'message'	=> $message,
 			'code'		=> $code,
@@ -89,10 +88,11 @@ class Controller_Provision_Rest extends Controller{
 
 	/**
 	 *	Allows to order free single user licenses for new users.
-	 *	ATTENTION: Commercial or group licenses are not orderable using this interface.
-	 *	ATTENTION: Free single user licenses are orderable only once for one user.
+	 *	ATTENTION: Commercial or group licenses are not order-able using this interface.
+	 *	ATTENTION: Free single user licenses are order-able only once for one user.
 	 */
-	public function orderLicense(){
+	public function orderLicense()
+	{
 		$request			= $this->env->getRequest();
 		$userId				= $request->get( 'userId' );
 //		$password			= $request->get( 'password' );
@@ -145,11 +145,17 @@ class Controller_Provision_Rest extends Controller{
 		}
 	}
 
-	public function test(){
+	public function test()
+	{
 		$data	= array(
 			'products' => $this->getProducts(),
 			'licenses' => $this->getLicenses( 1 ),
 		);
 		$this->handleJsonResponse( 'data', $data );
+	}
+
+	protected function __onInit(): void
+	{
+		$this->logic	= Logic_User_Provision::getInstance( $this->env );
 	}
 }

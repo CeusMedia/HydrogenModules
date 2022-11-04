@@ -17,7 +17,7 @@ class View_Admin_Mail_Attachment_Folder extends View
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->addCommonStyle( 'module.admin.mail.css' );
 	}

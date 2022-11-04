@@ -44,7 +44,7 @@ class Controller_Catalog_Provision_Product extends Controller
 		$this->addData( 'productId', $productId );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelProduct	= new Model_Provision_Product( $this->env );
 		$this->modelLicense	= new Model_Provision_Product_License( $this->env );

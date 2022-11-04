@@ -29,7 +29,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission
 		'direction'		=> 'ASC',
 	);
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->session->set( 'filter.work.mission.mode', 'archive' );

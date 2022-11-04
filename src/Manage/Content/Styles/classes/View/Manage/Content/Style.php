@@ -3,14 +3,9 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_Content_Style extends View{
-
-	protected function __onInit(){
-		$this->page	= $this->env->getPage();
-		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );
-		$this->page->js->addUrl( $pathJs.'module.manage.content.style.js', 'top' );
-		$this->page->css->theme->addUrl( 'module.manage.content.style.css' );
-	}
+class View_Manage_Content_Style extends View
+{
+	protected $page;
 
 	public function index(){
 		$file	= $this->getData( 'file' );
@@ -19,7 +14,7 @@ class View_Manage_Content_Style extends View{
 		}
 	}
 
-	public function listFiles( $files, $currentFile ){
+	public function listFiles( $files, $currentFile ): string{
 		$words		= (object) $this->getWords( 'index.filter' );
 		$list	= [];
 		if( !$files )
@@ -40,5 +35,12 @@ class View_Manage_Content_Style extends View{
 			'class'	=> 'nav nav-pills nav-stacked'
 		) );
 	}
+
+	protected function __onInit(): void
+	{
+		$this->page	= $this->env->getPage();
+		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );
+		$this->page->js->addUrl( $pathJs.'module.manage.content.style.js', 'top' );
+		$this->page->css->theme->addUrl( 'module.manage.content.style.css' );
+	}
 }
-?>

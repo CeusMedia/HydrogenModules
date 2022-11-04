@@ -25,7 +25,7 @@ class View_Auth_Rest extends View
 		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, [] );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->addThemeStyle( 'module.resource.auth.rest.css' );
 	}

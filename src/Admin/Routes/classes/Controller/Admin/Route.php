@@ -132,7 +132,7 @@ class Controller_Admin_Route extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request	= $this->env->getRequest();
 		$this->frontend	= Logic_Frontend::getInstance( $this->env );

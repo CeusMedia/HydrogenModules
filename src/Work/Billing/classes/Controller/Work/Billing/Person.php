@@ -44,7 +44,7 @@ class Controller_Work_Billing_Person extends Controller
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic	= new Logic_Billing( $this->env );
 		$this->request	= $this->env->getRequest();

@@ -293,7 +293,7 @@ class Logic_Page extends Logic
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$moduleNav	= $this->env->getModules()->get( 'UI_Navigation', TRUE, FALSE );
 		if( $moduleNav && $moduleNav->config['menu.source']->value === 'Database' ){

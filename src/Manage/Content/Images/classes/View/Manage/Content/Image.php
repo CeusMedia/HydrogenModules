@@ -54,7 +54,7 @@ class View_Manage_Content_Image extends View
 			return HtmlTag::create( 'ul', $list, ['class' => 'thumbs'] );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );

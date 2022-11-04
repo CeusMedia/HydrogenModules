@@ -170,7 +170,7 @@ class Job_Newsletter extends Job_Abstract
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();												//  get app config
 		$this->logic		= new Logic_Newsletter( $this->env );									//  get module logic

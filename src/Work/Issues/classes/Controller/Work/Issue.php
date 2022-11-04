@@ -345,7 +345,7 @@ class Controller_Work_Issue extends Controller
 
 	// --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Issue( $this->env );
 		$this->userId		= $this->env->getSession()->get( 'auth_user_id' );

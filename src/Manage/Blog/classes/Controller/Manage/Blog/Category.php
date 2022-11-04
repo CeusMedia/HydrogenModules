@@ -55,7 +55,7 @@ class Controller_Manage_Blog_Category extends Controller
 		$this->addData( 'category', $category );
 	}*/
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelCategory	= new Model_Blog_Category( $this->env );
 		$this->modelComment		= new Model_Blog_Comment( $this->env );

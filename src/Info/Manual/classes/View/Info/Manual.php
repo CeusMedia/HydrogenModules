@@ -48,7 +48,7 @@ InfoManual.UI.Page.init("#content-container", "#content-index");';
 		return str_replace( "%2F", "/", rawurldecode( $name ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$page	= $this->env->getPage();
 		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );

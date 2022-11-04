@@ -12,7 +12,7 @@ class View_Admin_Module extends View
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->page->addThemeStyle( 'module.admin.module.css' );
 	}

@@ -117,7 +117,7 @@ class Controller_Manage_Form_Block extends Controller
 	}
 
 	/*  --  PROTECTED  --  */
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelForm	= new Model_Form( $this->env );
 		$this->modelBlock	= new Model_Form_Block( $this->env );

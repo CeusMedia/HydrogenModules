@@ -3,7 +3,7 @@ abstract class Logic_Payment_Stripe_Event_Payin extends Logic_Payment_Stripe_Eve
 {
 	protected $modelPayin;
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->modelPayin	= new Model_Stripe_Payin( $this->env );

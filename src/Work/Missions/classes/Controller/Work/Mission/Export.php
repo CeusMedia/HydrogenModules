@@ -76,7 +76,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->pathLogs		= $this->env->getConfig()->get( 'path.logs' );

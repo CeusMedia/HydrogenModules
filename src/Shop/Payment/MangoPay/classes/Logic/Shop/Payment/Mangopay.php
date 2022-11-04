@@ -90,7 +90,7 @@ class Logic_Shop_Payment_Mangopay extends Logic
 		return NULL;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logicMangopay	= new Logic_Payment_Mangopay( $this->env );
 		$this->logicShop		= new Logic_Shop( $this->env );

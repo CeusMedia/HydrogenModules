@@ -98,7 +98,7 @@ class View_Manage_My_Provision_License extends View
 		return HtmlTag::create( 'div', $tabs->renderTabs( $current ), ['id' => 'tabs-manage-my-provision'] );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->addThemeStyle( 'module.manage.my.provision.css' );
 	}

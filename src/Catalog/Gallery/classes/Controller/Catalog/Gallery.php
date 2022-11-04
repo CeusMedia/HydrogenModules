@@ -124,7 +124,7 @@ class Controller_Catalog_Gallery extends Controller
 		$this->restart( $restartUrl );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->messenger		= $this->env->getMessenger();
 

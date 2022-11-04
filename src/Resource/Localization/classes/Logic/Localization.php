@@ -43,7 +43,7 @@ class Logic_Localization extends Logic
 		return $content;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model		= new  Model_Localization( $this->env );
 		$this->languages	= $this->env->getLanguage()->getLanguages();

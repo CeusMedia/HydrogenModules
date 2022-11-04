@@ -52,7 +52,7 @@ class View_Manage_Image_Slider extends View
 		return $label;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->css->theme->addUrl( 'module.manage.image.slider.css' );
 	}

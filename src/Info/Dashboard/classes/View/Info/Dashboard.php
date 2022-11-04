@@ -12,7 +12,7 @@ class View_Info_Dashboard extends View
 		$page->addThemeStyle( 'module.info.dashboard.css' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 	}
 }

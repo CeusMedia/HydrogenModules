@@ -633,7 +633,7 @@ class Logic_User_Provision extends Logic
 //		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$this->logicMail		= Logic_Mail::getInstance( $this->env );

@@ -49,7 +49,7 @@ class View_Info_File extends View
 		return $position;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->addThemeStyle( 'module.info.files.css' );
 	}

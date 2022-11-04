@@ -2,17 +2,14 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Work_Bill extends Controller{
+class Controller_Work_Bill extends Controller
+{
+	protected Model_Bill $model;
 
-	protected $model;
-	protected $userId;
+	protected ?string $userId		= NULL;
 
-	protected function __onInit(){
-		$this->model	= new Model_Bill( $this->env );
-		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
-	}
-
-	public function add(){
+	public function add()
+	{
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$data	= $request->getAll();
@@ -32,7 +29,8 @@ class Controller_Work_Bill extends Controller{
 		}
 	}
 
-	public function edit( $billId ){
+	public function edit( $billId )
+	{
 		$request	= $this->env->getRequest();
 		$bill	= $this->model->get( $billId );
 		if( !$bill ){
@@ -57,7 +55,8 @@ class Controller_Work_Bill extends Controller{
 		$this->addData( 'bill', $bill );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL )
+	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 
@@ -86,7 +85,8 @@ class Controller_Work_Bill extends Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL ){
+	public function index( $page = NULL )
+	{
 		$session	= $this->env->getSession();
 		$filters	= $session->getAll( 'filter_work_bill_', TRUE );
 
@@ -147,16 +147,25 @@ class Controller_Work_Bill extends Controller{
 		$this->addData( 'filters', $session->getAll( 'filter_work_bill_', TRUE ) );
 	}
 
-	public function graph(){
+	public function graph()
+	{
 		$this->addData( 'userId', $this->userId );
 	}
 
-	public function setStatus( $billId, $status ){
+	public function setStatus( $billId, $status )
+	{
 		$from	= $this->env->getRequest()->get( 'from' );
 		$this->model->edit( $billId, ['status' => $status] );
 		$this->restart( $from ? $from : './work/bill' );
 	}
 
-	public function remove(){
+	public function remove()
+	{
+	}
+
+	protected function __onInit(): void
+	{
+		$this->model	= new Model_Bill( $this->env );
+		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
 	}
 }

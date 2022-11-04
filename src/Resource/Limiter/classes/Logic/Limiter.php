@@ -102,7 +102,7 @@ class Logic_Limiter
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 //		$this->env->getCaptain()->callHook( 'Limiter', 'registerLimits', $this );
 	}

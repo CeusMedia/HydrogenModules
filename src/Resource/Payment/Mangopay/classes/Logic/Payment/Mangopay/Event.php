@@ -17,7 +17,7 @@ abstract class Logic_Payment_Mangopay_Event extends Logic
 		return $this;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->logicMangopay	= Logic_Payment_Mangopay::getInstance( $this->env );

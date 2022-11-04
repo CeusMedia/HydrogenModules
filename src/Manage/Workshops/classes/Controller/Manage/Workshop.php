@@ -2,19 +2,12 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Manage_Workshop extends Controller{
-
-	protected function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->model		= new Model_Workshop( $this->env );
-
-		$moduleConfigTinyMce	= $this->env->getConfig()->getAll( 'module.js_tinymce.auto.', TRUE );
-		$tinyMceAutoClass		= preg_replace( '/^(textarea)?\./i', '', $moduleConfigTinyMce->get( 'selector' ) );
-		$this->addData( 'tinyMceAutoClass', $tinyMceAutoClass );
-		$this->addData( 'tinyMceAutoMode', $moduleConfigTinyMce->get( 'mode' ) );
-	}
+class Controller_Manage_Workshop extends Controller
+{
+	protected $request;
+	protected $session;
+	protected $messenger;
+	protected Model_Workshop $model;
 
 	public function add(){
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
@@ -69,5 +62,18 @@ class Controller_Manage_Workshop extends Controller{
 		$this->model->remove( $workshopId );
 		$this->messenger->noteSuccess( 'Removed.' );
 		$this->restart( NULL, TRUE );
+	}
+
+	protected function __onInit(): void
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->model		= new Model_Workshop( $this->env );
+
+		$moduleConfigTinyMce	= $this->env->getConfig()->getAll( 'module.js_tinymce.auto.', TRUE );
+		$tinyMceAutoClass		= preg_replace( '/^(textarea)?\./i', '', $moduleConfigTinyMce->get( 'selector' ) );
+		$this->addData( 'tinyMceAutoClass', $tinyMceAutoClass );
+		$this->addData( 'tinyMceAutoMode', $moduleConfigTinyMce->get( 'mode' ) );
 	}
 }

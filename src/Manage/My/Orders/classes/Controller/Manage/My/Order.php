@@ -2,23 +2,11 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Manage_My_Order extends Controller{
-
-	protected $backends	= [];
+class Controller_Manage_My_Order extends Controller
+{
+	protected array $backends	= [];
 	protected $logicShop;
 	protected $logicAuth;
-
-	protected function __onInit(){
-		$this->logicShop	= $this->env->getLogic()->shop;
-		$this->logicAuth	= $this->env->getLogic()->authentication;
-
-		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
-		$backends	= [];
-		foreach( $this->backends as $backend )
-			$backends[$backend->key]	= $backend;
-		$this->addData( 'paymentBackends', $backends );
-	}
 
 	public function index( $page = 0 ){
 		$limit		= 10;
@@ -62,5 +50,18 @@ class Controller_Manage_My_Order extends Controller{
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'order', $order );
+	}
+
+	protected function __onInit(): void
+	{
+		$this->logicShop	= $this->env->getLogic()->shop;
+		$this->logicAuth	= $this->env->getLogic()->authentication;
+
+		$captain	= $this->env->getCaptain();
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
+		$backends	= [];
+		foreach( $this->backends as $backend )
+			$backends[$backend->key]	= $backend;
+		$this->addData( 'paymentBackends', $backends );
 	}
 }

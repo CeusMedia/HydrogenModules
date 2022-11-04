@@ -17,7 +17,7 @@ abstract class View_Helper_Mangopay_Abstract
 
 	abstract public function render();
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 	}
 }

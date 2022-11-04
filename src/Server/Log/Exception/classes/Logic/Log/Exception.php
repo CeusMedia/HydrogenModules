@@ -213,7 +213,7 @@ class Logic_Log_Exception extends Logic
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model		= new Model_Log_Exception( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.server_log_exception.', TRUE );

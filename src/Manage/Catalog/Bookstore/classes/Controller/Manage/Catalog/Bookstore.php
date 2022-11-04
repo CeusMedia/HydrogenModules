@@ -14,7 +14,7 @@ class Controller_Manage_Catalog_Bookstore extends Controller
 		$this->restart( 'article', TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
 		$this->messenger	= $this->env->getMessenger();

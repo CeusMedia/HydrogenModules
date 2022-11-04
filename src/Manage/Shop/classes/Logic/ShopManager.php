@@ -200,7 +200,7 @@ class Logic_ShopManager extends Logic
 		return $this;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelUser			= new Model_User( $this->env );
 		$this->modelAddress			= new Model_Address( $this->env );

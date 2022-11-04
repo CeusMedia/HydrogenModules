@@ -281,7 +281,7 @@ class Controller_Admin_Mail_Template extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();

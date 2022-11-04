@@ -378,7 +378,7 @@ class Logic_Form_Fill extends Logic
 		return count( $receivers );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logicMail			= $this->env->getLogic()->get( 'Mail' );
 		$this->modelForm			= $this->getModel( 'Form' );

@@ -17,7 +17,7 @@ class View_Manage_Shop_Shipping extends View
 		$this->env->getPage()->js->addModuleFile( 'module.manage.shop.js' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 	}
 }

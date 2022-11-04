@@ -1,33 +1,20 @@
 <?php
 
+use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Work_Graph extends Controller{
+class Controller_Work_Graph extends Controller
+{
+	protected $request;
+	protected $session;
+	protected $messenger;
 
-	protected function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
+	protected Model_Work_Graph $modelGraph;
+	protected Model_Work_Graph_Node $modelNode;
+	protected Model_Work_Graph_Edge $modelEdge;
 
-		$this->modelGraph	= new Model_Work_Graph( $this->env );
-		$this->modelNode	= new Model_Work_Graph_Node( $this->env );
-		$this->modelEdge	= new Model_Work_Graph_Edge( $this->env );
-
-		$graphs	= $this->modelGraph->getAll();
-		if( !$graphs ){
-			$this->modelGraph->add( array(
-				'type'			=> 'digraph',
-				'rankdir'		=> 'LR',
-				'title'			=> 'test',
-				'createdAt'		=> time(),
-				'modifiedAt'	=> time(),
-			) );
-			$graphs		= $this->modelGraph->getAll();
-		}
-		$this->addData( 'graphs', $graphs );
-	}
-
-	public function addEdge( $graphId, $nodeId = NULL ){
+	public function addEdge( $graphId, $nodeId = NULL )
+	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
 			$data[$key]	= $value !== "" ? $value : NULL;
@@ -37,7 +24,8 @@ class Controller_Work_Graph extends Controller{
 		$this->restart( $nodeId ? 'node/'.$nodeId : $graphId, TRUE );
 	}
 
-	public function addGraph(){
+	public function addGraph()
+	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
 			$data[$key]	= $value !== "" ? $value : NULL;
@@ -47,7 +35,8 @@ class Controller_Work_Graph extends Controller{
 		$this->restart( $graphId, TRUE );
 	}
 
-	public function addNode( $graphId ){
+	public function addNode( $graphId )
+	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
 			$data[$key]	= $value !== "" ? $value : NULL;
@@ -57,7 +46,8 @@ class Controller_Work_Graph extends Controller{
 		$this->restart( 'node/'.$nodeId /*$graphId*/, TRUE );
 	}
 
-	public function editEdge( $edgeId, $nodeId = NULL ){
+	public function editEdge( $edgeId, $nodeId = NULL )
+	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
 			$data[$key]	= $value !== "" ? $value : NULL;
@@ -68,7 +58,8 @@ class Controller_Work_Graph extends Controller{
 		$this->restart( $nodeId ? 'node/'.$nodeId : 'edge/'.$edgeId, TRUE );
 	}
 
-	public function editGraph( $graphId ){
+	public function editGraph( $graphId )
+	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
 			$data[$key]	= $value !== "" ? $value : NULL;
@@ -78,7 +69,8 @@ class Controller_Work_Graph extends Controller{
 		$this->restart( $graphId, TRUE );
 	}
 
-	public function editNode( $nodeId ){
+	public function editNode( $nodeId )
+	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
 			$data[$key]	= $value !== "" ? $value : NULL;
@@ -89,7 +81,8 @@ class Controller_Work_Graph extends Controller{
 		$this->restart( 'node/'.$nodeId, TRUE );
 	}
 
-	public function index( $graphId = NULL){
+	public function index( $graphId = NULL)
+	{
 		if( $graphId )
 			$this->selectGraph( $graphId );
 		$graphId	= $this->session->get( 'work_graph_id' );
@@ -100,7 +93,8 @@ class Controller_Work_Graph extends Controller{
 		$this->addData( 'nodes', $this->modelNode->getAllByIndex( 'graphId', $graphId ) );
 	}
 
-	public function edge( $edgeId, $nodeId = NULL ){
+	public function edge( $edgeId, $nodeId = NULL )
+	{
 		$edge	= $this->modelEdge->get( $edgeId );
 		$graph	= $this->modelGraph->get( $edge->graphId );
 		$this->addData( 'edgeId', $edgeId );
@@ -112,7 +106,8 @@ class Controller_Work_Graph extends Controller{
 //		$this->addData( 'edges', $this->modelEdge->getAllByIndex( 'graphId', $edge->graphId ) );
 	}
 
-	public function node( $nodeId ){
+	public function node( $nodeId )
+	{
 		$node	= $this->modelNode->get( $nodeId );
 		$graph	= $this->modelGraph->get( $node->graphId );
 		$this->addData( 'nodeId', $nodeId );
@@ -124,7 +119,8 @@ class Controller_Work_Graph extends Controller{
 		$this->addData( 'edgesOut', $this->modelEdge->getAllByIndex( 'fromNodeId', $nodeId ) );
 	}
 
-	public function selectGraph( $graphId ){
+	public function selectGraph( $graphId )
+	{
 		$graph	= $this->modelGraph->get( $graphId );
 		if( !$graph ){
 			$this->messenger->noteError( 'Invalid graph ID.' );
@@ -135,7 +131,49 @@ class Controller_Work_Graph extends Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function renderGraph( $graphId ){
+	public function view( $graphId, $force = NULL )
+	{
+		$graph		= $this->modelGraph->get( $graphId );
+		if( !$graph )
+			throw new RuntimeException( 'Invalid graph ID' );
+
+		$force		= $graph->modifiedAt > $graph->renderedAt || $force;
+		if( !strlen( $graph->image ) || $force ){
+			$this->renderGraphImage( $graphId, $force );
+			$graph		= $this->modelGraph->get( $graphId );
+		}
+		header( "Content-Type: image/png" );
+		header( "Content-Length: ".strlen( $graph->image ) );
+		print( $graph->image );
+		exit;
+	}
+
+	protected function __onInit(): void
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+
+		$this->modelGraph	= new Model_Work_Graph( $this->env );
+		$this->modelNode	= new Model_Work_Graph_Node( $this->env );
+		$this->modelEdge	= new Model_Work_Graph_Edge( $this->env );
+
+		$graphs	= $this->modelGraph->getAll();
+		if( !$graphs ){
+			$this->modelGraph->add( [
+				'type'			=> 'digraph',
+				'rankdir'		=> 'LR',
+				'title'			=> 'test',
+				'createdAt'		=> time(),
+				'modifiedAt'	=> time(),
+			] );
+			$graphs		= $this->modelGraph->getAll();
+		}
+		$this->addData( 'graphs', $graphs );
+	}
+
+	protected function renderGraph( string $graphId )
+	{
 		$graph		= $this->modelGraph->get( $graphId );
 		$nodes		= $this->modelNode->getAllByIndex( 'graphId', $graphId );
 		$edges		= $this->modelEdge->getAllByIndex( 'graphId', $graphId );
@@ -189,7 +227,8 @@ class Controller_Work_Graph extends Controller{
 		), FALSE );
 	}
 
-	protected function renderGraphImage( $graphId, $force = NULL ){
+	protected function renderGraphImage( string $graphId, bool $force = NULL )
+	{
 		$graph		= $this->modelGraph->get( $graphId );
 		if( !$graph )
 			throw new RuntimeException( 'Invalid graph ID' );
@@ -201,7 +240,7 @@ class Controller_Work_Graph extends Controller{
 				$graph		= $this->modelGraph->get( $graphId );
 			}
 			$graphFile	= "graph_".$graph->graphId;
-			File_Writer::save( $graphFile.".dot", $graph->dot );
+			FileWriter::save( $graphFile.".dot", $graph->dot );
 			$command	= "dot -Tpng ".$graphFile.".dot > ".$graphFile.".png";
 			exec( $command );
 			$this->modelGraph->edit( $graphId, array(
@@ -213,30 +252,16 @@ class Controller_Work_Graph extends Controller{
 		}
 	}
 
-	public function view( $graphId, $force = NULL ){
-		$graph		= $this->modelGraph->get( $graphId );
-		if( !$graph )
-			throw new RuntimeException( 'Invalid graph ID' );
-
-		$force		= $graph->modifiedAt > $graph->renderedAt || $force;
-		if( !strlen( $graph->image ) || $force ){
-			$this->renderGraphImage( $graphId, $force );
-			$graph		= $this->modelGraph->get( $graphId );
-		}
-		header( "Content-Type: image/png" );
-		header( "Content-Length: ".strlen( $graph->image ) );
-		print( $graph->image );
-		exit;
-	}
-
-/*	protected function checkGraph( $graphId ){
+/*	protected function checkGraph( string $graphId )
+	{
 		$graph		= $this->modelGraph->get( $graphId );
 		if( $graph )
 			return $graph;
 		throw new RuntimeException( 'Graph with ID %d is not existing', $graphId );
 	}
 
-	protected function getGraph( $graphId, $withNodes = NULL, $withEdges = NULL ){
+	protected function getGraph( string $graphId, bool $withNodes = NULL, bool $withEdges = NULL )
+	{
 		$graph		= $this->modelGraph->get( $graphId );
 		if( !$graph )
 			throw new RuntimeException( 'Graph with ID %d is not existing', $graphId );

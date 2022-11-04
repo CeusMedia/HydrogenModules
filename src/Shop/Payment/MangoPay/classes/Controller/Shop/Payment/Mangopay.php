@@ -146,7 +146,7 @@ class Controller_Shop_Payment_Mangopay extends Controller
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig()->getAll( 'module.shop_payment.', TRUE );
 		$this->provider		= new Logic_Payment_Mangopay( $this->env );

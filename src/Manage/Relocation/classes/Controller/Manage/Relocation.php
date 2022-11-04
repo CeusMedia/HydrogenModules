@@ -141,7 +141,7 @@ class Controller_Manage_Relocation extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model		= new Model_Relocation( $this->env );
 		$this->messenger	= $this->env->getMessenger();

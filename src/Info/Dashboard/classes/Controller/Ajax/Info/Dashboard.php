@@ -55,7 +55,7 @@ class Controller_Ajax_Info_Dashboard extends AjaxController
 		$this->respondData( $result );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		/*  --  MODULE RESOURCES  --  */
 		$this->logic		= Logic_Info_Dashboard::getInstance( $this->env );

@@ -523,7 +523,7 @@ ORDER BY
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelNote		= new Model_Note( $this->env );
 		$this->modelNoteLink	= new Model_Note_Link( $this->env );

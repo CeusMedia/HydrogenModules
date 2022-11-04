@@ -70,7 +70,7 @@ class Controller_Manage_My_User_Invite extends Controller
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->messenger	= $this->env->getMessenger();
 		$this->request		= $this->env->getRequest();

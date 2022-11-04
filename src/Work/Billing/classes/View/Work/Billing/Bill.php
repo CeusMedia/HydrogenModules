@@ -26,7 +26,7 @@ class View_Work_Billing_Bill extends View
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 	}
 }

@@ -14,7 +14,7 @@ class Controller_Work_Billing_Bill_Transaction extends Controller
 		$this->addData( 'corporationTransactions', $this->logic->getBillCorporationTransactions( $billId ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Billing( $this->env );
 	}

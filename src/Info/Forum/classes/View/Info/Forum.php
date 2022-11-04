@@ -16,7 +16,7 @@ class View_Info_Forum extends View
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );
 		$this->env->getPage()->addThemeStyle( 'module.info.forum.css' );

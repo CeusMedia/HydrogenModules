@@ -245,7 +245,7 @@ class Job_Mail_Group extends Job_Abstract
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logicGroup		= Logic_Mail_Group::getInstance( $this->env );
 		$this->logicMessage		= Logic_Mail_Group_Message::getInstance( $this->env );

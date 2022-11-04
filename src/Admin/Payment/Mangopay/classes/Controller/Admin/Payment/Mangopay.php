@@ -6,7 +6,7 @@ class Controller_Admin_Payment_Mangopay extends Controller
 {
 	protected $messenger;
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->messenger	= $this->env->getMessenger();
 	}

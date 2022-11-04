@@ -37,7 +37,7 @@ class Job_Work_Mail_Sync extends Job_Abstract
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic	= new Logic_Mail_Sync( $this->env );
 		$this->hostMap	= [];

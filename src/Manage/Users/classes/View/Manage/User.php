@@ -33,7 +33,7 @@ class View_Manage_User extends View
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$countries			= $this->env->getLanguage()->getWords( 'countries' );
 		$countriesAsJson	= json_encode( array_values( $countries ) );

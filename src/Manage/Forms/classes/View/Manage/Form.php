@@ -2,12 +2,8 @@
 
 use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_Form extends View{
-
-	protected function __onInit(){
-		$this->env->getPage()->addThemeStyle( 'module.manage.forms.css' );
-	}
-
+class View_Manage_Form extends View
+{
 	public function add(){}
 
 	public function edit(){}
@@ -23,5 +19,10 @@ class View_Manage_Form extends View{
 			$helper->setMode( $mode );
 		print $helper->setId( $formId )->render();
 		exit;
+	}
+
+	protected function __onInit(): void
+	{
+		$this->env->getPage()->addThemeStyle( 'module.manage.forms.css' );
 	}
 }

@@ -80,7 +80,7 @@ class View_Admin_Config extends View
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->addThemeStyle( 'module.admin.config.css' );
 	}

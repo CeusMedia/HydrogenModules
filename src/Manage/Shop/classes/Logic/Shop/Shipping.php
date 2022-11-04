@@ -65,7 +65,7 @@ class Logic_Shop_Shipping extends Logic
 		return NULL;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelShippingCountry	= new Model_Shop_Shipping_Country( $this->env );
 		$this->modelShippingGrade	= new Model_Shop_Shipping_Grade( $this->env );

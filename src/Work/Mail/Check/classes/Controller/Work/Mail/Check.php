@@ -448,7 +448,7 @@ class Controller_Work_Mail_Check extends Controller
 		) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();

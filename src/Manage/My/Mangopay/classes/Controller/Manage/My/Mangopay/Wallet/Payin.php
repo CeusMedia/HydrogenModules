@@ -1,12 +1,6 @@
 <?php
-class Controller_Manage_My_Mangopay_Wallet_Payin extends Controller_Manage_My_Mangopay_Abstract{
-
-	protected function __onInit(){
-		parent::__onInit();
-		$this->addData( 'wordsCards', $this->getWords( 'cardTypes', 'manage/my/mangopay/card' ) );
-		$this->addData( 'wallets', $this->logic->getUserWallets( $this->userId ) );
-	}
-
+class Controller_Manage_My_Mangopay_Wallet_Payin extends Controller_Manage_My_Mangopay_Abstract
+{
 	public function bank( $walletId = NULL ){
 		$wallet		= $this->checkWalletIsOwn( $walletId );
 		if( $this->request->has( 'transactionId' ) ){
@@ -93,5 +87,11 @@ class Controller_Manage_My_Mangopay_Wallet_Payin extends Controller_Manage_My_Ma
 		$this->addData( 'wallet', $wallet );
 		$this->addData( 'type', $type );
 	}
+
+	protected function __onInit(): void
+	{
+		parent::__onInit();
+		$this->addData( 'wordsCards', $this->getWords( 'cardTypes', 'manage/my/mangopay/card' ) );
+		$this->addData( 'wallets', $this->logic->getUserWallets( $this->userId ) );
+	}
 }
-?>

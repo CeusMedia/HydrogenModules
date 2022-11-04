@@ -22,7 +22,7 @@ class View_Info_Event extends View
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$pathJs     = $this->env->getConfig()->get( 'path.scripts' );
 		$this->env->getPage()->js->addUrl( $pathJs.'module.info.event.js' );

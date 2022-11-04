@@ -88,7 +88,7 @@ class Controller_Manage_Customer_Rating extends Controller
 		$this->addData( 'customer', $customer );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelCustomer	= new Model_Customer( $this->env );

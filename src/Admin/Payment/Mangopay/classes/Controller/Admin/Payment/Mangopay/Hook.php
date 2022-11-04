@@ -73,7 +73,7 @@ class Controller_Admin_Payment_Mangopay_Hook extends Controller
 		$this->addData( 'hook', $hook );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();

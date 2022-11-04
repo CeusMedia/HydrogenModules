@@ -110,7 +110,7 @@ class Logic_UserToken extends Logic
 		return $token;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelUser		= new Model_User( $this->env );
 		$this->modelPassword	= new Model_User_Password( $this->env );

@@ -71,7 +71,7 @@ class Controller_Manage_Catalog_Tag extends Controller
 		$this->addData( 'filterSearch', $this->session->get( 'filter_manage_catalog_tag_search' ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Article::init start' );

@@ -80,7 +80,7 @@ class Logic_Mail_Sync extends Logic
 		return $this->modelRun->getAll( $conditions, $orders, $limits );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelSync	= new Model_Mail_Sync( $this->env );
 		$this->modelHost	= new Model_Mail_Sync_Host( $this->env );

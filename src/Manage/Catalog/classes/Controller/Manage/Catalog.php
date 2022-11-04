@@ -15,7 +15,7 @@ class Controller_Manage_Catalog extends Controller
 		$this->restart( 'article', TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Catalog( $this->env );
 		$this->messenger	= $this->env->getMessenger();

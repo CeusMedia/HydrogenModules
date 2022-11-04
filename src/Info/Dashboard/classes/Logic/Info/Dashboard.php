@@ -195,7 +195,7 @@ class Logic_Info_Dashboard extends Logic
 	 *	@access		protected
 	 *	@return		void
 	 */
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model		= new Model_Dashboard( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );

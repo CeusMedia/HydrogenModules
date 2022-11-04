@@ -88,7 +88,7 @@ class Logic_Shop_Payment_Stripe extends Logic
 		return NULL;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logicStripe		= new Logic_Payment_Stripe( $this->env );
 		$this->logicShop		= new Logic_Shop( $this->env );

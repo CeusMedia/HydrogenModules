@@ -44,7 +44,7 @@ class Controller_Ajax_Auth_Local extends AjaxController
 		$this->respondData( $result );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 //		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();

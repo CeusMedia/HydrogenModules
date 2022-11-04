@@ -13,7 +13,7 @@ class View_Work_Time_Archive extends View
 
 	public function index(){}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelTimer		= new Model_Work_Timer( $this->env );
 		$this->modelProject		= new Model_Project( $this->env );

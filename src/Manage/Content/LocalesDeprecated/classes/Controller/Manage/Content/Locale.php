@@ -136,7 +136,7 @@ class Controller_Manage_Content_Locale extends Controller
 		$this->addData( 'fileId', $fileId );
 	}
 
-	protected function	__onInit()
+	protected function	__onInit(): void
 	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_content_locales.', TRUE );
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );

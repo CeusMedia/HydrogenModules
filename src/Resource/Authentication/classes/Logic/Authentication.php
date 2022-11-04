@@ -149,7 +149,7 @@ class Logic_Authentication extends Logic
 		return $this;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->session		= $this->env->getSession();
 		$this->env->getCaptain()->callHook( 'Auth', 'registerBackends', $this );

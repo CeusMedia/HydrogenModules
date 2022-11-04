@@ -27,7 +27,7 @@ class Job_Auth_Oauth2 extends Job_Abstract
 		xmp( join( PHP_EOL, $list ) );die;
 	}*/
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelProvider		= new Model_Oauth_Provider( $this->env );
 		$this->modelProviderDefault	= new Model_Oauth_ProviderDefault();

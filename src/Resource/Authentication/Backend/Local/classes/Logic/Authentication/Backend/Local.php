@@ -139,7 +139,7 @@ class Logic_Authentication_Backend_Local extends Logic
 		return $this;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->session		= $this->env->getSession();
 		$this->modelUser	= new Model_User( $this->env );

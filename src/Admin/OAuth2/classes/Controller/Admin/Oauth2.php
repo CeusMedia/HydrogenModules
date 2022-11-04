@@ -134,7 +134,7 @@ class Controller_Admin_Oauth2 extends Controller
 		$this->restart( 'edit/'.$providerId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();

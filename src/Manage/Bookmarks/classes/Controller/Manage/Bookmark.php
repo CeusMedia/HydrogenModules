@@ -91,7 +91,7 @@ class Controller_Manage_Bookmark extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model	= new Model_Bookmark( $this->env );
 		$this->addData( 'bookmarks', $this->model->getAll( ['status' => '0'], ['title' => 'ASC'] ) );

@@ -130,7 +130,7 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 		$this->restart( 'admin/database/backup' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();

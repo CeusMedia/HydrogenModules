@@ -377,7 +377,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		$this->restart( 'edit/'.$articleId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Article::init start' );

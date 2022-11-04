@@ -196,7 +196,7 @@ class Controller_Work_Mail_Group extends Controller
 		$this->restart( 'edit/'.$mailGroupId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();

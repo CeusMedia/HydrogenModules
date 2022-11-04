@@ -9,73 +9,12 @@ use CeusMedia\HydrogenFramework\Controller;
  */
 class Controller_Manage_My_User extends Controller{
 
-	protected $modelUser;
 	protected $request;
 	protected $session;
 	protected $messenger;
-	protected $userId;
-
-	protected function __onInit(){
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logicAuth	= Logic_Authentication::getInstance( $this->env );
-		$this->modelUser	= new Model_User( $this->env );
-
-		$msg	= (object) $this->getWords( 'msg' );
-		if( !$this->env->getModules()->has( 'Resource_Authentication' ) ){
-			$this->messenger->noteFailure( $msg->failureNoAuthentication );
-			$this->restart( NULL );
-		}
-		if( !$this->logicAuth->isAuthenticated() ){
-//			$this->messenger->noteFailure( $msg->errorNotAuthenticated );
-			$this->restart( 'auth/login' );
-		}
-		$this->userId = $this->logicAuth->getCurrentUserId();
-		if( !$this->modelUser->get( $this->userId ) ){
-			$this->messenger->noteError( $msg->errorInvalidUser );
-			$this->restart( NULL );
-		}
-	}
-
-	protected function checkConfirmationPassword( $from = NULL ){
-		$msg		= (object) $this->getWords( 'msg' );
-		$password	= trim( $this->request->get( 'password' ) );
-		if( !strlen( $password ) ){
-			$this->messenger->noteError( $msg->errorPasswordMissing );
-			if( $from )
-				$this->restart( $from );
-			$this->restart( NULL, TRUE );
-		}
-		if( !$this->checkPassword( $this->modelUser->get( $this->userId ), $password ) ){
-			$this->messenger->noteError( $msg->errorPasswordMismatch );
-			if( $from )
-				$this->restart( $from );
-			$this->restart( NULL, TRUE );
-		}
-	}
-
-	/**
-	 *	Check given user password against old and newer password storage.
-	 *	If newer password store is supported and old password has been found, migration will apply.
-	 *
-	 *	@access		protected
-	 *	@param   	object   	$user		User data object
-	 *	@param   	string		$password	Password to check on login
-	 *	@todo   	clean up if support for old passwort decays
-	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
-	 */
-	protected function checkPassword( $user, $password ){
-		if( class_exists( 'Logic_UserPassword' ) ){													//  @todo  remove line if old user password support decays
-			$logic			= Logic_UserPassword::getInstance( $this->env );
-			if( $logic->validateUserPassword( $user->userId, $password ) )
-				return TRUE;
-		}
-		$pepper		= $this->env->getConfig()->get( 'module.resource_users.password.pepper' );
-		if( $user->password === md5( $password.$pepper ) )
-			return TRUE;
-		return FALSE;
-	}
+	protected Logic_Authentication $logicAuth;
+	protected Model_User $modelUser;
+	protected string $userId;
 
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
@@ -304,5 +243,68 @@ class Controller_Manage_My_User extends Controller{
 		$this->messenger->noteSuccess( $words->msgSuccess );
 		$this->restart( NULL, TRUE );
 	}
+
+	protected function __onInit(): void
+	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+		$this->logicAuth	= Logic_Authentication::getInstance( $this->env );
+		$this->modelUser	= new Model_User( $this->env );
+
+		$msg	= (object) $this->getWords( 'msg' );
+		if( !$this->env->getModules()->has( 'Resource_Authentication' ) ){
+			$this->messenger->noteFailure( $msg->failureNoAuthentication );
+			$this->restart( NULL );
+		}
+		if( !$this->logicAuth->isAuthenticated() ){
+//			$this->messenger->noteFailure( $msg->errorNotAuthenticated );
+			$this->restart( 'auth/login' );
+		}
+		$this->userId = $this->logicAuth->getCurrentUserId();
+		if( !$this->modelUser->get( $this->userId ) ){
+			$this->messenger->noteError( $msg->errorInvalidUser );
+			$this->restart( NULL );
+		}
+	}
+
+	protected function checkConfirmationPassword( $from = NULL ){
+		$msg		= (object) $this->getWords( 'msg' );
+		$password	= trim( $this->request->get( 'password' ) );
+		if( !strlen( $password ) ){
+			$this->messenger->noteError( $msg->errorPasswordMissing );
+			if( $from )
+				$this->restart( $from );
+			$this->restart( NULL, TRUE );
+		}
+		if( !$this->checkPassword( $this->modelUser->get( $this->userId ), $password ) ){
+			$this->messenger->noteError( $msg->errorPasswordMismatch );
+			if( $from )
+				$this->restart( $from );
+			$this->restart( NULL, TRUE );
+		}
+	}
+
+	/**
+	 *	Check given user password against old and newer password storage.
+	 *	If newer password store is supported and old password has been found, migration will apply.
+	 *
+	 *	@access		protected
+	 *	@param   	object   	$user		User data object
+	 *	@param   	string		$password	Password to check on login
+	 *	@todo   	clean up if support for old passwort decays
+	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
+	 */
+	protected function checkPassword( object $user, string $password ): bool
+	{
+		if( class_exists( 'Logic_UserPassword' ) ){													//  @todo  remove line if old user password support decays
+			$logic			= Logic_UserPassword::getInstance( $this->env );
+			if( $logic->validateUserPassword( $user->userId, $password ) )
+				return TRUE;
+		}
+		$pepper		= $this->env->getConfig()->get( 'module.resource_users.password.pepper' );
+		if( $user->password === md5( $password.$pepper ) )
+			return TRUE;
+		return FALSE;
+	}
 }
-?>

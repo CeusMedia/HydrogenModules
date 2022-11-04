@@ -175,7 +175,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 		$this->restart( 'edit/'.$branchId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->messenger		= $this->env->getMessenger();
 		$this->request			= $this->env->getRequest();

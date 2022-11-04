@@ -5,19 +5,24 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Time extends View
 {
-/*	protected function __onInit(){
-		$this->modelTimer		= new Model_Work_Timer( $this->env );
-		$this->modelProject		= new Model_Project( $this->env );
-	}
-*/
-	public function add(){}
+	protected Model_Work_Timer $modelTimer;
+	protected Model_Project $modelProject;
 
-	public function ajaxRenderDashboardPanel(){
+	public function add()
+	{
 	}
 
-	public function edit(){}
+	public function ajaxRenderDashboardPanel()
+	{
+	}
 
-	public function index(){}
+	public function edit()
+	{
+	}
+
+	public function index()
+	{
+	}
 
 	public static function renderTabs( Environment $env, $current = 0 )
 	{
@@ -26,4 +31,11 @@ class View_Work_Time extends View
 		$env->getModules()->callHook( "WorkTime", "registerTabs", $tabs/*, $data*/ );						//  call tabs to be registered
 		return $tabs->renderTabs( $current );
 	}
+
+/*	protected function __onInit(): void
+	{
+		$this->modelTimer		= new Model_Work_Timer( $this->env );
+		$this->modelProject		= new Model_Project( $this->env );
+	}
+*/
 }

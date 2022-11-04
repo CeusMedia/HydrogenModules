@@ -81,7 +81,7 @@ class Controller_System_Load extends Controller
 		$this->addData( 'load', $this->getLoad( (int) $mode, (boolean) $relative ) );				//  append selected system load to view
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
 		$this->moduleConfig	= $this->config->getAll( 'module.server_system_load.', TRUE );			//  shortcut module configuration

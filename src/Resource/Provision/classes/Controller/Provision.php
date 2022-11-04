@@ -6,10 +6,10 @@ class Controller_Provision extends Controller{
 
 	protected $config;
 	protected $session;
-	protected $moduleConfig;
 	protected $resource;
 
-	protected function __onInit(){
+	protected function __onInit(): void
+	{
 		$this->config		= $this->env->getConfig();
 		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->config->getAll( 'module.resource_provision.', TRUE );

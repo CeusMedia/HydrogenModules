@@ -139,7 +139,7 @@ class Logic_IP_Lock_Transport extends Logic
 
 	/*  --  PROTECTED  --  */
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelFilter	= new Model_IP_Lock_Filter( $this->env );
 		$this->modelReason	= new Model_IP_Lock_Reason( $this->env );

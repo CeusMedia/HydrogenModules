@@ -140,7 +140,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 		return $this->check( $articleId )->title;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Catalog( $this->env );
 		$this->taxPercent	= $this->env->getConfig()->get( 'module.shop.tax.percent' );

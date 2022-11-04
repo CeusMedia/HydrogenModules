@@ -164,7 +164,7 @@ class Logic_EventQueue extends Logic
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model	= new Model_Event( $this->env );
 	}

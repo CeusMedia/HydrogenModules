@@ -153,7 +153,7 @@ class Logic_Database_Backup extends Logic
 
 	//  --  PROTECTED METHODS  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
 

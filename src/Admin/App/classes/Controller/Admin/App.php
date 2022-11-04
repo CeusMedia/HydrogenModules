@@ -130,7 +130,7 @@ class Controller_Admin_App extends Controller
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();

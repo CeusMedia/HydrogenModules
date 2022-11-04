@@ -154,7 +154,7 @@ class Job_Mail_Migration extends Job_Abstract
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model		= new Model_Mail( $this->env );
 		$this->logicMail	= $this->env->getLogic()->get( 'Mail' );

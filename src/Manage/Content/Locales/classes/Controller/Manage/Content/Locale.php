@@ -162,7 +162,7 @@ class Controller_Manage_Content_Locale extends Controller
 		) ), TRUE );
 	}
 
-	protected function	__onInit()
+	protected function	__onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();

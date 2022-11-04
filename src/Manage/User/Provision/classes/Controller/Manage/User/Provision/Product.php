@@ -2,20 +2,15 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Manage_User_Provision_Product extends Controller{
-
-	protected $prefixSession		= 'filter_manage_user_provision_product_';
-	protected $filters				= ['productId', 'productLicenseId', 'status'];
-
-	protected function __onInit(){
-		$this->request				= $this->env->getRequest();
-		$this->session				= $this->env->getSession();
-		$this->messenger			= $this->env->getMessenger();
-		$this->logicProvision		= Logic_User_Provision::getInstance( $this->env );
-//		$this->modelUser			= new Model_User( $this->env );
-		$this->modelLicense			= new Model_Provision_User_License( $this->env );
-		$this->addData( 'products', $this->logicProvision->getProducts() );
-	}
+class Controller_Manage_User_Provision_Product extends Controller
+{
+	protected $request;
+	protected $session;
+	protected $messenger;
+	protected Logic_User_Provision $logicProvision;
+	protected Model_Provision_User_License $modelLicense;
+	protected string $prefixSession		= 'filter_manage_user_provision_product_';
+	protected array $filters			= ['productId', 'productLicenseId', 'status'];
 
 /*	public function add( $productId = NULL ){
 		if( !$productId ){
@@ -101,5 +96,16 @@ class Controller_Manage_User_Provision_Product extends Controller{
 		$this->addData( 'page', $page );
 		$this->addData( 'total', $total );
 		$this->addData( 'limit', $limit );
+	}
+
+	protected function __onInit(): void
+	{
+		$this->request				= $this->env->getRequest();
+		$this->session				= $this->env->getSession();
+		$this->messenger			= $this->env->getMessenger();
+		$this->logicProvision		= Logic_User_Provision::getInstance( $this->env );
+//		$this->modelUser			= new Model_User( $this->env );
+		$this->modelLicense			= new Model_Provision_User_License( $this->env );
+		$this->addData( 'products', $this->logicProvision->getProducts() );
 	}
 }

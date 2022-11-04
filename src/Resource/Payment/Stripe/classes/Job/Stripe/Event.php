@@ -1,16 +1,14 @@
 <?php
 
+use CeusMedia\Common\Alg\Text\CamelCase;
 use CeusMedia\Common\UI\OutputBuffer;
 
-class Job_Stripe_Event extends Job_Abstract{
+class Job_Stripe_Event extends Job_Abstract
+{
+	protected Model_Stripe_Event $modelEvent;
 
-	protected $modelEvent;
-
-	protected function __onInit(){
-		$this->modelEvent	= new Model_Stripe_Event( $this->env );
-	}
-
-	public function handle(){
+	public function handle()
+	{
 		$orders	= ['eventId' => 'ASC'];
 		$events	= $this->modelEvent->getAllByIndex( 'status', Model_Stripe_Event::STATUS_RECEIVED, $orders );
 		foreach( $events as $event ){
@@ -27,7 +25,20 @@ class Job_Stripe_Event extends Job_Abstract{
 		}
 	}
 
-	protected function handleEvent( $eventId ){
+	public function count()
+	{
+		$model	= new Model_Stripe_Event( $this->env );
+		$count	= $model->countByIndex( 'status', Model_Stripe_Event::STATUS_RECEIVED );
+		$this->out( 'Found '.$count.' unhandled events.' );
+	}
+
+	protected function __onInit(): void
+	{
+		$this->modelEvent	= new Model_Stripe_Event( $this->env );
+	}
+
+	protected function handleEvent( string $eventId ): int
+	{
 		$event	= $this->modelEvent->get( $eventId );
 		if( !$event )
 			throw new InvalidArgumentException( 'Invalid event id' );
@@ -43,11 +54,11 @@ class Job_Stripe_Event extends Job_Abstract{
 		}
 		else {
 			$buffer		= new OutputBuffer();
-			$logicKey	= Alg_Text_CamelCase::convert( 'Payment Stripe Event '.$key, TRUE, TRUE );
+			$logicKey	= CamelCase::convert( 'Payment Stripe Event '.$key, TRUE, TRUE );
 //			try{
-				$logicEvent	= $this->env->logic->get( $logicKey );
-				$logicEvent->setEvent( $event )->handle();
-				$status		= Model_Stripe_Event::STATUS_CLOSED;
+			$logicEvent	= $this->env->logic->get( $logicKey );
+			$logicEvent->setEvent( $event )->handle();
+			$status		= Model_Stripe_Event::STATUS_CLOSED;
 /*			}
 			catch( Exception $e ){
 				print( 'Exception: '.$e->getMessage().PHP_EOL );
@@ -58,18 +69,10 @@ class Job_Stripe_Event extends Job_Abstract{
 			}
 */			$output		= $buffer->get( TRUE );
 		}
-		return $this->modelEvent->edit( $eventId, array(
+		return $this->modelEvent->edit( $eventId, [
 			'status'	=> $status,
 			'output'	=> $output,
 			'handledAt'	=> time(),
-		), FALSE );
-
+		], FALSE );
 	}
-
-	public function count(){
-		$model	= new Model_Stripe_Event( $this->env );
-		$count	= $model->countByIndex( 'status', Model_Stripe_Event::STATUS_RECEIVED );
-		$this->out( 'Found '.$count.' unhandled events.' );
-	}
-
 }

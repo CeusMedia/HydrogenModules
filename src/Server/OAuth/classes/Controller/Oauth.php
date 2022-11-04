@@ -142,7 +142,7 @@ class Controller_Oauth extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request	= $this->env->getRequest();
 		$config			= $this->env->getConfig()->getAll( 'module.server_oauth.', TRUE );

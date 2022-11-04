@@ -73,7 +73,7 @@ class Job_Mail_Queue extends Job_Abstract
 		), $this->results ) ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= Logic_Mail::getInstance( $this->env );
 		$this->options		= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );

@@ -5,7 +5,7 @@ class Job_Info_Files extends Job_Abstract
 
 	protected $words;
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();												//  get app config
 		$this->language		= $this->env->getLanguage();											//  get language support

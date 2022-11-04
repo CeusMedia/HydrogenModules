@@ -78,7 +78,7 @@ class Logic_Share extends Logic
 		return $this->moduleShare->remove( $share->shareId );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logicFileBucket	= Logic_FileBucket::getInstance( $this->env );
 		$this->modelShare		= new Model_Share( $this->env );

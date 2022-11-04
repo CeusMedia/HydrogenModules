@@ -11,7 +11,7 @@ use CeusMedia\HydrogenFramework\View;
  */
 class View_Auth_Local extends View
 {
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->addCommonStyle('module.resource.auth.local.css');
 		$this->env->getPage()->js->addModuleFile( 'module.resource.auth.local.js');

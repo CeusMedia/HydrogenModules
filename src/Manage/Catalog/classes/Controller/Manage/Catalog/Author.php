@@ -134,7 +134,7 @@ class Controller_Manage_Catalog_Author extends Controller
 		$this->restart( 'manage/catalog/author/edit/'.$authorId );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Author::init start' );
 		$this->messenger	= $this->env->getMessenger();

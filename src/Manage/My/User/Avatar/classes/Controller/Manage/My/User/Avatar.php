@@ -5,19 +5,11 @@ use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Manage_My_User_Avatar extends Controller{
-
-	protected $userId;
-
-	protected function __onInit(){
-		$this->userId		= $this->env->getSession()->get( 'auth_user_id' );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_my_user_avatar.', TRUE );
-		$this->modelAvatar	= new Model_User_Avatar( $this->env );
-		$this->pathImages	= $this->moduleConfig->get( 'path.images' );
-
-		if( !file_exists( $this->pathImages ) )
-			FolderEditor::createFolder( $this->pathImages );
-	}
+class Controller_Manage_My_User_Avatar extends Controller
+{
+	protected Model_User_Avatar $modelAvatar;
+	protected string $pathImages;
+	protected ?string $userId		= NULL;
 
 	public function index(){
 		$avatar		= $this->modelAvatar->getByIndex( 'userId', $this->userId );
@@ -96,7 +88,6 @@ class Controller_Manage_My_User_Avatar extends Controller{
 				$messenger->noteSuccess( $words->successImageSaved );
 			}
 			catch( Exception $e ){
-				@unlink( $path.$this->userId.'_'.$filename );
 				$this->callHook( 'Env', 'logException', $this, $e );
 				$message	=  'Bei der Bildverarbeitung ist ein <abbr title="%s">Fehler</abbr> aufgetreten.';
 				$messenger->noteFailure( $message, $e->getMessage() );
@@ -104,5 +95,15 @@ class Controller_Manage_My_User_Avatar extends Controller{
 		}
 		$this->restart( NULL, TRUE );
 	}
+
+	protected function __onInit(): void
+	{
+		$this->userId		= $this->env->getSession()->get( 'auth_user_id' );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_my_user_avatar.', TRUE );
+		$this->modelAvatar	= new Model_User_Avatar( $this->env );
+		$this->pathImages	= $this->moduleConfig->get( 'path.images' );
+
+		if( !file_exists( $this->pathImages ) )
+			FolderEditor::createFolder( $this->pathImages );
+	}
 }
-?>

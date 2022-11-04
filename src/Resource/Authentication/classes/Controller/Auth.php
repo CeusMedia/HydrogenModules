@@ -71,7 +71,7 @@ class Controller_Auth extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();

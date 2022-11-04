@@ -58,7 +58,7 @@ class Job_Work_Mail_Check extends Job_Abstract
 		$this->out( 'Done checking '.count( $addresses ).' mail address(es)' );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->options	= $this->env->getConfig()->getAll( 'module.work_mail_check.', TRUE );
 	}

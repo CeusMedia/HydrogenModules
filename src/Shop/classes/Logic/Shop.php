@@ -407,7 +407,7 @@ class Logic_Shop extends Logic
 		$this->logicShipping		= $logic;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->bridge				= new Logic_ShopBridge( $this->env );
 		$this->modelUser			= new Model_User( $this->env );

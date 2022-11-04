@@ -117,7 +117,7 @@ class View_Work_Bill extends View
 		return $table;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$page			= $this->env->getPage();

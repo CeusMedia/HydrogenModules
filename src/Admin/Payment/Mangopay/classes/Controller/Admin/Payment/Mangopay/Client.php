@@ -44,7 +44,7 @@ class Controller_Admin_Payment_Mangopay_Client extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 //		$this->session		= $this->env->getSession();

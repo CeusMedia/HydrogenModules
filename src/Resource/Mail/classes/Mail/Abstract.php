@@ -343,7 +343,7 @@ abstract class Mail_Abstract
 	 *	@access		protected
 	 *	@return		void
 	 */
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 	}
 

@@ -17,7 +17,7 @@ class View_Manage_My_Mangopay extends View
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->addThemeStyle( 'module.manage.my.mangopay.css' );
 	}

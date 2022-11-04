@@ -17,7 +17,7 @@ abstract class Logic_Payment_Stripe_Event extends Logic
 		return $this;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 		$this->logicStripe		= Logic_Payment_Stripe::getInstance( $this->env );

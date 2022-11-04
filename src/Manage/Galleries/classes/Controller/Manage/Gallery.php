@@ -195,7 +195,7 @@ class Controller_Manage_Gallery extends Controller
 		$this->restart( 'edit/'.$image->galleryId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelGallery	= new Model_Gallery( $this->env );
 		$this->modelImage	= new Model_Gallery_Image( $this->env );

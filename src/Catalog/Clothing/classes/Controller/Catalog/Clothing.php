@@ -24,7 +24,7 @@ class Controller_Catalog_Clothing extends Controller
 		}
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 	}
 }

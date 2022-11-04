@@ -153,7 +153,7 @@ class View_Admin_Mail_Queue extends View
 		return $term.$def;
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->addCommonStyle( 'module.admin.mail.css' );
 		$this->env->getPage()->js->addModuleFile( 'module.admin.mail.js' );

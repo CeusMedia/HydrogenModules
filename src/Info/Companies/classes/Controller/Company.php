@@ -32,7 +32,7 @@ class Controller_Company extends Controller
 		$this->addData( 'companyId', $companyId );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelBranch	= new Model_Branch( $this->env );
 		$this->modelCompany	= new Model_Company( $this->env );

@@ -144,7 +144,7 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@return		void
 	 */
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= Logic_Catalog_Provision::getInstance( $this->env );
 		$this->taxRate		= $this->env->getConfig()->get( 'module.catalog_provision.tax.rate' );

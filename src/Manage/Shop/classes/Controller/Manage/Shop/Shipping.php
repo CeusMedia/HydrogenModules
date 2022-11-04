@@ -142,7 +142,7 @@ class Controller_Manage_Shop_Shipping extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->modelGrade	= new Model_Shop_Shipping_Grade( $this->env );

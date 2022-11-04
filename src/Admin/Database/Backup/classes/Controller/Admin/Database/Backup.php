@@ -82,7 +82,7 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->addData( 'currentCopyPrefix', $prefix );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();

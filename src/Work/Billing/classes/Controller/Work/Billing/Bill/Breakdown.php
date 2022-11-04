@@ -104,7 +104,7 @@ class Controller_Work_Billing_Bill_Breakdown extends Controller
 		$this->restart( $billExpense->billId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Billing( $this->env );
 		$this->request		= $this->env->getRequest();

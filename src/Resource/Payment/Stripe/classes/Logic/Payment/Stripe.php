@@ -152,7 +152,7 @@ class Logic_Payment_Stripe extends Logic
 		//  ...
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_stripe.', TRUE );
 		\Stripe\Stripe::setApiKey( $this->moduleConfig->get( 'api.key.secret' ) );

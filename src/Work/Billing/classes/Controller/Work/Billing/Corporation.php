@@ -42,7 +42,7 @@ class Controller_Work_Billing_Corporation extends Controller
 		$this->addData( 'corporations', $corporations );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic	= new Logic_Billing( $this->env );
 		$this->request	= $this->env->getRequest();

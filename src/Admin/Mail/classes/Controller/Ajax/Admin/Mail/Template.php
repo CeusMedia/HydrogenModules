@@ -52,7 +52,7 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 		$this->respondData( TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelTemplate	= new Model_Mail_Template( $this->env );
 	}

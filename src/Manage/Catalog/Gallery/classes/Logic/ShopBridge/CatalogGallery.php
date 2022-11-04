@@ -145,7 +145,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@return		void
 	 */
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic			= new Logic_Catalog_Gallery( $this->env );
 		$this->modelImage		= new Model_Catalog_Gallery_Image( $this->env );

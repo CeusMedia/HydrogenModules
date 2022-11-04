@@ -57,7 +57,7 @@ class Controller_Ajax_Manage_Role extends AjaxController
 		$this->respondData( array( 'current' => (bool) $right ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 //		$this->modelRoleRight	= $this->getModel( 'Role_Right' );

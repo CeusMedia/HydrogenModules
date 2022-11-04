@@ -63,7 +63,7 @@ class Controller_Manage_Import extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->modelConnector	= new Model_Import_Connector( $this->env );

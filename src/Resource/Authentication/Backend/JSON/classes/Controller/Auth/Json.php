@@ -144,7 +144,7 @@ class Controller_Auth_Json extends Controller
 		$this->restart( $redirectTo );															//  restart (to redirect URL if set)
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();

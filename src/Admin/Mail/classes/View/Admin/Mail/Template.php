@@ -41,7 +41,7 @@ class View_Admin_Mail_Template extends View
 	{
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getPage()->addCommonStyle( 'module.admin.mail.css' );
 		$this->env->getPage()->js->addModuleFile( 'module.admin.mail.js' );

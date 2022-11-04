@@ -47,7 +47,7 @@ class Controller_Oauth_Resource extends Controller
 		);
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->env->getModules()->callHook( 'OAuthServer', 'registerResource', $this );
 	}

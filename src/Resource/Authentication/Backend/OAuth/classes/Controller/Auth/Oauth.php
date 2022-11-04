@@ -246,7 +246,7 @@ class Controller_Auth_Oauth extends Controller
 		$this->redirectAfterLogout( $redirectController, $redirectAction );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();

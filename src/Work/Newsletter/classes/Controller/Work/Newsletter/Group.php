@@ -141,7 +141,7 @@ class Controller_Work_Newsletter_Group extends Controller
 		$this->restart( 'edit/'.$groupId, TRUE );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Newsletter_Editor( $this->env );
 		$this->session		= $this->env->getSession();

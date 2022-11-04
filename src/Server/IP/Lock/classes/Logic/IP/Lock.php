@@ -218,7 +218,7 @@ class Logic_IP_Lock extends Logic
 		return $this->setStatus( $ipLockId, Model_IP_Lock::STATUS_UNLOCKED, $strict );				//  unlock lock and return TRUE
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->modelLock	= new Model_IP_Lock( $this->env );
 		$this->modelFilter	= new Model_IP_Lock_Filter( $this->env );
