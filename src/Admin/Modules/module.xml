@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<module>
+	<title>Admin: Modules</title>
+	<description>Module support and administration</description>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Implement installation of modules.</log>
+	<log version="0.3">Start migration to a software center like module.</log>
+<!--	<log version="0.3.x">Split model class into Model_Available and Model_Installed.</log>-->
+<!--	<log version="0.3.x">Read hymn file to get sources for indexing available modules.</log>-->
+<!--	<log version="0.3.x">Refactor functionality.</log>-->
+<!--	<log version="0.3.x">Replace linked icons by FontAwesome.</log>-->
+<!--	<log version="0.3.x">Apply Bootstrap styling.</log>-->
+	<files>
+		<class>Controller/Admin/Module.php</class>
+		<class>Model/Module.php</class>
+		<class>View/Admin/Module.php</class>
+		<locale>de/admin/module.ini</locale>
+		<css>module.admin.modules.css</css>
+		<template>admin/module/index.php</template>
+		<template>admin/module/view.php</template>
+	</files>
+	<config protected="yes" type="string" name="path">./modules/</config>
+	<link path="admin/module" access="acl">Module</link>
+</module>

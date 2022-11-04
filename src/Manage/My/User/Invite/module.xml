@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage My User Invites</title>
+	<description>Management for user invitations.</description>
+	<version>0.2.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add validity duration.</log>
+	<log version="0.2.2">Add hook for user removal.</log>
+	<log version="0.2.3">Add hook for project removal.</log>
+	<category>Management</category>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/My/User/Invite.php</class>
+		<class>Hook/Manage/My/User/Invite.php</class>
+		<class>Model/User/Invite.php</class>
+		<class>View/Manage/My/User/Invite.php</class>
+		<template>manage/my/user/invite/index.php</template>
+		<template>manage/my/user/invite/invite.php</template>
+		<template>manage/my/user/invite/promote.php</template>
+		<locale>de/manage/my/user/invite.ini</locale>
+		<locale>en/manage/my/user/invite.ini</locale>
+	</files>
+	<config protected="yes" type="boolean" name="invite">1</config>
+	<config protected="yes" type="boolean" name="promote">1</config>
+	<config protected="no" type="integer" name="days.valid">10</config>
+
+	<relations>
+		<needs type="module">Resource_Authentication</needs>
+	</relations>
+	<link path="manage/my/user/invite" access="inside" xml:lang="de">Einladungen</link>
+	<link path="manage/my/user/invite" access="inside" xml:lang="en">Invitations</link>
+	<hook type="resource" resource="User" event="remove">Hook_Manage_My_User_Invite::onUserRemove</hook>
+	<hook type="resource" resource="Project" event="remove">Hook_Manage_My_User_Invite::onProjectRemove</hook>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%prefix%>user_invites`;
+CREATE TABLE IF NOT EXISTS `user_invites` (
+  `userInviteId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `inviterId` int(10) unsigned NOT NULL,
+  `invitedId` int(10) unsigned NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `code` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`userInviteId`),
+  UNIQUE KEY `code` (`code`),
+  KEY `inviterId` (`inviterId`),
+  KEY `invitedId` (`invitedId`),
+  KEY `type` (`type`),
+  KEY `status` (`status`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%prefix%>user_invites`;
+]]></sql>
+</module>

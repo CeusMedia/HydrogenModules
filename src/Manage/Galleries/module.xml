@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Galleries</title>
+	<description></description>
+	<category>Management</category>
+	<version>0.6</version>
+	<log version="0.3.5">Use frontend resource.</log>
+	<log version="0.3.6">Apply content panels.</log>
+	<log version="0.4">Language support.</log>
+	<log version="0.4.1">Use module Resource:Upload for image upload.</log>
+	<log version="0.4.2">Finish localization.</log>
+	<log version="0.4.3">Make maximum file size configurable.</log>
+	<log version="0.4.4">Change button coloring.</log>
+	<log version="0.4.5">Fix base image path handling.</log>
+	<log version="0.4.6">Update configuration.</log>
+	<log version="0.4.7">Add relation to UI:JS:fancyBox.</log>
+	<log version="0.4.8">Use module UI_Helper_Input_File.</log>
+	<log version="0.4.9">Replace status icons in gallery list.</log>
+	<log version="0.4.10">Applied gallery order.</log>
+	<log version="0.5">Add hooks for TinyMCE integration.</log>
+	<log version="0.5.1">Update forms and actions.</log>
+	<log version="0.5.2">Move hooks to own hook class.</log>
+	<log version="0.5.3">Condense galleries list.</log>
+	<log version="0.6">Imported module from protected SVN repository.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Manage/Gallery.php</class>
+		<class>Hook/Manage/Gallery.php</class>
+		<class>Model/Gallery.php</class>
+		<class>Model/Gallery/Image.php</class>
+		<class>View/Manage/Gallery.php</class>
+		<locale>de/manage/gallery.ini</locale>
+		<locale>de/html/manage/gallery/top.html</locale>
+		<locale>de/html/manage/gallery/bottom.html</locale>
+		<locale>en/manage/gallery.ini</locale>
+		<locale>en/html/manage/gallery/top.html</locale>
+		<locale>en/html/manage/gallery/bottom.html</locale>
+		<template>manage/gallery/add.php</template>
+		<template>manage/gallery/edit.php</template>
+		<template>manage/gallery/edit.gallery.php</template>
+		<template>manage/gallery/edit.images.php</template>
+		<template>manage/gallery/edit.upload.php</template>
+		<template>manage/gallery/index.php</template>
+		<style load="auto">module.manage.galleries.css</style>
+		<script load="auto">module.manage.galleries.js</script>
+	</files>
+	<config type="string" name="image.path" title="within images folder">galleries/</config>
+	<config type="string" name="image.types" title="list of allowed MIME types">image/png,image/jpeg</config>
+	<config type="integer" name="image.size.file" title="maximum image file size in MB">4</config>
+	<config type="integer" name="image.size.thumb.x" title="maximum width of thumbnails">180</config>
+	<config type="integer" name="image.size.thumb.y" title="maximum height of thumbnails">135</config>
+	<config type="integer" name="image.size.x" title="maximum width of gallery images">800</config>
+	<config type="integer" name="image.size.y" title="maximum height of gallery images">600</config>
+	<config type="string" name="sort.by" values="galleryId,rank,title">galleryId</config>
+	<config type="string" name="sort.direction" values="ASC,DESC">DESC</config>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+		<needs type="module">Resource_Frontend</needs>
+		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">UI_Helper_Input_File</needs>
+		<needs type="module">UI_JS_fancyBox</needs>
+	</relations>
+	<link xml:lang="de" access="acl" path="manage/gallery">Galerien</link>
+	<link xml:lang="en" access="acl" path="manage/gallery">Galleries</link>
+	<hook type="resource" resource="TinyMCE" event="getImageList">Hook_Manage_Gallery::onTinyMCE_getImageList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Hook_Manage_Gallery::onTinyMCE_getLinkList</hook>
+</module>

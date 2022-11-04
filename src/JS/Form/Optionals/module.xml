@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: Form: Optionals</title>
+	<description><![CDATA[Related form input fields.
+
+Example 1:
+- select has name "test" and class "has-optionals"
+- option keys are "first" and "second"
+- div having class "optional test test-first" will show only on first option
+- div having class "optional test test-second" will show only on second option
+- div having class "optional test test-none" will never show
+
+Example 2:
+- checkbox has name "test" and class "has-optionals"
+- value of the checkbox is not important of no checkbox group
+- div having class "optional test test-true" will show if checkbox is checked
+- div having class "optional test test-false" will show if checkbox is unchecked
+- div having class "optional test test-none" will never show
+
+Example 3:
+- 3 checkboxes have name "tests[]" and class "has-optionals"
+- checkbox values are "1", "2" and "3"
+- div having class "optional tests-1 test-true" will show if first checkbox is checked
+- div having class "optional tests-1 test-false" will show if first checkbox is unchecked
+
+]]></description>
+	<version>0.4.6</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module JS:Optionals.</log>
+	<log version="0.3">Improved and moved to module UI:JS:cmFormOptionals.</log>
+	<log version="0.4">Moved from UI:JS:cmFormOptions to JS:Form:Optionals.</log>
+	<log version="0.4.1">Extend selector to apply change event on all input types.</log>
+	<log version="0.4.2">Handle hidden required inputs.</log>
+	<log version="0.4.3">Handle hidden required inputs earlier.</log>
+	<log version="0.4.4">Extract hook to own hook class.</log>
+	<log version="0.4.5">Support checkbox groups.</log>
+	<log version="0.4.6">Refactoring, examples and test page.</log>
+	<category>JavaScript</category>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Hook/JS/Form/Optionals.php</class>
+		<script load="auto">FormOptionals.js</script>
+	</files>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_Form_Optionals::onPageApplyModules</hook>
+</module>

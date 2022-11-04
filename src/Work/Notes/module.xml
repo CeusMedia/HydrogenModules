@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Notes</title>
+	<description><![CDATA[Note storage with editor supporting several formats.]]></description>
+	<category>Work</category>
+	<version>0.5.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Support projects.</log>
+	<log version="0.3.1">Add note links.</log>
+	<log version="0.3.2">Add note tags.</log>
+	<log version="0.3.3">Support Markdown syntax.</log>
+	<log version="0.3.4">Use JS_Markdown for quick rendering.</log>
+	<log version="0.3.5">Improve filters.</log>
+	<log version="0.3.6">Updated SQL.</log>
+	<log version="0.3.7">Refactore logic class by context.</log>
+	<log version="0.4">Refactoring.</log>
+	<log version="0.4.1">Disable note attribute "public".</log>
+	<log version="0.4.2">Make notes without project relation the new "public" notes.</log>
+	<log version="0.4.3">Show tags only related to user project notes.</log>
+	<log version="0.4.4">Disabled tags for more simple usage.</log>
+	<log version="0.4.5">Support hook Project::onListRelations.</log>
+	<log version="0.4.6">Support hook Project::onRemove.</log>
+	<log version="0.4.7">Replace CDN resource.</log>
+	<log version="0.4.8">Extract hooks own hook class.</log>
+	<log version="0.4.9">Add hooks to list and remove user related entities.</log>
+	<log version="0.5">Add status to note tag relations to allow ignored tags.</log>
+	<log version="0.5.1">Update code style.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Note.php</class>
+		<class>Hook/Work/Note.php</class>
+		<class>Model/Note.php</class>
+		<class>Model/Note/Link.php</class>
+		<class>Model/Note/Tag.php</class>
+		<class>Model/Link.php</class>
+		<class>Model/Tag.php</class>
+		<class>Logic/Note.php</class>
+		<class>View/Work/Note.php</class>
+		<template>work/note/add.php</template>
+		<template>work/note/edit.php</template>
+		<template>work/note/index.php</template>
+		<template>work/note/index.filter.php</template>
+		<template>work/note/view.php</template>
+		<locale>de/work/note.ini</locale>
+		<locale>de/html/work/note/add.info.html</locale>
+		<style load="auto">site.work.note.css</style>
+		<style load="auto" source="lib">xmp.formats.css</style>
+		<script load="auto" source="lib">String.pregQuote.js</script>
+		<script load="auto">FormNoteFilter.js</script>
+	</files>
+	<relations>
+		<needs type="module">Resource_Authentication</needs>
+		<supports type="module">UI_Helper_Content</supports>
+		<supports type="module">JS_Markdown</supports>
+<!--		<needs type="module">Tags</needs>-->
+	</relations>
+	<link xml:lang="de" access="acl" path="work/note" rank="44">Notizen</link>
+	<link xml:lang="en" access="acl" path="work/note" rank="44">Notes</link>
+	<hook type="resource" resource="Project" event="listRelations">Hook_Work_Note::onListProjectRelations</hook>
+	<hook type="resource" resource="Project" event="remove">Hook_Work_Note::onProjectRemove</hook>
+	<hook type="resource" resource="User" event="listRelations">Hook_Work_Note::onListUserRelations</hook>
+	<hook type="resource" resource="User" event="remove">Hook_Work_Note::onUserRemove</hook>
+	<sql on="install" type="mysql" version="0.2"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>links`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>links` (
+  `linkId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `url` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `lastAssignAt` decimal(12,0) unsigned DEFAULT NULL,
+  `lastSearchAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`linkId`),
+  KEY `url` (`url`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>notes`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>notes` (
+  `noteId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(11) unsigned NOT NULL,
+  `projectId` int(10) unsigned DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL,
+  `public` int(1) unsigned DEFAULT '0',
+  `format` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'plaintext',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  `numberViews` int(10) unsigned NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`noteId`),
+  KEY `userId` (`userId`),
+  KEY `status` (`status`),
+  KEY `projectId` (`projectId`),
+  KEY `public` (`public`),
+  KEY `format` (`format`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>note_links`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>note_links` (
+  `noteLinkId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `noteId` int(11) unsigned NOT NULL,
+  `linkId` int(11) unsigned NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`noteLinkId`),
+  KEY `noteId` (`noteId`),
+  KEY `linkId` (`linkId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>note_tags`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>note_tags` (
+  `noteTagId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `noteId` int(11) unsigned NOT NULL,
+  `tagId` int(11) unsigned NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`noteTagId`),
+  KEY `noteId` (`noteId`),
+  KEY `tagId` (`tagId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>tags`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>tags` (
+  `tagId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `content` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`tagId`),
+  KEY `content` (`content`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>term_log`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>term_log` (
+  `termLogId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(11) unsigned NOT NULL,
+  `count` decimal(10,0) NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`termLogId`),
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" type="mysql" version="0.5"><![CDATA[
+ALTER TABLE `<%?prefix%>note_tags` ADD `status` TINYINT NULL DEFAULT '0' AFTER `tagId`, ADD INDEX (`status`);
+ALTER TABLE `<%?prefix%>note_tags` ADD INDEX(`createdAt`);
+ALTER TABLE `<%?prefix%>note_tags` ADD `modifiedAt` DECIMAL(12) UNSIGNED NULL DEFAULT '0' AFTER `createdAt`, ADD INDEX (`modifiedAt`);
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>links`;
+DROP TABLE IF EXISTS `<%?prefix%>notes`;
+DROP TABLE IF EXISTS `<%?prefix%>note_links`;
+DROP TABLE IF EXISTS `<%?prefix%>note_tags`;
+DROP TABLE IF EXISTS `<%?prefix%>tags`;
+DROP TABLE IF EXISTS `<%?prefix%>term_log`;
+]]></sql>
+</module>

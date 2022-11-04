@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Helper: Pagination: PrevNext</title>
+	<description><![CDATA[Pagination component showing previous and next entry.
+
+This helper provides a small buttonbar to navigate to the previous or previous entity of some model.
+
+You must define the model class and the current ID.
+The component will retrieve the previous and next entities and create the buttons within a button bar.
+]]></description>
+	<version>0.2.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add button sizes and states.</log>
+	<log version="0.2.2">Support order column to differ from primary key of model.</log>
+	<log version="0.2.3">Refactor render method.</log>
+	<log version="0.2.4">Rename from UI:Navigation:PrevNext to UI:Helper:Pagination:PrevNext.</log>
+	<category>User Interface</category>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>View/Helper/Pagination/PrevNext.php</class>
+	</files>
+</module>

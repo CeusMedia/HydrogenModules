@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<module>
+	<title>Catalog: Gallery</title>
+	<description><![CDATA[Development meta package]]></description>
+	<category>Catalog</category>
+	<version>0.3.8</version>
+	<log version="0.1.0">Initial prototype.</log>
+	<log version="0.2.0">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Improved views.</log>
+	<log version="0.2.2">Updated grid layout.</log>
+	<log version="0.2.3">Added HTML blocks.</log>
+	<log version="0.2.4">Made tax rate configurable.</log>
+	<log version="0.2.5">Implemented download of zipped order archive.</log>
+	<log version="0.2.6">Added hook for shop to deliver download on payment success.</log>
+	<log version="0.2.7">Several small updates.</log>
+	<log version="0.3">Migrate file structure to database.</log>
+	<log version="0.3.1">Set delivery status on download.</log>
+	<log version="0.3.2">Improve configuration.</log>
+	<log version="0.3.3">Change category and image index to matrix.</log>
+	<log version="0.3.4">Improve table indices and modification timestamps.</log>
+	<log version="0.3.5">Remove auto import.</log>
+	<log version="0.3.6">Add single flag on image model.</log>
+	<log version="0.3.7">Add view helper for shop service panel.</log>
+	<log version="0.3.8">Extend bridge logic for quantity changes.</log>
+<!--	<log version="0.4">Support localization.</log>-->
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Catalog/Gallery.php</class>
+		<class>Logic/Catalog/Gallery.php</class>
+		<class>Logic/ShopBridge/CatalogGallery.php</class>
+		<class>Model/Catalog/Gallery/Category.php</class>
+		<class>Model/Catalog/Gallery/Image.php</class>
+		<class>View/Catalog/Gallery.php</class>
+		<class>View/Helper/Shop/FinishPanel/CatalogGallery.php</class>
+		<locale>de/catalog/gallery.ini</locale>
+		<locale>de/html/catalog/gallery/category/bottom.html</locale>
+		<locale>de/html/catalog/gallery/category/top.html</locale>
+		<locale>de/html/catalog/gallery/image/bottom.html</locale>
+		<locale>de/html/catalog/gallery/image/top.html</locale>
+		<locale>de/html/catalog/gallery/index/bottom.html</locale>
+		<locale>de/html/catalog/gallery/index/content.html</locale>
+		<locale>de/html/catalog/gallery/index/top.html</locale>
+		<locale>de/html/catalog/gallery/delivery.html</locale>
+		<template>catalog/gallery/image.php</template>
+		<template>catalog/gallery/index.php</template>
+		<template>catalog/gallery/category.php</template>
+		<style load="auto" level="end">module.catalog.gallery.css</style>
+	</files>
+	<config protected="yes" type="string" name="path.images" title="within images folder">catalog/</config>
+	<config protected="no" type="integer" name="tax.rate">7</config>
+<!--	<config protected="no" type="boolean" name="tax.included">yes</config>-->
+	<config protected="yes" type="boolean" name="download.auto" title="Flag: Start download automatically after payment success.">yes</config>
+	<config protected="yes" type="integer" name="download.duration" title="Valid duration of download in hours">24</config>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+		<needs type="module">Shop_Bridge</needs>
+		<supports type="module">Shop</supports>
+	</relations>
+	<hook type="resource" resource="Shop" event="renderServicePanels">Controller_Catalog_Gallery::__onRenderServicePanels</hook>
+	<sql on="install" type="mysql" version="0.3"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>catalog_gallery_images`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_gallery_images` (
+  `galleryImageId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `galleryCategoryId` int(10) unsigned NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `type` tinyint(3) unsigned NOT NULL,
+  `rank` tinyint(4) NOT NULL,
+  `filename` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `price` decimal(6,2) unsigned DEFAULT 0,
+  `takenAt` decimal(12,0) unsigned DEFAULT NULL,
+  `uploadedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`galleryImageId`),
+  KEY `galleryCategoryId` (`galleryCategoryId`),
+  KEY `status` (`status`),
+  KEY `type` (`type`),
+  KEY `filename` (`filename`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>catalog_gallery_categories`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_gallery_categories` (
+  `galleryCategoryId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `parentId` int(10) unsigned DEFAULT 0,
+  `status` tinyint(4) NOT NULL,
+  `rank` tinyint(4) NOT NULL,
+  `path` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `price` decimal(6,2) unsigned DEFAULT 0,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`galleryCategoryId`),
+  KEY `parentId` (`parentId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `<%?prefix%>shop_bridges` (`title`, `class`, `frontendController`, `frontendUriPath`, `backendController`, `backendUriPath`, `articleTableName`, `articleIdColumn`, `createdAt`) VALUES('Catalog: Gallery', 'CatalogGallery', 'Catalog_Gallery', 'catalog/gallery/', 'Manage_Catalog_Gallery', 'manage/catalog/gallery/', 'catalog_gallery_images', 'galleryImageId', 1434653387);
+
+	]]></sql>
+	<sql on="update" type="mysql" version="0.3.4"><![CDATA[
+ALTER TABLE `<%?prefix%>catalog_gallery_categories` ADD `image` VARCHAR(10) NULL AFTER `price`;
+ALTER TABLE `<%?prefix%>catalog_gallery_categories` ADD `modifiedAt` DECIMAL(12) UNSIGNED NULL ;
+ALTER TABLE `<%?prefix%>catalog_gallery_categories` ADD INDEX(`rank`);
+ALTER TABLE `<%?prefix%>catalog_gallery_categories` ADD INDEX(`createdAt`);
+ALTER TABLE `<%?prefix%>catalog_gallery_categories` ADD INDEX(`modifiedAt`);
+
+ALTER TABLE `<%?prefix%>catalog_gallery_images` CHANGE `uploadedAt` `createdAt` DECIMAL(12,0) UNSIGNED NOT NULL;
+ALTER TABLE `<%?prefix%>catalog_gallery_images` ADD `modifiedAt` DECIMAL(12) UNSIGNED NULL ;
+ALTER TABLE `<%?prefix%>catalog_gallery_images` ADD INDEX(`takenAt`);
+ALTER TABLE `<%?prefix%>catalog_gallery_images` ADD INDEX(`createdAt`);
+ALTER TABLE `<%?prefix%>catalog_gallery_images` ADD INDEX(`modifiedAt`);
+	]]></sql>
+	<sql on="update" type="mysql" version="0.3.4"><![CDATA[
+ALTER TABLE `<%?prefix%>catalog_gallery_images` ADD `single` TINYINT(1) UNSIGNED NULL DEFAULT '0' AFTER `price`;
+	]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>catalog_gallery_images`;
+DROP TABLE IF EXISTS `<%?prefix%>catalog_gallery_categories`;
+	]]></sql>
+</module>

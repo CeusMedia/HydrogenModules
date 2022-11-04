@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Shop</title>
+	<description><![CDATA[...]]></description>
+	<category>Management</category>
+	<version>0.4.7</version>
+	<log version="0.1.0">Initial prototype.</log>
+	<log version="0.2.0">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Added shipping.</log>
+	<log version="0.2.2">Added reporting.</log>
+	<log version="0.2.3">Added customer information.</log>
+	<log version="0.2.4">Designed status graph.</log>
+	<log version="0.2.5">Reworked order position status handling.</log>
+	<log version="0.3">Integrated shop bridge.</log>
+	<log version="0.3.1">Use new bootstrap tab system with hooks.</log>
+	<log version="0.3.2">Add dashboard panels and map.</log>
+	<log version="0.3.3">Use bootstrap library from GitHub.</log>
+	<log version="0.3.4">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.3.5">Apply CSS panels.</log>
+	<log version="0.3.6">Reworked dashboard view.</log>
+	<log version="0.3.7">Remove releation to Resource_Library_cmModules.</log>
+	<log version="0.3.8">Use shop bridge in order position list and report.</log>
+	<log version="0.3.9">Renamed shop logic to shop manager logic.</log>
+	<log version="0.4">Adjustment to shop model changes.</log>
+	<log version="0.4.1">Use new user model instead of customer.</log>
+	<log version="0.4.2">Use new user address model.</log>
+	<log version="0.4.3">Use users resource module.</log>
+	<log version="0.4.4">Update to support Shop version 0.8.</log>
+	<log version="0.4.5">Reintegrate shipping.</log>
+	<log version="0.4.6">Finish shipping panels.</log>
+	<log version="0.4.7">Extract shipping logic.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Shop.php</class>
+		<class>Controller/Manage/Shop/Order.php</class>
+		<class>Controller/Manage/Shop/Report.php</class>
+		<class>Controller/Manage/Shop/Shipping.php</class>
+		<class>Logic/ShopManager.php</class>
+		<class>Logic/Shop/Shipping.php</class>
+		<class>Model/Shop/Customer.php</class>
+		<class>Model/Shop/CustomerOld.php</class>
+		<class>Model/Shop/Order.php</class>
+		<class>Model/Shop/Order/Position.php</class>
+		<class>Model/Shop/Shipping/Country.php</class>
+		<class>Model/Shop/Shipping/Grade.php</class>
+		<class>Model/Shop/Shipping/Option.php</class>
+		<class>Model/Shop/Shipping/Price.php</class>
+		<class>Model/Shop/Shipping/Zone.php</class>
+		<class>View/Manage/Shop.php</class>
+		<class>View/Manage/Shop/Order.php</class>
+		<class>View/Manage/Shop/Report.php</class>
+		<class>View/Manage/Shop/Shipping.php</class>
+		<locale>de/manage/shop.ini</locale>
+		<locale>de/manage/shop/order.ini</locale>
+		<template>manage/shop/index.php</template>
+		<template>manage/shop/order/edit.php</template>
+		<template>manage/shop/order/filter.php</template>
+		<template>manage/shop/order/index.php</template>
+		<template>manage/shop/report/index.php</template>
+		<template>manage/shop/shipping/index.php</template>
+		<template>manage/shop/shipping/index.grades.php</template>
+		<template>manage/shop/shipping/index.prices.php</template>
+		<template>manage/shop/shipping/index.zones.php</template>
+		<style source="common">module.manage.shop.css</style>
+		<script>module.manage.shop.js</script>
+		<image>states.dot</image>
+		<image>states.png</image>
+	</files>
+	<relations>
+		<needs type="module">Resource_Address</needs>
+		<needs type="module">Resource_Users</needs>
+		<needs type="module">Shop_Bridge</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+		<needs type="module">UI_Map</needs>
+	</relations>
+	<link xml:lang="de" path="manage/shop/order">Bestellungen</link>
+	<link xml:lang="en" path="manage/shop/report">Statistik</link>
+	<hook type="resource" resource="ManageShop" event="registerTabs">View_Manage_Shop::___onRegisterTab</hook>
+	<hook type="resource" resource="ManageShop" event="registerTabs">View_Manage_Shop_Order::___onRegisterTab</hook>
+	<hook type="resource" resource="ManageShop" event="registerTabs">View_Manage_Shop_Report::___onRegisterTab</hook>
+	<hook type="resource" resource="ManageShop" event="registerTabs">View_Manage_Shop_Shipping::___onRegisterTab</hook>
+</module>

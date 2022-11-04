@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: JSON Server</title>
+	<description><![CDATA[Access to JSON Server.]]></description>
+	<category>Resource</category>
+	<version>0.3.1</version>
+	<log version="0.1">Initial prototype in project Client:Chat.</log>
+	<log version="0.2">Separation into this module.</log>
+	<log version="0.2.1">Added response code handler.</log>
+	<log version="0.2.2">Updated configuration.</log>
+	<log version="0.2.3">Updated configuration by mandatory and title.</log>
+	<log version="0.3">Use hook for automatic initialization and configuration.</log>
+	<log version="0.3.1">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
+<!--	<log version="0.3.x">Allow multiple instances.</log>-->
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Resource/Server/Json.php</class>
+		<class>View/Helper/JsonServerResponseCodeHandler.php</class>
+	</files>
+	<config protected="no" mandatory="yes" type="string" name="userAgent">CeusMedia::CMF::Resource:Server:JSON</config>
+	<config protected="no" mandatory="no" type="string" name="auth.username" title="Username for HTTP Basic Auth"></config>
+	<config protected="no" mandatory="no" type="string" name="auth.password" title="Password for HTTP Basic Auth"></config>
+	<config protected="no" mandatory="no" type="string" name="auth.secret" title="Commonly known secret for token access"></config>
+	<config protected="yes" mandatory="no" type="boolean" name="log" title="Enable request log"></config>
+	<config protected="yes" mandatory="no" type="string" name="log.file" title="Filename of server request log">server.json.log</config>
+	<config protected="no" mandatory="yes" type="string" name="uri" title="URL of JSON server"></config>
+	<hook type="resource" resource="Env" event="init">Resource_Server_Json::___onEnvInit</hook>
+</module>

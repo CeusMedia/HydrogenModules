@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Cache</title>
+	<description><![CDATA[Cache resource.
+
+This is a wrapper using <abbr title="Storage Engine Abstraction">SEA</abbr> (part of cmModules).
+]]></description>
+	<category>Resource</category>
+	<version>0.5.5</version>
+	<log version="0.4">Use Cache library from GitHub.</log>
+	<log version="0.5">Add job to clear cached objects.</log>
+	<log version="0.5.1">Fix bug on using PDO adapter.</log>
+	<log version="0.5.2">Migrate definition of jobs.</log>
+	<log version="0.5.3">Use general module main switch.</log>
+	<log version="0.5.4">Extract hook to own hook class.</log>
+	<log version="0.5.5">Replace job file by module configuration.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Hook/Resource/Cache.php</class>
+		<class>Model/Cache.php</class>
+		<class>Job/Cache.php</class>
+	</files>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+	<config protected="yes" type="string" name="type" mandatory="yes" values="Folder,Memcache,Memory,Noop,PDO,Session">Noop</config>
+	<config protected="yes" type="string" name="resource"></config>
+	<config protected="yes" type="string" name="context"></config>
+	<config protected="yes" type="integer" name="expiration"></config>
+	<relations/>
+	<hook type="event" resource="Env" event="initCache">Hook_Resource_Cache::onEnvInitCache</hook>
+	<job id="Resource.Cache.count">Cache::countObjects</job>
+	<job id="Resource.Cache.clear">Cache::clearObjects</job>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>cache`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>cache` (
+  `cacheId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `context` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8_unicode_ci,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  `expiration` decimal(12,0) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`cacheId`),
+  KEY `context` (`context`),
+  KEY `hash` (`hash`),
+  KEY `timestamp` (`timestamp`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>cache`;
+]]></sql>
+</module>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<module>
+	<title>Labs: Buttons</title>
+	<description>Lab for button styles and experiments.</description>
+	<version>0.2</version>
+	<category>Labs</category>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Lab/Button.php</class>
+		<class>View/Lab/Button.php</class>
+		<template>lab/button/index.php</template>
+		<style>site.lab.buttons.css</style>
+		<style>site.lab.buttons.neo.css</style>
+		<image source="theme">background_button_gradient_1.png</image>
+	</files>
+	<link path="lab/button">Lab: Buttons</link>
+</module>

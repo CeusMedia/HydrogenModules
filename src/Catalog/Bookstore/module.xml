@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<module>
+	<title>Catalog: Bookstore</title>
+	<description/>
+	<category>Catalog</category>
+	<version>0.7.9</version>
+	<log version="0.4.6">Responsive Design for category index.</log>
+	<log version="0.4.7">Support for search engine module.</log>
+	<log version="0.4.8">Supporting article description for shop lists and mails.</log>
+	<log version="0.4.9">Cleanup.</log>
+	<log version="0.5">Reinvented data feed for Google Merchant Center (without cache or job).</log>
+	<log version="0.5.1">Moved article cover image URL generation from helper to logic.</log>
+	<log version="0.5.2">Improved data feed to deliver acceptable data (valid for Google Merchant Center).</log>
+	<log version="0.5.3">Corrected calculation of included taxes.</log>
+	<log version="0.5.4">Integrated archive download of ordered images.</log>
+	<log version="0.5.5">Fixed link rendering in texts.</log>
+	<log version="0.5.6">Corrected event handling.</log>
+	<log version="0.5.7">Support mail addresses given for author references.</log>
+	<log version="0.5.8">Enlarge volume column in database model.</log>
+	<log version="0.6">Add new view by tag.</log>
+	<log version="0.6.1">Add panel for related articles.</log>
+	<log version="0.6.2">Extract article view into several templates.</log>
+	<log version="0.6.3">Change related articles list to slider.</log>
+	<log version="0.6.4">Add tags to search index.</log>
+	<log version="0.7">Migration from module Catalog.</log>
+	<log version="0.7.1">Integrate module Resource:FileBucket.</log>
+	<log version="0.7.2">Update search support.</log>
+	<log version="0.7.3">Extend bridge logic for quantity changes.</log>
+	<log version="0.7.4">Improve design on category index.</log>
+	<log version="0.7.5">Add helper for related articles slider.</log>
+	<log version="0.7.6">Improve category index by filter.</log>
+	<log version="0.7.7">Add support of weight for shop bridge.</log>
+	<log version="0.7.8">Add categories to sitemap / search index.</log>
+	<log version="0.7.9">Extract hooks to own class.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Catalog/Bookstore.php</class>
+		<class>Hook/Catalog/Bookstore.php</class>
+		<class>Logic/Catalog/Bookstore.php</class>
+		<class>Logic/ShopBridge/Bookstore.php</class>
+		<class>Model/Catalog/Bookstore/Article.php</class>
+		<class>Model/Catalog/Bookstore/Article/Author.php</class>
+		<class>Model/Catalog/Bookstore/Article/Category.php</class>
+		<class>Model/Catalog/Bookstore/Article/Document.php</class>
+		<class>Model/Catalog/Bookstore/Article/Tag.php</class>
+		<class>Model/Catalog/Bookstore/Author.php</class>
+		<class>Model/Catalog/Bookstore/Category.php</class>
+		<class>Model/Catalog/Bookstore/Status.php</class>
+		<class>View/Catalog/Bookstore.php</class>
+		<class>View/Helper/Catalog/Bookstore.php</class>
+		<class>View/Helper/Catalog/Bookstore/Position.php</class>
+		<class>View/Helper/Catalog/Bookstore/Relations.php</class>
+		<class>View/Helper/Text.php</class>
+		<template>catalog/bookstore/article.php</template>
+		<template>catalog/bookstore/article/item.php</template>
+		<template>catalog/bookstore/article/details.php</template>
+		<template>catalog/bookstore/article/order.php</template>
+		<template>catalog/bookstore/article/relations.php</template>
+		<template>catalog/bookstore/articles.php</template>
+		<template>catalog/bookstore/author.php</template>
+		<template>catalog/bookstore/authors.php</template>
+		<template>catalog/bookstore/categories.php</template>
+		<template>catalog/bookstore/category.php</template>
+		<template>catalog/bookstore/index.php</template>
+		<template>catalog/bookstore/news.php</template>
+		<template>catalog/bookstore/search.php</template>
+		<template>catalog/bookstore/tag.php</template>
+		<locale>de/catalog/bookstore.ini</locale>
+		<locale>de/html/catalog/bookstore/news.top.html</locale>
+		<locale>de/html/catalog/bookstore/news.bottom.html</locale>
+		<image>bookstore/no_picture.png</image>
+		<image>bookstore/no_picture_empty.png</image>
+		<script load="auto">ModuleCatalogBookstore.js</script>
+		<style load="auto" source="theme">module.catalog.bookstore.css</style>
+	</files>
+	<config type="boolean" name="feed">yes</config>
+	<config type="string" name="feed.copyright" title="Copyright notice for content in the channel."></config>
+	<config type="string" name="feed.managingEditor" title="Email address for person responsible for editorial content."></config>
+	<config type="string" name="feed.webMaster" title="Email address for person responsible for technical issues relating to channel."></config>
+	<config type="string" name="feed.generator" title="A string indicating the program used to generate the channel."></config>
+	<config type="string" name="feed.docs" title="A URL that points to the documentation for the format used in the RSS file.">http://blogs.law.harvard.edu/tech/rss</config>
+	<config type="integer" name="feed.ttl" title="A number of minutes that indicates how long a channel can be cached before refreshing from the source.">60</config>
+	<config type="string" name="feed.skipHours" title="An XML element that contains up to 24 hour-sub-elements whose value is a number between 0 and 23"></config>
+	<config type="string" name="feed.skipDays" title="An XML element that contains up to seven day-sub-elements whose value is Monday, Tuesday, Wednesday, Thursday, Friday, Saturday or Sunday."></config>
+	<config type="boolean" name="feed">yes</config>
+	<config type="string" name="feed.image.url" title="URL of a GIF, JPEG or PNG image that represents the channel."></config>
+	<config type="string" name="feed.image.link" title="URL of the site, when the channel is rendered, the image is a link to the site."></config>
+	<config type="string" name="feed.image.title" title="Describes the image, it's used in the ALT attribute of the HTML."></config>
+	<config type="integer" name="feed.image.width" title="Maximum value for width is 144, default value is 88."></config>
+	<config type="integer" name="feed.image.height" title="Maximum value for height is 400, default value is 31."></config>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+		<needs type="module">Resource_Mail</needs>
+		<needs type="module">Resource_FileBucket</needs>
+		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">UI_Helper_Pagination</needs>
+		<supports type="module">Shop</supports>
+	</relations>
+	<link xml:lang="de" access="public" path="catalog/bookstore">Katalog</link>
+	<link xml:lang="de" access="public" path="catalog/bookstore/categories">Kategorien</link>
+	<link xml:lang="de" access="public" path="catalog/bookstore/authors">Autoren</link>
+	<link xml:lang="de" access="public" path="catalog/bookstore/news">Neu</link>
+	<link xml:lang="de" access="public" path="catalog/bookstore/search">Suche</link>
+	<link xml:lang="en" access="public" path="catalog/bookstore">Catalog</link>
+	<link xml:lang="en" access="public" path="catalog/bookstore/categories">Categories</link>
+	<link xml:lang="en" access="public" path="catalog/bookstore/authors">Authors</link>
+	<link xml:lang="en" access="public" path="catalog/bookstore/news">New</link>
+	<link xml:lang="en" access="public" path="catalog/bookstore/search">Search</link>
+	<hook type="resource" resource="Sitemap" event="registerLinks">Hook_Catalog_Bookstore::onRegisterSitemapLinks</hook>
+	<hook type="resource" resource="Search" event="renderResults">Hook_Catalog_Bookstore::onRenderSearchResults</hook>
+	<hook type="resource" resource="Info_News" event="renderItem">View_Helper_Catalog_Bookstore::___onRenderNewsItem</hook>
+	<hook type="resource" resource="View" event="onRenderContent">Hook_Catalog_Bookstore::onRenderContent</hook>
+	<sql on="install" type="mysql" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_articles`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_bookstore_articles` (
+  `articleId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `subtitle` text COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `recension` text COLLATE utf8_unicode_ci NOT NULL,
+  `publication` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `size` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `digestion` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `weight` float(6,4) NOT NULL,
+  `isn` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `series` tinyint(1) unsigned DEFAULT NULL,
+  `price` varchar(10) COLLATE utf8_unicode_ci DEFAULT '0',
+  `cover` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `language` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'de',
+  `new` tinyint(1) unsigned DEFAULT '0',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`articleId`),
+  KEY `isbn` (`isn`),
+  KEY `language` (`language`),
+  KEY `new` (`new`),
+  KEY `series` (`series`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_article_authors`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_bookstore_article_authors` (
+  `articleAuthorId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `articleId` int(11) unsigned NOT NULL,
+  `authorId` int(11) unsigned NOT NULL,
+  `editor` tinyint(1) NOT NULL,
+  PRIMARY KEY (`articleAuthorId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_article_categories`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_bookstore_article_categories` (
+  `articleCategoryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `articleId` int(11) unsigned NOT NULL,
+  `categoryId` int(11) unsigned NOT NULL,
+  `volume` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`articleCategoryId`),
+  KEY `article_id` (`articleId`,`categoryId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_article_documents`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_bookstore_article_documents` (
+  `articleDocumentId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `articleId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`articleDocumentId`),
+  KEY `article_id` (`articleId`),
+  KEY `status` (`status`,`type`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_article_reviews`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_bookstore_article_reviews` (
+  `articleReviewId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `articleId` int(11) unsigned DEFAULT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  `excerpt` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`articleReviewId`),
+  KEY `article_id` (`articleId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_article_tags`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_bookstore_article_tags` (
+  `articleTagId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `articleId` int(10) unsigned NOT NULL,
+  `tag` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`articleTagId`),
+  KEY `articleId` (`articleId`),
+  KEY `tag` (`tag`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_authors`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_bookstore_authors` (
+  `authorId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lastname` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `firstname` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `image` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `reference` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`authorId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_categories`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_bookstore_categories` (
+  `categoryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parentId` int(11) unsigned NOT NULL,
+  `visible` tinyint(1) unsigned NOT NULL,
+  `issn` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `rank` tinyint(2) NOT NULL,
+  `publisher` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `label_de` varchar(220) COLLATE utf8_unicode_ci NOT NULL,
+  `label_en` varchar(220) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `label_it` varchar(220) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `label_former` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`categoryId`),
+  KEY `parentId` (`parentId`,`visible`,`issn`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_states`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>catalog_bookstore_states` (
+  `statusId` tinyint(2) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `available` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `rank` tinyint(2) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`statusId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" type="mysql" version="0.3.28"><![CDATA[
+ALTER TABLE  `<%?prefix%>catalog_bookstore_article_categories` CHANGE  `volume`  `volume` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT  '';
+]]></sql>
+	<sql on="update" type="mysql" version="0.7.7"><![CDATA[
+ALTER TABLE `<%?prefix%>catalog_bookstore_articles` CHANGE `weight` `weight` FLOAT(8,2) NOT NULL;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_articles`;
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_article_authors`;
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_article_categories`;
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_article_documents`;
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_article_reviews`;
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_article_tags`;
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_authors`;
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_categories`;
+DROP TABLE IF EXISTS `<%?prefix%>catalog_bookstore_states`;
+]]></sql>
+</module>

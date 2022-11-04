@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<module>
+	<title>Shop: Payment: MangoPay</title>
+	<description><![CDATA[Integrates MangoPay into shop.
+]]></description>
+	<category>Shop</category>
+	<version>0.3.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Improve relations.</log>
+	<log version="0.2.2">Set access for inside links.</log>
+	<log version="0.2.3">Add model for mangopay payments.</log>
+	<log version="0.2.4">Add finish panel helper for service tab.</log>
+	<log version="0.2.5">Add switches for every payment method.</log>
+	<log version="0.2.6">Add shop service panel view helper.</log>
+	<log version="0.2.7">Add job to finish order payment.</log>
+	<log version="0.2.8">Extract controller methods to new logic class.</log>
+	<log version="0.2.9">Send mails if payment succeeded or failed.</log>
+	<log version="0.3">Update to support Shop version 0.8.</log>
+	<log version="0.3.1">Replace job file by module configuration.</log>
+	<log version="0.3.2">Improve code style.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Shop/Payment/Mangopay.php</class>
+		<class>Hook/Shop/Payment/Mangopay.php</class>
+		<class>Job/Shop/Payment/Mangopay.php</class>
+		<class>Logic/Shop/Payment/Mangopay.php</class>
+		<class>Model/Shop/Payment/Mangopay.php</class>
+		<class>View/Helper/Shop/FinishPanel/Mangopay.php</class>
+		<class>View/Shop/Payment/Mangopay.php</class>
+		<locale>de/shop/payment/mangopay.ini</locale>
+	</files>
+	<config protected="yes" type="integer" name="method.BankWire" title="priority: 0-disabled, 1-highest, ..., 9-lowest">8</config>
+	<config protected="yes" type="integer" name="method.BankWireWeb" title="priority: 0-disabled, 1-highest, ..., 9-lowest">4</config>
+	<config protected="yes" type="integer" name="method.CreditCardWeb" title="priority: 0-disabled, 1-highest, ..., 9-lowest">2</config>
+	<relations>
+		<needs type="module">Shop_Payment</needs>
+		<needs type="module">Resource_Payment_Mangopay</needs>
+	</relations>
+	<link access="inside" path="shop/payment/mangopay/index"/>
+	<link access="inside" path="shop/payment/mangopay/perBankWire"/>
+	<link access="inside" path="shop/payment/mangopay/perCreditCard"/>
+	<link access="inside" path="shop/payment/mangopay/perDirectDebit"/>
+	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Hook_Shop_Payment_Mangopay::onRegisterShopPaymentBackends</hook>
+	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_Payment_Mangopay::onRenderServicePanels</hook>
+	<job id="Shop.Payment.Mangopay.handle">Shop_Payment_Mangopay::handle</job>
+	<sql on="install" type="mysql" version="0.2.3"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_payments_mangopay`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_payments_mangopay` (
+  `paymentId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `orderId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `payInId` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL COMMENT '0: created, 1: failed, 2: succeeded',
+  `object` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`paymentId`),
+  KEY `orderId` (`orderId`),
+  KEY `userId` (`userId`),
+  KEY `payInId` (`payInId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+</module>

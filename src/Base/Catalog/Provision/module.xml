@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<module>
+	<title>Base: Catalog: Provision</title>
+	<description><![CDATA[Common base for catalog for provioned product licenses.]]></description>
+	<category>Base</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Logic/Catalog/Provision.php</class>
+		<class>Logic/ShopBridge/Provision.php</class>
+		<class>Model/Provision/Product.php</class>
+		<class>Model/Provision/Product/License.php</class>
+	</files>
+	<config protected="yes" type="boolean" name="tax.included">1</config>
+	<config protected="yes" type="float" name="tax.rate">19</config>
+	<relations>
+		<needs type="module">Resource_Users</needs>
+	</relations>
+	<sql on="install" type="mysql" version="0.3.5"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>provision_products`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>provision_products` (
+  `productId` int(11) NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) DEFAULT '0',
+  `rank` tinyint(1) DEFAULT '0',
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `url` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`productId`),
+  UNIQUE KEY `title` (`title`),
+  KEY `status` (`status`),
+  KEY `rank` (`rank`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>provision_product_licenses`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>provision_product_licenses` (
+  `productLicenseId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `productId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `rank` tinyint(1) DEFAULT '0',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `duration` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `users` tinyint(3) unsigned NOT NULL,
+  `price` decimal(6,2) unsigned NOT NULL,
+  `currency` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`productLicenseId`),
+  KEY `productId` (`productId`),
+  KEY `status` (`status`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `<%?prefix%>shop_bridges` (`title`, `class`, `frontendController`, `frontendUriPath`, `backendController`, `backendUriPath`, `articleTableName`, `articleIdColumn`, `createdAt`) VALUES
+('Produktlizenzen', 'Provision', 'Catalog_Provision_Product', 'catalog/provision/product/license', 'Manage_Catalog_Provision_License', 'manage/catalog/provision/license/edit/0/%s', 'provision_product_licenses', 'productLicenseId', 1456446117);
+]]></sql>
+	<sql on="uninstall" type="mysql" version="0.3.5"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>provision_products`;
+DROP TABLE IF EXISTS `<%?prefix%>provision_product_licenses`;
+DELETE FROM `<%?prefix%shop_bridges` WHERE `class` = 'Provision';
+]]></sql>
+</module>

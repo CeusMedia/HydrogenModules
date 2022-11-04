@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Import</title>
+	<description><![CDATA[Editor for import connections.]]></description>
+	<category>Management</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen Module.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Import.php</class>
+		<class>View/Manage/Import.php</class>
+		<template>manage/import/add.php</template>
+		<template>manage/import/edit.php</template>
+		<template>manage/import/index.php</template>
+	</files>
+	<relations>
+		<needs type="module">Resource_Import</needs>
+	</relations>
+</module>

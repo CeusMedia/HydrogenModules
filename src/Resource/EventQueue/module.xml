@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: EventQueue</title>
+	<description><![CDATA[Basic event queue.
+
+Allows to store events in database to be handled later by an other module or process.
+		]]></description>
+	<category>Resource</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Job/EventQueue.php</class>
+		<class>Logic/EventQueue.php</class>
+		<class>Model/Event.php</class>
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+	</relations>
+	<job id="EventQueue.count">EventQueue::count</job>
+	<job id="EventQueue.handle">EventQueue::handle</job>
+	<sql on="install" type="mysql" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>events`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>events` (
+  `eventId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `creatorId` int(10) UNSIGNED DEFAULT '0',
+  `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:new, 1:revoked, 2:ignored, 3:running, 4:failed, 5:succeeded',
+  `scope` varchar(63) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `identifier` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
+  `origin` varchar(127) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `handler` varchar(63) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `data` text COLLATE utf8_unicode_ci,
+  `result` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`eventId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `status` (`status`),
+  KEY `identifier` (`identifier`),
+  KEY `scope` (`scope`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+</module>

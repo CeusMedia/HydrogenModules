@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Image: Slider</title>
+	<description><![CDATA[Model and renderer for image sliders.]]></description>
+	<category>Management</category>
+	<version>0.5</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen Module.</log>
+	<log version="0.2.1">Integrated frontend access.</log>
+	<log version="0.2.2">Corrected base path.</log>
+	<log version="0.2.3">Added short code demo.</log>
+	<log version="0.2.4">Updated slider images list.</log>
+	<log version="0.2.5">Integrated image scaling on slide image import.</log>
+	<log version="0.2.6">Correct path on add and edit.</log>
+	<log version="0.2.7">Added locale file.</log>
+	<log version="0.3">Added slide data editor.</log>
+	<log version="0.3.1">Reorder slide ranks after removing a slide.</log>
+	<log version="0.3.2">Updated slide list by comfortable ranking.</log>
+	<log version="0.3.3">Avoid upload to existing image.</log>
+	<log version="0.3.4">Scale and crop image on upload.</log>
+	<log version="0.3.5">Reorder slide on edit and after ranked upload.</log>
+	<log version="0.3.6">Display minimum image size and check on upload.</log>
+	<log version="0.3.7">Fixed scaling for small portrait and small images.</log>
+	<log version="0.4">Use module UI:Helper:Input:File for image upload.</log>
+	<log version="0.4.1">Language support for english and german.</log>
+	<log version="0.4.2">Improved localization.</log>
+	<log version="0.4.3">Improved base path handling.</log>
+	<log version="0.4.4">Finish localization.</log>
+	<log version="0.4.5">Recolor add buttons.</log>
+	<log version="0.4.6">Support animation types.</log>
+	<log version="0.4.7">Support crop position on adding slides.</log>
+	<log version="0.4.8">Improve slider index using icons and tooltips.</log>
+	<log version="0.5">Import from protected SVN repository.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Manage/Image/Slider.php</class>
+		<class>View/Manage/Image/Slider.php</class>
+		<locale>de/manage/image/slider.ini</locale>
+		<locale>en/manage/image/slider.ini</locale>
+		<template>manage/image/slider/add.php</template>
+		<template>manage/image/slider/demo.php</template>
+		<template>manage/image/slider/edit.php</template>
+		<template>manage/image/slider/edit.addSlide.php</template>
+		<template>manage/image/slider/edit.slides.php</template>
+		<template>manage/image/slider/editSlide.php</template>
+		<template>manage/image/slider/editSlide.info.php</template>
+		<template>manage/image/slider/index.php</template>
+		<style>module.manage.image.slider.css</style>
+	</files>
+	<config protected="yes" type="string" name="path" title="path to slider images within images folder">sliders/</config>
+	<relations>
+		<needs type="module">Resource_Frontend</needs>
+		<needs type="module">UI_Image_Slider</needs>
+		<needs type="module">UI_Helper_Input_File</needs>
+	</relations>
+</module>

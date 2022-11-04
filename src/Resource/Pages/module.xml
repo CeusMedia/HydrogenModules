@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Pages</title>
+	<description><![CDATA[Base of providing addressed pages.]]></description>
+	<category>Resource</category>
+	<version>0.9.4</version>
+	<log version="0.1.0">Starting this module as Info:Pages.</log>
+	<log version="0.1.1">Later, the extraction to Resource:Pages happened.</log>
+	<log version="0.1.2">This version log is the reduced progress of the former module.</log>
+	<log version="0.1.3">--------------------------------------------------------------</log>
+	<log version="0.5.2">Added page content format.</log>
+	<log version="0.5.4">Extended database table by timestamps.</log>
+	<log version="0.5.7">Merged SQL updates into SQL install script.</log>
+	<log version="0.5.9">Add new page status "deactivated" and avoid access.</log>
+	<log version="0.6">Support sitemap information in model.</log>
+	<log version="0.6.1">Support subpage resolution of module controlled pages.</log>
+	<log version="0.6.3">Allow page resolution of empty node page and redirect to first child.</log>
+	<log version="0.6.4">Redirect module page only if module path is not within linked page.</log>
+	<log version="0.6.6">Support page icons.</log>
+	<log version="0.7">Change module column to controller and action.</log>
+	<log version="0.7.2">Support page access.</log>
+	<log version="0.7.3">Add language support using module Resource:Localization.</log>
+	<log version="0.7.5">Identify page by controller and action.</log>
+	<log version="0.7.9">Cleanup and documentation.</log>
+	<log version="0.8">Improve dispatching.</log>
+	<log version="0.8.1">Refactor page detection to work by recursion.</log>
+	<log version="0.8.2">Add component page type.</log>
+	<log version="0.8.3">Extend logic class by method hasPages.</log>
+	<log version="0.9.0">Migrate core of Info:Pages to Resource:Pages.</log>
+	<log version="0.9.1">Add prototype of config based page model.</log>
+	<log version="0.9.2">Refactor page detection to be more stable.</log>
+	<log version="0.9.3">Extend model by fullpath for faster dispatching.</log>
+	<log version="0.9.4">Add dummy model for pages defined in modules.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Logic/Page.php</class>
+		<class>Model/Page.php</class>
+		<class>Model/Config/Page.php</class>
+		<class>Model/Module/Page.php</class>
+	</files>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+		<supports type="module">Resource_Localization</supports>
+	</relations>
+	<sql on="install" type="mysql" version="final"><![CDATA[
+CREATE TABLE IF NOT EXISTS `<%?prefix%>pages` (
+  `pageId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `parentId` int(10) UNSIGNED DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0',
+  `type` tinyint(4) DEFAULT '0',
+  `scope` int(10) UNSIGNED DEFAULT '0',
+  `rank` tinyint(1) DEFAULT '0',
+  `identifier` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fullpath` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `controller` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `action` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `access` varchar(10) COLLATE utf8_unicode_ci DEFAULT 'public',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  `format` varchar(20) COLLATE utf8_unicode_ci DEFAULT 'HTML',
+  `description` text COLLATE utf8_unicode_ci,
+  `keywords` text COLLATE utf8_unicode_ci,
+  `changefreq` varchar(8) COLLATE utf8_unicode_ci DEFAULT 'weekly',
+  `priority` float UNSIGNED DEFAULT '0.5',
+  `icon` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `template` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`pageId`),
+  KEY `parentId` (`parentId`),
+  KEY `status` (`status`),
+  KEY `type` (`type`),
+  KEY `scope` (`scope`),
+  KEY `identifier` (`identifier`),
+  KEY `fullpath` (`fullpath`),
+  KEY `controller` (`controller`),
+  KEY `action` (`action`),
+  KEY `access` (`access`),
+  KEY `format` (`format`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" type="mysql" version="0.9.3"><![CDATA[
+ALTER TABLE `<%?prefix%>pages` ADD `template` VARCHAR(255) NULL DEFAULT NULL AFTER `icon`;
+ALTER TABLE `<%?prefix%>pages` ADD `fullpath` VARCHAR(200) NOT NULL AFTER `identifier`, ADD INDEX (`fullpath`);
+ALTER TABLE `<%?prefix%>pages` CHANGE `rank` `rank` TINYINT(1) NULL DEFAULT '0';
+ALTER TABLE `<%?prefix%>pages` CHANGE `access` `access` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'public';
+ALTER TABLE `<%?prefix%>pages` CHANGE `changefreq` `changefreq` VARCHAR(8) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'weekly';
+ALTER TABLE `<%?prefix%>pages` CHANGE `priority` `priority` FLOAT UNSIGNED NULL DEFAULT '0.5';
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>pages`;
+]]></sql>
+</module>

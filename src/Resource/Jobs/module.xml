@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<module>
+	<title>Jobs</title>
+	<subtitle>Console based job execution.</subtitle>
+	<description><![CDATA[Console based job execution.
+
+Besides calling your application using a browser, calling business logic on console or as cron job might be interesting to you.
+This can be done by creating job classes with methods which can be executed using the jobber script job.php5 followed by a job ID and optional arguments.
+The job runner will setup the environment of your web application providing connecting to resources and logic.
+
+To add jobs you need to:
+- create a job class in <cite>classes/Job/</cite> which extends class <cite>Job_Abstract</cite>
+- create a method for each job
+- define each job within your module configuration
+
+Jobs are defined like this:
+code:xml><job id="MODULE.JOBCLASS.METHOD">JOBCLASS::METHOD</job><code
+
+Call your job like this:
+code:shell>./job.php JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
+
+Having set execution permissions to job.php, you can run the job like this:
+code:shell>./job.php JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
+
+<b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
+]]></description>
+	<category>Resource</category>
+	<version>0.8.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Extracted to Hydrogen module.</log>
+	<log version="0.2.1">Introduced logging mechanism.</log>
+	<log version="0.3.0">Prepared jobber to by called by maintainer.</log>
+	<log version="0.3.1">Introduced locking mechanism.</log>
+	<log version="0.3.2">Updated logging mechanism.</log>
+	<log version="0.3.3">Moved locking mechanism from job class to jobber itself.</log>
+	<log version="0.3.4">Made jobber class usable for module Resource:Maintainer.</log>
+	<log version="0.3.5">Adopted test jobs from module Resource:Maintainer.</log>
+	<log version="0.3.6">Extracted locking mechanism to own model class.</log>
+	<log version="0.3.7">Fixed bug on error logging.</log>
+	<log version="0.4">Renamed and updated job.php.</log>
+	<log version="0.4.1">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.4.2">Support JSON job files.</log>
+	<log version="0.4.3">Add job to index jobs.</log>
+	<log version="0.4.4">Add job to index job locks.</log>
+	<log version="0.4.5">Add job to clear job locks.</log>
+	<log version="0.4.6">Add jobs to get PHP version and PHP extension version.</log>
+	<log version="0.4.7">Apply shebang line to job script.</log>
+	<log version="0.5">Change handling of run parameters.</log>
+	<log version="0.5.1">Removed outdated library loading in job script.</log>
+	<log version="0.5.2">Capsulated error handling and reporting in job script.</log>
+	<log version="0.5.3">Let job script detect application path to be run from anywhere.</log>
+	<log version="0.5.4">Allow multiple job run instances by configuration.</log>
+	<log version="0.5.5">Extract job loading to own model class.</log>
+	<log version="0.6">Use newer argument parser reading commands and parameters.</log>
+	<log version="0.6.1">Add new protected job methods to show progress and errors.</log>
+	<log version="0.6.2">Note request arguments (commands and parameters) in job.</log>
+	<log version="0.6.3">Detect verbose mode by command.</log>
+	<log version="0.6.4">Extend reflection jobs and improve date job.</log>
+	<log version="0.6.5">Support job deprecation.</log>
+	<log version="0.6.6">Add convert for job definitions from XML to JSON.</log>
+	<log version="0.6.7">Use new CLI progress output component.</log>
+	<log version="0.6.8">Refactor job script.</log>
+	<log version="0.7">Improve error handling by catching throwable errors.</log>
+	<log version="0.7.1">Prepare new job configuration handling.</log>
+	<log version="0.7.2">Add models for new database handling.</log>
+	<log version="0.7.3">Replace file based locking mechanism.</log>
+	<log version="0.7.4">Move job handling to new logic class.</log>
+	<log version="0.7.5">Finish support for jobs defined in module configuration.</log>
+	<log version="0.7.6">Discover jobs defined by modules (=new style) or XML file (=old style).</log>
+	<log version="0.7.7">Add report mail for job run.</log>
+	<log version="0.8.0">Add job scheduler jobs.</log>
+	<log version="0.8.1">Add job to archive job runs: Job.Schedule.archive.</log>
+	<log version="0.8.2">Refactor job schedule model to support schedule formats: cron, interval, datetime.</log>
+	<log version="0.8.3">Improve error handling.</log>
+	<log version="0.8.4">Support removal of archivable job runs.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Jobber.php</class>
+		<class>Job/Abstract.php</class>
+		<class>Job/Job.php</class>
+		<class>Job/Job/Lock.php</class>
+		<class>Job/Job/Schedule.php</class>
+		<class>Job/Job/Test.php</class>
+		<class>Job/Job/Util.php</class>
+		<class>Logic/Job.php</class>
+		<class>Mail/Job/Report.php</class>
+		<class>Model/Job.php</class>
+		<class>Model/Job/Definition.php</class>
+		<class>Model/Job/Run.php</class>
+		<class>Model/Job/Schedule.php</class>
+		<style source="common">module.resource.jobs-mail.css</style>
+		<file>job.php</file>
+	</files>
+	<relations>
+		<needs type="composer">dragonmantank/cron-expression</needs>
+		<supports type="module">Resource_Maintainer</supports>
+		<supports type="module">Resource_Mail</supports>
+	</relations>
+	<job id="Job.list">Job::index</job>
+	<job id="Job.info">Job::info</job>
+<!--	<job id="Job.jsonfy">Job::convertJobConfigToJson</job>-->
+	<job id="Job.Lock.list">Job_Lock::list</job>
+	<job id="Job.Lock.clear">Job_Lock::clear</job>
+<!--	<job id="Job.Lock.alert">Job_Lock::alert</job>-->
+	<job id="Job.Schedule.archive">Job_Schedule::archive</job>
+	<job id="Job.Schedule.clean">Job_Schedule::remove</job>
+	<job id="Job.Schedule.run" multiple="yes">Job_Schedule::run</job>
+	<job id="Job.Test.reflect">Job_Test::reflect</job>
+	<job id="Job.Test.reflectCommands">Job_Test::reflectCommands</job>
+	<job id="Job.Test.reflectParameters">Job_Test::reflectParameters</job>
+	<job id="Job.Test.throw">Job_Test::throwException</job>
+	<job id="Job.Test.wait">Job_Test::wait</job>
+	<job id="Job.Util.getDate">Job_Util::getDate</job>
+	<job id="Job.Util.getExtensionVersion">Job_Util::getExtensionVersion</job>
+	<job id="Job.Util.getPhpVersion">Job_Util::getPhpVersion</job>
+	<sql type="mysql" on="install" version="0.7.2"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>job_definitions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>job_definitions` (
+  `jobDefinitionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mode` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:undefined,1:single,2:multiple,3:exclusive',
+  `status` tinyint(1) DEFAULT '0' COMMENT '0:disabled,1:enabled,2:deprecated',
+  `identifier` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `className` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `methodName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `arguments` text COLLATE utf8_unicode_ci COMMENT 'as JSON',
+  `runs` int(11) UNSIGNED DEFAULT '0',
+  `fails` int(11) UNSIGNED DEFAULT '0',
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) NOT NULL,
+  `lastRunAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`jobDefinitionId`),
+  UNIQUE KEY `identifier` (`identifier`),
+  KEY `status` (`status`),
+  KEY `mode` (`mode`),
+  KEY `className` (`className`),
+  KEY `methodName` (`methodName`),
+  KEY `createdAt` (`createdAt`),
+  KEY `modifiedAt` (`modifiedAt`),
+  KEY `lastRunAt` (`lastRunAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>job_runs`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>job_runs` (
+  `jobRunId` int(21) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `jobDefinitionId` int(11) UNSIGNED NOT NULL,
+  `jobScheduleId` int(11) UNSIGNED DEFAULT '0',
+  `processId` int(10) UNSIGNED DEFAULT '0',
+  `type` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:manually,1:scheduled',
+  `status` tinyint(1) DEFAULT '0' COMMENT '-3:terminated,-2:failed,-1:aborted,0:prepared,1:running,2:done',
+  `message` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  `ranAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  `finishedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`jobRunId`),
+  KEY `jobDefinitionId` (`jobDefinitionId`),
+  KEY `jobScheduleId` (`jobScheduleId`),
+  KEY `processId` (`processId`),
+  KEY `type` (`type`),
+  KEY `status` (`status`),
+  KEY `createdAt` (`createdAt`),
+  KEY `modifiedAt` (`modifiedAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>job_schedule`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>job_schedule` (
+  `jobScheduleId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `jobDefinitionId` int(11) UNSIGNED NOT NULL,
+  `status` tinyint(1) DEFAULT '0' COMMENT '0:disabled,1:enabled',
+  `minuteOfHour` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
+  `hourOfDay` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
+  `dayOfWeek` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
+  `dayOfMonth` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
+  `monthOfYear` varchar(10) COLLATE utf8_unicode_ci DEFAULT '*',
+  `createdAt` decimal(10,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(10,0) UNSIGNED NOT NULL,
+  `lastRunAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`jobScheduleId`),
+  KEY `jobDefinitionId` (`jobDefinitionId`),
+  KEY `status` (`status`),
+  KEY `minuteOfHour` (`minuteOfHour`),
+  KEY `hourOfDay` (`hourOfDay`),
+  KEY `dayOfWeek` (`dayOfWeek`),
+  KEY `dayOfMonth` (`dayOfMonth`),
+  KEY `monthOfYear` (`monthOfYear`),
+  KEY `createdAt` (`createdAt`),
+  KEY `modifiedAt` (`modifiedAt`),
+  KEY `lastRunAt` (`lastRunAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="update" version="0.7.7"><![CDATA[
+ALTER TABLE `<%?prefix%>job_schedule`
+  ADD `reportMode` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:never,1:always,2:change,3:fail,4:done,5:success' AFTER `status`,
+  ADD `reportChannel` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:none,1:mail,2:xmpp' AFTER `reportMode`,
+  ADD `arguments` VARCHAR(100) NULL DEFAULT NULL AFTER `monthOfYear`,
+  ADD `title` VARCHAR(200) NOT NULL AFTER `arguments`,
+  ADD `reportReceivers` TEXT NULL DEFAULT NULL AFTER `title`,
+  ADD INDEX (`reportMode`),
+  ADD INDEX (`reportChannel`);
+
+ALTER TABLE `<%?prefix%>job_runs`
+  ADD `archived` TINYINT(1) UNSIGNED NULL DEFAULT '0' COMMENT '0:no, 1:yes' AFTER `status`,
+  ADD `reportMode` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:never,1:always,2:change,3:fail,4:done,5:success' AFTER `archived`,
+  ADD `reportChannel` INT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:none,1:mail,2:xmpp' AFTER `reportMode`,
+  ADD `arguments` VARCHAR(250) NULL DEFAULT NULL AFTER `reportChannel`,
+  ADD `title` VARCHAR(200) NOT NULL AFTER `arguments`,
+  ADD `reportReceivers` TEXT NULL DEFAULT NULL AFTER `title`,
+  ADD INDEX (`archived`),
+  ADD INDEX (`reportMode`),
+  ADD INDEX (`reportChannel`);
+  ]]></sql>
+	<sql type="mysql" on="update" version="0.8.2"><![CDATA[
+-- ALTER TABLE `<%?prefix%>job_schedule` ADD COLUMN expression VARCHAR(100) GENERATED ALWAYS AS (CONCAT(minuteOfHour," ",hourOfDay," ",dayOfMonth," ",monthOfYear," ",dayOfWeek)) STORED AFTER reportChannel;
+ALTER TABLE `<%?prefix%>job_schedule` ADD COLUMN expression VARCHAR(100) AFTER reportChannel;
+ALTER TABLE `<%?prefix%>job_schedule` CHANGE `expression` `expression` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;
+ALTER TABLE `<%?prefix%>job_schedule` DROP `minuteOfHour`, DROP `hourOfDay`, DROP `dayOfWeek`, DROP `dayOfMonth`, DROP `monthOfYear`;
+ALTER TABLE `<%?prefix%>job_schedule` ADD `type` TINYINT(1) UNSIGNED NULL DEFAULT '1' COMMENT '0:unknown,1:cron,2:interval,3:datetime' AFTER `jobDefinitionId`, ADD INDEX (`type`);
+ALTER TABLE `<%?prefix%>job_schedule` CHANGE `type` `type` TINYINT(1) UNSIGNED NULL DEFAULT '0' COMMENT '0:unknown,1:cron,2:interval,3:datetime';
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>job_definitions`;
+DROP TABLE IF EXISTS `<%?prefix%>job_runs`;
+DROP TABLE IF EXISTS `<%?prefix%>job_schedule`;
+]]></sql>
+</module>

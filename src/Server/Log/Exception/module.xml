@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<module>
+	<title>Server: Syslog</title>
+	<description><![CDATA[Extends server by system log.
+
+Sends mail to developer with exception trace if a developer mail address is defined.
+This module can extend normal or server applications but will need an installed application base with mail support.
+
+**Features:**
+list>
+- stores exceptions into log file (serialized)
+- can send mails to one or more mail receivers
+<list
+
+**Invokation:**
+code>
+...
+catch( Exception $e ){
+	$this->env->getCaptain()->callHook( 'Env', 'logException', $this, ['exception' => $e] );
+}
+...
+<code
+
+If you are sure, that this module is installed, you can use:
+code>
+...
+catch( Exception $e ){
+	$this->env->logic->logException->log( $e );
+
+	/* or using logic instance */
+	Logic_Log_Exception::getInstance( $this->env )->log( $e );
+
+	/* or using controller */
+	Controller_Server_Log_Exception::logException( $e );
+}
+...
+<code
+Of course, this method is not the best way, since you bind your code to this module.
+Please think about using the hook instead.
+
+
+]]></description>
+	<category>Server</category>
+	<version>0.5.8</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
+	<log version="0.3">Add mail component for collecting exceptions facts for HTML and text mail.</log>
+	<log version="0.3.1">Add exception index and view.</log>
+	<log version="0.3.2">Extract hook to own class.</log>
+	<log version="0.4">Major overhaul.</log>
+	<log version="0.5">Add database support and import log file.</log>
+	<log version="0.5.1">Add new logic class to logic pool.</log>
+	<log version="0.5.2">Extract logic from controller to logic class.</log>
+	<log version="0.5.3">Extract logic from hook to logic class.</log>
+	<log version="0.5.4">Extract logic from job to logic class.</log>
+	<log version="0.5.5">Support frontend environment.</log>
+	<log version="0.5.6">Added English Localization files.</log>
+	<log version="0.5.7">Replace job file by module configuration.</log>
+	<log version="0.5.8">Improve import.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Server/Log/Exception.php</class>
+		<class>Hook/Server/Log/Exception.php</class>
+		<class>Job/Server/Log/Exception.php</class>
+		<class>Logic/Log/Exception.php</class>
+		<class>Mail/Log/Exception.php</class>
+		<class>Model/Log/Exception.php</class>
+		<class>View/Helper/Mail/Exception/Facts.php</class>
+		<class>View/Server/Log/Exception.php</class>
+		<template>server/log/exception/index.php</template>
+		<template>server/log/exception/view.php</template>
+		<locale>de/server/log/exception.ini</locale>
+		<locale>de/server/log/exception/sqlstate.ini</locale>
+		<locale>en/server/log/exception.ini</locale>
+		<locale>en/server/log/exception/sqlstate.ini</locale>
+	</files>
+	<config protected="yes" type="boolean" name="file.active" title="Enable log file">yes</config>
+	<config protected="yes" type="string" name="file.name" title="Path of log file">exception.log</config>
+	<config protected="yes" type="boolean" name="mail.active" title="Enable sending mails">yes</config>
+	<config protected="yes" type="string" name="mail.receivers" title="Mail receiver address[es] (comma separated)"></config>
+	<relations>
+		<needs type="module">Resource_Mail</needs>
+	</relations>
+	<hook type="resource" resource="Env" event="logException">Hook_Server_Log_Exception::onEnvLogException</hook>
+	<job id="Server.Log.Exception.import">Server_Log_Exception::import</job>
+	<sql on="update" type="mysql" version="0.5"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>log_exceptions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>log_exceptions` (
+  `exceptionId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` int(11) NOT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `message` text COLLATE utf8_unicode_ci NOT NULL,
+  `code` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `file` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `line` int(11) NOT NULL,
+  `trace` text COLLATE utf8_unicode_ci NOT NULL,
+  `previous` text COLLATE utf8_unicode_ci,
+  `sqlCode` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `subject` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `resource` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `env` text COLLATE utf8_unicode_ci NOT NULL,
+  `request` text COLLATE utf8_unicode_ci,
+  `session` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`exceptionId`),
+  KEY `status` (`status`),
+  KEY `type` (`type`),
+  KEY `code` (`code`),
+  KEY `file` (`file`),
+  KEY `createdAt` (`createdAt`),
+  KEY `modifiedAt` (`modifiedAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>log_exceptions`;
+]]></sql>
+</module>
