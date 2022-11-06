@@ -88,11 +88,11 @@ class JobScriptHelper
 		return $this;
 	}
 
-	public function setMode( string $modes ): self
+	public function setMode( string $mode ): self
 	{
 		if( !in_array( $mode, $this->modes ) )
 			throw new RangeException( 'Invalid mode: '.$mode );
-		$this->mode		= $modes;
+		$this->mode		= $mode;
 		return $this;
 	}
 

@@ -44,7 +44,8 @@ class Hook_Work_Time extends Hook
 	public static function onProjectRemove( Environment $env, $context, $module, $payload )
 	{
 		$projectId	= $payload['projectId'];
-		$this->modelTimer->removeByIndex( 'projectId', $projectId );
+		$modelTimer	= new Model_Work_Timer( $env );
+		$modelTimer->removeByIndex( 'projectId', $projectId );
 	}
 
 	public static function onEnvCallForModules( Environment $env, $context, $module, $payload = [] )

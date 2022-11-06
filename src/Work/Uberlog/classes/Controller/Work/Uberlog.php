@@ -4,8 +4,8 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Uberlog extends Controller
 {
-	/**	@var	Model_Log		$model		Instance of log record model */
-	protected $model;
+	/**	@var	Model_Log_Record		$model		Instance of log record model */
+	protected Model_Log_Record $modelRecord;
 
 	public function ajaxUpdateIndex()
 	{
@@ -32,7 +32,7 @@ class Controller_Work_Uberlog extends Controller
 		$data['logClientId']	= $this->getClientId( $post->get( 'client' ) );
 		$data['logHostId']		= $this->getHostId( $post->get( 'host' ) );
 		$data['logUserAgentId']	= $this->getUserAgentId( $post->get( 'userAgent' ) );
-		$recordId	= $this->model->add( $data );
+		$recordId	= $this->modelRecord->add( $data );
 		print( $recordId );
 		exit;
 		if( $request->isAjax() ){
@@ -44,8 +44,9 @@ class Controller_Work_Uberlog extends Controller
 
 	public function remove( $recordId )
 	{
-		$this->model->remove( $recordId );
-		$this->messenger->noteSuccess( 'Record '.$recordId.' has been removed.' );
+		$request	= $this->env->getRequest();
+		$this->modelRecord->remove( $recordId );
+		$this->env->getMessenger()->noteSuccess( 'Record '.$recordId.' has been removed.' );
 		if( $request->isAjax() )
 			exit;
 		$this->restart( NULL, TRUE );
@@ -59,7 +60,7 @@ class Controller_Work_Uberlog extends Controller
 			'timestamp'	=> time(),
 			'type'		=> $type,
 		);
-		$response	= $this->env->uberlog->report( $data );
+		$response	= $this->env->get( 'uberlog' )->report( $data );
 		$this->restart( NULL, TRUE );
 
 #		if( !$this->env->getModules()->has( 'Resource_Uberlog' ) )
@@ -74,7 +75,7 @@ class Controller_Work_Uberlog extends Controller
 
 	protected function __onInit(): void
 	{
-		$this->model	= new Model_Log_Record( $this->env );
+		$this->modelRecord	= new Model_Log_Record( $this->env );
 	}
 
 	protected function getCategoryId( $categoryName )
@@ -145,10 +146,10 @@ class Controller_Work_Uberlog extends Controller
 		return $modelAgent->add( $data );
 	}
 
-	protected function listRecords( $filters = [], $orders = [] )
+	protected function listRecords( array $filters = [], array $orders = [] ): array
 	{
-		$orders				= $orders ? $orders : ['logRecordId' => 'DESC'];
-		$records			= $this->model->getAll( $filters, $orders, [10 ,0] );
+		$orders				= $orders ?: ['logRecordId' => 'DESC'];
+		$records			= $this->modelRecord->getAll( $filters, $orders, [10 ,0] );
 		$listCategories		= [];
 		$listClients		= [];
 		$listHosts			= [];
@@ -172,12 +173,12 @@ class Controller_Work_Uberlog extends Controller
 		if( $listHosts )
 			foreach( $modelHost->getAllByIndex( 'logHostId', array_keys( $listHosts ) ) as $host )
 				$listHosts[$host->logHostId]	= $host;
+		$listUserAgents	= [];
 		if( $listUserAgentId )
 			foreach( $modelUserAgent->getAllByIndex( 'logUserAgentId', array_keys( $listUserAgentId ) ) as $userAgent )
 				$listUserAgents[$userAgent->logUserAgentId]	= $userAgent;
 
 		foreach( $records as $record ){
-
 			$record->host		= (object) ['title' => NULL];
 			$record->userAgent	= (object) ['title' => NULL];
 

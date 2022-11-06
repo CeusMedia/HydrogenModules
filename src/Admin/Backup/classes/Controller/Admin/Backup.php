@@ -1,21 +1,23 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\Folder;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Backup extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $messenger;
-	protected $model;
-	protected $moduleConfig;
-	protected $pathFiles;
-	protected $filterPrefix				= 'filter_admin_backup_';
-	protected $defaultLimit				= 10;
-	protected $defaultOrderColumn		= 'createdAt';
-	protected $defaultOrderDirection	= 'DESC';
-	protected $filters					= [];
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected Model_Backup $model;
+	protected string $pathFiles;
+	protected string $filterPrefix				= 'filter_admin_backup_';
+	protected int $defaultLimit					= 10;
+	protected string $defaultOrderColumn		= 'createdAt';
+	protected string $defaultOrderDirection		= 'DESC';
+	protected array $filters					= [];
 
 	public function filter( $reset = NULL )
 	{
@@ -88,6 +90,8 @@ class Controller_Admin_Backup extends Controller
 
 	protected function __onInit(): void
 	{
+		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig = $this->env->getConfig()->getAll('module.admin_backup.', TRUE);
 		$this->pathFiles = $this->moduleConfig->get('path');
 		$this->model = new Model_Backup($this->env);

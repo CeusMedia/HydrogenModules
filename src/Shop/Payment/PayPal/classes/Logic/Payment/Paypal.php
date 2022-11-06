@@ -5,16 +5,17 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Logic_Payment_PayPal
 {
+	protected Environment $env;
 	protected $password;
 	protected $username;
 	protected $signature;
 	public $latestResponse;
 
-	/**	@var	Model_Shop_Payment		$model			*/
-	protected $model;
+	/**	@var	Model_Shop_Payment_Paypal		$model			*/
+	protected Model_Shop_Payment_Paypal $model;
 
 	/**	@var	Dictionary				$config			Module configuration dictionary */
-	protected $config;
+	protected Dictionary $config;
 
 	public function __construct( Environment $env )
 	{

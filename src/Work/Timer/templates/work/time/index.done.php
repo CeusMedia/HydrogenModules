@@ -1,4 +1,12 @@
 <?php
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var string $userId */
+
 $w	= (object) $words['index-done'];
 
 $helperShortList	= new View_Helper_Work_Time_ShortList( $env );

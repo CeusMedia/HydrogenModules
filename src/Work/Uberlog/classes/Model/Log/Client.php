@@ -20,18 +20,18 @@ class Model_Log_Client extends Model
 {
 	protected string $name			= 'log_clients';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'logClientId',
 		'title',
 		'createdAt',
 		'loggedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'logClientId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'title',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

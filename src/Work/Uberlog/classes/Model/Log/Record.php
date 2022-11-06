@@ -29,7 +29,7 @@ class Model_Log_Record extends Model
 {
 	protected string $name			= 'log_records';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'recordId',
 		'logCategoryId',
 		'logClientId',
@@ -43,11 +43,11 @@ class Model_Log_Record extends Model
 		'message',
 		'client',
 		'timestamp'
-	);
+	];
 
 	protected string $primaryKey	= 'recordId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'logCategoryId',
 		'logClientId',
 		'logHostId',
@@ -55,7 +55,7 @@ class Model_Log_Record extends Model
 		'type',
 		'category',
 		'client',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

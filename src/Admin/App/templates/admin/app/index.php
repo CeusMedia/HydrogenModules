@@ -1,5 +1,15 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var string $appBrand */
+/** @var string $appIcon */
+/** @var string $appLogo */
+/** @var string $appTitle */
 
 $iconFile	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-folder'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -13,7 +23,7 @@ $panelTitle	= '<div class="content-panel">
 				<div class="span12">
 					<label for="input_title">Titel als einzeiliger Reintext</label>
 					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $appTitle, ENT_QUOTES, 'UTF-8' ).'"/>
-					<p><small class="not-muted">Dieser Titel erscheint an allen Stellen, wo die Anwendung benannt werden soll ohne HTML zu verwenden. Z.B. die Bezeichnung im Browser-Reiter oder in Text-E-Mails.</small></p>
+					<p><small class="not-muted">Dieser Titel erscheint an allen Stellen, wo die Anwendung benannt werden soll, ohne HTML zu verwenden. Z.B. die Bezeichnung im Browser-Reiter oder in Text-E-Mails.</small></p>
 				</div>
 			</div>
 			<div class="buttonbar">

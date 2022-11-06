@@ -1,18 +1,21 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Work_Time extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $messenger;
-	protected $userId;
-	protected $logicTimer;
-	protected $logicProject;
-	protected $modelTimer;
-	protected $projectMap;
-	protected $modules			= [];
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected ?string $userId;
+	protected Logic_Work_Timer $logicTimer;
+	protected Logic_Project $logicProject;
+	protected Model_Work_Timer $modelTimer;
+	protected array $projectMap;
+	protected array $modules			= [];
 
 	public function add()
 	{

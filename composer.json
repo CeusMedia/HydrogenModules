@@ -68,7 +68,7 @@
         ],
         "dev:phpstan": [
             "@dev:install",
-            "XDEBUG_MODE=OFF vendor/bin/phpstan analyse --configuration phpstan.neon --xdebug"
+            "XDEBUG_MODE=off vendor/bin/phpstan analyse --configuration phpstan.neon"
         ],
         "dev:phpstan-clear": [
             "@dev:install",

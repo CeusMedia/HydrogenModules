@@ -1,17 +1,19 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Time_Archive extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $userId;
-	protected $modelProject;
-	protected $modelMission;
-	protected $modelTimer;
-	protected $logicProject;
-	protected $projectMap;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected ?string $userId;
+	protected Model_Project $modelProject;
+	protected Model_Mission $modelMission;
+	protected Model_Work_Timer $modelTimer;
+	protected Logic_Project $logicProject;
+	protected array $projectMap;
 
 /*	public function add()
 	{
@@ -32,7 +34,7 @@ class Controller_Work_Time_Archive extends Controller
 			$data	= $this->request->getAll();
 			$this->restart( 'archive', TRUE );
 		}
-		$this->addData( 'activityMap', $this->activityMap );
+//		$this->addData( 'activityMap', $this->activityMap );
 		$this->addData( 'projectMap', $this->projectMap );
 	}
 

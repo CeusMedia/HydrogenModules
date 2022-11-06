@@ -1,10 +1,15 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Logic_Work_Timer
 {
-	static protected $instance;
+	protected Environment $env;
+	protected Dictionary $session;
+	protected static Logic_Work_Timer $instance;
+	protected Model_Work_Timer $modelTimer;
+	protected ?string $userId;
 
 	public function get( $timerId )
 	{
@@ -16,7 +21,8 @@ class Logic_Work_Timer
 		return $this->modelTimer->getAll( $conditions, $orders, $limits );
 	}
 
-	static public function getInstance( $env ){
+	static public function getInstance( $env ): self
+	{
 		if( !self::$instance )
 			self::$instance = new Logic_Work_Timer( $env );
 		return self::$instance;
@@ -31,9 +37,8 @@ class Logic_Work_Timer
 				'secondsNeeded'	=> $timer->secondsNeeded + ( time() - $timer->modifiedAt ),
 				'modifiedAt'	=> time(),
 			) );
-			$this->env->getCaptain()->callHook( 'Work_Timer', 'onPauseTimer', $this, array(
-				'timer'	=> $this->checkTimerId( $timerId )
-			) );
+			$payload	= ['timer' => $this->checkTimerId( $timerId )];
+			$this->env->getCaptain()->callHook( 'Work_Timer', 'onPauseTimer', $this, $payload );
 		}
 	}
 
@@ -48,9 +53,8 @@ class Logic_Work_Timer
 			if( $active )
 				$this->pause( $active->workTimerId );
 			$this->modelTimer->edit( $timerId, array( 'status' => 1, 'modifiedAt' => time() ) );
-			$this->env->getCaptain()->callHook( 'Work_Timer', 'onStartTimer', $this, array(
-				'timer'	=> $this->checkTimerId( $timerId )
-			) );
+			$payload	= ['timer' => $this->checkTimerId( $timerId )];
+			$this->env->getCaptain()->callHook( 'Work_Timer', 'onStartTimer', $this, $payload );
 		}
 	}
 
@@ -63,9 +67,8 @@ class Logic_Work_Timer
 			'status'		=> 3,
 			'modifiedAt'	=> time(),
 		) );
-		$this->env->getCaptain()->callHook( 'Work_Timer', 'onStopTimer', $this, array(
-			'timer'	=> $this->checkTimerId( $timerId )
-		) );
+		$payload	= ['timer' => $this->checkTimerId( $timerId )];
+		$this->env->getCaptain()->callHook( 'Work_Timer', 'onStopTimer', $this, $payload );
 	}
 
 	public function sumTimersOfModuleId( string $moduleKey, $moduleId, array $statuses = [2, 3] ): int
@@ -79,7 +82,7 @@ class Logic_Work_Timer
 		return $seconds;
 	}
 
-	public function countTimers( array $conditions )
+	public function countTimers( array $conditions ): int
 	{
 		return $this->modelTimer->count( $conditions );
 	}

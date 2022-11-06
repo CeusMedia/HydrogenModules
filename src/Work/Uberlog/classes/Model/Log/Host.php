@@ -20,18 +20,18 @@ class Model_Log_Host extends Model
 {
 	protected string $name			= 'log_hosts';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'logHostId',
 		'title',
 		'createdAt',
 		'loggedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'logHostId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'title',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

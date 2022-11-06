@@ -1,4 +1,11 @@
 <?php
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+
 $w	= (object) $words['index'];
 
 $panelActive	= $view->loadTemplateFile( 'work/time/index.active.php' );

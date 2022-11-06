@@ -1,5 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
 
 $w	= (object) $words['index'];
 $content	= '<div class="alert alert-info"><em class="muted">'.$w->noCurrent.'</em></div>';

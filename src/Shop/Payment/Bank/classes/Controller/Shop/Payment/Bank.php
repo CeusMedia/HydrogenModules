@@ -6,13 +6,13 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Shop_Payment_Bank extends Controller
 {
 	/**	@var	Dictionary					$config			Module configuration dictionary */
-	protected $config;
+	protected Dictionary$config;
 
 	/**	@var	Logic_Shop					$logicShop		Shop logic instance */
-	protected $logicShop;
+	protected Logic_Shop $logicShop;
 
-	/**	@var	Net_HTTP_PartitionSession	$session		Session resource */
-	protected $session;
+	/**	@var	Dictionary					$session		Session resource */
+	protected Dictionary $session;
 
 	protected $request;
 	protected $messenger;

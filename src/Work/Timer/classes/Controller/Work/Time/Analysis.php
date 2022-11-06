@@ -1,18 +1,20 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\PartitionSession as HttpSession;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Time_Analysis extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $userId;
-	protected $modelProject;
-	protected $modelMission;
-	protected $modelTimer;
-	protected $logicProject;
-	protected $projectMap;
-	protected $filterPrefix		= 'filter_work_timer_analysis_';
+	protected HttpRequest $request;
+	protected HttpSession $session;
+	protected ?string $userId;
+	protected Model_Project $modelProject;
+	protected Model_Mission $modelMission;
+	protected Model_Work_Timer $modelTimer;
+	protected Logic_Project $logicProject;
+	protected array $projectMap;
+	protected string $filterPrefix		= 'filter_work_timer_analysis_';
 
 	public function filter( $reset = NULL )
 	{
@@ -69,8 +71,6 @@ class Controller_Work_Time_Analysis extends Controller
 		$filterWeek			= $this->session->get( $this->filterPrefix.'week' );
 
 		$data		= [];
-		$users		= [];
-		$projects	= [];
 
 		$userMap		= Logic_Authentication::getInstance( $this->env )->getRelatedUsers( $this->userId );
 
@@ -202,7 +202,7 @@ class Controller_Work_Time_Analysis extends Controller
 			$this->session->set( $this->filterPrefix.'mode', 'projects' );
 	}
 
-	protected function sumTimers( array $conditions )
+	protected function sumTimers( array $conditions ): object
 	{
 		$sumPlanned	= 0;
 		$sumNeeded	= 0;

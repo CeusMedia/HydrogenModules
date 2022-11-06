@@ -1,15 +1,20 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Alg\ID;
 use CeusMedia\Common\FS\File\INI\Editor as IniFileEditor;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Language as LanguageResource;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_App extends Controller
 {
-	protected $config;
-	protected $language;
-	protected $messenger;
-	protected $request;
+	protected Dictionary $config;
+	protected LanguageResource $language;
+	protected ?MessengerResource $messenger;
+	protected HttpRequest $request;
 
 	public function index()
 	{
@@ -86,7 +91,15 @@ class Controller_Admin_App extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function setConfig( string $key, $value )
+	protected function __onInit(): void
+	{
+		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+		$this->language		= $this->env->getLanguage();
+	}
+
+	protected function setConfig( string $key, $value ): ?bool
 	{
 		if( $this->config->get( $key ) == $value )
 			return NULL;
@@ -96,7 +109,7 @@ class Controller_Admin_App extends Controller
 		return TRUE;
 	}
 
-	protected function setMainWord( string $key, $value )
+	protected function setMainWord( string $key, $value ): bool
 	{
 		$language	= $this->language->getLanguage();
 		$fileName	= $this->config['path.locales'].$language.'/main.ini';
@@ -107,17 +120,20 @@ class Controller_Admin_App extends Controller
 		return TRUE;
 	}
 
-	protected function uploadImage( $upload )
+	/**
+	 *	@param		object		$upload
+	 *	@return		string|FALSE|NULL
+	 */
+	protected function uploadImage( object $upload )
 	{
-		if( !is_object( $upload ) )
-			throw new InvalidArgumentException( 'Invalid upload given' );
 		if( $upload->error === 4 )
 			return NULL;
+
+		$logicUpload	= new Logic_Upload( $this->env );
 		try{
-			$logicUpload	= new Logic_Upload( $this->env );
 			$logicUpload->setUpload( $upload );
 			$pathImages		= $this->config->get( 'path.images' ).'/logo/';
-			$fileName		= $pathImages.Alg_ID::uuid().'.'.$logicUpload->getExtension();
+			$fileName		= $pathImages.ID::uuid().'.'.$logicUpload->getExtension();
 			FolderEditor::createFolder( $pathImages );
 			$logicUpload->saveTo( $fileName );
 			return $fileName;
@@ -128,13 +144,5 @@ class Controller_Admin_App extends Controller
 			$this->messenger->noteError( $helper->render() );
 			return FALSE;
 		}
-	}
-
-	protected function __onInit(): void
-	{
-		$this->config		= $this->env->getConfig();
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->language		= $this->env->getLanguage();
 	}
 }

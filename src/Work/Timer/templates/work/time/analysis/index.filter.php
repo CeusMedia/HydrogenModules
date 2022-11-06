@@ -1,5 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var array<object> $allProjects */
+/** @var array<object> $allUsers */
 
 $optMode	= $words['index-filter-modes'];
 $optMode	= HtmlElements::Options( $words['index-filter-modes'], $filterMode );
@@ -99,7 +107,7 @@ return '
 </div>
 <script>
 jQuery(document).ready(function(){
-	var dateInputs = $("#input_durationFrom, #input_durationTo" );
+	let dateInputs = $("#input_durationFrom, #input_durationTo" );
 	dateInputs.datepicker({
 		dateFormat: "yy-mm-dd",
 	//	appendText: "(yyyy-mm-dd)",

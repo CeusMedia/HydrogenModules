@@ -1,4 +1,12 @@
 <?php
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var array $records */
+
 //return '[uberlog::index]';
 
 $add	= '<a href="./work/uberlog/testRecord">test</a> | <button id="testRecordAjax">test AJAX</button>
@@ -69,7 +77,7 @@ $panelFilter	= '
 					'.date( 'j.n.Y', $record->timestamp ).'<br/>
 					'.date( 'H:i:s', $record->timestamp ).'
 				</td>
-				<td><button type="button" onclick="WorkUberlogView.removeRecord('.$record->logRecordId.');" class="btn btn-small">X</button></td>
+				<td><button type="button" onclick="WorkUberlogView.removeRecord('.$record->logRecordId.')" class="btn btn-small">X</button></td>
 			</tr>';
 		}
 		$list	= '
@@ -92,7 +100,7 @@ $panelFilter	= '
 			</tbody>
 		</table>
 		<script>
-		var lastId = '.$lastId.'
+		let lastId = '.$lastId.'
 		</script>
 			</div>
 		</div>
@@ -108,4 +116,3 @@ return '
 	</div>
 </div>
 '.$add;
-?>

@@ -3,20 +3,30 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var array $allProjects */
+/** @var array $allUsers */
+/** @var array $data */
 
 $indicator	= new HtmlIndicator( array(
 	'useColor'	=> FALSE,
 ) );
 
-function renderTime( $seconds ){
+function renderTime( int $seconds ): string
+{
 	if( $seconds )
 		return View_Work_Mission::formatSeconds( $seconds );
 	return '&minus;';
 }
 
 
-function renderTimers( Environment $env, $timers ){
+function renderTimers( Web $env, $timers ): string
+{
 	if( !$timers )
 		return '';
 	$list	= [];

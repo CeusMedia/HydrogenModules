@@ -20,18 +20,18 @@ class Model_Log_Category extends Model
 {
 	protected string $name			= 'log_categories';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'logCategoryId',
 		'title',
 		'createdAt',
 		'loggedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'logCategoryId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'title',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

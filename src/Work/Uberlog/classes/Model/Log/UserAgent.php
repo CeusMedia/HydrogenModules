@@ -20,18 +20,18 @@ class Model_Log_UserAgent extends Model
 {
 	protected string $name			= 'log_useragents';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'logUserAgentId',
 		'title',
 		'createdAt',
 		'loggedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'logUserAgentId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'title',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

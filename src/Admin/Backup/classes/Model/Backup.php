@@ -20,21 +20,21 @@ class Model_Backup extends Model
 {
 	protected string $name		= 'backups';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'backupId',
 		'creatorId',
 		'status',
 		'comment',
 		'createdAt',
 		'modifiedAt'
-	);
+	];
 
 	protected string $primaryKey	= 'backupId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'creatorId',
 		'status',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }
