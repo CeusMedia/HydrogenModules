@@ -20,16 +20,13 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class Controller_Admin_Log_Exception extends Controller
 {
-	/**	@var		Environment		$env		Environment instance */
-	protected $env;
-
 	protected $logic;
 
 	protected $messenger;
 
 	protected $model;
 
-	protected $moduleConfig;
+	protected Dictionary $moduleConfig;
 
 	protected $request;
 

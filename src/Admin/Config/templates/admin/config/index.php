@@ -8,9 +8,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var object $server */
 
-$w	= (object) $words['index'];
+//$w	= (object) $words['index'];
 
-[$textTop, $textBottom] = $view->populateTexts( ['top', 'bottom'], 'html/admin/config/index/' );
+[$textTop, $textBottom] = array_values( $view->populateTexts( ['top', 'bottom'], 'html/admin/config/index/' ) );
 
 $panelFilter	= $view->loadTemplateFile( 'admin/config/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'admin/config/index.list.php' );

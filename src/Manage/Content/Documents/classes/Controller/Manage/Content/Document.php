@@ -1,13 +1,13 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Content_Document extends Controller
 {
-
 	protected $frontend;
-	protected $moduleConfig;
-	protected $path;
+	protected Dictionary $moduleConfig;
+	protected $docPath;
 	protected $model;
 	protected $rights;
 
@@ -36,9 +36,9 @@ class Controller_Manage_Content_Document extends Controller
 					}
 					else{
 						if( $filename )
-							unlink( $this->path.$filename );
+							unlink( $this->docPath.$filename );
 						$filename	= $logicUpload->getFileName();
-						$logicUpload->saveTo( $this->path.$filename );
+						$logicUpload->saveTo( $this->docPath.$filename );
 						$this->messenger->noteSuccess( $words->successDocumentUploaded, $filename );
 					}
 				}
@@ -81,8 +81,8 @@ class Controller_Manage_Content_Document extends Controller
 		if( !in_array( 'remove', $this->rights ) )
 			$this->restart( NULL, TRUE );
 		$document	= base64_decode( $this->request->get( 'documentId' ) );
-		if( file_exists( $this->path.$document ) )
-			unlink( $this->path.$document );
+		if( file_exists( $this->docPath.$document ) )
+			unlink( $this->docPath.$document );
 		if( ( $page = $this->request->get( 'page' ) ) )
 			$this->restart( $page, TRUE );
 		$this->restart( NULL, TRUE );
@@ -94,23 +94,23 @@ class Controller_Manage_Content_Document extends Controller
 		$this->messenger	= $this->env->getMessenger();
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
-		$this->path			= $this->frontend->getPath().$this->moduleConfig->get( 'path.documents' );
+		$this->docPath		= $this->frontend->getPath().$this->moduleConfig->get( 'path.documents' );
 
 		$words				= (object) $this->getWords( 'msg' );
-		if( !$this->path ){
+		if( !$this->docPath ){
 			$this->messenger->noteFailure( $words->failureNoPathSet );
 			$this->restart();
 		}
-		if( !file_exists( $this->path ) || !is_dir( $this->path ) )
-			mkdir( $this->path, 0777, TRUE );
-		if( !is_writable( $this->path ) ){
-			$this->messenger->noteFailure( $words->failurePathNotWritable, $this->path );
+		if( !file_exists( $this->docPath ) || !is_dir( $this->docPath ) )
+			mkdir( $this->docPath, 0777, TRUE );
+		if( !is_writable( $this->docPath ) ){
+			$this->messenger->noteFailure( $words->failurePathNotWritable, $this->docPath );
 			$this->restart();
 		}
-//		if( !file_exists( $this->path.'.htaccess' ) )
-//			file_put_contents( $this->path.'.htaccess', 'Deny from all'.PHP_EOL );
+//		if( !file_exists( $this->docPath.'.htaccess' ) )
+//			file_put_contents( $this->docPath.'.htaccess', 'Deny from all'.PHP_EOL );
 
-		$this->model	= new Model_Document( $this->env, $this->path );
+		$this->model	= new Model_Document( $this->env, $this->docPath );
 		$this->rights	= $this->env->getAcl()->index( 'manage/content/document' );
 		$this->addData( 'rights', $this->rights );
 	}

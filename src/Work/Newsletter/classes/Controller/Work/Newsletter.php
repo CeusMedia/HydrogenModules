@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -10,7 +11,7 @@ class Controller_Work_Newsletter extends Controller
 	protected $session;
 	protected $request;
 	protected $messenger;
-	protected $moduleConfig;
+	protected Dictionary $moduleConfig;
 	protected $limiter;
 	protected $filterPrefix	= 'filter_work_newsletter_';
 

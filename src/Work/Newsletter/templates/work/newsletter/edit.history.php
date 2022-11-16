@@ -1,12 +1,22 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 
-$rowColors	= array(
+/** @var Environment $env */
+/** @var View $view */
+/** @var object $words */
+/** @var bool $tabbedLinks */
+/** @var array $letterHistory */
+/** @var string $frontendUrl */
+
+$rowColors	= [
 	-1	=> 'error',
 	1	=> 'warning',
 	2	=> 'success',
-);
+];
 $labelLetterButtonSend		= '<i class="icon-envelope icon-white"></i> '.$words->edit->buttonQueueAgain;
 $labelLetterButtonRemove	= '<i class="icon-remove icon-white"></i> '.$words->edit->buttonQueueRemove;
 $labelLetterButtonView		= '<i class="icon-eye-open"></i> '.$words->edit->buttonQueueView;

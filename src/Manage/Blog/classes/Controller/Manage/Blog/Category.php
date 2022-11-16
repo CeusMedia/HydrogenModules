@@ -1,27 +1,28 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Blog_Category extends Controller
 {
 	protected $messenger;
-	protected $modelCategory;
-	protected $modelComment;
-	protected $modelPost;
-	protected $modelUser;
-	protected $moduleConfig;
+	protected Model_Blog_Category $modelCategory;
+	protected Model_Blog_Comment $modelComment;
+	protected Model_Blog_Post $modelPost;
+	protected Model_User $modelUser;
+	protected Dictionary $moduleConfig;
 	protected $request;
 
 	public function add()
 	{
 		if( $this->request->get( 'save' ) ){
-			$data	= array(
+			$data	= [
 				'status'		=> $this->request->get( 'status' ),
 				'title'			=> $this->request->get( 'title' ),
 				'language'		=> $this->request->get( 'language' ),
 				'content'		=> $this->request->get( 'content' ),
 				'createdAt'		=> time(),
-			);
+			];
 			$categoryId		= $this->modelCategory->add( $data );
 			$this->restart( NULL, TRUE );
 		}
@@ -32,6 +33,23 @@ class Controller_Manage_Blog_Category extends Controller
 		$this->addData( 'category', (object) $data );
 	}
 
+	public function edit( $categoryId )
+	{
+		$category	= $this->checkCategory( $categoryId );
+		if( $this->request->get( 'save' ) ){
+			$data	= [
+				'status'		=> $this->request->get( 'status' ),
+				'title'			=> $this->request->get( 'title' ),
+				'language'		=> $this->request->get( 'language' ),
+				'content'		=> $this->request->get( 'content' ),
+				'modifiedAt'	=> time(),
+			];
+			$this->modelCategory->edit( $categoryId, $data, FALSE );
+			$this->restart( 'edit/'.$categoryId, TRUE );
+		}
+		$this->addData( 'category', $category );
+	}
+
 	public function index( $categoryId = NULL )
 	{
 		if( $categoryId )
@@ -40,14 +58,6 @@ class Controller_Manage_Blog_Category extends Controller
 		$this->addData( 'categories', $categories );
 	}
 
-	public function edit( $categoryId )
-	{
-		$category	= $this->checkCategory( $categoryId );
-		if( $this->request->get( 'save' ) ){
-
-		}
-		$this->addData( 'category', $category );
-	}
 /*
 	public function remove( $categoryId )
 	{

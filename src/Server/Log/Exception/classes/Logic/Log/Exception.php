@@ -1,17 +1,17 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Log_Exception extends Logic
 {
-	protected $logFile;
+	protected string $logFile;
 
-	protected $model;
+	protected Model_Log_Exception $model;
 
-	protected $moduleConfig;
+	protected Dictionary $moduleConfig;
 
-	protected $pathLogs;
+	protected string $pathLogs;
 
 	public function check( $id, bool $strict = TRUE )
 	{
@@ -45,21 +45,25 @@ class Logic_Log_Exception extends Logic
 				'timestamp'		=> time(),
 			];
 		}
-		$sessionData	= $this->env->getSession()->getAll();
-		if( isset( $sessionData['exception'] ) )
-		unset( $sessionData['exception'] );
-		if( isset( $sessionData['exceptionRequest'] ) )
-		unset( $sessionData['exceptionRequest'] );
-		if( isset( $sessionData['exceptionUrl'] ) )
-		unset( $sessionData['exceptionUrl'] );
 		$content->env				= [
 			'appName'	=> $this->env->getConfig()->get( 'app.name' ),
 			'class'		=> get_class( $this->env ),
 			'url'		=> $this->env->url,
 			'uri'		=> $this->env->uri,
 		];
-		$content->request			= $this->env->getRequest();
-		$content->session			= $sessionData;
+		try{
+			$content->request			= $this->env->getRequest();
+		} catch (Exception $e ){}
+		try{
+			$sessionData	= $this->env->getSession()->getAll();
+			if( isset( $sessionData['exception'] ) )
+				unset( $sessionData['exception'] );
+			if( isset( $sessionData['exceptionRequest'] ) )
+				unset( $sessionData['exceptionRequest'] );
+			if( isset( $sessionData['exceptionUrl'] ) )
+				unset( $sessionData['exceptionUrl'] );
+			$content->session			= $sessionData;
+		} catch (Exception $e ){}
 	//	$content->cookie			= $this->env->getCookie()->getAll();		// @todo activate for Hydrogen 0.8.6.5+
 		$content->previous			= $exception->getPrevious();
 		$content->class				= get_class( $exception );
@@ -172,7 +176,8 @@ class Logic_Log_Exception extends Logic
 
 	public function log( Exception $exception )
 	{
-		$this->captain->callHook( 'Env', 'logException', $this->env, ['exception' => $exception] );
+		$payload	= ['exception' => $exception];
+		$this->captain->callHook( 'Env', 'logException', $this->env, $payload );
 	}
 
 	public function saveCollectedDataToLogFile( $data )

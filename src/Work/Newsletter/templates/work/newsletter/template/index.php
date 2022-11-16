@@ -1,4 +1,13 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var object $words */
+/** @var bool $tabbedLinks */
+
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
 $panelFilter	= $view->loadTemplateFile( 'work/newsletter/template/index.filter.php' );

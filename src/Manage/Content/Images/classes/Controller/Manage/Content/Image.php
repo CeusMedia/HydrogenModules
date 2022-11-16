@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
@@ -18,13 +19,13 @@ class Controller_Manage_Content_Image extends Controller
 	protected $basePath;
 	protected $baseUri;
 	protected $extensions;
-	protected $folders			= [];
-	protected $frontend;
+	protected array $folders			= [];
+	protected Logic_Frontend $frontend;
 	protected $messenger;
-	protected $moduleConfig;
+	protected Dictionary $moduleConfig;
 	protected $request;
 	protected $thumbnailer;
-	protected $path;
+	protected $imagePath;
 
 	protected static $cacheImageList	= [];
 
@@ -67,7 +68,7 @@ class Controller_Manage_Content_Image extends Controller
 		$this->setPathFromHash( $folderHash );
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'msg' );
-			$folderPath	= $this->path;//trim( $this->request->get( 'path' ) );
+			$folderPath	= $this->imagePath;//trim( $this->request->get( 'path' ) );
 			$folder		= trim( $this->request->get( 'folder' ) );
 			$name		= trim( $this->request->get( 'name' ) );
 			$folder		= str_replace( "../", "", $folder );							//  security
@@ -88,12 +89,12 @@ class Controller_Manage_Content_Image extends Controller
 				}
 			}
 		}
-		$this->addData( 'imagePath', $this->path );
+		$this->addData( 'imagePath', $this->imagePath );
 	}
 
 	public function addImage()
 	{
-		$path		= $this->path;
+		$path		= $this->imagePath;
 		$folder		= trim( $this->request->get( 'folder' ) );
 		$file		= $this->request->get( 'file' );
 		$folder		= str_replace( "../", "", $folder );				//  security
@@ -237,12 +238,12 @@ class Controller_Manage_Content_Image extends Controller
 		$path		= $this->setPathFromHash( $folderHash );
 
 //		$folderPath	= $this->env->getRequest()->get( 'path' );
-		$this->addData( 'folderPath', $this->path );
+		$this->addData( 'folderPath', $this->imagePath );
 		if( !file_exists( $this->basePath ) )
 			return;
-		if( !file_exists( $this->basePath.$this->path ) ){
-			$this->messenger->noteError( $words->errorPathNotExisting, $this->path, dirname( $this->path ) );
-			$this->restart( base64_encode( dirname( $this->path ) ), TRUE );
+		if( !file_exists( $this->basePath.$this->imagePath ) ){
+			$this->messenger->noteError( $words->errorPathNotExisting, $this->imagePath, dirname( $this->imagePath ) );
+			$this->restart( base64_encode( dirname( $this->imagePath ) ), TRUE );
 		}
 	}
 
@@ -449,13 +450,13 @@ class Controller_Manage_Content_Image extends Controller
 			}
 			natcasesort( $this->folders );
 		}
-		$this->path	= $this->session->get( 'filter_manage_content_image_path' );
+		$this->imagePath	= $this->session->get( 'filter_manage_content_image_path' );
 		$this->thumbnailer	= new View_Helper_Thumbnailer( $this->env, 120, 80 );
 
 //		$path	= trim( $this->env->getRequest()->get( 'path' ) );
 //		$path	= str_replace( "../", "", base64_decode( $path ) );
 //		$path	= strlen( trim( $path ) ) ? trim( $path ) : ".";
-		$this->addData( 'path', $this->path );
+		$this->addData( 'path', $this->imagePath );
 		$this->addData( 'basePath', $this->basePath );
 		$this->addData( 'folders', $this->folders );
 		$this->addData( 'extensions', $this->extensions );
@@ -479,7 +480,7 @@ class Controller_Manage_Content_Image extends Controller
 			$words		= (object) $this->getWords( 'msg' );
 			$this->messenger->noteError( $words->errorFolderNotExisting, $folderPath );
 
-			if( $folderPath === $this->path )
+			if( $folderPath === $this->imagePath )
 				$this->setPathFromHash( base64_encode( './' ) );
 			$this->restart( NULL, TRUE );
 		}
@@ -492,14 +493,14 @@ class Controller_Manage_Content_Image extends Controller
 			$path		= str_replace( "../", "", base64_decode( $folderHash ) );
 			if( file_exists( $this->basePath.$path ) ){
 				$this->session->set( 'filter_manage_content_image_path', $path );
-				$this->addData( 'path', $this->path = $path );
+				$this->addData( 'path', $this->imagePath = $path );
 			}
 //			$this->checkFolder( $path );
 /*			if( !file_exists( $this->basePath.$path ) ){
-				$this->messenger->noteError( $words->errorPathNotExisting, $this->path, dirname( $path ) );
+				$this->messenger->noteError( $words->errorPathNotExisting, $this->imagePath, dirname( $path ) );
 				$this->restart( NULL, TRUE );
 			}*/
 		}
-		return $this->path;
+		return $this->imagePath;
 	}
 }

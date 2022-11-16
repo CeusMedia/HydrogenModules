@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Newsletter_Group extends Controller
@@ -9,7 +10,7 @@ class Controller_Work_Newsletter_Group extends Controller
 	protected $session;
 	protected $request;
 	protected $messenger;
-	protected $moduleConfig;
+	protected Dictionary $moduleConfig;
 	protected $limiter;
 
 	public function add()

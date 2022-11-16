@@ -1,9 +1,15 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
 
 $w		= (object) $words['confirm'];
 
-extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/local/confirm/' ) );
+[$textTop, $textInfo, $textBottom]	= array_values( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/local/confirm/' ) );
 
 $panelConfirm	= HTML::DivClass( "content-panel content-panel-form", array(
 	HTML::H3( $w->heading ),

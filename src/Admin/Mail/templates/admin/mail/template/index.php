@@ -1,8 +1,17 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
+use CeusMedia\Common\Alg\UnitFormater as UnitFormat;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as Html;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var array $templates */
 
 $modelMail		= new Model_Mail( $env );
 
@@ -85,10 +94,10 @@ $helperUpload->setLabel( $iconFile );
 $helperUpload->setName( 'template' );
 $helperUpload->setRequired( TRUE );
 
-extract( $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/template/import/', array(
+[$textTop, $textBottom]	= array_values( $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/template/import/', [
 	'labelMaxFileSize'		=> $words['import']['labelMaxFileSize'],
-	'valueMaxFileSize'		=> Alg_UnitFormater::formatBytes( $env->getLogic()->upload->getMaxUploadSize() ),
-) ) );
+	'valueMaxFileSize'		=> UnitFormat::formatBytes( $env->getLogic()->upload->getMaxUploadSize() ),
+] ) );
 
 $wordsImport		= (object) $words['import'];
 $modalImportBody	= $textTop.'

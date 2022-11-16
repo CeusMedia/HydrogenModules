@@ -1,12 +1,15 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\HydrogenFramework\Logic;
+use CeusMedia\Mail\Message\Renderer as MailMessageRendererV2;
 
 /**
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
@@ -19,15 +22,16 @@ class Logic_Mail extends Logic
 	const LIBRARY_MAIL_V1		= 2;
 	const LIBRARY_MAIL_V2		= 4;
 
-	protected $detectedTemplates	= [];
-	protected $libraries			= 0;
-	protected $options;
-	protected $modelQueue;
-	protected $modelTemplate;
-	protected $modelAttachment;
-	protected $pathAttachments;
+	protected array $detectedTemplates	= [];
+	protected int $libraries			= 0;
+	protected Dictionary $options;
+	protected Model_Mail $modelQueue;
+	protected Model_Mail_Template $modelTemplate;
+	protected Model_Mail_Attachment $modelAttachment;
+	protected string $pathAttachments;
+	protected string $frontendPath;
 
-	public function abortMailsWithTooManyAttempts()
+	public function abortMailsWithTooManyAttempts(): int
 	{
 		$model		= new Model_Mail( $this->env );
 		$mails		= $model->getAll( array(
@@ -67,7 +71,7 @@ class Logic_Mail extends Logic
 		return function_exists( 'gzdeflate' ) && function_exists( 'gzinflate' );
 	}
 
-	public function collectConfiguredReceivers( $userIds, $roleIds = [], $listConfigKeysToCheck = [] )
+	public function collectConfiguredReceivers( $userIds, array $roleIds = [], array $listConfigKeysToCheck = [] ): array
 	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return [];
@@ -143,15 +147,16 @@ class Logic_Mail extends Logic
 
 	/**
 	 *	Creates instance of mail class with given mail data.
-	 *	Return mail object contains availble mail parts.
+	 *	Return mail object contains available mail parts.
 	 *	An active mail template will be applied.
 	 *	@access		public
 	 *	@param		string		$mailClassName		Name of mail class without Mail_ prefix
 	 *	@param		array		$mailData			Data map for mail content generation, nested arrays and objects are possible
 	 *	@return		object							Instance of mail class containing rendered mail parts
 	 *	@throws		RuntimeException				If mail class is not existing
+	 *	@throws		ReflectionException
 	 */
-	public function createMail( string $mailClassName, $data )
+	public function createMail( string $mailClassName, array $mailData ): object
 	{
 		$className	= 'Mail_'.$mailClassName;
 		if( !class_exists( $className ) )
@@ -160,11 +165,11 @@ class Logic_Mail extends Logic
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$this->frontendPath	= $this->env->getConfig()->get( 'module.resource_frontend.path' );
 			if( $this->frontendPath != './' ){
-				$logicFrontend	= $this->env->getLogic->get( 'Frontend' );
+				$logicFrontend	= $this->env->getLogic()->get( 'Frontend' );
 				$env	= $logicFrontend->getRemoteEnv( $this->env );
 			}
 		}
-		return ObjectFactory::createObject( $className, [$env, $data] );
+		return ObjectFactory::createObject( $className, [$env, $mailData] );
 	}
 
 	/**
@@ -175,12 +180,12 @@ class Logic_Mail extends Logic
 	 *	The created raw output will replace the raw content within given mail object.
 	 *	@access		public
 	 *	@param		object		$mail			Mail object to compress object serial within
-	 *	@param		boolean		$unserialize	Flag: try to realize mail object from decompressed serial (default: yes)
+	 *	@param		boolean		$serialize		Flag: try to realize mail object from decompressed serial (default: yes)
 	 *	@param		boolean		$force			Flag: not used yet, exists for symmetry
 	 *	@throws		RuntimeException			if no object instance is available
 	 *	@throws		RuntimeException			if no object serial is available
 	 */
-	public function compressMailObject( $mail, bool $serialize = TRUE, bool $force = FALSE )
+	public function compressMailObject( object $mail, bool $serialize = TRUE, bool $force = FALSE )
 	{
 		if( $serialize ){
 			if( empty( $mail->object->instance ) )
@@ -204,7 +209,7 @@ class Logic_Mail extends Logic
 	 *	@throws		RuntimeException			if no compressed raw column content is available
 	 *	@throws		RuntimeException			if unserialization fails
 	 */
-	public function decompressMailObject( $mail, $unserialize = TRUE, $force = FALSE )
+	public function decompressMailObject( object $mail, bool $unserialize = TRUE, bool $force = FALSE )
 	{
 		if( is_string( $mail->object ) ){
 			$mail->object	= (object) array(
@@ -238,7 +243,7 @@ class Logic_Mail extends Logic
 	 *	@return		boolean
 	 *	@throws		RuntimeException		if no compressed raw column content is available
 	 */
-	public function decompressMailRaw( $mail, $force = FALSE )
+	public function decompressMailRaw( object $mail, bool $force = FALSE )
 	{
 		if( is_object( $mail->raw ) && !$force )
 			return TRUE;
@@ -310,10 +315,10 @@ class Logic_Mail extends Logic
 	 *	Tries to detect mail library used for mail by its ID.
 	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
 	 *	@access		public
-	 *	@param		integer		$mailId		ID of mail to get used library for
+	 *	@param		string		$mailId		ID of mail to get used library for
 	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
 	 */
-	public function detectMailLibraryFromMailId( $mailId )
+	public function detectMailLibraryFromMailId( string $mailId ): int
 	{
 		return $this->detectMailLibraryFromMail( $this->getMail( $mailId ) );
 	}
@@ -325,11 +330,11 @@ class Logic_Mail extends Logic
 	 *	@param		object		$mail		Mail data object from database to get used library for
 	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
 	 */
-	public function detectMailLibraryFromMail( $mail )
+	public function detectMailLibraryFromMail( object $mail ): int
 	{
 		if( !is_object( $mail ) )
 			throw new InvalidArgumentException( 'No mail object given' );
-		if( empty( $mail->usedLibrary ) || $force ){
+		if( empty( $mail->usedLibrary ) ){
 			if( is_string( $mail->object ) )
 				$this->decompressMailObject( $mail );
 			$mail->usedLibrary	= $this->detectMailLibraryFromMailObjectInstance( $mail->object->instance );
@@ -341,10 +346,10 @@ class Logic_Mail extends Logic
 	 *	Tries to detect mail library used for unpacked mail object.
 	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
 	 *	@access		public
-	 *	@param		object		$mail		Mail data object from database to get used library for
+	 *	@param		object		$mailObject		Mail data object from database to get used library for
 	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
 	 */
-	public function detectMailLibraryFromMailObjectInstance( $mailObject )
+	public function detectMailLibraryFromMailObjectInstance( object $mailObject ): int
 	{
 		if( is_a( $mailObject, 'Mail_Abstract' ) ){
 			if( is_a( $mailObject->mail, 'Net_Mail' ) )
@@ -362,7 +367,7 @@ class Logic_Mail extends Logic
 	}
 
 	/**
-	 *	Detects best template to use by looking for:
+	 *	Detects the best template to use by looking for:
 	 *	- given template ID, realizing mail settings of mail class of a module
 	 *	- active mail template ID within database
 	 *	- default mail template ID of mail resource module of frontend application (if considered)
@@ -372,10 +377,10 @@ class Logic_Mail extends Logic
 	 *	@param		integer			$preferredTemplateId	Template ID to override database and module defaults, if usable
 	 *	@param		boolean			$considerFrontend		Flag: consider mail resource module of frontend, if available
 	 *	@param		boolean			$strict					Flag: throw exception if something goes wrong
-	 *	@return		objects|NULL	Model entity object of detected mail template
+	 *	@return		object|NULL		Model entity object of detected mail template
 	 *	@todo		see code doc
 	 */
-	public function detectTemplateToUse( $preferredTemplateId = 0, bool $considerFrontend = FALSE, bool $strict = TRUE )
+	public function detectTemplateToUse( int $preferredTemplateId = 0, bool $considerFrontend = FALSE, bool $strict = TRUE ): ?object
 	{
 		$preferredTemplateId	= (int) $preferredTemplateId;										//  @todo remove after update to PHP 7.x using type hints
 		if( array_key_exists( $preferredTemplateId, $this->detectedTemplates ) )
@@ -393,25 +398,18 @@ class Logic_Mail extends Logic
 		}
 
 		//  collect template defaults and overrides
-		$templateIds	= [];
-		array_push( $templateIds, $defaultFromMailModule ? $defaultFromMailModule : 0 );
-		array_push( $templateIds, $defaultFromDatabase ? $defaultFromDatabase : 0 );
-		array_push( $templateIds, $defaultFromFrontend ? $defaultFromFrontend : 0 );
-		array_push( $templateIds, $preferredTemplateId ? $preferredTemplateId : 0 );
-
-		//  @todo active for PHP 7.x
-//		array_push( $templateIds, $defaultFromMailModule ?? 0 );
-//		array_push( $templateIds, $defaultFromDatabase ?? 0 );
-//		array_push( $templateIds, $defaultFromFrontend ?? 0 );
-//		array_push( $templateIds, $preferredTemplateId ?? 0 );
-
-		$templateIds	= array_unique( $templateIds );
+		$templateIds	= array_unique( [
+			$defaultFromMailModule ?: 0,
+			$defaultFromDatabase ?: 0,
+			$defaultFromFrontend ?: 0,
+			$preferredTemplateId ?: 0,
+		] );
 
 		//  get usable templates from database
-		$availableTemplateIds	= $this->modelTemplate->getAll( array(
+		$availableTemplateIds	= $this->modelTemplate->getAll( [
 			'mailTemplateId'	=> $templateIds,
 			'status'			=> '>= '.Model_Mail_Template::STATUS_USABLE,
-		), [], [], ['mailTemplateId'] );
+		], [], [], ['mailTemplateId'] );
 		if( !$availableTemplateIds ){
 			if( $strict )
 				throw new RuntimeException( 'No usable mail template available' );
@@ -426,7 +424,7 @@ class Logic_Mail extends Logic
 			return NULL;
 		}
 
-		//  get best template and store for later
+		//  get the best template and store for later
 		$detectedTemplateId	= array_pop( $templateIds );
 		$template			= $this->modelTemplate->get( $detectedTemplateId );
 		$this->detectedTemplates[$detectedTemplateId]	= $template;
@@ -437,10 +435,10 @@ class Logic_Mail extends Logic
 	 *	Detected compression used when mail object was stored.
 	 *	@access		public
 	 *	@param		object		$mail		Mail item from database
-	 *	@param		boolean		$force		Flag: redetect (default: no)
+	 *	@param		boolean		$force		Flag: re-detect (default: no)
 	 *	@return		integer		Detected compression as of Model_Mail::COMPRESSION_*
 	 */
-	public function detectUsedMailCompression( $mail, bool $force = FALSE ): int
+	public function detectUsedMailCompression( object $mail, bool $force = FALSE ): int
 	{
 		if( !$mail->compression || $force ){
 			if( is_string( $mail->object ) )
@@ -450,9 +448,9 @@ class Logic_Mail extends Logic
 			else
 				throw new RuntimeException( 'Detection failed since no raw source is available' );
 			$mail->compression	= Model_Mail::COMPRESSION_BASE64;
-			if( substr( $source, 0, 2 ) == "BZ" )													//  BZIP compression detected
+			if( substr( $source, 0, 2 ) === "BZ" )										//  BZIP compression detected
 				$mail->compression	= Model_Mail::COMPRESSION_BZIP;
-			else if( substr( $source, 0, 2 ) == "GZ" )												//  GZIP compression detected
+			else if( substr( $source, 0, 2 ) === "GZ" )								//  GZIP compression detected
 				$mail->compression	=  Model_Mail::COMPRESSION_GZIP;
 		}
 		return $mail->compression;
@@ -498,7 +496,7 @@ class Logic_Mail extends Logic
 		$raw			= '';
 		$libraryObject	= $incompleteMailDataObject->object->instance->mail;
 		if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
-			$raw	= \CeusMedia\Mail\Message\Renderer::render( $libraryObject );
+			$raw	= MailMessageRendererV2::render( $libraryObject );
 		}
 		else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
 			$raw	= \CeusMedia\Mail\Renderer::render( $libraryObject );
@@ -518,9 +516,9 @@ class Logic_Mail extends Logic
 			'language'			=> strtolower( trim( $language ) ),
 			'senderId'			=> (int) $senderId,
 			'senderAddress'		=> $senderAddress,
-			'receiverId'		=> isset( $receiver->userId ) ? $receiver->userId : 0,
+			'receiverId'		=> $receiver->userId ?? 0,
 			'receiverAddress'	=> $receiver->email,
-			'receiverName'		=> isset( $receiver->username ) ? $receiver->username : NULL,
+			'receiverName'		=> $receiver->username ?? NULL,
 			'subject'			=> $mail->getSubject(),
 			'mailClass'			=> get_class( $mail ),
 			'compression'		=> $incompleteMailDataObject->compression,
@@ -536,14 +534,14 @@ class Logic_Mail extends Logic
 	/**
 	 *	Returns saved mail as uncompressed object by mail ID.
 	 *	@access		public
-	 *	@param		integer			$mailId			ID of queued mail
+	 *	@param		string			$mailId			ID of queued mail
 	 *	@return		object							Mail object from queue
 	 *	@throws		OutOfRangeException				if mail ID is not existing
 	 *	@throws		RuntimeException				if mail is compressed by BZIP which is not supported in this environment
 	 *	@throws		RuntimeException				if mail is compressed by GZIP which is not supported in this environment
 	 *	@throws		RuntimeException				if unserialize mail serial fails
 	 */
-	public function getMail( $mailId )
+	public function getMail( string $mailId ): object
 	{
 		$mail	= $this->modelQueue->get( $mailId );
 		if( !$mail )
@@ -561,7 +559,7 @@ class Logic_Mail extends Logic
 	 *	@todo		kriss: (performance) remove double preg check for class (remove 3rd argument on index and double check if clause in loop)
 	 *	@todo		kriss: (migration) adjust regex for upcoming Hydrogen with namespaces, maybe use reflection
 	 */
-	public function getMailClassNames( bool $strict = TRUE, string $sort = 'ASC' )
+	public function getMailClassNames( bool $strict = TRUE, string $sort = 'ASC' ): array
 	{
 		$list			= [];																	//  prepare empty result list
 		$matches		= [];																	//  prepare empty matches list
@@ -591,12 +589,12 @@ class Logic_Mail extends Logic
 	/**
 	 *	Returns headers of mail as array map.
 	 *	@access		public
-	 *	@param		Mail_Abstract|integer	$mail		Mail object or ID
+	 *	@param		Mail_Abstract|string	$mail		Mail object or ID
 	 *	@return		array					Map of headers
 	 *	@deprecated	this method has no real value and will be removed
 	 *	@todo		remove this method
 	 */
-	public function getMailHeaders( $mail )
+	public function getMailHeaders( $mail ): array
 	{
 		$complete	= TRUE;
 		$mail		= $this->getMailFromObjectOrId( $mail );
@@ -614,14 +612,14 @@ class Logic_Mail extends Logic
 	/**
 	 *	Returns mail parts.
 	 *	@access		public
-	 *	@param		int|object		$mail		Mail object or ID
-	 *	@return		array			List of mail part objects
-	 *	@throws		InvalidArgumentException	if given argument is neither integer nor object
-	 *	@throws		Exception					if given mail object is not uncompressed and unserialized (use getMail)
-	 *	@throws		RuntimeException			if given mail object is of outdated Net_Mail and parser CMM_Mail_Parser is not available
-	 *	@throws		RuntimeException			if given no parser is available for mail object
+	 *	@param		object|string		$mail		Mail object or ID
+	 *	@return		array							List of mail part objects
+	 *	@throws		InvalidArgumentException		if given argument is neither integer nor object
+	 *	@throws		Exception						if given mail object is not uncompressed and unserialized (use getMail)
+	 *	@throws		RuntimeException				if given mail object is of outdated Net_Mail and parser CMM_Mail_Parser is not available
+	 *	@throws		RuntimeException				if given no parser is available for mail object
 	 */
-	public function getMailParts( $mail )
+	public function getMailParts( $mail ): array
 	{
 		$this->decompressMailObject( $mail );
 		if( !is_a( $mail->object->instance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
@@ -634,11 +632,11 @@ class Logic_Mail extends Logic
 	/**
 	 *	Returns queued mail object of mail ID.
 	 *	@access		public
-	 *	@param		integer			$mailId			ID of queued mail
+	 *	@param		string			$mailId			ID of queued mail
 	 *	@return		object							Mail object from queue
 	 *	@throws		OutOfRangeException				if mail ID is not existing
 	 */
-	public function getQueuedMail( $mailId )
+	public function getQueuedMail( string $mailId ): object
 	{
 		return $this->getMail( $mailId );
 	}
@@ -649,11 +647,10 @@ class Logic_Mail extends Logic
 	 *	@param		array			$conditions		Map of Conditions to include in SQL Query
 	 *	@param		array			$orders			Map of Orders to include in SQL Query
 	 *	@param		array			$limits			Map of Limits to include in SQL Query
-	 *	@param		array			$groupings		List of columns to group by
-	 *	@param		array			$havings		List of conditions to apply after grouping
+	 *	@param		array			$columns		List of columns to get
 	 *	@return		array
 	 */
-	public function getQueuedMails( $conditions = [], array $orders = [], array $limits = [], array $columns = [] ): array
+	public function getQueuedMails( array $conditions = [], array $orders = [], array $limits = [], array $columns = [] ): array
 	{
 		return $this->modelQueue->getAll( $conditions, $orders, $limits, $columns );
 	}
@@ -680,7 +677,7 @@ class Logic_Mail extends Logic
 
 	/**
 	 *	Handles mail by sending immediately or appending to queue if allowed.
-	 *	Sending mail immediately can be configured or forced by third argment.
+	 *	Sending mail immediately can be configured or forced by third argument.
 	 *	@access		public
 	 *	@param		Mail_Abstract	$mail			Mail to be sent
 	 *	@param		object			$receiver		Data object of receiver, must have member 'email', should have 'userId' and 'username'
@@ -688,7 +685,7 @@ class Logic_Mail extends Logic
 	 *	@param		boolean			$forceSendNow	Flag: override module settings and avoid queue
 	 *	@return		boolean			TRUE if success
 	 */
-	public function handleMail( Mail_Abstract $mail, $receiver, string $language, bool $forceSendNow = NULL )
+	public function handleMail( Mail_Abstract $mail, object $receiver, string $language, bool $forceSendNow = NULL ): bool
 	{
 		if( $this->options->get( 'queue.enabled' ) && !$forceSendNow )
 			return (bool) $this->enqueueMail( $mail, $language, $receiver );
@@ -698,10 +695,10 @@ class Logic_Mail extends Logic
 	/**
 	 *	Remove mail by its ID.
 	 *	@access		public
-	 *	@param		integer			$mailId			ID of mail to remove
+	 *	@param		string			$mailId			ID of mail to remove
 	 *	@return		boolean
 	 */
-	public function removeMail( $mailId ): bool
+	public function removeMail( string $mailId ): bool
 	{
 		return (bool) $this->modelQueue->remove( $mailId );
 	}
@@ -812,7 +809,7 @@ class Logic_Mail extends Logic
 	 *	@param		boolean|NULL	$toggle			New state or NULL to return current state
 	 *	@return		boolean|NULL	Current state if no new state is given
 	 */
-	public function useQueue( $toggle = NULL )
+	public function useQueue( ?bool $toggle = NULL )
 	{
 		if( $toggle === NULL )
 			return $this->options->get( 'queue.enabled' );
@@ -825,7 +822,7 @@ class Logic_Mail extends Logic
 	/**
 	 *	@todo		check if needed or remove
 	 */
-	public function decompressObjectInMail( $mail, bool $unserialize = TRUE, bool $force = FALSE )
+	public function decompressObjectInMail( object $mail, bool $unserialize = TRUE, bool $force = FALSE )
 	{
 		return $this->decompressMailObject( $mail, $unserialize, $force );
 	}
@@ -858,7 +855,7 @@ class Logic_Mail extends Logic
 		}
 	}
 
-	protected function getMailFromObjectOrId( $mailObjectOrId )
+	protected function getMailFromObjectOrId( $mailObjectOrId ): object
 	{
 		if( is_object( $mailObjectOrId ) )
 			return $mailObjectOrId;

@@ -5,13 +5,14 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Auth extends Controller
 {
+	public static string $moduleId	= 'Resource_Authentication';
+
 	protected $config;
 	protected $request;
 	protected $session;
 	protected $cookie;
 	protected $messenger;
 	protected $useCsrf;
-	protected $moduleConfig;
 
 	/**
 	 *	@deprecated		use Ajax::isAuthenticated instead
@@ -82,7 +83,7 @@ class Controller_Auth extends Controller
 			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
 				$this->cookie	= $this->env->getCookie();
 		$this->messenger	= $this->env->getMessenger();
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication.', TRUE );
+//		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication.', TRUE );
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
 	}
 

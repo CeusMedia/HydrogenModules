@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -7,8 +7,8 @@ use CeusMedia\HydrogenFramework\Controller;
  *	@todo		integrate validation from Controller_Admin_User::edit
  *	@todo   	validate email, check against trash mail domains
  */
-class Controller_Manage_My_User extends Controller{
-
+class Controller_Manage_My_User extends Controller
+{
 	protected $request;
 	protected $session;
 	protected $messenger;
@@ -19,7 +19,8 @@ class Controller_Manage_My_User extends Controller{
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 */
-	public function edit(){
+	public function edit()
+	{
 		$this->checkConfirmationPassword();
 
 		$words		= (object) $this->getWords( 'edit' );
@@ -66,7 +67,7 @@ class Controller_Manage_My_User extends Controller{
 //			}
 			$this->modelUser->edit( $this->userId, $data );
 			$this->messenger->noteSuccess( $words->msgSuccess );
-		};
+		}
 		$this->restart( './manage/my/user' );
 	}
 
@@ -74,7 +75,8 @@ class Controller_Manage_My_User extends Controller{
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 *	@todo   	Redesign: Send mail with confirmation before applying new mail address
 	 */
-	public function email(){
+	public function email()
+	{
 		$this->checkConfirmationPassword();
 
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
@@ -108,7 +110,8 @@ class Controller_Manage_My_User extends Controller{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index(){
+	public function index()
+	{
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$roleId		= $this->session->get( 'auth_role_id' );
 		$modelRole	= new Model_Role( $this->env );
@@ -142,7 +145,8 @@ class Controller_Manage_My_User extends Controller{
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 */
-	public function password(){
+	public function password()
+	{
 		$words		= (object) $this->getWords( 'password' );
 		$user		= $this->modelUser->get( $this->userId );
 
@@ -151,7 +155,7 @@ class Controller_Manage_My_User extends Controller{
 		$pwdMinStrength	= (int) $options->get( 'password.strength.min' );
 		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
-		$data = $this->request->getAllFromSource( 'POST', TRUE );
+		$data				= $this->request->getAllFromSource( 'POST', TRUE );
 		$passwordOld		= trim( $this->request->getFromSource( 'passwordOld', 'POST' ) );
 		$passwordNew		= trim( $this->request->getFromSource( 'passwordNew', 'POST' ) );
 		$passwordConfirm	= trim( $this->request->getFromSource( 'passwordConfirm', 'POST' ) );
@@ -186,7 +190,8 @@ class Controller_Manage_My_User extends Controller{
 		$this->restart( './manage/my/user' );
 	}
 
-	public function remove( $confirmed = NULL ){
+	public function remove( $confirmed = NULL )
+	{
 		$this->addData( 'userId', $this->userId );
 		$this->addData( 'user', $this->modelUser->get( $this->userId ) );
 		if( $this->request->getMethod()->isPost() && $confirmed ){
@@ -194,10 +199,11 @@ class Controller_Manage_My_User extends Controller{
 			$dbc	= $this->env->getDatabase();
 			$dbc->beginTransaction();
 			try{
-				$this->callHook( 'User', 'remove', $this, array(
+				$payload	= [
 					'userId'		=> $this->userId,
 					'informOthers'	=> TRUE,
-				) );
+				];
+				$this->callHook( 'User', 'remove', $this, $payload );
 				$dbc->commit();
 				$this->restart( 'auth/logout' );
 			}
@@ -214,7 +220,8 @@ class Controller_Manage_My_User extends Controller{
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 *	@todo   	Redesign: Send mail with confirmation before applying new username
 	 */
-	public function username(){
+	public function username()
+	{
 		$this->checkConfirmationPassword();
 
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
@@ -268,7 +275,8 @@ class Controller_Manage_My_User extends Controller{
 		}
 	}
 
-	protected function checkConfirmationPassword( $from = NULL ){
+	protected function checkConfirmationPassword( $from = NULL )
+	{
 		$msg		= (object) $this->getWords( 'msg' );
 		$password	= trim( $this->request->get( 'password' ) );
 		if( !strlen( $password ) ){

@@ -1,11 +1,20 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var object $words */
+/** @var array $dashboards */
+/** @var ?object $dashboard */
+/** @var ?array $panels */
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/info/dashboard/' ) );
 
 try{
-
 	$helper		= new View_Helper_Info_Dashboard( $env );
 //	print_m( $dashboard );die;
 	$helper->setDashboard( $dashboard );

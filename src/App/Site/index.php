@@ -34,11 +34,11 @@ if( isset( $defaultTimezone ) )								//  an alternative time zone is defined
 try{
 //	require_once "vendor/ceus-media/common/compat.php";		//  load compatibility layer
 	Loader::registerNew( 'php', NULL, $pathClasses );		//  register autoloader for project classes
-	$app	= new WebSiteApplication();						//  create default web site application instance
+	$app	= new WebSiteApplication();						//  create default website application instance
 	$app->run();											//  and run it
 }
-catch( Exception $e ){										//  an uncatched exception happend
-    class_exists( SentrySdk::class ) && Sentry\captureException( $e );
-    http_response_code(500);
-    (include_once 'templates/error.php') or ExceptionPage::display( $e );
+catch( Exception $e ){										//  an uncaught exception happened
+	class_exists( '\\SentrySdk' ) && Sentry\captureException( $e );
+	http_response_code(500);
+	(include_once 'templates/error.php') or ExceptionPage::display( $e );
 }

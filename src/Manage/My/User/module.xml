@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User</title>
 	<description>Management for own user account.</description>
-	<version>0.5.9</version>
+	<version>0.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3.0">Added support for tabs.</log>
@@ -26,12 +26,14 @@
 	<log version="0.5.7">Add panel to remove own user account.</log>
 	<log version="0.5.8">Move password panel in line.</log>
 	<log version="0.5.9">Add relations panel.</log>
+	<log version="0.6">Extract hook to own class.</log>
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/My/User.php</class>
+		<class>Hook/Manage/My/User.php</class>
 		<class>View/Manage/My/User.php</class>
 		<template>manage/my/user/index.php</template>
 		<template>manage/my/user/index.account.php</template>
@@ -75,5 +77,5 @@
 	<link xml:lang="en" rank="92" access="inside" path="manage/my/user/index">My account</link>
 	<link path="manage/my/user/password" access="inside"></link>
 	<link path="manage/my/user/edit" access="inside"></link>
-	<hook type="resource" resource="MyUser" event="registerTabs">View_Manage_My_User::___onRegisterTab</hook>
+	<hook type="resource" resource="MyUser" event="registerTabs">Hook_Manage_My_User::onRegisterTab</hook>
 </module>

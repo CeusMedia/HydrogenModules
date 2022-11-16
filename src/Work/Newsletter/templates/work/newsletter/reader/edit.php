@@ -1,17 +1,28 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var object $words */
+/** @var object $reader */
+/** @var bool $tabbedLinks */
+/** @var array $groups */
+/** @var array $readerLetters */
+/** @var array $readerGroups */
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
-$statusIcons	= array(
+$statusIcons	= [
 	-1		=> 'remove',
 	0		=> 'star',
 	1		=> 'ok',
-);
+];
 
-$optStatus	= HtmlElements::Options( $words->states, $reader->status );
-$optGender	= HtmlElements::Options( $words->gender, $reader->gender );
+$optStatus	= HtmlElements::Options( (array) $words->states, $reader->status );
+$optGender	= HtmlElements::Options( (array) $words->gender, $reader->gender );
 
 $optGroup	= [];
 foreach( $groups as $group )

@@ -8,17 +8,17 @@ class Controller_Auth_Oauth2 extends Controller
 {
 	protected $config;
 	protected $session;
-	protected $reqest;
+	protected $request;
 	protected $cookie;
 	protected $messenger;
 	protected $modelProvider;
 	protected $modelRelation;
 
-	protected $scopes	= array(
+	protected $scopes	= [
 		'adam-paterson/oauth2-slack'	=> ['identity.basic'],
 		'stevenmaguire/oauth2-paypal'	=> ['openid', 'profile', 'email', 'phone', 'address'],
 		'omines/oauth2-gitlab'			=> ['read_user']
-	);
+	];
 
 	public function login( $providerId = NULL )
 	{
@@ -74,12 +74,13 @@ class Controller_Auth_Oauth2 extends Controller
 					$this->restart( 'auth/login', FALSE );
 				}
 				if( ( $user = $modelUser->get( $relation->localUserId ) ) ){
-					$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
+					$payload	= [
 						'backend'	=> 'oauth2',
 						'username'	=> $user ? $user->username : $username,
 		//				'password'	=> $password,															//  disabled for security
 						'userId'	=> $user ? $user->userId : 0,
-					) );
+					];
+					$result		= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $payload );
 					if( !$this->messenger->gotError() ){
 						$role			= $modelRole->get( $user->roleId );
 						$allowedRoles	= $this->env->getConfig()->get( 'module.resource_authentication_backend_local.login.roles' );
@@ -156,10 +157,11 @@ class Controller_Auth_Oauth2 extends Controller
 
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
 		if( $this->session->has( 'auth_user_id' ) ){
-			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
+			$payload	= [
 				'userId'	=> $this->session->get( 'auth_user_id' ),
 				'roleId'	=> $this->session->get( 'auth_role_id' ),
-			) );
+			];
+			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
 			$this->session->remove( 'auth_user_id' );
 			$this->session->remove( 'auth_role_id' );
 			$this->logic->clearCurrentUser();
@@ -327,7 +329,7 @@ class Controller_Auth_Oauth2 extends Controller
 	 *	Dispatch next route after login, by these rules:
 	 *	1. Given controller and action
 	 *	2. Forced forward path of this auth module
-	 *	3. Request paramter 'from'
+	 *	3. Request parameter 'from'
 	 *	4. Forward path of this auth module
 	 *	5. Redirect to base auth module index for further dispatching
 	 *	ATM this is the same method for each auth module.
@@ -360,7 +362,7 @@ class Controller_Auth_Oauth2 extends Controller
 	 *	Dispatch next route after logout, by these rules:
 	 *	1. Given controller and action
 	 *	2. Forced forward path of this auth module
-	 *	3. Request paramter 'from'
+	 *	3. Request parameter 'from'
 	 *	4. Forward path of this auth module
 	 *	5. Go to index (empty path)
 	 *	ATM this is the same method for each auth module.

@@ -1,5 +1,13 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var object $words */
+/** @var object $newsletter */
 
 $model		= new Model_Newsletter_Reader_Letter( $env );
 $lettersSent	= $model->count( ['newsletterId' => $newsletter->newsletterId, 'status' => '>= 1'] );
@@ -14,30 +22,20 @@ $end	= min( $end, $start + 14 * 86400 );
 $days	= round( ( $end - $start ) / 86400 );
 
 if( $days > 1 ){
-	$list	= array( array(
+	$list	= [[
 		'Monat',
 		'Geöffnet',
 	//	'Geklickt',
 		'Versendet'
-	) );
-	for( $i=-1; $i<=$days; $i++){
+	]];
+	for( $i=-1; $i<=$days; $i++ ){
 		$timestamp	= $start + $i * 86400;
-		$list[]	= array(
+		$list[]	= [
 			date( "j.n.", $timestamp ),
-			(int) $model->count( array(
-				'status'		=> '>= 2',
-				'newsletterId'	=> $newsletter->newsletterId,
-				'openedAt'		=> '>= '.( $timestamp ),
-				'openedAt'		=> '< '.( $timestamp + 86400 ),
-			) ),
+			countOpened( $model, $newsletter->newsletterId, $timestamp, 86400 ),
 	//		(int) 0,
-			(int) $model->count( array(
-				'status'		=> '>= 1',
-				'newsletterId'	=> $newsletter->newsletterId,
-				'sentAt'		=> '>= '.( $timestamp ),
-				'sentAt'		=> '< '.( $timestamp + 86400 ),
-			) )
-		);
+			countSent( $model, $newsletter->newsletterId, $timestamp, 86400 ),
+		];
 	}
 }
 else{
@@ -46,31 +44,21 @@ else{
 	$end	= strtotime( date( "Y-m-d H:59:59", time() ) );
 	$hours	= ceil( ( $end - $start ) / $dura );
 
-	$list	= array( array(
+	$list	= [[
 		'Stunde',
 		'Geöffnet',
 	//	'Geklickt',
 		'Versendet'
-	) );
+	]];
 	$hour	= (int) date( "H", $start );
-	for( $i=-1; $i<=$hours; $i++){
+	for( $i=-1; $i<=$hours; $i++ ){
 		$timestamp	= $start + $hour + $i * $dura;
-		$list[]	= array(
+		$list[]	= [
 			date( "H:i", $timestamp ),
-			(int) $model->count( array(
-				'status'		=> '>= 2',
-				'newsletterId'	=> $newsletter->newsletterId,
-				'openedAt'		=> '>= '.( $timestamp ),
-				'openedAt'		=> '< '.( $timestamp + $dura ),
-			) ),
-	//		(int) 0,
-			(int) $model->count( array(
-				'status'		=> '>= 1',
-				'newsletterId'	=> $newsletter->newsletterId,
-				'sentAt'		=> '>= '.( $timestamp ),
-				'sentAt'		=> '< '.( $timestamp + $dura ),
-			) )
-		);
+			countOpened( $model, $newsletter->newsletterId, $timestamp, $dura ),
+			//		(int) 0,
+			countSent( $model, $newsletter->newsletterId, $timestamp, $dura ),
+		];
 	}
 }
 
@@ -100,3 +88,21 @@ return '
 		chart.draw(data, options);
 	}
 </script>';
+
+function countOpened( $model, $newsletterId, $timestamp, $duration, $status = '>= 2' ): int
+{
+	return $model->count( [
+		'status'		=> $status,
+		'newsletterId'	=> $newsletterId,
+		'openedAt'		=> sprintf( '>< %s & %s', $timestamp, $timestamp + $duration )
+	] );
+}
+
+function countSent( $model, $newsletterId, $timestamp, $duration, $status = '>= 1' ): int
+{
+	return $model->count( [
+		'status'		=> $status,
+		'newsletterId'	=> $newsletterId,
+		'sentAt'		=> sprintf( '>< %s & %s', $timestamp, $timestamp + $duration )
+	] );
+}

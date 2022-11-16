@@ -66,13 +66,13 @@ class Resource_Acl_Authentication extends Abstraction
 	/**
 	 *	Allows access to a controller action for a role.
 	 *	@access		public
-	 *	@param		integer		$roleId			Role ID
+	 *	@param		string		$roleId			Role ID
 	 *	@param		string		$controller		Name of Controller
 	 *	@param		string		$action			Name of Action
 	 *	@return		integer
 	 *	@todo 		refactor return type to string
 	 */
-	public function setRight( $roleId, string $controller, string $action )
+	public function setRight( string $roleId, string $controller, string $action ): int
 	{
 		if( $this->hasFullAccess( $roleId ) )
 			return -1;

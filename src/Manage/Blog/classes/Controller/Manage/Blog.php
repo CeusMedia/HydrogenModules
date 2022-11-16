@@ -1,20 +1,21 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Controller_Manage_Blog extends Controller
 {
 	protected $messenger;
-	protected $modelCategory;
-	protected $modelComment;
-	protected $modelPost;
-	protected $modelUser;
-	protected $moduleConfig;
+	protected Model_Blog_Category $modelCategory;
+	protected Model_Blog_Comment $modelComment;
+	protected Model_Blog_Post $modelPost;
+	protected Model_User $modelUser;
+	protected Dictionary $moduleConfig;
 	protected $request;
 	protected $session;
 
-	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
+	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, array & $payload )
 	{
 		$frontend		= Logic_Frontend::getInstance( $env );
 		if( !$frontend->hasModule( 'Info_Blog' ) )

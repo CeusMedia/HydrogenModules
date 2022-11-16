@@ -10,7 +10,8 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\INI\Reader as IniFileReader;
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment\Resource\Disclosure;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
+use Resource_Disclosure as Disclosure;
 
 /**
  *	Role Controller.
@@ -90,7 +91,8 @@ class Controller_Manage_Role extends Controller
 		$this->addData( 'role', $role );
 		$this->addData( 'words', $words );
 		$this->addData( 'userCount', $this->modelUser->countByIndex( 'roleId', $roleId ) );
-		$disclosure	= new Disclosure();
+
+		$disclosure	= new Disclosure( $this->env );
 		$options	= ['classPrefix' => 'Controller_', 'readParameters' => FALSE];
 
 		$list		= [];
@@ -183,7 +185,7 @@ class Controller_Manage_Role extends Controller
 		}
 	}
 
-	protected function getModuleWords( stdClass $module ): array
+	protected function getModuleWords( ModuleDefinition $module ): array
 	{
 		$path		= $this->env->getConfig()->get( 'path.locales' );
 		$language	= $this->env->getLanguage()->getLanguage();

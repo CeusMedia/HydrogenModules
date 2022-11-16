@@ -53,14 +53,14 @@ class Hook_UI_Bootstrap extends Hook
 			$versionAwesomeMajor	= (int) array_shift( $versionAwesomeParts );
 
 			$libraryVersion		= 0;
-			if( class_exists( '\\CeusMedia\\Bootstrap\\Base\\Component' ) )							//  Bootstrap library (>=0.5) with base classes
-				$libraryVersion	= \CeusMedia\Bootstrap\Base\Component::$version;
+			if( class_exists( '\\CeusMedia\\Bootstrap\\Base\\Element' ) )								//  Bootstrap library (>=0.5) with base classes
+				$libraryVersion	= \CeusMedia\Bootstrap\Base\Element::$version;
 			else if( class_exists( '\\CeusMedia\\Bootstrap\\Component' ) )							//  Bootstrap library is below 0.4.7
 				$libraryVersion	= \CeusMedia\Bootstrap\Component::getVersion();
 
 			if( version_compare( $libraryVersion, '0.5', '>=' ) ){
 				\CeusMedia\Bootstrap\Base\Structure::$defaultBsVersion	= $versionBootstrap;
-				\CeusMedia\Bootstrap\Base\Component::$defaultBsVersion	= $versionBootstrap;
+				\CeusMedia\Bootstrap\Base\Element::$defaultBsVersion	= $versionBootstrap;
 			}
 			else
 				\CeusMedia\Bootstrap\Component::$bsVersion	= $versionBootstrap;

@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\HydrogenFramework\View;

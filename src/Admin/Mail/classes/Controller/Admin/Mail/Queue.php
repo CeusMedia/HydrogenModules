@@ -334,7 +334,7 @@ class Controller_Admin_Mail_Queue extends Controller
 		$path				= '';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$path	= Logic_Frontend::getInstance( $this->env )->getPath();
-			\CeusMedia\Common\Loader::registerNew( 'php5', 'Mail_', $path.'classes/Mail/' );
+			\CeusMedia\Common\Loader::registerNew( 'php', 'Mail_', $path.'classes/Mail/' );
 		}
 		if( !is_array( $this->session->get( $this->filterPrefix.'status' ) ) )
 			$this->session->set( $this->filterPrefix.'status', []);

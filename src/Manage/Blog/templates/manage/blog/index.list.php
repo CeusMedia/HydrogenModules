@@ -19,7 +19,7 @@ if( $posts ){
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $words['states'][$post->status] ),
-			HtmlTag::create( 'td', $post->category->title ),
+			HtmlTag::create( 'td', $post->category ? $post->category->title : '' ),
 		) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "", "15%", "20%" );
@@ -29,7 +29,7 @@ if( $posts ){
 }
 
 \CeusMedia\Bootstrap\Icon::$defaultSet	= 'FontAwesome';
-$pagination	= new \CeusMedia\Bootstrap\PageControl( "./manage/blog/", $page, $pages );
+$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( "./manage/blog/", $page ?? 1, $pages ?? 0 );
 
 
 return '

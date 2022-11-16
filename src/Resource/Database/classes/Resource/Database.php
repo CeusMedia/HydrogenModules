@@ -278,13 +278,14 @@ else{
 		 *	Tries to connect database if not connected yet (lazy mode).
 		 *	@access		public
 		 *	@param		string		$statement		SQL statement to query
-		 *	@param		integer		$fetchMode		... (default: 2)
+		 *	@param		integer		$mode			Fetch mode, default: 2 (FETCH_ASSOC)
 		 *	@return		PDOStatement				PDO statement containing fetchable results
+		 *	@noinspection PhpComposerExtensionStubsInspection
 		 */
-		public function query( string $statement, int $fetchMode = 2, $arg3 = NULL, array $ctorargs = [] ){
+		public function query( $statement, int $mode = PDO::FETCH_ASSOC, $arg3 = NULL, array $ctorargs = [] ){
 			if( $this->status == self::STATUS_UNKNOWN )
 				$this->tryToConnect();
-			return parent::query( $statement, $fetchMode );
+			return parent::query( $statement, $mode );
 		}
 	}
 	class Resource_Database extends Resource_Database_PHP7 {}

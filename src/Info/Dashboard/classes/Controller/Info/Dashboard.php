@@ -4,14 +4,15 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Info_Dashboard extends Controller
 {
-	protected $logic;
 	protected $messenger;
-	protected $model;
-	protected $panels			= [];
 	protected $request;
 	protected $session;
-	protected $userId			= 0;
-	protected $messages;
+	protected Logic_Info_Dashboard $logic;
+	protected Model_Dashboard $model;
+	protected array $panels					= [];
+	protected string $userId				= '0';
+	protected object $messages;
+	protected ?object $user					= NULL;
 
 	public function add()
 	{
@@ -214,7 +215,7 @@ class Controller_Info_Dashboard extends Controller
 		/*  --  USER SUPPORT  --  */
 		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$logicAuth		= Logic_Authentication::getInstance( $this->env );
-			$this->userId	= $logicAuth->getCurrentUserId( FALSE );
+			$this->userId	= (string) $logicAuth->getCurrentUserId( FALSE );
 			$this->user		= $logicAuth->getCurrentUser( FALSE, TRUE );
 		}
 		$this->addData( 'currentUserId', $this->userId );

@@ -1,14 +1,13 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Server_Log_Sentry extends Hook
 {
-	public static function onEnvInitModules( Environment $env, $context, $module, $payload )
+	public function onEnvInitModules(): bool
 	{
 		$appConfig		= $this->env->getConfig()->getAll( 'app.', TRUE );
-		$moduleConfig	= $env->getConfig()->getAll( 'module.server_log_sentry.', TRUE );
+		$moduleConfig	= $this->module->getConfigAsDictionary();
 		if( $moduleConfig->get( 'active' ) ){
 			Sentry\init( [
 				'dsn'				=> $moduleConfig->get( 'dsn' ),
@@ -17,17 +16,17 @@ class Hook_Server_Log_Sentry extends Hook
 				'release'			=> $appConfig->get( 'release' ),
 			] );
 		}
-		return !TRUE;															//  mark hook as unhandled
+		return FALSE;															//  mark hook as unhandled
 	}
 
-	public static function onEnvLogException( Environment $env, $context, $module, $payload )
+	public function onEnvLogException(): bool
 	{
-		$data			= (array) $payload;
-		$moduleConfig	= $env->getConfig()->getAll( 'module.server_log_sentry.', TRUE );
-		if( array_key_exists( 'exception', $data, TRUE ) )
-			if( $data['exception'] instanceof Exception )
+		$data			= $this->payload;
+		$moduleConfig	= $this->module->getConfigAsDictionary();
+		if( array_key_exists( 'exception', $this->payload ) )
+			if( $this->payload['exception'] instanceof Exception )
 				if( $moduleConfig->get( 'active' ) )
-	    	        Sentry\captureException( $data['exception'] );
-		return !TRUE;															//  mark hook as unhandled
+					Sentry\captureException( $this->payload['exception'] );
+		return FALSE;															//  mark hook as unhandled
 	}
 }

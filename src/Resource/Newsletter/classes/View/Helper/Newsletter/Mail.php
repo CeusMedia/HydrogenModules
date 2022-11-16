@@ -1,5 +1,10 @@
 <?php
+
+use CeusMedia\Common\FS\File\CSS\Compressor as CssFileCompressor;
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\Net\Reader as NetReader;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -191,15 +196,15 @@ class View_Helper_Newsletter_Mail
 		$styles		= "";
 		foreach( $this->template->styles as $url ){
 			if( file_exists( $this->cachePath.md5( $url ) ) )
-				$styles		.= File_Reader::load( $this->cachePath.md5( $url ) );
+				$styles		.= FileReader::load( $this->cachePath.md5( $url ) );
 			else{
-				$content	= Net_Reader::readUrl( $url );
-				File_Writer::save( $this->cachePath.md5( $url ), $content );
+				$content	= NetReader::readUrl( $url );
+				FileWriter::save( $this->cachePath.md5( $url ), $content );
 				$styles		.= $content;
 			}
 		}
 		$styles		.= trim( $this->template->style );
-		if( ( $styles = trim( File_CSS_Compressor::compressString( $styles ) ) ) )
+		if( ( $styles = trim( CssFileCompressor::compressString( $styles ) ) ) )
 			$page->addHead( HtmlTag::create( 'style', $styles ) );
 
 		$page->addHead( "<!--[if mso]><style>* {font-family: sans-serif !important;}</style><![endif]-->" );
@@ -207,10 +212,10 @@ class View_Helper_Newsletter_Mail
 /*		$scripts		= [];
 		foreach( $this->template->scripts as $url ){
 			if( file_exists( $this->cachePath.md5( $url ) ) )
-				$scripts[]	= File_Reader::load( $this->cachePath.md5( $url ) );
+				$scripts[]	= FileReader::load( $this->cachePath.md5( $url ) );
 			else{
-				$content	= Net_Reader::readUrl( $url );
-				File_Writer::save( $this->cachePath.md5( $url ), $content );
+				$content	= NetReader::readUrl( $url );
+				FileWriter::save( $this->cachePath.md5( $url ), $content );
 				$scripts[]	= $content;
 			}
 		}

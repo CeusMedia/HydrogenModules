@@ -12,7 +12,7 @@ $panelList	= $view->loadTemplateFile( 'admin/mail/attachment/folder/index.list.p
 
 $tabs		= View_Admin_Mail_Attachment::renderTabs( $env, 'folder' );
 
-[$textTop, $textBottom] = $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/attachment/folder' );
+[$textTop, $textBottom] = array_values( $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/attachment/folder' ) );
 
 return $tabs.$textTop.'
 <div class="row-fluid">

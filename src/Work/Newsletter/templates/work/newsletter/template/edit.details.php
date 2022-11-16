@@ -1,6 +1,19 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var object $words */
+/** @var bool $tabbedLinks */
+/** @var object $template */
+/** @var array $newsletters */
+/** @var string $templateId */
+/** @var bool $isUsed */
+/** @var array $buttons */
 
 $w		= $words->edit;
 
@@ -94,7 +107,7 @@ if( isset( $newsletters ) && count( $newsletters ) )
 <div class="content-panel">
 	<h3>Verwendung</h3>
 	<div class="content-panel-inner">
-		<div style="max-height: 400px; overflow-x: none; overflow-y: auto;">
+		<div style="max-height: 400px; overflow-x: hidden; overflow-y: auto;">
 			'.$listNewsletters.'
 		</div>
 	</div>

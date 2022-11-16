@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	...
  *	@category		Library
@@ -10,6 +11,7 @@
  */
 
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
+use CeusMedia\HydrogenFramework\Environment;
 
 /**
  *	...
@@ -22,7 +24,9 @@ use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
  */
 class Resource_Disclosure
 {
-	protected $reflectOptions	= array(
+	protected Environment $env;
+
+	protected $reflectOptions	= [
 		'classPrefix'		=> 'Controller_',
 		'readMethods'		=> TRUE,
 		'readParameters'	=> TRUE,
@@ -35,20 +39,20 @@ class Resource_Disclosure
 		'skipInherited'		=> TRUE,
 		'skipFramework'		=> TRUE,
 		'methodFilter'		=> ReflectionMethod::IS_PUBLIC
-	);
+	];
 
-	public function __construct( $env, array $reflectOptions = [] )
+	public function __construct( Environment $env, array $reflectOptions = [] )
 	{
 		$this->env	= $env;
 		$this->reflectOptions	= array_merge( $this->reflectOptions, $reflectOptions );
 	}
 
-	public function getFrontendControllers( $frontendEnv )
+	public function getFrontendControllers( Environment $frontendEnv ): array
 	{
 		$controllers	= [];
 		$pathConfig		= $frontendEnv->getConfig()->get( 'path.config' );
 		$pathModules	= $frontendEnv->getConfig()->get( 'path.modules' );
-		$pathModules	= $pathModules ? $pathModules : $pathConfig.'modules/';
+		$pathModules	= $pathModules ?: $pathConfig.'modules/';
 		foreach( $frontendEnv->getModules()->getAll() as $moduleId => $module ){
 			if( empty( $module->files->classes ) )
 				continue;

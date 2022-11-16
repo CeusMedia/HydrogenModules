@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -6,35 +6,35 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_ItemRelationLister
 {
-	protected $env;
-	protected $relations;
-	protected $hookResource;
-	protected $hookEvent;
-	protected $hookIndices				= [];
-	protected $tableClass				= '';
-	protected $renderMode				= 'table';
-	protected $activeOnly				= FALSE;
-	protected $linkable					= TRUE;
-	protected $limit					= 20;
-	protected $labelCountEntities		= '';
-	protected $labelCountRelations		= '';
-	protected $hintEntities;
-	protected $hintRelations;
+	protected Environment $env;
+	protected ?array $relations			= NULL;
+	protected string $hookResource;
+	protected string $hookEvent;
+	protected array $hookIndices				= [];
+	protected string $tableClass				= '';
+	protected string $renderMode				= 'table';
+	protected bool $activeOnly				= FALSE;
+	protected bool $linkable					= TRUE;
+	protected int $limit					= 20;
+	protected string $labelCountEntities		= '';
+	protected string $labelCountRelations		= '';
+//	protected $hintEntities;
+//	protected $hintRelations;
 
-	protected $types;
-	protected $words;
-	protected $labels;
+	protected array $types					= [];
+	protected array $words;
+	protected array $labels;
 
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->words	= $this->env->getLanguage()->getWords( 'helper/relation' );
-		$this->labels	= array(
+		$this->labels	= [
 			'entities.count.label'		=> $this->words['entities']['countLabel'],
 			'entities.count.hint'		=> $this->words['entities']['countHint'],
 			'relations.count.label'		=> $this->words['relations']['countLabel'],
 			'relations.count.hint'		=> $this->words['entities']['countHint'],
-		);
+		];
 	}
 
 	public static function enqueueRelations( $data, $module, $type, $items, $label, $controller = NULL, $action = NULL )
@@ -42,18 +42,18 @@ class View_Helper_ItemRelationLister
 		if( !isset( $data->list ) )
 			$data->list	= [];
 		if( count( $items ) ){
-			$data->list[]	= (object) array(
-				'module'		=> (object) array(
+			$data->list[]	= (object) [
+				'module'		=> (object) [
 					'id'		=> $module->id,
 					'label'		=> $module->title,
-				),
+				],
 				'type'			=> $type,
 				'label'			=> $label,
 				'items'			=> $items,
 				'count'			=> count( $items ),
 				'controller'	=> $controller,
 				'action'		=> $action,
-			);
+			];
 		}
 	}
 
@@ -136,14 +136,13 @@ class View_Helper_ItemRelationLister
 			throw new RuntimeException( 'No hook for event call defined' );
 		if( !$this->hookIndices )
 			throw new RuntimeException( 'No indices set' );
-		$data	= array_merge( $this->hookIndices, array(
+		$data	= array_merge( $this->hookIndices, [
 			'activeOnly'	=> $this->activeOnly,
 			'linkable'		=> $this->linkable,
 			'list'			=> [],
-		) );
-		$data	= (object) $data;
+		] );
 		$this->env->getCaptain()->callHook( $this->hookResource, $this->hookEvent, $this, $data );
-		$this->relations	= $data->list;
+		$this->relations	= $data['list'];
 	}
 
 	protected function renderRelationsAsList(): string
@@ -225,20 +224,20 @@ class View_Helper_ItemRelationLister
 			$items	= HtmlTag::create( 'ul', $items, ['class' => 'unstyled'] );
 			$count	= HtmlTag::create( 'small', '('.$relation->count.')', ['class' => 'muted'] );
 			$label	= HtmlTag::create( 'big', $relation->label ).'<br/>'.$type;
-			$rows[]	= HtmlTag::create( 'tr', array(
+			$rows[]	= HtmlTag::create( 'tr', [
 				HtmlTag::create( 'td', $label, ['class' => 'cell-relation-label'] ),
 				HtmlTag::create( 'td', $items, ['class' => 'cell-relation-items'] ),
-			) );
+			] );
 		}
 		$colgroup	= HtmlElements::ColumnGroup( "30%", "" );
-		$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+		$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 			"Typ",
 			"Verknüpfungen / Einträge",
-		) ) );
+		] ) );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
-		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
+		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
 			'class'		=> 'table table-striped item-relation-lister '.$this->tableClass,
-		) );
+		] );
 		return HtmlTag::create( 'div', $table, ['class' => 'item-relations'] );
 	}
 
@@ -247,9 +246,10 @@ class View_Helper_ItemRelationLister
 	 */
 	protected function renderTypes()
 	{
-		$this->types	= [];
-		$this->types['entity']		= $this->labels['entities.count.label'];
-		$this->types['relation']	= $this->labels['relations.count.label'];
+		$this->types	= [
+			'entity'		=> $this->labels['entities.count.label'],
+			'relation'		=> $this->labels['relations.count.label'],
+		];
 		if( $this->labels['entities.count.hint'] )
 			$this->types['entity']		=  HtmlTag::create( 'abbr', $this->types['entity'], ['title' => $this->labels['entities.count.hint']] );
 		if( $this->labels['relations.count.hint'] )

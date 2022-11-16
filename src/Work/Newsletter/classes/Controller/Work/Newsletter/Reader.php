@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\CSV\Reader as CsvFileReader;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -12,7 +13,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 	protected $session;
 	protected $request;
 	protected $messenger;
-	protected $moduleConfig;
+	protected Dictionary $moduleConfig;
 	protected $limiter;
 
 	protected $filters		= array(

@@ -1,5 +1,6 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\Alg\ID;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Newsletter_Theme
@@ -42,7 +43,7 @@ class Model_Newsletter_Theme
 		$template		= $modelTemplate->get( $templateId );
 		$data			= (object) array_merge( (array) $template, $data );
 		$json	= (object) array(
-			'id'		=> Alg_ID::uuid(),
+			'id'		=> ID::uuid(),
 			'title'		=> $data->title,
 			'version'	=> $data->version,
 			'created'	=> date( 'c', $data->createdAt ),

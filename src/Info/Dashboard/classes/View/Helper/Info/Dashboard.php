@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -6,9 +6,9 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Info_Dashboard extends Abstraction
 {
-	protected $columns		= 3;
-	protected $dashboard;
-	protected $panels;
+	protected int $columns			= 3;
+	protected ?object $dashboard	= NULL;
+	protected array $panels			= [];
 
 	public function __construct( Environment $env )
 	{
@@ -18,6 +18,9 @@ class View_Helper_Info_Dashboard extends Abstraction
 	public function render(): string
 	{
 		$w	= (object) $this->getWords( 'board', 'info/dashboard' );
+
+		if( NULL === $this->dashboard )
+			return '';
 
 		$list	= [];
 		foreach( explode( ',', $this->dashboard->panels ) as $panelId ){
@@ -77,7 +80,7 @@ class View_Helper_Info_Dashboard extends Abstraction
 		return $this;
 	}
 
-	public function setDashboard( $dashboard ): self
+	public function setDashboard( ?object $dashboard ): self
 	{
 		$this->dashboard	= $dashboard;
 		return $this;

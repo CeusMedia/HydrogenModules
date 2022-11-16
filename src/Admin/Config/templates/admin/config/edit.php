@@ -11,8 +11,6 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $module */
 /** @var string $moduleId */
 
-[$textTop, $textBottom] = $view->populateTexts( ['top', 'bottom'], 'html/admin/config/edit/' );
-
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
 $iconLock		= HtmlTag::create( 'i', '', ['class' => 'icon-lock'] );
@@ -56,7 +54,7 @@ $cols	= HtmlElements::ColumnGroup( "24px", "37%", "80px", "" );
 $tbody	= HtmlTag::create( 'tbody', $rows );
 $table	= HtmlTag::create( 'table', [$cols, $tbody], ['class' => 'table table-striped table-fixed'] );
 
-extract( $view->populateTexts( ['top', 'bottom'], 'html/admin/config/edit/' ) );
+[$textTop, $textBottom] = array_values( $view->populateTexts( ['top', 'bottom'], 'html/admin/config/edit/' ) );
 
 $w	= (object) $words['edit'];
 

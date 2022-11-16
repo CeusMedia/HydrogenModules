@@ -1,10 +1,17 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
+use CeusMedia\Common\Alg\Obj\Constant as ObjectConstants;
+use CeusMedia\Common\Exception\Data\Ambiguous as AmbiguousDataException;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\Mail\Part\HTML as MailPartHtmlV1;
+use CeusMedia\Mail\Part\InlineImage as MailPartInlineImageV1;
+
 class View_Helper_Mail_View_HTML
 {
-	protected $env;
-	protected $mail;
-	protected $mailObject;
-	protected $logicMail;
+	protected Environment $env;
+	protected ?Mail_Abstract $mailObject		= NULL;
+	protected Logic_Mail $logicMail;
+	protected int $libraries;
 
 	public function __construct( $env )
 	{
@@ -13,35 +20,31 @@ class View_Helper_Mail_View_HTML
 		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 	}
 
-	public function render()
+	/**
+	 *	@return string
+	 *	@throws ReflectionException
+	 *	@throws AmbiguousDataException
+	 */
+	public function render(): string
 	{
 		if( !$this->mailObject )
 			throw new RuntimeException( 'No mail object set' );
 
 		$usedLibrary	= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this->mailObject );
-//		$this->env->getMessenger()->noteNotice( 'usedLibrary: '.Alg_Object_Constant::staticGetKeyByValue( 'Logic_Mail', $usedLibrary, 'LIBRARY_' ) );
+//		$this->env->getMessenger()->noteNotice( 'usedLibrary: '.ObjectConstants::staticGetKeyByValue( 'Logic_Mail', $usedLibrary, 'LIBRARY_' ) );
 		if( !( $this->libraries & $usedLibrary ) ){
-			$libraryKey	= Alg_Object_Constant::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
+			$libraryKey	= ObjectConstants::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
 			return '- used mail library ('.$libraryKey.') is not supported anymore or yet -';
 		}
 		$message	= $this->mailObject->mail;
 
 		$html	= '';
 		$images	= [];
-		if( $usedLibrary == Logic_Mail::LIBRARY_COMMON ){										//  mail uses library CeusMedia/Common
-			if( $part->getMimeType() === "text/html" ){
-				$html	= $part->getContent();
-				if( $part->getContentEncoding() === "base64" )
-					$html	= base64_decode( $html );
-				if( $part->getContentEncoding() === "quoted-printable" )
-					$html	= quoted_printable_decode( $html );
-			}
-		}
-		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 ){									//  mail uses library CeusMedia/Mail version 1
+		if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 ){										//  mail uses library CeusMedia/Mail version 1
 			foreach( $message->getParts( TRUE ) as $part ){
-				if( $part instanceof \CeusMedia\Mail\Part\HTML )
+				if( $part instanceof MailPartHtmlV1 )
 					$html	= $part->getContent();
-				else if( $part instanceof \CeusMedia\Mail\Part\InlineImage )
+				else if( $part instanceof MailPartInlineImageV1 )
 					$images[$part->getId()]	= $part;
 			}
 		}
@@ -70,7 +73,7 @@ class View_Helper_Mail_View_HTML
 			$mailObjectOrId	= $this->logicMail->getMail( $mailObjectOrId );
 		if( !is_object( $mailObjectOrId ) )
 			throw new InvalidArgumentException( 'Argument must be integer or object' );
-		$this->setMailObjectInstance( $this->mail->object->instance );
+		$this->setMailObjectInstance( $mailObjectOrId->object->instance );
 		return $this;
 	}
 

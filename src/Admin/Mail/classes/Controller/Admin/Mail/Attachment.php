@@ -7,12 +7,12 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Admin_Mail_Attachment extends Controller
 {
 	protected $request;
-	protected $model;
-	protected $path;
+	protected Model_Mail_Attachment $model;
+	protected string $attachmentPath;
 	protected $messenger;
-	protected $languages;
-	protected $logicMail;
-	protected $logicUpload;
+	protected array $languages;
+	protected Logic_Mail $logicMail;
+	protected Logic_Upload $logicUpload;
 
 	public function add()
 	{
@@ -70,7 +70,7 @@ class Controller_Admin_Mail_Attachment extends Controller
 	public function download( $fileName )
 	{
 		$fileName	= urldecode( $fileName );
-		HttpDownload::sendFile( $this->path.$fileName, $fileName );
+		HttpDownload::sendFile( $this->attachmentPath.$fileName, $fileName );
 	}
 
 	public function filter( $reset = NULL )
@@ -100,10 +100,10 @@ class Controller_Admin_Mail_Attachment extends Controller
 
 	protected function getMimeTypeOfFile( $filePath )
 	{
-		if( !file_exists( $this->path.$filePath ) )
+		if( !file_exists( $this->attachmentPath.$filePath ) )
 			throw new RuntimeException( 'File "'.$filePath.'" is not existing is attachments folder.' );
 		$info	= finfo_open( FILEINFO_MIME_TYPE/*, '/usr/share/file/magic'*/ );
-		return finfo_file( $info, $this->path.$filePath );
+		return finfo_file( $info, $this->attachmentPath.$filePath );
 	}
 
 	public function index( $page = NULL )
@@ -184,8 +184,8 @@ class Controller_Admin_Mail_Attachment extends Controller
 		$pathApp			= '';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$pathApp		= Logic_Frontend::getInstance( $this->env )->getPath();
-		$this->path			= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
-		$this->addData( 'path', $this->path );
+		$this->attachmentPath			= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
+		$this->addData( 'path', $this->attachmentPath );
 		$this->addData( 'files', $this->listFiles() );
 
 		$this->languages	= [];
@@ -200,8 +200,8 @@ class Controller_Admin_Mail_Attachment extends Controller
 	protected function listFiles(): array
 	{
 		$list	= [];
-		foreach( RecursiveFolderLister::getFileList( $this->path ) as $entry ){
-			$pathName	= preg_replace( '@^'.preg_quote( $this->path, '@' ).'@', '', $entry->getPathName() );
+		foreach( RecursiveFolderLister::getFileList( $this->attachmentPath ) as $entry ){
+			$pathName	= preg_replace( '@^'.preg_quote( $this->attachmentPath, '@' ).'@', '', $entry->getPathName() );
 			$list[$pathName]	= (object) [
 				'fileName'		=> $entry->getFilename(),
 				'filePath'		=> $pathName,

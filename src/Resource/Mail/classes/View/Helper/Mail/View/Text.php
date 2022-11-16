@@ -1,41 +1,43 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
+use CeusMedia\Common\Alg\Obj\Constant as ObjectConstants;
+use CeusMedia\Common\Exception\Data\Ambiguous as AmbiguousDataException;
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Mail_View_Text
 {
-	protected $env;
-	protected $mail;
-	protected $logicMail;
+	protected Environment $env;
+	protected ?Mail_Abstract $mailObject		= NULL;
+	protected Logic_Mail $logicMail;
+	protected int $libraries;
 
-	public function __construct( $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->logicMail	= $env->getLogic()->get( 'Mail' );
 		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 	}
 
-	public function render()
+	/**
+	 * @return string
+	 * @throws ReflectionException
+	 * @throws AmbiguousDataException
+	 */
+	public function render(): string
 	{
 		if( !$this->mailObject )
 			throw new RuntimeException( 'No mail object set' );
 
 		$usedLibrary	= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this->mailObject );
 		if( !( $this->libraries & $usedLibrary ) ){
-			$libraryKey	= Alg_Object_Constant::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
+			$libraryKey	= ObjectConstants::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
 			return '- used mail library ('.$libraryKey.') is not supported anymore or yet -';
 		}
 		$message	= $this->mailObject->mail;
 
 		$text	= '';
 		$images	= [];
-		if( $usedLibrary == Logic_Mail::LIBRARY_COMMON ){										//  mail uses library CeusMedia/Common
-			if( $part->getMimeType() === "text/plain" ){
-				$html	= $part->getContent();
-				if( $part->getContentEncoding() === "base64" )
-					$html	= base64_decode( $html );
-				if( $part->getContentEncoding() === "quoted-printable" )
-					$html	= quoted_printable_decode( $html );
-			}
-		}
-		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 ){									//  mail uses library CeusMedia/Mail version 1
+		if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 ){										//  mail uses library CeusMedia/Mail version 1
 			foreach( $message->getParts( TRUE ) as $part )
 				if( get_class( $part ) == 'CeusMedia\\Mail\\Part\\Text' )
 					$text	= $part->getContent();
@@ -59,7 +61,7 @@ class View_Helper_Mail_View_Text
 			$mailObjectOrId	= $this->logicMail->getMail( $mailObjectOrId );
 		if( !is_object( $mailObjectOrId ) )
 			throw new InvalidArgumentException( 'Argument must be integer or object' );
-		$this->setMailObjectInstance( $this->mail->object->instance );
+		$this->setMailObjectInstance( $mailObjectOrId->object->instance );
 		return $this;
 	}
 

@@ -18,7 +18,6 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
  */
 class Controller_Ajax_Manage_Role extends AjaxController
 {
-	protected $request;
 	protected $modelRole;
 	protected $modelRoleRight;
 
@@ -59,7 +58,6 @@ class Controller_Ajax_Manage_Role extends AjaxController
 
 	protected function __onInit(): void
 	{
-		$this->request			= $this->env->getRequest();
 //		$this->modelRoleRight	= $this->getModel( 'Role_Right' );
 		$this->modelRole		= new Model_Role( $this->env );
 		$this->modelRoleRight	= new Model_Role_Right( $this->env );

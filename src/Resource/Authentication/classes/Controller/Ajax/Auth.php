@@ -6,7 +6,7 @@ class Controller_Ajax_Auth extends AjaxController
 {
 //	protected $config;
 //	protected $request;
-	protected $session;
+//	protected $session;
 //	protected $logic;
 //	protected $moduleConfig;
 
@@ -28,7 +28,7 @@ class Controller_Ajax_Auth extends AjaxController
 	{
 //		$this->config		= $this->env->getConfig();
 //		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
+//		$this->session		= $this->env->getSession();
 //		$this->logic		= $this->env->getLogic()->get( 'Authentication' );
 //		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication.', TRUE );
 	}

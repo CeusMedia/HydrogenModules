@@ -1,21 +1,21 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\Common\Net\HTTP\Status as HttpStatus;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Auth extends Hook
 {
-	public static function onAppException( Environment $env, $context, $module, $payload = [] )
+	public function onAppException()
 	{
-		$payload	= (object) $payload;
-		if( !property_exists( $payload, 'exception' ) )
+		$load	= (object) $this->payload;
+		if( !property_exists( $load, 'exception' ) )
 			throw new Exception( 'No exception data given' );
-		if( !( $payload->exception instanceof Exception ) )
+		if( !( $load->exception instanceof Exception ) )
 			throw new Exception( 'Given exception data is not an exception object' );
-		$request	= $env->getRequest();
-		$session	= $env->getSession();
-		if( $payload->exception->getCode() == 403 ){
+		$request	= $this->env->getRequest();
+		$session	= $this->env->getSession();
+		if( $load->exception->getCode() == 403 ){
 			if( !$session->get( 'auth_user_id' ) ){
 				$forwardUrl	= $request->get( '__controller' );
 				if( $request->get( '__action' ) )
@@ -23,8 +23,8 @@ class Hook_Auth extends Hook
 				if( $request->get( '__arguments' ) )
 					foreach( $request->get( '__arguments' ) as $argument )
 						$forwardUrl	.= '/'.$argument;
-				$url	= $env->url.'auth/login?from='.$forwardUrl;
-				Net_HTTP_Status::sendHeader( 403 );
+				$url	= $this->env->url.'auth/login?from='.$forwardUrl;
+				HttpStatus::sendHeader( 403 );
 				if( !$request->isAjax() )
 					header( 'Location: '.$url );
 				exit;
@@ -33,24 +33,23 @@ class Hook_Auth extends Hook
 		return FALSE;
 	}
 
-	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
+	public function onPageApplyModules()
 	{
-		$session	= $env->getSession();
+		$session	= $this->env->getSession();
 		$userId		= (int) $session->get( 'auth_user_id' );										//  get ID of current user (or zero)
 		if( $userId ){
-			$cookie		= new HttpCookie( parse_url( $env->url, PHP_URL_PATH ) );
+			$cookie		= new HttpCookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 			$remember	= (bool) $cookie->get( 'auth_remember' );
 			$session->set( 'isRemembered', $remember );
 			$script		= 'Auth.init('.$userId.','.json_encode( $remember ).');';					//  initialize Auth class with user ID
-			$env->getPage()->js->addScriptOnReady( $script, 1 );									//  enlist script to be run on ready
+			$this->env->getPage()->js->addScriptOnReady( $script, 1 );								//  enlist script to be run on ready
 		}
 	}
 
-	public static function onEnvInitAcl( Environment $env, $context, $module, $payload )
+	public function onEnvInitAcl(): bool
 	{
-		$payload	= (object) $payload;
-//		$payload->className	= '\\CeusMedia\\HydrogenFramework\\Environment\\Resource\\Acl\\Database';
-		$payload->className	= 'Resource_Acl_Authentication';
+//		$this->payload['className']	= '\\CeusMedia\\HydrogenFramework\\Environment\\Resource\\Acl\\Database';
+		$this->payload['className']	= 'Resource_Acl_Authentication';
 		return TRUE;
 	}
 }

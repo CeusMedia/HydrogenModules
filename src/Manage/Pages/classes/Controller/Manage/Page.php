@@ -23,6 +23,8 @@ class Controller_Manage_Page extends Controller
 	protected $envManaged;
 	protected $defaultLanguage;
 
+	public static string $moduleId		= 'Manage_Pages';
+
 	public function add( $parentId = 0 )
 	{
 		$parent	= $parentId ? $this->checkPageId( $parentId ) : NULL;
@@ -124,7 +126,7 @@ ModuleManagePages.PageEditor.init();
 		$editors	= [];
 		$helper		= new UI_Helper_ContentEditor( $this->env );
 		$helper->setDefaultEditor( $defaultEditor );
-		$helper->setCurrentEditor( $currentEditor );
+		$helper->setCurrentEditor( $currentEditor ?? $defaultEditor );
 		$helper->setFormat( $page->format );
 		foreach( $this->getWords( 'editor-types' ) as $typeKey => $typeTemplate ){
 			$helper->setType( $typeKey );

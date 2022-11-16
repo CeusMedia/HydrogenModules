@@ -5,8 +5,6 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 class Controller_Ajax_Auth_Local extends AjaxController
 {
 //	protected $config;
-	protected $request;
-	protected $session;
 //	protected $modules;
 //	protected $moduleConfig;
 //	protected $limiter;
@@ -47,8 +45,8 @@ class Controller_Ajax_Auth_Local extends AjaxController
 	protected function __onInit(): void
 	{
 //		$this->config		= $this->env->getConfig();
-		$this->request		= $this->env->getRequest();
-		$this->session		= $this->env->getSession();
+//		$this->request		= $this->env->getRequest();
+//		$this->session		= $this->env->getSession();
 //		$this->modules		= $this->env->getModules();
 //		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Local' );
 

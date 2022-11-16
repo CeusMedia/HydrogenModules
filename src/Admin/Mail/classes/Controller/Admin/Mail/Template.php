@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
@@ -7,9 +7,9 @@ class Controller_Admin_Mail_Template extends Controller
 {
 	protected $request;
 	protected $messenger;
-	protected $modelTemplate;
-	protected $appPath;
-	protected $appUrl;
+	protected Model_Mail_Template $modelTemplate;
+	protected string $appPath;
+	protected string $appUrl;
 
 	public function add()
 	{
@@ -181,11 +181,11 @@ class Controller_Admin_Mail_Template extends Controller
 					$helper	= new View_Helper_Mail_View_Text( $this->env );
 					$helper->setMailObjectInstance( $mail );
 					$text	= $helper->render();
-					print( HtmlTag::create( 'html', array(
-						HtmlTag::create( 'body', array(
+					print( HtmlTag::create( 'html', [
+						HtmlTag::create( 'body', [
 							HtmlTag::create( 'xmp', $text ),
-						) ),
-					) ) );
+						] ),
+					] ) );
 					break;
 				default:
 					if( strlen( trim( $template->html ) ) )

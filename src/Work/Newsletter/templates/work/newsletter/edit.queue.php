@@ -1,6 +1,16 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
+use CeusMedia\Bootstrap\Progress;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var object $words */
+/** @var array $queues */
+/** @var string $newsletterId */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $iconRun		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] );
@@ -24,18 +34,18 @@ $buttonCancelDisabled	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;
 
 foreach( $queues as $queue ){
 //	print_m( $queue);die;
-	$bar	= new \CeusMedia\Bootstrap\Progress();
+	$bar	= new Progress();
 	$bar->addBar(
 		round( ( $queue->countLettersByStatus[1] + $queue->countLettersByStatus[2] ) / $queue->countLetters * 100, 1 ),
-		\CeusMedia\Bootstrap\Progress::BAR_CLASS_SUCCESS
+		Progress::BAR_CLASS_SUCCESS
 	);
 	$bar->addBar(
 		round( $queue->countLettersByStatus[0] / $queue->countLetters * 100, 1 ),
-		\CeusMedia\Bootstrap\Progress::BAR_CLASS_WARNING
+		Progress::BAR_CLASS_WARNING
 	);
 	$bar->addBar(
 		round( ( $queue->countLettersByStatus[-1] + $queue->countLettersByStatus[-2] + $queue->countLettersByStatus[-3] ) / $queue->countLetters * 100, 1 ),
-		\CeusMedia\Bootstrap\Progress::BAR_CLASS_DANGER
+		Progress::BAR_CLASS_DANGER
 	);
 
 	$buttonRun	= HtmlTag::create( 'a', $iconRun.'&nbsp;starten&nbsp;', array(
@@ -110,11 +120,11 @@ $labelLetterButtonRemove	= '<i class="icon-remove icon-white"></i> '.$words->edi
 $labelLetterButtonView		= '<i class="icon-eye-open"></i> '.$words->edit->buttonQueueView;
 $table						= '<em><small class="muted">Keine offenen Vorgänge vorhanden.</small></em>';
 if( $letterQueue ){
-	$rows	= [];
+	$rows		= [];
+	$rowColor	= 'warning';
 	foreach( $letterQueue as $readerLetter ){
 		if( $readerLetter->status != 0 )
 			continue;
-		$rowColor		= 'warning';
 		$urlSend		= './work/newsletter/sendLetter/'.$readerLetter->newsletterReaderLetterId;
 		$urlRemove		= './work/newsletter/dequeueLetter/'.$readerLetter->newsletterReaderLetterId;
 		$urlView		= './work/newsletter/view/'.$readerLetter->newsletterReaderLetterId;

@@ -1,4 +1,13 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var object $words */
+/** @var object $newsletter */
+/** @var bool $tabbedLinks */
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 

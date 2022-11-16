@@ -1,40 +1,51 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
+use CeusMedia\Common\Alg\Obj\Constant as ObjectConstants;
+use CeusMedia\Common\Exception\Data\Ambiguous as AmbiguousDataException;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\Mail\Renderer as MailRendererV1;
+use CeusMedia\Mail\Message\Renderer as MailRendererV2;
+
 class View_Helper_Mail_View_Source
 {
-	protected $env;
-	protected $mail;
-	protected $logicMail;
-	protected $mode			= 0;
+	protected Environment $env;
+	protected ?Mail_Abstract $mailObject		= NULL;
+	protected Logic_Mail $logicMail;
+	protected int $mode							= 0;
+	protected int $libraries;
 
 	const MODE_NORMAL		= 0;
 	const MODE_CONDENSED	= 1;
 
-	public function __construct( $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->logicMail	= $env->getLogic()->get( 'Mail' );
 		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 	}
 
-	public function render()
+	/**
+	 * @return string
+	 * @throws AmbiguousDataException
+	 * @throws ReflectionException
+	 */
+	public function render(): string
 	{
 		if( !$this->mailObject )
 			throw new RuntimeException( 'No mail object set' );
 
 		$usedLibrary	= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this->mailObject );
 		if( !( $this->libraries & $usedLibrary ) ){
-			$libraryKey	= Alg_Object_Constant::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
+			$libraryKey	= ObjectConstants::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
 			return '- used mail library ('.$libraryKey.') is not supported anymore or yet -';
 		}
 		$message	= $this->mailObject->mail;
 
 		$code	= '';
-		if( $usedLibrary == Logic_Mail::LIBRARY_COMMON )										//  mail uses library CeusMedia/Common
-			$code	= $message->getBody();														//  @todo find better way: currently only parts content displayed but no headers
-		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 )									//  mail uses library CeusMedia/Mail version 1
-			$code	= CeusMedia\Mail\Renderer::render( $message );								//  @todo find better way: currently only parts content displayed but no headers
-		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V2 )									//  mail uses library CeusMedia/Mail version 1
-			$code	= CeusMedia\Mail\Message\Renderer::render( $message );						//  @todo find better way: currently only parts content displayed but no headers
+		if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 )									//  mail uses library CeusMedia/Mail version 1
+			$code	= MailRendererV1::render( $message );									//  @todo find better way: currently only parts content displayed but no headers
+		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V2 )								//  mail uses library CeusMedia/Mail version 1
+			$code	= MailRendererV2::render( $message );									//  @todo find better way: currently only parts content displayed but no headers
 		else
 			throw new RangeException( 'No source renderer for mail object available' );
 
@@ -56,7 +67,7 @@ class View_Helper_Mail_View_Source
 			$mailObjectOrId	= $this->logicMail->getMail( $mailObjectOrId );
 		if( !is_object( $mailObjectOrId ) )
 			throw new InvalidArgumentException( 'Argument must be integer or object' );
-		$this->setMailObjectInstance( $this->mail->object->instance );
+		$this->setMailObjectInstance( $mailObjectOrId->object->instance );
 		return $this;
 	}
 
@@ -66,7 +77,7 @@ class View_Helper_Mail_View_Source
 		return $this;
 	}
 
-	public function setMode( $mode ): self
+	public function setMode( int $mode ): self
 	{
 		if( !in_array( $mode, [self::MODE_NORMAL, self::MODE_CONDENSED] ) )
 			throw new RangeException( 'Invalid mode' );

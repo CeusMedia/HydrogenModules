@@ -5,9 +5,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Input_Resource
 {
-	protected $env;
-	protected $inputId;
-	protected $modalId;
+	protected Environment $env;
+	protected ?string $inputId		= NULL;
+	protected ?string $modalId		= NULL;
 
 	public function __construct( Environment $env )
 	{
@@ -22,10 +22,9 @@ class View_Helper_Input_Resource
 	public function render(): string
 	{
 //		$modal			= new View_Helper_Bootstrap_Modal( $this->env );
-		$modal			= new BootstrapModalDialog( $this->env );
+		$modal			= new BootstrapModalDialog( $this->modalId );
 		$modal->setHeading( 'Auswahl' );
 		$modal->setBody( '<div id="'.$this->modalId.'-content"></div><div id="'.$this->modalId.'-loader"><div class="alert alert-info">... Loading ...</div></div>' );
-		$modal->setId( $this->modalId );
 		$modal->setFade( FALSE );
 		return $modal->render();
 	}
@@ -50,13 +49,13 @@ class View_Helper_Input_ResourceTrigger
 	const MODE_STYLE			= 'style';
 	const MODE_DOCUMENT			= 'document';
 
-	protected $env;
-	protected $modalId;
-	protected $mode				= 'image';
-	protected $inputId;
-	protected $label			= 'select';
-	protected $class			= 'btn';
-	protected $paths			= [];
+	protected Environment $env;
+	protected ?string $modalId		= NULL;
+	protected string $mode			= 'image';
+	protected ?string $inputId		= NULL;
+	protected string $label			= 'select';
+	protected string $class			= 'btn';
+	protected array $paths			= [];
 
 	public function __construct( Environment $env )
 	{
@@ -112,7 +111,7 @@ class View_Helper_Input_ResourceTrigger
 		return $this;
 	}
 
-	public function setPaths( string $paths ): self
+	public function setPaths( array $paths ): self
 	{
 		$this->paths	= $paths;
 		return $this;

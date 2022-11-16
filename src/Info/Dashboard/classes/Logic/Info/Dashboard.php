@@ -114,19 +114,19 @@ class Logic_Info_Dashboard extends Logic
 	/**
 	 *	Returns current user dashboard if available.
 	 *	@access		public
-	 *	@param		integer			$userId			ID of user to get current dashboard for
+	 *	@param		string			$userId			ID of user to get current dashboard for
 	 *	@param		boolean			$strict			Flag: throw exception if not available (default), otherwise return FALSE
-	 *	@return		integer			ID of new user dashboard
+	 *	@return		object|NULL		Dashboard data object
 	 *	@throws		DomainException					if user is not having a current dashboard
 	 */
-	public function getUserDashboard( $userId, bool $strict = TRUE )
+	public function getUserDashboard( string $userId, bool $strict = TRUE ): ?object
 	{
 		$dashboard	= $this->model->getByIndices( ['userId' => $userId, 'isCurrent' => 1] );
 		if( $dashboard )
 			return $dashboard;
 		if( $strict )
 			throw new DomainException( 'User has no current dashboard' );
-		return FALSE;
+		return NULL;
 	}
 
 	/**

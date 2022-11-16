@@ -1,10 +1,18 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+
 $w		= (object) $words['index'];
 
 $panelFilter	= $view->loadTemplateFile( 'admin/mail/queue/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'admin/mail/queue/index.list.php' );
 
-extract( $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/queue/' ) );
+[$textTop, $textBottom]	= array_values( $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/queue/' ) );
 
 return $textTop.'
 <div class="row-fluid">
@@ -18,4 +26,3 @@ return $textTop.'
 <style>
 .list-item-mail {}
 </style>'.$textBottom;
-?>

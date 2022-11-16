@@ -1,18 +1,26 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info_Page extends Hook
 {
-	public static function onAppDispatch( Environment $env, object $context, $module, array & $payload )
+	/**
+	 *	@param		Environment		$env
+	 *	@param		object			$context
+	 *	@param		object			$module
+	 *	@param		array			$payload
+	 *	@return		bool|NULL
+	 *	@throws		ReflectionException
+	 */
+	public static function onAppDispatch(Environment $env, object $context, object $module, array & $payload ): ?bool
 	{
 		if( $env->getModules()->has( 'Resource_Frontend' ) )										//  frontend resource exists
 			if( $env->getConfig()->get( 'module.resource_frontend.path' ) !== './' )				//  this app is a backend
 				return FALSE;																		//  no (frontend) pages for backend
 
 		$request	= $env->getRequest();
-		/** @var \Logic_Page $logic */
+		/** @var Logic_Page $logic */
 		$logic		= $env->getLogic()->get( 'page' );												//  get page logic instance
 
 		$path		= trim( $request->get( '__path' ), '/' );										//  get requested path

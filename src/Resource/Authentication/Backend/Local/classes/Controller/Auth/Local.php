@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Alg\Randomizer;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
@@ -6,6 +6,8 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Auth_Local extends Controller
 {
+	public static string $moduleId	= 'Resource_Authentication_Local';
+
 	protected $config;
 	protected $request;
 	protected $session;
@@ -14,7 +16,6 @@ class Controller_Auth_Local extends Controller
 	protected $modules;
 	protected $useCsrf;
 	protected $useOauth2;
-	protected $moduleConfig;
 	protected $moduleConfigAuth;
 	protected $moduleConfigUsers;
 	protected $limiter;
@@ -74,11 +75,12 @@ class Controller_Auth_Local extends Controller
 				if( $pak === $code ){
 					$modelUser->edit( $user->userId, ['status' => 1] );
 					$this->messenger->noteSuccess( $words->msgSuccess );
-					$result	= $this->callHook( 'Auth', 'afterConfirm', $this, array(
+					$payload	= [
 						'userId'	=> $user->userId,
 						'roleId'	=> $user->roleId,
 						'from'		=> $from,
-					) );
+					];
+					$result	= $this->callHook( 'Auth', 'afterConfirm', $this, $payload );
 					if( 1 ){
 						$this->messenger->noteSuccess( $words->msgSuccessAutoLogin );
 						$this->session->set( 'auth_user_id', $user->userId );
@@ -180,10 +182,11 @@ class Controller_Auth_Local extends Controller
 		$words		= (object) $this->getWords( 'logout' );
 		$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
 		if( $this->session->has( 'auth_user_id' ) ){
-			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
+			$payload	= [
 				'userId'	=> $this->session->get( 'auth_user_id' ),
 				'roleId'	=> $this->session->get( 'auth_role_id' ),
-			) );
+			];
+			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
 			$this->session->remove( 'auth_user_id' );
 			$this->session->remove( 'auth_role_id' );
 			$logicAuth->clearCurrentUser();
@@ -199,7 +202,7 @@ class Controller_Auth_Local extends Controller
 			if( $this->moduleConfig->get( 'logout.clearSession' ) )									//  session is to be cleared on logout
 				session_destroy();																	//  completely destroy session
 		}
-		$this->redirectAfterLogout( HttpCookie, $redirectAction );
+		$this->redirectAfterLogout( $redirectController, $redirectAction );
 	}
 
 	public function password()
@@ -252,7 +255,8 @@ class Controller_Auth_Local extends Controller
 				}
 				catch( Exception $e ){
 					$this->messenger->noteFailure( $words->msgSendingMailFailed );
-					$this->callHook( 'Env', 'logException', $this, ['exception' => $e] );
+					$payload	= ['exception' => $e];
+					$this->callHook( 'Env', 'logException', $this, $payload );
 				}
 				$this->env->getDatabase()->rollBack();
 			}
@@ -405,7 +409,8 @@ class Controller_Auth_Local extends Controller
 				catch( Exception $e ){
 //					$this->messenger->noteFailure( $words->msgSendingMailFailed );
 					$this->messenger->noteFailure( 'Fehler aufgetreten: '.$e->getMessage() );
-					$this->callHook( 'Env', 'logException', $this, ['exception' => $e] );
+					$payload	= ['exception' => $e];
+					$this->callHook( 'Env', 'logException', $this, $payload );
 				}
 				$this->env->getDatabase()->rollBack();
 			}
@@ -449,9 +454,10 @@ class Controller_Auth_Local extends Controller
 				$this->useOauth2	= $module->config['loginMode']->value === 'buttons';			//  use OAuth2 in local login only in buttons mode
 		}
 
-		$this->moduleConfig			= $this->config->getAll( 'module.resource_authentication_backend_local.', TRUE );
 		$this->moduleConfigAuth		= $this->config->getAll( 'module.resource_authentication.', TRUE );
 		$this->moduleConfigUsers	= $this->config->getAll( 'module.resource_users.', TRUE );
+//		$this->moduleConfigAuth		= $this->env->getModules()->get( 'Resource_Authentication' )->getConfigAsDictionary();
+//		$this->moduleConfigUsers	= $this->env->getModules()->get( 'Resource_Users' )->getConfigAsDictionary();
 		if( $this->modules->has( 'Resource_Limiter' ) )
 //			if( $this->modules->get( 'Resource_Limiter' )->isActive )				// @todo apply this line here and anywhere else
 				$this->limiter	= Logic_Limiter::getInstance( $this->env );
@@ -481,15 +487,15 @@ class Controller_Auth_Local extends Controller
 			$this->messenger->noteError( $words->msgInvalidUser );
 			return 0;
 		}
-		$hookData	= (object) array(
+		$hookData	= [
 			'status'	=> NULL,
 			'backend'	=> 'local',
 			'username'	=> $user ? $user->username : $username,
 //			'password'	=> $password,															//  disabled for security
 			'userId'	=> $user ? $user->userId : 0,
-		);
+		];
 		$this->callHook( 'Auth', 'checkBeforeLogin', $this, $hookData );
-		if( $hookData->status === FALSE )
+		if( $hookData['status'] === FALSE )
 			return 0;
 
 		$role	= $modelRole->get( $user->roleId );

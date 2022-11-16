@@ -1,6 +1,15 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Bootstrap\Nav\Tabs as BootstrapTabs;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object $template */
+/** @var ?string $tabId */
 
 $w			= (object) $words['edit'];
 
@@ -76,6 +85,6 @@ $heading3	= HtmlTag::create( 'h3', vsprintf( $w->heading, array(
 	htmlentities( $template->title, ENT_QUOTES, 'UTF-8' )
 ) ).$navPrevNext );
 
-extract( $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/template/edit/' ) );
+[$textTop, $textBottom]	= array_values( $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/template/edit/' ) );
 
 return $textTop.$heading3.$tabs.$textBottom;
