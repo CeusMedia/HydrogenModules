@@ -136,12 +136,12 @@ class View_Helper_ItemRelationLister
 			throw new RuntimeException( 'No hook for event call defined' );
 		if( !$this->hookIndices )
 			throw new RuntimeException( 'No indices set' );
-		$data	= array_merge( $this->hookIndices, [
+		$payload	= array_merge( $this->hookIndices, [
 			'activeOnly'	=> $this->activeOnly,
 			'linkable'		=> $this->linkable,
 			'list'			=> [],
 		] );
-		$this->env->getCaptain()->callHook( $this->hookResource, $this->hookEvent, $this, $data );
+		$this->env->getCaptain()->callHook( $this->hookResource, $this->hookEvent, $this, $payload );
 		$this->relations	= $data['list'];
 	}
 

@@ -16,7 +16,8 @@ list>
 code>
 ...
 catch( Exception $e ){
-	$this->env->getCaptain()->callHook( 'Env', 'logException', $this, ['exception' => $e] );
+	$payload	= ['exception' => $e];
+	$this->env->getCaptain()->callHook( 'Env', 'logException', $this, $payload );
 }
 ...
 <code

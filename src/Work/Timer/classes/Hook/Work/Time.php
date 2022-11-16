@@ -51,7 +51,8 @@ class Hook_Work_Time extends Hook
 	public static function onEnvCallForModules( Environment $env, $context, $module, $payload = [] )
 	{
 		$context	= new View_Helper_Work_Time_Timer( $env );
-		$env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, [] );
+		$payload	= [];
+		$env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, $payload );
 	}
 
 	public static function onWorkTimeRegisterTab( Environment $env, $context, $module, $payload )

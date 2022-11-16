@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Exception\Trace as HtmlExceptionTrace;
+
 class Mail_Log_Exception extends Mail_Abstract
 {
 	protected $helperFacts;
@@ -30,7 +33,7 @@ class Mail_Log_Exception extends Mail_Abstract
 			'<h3>Exception <small class="muted">in %s</small></h3><h3>Facts</h3>%s</h3>Trace</h3>%s',
 			$appName,
 			$this->helperFacts->render(),
-			UI_HTML_Exception_Trace::render( $exception )
+			HtmlExceptionTrace::render( $exception )
 		);
 		$this->setHtml( $html );
 

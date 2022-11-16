@@ -1,4 +1,5 @@
 <?php
+use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Forum_Answer extends Mail_Forum_Abstract
@@ -15,7 +16,7 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract
 		$content		= nl2br( $post->content, TRUE );
 		if( $post->type == 1 ){
 			$parts		= explode( "\n", $post->content );
-			$title		= $parts[1] ? Alg_Text_Trimmer::trim( $parts[1], 100 ) : '';
+			$title		= $parts[1] ? TextTrimmer::trim( $parts[1], 100 ) : '';
 			$caption	= $title ? HtmlTag::create( 'figcaption', htmlentities( $parts[1], ENT_QUOTES, 'UTF-8') ) : '';
 			$image		= HtmlTag::create( 'img', NULL, array(
 				'src'	=> 'contents/forum/'.$parts[0],

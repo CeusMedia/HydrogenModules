@@ -37,10 +37,11 @@ where the third argument is the calling object, logged as context.
 
 **Call By Hook:**
 code>
-$this->env->getCaptain()->callHook( 'Env', 'log', $this, array(
+$payload = [
 	'type'		=> 'error',
 	'message'	=> '...message...',
-) );
+];
+$this->env->getCaptain()->callHook( 'Env', 'log', $this, $payload );
 <code
 
 **Log Message Types:**

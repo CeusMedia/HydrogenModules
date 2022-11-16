@@ -242,7 +242,8 @@ class Controller_Manage_Form_Fill extends Controller
 			);
 		}
 		catch( Exception $e ){
-			$this->env->getCaptain()->callHook( 'Env', 'logException', $this, ['exception' => $e] );
+			$payload	= ['exception' => $e];
+			$this->env->getCaptain()->callHook( 'Env', 'logException', $this, $payload );
 //			$this->logicFill->sendManagerErrorMail( @$data );
 			$status	= 'error';
 			$data	= array(

@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -46,7 +47,7 @@ class Controller_Work_Mail_Group_Message extends Controller
 			}
 		}
 		catch( Exception $e ){
-			$content	= UI_HTML_Exception_Page::render( $e );
+			$content	= HtmlExceptionPage::render( $e );
 		}
 		$response	= $this->env->getResponse();
 		$response->setBody( $content );

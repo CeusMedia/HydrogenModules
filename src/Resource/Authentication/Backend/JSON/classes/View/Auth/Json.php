@@ -14,6 +14,7 @@ class View_Auth_Json extends View
 
 	public function renderRegisterFormExtensions()
 	{
-		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, [] );
+		$payload	= [];
+		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, $payload );
 	}
 }

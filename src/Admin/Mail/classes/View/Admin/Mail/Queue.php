@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
@@ -97,7 +98,7 @@ class View_Admin_Mail_Queue extends View
 			print( $helper->render() );
 		}
 		catch( Exception $e ){
-			UI_HTML_Exception_Page::display( $e );
+			HTmlExceptionPage::display( $e );
 		}
 		exit;
 	}

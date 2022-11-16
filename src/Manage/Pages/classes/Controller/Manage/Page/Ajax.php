@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\Alg\Text\Filter as TextFilter;
+use CeusMedia\Common\Alg\Text\TermExtractor as TextTermExtractor;
 use CeusMedia\Common\FS\File\Collection\Reader as ListFileReader;
 use CeusMedia\Common\FS\File\Collection\Editor as ListFileEditor;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
@@ -145,8 +146,8 @@ class Controller_Manage_Page_Ajax extends AjaxController
 		$html	= str_replace( "&nbsp;", " ", $html );
 		$blacklist	= 'config/terms.blacklist.txt';
 		if( file_exists( $blacklist ) )
-			Alg_Text_TermExtractor::loadBlacklist( $blacklist );
-		$terms	= Alg_Text_TermExtractor::getTerms( $html );
+			TextTermExtractor::loadBlacklist( $blacklist );
+		$terms	= TextTermExtractor::getTerms( $html );
 		$list	= [];
 		foreach( $terms as $term => $count )
 			if( preg_match( '/^[A-Z]/', $term ) )

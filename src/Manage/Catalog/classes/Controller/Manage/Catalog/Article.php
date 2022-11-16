@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
@@ -39,7 +40,7 @@ class Controller_Manage_Catalog_Article extends Controller
 			foreach( $logic->getArticles( $conditions, $orders, [0, 200] ) as $item ){
 				$id		= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
 				$list[] = (object) array(
-					'title'	=> Alg_Text_Trimmer::trimCentric( $item->title, 60 ),
+					'title'	=> TextTrimmer::trimCentric( $item->title, 60 ),
 					'value'	=> $pathCovers.$id.'__'.$item->cover,
 				);
 			}
@@ -77,7 +78,7 @@ class Controller_Manage_Catalog_Article extends Controller
 				if( $category->volume )
 					$item->title	.= ' - Band '.$category->volume;
 */				$articles[$nr]	= (object) array(
-					'title'	=> Alg_Text_Trimmer::trimCentric( $item->title, 80 ),
+					'title'	=> TextTrimmer::trimCentric( $item->title, 80 ),
 					'value'	=> $logic->getArticleUri( $item ),
 				);
 			}
@@ -95,7 +96,7 @@ class Controller_Manage_Catalog_Article extends Controller
 				$id				= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
 				$article		= $logic->getArticle( $item->articleId );
 				$documents[$nr]	= (object) array(
-					'title'	=> Alg_Text_Trimmer::trimCentric( $article->title, 40 ).' - '.$item->title,
+					'title'	=> TextTrimmer::trimCentric( $article->title, 40 ).' - '.$item->title,
 					'value'	=> $pathDocs.$id.'_'.$item->url,
 				);
 			}

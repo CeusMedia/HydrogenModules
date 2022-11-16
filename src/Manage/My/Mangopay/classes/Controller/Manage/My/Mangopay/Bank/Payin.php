@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
+
 /**
  *	@todo   			migrate index to add and implement payin history on index
  */
@@ -40,7 +43,7 @@ class Controller_Manage_My_Mangopay_Bank_Payin extends Controller_Manage_My_Mang
 				$this->handleMangopayResponseException( $e );
 			}
 			catch( Exception $e ){
-				UI_HTML_Exception_Page::display( $e );
+				HtmlExceptionPage::display( $e );
 				exit;
 			}
 		}

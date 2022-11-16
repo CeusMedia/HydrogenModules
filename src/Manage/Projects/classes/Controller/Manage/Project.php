@@ -380,14 +380,16 @@ class Controller_Manage_Project extends Controller
 						$this->logicMail->handleMail( $mail, $user, $language->getLanguage() );
 					}
 				}
-				$this->env->getCaptain()->callHook( 'Project', 'remove', $this, ['projectId' => $projectId] );
+				$payload	= ['projectId' => $projectId];
+				$this->env->getCaptain()->callHook( 'Project', 'remove', $this, $payload );
 				$dbc->commit();
 				$this->messenger->noteSuccess( $words->msgSuccessRemoved, $project->title );
 				$this->restart( NULL, TRUE );
 			}
 			catch( Exception $e ){
 				$dbc->rollBack();
-				$this->env->getCaptain()->callHook( 'Env', 'logException', $this, ['exception' => $e] );
+				$payload	= ['exception' => $e];
+				$this->env->getCaptain()->callHook( 'Env', 'logException', $this, $payload );
 				$this->messenger->noteFailure( $words->msgFailureException, $e->getMessage() );
 				$this->restart( 'edit/'.$projectId, TRUE );
 			}

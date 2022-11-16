@@ -85,10 +85,10 @@ class View_Helper_LanguageSelector extends Abstraction
 					'href'	=> $this->path.'?switchLanguageTo='.$entry,
 					'class'	=> 'language-selector-link active',
 				) );
-				$eventpayload = (object)( array( "label" => $link, "language" => $entry) );
-				$this->env->getCaptain()->callHook('LanguageSelector', 'queryLanguageDecorator', $this, $eventpayload );
-				$link   = $eventpayload->label;
-				$list[]	= HtmlTag::create( 'li', $link );
+				$payload	= ["label" => $link, "language" => $entry];
+				$this->env->getCaptain()->callHook('LanguageSelector', 'queryLanguageDecorator', $this, $payload );
+				$link		= $payload['label'];
+				$list[]		= HtmlTag::create( 'li', $link );
 			}
 		}
 		$listMenu		= HtmlTag::create( 'ul', $list, array(
@@ -96,9 +96,9 @@ class View_Helper_LanguageSelector extends Abstraction
 		) );
 
 		$label			= '<%?OPTIONALICON%>'.$this->words['selector']['label'];
-		$eventpayload 		= (object)( array("label" => $label, "language" => $this->language->GetLanguage() ) );
-		$this->env->getCaptain()->callHook('LanguageSelector','queryLanguageDecorator', $this, $eventpayload);
-		$label			= $eventpayload->label;
+		$payload 		= ["label" => $label, "language" => $this->language->GetLanguage()];
+		$this->env->getCaptain()->callHook('LanguageSelector','queryLanguageDecorator', $this, $payload );
+		$label			= $payload['label'];
 /* TODO Move to own Module and add support here for themeable icons
 		$flagimgpath		= "themes/common/img/".$this->language->GetLanguage().".png";
 		$flagimg		= HtmlTag::create( 'img' , '', array( 'src' => $flagimgpath , 'style' =>'height:1em') );
@@ -110,13 +110,10 @@ class View_Helper_LanguageSelector extends Abstraction
 			'data-toggle'	=> "dropdown",
 			'href'			=> "#",
 		) );
-		$component		= HtmlTag::create( 'div', array(
-			$buttonToggle,
-			$listMenu
-		), array(
+		$component		= HtmlTag::create( 'div', [$buttonToggle, $listMenu], [
 			'class'		=> 'btn-group',
 			'id'		=> 'language-selector',
-		) );
+		] );
 		return $component;
 	}
 

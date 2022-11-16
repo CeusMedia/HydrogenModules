@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Text\CamelCase as TextCamelCase;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Shop_Customer extends Controller
@@ -92,7 +93,7 @@ class Controller_Shop_Customer extends Controller
 				$labels		= $this->getWords( 'customer' );
 				foreach( $mandatory as $name ){
 					if( !$data->get( $name ) ){
-						$label	= Alg_Text_CamelCase::convert( $name, FALSE );
+						$label	= TextCamelCase::convert( $name, FALSE );
 						$this->messenger->noteError(
 							$this->words->errorFieldEmpty,
 							'billing_'.$name,
@@ -120,11 +121,12 @@ class Controller_Shop_Customer extends Controller
 					) );
 				}
 			}
-			$this->env->getCaptain()->callHook( 'Shop', 'updateAddress', $this, array(
+			$payload	= [
 				'address'		=> $this->modelAddress->get( $addressId ),
 				'relationId'	=> $relationId,
 				'relationType'	=> $relationType,
-			) );
+			];
+			$this->env->getCaptain()->callHook( 'Shop', 'updateAddress', $this, $payload );
 			$this->restart( NULL, TRUE );
 		}
 		if( !$addressId ){
@@ -220,7 +222,8 @@ class Controller_Shop_Customer extends Controller
 		}
 
 		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
+		$payload	= [];
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 		$this->addData( 'paymentBackends', $this->backends );
 
 		if( $this->modelCart->get( 'positions' ) ){

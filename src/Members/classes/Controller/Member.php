@@ -56,7 +56,8 @@ class Controller_Member extends Controller
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $words->failureMail );
-			$this->callHook( 'Env', 'logException', $this, $e );
+			$payload	= ['exception' => $e];
+			$this->callHook( 'Env', 'logException', $this, $payload );
 		}
 		$url	= 'view/'.$relation->fromUserId;
 		if( $relation->fromUserId == $this->userId )
@@ -137,7 +138,8 @@ class Controller_Member extends Controller
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $words->failureMail );
-			$this->callHook( 'Env', 'logException', $this, $e );
+			$payload	= ['exception' => $e];
+			$this->callHook( 'Env', 'logException', $this, $payload );
 		}
 		$url	= 'view/'.$relation->fromUserId;
 		if( $relation->fromUserId == $this->userId )
@@ -169,7 +171,8 @@ class Controller_Member extends Controller
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $words->failureMail );
-			$this->callHook( 'Env', 'logException', $this, $e );
+			$payload	= ['exception' => $e];
+			$this->callHook( 'Env', 'logException', $this, $payload );
 		}
 		$url	= 'view/'.$relation->fromUserId;
 		if( $relation->fromUserId == $this->userId )
@@ -214,7 +217,8 @@ class Controller_Member extends Controller
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $words->failureMail );
-			$this->callHook( 'Env', 'logException', $this, $e );
+			$payload	= ['exception' => $e];
+			$this->callHook( 'Env', 'logException', $this, $payload );
 		}
 		$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
 	}

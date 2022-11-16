@@ -2,6 +2,7 @@
 #Fresh Moods - Orfine
 #Rena Jones - Mesmerized
 
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Bookmark extends Controller
@@ -53,7 +54,7 @@ class Controller_Work_Bookmark extends Controller
 				$this->restart( NULL, TRUE );
 			}
 			catch( Exception $e ){
-				UI_HTML_Exception_Page::display( $e );
+				HtmlExceptionPage::display( $e );
 				exit;
 //				throw new RuntimeException( 'Failed: '.$url, )
 			}

@@ -152,7 +152,8 @@ class Logic_Authentication extends Logic
 	protected function __onInit(): void
 	{
 		$this->session		= $this->env->getSession();
-		$this->env->getCaptain()->callHook( 'Auth', 'registerBackends', $this );
+		$payload	= [];
+		$this->env->getCaptain()->callHook( 'Auth', 'registerBackends', $this, $payload );
 		if( !$this->backends )
 			throw new RuntimeException( 'No authentication backend installed' );
 		$backend = $this->session->get( 'auth_backend' );

@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
+
 $timezone		= "Europe/Berlin";										//  default time zone
 
 require_once 'vendor/autoload.php';
@@ -14,7 +17,7 @@ try{
 	$server->run();														//  and run
 }
 catch( Exception $e ){
-	#UI_HTML_Exception_Page::display( $e );
+	#HtmlExceptionPage::display( $e );
 	die( "Exception: ".$e->getMessage() );
 }
 ?>

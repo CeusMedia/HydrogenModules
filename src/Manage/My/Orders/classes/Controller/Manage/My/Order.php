@@ -57,8 +57,9 @@ class Controller_Manage_My_Order extends Controller
 		$this->logicShop	= $this->env->getLogic()->shop;
 		$this->logicAuth	= $this->env->getLogic()->authentication;
 
+		$payload	= [];
 		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 		$backends	= [];
 		foreach( $this->backends as $backend )
 			$backends[$backend->key]	= $backend;

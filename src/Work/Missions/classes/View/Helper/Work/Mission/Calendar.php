@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -200,7 +202,7 @@ $(document).ready(function(){
 		$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
 		$list		= [];
 		foreach( $missions as $mission ){
-		//	$title		= Alg_Text_Trimmer::trim( $mission->title, 20 );
+		//	$title		= TextTrimmer::trim( $mission->title, 20 );
 			$title		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );
 			$title		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $title );
 			$url		= './work/mission/edit/'.$mission->missionId;

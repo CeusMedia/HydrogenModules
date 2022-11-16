@@ -392,12 +392,13 @@ class Logic_Mail_Group_Message extends Logic
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
 		);
-		$result	= $this->modelMessage->edit( $messageId, $data );
-		$this->env->getCaptain()->callHook( 'MailGroupMessage', 'change', $this, array(
+		$result		= $this->modelMessage->edit( $messageId, $data );
+		$payload	= [
 			'before'	=> $message,
 			'changes'	=> $data,
 			'method'	=> $method,
-		) );
+		];
+		$this->env->getCaptain()->callHook( 'MailGroupMessage', 'change', $this, $payload );
 		return $result;
 	}
 }

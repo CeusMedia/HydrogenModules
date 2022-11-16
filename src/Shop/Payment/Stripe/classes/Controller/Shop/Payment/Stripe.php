@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Shop_Payment_Stripe extends Controller
@@ -74,7 +75,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 			$this->handleStripeResponseException( $e );
 		}
 		catch( Exception $e ){
-			UI_HTML_Exception_Page::display( $e );
+			HtmlExceptionPage::display( $e );
 			exit;
 		}
 		throw new Exception( 'No implemented' );
@@ -96,7 +97,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 				$this->handleStripeResponseException( $e );
 			}
 			catch( Exception $e ){
-				UI_HTML_Exception_Page::display( $e );
+				HtmlExceptionPage::display( $e );
 				exit;
 			}
 		}
@@ -126,7 +127,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 			$this->handleStripeResponseException( $e );
 		}
 		catch( Exception $e ){
-			UI_HTML_Exception_Page::display( $e );
+			HtmlExceptionPage::display( $e );
 			exit;
 		}
 		throw new Exception( 'No implemented' );
@@ -156,7 +157,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 			$this->handleStripeResponseException( $e );
 		}
 		catch( Exception $e ){
-			UI_HTML_Exception_Page::display( $e );
+			HtmlExceptionPage::display( $e );
 			exit;
 		}
 	}
@@ -188,7 +189,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 			$this->handleStripeResponseException( $e );
 		}
 		catch( Exception $e ){
-			UI_HTML_Exception_Page::display( $e );
+			HtmlExceptionPage::display( $e );
 			exit;
 		}
 	}
@@ -219,7 +220,8 @@ class Controller_Shop_Payment_Stripe extends Controller
 		$this->modelCart		= new Model_Shop_Cart( $this->env );
 
 		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
+		$payload	= [];
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 		$this->addData( 'paymentBackends', $this->backends );
 		$this->addData( 'configShop', $this->configShop );
 
@@ -240,7 +242,8 @@ class Controller_Shop_Payment_Stripe extends Controller
 		$this->wallet	= $wallets[0];*/
 
 /*		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
+		$payload	= [];
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 		$this->addData( 'paymentBackends', $this->backends );*/
 	}
 

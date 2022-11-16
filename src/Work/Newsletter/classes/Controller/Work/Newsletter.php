@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -407,7 +408,7 @@ class Controller_Work_Newsletter extends Controller
 			die;
 		}
 		catch( Exception $e ){
-			UI_HTML_Exception_Page::display( $e );
+			HtmlExceptionPage::display( $e );
 			die;
 			$this->messenger->noteError( 'Der gewählte Newsletter existiert nicht mehr. Weiterleitung zur Übersicht.' );
 			$this->restart( NULL, TRUE );

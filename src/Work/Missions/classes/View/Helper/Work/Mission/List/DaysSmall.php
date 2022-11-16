@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -175,7 +177,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 
 	public function renderRowLabel( $mission, $edit = TRUE, $showIcon = TRUE )
 	{
-		$label		= Alg_Text_Trimmer::trimCentric( $mission->title, $this->titleLength, '...' );
+		$label		= TextTrimmer::trimCentric( $mission->title, $this->titleLength, '...' );
 		$label		= htmlentities( $label, ENT_QUOTES, 'UTF-8' );
 		$label		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $label );
 		$url		= $this->baseUrl.'work/mission/view/'.$mission->missionId;

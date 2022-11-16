@@ -228,12 +228,12 @@ class Hook_App_Site extends Hook
 	 */
 	static public function ___onEnvConstructEnd( Environment $env, $context, $module, array & $payload )
 	{
-		$data	= array(
+		$data	= [
 			'type'		=> 'hook',
 			'entity'	=> 'Hook_App_Site::___onEnvConstructEnd',
 			'message'	=> 'Hook method "___onEnvConstructEnd" has been renamed to "onEnvConstructEnd"',
 			'instead'	=> 'Hook_App_Site::onEnvConstructEnd',
-		);
+		];
 		$env->getCaptain()->callHook( 'Framework', 'deprecation', $env, $data );
 		return self::onEnvConstructEnd( $env, $context, $module, $payload );
 	}

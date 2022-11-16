@@ -66,12 +66,13 @@ class Controller_Auth_Json extends Controller
 				if( !$user )
 					$this->messenger->noteError( $words->msgInvalidUser );
 				else{
-					$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
+					$payload	= [
 						'backend'	=> 'json',
 						'username'	=> $user ? $user->username : $username,
 		//				'password'	=> $password,															//  disabled for security
 						'userId'	=> $user ? $user->userId : 0,
-					) );
+					];
+					$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $payload );
 					$role	= $this->env->getServer()->postData( 'role', 'get', [$user->roleId] );
 					if( !$role->access )
 						$this->messenger->noteError( $words->msgInvalidRole );
@@ -111,10 +112,11 @@ class Controller_Auth_Json extends Controller
 		$words		= (object) $this->getWords( 'logout' );
 
 		if( $this->logic->isAuthenticated() ){
-			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
+			$payload	= [
 				'userId'	=> $this->session->get( 'auth_user_id' ),
 				'roleId'	=> $this->session->get( 'auth_role_id' ),
-			) );
+			];
+			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
 			$this->logic->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->env->getMessenger()->noteNotice( $words->msgAutoLogout );

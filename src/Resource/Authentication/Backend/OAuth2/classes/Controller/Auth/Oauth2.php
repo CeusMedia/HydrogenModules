@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Auth_Oauth2 extends Controller
@@ -121,7 +122,7 @@ class Controller_Auth_Oauth2 extends Controller
 				$this->messenger->noteError( $msgs->msgErrorException, $provider->title, $e->getMessage() );
 				if( $this->env->getLog()->logException( $e, $this ) )
 					$this->restart( 'auth/local/login', FALSE );
-				UI_HTML_Exception_Page::display( $e );
+				HtmlExceptionPage::display( $e );
 				exit;
 			}
 		}
@@ -233,7 +234,7 @@ class Controller_Auth_Oauth2 extends Controller
 				$this->messenger->noteError( $e->getMessage() );
 				if( $this->env->getLog()->logException( $e, $this ) )
 					$this->restart( 'register', TRUE );
-				UI_HTML_Exception_Page::display( $e );
+				HtmlExceptionPage::display( $e );
 				exit;
 			}
 		}

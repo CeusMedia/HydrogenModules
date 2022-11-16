@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Text\CamelCase as TextCamelCase;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Logic_ShopBridge
@@ -45,7 +46,7 @@ class Logic_ShopBridge
 			if( $class === "Abstract" )
 				continue;
 			if( !array_key_exists( $class, $this->bridgeClasses ) ){					//
-				$name		= trim( Alg_Text_CamelCase::decode( $class ) );
+				$name		= trim( TextCamelCase::decode( $class ) );
 				$title		= str_replace( " ", ": ", ucwords( $name ) );
 				$className	= str_replace( " ", "_",ucwords( $name ) );
 				$pathName	= strtolower( str_replace( " ", "/", $name ) ).'/';

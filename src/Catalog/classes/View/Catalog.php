@@ -1,11 +1,15 @@
 <?php
 
+use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
-class View_Catalog extends View{
-
+class View_Catalog extends View
+{
+	/**
+	 * @todo #hook
+	 */
 	static public function ___onRenderSearchResults( Environment $env, $context, $module, $data ){
 		$helper		= new View_Helper_Catalog( $env );
 		foreach( $data->documents as $resultDocument  ){
@@ -21,7 +25,7 @@ class View_Catalog extends View{
 //					$resultDocument->html	= $helper->renderArticleListItem( $article );
 					$url		= $helper->getArticleUri( $articleId, TRUE );
 					$title		= $helper->renderArticleLink( $article );
-					$urlTrimmed	= Alg_Text_Trimmer::trimCentric( $url, 120 );
+					$urlTrimmed	= TextTrimmer::trimCentric( $url, 120 );
 					$link		= HtmlTag::create( 'a', $urlTrimmed, array(
 						'href'	=> $url,
 						'class'	=> 'search-result-link-path',

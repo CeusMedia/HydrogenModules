@@ -1,6 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Exception\Trace as HtmlExceptionTrace;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Log_Exception extends Logic
@@ -29,7 +30,7 @@ class Logic_Log_Exception extends Logic
 			@serialize( $exception );
 			$content	= (object) [
 				'exception'		=> $exception,
-		//		'traceAsHtml'	=> UI_HTML_Exception_Trace::render( $exception ),
+		//		'traceAsHtml'	=> HtmlExceptionTrace::render( $exception ),
 				'trace'			=> '',
 				'timestamp'		=> time(),
 			];

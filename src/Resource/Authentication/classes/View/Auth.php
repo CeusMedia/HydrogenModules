@@ -31,7 +31,8 @@ class View_Auth extends View
 
 	public function renderRegisterFormExtensions()
 	{
-		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, [] );
+		$payload	= [];
+		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, $payload );
 	}
 
 	public static function renderTabs( Environment $env, $current = 0 )

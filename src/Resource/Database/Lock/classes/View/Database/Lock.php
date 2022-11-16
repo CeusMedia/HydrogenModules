@@ -8,7 +8,8 @@ class View_Database_Lock extends View{
 
 	public function ajaxRenderDashboardPanel(){
 		$context	= new View_Helper_Work_Time_Timer( $this->env );
-		$this->env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, [] );
+		$payload	= [];
+		$this->env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, $payload );
 		$modules	= $context->getRegisteredModules();
 
 		$locks		= $this->getData( 'locks' );

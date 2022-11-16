@@ -1,10 +1,11 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Alg\Text\CamelCase as TextCamelCase;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
- *	@todo	complete flow implementation, currently stoppted at method "pay"
+ *	@todo	complete flow implementation, currently stopped at method "pay"
  */
 class Controller_Shop extends Controller
 {
@@ -230,11 +231,12 @@ class Controller_Shop extends Controller
 		$this->session->set( 'shop_order_lastId', $orderId );
 		$this->modelCart->releaseOrder();
 		$this->env->getMessenger()->noteSuccess( $this->words->successFinished );
-		$order	= $this->logic->getOrder( $orderId );
-		$this->env->getModules()->callHook( 'Shop', 'onFinish', $this, array(
+		$order		= $this->logic->getOrder( $orderId );
+		$payload	= [
 			'orderId'	=> $orderId,
 			'order'		=> $order,
-		) );
+		];
+		$this->env->getModules()->callHook( 'Shop', 'onFinish', $this, $payload );
 		$this->restart( 'service', TRUE );
 	}
 
@@ -270,7 +272,7 @@ class Controller_Shop extends Controller
 			);
 			foreach( $mandatory as $name ){
 				if( !$customer->get( $name ) ){
-					$label	= Alg_Text_CamelCase::convert( $name, FALSE );
+					$label	= TextCamelCase::convert( $name, FALSE );
 					$this->messenger->noteError(
 						$this->words->errorFieldEmpty,
 						'customer_'.$name,
@@ -366,13 +368,13 @@ class Controller_Shop extends Controller
 		$this->addData( 'orderId', $orderId );
 		$this->addData( 'order', $this->logic->getOrder( $orderId, TRUE ) );
 
-		$arguments	= ['orderId' => $orderId, 'paymentBackends' => $this->backends];
-		$this->env->getModules()->callHookWithPayload( 'Shop', 'renderServicePanels', $this, $arguments );
+		$payload	= ['orderId' => $orderId, 'paymentBackends' => $this->backends];
+		$this->env->getModules()->callHookWithPayload( 'Shop', 'renderServicePanels', $this, $payload );
 		$this->addData( 'servicePanels', $this->servicePanels );
 
-		$arguments	= ['orderId' => $orderId];
+		$payload	= ['orderId' => $orderId];
 		$this->addData( 'delivery', NULL );
-		$this->env->getModules()->callHookWithPayload( 'Shop', 'onPaymentSuccess', $this, $arguments );
+		$this->env->getModules()->callHookWithPayload( 'Shop', 'onPaymentSuccess', $this, $payload );
 	}
 
 	public function setPaymentBackend( $paymentBackendKey = NULL )
@@ -398,7 +400,8 @@ class Controller_Shop extends Controller
 
 		$this->addData( 'options', $this->options );
 		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
+		$payload	= [];
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 		$this->addData( 'paymentBackends', $this->backends );
 		$this->addData( 'cart', $this->modelCart );
 		if( $this->modelCart->get( 'positions' ) )

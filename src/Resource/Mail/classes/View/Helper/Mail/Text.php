@@ -4,6 +4,10 @@
  *
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  */
+
+use CeusMedia\Common\Alg\Text\Extender as TextExtender;
+use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
+
 /**
  *	Collection of functions for rendering text mails.
  *
@@ -26,7 +30,7 @@ class View_Helper_Mail_Text
 	 */
 	static public function extend( $text, $toLength, $fromLeft = FALSE )
 	{
-		return Alg_Text_Extender::extend( $text, $toLength, $fromLeft, ' ' );
+		return TextExtender::extend( $text, $toLength, $fromLeft, ' ' );
 	}
 
 	/**
@@ -40,14 +44,14 @@ class View_Helper_Mail_Text
 	 */
 	static public function extendCentric( $text, $toLength )
 	{
-		return Alg_Text_Extender::extendCentric( $text, $toLength, ' ' );
+		return TextExtender::extendCentric( $text, $toLength, ' ' );
 	}
 
 	/**
 	 *	Fits a one line string into a maximum length.
 	 *	Trims too long strings from left, right or centric (default).
 	 *	Extends too short strings to float left (default), right or centric.
-	 *	With multi-byte support.
+	 *	With multibyte support.
 	 *	@static
 	 *	@access		public
 	 *	@param		string		$text			One line string to extend
@@ -106,7 +110,7 @@ class View_Helper_Mail_Text
 
 	/**
 	 *	Cuts a one line string from left, right or centric to a maximum length.
-	 *	With multi-byte support.
+	 *	With multibyte support.
 	 *	@static
 	 *	@access		public
 	 *	@param		string		$text			One line string to extend
@@ -118,8 +122,8 @@ class View_Helper_Mail_Text
 	static public function trim( $text, $length, $mode = 2 )
 	{
 		if( $mode === 2 || $mode === 'center' || $mode === 'centric' )
-			return Alg_Text_Trimmer::trimCentric( $text, $length );
-		return Alg_Text_Trimmer::trim( $text, $length, $mode );
+			return TextTrimmer::trimCentric( $text, $length );
+		return TextTrimmer::trim( $text, $length, $mode );
 	}
 
 	/**

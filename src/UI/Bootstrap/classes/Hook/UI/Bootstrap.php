@@ -26,7 +26,8 @@ class Hook_UI_Bootstrap extends Hook
 				case 'throw':
 				default:
 					$exception	= new RuntimeException( 'Bootstrap library (ceus-media/bootstrap) is not installed - please use composer to install' );
-//					$env->getCaptain()->callHook( 'App', 'onException', $context, ['exception' => $exception] );
+//					$payload	= ['exception' => $exception];
+//					$env->getCaptain()->callHook( 'App', 'onException', $context, $payload );
 					throw $exception;
 			}
 		}
@@ -40,7 +41,8 @@ class Hook_UI_Bootstrap extends Hook
 				case 'throw':
 				default:
 					$exception	= new RuntimeException( 'Module "UI:Font:FontAwesome" is not installed - please use hymn to install' );
-					$env->getCaptain()->callHook( 'App', 'onException', $context, ['exception' => $exception] );
+					$payload	= ['exception' => $exception];
+					$env->getCaptain()->callHook( 'App', 'onException', $context, $payload );
 //					throw $exception;
 			}
 		}

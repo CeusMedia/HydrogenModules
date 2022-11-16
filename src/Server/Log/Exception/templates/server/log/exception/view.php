@@ -1,6 +1,8 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\UI\VariableDumper;
 
 $w	= (object) $words['view'];
 
@@ -99,11 +101,11 @@ if( !empty( $exception->request ) ){
 			HtmlElements::ColumnGroup( '20%', '' ),
 			HtmlTag::create( 'tbody', $rows ),
 		), ['class' => 'table table-condensed table-striped'] );
-		$dumpRequest	= UI_VariableDumper::dump( $request->getAll() );
+		$dumpRequest	= VariableDumper::dump( $request->getAll() );
 	}
 	else {
 		$headers		= '';
-		$dumpRequest	= UI_VariableDumper::dump( $exception->request );
+		$dumpRequest	= VariableDumper::dump( $exception->request );
 	}
 	$topicRequest	= '
 	<div class="request-data"><h4>'.$w->topicRequest.'</h4>'.$dumpRequest.'</div>
@@ -118,7 +120,7 @@ if( !empty( $exception->session ) ){
 		unset( $session['exception'] );
 	if( isset( $session['exceptionReqeuest'] ) )
 		unset( $session['exceptionReqeuest'] );
-	$dumpSession	= UI_VariableDumper::dump( $session );
+	$dumpSession	= VariableDumper::dump( $session );
 	$topicSession	= '<h4>'.$w->topicSession.'</h4>
 	'.$dumpSession.'';
 }
@@ -127,7 +129,7 @@ if( !empty( $exception->session ) ){
 $topicEnv	= '';
 if( !empty( $exception->env ) ){
 	$env		= unserialize( $exception->env );
-	$dumpEnv	= UI_VariableDumper::dump( $env );
+	$dumpEnv	= VariableDumper::dump( $env );
 	$topicEnv	= '<h4>'.$w->topicEnv.'</h4>
 	'.$dumpEnv.'';
 }

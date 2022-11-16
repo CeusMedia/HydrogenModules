@@ -69,7 +69,8 @@ class Hook_Manage_Project extends Hook
 			$users		= $logic->getProjectUsers( $project->projectId );
 			if( count( $users ) === 0 ){
 				$lists->entities[]	= $project;
-				$env->getCaptain()->callHook( 'Project', 'remove', $context, ['projectId' => $project->projectId] );
+				$payload	= ['projectId' => $project->projectId];
+				$env->getCaptain()->callHook( 'Project', 'remove', $context, $payload );
 				$modelProject	= new Model_Project( $env );
 				$modelRelation	= new Model_Project_User( $env );
 				$modelRelation->removeByIndex( 'projectId', $project->projectId );

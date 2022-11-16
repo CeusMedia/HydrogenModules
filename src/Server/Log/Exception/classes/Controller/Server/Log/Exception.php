@@ -47,7 +47,8 @@ class Controller_Server_Log_Exception extends Controller
 	public function logTestException( $message, $code = 0 )
 	{
 		$exception	= new Exception( $message, $code );
-//		$this->callHook( 'Env', 'logException', $this, $exception );
+//		$payload	= ['exception' => $exception ];
+//		$this->callHook( 'Env', 'logException', $this, $payload );
 //		self::handleException( $this->env, $exception );
 		$this->logic->log( $exception );
 		$this->restart( NULL, TRUE );

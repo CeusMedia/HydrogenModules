@@ -254,7 +254,8 @@ class Logic_Job extends Logic
 	{
 //		$message	= $t->getMessage().'@'.$t->getFile().':'.$t->getLine().PHP_EOL.$t->getTraceAsString();
 		$this->env->getLog()->log( "error", $error );
-//		$this->env->getCaptain()->callHook( 'Env', 'logException', $this, ['exception' => $t] );
+//		$payload	= ['exception' => $t];
+//		$this->env->getCaptain()->callHook( 'Env', 'logException', $this, $payload );
 		return $this;
 	}
 
@@ -262,7 +263,8 @@ class Logic_Job extends Logic
 	{
 		$message	= $t->getMessage().'@'.$t->getFile().':'.$t->getLine().PHP_EOL.$t->getTraceAsString();
 		$this->env->getLog()->log( "error", $message );
-		$this->env->getCaptain()->callHook( 'Env', 'logException', $this, ['exception' => $t] );
+		$payload	= ['exception' => $t];
+		$this->env->getCaptain()->callHook( 'Env', 'logException', $this, $payload );
 		return $this;
 	}
 
@@ -523,7 +525,8 @@ class Logic_Job extends Logic
 					$jobSchedules[]	= $jobSchedule;
 			}
 			catch( Exception $e ){
-				$this->callHook( 'Env', 'logException', $this, ['exception' => $e] );
+				$payload	= ['exception' => $e];
+				$this->callHook( 'Env', 'logException', $this, $payload );
 			}
 		}
 		return $jobSchedules;

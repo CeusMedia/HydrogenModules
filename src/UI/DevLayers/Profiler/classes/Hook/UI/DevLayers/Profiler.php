@@ -16,7 +16,8 @@ class Hook_UI_DevLayers_Profiler extends Hook
 			catch( Exception $e ){
 //				print_m( $e->getMessage() );
 //				die("!");
-				$env->getCaptain()->callHook( 'App', 'logException', $context, ['exception' => $e] );
+				$payload	= ['exception' => $e];
+				$env->getCaptain()->callHook( 'App', 'logException', $context, $payload );
 			}
 		}
 	}

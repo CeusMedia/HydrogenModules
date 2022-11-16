@@ -48,7 +48,8 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 		$this->moduleConfig			= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
 
 		$captain	= $this->env->getCaptain();
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, [] );
+		$payload	= [];
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this );
 	}
 
 	protected function handleFailedBankWirePayIns()

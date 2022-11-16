@@ -504,11 +504,12 @@ class Logic_Mail_Group extends Logic
 			'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 			'modifiedAt'	=> time(),
 		) );
-		$this->env->getCaptain()->callHook( 'MailGroup', 'memberActivated', $this, array(
+		$payload	= [
 			'group'			=> $group,
 			'member'		=> $this->modelMember->get( $member->mailGroupMemberId ),
 			'informMembers'	=> TRUE,
-		) );
+		];
+		$this->env->getCaptain()->callHook( 'MailGroup', 'memberActivated', $this, $payload );
 	}
 
 	protected function setMemberStatusToDeactivated( $group, $member )
@@ -527,11 +528,12 @@ class Logic_Mail_Group extends Logic
 			'status'		=> Model_Mail_Group_Member::STATUS_DEACTIVATED,
 			'modifiedAt'	=> time(),
 		) );
-		$this->env->getCaptain()->callHook( 'MailGroup', 'memberDeactivated', $this, array(
+		$payload	= [
 			'group'			=> $group,
 			'member'		=> $this->modelMember->get( $member->mailGroupMemberId ),
 			'informMembers'	=> $memberWasActive,
-		) );
+		];
+		$this->env->getCaptain()->callHook( 'MailGroup', 'memberDeactivated', $this, $payload );
 	}
 
 	protected function setMemberStatusToRejected( $group, $member )
@@ -544,21 +546,23 @@ class Logic_Mail_Group extends Logic
 			'status'		=> Model_Mail_Group_Member::STATUS_REJECTED,
 			'modifiedAt'	=> time(),
 		) );
-		$this->env->getCaptain()->callHook( 'MailGroup', 'memberRejected', $this, array(
+		$payload	= [
 			'group'			=> $group,
 			'member'		=> $this->modelMember->get( $member->mailGroupMemberId ),
-		) );
+		];
+		$this->env->getCaptain()->callHook( 'MailGroup', 'memberRejected', $this, $payload );
 	}
 
 	protected function updateGroup( $groupId, $data, $method = NULL )
 	{
 		$group		= $this->checkGroupId( $groupId );
 		$this->modelGroup->edit( $groupId, $data );
-		return $this->env->getCaptain()->callHook( 'MailGroup', 'change', $this, array(
+		$payload	= [
 			'groupId'		=> $groupId,
 			'before'		=> $group,
 			'changes'		=> $data,
 			'method'		=> $method,
-		) );
+		];
+		return $this->env->getCaptain()->callHook( 'MailGroup', 'change', $this, $payload );
 	}
 }

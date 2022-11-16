@@ -13,13 +13,13 @@ class Controller_Manage_Page extends Controller
 	protected $messenger;
 	protected $session;
 	protected $words;
-	protected $frontend;
-	protected $patternIdentifier	= '@[^a-z0-9_/-]@';
-	protected $sessionPrefix		= 'filter_manage_pages_';
+	protected Logic_Frontend $frontend;
+	protected string $patternIdentifier	= '@[^a-z0-9_/-]@';
+	protected string $sessionPrefix		= 'filter_manage_pages_';
 
-	protected $appFocus;
-	protected $appSession;
-	protected $appLanguages;
+	protected string $appFocus;
+	protected \CeusMedia\Common\ADT\Collection\Dictionary $appSession;
+	protected array $appLanguages;
 	protected $envManaged;
 	protected $defaultLanguage;
 
@@ -54,9 +54,9 @@ class Controller_Manage_Page extends Controller
 			}
 		}
 
-		$page	= (object) array(
+		$page	= (object) [
 			'pageId'		=> 0,
-			'parentId'		=> $parentId ? $parentId : (int) $this->request->get( 'page_parentId' ),
+			'parentId'		=> $parentId ?: (int) $this->request->get( 'page_parentId' ),
 			'type'			=> (int) $this->request->get( 'page_type' ),
 			'scope'			=> (int) $this->request->get( 'page_scope' ),
 			'status'		=> 0,
@@ -71,7 +71,7 @@ class Controller_Manage_Page extends Controller
 			'icon'			=> $this->request->get( 'page_icon' ),
 			'template'		=> $this->request->get( 'page_template' ),
 			'createdAt'		=> time(),
-		);
+		];
 
 		$path		= $this->frontend ? $this->frontend->getUrl() : $this->env->url;
 		if( $parentId && $parent->type && $parent->type == 1 )
@@ -124,7 +124,7 @@ ModuleManagePages.PageEditor.init();
 		$currentEditor	= $this->session->get( $this->sessionPrefix.$this->appFocus.'.editor' );
 
 		$editors	= [];
-		$helper		= new UI_Helper_ContentEditor( $this->env );
+		$helper		= new View_Helper_Manage_Page_ContentEditor( $this->env );
 		$helper->setDefaultEditor( $defaultEditor );
 		$helper->setCurrentEditor( $currentEditor ?? $defaultEditor );
 		$helper->setFormat( $page->format );
@@ -196,7 +196,6 @@ ModuleManagePages.PageEditor.init();
 							$logic->add( 'Info_Pages', $pageId, $page->content );					//  store current page content as version
 					}
 				}
-
 
 				$data		= [];
 				foreach( $this->model->getColumns() as $column )
@@ -452,7 +451,7 @@ ModuleManagePages.PageEditor.init();
 			else
 				$source			= 'Modules';
 		}
-		//  persist the source decission
+		//  persist the source decision
 		if( !$this->appSession->get( 'source' ) )
 			$this->appSession->set( 'source', $source );
 
@@ -560,7 +559,11 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'parentMap', $parentMap );
 	}
 
-	protected function translatePage( $page ): object
+	/**
+	 *	@param		object		$page
+	 *	@return		object
+	 */
+	protected function translatePage( object $page ): object
 	{
 		if( !class_exists( 'Logic_Localization' ) )							//  localization module is not installed
 			return $page;
@@ -578,127 +581,5 @@ ModuleManagePages.PageEditor.init();
 		$id	= 'page.'.$page->identifier.'-content';
 		$page->content	= $localization->translate( $id, $page->content );
 		return $page;
-	}
-}
-
-
-class UI_Helper_ContentEditor
-{
-	const STATUS_INIT				= 0;
-	const STATUS_CONFIGURED			= 1;
-	const STATUS_COLLECTED			= 2;
-
-	protected $env;
-	protected $defaultEditorKey;
-	protected $currentEditorKey;
-	protected $forcedEditorKey;
-	protected $bestEditorKey;
-	protected $status				= 0;
-	protected $format;
-	protected $editors				= [];
-	protected $type;
-
-	public function __construct( $env )
-	{
-		$this->env		= $env;
-	}
-
-	public function getBestEditor(): string
-	{
-		return $this->collectEditors()->bestEditorKey;
-	}
-
-	public function getEditors(): array
-	{
-		return $this->collectEditors()->editors;
-	}
-
-	public function render(): string
-	{
-	}
-
-	public function setCurrentEditor( string $key ): self
-	{
-		$key	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $key ) );
-		if( $this->currentEditorKey !== $key ){
-			$this->currentEditorKey	= $key;
-			$this->status	= static::STATUS_CONFIGURED;
-		}
-		return $this;
-	}
-
-	public function setDefaultEditor( string $key ): self
-	{
-		$key	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $key ) );
-		if( $this->defaultEditorKey !== $key ){
-			$this->defaultEditorKey	= $key;
-			$this->status	= static::STATUS_CONFIGURED;
-		}
-		return $this;
-	}
-
-	public function setForcedEditor( string $key ): self
-	{
-		$key	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $key ) );
-		if( $this->forcedEditorKey !== $key ){
-			$this->forcedEditorKey	= $key;
-			$this->status	= static::STATUS_CONFIGURED;
-		}
-		return $this;
-	}
-
-	public function setFormat( string $format ): self
-	{
-		$format	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $format ) );
-		if( $this->format !== $format ){
-			$this->format	= $format;
-			$this->status	= static::STATUS_CONFIGURED;
-		}
-		return $this;
-	}
-
-	public function setLabelTemplate( $template ): self
-	{
-		$this->labelTemplate	= $template;
-		return $this;
-	}
-
-	public function setType( string $type ): self
-	{
-		$type	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $type ) );
-		if( $this->type !== $type ){
-			$this->type	= $type;
-			$this->status	= static::STATUS_CONFIGURED;
-		}
-		return $this;
-	}
-
-	protected function collectEditors(): self
-	{
-		if( $this->status === static::STATUS_COLLECTED )
-			return $this;
-		$payload	= [
-			'list'		=> [],
-			'type'		=> $this->type,
-			'format'	=> $this->format,
-			'default'	=> $this->defaultEditorKey,
-			'current'	=> $this->currentEditorKey,
-		];
-		$this->env->getCaptain()->callHook(
-			'Module',
-			'onGetAvailableContentEditor',
-			$this,
-			$payload
-		);
-		$this->status		= static::STATUS_COLLECTED;
-		krsort( $payload['list'] );
-		$this->editors	= [];
-		$this->bestEditorKey = $payload['list'] ? current( $payload['list'] )->key : '';
-		foreach( $payload['list'] as $editor ){
-			if( $this->labelTemplate )
-				$editor->label	= sprintf( $this->labelTemplate, $editor->label );
-			$this->editors[$editor->key]	= $editor->label;
-		}
-		return $this;
 	}
 }

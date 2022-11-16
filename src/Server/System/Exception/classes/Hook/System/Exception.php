@@ -1,12 +1,10 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Console as ConsoleEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
-
-use Exception;
-use RangeException;
 
 class Hook_System_Exception extends Hook
 {
@@ -63,7 +61,7 @@ class Hook_System_Exception extends Hook
 			case 'dev':
 			case 'strict':
 			default:
-				UI_HTML_Exception_Page::display( $e );
+				HtmlExceptionPage::display( $e );
 				exit;
 		}
 	}

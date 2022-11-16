@@ -22,7 +22,8 @@ class View_Auth_Rest extends View
 
 	public function renderRegisterFormExtensions()
 	{
-		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, [] );
+		$payload	= [];
+		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, $payload );
 	}
 
 	protected function __onInit(): void

@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Logic_Payment_PayPal
@@ -236,7 +237,7 @@ $insurance	= 0;
 			return $this->model->add( $data );
 		}
 		catch( Exception $e ){
-			UI_HTML_Exception_Page::display( $e );exit;
+			HtmlExceptionPage::display( $e );exit;
 			print( $e->getMessage() );
 			print_m( $this->latestResponse );
 			die;

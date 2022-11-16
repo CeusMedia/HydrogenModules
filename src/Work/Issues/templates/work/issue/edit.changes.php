@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
+
 try{
 if( !$issue->notes )
 	return;
@@ -16,6 +19,5 @@ return '
 </div>';
 }
 catch( Exception $e ){
-	UI_HTML_Exception_Page::display( $e);
+	HtmlExceptionPage::display( $e);
 }
-?>

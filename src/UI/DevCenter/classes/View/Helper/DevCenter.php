@@ -1,17 +1,21 @@
 <?php
 
+use CeusMedia\Bootstrap\Nav\TabbableNavbar;
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Alg\Text\CamelCase as TextCamelCase;
+use CeusMedia\Common\UI\HTML\Tree\VariableDump as HtmlVariableDump;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_DevCenter
 {
-	public $options	= [];
+	public array $options	= [];
 
-	protected $session;
+	protected Dictionary $session;
 
-	protected $height;
+	protected ?string $height;
 
-	protected $open;
+	protected bool $open;
 
 	public function __construct( Environment $env )
 	{
@@ -23,13 +27,13 @@ class View_Helper_DevCenter
 
 	public function render( Resource_DevCenter $resourceDevCenter, string $label, $url = NULL ): string
 	{
-		$tabs	= new \CeusMedia\Bootstrap\TabbableNavbar();
+		$tabs	= new TabbableNavbar();
 		$tabs->setFixed( 'top' );
 		foreach( $resourceDevCenter->getResources() as $resource ){
 			$id		= preg_replace( "/[^a-z0-9 _-]/i", "", $resource->key );
-			$id		= Alg_Text_CamelCase::convert( 'tab'.ucfirst( $id ) );
-			$data	= UI_HTML_Tree_VariableDump::dumpVar( $resource->value, !TRUE, !TRUE );
-			$count	= UI_HTML_Tree_VariableDump::$count;
+			$id		= TextCamelCase::convert( 'tab'.ucfirst( $id ) );
+			$data	= HtmlTreeVariableDump::dumpVar( $resource->value, !TRUE, !TRUE );
+			$count	= HtmlTreeVariableDump::$count;
 			if( $count )
 				$resource->label	.= '&nbsp;&nbsp;<span class="badge">'.$count.'</span>';
 			$tabs->add( $id, $resource->label, $data );

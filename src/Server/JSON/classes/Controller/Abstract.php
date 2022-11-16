@@ -7,6 +7,7 @@
  *	@copyright		2010 Ceus Media
  */
 
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -20,7 +21,7 @@ class Controller_Abstract extends Controller
 {
 	protected function logException( Exception $exception )
 	{
-		UI_HTML_Exception_Page::display( $exception );
+		HtmlExceptionPage::display( $exception );
 		die;
 
 		if( $this->env->getModules()->has( 'Server_Syslog' ) ){

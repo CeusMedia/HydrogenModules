@@ -45,10 +45,11 @@ class Job_EventQueue extends Job_Abstract
 					'status'		=> Model_Event::STATUS_IGNORED,
 					'modifiedAt'	=> time(),
 				];
-				$result = $captain->callHook( 'Events', 'handle', $this, [
+				$payload	= [
 					'identifier'	=> $event->identifier,
 					'data'			=> json_decode( $event->data )
-				] );
+				];
+				$result = $captain->callHook( 'Events', 'handle', $this, $payload);
 				if( $result === NULL ){
 					$results->nrIgnored++;
 					$results->ignored[]	= $event->eventId.':'.$event->identifier;

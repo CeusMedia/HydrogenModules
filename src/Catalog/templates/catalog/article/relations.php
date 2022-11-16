@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 if( !$env->getRequest()->has( 'testing123' ) )
@@ -23,8 +25,8 @@ foreach( $tags as $tag ){
 $tagList	= HtmlTag::create( 'span', join( ", ", $tagList ), ['class' => 'tag-list'] );
 
 foreach( $relatedArticles as $relation ){
-	$title		= $relation->article->title;//Alg_Text_Trimmer::trim( $relation->article->title, 60 );
-	$subtitle	= $relation->article->subtitle;//Alg_Text_Trimmer::trim( $relation->article->subtitle, 60 );
+	$title		= $relation->article->title;//TextTrimmer::trim( $relation->article->title, 60 );
+	$subtitle	= $relation->article->subtitle;//TextTrimmer::trim( $relation->article->subtitle, 60 );
 	$url		= $helper->getArticleUri( $relation->article->articleId, !TRUE );
 	$image		= HtmlTag::create( 'a', $helper->renderArticleImage( $relation->article, "" ), ['href' => $url] );
 	$image		= HtmlTag::create( 'div', $image, ['class' => 'related-articles-image-container'] );

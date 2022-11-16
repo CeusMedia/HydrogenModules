@@ -131,9 +131,8 @@ class Controller_Manage_Company extends Controller
 	public function remove( $companyId )
 	{
 		$company	= $this->checkCompany( $companyId );
-		$this->env->getCaptain()->callHook( 'Company', 'remove', $this, array(
-			'companyId' => $companyId
-		) );
+		$payload	= ['companyId' => $companyId];
+		$this->env->getCaptain()->callHook( 'Company', 'remove', $this, $payload );
 		if( $company->logo )
 			@unlink( $this->frontend->getPath().'images/companies/'.$company->logo );
 		$modelUser		= new Model_Company_User( $this->env );

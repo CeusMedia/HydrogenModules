@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
@@ -87,7 +88,7 @@ class Controller_Database_Lock extends Controller
 				$model		= new Model_Mission( $this->env );
 				$mission	= $model->get( $lock->entryId );
 				if( $mission ){
-					$title	= Alg_Text_Trimmer::trimCentric( $mission->title, 40 );
+					$title	= TextTrimmer::trimCentric( $mission->title, 40 );
 					$uri	= './work/mission/view/'.$lock->entryId;
 				}
 				break;

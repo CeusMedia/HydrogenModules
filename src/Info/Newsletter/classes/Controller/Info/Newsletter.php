@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
@@ -286,7 +287,7 @@ class Controller_Info_Newsletter extends Controller
 			exit;
 		}
 		catch( Exception $e ){
-			UI_HTML_Exception_Page::display( $e );
+			HtmlExceptionPage::display( $e );
 			die;
 			$this->messenger->noteError( 'Der gewählte Newsletter existiert nicht mehr. Weiterleitung zur Übersicht.' );
 			$this->restart( NULL, TRUE );

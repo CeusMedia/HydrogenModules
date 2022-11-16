@@ -2,7 +2,7 @@
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Tag as Html;
-use UI_HTML_Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $iconAdd	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconSave	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
