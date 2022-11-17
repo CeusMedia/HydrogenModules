@@ -11,7 +11,6 @@ class Logic_FileBucket extends Logic
 	const HASH_MD5			= 0;
 	const HASH_UUID			= 1;
 
-	protected $env;
 	protected $filePath;
 	protected $hashFunction	= 0;
 	protected $model;

@@ -8,21 +8,22 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Language;
 class View_Helper_Catalog_Bookstore
 {
 	/**	@var	Environment					$env */
-	protected $env;
-	/**	@var	Language					$language */
-	protected $language;
-	/**	@var	Logic_Catalog_Bookstore		$logic */
-	protected $logic;
+	protected Environment $env;
 
-	public function __construct( Environment $env ){
+	/**	@var	Language					$language */
+	protected Language $language;
+
+	/**	@var	Logic_Catalog_Bookstore		$logic */
+	protected Logic_Catalog_Bookstore $logic;
+
+	protected $cache;
+
+	public function __construct( Environment $env )
+	{
 		$this->env		= $env;
 		$this->logic	= new Logic_Catalog_Bookstore( $env );
 		$this->language	= $this->env->getLanguage();
 		$this->cache	= $this->env->getCache();
-	}
-
-	static public function ___onRenderNewsItem( Environment $env, &$context, $module, $data = [] ){
-		$context->content	= self::applyLinks( $env, $context->content );
 	}
 
 	static public function applyLinks( Environment $env, $content/*&$item*/ ){
@@ -65,38 +66,42 @@ class View_Helper_Catalog_Bookstore
 	}
 
 	/**
-	 *  Returns a float formated as Currency.
-	 *  @static
-	 *  @access     public
-	 *  @param      mixed       $price          Price to be formated
-	 *  @param      string      $separator      Separator
-	 *  @return     string
+	 *	Returns a float formatted as Currency.
+	 *	@static
+	 *	@access		public
+	 *	@param		mixed		$price			Price to be formatted
+	 *	@param		string		$separator		Separator
+	 *	@return		string
 	 */
-	static public function formatPrice( $price, $separator = "." ){
-		$price  = (float) $price;
-		ob_start();
-		$price  = sprintf( "%01.2f", $price );
-		$price  = str_replace( ".", $separator, $price );
-		return $price;
+	public static function formatPrice( $price, string $separator = '.' ): string
+	{
+		$price	= (float) $price;
+		$price	= sprintf( "%01.2f", $price );
+		return str_replace( ".", $separator, $price );
 	}
 
-	public function getArticleUri( $articleId, $absolute = FALSE ){
+	public function getArticleUri( $articleId, bool $absolute = FALSE ): string
+	{
 		return $this->logic->getArticleUri( (int) $articleId, $absolute );
 	}
 
-	public function getAuthorUri( $authorId, $absolute = FALSE ){
+	public function getAuthorUri( $authorId, bool $absolute = FALSE ): string
+	{
 		return $this->logic->getAuthorUri( (int) $authorId, $absolute );
 	}
 
-	public function getCategoryUri( $categoryOrId ){
+	public function getCategoryUri( $categoryOrId ): string
+	{
 		return $this->logic->getCategoryUri( $categoryOrId );
 	}
 
-	public function getTagUri( $tagOrId ){
+	public function getTagUri( $tagOrId ): string
+	{
 		return $this->logic->getTagUri( $tagOrId );
 	}
 
-	public function prepareArticleData( $article ){
+	public function prepareArticleData( $article ): array
+	{
 		$config		= $this->env->getConfig();
 		$language	= $this->env->getLanguage();
 		$words		= $language->getWords( 'catalog/bookstore' );
@@ -152,15 +157,16 @@ class View_Helper_Catalog_Bookstore
 	 *	@param		string		$labelNoPicture		Title of placeholder image
 	 *	@return		string		Rendered HTML tag of article cover image (or placeholder).
 	 */
-	public function renderArticleImage( $article, $labelNoPicture = "", $absolute = FALSE ){
+	public function renderArticleImage( $article, string $labelNoPicture = '', bool $absolute = FALSE ): string
+	{
 		if( $article->cover ){
 			$logicBucket	= new Logic_FileBucket( $this->env );
 			$fileMedium		= $logicBucket->getByPath( 'bookstore/article/m/'.$article->cover, 'catalog_bookstore' );
 			$fileLarge		= $logicBucket->getByPath( 'bookstore/article/l/'.$article->cover, 'catalog_bookstore' );
 			if( $fileMedium ){
 				$title	= htmlentities( strip_tags( View_Helper_Text::applyFormat( $article->title ) ) );
-				if( $fileLarge ){
-				}
+//				if( $fileLarge ){
+//				}
 				$uri	= './file/bookstore/article/m/'.$article->cover;
 				return HtmlElements::Image( $uri, $title, 'dropshadow' );
 			}
@@ -169,19 +175,22 @@ class View_Helper_Catalog_Bookstore
 		return HtmlElements::Image( $pathImages."bookstore/no_picture.png", $labelNoPicture );
 	}
 
-	public function renderArticleLink( $article ){
+	public function renderArticleLink( $article ): string
+	{
 		$title		= View_Helper_Text::applyFormat( $article->title );
-		$url		= $this->logic->getArticleUri( (int) $article->articleId, $article );
+		$url		= $this->logic->getArticleUri( $article );
 		return HtmlTag::create( 'a', $title, ['href' => $url] );
 	}
 
-	public function renderArticleListItem( $article ){
+	public function renderArticleListItem( $article ): string
+	{
 		$data	= $this->prepareArticleData( $article );
 		$view	= new View_Catalog_Bookstore( $this->env );
 		return $view->loadTemplateFile( 'catalog/bookstore/article/item.php', $data );
 	}
 
-	public function renderArticleThumbnail( $article, $labelNoPicture = "", $absolute = FALSE ){
+	public function renderArticleThumbnail( $article, string $labelNoPicture = '', bool $absolute = FALSE ): string
+	{
 		if( $article->cover ){
 			$logicBucket	= new Logic_FileBucket( $this->env );
 			$fileSmall		= $logicBucket->getByPath( 'bookstore/article/s/'.$article->cover, 'catalog_bookstore' );
@@ -195,7 +204,8 @@ class View_Helper_Catalog_Bookstore
 		return HtmlElements::Image( $pathImages."bookstore/no_picture.png", $labelNoPicture );
 	}
 
-	public function renderAuthorLink( $author ){
+	public function renderAuthorLink( $author ): string
+	{
 		$name	= $author->lastname;
 		if( $author->firstname )
 			$name	= $author->firstname." ".$name;
@@ -209,7 +219,8 @@ class View_Helper_Catalog_Bookstore
 		return HtmlTag::create( 'a', $name, ['href' => $url] );
 	}
 
-	public function renderCategory( $category, $heading = NULL ){
+	public function renderCategory( $category, ?string $heading = NULL ): string
+	{
 		if( is_string( $heading ) )
 			$heading	= HtmlTag::create( 'h3', $heading );
 		else if( $heading ){
@@ -230,7 +241,8 @@ class View_Helper_Catalog_Bookstore
 		return $heading.$descriptions.$articles;
 	}
 
-	public function renderCategoryArticleList( $category ){
+	public function renderCategoryArticleList( $category )
+	{
 		$cacheKey	= 'catalog.bookstore.html.categoryArticleList.'.$category->categoryId;
 		if( NULL === ( $list = $this->cache->get( $cacheKey ) ) ){
 			$orders		= ['articleCategoryId' => 'DESC', 'articleId' => 'DESC'];
@@ -243,14 +255,16 @@ class View_Helper_Catalog_Bookstore
 		return $list;
 	}
 
-	public function renderCategoryLink( $category, $language = "de" ){
+	public function renderCategoryLink( $category, string $language = 'de' ): string
+	{
 		$labelKey	= 'label_'.$language;
 		$title		= View_Helper_Text::applyFormat( $category->$labelKey );
 		$url		= $this->logic->getCategoryUri( $category, $language );
 		return HtmlTag::create( 'a', $title, ['href' => $url] );
 	}
 
-	public function renderCategoryList( $data, $language = "de" ){
+	public function renderCategoryList( $data, string $language = 'de' ): string
+	{
 		$list	= [];
 		foreach( $data as $category ){
 			$sub	= [];
@@ -269,7 +283,8 @@ class View_Helper_Catalog_Bookstore
 		return HtmlElements::unorderedList( $list, 0, ['class' => 'branches'] );
 	}
 
-	public function renderDocumentLink( $document ){
+	public function renderDocumentLink( $document ): string
+	{
 		return HtmlTag::create( 'a', $document->title, array(
 			'href'		=> 'file/bookstore/document/'.$document->url,
 			'class'		=> 'document',
@@ -277,14 +292,15 @@ class View_Helper_Catalog_Bookstore
 		) );
 	}
 
-	public function renderPositionFromArticle( $article, $language = "de" ){
+	public function renderPositionFromArticle( $article, string $language = 'de' ): string
+	{
 		$helper	= new View_Helper_Catalog_Bookstore_Position( $this->env );
 		return $helper->renderFromArticle( $article, $language );
 	}
 
-	public function renderPositionFromCategory( $category = NULL ){
+	public function renderPositionFromCategory( $category = NULL ): string
+	{
 		$helper	= new View_Helper_Catalog_Bookstore_Position( $this->env );
 		return $helper->renderFromCategory( $category );
 	}
 }
-?>

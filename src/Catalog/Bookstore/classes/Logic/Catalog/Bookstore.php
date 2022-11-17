@@ -314,7 +314,7 @@ class Logic_Catalog_Bookstore extends Logic
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getAuthorUri( $authorOrId, bool $absolute = FALSE ): array
+	public function getAuthorUri( $authorOrId, bool $absolute = FALSE ): string
 	{
 		$author	= $authorOrId;
 		if( is_int( $authorOrId ) )
@@ -331,7 +331,7 @@ class Logic_Catalog_Bookstore extends Logic
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getCategories( array $conditions = [], array $orders = [] )
+	public function getCategories( array $conditions = [], array $orders = [] ): array
 	{
 #		$cacheKey	= md5( json_encode( [$conditions, $orders] ) );
 #		if( ( $data = $this->cache->get( 'catalog.bookstore.categories.'.$cacheKey ) ) )

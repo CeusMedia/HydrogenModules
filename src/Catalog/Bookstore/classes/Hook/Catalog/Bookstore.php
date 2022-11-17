@@ -1,7 +1,6 @@
 <?php
 
 use CeusMedia\Common\XML\Element as XmlElement;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Catalog_Bookstore extends Hook
@@ -15,7 +14,7 @@ class Hook_Catalog_Bookstore extends Hook
 			'tags'			=> '',
 			'heading'		=> '',
 		);
-		$modals			= [];
+
 		if( preg_match( $pattern, $this->payload['content'] ) ){
 			$code		= preg_replace( $pattern, "\\2", $this->payload['content'] );
 			$code		= preg_replace( '/(\r|\n|\t)/', " ", $code );
@@ -44,6 +43,11 @@ class Hook_Catalog_Bookstore extends Hook
 		}
 	}
 
+	public function onRenderNewsItem()
+	{
+		$this->context->content	= View_Helper_Catalog_Bookstore::applyLinks( $this->env, $this->context->content );
+	}
+
 	public function onRenderSearchResults()
 	{
 		$helper			= new View_Helper_Catalog_Bookstore( $this->env );
@@ -60,7 +64,7 @@ class Hook_Catalog_Bookstore extends Hook
 				$path		= preg_replace( "@^catalog/bookstore/article/@", "", $resultDocument->path );
 				if( $articleId = (int) $path ){
 					$article	= $modelArticle->get( $articleId );
-					$articleUri	= $helper->getArticleUri( $articleId, !TRUE );
+					$articleUri	= $helper->getArticleUri( $articleId );
 					$resultDocument->facts	= (object) array(
 						'title'			=> $article->title,
 						'link'			=> preg_replace( '/^\.\//', '', $articleUri ),
@@ -76,7 +80,7 @@ class Hook_Catalog_Bookstore extends Hook
 					$title		= $author->lastname;
 					if( $author->firstname )
 						$title	= $author->firstname." ".$title;
-					$authorUri	= $helper->getAuthorUri( $author->authorId, !TRUE );
+					$authorUri	= $helper->getAuthorUri( $author->authorId );
 					$resultDocument->facts	= (object) array(
 						'title'			=> $title,
 						'link'			=> preg_replace( '/^\.\//', '', $authorUri ),
@@ -89,7 +93,7 @@ class Hook_Catalog_Bookstore extends Hook
 				$path		= preg_replace( "@^catalog/bookstore/category/@", "", $resultDocument->path );
 				if( $categoryId = (int) $path ){
 					$category		= $modelCategory->get( $categoryId );
-					$categoryUri	= $helper->getCategoryUri( $categoryId, !TRUE );
+					$categoryUri	= $helper->getCategoryUri( $categoryId );
 					$resultDocument->facts	= (object) array(
 						'title'			=> $category->label_de,
 						'link'			=> preg_replace( '/^\.\//', '', $categoryUri ),
@@ -116,25 +120,22 @@ class Hook_Catalog_Bookstore extends Hook
 		$logic		= new Logic_Catalog_Bookstore( $this->env );
 		$language	= $this->env->getLanguage()->getLanguage();
 
-		$conditions	= [];
 		$orders		= ['articleId' => 'DESC'];
-		foreach( $logic->getArticles( $conditions, $orders ) as $article ){
+		foreach( $logic->getArticles( [], $orders ) as $article ){
 			$url	= $logic->getArticleUri( $article, TRUE );
 			$date	= max( $article->createdAt, $article->modifiedAt );
 			$this->context->addLink( $url, $date > 0 ? $this->payload : NULL );
 		}
 
-		$conditions	= [];
 		$orders		= ['authorId' => 'DESC'];
-		foreach( $logic->getAuthors( $conditions, $orders ) as $author ){
+		foreach( $logic->getAuthors( [], $orders ) as $author ){
 			$url	= $logic->getAuthorUri( $author, TRUE );
 			$date	= NULL;//max( $author->createdAt, $author->modifiedAt );
 			$this->context->addLink( $url, $date );
 		}
 
-		$conditions	= ['visible' => 1];
 		$orders		= ['categoryId' => 'DESC'];
-		foreach( $logic->getCategories( $conditions, $orders ) as $category ){
+		foreach( $logic->getCategories( ['visible' => 1], $orders ) as $category ){
 			$url	= $logic->getCategoryUri( $category, $language, TRUE );
 			$date	= NULL;//max( $author->createdAt, $author->modifiedAt );
 			$this->context->addLink( $url, $date );
