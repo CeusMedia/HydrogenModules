@@ -6,18 +6,18 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Catalog_Bookstore extends Hook
 {
-	public static function onRenderContent( Environment $env, $context, $module, $data )
+	public function onRenderContent()
 	{
 		$pattern		= "/^(.*)(\[CatalogBookstoreRelations([^\]]+)?\])(.*)$/sU";
-		$helper			= new View_Helper_Catalog_Bookstore_Relations( $env );
+		$helper			= new View_Helper_Catalog_Bookstore_Relations( $this->env );
 		$defaultAttr	= array(
 			'articleId'		=> '',
 			'tags'			=> '',
 			'heading'		=> '',
 		);
 		$modals			= [];
-		if( preg_match( $pattern, $data->content ) ){
-			$code		= preg_replace( $pattern, "\\2", $data->content );
+		if( preg_match( $pattern, $this->payload['content'] ) ){
+			$code		= preg_replace( $pattern, "\\2", $this->payload['content'] );
 			$code		= preg_replace( '/(\r|\n|\t)/', " ", $code );
 			$code		= preg_replace( '/( ){2,}/', " ", $code );
 			$code		= trim( $code );
@@ -36,23 +36,23 @@ class Hook_Catalog_Bookstore extends Hook
 				$subcontent		.= '<script>jQuery(document).ready(function(){ModuleCatalogBookstoreRelatedArticlesSlider.init(260)});</script>';
 			}
 			catch( Exception $e ){
-				$env->getMessenger()->noteFailure( 'Short code failed: '.$code );
+				$this->env->getMessenger()->noteFailure( 'Short code failed: '.$code );
 				$subcontent	= '';
 			}
 			$replacement	= "\\1".$subcontent."\\4";												//  insert content of nested page...
-			$data->content	= preg_replace( $pattern, $replacement, $data->content );				//  ...into page content
+			$this->payload['content']	= preg_replace( $pattern, $replacement, $this->payload['content'] );				//  ...into page content
 		}
 	}
 
-	public static function onRenderSearchResults( Environment $env, $context, $module, $data )
+	public function onRenderSearchResults()
 	{
-		$helper			= new View_Helper_Catalog_Bookstore( $env );
-		$modelArticle	= new Model_Catalog_Bookstore_Article( $env );
-		$modelAuthor	= new Model_Catalog_Bookstore_Author( $env );
-		$modelCategory	= new Model_Catalog_Bookstore_Category( $env );
-		$words			= $env->getLanguage()->getWords( 'search' );
+		$helper			= new View_Helper_Catalog_Bookstore( $this->env );
+		$modelArticle	= new Model_Catalog_Bookstore_Article( $this->env );
+		$modelAuthor	= new Model_Catalog_Bookstore_Author( $this->env );
+		$modelCategory	= new Model_Catalog_Bookstore_Category( $this->env );
+		$words			= $this->env->getLanguage()->getWords( 'search' );
 		$categories		= (object) $words['result-categories'];
-		foreach( $data->documents as $nrDocument => $resultDocument  ){
+		foreach( $this->payload['documents'] as $nrDocument => $resultDocument  ){
 			if( !preg_match( "@^catalog/bookstore/@", $resultDocument->path ) )
 				continue;
 
@@ -110,18 +110,18 @@ class Hook_Catalog_Bookstore extends Hook
 		}
 	}
 
-	public static function onRegisterSitemapLinks( Environment $env, $context, $module, $data )
+	public function onRegisterSitemapLinks()
 	{
-		$baseUrl	= $env->url.'catalog/bookstore/';
-		$logic		= new Logic_Catalog_Bookstore( $env );
-		$language	= $env->getLanguage()->getLanguage();
+		$baseUrl	= $this->env->url.'catalog/bookstore/';
+		$logic		= new Logic_Catalog_Bookstore( $this->env );
+		$language	= $this->env->getLanguage()->getLanguage();
 
 		$conditions	= [];
 		$orders		= ['articleId' => 'DESC'];
 		foreach( $logic->getArticles( $conditions, $orders ) as $article ){
 			$url	= $logic->getArticleUri( $article, TRUE );
 			$date	= max( $article->createdAt, $article->modifiedAt );
-			$context->addLink( $url, $date > 0 ? $data : NULL );
+			$this->context->addLink( $url, $date > 0 ? $this->payload : NULL );
 		}
 
 		$conditions	= [];
@@ -129,7 +129,7 @@ class Hook_Catalog_Bookstore extends Hook
 		foreach( $logic->getAuthors( $conditions, $orders ) as $author ){
 			$url	= $logic->getAuthorUri( $author, TRUE );
 			$date	= NULL;//max( $author->createdAt, $author->modifiedAt );
-			$context->addLink( $url, $date );
+			$this->context->addLink( $url, $date );
 		}
 
 		$conditions	= ['visible' => 1];
@@ -137,7 +137,7 @@ class Hook_Catalog_Bookstore extends Hook
 		foreach( $logic->getCategories( $conditions, $orders ) as $category ){
 			$url	= $logic->getCategoryUri( $category, $language, TRUE );
 			$date	= NULL;//max( $author->createdAt, $author->modifiedAt );
-			$context->addLink( $url, $date );
+			$this->context->addLink( $url, $date );
 		}
 	}
 }

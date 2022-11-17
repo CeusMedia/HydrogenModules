@@ -5,7 +5,6 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Info_Gallery extends Controller
 {
-	protected $moduleConfig;
 	protected $baseFilePath;
 
 	public function index( $galleryId = NULL )
