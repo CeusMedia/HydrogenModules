@@ -10,26 +10,26 @@ class Logic_Catalog_Bookstore extends Logic
 	/**	@var	\CeusMedia\Cache\AbstractAdapter			$cache */
 	protected $cache;
 
-	/**	@var	Model_Bookstore_Catalog_Article				$modelArticle */
-	protected Model_Bookstore_Catalog_Article $modelArticle;
+	/**	@var	Model_Catalog_Bookstore_Article				$modelArticle */
+	protected Model_Catalog_Bookstore_Article $modelArticle;
 
-	/**	@var	Model_Bookstore_Catalog_Article_Author		$modelArticleAuthor */
-	protected Model_Bookstore_Catalog_Article_Author $modelArticleAuthor;
+	/**	@var	Model_Catalog_Bookstore_Article_Author		$modelArticleAuthor */
+	protected Model_Catalog_Bookstore_Article_Author $modelArticleAuthor;
 
-	/**	@var	Model_Bookstore_Catalog_Article_Category	$modelArticleCategory */
-	protected Model_Bookstore_Catalog_Article_Category $modelArticleCategory;
+	/**	@var	Model_Catalog_Bookstore_Article_Category	$modelArticleCategory */
+	protected Model_Catalog_Bookstore_Article_Category $modelArticleCategory;
 
-	/**	@var	Model_Bookstore_Catalog_Article_Document	$modelArticleDocument */
-	protected Model_Bookstore_Catalog_Article_Document $modelArticleDocument;
+	/**	@var	Model_Catalog_Bookstore_Article_Document	$modelArticleDocument */
+	protected Model_Catalog_Bookstore_Article_Document $modelArticleDocument;
 
-	/**	@var	Model_Bookstore_Catalog_Article_Tag			$modelArticleTag */
-	protected Model_Bookstore_Catalog_Article_Tag $modelArticleTag;
+	/**	@var	Model_Catalog_Bookstore_Article_Tag			$modelArticleTag */
+	protected Model_Catalog_Bookstore_Article_Tag $modelArticleTag;
 
-	/**	@var	Model_Bookstore_Catalog_Article_Category	$modelAuthor */
-	protected Model_Bookstore_Catalog_Article_Category $modelAuthor;
+	/**	@var	Model_Catalog_Bookstore_Article_Category	$modelAuthor */
+	protected Model_Catalog_Bookstore_Article_Category $modelAuthor;
 
-	/**	@var	Model_Bookstore_Catalog_Category			$modelCategory */
-	protected Model_Bookstore_Catalog_Category $modelCategory;
+	/**	@var	Model_Catalog_Bookstore_Category			$modelCategory */
+	protected Model_Catalog_Bookstore_Category $modelCategory;
 
 	protected string $articleUriTemplate					= 'catalog/bookstore/article/%2$d-%3$s';
 
