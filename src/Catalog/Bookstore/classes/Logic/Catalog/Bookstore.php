@@ -25,8 +25,8 @@ class Logic_Catalog_Bookstore extends Logic
 	/**	@var	Model_Catalog_Bookstore_Article_Tag			$modelArticleTag */
 	protected Model_Catalog_Bookstore_Article_Tag $modelArticleTag;
 
-	/**	@var	Model_Catalog_Bookstore_Article_Category	$modelAuthor */
-	protected Model_Catalog_Bookstore_Article_Category $modelAuthor;
+	/**	@var	Model_Catalog_Bookstore_Author				$modelAuthor */
+	protected Model_Catalog_Bookstore_Author $modelAuthor;
 
 	/**	@var	Model_Catalog_Bookstore_Category			$modelCategory */
 	protected Model_Catalog_Bookstore_Category $modelCategory;
