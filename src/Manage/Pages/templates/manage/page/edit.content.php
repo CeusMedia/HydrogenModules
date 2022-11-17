@@ -32,7 +32,7 @@ else{
 		$content	= '
 <div class="content-panel content-panel-form">
 	<div class="content-panel-inner">
-		<form action="./manage/page/edit/'.$page->pageId.'/'.$version.'" method="post" class="cmFormChange-auto form-changes-auto">
+		<form action="./manage/page/edit/'.$page->pageId.'/'.$version.'" method="post" class="not-cmFormChange-auto not-form-changes-auto">
 			<div class="row-fluid">
 				<div class="span4">
 					<label for="input_page_editor">'.$words['edit']['labelEditor'].'</label>

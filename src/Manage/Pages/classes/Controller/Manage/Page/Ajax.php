@@ -21,7 +21,7 @@ class Controller_Manage_Page_Ajax extends AjaxController
 		$this->envManaged	= $this->env;
 
 		if( $this->appFocus === 'frontend' ){
-			$this->frontend		= new Resource_Frontend( $this->env );
+			$this->frontend		= Logic_Frontend::getInstance( $this->env );
 			$this->envManaged	= $this->frontend->getEnv();
 		}
 		$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;

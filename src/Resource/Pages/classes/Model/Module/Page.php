@@ -34,7 +34,7 @@ class Model_Module_Page
 	{
 		$this->env		= $env;
 		$this->useAcl	= $this->env->getModules()->has( 'Resource_Users' );
-		$this->acl		= $this->env->getAcl();
+//		$this->acl		= $this->env->getAcl();
 		$this->loadPages();
 	}
 

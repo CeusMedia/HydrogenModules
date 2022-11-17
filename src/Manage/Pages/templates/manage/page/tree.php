@@ -2,6 +2,13 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+
+/** @var array $apps */
+/** @var array $sources */
+/** @var array $languages */
+
+
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconSortable	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrows-v'] );
 
@@ -17,13 +24,18 @@ if( count( $apps ) > 1 ){
 		</div>';
 }
 
-$sources	= [
-	'Database'	=> 'Database Pages',
-	'Config'	=> 'Config Pages',
-	'Modules'	=> 'Module Pages'
-];
-$optSource	= HtmlElements::Options( $sources, $source );
-
+$filterSource	= HtmlTag::create( 'input', NULL, ['type' => 'hidden', 'name' => 'source', 'value' => $source] );
+if( count( $sources ) > 1 ){
+	$sourceMap = [];
+	$sourceLabels	= [
+		'Database'	=> 'Database Pages',
+		'Config'	=> 'Config Pages',
+		'Modules'	=> 'Module Pages'
+	];
+	array_map(static function( $key ) use ( $sourceLabels, &$sourceMap ){
+		$sourceMap[$key]    = $sourceLabels[$key];
+	}, $sources );
+	$optSource	= HtmlElements::Options( $sourceMap, $source );
 	$filterSource	= '
 		<div class="row-fluid">
 			<div class="span12">
@@ -31,11 +43,12 @@ $optSource	= HtmlElements::Options( $sources, $source );
 				<select name="source" id="input_source" class="span12" onchange="document.location.href=\'./manage/page/setSource/\'+this.value;">'.$optSource.'</select>
 			</div>
 		</div>';
+}
 
 
 //print_m( $tree );die;
 
-$filterLanguage		= '';
+$filterLanguage		= HtmlTag::create( 'input', NULL, ['type' => 'hidden', 'name' => 'language', 'value' => $language] );
 if( count( $languages ) > 1 ){
 	$optLanguage	= HtmlElements::Options( array_combine( $languages, $languages ), $language );
 	$filterLanguage	= '
@@ -46,9 +59,6 @@ if( count( $languages ) > 1 ){
 			</div>
 		</div>';
 }
-else
-	$filterLanguage		= HtmlTag::create( 'input', NULL, ['type' => 'hidden', 'name' => 'language', 'value' => $language] );
-
 
 $optScope	= [];
 foreach( $words['scopes'] as $key => $value )

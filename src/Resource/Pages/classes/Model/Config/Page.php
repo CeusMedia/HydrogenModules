@@ -5,10 +5,10 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Config_Page
 {
-	protected $env;
-	protected $filePath;
-	protected $pages;
-	protected $baseItem		= array(
+	protected Environment $env;
+	protected string $filePath;
+	protected array $pages;
+	protected array $baseItem	= [
 		'parentId'		=> 0,
 		'status'		=> 0,
 		'type'			=> 0,
@@ -24,12 +24,12 @@ class Model_Config_Page
 		'template'		=> '',
 		'createdAt'		=> 0,
 		'modifiedAt'	=> 0,
-	);
-	protected $types		= array(
+	];
+	protected array $types	= [
 		0	=> 'page',
 		1	=> 'menu',
 		2	=> 'module'
-	);
+	];
 
 	public function __construct( Environment $env )
 	{
@@ -134,17 +134,17 @@ class Model_Config_Page
 		foreach( $this->scopes as $scopeNr => $scope ){
 			foreach( $this->fileData[$scope] as $pageNr => $page ){
 				$pageId++;
-				if( empty( $page['type'] ) ){
-					$page['type']	= 0;
-					if( !empty( $page['pages'] ) )
-						$page['type']	= 1;
-					else if( !empty( $page['controller'] ) )
-						$page['type']	= 2;
-				}
+				$page['type']	??= reset( $this->types );
+				$type	= (int) array_search( $page['type'], $this->types );
+				if( !empty( $page['pages'] ) )
+					$type	= 1;
+				else if( !empty( $page['controller'] ) )
+					$type	= 2;
+
 				$pageItem	= (object) array_merge( $this->baseItem, array(
 					'pageId'		=> $pageId,
 					'status'		=> 1,			//@todo realize
-					'type'			=> (int) array_search( $page['type'], $this->types ),
+					'type'			=> $type,
 					'controller'	=> !empty( $page['controller'] ) ? $page['controller'] : '',
 					'action'		=> !empty( $page['action'] ) ? $page['action'] : '',
 					'scope'			=> $scopeNr,
@@ -162,18 +162,18 @@ class Model_Config_Page
 				if( !empty( $page['pages'] ) ){
 					foreach( $page['pages'] as $subpageNr => $subpage ){
 						$pageId++;
-						if( empty( $subpage['type'] ) ){
-							$subpage['type']	= 0;
-							if( !empty( $subpage['pages'] ) )
-								$subpage['type']	= 1;
-							else if( !empty( $subpage['controller'] ) )
-								$subpage['type']	= 2;
-						}
+						$subpage['type']	??= reset( $this->types );
+						$type	= (int) array_search( $subpage['type'], $this->types );
+						if( !empty( $subpage['pages'] ) )
+							$type	= 1;
+						else if( !empty( $subpage['controller'] ) )
+							$type	= 2;
+
 						$subpageItem	= (object) array_merge( $this->baseItem, array(
 							'pageId'		=> $pageId,
 							'parentId'		=> $pageItem->pageId,
 							'status'		=> 1,			//@todo realize
-							'type'			=> (int) array_search( $subpage['type'], $this->types ),
+							'type'			=> $type,
 							'controller'	=> !empty( $subpage['controller'] ) ? $subpage['controller'] : '',
 							'action'		=> !empty( $subpage['action'] ) ? $subpage['action'] : '',
 							'scope'			=> $scopeNr,

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\FS\File\Collection\Reader as ListFileReader;
@@ -8,6 +9,8 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Page extends Controller
 {
+	public static string $moduleId		= 'Manage_Pages';
+
 	protected $model;
 	protected $request;
 	protected $messenger;
@@ -17,13 +20,11 @@ class Controller_Manage_Page extends Controller
 	protected string $patternIdentifier	= '@[^a-z0-9_/-]@';
 	protected string $sessionPrefix		= 'filter_manage_pages_';
 
-	protected string $appFocus;
-	protected \CeusMedia\Common\ADT\Collection\Dictionary $appSession;
+	protected string $appFocus			= 'self';
+	protected Dictionary $appSession;
 	protected array $appLanguages;
 	protected $envManaged;
 	protected $defaultLanguage;
-
-	public static string $moduleId		= 'Manage_Pages';
 
 	public function add( $parentId = 0 )
 	{
@@ -125,8 +126,10 @@ ModuleManagePages.PageEditor.init();
 
 		$editors	= [];
 		$helper		= new View_Helper_Manage_Page_ContentEditor( $this->env );
-		$helper->setDefaultEditor( $defaultEditor );
-		$helper->setCurrentEditor( $currentEditor ?? $defaultEditor );
+		if( NULL !== $defaultEditor ){
+			$helper->setDefaultEditor( $defaultEditor );
+			$helper->setCurrentEditor( $currentEditor ?? $defaultEditor );
+		}
 		$helper->setFormat( $page->format );
 		foreach( $this->getWords( 'editor-types' ) as $typeKey => $typeTemplate ){
 			$helper->setType( $typeKey );
@@ -399,7 +402,6 @@ ModuleManagePages.PageEditor.init();
 		$this->session			= $this->env->getSession();
 		$this->frontend			= Logic_Frontend::getInstance( $this->env );
 
-		$this->appFocus			= 'self';
 		$this->appSession		= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
 		$this->envManaged		= $this->env;
 		$this->appLanguages		= $this->env->getLanguage()->getLanguages();
@@ -413,7 +415,7 @@ ModuleManagePages.PageEditor.init();
 				'self'		=> 'Administration',
 				'frontend'	=> 'Webseite',
 			);
-			$this->appFocus	= $this->session->get( $this->sessionPrefix.'app' );
+			$this->appFocus	= $this->session->get( $this->sessionPrefix.'app', $this->appFocus );
 			if( !array_key_exists( $this->appFocus, $apps ) )
 				$this->appFocus	= current( array_keys( $apps ) );
 //			if( $this->appFocus !== $this->session->get( $this->sessionPrefix.'app' ) )
@@ -436,24 +438,29 @@ ModuleManagePages.PageEditor.init();
 		if( $this->session->get( $this->sessionPrefix.'app' ) !== $this->appFocus )
 			$this->session->set( $this->sessionPrefix.'app', $this->appFocus );
 
-		$managesModules	= $this->envManaged->getModules( TRUE );
+		$managesModules		= $this->envManaged->getModules( TRUE );
+		$possibleSources	= [];
+		if( $managesModules->has( 'Resource_Pages' ) )
+			$possibleSources[]	= 'Database';
+		if( file_exists( $this->envManaged->uri.'config/pages.json' ) )
+			$possibleSources[]	= 'Config';
+		$possibleSources[]	= 'Modules';
+		if( $possibleSources !== $this->appSession->get( 'sources' ) )
+			$this->appSession->set( 'sources', $possibleSources );
+		$this->addData( 'sources', $possibleSources );
+
+		$defaultSource	= reset( $possibleSources );
 		if( $managesModules->has( 'UI_Navigation' ) ){
-			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+			$module			= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' );
+			$defaultSource	= $module->config['menu.source']->value;
+			$this->addData( 'sources', [$defaultSource] );
 		}
-		else if( $this->appSession->has( 'source' ) ){
-			$source	= $this->appSession->get( 'source' );
-		}
-		else{
-			if( $managesModules->has( 'Resource_Pages' ) )
-				$source			= 'Database';
-			else if( file_exists( 'config/pages.json' ) )
-				$source			= 'Config';
-			else
-				$source			= 'Modules';
-		}
-		//  persist the source decision
-		if( !$this->appSession->get( 'source' ) )
+		$source		= $this->appSession->get( 'source', $defaultSource );
+		if( !in_array( $source, $possibleSources ) )
+			$source	= $defaultSource;
+		if( $source !== $this->appSession->get( 'source' ) )
 			$this->appSession->set( 'source', $source );
+		$this->addData( 'source', $source );
 
 		//  connect to model of source
 		switch( $source ){
@@ -521,7 +528,7 @@ ModuleManagePages.PageEditor.init();
 		$controllers	= [];
 		$pathConfig		= $this->envManaged->getConfig()->get( 'path.config' );
 		$pathModules	= $this->envManaged->getConfig()->get( 'path.modules' );
-		$pathModules	= $pathModules ? $pathModules : $pathConfig.'modules/';
+		$pathModules	= $pathModules ?: $pathConfig.'modules/';
 		foreach( $this->envManaged->getModules()->getAll() as $moduleId => $module ){
 			if( empty( $module->files->classes ) )
 				continue;
@@ -571,7 +578,7 @@ ModuleManagePages.PageEditor.init();
 		$localization	= new Logic_Localization( $this->env );
 /*		$this->env->getLog()->log("debug","trying to set language from appSession to localization object during translatePage: ".print_r($this->appSession,true),$this);
 		$this->env->getLog()->log("debug","trying to set language from appSession to localization object during translatePage: ".print_r($this->appSession->get( 'language' ),true),$this);
-		$this->env->getLog()->log("debug",print_r($this->session->getall(),true));
+		$this->env->getLog()->log("debug",print_r($this->session->getAll(),true));
 */
 		$localization->setLanguage( $this->appSession->get( 'language' ) );
 //		remark( $localization->getLanguage() );
