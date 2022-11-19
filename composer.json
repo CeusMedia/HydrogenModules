@@ -92,13 +92,17 @@
         ]
     },
     "scripts-descriptions": {
+        "dev:index-json": "Create library index as compact JSON (to speed up Hymn)",
+        "dev:index-json-humanreadable": "Create library index as readable JSON",
+        "dev:index-html": "Create library index as HTML",
+        "dev:index-serial": "Create library index as PHP serial",
         "dev:install": "Installs project dependencies for Development stage",
-        "dev:update": "Updates project dependencies for Development stage",
         "dev:phpstan": "Validate codebase with PHPStan",
         "dev:phpstan-clear": "Clear PHPStan cache",
         "dev:phpstan-save": "Store current results in ignore list",
         "dev:rector": "Shows suggestions of configured Rector rules",
         "dev:rector-fix": "Apply currently configured Rector rules to codebase",
-        "dev:test-syntax": "Validate code base syntax using PHP linter"
+        "dev:test-syntax": "Validate code base syntax using PHP linter",
+        "dev:update": "Updates project dependencies for Development stage"
     }
 }

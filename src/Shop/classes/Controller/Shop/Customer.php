@@ -6,25 +6,27 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Shop_Customer extends Controller
 {
 	/**	@var	array					$backends			List of available payment backends */
-	protected $backends					= [];
+	protected array $backends			= [];
 
 	/**	@var	float					$cartTotal			Total price of cart */
 	protected $cartTotal				= 0;
 
 	/**	@var	Model_Address			$modelAddress		Model for address objects*/
-	protected $modelAddress;
+	protected Model_Address $modelAddress;
 
 	/**	@var	Model_Shop_Cart			$modelCart			Model for shopping carts */
-	protected $modelCart;
+	protected Model_Shop_Cart $modelCart;
 
 	/**	@var	Model_User				$modelUser			Model for user accounts */
-	protected $modelUser;
+	protected Model_User $modelUser;
 
 	/**	@var	boolean					$useAuth			Flag: Shop allows user registration and login */
-	protected $useAuth					= FALSE;
+	protected bool $useAuth					= FALSE;
 
 	/** @var	Logic_Authentication	$logicAuth			Instance of authentication logic, if available */
-	protected $logicAuth;
+	protected Logic_Authentication $logicAuth;
+
+	protected object $words;
 
 	/**
 	 *	...
@@ -215,6 +217,7 @@ class Controller_Shop_Customer extends Controller
 		$this->modelAddress	= new Model_Address( $this->env );
 		$this->modelCart	= new Model_Shop_Cart( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
+		$this->words		= (object) $this->env->getLanguage()->getWords( 'shop' )['msg'];
 
 		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$this->useAuth		= TRUE;
