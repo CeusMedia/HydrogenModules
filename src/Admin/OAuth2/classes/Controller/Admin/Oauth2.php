@@ -7,7 +7,6 @@ class Controller_Admin_Oauth2 extends Controller
 	protected $request;
 	protected $session;
 	protected $messenger;
-	protected $moduleConfig;
 	protected $modelProvider;
 	protected $modelProviderDefault;
 	protected $providersIndex				= [];

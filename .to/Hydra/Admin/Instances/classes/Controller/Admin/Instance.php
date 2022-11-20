@@ -5,11 +5,12 @@ use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Admin_Instance extends Controller{
+class Controller_Admin_Instance extends Controller
+{
+	protected Model_Instance $model;
 
-	protected $moduleConfig;
-
-	protected function __onInit(){
+	protected function __onInit(): void
+	{
 		$this->model		= new Model_Instance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.admin_instances.', TRUE );

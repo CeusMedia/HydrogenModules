@@ -22,9 +22,7 @@ use CeusMedia\HydrogenFramework\Environment;
 class Controller_System_Log extends Controller
 {
 	/**	@var		Environment		$env		Environment instance */
-	protected $env;
-
-	protected $moduleConfig;
+	protected Environment $env;
 
 	public static function ___onLogException( Environment $env, $context, $module, $data = [] )
 	{
@@ -146,7 +144,7 @@ class Controller_System_Log extends Controller
 		$this->addData( 'page', $this->env->getSession()->get( 'filter_server_system_page' ) );
 	}
 
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.server_system_log.', TRUE );
 	}

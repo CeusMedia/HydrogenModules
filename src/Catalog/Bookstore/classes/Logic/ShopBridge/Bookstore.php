@@ -1,16 +1,19 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 {
+	public array $cache		= [];
+	public string $path		= "catalog/bookstore/article/%articleId%";
+	public $taxPercent;
+	public $taxIncluded;
+
 	/**	@var	Logic_Catalog_Bookstore		$logic		Bookstore logic instance */
 	protected $logic;
 
-	/**	@var	Alg_List_Dictionary			$moduleConfig */
-	protected $moduleConfig;
-
-	public $cache		= [];
-	public $path		= "catalog/bookstore/article/%articleId%";
-	public $taxPercent;
-	public $taxIncluded;
+	/**	@var	Dictionary			$moduleConfig */
+	protected Dictionary $moduleConfig;
 
 	public function changeQuantity( $articleId, $change )
 	{
@@ -18,7 +21,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	}
 
 	/**
-	 *	Checks existance of article and returns data object if found.
+	 *	Checks existence of article and returns data object if found.
 	 *	@access		public
 	 *	@param		integer		$articleId		ID of article
 	 *	@return		object						Bridged article data object if found
@@ -35,7 +38,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 		}
 		if( !$strict )
 			return FALSE;
-		throw new Exception( 'Invalid article ID: '.$articleId );
+		throw new InvalidArgumentException( 'Invalid article ID: '.$articleId );
 	}
 
 	/**

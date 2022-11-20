@@ -4,9 +4,8 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Csrf extends Controller
 {
-	protected $logic;
+	protected Logic_CSRF $logic;
 	protected $messenger;
-	protected $moduleConfig;
 
 	public function checkToken( $redirectUrl = NULL )
 	{

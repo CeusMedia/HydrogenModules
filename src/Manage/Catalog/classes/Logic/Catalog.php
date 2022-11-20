@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Cache\SimpleCacheInterface;
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\Image\ThumbnailCreator as ImageThumbnailCreator;
 use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
 
@@ -14,31 +15,31 @@ class Logic_Catalog extends Logic
 	protected $cache;
 
 	/**	@var	Logic_Frontend						$frontend */
-	protected $frontend;
+	protected Logic_Frontend $frontend;
 
 	/**	@var	Model_Catalog_Article				$modelArticle */
-	protected $modelArticle;
+	protected Model_Catalog_Article $modelArticle;
 
 	/**	@var	Model_Catalog_Article_Author		$modelArticleAuthor */
-	protected $modelArticleAuthor;
+	protected Model_Catalog_Article_Author $modelArticleAuthor;
 
 	/**	@var	Model_Catalog_Article_Category		$modelArticleCategory */
-	protected $modelArticleCategory;
+	protected Model_Catalog_Article_Category $modelArticleCategory;
 
 	/**	@var	Model_Catalog_Article_Document		$modelArticleDocument */
-	protected $modelArticleDocument;
+	protected Model_Catalog_Article_Document $modelArticleDocument;
 
 	/**	@var	Model_Catalog_Article_Tag			$modelArticleTag */
-	protected $modelArticleTag;
+	protected Model_Catalog_Article_Tag $modelArticleTag;
 
-	/**	@var	Model_Catalog_Article_Category		$modelAuthor */
-	protected $modelAuthor;
+	/**	@var	Model_Catalog_Author				$modelAuthor */
+	protected Model_Catalog_Author $modelAuthor;
 
 	/**	@var	Model_Catalog_Category				$modelCategory */
-	protected $modelCategory;
+	protected Model_Catalog_Category $modelCategory;
 
-	/**	@var	Alg_List_Dictionary					$moduleConfig */
-	protected $moduleConfig;
+	/**	@var	Dictionary							$moduleConfig */
+	protected Dictionary $moduleConfig;
 
 	protected $countArticlesInCategories;
 
@@ -137,7 +138,7 @@ class Logic_Catalog extends Logic
 			'articleId'	=> $articleId,
 			'tag'		=> $tag,
 		);
-		$this->clearCacheForArticle( $articleIdId );												//
+		$this->clearCacheForArticle( $articleId );												//
 		return $this->modelArticleTag->add( $data );
 	}
 
@@ -194,7 +195,7 @@ class Logic_Catalog extends Logic
 			'editor'	=> $role,
 		);
 		$relationId	= $this->modelArticleAuthor->add( $data );
-		$this->clearCacheForArticle( $categoryId );													//
+		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForAuthor( $authorId );													//
 		return $relationId;
 	}
@@ -224,6 +225,28 @@ class Logic_Catalog extends Logic
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->add( $indices );
+	}
+
+	/**
+	 *	Change stock quantity of article.
+	 *	@access		public
+	 *	@param		integer		$articleId		ID of article
+	 *	@param		integer		$change			Negative value on payed order, positive value on restock.
+	 *	@return		integer						Article quantity in stock after change
+	 *	@throws		InvalidArgumentException	if not found
+	 */
+	public function changeQuantity( $articleId, $change, bool $strict = TRUE )
+	{
+		$change		= (int) $change;
+		$article	= $this->modelArticle->get( $articleId );
+		if( !$article && $strict )
+			throw new RuntimeException( 'Article with ID '.$articleId.' is not existing' );
+		if( !$article )
+			return FALSE;
+		$this->modelArticle->edit( $articleId, array(
+			'quantity'	=> $article->quantity + $change
+		) );
+		return $article->quantity + $change;
 	}
 
 	/**
@@ -779,7 +802,7 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	protected function __onInit( $a = NULL )
+	protected function __onInit(): void
 	{
 		$this->env->getRuntime()->reach( 'Logic_Catalog::init start' );
 		$this->config				= $this->env->getConfig();

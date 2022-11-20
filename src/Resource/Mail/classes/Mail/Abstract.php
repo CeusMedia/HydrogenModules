@@ -91,7 +91,7 @@ abstract class Mail_Abstract
 		$this->setEnv( $env );
 		$this->modelTemplate	= new Model_Mail_Template( $env );
 		$this->mail				= new \CeusMedia\Mail\Message();
-		$this->view				= new View( $env );
+//		$this->view				= new View( $env );
 		$this->page				= new HtmlPage();
 		$this->logicMail		= $this->env->getLogic()->get( 'Mail' );
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );

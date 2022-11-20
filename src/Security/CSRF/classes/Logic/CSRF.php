@@ -21,7 +21,7 @@ class Logic_CSRF
 
 	protected $env;
 	protected $ip;
-	protected $model;
+	protected Model_CSRF_Token $model;
 	protected $moduleConfig;
 	protected $sessionId;
 

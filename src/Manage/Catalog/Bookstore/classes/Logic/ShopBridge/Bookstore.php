@@ -1,14 +1,17 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 {
 	/**	@var	Logic_Frontend				$frontend */
-	protected $frontend;
+	protected Logic_Frontend $frontend;
 
 	/**	@var	Logic_Catalog_Bookstore		$logic		Bookstore logic instance */
-	protected $logic;
+	protected Logic_Catalog_Bookstore $logic;
 
-	/**	@var	Alg_List_Dictionary			$moduleConfig */
-	protected $moduleConfig;
+	/**	@var	Dictionary					$moduleConfig */
+	protected Dictionary $moduleConfig;
 
 	public $cache		= [];
 	public $path		= "catalog/bookstore/article/%articleId%";
@@ -21,10 +24,10 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	}
 
 	/**
-	 *	Checks existance of article and returns data object if found.
+	 *	Checks existence of article and returns data object if found.
 	 *	@access		public
 	 *	@param		integer		$articleId		ID of article
-	 *	@return		object						Bridged article data object if found
+	 *	@return		object|NULL					Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 */
 	public function check( $articleId, $strict = TRUE )
@@ -37,8 +40,8 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 			return $article;
 		}
 		if( !$strict )
-			return FALSE;
-		throw new Exception( 'Invalid article ID: '.$articleId );
+			return NULL;
+		throw new InvalidArgumentException( 'Invalid article ID: '.$articleId );
 	}
 
 	/**
@@ -47,7 +50,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId		ID of article
 	 *	@return		object
 	 */
-	public function get( $articleId, $quantity = 1 )
+	public function get( $articleId, $quantity = 1 ): object
 	{
 		return (object) array(
 			'id'		=> $articleId,
@@ -87,7 +90,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId		ID of article
 	 *	@return		string
 	 */
-	public function getDescription( $articleId )
+	public function getDescription( $articleId ): string
 	{
 		$article	= $this->check( $articleId );
 		$words		= $this->env->getLanguage()->getWords( 'catalog' );
@@ -101,7 +104,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId		ID of article
 	 *	@return		string
 	 */
-	public function getLink( $articleId )
+	public function getLink( $articleId ): string
 	{
 		return $this->logic->getArticleUri( (int) $articleId );
 	}
@@ -113,7 +116,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		boolean		$absolute
 	 *	@return		string
 	 */
-	public function getPicture( $articleId, $absolute = FALSE )
+	public function getPicture( $articleId, bool $absolute = FALSE ): string
 	{
 		$uri		= $this->env->getConfig()->get( 'path.images' )."bookstore/no_picture.png";
 		$article	= $this->check( $articleId );
@@ -132,7 +135,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$amount			Amount to articles to get price for
 	 *	@return		float
 	 */
-	public function getPrice( $articleId, $amount = 1 )
+	public function getPrice( $articleId, int $amount = 1 )
 	{
 		$amount		= abs( (integer) $amount );
 		return $this->check( $articleId )->price * $amount;
@@ -145,7 +148,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$amount			Amount to articles to get tax for
 	 *	@return		float
 	 */
-	public function getTax( $articleId, $amount = 1 )
+	public function getTax( $articleId, int $amount = 1 )
 	{
 		$amount		= abs( (integer) $amount );												//  sanitize amount
 		$price		= $this->check( $articleId )->price;									//  get price of article
@@ -173,7 +176,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$amount			Amount to articles to get weight for
 	 *	@return		integer
 	 */
-	public function getWeight( $articleId, $amount = 1 )
+	public function getWeight( $articleId, int $amount = 1 )
 	{
 		return $this->check( $articleId )->weight * $amount;
 	}

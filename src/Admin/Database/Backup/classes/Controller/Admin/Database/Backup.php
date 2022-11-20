@@ -9,7 +9,6 @@ class Controller_Admin_Database_Backup extends Controller
 	protected $request;
 	protected $session;
 	protected $messenger;
-	protected $moduleConfig;
 	protected $logicBackup;
 
 	public function backup()

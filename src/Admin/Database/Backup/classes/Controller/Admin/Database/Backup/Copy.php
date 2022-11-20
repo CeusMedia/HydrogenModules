@@ -10,7 +10,6 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 	protected $messenger;
 	protected $logicBackup;
 	protected $logicCopy;
-	protected $moduleConfig;
 
 	public function activate( $backupId )
 	{

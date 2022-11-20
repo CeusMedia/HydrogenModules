@@ -11,7 +11,6 @@ class Controller_Auth_Json extends Controller
 	protected $cookie;
 	protected $messenger;
 	protected $useCsrf;
-	protected $moduleConfig;
 
 	public function index()
 	{

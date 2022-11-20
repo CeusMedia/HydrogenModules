@@ -1,21 +1,29 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 {
-	/**	@var	Logic_Frontend			$frontend */
-	protected $frontend;
-
-	/**	@var	Logic_Catalog			$logic */
-	protected $logic;
-
-	/**	@var	Alg_List_Dictionary		$moduleConfig */
-	protected $moduleConfig;
-
-	public $path		= "catalog/article/%articleId%";
+	public string $path		= "catalog/article/%articleId%";
 	public $taxPercent;
 	public $taxIncluded;
 
+	/**	@var	Logic_Frontend			$frontend */
+	protected Logic_Frontend $frontend;
+
+	/**	@var	Logic_Catalog			$logic */
+	protected Logic_Catalog $logic;
+
+	/**	@var	Dictionary		$moduleConfig */
+	protected Dictionary $moduleConfig;
+
+	public function changeQuantity( $articleId, $change )
+	{
+		return $this->logic->changeQuantity( $articleId, $change );
+	}
+
 	/**
-	 *	Checks existance of article and returns data object if found.
+	 *	Checks existence of article and returns data object if found.
 	 *	@access		public
 	 *	@param		integer		$articleId		ID of article
 	 *	@return		object						Bridged article data object if found
@@ -33,7 +41,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	public function get( $articleId, $quantity = 1 )
+	public function get( $articleId, int $quantity = 1 )
 	{
 		return (object) array(
 			'id'		=> $articleId,
@@ -99,7 +107,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getPrice( $articleId, $amount = 1 )
+	public function getPrice( $articleId, int $amount = 1 )
 	{
 		$amount		= abs( (integer) $amount );
 		return $this->check( $articleId )->price * $amount;
@@ -123,7 +131,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getTax( $articleId, $amount = 1 )
+	public function getTax( $articleId, int $amount = 1 )
 	{
 		$amount		= abs( (integer) $amount );												//  sanitize amount
 		$price		= $this->check( $articleId )->price;									//  get price of article
@@ -143,6 +151,18 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 		return $this->check( $articleId )->title;
 	}
 
+	/**
+	 *	Returns weight of article (one or many).
+	 *	@access		public
+	 *	@param		integer		$articleId		ID of article
+	 *	@param		integer		$amount			Amount to articles to get weight for
+	 *	@return		integer
+	 */
+	public function getWeight( $articleId, int $amount = 1 )
+	{
+		return $this->check( $articleId )->weight * $amount;
+	}
+
 	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Catalog( $this->env );
@@ -151,4 +171,5 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 		$this->taxPercent	= $this->env->getConfig()->get( 'module.shop.tax.percent' );
 		$this->taxIncluded	= $this->env->getConfig()->get( 'module.shop.tax.included' );
 	}
+
 }

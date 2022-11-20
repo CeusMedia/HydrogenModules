@@ -40,7 +40,6 @@ class Controller_Work_Mission extends Controller
 	protected $userMap			= [];
 	protected $userId			= 0;
 	protected $userRoleId		= 0;
-	protected $moduleConfig;
 	protected $contentFormat;
 
 	protected $defaultFilterValues	= array(

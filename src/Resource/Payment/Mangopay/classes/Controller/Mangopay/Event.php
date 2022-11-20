@@ -7,9 +7,8 @@ class Controller_Mangopay_Event extends Controller
 {
 //	public static $verbose	= TRUE;
 
-	protected $mangopay;
-	protected $model;
-	protected $moduleConfig;
+	protected Logic_Payment_Mangopay $mangopay;
+	protected Model_Mangopay_Event $model;
 
 	public function receive()
 	{

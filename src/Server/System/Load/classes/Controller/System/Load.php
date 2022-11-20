@@ -15,8 +15,7 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_System_Load extends Controller
 {
 	protected $config;
-	protected $cpuCores;
-	protected $moduleConfig;
+	protected int $cpuCores;
 
 	/**
 	 *	Returns server loads of last 1, 5 and 15 minutes, absolute or relative to number of CPU cores.

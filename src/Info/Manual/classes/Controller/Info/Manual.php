@@ -8,20 +8,19 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Info_Manual extends Controller
 {
-	protected $path;
 	protected $request;
 	protected $messenger;
-	protected $config;
-	protected $files			= [];
-	protected $userId			= 0;
-	protected $modelCategory;
-	protected $modelPage;
-	protected $modelUser;
-	protected $modelVersion;
+	protected string $docPath;
+	protected array $files			= [];
+	protected $userId				= 0;
+	protected Model_Manual_Category $modelCategory;
+	protected Model_Manual_Page $modelPage;
+	protected Model_User $modelUser;
+	protected Model_Manual_Version $modelVersion;
 
 	/** @var	Dictionary	$order */
-	protected $order;
-	protected $ext				= ".md";
+	protected Dictionary $order;
+	protected string $ext				= ".md";
 
 	public function add()
 	{
@@ -172,8 +171,8 @@ class Controller_Info_Manual extends Controller
 			$newPages	= [];
 			foreach( $files as $fileHash ){
 				$fileName	= base64_decode( $fileHash );
-				if( file_exists( $this->path.$fileName ) ){
-					$content	= FileReader::load( $this->path.$fileName );
+				if( file_exists( $this->docPath.$fileName ) ){
+					$content	= FileReader::load( $this->docPath.$fileName );
 					$category	= $this->checkCategoryId( $categoryId );
 					$nextRank	= $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1;
 					$newPages[]	= $this->modelPage->add( array(
@@ -188,7 +187,7 @@ class Controller_Info_Manual extends Controller
 						'createdAt'			=> time(),
 						'modifiedAt'		=> time(),
 					) );
-					@unlink( $this->path.$fileName );
+					@unlink( $this->docPath.$fileName );
 				}
 			}
 			$message	= vsprintf( 'Imported %d pages into category "%s".', array(
@@ -200,8 +199,8 @@ class Controller_Info_Manual extends Controller
 		}
 		if( $fileHash ){
 			$fileName	= base64_decode( $fileHash );
-			if( file_exists( $this->path.$fileName ) ){
-				$content	= FileReader::load( $this->path.$fileName );
+			if( file_exists( $this->docPath.$fileName ) ){
+				$content	= FileReader::load( $this->docPath.$fileName );
 				$categoryId	= $this->session->get( 'filter_info_manual_categoryId' );
 				$nextRank	= $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1;
 				$this->modelPage->add( array(
@@ -216,7 +215,7 @@ class Controller_Info_Manual extends Controller
 					'createdAt'			=> time(),
 					'modifiedAt'		=> time(),
 				) );
-				@unlink( $this->path.$fileName );
+				@unlink( $this->docPath.$fileName );
 				$this->restart( 'import', TRUE );
 			}
 		}
@@ -282,7 +281,7 @@ class Controller_Info_Manual extends Controller
 	{
 		if( !in_array( 'reload', $this->rights ) )
 			$this->restart( NULL, TRUE );
-		$orderFile	= $this->path.'order.list';
+		$orderFile	= $this->docPath.'order.list';
 		$new		= array_diff( $this->files, $this->order->getAll() );
 		$outdated	= array_diff( $this->order->getAll(), $this->files );
 		foreach( $new as $entry )
@@ -301,7 +300,7 @@ class Controller_Info_Manual extends Controller
 		if( !$this->isEditable || !in_array( 'remove', $this->rights ) )
 			$this->restartToPage( $page );
 
-//		$filePath	= $this->path.$fileName.$this->ext;
+//		$filePath	= $this->docPath.$fileName.$this->ext;
 		$this->modelPage->remove( $page->manualPageId );
 		if( $page->manualCategoryId )
 			$this->rankPagesOfCategory( $page->manualCategoryId );
@@ -311,16 +310,16 @@ class Controller_Info_Manual extends Controller
 	}
 
 /*	protected function saveOrder(){
-		$orderFile	= $this->path.'order.list';
+		$orderFile	= $this->docPath.'order.list';
 		FileWriter::save( $orderFile, implode( "\n", $this->order->getAll() ) );
 	}*/
 
 	public function scanFiles()
 	{
 		$this->files	= [];
-		$index	= new RecursiveRegexFileIndex( $this->path, "/\\".$this->ext."$/" );
+		$index	= new RecursiveRegexFileIndex( $this->docPath, "/\\".$this->ext."$/" );
 		foreach( $index as $entry ){
-			$pathName	= substr( $entry->getPathname(), strlen( $this->path ) );
+			$pathName	= substr( $entry->getPathname(), strlen( $this->docPath ) );
 			$this->files[]	= $pathName;
 			natcasesort( $this->files );
 		}
@@ -365,7 +364,7 @@ class Controller_Info_Manual extends Controller
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_manual.', TRUE );
-		$this->path			= $this->moduleConfig->get( 'path' );
+		$this->docPath		= $this->moduleConfig->get( 'path' );
 		$this->order		= new Dictionary();
 		$this->rights		= $this->env->getAcl()->index( 'info/manual' );
 		$this->isEditable	= $this->moduleConfig->get( 'editor' );
@@ -381,8 +380,8 @@ class Controller_Info_Manual extends Controller
 		}
 
 		$this->scanFiles();
-		$orderFile	= $this->path.'order.list';
-		if( file_exists( $this->path.'order.list' ) ){
+		$orderFile	= $this->docPath.'order.list';
+		if( file_exists( $this->docPath.'order.list' ) ){
 			$order			= trim( FileReader::load( $orderFile ) );
 			$this->order	= new Dictionary( explode( "\n", $order ) );
 		}
@@ -391,7 +390,7 @@ class Controller_Info_Manual extends Controller
 			$this->saveOrder();
 		}
 
-		$this->addData( 'path', $this->path );
+		$this->addData( 'path', $this->docPath );
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->addData( 'files', $this->files );
 		$this->addData( 'order', $this->order );
@@ -433,7 +432,7 @@ class Controller_Info_Manual extends Controller
 			return $matches[1].'('.$matches[2].')';
 		if( preg_match( "/^\.\/info\/manual\/view\//i", $matches[2] ) ){
 			$fileName	= str_replace( './info/manual/page/', '', $matches[2] );
-			if( file_exists( $this->path.urldecode( $fileName ).$this->ext ) )
+			if( file_exists( $this->docPath.urldecode( $fileName ).$this->ext ) )
 				return $matches[1].'('.'./info/manual/page/'.urlencode( $fileName ).')';
 			return '<strike>'.$matches[1].'('.'./info/manual/page/'.urlencode( $fileName ).').</strike>';
 		}
@@ -467,7 +466,7 @@ class Controller_Info_Manual extends Controller
 		$list	= [];
 		$this->scanFiles();
 		foreach( $this->files as $entry ){
-			$filePath	= $this->path.$entry;
+			$filePath	= $this->docPath.$entry;
 			$content	= FileReader::load( $filePath );
 			$relinked	= str_replace( "](".$oldName.")", "](".$newName.")", $content );
 			$relinked	= str_replace( "]: ".$oldName."\r\n", "]: ".$newName."\r\n", $relinked );

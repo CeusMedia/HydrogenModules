@@ -5,7 +5,6 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Authentication_Backend_Oauth extends Logic
 {
-	protected $config;
 	protected $modelUser;
 	protected $modelRole;
 	protected $moduleConfig;
