@@ -34,8 +34,8 @@ class Model_Cache
 			$dbc		= $this->env->getDatabase();
 			$resource	= array( $dbc, $dbc->getPrefix().$resource );
 		}
-		$this->model	= $factory->newStorage( $type, $resource, $context, $expiration );
-		$this->env->set( 'cache', $this );
+		$model	= $factory->newStorage( $type, $resource, $context, $expiration );
+		$this->env->set( 'cache', $model );
 	}
 
 	public function flush( ?string $context = NULL )
