@@ -4,7 +4,6 @@ use CeusMedia\Cache\Factory as CacheV2Factory;
 use CeusMedia\Cache\SimpleCacheFactory as CacheV3Factory;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
-use RuntimeException;
 
 class Hook_Resource_Cache extends Hook
 {
