@@ -21,23 +21,24 @@ class View_Auth_Local extends View
 	{
 	}
 
-	public function login()
+	public function login(): void
 	{
 		$this->env->getPage()->js->addScriptOnReady('ModuleResourceAuthLocal.Login.init();');
 	}
 
-	public function password()
+	public function password(): void
 	{
 		$this->env->getPage()->js->addScriptOnReady('ModuleResourceAuthLocal.Password.init();');
 	}
 
-	public function register()
+	public function register(): void
 	{
 		$this->env->getPage()->js->addScriptOnReady('ModuleResourceAuthLocal.Registration.init();');
 	}
 
-	public function renderRegisterFormExtensions()
+	public function renderRegisterFormExtensions(): ?bool
 	{
-		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, [] );
+		$payload	= [];
+		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, $payload );
 	}
 }
