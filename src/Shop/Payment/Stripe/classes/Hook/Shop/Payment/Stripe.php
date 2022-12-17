@@ -16,7 +16,7 @@ class Hook_Shop_Payment_Stripe extends Hook
 	 *	@param		array			$payload	Map of hook payload data
 	 *	@return		void
 	 */
-	public static function onRegisterShopPaymentBackends( Environment $env, $context, $module, $payload = [] ): void
+	public static function onRegisterShopPaymentBackends( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_stripe.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/stripe' );
@@ -68,7 +68,7 @@ class Hook_Shop_Payment_Stripe extends Hook
 	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onRenderServicePanels( Environment $env, $context, $module, $payload = [] )
+	public static function onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;

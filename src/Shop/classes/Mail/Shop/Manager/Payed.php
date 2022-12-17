@@ -1,13 +1,18 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
 class Mail_Shop_Manager_Payed extends Mail_Abstract
 {
-	protected $order;
-	protected $logicBridge;
-	protected $logicShop;
-	protected $helperAddress;
-	protected $helperCart;
+	protected ?object $order								= NULL;
+	protected Logic_ShopBridge $logicBridge;
+	protected Logic_Shop $logicShop;
+	protected View_Helper_Shop_AddressView $helperAddress;
+	protected View_Helper_Shop_CartPositions $helperCart;
+	protected array $words;
 
-	protected function generate(): self
+	protected function __onInit(): void
 	{
 		$this->logicBridge		= new Logic_ShopBridge( $this->env );
 		$this->logicShop		= new Logic_Shop( $this->env );
@@ -16,13 +21,24 @@ class Mail_Shop_Manager_Payed extends Mail_Abstract
 		$this->helperCart->setDisplay( View_Helper_Shop_CartPositions::DISPLAY_MAIL );
 		$this->words			= $this->getWords( 'shop' );
 
+		/* hack: empty view instance with casted environment, will break if cli runtime (job context)
+		/** @todo replace this hack by a better general solution */
+		/** @var WebEnvironment $env */
+		$env		= $this->env;
+		$this->view	= new View( $env );
+	}
+
+	protected function generate(): self
+	{
 		if( empty( $this->data['orderId'] ) )
 			throw new InvalidArgumentException( 'Missing order ID in mail data' );
 
 		$this->order		= $this->logicShop->getOrder( $this->data['orderId'], TRUE );
 		if( !$this->order )
 			throw new InvalidArgumentException( 'Invalid order ID' );
-		$this->customer		= $this->logicShop->getOrderCustomer( $this->order->orderId );
+
+//		$this->customer		= $this->logicShop->getOrderCustomer( $this->order->orderId );
+
 		foreach( $this->order->positions as $nr => $position ){
 			$bridge				= $this->logicBridge->getBridgeObject( (int) $position->bridgeId );
 			$position->article	= $bridge->get( $position->articleId, $position->quantity );

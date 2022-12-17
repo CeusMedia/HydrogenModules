@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Shop_Special extends Hook
 {
-	static public $articleId		= 0;
+	public static $articleId		= 0;
 
 	/**
 	 *	...
@@ -17,7 +17,7 @@ class Hook_Shop_Special extends Hook
 	 *	@param		array			$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onPageInit( Environment $env, $context, $module, $payload = [] )
+	public static function onPageInit( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$request	= $env->getRequest();
 		$model		= new Model_Shop_Bridge( $env );
@@ -44,7 +44,7 @@ class Hook_Shop_Special extends Hook
 	 *	@param		array			$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
+	public static function onPageApplyModules( Environment $env, object $context, object $module, array & $payload ): void
 	{
 //		remark( 'articleId: '.static::$articleId );die;
 		if( !static::isSpecial() )
@@ -66,7 +66,7 @@ class Hook_Shop_Special extends Hook
 		$context->addBodyClass( 'specialOffer' );
 	}
 
-	public static function isSpecial()
+	public static function isSpecial(): bool
 	{
 		return static::$articleId > 0;
 	}

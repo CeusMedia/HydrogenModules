@@ -1,13 +1,19 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
 class Mail_Shop_Customer_NotPayed extends Mail_Abstract
 {
-	protected $order;
-	protected $logicBridge;
-	protected $logicShop;
-	protected $helperAddress;
-	protected $helperCart;
+	protected ?object $order								= NULL;
+	protected Logic_ShopBridge $logicBridge;
+	protected Logic_Shop $logicShop;
+	protected View_Helper_Shop_AddressView $helperAddress;
+	protected View_Helper_Shop_CartPositions $helperCart;
+	protected View_Helper_Shop_OrderFacts $helperOrderFacts;
+	protected array $words;
 
-	protected function generate(): self
+	protected function __onInit(): void
 	{
 		$this->logicBridge		= new Logic_ShopBridge( $this->env );
 		$this->logicShop		= new Logic_Shop( $this->env );
@@ -18,6 +24,15 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract
 		$this->helperOrderFacts->setDisplay( View_Helper_Shop_OrderFacts::DISPLAY_MAIL );
 		$this->words			= $this->getWords( 'shop' );
 
+		/* hack: empty view instance with casted environment, will break if cli runtime (job context)
+		/** @todo replace this hack by a better general solution */
+		/** @var WebEnvironment $env */
+		$env		= $this->env;
+		$this->view	= new View( $env );
+	}
+
+	protected function generate(): self
+	{
 		if( empty( $this->data['orderId'] ) )
 			throw new InvalidArgumentException( 'Missing order ID in mail data' );
 
@@ -54,7 +69,7 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract
 
 		$helperShop	= new View_Helper_Shop( $this->env );
 
-		$body	= $this->view->loadContentFile( 'mail/shop/manager/not_payed.html', array(
+		$body	= $this->view->loadContentFile( 'mail/shop/manager/not_payed.html', [
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
 			'orderTime'			=> date( 'H:i:s', $this->order->modifiedAt ),
 			'orderStatus'		=> $this->words['statuses-order'][$this->order->status],
@@ -71,7 +86,7 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract
 			'addressDelivery'	=> $this->helperAddress->setAddress( $this->order->customer->addressDelivery )->render(),
 			'addressBilling'	=> $this->helperAddress->setAddress( $this->order->customer->addressBilling )->render(),
 			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
-		) );
+		] );
 		$this->addThemeStyle( 'module.shop.css' );
 		$this->addBodyClass( 'moduleShop' );
 		$this->page->setBaseHref( $this->env->url );
@@ -83,7 +98,7 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract
 		$this->helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_TEXT );
 		$this->helperAddress->setOutput( View_Helper_Shop_AddressView::OUTPUT_TEXT );
 		$this->helperOrderFacts->setOutput( View_Helper_Shop_OrderFacts::OUTPUT_TEXT );
-		$templateData	= array(
+		$templateData	= [
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
 			'orderTime'			=> date( 'H:i:s', $this->order->modifiedAt ),
 			'config'			=> $this->env->getConfig()->getAll( 'module.shop.' ),
@@ -95,7 +110,7 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract
 			'addressDelivery'	=> $this->helperAddress->setAddress( $this->order->customer->addressDelivery )->render(),
 			'addressBilling'	=> $this->helperAddress->setAddress( $this->order->customer->addressBilling )->render(),
 			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
-		);
+		];
 		return $this->view->loadContentFile( 'mail/shop/customer/not_payed.txt', $templateData );
 	}
 }

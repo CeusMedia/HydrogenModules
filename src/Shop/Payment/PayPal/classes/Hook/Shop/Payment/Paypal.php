@@ -16,7 +16,7 @@ class Hook_Shop_Payment_Paypal extends Hook
 	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onRegisterShopPaymentBackends( Environment $env, $context, $module, $payload = [] )
+	public static function onRegisterShopPaymentBackends( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_paypal.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/paypal' );
@@ -43,7 +43,7 @@ class Hook_Shop_Payment_Paypal extends Hook
 	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onRenderServicePanels( Environment $env, $context, $module, $payload = [] )
+	static public function onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;

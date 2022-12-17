@@ -1,13 +1,20 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
 class Mail_Shop_Customer_Ordered extends Mail_Abstract
 {
-	protected $order;
-	protected $logicBridge;
-	protected $logicShop;
-	protected $helperAddress;
-	protected $helperCart;
+	protected ?object $order								= NULL;
+	protected Logic_ShopBridge $logicBridge;
+	protected Logic_Shop $logicShop;
+	protected View_Helper_Shop_AddressView $helperAddress;
+	protected View_Helper_Shop_CartPositions $helperCart;
+	protected View_Helper_Shop $helperShop;
+	protected View_Helper_Shop_OrderFacts $helperOrderFacts;
+	protected array $words;
 
-	protected function generate(): self
+	protected function __onInit(): void
 	{
 		$this->logicBridge		= new Logic_ShopBridge( $this->env );
 		$this->logicShop		= new Logic_Shop( $this->env );
@@ -19,12 +26,26 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 		$this->helperOrderFacts->setDisplay( View_Helper_Shop_OrderFacts::DISPLAY_MAIL );
 		$this->words			= $this->getWords( 'shop' );
 
+		/* hack: empty view instance with casted environment, will break if cli runtime (job context)
+		/** @todo replace this hack by a better general solution */
+		/** @var WebEnvironment $env */
+		$env		= $this->env;
+		$this->view	= new View( $env );
+	}
+
+	/**
+	 *	@return		self
+	 *	@throws		RangeException
+	 *	@throws		InvalidArgumentException
+	 */
+	protected function generate(): self
+	{
 		if( empty( $this->data['orderId'] ) )
 			throw new InvalidArgumentException( 'Missing order ID in mail data' );
 
 		$this->order		= $this->logicShop->getOrder( $this->data['orderId'], TRUE );
 		if( !$this->order )
-			throw new InvalidArgumentException( 'Invalid order ID' );
+			throw new RangeException( 'Invalid order ID' );
 		foreach( $this->order->positions as $nr => $position ){
 			$bridge				= $this->logicBridge->getBridgeObject( (int) $position->bridgeId );
 			$position->article	= $bridge->get( $position->articleId, $position->quantity );
@@ -57,13 +78,14 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 
 		$panelPayment	= '';
 		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.html';
+
 		if( $this->view->hasContentFile( $filePayment ) )
-			$panelPayment	= $this->view->loadContentFile( $filePayment, array(
+			$panelPayment	= $this->view->loadContentFile( $filePayment, [
 				'module'		=> $this->env->getConfig()->getAll( 'module.', TRUE ),
 				'order'		=> $this->order,
-			) );
+			] );
 
-		$body	= $this->view->loadContentFile( 'mail/shop/customer/ordered.html', array(
+		$body	= $this->view->loadContentFile( 'mail/shop/customer/ordered.html', [
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
 			'orderTime'			=> date( 'H:i:s', $this->order->modifiedAt ),
 			'date'				=> ['year' => date( 'Y' ), 'month' => date( 'm' ), 'day' => date( 'd' )],
@@ -80,7 +102,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 			'addressBilling'	=> $this->helperAddress->setAddress( $this->order->customer->addressBilling )->render(),
 			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
 			'panelPayment'		=> $panelPayment,
-		) );
+		] );
 		$this->addThemeStyle( 'module.shop.css' );
 		$this->addBodyClass( 'moduleShop' );
 		$this->page->setBaseHref( $this->env->url );
@@ -101,12 +123,12 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 		$panelPayment	= '';
 		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.txt';
 		if( $this->view->hasContentFile( $filePayment ) )
-			$panelPayment	= $this->view->loadContentFile( $filePayment, array(
+			$panelPayment	= $this->view->loadContentFile( $filePayment, [
 				'module'	=> $this->env->getConfig()->getAll( 'module.', TRUE ),
 				'order'		=> $this->order,
-			) );
+			] );
 
-		$templateData	= array(
+		$templateData	= [
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
 			'orderTime'			=> date( 'H:i:s', $this->order->modifiedAt ),
 			'config'			=> $this->env->getConfig()->getAll( 'module.shop.' ),
@@ -122,7 +144,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 			'addressBilling'	=> $this->helperAddress->setAddress( $this->order->customer->addressBilling )->render(),
 			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
 			'panelPayment'		=> $panelPayment,
-		);
+		];
 		return $this->view->loadContentFile( 'mail/shop/customer/ordered.txt', $templateData );
 	}
 }

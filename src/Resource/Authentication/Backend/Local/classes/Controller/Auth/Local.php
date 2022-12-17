@@ -1,25 +1,28 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Randomizer;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Library\Local as LocalModuleLibraryResource;
 
 class Controller_Auth_Local extends Controller
 {
-	public static string $moduleId	= 'Resource_Authentication_Local';
+	public static string $moduleId	= 'Resource_Authentication_Backend_Local';
 
-	protected $config;
-	protected $request;
-	protected $session;
-	protected $cookie;
-	protected $messenger;
-	protected $modules;
-	protected $useCsrf;
-	protected $useOauth2;
-	protected $moduleConfigAuth;
-	protected $moduleConfigUsers;
-	protected $limiter;
-	protected $logic;
+	protected Dictionary $config;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected HttpCookie $cookie;
+	protected ?MessengerResource $messenger;
+	protected LocalModuleLibraryResource $modules;
+	protected bool $useCsrf;
+	protected bool $useOauth2;
+	protected Dictionary $moduleConfigAuth;
+	protected Dictionary $moduleConfigUsers;
+	protected ?Logic_Limiter $limiter			= NULL;
+	protected Logic_Authentication_Backend_Local $logic;
 
 	public function ajaxUsernameExists()
 	{

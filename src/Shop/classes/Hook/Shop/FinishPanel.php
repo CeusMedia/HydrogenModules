@@ -1,9 +1,10 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 use CeusMedia\HydrogenFramework\View;
 
-class Hook_Shop_FinishPanel
+class Hook_Shop_FinishPanel extends Hook
 {
 	/**
 	 *	...
@@ -12,10 +13,10 @@ class Hook_Shop_FinishPanel
 	 *	@param		Environment		$env			Environment instance
 	 *	@param		object			$context		Hook context object
 	 *	@param		object			$module			Module object
-	 *	@param		public			$arguments		Map of hook arguments
+	 *	@param		array			$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onRenderServicePanels( Environment $env, $context, $module, $payload = [] )
+	public static function onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
 			return;
