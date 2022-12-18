@@ -1,6 +1,16 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var array $articleCategories */
+/** @var object $article */
+/** @var array $categories */
 
 $iconUp		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-up'] );
 $iconDown	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-down'] );
@@ -79,8 +89,8 @@ foreach( $categories as $item ){
 		ksort( $subs[$item->parentId] );
 	}
 }
-foreach( $subs as $parentId => $items ){
-}
+//foreach( $subs as $parentId => $items ){
+//}
 
 $optCategory	= [];
 foreach( $categories as $item ){
@@ -126,7 +136,7 @@ $panelAdd	= '
 </div>
 <script>
 jQuery("#input_categoryId").on("change", function(){
-	var value = jQuery("#input_categoryId").val();
+	let value = jQuery("#input_categoryId").val();
 	jQuery.ajax({
 		url: "./manage/catalog/bookstore/category/ajaxGetNextRank/"+value,
 		method: "post",
@@ -143,4 +153,3 @@ return '
 '.$panelCategories.'
 '.$panelAdd.'
 <!--  /Manage: Catalog: Article: Categories  -->';
-?>

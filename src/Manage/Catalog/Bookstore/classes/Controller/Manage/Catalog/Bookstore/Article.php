@@ -1,30 +1,33 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Catalog_Bookstore_Article extends Controller
 {
-	protected $fontend;
-	protected $logic;
-	protected $messenger;
-	protected $request;
-	protected $session;
-	protected $sessionPrefix;
+	protected Logic_Frontend $frontend;
+	protected Logic_Catalog_Bookstore $logic;
+	protected MessengerResource $messenger;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected string $sessionPrefix;
 
 	/**
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		object		$env
-	 *	@param		object		$context
-	 *	@param		unknown		$module
-	 *	@param		unknown		$arguments
+	 *	@param		Environment		$env
+	 *	@param		object			$context
+	 *	@param		object			$module
+	 *	@param		array			$payload
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@todo		kriss: code doc
 	 */
-	public static function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] )
+	public static function ___onTinyMCE_getImageList( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$cache		= $env->getCache();
 		if( 1 || !( $list = $cache->get( 'catalog.tinymce.images.catalog.bookstore.articles' ) ) ){
@@ -33,36 +36,37 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );				//  focus module configuration
 			$pathCovers	= $frontend->getPath( 'contents' ).$config->get( 'path.covers' );			//  get path to cover images
 			$pathCovers	= substr( $pathCovers, strlen( $frontend->getPath() ) );					//  strip frontend base path
-			$list       = [];
+			$list		= [];
 			$conditions	= ['cover' => '> 0'];
 			$orders		= ['title' => 'ASC'];
 			foreach( $logic->getArticles( $conditions, $orders, [0, 200] ) as $item ){
 				$id		= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
-				$list[] = (object) array(
+				$list[] = (object) [
 					'title'	=> TextTrimmer::trimCentric( $item->title, 60 ),
 					'value'	=> 'file/bookstore/article/m/'.$item->cover,
-				);
+				];
 			}
 			$cache->set( 'catalog.tinymce.images.catalog.bookstore.articles', $list );
 		}
-		$context->list  = array_merge( $context->list, array( (object) array(		//  extend global collection by submenu with list of items
+		$context->list	= array_merge( $context->list, [(object) [				//  extend global collection by submenu with list of items
 			'title'	=> 'Veröffentlichungen:',									//  label of submenu @todo extract
 			'menu'	=> array_values( $list ),									//  items of submenu
-		) ) );
+		]] );
 	}
 
 	/**
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		object		$env
-	 *	@param		object		$context
-	 *	@param		unknown		$module
-	 *	@param		unknown		$arguments
+	 *	@param		Environment		$env
+	 *	@param		object			$context
+	 *	@param		object			$module
+	 *	@param		array			$payload
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@todo		kriss: code doc
 	 */
-	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
+	public static function ___onTinyMCE_getLinkList( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$cache		= $env->getCache();
 		$logic		= new Logic_Catalog_Bookstore( $env );
@@ -77,18 +81,18 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 /*				$category	= $logic->getCategoryOfArticle( $article->articleId );
 				if( $category->volume )
 					$item->title	.= ' - Band '.$category->volume;
-*/				$articles[$nr]	= (object) array(
+*/				$articles[$nr]	= (object) [
 					'title'	=> TextTrimmer::trimCentric( $item->title, 80 ),
 					'value'	=> $logic->getArticleUri( $item ),
-				);
+				];
 			}
 			$cache->set( 'catalog.tinymce.links.catalog.bookstore.articles', $articles );
 		}
 		$words	= $env->getLanguage()->getWords( 'manage/catalog/bookstore' );
-		$context->list	= array_merge( $context->list, array( (object) array(
+		$context->list	= array_merge( $context->list, [(object) [
 			'title'	=> $words['tinymce-menu-links']['articles'],
 			'menu'	=> array_values( $articles ),
-		) ) );
+		]] );
 
 		if( 1 ||  !( $documents = $cache->get( 'catalog.tinymce.links.catalog.bookstore.documents' ) ) ){
 			$pathDocs	= $frontend->getPath( 'contents' ).$config->get( 'path.documents' );
@@ -99,21 +103,25 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 				$id				= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
 				$article		= $logic->getArticle( $item->articleId, FALSE );
 				if( $article )
-					$documents[$nr]	= (object) array(
+					$documents[$nr]	= (object) [
 //					'title'	=> TextTrimmer::trimCentric( $article->title, 40 ).' - '.$item->title,
 					'title'	=> $article->title.' - '.$item->title,
 					'value'	=> 'file/bookstore/document/'.$item->url,
-				);
+				];
 			}
 			$cache->set( 'catalog.tinymce.links.catalog.bookstore.documents', $documents );
 		}
-		$context->list	= array_merge( $context->list, array( (object) array(
+		$context->list	= array_merge( $context->list, [(object) [
 			'title'	=> $words['tinymce-menu-links']['documents'],
 			'menu'	=> array_values( $documents ),
-		) ) );
+		]] );
 	}
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
@@ -134,7 +142,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		$this->addData( 'articles', $this->getFilteredArticles() );
 	}
 
-	public function addAuthor( $articleId )
+	public function addAuthor( string $articleId ): void
 	{
 		$authorId	= $this->request->get( 'authorId' );
 		$editor		= $this->request->get( 'editor' );
@@ -142,7 +150,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function addCategory( $articleId )
+	public function addCategory( string $articleId ): void
 	{
 		$categoryId		= $this->request->get( 'categoryId' );
 		$volume			= $this->request->get( 'volume' );
@@ -150,7 +158,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function addDocument( $articleId )
+	public function addDocument( string $articleId ): void
 	{
 		$file		= $this->request->get( 'document' );
 		$title		= $this->request->get( 'title' );
@@ -187,14 +195,14 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function addTag( $articleId, $tag = NULL )
+	public function addTag( string $articleId, ?string $tag = NULL ): void
 	{
-		$tag	= $tag ? $tag : $this->request->get( 'tag' );
+		$tag	= $tag ?: $this->request->get( 'tag' );
 		$this->logic->addArticleTag( $articleId, $tag );
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function ajaxGetTags()
+	public function ajaxGetTags(): void
 	{
 		$startsWith	= $this->request->get( 'query' );
 		$conditions	= ['tag' => $startsWith.'%'];
@@ -212,7 +220,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		exit;
 	}
 
-	public function ajaxGetIsns()
+	public function ajaxGetIsns(): void
 	{
 		$startsWith	= $this->request->get( 'query' );
 		$conditions	= ['isn' => $startsWith.'%'];
@@ -230,13 +238,13 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		exit;
 	}
 
-	public function ajaxSetTab( $tabKey )
+	public function ajaxSetTab( string $tabKey ): void
 	{
 		$this->session->set( 'manage.catalog.bookstore.article.tab', $tabKey );
 		exit;
 	}
 
-	public function edit( $articleId )
+	public function edit( string $articleId ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'edit' );
@@ -260,7 +268,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		$this->addData( 'filters', $this->session->getAll( $this->sessionPrefix ) );
 	}
 
-	public function filter( $reset = FALSE )
+	public function filter( $reset = FALSE ): void
 	{
 		$this->session->set( $this->sessionPrefix.'id', trim( $this->request->get( 'id' ) ) );
 		$this->session->set( $this->sessionPrefix.'term', trim( $this->request->get( 'term' ) ) );
@@ -286,7 +294,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$articles	= $this->getFilteredArticles();
 		if( count( $articles ) === 1 ){
@@ -300,51 +308,51 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 	/**
 	 *	Removes article with images and relations to categories and authors.
 	 *	@access		public
-	 *	@param		$articleId
+	 *	@param		string		$articleId
 	 */
-	public function remove( $articleId )
+	public function remove( string $articleId ): void
 	{
 		$this->logic->removeArticle( $articleId );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeAuthor( $articleId, $authorId )
+	public function removeAuthor( string $articleId, string $authorId ): void
 	{
 		$this->logic->removeAuthorFromArticle( $articleId, $authorId );
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function removeCategory( $articleId, $categoryId )
+	public function removeCategory( string $articleId, string $categoryId ): void
 	{
 		$this->logic->removeCategoryFromArticle( $articleId, $categoryId );
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function removeCover( $articleId )
+	public function removeCover( string $articleId ): void
 	{
 		$this->logic->removeArticleCover( $articleId );
 		$this->restart( 'edit/'.$articleId, TRUE );
 	}
 
-	public function removeDocument( $articleId, $articleDocumentId )
+	public function removeDocument( string $articleId, string $articleDocumentId ): void
 	{
 		$this->logic->removeArticleDocument( $articleDocumentId );
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function removeTag( $articleId, $articleTagId )
+	public function removeTag( string $articleId, string $articleTagId ): void
 	{
 		$this->logic->removeArticleTag( $articleTagId );
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function setAuthorRole( $articleId, $authorId, $role )
+	public function setAuthorRole( string $articleId, string $authorId, $role ): void
 	{
 		$this->logic->setArticleAuthorRole( $articleId, $authorId, $role );
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
 	}
 
-	public function setCover( $articleId )
+	public function setCover( string $articleId ): void
 	{
 		$file		= $this->request->get( 'image' );
 		$words		= (object) $this->getWords( 'upload' );
@@ -400,7 +408,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Article::init done' );
 	}
 
-	protected function getFilteredArticles()
+	protected function getFilteredArticles(): array
 	{
 		$filters	= $this->session->getAll( 'module.manage_catalog_bookstore_article.filter.' );
 		$orders		= [];
@@ -464,8 +472,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		}
 		if( $articleIds )
 			$conditions['articleId']	= $articleIds;
-		$offset		= isset( $filter['offset'] ) ? $filter['offset'] : 0;
-		$articles	= $this->logic->getArticles( $conditions, $orders, [$offset, 50] );
-		return $articles;
+		$offset		= $filter['offset'] ?? 0;
+		return $this->logic->getArticles( $conditions, $orders, [$offset, 50] );
 	}
 }

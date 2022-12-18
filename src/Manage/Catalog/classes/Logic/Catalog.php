@@ -41,7 +41,10 @@ class Logic_Catalog extends Logic
 	/**	@var	Dictionary							$moduleConfig */
 	protected Dictionary $moduleConfig;
 
-	protected $countArticlesInCategories;
+	protected array $countArticlesInCategories		= [];
+	protected string $pathArticleCovers;
+	protected string $pathArticleDocuments;
+	protected string $pathAuthorImages;
 
 	/**
 	 *	@todo		kriss: code doc

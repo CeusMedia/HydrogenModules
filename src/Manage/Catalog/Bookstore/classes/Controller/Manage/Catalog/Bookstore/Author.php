@@ -1,17 +1,19 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Catalog_Bookstore_Author extends Controller
 {
-	protected $frontend;
-	protected $logic;
-	protected $messenger;
-	protected $request;
-	protected $session;
+	protected Logic_Frontend $frontend;
+	protected Logic_Catalog_Bookstore $logic;
+	protected MessengerResource $messenger;
+	protected Dictionary $request;
+	protected Dictionary $session;
 
-	public static function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] )
+	public static function ___onTinyMCE_getImageList( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$cache		= $env->getCache();
 		if( !( $list = $cache->get( 'catalog.tinymce.images.catalog.bookstore.authors' ) ) ){
@@ -27,22 +29,22 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 					$id		= str_pad( $item->authorId, 5, 0, STR_PAD_LEFT );
 //					$label	= $item->lastname.( $item->firstname ? ', '.$item->firstname : "" );
 					$label	= ( $item->firstname ? $item->firstname.' ' : '' ).$item->lastname;
-					$list[] = (object) array(
+					$list[] = (object) [
 						'title'	=> $label,
 //						'value'	=> $pathImages.$id.'_'.$item->image,
 						'value'	=> 'file/bookstore/author/'.$item->image,
-					);
+					];
 				}
 			}
 			$cache->set( 'catalog.tinymce.images.catalog.bookstore.authors', $list );
 		}
-		$context->list  = array_merge( $context->list, array( (object) array(	//  extend global collection by submenu with list of items
+		$context->list	= array_merge( $context->list, [(object) [				//  extend global collection by submenu with list of items
 			'title'	=> 'Autoren:',												//  label of submenu @todo extract
-			'menu'	=> array_values( $list ),								//  items of submenu
-		) ) );
+			'menu'	=> array_values( $list ),									//  items of submenu
+		]] );
 	}
 
-	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
+	public static function ___onTinyMCE_getLinkList( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$cache		= $env->getCache();
 		if( !( $authors = $cache->get( 'catalog.tinymce.links.catalog.bookstore.authors' ) ) ){
@@ -57,13 +59,13 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 			$cache->set( 'catalog.tinymce.links.catalog.bookstore.authors', $authors );
 		}
 		$words	= $env->getLanguage()->getWords( 'manage/catalog/bookstore' );
-		$context->list  = array_merge( $context->list, array( (object) array(	//  extend global collection by submenu with list of items
+		$context->list  = array_merge( $context->list, [(object) [	//  extend global collection by submenu with list of items
 			'title'	=> $words['tinymce-menu-links']['authors'],					//  label of submenu
 			'menu'	=> array_values( $authors ),								//  items of submenu
-		) ) );
+		]] );
 	}
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'add' );
@@ -83,13 +85,13 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 		$this->addData( 'authors', $this->logic->getAuthors() );
 	}
 
-	public function ajaxSetTab( $tabKey )
+	public function ajaxSetTab( string $tabKey ): void
 	{
 		$this->session->set( 'manage.catalog.bookstore.author.tab', $tabKey );
 		exit;
 	}
 
-	public function edit( $authorId )
+	public function edit( string $authorId ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'edit' );
@@ -109,7 +111,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 		$this->addData( 'articles', $this->logic->getArticlesFromAuthor( $author ) );
 	}
 
-	public function index()
+	public function index(): void
 	{
 #		if( !( $authors	= $this->env->getCache()->get( 'authors' ) ) ){
 			$authors	= $this->logic->getAuthors();
@@ -118,7 +120,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 		$this->addData( 'authors', $authors );
 	}
 
-	public function remove( $authorId )
+	public function remove( string $authorId ): void
 	{
 		$words	= $this->getWords( 'remove' );
 		if( $this->logic->getArticlesFromAuthor( $authorId ) )
@@ -129,7 +131,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 		}
 	}
 
-	public function removeImage( $authorId )
+	public function removeImage( string $authorId ): void
 	{
 		$this->logic->removeAuthorImage( $authorId );
 		$this->restart( 'manage/catalog/bookstore/author/edit/'.$authorId );
@@ -152,7 +154,8 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Author::init done' );
 	}
 
-	protected function uploadImage( $authorId, $file ){
+	protected function uploadImage( string $authorId, array $file ): void
+	{
 		$words		= (object) $this->getWords( 'upload' );
 		if( !isset( $file['name'] ) || empty( $file['name'] ) )
 			return;

@@ -1,14 +1,16 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\Alg\Time\Converter as TimeConverter;
 use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  *	@todo			remove LUV context, replace by methods of module "Resource::Frontend"
  */
 class Logic_Catalog_Bookstore extends Logic
 {
-	/**	@var	\CeusMedia\Cache\AbstractAdapter			$cache */
-	protected $cache;
+	/**	@var	CacheInterface						$cache */
+	protected CacheInterface $cache;
 
 	/**	@var	Model_Catalog_Bookstore_Article				$modelArticle */
 	protected Model_Catalog_Bookstore_Article $modelArticle;
@@ -36,14 +38,13 @@ class Logic_Catalog_Bookstore extends Logic
 	/**
 	 *	Change stock quantity of article.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
+	 *	@param		string		$articleId		ID of article
 	 *	@param		integer		$change			Negative value on payed order, positive value on restock.
-	 *	@return		integer						Article quantity in stock after change
+	 *	@return		integer|FALSE				Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function changeQuantity( $articleId, $change, bool $strict = TRUE )
+	public function changeQuantity( string $articleId, int $change, bool $strict = TRUE )
 	{
-		$change		= (int) $change;
 		$article	= $this->modelArticle->get( $articleId );
 		if( !$article && $strict )
 			throw new RuntimeException( 'Article with ID '.$articleId.' is not existing' );
@@ -56,9 +57,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function checkArticleId( $articleId, bool $throwException = FALSE ): bool
+	public function checkArticleId( string $articleId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelArticle->has( (int) $articleId ) )
 			return TRUE;
@@ -68,9 +69,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function checkAuthorId( $authorId, bool $throwException = FALSE ): bool
+	public function checkAuthorId( string $authorId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelAuthor->has( (int) $authorId ) )
 			return TRUE;
@@ -80,9 +81,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function checkCategoryId( $categoryId, bool $throwException = FALSE ): bool
+	public function checkCategoryId( string $categoryId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelCategory->has( (int) $categoryId ) )
 			return TRUE;
@@ -92,7 +93,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
 	public function countArticles( array $conditions = [] ): int
 	{
@@ -100,9 +101,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function countArticlesInCategory( $categoryId, bool $recursive = FALSE ): int
+	public function countArticlesInCategory( string $categoryId, bool $recursive = FALSE ): int
 	{
 		$number		= count( $this->modelArticleCategory->getAllByIndex( 'categoryId', $categoryId ) );
 		if( $recursive ){
@@ -114,12 +115,12 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getArticle( $articleId )
+	public function getArticle( string $articleId ): object
 	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.article.'.$articleId ) ) )
-			return $data;
+			return (object) $data;
 		$this->checkArticleId( $articleId, TRUE );
 		$data	= $this->modelArticle->get( $articleId );
 		$this->cache->set( 'catalog.bookstore.article.'.$articleId, $data );
@@ -127,9 +128,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getArticleCoverUrl( $articleOrId, $size = 'm', $absolute = FALSE, $urlEncoded = FALSE )
+	public function getArticleCoverUrl( $articleOrId, string $size = 'm', bool $absolute = FALSE, bool $urlEncoded = FALSE ): ?string
 	{
 		if( is_bool( $size ) )																		//  @deprecated remove after migration
 			$size	= $size ? 's' : 'm';															//  @deprecated remove after migration
@@ -152,17 +153,17 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		use cache if possible
+	 *	@todo		code doc
 	 */
-	public function getArticleTag( $articleTagId )
+	public function getArticleTag( string $articleTagId ): ?object
 	{
 		return $this->modelArticleTag->get( $articleTagId );
 	}
 
 	/**
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		use cache if possible
+	 *	@todo		code doc
 	 */
 	public function getArticles( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
@@ -176,7 +177,7 @@ class Logic_Catalog_Bookstore extends Logic
 		return $list;
 	}
 
-	public function getArticlesFromTags( $tags, array $excludeArticleIds = [], array $orders = [], array $limits = [] ): array
+	public function getArticlesFromTags( array $tags, array $excludeArticleIds = [], array $orders = [], array $limits = [] ): array
 	{
 		$articleIds		= [];
 		$articleTagsMap	= [];
@@ -198,20 +199,20 @@ class Logic_Catalog_Bookstore extends Logic
 			$filteredArticleIds	= array_diff( array_keys( $articleIds ), $excludeArticleIds );
 			$articles	= $this->getArticles( ['articleId' => $filteredArticleIds], $orders, $limits );
 			foreach( $filteredArticleIds as $articleId ){
-				$list[$articleId]	= (object) array(
+				$list[$articleId]	= (object) [
 					'tags'		=> $articleTagsMap[$articleId],
 					'article'	=> $articles[$articleId],
 					'matches'	=> $articleIds[$articleId]
-				);
+				];
 			}
 		}
 		return $list;
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getArticlesFromAuthor( $author, array $orders = [], array $limits = [] ): array
+	public function getArticlesFromAuthor( object $author, array $orders = [], array $limits = [] ): array
 	{
 		$articles	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $author->authorId );
 		$articleIds	= [];
@@ -219,14 +220,14 @@ class Logic_Catalog_Bookstore extends Logic
 			$articleIds[]	= $article->articleId;
 		if( $articleIds ){
 			$conditions	= ['articleId' => $articleIds];
-			$articles	= $this->getArticles( $conditions, $orders, $limits );
-			return $articles;
+			return $this->getArticles( $conditions, $orders, $limits );
 		}
 		return [];
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@throws		ReflectionException
+	 *	@todo		code doc
 	 */
 	public function getArticlesFromAuthorIds( array $authorIds, bool $returnIds = FALSE ): array
 	{
@@ -241,9 +242,10 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@throws		ReflectionException
+	 *	@todo		code doc
 	 */
-	public function getArticlesFromAuthors( $authors, bool $returnIds = FALSE ): array
+	public function getArticlesFromAuthors( array $authors, bool $returnIds = FALSE ): array
 	{
 		$authorIds	= [];
 		foreach( $authors as $author )
@@ -252,7 +254,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
 	public function getArticleUri( $articleOrId, bool $absolute = FALSE ): string
 	{
@@ -261,25 +263,25 @@ class Logic_Catalog_Bookstore extends Logic
 			$article	= $this->getArticle( $articleOrId );
 		if( !is_object( $article ) )
 			throw new InvalidArgumentException( 'Given article data is invalid' );
-		$uri		= vsprintf( $this->articleUriTemplate, array(
+		$uri		= vsprintf( $this->articleUriTemplate, [
 			0,
 			$article->articleId,
 			$this->getUriPart( $article->title ),
-		) );
+		] );
 		return $absolute ? $this->env->url.$uri : './'.$uri;
 	}
 
 	/**
-	 *	@todo		kriss: use cache
+	 *	@todo		use cache
 	 */
-	public function getAuthor( $authorId )
+	public function getAuthor( string $authorId ): ?object
 	{
 		$this->checkAuthorId( $authorId, TRUE );
 		return $this->modelAuthor->get( $authorId );
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
 	public function getAuthors( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
@@ -292,10 +294,10 @@ class Logic_Catalog_Bookstore extends Logic
 	/**
 	 *	Returns list of article authors.
 	 *	@access		public
-	 *	@param		integer		$articleId			Article ID
+	 *	@param		string		$articleId			Article ID
 	 *	@return		array
 	 */
-	public function getAuthorsOfArticle( $articleId ): array
+	public function getAuthorsOfArticle( string $articleId ): array
 	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.article.author.'.$articleId ) ) )
 			return $data;
@@ -312,13 +314,13 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
 	public function getAuthorUri( $authorOrId, bool $absolute = FALSE ): string
 	{
 		$author	= $authorOrId;
 		if( is_int( $authorOrId ) )
-			$author	= $this->getAuthor( $authorOrId, TRUE );
+			$author	= $this->getAuthor( $authorOrId );
 		else if( !is_object( $author ) )
 			throw new InvalidArgumentException( 'Given author data is invalid' );
 		$name	= $author->lastname;
@@ -329,7 +331,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
 	public function getCategories( array $conditions = [], array $orders = [] ): array
 	{
@@ -345,9 +347,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getCategoriesOfArticle( $articleId ): array
+	public function getCategoriesOfArticle( string $articleId ): array
 	{
 		$this->checkArticleId( $articleId, TRUE );
 		$list			= [];
@@ -366,12 +368,12 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getCategory( $categoryId )
+	public function getCategory( string $categoryId ): object
 	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.category.'.$categoryId ) ) )
-			return $data;
+			return (object) $data;
 		$this->checkCategoryId( $categoryId, TRUE );
 		$data	= $this->modelCategory->get( $categoryId );
 		$this->cache->set( 'catalog.bookstore.category.'.$categoryId, $data );
@@ -379,11 +381,11 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: clean up
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		clean up
+	 *	@todo		use cache if possible
+	 *	@todo		code doc
 	 */
-	public function getCategoryArticles( $category, array $orders = [], array $limits = [] )
+	public function getCategoryArticles( object $category, array $orders = [], array $limits = [] ): array
 	{
 #		$cacheKey	= md5( json_encode( [$category->categoryId, $orders, $limits] ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.category.articles.'.$cacheKey ) ) )
@@ -403,7 +405,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
 	public function getCategoryOfArticle( $articleId )
 	{
@@ -415,9 +417,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getCategoryUri( $categoryOrId, string $language = 'de', bool $absolute = FALSE )
+	public function getCategoryUri( $categoryOrId, string $language = 'de', bool $absolute = FALSE ): string
 	{
 		$category	= $categoryOrId;
 		if( is_int( $categoryOrId ) )
@@ -432,18 +434,18 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getDocumentsOfArticle( $articleId ): array
+	public function getDocumentsOfArticle( string $articleId ): array
 	{
 		return $this->modelArticleDocument->getAllByIndex( 'articleId', $articleId );
 	}
 
 	/**
-	 *	@todo		kriss: code doc
-	 *	@todo		kriss: use cache by storing tags in article cache file
+	 *	@todo		code doc
+	 *	@todo		use cache by storing tags in article cache file
 	 */
-	public function getTagsOfArticle( $articleId, bool $sort = FALSE ): array
+	public function getTagsOfArticle( string $articleId, bool $sort = FALSE ): array
 	{
 		$tags	= $this->modelArticleTag->getAllByIndex( 'articleId', $articleId );
 		$list	= [];
@@ -455,7 +457,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
 	public function getTagUri( $tagOrId, string $language = 'de', bool $absolute = FALSE ): string
 	{
@@ -472,14 +474,13 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
 	public function getUriPart( string $label, string $delimiter = '_' ): string
 	{
 		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
-		$label	= preg_replace( "/ +/", $delimiter, $label );
-		return $label;
+		return preg_replace( "/ +/", $delimiter, $label );
 	}
 
 /*  -------------------------------------------------  */
@@ -487,16 +488,17 @@ class Logic_Catalog_Bookstore extends Logic
 	/**
 	 *	Indicates whether an Article is to be releases in future.
 	 *	@access		public
-	 *	@param		int			$articleId			ID of Article
+	 *	@param		string		$articleId			ID of Article
 	 *	@return		bool
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@throws		ReflectionException
+	 *	@todo		check if this method is used or deprecated
+	 *	@todo		use cache if possible
+	 *	@todo		code doc
 	 */
-	public function isFuture( $articleId ): bool
+	public function isFuture( string $articleId ): bool
 	{
-		$tc		= new Alg_Time_Converter;
-		$model	= new Model_Article( $articleId );
+		$tc		= new TimeConverter();
+		$model	= new Model_Article( $this->env, $articleId );
 		$data	= $model->getData( true );
 		if( strpos( $data['publication'], "." ) )
 			$time	= $tc->convertToTimestamp( $data['publication'], 'date' );
@@ -505,91 +507,11 @@ class Logic_Catalog_Bookstore extends Logic
 		return $time > time();
 	}
 
-	/*  --  DEPRECATED METHOD  --  */
+	/*  --  PROTECTED  --  */
 
 	/**
-	 *	@deprecated	not used anymore, will be removed
-	 *	@todo		kriss: remove method
-	 */
-	public function getFullCategoryName( $categoryId, string $language = 'de' ): string
-	{
-		throw new RuntimeException( 'Catalog logic method "getFullCategoryName" is deprecated.' );
-		$data	= $this->modelCategory->get( $categoryId );
-		$name	= $data->{"label_".$language};
-		if( $data->parentId ){
-			$parent	= $this->modelCategory->get( $data->parentId );
-			$name	= $parent->{"label_".$language}." -> ".$name;
-		}
-		return $name;
-	}
-
-	/**
-	 *	Indicates whether an Author is Editor of an Article.
-	 *	@access		public
-	 *	@param		int			$articleId			ID of Article
-	 *	@param		int			$authorId			ID of Author
-	 *	@return		bool|NULL
-	 *	@deprecated	not used anymore, will be removed
-	 *	@todo		kriss: remove method
-	 */
-	public function isArticleEditor( $articleId, $authorId ): ?bool
-	{
-		throw new RuntimeException( 'Catalog logic method "isArticleEditor" is deprecated.' );
-		$model	= new Model_ArticleAuthor( $this->env );
-		$model->focusForeign( "articleId", $articleId );
-		$model->focusForeign( "authorId", $authorId );
-		$data	= $model->getData( true );
-		if( $data )
-			return $data['editor'];
-		return null;
-	}
-
-	/**
-	 *	Indicates whether an Author is related to an Article.
-	 *	@access		public
-	 *	@param		int			$articleId			ID of Article
-	 *	@param		int			$authorId			ID of Author
-	 *	@return		bool
-	 *	@deprecated	not used anymore, will be removed
-	 *	@todo		kriss: remove method
-	 */
-	public function isAuthorOfArticle( $articleId, $authorId ): bool
-	{
-		throw new RuntimeException( 'Catalog logic method "isAuthorOfArticle" is deprecated.' );
-		$model	= new Model_ArticleAuthor( $this->env );
-		$model->focusForeign( "articleId", $articleId );
-		$model->focusForeign( "authorId", $authorId );
-		$data	= $model->getData();
-		return (bool) count( $data );
-	}
-
-	/**
-	 *	Indicates whether an Author is related to an Article.
-	 *	@access		public
-	 *	@param		int			$articleId			ID of Article
-	 *	@param		int			$authorId			ID of Author
-	 *	@return		bool
-	 *	@deprecated	not used anymore, will be removed
-	 *	@todo		kriss: remove method
-	 */
-	public function isCategoryOfArticle( $articleId, $categoryId ): bool
-	{
-		throw new RuntimeException( 'Catalog logic method "isCategoryOfArticle" is deprecated.' );
-		$model	= new Model_ArticleCategory();
-		$model->focusForeign( "articleId", $articleId );
-		$model->focusForeign( "categoryId", $categoryId );
-		$data	= $model->getData();
-		return (bool) count( $data );
-	}
-
-	public function setArticleUri( $articleUriTemplate ): self
-	{
-		$this->articleUriTemplate	= $articleUriTemplate;
-		return $this;
-	}
-
-	/**
-	 *	@todo		kriss: code doc
+	 *	@throws		ReflectionException
+	 *	@todo		code doc
 	 */
 	protected function __onInit(): void
 	{

@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Cache\SimpleCacheInterface;
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -12,13 +12,13 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
 class Logic_Catalog_Bookstore extends Logic
 {
 	/**	@var	SimpleCacheInterface						$cache */
-	protected $cache;
+	protected SimpleCacheInterface $cache;
 
 	/**	@var	Logic_Frontend								$frontend */
 	protected Logic_Frontend $frontend;
 
 	/**	@var	Model_Catalog_Bookstore_Article				$modelArticle */
-	protected Model_Catalog_Bookstore_Article$modelArticle;
+	protected Model_Catalog_Bookstore_Article $modelArticle;
 
 	/**	@var	Model_Catalog_Bookstore_Article_Author		$modelArticleAuthor */
 	protected Model_Catalog_Bookstore_Article_Author $modelArticleAuthor;
@@ -41,12 +41,15 @@ class Logic_Catalog_Bookstore extends Logic
 	/**	@var	Dictionary							$moduleConfig */
 	protected Dictionary $moduleConfig;
 
-	protected $countArticlesInCategories;
+	protected array $countArticlesInCategories		= [];
+	protected string $pathArticleCovers;
+	protected string $pathArticleDocuments;
+	protected string $pathAuthorImages;
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function addArticle( $data )
+	public function addArticle( array $data ): string
 	{
 		$data['createdAt']	= time();
 		$articleId	= $this->modelArticle->add( $data );
@@ -55,9 +58,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function addArticleDocument( $articleId, $sourceFile, $title, $mimeType )
+	public function addArticleDocument( string $articleId, string $sourceFile, string $title, string $mimeType ): string
 	{
 		if( !file_exists( $sourceFile ) )
 			throw new RuntimeException( 'File is not existing' );
@@ -85,22 +88,22 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function addArticleTag( $articleId, $tag )
+	public function addArticleTag( string $articleId, string $tag ): string
 	{
-		$data	= array(
+		$data	= [
 			'articleId'	=> $articleId,
 			'tag'		=> $tag,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );												//
 		return $this->modelArticleTag->add( $data );
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function addAuthor( $data )
+	public function addAuthor( array $data ): string
 	{
 //		$data['createdAt']	= time();
 		$this->clearCacheForAuthor( 0 );
@@ -108,9 +111,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function addAuthorImage( $authorId, string $sourceFile, string $mimeType )
+	public function addAuthorImage( string $authorId, string $sourceFile, string $mimeType ): void
 	{
 		if( !file_exists( $sourceFile ) )
 			throw new RuntimeException( 'File is not existing' );
@@ -140,25 +143,25 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function addAuthorToArticle( $articleId, $authorId, $role )
+	public function addAuthorToArticle( string $articleId, string $authorId, $role ): string
 	{
-		$data		= array(
+		$data		= [
 			'articleId'	=> $articleId,
 			'authorId'	=> $authorId,
 			'editor'	=> $role,
-		);
+		];
 		$relationId	= $this->modelArticleAuthor->add( $data );
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForAuthor( $authorId );													//
 		return $relationId;
 	}
 
-	/**
-	 *	@todo		kriss: code doc
+	/** 
+	 *	@todo		code doc
 	 */
-	public function addCategory( $data )
+	public function addCategory( array $data ): string
 	{
 //		$data['registeredAt']	= time();
 		$this->clearCacheForCategory( 0 );
@@ -166,28 +169,28 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function addCategoryToArticle( $articleId, $categoryId, $volume = NULL )
+	public function addCategoryToArticle( string $articleId, string $categoryId, ?string $volume = NULL ): string
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
 		$rank		= count( $this->getCategoryArticles( $categoryId ) ) + 1;
-		$indices	= array(
+		$indices	= [
 			'articleId'		=> $articleId,
 			'categoryId'	=> $categoryId,
 			'rank'			=> $rank,
 			'volume'		=> $volume,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->add( $indices );
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function checkArticleId( $articleId, bool $throwException = FALSE ): bool
+	public function checkArticleId( string $articleId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelArticle->has( (int) $articleId ) )
 			return TRUE;
@@ -197,9 +200,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function checkAuthorId( $authorId, bool $throwException = FALSE ): bool
+	public function checkAuthorId( string $authorId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelAuthor->has( (int) $authorId ) )
 			return TRUE;
@@ -209,9 +212,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function checkCategoryId( $categoryId, bool $throwException = FALSE ): bool
+	public function checkCategoryId( string $categoryId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelCategory->has( (int) $categoryId ) )
 			return TRUE;
@@ -223,12 +226,12 @@ class Logic_Catalog_Bookstore extends Logic
 	/**
 	 *	Removes cache files related to article after changes.
 	 *	Uses clearCacheForCategory to invalidate category cache.
-	 *	Attention: MUST NO call clearCacheForAuthor.
+	 *	Attention: MUST NOT call clearCacheForAuthor.
 	 *	@access		public
 	 *	@param		integer		$articleId			ID of article to clear cache files for
 	 *	@return		void
 	 */
-	protected function clearCacheForArticle( $articleId )
+	protected function clearCacheForArticle( string $articleId ): void
 	{
 		$article	= $this->modelArticle->get( $articleId );										//  get article
 		$this->cache->remove( 'catalog.bookstore.article.'.$articleId );										//  remove article cache
@@ -247,10 +250,10 @@ class Logic_Catalog_Bookstore extends Logic
 	 *	Removes cache files related to article after changes.
 	 *	Uses clearCacheForArticle to invalidate article cache.
 	 *	@access		public
-	 *	@param		integer		$authorId			ID of author
+	 *	@param		string		$authorId			ID of author
 	 *	@return		void
 	 */
-	protected function clearCacheForAuthor( $authorId )
+	protected function clearCacheForAuthor( string $authorId ): void
 	{
 		$relations	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $authorId );			//  get all articles of author
 		foreach( $relations as $relation ){															//  iterate article relations
@@ -264,12 +267,12 @@ class Logic_Catalog_Bookstore extends Logic
 
 	/**
 	 *	Removes cache files related to categories after changes.
-	 *	Attention: MUST NO call clearCacheForArticle.
+	 *	Attention: MUST NOT call clearCacheForArticle.
 	 *	@access		public
-	 *	@param		integer		$categoryId			ID of category
+	 *	@param		string		$categoryId			ID of category
 	 *	@return		void
 	 */
-	protected function clearCacheForCategory( $categoryId )
+	protected function clearCacheForCategory( string $categoryId ): void
 	{
 		while( $categoryId ){																		//  loop while category ID exists
 			$category	= $this->modelCategory->get( $categoryId );									//  get category of category ID
@@ -289,9 +292,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function countArticles( $conditions = [] ): int
+	public function countArticles( array $conditions = [] ): int
 	{
 		return $this->modelArticle->count( $conditions );
 	}
@@ -300,11 +303,11 @@ class Logic_Catalog_Bookstore extends Logic
 	 *	Returns number of articles within a category or its sub categories, if enabled.
 	 *	Uses cache 'catalog.count.categories.articles' in recursive mode.
 	 *	@access		public
-	 *	@param 		integer		$categoryId		ID of category to count articles for
+	 *	@param 		string		$categoryId		ID of category to count articles for
 	 *	@param 		boolean		$recursive		Flag: count in sub categories, default: FALSE
 	 *	@return		integer						Number of found articles in category
 	 */
-	public function countArticlesInCategory( $categoryId, bool $recursive = FALSE ): int
+	public function countArticlesInCategory( string $categoryId, bool $recursive = FALSE ): int
 	{
 		if( $recursive && isset( $this->countArticlesInCategories[$categoryId] ) )
 			return $this->countArticlesInCategories[$categoryId];
@@ -318,9 +321,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function editArticle( $articleId, $data )
+	public function editArticle( string $articleId, array $data ): void
 	{
 		$this->checkArticleId( $articleId, TRUE );
 //		$data['modifiedAt']	= time();
@@ -329,9 +332,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function editAuthor( $authorId, $data )
+	public function editAuthor( string $authorId, array $data ): void
 	{
 		$this->checkAuthorId( $authorId, TRUE );
 //		$data['modifiedAt']	= time();																//
@@ -340,9 +343,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function editCategory( $categoryId, $data )
+	public function editCategory( string $categoryId, array $data ): void
 	{
 		$this->checkCategoryId( $categoryId, TRUE );
 		$old	= $this->modelCategory->get( $categoryId );
@@ -355,12 +358,12 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getArticle( $articleId, bool $strict = TRUE )
+	public function getArticle( string $articleId, bool $strict = TRUE ): object
 	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.article.'.$articleId ) ) )
-			return $data;
+			return (object) $data;
 		$this->checkArticleId( $articleId, $strict );
 		$data	= $this->modelArticle->get( $articleId );
 		$this->cache->set( 'catalog.bookstore.article.'.$articleId, $data );
@@ -368,10 +371,10 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		use cache if possible
+	 *	@todo		code doc
 	 */
-	public function getArticles( $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getArticles( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 #		$cacheKey	= md5( json_encode( [$conditions, $orders, $limits] ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.articles.'.$cacheKey ) ) )
@@ -384,9 +387,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getArticlesFromAuthor( $author, array $orders = [], array $limits = [] ): array
+	public function getArticlesFromAuthor( object $author, array $orders = [], array $limits = [] ): array
 	{
 		$articles	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $author->authorId );
 		$articleIds	= [];
@@ -400,9 +403,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getArticlesFromAuthorIds( $authorIds, bool $returnIds = FALSE ): array
+	public function getArticlesFromAuthorIds( array $authorIds, bool $returnIds = FALSE ): array
 	{
 		$model		= new Model_Catalog_Bookstore_Article_Author( $this->env );
 		$articles	= $model->getAll( ['authorId' => array_values( $authorIds )] );
@@ -415,9 +418,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getArticlesFromAuthors( $authors, bool $returnIds = FALSE ): array
+	public function getArticlesFromAuthors( array $authors, bool $returnIds = FALSE ): array
 	{
 		$authorIds	= [];
 		foreach( $authors as $author )
@@ -426,7 +429,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
 	public function getArticleUri( $articleOrId ): string
 	{
@@ -440,18 +443,18 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: use cache
+	 *	@todo		use cache
 	 */
-	public function getAuthor( $authorId )
+	public function getAuthor( string $authorId ): object
 	{
 		$this->checkAuthorId( $authorId, TRUE );
 		return $this->modelAuthor->get( $authorId );
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getAuthors( $conditions = [], array $orders = [] ): array
+	public function getAuthors( array $conditions = [], array $orders = [] ): array
 	{
 		$list	= [];
 		foreach( $this->modelAuthor->getAll( $conditions, $orders ) as $author )
@@ -462,10 +465,10 @@ class Logic_Catalog_Bookstore extends Logic
 	/**
 	 *	Returns list of article authors.
 	 *	@access		public
-	 *	@param		integer		$articleId			Article ID
+	 *	@param		string		$articleId			Article ID
 	 *	@return		array
 	 */
-	public function getAuthorsOfArticle( $articleId ): array
+	public function getAuthorsOfArticle( string $articleId ): array
 	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.article.author.'.$articleId ) ) )
 			return $data;
@@ -482,13 +485,13 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getAuthorUri( $authorOrId, bool $absolute = FALSE )
+	public function getAuthorUri( $authorOrId, bool $absolute = FALSE ): string
 	{
 		$author = $authorOrId;
 		if( is_int( $authorOrId ) )
-			$author	= $this->getAuthor( $authorOrId, TRUE );
+			$author	= $this->getAuthor( $authorOrId );
 		else if( !is_object( $author ) )
 			throw new InvalidArgumentException( 'Given author data is invalid' );
 		$name	= $author->lastname;
@@ -499,9 +502,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: clean up
+	 *	@todo		clean up
 	 */
-	public function getCategories( $conditions = [], array $orders = [] ): array
+	public function getCategories( array $conditions = [], array $orders = [] ): array
 	{
 #		$cacheKey	= md5( json_encode( [$conditions, $orders] ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.categories.'.$cacheKey ) ) )
@@ -515,9 +518,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getCategoriesOfArticle( $articleId ): array
+	public function getCategoriesOfArticle( string $articleId ): array
 	{
 		$this->checkArticleId( $articleId, TRUE );
 		$list			= [];
@@ -532,13 +535,13 @@ class Logic_Catalog_Bookstore extends Logic
 				$list[$category->categoryId]		= $category;
 			}
 			else{
-				$list[$relation->categoryId]		= (object) array(
+				$list[$relation->categoryId]		= (object) [
 					'categoryId'	=> $relation->categoryId,
 					'parentId'		=> 0,
 					'label_de'		=> '- verwaist -',
 					'volume'		=> $relation->volume,
 					'rank'			=> 0,
-				);
+				];
 			}
 
 		}
@@ -546,12 +549,12 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getCategory( $categoryId )
+	public function getCategory( string $categoryId ): object
 	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.category.'.$categoryId ) ) )
-			return $data;
+			return (object) $data;
 		$this->checkCategoryId( $categoryId, TRUE );
 		$data	= $this->modelCategory->get( $categoryId );
 		$this->cache->set( 'catalog.bookstore.category.'.$categoryId, $data );
@@ -559,9 +562,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: clean up
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		clean up
+	 *	@todo		use cache if possible
+	 *	@todo		code doc
 	 */
 	public function getCategoryArticles( $category, array $orders = [], array $limits = [] ): array
 	{
@@ -587,9 +590,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getCategoryOfArticle( $article )
+	public function getCategoryOfArticle( object $article ): object
 	{
 		$relation	= $this->modelArticleCategory->getByIndex( 'articleId', $article->articleId );
 		$category			= $this->modelCategory->get( $relation->categoryId );
@@ -599,29 +602,29 @@ class Logic_Catalog_Bookstore extends Logic
 		return $category;
 	}
 
-	public function getDocuments( $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getDocuments( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelArticleDocument->getAll( $conditions, $orders, $limits );
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getDocumentsOfArticle( $articleId ): array
+	public function getDocumentsOfArticle( string $articleId ): array
 	{
 		return $this->modelArticleDocument->getAllByIndex( 'articleId', $articleId );
 	}
 
-	public function getTags( $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getTags( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelArticleTag->getAll( $conditions, $orders, $limits );
 	}
 
 	/**
-	 *	@todo		kriss: code doc
-	 *	@todo		kriss: use cache by storing tags in article cache file
+	 *	@todo		code doc
+	 *	@todo		use cache by storing tags in article cache file
 	 */
-	public function getTagsOfArticle( $articleId, bool $sort = FALSE ): array
+	public function getTagsOfArticle( string $articleId, bool $sort = FALSE ): array
 	{
 		$tags	= $this->modelArticleTag->getAllByIndex( 'articleId', $articleId );
 		$list	= [];
@@ -633,9 +636,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function getUriPart( $label, string $delimiter = "_" ): string
+	public function getUriPart( string $label, string $delimiter = "_" ): string
 	{
 		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
@@ -646,9 +649,9 @@ class Logic_Catalog_Bookstore extends Logic
 	/**
 	 *	Removes article with cover, documents, tags and relations to authors and categories.
 	 *	Caches will be removed.
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function removeArticle( $articleId )
+	public function removeArticle( string $articleId ): void
 	{
 		$this->removeArticleCover( $articleId );
 		foreach( $this->getCategoriesOfArticle( $articleId ) as $relation )
@@ -664,11 +667,11 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		check if this method is used or deprecated
+	 *	@todo		use cache if possible
+	 *	@todo		code doc
 	 */
-	public function removeArticleCover( $articleId )
+	public function removeArticleCover( string $articleId ): void
 	{
 		$article		= $this->getArticle( $articleId );
 		$logicBucket	= new Logic_FileBucket( $this->env );
@@ -685,10 +688,10 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		use cache if possible
+	 *	@todo		code doc
 	 */
-	public function removeArticleDocument( $documentId )
+	public function removeArticleDocument( string $documentId ): bool
 	{
 		$document		= $this->modelArticleDocument->get( $documentId );
 		$logicBucket	= new Logic_FileBucket( $this->env );
@@ -702,40 +705,42 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		check if this method is used or deprecated
+	 *	@todo		use cache if possible
+	 *	@todo		code doc
 	 */
-	public function removeArticleFromCategory( $articleId, $categoryId )
+	public function removeArticleFromCategory( string $articleId, string $categoryId ): int
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
-		$indices	= array(
+		$indices	= [
 			'articleId'		=> $articleId,
 			'categoryId'	=> $categoryId,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->removeByIndices( $indices );
 	}
 
 	/**
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		use cache if possible
+	 *	@todo		code doc
 	 */
-	public function removeArticleTag( $articleTagId )
+	public function removeArticleTag( string $articleTagId ): ?bool
 	{
 		$relation	= $this->modelArticleTag->get( $articleTagId );
 		if( $relation ){
 			$this->clearCacheForArticle( $relation->articleId );
 			return $this->modelArticleTag->remove( $articleTagId );
 		}
+		return FALSE;
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@throws		ReflectionException
+	 *	@todo		code doc
 	 */
-	public function removeAuthor( $authorId )
+	public function removeAuthor( string $authorId ): void
 	{
 		$this->checkAuthorId( $authorId );
 		$articles	= $this->getArticlesFromAuthorIds( [$authorId] );
@@ -747,16 +752,16 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function removeAuthorFromArticle( $articleId, $authorId )
+	public function removeAuthorFromArticle( string $articleId, string $authorId ): int
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
-		$indices	= array(
+		$indices	= [
 			'articleId'	=> $articleId,
 			'authorId'	=> $authorId,
-		);
+		];
 		$result	= $this->modelArticleAuthor->removeByIndices( $indices );
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForAuthor( $authorId );													//
@@ -764,11 +769,11 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		check if this method is used or deprecated
+	 *	@todo		use cache if possible
+	 *	@todo		code doc
 	 */
-	public function removeAuthorImage( $authorId )
+	public function removeAuthorImage( string $authorId ): void
 	{
 		$author			= $this->getAuthor( $authorId );
 		$logicBucket	= new Logic_FileBucket( $this->env );
@@ -781,9 +786,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function removeCategory( $categoryId )
+	public function removeCategory( string $categoryId ): bool
 	{
 		$this->checkCategoryId( $categoryId );
 		if( $this->countArticlesInCategory( $categoryId, TRUE ) )
@@ -793,9 +798,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function removeCategoryFromArticle( $articleId, $categoryId )
+	public function removeCategoryFromArticle( string $articleId, string $categoryId ): int
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
@@ -809,11 +814,11 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		check if this method is used or deprecated
+	 *	@todo		use cache if possible
+	 *	@todo		code doc
 	 */
-	public function setArticleAuthorRole( $articleId, $authorId, $role )
+	public function setArticleAuthorRole( string $articleId, string $authorId, $role ): void
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
@@ -827,9 +832,9 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		code doc
 	 */
-	public function setArticleCover( $articleId, $sourceFile, $mimeType )
+	public function setArticleCover( string $articleId, string $sourceFile, string $mimeType ): void
 	{
 		if( !file_exists( $sourceFile ) )
 			throw new RuntimeException( 'File is not existing' );
@@ -877,7 +882,8 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@throws		ReflectionException
+	 *	@todo		code doc
 	 */
 	protected function __onInit(): void
 	{

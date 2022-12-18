@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Cache\Encoder\Serial as SerialEncoder;
 use CeusMedia\Cache\Factory as CacheV2Factory;
 use CeusMedia\Cache\SimpleCacheFactory as CacheV3Factory;
 use CeusMedia\HydrogenFramework\Environment;
@@ -35,6 +36,7 @@ class Hook_Resource_Cache extends Hook
 			$resource	= array( $dbc, $dbc->getPrefix().$resource );
 		}
 		$model	= $factory->newStorage( $type, $resource, $context, $expiration );
+		$model->setEncoder( SerialEncoder::class );
 		$this->env->set( 'cache', $model );
 		//$this->env->set( 'cache', new Model_Cache( $this->env ) );
 	}

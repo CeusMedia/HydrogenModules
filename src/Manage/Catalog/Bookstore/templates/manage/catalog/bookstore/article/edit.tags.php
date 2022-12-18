@@ -1,6 +1,15 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var array $articleTags */
+/** @var object $article */
 
 $listTags	= "";
 $panelTags	= '<div class="alert alert-error">Noch kein Schlagwort vergeben.</div>';
@@ -81,4 +90,3 @@ return '
 	'.$panelAdd.'
 </form>
 <!--  Manage: Catalog: Article: Tags  -->';
-?>

@@ -1,5 +1,17 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+
+/** @var array $articleTags */
+/** @var array $articleCategories */
+/** @var array $articleAuthors */
+/** @var array $articleDocuments */
 
 $w			= (object) $words['edit'];
 
@@ -8,18 +20,20 @@ $w			= (object) $words['edit'];
 $tabsMain	= $this->renderMainTabs();
 
 $tabs		= [];
-$panes		= array(
+$panes		= [
 	'details'		=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.details.php', ['w' => $w] ),
 	'authors'		=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.authors.php', ['w' => $w] ),
 	'categories'	=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.categories.php', ['w' => $w] ),
 	'cover'			=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.cover.php', ['w' => $w] ),
 	'documents'		=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.documents.php', ['w' => $w] ),
 	'tags'			=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.tags.php', ['w' => $w] ),
-);
+];
 
-$current	= $this->env->getSession()->get( 'manage.catalog.bookstore.article.tab' );
-if( !$current )
-	$current	= @array_shift( array_keys( $words['tabs'] ) );
+$current	= $env->getSession()->get( 'manage.catalog.bookstore.article.tab' );
+if( !$current ){
+	$keys		= array_keys( $words['tabs'] );
+	$current	= @array_shift( $keys );
+}
 foreach( $words['tabs'] as $key => $label ){
 	$attributes	= array(
 		'href'			=> '#tab-'.$key,
@@ -66,6 +80,4 @@ return '
 			'.$panes.'
 		</div>
 	</div>
-</div>
-';
-?>
+</div>';

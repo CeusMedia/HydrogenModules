@@ -1,17 +1,19 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Catalog_Bookstore_Tag extends Controller
 {
-	protected $fontend;
-	protected $logic;
-	protected $messenger;
-	protected $request;
-	protected $session;
-	protected $sessionPrefix;
+	protected Logic_Frontend $frontend;
+	protected Logic_Catalog_Bookstore $logic;
+	protected MessengerResource $messenger;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected string $sessionPrefix;
 
-	public function filter( $reset = 0 )
+	public function filter( $reset = 0 ): void
 	{
 		if( $reset ){
 			$this->session->remove( 'filter_manage_catalog_bookstore_tag_search' );
@@ -22,7 +24,7 @@ class Controller_Manage_Catalog_Bookstore_Tag extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $limit = 10, $page = 0 )
+	public function index( $limit = 10, $page = 0 ): void
 	{
 		$modelTag		= new Model_Catalog_Bookstore_Article_Tag( $this->env );
 		$modelArticle	= new Model_Catalog_Bookstore_Article( $this->env );

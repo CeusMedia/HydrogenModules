@@ -1,9 +1,20 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var array $articleAuthors */
+/** @var object $article */
+/** @var array $authors */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $authorRelationsByAuthorId	= [];
 foreach( $articleAuthors as $item )
@@ -18,7 +29,7 @@ if( $articleAuthors ){
 		$optRole		= $words['authorRoles'];
 		$optRole		= HtmlElements::Options( $optRole, (int) $item->editor );
 		$urlRemove		= './manage/catalog/bookstore/article/removeAuthor/'.$article->articleId.'/'.(int) $item->authorId;
-		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'"><i class="icon-remove icon-white"></i></a>';
+		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'">'.$iconRemove.'</a>';
 		$label			= $item->lastname.( $item->firstname ? ', '.$item->firstname : "" );
 		$label			= '<a href="./manage/catalog/bookstore/author/edit/'.$item->authorId.'">'.$label.'</a>';
 		$listAuthors[]	= '<tr>
@@ -100,4 +111,4 @@ return '
 '.$panelAuthors.'
 '.$panelAdd.'
 <!--  /Manage: Catalog: Article: Authors  -->';
-?>
+

@@ -1,6 +1,18 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Alg\UnitParser;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var array $articleDocuments */
+/** @var object $article */
+/** @var Dictionary $moduleConfig */
 
 $panelDocuments	= '<div class="alert alert-error">Noch keine Dokumente gespeichert.</div>';
 
@@ -44,7 +56,7 @@ if( $articleDocuments ){
 <hr/>';
 }
 
-$documentMaxSize	= Alg_UnitParser::parse( $moduleConfig->get( 'article.document.size' ), "M" );
+$documentMaxSize	= UnitParser::parse( $moduleConfig->get( 'article.document.size' ), "M" );
 $documentMaxSize	= Logic_Upload::getMaxUploadSize( ['config' => $documentMaxSize] );
 $documentMaxSize	= Alg_UnitFormater::formatBytes( $documentMaxSize );
 
@@ -96,4 +108,3 @@ return '
 '.$panelDocuments.'
 '.$panelAdd.'
 <!--  /Manage: Catalog: Article: Documents  -->';
-?>

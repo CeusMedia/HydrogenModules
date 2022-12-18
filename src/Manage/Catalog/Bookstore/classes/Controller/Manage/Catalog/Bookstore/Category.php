@@ -1,11 +1,18 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Catalog_Bookstore_Category extends Controller
 {
-	public function ajaxGetNextRank( $categoryId )
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected Logic_Catalog_Bookstore $logic;
+
+	public function ajaxGetNextRank( string $categoryId ): void
 	{
 		$nextRank			= 0;
 		$categoryArticles	= $this->logic->getCategoryArticles( $categoryId, ['rank' => 'DESC'] );
@@ -16,7 +23,14 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 		exit;
 	}
 
-	public function rankArticle( $categoryId, $articleId, $direction )
+	/**
+	 *	@param		string		$categoryId
+	 *	@param		string		$articleId
+	 *	@param		string		$direction
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function rankArticle( string $categoryId, string $articleId, string $direction ): void
 	{
 		$model		= new Model_Catalog_Bookstore_Article_Category( $this->env );
 		$category	= $this->logic->getCategory( $categoryId );
@@ -45,7 +59,7 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 		$this->restart( './manage/catalog/bookstore/category/edit/'.$categoryId );
 	}
 
-	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
+	public static function ___onTinyMCE_getLinkList( Environment $env, object $context, object $module, array & $payload )
 	{
 		$cache		= $env->getCache();
 		if( !( $categories = $cache->get( 'catalog.tinymce.links.catalog.bookstore.categories' ) ) ){
@@ -71,13 +85,13 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 			$cache->set( 'catalog.tinymce.links.catalog.bookstore.categories', $categories );
 		}
 		$words	= $env->getLanguage()->getWords( 'manage/catalog/bookstore' );
-        $context->list  = array_merge( $context->list, array( (object) array(		//  extend global collection by submenu with list of items
-			'title'	=> $words['tinymce-menu-links']['categories'],											//  label of submenu @todo extract
+		$context->list  = array_merge( $context->list, [(object) [					//  extend global collection by submenu with list of items
+			'title'	=> $words['tinymce-menu-links']['categories'],					//  label of submenu @todo extract
 			'menu'	=> array_values( $categories ),									//  items of submenu
-		) ) );
+		]] );
 	}
 
-	public function add( $parentId = NULL )
+	public function add( ?string $parentId = NULL ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
@@ -98,13 +112,13 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 		$this->addData( 'categories', $this->logic->getCategories( [], ['rank' => 'ASC'] ) );
 	}
 
-	public function ajaxSetTab( $tabKey )
+	public function ajaxSetTab( string $tabKey ): void
 	{
 		$this->session->set( 'manage.catalog.bookstore.category.tab', $tabKey );
 		exit;
 	}
 
-	public function edit( $categoryId )
+	public function edit( string $categoryId ): void
 	{
 		$words		= (object) $this->getWords( 'edit' );
 		$category	= $this->logic->getCategory( $categoryId );

@@ -1,5 +1,13 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object $article */
 
 $optStatus	= HtmlElements::Options( $words['states'], $article->status );
 $optType	= HtmlElements::Options( $words['types'], $article->series );
@@ -33,7 +41,7 @@ return '
 				</div>
 				<div class="span3">
 					<label for="input_weight">'.$w->labelWeight.'</label>
-					<input class="span12" type="text" name="weight" id="input_weight" value="'.number_format( $article->weight, 0 ).'"/>
+					<input class="span12" type="text" name="weight" id="input_weight" value="'.number_format( $article->weight ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
@@ -78,4 +86,3 @@ return '
 	</div>
 </div>
 <!--  /Manage: Catalog: Article: Details  -->';
-?>
