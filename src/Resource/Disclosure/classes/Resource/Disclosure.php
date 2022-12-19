@@ -30,7 +30,7 @@ class Resource_Disclosure
 		'classPrefix'		=> 'Controller_',
 		'readMethods'		=> TRUE,
 		'readParameters'	=> TRUE,
-		'fileExtension'		=> 'php.?',
+		'fileExtension'		=> 'php[0-9]*',
 		'reflectClass'		=> FALSE,
 		'reflectMethod'		=> FALSE,
 		'reflectParameter'	=> FALSE,
@@ -82,7 +82,8 @@ class Resource_Disclosure
 		$path		= realpath( $path );
 		$index		= new RecursiveRegexFileIndex( $path, '/^[^_].+\.'.$options['fileExtension'].'$/' );
 		foreach( $index as $entry ){
-			$fileName	= preg_replace( '@^'.$path.'/@', '', $entry->getPathname() );
+			$regex		= '@^'.preg_quote( $path, '@' ).'/@';
+			$fileName	= preg_replace( $regex, '', $entry->getPathname() );
 			$fileBase	= preg_replace( '@\.'.$options['fileExtension'].'$@', '', $fileName );
 			$controller	= str_replace( '/', '_', $fileBase );
 			$className	= $options['classPrefix'].$controller;
