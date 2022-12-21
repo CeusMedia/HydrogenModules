@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Content: Locales</title>
+	<description><![CDATA[Editor for HTML, mail and locale files.]]></description>
+	<category>Management</category>
+	<version>0.6.3</version>
+	<log version="0.3.2">Fixed bug in edit action.</log>
+	<log version="0.3.3">Disable onRenderContent hook in editor.</log>
+	<log version="0.3.4">Improve file list.</log>
+	<log version="0.3.5">Support english language.</log>
+	<log version="0.3.6">Use module Resource:Frontend to get path.</log>
+	<log version="0.4">Use module Resource:Upload for image upload.</log>
+	<log version="0.4.1">Rewrite handling of selected language and file.</log>
+	<log version="0.4.2">Finished localization.</log>
+	<log version="0.4.3">Disable editor form elements for readonly files.</log>
+	<log version="0.4.4">Autodetect default language (from folders).</log>
+	<log version="0.4.5">Apply content panel style.</log>
+	<log version="0.4.6">Add filter to hide empty files.</log>
+	<log version="0.4.7">Hotkey to save content. Mark content change and save.</log>
+	<log version="0.5">Update relations: -JS:cmSelectBox +JS:CodeMirror +JS:TinyMCE.</log>
+	<log version="0.5.1">Add editor selector.</log>
+	<log version="0.5.2">Add default editor for file extensions.</log>
+	<log version="0.5.3">Extract template scripts to JavaScript file.</log>
+	<log version="0.5.4">Add folder selector.</log>
+	<log version="0.5.5">Cleanup.</log>
+	<log version="0.5.8">End Of Life of module in protected module library.</log>
+	<log version="0.6">Resurrection as module in public module library.</log>
+	<log version="0.6.1">Extract file list to view helper.</log>
+	<log version="0.6.2">Support Ace editor with auto-save.</log>
+	<log version="0.6.3">Rename from Manage:Content to Manage:Content:Locales.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Manage/Content/Locale.php</class>
+		<class>View/Helper/Manage/Content/Locale/List.php</class>
+		<class>View/Manage/Content/Locale.php</class>
+		<template>manage/content/locale/index.php</template>
+		<template>manage/content/locale/edit.php</template>
+		<template>manage/content/locale/filter.php</template>
+		<locale>de/manage/content/locale.ini</locale>
+		<locale>de/html/manage/content/locale/index.top.html</locale>
+		<locale>de/html/manage/content/locale/index.bottom.html</locale>
+		<locale>en/manage/content/locale.ini</locale>
+		<locale>en/html/manage/content/locale/index.top.html</locale>
+		<locale>en/html/manage/content/locale/index.bottom.html</locale>
+		<style source="common">module.manage.content.locale.css</style>
+		<script>module.manage.content.locale.js</script>
+	</files>
+	<link xml:lang="de" access="acl" rank="65" path="manage/content/locale">Sprachinhalte</link>
+	<link xml:lang="en" access="acl" rank="65" path="manage/content/locale">Localization</link>
+	<link access="acl" path="manage/content/locale/ajaxSaveContent"/>
+	<relations>
+		<supports type="module">JS_Ace</supports>
+		<supports type="module">JS_CodeMirror</supports>
+		<supports type="module">JS_TinyMCE</supports>
+	</relations>
+</module>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<module>
+	<title>Server: Scheduler</title>
+	<description><![CDATA[Console based job scheduler.]]></description>
+	<category>Resource</category>
+	<version>0.5</version>
+	<log version="0.1">Initial prototype in project Chat:Client.</log>
+	<log version="0.2">Separated to this Hydrogen module.</log>
+	<log version="0.3">Use module Resource:Jobs to call jobs to ensure logging and locking.</log>
+	<log version="0.4">Renamed and updated maintain script.</log>
+	<log version="0.5">Import from protected SVN repository.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Scheduler.php</class>
+		<class>Job/Test/Scheduler.php</class>
+		<file>schedule.php</file>
+		<file>config/jobs/test.scheduler.xml</file>
+	</files>
+	<config type="string" name="mode" info="mode of jobs to run"  values="dev,test,live">dev</config>
+	<config type="integer" name="console.sleep" info="seconds to sleep if in console loop mode">10</config>
+	<config type="string" name="log" info="where to log maintainer results @todo implement">logs/scheduler.log</config>
+	<config type="string" name="log.error" info="where to log maintainer errors @todo implement">logs/scheduler.error.log</config>
+	<relations>
+		<needs type="module">Resource_Jobs</needs>
+	</relations>
+</module>

@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Mail Group</title>
+	<deprecation version="0.4.3">Moved to GitLab::CeusMedia:MailGroup.</deprecation>
+	<description/>
+	<category>Work</category>
+	<version>0.4.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add database models for groups and members.</log>
+	<log version="0.2.2">Add database models for servers and roles.</log>
+	<log version="0.3">Extracted logic, models and job to new module Resource:Mail:Group.</log>
+	<log version="0.3.1">Support Extended server model (IMAP and SMTP).</log>
+	<log version="0.3.2">Add prototype of message display.</log>
+	<log version="0.3.3">Extend group management.</log>
+	<log version="0.3.4">Send mails on member status changes.</log>
+	<log version="0.3.5">Add members per invite or already activated.</log>
+	<log version="0.3.6">Support automatic mail attachments.</log>
+	<log version="0.3.7">Set receiver name in sent mails.</log>
+	<log version="0.3.8">Improve mail view for manager.</log>
+	<log version="0.3.9">Split group edit panels.</log>
+	<log version="0.4">Extract hook to own class.</log>
+	<log version="0.4.1">Apply Bootstrap to HTML view of message.</log>
+	<log version="0.4.2">Improve code style.</log>
+	<log version="0.4.3">EOL: Moved to GitLab::CeusMedia:MailGroup.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Mail/Group.php</class>
+		<class>Controller/Work/Mail/Group/Message.php</class>
+		<class>Controller/Work/Mail/Group/Role.php</class>
+		<class>Controller/Work/Mail/Group/Server.php</class>
+		<class>Hook/Work/Mail/Group.php</class>
+		<class>View/Work/Mail/Group.php</class>
+		<class>View/Work/Mail/Group/Message.php</class>
+		<class>View/Work/Mail/Group/Role.php</class>
+		<class>View/Work/Mail/Group/Server.php</class>
+		<locale>de/work/mail/group.ini</locale>
+		<locale>de/work/mail/group/message.ini</locale>
+		<template>work/mail/group/add.php</template>
+		<template>work/mail/group/edit.php</template>
+		<template>work/mail/group/edit.details.php</template>
+		<template>work/mail/group/edit.members.php</template>
+		<template>work/mail/group/index.php</template>
+		<template>work/mail/group/message/index.php</template>
+		<template>work/mail/group/message/view.php</template>
+		<template>work/mail/group/role/add.php</template>
+		<template>work/mail/group/role/edit.php</template>
+		<template>work/mail/group/role/index.php</template>
+		<template>work/mail/group/server/add.php</template>
+		<template>work/mail/group/server/edit.php</template>
+		<template>work/mail/group/server/index.php</template>
+<!--		<style source="theme" load="auto" level="end">module.work.mail.group.css</style>-->
+<!--		<script load="auto" level="end">module.work.mail.group.js</script>-->
+	</files>
+	<relations>
+		<needs type="module">Resource_Mail_Group</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+	</relations>
+	<hook type="resource" resource="WorkMailGroup" event="registerTabs">Hook_Work_Mail_Group::onRegisterTab</hook>
+</module>

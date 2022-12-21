@@ -1,0 +1,384 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Forms</title>
+	<description><![CDATA[Basic handling for forms.]]></description>
+	<category>Resource</category>
+	<version>0.3.9</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Support delivery rules.</log>
+	<log version="0.3.1">Support manager and customer rules.</log>
+	<log version="0.3.2">Add mail for error handling.</log>
+	<log version="0.3.3">Add role type to form mail model.</log>
+	<log version="0.3.4">Add form transfer targets and rules.</log>
+	<log version="0.3.5">Add form transfer mapper.</log>
+	<log version="0.3.6">Add form fill transfer reports.</log>
+	<log version="0.3.7">Support form import rules.</log>
+	<log version="0.3.8">Support attachment rules.</log>
+	<log version="0.3.9">Add first report job about failed transfers.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Job/FormImport.php</class>
+		<class>Job/FormReport.php</class>
+<!--		<class>Logic/Form.php</class>-->
+		<class>Logic/Form/Transfer/DataMapper.php</class>
+		<class>Mail/Form/Abstract.php</class>
+		<class>Mail/Form/Customer/Confirm.php</class>
+		<class>Mail/Form/Customer/Result.php</class>
+		<class>Mail/Form/Manager/Error.php</class>
+		<class>Mail/Form/Manager/Filled.php</class>
+		<class>Model/Form.php</class>
+		<class>Model/Form/Block.php</class>
+		<class>Model/Form/Fill.php</class>
+		<class>Model/Form/Mail.php</class>
+		<class>Model/Form/Rule.php</class>
+		<class>Model/Form/Fill/Transfer.php</class>
+		<class>Model/Form/Import/Rule.php</class>
+<!--		<class>Model/Form/Import/Source.php</class>-->
+		<class>Model/Form/Transfer/Rule.php</class>
+		<class>Model/Form/Transfer/Target.php</class>
+		<class>View/Helper/Form/Fill/Data.php</class>
+		<class>View/Helper/Form/Fill/Person.php</class>
+	</files>
+	<config protected="yes" type="string" name="mail.sender.address"></config>
+	<config protected="yes" type="string" name="mail.sender.name"></config>
+	<config protected="yes" type="integer" name="mail.template"></config>
+	<relations>
+		<needs type="module">Resource_Database</needs>
+		<needs type="module">Resource_Import</needs>
+	</relations>
+	<job id="Form.Import.import">FormImport::import</job>
+	<job id="Form.Report.Transfer.failed">FormReport::reportFailedTranfers</job>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>form_blocks`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_blocks` (
+  `blockId` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `identifier` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`blockId`),
+  UNIQUE KEY `title` (`title`),
+  UNIQUE KEY `identifier` (`identifier`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_fills`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_fills` (
+  `fillId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `email` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `data` text COLLATE utf8_unicode_ci NOT NULL,
+  `referer` text COLLATE utf8_unicode_ci,
+  `agent` mediumtext COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`fillId`),
+  KEY `formId` (`formId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>forms`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>forms` (
+  `formId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mailId` int(10) UNSIGNED DEFAULT '0',
+  `type` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `receivers` text COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`formId`),
+  KEY `status` (`status`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_mails`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_mails` (
+  `mailId` int(11) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `format` tinyint(1) UNSIGNED NOT NULL COMMENT '1-Text, 2-HTML',
+  `subject` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`mailId`),
+  UNIQUE KEY `identifier` (`identifier`),
+  KEY `format` (`format`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_rules`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_rules` (
+  `formRuleId` int(11) NOT NULL AUTO_INCREMENT,
+  `formId` int(11) NOT NULL,
+  `rules` text COLLATE utf8_unicode_ci NOT NULL,
+  `mailAddresses` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `mailId` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`formRuleId`),
+  KEY `formId` (`formId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	]]></sql>
+	<sql type="mysql" on="install" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>forms`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>forms` (
+  `formId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `managerMailId` int(10) UNSIGNED DEFAULT '0',
+  `customerMailId` int(10) UNSIGNED DEFAULT '0',
+  `type` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `receivers` text COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`formId`),
+  KEY `status` (`status`),
+  KEY `type` (`type`),
+  KEY `managerMailId` (`managerMailId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_blocks`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_blocks` (
+  `blockId` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `identifier` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`blockId`),
+  UNIQUE KEY `title` (`title`),
+  UNIQUE KEY `identifier` (`identifier`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_fills`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_fills` (
+  `fillId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `email` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `data` text COLLATE utf8_unicode_ci NOT NULL,
+  `referer` text COLLATE utf8_unicode_ci,
+  `agent` mediumtext COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`fillId`),
+  KEY `formId` (`formId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_fill_transfers`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_fill_transfers` (
+  `formFillTransferId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `formTransferRuleId` int(10) UNSIGNED NOT NULL,
+  `formTransferTargetId` int(10) UNSIGNED NOT NULL,
+  `fillId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) UNSIGNED NOT NULL,
+  `data` text COLLATE utf8_unicode_ci NOT NULL,
+  `message` text COLLATE utf8_unicode_ci NULL,
+  `trace` TEXT COLLATE utf8_unicode_ci NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`formFillTransferId`),
+  KEY `formId` (`formId`),
+  KEY `formTransferRuleId` (`formTransferRuleId`),
+  KEY `formTransferTargetId` (`formTransferTargetId`),
+  KEY `fillId` (`fillId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_import_rules`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_import_rules` (
+  `formImportRuleId` int(10) UNSIGNED NOT NULL,
+  `importConnectionId` int(10) UNSIGNED NOT NULL,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:new, 1:test, 2:active, 3:paused, 4:disabled',
+  `title` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `searchCriteria` text COLLATE utf8_unicode_ci NOT NULL,
+  `options` text COLLATE utf8_unicode_ci,
+  `rules` text COLLATE utf8_unicode_ci NOT NULL,
+  `renameTo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `moveTo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`formImportRuleId`),
+  KEY `formId` (`formId`),
+  KEY `status` (`status`),
+  KEY `importConnectionId` (`importConnectionId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_mails`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_mails` (
+  `mailId` int(11) NOT NULL AUTO_INCREMENT,
+  `roleType` tinyint(1) UNSIGNED DEFAULT '0',
+  `identifier` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `format` tinyint(1) UNSIGNED NOT NULL COMMENT '1-Text, 2-HTML',
+  `subject` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`mailId`),
+  UNIQUE KEY `identifier` (`identifier`),
+  KEY `format` (`format`),
+  KEY `roleType` (`roleType`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_rules`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_rules` (
+  `formRuleId` int(11) NOT NULL AUTO_INCREMENT,
+  `formId` int(11) NOT NULL,
+  `type` tinyint(1) UNSIGNED NOT NULL,
+  `rules` text COLLATE utf8_unicode_ci NOT NULL,
+  `mailAddresses` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `mailId` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`formRuleId`),
+  KEY `formId` (`formId`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_transfer_targets`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_transfer_targets` (
+  `formTransferTargetId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:disabled, 1:enabled',
+  `title` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
+  `className` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `baseUrl` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `apiKey` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`formTransferTargetId`),
+  KEY `status` (`status`),
+  KEY `className` (`className`),
+  KEY `createdAt` (`createdAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_transfer_rules`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_transfer_rules` (
+  `formTransferRuleId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `formTransferTargetId` int(10) UNSIGNED NOT NULL,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `title` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `rules` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`formTransferRuleId`),
+  KEY `formTransferTargetId` (`formTransferTargetId`),
+  KEY `formId` (`formId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `<%?prefix%>forms` (`formId`, `managerMailId`, `customerMailId`, `type`, `status`, `title`, `receivers`, `content`, `timestamp`) VALUES
+(1, 1, 2, 1, 1, 'Test 1', 'dev@ceusmedia.de', '<div class=\"content-panel\">\r\n	<h3><span class=\"muted\">Formular:</span> Test 1</h3>\r\n	<div class=\"content-panel-inner\">\r\n		[block_person]\r\n	</div>\r\n</div>\r\n', '1585524422');
+
+INSERT INTO `<%?prefix%>form_blocks` (`blockId`, `title`, `identifier`, `content`) VALUES
+(1, 'Zeile: Person: Name', 'row_person_name', '<div class=\"cmforms-row\">\r\n	<div class=\"cmforms-col-1-3\">\r\n		<label for=\"input_gender\" class=\"required\">Geschlecht</label>\r\n		<select name=\"gender\" id=\"input_gender\" required=\"required\">\r\n			<option value=\"\">bitte wählen ...</option>\r\n			<option value=\"0\">weiblich</option>\r\n			<option value=\"1\">männlich</option>\r\n			<option value=\"2\">inter</option>\r\n		</select>\r\n	</div>\r\n	<div class=\"cmforms-col-1-3\">\r\n		<label for=\"input_firstname\" class=\"required\">Vorname</label>\r\n		<input type=\"text\" name=\"firstname\" id=\"input_firstname\" required=\"required\"/>\r\n	</div>\r\n	<div class=\"cmforms-col-1-3\">\r\n		<label for=\"input_surname\" class=\"required\">Nachname</label>\r\n		<input type=\"text\" name=\"surname\" id=\"input_surname\" required=\"required\"/>\r\n	</div>\r\n</div>'),
+(2, 'Zeile: Submit-Button', 'row_button', '<div class=\"cmforms-row buttonbar\">\r\n	<button type=\"submit\" name=\"send\" class=\"btn btn-primary\">abschicken</button>\r\n</div>\r\n'),
+(3, 'Zeile: Person: Kontakt', 'row_person_contact', '<div class=\"cmforms-row\">\r\n	<div class=\"cmforms-col-2-3\">\r\n		<label for=\"input_email\" class=\"required\">E-Mail</label>\r\n		<input type=\"email\" name=\"email\" id=\"input_email\" required=\"required\"/>\r\n	</div>\r\n	<div class=\"cmforms-col-1-3\">\r\n		<label for=\"input_phone\" data-class=\"required\">Telefon</label>\r\n		<input type=\"text\" name=\"phone\" id=\"input_phone\" data-required=\"required\"/>\r\n	</div>\r\n</div>\r\n'),
+(4, 'Block: Person', 'person', '<h3>Kontaktdaten</h3>\r\n<div class=\"cmforms-row\">\r\n	[block_row_person_name]\r\n	[block_row_person_contact]\r\n	[block_row_person_address]\r\n</div>\r\n'),
+(5, 'Zeile: Person: Adresse', 'row_person_address', '<div class=\"cmforms-row\">\r\n	<div class=\"cmforms-col-2-3\">\r\n		<label for=\"input_street\" class=\"required\">Straße und Nr.</label>\r\n		<input type=\"text\" name=\"street\" id=\"input_street\" required=\"required\"/>\r\n	</div>\r\n	<div class=\"cmforms-col-1-3\">\r\n		<label for=\"input_postcode\" class=\"required\">PLZ</label>\r\n		<input type=\"text\" name=\"postcode\" id=\"input_postcode\" required=\"required\"/>\r\n	</div>\r\n</div>\r\n<div class=\"cmforms-row\">\r\n	<div class=\"cmforms-col-1-2\">\r\n		<label for=\"input_city\" class=\"required\">Ort</label>\r\n		<input type=\"text\" name=\"city\" id=\"input_city\" required=\"required\"/>\r\n	</div>\r\n	<div class=\"cmforms-col-1-2\">\r\n		[block_field_country]\r\n	</div>\r\n</div>\r\n'),
+(6, 'Zelle: Land', 'field_country', '<label for=\"input_country\" class=\"required\">Land</label>\r\n<select name=\"country\" id=\"input_country\" required=\"required\">\r\n	<option value=\"\">bitte wählen ...</option>\r\n	<option value=\"AF\">Afghanistan</option>\r\n	<option value=\"AL\">Albanien</option>\r\n	<option value=\"DZ\">Algerien</option>\r\n	<option value=\"AS\">Amerikanisch-Samoa</option>\r\n	<option value=\"AD\">Andorra</option>\r\n	<option value=\"AO\">Angola</option>\r\n	<option value=\"AI\">Anguilla</option>\r\n	<option value=\"AQ\">Antarktis</option>\r\n	<option value=\"AG\">Antigua und Barbuda</option>\r\n	<option value=\"AR\">Argentinien</option>\r\n	<option value=\"AM\">Armenien</option>\r\n	<option value=\"AW\">Aruba</option>\r\n	<option value=\"AU\">Australien</option>\r\n	<option value=\"AT\">Österreich</option>\r\n	<option value=\"AZ\">Aserbaidschan</option>\r\n	<option value=\"BS\">Bahamas</option>\r\n	<option value=\"BH\">Bahrain</option>\r\n	<option value=\"BD\">Bangladesh</option>\r\n	<option value=\"BB\">Barbados</option>\r\n	<option value=\"BY\">Weißrussland</option>\r\n	<option value=\"BE\">Belgien</option>\r\n	<option value=\"BZ\">Belize</option>\r\n	<option value=\"BJ\">Benin</option>\r\n	<option value=\"BM\">Bermuda</option>\r\n	<option value=\"BT\">Bhutan</option>\r\n	<option value=\"BO\">Bolivien</option>\r\n	<option value=\"BA\">Bosnien und Herzegowina</option>\r\n	<option value=\"BW\">Botswana</option>\r\n	<option value=\"BV\">Bouvetinsel</option>\r\n	<option value=\"BR\">Brasilien</option>\r\n	<option value=\"IO\">Britisches Territorium im Indischen Ozean</option>\r\n	<option value=\"BN\">Brunei Darussalam</option>\r\n	<option value=\"BG\">Bulgarien</option>\r\n	<option value=\"BF\">Burkina Faso</option>\r\n	<option value=\"BI\">Burundi</option>\r\n	<option value=\"KH\">Kambodscha</option>\r\n	<option value=\"CM\">Kamerun</option>\r\n	<option value=\"CA\">Kanada</option>\r\n	<option value=\"CV\">Kap Verde</option>\r\n	<option value=\"KY\">Kaimaninseln</option>\r\n	<option value=\"CF\">Zentralafrikanische Republik</option>\r\n	<option value=\"TD\">Tschad</option>\r\n	<option value=\"CL\">Chile</option>\r\n	<option value=\"CN\">China</option>\r\n	<option value=\"CX\">Weihnachtsinseln</option>\r\n	<option value=\"CC\">Cocos (Keeling) Islands</option>\r\n	<option value=\"CO\">Kolumbien</option>\r\n	<option value=\"KM\">Comoros</option>\r\n	<option value=\"CG\">Kongo</option>\r\n	<option value=\"CD\">Kongo, Demokratische Republik des</option>\r\n	<option value=\"CK\">Cook-Inseln</option>\r\n	<option value=\"CR\">Costa Rica</option>\r\n	<option value=\"CI\">Cote D\'Ivoire</option>\r\n	<option value=\"HR\">Kroatien (Lokaler Name: Hrvatska)</option>\r\n	<option value=\"CU\">Kuba</option>\r\n	<option value=\"CY\">Zypern</option>\r\n	<option value=\"CZ\">Tschechische Republik</option>\r\n	<option value=\"DK\">Dänemark</option>\r\n	<option value=\"DJ\">Dschibuti</option>\r\n	<option value=\"DM\">Dominica</option>\r\n	<option value=\"DO\">Dominikanische Republik</option>\r\n	<option value=\"TL\">Timor-Leste (Osttimor)</option>\r\n	<option value=\"EC\">Ecuador</option>\r\n	<option value=\"EG\">Ägypten</option>\r\n	<option value=\"SV\">El Salvador</option>\r\n	<option value=\"GQ\">Äquatorialguinea</option>\r\n	<option value=\"ER\">Eritrea</option>\r\n	<option value=\"EE\">Estland</option>\r\n	<option value=\"ET\">Äthopien</option>\r\n	<option value=\"FK\">Falkland-Inseln (Malvinas)</option>\r\n	<option value=\"FO\">Färöer</option>\r\n	<option value=\"FJ\">Fidschi</option>\r\n	<option value=\"FI\">Finnland</option>\r\n	<option value=\"FR\">Frankreich</option>\r\n	<option value=\"FX\">Frankreich, Mutterland</option>\r\n	<option value=\"GF\">Französisch-Guayana</option>\r\n	<option value=\"PF\">Französisch-Polynesien</option>\r\n	<option value=\"TF\">Französische Süd- und Antarktisgebiete</option>\r\n	<option value=\"GA\">Gabon</option>\r\n	<option value=\"GM\">Gambia</option>\r\n	<option value=\"GE\">Georgien</option>\r\n	<option value=\"DE\" selected=\"selected\">Deutschland</option>\r\n	<option value=\"GH\">Ghana</option>\r\n	<option value=\"GI\">Gibraltar</option>\r\n	<option value=\"GR\">Griechenland</option>\r\n	<option value=\"GL\">Grönland</option>\r\n	<option value=\"GD\">Grenada</option>\r\n	<option value=\"GP\">Guadeloupe</option>\r\n	<option value=\"GU\">Guam</option>\r\n	<option value=\"GT\">Guatemala</option>\r\n	<option value=\"GN\">Guinea</option>\r\n	<option value=\"GW\">Guinea-Bissau</option>\r\n	<option value=\"GY\">Guyana</option>\r\n	<option value=\"HT\">Haiti</option>\r\n	<option value=\"HM\">Heard und McDonaldinseln</option>\r\n	<option value=\"VA\">Holy See (Vatikanstadt)</option>\r\n	<option value=\"HN\">Honduras</option>\r\n	<option value=\"HK\">Hongkong</option>\r\n	<option value=\"HU\">Ungarn</option>\r\n	<option value=\"IS\">Island</option>\r\n	<option value=\"IN\">Indien</option>\r\n	<option value=\"ID\">Indonesien</option>\r\n	<option value=\"IR\">Iran (Islamische Republik des)</option>\r\n	<option value=\"IQ\">Irak</option>\r\n	<option value=\"IE\">Irland</option>\r\n	<option value=\"IL\">Israel</option>\r\n	<option value=\"IT\">Italien</option>\r\n	<option value=\"JM\">Jamaika</option>\r\n	<option value=\"JP\">Japan</option>\r\n	<option value=\"JO\">Jordanien</option>\r\n	<option value=\"KZ\">Kasachstan</option>\r\n	<option value=\"KE\">Kenia</option>\r\n	<option value=\"KI\">Kiribati</option>\r\n	<option value=\"KP\">Nordkorea</option>\r\n	<option value=\"KR\">Südkorea</option>\r\n	<option value=\"KW\">Kuwait</option>\r\n	<option value=\"KG\">Kirgistan</option>\r\n	<option value=\"LA\">Laos</option>\r\n	<option value=\"LV\">Lettland</option>\r\n	<option value=\"LB\">Libanon</option>\r\n	<option value=\"LS\">Lesotho</option>\r\n	<option value=\"LR\">Liberia</option>\r\n	<option value=\"LY\">Lybien</option>\r\n	<option value=\"LI\">Liechtenstein</option>\r\n	<option value=\"LT\">Litauen</option>\r\n	<option value=\"LU\">Luxemburg</option>\r\n	<option value=\"MO\">Macao</option>\r\n	<option value=\"MK\">Mazedonien</option>\r\n	<option value=\"MG\">Madagaskar</option>\r\n	<option value=\"MW\">Malawi</option>\r\n	<option value=\"MY\">Malaysia</option>\r\n	<option value=\"MV\">Malediven</option>\r\n	<option value=\"ML\">Mali</option>\r\n	<option value=\"MT\">Malta</option>\r\n	<option value=\"MH\">Marshallinseln</option>\r\n	<option value=\"MQ\">Martinique</option>\r\n	<option value=\"MR\">Mauretanien</option>\r\n	<option value=\"MU\">Mauritius</option>\r\n	<option value=\"YT\">Mayotte</option>\r\n	<option value=\"MX\">Mexiko</option>\r\n	<option value=\"FM\">Mikronesien</option>\r\n	<option value=\"MD\">Moldawien</option>\r\n	<option value=\"MC\">Monaco</option>\r\n	<option value=\"MN\">Mongolei</option>\r\n	<option value=\"ME\">Montenegro</option>\r\n	<option value=\"MS\">Montserrat</option>\r\n	<option value=\"MA\">Marokko</option>\r\n	<option value=\"MZ\">Mosambik</option>\r\n	<option value=\"MM\">Myanmar</option>\r\n	<option value=\"NA\">Namibia</option>\r\n	<option value=\"NR\">Nauru</option>\r\n	<option value=\"NP\">Nepal</option>\r\n	<option value=\"NL\">Niederlande</option>\r\n	<option value=\"AN\">Niederländische Antillen</option>\r\n	<option value=\"NC\">Neukaledonien (franz.)</option>\r\n	<option value=\"NZ\">Neuseeland</option>\r\n	<option value=\"NI\">Nicaragua</option>\r\n	<option value=\"NE\">Niger</option>\r\n	<option value=\"NG\">Nigeria</option>\r\n	<option value=\"NU\">Niue</option>\r\n	<option value=\"NF\">Norfolk-Inseln</option>\r\n	<option value=\"MP\">Nördliche Marianen</option>\r\n	<option value=\"NO\">Norwegen</option>\r\n	<option value=\"OM\">Oman</option>\r\n	<option value=\"PK\">Pakistan</option>\r\n	<option value=\"PW\">Palau</option>\r\n	<option value=\"PA\">Panama</option>\r\n	<option value=\"PG\">Papua-Neuguinea</option>\r\n	<option value=\"PY\">Paraguay</option>\r\n	<option value=\"PE\">Peru</option>\r\n	<option value=\"PH\">Philippinen</option>\r\n	<option value=\"PN\">Pitcairn</option>\r\n	<option value=\"PL\">Polen</option>\r\n	<option value=\"PT\">Portugal</option>\r\n	<option value=\"PR\">Puerto Rico</option>\r\n	<option value=\"QA\">Katar</option>\r\n	<option value=\"RE\">Réunion (franz.)</option>\r\n	<option value=\"RO\">Rumänien</option>\r\n	<option value=\"RU\">Russland (Russ. Föderation)</option>\r\n	<option value=\"RW\">Ruanda</option>\r\n	<option value=\"KN\">Saint Kitts und Nevis</option>\r\n	<option value=\"LC\">Saint Lucia</option>\r\n	<option value=\"VC\">St. Vincent und die Grenadinen</option>\r\n	<option value=\"WS\">Samoa</option>\r\n	<option value=\"SM\">San Marino</option>\r\n	<option value=\"ST\">São Tomé und Príncipe</option>\r\n	<option value=\"SA\">Saudi-Arabien</option>\r\n	<option value=\"SN\">Senegal</option>\r\n	<option value=\"SR\">Serbien</option>\r\n	<option value=\"SC\">Seychellen</option>\r\n	<option value=\"SL\">Sierra Leone</option>\r\n	<option value=\"SG\">Singapur</option>\r\n	<option value=\"SK\">Slowakei (Slowakische Republik)</option>\r\n	<option value=\"SI\">Slowenien</option>\r\n	<option value=\"SB\">Salomonen</option>\r\n	<option value=\"SO\">Somalia</option>\r\n	<option value=\"ZA\">Südafrika</option>\r\n	<option value=\"GS\">Südgeorgien und die Südlichen Sandwichinseln</option>\r\n	<option value=\"SS\">South Sudan</option>\r\n	<option value=\"ES\">Spanien</option>\r\n	<option value=\"LK\">Sri Lanka</option>\r\n	<option value=\"SH\">St. Helena</option>\r\n	<option value=\"PM\">Saint Pierre und Miquelon</option>\r\n	<option value=\"SD\">Sudan</option>\r\n	<option value=\"SR\">Surinam</option>\r\n	<option value=\"SJ\">Spitzbergen (Inselgruppe v. Norwegen)</option>\r\n	<option value=\"SZ\">Swaziland</option>\r\n	<option value=\"SE\">Schweden</option>\r\n	<option value=\"CH\">Schweiz</option>\r\n	<option value=\"SY\">Syrien</option>\r\n	<option value=\"TW\">Taiwan</option>\r\n	<option value=\"TJ\">Tadschikistan</option>\r\n	<option value=\"TZ\">Tansania</option>\r\n	<option value=\"TH\">Thailand</option>\r\n	<option value=\"TG\">Togo</option>\r\n	<option value=\"TK\">Tokelau</option>\r\n	<option value=\"TO\">Tonga</option>\r\n	<option value=\"TT\">Trinidad und Tobago</option>\r\n	<option value=\"TN\">Tunesien</option>\r\n	<option value=\"TR\">Türkei</option>\r\n	<option value=\"TM\">Turkmenistan</option>\r\n	<option value=\"TC\">Turks und Caicos Islands</option>\r\n	<option value=\"TV\">Tuvalu</option>\r\n	<option value=\"UG\">Uganda</option>\r\n	<option value=\"UA\">Ukraine</option>\r\n	<option value=\"AE\">Vereinigte Arabische Emirate</option>\r\n	<option value=\"GB\">Vereinigtes Königreich (GB)</option>\r\n	<option value=\"US\">USA - Vereinigte Staaten</option>\r\n	<option value=\"UM\">United States Minor Outlying Islands</option>\r\n	<option value=\"UY\">Uruguay</option>\r\n	<option value=\"UZ\">Usbekistan</option>\r\n	<option value=\"VU\">Vanuatu</option>\r\n	<option value=\"VE\">Venezuela</option>\r\n	<option value=\"VN\">Vietnam</option>\r\n	<option value=\"VG\">Britische Jungferninseln</option>\r\n	<option value=\"VI\">Amerikanische Jungferninseln</option>\r\n	<option value=\"WF\">Wallis und Futuna</option>\r\n	<option value=\"EH\">Westsahara</option>\r\n	<option value=\"YE\">Jemen</option>\r\n	<option value=\"YU\">Jugoslawien</option>\r\n	<option value=\"ZM\">Sambia</option>\r\n	<option value=\"ZW\">Simbabwe</option>\r\n</select>\r\n');
+
+INSERT INTO `<%?prefix%>form_mails` (`mailId`, `roleType`, `identifier`, `format`, `subject`, `title`, `content`) VALUES
+(1, 32, 'manager_filled', 2, 'Eingang einer Anfrage', 'Manager: Eingang einer Anfrage', '<p>\r\n	<big><strong>Hallo!</strong></big>\r\n</p>\r\n<p>\r\n	Das Formular \"[form_title]\" wurde ausgefüllt und abgesendet.\r\n</p>\r\n\r\n[helper_fill_person]\r\n[helper_fill_data]\r\n\r\n<p>\r\n	Freundliche Grüße,<br/>\r\n	<em>...</em>\r\n</p>'),
+(2, 12, 'customer_result_default', 2, 'Kontaktformular - Empfangsbestätigung', 'Kunde: Ergebnis: Standard', '<br/>\r\n<p>\r\n	<big><strong>Hallo [data_firstname] [data_surname],</strong></big>\r\n</p>\r\n<p>\r\n	Sie haben das Formular \"[form_title]\" ausgefüllt und abgesendet.<br/>\r\n</p>\r\n<p>\r\n	Mit dieser E-Mail erhalten Sie eine Bestätigung Ihrer Anfrage sowie eine Übersicht über alle Informationen, die Sie angegeben haben.<br/>\r\n	Diese Informationen werden in unserem System gespeichert und gegebenenfalls an die entsprechenden Zuständigen weiter gegeben.\r\n</p>\r\n<div>\r\n	[helper_fill_person]\r\n</div>\r\n<div>\r\n	[helper_fill_data]\r\n</div>\r\n<p>\r\n	Mit freundlichen Grüßen,<br/>\r\n	<em>...</em>\r\n</p>\r\n<br/>'),
+(3, 13, 'customer_confirm', 2, 'Bestätigung wird benötigt', 'Kunde: Bestätigung benötigt', '<br/>\r\n<p>\r\n	<big><strong>Hallo [data_firstname] [data_surname],</strong></big>\r\n</p>\r\n<p>\r\n	Sie haben das Formular \"[form_title]\" ausgefüllt und abgesendet.<br/>\r\n</p>\r\n<p>\r\nMit dieser E-Mail erhalten Sie eine Bestätigung Ihrer Anfrage sowie eine Übersicht über alle Informationen, die Sie angegeben haben.<br/>\r\n</p>\r\n<p>\r\n	<strong>Um sicherzustellen, dass die Anfrage wirklich von Ihnen stammt, bitten wir Sie, diesen Bestätigungslink anzuklicken. Erst dann kann der Vorgang abgeschlossen werden. </strong>\r\n</p>\r\n<p>\r\n	<a href=\"[link_confirm]\">Bestätigungslink - bitte im Browser öffnen</a>\r\n</p>\r\n<div>\r\n	[helper_fill_person]\r\n</div>\r\n<div>\r\n	[helper_fill_data]\r\n</div>\r\n<p>\r\n	Freundliche Grüße,<br/>\r\n	<em>...</em>\r\n</p>');
+	]]></sql>
+	<sql type="mysql" on="update" version="0.3.1"><![CDATA[
+ALTER TABLE `<%?prefix%>form_rules` ADD `type` TINYINT(1) UNSIGNED NOT NULL AFTER `formId`, ADD INDEX (`type`);
+	]]></sql>
+	<sql type="mysql" on="update" version="0.3.3"><![CDATA[
+ALTER TABLE `<%?prefix%>form_mails` ADD `roleType` TINYINT(1) UNSIGNED NULL DEFAULT '0' AFTER `mailId`, ADD INDEX (`roleType`);
+UPDATE `<%?prefix%>form_mails` SET `roleType` = 12 WHERE `identifier` LIKE "customer_result%";
+UPDATE `<%?prefix%>form_mails` SET `roleType` = 13 WHERE `identifier` LIKE "customer_react%" OR `identifier` LIKE "customer_confirm%";
+UPDATE `<%?prefix%>form_mails` SET `roleType` = 11 WHERE `identifier` LIKE "customer%" AND `roleType` = 0;
+UPDATE `<%?prefix%>form_mails` SET `roleType` = 22 WHERE `identifier` LIKE "leader_result%" OR `identifier` LIKE "leader_filled%";
+UPDATE `<%?prefix%>form_mails` SET `roleType` = 23 WHERE `identifier` LIKE "leader_react%" OR `identifier` LIKE "leader_confirm%";
+UPDATE `<%?prefix%>form_mails` SET `roleType` = 21 WHERE `identifier` LIKE "leader%" AND `roleType` = 0;
+UPDATE `<%?prefix%>form_mails` SET `roleType` = 32 WHERE `identifier` LIKE "manager_result%" OR `identifier` LIKE "manager_filled%";
+UPDATE `<%?prefix%>form_mails` SET `roleType` = 33 WHERE `identifier` LIKE "manager_react%" OR `identifier` LIKE "manager_confirm%";
+UPDATE `<%?prefix%>form_mails` SET `roleType` = 31 WHERE `identifier` LIKE "manager%" AND `roleType` = 0;
+ALTER TABLE `<%?prefix%>forms` CHANGE `mailId` `customerMailId` INT(10) UNSIGNED NULL DEFAULT '0';
+ALTER TABLE `<%?prefix%>forms` ADD `managerMailId` INT UNSIGNED NULL DEFAULT '0' AFTER `formId`, ADD INDEX (`managerMailId`);
+	]]></sql>
+	<sql type="mysql" on="update" version="0.3.4"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>form_transfer_targets`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_transfer_targets` (
+  `formTransferTargetId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:disabled, 1:enabled',
+  `title` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
+  `className` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `baseUrl` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `apiKey` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`formTransferTargetId`),
+  KEY `status` (`status`),
+  KEY `className` (`className`),
+  KEY `createdAt` (`createdAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>form_transfer_rules`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_transfer_rules` (
+  `formTransferRuleId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `formTransferTargetId` int(10) UNSIGNED NOT NULL,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `title` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `rules` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`formTransferRuleId`),
+  KEY `formTransferTargetId` (`formTransferTargetId`),
+  KEY `formId` (`formId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+<sql type="mysql" on="update" version="0.3.6"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>form_fill_transfers`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_fill_transfers` (
+  `formFillTransferId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `formTransferRuleId` int(10) UNSIGNED NOT NULL,
+  `formTransferTargetId` int(10) UNSIGNED NOT NULL,
+  `fillId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) UNSIGNED NOT NULL,
+  `data` text COLLATE utf8_unicode_ci NOT NULL,
+  `message` text COLLATE utf8_unicode_ci NULL,
+  `trace` TEXT COLLATE utf8_unicode_ci NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`formFillTransferId`),
+  KEY `formId` (`formId`),
+  KEY `formTransferRuleId` (`formTransferRuleId`),
+  KEY `formTransferTargetId` (`formTransferTargetId`),
+  KEY `fillId` (`fillId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+<sql type="mysql" on="update" version="0.3.7"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>form_import_rules`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>form_import_rules` (
+  `formImportRuleId` int(10) UNSIGNED NOT NULL,
+  `importConnectionId` int(10) UNSIGNED NOT NULL,
+  `formId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:new, 1:test, 2:active, 3:paused, 4:disabled',
+  `title` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `searchCriteria` text COLLATE utf8_unicode_ci NOT NULL,
+  `options` text COLLATE utf8_unicode_ci,
+  `rules` text COLLATE utf8_unicode_ci NOT NULL,
+  `renameTo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `moveTo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`formImportRuleId`),
+  KEY `formId` (`formId`),
+  KEY `status` (`status`),
+  KEY `importConnectionId` (`importConnectionId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+<sql type="mysql" on="update" version="0.3.8"><![CDATA[
+ALTER TABLE `<%?prefix%>form_rules` ADD `filePath` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL AFTER `mailId`;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+		DROP TABLE IF EXISTS `<%?prefix%>form_import_rules`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_fill_transfers`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_transfer_rules`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_transfer_targets`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_mails`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_fills`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_rules`;
+		DROP TABLE IF EXISTS `<%?prefix%>form_blocks`;
+		DROP TABLE IF EXISTS `<%?prefix%>forms`;
+	]]></sql>
+</module>

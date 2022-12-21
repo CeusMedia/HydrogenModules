@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: IP Locks</title>
+	<description><![CDATA[]]></description>
+	<category>Management</category>
+	<version>0.3.9</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen Module.</log>
+	<log version="0.2.1">Added tabs and reason management.</log>
+	<log version="0.2.2">Added filter management.</log>
+	<log version="0.2.3">Extended lock list by timestamp columns.</log>
+	<log version="0.2.4">Added pagination in lock list.</log>
+	<log version="0.2.5">Added lock view prototype.</log>
+	<log version="0.2.6">Applied module UI:CSS:Panel.</log>
+	<log version="0.2.7">Reworked all lists and buttons.</log>
+	<log version="0.3">First production release.</log>
+	<log version="0.3.1">Add lock list filter.</log>
+	<log version="0.3.2">Use pagination from Bootstrap package.</log>
+	<log version="0.3.3">Support IPv6.</log>
+	<log version="0.3.4">Add export and import.</log>
+	<log version="0.3.5">Extract hook to own class.</log>
+	<log version="0.3.6">Extend export settings by reasons.</log>
+	<log version="0.3.7">Extend export settings by filters.</log>
+	<log version="0.3.8">Migrate to support CeusMedia::Common 0.8.5.</log>
+	<log version="0.3.9">English Localization added</log>
+<!--	<log version="0.3.x">Added whitelist management.</log>-->
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Manage/Ip/Lock.php</class>
+		<class>Controller/Manage/Ip/Lock/Filter.php</class>
+		<class>Controller/Manage/Ip/Lock/Reason.php</class>
+		<class>Controller/Manage/Ip/Lock/Transport.php</class>
+<!--		<class>Controller/Manage/Ip/Lock/Whitelist.php</class>-->
+		<class>Hook/Manage/Ip/Lock.php</class>
+		<class>View/Manage/Ip/Lock.php</class>
+		<class>View/Manage/Ip/Lock/Filter.php</class>
+		<class>View/Manage/Ip/Lock/Reason.php</class>
+		<class>View/Manage/Ip/Lock/Transport.php</class>
+<!--		<class>View/Manage/Ip/Lock/Whitelist.php</class>-->
+		<locale>de/manage/ip/lock.ini</locale>
+		<locale>en/manage/ip/lock.ini</locale>
+		<template>manage/ip/lock/add.php</template>
+		<template>manage/ip/lock/edit.php</template>
+		<template>manage/ip/lock/index.php</template>
+		<template>manage/ip/lock/index.filter.php</template>
+		<template>manage/ip/lock/index.list.php</template>
+		<template>manage/ip/lock/filter/add.php</template>
+		<template>manage/ip/lock/filter/edit.php</template>
+		<template>manage/ip/lock/filter/index.php</template>
+		<template>manage/ip/lock/reason/add.php</template>
+		<template>manage/ip/lock/reason/edit.php</template>
+		<template>manage/ip/lock/reason/index.php</template>
+		<template>manage/ip/lock/transport/index.php</template>
+		<template>manage/ip/lock/transport/index.export.php</template>
+		<template>manage/ip/lock/transport/index.import.php</template>
+<!--		<template>manage/ip/lock/whitelist/index.php</template>-->
+	</files>
+	<relations>
+		<needs type="module">Server_IP_Lock</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+		<needs type="module">UI_Helper_HTML</needs>
+	</relations>
+	<hook type="resource" resource="IpLock" event="registerTabs">Hook_Manage_Ip_Lock::onRegisterTab</hook>
+</module>

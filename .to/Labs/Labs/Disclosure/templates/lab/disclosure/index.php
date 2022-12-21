@@ -1,0 +1,60 @@
+<?php
+
+use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Ladder as HtmlLadder;
+
+$script	= '
+$(document).ready(function(){
+//	$("#tabs-disclosure").tabs();
+	$("#controllers").cmLadder();
+});
+';
+
+$ext		= 'php5';
+$path		= 'classes/Controller/';
+$path		= realpath( $path );
+$regexClass	= '/^[A-Z][A-Za-z0-9]+\.'.$ext.'$/U';
+
+$classes	= [];
+$index		= new RecursiveRegexFileIndex( $path, $regexClass );
+foreach( $index as $entry ){
+	$fileName	= preg_replace( '@^'.$path.'/(.+)\.'.$ext.'$@', '\\1', $entry->getPathname() );
+	$className	= 'Controller_'.str_replace( '/', '_', $fileName );
+	$classes[$className]	= new ReflectionClass( $className );
+}
+ksort( $classes );
+
+$ladder	= new HtmlLadder( 'controllers' );
+foreach( $classes as $className => $classReflection ){
+	$methods	= [];
+	foreach( $classReflection->getMethods( ReflectionMethod::IS_PUBLIC ) as $methodReflection ){
+		$parameters	= [];
+		foreach( $methodReflection->getParameters() as $key => $parameterReflection )
+			$parameters[]	= $parameterReflection->name;
+		$parameters	= ' <small class="parameters">('.join( ', ', $parameters ).')</small>';
+		$methodName	= '<span class="method method-name">'.$methodReflection->name.'</span>';
+		if( $methodReflection->class === $className )
+		{
+			$label	= '<b>'.$methodName.'</b>'.$parameters;
+		}
+		else
+		{
+			$type	= '&nbsp;<small>from '.$methodReflection->class.'</small>';
+			$label	= '<small>'.$methodName.$parameters.$type.'</small>';
+		}
+		$label	= HtmlElements::ListItem( $label );
+		$methods[$methodReflection->name]	= $label;
+	}
+	ksort( $methods );
+	$methods	= '<b>Actions</b>'.HtmlElements::unorderedList( $methods );
+	$ladder->addStep( preg_replace( '/^Controller_/', '', $className ), $methods );
+}
+
+$this->env->page->js->addScript( $script );
+
+return '
+<h2>Labor</h2>
+<h3>Controllers & Actions</h3>
+'.$ladder->buildHtml();
+?>

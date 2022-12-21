@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Finances</title>
+	<description><![CDATA[Basic finance management.]]></description>
+	<version>0.2.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Replace CDN resource.</log>
+	<log version="0.2.2">Improve code style.</log>
+	<category>Work</category>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Work/Finance.php</class>
+		<class>Controller/Work/Finance/Bank.php</class>
+		<class>Controller/Work/Finance/Bank/Account.php</class>
+		<class>Controller/Work/Finance/Fund.php</class>
+		<class>Model/Finance/Bank.php</class>
+		<class>Model/Finance/Bank/Account.php</class>
+		<class>Model/Finance/Bank/Account/Reader/Postbank.php</class>
+		<class>Model/Finance/Bank/Account/Reader/DKB.php</class>
+		<class>Model/Finance/Bank/Account/Reader/DeutscheBank.php</class>
+		<class>Model/Finance/Bank/Account/Reader/DWS.php</class>
+		<class>Model/Finance/Fund.php</class>
+		<class>Model/Finance/FundPrice.php</class>
+		<class>View/Work/Finance.php</class>
+		<class>View/Work/Finance/Bank.php</class>
+		<class>View/Work/Finance/Bank/Account.php</class>
+		<class>View/Work/Finance/Fund.php</class>
+		<template>work/finance/index.php</template>
+		<template>work/finance/bank/add.php</template>
+		<template>work/finance/bank/edit.php</template>
+		<template>work/finance/bank/index.php</template>
+		<template>work/finance/bank/account/add.php</template>
+		<template>work/finance/bank/account/edit.php</template>
+		<template>work/finance/bank/account/index.php</template>
+		<template>work/finance/fund/add.php</template>
+		<template>work/finance/fund/edit.php</template>
+		<template>work/finance/fund/index.php</template>
+		<locale>de/work/finance.ini</locale>
+		<locale>de/work/finance/bank.ini</locale>
+		<locale>de/work/finance/bank/account.ini</locale>
+		<locale>de/work/finance/fund.ini</locale>
+		<locale>en/work/finance/fund.ini</locale>
+		<image source="local">fondsweb.de.ico</image>
+		<image source="local">finanzen.net.ico</image>
+<!--		<style load="auto">site.work.fund.css</style>
+		<script load="auto">work.fund.js</script>-->
+	</files>
+	<relations>
+<!--		<needs type="module"></needs>
+-->	</relations>
+	<link xml:lang="de" access="acl" path="work/finance">Finanzen</link>
+	<link xml:lang="de" access="acl" path="work/finance/bank">Banken</link>
+	<link xml:lang="de" access="acl" path="work/finance/bank/account">Konten</link>
+	<link xml:lang="de" access="acl" path="work/finance/fund">Fonds</link>
+	<link xml:lang="en" access="acl" path="work/finance">Finances</link>
+	<link xml:lang="en" access="acl" path="work/finance/bank">Banks</link>
+	<link xml:lang="en" access="acl" path="work/finance/bank/account">Accounts</link>
+	<link xml:lang="en" access="acl" path="work/finance/fund">Funds</link>
+	<config type="string" name="urlView">http://www.fondsweb.de/</config>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>finance_banks`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>finance_banks` (
+  `bankId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(10) unsigned NOT NULL,
+  `type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `username` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `updatedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`bankId`),
+  KEY `userId` (`userId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>finance_bank_accounts`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>finance_bank_accounts` (
+  `bankAccountId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `bankId` int(11) NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `currency` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `accountKey` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `value` float(10,2) NOT NULL,
+  `timestamp` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`bankAccountId`),
+  KEY `type` (`type`),
+  KEY `currency` (`currency`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>finance_funds`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>finance_funds` (
+  `fundId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(10) unsigned NOT NULL,
+  `ISIN` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `currency` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
+  `pieces` float(10,4) NOT NULL,
+  `kag` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`fundId`),
+  KEY `userId` (`userId`),
+  KEY `ISIN` (`ISIN`),
+  KEY `currency` (`currency`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>finance_fund_prices`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>finance_fund_prices` (
+  `fundPriceId` int(11) NOT NULL AUTO_INCREMENT,
+  `fundId` int(11) NOT NULL,
+  `pieces` float(10,4) unsigned NOT NULL,
+  `price` float(10,4) NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`fundPriceId`),
+  UNIQUE KEY `fundId` (`fundId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE  `<%?prefix%>finance_bank_accounts` ADD  `fee` FLOAT( 6, 2 ) UNSIGNED NULL AFTER  `title`;
+ALTER TABLE  `<%?prefix%>finance_bank_accounts` ADD  `debit` FLOAT( 6, 2 ) UNSIGNED NULL AFTER  `fee`;
+ALTER TABLE  `<%?prefix%>finance_bank_accounts` ADD  `due` DECIMAL( 12 ) UNSIGNED NOT NULL AFTER  `debit`;
+ALTER TABLE  `<%?prefix%>finance_bank_accounts` ADD  `scope` TINYINT( 1 ) UNSIGNED NOT NULL AFTER  `type` ,
+ADD INDEX (  `scope` );
+ALTER TABLE  `<%?prefix%>finance_funds` ADD  `scope` TINYINT( 1 ) UNSIGNED NOT NULL AFTER  `userId` ,
+ADD INDEX (  `scope` );
+ALTER TABLE  `<%?prefix%>finance_funds` ADD  `type` TINYINT( 1 ) UNSIGNED NOT NULL AFTER  `userId` ,
+ADD INDEX (  `type` );
+
+ALTER TABLE  `<%?prefix%>finance_fund_prices` CHANGE  `fundId`  `fundId` INT( 11 ) UNSIGNED NOT NULL;
+ALTER TABLE  `<%?prefix%>finance_fund_prices` DROP INDEX  `fundId`;
+ALTER TABLE  `<%?prefix%>finance_fund_prices` ADD INDEX (  `fundId` );
+
+
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>finance_banks`;
+DROP TABLE IF EXISTS `<%?prefix%>finance_bank_accounts`;
+DROP TABLE IF EXISTS `<%?prefix%>finance_funds`;
+DROP TABLE IF EXISTS `<%?prefix%>finance_fund_prices`;
+]]></sql>
+</module>

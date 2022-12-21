@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<module>
+	<title>Server: Log: Sentry</title>
+	<description><![CDATA[Sentry monitoring integration]]></description>
+	<category>Server</category>
+	<version>0.2.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add readme with installation notes.</log>
+	<log version="0.2.2">Extend config by environment and release.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Hook/Server/Log/Sentry.php</class>
+	</files>
+	<config protected="yes" type="boolean" name="active" title="Module main switch">yes</config>
+	<config protected="yes" type="string" name="dsn" title="Sentry project DSN"></config>
+	<config protected="no" type="string" name="environment" title="Application environment"></config>
+	<config protected="no" type="string" name="release" title="Project release version"></config>
+	<hook type="resource" resource="Env" level="0" event="initModules">Hook_Server_Log_Sentry::onEnvInitModules</hook>
+	<hook type="resource" resource="Env" level="3" event="logException">Hook_Server_Log_Sentry::onEnvLogException</hook>
+</module>

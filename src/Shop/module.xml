@@ -1,0 +1,317 @@
+<?xml version="1.0"?>
+<module>
+	<title>Shop</title>
+	<description><![CDATA[Basic shop with cart, shipping and conditions.
+For payment you need to install a payment module.]]></description>
+	<category>Shop</category>
+	<version>0.8.7</version>
+	<log version="0.3.14">Improved cart panels.</log>
+	<log version="0.3.15">Changed and extracted locales.</log>
+	<log version="0.3.16">Added support for article description in tables and mails.</log>
+	<log version="0.3.17">Added mail attachments for revocation of orders or registrered services.</log>
+	<log version="0.3.18">Improved localisation of customer and conditions panels.</log>
+	<log version="0.3.19">Improved cart markup, support white icons in tabs.</log>
+	<log version="0.4">Adjust to new version of shop bridge.</log>
+	<log version="0.4.1">Improved tax calculation.</log>
+	<log version="0.4.2">Added text mail for customer.</log>
+	<log version="0.4.3">Extended order model by prices.</log>
+	<log version="0.4.4">Skip payment if cart price is 0.</log>
+	<log version="0.4.5">Use Bootstrap library from GitHub.</log>
+	<log version="0.4.6">Extend customer model by geo coordinates.</log>
+	<log version="0.4.7">Use authenticated user data as customer.</log>
+	<log version="0.5">Support authenticated users.</log>
+	<log version="0.5.1">Support single use order positions.</log>
+	<log version="0.5.2">Improve cart view.</log>
+	<log version="0.5.3">Add hook on order finish.</log>
+	<log version="0.5.4">Add relation to module Resource:Mail.</log>
+	<log version="0.5.5">Rename column editedAt to modifiedAt.</log>
+	<log version="0.5.6">Support MySQL strict mode.</log>
+	<log version="0.6">Support new payment abstraction.</log>
+	<log version="0.6.1">New customer address management.</log>
+	<log version="0.6.2">Use FontAwesome and Tabs modules.</log>
+	<log version="0.6.3">Improve payment method view.</log>
+	<log version="0.6.4">Extract cart positions view helper.</log>
+	<log version="0.6.5">Note payment method and ID in order model.</log>
+	<log version="0.6.6">Renamed mail classes.</log>
+	<log version="0.6.7">Decrease article stock quantity if order has been payed.</log>
+	<log version="0.6.8">Add mail for not payed orders.</log>
+	<log version="0.7">Support reponsive design in cart and checkout.</log>
+	<log version="0.7.1">Improve locales.</log>
+	<log version="0.7.2">Add english mail locales.</log>
+	<log version="0.7.3">Add helper for order facts, used in mails.</log>
+	<log version="0.7.4">Add support for new finish panel hook.</log>
+	<log version="0.7.5">Add payment block in customer order mail.</log>
+	<log version="0.7.6">Integrate OAuth2 in customer login.</log>
+	<log version="0.7.7">Hide payment tab if cart content is free or empty.</log>
+	<log version="0.7.8">Extract customer handling to own controller and view.</log>
+	<log version="0.7.9">Reintegrate guest customer.</log>
+	<log version="0.8">Migrate old customer date into new structure.</log>
+	<log version="0.8.1">Enable position management in checkout.</log>
+	<log version="0.8.2">Replace session storage by new cart model.</log>
+	<log version="0.8.3">Reintegrate shipping.</log>
+	<log version="0.8.4">Integrate shop jobs from other app modules.</log>
+	<log version="0.8.5">Refactoring to use shop user instead of shop customer.</log>
+	<log version="0.8.6">Move job definitions to module configuration.</log>
+	<log version="0.8.7">Improve code style.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Shop.php</class>
+		<class>Controller/Shop/Customer.php</class>
+		<class>Hook/Shop/FinishPanel.php</class>
+		<class>Job/Shop.php</class>
+		<class>Logic/Shop.php</class>
+		<class>Mail/Shop/Customer/NotPayed.php</class>
+		<class>Mail/Shop/Customer/Ordered.php</class>
+		<class>Mail/Shop/Customer/Payed.php</class>
+		<class>Mail/Shop/Manager/NotPayed.php</class>
+		<class>Mail/Shop/Manager/Ordered.php</class>
+		<class>Mail/Shop/Manager/Payed.php</class>
+		<class>Model/Shop/Cart.php</class>
+		<class>Model/Shop/Customer.php</class>
+		<class>Model/Shop/CustomerOld.php</class>
+		<class>Model/Shop/Order.php</class>
+		<class>Model/Shop/Order/Position.php</class>
+		<class>View/Shop.php</class>
+		<class>View/Shop/Customer.php</class>
+		<class>View/Helper/Shop.php</class>
+		<class>View/Helper/Shop/AddressForm.php</class>
+		<class>View/Helper/Shop/AddressView.php</class>
+		<class>View/Helper/Shop/CartPositions.php</class>
+		<class>View/Helper/Shop/OrderFacts.php</class>
+		<class>View/Helper/Shop/Tabs.php</class>
+		<locale>de/shop.ini</locale>
+		<locale>de/shop/customer.ini</locale>
+		<locale>de/html/shop/bottom.html</locale>
+		<locale>de/html/shop/top.html</locale>
+		<locale>de/html/shop/conditions.html</locale>
+		<locale>de/html/shop/shipping.html</locale>
+		<locale>de/html/shop/service.html</locale>
+		<locale>de/html/shop/checkout.top.html</locale>
+		<locale>de/html/shop/checkout.bottom.html</locale>
+		<locale>de/mail/shop/customer/not_payed.html</locale>
+		<locale>de/mail/shop/customer/not_payed.txt</locale>
+		<locale>de/mail/shop/customer/ordered.html</locale>
+		<locale>de/mail/shop/customer/ordered.txt</locale>
+		<locale>de/mail/shop/customer/payed.html</locale>
+		<locale>de/mail/shop/customer/payed.txt</locale>
+		<locale>de/mail/shop/manager/not_payed.html</locale>
+		<locale>de/mail/shop/manager/ordered.html</locale>
+		<locale>de/mail/shop/manager/payed.html</locale>
+		<locale>de/html/shop/panel/finish.html</locale>
+		<locale>de/html/shop/panel/finishTop.html</locale>
+		<locale>en/shop.ini</locale>
+		<locale>en/shop/customer.ini</locale>
+		<locale>en/html/shop/bottom.html</locale>
+		<locale>en/html/shop/top.html</locale>
+		<locale>en/html/shop/conditions.html</locale>
+		<locale>en/html/shop/shipping.html</locale>
+		<locale>en/html/shop/service.html</locale>
+		<locale>en/html/shop/checkout.top.html</locale>
+		<locale>en/html/shop/checkout.bottom.html</locale>
+		<locale>en/mail/shop/customer/not_payed.html</locale>
+		<locale>en/mail/shop/customer/not_payed.txt</locale>
+		<locale>en/mail/shop/customer/ordered.html</locale>
+		<locale>en/mail/shop/customer/ordered.txt</locale>
+		<locale>en/mail/shop/customer/payed.html</locale>
+		<locale>en/mail/shop/customer/payed.txt</locale>
+		<locale>en/mail/shop/manager/not_payed.html</locale>
+		<locale>en/mail/shop/manager/ordered.html</locale>
+		<locale>en/mail/shop/manager/payed.html</locale>
+		<locale>en/html/shop/panel/finish.html</locale>
+		<locale>en/html/shop/panel/finishTop.html</locale>
+		<template>shop/cart.php</template>
+		<template>shop/checkout.php</template>
+		<template>shop/conditions.php</template>
+		<template>shop/customer/address.php</template>
+		<template>shop/customer/index.php</template>
+		<template>shop/customer/inside.php</template>
+		<template>shop/customer/outside.php</template>
+		<template>shop/payment.php</template>
+		<template>shop/service.php</template>
+		<style sourc="theme" load="auto">module.shop.css</style>
+		<file>contents/attachments/Widerrufsformular.odt</file>
+		<file>contents/attachments/Widerrufsformular.pdf</file>
+		<file>contents/attachments/Widerrufsformular.txt</file>
+	</files>
+	<config protected="yes" mandatory="yes" type="string" name="mail.manager"></config>
+	<config protected="yes" type="boolean" name="tax.included">yes</config>
+	<config protected="yes" type="integer" name="tax.percent">7</config>
+	<config protected="yes" mandatory="yes" type="integer" name="price.accuracy">2</config>
+	<config protected="yes" mandatory="yes" type="string" name="price.currency" values="€,£,$,¥">€</config>
+	<config protected="yes" mandatory="yes" type="string" name="price.point">,</config>
+	<config protected="yes" type="boolean" name="tabs.icons.white">no</config>
+	<config protected="yes" type="integer" name="accountRoleId">4</config>
+	<config protected="yes" type="integer" name="customerRoleId">6</config>
+<!--	<config protected="yes" type="" name=""></config>-->
+	<link access="public" path="shop/addArticle"/>
+	<link access="public" path="shop/cart"/>
+	<link access="public" path="shop/changePositionQuantity"/>
+	<link access="public" path="shop/checkout"/>
+	<link access="public" path="shop/conditions"/>
+	<link access="public" path="shop/finish"/>
+	<link access="public" path="shop/index"/>
+	<link access="public" path="shop/payment"/>
+	<link access="public" path="shop/removeArticle"/>
+	<link access="public" path="shop/service"/>
+	<link access="public" path="shop/customer/address"/>
+	<link access="public" path="shop/customer/index"/>
+	<relations>
+		<needs type="module">Resource_Mail</needs>
+		<needs type="module">Resource_Users</needs>
+		<needs type="module">Resource_Address</needs>
+		<needs type="module">Resource_Authentication_Backend_Local</needs>
+		<needs type="module">Shop_Bridge</needs>
+		<needs type="module">UI_Font_FontAwesome</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+		<supports type="module">Shop_Payment</supports>
+		<supports type="module">Shop_Shipping</supports>
+	</relations>
+	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_FinishPanel::onRenderServicePanels</hook>
+	<job id="Shop.OldCustomers.cleanup" mode="dev,test,live">Shop::cleanupOldCustomers</job>
+	<job id="Shop.OldCustomers.cleanupTestOrders" mode="dev,test,live">Shop::cleanupOldCustomerTestOrders</job>
+	<job id="Shop.OldCustomers.importAsMigrantsAndSaveAsCsv" mode="dev,test,live">Shop::importOldCustomersAsMigrantsAndSaveAsCsv</job>
+	<job id="Shop.OldCustomers.migrate" mode="dev,test,live">Shop::migrateOldCustomers</job>
+	<job id="Shop.OldCustomers.sanitizeCountries" mode="dev,test,live">Shop::sanitizeOldCustomerCountries</job>
+	<job id="Shop.OldCustomers.createConfig" mode="dev,test,live">Shop::createOldCustomersConfig</job>
+	<sql type="mysql" on="install" version="0.1">
+<![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_customers`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_customers` (
+  `customerId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `lastname` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `country` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `region` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `city` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `address` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `password` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `alternative` tinyint(1) NOT NULL DEFAULT '0',
+  `billing_institution` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `billing_firstname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `billing_lastname` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `billing_tnr` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `billing_country` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `billing_city` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `billing_postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `billing_address` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `billing_phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `billing_email` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`customerId`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>shop_orders`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_orders` (
+  `orderId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `customerId` int(11) unsigned NOT NULL DEFAULT '0',
+  `sessionId` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `options` varchar(100) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL DEFAULT '',
+  `channel` varchar(20) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL DEFAULT '',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `editedAt` decimal(12,0) DEFAULT NULL,
+  PRIMARY KEY (`orderId`),
+  KEY `customer_id` (`customerId`),
+  KEY `session_id` (`sessionId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>shop_order_positions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_order_positions` (
+  `positionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `orderId` int(11) unsigned NOT NULL DEFAULT '0',
+  `bridgeId` int(11) unsigned NOT NULL,
+  `articleId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `quantity` int(4) unsigned NOT NULL DEFAULT '1',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `editedAt` decimal(12,0) DEFAULT NULL,
+  PRIMARY KEY (`positionId`),
+  KEY `orderId` (`orderId`),
+  KEY `articleId` (`articleId`),
+  KEY `userId` (`userId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>shop_receipts`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_receipts` (
+  `receiptId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `orderId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `positions` text COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` varchar(12) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`receiptId`),
+  KEY `order_id` (`orderId`),
+  KEY `user_id` (`userId`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]>
+	</sql>
+	<sql type="mysql" on="update" version="0.3.11"><![CDATA[
+ALTER TABLE  `<%?prefix%>shop_customers` ADD  `institution` VARCHAR( 100 ) NULL AFTER  `password` ;
+]]>
+	</sql>
+	<sql type="mysql" on="update" version="0.3.17"><![CDATA[
+INSERT INTO `<%?prefix%>mail_attachments` (`status`, `language`, `className`, `filename`, `mimeType`, `countAttached`, `createdAt`) VALUES(1, 'de', 'Mail_Shop_Order_Customer', 'Widerrufsformular.pdf', 'application/pdf', 0, 1406940162);
+INSERT INTO `<%?prefix%>mail_attachments` (`status`, `language`, `className`, `filename`, `mimeType`, `countAttached`, `createdAt`) VALUES(0, 'de', 'Mail_Shop_Order_Customer', 'Widerrufsformular.odt', 'application/vnd.oasis.opendocument.text', 0, 1406940192);
+INSERT INTO `<%?prefix%>mail_attachments` (`status`, `language`, `className`, `filename`, `mimeType`, `countAttached`, `createdAt`) VALUES(0, 'de', 'Mail_Shop_Order_Customer', 'Widerrufsformular.txt', 'text/plain', 0, 1406940198);
+]]></sql>
+	<sql type="mysql" on="update" version="0.4.3"><![CDATA[
+ALTER TABLE `<%?prefix%>shop_orders` ADD `price` DECIMAL(8,2) UNSIGNED NOT NULL AFTER `status`, ADD `priceTaxed` DECIMAL(8,2) UNSIGNED NOT NULL AFTER `price`;
+ALTER TABLE `<%?prefix%>shop_order_positions` ADD `price` DECIMAL(6,2) UNSIGNED NOT NULL AFTER `quantity`, ADD `priceTaxed` DECIMAL(6,2) UNSIGNED NOT NULL AFTER `price`;
+]]></sql>
+	<sql type="mysql" on="update" version="0.4.6"><![CDATA[
+ALTER TABLE `<%?prefix%>shop_customers` ADD `longitude` FLOAT NULL AFTER `password`, ADD `latitude` FLOAT NULL AFTER `longitude`;
+ALTER TABLE `<%?prefix%>shop_orders` ADD `userId` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `sessionId`;
+]]></sql>
+	<sql type="mysql" on="update" version="0.5.5"><![CDATA[
+ALTER TABLE `<%?prefix%>shop_orders` CHANGE `editedAt` `modifiedAt` DECIMAL(12,0) UNSIGNED NULL;
+ALTER TABLE `<%?prefix%>shop_order_positions` CHANGE `editedAt` `modifiedAt` DECIMAL(12,0) UNSIGNED NULL;
+]]></sql>
+	<sql type="mysql" on="update" version="0.5.6"><![CDATA[
+ALTER TABLE `<%?prefix%>shop_customers` CHANGE `billing_institution` `billing_institution` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+CHANGE `billing_firstname` `billing_firstname` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+CHANGE `billing_lastname` `billing_lastname` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+CHANGE `billing_tnr` `billing_tnr` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+CHANGE `billing_country` `billing_country` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+CHANGE `billing_city` `billing_city` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+CHANGE `billing_postcode` `billing_postcode` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+CHANGE `billing_address` `billing_address` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+CHANGE `billing_phone` `billing_phone` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+CHANGE `billing_email` `billing_email` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '';
+]]></sql>
+	<sql type="mysql" on="update" version="0.6.1"><![CDATA[
+ALTER TABLE  `<%?prefix%>shop_orders` ADD  `currency` VARCHAR( 3 ) NOT NULL DEFAULT  'EUR' AFTER  `status` ,
+ADD INDEX (  `currency` ) ;
+ALTER TABLE  `<%?prefix%>shop_order_positions` ADD  `currency` VARCHAR( 3 ) NOT NULL DEFAULT  'EUR' AFTER  `quantity` ,
+ADD INDEX (  `currency` ) ;
+]]></sql>
+	<sql type="mysql" on="update" version="0.6.5"><![CDATA[
+ALTER TABLE `<%?prefix%>shop_orders` CHANGE `channel` `paymentMethod` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;
+ALTER TABLE `<%?prefix%>shop_orders` ADD `paymentId` INT( 11 ) UNSIGNED NULL DEFAULT '0' AFTER `paymentMethod`;
+]]></sql>
+	<sql type="mysql" on="update" version="0.6.6"><![CDATA[
+UPDATE `<%?prefix%>mail_attachments` SET `className` = "Mail_Shop_Customer_Ordered" WHERE `className` = "Mail_Shop_Order_Customer";
+]]></sql>
+	<sql type="mysql" on="update" version="0.7.9"><![CDATA[
+RENAME TABLE `<%?prefix%>shop_customers` TO `<%?prefix%>shop_customers_old`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_customers` (
+  `customerId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`customerId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_customers`;
+DROP TABLE IF EXISTS `<%?prefix%>shop_order_positions`;
+DROP TABLE IF EXISTS `<%?prefix%>shop_orders`;
+DROP TABLE IF EXISTS `<%?prefix%>shop_receipts`;
+DELETE FROM `<%?prefix%>mail_attachments` WHERE className = "Mail_Shop_Customer_Ordered";
+]]></sql>
+</module>

@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<module>
+	<title>Info: Manual</title>
+	<description><![CDATA[Viewer for documents written using Markdown.
+
+Additionally contains editing features which need to be enabled.
+
+Features of viewer:
+list>
+- Documents are existing as files and can be stored in (nested) folders
+- Markdown syntax can be rendered:
+list>
+	- before delivery using serverside Markdown renderer (server-inline)
+	- before display using AJAX and serverside Markdown renderer (server-ajax)
+	- before display using PageDown.js (client)
+<list
+<list
+Features of editor:
+list>
+- Documents can be added, updated, renamed/moved or removed
+- Document list order can be managed by pushing documents up or down
+- Renaming a document will adjust links to this document in others
+<list
+This module can be localized.
+]]></description>
+	<version>0.7.8</version>
+	<log version="0.6.3">Extract CSS to style file.</log>
+	<log version="0.6.4">Add support for serverside Markdown rendering.</log>
+	<log version="0.6.5">Add configuration and detection of renderer.</log>
+	<log version="0.6.6">Load script and style only within module.</log>
+	<log version="0.6.7">Add support for new AJAJ client.</log>
+	<log version="0.6.8">Add relation to module JS:CodeMirror.</log>
+	<log version="0.6.9">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.7.0">Replace file base solution by database.</log>
+	<log version="0.7.1">Add helper for category page navigation list.</log>
+	<log versiob="0.7.2">Improve category selection.</log>
+	<log version="0.7.3">Support nested pages.</log>
+	<log version="0.7.4">Add hook for shortcodes.</log>
+	<log version="0.7.5">Migrate to support CeusMedia::Common 0.8.5.</log>
+	<log version="0.7.6">Improve code style to catch up with PHP 7.3+.</log>
+	<log version="0.7.7">Save open folders.</log>
+	<log version="0.7.8">Use specific markdown renderer.</log>
+<!--	<log version="0.8.x">Use editor configuration switch for read-only mode.</log>-->
+<!--	<log version="0.8.x">Replace CodeMirror as Markdown editor by SimpleMDE.</log>-->
+<!--	<log version="0.8.x">Remove file based solution.</log>-->
+<!--	<log version="0.8.x">Migration relinking to database solution.</log>-->
+<!--	<log version="0.8.x">Improve JavaScript handling of page tree.</log>-->
+	<category>Info</category>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Ajax/Info/Manual.php</class>
+		<class>Controller/Info/Manual.php</class>
+		<class>Hook/Info/Manual/Shortcode.php</class>
+		<class>Model/Manual/Category.php</class>
+		<class>Model/Manual/Page.php</class>
+		<class>Model/Manual/Version.php</class>
+		<class>View/Helper/Info/Manual/CategoryPageList.php</class>
+		<class>View/Helper/Info/Manual/CategorySelector.php</class>
+		<class>View/Helper/Info/Manual/PageTree.php</class>
+		<class>View/Helper/Info/Manual/Url.php</class>
+		<class>View/Helper/Info/Manual/ViewerBar.php</class>
+		<class>View/Info/Manual.php</class>
+		<template>info/manual/add.php</template>
+		<template>info/manual/edit.php</template>
+		<template>info/manual/import.php</template>
+		<template>info/manual/index.php</template>
+		<template>info/manual/page.php</template>
+		<locale>de/info/manual.ini</locale>
+		<locale>de/info/manual/demo.syntax.md</locale>
+		<locale>de/info/manual/order.list</locale>
+		<script>Info.Manual.js</script>
+		<style>module.info.manual.css</style>
+	</files>
+	<config type="string" protected="yes" name="path">locales/de/info/manual/</config>
+	<config type="string" protected="no" name="renderer" values="client,server-ajax,server-inline">server-inline</config>
+	<config type="boolean" name="editor">1</config>
+	<config type="integer" name="editor.rows">20</config>
+	<relations>
+		<needs type="module">JS_jQuery</needs>
+		<needs type="module">JS_CodeMirror</needs>
+		<needs type="module">JS_Markdown</needs>
+		<needs type="module">Resource_Database</needs>
+		<needs type="module">UI_Bootstrap_Treeview</needs>
+		<needs type="module">UI_Markdown</needs>
+		<needs type="module">UI_Shortcode</needs>
+	</relations>
+	<hook type="resource" resource="View" event="onRenderContent">Hook_Info_Manual_Shortcode::onViewRenderContent</hook>
+	<sql type="mysql" on="install" version="0.7.0"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>manual_categories`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>manual_categories` (
+  `manualCategoryId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `creatorId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `format` tinyint(1) unsigned NOT NULL,
+  `version` int(10) unsigned NOT NULL,
+  `rank` int(10) unsigned NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`manualCategoryId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `status` (`status`),
+  KEY `format` (`format`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>manual_pages`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>manual_pages` (
+  `manualPageId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `manualCategoryId` int(11) unsigned NOT NULL,
+  `creatorId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `format` tinyint(1) unsigned NOT NULL,
+  `version` int(10) unsigned NOT NULL,
+  `rank` int(10) unsigned NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`manualPageId`),
+  KEY `manualCategoryId` (`manualCategoryId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `status` (`status`),
+  KEY `format` (`format`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>manual_versions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>manual_versions` (
+  `manualVersionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userId` int(11) unsigned NOT NULL,
+  `objectId` int(11) unsigned NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL,
+  `version` int(11) unsigned NOT NULL,
+  `object` text COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`manualVersionId`),
+  KEY `userId` (`userId`),
+  KEY `objectId` (`objectId`),
+  KEY `type` (`type`),
+  KEY `version` (`version`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="update" version="0.7.3"><![CDATA[
+ALTER TABLE `<%?prefix%>manual_pages` ADD `parentId` INT( 11 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `creatorId`,
+ADD INDEX ( `parentId` ) ;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>manual_pages`;
+DROP TABLE IF EXISTS `<%?prefix%>manual_categories`;
+DROP TABLE IF EXISTS `<%?prefix%>manual_versions`;
+]]></sql>
+</module>

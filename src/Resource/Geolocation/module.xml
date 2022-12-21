@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Geolocation</title>
+	<description><![CDATA[Supports OpenGeoDB.
+
+This module includes OpenGeoDB with some extensions:
+list>
+- country data only for germany
+- new postcodes model and data
+<list
+
+In order to use this base data, you will need to install SQL scripts:
+list>
+- geodb.sql
+- postcodes.sql
+<list
+manually, since automatic unzipping and loading is not implemented right now.
+
+Otherwise please install the geo database dump fitting to your needs on your own.
+]]></description>
+	<category>Resource</category>
+	<version>0.3.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Extract model from logic.</log>
+	<log version="0.3.1">New postcode model.</log>
+	<log version="0.3.2">Resolve postcodes (~60K).</log>
+	<log version="0.3.3">Add database dumps of geodb and postcodes (~8MB).</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Model/OpenGeo.php</class>
+		<class>Model/OpenGeo/Postcode.php</class>
+		<class>Model/Postcode.php</class>
+		<class>Logic/Geocoder.php</class>
+		<sql>geodb.sql.gz</sql>
+		<sql>postcodes.sql.gz</sql>
+	</files>
+	<relations/>
+	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+	]]></hook>
+</module>

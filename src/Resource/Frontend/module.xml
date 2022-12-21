@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Frontend</title>
+	<description><![CDATA[Remote access to frontend for administrative and management modules.]]></description>
+	<category>Resource</category>
+	<version>0.3.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Refactored logic class to singleton.</log>
+	<log version="0.2.2">Add method to get frontend languages, default language first.</log>
+	<log version="0.2.3">Add method to get frontend configuration value.</log>
+	<log version="0.2.4">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.2.5">Improve detection of base URI.</log>
+	<log version="0.3">Use static logic method getRemoteEnv to create real remote environment.</log>
+	<log version="0.3.1">Extract hook to own hook class.</log>
+	<log version="0.3.2">Use framework logic class for frontend logic.</log>
+	<log version="0.3.3">Improve code strictness and style.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Hook/Resource/Frontend.php</class>
+		<class>Logic/Frontend.php</class>
+	</files>
+	<config protected="yes" type="string" name="path">../</config>
+	<relations/>
+	<hook type="resource" resource="Page" event="applyModules">Hook_Resource_Frontend::onPageApplyModules</hook>
+</module>

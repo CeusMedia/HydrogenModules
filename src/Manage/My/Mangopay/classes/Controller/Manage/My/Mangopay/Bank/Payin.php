@@ -1,0 +1,65 @@
+<?php
+
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
+
+/**
+ *	@todo   			migrate index to add and implement payin history on index
+ */
+class Controller_Manage_My_Mangopay_Bank_Payin extends Controller_Manage_My_Mangopay_Abstract
+{
+	protected $words;
+
+	public function index( $bankAccountId, $walletId = NULL, $amount = NULL )
+	{
+		$bankAccount	= $this->checkIsOwnBankAccount( $bankAccountId );
+		$walletId = $walletId ? $walletId : $this->request->get( 'walletId' );
+		if( $walletId ){
+			$wallet	= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );
+			$this->addData( 'currency', $wallet->Currency );
+		}
+
+		$fees			= $this->moduleConfig->getAll( 'fees.payin.' );
+		$this->saveBackLink( 'from', 'from' );											//  @todo kriss: may be earlier?
+		$isPost			= $this->request->getMethod() === "POST";
+		$hasAmount		= strlen( trim( $this->request->get( 'amount' ) ) );
+		$hasCurrency	= strlen( trim( $this->request->get( 'currency' ) ) );
+		$hasWallet		= strlen( trim( $this->request->get( 'walletId' ) ) );
+		if( $isPost && $hasAmount && $hasCurrency && $hasWallet ){						//  form has been executed
+			$walletId		= $this->request->get( 'walletId' );
+			$wallet			= $this->checkWalletIsOwn( $walletId );						//  @todo handle invalid walled
+			try{
+				$createdPayIn	= $this->logic->createPayInFromBankAccount(
+					$this->userId,
+					$walletId,
+					$bankAccountId,
+					round( $this->request->get( 'amount' ) * 100 )
+				);
+				$this->addData( 'bankAccount', $bankAccount );
+				$this->addData( 'wallet', $wallet );
+				$this->addData( 'payin', $createdPayIn );
+				$this->addData( 'from', $this->session->get( $this->sessionPrefix.'from' ) );
+			}
+			catch( MangoPay\Libraries\ResponseException $e ){
+				$this->handleMangopayResponseException( $e );
+			}
+			catch( Exception $e ){
+				HtmlExceptionPage::display( $e );
+				exit;
+			}
+		}
+		$wallets		= $this->logic->getUserWallets( $this->userId );
+		$this->addData( 'walletId', $walletId );
+		$this->addData( 'wallets', $wallets );
+		$this->addData( 'bankAccountId', $bankAccountId );
+		$this->addData( 'bankAccount', $bankAccount );
+		$this->addData( 'from', $this->request->get( 'from' ) );
+		$this->addData( 'amount', $amount );
+	}
+
+	protected function __onInit(): void
+	{
+		parent::__onInit();
+//		$this->words			= $this->getWords( 'add', 'manage/my/mangopay/bank/payin' );
+		$this->sessionPrefix	= 'manage_my_mangopay_bank_payin_';
+	}
+}

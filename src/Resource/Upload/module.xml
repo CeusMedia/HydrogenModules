@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Upload</title>
+	<description><![CDATA[Basic handling for HTTP uploads.]]></description>
+	<category>Resource</category>
+	<version>0.3.6</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Extended configuration by mandatory attributes.</log>
+	<log version="0.2.1">Fixed bug and added method getFileName().</log>
+	<log version="0.2.2">Added method getMaxUploadSize.</log>
+	<log version="0.2.3">Extend getMaxUploadSize by other own limits.</log>
+	<log version="0.2.4">Sanitize uploaded file name.</log>
+	<log version="0.3">Include error message handling.</log>
+	<log version="0.3.1">Add support for module Resource:FileBucket.</log>
+	<log version="0.3.2">Implement virus check using module Resource:ClamScan.</log>
+	<log version="0.3.3">Add virus check error handling.</log>
+	<log version="0.3.4">Extend upload by method to get file size.</log>
+	<log version="0.3.5">Extend upload error view helper by static rendering.</log>
+	<log version="0.3.6">Support list of allowed MIME types as string.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Logic/Upload.php</class>
+		<class>View/Helper/UploadError.php</class>
+		<locale>de/resource/upload.ini</locale>
+	</files>
+	<relations>
+		<needs type="module">Resource_ClamScan</needs>
+	</relations>
+</module>

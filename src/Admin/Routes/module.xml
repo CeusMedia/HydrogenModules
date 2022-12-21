@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<module>
+	<title>Admin: Routes</title>
+	<description><![CDATA[Editor for frontend routes.]]></description>
+	<category>Administration</category>
+	<version>0.2.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Support database management.</log>
+	<log version="0.2.2">Add add and edit views.</log>
+	<log version="0.2.3">Prefill HTTP status codes.</log>
+	<log version="0.2.4">Add relation to module Server:Router.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Admin/Route.php</class>
+		<class>View/Admin/Route.php</class>
+		<template>admin/route/add.php</template>
+		<template>admin/route/edit.php</template>
+		<template>admin/route/index.php</template>
+	</files>
+	<link access="acl" xml:lang="de" rank="95" path="admin/route">Routes</link>
+	<link access="acl" xml:lang="en" rank="95" path="admin/route">Routen</link>
+	<relations>
+		<needs type="module">Server_Router</needs>
+	</relations>
+</module>

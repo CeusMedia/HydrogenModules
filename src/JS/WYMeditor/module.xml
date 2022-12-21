@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: WYMeditor</title>
+	<description><![CDATA[WYSIWYM Editor.]]></description>
+	<version>1.0b1-p1</version>
+	<log version="1.0b1-p1">Extract hook to own hook class.</log>
+	<category>JavaScript</category>
+	<company site="http://www.wymeditor.org/">wymeditor.org</company>
+	<author><![CDATA[Jean-François Hovinne]]></author>
+	<license source="http://www.opensource.org/licenses/mit-license.php">MIT</license>
+	<license source="http://www.gnu.org/copyleft/gpl.html">GPL</license>
+	<files>
+		<class>Hook/JS/WYMeditor.php</class>
+		<script load="auto" source="lib">jquery/wymeditor/1.0b1/jquery.wymeditor.min.js</script>
+	</files>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_WYMeditor::onPageApplyModules</hook>
+</module>

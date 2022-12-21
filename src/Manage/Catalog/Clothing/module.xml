@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Catalog: Clothing</title>
+	<description><![CDATA[Management for clothing catalog.]]></description>
+	<category>Management</category>
+	<version>0.2.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Extended article features.</log>
+	<log version="0.2.2">Support article images.</log>
+	<log version="0.2.3">Add language support using module Resource:Localization.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Manage/Catalog/Clothing/Article.php</class>
+		<class>Controller/Manage/Catalog/Clothing/Category.php</class>
+		<class>Logic/ShopBridge/Clothing.php</class>
+		<class>Model/Catalog/Clothing/Article.php</class>
+		<class>Model/Catalog/Clothing/Category.php</class>
+		<class>View/Manage/Catalog/Clothing/Article.php</class>
+		<class>View/Manage/Catalog/Clothing/Category.php</class>
+		<template>manage/catalog/clothing/article/add.php</template>
+		<template>manage/catalog/clothing/article/edit.php</template>
+		<template>manage/catalog/clothing/article/index.php</template>
+		<template>manage/catalog/clothing/category/add.php</template>
+		<template>manage/catalog/clothing/category/edit.php</template>
+		<template>manage/catalog/clothing/category/index.php</template>
+		<locale>de/manage/catalog/clothing/article.ini</locale>
+		<locale>de/manage/catalog/clothing/category.ini</locale>
+		<locale>de/html/manage/catalog/clothing/article/add/bottom.html</locale>
+		<locale>de/html/manage/catalog/clothing/article/add/top.html</locale>
+		<locale>de/html/manage/catalog/clothing/article/edit/bottom.html</locale>
+		<locale>de/html/manage/catalog/clothing/article/edit/top.html</locale>
+		<locale>de/html/manage/catalog/clothing/article/index/bottom.html</locale>
+		<locale>de/html/manage/catalog/clothing/article/index/top.html</locale>
+		<locale>de/html/manage/catalog/clothing/category/add/bottom.html</locale>
+		<locale>de/html/manage/catalog/clothing/category/add/top.html</locale>
+		<locale>de/html/manage/catalog/clothing/category/edit/bottom.html</locale>
+		<locale>de/html/manage/catalog/clothing/category/edit/top.html</locale>
+		<locale>de/html/manage/catalog/clothing/category/index/bottom.html</locale>
+		<locale>de/html/manage/catalog/clothing/category/index/top.html</locale>
+	</files>
+	<relations>
+		<needs type="module">Manage_Shop</needs>
+		<supports type="module">Resource_Localization</supports>
+	</relations>
+<!--	<hook type="resource" resource="TinyMCE" event="getImageList">View_Manage_Catalog_Clothing_Article::___onTinyMCE_getImageList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">View_Manage_Catalog_Clothing_Article::___onTinyMCE_getLinkList</hook>-->
+</module>

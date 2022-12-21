@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<module>
+	<title>Admin: Database: Backup</title>
+	<description><![CDATA[Backup and restore database dumps.]]></description>
+	<category>Administration</category>
+	<version>0.3.6</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Improve index timestamp handling.</log>
+	<log version="0.2.2">Use general module main switch.</log>
+	<log version="0.3">Allow to install and use dump copies.</log>
+	<log version="0.3.1">Extract logic from controller.</log>
+	<log version="0.3.2">Split dump view into panels.</log>
+	<log version="0.3.3">Extract hook method from controller to own hook class.</log>
+	<log version="0.3.4">Add relation to module UI:Helper:HTML.</log>
+	<log version="0.3.5">Support remote dump management by module Resource:Frontend.</log>
+	<log version="0.3.6">Improve code style.</log>
+<!--	<log version="0.3.x">Support dump switch.</log>-->
+<!--	<log version="0.3.y">Add locale files.</log>-->
+<!--	<log version="0.3.z">Extract view panels.</log>-->
+<!--	<log version="0.4">Replace dump comment file by dump model.</log>-->
+<!--	<log version="0.4.1">Improve notice on using dump copy.</log>-->
+<!--	<log version="0.4.2">Add compression for dumps.</log>-->
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Admin/Database/Backup.php</class>
+		<class>Controller/Admin/Database/Backup/Copy.php</class>
+		<class>Logic/Database/Backup.php</class>
+		<class>Logic/Database/Backup/Copy.php</class>
+		<class>View/Admin/Database/Backup.php</class>
+		<class>View/Admin/Database/Backup/Copy.php</class>
+		<class>Hook/Admin/Database/Backup/Copy.php</class>
+		<template>admin/database/backup/backup.php</template>
+		<template>admin/database/backup/index.php</template>
+		<template>admin/database/backup/view.php</template>
+		<template>admin/database/backup/view.facts.php</template>
+		<template>admin/database/backup/view.copy.php</template>
+		<template>admin/database/backup/view.download.php</template>
+		<template>admin/database/backup/view.recover.php</template>
+<!--		<file>config/jobs/admin.backup.database.xml</file>-->
+	</files>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+	<config protected="yes" type="string" name="path" mandatory="yes">config/sql/</config>
+<!--	<config protected="yes" type="boolean" name="copy.active">yes</config>-->
+	<config protected="yes" type="string" name="copy.database"></config>
+	<relations>
+		<needs type="module">UI_Helper_HTML</needs>
+	</relations>
+	<hook type="event" resource="Page" event="applyModules">Hook_Admin_Database_Backup_Copy::onPageApplyModules</hook>
+	<hook type="event" resource="Env" event="constructEnd">Hook_Admin_Database_Backup_Copy::onPageBuild</hook>
+</module>

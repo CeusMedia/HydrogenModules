@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: FileBucket</title>
+	<description><![CDATA[Local storage of hashed files.
+
+Indices add files in database and stores file by hash names.
+Files can be assigned to modules and virtual paths.
+		]]></description>
+	<category>Resource</category>
+	<version>0.2.8</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Implement removal methods.</log>
+	<log version="0.2.2">Allow to rename bucket file path.</log>
+	<log version="0.2.3">Extend logic by getFileSize.</log>
+	<log version="0.2.4">Extend upload error view helper by static rendering.</log>
+	<log version="0.2.5">Create .htaccess in file path if not existing.</log>
+	<log version="0.2.6">Let logic class inherit from new framework logic class.</log>
+	<log version="0.2.7">Add method to cleanup files.</log>
+	<log version="0.2.8">Support download.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/File.php</class>
+		<class>Logic/FileBucket.php</class>
+		<class>Model/File.php</class>
+		<class>View/File.php</class>
+	</files>
+	<config protected="yes" type="string" name="path" title="path to hashed files within contents folder">files/</config>
+	<relations/>
+	<link access="public" path="file/index"/>
+	<sql on="install" type="mysql" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>files`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>files` (
+  `fileId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `creatorId` int(11) UNSIGNED DEFAULT '0',
+  `moduleId` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `hash` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `mimeType` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `fileSize` decimal(20,0) NOT NULL,
+  `filePath` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `fileName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  `viewedAt` decimal(12,0) UNSIGNED DEFAULT '0',
+  `viewCount` int(11) UNSIGNED DEFAULT '0',
+  PRIMARY KEY (`fileId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `hash` (`hash`),
+  KEY `mimeType` (`mimeType`),
+  KEY `fileSize` (`fileSize`),
+  KEY `filePath` (`filePath`),
+  KEY `fileName` (`fileName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+</module>

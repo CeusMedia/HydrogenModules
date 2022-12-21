@@ -1,0 +1,264 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource: Mail: Group</title>
+	<description/>
+	<category>Resource</category>
+	<version>0.4.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add database models for groups and members.</log>
+	<log version="0.2.2">Add database models for servers and roles.</log>
+	<log version="0.2.4">Add logic and job.</log>
+	<log version="0.3">Refactoring to new module Resource:Mail:Group.</log>
+	<log version="0.3.1">Implement unregister.</log>
+	<log version="0.3.2">Extend server model by IMAP and SMTP.</log>
+	<log version="0.3.3">Add model for mail group messages.</log>
+	<log version="0.3.4">Extend group model by type, visibility and description.</log>
+	<log version="0.3.5">Add model for mail group actions.</log>
+	<log version="0.3.6">Add hooks to handle confirmed member actions.</log>
+	<log version="0.3.7">Add mails for member status change.</log>
+	<log version="0.3.8">Add invite and silent add.</log>
+	<log version="0.3.9">Support automatic mail attachments.</log>
+	<log version="0.4">Extract message logic to own class.</log>
+	<log version="0.4.1">Refactor mail classes and plain part locales.</log>
+	<log version="0.4.2">Add terms of use and privacy note.</log>
+	<log version="0.4.3">Replace job file by module configuration.</log>
+	<log version="0.4.4">Improve code style.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Info/Mail/Group.php</class>
+		<class>Job/Mail/Group.php</class>
+		<class>Hook/Resource/Mail/Group.php</class>
+		<class>Hook/Resource/Mail/Group/Member.php</class>
+		<class>Logic/Mail/Group.php</class>
+		<class>Logic/Mail/Group/Message.php</class>
+		<class>Mail/Info/Mail/Group/Manager/GroupActivated.php</class>
+		<class>Mail/Info/Mail/Group/Manager/GroupDeactivated.php</class>
+		<class>Mail/Info/Mail/Group/Manager/MemberJoined.php</class>
+		<class>Mail/Info/Mail/Group/Manager/MemberLeft.php</class>
+		<class>Mail/Info/Mail/Group/Manager/MemberRegistered.php</class>
+		<class>Mail/Info/Mail/Group/Manager/MemberRejected.php</class>
+		<class>Mail/Info/Mail/Group/Member/Activated.php</class>
+		<class>Mail/Info/Mail/Group/Member/Added.php</class>
+		<class>Mail/Info/Mail/Group/Member/Autojoined.php</class>
+		<class>Mail/Info/Mail/Group/Member/Deactivated.php</class>
+		<class>Mail/Info/Mail/Group/Member/Invited.php</class>
+		<class>Mail/Info/Mail/Group/Member/Joined.php</class>
+		<class>Mail/Info/Mail/Group/Member/Joining.php</class>
+		<class>Mail/Info/Mail/Group/Member/Leaving.php</class>
+		<class>Mail/Info/Mail/Group/Member/Left.php</class>
+		<class>Mail/Info/Mail/Group/Member/Registered.php</class>
+		<class>Mail/Info/Mail/Group/Member/Rejected.php</class>
+		<class>Mail/Info/Mail/Group/Members/MemberActivated.php</class>
+		<class>Mail/Info/Mail/Group/Members/MemberDeactivated.php</class>
+		<class>Mail/Info/Mail/Group/Members/MemberJoined.php</class>
+		<class>Mail/Info/Mail/Group/Members/MemberLeft.php</class>
+		<class>Model/Mail/Group.php</class>
+		<class>Model/Mail/Group/Action.php</class>
+		<class>Model/Mail/Group/Member.php</class>
+		<class>Model/Mail/Group/Message.php</class>
+		<class>Model/Mail/Group/Role.php</class>
+		<class>Model/Mail/Group/Server.php</class>
+		<class>View/Info/Mail/Group.php</class>
+		<locale>de/html/info/mail/group/privacyNotice.html</locale>
+		<locale>de/html/info/mail/group/termsOfUse.html</locale>
+		<locale>de/info/mail/group.ini</locale>
+		<locale>de/mail/info/mail/group/manager/groupActivated.txt</locale>
+		<locale>de/mail/info/mail/group/manager/groupDeactivated.txt</locale>
+		<locale>de/mail/info/mail/group/manager/memberJoined.txt</locale>
+		<locale>de/mail/info/mail/group/manager/memberLeft.txt</locale>
+		<locale>de/mail/info/mail/group/manager/memberRegistered.txt</locale>
+		<locale>de/mail/info/mail/group/manager/memberRejected.txt</locale>
+		<locale>de/mail/info/mail/group/member/activated.txt</locale>
+		<locale>de/mail/info/mail/group/member/added.txt</locale>
+		<locale>de/mail/info/mail/group/member/autojoined.txt</locale>
+		<locale>de/mail/info/mail/group/member/deactivated.txt</locale>
+		<locale>de/mail/info/mail/group/member/invited.txt</locale>
+		<locale>de/mail/info/mail/group/member/joined.txt</locale>
+		<locale>de/mail/info/mail/group/member/joining.txt</locale>
+		<locale>de/mail/info/mail/group/member/leaving.txt</locale>
+		<locale>de/mail/info/mail/group/member/left.txt</locale>
+		<locale>de/mail/info/mail/group/member/registered.txt</locale>
+		<locale>de/mail/info/mail/group/member/rejected.txt</locale>
+		<locale>de/mail/info/mail/group/members/groupActivated.txt</locale>
+		<locale>de/mail/info/mail/group/members/groupDeactivated.txt</locale>
+		<locale>de/mail/info/mail/group/members/memberActivated.txt</locale>
+		<locale>de/mail/info/mail/group/members/memberDeactivated.txt</locale>
+		<locale>de/mail/info/mail/group/members/memberJoined.txt</locale>
+		<locale>de/mail/info/mail/group/members/memberLeft.txt</locale>
+		<template>info/mail/group/index.php</template>
+		<template>info/mail/group/join.php</template>
+		<template>info/mail/group/joined.php</template>
+		<template>info/mail/group/leave.php</template>
+		<template>info/mail/group/view.php</template>
+		<template>info/mail/group/register.php</template>
+<!--		<style source="theme" load="auto" level="end">module.work.mail.sync.css</style>-->
+<!--		<script load="auto" level="end">module.work.mail.group.js</script>-->
+	</files>
+	<relations>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+	</relations>
+	<link access="public" path="info/mail/group/index"/>
+	<link access="public" path="info/mail/group/join"/>
+	<link access="public" path="info/mail/group/joined"/>
+	<link access="public" path="info/mail/group/leave"/>
+	<link access="public" path="info/mail/group/view"/>
+	<link access="public" path="info/mail/group/completeMemberAction"/>
+	<hook type="resource" resource="MailGroup" event="groupActivated">Hook_Resource_Mail_Group::onGroupActivated</hook>
+	<hook type="resource" resource="MailGroup" event="groupDeactivated">Hook_Resource_Mail_Group::onGroupDeactivated</hook>
+	<hook type="resource" resource="MailGroup" event="memberActivated">Hook_Resource_Mail_Group_Member::onMemberActivated</hook>
+	<hook type="resource" resource="MailGroup" event="memberDeactivated">Hook_Resource_Mail_Group_Member::onMemberDeactivated</hook>
+	<hook type="resource" resource="MailGroup" event="memberJoined">Hook_Resource_Mail_Group_Member::onMemberJoined</hook>
+	<hook type="resource" resource="MailGroup" event="memberLeft">Hook_Resource_Mail_Group_Member::onMemberLeft</hook>
+	<hook type="resource" resource="MailGroup" event="memberRejected">Hook_Resource_Mail_Group_Member::onMemberReject</hook>
+	<hook type="resource" resource="MailGroupAction" event="confirmAfterJoin">Hook_Resource_Mail_Group::onConfirmAfterJoin</hook>
+	<hook type="resource" resource="MailGroupAction" event="deactivateAfterLeaving">Hook_Resource_Mail_Group::onDeactivateAfterLeaving</hook>
+	<job id="Mail.Group.handle">Mail_Group::handle</job>
+	<job id="Mail.Group.test">>Mail_Group::test</job>
+	<job id="Mail.Group.Members.activate">Mail_Group::activateConfirmedMembers</job>
+	<job id="Mail.Group.Members.inform">Mail_Group::informMembersAboutNewMember</job>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_groups`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_groups` (
+  `mailGroupId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mailGroupServerId` int(11) unsigned NOT NULL,
+  `defaultRoleId` tinyint(1) unsigned NOT NULL,
+  `adminId` int(10) unsigned NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `address` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `bounce` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`mailGroupId`),
+  UNIQUE KEY `address` (`address`),
+  UNIQUE KEY `title` (`title`),
+  KEY `mailServerId` (`mailGroupServerId`),
+  KEY `status` (`status`),
+  KEY `adminId` (`adminId`),
+  KEY `defaultRoleId` (`defaultRoleId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_members`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_members` (
+  `mailGroupMemberId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mailGroupId` int(10) unsigned NOT NULL,
+  `roleId` int(10) unsigned NOT NULL,
+  `status` tinyint(1) unsigned NOT NULL,
+  `address` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`mailGroupMemberId`),
+  KEY `mailGroupId` (`mailGroupId`),
+  KEY `status` (`status`),
+  KEY `address` (`address`),
+  KEY `roleId` (`roleId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_roles`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_roles` (
+  `mailGroupRoleId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) unsigned NOT NULL,
+  `rank` tinyint(1) unsigned NOT NULL,
+  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `read` tinyint(1) unsigned NOT NULL,
+  `write` tinyint(1) unsigned NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`mailGroupRoleId`),
+  UNIQUE KEY `title` (`title`),
+  KEY `status` (`status`),
+  KEY `rank` (`rank`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_servers`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_servers` (
+  `mailGroupServerId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) unsigned NOT NULL,
+  `imapHost` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `imapPort` decimal(5,0) unsigned NOT NULL,
+  `smtpHost` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `smtpPort` decimal(5,0) unsigned NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`mailGroupServerId`),
+  KEY `status` (`status`),
+  KEY `imapHost` (`imapHost`),
+  KEY `imapPort` (`imapPort`),
+  KEY `smtpHost` (`smtpHost`),
+  KEY `smtpPort` (`smtpPort`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="update" version="0.3.3"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_messages`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_messages` (
+  `mailGroupMessageId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mailGroupId` int(10) UNSIGNED NOT NULL,
+  `mailGroupMemberId` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL,
+  `parentId` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `messageId` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `raw` blob NOT NULL,
+  `object` blob NOT NULL,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`mailGroupMessageId`),
+  KEY `mailGroupId` (`mailGroupId`),
+  KEY `mailGroupMemberId` (`mailGroupMemberId`),
+  KEY `status` (`status`),
+  KEY `parentId` (`parentId`),
+  KEY `messageId` (`messageId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="update" version="0.3.4"><![CDATA[
+ALTER TABLE `<%?prefix%>mail_groups` CHANGE `adminId` `managerId` INT(11) UNSIGNED NOT NULL;
+ALTER TABLE `<%?prefix%>mail_groups` ADD `type` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:public, 1:join, 2:register, 3:invite' AFTER `managerId`;
+ALTER TABLE `<%?prefix%>mail_groups` ADD `visibility` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0:public, 1:inside, 2:manager, 3:hidden' AFTER `type`;
+ALTER TABLE `<%?prefix%>mail_groups` ADD `subtitle` VARCHAR(200) NULL DEFAULT NULL AFTER `bounce`;
+ALTER TABLE `<%?prefix%>mail_groups` ADD `description` TEXT NULL DEFAULT NULL AFTER `subtitle`;
+ALTER TABLE `<%?prefix%>mail_groups` ADD `terms` TEXT NULL DEFAULT NULL AFTER `description`;
+ALTER TABLE `<%?prefix%>mail_groups` ADD INDEX (`type`);
+ALTER TABLE `<%?prefix%>mail_groups` ADD INDEX (`visibility`);
+ALTER TABLE `<%?prefix%>mail_groups` DROP INDEX `title`, ADD UNIQUE `title` (`title`) USING BTREE;
+ALTER TABLE `<%?prefix%>mail_group_roles` DROP INDEX status;
+ALTER TABLE `<%?prefix%>mail_group_roles` ADD INDEX(`status`);
+ALTER TABLE `<%?prefix%>mail_group_roles` ADD INDEX(`rank`);
+]]></sql>
+	<sql type="mysql" on="update" version="0.3.5"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_actions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>mail_group_actions` (
+  `mailGroupActionId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `mailGroupId` int(10) UNSIGNED NOT NULL,
+  `mailGroupMemberId` int(10) UNSIGNED NOT NULL,
+  `status` tinyint(1) NULL DEFAULT '0',
+  `uuid` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `action` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `message` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`mailGroupActionId`),
+  KEY `mailGroupId` (`mailGroupId`),
+  KEY `mailGroupMemberId` (`mailGroupMemberId`),
+  KEY `status` (`status`),
+  KEY `uuid` (`uuid`),
+  KEY `action` (`action`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="update" version="0.4.1"><![CDATA[
+UPDATE `<%?prefix%>mail_groups` SET status = 2 WHERE status = 1;
+UPDATE `<%?prefix%>mail_group_members` SET status = -3 WHERE status = -2;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>mail_groups`;
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_members`;
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_messages`;
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_roles`;
+DROP TABLE IF EXISTS `<%?prefix%>mail_group_servers`;
+]]></sql>
+</module>

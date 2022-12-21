@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<module>
+	<title>JSON Server Browser</title>
+	<description><![CDATA[Browser for a JSON server applications.
+This module extends a JSON server application by a browser frontend with controls.
+Imagine you have installed a Hydrogen instance with a pure server application which always returns its results in JSON, just like the chat server. Opening the server URL in a browser shows you the JSON response. You need to use the server's REST API just like all other clients. If you need a user interface to request the server this can be integrated into the server application. It extends the server's JSON response by a browser view using (X)HTML + CSS + JavaScript + jQuery and allows you to:
+- have a nicer view when calling the server in a browser
+- quickly control of your server
+- take a deeper view on server responses during developement and debugging
+<b>Attention</b>: You will need to <u>secure</u> this server user interface if you face anonymous access.
+]]></description>
+	<category>Server</category>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Improve exception handling.</log>
+	<log version="0.3">Migrate single template to panels.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<todo>implement power switch: on - show browser | off - show pure response</todo>
+	<todo>implement modes: view | control</todo>
+	<todo>implement IP access filter (define IPs in config which are allowed, block all others)</todo>
+	<files>
+		<class>Browser.php</class>
+		<template>browser/index.php</template>
+		<template>browser/panel.debug.php</template>
+		<template>browser/panel.error.php</template>
+		<template>browser/panel.form.php</template>
+		<template>browser/panel.info.php</template>
+		<template>browser/panel.json.php</template>
+		<template>browser/panel.response.php</template>
+		<script>LocalServerFrontendController.js</script>
+		<script>LocalServerFrontendController.min.js</script>
+		<script>browser.js</script>
+		<style>browser.css</style>
+	</files>
+	<relations>
+		<needs type="module">JS_jQuery_deparam</needs>
+		<needs type="module">Server_Info_Disclosure</needs>
+		<needs type="module">UI_Bootstrap</needs>
+		<needs type="module">UI_CSS_Panel</needs>
+	</relations>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+</module>

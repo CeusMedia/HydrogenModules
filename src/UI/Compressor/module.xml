@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Compressor</title>
+	<description><![CDATA[Increases performance of web applications by reducing HTTP requests and traffic.
+
+The default Hydrogen page components for collecting JavaScripts and Stylesheets already are capable to combine and compress collected resources.
+This module configures and enables this compression.
+
+Uses [link:http://www.crockford.com/javascript/jsmin.html|JSMin] by [link:http://www.crockford.com/|Douglas Crockford].
+]]></description>
+	<category>User Interface</category>
+	<version>0.4.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Added more options.</log>
+	<log version="0.3.1">Added flush action to clear cache.</log>
+	<log version="0.4">Refactored module hook.</log>
+	<log version="0.4.1">Extracted module hook to controller class.</log>
+	<log version="0.4.2">Support (new) common styles folder.</log>
+	<log version="0.4.3">Extract hook to own class.</log>
+	<log version="0.4.4">Move controller and view classes to subfolder.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>JSMin.php</class>
+		<class>Controller/UI/Compressor.php</class>
+		<class>Hook/UI/Compressor.php</class>
+		<class>View/UI/Compressor.php</class>
+	</files>
+	<config protected="yes" type="string" name="jsCachePath"></config>
+	<config protected="yes" type="boolean" name="jsMinify" mandatory="yes">yes</config>
+	<config protected="yes" type="string" name="jsPrefix">min.</config>
+	<config protected="yes" type="string" name="jsSuffix"></config>
+	<config protected="yes" type="string" name="cssCachePath"></config>
+	<config protected="yes" type="boolean" name="cssMinify" mandatory="yes">yes</config>
+	<config protected="yes" type="string" name="cssPrefix">min.</config>
+	<config protected="yes" type="string" name="cssSuffix"></config>
+	<relations/>
+	<link rank="99" access="public" path="compressor/ui/flush"></link>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Compressor::onApplyModules</hook>
+</module>

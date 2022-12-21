@@ -2,6 +2,8 @@
 <?php
 
 use CeusMedia\Common\CLI\Output\Progress as ProgressOutput;
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\FS\Folder\RegexFilter as RegexFolderFilter;
 
 require_once 'vendor/autoload.php';
 
@@ -39,7 +41,7 @@ class Tool
 		self::dispatch( $action );
 	}
 
-	protected static function dispatch( $action )
+	protected static function dispatch( string $action )
 	{
 		switch( $action ){
 			case 'OldStructure::testSyntax':
@@ -129,19 +131,19 @@ class Tool_OldStructure
 
 	public static function copyToNewStructure()
 	{
-		FS_Folder_Editor::createFolder( self::$pathNew );
-		$folders	= new FS_Folder_RegexFilter( '.', '@^[A-Z]@', FALSE, TRUE, FALSE );
+		FolderEditor::createFolder( self::$pathNew );
+		$folders	= new RegexFolderFilter( '.', '@^[A-Z]@', FALSE, TRUE, FALSE );
 		foreach( $folders as $folder ){
 			if( !file_exists( self::$pathNew.$folder->getFilename() ) ){
-				if( $verbose )
+				if( self::$verbose )
 					echo "- copy folder: ".$folder->getFilename().' ... ';
 				try {
-					FS_Folder_Editor::copyFolder( $folder->getPathname(), self::$pathNew.$folder->getFilename() );
-					if( $verbose )
+					FolderEditor::copyFolder( $folder->getPathname(), self::$pathNew.$folder->getFilename() );
+					if( self::$verbose )
 						echo "done".PHP_EOL;
 				}
 				catch( Throwable $t ){
-					if( $verbose )
+					if( self::$verbose )
 						echo "skipped: ".$t->getMessage().PHP_EOL;
 				}
 			}
@@ -173,15 +175,15 @@ class Tool_NewStructure
 		echo "renamed ".count( $list )." file".PHP_EOL;
 	}
 
-	public static function createLinksToOldStructure()
+	public static function createLinksToOldStructure( bool $verbose = FALSE )
 	{
-		$folders	= new FS_Folder_RegexFilter( '.', '@^[A-Z]@', FALSE, TRUE, FALSE );
+		$folders	= new RegexFolderFilter( '.', '@^[A-Z]@', FALSE, TRUE, FALSE );
 		foreach( $folders as $folder ){
 			$folderName	= $folder->getFilename();
-			if( $verbose )
+			if( $verbose ?? FALSE )
 				echo "- link files in folder: ".$folderName.':'.PHP_EOL;
 			if( !self::$dry )
-				FS_Folder_Editor::createFolder( self::$pathOld.$folderName );
+				FolderEditor::createFolder( self::$pathOld.$folderName );
 			$files = Tool_Utilities::scanFolder( self::$pathNew.$folderName );
 			$nr = 0;
 			foreach( $files as $filePathAbsolute => $filePathShort ){
@@ -189,7 +191,7 @@ class Tool_NewStructure
 				$wayBack	= '../';
 				if( $path ){
 					if( !self::$dry )
-						FS_Folder_Editor::createFolder( self::$pathOld.$folderName.'/'.$path );
+						FolderEditor::createFolder( self::$pathOld.$folderName.'/'.$path );
 					$pathParts	= explode( '/', rtrim( $path, '/' ) );
 					$wayBack	= str_repeat( '../', count( $pathParts ) + 1 );
 				}

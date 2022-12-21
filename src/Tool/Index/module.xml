@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<module>
+	<title>Tools: Index</title>
+	<description><![CDATA[Poster of available tools.]]></description>
+	<version>0.1</version>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<category>Tools</category>
+	<files>
+		<class>Controller/Tool/Index.php</class>
+		<class>View/Tool/Index.php</class>
+		<template>tool/index/index.php</template>
+		<locale>de/tool/index.ini</locale>
+		<script>tool.index.js</script>
+		<style>site.tool.index.css</style>
+	</files>
+	<link>tool/index</link>
+</module>
+
