@@ -43,15 +43,15 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
  */
 class View_Helper_Datetime extends Abstraction
 {
-	public $stringEmpty			= "";
-	public $formatDatetime		= 'Y-m-d H:i:s';
-	public $formatDate			= 'Y-m-d';
-	public $formatTime			= 'H:i:s';
-	public $languageFileKey		= 'datetime';
-	public $languageSection		= 'phrases-time';
+	public string $stringEmpty			= '';
+	public string $formatDatetime		= 'Y-m-d H:i:s';
+	public string $formatDate			= 'Y-m-d';
+	public string $formatTime			= 'H:i:s';
+	public string $languageFileKey		= 'datetime';
+	public string $languageSection		= 'phrases-time';
 
-	/**	@var	Alg_Time_DurationPhraser	$phraser */
-	protected $phraser			= NULL;
+	/**	@var	TimeDurationPhraser|NULL	$phraser */
+	protected ?TimeDurationPhraser $phraser			= NULL;
 
 	/**
 	 *	Constructor.
@@ -78,22 +78,20 @@ class View_Helper_Datetime extends Abstraction
 	{
 		if( (int)$timestamp < 1 )
 			return $this->stringEmpty;
-		$format	= $format ? $format : $this->formatDate;
+		$format	= $format ?: $this->formatDate;
 		$date	= date( $format, $timestamp );
 		$attr	= ['class' => 'date'];
-		$date	= HtmlTag::create( 'span', $date, $attr );
-		return $date;
+		return HtmlTag::create( 'span', $date, $attr );
 	}
 
 	public function getDatetimeFromTimestamp( $timestamp, string $format = NULL ): string
 	{
 		if( (int)$timestamp < 1 )
 			return $this->stringEmpty;
-		$format	= $format ? $format : $this->formatDatetime;
+		$format	= $format ?: $this->formatDatetime;
 		$date	= date( $format, $timestamp );
 		$attr	= ['class' => 'datetime'];
-		$date	= HtmlTag::create( 'span', $date, $attr );
-		return $date;
+		return HtmlTag::create( 'span', $date, $attr );
 	}
 
 	public function getDurationPhraseFromTimestamp( $timestamp, bool $showDatetime = FALSE ): string
@@ -102,16 +100,16 @@ class View_Helper_Datetime extends Abstraction
 			return $this->stringEmpty;
 		if( !$this->phraser ){
 			$this->setPhraserLanguage( $this->languageFileKey, $this->languageSection );
-			$phrase	= $this->phraser->getPhraseFromTimestamp( $timestamp );
 		}
+		$phrase	= $this->phraser->getPhraseFromTimestamp( $timestamp );
 		if( $showDatetime ){
 			$datetime	= $this->convertFromTimestamp( (int)$timestamp );
 			$phrase		= HtmlElements::Acronym( $phrase, $datetime );
 		}
-		$attributes	= array(
+		$attributes	= [
 			'class'				=> 'phrase ui-datetime-timephrase',
 			'data-timestamp'	=> $timestamp,
-		);
+		];
 		return HtmlTag::create( 'span', $phrase, $attributes );
 	}
 
@@ -119,18 +117,17 @@ class View_Helper_Datetime extends Abstraction
 	{
 		if( (int)$timestamp < 1 )
 			return $this->stringEmpty;
-		$format	= $format ? $format : $this->formatTime;
+		$format	= $format ?: $this->formatTime;
 		$time	= date( $format, $timestamp );
 		$attr	= ['class' => 'time'];
-		$time	= HtmlTag::create( 'span', $time, $attr );
-		return $time;
+		return HtmlTag::create( 'span', $time, $attr );
 	}
 
 	public function setPhraserLanguage( string $fileKey, string $section ): self
 	{
-		$words		= $this->env->language->getWords( $fileKey );
+		$words		= $this->env->getLanguage()->getWords( $fileKey );
 		if( !isset( $words[$section] ) )
-			throw new InvalidArgumentException( 'Invalid language section "'.$section.'" in topic "'.$topic.'"' );
+			throw new InvalidArgumentException( 'Invalid language section "'.$section.'" in file "'.$fileKey.'"' );
 		$this->phraser	= new TimeDurationPhraser( $words[$section] );
 		return $this;
 	}

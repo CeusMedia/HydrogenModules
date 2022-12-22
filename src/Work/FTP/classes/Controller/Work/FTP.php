@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Time\Clock;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_FTP extends Controller
@@ -55,7 +56,7 @@ class Controller_Work_FTP extends Controller
 	public function index()
 	{
 		$this->connect();
-		$clock	= new Alg_Time_Clock;
+		$clock	= new Clock;
 		$path		= $this->env->getRequest()->get( 'path' );
 		if( $this->env->getRequest()->has( 'refresh' ) )
 			$this->logic->uncache( $path );

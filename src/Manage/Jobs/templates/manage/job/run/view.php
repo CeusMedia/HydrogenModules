@@ -1,5 +1,13 @@
 <?php
+
+use CeusMedia\Common\Alg\Time\Duration;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var array $words */
+/** @var object $definition */
+/** @var object $run */
 
 $helperTime		= new View_Helper_TimePhraser( $env );
 $helperTime->setTemplate( $words['index']['timestampTemplate'] );
@@ -27,7 +35,7 @@ if( $run->ranAt ){
 	$duration	= '-';
 	if( $run->finishedAt ){
 		$duration	= $run->finishedAt - $run->ranAt;
-		$duration	= $duration ? Alg_Time_Duration::render( $duration, ' ', TRUE ) : '-';
+		$duration	= $duration ? Duration::render( $duration, ' ', TRUE ) : '-';
 	}
 	$facts['Start']				= date( 'd.m.Y H:i:s', $run->ranAt );
 	if( $run->finishedAt ){

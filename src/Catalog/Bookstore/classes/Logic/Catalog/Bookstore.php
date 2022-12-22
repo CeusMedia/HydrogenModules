@@ -226,7 +226,6 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@throws		ReflectionException
 	 *	@todo		code doc
 	 */
 	public function getArticlesFromAuthorIds( array $authorIds, bool $returnIds = FALSE ): array
@@ -242,7 +241,6 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@throws		ReflectionException
 	 *	@todo		code doc
 	 */
 	public function getArticlesFromAuthors( array $authors, bool $returnIds = FALSE ): array
@@ -407,7 +405,7 @@ class Logic_Catalog_Bookstore extends Logic
 	/**
 	 *	@todo		code doc
 	 */
-	public function getCategoryOfArticle( $articleId )
+	public function getCategoryOfArticle( $articleId ): object
 	{
 		$relation	= $this->modelArticleCategory->getByIndex( 'articleId', $articleId );
 		$category			= $this->modelCategory->get( $relation->categoryId );
@@ -419,7 +417,7 @@ class Logic_Catalog_Bookstore extends Logic
 	/**
 	 *	@todo		code doc
 	 */
-	public function getCategoryUri( $categoryOrId, string $language = 'de', bool $absolute = FALSE ): string
+	public function getCategoryUri( $categoryOrId, string $language = 'en', bool $absolute = FALSE ): string
 	{
 		$category	= $categoryOrId;
 		if( is_int( $categoryOrId ) )
@@ -459,7 +457,7 @@ class Logic_Catalog_Bookstore extends Logic
 	/**
 	 *	@todo		code doc
 	 */
-	public function getTagUri( $tagOrId, string $language = 'de', bool $absolute = FALSE ): string
+	public function getTagUri( $tagOrId, string $language = 'en', bool $absolute = FALSE ): string
 	{
 		$tag	= $tagOrId;
 		if( is_int( $tagOrId ) )
@@ -500,10 +498,8 @@ class Logic_Catalog_Bookstore extends Logic
 		$tc		= new TimeConverter();
 		$model	= new Model_Article( $this->env, $articleId );
 		$data	= $model->getData( true );
-		if( strpos( $data['publication'], "." ) )
-			$time	= $tc->convertToTimestamp( $data['publication'], 'date' );
-		else
-			$time	= $tc->convertToTimestamp( $data['publication'], 'year' );
+		$format	= strpos( $data['publication'], "." ) ? 'date' : 'year';
+		$time	= $tc->convertToTimestamp( $data['publication'], $format );
 		return $time > time();
 	}
 
@@ -529,4 +525,3 @@ class Logic_Catalog_Bookstore extends Logic
 #		$this->modelReview			= new Model_Catalog_Review( $this->env );
 	}
 }
-

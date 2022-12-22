@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Time\Converter as TimeConverter;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -38,7 +39,7 @@ class View_Helper_Messenger_Bootstrap
 			$class	= $this->classes[$message->type].' messenger-message-'.$nr;
 			$message	= HtmlTag::create( 'div', (string) $message->message, ['class' => 'messenger-message'] );
 			if( $timeFormat && !empty( $message->timestamp ) ){
-				$time		= Alg_Time_Converter::convertToHuman( $message->timestamp, $timeFormat );
+				$time		= TimeConverter::convertToHuman( $message->timestamp, $timeFormat );
 				$time		= HtmlTag::create( 'span',  '['.$time.'] ', ['class' => 'time'] );
 				$message	= $time.$message;
 			}

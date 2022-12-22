@@ -6,8 +6,8 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 {
 	public array $cache		= [];
 	public string $path		= "catalog/bookstore/article/%articleId%";
-	public $taxPercent;
-	public $taxIncluded;
+	public float $taxPercent;
+	public float $taxIncluded;
 
 	/**	@var	Logic_Catalog_Bookstore		$logic		Bookstore logic instance */
 	protected $logic;
@@ -27,7 +27,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@return		object						Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function check( $articleId, $strict = TRUE )
+	public function check( $articleId, bool $strict = TRUE )
 	{
 		if( isset( $this->cache[$articleId] ) )
 			return $this->cache[$articleId];
@@ -45,38 +45,39 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	Returns complete information set of article available via shop bridge.
 	 *	@access		public
 	 *	@param		integer		$articleId		ID of article
+	 *	@param		integer		$quantity		Amount of articles
 	 *	@return		object
 	 */
-	public function get( $articleId, $quantity = 1 )
+	public function get( $articleId, int $quantity = 1 ): object
 	{
-		return (object) array(
+		return (object) [
 			'id'		=> $articleId,
 			'link'		=> $this->getLink( $articleId ),
-			'picture'	=> (object) array(
+			'picture'	=> (object) [
 				'relative'	=> $this->getPicture( $articleId ),
 				'absolute'	=> $this->getPicture( $articleId, TRUE ),
-			),
-			'price'	=> (object) array(
+			],
+			'price'		=> (object) [
 				'one'		=> $this->getPrice( $articleId ),
 				'all'		=> $this->getPrice( $articleId, $quantity ),
-			),
-			'tax'	=> (object) array(
+			],
+			'tax'		=> (object) [
 				'rate'		=> $this->taxPercent,
 				'one'		=> $this->getTax( $articleId ),
 				'all'		=> $this->getTax( $articleId, $quantity ),
-			),
-			'weight'		=> (object) array(
+			],
+			'weight'	=> (object) [
 				'one'		=> $this->getWeight( $articleId ),
 				'all'		=> $this->getWeight( $articleId, $quantity ),
-			),
+			],
 			'title'			=> $this->getTitle( $articleId ),
 			'description'	=> $this->getDescription( $articleId ),
 			'bridge'		=> $this->getBridgeClass(),
 			'bridgeId'		=> $this->getBridgeId(),
-		);
+		];
 	}
 
-	public function getAll( $conditions = [], $orders = [], $limits = [] )
+	public function getAll( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->logic->getArticles( $conditions, $orders, $limits );
 	}
@@ -87,7 +88,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId		ID of article
 	 *	@return		string
 	 */
-	public function getDescription( $articleId )
+	public function getDescription( $articleId ): string
 	{
 		$article	= $this->check( $articleId );
 		$words		= $this->env->getLanguage()->getWords( 'catalog/bookstore' );
@@ -101,7 +102,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId		ID of article
 	 *	@return		string
 	 */
-	public function getLink( $articleId )
+	public function getLink( $articleId ): string
 	{
 		return $this->logic->getArticleUri( (int) $articleId );
 	}
@@ -113,7 +114,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		boolean		$absolute
 	 *	@return		string
 	 */
-	public function getPicture( $articleId, $absolute = FALSE )
+	public function getPicture( $articleId, bool $absolute = FALSE ): string
 	{
 		$uri		= $this->env->getConfig()->get( 'path.images' )."bookstore/no_picture.png";
 		$article	= $this->check( $articleId );
@@ -133,9 +134,9 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$amount			Amount to articles to get price for
 	 *	@return		float
 	 */
-	public function getPrice( $articleId, $amount = 1 )
+	public function getPrice( $articleId, int $amount = 1 ): float
 	{
-		$amount		= abs( (integer) $amount );
+		$amount		= abs( $amount );
 		return $this->check( $articleId )->price * $amount;
 	}
 
@@ -146,7 +147,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$amount			Amount to articles to get tax for
 	 *	@return		float
 	 */
-	public function getTax( $articleId, $amount = 1 )
+	public function getTax( $articleId, int $amount = 1 ): float
 	{
 		$amount		= abs( (integer) $amount );												//  sanitize amount
 		$price		= $this->check( $articleId )->price;									//  get price of article
@@ -162,7 +163,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId		ID of article
 	 *	@return		string
 	 */
-	public function getTitle( $articleId )
+	public function getTitle( $articleId ): string
 	{
 		return $this->check( $articleId )->title;
 	}
@@ -174,7 +175,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$amount			Amount to articles to get weight for
 	 *	@return		integer
 	 */
-	public function getWeight( $articleId, $amount = 1 )
+	public function getWeight( $articleId, int $amount = 1 )
 	{
 		return $this->check( $articleId )->weight * $amount;
 	}
@@ -182,8 +183,8 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
+		$this->taxPercent	= (float) $this->env->getConfig()->get( 'module.shop.tax.percent' );
+		$this->taxIncluded	= (float) $this->env->getConfig()->get( 'module.shop.tax.included' );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.catalog_bookstore.', TRUE );
-		$this->taxPercent	= $this->env->getConfig()->get( 'module.shop.tax.percent' );
-		$this->taxIncluded	= $this->env->getConfig()->get( 'module.shop.tax.included' );
 	}
 }

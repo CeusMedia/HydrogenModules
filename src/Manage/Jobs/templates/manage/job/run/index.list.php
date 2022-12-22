@@ -1,6 +1,13 @@
 <?php
+
+use CeusMedia\Common\Alg\Time\Duration;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var Environment $env */
+/** @var array $words */
+/** @var object[] $definitions */
+/** @var object[] $runs */
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
 
@@ -52,7 +59,7 @@ if( $runs ){
 		$duration	= '-';
 		if( $item->finishedAt ){
 			$duration	= $item->finishedAt - $item->ranAt;
-			$duration	= Alg_Time_Duration::render( $duration, ' ', TRUE );
+			$duration	= Duration::render( $duration, ' ', TRUE );
 		}
 
 		$buttonArchive	= '';
