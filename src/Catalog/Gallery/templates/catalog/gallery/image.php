@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
 
@@ -123,7 +125,7 @@ return '
 					<dt>Dateiname</dt>
 					<dd>'.$image->filename.'</dd>
 					<dt>Dateigröße</dt>
-					<dd>'.Alg_UnitFormater::formatBytes( filesize( $pathOriginal.$image->filename ) ).'</dd>
+					<dd>'.UnitFormater::formatBytes( filesize( $pathOriginal.$image->filename ) ).'</dd>
 					<dt>Auflösung</dt>
 					<dd>'.$source->getWidth().' × '.$source->getHeight().'px</dd>
 					<dt>Preis</dt>

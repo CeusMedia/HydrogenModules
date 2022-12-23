@@ -1,6 +1,8 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Alg\UnitFormater;
+use CeusMedia\Common\Alg\UnitParser;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
@@ -73,9 +75,9 @@ if( $article->cover ){
 </div>';
 }
 
-$imageMaxSize	= Alg_UnitParser::parse( $moduleConfig->get( 'article.image.size' ), "M" );
+$imageMaxSize	= UnitParser::parse( $moduleConfig->get( 'article.image.size' ), "M" );
 $imageMaxSize	= Logic_Upload::getMaxUploadSize( ['config' => $imageMaxSize] );
-$imageMaxSize	= Alg_UnitFormater::formatBytes( $imageMaxSize );
+$imageMaxSize	= UnitFormater::formatBytes( $imageMaxSize );
 
 $list				= [];
 $imageExtensions	= $moduleConfig->get( 'article.image.extensions' );

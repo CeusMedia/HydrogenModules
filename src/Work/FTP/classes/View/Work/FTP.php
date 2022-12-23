@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
@@ -65,7 +66,7 @@ class View_Work_FTP extends View
 				$size		= $entry->folders.' <i class="icon-folder-close"></i> / '.$entry->files.' <i class="icon-file"></i>';
 			}
 			else{
-				$size		= Alg_UnitFormater::formatBytes( $entry->size, 1 );
+				$size		= UnitFormater::formatBytes( $entry->size, 1 );
 				$link	= $label;
 			}
 

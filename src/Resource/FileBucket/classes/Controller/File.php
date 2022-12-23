@@ -4,6 +4,8 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_File extends Controller
 {
+	protected Logic_FileBucket $logic;
+
 	public function clean()
 	{
 		$index	= new DirectoryIterator( $this->logic->getPath() );
@@ -16,7 +18,7 @@ class Controller_File extends Controller
 				unlink( $entry->getPathname() );
 			}
 		}
-		$this->restart( NULL );
+		$this->restart();
 	}
 
 	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $args4 = NULL, $arg5 = NULL, $arg6 = NULL, $arg7 = NULL, $arg8 = NULL )

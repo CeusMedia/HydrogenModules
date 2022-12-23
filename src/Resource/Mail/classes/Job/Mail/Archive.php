@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\Alg\ID;
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
@@ -6,20 +9,23 @@ use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 
 class Job_Mail_Archive extends Job_Abstract
 {
-	protected $model;
+	protected Model_Mail $model;
 
-	protected $libraries;
+	protected Logic_Mail $logicMail;
 
-	protected $statusesHandledMails	= array(
+	/** @var	int		$libraries		Bitmask of supported mail libraries */
+	protected int $libraries;
+
+	protected array $statusesHandledMails	= [
 		Model_Mail::STATUS_ABORTED,																//  status: -3
 		Model_Mail::STATUS_FAILED,																//  status: -2
 		Model_Mail::STATUS_SENT,																//  status: 2
 		Model_Mail::STATUS_RECEIVED,															//  status: 3
 		Model_Mail::STATUS_OPENED,																//  status: 4
 		Model_Mail::STATUS_REPLIED,																//  status: 5
-	);
+	];
 
-	protected $prefixPlaceholder	= '<%?prefix%>';
+	protected string $prefixPlaceholder	= '<%?prefix%>';
 
 	/**
 	 *	Removes old mails from database table.
@@ -54,10 +60,10 @@ class Job_Mail_Archive extends Job_Abstract
 	{
 		$age		= $this->parameters->get( '--age', '1Y' );
 		$age		= $age ? strtoupper( $age ) : '1Y';
-		$limits		= array(
+		$limits		= [
 			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
 			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
-		);
+		];
 		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
 
 		$class		= $this->parameters->get( '--class', NULL );
@@ -67,11 +73,11 @@ class Job_Mail_Archive extends Job_Abstract
 				if( !preg_match( '/\\\/', $mailClassName ) )
 					$class[$nr]	= 'Mail_'.$mailClassName;
 		}
-		$conditions	= array(
+		$conditions	= [
 			'status'		=> $this->statusesHandledMails,
 			'mailClass'		=> $class,
 			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
-		);
+		];
 		$orders		= ['mailId' => 'ASC'];
 		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, ['mailId'] );
 		$nrMails	= count( $mailIds );
@@ -102,7 +108,7 @@ class Job_Mail_Archive extends Job_Abstract
 		$prefix		= $dba->get( 'prefix' );
 		$tables		= $prefix.'mails';
 
-		$command	= call_user_func_array( "sprintf", array(										//  call sprintf with arguments list
+		$command	= call_user_func_array( "sprintf", [										//  call sprintf with arguments list
 			"mysqldump -h%s -P%s -u%s -p%s %s %s > %s",												//  command to replace within
 			escapeshellarg( $dba->get( 'host' ) ),													//  configured host name as escaped shell arg
 			escapeshellarg( $dba->get( 'port' ) ? $dba->get( 'port' ) : 3306  ),					//  configured port as escaped shell arg
@@ -111,7 +117,7 @@ class Job_Mail_Archive extends Job_Abstract
 			escapeshellarg( $dba->get( 'name' ) ),													//  configured database name as escaped shell arg
 			$tables,																				//  collected found tables
 			escapeshellarg( $pathname ),															//  dump output filename
-		) );
+		] );
 		$resultCode		= 0;
 		$resultOutput	= [];
 		exec( $command, $resultOutput, $resultCode );
@@ -120,7 +126,7 @@ class Job_Mail_Archive extends Job_Abstract
 
 		/*  --  REPLACE PREFIX  --  */
 		$regExp		= "@(EXISTS|FROM|INTO|TABLE|TABLES|for table)( `)(".$prefix.")(.+)(`)@U";		//  build regular expression
-		$callback	= [$this, '_callbackReplacePrefix'];										//  create replace callback
+		$callback	= [$this, '_callbackReplacePrefix'];											//  create replace callback
 		rename( $pathname, $pathname."_" );															//  move dump file to source file
 		$fpIn		= fopen( $pathname."_", "r" );													//  open source file
 		$fpOut		= fopen( $pathname, "a" );														//  prepare empty target file
@@ -154,10 +160,10 @@ class Job_Mail_Archive extends Job_Abstract
 	{
 		$conditions	= ['status' > $this->statusesHandledMails];
 		$orders		= ['mailId' => 'ASC'];
-		$limits		= array(
+		$limits		= [
 			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
 			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
-		);
+		];
 		$count		= 0;
 		$fails		= [];
 		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, ['mailId'] );
@@ -219,20 +225,20 @@ class Job_Mail_Archive extends Job_Abstract
 				if( !preg_match( '/\\\/', $mailClassName ) )
 					$class[$nr]	= 'Mail_'.$mailClassName;
 		}
-		$conditions	= array(
+		$conditions	= [
 			'status'		=> $this->statusesHandledMails,
 			'mailClass'		=> $class,
 			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
-		);
+		];
 
 		$orders		= ['mailId' => 'DESC'];
 		$fails		= [];
-		$results	= (object) array(
+		$results	= (object) [
 			'mails'			=> 0,
 			'attachments'	=> 0,
 			'sizeBefore'	=> 0,
 			'sizeAfter'		=> 0,
-		);
+		];
 
 		if( $this->dryMode )
 			$this->out( 'DRY RUN - no changes will be made.' );
@@ -253,10 +259,10 @@ class Job_Mail_Archive extends Job_Abstract
 							$renderer	= new \CeusMedia\Mail\Message\Renderer();
 							$raw		= $renderer->render( $mail->object->instance->mail );
 							if( !$this->dryMode ){
-								$this->model->edit( $mail->mailId, array(
+								$this->model->edit( $mail->mailId, [
 									'object'	=> $mail->object->raw,
 									'raw'		=> $this->logicMail->compressString( $raw ),
-								), FALSE );
+								], FALSE );
 							}
 							$results->attachments++;
 							$results->sizeBefore	+= $sizeBefore;
@@ -273,10 +279,10 @@ class Job_Mail_Archive extends Job_Abstract
 							$this->logicMail->compressMailObject( $mail );
 							$raw	= \CeusMedia\Mail\Renderer::render( $mail->object->instance->mail );
 							if( !$this->dryMode ){
-								$this->model->edit( $mail->mailId, array(
+								$this->model->edit( $mail->mailId, [
 									'object'	=> $mail->object->raw,
 									'raw'		=> $this->logicMail->compressString( $raw ),
-								), FALSE );
+								], FALSE );
 							}
 							$results->attachments++;
 							$results->sizeBefore	+= $sizeBefore;
@@ -295,11 +301,11 @@ class Job_Mail_Archive extends Job_Abstract
 			$this->out();
 		if( $results->attachments ){
 			$message	= 'Detached %s attachments, deflated mails from %s to %s.';
-			$this->out( vsprintf( $message, array(
+			$this->out( vsprintf( $message, [
 				$results->attachments,
-				Alg_UnitFormater::formatBytes( $results->sizeBefore ),
-				Alg_UnitFormater::formatBytes( $results->sizeAfter )
-			) ) );
+				UnitFormater::formatBytes( $results->sizeBefore ),
+				UnitFormater::formatBytes( $results->sizeAfter )
+			] ) );
 		}
 		else
 			$this->out( 'No detachable attachments found.' );
@@ -322,10 +328,10 @@ class Job_Mail_Archive extends Job_Abstract
 
 		$conditions	= ['status' => $this->statusesHandledMails];
 		$orders		= ['mailId' => 'ASC'];
-		$limits		= array(
+		$limits		= [
 			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
 			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
-		);
+		];
 		$count		= 0;
 		$fails		= [];
 		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, ['mailId'] );
@@ -345,7 +351,7 @@ class Job_Mail_Archive extends Job_Abstract
 				$this->showProgress( $count, count( $mailIds ), 'E' );
 				continue;
 			}
-			$uuid		= Alg_ID::uuid();
+			$uuid		= ID::uuid();
 			$shard		= $uuid[0].'/'.$uuid[1].'/'.$uuid[2].'/';
 			if( !empty( $mail->raw ) ){
 				if( !file_exists( $path.$shard ) )
@@ -395,6 +401,10 @@ class Job_Mail_Archive extends Job_Abstract
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->model		= new Model_Mail( $this->env );

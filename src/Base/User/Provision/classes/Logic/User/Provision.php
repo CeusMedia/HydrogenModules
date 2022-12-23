@@ -1,10 +1,20 @@
 <?php
 
+use CeusMedia\Common\Alg\ID;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_User_Provision extends Logic
 {
+	protected Logic_Authentication $logicAuth;
+	protected Logic_Mail $logicMail;
+
+	protected Model_Provision_Product $modelProduct;
+	protected Model_Provision_Product_License $modelLicense;
+	protected Model_Provision_User_License $modelUserLicense;
+	protected Model_Provision_User_License_Key $modelUserKey;
+	protected Model_User $modelUser;
+
 	/**
 	 *	Activate user license and send mails to user license key users.
 	 *	@access		protected
@@ -13,7 +23,7 @@ class Logic_User_Provision extends Logic
 	 *	@param		boolean			$sendUserMails		Flag: send mails to user license keys users about assigment
 	 *	@return		boolean
 	 */
-	public function activateUserLicense( $userLicenseId, $sendOwnerMail = TRUE, $sendUserMails = TRUE )
+	public function activateUserLicense( $userLicenseId, bool $sendOwnerMail = TRUE, bool $sendUserMails = TRUE )
 	{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		if( !$userLicense )
@@ -22,19 +32,19 @@ class Logic_User_Provision extends Logic
 			throw new RuntimeException( 'User license cannot be activated.' );
 
 		$duration	= $this->getDurationInSeconds( $userLicense->duration );
- 		$result		= $this->modelUserLicense->edit( $userLicenseId, array(
+ 		$result		= $this->modelUserLicense->edit( $userLicenseId, [
 			'status'		=> Model_Provision_User_License::STATUS_ACTIVE,
 			'modifiedAt'	=> time(),
 			'startsAt'		=> time(),
 			'endsAt'		=> time() + $duration,
-		) );
+		] );
 		if( !$result )
 			return FALSE;
 
-		$userLicenseKeys	= $this->modelUserKey->getAll( array(
+		$userLicenseKeys	= $this->modelUserKey->getAll( [
 			'productLicenseId'	=> $userLicense->productLicenseId,
 			'status'			=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
-		) );
+		] );
 		if( $sendOwnerMail )
 			$this->sendMailOnActivatedUserLicense( $userLicenseId );
 		if( $sendUserMails )
@@ -51,7 +61,7 @@ class Logic_User_Provision extends Logic
 	 *	@param		boolean			$sendUserMails		Flag: send mails to user license keys users about revokation
 	 *	@return		boolean
 	 */
-	public function revokeUserLicense( $userLicenseId, $sendOwnerMail = TRUE, $sendUserMails = TRUE )
+	public function revokeUserLicense( $userLicenseId, bool $sendOwnerMail = TRUE, bool $sendUserMails = TRUE )
 	{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		if( !$userLicense )
@@ -59,17 +69,17 @@ class Logic_User_Provision extends Logic
 		if( $userLicense->status !== Model_Provision_User_License::STATUS_ACTIVE )
 			throw new RuntimeException( 'User license cannot be revoked.' );
 
- 		$result		= $this->modelUserLicense->edit( $userLicenseId, array(
+ 		$result		= $this->modelUserLicense->edit( $userLicenseId, [
 			'status'		=> Model_Provision_User_License::STATUS_REVOKED,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		if( $result )
 			return FALSE;
 
-		$userLicenseKeys	= $this->modelUserKey->getAll( array(
+		$userLicenseKeys	= $this->modelUserKey->getAll( [
 			'productLicenseId'	=> $userLicense->productLicenseId,
 			'status'			=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
-		) );
+		] );
 		if( $sendOwnerMail )
 			$this->sendMailOnRevokedUserLicense( $userLicenseId );
 		if( $sendUserMails )
@@ -104,25 +114,24 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@todo   		rework, send mails
 	 */
-	public function addUserLicense( $userId, $productLicenseId, $assignFirst = FALSE )
+	public function addUserLicense( $userId, $productLicenseId, bool $assignFirst = FALSE ): string
 	{
 		$productLicense	= $this->modelLicense->get( $productLicenseId );
-		$data		= array(
+		$data		= [
 			'userId'			=> $userId,
 			'productLicenseId'	=> $productLicenseId,
 			'productId'			=> $productLicense->productId,
 			'status'			=> 0,
-			'uid'				=> substr( Alg_ID::uuid(), -12 ),
+			'uid'				=> substr( ID::uuid(), -12 ),
 			'duration'			=> $productLicense->duration,
 			'users'				=> $productLicense->users,
 			'price'				=> $productLicense->price,
-			'duration'			=> $productLicense->duration,
 			'createdAt'			=> time(),
-		);
+		];
 		$userLicenseId	= $this->modelUserLicense->add( $data );
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		for( $i=0; $i<$productLicense->users; $i++ ){
-			$data		= array(
+			$data		= [
 				'userLicenseId'		=> $userLicenseId,
 				'userId'			=> ( $assignFirst && $i === 0 ) ? $userId : 0,
 				'productLicenseId'	=> $productLicenseId,
@@ -130,14 +139,15 @@ class Logic_User_Provision extends Logic
 				'status'			=> ( $assignFirst && $i === 0 ) ? 1 : 0,
 				'uid'				=> $userLicense->uid.'-'.str_pad( ( $i + 1), 4, '0', STR_PAD_LEFT ),
 				'createdAt'			=> time(),
-			);
+			];
 			$userLicenseKeyId	= $this->modelUserKey->add( $data );
 		}
 		return $userLicenseId;
 	}
 
 	/**
-	 *	@todo   		doc
+	 *	@todo		doc
+	 *	@throws		ReflectionException
 	 */
 	public function setUserOfUserLicenseKey( $userLicenseKeyId, $userId = 0 )
 	{
@@ -147,18 +157,18 @@ class Logic_User_Provision extends Logic
 		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
 		$userLicense	= $this->getUserLicense( $userLicenseKey->userLicenseId );
 		if( $userId ){
-			$this->modelUserKey->edit( $userLicenseKeyId, array(
+			$this->modelUserKey->edit( $userLicenseKeyId, [
 				'userId'	=> $userId,
 				'status'	=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
-			) );
+			] );
 			if( $userLicense->status == Model_Provision_User_License::STATUS_ACTIVE )
 				$this->sendMailOnAssignUserLicenseKey( $userLicenseKeyId );
 		}
 		else if( $userLicenseKey->userId ){
-			$this->modelUserKey->edit( $userLicenseKeyId, array(
+			$this->modelUserKey->edit( $userLicenseKeyId, [
 				'userId'	=> 0,
 				'status'	=> Model_Provision_User_License_Key::STATUS_NEW,
-			) );
+			] );
 			if( $userLicense->status == Model_Provision_User_License::STATUS_ACTIVE )
 				$this->sendMailOnRevokeUserLicenseKey( $userLicenseKeyId, $userLicenseKey->userId );
 		}
@@ -168,7 +178,7 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@todo   		doc
 	 */
-	public function countUserLicensesByProductLicense( $productLicenseId )
+	public function countUserLicensesByProductLicense( $productLicenseId ): int
 	{
 		return $this->modelUserLicense->countByIndex( 'productLicenseId', $productLicenseId );
 	}
@@ -185,7 +195,7 @@ class Logic_User_Provision extends Logic
 	 *	@param		integer		$productId		Product ID
 	 *	@return		NULL|FALSE|integer			ID of next user license key if prepared and active license, FALSE if still having an active key, NULL otherwise
 	 *	@todo		check project existence and activity
-	 *	@todo   		rework
+	 *	@todo		rework
 	 */
 	public function enableNextUserLicenseKeyForProduct( $userId, $productId )
 	{
@@ -208,11 +218,11 @@ class Logic_User_Provision extends Logic
 			$nextUserKey	= $this->modelUserKey->get( $nextUserKeyId );
 			$userLicense	= $this->modelUserLicense->get( $nextUserKey->userLicenseId );
 			$duration		= $this->getDurationInSeconds( $userLicense->duration );
-			$this->modelUserKey->edit( $nextUserKeyId, array(
+			$this->modelUserKey->edit( $nextUserKeyId, [
 				'status'	=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
 				'startsAt'	=> time(),
 				'endsAt'	=> time() + $duration,
-			) );
+			] );
 			return $nextUserKeyId;
 		}
 		return NULL;
@@ -228,17 +238,17 @@ class Logic_User_Provision extends Logic
 	 *	@todo		add hook in module config
 	 *	@todo		add hook call in module Resource:Users, better implement Logic_UserStatus before
 	 */
-	public function __onChangeUserStatus( Environment $env, $context, $module, $data = [] )
+	public function __onChangeUserStatus( Environment $env, object $context, object $module, array & $payload )
 	{
-		if( !isset( $data['status'] ) )
+		if( !isset( $payload['status'] ) )
 			throw new InvalidArgumentException( 'Missing new status' );
-		if( !isset( $data['userId'] ) )
+		if( !isset( $payload['userId'] ) )
 			throw new InvalidArgumentException( 'Missing user ID' );
-		$user	= $this->modelUser->get( $data['userId'] );
+		$user	= $this->modelUser->get( $payload['userId'] );
 		if( !$user )
 			throw new RangeException( 'Invalid user ID' );
 		$oldStatus	= $user->status;
-		$newStatus	= $data['status'];
+		$newStatus	= $payload['status'];
 		if( $oldStatus > 0  && $newStatus == -2/*Model_User::STATUS_DEACTIVATED*/ ){
 			// @todo revoke user license keys
 		}
@@ -247,13 +257,13 @@ class Logic_User_Provision extends Logic
 		}
 	}
 
-	public function handleOutdatedUserLicenses()
+	public function handleOutdatedUserLicenses(): array
 	{
 		$results	= [];
-		$outdatedUserLicenses	= $this->modelUserLicense->getAllByIndices( array(
+		$outdatedUserLicenses	= $this->modelUserLicense->getAllByIndices( [
 			'status'	=> Model_Provision_User_License::STATUS_ACTIVE,
 			'endsAt'	=> '< '.time(),
-		), ['endsAt' => 'ASC'] );
+		], ['endsAt' => 'ASC'] );
 		foreach( $outdatedUserLicenses as $outdatedUserLicense )
 			$results[]	= $this->handleOutdatedUserLicense( $outdatedUserLicense->userLicenseId );
 		return $results;
@@ -263,7 +273,7 @@ class Logic_User_Provision extends Logic
 	 *	@deprecated  	use handleOutdatedUserLicenses instead
 	 *	@todo   		remove, after job has been updated
 	 */
-	public function handleExpiredKeys()
+	public function handleExpiredKeys(): array
 	{
 		return $this->handleOutdatedUserLicenses();
 		$dbc		= $this->env->getDatabase();
@@ -271,22 +281,22 @@ class Logic_User_Provision extends Logic
 		$logicMail	= Logic_Mail::getInstance( $this->env );
 		$list		= [];
 		foreach( $this->getOutdatedUserLicenseKeys() as $key ){
-			$data	= array(
+			$data	= [
 				'key'		=> $key,
 				'license'	=> $this->modelUserLicense->get( $key->userLicenseId ),
 				'product'	=> $this->modelProduct->get( $key->productId ),
 				'user'		=> $this->modelUser->get( $key->userId ),
-			);
+			];
 			$nextUserKeyId	= $this->getNextUserLicenseKeyIdForProduct( $key->userId, $key->productId );
 			if( $nextUserKeyId ){
 				try{
 					$dbc->beginTransaction();
 					$data['nextKey']	= $this->modelUserKey->get( $nextUserKeyId );
-					$this->modelUserKey->edit( $key->userLicenseKeyId, array(
+					$this->modelUserKey->edit( $key->userLicenseKeyId, [
 						'status'	=> Model_Provision_User_License_Key::STATUS_EXPIRED,
-					) );
+					] );
 					$this->enableNextUserLicenseKeyForProduct( $key->userId, $key->productId );
-					$mail	= new Mail_Provision_Key_Continued( $this->env, $data );
+					$mail	= new Mail_Provision_Customer_Key_Continued( $this->env, $data );
 					$logicMail->handleMail( $mail, $data['user'], $language, !TRUE );
 					$dbc->commit();
 					$list[]	= (object) $data;
@@ -299,10 +309,10 @@ class Logic_User_Provision extends Logic
 			else{
 				try{
 					$dbc->beginTransaction();
-					$this->modelUserKey->edit( $key->userLicenseKeyId, array(
+					$this->modelUserKey->edit( $key->userLicenseKeyId, [
 						'status'	=> Model_Provision_User_License_Key::STATUS_EXPIRED,
-					) );
-					$mail	= new Mail_Provision_Key_Expired( $this->env, $data );
+					] );
+					$mail	= new Mail_Provision_Customer_Key_Expired( $this->env, $data );
 					$logicMail->handleMail( $mail, $data['user'], $language, !TRUE );
 					$dbc->commit();
 					$list[]	= (object) $data;
@@ -351,7 +361,7 @@ class Logic_User_Provision extends Logic
 	 *	@throws		RangeException				if given user ID is invalid
 	 *	@throws		RuntimeException			if given user is not activated
 	 *	@todo		check project existence and activity
-	 *	@todo   		rework
+	 *	@todo		rework
 	 */
 	public function getNextUserLicenseKeyIdForProduct( $userId, $productId )
 	{
@@ -375,16 +385,16 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@todo   		rework
 	 */
-	public function getOutdatedUserLicenseKeys()
+	public function getOutdatedUserLicenseKeys(): array
 	{
-		$indices	= array(
+		$indices	= [
 			'status'	=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
 			'endsAt'	=> '< '.time(),
-		);
+		];
 		return $this->modelUserKey->getAllByIndices( $indices );
 	}
 
-	public function getProduct( $productId )
+	public function getProduct( $productId ): object
 	{
 		$product	= $this->modelProduct->get( $productId );
 		if( !$product )
@@ -413,17 +423,16 @@ class Logic_User_Provision extends Logic
 		return $productLicenses;
 	}
 
-	public function getProducts( $status = NULL )
+	public function getProducts( $status = NULL ): array
 	{
 		$indices	= [];
 		if( $status !== NULL )
 			$indices['status']	= $status;
 		$orders		= ['rank' => 'ASC', 'title' => 'ASC'];
-		$products	= $this->modelProduct->getAll( $indices, $orders );
-		return $products;
+		return $this->modelProduct->getAll( $indices, $orders );
 	}
 
-	public function getUser( $userId )
+	public function getUser( $userId ): object
 	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
@@ -432,7 +441,7 @@ class Logic_User_Provision extends Logic
 		return $user;
 	}
 
-	public function getUserLicense( $userLicenseId )
+	public function getUserLicense( $userLicenseId ): object
 	{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		if( !$userLicense )
@@ -444,16 +453,16 @@ class Logic_User_Provision extends Logic
 		return $clone;
 	}
 
-	public function getUserLicenseOwner( $userLicenseId )
+	public function getUserLicenseOwner( $userLicenseId ): object
 	{
 		$userLicense	= $this->getUserLicense( $userLicenseId );
-		$user	= $this->getUser( $userLicense->userId );
+		$user			= $this->getUser( $userLicense->userId );
 		if( !$user )
-			throw new RangeException( 'User ID '.$userId.' is not existing' );
+			throw new RangeException( 'Invalid user license ID: '.$userLicenseId );
 		return $user;
 	}
 
-	public function getUserLicenseKey( $userLicenseKeyId )
+	public function getUserLicenseKey( $userLicenseKeyId ): object
 	{
 		$userLicenseKey	= $this->modelUserKey->get( $userLicenseKeyId );
 		if( !$userLicenseKey )
@@ -461,12 +470,12 @@ class Logic_User_Provision extends Logic
 		return $userLicenseKey;
 	}
 
-	public function getUserLicenseKeyOwner( $userLicenseKeyId )
+	public function getUserLicenseKeyOwner( $userLicenseKeyId ): object
 	{
 		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
 		$user	= $this->getUser( $userLicenseKey->userId );
 		if( !$user )
-			throw new RangeException( 'User ID '.$userId.' is not existing' );
+			throw new RangeException( 'User user licence key ID: '.$userLicenseKeyId );
 		return $user;
 	}
 
@@ -474,7 +483,7 @@ class Logic_User_Provision extends Logic
 	{
 	}*/
 
-	public function getUserLicensesFromUser( $userId, $productId = NULL )
+	public function getUserLicensesFromUser( $userId, $productId = NULL ): array
 	{
 		$indices		= ['userId' => $userId];
 		if( $productId )
@@ -488,7 +497,7 @@ class Logic_User_Provision extends Logic
 		return $userLicenses;
 	}
 
-	public function getNotAssignedUserLicenseKeysFromUser( $userId, $projectId = NULL )
+	public function getNotAssignedUserLicenseKeysFromUser( $userId, $projectId = NULL ): array
 	{
 		$list		= [];
 		$licenses	= $this->getUserLicensesFromUser( $userId, $projectId );
@@ -509,7 +518,7 @@ class Logic_User_Provision extends Logic
 		return $keys;
 	}
 
-	public function getUserLicenseKeys( $userLicenseId, $assignedOnly = FALSE )
+	public function getUserLicenseKeys( $userLicenseId, bool $assignedOnly = FALSE )
 	{
 		$indices	= ['userLicenseId' => $userLicenseId];
 		if( $assignedOnly )
@@ -519,11 +528,11 @@ class Logic_User_Provision extends Logic
 		return $keys;
 	}
 
-	public function getUserLicenseKeysFromUser( $userId, $activeOnly = NULL, $productId = NULL )
+	public function getUserLicenseKeysFromUser( $userId, bool $activeOnly = NULL, $productId = NULL )
 	{
-		$indices	= array(
+		$indices	= [
 			'userId'	=> $userId,
-		);
+		];
 		if( $activeOnly ){
 			$indices['status']		= Model_Provision_User_License_Key::STATUS_ASSIGNED;
 			$indices['startsAt']	= '< '.time();
@@ -542,27 +551,27 @@ class Logic_User_Provision extends Logic
 		return $keys;
 	}
 
-	public function sendMailOnActivatedUserLicense( $userLicenseId )
+	public function sendMailOnActivatedUserLicense( $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Activated' );
 	}
 
-	public function sendMailOnDeactivatedUserLicense( $userLicenseId )
+	public function sendMailOnDeactivatedUserLicense( $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Deactivated' );
 	}
 
-	public function sendMailOnExpiredUserLicense( $userLicenseId )
+	public function sendMailOnExpiredUserLicense( $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Expired' );
 	}
 
-	public function sendMailOnReplacedUserLicense( $userLicenseId )
+	public function sendMailOnReplacedUserLicense( $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Replaced' );
 	}
 
-	public function sendMailOnRevokedUserLicense( $userLicenseId )
+	public function sendMailOnRevokedUserLicense( $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Revoked' );
 	}
@@ -573,18 +582,19 @@ class Logic_User_Provision extends Logic
 	 *	@param		integer			$userLicenseKeyId		User license key ID
 	 *	@return		boolean
 	 *	@todo   	user language
+	 *	@throws		ReflectionException
 	 */
-	public function sendMailOnAssignUserLicenseKey( $userLicenseKeyId )
+	public function sendMailOnAssignUserLicenseKey( $userLicenseKeyId ): bool
 	{
 		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
 		$userLicense	= $this->getUserLicense( $userLicenseKey->userLicenseId );
 		$user	= $this->getUser( $userLicenseKey->userId );
-		$mail	= $this->logicMail->createMail( 'Provision_Customer_Key_Assigned', array(
+		$mail	= $this->logicMail->createMail( 'Provision_Customer_Key_Assigned', [
 			'product'			=> $userLicense->product,
 			'productLicense'	=> $userLicense->productLicense,
 			'user'				=> $user,
 			'userLicense'		=> $userLicense,
-		) );
+		] );
 		$language	= $this->env->getLanguage()->getLanguage();
 		return $this->logicMail->handleMail( $mail, $user, $language );
 	}
@@ -596,18 +606,19 @@ class Logic_User_Provision extends Logic
 	 *	@param		integer			$oldUserId				User ID before revokation
 	 *	@return		boolean
 	 *	@todo   	user language
+	 *	@throws		ReflectionException
 	 */
-	public function sendMailOnRevokeUserLicenseKey( $userLicenseKeyId, $oldUserId )
+	public function sendMailOnRevokeUserLicenseKey( $userLicenseKeyId, $oldUserId ): bool
 	{
 		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
 		$userLicense	= $this->getUserLicense( $userLicenseKey->userLicenseId );
 		$user	= $this->getUser( $oldUserId );
-		$mail	= $this->logicMail->createMail( 'Provision_Customer_Key_Revoked', array(
+		$mail	= $this->logicMail->createMail( 'Provision_Customer_Key_Revoked', [
 			'product'			=> $userLicense->product,
 			'productLicense'	=> $userLicense->productLicense,
 			'user'				=> $user,
 			'userLicense'		=> $userLicense,
-		) );
+		] );
 		$language	= $this->env->getLanguage()->getLanguage();
 		return $this->logicMail->handleMail( $mail, $user, $language );
 	}
@@ -619,9 +630,9 @@ class Logic_User_Provision extends Logic
 	{
 		$userLicense	= $this->getUserLicense( $userLicenseId );
 
-		$data	= array(
+		$data	= [
 			'status'	=> $status,
-		);
+		];
 		$this->modelUserLicense->edit( $userLicenseId, $data );
 
 	//  @todo react to license status within keys:
@@ -633,6 +644,10 @@ class Logic_User_Provision extends Logic
 //		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
@@ -644,19 +659,19 @@ class Logic_User_Provision extends Logic
 		$this->modelUser		= new Model_User( $this->env );
 	}
 
-	protected function handleOutdatedUserLicense( $userLicenseId )
+	protected function handleOutdatedUserLicense( $userLicenseId ): object
 	{
 		$outdatedUserLicense		= $this->getUserLicense( $userLicenseId );
 		$outdatedUserLicenseKeys	= $this->getUserLicenseKeys( $userLicenseId, TRUE );			//  get assigned keys of outdated user license
-		$nextUserLicense			= $this->modelUserLicense->getByIndices( array(					//  get next user license ...
+		$nextUserLicense			= $this->modelUserLicense->getByIndices( [						//  get next user license ...
 			'productId'			=> $outdatedUserLicense->productId,									//  ... related to product
 			'productLicenseId'	=> $outdatedUserLicense->productLicenseId,							//  ... related to product license
 			'status'			=> Model_Provision_User_License::STATUS_NEW,									//  ... awaiting activation
-		), ['userLicenseId' => 'ASC'] );														//  ... and order be creation date
+		], ['userLicenseId' => 'ASC'] );															//  ... and order be creation date
 
 		//  --  COLLECT USERS TO INFORM ABOUT REVOKATION  --  //
-		$usersAssigned	= [];																	//  prepare list of users to inform about assignment
-		$usersRevoked	= [];																	//  prepare list of users to inform about revokation
+		$usersAssigned	= [];																		//  prepare list of users to inform about assignment
+		$usersRevoked	= [];																		//  prepare list of users to inform about revokation
 		foreach( $outdatedUserLicenseKeys as $outdatedUserLicenseKey )								//  iterate keys of outdated user license
 			$usersRevoked[$outdatedUserLicenseKey->userId]	= $outdatedUserLicenseKey;				//  note user id of outdated user license key
 
@@ -698,27 +713,27 @@ class Logic_User_Provision extends Logic
 		foreach( $usersAssigned as $userId => $key )												//  iterate user to inform about assignment
 			$this->sendMailOnRevokeUserLicenseKey( $key->userLicenseKeyId );						//  send mail to user of next user license key
 
-		return (object) array(
+		return (object) [
 			'outdatedUserLicense'	=> $outdatedUserLicense,
 			'nextUserLicense'		=> $nextUserLicense,
 			'usersRevoked'			=> $usersRevoked,
 			'usersAssigned'			=> $usersAssigned,
-		);
+		];
 	}
 
-	protected function sendMailOnUserLicenseChange( $userLicenseId, $change )
+	protected function sendMailOnUserLicenseChange( $userLicenseId, $change ): bool
 	{
 		$changes	= ['Activated', 'Deactivated', 'Expired', 'Replaced', 'Revoked'];
 		if( !in_array( $change, $changes ) )
 			throw new DomainException( 'Invalid user license customer mail change "'.$change.'"' );
 		$userLicense	= $this->getUserLicense( $userLicenseId );
 		$user			= $this->getUser( $userLicense->userId );
-		$mail	= $this->logicMail->createMail( 'Provision_Customer_License_'.$change, array(
+		$mail	= $this->logicMail->createMail( 'Provision_Customer_License_'.$change, [
 			'product'			=> $userLicense->product,
 			'productLicense'	=> $userLicense->productLicense,
 			'user'				=> $user,
 			'userLicense'		=> $userLicense,
-		) );
+		] );
 		$language	= $this->env->getLanguage()->getLanguage();
 		return $this->logicMail->handleMail( $mail, $user, $language );
 	}

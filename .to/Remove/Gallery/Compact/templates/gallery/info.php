@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $folderPath	= dirname( $source ).'/';
@@ -123,7 +124,7 @@ if( $useExif ){
 	$data['Auflösung']	= $mps.' <acronym title="Megapixel">MP</acronym> <small><em>('.$exif->get( 'COMPUTED.Width' ).' x '.$exif->get( 'COMPUTED.Height' ).')</em></small>';
 //	$data['Größe']		= $mps.' <acronym title="Megapixel">MP</acronym>';
 //	$data['Dimensionen']	= $exif->get( 'COMPUTED.Width' ).' x '.$exif->get( 'COMPUTED.Height' ).' Pixel';
-	$data['Dateigröße']	= Alg_UnitFormater::formatBytes( $exif->get( 'FileSize' ) );
+	$data['Dateigröße']	= UnitFormater::formatBytes( $exif->get( 'FileSize' ) );
 //	$data['Dateiname']	= $exif->get( 'FileName' );
 //	$data['Gallerie']	= implode( ' / ', array_slice( explode( '/', $source ), 0, -1 ) );
 	if( strlen( $exif->get( 'DateTimeOriginal' ) ) ){

@@ -1,15 +1,15 @@
 <?php
 
+use CeusMedia\Common\Alg\Crypt\PasswordStrength;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ajax_Auth_Local extends AjaxController
 {
-//	protected $config;
-//	protected $modules;
-//	protected $moduleConfig;
-//	protected $limiter;
-//	protected $logic;
-
+	/**
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		ReflectionException
+	 */
 	public function usernameExists()
 	{
 		$username	= trim( $this->request->get( 'username' ) );
@@ -21,6 +21,11 @@ class Controller_Ajax_Auth_Local extends AjaxController
 		$this->respondData( $result );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		ReflectionException
+	 */
 	public function emailExists()
 	{
 		$email		= trim( $this->request->get( 'email' ) );
@@ -32,27 +37,20 @@ class Controller_Ajax_Auth_Local extends AjaxController
 		$this->respondData( $result );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		JsonException
+	 */
 	public function passwordStrength()
 	{
 		$password	= trim( $this->request->get( 'password' ) );
 		$result		= 0;
-		if( strlen( $password ) ){
-			$result	= Alg_Crypt_PasswordStrength::getStrength( $password );
-		}
+		if( strlen( $password ) )
+			$result	= PasswordStrength::getStrength( $password );
 		$this->respondData( $result );
 	}
 
 	protected function __onInit(): void
 	{
-//		$this->config		= $this->env->getConfig();
-//		$this->request		= $this->env->getRequest();
-//		$this->session		= $this->env->getSession();
-//		$this->modules		= $this->env->getModules();
-//		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Local' );
-
-//		$this->moduleConfig			= $this->config->getAll( 'module.resource_authentication_backend_local.', TRUE );
-//		if( $this->modules->has( 'Resource_Limiter' ) )
-//			if( $this->modules->get( 'Resource_Limiter' )->isActive )				// @todo apply this line here and anywhere else
-//				$this->limiter	= Logic_Limiter::getInstance( $this->env );
 	}
 }

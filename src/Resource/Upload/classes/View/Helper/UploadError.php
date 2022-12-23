@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
@@ -26,7 +27,7 @@ class View_Helper_UploadError extends Abstraction
 		$message	= $messages[$this->upload->error];
 		switch( $this->upload->error ){
 			case 10:
-				$size		= Alg_UnitFormater::formatBytes( $this->upload->allowedSize );
+				$size		= UnitFormater::formatBytes( $this->upload->allowedSize );
 				$message	= sprintf( $message, $size );
 				break;
 			case 11:

@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\Alg\ID;
+use CeusMedia\Common\Alg\UnitParser;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
@@ -11,7 +13,12 @@ class Controller_Manage_My_User_Avatar extends Controller
 	protected string $pathImages;
 	protected ?string $userId		= NULL;
 
-	public function index(){
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function index()
+	{
 		$avatar		= $this->modelAvatar->getByIndex( 'userId', $this->userId );
 		$model		= new Model_User( $this->env );
 		$user		= $model->get( $this->userId );
@@ -21,7 +28,8 @@ class Controller_Manage_My_User_Avatar extends Controller
 		$this->addData( 'avatar', $avatar );					//
 	}
 
-	public function remove(){
+	public function remove()
+	{
 		$avatar		= $this->modelAvatar->getByIndex( 'userId', $this->userId );
 		@unlink( $this->pathImages.$this->userId.'_'.$avatar->filename );
 		@unlink( $this->pathImages.$this->userId.'__'.$avatar->filename );
@@ -30,21 +38,22 @@ class Controller_Manage_My_User_Avatar extends Controller
 		$this->restart( NULL, TRUE );																//  @todo: make another redirect possible
 	}
 
-	public function upload(){
+	public function upload()
+	{
 		$words		= (object) $this->getWords( 'msg' );
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 //		$words		= (object) $this->getWords( 'update' );
 
 		$logic		= new Logic_Upload( $this->env );
-		$maxSize	= Alg_UnitParser::parse( $this->moduleConfig->get( 'image.upload.maxFileSize' ), 'M' );
+		$maxSize	= UnitParser::parse( $this->moduleConfig->get( 'image.upload.maxFileSize' ), 'M' );
 		$maxSize	= Logic_Upload::getMaxUploadSize( ['config' => $maxSize] );
 		$logic->setUpload( $request->get( 'upload' ) );
 		if( !$logic->checkSize( $maxSize ) ){
 			$messenger->noteError( $words->errorFileTooLarge );
 		}
 		else{
-			$fileName	= Alg_ID::uuid().'.'.$logic->getExtension( TRUE );
+			$fileName	= ID::uuid().'.'.$logic->getExtension( TRUE );
 			$logic->saveTo( $this->pathImages.$this->userId.'_'.$fileName );									//  save originally uploaded image
 			try{
 				/*  --  PROCESS AND SAVE NEW AVATAR IMAGES  -- */
@@ -96,6 +105,10 @@ class Controller_Manage_My_User_Avatar extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->userId		= $this->env->getSession()->get( 'auth_user_id' );

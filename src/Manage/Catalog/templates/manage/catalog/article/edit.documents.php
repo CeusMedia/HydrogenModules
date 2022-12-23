@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\Alg\UnitFormater;
+use CeusMedia\Common\Alg\UnitParser;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -45,8 +48,8 @@ if( $articleDocuments ){
 }
 
 $documentMaxSize	= $moduleConfig->get( 'article.document.maxSize' );
-$limits				= ['document' => Alg_UnitParser::parse( $documentMaxSize, "M" )];
-$documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
+$limits				= ['document' => UnitParser::parse( $documentMaxSize, "M" )];
+$documentMaxSize	= UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
 
 $list				= [];
 $documentExtensions	= $moduleConfig->get( 'article.document.extensions' );

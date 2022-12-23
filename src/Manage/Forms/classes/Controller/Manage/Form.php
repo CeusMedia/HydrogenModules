@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
@@ -257,7 +258,7 @@ class Controller_Manage_Form extends Controller
 		];
 
 		if( strlen( trim( $rules ) ) ){
-			$parser	= new ADT_JSON_Parser;
+			$parser	= new JsonParser;
 			try{
 				$ruleSet	= $parser->parse( $rules, FALSE );
 				$response['status']	= 'parsed';

@@ -5,6 +5,7 @@
  *	@package		Work.Missions
  */
 
+use CeusMedia\Common\Alg\ID;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
@@ -225,7 +226,7 @@ class Controller_Work_Mission extends Controller
 			'missionId'	=> $missionId,
 			'filename'	=> $upload->name,
 		) );
-		$hashname	= $document ? $document->hashname : Alg_ID::uuid();
+		$hashname	= $document ? $document->hashname : ID::uuid();
 		$logic		= new Logic_Upload( $this->env );
 //		$logic->checkMimeType( [] );
 //		$logic->checkSize();
@@ -240,7 +241,7 @@ class Controller_Work_Mission extends Controller
 			) );
 		}
 		else{
-			$model->add( array(
+			$model->add( [
 				'missionId'		=> $missionId,
 				'userId'		=> $this->userId,
 				'size'			=> $upload->size,
@@ -249,7 +250,7 @@ class Controller_Work_Mission extends Controller
 				'hashname'		=> $hashname,
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			) );
+			] );
 		}
 
 //		$from	= $this->env->getRequest()->has( 'from' ) ? $this->env->getRequest()->has( 'from' );
@@ -286,27 +287,27 @@ class Controller_Work_Mission extends Controller
 		$logic		= Logic_Work_Mission::getInstance( $this->env );
 		switch( $panelId ){
 			case 'work-mission-my-tasks':
-				$conditions		= array(
+				$conditions		= [
 					'status'	=> [0, 1, 2, 3],
 					'type'		=> 0,
 					'dayStart'	=> '<= '.date( 'Y-m-d', time() ),
 //					'dayEnd'	=> '>= '.date( 'Y-m-d', time() ),
 					'workerId'	=> $this->userId,
-				);
-				$orders		= array(
+				];
+				$orders		= [
 					'priority'	=> 'ASC',
 					'title'		=> 'ASC',
-				);
+				];
 				$missions	= $logic->getUserMissions( $this->userId, $conditions, $orders );
 				$this->addData( 'tasks', $missions );
 				break;
 			case 'work-mission-my-today':
 			default:
-				$conditions	= array(
+				$conditions	= [
 					'type'			=> 1,
 					'status'		=> [0, 1, 2, 3],
 					'dayStart'		=> date( 'Y-m-d' ),
-				);
+				];
 				$orders	= ['timeStart' => 'ASC'];
 				$events	= $logic->getUserMissions( $this->userId, $conditions, $orders );
 				$this->addData( 'events', $events );
@@ -351,21 +352,21 @@ class Controller_Work_Mission extends Controller
 			foreach( $allDayMissions as $entry )
 				$total += count( $entry );
 
-			$data		= array(
+			$data		= [
 				'day'		=> $day,
 				'items'		=> $allDayMissions[$day],//$listLarge->getDayMissions( $day ),
 				'count'		=> count( $allDayMissions[$day] ),//$listLarge->getDayMissions( $day ) ),
 				'total'		=> $total,
-				'buttons'	=> array(
+				'buttons'	=> [
 					'large'	=> $buttonsLarge->render(),
 					'small'	=> $buttonsSmall->render(),
-				),
-				'lists'		=> array(
+				],
+				'lists'		=> [
 					'large'	=> $listLarge->renderDayList( 1, $day, TRUE, TRUE, FALSE, TRUE ),
 					'small'	=> $listSmall->renderDayList( 1, $day, TRUE, TRUE, FALSE, !TRUE )
-				),
+				],
 				'filters'	=> $this->session->getAll( $this->filterKeyPrefix.$mode.'.' ),
-			);
+			];
 			print( json_encode( $data ) );
 			exit;
 		}
@@ -406,11 +407,11 @@ class Controller_Work_Mission extends Controller
 	public function ajaxSaveContent( $missionId )
 	{
 		$content	= $this->env->getRequest()->get( 'content' );
-		$this->model->edit( $missionId, array(														//  store in database
+		$this->model->edit( $missionId, [														//  store in database
 			'content'		=> $content,															//  - new content
 			'modifierId'	=> $this->userId,														//  - modifying user id
 			'modifiedAt'	=> time(),																//  - modification time
-		), FALSE );																					//  without striping tags
+		], FALSE );																					//  without striping tags
 		$html		= View_Helper_Markdown::transformStatic( $this->env, $content );
 		header( 'Content-length: '.strlen( $html ) );
 		header( 'Content-type: text/html' );
@@ -438,10 +439,10 @@ class Controller_Work_Mission extends Controller
 		$direction	= $direction ? $direction : 'ASC';
 		$this->session->set( $this->filterKeyPrefix.'direction', $direction );
 
-		$this->setData( array(																		//  assign data t$
+		$this->setData( [																		//  assign data t$
 			'userProjects'	=> $this->userProjects,													//  add user projec$
 			'users'			=> $this->userMap,														//  add user map
-		) );
+		] );
 
 		$this->addData( 'filterTypes', $this->session->get( $this->filterKeyPrefix.'types' ) );
 		$this->addData( 'filterPriorities', $this->session->get( $this->filterKeyPrefix.'priorities' ) );
@@ -483,10 +484,10 @@ class Controller_Work_Mission extends Controller
 	{
 		$date		= trim( $this->request->get( 'date' ) );
 		$mission	= $this->model->get( $missionId );
-		$data		= array(
+		$data		= [
 			'modifierId'	=> $this->userId,
 			'modifiedAt'	=> time(),
-		);
+		];
 		$change		= "";
 
 		if( preg_match( "/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]+$/", $date ) ){
@@ -557,13 +558,13 @@ class Controller_Work_Mission extends Controller
 		$words		= (object) $this->getWords( 'edit' );
 		$mission	= $this->model->get( $missionId );
 		$minutes	= ceil( View_Work_Mission::parseTime( $this->request->get( 'timeRequired' ) ) / 60 );
-		$this->model->edit( $missionId, array(														//  store in database
+		$this->model->edit( $missionId, [														//  store in database
 			'status'			=> $this->request->get( 'status' ),									//  - new status
 //			'hoursRequired'		=> $this->request->get( 'hoursRequired' ),							//  - number of required hours
 			'minutesRequired'	=> $minutes,														//  - number of required minutes
 			'modifierId'		=> $this->userId,													//  - modifying user id
 			'modifiedAt'		=> time(),															//  - modification time
-		) );
+		] );
 		$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
 		$this->messenger->noteSuccess( $words->msgSuccessClosed );
 		$this->restart( NULL, TRUE );
@@ -585,12 +586,12 @@ class Controller_Work_Mission extends Controller
 			$this->messenger->noteError( $words->msgInvalidId );
 		if( strtoupper( $mission->format ) === 'MARKDOWN' && strtoupper( $format ) === 'HTML' ){
 			$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
-			$data	= array(
+			$data	= [
 				'content'		=> $content,
 				'format'		=> 'HTML',
 				'modifiedAt'	=> time(),
 				'modifierId'	=> $this->userId,
-			);
+			];
 			$this->model->edit( $missionId, $data, FALSE );
 		}
 		else if( strtoupper( $mission->format ) === 'HTML' && strtoupper( $format ) === 'MARKDOWN' ){
@@ -598,19 +599,19 @@ class Controller_Work_Mission extends Controller
 				$this->messenger->noteError( 'Converter package not installed. Use composer to install <code>ceus-media/markdown</code>!' );
 				$this->restart( 'edit/'.$missionId, TRUE );
 			}
-			$converter	= new \League\HTMLToMarkdown\HtmlConverter( array(
+			$converter	= new \League\HTMLToMarkdown\HtmlConverter( [
 				'header_style'		=> 'atx',
 				'hard_break'		=> TRUE,
 				'bold_style'		=> '**',
 				'italic_style'		=> '*',
-			) );
+			] );
 			$content	= $converter->convert( $mission->content );
-			$data	= array(
+			$data	= [
 				'content'		=> $converter->convert( $mission->content ),
 				'format'		=> 'Markdown',
 				'modifiedAt'	=> time(),
 				'modifierId'	=> $this->userId,
-			);
+			];
 			$this->model->edit( $missionId, $data, FALSE );
 		}
 		$this->restart( 'edit/'.$missionId, TRUE );
@@ -700,7 +701,7 @@ class Controller_Work_Mission extends Controller
 			if( !$title )
 				$this->messenger->noteError( $words->msgNoTitle );
 			if( !$this->messenger->gotError() ){
-				$data	= array(
+				$data	= [
 					'workerId'			=> (int) $this->request->get( 'workerId' ),
 					'projectId'			=> (int) $this->request->get( 'projectId' ),
 					'type'				=> (int) $this->request->get( 'type' ),
@@ -721,7 +722,7 @@ class Controller_Work_Mission extends Controller
 					'format'			=> $format,
 					'modifiedAt'		=> time(),
 					'modifierId'		=> $this->userId,
-				);
+				];
 				if( /*strtoupper( $format ) == "HTML" || */$this->request->has( 'content' ) )
 					$data['content']	= $this->request->get( 'content' );
 
@@ -758,17 +759,17 @@ class Controller_Work_Mission extends Controller
 
 		if( $this->useTimer ){
 			$logic	= Logic_Work_Timer::getInstance( $this->env );
-			$conditions	= array(
+			$conditions	= [
 				'module'	=> 'Work_Missions',
 				'moduleId'	=> $mission->missionId,
 				'status'	=> [0, 1, 2],
-			);
+			];
 			$this->addData( 'openTimers', $logic->countTimers( $conditions ) );
 
-			$conditions	= array(
+			$conditions	= [
 				'moduleId'	=> 0,
 				'userId'	=> $this->userId,
-			);
+			];
 			$this->addData( 'unrelatedTimers', $logic->index( $conditions, ['title' => 'ASC'] ) );
 		}
 
@@ -814,10 +815,10 @@ class Controller_Work_Mission extends Controller
 #			if( $this->request->has( 'direction' ) )
 #				$this->session->set( $sessionPrefix.'direction', $this->request->get( 'direction' ) );
 		if( $this->request->isAjax() ){
-			print( json_encode( (object) array(
+			print( json_encode( (object) [
 				'session'	=> $this->session->getAll(),
 				'request'	=> $this->request->getAll()
-			) ) );
+			] ) );
 			exit;
 		}
 		$this->restart( '', TRUE );
@@ -829,10 +830,10 @@ class Controller_Work_Mission extends Controller
 		$conditions	= $this->logic->getFilterConditions( $this->filterKeyPrefix, $additionalConditions );
 		$direction	= $this->session->get( $this->filterKeyPrefix.'direction' );
 		$order		= $this->session->get( $this->filterKeyPrefix.'order' );
-		$orders		= array(					//  collect order pairs
+		$orders		= [					//  collect order pairs
 			$order		=> $direction,			//  selected or default order and direction
 			'timeStart'	=> 'ASC',				//  order events by start time
-		);
+		];
 		if( $order != "title" )					//  if not ordered by title
 			$orders['title']	= 'ASC';		//  order by title at last
 		$limits	= [];
@@ -924,15 +925,15 @@ class Controller_Work_Mission extends Controller
 
 		$this->assignFilters();
 
-		$this->setData( array(																		//  assign data to view
+		$this->setData( [																		//  assign data to view
 			'missions'		=> $this->getFilteredMissions( $this->userId ),							//  add user missions
 			'userProjects'	=> $this->userProjects,													//  add user projects
 			'users'			=> $this->userMap,														//  add user map
 			'currentDay'	=> (int) $this->session->get( $this->filterKeyPrefix.'day' ),			//  set currently selected day
-		) );
+		] );
 	}
 
-	protected function initDefaultFilters()
+	protected function initDefaultFilters(): void
 	{
 		if( $this->session->get( $this->filterKeyPrefix.'mode' ) === NULL )
 			$this->session->set( $this->filterKeyPrefix.'mode', $this->defaultFilterValues['mode'] );
@@ -1026,7 +1027,7 @@ class Controller_Work_Mission extends Controller
 	{
 		$model		= new Model_Mission_Filter( $this->env );
 		$serial		= serialize( $this->session->getAll( $this->filterKeyPrefix ) );
-		$data		= array( 'serial' => $serial, 'timestamp' => time() );
+		$data		= ['serial' => $serial, 'timestamp' => time()];
 		$indices	= ['userId' => $userId];
 		$filter		= $model->getByIndex( 'userId', $userId );
 		if( $filter )
@@ -1071,11 +1072,11 @@ class Controller_Work_Mission extends Controller
 	{
 		$this->checkIsEditor( $missionId );
 		$data	= [];
-		$this->model->edit( $missionId, array(														//  store in database
+		$this->model->edit( $missionId, [														//  store in database
 			'priority'		=> $priority,															//  - new priority
 			'modifierId'	=> $this->userId,														//  - modifying user id
 			'modifiedAt'	=> time(),																//  - modification time
-		) );
+		] );
 		if( !$showMission )																			//  back to list
 			$this->restart( NULL, TRUE );															//  jump to list
 		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
@@ -1084,11 +1085,11 @@ class Controller_Work_Mission extends Controller
 	public function setStatus( $missionId, $status, $showMission = FALSE )
 	{
 		$this->checkIsEditor( $missionId );
-		$this->model->edit( $missionId, array(														//  store in database
+		$this->model->edit( $missionId, [														//  store in database
 			'status'		=> $status,																//  - new status
 			'modifierId'	=> $this->userId,														//  - modifying user id
 			'modifiedAt'	=> time(),																//  - modification time
-		) );
+		] );
 		if( $status < 0 || !$showMission )															//  mission aborted/done or back to list
 			$this->restart( NULL, TRUE );															//  jump to list
 		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
@@ -1103,10 +1104,10 @@ class Controller_Work_Mission extends Controller
 				$user			= $modelUser->get( $this->userId );									//
 
 				$groupings	= ['missionId'];													//  group by mission ID to apply HAVING clause
-				$havings	= array(																//  apply filters after grouping
+				$havings	= [																//  apply filters after grouping
 					'creatorId = '.(int) $user->userId,												//
 					'workerId = '.(int) $user->userId,												//
-				);
+				];
 				if( $this->env->getModules()->has( 'Manage_Projects' ) ){							//  look for module
 					$modelProject	= new Model_Project( $this->env );								//
 					$userProjects	= $modelProject->getUserProjects( $user->userId );				//  get projects assigned to user
@@ -1116,29 +1117,29 @@ class Controller_Work_Mission extends Controller
 				$havings	= [join( ' OR ', $havings )];									//  render HAVING clause
 
 				//  --  TASKS  --  //
-				$filters	= array(																//  task filters
+				$filters	= [																//  task filters
 					'type'		=> 0,																//  tasks only
 					'status'	=> [0, 1, 2, 3],												//  states: new, accepted, progressing, ready
 					'dayStart'	=> "<= ".date( "Y-m-d", time() ),									//  present and past (overdue)
-				);
+				];
 				$order	= ['priority' => 'ASC'];
-				$tasks	= $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered tasks ordered by priority
+				$tasks	= $modelMission->getAll( $filters, $order, [], [], $groupings, $havings );	//  get filtered tasks ordered by priority
 
 				//  --  EVENTS  --  //
-				$filters	= array(																//  event filters
+				$filters	= [																//  event filters
 					'type'		=> 1,																//  events only
 					'status'	=> [0, 1, 2, 3],												//  states: new, accepted, progressing, ready
 					'dayStart'	=> "<= ".date( "Y-m-d", time() ),									//  starting today
-				);
+				];
 				$order	= ['timeStart' => 'ASC'];
-				$events	= $modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered events ordered by start time
+				$events	= $modelMission->getAll( $filters, $order, [], [], $groupings, $havings );	//  get filtered events ordered by start time
 
 				if( $events || $tasks ){															//  user has tasks or events
-					$mail		= new Mail_Work_Mission_Daily( $this->env, array(					//  create mail and populate data
+					$mail		= new Mail_Work_Mission_Daily( $this->env, [					//  create mail and populate data
 						'user'		=> $user,
 						'tasks'		=> $tasks,
 						'events'	=> $events
-					) );
+					] );
 					$content	= print( $mail->getContent( 'htmlRendered' ) );
 				}
 				break;
@@ -1151,10 +1152,10 @@ class Controller_Work_Mission extends Controller
 
 	public function testMailNew( $missionId, $asText = NULL )
 	{
-		$data	= array(
+		$data	= [
 			'mission'	=> $this->model->get( $missionId ),
 			'user'		=> $this->userMap[$this->userId],
-		);
+		];
 		$mail	= new Mail_Work_Mission_New( $this->env, $data );
 		$asText ? xmp( $mail->getContent('textRendered' ) ) : print( $mail->getContent( 'htmlRendered' ) );
 		exit;
@@ -1182,11 +1183,11 @@ class Controller_Work_Mission extends Controller
 		$missionNew->location	= array_rand( array_flip( [$missionOld->location, 'Schulungsraum', ''] ) );
 		$missionNew->dayStart	= date( "Y-m-d", strtotime( $missionNew->dayStart ) + array_rand( array_flip( [-1, 0, 1] ) ) * 3600 * 24 );
 		$missionNew->dayEnd		= date( "Y-m-d", strtotime( $missionNew->dayEnd ) + array_rand( array_flip( [-1, 0, 1] ) ) * 3600 * 24 );
-		$data		= array(
+		$data		= [
 			'missionBefore'	=> $missionOld,
 			'missionAfter'	=> $missionNew,
 			'user'			=> $this->userMap[$this->userId],
-		);
+		];
 		$mail	= new Mail_Work_Mission_Update( $this->env, $data );
 		$asText ? xmp( $mail->getContent( 'textRendered' ) ) : print( $mail->getContent( 'htmlRendered' ) );
 		exit;

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\FS\Folder;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\Lister as FolderIndex;
@@ -131,7 +132,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 			$this->logicUpload->setUpload( $this->request->get( 'file' ) );
 			$maxSize	= $this->logicUpload->getMaxUploadSize();
 			if( !$this->logicUpload->checkSize( $maxSize ) ){
-				$this->messenger->noteError( $words->errorFileTooLarge, Alg_UnitFormater::formatBytes( $maxSize ) );
+				$this->messenger->noteError( $words->errorFileTooLarge, UnitFormater::formatBytes( $maxSize ) );
 			}
 			else if( $file->error ){
 				$handler    = new UploadErrorHandler();

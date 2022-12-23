@@ -1,31 +1,39 @@
 <?php
 
+use CeusMedia\Common\Alg\ID;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Catalog_Provision extends Logic
 {
+	protected Logic_Authentication $logicAuth;
+	protected Logic_Mail $logicMail;
+	protected Model_Provision_Product $modelProduct;
+	protected Model_Provision_Product_License $modelLicense;
+	protected Model_Provision_User_License $modelUserLicense;
+	protected Model_Provision_User_License_Key $modelUserKey;
+	protected Model_User $modelUser;
+
 	/**
 	 *	@todo   		rework, send mails
 	 */
-	public function addUserLicense( $userId, $productLicenseId, $assignFirst = FALSE )
+	public function addUserLicense( $userId, $productLicenseId, bool $assignFirst = FALSE ): string
 	{
 		$productLicense	= $this->modelLicense->get( $productLicenseId );
-		$data		= array(
+		$data		= [
 			'userId'			=> $userId,
 			'productLicenseId'	=> $productLicenseId,
 			'productId'			=> $productLicense->productId,
 			'status'			=> 0,
-			'uid'				=> substr( Alg_ID::uuid(), -12 ),
+			'uid'				=> substr( ID::uuid(), -12 ),
 			'duration'			=> $productLicense->duration,
 			'users'				=> $productLicense->users,
 			'price'				=> $productLicense->price,
-			'duration'			=> $productLicense->duration,
 			'createdAt'			=> time(),
-		);
+		];
 		$userLicenseId	= $this->modelUserLicense->add( $data );
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		for( $i=0; $i<$productLicense->users; $i++ ){
-			$data		= array(
+			$data		= [
 				'userLicenseId'		=> $userLicenseId,
 				'userId'			=> ( $assignFirst && $i === 0 ) ? $userId : 0,
 				'productLicenseId'	=> $productLicenseId,
@@ -33,7 +41,7 @@ class Logic_Catalog_Provision extends Logic
 				'status'			=> ( $assignFirst && $i === 0 ) ? 1 : 0,
 				'uid'				=> $userLicense->uid.'-'.str_pad( ( $i + 1), 4, '0', STR_PAD_LEFT ),
 				'createdAt'			=> time(),
-			);
+			];
 			$userLicenseKeyId	= $this->modelUserKey->add( $data );
 		}
 		return $userLicenseId;
@@ -64,7 +72,7 @@ class Logic_Catalog_Provision extends Logic
 		$userLicenses	= $this->getUserLicensesFromUser( $userId, $productId );
 		foreach( $userLicenses as $userLicense ){
 			foreach( $userLicense->userLicenseKeys as $userLicenseKey ){
-				if( $userLicenseKey->status == Model_User_License_Key::STATUS_ACTIVE ){
+				if( $userLicenseKey->status == Model_Provision_User_License_Key::STATUS_ASSIGNED ){
 					return FALSE;
 				}
 			}
@@ -75,7 +83,7 @@ class Logic_Catalog_Provision extends Logic
 			$userLicense	= $this->modelUserLicense->get( $nextUserKey->userLicenseId );
 			$duration		= $this->getDurationInSeconds( $userLicense->duration );
 			$this->modelUserKey->edit( $nextUserKeyId, array(
-				'status'	=> Model_User_License_Key::STATUS_ACTIVE,
+				'status'	=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
 				'startsAt'	=> time(),
 				'endsAt'	=> time() + $duration,
 			) );
@@ -139,7 +147,7 @@ class Logic_Catalog_Provision extends Logic
 		$userLicenses	= $this->getUserLicensesFromUser( $userId, $productId );
 		foreach( $userLicenses as $userLicense ){
 			foreach( $userLicense->userLicenseKeys as $userLicenseKey ){
-				if( $userLicenseKey->status == Model_User_License_Key::STATUS_ASSIGNED ){
+				if( $userLicenseKey->status == Model_Provision_User_License_Key::STATUS_ASSIGNED ){
 					return $userLicenseKey->userLicenseKeyId;
 				}
 			}
@@ -176,7 +184,7 @@ class Logic_Catalog_Provision extends Logic
 		return $productLicenses;
 	}
 
-	public function getProductUri( $productOrId, $absolute = FALSE )
+	public function getProductUri( $productOrId, bool $absolute = FALSE )
 	{
 		$product	= $productOrId;
 		if( is_int( $productOrId ) )
@@ -190,7 +198,7 @@ class Logic_Catalog_Provision extends Logic
 		return $absolute ? $this->env->url.$uri : './'.$uri;
 	}
 
-	public function getProductLicenseUri( $productLicenseOrId, $absolute = FALSE )
+	public function getProductLicenseUri( $productLicenseOrId, bool $absolute = FALSE )
 	{
 		$productLicense	= $productLicenseOrId;
 		if( is_int( $productLicenseOrId ) )
@@ -222,24 +230,26 @@ class Logic_Catalog_Provision extends Logic
 	/**
 	 *	@todo		kriss: code doc
 	 */
-	public function getUriPart( $label, $delimiter = "_" )
+	public function getUriPart( string $label, string $delimiter = '_' ): string
 	{
 		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
-		$label	= preg_replace( "/ +/", $delimiter, $label );
-		return $label;
+		return preg_replace( "/ +/", $delimiter, $label );
 	}
 
-	public function getProducts( $status = NULL )
+	public function getProducts( $status = NULL ): array
 	{
 		$indices	= [];
 		if( $status !== NULL )
 			$indices['status']	= $status;
 		$orders		= ['rank' => 'ASC', 'title' => 'ASC'];
-		$products	= $this->modelProduct->getAll( $indices, $orders );
-		return $products;
+		return $this->modelProduct->getAll( $indices, $orders );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );

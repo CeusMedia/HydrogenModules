@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\Alg\UnitFormater;
+use CeusMedia\Common\Alg\UnitParser;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $urlBase	= $frontend->getUri().$frontend->getConfigValue( 'path.contents' ).$moduleConfig->get( 'path.covers' );
@@ -52,8 +55,8 @@ if( $article->cover ){
 }
 
 $documentMaxSize	= $moduleConfig->get( 'article.document.maxSize' );
-$limits				= ['document' => Alg_UnitParser::parse( $documentMaxSize, "M" )];
-$documentMaxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
+$limits				= ['document' => UnitParser::parse( $documentMaxSize, "M" )];
+$documentMaxSize	= UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize( $limits ) );
 
 $list				= [];
 $documentExtensions	= $moduleConfig->get( 'article.image.extensions' );

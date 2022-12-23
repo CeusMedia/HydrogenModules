@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\UnitParser;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 
@@ -107,7 +108,7 @@ class Logic_Upload{
 	public function checkSize( $maxSize, $noteError = FALSE ){
 		if( $this->upload->error )
 			return FALSE;
-		$maxSize	= Alg_UnitParser::parse( $maxSize, 'B' );
+		$maxSize	= UnitParser::parse( $maxSize, 'B' );
 		$maxSize	= Logic_Upload::getMaxUploadSize( ['config' => $maxSize] );
 		$this->upload->allowedSize	= $maxSize;
 
@@ -198,8 +199,8 @@ class Logic_Upload{
 	 *	Returns maximum supported file size of uploads in bytes.
 	 *	Gets the minimum of PHP limits 'upload_max_filesize', 'post_max_size' and 'memory_limit'.
 	 *	Take take other given limits into judgement, eg. ['myLimit' => '4MB'].
-	 *	Uses Alg_UnitParser to convert limit strings like "4M" to integer.
-	 *	Uses Alg_UnitParser to convert own given limits with units to integer.
+	 *	Uses CeusMedia\Common\Alg\UnitParser to convert limit strings like "4M" to integer.
+	 *	Uses CeusMedia\Common\Alg\UnitParser to convert own given limits with units to integer.
 	 *
 	 *	@static
 	 *	@access		public
@@ -209,10 +210,10 @@ class Logic_Upload{
 	static function getMaxUploadSize( $otherLimits = [] ){
 		foreach( $otherLimits as $key => $value )
 			if( preg_match( "/[a-z]$/i", trim( $value ) ) )
-				$otherLimits[$key]	= Alg_UnitParser::parse( trim( $value ) );
-		$otherLimits['upload']	= Alg_UnitParser::parse( ini_get( 'upload_max_filesize' ), "M" );
-		$otherLimits['post']	= Alg_UnitParser::parse( ini_get( 'post_max_size' ), "M" );
-		$otherLimits['memory']	= Alg_UnitParser::parse( ini_get( 'memory_limit' ), "M" );
+				$otherLimits[$key]	= UnitParser::parse( trim( $value ) );
+		$otherLimits['upload']	= UnitParser::parse( ini_get( 'upload_max_filesize' ), "M" );
+		$otherLimits['post']	= UnitParser::parse( ini_get( 'post_max_size' ), "M" );
+		$otherLimits['memory']	= UnitParser::parse( ini_get( 'memory_limit' ), "M" );
 		return min( $otherLimits );
 	}
 
@@ -327,7 +328,7 @@ class Logic_Upload{
 		$this->upload	= $uploadData;
 		$this->upload->allowedMimeTypes		= [];
 		$this->upload->allowedExtensions	= $allowedExtensions;
-		$this->upload->allowedSize			= Alg_UnitParser::parse( trim( $maxSize ) );
+		$this->upload->allowedSize			= UnitParser::parse( trim( $maxSize ) );
 
 		$maxSize ? $this->checkSize( $maxSize, TRUE ) : NULL;
 		$allowedExtensions ? $this->checkExtension( $allowedExtensions, TRUE ) : NULL;

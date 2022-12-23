@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Crypt\PasswordStrength;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ajax_Auth_Json extends AjaxController
@@ -33,7 +34,7 @@ class Controller_Ajax_Auth_Json extends AjaxController
 		$password	= trim( $this->request->get( 'password' ) );
 		$result		= 0;
 		if( strlen( $password ) )
-			$result			= Alg_Crypt_PasswordStrength::getStrength( $password );
+			$result			= PasswordStrength::getStrength( $password );
 		$this->respondData( $result );
 	}
 }

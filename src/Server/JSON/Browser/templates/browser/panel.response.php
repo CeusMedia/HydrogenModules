@@ -1,7 +1,11 @@
 <?php
 
+use CeusMedia\Common\ADT\JSON\Pretty as JsonFormat;
+
+/** @var object $response */
+
 if( is_object( $response->data ) || is_array( $response->data ) ){
-	$content		= trim( ADT_JSON_Formater::format( json_encode( $response->data ) ) );
+	$content		= trim( JsonFormat::print( json_encode( $response->data ) ) );
 	$content	= '<xmp class="js">'.$content.'</xmp>';
 }
 else
@@ -15,5 +19,4 @@ return '
 			'.$content.'
 		</div>
 	</div>
-</div>
-';
+</div>';

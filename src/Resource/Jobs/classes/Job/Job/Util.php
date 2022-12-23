@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\ADT\Constant as Constants;
+
 class Job_Job_Util extends Job_Abstract
 {
 //	protected $logic;
@@ -20,10 +23,10 @@ class Job_Job_Util extends Job_Abstract
 			$this->parameters->set( '--format', $this->parameters->get( '-f' ) );
 		if( $this->parameters->get( '--format' ) )
 			$format	= $this->parameters->get( '--format' );
-		if( preg_match( '/^[A-Z0-9_]+$/', $format ) && ADT_Constant::has( $format ) ){
-			if( $this->verbose )Job.
+		if( preg_match( '/^[A-Z0-9_]+$/', $format ) && Constants::has( $format ) ){
+			if( $this->verbose )
 				$this->out( 'Found format by constant.' );
-			$format	= ADT_Constant::get( $format );
+			$format	= Constants::get( $format );
 		}
 		else if( version_compare( PHP_VERSION, '7.0', '<' ) ){
 			if( $this->verbose )
@@ -52,14 +55,14 @@ class Job_Job_Util extends Job_Abstract
 	public function getPhpVersion()
 	{
 		$phpVersion		= phpversion();
-		$this->results	= (object) array(
+		$this->results	= (object) [
 			'full'	=> $phpVersion,
 			'short'	=> $this->shortenVersion( $phpVersion ),
-		);
+		];
 		$this->out( $this->results->short );
 	}
 
-	protected function shortenVersion( $version ): string
+	protected function shortenVersion( string $version ): string
 	{
 		return preg_replace( '/(-.+)$/', '', $version );
 	}

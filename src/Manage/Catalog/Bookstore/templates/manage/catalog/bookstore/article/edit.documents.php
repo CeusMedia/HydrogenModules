@@ -1,6 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\Alg\UnitParser;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -58,7 +59,7 @@ if( $articleDocuments ){
 
 $documentMaxSize	= UnitParser::parse( $moduleConfig->get( 'article.document.size' ), "M" );
 $documentMaxSize	= Logic_Upload::getMaxUploadSize( ['config' => $documentMaxSize] );
-$documentMaxSize	= Alg_UnitFormater::formatBytes( $documentMaxSize );
+$documentMaxSize	= UnitFormater::formatBytes( $documentMaxSize );
 
 $list				= [];
 $documentExtensions	= $moduleConfig->get( 'article.document.extensions' );

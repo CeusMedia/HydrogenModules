@@ -25,6 +25,8 @@
  */
 
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
+use CeusMedia\Common\Alg\Obj\MethodFactory as ObjectMethodFactory;
+use CeusMedia\HydrogenFramework\Controller as Controller;
 use CeusMedia\HydrogenFramework\Dispatcher\General as GeneralDispatcher;
 
 /**
@@ -37,7 +39,7 @@ use CeusMedia\HydrogenFramework\Dispatcher\General as GeneralDispatcher;
 class Dispatcher extends GeneralDispatcher
 {
 
-	public $checkClassActionArguments	= TRUE;
+	public bool $checkClassActionArguments	= TRUE;
 
 	/**
 	 *	Checks whether token authentication is needed or invalid.
@@ -54,15 +56,14 @@ class Dispatcher extends GeneralDispatcher
 	 *	@return		void
 	 *	@throws		RuntimeException if authentication is active and not fulfilled
 	 */
-	protected function checkAuth( $controller, $action )
+	protected function checkAuth( string $controller, string $action )
 	{
-		$config	= $this->env->getConfig()->getAll( 'module.server_json.', TRUE );					//  shortcurt module config
+		$config	= $this->env->getConfig()->getAll( 'module.server_json.', TRUE );					//  shortcut module config
 		if( !$config->get( 'token.active' ) )														//  token is not needed for authentication
 			return;
 		$excludes	= preg_split( '/, */', $config->get( 'token.excludes' ) );							//  extract paths accessible without token
 
-		if( !in_array( $controller.'/'.$action, $excludes ) )										//  not a token-free resource
-		{
+		if( !in_array( $controller.'/'.$action, $excludes ) ){										//  not a token-free resource
 			$token	= $this->request->get( 'token' );												//  extract sent token
 			if( !trim( $token ) )																	//  no token given
 				throw new RuntimeException( 'Access denied: missing token', 220 );					//  break with internal error
@@ -77,8 +78,9 @@ class Dispatcher extends GeneralDispatcher
 	 *	Notifies Piwik tracker if enabled.
 	 *	@access		public
 	 *	@return		mixed		Result returned by called controller method
+	 *	@throws		ReflectionException
 	 */
-	public function dispatch()
+	public function dispatch(): string
 	{
 		$this->realizeCall();																		//  set defaults if necessary
 
@@ -95,12 +97,13 @@ class Dispatcher extends GeneralDispatcher
 		$this->checkClass( $className );															//  ensure controller class
 
 		$factory	= new ObjectFactory();															//  raise object factory
-		$instance	= $factory->createObject( $className, [&$this->env] );					//  build controller instance
+		/** @var Controller $instance */
+		$instance	= $factory->createObject( $className, [&$this->env] );							//  build controller instance
 		$this->checkClassAction( $className, $instance, $action );									//  ensure action method
 		if( $this->checkClassActionArguments )														//  action method arguments are to be checked
 			$this->checkClassActionArguments( $className, $instance, $action );						//  ensure action method arguments
 
-		$data	= Alg_Object_MethodFactory::callObjectMethod( $instance, $action, $arguments );		//  call action method in controller class with arguments
+		$data	= ObjectMethodFactory::staticCallObjectMethod( $instance, $action, $arguments );	//  call action method in controller class with arguments
 		$this->noteLastCall( $instance );															//  store this call to avoid loops
 		return $data;																				//  return result of controller method
 	}

@@ -1,20 +1,21 @@
 <?php
 
+use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Form_Fill extends Logic
 {
-	protected $logicMail;
-	protected $modelFill;
-	protected $modelForm;
-	protected $modelRule;
-	protected $modelMail;
-	protected $modelTransferTarget;
-	protected $modelTransferRule;
-	protected $modelFillTransfer;
+	protected Logic_Mail $logicMail;
+	protected Model_Form $modelForm;
+	protected Model_Form_Fill $modelFill;
+	protected Model_Form_Fill_Transfer $modelFillTransfer;
+	protected Model_Form_Mail $modelMail;
+	protected Model_Form_Rule $modelRule;
+	protected Model_Form_Transfer_Rule $modelTransferRule;
+	protected Model_Form_Transfer_Target $modelTransferTarget;
 
-	protected $transferTargetMap	= [];
+	protected array $transferTargetMap	= [];
 
 	public function applyTransfers( $fillId ): array
 	{
@@ -31,7 +32,7 @@ class Logic_Form_Fill extends Logic
 		}
 		$form		= $this->modelForm->get( $fill->formId );
 
-		$parser		= new ADT_JSON_Parser;
+		$parser		= new JsonParser;
 		$mapper		= new Logic_Form_Transfer_DataMapper( $this->env );
 
 		$transfers	= [];

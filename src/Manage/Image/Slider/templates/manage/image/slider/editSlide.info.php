@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
 
@@ -34,7 +36,7 @@ return '
 			<dt>'.$w->labelImageSize.'</dt>
 			<dd>'.$slideImage->getWidth().'&times;'.$slideImage->getHeight().'px</dd>
 			<dt>'.$w->labelFileSize.'</dt>
-			<dd>'.Alg_UnitFormater::formatBytes( filesize( $slideFilePath ) ).'</dd>
+			<dd>'.UnitFormater::formatBytes( filesize( $slideFilePath ) ).'</dd>
 		</dl>
 		<dl class="dl-horizontal">
 			<dt>'.$w->labelSlider.'</dt>

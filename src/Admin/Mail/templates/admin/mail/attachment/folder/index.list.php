@@ -3,6 +3,7 @@
 use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Modal\Dialog as ModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as ModalTrigger;
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as Html;
 use CeusMedia\HydrogenFramework\Environment\Web;
@@ -24,7 +25,7 @@ $iconCancel		= new Icon( 'arrow-left' );
 
 $w				= (object) $words['upload'];
 
-$maxSize		= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize() );
+$maxSize		= UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize() );
 $helperUpload	= new View_Helper_Input_File( $env );
 $helperUpload->setLabel( $iconUpload )->setRequired( TRUE )->setName( 'file' );
 
@@ -159,7 +160,7 @@ if( $files ){
 		] );
 
 	//		$mimeType	= Html::create( 'span', $w->labelMimeType.': '.$file->mimeType );
-		$fileSize	= Html::create( 'span', $w->labelFileSize.': '.Alg_UnitFormater::formatBytes( filesize( $basePath.$selectedPath.$fileName ) ) );
+		$fileSize	= Html::create( 'span', $w->labelFileSize.': '.UnitFormater::formatBytes( filesize( $basePath.$selectedPath.$fileName ) ) );
 		$info		= Html::create( 'small', $fileSize/*.' | '.$mimeType*/, ['class' => 'muted'] );
 
 		$buttons	= [$buttonDownload, $buttonRemove];

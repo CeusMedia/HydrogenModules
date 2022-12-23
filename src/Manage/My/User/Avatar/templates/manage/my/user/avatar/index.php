@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\Alg\UnitFormater;
+use CeusMedia\Common\Alg\UnitParser;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['index'];
@@ -11,9 +14,9 @@ $helperUpload->setName( 'upload' );
 $helperUpload->setLabel( $iconFile );
 $helperUpload->setRequired( TRUE );
 
-$maxSize	= Alg_UnitParser::parse( $moduleConfig->get( 'image.upload.maxFileSize' ), 'M' );
+$maxSize	= UnitParser::parse( $moduleConfig->get( 'image.upload.maxFileSize' ), 'M' );
 $maxSize	= Logic_Upload::getMaxUploadSize( ['config' => $maxSize] );
-$maxSize	= Alg_UnitFormater::formatBytes( $maxSize );
+$maxSize	= UnitFormater::formatBytes( $maxSize );
 
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
 $imageAvatar	= '';

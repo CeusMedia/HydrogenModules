@@ -1,14 +1,17 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
-class View_Helper_Form_Fill_Person{
+class View_Helper_Form_Fill_Person
+{
+	protected Environment $env;
 
-	protected $fill;
+	protected object $fill;
 
-	protected $form;
+	protected object $form;
 
-	protected $fields		= array(
+	protected array $fields		= [
 		'gender',
 		'firstname',
 		'surname',
@@ -18,35 +21,39 @@ class View_Helper_Form_Fill_Person{
 		'city',
 		'postcode',
 		'country'
-	);
+	];
 
-	protected $heading		= 'Person';
+	protected string $heading		= 'Person';
 
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env		= $env;
 	}
 
-	public function addFields( $fields ){
-		if( !is_array( $fields ) )
-			throw new InvalidArgumentException( 'Fields must be an array' );
+	public function addFields( array $fields ): self
+	{
 		$this->fields	= array_merge( $this->fields, $fields );
+		return $this;
 	}
 
-	public function getFields(){
+	public function getFields(): array
+	{
 		return $this->fields;
 	}
 
-	public function getHeading(){
+	public function getHeading(): string
+	{
 		return $this->heading;
 	}
 
-	public function removeFields( $fields ){
-		if( !is_array( $fields ) )
-			throw new InvalidArgumentException( 'Fields must be an array' );
+	public function removeFields( array $fields ): self
+	{
 		$this->fields	= array_diff( $this->fields, $fields );
+		return $this;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->fill )
 			throw new DomainException( 'No fill given' );
 //		if( !$this->form )
@@ -76,15 +83,16 @@ class View_Helper_Form_Fill_Person{
 
 		$dataPerson		= '';
 		if( $listInfo ){
-			$dataPerson	= HtmlTag::create( 'div', array(
+			$dataPerson	= HtmlTag::create( 'div', [
 				HtmlTag::create( 'h3', 'Person' ),
-				$this->renderTable( $listInfo, TRUE ),
-			) );
+				$this->renderTable( $listInfo ),
+			] );
 		}
 		return $dataPerson;
 	}
 
-	protected function renderFacts( $facts, $horizontal = FALSE ){
+	protected function renderFacts( $facts, $horizontal = FALSE ): string
+	{
 		$list	= [];
 		foreach( $facts as $label => $value ){
 			$list[]	= HtmlTag::create( 'dt', $label );
@@ -92,37 +100,39 @@ class View_Helper_Form_Fill_Person{
 		}
 		if( $list )
 			return HtmlTag::create( 'dl', $list, ['class' => $horizontal ? 'dl-horizontal' : NULL] );
+		return '';
 	}
 
-	protected function renderTable( $rows ){
+	protected function renderTable( array $rows ): string
+	{
 		$list	= [];
 		foreach( $rows as $row ){
-			$list[]	= HtmlTag::create( 'tr', array(
+			$list[]	= HtmlTag::create( 'tr', [
 				HtmlTag::create( 'th', $row->label ),
 				HtmlTag::create( 'td', $row->value ),
-			) );
+			] );
 		}
-		return HtmlTag::create( 'table', array(
+		return HtmlTag::create( 'table', [
 			HtmlElements::ColumnGroup( ['50%', '50%'] ),
 			HtmlTag::create( 'tbody', $list ),
-		), ['class' => 'table table-striped table-fixed table-bordered table-condensed'] );
+		], ['class' => 'table table-striped table-fixed table-bordered table-condensed'] );
 	}
 
-	public function setFields( $fields ){
-		if( !is_array( $fields ) )
-			throw new InvalidArgumentException( 'Fields must be an array' );
+	public function setFields( array $fields ): self
+	{
 		$this->fields	= $fields;
+		return $this;
 	}
 
-	public function setFill( $fill ){
-		if( !is_object( $fill ) )
-			throw new InvalidArgumentException( 'Fill must be an object' );
+	public function setFill( object $fill ): self
+	{
 		$this->fill		= $fill;
+		return $this;
 	}
 
-	public function setForm( $form ){
-		if( !is_object( $form ) )
-			throw new InvalidArgumentException( 'Form must be an object' );
+	public function setForm( object $form ): self
+	{
 		$this->form		= $form;
+		return $this;
 	}
 }

@@ -7,7 +7,7 @@ use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
 
 /**
- *	@todo	extract classes Logic_Upload and Alg_UnitParser
+ *	@todo	extract classes Logic_Upload and CeusMedia\Common\Alg\UnitParser
  */
 class Logic_Catalog_Bookstore extends Logic
 {

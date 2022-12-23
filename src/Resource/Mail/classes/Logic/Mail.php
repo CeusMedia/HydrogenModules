@@ -5,6 +5,7 @@
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Alg\Obj\Constant as ObjectConstants;
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
@@ -152,11 +153,11 @@ class Logic_Mail extends Logic
 	 *	@access		public
 	 *	@param		string		$mailClassName		Name of mail class without Mail_ prefix
 	 *	@param		array		$mailData			Data map for mail content generation, nested arrays and objects are possible
-	 *	@return		object							Instance of mail class containing rendered mail parts
+	 *	@return		Mail_Abstract					Instance of mail class containing rendered mail parts
 	 *	@throws		RuntimeException				If mail class is not existing
 	 *	@throws		ReflectionException
 	 */
-	public function createMail( string $mailClassName, array $mailData ): object
+	public function createMail( string $mailClassName, array $mailData ): Mail_Abstract
 	{
 		$className	= 'Mail_'.$mailClassName;
 		if( !class_exists( $className ) )
@@ -787,7 +788,7 @@ class Logic_Mail extends Logic
 		$status			= (int) $status;
 		$mail			= $this->getMailFromObjectOrId( $mail );
 		$mail->status	= (int) $mail->status;
-		$modelStatuses	= Alg_Object_Constant::staticGetAll( 'Model_Mail', 'STATUS_' );
+		$modelStatuses	= ObjectConstants::staticGetAll( 'Model_Mail', 'STATUS_' );
 		$statusMap		= array_flip( $modelStatuses );
 		if( !in_array( $status, array_values( $modelStatuses ) ) )
 			throw new DomainException( 'Invalid status: '.$status );

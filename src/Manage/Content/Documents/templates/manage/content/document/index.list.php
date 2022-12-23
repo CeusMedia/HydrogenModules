@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -26,7 +28,7 @@ if( $documents ){
 			'target'	=> '_blank'
 		) );
 		$uploadedAt	= $helper->convert( filemtime( $filePath ), TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix );
-		$size		= Alg_UnitFormater::formatBytes( filesize( $filePath ) );
+		$size		= UnitFormater::formatBytes( filesize( $filePath ) );
 		$actions	= in_array( 'remove', $rights ) ? $remove : '';
 		$rows[]		= HtmlTag::create( 'tr',
 			HtmlTag::create( 'td', $link, ['class' => 'cell-title autocut'] ).

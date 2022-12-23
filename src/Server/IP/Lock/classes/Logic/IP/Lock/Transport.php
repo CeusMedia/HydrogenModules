@@ -1,14 +1,15 @@
 <?php
 
+use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\HydrogenFramework\Logic as Logic;
 
 class Logic_IP_Lock_Transport extends Logic
 {
-	protected $modelFilter;
-	protected $modelReason;
-	protected $modelLock;
-	protected $logicLock;
+	protected Model_IP_Lock_Filter $modelFilter;
+	protected Model_IP_Lock_Reason $modelReason;
+	protected Model_IP_Lock $modelLock;
+	protected Logic_IP_Lock $logicLock;
 
 	/**
 	 *	Export reasons and filters.
@@ -17,7 +18,7 @@ class Logic_IP_Lock_Transport extends Logic
 	 *	@param		array		$filterIds		List if filter IDs (empty: all)
 	 *	@return		object		Map of reasons and filters (keys: reasons, filters)
 	 */
-	public function export( array $reasonIds = [], array $filterIds = [] )
+	public function export( array $reasonIds = [], array $filterIds = [] ): object
 	{
 		if( !$reasonIds ){
 			$reasons	= $this->modelReason->getAll();
@@ -68,12 +69,12 @@ class Logic_IP_Lock_Transport extends Logic
 	 *	Other will try to merge new reasons and filters with existing ones.
 	 *
 	 *	@access		public
-	 *	@param		object		Data object containing reasons and filters
-	 *	@param		boolean		Flag: clear locks, filters and reasons beforehand
-	 *	@return		object		Data object containging number of affected reasons and filters
+	 *	@param		object		$data				Data object containing reasons and filters
+	 *	@param		boolean		$resetAllBefore		Flag: clear locks, filters and reasons beforehand
+	 *	@return		object		Data object containing number of affected reasons and filters
 	 *	@throws		RuntimeException	if import transaction failed
 	 */
-	public function import( $data, bool $resetAllBefore = FALSE )
+	public function import( object $data, bool $resetAllBefore = FALSE ): object
 	{
 		$dbc	= $this->env->getDatabase();
 		try{
@@ -87,10 +88,10 @@ class Logic_IP_Lock_Transport extends Logic
 					$this->modelReason->add( (array) $reason, FALSE );
 				foreach( $data->filters as $filter )
 					$this->modelFilter->add( (array) $filter, FALSE );
-				$result		= (object) array(
+				$result		= (object) [
 					'reasons'	=> count( $data->reasons ),
 					'filters'	=> count( $data->filters ),
-				);
+				];
 			}
 			else
 				$result	= $this->importByMerge( $data );
@@ -109,14 +110,14 @@ class Logic_IP_Lock_Transport extends Logic
 	 *	Other will try to merge new reasons and filters with existing ones.
 	 *
 	 *	@access		public
-	 *	@param		string		$jsonFile			Data object containing reasons and filters
+	 *	@param		string		$json				Data object containing reasons and filters
 	 *	@param		boolean		$resetAllBefore		Flag: clear locks, filters and reasons beforehand
-	 *	@return		object		Data object containging number of affected reasons and filters
+	 *	@return		object		Data object containing number of affected reasons and filters
 	 *	@throws		RuntimeException	if import transaction failed
 	 */
-	public function importFromJson( string $json, bool $resetAllBefore = FALSE )
+	public function importFromJson( string $json, bool $resetAllBefore = FALSE ): object
 	{
-		$data	= ADT_JSON_Parser::getNew()->parse( $json );
+		$data	= JsonParser::getNew()->parse( $json );
 		return $this->import( $data, $resetAllBefore );
 	}
 
@@ -128,17 +129,20 @@ class Logic_IP_Lock_Transport extends Logic
 	 *	@access		public
 	 *	@param		string		$jsonFile			JSON file containing reasons and filters
 	 *	@param		boolean		$resetAllBefore		Flag: clear locks, filters and reasons beforehand
-	 *	@return		object		Data object containging number of affected reasons and filters
+	 *	@return		object		Data object containing number of affected reasons and filters
 	 *	@throws		RuntimeException	if import transaction failed
 	 */
-	public function importFromJsonFile( string $jsonFile, bool $resetAllBefore = FALSE )
+	public function importFromJsonFile( string $jsonFile, bool $resetAllBefore = FALSE ): object
 	{
-		$json	= FileReader::load( $jsonFile );
-		return $this->importFromJson( $json, $resetAllBefore );
+		return $this->importFromJson( FileReader::load( $jsonFile ), $resetAllBefore );
 	}
 
 	/*  --  PROTECTED  --  */
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelFilter	= new Model_IP_Lock_Filter( $this->env );
@@ -147,7 +151,7 @@ class Logic_IP_Lock_Transport extends Logic
 		$this->logicLock	= $this->env->getLogic()->get( 'ipLock' );
 	}
 
-	protected function importByMerge( $data )
+	protected function importByMerge( object $data ): object
 	{
 		$countReasons	= 0;
 		$countFilters	= 0;
@@ -177,19 +181,19 @@ class Logic_IP_Lock_Transport extends Logic
 			}
 		}
 		foreach( $filterIdMap as $filterImportId => $filter ){
-			$existingFilter	= $this->modelFilter->getByIndices( array(
+			$existingFilter	= $this->modelFilter->getByIndices( [
 				'method'	=> $filter->method,
 				'pattern'	=> $filter->pattern,
-			) );
+			] );
 			if( !$existingFilter ){
 				$filter->reasonId	= $reasonIdMap[$filter->reasonId]->ipLockReasonId;
 				$this->modelFilter->add( (array) $filter, FALSE );
 				$countFilters++;
 			}
 		}
-		return (object) array(
+		return (object) [
 			'reasons'	=> $countReasons,
 			'filters'	=> $countFilters,
-		);
+		];
 	}
 }

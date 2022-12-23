@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\Alg\Obj\Constant as ObjectConstants;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -34,7 +36,7 @@ if( $env->php->version->has( 7 ) )																//  @todo remove in v1 using P
 }/**/
 $optCategory	= HtmlElements::Options( $optCategory, $categoryId );
 
-$optFormat		= array_flip( Alg_Object_Constant::staticGetAll( 'Model_Manual_Page', 'FORMAT_' ) );
+$optFormat		= array_flip( ObjectConstants::staticGetAll( 'Model_Manual_Page', 'FORMAT_' ) );
 $optFormat		= HtmlElements::Options( array_reverse( $optFormat, TRUE ) );
 
 $buttonCancel	= HtmlTag::create( 'a', 'zurück', ['href' => './info/manual', 'class' => 'btn'] );

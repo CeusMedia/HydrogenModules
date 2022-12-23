@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\Alg\Obj\Constant as ObjectConstants;
+
 /**
  *	This job exists to training working with jobs, only.
  *	Nothing productive will be done.
@@ -75,7 +78,7 @@ class Job_Job_Schedule extends Job_Abstract
 		$statusParam	= preg_replace( '/\s/', '', $statusParam );
 		if( $statusParam !== '*' ){
 			$statuses	= [];
-			$statusMap	= Alg_Object_Constant::staticGetAll( 'Model_Job_Run', 'STATUS_' );
+			$statusMap	= ObjectConstants::staticGetAll( 'Model_Job_Run', 'STATUS_' );
 			foreach( explode( ',', $statusParam ) as $statusKey ){
 				if( !array_key_exists( $statusKey, $statusMap ) )
 					throw new \InvalidArgumentException( 'Invalid job run status: '.$statusKey );
@@ -134,9 +137,10 @@ class Job_Job_Schedule extends Job_Abstract
 	 *			- optional, default: 0
 	 *
 	 *	@access		public
-	 *	@return		void
+	 *	@return		int
+	 *	@throws		ReflectionException
 	 */
-	public function remove()
+	public function remove(): int
 	{
 		$modelRun	= new Model_Job_Run( $this->env );
 
@@ -171,7 +175,7 @@ class Job_Job_Schedule extends Job_Abstract
 		$statusParam	= preg_replace( '/\s/', '', $statusParam );
 		if( $statusParam !== '*' ){
 			$statuses	= [];
-			$statusMap	= Alg_Object_Constant::staticGetAll( 'Model_Job_Run', 'STATUS_' );
+			$statusMap	= ObjectConstants::staticGetAll( 'Model_Job_Run', 'STATUS_' );
 			foreach( explode( ',', $statusParam ) as $statusKey ){
 				if( !array_key_exists( $statusKey, $statusMap ) )
 					throw new \InvalidArgumentException( 'Invalid job run status: '.$statusKey );

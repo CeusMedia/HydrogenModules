@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -65,7 +66,7 @@ class Controller_Manage_Form_Import extends Controller
 		];
 
 		if( strlen( trim( $rules ) ) ){
-			$parser	= new ADT_JSON_Parser;
+			$parser	= new JsonParser;
 			try{
 				$ruleSet	= $parser->parse( $rules, FALSE );
 				$response['status']	= 'parsed';

@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 if( !in_array( 'upload', $rights ) )
@@ -14,7 +16,7 @@ $helper->setName( 'upload' );
 $helper->setLabel( $iconFile );
 $helper->setRequired( TRUE );
 
-$maxSize	= Alg_UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize() );
+$maxSize	= UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize() );
 
 return '
 <div class="content-panel">

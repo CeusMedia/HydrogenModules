@@ -1,6 +1,9 @@
 <?php
 
+use CeusMedia\Common\Alg\Obj\Constant as ObjectConstants;
 use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
+use CeusMedia\Common\FS\File\RegexFilter as RegexFileFilter;
+use CeusMedia\Common\XML\ElementReader as XmlElementReader;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Job
@@ -10,9 +13,10 @@ class Model_Job
 	const FORMAT_JSON		= 2;
 	const FORMAT_MODULE		= 3;
 
-	protected $pathJobs		= 'config/jobs/';
-	protected $jobs			= [];
-	protected $format		= 0;
+	protected Environment $env;
+	protected string $pathJobs		= 'config/jobs/';
+	protected array $jobs			= [];
+	protected int $format			= 0;
 
 	public function __construct( Environment $env )
 	{
@@ -86,14 +90,14 @@ class Model_Job
 		if( $this->format === static::FORMAT_XML ){
 			foreach( self::readJobsFromXmlFiles( $this->pathJobs, $modes ) as $jobId => $job ){
 				if( $strict && array_key_exists( $jobId, $this->jobs ) )
-					throw new \DomainException( 'Duplicate job ID "'.$jobId.'"' );
+					throw new DomainException( 'Duplicate job ID "'.$jobId.'"' );
 				$this->jobs[$jobId]	= $job;
 			}
 		}
 		else if( $this->format === static::FORMAT_JSON ){
 			foreach( self::readJobsFromJsonFiles( $this->pathJobs, $modes ) as $jobId => $job ){
 				if( $strict && array_key_exists( $jobId, $this->jobs ) )
-					throw new \DomainException( 'Duplicate job ID "'.$jobId.'"' );
+					throw new DomainException( 'Duplicate job ID "'.$jobId.'"' );
 				$this->jobs[$jobId]	= $job;
 			}
 		}
@@ -126,16 +130,16 @@ class Model_Job
 			if( $modes && !array_intersect( $job->mode, $modes ) )
 				continue;
 			if( array_key_exists( $jobId, $jobs ) )
-				throw new \DomainException( 'Duplicate job ID: '.$jobId );
+				throw new DomainException( 'Duplicate job ID: '.$jobId );
 			$jobs[$jobId]	= $job;
 		}
 		return $jobs;
 	}
 
-	public function readJobsFromXmlFile( string $pathName, $modes = [] ): array
+	public function readJobsFromXmlFile( string $pathName, array $modes = [] ): array
 	{
 		$jobs	= [];
-		$xml	= \XML_ElementReader::readFile( $pathName );
+		$xml	= XmlElementReader::readFile( $pathName );
 		foreach( $xml->job as $job ){
 			$jobObj				= new \stdClass();
 			$jobObj->id			= $job->getAttribute( 'id' );
@@ -152,15 +156,20 @@ class Model_Job
 			if( $modes && !array_intersect( $jobObj->mode, $modes ) )
 				continue;
 			if( array_key_exists( $jobObj->id, $jobs ) )
-				throw new \DomainException( 'Duplicate job ID: '.$jobObj->id );
+				throw new DomainException( 'Duplicate job ID: '.$jobObj->id );
 			$jobs[$jobObj->id] = $jobObj;
 		}
 		return $jobs;
 	}
 
+	/**
+	 *	@param		string		$format
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
 	public function setFormat( string $format ): self
 	{
-		$validFormats	= Alg_Object_Constant::staticGetAll( 'Model_Job', 'FORMAT_' );
+		$validFormats	= ObjectConstants::staticGetAll( 'Model_Job', 'FORMAT_' );
 		if( !in_array( $format, $validFormats ) )
 			throw new RangeException( 'Invalid format' );
 		$this->format	= $format;
@@ -172,14 +181,14 @@ class Model_Job
 	protected function readJobsFromJsonFiles( $modes = [] ): array
 	{
 		$jobs		= [];
-		$index			= new \FS_File_RegexFilter( $this->pathJobs, '/\.json$/i' );
+		$index			= new RegexFileFilter( $this->pathJobs, '/\.json$/i' );
 		foreach( $index as $file ){
 			$fileJobs	= $this->readJobsFromJsonFile( $file->getPathname(), $modes );
 			foreach( $fileJobs as $jobId => $job ){
 				$job->pathName	= $file->getPathname();
 				$job->fileName	= $file->getFilename();
 				if( array_key_exists( $jobId, $jobs ) )
-					throw new \DomainException( 'Duplicate job ID: '.$jobId );
+					throw new DomainException( 'Duplicate job ID: '.$jobId );
 				$jobs[$jobId]	= $job;
 			}
 		}
@@ -198,14 +207,14 @@ class Model_Job
 	protected function readJobsFromXmlFiles( $modes = [] ): array
 	{
 		$jobs			= [];
-		$index			= new \FS_File_RegexFilter( $this->pathJobs, '/\.xml$/i' );
+		$index			= new RegexFileFilter( $this->pathJobs, '/\.xml$/i' );
 		foreach( $index as $file ){
 			$fileJobs	= $this->readJobsFromXmlFile( $file->getPathname(), $modes );
 			foreach( $fileJobs as $jobId => $job ){
 				$job->pathName	= $file->getPathname();
 				$job->fileName	= $file->getFilename();
 				if( array_key_exists( $jobId, $jobs ) )
-					throw new \DomainException( 'Duplicate job ID: '.$jobId );
+					throw new DomainException( 'Duplicate job ID: '.$jobId );
 				$jobs[$jobId]	= $job;
 			}
 		}

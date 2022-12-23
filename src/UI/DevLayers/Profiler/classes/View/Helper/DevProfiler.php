@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -57,7 +58,7 @@ class View_Helper_DevProfiler
 
 	protected static function formatTime( $microseconds ): string
 	{
-		$time	= Alg_UnitFormater::formatMicroSeconds( $microseconds );
+		$time	= UnitFormater::formatMicroSeconds( $microseconds );
 		return substr( str_replace( ' ', '', $time ), 0, -1 );
 	}
 }

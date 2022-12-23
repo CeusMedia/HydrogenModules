@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Bootstrap\Icon;
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -135,7 +136,7 @@ else{
 				$list[]	= HtmlTag::create( 'tr', array(
 					HtmlTag::create( 'td', $link ),
 					HtmlTag::create( 'td', $attachment->mimeType ),
-					HtmlTag::create( 'td', Alg_UnitFormater::formatBytes( $attachment->fileSize ) ),
+					HtmlTag::create( 'td', UnitFormater::formatBytes( $attachment->fileSize ) ),
 					HtmlTag::create( 'td', $date ),
 					HtmlTag::create( 'td', $buttons, ['style' => 'text-align: right'] ),
 				) );
@@ -168,7 +169,7 @@ else{
 				$list[]	= HtmlTag::create( 'tr', array(
 					HtmlTag::create( 'td', $link ),
 					HtmlTag::create( 'td', $image->mimeType ),
-					HtmlTag::create( 'td', Alg_UnitFormater::formatBytes( $image->fileSize ) ),
+					HtmlTag::create( 'td', UnitFormater::formatBytes( $image->fileSize ) ),
 					HtmlTag::create( 'td', $date ),
 					HtmlTag::create( 'td', '', ['style' => 'text-align: right'] ),
 				) );

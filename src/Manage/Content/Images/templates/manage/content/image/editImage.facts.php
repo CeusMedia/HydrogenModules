@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\Alg\UnitFormater;
+
 $imageThumbnailUri	= $helperThumbnailer->get( $pathImages.$imagePath );
 
 $w	= (object) $words['editImage.facts'];
@@ -18,7 +20,7 @@ $panelFacts		= '
 					<dt>'.$w->labelTimestamp.'</dt>
 					<dd>'.date( 'd.m.Y', $imageFileTime ).' <small class="muted">'.date( 'H:i:s', $imageFileTime ).'</small></dd>
 					<dt>'.$w->labelFileSize.'</dt>
-					<dd>'.Alg_UnitFormater::formatBytes( $imageFileSize ).'</dd>
+					<dd>'.UnitFormater::formatBytes( $imageFileSize ).'</dd>
 					<dt>'.$w->labelFileType.'</dt>
 					<dd>'.$imageMimeType.'</dd>
 					<dt>'.$w->labelImageSize.'</dt>

@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\OutputBuffer;
@@ -187,7 +189,7 @@ class View_Helper_TinyMce_FileBrowser
 		try{
 			$image		= new Image( $remoteFilePath );
 			$facts		= HtmlTag::create( 'dl', array(
-				sprintf( '<dt>Größe</dt><dd>%s</dd>', Alg_UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
+				sprintf( '<dt>Größe</dt><dd>%s</dd>', UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
 				sprintf( '<dt>Auflösung</dt><dd>%s&times;%s px</dd>', $image->getWidth(), $image->getHeight() ),
 				sprintf( '<dt>Qualität</dt><dd class="fact-quality">%s %%</dd>', $image->getQuality() ),
 				sprintf( '<dt>Typ</dt><dd class="fact-mime">%s</dd>', $image->getMimeType() ),
@@ -196,7 +198,7 @@ class View_Helper_TinyMce_FileBrowser
 		}
 		catch( Exception $e ){
 			$facts		= HtmlTag::create( 'dl', array(
-				sprintf( '<dt>Größe</dt><dd>%s</dd>', Alg_UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
+				sprintf( '<dt>Größe</dt><dd>%s</dd>', UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
 				sprintf( '<dt>Alter</dt><dd>'.$this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ).'</dd>' ),
 			), ['class' => 'dl-inline'] );
 		}

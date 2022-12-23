@@ -1,5 +1,9 @@
 <?php
+
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
+/** @var Environment $env */
 
 $tabs	= View_Work_Mail_Check::renderTabs( $env, 'import' );
 
@@ -33,7 +37,7 @@ if( !empty( $type ) ){
 						</div>
 						<div class="span3">
 							<label for="input_size">Dateigröße</label>
-							<input type="text" name="size" id="input_size" value="'.Alg_UnitFormater::formatBytes( $size ).'" class="span12" disabled="disabled"/>
+							<input type="text" name="size" id="input_size" value="'.UnitFormater::formatBytes( $size ).'" class="span12" disabled="disabled"/>
 						</div>
 						<div class="span3">
 							<label for="input_count">Einträge</label>

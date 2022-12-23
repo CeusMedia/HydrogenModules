@@ -1,21 +1,23 @@
 <?php
 
+use CeusMedia\Common\Alg\ID;
 use CeusMedia\HydrogenFramework\Logic;
+use PhpImap\Mailbox as PhpImapMailbox;
 
 class Logic_Mail_Group extends Logic
 {
-	protected $modelGroup;
-	protected $modelMember;
-	protected $modelMessage;
-	protected $modelRole;
-	protected $modelServer;
-	protected $modelAction;
-	protected $modelUser;
-	protected $logicMail;
+	protected Model_Mail_Group $modelGroup;
+	protected Model_Mail_Group_Member $modelMember;
+	protected Model_Mail_Group_Message $modelMessage;
+	protected Model_Mail_Group_Role $modelRole;
+	protected Model_Mail_Group_Server $modelServer;
+	protected Model_Mail_Group_Action $modelAction;
+	protected Model_User $modelUser;
+	protected Logic_Mail $logicMail;
 
-	public function addGroup( $data )
+	public function addGroup( array $data ): string
 	{
-		$data		= array_merge( array(
+		$data		= array_merge( [
 			"defaultRoleId"			=> 1,
 			"managerId"				=> 0,
 			"type"					=> Model_Mail_Group::TYPE_REGISTER,
@@ -27,10 +29,10 @@ class Logic_Mail_Group extends Logic
 			"bounce"				=> NULL,
 			"subtitle"				=> NULL,
 			"description"			=> NULL,
-		), $data, array(
+		], $data, [
 			'createdAt'				=> time(),
 			'modifiedAt'			=> time(),
-		) );
+		] );
 		if( !strlen( trim( $data['address'] ) ) )
 			throw new InvalidArgumentException( 'No mailbox address given' );
 		if( !strlen( trim( $data['password'] ) ) )
@@ -48,7 +50,7 @@ class Logic_Mail_Group extends Logic
 		$member	= $this->getGroupMemberByAddress( $groupId, $address, FALSE, FALSE );
 		if( $member )
 			return $member->mailGroupMemberId;
-		$groupMemberId	= $this->modelMember->add( array(
+		$groupMemberId	= $this->modelMember->add( [
 			'mailGroupId'	=> $groupId,
 			'roleId'		=> $group->defaultRoleId,
 			'status'		=> Model_Mail_Group_Member::STATUS_REGISTERED,
@@ -56,7 +58,7 @@ class Logic_Mail_Group extends Logic
 			'title'			=> $title,
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		return $groupMemberId;
 	}
 
@@ -66,7 +68,7 @@ class Logic_Mail_Group extends Logic
 		if( $this->isGroupMember( $groupId, $memberId ) )
 			return;
 		$member	= $this->checkMemberId( $memberId );
-		$groupMemberId	= $this->modelMember->add( array(
+		$groupMemberId	= $this->modelMember->add( [
 			'mailGroupId'	=> $groupId,
 			'roleId'		=> $group->defaultRoleId,
 			'status'		=> Model_Mail_Group_Member::STATUS_REGISTERED,
@@ -74,16 +76,16 @@ class Logic_Mail_Group extends Logic
 			'title'			=> $member->title,
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		return $groupMemberId;
 	}*/
 
 	public function autojoinMemberByMessage( $groupId, $message )
 	{
-		$allowedGroupStatuses	= array(
+		$allowedGroupStatuses	= [
 			Model_Mail_Group::STATUS_ACTIVATED,
  			Model_Mail_Group::STATUS_WORKING,
-		);
+		];
 		$group	= $this->getGroup( $message->mailGroupId );
 		if( !$group )
 			throw new RuntimeException( 'Invalid group ID' );
@@ -105,20 +107,20 @@ class Logic_Mail_Group extends Logic
 				$senderName
 			);
 			$senderMember	= $this->checkMemberId( $senderMemberId );
-			$this->modelMessage->edit( $message->mailGroupMessageId, array(
+			$this->modelMessage->edit( $message->mailGroupMessageId, [
 				'mailGroupMemberId'	=> $senderMember->mailGroupMemberId,
-			) );
+			] );
 		}
 //		$action		= $this->registerMemberAction( 'confirmAfterJoin', $groupId, $senderMember->mailGroupMemberId, '' );
-		$mailData	= array(
+		$mailData	= [
 			'member'	=> $senderMember,
 			'group'		=> $group,
 //			'action'	=> $action,
-		);
-		$receiver	= (object) array(
+		];
+		$receiver	= (object) [
 			'username'	=> $senderMember->title,
 			'email'		=> $senderMember->address,
-		);
+		];
 		$this->logicMail->handleMail(
 			new Mail_Info_Mail_Group_Autojoined( $this->env, $mailData ),
 			$receiver,
@@ -205,10 +207,10 @@ class Logic_Mail_Group extends Logic
 	{
 		$indices	= ['mailGroupId' => $groupId];
 		if( $activeOnly )
-			$indices['status']	= array(
+			$indices['status']	= [
 				Model_Mail_Group::STATUS_ACTIVATED,
 				Model_Mail_Group::STATUS_WORKING,
-			);
+			];
 		if( ( $group = $this->modelGroup->getByIndices( $indices ) ) )
 			return $group;
 		if( !$strict )
@@ -220,10 +222,10 @@ class Logic_Mail_Group extends Logic
 	{
 		$indices	= [];
 		if( $activeOnly )
-			$indices['status']	= array(
+			$indices['status']	= [
 				Model_Mail_Group::STATUS_ACTIVATED,
 				Model_Mail_Group::STATUS_WORKING,
-			);
+			];
 		$list	= [];
 		foreach( $this->modelGroup->getAll( $indices ) as $group )
 			$list[$group->mailGroupId]	= $group;
@@ -264,10 +266,10 @@ class Logic_Mail_Group extends Logic
 	{
 		$indices	= ['address' => $address];
 		if( $activeOnly )
-			$indices['status']	= array(
+			$indices['status']	= [
 				Model_Mail_Group::STATUS_ACTIVATED,
 				Model_Mail_Group::STATUS_WORKING,
-			);
+			];
 		if( ( $group = $this->modelGroup->getByIndices( $indices ) ) )
 			return $group;
 		if( !$strict )
@@ -296,14 +298,14 @@ class Logic_Mail_Group extends Logic
 	 *	@access		public
 	 *	@param		integer		$groupId		Group ID
 	 *	@param		boolean		$dry			Flag: Dry mode (default: no)
-	 *	@return		array		list of resulting message ids or import error
+	 *	@return		object		--list of resulting message ids or import error--
 	 */
-	public function importGroupMails( $groupId, bool $dry = FALSE )
+	public function importGroupMails( $groupId, bool $dry = FALSE ): object
 	{
-		$results	= (object) array(
+		$results	= (object) [
 			'mailsImported'	=> [],
 			'errors'		=> [],
-		);
+		];
 		$mailbox	= $this->getMailbox( $groupId );
 		$mailIds	= $mailbox->searchMailbox( 'UNSEEN' );
 //		$mailIds	= $limit > 0 ? array_slice( $mailIds, 0, $limit ) : $mailIds;
@@ -324,34 +326,34 @@ class Logic_Mail_Group extends Logic
 		return $results;
 	}
 
-	public function isGroupMember( $groupId, $memberId )
+	public function isGroupMember( $groupId, $memberId ): bool
 	{
-		return (bool) $this->modelMember->count( array(
+		return (bool) $this->modelMember->count( [
 			'mailGroupMemberId'		=> $memberId,
 			'mailGroupId'			=> $groupId,
-		) );
+		] );
 	}
 
-	public function isGroupMemberAddress( $groupId, $address )
+	public function isGroupMemberAddress( $groupId, $address ): bool
 	{
-		return (bool) $this->modelMember->count( array(
+		return (bool) $this->modelMember->count( [
 			'mailGroupId'		=> $groupId,
 			'address'			=> $address,
-		) );
+		] );
 	}
 
-	public function registerMemberAction( $action, $groupId, $memberId, $message )
+	public function registerMemberAction( $action, $groupId, $memberId, $message ): object
 	{
-		$actionId	= $this->modelAction->add( array(
+		$actionId	= $this->modelAction->add( [
 			'mailGroupId'		=> $groupId,
 			'mailGroupMemberId'	=> $memberId,
 			'status'			=> Model_Mail_Group_Action::STATUS_REGISTERED,
-			'uuid'				=> Alg_ID::uuid(),
+			'uuid'				=> ID::uuid(),
 			'action'			=> $action,
 			'message'			=> $message,
 			'createdAt'			=> time(),
 			'modifiedAt'		=> time(),
-		) );
+		] );
 		return $this->modelAction->get( $actionId );
 	}
 
@@ -391,10 +393,10 @@ class Logic_Mail_Group extends Logic
 		if( (int) $member->status === (int) $status )
 			return FALSE;
 		$group		= $this->checkGroupId( $groupId );
-		$mailData	= array(
+		$mailData	= [
 			'group'		=> $group,
 			'member'	=> $member,
-		);
+		];
 		switch( $status ){
 			case Model_Mail_Group_Member::STATUS_ACTIVATED;
 				$this->setMemberStatusToActivated( $group, $member );
@@ -409,12 +411,17 @@ class Logic_Mail_Group extends Logic
 		return TRUE;
 	}
 
-	public function testGestMail( $groupId, $limit = 1 ){
+	public function testGestMail( $groupId, $limit = 1 )
+	{
 		return;
 	}
 
 	//  --  PROTECTED METHODS --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelGroup	= new Model_Mail_Group( $this->env );
@@ -428,23 +435,23 @@ class Logic_Mail_Group extends Logic
 	}
 
 	/**
-	 *	Tries to create a mailbox usind Plesk command line utilities
+	 *	Tries to create a mailbox using Plesk command line utilities
 	 *	@see		https://docs.plesk.com/en-US/onyx/cli-linux/using-command-line-utilities/mail-mail-accounts.39181/
 	 *	@todo		finish impl (find a way to execute command as root), run checks beforehand
 	 */
 	protected function createGroupMailAccountUsingPlesk( $groupId )
 	{
-		$group			= $this->checkGroupId( $mailGroupId );
+		$group			= $this->checkGroupId( $groupId );
 		if( $group->status !== Model_Mail_Group::STATUS_NEW )
 			throw new RuntimeException( 'Mail group be in status STATUS_NEW' );
-		$options		= array(
+		$options		= [
 			'--create '.$group->address,
 			'--passwd '.$group->password,
 			'-mailbox true',
 			'-mbox_quota 50M',
 			'-antivirus inout',
 			'-description "'.$group->title.'"',
-		);
+		];
 		$command		= 'plesk bin mail '.join( ' ', $options );
 
 	//	@todo: find a way to execute command as root
@@ -452,7 +459,7 @@ class Logic_Mail_Group extends Logic
 		$this->modelGroup->edit( $groupId, ['status' => Model_Mail_Group::STATUS_EXISTING] );
 	}
 
-	protected function getMailbox( $groupId )
+	protected function getMailbox( $groupId ): PhpImapMailbox
 	{
 		$group		= $this->checkGroupId( $groupId );
 		$server		= $this->modelServer->get( $group->mailGroupServerId );
@@ -463,7 +470,7 @@ class Logic_Mail_Group extends Logic
 		else if( (int) $server->imapPort === 143 )
 			$flags[]	= 'tls';
 		$flags		= join( '/', $flags );
-		$mailbox	= new \PhpImap\Mailbox(
+		$mailbox	= new PhpImapMailbox(
 			sprintf( '{%s:%d/%s}INBOX', $server->imapHost, $server->imapPort, $flags ),
 			$group->address,
 			$group->password,
@@ -475,35 +482,35 @@ class Logic_Mail_Group extends Logic
 
 	protected function setMemberStatusToActivated( $group, $member )
 	{
-		$mailData	= array(
+		$mailData	= [
 			'group'		=> $group,
 			'member'	=> $member,
-		);
+		];
 		if( $group->type == Model_Mail_Group::TYPE_REGISTER ){
 			if( $member->status == Model_Mail_Group_Member::STATUS_CONFIRMED ){
-				$action	= $this->modelAction->getByIndices( array(
+				$action	= $this->modelAction->getByIndices( [
 					'mailGroupId'		=> $group->mailGroupId,
 					'mailGroupMemberId'	=> $member->mailGroupMemberId,
 					'action'			=> 'confirmAfterJoin',
 					'status'			=> Model_Mail_Group_Action::STATUS_HANDLED,
-				) );
+				] );
 				if( $action ){
-					$this->modelAction->add( array(
+					$this->modelAction->add( [
 						'mailGroupId'		=> $group->mailGroupId,
 						'mailGroupMemberId'	=> $member->mailGroupMemberId,
-						'uuid'				=> Alg_ID::uuid(),
+						'uuid'				=> ID::uuid(),
 						'action'			=> 'informAfterFirstActivate',
 						'message'			=> $action->message,
 						'createdAt'			=> time(),
 						'modifiedAt'		=> time(),
-					) );
+					] );
 				}
 			}
 		}
-		$this->modelMember->edit( $member->mailGroupMemberId, array(
+		$this->modelMember->edit( $member->mailGroupMemberId, [
 			'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$payload	= [
 			'group'			=> $group,
 			'member'		=> $this->modelMember->get( $member->mailGroupMemberId ),
@@ -514,20 +521,20 @@ class Logic_Mail_Group extends Logic
 
 	protected function setMemberStatusToDeactivated( $group, $member )
 	{
-		$mailData	= array(
+		$mailData	= [
 			'group'		=> $group,
 			'member'	=> $member,
-		);
+		];
 		$memberWasActive	= TRUE;
 		if( $group->type == Model_Mail_Group::TYPE_REGISTER ){
 			if( $member->status == Model_Mail_Group_Member::STATUS_CONFIRMED ){
 				$memberWasActive	= FALSE;
 			}
 		}
-		$this->modelMember->edit( $member->mailGroupMemberId, array(
+		$this->modelMember->edit( $member->mailGroupMemberId, [
 			'status'		=> Model_Mail_Group_Member::STATUS_DEACTIVATED,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$payload	= [
 			'group'			=> $group,
 			'member'		=> $this->modelMember->get( $member->mailGroupMemberId ),
@@ -538,14 +545,14 @@ class Logic_Mail_Group extends Logic
 
 	protected function setMemberStatusToRejected( $group, $member )
 	{
-		$mailData	= array(
+		$mailData	= [
 			'group'		=> $group,
 			'member'	=> $member,
-		);
-		$this->modelMember->edit( $member->mailGroupMemberId, array(
+		];
+		$this->modelMember->edit( $member->mailGroupMemberId, [
 			'status'		=> Model_Mail_Group_Member::STATUS_REJECTED,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$payload	= [
 			'group'			=> $group,
 			'member'		=> $this->modelMember->get( $member->mailGroupMemberId ),

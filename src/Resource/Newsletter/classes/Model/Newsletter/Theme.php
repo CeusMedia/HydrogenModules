@@ -1,35 +1,40 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Alg\ID;
+use CeusMedia\Common\XML\ElementReader as XmlElementReader;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Newsletter_Theme
 {
-	protected $attributesAuthor	= array(
+	protected array $attributesAuthor		= [
 		'name'			=> '',
 		'email'			=> '',
 		'company'		=> '',
 		'link'			=> '',
 		'github'		=> '',
 		'twitter'		=> '',
-	);
+	];
 
-	protected $attributesCopyright	= array(
+	protected array $attributesCopyright	= [
 		'year'			=> '',
 		'link'			=> '',
-	);
+	];
 
-	protected $attributesTimestamp	= array(
+	protected array $attributesTimestamp	= [
 		'source'		=> '',
-	);
+	];
 
-	protected $attributesDescription	= array(
+	protected array $attributesDescription	= [
 		'format'		=> 'markdown',
-	);
+	];
 
-	protected $attributesLicense	= array(
+	protected array $attributesLicense		= [
 		'id'			=> '',
-	);
+	];
+
+	protected Environment $env;
+
+	protected string $themePath;
 
 	public function __construct( Environment $env, string $themePath )
 	{
@@ -37,33 +42,39 @@ class Model_Newsletter_Theme
 		$this->themePath	= rtrim( $themePath, '/' ).'/';
 	}
 
-	public function createFromTemplate( $templateId, $data )
+	/**
+	 *	@param		string		$templateId
+	 *	@param		array		$data
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function createFromTemplate( string $templateId, array $data )
 	{
 		$modelTemplate	= new Model_Newsletter_Template( $this->env );
 		$template		= $modelTemplate->get( $templateId );
 		$data			= (object) array_merge( (array) $template, $data );
-		$json	= (object) array(
+		$json	= (object) [
 			'id'		=> ID::uuid(),
 			'title'		=> $data->title,
 			'version'	=> $data->version,
 			'created'	=> date( 'c', $data->createdAt ),
 			'modified'	=> date( 'c', $data->modifiedAt ),
-			'sender'	=> array(
+			'sender'	=> [
 				'address'	=> $data->senderAddress,
 				'name'		=> $data->senderName,
-			),
+			],
 			'imprint'	=> $data->imprint,
 			'styles'	=> $data->styles,
-			'author'	=> array(
+			'author'	=> [
 				'name'		=> $data->authorName,
 				'email'		=> $data->authorEmail,
 				'company'	=> $data->authorCompany,
 				'url'		=> $data->authorUrl,
-			),
+			],
 			'license'		=> $data->license,
 			'licenseUrl'	=> $data->licenseUrl,
 			'description'	=> $data->description,
-		);
+		];
 		$themeKey		= strtolower( $data->title );
 		$themeKey		= preg_replace( '/[^a-z0-9 ]/', '', $themeKey );
 		$themeKey		= str_replace( ' ', '_', $themeKey ).'_v'.$data->version;
@@ -82,7 +93,7 @@ class Model_Newsletter_Theme
 
 		$pathJs		= $this->env->getConfig()->get( 'path.scripts' );
 
-		$error	= Resource_PhantomJS::getInstance( $this->env )->setDebug(1)->execute(
+		$error	= Resource_PhantomJS::getInstance( $this->env )->setDebug( 1 )->execute(
 			$pathJs.'phantomjs/screenshot.js',
 			$this->env->url.'work/newsletter/template/preview/html/'.$templateId,
 			$folder.'/template.png'
@@ -99,7 +110,7 @@ class Model_Newsletter_Theme
 	public function getAll(): array
 	{
 		$themes	= [];
-		$index	= new \DirectoryIterator( $this->themePath );
+		$index	= new DirectoryIterator( $this->themePath );
 		foreach( $index as $entry ){
 			if( $entry->isDot() || !$entry->isDir() )
 				continue;
@@ -109,7 +120,7 @@ class Model_Newsletter_Theme
 		ksort( $themes );
 		$list	= [];
 		foreach( $themes as $theme )
-			$list[$theme->id]	= $theme;
+			$list[$theme->id->getValue()]	= $theme;
 		return $list;
 	}
 
@@ -119,10 +130,11 @@ class Model_Newsletter_Theme
 			return $this->getFromFolderJson( $theme );
 		if( file_exists( $this->themePath.$theme.'/template.xml' ) )
 			return $this->getFromFolderXml( $theme );
-		throw new \RangeException( 'Theme meta file "'.$theme.'" is not existing' );
+		throw new RangeException( 'Theme meta file "'.$theme.'" is not existing' );
 	}
 
-	public function getFromId( $id ){
+	public function getFromId( $id )
+	{
 		$themes	= $this->getAll();
 		return $themes[$id];
 	}
@@ -134,7 +146,7 @@ class Model_Newsletter_Theme
 		$json	= file_get_contents( $this->themePath.$theme.'/template.json' );
 		$data	= json_decode( $json );
 		if( !isset( $data->id ) ){
- 			$data->id	= Alg_ID::uuid();
+ 			$data->id	= ID::uuid();
 			$json		= json_encode( $data, JSON_PRETTY_PRINT );
 			file_put_contents( $this->themePath.$theme.'/template.json', $json );
 		}
@@ -144,7 +156,7 @@ class Model_Newsletter_Theme
 
 	protected function getFromFolderXml( string $theme )
 	{
-		$xml	= \XML_ElementReader::readFile( $this->themePath.$theme.'/template.xml' );
+		$xml	= XmlElementReader::readFile( $this->themePath.$theme.'/template.xml' );
 		foreach( $xml->author as $author ){
 			foreach( $this->attributesAuthor as $attributeName => $attributeDefault )
 				if( !$author->hasAttribute( $attributeName ) )

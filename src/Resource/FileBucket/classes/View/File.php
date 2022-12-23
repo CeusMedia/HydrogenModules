@@ -6,9 +6,14 @@ use CeusMedia\Common\XML\DOM\Builder as XmlBuilder;
 use CeusMedia\Common\XML\DOM\Node as XmlNode;
 use CeusMedia\HydrogenFramework\View;
 
-class View_File extends View{
-
-	public function index(){
+class View_File extends View
+{
+	/**
+	 *	@return		void
+	 *	@throws		DOMException
+	 */
+	public function index()
+	{
 		$file	= $this->getData( 'file' );
 		$path	= $this->getData( 'sourcePath' );
 
@@ -21,7 +26,10 @@ class View_File extends View{
 		$this->negotiateContentOnHit( $path, $file, array_keys( $mimeTypes ) );
 	}
 
-	protected function negotiateContentOnHit( $path, $file, $mimeTypes ){
+	//  --  PROTECTED  --  //
+
+	protected function negotiateContentOnHit( string $path, object $file, array $mimeTypes = [] )
+	{
 		$this->env->getConfig()->get( 'path.contents' );
 		$sourceFilePath	= $path.$file->hash;
 		if( !file_exists( $sourceFilePath ) )
@@ -29,7 +37,8 @@ class View_File extends View{
 		if( !is_readable( $sourceFilePath ) )
 			throw new RuntimeException( 'Given source file is not readable' );
 
-		if( version_compare( PHP_VERSION, '5.3.0' ) >= 0 ){											//  atleast PHP 5.3
+		/** @todo remove version check, since we are on PHP 7 or 8 */
+		if( version_compare( PHP_VERSION, '5.3.0' ) >= 0 ){								//  at least PHP 5.3
 			header_remove( 'Cache-Control' );														//  remove sent cache control header
 			header_remove( 'Pragma' );																//  remove sent pragma header
 		}
@@ -60,7 +69,13 @@ class View_File extends View{
 		exit;
 	}
 
-	protected function negotiateContentOnMiss( $mimeTypes ){
+	/**
+	 *	@param		array		$mimeTypes
+	 *	@return		void
+	 *	@throws		DOMException
+	 */
+	protected function negotiateContentOnMiss( array $mimeTypes )
+	{
 		$response	= $this->env->getResponse();
 		$response->setStatus( 404, TRUE );
 
@@ -84,11 +99,11 @@ class View_File extends View{
 					$response->send( NULL, TRUE, TRUE );
 				case 'application/json':
 				case 'text/json':
-					$data	= array(
+					$data	= [
 						'status'	=> 'error',
 						'error'		=> 'Not found',
 						'code'		=> 404,
-					);
+					];
 					$response->setBody( json_encode( $data ) );
 					$response->send( NULL, TRUE, TRUE );
 			}
@@ -96,4 +111,3 @@ class View_File extends View{
 		$response->send( NULL, TRUE, TRUE );
 	}
 }
-?>

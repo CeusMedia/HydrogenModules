@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -17,7 +19,7 @@ $w		= (object) $words['index'];
 
 foreach( $files as $item ){
 	$timePhrase		= sprintf( $w->timePhrase, $helper->convert( $item->uploadedAt ) );
-	$size			= Alg_UnitFormater::formatBytes( $item->size );
+	$size			= UnitFormater::formatBytes( $item->size );
 	$urlView		= './info/file/deliver/'.$item->downloadFileId;
 	$urlDownload	= './info/file/download/'.$item->downloadFileId;
 	$urlRemove		= './info/file/remove/'.$item->downloadFileId;

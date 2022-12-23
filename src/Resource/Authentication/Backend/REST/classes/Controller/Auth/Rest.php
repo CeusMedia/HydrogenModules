@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Crypt\PasswordStrength;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -33,7 +34,7 @@ class Controller_Auth_Rest extends Controller
 		$password	= trim( $this->request->get( 'password' ) );
 		$result		= 0;
 		if( strlen( $password ) ){
-			$result			= Alg_Crypt_PasswordStrength::getStrength( $password );
+			$result			= PasswordStrength::getStrength( $password );
 		}
 		print( json_encode( $result ) );
 		exit;

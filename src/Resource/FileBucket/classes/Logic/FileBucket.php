@@ -1,9 +1,10 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Alg\ID;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_FileBucket extends Logic
@@ -11,14 +12,18 @@ class Logic_FileBucket extends Logic
 	const HASH_MD5			= 0;
 	const HASH_UUID			= 1;
 
-	protected $filePath;
-	protected $hashFunction	= 0;
-	protected $model;
+	protected string $filePath;
+	protected int $hashFunction	= 0;
+	protected Model_File $model;
+	protected Dictionary $moduleConfig;
 
-	public function __construct( Environment $env )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	protected function __onInit()
 	{
-		$this->env		= $env;
-		$this->model	= new Model_File( $this->env );
+		$this->model		= new Model_File( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_filebucket.', TRUE );
 		switch( strtoupper( $this->moduleConfig->get( 'hash' ) ) ){
 			case 'UUID':
@@ -38,7 +43,7 @@ class Logic_FileBucket extends Logic
 			file_put_contents( $this->filePath.'.htaccess', 'Deny from all'.PHP_EOL );
 	}
 
-	public function add( $sourceFilePath, $uriPath, $mimeType, $moduleId = NULL )
+	public function add( string $sourceFilePath, string $uriPath, string $mimeType, ?string $moduleId = NULL ): string
 	{
 		if( !file_exists( $sourceFilePath ) )
 			throw new RuntimeException( 'Given source file is not existing' );
@@ -64,85 +69,94 @@ class Logic_FileBucket extends Logic
 		return $this->model->add( $data );
 	}
 
-	public function get( $fileId )
+	public function get( string $fileId ): ?object
 	{
 		return $this->model->get( $fileId );
 	}
 
-	public function getAllFromModuleAndPath( $moduleId, $filePath, $orders = [], $limits = [] )
+	public function getAllFromModuleAndPath( string $moduleId, string $filePath, array $orders = [], array $limits = [] ): array
 	{
-		return $this->getAllByIndices( array(
+		return $this->getAllByIndices( [
 			'moduleId'		=> $moduleId,
 			'filePath'		=> $filePath,
-		), $orders, $limits );
+		], $orders, $limits );
 	}
 
-	public function getAllByIndices( $indices, $orders = [], $limits = [] )
+	public function getAllByIndices( array $indices, array $orders = [], array $limits = [] ): array
 	{
 		if( !$orders )
 			$orders		= ['filePath' => 'ASC', 'fileName' => 'ASC'];
 		return $this->model->getAllByIndices( $indices, $orders, $limits );
 	}
 
-	public function getAllFromModule( $moduleId, $orders = [], $limits = [] )
+	public function getAllFromModule( string $moduleId, array $orders = [], array $limits = [] ): array
 	{
 		return $this->getAllByIndices( ['moduleId' => $moduleId], $orders, $limits );
 	}
 
-	public function getAllFromPath( $filePath, $orders = [], $limits = [] )
+	public function getAllFromPath( string $filePath, array $orders = [], array $limits = [] ): array
 	{
 		return $this->getAllByIndices( ['filePath' => $filePath], $orders, $limits );
 	}
 
-	public function getByHash( $hash )
+	public function getByHash( string $hash ): ?object
 	{
 		return $this->model->getByIndex( 'hash', $hash );
 	}
 
-	public function getByPath( $uriPath, $moduleId = NULL )
+	public function getByPath( string $uriPath, ?string $moduleId = NULL ): ?object
 	{
 		$parts		= $this->getFilePartsFromUriPath( $uriPath );
-		$indices	= array(
+		$indices	= [
 			'filePath'	=> $parts->filePath,
 			'fileName'	=> $parts->fileName,
-		);
+		];
 		if( $moduleId )
 			$indices['moduleId']	= $moduleId;
 		return $this->model->getByIndices( $indices );
 	}
 
-	protected function getFilePartsFromUriPath( $uriPath )
+	protected function getFilePartsFromUriPath( string $uriPath ): object
 	{
 		$parts		= explode( "/", $uriPath );
 		$fileName	= array_pop( $parts );
 		$filePath	= join( "/", $parts );
-		return (object) array(
+		return (object) [
 			'filePath'	=> $filePath,
 			'fileName'	=> $fileName,
-		);
+		];
 	}
 
-	protected function getNewHash()
+	protected function getNewHash(): string
 	{
 		do{
 			$hash		= md5( microtime( TRUE ) );
 			if( $this->hashFunction === self::HASH_UUID )
-				$hash	= Alg_ID::uuid();
+				$hash	= ID::uuid();
 		}
 		while( $this->model->countByIndex( 'hash', $hash ) );
 		return $hash;
 	}
 
-	public function getPath()
+	public function getPath(): string
 	{
 		return $this->filePath;
 	}
 
-	public function limitImageSize( $fileId, $maxWidth, $maxHeight, $quality = NULL )
+	/**
+	 *	@param		string		$fileId
+	 *	@param		int			$maxWidth
+	 *	@param		int			$maxHeight
+	 *	@param		mixed		$quality
+	 *	@return		bool
+	 *	@throws		InvalidArgumentException	if file is not an image
+	 *	@throws		Exception					if image could not been created
+	 */
+	public function limitImageSize( string $fileId, int $maxWidth, int $maxHeight, $quality = NULL ): bool
 	{
 		$file		= $this->get( $fileId );
 		if( !in_array( $file->mimeType, ['image/png', 'image/gif', 'image/jpeg'] ) )
-			throw new Exception( 'File is not an image' );
+			throw new InvalidArgumentException( 'File is not an image' );
 		$image		= new Image( $this->getPath().$file->hash );
 		if( $image->getWidth() <= $maxWidth && $image->getHeight() <= $maxHeight )
 			return FALSE;
@@ -155,16 +169,24 @@ class Logic_FileBucket extends Logic
 		return TRUE;
 	}
 
-	public function noteView( $fileId )
+	public function noteView( string $fileId )
 	{
 		if( $file = $this->get( $fileId ) )
-			$this->model->edit( $fileId, array(
+			$this->model->edit( $fileId, [
 				'viewedAt'	=> time(),
 				'viewCount'	=> $file->viewCount + 1,
-			) );
+			] );
 	}
 
-	public function replace( $fileId, $sourceFilePath, $mimeType = NULL )
+	/**
+	 *	@param		string			$fileId
+	 *	@param		string			$sourceFilePath
+	 *	@param		string|NULL		$mimeType
+	 *	@return		string
+	 *	@throws		DomainException
+	 *	@throws		RuntimeException
+	 */
+	public function replace( string $fileId, string $sourceFilePath, ?string $mimeType = NULL ): string
 	{
 		$file	= $this->get( $fileId );
 		if( !$file )
@@ -173,18 +195,18 @@ class Logic_FileBucket extends Logic
 			throw new RuntimeException( 'Given source file is not existing' );
 		if( !is_readable( $sourceFilePath ) )
 			throw new RuntimeException( 'Given source file is not readable' );
-		$mimeType	= $mimeType ? $mimeType : $file->mimeType;
+		$mimeType	= $mimeType ?: $file->mimeType;
 		$this->remove( $fileId );
 		$uriPath	= $file->filePath ? $file->filePath.'/'.$file->fileName : $file->fileName;
 		return $this->add( $sourceFilePath, $uriPath, $mimeType, $file->moduleId );
 	}
 
-	public function rename( $fileId, $name )
+	public function rename( $fileId, string $name ): bool
 	{
-		$this->model->edit( $fileId, ['fileName' => $name] );
+		return 1 === $this->model->edit( $fileId, ['fileName' => $name] );
 	}
 
-	public function remove( $fileId )
+	public function remove( string $fileId ): bool
 	{
 		$file	= $this->get( $fileId );
 		if( !$file )
@@ -193,10 +215,9 @@ class Logic_FileBucket extends Logic
 		return $this->model->remove( $fileId );
 	}
 
-	public function setHashFunction( $function )
+	public function setHashFunction( int $function ): self
 	{
-		if( !is_int( $function ) )
-			throw new InvalidArgumentException( 'Hash function must be an integer (see constants of Logic_File)' );
 		$this->hashFunction	= $function;
+		return $this;
 	}
 }

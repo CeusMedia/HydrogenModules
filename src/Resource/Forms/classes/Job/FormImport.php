@@ -1,24 +1,21 @@
 <?php
 
+use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\Alg\Time\Clock;
-use CeusMedia\Mail\Mailbox;
-use CeusMedia\Mail\Mailbox\Mail;
-use CeusMedia\Mail\Mailbox\Search;
-use CeusMedia\Mail\Message\Header\Encoding;
 
 class Job_FormImport extends Job_Abstract
 {
-	protected $logicImport;
-	protected $logicFill;
-	protected $modelConnection;
-	protected $modelConnector;
-	protected $modelForm;
-	protected $modelFill;
-	protected $modelImportRule;
-	protected $jsonMapper;
-	protected $dataMapper;
+	protected Logic_Import $logicImport;
+	protected Logic_Form_Fill $logicFill;
+	protected Model_Import_Connection $modelConnection;
+	protected Model_Import_Connector $modelConnector;
+	protected Model_Form $modelForm;
+	protected Model_Form_Fill $modelFill;
+	protected Model_Form_Import_Rule $modelImportRule;
+	protected JsonParser $jsonParser;
+	protected Logic_Form_Transfer_DataMapper $dataMapper;
 
-	public function import( $arguments = [] )
+	public function import( array $arguments = [] ): array
 	{
 //		Encoding::$decodeStrategy = Encoding::DECODE_STRATEGY_ICONV_TOLERANT;
 		$verbose		= in_array( 'verbose', $arguments ) || $this->parameters->get( 'verbose' );
@@ -29,7 +26,7 @@ class Job_FormImport extends Job_Abstract
 			$connection			= $this->modelConnection->get( $importRule->importConnectionId );
 			$connector			= $this->modelConnector->get( $connection->importConnectorId );
 			$connectionInstance	= $this->logicImport->getConnectionInstanceFromId( $importRule->importConnectionId );
-			$connectionInstance->setOptions( $this->jsonParser->parse( $importRule->options, FALSE ) );
+			$connectionInstance->setOptions( $this->jsonParser->parse( $importRule->options ) );
 			$searchCriteria		= explode( PHP_EOL, $importRule->searchCriteria );
 			$clock				= new Clock();
 			$results			= $connectionInstance->find( $searchCriteria, [], [0, 10] );
@@ -42,7 +39,7 @@ class Job_FormImport extends Job_Abstract
 				$this->out( 'Data Sources: '.count( $results ).' found' );
 				$this->out( 'Time needed: '.$clock->stop( 3, 0 ).' ms' );
 			}
-			$ruleSet	= $this->jsonParser->parse( $importRule->rules, FALSE );
+			$ruleSet	= $this->jsonParser->parse( $importRule->rules );
 			foreach( $results as $result ){
 				if( !$dryMode ){
 					if( $importRule->moveTo )
@@ -73,7 +70,7 @@ class Job_FormImport extends Job_Abstract
 			$connection			= $this->modelConnection->get( $importRule->importConnectionId );
 			$connector			= $this->modelConnector->get( $connection->importConnectorId );
 			$connectionInstance	= $this->logicImport->getConnectionInstanceFromId( $importRule->importConnectionId );
-			$connectionInstance->setOptions( $this->jsonParser->parse( $importRule->options, FALSE ) );
+			$connectionInstance->setOptions( $this->jsonParser->parse( $importRule->options ) );
 
 			$searchCriteria		= explode( PHP_EOL, $importRule->searchCriteria );
 			$clock				= new Clock();
@@ -86,6 +83,10 @@ class Job_FormImport extends Job_Abstract
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->logicImport			= new Logic_Import( $this->env );
@@ -95,7 +96,7 @@ class Job_FormImport extends Job_Abstract
 		$this->modelForm			= new Model_Form( $this->env );
 		$this->modelFill			= new Model_Form_Fill( $this->env );
 		$this->modelImportRule		= new Model_Form_Import_Rule( $this->env );
-		$this->jsonParser			= new ADT_JSON_Parser;
+		$this->jsonParser			= new JsonParser;
 		$this->dataMapper			= new Logic_Form_Transfer_DataMapper( $this->env );
 	}
 
@@ -107,17 +108,17 @@ class Job_FormImport extends Job_Abstract
 			$formMap	= [];
 			foreach( $forms as $form )
 				$formMap[$form->formId]	= $form;
-			$conditions		= array(
+			$conditions		= [
 				'formId'	=> array_keys( $formMap ),
-				'status'	=> array(
+				'status'	=> [
 					Model_Form_Import_Rule::STATUS_TEST,
 					Model_Form_Import_Rule::STATUS_ACTIVE,
-				),
-			);
-			$orders		= array(
+				],
+			];
+			$orders		= [
 				'importConnectionId'	=> 'ASC',
 				'formId'				=> 'ASC',
-			);
+			];
 			$limits		= [];
 			$rules		= $this->modelImportRule->getAll( $conditions, $orders, $limits );
 			foreach( $rules as $rule )
@@ -136,7 +137,7 @@ class Job_FormImport extends Job_Abstract
 	 *	@param		boolean		$dryMode			Flag: do not change anything, default: no
 	 *	@return		integer		Fill ID
 	 */
-	protected function importData( $importRule, $ruleSet, array $importData, bool $verbose, bool $dryMode ): int
+	protected function importData( object $importRule, object $ruleSet, array $importData, bool $verbose, bool $dryMode ): int
 	{
 		if( !count( $importData ) )
 			throw new Exception( 'No import data given.' );
@@ -155,9 +156,8 @@ class Job_FormImport extends Job_Abstract
 			remark( 'Fill Data:' );
 			print_m( $fillData );
 		}
-		$createdAt	= $formData['createdAt'] ?? time();
 
-		$data		= array(
+		$data		= [
 			'formId'		=> $importRule->formId,
 			'status'		=> Model_Form_Fill::STATUS_CONFIRMED,
 			'email'			=> $formData['email'] ?? '',
@@ -166,7 +166,7 @@ class Job_FormImport extends Job_Abstract
 			'agent'			=> '',//strip_tags( getEnv( 'HTTP_USER_AGENT' ) ),
 			'createdAt'		=> $formData['createdAt'] ?? time(),
 			'modifiedAt'	=> time(),
-		);
+		];
 		if( $dryMode || $importRule->status == Model_Form_Import_Rule::STATUS_TEST )
 			return 0;
 

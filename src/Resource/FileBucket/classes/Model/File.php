@@ -18,32 +18,32 @@ class Model_File extends Model
 {
 	protected string $name		= 'files';
 
-	protected array $columns	= array(
-		"fileId",
-		"creatorId",
-		"moduleId",
-		"hash",
-		"mimeType",
-		"fileSize",
-		"filePath",
-		"fileName",
-		"createdAt",
-		"modifiedAt",
-		"viewedAt",
-		"viewCount",
-	);
+	protected array $columns	= [
+		'fileId',
+		'creatorId',
+		'moduleId',
+		'hash',
+		'mimeType',
+		'fileSize',
+		'filePath',
+		'fileName',
+		'createdAt',
+		'modifiedAt',
+		'viewedAt',
+		'viewCount',
+	];
 
 	protected string $primaryKey	= 'fileId';
 
-	protected array $indices		= array(
-		"creatorId",
-		"moduleId",
-		"hash",
-		"mimeType",
-		"fileSize",
-		"filePath",
-		"fileName",
-	);
+	protected array $indices		= [
+		'creatorId',
+		'moduleId',
+		'hash',
+		'mimeType',
+		'fileSize',
+		'filePath',
+		'fileName',
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }
