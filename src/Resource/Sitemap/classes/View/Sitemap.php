@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\XML\DOM\Builder as XmlBuilder;
 use CeusMedia\Common\XML\DOM\Node as XmlNode;
 use CeusMedia\HydrogenFramework\View;
 
@@ -48,7 +49,7 @@ class View_Sitemap extends View
 		}
 
 		$type	= "application/rss+xml";
-		$xml	= XML_DOM_Builder::build( $root );
+		$xml	= XmlBuilder::build( $root );
 		switch( $options->get( 'compression' ) ){
 			case 'bzip':
 				$type	= "application/x-bzip2";

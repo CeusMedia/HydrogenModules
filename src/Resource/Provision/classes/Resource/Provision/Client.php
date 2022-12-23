@@ -1,42 +1,50 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Reader as HttpReader;
+use CeusMedia\Common\Net\HTTP\Status as HttpStatus;
+use CeusMedia\HydrogenFramework\Environment;
 
 /**
  *	@todo		apply module config main switch
  */
-class Resource_Provision_Client{
+class Resource_Provision_Client
+{
+	protected Environment $env;
+	protected Dictionary $moduleConfig;
 
-	protected $env;
-	protected $moduleConfig;
-
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env			= $env;
-		$this->moduleConfig	= $env->config->getAll( 'module.resource_provision.', TRUE );
+		$this->moduleConfig	= $env->getConfig()->getAll( 'module.resource_provision.', TRUE );
 	}
 
-	public function getLicense( $licenseId ){
+	public function getLicense( $licenseId )
+	{
 		return $this->request( 'provision/rest/getLicense/'.$licenseId );
 	}
 
-	public function getProductLicenses( $productId ){
+	public function getProductLicenses( $productId )
+	{
 		return $this->request( 'provision/rest/getLicenses/'.$productId );
 	}
 
-	public function getUserLicenseKey( $userId ){
+	public function getUserLicenseKey( $userId )
+	{
 		$modelUser	= new Model_User( $this->env );
 		$user		= $modelUser->get( $userId );
 		if( !$user )
 			throw new InvalidArgumentException( 'Invalid user ID' );
 		$url		= 'provision/rest/hasActiveKey';
-		$postData	= array(
+		$postData	= [
 			'productId'	=> $this->moduleConfig->get( 'productId' ),
 			'userId'	=> $user->accountId,
-		);
+		];
 		return $this->request( $url, $postData );
 	}
 
-	public function request( $url, $postData = NULL ){
+	public function request( $url, $postData = NULL )
+	{
 		$productId		= $this->moduleConfig->get( 'productId' );
 		$server			= $this->moduleConfig->getAll( 'server.', TRUE );
 		if( !preg_match( "@^[a-z]+://@", $url ) )
@@ -51,11 +59,11 @@ class Resource_Provision_Client{
 		else
 			$response	= $serverRequest->get( $url );
 
-		$status	= Net_HTTP_Status::getCode( $response->getStatus() );
+		$status	= HttpStatus::getCode( $response->getStatus() );
 		if( $status === 302 && $response->headers->hasField( 'Location' ) ){
 			$redirect = $response->headers->getField( 'Location' )[0]->getValue();
 			if( parse_url( $url, PHP_URL_HOST ) !== parse_url( $redirect, PHP_URL_HOST ) )
-				throw BadDomainException( 'Relocation to another domain is not allowed at the moment' );
+				throw new DomainException( 'Relocation to another domain is not allowed at the moment' );
 			return $this->request( $redirect, $postData );
 		}
 		if( $status !== 200 )

@@ -70,7 +70,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			default:
 				$missions	= $this->model->getAll();												//  get all missions
 				$zip		= gzencode( serialize( $missions ) );									//  gzip serial of mission objects
-				Net_HTTP_Download::sendString( $zip , 'missions_'.date( 'Ymd' ).'.gz' );			//  deliver downloadable file
+				\CeusMedia\Common\Net\HTTP\Download::sendString( $zip , 'missions_'.date( 'Ymd' ).'.gz' );			//  deliver downloadable file
 		}
 */	}
 

@@ -1,13 +1,16 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Obj\Constant as ObjectConstant;
 use CeusMedia\Common\CLI\Question;
 use CeusMedia\Common\FS\File\JSON\Writer as JsonFileWriter;
+use CeusMedia\Common\FS\File\RegexFilter as RegexFileFilter;
 
 class Job_Job extends Job_Abstract
 {
-	protected $pathJobs		= 'config/jobs/';
-	protected $logic;
+	protected string $pathJobs		= 'config/jobs/';
+	protected Logic_Job $logic;
+	protected Dictionary $options;
 
 	/**
 	 *	@deprecated		Conversion from XML file to JSON file not needed anymore, since new solution is migration to module XML file + database import by jobs module
@@ -17,21 +20,21 @@ class Job_Job extends Job_Abstract
 	{
 		$model		= new Model_Job( $this->env );
 		$modes		= [];																		//  no specific modes
-		$index		= new \FS_File_RegexFilter( $this->pathJobs, '/\.xml$/i' );
+		$index		= new RegexFileFilter( $this->pathJobs, '/\.xml$/i' );
 		foreach( $index as $file ){
 			$this->out( 'Reading job XML: '.$file->getFilename() );
-			$moduleJobs		= (object) array(
+			$moduleJobs		= (object) [
 				'moduleId'	=> NULL,
 				'version'	=> NULL,
 				'jobs'		=> [],
-			);
+			];
 			$fileJobs	= $model->readJobsFromXmlFile( $file->getPathname(), $modes );
 			foreach( $fileJobs as $jobId => $jobSource ){
-				$jobTarget	= (object) array(
+				$jobTarget	= (object) [
 					'class'		=> $jobSource->class,
 					'method'	=> $jobSource->method,
 					'mode'		=> $jobSource->mode,
-				);
+				];
 				if( !empty( $jobSource->interval ) )
 					$jobTarget->interval	= $jobSource->interval;
 				if( $jobSource->deprecated )
@@ -56,10 +59,10 @@ class Job_Job extends Job_Abstract
 	 *	Display list of available job identifiers.
 	 *	Stores list of available job definitions as result.
 	 *	@access		public
-	 *	@param		array		List of environment modes to filter jobs by (currently not implemented)
+	 *	@param		array		$mode		List of environment modes to filter jobs by (currently not implemented)
 	 *	@todo		add old mode (= environment type [dev,test,live])
 	 */
-	public function index( $mode = NULL )
+	public function index( array $mode = [] )
 	{
 		$conditions	= [];
 //		if( $mode )
@@ -75,10 +78,10 @@ class Job_Job extends Job_Abstract
 	/**
 	 *	Display information about one or more jobs.
 	 *	@access		public
-	 *	@param		array		List of job identifiers
+	 *	@param		array		$jobIdentifiers		List of job identifiers
 	 *	@todo		add old mode (= environment type [dev,test,live])
 	 */
-	public function info( $jobIdentifiers = NULL )
+	public function info( array $jobIdentifiers = [] )
 	{
 		if( !count( $jobIdentifiers ) ){
 			$this->out( 'No job identifier(s) given' );
@@ -93,11 +96,11 @@ class Job_Job extends Job_Abstract
 			if( count( $jobIdentifiers ) !== 1 )
 				$this->out( 'Job: '.$jobIdentifier );
 			$constants	= new ObjectConstant( 'Model_Job_Definition' );
-			$data	= array(
+			$data	= [
 				'Method'		=> 'Job_'.$job->className.' >> '.$job->methodName,
 				'Mode'			=> strtolower( $constants->getKeyByValue( (int) $job->mode, 'MODE_' ) ),
 				'Status'		=> strtolower( $constants->getKeyByValue( (int) $job->status, 'STATUS_' ) ),
-			);
+			];
 			$arguments	= json_decode( $job->arguments );
 			if( $arguments )
 				$data['Arguments']	= print_m( $arguments, NULL, NULL, TRUE );
@@ -129,10 +132,10 @@ class Job_Job extends Job_Abstract
 		}
 		else{
 			$firstRun	= $modelRun->getAll(
-				array(),
-				array( 'jobRunId' => 'ASC' ),
-				array( 0, 1 ),
-				array( 'createdAt' ),
+				[],
+				['jobRunId' => 'ASC'],
+				[0, 1],
+				['createdAt'],
 			);
 			if( $firstRun ){
 				$nextDate	= new DateTimeImmutable();

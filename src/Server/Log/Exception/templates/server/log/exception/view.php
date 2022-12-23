@@ -1,8 +1,14 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\VariableDumper;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var array $words */
+/** @var object $exception */
 
 $w	= (object) $words['view'];
 
@@ -47,7 +53,8 @@ if( in_array( 'Exception_Logic', $classes ) ){
 	 *	@see		http://developer.mimer.com/documentation/html_92/Mimer_SQL_Mobile_DocSet/App_Return_Codes2.html
 	 *	@see		http://publib.boulder.ibm.com/infocenter/idshelp/v10/index.jsp?topic=/com.ibm.sqls.doc/sqls520.htm
 	 */
-	function getMeaningOfSQLSTATE( $env, $SQLSTATE ){
+	function getMeaningOfSQLSTATE( $env, $SQLSTATE )
+	{
 		$class1	= substr( $SQLSTATE, 0, 2 );
 		$class2	= substr( $SQLSTATE, 2, 3 );
 
@@ -86,7 +93,7 @@ $topicRequest	= '';
 if( !empty( $exception->request ) ){
 	$request	= unserialize( $exception->request );
 
-	if( $request instanceof Net_HTTP_Request ){
+	if( $request instanceof HttpRequest){
 		$rows	= [];
 		foreach( $request->getHeaders()->getFields() as $field ){
 			$value	= $field->getValue();
@@ -97,10 +104,10 @@ if( !empty( $exception->request ) ){
 				HtmlTag::create( 'td', $value ),
 			) );
 		}
-		$headers		= HtmlTag::create( 'table', array(
+		$headers		= HtmlTag::create( 'table', [
 			HtmlElements::ColumnGroup( '20%', '' ),
 			HtmlTag::create( 'tbody', $rows ),
-		), ['class' => 'table table-condensed table-striped'] );
+		], ['class' => 'table table-condensed table-striped'] );
 		$dumpRequest	= VariableDumper::dump( $request->getAll() );
 	}
 	else {
@@ -118,8 +125,8 @@ if( !empty( $exception->session ) ){
 	$session	= unserialize( $exception->session );
 	if( isset( $session['exception'] ) )
 		unset( $session['exception'] );
-	if( isset( $session['exceptionReqeuest'] ) )
-		unset( $session['exceptionReqeuest'] );
+	if( isset( $session['exceptionRequest'] ) )
+		unset( $session['exceptionRequest'] );
 	$dumpSession	= VariableDumper::dump( $session );
 	$topicSession	= '<h4>'.$w->topicSession.'</h4>
 	'.$dumpSession.'';

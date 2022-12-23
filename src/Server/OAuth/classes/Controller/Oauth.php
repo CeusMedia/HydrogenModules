@@ -6,6 +6,8 @@
  *	@copyright		2014 Ceus Media
  */
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
+use CeusMedia\Common\Net\HTTP\Status as HttpStatus;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -19,23 +21,23 @@ use CeusMedia\HydrogenFramework\Controller;
  */
 class Controller_Oauth extends Controller
 {
-	/**	@var		Net_HTTP_Request_Receiver	$request */
-	protected $request;
+	/**	@var	HttpRequest						$request */
+	protected HttpRequest $request;
 
-	/**	@var		integer					$lifetimeAccessToken		Seconds until access token expires */
-	protected $lifetimeAccessToken			= 3600;
+	/**	@var	integer							$lifetimeAccessToken		Seconds until access token expires */
+	protected int $lifetimeAccessToken			= 3600;
 
-	/**	@var		integer					$lifetimeAuthorizationCode	Seconds until authorization code expires */
-	protected $lifetimeAuthorizationCode	= 600;
+	/**	@var	integer							$lifetimeAuthorizationCode	Seconds until authorization code expires */
+	protected int $lifetimeAuthorizationCode	= 600;
 
-	/**	@var		integer					$lifetimeRefreshToken		Seconds until refresh token expires */
-	protected $lifetimeRefreshToken			= 1209600;
+	/**	@var	integer							$lifetimeRefreshToken		Seconds until refresh token expires */
+	protected int $lifetimeRefreshToken			= 1209600;
 
-	protected $flagSendRefreshTokenOnAuthorizationCodeGrant	= TRUE;
+	protected bool $flagSendRefreshTokenOnAuthorizationCodeGrant	= TRUE;
 
-	protected $flagSendRefreshTokenOnPasswordGrant			= TRUE;
+	protected bool $flagSendRefreshTokenOnPasswordGrant				= TRUE;
 
-	protected $flagRefreshRefreshToken						= FALSE;
+	protected bool $flagRefreshRefreshToken							= FALSE;
 
 	/**
 	 *	... unfinished, undocumented ...
@@ -240,7 +242,7 @@ class Controller_Oauth extends Controller
 			$parameters['error_description']	= utf8_decode( $description );
 		if( strlen( trim( $uri ) ) )
 			$parameters['error_uri']	= $uri;
-		$text	= Net_HTTP_Status::getText( $status );
+		$text	= HttpStatus::getText( $status );
 		header( "HTTP/1.0 ".$status." ".$text );
 		header( "Status: ".$status." ".$text );
 		header( "Content-Type: application/json;charset=UTF-8" );
@@ -261,7 +263,7 @@ class Controller_Oauth extends Controller
 	 *	@param		integer		$userId				ID of authenticating user
 	 *	@param		string		$redirectUri		URI to redirect to afterwards ()
 	 *	@param		string		$scope				List of scopes asked to access to
-	 *	@return		sting		Authorization code to be delivered to redirect URI
+	 *	@return		string		Authorization code to be delivered to redirect URI
 	 */
 	protected function generateAuthorizationCode( $applicationId, $userId, $redirectUri, $scope = NULL ): string
 	{
@@ -415,15 +417,16 @@ class Controller_Oauth extends Controller
 			$this->errorResponse( 'invalid_client', 'Invalid client ID.', NULL, 401 );				//  respond error
 
 		/*  --  VALIDATION OF CLIENT SECRET  --  */
-		$indices	= ['clientId' => $clientId, 'clientSecret' => $clientSecret];			//  indices to find authorized application
+		$modelApplication	= new Model_Oauth_Application( $this->env );							//  connect storage of applications
+		$indices	= ['clientId' => $clientId, 'clientSecret' => $clientSecret];					//  indices to find authorized application
 		if( !( $application = $modelApplication->getByIndices( $indices ) ) )						//  no application found by client ID and secret
 			$this->errorResponse( 'invalid_client', 'Invalid client secret.', NULL, 401 );			//  respond error
 
-		$data	= array(
+		$data	= [
 			'access_token'	=> $this->generateAccessToken( $applicationId ),
 			'token_type'	=> 'bearer',
 			'expires_in'	=> $this->lifetimeRefreshToken,
-		);
+		];
 		$this->respondJsonData( $data );
 	}
 

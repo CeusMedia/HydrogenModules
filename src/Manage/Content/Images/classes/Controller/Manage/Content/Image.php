@@ -5,6 +5,8 @@ use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
+use CeusMedia\Common\Net\HTTP\Status as HttpStatus;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -13,21 +15,24 @@ use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\Common\UI\Image\ThumbnailCreator as ImageThumbnailCreator;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Content_Image extends Controller
 {
-	protected $basePath;
-	protected $baseUri;
-	protected $extensions;
+	protected static array $cacheImageList	= [];
+
+	protected string $basePath;
+	protected string $baseUri;
+
+	protected array $extensions;
 	protected array $folders			= [];
 	protected Logic_Frontend $frontend;
-	protected $messenger;
+	protected MessengerResource $messenger;
 	protected Dictionary $moduleConfig;
-	protected $request;
-	protected $thumbnailer;
-	protected $imagePath;
-
-	protected static $cacheImageList	= [];
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected View_Helper_Thumbnailer $thumbnailer;
+	protected string $imagePath;
 
 	public static function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] )
 	{
@@ -367,7 +372,7 @@ class Controller_Manage_Content_Image extends Controller
 		$imagePath	= base64_decode( $imageHash );
 //		$imagePath	= $this->env->getRequest()->get( 'path' );
 		if( !file_exists( $this->basePath.$imagePath ) ){
-			Net_HTTP_Status::sendHeader( 404 );                                           //  send HTTP status code header
+			HttpStatus::sendHeader( 404 );                                           //  send HTTP status code header
 			die( "Invalid request" );
 		}
 		$image		= getimagesize( $this->basePath.$imagePath );
@@ -385,7 +390,7 @@ class Controller_Manage_Content_Image extends Controller
 		exit;
 	}
 
-	protected static function getImageList( $env )
+	protected static function getImageList( Environment $env ): array
 	{
 		$cache		= $env->getCache();
 		if( $list = $env->cache->get( 'ManageContentImages.list.static' ) )

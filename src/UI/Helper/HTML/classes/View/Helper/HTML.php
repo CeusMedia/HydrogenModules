@@ -7,13 +7,13 @@ class View_Helper_HTML
 //	public function __construct();
 }
 
-class HTML/* extends UI_HTML_Elements*/
+class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 {
 	const BR = '<br/>';
 	const HR = '<hr/>';
 
-	static $prefixIdInput	= 'input_';
-	static $prefixIdForm	= 'form_';
+	public static string $prefixIdInput	= 'input_';
+	public static string $prefixIdForm	= 'form_';
 
 	public static function Abbr( string $label, string $title = NULL ): string
 	{

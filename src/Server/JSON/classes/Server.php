@@ -8,6 +8,7 @@
  */
 
 use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\Net\HTTP\Sniffer\MimeType as MimeTypeSniffer;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\OutputBuffer;
@@ -42,7 +43,7 @@ class Server extends WebSite
 		$writer->appendString( $message );
 	}
 
-	protected function logOnComplete()
+	protected function logOnComplete(): void
 	{
 		$responseLength	= $this->env->getResponse()->getLength();
 		$responseTime	= $this->env->getClock()->stop( 6, 0 );
@@ -54,7 +55,7 @@ class Server extends WebSite
 #		$this->logRequestInDatabase( $responseTime, $responseLength );
 	}
 
-	protected function main( $defaultController = 'index', $defaultAction = 'index' )
+	protected function main( $defaultController = 'index', $defaultAction = 'index' ): string
 	{
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
@@ -110,7 +111,7 @@ class Server extends WebSite
 		}
 
 	//	$data['requestHeaders']	= $request->headers->toArray();
-//		$this->messenger->noteNotice( print_m( Net_HTTP_Header_Field::decodeQualifiedValues( getEnv( 'HTTP_ACCEPT' ) ), NULL, NULL, TRUE ) );
+//		$this->messenger->noteNotice( print_m( \CeusMedia\Common\Net\HTTP\Header\Field::decodeQualifiedValues( getEnv( 'HTTP_ACCEPT' ) ), NULL, NULL, TRUE ) );
 
 		$mimeTypesAllowed	= array(
 			'application/json',
@@ -120,7 +121,7 @@ class Server extends WebSite
 			'text/html'
 		);
 		$mimeTypeDefault	= 'application/json;charset=utf8';
-		$mimeTypeSniffer	= new Net_HTTP_Sniffer_MimeType;
+		$mimeTypeSniffer	= new MimeTypeSniffer;
 		$mimeType			= $mimeTypeSniffer->getMimeType( $mimeTypesAllowed, $mimeTypeDefault );
 		$response->addHeaderPair( 'Content-type', $mimeType );
 		$allowed			= $config->get( 'module.server_json.access.allow.origin' );
@@ -145,7 +146,7 @@ class Server extends WebSite
 		return $supported[0];
 	}
 
-	protected function respond( $body, $headers = [] )
+	protected function respond( string $body, array $headers = [] ): object
 	{
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
@@ -172,7 +173,7 @@ class Server extends WebSite
 		$this->env->getResponse()->setStatus( '401 Unauthorized' );
 		$heading	= HtmlTag::create( 'h1', '401 Unauthorized' );
 		$paragraph	= HtmlTag::create( 'p', 'You need to send a token, which you get by posting the shared secret to /auth/getToken.' );
-		$page	= new HtmlPage();
+		$page		= new HtmlPage();
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
 		$page->addBody( $heading.$paragraph );
@@ -188,7 +189,7 @@ class Server extends WebSite
 		$this->env->getResponse()->setStatus( '403 Forbidden' );
 		$heading	= HtmlTag::create( 'h1', '403 Forbidden' );
 		$paragraph	= HtmlTag::create( 'p', 'This service can not be accessed by your IP address.' );
-		$page	= new HtmlPage();
+		$page		= new HtmlPage();
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
 		$page->addBody( $heading.$paragraph );
@@ -204,7 +205,7 @@ class Server extends WebSite
 		$this->env->getResponse()->setStatus( '404 Not Found' );
 		$heading	= HtmlTag::create( 'h1', '404 Not Found' );
 		$paragraph	= HtmlTag::create( 'p', 'The resource you have requested is not existing on this server.' );
-		$page	= new HtmlPage();
+		$page		= new HtmlPage();
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
 		$page->addBody( $heading.$paragraph );
@@ -219,7 +220,7 @@ class Server extends WebSite
 	{
 		$this->env->getResponse()->setStatus( '500 Internal Server Error' );
 		$heading	= HtmlTag::create( 'h1', '500 Internal Server Error' );
-		$paragraph	= HtmlTag::create( 'p', 'An exception occured while executing your request. Please restart the service.' );
+		$paragraph	= HtmlTag::create( 'p', 'An exception occurred while executing your request. Please restart the service.' );
 		$page	= new HtmlPage();
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/reset.css' );
 		$page->addStylesheet( '//css.ceusmedia.de/blueprint/typography.css' );
@@ -233,15 +234,15 @@ class Server extends WebSite
 
 	protected function validateReferer()
 	{
-		$refererAllowed	= trim( $this->env->config->get( 'module.server_json.referers.only' ) );	//  get allowed referers from config
-		if( !$refererAllowed )																		//  no referers defined
+		$refererAllowed	= trim( $this->env->config->get( 'module.server_json.referers.only' ) );	//  get allowed referrers from config
+		if( !$refererAllowed )																		//  no referrers defined
 			return TRUE;																			//  so everyone can access
 
 		$refererActual	= parse_url( getEnv( 'HTTP_REFERER' ) );									//  get actually requesting referer
 		if( empty( $refererActual['host'] )	)														//  no valid referer transmitted
 			return FALSE;																			//  so block access
 
-		$referers	= preg_split( '/\s,\s/', $refererAllowed );										//  if multiple referers are defined
+		$referers	= preg_split( '/\s,\s/', $refererAllowed );										//  if multiple referrers are defined
 		if( in_array( $refererActual['host'], $referers ) )											//  match allowed referer host with requesting referer host
 			return TRUE;																			//  allowed
 		return FALSE;																				//  otherwise block

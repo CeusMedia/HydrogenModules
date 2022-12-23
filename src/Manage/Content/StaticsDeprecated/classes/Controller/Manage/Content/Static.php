@@ -12,6 +12,7 @@ use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -207,7 +208,7 @@ class Controller_Manage_Content_Static extends Controller
 			FolderEditor::createFolder( $this->path );
 
 		$paths	= [];
-		$index	= FS_Folder_RecursiveLister::getFolderList( $this->path );
+		$index	= RecursiveFolderLister::getFolderList( $this->path );
 		foreach( $index as $item )
 			$paths[]	= substr( $item->getPathname(), strlen( $this->path ) );
 		$this->addData( 'pathContent', $this->path );

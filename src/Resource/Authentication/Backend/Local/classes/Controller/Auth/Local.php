@@ -3,7 +3,9 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Crypt\PasswordStrength;
 use CeusMedia\Common\Alg\Randomizer;
+use CeusMedia\Common\Alg\Validation\Predicates;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Library\Local as LocalModuleLibraryResource;
@@ -13,7 +15,7 @@ class Controller_Auth_Local extends Controller
 	public static string $moduleId	= 'Resource_Authentication_Backend_Local';
 
 	protected Dictionary $config;
-	protected Dictionary $request;
+	protected HttpRequest $request;
 	protected Dictionary $session;
 	protected HttpCookie $cookie;
 	protected ?MessengerResource $messenger;
@@ -149,7 +151,7 @@ class Controller_Auth_Local extends Controller
 					$this->restart( 'login?username='.$username, TRUE );
 				}
 				$modelUser	= new Model_User( $this->env );
-				$modelUser->edit( $userId, array( 'loggedAt' => time() ) );
+				$modelUser->edit( $userId, ['loggedAt' => time()] );
 				$this->messenger->noteSuccess( $words->msgSuccess );
 
 				$user	= $modelUser->get( $userId );
@@ -232,12 +234,12 @@ class Controller_Auth_Local extends Controller
 
 				$this->env->getDatabase()->beginTransaction();
 				try{
-					$data		= array(
+					$data		= [
 						'firstname'	=> $user->firstname,
 						'surname'	=> $user->surname,
 						'username'	=> $user->username,
 						'password'	=> $password,
-					);
+					];
 					$language	= $this->env->getLanguage()->getLanguage();
 					$mail		= new Mail_Auth_Local_Password( $this->env, $data );
 					$logic		= Logic_Mail::getInstance( $this->env );
@@ -324,7 +326,7 @@ class Controller_Auth_Local extends Controller
 			else if( $modelUser->countByIndex( 'username', $username ) )
 				$this->messenger->noteError( $words->msgUsernameExisting, $username );
 			else if( $nameRegExp )
-				if( !Alg_Validation_Predicates::isPreg( $username, $nameRegExp ) )
+				if( !Predicates::isPreg( $username, $nameRegExp ) )
 					$this->messenger->noteError( $words->msgUsernameInvalid, $username, $nameRegExp );
 			if( empty( $password ) )
 				$this->messenger->noteError( $words->msgNoPassword );
@@ -342,7 +344,7 @@ class Controller_Auth_Local extends Controller
 				$this->messenger->noteError( $words->msgTermsNotAccepted  );
 
 			if( $this->messenger->gotError() - $errors == 0 ){
-				$data	= array(
+				$data	= [
 					'roleId'		=> $roleId,
 					'status'		=> $status,
 					'email'			=> $email,
@@ -359,7 +361,7 @@ class Controller_Auth_Local extends Controller
 					'phone'			=> $input['phone'],
 					'fax'			=> $input['fax'],
 					'createdAt'		=> time(),
-				);
+				];
 
 				if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays
 					$data['password']	= '';
@@ -392,12 +394,12 @@ class Controller_Auth_Local extends Controller
 						$forward	= './auth/local/confirm'.( $from ? '?from='.$from : '' );
 						if( $this->session->get( 'auth_register_oauth_user_id' ) ){
 							$modelOauthUser	= new Model_Oauth_User( $this->env );
-							$modelOauthUser->add( array(
+							$modelOauthUser->add( [
 								'oauthProviderId'	=> $this->session->get( 'auth_register_oauth_provider_id' ),
 								'oauthId'			=> $this->session->get( 'auth_register_oauth_user_id' ),
 								'localUserId'		=> $userId,
 								'timestamp'			=> time(),
-							) );
+							] );
 							$this->session->remove( 'auth_register_oauth_provider_id' );
 							$this->session->remove( 'auth_register_oauth_provider' );
 							$this->session->remove( 'auth_register_oauth_user_id' );
@@ -516,11 +518,11 @@ class Controller_Auth_Local extends Controller
 			$this->messenger->noteError( $words->msgInvalidRole, $role->title );
 			return 0;
 		}*/
-		$insufficientUserStatuses = array(
+		$insufficientUserStatuses = [
 			0	=> $words->msgUserUnconfirmed,
 			-1	=> $words->msgUserLocked,
 			-2	=> $words->msgUserDisabled,
-		);
+		];
 		foreach( $insufficientUserStatuses as $status => $message ){
 			if( (int) $user->status === $status ){
 				$this->messenger->noteError( $message );
@@ -671,7 +673,7 @@ class Controller_Auth_Local extends Controller
 					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )								//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
-						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
+						$modelUser->edit( $user->userId, ['loggedAt' => time()] );			//  note login time in database
 						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
 						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
 						$this->logic->setAuthenticatedUser( $user );

@@ -23,6 +23,7 @@
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Database\PDO\Connection as DatabasePdoConnection;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -31,7 +32,7 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@copyright		2011 Christian Würker
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
-class Resource_Database_Base extends \CeusMedia\Database\PDO\Connection
+class Resource_Database_Base extends DatabasePdoConnection
 {
 	const STATUS_LOST			= -1;
 	const STATUS_UNKNOWN		= 0;

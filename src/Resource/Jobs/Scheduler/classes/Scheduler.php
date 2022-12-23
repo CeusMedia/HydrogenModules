@@ -7,8 +7,11 @@
  *	@copyright		2010 Ceus Media
  */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\RegexFilter as RegexFileFilter;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\XML\ElementReader as XmlElementReader;
 use CeusMedia\HydrogenFramework\Application\Console as ConsoleApplication;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -21,7 +24,7 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class Scheduler extends ConsoleApplication
 {
-	protected $intervals	= array(
+	protected array $intervals	= [
 		'sec'	=> [],
 		'min'	=> [],
 		'min5'	=> [],
@@ -35,18 +38,19 @@ class Scheduler extends ConsoleApplication
 		'mon3'	=> [],
 		'mon6'	=> [],
 		'year'	=> [],
-	);
-	protected $jobber;
-	protected $jobs		= [];
+	];
+	protected Jobber $jobber;
+	protected array $jobs		= [];
+	protected Dictionary $moduleConfig;
 
-	public static function readJobXmlFile( $modes = [] )
+	public static function readJobXmlFile( $modes = [] ): object
 	{
-		$map			= new stdClass();
+		$map			= (object) [];
 		$map->jobs		= [];
 		$map->intervals	= [];
-		$index			= new \FS_File_RegexFilter( 'config/jobs/', '/\.xml$/i' );
+		$index			= new RegexFileFilter( 'config/jobs/', '/\.xml$/i' );
 		foreach( $index as $file ){
-			$xml	= \XML_ElementReader::readFile( $file->getPathname() );
+			$xml	= XmlElementReader::readFile( $file->getPathname() );
 			foreach( $xml->job as $job ){
 				$jobObj = new stdClass();
 				$jobObj->id			= $job->getAttribute( 'id' );
@@ -91,7 +95,7 @@ class Scheduler extends ConsoleApplication
 		foreach( $map->intervals as $interval => $jobs )
 			if( $interval )
 				$this->intervals[$interval]	= $jobs;
-		$this->jobber	= new \Jobber( $this->env );
+		$this->jobber	= new Jobber( $this->env );
 		$this->jobber->loadJobs( [$mode] );
 	}
 
@@ -122,7 +126,7 @@ class Scheduler extends ConsoleApplication
 		while( $loop );
 	}
 
-	protected function getChanges( $last, $now )
+	protected function getChanges( $last, $now ): array
 	{
 		$minute1	= date( 'i', $last );
 		$minute2	= date( 'i', $now );
@@ -132,7 +136,7 @@ class Scheduler extends ConsoleApplication
 		$day2		= date( 'd', $now );
 		$month1		= date( 'm', $last );
 		$month2		= date( 'm', $now );
-		$changes	= array(
+		$changes	= [
 			'sec'	=> $last != $now,
 			'min'	=> $minute1 != $minute2,
 			'min5'	=> floor( $minute1 / 5 ) != floor( $minute1 / 5 ),
@@ -146,7 +150,7 @@ class Scheduler extends ConsoleApplication
 			'mon3'	=> FALSE,
 			'mon6'	=> FALSE,
 			'year'	=> date( "y", $last ) != date( "y", $now ),
-		);
+		];
 		return $changes;
 	}
 

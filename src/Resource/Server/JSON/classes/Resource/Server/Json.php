@@ -25,6 +25,7 @@
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\CURL as NetCURL;
 use CeusMedia\Common\Net\HTTP\Reader as HttpReader;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -38,14 +39,15 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class Resource_Server_Json
 {
-	protected $env;
+	protected Environment $env;
 	protected $serverUri;
-	protected $curlOptions		= array(
+	protected array $curlOptions		= [
 		'ALL'	=> [],
 		'GET'	=> [],
 		'POST'	=> []
-	);
-	protected $userAgent		= 'CMF:Hydrogen/1.0';
+	];
+	protected string $userAgent			= 'CMF:Hydrogen/1.0';
+	protected string $clientIp;
 
 	/**
 	 *	Constructor.
@@ -85,9 +87,9 @@ class Resource_Server_Json
 	 *	@todo			make environment resource key configurable
 	 *	@todo			allow multiple instances
 	 *	@todo			localization of messages
-	 *	@todo			allow other auth methods than 'shared secred'
+	 *	@todo			allow other auth methods than 'shared secret'
 	 */
-	public static function ___onEnvInit( Environment $env, $context, $module, $data = [] )
+	public static function ___onEnvInit( Environment $env, $context, $module, array $data = [] )
 	{
 		$server		= new Resource_Server_Json( $context );
 		$context->set( 'server', $server );
@@ -123,10 +125,10 @@ class Resource_Server_Json
 	 *	@param		string		$method		Request method (ALL|GET|POST)
 	 *	@param		bool		$strict		Flag: throw exception or return NULL
 	 *	@return		mixed		Set CURL option value or NULL (if not strict)
-	 *	@throws		InvalidArgumentException if method is invaid
+	 *	@throws		InvalidArgumentException if method is invalid
 	 *	@throws		InvalidArgumentException if key is not existing and strict mode
 	 */
-	public function getCurlOption( $key, $method = 'ALL', $strict = FALSE )
+	public function getCurlOption( string $key, string $method = 'ALL', bool $strict = FALSE )
 	{
 		$method	= strtoupper( $method );
 		if( !array_key_exists( $method, $this->curlOptions ) )
@@ -138,7 +140,7 @@ class Resource_Server_Json
 		return NULL;
 	}
 
-	public function getCurlOptions( $method = 'ALL' )
+	public function getCurlOptions( string $method = 'ALL' ): array
 	{
 		$method	= strtoupper( $method );
 		if( !array_key_exists( $method, $this->curlOptions ) )
@@ -146,18 +148,18 @@ class Resource_Server_Json
 		return $this->curlOptions[$method];
 	}
 
-	public function getData( $controller, $action = NULL, $arguments = [], $parameters = [], $curlOptions = [] )
+	public function getData( string $controller, ?string $action = NULL, array $arguments = [], array $parameters = [], array $curlOptions = [] )
 	{
 		$url	= $this->buildServerGetUrl( $controller, $action, $arguments, $parameters = [] );
 		return	$this->getDataFromUrl( $url, $curlOptions );
 	}
 
-	public function getDataFromUri( $uri, $curlOptions = [] )
+	public function getDataFromUri( $uri, array $curlOptions = [] )
 	{
 		return $this->getDataFromUrl( $this->serverUri.$uri, $curlOptions );
 	}
 
-	public function getDataFromUrl( $url, $curlOptions = [] )
+	public function getDataFromUrl( $url, array $curlOptions = [] )
 	{
 		$reader		= new HttpReader();
 		$headers	= ['Accept-Encoding: gzip, deflate'];
@@ -165,10 +167,10 @@ class Resource_Server_Json
 		$response	= $reader->get( $url, $headers, $options );
 		$json		= $response->getBody();
 
-		$statusCode	= $reader->getCurlInfo( Net_CURL::INFO_HTTP_CODE );
-		$logPath	= $this->env->config->get( 'path.logs' );
-		$logEnabled	= $this->env->config->get( 'module.resource_server_json.log' );
-		$logFile	= $this->env->config->get( 'module.resource_server_json.log.file' );
+		$statusCode	= $reader->getCurlInfo( NetCURL::INFO_HTTP_CODE );
+		$logPath	= $this->env->getConfig()->get( 'path.logs' );
+		$logEnabled	= $this->env->getConfig()->get( 'module.resource_server_json.log' );
+		$logFile	= $this->env->getConfig()->get( 'module.resource_server_json.log.file' );
 		if( $logEnabled && $logFile )
 			error_log( time()." GET (".$statusCode."): ".$json."\n", 3, $logPath.$logFile );
 		$response	= $this->handleResponse( $json, $url, $statusCode );
@@ -181,12 +183,12 @@ class Resource_Server_Json
 		return $this->postDataToUrl( $url, $data, $curlOptions );
 	}
 
-	public function postDataToUri( $uri, $data = [], $curlOptions = [] )
+	public function postDataToUri( $uri, $data = [], array $curlOptions = [] )
 	{
 		return $this->postDataToUrl( $this->serverUri.$uri, $data, $curlOptions );
 	}
 
-	public function postDataToUrl( $url, $data = [], $curlOptions = [] )
+	public function postDataToUrl( $url, $data = [], array $curlOptions = [] )
 	{
 		if( $data instanceof Dictionary )
 			$data	= $data->getAll();
@@ -195,7 +197,7 @@ class Resource_Server_Json
 		if( $this->env->getSession()->get( 'ip' ) )
 			$data['ip']	= $this->env->getSession()->get( 'ip' );
 		foreach( $data as $key => $value )															//  cURL hack (file upload identifier)
-			if( is_string( $value ) && substr( $value, 0, 1 ) == "@" )								//  leading @ in field values
+			if( is_string( $value ) && substr( $value, 0, 1 ) == "@" )					//  leading @ in field values
 				$data[$key]	= "\\".$value;															//  need to be escaped
 
 		$reader		= new HttpReader();
@@ -207,33 +209,35 @@ class Resource_Server_Json
 		$response	= $reader->post( $url, $data, $headers, $options );
 		$json		= $response->getBody();
 
-		$statusCode	= $reader->getCurlInfo( Net_CURL::INFO_HTTP_CODE );
-		$logPath	= $this->env->config->get( 'path.logs' );
-		$logEnabled	= $this->env->config->get( 'module.resource_server_json.log' );
-		$logFile	= $this->env->config->get( 'module.resource_server_json.log.file' );
+		$statusCode	= $reader->getCurlInfo( NetCURL::INFO_HTTP_CODE );
+		$logPath	= $this->env->getConfig()->get( 'path.logs' );
+		$logEnabled	= $this->env->getConfig()->get( 'module.resource_server_json.log' );
+		$logFile	= $this->env->getConfig()->get( 'module.resource_server_json.log.file' );
 		if( $logEnabled && $logFile )
 			error_log( time()." POST (".$statusCode."): ".$json."\n", 3, $logPath.$logFile );
 		$response	= $this->handleResponse( $json, $url, $statusCode );
 		return $response->data;
 	}
 
-	public function setCurlOption( $key, $value, $method = 'ALL' )
+	public function setCurlOption( $key, $value, string $method = 'ALL' ): self
 	{
 		$method	= strtoupper( $method );
 		if( !array_key_exists( $method, $this->curlOptions ) )
 			throw new InvalidArgumentException( 'Invalid method: '.$method );
 		$this->curlOptions[$method][$key]	= $value;
+		return $this;
 	}
 
-	public function setCurlOptions( $curlOptions, $method = 'ALL' )
+	public function setCurlOptions( $curlOptions, string $method = 'ALL' ): self
 	{
 		$method	= strtoupper( $method );
 		if( !array_key_exists( $method, $this->curlOptions ) )
 			throw new InvalidArgumentException( 'Invalid method: '.$method );
 		$this->curlOptions[$method]	= $curlOptions;
+		return $this;
 	}
 
-	protected function buildServerGetUrl( $controller, $action = NULL, $arguments = [], $parameters = [] )
+	protected function buildServerGetUrl( $controller, ?string $action = NULL, array $arguments = [], array $parameters = [] ): string
 	{
 		$url	= $this->buildServerPostUrl( $controller, $action, $arguments );
 		if( is_null( $parameters ) )
@@ -252,12 +256,12 @@ class Resource_Server_Json
 	/**
 	 *	Builds URL string from controller, action and arguments.
 	 *	@access		protected
-	 *	@param		string		$controller		Controller name
-	 *	@param		string		$action			Action name
-	 *	@param		array		$arguments		List of URI arguments
-	 *	@return		string		URL on server
+	 *	@param		string|NULL		$controller		Controller name
+	 *	@param		string|NULL		$action			Action name
+	 *	@param		array			$arguments		List of URI arguments
+	 *	@return		string			URL on server
 	 */
-	protected function buildServerPostUrl( $controller, $action = NULL, $arguments = [] )
+	protected function buildServerPostUrl( ?string $controller, ?string $action = NULL, array $arguments = [] ): string
 	{
 		if( $arguments && empty( $action ) )
 			$action		= 'index';
@@ -272,13 +276,11 @@ class Resource_Server_Json
 		foreach( $arguments as $nr => $argument )
 			$arguments[$nr]	= urlencode( $argument );
 		$arguments	= implode( '/', $arguments );
-		$url		= $this->serverUri.$controller.$action.$arguments;
-		return $url;
+		return $this->serverUri.$controller.$action.$arguments;
 	}
 
-	protected function handleResponse( $json, $url, $statusCode )
+	protected function handleResponse( $json, $url, int $statusCode )
 	{
-
 		if( $statusCode != 200 && $statusCode != 500 )
 			throw new RuntimeException( 'Resource '.$url.' has HTTP code '.$statusCode );
 		$response	= json_decode( $json );

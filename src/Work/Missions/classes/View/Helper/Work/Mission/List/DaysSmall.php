@@ -50,7 +50,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 	public function __construct( $env ){
 		parent::__construct( $env );
 		$this->baseUrl		= $env->getConfig()->get( 'app.base.url' );
-		$this->indicator	= new UI_HTML_Indicator();
+		$this->indicator	= new \CeusMedia\Common\UI\HTML\Indicator();
 		$this->logic		= Logic_Work_Mission::getInstance( $env );
 		$this->today		= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 		$this->projects		= [];

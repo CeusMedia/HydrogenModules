@@ -25,7 +25,7 @@ class Mail_Work_Mission_Done extends Mail_Work_Mission_Change
 		$weekdays		= (array) $this->getWords( 'work/mission', 'days' );
 		$salutes		= (array) $this->getWords( 'work/mission', 'mail-salutes' );
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
-		$indicator		= new UI_HTML_Indicator();
+		$indicator		= new \CeusMedia\Common\UI\HTML\Indicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
 

@@ -9,6 +9,8 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Common\XML\Element as XmlElement;
+use CeusMedia\Common\XML\ElementReader as XmlElementReader;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
@@ -36,7 +38,7 @@ class View_Helper_FriendLister extends Abstraction
 	 *	Renders and returns list for given XML file.
 	 *	@access		public
 	 *	@return		string
-	 *	@throws		RuntimeException if XML file is not existing
+	 *	@throws		RuntimeException		if XML file is not existing
 	 */
 	public function build(): string
 	{
@@ -46,7 +48,7 @@ class View_Helper_FriendLister extends Abstraction
 			throw new RuntimeException( 'File "'.$c->get( 'file' ).'" is not existing' );			//
 
 		$list	= [];																			//
-		$xml	= XML_ElementReader::readFile( $c->get( 'file' ) );									//
+		$xml	= XmlElementReader::readFile( $c->get( 'file' ) );									//
 		foreach( $xml->friend as $item ){															//
 			if( $item->hasAttribute( 'disabled' ) )													//
 				if( $item->getAttribute( 'disabled' ) == "yes" )									//
@@ -81,10 +83,10 @@ class View_Helper_FriendLister extends Abstraction
 	/**
 	 *	Renders friend icon if possible.
 	 *	@access		protected
-	 *	@param		XML_Element		$friend		Element of XML file to get icon for
+	 *	@param		XmlElement		$friend		Element of XML file to get icon for
 	 *	@return		string|NULL
 	 */
-	protected function renderIcon( $friend ): string
+	protected function renderIcon( XmlElement $friend ): string
 	{
 		$config		= $this->env->getConfig();														//
 		$icon		= $config->get( 'module.ui_friendlister.icon.male' );							//

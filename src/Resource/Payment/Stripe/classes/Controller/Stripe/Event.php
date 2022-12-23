@@ -1,11 +1,20 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
+use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Stripe_Event extends Controller
 {
 //	public static $verbose	= TRUE;
+	protected Logic_Payment_Stripe $stripe;
+	protected Model_Stripe_Event $model;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Dictionary $moduleConfig;
 
 	public function receive()
 	{
@@ -28,7 +37,7 @@ class Controller_Stripe_Event extends Controller
 			}
 			if( !$this->verify( $eventType, $resourceId ) )
 				throw new InvalidArgumentException( 'Event verification failed' );
-			$eventId	= $this->model->add( array(
+			$eventId	= $this->model->add( [
 				'status'		=> Model_Stripe_Event::STATUS_RECEIVED,
 				'id'			=> $resourceId,
 				'type'			=> $eventType,
@@ -36,7 +45,7 @@ class Controller_Stripe_Event extends Controller
 				'receivedAt'	=> time(),
 				'output'		=> '',
 				'handledAt'		=> 0,
-			) );
+			] );
 			$response->setStatus( 200 );
 			$response->setBody( '<h1>OK</h1><p>Event has been received and handled.</p>' );
 		}
@@ -50,7 +59,7 @@ class Controller_Stripe_Event extends Controller
 			$response->setStatus( 500 );
 			$response->setBody( '<h1>Internal Server Error</h1><p>An error occured. Event has not been handled.</p><p>'.$e->getMessage().'.</p>' );
 		}
-		Net_HTTP_Response_Sender::sendResponse( $response );
+		HttpResponseSender::sendResponse( $response );
 		exit;
 	}
 
@@ -75,7 +84,7 @@ class Controller_Stripe_Event extends Controller
 		return $this->env->logic->mail->sendMail( $mail, $receiver, $language );
 	}
 
-	protected function verify( $eventType, $resourceId )
+	protected function verify( string $eventType, $resourceId )
 	{
 		if( preg_match( '@_CREATED$@', $eventType ) )
 			$status	= 'CREATED';
@@ -83,17 +92,17 @@ class Controller_Stripe_Event extends Controller
 			$status	= 'FAILED';
 		else if( preg_match( '@_SUCCEEDED$@', $eventType ) )
 			$status	= 'SUCCEEDED';
-		else return TRUE;														//  no handleable and verifyable event found
+		else return TRUE;														//  no handleable and verifiable event found
 		$entity	= $this->stripe->getEventResource( $eventType, $resourceId );
 		if( $entity && $entity->Status === $status )
 			return TRUE;
-		$this->sendMail( 'EventUnverfied', array(
+		$this->sendMail( 'EventUnverified', [
 			'entity'	=> $entity,
-			'event'		=> (object) array(
+			'event'		=> (object) [
 				'eventType'		=> $eventType,
 				'resourceId'	=> $resourceId,
-			),
-		) );
+			],
+		] );
 		return FALSE;
 	}
 }

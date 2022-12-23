@@ -1,32 +1,34 @@
 <?php
 
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
+use CeusMedia\Common\Alg\Obj\MethodFactory as ObjectMethodFactory;
 use CeusMedia\Common\UI\OutputBuffer;
 use CeusMedia\HydrogenFramework\Logic;
+use CeusMedia\Mail\Address\Collection\Parser as AddressCollectionParser;
 
 class Logic_Job extends Logic
 {
-	protected $modelSchedule;
-	protected $modelDefinition;
-	protected $modelRun;
+	protected Model_Job_Schedule $modelSchedule;
+	protected Model_Job_Definition $modelDefinition;
+	protected Model_Job_Run $modelRun;
 
 	public function archiveJobRun( int $jobRunId ): bool
 	{
-		$statusesNotArchivable	= array(
+		$statusesNotArchivable	= [
 			Model_Job_Run::STATUS_PREPARED,
 			Model_Job_Run::STATUS_RUNNING,
-		);
+		];
 		$jobRun	= $this->modelRun->get( $jobRunId );
 		if( $jobRun && !$jobRun->archived ){
 			if( !in_array( $jobRun->status, $statusesNotArchivable ) ){
-				$this->modelRun->edit( $jobRunId, array(
+				$this->modelRun->edit( $jobRunId, [
 					'archived'			=> Model_Job_Run::ARCHIVED_YES,
 					'processId'			=> NULL,
 					'reportMode'		=> Model_Job_Run::REPORT_MODE_NEVER,
 					'reportChannel'		=> Model_Job_Run::REPORT_CHANNEL_NONE,
 					'reportReceivers'	=> NULL,
 					'message'			=> NULL,
-				) );
+				] );
 				return TRUE;
 			}
 		}
@@ -54,13 +56,13 @@ class Logic_Job extends Logic
 		$model->load( ['live', 'test', 'dev'] );
 		foreach( $model->getAll() as $xmlJobId => $xmlJob ){
 			if( !array_key_exists( $xmlJobId, $discoveredJobs ) ){
-				$discoveredJobs[$xmlJobId]	= (object) array(
+				$discoveredJobs[$xmlJobId]	= (object) [
 					'id'		=> $xmlJobId,
 					'class'		=> $xmlJob->class,
 					'method'	=> $xmlJob->method,
 					'multiple'	=> FALSE,
 					'arguments'	=> NULL,
-				);
+				];
 			}
 		}
 		if( !$discoveredJobs )																		//  no jobs discovered
@@ -68,10 +70,10 @@ class Logic_Job extends Logic
 
 		//  read already registered jobs matching discovered jobs
 		$registeredJobIdentifiers	= $this->modelDefinition->getAll(								//  get all registered jobs
-			array( 'identifier' => array_keys( $discoveredJobs ) ),									//  ... having the discovered identifiers
-			array(),																				//  ... without any orders
-			array(),																				//  ... without any limits
-			array( 'identifier' )																	//  ... and return identifiers, only
+			['identifier' => array_keys( $discoveredJobs )],										//  ... having the discovered identifiers
+			[],																						//  ... without any orders
+			[],																						//  ... without any limits
+			['identifier']																			//  ... and return identifiers, only
 		);
 		if( count( $discoveredJobs ) === count( $registeredJobIdentifiers ) )						//  no new jobs discovered
 			return $list;																			//  return empty list
@@ -82,10 +84,10 @@ class Logic_Job extends Logic
 			$mode	= Model_Job_Definition::MODE_SINGLE;											//  assume mode is "single"
 			if( $discoveredJob->multiple )															//  job is marked as "multiple"
 				$mode	= Model_Job_Definition::MODE_MULTIPLE;										//  set mode to "multiple"
-			$arguments	= [];																	//  assume no arguments
+			$arguments	= [];																		//  assume no arguments
 			if( $discoveredJob->arguments )															//  job as defined arguments
 				$arguments	= $discoveredJob->arguments;											//  carry arguments
-			$jobDefinitionId	= $this->modelDefinition->add( array(								//  register job in database
+			$jobDefinitionId	= $this->modelDefinition->add( [									//  register job in database
 				'mode'			=> $mode,
 				'status'		=> Model_Job_Definition::STATUS_ENABLED,
 				'identifier'	=> $discoveredJob->id,
@@ -94,7 +96,7 @@ class Logic_Job extends Logic
 				'arguments'		=> json_encode( $arguments ),
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$list[$discoveredJob->id]	= $jobDefinitionId;											//  note identifier and new job definition ID
 		}
 		return $list;																				//  return result list
@@ -111,14 +113,14 @@ class Logic_Job extends Logic
 		if( $jobDefinition ){
 			if( $extendBy ){
 				if( in_array( 'schedules', $extendBy ) ){
-					$jobDefinition->schedules	= $this->modelSchedule->getAll( array(
+					$jobDefinition->schedules	= $this->modelSchedule->getAll( [
 						'jobDefinitionId'	=> $jobDefinition->jobDefinitionId,
-					) );
+					] );
 				}
 				if( in_array( 'runs', $extendBy ) ){
-					$jobDefinition->runs		= $this->modelRun->getAll( array(
+					$jobDefinition->runs		= $this->modelRun->getAll( [
 						'jobDefinitionId'	=> $jobDefinition->jobDefinitionId,
-					) );
+					] );
 				}
 			}
 			return $jobDefinition;
@@ -126,7 +128,7 @@ class Logic_Job extends Logic
 		return NULL;
 	}
 
-	public function getDefinitions( $conditions = [], $orders = [], $limits = [], $fields = [] ): array
+	public function getDefinitions( array $conditions = [], array $orders = [], array $limits = [], array $fields = [] ): array
 	{
 		return $this->modelDefinition->getAll( $conditions, $orders, $limits, $fields );
 	}
@@ -139,7 +141,7 @@ class Logic_Job extends Logic
 	 *	@param		array		$orders			Order rules (defaults to: ranAt -> DESC)
 	 *	@return		array						List ob job run objects not having a process anymore
 	 */
-	public function getDiscontinuedJobRuns( $conditions = [], $orders = [] ): array
+	public function getDiscontinuedJobRuns( array $conditions = [], array $orders = [] ): array
 	{
 		$list			= [];
 		$orders			= $orders ? $orders : ['ranAt' => 'ASC'];
@@ -149,20 +151,20 @@ class Logic_Job extends Logic
 		return $list;
 	}
 
-	public function getRunningJobs( $conditions = [], $orders = [], $limits = [], $fields = [] ): array
+	public function getRunningJobs( array $conditions = [], array $orders = [], array $limits = [], array $fields = [] ): array
 	{
 		$conditions['status']	= Model_Job_Run::STATUS_RUNNING;
 		return $this->modelRun->getAll( $conditions, $orders, $limits, $fields );
 	}
 
 	/**
-	 *	Return list of preared job runs.
+	 *	Return list of prepared job runs.
 	 *	@access		public
 	 *	@param		int			$jobRunId		ID of job run
 	 *	@param		array		$extendBy		List of data extensions (definition, schedules)
 	 *	@return		object|NULL	Found prepared job run
 	 */
-	public function getPreparedJobRun( $jobRunId, $extendBy = [] ): object
+	public function getPreparedJobRun( $jobRunId, array $extendBy = [] ): object
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
 		if( $jobRun && $extendBy ){
@@ -175,13 +177,13 @@ class Logic_Job extends Logic
 	}
 
 	/**
-	 *	Return list of preared job runs,
+	 *	Return list of prepared job runs,
 	 *	@access		public
-	 *	@param		int			$jobDefinitionId	ID of job defintion to filter by (optional)
+	 *	@param		int			$jobDefinitionId	ID of job definition to filter by (optional)
 	 *	@param		array		$extendBy			List of data extensions (definition, schedules)
 	 *	@return		array		list of found prepared job runs
 	 */
-	public function getPreparedJobRuns( $jobDefinitionId = NULL, $extendBy = [] ): array
+	public function getPreparedJobRuns( $jobDefinitionId = NULL, array $extendBy = [] ): array
 	{
 		$indices	= ['status' => Model_Job_Run::STATUS_PREPARED];
 		if( $jobDefinitionId )
@@ -191,25 +193,25 @@ class Logic_Job extends Logic
 			if( in_array( 'definition', $extendBy ) )
 				$preparedJob->definition	= $this->modelDefinition->get( $preparedJob->jobDefinitionId );
 			if( in_array( 'schedules', $extendBy ) )
-				$preparedJob->schedules	= $this->modelSchedule->getAll( array(
+				$preparedJob->schedules	= $this->modelSchedule->getAll( [
 					'jobDefinitionId'	=> $preparedJob->jobDefinitionId,
-				) );
+				] );
 		}
 		return $preparedJobs;
 	}
 
 	public function getScheduledJobs( $conditions = [] ): array
 	{
-		$conditions	= array_merge( array(
+		$conditions	= array_merge( [
 			'status'	=> 1,
-		), $conditions );
+		], $conditions );
 		$list	= $this->modelSchedule->getAll( $conditions );
 		foreach( $list as $nr => $item ){
 			$list[$nr]->definition		= $this->modelDefinition->get( $item->jobDefinitionId );
 			$list[$nr]->latestRuns	= $this->modelRun->getAll(
-				array( 'jobScheduleId' => $item->jobScheduleId ),
-				array( 'modifiedAt' => 'DESC' ),
-				array( 0, 10 )
+				['jobScheduleId' => $item->jobScheduleId],
+				['modifiedAt' => 'DESC'],
+				[0, 10]
 			);
 		}
 		return $list;
@@ -217,15 +219,15 @@ class Logic_Job extends Logic
 
 	public function hasRunningExclusiveJob(): bool
 	{
-		$exclusiveJobsDefinitionIds	= $this->modelDefinition->getAllByIndices( array(
+		$exclusiveJobsDefinitionIds	= $this->modelDefinition->getAllByIndices( [
 			'mode'		=> Model_Job_Definition::MODE_EXCLUSIVE,
 			'status'	=> Model_Job_Definition::STATUS_ENABLED,
-		), [], [], ['jobDefinitionId'] );
+		], [], [], ['jobDefinitionId'] );
 		if( $exclusiveJobsDefinitionIds ){
-			$exclusiveJobIsRunning	= $this->modelRun->getByIndices( array(
+			$exclusiveJobIsRunning	= $this->modelRun->getByIndices( [
 				'jobDefinitionId'	=> $exclusiveJobsDefinitionIds,
-				'status'		=> Model_Job_Run::STATUS_RUNNING,
-			) );
+				'status'			=> Model_Job_Run::STATUS_RUNNING,
+			] );
 			if( $exclusiveJobIsRunning )
 				return TRUE;
 		}
@@ -272,7 +274,7 @@ class Logic_Job extends Logic
 	{
 		if( !$this->isPreparableJob( $job, Model_Job_Run::TYPE_MANUALLY ) )
 			return NULL;
-		$entityData	= array_merge( array(
+		$entityData	= array_merge( [
 			'jobDefinitionId'	=> $job->jobDefinitionId,
 			'processId'			=> getmypid(),
 			'type'				=> Model_Job_Run::TYPE_MANUALLY,
@@ -281,7 +283,7 @@ class Logic_Job extends Logic
 //			'message'			=> json_encode( [] ),
 			'createdAt'			=> time(),
 			'modifiedAt'		=> time(),
-		), $options );
+		], $options );
 		$jobRunId	= $this->modelRun->add( $entityData );
 		return $this->getPreparedJobRun( $jobRunId );
 	}
@@ -304,14 +306,14 @@ class Logic_Job extends Logic
 	{
 		$jobRun	= $this->getPreparedJobRun( $jobRunId, ['definition'] );
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED )
-			throw new \RuntimeException( 'Job run is not in prepared state' );
+			throw new RuntimeException( 'Job run is not in prepared state' );
 		if( $jobRun->definition && !$jobRun->processId ){
 			try{
-				$this->modelRun->edit( $jobRun->jobRunId, array(
+				$this->modelRun->edit( $jobRun->jobRunId, [
 					'status'		=> Model_Job_Run::STATUS_RUNNING,
 					'processId'		=> getmypid(),
 					'modifiedAt'	=> time(),
-				) );
+				] );
 //				exec( $jobRun->method );
 			}
 			catch( Exception $e ){
@@ -324,15 +326,15 @@ class Logic_Job extends Logic
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_RUNNING )
-			throw new \RuntimeException( 'Job is not running' );
+			throw new RuntimeException( 'Job is not running' );
 		if( !in_array( $status, Model_Job_Run::STATUS_TRANSITIONS[$jobRun->status] ) )
 			throw new \DomainException( 'Transition to given status is not allowed' );
-		$dataRun	= array(
+		$dataRun	= [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
 			'finishedAt'	=> time(),
 			'message'		=> json_encode( $messageData ),
-		);
+		];
 		if( $status === Model_Job_Run::STATUS_TERMINATED )
 			if( $this->isActiveProcessId( (int) $jobRun->processId ) )
 				$this->killJobRunProcess( (int) $jobRun->processId );
@@ -345,34 +347,34 @@ class Logic_Job extends Logic
 			$this->modelDefinition->edit( $jobRun->jobDefinitionId, $dataDefinition );
 	}
 
-	public function startJobRun( object $jobRun, $commands = [], $parameters = [] ): int
+	public function startJobRun( object $jobRun, $commands = [], array $parameters = [] ): int
 	{
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED )
 			throw new RuntimeException( 'Job run is not in prepared state' );
-		$this->modelRun->edit( $jobRun->jobRunId, array(
+		$this->modelRun->edit( $jobRun->jobRunId, [
 			'status'		=> Model_Job_Run::STATUS_RUNNING,
 			'processId'		=> getmypid(),
 			'modifiedAt'	=> time(),
 			'ranAt'			=> time(),
-		) );
+		] );
 
 		$jobDefinition	= $this->modelDefinition->get( $jobRun->jobDefinitionId );
-		$this->modelDefinition->edit( $jobRun->jobDefinitionId, array(
+		$this->modelDefinition->edit( $jobRun->jobDefinitionId, [
 			'runs'		=> $jobDefinition->runs + 1,
 			'lastRunAt'	=> time(),
-		) );
+		] );
 
 		if( $jobRun->jobScheduleId ){
 			$jobSchedule	= $this->modelSchedule->get( $jobRun->jobScheduleId );
-			$this->modelSchedule->edit( $jobRun->jobScheduleId, array(
+			$this->modelSchedule->edit( $jobRun->jobScheduleId, [
 				'lastRunAt'	=> time(),
-			) );
+			] );
 		}
 
 
 		$className	= 'Job_'.$jobDefinition->className;												//  build job class name
-		$classArgs	= [$this->env, $this];													//  prepare job class instance arguments
-		$arguments	= [$commands, $parameters];												//
+		$classArgs	= [$this->env, $this];															//  prepare job class instance arguments
+		$arguments	= [$commands, $parameters];														//
 		$methodName	= $jobDefinition->methodName;													//  shortcut method name
 		$jobObject	= ObjectFactory::createObject( '\\'.$className, $classArgs );				//  ... create job class instance with arguments
 		$jobObject->noteJob( $jobDefinition->className, $methodName );								//  ... inform job instance about method to be called
@@ -386,17 +388,17 @@ class Logic_Job extends Logic
 			$outputBuffer	= new OutputBuffer( FALSE );
 			if( $jobRun->type == Model_Job_Run::TYPE_SCHEDULED )
 				$outputBuffer->open();
-			$factory	= new \Alg_Object_MethodFactory( $jobObject );								//  create a factory for this job
+			$factory	= new ObjectMethodFactory( $jobObject );								//  create a factory for this job
 			$result		= $factory->callMethod( $methodName, $arguments );							//  call job method with arguments
 
 			if( $jobRun->type == Model_Job_Run::TYPE_SCHEDULED )
 				$output	= $outputBuffer->get( TRUE );
-			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_DONE, array(			//  finish job run since no exception has been thrown
+			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_DONE, [			//  finish job run since no exception has been thrown
 				'type'		=> 'data',																//  ... and save message of type "data"
 				'code'		=> $result,																//  ... containing the method call return code
 				'data'		=> $jobObject->getResults(),											//  ... and results collected by the method call
 				'output'	=> $output,
-			) );
+			] );
 			if( is_integer( $result ) )																//  method call return value is an integer
 				$returnCode	 = $result;																//  carry this return code out as status
 /*			if( strlen( trim( $result ) ) )															//  handle old return strings @deprecated
@@ -405,7 +407,7 @@ class Logic_Job extends Logic
 */			$returnCode = 1;																		//  quit with positive status
 		}
 		catch( Throwable $t ){																		//  on throwable error or exception
-			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_FAILED, array(		//  finish job run as failed
+			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_FAILED, [		//  finish job run as failed
 				'type'		=> 'throwable',															//  ... and save message of type "throwable" for caught exception
 				'exception'	=> get_class( $t ),
 				'message'	=> $t->getMessage(),													//  ...
@@ -413,7 +415,7 @@ class Logic_Job extends Logic
 				'file'		=> $t->getFile(),														//  ...
 				'line'		=> $t->getLine(),														//  ...
 				'trace'		=> $t->getTraceAsString(),												//  ...
-			) );
+			] );
 			if( (int) $jobRun->type === Model_Job_Run::TYPE_MANUALLY ){								//  since job has been run manually
 				throw new RuntimeException( 'Job run failed: '.$t->getMessage(), 0, $t );			//  ... carry exception out
 			}
@@ -424,7 +426,7 @@ class Logic_Job extends Logic
 		return $returnCode;																					//  quit with negative status
 	}
 
-	public function removeJobRun( $jobRunId )
+	public function removeJobRun( $jobRunId ): bool
 	{
 		$job			= $this->modelRun->get( $jobRunId );
 		if( $job && in_array( (int) $job->status, Model_Job_Run::STATUSES_ARCHIVABLE, TRUE ) ){
@@ -440,12 +442,12 @@ class Logic_Job extends Logic
 		foreach( $this->getDiscontinuedJobRuns() as $jobRun ){
 			$messageData	= $reason ? ['reason' => $reason] : [];
 			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_TERMINATED, $messageData );
-			$list[(int) $jobRun->jobRunId]	= (object) array(
+			$list[(int) $jobRun->jobRunId]	= (object) [
 				'jobRunId'			=> (int) $jobRun->jobRunId,
 				'jobDefinitionId'	=> (int) $jobRun->jobDefinitionId,
 				'jobScheduleId'		=> (int) $jobRun->jobScheduleId,
 				'jobDefinition'		=> $this->getDefinition( (int) $jobRun->jobDefinitionId ),
-			);
+			];
 		}
 		return $list;
 	}
@@ -455,15 +457,19 @@ class Logic_Job extends Logic
 		$jobRunId	= $jobRunOrJobRunId;
 		if( is_object( $jobRunOrJobRunId ) )
 			$jobRunId	= $jobRunOrJobRunId->jobRunId;
-		$this->modelRun->edit( $jobRunId, array(
+		$this->modelRun->edit( $jobRunId, [
 			'processId'		=> getmypid(),
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		return $this->modelRun->get( $jobRunId );
 	}*/
 
 	/*  --  PROTECTED  --  */
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelDefinition	= new Model_Job_Definition( $this->env );
@@ -474,15 +480,15 @@ class Logic_Job extends Logic
 
 	protected function abortPreparedJobRuns( $jobDefinitionId ): array
 	{
-		$preparedJobs	= $this->modelRun->getAllByIndices( array(
+		$preparedJobs	= $this->modelRun->getAllByIndices( [
 			'jobDefinitionId'	=> $jobDefinitionId,
 			'status'		=> Model_Job_Run::STATUS_PREPARED
-		) );
+		] );
 		foreach( $preparedJobs as $preparedJob ){
-			$this->modelRun->edit( $preparedJob->jobRunId, array(
+			$this->modelRun->edit( $preparedJob->jobRunId, [
 				'status'		=> Model_Job_Run::STATUS_ABORTED,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 		}
 		return $preparedJobs;
 	}
@@ -490,14 +496,14 @@ class Logic_Job extends Logic
 	protected function getScheduledJobsToPrepare( $jobDefinitionId = NULL ): array
 	{
 		$jobSchedules	= [];
-		$indices		= array(
+		$indices		= [
 			'status'	=> Model_Job_Schedule::STATUS_ENABLED,
-			'type'		=> array(
+			'type'		=> [
 				Model_Job_Schedule::TYPE_CRON,
 				Model_Job_Schedule::TYPE_INTERVAL,
 				Model_Job_Schedule::TYPE_DATETIME,
-			),
-		);
+			],
+		];
 		if( $jobDefinitionId )
 			$indices['jobDefinitionId']	= $jobDefinitionId;
 		foreach( $this->modelSchedule->getAllByIndices( $indices ) as $jobSchedule ){
@@ -578,7 +584,7 @@ class Logic_Job extends Logic
 			$job	= $this->modelDefinition->get( $scheduledJob->jobDefinitionId );
 			if( $this->isPreparableJob( $job ) ){
 				$this->abortPreparedJobRuns( $scheduledJob->jobDefinitionId );
-				$jobRunId	= $this->modelRun->add( array(
+				$jobRunId	= $this->modelRun->add( [
 					'jobScheduleId'		=> $scheduledJob->jobScheduleId,
 					'jobDefinitionId'	=> $scheduledJob->jobDefinitionId,
 					'type'				=> Model_Job_Run::TYPE_SCHEDULED,
@@ -591,7 +597,7 @@ class Logic_Job extends Logic
 //					'message'			=> json_encode( [] ),
 					'createdAt'			=> time(),
 					'modifiedAt'		=> time(),
-				) );
+				] );
 				$list[$jobRunId]	= $this->modelRun->get( $jobRunId );
 			}
 		}
@@ -622,38 +628,34 @@ class Logic_Job extends Logic
 			case Model_Job_Run::REPORT_MODE_SUCCESS:
 				return $status === Model_Job_Run::STATUS_SUCCESS;
 /*			case Model_Job_Run::REPORT_MODE_NEGATIVE:
-				return in_array( $status, array(
+				return in_array( $status, [
 					Model_Job_Run::STATUS_TERMINATED,
 					Model_Job_Run::STATUS_FAILED,
 					Model_Job_Run::STATUS_ABORTED,
-				) );*/
+				] );*/
 /*			case Model_Job_Run::REPORT_MODE_ERROR:			//  @todo to implement
-				return in_array( $status, array(
-				) );*/
+				return in_array( $status, [
+				] );*/
 /*			case Model_Job_Run::REPORT_MODE_POSITIVE:
-				return in_array( $status, array(
+				return in_array( $status, [
 					Model_Job_Run::STATUS_DONE,
 					Model_Job_Run::STATUS_SUCCESS,
-				) );*/
+				] );*/
 			case Model_Job_Run::REPORT_MODE_CHANGE:
-				$previousRunStatus	= $this->modelRun->getByIndices(
-					array(
+				$previousRunStatus	= $this->modelRun->getByIndices( [
 						'jobRunId'			=> '< '.$jobRunId,
 						'jobDefinitionId'	=> $jobRun->jobDefinitionId,
-					),
-					array( 'jobRunId' => 'DESC' ),
-					array( 'status' )
-				);
+					], ['jobRunId' => 'DESC'], ['status'] );
 				if( $previousRunStatus ){
-					$statusMap		= array(
-						'positive'	=> array(
+					$statusMap		= [
+						'positive'	=> [
 							Model_Job_Run::STATUS_DONE,
 							Model_Job_Run::STATUS_SUCCESS,
-						),
-						'negative'	=> array(
+						],
+						'negative'	=> [
 							Model_Job_Run::STATUS_FAILED,
-						)
-					);
+						]
+					];
 					$nowIsNeg	= in_array( $status, $statusMap['negative'] );
 					$nowIsPos	= in_array( $status, $statusMap['positive'] );
 					$prevIsNeg	= in_array( $previousRunStatus, $statusMap['negative'] );
@@ -675,7 +677,7 @@ class Logic_Job extends Logic
 			return 0;
 
 		$receivers	= $jobRun->reportReceivers;
-		$parser		= new \CeusMedia\Mail\Address\Collection\Parser();
+		$parser		= new AddressCollectionParser();
 		$receivers	= $parser->parse( $receivers );
 		if( !count( $receivers ) )
 			return 0;
@@ -683,20 +685,20 @@ class Logic_Job extends Logic
 
 		$jobDefinition	= $this->modelDefinition->get( $jobRun->jobDefinitionId );
 		$results		= (array) json_decode( $jobRun->message ?: '[]' );
-		$mailData		= array(
-			'arguments'		=> (object) array(
+		$mailData		= [
+			'arguments'		=> (object) [
 				'commands'		=> $commands,
 				'parameters'	=> $parameters
-			),
+			],
 			'definition'	=> $jobDefinition,
 			'run'			=> $jobRun,
-			'result'		=> (object) array_merge( array(
+			'result'		=> (object) array_merge( [
 				'status'	=> $jobRun->status,
 				'code'		=> $resultCode,													//  ... containing the method call return code
 				'type'		=> 'empty',														//  ... and save message of type "data"
 				'data'		=> NULL,														//  ... and results collected by the method call
-			), $results ),
-		);
+			], $results ),
+		];
 
 		switch( (int) $jobRun->reportChannel ){
 			case Model_Job_Run::REPORT_CHANNEL_MAIL:
@@ -715,13 +717,13 @@ class Logic_Job extends Logic
 		$language	= $this->env->getLanguage()->getLanguage();
 		$mail		= new Mail_Job_Report( $this->env, $mailData );
 		foreach( $receivers as $address ){
-			$receiver	= (object) array( 'email' => $address->getAddress() );
+			$receiver	= (object) ['email' => $address->getAddress()];
 			$logicMail->handleMail( $mail, $receiver, $language );
 		}
 	}
 
 	protected function sendReportViaXMPP( $jobRunId, $mailData, $receivers )
 	{
-		throw new \RuntimeException( 'No implemented, yet' );
+		throw new RuntimeException( 'No implemented, yet' );
 	}
 }

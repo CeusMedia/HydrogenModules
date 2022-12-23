@@ -1,11 +1,21 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
+use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Payment_Mangopay_Event extends Controller
 {
-	public static $verbose	= TRUE;
+	public static bool $verbose	= TRUE;
+
+	protected HttpRequest $request;
+	protected Logic_Payment_Mangopay $mangopay;
+	protected Model_Mangopay_Event $model;
+	protected ?MessengerResource $messenger;
+	protected Dictionary $moduleConfig;
 
 	public function close( $eventId )
 	{
@@ -13,7 +23,7 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 		$this->model->edit( $eventId, array(
 			'status'	=> Model_Mangopay_Event::STATUS_CLOSED,
 			'output'	=> $event->output.'<br/><strong>CLOSED MANUALLY</strong>',
-			'handledAt'	=> time,
+			'handledAt'	=> time(),
 		), FALSE );
 		$this->restart( 'view/'.$eventId.'?page='.$this->request->get( 'page' ), TRUE );
 	}
@@ -76,7 +86,7 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 			$response->setStatus( 500 );
 			$response->setBody( '<h1>Internal Server Error</h1><p>An error occured. Event has not been handled.</p><p>'.$e->getMessage().'.</p>' );
 		}
-		Net_HTTP_Response_Sender::sendResponse( $response );
+		HttpResponseSender::sendResponse( $response );
 		exit;
 	}
 
@@ -94,6 +104,12 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 		$this->restart( 'view/'.$eventId.'?page='.$this->request->get( 'page' ), TRUE );
 	}
 
+	/**
+	 *	@param		$type
+	 *	@param		$data
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function sendMail( $type, $data )
 	{
 		if( !$this->moduleConfig->get( 'mail.hook' ) )
@@ -117,6 +133,10 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 		$this->addData( 'page', $this->request->get( 'page' ) );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -132,7 +152,7 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 		if( $event )
 			return $event;
 		$this->messenger->noteError( 'Invalid event ID.' );
-		$this->restart( strintf( $failUrl, $eventId ), TRUE );
+		$this->restart( sprintf( $failUrl, $eventId ), TRUE );
 	}
 
 	protected function verify( $eventType, $resourceId )
@@ -147,13 +167,13 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 		$entity	= $this->mangopay->getEventResource( $eventType, $resourceId );
 		if( $entity && $entity->Status === $status )
 			return TRUE;
-		$this->sendMail( 'EventUnverfied', array(
+		$this->sendMail( 'EventUnverified', [
 			'entity'	=> $entity,
-			'event'		=> (object) array(
+			'event'		=> (object) [
 				'eventType'		=> $eventType,
 				'resourceId'	=> $resourceId,
-			),
-		) );
+			],
+		] );
 		return FALSE;
 	}
 }

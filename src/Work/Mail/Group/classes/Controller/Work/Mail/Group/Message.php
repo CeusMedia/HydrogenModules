@@ -1,19 +1,23 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+use CeusMedia\Mail\Message\Parser as MailParser;
 
 class Controller_Work_Mail_Group_Message extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $messenger;
-	protected $logicGroup;
-	protected $logicMessage;
-	protected $modelMessage;
-	protected $filterPrefix;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected Logic_Mail_Group $logicGroup;
+	protected Logic_Mail_Group_Message $logicMessage;
+	protected Model_Mail_Group_Message $modelMessage;
+	protected string $filterPrefix;
 
 	public function checkId( $messageId )
 	{
@@ -51,7 +55,7 @@ class Controller_Work_Mail_Group_Message extends Controller
 		}
 		$response	= $this->env->getResponse();
 		$response->setBody( $content );
-		Net_HTTP_Response_Sender::sendResponse( $response, NULL, TRUE, TRUE );
+		HttpResponseSender::sendResponse( $response, NULL, TRUE, TRUE );
 	}
 
 	public function index( $page = 0 )
@@ -75,16 +79,16 @@ class Controller_Work_Mail_Group_Message extends Controller
 		$this->addData( 'pages', ceil( $total / $limit ) );
 	}
 
-	public function setStatus( $serverId, $status )
+/*	public function setStatus( $messageId, $status )
 	{
-		$server	= $this->checkId( $serverId );
+		$server	= $this->checkId( $messageId );
 		if( $server ){
-			$this->modelServer->edit( $serverId, array(
+			$this->modelMessage->edit( $messageId, [
 				'status'		=> (int) $status,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 		}
-	}
+	}*/
 
 /*	public function remove( $messageId ){
 		$message	= $this->checkId( $messageId );
@@ -99,7 +103,7 @@ class Controller_Work_Mail_Group_Message extends Controller
 		$message		= $this->checkId( $messageId );
 		if( $message->status == Model_Mail_Group_Message::STATUS_NEW ){
 			$rawMail	= bzdecompress(substr($message->raw,6));
-			$parser		= new \CeusMedia\Mail\Message\Parser();
+			$parser		= new MailParser();
 			$message->object		= 'BZIP2:'.bzcompress( serialize( $parser->parse( $rawMail ) ) );
 			$this->modelMessage->edit( $messageId, ['object' => $message->object], FALSE );
 		}

@@ -1,13 +1,22 @@
 <?php
 
+use CeusMedia\Database\PDO\Connection as DatabasePdoConnection;
+use CeusMedia\Database\PDO\Table\Writer as TableWriter;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Model;
 
 class Resource_Database_Undo
 {
-	protected $userId	= 0;
+	protected Environment $env;
+	protected Model_Undo_Log $storage;
+	protected ?string $userId	= NULL;
 
-	public function __construct( Environment $env, $userId = 0 )
+	/**
+	 *	@param		Environment		$env
+	 *	@param		string|NULL		$userId
+	 *	@throws		ReflectionException
+	 */
+	public function __construct( Environment $env, ?string $userId = NULL )
 	{
 		$this->env		= $env;
 		$this->storage	= new Model_Undo_Log( $env );
@@ -15,7 +24,7 @@ class Resource_Database_Undo
 			$this->setUserId( $userId );
 	}
 
-	public function getAllChanges( $tableName = NULL, $maxAge = 0 )
+	public function getAllChanges( ?string $tableName = NULL, $maxAge = 0 ): array
 	{
 		$conditions	= ['userId'	=> $this->userId];
 		if( $tableName )
@@ -27,7 +36,7 @@ class Resource_Database_Undo
 
 	public function getLatestChangeOfModel( Model $model, $maxAge = 0 )
 	{
-		return $this->getLatestChangeOfTable( $model->getTableName(), $maxAge );
+		return $this->getLatestChangeOfTable( $model->getName(), $maxAge );
 	}
 
 	public function getLatestChangeOfTable( $tableName, $maxAge = 0 )
@@ -48,16 +57,17 @@ class Resource_Database_Undo
 
 	}
 
-	protected function note( Model $tableWriter, $conditions, $mode )
+	protected function note( Model $tableWriter, $conditions, $mode ): bool
 	{
-		$data	= array(
+		$data	= [
 			'userId'		=> $this->userId,
 			'mode'			=> $mode,
 			'tableName'		=> $tableWriter->getName(),
 			'primaryKey'	=> $tableWriter->getPrimaryKey(),
 			'values'		=> [],
 			'timestamp'		=> time(),
-		);
+		];
+		$cond	= [];
 		foreach( $conditions as $key => $value )
 			$cond[]	= $key."='".$value."'";
 		$conditions	= join( " AND ", $cond );
@@ -71,33 +81,34 @@ class Resource_Database_Undo
 		return TRUE;
 	}
 
-	public function noteDelete( Model $tableWriter, $conditions )
+	public function noteDelete( Model $tableWriter, $conditions ): bool
 	{
 		return $this->note( $tableWriter, $conditions, Model_Undo_Log::MODE_DELETE );
 	}
 
-	public function noteInsert( Model $tableWriter, $id )
+	public function noteInsert( Model $tableWriter, $id ): bool
 	{
 		$primaryKey	= $tableWriter->getPrimaryKey();
 		$conditions	= [$primaryKey => $id];
 		return $this->note( $tableWriter, $conditions, Model_Undo_Log::MODE_INSERT );
 	}
 
-	public function noteUpdate( Model $tableWriter, $conditions )
+	public function noteUpdate( Model $tableWriter, $conditions ): bool
 	{
 		return $this->note( $tableWriter, $conditions, Model_Undo_Log::MODE_UPDATE );
 	}
 
-	public function isLatestChangeOnTable( $changeId, $tableName )
+	public function isLatestChangeOnTable( $changeId, $tableName ): bool
 	{
 		$change	= $this->getLatestChangeOfTable( $tableName );
 		return $change->changeId == $changeId;
 	}
 
 	/**
+	 *	@param		string		$changeId
 	 *	@return		void
 	 */
-	public function revert( $changeId )
+	public function revert( string $changeId ): void
 	{
 		$indices	= ['changeId' => $changeId, 'userId' => $this->userId];
 		$action	= $this->storage->getByIndices( $indices );
@@ -105,17 +116,19 @@ class Resource_Database_Undo
 			throw new InvalidArgumentException( 'Invalid change ID' );
 		if( !$this->isLatestChangeOnTable( $changeId, $action->tableName ) )
 			throw new RuntimeException( 'Given change ID is not the lastest change' );
+
+		/** @var DatabasePdoConnection $dbc */;
+		$dbc		= $this->env->getDatabase();
 		try{
 			$values		= json_decode( $action->values, TRUE );
 			if( !$values )
 				throw new Exception( 'No values stored for change' );
 
-			$dbc		= $this->env->getDatabase();
 			$tableName	= $action->tableName;
 			$primaryKey	= $action->primaryKey;
 			$columns	= array_keys( $values[0] );
 			$dbc->beginTransaction();
-			$table		= new DB_PDO_TableWriter( $dbc, $tableName, $columns, $primaryKey );
+			$table		= new TableWriter( $dbc, $tableName, $columns, $primaryKey );
 			switch( $action->mode ){
 				case Model_Undo_Log::MODE_DELETE:
 					foreach( $values as $data )
@@ -144,8 +157,9 @@ class Resource_Database_Undo
 		}
 	}
 
-	public function setUserId( $userId )
+	public function setUserId( ?string $userId ): self
 	{
-		$this->userId	= (int) $userId;
+		$this->userId	= $userId;
+		return $this;
 	}
 }

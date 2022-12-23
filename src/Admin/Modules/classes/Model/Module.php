@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\FS\File\RecursiveNameFilter as RecursiveFileFinder;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
+use CeusMedia\Common\XML\ElementReader as XmlElementReader;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Module
@@ -148,7 +149,7 @@ class Model_Module
 
 	protected function readXml( string $fileName )
 	{
-		$xml	= @XML_ElementReader::readFile( $fileName );
+		$xml	= XmlElementReader::readFile( $fileName );
 		$obj	= new stdClass();
 		$obj->title				= (string) $xml->title;
 		$obj->description		= (string) $xml->description;

@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Post as HttpPost;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -30,23 +31,23 @@ class Logic_Payment_PayPal
 		$payment	= $this->getPayment( $paymentId );
 		if( !$payment->payerId )
 			throw new RuntimeException( 'Payer not logged in' );
-		$data		= array(
+		$data		= [
 			'METHOD'		=> 'DoExpressCheckoutPayment',
 			'TOKEN'			=> $payment->token,
 			'AMT'			=> $payment->amount,
 			'PAYERID'		=> $payment->payerId,
 			'CURRENCYCODE'	=> 'EUR',
 			'PAYMENTACTION'	=> 'Sale',
-		);
+		];
 		try{
 			$response	= (object) $this->request( $data );
 			if( !( $response->ACK === "Success" ) ){
 				$this->latestResponse	= $response;
 				throw new RuntimeException( 'Transaction failed' );
 			}
-			$data		= array(
+			$data		= [
 				'status'	=> 2,
-			);
+			];
 			$this->model->edit( $paymentId, $data );
 			return TRUE;
 		}
@@ -96,29 +97,29 @@ class Logic_Payment_PayPal
 	public function requestPayerDetails( $paymentId )
 	{
 		$payment	= $this->getPayment( $paymentId );
-		$data	= array(
+		$data	= [
 			'METHOD'	=> 'getExpressCheckoutDetails',
 			'TOKEN'		=> $payment->token
-		);
+		];
 		$response	= (object) $this->request( $data );
 		if( !( $response->ACK === "Success" && !empty( $response->PAYERID ) ) ){
 			$this->latestResponse	= $response;
 			throw new RuntimeException( 'Requesting details failed' );
 		}
-		$data		= array(
+		$data		= [
 			'payerId'	=> $response->PAYERID,
 			'status'	=> 1,
 			'email'		=> $response->EMAIL,
 			'firstname'	=> $response->FIRSTNAME,
 			'lastname'	=> $response->LASTNAME,
-		);
+		];
 		if( $this->config->get( 'option.shipping' ) !== "none" ){
-			$data		+= array(
+			$data		+= [
 				'country'	=> $response->SHIPTOCOUNTRYCODE,
 				'street'	=> $response->SHIPTOSTREET,
 				'city'		=> $response->SHIPTOCITY,
 				'postcode'	=> $response->SHIPTOZIP,
-			);
+			];
 		}
 		$this->model->edit( $paymentId, $data );
 	}
@@ -144,21 +145,21 @@ class Logic_Payment_PayPal
 		$customer	= $order->customer;
 		$positions	= $order->positions;
 
-$handling	= 0;
-$insurance	= 0;
+		$handling	= 0;
+		$insurance	= 0;
 
 		$shipping	= 0;
 		if( isset( $order->shipping ) )
 			$shipping	= $order->shipping->priceTaxed;
 
-		$data	= array(
+		$data	= [
 			'SUBJECT'		=> $subject,
 			'METHOD'		=> "SetExpressCheckout",
 			'LOCALECODE'	=> 'de_DE',
 			'RETURNURL'		=> $this->env->url."shop/payment/paypal/authorized",
 			'CANCELURL'		=> $this->env->url."shop/payment/paypal/cancelled",
 			'ALLOWNOTE'		=> 1,
-		);
+		];
 		if( $this->config->get( 'option.shipping' ) === "none" )
 			$data['NOSHIPPING']	= 1;
 		$headerOptions	= $this->config->getAll( '', TRUE );
@@ -215,12 +216,12 @@ $insurance	= 0;
 				throw new RuntimeException( 'Requesting token failed' );
 			}
 /*			$modelAddress	= new Model_Address( $this->env );
-			$address		= $modelAddress->get( array(
+			$address		= $modelAddress->get( [
 				'relationType'	=> 'user',
 				'relationId'	=> $this->localUserId,
 				'type'			=> Model_Address::TYPE_BILLING,
-			) );*/
-			$data	= array(
+			] );*/
+			$data	= [
 				'orderId'	=> $orderId,
 				'token'		=> $response->TOKEN,
 				'status'	=> 0,
@@ -233,7 +234,7 @@ $insurance	= 0;
 				'city'		=> $customer->city,
 				'street'	=> $customer->street.( $customer->number ? ' '.$customer->number : '' ),
 				'timestamp'	=> time(),
-			);
+			];
 			return $this->model->add( $data );
 		}
 		catch( Exception $e ){
@@ -262,15 +263,15 @@ $insurance	= 0;
 	{
 		if( !( $this->username && $this->password && $this->signature ) )
 			throw new RuntimeException( 'No merchant account set' );
-		$data	= array_merge( array(
+		$data	= array_merge( [
 			'USER'		=> $this->username,
 			'PWD'		=> $this->password,
 			'SIGNATURE'	=> $this->signature,
 			'VERSION'	=> $this->config->get( 'server.api.version' ),
-		), $data );
+		], $data );
 		$mode		= $this->config->get( 'mode' );
 		$server		= $this->config->get( 'server.api.'.$mode );
-		$response	= Net_HTTP_Post::sendData( $server, $data );
+		$response	= HttpPost::sendData( $server, $data );
 		$data		= [];
 		parse_str( $response, $data );
 		return $data;

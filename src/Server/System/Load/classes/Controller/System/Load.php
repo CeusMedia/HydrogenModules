@@ -5,6 +5,8 @@
  *	@copyright	Ceus Media 2015
  */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -14,8 +16,9 @@ use CeusMedia\HydrogenFramework\Controller;
  */
 class Controller_System_Load extends Controller
 {
-	protected $config;
+	protected Dictionary $config;
 	protected int $cpuCores;
+	protected Dictionary $moduleConfig;
 
 	/**
 	 *	Returns server loads of last 1, 5 and 15 minutes, absolute or relative to number of CPU cores.
@@ -31,8 +34,6 @@ class Controller_System_Load extends Controller
 		$loads	= sys_getloadavg();
 		$cores	= max( 1, floor( (float) $cores ) );
 		if( $relative ){
-			if( $cores < 1 )
-				throw new InvalidArgumentException( 'Number of core must be atleast 1' );
 			if( $cores > 1 ){
 				foreach( $loads as $nr => $load ){
 					$loads[$nr]	= $load / $cores;
@@ -45,17 +46,17 @@ class Controller_System_Load extends Controller
 	public function ajaxGetLoad( int $mode = 0, bool $relative = FALSE )
 	{
 		if( !$this->env->getRequest()->isAjax() )													//  not an AJAX request
-			throw new RuntimeException( 'Accessible using AJAX only' );								//  quit with exception
-		$load		= $this->getLoad( (int) $mode, (bool) $relative );								//  get system load
-		$this->respondJson( array( 'load' => $load, 'time' => time() ) );							//  send loads as JSON response
+			throw new RuntimeException( 'Accessible using AJAX only' );					//  quit with exception
+		$load		= $this->getLoad( $mode, $relative );											//  get system load
+		$this->respondAsJson( ['load' => $load, 'time' => time()] );								//  send loads as JSON response
 	}
 
 	public function ajaxGetLoads( bool $relative = FALSE )
 	{
 		if( !$this->env->getRequest()->isAjax() )													//  not an AJAX request
-			throw new RuntimeException( 'Accessible using AJAX only' );								//  quit with exception
-		$loads	= self::getLoads( (bool) $relative, $this->cpuCores );								//  get system loads
-		$this->respondAsJson( array( 'load' => $loads, 'time' => time() ) );						//  send loads as JSON response
+			throw new RuntimeException( 'Accessible using AJAX only' );					//  quit with exception
+		$loads	= self::getLoads( $relative, $this->cpuCores );								//  get system loads
+		$this->respondAsJson( ['load' => $loads, 'time' => time()] );								//  send loads as JSON response
 	}
 
 	public function ajaxRenderDashboardPanel( string $panelId )
@@ -77,7 +78,7 @@ class Controller_System_Load extends Controller
 	 */
 	public function ajaxRenderIndicator( int $mode = 0, bool $relative = FALSE )
 	{
-		$this->addData( 'load', $this->getLoad( (int) $mode, (boolean) $relative ) );				//  append selected system load to view
+		$this->addData( 'load', $this->getLoad( $mode, $relative ) );				//  append selected system load to view
 	}
 
 	protected function __onInit(): void
@@ -99,8 +100,8 @@ class Controller_System_Load extends Controller
 	 */
 	protected function getLoad( int $mode = 0, bool $relative = FALSE ): float
 	{
-		$mode	= max( 0, min( 2, (int) $mode ) );													//  make sure mode is of integer within {0, 1, 2}
-		$loads	= self::getLoads( (bool) $relative, $this->cpuCores );								//  get server loads of last 1, 5 and 15 minutes
+		$mode	= max( 0, min( 2, $mode ) );											//  make sure mode is of integer within {0, 1, 2}
+		$loads	= self::getLoads( $relative, $this->cpuCores );										//  get server loads of last 1, 5 and 15 minutes
 		return $loads[$mode];																		//  return one selected load value as float
 	}
 
@@ -111,16 +112,16 @@ class Controller_System_Load extends Controller
 	 *	@param		integer		$status		HTTP status code to set, default: 200
 	 *	@param		array		$headers	Map of additional response headers
 	 *	@return		void
-	 *	@todo		kriss: move this method to Hydrogen controller
+	 *	@todo		move this method to Hydrogen controller
 	 */
-	protected function respondAsJson( $data, int $status = 200, array $headers = [] )
+	protected function respondAsJson( $data, int $status = 200, array $headers = [] ): void
 	{
 		$response	= $this->env->getResponse();													//  prepare request response
-		$response->addHeaderPair( 'Content-type', 'application/json' );								//  set response MIME type fo JSON
+		$response->addHeaderPair( 'Content-type', 'application/json' );				//  set response MIME type fo JSON
 		foreach( $headers as $key => $value )														//  iterate additional headers
 			$response->addHeaderPair( $key, $value );												//  add additional header to response
 		$response->setBody( json_encode( $data ) );													//  add JSON encoded data to response
-		Net_HTTP_Response_Sender::sendResponse( $response, NULL, TRUE );							//  send response
+		HttpResponseSender::sendResponse( $response );												//  send response
 		exit;																						//  and quit execution
 	}
 }

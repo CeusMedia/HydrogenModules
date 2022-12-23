@@ -1,8 +1,17 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env  */
+/** @var View $view */
+/** @var array $words */
+
 $w			= (object) $words['index'];
 
 /* TO BE USED LATER FOR STATUS INFO
-$indicator	= new UI_HTML_Indicator();
+$indicator	= new \CeusMedia\Common\UI\HTML\Indicator();
 $indicator->setIndicatorClass( 'indicator-small' );
 $ind1		= $indicator->build( 75, 100 );
 */
@@ -21,37 +30,18 @@ $tabs	= View_Manage_My_User::renderTabs( $env );
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/my/user/' ) );
 
-return $textTop.$tabs.
-HTML::DivClass( 'row-fluid', array(
-	HTML::DivClass( 'span7', array(
+return $textTop.$tabs.HtmlTag::create( 'div', [
+	HtmlTag::create( 'div', [
 //		$panelAccount,
 		$panelEdit,
 		$panelPassword,
 		$panelEmail,
 		$panelUsername,
 		$panelRemove,
-	) ),
-	HTML::DivClass( 'span5', array(
+	], ['class' => 'span7'] ),
+	HtmlTag::create( 'div', [
 		$panelInfo,
 		$panelRelations,
 		$panelPasswords,
-	) ),
-) ).$textBottom;
-
-return $textTop.$tabs.
-HTML::DivClass( 'row-fluid', array(
-	HTML::DivClass( 'span8', $panelAccount ),
-	HTML::DivClass( 'span4', $panelInfo ),
-) ).
-HTML::DivClass( 'row-fluid', array(
-	HTML::DivClass( 'span8', $panelEdit ),
-) ).
-HTML::DivClass( 'row-fluid', array(
-	HTML::DivClass( 'span3', $panelPassword ),
-	HTML::DivClass( 'span5', $panelPasswords ),
-) ).
-HTML::DivClass( 'row-fluid', array(
-	HTML::DivClass( 'span8', $panelEmail ),
-	HTML::DivClass( 'span4', $panelUsername ),
-) ).$textBottom;
-?>
+	], ['class' => 'span5'] ),
+], ['class' => 'row-fluid'] ).$textBottom;

@@ -65,7 +65,7 @@ $baseUrl	= $env->url;
 //	$baseUrl	= Logic_Frontend::getInstance( $env )->getUri();
 $page->setBaseHref( $baseUrl );
 /*
-$page	= new UI_HTML_PageFrame();
+$page	= new \CeusMedia\Common\UI\HTML\PageFrame();
 foreach( explode( ",", $template->styles ) as $style )
 	$page->addStylesheet( trim( $style ) );*/
 

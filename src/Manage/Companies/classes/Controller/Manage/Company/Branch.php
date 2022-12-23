@@ -153,7 +153,7 @@ class Controller_Manage_Company_Branch extends Controller
 				UPLOAD_ERR_CANT_WRITE	=> $words['upload-errors']['UPLOAD_ERR_CANT_WRITE'],
 				UPLOAD_ERR_EXTENSION	=> $words['upload-errors']['UPLOAD_ERR_EXTENSION'],
 			);
-			$handler		= new Net_HTTP_UploadErrorHandler();
+			$handler		= new \CeusMedia\Common\Net\HTTP\UploadErrorHandler();
 			$handler->setMessages( $messages );
 			$handler->handleErrorFromUpload( $image );
 		}

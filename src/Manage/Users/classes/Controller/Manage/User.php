@@ -7,6 +7,7 @@
  *	@copyright		2010-2012 Ceus Media
  */
 
+use CeusMedia\Common\Alg\Validation\Predicates;
 use CeusMedia\HydrogenFramework\Controller;
 
 /**
@@ -70,7 +71,7 @@ class Controller_Manage_User extends Controller
 			else if( $modelUser->countByIndex( 'username', $username ) )							//  username is already used
 				$messenger->noteError( $words->msgUsernameExisting, $username );
 			else if( $nameRegExp )
-				if( !Alg_Validation_Predicates::isPreg( $username, $nameRegExp ) )
+				if( !Predicates::isPreg( $username, $nameRegExp ) )
 					$messenger->noteError( $words->msgUsernameInvalid, $username, $nameRegExp );
 			if( empty( $password ) )
 				$messenger->noteError( $words->msgNoPassword );

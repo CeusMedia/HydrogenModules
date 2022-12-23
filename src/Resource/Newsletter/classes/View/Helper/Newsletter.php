@@ -1,5 +1,7 @@
 <?php
 
+use CeusMedia\Common\FS\File\CSS\Compressor as CssCompressor;
+use CeusMedia\Common\Net\Reader as NetReader;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -9,13 +11,13 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class View_Helper_Newsletter
 {
-	protected $env;
+	protected Environment $env;
+	protected string $cachePath	= "cache/";
+	protected bool $preview		= FALSE;
+	protected Logic_Newsletter $logic;
+	protected object $template;
 
-	protected $cachePath	= "cache/";
-
-	protected $preview		= FALSE;
-
-	public function __construct( Environment $env, $templateId, $preview = FALSE )
+	public function __construct( Environment $env, $templateId, bool $preview = FALSE )
 	{
 		$this->env		= $env;
 		$this->preview	= $preview;
@@ -25,7 +27,7 @@ class View_Helper_Newsletter
 		$this->template->styles		= $this->logic->getTemplateAttributeList( $templateId, 'styles' );
 	}
 
-	public function generateMail( $readerLetterId )
+	public function generateMail( $readerLetterId ): Mail_Newsletter
 	{
 		$this->logic->checkReaderLetterId( $readerLetterId );
 		$readerLetter	= $this->logic->getReaderLetter( $readerLetterId );
@@ -62,7 +64,7 @@ class View_Helper_Newsletter
 			$urlTrack	= 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';			//  just embed an empty image
 
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );
-		$data		= array(
+		return [
 			'baseUrl'			=> $baseUrl,
 			'templateId'		=> $newsletter->newsletterTemplateId,
 			'newsletterId'		=> $newsletter->newsletterId,
@@ -79,8 +81,7 @@ class View_Helper_Newsletter
 			'linkConfirm'		=> $urlConfirm,
 			'linkUnregister'	=> $urlOptOut,
 			'linkView'			=> $urlView,
-		);
-		return $data;
+		];
 	}
 
 	/**
@@ -108,7 +109,7 @@ class View_Helper_Newsletter
 			$urlTrack	= 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';			//  just embed an empty image
 
 		$newsletter		= $this->logic->getNewsletter( $letter->newsletterId );
-		$data		= array(
+		return [
 			'baseUrl'			=> $baseUrl,
 			'templateId'		=> $newsletter->newsletterTemplateId,
 			'newsletterId'		=> $newsletter->newsletterId,
@@ -124,15 +125,14 @@ class View_Helper_Newsletter
 			'tracking'			=> HtmlTag::create( 'img', NULL, ['src' => $urlTrack] ),
 			'linkUnregister'	=> $urlOptOut,
 			'linkView'			=> $urlView,
-		);
-		return $data;
+		];
 	}
 
 	/**
-	 *	@param		$mode		Mail format: 0 - Plain, 1 - HTML
+	 *	@param		array		$matches
 	 */
 
-	protected function callbackReplacePlainColumns( $matches )
+	protected function callbackReplacePlainColumns( array $matches )
 	{
 		$columns	= $matches[1];
 		$content	= $matches[2];
@@ -144,7 +144,7 @@ class View_Helper_Newsletter
 		die;
 	}
 
-	protected function realizeColumns( $content, $mode = 0 )
+	protected function realizeColumns( string $content, int $mode = 0 ): string
 	{
 		switch( $mode ){
 			case 0:
@@ -166,7 +166,7 @@ class View_Helper_Newsletter
 	/**
 	 *	@todo  			check if deprecated
 	 */
-	public function renderNewsletterPlain( $newsletterId, $readerId = NULL, $data = [] )
+	public function renderNewsletterPlain( $newsletterId, $readerId = NULL, array $data = [] ): string
 	{
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );
 		$helper		= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId );
@@ -185,7 +185,7 @@ class View_Helper_Newsletter
 	/**
 	 *	@todo  			check if deprecated
 	 */
-	public function renderNewsletterHtml( $newsletterId, $readerId = NULL, $data = [], $strict = TRUE )
+	public function renderNewsletterHtml( $newsletterId, $readerId = NULL, array $data = [], bool $strict = TRUE ): string
 	{
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );
 		$helper		= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId, $this->preview );
@@ -204,7 +204,7 @@ class View_Helper_Newsletter
 	/**
 	 *	@todo  			check if deprecated
 	 */
-	public function renderPlain( $data )
+	public function renderPlain( array $data ): string
 	{
 		$content	= $this->template->plain;
 
@@ -221,7 +221,7 @@ class View_Helper_Newsletter
 		return $content;
 	}
 
-	public function renderHtml( $data, $strict = TRUE )
+	public function renderHtml( array $data, bool $strict = TRUE ): string
 	{
 		$page		= new HtmlPage();
 		$cache		= $this->env->getCache();
@@ -244,13 +244,13 @@ class View_Helper_Newsletter
 			if( $cache->has( $cacheKey ) )
 				$styles		.= $cache->get( $cacheKey );
 			else{
-				$content	= Net_Reader::readUrl( $url );
+				$content	= NetReader::readUrl( $url );
 				$cache->set( $cacheKey, $content );
 				$styles		.= $content;
 			}
 		}
 		$styles		.= trim( $this->template->style );
-		if( ( $styles = trim( File_CSS_Compressor::compressString( $styles ) ) ) )
+		if( ( $styles = trim( CssCompressor::compressString( $styles ) ) ) )
 			$page->addHead( HtmlTag::create( 'style', $styles ) );
 
 		if( $this->preview ){

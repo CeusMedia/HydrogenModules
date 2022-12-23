@@ -1,21 +1,25 @@
 <?php
 
-use CeusMedia\Common\FS\File\Cache as FileCache;
+use CeusMedia\HydrogenFramework\Environment;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 use CeusMedia\Common\Net\FTP\Client as FtpClient;
 
 class Logic_FTP
 {
-	/**	@var	FileCache	$cache */
-	protected $cache;
+	/**	@var	SimpleCacheInterface	$cache */
+	protected SimpleCacheInterface $cache;
 
-	/**	@var	FtpClient	$client */
-	protected $client;
+	/**	@var	FtpClient|NULL	$client */
+	protected ?FtpClient $client				= NULL;
 
-	protected $cachePrefix;
+	protected ?string $cachePrefix				= NULL;
 
-	public function __construct( string $pathCache = 'contents/cache/' )
+	protected Environment $env;
+
+	public function __construct( Environment $env )
 	{
-		$this->cache	= new FileCache( $pathCache );
+		$this->env		= $env;
+		$this->cache	= $this->env->getCache();
 	}
 
 	public function connect( string $host, $port, string $username, string $password, string $path )
@@ -46,9 +50,9 @@ class Logic_FTP
 
 	/**
 	 *	@todo		remove after testing
-	 *	@return		Net_FTP_Client
+	 *	@return		FtpClient
 	 */
-	public function getClient()
+	public function getClient(): FtpClient
 	{
 		return $this->client;
 	}

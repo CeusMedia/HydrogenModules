@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Alg\Validation\Predicates;
 use CeusMedia\Common\FS\Folder\Lister as FolderLister;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -11,7 +12,7 @@ class Controller_Tool_Index extends Controller
 	*	@param		string		$predicateClassName		Class Name of Predicate Class
 	*	@return		void
 	*/
-	public function index( string $predicateClassName = "Alg_Validation_Predicates" )
+	public function index( string $predicateClassName = Predicates::class )
 	{
 		$labels		= parse_ini_file( "config.ini", TRUE );
 		$index		= FolderLister::getMixedList( "./tools/" );
