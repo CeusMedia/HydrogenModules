@@ -1,26 +1,27 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Billing_Bill extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $filterPrefix;
-	protected $logic;
-	protected $modelBill;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected string $filterPrefix;
+	protected Logic_Billing $logic;
+	protected Model_Billing_Bill $modelBill;
 
 	public function add()
 	{
 		if( $this->request->has( 'save' ) ){
-			$billId		= $this->modelBill->add( array(
+			$billId		= $this->modelBill->add( [
 				'number'		=> $this->request->get( 'number' ),
 				'title'			=> $this->request->get( 'title' ),
 				'taxRate'		=> $this->request->get( 'taxRate' ),
 				'amountNetto'	=> $this->request->get( 'amountNetto' ),
 				'amountTaxed'	=> $this->request->get( 'amountTaxed' ),
 				'dateBooked'	=> $this->request->get( 'dateBooked' ),
-		 	) );
+			] );
 			$this->restart( './work/billing/bill/breakdown/'.$billId );
 		}
 	}
@@ -77,7 +78,7 @@ class Controller_Work_Billing_Bill extends Controller
 	public function index( $page = 0 )
 	{
 		$filterStatus	= $this->session->get( $this->filterPrefix.'status' );
-		$filterYear	= $this->session->get( $this->filterPrefix.'year' );
+		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
 		$filterNumber	= $this->session->get( $this->filterPrefix.'number' );
 		$filterTitle	= $this->session->get( $this->filterPrefix.'title' );
@@ -114,10 +115,10 @@ class Controller_Work_Billing_Bill extends Controller
 
 	public function unbook( $billId )
 	{
-		$bill			= $this->logic->getBill( $billId );
+		$bill				= $this->logic->getBill( $billId );
 		$modelBillShare		= new Model_Billing_Bill_Share( $this->env );
 		$modelBillReserve	= new Model_Billing_Bill_Reserve( $this->env );
-		$billShares		= $this->logic->getBillShares( $billId );
+		$billShares			= $this->logic->getBillShares( $billId );
 		$billReserves		= $this->logic->getBillReserves( $billId );
 		foreach( $billReserves as $billReserve ){
 			$transactions	= $this->logic->getTransactions( array(
@@ -133,12 +134,12 @@ class Controller_Work_Billing_Bill extends Controller
 			$modelBillReserve->edit( $billReserve->billReserveId, ['status' => Model_Billing_Bill_Reserve::STATUS_NEW] );
 		}
 		foreach( $billShares as $billShare ){
-			$transactions	= $this->logic->getTransactions( array(
+			$transactions	= $this->logic->getTransactions( [
 				'fromType'	=> Model_Billing_Transaction::TYPE_BILL,
 				'fromId'	=> $billId,
 				'status'	=> Model_Billing_Transaction::STATUS_BOOKED,
 				'relation'	=> '%|billShare:'.$billShare->billShareId.'|%',
-			) );
+			] );
 			foreach( $transactions as $transaction )
 //				remark( 'Revert share transaction '.$transaction->transactionId );
 				$this->logic->revertTransaction( $transaction->transactionId );

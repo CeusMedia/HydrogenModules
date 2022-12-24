@@ -12,10 +12,10 @@ class Job_Billing extends Job_Abstract
 		$dayOfYear	= (int) date( 'z', $timestamp ) + 1;
 		$total		= 0;
 		if( $dayOfYear === 1 ){
-			$expenses	= $this->logic->getExpenses( array(
+			$expenses	= $this->logic->getExpenses( [
 				'status'	=> Model_Billing_Expense::STATUS_ACTIVE,
 				'frequency'	=> Model_Billing_Expense::FREQUENCY_YEARLY,
-			) );
+			] );
 			if( $expenses ){
 				$total	+= count( $expenses );
 				$this->out( "Booking ".count( $expenses )." yearly expenses..." );
@@ -24,10 +24,10 @@ class Job_Billing extends Job_Abstract
 			}
 		}
 		if( $dayOfMonth === 1 ){
-			$expenses	= $this->logic->getExpenses( array(
+			$expenses	= $this->logic->getExpenses( [
 				'status'	=> Model_Billing_Expense::STATUS_ACTIVE,
 				'frequency'	=> Model_Billing_Expense::FREQUENCY_MONTHLY,
-			) );
+			] );
 			if( $expenses ){
 				$total	+= count( $expenses );
 				$this->out( "Booking ".count( $expenses )." monthly expenses..." );
@@ -36,10 +36,10 @@ class Job_Billing extends Job_Abstract
 			}
 		}
 		if( $dayOfWeek === 1 ){
-			$expenses	= $this->logic->getExpenses( array(
+			$expenses	= $this->logic->getExpenses( [
 				'status'	=> Model_Billing_Expense::STATUS_ACTIVE,
 				'frequency'	=> Model_Billing_Expense::FREQUENCY_WEEKLY,
-			) );
+			] );
 			if( $expenses ){
 				$total	+= count( $expenses );
 				$this->out( "Booking ".count( $expenses )." weekly expenses..." );
@@ -47,10 +47,10 @@ class Job_Billing extends Job_Abstract
 					$this->_bookExpense( $expense );
 			}
 		}
-		$expenses	= $this->logic->getExpenses( array(
+		$expenses	= $this->logic->getExpenses( [
 			'status'	=> Model_Billing_Expense::STATUS_ACTIVE,
 			'frequency'	=> Model_Billing_Expense::FREQUENCY_DAILY
-		) );
+		] );
 		if( $expenses ){
 			$total	+= count( $expenses );
 			$this->out( "Booking ".count( $expenses )." daily expenses..." );

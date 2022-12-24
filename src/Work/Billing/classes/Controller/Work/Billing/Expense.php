@@ -1,27 +1,28 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Billing_Expense extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $logic;
-	protected $modelExpense;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected Logic_Billing $logic;
+	protected Model_Billing_Expense $modelExpense;
 
 	public function add()
 	{
 		if( $this->request->has( 'save' ) ){
-			$data	= array(
+			$data	= [
 				'status'		=> $this->request->get( 'status' ),
 				'title'			=> $this->request->get( 'title' ),
 				'amount'		=> $this->request->get( 'amount' ),
 				'frequency'		=> $this->request->get( 'frequency' ),
-			);
+			];
 			if( $this->request->get( 'fromType' ) == 2 )
 				$data['fromCorporationId']	= $this->request->get( 'fromCorporationId' );
 			else if( $this->request->get( 'fromType' ) == 1 )
-				$data['fromPersonId']	= $this->request->get( 'fromPersonId' );
+				$data['fromPersonId']		= $this->request->get( 'fromPersonId' );
 			if( $this->request->get( 'toType' ) == 2 )
 				$data['toCorporationId']	= $this->request->get( 'toCorporationId' );
 			else if( $this->request->get( 'toType' ) == 1 )
@@ -36,7 +37,7 @@ class Controller_Work_Billing_Expense extends Controller
 	public function edit( $expenseId )
 	{
 		if( $this->request->has( 'save' ) ){
-			$data	= array(
+			$data	= [
 				'title'				=> $this->request->get( 'title' ),
 				'amount'			=> $this->request->get( 'amount' ),
 				'frequency'			=> $this->request->get( 'frequency' ),
@@ -45,7 +46,7 @@ class Controller_Work_Billing_Expense extends Controller
 				'fromPersonId'		=> 0,
 				'toCorporationId'	=> 0,
 				'toPersonId'		=> 0,
-			);
+			];
 			if( $this->request->get( 'fromType' ) == 2 )
 				$data['fromCorporationId']	= $this->request->get( 'fromCorporationId' );
 			else if( $this->request->get( 'fromType' ) == 1 )

@@ -1,13 +1,14 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Billing_Reserve extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $logic;
-	protected $modelReserve;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected Logic_Billing $logic;
+	protected Model_Billing_Reserve $modelReserve;
 
 	public function add()
 	{

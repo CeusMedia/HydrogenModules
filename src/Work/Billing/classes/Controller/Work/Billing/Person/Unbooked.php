@@ -4,7 +4,7 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Billing_Person_Unbooked extends Controller
 {
-	protected $logic;
+	protected Logic_Billing $logic;
 
 	public function index( $personId )
 	{

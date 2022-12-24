@@ -1,13 +1,14 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Billing_Person_Reserve extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $filterPrefix;
-	protected $logic;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected string $filterPrefix;
+	protected Logic_Billing $logic;
 
 	public function filter( $personId, $reset = FALSE )
 	{

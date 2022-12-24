@@ -1,24 +1,25 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Billing_Corporation extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $logic;
-	protected $modelCorporation;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected Logic_Billing $logic;
+	protected Model_Billing_Corporation $modelCorporation;
 
 	public function add()
 	{
 		if( $this->request->has( 'save' ) ){
-			$corporationId		= $this->modelCorporation->add( array(
+			$corporationId		= $this->modelCorporation->add( [
 				'status'	=> Model_Billing_Corporation::STATUS_NEW,
 				'title'		=> $this->request->get( 'title' ),
 				'balance'	=> $this->request->get( 'balance' ),
 				'iban'		=> $this->request->get( 'iban' ),
 				'bic'		=> $this->request->get( 'bic' ),
-			) );
+			] );
 			$this->restart( 'edit/'.$corporationId, TRUE );
 		}
 	}
@@ -26,11 +27,11 @@ class Controller_Work_Billing_Corporation extends Controller
 	public function edit( $corporationId )
 	{
 		if( $this->request->has( 'save' ) ){
-			$this->modelCorporation->edit( $corporationId, array(
+			$this->modelCorporation->edit( $corporationId, [
 				'title'		=> $this->request->get( 'title' ),
 				'iban'		=> $this->request->get( 'iban' ),
 				'bic'		=> $this->request->get( 'bic' ),
-			) );
+			] );
 			$this->restart( 'edit/'.$corporationId, TRUE );
 		}
 		$this->addData( 'corporation', $this->modelCorporation->get( $corporationId ) );

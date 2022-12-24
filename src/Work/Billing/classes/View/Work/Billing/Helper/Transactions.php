@@ -16,12 +16,16 @@ class View_Work_Billing_Helper_Transactions
 		self::MODE_PERSON,
 	];
 
-	protected $buttons;
-	protected $heading			= 'Transaktionen';
-	protected $mode				= 0;
-	protected $transactions		= [];
-	protected $filterPrefix;
-	protected $filterUrl;
+	protected Environment $env;
+	protected Logic_Billing $logic;
+	protected Model_Billing_Bill $modelBill;
+	protected Model_Billing_Expense $modelExpense;
+	protected string $buttons			= '';
+	protected string $heading			= 'Transaktionen';
+	protected int $mode					= 0;
+	protected array $transactions		= [];
+	protected string $filterPrefix		= '';
+	protected string $filterUrl			= '';
 
 	public function __construct( Environment $env )
 	{
@@ -86,21 +90,21 @@ class View_Work_Billing_Helper_Transactions
 				switch( $transaction->fromType ){
 					case Model_Billing_Transaction::TYPE_PERSON:
 						$sender	= $this->logic->getPerson( $transaction->fromId );
-						$from	= HtmlTag::create( 'a', $iconPerson.'&nbsp;'.$sender->firstname.' '.$sender->surname, array(
+						$from	= HtmlTag::create( 'a', $iconPerson.'&nbsp;'.$sender->firstname.' '.$sender->surname, [
 							'href'	=> './work/billing/person/edit/'.$transaction->fromId,
-						) );
+						] );
 						break;
 					case Model_Billing_Transaction::TYPE_CORPORATION:
 						$sender	= $this->logic->getCorporation( $transaction->fromId );
-						$from	= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$sender->title, array(
+						$from	= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$sender->title, [
 							'href'	=> './work/billing/corporation/edit/'.$transaction->fromId,
-						) );
+						] );
 						break;
 					case Model_Billing_Transaction::TYPE_BILL:
 						$sender	= $this->logic->getBill( $transaction->fromId );
-						$from	= HtmlTag::create( 'a', $iconBill.'&nbsp;'.$sender->number, array(
+						$from	= HtmlTag::create( 'a', $iconBill.'&nbsp;'.$sender->number, [
 							'href'	=> './work/billing/edit/'.$transaction->fromId,
-						) );
+						] );
 						break;
 				}
 
@@ -108,15 +112,15 @@ class View_Work_Billing_Helper_Transactions
 				switch( $transaction->toType ){
 					case Model_Billing_Transaction::TYPE_PERSON:
 						$sender	= $this->logic->getPerson( $transaction->toId );
-						$to		= HtmlTag::create( 'a', $iconPerson.'&nbsp;'.$sender->firstname.' '.$sender->surname, array(
+						$to		= HtmlTag::create( 'a', $iconPerson.'&nbsp;'.$sender->firstname.' '.$sender->surname, [
 							'href'	=> './work/billing/person/edit/'.$transaction->toId,
-						) );
+						] );
 						break;
 					case Model_Billing_Transaction::TYPE_CORPORATION:
 						$sender	= $this->logic->getCorporation( $transaction->toId );
-						$to		= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$sender->title, array(
+						$to		= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$sender->title, [
 							'href'	=> './work/billing/corporation/edit/'.$transaction->toId,
-						) );
+						] );
 						break;
 				}
 
@@ -127,36 +131,36 @@ class View_Work_Billing_Helper_Transactions
 				$date	= date( 'd.m.', strtotime( $transaction->dateBooked ) ).$year;
 
 				$id		= HtmlTag::create( 'small', $transaction->transactionId );
-				$list[]	= HtmlTag::create( 'tr', array(
+				$list[]	= HtmlTag::create( 'tr', [
 				/*	HtmlTag::create( 'td', $id, ['class' => 'cell-number'] ),*/
 					HtmlTag::create( 'td', $title ),
 					HtmlTag::create( 'td', $from ),
 					HtmlTag::create( 'td', $to ),
 					HtmlTag::create( 'td', $date, ['class' => 'cell-number'] ),
 					HtmlTag::create( 'td', number_format( $transaction->amount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
-				), ['class' => $transaction->amount > 0 ? 'success' : 'error'] );
+				], ['class' => $transaction->amount > 0 ? 'success' : 'error'] );
 			}
 
-			$tfoot	= HtmlTag::create( 'tfoot', HtmlTag::create( 'tr', array(
+			$tfoot	= HtmlTag::create( 'tfoot', HtmlTag::create( 'tr', [
 			/*	HtmlTag::create( 'td', $id, ['class' => 'cell-number'] ),*/
 				HtmlTag::create( 'td', '<strong>Gesamt</strong>' ),
 				HtmlTag::create( 'td', '' ),
 				HtmlTag::create( 'td', '' ),
 				HtmlTag::create( 'td', '' ),
 				HtmlTag::create( 'td', number_format( $sum, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
-			) ) );
+			] ) );
 			if( count( $this->transactions ) < 2 )
 				$tfoot		= '';
 
 			$colgroup	= HtmlElements::ColumnGroup( [/*'45', */'', '200', '200', '100', '100'] );
-			$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+			$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 /*				HtmlTag::create( 'th', 'ID', ['class' => 'cell-number'] ),*/
 				HtmlTag::create( 'th', 'Vorgang' ),
 				HtmlTag::create( 'th', 'Zu Lasten' ),
 				HtmlTag::create( 'th', 'Zu Gunsten' ),
 				HtmlTag::create( 'th', 'Datum', ['class' => 'cell-number'] ),
 				HtmlTag::create( 'th', 'Betrag', ['class' => 'cell-number'] ),
-			) ) );
+			] ) );
 			$tbody	= HtmlTag::create( 'tbody', $list );
 			$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, ['class' => 'table table-fixed table-condensed'] );
 		}
