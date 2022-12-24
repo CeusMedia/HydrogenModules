@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_File extends Model
 {
-	protected string $name		= 'files';
+	protected string $name			= 'files';
 
-	protected array $columns	= [
+	protected array $columns		= [
 		'fileId',
 		'creatorId',
 		'moduleId',
@@ -45,5 +45,5 @@ class Model_File extends Model
 		'fileName',
 	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

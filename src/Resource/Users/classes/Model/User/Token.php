@@ -17,16 +17,16 @@ class Model_User_Token extends Model
 	const STATUS_NEW		= 0;
 	const STATUS_ACTIVE		= 1;
 
-	const STATUSES			= array(
+	const STATUSES			= [
 		self::STATUS_REVOKED,
 		self::STATUS_OUTDATED,
 		self::STATUS_NEW,
 		self::STATUS_ACTIVE,
-	);
+	];
 
 	protected string $name			= 'user_tokens';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'userTokenId',
 		'userId',
 		'status',
@@ -35,16 +35,16 @@ class Model_User_Token extends Model
 		'createdAt',
 		'usedAt',
 		'revokedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'userTokenId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userId',
 		'status',
 		'scope',
 		'token',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

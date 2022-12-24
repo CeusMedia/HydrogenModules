@@ -12,9 +12,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Mail_Address extends Model
 {
-	protected string $name		= 'mail_addresses';
+	protected string $name			= 'mail_addresses';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"mailAddressId",
 		"mailGroupId",
 		"status",
@@ -22,15 +22,15 @@ class Model_Mail_Address extends Model
 		"data",
 		"createdAt",
 		"checkedAt",
-	);
+	];
 
 	protected string $primaryKey	= 'mailAddressId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"mailGroupId",
 		"status",
 		"address",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

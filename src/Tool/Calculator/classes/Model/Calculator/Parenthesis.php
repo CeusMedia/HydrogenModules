@@ -1,15 +1,15 @@
 <?php
 class Model_Calculator_Parenthesis extends Model_Calculator_TerminalExpression
 {
-	protected $precidence	= 7;
+	protected int $precedence	= 7;
 
 	public function operate( Model_Calculator_Stack $stack )
 	{
 	}
 
-	public function getPrecidence(): int
+	public function getPrecedence(): int
 	{
-		return $this->precidence;
+		return $this->precedence;
 	}
 
 	public function isNoOp(): bool

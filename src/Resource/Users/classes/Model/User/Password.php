@@ -17,16 +17,16 @@ class Model_User_Password extends Model
 	const STATUS_NEW		= 0;
 	const STATUS_ACTIVE		= 1;
 
-	const STATUSES			= array(
+	const STATUSES			= [
 		self::STATUS_REVOKED,
 		self::STATUS_OUTDATED,
 		self::STATUS_NEW,
 		self::STATUS_ACTIVE,
-	);
+	];
 
 	protected string $name			= 'user_passwords';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'userPasswordId',
 		'userId',
 		'algo',
@@ -39,16 +39,16 @@ class Model_User_Password extends Model
 		'failedAt',
 		'usedAt',
 		'revokedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'userPasswordId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userId',
 		'status',
 		'salt',
 		'hash',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

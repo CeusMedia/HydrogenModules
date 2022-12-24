@@ -17,16 +17,16 @@ class Model_Mail_Template extends Model
 	const STATUS_USABLE		= 2;
 	const STATUS_ACTIVE		= 3;
 
-	const STATUSES			= array(
+	const STATUSES			= [
 		self::STATUS_NEW,
 		self::STATUS_IMPORTED,
 		self::STATUS_USABLE,
 		self::STATUS_ACTIVE,
-	);
+	];
 
-	protected string $name		= 'mail_templates';
+	protected string $name			= 'mail_templates';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"mailTemplateId",
 		"status",
 		"language",
@@ -38,15 +38,15 @@ class Model_Mail_Template extends Model
 		"images",
 		"createdAt",
 		"modifiedAt",
-	);
+	];
 
 	protected string $primaryKey	= 'mailTemplateId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"status",
 		"language",
 		"title",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

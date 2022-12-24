@@ -22,7 +22,7 @@ class Model_Role extends Model
 	const ACCESS_ACL		= 64;
 	const ACCESS_FULL		= 128;
 
-	const ACCESSES			= array(
+	const ACCESSES			= [
 		self::ACCESS_NONE,
 //		self::ACCESS_,
 //		self::ACCESS_,
@@ -32,7 +32,7 @@ class Model_Role extends Model
 //		self::ACCESS_,
 		self::ACCESS_ACL,
 		self::ACCESS_FULL,
-	);
+	];
 
 	const REGISTER_DENIED	= 0;
 //	const REGISTER_			= 1;
@@ -44,7 +44,7 @@ class Model_Role extends Model
 	const REGISTER_VISIBLE	= 64;
 	const REGISTER_DEFAULT	= 128;
 
-	const REGISTERS			= array(
+	const REGISTERS			= [
 		self::REGISTER_DENIED,
 //		self::REGISTER_,
 //		self::REGISTER_,
@@ -54,11 +54,11 @@ class Model_Role extends Model
 		self::REGISTER_HIDDEN,
 		self::REGISTER_VISIBLE,
 		self::REGISTER_DEFAULT,
-	);
+	];
 
-	protected string $name		= 'roles';
+	protected string $name			= 'roles';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'roleId',
 		'access',
 		'register',
@@ -66,15 +66,15 @@ class Model_Role extends Model
 		'description',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'roleId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'access',
 		'register',
 		'title',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

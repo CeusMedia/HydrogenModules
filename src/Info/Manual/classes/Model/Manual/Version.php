@@ -33,5 +33,5 @@ class Model_Manual_Version extends Model
 		'version',
 	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

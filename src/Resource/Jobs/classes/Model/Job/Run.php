@@ -26,24 +26,24 @@ class Model_Job_Run extends Model
 	const REPORT_MODE_DONE		= 4;
 	const REPORT_MODE_SUCCESS	= 5;
 
-	const REPORT_MODES			= array(
+	const REPORT_MODES			= [
 		self::REPORT_MODE_NEVER,
 		self::REPORT_MODE_ALWAYS,
 		self::REPORT_MODE_CHANGE,
 		self::REPORT_MODE_FAIL,
 		self::REPORT_MODE_DONE,
 		self::REPORT_MODE_SUCCESS,
-	);
+	];
 
 	const REPORT_CHANNEL_NONE	= 0;
 	const REPORT_CHANNEL_MAIL	= 1;
 	const REPORT_CHANNEL_XMPP	= 2;
 
-	const REPORT_CHANNELS		= array(
+	const REPORT_CHANNELS		= [
 		self::REPORT_CHANNEL_NONE,
 		self::REPORT_CHANNEL_MAIL,
 		self::REPORT_CHANNEL_XMPP,
-	);
+	];
 
 	const STATUS_TERMINATED		= -3;
 	const STATUS_FAILED			= -2;
@@ -53,30 +53,30 @@ class Model_Job_Run extends Model
 	const STATUS_DONE			= 2;
 	const STATUS_SUCCESS		= 3;
 
-	const STATUS_TRANSITIONS	= array(
-		self::STATUS_TERMINATED		=> array(
+	const STATUS_TRANSITIONS	= [
+		self::STATUS_TERMINATED		=> [
 			self::STATUS_PREPARED,
-		),
-		self::STATUS_FAILED			=> array(
-		),
-		self::STATUS_ABORTED		=> array(
+		],
+		self::STATUS_FAILED			=> [
+		],
+		self::STATUS_ABORTED		=> [
 			self::STATUS_PREPARED,
-		),
-		self::STATUS_PREPARED		=> array(
+		],
+		self::STATUS_PREPARED		=> [
 			self::STATUS_RUNNING,
-		),
-		self::STATUS_RUNNING		=> array(
+		],
+		self::STATUS_RUNNING		=> [
 			self::STATUS_TERMINATED,
 			self::STATUS_FAILED,
 			self::STATUS_DONE,
 			self::STATUS_SUCCESS,
-		),
-		self::STATUS_DONE			=> array(
+		],
+		self::STATUS_DONE			=> [
 			self::STATUS_SUCCESS,
-		),
-	);
+		],
+	];
 
-	const STATUSES				= array(
+	const STATUSES				= [
 		self::STATUS_TERMINATED,
 		self::STATUS_FAILED,
 		self::STATUS_ABORTED,
@@ -84,38 +84,38 @@ class Model_Job_Run extends Model
 		self::STATUS_RUNNING,
 		self::STATUS_DONE,
 		self::STATUS_SUCCESS,
-	);
+	];
 
-	const STATUSES_NEGATIVE		= array(
+	const STATUSES_NEGATIVE		= [
 		self::STATUS_TERMINATED,
 		self::STATUS_FAILED,
 		self::STATUS_ABORTED,
-	);
+	];
 
-	const STATUSES_POSITIVE		= array(
+	const STATUSES_POSITIVE		= [
 		self::STATUS_DONE,
 		self::STATUS_SUCCESS,
-	);
+	];
 
-	const STATUSES_ARCHIVABLE	= array(
+	const STATUSES_ARCHIVABLE	= [
 		self::STATUS_TERMINATED,
 		self::STATUS_FAILED,
 		self::STATUS_ABORTED,
 		self::STATUS_DONE,
 		self::STATUS_SUCCESS,
-	);
+	];
 
 	const TYPE_MANUALLY			= 0;
 	const TYPE_SCHEDULED		= 1;
 
-	const TYPES					= array(
+	const TYPES					= [
 		self::TYPE_MANUALLY,
 		self::TYPE_SCHEDULED,
-	);
+	];
 
 	protected string $name			= 'job_runs';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'jobRunId',
 		'jobDefinitionId',
 		'jobScheduleId',
@@ -133,11 +133,11 @@ class Model_Job_Run extends Model
 		'modifiedAt',
 		'ranAt',
 		'finishedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'jobRunId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'jobDefinitionId',
 		'jobScheduleId',
 		'processId',
@@ -148,7 +148,7 @@ class Model_Job_Run extends Model
 		'reportChannel',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

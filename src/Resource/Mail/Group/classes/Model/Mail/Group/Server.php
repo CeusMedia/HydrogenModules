@@ -12,9 +12,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Mail_Group_Server extends Model
 {
-	protected string $name		= 'mail_group_servers';
+	protected string $name			= 'mail_group_servers';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"mailGroupServerId",
 		"status",
 		"imapHost",
@@ -24,18 +24,18 @@ class Model_Mail_Group_Server extends Model
 		"title",
 		"createdAt",
 		"modifiedAt",
-	);
+	];
 
 	protected string $primaryKey	= 'mailGroupServerId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"status",
 		"imapHost",
 		"imapPort",
 		"smtpHost",
 		"smtpPort",
 		"title",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

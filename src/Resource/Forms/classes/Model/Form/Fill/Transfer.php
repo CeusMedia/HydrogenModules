@@ -41,5 +41,5 @@ class Model_Form_Fill_Transfer extends Model
 
 	protected string $name			= 'form_fill_transfers';
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

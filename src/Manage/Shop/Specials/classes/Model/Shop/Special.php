@@ -21,9 +21,9 @@ class Model_Shop_Special extends Model
 	const STATUS_NEW				= 0;
 	const STATUS_ACTIVE				= 1;
 
-	protected string $name		= 'shop_specials';
+	protected string $name			= 'shop_specials';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"shopSpecialId",
 		"creatorId",
 		"bridgeId",
@@ -33,15 +33,15 @@ class Model_Shop_Special extends Model
 		"styleFiles",
 		"createdAt",
 		"modifiedAt",
-	);
+	];
 
 	protected string $primaryKey	= 'shopSpecialId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"creatorId",
 		"bridgeId",
 		"articleId",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

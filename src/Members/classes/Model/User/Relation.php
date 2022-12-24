@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_User_Relation extends Model
 {
-	protected string $name		= 'user_relations';
+	protected string $name			= 'user_relations';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'userRelationId',
 		'fromUserId',
 		'toUserId',
@@ -28,16 +28,16 @@ class Model_User_Relation extends Model
 		'status',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'userRelationId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'fromUserId',
 		'toUserId',
 		'type',
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

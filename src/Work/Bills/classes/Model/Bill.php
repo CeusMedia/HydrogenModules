@@ -6,7 +6,7 @@ class Model_Bill extends Model
 {
 	protected string $name			= 'bills';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'billId',
 		'userId',
 		'customerId',
@@ -17,17 +17,17 @@ class Model_Bill extends Model
 		'title',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'billId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userId',
 		'customerId',
 		'type',
 		'status',
 		'date',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

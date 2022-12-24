@@ -16,7 +16,7 @@ class Controller_Admin_App extends Controller
 	protected ?MessengerResource $messenger;
 	protected HttpRequest $request;
 
-	public function index()
+	public function index(): void
 	{
 		$words	= $this->language->getWords( 'main' );
 		$this->addData( 'appTitle', $words['main']['title'] );
@@ -25,7 +25,7 @@ class Controller_Admin_App extends Controller
 		$this->addData( 'appIcon', $this->config->get( 'app.icon' ) );
 	}
 
-	public function removeIcon()
+	public function removeIcon(): void
 	{
 		if( $current = $this->config->get( 'app.icon' ) ){
 			@unlink( $current );
@@ -34,7 +34,7 @@ class Controller_Admin_App extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeLogo()
+	public function removeLogo(): void
 	{
 		if( $current = $this->config->get( 'app.logo' ) ){
 			@unlink( $current );
@@ -43,7 +43,7 @@ class Controller_Admin_App extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setBrand()
+	public function setBrand(): void
 	{
 		if( strlen( trim( $brand = $this->request->get( 'brand' ) ) ) ){
 			if( $this->setMainWord( 'brand', $brand ) )
@@ -52,7 +52,7 @@ class Controller_Admin_App extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setIcon()
+	public function setIcon(): void
 	{
 		try{
 			$icon = (object) $this->request->get( 'icon' );
@@ -67,7 +67,7 @@ class Controller_Admin_App extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setLogo()
+	public function setLogo(): void
 	{
 		try{
 			$logo = (object) $this->request->get( 'logo' );
@@ -82,7 +82,7 @@ class Controller_Admin_App extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setTitle()
+	public function setTitle(): void
 	{
 		if( strlen( trim( $title = $this->request->get( 'title' ) ) ) ){
 			if( $this->setMainWord( 'title', $title ) )

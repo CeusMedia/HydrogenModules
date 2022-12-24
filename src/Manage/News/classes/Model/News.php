@@ -1,8 +1,6 @@
 <?php
 /**
  *	...
- *	@category		...
- *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
  */
@@ -11,16 +9,14 @@ use CeusMedia\HydrogenFramework\Model;
 
 /**
  *	...
- *	@category		...
- *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013 Ceus Media
  */
 class Model_News extends Model
 {
-	protected string $name		= 'news';
+	protected string $name			= 'news';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'newsId',
 		'status',
 		'title',
@@ -29,14 +25,14 @@ class Model_News extends Model
 		'startsAt',
 		'endsAt',
 		'createdAt',
-	);
+	];
 
 	protected string $primaryKey	= 'newsId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'status',
 		'title',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

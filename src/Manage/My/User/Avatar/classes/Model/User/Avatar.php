@@ -6,21 +6,21 @@ class Model_User_Avatar extends Model
 {
 	protected string $name			= 'user_avatars';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'userAvatarId',
 		'userId',
 		'status',
 		'filename',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'userAvatarId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userId',
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

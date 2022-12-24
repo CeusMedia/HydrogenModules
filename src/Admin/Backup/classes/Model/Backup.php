@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Backup extends Model
 {
-	protected string $name		= 'backups';
+	protected string $name			= 'backups';
 
-	protected array $columns	= [
+	protected array $columns		= [
 		'backupId',
 		'creatorId',
 		'status',
@@ -36,5 +36,5 @@ class Model_Backup extends Model
 		'status',
 	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

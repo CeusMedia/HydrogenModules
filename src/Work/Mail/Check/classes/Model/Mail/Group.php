@@ -12,21 +12,21 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Mail_Group extends Model
 {
-	protected string $name		= 'mail_groups';
+	protected string $name			= 'mail_groups';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"mailGroupId",
 		"title",
 		"columns",
 		"mailColumn",
 		"createdAt",
-	);
+	];
 
 	protected string $primaryKey	= 'mailGroupId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"title",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

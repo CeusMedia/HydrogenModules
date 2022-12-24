@@ -4,21 +4,21 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Link extends Model
 {
-	protected string $name		= 'links';
+	protected string $name			= 'links';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'linkId',
 		'url',
 		'createdAt',
 		'lastAssignAt',
 		'lastSearchAt',
-	);
+	];
 
 	protected string $primaryKey	= 'linkId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'url'
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

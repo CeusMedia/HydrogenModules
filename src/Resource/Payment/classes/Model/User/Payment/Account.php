@@ -18,23 +18,23 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_User_Payment_Account extends Model
 {
-	protected string $name		= 'user_payment_accounts';
+	protected string $name			= 'user_payment_accounts';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'userPaymentAccountId',
 		'userId',
 		'paymentAccountId',
 		'provider',
 		'createdAt',
-	);
+	];
 
 	protected string $primaryKey	= 'userPaymentAccountId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userId',
 		'paymentAccountId',
 		'provider',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

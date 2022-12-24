@@ -1,12 +1,12 @@
 <?php
 abstract class Model_Calculator_Operator extends Model_Calculator_TerminalExpression
 {
-	protected $precidence	= 0;
-	protected $leftAssoc	= TRUE;
+	protected int $precedence	= 0;
+	protected bool $leftAssoc	= TRUE;
 
-	public function getPrecidence(): int
+	public function getPrecedence(): int
 	{
-		return $this->precidence;
+		return $this->precedence;
 	}
 
 	public function isLeftAssoc(): bool

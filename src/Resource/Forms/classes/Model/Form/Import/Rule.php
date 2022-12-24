@@ -41,7 +41,7 @@ class Model_Form_Import_Rule extends Model
 			self::STATUS_DISABLED,
 			self::STATUS_TEST,
 		],
-		self::STATUS_DISABLED		=> [
+		self::STATUS_DISABLED	=> [
 			self::STATUS_PAUSED,
 			self::STATUS_ACTIVE,
 			self::STATUS_TEST,
@@ -73,5 +73,5 @@ class Model_Form_Import_Rule extends Model
 
 	protected string $name			= 'form_import_rules';
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

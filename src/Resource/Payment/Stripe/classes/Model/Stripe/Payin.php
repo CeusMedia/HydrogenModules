@@ -4,10 +4,10 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Stripe_Payin extends Model
 {
-	const STATUS_UNKNOWN		= 0;
-	const STATUS_CREATED		= 1;
-	const STATUS_FAILED			= 2;
-	const STATUS_SUCCEEDED		= 3;
+	const STATUS_UNKNOWN			= 0;
+	const STATUS_CREATED			= 1;
+	const STATUS_FAILED				= 2;
+	const STATUS_SUCCEEDED			= 3;
 
 	const TYPE_UNKNOWN				= 0;
 	const TYPE_CARD					= 1;
@@ -19,7 +19,7 @@ class Model_Stripe_Payin extends Model
 
 	protected string $name		= 'stripe_payins';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		"payinId",
 		"userId",
 		"status",
@@ -30,16 +30,16 @@ class Model_Stripe_Payin extends Model
 		"data",
 		"createdAt",
 		"modifiedAt"
-	);
+	];
 
 	protected string $primaryKey	= 'payinId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"userId",
 		"status",
 		"id",
 		"type",
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 
@@ -54,7 +54,7 @@ class Model_Stripe_Payin extends Model
 		return NULL;
 	}
 
-	public static function getStatusId( $status )
+	public static function getStatusId( $status ): int
 	{
 		switch( $status ){
 			case 'CREATED':
@@ -67,7 +67,7 @@ class Model_Stripe_Payin extends Model
 		return self::STATUS_UNKNOWN;
 	}
 
-	public static function getStatusLabel( $status )
+	public static function getStatusLabel( int $status ): string
 	{
 		switch( $status ){
 			case self::STATUS_CREATED:
@@ -80,7 +80,7 @@ class Model_Stripe_Payin extends Model
 		return 'UNKNOWN';
 	}
 
-	public static function getTypeId( $type )
+	public static function getTypeId( string $type ): int
 	{
 		switch( $type ){
 			case 'CARD':
@@ -99,7 +99,7 @@ class Model_Stripe_Payin extends Model
 		return self::TYPE_UNKNOWN;
 	}
 
-	public static function getTypeLabel( $type )
+	public static function getTypeLabel( int $type ): string
 	{
 		switch( $type ){
 			case self::TYPE_CARD:

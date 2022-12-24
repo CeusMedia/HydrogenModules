@@ -16,26 +16,26 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Catalog_Article_Document extends Model
 {
-	protected string $name		= 'catalog_article_documents';
+	protected string $name			= 'catalog_article_documents';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'articleDocumentId',
 		'articleId',
 		'status',
 		'type',
 		'url',
 		'title',
-	);
+	];
 
 	protected string $primaryKey	= 'articleDocumentId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"articleId",
 		"status",
 		"type",
 		"url",
 		'title',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

@@ -16,19 +16,19 @@ use CeusMedia\HydrogenFramework\Model;
  */
 final class Model_Shop_Shipping_Zone extends Model
 {
-	protected string $name		= 'shop_shipping_zones';
+	protected string $name			= 'shop_shipping_zones';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'zoneId',
 		'title',
 		'fallback',
-	);
+	];
 
 	protected string $primaryKey	= 'zoneId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'fallback',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

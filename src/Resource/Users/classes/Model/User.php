@@ -13,12 +13,12 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_User extends Model
 {
-	const GENDER_UNKNOWN	= 0;
-	const GENDER_FEMALE		= 1;
-	const GENDER_MALE		= 2;
-	const GENDER_OTHER		= 3;
+	const GENDER_UNKNOWN		= 0;
+	const GENDER_FEMALE			= 1;
+	const GENDER_MALE			= 2;
+	const GENDER_OTHER			= 3;
 
-	const GENDERS			= [
+	const GENDERS				= [
 		self::GENDER_UNKNOWN,
 		self::GENDER_FEMALE,
 		self::GENDER_OTHER,
@@ -30,37 +30,37 @@ class Model_User extends Model
 	const STATUS_UNCONFIRMED	= 0;
 	const STATUS_ACTIVE			= 1;
 
-	const STATUSES				= array(
+	const STATUSES				= [
 		self::STATUS_DISABLED,
 		self::STATUS_BANNED,
 		self::STATUS_UNCONFIRMED,
 		self::STATUS_ACTIVE,
-	);
+	];
 
-	const STATUS_TRANSITIONS	= array(
-		self::STATUS_DISABLED	=> array(
+	const STATUS_TRANSITIONS	= [
+		self::STATUS_DISABLED		=> [
 			self::STATUS_UNCONFIRMED,
 			self::STATUS_ACTIVE,
-		),
-		self::STATUS_BANNED			=> array(
+		],
+		self::STATUS_BANNED			=> [
 			self::STATUS_DISABLED,
 			self::STATUS_UNCONFIRMED,
 			self::STATUS_ACTIVE,
-		),
-		self::STATUS_UNCONFIRMED	=> array(
+		],
+		self::STATUS_UNCONFIRMED	=> [
 			self::STATUS_DISABLED,
 			self::STATUS_BANNED,
 			self::STATUS_ACTIVE,
-		),
-		self::STATUS_ACTIVE			=> array(
+		],
+		self::STATUS_ACTIVE			=> [
 			self::STATUS_DISABLED,
 			self::STATUS_BANNED,
-		),
-	);
+		],
+	];
 
-	protected string $name		= 'users';
+	protected string $name			= 'users';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'userId',
 		'accountId',
 		'roleId',
@@ -85,10 +85,10 @@ class Model_User extends Model
 		'modifiedAt',
 		'loggedAt',
 		'activeAt',
-	);
+	];
 	protected string $primaryKey	= 'userId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'accountId',
 		'roleId',
 		'roomId',
@@ -98,9 +98,9 @@ class Model_User extends Model
 		'email',
 		'gender',
 		'country',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
 	public function migrate()
 	{

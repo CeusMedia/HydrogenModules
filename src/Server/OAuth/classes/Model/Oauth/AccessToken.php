@@ -33,43 +33,42 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_access_tokens` (
  */
 class Model_Oauth_AccessToken extends Model
 {
-	protected string $name		= 'oauth_access_tokens';
+	protected string $name			= 'oauth_access_tokens';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'oauthAccessTokenId',
 		'oauthApplicationId',
 		'token',
 		'userId',
 		'scope',
 		'createdAt',
-	);
+	];
 
 	protected string $primaryKey	= 'oauthAccessTokenId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'oauthApplicationId',
 		'userId',
 		'token',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
 	/**
-	 *	Returnes generated unique token.
+	 *	Returns generated unique token.
 	 *	@access		public
-	 *	@param		integer		$applicationId		ID of application to get token for
-	 *	@param		string		$scope				List of scopes to get token for (optional)
-	 *	@param		string		$salt				Token hash salt (optional)
-	 *	@param		string		$pepper				Token hash pepper (optional)
-	 *	@return		string		Token (32 characters)
+	 *	@param		integer			$applicationId		ID of application to get token for
+	 *	@param		string			$scope				List of scopes to get token for (optional)
+	 *	@param		string|NULL		$salt				Token hash salt (optional)
+	 *	@param		string|NULL		$pepper				Token hash pepper (optional)
+	 *	@return		string			Token (32 characters)
 	 */
-	public function getNewToken( $applicationId, $scope = "", $salt = NULL, $pepper = NULL ): string
+	public function getNewToken( $applicationId, string $scope = '', ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
 		do{
 			$key	= $applicationId.'_'.$scope.'_'.$salt.'_'.microtime( TRUE ).'_'.$pepper;
 			$token	= md5( $key );
-		}
-		while( $this->getByIndex( 'token', $token ) );
+		} while( $this->getByIndex( 'token', $token ) );
 		return $token;
 	}
 }

@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Bookmark_Comment extends Model
 {
-	protected string $name		= 'bookmark_comments';
+	protected string $name			= 'bookmark_comments';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'bookmarkCommentId',
 		'bookmarkId',
 		'userId',
@@ -30,11 +30,11 @@ class Model_Bookmark_Comment extends Model
 		'createdAt',
 		'modifiedAt',
 		'votedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'bookmarkCommentId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'bookmarkId',
 		'userId',
 		'status',
@@ -42,7 +42,7 @@ class Model_Bookmark_Comment extends Model
 		'createdAt',
 		'modifiedAt',
 		'votedAt',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

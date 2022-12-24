@@ -35,9 +35,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_codes` (
  */
 class Model_Oauth_Code extends Model
 {
-	protected string $name		= 'oauth_codes';
+	protected string $name			= 'oauth_codes';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'oauthCodeId',
 		'oauthApplicationId',
 		'userId',
@@ -45,27 +45,27 @@ class Model_Oauth_Code extends Model
 		'code',
 		'scope',
 		'createdAt',
-	);
+	];
 
 	protected string $primaryKey	= 'oauthCodeId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'oauthApplicationId',
 		'userId',
 		'redirectUri',
 		'code',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
 	/**
-	 *	Returnes generated unique token.
+	 *	Returns generated unique token.
 	 *	@access		public
 	 *	@param		integer		$applicationId		ID of application to get token for
 	 *	@param		string		$scope				List of scopes to get token for (optional)
 	 *	@return		string		Authorization code (32 characters)
 	 */
-	public function getNewCode( $applicationId, $scope = '' ): string
+	public function getNewCode( $applicationId, string $scope = '' ): string
 	{
 		do{
 			$code	= md5( $applicationId.'_'.$scope.'_'.microtime( TRUE ) );

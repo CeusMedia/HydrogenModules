@@ -14,22 +14,22 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Server extends Model
 {
-	protected string $name		= 'servers';
+	protected string $name			= 'servers';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'serverId',
 		'status',
 		'title',
 		'description',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'serverId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

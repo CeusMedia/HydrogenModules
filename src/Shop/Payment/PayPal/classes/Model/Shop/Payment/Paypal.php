@@ -6,7 +6,7 @@ class Model_Shop_Payment_Paypal extends Model
 {
 	protected string $name		= 'shop_payments_paypal';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'paymentId',
 		'orderId',
 		'token',
@@ -21,16 +21,16 @@ class Model_Shop_Payment_Paypal extends Model
 		'city',
 		'postcode',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'paymentId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'orderId',
 		'token',
 		'payerId',
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

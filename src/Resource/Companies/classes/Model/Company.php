@@ -12,7 +12,7 @@ class Model_Company extends Model
 
 	protected string $name			= 'companies';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'companyId',
 		'status',
 		'title',
@@ -28,14 +28,14 @@ class Model_Company extends Model
 		'logo',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'companyId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'status',
 		'title',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

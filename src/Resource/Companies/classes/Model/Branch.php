@@ -10,11 +10,11 @@ class Model_Branch extends Model
 	const STATUS_CHANGED	= 1;
 	const STATUS_ACTIVE		= 2;
 
-	protected $radiusEarth  = 6371;
+	protected int $radiusEarth  	= 6371;
 
 	protected string $name			= 'branches';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'branchId',
 		'companyId',
 		'status',
@@ -35,16 +35,16 @@ class Model_Branch extends Model
 		'z',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'branchId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'companyId',
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
 	public function extendWithGeocodes( $branchId )
 	{
@@ -53,13 +53,13 @@ class Model_Branch extends Model
 			$geocoder	= new Logic_Geocoder( $this->env );
 			$tags	= $geocoder->geocodeAddress( $branch->street, $branch->number, $branch->postcode, $branch->city, 'Deutschland' );
 			$coords	= $geocoder->convertRadianToCoords( $tags->longitude, $tags->latitude );
-			$data	= array(
+			$data	= [
 				'longitude'	=> $tags->longitude,
 				'latitude'	=> $tags->latitude,
 				'x'			=> $coords->x,
 				'y'			=> $coords->y,
 				'z'			=> $coords->z,
-			);
+			];
 			$this->edit( $branchId, $data );
 			return TRUE;
 		}
@@ -69,7 +69,7 @@ die( $e->getMessage() );
 		}
 	}
 
-	public function getAllInDistance( $x, $y, $z, $distance, $havingIds = [] )
+	public function getAllInDistance( $x, $y, $z, $distance, array $havingIds = [] ): array
 	{
 		$query		= 'SELECT *
 		FROM branches as b
@@ -95,7 +95,7 @@ die( $e->getMessage() );
 	/**
 	 *	@todo		move to branch module and remove
 	 */
-	public function getBranchesInRangeOf( $point, $radius, $havingIds = [] )
+	public function getBranchesInRangeOf( $point, $radius, array $havingIds = [] ): array
 	{
 		$list		= [];
 		$model		= new Model_Branch( $this->env );

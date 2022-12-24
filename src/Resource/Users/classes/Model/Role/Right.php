@@ -14,23 +14,23 @@ class Model_Role_Right extends Model
 {
 	protected string $name			= 'role_rights';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'roleRightId',
 		'roleId',
 		'controller',
 		'action',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'roleRightId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'roleId',
 		'controller',
 		'action',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
 	public static function maxifyController( string $controller ): string
 	{

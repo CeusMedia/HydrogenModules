@@ -6,7 +6,7 @@ class Model_Provision_Product_License extends Model
 {
 	protected string $name			= 'provision_product_licenses';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'productLicenseId',
 		'productId',
 		'status',
@@ -19,16 +19,16 @@ class Model_Provision_Product_License extends Model
 		'description',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'productLicenseId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'productId',
 		'status',
 		'rank',
 		'title',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

@@ -22,23 +22,23 @@ class Model_Oauth_Application extends Model
 	const STATUS_DISABLED		= 0;
 	const STATUS_ENABLED		= 1;
 
-	const STATUSES				= array(
+	const STATUSES				= [
 		self::STATUS_REMOVED,
 		self::STATUS_DISABLED,
 		self::STATUS_ENABLED,
-	);
+	];
 
 	const TYPE_PUBLIC			= 0;
 	const TYPE_CONFIDENTIAL		= 1;
 
-	const TYPES					= array(
+	const TYPES					= [
 		self::TYPE_PUBLIC,
 		self::TYPE_CONFIDENTIAL,
-	);
+	];
 
-	protected string $name		= 'oauth_applications';
+	protected string $name			= 'oauth_applications';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'oauthApplicationId',
 		'userId',
 		'type',
@@ -50,37 +50,36 @@ class Model_Oauth_Application extends Model
 		'url',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'oauthApplicationId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userId',
 		'type',
 		'status',
 		'clientId',
 		'clientSecret',
 		'url',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
-	public function getNewClientId( $salt = NULL, $pepper = NULL ): string
+	public function getNewClientId( ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
 		do{
 			$pos	= round( rand(0, 1) * 20 );
 			$id		= substr( md5( $salt.'_'.microtime( TRUE ).'_'.$pepper ), $pos, 12 );
-		}
-		while( $this->getByIndex( 'clientId', $id ) );
+		} while( $this->getByIndex( 'clientId', $id ) );
 		return $id;
 	}
 
-	public function getNewClientSecret( $salt = NULL, $pepper = NULL ): string
+	public function getNewClientSecret( ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
 		return hash( "sha256", $salt.'_'.microtime( TRUE ).'_'.$pepper );
 	}
 
-	public function remove( $id )
+	public function remove( string $id ): bool
 	{
 		$modelAccess	= new Model_Oauth_AccessToken( $this->env );
 		$modelCode		= new Model_Oauth_Code( $this->env );
@@ -88,6 +87,6 @@ class Model_Oauth_Application extends Model
 		$modelAccess->removeByIndex( 'oauthApplicationId', $id );
 		$modelCode->removeByIndex( 'oauthApplicationId', $id );
 		$modelRefresh->removeByIndex( 'oauthApplicationId', $id );
-		parent::remove( $id );
+		return parent::remove( $id );
 	}
 }

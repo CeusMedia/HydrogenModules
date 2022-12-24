@@ -11,7 +11,7 @@ class Model_Form extends Model
 	const STATUS_NEW		= 0;
 	const STATUS_ACTIVATED	= 1;
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'formId',
 		'customerMailId',
 		'managerMailId',
@@ -21,17 +21,17 @@ class Model_Form extends Model
 		'receivers',
 		'content',
 		'timestamp',
-	);
+	];
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'customerMailId',
 		'managerMailId',
 		'status',
-	);
+	];
 
 	protected string $primaryKey	= 'formId';
 
 	protected string $name			= 'forms';
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

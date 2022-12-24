@@ -10,11 +10,11 @@ class Model_Event extends Model
 	const STATUS_CHANGED	= 1;
 	const STATUS_ACTIVE		= 2;
 
-	protected $radiusEarth  = 6371;
+	protected int $radiusEarth  = 6371;
 
 	protected string $name			= 'events';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'eventId',
 		'addressId',
 		'status',
@@ -26,18 +26,18 @@ class Model_Event extends Model
 		'description',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'eventId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'addressId',
 		'status',
 		'dateStart',
 		'dateEnd',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
 	public function getAllWithinTimeAndSpaceRanges( SpaceRange $spaceRange, TimeRange $timeRange ): array
 	{
@@ -89,20 +89,20 @@ class TimeRange
 		return $this->dateEnd;
 	}
 
-	public function getEnd()
+	public function getEnd(): object
 	{
-		return (object) array(
+		return (object) [
 			'date'	=> $this->dateEnd,
 			'time'	=> $this->timeEnd,
-		);
+		];
 	}
 
-	public function getStart()
+	public function getStart(): object
 	{
-		return (object) array(
+		return (object) [
 			'date'	=> $this->dateStart,
 			'time'	=> $this->timeStart,
-		);
+		];
 	}
 
 	public function getTimeStart()
@@ -166,13 +166,13 @@ class SpaceRange
 		$this->setDistance( $distance );
 	}
 
-	public function getCoords()
+	public function getCoords(): object
 	{
-		return (object) array(
+		return (object) [
 			'x' => $this->x,
 			'y'	=> $this->y,
 			'z'	=> $this->z,
-		);
+		];
 	}
 
 	public function getDistance()

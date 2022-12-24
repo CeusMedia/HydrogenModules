@@ -22,9 +22,9 @@ class Model_Log_Exception extends Model
 	const STATUS_HANDLED	= 1;
 	const STATUS_MARKED		= 2;
 
-	protected string $name		= 'log_exceptions';
+	protected string $name			= 'log_exceptions';
 
-	protected array $columns	= [
+	protected array $columns		= [
 		'exceptionId',
 		'status',
 		'type',
@@ -55,5 +55,5 @@ class Model_Log_Exception extends Model
 		'modifiedAt',
 	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

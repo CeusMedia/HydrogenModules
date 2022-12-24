@@ -17,9 +17,9 @@ class Model_Mangopay_Payin extends Model
 	const TYPE_DIRECT_DEBIT_DIRECT	= 5;
 	const TYPE_PAYPAL				= 6;
 
-	protected string $name		= 'mangopay_payins';
+	protected string $name			= 'mangopay_payins';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"payinId",
 		"userId",
 		"status",
@@ -30,18 +30,18 @@ class Model_Mangopay_Payin extends Model
 		"data",
 		"createdAt",
 		"modifiedAt"
-	);
+	];
 
 	protected string $primaryKey	= 'payinId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"userId",
 		"status",
 		"id",
 		"type",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
 	public static function getLatestResourceFromPayinData( $payinData )
 	{
@@ -54,7 +54,7 @@ class Model_Mangopay_Payin extends Model
 		return NULL;
 	}
 
-	public static function getStatusId( $status )
+	public static function getStatusId( string $status ): int
 	{
 		switch( $status ){
 			case 'CREATED':
@@ -67,7 +67,7 @@ class Model_Mangopay_Payin extends Model
 		return self::STATUS_UNKNOWN;
 	}
 
-	public static function getStatusLabel( $status )
+	public static function getStatusLabel( int $status ): string
 	{
 		switch( $status ){
 			case self::STATUS_CREATED:
@@ -80,7 +80,7 @@ class Model_Mangopay_Payin extends Model
 		return 'UNKNOWN';
 	}
 
-	public static function getTypeId( $type )
+	public static function getTypeId( string $type ): int
 	{
 		switch( $type ){
 			case 'CARD':
@@ -99,7 +99,7 @@ class Model_Mangopay_Payin extends Model
 		return self::TYPE_UNKNOWN;
 	}
 
-	public static function getTypeLabel( $type )
+	public static function getTypeLabel( int $type ): string
 	{
 		switch( $type ){
 			case self::TYPE_CARD:

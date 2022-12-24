@@ -1,28 +1,20 @@
 <?php
 /**
  *	Data Model of Route.
- *	@category		...
- *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			...
- *	@version		...
  */
 
 use CeusMedia\HydrogenFramework\Model;
 
 /**
  *	Data Model of Route.
- *	@category		...
- *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			...
- *	@version		...
  */
 class Model_Route extends Model
 {
-	protected string $name		= 'routes';
+	protected string $name			= 'routes';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'routeId',
 		'status',
 		'methods',
@@ -33,18 +25,18 @@ class Model_Route extends Model
 		'target',
 		'title',
 		'createdAt',
-	);
+	];
 
 	protected string $primaryKey	= 'routeId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'status',
 		'regex',
 		'ajax',
 		'code',
 		'source',
 		'target',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

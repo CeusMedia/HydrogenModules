@@ -20,20 +20,20 @@ class Model_Issue_Note extends Model
 {
 	protected string $name			= 'issue_notes';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'issueNoteId',
 		'issueId',
 		'userId',
 		'note',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'issueNoteId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'issueId',
 		'userId',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

@@ -18,35 +18,35 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Oauth_RefreshToken extends Model
 {
-	protected string $name		= 'oauth_refresh_tokens';
+	protected string $name			= 'oauth_refresh_tokens';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'oauthRefreshTokenId',
 		'oauthApplicationId',
 		'token',
 		'scope',
 		'createdAt',
-	);
+	];
 
 	protected string $primaryKey	= 'oauthRefreshTokenId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'oauthApplicationId',
 		'token',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
 	/**
-	 *	Returnes generated unique token.
+	 *	Returns generated unique token.
 	 *	@access		public
-	 *	@param		integer		$applicationId		ID of application to get token for
-	 *	@param		string		$scope				List of scopes to get token for (optional)
-	 *	@param		string		$salt				Token hash salt (optional)
-	 *	@param		string		$pepper				Token hash pepper (optional)
-	 *	@return		string		Token (32 characters)
+	 *	@param		integer			$applicationId		ID of application to get token for
+	 *	@param		string			$scope				List of scopes to get token for (optional)
+	 *	@param		string|NULL		$salt				Token hash salt (optional)
+	 *	@param		string|NULL		$pepper				Token hash pepper (optional)
+	 *	@return		string			Token (32 characters)
 	 */
-	public function getNewToken( $applicationId, $scope = "", $salt = NULL, $pepper = NULL ): string
+	public function getNewToken( $applicationId, string $scope = '', ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
 		do{
 			$key	= $applicationId.'_'.$scope.'_'.$salt.'_'.microtime( TRUE ).'_'.$pepper;

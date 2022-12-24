@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Image_Slide extends Model
 {
-	protected string $name		= 'slider_slides';
+	protected string $name			= 'slider_slides';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'sliderSlideId',
 		'sliderId',
 		'status',
@@ -16,16 +16,16 @@ class Model_Image_Slide extends Model
 		'link',
 		'rank',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'sliderSlideId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'sliderId',
 		'status',
 		'source',
 		'title',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

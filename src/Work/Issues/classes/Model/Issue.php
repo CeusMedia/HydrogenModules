@@ -20,7 +20,7 @@ class Model_Issue extends Model
 {
 	protected string $name			= 'issues';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'issueId',
 		'reporterId',
 		'managerId',
@@ -34,11 +34,11 @@ class Model_Issue extends Model
 		'content',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'issueId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'reporterId',
 		'managerId',
 		'projectId',
@@ -46,7 +46,7 @@ class Model_Issue extends Model
 		'severity',
 		'priority',
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

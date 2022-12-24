@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Bookmark_Tag extends Model
 {
-	protected string $name		= 'bookmark_tags';
+	protected string $name			= 'bookmark_tags';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'bookmarkTagId',
 		'bookmarkId',
 		'userId',
@@ -28,17 +28,17 @@ class Model_Bookmark_Tag extends Model
 		'createdAt',
 		'relatedAt',
 		'usedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'bookmarkTagId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'bookmarkId',
 		'userId',
 		'createdAt',
 		'relatedAt',
 		'usedAt',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

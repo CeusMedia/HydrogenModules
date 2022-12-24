@@ -30,9 +30,9 @@ class Model_Bookmark extends Model
 		self::STATUS_ARCHIVED,
 	];
 
-	protected string $name		= 'bookmarks';
+	protected string $name			= 'bookmarks';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'bookmarkId',
 		'userId',
 		'status',
@@ -46,18 +46,18 @@ class Model_Bookmark extends Model
 		'createdAt',
 		'modifiedAt',
 		'visitedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'bookmarkId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userId',
 		'status',
 		'url',
 		'createdAt',
 		'modifiedAt',
 		'visitedAt',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

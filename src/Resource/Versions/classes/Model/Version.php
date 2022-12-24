@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Version extends Model
 {
-	protected string $name		= 'versions';
+	protected string $name			= 'versions';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'versionId',
 		'userId',
 		'module',
@@ -28,17 +28,17 @@ class Model_Version extends Model
 		'version',
 		'content',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'versionId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userId',
 		'module',
 		'id',
 		'version',
 		'timestamp',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

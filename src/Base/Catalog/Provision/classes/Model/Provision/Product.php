@@ -11,7 +11,7 @@ class Model_Provision_Product extends Model
 
 	protected string $name			= 'provision_products';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'productId',
 		'status',
 		'rank',
@@ -20,15 +20,15 @@ class Model_Provision_Product extends Model
 		'description',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'productId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'status',
 		'rank',
 		'title',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

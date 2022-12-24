@@ -8,7 +8,7 @@ class Model_Project extends Model
 
 	protected string $name			= 'projects';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'projectId',
 		'creatorId',
 		'parentId',
@@ -19,21 +19,21 @@ class Model_Project extends Model
 		'description',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'projectId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'creatorId',
 		'parentId',
 		'status',
 		'priority',
 		'title',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
-	public function getUserProjects( $userId, $conditions = [], $orders = [] )
+	public function getUserProjects( $userId, array $conditions = [], array $orders = [] ): array
 	{
 		$modelProject	= new Model_Project( $this->env );
 		$modelRelation	= new Model_Project_User( $this->env );
@@ -55,7 +55,7 @@ class Model_Project extends Model
 		return $projects;
 	}
 
-	public function getProjectUsers( $projectId, $conditions = [], $orders = [] )
+	public function getProjectUsers( $projectId, array $conditions = [], array $orders = [] ): array
 	{
 		$modelUser		= new Model_User( $this->env );
 		$modelRelation	= new Model_Project_User( $this->env );

@@ -14,9 +14,9 @@ class Model_Mail_Sync_Run extends Model
 		self::STATUS_SUCCESS,
 	];
 
-	protected string $name		= 'mail_sync_runs';
+	protected string $name			= 'mail_sync_runs';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'mailSyncRunId',
 		'mailSyncId',
 		'status',
@@ -25,13 +25,13 @@ class Model_Mail_Sync_Run extends Model
 		'output',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 	protected string $primaryKey	= 'mailSyncRunId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'mailSyncId',
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

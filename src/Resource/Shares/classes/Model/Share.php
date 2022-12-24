@@ -10,7 +10,7 @@ class Model_Share extends Model
 
 	protected string $name				= 'shares';
 
-	protected array $columns			= array(
+	protected array $columns			= [
 		'shareId',
 		'status',
 		'access',
@@ -21,9 +21,9 @@ class Model_Share extends Model
 		'uuid',
 		'createdAt',
 		'accessedAt',
-	);
+	];
 
-	protected array $indices			= array(
+	protected array $indices			= [
 		'status',
 		'access',
 		'validity',
@@ -31,9 +31,9 @@ class Model_Share extends Model
 		'relationId',
 		'path',
 		'uuid',
-	);
+	];
 
 	protected string $primaryKey		= 'shareId';
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode			= PDO::FETCH_OBJ;
 }

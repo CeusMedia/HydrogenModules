@@ -20,7 +20,7 @@ class Model_Blog_Post extends Model
 {
 	protected string $name		= 'blog_posts';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'postId',
 		'parentId',
 		'authorId',
@@ -37,17 +37,17 @@ class Model_Blog_Post extends Model
 		'modifiedAt',
 		'viewedAt',
 		'commentedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'postId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'parentId',
 		'authorId',
 		'categoryId',
 		'status',
 		'language',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

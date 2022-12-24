@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Work_Graph extends Model
 {
-	protected string $name		= 'graphs';
+	protected string $name			= 'graphs';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"graphId",
 		"type",
 		"rankdir",
@@ -42,15 +42,15 @@ class Model_Work_Graph extends Model
 		"createdAt",
 		"modifiedAt",
 		"renderedAt",
-	);
+	];
 
 	protected string $primaryKey	= 'graphId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"type",
 		"rankdir",
 		"title",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

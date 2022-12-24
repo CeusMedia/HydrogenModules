@@ -1,7 +1,7 @@
 <?php
 class Model_Calculator_Power extends Model_Calculator_Operator
 {
-	protected $precidence	= 6;
+	protected int $precedence	= 6;
 
 	public function operate( Model_Calculator_Stack $stack )
 	{

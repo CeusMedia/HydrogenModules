@@ -33,5 +33,5 @@ class Model_Form_Transfer_Rule extends Model
 
 	protected string $name			= 'form_transfer_rules';
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

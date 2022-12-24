@@ -36,5 +36,5 @@ class Model_Form_Rule extends Model
 
 	protected string $name			= 'form_rules';
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

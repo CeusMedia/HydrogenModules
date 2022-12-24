@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Catalog_Bookstore_Author extends Model
 {
-	protected string $name		= 'catalog_bookstore_authors';
+	protected string $name			= 'catalog_bookstore_authors';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"authorId",
 		"lastname",
 		"firstname",
@@ -26,16 +26,16 @@ class Model_Catalog_Bookstore_Author extends Model
 		"image",
 		"reference",
 		"description",
-	);
+	];
 
 	protected string $primaryKey	= 'authorId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"lastname",
 		"image",
 		"reference",
 //		"institution",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

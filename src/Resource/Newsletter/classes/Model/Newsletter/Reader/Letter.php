@@ -25,18 +25,18 @@ class Model_Newsletter_Reader_Letter extends Model
 	const STATUS_SENT		= 1;
 	const STATUS_OPENED		= 2;
 
-	const STATUSES			= array(
+	const STATUSES			= [
 		self::STATUS_REMOVED,
 		self::STATUS_CANCELLED,
 		self::STATUS_FAILED,
 		self::STATUS_ENQUEUED,
 		self::STATUS_SENT,
 		self::STATUS_OPENED,
-	);
+	];
 
-	protected string $name		= 'newsletter_reader_letters';
+	protected string $name			= 'newsletter_reader_letters';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'newsletterReaderLetterId',
 		'newsletterReaderId',
 		'newsletterQueueId',
@@ -46,17 +46,17 @@ class Model_Newsletter_Reader_Letter extends Model
 		'enqueuedAt',
 		'sentAt',
 		'openedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'newsletterReaderLetterId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'newsletterReaderId',
 		'newsletterQueueId',
 		'newsletterId',
 		'mailId',
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

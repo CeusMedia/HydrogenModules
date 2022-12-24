@@ -6,7 +6,7 @@ class Model_Company_User extends Model
 {
 	protected string $name			= 'company_users';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'companyUserId',
 		'companyId',
 		'userId',
@@ -14,16 +14,16 @@ class Model_Company_User extends Model
 //		'role',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'companyUserId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'companyId',
 		'userId',
 //		'status',
 //		'role',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

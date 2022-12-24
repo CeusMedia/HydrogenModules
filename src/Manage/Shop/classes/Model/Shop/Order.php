@@ -30,9 +30,9 @@ class Model_Shop_Order extends Model
 	const STATUS_DELIVERED			= 5;
 	const STATUS_COMPLETED			= 6;
 
-	protected string $name		= 'shop_orders';
+	protected string $name			= 'shop_orders';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"orderId",
 		"customerId",
 		"sessionId",
@@ -46,11 +46,11 @@ class Model_Shop_Order extends Model
 		"priceTaxed",
 		"createdAt",
 		"modifiedAt",
-	);
+	];
 
 	protected string $primaryKey	= 'orderId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"customerId",
 		"sessionId",
 		"userId",
@@ -58,7 +58,7 @@ class Model_Shop_Order extends Model
 		"paymentId",
 		"status",
 		"currency",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

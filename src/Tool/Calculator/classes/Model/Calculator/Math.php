@@ -1,15 +1,14 @@
 <?php
 class Model_Calculator_Math
 {
-	protected $variables = [];
+	protected array $variables = [];
 
-	public function evaluate( $string )
+	public function evaluate( $string ): string
 	{
-		$stack = $this->parse( $string );
-		return $this->run( $stack );
+		return $this->run( $this->parse( $string ) );
 	}
 
-	public function parse( $string )
+	public function parse( $string ):Model_Calculator_Stack
 	{
 		$tokens = $this->tokenize( $string );
 		$output = new Model_Calculator_Stack();
@@ -37,7 +36,7 @@ class Model_Calculator_Math
 		$this->variables[$name] = $value;
 	}
 
-	public function run( Model_Calculator_Stack $stack )
+	public function run( Model_Calculator_Stack $stack ): string
 	{
 		while( ( $operator = $stack->pop() ) && $operator->isOperator() ){
 			$value = $operator->operate( $stack );
@@ -57,7 +56,7 @@ class Model_Calculator_Math
 		return $token;
 	}
 
-	protected function render( Model_Calculator_Stack $stack )
+	protected function render( Model_Calculator_Stack $stack ): string
 	{
 		$output = '';
 		while( ( $el = $stack->pop() ) )
@@ -69,7 +68,7 @@ class Model_Calculator_Math
 		throw new RuntimeException( 'Could not render output' );
 	}
 
-	protected function parseParenthesis( Model_Calculator_TerminalExpression $expression, Stack $output, Stack $operators )
+	protected function parseParenthesis( Model_Calculator_TerminalExpression $expression, Model_Calculator_Stack $output, Model_Calculator_Stack $operators ): void
 	{
 		if( $expression->isOpen() )
 			$operators->push( $expression );
@@ -88,16 +87,16 @@ class Model_Calculator_Math
 		}
 	}
 
-	protected function parseOperator( Model_Calculator_TerminalExpression $expression, Model_Calculator_Stack $output, Model_Calculator_Stack $operators )
+	protected function parseOperator( Model_Calculator_TerminalExpression $expression, Model_Calculator_Stack $output, Model_Calculator_Stack $operators ): void
 	{
 		$end = $operators->poke();
 		if( !$end )
 			$operators->push( $expression );
 		else if( $end->isOperator() ){
 			do{
-				if( $expression->isLeftAssoc() && $expression->getPrecidence() <= $end->getPrecidence() )
+				if( $expression->isLeftAssoc() && $expression->getPrecedence() <= $end->getPrecedence() )
 					$output->push( $operators->pop() );
-				else if( !$expression->isLeftAssoc() && $expression->getPrecidence() < $end->getPrecidence() )
+				else if( !$expression->isLeftAssoc() && $expression->getPrecedence() < $end->getPrecedence() )
 					$output->push( $operators->pop() );
 				else
 					break;

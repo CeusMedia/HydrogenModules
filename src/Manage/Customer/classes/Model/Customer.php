@@ -6,7 +6,7 @@ class Model_Customer extends Model
 {
 	protected string $name			= 'customers';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'customerId',
 		'creatorId',
 		'size',
@@ -27,11 +27,11 @@ class Model_Customer extends Model
 		'fax',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'customerId';
 
-	protected $indizes		= [];
+	protected array $indizes		= [];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

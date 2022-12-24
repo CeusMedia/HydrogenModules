@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Testimonial extends Model
 {
-	protected string $name		= 'testimonials';
+	protected string $name			= 'testimonials';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'testimonialId',
 		'status',
 		'rank',
@@ -31,17 +31,17 @@ class Model_Testimonial extends Model
 		'title',
 		'description',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'testimonialId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'status',
 		'rank',
 		'rating',
 		'username',
 		'email',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

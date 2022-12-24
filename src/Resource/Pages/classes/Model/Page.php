@@ -40,9 +40,9 @@ class Model_Page extends Model
 		self::STATUS_VISIBLE,
 	];
 
-	protected string $name		= 'pages';
+	protected string $name			= 'pages';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'pageId',
 		'parentId',
 		'type',
@@ -65,11 +65,11 @@ class Model_Page extends Model
 		'template',
 		'createdAt',
 		'modifiedAt'
-	);
+	];
 
 	protected string $primaryKey	= 'pageId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'parentId',
 		'type',
 		'scope',
@@ -82,7 +82,7 @@ class Model_Page extends Model
 		'format',
 		'changefreq',
 		'priority',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

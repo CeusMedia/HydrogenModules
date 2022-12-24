@@ -18,19 +18,19 @@ final class Model_Shop_Shipping_Grade extends Model
 {
 	protected string $name		= 'shop_shipping_grades';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'gradeId',
 		'title',
 		'weight',
 		'fallback',
-	);
+	];
 
 	protected string $primaryKey	= 'gradeId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'weight',
 		'fallback',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

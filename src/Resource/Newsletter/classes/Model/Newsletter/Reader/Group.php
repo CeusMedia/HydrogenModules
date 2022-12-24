@@ -23,30 +23,30 @@ class Model_Newsletter_Reader_Group extends Model
 	const STATUS_ASSIGNED		= 0;
 	const STATUS_REJOINED		= 1;
 
-	const STATUSES				= array(
+	const STATUSES				= [
 		self::STATUS_REMOVED,
 		self::STATUS_CANCELLED,
 		self::STATUS_ASSIGNED,
 		self::STATUS_REJOINED,
-	);
+	];
 
-	protected string $name		= 'newsletter_reader_groups';
+	protected string $name			= 'newsletter_reader_groups';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'newsletterReaderGroupId',
 		'newsletterReaderId',
 		'newsletterGroupId',
 		'status',
 		'createdAt',
-	);
+	];
 
 	protected string $primaryKey	= 'newsletterReaderGroupId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'newsletterReaderId',
 		'newsletterGroupId',
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

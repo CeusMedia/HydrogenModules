@@ -30,9 +30,9 @@ class Model_Mail_Group_Member extends Model
 		self::STATUS_ACTIVATED,
 	];
 
-	protected string $name		= 'mail_group_members';
+	protected string $name			= 'mail_group_members';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"mailGroupMemberId",
 		"mailGroupId",
 		"roleId",
@@ -41,16 +41,16 @@ class Model_Mail_Group_Member extends Model
 		"title",
 		"createdAt",
 		"modifiedAt",
-	);
+	];
 
 	protected string $primaryKey	= 'mailGroupMemberId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"mailGroupId",
 		"status",
 		"address",
 		"title",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

@@ -6,7 +6,7 @@ class Model_Branch extends Model
 {
 	protected string $name			= 'branches';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'branchId',
 		'companyId',
 		'status',
@@ -26,16 +26,16 @@ class Model_Branch extends Model
 		'z',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'branchId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'companyId',
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
 	public function extendWithGeocodes( $branchId )
 	{
@@ -59,7 +59,7 @@ class Model_Branch extends Model
 		}
 	}
 
-	public function getAllInDistance( $x, $y, $z, $distance )
+	public function getAllInDistance( $x, $y, $z, $distance ): array
 	{
 		$query		= 'SELECT *
 		FROM branches as b

@@ -22,27 +22,27 @@ class Model_Newsletter_Group extends Model
 	const STATUS_NEW		= 0;
 	const STATUS_USABLE		= 1;
 
-	const STATUSES			= array(
+	const STATUSES			= [
 		self::STATUS_DISCARDED,
 		self::STATUS_NEW,
 		self::STATUS_USABLE,
-	);
+	];
 
 	const TYPE_DEFAULT		= 0;
 	const TYPE_TEST			= 1;
 	const TYPE_AUTOMATIC	= 2;
 	const TYPE_HIDDEN		= 3;
 
-	const TYPES				= array(
+	const TYPES				= [
 		self::TYPE_DEFAULT,
 		self::TYPE_TEST,
 		self::TYPE_AUTOMATIC,
 		self::TYPE_HIDDEN,
-	);
+	];
 
-	protected string $name		= 'newsletter_groups';
+	protected string $name			= 'newsletter_groups';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'newsletterGroupId',
 		'creatorId',
 		'status',
@@ -50,16 +50,16 @@ class Model_Newsletter_Group extends Model
 		'title',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'newsletterGroupId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'creatorId',
 		'status',
 		'type',
 		'title',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

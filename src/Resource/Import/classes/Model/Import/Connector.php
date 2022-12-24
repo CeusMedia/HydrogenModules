@@ -24,9 +24,9 @@ class Model_Import_Connector extends Model
 	const FEATURE_DELETE	= 16;
 	const FEATURE_CREATE	= 32;
 
-	protected string $name		= 'import_connectors';
+	protected string $name			= 'import_connectors';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'importConnectorId',
 		'creatorId',
 		'status',
@@ -36,16 +36,16 @@ class Model_Import_Connector extends Model
 		'description',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'importConnectorId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'creatorId',
 		'status',
 		'type',
 		'className',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

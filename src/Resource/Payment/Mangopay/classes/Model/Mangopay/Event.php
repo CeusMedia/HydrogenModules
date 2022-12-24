@@ -9,9 +9,9 @@ class Model_Mangopay_Event extends Model
 	const STATUS_HANDLED		= 2;
 	const STATUS_CLOSED			= 3;
 
-	protected string $name		= 'mangopay_events';
+	protected string $name			= 'mangopay_events';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"eventId",
 		"status",
 		"id",
@@ -20,19 +20,19 @@ class Model_Mangopay_Event extends Model
 		"triggeredAt",
 		"receivedAt",
 		"handledAt",
-	);
+	];
 
 	protected string $primaryKey	= 'eventId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"status",
 		"id",
 		"type",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
-	public $types			= array(
+	public array $types				= [
 		'PAYIN_NORMAL'				=> ['PAYIN_NORMAL_CREATED', 'PAYIN_NORMAL_SUCCEEDED', 'PAYIN_NORMAL_FAILED'],
 		'PAYOUT_NORMAL_'			=> ['PAYOUT_NORMAL_CREATED', 'PAYOUT_NORMAL_SUCCEEDED', 'PAYOUT_NORMAL_FAILED'],
 		'TRANSFER_NORMAL'			=> ['TRANSFER_NORMAL_CREATED', 'TRANSFER_NORMAL_SUCCEEDED', 'TRANSFER_NORMAL_FAILED'],
@@ -47,5 +47,5 @@ class Model_Mangopay_Event extends Model
 		'MANDATE'					=> ['MANDATE_CREATED', 'MANDATE_FAILED', 'MANDATE_ACTIVATED', 'MANDATE_SUBMITTED'],
 		'PREAUTHORIZATION_PAYMENT'	=> ['PREAUTHORIZATION_PAYMENT_WAITING', 'PREAUTHORIZATION_PAYMENT_EXPIRED', 'PREAUTHORIZATION_PAYMENT_CANCELED', 'PREAUTHORIZATION_PAYMENT_VALIDATED'],
 		'UBO_DECLARATION'			=> ['UBO_DECLARATION_CREATED', 'UBO_DECLARATION_VALIDATION_ASKED', 'UBO_DECLARATION_REFUSED', 'UBO_DECLARATION_VALIDATED'],
-	);
+	];
 }

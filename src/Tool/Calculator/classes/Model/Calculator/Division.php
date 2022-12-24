@@ -1,7 +1,7 @@
 <?php
 class Model_Calculator_Division extends Model_Calculator_Operator
 {
-	protected $precidence = 5;
+	protected int $precedence = 5;
 
 	public function operate( Model_Calculator_Stack $stack )
 	{

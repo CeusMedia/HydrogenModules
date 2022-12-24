@@ -12,9 +12,9 @@ class Model_IP_Lock_Reason extends Model
 		self::STATUS_ENABLED,
 	];
 
-	protected string $name		= 'ip_lock_reasons';
+	protected string $name			= 'ip_lock_reasons';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'ipLockReasonId',
 		'status',
 		'duration',
@@ -22,16 +22,16 @@ class Model_IP_Lock_Reason extends Model
 		'description',
 		'createdAt',
 		'appliedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'ipLockReasonId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'status',
 		'duration',
 		'createdAt',
 		'appliedAt',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

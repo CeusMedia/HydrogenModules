@@ -14,28 +14,28 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Lock extends Model
 {
-	/**	@var	$name		string		Table name without prefix of database connection */
-	protected string $name			= "locks";
+	/**	@var	string		$name		Table name without prefix of database connection */
+	protected string $name				= "locks";
 
-	/**	@var	$name		string		List of columns within table */
-	protected array $columns		= array(
+	/**	@var	array		$columns	List of columns within table */
+	protected array $columns			= [
 		'lockId',
 		'userId',
 		'subject',
 		'entryId',
 		'timestamp',
-	);
+	];
 
-	/**	@var	$name		string		Name of column with primary key */
-	protected string $primaryKey	= "lockId";
+	/**	@var	string		$primaryKey	Name of column with primary key */
+	protected string $primaryKey		= "lockId";
 
-	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
-	protected array $indices		= array(
+	/**	@var	array		$indices	List of columns which are a foreign key and/or indexed */
+	protected array $indices			= [
 		'userId',
 		'subject',
 		'entryId',
-	);
+	];
 
-	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	/**	@var	integer		$fetchMode	Fetch mode, see PDO documentation */
+	protected int $fetchMode			= PDO::FETCH_OBJ;
 }

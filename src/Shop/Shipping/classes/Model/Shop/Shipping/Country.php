@@ -16,20 +16,20 @@ use CeusMedia\HydrogenFramework\Model;
  */
 final class Model_Shop_Shipping_Country extends Model
 {
-	protected string $name		= 'shop_shipping_countries';
+	protected string $name			= 'shop_shipping_countries';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'countryId',
 		'zoneId',
 		'countryCode',
-	);
+	];
 
 	protected string $primaryKey	= 'countryId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'zoneId',
 		'countryCode',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

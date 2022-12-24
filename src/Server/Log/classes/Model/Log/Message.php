@@ -23,10 +23,10 @@ class Model_Log_Message extends Model
 	const FORMAT_WDDX		= 8;
 
 	/**	@var		string				$name				Name of Database Table without Prefix */
-	protected string $name						= 'log_messages';
+	protected string $name				= 'log_messages';
 
 	/**	@var		array				$columns			List of Database Table Columns */
-	protected array $columns	= array(
+	protected array $columns			= [
 		'logMessageId',
 		'type',
 		'status',
@@ -36,19 +36,19 @@ class Model_Log_Message extends Model
 		'userAgent',
 		'context',
 		'microtimestamp',
-	);
+	];
 
 	/**	@var		string				$primaryKey			Primary Key of Database Table */
-	protected string $primaryKey				= 'logMessageId';
+	protected string $primaryKey		= 'logMessageId';
 
 	/**	@var		array				$name				List of foreign Keys of Database Table */
- 	protected array $indices					= array(
+ 	protected array $indices			= [
 		'type',
 		'status',
 		'ip',
 		'format',
-	);
+	];
 
 	/**	@var		integer				$fetchMode			PDO fetch mode */
-	protected int $fetchMode				= PDO::FETCH_OBJ;
+	protected int $fetchMode			= PDO::FETCH_OBJ;
 }

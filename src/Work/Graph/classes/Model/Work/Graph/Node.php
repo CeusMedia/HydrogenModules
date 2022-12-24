@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Work_Graph_Node extends Model
 {
-	protected string $name		= 'graph_nodes';
+	protected string $name			= 'graph_nodes';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"nodeId",
 		"graphId",
 		"ID",
@@ -32,14 +32,14 @@ class Model_Work_Graph_Node extends Model
 		"height",
 		"fontsize",
 		"fontcolor",
-	);
+	];
 
 	protected string $primaryKey	= 'nodeId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"graphId",
 		"ID",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

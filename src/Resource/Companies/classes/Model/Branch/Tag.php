@@ -6,19 +6,19 @@ class Model_Branch_Tag extends Model
 {
 	protected string $name			= 'branch_tags';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'branchTagId',
 		'branchId',
 		'label',
 		'createdAt',
-	);
+	];
 
 	protected string $primaryKey	= 'branchTagId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'branchId',
 		'label',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

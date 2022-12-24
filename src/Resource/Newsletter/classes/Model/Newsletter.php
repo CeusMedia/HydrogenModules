@@ -23,16 +23,16 @@ class Model_Newsletter extends Model
 	const STATUS_READY			= 1;
 	const STATUS_SENT			= 2;
 
-	const STATUSES				= array(
+	const STATUSES				= [
 		self::STATUS_ABORTED,
 		self::STATUS_NEW,
 		self::STATUS_READY,
 		self::STATUS_SENT,
-	);
+	];
 
-	protected string $name		= 'newsletters';
+	protected string $name			= 'newsletters';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'newsletterId',
 		'newsletterTemplateId',
 		'creatorId',
@@ -50,17 +50,17 @@ class Model_Newsletter extends Model
 		'createdAt',
 		'modifiedAt',
 		'sentAt',
-	);
+	];
 
 	protected string $primaryKey	= 'newsletterId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'newsletterTemplateId',
 		'creatorId',
 		'status',
 		'title',
 		'subject',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

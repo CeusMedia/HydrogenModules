@@ -38,9 +38,9 @@ class Model_Workshop extends Model
 	const STATUS_OUTDATED		= 2;
 	const STATUS_CLOSED			= 3;
 
-	protected string $name		= 'workshops';
+	protected string $name			= 'workshops';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'workshopId',
 		'status',
 		'rank',
@@ -52,16 +52,16 @@ class Model_Workshop extends Model
 		'imageAlignV',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'workshopId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'status',
 		'rank',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

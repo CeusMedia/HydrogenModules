@@ -58,5 +58,5 @@ class Model_Manual_Page extends Model
 		'title',
 	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

@@ -27,7 +27,7 @@ class Model_Job_Definition extends Model
 
 	protected string $name			= 'job_definitions';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'jobDefinitionId',
 		'mode',
 		'status',
@@ -40,11 +40,11 @@ class Model_Job_Definition extends Model
 		'createdAt',
 		'modifiedAt',
 		'lastRunAt',
-	);
+	];
 
 	protected string $primaryKey	= 'jobDefinitionId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'mode',
 		'status',
 		'identifier',
@@ -52,7 +52,7 @@ class Model_Job_Definition extends Model
 		'methodName',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

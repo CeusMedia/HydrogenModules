@@ -20,9 +20,9 @@ class Model_Mail_Sync extends Model
 		self::STATUS_CLOSED,
 	];
 
-	protected string $name		= 'mail_syncs';
+	protected string $name			= 'mail_syncs';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'mailSyncId',
 		'sourceMailHostId',
 		'targetMailHostId',
@@ -34,17 +34,17 @@ class Model_Mail_Sync extends Model
 		'targetPassword',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'mailSyncId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'sourceMailHostId',
 		'targetMailHostId',
 		'sourceUsername',
 		'targetUsername',
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

@@ -20,7 +20,7 @@ class Model_Blog_Comment extends Model
 {
 	protected string $name		= 'blog_comments';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'commentId',
 		'parentId',
 		'postId',
@@ -34,11 +34,11 @@ class Model_Blog_Comment extends Model
 		'nrDislikes',
 		'createdAt',
 		'repliedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'commentId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'parentId',
 		'postId',
 		'authorId',
@@ -46,7 +46,7 @@ class Model_Blog_Comment extends Model
 		'language',
 		'username',
 		'email',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

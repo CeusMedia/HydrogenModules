@@ -1,8 +1,6 @@
 <?php
 /**
  *	...
- *	@category		...
- *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013-2020 Ceus Media
  */
@@ -11,8 +9,6 @@ use CeusMedia\HydrogenFramework\Model;
 
 /**
  *	...
- *	@category		...
- *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013-2020 Ceus Media
  */
@@ -23,16 +19,16 @@ class Model_Newsletter_Reader extends Model
 	const STATUS_REGISTERED		= 0;
 	const STATUS_CONFIRMED		= 1;
 
-	const STATUSES				= array(
+	const STATUSES				= [
 		self::STATUS_DEACTIVATED,
 		self::STATUS_UNREGISTERED,
 		self::STATUS_REGISTERED,
 		self::STATUS_CONFIRMED,
-	);
+	];
 
-	protected string $name		= 'newsletter_readers';
+	protected string $name			= 'newsletter_readers';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'newsletterReaderId',
 		'status',
 		'email',
@@ -42,16 +38,16 @@ class Model_Newsletter_Reader extends Model
 		'surname',
 		'institution',
 		'registeredAt',
-	);
+	];
 
 	protected string $primaryKey	= 'newsletterReaderId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'status',
 		'email',
 		'firstname',
 		'surname',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

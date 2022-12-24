@@ -6,7 +6,7 @@ class Model_Work_Timer extends Model
 {
 	protected string $name			= 'work_timers';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'workTimerId',
 		'userId',
 		'projectId',
@@ -20,11 +20,11 @@ class Model_Work_Timer extends Model
 		'description',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'workTimerId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userId',
 		'projectId',
 		'workerId',
@@ -32,7 +32,7 @@ class Model_Work_Timer extends Model
 		'moduleId',
 		'userId',
 		'status',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

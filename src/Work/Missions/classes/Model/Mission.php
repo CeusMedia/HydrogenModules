@@ -18,14 +18,14 @@ class Model_Mission extends Model
 	const PRIORITY_LOW			= 4;
 	const PRIORITY_LOWEST		= 5;
 
-	const PRIORITIES			= array(
+	const PRIORITIES			= [
 		self::PRIORITY_NONE,
 		self::PRIORITY_HIGHEST,
 		self::PRIORITY_HIGH,
 		self::PRIORITY_NORMAL,
 		self::PRIORITY_LOW,
 		self::PRIORITY_LOWEST,
-	);
+	];
 
 	const STATUS_ABORTED		= -2;
 	const STATUS_REJECTED		= -1;
@@ -35,7 +35,7 @@ class Model_Mission extends Model
 	const STATUS_READY			= 3;
 	const STATUS_FINISHED		= 4;
 
-	const STATUSES			= array(
+	const STATUSES				= [
 		self::STATUS_ABORTED,
 		self::STATUS_REJECTED,
 		self::STATUS_NEW,
@@ -43,21 +43,21 @@ class Model_Mission extends Model
 		self::STATUS_PROGRESS,
 		self::STATUS_READY,
 		self::STATUS_FINISHED,
-	);
+	];
 
-	const TYPE_TASK		= 0;
-	const TYPE_EVENT	= 1;
+	const TYPE_TASK				= 0;
+	const TYPE_EVENT			= 1;
 
-	const TYPES			= array(
+	const TYPES					= [
 		self::TYPE_TASK.
 		self::TYPE_EVENT,
-	);
+	];
 
 	/**	@var	$name		string		Table name without prefix of database connection */
-	protected string $name			= "missions";
+	protected string $name				= "missions";
 
-	/**	@var	$name		string		List of columns within table */
-	protected array $columns		= array(
+	/**	@var	array		$columns	List of columns within table */
+	protected array $columns			= [
 		'missionId',
 		'creatorId',
 		'modifierId',
@@ -79,13 +79,13 @@ class Model_Mission extends Model
 		'reference',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
-	/**	@var	$name		string		Name of column with primary key */
-	protected string $primaryKey	= "missionId";
+	/**	@var	string		$primaryKey		Name of column with primary key */
+	protected string $primaryKey			= "missionId";
 
-	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
-	protected array $indices		= array(
+	/**	@var	array		$name			List of columns which are a foreign key and/or indexed */
+	protected array $indices				= [
 		'creatorId',
 		'modifierId',
 		'workerId',
@@ -95,8 +95,8 @@ class Model_Mission extends Model
 		'status',
 		'dayStart',
 		'dayEnd',
-	);
+	];
 
-	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	/**	@var	integer		$fetchMode		Fetch mode, see PDO documentation */
+	protected int $fetchMode				= PDO::FETCH_OBJ;
 }

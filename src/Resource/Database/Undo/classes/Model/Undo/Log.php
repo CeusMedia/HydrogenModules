@@ -25,7 +25,7 @@ class Model_Undo_Log extends Model
 
 	protected string $name		= 'undo_log';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'changeId',
 		'userId',
 		'mode',
@@ -33,16 +33,16 @@ class Model_Undo_Log extends Model
 		'primaryKey',
 		'values',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'changeId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userId',
 		'mode',
 		'tableName',
 		'primaryKey',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

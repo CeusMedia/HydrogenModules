@@ -4,18 +4,18 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_TermLog extends Model
 {
-	protected string $name		= 'term_log';
+	protected string $name			= 'term_log';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'termLogId',
 		'userId',
 		'count',
 		'content',
 		'createdAt',
 		'modifiedAt'
-	);
+	];
 
 	protected string $primaryKey	= 'termLogId';
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

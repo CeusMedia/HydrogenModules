@@ -1,7 +1,7 @@
 <?php
 class Model_Calculator_Subtraction extends Model_Calculator_Operator
 {
-	protected $precidence = 4;
+	protected int $precedence = 4;
 
 	public function operate( Model_Calculator_Stack $stack )
 	{

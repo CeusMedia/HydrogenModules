@@ -20,11 +20,11 @@ class Model_Job_Schedule extends Model
 	const STATUS_ENABLED	= 1;
 	const STATUS_PAUSED		= 2;
 
-	const STATUSES				= array(
+	const STATUSES				= [
 		self::STATUS_DISABLED,
 		self::STATUS_ENABLED,
 		self::STATUS_PAUSED,
-	);
+	];
 
 	const REPORT_MODE_NEVER		= 0;
 	const REPORT_MODE_ALWAYS	= 1;
@@ -33,39 +33,39 @@ class Model_Job_Schedule extends Model
 	const REPORT_MODE_DONE		= 4;
 	const REPORT_MODE_SUCCESS	= 5;
 
-	const REPORT_MODES			= array(
+	const REPORT_MODES			= [
 		self::REPORT_MODE_NEVER,
 		self::REPORT_MODE_ALWAYS,
 		self::REPORT_MODE_CHANGE,
 		self::REPORT_MODE_FAIL,
 		self::REPORT_MODE_DONE,
 		self::REPORT_MODE_SUCCESS,
-	);
+	];
 
 	const REPORT_CHANNEL_NONE	= 0;
 	const REPORT_CHANNEL_MAIL	= 1;
 	const REPORT_CHANNEL_XMPP	= 2;
 
-	const REPORT_CHANNELS		= array(
+	const REPORT_CHANNELS		= [
 		self::REPORT_CHANNEL_NONE,
 		self::REPORT_CHANNEL_MAIL,
 		self::REPORT_CHANNEL_XMPP,
-	);
+	];
 
 	const TYPE_UNKNOWN		= 0;
 	const TYPE_CRON			= 1;
 	const TYPE_INTERVAL		= 2;
 	const TYPE_DATETIME		= 3;
 
-	const TYPES				= array(
+	const TYPES				= [
 		self::TYPE_CRON,
 		self::TYPE_INTERVAL,
 		self::TYPE_DATETIME,
-	);
+	];
 
 	protected string $name			= 'job_schedule';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'jobScheduleId',
 		'jobDefinitionId',
 		'type',
@@ -79,11 +79,11 @@ class Model_Job_Schedule extends Model
 		'createdAt',
 		'modifiedAt',
 		'lastRunAt',
-	);
+	];
 
 	protected string $primaryKey	= 'jobScheduleId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'jobDefinitionId',
 		'type',
 		'status',
@@ -92,7 +92,7 @@ class Model_Job_Schedule extends Model
 		'createdAt',
 		'modifiedAt',
 		'lastRunAt',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

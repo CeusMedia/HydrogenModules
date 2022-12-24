@@ -12,9 +12,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Download_Folder extends Model
 {
-	protected string $name		= 'download_folders';
+	protected string $name			= 'download_folders';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'downloadFolderId',
 		'parentId',
 		'type',
@@ -25,16 +25,16 @@ class Model_Download_Folder extends Model
 		'nrFiles',
 		'createdAt',
 		'modifiedAt'
-	);
+	];
 
 	protected string $primaryKey	= 'downloadFolderId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'parentId',
 		'type',
 		'rank',
 		'title',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

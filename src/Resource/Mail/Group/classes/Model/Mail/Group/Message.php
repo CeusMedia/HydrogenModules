@@ -17,16 +17,16 @@ class Model_Mail_Group_Message extends Model
 	const STATUS_STALLED	= 1;
 	const STATUS_FORWARDED	= 2;
 
-	const STATUSES					= [
+	const STATUSES			= [
 		self::STATUS_REJECTED,
 		self::STATUS_NEW,
 		self::STATUS_STALLED,
 		self::STATUS_FORWARDED,
 	];
 
-	protected string $name		= 'mail_group_messages';
+	protected string $name			= 'mail_group_messages';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"mailGroupMessageId",
 		"mailGroupId",
 		"mailGroupMemberId",
@@ -37,17 +37,17 @@ class Model_Mail_Group_Message extends Model
 		"object",
 		"createdAt",
 		"modifiedAt",
-	);
+	];
 
 	protected string $primaryKey	= 'mailGroupMessageId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"mailGroupId",
 		"mailGroupMemberId",
 		"status",
 		"parentId",
 		"messageId",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

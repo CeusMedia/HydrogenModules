@@ -6,7 +6,7 @@ class Model_Customer_Rating extends Model
 {
 	protected string $name			= 'customer_ratings';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'customerRatingId',
 		'customerId',
 		'userId',
@@ -19,17 +19,20 @@ class Model_Customer_Rating extends Model
 		'uptightness',				//  Nervfaktor, Nervosität, Verspanntheit
 		'comment',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'customerRatingId';
 
-	protected array $indices		= ['customerId', 'userId'];
+	protected array $indices		= [
+		'customerId',
+		'userId'
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
 	public function calculateCustomerIndex( $rating )
 	{
-		$factors	= array(
+		$factors	= [
 			'affability'	=> 3,
 			'guidability'	=> 4,
 			'growthRate'	=> 5,
@@ -37,7 +40,7 @@ class Model_Customer_Rating extends Model
 			'paymentMoral'	=> 7,
 			'adherence'		=> 1,
 			'uptightness'	=> -2,
-		);
+		];
 		$index		= 0;
 		$properties	= [];
 		foreach( $factors as $property => $factor ){

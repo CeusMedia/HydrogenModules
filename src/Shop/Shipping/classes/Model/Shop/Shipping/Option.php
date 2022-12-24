@@ -16,19 +16,19 @@ use CeusMedia\HydrogenFramework\Model;
  */
 final class Model_Shop_Shipping_Option extends Model
 {
-	protected string $name		= 'shop_shipping_options';
+	protected string $name			= 'shop_shipping_options';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'optionId',
 		'title',
 		'price',
-	);
+	];
 
 	protected string $primaryKey	= 'optionId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'price',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

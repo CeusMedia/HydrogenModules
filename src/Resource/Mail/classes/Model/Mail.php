@@ -34,55 +34,55 @@ class Model_Mail extends Model
 	const COMPRESSION_GZIP		= 3;
 	const COMPRESSION_BZIP		= 4;
 
-	public static $transitions	= array(
-		self::STATUS_ABORTED	=> array(
+	public static array $transitions	= [
+		self::STATUS_ABORTED	=> [
 			self::STATUS_NEW,
-		),
-		self::STATUS_FAILED	=> array(
+		],
+		self::STATUS_FAILED		=> [
 			self::STATUS_ABORTED,
 			self::STATUS_RETRY,
 			self::STATUS_NEW,
-		),
-		self::STATUS_RETRY	=> array(
+		],
+		self::STATUS_RETRY		=> [
 			self::STATUS_ABORTED,
 			self::STATUS_FAILED,
 			self::STATUS_NEW,
-		),
-		self::STATUS_NEW		=> array(
+		],
+		self::STATUS_NEW		=> [
 			self::STATUS_ABORTED,
 			self::STATUS_SENDING,
 			self::STATUS_SENT,
-		),
-		self::STATUS_SENDING	=> array(
+		],
+		self::STATUS_SENDING	=> [
 			self::STATUS_FAILED,
 			self::STATUS_RETRY,
 			self::STATUS_SENT,
-		),
-		self::STATUS_SENT		=> array(
+		],
+		self::STATUS_SENT		=> [
 			self::STATUS_RECEIVED,
 			self::STATUS_OPENED,
 			self::STATUS_REPLIED,
 			self::STATUS_ARCHIVED,
-		),
-		self::STATUS_RECEIVED	=> array(
+		],
+		self::STATUS_RECEIVED	=> [
 			self::STATUS_OPENED,
 			self::STATUS_REPLIED,
 			self::STATUS_ARCHIVED,
-		),
-		self::STATUS_OPENED	=> array(
+		],
+		self::STATUS_OPENED		=> [
 			self::STATUS_REPLIED,
 			self::STATUS_ARCHIVED,
-		),
-		self::STATUS_REPLIED	=> array(
+		],
+		self::STATUS_REPLIED	=> [
 			self::STATUS_ARCHIVED,
-		),
-		self::STATUS_ARCHIVED	=> array(
-		),
-	);
+		],
+		self::STATUS_ARCHIVED	=> [
+		],
+	];
 
-	protected string $name		= 'mails';
+	protected string $name			= 'mails';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'mailId',
 		'senderId',
 		'receiverId',
@@ -101,10 +101,11 @@ class Model_Mail extends Model
 		'enqueuedAt',
 		'attemptedAt',
 		'sentAt',
-	);
+	];
+
 	protected string $primaryKey	= 'mailId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'senderId',
 		'receiverId',
 		'templateId',
@@ -120,7 +121,7 @@ class Model_Mail extends Model
 		'enqueuedAt',
 		'attemptedAt',
 		'sentAt',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

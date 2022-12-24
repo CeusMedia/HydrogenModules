@@ -18,7 +18,7 @@ class Model_User_Invite extends Model
 {
 	protected string $name			= 'user_invites';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'userInviteId',
 		'inviterId',
 		'invitedId',
@@ -29,22 +29,22 @@ class Model_User_Invite extends Model
 		'email',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'userInviteId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'inviterId',
 		'invitedId',
 		'projectId',
 		'type',
 		'status',
 		'email',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
-	public function generateInviteCode( $inviterId, $mode = 0, $length = 10, $split = 5 )
+	public function generateInviteCode( $inviterId, $mode = 0, int $length = 10, int $split = 5 )
 	{
 		switch( $mode ){
 			default:
@@ -52,7 +52,7 @@ class Model_User_Invite extends Model
 				$code	= md5( $userId.$seed );
 		}
 		$length	= min( $length, strlen( $code ) );													//  length cannot be longer than generated raw code
-		$length	= max( $length, 3 );																//  length must be atleast 3
+		$length	= max( $length, 3 );																//  length must be at least 3
 		$split	= min( $split, $length );															//  split length cannot be longer than length
 		$split	= max( $split, 0 );																	//  split cannot by negative
 
@@ -70,7 +70,7 @@ class Model_User_Invite extends Model
 		return $model->getByIndex( 'email', $email );
 	}
 
-	public function setStatus( $userInviteId, $status )
+	public function setStatus( $userInviteId, $status ): int
 	{
 		if( !is_int( $status ) )
 			throw new InvalidArgumentException( 'Status must be integer' );

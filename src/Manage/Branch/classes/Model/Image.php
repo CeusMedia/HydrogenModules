@@ -6,7 +6,7 @@ class Model_Image extends Model
 {
 	protected string $name			= 'images';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'imageId',
 		'companyId',
 		'branchId',
@@ -14,14 +14,14 @@ class Model_Image extends Model
 		'status',
 		'title',
 //		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'imageId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'companyId',
 		'branchId',
 		'creditId',
   		'status',
-	);
+	];
 }

@@ -11,9 +11,9 @@ class Model_IP_Lock_Filter extends Model
 		self::STATUS_ENABLED,
 	];
 
-	protected string $name		= 'ip_lock_filters';
+	protected string $name			= 'ip_lock_filters';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'ipLockFilterId',
 		'reasonId',
 		'status',
@@ -24,10 +24,11 @@ class Model_IP_Lock_Filter extends Model
 		'createdAt',
 		'appliedAt',
 		'modifiedAt',
-	);
+	];
+
 	protected string $primaryKey	= 'ipLockFilterId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'reasonId',
 		'status',
 		'lockStatus',
@@ -35,7 +36,7 @@ class Model_IP_Lock_Filter extends Model
 		'pattern',
 		'title',
 		'createdAt',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

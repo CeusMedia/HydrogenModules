@@ -20,7 +20,7 @@ class Model_User_Setting extends Model
 {
 	protected string $name			= 'user_settings';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'userSettingId',
 		'moduleId',
 		'managerId',
@@ -29,20 +29,20 @@ class Model_User_Setting extends Model
 		'value',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'userSettingId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'moduleId',
 		'managerId',
 		'userId',
 		'key',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 
-	public function applyConfig( $userId = NULL, $hidePasswords = TRUE )
+	public function applyConfig( $userId = NULL, bool $hidePasswords = TRUE ): Dictionary
 	{
 		$config		= $this->env->getConfig()->getAll();
 		if( $userId === NULL )
@@ -64,13 +64,13 @@ class Model_User_Setting extends Model
 		return new Dictionary( $config );
 	}
 
-	static public function applyConfigStatic( Environment $env, $userId = NULL, $hidePasswords = TRUE )
+	static public function applyConfigStatic( Environment $env, $userId = NULL, bool $hidePasswords = TRUE ): Dictionary
 	{
 		$model	= new Model_User_Setting( $env );
 		return $model->applyConfig( $userId, $hidePasswords );
 	}
 
-	public function castValue( $type, $value )
+	public function castValue( string $type, $value )
 	{
 		switch( $type ){
 			case 'bool':

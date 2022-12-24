@@ -12,9 +12,9 @@ class Model_Billing_Bill extends Model
 		self::STATUS_BOOKED,
 	];
 
-	protected string $name		= "billing_bills";
+	protected string $name			= "billing_bills";
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'billId',
 		'status',
 		'number',
@@ -24,14 +24,14 @@ class Model_Billing_Bill extends Model
 		'amountAssigned',
 		'dateBooked',
 		'title',
-	);
+	];
 
 	protected string $primaryKey	= 'billId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'status',
 		'number',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

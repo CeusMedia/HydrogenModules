@@ -10,7 +10,7 @@ class Model_Provision_User_License_Key extends Model
 
 	protected string $name			= 'user_provision_license_keys';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'userLicenseKeyId',
 		'userLicenseId',
 		'userId',
@@ -20,19 +20,18 @@ class Model_Provision_User_License_Key extends Model
 		'uid',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'userLicenseKeyId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userLicenseId',
 		'userId',
 		'productLicenseId',
 		'productId',
 		'status',
 		'uid',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }
-?>

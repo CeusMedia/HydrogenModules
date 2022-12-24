@@ -22,9 +22,9 @@ class Model_Mail_Group_Action extends Model
 		self::STATUS_HANDLED,
 	];
 
-	protected string $name		= 'mail_group_actions';
+	protected string $name			= 'mail_group_actions';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		"mailGroupActionId",
 		"mailGroupId",
 		"mailGroupMemberId",
@@ -34,17 +34,17 @@ class Model_Mail_Group_Action extends Model
 		"message",
 		"createdAt",
 		"modifiedAt",
-	);
+	];
 
 	protected string $primaryKey	= 'mailGroupActionId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		"mailGroupId",
 		"mailGroupMemberId",
 		"status",
 		"uuid",
 		"action",
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

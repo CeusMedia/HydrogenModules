@@ -16,7 +16,7 @@ class Model_Shop_Payment_Mangopay extends Model
 
 	protected string $name			= 'shop_payments_mangopay';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'paymentId',
 		'orderId',
 		'userId',
@@ -25,16 +25,16 @@ class Model_Shop_Payment_Mangopay extends Model
 		'object',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'paymentId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'orderId',
 		'userId',
 		'payInId',
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

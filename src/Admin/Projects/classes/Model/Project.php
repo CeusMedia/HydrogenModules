@@ -18,22 +18,22 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Project extends Model
 {
-	protected string $name		= 'projects';
+	protected string $name			= 'projects';
 
-	protected array $columns	= array(
+	protected array $columns		= [
 		'projectId',
 		'status',
 		'title',
 		'description',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'projectId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'status',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

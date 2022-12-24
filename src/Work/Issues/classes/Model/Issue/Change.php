@@ -20,7 +20,7 @@ class Model_Issue_Change extends Model
 {
 	protected string $name			= 'issue_changes';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'issueChangeId',
 		'issueId',
 		'userId',
@@ -29,16 +29,16 @@ class Model_Issue_Change extends Model
 		'from',
 		'to',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'issueChangeId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'issueId',
 		'userId',
 		'noteId',
 		'type',
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

@@ -20,19 +20,19 @@ class Model_Token extends Model
 {
 	protected string $name			= 'tokens';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'tokenId',
 		'token',
 		'ip',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'tokenId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'token',
 		'ip'
-	);
+	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

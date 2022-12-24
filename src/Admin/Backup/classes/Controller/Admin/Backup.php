@@ -19,7 +19,7 @@ class Controller_Admin_Backup extends Controller
 	protected string $defaultOrderDirection		= 'DESC';
 	protected array $filters					= [];
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			foreach( $this->filters as $filterKey )
@@ -37,7 +37,7 @@ class Controller_Admin_Backup extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	public function index( $page = 0 ): void
 	{
 		$conditions	= [];
 		$filters	= $this->session->getAll( $this->filterPrefix, TRUE );
@@ -58,7 +58,7 @@ class Controller_Admin_Backup extends Controller
 		$this->addData( 'backups', $backups );
 	}
 
-	public function add()
+	public function add(): void
 	{
 		$this->messenger->noteFailure( 'Not implemented, yet' );
 		$this->restart( NULL, TRUE );
@@ -70,7 +70,7 @@ class Controller_Admin_Backup extends Controller
 	 *	@return		void
 	 *	@todo		implement
 	 */
-	public function restore( string $backupId )
+	public function restore( string $backupId ): void
 	{
 		$this->messenger->noteFailure( 'Not implemented, yet' );
 		$this->restart( NULL, TRUE );
@@ -82,7 +82,7 @@ class Controller_Admin_Backup extends Controller
 	 *	@return		void
 	 *	@todo		implement
 	 */
-	public function remove( string $backupId )
+	public function remove( string $backupId ): void
 	{
 		$this->messenger->noteFailure( 'Not implemented, yet' );
 		$this->restart( NULL, TRUE );
@@ -92,9 +92,9 @@ class Controller_Admin_Backup extends Controller
 	{
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
-		$this->moduleConfig = $this->env->getConfig()->getAll('module.admin_backup.', TRUE);
-		$this->pathFiles = $this->moduleConfig->get('path');
-		$this->model = new Model_Backup($this->env);
+		$this->moduleConfig	= $this->env->getConfig()->getAll('module.admin_backup.', TRUE);
+		$this->pathFiles	= $this->moduleConfig->get('path');
+		$this->model		= new Model_Backup( $this->env );
 		if (!file_exists($this->pathFiles))
 			new Folder( $this->pathFiles, TRUE );
 		if( !$this->session->has( $this->filterPrefix.'limit' ) )
